@@ -22,7 +22,7 @@ $edd_download_meta_box = array(
 			'class' => 'edd_download_files',
 			'type' 	=> 'repeatable upload',
 			'std'	=> ''
-		),							
+		),						
 		array(
 			'name' 	=> __('Show Purchase Link on Details Page', 'edd'),
 			'desc' 	=> __('Check this to automatically append the purchase link to download detail pages. If unchecked, you must enter the short code manually.', 'edd'),
@@ -161,8 +161,12 @@ function edd_render_download_meta_box()	{
 		echo '</tr>';
 	}
 	echo '<tr>';
+		echo '<th style="width:20%"><label>' . __('Notes', 'edd') . '</label></th>';
+		echo '<td>' . __('The style options above do NOT reflect the style of short code. The short code allows you to place a purchase button for this download anywhere on the site.', 'edd') . '</td>';
+	echo '</tr>';
+	echo '<tr>';
 		echo '<th style="width:20%"><label>' . __('Short Code for this Download', 'edd') . '</label></th>';
-		echo '<td><em>[purchase_link id="' . $post->ID . '" text="' . __('Purchase', 'edd') . '" style="button" color="gray"]';
+		echo '<td><em>[purchase_link id="' . $post->ID . '" text="' . __('Purchase', 'edd') . '" style="button" color="gray"]</td>';
 	echo '</tr>';
 	echo '</table>';
 }
