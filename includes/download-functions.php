@@ -1,0 +1,200 @@
+<?php
+
+// retrieves a download post object by ID or slug
+function edd_get_download($download) {
+
+	if(is_numeric($download)) {
+		$download = get_post($download);
+		if($download->post_type != 'download')
+			return null;
+		return $download;
+	}
+	
+	$args = array(
+		'post_type' => 'download',
+		'name' => $download,
+		'numberposts' => 1
+	);
+	
+	$download = get_posts($args);
+    
+	if ($download) {
+		return $download[0];
+	}
+	
+	return null;
+}
+
+// retrieves a list of all purchases by a specific user
+function edd_get_users_purchases($user_id) {
+	
+	$purchases = get_transient('edd_user_' . $user_id . '_purchases');
+	if(false === $purchases || edd_is_test_mode()) {
+		$mode = edd_is_test_mode() ? 'test' : 'live';
+		$purchases = get_posts(
+			array(
+				'meta_query' => array(
+					'relation' => 'AND',
+					array(
+						'key' => '_edd_payment_mode',
+						'value' => $mode
+					),
+					array(
+						'key' => '_edd_payment_user_id',
+						'value' => $user_id
+					)
+				),
+				'post_type' => 'edd_payment', 
+				'posts_per_page' => -1
+			)
+		);
+		set_transient('edd_user_' . $user_id . '_purchases', $purchases, 7200);
+	}
+	if($purchases)
+		return $purchases; // return the download list
+	
+	// no downloads	
+	return false;	
+}
+
+
+// returns the file extension of a filename
+function edd_get_file_extension($str)
+{
+   $parts = explode('.', $str);
+   return end($parts);
+}
+
+// returns the total earnings for a download
+function edd_get_download_earnings_stats($download_id) {
+	$earnings = get_post_meta($download_id, '_edd_download_earnings', true);
+	if($earnings)
+		return $earnings;
+	return 0;
+}
+
+// return the sales number for a download
+function edd_get_download_sales_stats($download_id) {
+	$sales = get_post_meta($download_id, '_edd_download_sales', true);
+	if($sales)
+		return $sales;
+	return 0;
+}
+
+// returns the purchase price of a download
+function edd_get_download_price($download_id) {
+	$price = get_post_meta($download_id, 'edd_price', true);
+	if($price)
+		return $price;
+	return 0;
+}
+
+// retrieves an array of all downloadable files for a download
+function edd_get_download_files($download_id) {
+	$files = get_post_meta($download_id, 'edd_download_files', true);
+	if($files)
+		return $files;
+	return false;
+}
+
+// constructs the file download url for a specific file
+function edd_get_download_file_url($key, $email, $filekey, $download) {
+	$download_url = add_query_arg(
+		'download_key', 
+		$key,
+		add_query_arg(
+			'email',
+			urlencode($email),
+			add_query_arg(
+				'file',
+				$filekey,
+				add_query_arg(
+					'download',
+					$download,
+					add_query_arg(
+						'expire',
+						urlencode(base64_encode(strtotime('+1 day', time()))), // link valid for 24 hours
+						home_url()
+					)
+				)
+			)
+		)
+	);
+	return $download_url;	
+}
+
+
+// verifies a download purchase using a purchase key and email
+function edd_verify_download_link($download_id, $key, $email, $expire) {
+
+	$meta_query = array(
+		'relation' => 'AND',
+		array(
+			'key' => '_edd_payment_purchase_key',
+			'value' => $key
+		),
+		array(
+			'key' => '_edd_payment_user_email',
+			'value' => $email
+		)
+	);
+
+	$payments = get_posts(array('meta_query' => $meta_query, 'post_type' => 'edd_payment'));
+	if($payments) {
+		foreach($payments as $payment) {
+			$payment_meta = get_post_meta($payment->ID, '_edd_payment_meta', true);
+			$downloads = maybe_unserialize($payment_meta['downloads']);
+			//print_r($downloads); exit;
+			if(array_search($download_id, $downloads) !== false) {
+				if(time() < $expire) {
+					return true; // payment has been verified and link is still valid
+				}
+				return false; // payment verified, but link is no longer valid
+			}
+		}
+	}
+	// payment not verified
+	return false;
+}
+
+
+// increases the sale count od a download
+function edd_increase_purchase_count($download_id) {
+	$sales = edd_get_download_sales_stats($download_id);
+	$sales = $sales + 1;
+	if(update_post_meta($download_id, '_edd_download_sales', $sales))
+		return $sales;
+
+	return false;
+}
+
+// increases the total earnings of a download
+function edd_increase_earnings($download_id, $amount) {
+	$earnings = edd_get_download_earnings_stats($download_id);
+	$earnings = $earnings + $amount;
+	
+	if(update_post_meta($download_id, '_edd_download_earnings', $earnings))
+		return $earnings;
+	
+	return false;
+}
+
+/*
+* Checks to see if a user has purchased a download
+* uses edd_get_users_purchases()
+* @param int $user_id - the ID of the user to check
+* @param int $download_Id - the ID of the download to check for
+* return bool - true if has purchased, false otherwise
+*/
+function edd_has_user_purchased($user_id, $download_id) {
+	$users_purchases = edd_get_users_purchases($user_id);
+	if($users_purchases) {
+		foreach($users_purchases as $purchase) {
+			$purchase_meta = get_post_meta($purchase->ID, '_edd_payment_meta', true);
+			$purchased_files = maybe_unserialize($purchase_meta['downloads']);
+			if(array_search($download_id, $purchased_files) !== false)
+				return true; // user has purchased the download
+		}
+	}
+	return false; // user has not purchased the download
+}
