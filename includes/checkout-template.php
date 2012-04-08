@@ -44,7 +44,7 @@ function edd_checkout_form() {
 									echo '<label for="edd-gateway">' . __('Choose Your Payment Method', 'rcp') . '</label>';
 								} else {
 									foreach($gateways as $gateway_id => $gateway) :
-										echo '<input type="hidden" name="payment-mode" value="' . $gateway_id . '"/>';
+										echo '<input type="hidden" id="edd-gateway" name="payment-mode" value="' . $gateway_id . '"/>';
 									endforeach;
 								}
 								?>
@@ -174,6 +174,7 @@ add_action('edd_cc_form', 'edd_get_cc_form');
 function edd_default_cc_address_fields() {
 	ob_start(); ?>
 	<fieldset class="cc-address">
+		<legend><?php _e('Credit Card Info', 'edd'); ?></legend>
 		<p>
 			<input type="text" name="card_address" class="card-address edd-input required"/>
 			<label class="edd-label"><?php _e('Billing Address', 'edd'); ?></label>

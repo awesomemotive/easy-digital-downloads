@@ -113,7 +113,11 @@ jQuery(document).ready(function($) {
 	
 	// load the fields for the selected payment method
 	$('#edd_payment_mode').submit(function(e) {
-		var payment_mode = $('option:selected', '#edd-gateway').val();
+		if($('select#edd-gateway').length) {
+			var payment_mode = $('option:selected', '#edd-gateway').val();
+		} else {
+			var payment_mode = $('#edd-gateway').val();
+		}
 		var form = $(this);
 		var action = form.attr("action") + '?payment-mode=' + payment_mode;
 		// show the ajax loader
