@@ -248,3 +248,13 @@ function edd_get_login_fields() {
 	<?php
 	return ob_get_clean();
 }
+
+function edd_show_payment_iconos() {
+	global $edd_options;
+	if(isset($edd_options['accepted_cards'])) {
+		foreach($edd_options['accepted_cards'] as $key => $card) {
+			echo '<img class="payment-icon" src="' . EDD_PLUGIN_URL . 'includes/images/icons/' . strtolower(str_replace(' ', '', $card)) . '.png"/>';
+		}
+	}
+}
+add_action('edd_payment_mode_before_gateways', 'edd_show_payment_iconos');

@@ -12,6 +12,7 @@
 #edd_purchase_form input.card-expiry-month { width: 30px; }
 #edd_purchase_form input.card-expiry-year { width: 60px; }
 #edd_purchase_form span.exp-divider {  }
+#edd_checkout_form_wrap img.payment-icon{ margin: 0 3px 0 0; }
 
 /****************************************
 * Cart Widget

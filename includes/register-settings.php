@@ -89,6 +89,19 @@ function edd_register_settings() {
 					'options' => edd_get_payment_gateways()
 				),
 				array(
+					'id' => 'accepted_cards',
+					'name' => __('Accepted Payment Methods', 'edd'),
+					'desc' => __('Display icons for the selected payment methods', 'edd') . '<br/>' . __('You will also need to configure your gateway settings if you accepting credit cards', 'edd'),
+					'type' => 'multicheck',
+					'options' => array(
+						'Mastercard',
+						'Visa',
+						'American Express',
+						'Discover',
+						'PayPal'
+					)
+				),
+				array(
 					'id' => 'paypal',
 					'name' => '<strong>' . __('PayPal Settings', 'edd') . '</strong>',
 					'desc' => __('Configure the PayPal settings', 'edd'),
@@ -326,10 +339,11 @@ function edd_multicheck_callback($args) {
 	global $edd_options;
 
 	foreach($args['options'] as $key => $option) :
-		if(isset($edd_options['gateways'][$key])) { $enabled = '1'; } else { $enabled = NULL; }
-		echo '<input name="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
+		if(isset($edd_options[$args['id']][$key])) { $enabled = $option; } else { $enabled = NULL; }
+		echo '<input name="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
 		echo '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
 	endforeach;
+	echo '<p class="description">' . $args['desc'] . '</p>';
 
 }
 
