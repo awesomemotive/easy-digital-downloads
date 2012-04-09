@@ -14,7 +14,7 @@ function edd_is_ajax_enabled() {
 }
 
 function edd_ajax_remove_from_cart() {
-	if(isset($_POST['cart_item'])) {
+	if(isset($_POST['cart_item']) && check_ajax_referer( 'ajax_nonce', 'nonce' )) {
 		edd_remove_from_cart($_POST['cart_item']);
 		echo 'removed';
 	}
@@ -24,7 +24,7 @@ add_action('wp_ajax_edd_remove_from_cart', 'edd_ajax_remove_from_cart');
 add_action('wp_ajax_nopriv_edd_remove_from_cart', 'edd_ajax_remove_from_cart');
 
 function edd_ajax_add_to_cart() {
-	if(isset($_POST['download_id'])) {
+	if(isset($_POST['download_id']) && check_ajax_referer( 'ajax_nonce', 'nonce' )) {
 		global $post;
 		$key = edd_add_to_cart($_POST['download_id']);
 		$cart_item = edd_get_cart_item_template($key, $_POST['download_id'], true);
@@ -36,7 +36,7 @@ add_action('wp_ajax_edd_add_to_cart', 'edd_ajax_add_to_cart');
 add_action('wp_ajax_nopriv_edd_add_to_cart', 'edd_ajax_add_to_cart');
 
 function edd_ajax_validate_discount() {
-	if(isset($_POST['code'])) {
+	if(isset($_POST['code']) && check_ajax_referer( 'ajax_nonce', 'nonce' )) {
 		if(edd_is_discount_valid($_POST['code'])) {
 			$price = edd_get_cart_amount();
 			$discounted_price = edd_get_discounted_amount($_POST['code'], $price);

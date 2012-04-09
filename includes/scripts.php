@@ -13,6 +13,7 @@ function edd_load_scripts() {
 		wp_enqueue_script('edd-ajax', EDD_PLUGIN_URL . 'includes/js/edd-ajax.js');
 		wp_localize_script('edd-ajax', 'edd_scripts', array(
 				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				'ajax_nonce' => wp_create_nonce( 'edd_ajax_nonce' ),
 				'no_discount' => __('Please enter a discount code', 'edd'), // blank discount code message
 				'discount_applied' => __('Discount Applied', 'edd'), // discount verified message
 				'loading' => __('Loading', 'edd') , // general loading message

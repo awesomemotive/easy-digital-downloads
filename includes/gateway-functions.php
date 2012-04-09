@@ -18,7 +18,7 @@ function edd_get_payment_gateways() {
 function edd_get_enabled_payment_gateways() {
 	global $edd_options;
 	$gateways = edd_get_payment_gateways();
-	$enabled_gateways = $edd_options['gateways'];
+	$enabled_gateways = isset( $edd_options['gateways'] ) ? $edd_options['gateways'] : '';
 	$gateway_list = array();
 	foreach($gateways as $key => $gateway) :
 		if(isset($enabled_gateways[$key]) && $enabled_gateways[$key] == 1) :
