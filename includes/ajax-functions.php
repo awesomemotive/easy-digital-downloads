@@ -73,3 +73,17 @@ function edd_load_checkout_register_fields() {
 	echo edd_get_register_fields(); die();
 }
 add_action('wp_ajax_nopriv_checkout_register', 'edd_load_checkout_register_fields');
+
+// used only in the admin
+function edd_ajax_get_download_title() {
+	if(isset($_POST['download_id'])) {
+		$title = get_the_title($_POST['download_id']);
+		if($title) {
+			echo $title;
+		} else {
+			echo 'fail';
+		}
+	}
+	die();
+}
+add_action('wp_ajax_edd_get_download_title', 'edd_ajax_get_download_title');

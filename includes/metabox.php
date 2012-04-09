@@ -72,6 +72,7 @@ function edd_add_download_meta_box() {
 
 	add_meta_box($edd_download_meta_box['id'], $edd_download_meta_box['title'], 'edd_render_download_meta_box', 'download', 'normal', 'default', $edd_download_meta_box);
 	add_meta_box('edd_download_stats', __('Download Stats', 'edd'), 'edd_render_stats_meta_box', 'download', 'side', 'high');
+	add_meta_box('edd_payment_info', __('Payment Info', 'edd'), 'edd_render_payment_meta_box', 'edd_payment', 'normal', 'high');
 }
 add_action('add_meta_boxes', 'edd_add_download_meta_box');
 

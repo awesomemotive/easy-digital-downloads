@@ -74,4 +74,39 @@ jQuery(document).ready(function ($) {
             window.imagefield = false;
         }
     }
+	
+	$('#edd-add-download').on('click', function() {
+		var downloads = [];
+		$('.edd-download-to-add').each(function() {
+			if($(this).is(':checked')) {
+				var id = $(this).val();
+				data = {
+					action: 'edd_get_download_title',
+					download_id: id
+				};
+				$.post(ajaxurl, data, function (response) {
+					if (response != 'fail') {
+						var html = '<div class="purchased_download_' + id + '"><input type="hidden" name="edd-purchased-downloads[]" value="' + id + '"/><strong>' + response + '</strong> - <a href="#" class="edd-remove-purchased-download" data-action="remove_purchased_download" data-id="' + id + '">Remove</a></div>';
+						$(html).insertBefore('#edit-downloads');
+					}
+				});
+			}
+		});
+		tb_remove();
+		return false;
+	});
+	$('#purchased-downloads').on('click', '.edd-remove-purchased-download', function() {
+		var $this = $(this);
+		data = {
+			action: $this.data('action'),
+			download_id: $this.data('id')
+		};
+		$.post(ajaxurl, data, function (response) {
+			if (response != 'fail') {
+				$('.purchased_download_' + $this.data('id')).remove();
+			}
+		});
+		return false;
+	});
+	
 });

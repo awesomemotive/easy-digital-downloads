@@ -89,6 +89,17 @@ function edd_insert_payment($payment_data = array()) {
 	return false;
 }
 
+// updates the purchase date for a payment. Used primarily for adding new downloads to a purchase
+function edd_update_purchased_downloads($data) {
+	if(wp_verify_nonce($data['edd-payment-nonce'], 'edd_payment_nonce')) {
+		$payment_id = $_POST['payment-id'];
+		$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
+		$payment_data['downloads'] = serialize($_POST['edd-purchased-downloads']);
+		update_post_meta($payment_id, '_edd_payment_meta', $payment_data);
+	}
+}
+add_action('edd_edit_payment', 'edd_update_purchased_downloads');
+
 function edd_update_payment_status($payment_id, $status = 'pending') {
 	
 	if($status == 'completed' || $status == 'complete') {
