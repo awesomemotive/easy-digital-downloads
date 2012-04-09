@@ -16,6 +16,7 @@ function edd_load_scripts() {
 				'ajax_nonce' => wp_create_nonce( 'edd_ajax_nonce' ),
 				'no_discount' => __('Please enter a discount code', 'edd'), // blank discount code message
 				'discount_applied' => __('Discount Applied', 'edd'), // discount verified message
+				'already_in_cart_message' => __('You have already added this item to your cart', 'edd'), // item already in the cart message
 				'loading' => __('Loading', 'edd') , // general loading message
 				'ajax_loader' => EDD_PLUGIN_URL . 'includes/images/loading.gif' // ajax loading image
 			)

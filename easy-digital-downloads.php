@@ -28,14 +28,6 @@ if(!defined('EDD_PLUGIN_FILE')) {
 	define('EDD_PLUGIN_FILE', __FILE__);
 }
 
-/*************************************
-* globals
-*************************************/
-
-global $wpdb, $edd_payments_db_name, $edd_payments_db_version;
-$edd_payments_db_name = $wpdb->prefix . 'edd_payments';
-$edd_payments_db_version = 1.0;
-
 /*****************************************
 load the languages
 *****************************************/

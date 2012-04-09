@@ -2,7 +2,7 @@ var edd_scripts;
 jQuery(document).ready(function ($) {
 
     // send Remove from Cart requests
-    $('.edd-remove-from-cart').live('click', function (event) {
+    $('.edd-remove-from-cart').on('click.eddRemoveFromCart', function (event) {
         var $this = $(this),
             item = $this.data('cart-item'),
             action = $this.data('action'),
@@ -26,7 +26,7 @@ jQuery(document).ready(function ($) {
     });
 
     // send Add to Cart request
-    $('.edd-add-to-cart').on('click', function (event) {
+    $('.edd-add-to-cart').on('click.eddAddToCart', function (event) {
         var $this = $(this);
 
         // show the ajax loader
@@ -41,7 +41,12 @@ jQuery(document).ready(function ($) {
             };
 
         $.post(edd_scripts.ajaxurl, data, function (cart_item_response) {
-            if ($('.cart_item.empty').length) {
+            // item already in the cart
+			if(cart_item_response == 'incart') {
+				alert(edd_scripts.already_in_cart_message);
+			}
+			
+			if ($('.cart_item.empty').length) {
                 $(cart_item_response).insertBefore('.cart_item.empty');
                 $('.cart_item.edd_checkout').show();
                 $('.cart_item.empty').remove();

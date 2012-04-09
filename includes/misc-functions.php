@@ -14,6 +14,15 @@ function edd_logged_in_only() {
 	return false;
 }
 
+/*
+* returns the access level required to access the downloads menu
+* currently not not changeable, but here for a future update
+*/
+function edd_get_menu_access_level() {
+	global $edd_options;
+	return 'manage_options';
+}
+
 // checks whether an integer is odd
 function edd_is_odd( $int ) {
 	return( $int & 1 );

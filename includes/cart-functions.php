@@ -40,7 +40,6 @@ function edd_add_to_cart($download_id) {
 /*
 * Removes a download from the shopping cart
 * Uses edd_get_cart_contents()
-* @param - $download_id INT the ID number of the download to remove
 * @param - $cart_key INT the cart key to remove
 * return - array of updated cart items
 */
@@ -55,6 +54,24 @@ function edd_remove_from_cart($cart_key) {
 	return $cart; // the updated cart items
 }
 
+
+/*
+* Checks to see if an item is already in the cart
+* Uses edd_get_cart_contents()
+* @param - $download_id INT the ID number of the download to remove
+* @param - $cart_key INT the cart key to remove
+* return - array of updated cart items
+*/
+function edd_item_in_cart($download_id) {
+	$cart = edd_get_cart_contents();
+	if(!is_array($cart)) {
+		return false; // empty cart
+	} else {
+		if(in_array($download_id, $cart)) {
+			return true;
+		}
+	}
+}
 
 /*
 * Gets the quanity for an item in the cart
