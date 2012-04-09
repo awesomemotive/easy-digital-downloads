@@ -1,3 +1,4 @@
+var edd_scripts;
 jQuery(document).ready(function ($) {
 
     // send Remove from Cart requests
@@ -7,7 +8,8 @@ jQuery(document).ready(function ($) {
             action = $this.data('action'),
             data = {
                 action: action,
-                cart_item: item
+                cart_item: item,
+                nonce: edd_scripts.ajax_nonce
             };
 
         $.post(edd_scripts.ajaxurl, data, function (response) {
@@ -31,10 +33,11 @@ jQuery(document).ready(function ($) {
         $this.next().show();
 
         var download = $this.data('download-id'),
-            action = $this.data('action'),
+            action   = $this.data('action'),
             data = {
                 action: action,
-                download_id: download
+                download_id: download,
+                nonce: edd_scripts.ajax_nonce
             };
 
         $.post(edd_scripts.ajaxurl, data, function (cart_item_response) {
@@ -70,7 +73,8 @@ jQuery(document).ready(function ($) {
 
         var postData = {
             action: 'edd_apply_discount',
-            code: discount_code
+            code: discount_code,
+            nonce: edd_scripts.ajax_nonce
         };
 
         $.ajax({
@@ -97,7 +101,8 @@ jQuery(document).ready(function ($) {
         var $this = $(this),
             action = $this.data('action'),
             data = {
-                action: action
+                action: action,
+                nonce: edd_scripts.ajax_nonce
             };
         // show the ajax loader
         $('.edd-cart-ajax').show();
