@@ -123,7 +123,7 @@ function edd_process_paypal_ipn() {
 	
 	// instantiate the IpnListener class
 	if(!class_exists('IpnListener')) {
-		include(EDD_PLUGIN_DIR . '/includes/gateways/libraries/paypal/ipnlistener.php');
+		include_once(EDD_PLUGIN_DIR . 'includes/gateways/libraries/paypal/ipnlistener.php');
 	}
 	
 	$listener = new IpnListener();

@@ -8,7 +8,7 @@ function edd_discounts_page() {
 		
 		<?php if(isset($_GET['edd-action']) && $_GET['edd-action'] == 'edit_discount') : ?>
 
-			<?php include(EDD_PLUGIN_DIR . '/includes/admin-pages/forms/edit-discount.php'); ?>
+			<?php include_once(EDD_PLUGIN_DIR . 'includes/admin-pages/forms/edit-discount.php'); ?>
 
 		<?php else : ?>
 			<h2><?php _e('Discount Codes', 'edd'); ?></h2>
@@ -92,7 +92,7 @@ function edd_discounts_page() {
 			</table>		
 			<?php do_action('edd_discounts_below_table'); ?>	
 
-			<?php include(EDD_PLUGIN_DIR . '/includes/admin-pages/forms/add-discount.php'); ?>
+			<?php include_once(EDD_PLUGIN_DIR . 'includes/admin-pages/forms/add-discount.php'); ?>
 		
 		<?php endif; ?>
 		
