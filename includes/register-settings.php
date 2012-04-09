@@ -131,6 +131,12 @@ function edd_register_settings() {
 		'emails' => apply_filters('edd_settings_emails', 
 			array(
 				array(
+					'id' => 'from_email',
+					'name' => __('From Email', 'edd'),
+					'desc' => __('Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'edd'),
+					'type' => 'text'
+				),
+				array(
 					'id' => 'purchase_subject',
 					'name' => __('Purchase Email Subject', 'edd'),
 					'desc' => __('Enter the subject line for the purchase receipt email', 'edd'),
@@ -166,6 +172,12 @@ function edd_register_settings() {
 					'id' => 'show_register_form',
 					'name' => __('Show Register Form?', 'edd'),
 					'desc' => __('Display the registration form for non-logged-in users', 'edd'),
+					'type' => 'checkbox',
+				),
+				array(
+					'id' => 'uses_can_redownload',
+					'name' => __('Disable Redownload?', 'edd'),
+					'desc' => __('Check this if you do not want to allow users to redownload items from their purchase history', 'edd'),
 					'type' => 'checkbox',
 				)
 			)

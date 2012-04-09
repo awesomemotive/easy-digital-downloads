@@ -25,7 +25,7 @@ function edd_download_history($atts, $content = null) {
 		), $atts )
 	);
 	
-	global $user_ID;
+	global $user_ID, $edd_options;
 	
 	if(is_user_logged_in()) {
 		$purchases = edd_get_users_purchases($user_ID);
@@ -40,13 +40,15 @@ function edd_download_history($atts, $content = null) {
 					foreach($downloads as $download) {
 						$list .= '<li class="edd_purchased_download">';
 							$list .= get_the_title($download);
-							$list .= '<ul class="edd_purchased_download_files">';
-								$download_files = get_post_meta($download, 'edd_download_files', true);
-								foreach($download_files as $filekey => $file) {
-									$download_url = edd_get_download_file_url($payment_meta['key'], $payment_meta['email'], $filekey, $download);
-									$list .= '<li class="edd_download_file"><a href="' . $download_url . '" class="edd_download_file_link">' . $file['name'] . '</a></li>';
-								}
-							$list .= '</ul>';
+							if(!isset($edd_options['uses_can_redownload'])) {
+								$list .= '<ul class="edd_purchased_download_files">';
+									$download_files = get_post_meta($download, 'edd_download_files', true);
+									foreach($download_files as $filekey => $file) {
+										$download_url = edd_get_download_file_url($payment_meta['key'], $payment_meta['email'], $filekey, $download);
+										$list .= '<li class="edd_download_file"><a href="' . $download_url . '" class="edd_download_file_link">' . $file['name'] . '</a></li>';
+									}
+								$list .= '</ul>';
+							}
 						$list .= '</li>';
 					}
 				}
