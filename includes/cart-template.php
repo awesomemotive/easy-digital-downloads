@@ -1,6 +1,7 @@
 <?php
 
 function edd_checkout_cart() {
+    global $post;
 	ob_start(); ?>
 	<?php do_action('edd_before_checkout_cart'); ?>
 	<table id="edd_checkout_cart" <?php if(edd_is_ajax_enabled()) { echo 'class="ajaxed"'; } ?>>
