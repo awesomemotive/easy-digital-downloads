@@ -81,12 +81,6 @@ function edd_insert_payment($payment_data = array()) {
 			}
 		}
 		
-		// clear all the checkout errors, if any
-		edd_clear_errors();
-		
-		// empty the shopping cart
-		edd_empty_cart();
-		
 		do_action('edd_insert_payment', $payment_data);		
 		
 		return $payment; // return the ID
@@ -105,6 +99,9 @@ function edd_update_payment_status($payment_id, $status = 'pending') {
 	
 	// send email with secure download link
 	edd_email_download_link($payment_id);
+	
+	// empty the shopping cart
+	edd_empty_cart();
 	
 	do_action('edd_update_payment_status', $payment_id, $status);
 }

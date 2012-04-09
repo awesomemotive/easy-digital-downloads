@@ -34,6 +34,9 @@ function edd_add_to_cart($download_id) {
 	
 	$_SESSION['edd_cart'] = $cart;
 	
+	// clear all the checkout errors, if any
+	edd_clear_errors();
+	
 	return count($cart) - 1;
 }
 
@@ -51,6 +54,10 @@ function edd_remove_from_cart($cart_key) {
 		unset($cart[$cart_key]);
 	}
 	$_SESSION['edd_cart'] = $cart;
+	
+	// clear all the checkout errors, if any
+	edd_clear_errors();
+	
 	return $cart; // the updated cart items
 }
 
