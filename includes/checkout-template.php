@@ -124,7 +124,7 @@ function edd_checkout_form() {
 								<input type="hidden" name="edd-user-id" value="<?php echo $user_data->ID; ?>"/>
 								<?php } ?>
 								<input type="hidden" name="edd-action" value="purchase"/>
-								<input type="hidden" name="edd-gateway" value="<?php echo urldecode($_GET['payment-mode']); ?>" />
+								<input type="hidden" name="edd-gateway" value="<?php echo $payment_mode; ?>" />
 								<input type="hidden" name="edd-nonce" value="<?php echo wp_create_nonce('edd-purchase-nonce'); ?>"/>
 								<span class="edd_button edd_gray">
 									<span class="edd_button_outer">
