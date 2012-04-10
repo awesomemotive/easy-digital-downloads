@@ -20,6 +20,7 @@ function edd_payment_history_page() {
 			$offset = $per_page * ($page-1);
 			
 			$mode = isset($_GET['mode']) ? $_GET['mode'] : 'live';
+			if(edd_is_test_mode() && !isset($_GET['mode'])) $mode = 'test';
 			$payments = edd_get_payments($offset, $per_page, $mode);
 			$payment_count = edd_count_payments($mode);
 			$total_pages = ceil($payment_count/$per_page);

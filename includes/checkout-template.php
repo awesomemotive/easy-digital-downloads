@@ -27,43 +27,52 @@ function edd_checkout_form() {
 			
 			<div id="edd_checkout_form_wrap">
 			
-				<?php if(!isset($_GET['payment-mode'])) { ?>
+				<?php 
+				$gateways = edd_get_enabled_payment_gateways();
+				if(count($gateways) > 1 && !isset($_GET['payment-mode'])) { ?>
 					<?php do_action('edd_payment_mode_top'); ?>
 					<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
-						<fieldset>
+						<fieldset id="edd_payment_mode_select">
 							<?php do_action('edd_payment_mode_before_gateways'); ?>
 							<p>
-								<?php
-								$gateways = edd_get_enabled_payment_gateways();
-								if(count($gateways) > 1) {
+								<?php								
 									echo '<select class="edd-select" name="payment-mode" id="edd-gateway">';
 										foreach($gateways as $gateway_id => $gateway) :
 											echo '<option value="' . $gateway_id . '">' . $gateway['checkout_label'] . '</option>';
 										endforeach;
 									echo '</select>';
 									echo '<label for="edd-gateway">' . __('Choose Your Payment Method', 'rcp') . '</label>';
-								} else {
-									foreach($gateways as $gateway_id => $gateway) :
-										echo '<input type="hidden" id="edd-gateway" name="payment-mode" value="' . $gateway_id . '"/>';
-									endforeach;
-								}
 								?>
 							</p>
 							<?php do_action('edd_payment_mode_after_gateways'); ?>
 						</fieldset>
-						<fieldset>
+						<fieldset id="edd_payment_mode_submit">
 							<p>
-								<input type="submit" value="<?php _e('Next', 'edd'); ?>"/>
+								<span class="edd_button edd_gray">
+									<span class="edd_button_outer">
+										<span class="edd_button_inner">
+											<input type="submit" class="edd_button_text edd-submit" value="<?php _e('Next', 'edd'); ?>"/>
+										</span>
+									</span>
+								</span>
 							</p>
 						</fieldset>
 					</form>
 					<?php do_action('edd_payment_mode_bottom'); ?>
 			
 				<?php } else { ?>
+		
+					<?php					
+						foreach($gateways as $gateway_id => $gateway) :
+							$enabled_gateway = $gateway_id;
+						endforeach;
+						$payment_mode = isset($_GET['payment-mode']) ? urldecode($_GET['payment-mode']) : $enabled_gateway;	
+					?>
 					
+					<?php do_action('edd_before_purchase_form'); ?>
 					<form id="edd_purchase_form" action="<?php echo $page_URL; ?>" method="POST">					
 					
-						<?php do_action('edd_before_purchase_form'); ?>
+						<?php do_action('edd_purchase_form_top'); ?>
 					
 						<?php if(isset($edd_options['logged_in_only']) && !is_user_logged_in() && !isset($_GET['login'])) { ?>
 							<div id="edd_checkout_login_register"><?php echo edd_get_register_fields(); ?></div>
@@ -71,7 +80,7 @@ function edd_checkout_form() {
 							<div id="edd_checkout_login_register"><?php echo edd_get_login_fields(); ?></div>
 						<?php } ?>
 						<?php if(!isset($_GET['login']) && is_user_logged_in()) { ?>											
-						<fieldset>
+						<fieldset id="edd_checkout_user_info">
 							<p>
 								<input class="edd-input" type="text" name="edd-email" id="edd-email" value="<?php echo is_user_Logged_in() ? $user_data->user_email : ''; ?>"/>
 								<label class="edd-label" for="edd-email"><?php _e('Email Address', 'edd'); ?></label>
@@ -86,8 +95,9 @@ function edd_checkout_form() {
 							</p>	
 							<?php do_action('edd_purchase_form_user_info'); ?>
 						</fieldset>				
-						<?php } ?>		
-						<fieldset>
+						<?php } ?>
+						<?php if(edd_get_discounts()) { // only show if we have at least one discount ?>
+						<fieldset id="edd_discount_code">
 							<p>
 								<input class="edd-input" type="text" id="edd-discount" name="edd-discount"/>
 								<label class="edd-label" for="edd-discount">
@@ -97,16 +107,17 @@ function edd_checkout_form() {
 									<?php } ?>
 								</label>
 							</p>
-						</fieldset>				
+						</fieldset>	
+						<?php } ?>
 						<?php 
 							// load the credit card form and allow gateways to load their own if they wish
-							if(has_action('edd_' . urldecode($_GET['payment-mode']) . '_cc_form')) {
-								do_action('edd_' . urldecode($_GET['payment-mode']) . '_cc_form'); 
+							if(has_action('edd_' . $payment_mode . '_cc_form')) {
+								do_action('edd_' . $payment_mode . '_cc_form'); 
 							} else {
 								do_action('edd_cc_form');
 							}
 						?>					
-						<fieldset>
+						<fieldset id="edd_purchase_submit">
 							<p>
 								<?php do_action('edd_purchase_form_before_submit'); ?>
 								<?php if(is_user_logged_in()) { ?>
@@ -115,7 +126,13 @@ function edd_checkout_form() {
 								<input type="hidden" name="edd-action" value="purchase"/>
 								<input type="hidden" name="edd-gateway" value="<?php echo urldecode($_GET['payment-mode']); ?>" />
 								<input type="hidden" name="edd-nonce" value="<?php echo wp_create_nonce('edd-purchase-nonce'); ?>"/>
-								<input type="submit" name="edd-purchase" value="<?php _e('Purchase', 'edd'); ?>"/>
+								<span class="edd_button edd_gray">
+									<span class="edd_button_outer">
+										<span class="edd_button_inner">
+											<input type="submit" class="edd_button_text edd-submit" name="edd-purchase" value="<?php _e('Purchase', 'edd'); ?>"/>
+										</span>
+									</span>
+								</span>
 								<?php do_action('edd_purchase_form_after_submit'); ?>
 							</p>
 							<?php if(!edd_is_ajax_enabled()) { ?>
@@ -258,4 +275,5 @@ function edd_show_payment_iconos() {
 		}
 	}
 }
-add_action('edd_payment_mode_before_gateways', 'edd_show_payment_iconos');
+add_action('edd_payment_mode_top', 'edd_show_payment_iconos');
+add_action('edd_before_purchase_form', 'edd_show_payment_iconos');

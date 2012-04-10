@@ -24,22 +24,6 @@ $edd_download_meta_box = array(
 			'std'	=> ''
 		),						
 		array(
-			'name' 	=> __('Show Purchase Link on Details Page', 'edd'),
-			'desc' 	=> __('Check this to automatically append the purchase link to download detail pages. If unchecked, you must enter the short code manually.', 'edd'),
-			'id' 	=> '_edd_show_purchase_link',
-			'class' => 'edd_show_purchase_link',
-			'type' 	=> 'checkbox',
-			'std'	=> ''
-		),							
-		array(
-			'name' 	=> __('Show Purchase Link on Archive Pages', 'edd'),
-			'desc' 	=> __('Check this to automatically append the purchase link to download excerpts.', 'edd'),
-			'id' 	=> '_edd_show_archive_purchase_link',
-			'class' => 'edd_show_archive_purchase_link',
-			'type' 	=> 'checkbox',
-			'std'	=> ''
-		),							
-		array(
 			'name' 	=> __('Purchase Text', 'edd'),
 			'desc' 	=> __('Add the text you would like displayed for the purchase text', 'edd'),
 			'id' 	=> '_edd_purchase_text',
@@ -62,7 +46,15 @@ $edd_download_meta_box = array(
 			'class' => 'edd_select',
 			'type' 	=> 'select',
 			'options' => edd_get_button_colors()
-		)		
+		),
+		array(
+			'name' 	=> __('Disable the purchase button?', 'edd'),
+			'desc' 	=> __('Check this if you do not want the purchase button to be automatically added', 'edd'),
+			'id' 	=> '_edd_hide_purchase_link',
+			'class' => 'edd_hide_purchase_link',
+			'type' 	=> 'checkbox',
+			'std'	=> ''
+		),
 	)
 );			
 

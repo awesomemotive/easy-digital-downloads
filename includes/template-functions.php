@@ -3,16 +3,8 @@
 // automatically appends the purchase link to download content, if enabled
 function edd_append_purchase_link($content) {
 	global $post;
-	if($post->post_type == 'download' && is_singular()) {
-		if(get_post_meta($post->ID, '_edd_show_purchase_link', true)) {
-			$button_text = get_post_meta($post->ID, '_edd_purchase_text', true);
-			$style = get_post_meta($post->ID, '_edd_purchase_style', true);
-			$color = get_post_meta($post->ID, '_edd_purchase_color', true);
-			$content .= edd_get_purchase_link($post->ID, $button_text, $style, $color);
-		}
-	}
-	if($post->post_type == 'download' && is_archive()) {
-		if(get_post_meta($post->ID, '_edd_show_archive_purchase_link', true)) {
+	if($post->post_type == 'download' && is_singular() && is_main_query()) {
+		if(!get_post_meta($post->ID, '_edd_hide_purchase_link', true)) {
 			$button_text = get_post_meta($post->ID, '_edd_purchase_text', true);
 			$style = get_post_meta($post->ID, '_edd_purchase_style', true);
 			$color = get_post_meta($post->ID, '_edd_purchase_color', true);
@@ -32,7 +24,7 @@ function edd_get_purchase_link($download_id = null, $link_text = 'Purchase', $st
 	if(!edd_has_user_purchased($user_ID, $download_id)) {
 
 		if($style == 'button') {
-			$link = '<a href="' . $link . '" class="edd-add-to-cart edd_' . $style . ' edd_' . $color . '" data-action="edd_add_to_cart" data-download-id="' . $download_id . '">';
+			$link = '<a href="' . $link . '" class="edd-add-to-cart edd_button edd_' . $color . '" data-action="edd_add_to_cart" data-download-id="' . $download_id . '">';
 			 	$link .= '<span class="edd_button_outer"><span class="edd_button_inner"><span class="edd_button_text">' . $link_text . '</span></span></span>';
 			$link .= '</a>';
 		} else {
