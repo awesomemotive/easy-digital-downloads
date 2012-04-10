@@ -164,14 +164,14 @@ function edd_register_settings() {
 				),
 				array(
 					'id' => 'logged_in_only',
-					'name' => __('Logged-In Only', 'edd'),
+					'name' => __('Disable Guest Checkout', 'edd'),
 					'desc' => __('Require that users be logged-in to purchase files.', 'edd'),
 					'type' => 'checkbox'
 				),
 				array(
 					'id' => 'show_register_form',
-					'name' => __('Show Register Form?', 'edd'),
-					'desc' => __('Display the registration form for non-logged-in users', 'edd'),
+					'name' => __('Show Register / Login Form?', 'edd'),
+					'desc' => __('Display the registration and login forms on the checkout page for non-logged-in users', 'edd'),
 					'type' => 'checkbox',
 				),
 				array(

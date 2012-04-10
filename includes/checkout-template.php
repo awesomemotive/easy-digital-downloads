@@ -74,71 +74,87 @@ function edd_checkout_form() {
 					
 						<?php do_action('edd_purchase_form_top'); ?>
 					
-						<?php if(isset($edd_options['logged_in_only']) && !is_user_logged_in() && !isset($_GET['login'])) { ?>
-							<div id="edd_checkout_login_register"><?php echo edd_get_register_fields(); ?></div>
-						<?php } elseif(isset($edd_options['show_register_form']) && !is_user_logged_in() && isset($_GET['login'])) { ?>
-							<div id="edd_checkout_login_register"><?php echo edd_get_login_fields(); ?></div>
-						<?php } ?>
-						<?php if(!isset($_GET['login']) && is_user_logged_in()) { ?>											
-						<fieldset id="edd_checkout_user_info">
-							<p>
-								<input class="edd-input" type="text" name="edd-email" id="edd-email" value="<?php echo is_user_Logged_in() ? $user_data->user_email : ''; ?>"/>
-								<label class="edd-label" for="edd-email"><?php _e('Email Address', 'edd'); ?></label>
-							</p>
-							<p>
-								<input class="edd-input" type="text" name="edd-first" id="edd-first" value="<?php echo is_user_Logged_in() ? $user_data->user_firstname : ''; ?>"/>
-								<label class="edd-label" for="edd-first"><?php _e('First Name', 'edd'); ?></label>
-							</p>
-							<p>
-								<input class="edd-input" type="text" name="edd-last" id="edd-last" value="<?php echo is_user_Logged_in() ? $user_data->user_lastname : ''; ?>"/>
-								<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
-							</p>	
-							<?php do_action('edd_purchase_form_user_info'); ?>
-						</fieldset>				
-						<?php } ?>
-						<?php if(edd_get_discounts()) { // only show if we have at least one discount ?>
-						<fieldset id="edd_discount_code">
-							<p>
-								<input class="edd-input" type="text" id="edd-discount" name="edd-discount"/>
-								<label class="edd-label" for="edd-discount">
-									<?php _e('Discount', 'edd'); ?>
-									<?php if(edd_is_ajax_enabled()) { ?>
-										- <a href="#" class="edd-apply-discount"><?php _e('Apply Discount', 'edd'); ?></a>
-									<?php } ?>
-								</label>
-							</p>
-						</fieldset>	
-						<?php } ?>
 						<?php 
-							// load the credit card form and allow gateways to load their own if they wish
-							if(has_action('edd_' . $payment_mode . '_cc_form')) {
-								do_action('edd_' . $payment_mode . '_cc_form'); 
+						if(isset($edd_options['logged_in_only']) && !isset($edd_options['show_register_form'])) {
+							if(is_user_logged_in()) {
+								$can_checkout = true;
 							} else {
-								do_action('edd_cc_form');
+								$can_checkout = false;
 							}
-						?>					
-						<fieldset id="edd_purchase_submit">
-							<p>
-								<?php do_action('edd_purchase_form_before_submit'); ?>
-								<?php if(is_user_logged_in()) { ?>
-								<input type="hidden" name="edd-user-id" value="<?php echo $user_data->ID; ?>"/>
-								<?php } ?>
-								<input type="hidden" name="edd-action" value="purchase"/>
-								<input type="hidden" name="edd-gateway" value="<?php echo $payment_mode; ?>" />
-								<input type="hidden" name="edd-nonce" value="<?php echo wp_create_nonce('edd-purchase-nonce'); ?>"/>
-								<span class="edd_button edd_gray">
-									<span class="edd_button_outer">
-										<span class="edd_button_inner">
-											<input type="submit" class="edd_button_text edd-submit" name="edd-purchase" value="<?php _e('Purchase', 'edd'); ?>"/>
+						} elseif(isset($edd_options['show_register_form']) && isset($edd_options['logged_in_only'])) {
+							$can_checkout = true;
+						} elseif(!isset($edd_options['logged_in_only'])) {
+							$can_checkout = true;
+						}
+						if($can_checkout) { ?>
+							<?php if(isset($edd_options['show_register_form']) && !is_user_logged_in() && !isset($_GET['login'])) { ?>
+								<div id="edd_checkout_login_register"><?php echo edd_get_register_fields(); ?></div>
+							<?php } elseif(isset($edd_options['show_register_form']) && !is_user_logged_in() && isset($_GET['login'])) { ?>
+								<div id="edd_checkout_login_register"><?php echo edd_get_login_fields(); ?></div>
+							<?php } ?>
+							<?php if(!isset($_GET['login']) && is_user_logged_in()) { ?>											
+							<fieldset id="edd_checkout_user_info">
+								<p>
+									<input class="edd-input" type="text" name="edd-email" id="edd-email" value="<?php echo is_user_Logged_in() ? $user_data->user_email : ''; ?>"/>
+									<label class="edd-label" for="edd-email"><?php _e('Email Address', 'edd'); ?></label>
+								</p>
+								<p>
+									<input class="edd-input" type="text" name="edd-first" id="edd-first" value="<?php echo is_user_Logged_in() ? $user_data->user_firstname : ''; ?>"/>
+									<label class="edd-label" for="edd-first"><?php _e('First Name', 'edd'); ?></label>
+								</p>
+								<p>
+									<input class="edd-input" type="text" name="edd-last" id="edd-last" value="<?php echo is_user_Logged_in() ? $user_data->user_lastname : ''; ?>"/>
+									<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
+								</p>	
+								<?php do_action('edd_purchase_form_user_info'); ?>
+							</fieldset>				
+							<?php } ?>
+							<?php if(edd_get_discounts()) { // only show if we have at least one discount ?>
+							<fieldset id="edd_discount_code">
+								<p>
+									<input class="edd-input" type="text" id="edd-discount" name="edd-discount"/>
+									<label class="edd-label" for="edd-discount">
+										<?php _e('Discount', 'edd'); ?>
+										<?php if(edd_is_ajax_enabled()) { ?>
+											- <a href="#" class="edd-apply-discount"><?php _e('Apply Discount', 'edd'); ?></a>
+										<?php } ?>
+									</label>
+								</p>
+							</fieldset>	
+							<?php } ?>
+							<?php 
+								// load the credit card form and allow gateways to load their own if they wish
+								if(has_action('edd_' . $payment_mode . '_cc_form')) {
+									do_action('edd_' . $payment_mode . '_cc_form'); 
+								} else {
+									do_action('edd_cc_form');
+								}
+							?>					
+							<fieldset id="edd_purchase_submit">
+								<p>
+									<?php do_action('edd_purchase_form_before_submit'); ?>
+									<?php if(is_user_logged_in()) { ?>
+									<input type="hidden" name="edd-user-id" value="<?php echo $user_data->ID; ?>"/>
+									<?php } ?>
+									<input type="hidden" name="edd-action" value="purchase"/>
+									<input type="hidden" name="edd-gateway" value="<?php echo $payment_mode; ?>" />
+									<input type="hidden" name="edd-nonce" value="<?php echo wp_create_nonce('edd-purchase-nonce'); ?>"/>
+									<span class="edd_button edd_gray">
+										<span class="edd_button_outer">
+											<span class="edd_button_inner">
+												<input type="submit" class="edd_button_text edd-submit" name="edd-purchase" value="<?php _e('Purchase', 'edd'); ?>"/>
+											</span>
 										</span>
 									</span>
-								</span>
-								<?php do_action('edd_purchase_form_after_submit'); ?>
-							</p>
-							<?php if(!edd_is_ajax_enabled()) { ?>
-								<p class="edd-cancel"><a href="javascript:history.go(-1)"><?php _e('Go back', 'edd'); ?></a></p>
-							<?php } ?>				
-						</fieldset>
+									<?php do_action('edd_purchase_form_after_submit'); ?>
+								</p>
+								<?php if(!edd_is_ajax_enabled()) { ?>
+									<p class="edd-cancel"><a href="javascript:history.go(-1)"><?php _e('Go back', 'edd'); ?></a></p>
+								<?php } ?>				
+							</fieldset>
+						<?php } else { ?>
+							<p><?php _e('You must be logged in to complete your purchase', 'edd'); ?></p>
+						<?php } ?>
 						<?php do_action('edd_purchase_form_bottom'); ?>
 					</form>
 					<?php do_action('edd_after_purchase_form'); ?>
@@ -155,7 +171,7 @@ function edd_get_cc_form() {
 	ob_start(); ?>
 	
 	<?php do_action('edd_before_cc_fields'); ?>
-	<fieldset>
+	<fieldset id="edd_cc_fields">
 		<p>
 			<input type="text" autocomplete="off" name="card_name" class="card-name edd-input required" />
 			<label class="edd-label"><?php _e('Name on the Card', 'edd'); ?></label>
@@ -190,7 +206,7 @@ add_action('edd_cc_form', 'edd_get_cc_form');
 // outputs the default credit card address fields
 function edd_default_cc_address_fields() {
 	ob_start(); ?>
-	<fieldset class="cc-address">
+	<fieldset id="edd_cc_address" class="cc-address">
 		<legend><?php _e('Credit Card Info', 'edd'); ?></legend>
 		<p>
 			<input type="text" name="card_address" class="card-address edd-input required"/>
