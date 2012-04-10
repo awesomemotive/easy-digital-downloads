@@ -58,6 +58,7 @@ include_once(EDD_PLUGIN_DIR . 'includes/scripts.php');
 include_once(EDD_PLUGIN_DIR . 'includes/post-types.php');
 include_once(EDD_PLUGIN_DIR . 'includes/plugin-compatibility.php');
 include_once(EDD_PLUGIN_DIR . 'includes/email-functions.php');
+include_once(EDD_PLUGIN_DIR . 'includes/error-tracking.php');
 if(is_admin()) {
 	include_once(EDD_PLUGIN_DIR . 'includes/admin-actions.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/metabox.php');
@@ -74,7 +75,6 @@ if(is_admin()) {
 	include_once(EDD_PLUGIN_DIR . 'includes/process-purchase.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/process-download.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/shortcodes.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/error-tracking.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/gateways/paypal.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/gateways/manual.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/login-register.php');
