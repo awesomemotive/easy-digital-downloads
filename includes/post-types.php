@@ -44,7 +44,7 @@ function edd_setup_download_post_type() {
 		'capability_type' => 'post',
 		'has_archive' => $archives, 
 		'hierarchical' => false,
-		'menu_position' => 25,
+		'menu_position' => 20,
 		'supports' => array( 'title', 'editor', 'thumbnail' ),
 		'menu_icon' => EDD_PLUGIN_URL . 'includes/images/media-button.png'
 	); 

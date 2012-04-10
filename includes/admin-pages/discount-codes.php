@@ -22,6 +22,7 @@ function edd_discounts_page() {
 						<th><?php _e('Amount', 'edd'); ?></th>
 						<th><?php _e('Uses', 'edd'); ?></th>
 						<th><?php _e('Max Uses', 'edd'); ?></th>
+						<th><?php _e('Start Date', 'edd'); ?></th>
 						<th><?php _e('Expiration', 'edd'); ?></th>
 						<th><?php _e('Status', 'edd'); ?></th>
 						<th><?php _e('Actions', 'edd'); ?></th>
@@ -35,6 +36,7 @@ function edd_discounts_page() {
 						<th><?php _e('Amount', 'edd'); ?></th>
 						<th><?php _e('Uses', 'edd'); ?></th>
 						<th><?php _e('Max Uses', 'edd'); ?></th>
+						<th><?php _e('Start Date', 'edd'); ?></th>
 						<th><?php _e('Expiration', 'edd'); ?></th>
 						<th><?php _e('Status', 'edd'); ?></th>
 						<th><?php _e('Actions', 'edd'); ?></th>
@@ -66,13 +68,24 @@ function edd_discounts_page() {
 										}
 									?>
 								</td>
-								<td><?php 
+								<td>
+								<?php 
+									if(isset($discount['start']) && $discount['start'] != '') {
+										echo date(get_option('date_format'), strtotime($discount['start'] )); 
+									} else {
+										_e('No start date', 'edd');
+									}	
+									?>
+								</td>
+								<td>
+								<?php 
 									if(isset($discount['expiration']) && $discount['expiration'] != '') {
 										echo edd_is_discount_expired($discount_key) ? __('Expired', 'edd') : $discount['expiration']; 
 									} else {
 										_e('no expiration', 'edd');
 									}	
-									?></td>
+									?>
+								</td>
 								<td><?php if(isset($discount['status'])) echo $discount['status']; ?></td>
 								<td>
 									<a href="<?php echo add_query_arg('edd-action', 'edit_discount', add_query_arg('discount', $discount_key, $current_page)); ?>"><?php _e('Edit', 'edd'); ?></a> |

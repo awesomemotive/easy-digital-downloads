@@ -168,6 +168,22 @@ function edd_is_discount_expired($code_id) {
 	return false; // discount is NOT expired
 }
 
+// checks whether a discount code is available yet (start date)
+function edd_is_discount_started($code_id) { 
+	$discount = edd_get_discount($code_id);
+	if($discount) {
+		if(isset($discount['start']) && $discount['start'] != '') {
+			$start_date = strtotime($discount['start']);
+			if($start_date < time()) {
+				return true; // discount has pased the start date
+			}
+		} else {
+			return true; // no start date for this discount, so has to be true
+		}
+	}
+	return false; // discount has not passed the start date
+}
+
 // checks to see if a discount has uses left
 function edd_is_discount_maxed_out($code_id) {
 	$discount = edd_get_discount($code_id);
@@ -185,7 +201,7 @@ function edd_is_discount_maxed_out($code_id) {
 function edd_is_discount_valid($code) {
 	$discount_id = edd_get_discount_by_code($code);
 	if($discount_id !== false) {
-		if(edd_is_discount_active($discount_id) && !edd_is_discount_maxed_out($discount_id)) {
+		if(edd_is_discount_active($discount_id) && !edd_is_discount_maxed_out($discount_id) && edd_is_discount_started($discount_id)) {
 			return true;
 		}
 	}

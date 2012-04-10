@@ -43,6 +43,15 @@
 			</tr>
 			<tr class="form-field">
 				<th scope="row" valign="top">
+					<label for="edd-start"><?php _e('Start date', 'edd'); ?></label>
+				</th>
+				<td>
+					<input name="start" id="edd-start" type="text" value="" style="width: 120px;" class="edd_datepicker"/>
+					<p class="description"><?php _e('Enter the start date for this discount code in the format of yyyy-mm-dd. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'edd'); ?></p>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
 					<label for="edd-expiration"><?php _e('Expiration date', 'edd'); ?></label>
 				</th>
 				<td>
