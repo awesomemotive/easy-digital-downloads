@@ -206,8 +206,11 @@ function edd_has_user_purchased($user_id, $download_id) {
 		foreach($users_purchases as $purchase) {
 			$purchase_meta = get_post_meta($purchase->ID, '_edd_payment_meta', true);
 			$purchased_files = maybe_unserialize($purchase_meta['downloads']);
-			if(array_search($download_id, $purchased_files) !== false)
-				return true; // user has purchased the download
+			if(is_array($purchased_files)) {
+				if(array_search($download_id, $purchased_files) !== false) {
+					return true; // user has purchased the download
+				}
+			}
 		}
 	}
 	return false; // user has not purchased the download

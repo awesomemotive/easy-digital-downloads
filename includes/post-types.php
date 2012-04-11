@@ -90,15 +90,15 @@ function edd_setup_download_taxonomies() {
 	$category_labels = array(
 		'name' => _x( 'Categories', 'taxonomy general name', 'edd' ),
 		'singular_name' => _x( 'Category', 'taxonomy singular name', 'edd' ),
-		'search_items' =>  __( 'Search Categories' ),
-		'all_items' => __( 'All Categories' ),
-		'parent_item' => __( 'Parent Category' ),
-		'parent_item_colon' => __( 'Parent Category:' ),
-		'edit_item' => __( 'Edit Category' ), 
-		'update_item' => __( 'Update Category' ),
-		'add_new_item' => __( 'Add New Category' ),
-		'new_item_name' => __( 'New Category Name' ),
-		'menu_name' => __( 'Categories' ),
+		'search_items' =>  __( 'Search Categories', 'edd'  ),
+		'all_items' => __( 'All Categories', 'edd'  ),
+		'parent_item' => __( 'Parent Category', 'edd'  ),
+		'parent_item_colon' => __( 'Parent Category:', 'edd'  ),
+		'edit_item' => __( 'Edit Category', 'edd'  ), 
+		'update_item' => __( 'Update Category', 'edd'  ),
+		'add_new_item' => __( 'Add New Category', 'edd'  ),
+		'new_item_name' => __( 'New Category Name', 'edd'  ),
+		'menu_name' => __( 'Categories', 'edd'  ),
 	); 	
 
 	register_taxonomy('download_category', array('download'), array(
@@ -112,15 +112,15 @@ function edd_setup_download_taxonomies() {
 	$tag_labels = array(
 		'name' => _x( 'Tags', 'taxonomy general name', 'edd' ),
 		'singular_name' => _x( 'Tag', 'taxonomy singular name', 'edd' ),
-		'search_items' =>  __( 'Search Tags' ),
-		'all_items' => __( 'All Tags' ),
-		'parent_item' => __( 'Parent Tag' ),
-		'parent_item_colon' => __( 'Parent Tag:' ),
-		'edit_item' => __( 'Edit Tag' ), 
-		'update_item' => __( 'Update Tag' ),
-		'add_new_item' => __( 'Add New Tag' ),
-		'new_item_name' => __( 'New Tag Name' ),
-		'menu_name' => __( 'Tags' ),
+		'search_items' =>  __( 'Search Tags', 'edd'  ),
+		'all_items' => __( 'All Tags', 'edd'  ),
+		'parent_item' => __( 'Parent Tag', 'edd'  ),
+		'parent_item_colon' => __( 'Parent Tag:', 'edd'  ),
+		'edit_item' => __( 'Edit Tag', 'edd'  ), 
+		'update_item' => __( 'Update Tag', 'edd'  ),
+		'add_new_item' => __( 'Add New Tag', 'edd'  ),
+		'new_item_name' => __( 'New Tag Name', 'edd'  ),
+		'menu_name' => __( 'Tags', 'edd'  ),
 	); 	
 
 	register_taxonomy('download_tag', array('download'), array(
@@ -138,9 +138,9 @@ function edd_updated_messages( $messages ) {
 
 	$messages['download'] = array(
 		1 => __('Download updated.', 'edd' ),
-		4 => __('Download updated.'),
+		4 => __('Download updated.', 'edd' ),
 		6 => __('Download published.', 'edd' ),
-		7 => __('Download saved.'),
+		7 => __('Download saved.', 'edd' ),
 		8 => __('Download submitted.', 'edd'),
 	);
 

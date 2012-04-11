@@ -41,7 +41,7 @@ function edd_checkout_form() {
 											echo '<option value="' . $gateway_id . '">' . $gateway['checkout_label'] . '</option>';
 										endforeach;
 									echo '</select>';
-									echo '<label for="edd-gateway">' . __('Choose Your Payment Method', 'rcp') . '</label>';
+									echo '<label for="edd-gateway">' . __('Choose Your Payment Method', 'edd') . '</label>';
 								?>
 							</p>
 							<?php do_action('edd_payment_mode_after_gateways'); ?>
