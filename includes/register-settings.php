@@ -312,19 +312,19 @@ function edd_register_settings() {
 add_action('admin_init', 'edd_register_settings');
 
 function edd_settings_general_description_callback() {
-	echo __('Configure the settings below', 'edd');
+	//echo __('Configure the settings below', 'edd');
 }
 
 function edd_settings_gateways_description_callback() {
-	echo __('Configure the settings below', 'edd');
+	//echo __('Configure the settings below', 'edd');
 }
 
 function edd_settings_emails_description_callback() {
-	echo __('Configure the settings below', 'edd');
+	//echo __('Configure the settings below', 'edd');
 }
 
 function edd_settings_misc_description_callback() {
-	echo __('Configure the settings below', 'edd');
+	//echo __('Configure the settings below', 'edd');
 }
 
 // render header

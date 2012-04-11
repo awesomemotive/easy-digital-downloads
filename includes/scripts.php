@@ -2,6 +2,8 @@
 
 function edd_load_scripts() {
 
+	global $edd_options;
+
 	wp_enqueue_script('jquery');
 	
 	// load Stripe JS, if enabled
@@ -18,7 +20,8 @@ function edd_load_scripts() {
 				'discount_applied' => __('Discount Applied', 'edd'), // discount verified message
 				'already_in_cart_message' => __('You have already added this item to your cart', 'edd'), // item already in the cart message
 				'loading' => __('Loading', 'edd') , // general loading message
-				'ajax_loader' => EDD_PLUGIN_URL . 'includes/images/loading.gif' // ajax loading image
+				'ajax_loader' => EDD_PLUGIN_URL . 'includes/images/loading.gif', // ajax loading image
+				'checkout_page' => get_permalink($edd_options['purchase_page'])
 			)
 		);
 	}

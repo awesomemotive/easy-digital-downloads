@@ -25,10 +25,12 @@ function edd_get_purchase_link($download_id = null, $link_text = 'Purchase', $st
 
 		if($style == 'button') {
 			$link = '<a href="' . $link . '" class="edd-add-to-cart edd_button edd_' . $color . '" data-action="edd_add_to_cart" data-download-id="' . $download_id . '">';
-			 	$link .= '<span class="edd_button_outer"><span class="edd_button_inner"><span class="edd_button_text">' . $link_text . '</span></span></span>';
+			 	$link .= '<span class="edd_button_outer"><span class="edd_button_inner">';
+					$link .= '<span class="edd_button_text"><span>' . $link_text . '</span><span style="display:none">' . __('Checkout', 'edd') . '</span></span>';
+				$link .= '</span></span>';
 			$link .= '</a>';
 		} else {
-			$link = '<a href="' . $link . '" class="edd-add-to-cart" data-action="edd_add_to_cart" data-download-id="' . $download_id . '">' . $link_text . '</a>';
+			$link = '<a href="' . $link . '" class="edd-add-to-cart" data-action="edd_add_to_cart" data-download-id="' . $download_id . '"><span class="edd_link_text"><span>' . $link_text . '</span><span style="display:none">' . __('Checkout', 'edd') . '</span></span></a>';
 		}
 		if(edd_is_ajax_enabled()) {
 			$link .= '<img src="' . EDD_PLUGIN_URL . 'includes/images/loading.gif" class="edd-cart-ajax" style="display: none;"/>';

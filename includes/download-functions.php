@@ -57,6 +57,20 @@ function edd_get_users_purchases($user_id) {
 	return false;	
 }
 
+/*
+* retrieves an array of all files purchased
+* @param int $payment_id - the ID number of the purchase
+* return mixed - array if purchase exists, false otherwise
+*/
+function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
+	if(is_null($download_meta)) {
+		$payment_meta = get_post_meta($payment_id, '_edd_payment_meta', true);
+	}
+	$downloads = maybe_unserialize($payment_meta['downloads']);
+	if($downloads)
+		return $downloads;
+	return false;
+}
 
 // returns the file extension of a filename
 function edd_get_file_extension($str)

@@ -2,7 +2,7 @@ var edd_scripts;
 jQuery(document).ready(function ($) {
 
     // send Remove from Cart requests
-    $('.edd-remove-from-cart').on('click.eddRemoveFromCart', function (event) {
+    $('body').on('click.eddRemoveFromCart', '.edd-remove-from-cart', function (event) {
         var $this = $(this),
             item = $this.data('cart-item'),
             action = $this.data('action'),
@@ -26,7 +26,7 @@ jQuery(document).ready(function ($) {
     });
 
     // send Add to Cart request
-    $('.edd-add-to-cart').on('click.eddAddToCart', function (event) {
+    $('body').on('click.eddAddToCart', '.edd-add-to-cart', function (event) {
         var $this = $(this);
 
         // show the ajax loader
@@ -44,8 +44,11 @@ jQuery(document).ready(function ($) {
             // item already in the cart
 			if(cart_item_response == 'incart') {
 				alert(edd_scripts.already_in_cart_message);
+				$('.edd-cart-ajax').hide();
+				return;
 			}
 			
+			// add the new item to the cart widget
 			if ($('.cart_item.empty').length) {
                 $(cart_item_response).insertBefore('.cart_item.empty');
                 $('.cart_item.edd_checkout').show();
@@ -53,16 +56,26 @@ jQuery(document).ready(function ($) {
             } else {
                 $(cart_item_response).insertBefore('.cart_item.edd_checkout');
             }
+			
+			// update the cart quantity
             var quantity = $('span.edd-cart-quantity').text();
             quantity = parseInt(quantity, 10) + 1;
             $('span.edd-cart-quantity').text(quantity);
 
             // hide the ajax loader
             $('.edd-cart-ajax').hide();
+			
+			// switch purchase to checkout
+			$('.edd_button_text span, .edd_link_text span', $this).toggle();
+			$this.removeClass('edd-add-to-cart');
+			$this.attr('href', edd_scripts.checkout_page);
+			
+			// show the added message
             $this.next().next().fadeIn();
             setTimeout(function () {
                 $this.next().next().fadeOut();
             }, 3000);
+			
         });
         return false;
     });
