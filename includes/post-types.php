@@ -22,7 +22,6 @@ function edd_setup_download_post_type() {
 		$menu_position = EDD_MENU_POSITION;
 	}
 	
-	
 	$download_labels = array(
 		'name' => _x('Downloads', 'post type general name', 'edd'),
 		'singular_name' => _x('Download', 'post type singular name', 'edd'),
