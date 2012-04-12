@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-07 16:33-0600\n"
-"PO-Revision-Date: 2012-04-07 16:34-0600\n"
+"POT-Creation-Date: 2012-04-11 18:57-0600\n"
+"PO-Revision-Date: 2012-04-11 18:57-0600\n"
 "Last-Translator: Pippin Williamson <pippin@pippinsplugins.com>\n"
 "Language-Team: Pippin's Plugins\n"
 "MIME-Version: 1.0\n"
@@ -20,11 +20,11 @@ msgstr ""
 "X-Poedit-SearchPath-4: ../includes/gateways\n"
 "X-Poedit-SearchPath-5: .\n"
 
-#: ../includes/admin-notices.php:5
+#: ../includes/admin-notices.php:6
 msgid "Discount code updated."
 msgstr ""
 
-#: ../includes/admin-notices.php:8
+#: ../includes/admin-notices.php:9
 msgid "There was a problem updating your discount code, please try again."
 msgstr ""
 
@@ -52,42 +52,42 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: ../includes/ajax-functions.php:52
+#: ../includes/ajax-functions.php:56
 msgid "The discount you entered is invalid"
 msgstr ""
 
-#: ../includes/cart-functions.php:149
-#: ../includes/cart-template.php:61
+#: ../includes/cart-functions.php:173
+#: ../includes/cart-template.php:62
 msgid "Your cart is empty"
 msgstr ""
 
-#: ../includes/cart-template.php:10
+#: ../includes/cart-template.php:11
 msgid "Item Name"
 msgstr ""
 
-#: ../includes/cart-template.php:11
+#: ../includes/cart-template.php:12
 msgid "Item Price"
 msgstr ""
 
-#: ../includes/cart-template.php:12
+#: ../includes/cart-template.php:13
 msgid "Actions"
 msgstr ""
 
-#: ../includes/cart-template.php:24
-#: ../includes/cart-template.php:78
+#: ../includes/cart-template.php:25
+#: ../includes/cart-template.php:79
 msgid "remove"
 msgstr ""
 
-#: ../includes/cart-template.php:30
+#: ../includes/cart-template.php:31
 msgid "Your shopping cart is empty"
 msgstr ""
 
-#: ../includes/cart-template.php:37
+#: ../includes/cart-template.php:38
 msgid "Total"
 msgstr ""
 
-#: ../includes/cart-template.php:59
-#: ../includes/cart-template.php:62
+#: ../includes/cart-template.php:60
+#: ../includes/cart-template.php:63
 msgid "Checkout"
 msgstr ""
 
@@ -95,127 +95,135 @@ msgstr ""
 msgid "Choose Your Payment Method"
 msgstr ""
 
-#: ../includes/checkout-template.php:56
+#: ../includes/checkout-template.php:54
 msgid "Next"
 msgstr ""
 
-#: ../includes/checkout-template.php:77
+#: ../includes/checkout-template.php:99
 msgid "Email Address"
 msgstr ""
 
-#: ../includes/checkout-template.php:81
+#: ../includes/checkout-template.php:103
 msgid "First Name"
 msgstr ""
 
-#: ../includes/checkout-template.php:85
+#: ../includes/checkout-template.php:107
 msgid "Last Name"
 msgstr ""
 
-#: ../includes/checkout-template.php:94
+#: ../includes/checkout-template.php:117
 msgid "Discount"
 msgstr ""
 
-#: ../includes/checkout-template.php:96
+#: ../includes/checkout-template.php:119
 msgid "Apply Discount"
 msgstr ""
 
-#: ../includes/checkout-template.php:118
+#: ../includes/checkout-template.php:145
 #: ../includes/dashboard-columns.php:41
 msgid "Purchase"
 msgstr ""
 
-#: ../includes/checkout-template.php:122
+#: ../includes/checkout-template.php:152
 msgid "Go back"
 msgstr ""
 
-#: ../includes/checkout-template.php:144
+#: ../includes/checkout-template.php:156
+msgid "You must be logged in to complete your purchase"
+msgstr ""
+
+#: ../includes/checkout-template.php:177
 msgid "Name on the Card"
 msgstr ""
 
-#: ../includes/checkout-template.php:148
+#: ../includes/checkout-template.php:181
 msgid "Card Number"
 msgstr ""
 
-#: ../includes/checkout-template.php:152
+#: ../includes/checkout-template.php:185
 msgid "CVC"
 msgstr ""
 
-#: ../includes/checkout-template.php:159
+#: ../includes/checkout-template.php:192
 msgid "Expiration (MM/YYYY)"
 msgstr ""
 
-#: ../includes/checkout-template.php:179
-msgid "Billing Address"
-msgstr ""
-
-#: ../includes/checkout-template.php:183
-msgid "Billing Address Line 2"
-msgstr ""
-
-#: ../includes/checkout-template.php:187
-msgid "Billing City"
-msgstr ""
-
-#: ../includes/checkout-template.php:191
-msgid "Billing State / Province"
-msgstr ""
-
-#: ../includes/checkout-template.php:195
-msgid "Billing Zip / Postal Code"
-msgstr ""
-
-#: ../includes/checkout-template.php:206
-msgid "Create an account"
-msgstr ""
-
-#: ../includes/checkout-template.php:208
-#: ../includes/checkout-template.php:209
-#: ../includes/checkout-template.php:237
-msgid "Username"
-msgstr ""
-
-#: ../includes/checkout-template.php:212
-msgid "email@domain.com"
+#: ../includes/checkout-template.php:210
+msgid "Credit Card Info"
 msgstr ""
 
 #: ../includes/checkout-template.php:213
-msgid "Email"
+msgid "Billing Address"
 msgstr ""
 
 #: ../includes/checkout-template.php:217
-#: ../includes/checkout-template.php:241
-msgid "Password"
+msgid "Billing Address Line 2"
 msgstr ""
 
 #: ../includes/checkout-template.php:221
-msgid "Password Again"
+msgid "Billing City"
 msgstr ""
 
-#: ../includes/checkout-template.php:223
-msgid "Already have an account?"
+#: ../includes/checkout-template.php:225
+msgid "Billing State / Province"
 msgstr ""
 
-#: ../includes/checkout-template.php:223
-msgid "Login"
-msgstr ""
-
-#: ../includes/checkout-template.php:234
-msgid "Login to your account"
-msgstr ""
-
-#: ../includes/checkout-template.php:236
-msgid "Your username"
+#: ../includes/checkout-template.php:229
+msgid "Billing Zip / Postal Code"
 msgstr ""
 
 #: ../includes/checkout-template.php:240
+msgid "Create an account"
+msgstr ""
+
+#: ../includes/checkout-template.php:242
+#: ../includes/checkout-template.php:243
+#: ../includes/checkout-template.php:271
+msgid "Username"
+msgstr ""
+
+#: ../includes/checkout-template.php:246
+msgid "email@domain.com"
+msgstr ""
+
+#: ../includes/checkout-template.php:247
+msgid "Email"
+msgstr ""
+
+#: ../includes/checkout-template.php:251
+#: ../includes/checkout-template.php:275
+msgid "Password"
+msgstr ""
+
+#: ../includes/checkout-template.php:255
+msgid "Password Again"
+msgstr ""
+
+#: ../includes/checkout-template.php:257
+msgid "Already have an account?"
+msgstr ""
+
+#: ../includes/checkout-template.php:257
+msgid "Login"
+msgstr ""
+
+#: ../includes/checkout-template.php:268
+msgid "Login to your account"
+msgstr ""
+
+#: ../includes/checkout-template.php:270
+msgid "Your username"
+msgstr ""
+
+#: ../includes/checkout-template.php:274
 msgid "Your password"
 msgstr ""
 
-#: ../includes/checkout-template.php:244
+#: ../includes/checkout-template.php:278
 msgid "Need to create an account?"
 msgstr ""
 
-#: ../includes/checkout-template.php:244
+#: ../includes/checkout-template.php:278
 msgid "Register"
 msgstr ""
 
@@ -258,27 +266,27 @@ msgstr ""
 msgid "Show all tags"
 msgstr ""
 
-#: ../includes/email-functions.php:23
+#: ../includes/email-functions.php:25
 msgid "Hello"
 msgstr ""
 
-#: ../includes/email-functions.php:23
+#: ../includes/email-functions.php:25
 msgid "A download purchase has been made"
 msgstr ""
 
-#: ../includes/email-functions.php:24
+#: ../includes/email-functions.php:26
 msgid "Downloads sold:"
 msgstr ""
 
-#: ../includes/email-functions.php:32
+#: ../includes/email-functions.php:34
 msgid "Amount: "
 msgstr ""
 
-#: ../includes/email-functions.php:33
+#: ../includes/email-functions.php:35
 msgid "Thank you"
 msgstr ""
 
-#: ../includes/email-functions.php:35
+#: ../includes/email-functions.php:37
 msgid "New download purchase"
 msgstr ""
 
@@ -328,337 +336,341 @@ msgid "Upload the downloadable files."
 msgstr ""
 
 #: ../includes/metabox.php:27
-msgid "Show Purchase Link on Details Page"
-msgstr ""
-
-#: ../includes/metabox.php:28
-msgid "Check this to automatically append the purchase link to download detail pages. If unchecked, you must enter the short code manually."
-msgstr ""
-
-#: ../includes/metabox.php:35
-msgid "Show Purchase Link on Archive Pages"
-msgstr ""
-
-#: ../includes/metabox.php:36
-msgid "Check this to automatically append the purchase link to download excerpts."
-msgstr ""
-
-#: ../includes/metabox.php:43
 msgid "Purchase Text"
 msgstr ""
 
-#: ../includes/metabox.php:44
+#: ../includes/metabox.php:28
 msgid "Add the text you would like displayed for the purchase text"
 msgstr ""
 
-#: ../includes/metabox.php:51
+#: ../includes/metabox.php:35
 msgid "Link Style"
 msgstr ""
 
-#: ../includes/metabox.php:52
-#: ../includes/metabox.php:60
+#: ../includes/metabox.php:36
+#: ../includes/metabox.php:44
 msgid "Choose the style of the purchase link"
 msgstr ""
 
-#: ../includes/metabox.php:59
+#: ../includes/metabox.php:43
 msgid "Button Color"
 msgstr ""
 
-#: ../includes/metabox.php:74
+#: ../includes/metabox.php:51
+msgid "Disable the purchase button?"
+msgstr ""
+
+#: ../includes/metabox.php:52
+msgid "Check this if you do not want the purchase button to be automatically added"
+msgstr ""
+
+#: ../includes/metabox.php:66
 msgid "Download Stats"
 msgstr ""
 
-#: ../includes/metabox.php:138
-#: ../includes/metabox.php:149
+#: ../includes/metabox.php:67
+msgid "Payment Info"
+msgstr ""
+
+#: ../includes/metabox.php:131
+#: ../includes/metabox.php:142
 msgid "file name"
 msgstr ""
 
-#: ../includes/metabox.php:139
-#: ../includes/metabox.php:150
+#: ../includes/metabox.php:132
+#: ../includes/metabox.php:143
 msgid "file url"
 msgstr ""
 
-#: ../includes/metabox.php:154
-#: ../includes/post-types.php:8
-#: ../includes/post-types.php:41
+#: ../includes/metabox.php:147
+#: ../includes/post-types.php:23
+#: ../includes/post-types.php:56
 msgid "Add New"
 msgstr ""
 
-#: ../includes/metabox.php:164
+#: ../includes/metabox.php:157
+msgid "Notes"
+msgstr ""
+
+#: ../includes/metabox.php:158
+msgid "The style options above do NOT reflect the style of short code. The short code allows you to place a purchase button for this download anywhere on the site."
+msgstr ""
+
+#: ../includes/metabox.php:161
 msgid "Short Code for this Download"
 msgstr ""
 
-#: ../includes/metabox.php:222
+#: ../includes/metabox.php:219
 msgid "Sales:"
 msgstr ""
 
-#: ../includes/metabox.php:228
+#: ../includes/metabox.php:225
 msgid "Earnings:"
 msgstr ""
 
-#: ../includes/misc-functions.php:24
+#: ../includes/misc-functions.php:33
 msgid "US Dollars (&#36;)"
 msgstr ""
 
-#: ../includes/misc-functions.php:25
+#: ../includes/misc-functions.php:34
 msgid "Euros (&euro;)"
 msgstr ""
 
-#: ../includes/misc-functions.php:26
+#: ../includes/misc-functions.php:35
 msgid "Pounds Sterling (&pound;)"
 msgstr ""
 
-#: ../includes/misc-functions.php:27
+#: ../includes/misc-functions.php:36
 msgid "Australian Dollars (&#36;)"
 msgstr ""
 
-#: ../includes/misc-functions.php:28
+#: ../includes/misc-functions.php:37
 msgid "Brazilian Real (&#36;)"
 msgstr ""
 
-#: ../includes/misc-functions.php:29
+#: ../includes/misc-functions.php:38
 msgid "Canadian Dollars (&#36;)"
 msgstr ""
 
-#: ../includes/misc-functions.php:30
+#: ../includes/misc-functions.php:39
 msgid "Czech Koruna"
 msgstr ""
 
-#: ../includes/misc-functions.php:31
+#: ../includes/misc-functions.php:40
 msgid "Danish Krone"
 msgstr ""
 
-#: ../includes/misc-functions.php:32
+#: ../includes/misc-functions.php:41
 msgid "Hong Kong Dollar (&#36;)"
 msgstr ""
 
-#: ../includes/misc-functions.php:33
+#: ../includes/misc-functions.php:42
 msgid "Hungarian Forint"
 msgstr ""
 
-#: ../includes/misc-functions.php:34
+#: ../includes/misc-functions.php:43
 msgid "Israeli Shekel"
 msgstr ""
 
-#: ../includes/misc-functions.php:35
+#: ../includes/misc-functions.php:44
 msgid "Japanese Yen (&yen;)"
 msgstr ""
 
-#: ../includes/misc-functions.php:36
+#: ../includes/misc-functions.php:45
 msgid "Malaysian Ringgits"
 msgstr ""
 
-#: ../includes/misc-functions.php:37
+#: ../includes/misc-functions.php:46
 msgid "Mexican Peso (&#36;)"
 msgstr ""
 
-#: ../includes/misc-functions.php:38
+#: ../includes/misc-functions.php:47
 msgid "New Zealand Dollar (&#36;)"
 msgstr ""
 
-#: ../includes/misc-functions.php:39
+#: ../includes/misc-functions.php:48
 msgid "Norwegian Krone"
 msgstr ""
 
-#: ../includes/misc-functions.php:40
+#: ../includes/misc-functions.php:49
 msgid "Philippine Pesos"
 msgstr ""
 
-#: ../includes/misc-functions.php:41
+#: ../includes/misc-functions.php:50
 msgid "Polish Zloty"
 msgstr ""
 
-#: ../includes/misc-functions.php:42
+#: ../includes/misc-functions.php:51
 msgid "Singapore Dollar (&#36;)"
 msgstr ""
 
-#: ../includes/misc-functions.php:43
+#: ../includes/misc-functions.php:52
 msgid "Swedish Krona"
 msgstr ""
 
-#: ../includes/misc-functions.php:44
+#: ../includes/misc-functions.php:53
 msgid "Swiss Franc"
 msgstr ""
 
-#: ../includes/misc-functions.php:45
+#: ../includes/misc-functions.php:54
 msgid "Taiwan New Dollars"
 msgstr ""
 
-#: ../includes/misc-functions.php:46
+#: ../includes/misc-functions.php:55
 msgid "Thai Baht"
 msgstr ""
 
-#: ../includes/payment-functions.php:126
+#: ../includes/payment-functions.php:134
 msgid "pending"
 msgstr ""
 
-#: ../includes/payment-functions.php:129
+#: ../includes/payment-functions.php:137
 msgid "complete"
 msgstr ""
 
-#: ../includes/post-types.php:6
-#: ../includes/post-types.php:18
+#: ../includes/post-types.php:21
+#: ../includes/post-types.php:33
 msgid "Downloads"
 msgstr ""
 
-#: ../includes/post-types.php:9
+#: ../includes/post-types.php:24
 msgid "Add New Download"
 msgstr ""
 
-#: ../includes/post-types.php:10
+#: ../includes/post-types.php:25
 msgid "Edit Download"
 msgstr ""
 
-#: ../includes/post-types.php:11
+#: ../includes/post-types.php:26
 msgid "New Download"
 msgstr ""
 
-#: ../includes/post-types.php:12
+#: ../includes/post-types.php:27
 msgid "All Downloads"
 msgstr ""
 
-#: ../includes/post-types.php:13
+#: ../includes/post-types.php:28
 msgid "View Download"
 msgstr ""
 
-#: ../includes/post-types.php:14
+#: ../includes/post-types.php:29
 msgid "Search Downloads"
 msgstr ""
 
-#: ../includes/post-types.php:15
+#: ../includes/post-types.php:30
 msgid "No Downloads found"
 msgstr ""
 
-#: ../includes/post-types.php:16
+#: ../includes/post-types.php:31
 msgid "No Downloads found in Trash"
 msgstr ""
 
-#: ../includes/post-types.php:39
+#: ../includes/post-types.php:54
 msgid "Payments"
 msgstr ""
 
-#: ../includes/post-types.php:40
+#: ../includes/post-types.php:55
 msgid "Payment"
 msgstr ""
 
-#: ../includes/post-types.php:42
+#: ../includes/post-types.php:57
 msgid "Add New Payment"
 msgstr ""
 
-#: ../includes/post-types.php:43
+#: ../includes/post-types.php:58
 msgid "Edit Payment"
 msgstr ""
 
-#: ../includes/post-types.php:44
+#: ../includes/post-types.php:59
 msgid "New Payment"
 msgstr ""
 
-#: ../includes/post-types.php:45
+#: ../includes/post-types.php:60
 msgid "All Payments"
 msgstr ""
 
-#: ../includes/post-types.php:46
+#: ../includes/post-types.php:61
 msgid "View Payment"
 msgstr ""
 
-#: ../includes/post-types.php:47
+#: ../includes/post-types.php:62
 msgid "Search Payments"
 msgstr ""
 
-#: ../includes/post-types.php:48
+#: ../includes/post-types.php:63
 msgid "No Payments found"
 msgstr ""
 
-#: ../includes/post-types.php:49
+#: ../includes/post-types.php:64
 msgid "No Payments found in Trash"
 msgstr ""
 
-#: ../includes/post-types.php:77
+#: ../includes/post-types.php:92
 msgid "Category"
 msgstr ""
 
-#: ../includes/post-types.php:78
+#: ../includes/post-types.php:93
 msgid "Search Categories"
 msgstr ""
 
-#: ../includes/post-types.php:79
+#: ../includes/post-types.php:94
 msgid "All Categories"
 msgstr ""
 
-#: ../includes/post-types.php:80
+#: ../includes/post-types.php:95
 msgid "Parent Category"
 msgstr ""
 
-#: ../includes/post-types.php:81
+#: ../includes/post-types.php:96
 msgid "Parent Category:"
 msgstr ""
 
-#: ../includes/post-types.php:82
+#: ../includes/post-types.php:97
 msgid "Edit Category"
 msgstr ""
 
-#: ../includes/post-types.php:83
+#: ../includes/post-types.php:98
 msgid "Update Category"
 msgstr ""
 
-#: ../includes/post-types.php:84
+#: ../includes/post-types.php:99
 msgid "Add New Category"
 msgstr ""
 
-#: ../includes/post-types.php:85
+#: ../includes/post-types.php:100
 msgid "New Category Name"
 msgstr ""
 
-#: ../includes/post-types.php:99
+#: ../includes/post-types.php:114
 msgid "Tag"
 msgstr ""
 
-#: ../includes/post-types.php:100
+#: ../includes/post-types.php:115
 msgid "Search Tags"
 msgstr ""
 
-#: ../includes/post-types.php:101
+#: ../includes/post-types.php:116
 msgid "All Tags"
 msgstr ""
 
-#: ../includes/post-types.php:102
+#: ../includes/post-types.php:117
 msgid "Parent Tag"
 msgstr ""
 
-#: ../includes/post-types.php:103
+#: ../includes/post-types.php:118
 msgid "Parent Tag:"
 msgstr ""
 
-#: ../includes/post-types.php:104
+#: ../includes/post-types.php:119
 msgid "Edit Tag"
 msgstr ""
 
-#: ../includes/post-types.php:105
+#: ../includes/post-types.php:120
 msgid "Update Tag"
 msgstr ""
 
-#: ../includes/post-types.php:106
+#: ../includes/post-types.php:121
 msgid "Add New Tag"
 msgstr ""
 
-#: ../includes/post-types.php:107
+#: ../includes/post-types.php:122
 msgid "New Tag Name"
 msgstr ""
 
-#: ../includes/post-types.php:125
-#: ../includes/post-types.php:126
+#: ../includes/post-types.php:140
+#: ../includes/post-types.php:141
 msgid "Download updated."
 msgstr ""
 
-#: ../includes/post-types.php:127
+#: ../includes/post-types.php:142
 msgid "Download published."
 msgstr ""
 
-#: ../includes/post-types.php:128
+#: ../includes/post-types.php:143
 msgid "Download saved."
 msgstr ""
 
-#: ../includes/post-types.php:129
+#: ../includes/post-types.php:144
 msgid "Download submitted."
 msgstr ""
 
@@ -791,153 +803,186 @@ msgid "Choose the payment gateways you want to enable."
 msgstr ""
 
 #: ../includes/register-settings.php:93
-msgid "PayPal Settings"
+msgid "Accepted Payment Methods"
 msgstr ""
 
 #: ../includes/register-settings.php:94
-msgid "Configure the PayPal settings"
+msgid "Display icons for the selected payment methods"
 msgstr ""
 
-#: ../includes/register-settings.php:99
-msgid "PayPal Email"
-msgstr ""
-
-#: ../includes/register-settings.php:100
-msgid "Enter your PayPal account's email"
+#: ../includes/register-settings.php:94
+msgid "You will also need to configure your gateway settings if you accepting credit cards"
 msgstr ""
 
 #: ../includes/register-settings.php:106
-msgid "Disable cURL for PayPal IPN"
+msgid "PayPal Settings"
 msgstr ""
 
 #: ../includes/register-settings.php:107
-msgid "If payments are not getting marked as complete, check this option"
+msgid "Configure the PayPal settings"
 msgstr ""
 
 #: ../includes/register-settings.php:112
-msgid "Alternate PayPal Purchase Verification"
+msgid "PayPal Email"
 msgstr ""
 
 #: ../includes/register-settings.php:113
+msgid "Enter your PayPal account's email"
+msgstr ""
+
+#: ../includes/register-settings.php:119
+msgid "Disable cURL for PayPal IPN"
+msgstr ""
+
+#: ../includes/register-settings.php:120
+msgid "If payments are not getting marked as complete, check this option"
+msgstr ""
+
+#: ../includes/register-settings.php:125
+msgid "Alternate PayPal Purchase Verification"
+msgstr ""
+
+#: ../includes/register-settings.php:126
 msgid "If payments are not getting marked as complete, and disabling cURL does not fix the problem, then check this box"
 msgstr ""
 
-#: ../includes/register-settings.php:122
+#: ../includes/register-settings.php:135
+msgid "From Email"
+msgstr ""
+
+#: ../includes/register-settings.php:136
+msgid "Email to send purchase receipts from. This will act as the \"from\" and \"reply-to\" address."
+msgstr ""
+
+#: ../includes/register-settings.php:141
 msgid "Purchase Email Subject"
 msgstr ""
 
-#: ../includes/register-settings.php:123
+#: ../includes/register-settings.php:142
 msgid "Enter the subject line for the purchase receipt email"
 msgstr ""
 
-#: ../includes/register-settings.php:128
+#: ../includes/register-settings.php:147
 msgid "Purchase Receipt"
 msgstr ""
 
-#: ../includes/register-settings.php:129
+#: ../includes/register-settings.php:148
 msgid "Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:"
 msgstr ""
 
-#: ../includes/register-settings.php:130
+#: ../includes/register-settings.php:149
 msgid "A list of download URLs for each download purchased"
 msgstr ""
 
-#: ../includes/register-settings.php:131
+#: ../includes/register-settings.php:150
 msgid "The buyer's name"
 msgstr ""
 
-#: ../includes/register-settings.php:132
+#: ../includes/register-settings.php:151
 msgid "The date of the purchase"
 msgstr ""
 
-#: ../includes/register-settings.php:133
+#: ../includes/register-settings.php:152
 msgid "Your site name"
 msgstr ""
 
-#: ../includes/register-settings.php:142
+#: ../includes/register-settings.php:161
 msgid "Enable Ajax"
 msgstr ""
 
-#: ../includes/register-settings.php:143
+#: ../includes/register-settings.php:162
 msgid "Check this to enable AJAX for the shopping cart."
 msgstr ""
 
-#: ../includes/register-settings.php:148
-msgid "Logged-In Only"
+#: ../includes/register-settings.php:167
+msgid "Disable Guest Checkout"
 msgstr ""
 
-#: ../includes/register-settings.php:149
+#: ../includes/register-settings.php:168
 msgid "Require that users be logged-in to purchase files."
 msgstr ""
 
-#: ../includes/register-settings.php:154
-msgid "Show Register Form?"
+#: ../includes/register-settings.php:173
+msgid "Show Register / Login Form?"
 msgstr ""
 
-#: ../includes/register-settings.php:155
-msgid "Display the registration form for non-logged-in users"
+#: ../includes/register-settings.php:174
+msgid "Display the registration and login forms on the checkout page for non-logged-in users"
 msgstr ""
 
-#: ../includes/register-settings.php:178
+#: ../includes/register-settings.php:179
+msgid "Disable Redownload?"
+msgstr ""
+
+#: ../includes/register-settings.php:180
+msgid "Check this if you do not want to allow users to redownload items from their purchase history"
+msgstr ""
+
+#: ../includes/register-settings.php:203
 msgid "General Settings"
 msgstr ""
 
-#: ../includes/register-settings.php:204
+#: ../includes/register-settings.php:229
 msgid "Payment Gateway Settings"
 msgstr ""
 
-#: ../includes/register-settings.php:230
+#: ../includes/register-settings.php:255
 msgid "Email Settings"
 msgstr ""
 
-#: ../includes/register-settings.php:256
+#: ../includes/register-settings.php:281
 msgid "Misc Settings"
 msgstr ""
 
-#: ../includes/register-settings.php:290
-#: ../includes/register-settings.php:294
-#: ../includes/register-settings.php:298
-#: ../includes/register-settings.php:302
-msgid "Configure the settings below"
-msgstr ""
-
-#: ../includes/scripts.php:16
+#: ../includes/scripts.php:19
 msgid "Please enter a discount code"
 msgstr ""
 
-#: ../includes/scripts.php:17
+#: ../includes/scripts.php:20
 msgid "Discount Applied"
 msgstr ""
 
-#: ../includes/scripts.php:18
+#: ../includes/scripts.php:21
+msgid "You have already added this item to your cart"
+msgstr ""
+
+#: ../includes/scripts.php:22
 msgid "Loading"
 msgstr ""
 
-#: ../includes/shortcodes.php:54
+#: ../includes/shortcodes.php:35
+msgid "Download Name"
+msgstr ""
+
+#: ../includes/shortcodes.php:36
+msgid "Files"
+msgstr ""
+
+#: ../includes/shortcodes.php:61
 msgid "You have not purchased any downloads"
 msgstr ""
 
-#: ../includes/shortcodes.php:79
+#: ../includes/shortcodes.php:82
 msgid "Add to Cart"
 msgstr ""
 
-#: ../includes/shortcodes.php:106
+#: ../includes/shortcodes.php:109
 msgid "No downloads found"
 msgstr ""
 
-#: ../includes/template-functions.php:43
+#: ../includes/template-functions.php:37
 msgid "added to your cart"
 msgstr ""
 
-#: ../includes/template-functions.php:47
+#: ../includes/template-functions.php:41
 msgid "here"
 msgstr ""
 
-#: ../includes/template-functions.php:48
+#: ../includes/template-functions.php:42
 msgid "You have already purchased this item."
 msgstr ""
 
-#: ../includes/template-functions.php:48
+#: ../includes/template-functions.php:42
 #, php-format
 msgid "Click %s to purchase again."
 msgstr ""
@@ -997,266 +1042,202 @@ msgid "Show Quantity:"
 msgstr ""
 
 #: ../includes/admin-pages/discount-codes.php:20
-#: ../includes/admin-pages/discount-codes.php:33
+#: ../includes/admin-pages/discount-codes.php:34
+#: ../includes/admin-pages/forms/add-discount.php:16
+#: ../includes/admin-pages/forms/edit-discount.php:22
 msgid "Code"
 msgstr ""
 
 #: ../includes/admin-pages/discount-codes.php:21
-#: ../includes/admin-pages/discount-codes.php:34
+#: ../includes/admin-pages/discount-codes.php:35
+#: ../includes/admin-pages/forms/add-discount.php:25
+#: ../includes/admin-pages/forms/edit-discount.php:31
 msgid "Type"
 msgstr ""
 
 #: ../includes/admin-pages/discount-codes.php:22
-#: ../includes/admin-pages/discount-codes.php:35
+#: ../includes/admin-pages/discount-codes.php:36
+#: ../includes/admin-pages/forms/add-discount.php:37
+#: ../includes/admin-pages/forms/edit-discount.php:43
 msgid "Amount"
 msgstr ""
 
 #: ../includes/admin-pages/discount-codes.php:23
-#: ../includes/admin-pages/discount-codes.php:36
+#: ../includes/admin-pages/discount-codes.php:37
 msgid "Uses"
 msgstr ""
 
 #: ../includes/admin-pages/discount-codes.php:24
-#: ../includes/admin-pages/discount-codes.php:37
+#: ../includes/admin-pages/discount-codes.php:38
+#: ../includes/admin-pages/forms/add-discount.php:64
+#: ../includes/admin-pages/forms/edit-discount.php:70
 msgid "Max Uses"
 msgstr ""
 
 #: ../includes/admin-pages/discount-codes.php:25
-#: ../includes/admin-pages/discount-codes.php:38
-msgid "Expiration"
+#: ../includes/admin-pages/discount-codes.php:39
+msgid "Start Date"
 msgstr ""
 
 #: ../includes/admin-pages/discount-codes.php:26
-#: ../includes/admin-pages/discount-codes.php:39
+#: ../includes/admin-pages/discount-codes.php:40
+msgid "Expiration"
+msgstr ""
+
+#: ../includes/admin-pages/discount-codes.php:27
+#: ../includes/admin-pages/discount-codes.php:41
+#: ../includes/admin-pages/payments-history.php:51
+#: ../includes/admin-pages/payments-history.php:64
+#: ../includes/admin-pages/forms/edit-discount.php:79
 msgid "Status"
 msgstr ""
 
-#: ../includes/admin-pages/discount-codes.php:63
 #: ../includes/admin-pages/discount-codes.php:65
+#: ../includes/admin-pages/discount-codes.php:67
 msgid "unlimited"
 msgstr ""
 
-#: ../includes/admin-pages/discount-codes.php:71
+#: ../includes/admin-pages/discount-codes.php:76
+msgid "No start date"
+msgstr ""
+
+#: ../includes/admin-pages/discount-codes.php:83
 msgid "Expired"
 msgstr ""
 
-#: ../includes/admin-pages/discount-codes.php:73
+#: ../includes/admin-pages/discount-codes.php:85
 msgid "no expiration"
 msgstr ""
 
-#: ../includes/admin-pages/discount-codes.php:78
+#: ../includes/admin-pages/discount-codes.php:91
+#: ../includes/admin-pages/payments-history.php:111
 msgid "Edit"
 msgstr ""
 
-#: ../includes/admin-pages/discount-codes.php:80
+#: ../includes/admin-pages/discount-codes.php:93
 msgid "Deactivate"
 msgstr ""
 
-#: ../includes/admin-pages/discount-codes.php:82
+#: ../includes/admin-pages/discount-codes.php:95
 msgid "Activate"
 msgstr ""
 
-#: ../includes/admin-pages/discount-codes.php:84
+#: ../includes/admin-pages/discount-codes.php:97
 msgid "Delete"
 msgstr ""
 
-#: ../includes/admin-pages/discount-codes.php:89
+#: ../includes/admin-pages/discount-codes.php:102
 msgid "No discount codes have been created."
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:24
+#: ../includes/admin-pages/payments-history.php:30
 msgid "Payment mode"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:26
+#: ../includes/admin-pages/payments-history.php:32
 msgid "Live"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:27
+#: ../includes/admin-pages/payments-history.php:33
 msgid "Test"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:31
+#: ../includes/admin-pages/payments-history.php:37
 msgid "Payments per page"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:33
+#: ../includes/admin-pages/payments-history.php:39
 msgid "Show"
-msgstr ""
-
-#: ../includes/admin-pages/payments-history.php:38
-#: ../includes/admin-pages/payments-history.php:51
-msgid "ID"
-msgstr ""
-
-#: ../includes/admin-pages/payments-history.php:40
-#: ../includes/admin-pages/payments-history.php:53
-msgid "Key"
-msgstr ""
-
-#: ../includes/admin-pages/payments-history.php:41
-#: ../includes/admin-pages/payments-history.php:54
-msgid "Products"
 msgstr ""
 
 #: ../includes/admin-pages/payments-history.php:44
 #: ../includes/admin-pages/payments-history.php:57
+msgid "ID"
+msgstr ""
+
+#: ../includes/admin-pages/payments-history.php:46
+#: ../includes/admin-pages/payments-history.php:59
+msgid "Key"
+msgstr ""
+
+#: ../includes/admin-pages/payments-history.php:47
+#: ../includes/admin-pages/payments-history.php:60
+msgid "Products"
+msgstr ""
+
+#: ../includes/admin-pages/payments-history.php:50
+#: ../includes/admin-pages/payments-history.php:63
 msgid "User"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:74
+#: ../includes/admin-pages/payments-history.php:80
 #, php-format
 msgid "Purchase Details for Payment #%s"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:74
+#: ../includes/admin-pages/payments-history.php:80
 msgid "View Order Details"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:77
+#: ../includes/admin-pages/payments-history.php:83
 msgid "Purchased File"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:77
+#: ../includes/admin-pages/payments-history.php:83
 msgid "Purchased Files"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:82
+#: ../includes/admin-pages/payments-history.php:88
 msgid "Price: "
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:87
+#: ../includes/admin-pages/payments-history.php:93
 msgid "Discount used:"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:87
+#: ../includes/admin-pages/payments-history.php:93
 msgid "none"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:88
+#: ../includes/admin-pages/payments-history.php:94
 msgid "Total:"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:91
+#: ../includes/admin-pages/payments-history.php:97
 msgid "Buyer's Personal Details:"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:93
+#: ../includes/admin-pages/payments-history.php:99
 msgid "Name:"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:94
+#: ../includes/admin-pages/payments-history.php:100
 msgid "Email:"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:97
+#: ../includes/admin-pages/payments-history.php:103
+#: ../includes/admin-pages/forms/edit-payment.php:44
 msgid "Close"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:104
+#: ../includes/admin-pages/payments-history.php:112
 msgid "Resend Purchase Receipt"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:110
+#: ../includes/admin-pages/payments-history.php:119
 msgid "No payments recorded yet"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:125
+#: ../includes/admin-pages/payments-history.php:134
 msgid "&laquo; Previous"
 msgstr ""
 
-#: ../includes/admin-pages/payments-history.php:126
+#: ../includes/admin-pages/payments-history.php:135
 msgid "Next &raquo;"
 msgstr ""
 
 #: ../includes/admin-pages/reports.php:14
 msgid "Transactions created while in test mode are not included on this page."
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:11
-msgid "Easy Digital Downloads"
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:12
-msgid "Pages"
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:14
-#: ../includes/admin-pages/settings.php:16
-msgid "Misc"
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:25
-msgid "Purchase Form"
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:49
-#: ../includes/admin-pages/settings-old.php:78
-msgid "No pages found"
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:53
-msgid "Choose the page that holds the checkout form short code."
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:82
-msgid "Choose the page users are directed to after a successful purchase."
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:95
-#: ../includes/admin-pages/settings-old.php:101
-#: ../includes/admin-pages/settings-old.php:106
-msgid "Test Mode"
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:110
-msgid "Check this to use the plugin in test mode."
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:124
-#: ../includes/admin-pages/settings-old.php:129
-msgid "Gateways"
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:140
-msgid "Check each of the payment gateways you would like to enable. Configure the selected gateways below."
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:163
-msgid "Enter your PayPal Email."
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:177
-msgid "Miscellaneous"
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:261
-msgid "Choose your currency."
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:261
-msgid "Note"
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:261
-msgid "If you use Stripe, you MUST use USD."
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:288
-msgid "Messages"
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:294
-#: ../includes/admin-pages/settings-old.php:299
-msgid "Payment Confirmation"
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:303
-msgid "Enter the message displayed after a user makes a successful purchase. HTML is accepted."
-msgstr ""
-
-#: ../includes/admin-pages/settings-old.php:313
-msgid "Save Options"
 msgstr ""
 
 #: ../includes/admin-pages/settings.php:13
@@ -1265,6 +1246,10 @@ msgstr ""
 
 #: ../includes/admin-pages/settings.php:15
 msgid "Emails"
+msgstr ""
+
+#: ../includes/admin-pages/settings.php:16
+msgid "Misc"
 msgstr ""
 
 #: ../includes/admin-pages/forms/add-discount.php:1
@@ -1303,20 +1288,30 @@ msgstr ""
 
 #: ../includes/admin-pages/forms/add-discount.php:46
 #: ../includes/admin-pages/forms/edit-discount.php:52
-msgid "Expiration date"
+msgid "Start date"
 msgstr ""
 
 #: ../includes/admin-pages/forms/add-discount.php:50
 #: ../includes/admin-pages/forms/edit-discount.php:56
-msgid "Enter the expiration date for this discount code in the format of yyyy-mm-dd. For no expiration, leave blank"
+msgid "Enter the start date for this discount code in the format of yyyy-mm-dd. For no start date, leave blank. If entered, the discount can only be used after or on this date."
+msgstr ""
+
+#: ../includes/admin-pages/forms/add-discount.php:55
+#: ../includes/admin-pages/forms/edit-discount.php:61
+msgid "Expiration date"
 msgstr ""
 
 #: ../includes/admin-pages/forms/add-discount.php:59
 #: ../includes/admin-pages/forms/edit-discount.php:65
+msgid "Enter the expiration date for this discount code in the format of yyyy-mm-dd. For no expiration, leave blank"
+msgstr ""
+
+#: ../includes/admin-pages/forms/add-discount.php:68
+#: ../includes/admin-pages/forms/edit-discount.php:74
 msgid "The maximum number of times this discount can be used. Leave blank for unlimited."
 msgstr ""
 
-#: ../includes/admin-pages/forms/add-discount.php:67
+#: ../includes/admin-pages/forms/add-discount.php:76
 msgid "Add Discount Code"
 msgstr ""
 
@@ -1329,23 +1324,45 @@ msgid "Edit Discount"
 msgstr ""
 
 #: ../includes/admin-pages/forms/edit-discount.php:7
+#: ../includes/admin-pages/forms/edit-payment.php:2
 msgid "Go Back"
 msgstr ""
 
-#: ../includes/admin-pages/forms/edit-discount.php:74
+#: ../includes/admin-pages/forms/edit-discount.php:83
 msgid "Active"
 msgstr ""
 
-#: ../includes/admin-pages/forms/edit-discount.php:75
+#: ../includes/admin-pages/forms/edit-discount.php:84
 msgid "Inactive"
 msgstr ""
 
-#: ../includes/admin-pages/forms/edit-discount.php:77
+#: ../includes/admin-pages/forms/edit-discount.php:86
 msgid "The status of this discount code."
 msgstr ""
 
-#: ../includes/admin-pages/forms/edit-discount.php:87
+#: ../includes/admin-pages/forms/edit-discount.php:96
 msgid "Update Discount Code"
+msgstr ""
+
+#: ../includes/admin-pages/forms/edit-payment.php:8
+msgid "Downloads Purchased"
+msgstr ""
+
+#: ../includes/admin-pages/forms/edit-payment.php:20
+#, php-format
+msgid "Add download to purchase #%s"
+msgstr ""
+
+#: ../includes/admin-pages/forms/edit-payment.php:20
+msgid "Add download to purchase"
+msgstr ""
+
+#: ../includes/admin-pages/forms/edit-payment.php:30
+msgid "Update Payment"
+msgstr ""
+
+#: ../includes/admin-pages/forms/edit-payment.php:43
+msgid "Add Selected Downloads"
 msgstr ""
 
 #: ../includes/gateways/paypal.php:171

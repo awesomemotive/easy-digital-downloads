@@ -41,6 +41,7 @@ load_plugin_textdomain( 'edd', false, dirname( plugin_basename( EDD_PLUGIN_FILE 
 
 include_once(EDD_PLUGIN_DIR . 'includes/register-settings.php');
 $edd_options = edd_get_settings();
+include_once(EDD_PLUGIN_DIR . 'includes/install.php');
 include_once(EDD_PLUGIN_DIR . 'includes/template-functions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/checkout-template.php');
 include_once(EDD_PLUGIN_DIR . 'includes/cart-template.php');

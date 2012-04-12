@@ -81,7 +81,7 @@ function edd_payment_history_page() {
 										<div id="purchased-files-<?php echo $payment->ID; ?>" style="display:none;">
 											<?php $downloads = maybe_unserialize($payment_meta['downloads']); ?>
 											<h4><?php echo _n(__('Purchased File', 'edd'), __('Purchased Files', 'edd'), count($downloads)); ?></h4>
-											<ul clas="purchased-files-list">
+											<ul class="purchased-files-list">
 											<?php 
 												if($downloads) {
 													foreach($downloads as $download) {
@@ -108,7 +108,7 @@ function edd_payment_history_page() {
 									<td><?php echo get_user_by('id', $user_info['id'])->display_name; ?></td>
 									<td><?php echo edd_get_payment_status($payment); ?></td>
 									<td>
-										<a href="<?php echo add_query_arg('edd-action', 'edit-payment', add_query_arg('purchase_id', $payment->ID)); ?>"><?php _e('Edit'); ?></a> | 
+										<a href="<?php echo add_query_arg('edd-action', 'edit-payment', add_query_arg('purchase_id', $payment->ID)); ?>"><?php _e('Edit', 'edd'); ?></a> | 
 										<a href="<?php echo add_query_arg('edd-action', 'email_links', add_query_arg('purchase_id', $payment->ID)); ?>"><?php _e('Resend Purchase Receipt', 'edd'); ?></a>
 									</td>
 								</tr>
@@ -116,7 +116,7 @@ function edd_payment_history_page() {
 							$i++;
 							endforeach;
 						else : ?>
-						<tr><td colspan="9"><?php _e('No payments recorded yet', 'rcp'); ?></td></tr>
+						<tr><td colspan="9"><?php _e('No payments recorded yet', 'edd'); ?></td></tr>
 					<?php endif;?>
 				</table>
 				<?php if ($total_pages > 1) : ?>

@@ -42,7 +42,7 @@ function edd_process_paypal_purchase($purchase_data) {
 	if($payment) {
 		// only send to paypal if the pending payment is created successfully
 		$listener_url = add_query_arg('edd-listener', 'IPN', home_url());
-		$return_url = get_permalink($edd_options['success_page']);
+		$return_url = add_query_arg('payment-confirmation', 'paypal', get_permalink($edd_options['success_page']));
 		$cart_summary = edd_get_purchase_summary($purchase_data, $false);		
 		
 		// one time payment
@@ -70,6 +70,30 @@ function edd_process_paypal_purchase($purchase_data) {
 	}
 }
 add_action('edd_gateway_paypal', 'edd_process_paypal_purchase');
+
+function edd_confirm_paypal_payment($content) {
+	// this is an extra check that runs on the confirmation page to make sure the user's payment is updated to complete
+	if(isset($_POST['txn_type']) && $_POST['txn_type'] == 'web_accept') {
+	
+		global $edd_options;
+	
+		$payment_id 		= $_POST['custom'];
+		$purchase_key	 	= $_POST['item_number'];
+		$amount 			= $_POST['mc_gross'];
+		$payment_status 	= $_POST['payment_status'];
+		$currency_code		= $_POST['mc_currency'];
+		
+		if($currency_code != $edd_options['currency']) {
+			return __('There was an error and your payment cannot be confirmed. Please contact site adminstrators.', 'edd');
+		}
+				
+		// set the payment to complete. This also sends the emails
+		edd_update_payment_status($payment_id, 'publish');
+		
+	}
+	return $content;
+}
+add_filter('edd_payment_confirm_paypal', 'edd_confirm_paypal_payment');
 
 // listens for a PayPal IPN requests and then sends to the processing function
 function edd_listen_for_paypal_ipn() {
@@ -154,9 +178,9 @@ function edd_process_paypal_ipn() {
 		$purchase_key	 	= $_POST['item_number'];
 		$amount 			= $_POST['mc_gross'];
 		$payment_status 	= $_POST['payment_status'];
-		$currency_code		= $_POST['mc_currency'];
+		$currency_code		= strtolower($_POST['mc_currency']);
 		
-		if($currency_code != $edd_options['currency']) {
+		if($currency_code != strtolower($edd_options['currency'])) {
 			return; // the currency code is invalid
 		}
 				

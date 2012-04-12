@@ -98,7 +98,7 @@ function edd_show_monthly_eanings_graph($bgcolor = 'white') {
 	        ]);
 
 	        var options = {
-	          	title: "<?php _e('Earnings per month', 'rcpg'); ?>",
+	          	title: "<?php _e('Earnings per month', 'edd'); ?>",
 				colors:['#a3bcd3'],
 				fontSize: 12,
 				backgroundColor: '#ffffff'

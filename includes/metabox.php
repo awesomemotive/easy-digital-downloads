@@ -144,7 +144,7 @@ function edd_render_download_meta_box()	{
 								$field_html .= '<button class="button-secondary edd_upload_image_button">Upload File</button>';
 							$field_html .= '</div>';
 						}
-						$field_html .= '<button class="edd_add_new_upload_field button-secondary">' . __('Add New', 'ecpt') . '</button>&nbsp;&nbsp;' . __(stripslashes($field['desc']));		
+						$field_html .= '<button class="edd_add_new_upload_field button-secondary">' . __('Add New', 'edd') . '</button>&nbsp;&nbsp;' . __(stripslashes($field['desc']));		
 			
 						echo $field_html;
 			
