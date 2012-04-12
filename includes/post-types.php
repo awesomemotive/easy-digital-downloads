@@ -17,6 +17,12 @@ function edd_setup_download_post_type() {
 		$rewrite = false;
 	}
 	
+	$menu_position = 20;
+	if(defined('EDD_MENU_POSITION') && is_numeric(EDD_MENU_POSITION)) {
+		$menu_position = EDD_MENU_POSITION;
+	}
+	
+	
 	$download_labels = array(
 		'name' => _x('Downloads', 'post type general name', 'edd'),
 		'singular_name' => _x('Download', 'post type singular name', 'edd'),
@@ -44,7 +50,7 @@ function edd_setup_download_post_type() {
 		'capability_type' => 'post',
 		'has_archive' => $archives, 
 		'hierarchical' => false,
-		'menu_position' => 20,
+		'menu_position' => $menu_position,
 		'supports' => array( 'title', 'editor', 'thumbnail' ),
 		'menu_icon' => EDD_PLUGIN_URL . 'includes/images/media-button.png'
 	); 
