@@ -106,6 +106,9 @@ function edd_update_payment_status($payment_id, $status = 'pending') {
 		$status = 'publish';
 	}
 	
+	$payment = get_post($payment_id);
+	if($payment->post_status == 'publish') return; // payment has already been marked as complete
+	
 	wp_update_post(array('ID' => $payment_id, 'post_status' => $status));
 	
 	// send email with secure download link
