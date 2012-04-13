@@ -42,13 +42,13 @@ add_action('wp_enqueue_scripts', 'edd_register_styles');
 function edd_load_admin_scripts($hook) {
 
 	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page;
-	
+
 	$edd_pages = array($edd_discounts_page, $edd_payments_page, $edd_settings_page);
 		
-	if( ( isset($post) && 'download' != $post->post_type ) && !in_array($hook, $edd_pages) )
+	if( ( !isset($post) || 'download' != $post->post_type ) && !in_array($hook, $edd_pages) )
 		return; // load the scripts only on the Download pages
 	
-	if($hook == 'download_page_edd-reports' || $hook == 'index.php') {
+	if($hook == 'download_page_edd-reports') {
 		wp_enqueue_script('google-charts', 'https://www.google.com/jsapi');
 	}
 	if($hook == 'download_page_edd-discounts') {

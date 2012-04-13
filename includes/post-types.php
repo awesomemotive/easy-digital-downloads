@@ -17,7 +17,7 @@ function edd_setup_download_post_type() {
 		$rewrite = false;
 	}
 	
-	$menu_position = 20;
+	$menu_position = 15;
 	if(defined('EDD_MENU_POSITION') && is_numeric(EDD_MENU_POSITION)) {
 		$menu_position = EDD_MENU_POSITION;
 	}

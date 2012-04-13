@@ -2,6 +2,8 @@
 * Checkout form
 ****************************************/
 
+.edd_clearfix:after { display: block; visibility: hidden; float: none; clear: both; text-indent: -9999px; content: "."; }
+
 /* cart contents */
 #edd_checkout_cart .edd_cart_total {  }
 
@@ -40,26 +42,33 @@
 	padding: 0 0 0 5px; display: block; height: 32px; 
 	background: url(../images/button-start.png) no-repeat; 
 }
+.edd_button_outer br, .edd_button_outer p { display: none!important; }
+
 .edd_button_inner { 
 	display: block; height: 32px; background: url(../images/button-end.png) no-repeat right top; 
 	padding: 0 4px 0 0; 
 }
-.edd_button_text, input.edd_button_text { 
+.edd_button_text, input.edd_button_text, input#edd-purchase-button, input#edd_next_button { 
 	display: block; height: 32px; background: url(../images/button-mid.png) repeat-x; 
-	padding: 0 4px; margin: 0; border: none;
+	padding: 0 4px; margin: 0; border: none;  text-shadow: none; color: #555; 
+	-webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0;
 }
-input.edd_button_text  { padding: 0 4px 4px; }
+input.edd_button_text, input#edd-purchase-button, input#edd_next_button  { padding: 0 4px 4px; }
 
-.edd_button:active, input.edd_button_text:active { line-height: 30px; }
+.edd_button:active, input.edd_button_text:active, input#edd-purchase-button:active, input#edd_next_button:active { line-height: 30px; }
 
 
 /* gray */
 .edd_button.edd_gray { color: #555; text-shadow: 0 0 1px #fff; }
 .edd_button.edd_gray:hover .edd_button_outer,
-.edd_button.edd_gray:hover .edd_button_text { background-position: 0 -33px; }
+.edd_button.edd_gray:hover .edd_button_text,
+.edd_button.edd_gray:hover  input#edd-purchase-button,
+.edd_button.edd_gray:hover input#edd_next_button { background-position: 0 -33px; }
 .edd_button.edd_gray:hover .edd_button_inner { background-position: right -33px; }
 .edd_button.edd_gray:active .edd_button_outer,
-.edd_button.edd_gray:active .edd_button_text { background-position: 0 -65px; }
+.edd_button.edd_gray:active .edd_button_text,
+.edd_button.edd_gray:active  input#edd-purchase-button, 
+.edd_button.edd_gray:active  input#edd_next_button { background-position: 0 -65px; }
 .edd_button.edd_gray:active .edd_button_inner { background-position: right -65px; }
 
 /* pink */

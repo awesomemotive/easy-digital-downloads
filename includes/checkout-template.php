@@ -25,7 +25,7 @@ function edd_checkout_form() {
 				
 			<?php echo edd_checkout_cart(); ?>
 			
-			<div id="edd_checkout_form_wrap">
+			<div id="edd_checkout_form_wrap" class="edd_clearfix">
 			
 				<?php 
 				$gateways = edd_get_enabled_payment_gateways();
@@ -48,13 +48,7 @@ function edd_checkout_form() {
 						</fieldset>
 						<fieldset id="edd_payment_mode_submit">
 							<p>
-								<span class="edd_button edd_gray">
-									<span class="edd_button_outer">
-										<span class="edd_button_inner">
-											<input type="submit" class="edd_button_text edd-submit" value="<?php _e('Next', 'edd'); ?>"/>
-										</span>
-									</span>
-								</span>
+								<span class="edd_button edd_gray"><span class="edd_button_outer"><span class="edd_button_inner"><input type="submit" id="edd_next_button" class="edd_button_text edd-submit" value="<?php _e('Next', 'edd'); ?>"/></span></span></span>
 							</p>
 						</fieldset>
 					</form>
@@ -95,15 +89,15 @@ function edd_checkout_form() {
 							<?php if(!isset($_GET['login']) && is_user_logged_in()) { ?>											
 							<fieldset id="edd_checkout_user_info">
 								<p>
-									<input class="edd-input required" type="text" name="edd_email" id="edd-email" value="<?php echo is_user_Logged_in() ? $user_data->user_email : ''; ?>"/>
+									<input class="edd-input required" type="text" name="edd_email" placeholder="<?php _e('Email address', 'edd'); ?>" id="edd-email" value="<?php echo is_user_Logged_in() ? $user_data->user_email : ''; ?>"/>
 									<label class="edd-label" for="edd-email"><?php _e('Email Address', 'edd'); ?></label>
 								</p>
 								<p>
-									<input class="edd-input required" type="text" name="edd_first" id="edd-first" value="<?php echo is_user_Logged_in() ? $user_data->user_firstname : ''; ?>"/>
+									<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e('First Name', 'edd'); ?>" id="edd-first" value="<?php echo is_user_Logged_in() ? $user_data->user_firstname : ''; ?>"/>
 									<label class="edd-label" for="edd-first"><?php _e('First Name', 'edd'); ?></label>
 								</p>
 								<p>
-									<input class="edd-input" type="text" name="edd-last" id="edd-last" value="<?php echo is_user_Logged_in() ? $user_data->user_lastname : ''; ?>"/>
+									<input class="edd-input" type="text" name="edd-last" id="edd-last" placeholder="<?php _e('Last name', 'edd'); ?>" value="<?php echo is_user_Logged_in() ? $user_data->user_lastname : ''; ?>"/>
 									<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
 								</p>	
 								<?php do_action('edd_purchase_form_user_info'); ?>
@@ -112,7 +106,7 @@ function edd_checkout_form() {
 							<?php if(edd_get_discounts()) { // only show if we have at least one discount ?>
 							<fieldset id="edd_discount_code">
 								<p>
-									<input class="edd-input" type="text" id="edd-discount" name="edd-discount"/>
+									<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e('Enter discount', 'edd'); ?>"/>
 									<label class="edd-label" for="edd-discount">
 										<?php _e('Discount', 'edd'); ?>
 										<?php if(edd_is_ajax_enabled()) { ?>
@@ -139,13 +133,7 @@ function edd_checkout_form() {
 									<input type="hidden" name="edd-action" value="purchase"/>
 									<input type="hidden" name="edd-gateway" value="<?php echo $payment_mode; ?>" />
 									<input type="hidden" name="edd-nonce" value="<?php echo wp_create_nonce('edd-purchase-nonce'); ?>"/>
-									<span class="edd_button edd_gray">
-										<span class="edd_button_outer">
-											<span class="edd_button_inner">
-												<input type="submit" class="edd_button_text edd-submit" id="edd-purchase-button" name="edd-purchase" value="<?php _e('Purchase', 'edd'); ?>"/>
-											</span>
-										</span>
-									</span>
+									<span class="edd_button edd_gray"><span class="edd_button_outer"><span class="edd_button_inner"><input type="submit" class="edd_button_text edd-submit" id="edd-purchase-button" name="edd-purchase" value="<?php _e('Purchase', 'edd'); ?>"/></span></span></span>
 									<?php do_action('edd_purchase_form_after_submit'); ?>
 								</p>
 								<?php if(!edd_is_ajax_enabled()) { ?>
@@ -173,22 +161,22 @@ function edd_get_cc_form() {
 	<?php do_action('edd_before_cc_fields'); ?>
 	<fieldset id="edd_cc_fields">
 		<p>
-			<input type="text" autocomplete="off" name="card_name" class="card-name edd-input required" />
+			<input type="text" autocomplete="off" name="card_name" class="card-name edd-input required" placeholder="<?php _e('Card name', 'edd'); ?>" />
 			<label class="edd-label"><?php _e('Name on the Card', 'edd'); ?></label>
 		</p>
 		<p>
-			<input type="text" autocomplete="off" name="card_number" class="card-number edd-input required" />
+			<input type="text" autocomplete="off" name="card_number" class="card-number edd-input required" placeholder="<?php _e('Card number', 'edd'); ?>" />
 			<label class="edd-label"><?php _e('Card Number', 'edd'); ?></label>
 		</p>
 		<p>
-			<input type="text" size="4" autocomplete="off" name="card_cvc" class="card-cvc edd-input required" />
+			<input type="text" size="4" autocomplete="off" name="card_cvc" class="card-cvc edd-input required" placeholder="<?php _e('Security code', 'edd'); ?>" />
 			<label class="edd-label"><?php _e('CVC', 'edd'); ?></label>
 		</p>
 		<?php do_action('edd_before_cc_expiration'); ?>
 		<p class="card-expiration">
-			<input type="text" size="2" name="card_exp_month" class="card-expiry-month edd-input required"/>
+			<input type="text" size="2" name="card_exp_month"  placeholder="<?php _e('Month', 'edd'); ?>" class="card-expiry-month edd-input required"/>
 			<span class="exp-divider"> / </span>
-			<input type="text" size="4" name="card_exp_year" class="card-expiry-year edd-input required"/>
+			<input type="text" size="4" name="card_exp_year" placeholder="<?php _e('Year', 'edd'); ?>" class="card-expiry-year edd-input required"/>
 			<label class="edd-label"><?php _e('Expiration (MM/YYYY)', 'edd'); ?></label>
 		</p>
 		<?php do_action('edd_before_cc_expiration'); ?>
@@ -209,23 +197,23 @@ function edd_default_cc_address_fields() {
 	<fieldset id="edd_cc_address" class="cc-address">
 		<legend><?php _e('Credit Card Info', 'edd'); ?></legend>
 		<p>
-			<input type="text" name="card_address" class="card-address edd-input required"/>
+			<input type="text" name="card_address" class="card-address edd-input required" placeholder="<?php _e('Address line 1', 'edd'); ?>"/>
 			<label class="edd-label"><?php _e('Billing Address', 'edd'); ?></label>
 		</p>
 		<p>
-			<input type="text" name="card_address_2" class="card-address-2 edd-input required"/>
+			<input type="text" name="card_address_2" class="card-address-2 edd-input required" placeholder="<?php _e('Address line 2', 'edd'); ?>"/>
 			<label class="edd-label"><?php _e('Billing Address Line 2', 'edd'); ?></label>
 		</p>
 		<p>
-			<input type="text" name="card_city" class="card-city edd-input required"/>
+			<input type="text" name="card_city" class="card-city edd-input required" placeholder="<?php _e('City', 'edd'); ?>"/>
 			<label class="edd-label"><?php _e('Billing City', 'edd'); ?></label>
 		</p>
 		<p>
-			<input type="text" size="6" name="card_state" class="card-state edd-input required"/>
+			<input type="text" size="6" name="card_state" class="card-state edd-input required" placeholder="<?php _e('State / Province', 'edd'); ?>"/>
 			<label class="edd-label"><?php _e('Billing State / Province', 'edd'); ?></label>
 		</p>
 		<p>
-			<input type="text" size="4" name="card_zip" class="card-zip edd-input required"/>
+			<input type="text" size="4" name="card_zip" class="card-zip edd-input required" placeholder="<?php _e('Zip / Postal code', 'edd'); ?>"/>
 			<label class="edd-label"><?php _e('Billing Zip / Postal Code', 'edd'); ?></label>
 		</p>
 	</fieldset>
@@ -239,19 +227,19 @@ function edd_get_register_fields() {
 	<fieldset id="edd_register_fields">
 		<legend><?php _e('Create an account', 'edd'); ?></legend>
 		<p>
-			<input name="edd_user_login" id="edd_user_login" class="required edd-input" type="text" title="<?php _e('Username', 'edd'); ?>"/>
+			<input name="edd_user_login" id="edd_user_login" class="required edd-input" type="text" placeholder="<?php _e('Username', 'edd'); ?>" title="<?php _e('Username', 'edd'); ?>"/>
 			<label for="edd_user_Login"><?php _e('Username', 'edd'); ?></label>
 		</p>
 		<p>
-			<input name="edd_user_email" id="edd_user_email" class="required edd-input" type="email" title="<?php _e('email@domain.com', 'edd'); ?>"/>
+			<input name="edd_user_email" id="edd_user_email" class="required edd-input" type="email" placeholder="<?php _e('Email address', 'edd'); ?>" title="<?php _e('email@domain.com', 'edd'); ?>"/>
 			<label for="edd_user_email"><?php _e('Email', 'edd'); ?></label>
 		</p>
 		<p>
-			<input name="edd_user_pass" id="edd_user_pass" class="required edd-input" type="password"/>
+			<input name="edd_user_pass" id="edd_user_pass" class="required edd-input" placeholder="<?php _e('Password', 'edd'); ?>" type="password"/>
 			<label for="password"><?php _e('Password', 'edd'); ?></label>
 		</p>
 		<p>
-			<input name="edd_user_pass_confirm" id="edd_user_pass_confirm" class="required edd-input" type="password"/>
+			<input name="edd_user_pass_confirm" id="edd_user_pass_confirm" class="required edd-input" placeholder="<?php _e('Confirm password', 'edd'); ?>" type="password"/>
 			<label for="password_again"><?php _e('Password Again', 'edd'); ?></label>
 		</p>
 		<p><?php _e('Already have an account?', 'edd'); ?> <a href="<?php echo add_query_arg('login', 1); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e('Login', 'edd'); ?></a></p>
