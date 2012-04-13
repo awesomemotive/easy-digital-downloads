@@ -5,7 +5,9 @@ function edd_process_purchase_form() {
 				
 		$user_id = isset($_POST['edd-user-id']) ? $_POST['edd-user-id'] : 0;
 		$user_email = $_POST['edd-email'];
-				
+			
+		$need_new_user = false;
+		
 		if(isset($_POST['edd-discount']) && $_POST['edd-discount'] != '' && !edd_is_discount_valid($_POST['edd-discount'])) {
 			// check for valid discount
 			edd_set_error('invalid_discount', __('The discount you entered is invalid', 'edd'));

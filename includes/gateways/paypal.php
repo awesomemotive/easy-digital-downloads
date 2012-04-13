@@ -43,7 +43,7 @@ function edd_process_paypal_purchase($purchase_data) {
 		// only send to paypal if the pending payment is created successfully
 		$listener_url = trailingslashit(home_url()).'?edd-listener=IPN';
 		$return_url = add_query_arg('payment-confirmation', 'paypal', get_permalink($edd_options['success_page']));
-		$cart_summary = edd_get_purchase_summary($purchase_data, $false);		
+		$cart_summary = edd_get_purchase_summary($purchase_data, false);		
 		
 		// one time payment
 		if(edd_is_test_mode()) {
@@ -74,7 +74,7 @@ function edd_process_paypal_purchase($purchase_data) {
 		
 		// get rid of cart contents
 		edd_empty_cart();
-		
+				
 		// Redirect to paypal
 		wp_redirect($paypal_redirect);
 		exit;

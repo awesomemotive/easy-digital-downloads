@@ -40,6 +40,8 @@ function edd_manual_payment($purchase_data) {
 	
 	if($payment) {
 		edd_update_payment_status($payment, 'publish');
+		// empty the shopping cart
+		edd_empty_cart();
 		edd_send_to_success_page();
 	} else {
 		// if errors are present, send the user back to the purchase page so they can be corrected
