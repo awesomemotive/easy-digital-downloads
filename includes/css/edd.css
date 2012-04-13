@@ -8,6 +8,7 @@
 /* checkout fields */
 #edd_purchase_form input.edd-input, 
 #edd_purchase_form input.edd-input { display: inline-block; width: 200px; }
+#edd_purchase_form input.edd-input.error { border-color: #c4554e; }
 #edd_purchase_form label { display: inline-block;  width: 200px; }
 #edd_purchase_form input.card-expiry-month { width: 30px; }
 #edd_purchase_form input.card-expiry-year { width: 60px; }

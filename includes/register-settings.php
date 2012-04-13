@@ -163,6 +163,12 @@ function edd_register_settings() {
 					'type' => 'checkbox'
 				),
 				array(
+					'id' => 'jquery_validation',
+					'name' => __('Enable jQuery Validation', 'edd'),
+					'desc' => __('Check this to enable jQuery validation on the checkout form.', 'edd'),
+					'type' => 'checkbox'
+				),
+				array(
 					'id' => 'logged_in_only',
 					'name' => __('Disable Guest Checkout', 'edd'),
 					'desc' => __('Require that users be logged-in to purchase files.', 'edd'),

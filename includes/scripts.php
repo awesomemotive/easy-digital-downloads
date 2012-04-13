@@ -26,6 +26,10 @@ function edd_load_scripts() {
 			)
 		);
 	}
+	if(isset($edd_options['jquery_validation']) && is_page($edd_options['purchase_page'])) {
+		wp_enqueue_script('jquery-validation', EDD_PLUGIN_URL . 'includes/js/jquery.validate.min.js');
+		wp_enqueue_script('edd-validation', EDD_PLUGIN_URL . 'includes/js/form-validation.js');
+	}
 }
 add_action('wp_enqueue_scripts', 'edd_load_scripts');
 

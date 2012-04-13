@@ -95,11 +95,11 @@ function edd_checkout_form() {
 							<?php if(!isset($_GET['login']) && is_user_logged_in()) { ?>											
 							<fieldset id="edd_checkout_user_info">
 								<p>
-									<input class="edd-input" type="text" name="edd-email" id="edd-email" value="<?php echo is_user_Logged_in() ? $user_data->user_email : ''; ?>"/>
+									<input class="edd-input required" type="text" name="edd_email" id="edd-email" value="<?php echo is_user_Logged_in() ? $user_data->user_email : ''; ?>"/>
 									<label class="edd-label" for="edd-email"><?php _e('Email Address', 'edd'); ?></label>
 								</p>
 								<p>
-									<input class="edd-input" type="text" name="edd-first" id="edd-first" value="<?php echo is_user_Logged_in() ? $user_data->user_firstname : ''; ?>"/>
+									<input class="edd-input required" type="text" name="edd_first" id="edd-first" value="<?php echo is_user_Logged_in() ? $user_data->user_firstname : ''; ?>"/>
 									<label class="edd-label" for="edd-first"><?php _e('First Name', 'edd'); ?></label>
 								</p>
 								<p>
@@ -142,7 +142,7 @@ function edd_checkout_form() {
 									<span class="edd_button edd_gray">
 										<span class="edd_button_outer">
 											<span class="edd_button_inner">
-												<input type="submit" class="edd_button_text edd-submit" name="edd-purchase" value="<?php _e('Purchase', 'edd'); ?>"/>
+												<input type="submit" class="edd_button_text edd-submit" id="edd-purchase-button" name="edd-purchase" value="<?php _e('Purchase', 'edd'); ?>"/>
 											</span>
 										</span>
 									</span>
