@@ -93,6 +93,7 @@ function edd_process_purchase_form() {
 						'role'				=> 'subscriber'
 					)
 				);
+				do_action('edd_insert_user', $user_id);
 				edd_log_user_in($user_id, $user_login, $user_pass);
 			}	
 			
