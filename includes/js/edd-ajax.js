@@ -18,6 +18,9 @@ jQuery(document).ready(function ($) {
                 var quantity = $('span.edd-cart-quantity').text();
                 quantity = parseInt(quantity, 10) - 1;
                 $('span.edd-cart-quantity').text(quantity);
+				if($('.cart_item.edd_checkout').length) {
+					$('.cart_item.edd_checkout').replaceWith('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
+				}
             } else {
                 //alert('bad');
             }

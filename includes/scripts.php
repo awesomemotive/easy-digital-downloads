@@ -19,6 +19,7 @@ function edd_load_scripts() {
 				'no_discount' => __('Please enter a discount code', 'edd'), // blank discount code message
 				'discount_applied' => __('Discount Applied', 'edd'), // discount verified message
 				'already_in_cart_message' => __('You have already added this item to your cart', 'edd'), // item already in the cart message
+				'empty_cart_message' => __('Your cart is empty', 'edd'), // item already in the cart message
 				'loading' => __('Loading', 'edd') , // general loading message
 				'ajax_loader' => EDD_PLUGIN_URL . 'includes/images/loading.gif', // ajax loading image
 				'checkout_page' => get_permalink($edd_options['purchase_page'])

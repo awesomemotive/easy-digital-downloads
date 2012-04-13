@@ -41,25 +41,40 @@ function edd_process_paypal_purchase($purchase_data) {
 	
 	if($payment) {
 		// only send to paypal if the pending payment is created successfully
-		$listener_url = add_query_arg('edd-listener', 'IPN', home_url());
+		$listener_url = trailingslashit(home_url()).'?edd-listener=IPN';
 		$return_url = add_query_arg('payment-confirmation', 'paypal', get_permalink($edd_options['success_page']));
 		$cart_summary = edd_get_purchase_summary($purchase_data, $false);		
 		
 		// one time payment
 		if(edd_is_test_mode()) {
-			$paypal_redirect = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick';
+			$paypal_redirect = 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
 		} else {
-			$paypal_redirect = 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick';
+			$paypal_redirect = 'https://www.paypal.com/cgi-bin/webscr/?';
 		}
-		$paypal_redirect .= '&amount=' . $purchase_data['price'];
-		$paypal_redirect .= '&business=' . urlencode($edd_options['paypal_email']);
-		$paypal_redirect .= '&item_name=' . urlencode($cart_summary);
-		$paypal_redirect .= '&email=' . $purchase_data['user_email'];
-		$paypal_redirect .= '&no_shipping=1&no_note=1&item_number=' . $purchase_data['purchase_key'];
-		$paypal_redirect .= '&currency_code=' . $edd_options['currency'];
-		$paypal_redirect .= '&charset=UTF-8&return=' . urlencode($return_url);
-		$paypal_redirect .= '&notify_url=' . urlencode($listener_url);
-		$paypal_redirect .= '&rm=2&custom=' . $payment;
+		$paypal_args = array(
+			'cmd' => '_xclick',
+			'amount' => $purchase_data['price'],
+			'business' => $edd_options['paypal_email'],
+			'item_name' => $cart_summary,
+			'email' => $purchase_data['user_email'],
+			'no_shipping' => '1',
+			'no_note' => '1',
+			'currency_code' => $edd_options['currency'],
+			'item_number' => $purchase_data['purchase_key'],
+			'charset' => 'UTF-8',
+			'custom' => $payment,
+			'rm' => '2',
+			'return' => $return_url,
+			'notify_url' => $listener_url
+		);
+		//var_dump(http_build_query($paypal_args)); exit;
+		$paypal_redirect .= http_build_query($paypal_args);
+				
+		//var_dump(urldecode($paypal_redirect)); exit;
+		
+		// get rid of cart contents
+		edd_empty_cart();
+		
 		// Redirect to paypal
 		wp_redirect($paypal_redirect);
 		exit;
@@ -71,29 +86,6 @@ function edd_process_paypal_purchase($purchase_data) {
 }
 add_action('edd_gateway_paypal', 'edd_process_paypal_purchase');
 
-function edd_confirm_paypal_payment($content) {
-	// this is an extra check that runs on the confirmation page to make sure the user's payment is updated to complete
-	if(isset($_POST['txn_type']) && $_POST['txn_type'] == 'web_accept') {
-	
-		global $edd_options;
-	
-		$payment_id 		= $_POST['custom'];
-		$purchase_key	 	= $_POST['item_number'];
-		$amount 			= $_POST['mc_gross'];
-		$payment_status 	= $_POST['payment_status'];
-		$currency_code		= $_POST['mc_currency'];
-		
-		if($currency_code != $edd_options['currency']) {
-			return __('There was an error and your payment cannot be confirmed. Please contact site adminstrators.', 'edd');
-		}
-				
-		// set the payment to complete. This also sends the emails
-		edd_update_payment_status($payment_id, 'publish');
-		
-	}
-	return $content;
-}
-add_filter('edd_payment_confirm_paypal', 'edd_confirm_paypal_payment');
 
 // listens for a PayPal IPN requests and then sends to the processing function
 function edd_listen_for_paypal_ipn() {
@@ -130,7 +122,7 @@ function edd_listen_for_paypal_ipn() {
 			if($purchase_key != $payment_meta['key']) {
 				return; // purchase keys don't match
 			}
-			if(strtolower($payment_status) != 'completed') {
+			if(strtolower($payment_status) != 'completed' || edd_is_test_mode()) {
 				return; // payment wasn't completed
 			}
 			
@@ -176,16 +168,26 @@ function edd_process_paypal_ipn() {
 	if ($verified) {
 		$payment_id 		= $_POST['custom'];
 		$purchase_key	 	= $_POST['item_number'];
-		$amount 			= $_POST['mc_gross'];
+		$paypal_amount 		= $_POST['mc_gross'];
 		$payment_status 	= $_POST['payment_status'];
 		$currency_code		= strtolower($_POST['mc_currency']);
 		
+		// retrieve the meta info for this payment
+		$payment_meta = get_post_meta($payment_id, '_edd_payment_meta', true);
+		$payment_amount = edd_format_amount($payment_meta['amount']);
+	
 		if($currency_code != strtolower($edd_options['currency'])) {
 			return; // the currency code is invalid
 		}
+		if($paypal_amount != $payment_amount) {
+			return; // the prices don't match
+		}
+		if($purchase_key != $payment_meta['key']) {
+			return; // purchase keys don't match
+		}
 				
 		if(isset($_POST['txn_type']) && $_POST['txn_type'] == 'web_accept') {
-			if(strtolower($payment_status) == 'completed') {
+			if(strtolower($payment_status) == 'completed' || edd_is_test_mode()) {
 				// set the payment to complete. This also sends the emails
 				edd_update_payment_status($payment_id, 'publish');
 			}
