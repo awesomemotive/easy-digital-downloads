@@ -2,7 +2,7 @@
 
 $edd_download_meta_box = array( 
 	'id' => 'downloadinformation',
-	'title' => 'Download Configuration',
+	'title' => __('Download Configuration', 'edd'),
 	'page' => array('download'),
 	'context' => 'normal',
 	'priority' => 'default',
@@ -133,7 +133,7 @@ function edd_render_download_meta_box()	{
 									$file = isset($meta[$key]['file']) ? $meta[$key]['file'] : '';
 									$field_html .= '<input type="text" class="edd_repeatable_name_field" placeholder="' . __('file name', 'edd') . '" name="' . $field['id'] . '[' . $key . '][name]" id="' . $field['id'] . '[' . $key . '][name]" value="' . $name . '" size="20" style="width:20%" />';
 									$field_html .= '<input type="text" class="edd_repeatable_upload_field edd_upload_field" placeholder="' . __('file url', 'edd') . '" name="' . $field['id'] . '[' . $key . '][file]" id="' . $field['id'] . '[' . $key . '][file]" value="' . $file . '" size="30" style="width:50%" />';
-									$field_html .= '<button class="button-secondary edd_upload_image_button">Upload File</button>';
+									$field_html .= '<button class="button-secondary edd_upload_image_button">' . __('Upload File', 'edd') . '</button>';
 								if($count > 1) {
 									$field_html .= '<a href="#" class="edd_remove_repeatable button-secondary">x</a><br/>';
 								}

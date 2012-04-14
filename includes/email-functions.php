@@ -23,7 +23,7 @@ function edd_email_download_link($payment_id, $admin_notice = true) {
 	if($admin_notice) {
 		/* send an email notification to the admin */
 		$admin_email = isset($edd_options['from_email']) ? $edd_options['from_email'] : get_option('admin_email');
-		$admin_message = __('Hello', 'edd') . "\n\n" . __('A download purchase has been made') . ".\n\n";
+		$admin_message = __('Hello', 'edd') . "\n\n" . __('A download purchase has been made', 'edd') . ".\n\n";
 		$admin_message .= __('Downloads sold:', 'edd') .  "\n\n";
 			
 		$download_list = '';	
