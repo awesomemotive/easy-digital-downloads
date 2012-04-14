@@ -131,6 +131,12 @@ function edd_register_settings() {
 		'emails' => apply_filters('edd_settings_emails', 
 			array(
 				array(
+					'id' => 'from_name',
+					'name' => __('From Name', 'edd'),
+					'desc' => __('The name purchase receipts are said to come from. This should probably be your site or shop name.', 'edd'),
+					'type' => 'text'
+				),
+				array(
 					'id' => 'from_email',
 					'name' => __('From Email', 'edd'),
 					'desc' => __('Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'edd'),

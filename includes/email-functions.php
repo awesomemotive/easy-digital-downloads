@@ -10,9 +10,10 @@ function edd_email_download_link($payment_id, $admin_notice = true) {
 		$message = apply_filters('edd_purchase_receipt', $message);
 	$message .= '</body></html>';
 	
+	$from_name = isset($edd_options['from_name']) ? $edd_options['from_name'] : get_bloginfo('name');
 	$from_email = isset($edd_options['from_email']) ? $edd_options['from_email'] : get_option('admin_email');
 	
-	$headers = "From: " . $from_email . "\r\n";
+	$headers = "From: " . strip_tags(stripslashes(htmlspecialchars_decode(utf8_decode($from_name)))) . " <$from_email>\r\n";
 	$headers .= "Reply-To: ". $from_email . "\r\n";
 	$headers .= "MIME-Version: 1.0\r\n";
 	$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";	

@@ -37,7 +37,10 @@ $edd_download_meta_box = array(
 			'id' 	=> '_edd_purchase_style',
 			'class' => 'edd_radio',
 			'type' 	=> 'radio',
-			'options' => array('button', 'text')
+			'options' => array(
+				array('value' => 'button', 'label' => __('Button', 'edd')),
+				array('value' => 'text', 'label' => __('Text', 'edd')),
+			)
 		),							
 		array(
 			'name' 	=> __('Button Color', 'edd'),
@@ -103,7 +106,7 @@ function edd_render_download_meta_box()	{
 						break;
 					case 'radio':
 						foreach ($field['options'] as $option) {
-							echo '<input type="radio" name="', $field['id'], '" value="', $option, '"', $meta == $option ? ' checked="checked"' : '', ' />&nbsp;', $option;
+							echo '<input type="radio" name="', $field['id'], '" value="', $option['value'], '"', $meta == $option['value'] ? ' checked="checked"' : '', ' />&nbsp;', $option['label'] . '&nbsp;';
 						}
 						echo '<br/>' . $field['desc'];
 						break;
