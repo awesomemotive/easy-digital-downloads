@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-14 10:57-0600\n"
-"PO-Revision-Date: 2012-04-14 10:57-0600\n"
+"POT-Creation-Date: 2012-04-14 12:23-0600\n"
+"PO-Revision-Date: 2012-04-14 12:23-0600\n"
 "Last-Translator: Pippin Williamson <pippin@pippinsplugins.com>\n"
 "Language-Team: Pippin's Plugins\n"
 "MIME-Version: 1.0\n"
@@ -437,47 +437,105 @@ msgid "Download Stats"
 msgstr ""
 
 #: ../includes/metabox.php:70
+msgid "Purchase Log"
+msgstr ""
+
+#: ../includes/metabox.php:71
+msgid "File Download Log"
+msgstr ""
+
+#: ../includes/metabox.php:72
 msgid "Payment Info"
 msgstr ""
 
-#: ../includes/metabox.php:134
-#: ../includes/metabox.php:145
+#: ../includes/metabox.php:136
+#: ../includes/metabox.php:147
 msgid "file name"
 msgstr ""
 
-#: ../includes/metabox.php:135
-#: ../includes/metabox.php:146
+#: ../includes/metabox.php:137
+#: ../includes/metabox.php:148
 msgid "file url"
 msgstr ""
 
-#: ../includes/metabox.php:136
+#: ../includes/metabox.php:138
+#: ../includes/metabox.php:149
 msgid "Upload File"
 msgstr ""
 
-#: ../includes/metabox.php:150
+#: ../includes/metabox.php:152
 #: ../includes/post-types.php:28
 #: ../includes/post-types.php:61
 msgid "Add New"
 msgstr ""
 
-#: ../includes/metabox.php:160
+#: ../includes/metabox.php:162
 msgid "Notes"
 msgstr ""
 
-#: ../includes/metabox.php:161
+#: ../includes/metabox.php:163
 msgid "The style options above do NOT reflect the style of short code. The short code allows you to place a purchase button for this download anywhere on the site."
 msgstr ""
 
-#: ../includes/metabox.php:164
+#: ../includes/metabox.php:166
 msgid "Short Code for this Download"
 msgstr ""
 
-#: ../includes/metabox.php:222
+#: ../includes/metabox.php:224
 msgid "Sales:"
 msgstr ""
 
-#: ../includes/metabox.php:228
+#: ../includes/metabox.php:230
 msgid "Earnings:"
+msgstr ""
+
+#: ../includes/metabox.php:245
+msgid "Sales Log"
+msgstr ""
+
+#: ../includes/metabox.php:247
+msgid "Each sale for this download is listed below."
+msgstr ""
+
+#: ../includes/metabox.php:261
+#: ../includes/metabox.php:309
+msgid "Date:"
+msgstr ""
+
+#: ../includes/metabox.php:265
+msgid "Buyer:"
+msgstr ""
+
+#: ../includes/metabox.php:269
+msgid "Purchase ID:"
+msgstr ""
+
+#: ../includes/metabox.php:276
+msgid "No sales yet"
+msgstr ""
+
+#: ../includes/metabox.php:291
+msgid "Download Log"
+msgstr ""
+
+#: ../includes/metabox.php:293
+msgid "Each time a file is downloaded, it is recorded below."
+msgstr ""
+
+#: ../includes/metabox.php:313
+msgid "Downloaded by:"
+msgstr ""
+
+#: ../includes/metabox.php:317
+msgid "IP Address:"
+msgstr ""
+
+#: ../includes/metabox.php:321
+msgid "File: "
+msgstr ""
+
+#: ../includes/metabox.php:329
+msgid "No file downloads yet yet"
 msgstr ""
 
 #: ../includes/misc-functions.php:33
@@ -572,11 +630,11 @@ msgstr ""
 msgid "Thai Baht"
 msgstr ""
 
-#: ../includes/payment-functions.php:137
+#: ../includes/payment-functions.php:142
 msgid "pending"
 msgstr ""
 
-#: ../includes/payment-functions.php:140
+#: ../includes/payment-functions.php:145
 msgid "complete"
 msgstr ""
 
@@ -746,11 +804,11 @@ msgstr ""
 msgid "Download submitted."
 msgstr ""
 
-#: ../includes/process-download.php:56
+#: ../includes/process-download.php:67
 msgid "You do not have permission to download this file"
 msgstr ""
 
-#: ../includes/process-download.php:56
+#: ../includes/process-download.php:67
 msgid "Purchase Verification Failed"
 msgstr ""
 
@@ -1312,7 +1370,7 @@ msgid "Email:"
 msgstr ""
 
 #: ../includes/admin-pages/payments-history.php:103
-#: ../includes/admin-pages/forms/edit-payment.php:44
+#: ../includes/admin-pages/forms/edit-payment.php:58
 msgid "Close"
 msgstr ""
 
@@ -1416,7 +1474,7 @@ msgid "Edit Discount"
 msgstr ""
 
 #: ../includes/admin-pages/forms/edit-discount.php:7
-#: ../includes/admin-pages/forms/edit-payment.php:2
+#: ../includes/admin-pages/forms/edit-payment.php:3
 msgid "Go Back"
 msgstr ""
 
@@ -1436,24 +1494,36 @@ msgstr ""
 msgid "Update Discount Code"
 msgstr ""
 
-#: ../includes/admin-pages/forms/edit-payment.php:8
+#: ../includes/admin-pages/forms/edit-payment.php:9
 msgid "Downloads Purchased"
 msgstr ""
 
-#: ../includes/admin-pages/forms/edit-payment.php:20
+#: ../includes/admin-pages/forms/edit-payment.php:21
 #, php-format
 msgid "Add download to purchase #%s"
 msgstr ""
 
-#: ../includes/admin-pages/forms/edit-payment.php:20
+#: ../includes/admin-pages/forms/edit-payment.php:21
 msgid "Add download to purchase"
 msgstr ""
 
-#: ../includes/admin-pages/forms/edit-payment.php:30
+#: ../includes/admin-pages/forms/edit-payment.php:26
+msgid "Payment Status"
+msgstr ""
+
+#: ../includes/admin-pages/forms/edit-payment.php:31
+msgid "Pending"
+msgstr ""
+
+#: ../includes/admin-pages/forms/edit-payment.php:32
+msgid "Complete"
+msgstr ""
+
+#: ../includes/admin-pages/forms/edit-payment.php:44
 msgid "Update Payment"
 msgstr ""
 
-#: ../includes/admin-pages/forms/edit-payment.php:43
+#: ../includes/admin-pages/forms/edit-payment.php:57
 msgid "Add Selected Downloads"
 msgstr ""
 
