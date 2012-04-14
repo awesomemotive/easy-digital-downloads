@@ -1,3 +1,4 @@
+<?php $payment = get_post($_GET['purchase_id']); ?>
 <div class="wrap">
 	<h2><?php _e('Edit Payment', 'edd'); ?>: <?php echo get_the_title($_GET['purchase_id']) . ' - #' . $_GET['purchase_id']; ?> - <a href="<?php echo admin_url('edit.php?post_type=download&page=edd-payment-history'); ?>" class="button-secondary"><?php _e('Go Back', 'edd'); ?></a></h2>
 	<form id="edd-edit-payment" action="" method="post">
@@ -20,11 +21,24 @@
 						<p id="edit-downloads"><a href="#TB_inline?width=640&inlineId=available-downloads" class="thickbox" title="<?php printf(__('Add download to purchase #%s', 'edd'), $_GET['purchase_id']); ?> "><?php _e('Add download to purchase', 'edd'); ?></p>
 					</td>
 				</tr>
+				<tr class="form-field">
+					<th scope="row" valign="top">
+						<span><?php _e('Payment Status', 'edd'); ?></span>
+					</th>
+					<td id="purchased-downloads">
+						<?php $status = $payment->post_status; ?>
+						<select name="edd-payment-status" id="edd_payment_status">
+							<option value="pending" <?php selected($status, 'pending'); ?>><?php _e('Pending', 'edd'); ?></option>
+							<option value="publish" <?php selected($status, 'publish'); ?>><?php _e('Complete', 'edd'); ?></option>
+						</select>
+					</td>
+				</tr>
 				
 			</tbody>
 		</table>
 		
 		<input type="hidden" name="edd-action" value="edit_payment"/>
+		<input type="hidden" name="edd-old-status" value="<?php echo $status; ?>"/>
 		<input type="hidden" name="payment-id" value="<?php echo $_GET['purchase_id']; ?>"/>
 		<?php wp_nonce_field('edd_payment_nonce', 'edd-payment-nonce'); ?>
 		<?php echo submit_button(__('Update Payment', 'edd')); ?>

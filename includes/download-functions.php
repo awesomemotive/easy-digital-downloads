@@ -95,12 +95,84 @@ function edd_get_download_sales_stats($download_id) {
 	return 0;
 }
 
+// returns an array of sales and sale info for a download
+function edd_get_download_sales_log($download_id) {
+	$sales_log = get_post_meta($download_id, '_edd_sales_log', true);
+	if($sales_log) {
+		return $sales_log;
+	}
+	return false;
+}
+
+// returns an array of file download dates and user info
+function edd_get_file_download_log($download_id) {
+	$download_log = get_post_meta($download_id, '_edd_file_download_log', true);
+	if($download_log) {
+		return $download_log;
+	}
+	return false;
+}
+
+// stores log information for a download sale
+function edd_record_sale_in_log($download_id, $payment_id, $user_info, $date) {
+	$log = edd_get_download_sales_log($download_id);
+	if(!$log) {
+		$log = array();
+	}
+	$log_entry = array(
+		'payment_id' => $payment_id,
+		'user_info' => $user_info,
+		'date' => $date
+	);
+	$log[] = $log_entry;
+	
+	update_post_meta($download_id, '_edd_sales_log', $log);
+}
+
+// stores a log entry for a file download
+function edd_record_download_in_log($download_id, $file_id, $user_info, $ip, $date) {
+	$log = edd_get_file_download_log($download_id);
+	if(!$log) {
+		$log = array();
+	}
+	$log_entry = array(
+		'file_id' => $file_id,
+		'user_info' => $user_info,
+		'ip' => $ip,
+		'date' => $date
+	);
+	$log[] = $log_entry;
+	
+	update_post_meta($download_id, '_edd_file_download_log', $log);
+}
+
 // returns the purchase price of a download
 function edd_get_download_price($download_id) {
 	$price = get_post_meta($download_id, 'edd_price', true);
 	if($price)
 		return $price;
 	return 0;
+}
+
+// increases the sale count od a download
+function edd_increase_purchase_count($download_id) {
+	$sales = edd_get_download_sales_stats($download_id);
+	$sales = $sales + 1;
+	if(update_post_meta($download_id, '_edd_download_sales', $sales))
+		return $sales;
+
+	return false;
+}
+
+// increases the total earnings of a download
+function edd_increase_earnings($download_id, $amount) {
+	$earnings = edd_get_download_earnings_stats($download_id);
+	$earnings = $earnings + $amount;
+	
+	if(update_post_meta($download_id, '_edd_download_earnings', $earnings))
+		return $earnings;
+	
+	return false;
 }
 
 // retrieves an array of all downloadable files for a download
@@ -168,28 +240,6 @@ function edd_verify_download_link($download_id, $key, $email, $expire) {
 		}
 	}
 	// payment not verified
-	return false;
-}
-
-
-// increases the sale count od a download
-function edd_increase_purchase_count($download_id) {
-	$sales = edd_get_download_sales_stats($download_id);
-	$sales = $sales + 1;
-	if(update_post_meta($download_id, '_edd_download_sales', $sales))
-		return $sales;
-
-	return false;
-}
-
-// increases the total earnings of a download
-function edd_increase_earnings($download_id, $amount) {
-	$earnings = edd_get_download_earnings_stats($download_id);
-	$earnings = $earnings + $amount;
-	
-	if(update_post_meta($download_id, '_edd_download_earnings', $earnings))
-		return $earnings;
-	
 	return false;
 }
 

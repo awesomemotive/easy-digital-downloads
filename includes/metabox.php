@@ -67,6 +67,8 @@ function edd_add_download_meta_box() {
 
 	add_meta_box($edd_download_meta_box['id'], $edd_download_meta_box['title'], 'edd_render_download_meta_box', 'download', 'normal', 'default', $edd_download_meta_box);
 	add_meta_box('edd_download_stats', __('Download Stats', 'edd'), 'edd_render_stats_meta_box', 'download', 'side', 'high');
+	add_meta_box('edd_purchase_log', __('Purchase Log', 'edd'), 'edd_render_purchase_log_meta_box', 'download', 'normal', 'default');
+	add_meta_box('edd_file_download_log', __('File Download Log', 'edd'), 'edd_render_download_log_meta_box', 'download', 'normal', 'default');
 	add_meta_box('edd_payment_info', __('Payment Info', 'edd'), 'edd_render_payment_meta_box', 'edd_payment', 'normal', 'high');
 }
 add_action('add_meta_boxes', 'edd_add_download_meta_box');
@@ -144,7 +146,7 @@ function edd_render_download_meta_box()	{
 							$field_html .= '<div class="edd_repeatable_upload_wrapper">';
 								$field_html .= '<input type="text" class="edd_repeatable_name_field" placeholder="' . __('file name', 'edd') . '" name="' . $field['id'] . '[0][name]" id="' . $field['id'] . '[0][name]" value="" size="20" style="width:20%" />';
 								$field_html .= '<input type="text" class="edd_repeatable_upload_field edd_upload_field" placeholder="' . __('file url', 'edd') . '" name="' . $field['id'] . '[0][file]" id="' . $field['id'] . '[0][file]" value="" size="30" style="width:50%" />';
-								$field_html .= '<button class="button-secondary edd_upload_image_button">Upload File</button>';
+								$field_html .= '<button class="button-secondary edd_upload_image_button">' . __('Upload File', 'edd') . '</button>';
 							$field_html .= '</div>';
 						}
 						$field_html .= '<button class="edd_add_new_upload_field button-secondary">' . __('Add New', 'edd') . '</button>&nbsp;&nbsp;' . __(stripslashes($field['desc']));		
@@ -230,5 +232,103 @@ function edd_render_stats_meta_box() {
 				echo '$' . $earnings;
 			echo '</td>';
 		echo '</tr>';
+	echo '</table>';
+}
+
+function edd_render_purchase_log_meta_box() {
+	global $post;
+	
+	$sales = edd_get_download_sales_log($post->ID);
+	
+	echo '<table class="form-table">';
+		echo '<tr>';
+			echo '<th style="width:20%"><strong>' . __('Sales Log', 'edd') . '</strong></th>';
+			echo '<td colspan="4" class="edd_download_stats">';
+				_e('Each sale for this download is listed below.', 'edd');
+			echo '</td>';
+		echo '</tr>';
+		if($sales) {
+			foreach($sales as $sale) {
+				if($sale['user_info']['id'] != 0) {
+					$user_data = get_userdata($sale['user_info']['id']);
+					$name = $user_data->display_name;
+				} else {
+					$name = $sale['user_info']['first_name'] . ' ' . $sale['user_info']['last_name'];
+				}
+				echo '<tr>';
+				
+					echo '<td class="edd_download_sales_log">';
+						echo '<strong>' . __('Date:', 'edd') . '</strong> ' . $sale['date'];
+					echo '</td>';
+				
+					echo '<td class="edd_download_sales_log">';
+						echo '<strong>' . __('Buyer:', 'edd') . '</strong> ' . $name;
+					echo '</td>';
+					
+					echo '<td colspan="3" class="edd_download_sales_log">';
+						echo '<strong>' . __('Purchase ID:', 'edd') . '</strong> <a href="' . admin_url('edit.php?post_type=download&page=edd-payment-history&purchase_id=' . $sale['payment_id'] . '&edd-action=edit-payment') . '">' . $sale['payment_id'] . '</a>';
+					echo '</td>';
+				echo '</tr>';
+			} // endforeach
+		} else {
+			echo '<tr>';
+				echo '<td colspan=2" class="edd_download_sales_log">';
+					echo __('No sales yet', 'edd');
+				echo '</td>';
+			echo '</tr>';		
+		}
+	echo '</table>';
+}
+
+function edd_render_download_log_meta_box() {
+	global $post;
+	
+	$downloads = edd_get_file_download_log($post->ID);
+	$files = edd_get_download_files($post->ID);
+	
+	echo '<table class="form-table">';
+		echo '<tr>';
+			echo '<th style="width:20%"><strong>' . __('Download Log', 'edd') . '</strong></th>';
+			echo '<td colspan="4" class="edd_download_stats">';
+				_e('Each time a file is downloaded, it is recorded below.', 'edd');
+			echo '</td>';
+		echo '</tr>';
+		if($downloads) {
+			foreach($downloads as $file_download) {
+				if($file_download['user_info']['id'] != 0) {
+					$user_data = get_userdata($file_download['user_info']['id']);
+					$name = $user_data->display_name;
+				} else {
+					$name = $file_download['user_info']['email'];
+				}
+				$file_name = $files[$file_download['file_id']]['name'];
+				
+				echo '<tr>';
+				
+					echo '<td class="edd_download_sales_log">';
+						echo '<strong>' . __('Date:', 'edd') . '</strong> ' . $file_download['date'];
+					echo '</td>';
+				
+					echo '<td class="edd_download_sales_log">';
+						echo '<strong>' . __('Downloaded by:', 'edd') . '</strong> ' . $name;
+					echo '</td>';
+					
+					echo '<td class="edd_download_sales_log">';
+						echo '<strong>' . __('IP Address:', 'edd') . '</strong> ' . $file_download['ip'];
+					echo '</td>';
+					
+					echo '<td colspan="2" class="edd_download_sales_log">';
+						echo '<strong>' . __('File: ', 'edd') . '</strong> ' . $file_name;
+					echo '</td>';
+					
+				echo '</tr>';
+			} // endforeach
+		} else {
+			echo '<tr>';
+				echo '<td colspan=4" class="edd_download_sales_log">';
+					echo __('No file downloads yet yet', 'edd');
+				echo '</td>';
+			echo '</tr>';		
+		}
 	echo '</table>';
 }

@@ -17,6 +17,17 @@ function edd_process_download() {
 			
 			$requested_file = $download_files[$file_key]['file'];
 			
+			$user_info = array();
+			$user_info['email'] = $email;
+			if(is_user_logged_in()) {
+				global $user_ID;
+				$user_data = get_userdata($user_ID);
+				$user_info['id'] = $user_ID;
+				$user_info['name'] = $user_data->display_name;
+			}
+			
+			edd_record_download_in_log($download, $file_key, $user_info, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
+			
 			$file_extension = edd_get_file_extension($requested_file);
 
             switch ($file_extension) :

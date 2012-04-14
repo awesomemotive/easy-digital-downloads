@@ -72,6 +72,7 @@ function edd_insert_payment($payment_data = array()) {
 		if(!edd_is_test_mode()) {
 			// increase purchase count and earnings
 			foreach($payment_data['downloads'] as $download) {
+				edd_record_sale_in_log($download, $payment, $payment_data['user_info'], $payment_data['date']);
 				edd_increase_purchase_count($download);
 				edd_increase_earnings($download, $payment_data['price']);
 			}
@@ -89,18 +90,22 @@ function edd_insert_payment($payment_data = array()) {
 	return false;
 }
 
-// updates the purchase date for a payment. Used primarily for adding new downloads to a purchase
-function edd_update_purchased_downloads($data) {
+// updates the purchase data for a payment. Used primarily for adding new downloads to a purchase
+function edd_update_edited_purchase($data) {
 	if(wp_verify_nonce($data['edd-payment-nonce'], 'edd_payment_nonce')) {
 		$payment_id = $_POST['payment-id'];
 		$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
 		$payment_data['downloads'] = serialize($_POST['edd-purchased-downloads']);
 		update_post_meta($payment_id, '_edd_payment_meta', $payment_data);
+		if($_POST['edd-old-status'] != $_POST['edd-payment-status']) {
+			wp_update_post(array('ID' => $payment_id, 'post_status' => $_POST['edd-payment-status']));
+		}
 	}
 }
-add_action('edd_edit_payment', 'edd_update_purchased_downloads');
+add_action('edd_edit_payment', 'edd_update_edited_purchase');
 
-function edd_update_payment_status($payment_id, $status = 'pending') {
+// updates a payment status, and performs all necessary functions to mark it as complete, and to finish a purchase
+function edd_update_payment_status($payment_id, $status = 'publish') {
 	
 	if($status == 'completed' || $status == 'complete') {
 		$status = 'publish';
