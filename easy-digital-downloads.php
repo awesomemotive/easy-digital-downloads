@@ -8,7 +8,6 @@ Author URI: http://pippinsplugins.com
 Version: 1.0-beta
 */
 
-
 ini_set('display_errors', 'on');
 
 /*************************************
