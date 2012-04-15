@@ -15,9 +15,9 @@ Sell digital downloads through WordPress with this complete digital downloads ma
 
 Selling digital downloads is something that not a single one of the large WordPress ecommerce plugins has ever gotten really right. This plugin aims to fix that. Instead of focusing on providing every single feature under the sun, Easy Digital Downloads trys to provide only the ones that you really need. It aims to make selling digital downloads through WordPress easy, and complete.
 
-As this plugin is still in beta, it is strongly encouraged that you submit your feedback and bug reports to the project's [Git Hub page](https://github.com/mordauk/Easy-Digital-Downloads).
+As this plugin is still in beta, it is strongly encouraged that you submit your feedback and bug reports to the project's [Git Hub page](https://github.com/pippinsplugins/Easy-Digital-Downloads).
 
-**Follow this plugin on [Git Hub](https://github.com/mordauk/Easy-Digital-Downloads)**
+**Follow this plugin on [Git Hub](https://github.com/pippinsplugins/Easy-Digital-Downloads)**
 
 Features of the plugin include:
 

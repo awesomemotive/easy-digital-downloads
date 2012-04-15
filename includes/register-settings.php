@@ -5,7 +5,7 @@ function edd_register_settings() {
 	/********************************
 	* setup some default option sets
 	********************************/
-	$pages = get_pages();
+	$pages = get_pages();	
 	$pages_options = array();
 	if($pages) {
 		foreach ( $pages as $page ) {
@@ -20,7 +20,7 @@ function edd_register_settings() {
 			array(
 				array(
 					'id' => 'test_mode',
-					'name' => __('Use this plugin in test mode', 'edd'),
+					'name' => __('Test Mode', 'edd'),
 					'desc' => __('While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'edd'),
 					'type' => 'checkbox'
 				),
@@ -90,8 +90,8 @@ function edd_register_settings() {
 				),
 				array(
 					'id' => 'accepted_cards',
-					'name' => __('Accepted Payment Methods', 'edd'),
-					'desc' => __('Display icons for the selected payment methods', 'edd') . '<br/>' . __('You will also need to configure your gateway settings if you accepting credit cards', 'edd'),
+					'name' => __('Accepted Payment Method Icons', 'edd'),
+					'desc' => __('Display icons for the selected payment methods', 'edd') . '<br/>' . __('You will also need to configure your gateway settings if you are accepting credit cards', 'edd'),
 					'type' => 'multicheck',
 					'options' => array(
 						'Mastercard',
