@@ -41,9 +41,9 @@ add_action('wp_enqueue_scripts', 'edd_register_styles');
 
 function edd_load_admin_scripts($hook) {
 
-	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page;
+	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page;
 
-	$edd_pages = array($edd_discounts_page, $edd_payments_page, $edd_settings_page);
+	$edd_pages = array($edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page);
 		
 	if( ( !isset($post) || 'download' != $post->post_type ) && !in_array($hook, $edd_pages) )
 		return; // load the scripts only on the Download pages

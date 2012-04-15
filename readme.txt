@@ -62,6 +62,26 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 
 == Screenshots ==
 
+1. Screenshot 1
+2. Screenshot 2
+3. Screenshot 3
+4. Screenshot 4
+5. Screenshot 5
+6. Screenshot 6
+7. Screenshot 7
+8. Screenshot 8
+9. Screenshot 9
+10. Screenshot 10
+11. Screenshot 11
+12. Screenshot 12
+13. Screenshot 13
+14. Screenshot 14
+15. Screenshot 15
+16. Screenshot 16
+17. Screenshot 17
+18. Screenshot 18
+19. Screenshot 19
+
 == Changelog ==
 
 = 1.0.1.1 = 
