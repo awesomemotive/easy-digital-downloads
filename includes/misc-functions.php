@@ -52,7 +52,8 @@ function edd_get_currencies() {
 		'SEK' => __('Swedish Krona', 'edd'),
 		'CHF' => __('Swiss Franc', 'edd'),
 		'TWD' => __('Taiwan New Dollars', 'edd'),
-		'THB' => __('Thai Baht', 'edd')
+		'THB' => __('Thai Baht', 'edd'),
+		'INR' => __('Indian Rupee', 'edd')
 	);
 	return $currencies;
 }

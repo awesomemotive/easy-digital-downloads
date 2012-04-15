@@ -3,32 +3,32 @@ Author URI: http://pippinsplugins.com
 Plugin URI: http://easydigitaldownloads.com
 Contributors: mordauk
 Donate link: http://pippinsplugins.com/support-the-site
-Tags: download, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson
+Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.3.1
+Stable Tag: 1.0.1.1
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
 == Description ==
 
-**This plugin is very much still in beta. Use on production sites is not yet recommended**
-
 Selling digital downloads is something that not a single one of the large WordPress ecommerce plugins has ever gotten really right. This plugin aims to fix that. Instead of focusing on providing every single feature under the sun, Easy Digital Downloads trys to provide only the ones that you really need. It aims to make selling digital downloads through WordPress easy, and complete.
-
-As this plugin is still in beta, it is strongly encouraged that you submit your feedback and bug reports to the project's [Git Hub page](https://github.com/pippinsplugins/Easy-Digital-Downloads).
 
 **Follow this plugin on [Git Hub](https://github.com/pippinsplugins/Easy-Digital-Downloads)**
 
 Features of the plugin include:
 
-* A cart system for purchasing multiple downloads at once
-* A complete promotional code system
-* Many payment gateways. PayPal and Manual are included by default with Stripe, PayPal Pro, PayPal Express, and others available as add-ons (once the plugin is out of beta)
+* Cart system for purchasing multiple downloads at once
+* Complete promotional code system
+* Many payment gateways. PayPal and Manual are included by default with Stripe, PayPal Pro, PayPal Express, and others available as add-ons
 * Complete payment history
 * User purchase history and ability to redownload files
 * Multiple files per downloadable product
 * Customizable purchase receipts
 * Earnings and sales charts
+* Details purchase and file download logs
+* Extensible with many [add-ons](http://easydigitaldownloads.com/extensions/)
+* Developer friendly with dozens of actions and filters
 
 More information at [Easy Digital Downloads.com](http://easydigitaldownloads.com/).
 
@@ -37,27 +37,45 @@ More information at [Easy Digital Downloads.com](http://easydigitaldownloads.com
 == Installation ==
 
 1. Activate the plugin
-2. Create a page to act as your downloads checkout page and place [download_checkout] in its content
-3. Create a page to act as the "your purchase history" for your users and place the [download_history] short code in its content
-4. Create a page to act as your "successful purchase" page
-5. Go to Settings > Permalinks and click "Save Changes"
-6. Go to Downloads > Settings and configure the options
-7. Create downloads
-8. Insert purchase buttons for any download via the "Insert Download" button next the Upload Media buttons
+2. Go to Downloads > Settings and configure the options
+3. Create Downloadable products from the Downloads page
+4. Insert purchase buttons for any download via the "Insert Download" button next the Upload Media buttons
+5. For detailed setup instructions, vist the official [Documentation](http://easydigitaldownloads.com/documentation/) page.
 
+== Frequently Asked Questions ==
+
+= How do I Show My Shopping Cart? =
+
+There are three ways you can show the downloads shopping cart:
+
+1. Use the short code and simply place ]download_cart] on a page or within a text widget.
+
+2. Use the included widget. Go to Appearance > Widgets and place “Downloads Cart” into any widget area available.
+
+3. Use the template tag and place the following the template file of your choosing:
+
+`echo edd_shopping_cart();`
+
+= Getting a 404 error? =
+
+To get rid of the 404 error when viewing a download, you need to resave your permalink structure. Go to Settings > Permalinks and click “Save Changes”.
+
+== Screenshots ==
 
 == Changelog ==
 
-= 1.0 = 
+= 1.0.1.1 = 
 
-* Beta version
+* Minor updates including inclusion of INR as an available currency.
+* Updates to the default.po file for missing strings.
 
 = 1.0 =
 
-* Beta release
+* First offical release!
 
 == Upgrade Notice ==
 
 = 1.0 =
 
-* Nothing new here
+* Minor updates including inclusion of INR as an available currency.
+* Updates to the default.po file for missing strings.
