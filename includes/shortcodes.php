@@ -77,6 +77,12 @@ function edd_checkout_form_shortcode($atts, $content = null) {
 }
 add_shortcode('download_checkout', 'edd_checkout_form_shortcode');
 
+// show the shopping cart
+function edd_cart_shortcode($atts, $content = null) {
+	return edd_shopping_cart();
+}
+add_shortcode('download_cart', 'edd_cart_shortcode');
+
 function edd_downloads_query($atts, $content = null) {
 	extract( shortcode_atts( array(
 			'category' => '',

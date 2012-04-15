@@ -45,7 +45,7 @@ function edd_checkout_cart() {
 	return ob_get_clean();
 }
 
-function edd_cart_widget($echo = false) {
+function edd_shopping_cart($echo = false) {
 	global $edd_options;
 	ob_start(); ?>
 	
