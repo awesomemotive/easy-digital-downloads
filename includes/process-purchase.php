@@ -3,8 +3,10 @@
 function edd_process_purchase_form() {
 	if(isset($_POST['edd-action']) && $_POST['edd-action'] == 'purchase' && wp_verify_nonce($_POST['edd-nonce'], 'edd-purchase-nonce')) {
 				
-		$user_id = isset($_POST['edd-user-id']) ? $_POST['edd-user-id'] : 0;
-		$user_email = $_POST['edd_email'];
+		$user_id = isset($_POST['edd-user-id']) ? $_POST['edd-user-id'] : null;
+		$user_email = strip_tags($_POST['edd_email']);
+		$user_first = strip_tags($_POST["edd_first"]);
+		$user_last	= strip_tags($_POST["edd_last"]);
 			
 		$need_new_user = false;
 		
@@ -18,10 +20,7 @@ function edd_process_purchase_form() {
 			// check the new user's credentials against existing ones
 			
 			$user_login		= $_POST["edd_user_login"];	
-			$user_email		= $_POST["edd_user_email"];
 			$user_pass		= $_POST["edd_user_pass"];
-			$user_first 	= $_POST["edd_user_first"];
-			$user_last	 	= $_POST["edd_user_last"];
 			$pass_confirm 	= $_POST["edd_user_pass_confirm"];
 			$need_new_user	= true;
 			
@@ -63,8 +62,8 @@ function edd_process_purchase_form() {
 					$user_pass = $_POST['edd-password'];
 					edd_log_user_in($user_data->ID, $_POST['edd-username'], $user_pass);
 					// set the buyer's name
-					$_POST['edd-first'] = $user_data->first_name;
-					$_POST['edd-last'] = $user_data->last_name;
+					$_POST['edd_first'] = $user_data->first_name;
+					$_POST['edd_last'] = $user_data->last_name;
 				} else {
 					edd_set_error('password_incorrect', __('The password you entered is incorrect', 'edd'));
 				}
@@ -105,8 +104,8 @@ function edd_process_purchase_form() {
 			$user_info = array(
 				'id' => $user_id,
 				'email' => $user_email,
-				'first_name' => strip_tags($_POST['edd-first']),
-				'last_name' => strip_tags($_POST['edd-last']),
+				'first_name' => $user_first,
+				'last_name' => $user_last,
 				'discount' => isset($_POST['edd-discount']) && edd_is_discount_valid($_POST['edd-discount']) ? $_POST['edd-discount'] : 'none'
 			);	
 				

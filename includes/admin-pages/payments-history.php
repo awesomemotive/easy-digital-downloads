@@ -105,7 +105,7 @@ function edd_payment_history_page() {
 									</td>
 									<td style="text-transform:uppercase;"><?php echo edd_currency_filter( $payment_meta['amount']); ?></td>
 									<td><?php echo date(get_option('date_format'), strtotime($payment->post_date)); ?></td>
-									<td><?php echo get_user_by('id', $user_info['id'])->display_name; ?></td>
+									<td><?php echo isset($user_info['id']) ? get_user_by('id', $user_info['id'])->display_name : __('guest', 'edd'); ?></td>
 									<td><?php echo edd_get_payment_status($payment); ?></td>
 									<td>
 										<a href="<?php echo add_query_arg('edd-action', 'edit-payment', add_query_arg('purchase_id', $payment->ID)); ?>"><?php _e('Edit', 'edd'); ?></a> | 

@@ -32,12 +32,13 @@ function edd_manual_payment($purchase_data) {
 		'purchase_key' => $purchase_data['purchase_key'],
 		'currency' => $edd_options['currency'],
 		'downloads' => $purchase_data['downloads'],
-		'user_info' => $purchase_data['user_info']
+		'user_info' => $purchase_data['user_info'],
+		'status' => 'pending'
 	);
 	
 	// record the pending payment
 	$payment = edd_insert_payment($payment);
-	
+		
 	if($payment) {
 		edd_update_payment_status($payment, 'publish');
 		// empty the shopping cart

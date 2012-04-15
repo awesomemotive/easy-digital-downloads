@@ -86,7 +86,7 @@ function edd_checkout_form() {
 							<?php } elseif(isset($edd_options['show_register_form']) && !is_user_logged_in() && isset($_GET['login'])) { ?>
 								<div id="edd_checkout_login_register"><?php echo edd_get_login_fields(); ?></div>
 							<?php } ?>
-							<?php if(!isset($_GET['login']) && is_user_logged_in()) { ?>											
+							<?php if( (!isset($_GET['login']) && is_user_logged_in()) || !isset($edd_options['logged_in_only'])) { ?>											
 							<fieldset id="edd_checkout_user_info">
 								<p>
 									<input class="edd-input required" type="text" name="edd_email" placeholder="<?php _e('Email address', 'edd'); ?>" id="edd-email" value="<?php echo is_user_Logged_in() ? $user_data->user_email : ''; ?>"/>
@@ -97,7 +97,7 @@ function edd_checkout_form() {
 									<label class="edd-label" for="edd-first"><?php _e('First Name', 'edd'); ?></label>
 								</p>
 								<p>
-									<input class="edd-input" type="text" name="edd-last" id="edd-last" placeholder="<?php _e('Last name', 'edd'); ?>" value="<?php echo is_user_Logged_in() ? $user_data->user_lastname : ''; ?>"/>
+									<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e('Last name', 'edd'); ?>" value="<?php echo is_user_Logged_in() ? $user_data->user_lastname : ''; ?>"/>
 									<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
 								</p>	
 								<?php do_action('edd_purchase_form_user_info'); ?>
@@ -223,16 +223,13 @@ function edd_default_cc_address_fields() {
 add_action('edd_cc_form_address_fields', 'edd_default_cc_address_fields');
 
 function edd_get_register_fields() {
+	global $edd_options;
 	ob_start(); ?>
 	<fieldset id="edd_register_fields">
-		<legend><?php _e('Create an account', 'edd'); ?></legend>
+		<legend><?php _e('Create an account', 'edd'); if(!isset($edd_options['logged_in_only'])) { echo ' ' . __('(optional)', 'edd'); } ?></legend>
 		<p>
 			<input name="edd_user_login" id="edd_user_login" class="required edd-input" type="text" placeholder="<?php _e('Username', 'edd'); ?>" title="<?php _e('Username', 'edd'); ?>"/>
 			<label for="edd_user_Login"><?php _e('Username', 'edd'); ?></label>
-		</p>
-		<p>
-			<input name="edd_user_email" id="edd_user_email" class="required edd-input" type="email" placeholder="<?php _e('Email address', 'edd'); ?>" title="<?php _e('email@domain.com', 'edd'); ?>"/>
-			<label for="edd_user_email"><?php _e('Email', 'edd'); ?></label>
 		</p>
 		<p>
 			<input name="edd_user_pass" id="edd_user_pass" class="required edd-input" placeholder="<?php _e('Password', 'edd'); ?>" type="password"/>

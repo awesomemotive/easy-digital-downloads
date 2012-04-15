@@ -69,19 +69,6 @@ function edd_insert_payment($payment_data = array()) {
 		// clear the user's purchased cache
 		delete_transient('edd_user_' . $payment_data['user_info']['id'] . '_purchases');
 		
-		if(!edd_is_test_mode()) {
-			// increase purchase count and earnings
-			foreach($payment_data['downloads'] as $download) {
-				edd_record_sale_in_log($download, $payment, $payment_data['user_info'], $payment_data['date']);
-				edd_increase_purchase_count($download);
-				edd_increase_earnings($download, $payment_data['price']);
-			}
-		
-			if(isset($payment_data['user_info']['discount'])) {
-				edd_increase_discount_usage($payment_data['user_info']['discount']);
-			}
-		}
-		
 		do_action('edd_insert_payment', $payment_data);		
 		
 		return $payment; // return the ID
@@ -112,9 +99,25 @@ function edd_update_payment_status($payment_id, $status = 'publish') {
 	}
 	
 	$payment = get_post($payment_id);
-	if($payment->post_status == 'publish') return; // payment has already been marked as complete
 	
+	$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
+	$downloads = maybe_unserialize($payment_data['downloads']);
+	$user_info = maybe_unserialize($payment_data['user_info']);
+
 	wp_update_post(array('ID' => $payment_id, 'post_status' => $status));
+	
+	if(!edd_is_test_mode()) {
+		// increase purchase count and earnings
+		foreach($downloads as $download) {
+			edd_record_sale_in_log($download, $payment_id, $user_info, $payment_data['date']);
+			edd_increase_purchase_count($download);
+			edd_increase_earnings($download, $payment_data['amount']);
+		}
+	
+		if(isset($payment_data['user_info']['discount'])) {
+			edd_increase_discount_usage($payment_data['user_info']['discount']);
+		}
+	}
 	
 	// send email with secure download link
 	edd_email_download_link($payment_id);

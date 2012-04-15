@@ -13,7 +13,7 @@ function edd_email_download_link($payment_id, $admin_notice = true) {
 	$from_name = isset($edd_options['from_name']) ? $edd_options['from_name'] : get_bloginfo('name');
 	$from_email = isset($edd_options['from_email']) ? $edd_options['from_email'] : get_option('admin_email');
 	
-	$headers = "From: " . strip_tags(stripslashes(htmlspecialchars_decode(utf8_decode($from_name)))) . " <$from_email>\r\n";
+	$headers = "From: " . strip_tags(stripslashes(str_replace("'", '', utf8_decode($from_name)))) . " <$from_email>\r\n";
 	$headers .= "Reply-To: ". $from_email . "\r\n";
 	$headers .= "MIME-Version: 1.0\r\n";
 	$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";	
@@ -43,12 +43,14 @@ function edd_email_templage_tags($message, $payment_data) {
 	
 	$user_info = maybe_unserialize($payment_data['user_info']);
 	
-	if(isset($user_info['first_name'])) {
-		$name = $user_info['first_name'];
-	} elseif(isset($user_info['id'])) {
+	if(isset($user_info['id'])) {
 		$user_data = get_userdata($user_info['id']);
 		$name = $user_data->display_name;
-	}
+	} elseif(isset($user_info['first_name'])) {
+		$name = $user_info['first_name'];
+	} else {
+		$name = $user_info['email'];
+	}	
 	
 	$download_list = '<ul>';
 		foreach(maybe_unserialize($payment_data['downloads']) as $download) {
