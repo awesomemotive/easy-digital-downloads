@@ -5,8 +5,8 @@ function edd_process_purchase_form() {
 				
 		$user_id = isset($_POST['edd-user-id']) ? $_POST['edd-user-id'] : null;
 		$user_email = strip_tags($_POST['edd_email']);
-		$user_first = strip_tags($_POST["edd_first"]);
-		$user_last	= strip_tags($_POST["edd_last"]);
+		$user_first = isset($_POST["edd_first"]) ? strip_tags($_POST["edd_first"]) : '';
+		$user_last = isset($_POST["edd_last"]) ? strip_tags($_POST["edd_last"]) : '';
 			
 		$need_new_user = false;
 		
@@ -24,35 +24,37 @@ function edd_process_purchase_form() {
 			$pass_confirm 	= $_POST["edd_user_pass_confirm"];
 			$need_new_user	= true;
 			
-			if(username_exists($user_login)) {
-				// Username already registered
-				edd_set_error('username_unavailable', __('Username already taken', 'edd'));
+			if(strlen(trim($user_login)) > 0 && edd_no_guest_checkout()) {
+			
+				if(username_exists($user_login)) {
+					// Username already registered
+					edd_set_error('username_unavailable', __('Username already taken', 'edd'));
+				}
+				if(!validate_username($user_login)) {
+					// invalid username
+					edd_set_error('username_invalid', __('Invalid username', 'edd'));
+				}
+				if($user_login == '') {
+					// empty username
+					edd_set_error('username_empty', __('Enter a username', 'edd'));
+				}
+				if(!is_email($user_email)) {
+					//invalid email
+					edd_set_error('email_invalid', __('Invalid email', 'edd'));
+				}
+				if(email_exists($user_email)) {
+					//Email address already registered
+					edd_set_error('email_used', __('Email already used', 'edd'));
+				}
+				if($user_pass == '') {
+					// passwords do not match
+					edd_set_error('password_empty', __('Enter a password', 'edd'));
+				}
+				if($user_pass != $pass_confirm) {
+					// passwords do not match
+					edd_set_error('password_mismatch', __('Passwords don\'t match', 'edd'));
+				}	
 			}
-			if(!validate_username($user_login)) {
-				// invalid username
-				edd_set_error('username_invalid', __('Invalid username', 'edd'));
-			}
-			if($user_login == '') {
-				// empty username
-				edd_set_error('username_empty', __('Enter a username', 'edd'));
-			}
-			if(!is_email($user_email)) {
-				//invalid email
-				edd_set_error('email_invalid', __('Invalid email', 'edd'));
-			}
-			if(email_exists($user_email)) {
-				//Email address already registered
-				edd_set_error('email_used', __('Email already used', 'edd'));
-			}
-			if($user_pass == '') {
-				// passwords do not match
-				edd_set_error('password_empty', __('Enter a password', 'edd'));
-			}
-			if($user_pass != $pass_confirm) {
-				// passwords do not match
-				edd_set_error('password_mismatch', __('Passwords don\'t match', 'edd'));
-			}	
-
 		} elseif(isset($_POST['edd-purchase-var']) && $_POST['edd-purchase-var'] == 'needs-to-login') {
 		
 			// log the user in

@@ -7,6 +7,13 @@ function edd_is_test_mode() {
 	return false;
 }
 
+function edd_no_guest_checkout() {
+	global $edd_options;
+	if(isset($edd_options['logged_in_only']))
+		return true;
+	return false;
+}
+
 function edd_logged_in_only() {
 	global $edd_options;
 	if(isset($edd_options['logged_in_only']))

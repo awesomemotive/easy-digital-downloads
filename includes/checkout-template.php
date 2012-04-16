@@ -226,17 +226,17 @@ function edd_get_register_fields() {
 	global $edd_options;
 	ob_start(); ?>
 	<fieldset id="edd_register_fields">
-		<legend><?php _e('Create an account', 'edd'); if(!isset($edd_options['logged_in_only'])) { echo ' ' . __('(optional)', 'edd'); } ?></legend>
+		<legend><?php _e('Create an account', 'edd'); if(!edd_no_guest_checkout()) { echo ' ' . __('(optional)', 'edd'); } ?></legend>
 		<p>
-			<input name="edd_user_login" id="edd_user_login" class="required edd-input" type="text" placeholder="<?php _e('Username', 'edd'); ?>" title="<?php _e('Username', 'edd'); ?>"/>
+			<input name="edd_user_login" id="edd_user_login" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" type="text" placeholder="<?php _e('Username', 'edd'); ?>" title="<?php _e('Username', 'edd'); ?>"/>
 			<label for="edd_user_Login"><?php _e('Username', 'edd'); ?></label>
 		</p>
 		<p>
-			<input name="edd_user_pass" id="edd_user_pass" class="required edd-input" placeholder="<?php _e('Password', 'edd'); ?>" type="password"/>
+			<input name="edd_user_pass" id="edd_user_pass" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" placeholder="<?php _e('Password', 'edd'); ?>" type="password"/>
 			<label for="password"><?php _e('Password', 'edd'); ?></label>
 		</p>
 		<p>
-			<input name="edd_user_pass_confirm" id="edd_user_pass_confirm" class="required edd-input" placeholder="<?php _e('Confirm password', 'edd'); ?>" type="password"/>
+			<input name="edd_user_pass_confirm" id="edd_user_pass_confirm" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" placeholder="<?php _e('Confirm password', 'edd'); ?>" type="password"/>
 			<label for="password_again"><?php _e('Password Again', 'edd'); ?></label>
 		</p>
 		<p><?php _e('Already have an account?', 'edd'); ?> <a href="<?php echo add_query_arg('login', 1); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e('Login', 'edd'); ?></a></p>
