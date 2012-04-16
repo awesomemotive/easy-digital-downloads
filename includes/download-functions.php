@@ -63,7 +63,7 @@ function edd_get_users_purchases($user_id) {
 * @param - $user_id int - the ID of the user to check
 * return bool - true if has purchased, false other wise
 */
-function edd_has_user_purchased($user_id) {
+function edd_has_purchases($user_id) {
 	if(edd_get_users_purchases($user_id)) {
 		return true; // user has at least one purchase
 	}
