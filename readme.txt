@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.3.1
-Stable Tag: 1.0.1.1
+Stable Tag: 1.0.1.2
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
@@ -32,7 +32,7 @@ Features of the plugin include:
 
 More information at [Easy Digital Downloads.com](http://easydigitaldownloads.com/).
 
-[youtube http://www.youtube.com/watch?v=EZNygMxSK3w]
+[youtube http://www.youtube.com/watch?v=SjOeSZ08_IA]
 
 == Installation ==
 
@@ -84,6 +84,14 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 
 == Changelog ==
 
+= 1.0.1.2 =
+
+Fixed a bug with the manual payment gateway. 
+Fixed a bug where sales / earnings counts were increased before a purchase was confirmed. 
+Fixed a bug with the checkout registration / login forms.
+Added a German translation, thanks to David Decker.
+Added a partial European Portuguese translation, thanks to Takssista.
+
 = 1.0.1.1 = 
 
 * Minor updates including inclusion of INR as an available currency.
@@ -95,7 +103,19 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 
 == Upgrade Notice ==
 
-= 1.0 =
+= 1.0.1.2 =
+
+Fixed a bug with the manual payment gateway. 
+Fixed a bug where sales / earnings counts were increased before a purchase was confirmed. 
+Fixed a bug with the checkout registration / login forms.
+Added a German translation, thanks to David Decker.
+Added a partial European Portuguese translation, thanks to Takssista.
+
+= 1.0.1.1 = 
 
 * Minor updates including inclusion of INR as an available currency.
 * Updates to the default.po file for missing strings.
+
+= 1.0 =
+
+* First offical release!
