@@ -60,6 +60,8 @@ function edd_process_purchase_form() {
 			// log the user in
 			$user_data = get_user_by('login', $_POST['edd-username']);
 			if($user_data) {
+				$user_ID = $user_data->ID;
+				$user_email = $user_data->user_email;
 				if(wp_check_password($_POST['edd-password'], $user_data->user_pass, $user_data->ID)) {
 					$user_pass = $_POST['edd-password'];
 					edd_log_user_in($user_data->ID, $_POST['edd-username'], $user_pass);
@@ -69,6 +71,7 @@ function edd_process_purchase_form() {
 				} else {
 					edd_set_error('password_incorrect', __('The password you entered is incorrect', 'edd'));
 				}
+				
 			} else {
 				edd_set_error('username_incorrect', __('The username you entered does not exist', 'edd'));
 			}

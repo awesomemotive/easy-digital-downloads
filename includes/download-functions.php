@@ -58,6 +58,19 @@ function edd_get_users_purchases($user_id) {
 }
 
 /*
+* Checks to see if a user has purchased at least one item
+* Uses edd_get_users_purchases()
+* @param - $user_id int - the ID of the user to check
+* return bool - true if has purchased, false other wise
+*/
+function edd_has_user_purchased($user_id) {
+	if(edd_get_users_purchases($user_id)) {
+		return true; // user has at least one purchase
+	}
+	return false; // user has never purchased anything
+}
+
+/*
 * retrieves an array of all files purchased
 * @param int $payment_id - the ID number of the purchase
 * return mixed - array if purchase exists, false otherwise
