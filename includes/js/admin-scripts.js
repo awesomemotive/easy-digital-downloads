@@ -28,10 +28,7 @@ jQuery(document).ready(function ($) {
         $('input[type="text"]', field).val("");
 
         // set up a count var
-        var count = 0;
-        $('.edd_repeatable_upload_field', container).each(function () {
-            count = count++;
-        });
+        var count = $('.edd_repeatable_upload_wrapper', container).size();
 
         name = name + '[' + count + '][name]';
         file_name = file_name + '[' + count + '][file]';

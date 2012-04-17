@@ -84,13 +84,17 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 
 == Changelog ==
 
+= 1.0.1.3 =
+
+* Fixed a bug with the checkout login / register forms
+
 = 1.0.1.2 =
 
-Fixed a bug with the manual payment gateway. 
-Fixed a bug where sales / earnings counts were increased before a purchase was confirmed. 
-Fixed a bug with the checkout registration / login forms.
-Added a German translation, thanks to David Decker.
-Added a partial European Portuguese translation, thanks to Takssista.
+* Fixed a bug with the manual payment gateway. 
+* Fixed a bug where sales / earnings counts were increased before a purchase was confirmed. 
+* Fixed a bug with the checkout registration / login forms.
+* Added a German translation, thanks to David Decker.
+* Added a partial European Portuguese translation, thanks to Takssista.
 
 = 1.0.1.1 = 
 
@@ -102,6 +106,10 @@ Added a partial European Portuguese translation, thanks to Takssista.
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.0.1.3 =
+
+* Fixed a bug with the checkout login / register forms
 
 = 1.0.1.2 =
 
