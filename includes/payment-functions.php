@@ -99,7 +99,9 @@ function edd_update_payment_status($payment_id, $status = 'publish') {
 	}
 	
 	$payment = get_post($payment_id);
-	
+	if($payment->post_status == 'publish') {
+		return;
+	}
 	$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
 	$downloads = maybe_unserialize($payment_data['downloads']);
 	$user_info = maybe_unserialize($payment_data['user_info']);
