@@ -3,6 +3,9 @@
 // retrieves an array of all available discount codes
 function edd_get_discounts() {
 	$discounts = get_option('edd_discounts');
+	if(false === $discounts) { 
+		add_option('edd_discounts');
+	}
 	if($discounts)
 		return $discounts;
 	return false;
@@ -69,16 +72,16 @@ add_action('edd_edit_discount', 'edd_edit_discount');
 */
 function edd_store_discount($discount_details, $id = null) {
 	if(edd_discount_exists($id) && !is_null($id)) { // update an existing discount
-	
-		$discounts = edd_get_discounts(); 
+		$discounts = edd_get_discounts();
+		if(!$discounts) $discounts = array();
 		$discounts[$id] = $discount_details;		
 		update_option('edd_discounts', $discounts);
 		
 		return true; // discount code updated
 		
 	} else { // add the discount
-		
 		$discounts = edd_get_discounts();
+		if(!$discounts) $discounts = array();
 		$discounts[] = $discount_details;
 		
 		update_option('edd_discounts', $discounts);
