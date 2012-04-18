@@ -39,7 +39,9 @@ function edd_process_download() {
                 case "ppt": $ctype = "application/vnd.ms-powerpoint"; break;
                 case "gif": $ctype = "image/gif"; break;
                 case "png": $ctype = "image/png"; break;
-                case "jpe": case "jpeg": case "jpg": $ctype="image/jpg"; break;
+                case "jpe": $ctype="image/jpg"; break;
+				case "jpeg": $ctype="image/jpg"; break;
+				case "jpg": $ctype="image/jpg"; break;
                 default: $ctype = "application/force-download";
             endswitch;
 			
@@ -58,9 +60,9 @@ function edd_process_download() {
 			header("Robots: none");
 			header("Content-Type: " . $ctype . "");
 			header("Content-Description: File Transfer");	
-		    header("Content-Disposition: attachment; filename=\"" . $requested_file . "\";");
+		    header("Content-Disposition: attachment; filename=\"" . basename($requested_file) . "\";");
 			header("Content-Transfer-Encoding: binary");
-			header('Location: ' . $requested_file);
+			@readfile($requested_file);
 			exit;
 			
 		} else {
