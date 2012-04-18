@@ -84,6 +84,11 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 
 == Changelog ==
 
+= 1.0.1.4 = 
+
+* Fixed a bug with the "Add New" button for download source files.
+* Added the Italian language files, thanks to Marco.
+
 = 1.0.1.3 =
 
 * Fixed a bug with the checkout login / register forms
@@ -106,6 +111,11 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.0.1.4 = 
+
+* Fixed a bug with the "Add New" button for download source files.
+* Added the Italian language files, thanks to Marco.
 
 = 1.0.1.3 =
 

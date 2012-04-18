@@ -99,7 +99,7 @@ function edd_discounts_page() {
 							</tr>
 						<?php endforeach; ?>
 					<?php else : ?>
-					<tr><td colspan=8><?php _e('No discount codes have been created.', 'edd'); ?></td>
+					<tr><td colspan=10><?php _e('No discount codes have been created.', 'edd'); ?></td>
 					<?php endif; ?>
 				</tbody>
 			</table>		

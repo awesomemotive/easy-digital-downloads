@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-07 16:33-0600\n"
-"PO-Revision-Date: 2012-04-15 15:21-0600\n"
-"Last-Translator: Pippin Williamson <pippin@pippinsplugins.com>\n"
+"PO-Revision-Date: 2012-04-17 22:12-0000\n"
+"Last-Translator: \n"
 "Language-Team: MisterWho <misterwho@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -337,7 +337,7 @@ msgstr ""
 
 #: ../includes/metabox.php:35
 msgid "Show Purchase Link on Archive Pages"
-msgstr ""
+msgstr "Exibir Ligação de Compra nas Páginas Arquivadas"
 
 #: ../includes/metabox.php:36
 msgid "Check this to automatically append the purchase link to download excerpts."
@@ -386,7 +386,7 @@ msgstr "Adicionar Novo"
 
 #: ../includes/metabox.php:164
 msgid "Short Code for this Download"
-msgstr ""
+msgstr "Código para este Download"
 
 #: ../includes/metabox.php:222
 msgid "Sales:"
@@ -422,71 +422,71 @@ msgstr "Dolars Canadianos (&#36;)"
 
 #: ../includes/misc-functions.php:30
 msgid "Czech Koruna"
-msgstr ""
+msgstr "Coroa da República Checa"
 
 #: ../includes/misc-functions.php:31
 msgid "Danish Krone"
-msgstr ""
+msgstr "Coroa Dinamarquesa"
 
 #: ../includes/misc-functions.php:32
 msgid "Hong Kong Dollar (&#36;)"
-msgstr ""
+msgstr "Dólar de Hong Kong (&#36;)"
 
 #: ../includes/misc-functions.php:33
 msgid "Hungarian Forint"
-msgstr ""
+msgstr "Florim Húngaro"
 
 #: ../includes/misc-functions.php:34
 msgid "Israeli Shekel"
-msgstr ""
+msgstr "Sheqel Israelense"
 
 #: ../includes/misc-functions.php:35
 msgid "Japanese Yen (&yen;)"
-msgstr ""
+msgstr "Yen Japonês (&yen;)"
 
 #: ../includes/misc-functions.php:36
 msgid "Malaysian Ringgits"
-msgstr ""
+msgstr "Ringgit Malásio"
 
 #: ../includes/misc-functions.php:37
 msgid "Mexican Peso (&#36;)"
-msgstr ""
+msgstr "Peso Mexicano (&#36;)"
 
 #: ../includes/misc-functions.php:38
 msgid "New Zealand Dollar (&#36;)"
-msgstr ""
+msgstr "Dólar da Nova Zelândia (&#36;)"
 
 #: ../includes/misc-functions.php:39
 msgid "Norwegian Krone"
-msgstr ""
+msgstr "Coroa Norueguesa"
 
 #: ../includes/misc-functions.php:40
 msgid "Philippine Pesos"
-msgstr ""
+msgstr "Pesos Filipinos"
 
 #: ../includes/misc-functions.php:41
 msgid "Polish Zloty"
-msgstr ""
+msgstr "Zloty Polaco"
 
 #: ../includes/misc-functions.php:42
 msgid "Singapore Dollar (&#36;)"
-msgstr ""
+msgstr "Dólar de Singapura (&#36;)"
 
 #: ../includes/misc-functions.php:43
 msgid "Swedish Krona"
-msgstr ""
+msgstr "Coroa Sueca"
 
 #: ../includes/misc-functions.php:44
 msgid "Swiss Franc"
-msgstr ""
+msgstr "Franco Suíço"
 
 #: ../includes/misc-functions.php:45
 msgid "Taiwan New Dollars"
-msgstr ""
+msgstr "Novo Dólar Tailandês"
 
 #: ../includes/misc-functions.php:46
 msgid "Thai Baht"
-msgstr ""
+msgstr "Baht Tailandês"
 
 #: ../includes/payment-functions.php:126
 msgid "pending"
@@ -503,83 +503,83 @@ msgstr "Downloads"
 
 #: ../includes/post-types.php:9
 msgid "Add New Download"
-msgstr ""
+msgstr "Adicionar Novo Download"
 
 #: ../includes/post-types.php:10
 msgid "Edit Download"
-msgstr ""
+msgstr "Editar Download"
 
 #: ../includes/post-types.php:11
 msgid "New Download"
-msgstr ""
+msgstr "Novo Download"
 
 #: ../includes/post-types.php:12
 msgid "All Downloads"
-msgstr ""
+msgstr "Todos os Downloads"
 
 #: ../includes/post-types.php:13
 msgid "View Download"
-msgstr ""
+msgstr "Visualizar Download"
 
 #: ../includes/post-types.php:14
 msgid "Search Downloads"
-msgstr ""
+msgstr "Pesquisar Downloads"
 
 #: ../includes/post-types.php:15
 msgid "No Downloads found"
-msgstr ""
+msgstr "Não foram encontrados Downloads"
 
 #: ../includes/post-types.php:16
 msgid "No Downloads found in Trash"
-msgstr ""
+msgstr "Não foram encontrados Downloads no Lixo"
 
 #: ../includes/post-types.php:39
 msgid "Payments"
-msgstr ""
+msgstr "Pagamentos"
 
 #: ../includes/post-types.php:40
 msgid "Payment"
-msgstr ""
+msgstr "Pagamento"
 
 #: ../includes/post-types.php:42
 msgid "Add New Payment"
-msgstr ""
+msgstr "Adicionar Novo Pagamento"
 
 #: ../includes/post-types.php:43
 msgid "Edit Payment"
-msgstr ""
+msgstr "Editar Pagamento"
 
 #: ../includes/post-types.php:44
 msgid "New Payment"
-msgstr ""
+msgstr "Novo Pagamento"
 
 #: ../includes/post-types.php:45
 msgid "All Payments"
-msgstr ""
+msgstr "Todos os Pagamentos"
 
 #: ../includes/post-types.php:46
 msgid "View Payment"
-msgstr ""
+msgstr "Visualizar Pagamento"
 
 #: ../includes/post-types.php:47
 msgid "Search Payments"
-msgstr ""
+msgstr "Pesquisar Pagamentos"
 
 #: ../includes/post-types.php:48
 msgid "No Payments found"
-msgstr ""
+msgstr "Não foram encontrados Pagamentos"
 
 #: ../includes/post-types.php:49
 msgid "No Payments found in Trash"
-msgstr ""
+msgstr "Não foram encontrados Pagamentos no Lixo"
 
 #: ../includes/post-types.php:77
 msgid "Category"
-msgstr ""
+msgstr "Categoria"
 
 #: ../includes/post-types.php:78
 msgid "Search Categories"
-msgstr ""
+msgstr "Pesquisar Categorias"
 
 #: ../includes/post-types.php:79
 msgid "All Categories"
@@ -623,40 +623,40 @@ msgstr "Todas as Etiquetas"
 
 #: ../includes/post-types.php:102
 msgid "Parent Tag"
-msgstr ""
+msgstr "Etiqueta Mãe"
 
 #: ../includes/post-types.php:103
 msgid "Parent Tag:"
-msgstr ""
+msgstr "Etiqueta Mãe:"
 
 #: ../includes/post-types.php:104
 msgid "Edit Tag"
-msgstr ""
+msgstr "Editar Etiqueta"
 
 #: ../includes/post-types.php:105
 msgid "Update Tag"
-msgstr ""
+msgstr "Actualizar Etiqueta"
 
 #: ../includes/post-types.php:106
 msgid "Add New Tag"
-msgstr ""
+msgstr "Adicionar Nova Etiqueta"
 
 #: ../includes/post-types.php:107
 msgid "New Tag Name"
-msgstr ""
+msgstr "Novo Nome de Etiqueta"
 
 #: ../includes/post-types.php:125
 #: ../includes/post-types.php:126
 msgid "Download updated."
-msgstr ""
+msgstr "Download actualizado."
 
 #: ../includes/post-types.php:127
 msgid "Download published."
-msgstr ""
+msgstr "Download publicado."
 
 #: ../includes/post-types.php:128
 msgid "Download saved."
-msgstr ""
+msgstr "Download gravado."
 
 #: ../includes/post-types.php:129
 msgid "Download submitted."
@@ -676,7 +676,7 @@ msgstr ""
 
 #: ../includes/process-purchase.php:32
 msgid "Invalid username"
-msgstr ""
+msgstr "Nome de Utilizador Inválido"
 
 #: ../includes/process-purchase.php:36
 msgid "Enter a username"
@@ -792,15 +792,15 @@ msgstr ""
 
 #: ../includes/register-settings.php:93
 msgid "PayPal Settings"
-msgstr ""
+msgstr "Opções do Paypal"
 
 #: ../includes/register-settings.php:94
 msgid "Configure the PayPal settings"
-msgstr ""
+msgstr "Configurar as opções do Paypal"
 
 #: ../includes/register-settings.php:99
 msgid "PayPal Email"
-msgstr ""
+msgstr "Email da conta Paypal"
 
 #: ../includes/register-settings.php:100
 msgid "Enter your PayPal account's email"
@@ -856,7 +856,7 @@ msgstr ""
 
 #: ../includes/register-settings.php:142
 msgid "Enable Ajax"
-msgstr ""
+msgstr "Activar Ajax"
 
 #: ../includes/register-settings.php:143
 msgid "Check this to enable AJAX for the shopping cart."
@@ -864,7 +864,7 @@ msgstr ""
 
 #: ../includes/register-settings.php:148
 msgid "Logged-In Only"
-msgstr ""
+msgstr "Apenas Utilizadores Ligados"
 
 #: ../includes/register-settings.php:149
 msgid "Require that users be logged-in to purchase files."
@@ -880,7 +880,7 @@ msgstr ""
 
 #: ../includes/register-settings.php:178
 msgid "General Settings"
-msgstr ""
+msgstr "Configurações Gerais"
 
 #: ../includes/register-settings.php:204
 msgid "Payment Gateway Settings"
@@ -888,11 +888,11 @@ msgstr ""
 
 #: ../includes/register-settings.php:230
 msgid "Email Settings"
-msgstr ""
+msgstr "Configurações de Email"
 
 #: ../includes/register-settings.php:256
 msgid "Misc Settings"
-msgstr ""
+msgstr "Configurações Diversas"
 
 #: ../includes/register-settings.php:290
 #: ../includes/register-settings.php:294
@@ -911,7 +911,7 @@ msgstr ""
 
 #: ../includes/scripts.php:18
 msgid "Loading"
-msgstr ""
+msgstr "A Carregar"
 
 #: ../includes/shortcodes.php:54
 msgid "You have not purchased any downloads"
@@ -931,7 +931,7 @@ msgstr ""
 
 #: ../includes/template-functions.php:47
 msgid "here"
-msgstr ""
+msgstr "aqui"
 
 #: ../includes/template-functions.php:48
 msgid "You have already purchased this item."
@@ -946,7 +946,7 @@ msgstr ""
 #: ../includes/thickbox.php:10
 #: ../includes/thickbox.php:96
 msgid "Insert Download"
-msgstr ""
+msgstr "Inserir Download"
 
 #: ../includes/thickbox.php:39
 msgid "You must choose a download"
@@ -974,7 +974,7 @@ msgstr ""
 
 #: ../includes/thickbox.php:97
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: ../includes/thickbox.php:99
 msgid "Button Styles"
@@ -990,7 +990,7 @@ msgstr ""
 
 #: ../includes/widgets.php:60
 msgid "Title:"
-msgstr ""
+msgstr "Título:"
 
 #: ../includes/widgets.php:64
 msgid "Show Quantity:"
@@ -999,12 +999,12 @@ msgstr ""
 #: ../includes/admin-pages/discount-codes.php:20
 #: ../includes/admin-pages/discount-codes.php:33
 msgid "Code"
-msgstr ""
+msgstr "Código"
 
 #: ../includes/admin-pages/discount-codes.php:21
 #: ../includes/admin-pages/discount-codes.php:34
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: ../includes/admin-pages/discount-codes.php:22
 #: ../includes/admin-pages/discount-codes.php:35
@@ -1014,17 +1014,17 @@ msgstr ""
 #: ../includes/admin-pages/discount-codes.php:23
 #: ../includes/admin-pages/discount-codes.php:36
 msgid "Uses"
-msgstr ""
+msgstr "Utilizações"
 
 #: ../includes/admin-pages/discount-codes.php:24
 #: ../includes/admin-pages/discount-codes.php:37
 msgid "Max Uses"
-msgstr ""
+msgstr "Limite Máximo de Utilizações"
 
 #: ../includes/admin-pages/discount-codes.php:25
 #: ../includes/admin-pages/discount-codes.php:38
 msgid "Expiration"
-msgstr ""
+msgstr "Validade"
 
 #: ../includes/admin-pages/discount-codes.php:26
 #: ../includes/admin-pages/discount-codes.php:39
@@ -1034,7 +1034,7 @@ msgstr ""
 #: ../includes/admin-pages/discount-codes.php:63
 #: ../includes/admin-pages/discount-codes.php:65
 msgid "unlimited"
-msgstr ""
+msgstr "ilimitado"
 
 #: ../includes/admin-pages/discount-codes.php:71
 msgid "Expired"
@@ -1046,19 +1046,19 @@ msgstr ""
 
 #: ../includes/admin-pages/discount-codes.php:78
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #: ../includes/admin-pages/discount-codes.php:80
 msgid "Deactivate"
-msgstr ""
+msgstr "Desactivar"
 
 #: ../includes/admin-pages/discount-codes.php:82
 msgid "Activate"
-msgstr ""
+msgstr "Activar"
 
 #: ../includes/admin-pages/discount-codes.php:84
 msgid "Delete"
-msgstr ""
+msgstr "Eliminar"
 
 #: ../includes/admin-pages/discount-codes.php:89
 msgid "No discount codes have been created."
@@ -1066,7 +1066,7 @@ msgstr ""
 
 #: ../includes/admin-pages/payments-history.php:24
 msgid "Payment mode"
-msgstr ""
+msgstr "Método de Pagamento"
 
 #: ../includes/admin-pages/payments-history.php:26
 msgid "Live"
@@ -1082,27 +1082,27 @@ msgstr ""
 
 #: ../includes/admin-pages/payments-history.php:33
 msgid "Show"
-msgstr ""
+msgstr "Exibir"
 
 #: ../includes/admin-pages/payments-history.php:38
 #: ../includes/admin-pages/payments-history.php:51
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: ../includes/admin-pages/payments-history.php:40
 #: ../includes/admin-pages/payments-history.php:53
 msgid "Key"
-msgstr ""
+msgstr "Chave"
 
 #: ../includes/admin-pages/payments-history.php:41
 #: ../includes/admin-pages/payments-history.php:54
 msgid "Products"
-msgstr ""
+msgstr "Produtos"
 
 #: ../includes/admin-pages/payments-history.php:44
 #: ../includes/admin-pages/payments-history.php:57
 msgid "User"
-msgstr ""
+msgstr "Utilizador"
 
 #: ../includes/admin-pages/payments-history.php:74
 #, php-format
@@ -1123,7 +1123,7 @@ msgstr ""
 
 #: ../includes/admin-pages/payments-history.php:82
 msgid "Price: "
-msgstr ""
+msgstr "Preço:"
 
 #: ../includes/admin-pages/payments-history.php:87
 msgid "Discount used:"
@@ -1131,7 +1131,7 @@ msgstr ""
 
 #: ../includes/admin-pages/payments-history.php:87
 msgid "none"
-msgstr ""
+msgstr "nenhum"
 
 #: ../includes/admin-pages/payments-history.php:88
 msgid "Total:"
@@ -1163,11 +1163,11 @@ msgstr ""
 
 #: ../includes/admin-pages/payments-history.php:125
 msgid "&laquo; Previous"
-msgstr ""
+msgstr "&laquo; Anterior"
 
 #: ../includes/admin-pages/payments-history.php:126
 msgid "Next &raquo;"
-msgstr ""
+msgstr "Próximo &raquo;"
 
 #: ../includes/admin-pages/reports.php:14
 msgid "Transactions created while in test mode are not included on this page."
@@ -1179,21 +1179,21 @@ msgstr ""
 
 #: ../includes/admin-pages/settings-old.php:12
 msgid "Pages"
-msgstr ""
+msgstr "Páginas"
 
 #: ../includes/admin-pages/settings-old.php:14
 #: ../includes/admin-pages/settings.php:16
 msgid "Misc"
-msgstr ""
+msgstr "Diversos"
 
 #: ../includes/admin-pages/settings-old.php:25
 msgid "Purchase Form"
-msgstr ""
+msgstr "Formulário de Compra"
 
 #: ../includes/admin-pages/settings-old.php:49
 #: ../includes/admin-pages/settings-old.php:78
 msgid "No pages found"
-msgstr ""
+msgstr "Não foram encontradas páginas"
 
 #: ../includes/admin-pages/settings-old.php:53
 msgid "Choose the page that holds the checkout form short code."
@@ -1207,16 +1207,16 @@ msgstr ""
 #: ../includes/admin-pages/settings-old.php:101
 #: ../includes/admin-pages/settings-old.php:106
 msgid "Test Mode"
-msgstr ""
+msgstr "Modo de Teste"
 
 #: ../includes/admin-pages/settings-old.php:110
 msgid "Check this to use the plugin in test mode."
-msgstr ""
+msgstr "Coloque um visto aqui para usar o plugin em modo de teste."
 
 #: ../includes/admin-pages/settings-old.php:124
 #: ../includes/admin-pages/settings-old.php:129
 msgid "Gateways"
-msgstr ""
+msgstr "Gateways"
 
 #: ../includes/admin-pages/settings-old.php:140
 msgid "Check each of the payment gateways you would like to enable. Configure the selected gateways below."
