@@ -125,7 +125,9 @@ function edd_process_purchase_form() {
 				'post_data' => $_POST,
 				'cart_details' => edd_get_cart_content_details()
 			);
-						
+			
+			do_action('edd_checkout_before_gateway', $_POST, $user_info);
+			
 			// allow the purchase data to be modified before it is sent to the gateway
 			$purchase_data = apply_filters('edd_purchase_data_before_gateway', $purchase_data);
 			

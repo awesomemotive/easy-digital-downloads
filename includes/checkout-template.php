@@ -232,6 +232,10 @@ function edd_get_register_fields() {
 			<label for="edd_user_Login"><?php _e('Username', 'edd'); ?></label>
 		</p>
 		<p>
+			<input name="edd_email" id="edd_email" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" type="text" placeholder="<?php _e('Email', 'edd'); ?>" title="<?php _e('Email', 'edd'); ?>"/>
+			<label for="edd_email"><?php _e('Email', 'edd'); ?></label>
+		</p>
+		<p>
 			<input name="edd_user_pass" id="edd_user_pass" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" placeholder="<?php _e('Password', 'edd'); ?>" type="password"/>
 			<label for="password"><?php _e('Password', 'edd'); ?></label>
 		</p>

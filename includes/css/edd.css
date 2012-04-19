@@ -56,7 +56,7 @@
 	-webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0;
 }
 input.edd_button_text, input#edd-purchase-button, input#edd_next_button  { padding: 0 4px 4px; }
-.edd_button_text span, .edd_button_text input { width: 100%; }
+
 
 .edd_button:active, input.edd_button_text:active, input#edd-purchase-button:active, input#edd_next_button:active { line-height: 30px; }
 
