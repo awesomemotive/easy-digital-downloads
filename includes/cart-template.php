@@ -20,7 +20,12 @@ function edd_checkout_cart() {
 				<?php foreach($cart_items as $key => $item) : ?>
 					<tr>
 						<?php do_action('edd_checkout_table_body_first', $item); ?>
-						<td><?php echo get_the_title($item); ?></td>
+						<td>
+							<?php 
+								if(has_post_thumbnail($item)) { echo get_the_post_thumbnail($item, apply_filters('edd_checkout_image_size', array(25,25))); } 
+								echo get_the_title($item); 
+							?>
+						</td>
 						<td><?php echo edd_currency_filter(edd_get_download_price($item)); ?></td>
 						<td><a href="<?php echo edd_remove_item_url($key, $post); ?>"><?php _e('remove', 'edd'); ?></td>
 						<?php do_action('edd_checkout_table_body_last', $item); ?>
