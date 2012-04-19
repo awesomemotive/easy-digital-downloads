@@ -49,7 +49,6 @@ function edd_payment_history_page() {
 						<th><?php _e('Date', 'edd'); ?></th>
 						<th><?php _e('User', 'edd'); ?></th>
 						<th><?php _e('Status', 'edd'); ?></th>
-						<th><?php _e('Actions', 'edd'); ?></th>
 					</tr>
 				</thead>
 				<tfoot>
@@ -62,7 +61,6 @@ function edd_payment_history_page() {
 						<th><?php _e('Date', 'edd'); ?></th>
 						<th><?php _e('User', 'edd'); ?></th>
 						<th><?php _e('Status', 'edd'); ?></th>
-						<th><?php _e('Actions', 'edd'); ?></th>
 					</tr>
 				</tfoot>
 				<tbody>
@@ -74,8 +72,28 @@ function edd_payment_history_page() {
 								$payment_meta = get_post_meta($payment->ID, '_edd_payment_meta', true);
 								$user_info = maybe_unserialize($payment_meta['user_info']); ?>
 								<tr class="edd_payment <?php if(edd_is_odd($i)) echo 'alternate'; ?>">
-									<td><?php echo $payment->ID; ?></td>
-									<td><?php echo $payment_meta['email']; ?></td>
+									<td>
+										<?php echo $payment->ID; ?>
+									</td>
+									<td>
+										<?php echo $payment_meta['email']; ?>
+										<div class="row-actions">
+											<?php 
+											$row_actions = array(
+												'edit' => '<a href="' . add_query_arg('edd-action', 'edit-payment', add_query_arg('purchase_id', $payment->ID)) . '">' . __('Edit', 'edd') . '</a>',
+												'email_links' => '<a href="' . add_query_arg('edd-action', 'email_links', add_query_arg('purchase_id', $payment->ID)) . '">' . __('Resend Purchase Receipt', 'edd') . '</a>',
+												'delete' => '<a href="' . wp_nonce_url(add_query_arg('edd-action', 'delete_payment', add_query_arg('purchase_id', $payment->ID)), 'edd_payment_nonce') . '">' . __('Delete', 'edd') . '</a>'
+											);
+											$row_actions = apply_filters('edd_payment_row_actions', $row_actions, $payment);
+											$action_count = count($row_actions); $i = 1;
+											foreach($row_actions as $key => $action) {
+												if($action_count == $i) { $sep = ''; } else { $sep = ' | '; }
+												echo '<span class="' . $key . '">' . $action . '</span>' . $sep;
+												$i++;
+											}
+											?>
+										</div>
+									</td>
 									<td><?php echo $payment_meta['key']; ?></td>
 									<td><a href="#TB_inline?width=640&inlineId=purchased-files-<?php echo $payment->ID; ?>" class="thickbox" title="<?php printf(__('Purchase Details for Payment #%s', 'edd'), $payment->id); ?> "><?php _e('View Order Details', 'edd'); ?></a>
 										<div id="purchased-files-<?php echo $payment->ID; ?>" style="display:none;">
@@ -107,16 +125,12 @@ function edd_payment_history_page() {
 									<td><?php echo date(get_option('date_format'), strtotime($payment->post_date)); ?></td>
 									<td><?php echo isset($user_info['id']) ? get_user_by('id', $user_info['id'])->display_name : __('guest', 'edd'); ?></td>
 									<td><?php echo edd_get_payment_status($payment); ?></td>
-									<td>
-										<a href="<?php echo add_query_arg('edd-action', 'edit-payment', add_query_arg('purchase_id', $payment->ID)); ?>"><?php _e('Edit', 'edd'); ?></a> | 
-										<a href="<?php echo add_query_arg('edd-action', 'email_links', add_query_arg('purchase_id', $payment->ID)); ?>"><?php _e('Resend Purchase Receipt', 'edd'); ?></a>
-									</td>
 								</tr>
 							<?php
 							$i++;
 							endforeach;
 						else : ?>
-						<tr><td colspan="9"><?php _e('No payments recorded yet', 'edd'); ?></td></tr>
+						<tr><td colspan="8"><?php _e('No payments recorded yet', 'edd'); ?></td></tr>
 					<?php endif;?>
 				</table>
 				<?php if ($total_pages > 1) : ?>
