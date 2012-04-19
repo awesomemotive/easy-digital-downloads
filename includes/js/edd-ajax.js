@@ -68,17 +68,21 @@ jQuery(document).ready(function ($) {
             // hide the ajax loader
             $('.edd-cart-ajax').hide();
 			
-			// switch purchase to checkout
-			$('.edd_button_text span, .edd_link_text span', $this).toggle();
-			$this.removeClass('edd-add-to-cart');
-			$this.attr('href', edd_scripts.checkout_page);
+			if($('.edd_button_text').length) {
+				// switch purchase to checkout
+				$('.edd_button_text span, .edd_link_text span', $this).toggle();
+				$this.removeClass('edd-add-to-cart');
+				$this.attr('href', edd_scripts.checkout_page);
 			
-			// show the added message
-            $this.next().next().fadeIn();
-            setTimeout(function () {
-                $this.next().next().fadeOut();
-            }, 3000);
-			
+				// show the added message
+	            $this.next().next().fadeIn();
+	            setTimeout(function () {
+	                $this.next().next().fadeOut();
+	            }, 3000);
+			}
+			if($('.edd_already_purchased').length) {
+				$('.edd_already_purchased span').toggle();
+			}
         });
         return false;
     });

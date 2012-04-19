@@ -5,8 +5,8 @@ function edd_append_purchase_link($content) {
 	global $post;
 	if($post->post_type == 'download' && is_singular() && is_main_query()) {
 		if(!get_post_meta($post->ID, '_edd_hide_purchase_link', true)) {
-			$button_text = get_post_meta($post->ID, '_edd_purchase_text', true);
-			$style = get_post_meta($post->ID, '_edd_purchase_style', true);
+			$button_text = get_post_meta($post->ID, '_edd_purchase_text', true) ? get_post_meta($post->ID, '_edd_purchase_text', true) : __('Purchase', 'edd');
+			$style = get_post_meta($post->ID, '_edd_purchase_style', true) ? get_post_meta($post->ID, '_edd_purchase_style', true) : 'button';
 			$color = get_post_meta($post->ID, '_edd_purchase_color', true);
 			$content .= edd_get_purchase_link($post->ID, $button_text, $style, $color);
 		}
@@ -39,7 +39,9 @@ function edd_get_purchase_link($download_id = null, $link_text = 'Purchase', $st
 		return apply_filters('edd_purchase_link', $link);
 	} else {
 		$link = '<a href="' . $link . '" class="edd-add-to-cart" data-action="edd_add_to_cart" data-download-id="' . $download_id . '">' . __('here', 'edd') . '</a>';
-		return '<span class="edd_already_purchased">' . __('You have already purchased this item.', 'edd') . ' ' . sprintf(__('Click %s to purchase again.', 'edd'), $link) . '</span>';
+		$checkout_link = '<span style="display:none;"><a href="' . get_permalink($edd_options['purchase_page']) . '">' . __('Checkout', 'edd') . '</a></span>';
+		$purchase_link = '<span class="edd_already_purchased">' . __('You have already purchased this item.', 'edd') . ' <span>' . sprintf(__('Click %s to purchase again.', 'edd'), $link) . '</span>' . $checkout_link . '</span>';
+		return $purchase_link;
 	}
 }
 
