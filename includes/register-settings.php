@@ -191,6 +191,31 @@ function edd_register_settings() {
 					'name' => __('Disable Redownload?', 'edd'),
 					'desc' => __('Check this if you do not want to allow users to redownload items from their purchase history', 'edd'),
 					'type' => 'checkbox',
+				),
+				array(
+					'id' => 'terms',
+					'name' => '<strong>' . __('Terms of Agreement', 'edd') . '</strong>',
+					'desc' => '',
+					'type' => 'header',
+				),
+				array(
+					'id' => 'show_agree_to_terms',
+					'name' => __('Agree to Terms', 'edd'),
+					'desc' => __('Check this to show an agree to terms on the checkout that users must agree to before purchasing', 'edd'),
+					'type' => 'checkbox',
+				),
+				array(
+					'id' => 'agree_label',
+					'name' => __('Agree to Terms Label', 'edd'),
+					'desc' => __('Label shown next to the agree to terms check box', 'edd'),
+					'type' => 'text',
+					'size' => 'regular'
+				),
+				array(
+					'id' => 'agree_text',
+					'name' => __('Agreement Text', 'edd'),
+					'desc' => __('If Agree to Terms is checked, enter the agreement terms here', 'edd'),
+					'type' => 'rich_editor',
 				)
 			)
 		)

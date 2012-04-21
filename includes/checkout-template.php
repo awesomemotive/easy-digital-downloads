@@ -23,11 +23,22 @@ function edd_checkout_form() {
 		
 		<?php if(edd_get_cart_contents()) : ?>
 				
-			<?php echo edd_checkout_cart(); ?>
+			<?php edd_checkout_cart(); ?>
 			
 			<div id="edd_checkout_form_wrap" class="edd_clearfix">
-			
-				<?php 
+				<?php if(isset($edd_options['show_agree_to_terms'])) { ?>
+					<script type="text/javascript">
+						jQuery(document).ready(function($){
+							$('body').on('click', '.edd_terms_links', function(e) {
+								//e.preventDefault();
+								$('#edd_terms').slideToggle();
+								$('.edd_terms_links').toggle();
+								return false;
+							});
+						});
+					</script>
+				<?php
+				} 
 				$gateways = edd_get_enabled_payment_gateways();
 				if(count($gateways) > 1 && !isset($_GET['payment-mode'])) { ?>
 					<?php do_action('edd_payment_mode_top'); ?>
@@ -123,7 +134,27 @@ function edd_checkout_form() {
 								} else {
 									do_action('edd_cc_form');
 								}
-							?>					
+							?>			
+							
+							<?php if(isset($edd_options['show_agree_to_terms'])) { ?>
+								<fieldset id="edd_terms_agreement">
+									<p>
+										<div id="edd_terms" style="display:none;">
+											<?php 
+												do_action('edd_before_terms');
+												echo wpautop($edd_options['agree_text']); 
+												do_action('edd_after_terms');
+											?>
+										</div>
+										<div id="edd_show_terms">
+											<a href="#" class="edd_terms_links"><?php _e('Show Terms', 'edd'); ?></a>
+											<a href="#" class="edd_terms_links" style="display:none;"><?php _e('Hide Terms', 'edd'); ?></a>
+										</div>
+										<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
+										<label for="edd_agree_to_terms"><?php echo isset($edd_options['agree_label']) ? $edd_options['agree_label'] : __('Agree to Terms?', 'edd'); ?></label>
+									</p>
+								</fieldset>
+							<?php } ?>	
 							<fieldset id="edd_purchase_submit">
 								<p>
 									<?php do_action('edd_purchase_form_before_submit'); ?>

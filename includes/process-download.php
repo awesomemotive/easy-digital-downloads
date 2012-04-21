@@ -8,6 +8,7 @@ function edd_process_download() {
 		$file_key = urldecode($_GET['file']);
 		$expire = urldecode(base64_decode($_GET['expire']));
 				
+				
 		$payment = edd_verify_download_link($download, $key, $email, $expire);
 		$has_access = ( edd_logged_in_only() && is_user_logged_in() ) || !edd_logged_in_only() ? true : false;
 		if($payment && $has_access) {
@@ -45,15 +46,9 @@ function edd_process_download() {
                 default: $ctype = "application/force-download";
             endswitch;
 			
-			@ini_set('zlib.output_compression', 'Off');
-			@set_time_limit(0);
-			@session_start();					
-			@session_cache_limiter('none');		
-			@set_magic_quotes_runtime(0);
-			@ob_end_clean();
-			@session_write_close();
-			
-			
+			set_time_limit(0);
+			set_magic_quotes_runtime(0);
+				
 			header("Pragma: no-cache");
 			header("Expires: 0");
 			header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
@@ -62,7 +57,7 @@ function edd_process_download() {
 			header("Content-Description: File Transfer");	
 		    header("Content-Disposition: attachment; filename=\"" . basename($requested_file) . "\";");
 			header("Content-Transfer-Encoding: binary");
-			@readfile($requested_file);
+			readfile($requested_file);
 			exit;
 			
 		} else {

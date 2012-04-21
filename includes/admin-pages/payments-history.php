@@ -138,9 +138,9 @@ function edd_payment_history_page() {
 						<div class="tablenav-pages alignright">
 							<?php
 								if(isset($_GET['show']) && $_GET['show'] > 0) {
-									$base = 'edit.php?post_type=download&page=edd-payment-history&show=' . $_GET['show'] . '%_%';
+									$base = 'edit.php?post_type=download&page=edd-payment-history&mode=' . $mode . '&show=' . $_GET['show'] . '%_%';
 								} else {
-									$base = 'edit.php?post_type=download&page=edd-payment-history%_%';
+									$base = 'edit.php?post_type=download&page=edd-payment-history&mode=' . $mode . '%_%';
 								}
 								echo paginate_links( array(
 									'base' => $base,

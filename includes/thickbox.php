@@ -74,8 +74,9 @@ function edd_admin_footer_for_thickbox() {
 						<option value=""><?php _e('Choose a style', 'edd'); ?></option>
 						<?php
 							$styles = array('button', 'text link');
-							foreach ( $styles as $style )
+							foreach ( $styles as $style ) {
 								echo '<option value="' . $style . '">' . $style . '</option>';
+							}
 						?>
 					</select>
 				</div>

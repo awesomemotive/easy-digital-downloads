@@ -3,6 +3,8 @@
 function edd_process_purchase_form() {
 	if(isset($_POST['edd-action']) && $_POST['edd-action'] == 'purchase' && wp_verify_nonce($_POST['edd-nonce'], 'edd-purchase-nonce')) {
 				
+		global $edd_options;	
+				
 		$user_id = isset($_POST['edd-user-id']) ? $_POST['edd-user-id'] : null;
 		$user_email = strip_tags($_POST['edd_email']);
 		$user_first = isset($_POST["edd_first"]) ? strip_tags($_POST["edd_first"]) : '';
@@ -13,6 +15,9 @@ function edd_process_purchase_form() {
 		if(isset($_POST['edd-discount']) && $_POST['edd-discount'] != '' && !edd_is_discount_valid($_POST['edd-discount'])) {
 			// check for valid discount
 			edd_set_error('invalid_discount', __('The discount you entered is invalid', 'edd'));
+		}
+		if(isset($edd_options['show_agree_to_terms']) && ( !isset($_POST['edd_agree_to_terms']) || $_POST['edd_agree_to_terms'] != 1 ) ) {
+			edd_set_error('agree_to_terms', __('You must agree to the terms of use', 'edd'));
 		}
 		
 		if(isset($_POST['edd-purchase-var']) && $_POST['edd-purchase-var'] == 'needs-to-register') {
