@@ -9,7 +9,7 @@ $edd_download_meta_box = array(
 	'fields' => array(				
 		array(
 			'name' 	=> __('Price', 'edd'),
-			'desc' 	=> __('Enter the download price', 'edd'),
+			'desc' 	=> __('Enter the download price. Do not include a currency symbol', 'edd'),
 			'id' 	=> 'edd_price',
 			'class' => 'edd_price',
 			'type' 	=> 'price',
@@ -77,7 +77,7 @@ add_action('add_meta_boxes', 'edd_add_download_meta_box');
 function edd_render_download_meta_box()	{
 	global $post;
 	global $edd_download_meta_box;
-	global $wp_version;
+	global $wp_version, $edd_options;
 	
 	// Use nonce for verification
 	echo '<input type="hidden" name="edd_download_meta_box_nonce" value="', wp_create_nonce(basename(__FILE__)), '" />';
@@ -97,7 +97,11 @@ function edd_render_download_meta_box()	{
 						echo '<input class="regular-text" type="text" name="', $field['id'], '" id="', $field['id'], '" value="', $meta ? $meta : $field['std'], '" size="30" /><br/>', '', $field['desc'];
 						break;
 					case 'price':
-						echo '<input type="text" name="', $field['id'], '" id="', $field['id'], '" value="', $meta ? $meta : $field['std'], '" size="30" style="width:50px;" placeholder="9.99"/>', ' ', $field['desc'];
+						if($edd_options['currency_position'] == 'before') {
+							echo edd_currency_filter('') . '<input type="text" name="', $field['id'], '" id="', $field['id'], '" value="', $meta ? $meta : $field['std'], '" size="30" style="width:50px;" placeholder="9.99"/>', ' ', $field['desc'];
+						} else {
+							echo '<input type="text" name="', $field['id'], '" id="', $field['id'], '" value="', $meta ? $meta : $field['std'], '" size="30" style="width:50px;" placeholder="9.99"/>' . edd_currency_filter(''), ' ', $field['desc'];
+						}
 						break;
 					case 'textarea':
 						if($field['rich_editor'] == 1) {
