@@ -86,11 +86,15 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 
 = 1.0.3 =
 
-* Added option to include an "Agree to terms" to the checkout
-* Added an option for the checkout cart template to be customized via the theme
-* Fixed a potential bug with file downloads
-* Added .epub files to accepted mime types
-* Fixed a bug with a missing email field when using add-on gateways
+* Added first and last name fields to the checkout registration form.
+* Improved country list formatting. 
+* Improved the price input field to make it more clear and help prevent improper price formats.
+* Added backwards compatibility for WP versions < 3.3. The rich editors in the settings pages could not be rendered in < 3.3.
+* Added option to include an "Agree to terms" to the checkout.
+* Added an option for the checkout cart template to be customized via the theme.
+* Fixed a potential bug with file downloads.
+* Added .epub files to accepted mime types.
+* Fixed a bug with a missing email field when using add-on gateways.
 
 = 1.0.2 =
 
@@ -134,11 +138,15 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 
 = 1.0.3 =
 
-* Added option to include an "Agree to terms" to the checkout
-* Added an option for the checkout cart template to be customized via the theme
-* Fixed a potential bug with file downloads
-* Added .epub files to accepted mime types
-* Fixed a bug with a missing email field when using add-on gateways
+* Added first and last name fields to the checkout registration form.
+* Improved country list formatting. 
+* Improved the price input field to make it more clear and help prevent improper price formats.
+* Added backwards compatibility for WP versions < 3.3. The rich editors in the settings pages could not be rendered in < 3.3.
+* Added option to include an "Agree to terms" to the checkout.
+* Added an option for the checkout cart template to be customized via the theme.
+* Fixed a potential bug with file downloads.
+* Added .epub files to accepted mime types.
+* Fixed a bug with a missing email field when using add-on gateways.
 
 = 1.0.2 =
 
