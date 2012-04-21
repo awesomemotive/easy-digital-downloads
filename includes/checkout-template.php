@@ -179,10 +179,10 @@ function edd_get_cc_form() {
 			<input type="text" size="4" name="card_exp_year" placeholder="<?php _e('Year', 'edd'); ?>" class="card-expiry-year edd-input required"/>
 			<label class="edd-label"><?php _e('Expiration (MM/YYYY)', 'edd'); ?></label>
 		</p>
-		<?php do_action('edd_before_cc_expiration'); ?>
+		<?php do_action('edd_after_cc_expiration'); ?>
 	</fieldset>
 
-	<?php do_action('edd_cc_form_address_fields', 'edd_default_cc_address_fields'); ?>
+	<?php do_action('edd_cc_form_address_fields'); ?>
 
 	<?php do_action('edd_after_cc_fields'); ?>
 		
