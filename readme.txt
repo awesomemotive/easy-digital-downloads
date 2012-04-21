@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.3.2
-Stable Tag: 1.0.2.1
+Stable Tag: 1.0.3
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
@@ -84,8 +84,11 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 
 == Changelog ==
 
-= 1.0.2.1 =
+= 1.0.3 =
 
+* Added option to include an "Agree to terms" to the checkout
+* Added an option for the checkout cart template to be customized via the theme
+* Fixed a potential bug with file downloads
 * Added .epub files to accepted mime types
 * Fixed a bug with a missing email field when using add-on gateways
 
@@ -129,8 +132,11 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 
 == Upgrade Notice ==
 
-= 1.0.2.1 =
+= 1.0.3 =
 
+* Added option to include an "Agree to terms" to the checkout
+* Added an option for the checkout cart template to be customized via the theme
+* Fixed a potential bug with file downloads
 * Added .epub files to accepted mime types
 * Fixed a bug with a missing email field when using add-on gateways
 
