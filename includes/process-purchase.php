@@ -26,6 +26,7 @@ function edd_process_purchase_form() {
 			
 			$user_login		= $_POST["edd_user_login"];	
 			$user_pass		= $_POST["edd_user_pass"];
+			$user_email		= $_POST['edd_email'];
 			$pass_confirm 	= $_POST["edd_user_pass_confirm"];
 			$need_new_user	= true;
 			

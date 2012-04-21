@@ -267,6 +267,14 @@ function edd_get_register_fields() {
 			<label for="edd_email"><?php _e('Email', 'edd'); ?></label>
 		</p>
 		<p>
+			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e('First Name', 'edd'); ?>" id="edd-first" value="<?php echo is_user_Logged_in() ? $user_data->user_firstname : ''; ?>"/>
+			<label class="edd-label" for="edd-first"><?php _e('First Name', 'edd'); ?></label>
+		</p>
+		<p>
+			<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e('Last name', 'edd'); ?>" value="<?php echo is_user_Logged_in() ? $user_data->user_lastname : ''; ?>"/>
+			<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
+		</p>
+		<p>
 			<input name="edd_user_pass" id="edd_user_pass" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" placeholder="<?php _e('Password', 'edd'); ?>" type="password"/>
 			<label for="password"><?php _e('Password', 'edd'); ?></label>
 		</p>
