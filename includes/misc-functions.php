@@ -104,6 +104,9 @@ function edd_currency_filter( $price ) {
 
 function edd_get_country_list() {
 	$countries =array(
+		'US' => 'United States',
+		'CA' => 'Canada',
+		'GB' => 'United Kingdom (GB)',
 		'AD' => 'Andorra',
 		'AE' => 'United Arab Emirates',
 		'AF' => 'Afghanistan',
@@ -139,7 +142,6 @@ function edd_get_country_list() {
 		'BW' => 'Botswana',
 		'BY' => 'Belarus',
 		'BZ' => 'Belize',
-		'CA' => 'Canada',
 		'CC' => 'Cocos (keeling) Islands',
 		'CD' => 'Congo, Democratic People\'s Republic',
 		'CF' => 'Central African Republic',
@@ -178,7 +180,6 @@ function edd_get_country_list() {
 		'FO' => 'Faroe Islands',
 		'FR' => 'France',
 		'GA' => 'Gabon',
-		'GB' => 'United Kingdom (GB)',
 		'GD' => 'Grenada',
 		'GE' => 'Georgia',
 		'GF' => 'French Guiana',
@@ -329,7 +330,6 @@ function edd_get_country_list() {
 		'UA' => 'Ukraine',
 		'UG' => 'Uganda',
 		'UM' => 'US Minor Outlying Islands',
-		'US' => 'United States',
 		'UY' => 'Uruguay',
 		'UZ' => 'Uzbekistan',
 		'VA' => 'Holy See (City Vatican State)',
