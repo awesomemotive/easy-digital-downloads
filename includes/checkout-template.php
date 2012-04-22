@@ -23,7 +23,11 @@ function edd_checkout_form() {
 		
 		<?php if(edd_get_cart_contents()) : ?>
 				
-			<?php edd_checkout_cart(); ?>
+			<?php 
+			do_action('edd_before_checkout_cart');
+			edd_checkout_cart(); 
+			do_action('edd_after_checkout_cart');
+			?>
 			
 			<div id="edd_checkout_form_wrap" class="edd_clearfix">
 				<?php if(isset($edd_options['show_agree_to_terms'])) { ?>
@@ -39,6 +43,9 @@ function edd_checkout_form() {
 					</script>
 				<?php
 				} 
+				
+				do_action('edd_checkout_after_cart');
+				
 				$gateways = edd_get_enabled_payment_gateways();
 				if(count($gateways) > 1 && !isset($_GET['payment-mode'])) { ?>
 					<?php do_action('edd_payment_mode_top'); ?>

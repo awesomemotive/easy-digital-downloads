@@ -1,7 +1,4 @@
-<?php
-global $post;
-ob_start();
-do_action('edd_before_checkout_cart'); ?>
+<?php global $post; ?>
 <table id="edd_checkout_cart" <?php if(edd_is_ajax_enabled()) { echo 'class="ajaxed"'; } ?>>
 	<thead>
 		<tr>
@@ -43,5 +40,4 @@ do_action('edd_before_checkout_cart'); ?>
 		</tr>
 	</tfoot>
 </table>
-<?php 
-do_action('edd_after_checkout_cart');
+<?php
