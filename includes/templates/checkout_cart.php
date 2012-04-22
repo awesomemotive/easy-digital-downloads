@@ -40,4 +40,3 @@
 		</tr>
 	</tfoot>
 </table>
-<?php

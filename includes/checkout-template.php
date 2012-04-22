@@ -30,22 +30,10 @@ function edd_checkout_form() {
 			?>
 			
 			<div id="edd_checkout_form_wrap" class="edd_clearfix">
-				<?php if(isset($edd_options['show_agree_to_terms'])) { ?>
-					<script type="text/javascript">
-						jQuery(document).ready(function($){
-							$('body').on('click', '.edd_terms_links', function(e) {
-								//e.preventDefault();
-								$('#edd_terms').slideToggle();
-								$('.edd_terms_links').toggle();
-								return false;
-							});
-						});
-					</script>
-				<?php
-				} 
-				
-				do_action('edd_checkout_after_cart');
-				
+			
+				<?php 				
+				do_action('edd_checkout_form_top');
+			
 				$gateways = edd_get_enabled_payment_gateways();
 				if(count($gateways) > 1 && !isset($_GET['payment-mode'])) { ?>
 					<?php do_action('edd_payment_mode_top'); ?>
@@ -328,3 +316,22 @@ function edd_show_payment_iconos() {
 }
 add_action('edd_payment_mode_top', 'edd_show_payment_iconos');
 add_action('edd_before_purchase_form', 'edd_show_payment_iconos');
+
+
+function edd_agree_to_terms_js() {
+	global $edd_options;
+	if(isset($edd_options['show_agree_to_terms'])) { ?>
+		<script type="text/javascript">
+			jQuery(document).ready(function($){
+				$('body').on('click', '.edd_terms_links', function(e) {
+					//e.preventDefault();
+					$('#edd_terms').slideToggle();
+					$('.edd_terms_links').toggle();
+					return false;
+				});
+			});
+		</script>
+	<?php
+	}
+}
+add_action('edd_checkout_form_top', 'edd_agree_to_terms_js');
