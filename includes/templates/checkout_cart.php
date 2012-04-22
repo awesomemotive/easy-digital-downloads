@@ -31,7 +31,7 @@ do_action('edd_before_checkout_cart'); ?>
 			<?php endforeach; ?>
 		<?php else: ?>
 			<tr class="edd_cart_item" id="edd_cart_item_<?php echo $item; ?>">
-				<td colspan="3"><?php _e('Your shopping cart is empty', 'edd'); ?></td>
+				<td colspan="3"><?php do_action('edd_empty_cart'); ?></td>
 			</tr>
 		<?php endif; ?>
 	</tbody>

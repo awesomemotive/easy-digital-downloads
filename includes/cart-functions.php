@@ -169,11 +169,6 @@ function edd_empty_cart() {
 	$_SESSION['edd_cart'] = NULL;
 }
 
-function edd_empty_cart_message() {
-	echo '<p class="edd-empty-cart">' . __('Your cart is empty', 'edd') . '</p>';
-}
-add_action('edd_empty_cart', 'edd_empty_cart_message');
-
 // make sure a session is started
 if(!session_id()){
 	add_action( 'init', 'session_start', -1 );

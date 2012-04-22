@@ -22,7 +22,7 @@ function edd_shopping_cart($echo = false) {
 			endforeach;
 			echo '<li class="cart_item edd_checkout"><a href="' . get_permalink($edd_options['purchase_page']) . '">' . __('Checkout', 'edd') . '</a></li>';
 		else :
-			echo '<li class="cart_item empty">' . apply_filters('edd_empty_cart_message', __('Your cart is empty', 'edd')) . '</li>';
+			echo '<li class="cart_item empty">' . edd_empty_cart_message() . '</li>';
 			echo '<li class="cart_item edd_checkout" style="display:none;"><a href="' . get_permalink($edd_options['purchase_page']) . '">' . __('Checkout', 'edd') . '</a></li>';
 		endif; ?>
 	</ul>
@@ -44,3 +44,9 @@ function edd_get_cart_item_template($cart_key, $item, $ajax = false) {
 	
 	return apply_filters('edd_cart_item', $item);
 }
+
+// shows the message for an empty cart
+function edd_empty_cart_message() {
+	echo apply_filters('edd_empty_cart_message', __('Your cart is empty.', 'edd'));
+}
+add_action('edd_empty_cart', 'edd_empty_cart_message');
