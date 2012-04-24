@@ -66,7 +66,7 @@ function edd_render_files_field($post_id) {
 				}
 			} else {
 				$field_html .= '<div class="edd_repeatable_upload_wrapper">';
-					$field_html .= '<input type="text" class="edd_repeatable_name_field" placeholder="' . __('file name', 'edd') . '" name="' . $field['id'] . '[0][name]" id="edd_download_files[0][name]" value="" size="20" style="width:20%" />';
+					$field_html .= '<input type="text" class="edd_repeatable_name_field" placeholder="' . __('file name', 'edd') . '" name="edd_download_files[0][name]" id="edd_download_files[0][name]" value="" size="20" style="width:20%" />';
 					$field_html .= '<input type="text" class="edd_repeatable_upload_field edd_upload_field" placeholder="' . __('file url', 'edd') . '" name="edd_download_files[0][file]" id="edd_download_files[0][file]" value="" size="30" style="width:50%" />';
 					$field_html .= '<button class="button-secondary edd_upload_image_button">' . __('Upload File', 'edd') . '</button>';
 				$field_html .= '</div>';
