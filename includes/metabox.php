@@ -123,7 +123,7 @@ function edd_render_button_color($post_id) {
 }
 add_action('edd_meta_box_fields', 'edd_render_button_color', 50);
 
-function edd_render_disable_buttom($post_id) {	
+function edd_render_disable_button($post_id) {	
 	$show_button = get_post_meta($post_id, '_edd_hide_purchase_link', true);
 	echo '<tr id="edd_hide_purchase_link" class="edd_table_row">';
 		echo '<th style="width:20%"><label for="_edd_hide_purchase_link">' . __('Disable the purchase button?', 'edd') . '</label></th>';
@@ -133,7 +133,7 @@ function edd_render_disable_buttom($post_id) {
 		echo '</td>';
 	echo '</tr>';
 }
-add_action('edd_meta_box_fields', 'edd_render_disable_buttom', 60);
+add_action('edd_meta_box_fields', 'edd_render_disable_button', 60);
 
 function edd_render_meta_notes($post_id) {
 	// notes
