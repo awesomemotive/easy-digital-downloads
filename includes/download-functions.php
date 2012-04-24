@@ -85,6 +85,23 @@ function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
 	return false;
 }
 
+/*
+* retrieves the price of a downloadable product after purchase
+* this price includes any necessary discounts that were applied
+* @param int $download_id - the ID of the download
+* @param array $user_purchase_info - an array of all information for the payment
+* return string - the price of the download
+*/
+function edd_get_download_final_price($download_id, $user_purchase_info) {
+	$original_price = get_post_meta($download_id, 'edd_price', true);
+	if(isset($user_purchase_info['discount']) && $user_purchase_info['discount'] != 'none') {
+		$price = edd_get_discounted_amount($user_purchase_info['discount'], $original_price);
+	} else {
+		$price = $original_price;
+	}
+	return $price;
+}
+
 // returns the file extension of a filename
 function edd_get_file_extension($str)
 {

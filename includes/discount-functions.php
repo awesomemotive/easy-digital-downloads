@@ -52,7 +52,7 @@ add_action('edd_add_discount', 'edd_add_discount');
 function edd_edit_discount($data) {
 	if(isset($data['edd-discount-nonce']) && wp_verify_nonce($data['edd-discount-nonce'], 'edd_discount_nonce')) {
 		// setup the discount code details
-		$posted = array();
+		$discount = array();
 		foreach($data as $key => $value) {
 			if($key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'discount-id' && $key != 'edd-redirect')
 			$discount[$key] = strip_tags(addslashes($value));

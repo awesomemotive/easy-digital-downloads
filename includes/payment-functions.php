@@ -99,7 +99,8 @@ function edd_update_payment_status($payment_id, $status = 'publish') {
 		foreach($downloads as $download) {
 			edd_record_sale_in_log($download, $payment_id, $user_info, $payment_data['date']);
 			edd_increase_purchase_count($download);
-			edd_increase_earnings($download, $payment_data['amount']);
+			$amount = edd_get_download_final_price($download, $user_info);
+			edd_increase_earnings($download, $amount);
 		}
 	
 		if(isset($payment_data['user_info']['discount'])) {
