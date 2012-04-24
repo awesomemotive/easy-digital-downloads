@@ -85,7 +85,7 @@ function edd_render_purchase_text_field($post_id) {
 	echo '<tr id="_edd_purchase_text" class="edd_table_row">';
 		echo '<th style="width:20%"><label for="edd_purchase_text">' . __('Purchase Text', 'edd') . '</label></th>';
 		echo '<td>';
-			echo '<input type="text" name="_edd_purchase_text" id="edd_purchase_text" value="', $purchase_text ? $purchase_text : '', '" size="30" class="regular-text" placeholder="9.99"/>' . __('Add the text you would like displayed for the purchase text', 'edd'); // field description				
+			echo '<input type="text" name="_edd_purchase_text" id="edd_purchase_text" value="', $purchase_text ? $purchase_text : '', '" size="30" class="regular-text" placeholder="' . __('Purchase', 'edd') . '"/>' . __('Add the text you would like displayed for the purchase text', 'edd'); // field description				
 		echo '</td>';
 	echo '</tr>';
 }
@@ -159,9 +159,10 @@ function edd_download_meta_box_save($post_id) {
 	}
 
 	// check autosave
-	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-		return $post_id;
-	}
+    if ( (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || ( defined('DOING_AJAX') && DOING_AJAX) || isset($_REQUEST['bulk_edit']) ) return $post_id;
+	
+	//don't save if only a revision
+	if ( $post->post_type == 'revision' ) return $post_id;
 
 	// check permissions
 	if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {
