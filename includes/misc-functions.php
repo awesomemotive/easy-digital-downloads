@@ -36,32 +36,31 @@ function edd_is_odd( $int ) {
 }
 
 function edd_get_currencies() {
-	$currencies = apply_filters('edd_currencies', array(
-			'USD' => __('US Dollars (&#36;)', 'edd'),
-			'EUR' => __('Euros (&euro;)', 'edd'),
-			'GBP' => __('Pounds Sterling (&pound;)', 'edd'),
-			'AUD' => __('Australian Dollars (&#36;)', 'edd'),
-			'BRL' => __('Brazilian Real (&#36;)', 'edd'),
-			'CAD' => __('Canadian Dollars (&#36;)', 'edd'),
-			'CZK' => __('Czech Koruna', 'edd'),
-			'DKK' => __('Danish Krone', 'edd'),
-			'HKD' => __('Hong Kong Dollar (&#36;)', 'edd'),
-			'HUF' => __('Hungarian Forint', 'edd'),
-			'ILS' => __('Israeli Shekel', 'edd'),
-			'JPY' => __('Japanese Yen (&yen;)', 'edd'),
-			'MYR' => __('Malaysian Ringgits', 'edd'),
-			'MXN' => __('Mexican Peso (&#36;)', 'edd'),
-			'NZD' => __('New Zealand Dollar (&#36;)', 'edd'),
-			'NOK' => __('Norwegian Krone', 'edd'),
-			'PHP' => __('Philippine Pesos', 'edd'),
-			'PLN' => __('Polish Zloty', 'edd'),
-			'SGD' => __('Singapore Dollar (&#36;)', 'edd'),
-			'SEK' => __('Swedish Krona', 'edd'),
-			'CHF' => __('Swiss Franc', 'edd'),
-			'TWD' => __('Taiwan New Dollars', 'edd'),
-			'THB' => __('Thai Baht', 'edd'),
-			'INR' => __('Indian Rupee', 'edd')
-		)
+	$currencies = array(
+		'USD' => __('US Dollars (&#36;)', 'edd'),
+		'EUR' => __('Euros (&euro;)', 'edd'),
+		'GBP' => __('Pounds Sterling (&pound;)', 'edd'),
+		'AUD' => __('Australian Dollars (&#36;)', 'edd'),
+		'BRL' => __('Brazilian Real (&#36;)', 'edd'),
+		'CAD' => __('Canadian Dollars (&#36;)', 'edd'),
+		'CZK' => __('Czech Koruna', 'edd'),
+		'DKK' => __('Danish Krone', 'edd'),
+		'HKD' => __('Hong Kong Dollar (&#36;)', 'edd'),
+		'HUF' => __('Hungarian Forint', 'edd'),
+		'ILS' => __('Israeli Shekel', 'edd'),
+		'JPY' => __('Japanese Yen (&yen;)', 'edd'),
+		'MYR' => __('Malaysian Ringgits', 'edd'),
+		'MXN' => __('Mexican Peso (&#36;)', 'edd'),
+		'NZD' => __('New Zealand Dollar (&#36;)', 'edd'),
+		'NOK' => __('Norwegian Krone', 'edd'),
+		'PHP' => __('Philippine Pesos', 'edd'),
+		'PLN' => __('Polish Zloty', 'edd'),
+		'SGD' => __('Singapore Dollar (&#36;)', 'edd'),
+		'SEK' => __('Swedish Krona', 'edd'),
+		'CHF' => __('Swiss Franc', 'edd'),
+		'TWD' => __('Taiwan New Dollars', 'edd'),
+		'THB' => __('Thai Baht', 'edd'),
+		'INR' => __('Indian Rupee', 'edd')
 	);
 	return apply_filters('edd_currencies', $currencies);
 }
@@ -85,7 +84,7 @@ function edd_currency_filter( $price ) {
 			case "JPY" : return '&yen;' . $price; break;
 			default :
 			    $formatted = $currency . ' ' . $price;
-    		    return apply_filters('edd_'.$currency.'_currency_filter_before', $formatted, $currency, $price);
+    		    return apply_filters('edd_' . strtolower($currency) . '_currency_filter_before', $formatted, $currency, $price);
 			break;
 		endswitch;
 	else :
@@ -103,7 +102,7 @@ function edd_currency_filter( $price ) {
 			case "JPY" : return $price . '&yen;'; break;
 			default : 
 			    $formatted = $price . ' ' . $currency;
-			    return apply_filters('edd_'.$currency.'_currency_filter_after', $formatted, $currency, $price);
+			    return apply_filters('edd_' . strtolower($currency) . '_currency_filter_after', $formatted, $currency, $price);
 			break;
 		endswitch;	
 	endif;
