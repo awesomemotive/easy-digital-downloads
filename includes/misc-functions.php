@@ -62,7 +62,7 @@ function edd_get_currencies() {
 		'THB' => __('Thai Baht', 'edd'),
 		'INR' => __('Indian Rupee', 'edd')
 	);
-	return $currencies;
+	return apply_filters('edd_currencies', $currencies);
 }
 
 function edd_currency_filter( $price ) {
@@ -82,7 +82,10 @@ function edd_currency_filter( $price ) {
 				return '&#36;' . $price; 
 			break;
 			case "JPY" : return '&yen;' . $price; break;
-			default : return $currency . ' ' . $price; break;
+			default :
+			    $formatted = $currency . ' ' . $price;
+    		    return apply_filters('edd_'.$currency.'_currency_filter_before', $formatted, $currency, $price);
+			break;
 		endswitch;
 	else :
 		switch ($currency) :
@@ -97,7 +100,10 @@ function edd_currency_filter( $price ) {
 				return $price . '&#36;'; 
 			break;
 			case "JPY" : return $price . '&yen;'; break;
-			default : return $price . ' ' . $currency; break;
+			default : 
+			    $formatted = $price . ' ' . $currency;
+			    return apply_filters('edd_'.$currency.'_currency_filter_after', $formatted, $currency, $price);
+			break;
 		endswitch;	
 	endif;
 }
