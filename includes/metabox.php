@@ -30,7 +30,7 @@ function edd_render_price_field($post_id) {
 	echo '<tr id="edd_price" class="edd_table_row">';
 		echo '<th style="width:20%"><label for="edd_price">' . __('Price', 'edd') . '</label></th>';
 		echo '<td>';
-			if($edd_options['currency_position'] == 'before') {
+			if(!isset($edd_options['currency_position']) || $edd_options['currency_position'] == 'before') {
 				echo edd_currency_filter('') . '<input type="text" name="edd_price" id="edd_price" value="', $price ? $price : '', '" size="30" style="width:50px;" placeholder="9.99"/>';
 			} else {
 				echo '<input type="text" name="edd_price" id="edd_price" value="', $price ? $price : '', '" size="30" style="width:50px;" placeholder="9.99"/>' . edd_currency_filter('');
