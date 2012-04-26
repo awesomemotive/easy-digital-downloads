@@ -116,7 +116,7 @@ function edd_render_button_color($post_id) {
 				foreach($colors as $key => $color) {
 					echo '<option value="' . $key . '" ' . checked($key, $button_color, false) . '>' . $color . '</option>';
 				}
-			echo '</select> ';
+			echo '</select>&nbsp;';
 			echo __('Choose the color of the purchase link, if button was selected above.', 'edd');
 		echo '</td>';
 	echo '</tr>';
