@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.3.2
-Stable Tag: 1.0.3
+Stable Tag: 1.0.4
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
@@ -84,6 +84,14 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 
 == Changelog ==
 
+= 1.0.4 =
+
+* Added a new "Add Ons" page for viewing all available add-ons for the plugin
+* Added two new filters for currencies that allow developers to add their own currencies
+* Improved meta box field loading that allows add-ons to add / remove fields
+* Added language files for Spanish
+* Improvements to the "empty cart" message. It can now be customized via a filter
+
 = 1.0.3 =
 
 * Added first and last name fields to the checkout registration form.
@@ -135,6 +143,14 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.0.4 =
+
+* Added a new "Add Ons" page for viewing all available add-ons for the plugin
+* Added two new filters for currencies that allow developers to add their own currencies
+* Improved meta box field loading that allows add-ons to add / remove fields
+* Added language files for Spanish
+* Improvements to the "empty cart" message. It can now be customized via a filter
 
 = 1.0.3 =
 

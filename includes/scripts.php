@@ -41,9 +41,9 @@ add_action('wp_enqueue_scripts', 'edd_register_styles');
 
 function edd_load_admin_scripts($hook) {
 
-	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page;
+	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page;
 
-	$edd_pages = array($edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page);
+	$edd_pages = array($edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page);
 		
 	if( ( !isset($post) || 'download' != $post->post_type ) && !in_array($hook, $edd_pages) )
 		return; // load the scripts only on the Download pages
@@ -57,8 +57,9 @@ function edd_load_admin_scripts($hook) {
 	wp_enqueue_script('media-upload'); 
 	wp_enqueue_script('thickbox');
 	wp_enqueue_script('edd-admin-scripts', EDD_PLUGIN_URL . 'includes/js/admin-scripts.js');
+	wp_localize_script('edd-admin-scripts', 'edd_vars', array('post_id' => isset($post->ID) ? $post->ID : null));
 	wp_enqueue_style('thickbox');
 	wp_enqueue_style('jquery-ui-css', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css', false, '1.8', 'all');
-	wp_localize_script('edd-admin-scripts', 'edd_vars', array('post_id' => isset($post->ID) ? $post->ID : null));
+	wp_enqueue_style('edd-admin', EDD_PLUGIN_URL . 'includes/css/edd-admin.css');
 }
 add_action('admin_enqueue_scripts', 'edd_load_admin_scripts', 100);

@@ -5,7 +5,7 @@ Plugin URI: http://easydigitaldownloads.com
 Description: Serve Digital Downloads Through WordPress
 Author: Pippin Williamson
 Author URI: http://pippinsplugins.com
-Version: 1.0.3
+Version: 1.0.4
 */
 
 ini_set('display_errors', 'on');
@@ -67,6 +67,7 @@ if(is_admin()) {
 	include_once(EDD_PLUGIN_DIR . 'includes/admin-pages/settings.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/admin-pages/discount-codes.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/admin-pages/reports.php');
+	include_once(EDD_PLUGIN_DIR . 'includes/admin-pages/add-ons.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/admin-notices.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/dashboard-columns.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/thickbox.php');
