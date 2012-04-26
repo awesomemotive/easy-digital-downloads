@@ -144,7 +144,7 @@ function edd_render_meta_notes($post_id) {
 	
 	// short code
 	echo '<tr>';
-		echo '<th style="width:20%"><label>' . __('Short Code for this Download', 'edd') . '</label></th>';
+		echo '<th style="width:20%"><label>' . __('Purchase Button Short Code', 'edd') . '</label></th>';
 		echo '<td><em>[purchase_link id="' . $post_id . '" text="' . __('Purchase', 'edd') . '" style="button" color="gray"]</td>';
 	echo '</tr>';
 }
