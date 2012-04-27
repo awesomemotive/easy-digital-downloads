@@ -95,7 +95,7 @@ function edd_payment_history_page() {
 										</div>
 									</td>
 									<td><?php echo $payment_meta['key']; ?></td>
-									<td><a href="#TB_inline?width=640&inlineId=purchased-files-<?php echo $payment->ID; ?>" class="thickbox" title="<?php printf(__('Purchase Details for Payment #%s', 'edd'), $payment->id); ?> "><?php _e('View Order Details', 'edd'); ?></a>
+									<td><a href="#TB_inline?width=640&inlineId=purchased-files-<?php echo $payment->ID; ?>" class="thickbox" title="<?php printf(__('Purchase Details for Payment #%s', 'edd'), $payment->ID); ?> "><?php _e('View Order Details', 'edd'); ?></a>
 										<div id="purchased-files-<?php echo $payment->ID; ?>" style="display:none;">
 											<?php $downloads = maybe_unserialize($payment_meta['downloads']); ?>
 											<h4><?php echo _n(__('Purchased File', 'edd'), __('Purchased Files', 'edd'), count($downloads)); ?></h4>
