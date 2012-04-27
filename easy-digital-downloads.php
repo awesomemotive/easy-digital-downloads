@@ -5,7 +5,7 @@ Plugin URI: http://easydigitaldownloads.com
 Description: Serve Digital Downloads Through WordPress
 Author: Pippin Williamson
 Author URI: http://pippinsplugins.com
-Version: 1.0.4
+Version: 1.0.4.1
 */
 
 ini_set('display_errors', 'on');

@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.3.2
-Stable Tag: 1.0.4
+Stable Tag: 1.0.4.1
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
@@ -71,18 +71,13 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 7. Screenshot 7
 8. Screenshot 8
 9. Screenshot 9
-10. Screenshot 10
-11. Screenshot 11
-12. Screenshot 12
-13. Screenshot 13
-14. Screenshot 14
-15. Screenshot 15
-16. Screenshot 16
-17. Screenshot 17
-18. Screenshot 18
-19. Screenshot 19
 
 == Changelog ==
+
+= 1.0.4.1 =
+
+* New download post type icon
+* Fixed missing add-ons.php file
 
 = 1.0.4 =
 
@@ -143,6 +138,11 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.0.4.1 =
+
+* New download post type icon
+* Fixed missing add-ons.php file
 
 = 1.0.4 =
 
