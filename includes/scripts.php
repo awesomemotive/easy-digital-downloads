@@ -63,3 +63,16 @@ function edd_load_admin_scripts($hook) {
 	wp_enqueue_style('edd-admin', EDD_PLUGIN_URL . 'includes/css/edd-admin.css');
 }
 add_action('admin_enqueue_scripts', 'edd_load_admin_scripts', 100);
+
+// adds edd custom post type icon
+function edd_admin_downloads_icon() {
+	$icon_url = EDD_PLUGIN_URL . 'includes/images/edd-icon.png';	
+	?>
+	<style type="text/css" media="screen">
+		body #adminmenu #menu-posts-download div.wp-menu-image { background:transparent url( "<?php echo $icon_url; ?>" ) no-repeat 7px -32px; }
+		body #adminmenu #menu-posts-download:hover div.wp-menu-image, 
+		body #adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image { background:transparent url( "<?php echo $icon_url; ?>" ) no-repeat 7px 0; }	
+	</style>
+    <?php
+}
+add_action('admin_head','edd_admin_downloads_icon');
