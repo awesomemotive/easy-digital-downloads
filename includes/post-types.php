@@ -51,7 +51,6 @@ function edd_setup_download_post_type() {
 		'hierarchical' => false,
 		'menu_position' => $menu_position,
 		'supports' => array( 'title', 'editor', 'thumbnail' ),
-		'menu_icon' => EDD_PLUGIN_URL . 'includes/images/media-button.png'
 	); 
 	register_post_type('download', $download_args);
 	
