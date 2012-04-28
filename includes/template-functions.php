@@ -8,6 +8,7 @@ function edd_append_purchase_link($content) {
 			$button_text = get_post_meta($post->ID, '_edd_purchase_text', true) ? get_post_meta($post->ID, '_edd_purchase_text', true) : __('Purchase', 'edd');
 			$style = get_post_meta($post->ID, '_edd_purchase_style', true) ? get_post_meta($post->ID, '_edd_purchase_style', true) : 'button';
 			$color = get_post_meta($post->ID, '_edd_purchase_color', true);
+			if($color) { $color = str_replace(' ', '_', $color); }
 			$content .= edd_get_purchase_link($post->ID, $button_text, $style, $color);
 		}
 	}
@@ -65,7 +66,11 @@ function edd_get_purchase_link($download_id = null, $link_text = 'Purchase', $st
 				
 				$purchase_text = '<input type="submit" class="edd_submit_plain edd-add-to-cart" name="edd_purchase_download" value="' . $link_text . '" data-action="edd_add_to_cart" data-download-id="' . $download_id . '"' . $data_variable . '/>';
 				
-				$purchase_form .= $purchase_text;
+				$checkout_link = '<a href="' . $checkout_url . '" class="edd_go_to_checkout edd_button edd_' . $color . '" style="display:none;">';
+				 	$checkout_link .= __('Checkout', 'edd');
+				$checkout_link .= '</a>';
+				
+				$purchase_form .= $purchase_text . $checkout_link;
 			}
 			if(edd_is_ajax_enabled()) {
 				$purchase_form .= '<img src="' . EDD_PLUGIN_URL . 'includes/images/loading.gif" class="edd-cart-ajax" style="display: none;"/>';
@@ -102,7 +107,19 @@ function edd_filter_success_page_content($content) {
 add_filter('the_content', 'edd_filter_success_page_content');
 
 function edd_get_button_colors() {
-	return apply_filters('edd_button_colors', array('gray', 'pink', 'blue', 'green', 'teal', 'black', 'dark gray', 'orange', 'purple', 'slate'));
+	$colors = array(
+		'gray' => __('Gray', 'edd'), 
+		'pink' => __('Pink', 'edd'), 
+		'blue' => __('blue', 'edd'), 
+		'green' => __('Green', 'edd'), 
+		'teal' => __('Teal', 'edd'), 
+		'black' => __('Black', 'edd'), 
+		'dark gray' => __('Dark Gray', 'edd'), 
+		'orange' => __('Orange', 'edd'), 
+		'purple' => __('Purple', 'edd'), 
+		'slate' => __('Slate', 'edd')
+	);
+	return apply_filters('edd_button_colors', $colors);
 }
 
 function edd_show_has_purchased_item_message($user_id, $download_id) {
