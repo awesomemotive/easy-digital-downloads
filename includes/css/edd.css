@@ -42,7 +42,7 @@ input.edd_submit_plain { background: none!important; border: none!important; pad
 /* general */
 .edd_button { 
 	display: inline-block; *display: block; zoom: 1; position: relative; 
-	height: 32px; line-height: 28px; text-decoration: none; color: #555; 
+	height: 32px; line-height: 28px; text-decoration: none; color: #555; cursor: pointer;
 }
 
 .edd_button_outer { 
@@ -58,7 +58,7 @@ input.edd_submit_plain { background: none!important; border: none!important; pad
 .edd_button_text, input.edd_button_text, input#edd-purchase-button, input#edd_next_button { 
 	display: block; height: 32px; background: url(../images/button-mid.png) repeat-x; 
 	padding: 0 4px; margin: 0; border: none;  text-shadow: none; color: #555; 
-	-webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0;
+	-webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0; cursor: pointer;
 }
 input.edd_button_text, input#edd-purchase-button, input#edd_next_button  { padding: 0 4px 4px; }
 

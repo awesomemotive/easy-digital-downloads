@@ -33,7 +33,7 @@ function edd_get_purchase_link($download_id = null, $link_text = 'Purchase', $st
 						if($key == 0) {
 							$checked = 'checked="checked"';
 						}
-						$purchase_form .= '<input type="radio" ' . $checked . ' name="edd_options[price_id]" id="edd_price_option_' . $key . '" value="' . $key . '"/>&nbsp;';
+						$purchase_form .= '<input type="radio" ' . $checked . ' name="edd_options[price_id]" id="edd_price_option_' . $key . '" class="edd_price_option_' . $download_id . '" value="' . $key . '"/>&nbsp;';
 						$purchase_form .= '<label for="edd_price_option_' . $key . '">' . $price['name'] . ' - ' . edd_currency_filter($price['amount']) . '</label><br/>';
 					}
 				}
@@ -45,26 +45,18 @@ function edd_get_purchase_link($download_id = null, $link_text = 'Purchase', $st
 			if(edd_has_user_purchased($user_ID, $download_id)) {
 				do_action('edd_has_purchased_item_message', $user_ID, $download_id);
 			}
-		
+				
+			$data_variable = $variable_pricing ? ' data-variable-price="yes"' : '';
+			
 			if($style == 'button') {
 				
-				/*
-				* this is the old purchase link, before it was changed to a form. Left here for reference, if needed
-				$link = '<a href="' . $link . '" class="edd-add-to-cart edd_button edd_' . $color . '" data-action="edd_add_to_cart" data-download-id="' . $download_id . '">';
-					$link .= '<span class="edd_button_outer"><span class="edd_button_inner">';
-						$link .= '<span class="edd_button_text"><span>' . $link_text . '</span><span style="display:none">' . __('Checkout', 'edd') . '</span></span>';
-					$link .= '</span></span>';
-				$link .= '</a>';
-				*/
-				
-				$purchase_button = '<span class="edd_button edd_' . $color . '"><span class="edd_button_outer"><span class="edd_button_inner"><input type="submit" class="edd_button_text edd-submit" id="edd-purchase-button" name="edd_purchase_download" value="' . $link_text . '"/></span></span></span>';
+				$purchase_button = '<span class="edd_button edd_' . $color . '"><span class="edd_button_outer"><span class="edd_button_inner"><input type="submit" class="edd_button_text edd-submit edd-add-to-cart" name="edd_purchase_download" value="' . $link_text . '" data-action="edd_add_to_cart" data-download-id="' . $download_id . '"' . $data_variable . '/></span></span></span>';
 				
 				$purchase_form .= $purchase_button;
 				
 			} else {
-				//$purchase_form .= '<a href="' . $link . '" class="edd-add-to-cart" data-action="edd_add_to_cart" data-download-id="' . $download_id . '"><span class="edd_link_text"><span>' . $link_text . '</span><span style="display:none">' . __('Checkout', 'edd') . '</span></span></a>';
 				
-				$purchase_text = '<input type="submit" class="edd_submit_plain" id="edd-purchase-text" name="edd_purchase_download" value="' . $link_text . '"/>';
+				$purchase_text = '<input type="submit" class="edd_submit_plain edd-add-to-cart" name="edd_purchase_download" value="' . $link_text . '" data-action="edd_add_to_cart" data-download-id="' . $download_id . '"' . $data_variable . '/>';
 				
 				$purchase_form .= $purchase_text;
 			}

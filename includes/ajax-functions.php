@@ -27,7 +27,8 @@ function edd_ajax_add_to_cart() {
 	if(isset($_POST['download_id']) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' )) {
 		global $post;
 		if(!edd_item_in_cart($_POST['download_id'])) {
-			$key = edd_add_to_cart($_POST['download_id']);
+			$options = is_numeric($_POST['price_id']) ? array('price_id' => $_POST['price_id']) : array();
+			$key = edd_add_to_cart($_POST['download_id'], $options);
 			$cart_item = edd_get_cart_item_template($key, $_POST['download_id'], true);
 			echo $cart_item;
 		} else {

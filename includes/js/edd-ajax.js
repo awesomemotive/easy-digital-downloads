@@ -29,17 +29,27 @@ jQuery(document).ready(function ($) {
     });
 
     // send Add to Cart request
-    $('body').on('click.eddAddToCart', '.edd-add-to-cart', function (event) {
-        var $this = $(this);
+    $('body').on('click.eddAddToCart', '.edd-add-to-cart', function (e) {
+        
+		e.preventDefault();
+		
+		var $this = $(this);
 
         // show the ajax loader
         $this.next().show();
 
-        var download = $this.data('download-id'),
-            action   = $this.data('action'),
+		var download = $this.data('download-id');
+		var variable_price = $this.data('variable-price');
+		var item_price_id = false;
+		if(typeof variable_price !== 'undefined' && variable_price !== false) {
+			item_price_id = $('.edd_price_option_' + download + ':checked').val();
+		}
+		
+        var action = $this.data('action'),
             data = {
                 action: action,
                 download_id: download,
+				price_id : item_price_id,
                 nonce: edd_scripts.ajax_nonce
             };
 

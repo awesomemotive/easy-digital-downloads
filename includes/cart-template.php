@@ -37,8 +37,10 @@ function edd_shopping_cart($echo = false) {
 function edd_get_cart_item_template($cart_key, $item, $ajax = false) {
 	global $post;
 	
+	$id = is_array($item) ? $item['id'] : $item;
+	
 	$remove_url = edd_remove_item_url($cart_key, $post, $ajax);
-	$title = get_the_title($item['id']); 
+	$title = get_the_title($id); 
 	$remove = '<a href="' . $remove_url . '" data-cart-item="' . $cart_key . '" data-action="edd_remove_from_cart" class="edd-remove-from-cart">' . __('remove', 'edd') . '</a>';	
 	$item = '<li class="edd-cart-item">' . $title . ' - ' . $remove . '</li>';
 	
@@ -47,6 +49,6 @@ function edd_get_cart_item_template($cart_key, $item, $ajax = false) {
 
 // shows the message for an empty cart
 function edd_empty_cart_message() {
-	echo apply_filters('edd_empty_cart_message', __('Your cart is empty.', 'edd'));
+	return apply_filters('edd_empty_cart_message', __('Your cart is empty.', 'edd'));
 }
 add_action('edd_empty_cart', 'edd_empty_cart_message');
