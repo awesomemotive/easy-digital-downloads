@@ -32,9 +32,11 @@ jQuery(document).ready(function ($) {
 		e.preventDefault();
 		
 		var $this = $(this);
-
-        // show the ajax loader
-        $this.next().show();
+			
+		var container = $this.closest('div');	
+ 
+       // show the ajax loader
+        $('.edd-cart-ajax', container).show();
 
 		var download = $this.data('download-id');
 		var variable_price = $this.data('variable-price');
@@ -74,23 +76,17 @@ jQuery(document).ready(function ($) {
             $('span.edd-cart-quantity').text(quantity);
 
             // hide the ajax loader
-            $('.edd-cart-ajax').hide();
+            $('.edd-cart-ajax', container).hide();
 			
-			if($('.edd_button_text').length) {
-				// switch purchase to checkout
-				$('.edd_button_text span, .edd_link_text span', $this).toggle();
-				$this.removeClass('edd-add-to-cart');
-				$this.attr('href', edd_scripts.checkout_page);
-			
-				// show the added message
-	            $this.next().next().fadeIn();
-	            setTimeout(function () {
-	                $this.next().next().fadeOut();
-	            }, 3000);
-			}
-			if($('.edd_already_purchased').length) {
-				$('.edd_already_purchased span').toggle();
-			}
+			// switch purchase to checkout
+			$('.edd_go_to_checkout, .edd_add_to_cart_wrap', container).toggle();
+				
+			// show the added message
+            $('.edd-cart-added-alert', container).fadeIn();
+            setTimeout(function () {
+                $('.edd-cart-added-alert', container).fadeOut();
+            }, 3000);
+
         });
         return false;
     });
