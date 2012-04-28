@@ -44,9 +44,10 @@ function edd_download_history() {
 						if($downloads) {
 							foreach($downloads as $download) {
 								echo '<tr>';
-									$download_files = get_post_meta($download, 'edd_download_files', true);
+									$id = isset($payment_meta['cart_details']) ? $download['id'] : $download;
+									$download_files = get_post_meta($id, 'edd_download_files', true);
 									do_action('edd_user_history_table_begin', $purchase->ID);
-									echo '<td>' . get_the_title($download) . '</td>';
+									echo '<td>' . get_the_title($id) . '</td>';
 									echo '<td>';
 									if($download_files) {
 										foreach($download_files as $filekey => $file) {

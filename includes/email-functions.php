@@ -28,7 +28,8 @@ function edd_email_download_link($payment_id, $admin_notice = true) {
 			
 		$download_list = '';	
 		foreach(maybe_unserialize($payment_data['downloads']) as $download) {
-			$download_list .= get_the_title($download) . "\n";
+			$id = isset($payment_data['cart_details']) ? $download['id'] : $download;
+			$download_list .= get_the_title($id) . "\n";
 		}
 		
 		$admin_message .= $download_list . "\n";
@@ -54,13 +55,14 @@ function edd_email_templage_tags($message, $payment_data) {
 	
 	$download_list = '<ul>';
 		foreach(maybe_unserialize($payment_data['downloads']) as $download) {
-			$download_list .= '<li>' . get_the_title($download) . '<br/>';
+			$id = isset($payment_data['cart_details']) ? $download['id'] : $download;
+			$download_list .= '<li>' . get_the_title($id) . '<br/>';
 			$download_list .= '<ul>';
-				$files = edd_get_download_files($download);
+				$files = edd_get_download_files($id);
 				if($files) {
 					foreach($files as $filekey => $file) {
 						$download_list .= '<li>';
-							$file_url = edd_get_download_file_url($payment_data['key'], $payment_data['email'], $filekey, $download);
+							$file_url = edd_get_download_file_url($payment_data['key'], $payment_data['email'], $filekey, $id);
 							$download_list .= '<a href="' . $file_url . '">' . $file['name'] . '</a>';
 						$download_list .= '</li>';
 					}
