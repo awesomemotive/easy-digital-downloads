@@ -133,7 +133,7 @@ function edd_render_purchase_text_field($post_id) {
 	echo '<tr id="_edd_purchase_text" class="edd_table_row">';
 		echo '<th style="width:20%"><label for="edd_purchase_text">' . __('Purchase Text', 'edd') . '</label></th>';
 		echo '<td>';
-			echo '<input type="text" name="_edd_purchase_text" id="edd_purchase_text" value="', $purchase_text ? $purchase_text : '', '" size="30" class="regular-text" placeholder="' . __('Purchase', 'edd') . '"/>' . __('Add the text you would like displayed for the purchase text', 'edd'); // field description				
+			echo '<input type="text" name="_edd_purchase_text" id="edd_purchase_text" value="', $purchase_text ? $purchase_text : '', '" size="30" class="regular-text" style="width: 40%;" placeholder="' . __('Purchase', 'edd') . '"/>' . __('Add the text you would like displayed for the purchase text', 'edd'); // field description				
 		echo '</td>';
 	echo '</tr>';
 }
@@ -156,7 +156,9 @@ add_action('edd_meta_box_fields', 'edd_render_link_styles', 40);
 function edd_render_button_color($post_id) {	
 	//  button color
 	$button_color = get_post_meta($post_id, '_edd_purchase_color', true);
-	echo '<tr id="edd_purchase_color" class="edd_table_row">';
+	$link_style = get_post_meta($post_id, '_edd_purchase_style', true);
+	$display = $link_style == 'button' ? '' : ' style="display:none;"';
+	echo '<tr id="edd_purchase_color" class="edd_table_row"' . $display . '>';
 		echo '<th style="width:20%"><label for="_edd_purchase_color">' . __('Button Color', 'edd') . '</label></th>';
 		echo '<td>';
 			echo '<select name="_edd_purchase_color">';
@@ -186,14 +188,16 @@ add_action('edd_meta_box_fields', 'edd_render_disable_button', 60);
 function edd_render_meta_notes($post_id) {
 	// notes
 	echo '<tr>';
-		echo '<th style="width:20%"><label>' . __('Notes', 'edd') . '</label></th>';
-		echo '<td>' . __('The style options above do NOT reflect the style of short code. The short code allows you to place a purchase button for this download anywhere on the site.', 'edd') . '</td>';
+		echo '<td style="width:20%" colspan=2><strong>' . __('Notes', 'edd') . '</strong></td>';
+	echo '</tr>';
+	echo '<tr>';
+		echo '<td colspan=2>' . __('The style options above do NOT reflect the style of short code. The short code allows you to place a purchase button for this download anywhere on the site.', 'edd') . '</td>';
 	echo '</tr>';
 	
 	// short code
 	echo '<tr>';
-		echo '<th style="width:20%"><label>' . __('Purchase Button Short Code', 'edd') . '</label></th>';
-		echo '<td><em>[purchase_link id="' . $post_id . '" text="' . __('Purchase', 'edd') . '" style="button" color="gray"]</td>';
+		echo '<th style="width:20%"><label>' . __('Short Code', 'edd') . '</label></th>';
+		echo '<td><em>[purchase_link id="' . $post_id . '" text="' . __('Purchase', 'edd') . '" style="button" color="gray"]</em><br/>' . __('This short code can be placed anywhere on your site', 'edd') . '</td>';
 	echo '</tr>';
 }
 add_action('edd_meta_box_fields', 'edd_render_meta_notes', 70);
