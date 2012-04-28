@@ -17,17 +17,20 @@
 					<?php do_action('edd_checkout_table_body_first', $item); ?>
 					<td>
 						<?php 
-							if(has_post_thumbnail($item)) { echo get_the_post_thumbnail($item, apply_filters('edd_checkout_image_size', array(25,25))); } 
-							echo get_the_title($item); 
+							//print_r($item);
+							if(has_post_thumbnail($item)) { 
+								echo get_the_post_thumbnail($item['id'], apply_filters('edd_checkout_image_size', array(25,25))); 
+							} 
+							echo get_the_title($item['id']); 
 						?>
 					</td>
-					<td><?php echo edd_currency_filter(edd_get_download_price($item)); ?></td>
+					<td><?php echo edd_currency_filter(edd_get_cart_item_price($item['id'], $item['options'])); ?></td>
 					<td><a href="<?php echo edd_remove_item_url($key, $post); ?>"><?php _e('remove', 'edd'); ?></td>
 					<?php do_action('edd_checkout_table_body_last', $item); ?>
 				</tr>
 			<?php endforeach; ?>
 		<?php else: ?>
-			<tr class="edd_cart_item" id="edd_cart_item_<?php echo $item; ?>">
+			<tr class="edd_cart_item" id="edd_cart_item_<?php echo $item['id']; ?>">
 				<td colspan="3"><?php do_action('edd_empty_cart'); ?></td>
 			</tr>
 		<?php endif; ?>

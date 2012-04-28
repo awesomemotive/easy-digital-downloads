@@ -90,10 +90,15 @@ function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
 * this price includes any necessary discounts that were applied
 * @param int $download_id - the ID of the download
 * @param array $user_purchase_info - an array of all information for the payment
+* @param string $amount_override a custom amount taht over rides the 'edd_price' meta, used for variable prices
 * return string - the price of the download
 */
-function edd_get_download_final_price($download_id, $user_purchase_info) {
-	$original_price = get_post_meta($download_id, 'edd_price', true);
+function edd_get_download_final_price($download_id, $user_purchase_info, $amount_override = null) {
+	if(is_null($amount_override)) {
+		$original_price = get_post_meta($download_id, 'edd_price', true);
+	} else {
+		$original_price = $amount_override;
+	}
 	if(isset($user_purchase_info['discount']) && $user_purchase_info['discount'] != 'none') {
 		$price = edd_get_discounted_amount($user_purchase_info['discount'], $original_price);
 	} else {
@@ -176,7 +181,11 @@ function edd_record_download_in_log($download_id, $file_id, $user_info, $ip, $da
 	update_post_meta($download_id, '_edd_file_download_log', $log);
 }
 
-// returns the purchase price of a download
+/*
+* Returns the price of a download, but only for non-variable priced downloads
+* @param - $download_id INT the ID number of the download to retrieve a price for
+* @return string/int the price of the download
+*/
 function edd_get_download_price($download_id) {
 	$price = get_post_meta($download_id, 'edd_price', true);
 	if($price)

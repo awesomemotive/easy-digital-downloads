@@ -74,6 +74,10 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 
 == Changelog ==
 
+= 1.0.5 =
+
+* New variable pricing option for downloads
+
 = 1.0.4.1 =
 
 * New download post type icon

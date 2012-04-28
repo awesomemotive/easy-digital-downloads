@@ -1,15 +1,23 @@
 <?php
 
-function edd_cart_actions() {
+function edd_cart_get_actions() {
 	if(isset($_GET['edd_action'])) {
 		do_action('edd_' . $_GET['edd_action'], $_GET);		
 	}
 }
-add_action('init', 'edd_cart_actions');
+add_action('init', 'edd_cart_get_actions');
+
+function edd_cart_post_actions() {
+	if(isset($_POST['edd_action'])) {
+		do_action('edd_' . $_POST['edd_action'], $_POST);		
+	}
+}
+add_action('init', 'edd_cart_post_actions');
 
 function edd_process_add_to_cart($data) {
-	$download_id = $_GET['download_id'];
-	$cart = edd_add_to_cart($download_id);
+	$download_id = $data['download_id'];
+	$options = isset($data['edd_options']) ? $data['edd_options'] : array(); 
+	$cart = edd_add_to_cart($download_id, $options);
 }
 add_action('edd_add_to_cart', 'edd_process_add_to_cart');
 

@@ -97,13 +97,26 @@ function edd_payment_history_page() {
 									<td><?php echo $payment_meta['key']; ?></td>
 									<td><a href="#TB_inline?width=640&inlineId=purchased-files-<?php echo $payment->ID; ?>" class="thickbox" title="<?php printf(__('Purchase Details for Payment #%s', 'edd'), $payment->ID); ?> "><?php _e('View Order Details', 'edd'); ?></a>
 										<div id="purchased-files-<?php echo $payment->ID; ?>" style="display:none;">
-											<?php $downloads = maybe_unserialize($payment_meta['downloads']); ?>
+											<?php 
+												$downloads = isset($payment_meta['cart_details']) ? maybe_unserialize($payment_meta['cart_details']) : maybe_unserialize($payment_meta['downloads']);
+											?>
 											<h4><?php echo _n(__('Purchased File', 'edd'), __('Purchased Files', 'edd'), count($downloads)); ?></h4>
 											<ul class="purchased-files-list">
 											<?php 
 												if($downloads) {
 													foreach($downloads as $download) {
-														echo '<li><a href="' . admin_url('post.php?post=' . $download . '&action=edit') . '" target="_blank">' . get_the_title($download) . '</a> - ' . __('Price: ', 'edd') . edd_currency_filter(edd_get_download_price($download)) . '</li>';
+														echo '<li>';
+															
+															// retrieve the ID of the download
+															$id = isset($payment_meta['cart_details']) ? $download['id'] : $download;
+															
+															// if download has variable prices, override the default price
+															$price_override = isset($payment_meta['cart_details']) ? $download['price'] : null; 
+															
+															// calculate the final price
+															$price = edd_get_download_final_price($id, unserialize($payment_meta['user_info']), $price_override);
+															echo '<a href="' . admin_url('post.php?post=' . $id . '&action=edit') . '" target="_blank">' . get_the_title($id) . '</a> - ' . __('Price: ', 'edd') . edd_currency_filter($price);
+														echo '</li>';
 													}
 												}
 											?>

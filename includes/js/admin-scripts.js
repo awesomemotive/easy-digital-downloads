@@ -9,6 +9,41 @@ jQuery(document).ready(function ($) {
         });
     }
 
+	// toggle the pricing options
+	$('#edd_variable_pricing').on('click', function() {
+		$('.edd_pricing_fields').toggle();
+	});
+	
+	// add new price option 
+    $(".edd_add_new_price").on('click', function (e) {
+        var $this = $(this),
+            container = $this.closest('tr'),
+            field = $this.closest('td').find("div.edd_variable_prices_wrapper:last").clone(true),
+            fieldLocation = $this.closest('td').find('div.edd_variable_prices_wrapper:last');
+
+        // get the hidden field that has the name value
+        var name_field = $("input.edd_variable_prices_name_field", container);
+
+        // set the base of the new field name
+        var id = $(name_field).attr("id");
+
+        // set the new field val to blank
+        $('input[type="text"]', field).val("");
+
+        // set up a count var
+        var count = $('.edd_variable_prices_wrapper', container).size();
+
+        name = id + '[' + count + '][name]';
+        price = id + '[' + count + '][amount]';
+
+        $('input.edd_variable_prices_name', field).attr("name", name).attr("id", name);
+        $('input.edd_variable_prices_amount', field).attr("name", price).attr("id", price);
+
+        field.insertAfter(fieldLocation, $this.closest('td'));
+
+        return false;
+    });
+	
     // add new repeatable upload field
     $(".edd_add_new_upload_field").on('click', function () {
         var $this = $(this),

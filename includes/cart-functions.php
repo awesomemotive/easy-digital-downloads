@@ -22,14 +22,15 @@ function edd_get_cart_quantity() {
 * Adds a download ID to the shopping cart
 * Uses edd_get_cart_contents()
 * @param - $download_id INT the ID number of the download to add to the cart
+* @param - $options array an array of options, such as variable price
 * return - cart key of the new item
 */
-function edd_add_to_cart($download_id) {
+function edd_add_to_cart($download_id, $options = array()) {
 	$cart = edd_get_cart_contents();
 	if(is_array($cart)) {
-		$cart[] = $download_id;
+		$cart[] = array('id' => $download_id, 'options' => $options);
 	} else {
-		$cart = array($download_id);
+		$cart = array(array('id' => $download_id, 'options' => $options));
 	}
 	
 	$_SESSION['edd_cart'] = $cart;
@@ -93,6 +94,26 @@ function edd_get_cart_item_quantity($item) {
 }
 
 /*
+* Gets the price of the cart item
+* @param - $item INT the download ID number
+* @param - $options array optional parameters, used for defining variable prices
+* Return - string - price for this item
+*/
+function edd_get_cart_item_price($item_id, $options = array()) {
+	
+	$variable_pricing = get_post_meta($item_id, '_variable_pricing', true);
+	$price = get_post_meta($item_id, 'edd_price', true); 
+	if($variable_pricing && !empty($options)) {
+		// if variable prices are enabled, retrieve the options
+		$prices = get_post_meta($item_id, 'edd_variable_prices', true);
+		if($prices) {
+			$price = $prices[$options['price_id']]['amount'];
+		}
+	}
+	return $price;
+}
+
+/*
 * Gets the total price amount in the cart
 * uses edd_get_cart_contents()
 * uses edd_get_download_price()
@@ -104,7 +125,7 @@ function edd_get_cart_amount() {
 	$amount = 0;
 	if($cart_items) {
 		foreach($cart_items as $item) {
-			$item_price = edd_get_download_price($item);
+			$item_price = edd_get_cart_item_price($item['id'], $item['options']);
 			$amount = $amount + $item_price;
 		}
 		if(isset($_POST['edd-discount']) && $_POST['edd-discount'] != '') {
@@ -149,9 +170,10 @@ function edd_get_cart_content_details() {
 	if($cart_items) {
 		foreach($cart_items as $key => $item) {
 			$details[$key] = array(
-				'name' => get_the_title($item),
+				'name' => get_the_title($item['id']),
+				'id' => $item['id'],
 				'item_number' => $item,
-				'price' => edd_get_download_price($item),
+				'price' => edd_get_cart_item_price($item['id'], $item['options']),
 				'quantity' => 1
 			);
 		}

@@ -57,11 +57,13 @@ function edd_email_templage_tags($message, $payment_data) {
 			$download_list .= '<li>' . get_the_title($download) . '<br/>';
 			$download_list .= '<ul>';
 				$files = edd_get_download_files($download);
-				foreach($files as $filekey => $file) {
-					$download_list .= '<li>';
-						$file_url = edd_get_download_file_url($payment_data['key'], $payment_data['email'], $filekey, $download);
-						$download_list .= '<a href="' . $file_url . '">' . $file['name'] . '</a>';
-					$download_list .= '</li>';
+				if($files) {
+					foreach($files as $filekey => $file) {
+						$download_list .= '<li>';
+							$file_url = edd_get_download_file_url($payment_data['key'], $payment_data['email'], $filekey, $download);
+							$download_list .= '<a href="' . $file_url . '">' . $file['name'] . '</a>';
+						$download_list .= '</li>';
+					}
 				}
 			$download_list .= '</ul></li>';
 		}

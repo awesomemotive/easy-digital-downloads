@@ -26,16 +26,64 @@ function edd_render_download_meta_box()	{
 
 function edd_render_price_field($post_id) {
 	global $edd_options;
+	$variable_pricing = get_post_meta($post_id, '_variable_pricing', true);
 	$price = get_post_meta($post_id, 'edd_price', true);
 	echo '<tr id="edd_price" class="edd_table_row">';
-		echo '<th style="width:20%"><label for="edd_price">' . __('Price', 'edd') . '</label></th>';
+		echo '<th style="width:20%"><label for="edd_price">' . __('Pricing', 'edd') . '</label></th>';
 		echo '<td>';
-			if(!isset($edd_options['currency_position']) || $edd_options['currency_position'] == 'before') {
-				echo edd_currency_filter('') . '<input type="text" name="edd_price" id="edd_price" value="', $price ? $price : '', '" size="30" style="width:50px;" placeholder="9.99"/>';
-			} else {
-				echo '<input type="text" name="edd_price" id="edd_price" value="', $price ? $price : '', '" size="30" style="width:50px;" placeholder="9.99"/>' . edd_currency_filter('');
-			}
-			_e('Enter the download price. Do not include a currency symbol', 'edd'); // field description				
+			echo '<p>';
+				echo '<input type="checkbox" name="_variable_pricing" id="edd_variable_pricing" value="1" ' . checked(1, $variable_pricing, false) . '/>&nbsp;';
+				echo __('Check this to enable variable pricing.', 'edd') . '<br/>';
+			echo '</p>';
+			echo '<p>';
+				
+				// check to see which pricing fields should be displayed
+				if($variable_pricing) { $price_display = ' style="display:none;"'; } else { $price_display = ''; }
+				if($variable_pricing) { $variable_display = ''; } else { $variable_display = ' style="display:none;"';  }
+				
+				/**********************************
+				// variable pricing
+				**********************************/
+				
+				$prices = get_post_meta($post_id, 'edd_variable_prices', true);
+				// variable pricing (multiple pricing options)
+				$field_html = '<input type="hidden" id="edd_variable_prices" class="edd_variable_prices_name_field" value=""/>';
+				if(is_array($prices)) {
+					$count = 1;
+					foreach($prices as $key => $value) {
+						$field_html .= '<div class="edd_variable_prices_wrapper">';
+							$name = isset($prices[$key]['name']) ? $prices[$key]['name'] : '';
+							$amount = isset($prices[$key]['amount']) ? $prices[$key]['amount'] : '';
+							$field_html .= '<input type="text" class="edd_variable_prices_name" placeholder="' . __('price option name', 'edd') . '" name="edd_variable_prices[' . $key . '][name]" id="edd_variable_prices[' . $key . '][name]" value="' . $name . '" size="20" style="width:20%" />';
+							$field_html .= '<input type="text" class="edd_variable_prices_amount text" placeholder="' . __('9.99', 'edd') . '" name="edd_variable_prices[' . $key . '][amount]" id="edd_variable_prices[' . $key . '][amount]" value="' . $amount . '" size="30" style="width:50px;" />';
+						if($count > 1) {
+							$field_html .= '<a href="#" class="edd_remove_repeatable button-secondary">x</a><br/>';
+						}
+						$field_html .= '</div>';
+						$count++;
+					}
+				} else {
+					$field_html .= '<div class="edd_variable_prices_wrapper">';
+						$field_html .= '<input type="text" class="edd_variable_prices_name" placeholder="' . __('file name', 'edd') . '" name="edd_variable_prices[0][name]" id="edd_variable_prices[0][name]" value="" size="20" style="width:20%" />';
+						$field_html .= '<input type="text" class="edd_variable_prices_amount" placeholder="' . __('9.99', 'edd') . '" name="edd_variable_prices[0][amount]" id="edd_variable_prices[0][amount]" value="" size="30" style="width:50px;" />';
+					$field_html .= '</div>';
+				}
+				$field_html .= '<button class="edd_add_new_price button-secondary">' . __('Add New Price Option', 'edd') . '</button>&nbsp;&nbsp;';
+				
+				echo '<div id="edd_variable_price_fields" class="edd_pricing_fields" ' . $variable_display . '>' . $field_html . '</div>';
+					
+				/**********************************
+				// default, single pricing
+				**********************************/
+				echo '<div id="edd_regular_price_field" class="edd_pricing_fields" ' . $price_display . '>';
+					if(!isset($edd_options['currency_position']) || $edd_options['currency_position'] == 'before') {
+						echo edd_currency_filter('') . '<input type="text" name="edd_price" id="edd_price" value="', $price ? $price : '', '" size="30" style="width:50px;" placeholder="9.99"/>';
+					} else {
+						echo '<input type="text" name="edd_price" id="edd_price" value="', $price ? $price : '', '" size="30" style="width:50px;" placeholder="9.99"/>' . edd_currency_filter('');
+					}
+					echo __('Enter the download price. Do not include a currency symbol', 'edd');						
+				echo '</div>';
+			echo '</p>';
 		echo '</td>';
 	echo '</tr>';
 }
@@ -48,7 +96,7 @@ function edd_render_files_field($post_id) {
 		echo '<th style="width:20%"><label for="edd_download_files">' . __('Download Files', 'edd') . '</label></th>';
 		echo '<td>';
 			$field_html = '<input type="hidden" id="edd_download_files" class="edd_repeatable_upload_name_field" value=""/>';
-			$field_html .= '<input type="hidden" id="edd_download_files" class="edd_repeatable_upload_file_field" value=""/>';
+			$field_html .= '<input type="hidden" class="edd_repeatable_upload_file_field" value=""/>';
 			if(is_array($files)) {
 				$count = 1;
 				foreach($files as $key => $value) {
@@ -176,6 +224,8 @@ function edd_download_meta_box_save($post_id) {
 	// these are the default fields that get saved
 	$fields = apply_filters('edd_metabox_fields_save', array(
 			'edd_price',
+			'_variable_pricing',
+			'edd_variable_prices',
 			'edd_download_files',
 			'_edd_purchase_text',
 			'_edd_purchase_style',

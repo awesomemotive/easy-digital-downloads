@@ -56,6 +56,7 @@ function edd_insert_payment($payment_data = array()) {
 			'currency' => $payment_data['currency'],
 			'downloads' => serialize($payment_data['downloads']),
 			'user_info' => serialize($payment_data['user_info']),
+			'cart_details' => serialize($payment_data['cart_details']),
 			'user_id' => $payment_data['user_info']['id']
 		);
 		// record the payment details
@@ -91,16 +92,22 @@ function edd_update_payment_status($payment_id, $status = 'publish') {
 	$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
 	$downloads = maybe_unserialize($payment_data['downloads']);
 	$user_info = maybe_unserialize($payment_data['user_info']);
-
+	$cart_details = maybe_unserialize($payment_data['cart_details']);
+	
 	wp_update_post(array('ID' => $payment_id, 'post_status' => $status));
 	
 	if(!edd_is_test_mode()) {
 		// increase purchase count and earnings
 		foreach($downloads as $download) {
-			edd_record_sale_in_log($download, $payment_id, $user_info, $payment_data['date']);
-			edd_increase_purchase_count($download);
-			$amount = edd_get_download_final_price($download, $user_info);
-			edd_increase_earnings($download, $amount);
+			edd_record_sale_in_log($download['id'], $payment_id, $user_info, $payment_data['date']);
+			edd_increase_purchase_count($download['id']);
+			$amount = null;
+			if(is_array($cart_details)) {
+				$cart_item_id = array_search($download['id'], $cart_details);
+				$amount = isset($cart_details[$cart_item_id]['price']) ? $cart_details[$cart_item_id]['price'] : null;
+			}
+			$amount = edd_get_download_final_price($download['id'], $user_info, $amount);
+			edd_increase_earnings($download['id'], $amount);
 		}
 	
 		if(isset($payment_data['user_info']['discount'])) {

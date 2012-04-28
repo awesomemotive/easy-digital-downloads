@@ -33,6 +33,11 @@
 /****************************************
 * Purchase buttons
 ****************************************/
+input.edd_submit_plain { background: none!important; border: none!important; padding: none!important; display: inline; cursor: pointer; }
+
+/****************************************
+* Purchase buttons
+****************************************/
 
 /* general */
 .edd_button { 
