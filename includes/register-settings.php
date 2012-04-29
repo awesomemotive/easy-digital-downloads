@@ -160,6 +160,16 @@ function edd_register_settings() {
 				)
 			)
 		),
+		'styles' => apply_filters('edd_settings_styles', 
+			array(
+				array(
+					'id' => 'disable_styles',
+					'name' => __('Disable Styles', 'edd'),
+					'desc' => __('Check this to disable all included styling', 'edd'),
+					'type' => 'checkbox'
+				)
+			)
+		),		
 		'misc' => apply_filters('edd_settings_misc', 
 			array(
 				array(
@@ -223,16 +233,19 @@ function edd_register_settings() {
 	
 	if( false == get_option( 'edd_settings_general' ) ) {  
         add_option( 'edd_settings_general' );  
-    }
+   }
 	if( false == get_option( 'edd_settings_gateways' ) ) {  
         add_option( 'edd_settings_gateways' );  
-    }
+   }
 	if( false == get_option( 'edd_settings_emails' ) ) {  
         add_option( 'edd_settings_emails' );  
-    }
+   }
+   if( false == get_option( 'edd_settings_styles' ) ) {  
+        add_option( 'edd_settings_styles' );  
+   }
 	if( false == get_option( 'edd_settings_misc' ) ) {  
         add_option( 'edd_settings_misc' );  
-    } 
+   } 
 	
 	
 	add_settings_section(
@@ -314,12 +327,38 @@ function edd_register_settings() {
 	}
 	
 	add_settings_section(
+		'edd_settings_styles',
+		__('Style Settings', 'edd'),
+		'edd_settings_styles_description_callback',
+		'edd_settings_styles'
+	);
+	
+	foreach($edd_settings['styles'] as $option) {
+		add_settings_field(
+			'edd_settings_styles[' . $option['id'] . ']',
+			$option['name'],
+			'edd_' . $option['type'] . '_callback',
+			'edd_settings_styles',
+			'edd_settings_styles',
+			array(
+				'id' => $option['id'],
+				'desc' => $option['desc'],
+				'name' => $option['name'],
+				'section' => 'styles',
+				'size' => isset($option['size']) ? $option['size'] : '' ,
+				'options' => isset($option['options']) ? $option['options'] : '',
+				'std' => isset($option['std']) ? $option['std'] : ''
+	    	)
+		);
+	}	
+	
+	
+	add_settings_section(
 		'edd_settings_misc',
 		__('Misc Settings', 'edd'),
 		'edd_settings_misc_description_callback',
 		'edd_settings_misc'
 	);
-	
 	
 	foreach($edd_settings['misc'] as $option) {
 		add_settings_field(
@@ -344,6 +383,7 @@ function edd_register_settings() {
 	register_setting('edd_settings_general', 'edd_settings_general');
 	register_setting('edd_settings_gateways', 'edd_settings_gateways');
 	register_setting('edd_settings_emails', 'edd_settings_emails');
+	register_setting('edd_settings_styles', 'edd_settings_styles');
 	register_setting('edd_settings_misc', 'edd_settings_misc');
 }
 add_action('admin_init', 'edd_register_settings');
@@ -357,6 +397,10 @@ function edd_settings_gateways_description_callback() {
 }
 
 function edd_settings_emails_description_callback() {
+	//echo __('Configure the settings below', 'edd');
+}
+
+function edd_settings_styles_description_callback() {
 	//echo __('Configure the settings below', 'edd');
 }
 
@@ -461,7 +505,8 @@ function edd_get_settings() {
 	$page_settings = is_array(get_option('edd_settings_general')) ? get_option('edd_settings_general') : array();
 	$gateway_settings = is_array(get_option('edd_settings_gateways')) ? get_option('edd_settings_gateways') : array();
 	$email_settings = is_array(get_option('edd_settings_emails')) ? get_option('edd_settings_emails') : array();
+	$style_settings = is_array(get_option('edd_settings_styles')) ? get_option('edd_settings_styles') : array();
 	$misc_settings = is_array(get_option('edd_settings_misc')) ? get_option('edd_settings_misc') : array();
 
-	return array_merge($page_settings, $gateway_settings, $email_settings, $misc_settings);
+	return array_merge($page_settings, $gateway_settings, $email_settings, $style_settings, $misc_settings);
 }

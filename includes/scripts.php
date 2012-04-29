@@ -34,7 +34,10 @@ function edd_load_scripts() {
 add_action('wp_enqueue_scripts', 'edd_load_scripts');
 
 function edd_register_styles() {
-	wp_enqueue_style('edd-styles', EDD_PLUGIN_URL . 'includes/css/edd.css');
+	global $edd_options;
+	if(!isset($edd_options['disable_styles'])) {
+		wp_enqueue_style('edd-styles', EDD_PLUGIN_URL . 'includes/css/edd.css');
+	}
 }
 add_action('wp_enqueue_scripts', 'edd_register_styles');
 
