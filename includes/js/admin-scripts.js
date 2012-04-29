@@ -132,6 +132,8 @@ jQuery(document).ready(function ($) {
 		tb_remove();
 		return false;
 	});
+
+	
 	$('#purchased-downloads').on('click', '.edd-remove-purchased-download', function() {
 		var $this = $(this);
 		data = {

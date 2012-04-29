@@ -21,7 +21,7 @@
 							if(has_post_thumbnail($item)) { 
 								echo get_the_post_thumbnail($item['id'], apply_filters('edd_checkout_image_size', array(25,25))); 
 							} 
-							echo get_the_title($item['id']); 
+							echo '<span class="edd_checkout_cart_item_title">' . get_the_title($item['id']) . '</span>'; 
 						?>
 					</td>
 					<td><?php echo edd_currency_filter(edd_get_cart_item_price($item['id'], $item['options'])); ?></td>
