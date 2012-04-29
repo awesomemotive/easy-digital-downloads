@@ -88,5 +88,6 @@ add_filter('edd_purchase_receipt', 'edd_email_default_formatting');
 function edd_resend_email_links($data) {
 	$purchase_id = $data['purchase_id'];
 	edd_email_download_link($purchase_id, false);
+	wp_redirect(add_query_arg('edd-message', 'email_sent', remove_query_arg('edd-action', remove_query_arg('purchase_id')))); exit;
 }
 add_action('edd_email_links', 'edd_resend_email_links');
