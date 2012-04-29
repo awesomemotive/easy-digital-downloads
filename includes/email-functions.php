@@ -80,6 +80,11 @@ function edd_email_templage_tags($message, $payment_data) {
 	return $message;
 }
 
+function edd_email_default_formatting($message) {
+	return wpautop($message);	
+}
+add_filter('edd_purchase_receipt', 'edd_email_default_formatting');
+
 function edd_resend_email_links($data) {
 	$purchase_id = $data['purchase_id'];
 	edd_email_download_link($purchase_id, false);
