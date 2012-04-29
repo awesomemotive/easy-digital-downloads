@@ -18,6 +18,7 @@ function edd_get_cart_quantity() {
 	return $quantity;
 }
 
+
 /*
 * Adds a download ID to the shopping cart
 * Uses edd_get_cart_contents()
