@@ -269,12 +269,16 @@ function edd_verify_download_link($download_id, $key, $email, $expire) {
 		foreach($payments as $payment) {
 			$payment_meta = get_post_meta($payment->ID, '_edd_payment_meta', true);
 			$downloads = maybe_unserialize($payment_meta['downloads']);
-			//print_r($downloads); exit;
-			if(array_search($download_id, $downloads) !== false) {
-				if(time() < $expire) {
-					return true; // payment has been verified and link is still valid
+			if($downloads) {
+				foreach($downloads as $download) {
+					$id = isset($payment_meta['cart_details']) ? $download['id'] : $download;
+					if($id == $download_id) {
+						if(time() < $expire) {
+							return true; // payment has been verified and link is still valid
+						}
+						return false; // payment verified, but link is no longer valid
+					}
 				}
-				return false; // payment verified, but link is no longer valid
 			}
 		}
 	}

@@ -8,7 +8,7 @@ function edd_process_download() {
 		$file_key = urldecode($_GET['file']);
 		$expire = urldecode(base64_decode($_GET['expire']));
 				
-				
+
 		$payment = edd_verify_download_link($download, $key, $email, $expire);
 		$has_access = ( edd_logged_in_only() && is_user_logged_in() ) || !edd_logged_in_only() ? true : false;
 		if($payment && $has_access) {
