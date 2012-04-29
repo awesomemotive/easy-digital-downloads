@@ -167,6 +167,13 @@ function edd_register_settings() {
 					'name' => __('Disable Styles', 'edd'),
 					'desc' => __('Check this to disable all included styling', 'edd'),
 					'type' => 'checkbox'
+				),
+				array(
+					'id' => 'checkout_color',
+					'name' => __('Checkout Button Color', 'edd'),
+					'desc' => __('Choose the button color you want to use for the checkout buttons.', 'edd'),
+					'type' => 'select',
+					'options' => edd_get_button_colors()
 				)
 			)
 		),		
