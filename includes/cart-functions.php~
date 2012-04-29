@@ -158,7 +158,7 @@ function edd_get_purchase_summary($purchase_data, $email = true) {
 		$summary .= $purchase_data['user_email'] . ' - ';
 	}
 	foreach($purchase_data['downloads'] as $download) {
-		$summary .= get_the_title($download['id']]) . ', ';
+		$summary .= get_the_title($download) . ', ';
 	}
 	$summary = substr($summary, 0, -2);
 	
