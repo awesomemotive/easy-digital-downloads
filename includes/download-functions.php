@@ -76,7 +76,7 @@ function edd_has_purchases($user_id) {
 * return mixed - array if purchase exists, false otherwise
 */
 function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
-	if(is_null($download_meta)) {
+	if(is_null($payment_meta)) {
 		$payment_meta = get_post_meta($payment_id, '_edd_payment_meta', true);
 	}
 	$downloads = maybe_unserialize($payment_meta['downloads']);
