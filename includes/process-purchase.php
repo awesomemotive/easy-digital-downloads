@@ -137,8 +137,15 @@ function edd_process_purchase_form() {
 			// allow the purchase data to be modified before it is sent to the gateway
 			$purchase_data = apply_filters('edd_purchase_data_before_gateway', $purchase_data);
 			
+			$gateway = $_POST['edd-gateway'];
+			
+			if($purchase_data['price'] <= 0) {
+				// if the total amount in the cart is 0, send to the manaul gateway. This emulates a free download purchase
+				$gateway = 'manual';
+			}
+			
 			// send info to gateway for payment processing
-			edd_send_to_gateway($_POST['edd-gateway'], $purchase_data);		
+			edd_send_to_gateway($gateway, $purchase_data);		
 		}
 		// errors are present
 		edd_send_back_to_checkout('?payment-mode=' . $_POST['edd-gateway']);

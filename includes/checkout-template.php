@@ -35,7 +35,14 @@ function edd_checkout_form() {
 				do_action('edd_checkout_form_top');
 			
 				$gateways = edd_get_enabled_payment_gateways();
-				if(count($gateways) > 1 && !isset($_GET['payment-mode'])) { ?>
+				$show_gateways = false;
+				if(count($gateways) > 1 && !isset($_GET['payment-mode'])) {
+					$show_gateways = true;
+					if(edd_get_cart_amount() <= 0) {
+						$show_gateways = false;
+					}
+				}
+				if($show_gateways) { ?>
 					<?php do_action('edd_payment_mode_top'); ?>
 					<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
 						<fieldset id="edd_payment_mode_select">
@@ -72,6 +79,9 @@ function edd_checkout_form() {
 					<?php					
 						foreach($gateways as $gateway_id => $gateway) :
 							$enabled_gateway = $gateway_id;
+							if(edd_get_cart_amount() <= 0) {
+								$enabled_gateway = 'manual'; // this allows a free download by filling in the info
+							}
 						endforeach;
 						$payment_mode = isset($_GET['payment-mode']) ? urldecode($_GET['payment-mode']) : $enabled_gateway;	
 					?>
