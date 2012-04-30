@@ -204,6 +204,7 @@ add_action('edd_meta_box_fields', 'edd_render_meta_notes', 70);
 	
 // Save data from meta box
 function edd_download_meta_box_save($post_id) {
+	global $post;
 	
 	// verify nonce
 	if (isset($_POST['edd_download_meta_box_nonce']) && !wp_verify_nonce($_POST['edd_download_meta_box_nonce'], basename(__FILE__))) {
@@ -214,7 +215,7 @@ function edd_download_meta_box_save($post_id) {
     if ( (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || ( defined('DOING_AJAX') && DOING_AJAX) || isset($_REQUEST['bulk_edit']) ) return $post_id;
 	
 	//don't save if only a revision
-	if ( $post->post_type == 'revision' ) return $post_id;
+	if ( isset($post->post_type) && $post->post_type == 'revision' ) return $post_id;
 
 	// check permissions
 	if (isset($_POST['post_type']) && 'page' == $_POST['post_type']) {

@@ -123,6 +123,6 @@ function edd_get_button_colors() {
 }
 
 function edd_show_has_purchased_item_message($user_id, $download_id) {
-	echo __('You have already purchased this item,but you may purchase it again.', 'edd');
+	echo __('You have already purchased this item, but you may purchase it again.', 'edd');
 }
 add_action('edd_has_purchased_item_message', 'edd_show_has_purchased_item_message', 10, 2);
