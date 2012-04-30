@@ -20,7 +20,8 @@ function edd_get_purchase_link($download_id = null, $link_text = 'Purchase', $st
 	global $edd_options, $post, $user_ID;
 
 	$page = get_permalink($post->ID); // current page
-	$link = add_query_arg('download_id', $download_id, add_query_arg('edd_action', 'add_to_cart', $page));
+	$link_args = array('download_id' => $download_id, 'edd_action' => 'add_to_cart');
+	$link = add_query_arg($link_args, $page);
 	$checkout_url = get_permalink($edd_options['purchase_page']);
 	$variable_pricing = get_post_meta($download_id, '_variable_pricing', true);
 	
