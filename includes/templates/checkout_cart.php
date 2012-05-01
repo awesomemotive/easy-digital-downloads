@@ -14,13 +14,15 @@
 		<?php if($cart_items) : ?>
 			<?php foreach($cart_items as $key => $item) : ?>
 				<tr>
-					<?php do_action('edd_checkout_table_body_first', $item); ?>
+					<?php do_action('edd_checkout_table_body_first', $item['id']); ?>
 					<td>
 						<?php 
 							//print_r($item);
-							if(has_post_thumbnail($item)) { 
-								echo get_the_post_thumbnail($item['id'], apply_filters('edd_checkout_image_size', array(25,25))); 
-							} 
+							if(current_theme_supports('post-thumbnails')) {
+								if(has_post_thumbnail($item['id'])) { 
+									echo get_the_post_thumbnail($item['id'], apply_filters('edd_checkout_image_size', array(25,25))); 
+								} 
+							}
 							echo '<span class="edd_checkout_cart_item_title">' . get_the_title($item['id']) . '</span>'; 
 						?>
 					</td>
