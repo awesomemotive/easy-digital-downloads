@@ -5,8 +5,10 @@
 .edd_clearfix:after { display: block; visibility: hidden; float: none; clear: both; text-indent: -9999px; content: "."; }
 
 /* cart contents */
+#edd_checkout_cart { text-align: left; width: 100%; }
 #edd_checkout_cart .edd_cart_total {  }
-#edd_checkout_cart td { line-height: 25px; vertical-align: middle; }
+#edd_checkout_cart th { text-align: left; }
+#edd_checkout_cart td { line-height: 25px; vertical-align: middle; text-align: left; }
 #edd_checkout_cart td img { float: left; margin: 0 8px 0 0;}
 
 /* checkout fields */
