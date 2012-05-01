@@ -155,6 +155,7 @@ function edd_register_settings() {
 						'{download_list} - ' . __('A list of download URLs for each download purchased', 'edd') . '<br/>' .
 						'{name} - ' . __('The buyer\'s name', 'edd') . '<br/>' .
 						'{date} - ' . __('The date of the purchase', 'edd') . '<br/>' .
+						'{price} - ' . __('The total price of the purchase', 'edd') . '<br/>' .
 						'{sitename} - ' . __('Your site name', 'edd'),
 					'type' => 'rich_editor'
 				)
