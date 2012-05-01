@@ -7,7 +7,7 @@ function edd_email_download_link($payment_id, $admin_notice = true) {
 
 	$message = '<html><body>';
 		$message .= edd_email_templage_tags($edd_options['purchase_receipt'], $payment_data);
-		$message = apply_filters('edd_purchase_receipt', $message);
+		$message = apply_filters('edd_purchase_receipt', $message, $payment_id, $payment_data);
 	$message .= '</body></html>';
 	
 	$from_name = isset($edd_options['from_name']) ? $edd_options['from_name'] : get_bloginfo('name');
@@ -35,7 +35,7 @@ function edd_email_download_link($payment_id, $admin_notice = true) {
 		$admin_message .= $download_list . "\n";
 		$admin_message .= __('Amount: ', 'edd') . " " . html_entity_decode(edd_currency_filter($payment_data['amount'])) . "\n\n";
 		$admin_message .= __('Thank you', 'edd');
-		$admin_message = apply_filters('edd_admin_purchase_notification', $admin_message);
+		$admin_message = apply_filters('edd_admin_purchase_notification', $admin_message, $payment_id, $payment_data);
 		wp_mail( $admin_email, __('New download purchase', 'edd'), $admin_message );
 	}
 }
@@ -78,7 +78,7 @@ function edd_email_templage_tags($message, $payment_data) {
 	$message = str_replace('{date}', $payment_data['date'], $message);
 	$message = str_replace('{sitename}', get_bloginfo('name'), $message);
 	$message = str_replace('{price}', $price, $message);
-	$message = apply_filters('edd_email_template_tags', $message);
+	$message = apply_filters('edd_email_template_tags', $message, $payment_data);
 	
 	return $message;
 }
