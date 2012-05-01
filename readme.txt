@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.3.2
-Stable Tag: 1.0.4.1
+Stable Tag: 1.0.5
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
@@ -24,6 +24,7 @@ Features of the plugin include:
 * Complete payment history
 * User purchase history and ability to redownload files
 * Multiple files per downloadable product
+* Variable prices for multiple price optiosn per product
 * Customizable purchase receipts
 * Earnings and sales charts
 * Detailed purchase and file download logs
@@ -50,7 +51,7 @@ There are three ways you can show the downloads shopping cart:
 
 1. Use the short code and simply place ]download_cart] on a page or within a text widget.
 
-2. Use the included widget. Go to Appearance > Widgets and place “Downloads Cart” into any widget area available.
+2. Use the included widget. Go to Appearance > Widgets and place the "Downloads Cart" widget into any widget area available.
 
 3. Use the template tag and place the following the template file of your choosing:
 
@@ -58,7 +59,7 @@ There are three ways you can show the downloads shopping cart:
 
 = Getting a 404 error? =
 
-To get rid of the 404 error when viewing a download, you need to resave your permalink structure. Go to Settings > Permalinks and click “Save Changes”.
+To get rid of the 404 error when viewing a download, you need to resave your permalink structure. Go to Settings > Permalinks and click "Save Changes".
 
 == Screenshots ==
 
@@ -77,6 +78,21 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 = 1.0.5 =
 
 * New variable pricing option for downloads
+* Added new {price} template tag for emails
+* Fixed an improperly named filter for "edd_payment_meta"
+* Updated some advanced query URLs to be more efficient
+* Updated the German language files
+* Updated default.po/mo
+* Added a check for whether the current theme supports post thumbnails
+* Fixed a few undefined index errors
+* Updated Spanish language files
+* Added support for free downloads
+* Fixed some bugs with the email formatting
+* Fixed a small bug with the ajax add to cart system
+* Improved the download metabox layout
+* Updated the French language files
+* Added a new icon to the Downloads post type
+
 
 = 1.0.4.1 =
 
@@ -142,6 +158,24 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.0.5 =
+
+* New variable pricing option for downloads
+* Added new {price} template tag for emails
+* Fixed an improperly named filter for "edd_payment_meta"
+* Updated some advanced query URLs to be more efficient
+* Updated the German language files
+* Updated default.po/mo
+* Added a check for whether the current theme supports post thumbnails
+* Fixed a few undefined index errors
+* Updated Spanish language files
+* Added support for free downloads
+* Fixed some bugs with the email formatting
+* Fixed a small bug with the ajax add to cart system
+* Improved the download metabox layout
+* Updated the French language files
+* Added a new icon to the Downloads post type
 
 = 1.0.4.1 =
 
