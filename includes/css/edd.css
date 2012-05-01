@@ -48,7 +48,7 @@ input.edd_submit_plain { background: none!important; border: none!important; pad
 }
 
 .edd_button_outer { 
-	padding: 0 0 0 5px; display: block; height: 32px; 
+	padding: 0 0 0 5px; display: block; height: 32px; line-height: 26px;
 	background: url(../images/button-start.png) no-repeat; 
 }
 .edd_button_outer br, .edd_button_outer p { display: none!important; }
@@ -58,14 +58,20 @@ input.edd_submit_plain { background: none!important; border: none!important; pad
 	padding: 0 4px 0 0; 
 }
 .edd_button_text, input.edd_button_text, input#edd-purchase-button, input#edd_next_button { 
-	display: block; height: 32px; background: url(../images/button-mid.png) repeat-x; 
-	padding: 0 4px; margin: 0; border: none;  text-shadow: none; color: #555; 
-	-webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0; cursor: pointer;
+	display: block; height: 32px!important; background-image: url(../images/button-mid.png)!important; 
+	padding: 0 4px!important; margin: 0; border: none!important;  text-shadow: none; color: #555; 
+	-webkit-border-radius: 0!important; -moz-border-radius: 0!important; border-radius: 0!important; cursor: pointer;
 }
-input.edd_button_text, input#edd-purchase-button, input#edd_next_button  { padding: 0 4px 4px; }
+input.edd_button_text, input#edd-purchase-button, input#edd_next_button  { 
+	padding: 0 4px 4px!important; margin: 0!important; 
+}
 
-
-.edd_button:active, input.edd_button_text:active, input#edd-purchase-button:active, input#edd_next_button:active { line-height: 30px; }
+.edd_button:hover, input.edd_button_text:hover, input#edd-purchase-button:hover, input#edd_next_button:hover { 
+	filter: alpha(opacity=100)!important; -moz-opacity: 1!important; -khtml-opacity: 1!important; opacity: 1!important;
+}
+.edd_button:active, input.edd_button_text:active, input#edd-purchase-button:active, input#edd_next_button:active { 
+	line-height: 30px; 
+}
 
 
 /* gray */
