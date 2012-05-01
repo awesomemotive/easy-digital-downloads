@@ -71,10 +71,13 @@ function edd_email_templage_tags($message, $payment_data) {
 		}
 	$download_list .= '</ul>';
 	
+	$price = $payment_data['amount'];	
+	
 	$message = str_replace('{name}', $name, $message);
 	$message = str_replace('{download_list}', $download_list, $message);
 	$message = str_replace('{date}', $payment_data['date'], $message);
 	$message = str_replace('{sitename}', get_bloginfo('name'), $message);
+	$message = str_replace('{price}', $price, $message);
 	$message = apply_filters('edd_email_template_tags', $message);
 	
 	return $message;
