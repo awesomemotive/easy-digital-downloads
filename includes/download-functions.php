@@ -224,27 +224,16 @@ function edd_get_download_files($download_id) {
 
 // constructs the file download url for a specific file
 function edd_get_download_file_url($key, $email, $filekey, $download) {
-	$download_url = add_query_arg(
-		'download_key', 
-		$key,
-		add_query_arg(
-			'email',
-			urlencode($email),
-			add_query_arg(
-				'file',
-				$filekey,
-				add_query_arg(
-					'download',
-					$download,
-					add_query_arg(
-						'expire',
-						urlencode(base64_encode(strtotime('+1 day', time()))), // link valid for 24 hours
-						home_url()
-					)
-				)
-			)
-		)
-	);
+	
+	$params = array(
+		'download_key' => $key,
+		'email' => urlencode($email),
+		'file' => $filekey,
+		'download' => $download, 
+		'expire' => urlencode(base64_encode(strtotime('+1 day', time())))
+	);	
+	
+	$download_url = add_query_arg($params, home_url());
 	return $download_url;	
 }
 
