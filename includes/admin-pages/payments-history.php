@@ -25,7 +25,7 @@ function edd_payment_history_page() {
 		    $orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'ID';
 		    $order = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 		    $order_inverse = $order == 'DESC' ? 'ASC' : 'DESC';
-			$order_class = strtolower($order);
+			$order_class = strtolower($order_inverse);
 			
 			$payments = edd_get_payments($offset, $per_page, $mode, $orderby, $order);
 			$payment_count = edd_count_payments($mode);
