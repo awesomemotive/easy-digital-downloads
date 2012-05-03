@@ -21,9 +21,16 @@ function edd_payment_history_page() {
 			
 			$mode = isset($_GET['mode']) ? $_GET['mode'] : 'live';
 			if(edd_is_test_mode() && !isset($_GET['mode'])) $mode = 'test';
-			$payments = edd_get_payments($offset, $per_page, $mode);
+			
+		    $orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'ID';
+		    $order = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+		    $order_inverse = $order == 'DESC' ? 'ASC' : 'DESC';
+			$order_class = strtolower($order);
+			
+			$payments = edd_get_payments($offset, $per_page, $mode, $orderby, $order);
 			$payment_count = edd_count_payments($mode);
 			$total_pages = ceil($payment_count/$per_page);
+			
 			?>
 			<h2><?php _e('Payment History', 'edd'); ?></h2>
 			<form id="payments-filter" action="<?php echo admin_url('edit.php'); ?>" method="get" style="float: right; margin-bottom: 5px;">
@@ -41,14 +48,20 @@ function edd_payment_history_page() {
 			<table class="wp-list-table widefat fixed posts edd-payments">
 				<thead>
 					<tr>
-						<th style="width: 60px;"><?php _e('ID', 'edd'); ?></th>
+						<th style="width: 60px;" class="manage-column column-title sortable <?php echo $order_class; echo $orderby == 'ID' ? ' sorted' : ''; ?>">
+						    <a href="<?php echo add_query_arg( array( 'orderby' => 'ID', 'order' => $order_inverse ) ); ?>" title="<?php _e('ID', 'edd'); ?>"><span><?php _e('ID', 'edd'); ?></span> <span class="sorting-indicator"></span></a>
+						</th>
 						<th style="width: 165px;"><?php _e('Email', 'edd'); ?></th>
 						<th style="width: 240px;"><?php _e('Key', 'edd'); ?></th>
 						<th><?php _e('Products', 'edd'); ?></th>
 						<th><?php _e('Price', 'edd'); ?></th>
-						<th><?php _e('Date', 'edd'); ?></th>
-						<th><?php _e('User', 'edd'); ?></th>
-						<th><?php _e('Status', 'edd'); ?></th>
+						<th class="manage-column column-title sortable <?php echo $order_class; echo $orderby == 'Date' ? ' sorted' : ''; ?>">
+						    <a href="<?php echo add_query_arg( array( 'orderby' => 'post_date', 'order' => $order_inverse ) ); ?>" title="<?php _e('Date', 'edd'); ?>"><span><?php _e('Date', 'edd'); ?></span> <span class="sorting-indicator"></span></a>
+						</th>
+						<th><?php _e('User', 'edd'); ?></span></th>
+						<th class="manage-column column-title sortable <?php echo $order_class; echo $orderby == 'Status' ? ' sorted' : ''; ?>">
+						    <a href="<?php echo add_query_arg( array( 'orderby' => 'post_status', 'order' => $order_inverse ) ); ?>" title="<?php _e('Status', 'edd'); ?>"><span><?php _e('Status', 'edd'); ?></span> <span class="sorting-indicator"></span></a>
+						</th>
 					</tr>
 				</thead>
 				<tfoot>
@@ -95,7 +108,7 @@ function edd_payment_history_page() {
 										</div>
 									</td>
 									<td><?php echo $payment_meta['key']; ?></td>
-									<td><a href="#TB_inline?width=640&inlineId=purchased-files-<?php echo $payment->ID; ?>" class="thickbox" title="<?php printf(__('Purchase Details for Payment #%s', 'edd'), $payment->ID); ?> "><?php _e('View Order Details', 'edd'); ?></a>
+									<td><a href="#TB_inline?width=640&amp;inlineId=purchased-files-<?php echo $payment->ID; ?>" class="thickbox" title="<?php printf(__('Purchase Details for Payment #%s', 'edd'), $payment->ID); ?> "><?php _e('View Order Details', 'edd'); ?></a>
 										<div id="purchased-files-<?php echo $payment->ID; ?>" style="display:none;">
 											<?php 
 												$downloads = isset($payment_meta['cart_details']) ? maybe_unserialize($payment_meta['cart_details']) : maybe_unserialize($payment_meta['downloads']);
