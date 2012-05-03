@@ -41,8 +41,15 @@ function edd_process_download() {
                 case "gif": $ctype = "image/gif"; break;
                 case "png": $ctype = "image/png"; break;
                 case "jpe": $ctype="image/jpg"; break;
-				case "jpeg": $ctype="image/jpg"; break;
-				case "jpg": $ctype="image/jpg"; break;
+                case "jpeg": $ctype="image/jpg"; break;
+                case "jpg": $ctype="image/jpg"; break;
+                case 'mp3': $ctype="audio/mpeg"; break;
+                case 'wav': $ctype="audio/x-wav"; break;
+                case 'mpeg': $ctype="video/mpeg"; break;
+                case 'mpg': $ctype="video/mpeg"; break;
+                case 'mpe': $ctype="video/mpeg"; break;
+                case 'mov': $ctype="video/quicktime"; break;
+                case 'avi': $ctype="'video/x-msvideo"; break;
                 default: $ctype = "application/force-download";
             endswitch;
 			
