@@ -1,13 +1,15 @@
 <?php
 // retrieve payments from the database
-function edd_get_payments( $offset = 0, $number = 20, $mode = 'live' ) {
+function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby = 'ID', $order = 'DESC' ) {
 	$payment_args = array(
 		'post_type' => 'edd_payment', 
 		'posts_per_page' => $number, 
 		'post_status' => 'any', 
 		'offset' => $offset,
 		'meta_key' => '_edd_payment_mode',
-		'meta_value' => $mode
+		'meta_value' => $mode,
+		'order' => $order,
+		'orderby' => $orderby
 	);
 	$payments = get_posts($payment_args);
 	if($payments) {
