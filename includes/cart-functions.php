@@ -28,18 +28,20 @@ function edd_get_cart_quantity() {
 */
 function edd_add_to_cart($download_id, $options = array()) {
 	$cart = edd_get_cart_contents();
-	if(is_array($cart)) {
-		$cart[] = array('id' => $download_id, 'options' => $options);
-	} else {
-		$cart = array(array('id' => $download_id, 'options' => $options));
+	if(!edd_item_in_cart($download_id)) {
+		if(is_array($cart)) {
+			$cart[] = array('id' => $download_id, 'options' => $options);
+		} else {
+			$cart = array(array('id' => $download_id, 'options' => $options));
+		}
+	
+		$_SESSION['edd_cart'] = $cart;
+	
+		// clear all the checkout errors, if any
+		edd_clear_errors();
+	
+		return count($cart) - 1;
 	}
-	
-	$_SESSION['edd_cart'] = $cart;
-	
-	// clear all the checkout errors, if any
-	edd_clear_errors();
-	
-	return count($cart) - 1;
 }
 
 /*
@@ -72,12 +74,14 @@ function edd_remove_from_cart($cart_key) {
 * return - array of updated cart items
 */
 function edd_item_in_cart($download_id) {
-	$cart = edd_get_cart_contents();
-	if(!is_array($cart)) {
+	$cart_items = edd_get_cart_contents();
+	if(!is_array($cart_items)) {
 		return false; // empty cart
 	} else {
-		if(in_array($download_id, $cart)) {
-			return true;
+		foreach($cart_items as $item) {
+			if($item['id'] == $download_id) {
+				return true;
+			}
 		}
 	}
 }
