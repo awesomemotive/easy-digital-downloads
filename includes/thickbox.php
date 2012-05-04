@@ -6,7 +6,7 @@ function edd_media_button($context) {
 
 	/** Only run in post/page creation and edit screens */
 	if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow != 'download' ) {
-		$img = '<img src="' . EDD_PLUGIN_URL . 'includes/images/media-button.png" alt="' . __('Insert Download', 'edd') . '"/>';
+		$img = '<img src="' . EDD_PLUGIN_URL . 'includes/images/edd-media.png" alt="' . __('Insert Download', 'edd') . '"/>';
 		$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox" title="' . __('Insert Download', 'edd') . '">' . $img . '</a>';
 	}
 	return $context . $output;
@@ -24,34 +24,30 @@ function edd_admin_footer_for_thickbox() {
 		
 		?>
 		<script type="text/javascript">
-			function insertDownload() {
-				var id = jQuery('#select-edd-download').val();
-				var style = jQuery('#select-edd-style').val();
-				if(jQuery('#select-edd-color').is(':visible')) {
-					var color = jQuery('#select-edd-color').val();
-				} else {
-					var color = '';
-				}
-				var text = jQuery('#edd-text').val();
-				
-				/** Return early if no slider is selected */
-				if ( '' == id ) {
-					alert('<?php _e("You must choose a download", "edd"); ?>');
-					return;
-				}
+            function insertDownload() {
+                var id = jQuery('#select-edd-download').val(),
+                    style = jQuery('#select-edd-style').val(),
+                    color = jQuery('#select-edd-color').is(':visible') ? jQuery('#select-edd-color').val() : '',
+                    text = jQuery('#edd-text').val() || '<?php _e("Purchase", "edd"); ?>';
 
-				/** Send the shortcode to the editor */
-				window.send_to_editor('[purchase_link id="' + id + '" style="' + style + '" color="' + color + '" text="' + text + '"]');
-			}
-			jQuery(document).ready(function($){
-				$('#select-edd-style').change(function() {
-					if($(this).val() == 'button') {
-						$('#edd-color-choice').slideDown();
-					} else {
-						$('#edd-color-choice').slideUp();
-					}
-				});
-			});
+                /** Return early if no slider is selected */
+                if ('' === id) {
+                    alert('<?php _e("You must choose a download", "edd"); ?>');
+                    return;
+                }
+
+                /** Send the shortcode to the editor */
+                window.send_to_editor('[purchase_link id="' + id + '" style="' + style + '" color="' + color + '" text="' + text + '"]');
+            }
+            jQuery(document).ready(function ($) {
+                $('#select-edd-style').change(function () {
+                    if ($(this).val() === 'button') {
+                        $('#edd-color-choice').slideDown();
+                    } else {
+                        $('#edd-color-choice').slideUp();
+                    }
+                });
+            });
 		</script>
 
 		<div id="choose-download" style="display: none;">
