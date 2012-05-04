@@ -190,6 +190,38 @@ function edd_get_cart_content_details() {
 }
 
 /*
+* Adds all downloads within a taxonomy term to the cart
+* @since v1.0.6
+* @param $taxonomy string - the name of the taxonomy
+* @param $terms mixed - the slug or id of the term from which to add ites, or an array of terms
+* @return array of IDs for each item added to the cart
+*/
+function edd_add_collection_to_cart($taxonomy, $terms) {
+	
+	if(!is_string($taxonomy)) return false;
+	
+	$field = is_int($terms) ? 'id' : 'slug';
+	
+	$cart_item_ids = array();	
+	
+	$args = array(
+		'post_type' => 'download',
+		'posts_per_page' => -1,
+		$taxonomy => $terms
+	);	
+	
+	$items = get_posts($args);
+	if($items) {
+
+		foreach($items as $item) {
+			edd_add_to_cart($item->ID);
+			$cart_item_ids[] = $item->ID;
+		}	
+	}
+	return $cart_item_ids;
+}
+
+/*
 * Empties the cart
 */
 function edd_empty_cart() {

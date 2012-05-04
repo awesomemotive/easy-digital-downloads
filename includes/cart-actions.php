@@ -26,3 +26,11 @@ function edd_process_remove_fromt_cart($data) {
 	$cart = edd_remove_from_cart($cart_key);
 }
 add_action('edd_remove', 'edd_process_remove_fromt_cart');
+
+function edd_process_collection_purchase($data) {
+	$taxonomy = urldecode($data['taxonomy']);
+	$terms = urldecode($data['terms']);
+	$cart_items = edd_add_collection_to_cart($taxonomy, $terms);
+	wp_redirect(add_query_arg('added', '1', remove_query_arg(array('edd_action', 'taxonomy', 'terms')))); exit;
+}
+add_action('edd_purchase_collection', 'edd_process_collection_purchase');

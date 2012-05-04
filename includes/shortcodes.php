@@ -84,6 +84,23 @@ function edd_cart_shortcode($atts, $content = null) {
 }
 add_shortcode('download_cart', 'edd_cart_shortcode');
 
+/*
+* Displays a collection purchase link for adding all items in a taxonomy term to the cart
+* @since v1.0.6
+*/
+function edd_purchase_collection_shortcode($atts, $content = null) {
+	extract( shortcode_atts( array(
+			'taxonomy' => '',
+			'terms' => ''
+		), $atts )
+	);
+	
+	return '<a href="' . add_query_arg(array('edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms)) . '">Purchase All Items</a>';
+}
+add_shortcode('purchase_collection', 'edd_purchase_collection_shortcode');
+
+
+// incomplete short code for querying downloads
 function edd_downloads_query($atts, $content = null) {
 	extract( shortcode_atts( array(
 			'category' => '',
