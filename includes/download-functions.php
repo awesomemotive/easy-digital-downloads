@@ -193,6 +193,15 @@ function edd_get_download_price($download_id) {
 	return 0;
 }
 
+/*
+* Displays a formatted price for a download
+* @param - int $download_id the ID of the download price to show
+* @echo string the nicely formatted price of the download with currency
+*/
+function edd_price($download_id) {
+	echo edd_currency_filter(edd_get_download_price($download_id));
+}
+
 // increases the sale count od a download
 function edd_increase_purchase_count($download_id) {
 	$sales = edd_get_download_sales_stats($download_id);
