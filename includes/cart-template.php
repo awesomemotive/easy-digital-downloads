@@ -41,9 +41,8 @@ function edd_get_cart_item_template($cart_key, $item, $ajax = false) {
 	
 	$remove_url = edd_remove_item_url($cart_key, $post, $ajax);
 	$title = get_the_title($id); 
-	$remove = '<a href="' . $remove_url . '" data-cart-item="' . $cart_key . '" data-action="edd_remove_from_cart" class="edd-remove-from-cart">' . __('remove', 'edd') . '</a>';
-	$item = '<li class="edd-cart-item"><span class="edd-cart-item-title">' . $title . '</span> <span class="edd-cart-item-separator">-</span> ' .  . '</li>';
-	
+	$remove = '<a href="' . $remove_url . '" data-cart-item="' . $cart_key . '" data-action="edd_remove_from_cart" class="edd-remove-from-cart">' . __('remove', 'edd') . '</a>';	
+	$item = '<li class="edd-cart-item"><span class="edd-cart-item-title">' . $title . '</span> <span class="edd-cart-item-separator">-</span> ' . $remove . '</li>';
 	return apply_filters('edd_cart_item', $item);
 }
 
