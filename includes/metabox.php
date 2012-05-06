@@ -54,7 +54,7 @@ function edd_render_price_field($post_id) {
 						$field_html .= '<div class="edd_variable_prices_wrapper">';
 							$name = isset($prices[$key]['name']) ? $prices[$key]['name'] : '';
 							$amount = isset($prices[$key]['amount']) ? $prices[$key]['amount'] : '';
-							$field_html .= '<input type="text" class="edd_variable_prices_name" placeholder="' . __('price option name', 'edd') . '" name="edd_variable_prices[' . $key . '][name]" id="edd_variable_prices[' . $key . '][name]" value="' . $name . '" size="20" style="width:20%" />';
+							$field_html .= '<input type="text" class="edd_variable_prices_name" placeholder="' . __('price option name', 'edd') . '" name="edd_variable_prices[' . $key . '][name]" id="edd_variable_prices[' . $key . '][name]" value="' . esc_attr( $name ) . '" size="20" style="width:50%" />';
 							$field_html .= '<input type="text" class="edd_variable_prices_amount text" placeholder="' . __('9.99', 'edd') . '" name="edd_variable_prices[' . $key . '][amount]" id="edd_variable_prices[' . $key . '][amount]" value="' . $amount . '" size="30" style="width:50px;" />';
 						if($count > 1) {
 							$field_html .= '<a href="#" class="edd_remove_repeatable button-secondary">x</a><br/>';
@@ -64,7 +64,7 @@ function edd_render_price_field($post_id) {
 					}
 				} else {
 					$field_html .= '<div class="edd_variable_prices_wrapper">';
-						$field_html .= '<input type="text" class="edd_variable_prices_name" placeholder="' . __('file name', 'edd') . '" name="edd_variable_prices[0][name]" id="edd_variable_prices[0][name]" value="" size="20" style="width:20%" />';
+						$field_html .= '<input type="text" class="edd_variable_prices_name" placeholder="' . __('file name', 'edd') . '" name="edd_variable_prices[0][name]" id="edd_variable_prices[0][name]" value="" size="20" style="width:50%" />';
 						$field_html .= '<input type="text" class="edd_variable_prices_amount" placeholder="' . __('9.99', 'edd') . '" name="edd_variable_prices[0][amount]" id="edd_variable_prices[0][amount]" value="" size="30" style="width:50px;" />';
 					$field_html .= '</div>';
 				}
@@ -242,7 +242,12 @@ function edd_download_meta_box_save($post_id) {
 		if(isset($_POST[$field])) {
 			$old = get_post_meta($post_id, $field, true);
 			if($old != $_POST[$field]) {
-				update_post_meta($post_id, $field, $_POST[$field]);
+				if( is_string( $_POST[$field] ) ) {
+					$new = esc_attr( $_POST[$field] );	
+				} else {
+					$new = $_POST[$field];
+				}				
+				update_post_meta($post_id, $field, $new);
 			}
 		} else {
 			delete_post_meta($post_id, $field);
