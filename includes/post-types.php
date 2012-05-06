@@ -39,7 +39,7 @@ function edd_setup_download_post_type() {
 	);
 	
 	$download_args = array(
-		'labels' => $download_labels,
+		'labels' => apply_filters('edd_download_labels', $download_labels),
 		'public' => true,
 		'publicly_queryable' => true,
 		'show_ui' => true, 
@@ -50,7 +50,7 @@ function edd_setup_download_post_type() {
 		'has_archive' => $archives, 
 		'hierarchical' => false,
 		'menu_position' => $menu_position,
-		'supports' => array( 'title', 'editor', 'thumbnail' ),
+		'supports' => apply_filters('edd_download_supports', array( 'title', 'editor', 'thumbnail' ) ),
 	); 
 	register_post_type('download', $download_args);
 	
@@ -71,7 +71,7 @@ function edd_setup_download_post_type() {
 	);
 	
 	$payment_args = array(
-		'labels' => $payment_labels,
+		'labels' => apply_filters('edd_payment_labels', $payment_labels),
 		'public' => true,
 		'publicly_queryable' => true,
 		'show_ui' => true, 
@@ -107,7 +107,7 @@ function edd_setup_download_taxonomies() {
 
 	register_taxonomy('download_category', array('download'), array(
 		'hierarchical' => true,
-		'labels' => $category_labels,
+		'labels' => apply_filters('edd_download_category_labels', $category_labels),
 		'show_ui' => true,
 		'query_var' => 'download_category',
 		'rewrite' => array('slug' => 'downloads/category')
@@ -129,7 +129,7 @@ function edd_setup_download_taxonomies() {
 
 	register_taxonomy('download_tag', array('download'), array(
 		'hierarchical' => false,
-		'labels' => $tag_labels,
+		'labels' => apply_filters('edd_download_tag_labels', $tag_labels),
 		'show_ui' => true,
 		'query_var' => 'download_tag',
 		'rewrite' => array('slug' => 'downloads/tag')

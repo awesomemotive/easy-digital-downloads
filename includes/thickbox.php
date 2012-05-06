@@ -30,7 +30,7 @@ function edd_admin_footer_for_thickbox() {
                     color = jQuery('#select-edd-color').is(':visible') ? jQuery('#select-edd-color').val() : '',
                     text = jQuery('#edd-text').val() || '<?php _e("Purchase", "edd"); ?>';
 
-                /** Return early if no slider is selected */
+                /** Return early if no download is selected */
                 if ('' === id) {
                     alert('<?php _e("You must choose a download", "edd"); ?>');
                     return;

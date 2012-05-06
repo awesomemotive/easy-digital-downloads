@@ -25,7 +25,7 @@ function edd_get_purchase_link($download_id = null, $link_text = 'Purchase', $st
 	$checkout_url = get_permalink($edd_options['purchase_page']);
 	$variable_pricing = get_post_meta($download_id, '_variable_pricing', true);
 	
-	$purchase_form = '<form id="edd_purchase_' . $download_id . '" action="" method="POST">';
+	$purchase_form = '<form id="edd_purchase_' . $download_id . '" class="edd_download_purchase_form" action="" method="POST">';
 		
 		if($variable_pricing) {
 			$prices = get_post_meta($download_id, 'edd_variable_prices', true);
@@ -36,8 +36,8 @@ function edd_get_purchase_link($download_id = null, $link_text = 'Purchase', $st
 						if($key == 0) {
 							$checked = 'checked="checked"';
 						}
-						$purchase_form .= '<input type="radio" ' . $checked . ' name="edd_options[price_id]" id="edd_price_option_' . $key . '" class="edd_price_option_' . $download_id . '" value="' . $key . '"/>&nbsp;';
-						$purchase_form .= '<label for="edd_price_option_' . $key . '">' . $price['name'] . ' - ' . edd_currency_filter($price['amount']) . '</label><br/>';
+						$purchase_form .= '<input type="radio" ' . $checked . ' name="edd_options[price_id]" id="edd_price_option_' . $download_id . '_' . $key . '" class="edd_price_option_' . $download_id . '" value="' . $key . '"/>&nbsp;';
+						$purchase_form .= '<label for="edd_price_option_' . $download_id . '_' . $key . '">' . $price['name'] . ' - ' . edd_currency_filter($price['amount']) . '</label><br/>';
 					}
 				}
 			$purchase_form .= '</div><!--end .edd_price_options-->';
@@ -124,6 +124,6 @@ function edd_get_button_colors() {
 }
 
 function edd_show_has_purchased_item_message($user_id, $download_id) {
-	echo __('You have already purchased this item, but you may purchase it again.', 'edd');
+	echo '<p class="edd_has_purchased">' . __('You have already purchased this item, but you may purchase it again.', 'edd') . '</p>';
 }
 add_action('edd_has_purchased_item_message', 'edd_show_has_purchased_item_message', 10, 2);

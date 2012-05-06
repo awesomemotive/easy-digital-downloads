@@ -40,7 +40,7 @@ class edd_cart_widget extends WP_Widget {
             echo $before_title . $title . $quantity . $after_title;
         }
         do_action('edd_before_cart_widget');
-        echo edd_shopping_cart();
+        edd_shopping_cart(true);
         do_action('edd_after_cart_widget');
         echo $after_widget;
     }
