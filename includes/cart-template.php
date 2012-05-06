@@ -45,8 +45,7 @@ function edd_get_cart_item_template($cart_key, $item, $ajax = false) {
 		$title .= ' - ' . edd_get_price_name($item['id'], $item['options']);							
 	}
 	$remove = '<a href="' . $remove_url . '" data-cart-item="' . $cart_key . '" data-action="edd_remove_from_cart" class="edd-remove-from-cart">' . __('remove', 'edd') . '</a>';	
-	$item = '<li class="edd-cart-item">' . $title . ' - ' . $remove . '</li>';
-	
+	$item = '<li class="edd-cart-item"><span class="edd-cart-item-title">' . $title . '</span> <span class="edd-cart-item-separator">-</span> ' . $remove . '</li>';
 	return apply_filters('edd_cart_item', $item);
 }
 
