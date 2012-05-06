@@ -23,7 +23,11 @@
 									echo get_the_post_thumbnail($item['id'], apply_filters('edd_checkout_image_size', array(25,25))); 
 								} 
 							}
-							echo '<span class="edd_checkout_cart_item_title">' . get_the_title($item['id']) . '</span>'; 
+							$item_title = get_the_title($item['id']);
+							if(!empty($item['options'])) {
+								$item_title .= ' - ' . edd_get_price_name($item['id'], $item['options']);							
+							}
+							echo '<span class="edd_checkout_cart_item_title">' . $item_title . '</span>'; 
 						?>
 					</td>
 					<td><?php echo edd_currency_filter(edd_get_cart_item_price($item['id'], $item['options'])); ?></td>

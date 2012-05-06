@@ -119,6 +119,26 @@ function edd_get_cart_item_price($item_id, $options = array()) {
 }
 
 /*
+* Gets the name of the specified price option, for variable pricing only
+* @param - $item INT the download ID number
+* @param - $options array optional parameters, used for defining variable prices
+* Return - string - the name of the price option
+*/
+function edd_get_price_name($item_id, $options = array()) {
+	
+	$variable_pricing = get_post_meta($item_id, '_variable_pricing', true);
+	if($variable_pricing && !empty($options)) {
+		// if variable prices are enabled, retrieve the options
+		$prices = get_post_meta($item_id, 'edd_variable_prices', true);
+		if($prices) {
+			$name = $prices[$options['price_id']]['name'];
+		}
+		return $name;
+	}
+	return false;
+}
+
+/*
 * Gets the total price amount in the cart
 * uses edd_get_cart_contents()
 * uses edd_get_download_price()
