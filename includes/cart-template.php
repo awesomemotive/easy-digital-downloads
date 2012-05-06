@@ -47,8 +47,12 @@ function edd_get_cart_item_template($cart_key, $item, $ajax = false) {
 	return apply_filters('edd_cart_item', $item);
 }
 
-// shows the message for an empty cart
+// gets the message for an empty cart
 function edd_empty_cart_message() {
 	return apply_filters('edd_empty_cart_message', __('Your cart is empty.', 'edd'));
 }
-add_action('edd_empty_cart', 'edd_empty_cart_message');
+
+function edd_empty_checkout_cart() {
+	echo edd_empty_cart_message();
+}
+add_action('edd_empty_cart', 'edd_empty_checkout_cart');
