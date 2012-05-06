@@ -24,10 +24,10 @@ function edd_process_purchase_form() {
 			
 			// check the new user's credentials against existing ones
 			
-			$user_login		= $_POST["edd_user_login"];	
-			$user_pass		= $_POST["edd_user_pass"];
-			$user_email		= $_POST['edd_email'];
-			$pass_confirm 	= $_POST["edd_user_pass_confirm"];
+			$user_login		= isset($_POST["edd_user_login"]) ? $_POST["edd_user_login"] : '';	
+			$user_pass		= isset($_POST["edd_user_pass"]) ? $_POST["edd_user_pass"] : '';
+			$user_email		= isset($_POST['edd_email']) ? $_POST['edd_email'] : '';
+			$pass_confirm 	= isset($_POST["edd_user_pass_confirm"]) ? $_POST["edd_user_pass_confirm"] : '';
 			$need_new_user	= true;
 			
 			if(strlen(trim($user_login)) > 0 && edd_no_guest_checkout()) {
@@ -60,6 +60,9 @@ function edd_process_purchase_form() {
 					// passwords do not match
 					edd_set_error('password_mismatch', __('Passwords don\'t match', 'edd'));
 				}	
+			} elseif( !edd_no_guest_checkout() ) {
+				// no user name was provided, and guest checkout is not required
+				$need_new_user = false;
 			}
 		} elseif(isset($_POST['edd-purchase-var']) && $_POST['edd-purchase-var'] == 'needs-to-login') {
 		
