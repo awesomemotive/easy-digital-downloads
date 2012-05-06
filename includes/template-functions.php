@@ -36,8 +36,8 @@ function edd_get_purchase_link($download_id = null, $link_text = 'Purchase', $st
 						if($key == 0) {
 							$checked = 'checked="checked"';
 						}
-						$purchase_form .= '<input type="radio" ' . $checked . ' name="edd_options[price_id]" id="edd_price_option_' . $key . '" class="edd_price_option_' . $download_id . '" value="' . $key . '"/>&nbsp;';
-						$purchase_form .= '<label for="edd_price_option_' . $key . '">' . $price['name'] . ' - ' . edd_currency_filter($price['amount']) . '</label><br/>';
+						$purchase_form .= '<input type="radio" ' . $checked . ' name="edd_options[price_id]" id="edd_price_option_' . $download_id . '_' . $key . '" class="edd_price_option_' . $download_id . '" value="' . $key . '"/>&nbsp;';
+						$purchase_form .= '<label for="edd_price_option_' . $download_id . '_' . $key . '">' . $price['name'] . ' - ' . edd_currency_filter($price['amount']) . '</label><br/>';
 					}
 				}
 			$purchase_form .= '</div><!--end .edd_price_options-->';
