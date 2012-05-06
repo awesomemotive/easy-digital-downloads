@@ -86,7 +86,7 @@ function edd_process_purchase_form() {
 			edd_set_error('login_register_error', __('Something has gone wrong, please try again', 'edd'));
 		} else {
 			if(!isset($_POST['edd_email']) || !is_email($_POST['edd_email'])) {
-				// check for valid discount
+				// check for valid email
 				edd_set_error('invalid_email', __('You must enter a valid email address.', 'edd'));
 			}
 		}

@@ -146,6 +146,7 @@ function edd_payment_history_page() {
 												<ul>
 													<li><?php echo __('Name:', 'edd') . ' ' . $user_info['first_name'] . ' ' . $user_info['last_name']; ?></li>
 													<li><?php echo __('Email:', 'edd') . ' ' . $payment_meta['email']; ?></li>
+													<?php do_action('edd_payment_personal_details_list', $payment_meta, $user_info); ?>
 												</ul>
 											</div>
 											<p><a id="edd-close-purchase-details" class="button-secondary" onclick="tb_remove();" title="<?php _e('Close', 'edd'); ?>"><?php _e('Close', 'edd'); ?></a></p>
