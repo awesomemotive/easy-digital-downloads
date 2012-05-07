@@ -5,7 +5,7 @@
 			<?php do_action('edd_checkout_table_header_first'); ?>
 			<th><?php _e('Item Name', 'edd'); ?></th>
 			<th><?php _e('Item Price', 'edd'); ?></th>
-			<th><?php _e('Actions', 'edd'); ?></th>
+			<th class="edd_cart_actions"><?php _e('Actions', 'edd'); ?></th>
 			<?php do_action('edd_checkout_table_header_last'); ?>
 		</tr>
 	</thead>
@@ -31,7 +31,7 @@
 						?>
 					</td>
 					<td><?php echo edd_currency_filter(edd_get_cart_item_price($item['id'], $item['options'])); ?></td>
-					<td><a href="<?php echo edd_remove_item_url($key, $post); ?>"><?php _e('remove', 'edd'); ?></td>
+					<td class="edd_cart_actions"><a href="<?php echo edd_remove_item_url($key, $post); ?>"><?php _e('remove', 'edd'); ?></td>
 					<?php do_action('edd_checkout_table_body_last', $item); ?>
 				</tr>
 			<?php endforeach; ?>

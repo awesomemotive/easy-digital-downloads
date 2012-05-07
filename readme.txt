@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.3.2
-Stable Tag: 1.0.5
+Stable Tag: 1.0.6
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
@@ -74,6 +74,28 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 9. Screenshot 9
 
 == Changelog ==
+
+= 1.0.6 =
+
+* NOTE: if you have modified the checkout_cart.php template via your theme, please consider updating it with the new version as many things have changed.
+* Fixed a bug with the empty cart message not being displayed on the checkout page
+* When purchasing a product with variable prices, the selected price option name is now shown on the checkout page
+* Fixed a bug with the in-checkout registration /login form
+* Improved the layout of the in-checkout register / login forms
+* Fixed a bug in the "Edit Payment" page caused by the variable price system
+* Fixed a bug with plugin pages being duplicate on reactivation of EDD
+* Variable price descriptions can now contain HTMl
+* Added new a new filter that allows for the jQuery validation rules to be modified for the checkout page
+* Payments in the Payment History page can now be sorted by ID, Status, and Date.
+* Fix a bug that allowed for the same download to be added to the cart twice.
+* Added missing element classes to the cart widget, checkout cart, and more
+* Added the edd_price() function for use in themes
+* Updated the edd_payment_meta filter with a second parameter for $payment_data
+* Updated the "Insert Download" icon in the "Insert Media" section to match the main post type icon
+* Added filters that allow for post type and taxonomy labels to be modified via the theme
+* Added filters that allow for the post type "supports" attributes to be modified
+* Added extra mimetypes to the function that processes file downloads
+* Dramatically improved the CSS of the checkout page.
 
 = 1.0.5 =
 
@@ -158,6 +180,28 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.0.6 =
+
+* NOTE: if you have modified the checkout_cart.php template via your theme, please consider updating it with the new version as many things have changed.
+* Fixed a bug with the empty cart message not being displayed on the checkout page
+* When purchasing a product with variable prices, the selected price option name is now shown on the checkout page
+* Fixed a bug with the in-checkout registration /login form
+* Improved the layout of the in-checkout register / login forms
+* Fixed a bug in the "Edit Payment" page caused by the variable price system
+* Fixed a bug with plugin pages being duplicate on reactivation of EDD
+* Variable price descriptions can now contain HTMl
+* Added new a new filter that allows for the jQuery validation rules to be modified for the checkout page
+* Payments in the Payment History page can now be sorted by ID, Status, and Date.
+* Fix a bug that allowed for the same download to be added to the cart twice.
+* Added missing element classes to the cart widget, checkout cart, and more
+* Added the edd_price() function for use in themes
+* Updated the edd_payment_meta filter with a second parameter for $payment_data
+* Updated the "Insert Download" icon in the "Insert Media" section to match the main post type icon
+* Added filters that allow for post type and taxonomy labels to be modified via the theme
+* Added filters that allow for the post type "supports" attributes to be modified
+* Added extra mimetypes to the function that processes file downloads
+* Dramatically improved the CSS of the checkout page.
 
 = 1.0.5 =
 

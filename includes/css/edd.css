@@ -5,10 +5,16 @@
 .edd_clearfix:after { display: block; visibility: hidden; float: none; clear: both; text-indent: -9999px; content: "."; }
 
 /* cart contents */
-#edd_checkout_cart { text-align: left; width: 100%; }
-#edd_checkout_cart .edd_cart_total {  }
-#edd_checkout_cart th { text-align: left; }
-#edd_checkout_cart td { line-height: 25px; vertical-align: middle; text-align: left; }
+#edd_checkout_cart { text-align: left; width: 100%; border-top: 1px solid #f0f0f0; border-bottom: none;}
+#edd_checkout_cart th,
+#edd_checkout_cart td { text-align: left; padding: 3px 5px; border-bottom: 1px solid #f0f0f0; border-top: none; }
+#edd_checkout_cart th { font-weight: bold; background: #f5f5f5;}
+#edd_checkout_cart td { line-height: 25px; vertical-align: middle; }
+#edd_checkout_cart th.edd_cart_actions,
+#edd_checkout_cart td.edd_cart_actions,
+#edd_checkout_cart th:last-child,
+#edd_checkout_cart td:last-child,
+#edd_checkout_cart th.edd_cart_total { text-align: right; }
 #edd_checkout_cart td img { float: left; margin: 0 8px 0 0;}
 
 /* checkout fields */
@@ -19,7 +25,18 @@
 #edd_purchase_form input.card-expiry-month { width: 30px; }
 #edd_purchase_form input.card-expiry-year { width: 60px; }
 #edd_purchase_form span.exp-divider {  }
+#edd_checkout_form_wrap p { margin: 0 0 10px; }
+#edd_checkout_form_wrap input[type="text"], 
+#edd_checkout_form_wrap input[type="email"], 
+#edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; width: 200px; }
 #edd_checkout_form_wrap img.payment-icon{ margin: 0 3px 0 0; }
+#edd_checkout_form_wrap fieldset#edd_register_account_fields,
+#edd_checkout_form_wrap fieldset#edd_login_fields { border: 1px solid #f0f0f0; padding: 10px; margin: 0 0 10px; }
+#edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_register_password,
+#edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_login_password { margin: 0; }
+#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="text"], 
+#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="email"], 
+#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="password"] { width: 188px; }
 
 /****************************************
 * Cart Widget

@@ -62,7 +62,7 @@ function edd_insert_payment($payment_data = array()) {
 			'user_id' => $payment_data['user_info']['id']
 		);
 		// record the payment details
-		update_post_meta($payment, '_edd_payment_meta', apply_filters('edd_payment_meta', $payment_meta));
+		update_post_meta($payment, '_edd_payment_meta', apply_filters('edd_payment_meta', $payment_meta, $payment_data));
 		update_post_meta($payment, '_edd_payment_user_id', $payment_data['user_info']['id']);
 		update_post_meta($payment, '_edd_payment_user_email', $payment_data['user_email']);
 		update_post_meta($payment, '_edd_payment_purchase_key', $payment_data['purchase_key']);
