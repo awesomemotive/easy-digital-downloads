@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.3.2
-Stable Tag: 1.0.6
+Stable Tag: 1.0.7
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
@@ -34,6 +34,20 @@ Features of the plugin include:
 More information at [Easy Digital Downloads.com](http://easydigitaldownloads.com/).
 
 [youtube http://www.youtube.com/watch?v=SjOeSZ08_IA]
+
+**Languages**
+
+Easy Digital Downloads as been translated into the following languages:
+
+1. English
+2. German
+3. Spanish
+4. French
+5. Italian
+6. Dutch
+7. European Portuguese
+
+Would you like to help translate the plugin into more langauges? [Contact Pippin](http://easydigitaldownloads.com/contact-developer/).
 
 == Installation ==
 
@@ -73,7 +87,20 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 8. Screenshot 8
 9. Screenshot 9
 
+
 == Changelog ==
+
+= 1.0.7 =
+
+* Added new edd_has_variable_prices() function
+* Improved the edd_price() function to take into account products with variable prices
+* Added an $id parameter to the edd_cart_item filter
+* Updated French language files
+* Added missing "required" classes to the checkout login form
+* Added the ability to update the email address associated with payments
+* Added a new [edd_login] short code for showing a basic login form
+* Added new Dutch language translation files
+
 
 = 1.0.6 =
 
@@ -180,6 +207,17 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.0.7 =
+
+* Added new edd_has_variable_prices() function
+* Improved the edd_price() function to take into account products with variable prices
+* Added an $id parameter to the edd_cart_item filter
+* Updated French language files
+* Added missing "required" classes to the checkout login form
+* Added the ability to update the email address associated with payments
+* Added a new [edd_login] short code for showing a basic login form
+* Added new Dutch language translation files
 
 = 1.0.6 =
 
