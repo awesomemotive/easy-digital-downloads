@@ -126,7 +126,7 @@ function edd_checkout_form() {
 								<?php do_action('edd_purchase_form_user_info'); ?>
 							</fieldset>				
 							<?php } ?>
-							<?php if(edd_get_discounts()) { // only show if we have at least one discount ?>
+							<?php if(edd_has_active_discounts()) { // only show if we have at least one active discount ?>
 							<fieldset id="edd_discount_code">
 								<p>
 									<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e('Enter discount', 'edd'); ?>"/>
