@@ -5,18 +5,14 @@ function edd_append_purchase_link($content) {
 	global $post;
 	if($post->post_type == 'download' && is_singular() && is_main_query()) {
 		if(!get_post_meta($post->ID, '_edd_hide_purchase_link', true)) {			
-			$button_text = get_post_meta($post->ID, '_edd_purchase_text', true) ? get_post_meta($post->ID, '_edd_purchase_text', true) : __('Purchase', 'edd');
-			$style = get_post_meta($post->ID, '_edd_purchase_style', true) ? get_post_meta($post->ID, '_edd_purchase_style', true) : 'button';
-			$color = get_post_meta($post->ID, '_edd_purchase_color', true);
-			if($color) { $color = str_replace(' ', '_', $color); }
-			$content .= edd_get_purchase_link($post->ID, $button_text, $style, $color);
+			$content .= edd_get_purchase_link($post->ID);
 		}
 	}
 	return $content;
 }
 add_filter('the_content', 'edd_append_purchase_link');
 
-function edd_get_purchase_link($download_id = null, $link_text = 'Purchase', $style = 'button', $color = 'blue') {
+function edd_get_purchase_link($download_id = null, $link_text = null, $style = null, $color = null) {
 	global $edd_options, $post, $user_ID;
 
 	$page = get_permalink($post->ID); // current page
@@ -25,6 +21,15 @@ function edd_get_purchase_link($download_id = null, $link_text = 'Purchase', $st
 	$checkout_url = get_permalink($edd_options['purchase_page']);
 	$variable_pricing = get_post_meta($download_id, '_variable_pricing', true);
 	
+	if(is_null($link_text)) {
+		$link_text = get_post_meta($post->ID, '_edd_purchase_text', true) ? get_post_meta($post->ID, '_edd_purchase_text', true) : __('Purchase', 'edd');
+	}
+	if(is_null($style)) {
+		$style = get_post_meta($post->ID, '_edd_purchase_style', true) ? get_post_meta($post->ID, '_edd_purchase_style', true) : 'button';
+	}
+	if(is_null($color)) {		
+		$color = get_post_meta($post->ID, '_edd_purchase_color', true) ? str_replace(' ', '_', get_post_meta($post->ID, '_edd_purchase_color', true)) : 'blue';
+	}
 	$purchase_form = '<form id="edd_purchase_' . $download_id . '" class="edd_download_purchase_form" action="" method="POST">';
 		
 		if($variable_pricing) {
@@ -111,7 +116,7 @@ function edd_get_button_colors() {
 	$colors = array(
 		'gray' => __('Gray', 'edd'), 
 		'pink' => __('Pink', 'edd'), 
-		'blue' => __('blue', 'edd'), 
+		'blue' => __('Blue', 'edd'), 
 		'green' => __('Green', 'edd'), 
 		'teal' => __('Teal', 'edd'), 
 		'black' => __('Black', 'edd'), 
