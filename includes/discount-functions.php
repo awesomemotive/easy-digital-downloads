@@ -13,7 +13,7 @@ function edd_get_discounts() {
 
 // checks if there is any active discounts, returns a boolean
 function edd_has_active_discounts() {
-    $has_active = false; 
+	$has_active = false; 
 	$discounts = edd_get_discounts();
 	if(is_array($discounts) && !empty($discounts)) {
         foreach($discounts as $discount) {
