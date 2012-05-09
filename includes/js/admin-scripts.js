@@ -93,19 +93,25 @@ jQuery(document).ready(function ($) {
     if ($('.edd_upload_image_button').length > 0) {
         // Media Uploader
         window.formfield = '';
-
+        
         $('.edd_upload_image_button').on('click', function (e) {
             e.preventDefault();
             window.formfield = $('.edd_upload_field', $(this).parent());
-            tb_show('', 'media-upload.php?post_id=' + edd_vars.post_id + '&TB_iframe=true');
+    		window.tbframe_interval = setInterval(function() {
+    		    jQuery('#TB_iframeContent').contents().find('.savesend .button').val(edd_vars.use_this_file).end().find('#insert-gallery, .wp-post-thumbnail').hide();
+    		}, 2000);
+            tb_show(edd_vars.add_new_download, 'media-upload.php?post_id=' + edd_vars.post_id + '&TB_iframe=true');
         });
-        window.send_to_editor = function (html) {
+        
+        window.original_send_to_editor = window.send_to_editor;
+        window.send_to_editor = function (html) {            
             if (window.formfield) {
                 imgurl = $('a', '<div>' + html + '</div>').attr('href');
                 window.formfield.val(imgurl);
+                window.clearInterval(window.tbframe_interval);
                 tb_remove();
             } else {
-                window.send_to_editor(html);
+                window.original_send_to_editor(html);
             }
             window.formfield = '';
             window.imagefield = false;
