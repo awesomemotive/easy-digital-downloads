@@ -11,7 +11,7 @@ function edd_get_discounts() {
 	return false;
 }
 
-// checks if there is any active discounts, retrieves a boolean
+// checks if there is any active discounts, returns a boolean
 function edd_has_active_discounts() {
     $has_active = false; 
 	$discounts = edd_get_discounts();
