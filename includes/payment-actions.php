@@ -6,6 +6,7 @@ function edd_update_edited_purchase($data) {
 		$payment_id = $_POST['payment-id'];
 		$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
 		$payment_data['downloads'] = serialize($_POST['edd-purchased-downloads']);
+		$payment_data['email'] = strip_tags($_POST['edd-buyer-email']);
 		update_post_meta($payment_id, '_edd_payment_meta', $payment_data);
 		if($_POST['edd-old-status'] != $_POST['edd-payment-status']) {
 			wp_update_post(array('ID' => $payment_id, 'post_status' => $_POST['edd-payment-status']));

@@ -84,6 +84,17 @@ function edd_cart_shortcode($atts, $content = null) {
 }
 add_shortcode('download_cart', 'edd_cart_shortcode');
 
+// displays the login form
+function edd_login_form_shortcode($atts, $content = null) {
+	
+	extract( shortcode_atts( array(
+			'redirect' => '',
+		), $atts )
+	);
+	return edd_login_form($redirect);
+}
+add_shortcode('edd_login', 'edd_login_form_shortcode');
+
 /*
 * Displays a collection purchase link for adding all items in a taxonomy term to the cart
 * @since v1.0.6

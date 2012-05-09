@@ -1,16 +1,27 @@
-<?php $payment = get_post($_GET['purchase_id']); ?>
+<?php 
+$payment = get_post($_GET['purchase_id']); 
+$payment_data = get_post_meta($_GET['purchase_id'], '_edd_payment_meta', true);
+?>
 <div class="wrap">
 	<h2><?php _e('Edit Payment', 'edd'); ?>: <?php echo get_the_title($_GET['purchase_id']) . ' - #' . $_GET['purchase_id']; ?> - <a href="<?php echo admin_url('edit.php?post_type=download&page=edd-payment-history'); ?>" class="button-secondary"><?php _e('Go Back', 'edd'); ?></a></h2>
 	<form id="edd-edit-payment" action="" method="post">
 		<table class="form-table">
 			<tbody>
-				<tr class="form-field">
+				<tr>
+					<th scope="row" valign="top">
+						<span><?php _e('Buyer\'s Email', 'edd'); ?></span>
+					</th>	
+					<td id="purchased-downloads">
+						<input class="regular-text" type="text" name="edd-buyer-email" id="edd-buyer-email" value="<?php echo $payment_data['email']; ?>"/>
+						<p class="description"><?php _e('If needed, you can update the buyer\'s email here.', 'edd'); ?></p>
+					</td>
+				</tr>
+				<tr>				
 					<th scope="row" valign="top">
 						<span><?php _e('Downloads Purchased', 'edd'); ?></span>
 					</th>
 					<td id="purchased-downloads">
 						<?php
-							$payment_data = get_post_meta($_GET['purchase_id'], '_edd_payment_meta', true);
 							$downloads = maybe_unserialize($payment_data['downloads']);
 							if($downloads) :
 								foreach($downloads as $download) :
@@ -22,7 +33,7 @@
 						<p id="edit-downloads"><a href="#TB_inline?width=640&inlineId=available-downloads" class="thickbox" title="<?php printf(__('Add download to purchase #%s', 'edd'), $_GET['purchase_id']); ?> "><?php _e('Add download to purchase', 'edd'); ?></p>
 					</td>
 				</tr>
-				<tr class="form-field">
+				<tr>
 					<th scope="row" valign="top">
 						<span><?php _e('Payment Status', 'edd'); ?></span>
 					</th>

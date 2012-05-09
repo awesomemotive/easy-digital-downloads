@@ -195,11 +195,30 @@ function edd_get_download_price($download_id) {
 
 /*
 * Displays a formatted price for a download
+* @uses edd_has_variable_prices()
 * @param - int $download_id the ID of the download price to show
 * @echo string the nicely formatted price of the download with currency
 */
 function edd_price($download_id) {
-	echo edd_currency_filter(edd_get_download_price($download_id));
+	if(edd_has_variable_prices($download_id)) {
+		$prices = get_post_meta($download_id, 'edd_variable_prices', true);
+		echo edd_currency_filter($prices[0]['amount']); // show the first price option
+	} else {
+		echo edd_currency_filter(edd_get_download_price($download_id));
+	}
+}
+
+/*
+* Checks to see if a download has variable prices enabled
+* @since v1.0.7
+* @param int $download_id the ID number of the download to checl
+* @return bool true if has variable prices, false otherwise
+*/
+function edd_has_variable_prices($download_id) {
+	if(get_post_meta($download_id, '_variable_pricing', true)) {
+		return true;	
+	}
+	return false;
 }
 
 // increases the sale count od a download
