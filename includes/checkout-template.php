@@ -8,9 +8,9 @@ function edd_checkout_form() {
 		$page_URL =  get_permalink($post->ID);
 	else :
 		$page_URL = 'http';
-		if ($_SERVER["HTTPS"] == "on") $pageURL .= "s";
+		if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") $pageURL .= "s";
 		$page_URL .= "://";
-		if ($_SERVER["SERVER_PORT"] != "80") $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+		if (isset($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"] != "80") $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
 		else $page_URL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 	endif;	
 	
