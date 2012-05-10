@@ -88,7 +88,7 @@ function edd_get_purchase_link($download_id = null, $link_text = 'Purchase', $st
 
 function edd_remove_item_url($cart_key, $post, $ajax = false) {
 	global $post;
-	$current_page = $ajax ? home_url() : get_permalink($post->ID);
+	$current_page = ($ajax || is_404()) ? home_url() : get_permalink($post->ID);
 	$remove_url = add_query_arg('cart_item', $cart_key, add_query_arg('edd_action', 'remove', $current_page));
 	return apply_filters('edd_remove_item_url', $remove_url);
 }
