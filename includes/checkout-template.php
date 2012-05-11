@@ -305,7 +305,8 @@ function edd_get_register_fields() {
 			<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
 		</p>
 		<input type="hidden" name="edd-purchase-var" value="needs-to-register"/>		
-		<?php do_action('edd_purchase_form_register_fields'); ?>								
+		<?php do_action('edd_purchase_form_register_fields'); ?>
+		<?php do_action('edd_purchase_form_user_info');	?>				
 	</fieldset>
 	<?php
 	return ob_get_clean();
