@@ -79,8 +79,8 @@ function edd_get_purchase_link($download_id = null, $link_text = null, $style = 
 				$purchase_form .= $purchase_text . $checkout_link;
 			}
 			if(edd_is_ajax_enabled()) {
-				$purchase_form .= '<img src="' . EDD_PLUGIN_URL . 'includes/images/loading.gif" class="edd-cart-ajax" style="display: none;"/>';
-				$purchase_form .= '&nbsp;<span style="display:none;" class="edd-cart-added-alert">' . __('added to your cart', 'edd') . '</span>';
+				$purchase_form .= '<div class="edd-cart-ajax-alert"><img src="' . EDD_PLUGIN_URL . 'includes/images/loading.gif" class="edd-cart-ajax" style="display: none;"/>';
+				$purchase_form .= '&nbsp;<span style="display:none;" class="edd-cart-added-alert">' . __('added to your cart', 'edd') . '</span></div>';
 			}
 	
 		$purchase_form .= '</div><!--end .edd_purchase_submit_wrapper-->';	
@@ -93,7 +93,7 @@ function edd_get_purchase_link($download_id = null, $link_text = null, $style = 
 
 function edd_remove_item_url($cart_key, $post, $ajax = false) {
 	global $post;
-	$current_page = $ajax ? home_url() : get_permalink($post->ID);
+	$current_page = ($ajax || !isset($post->ID)) ? home_url() : get_permalink($post->ID);
 	$remove_url = add_query_arg('cart_item', $cart_key, add_query_arg('edd_action', 'remove', $current_page));
 	return apply_filters('edd_remove_item_url', $remove_url);
 }
