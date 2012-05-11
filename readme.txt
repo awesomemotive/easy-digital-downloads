@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.3.2
-Stable Tag: 1.0.7
+Stable Tag: 1.0.7.1
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
@@ -89,6 +89,16 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 
 
 == Changelog ==
+
+= 1.0.7.1 =
+
+* Added a second instance do_action('edd_purchase_form_user_info') to the checkout registration form
+* Updated the edd_purchase_link() function to automatically detect chosen link styles and colors
+* Fixed a bug with the discount code form on checkout. It now only shows if there is at least one active discount. Props to Sksmatt
+* Fixed a bug with the Media Uploader when adding media to the content of a Download. Props to Sksmatt
+* Added a wrapper div.edd-cart-ajax-alert around the message that shows when an item has been added to the cart
+* Fixed a small error notice present in the checkout form short code. Props to Sksmatt 
+* Fixed a small bug wit the edd_remove_item_url() present when on a 404 error page. Props to Sksmatt
 
 = 1.0.7 =
 
@@ -207,6 +217,16 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.0.7.1 =
+
+* Added a second instance do_action('edd_purchase_form_user_info') to the checkout registration form
+* Updated the edd_purchase_link() function to automatically detect chosen link styles and colors
+* Fixed a bug with the discount code form on checkout. It now only shows if there is at least one active discount. Props to Sksmatt
+* Fixed a bug with the Media Uploader when adding media to the content of a Download. Props to Sksmatt
+* Added a wrapper div.edd-cart-ajax-alert around the message that shows when an item has been added to the cart
+* Fixed a small error notice present in the checkout form short code. Props to Sksmatt 
+* Fixed a small bug wit the edd_remove_item_url() present when on a 404 error page. Props to Sksmatt
 
 = 1.0.7 =
 
