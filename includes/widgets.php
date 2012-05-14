@@ -7,6 +7,7 @@
 // register all widgets
 function edd_register_widgets() {
     register_widget('edd_cart_widget');
+    register_widget('edd_categories_tags_widget');
 }
 add_action('widgets_init', 'edd_register_widgets');
 
@@ -18,7 +19,7 @@ class edd_cart_widget extends WP_Widget {
     /** constructor */
     function edd_cart_widget()
     {
-        parent::WP_Widget(false, $name = __('Downloads Cart', 'edd'), array('description' => __('Display the downloads shopping cart', 'edd')));
+        parent::WP_Widget(false, __('Downloads Cart', 'edd'), array('description' => __('Display the downloads shopping cart', 'edd')));
     }
 
     /** @see WP_Widget::widget */
@@ -57,16 +58,8 @@ class edd_cart_widget extends WP_Widget {
     /** @see WP_Widget::form */
     function form($instance)
     {
-        if (isset($instance['title'])) {
-            $title = esc_attr($instance['title']);
-        } else {
-            $title = '';
-        }
-        if (isset($instance['quantity'])) {
-            $quantity = esc_attr($instance['quantity']);
-        } else {
-            $quantity = '';
-        }
+        $title = isset($instance['title']) ? esc_attr($instance['title']) : '';
+        $quantity = isset($instance['quantity']) ? esc_attr($instance['quantity']) : '';
         ?>
     <p>
         <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:', 'edd'); ?></label>
@@ -78,6 +71,79 @@ class edd_cart_widget extends WP_Widget {
         <input id="<?php echo $this->get_field_id('quantity'); ?>"
                name="<?php echo $this->get_field_name('quantity'); ?>" type="checkbox"
                value="1" <?php checked('1', $quantity); ?>/>
+    </p>
+    <?php
+    }
+}
+
+/**
+ * Downloads Categories / Tags Widget Class
+ */
+class edd_categories_tags_widget extends WP_Widget {
+
+    /** constructor */
+    function edd_categories_tags_widget()
+    {
+        parent::WP_Widget(false, __('Downloads Categories / Tags', 'edd'), array('description' => __('Display the downloads categories or tags', 'edd')));
+    }
+
+    /** @see WP_Widget::widget */
+    function widget($args, $instance)
+    {
+        extract($args);
+        $title = apply_filters('widget_title', $instance['title']);
+        $tax = $instance['taxonomy'];
+        
+        global $post, $edd_options;
+
+        echo $before_widget;
+        if ($title) {
+            echo $before_title . $title . $after_title;
+        }
+        
+        do_action('edd_before_taxonomy_widget');
+        $terms = get_terms($tax);
+
+		if (is_wp_error($terms)) {
+		    return;
+		} else {
+            echo "<ul class=\"edd-taxonomy-widget\">\n";
+		    foreach ($terms as $term) {
+		        echo '<li><a href="' . get_term_link( $term ) . '" title="' . esc_attr( $term->name ) . '" rel="bookmark">' . $term->name . '</a></li>'."\n";
+		    }
+		    echo "</ul>\n";
+		}
+        
+        do_action('edd_after_taxonomy_widget');
+        echo $after_widget;
+    }
+
+    /** @see WP_Widget::update */
+    function update($new_instance, $old_instance)
+    {
+        $instance = $old_instance;
+        $instance['title'] = strip_tags($new_instance['title']);
+        $instance['taxonomy'] = strip_tags($new_instance['taxonomy']);
+        return $instance;
+    }
+
+    /** @see WP_Widget::form */
+    function form($instance)
+    {
+        $title = isset($instance['title']) ? esc_attr($instance['title']) : '';
+        $taxonomy = isset($instance['taxonomy']) ? esc_attr($instance['taxonomy']) : 'download_category';
+        ?>
+    <p>
+        <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:', 'edd'); ?></label>
+        <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>"
+               name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>"/>
+    </p>
+    <p>
+        <label for="<?php echo $this->get_field_id('taxonomy'); ?>"><?php _e('Taxonomy:', 'edd'); ?></label>
+        <select name="<?php echo $this->get_field_name('taxonomy'); ?>" id="<?php echo $this->get_field_id('taxonomy'); ?>">
+            <option value="download_category" <?php selected('download_category',$taxonomy); ?>><?php _e('Categories', 'edd'); ?></option>
+            <option value="download_tag" <?php selected('download_tag',$taxonomy); ?>><?php _e('Tags', 'edd'); ?></option>
+        </select>
     </p>
     <?php
     }
