@@ -11,7 +11,7 @@ $payment_data = get_post_meta($_GET['purchase_id'], '_edd_payment_meta', true);
 					<th scope="row" valign="top">
 						<span><?php _e('Buyer\'s Email', 'edd'); ?></span>
 					</th>	
-					<td id="purchased-downloads">
+					<td>
 						<input class="regular-text" type="text" name="edd-buyer-email" id="edd-buyer-email" value="<?php echo $payment_data['email']; ?>"/>
 						<p class="description"><?php _e('If needed, you can update the buyer\'s email here.', 'edd'); ?></p>
 					</td>
@@ -37,7 +37,7 @@ $payment_data = get_post_meta($_GET['purchase_id'], '_edd_payment_meta', true);
 					<th scope="row" valign="top">
 						<span><?php _e('Payment Status', 'edd'); ?></span>
 					</th>
-					<td id="purchased-downloads">
+					<td>
 						<?php $status = $payment->post_status; ?>
 						<select name="edd-payment-status" id="edd_payment_status">
 							<option value="pending" <?php selected($status, 'pending'); ?>><?php _e('Pending', 'edd'); ?></option>
