@@ -104,15 +104,15 @@ class edd_categories_tags_widget extends WP_Widget {
         do_action('edd_before_taxonomy_widget');
         $terms = get_terms($tax);
 
-		if (is_wp_error($terms)) {
-		    return;
-		} else {
-            echo "<ul class=\"edd-taxonomy-widget\">\n";
-		    foreach ($terms as $term) {
-		        echo '<li><a href="' . get_term_link( $term ) . '" title="' . esc_attr( $term->name ) . '" rel="bookmark">' . $term->name . '</a></li>'."\n";
-		    }
-		    echo "</ul>\n";
-		}
+			if (is_wp_error($terms)) {
+			    return;
+			} else {
+	            echo "<ul class=\"edd-taxonomy-widget\">\n";
+			    foreach ($terms as $term) {
+			        echo '<li><a href="' . get_term_link( $term ) . '" title="' . esc_attr( $term->name ) . '" rel="bookmark">' . $term->name . '</a></li>'."\n";
+			    }
+			    echo "</ul>\n";
+			}
         
         do_action('edd_after_taxonomy_widget');
         echo $after_widget;
@@ -133,18 +133,18 @@ class edd_categories_tags_widget extends WP_Widget {
         $title = isset($instance['title']) ? esc_attr($instance['title']) : '';
         $taxonomy = isset($instance['taxonomy']) ? esc_attr($instance['taxonomy']) : 'download_category';
         ?>
-    <p>
-        <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:', 'edd'); ?></label>
-        <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>"
-               name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>"/>
-    </p>
-    <p>
-        <label for="<?php echo $this->get_field_id('taxonomy'); ?>"><?php _e('Taxonomy:', 'edd'); ?></label>
-        <select name="<?php echo $this->get_field_name('taxonomy'); ?>" id="<?php echo $this->get_field_id('taxonomy'); ?>">
-            <option value="download_category" <?php selected('download_category',$taxonomy); ?>><?php _e('Categories', 'edd'); ?></option>
-            <option value="download_tag" <?php selected('download_tag',$taxonomy); ?>><?php _e('Tags', 'edd'); ?></option>
-        </select>
-    </p>
+	    <p>
+	        <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:', 'edd'); ?></label>
+	        <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>"
+	               name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>"/>
+	    </p>
+	    <p>
+	        <label for="<?php echo $this->get_field_id('taxonomy'); ?>"><?php _e('Taxonomy:', 'edd'); ?></label>
+	        <select name="<?php echo $this->get_field_name('taxonomy'); ?>" id="<?php echo $this->get_field_id('taxonomy'); ?>">
+	            <option value="download_category" <?php selected('download_category',$taxonomy); ?>><?php _e('Categories', 'edd'); ?></option>
+	            <option value="download_tag" <?php selected('download_tag',$taxonomy); ?>><?php _e('Tags', 'edd'); ?></option>
+	        </select>
+	    </p>
     <?php
     }
 }
