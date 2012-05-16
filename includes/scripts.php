@@ -6,16 +6,11 @@ function edd_load_scripts() {
 
 	wp_enqueue_script('jquery');
 	
-	// load Stripe JS, if enabled
-	if(edd_is_gateway_active('stripe')) {
-		wp_enqueue_script('stripe', 'https://js.stripe.com/v1/');
-	}
-	
 	// get position in cart of current download
 	if(isset($post->ID)) {
 	    $position = edd_get_item_position_in_cart($post->ID);
 	}
-	
+		
 	// load ajax JS, if enabled
 	if(edd_is_ajax_enabled()) {
 		wp_enqueue_script('edd-ajax', EDD_PLUGIN_URL . 'includes/js/edd-ajax.js');
