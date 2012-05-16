@@ -41,9 +41,9 @@ function edd_insert_payment($payment_data = array()) {
 	}
 	
 	if(isset($payment_data['status'])) {
-		$status = 'pending';
+		$status = $payment_data['status'];
 	} else {
-		$status = 'publish';
+		$status = 'pending';
 	}
 	
 	// create a blank payment
@@ -89,6 +89,7 @@ function edd_update_payment_status($payment_id, $status = 'publish') {
 	
 	$payment = get_post($payment_id);
 	if($payment->post_status == 'publish') {
+		// for some reason this is occasionally coming back as true even when the payment is not		
 		return;
 	}
 	$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
