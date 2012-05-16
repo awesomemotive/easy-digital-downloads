@@ -6,7 +6,7 @@ function edd_install() {
 	if(!isset($edd_options['purchase_page'])) {	
 		$checkout = wp_insert_post(
 			array(
-				'post_title' => 'Checkout',
+				'post_title' => __('Checkout', 'edd'),
 				'post_content' => '[download_checkout]',
 				'post_status' => 'publish',
 				'post_author' => 1,
@@ -15,8 +15,8 @@ function edd_install() {
 		);
 		$success = wp_insert_post(
 			array(
-				'post_title' => 'Purchase Confirmation',
-				'post_content' => 'Thank you for your purchase!',
+				'post_title' => __('Purchase Confirmation', 'edd'),
+				'post_content' => __('Thank you for your purchase!',
 				'post_status' => 'publish',
 				'post_author' => 1,
 				'post_type' => 'page'
@@ -24,7 +24,7 @@ function edd_install() {
 		);
 		$history = wp_insert_post(
 			array(
-				'post_title' => 'Purchase History',
+				'post_title' => __('Purchase History', 'edd'),
 				'post_content' => '[download_history]',
 				'post_status' => 'publish',
 				'post_author' => 1,

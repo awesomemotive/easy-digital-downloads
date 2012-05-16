@@ -2,7 +2,7 @@
 
 function edd_load_scripts() {
 
-	global $edd_options;
+	global $edd_options, $post;
 
 	wp_enqueue_script('jquery');
 	
@@ -10,6 +10,12 @@ function edd_load_scripts() {
 	if(edd_is_gateway_active('stripe')) {
 		wp_enqueue_script('stripe', 'https://js.stripe.com/v1/');
 	}
+	
+	// get position in cart of current download
+	if(isset($post->ID)) {
+	    $position = edd_get_item_position_in_cart($post->ID);
+	}
+	
 	// load ajax JS, if enabled
 	if(edd_is_ajax_enabled()) {
 		wp_enqueue_script('edd-ajax', EDD_PLUGIN_URL . 'includes/js/edd-ajax.js');
@@ -18,6 +24,7 @@ function edd_load_scripts() {
 				'ajax_nonce' => wp_create_nonce( 'edd_ajax_nonce' ),
 				'no_discount' => __('Please enter a discount code', 'edd'), // blank discount code message
 				'discount_applied' => __('Discount Applied', 'edd'), // discount verified message
+				'position_in_cart' => isset($position) ? $position : -1,
 				'already_in_cart_message' => __('You have already added this item to your cart', 'edd'), // item already in the cart message
 				'empty_cart_message' => __('Your cart is empty', 'edd'), // item already in the cart message
 				'loading' => __('Loading', 'edd') , // general loading message
