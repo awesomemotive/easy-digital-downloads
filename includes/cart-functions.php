@@ -87,6 +87,26 @@ function edd_item_in_cart($download_id) {
 }
 
 /*
+* Gets the position of an item in the cart
+* Uses edd_get_cart_contents()
+* @param - $download_id INT the ID number of the download to find
+* @param - $cart_key INT the cart key to find
+* return - $position INT position of the item in the cart
+*/
+function edd_get_item_position_in_cart($download_id) {
+	$cart_items = edd_get_cart_contents();
+	if(!is_array($cart_items)) {
+		return false; // empty cart
+	} else {
+		foreach($cart_items as $postion => $item) {
+			if($item['id'] == $download_id) {
+				return $postion;
+			}
+		}
+	}
+}
+
+/*
 * Gets the quanity for an item in the cart
 * Paramter - $item INT the download (cart item) ID number
 * Return - INT - number of this item in the cart
