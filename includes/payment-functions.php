@@ -80,7 +80,7 @@ function edd_insert_payment($payment_data = array()) {
 		// clear the user's purchased cache
 		delete_transient('edd_user_' . $payment_data['user_info']['id'] . '_purchases');
 		
-		do_action('edd_insert_payment', $payment_data);		
+		do_action('edd_insert_payment', $payment, $payment_data);		
 		
 		return $payment; // return the ID
 	}
