@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.3.2
-Stable Tag: 1.0.7.1
+Stable Tag: 1.0.7.2
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
@@ -89,6 +89,16 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 
 
 == Changelog ==
+
+= 1.0.7.2 =
+
+* Added a new EDD Categories / Tags widget
+* Removed duplicated code from payments history page
+* Fixed a major bug that made it impossible to safely update orders
+* Added user's IP address to payment meta
+* Added localization to the default page titles created during install
+* Removed old stripe.js code that is no longer used
+* Added an enhancement to the cart widget that causes the "Purchase" button to reset when removing an item from the cart
 
 = 1.0.7.1 =
 
@@ -217,6 +227,16 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.0.7.2 =
+
+* Added a new EDD Categories / Tags widget
+* Removed duplicated code from payments history page
+* Fixed a major bug that made it impossible to safely update orders
+* Added user's IP address to payment meta
+* Added localization to the default page titles created during install
+* Removed old stripe.js code that is no longer used
+* Added an enhancement to the cart widget that causes the "Purchase" button to reset when removing an item from the cart
 
 = 1.0.7.1 =
 
