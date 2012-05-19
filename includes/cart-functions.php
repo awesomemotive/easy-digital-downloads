@@ -17,7 +17,7 @@
  *
  * @access      public
  * @since       1.0 
- * @return      array
+ * @return      array | false
 */
 
 function edd_get_cart_contents() {

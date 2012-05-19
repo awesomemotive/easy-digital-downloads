@@ -9,6 +9,13 @@
  * @since       1.0 
 */
 
+/**
+ * Get Checkout Form
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      string
+*/
 
 function edd_checkout_form() {
 
@@ -215,6 +222,15 @@ function edd_checkout_form() {
 	return ob_get_clean();
 }
 
+
+/**
+ * Get CC Form
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_get_cc_form() {
 	ob_start(); ?>
 	
@@ -251,7 +267,17 @@ function edd_get_cc_form() {
 }
 add_action('edd_cc_form', 'edd_get_cc_form');
 
-// outputs the default credit card address fields
+
+/**
+ * Default CC Address fields
+ *
+ * Outputs the default credit card address fields
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_default_cc_address_fields() {
 	ob_start(); ?>
 	<fieldset id="edd_cc_address" class="cc-address">
@@ -281,6 +307,15 @@ function edd_default_cc_address_fields() {
 	echo ob_get_clean();
 }
 add_action('edd_cc_form_address_fields', 'edd_default_cc_address_fields');
+
+
+/**
+ * Get Register Fields
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      string
+*/
 
 function edd_get_register_fields() {
 	global $edd_options;
@@ -322,6 +357,15 @@ function edd_get_register_fields() {
 	return ob_get_clean();
 }
 
+
+/**
+ * Get Login Fields
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      string
+*/
+
 function edd_get_login_fields() {
 	ob_start(); ?>
 		<fieldset id="edd_login_fields">
@@ -347,7 +391,16 @@ function edd_get_login_fields() {
 	return ob_get_clean();
 }
 
-function edd_show_payment_iconos() {
+
+/**
+ * Show Payment Icons
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
+function edd_show_payment_icons() {
 	global $edd_options;
 	if(isset($edd_options['accepted_cards'])) {
 		foreach($edd_options['accepted_cards'] as $key => $card) {
@@ -355,9 +408,17 @@ function edd_show_payment_iconos() {
 		}
 	}
 }
-add_action('edd_payment_mode_top', 'edd_show_payment_iconos');
-add_action('edd_before_purchase_form', 'edd_show_payment_iconos');
+add_action('edd_payment_mode_top', 'edd_show_payment_icons');
+add_action('edd_before_purchase_form', 'edd_show_payment_icons');
 
+
+/**
+ * Agree To Terms JS
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_agree_to_terms_js() {
 	global $edd_options;
