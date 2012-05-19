@@ -113,6 +113,12 @@ function edd_remove_item_url($cart_key, $post, $ajax = false) {
 	return apply_filters('edd_remove_item_url', $remove_url);
 }
 
+/*
+* Adds an action to the end of download post content that can be hooked to by other functions
+* @since v1.0.8
+* @param $content string the the_content field of the download object
+* @return $content string the content with any additional data attached
+*/
 function edd_after_download_content($content) {
 	global $post;
 	if($post->post_type == 'download' && is_singular() && is_main_query()) {

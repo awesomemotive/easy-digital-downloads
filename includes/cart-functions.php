@@ -261,6 +261,11 @@ function edd_add_collection_to_cart($taxonomy, $terms) {
 	return $cart_item_ids;
 }
 
+/*
+* Shows an alert message when an item is added to the cart (only when ajax is disabled) 
+* @since v1.0.8
+* @param $download_id INT the ID number of the download added to the cart
+*/
 function edd_show_added_to_cart_messages($download_id) {
 	if( isset( $_POST['edd_action'] ) && $_POST['edd_action'] == 'add_to_cart' ) {
 		$alert = sprintf( __('You have successfully added %s to your shopping cart.', 'edd'), get_the_title( $download_id ) );
@@ -268,6 +273,11 @@ function edd_show_added_to_cart_messages($download_id) {
 	}
 }
 add_action('edd_after_download_content', 'edd_show_added_to_cart_messages');
+
+function edd_get_checkout_uri() {
+    global $edd_options;
+    return isset( $edd_options['purchase_page'] ) ? get_permalink($edd_options['purchase_page']) : '';
+}
 
 /*
 * Empties the cart
