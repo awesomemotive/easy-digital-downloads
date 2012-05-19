@@ -3,7 +3,7 @@
  * Dashboard Columns
  *
  * @package     Easy Digital Downloads
- * @subpackage  Admin
+ * @subpackage  Dashboard Columns
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0 
@@ -13,7 +13,7 @@
 /**
  * Donwload Columns
  *
- * Define the custom columns and the order of the columns.
+ * Defines the custom columns and their order.
  *
  * @access      private
  * @since       1.0 
@@ -39,7 +39,7 @@ add_filter('manage_edit-download_columns', 'edd_download_columns');
 /**
  * Render Donwload Columns
  *
- * Render the custom column content.
+ * Render the custom columns content.
  *
  * @access      private
  * @since       1.0 
@@ -105,13 +105,13 @@ add_filter( 'manage_edit-download_sortable_columns', 'edd_sortable_download_colu
 */
 
 function edd_sort_downloads( $vars ) {
-	// Check if we're viewing the 'movie' post type
+	// check if we're viewing the "movie" post type
 	if ( isset( $vars['post_type'] ) && 'download' == $vars['post_type'] ) {
 
-		// Check if 'orderby' is set to 'sales'
+		// check if 'orderby' is set to "sales"
 		if ( isset( $vars['orderby'] ) && isset( $vars['sales'] ) && 'sales' == $vars['sales'] ) {
 
-			// Merge the query vars with our custom variables
+			// merge the query vars with our custom variables
 			$vars = array_merge(
 				$vars,
 				array(
@@ -121,10 +121,10 @@ function edd_sort_downloads( $vars ) {
 			);
 		}
 		
-		// Check if 'orderby' is set to 'earnings'
+		// check if "orderby" is set to "earnings"
 		if ( isset( $vars['orderby'] ) && isset( $vars['earnings'] ) && 'earnings' == $vars['earnings'] ) {
 
-			// Merge the query vars with our custom variables
+			// merge the query vars with our custom variables
 			$vars = array_merge(
 				$vars,
 				array(
@@ -158,7 +158,7 @@ add_action( 'load-edit.php', 'edd_download_load' );
 /**
  * Add Download Filters
  *
- * add taxonomy drop down filters for downloads
+ * Add taxonomy drop down filters for downloads.
  *
  * @access      private
  * @since       1.0 

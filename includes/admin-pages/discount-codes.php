@@ -84,7 +84,7 @@ function edd_discounts_page() {
 										if(isset($discount['max'])) {
 											echo $discount['max'] == '' ? __('unlimited', 'edd') : $discount['max'];  
 										} else {
-											echo __('unlimited', 'edd');
+											_e('unlimited', 'edd');
 										}
 									?>
 								</td>
