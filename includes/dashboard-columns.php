@@ -3,13 +3,23 @@
  * Dashboard Columns
  *
  * @package     Easy Digital Downloads
- * @subpackage  Admin
+ * @subpackage  Dashboard Columns
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0 
 */
 
-// define the custom columns and the order of the columns
+
+/**
+ * Donwload Columns
+ *
+ * Defines the custom columns and their order.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      array
+*/
+
 function edd_download_columns($download_columns){
 	$download_columns = array(
 		'cb' => '<input type="checkbox"/>',
@@ -26,7 +36,16 @@ function edd_download_columns($download_columns){
 add_filter('manage_edit-download_columns', 'edd_download_columns');
 
 
-// render the custom column content
+/**
+ * Render Donwload Columns
+ *
+ * Render the custom columns content.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_render_download_columns($column_name, $post_id) {
 	if(get_post_type($post_id) == 'download') {
 		
@@ -54,6 +73,17 @@ function edd_render_download_columns($column_name, $post_id) {
 }
 add_action('manage_posts_custom_column', 'edd_render_download_columns', 10, 2);
 
+
+/**
+ * Sortable Donwload Columns
+ *
+ * Set the sortable columns content.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      array
+*/
+
 function edd_sortable_download_columns( $columns ) {
 
 	$columns['sales'] = 'sales';
@@ -64,15 +94,24 @@ function edd_sortable_download_columns( $columns ) {
 add_filter( 'manage_edit-download_sortable_columns', 'edd_sortable_download_columns' );
 
 
-/* Sorts the downloads */
+/**
+ * Sorts Downloads
+ *
+ * Sorts the downloads.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      array
+*/
+
 function edd_sort_downloads( $vars ) {
-	/* Check if we're viewing the 'movie' post type. */
+	// check if we're viewing the "movie" post type
 	if ( isset( $vars['post_type'] ) && 'download' == $vars['post_type'] ) {
 
-		/* Check if 'orderby' is set to 'sales'. */
+		// check if 'orderby' is set to "sales"
 		if ( isset( $vars['orderby'] ) && isset( $vars['sales'] ) && 'sales' == $vars['sales'] ) {
 
-			/* Merge the query vars with our custom variables. */
+			// merge the query vars with our custom variables
 			$vars = array_merge(
 				$vars,
 				array(
@@ -82,10 +121,10 @@ function edd_sort_downloads( $vars ) {
 			);
 		}
 		
-		/* Check if 'orderby' is set to 'earnings'. */
+		// check if "orderby" is set to "earnings"
 		if ( isset( $vars['orderby'] ) && isset( $vars['earnings'] ) && 'earnings' == $vars['earnings'] ) {
 
-			/* Merge the query vars with our custom variables. */
+			// merge the query vars with our custom variables
 			$vars = array_merge(
 				$vars,
 				array(
@@ -98,15 +137,38 @@ function edd_sort_downloads( $vars ) {
 
 	return $vars;
 }
+
+
+/**
+ * Download Load
+ *
+ * Sorts the downloads.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_download_load() {
 	add_filter( 'request', 'edd_sort_downloads' );
 }
 add_action( 'load-edit.php', 'edd_download_load' );
 
 
-// add taxonomy drop down filters for downloads
+/**
+ * Add Download Filters
+ *
+ * Add taxonomy drop down filters for downloads.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_add_download_filters() {
-	global $typenow; 			// the current post type
+	global $typenow;
+	
+	// the current post type
 	if($typenow == 'download') {
 		
 		$terms = get_terms('download_category');

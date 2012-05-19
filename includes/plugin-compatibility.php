@@ -15,7 +15,7 @@
 /**
  * Remove Restrict Meta Box
  *
- * emoves the "Restrict This Content" meta box from Restrict Content Pro.
+ * Removes the "Restrict This Content" meta box from Restrict Content Pro.
  *
  * @access      private
  * @since       1.0 

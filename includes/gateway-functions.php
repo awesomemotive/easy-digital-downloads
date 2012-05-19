@@ -9,7 +9,17 @@
  * @since       1.0 
 */
 
-// returns a list of all available gateways
+
+/**
+ * Get Payment Gateways
+ *
+ * Rreturns a list of all available gateways.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      array
+*/
+
 function edd_get_payment_gateways() {
 	
 	// default, built-in gateways
@@ -23,7 +33,17 @@ function edd_get_payment_gateways() {
 	return $gateways;
 }
 
-// returns a list of all enabled gateways
+
+/**
+ * Get Enabled Payment Gateways
+ *
+ * Returns a list of all enabled gateways.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      array
+*/
+
 function edd_get_enabled_payment_gateways() {
 	global $edd_options;
 	$gateways = edd_get_payment_gateways();
@@ -37,12 +57,18 @@ function edd_get_enabled_payment_gateways() {
 	return $gateway_list;
 }
 
-/*
-* Checks whether a specified gateway is activated
-* * Uses edd_get_enabled_payment_gateways()
-* Parameter - string The ID name of the gateway to check for
-* Return bool - true if enabled, false otherwise
+
+/**
+ * Is Gateway Active
+ *
+ * Checks whether a specified gateway is activated.
+ *
+ * @access      public
+ * @since       1.0 
+ * @param       string - The ID name of the gateway to check for
+ * @return      boolean - true if enabled, false otherwise
 */
+
 function edd_is_gateway_active($gateway) {
 	$gateways = edd_get_enabled_payment_gateways();
 	if(array_key_exists($gateway, $gateways)) {
@@ -52,7 +78,16 @@ function edd_is_gateway_active($gateway) {
 }
 
 
-// sends the registration data to the specified gateway
+/**
+ * Send to Gateway
+ *
+ * Sends the registration data to the specified gateway.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_send_to_gateway($gateway, $payment_data) {
 	// $gateway must match the ID used when registering the gateway
 	do_action('edd_gateway_' . $gateway, $payment_data);

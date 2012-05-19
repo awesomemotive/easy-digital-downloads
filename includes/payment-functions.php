@@ -9,7 +9,17 @@
  * @since       1.0 
 */
 
-// retrieve payments from the database
+
+/**
+ * Get Payments
+ *
+ * Retrieve payments from the database.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      object
+*/
+
 function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby = 'ID', $order = 'DESC' ) {
 	$payment_args = array(
 		'post_type' => 'edd_payment', 
@@ -28,7 +38,17 @@ function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby =
 	return false;
 }
 
-// returns the total number of payments recorded
+
+/**
+ * Count Payments
+ *
+ * Returns the total number of payments recorded.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      integer
+*/
+
 function edd_count_payments($mode) {
 	$payments = edd_get_payments(0, -1, $mode);
 	$count = 0;
@@ -37,6 +57,15 @@ function edd_count_payments($mode) {
 	}
 	return $count;
 }
+
+
+/**
+ * Insert Payment
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_insert_payment($payment_data = array()) {
 
@@ -98,7 +127,17 @@ function edd_insert_payment($payment_data = array()) {
 	return false;
 }
 
-// updates a payment status, and performs all necessary functions to mark it as complete, and to finish a purchase
+
+/**
+ * Update Payment Status
+ *
+ * Updates a payment status, and performs all necessary functions to mark it as complete, and to finish a purchase.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_update_payment_status($payment_id, $status = 'publish') {
 	
 	if($status == 'completed' || $status == 'complete') {
@@ -145,6 +184,15 @@ function edd_update_payment_status($payment_id, $status = 'publish') {
 	do_action('edd_update_payment_status', $payment_id, $status);
 }
 
+
+/**
+ * Check For Existing Payment
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      boolean
+*/
+
 function edd_check_for_existing_payment($payment_id) {
 	$payment = get_post($payment_id);
 	if($payment && $payment->post_status == 'publish') {
@@ -153,7 +201,17 @@ function edd_check_for_existing_payment($payment_id) {
 	return false; // this payment doesn't exist
 }
 
-// retrieves the status of a payment
+
+/**
+ * Get Payment Status
+ *
+ * Retrieves the status of a payment.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      string
+*/
+
 function edd_get_payment_status($payment = OBJECT) {
 	if(!is_object($payment))
 		return;
@@ -170,6 +228,14 @@ function edd_get_payment_status($payment = OBJECT) {
 	endswitch;
 }
 
+
+/**
+ * Get Earnings By Date
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      integer
+*/
 
 function edd_get_earnings_by_date($month_num, $year) {
 	$sales = get_posts(
@@ -193,12 +259,18 @@ function edd_get_earnings_by_date($month_num, $year) {
 	return $total;
 }
 
-/*
-* Checks whether a payment has been marked as complete
-* @since v1.0.8
-* @param $payment_id INT the ID number of the payment to check
-* @return bool true if complete, false otherwise
+
+/**
+ * Is Payment Complete
+ *
+ * Checks whether a payment has been marked as complete.
+ *
+ * @access      public
+ * @since       1.0.8
+ * @param       $payment_id INT the ID number of the payment to check
+ * @return      boolean true if complete, false otherwise
 */
+
 function edd_is_payment_complete($payment_id) {
 	$payment = get_post($payment_id);
 	if( $payment )

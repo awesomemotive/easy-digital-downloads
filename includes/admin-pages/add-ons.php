@@ -37,25 +37,3 @@ function edd_add_ons_page() {
 	<?php
 	echo ob_get_clean();
 }
-
-
-/**
- * To Array
- *
- * Converts XML into an array.
- *
- * @access      public
- * @since       1.0
- * @return      array
-*/
-
-function toArray($xml) {
-	$array = json_decode(json_encode($xml), TRUE);
-	
-	foreach ( array_slice($array, 0) as $key => $value ) {
-		if ( empty($value) ) $array[$key] = NULL;
-		elseif ( is_array($value) ) $array[$key] = toArray($value);
-	}
-
-	return $array;
-}

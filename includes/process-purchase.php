@@ -43,7 +43,6 @@ function edd_process_purchase_form() {
 		if(isset($_POST['edd-purchase-var']) && $_POST['edd-purchase-var'] == 'needs-to-register') {
 			
 			// check the new user's credentials against existing ones
-			
 			$user_login		= isset($_POST["edd_user_login"]) ? $_POST["edd_user_login"] : '';	
 			$user_pass		= isset($_POST["edd_user_pass"]) ? $_POST["edd_user_pass"] : '';
 			$user_email		= isset($_POST['edd_email']) ? $_POST['edd_email'] : '';
