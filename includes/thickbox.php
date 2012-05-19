@@ -49,7 +49,6 @@ function edd_admin_footer_for_thickbox() {
 	global $pagenow, $typenow;
 
 	// Only run in post/page creation and edit screens
-		
 	if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow != 'download' ) {
 		$downloads = get_posts(array('post_type' => 'download', 'posts_per_page' => -1));
 		

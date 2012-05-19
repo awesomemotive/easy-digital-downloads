@@ -10,6 +10,14 @@
 */
 
 
+/**
+ * Edd Login Form
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      string
+*/
+
 function edd_login_form($redirect = '') {
 	global $edd_options, $post;
 
@@ -63,6 +71,15 @@ function edd_login_form($redirect = '') {
 	return ob_get_clean();
 }
 
+
+/**
+ * Edd Process Login Form
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_process_login_form($data) {
 	if(wp_verify_nonce($data['edd_login_nonce'], 'edd-login-nonce')) {
 		$user_data = get_user_by('login', $data['edd_user_login']);
@@ -85,6 +102,15 @@ function edd_process_login_form($data) {
 	}
 }
 add_action('edd_user_login', 'edd_process_login_form');
+
+
+/**
+ * Edd Log User In
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_log_user_in($user_id, $user_login, $user_pass) {
 	wp_set_auth_cookie($user_id);

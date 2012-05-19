@@ -1,9 +1,9 @@
 <?php
 /**
- * Install
+ * Install Function
  *
  * @package     Easy Digital Downloads
- * @subpackage  Install
+ * @subpackage  Install Function
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0 
@@ -23,9 +23,9 @@
 function edd_install() {
 	global $wpdb, $edd_options;
 	
-	// Check if the purchase page option exists
+	// check if the purchase page option exists
 	if(!isset($edd_options['purchase_page'])) {
-	    // Checkout
+	    // checkout
 		$checkout = wp_insert_post(
 			array(
 				'post_title' => __('Checkout', 'edd'),
@@ -35,7 +35,7 @@ function edd_install() {
 				'post_type' => 'page'
 			)
 		);
-		// Success
+		// success
 		$success = wp_insert_post(
 			array(
 				'post_title' => __('Purchase Confirmation', 'edd'),
@@ -45,7 +45,7 @@ function edd_install() {
 				'post_type' => 'page'
 			)
 		);
-		// History
+		// history
 		$history = wp_insert_post(
 			array(
 				'post_title' => __('Purchase History', 'edd'),
@@ -57,13 +57,13 @@ function edd_install() {
 		);
 	}
 	
-	// Setup the download custom post type
+	// setup the download custom post type
 	edd_setup_download_post_type();
 	
-	// Setup the download custom taxonomies
+	// setup the download custom taxonomies
 	edd_setup_download_taxonomies();
 	
-	// Clear permalinks
+	// clear permalinks
 	flush_rewrite_rules();
 }
 register_activation_hook(EDD_PLUGIN_FILE, 'edd_install');
