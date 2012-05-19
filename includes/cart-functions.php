@@ -261,6 +261,14 @@ function edd_add_collection_to_cart($taxonomy, $terms) {
 	return $cart_item_ids;
 }
 
+function edd_show_added_to_cart_messages($download_id) {
+	if( isset( $_POST['edd_action'] ) && $_POST['edd_action'] == 'add_to_cart' ) {
+		$alert = sprintf( __('You have successfully added %s to your shopping cart.', 'edd'), get_the_title( $download_id ) );
+		echo '<div class="edd_added_to_cart_alert">' . $alert . '</div>';
+	}
+}
+add_action('edd_after_download_content', 'edd_show_added_to_cart_messages');
+
 /*
 * Empties the cart
 */

@@ -30,6 +30,7 @@ function edd_get_purchase_link($download_id = null, $link_text = null, $style = 
 	if(is_null($color)) {		
 		$color = get_post_meta($post->ID, '_edd_purchase_color', true) ? str_replace(' ', '_', get_post_meta($post->ID, '_edd_purchase_color', true)) : 'blue';
 	}
+	
 	$purchase_form = '<form id="edd_purchase_' . $download_id . '" class="edd_download_purchase_form" action="" method="POST">';
 		
 		if($variable_pricing) {
@@ -111,6 +112,17 @@ function edd_remove_item_url($cart_key, $post, $ajax = false) {
 	$remove_url = add_query_arg('cart_item', $cart_key, add_query_arg('edd_action', 'remove', $current_page));
 	return apply_filters('edd_remove_item_url', $remove_url);
 }
+
+function edd_after_download_content($content) {
+	global $post;
+	if($post->post_type == 'download' && is_singular() && is_main_query()) {
+		ob_start();
+			do_action('edd_after_download_content', $download_id);
+		$content .= ob_get_clean();
+	}
+	return $content;
+}
+add_filter('the_content', 'edd_after_download_content');
 
 function edd_filter_success_page_content($content) {
 	

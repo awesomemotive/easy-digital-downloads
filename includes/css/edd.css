@@ -50,13 +50,14 @@
 #edd_registration_form label { display: inline-block; width: 200px; }
 
 /****************************************
-* Purchase buttons
+* Alerts
 ****************************************/
-input.edd_submit_plain { background: none!important; border: none!important; padding: none!important; display: inline; cursor: pointer; }
+.edd_added_to_cart_alert { padding: 5px; font-size: 14px;  border: 1px solid #046a9e; background: #9ecce2; color: #333; margin: 8px 0;}
 
 /****************************************
 * Purchase buttons
 ****************************************/
+input.edd_submit_plain { background: none!important; border: none!important; padding: none!important; display: inline; cursor: pointer; }
 
 /* general */
 .edd_button { 
