@@ -1,4 +1,24 @@
 <?php
+/**
+ * Options Page
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Options Page
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+
+
+/**
+ * Options Page
+ *
+ * Renders the options page contents.
+ *
+ * @access      private
+ * @since       1.0
+ * @return      void
+*/
 
 function edd_options_page() {
 

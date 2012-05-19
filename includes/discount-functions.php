@@ -1,4 +1,13 @@
 <?php
+/**
+ * Discount Functions
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Discount Functions
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
 
 // retrieves an array of all available discount codes
 function edd_get_discounts() {

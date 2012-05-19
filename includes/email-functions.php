@@ -1,4 +1,13 @@
 <?php
+/**
+ * Email Functions
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Email Functions
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
 
 // email the download link and payment confirmation to the buyer
 function edd_email_download_link($payment_id, $admin_notice = true) {

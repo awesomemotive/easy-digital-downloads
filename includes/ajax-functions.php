@@ -1,10 +1,27 @@
 <?php
+/**
+ * AJAX Functions
+ *
+ * Process the front-end AJAX actions.
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  AJAX
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
 
-/****************************************************
-* Ajax actions from the frontend are processed here
-****************************************************/
 
-// checks whether ajax is enabled
+/**
+ * AJAX enabled
+ *
+ * Checks whether AJAX is enabled.
+ *
+ * @access      private
+ * @since       1.0
+ * @return      boolean
+*/
+
 function edd_is_ajax_enabled() {
 	global $edd_options;
 	if(isset($edd_options['ajax_cart'])) {
@@ -12,6 +29,17 @@ function edd_is_ajax_enabled() {
 	}
 	return false;
 }
+
+
+/**
+ * AJAX Remove From Cart
+ *
+ * Removes item from cart.
+ *
+ * @access      private
+ * @since       1.0
+ * @return      string
+*/
 
 function edd_ajax_remove_from_cart() {
 	if(isset($_POST['cart_item']) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' )) {
@@ -22,6 +50,17 @@ function edd_ajax_remove_from_cart() {
 }
 add_action('wp_ajax_edd_remove_from_cart', 'edd_ajax_remove_from_cart');
 add_action('wp_ajax_nopriv_edd_remove_from_cart', 'edd_ajax_remove_from_cart');
+
+
+/**
+ * AJAX Add To Cart
+ *
+ * Adds item to the cart.
+ *
+ * @access      private
+ * @since       1.0
+ * @return      string
+*/
 
 function edd_ajax_add_to_cart() {
 	if(isset($_POST['download_id']) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' )) {
@@ -39,6 +78,17 @@ function edd_ajax_add_to_cart() {
 }
 add_action('wp_ajax_edd_add_to_cart', 'edd_ajax_add_to_cart');
 add_action('wp_ajax_nopriv_edd_add_to_cart', 'edd_ajax_add_to_cart');
+
+
+/**
+ * AJAX Validate Discount
+ *
+ * Validates the supplied discount.
+ *
+ * @access      private
+ * @since       1.0
+ * @return      string
+*/
 
 function edd_ajax_validate_discount() {
 	if(isset($_POST['code']) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' )) {
@@ -65,17 +115,49 @@ function edd_ajax_validate_discount() {
 add_action('wp_ajax_edd_apply_discount', 'edd_ajax_validate_discount');
 add_action('wp_ajax_nopriv_edd_apply_discount', 'edd_ajax_validate_discount');
 
+
+/**
+ * Load Checkout Login Fields
+ *
+ * Echoes the login fields
+ *
+ * @access      private
+ * @since       1.0
+ * @return      void
+*/
+
 function edd_load_checkout_login_fields() {
 	echo edd_get_login_fields(); die();
 }
 add_action('wp_ajax_nopriv_checkout_login', 'edd_load_checkout_login_fields');
+
+
+/**
+ * Load Checkout Register Fields
+ *
+ * Echoes the register fields
+ *
+ * @access      private
+ * @since       1.0
+ * @return      void
+*/
 
 function edd_load_checkout_register_fields() {
 	echo edd_get_register_fields(); die();
 }
 add_action('wp_ajax_nopriv_checkout_register', 'edd_load_checkout_register_fields');
 
-// used only in the admin
+
+/**
+ * Get Download Title
+ *
+ * Used only in the admin
+ *
+ * @access      private
+ * @since       1.0
+ * @return      string
+*/
+
 function edd_ajax_get_download_title() {
 	if(isset($_POST['download_id'])) {
 		$title = get_the_title($_POST['download_id']);

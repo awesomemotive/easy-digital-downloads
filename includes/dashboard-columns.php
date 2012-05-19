@@ -1,4 +1,13 @@
 <?php
+/**
+ * Dashboard Columns
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Admin
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
 
 // define the custom columns and the order of the columns
 function edd_download_columns($download_columns){

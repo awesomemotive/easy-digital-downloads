@@ -1,10 +1,28 @@
 <?php
+/**
+ * Register Settings
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Register Settings
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+
+
+/**
+ * Register Settings
+ *
+ * Registers the required settings.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_register_settings() {
 	
-	/********************************
-	* setup some default option sets
-	********************************/
+	// setup some default option sets
 	$pages = get_pages();	
 	$pages_options = array();
 	if($pages) {
@@ -13,8 +31,8 @@ function edd_register_settings() {
 		}
 	}
 	
-	// white list our settings, each in their respective section
-	// filters can be used to add more options to each section
+	/* white list our settings, each in their respective section
+	   filters can be used to add more options to each section */
 	$edd_settings = array(
 		'general' => apply_filters('edd_settings_general', 
 			array(
@@ -396,32 +414,107 @@ function edd_register_settings() {
 }
 add_action('admin_init', 'edd_register_settings');
 
+
+/**
+ * Settings General Description Callback
+ *
+ * Renders the general section description.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_settings_general_description_callback() {
 	//echo __('Configure the settings below', 'edd');
 }
+
+
+/**
+ * Settings Gateways Description Callback
+ *
+ * Renders the gateways section description.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_settings_gateways_description_callback() {
 	//echo __('Configure the settings below', 'edd');
 }
 
+
+/**
+ * Settings Emails Description Callback
+ *
+ * Renders the emails section description.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_settings_emails_description_callback() {
 	//echo __('Configure the settings below', 'edd');
 }
+
+
+/**
+ * Settings Styles Description Callback
+ *
+ * Renders the styles section description.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_settings_styles_description_callback() {
 	//echo __('Configure the settings below', 'edd');
 }
 
+
+/**
+ * Settings Misc Description Callback
+ *
+ * Renders the misc section description.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_settings_misc_description_callback() {
 	//echo __('Configure the settings below', 'edd');
 }
 
-// render header
+
+/**
+ * Header Callback
+ *
+ * Renders the header.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_header_callback($args) { 
     echo '';  
 }
 
-// render checkboxes
+
+/**
+ * Checkbox Callback
+ *
+ * Renders checkboxes.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_checkbox_callback($args) { 
  
 	global $edd_options;
@@ -434,7 +527,17 @@ function edd_checkbox_callback($args) {
  
 }
 
-// render multiple checkboxes
+
+/**
+ * Multicheck Callback
+ *
+ * Renders multiple checkboxes.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_multicheck_callback($args) { 
  
 	global $edd_options;
@@ -448,7 +551,17 @@ function edd_multicheck_callback($args) {
 
 }
 
-// render gateway checkboxes
+
+/**
+ * Gateways Callback
+ *
+ * Renders gateways fields.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_gateways_callback($args) { 
  
 	global $edd_options;
@@ -461,7 +574,17 @@ function edd_gateways_callback($args) {
 
 }
 
-// render text fields
+
+/**
+ * Text Callback
+ *
+ * Renders text fields.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_text_callback($args) { 
  
 	global $edd_options;
@@ -475,7 +598,17 @@ function edd_text_callback($args) {
  
 }
 
-// render select fields
+
+/**
+ * Select Callback
+ *
+ * Renders select fields.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_select_callback($args) { 
  
 	global $edd_options;
@@ -491,7 +624,17 @@ function edd_select_callback($args) {
  
 }
 
-// render rich editor fields
+
+/**
+ * Rich Editor Callback
+ *
+ * Renders rich editor fields.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_rich_editor_callback($args) { 
  
 	global $edd_options, $wp_version;
@@ -508,7 +651,18 @@ function edd_rich_editor_callback($args) {
  
 }
 
-// retrieves all plugin settings and returns them as a combined array
+
+/**
+ * Get Settings
+ *
+ * Retrieves all plugin settings and returns them 
+ * as a combined array.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      array
+*/
+
 function edd_get_settings() {
 	$page_settings = is_array(get_option('edd_settings_general')) ? get_option('edd_settings_general') : array();
 	$gateway_settings = is_array(get_option('edd_settings_gateways')) ? get_option('edd_settings_gateways') : array();

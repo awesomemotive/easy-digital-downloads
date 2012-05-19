@@ -1,4 +1,24 @@
 <?php
+/**
+ * Process Purchase
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Process Purchase
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+
+
+/**
+ * Process Purchase Form
+ *
+ * Handles the purchase form process.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_process_purchase_form() {
 	if(isset($_POST['edd-action']) && $_POST['edd-action'] == 'purchase' && wp_verify_nonce($_POST['edd-nonce'], 'edd-purchase-nonce')) {
@@ -156,6 +176,17 @@ function edd_process_purchase_form() {
 }
 add_action('init', 'edd_process_purchase_form');
 
+
+/**
+ * Send To Success Page
+ *
+ * Sends the user to the succes page.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_send_to_success_page($query_string = null) {
 	global $edd_options;
 	$redirect = get_permalink($edd_options['success_page']);
@@ -164,7 +195,18 @@ function edd_send_to_success_page($query_string = null) {
 	wp_redirect($redirect); exit;
 }
 
-// used to redirect a user back to the purchase page if there are errors present
+
+/**
+ * Send Back to Checkout
+ *
+ * Used to redirect a user back to the purchase 
+ * page if there are errors present.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_send_back_to_checkout($query_string = null) {
 	global $edd_options;
 	$redirect = get_permalink($edd_options['purchase_page']);
@@ -172,6 +214,17 @@ function edd_send_back_to_checkout($query_string = null) {
 		$redirect .= $query_string;
 	wp_redirect($redirect); exit;
 }
+
+
+/**
+ * Get Success Page URL
+ *
+ * Gets the success page URL.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      string
+*/
 
 function edd_get_success_page_url($query_string = null) {
 	global $edd_options;

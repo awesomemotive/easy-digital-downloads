@@ -1,6 +1,26 @@
 <?php
+/**
+ * Payment Actions
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Payment Actions
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
 
-// updates the purchase data for a payment. Used primarily for adding new downloads to a purchase
+
+/**
+ * Update Edited Purchase
+ *
+ * Updates the purchase data for a payment. 
+ * Used primarily for adding new downloads to a purchase.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_update_edited_purchase($data) {
 	if(wp_verify_nonce($data['edd-payment-nonce'], 'edd_payment_nonce')) {
 		$payment_id = $_POST['payment-id'];
@@ -27,7 +47,15 @@ function edd_update_edited_purchase($data) {
 }
 add_action('edd_edit_payment', 'edd_update_edited_purchase');
 
-// removes a payment
+
+/**
+ * Delete Purchase
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_delete_purchase($data) {
 	if(wp_verify_nonce($data['_wpnonce'], 'edd_payment_nonce')) {
 		$payment_id = $data['purchase_id'];
