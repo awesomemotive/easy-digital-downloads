@@ -11,7 +11,7 @@
 
 
 /**
- * Edd Login Form
+ * Login Form
  *
  * @access      private
  * @since       1.0 
@@ -73,7 +73,7 @@ function edd_login_form($redirect = '') {
 
 
 /**
- * Edd Process Login Form
+ * Process Login Form
  *
  * @access      private
  * @since       1.0 
@@ -105,7 +105,7 @@ add_action('edd_user_login', 'edd_process_login_form');
 
 
 /**
- * Edd Log User In
+ * Log User In
  *
  * @access      public
  * @since       1.0 
