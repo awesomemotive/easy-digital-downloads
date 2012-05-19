@@ -41,7 +41,7 @@ function edd_get_menu_access_level() {
 
 // checks whether an integer is odd
 function edd_is_odd( $int ) {
-	return( $int & 1 );
+	return (bool) ( $int & 1 );
 }
 
 function edd_get_currencies() {

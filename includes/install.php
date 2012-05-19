@@ -9,10 +9,23 @@
  * @since       1.0 
 */
 
+
+/**
+ * Install
+ *
+ * Runs on plugin install.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_install() {
 	global $wpdb, $edd_options;
 	
-	if(!isset($edd_options['purchase_page'])) {	
+	// Check if the purchase page option exists
+	if(!isset($edd_options['purchase_page'])) {
+	    // Checkout
 		$checkout = wp_insert_post(
 			array(
 				'post_title' => __('Checkout', 'edd'),
@@ -22,6 +35,7 @@ function edd_install() {
 				'post_type' => 'page'
 			)
 		);
+		// Success
 		$success = wp_insert_post(
 			array(
 				'post_title' => __('Purchase Confirmation', 'edd'),
@@ -31,6 +45,7 @@ function edd_install() {
 				'post_type' => 'page'
 			)
 		);
+		// History
 		$history = wp_insert_post(
 			array(
 				'post_title' => __('Purchase History', 'edd'),
@@ -41,10 +56,14 @@ function edd_install() {
 			)
 		);
 	}
+	
+	// Setup the download custom post type
 	edd_setup_download_post_type();
+	
+	// Setup the download custom taxonomies
 	edd_setup_download_taxonomies();
 	
-	// clear permalinks
+	// Clear permalinks
 	flush_rewrite_rules();
 }
 register_activation_hook(EDD_PLUGIN_FILE, 'edd_install');
