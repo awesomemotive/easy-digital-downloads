@@ -87,6 +87,26 @@ function edd_item_in_cart($download_id) {
 }
 
 /*
+* Gets the position of an item in the cart
+* Uses edd_get_cart_contents()
+* @param - $download_id INT the ID number of the download to find
+* @param - $cart_key INT the cart key to find
+* return - $position INT position of the item in the cart
+*/
+function edd_get_item_position_in_cart($download_id) {
+	$cart_items = edd_get_cart_contents();
+	if(!is_array($cart_items)) {
+		return false; // empty cart
+	} else {
+		foreach($cart_items as $postion => $item) {
+			if($item['id'] == $download_id) {
+				return $postion;
+			}
+		}
+	}
+}
+
+/*
 * Gets the quanity for an item in the cart
 * Paramter - $item INT the download (cart item) ID number
 * Return - INT - number of this item in the cart
@@ -239,6 +259,29 @@ function edd_add_collection_to_cart($taxonomy, $terms) {
 		}	
 	}
 	return $cart_item_ids;
+}
+
+/*
+* Shows an alert message when an item is added to the cart (only when ajax is disabled) 
+* @since v1.0.8
+* @param $download_id INT the ID number of the download added to the cart
+*/
+function edd_show_added_to_cart_messages($download_id) {
+	if( isset( $_POST['edd_action'] ) && $_POST['edd_action'] == 'add_to_cart' ) {
+		$alert = sprintf( __('You have successfully added %s to your shopping cart.', 'edd'), get_the_title( $download_id ) );
+		echo '<div class="edd_added_to_cart_alert">' . $alert . '</div>';
+	}
+}
+add_action('edd_after_download_content', 'edd_show_added_to_cart_messages');
+
+/*
+* Retrieves the URL of the checkout page
+* @since v1.0.8
+* @return mixed - the full URL to the checkout page, if present, NULL if it doesn't exist
+*/
+function edd_get_checkout_uri() {
+    global $edd_options;
+    return isset( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) : NULL;
 }
 
 /*

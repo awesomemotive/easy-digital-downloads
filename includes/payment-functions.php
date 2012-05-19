@@ -182,3 +182,17 @@ function edd_get_earnings_by_date($month_num, $year) {
 	}
 	return $total;
 }
+
+/*
+* Checks whether a payment has been marked as complete
+* @since v1.0.8
+* @param $payment_id INT the ID number of the payment to check
+* @return bool true if complete, false otherwise
+*/
+function edd_is_payment_complete($payment_id) {
+	$payment = get_post($payment_id);
+	if( $payment )
+		if( $payment->post_status == 'publish' )
+			return true;
+	return false;
+}

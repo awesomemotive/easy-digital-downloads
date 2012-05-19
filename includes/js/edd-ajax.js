@@ -14,6 +14,10 @@ jQuery(document).ready(function ($) {
 
         $.post(edd_scripts.ajaxurl, data, function (response) {
             if (response == 'removed') {
+                if ( parseInt(edd_scripts.position_in_cart,10) === parseInt(item,10) ) {
+                    window.location = window.location;
+                    return false;
+                }
                 $this.parent().remove();
                 var quantity = $('span.edd-cart-quantity').text();
                 quantity = parseInt(quantity, 10) - 1;
