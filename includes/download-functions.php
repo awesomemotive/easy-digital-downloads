@@ -9,7 +9,17 @@
  * @since       1.0 
 */
 
-// retrieves a download post object by ID or slug
+
+/**
+ * Get Download
+ *
+ * Retrieves a download post object by ID or slug.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      object
+*/
+
 function edd_get_download($download) {
 
 	if(is_numeric($download)) {
@@ -34,7 +44,17 @@ function edd_get_download($download) {
 	return null;
 }
 
-// retrieves a list of all purchases by a specific user
+
+/**
+ * Get Users Purchases
+ *
+ * Retrieves a list of all purchases by a specific user.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      array
+*/
+
 function edd_get_users_purchases($user_id) {
 	
 	$purchases = get_transient('edd_user_' . $user_id . '_purchases');
@@ -59,19 +79,27 @@ function edd_get_users_purchases($user_id) {
 		);
 		set_transient('edd_user_' . $user_id . '_purchases', $purchases, 7200);
 	}
-	if($purchases)
-		return $purchases; // return the download list
+	if($purchases) {
+	    // return the download list
+		return $purchases;
+	}
 	
 	// no downloads	
 	return false;	
 }
 
-/*
-* Checks to see if a user has purchased at least one item
-* Uses edd_get_users_purchases()
-* @param - $user_id int - the ID of the user to check
-* return bool - true if has purchased, false other wise
+
+/**
+ * Has Purchases
+ *
+ * Checks to see if a user has purchased at least one item.
+ *
+ * @access      public
+ * @since       1.0 
+ * @param       $user_id int - the ID of the user to check
+ * @return      bool - true if has purchased, false other wise.
 */
+
 function edd_has_purchases($user_id) {
 	if(edd_get_users_purchases($user_id)) {
 		return true; // user has at least one purchase
@@ -79,11 +107,18 @@ function edd_has_purchases($user_id) {
 	return false; // user has never purchased anything
 }
 
-/*
-* retrieves an array of all files purchased
-* @param int $payment_id - the ID number of the purchase
-* return mixed - array if purchase exists, false otherwise
+
+/**
+ * Get Downloads Of Purchase
+ *
+ * Retrieves an array of all files purchased.
+ *
+ * @access      public
+ * @since       1.0 
+ * @param       int $payment_id - the ID number of the purchase
+ * @return      mixed - array if purchase exists, false otherwise
 */
+
 function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
 	if(is_null($payment_meta)) {
 		$payment_meta = get_post_meta($payment_id, '_edd_payment_meta', true);
@@ -94,14 +129,21 @@ function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
 	return false;
 }
 
-/*
-* retrieves the price of a downloadable product after purchase
-* this price includes any necessary discounts that were applied
-* @param int $download_id - the ID of the download
-* @param array $user_purchase_info - an array of all information for the payment
-* @param string $amount_override a custom amount taht over rides the 'edd_price' meta, used for variable prices
-* return string - the price of the download
+
+/**
+ * Get Download Final Price
+ *
+ * retrieves the price of a downloadable product after purchase
+ * this price includes any necessary discounts that were applied.
+ *
+ * @access      public
+ * @since       1.0 
+ * @param       int $download_id - the ID of the download
+ * @param       array $user_purchase_info - an array of all information for the payment
+ * @param       string $amount_override a custom amount taht over rides the 'edd_price' meta, used for variable prices
+ * @return      string - the price of the download
 */
+
 function edd_get_download_final_price($download_id, $user_purchase_info, $amount_override = null) {
 	if(is_null($amount_override)) {
 		$original_price = get_post_meta($download_id, 'edd_price', true);
@@ -116,14 +158,34 @@ function edd_get_download_final_price($download_id, $user_purchase_info, $amount
 	return $price;
 }
 
-// returns the file extension of a filename
+
+/**
+ * Get File Extension
+ *
+ * Returns the file extension of a filename.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      string
+*/
+
 function edd_get_file_extension($str)
 {
    $parts = explode('.', $str);
    return end($parts);
 }
 
-// returns the total earnings for a download
+
+/**
+ * Get Download Earnings Stats
+ *
+ * Returns the total earnings for a download.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      integer
+*/
+
 function edd_get_download_earnings_stats($download_id) {
 	$earnings = get_post_meta($download_id, '_edd_download_earnings', true);
 	if($earnings)
@@ -131,7 +193,17 @@ function edd_get_download_earnings_stats($download_id) {
 	return 0;
 }
 
-// return the sales number for a download
+
+/**
+ * Get Download Sales Stats
+ *
+ * Return the sales number for a download.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      integer
+*/
+
 function edd_get_download_sales_stats($download_id) {
 	$sales = get_post_meta($download_id, '_edd_download_sales', true);
 	if($sales)
@@ -139,7 +211,17 @@ function edd_get_download_sales_stats($download_id) {
 	return 0;
 }
 
-// returns an array of sales and sale info for a download
+
+/**
+ * Get Download Sales Log
+ *
+ * Returns an array of sales and sale info for a download.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      array
+*/
+
 function edd_get_download_sales_log($download_id) {
 	$sales_log = get_post_meta($download_id, '_edd_sales_log', true);
 	if($sales_log) {
@@ -148,7 +230,17 @@ function edd_get_download_sales_log($download_id) {
 	return false;
 }
 
-// returns an array of file download dates and user info
+
+/**
+ * Get File Download Log
+ *
+ * Returns an array of file download dates and user info.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      array
+*/
+
 function edd_get_file_download_log($download_id) {
 	$download_log = get_post_meta($download_id, '_edd_file_download_log', true);
 	if($download_log) {
@@ -157,7 +249,17 @@ function edd_get_file_download_log($download_id) {
 	return false;
 }
 
-// stores log information for a download sale
+
+/**
+ * Record Sale In Log
+ *
+ * Stores log information for a download sale.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_record_sale_in_log($download_id, $payment_id, $user_info, $date) {
 	$log = edd_get_download_sales_log($download_id);
 	if(!$log) {
@@ -173,7 +275,17 @@ function edd_record_sale_in_log($download_id, $payment_id, $user_info, $date) {
 	update_post_meta($download_id, '_edd_sales_log', $log);
 }
 
-// stores a log entry for a file download
+
+/**
+ * Record Download In Log
+ *
+ * Stores a log entry for a file download.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_record_download_in_log($download_id, $file_id, $user_info, $ip, $date) {
 	$log = edd_get_file_download_log($download_id);
 	if(!$log) {
@@ -190,11 +302,18 @@ function edd_record_download_in_log($download_id, $file_id, $user_info, $ip, $da
 	update_post_meta($download_id, '_edd_file_download_log', $log);
 }
 
-/*
-* Returns the price of a download, but only for non-variable priced downloads
-* @param - $download_id INT the ID number of the download to retrieve a price for
-* @return string/int the price of the download
+
+/**
+ * Get Download Price
+ *
+ * Returns the price of a download, but only for non-variable priced downloads.
+ *
+ * @access      public
+ * @since       1.0 
+ * @param       $download_id INT the ID number of the download to retrieve a price for
+ * @return      $string/int the price of the download
 */
+
 function edd_get_download_price($download_id) {
 	$price = get_post_meta($download_id, 'edd_price', true);
 	if($price)
@@ -202,12 +321,18 @@ function edd_get_download_price($download_id) {
 	return 0;
 }
 
-/*
-* Displays a formatted price for a download
-* @uses edd_has_variable_prices()
-* @param - int $download_id the ID of the download price to show
-* @echo string the nicely formatted price of the download with currency
+
+/**
+ * Price
+ *
+ * Displays a formatted price for a download.
+ *
+ * @access      public
+ * @since       1.0
+ * @param       int $download_id the ID of the download price to show
+ * @return      void
 */
+
 function edd_price($download_id) {
 	if(edd_has_variable_prices($download_id)) {
 		$prices = get_post_meta($download_id, 'edd_variable_prices', true);
@@ -217,12 +342,18 @@ function edd_price($download_id) {
 	}
 }
 
-/*
-* Checks to see if a download has variable prices enabled
-* @since v1.0.7
-* @param int $download_id the ID number of the download to checl
-* @return bool true if has variable prices, false otherwise
+
+/**
+ * Has Variable Prices
+ *
+ * Checks to see if a download has variable prices enabled.
+ *
+ * @access      public
+ * @since       1.0.7
+ * @param       int $download_id the ID number of the download to checl
+ * @return      boolean true if has variable prices, false otherwise
 */
+
 function edd_has_variable_prices($download_id) {
 	if(get_post_meta($download_id, '_variable_pricing', true)) {
 		return true;	
@@ -230,7 +361,17 @@ function edd_has_variable_prices($download_id) {
 	return false;
 }
 
-// increases the sale count od a download
+
+/**
+ * Increase Purchase Count
+ *
+ * Increases the sale count od a download.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_increase_purchase_count($download_id) {
 	$sales = edd_get_download_sales_stats($download_id);
 	$sales = $sales + 1;
@@ -240,7 +381,17 @@ function edd_increase_purchase_count($download_id) {
 	return false;
 }
 
-// increases the total earnings of a download
+
+/**
+ * Increase Earnings
+ *
+ * Increases the total earnings of a download.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_increase_earnings($download_id, $amount) {
 	$earnings = edd_get_download_earnings_stats($download_id);
 	$earnings = $earnings + $amount;
@@ -251,7 +402,15 @@ function edd_increase_earnings($download_id, $amount) {
 	return false;
 }
 
-// retrieves an array of all downloadable files for a download
+
+/**
+ * Get Download Files
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      array
+*/
+
 function edd_get_download_files($download_id) {
 	$files = get_post_meta($download_id, 'edd_download_files', true);
 	if($files)
@@ -259,7 +418,17 @@ function edd_get_download_files($download_id) {
 	return false;
 }
 
-// constructs the file download url for a specific file
+
+/**
+ * Get Download File Url
+ *
+ * Constructs the file download url for a specific file.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      string
+*/
+
 function edd_get_download_file_url($key, $email, $filekey, $download) {
 	
 	$params = array(
@@ -275,7 +444,16 @@ function edd_get_download_file_url($key, $email, $filekey, $download) {
 }
 
 
-// verifies a download purchase using a purchase key and email
+/**
+ * Verify Download Link
+ *
+ * Verifies a download purchase using a purchase key and email.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      boolean
+*/
+
 function edd_verify_download_link($download_id, $key, $email, $expire) {
 
 	$meta_query = array(
@@ -312,13 +490,19 @@ function edd_verify_download_link($download_id, $key, $email, $expire) {
 	return false;
 }
 
-/*
-* Checks to see if a user has purchased a download
-* uses edd_get_users_purchases()
-* @param int $user_id - the ID of the user to check
-* @param int $download_Id - the ID of the download to check for
-* return bool - true if has purchased, false otherwise
+
+/**
+ * Has User Purchased
+ *
+ * Checks to see if a user has purchased a download.
+ *
+ * @access      public
+ * @since       1.0 
+ * @param       int $user_id - the ID of the user to check
+ * @param       int $download_Id - the ID of the download to check for
+ * @return      boolean - true if has purchased, false otherwise
 */
+
 function edd_has_user_purchased($user_id, $download_id) {
 	$users_purchases = edd_get_users_purchases($user_id);
 	if($users_purchases) {
@@ -327,10 +511,12 @@ function edd_has_user_purchased($user_id, $download_id) {
 			$purchased_files = maybe_unserialize($purchase_meta['downloads']);
 			if(is_array($purchased_files)) {
 				if(array_search($download_id, $purchased_files) !== false) {
-					return true; // user has purchased the download
+				    // user has purchased the download
+					return true;
 				}
 			}
 		}
 	}
-	return false; // user has not purchased the download
+	// user has not purchased the download
+	return false;
 }

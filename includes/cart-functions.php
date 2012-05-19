@@ -230,6 +230,7 @@ function edd_get_price_name($item_id, $options = array()) {
 	return false;
 }
 
+
 /**
  * Get Cart Amount
  *

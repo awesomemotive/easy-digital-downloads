@@ -1,10 +1,38 @@
 <?php
+/**
+ * PayPal Standard Gateway
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  PayPal Standard Gateway
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
 
-// PayPal Standard does not need a CC form, so remove it
+
+/**
+ * PayPal Remove CC Form
+ *
+ * PayPal Standard does not need a CC form, so remove it.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_paypal_remove_cc_form() {
 	// we only register the action so that the default CC form is not shown
 }
 add_action('edd_paypal_cc_form', 'edd_paypal_remove_cc_form');
+
+
+/**
+ * Process PayPal Purchase
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_process_paypal_purchase($purchase_data) {
 	global $edd_options;
@@ -88,7 +116,16 @@ function edd_process_paypal_purchase($purchase_data) {
 add_action('edd_gateway_paypal', 'edd_process_paypal_purchase');
 
 
-// listens for a PayPal IPN requests and then sends to the processing function
+/**
+ * Listen For PayPal IPN
+ *
+ * Listens for a PayPal IPN requests and then sends to the processing function.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_listen_for_paypal_ipn() {
 	global $edd_options;
 	
@@ -133,6 +170,15 @@ function edd_listen_for_paypal_ipn() {
 	}
 }
 add_action('init', 'edd_listen_for_paypal_ipn');
+
+
+/**
+ * Process PayPal IPN
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_process_paypal_ipn() {
 

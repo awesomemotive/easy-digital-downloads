@@ -9,7 +9,17 @@
  * @since       1.0 
 */
 
-// email the download link and payment confirmation to the buyer
+
+/**
+ * Email Download Link
+ * 
+ * Email the download link and payment confirmation to the buyer.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_email_download_link($payment_id, $admin_notice = true) {
 	global $edd_options;
 	$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
@@ -48,6 +58,16 @@ function edd_email_download_link($payment_id, $admin_notice = true) {
 		wp_mail( $admin_email, __('New download purchase', 'edd'), $admin_message );
 	}
 }
+
+
+
+/**
+ * Email Template Tags
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      string
+*/
 
 function edd_email_templage_tags($message, $payment_data) {
 	
@@ -92,10 +112,28 @@ function edd_email_templage_tags($message, $payment_data) {
 	return $message;
 }
 
+
+/**
+ * Email Default Formatting
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      string
+*/
+
 function edd_email_default_formatting($message) {
 	return wpautop($message);	
 }
 add_filter('edd_purchase_receipt', 'edd_email_default_formatting');
+
+
+/**
+ * Resend Email Links
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_resend_email_links($data) {
 	$purchase_id = $data['purchase_id'];

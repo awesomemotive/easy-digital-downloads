@@ -9,7 +9,17 @@
  * @since       1.0 
 */
 
-// retrieves an array of all available discount codes
+
+/**
+ * Get Discounts
+ *
+ * Retrieves an array of all available discount codes.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      boolean
+*/
+
 function edd_get_discounts() {
 	$discounts = get_option('edd_discounts');
 	if(false === $discounts) { 
@@ -20,7 +30,17 @@ function edd_get_discounts() {
 	return false;
 }
 
-// checks if there is any active discounts, returns a boolean
+
+/**
+ * Has Active Discounts
+ *
+ * Checks if there is any active discounts, returns a boolean.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      boolean
+*/
+
 function edd_has_active_discounts() {
 	$has_active = false; 
 	$discounts = edd_get_discounts();
@@ -34,8 +54,18 @@ function edd_has_active_discounts() {
     }
     return $has_active;
 }
+ 
 
-// retrieves a complete discount code by ID/key 
+/**
+ * Get Discount
+ *
+ * Retrieves a complete discount code by ID/key.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      array
+*/
+
 function edd_get_discount($key) {
 	$discounts = edd_get_discounts();
 	if($discounts) {
@@ -44,7 +74,17 @@ function edd_get_discount($key) {
 	return false;
 }
 
-// retrieves all details for a discount by its code
+
+/**
+ * Get Discount Id By Code
+ *
+ * Retrieves all details for a discount by its code.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      array
+*/
+
 function edd_get_discount_id_by_code($code) {
 	$discounts = edd_get_discounts();
 	if($discounts) {
@@ -57,7 +97,17 @@ function edd_get_discount_id_by_code($code) {
 	return false;
 }
 
-// setups and stores a new discount code
+
+/**
+ * Add Discount
+ *
+ * Setups and stores a new discount code.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_add_discount($data) {
 	if(wp_verify_nonce($data['edd-discount-nonce'], 'edd_discount_nonce')) {
 		// setup the discount code details
@@ -72,7 +122,17 @@ function edd_add_discount($data) {
 }
 add_action('edd_add_discount', 'edd_add_discount');
 
-// saves an edited discount
+
+/**
+ * Edit Discount
+ *
+ * Saves an edited discount.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_edit_discount($data) {
 	if(isset($data['edd-discount-nonce']) && wp_verify_nonce($data['edd-discount-nonce'], 'edd_discount_nonce')) {
 		// setup the discount code details
@@ -90,10 +150,18 @@ function edd_edit_discount($data) {
 }
 add_action('edd_edit_discount', 'edd_edit_discount');
 
-/*
-* Stores a discount code.
-* If the code exists, it updates it, otherwise it creates a new one
+
+/**
+ * Store Discount
+ *
+ * Stores a discount code.
+ * If the code exists, it updates it, otherwise it creates a new one.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      boolean
 */
+
 function edd_store_discount($discount_details, $id = null) {
 	if(edd_discount_exists($id) && !is_null($id)) { // update an existing discount
 		$discounts = edd_get_discounts();
@@ -116,7 +184,17 @@ function edd_store_discount($discount_details, $id = null) {
 	return false; // something went wrong
 }
 
-// listens for when a discount delete button is clicked
+
+/**
+ * Delete Discount
+ *
+ * Listens for when a discount delete button is clicked.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_delete_discount($data) {
 	$discount_id = $data['discount'];
 	edd_remove_discount($discount_id);
@@ -124,6 +202,15 @@ function edd_delete_discount($data) {
 add_action('edd_delete_discount', 'edd_delete_discount');
 
 // deletes a discount code
+
+/**
+ * Remove Discount
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_remove_discount($discount_id) {
 	
 	$discounts = edd_get_discounts();
@@ -133,12 +220,30 @@ function edd_remove_discount($discount_id) {
 }
 
 // sets a discount code to active
+
+/**
+ * Activate Discount
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_activate_discount($data) {
 	$id = $data['discount'];
 	edd_update_discount_status($id, 'active');
 }
 add_action('edd_activate_discount', 'edd_activate_discount');
 
+
+
+/**
+ * Deactivate Discount
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_deactivate_discount($data) {
 	$id = $data['discount'];
@@ -147,6 +252,15 @@ function edd_deactivate_discount($data) {
 add_action('edd_deactivate_discount', 'edd_deactivate_discount');
 
 // updates a discount's status from one status to another. 
+
+/**
+ * Update Discount Status
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_update_discount_status($code_id, $new_status) {
 	$discount = edd_get_discount($code_id);
 	$discounts = edd_get_discounts();
@@ -160,6 +274,15 @@ function edd_update_discount_status($code_id, $new_status) {
 }
 
 // checks to see if a discount code already exists
+
+/**
+ * Discount Exists
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_discount_exists($code_id) {
 	$discounts = edd_get_discounts();
 	
@@ -171,6 +294,15 @@ function edd_discount_exists($code_id) {
 }
 
 // checks whether a discount code is active
+
+/**
+ * Is Discount Active
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_is_discount_active($code_id) { 
 	$discount = edd_get_discount($code_id);
 	if($discount) {
@@ -182,6 +314,15 @@ function edd_is_discount_active($code_id) {
 }
 
 // checks whether a discount code is expired
+
+/**
+ * Is Discount Expired
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_is_discount_expired($code_id) { 
 	$discount = edd_get_discount($code_id);
 	if($discount) {
@@ -196,6 +337,15 @@ function edd_is_discount_expired($code_id) {
 }
 
 // checks whether a discount code is available yet (start date)
+
+/**
+ * Is Discount Started
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_is_discount_started($code_id) { 
 	$discount = edd_get_discount($code_id);
 	if($discount) {
@@ -212,6 +362,15 @@ function edd_is_discount_started($code_id) {
 }
 
 // checks to see if a discount has uses left
+
+/**
+ * Is Discount Maxed Out
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_is_discount_maxed_out($code_id) {
 	$discount = edd_get_discount($code_id);
 	if($discount) {
@@ -225,6 +384,15 @@ function edd_is_discount_maxed_out($code_id) {
 }
 
 // check whether a discount code is valid (when purchasing)
+
+/**
+ * Is Discount Valid
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_is_discount_valid($code) {
 	$discount_id = edd_get_discount_by_code($code);
 	if($discount_id !== false) {
@@ -237,6 +405,15 @@ function edd_is_discount_valid($code) {
 }
 
 // retrieves a discount code ID from the code
+
+/**
+ * Get Discount By Code
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_get_discount_by_code($code) {
 	$discounts = edd_get_discounts();
 	if($discounts) {
@@ -257,6 +434,15 @@ function edd_get_discount_by_code($code) {
 * @param $base_price - string/int the price before discount
 * @return $discounted_price - string - the amount after discount 
 */
+
+/**
+ * Get Discounted Amount
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_get_discounted_amount($code, $base_price) {
 	$discount_id = edd_get_discount_by_code($code);
 	$discounts = edd_get_discounts();
@@ -277,6 +463,15 @@ function edd_get_discounted_amount($code, $base_price) {
 * @param $code string - the discount code to be incremented
 * return int - the new use count
 */
+
+/**
+ * Increase Discount Usage
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_increase_discount_usage($code) {
 	$discount_id = edd_get_discount_by_code($code);
 	$discounts = edd_get_discounts();
@@ -290,6 +485,15 @@ function edd_increase_discount_usage($code) {
 	$new_use_count = update_option('edd_discounts', $discounts);
 	return $new_use_count;
 }
+
+
+/**
+ * Format Discount Rate
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      string
+*/
 
 function edd_format_discount_rate($rate, $amount) {
 	if($rate == 'flat') {
