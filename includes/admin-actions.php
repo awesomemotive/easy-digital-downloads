@@ -1,4 +1,21 @@
 <?php
+/**
+ * Admin Actions
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Admin Actions
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0
+*/
+
+
+/**
+ * Process Actions
+ *
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_process_actions() {
 	if(isset($_POST['edd-action'])) {

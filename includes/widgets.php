@@ -1,19 +1,35 @@
 <?php
+/**
+ * Widgets
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Widgets
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
 
-/***********************
- * front end widgets
- ***********************/
 
-// register all widgets
-function edd_register_widgets() {
-    register_widget('edd_cart_widget');
-    register_widget('edd_categories_tags_widget');
-}
-add_action('widgets_init', 'edd_register_widgets');
+/*
+|--------------------------------------------------------------------------
+| FRONT-END WIDGETS
+|--------------------------------------------------------------------------
+|
+| - Cart Widget
+| - Categories / Tags Widget
+|
+*/
 
 /**
- * Downloads Cart Widget Class
- */
+ * Download Cart Widget
+ *
+ * Downloads cart widget class.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+    
 class edd_cart_widget extends WP_Widget {
 
     /** constructor */
@@ -76,9 +92,17 @@ class edd_cart_widget extends WP_Widget {
     }
 }
 
+
 /**
- * Downloads Categories / Tags Widget Class
- */
+ * Download Categories / Tags
+ *
+ * Downloads categories / tags widget class.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 class edd_categories_tags_widget extends WP_Widget {
 
     /** constructor */
@@ -149,10 +173,32 @@ class edd_categories_tags_widget extends WP_Widget {
     }
 }
 
-/***********************
- * dashboard widgets
- * -- disabled for now
- ***********************/
+
+/**
+ * Register Widgets
+ *
+ * Registers the EDD Widgets.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
+function edd_register_widgets() {
+    register_widget('edd_cart_widget');
+    register_widget('edd_categories_tags_widget');
+}
+add_action('widgets_init', 'edd_register_widgets');
+
+/*
+|--------------------------------------------------------------------------
+| DASHBOARD WIDGETS
+|--------------------------------------------------------------------------
+|
+| Disabled for now.
+|
+*/
+
 /*
 function edd_stats_widgets() {
    wp_add_dashboard_widget('edd_sales_widget', __('Download Sales', 'edd'), 'edd_dashboard_sales_widget');

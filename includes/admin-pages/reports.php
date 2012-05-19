@@ -1,4 +1,24 @@
 <?php
+/**
+ * Admin Reports Page
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Admin Reports Page
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+
+
+/**
+ * Reports Page
+ *
+ * Renders the reports page contents.
+ *
+ * @access      private
+ * @since       1.0
+ * @return      void
+*/
 
 function edd_reports_page() {
 	global $edd_options;	

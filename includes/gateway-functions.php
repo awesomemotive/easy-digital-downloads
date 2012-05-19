@@ -1,4 +1,13 @@
 <?php
+/**
+ * Gateway Functions
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Gateway Functions
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
 
 // returns a list of all available gateways
 function edd_get_payment_gateways() {

@@ -1,4 +1,24 @@
 <?php
+/**
+ * Admin Payment History
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Admin Payment History
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+
+
+/**
+ * Payment History Page
+ *
+ * Renders the payment history page contents.
+ *
+ * @access      private
+ * @since       1.0
+ * @return      void
+*/
 
 function edd_payment_history_page() {
 	global $edd_options;

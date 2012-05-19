@@ -1,4 +1,14 @@
 <?php
+/**
+ * Loigin / Register Functions
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Login/Register
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+
 
 function edd_login_form($redirect = '') {
 	global $edd_options, $post;

@@ -1,4 +1,24 @@
 <?php
+/**
+ * Post Type Functions
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Post Type Functions
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+
+
+/**
+ * Setup Download Post Type
+ *
+ * Registers the Downloads CPT.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_setup_download_post_type() {
 
@@ -89,6 +109,17 @@ function edd_setup_download_post_type() {
 }
 add_action('init', 'edd_setup_download_post_type', 100);
 
+
+/**
+ * Setup Download Taxonomies
+ *
+ * Registers the custom taxonomies.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_setup_download_taxonomies() {
 
 	$category_labels = array(
@@ -136,6 +167,17 @@ function edd_setup_download_taxonomies() {
 	));
 }
 add_action('init', 'edd_setup_download_taxonomies', 10);
+
+
+/**
+ * Updated Messages
+ *
+ * Returns an array of with all updated messages.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      array
+*/
 
 function edd_updated_messages( $messages ) {
 	global $post, $post_ID;

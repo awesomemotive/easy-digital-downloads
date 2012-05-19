@@ -1,5 +1,25 @@
 <?php
- 
+/**
+ * Upload Functions
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Upload Functions
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+
+
+/**
+ * Change Downloads Upload Dir
+ *
+ * Hooks the edd_set_upload_dir filter when appropiate.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_change_downloads_upload_dir() {
     global $pagenow;
 
@@ -11,11 +31,20 @@ function edd_change_downloads_upload_dir() {
 }
 add_action('admin_init', 'edd_change_downloads_upload_dir', 999);
 
+
+/**
+ * Set Upload Dir
+ *
+ * Sets the upload dir to /edd.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      array
+*/
+
 function edd_set_upload_dir($upload) {
 	$upload['subdir']	= '/edd' . $upload['subdir'];
 	$upload['path'] = $upload['basedir'] . $upload['subdir'];
 	$upload['url']	= $upload['baseurl'] . $upload['subdir'];
 	return $upload;
 }
-
-?>

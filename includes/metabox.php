@@ -1,4 +1,13 @@
 <?php
+/**
+ * Metabox Functions
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Metabox Functions
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
 
 function edd_add_download_meta_box() {
 	add_meta_box('downloadinformation', __('Download Configuration', 'edd'), 'edd_render_download_meta_box', 'download', 'normal', 'default');

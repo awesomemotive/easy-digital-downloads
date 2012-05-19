@@ -1,4 +1,22 @@
 <?php
+/**
+ * Cart Template
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Cart Template
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+
+
+/**
+ * Get Checkout Cart
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_checkout_cart() {
 	if(file_exists(trailingslashit(get_stylesheet_directory()) . 'edd_templates/checkout_cart.php')) {
@@ -7,6 +25,15 @@ function edd_checkout_cart() {
 		include_once(EDD_PLUGIN_DIR . '/includes/templates/checkout_cart.php');
 	}
 }
+
+
+/**
+ * Shopping Cart
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      string
+*/
 
 function edd_shopping_cart($echo = false) {
 	global $edd_options;
@@ -34,6 +61,15 @@ function edd_shopping_cart($echo = false) {
 		return ob_get_clean();
 }
 
+
+/**
+ * Get Cart Item Template
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      string
+*/
+
 function edd_get_cart_item_template($cart_key, $item, $ajax = false) {
 	global $post;
 	
@@ -49,10 +85,29 @@ function edd_get_cart_item_template($cart_key, $item, $ajax = false) {
 	return apply_filters('edd_cart_item', $item, $id);
 }
 
-// gets the message for an empty cart
+
+/**
+ * Empty Cart Message
+ *
+ * Gets the message for an empty cart.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      string
+*/
+
 function edd_empty_cart_message() {
 	return apply_filters('edd_empty_cart_message', __('Your cart is empty.', 'edd'));
 }
+
+
+/**
+ * Empty Checkout Cart
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      string
+*/
 
 function edd_empty_checkout_cart() {
 	echo edd_empty_cart_message();

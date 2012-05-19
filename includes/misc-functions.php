@@ -1,4 +1,22 @@
 <?php
+/**
+ * Misc Functions
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Misc Functions
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+
+
+/**
+ * Is Test Mode
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      boolean
+*/
 
 function edd_is_test_mode() {
 	global $edd_options;
@@ -7,12 +25,30 @@ function edd_is_test_mode() {
 	return false;
 }
 
+
+/**
+ * No Guest Checkout
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      boolean
+*/
+
 function edd_no_guest_checkout() {
 	global $edd_options;
 	if(isset($edd_options['logged_in_only']))
 		return true;
 	return false;
 }
+
+
+/**
+ * Logged in Only
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      boolean
+*/
 
 function edd_logged_in_only() {
 	global $edd_options;
@@ -21,19 +57,47 @@ function edd_logged_in_only() {
 	return false;
 }
 
-/*
-* returns the access level required to access the downloads menu
-* currently not not changeable, but here for a future update
+
+/**
+ * Get Menu Access Level 
+ *
+ * Returns the access level required to access 
+ * the downloads menu. Currently not not changeable,
+ * but here for a future update.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      string
 */
+
 function edd_get_menu_access_level() {
 	global $edd_options;
 	return 'manage_options';
 }
 
-// checks whether an integer is odd
+
+/**
+ * Is Odd 
+ *
+ * Checks wether an integer is odd.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      boolean
+*/
+
 function edd_is_odd( $int ) {
-	return( $int & 1 );
+	return (bool) ( $int & 1 );
 }
+
+
+/**
+ * Get Currencies 
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      array
+*/
 
 function edd_get_currencies() {
 	$currencies = array(
@@ -64,6 +128,15 @@ function edd_get_currencies() {
 	);
 	return apply_filters('edd_currencies', $currencies);
 }
+
+
+/**
+ * Get Currency Filter 
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      array
+*/
 
 function edd_currency_filter( $price ) {
 	global $edd_options;
@@ -107,6 +180,15 @@ function edd_currency_filter( $price ) {
 		endswitch;	
 	endif;
 }
+
+
+/**
+ * Get Country List 
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      array
+*/
 
 function edd_get_country_list() {
 	$countries =array(
@@ -357,7 +439,18 @@ function edd_get_country_list() {
 	return $countries;
 }
 
-// takes a month number and returns the name three letter name of it
+
+/**
+ * Month Num To Name 
+ *
+ * Takes a month number and returns the 
+ * name three letter name of it.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      string
+*/
+
 function edd_month_num_to_name($n)
 {
     $timestamp = mktime(0, 0, 0, $n, 1, 2005);
