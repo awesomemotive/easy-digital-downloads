@@ -43,6 +43,15 @@
 ****************************************/
 
 /****************************************
+* Purchase History
+****************************************/
+#edd_user_history { text-align: left; width: 100%; border-top: 1px solid #f0f0f0; border-bottom: none;}
+#edd_user_history th,
+#edd_user_history td { text-align: left; padding: 3px 5px; border-bottom: 1px solid #f0f0f0; border-top: none; }
+#edd_user_history th { font-weight: bold; background: #f5f5f5;}
+#edd_user_history td { line-height: 25px; vertical-align: middle; }
+
+/****************************************
 * Registration Form
 ****************************************/
 
