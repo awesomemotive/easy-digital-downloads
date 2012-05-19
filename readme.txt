@@ -6,7 +6,11 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.3.2
+<<<<<<< HEAD
+Stable Tag: 1.0.7.2
+=======
 Stable Tag: 1.0.8
+>>>>>>> 75e90da1356a4ee1183c21a1414e1d69fa1739e8
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
@@ -238,7 +242,10 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 * Removed old stripe.js code that is no longer used
 * Added an enhancement to the cart widget that causes the "Purchase" button to reset when removing an item from the cart
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 75e90da1356a4ee1183c21a1414e1d69fa1739e8
 = 1.0.7.1 =
 
 * Added a second instance do_action('edd_purchase_form_user_info') to the checkout registration form
