@@ -2,20 +2,20 @@
 /**
  * Metabox Functions
  *
- * @package		Easy Digital Downloads
- * @subpackage	Metabox Functions
- * @copyright	Copyright (c) 2012, Pippin Williamson
- * @license		http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since		1.0 
+ * @package     Easy Digital Downloads
+ * @subpackage  Metabox Functions
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
 */
 
 
 /**
  * Add Download Meta Box
  *
- * @access		private
- * @since		1.0 
- * @return		void
+ * @access      private
+ * @since       1.0 
+ * @return      void
 */
 
 function edd_add_download_meta_box() {
@@ -33,9 +33,9 @@ add_action('add_meta_boxes', 'edd_add_download_meta_box');
  *
  * Render the download information meta box.
  *
- * @access		private
- * @since		1.0 
- * @return		void
+ * @access      private
+ * @since       1.0 
+ * @return      void
 */
 
 function edd_render_download_meta_box() {
@@ -56,9 +56,9 @@ function edd_render_download_meta_box() {
 /**
  * Render Price Field
  *
- * @access		private
- * @since		1.0 
- * @return		void
+ * @access      private
+ * @since       1.0 
+ * @return      void
 */
 
 function edd_render_price_field($post_id) {
@@ -135,9 +135,9 @@ add_action('edd_meta_box_fields', 'edd_render_price_field', 10);
 /**
  * Render Files Field
  *
- * @access		private
- * @since		1.0 
- * @return		void
+ * @access      private
+ * @since       1.0 
+ * @return      void
 */
 
 function edd_render_files_field($post_id) {
@@ -182,9 +182,9 @@ add_action('edd_meta_box_fields', 'edd_render_files_field', 20);
 /**
  * Render Purchase Text Field
  *
- * @access		private
- * @since		1.0 
- * @return		void
+ * @access      private
+ * @since       1.0 
+ * @return      void
 */
 
 function edd_render_purchase_text_field($post_id) {
@@ -203,9 +203,9 @@ add_action('edd_meta_box_fields', 'edd_render_purchase_text_field', 30);
 /**
  * Render Link Styles
  *
- * @access		private
- * @since		1.0 
- * @return		void
+ * @access      private
+ * @since       1.0 
+ * @return      void
 */
 
 function edd_render_link_styles($post_id) {
@@ -226,9 +226,9 @@ add_action('edd_meta_box_fields', 'edd_render_link_styles', 40);
 /**
  * Render Button Color
  *
- * @access		private
- * @since		1.0 
- * @return		void
+ * @access      private
+ * @since       1.0 
+ * @return      void
 */
 
 function edd_render_button_color($post_id) {	
@@ -255,9 +255,9 @@ add_action('edd_meta_box_fields', 'edd_render_button_color', 50);
 /**
  * Render Disable Button
  *
- * @access		private
- * @since		1.0 
- * @return		void
+ * @access      private
+ * @since       1.0 
+ * @return      void
 */
 
 function edd_render_disable_button($post_id) {	
@@ -276,9 +276,9 @@ add_action('edd_meta_box_fields', 'edd_render_disable_button', 60);
 /**
  * Render Meta Notes
  *
- * @access		private
- * @since		1.0 
- * @return		void
+ * @access      private
+ * @since       1.0 
+ * @return      void
 */
 
 function edd_render_meta_notes($post_id) {
@@ -304,9 +304,9 @@ add_action('edd_meta_box_fields', 'edd_render_meta_notes', 70);
  *
  * Save data from meta box.
  *
- * @access		private
- * @since		1.0 
- * @return		void
+ * @access      private
+ * @since       1.0 
+ * @return      void
 */
 
 function edd_download_meta_box_save($post_id) {
@@ -367,9 +367,9 @@ add_action('save_post', 'edd_download_meta_box_save');
 /**
  * Render Stats Meta Box
  *
- * @access		private
- * @since		1.0 
- * @return		void
+ * @access      private
+ * @since       1.0 
+ * @return      void
 */
 
 function edd_render_stats_meta_box() {
@@ -399,9 +399,9 @@ function edd_render_stats_meta_box() {
 /**
  * Render Purchase Log Meta Box
  *
- * @access		private
- * @since		1.0 
- * @return		void
+ * @access      private
+ * @since       1.0 
+ * @return      void
 */
 
 function edd_render_purchase_log_meta_box() {
@@ -454,9 +454,9 @@ function edd_render_purchase_log_meta_box() {
 /**
  * Render Download Log Meta Box
  *
- * @access		private
- * @since		1.0 
- * @return		void
+ * @access      private
+ * @since       1.0 
+ * @return      void
 */
 
 function edd_render_download_log_meta_box() {
