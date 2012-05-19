@@ -274,9 +274,14 @@ function edd_show_added_to_cart_messages($download_id) {
 }
 add_action('edd_after_download_content', 'edd_show_added_to_cart_messages');
 
+/*
+* Retrieves the URL of the checkout page
+* @since v1.0.8
+* @return mixed - the full URL to the checkout page, if present, NULL if it doesn't exist
+*/
 function edd_get_checkout_uri() {
     global $edd_options;
-    return isset( $edd_options['purchase_page'] ) ? get_permalink($edd_options['purchase_page']) : '';
+    return isset( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) : NULL;
 }
 
 /*
