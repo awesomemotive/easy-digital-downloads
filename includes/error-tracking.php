@@ -1,4 +1,13 @@
 <?php
+/**
+ * Error Tracking
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Error Tracking
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
 
 /*
 * Prints all stored errors. For use during checkout

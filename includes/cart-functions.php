@@ -1,14 +1,40 @@
 <?php
+/**
+ * Cart Functions
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Cart Functions
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
 
-// retrieve contents from the cart
+
+/**
+ * Get Cart Contents
+ *
+ * Retrieve contents from the cart.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      array
+*/
+
 function edd_get_cart_contents() {
 	return isset($_SESSION['edd_cart']) ? $_SESSION['edd_cart'] : false;
 }
 
-/*
-* Gets the total quanity of items cart
-* Return - INT - number of this item in the cart
+
+/**
+ * Get Cart Quantity
+ *
+ * Gets the total quanity of items cart.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      INT - number of this item in the cart
 */
+
 function edd_get_cart_quantity() {
 	$cart = edd_get_cart_contents();
 	if($cart)
@@ -19,13 +45,19 @@ function edd_get_cart_quantity() {
 }
 
 
-/*
-* Adds a download ID to the shopping cart
-* Uses edd_get_cart_contents()
-* @param - $download_id INT the ID number of the download to add to the cart
-* @param - $options array an array of options, such as variable price
-* return - cart key of the new item
+/**
+ * Add To Cart
+ *
+ * Adds a download ID to the shopping cart.
+ * Uses edd_get_cart_contents().
+ *
+ * @access      public
+ * @since       1.0 
+ * @param       $download_id - INT the ID number of the download to add to the cart
+ * @param       $options - array an array of options, such as variable price
+ * @return      string - cart key of the new item
 */
+
 function edd_add_to_cart($download_id, $options = array()) {
 	$cart = edd_get_cart_contents();
 	if(!edd_item_in_cart($download_id)) {
@@ -44,12 +76,20 @@ function edd_add_to_cart($download_id, $options = array()) {
 	}
 }
 
-/*
-* Removes a download from the shopping cart
-* Uses edd_get_cart_contents()
-* @param - $cart_key INT the cart key to remove
-* return - array of updated cart items
+
+/**
+ * Remove From Cart
+ *
+ * Removes a download from the shopping cart.
+ * Uses edd_get_cart_contents().
+ *
+ * @access      public
+ * @since       1.0 
+ * @param       $cart_key INT the cart key to remove
+ * @param       $options - array an array of options, such as variable price
+ * @return      array of updated cart items
 */
+
 function edd_remove_from_cart($cart_key) {
 	$cart = edd_get_cart_contents();
 	if(!is_array($cart)) {

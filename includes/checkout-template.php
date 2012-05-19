@@ -1,4 +1,14 @@
 <?php
+/**
+ * Checkout Template
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Checkout Template
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+
 
 function edd_checkout_form() {
 

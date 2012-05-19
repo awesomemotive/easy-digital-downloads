@@ -1,4 +1,13 @@
 <?php
+/**
+ * Misc Functions
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Misc Functions
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
 
 function edd_is_test_mode() {
 	global $edd_options;

@@ -1,4 +1,24 @@
 <?php
+/**
+ * Scripts
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Scripts
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+
+
+/**
+ * Load Scripts
+ *
+ * Enqueues the required scripts.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_load_scripts() {
 
@@ -6,12 +26,12 @@ function edd_load_scripts() {
 
 	wp_enqueue_script('jquery');
 	
-	// get position in cart of current download
+	// Get position in cart of current download
 	if(isset($post->ID)) {
 	    $position = edd_get_item_position_in_cart($post->ID);
 	}
 		
-	// load ajax JS, if enabled
+	// Load AJAX scripts, if enabled
 	if(edd_is_ajax_enabled()) {
 		wp_enqueue_script('edd-ajax', EDD_PLUGIN_URL . 'includes/js/edd-ajax.js');
 		wp_localize_script('edd-ajax', 'edd_scripts', array(
@@ -28,6 +48,8 @@ function edd_load_scripts() {
 			)
 		);
 	}
+	
+	// Load jQuery validation
 	if(isset($edd_options['jquery_validation']) && is_page($edd_options['purchase_page'])) {
 		wp_enqueue_script('jquery-validation', EDD_PLUGIN_URL . 'includes/js/jquery.validate.min.js');
 		wp_enqueue_script('edd-validation', EDD_PLUGIN_URL . 'includes/js/form-validation.js');
@@ -37,6 +59,17 @@ function edd_load_scripts() {
 }
 add_action('wp_enqueue_scripts', 'edd_load_scripts');
 
+
+/**
+ * Register Styles
+ *
+ * Checks the styles option and hooks the required filter.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_register_styles() {
 	global $edd_options;
 	if(!isset($edd_options['disable_styles'])) {
@@ -45,6 +78,16 @@ function edd_register_styles() {
 }
 add_action('wp_enqueue_scripts', 'edd_register_styles');
 
+
+/**
+ * Load Admin Scripts
+ *
+ * Enqueues the required admin scripts.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_load_admin_scripts($hook) {
 
@@ -75,7 +118,17 @@ function edd_load_admin_scripts($hook) {
 }
 add_action('admin_enqueue_scripts', 'edd_load_admin_scripts', 100);
 
-// adds edd custom post type icon
+
+/**
+ * Admin Downloads Icon
+ *
+ * Echoes the CSS for the downloads post type icon.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_admin_downloads_icon() {
     global $post_type;
 	$icon_url = EDD_PLUGIN_URL . 'includes/images/edd-icon.png';	

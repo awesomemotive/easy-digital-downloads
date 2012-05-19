@@ -1,4 +1,21 @@
 <?php
+/**
+ * Admin Notices
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Admin Notices
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+
+
+/**
+ * Admin Messages
+ *
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_admin_messages() {
 	$edd_access_level = edd_get_menu_access_level();

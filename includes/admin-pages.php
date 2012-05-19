@@ -1,4 +1,24 @@
 <?php
+/**
+ * Admin Pages
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Admin Pages
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+
+
+/**
+ * Add Options Link
+ *
+ * Creates the admin submenu pages.
+ *
+ * @access      private
+ * @since       1.0
+ * @return      void
+*/
 
 function edd_add_options_link() {
 	global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page;

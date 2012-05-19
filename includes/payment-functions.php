@@ -1,4 +1,14 @@
 <?php
+/**
+ * Payment Functions
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Payment Functions
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+
 // retrieve payments from the database
 function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby = 'ID', $order = 'DESC' ) {
 	$payment_args = array(

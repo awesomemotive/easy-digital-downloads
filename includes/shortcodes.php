@@ -1,6 +1,25 @@
 <?php
+/**
+ * Shortcodes
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Shortcodes
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
 
-// retrieves a download and displays the purchase form
+
+/**
+ * Purchase Link Shortcode
+ *
+ * Retrieves a download and displays the purchase form.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      string
+*/
+
 function edd_download_shortcode( $atts, $content = null ) {	
 	extract( shortcode_atts( array(
 			'id' => '',
@@ -18,9 +37,18 @@ function edd_download_shortcode( $atts, $content = null ) {
 }
 add_shortcode('purchase_link', 'edd_download_shortcode');
 
-// displays a user's download/purchsae history
+
+/**
+ * Download History Shortcode
+ *
+ * Displays a user's download/purchsae history.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      string
+*/
+
 function edd_download_history() {
-	
 	global $user_ID, $edd_options;
 	
 	if(is_user_logged_in()) {
@@ -72,19 +100,49 @@ function edd_download_history() {
 }
 add_shortcode('download_history', 'edd_download_history');
 
-// show the checkout form
+
+/**
+ * Checkout Form Shortcode
+ *
+ * Show the checkout form.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      string
+*/
+
 function edd_checkout_form_shortcode($atts, $content = null) {
 	return edd_checkout_form();
 }
 add_shortcode('download_checkout', 'edd_checkout_form_shortcode');
 
-// show the shopping cart
+
+/**
+ * Download Cart Shortcode
+ *
+ * Show the shopping cart.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      string
+*/
+
 function edd_cart_shortcode($atts, $content = null) {
 	return edd_shopping_cart();
 }
 add_shortcode('download_cart', 'edd_cart_shortcode');
 
-// displays the login form
+
+/**
+ * Login Shortcode
+ *
+ * Shows the login form.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      string
+*/
+
 function edd_login_form_shortcode($atts, $content = null) {
 	
 	extract( shortcode_atts( array(
@@ -95,10 +153,18 @@ function edd_login_form_shortcode($atts, $content = null) {
 }
 add_shortcode('edd_login', 'edd_login_form_shortcode');
 
-/*
-* Displays a collection purchase link for adding all items in a taxonomy term to the cart
-* @since v1.0.6
+
+/**
+ * Purchase Collection Shortcode
+ *
+ * Displays a collection purchase link for adding all 
+ * items in a taxonomy term to the cart.
+ *
+ * @access      private
+ * @since       1.0.6
+ * @return      string
 */
+
 function edd_purchase_collection_shortcode($atts, $content = null) {
 	extract( shortcode_atts( array(
 			'taxonomy' => '',
@@ -111,7 +177,16 @@ function edd_purchase_collection_shortcode($atts, $content = null) {
 add_shortcode('purchase_collection', 'edd_purchase_collection_shortcode');
 
 
-// incomplete short code for querying downloads
+/**
+ * Downloads Shortcode
+ *
+ * Incomplete short code for querying downloads.
+ *
+ * @access      private
+ * @since       1.0.6
+ * @return      string
+*/
+
 function edd_downloads_query($atts, $content = null) {
 	extract( shortcode_atts( array(
 			'category' => '',

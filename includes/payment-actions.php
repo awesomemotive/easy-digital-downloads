@@ -1,4 +1,14 @@
 <?php
+/**
+ * Payment Actions
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Payment Actions
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+
 
 // updates the purchase data for a payment. Used primarily for adding new downloads to a purchase
 function edd_update_edited_purchase($data) {

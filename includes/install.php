@@ -1,4 +1,13 @@
 <?php
+/**
+ * Install
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Install
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
 
 function edd_install() {
 	global $wpdb, $edd_options;
