@@ -93,15 +93,15 @@ function edd_payment_history_page() {
 										<div class="row-actions">
 											<?php 
 											$row_actions = array(
-												'edit' => '<a href="' . add_query_arg('edd-action', 'edit-payment', add_query_arg('purchase_id', $payment->ID)) . '">' . __('Edit', 'edd') . '</a>',
-												'email_links' => '<a href="' . add_query_arg('edd-action', 'email_links', add_query_arg('purchase_id', $payment->ID)) . '">' . __('Resend Purchase Receipt', 'edd') . '</a>',
-												'delete' => '<a href="' . wp_nonce_url(add_query_arg('edd-action', 'delete_payment', add_query_arg('purchase_id', $payment->ID)), 'edd_payment_nonce') . '">' . __('Delete', 'edd') . '</a>'
+												'edit' => '<a href="' . add_query_arg( array( 'edd-action' => 'edit-payment', 'purchase_id' => $payment->ID ) ) . '">' . __('Edit', 'edd') . '</a>',
+												'email_links' => edd_is_payment_complete($payment->ID) ? '<a href="' . add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment->ID) ) . '">' . __('Resend Purchase Receipt', 'edd') . '</a>' : NULL,
+												'delete' => '<a href="' . wp_nonce_url(add_query_arg( array( 'edd-action' => 'delete_payment', 'purchase_id' => $payment->ID ) ), 'edd_payment_nonce') . '">' . __('Delete', 'edd') . '</a>'
 											);
 											$row_actions = apply_filters('edd_payment_row_actions', $row_actions, $payment);
 											$action_count = count($row_actions); $i = 1;
 											foreach($row_actions as $key => $action) {
 												if($action_count == $i) { $sep = ''; } else { $sep = ' | '; }
-												echo '<span class="' . $key . '">' . $action . '</span>' . $sep;
+												echo !is_null( $action ) ? '<span class="' . $key . '">' . $action . '</span>' . $sep : '';
 												$i++;
 											}
 											?>
