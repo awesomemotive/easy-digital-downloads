@@ -123,7 +123,7 @@ function edd_after_download_content($content) {
 	global $post;
 	if($post->post_type == 'download' && is_singular() && is_main_query()) {
 		ob_start();
-			do_action('edd_after_download_content', $download_id);
+			do_action('edd_after_download_content', $post->ID);
 		$content .= ob_get_clean();
 	}
 	return $content;
