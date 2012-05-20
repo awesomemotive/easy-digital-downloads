@@ -21,7 +21,7 @@
 */
 
 /**
- * Download Cart Widget
+ * Cart Widget
  *
  * Downloads cart widget class.
  *
@@ -94,7 +94,7 @@ class edd_cart_widget extends WP_Widget {
 
 
 /**
- * Download Categories / Tags
+ * Categories / Tags Widget
  *
  * Downloads categories / tags widget class.
  *
