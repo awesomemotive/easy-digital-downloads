@@ -39,7 +39,7 @@ function edd_process_purchase_form() {
 		if(isset($edd_options['show_agree_to_terms']) && ( !isset($_POST['edd_agree_to_terms']) || $_POST['edd_agree_to_terms'] != 1 ) ) {
 			edd_set_error('agree_to_terms', __('You must agree to the terms of use', 'edd'));
 		}
-		
+			
 		if(isset($_POST['edd-purchase-var']) && $_POST['edd-purchase-var'] == 'needs-to-register') {
 			
 			// check the new user's credentials against existing ones
@@ -49,7 +49,7 @@ function edd_process_purchase_form() {
 			$pass_confirm 	= isset($_POST["edd_user_pass_confirm"]) ? $_POST["edd_user_pass_confirm"] : '';
 			$need_new_user	= true;
 			
-			if(strlen(trim($user_login)) > 0 && edd_no_guest_checkout()) {
+			if(strlen(trim($user_login)) > 0) {
 			
 				if(username_exists($user_login)) {
 					// Username already registered
@@ -78,18 +78,24 @@ function edd_process_purchase_form() {
 				if($user_pass != $pass_confirm) {
 					// passwords do not match
 					edd_set_error('password_mismatch', __('Passwords don\'t match', 'edd'));
-				}	
-			} elseif( !edd_no_guest_checkout() ) {
-				// no user name was provided, and guest checkout is not required
-				$need_new_user = false;
+				}
+			} elseif( edd_no_guest_checkout() ) {
+				edd_set_error('must_log_in', __('You must login or register to complete your purchase', 'edd'));
 			}
+		
 		} elseif(isset($_POST['edd-purchase-var']) && $_POST['edd-purchase-var'] == 'needs-to-login') {
 		
+			if( ( !isset( $_POST['edd-username'] ) || $_POST['edd-username'] == '' ) && edd_no_guest_checkout() ) {
+				edd_set_error('must_log_in', __('You must login or register to complete your purchase', 'edd'));
+			}
 			// log the user in
 			$user_data = get_user_by('login', $_POST['edd-username']);
 			if($user_data) {
-				$user_ID = $user_data->ID;
+				$user_id = $user_data->ID;
 				$user_email = $user_data->user_email;
+				$user_login = $user_data->user_login;
+				$user_first = $user_data->first_name;
+				$user_last = $user_data->last_name;
 				if(wp_check_password($_POST['edd-password'], $user_data->user_pass, $user_data->ID)) {
 					$user_pass = $_POST['edd-password'];
 					edd_log_user_in($user_data->ID, $_POST['edd-username'], $user_pass);
@@ -99,11 +105,9 @@ function edd_process_purchase_form() {
 				} else {
 					edd_set_error('password_incorrect', __('The password you entered is incorrect', 'edd'));
 				}
-				
 			} else {
 				edd_set_error('username_incorrect', __('The username you entered does not exist', 'edd'));
-			}
-			
+			}	
 		} elseif(isset($_POST['edd-purchase-var'])) {
 			edd_set_error('login_register_error', __('Something has gone wrong, please try again', 'edd'));
 		} else {
