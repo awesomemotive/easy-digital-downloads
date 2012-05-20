@@ -103,7 +103,7 @@ function edd_render_price_field($post_id) {
 					}
 				} else {
 					$field_html .= '<div class="edd_variable_prices_wrapper">';
-						$field_html .= '<input type="text" class="edd_variable_prices_name" placeholder="' . __('file name', 'edd') . '" name="edd_variable_prices[0][name]" id="edd_variable_prices[0][name]" value="" size="20" style="width:50%" />';
+						$field_html .= '<input type="text" class="edd_variable_prices_name" placeholder="' . __('price name', 'edd') . '" name="edd_variable_prices[0][name]" id="edd_variable_prices[0][name]" value="" size="20" style="width:50%" />';
 						$field_html .= '<input type="text" class="edd_variable_prices_amount" placeholder="' . __('9.99', 'edd') . '" name="edd_variable_prices[0][amount]" id="edd_variable_prices[0][amount]" value="" size="30" style="width:50px;" />';
 					$field_html .= '</div>';
 				}
