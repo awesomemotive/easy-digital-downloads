@@ -94,7 +94,7 @@ class edd_cart_widget extends WP_Widget {
 
 
 /**
- * Categories / Tags
+ * Categories / Tags Widget
  *
  * Downloads categories / tags widget class.
  *
