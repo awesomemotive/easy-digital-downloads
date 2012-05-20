@@ -388,6 +388,7 @@ function edd_add_collection_to_cart($taxonomy, $terms) {
 function edd_show_added_to_cart_messages($download_id) {
 	if( isset( $_POST['edd_action'] ) && $_POST['edd_action'] == 'add_to_cart' ) {
 		$alert = sprintf( __('You have successfully added %s to your shopping cart.', 'edd'), get_the_title( $download_id ) );
+		$alert .= ' <a href="' . edd_get_checkout_uri() . '" class="edd_alert_checkout_link">' . __('Checkout.', 'edd') . '</a>';
 		echo '<div class="edd_added_to_cart_alert">' . $alert . '</div>';
 	}
 }

@@ -62,6 +62,7 @@
 * Alerts
 ****************************************/
 .edd_added_to_cart_alert { padding: 5px; font-size: 14px;  border: 1px solid #046a9e; background: #9ecce2; color: #333; margin: 8px 0;}
+.edd_added_to_cart_alert a.edd_alert_checkout_link { color: #000!important; }
 
 /****************************************
 * Purchase buttons
