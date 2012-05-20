@@ -211,6 +211,6 @@ function edd_dashboard_sales_widget() {
 }
 
 function edd_dashboard_earnings_widget() {
-	edd_show_download_eanings_graph();
+	edd_show_download_earnings_graph();
 }
 */

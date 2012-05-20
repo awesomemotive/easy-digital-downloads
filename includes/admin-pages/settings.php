@@ -1,9 +1,9 @@
 <?php
 /**
- * Options Page
+ * Admin Options Page
  *
  * @package     Easy Digital Downloads
- * @subpackage  Options Page
+ * @subpackage  Admin Options Page
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0 

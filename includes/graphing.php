@@ -10,6 +10,14 @@
 */
 
 
+/**
+ * Show Download Sales Graph
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_show_download_sales_graph($bgcolor = 'white') {
 	$downloads = get_posts(array('post_type' => 'download', 'posts_per_page' => -1));
 	if($downloads) {
@@ -48,7 +56,15 @@ function edd_show_download_sales_graph($bgcolor = 'white') {
 }
 
 
-function edd_show_download_eanings_graph($bgcolor = 'white') {
+/**
+ * Show Download Earnings Graph
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
+function edd_show_download_earnings_graph($bgcolor = 'white') {
 	$downloads = get_posts(array('post_type' => 'download', 'posts_per_page' => -1));
 	if($downloads) {
 		ob_start(); ?>
@@ -84,6 +100,15 @@ function edd_show_download_eanings_graph($bgcolor = 'white') {
 		echo ob_get_clean();
 	}
 }
+
+
+/**
+ * Show Monthly Earnings Graph
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_show_monthly_eanings_graph($bgcolor = 'white') {
 	ob_start(); ?>

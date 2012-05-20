@@ -1,10 +1,38 @@
 <?php
+/**
+ * Manual Gateway
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Manual Gateway
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
 
-// PayPal Standard does not need a CC form, so remove it
+
+/**
+ * Manual Remove CC Form
+ *
+ * Manual does not need a CC form, so remove it.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_manual_remove_cc_form() {
 	// we only register the action so that the default CC form is not shown
 }
 add_action('edd_manual_cc_form', 'edd_manual_remove_cc_form');
+
+
+/**
+ * Manual Payment
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_manual_payment($purchase_data) {
 	global $edd_options;

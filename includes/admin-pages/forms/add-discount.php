@@ -1,3 +1,14 @@
+<?php
+/**
+ * Add Discount Template
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Discounts
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+*/
+?>
 <h3><?php _e('Add New Discount', 'edd'); ?></h3>
 <form id="edd-add-discount" action="" method="POST">
 	<table class="form-table">

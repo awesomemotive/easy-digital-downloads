@@ -9,6 +9,15 @@
  * @since       1.0 
 */
 
+
+/**
+ * Add Download Meta Box
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_add_download_meta_box() {
 	add_meta_box('downloadinformation', __('Download Configuration', 'edd'), 'edd_render_download_meta_box', 'download', 'normal', 'default');
 	add_meta_box('edd_download_stats', __('Download Stats', 'edd'), 'edd_render_stats_meta_box', 'download', 'side', 'high');
@@ -18,8 +27,18 @@ function edd_add_download_meta_box() {
 }
 add_action('add_meta_boxes', 'edd_add_download_meta_box');
 
-// render the download information meta box
-function edd_render_download_meta_box()	{
+
+/**
+ * Render Download Meta Box
+ *
+ * Render the download information meta box.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
+function edd_render_download_meta_box() {
 	global $post, $wp_version, $edd_options;
 	
 	// Use nonce for verification
@@ -32,6 +51,15 @@ function edd_render_download_meta_box()	{
 
 	echo '</table>';
 }
+
+
+/**
+ * Render Price Field
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_render_price_field($post_id) {
 	global $edd_options;
@@ -48,11 +76,13 @@ function edd_render_price_field($post_id) {
 				
 				// check to see which pricing fields should be displayed
 				if($variable_pricing) { $price_display = ' style="display:none;"'; } else { $price_display = ''; }
-				if($variable_pricing) { $variable_display = ''; } else { $variable_display = ' style="display:none;"';  }
+				if($variable_pricing) { $variable_display = ''; } else { $variable_display = ' style="display:none;"';	}
 				
-				/**********************************
-				// variable pricing
-				**********************************/
+				/*
+				|--------------------------------------------------------------------------
+				| VARIABLE PRICING
+				|--------------------------------------------------------------------------
+				*/
 				
 				$prices = get_post_meta($post_id, 'edd_variable_prices', true);
 				// variable pricing (multiple pricing options)
@@ -81,9 +111,12 @@ function edd_render_price_field($post_id) {
 				
 				echo '<div id="edd_variable_price_fields" class="edd_pricing_fields" ' . $variable_display . '>' . $field_html . '</div>';
 					
-				/**********************************
-				// default, single pricing
-				**********************************/
+				/*
+				|--------------------------------------------------------------------------
+				| DEFAULT, SINGLE PRICE
+				|--------------------------------------------------------------------------
+				*/
+				
 				echo '<div id="edd_regular_price_field" class="edd_pricing_fields" ' . $price_display . '>';
 					if(!isset($edd_options['currency_position']) || $edd_options['currency_position'] == 'before') {
 						echo edd_currency_filter('') . '<input type="text" name="edd_price" id="edd_price" value="', $price ? $price : '', '" size="30" style="width:50px;" placeholder="9.99"/>';
@@ -97,6 +130,15 @@ function edd_render_price_field($post_id) {
 	echo '</tr>';
 }
 add_action('edd_meta_box_fields', 'edd_render_price_field', 10);
+
+
+/**
+ * Render Files Field
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_render_files_field($post_id) {
 	// downloadable files
@@ -136,6 +178,15 @@ function edd_render_files_field($post_id) {
 }
 add_action('edd_meta_box_fields', 'edd_render_files_field', 20);
 
+
+/**
+ * Render Purchase Text Field
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_render_purchase_text_field($post_id) {
 	// purchase text
 	$purchase_text = get_post_meta($post_id, '_edd_purchase_text', true);
@@ -147,6 +198,15 @@ function edd_render_purchase_text_field($post_id) {
 	echo '</tr>';
 }
 add_action('edd_meta_box_fields', 'edd_render_purchase_text_field', 30);
+
+
+/**
+ * Render Link Styles
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_render_link_styles($post_id) {
 	// link style
@@ -162,8 +222,17 @@ function edd_render_link_styles($post_id) {
 }
 add_action('edd_meta_box_fields', 'edd_render_link_styles', 40);	
 
+
+/**
+ * Render Button Color
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_render_button_color($post_id) {	
-	//  button color
+	//	button color
 	$button_color = get_post_meta($post_id, '_edd_purchase_color', true);
 	$link_style = get_post_meta($post_id, '_edd_purchase_style', true);
 	$display = $link_style == 'button' ? '' : ' style="display:none;"';
@@ -182,6 +251,15 @@ function edd_render_button_color($post_id) {
 }
 add_action('edd_meta_box_fields', 'edd_render_button_color', 50);
 
+
+/**
+ * Render Disable Button
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_render_disable_button($post_id) {	
 	$show_button = get_post_meta($post_id, '_edd_hide_purchase_link', true);
 	echo '<tr id="edd_hide_purchase_link" class="edd_table_row">';
@@ -193,6 +271,15 @@ function edd_render_disable_button($post_id) {
 	echo '</tr>';
 }
 add_action('edd_meta_box_fields', 'edd_render_disable_button', 60);
+
+
+/**
+ * Render Meta Notes
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_render_meta_notes($post_id) {
 	// notes
@@ -211,7 +298,17 @@ function edd_render_meta_notes($post_id) {
 }
 add_action('edd_meta_box_fields', 'edd_render_meta_notes', 70);
 	
-// Save data from meta box
+
+/**
+ * Download Meta Box Save
+ *
+ * Save data from meta box.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_download_meta_box_save($post_id) {
 	global $post;
 	
@@ -221,7 +318,7 @@ function edd_download_meta_box_save($post_id) {
 	}
 
 	// check autosave
-    if ( (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || ( defined('DOING_AJAX') && DOING_AJAX) || isset($_REQUEST['bulk_edit']) ) return $post_id;
+	if ( (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || ( defined('DOING_AJAX') && DOING_AJAX) || isset($_REQUEST['bulk_edit']) ) return $post_id;
 	
 	//don't save if only a revision
 	if ( isset($post->post_type) && $post->post_type == 'revision' ) return $post_id;
@@ -266,6 +363,15 @@ function edd_download_meta_box_save($post_id) {
 }
 add_action('save_post', 'edd_download_meta_box_save');
 
+
+/**
+ * Render Stats Meta Box
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
 function edd_render_stats_meta_box() {
 	global $post;
 	
@@ -288,6 +394,15 @@ function edd_render_stats_meta_box() {
 		do_action('edd_stats_meta_box');
 	echo '</table>';
 }
+
+
+/**
+ * Render Purchase Log Meta Box
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_render_purchase_log_meta_box() {
 	global $post;
@@ -334,6 +449,15 @@ function edd_render_purchase_log_meta_box() {
 		}
 	echo '</table>';
 }
+
+
+/**
+ * Render Download Log Meta Box
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
 
 function edd_render_download_log_meta_box() {
 	global $post;
