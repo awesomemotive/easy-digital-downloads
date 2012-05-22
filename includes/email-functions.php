@@ -22,6 +22,7 @@
 
 function edd_email_download_link($payment_id, $admin_notice = true) {
 	global $edd_options;
+	
 	$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
 
 	$message = '<html><body>';
