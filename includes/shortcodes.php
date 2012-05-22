@@ -41,7 +41,7 @@ add_shortcode('purchase_link', 'edd_download_shortcode');
 /**
  * Download History Shortcode
  *
- * Displays a user's download/purchsae history.
+ * Displays a user's download history.
  *
  * @access      private
  * @since       1.0 
@@ -99,6 +99,76 @@ function edd_download_history() {
 	}
 }
 add_shortcode('download_history', 'edd_download_history');
+
+/**
+ * Purchase History Shortcode
+ *
+ * Displays a user's purchsae history.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      string
+*/
+
+function edd_purchase_history() {
+	global $user_ID, $edd_options;
+	
+	if(is_user_logged_in()) {
+		
+		$purchases = edd_get_users_purchases($user_ID);
+		
+		ob_start();
+			if($purchases) { ?>
+				<table id="edd_user_history">
+					<thead>
+						<tr>
+							<?php do_action('edd_purchase_history_header_before'); ?>
+							<th class="edd_purchase_id_header"><?php _e('Purchase ID', 'edd'); ?></th>
+							<th class="edd_purchase_date_header"><?php _e('Date', 'edd'); ?></th>
+							<th class="edd_purchase_amount_header"><?php _e('Amount', 'edd'); ?></th>
+							<th class="edd_purchased_files_header"><?php _e('Files', 'edd'); ?></th>
+							<?php do_action('edd_purchase_history_header_after'); ?>
+						</tr>
+					</thead>
+					<?php foreach($purchases as $purchase) { ?>
+						<?php $purchase_data = get_post_meta($purchase->ID, '_edd_payment_meta', true); ?>
+						<?php do_action('edd_purchase_history_body_start', $purchase->ID, $purchase_data); ?>
+						<tr class="edd_purhcase_row">
+							<td>#<?php echo $purchase->ID; ?></td>
+							<td><?php echo date(get_option('date_format'), strtotime($purchase->post_date)); ?></td>
+							<td><?php echo edd_currency_filter($purchase_data['amount']); ?></td>
+							<td>
+								<?php
+									// show a list of downloadable files
+									$downloads = edd_get_downloads_of_purchase($purchase->ID);
+									if($downloads) {
+										foreach($downloads as $download) {
+											$id = isset($purchase_data['cart_details']) ? $download['id'] : $download;
+											$download_files = get_post_meta($id, 'edd_download_files', true);
+											if($download_files) {
+												foreach($download_files as $filekey => $file) {
+													$download_url = edd_get_download_file_url($purchase_data['key'], $purchase_data['email'], $filekey, $id);
+													echo'<div class="edd_download_file"><a href="' . $download_url . '" class="edd_download_file_link">' . $file['name'] . '</a></div>';
+												} 
+											} else {
+												_e('No downloadable files found.', 'edd');
+											}
+										}
+									}
+								?>
+							</td>
+						</tr>
+						<?php do_action('edd_purchase_history_body_end', $purchase->ID, $purchase_data); ?>
+					<?php } ?>
+				</table>
+				<?php
+			} else {
+				echo '<p class="edd-no-purchases">' . __('You have not made any purchases', 'edd') . '</p>';
+			}
+		return ob_get_clean();
+	}
+}
+add_shortcode('purchase_history', 'edd_purchase_history');
 
 
 /**
