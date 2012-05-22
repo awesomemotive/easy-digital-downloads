@@ -46,6 +46,6 @@ add_action('admin_notices', 'edd_admin_messages');
 */
 
 function edd_admin_addons_notices() {
-    add_settings_error( 'edd-notices', 'edd-addons-feed-error', __('There seems to be an issue with the server. Please try again in a few minutes.', 'edd'), 'error' );
-    settings_errors( 'edd-notices' );
+	add_settings_error( 'edd-notices', 'edd-addons-feed-error', __('There seems to be an issue with the server. Please try again in a few minutes.', 'edd'), 'error' );
+	settings_errors( 'edd-notices' );
 }
