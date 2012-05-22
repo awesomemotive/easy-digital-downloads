@@ -132,7 +132,7 @@ function edd_purchase_history() {
 					</thead>
 					<?php foreach($purchases as $purchase) { ?>
 						<?php $purchase_data = get_post_meta($purchase->ID, '_edd_payment_meta', true); ?>
-						<?php do_action('edd_purchase_history_body_start', $purchase->ID, $purchase_data); ?>
+						<?php do_action('edd_purchase_history_body_start', $purchase, $purchase_data); ?>
 						<tr class="edd_purhcase_row">
 							<td>#<?php echo $purchase->ID; ?></td>
 							<td><?php echo date(get_option('date_format'), strtotime($purchase->post_date)); ?></td>
@@ -158,7 +158,7 @@ function edd_purchase_history() {
 								?>
 							</td>
 						</tr>
-						<?php do_action('edd_purchase_history_body_end', $purchase->ID, $purchase_data); ?>
+						<?php do_action('edd_purchase_history_body_end', $purchase, $purchase_data); ?>
 					<?php } ?>
 				</table>
 				<?php
