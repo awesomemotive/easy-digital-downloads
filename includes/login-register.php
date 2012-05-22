@@ -44,11 +44,11 @@ function edd_login_form($redirect = '') {
 			<fieldset>
 				<legend><?php _e('Log into Your Account', 'edd'); ?></legend>
 				<p>
-					<label for="edd_user_Login"><?php _e('Username', 'feralf'); ?></label>
+					<label for="edd_user_Login"><?php _e('Username', 'edd'); ?></label>
 					<input name="edd_user_login" id="edd_user_login" class="required" type="text" title="<?php _e('Username', 'edd'); ?>"/>
 				</p>
 				<p>
-					<label for="edd_user_pass"><?php _e('Password', 'feralf'); ?></label>
+					<label for="edd_user_pass"><?php _e('Password', 'edd'); ?></label>
 					<input name="edd_user_pass" id="edd_user_pass" class="password required" type="password"/>
 				</p>
 				<p>
