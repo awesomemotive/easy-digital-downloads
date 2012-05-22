@@ -72,7 +72,7 @@ Would you like to help translate the plugin into more langauges? [Contact Pippin
 
 There are three ways you can show the downloads shopping cart:
 
-1. Use the short code and simply place ]download_cart] on a page or within a text widget.
+1. Use the short code and simply place [download_cart] on a page or within a text widget.
 
 2. Use the included widget. Go to Appearance > Widgets and place the "Downloads Cart" widget into any widget area available.
 
@@ -83,6 +83,32 @@ There are three ways you can show the downloads shopping cart:
 = Getting a 404 error? =
 
 To get rid of the 404 error when viewing a download, you need to resave your permalink structure. Go to Settings > Permalinks and click "Save Changes".
+
+= How do I Show the User's Purchase History? =
+
+Place the [purchase_history] short code on any page.
+
+If you want to just show a list of the files the user has purchased, use the [download_history] short code instead.
+
+= Can I Setup an Affiliate System? =
+
+Yes! EDD has an add-on that provides a complete affiliate system that you can use to award commissions to your affiliate marketers.
+
+[Checkout Affiliates Pro + EDD Integration Pack](http://easydigitaldownloads.com/extension/affiliates-pro-integration-pack/)
+
+= Can Users Purchase Products without Using PayPal? =
+
+Yes, through the addition of one or more of the add-on payment gateways, you can accept payments in many different ways. The add-on gateways currently available:
+
+* [Stripe](http://easydigitaldownloads.com/extension/stripe-payment-gateway/)
+* [Recurly](http://easydigitaldownloads.com/extension/recurly-com-checkout/)
+* [Authorize.net](http://easydigitaldownloads.com/extension/authorize-net-gateway/)
+* [Moneybookers / Skrill](http://easydigitaldownloads.com/extension/moneybookers-skrill-payment-gateway/)
+* [2Checkout](http://easydigitaldownloads.com/extension/2checkout-gateway/)
+* [PayPal Pro / Express](http://easydigitaldownloads.com/extension/paypal-pro-express/)
+* [Mijireh Checkout](http://easydigitaldownloads.com/extension/mijireh-checkout/)
+* [MercadoPago](http://easydigitaldownloads.com/extension/mercadopago/)
+* More coming soon
 
 == Screenshots ==
 
@@ -98,6 +124,16 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 
 
 == Changelog ==
+
+= 1.0.8 =
+
+* Added the [purchase_history] shortcode for showing a detailed list of user's purchases
+* Improved the names of the widgets
+* Fixed a CSS bug with the Add Ons page
+* Added the edd_get_checkout_uri() function for use by themes
+* Fixed a couple of bugs with the login/register checkout forms
+* Dramatically improved code documentation
+* Fixed an incorrectly named parameter in the edd_after_download_content hook
 
 = 1.0.7.2 =
 
@@ -236,6 +272,16 @@ To get rid of the 404 error when viewing a download, you need to resave your per
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.0.8 =
+
+* Added the [purchase_history] shortcode for showing a detailed list of user's purchases
+* Improved the names of the widgets
+* Fixed a CSS bug with the Add Ons page
+* Added the edd_get_checkout_uri() function for use by themes
+* Fixed a couple of bugs with the login/register checkout forms
+* Dramatically improved code documentation
+* Fixed an incorrectly named parameter in the edd_after_download_content hook
 
 = 1.0.7.2 =
 
