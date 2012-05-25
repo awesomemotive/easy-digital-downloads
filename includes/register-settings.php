@@ -640,7 +640,7 @@ function edd_rich_editor_callback($args) {
 	global $edd_options, $wp_version;
 	
 	if(isset($edd_options[$args['id']])) { $value = $edd_options[$args['id']]; } else { $value = isset($args['std']) ? $args['std'] : ''; }
-    if($wp_version >= 3.3) {
+    if($wp_version >= 3.3 && function_exists('wp_editor')) {
 		$html = wp_editor($value, 'edd_settings_' . $args['section'] . '[' . $args['id'] . ']', array('textarea_name' => 'edd_settings_' . $args['section'] . '[' . $args['id'] . ']'));
     } else {
 		$html = '<textarea class="large-text" rows="10" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']">' . $value . '</textarea>';
