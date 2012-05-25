@@ -11,42 +11,6 @@
 
 
 /**
- * Cart Get Actions
- *
- * Hooks EDD actions, when present in $_GET.
- *
- * @access      private
- * @since       1.0 
- * @return      void
-*/
-
-function edd_cart_get_actions() {
-	if(isset($_GET['edd_action'])) {
-		do_action('edd_' . $_GET['edd_action'], $_GET);		
-	}
-}
-add_action('init', 'edd_cart_get_actions');
-
-
-/**
- * Cart Post Actions
- *
- * Hooks EDD actions, when present in $_POST.
- *
- * @access      private
- * @since       1.0 
- * @return      void
-*/
-
-function edd_cart_post_actions() {
-	if(isset($_POST['edd_action'])) {
-		do_action('edd_' . $_POST['edd_action'], $_POST);		
-	}
-}
-add_action('init', 'edd_cart_post_actions');
-
-
-/**
  * Process Add To Cart
  *
  * Process the add to cart request.

@@ -23,13 +23,9 @@
 
 function edd_process_purchase_form() {
     global $edd_options;
-    
+
     // no need to run on admin
     if ( is_admin() )
-    return;
-    
-    // look for the purchase action
-    if ( ! isset( $_POST['edd-action'] ) || $_POST['edd-action'] != 'purchase' )
     return;
     
     // verify the nonce for this action

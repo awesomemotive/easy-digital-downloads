@@ -191,7 +191,7 @@ function edd_checkout_form() {
 									<?php if(is_user_logged_in()) { ?>
 									<input type="hidden" name="edd-user-id" value="<?php echo $user_data->ID; ?>"/>
 									<?php } ?>
-									<input type="hidden" name="edd-action" value="purchase"/>
+									<input type="hidden" name="edd_action" value="purchase"/>
 									<input type="hidden" name="edd-gateway" value="<?php echo $payment_mode; ?>" />
 									<input type="hidden" name="edd-nonce" value="<?php echo wp_create_nonce('edd-purchase-nonce'); ?>"/>
 									<?php $color = isset($edd_options['checkout_color']) ? $edd_options['checkout_color'] : 'gray'; ?>
