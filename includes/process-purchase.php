@@ -295,7 +295,6 @@ function edd_purchase_form_validate_logged_in_user() {
 */
 
 function edd_purchase_form_validate_new_user() {
-	//$registering_user = false;	
 
    // start empty array to collect valid user data
    $valid_user_data = array(
@@ -315,9 +314,7 @@ function edd_purchase_form_validate_new_user() {
 			
    // check if we have an username to register
    if ( $user_login && strlen( $user_login ) > 0 ) {
-	
-		//$registering_user = true;
-	
+		
 		// we have an user name, check if it already exists
 		if ( username_exists( $user_login ) ) {
 			
@@ -354,7 +351,7 @@ function edd_purchase_form_validate_new_user() {
 		   edd_set_error( 'email_invalid', __( 'Invalid email', 'edd' ) );
 	 
 	  // check if email exists	 
-	   } else if ( email_exists( $user_email ) && $registering_user ) {
+	   } else if ( email_exists( $user_email ) ) {
 			
 			// email address already registered
 			edd_set_error( 'email_used', __( 'Email already used', 'edd' ) );
@@ -377,7 +374,7 @@ function edd_purchase_form_validate_new_user() {
 	if ( $user_pass && $pass_confirm ) {
 		
 		// verify confirmation matches
-		if ( $user_pass != $pass_confirm && $registering_user ) {
+		if ( $user_pass != $pass_confirm ) {
 			
 			// passwords do not match
 			edd_set_error( 'password_mismatch', __( 'Passwords don\'t match', 'edd' ) );
@@ -388,7 +385,7 @@ function edd_purchase_form_validate_new_user() {
 			$valid_user_data['user_pass'] = $user_pass;
 			
 		}
-	} else if( $registering_user ) {
+	} else {
 		
 		// pass or confrimation missing
 		if ( ! $user_pass ) {
