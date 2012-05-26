@@ -159,6 +159,7 @@ function edd_update_payment_status($payment_id, $status = 'publish') {
 	if(!edd_is_test_mode()) {
 		// increase purchase count and earnings
 		foreach($downloads as $download) {
+			
 			edd_record_sale_in_log($download['id'], $payment_id, $user_info, $payment_data['date']);
 			edd_increase_purchase_count($download['id']);
 			$amount = null;
@@ -168,6 +169,7 @@ function edd_update_payment_status($payment_id, $status = 'publish') {
 			}
 			$amount = edd_get_download_final_price($download['id'], $user_info, $amount);
 			edd_increase_earnings($download['id'], $amount);
+			
 		}
 	
 		if(isset($payment_data['user_info']['discount'])) {
@@ -182,6 +184,45 @@ function edd_update_payment_status($payment_id, $status = 'publish') {
 	edd_empty_cart();
 	
 	do_action('edd_update_payment_status', $payment_id, $status);
+}
+
+
+/**
+ * Undos a purchase, including the decrease of sale and earning stats
+ *
+ * Used for when refunding or deleting a purchase
+ *
+ * @access      public
+ * @since       1.0.8.1
+ * @param       int $download_id - the ID number of the download
+ * @param       int $payment_id - the ID number of the purchase
+ * @return      
+*/
+
+function edd_undo_purchase( $download_id, $payment_id ) {
+	
+	$payment = get_post( $payment_id );
+	if( edd_get_payment_status( $payment ) == 'refunded' )
+		return; // payment has already been reversed
+	
+	edd_decrease_purchase_count( $download_id );
+				
+	$purchase_meta = get_post_meta($payment_id, '_edd_payment_meta', true);
+	
+	$user_purchase_info = maybe_unserialize( $purchase_meta['user_info'] );
+	
+	$cart_details = maybe_unserialize( $purchase_meta['cart_details'] );					
+			
+	$amount = null;
+	if(is_array($cart_details)) {
+		$cart_item_id = array_search($download_id, $cart_details);
+		$amount = isset($cart_details[$cart_item_id]['price']) ? $cart_details[$cart_item_id]['price'] : null;
+	}				
+					
+	$amount = edd_get_download_final_price( $download_id, $user_purchase_info, $amount );
+	
+	edd_decrease_earnings( $download_id, $amount );
+	
 }
 
 
@@ -221,6 +262,9 @@ function edd_get_payment_status($payment = OBJECT) {
 			break;
 		case 'publish' :
 			return __('complete', 'edd');
+			break;
+		case 'refunded' :
+			return __('refunded', 'edd');
 			break;
 		default:
 			return;
