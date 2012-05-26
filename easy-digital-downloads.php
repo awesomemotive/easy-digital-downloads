@@ -84,6 +84,7 @@ include_once(EDD_PLUGIN_DIR . 'includes/ajax-functions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/widgets.php');
 include_once(EDD_PLUGIN_DIR . 'includes/mime-types.php');
 include_once(EDD_PLUGIN_DIR . 'includes/gateway-functions.php');
+include_once(EDD_PLUGIN_DIR . 'includes/discount-actions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/discount-functions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/payment-functions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/misc-functions.php');
