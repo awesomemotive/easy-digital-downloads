@@ -103,8 +103,12 @@ function edd_payment_history_page() {
 							foreach($payments as $payment) : ?>							
 								<?php 
 								$payment_meta = get_post_meta($payment->ID, '_edd_payment_meta', true);
-								$user_info = maybe_unserialize($payment_meta['user_info']); ?>
-								<tr class="edd_payment <?php if(edd_is_odd($i)) echo 'alternate'; ?>">
+								$user_info = maybe_unserialize($payment_meta['user_info']); 
+								$classes = array();
+								$classes[] = edd_is_odd($i) ? 'alternate' : '';
+								$payment_classes = get_post_class( apply_filters( 'edd_payment_row_classes', $classes ), $payment->ID );						
+								?>
+								<tr class="edd_payment <?php echo implode( ' ', $payment_classes ); ?>">
 									<td>
 										<?php echo $payment->ID; ?>
 									</td>
