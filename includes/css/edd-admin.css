@@ -14,3 +14,7 @@
 #edd-add-ons .edd-extension h3 { margin: 0 0 8px; }
 #edd-add-ons .edd-extension .button-secondary { position: absolute; bottom: 8px; left: 8px; }
 #edd-add-ons .edd-browse-all { clear:both; width:100%; }
+
+/* Payment History Styles
+-------------------------------------------------------------- */
+tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
