@@ -111,6 +111,7 @@ function edd_load_admin_scripts($hook) {
         'post_id' => isset($post->ID) ? $post->ID : null,
         'add_new_download' => __('Add New Download', 'edd'), // thickbox title
         'use_this_file' => __('Use This File','edd'), // "use this file" button
+        'delete_payment' => __('Are you sure you wish to delete this payment?', 'edd')
     ));
 	wp_enqueue_style('thickbox');
 	wp_enqueue_style('jquery-ui-css', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css', false, '1.8', 'all');

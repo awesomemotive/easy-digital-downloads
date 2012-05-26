@@ -153,4 +153,11 @@ jQuery(document).ready(function ($) {
 		return false;
 	});
 	
+	$('.edd_payment .row-actions .delete a').on('click', function() {
+		if( confirm( edd_vars.delete_payment ) ) {
+			return true;	
+		}		
+		return false;
+	});	
+	
 });
