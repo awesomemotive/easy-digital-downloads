@@ -52,6 +52,7 @@ $payment_data = get_post_meta($_GET['purchase_id'], '_edd_payment_meta', true);
 						<select name="edd-payment-status" id="edd_payment_status">
 							<option value="pending" <?php selected($status, 'pending'); ?>><?php _e('Pending', 'edd'); ?></option>
 							<option value="publish" <?php selected($status, 'publish'); ?>><?php _e('Complete', 'edd'); ?></option>
+							<option value="refunded" <?php selected($status, 'refunded'); ?>><?php _e('Refunded', 'edd'); ?></option>
 						</select>
 					</td>
 				</tr>
