@@ -58,8 +58,6 @@ function edd_update_edited_purchase($data) {
 		
 		if($_POST['edd-old-status'] != $_POST['edd-payment-status']) {
 			
-			wp_update_post(array('ID' => $payment_id, 'post_status' => $_POST['edd-payment-status']));
-			
 			if( $_POST['edd-payment-status'] == 'refunded' ) {
 				
 				// update sale counts and earnings for all purchased products
@@ -69,7 +67,9 @@ function edd_update_edited_purchase($data) {
 					
 				}
 				
-			}
+			}			
+			
+			wp_update_post(array('ID' => $payment_id, 'post_status' => $_POST['edd-payment-status']));
 			
 		}
 		

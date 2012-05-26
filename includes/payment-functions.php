@@ -207,7 +207,7 @@ function edd_undo_purchase( $download_id, $payment_id ) {
 	
 	edd_decrease_purchase_count( $download_id );
 				
-	$purchase_meta = get_post_meta($payment_id, '_edd_payment_meta', true);
+	$purchase_meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
 	
 	$user_purchase_info = maybe_unserialize( $purchase_meta['user_info'] );
 	
