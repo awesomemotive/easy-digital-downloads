@@ -34,7 +34,7 @@ msgstr "Le paiement a été supprimé."
 
 #: includes/admin-notices.php:15
 msgid "The purchase receipt has been resent."
-msgstr "La facture d'achat a été renvoyé."
+msgstr "La facture d'achat a été renvoyée."
 
 # @ edd
 #: includes/admin-pages.php:6
@@ -172,7 +172,7 @@ msgstr "Achat"
 # @ edd
 #: includes/checkout-template.php:190
 msgid "Go back"
-msgstr "Retourner"
+msgstr "Retour"
 
 # @ edd
 #: includes/checkout-template.php:194
