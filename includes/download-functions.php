@@ -55,7 +55,7 @@ function edd_get_download($download) {
  * @since       1.0 
  * @param       int $download_id - the ID of the download
  * @param       array $user_purchase_info - an array of all information for the payment
- * @param       string $amount_override a custom amount taht over rides the 'edd_price' meta, used for variable prices
+ * @param       string $amount_override a custom amount that over rides the 'edd_price' meta, used for variable prices
  * @return      string - the price of the download
 */
 
@@ -280,7 +280,7 @@ function edd_has_variable_prices($download_id) {
 /**
  * Increase Purchase Count
  *
- * Increases the sale count od a download.
+ * Increases the sale count of a download.
  *
  * @access      public
  * @since       1.0 
@@ -290,6 +290,25 @@ function edd_has_variable_prices($download_id) {
 function edd_increase_purchase_count($download_id) {
 	$sales = edd_get_download_sales_stats($download_id);
 	$sales = $sales + 1;
+	if(update_post_meta($download_id, '_edd_download_sales', $sales))
+		return $sales;
+
+	return false;
+}
+
+/**
+ * Decrease Purchase Count
+ *
+ * Decreases the sale count of a download. Primarily for when a purchase is refunded.
+ *
+ * @access      public
+ * @since       1.0.8.1
+ * @return      void
+*/
+
+function edd_decrease_purchase_count($download_id) {
+	$sales = edd_get_download_sales_stats($download_id);
+	$sales = $sales - 1;
 	if(update_post_meta($download_id, '_edd_download_sales', $sales))
 		return $sales;
 
@@ -310,6 +329,27 @@ function edd_increase_purchase_count($download_id) {
 function edd_increase_earnings($download_id, $amount) {
 	$earnings = edd_get_download_earnings_stats($download_id);
 	$earnings = $earnings + $amount;
+	
+	if(update_post_meta($download_id, '_edd_download_earnings', $earnings))
+		return $earnings;
+	
+	return false;
+}
+
+
+/**
+ * Decrease Earnings
+ *
+ * Decreases the total earnings of a download. Primarily for when a purchase is refunded.
+ *
+ * @access      public
+ * @since       1.0.8.1 
+ * @return      void
+*/
+
+function edd_decrease_earnings($download_id, $amount) {
+	$earnings = edd_get_download_earnings_stats($download_id);
+	$earnings = $earnings - $amount;
 	
 	if(update_post_meta($download_id, '_edd_download_earnings', $earnings))
 		return $earnings;
