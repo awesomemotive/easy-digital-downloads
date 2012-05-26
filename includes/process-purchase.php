@@ -26,11 +26,11 @@ function edd_process_purchase_form() {
 
 	// no need to run on admin
 	if ( is_admin() )
-	return;
+		return;
 
 	// verify the nonce for this action
 	if ( ! isset( $_POST['edd-nonce'] ) || ! wp_verify_nonce( $_POST['edd-nonce'], 'edd-purchase-nonce' ) )
-	return;
+		return;
 
 	// validate the form $_POST data
 	$valid_data = edd_purchase_form_validate_fields(); 
@@ -92,6 +92,7 @@ function edd_process_purchase_form() {
 
 	// send info to the gateway for payment processing
 	edd_send_to_gateway( $valid_data['gateway'], $purchase_data );
+	
 	exit;
 }
 add_action('edd_purchase', 'edd_process_purchase_form');
@@ -296,14 +297,16 @@ function edd_purchase_form_validate_logged_in_user() {
 
 function edd_purchase_form_validate_new_user() {
 
+	$registering_new_user = false;
+
    // start empty array to collect valid user data
    $valid_user_data = array(
-	// assume there will be errors
-	'user_id' => -1,
-	// get first name
-	'user_first' => isset( $_POST["edd_first"] ) ? strip_tags( trim( $_POST["edd_first"] ) ) : '',
-	// get last name
-	'user_last' => isset( $_POST["edd_last"] ) ? strip_tags( trim( $_POST["edd_last"] ) ) : '',
+		// assume there will be errors
+		'user_id' => -1,
+		// get first name
+		'user_first' => isset( $_POST["edd_first"] ) ? strip_tags( trim( $_POST["edd_first"] ) ) : '',
+		// get last name
+		'user_last' => isset( $_POST["edd_last"] ) ? strip_tags( trim( $_POST["edd_last"] ) ) : '',
    );
  
    // check the new user's credentials against existing ones
@@ -314,6 +317,8 @@ function edd_purchase_form_validate_new_user() {
 			
    // check if we have an username to register
    if ( $user_login && strlen( $user_login ) > 0 ) {
+		
+		$registering_new_user = true;
 		
 		// we have an user name, check if it already exists
 		if ( username_exists( $user_login ) ) {
@@ -351,7 +356,7 @@ function edd_purchase_form_validate_new_user() {
 		   edd_set_error( 'email_invalid', __( 'Invalid email', 'edd' ) );
 	 
 	  // check if email exists	 
-	   } else if ( email_exists( $user_email ) ) {
+	   } else if ( email_exists( $user_email ) && $registering_new_user ) {
 			
 			// email address already registered
 			edd_set_error( 'email_used', __( 'Email already used', 'edd' ) );
@@ -385,15 +390,16 @@ function edd_purchase_form_validate_new_user() {
 			$valid_user_data['user_pass'] = $user_pass;
 			
 		}
+		
 	} else {
 		
 		// pass or confrimation missing
-		if ( ! $user_pass ) {
+		if ( ! $user_pass && $registering_new_user ) {
 			
 			// password invalid
 			edd_set_error( 'password_empty', __( 'Enter a password', 'edd' ) );
 			
-		} else if ( ! $pass_confirm ) {
+		} else if ( ! $pass_confirm && $registering_new_user ) {
 			
 			// confirmation invalid 
 			edd_set_error( 'confirmation_empty', __( 'Enter the password confirmation', 'edd' ) );
