@@ -177,6 +177,9 @@ function edd_apply_email_template( $body, $payment_id, $payment_data ) {
 	
 	$template_name = isset( $edd_options['email_template'] ) ? $edd_options['email_template'] : 'default';
 	
+	if( $template_name == 'none' )
+		return $body; // return the plain email with no template	
+	
 	ob_start();
 		do_action('edd_email_template_' . $template_name);
 	
@@ -200,9 +203,25 @@ add_filter('edd_purchase_receipt', 'edd_apply_email_template', 10, 3);
 
 function edd_default_email_template() {	
 	
-	echo '<div>';
-		echo '{email}';
+	echo '<div style="width: 400px;" border: 1px solid #ccc;>';
+		echo '{email}'; // this tag is required in order for the contents of the email to be shown
 	echo '</div>';
 }
 add_action('edd_email_template_default', 'edd_default_email_template');
 
+
+/**
+ * Get Email Templates
+ *
+ * @access     private
+ * @since      1.0.8.2
+ * @return     array
+*/
+
+function edd_get_email_templates() {
+	$templates = array(
+		'default' => __('Default Template'),
+		'none' => __('No template, plain text only', 'edd')
+	);
+	return apply_filters( 'edd_email_templates', $templates );
+}	

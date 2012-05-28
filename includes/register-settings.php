@@ -178,6 +178,13 @@ function edd_register_settings() {
 					'type' => 'rich_editor'
 				),
 				array(
+					'id' => 'email_template',
+					'name' => __('Email Template', 'edd'),
+					'desc' => __('Choose a template', 'edd'),
+					'type' => 'select',
+					'options' => edd_get_email_templates()
+				),
+				array(
 					'id' => 'email_settings',
 					'name' => '',
 					'desc' => '',
