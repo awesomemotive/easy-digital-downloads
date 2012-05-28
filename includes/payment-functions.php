@@ -274,6 +274,28 @@ function edd_get_payment_status($payment = OBJECT) {
 
 
 /**
+ * Get Payment Statuses
+ *
+ * Retrieves all available statuses for payments
+ *
+ * @access      public
+ * @since       1.0.8.1 
+ * @return      string
+*/
+
+function edd_get_payment_statuses() {
+	
+	$payment_statuses = array(
+		'pending' => __('Pending', 'edd'),
+		'publish' => __('Complete', 'edd'),
+		'refunded' => __('Refunded', 'edd')
+	);
+	
+	return apply_filters( 'edd_payment_statuses', $payment_statuses ); 
+	
+}
+
+/**
  * Get Earnings By Date
  *
  * @access      public
