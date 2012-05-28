@@ -176,6 +176,12 @@ function edd_register_settings() {
 						'{price} - ' . __('The total price of the purchase', 'edd') . '<br/>' .
 						'{sitename} - ' . __('Your site name', 'edd'),
 					'type' => 'rich_editor'
+				),
+				array(
+					'id' => 'email_settings',
+					'name' => '',
+					'desc' => '',
+					'type' => 'hook',
 				)
 			)
 		),
@@ -648,6 +654,23 @@ function edd_rich_editor_callback($args) {
 	$html .= '<br/><label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';  
  
     echo $html;
+ 
+}
+
+
+/**
+ * Hook Callback
+ *
+ * Adds a do_action() hook in place of the field
+ *
+ * @access      private
+ * @since       1.0.8.2 
+ * @return      void
+*/
+
+function edd_hook_callback($args) { 
+ 	
+	do_action('edd_' . $args['id']);
  
 }
 
