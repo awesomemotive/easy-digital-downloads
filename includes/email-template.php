@@ -152,10 +152,11 @@ function edd_get_email_body_content( $payment_id, $payment_data ) {
 */
 
 function edd_get_email_body_footer() {
-	ob_start(); ?>
+	ob_start(); 
+	do_action('edd_email_body_footer');	
+	?>
 	</body></html>
 	<?php
-	do_action('edd_email_body_footer');
 	return ob_get_clean();
 }
 
