@@ -215,7 +215,7 @@ function edd_process_paypal_ipn() {
 	if ($verified) {
 		$payment_id 		= $_POST['custom'];
 		$purchase_key	 	= $_POST['item_number'];
-		$paypal_amount 		= $_POST['mc_gross'];
+		$paypal_amount 	= absint( $_POST['mc_gross'] );
 		$payment_status 	= $_POST['payment_status'];
 		$currency_code		= strtolower($_POST['mc_currency']);
 		
@@ -234,9 +234,29 @@ function edd_process_paypal_ipn() {
 		}
 				
 		if(isset($_POST['txn_type']) && $_POST['txn_type'] == 'web_accept') {
-			if(strtolower($payment_status) == 'completed' || edd_is_test_mode()) {
+			
+			$status = strtolower($payment_status);			
+			
+			if( $status == 'completed' || edd_is_test_mode()) {
+				
 				// set the payment to complete. This also sends the emails
 				edd_update_payment_status($payment_id, 'publish');
+				
+			} else if( $status == 'refunded' ) {
+				
+				// this refund process doesn't work yet				
+				
+				$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
+				$downloads = maybe_unserialize($payment_data['downloads']);				
+				
+				if( is_array( $downloads ) ) {
+					foreach( $downloads as $download ) {
+						edd_undo_purchase( $download['id'], $payment_id );		
+					}
+				}
+				
+				wp_update_post(array('ID' => $payment_id, 'post_status' => 'refunded'));				
+				
 			}
 		}
 
