@@ -148,7 +148,7 @@ function edd_get_email_body_content( $payment_id, $payment_data ) {
  *
  * @access     private
  * @since      1.0.8.2
- * @echo      	string
+ * @return     string
 */
 
 function edd_get_email_body_footer() {
@@ -158,3 +158,50 @@ function edd_get_email_body_footer() {
 	do_action('edd_email_body_footer');
 	return ob_get_clean();
 }
+
+/**
+ * Applies the Chosen Email Template
+ *
+ * @access     private
+ * @since      1.0.8.2
+ * @param		string - the contents of the receipt email
+ * @param		int - the ID of the payment we are sending a receipt for
+ * @param		array - an array of meta information for the payment
+ * @return     string
+*/
+
+function edd_apply_email_template( $body, $payment_id, $payment_data ) {
+	
+	global $edd_options;	
+	
+	$template_name = isset( $edd_options['email_template'] ) ? $edd_options['email_template'] : 'default';
+	
+	ob_start();
+		do_action('edd_email_template_' . $template_name);
+	
+	$template = ob_get_clean();	
+	
+	$email = str_replace('{email}', $body, $template );
+	
+	return $email;	
+	
+}
+add_filter('edd_purchase_receipt', 'edd_apply_email_template', 10, 3);
+
+
+/**
+ * Default Email Template
+ *
+ * @access     private
+ * @since      1.0.8.2
+ * @echo      	string
+*/
+
+function edd_default_email_template() {	
+	
+	echo '<div>';
+		echo '{email}';
+	echo '</div>';
+}
+add_action('edd_email_template_default', 'edd_default_email_template');
+
