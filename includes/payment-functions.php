@@ -253,23 +253,21 @@ function edd_check_for_existing_payment($payment_id) {
  * @return      string
 */
 
-function edd_get_payment_status($payment = OBJECT) {
-	if(!is_object($payment))
-		return;
-	switch($payment->post_status) :
-		case 'pending' :
-			return __('pending', 'edd');
-			break;
-		case 'publish' :
-			return __('complete', 'edd');
-			break;
-		case 'refunded' :
-			return __('refunded', 'edd');
-			break;
-		default:
-			return;
-			break;
-	endswitch;
+function edd_get_payment_status($payment = OBJECT, $return_label = false) {
+	if( !is_object($payment) && !isset($payment->post_status) )
+    	return;
+     
+   $statuses = edd_get_payment_statuses();
+   if (!is_array($statuses) || empty($statuses)) 
+   	return;
+     
+   if ( array_key_exists( $payment->post_status, $statuses) ) {
+      if ( true === $return_label ) {
+      	return $statuses[$payment->post_status];
+      } else {
+      	return array_search( $payment->post_status, $statuses );
+   	}
+   }        
 }
 
 
