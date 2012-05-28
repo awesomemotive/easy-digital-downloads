@@ -5,8 +5,8 @@ Contributors: mordauk, sksmatt
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
-Tested up to: 3.3.2
-Stable Tag: 1.0.8
+Tested up to: 3.4
+Stable Tag: 1.0.8.1
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -36,11 +36,11 @@ More information at [Easy Digital Downloads.com](http://easydigitaldownloads.com
 
 [youtube http://www.youtube.com/watch?v=SjOeSZ08_IA]
 
-** Add an Affiliate System to Your Store **
+**Add an Affiliate System to Your Store**
 
 Easy Digital Downloads has an [integration pack for the awesome Affiliates Pro plugin](http://easydigitaldownloads.com/extension/affiliates-pro-integration-pack/), which gives you everything you need to build a complete affiliate system and dramatically boost your traffic and sales.
 
-** Build Up Your Email Subscribers **
+**Build Up Your Email Subscribers**
 
 With add-ons for both [Mail Chimp](http://easydigitaldownloads.com/extension/mail-chimp/) and [Campaign Monitor](http://easydigitaldownloads.com/extension/campaign-monitor/), Easy Digital Downloads can easily grow your email subscription lists while making you money at the same time.
 
@@ -124,6 +124,22 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.0.8.1 =
+
+* Updated es_ES translation files
+* A lots of code documentation improvements
+* Completely rewrote the purchase processing functions to fix a couple of bugs and make the entire thing easier to debug and improve
+* Fixed a problem with user emails not being recorded for guest purchases
+* Improved the performance of the add-ons page with transients
+* Reorganized some functions into more appropriate files
+* Fixed translation domains on the login forms
+* Added a new option for marking a payment as "refunded". The refund process must be done through the payment gateway still. When payments are marked as "refunded", the sales and earnings stats will be adjusted accordingly.
+* Added an alert message to the "Delete Payment" link
+* Updated French language files
+* Added get_post_class() to the payments history page so that payment rows can be styled based on their status, post type, etc.
+* Updated admin CSS to add custom background color to refunded payments
+* Added new filter called "edd_payment_statuses", which can be used to register custom statuses
 
 = 1.0.8 =
 
@@ -272,6 +288,22 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.0.8.1 =
+
+* Updated es_ES translation files
+* A lots of code documentation improvements
+* Completely rewrote the purchase processing functions to fix a couple of bugs and make the entire thing easier to debug and improve
+* Fixed a problem with user emails not being recorded for guest purchases
+* Improved the performance of the add-ons page with transients
+* Reorganized some functions into more appropriate files
+* Fixed translation domains on the login forms
+* Added a new option for marking a payment as "refunded". The refund process must be done through the payment gateway still. When payments are marked as "refunded", the sales and earnings stats will be adjusted accordingly.
+* Added an alert message to the "Delete Payment" link
+* Updated French language files
+* Added get_post_class() to the payments history page so that payment rows can be styled based on their status, post type, etc.
+* Updated admin CSS to add custom background color to refunded payments
+* Added new filter called "edd_payment_statuses", which can be used to register custom statuses
 
 = 1.0.8 =
 
