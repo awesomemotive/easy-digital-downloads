@@ -137,7 +137,7 @@ function edd_purchase_history() {
 					<?php foreach($purchases as $purchase) { ?>
 						<?php $purchase_data = get_post_meta($purchase->ID, '_edd_payment_meta', true); ?>
 						<?php do_action('edd_purchase_history_body_start', $purchase, $purchase_data); ?>
-						<tr class="edd_purhcase_row">
+						<tr class="edd_purchase_row">
 							<td>#<?php echo $purchase->ID; ?></td>
 							<td><?php echo date(get_option('date_format'), strtotime($purchase->post_date)); ?></td>
 							<td><?php echo edd_currency_filter($purchase_data['amount']); ?></td>
@@ -154,7 +154,7 @@ function edd_purchase_history() {
 												if($download_files) {
 													foreach($download_files as $filekey => $file) {
 														$download_url = edd_get_download_file_url($purchase_data['key'], $purchase_data['email'], $filekey, $id);
-														echo'<div class="edd_download_file"><a href="' . $download_url . '" class="edd_download_file_link">' . $file['name'] . '</a></div>';
+														echo '<div class="edd_download_file"><a href="' . $download_url . '" class="edd_download_file_link">' . $file['name'] . '</a></div>';
 													} 
 												} else {
 													_e('No downloadable files found.', 'edd');
