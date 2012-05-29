@@ -250,7 +250,7 @@ add_action('edd_email_template_default', 'edd_default_email_template');
 
 function edd_get_email_templates() {
 	$templates = array(
-		'default' => __('Default Template'),
+		'default' => __('Default Template', 'edd'),
 		'none' => __('No template, plain text only', 'edd')
 	);
 	return apply_filters( 'edd_email_templates', $templates );
