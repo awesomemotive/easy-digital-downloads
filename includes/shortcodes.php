@@ -73,7 +73,7 @@ function edd_download_history() {
 						$payment_meta = get_post_meta($purchase->ID, '_edd_payment_meta', true);
 						if($downloads) {
 							foreach($downloads as $download) {
-								echo '<tr>';
+								echo '<tr class="edd_download_history_row">';
 									$id = isset($payment_meta['cart_details']) ? $download['id'] : $download;
 									$download_files = get_post_meta($id, 'edd_download_files', true);
 									do_action('edd_user_history_table_begin', $purchase->ID);
