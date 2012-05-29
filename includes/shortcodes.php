@@ -150,13 +150,15 @@ function edd_purchase_history() {
 											$id = isset($purchase_data['cart_details']) ? $download['id'] : $download;
 											$download_files = get_post_meta($id, 'edd_download_files', true);
 											echo '<div class="edd_purchased_download_name">' . get_the_title($id) . '</div>';
-											if($download_files) {
-												foreach($download_files as $filekey => $file) {
-													$download_url = edd_get_download_file_url($purchase_data['key'], $purchase_data['email'], $filekey, $id);
-													echo'<div class="edd_download_file"><a href="' . $download_url . '" class="edd_download_file_link">' . $file['name'] . '</a></div>';
-												} 
-											} else {
-												_e('No downloadable files found.', 'edd');
+											if( ! edd_no_redownload() ) {
+												if($download_files) {
+													foreach($download_files as $filekey => $file) {
+														$download_url = edd_get_download_file_url($purchase_data['key'], $purchase_data['email'], $filekey, $id);
+														echo'<div class="edd_download_file"><a href="' . $download_url . '" class="edd_download_file_link">' . $file['name'] . '</a></div>';
+													} 
+												} else {
+													_e('No downloadable files found.', 'edd');
+												}
 											}
 										}
 									}
