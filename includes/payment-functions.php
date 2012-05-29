@@ -178,7 +178,7 @@ function edd_update_payment_status($payment_id, $status = 'publish') {
 	}
 	
 	// send email with secure download link
-	edd_email_download_link($payment_id);
+	edd_email_purchase_receipt($payment_id);
 	
 	// empty the shopping cart
 	edd_empty_cart();
