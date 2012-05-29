@@ -107,6 +107,23 @@ function edd_is_odd( $int ) {
 
 
 /**
+ * Get File Extension
+ *
+ * Returns the file extension of a filename.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      string
+*/
+
+function edd_get_file_extension($str)
+{
+   $parts = explode('.', $str);
+   return end($parts);
+}
+
+
+/**
  * Get Currencies 
  *
  * @access      public
