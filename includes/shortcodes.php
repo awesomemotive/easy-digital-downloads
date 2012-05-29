@@ -61,7 +61,9 @@ function edd_download_history() {
 						<tr>
 							<?php do_action('edd_user_history_header_before'); ?>
 							<th class="edd_download_download_name_header"><?php _e('Download Name', 'edd'); ?></th>
-							<th class="edd_download_download_files_header"><?php _e('Files', 'edd'); ?></th>
+							<?php if( ! edd_no_redownload() ) { ?>
+								<th class="edd_download_download_files_header"><?php _e('Files', 'edd'); ?></th>
+							<?php } ?>							
 							<?php do_action('edd_user_history_header_after'); ?>
 						</tr>
 					</thead>
@@ -76,16 +78,18 @@ function edd_download_history() {
 									$download_files = get_post_meta($id, 'edd_download_files', true);
 									do_action('edd_user_history_table_begin', $purchase->ID);
 									echo '<td>' . get_the_title($id) . '</td>';
-									echo '<td>';
-									if($download_files) {
-										foreach($download_files as $filekey => $file) {
-												$download_url = edd_get_download_file_url($payment_meta['key'], $payment_meta['email'], $filekey, $id);
-												echo'<div class="edd_download_file"><a href="' . $download_url . '" class="edd_download_file_link">' . $file['name'] . '</a></div>';
-										} 
-									} else {
-										_e('No downloadable files found.', 'edd');
+									if( ! edd_no_redownload() ) {									
+										echo '<td>';
+										if($download_files) {
+											foreach($download_files as $filekey => $file) {
+													$download_url = edd_get_download_file_url($payment_meta['key'], $payment_meta['email'], $filekey, $id);
+													echo'<div class="edd_download_file"><a href="' . $download_url . '" class="edd_download_file_link">' . $file['name'] . '</a></div>';
+											} 
+										} else {
+											_e('No downloadable files found.', 'edd');
+										}
+										echo '</td>';
 									}
-									echo '</td>';
 									do_action('edd_user_history_table_end', $purchase->ID);
 								echo '</tr>';
 							}
@@ -145,6 +149,7 @@ function edd_purchase_history() {
 										foreach($downloads as $download) {
 											$id = isset($purchase_data['cart_details']) ? $download['id'] : $download;
 											$download_files = get_post_meta($id, 'edd_download_files', true);
+											echo '<div class="edd_purchased_download_name">' . get_the_title($id) . '</div>';
 											if($download_files) {
 												foreach($download_files as $filekey => $file) {
 													$download_url = edd_get_download_file_url($purchase_data['key'], $purchase_data['email'], $filekey, $id);
