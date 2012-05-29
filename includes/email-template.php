@@ -63,6 +63,37 @@ function edd_email_templage_tags($message, $payment_data) {
 
 
 /**
+ * Email Preview Template Tags
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      string
+*/
+
+function edd_email_preview_templage_tags( $message ) {
+
+	$download_list = '<ul>';
+		$download_list .= '<li>' . __('Sample Product Title', 'edd') . '<br/>';
+		$download_list .= '<ul>';
+			$download_list .= '<li>';
+				$download_list .= '<a href="#">' . __('Sample Download File Name', 'edd') . '</a>';
+			$download_list .= '</li>';
+		$download_list .= '</ul></li>';
+	$download_list .= '</ul>';
+	
+	$price = edd_currency_filter(9.50);	
+	
+	$message = str_replace('{name}', 'John Doe', $message);
+	$message = str_replace('{download_list}', $download_list, $message);
+	$message = str_replace('{date}', date( get_option('date_format'), time() ), $message);
+	$message = str_replace('{sitename}', get_bloginfo('name'), $message);
+	$message = str_replace('{price}', $price, $message);
+	
+	return wpautop($message);
+	
+}
+
+/**
  * Email Default Formatting
  *
  * @access      private
@@ -85,28 +116,19 @@ add_filter('edd_purchase_receipt', 'edd_email_default_formatting');
 */
 
 function edd_email_template_preview() {
+	global $edd_options;
 	ob_start(); ?>
 		<a href="#TB_inline?width=640&amp;inlineId=email-preview" id="open-email-preview" class="thickbox" title="<?php _e('Purchase Receipt Preview', 'edd'); ?> "><?php _e('Preview Purchase Receipt', 'edd'); ?></a>
 		<div id="email-preview" style="display:none;">
-			
-			<script type="text/javascript">
-				jQuery(document).ready(function($) {
-					$('#open-email-preview').on('click', function() {
-						var emailContents = $('.wp-editor-area').text();
-						$('#email-content').html('');
-						$('#email-content').html(emailContents);
-					});
-				});
-			</script>			
-			
-			<div id="email-content"></div><!--end #email-content-->			
-			
+					
+			<?php echo edd_apply_email_template($edd_options['purchase_receipt'], null, null); ?>			
+						
 			<p><a id="edd-close-preview" class="button-secondary" onclick="tb_remove();" title="<?php _e('Close', 'edd'); ?>"><?php _e('Close', 'edd'); ?></a></p>
 		</div>
 	<?php
 	echo ob_get_clean();
 }
-//add_action('edd_email_settings', 'edd_email_template_preview');
+add_action('edd_email_settings', 'edd_email_template_preview');
 
 
 /**
@@ -185,6 +207,9 @@ function edd_apply_email_template( $body, $payment_id, $payment_data ) {
 	
 	$template = ob_get_clean();	
 	
+	if(is_admin())
+		$body = edd_email_preview_templage_tags($body);	
+	
 	$email = str_replace('{email}', $body, $template );
 	
 	return $email;	
@@ -203,8 +228,10 @@ add_filter('edd_purchase_receipt', 'edd_apply_email_template', 10, 3);
 
 function edd_default_email_template() {	
 	
-	echo '<div style="width: 400px;" border: 1px solid #ccc;>';
-		echo '{email}'; // this tag is required in order for the contents of the email to be shown
+	echo '<div style="width: 600px; border: 1px solid #ccc; background: #f0f0f0; padding: 8px 10px; margin: 0 auto;">';
+		echo '<div id="edd-email-content" style="background: #fff; border: 1px solid #ccc; padding: 10px;">';
+			echo '{email}'; // this tag is required in order for the contents of the email to be shown
+		echo '</div>';	
 	echo '</div>';
 }
 add_action('edd_email_template_default', 'edd_default_email_template');
