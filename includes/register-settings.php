@@ -236,7 +236,7 @@ function edd_register_settings() {
 					'type' => 'checkbox',
 				),
 				array(
-					'id' => 'uses_can_redownload',
+					'id' => 'disable_redownload',
 					'name' => __('Disable Redownload?', 'edd'),
 					'desc' => __('Check this if you do not want to allow users to redownload items from their purchase history', 'edd'),
 					'type' => 'checkbox',

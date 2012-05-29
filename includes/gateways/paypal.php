@@ -215,7 +215,7 @@ function edd_process_paypal_ipn() {
 	if ($verified) {
 		$payment_id 		= $_POST['custom'];
 		$purchase_key	 	= $_POST['item_number'];
-		$paypal_amount 	= absint( $_POST['mc_gross'] );
+		$paypal_amount 	= $_POST['mc_gross'];
 		$payment_status 	= $_POST['payment_status'];
 		$currency_code		= strtolower($_POST['mc_currency']);
 		

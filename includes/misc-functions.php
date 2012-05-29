@@ -59,6 +59,21 @@ function edd_logged_in_only() {
 
 
 /**
+ * Disable Redownload
+ *
+ * @access      public
+ * @since       1.08.2
+ * @return      boolean
+*/
+
+function edd_no_redownload() {
+	global $edd_options;
+	if(isset($edd_options['disable_redownload']))
+		return true;
+	return false;	
+}
+
+/**
  * Get Menu Access Level 
  *
  * Returns the access level required to access 
