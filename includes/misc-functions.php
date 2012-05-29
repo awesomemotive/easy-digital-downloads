@@ -124,6 +124,34 @@ function edd_get_file_extension($str)
 
 
 /**
+ * Get User IP
+ *
+ * Returns the IP address of the current visitor
+ *
+ * @access      public
+ * @since       1.0.8.2
+ * @return      string
+*/
+
+function edd_get_ip()
+{
+    if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
+    {
+      $ip=$_SERVER['HTTP_CLIENT_IP'];
+    }
+    elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
+    {
+      $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+    }
+    else
+    {
+      $ip=$_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
+}
+
+
+/**
  * Get Currencies 
  *
  * @access      public
