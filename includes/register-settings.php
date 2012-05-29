@@ -180,7 +180,7 @@ function edd_register_settings() {
 				array(
 					'id' => 'email_template',
 					'name' => __('Email Template', 'edd'),
-					'desc' => __('Choose a template', 'edd'),
+					'desc' => __('Choose a template. Click "Save Changes" then "Preview Purchase Receipt" to see the new template.', 'edd'),
 					'type' => 'select',
 					'options' => edd_get_email_templates()
 				),
@@ -631,6 +631,7 @@ function edd_select_callback($args) {
 		$selected = isset($edd_options[$args['id']]) ? selected($option, $edd_options[$args['id']], false) : '';
 		$html .= '<option value="' . $option . '" ' . $selected . '>' . $name . '</option>';
 	}
+	$html .= '</select>';
 	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';  
  
     echo $html; 
