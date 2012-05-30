@@ -185,6 +185,7 @@ function edd_get_currencies() {
 		'TWD' => __('Taiwan New Dollars', 'edd'),
 		'THB' => __('Thai Baht', 'edd'),
 		'INR' => __('Indian Rupee', 'edd')
+		'TRY' => __('Turkish Lira', 'edd')
 	);
 	return apply_filters('edd_currencies', $currencies);
 }
