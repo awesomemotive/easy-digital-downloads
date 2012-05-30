@@ -115,7 +115,7 @@ if(is_admin()) {
 	include_once(EDD_PLUGIN_DIR . 'includes/process-purchase.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/process-download.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/shortcodes.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/gateways/paypal.php');
+	include_once(EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/gateways/manual.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/login-register.php');
 }
