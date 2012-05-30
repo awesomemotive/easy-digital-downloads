@@ -75,23 +75,6 @@ function edd_get_download_final_price($download_id, $user_purchase_info, $amount
 
 
 /**
- * Get File Extension
- *
- * Returns the file extension of a filename.
- *
- * @access      public
- * @since       1.0 
- * @return      string
-*/
-
-function edd_get_file_extension($str)
-{
-   $parts = explode('.', $str);
-   return end($parts);
-}
-
-
-/**
  * Get Download Earnings Stats
  *
  * Returns the total earnings for a download.

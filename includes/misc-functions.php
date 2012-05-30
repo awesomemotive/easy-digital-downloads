@@ -59,6 +59,21 @@ function edd_logged_in_only() {
 
 
 /**
+ * Disable Redownload
+ *
+ * @access      public
+ * @since       1.08.2
+ * @return      boolean
+*/
+
+function edd_no_redownload() {
+	global $edd_options;
+	if(isset($edd_options['disable_redownload']))
+		return true;
+	return false;	
+}
+
+/**
  * Get Menu Access Level 
  *
  * Returns the access level required to access 
@@ -88,6 +103,51 @@ function edd_get_menu_access_level() {
 
 function edd_is_odd( $int ) {
 	return (bool) ( $int & 1 );
+}
+
+
+/**
+ * Get File Extension
+ *
+ * Returns the file extension of a filename.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      string
+*/
+
+function edd_get_file_extension($str)
+{
+   $parts = explode('.', $str);
+   return end($parts);
+}
+
+
+/**
+ * Get User IP
+ *
+ * Returns the IP address of the current visitor
+ *
+ * @access      public
+ * @since       1.0.8.2
+ * @return      string
+*/
+
+function edd_get_ip()
+{
+    if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
+    {
+      $ip=$_SERVER['HTTP_CLIENT_IP'];
+    }
+    elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
+    {
+      $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+    }
+    else
+    {
+      $ip=$_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
 }
 
 
