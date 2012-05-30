@@ -292,23 +292,21 @@ add_action( 'init', 'edd_process_paypal_ipn' );
  *
  * @access      private
  * @since       1.0.8.2
- * @return      return
+ * @return      string
 */
 
 function edd_get_paypal_redirect() {
     global $edd_options;
     
-    // set request protocol
-    $protocol = ( isset( $edd_options['ssl'] ) ) ? 'https://' : 'http://';
 
     // check the current payment mode
     if ( edd_is_test_mode() ) {
         // test mode
-        $paypal_uri = 'www.sandbox.paypal.com/cgi-bin/webscr/?';
+        $paypal_uri = 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
     } else {
         // live mode
-        $paypal_uri = 'www.paypal.com/cgi-bin/webscr/?';
+        $paypal_uri = 'https://www.paypal.com/cgi-bin/webscr/?';
     }
     
-    return $protocol . $paypal_uri;
+    return $paypal_uri;
 }
