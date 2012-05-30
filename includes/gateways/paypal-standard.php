@@ -230,7 +230,7 @@ function edd_process_paypal_ipn() {
     }
     
     // get the PayPal redirect uri
-    $paypal_redirect = edd_get_paypal_redirect();
+    $paypal_redirect = edd_get_paypal_redirect(true);
     
     // get response
     $api_response = wp_remote_get( $paypal_redirect . $encoded_data );
@@ -295,17 +295,22 @@ add_action( 'init', 'edd_process_paypal_ipn' );
  * @return      string
 */
 
-function edd_get_paypal_redirect() {
+function edd_get_paypal_redirect( $ssl_check = false ) {
     global $edd_options;
     
+	if( is_ssl() || ! $ssl_check ) {
+		$protocal = 'https://';
+	} else {
+		$protocal = 'http://';	
+	}	
 
     // check the current payment mode
     if ( edd_is_test_mode() ) {
         // test mode
-        $paypal_uri = 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
+        $paypal_uri = $protocal . 'www.sandbox.paypal.com/cgi-bin/webscr/?';
     } else {
         // live mode
-        $paypal_uri = 'https://www.paypal.com/cgi-bin/webscr/?';
+        $paypal_uri = $protocal . 'www.paypal.com/cgi-bin/webscr/?';
     }
     
     return $paypal_uri;
