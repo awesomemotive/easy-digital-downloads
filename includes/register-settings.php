@@ -133,15 +133,9 @@ function edd_register_settings() {
 					'size' => 'regular'
 				),
 				array(
-					'id' => 'paypal_disable_curl',
-					'name' => __('Disable cURL for PayPal IPN', 'edd'),
-					'desc' => __('If payments are not getting marked as complete, check this option', 'edd'),
-					'type' => 'checkbox'
-				),
-				array(
 					'id' => 'paypal_alternate_verification',
 					'name' => __('Alternate PayPal Purchase Verification', 'edd'),
-					'desc' => __('If payments are not getting marked as complete, and disabling cURL does not fix the problem, then check this box', 'edd'),
+					'desc' => __('If payments are not getting marked as complete, then check this box. Note, this requires that buyers return to your site from PayPal.', 'edd'),
 					'type' => 'checkbox'
 				)
 			)

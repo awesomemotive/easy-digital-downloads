@@ -195,6 +195,8 @@ function edd_get_email_body_footer() {
 
 function edd_apply_email_template( $body, $payment_id, $payment_data ) {
 	
+	return $body; // this is so that the plain email is returned. Remove this once the template system is ready	
+	
 	global $edd_options;	
 	
 	$template_name = isset( $edd_options['email_template'] ) ? $edd_options['email_template'] : 'default';
