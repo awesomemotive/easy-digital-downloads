@@ -89,7 +89,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
         $cart_summary = edd_get_purchase_summary( $purchase_data, false );      
         
         // get the PayPal redirect uri
-        $paypal_redirect = edd_get_paypal_redirect();
+        $paypal_redirect = trailingslashit( edd_get_paypal_redirect() ) . '?';
         
         // setup PayPal arguments
         $paypal_args = array( 
@@ -136,11 +136,8 @@ add_action( 'edd_gateway_paypal', 'edd_process_paypal_purchase' );
 
 function edd_listen_for_paypal_ipn() {
     global $edd_options;
-    
-    // no need to run on admin
-    if ( is_admin() )
-    return;
-    
+   
+  
     // regular PayPal IPN
     if ( ! isset( $edd_options['paypal_alternate_verification'] ) ) {
         
@@ -195,7 +192,7 @@ add_action( 'init', 'edd_listen_for_paypal_ipn' );
 
 function edd_process_paypal_ipn() {
     global $edd_options;
-    
+
     // check the request method is POST
     if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] != 'POST' ) {
         return;
@@ -228,23 +225,35 @@ function edd_process_paypal_ipn() {
             }
         }
     }
+   
+	// convert collected post data to an array
+   parse_str( $encoded_data, $encoded_data_array );     
+   
+   // get the PayPal redirect uri
+   $paypal_redirect = edd_get_paypal_redirect(true);
     
-    // get the PayPal redirect uri
-    $paypal_redirect = edd_get_paypal_redirect(true);
-    
+	$remote_post_vars = array(
+		'method' => 'POST',
+		'timeout' => 45,
+		'redirection' => 5,
+		'httpversion' => '1.0',
+		'blocking' => true,
+		'headers' => array(),
+		'body' => $encoded_data_array
+   );
+   
     // get response
-    $api_response = wp_remote_get( $paypal_redirect . $encoded_data );
-    
-    // retrieve the response body
-    $response = wp_remote_retrieve_body( $api_response );
-    
-    // check the response is valid
-    if ( $response != 'VERIFIED' )
-    return;
-    
-    // convert collected post data to an array
-    parse_str( $post_data, $post_data_array );
-    
+   $api_response = wp_remote_post( edd_get_paypal_redirect(), $remote_post_vars );
+   
+	if( is_wp_error( $api_response) )
+		return; // something went wrong   
+   
+   if ($api_response['body'] !== 'VERIFIED')
+   	return; // response not okay
+   	 
+   // convert collected post data to an array
+   parse_str( $post_data, $post_data_array );   
+   	 
     // check if $post_data_array has been populated
     if ( ! is_array( $post_data_array ) && ! empty( $post_data_array ) )
     return;
@@ -252,7 +261,7 @@ function edd_process_paypal_ipn() {
     // collect payment details
     $payment_id     = $post_data_array['custom'];
     $purchase_key   = $post_data_array['item_number'];
-    $paypal_amount  = absint( $post_data_array['mc_gross'] );
+    $paypal_amount  = $post_data_array['mc_gross'];
     $payment_status = $post_data_array['payment_status'];
     $currency_code  = strtolower( $post_data_array['mc_currency'] );
     
@@ -267,7 +276,7 @@ function edd_process_paypal_ipn() {
     }
     if ( $paypal_amount != $payment_amount ) {
         // the prices don't match
-        return;
+       return;
     }
     if ( $purchase_key != $payment_meta['key'] ) {
         // purchase keys don't match
@@ -307,10 +316,10 @@ function edd_get_paypal_redirect( $ssl_check = false ) {
     // check the current payment mode
     if ( edd_is_test_mode() ) {
         // test mode
-        $paypal_uri = $protocal . 'www.sandbox.paypal.com/cgi-bin/webscr/?';
+        $paypal_uri = $protocal . 'www.sandbox.paypal.com/cgi-bin/webscr';
     } else {
         // live mode
-        $paypal_uri = $protocal . 'www.paypal.com/cgi-bin/webscr/?';
+        $paypal_uri = $protocal . 'www.paypal.com/cgi-bin/webscr';
     }
     
     return $paypal_uri;
