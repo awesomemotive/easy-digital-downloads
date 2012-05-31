@@ -416,8 +416,8 @@ function edd_increase_discount_usage($code) {
  * @return      string
 */
 
-function edd_format_discount_rate($rate, $amount) {
-	if($rate == 'flat') {
+function edd_format_discount_rate($type, $amount) {
+	if($type == 'flat') {
 		return edd_currency_filter($amount);
 	} else {
 		return $amount . '%';

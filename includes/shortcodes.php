@@ -232,6 +232,46 @@ add_shortcode('edd_login', 'edd_login_form_shortcode');
 
 
 /**
+ * Discounts short code
+ *
+ * Displays a list of all active discounts 
+ *
+ * @access      private
+ * @since       1.0.8.2
+ * @return      string
+*/
+
+function edd_discounts_shortcode( $atts, $content = null ) {
+	
+	$discounts = edd_get_discounts();
+		
+	if( ! $discounts && edd_has_active_discounts() )
+		return;
+	
+	$discounts_list = '<ul id="edd_discounts_list">';
+	
+	foreach( $discounts as $discount ) {
+	
+		$discounts_list .= '<li class="edd_discount">';
+
+			$discounts_list .= '<span class="edd_discount_name">' . $discount['name'] . '</span>';
+			$discounts_list .= '<span class="edd_discount_separator"> - </span>';
+			$discounts_list .= '<span class="edd_discount_amount">' . edd_format_discount_rate( $discount['type'], $discount['amount'] ) . '</span>';
+
+		$discounts_list .= '</li>';
+		
+	}
+	
+	$discounts_list .= '</ul>';	
+	
+	return $discounts_list;
+	
+}
+add_shortcode('download_discounts', 'edd_discounts_shortcode');
+
+
+
+/**
  * Purchase Collection Shortcode
  *
  * Displays a collection purchase link for adding all 
