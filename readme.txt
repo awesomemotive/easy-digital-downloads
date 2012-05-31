@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.4
-Stable Tag: 1.0.8.1
+Stable Tag: 1.0.8.2
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -124,6 +124,20 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.0.8.2 =
+
+* Added a number_format() check to the PayPal standard gateway
+* Added the Turkish Lira to supported currencies
+* Dramatically improved the default PayPal gateway, which should help prevent payments not getting verified
+* Added edd_get_ip() and updated the user IP detection. It previously failed if the server was running SSL
+* Added missing class name to the download history table
+* Fixed a misnamed class in the purchase history table
+* Updated purchase and download history to now show download links if redownload is disabled
+* Added a new conditional called edd_no_redownload() that theme devs can use to check if redownloading of files is permitted
+* Fixed problem with improper encoding of apostrphes in purchase receipt emails
+* Added new edd_hook_callback() function for settings field type callbacks
+* Updated default language files with new strings for translation
 
 = 1.0.8.1 =
 
@@ -288,6 +302,20 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.0.8.2 =
+
+* Added a number_format() check to the PayPal standard gateway
+* Added the Turkish Lira to supported currencies
+* Dramatically improved the default PayPal gateway, which should help prevent payments not getting verified
+* Added edd_get_ip() and updated the user IP detection. It previously failed if the server was running SSL
+* Added missing class name to the download history table
+* Fixed a misnamed class in the purchase history table
+* Updated purchase and download history to now show download links if redownload is disabled
+* Added a new conditional called edd_no_redownload() that theme devs can use to check if redownloading of files is permitted
+* Fixed problem with improper encoding of apostrphes in purchase receipt emails
+* Added new edd_hook_callback() function for settings field type callbacks
+* Updated default language files with new strings for translation
 
 = 1.0.8.1 =
 
