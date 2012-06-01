@@ -515,6 +515,18 @@ function edd_get_country_list() {
 function edd_month_num_to_name($n)
 {
     $timestamp = mktime(0, 0, 0, $n, 1, 2005);
-    
     return date("M", $timestamp);
+}
+
+
+/**
+ * Get PHP Arg Seaparator Ouput
+ *
+ * @access      public
+ * @since       1.0.8.3
+ * @return      string
+*/
+
+function edd_get_php_arg_separator_output() {
+    return ini_get('arg_separator.output');
 }
