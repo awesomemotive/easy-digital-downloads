@@ -28,9 +28,8 @@ function edd_get_payment_gateways() {
 		'manual' => array('admin_label' => __('Manual Payment', 'edd'), 'checkout_label' => __('Manual Payment', 'edd')),
 	);
 	
-	$gateways = apply_filters('edd_payment_gateways', $gateways);
-	
-	return $gateways;
+	return apply_filters('edd_payment_gateways', $gateways);
+
 }
 
 
