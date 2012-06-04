@@ -208,10 +208,13 @@ function edd_process_paypal_ipn() {
     // start the encoded data collection with notification command
     $encoded_data = 'cmd=_notify-validate';
     
+    // get current arg separator
+    $arg_separator = edd_get_php_arg_separator_output();
+    
     // verify there is a post_data
     if ( $post_data || strlen( $post_data ) > 0 ) {
         // append the data
-        $encoded_data .= '&'.$post_data;
+        $encoded_data .= $arg_separator.$post_data;
     } else {
         // check if POST is empty
         if ( empty( $_POST ) ) {
@@ -221,7 +224,7 @@ function edd_process_paypal_ipn() {
             // loop trough each POST
             foreach ( $_POST as $key => $value ) {
                 // encode the value and append the data
-                $encoded_data .= "&$key=" . urlencode( $value );
+                $encoded_data .= $arg_separator."$key=" . urlencode( $value );
             }
         }
     }
