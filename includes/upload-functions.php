@@ -25,6 +25,15 @@ function edd_change_downloads_upload_dir() {
 
     if ( ! empty( $_POST['post_id'] ) && ( 'async-upload.php' == $pagenow || 'media-upload.php' == $pagenow ) ) {
         if ( 'download' == get_post_type( $_REQUEST['post_id'] ) ) {
+            $wp_upload_dir = wp_upload_dir();
+            $upload_path = $wp_upload_dir['basedir'] . '/edd' . $wp_upload_dir['subdir'];
+            if (wp_mkdir_p($upload_path) && !file_exists($upload_path.'/.htaccess')) {
+                if ($file_handle = @fopen( $upload_path . '/.htaccess', 'w' )) {
+                    fwrite($file_handle, 'Options All -Indexes');
+                    fclose($file_handle);
+                }
+
+            }
             add_filter( 'upload_dir', 'edd_set_upload_dir' );
         }
     }
