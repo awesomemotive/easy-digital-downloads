@@ -383,6 +383,26 @@ function edd_get_download_file_url($key, $email, $filekey, $download) {
 
 
 /**
+ * Outputs the download file
+ *
+ * Delivers the requested file to the user's browser
+ *
+ * @access      public
+ * @since       1.0.8.3 
+ * @return      string
+*/
+
+function edd_read_file( $file ) {
+	// some hosts do not allow files to be read via URL, so this permits that to be over written
+	if( defined('EDD_READ_FILE_MODE') && EDD_READ_FILE_MODE == 'header' ) {
+		header("Location: " . $file);
+	} else {
+		readfile($file);	
+	}
+}
+
+
+/**
  * Verify Download Link
  *
  * Verifies a download purchase using a purchase key and email.
