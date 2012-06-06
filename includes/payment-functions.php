@@ -149,42 +149,16 @@ function edd_update_payment_status($payment_id, $status = 'publish') {
 		// for some reason this is occasionally coming back as true even when the payment is not		
 		return;
 	}
-	$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
-	$downloads = maybe_unserialize($payment_data['downloads']);
-	$user_info = maybe_unserialize($payment_data['user_info']);
-	$cart_details = maybe_unserialize($payment_data['cart_details']);
+	
+	$old_status = $payment->post_status;	
+	
+	do_action('edd_before_payment_status_change', $payment_id, $status, $old_status);	
 	
 	wp_update_post(array('ID' => $payment_id, 'post_status' => $status));
 	
-	if(!edd_is_test_mode()) {
-		// increase purchase count and earnings
-		foreach($downloads as $download) {
-			
-			edd_record_sale_in_log($download['id'], $payment_id, $user_info, $payment_data['date']);
-			edd_increase_purchase_count($download['id']);
-			$amount = null;
-			if(is_array($cart_details)) {
-				$cart_item_id = array_search($download['id'], $cart_details);
-				$amount = isset($cart_details[$cart_item_id]['price']) ? $cart_details[$cart_item_id]['price'] : null;
-			}
-			$amount = edd_get_download_final_price($download['id'], $user_info, $amount);
-			edd_increase_earnings($download['id'], $amount);
-			
-		}
-	
-		if(isset($payment_data['user_info']['discount'])) {
-			edd_increase_discount_usage($payment_data['user_info']['discount']);
-		}
-	}
-	
-	// send email with secure download link
-	edd_email_purchase_receipt($payment_id);
-	
-	// empty the shopping cart
-	edd_empty_cart();
-	
-	do_action('edd_update_payment_status', $payment_id, $status);
+	do_action('edd_update_payment_status', $payment_id, $status, $old_status);
 }
+
 
 
 /**
