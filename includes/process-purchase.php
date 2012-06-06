@@ -72,7 +72,8 @@ function edd_process_purchase_form() {
 		'date' => date( 'Y-m-d H:i:s' ),
 		'user_info' => $user_info,
 		'post_data' => $_POST,
-		'cart_details' => edd_get_cart_content_details()
+		'cart_details' => edd_get_cart_content_details(),
+		'gateway' => $valid_data['gateway']
 	);
 	
 	// add the user data for hooks
