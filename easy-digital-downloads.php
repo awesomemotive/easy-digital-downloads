@@ -75,6 +75,7 @@ include_once(EDD_PLUGIN_DIR . 'includes/register-settings.php');
 $edd_options = edd_get_settings();
 include_once(EDD_PLUGIN_DIR . 'includes/install.php');
 include_once(EDD_PLUGIN_DIR . 'includes/actions.php');
+include_once(EDD_PLUGIN_DIR . 'includes/deprecated-functions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/template-functions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/checkout-template.php');
 include_once(EDD_PLUGIN_DIR . 'includes/cart-template.php');

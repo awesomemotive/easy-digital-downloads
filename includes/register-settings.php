@@ -206,9 +206,9 @@ function edd_register_settings() {
 		'misc' => apply_filters('edd_settings_misc', 
 			array(
 				array(
-					'id' => 'ajax_cart',
-					'name' => __('Enable Ajax', 'edd'),
-					'desc' => __('Check this to enable AJAX for the shopping cart.', 'edd'),
+					'id' => 'disable_ajax_cart',
+					'name' => __('Disable Ajax', 'edd'),
+					'desc' => __('Check this to disable AJAX for the shopping cart.', 'edd'),
 					'type' => 'checkbox'
 				),
 				array(
