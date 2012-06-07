@@ -78,6 +78,22 @@ function edd_is_gateway_active($gateway) {
 
 
 /**
+ * Get gateway admin label
+ *
+ * Returns the admin label for the specified gateway.
+ *
+ * @access      public
+ * @since       1.0.8.3
+ * @param       string - The ID name of the gateway to retrieve a label for
+ * @return      string
+*/
+
+function edd_get_gateway_admin_label($gateway) {
+	$gateways = edd_get_enabled_payment_gateways();
+	return $gateways[$gateway]['admin_label'];
+}
+
+/**
  * Send to Gateway
  *
  * Sends the registration data to the specified gateway.

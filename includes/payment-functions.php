@@ -116,6 +116,9 @@ function edd_insert_payment($payment_data = array()) {
 		$mode = edd_is_test_mode() ? 'test' : 'live';
 		update_post_meta($payment, '_edd_payment_mode', $mode);
 		
+		$gateway = isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : ''; 
+		update_post_meta($payment, '_edd_payment_gateway', $gateway);
+		
 		// clear the user's purchased cache
 		delete_transient('edd_user_' . $payment_data['user_info']['id'] . '_purchases');
 		

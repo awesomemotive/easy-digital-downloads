@@ -169,6 +169,15 @@ function edd_payment_history_page() {
 													<?php do_action('edd_payment_personal_details_list', $payment_meta, $user_info); ?>
 												</ul>
 											</div>
+											
+											<?php
+											$gateway = get_post_meta( $payment->ID, '_edd_payment_gateway', true);
+											if( $gateway ) { ?>
+											<div class="payment-method">
+												<h4><?php _e('Payment Method:', 'edd'); ?></h4>
+												<span class="payment-method-name"><?php echo edd_get_gateway_admin_label( $gateway ); ?></span>
+											</div>
+											<?php } ?>
 											<p><a id="edd-close-purchase-details" class="button-secondary" onclick="tb_remove();" title="<?php _e('Close', 'edd'); ?>"><?php _e('Close', 'edd'); ?></a></p>
 										</div>
 									</td>
