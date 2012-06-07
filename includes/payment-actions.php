@@ -126,6 +126,10 @@ function edd_update_edited_purchase($data) {
 			
 		}
 		
+		if( $_POST['edd-payment-status'] == 'publish' && isset( $_POST['edd-payment-send-email'] ) ) {
+			// send the purchase receipt
+			edd_email_purchase_receipt( $payment_id, false );
+		}
 	}
 	
 }

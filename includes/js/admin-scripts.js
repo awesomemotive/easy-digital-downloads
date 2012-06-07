@@ -153,6 +153,15 @@ jQuery(document).ready(function ($) {
 		return false;
 	});
 	
+	// show / hide the send purchase receipt check box on the Edit payment screen
+	$('#edd_payment_status').change(function() {
+		if( $('#edd_payment_status option:selected').val() == 'publish' ) {
+			$('#edd_payment_notification').slideDown();
+		} else {
+			$('#edd_payment_notification').slideUp();
+		}
+	});	
+	
 	$('.edd_payment .row-actions .delete a').on('click', function() {
 		if( confirm( edd_vars.delete_payment ) ) {
 			return true;	

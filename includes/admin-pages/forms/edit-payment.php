@@ -59,7 +59,15 @@ $payment_data = get_post_meta($_GET['purchase_id'], '_edd_payment_meta', true);
 						</select>
 					</td>
 				</tr>
-				
+				<tr id="edd_payment_notification" style="display:none;">
+					<th scope="row" valign="top">
+						<span><?php _e('Send Purchase Receipt', 'edd'); ?></span>
+					</th>
+					<td>
+						<input type="checkbox" name="edd-payment-send-email" id="edd_send_email" value="yes"/>
+						<span class="description"><?php _e('Check this box to send the purchase receipt, including all download links.', 'edd'); ?></span>
+					</td>
+				</tr>
 			</tbody>
 		</table>
 		
