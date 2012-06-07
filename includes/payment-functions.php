@@ -101,7 +101,7 @@ function edd_insert_payment($payment_data = array()) {
 			'user_id' => $payment_data['user_info']['id']
 		);
 		
-		if ($_SERVER['HTTP_X_FORWARD_FOR']) {
+		if ( isset( $_SERVER['HTTP_X_FORWARD_FOR'] ) ) {
 			$ip = $_SERVER['HTTP_X_FORWARD_FOR'];
 		} else {
 			$ip = $_SERVER['REMOTE_ADDR'];
