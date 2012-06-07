@@ -629,7 +629,8 @@ function edd_send_to_success_page($query_string = null) {
 	$redirect = get_permalink($edd_options['success_page']);
 	if($query_string)
 		$redirect .= $query_string;
-	wp_redirect($redirect); exit;
+			
+	wp_redirect( apply_filters('edd_success_page_redirect', $redirect, $_POST['edd-gateway'], $query_string) ); exit;
 }
 
 
