@@ -102,7 +102,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
             'no_note'       => '1', 
             'currency_code' => $edd_options['currency'], 
             'item_number'   => $purchase_data['purchase_key'], 
-            'charset'       => 'UTF-8', 
+            'charset'       => get_bloginfo( 'charset' ), 
             'custom'        => $payment, 
             'rm'            => '2', 
             'return'        => $return_url, 
@@ -289,7 +289,7 @@ function edd_process_paypal_ipn() {
     if ( isset( $post_data_array['txn_type'] ) && $post_data_array['txn_type'] == 'web_accept' ) {
         
         $status = strtolower( $payment_status );
-        
+                
         if ( $status == 'completed' || edd_is_test_mode() ) {
             edd_update_payment_status( $payment_id, 'publish' );
         }
