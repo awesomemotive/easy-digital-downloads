@@ -63,7 +63,10 @@ global $edd_options;
 |--------------------------------------------------------------------------
 */
 
-load_plugin_textdomain( 'edd', false, dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/' );
+function edd_textdomain() {
+	load_plugin_textdomain( 'edd', false, dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/' );
+}
+add_action('init', 'edd_textdomain');
 
 /*
 |--------------------------------------------------------------------------
