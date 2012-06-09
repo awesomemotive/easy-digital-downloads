@@ -77,7 +77,7 @@ function edd_no_redownload() {
  * Get Menu Access Level 
  *
  * Returns the access level required to access 
- * the downloads menu. Currently not not changeable,
+ * the downloads menu. Currently not changeable,
  * but here for a future update.
  *
  * @access      public
@@ -135,17 +135,14 @@ function edd_get_file_extension($str)
 
 function edd_get_ip()
 {
-    if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
-    {
-      $ip=$_SERVER['HTTP_CLIENT_IP'];
-    }
-    elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
-    {
-      $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
-    }
-    else
-    {
-      $ip=$_SERVER['REMOTE_ADDR'];
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+    	//check ip from share internet
+      $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+    	//to check ip is pass from proxy
+      $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+      $ip = $_SERVER['REMOTE_ADDR'];
     }
     return $ip;
 }
@@ -530,3 +527,4 @@ function edd_month_num_to_name($n)
 function edd_get_php_arg_separator_output() {
     return ini_get('arg_separator.output');
 }
+
