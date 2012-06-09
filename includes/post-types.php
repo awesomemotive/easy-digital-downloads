@@ -20,7 +20,7 @@
  * @return      void
 */
 
-function edd_setup_download_post_type() {
+function edd_setup_edd_post_types() {
 
 	$archives = true;
 	if(defined('EDD_DISABLE_ARCHIVE') && EDD_DISABLE_ARCHIVE == true) {
@@ -74,6 +74,9 @@ function edd_setup_download_post_type() {
 	); 
 	register_post_type('download', $download_args);
 	
+	
+	/* payment post type */	
+	
 	$payment_labels = array(
 		'name' => _x('Payments', 'post type general name', 'edd'),
 		'singular_name' => _x('Payment', 'post type singular name', 'edd'),
@@ -107,7 +110,7 @@ function edd_setup_download_post_type() {
 	register_post_type('edd_payment', $payment_args);
 	
 }
-add_action('init', 'edd_setup_download_post_type', 100);
+add_action('init', 'edd_setup_edd_post_types', 100);
 
 
 /**
