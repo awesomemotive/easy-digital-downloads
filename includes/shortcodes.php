@@ -314,9 +314,13 @@ function edd_downloads_query($atts, $content = null) {
 			'tags' => '',
 			'relation' => 'OR',
 			'number' => 10,
+			'excerpt' => 'yes',
+			'excerpt_length' => 30,
+			'buy_button' => 'yes',
 			'style' => 'button',
 			'color' => 'blue',
-			'text' => __('Add to Cart', 'edd')
+			'text' => __('Add to Cart', 'edd'),
+			'columns' => 3
 		), $atts )
 	);
 
@@ -332,16 +336,51 @@ function edd_downloads_query($atts, $content = null) {
 		$query['download_category'] = $category;
 	}
 	
+	switch(intval($columns)) :
+	
+		case 1:
+			$column_width = '100%'; break;
+		case 2:
+			$column_width = '50%'; break;
+		case 3:
+			$column_width = '33%'; break;
+		case 4:
+			$column_width = '25%'; break;
+		case 5:
+			$column_width = '20%'; break;
+		case 6:
+			$column_width = '16.6%'; break;
+	
+	endswitch;
+	
 	// allow the query to be manipulated by other plugins
 	$query = apply_filters('edd_downloads_query', $query);
 	
 	$downloads = get_posts($query);
 	if($downloads) :
-		$display = '<ul class="edd_downloads_list">';
-		foreach($downloads as $download) :
-			$display .= '<li class="edd_download">' . get_the_title($download->ID) . ' - ' . edd_get_purchase_link($download->ID, $text, $style, $color) . '</li>';
-		endforeach;
-		$display .= '</ul>';
+		$i = 1;
+		ob_start(); ?>
+		<div class="edd_downloads_list">
+			<?php foreach($downloads as $download) : ?>
+				<div class="edd_download" style="width: <?php echo $column_width; ?>; float: left;">
+					<div class="edd_download_inner">
+						<h3 class="edd_download_title"><?php echo get_the_title($download->ID); ?></h3>
+						<?php 
+						if($excerpt == 'yes') {
+							echo wpautop( wp_trim_words( $download->post_content, (int)$excerpt_length ) ); 
+						}
+						if($buy_button == 'yes') {
+							echo edd_get_purchase_link($download->ID, $text, $style, $color); 
+						}	
+						?>
+					</div>
+				</div>
+				<?php if($i % $columns == 0) { ?><div style="clear:both;"></div><?php } ?>
+			<?php $i++; endforeach; ?>
+			<div style="clear:both;"></div>
+		</div>
+		<?php
+		$display = ob_get_clean();
 	else:
 		$display = __('No downloads found', 'edd');
 	endif;
