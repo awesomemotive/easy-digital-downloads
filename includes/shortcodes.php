@@ -320,7 +320,9 @@ function edd_downloads_query($atts, $content = null) {
 			'style' => 'button',
 			'color' => 'blue',
 			'text' => __('Add to Cart', 'edd'),
-			'columns' => 3
+			'columns' => 3,
+			'fallback' => false,
+			'thumbsize' => 'thumbnail'
 		), $atts )
 	);
 
@@ -364,6 +366,16 @@ function edd_downloads_query($atts, $content = null) {
 			<?php foreach($downloads as $download) : ?>
 				<div class="edd_download" style="width: <?php echo $column_width; ?>; float: left;">
 					<div class="edd_download_inner">
+					     <?php if ( function_exists( 'has_post_thumbnail' ) && has_post_thumbnail($download->ID) ): ?>
+					        <div class="edd_download_image">
+                                <?php echo get_the_post_thumbnail($download->ID, $thumbsize); ?>
+                            </div>
+                        <?php elseif (false !== $fallback): ?>
+                            <div class="edd_download_image">
+                                <img src="<?php echo $fallback; ?>" alt="<?php the_title(); ?>"/>
+                            </div>
+                        <?php endif ?>
+                            
 						<h3 class="edd_download_title"><?php echo get_the_title($download->ID); ?></h3>
 						<?php 
 						if($excerpt == 'yes') {
