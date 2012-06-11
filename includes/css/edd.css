@@ -222,6 +222,7 @@ input.edd_button_text, input#edd-purchase-button, input#edd_next_button  {
 /* =Downloads Shortcode
 -------------------------------------------------------------- */
 .edd_download_inner { padding: 0 8px 8px; margin: 0 0 10px; }
+.edd_download_image { max-width:100%; }
 
 /* =Misc styles
 -------------------------------------------------------------- */
