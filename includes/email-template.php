@@ -207,7 +207,9 @@ function edd_apply_email_template( $body, $payment_id, $payment_data ) {
 		
 		return $body; // return the plain email with no template	
 	}
+	
 	ob_start();
+		
 		do_action('edd_email_template_' . $template_name);
 	
 	$template = ob_get_clean();	
