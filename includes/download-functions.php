@@ -114,17 +114,31 @@ function edd_get_download_sales_stats($download_id) {
  * Get Download Sales Log
  *
  * Returns an array of sales and sale info for a download.
+ * 
+ * @param		 $download_id INT the ID number of the download to retrieve a log for
+ * @param		 $paginate bool whether to paginate the results or not
+ * @param		 $number int the number of results to return
+ * @param		 $offset int the number of items to skip
  *
  * @access      public
  * @since       1.0 
  * @return      array
 */
 
-function edd_get_download_sales_log($download_id) {
+function edd_get_download_sales_log($download_id, $paginate = false, $number = 10, $offset = 0) {
+	
 	$sales_log = get_post_meta($download_id, '_edd_sales_log', true);
 	if($sales_log) {
-		return $sales_log;
+		$sales_log = array_reverse( $sales_log );
+		$log = array();
+		$log['number'] = count( $sales_log );		
+		$log['sales'] = $sales_log;
+		if( $paginate ) {
+			$log['sales'] = array_slice( $sales_log, $offset, $number );
+		}
+		return $log;
 	}
+	
 	return false;
 }
 
@@ -149,14 +163,13 @@ function edd_get_file_download_log($download_id, $paginate = false, $number = 10
 	$download_log = get_post_meta($download_id, '_edd_file_download_log', true);
 	if($download_log) {
 		$download_log = array_reverse( $download_log );
+		$log = array();
+		$log['number'] = count($download_log);		
+		$log['downloads'] = $download_log;
 		if( $paginate ) {
-			$log = array();
-			$log['number'] = count($download_log);
 			$log['downloads'] = array_slice($download_log, $offset, $number);
-			return $log;
-		} else {
-			return $download_log;
 		}
+		return $log;
 	}
 	return false;
 }
