@@ -136,13 +136,27 @@ function edd_get_download_sales_log($download_id) {
  *
  * @access      public
  * @since       1.0 
+ * 
+ * @param		 $download_id INT the ID number of the download to retrieve a log for
+ * @param		 $paginate bool whether to paginate the results or not
+ * @param		 $number int the number of results to return
+ * @param		 $offset int the number of items to skip
+ *
  * @return      array
 */
 
-function edd_get_file_download_log($download_id) {
+function edd_get_file_download_log($download_id, $paginate = false, $number = 10, $offset = 0) {
 	$download_log = get_post_meta($download_id, '_edd_file_download_log', true);
 	if($download_log) {
-		return $download_log;
+		$download_log = array_reverse( $download_log );
+		if( $paginate ) {
+			$log = array();
+			$log['number'] = count($download_log);
+			$log['downloads'] = array_slice($download_log, $offset, $number);
+			return $log;
+		} else {
+			return $download_log;
+		}
 	}
 	return false;
 }

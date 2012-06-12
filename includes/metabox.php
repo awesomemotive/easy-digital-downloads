@@ -39,7 +39,7 @@ add_action('add_meta_boxes', 'edd_add_download_meta_box');
 */
 
 function edd_render_download_meta_box() {
-	global $post, $wp_version, $edd_options;
+	global $post, $edd_options;
 	
 	// Use nonce for verification
 	echo '<input type="hidden" name="edd_download_meta_box_nonce" value="' . wp_create_nonce(basename(__FILE__)) . '" />';
@@ -75,8 +75,8 @@ function edd_render_price_field($post_id) {
 			echo '<p>';
 				
 				// check to see which pricing fields should be displayed
-				if($variable_pricing) { $price_display = ' style="display:none;"'; } else { $price_display = ''; }
-				if($variable_pricing) { $variable_display = ''; } else { $variable_display = ' style="display:none;"';	}
+				$price_display = $variable_pricing ? ' style="display:none;"' : '';
+				$variable_display = $variable_pricing ? '' : ' style="display:none;"';
 				
 				/*
 				|--------------------------------------------------------------------------
@@ -462,7 +462,17 @@ function edd_render_purchase_log_meta_box() {
 function edd_render_download_log_meta_box() {
 	global $post;
 	
-	$downloads = edd_get_file_download_log($post->ID);
+	$per_page = 10;	
+	
+	if( isset( $_GET['edd_log_page'] ) ) {
+		$page = intval( $_GET['edd_log_page'] );
+		$offset = $per_page * ( $page - 1 );
+		$download_log = edd_get_file_download_log($post->ID, true, $per_page, $offset);
+	} else {
+		$page = 1;
+		$download_log = edd_get_file_download_log($post->ID, true);
+	}
+	
 	$files = edd_get_download_files($post->ID);
 	
 	echo '<table class="form-table">';
@@ -472,8 +482,8 @@ function edd_render_download_log_meta_box() {
 				_e('Each time a file is downloaded, it is recorded below.', 'edd');
 			echo '</td>';
 		echo '</tr>';
-		if($downloads) {
-			foreach($downloads as $file_download) {
+		if($download_log) {
+			foreach($download_log['downloads'] as $file_download) {
 				if($file_download['user_info']['id'] != 0) {
 					$user_data = get_userdata($file_download['user_info']['id']);
 					$name = $user_data->display_name;
@@ -511,4 +521,26 @@ function edd_render_download_log_meta_box() {
 			echo '</tr>';		
 		}
 	echo '</table>';
+	
+	$total_log_entries = $download_log['number'];		
+	$total_pages = ceil( $total_log_entries / $per_page );
+	
+	if ($total_pages > 1) :
+		echo '<div class="tablenav">';
+			echo '<div class="tablenav-pages alignright">';
+				$base = 'post.php?post=' . $post->ID . '&action=edit%_%';		
+				echo paginate_links( array(
+					'base' => $base,
+					'format' => '&edd_log_page=%#%',
+					'prev_text' => '&laquo; ' . __('Previous', 'edd'),
+					'next_text' => __('Next', 'edd') . ' &raquo;',
+					'total' => $total_pages,
+					'current' => $page,
+					'end_size' => 1,
+					'mid_size' => 5,
+					'add_fragment' => '#edd_file_download_log'
+				));
+			echo '</div>';
+		echo '</div><!--end .tablenav-->';
+	endif;
 }
