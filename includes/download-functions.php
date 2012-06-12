@@ -186,7 +186,7 @@ function edd_get_file_download_log($download_id, $paginate = false, $number = 10
 */
 
 function edd_record_sale_in_log($download_id, $payment_id, $user_info, $date) {
-	$log = edd_get_download_sales_log($download_id);
+	$log = get_post_meta($download_id, '_edd_sales_log', true);
 	if(!$log) {
 		$log = array();
 	}
@@ -212,7 +212,7 @@ function edd_record_sale_in_log($download_id, $payment_id, $user_info, $date) {
 */
 
 function edd_record_download_in_log($download_id, $file_id, $user_info, $ip, $date) {
-	$log = edd_get_file_download_log($download_id);
+	$log = get_post_meta($download_id, '_edd_file_download_log', true);
 	if(!$log) {
 		$log = array();
 	}

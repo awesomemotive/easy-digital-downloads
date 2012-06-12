@@ -518,8 +518,9 @@ function edd_render_download_log_meta_box() {
 		echo '</tr>';
 		if($download_log) {
 			foreach($download_log['downloads'] as $file_download) {
-				if($file_download['user_info']['id'] != 0) {
-					$user_data = get_userdata($file_download['user_info']['id']);
+				$user_id = isset($file_download['user_info']['id']) ? $file_download['user_info']['id'] : 0;
+				$user_data = get_userdata($user_id);
+				if( $user_data ) {
 					$name = $user_data->display_name;
 				} else {
 					$name = $file_download['user_info']['email'];

@@ -62,7 +62,7 @@ function edd_logged_in_only() {
  * Disable Redownload
  *
  * @access      public
- * @since       1.08.2
+ * @since       1.0.8.2
  * @return      boolean
 */
 
