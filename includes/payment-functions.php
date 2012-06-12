@@ -150,7 +150,7 @@ function edd_update_payment_status($payment_id, $status = 'publish') {
 	$payment = get_post($payment_id);
 	if($payment->post_status == 'publish') {
 		// for some reason this is occasionally coming back as true even when the payment is not		
-		return;
+		//return;
 	}
 	
 	$old_status = $payment->post_status;	
