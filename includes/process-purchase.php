@@ -268,14 +268,19 @@ function edd_purchase_form_validate_logged_in_user() {
 		// get the logged in user data
 		$user_data = get_userdata( $user_ID );
 
+		if( !is_email( $_POST['edd_email'] ) ) {
+			// if the user enters an email other than the stored email, we must verify it
+			edd_set_error( 'invalid_email', __( 'Please enter a valid email address.', 'edd' ) );
+		}
+
 		// verify data
 		if ( $user_data ) {
 			// collected logged in user data
 			$valid_user_data = array(
 				'user_id' 		=> $user_ID,
-				'user_email' 	=> $user_data->user_email,
-				'user_first' 	=> $user_data->user_firstname,
-				'user_last' 	=> $user_data->user_lastname,
+				'user_email' 	=> sanitize_email( $_POST['edd_email'] ),
+				'user_first' 	=> sanitize_text_field( $_POST['edd_first'] ),
+				'user_last' 	=> sanitize_text_field( $_POST['edd_last'] ),
 			);	
 		} else {
 			// set invalid user error
