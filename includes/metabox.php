@@ -19,8 +19,8 @@
 */
 
 function edd_add_download_meta_box() {
-	add_meta_box('downloadinformation', __('Download Configuration', 'edd'), 'edd_render_download_meta_box', 'download', 'normal', 'default');
-	add_meta_box('edd_download_stats', __('Download Stats', 'edd'), 'edd_render_stats_meta_box', 'download', 'side', 'high');
+	add_meta_box('downloadinformation', sprintf(__('%1$s Configuration', 'edd'), edd_get_label_singular(), edd_get_label_plural() ),  'edd_render_download_meta_box', 'download', 'normal', 'default');
+	add_meta_box('edd_download_stats', sprintf(__('%1$ Stats', 'edd'), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', 'download', 'side', 'high');
 	add_meta_box('edd_purchase_log', __('Purchase Log', 'edd'), 'edd_render_purchase_log_meta_box', 'download', 'normal', 'default');
 	add_meta_box('edd_file_download_log', __('File Download Log', 'edd'), 'edd_render_download_log_meta_box', 'download', 'normal', 'default');
 	add_meta_box('edd_payment_info', __('Payment Info', 'edd'), 'edd_render_payment_meta_box', 'edd_payment', 'normal', 'high');
