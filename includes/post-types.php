@@ -126,11 +126,11 @@ add_action('init', 'edd_setup_edd_post_types', 100);
 */
 
 function edd_get_default_labels() {
-    $defaults = array(
-       'singular' => __('Download','edd'),
-       'plural' => __('Downloads','edd')
-    );
-    return apply_filters( 'edd_default_downloads_name', $defaults );
+	$defaults = array(
+	   'singular' => __('Download','edd'),
+	   'plural' => __('Downloads','edd')
+	);
+	return apply_filters( 'edd_default_downloads_name', $defaults );
 }
 
 
@@ -142,9 +142,9 @@ function edd_get_default_labels() {
  * @return      string
 */
 
-function edd_get_label_singular() {
-    $defaults = edd_get_default_labels();
-    return $defaults['singular'];
+function edd_get_label_singular($lowercase = false) {
+	$defaults = edd_get_default_labels();
+	return ($lowercase) ? strtolower($defaults['singular']) : $defaults['singular'];
 }
 
 
@@ -156,9 +156,9 @@ function edd_get_label_singular() {
  * @return      string
 */
 
-function edd_get_label_plural() {
-    $defaults = edd_get_default_labels();
-    return $defaults['plural'];
+function edd_get_label_plural($lowercase = false) {
+	$defaults = edd_get_default_labels();
+	return ($lowercase) ? strtolower($defaults['plural']) : $defaults['plural'];
 }
 
 
