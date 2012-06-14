@@ -32,7 +32,8 @@ function edd_install() {
 				'post_content' => '[download_checkout]',
 				'post_status' => 'publish',
 				'post_author' => 1,
-				'post_type' => 'page'
+				'post_type' => 'page',
+				'comment_status' => 'closed'
 			)
 		);
 		// success
@@ -42,7 +43,8 @@ function edd_install() {
 				'post_content' => __('Thank you for your purchase!', 'edd'),
 				'post_status' => 'publish',
 				'post_author' => 1,
-				'post_type' => 'page'
+				'post_type' => 'page',
+				'comment_status' => 'closed'
 			)
 		);
 		// history
@@ -52,13 +54,14 @@ function edd_install() {
 				'post_content' => '[download_history]',
 				'post_status' => 'publish',
 				'post_author' => 1,
-				'post_type' => 'page'
+				'post_type' => 'page',
+				'comment_status' => 'closed'
 			)
 		);
 	}
 	
 	// setup the download custom post type
-	edd_setup_download_post_type();
+	edd_setup_edd_post_types();
 	
 	// setup the download custom taxonomies
 	edd_setup_download_taxonomies();
