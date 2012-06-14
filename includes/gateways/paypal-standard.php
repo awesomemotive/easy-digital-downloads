@@ -96,7 +96,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
             'cmd'           => '_xclick', 
             'amount'        => $purchase_data['price'], 
             'business'      => $edd_options['paypal_email'], 
-            'item_name'     => $cart_summary, 
+            'item_name'     => stripslashes_deep( html_entity_decode( $cart_summary, ENT_COMPAT, 'UTF-8' ) ), 
             'email'         => $purchase_data['user_email'], 
             'no_shipping'   => '1', 
             'no_note'       => '1', 
@@ -147,6 +147,7 @@ function edd_listen_for_paypal_ipn() {
         
     // alternate purchase verification  
     } else { 
+	
         if ( isset( $_GET['tx'] ) && isset( $_GET['st'] ) && isset( $_GET['amt'] ) && isset( $_GET['cc'] ) && isset( $_GET['cm'] ) && isset( $_GET['item_number'] ) ) {
             // we are using the alternate method of verifying PayPal purchases
             
