@@ -76,7 +76,7 @@ function edd_get_discount($key) {
 
 
 /**
- * Get Discount Id By Code
+ * Get Discount By Code
  *
  * Retrieves all details for a discount by its code.
  *
@@ -85,12 +85,12 @@ function edd_get_discount($key) {
  * @return      array
 */
 
-function edd_get_discount_id_by_code($code) {
+function edd_get_discount_by_code($code) {
 	$discounts = edd_get_discounts();
 	if($discounts) {
 		foreach($discounts as $id => $discount) {
 			if($discount['code'] == $code) {
-				return $id;
+				return $discounts[$id];
 			}
 		}
 	}
@@ -319,7 +319,7 @@ function edd_is_discount_maxed_out($code_id) {
 */
 
 function edd_is_discount_valid($code) {
-	$discount_id = edd_get_discount_by_code($code);
+	$discount_id = edd_get_discount_id_by_code($code);
 	if($discount_id !== false) {
 		if(edd_is_discount_active($discount_id) && !edd_is_discount_maxed_out($discount_id) && edd_is_discount_started($discount_id)) {
 			return true;
@@ -340,16 +340,17 @@ function edd_is_discount_valid($code) {
  * @return      void
 */
 
-function edd_get_discount_by_code($code) {
+function edd_get_discount_id_by_code($code) {
 	$discounts = edd_get_discounts();
+	$code_id = false;
 	if($discounts) {
 		foreach($discounts as $key => $discount) {
-			if(isset($discount['code']) && $discount['code'] == $code) {
-				return $key;
+			if(trim($discount['code']) === trim($code)) {
+				$code_id = $key;
 			}
 		}
 	}
-	return false;
+	return $code_id;
 }
 
 
@@ -366,7 +367,7 @@ function edd_get_discount_by_code($code) {
 */
 
 function edd_get_discounted_amount($code, $base_price) {
-	$discount_id = edd_get_discount_by_code($code);
+	$discount_id = edd_get_discount_id_by_code($code);
 	$discounts = edd_get_discounts();
 	$type = $discounts[$discount_id]['type'];
 	$rate = $discounts[$discount_id]['amount'];
@@ -394,7 +395,7 @@ function edd_get_discounted_amount($code, $base_price) {
 */
 
 function edd_increase_discount_usage($code) {
-	$discount_id = edd_get_discount_by_code($code);
+	$discount_id = edd_get_discount_id_by_code($code);
 	$discounts = edd_get_discounts();
 	$uses = isset($discounts[$discount_id]['uses']) ? $discounts[$discount_id]['uses'] : false;
 	if($uses) {
@@ -403,8 +404,7 @@ function edd_increase_discount_usage($code) {
 		$uses = 1;
 	}
 	$discounts[$discount_id]['uses'] = $uses;
-	$new_use_count = update_option('edd_discounts', $discounts);
-	return $new_use_count;
+	return update_option('edd_discounts', $discounts);
 }
 
 
