@@ -32,7 +32,7 @@ function edd_complete_purchase($payment_id, $new_status, $old_status) {
 		$downloads = maybe_unserialize($payment_data['downloads']);
 		$user_info = maybe_unserialize($payment_data['user_info']);
 		$cart_details = maybe_unserialize($payment_data['cart_details']);				
-				
+								
 		// increase purchase count and earnings
 		foreach($downloads as $download) {
 			
@@ -47,7 +47,7 @@ function edd_complete_purchase($payment_id, $new_status, $old_status) {
 			edd_increase_earnings($download['id'], $amount);
 			
 		}
-	
+		
 		if(isset($payment_data['user_info']['discount'])) {
 			edd_increase_discount_usage($payment_data['user_info']['discount']);
 		}

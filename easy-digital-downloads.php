@@ -91,6 +91,7 @@ include_once(EDD_PLUGIN_DIR . 'includes/gateway-functions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/discount-actions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/discount-functions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/payment-functions.php');
+include_once(EDD_PLUGIN_DIR . 'includes/payment-actions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/misc-functions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/download-functions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/scripts.php');
@@ -113,7 +114,6 @@ if(is_admin()) {
 	include_once(EDD_PLUGIN_DIR . 'includes/dashboard-columns.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/thickbox.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/graphing.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/payment-actions.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/upload-functions.php');
 } else {
 	include_once(EDD_PLUGIN_DIR . 'includes/process-purchase.php');

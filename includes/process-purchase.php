@@ -212,7 +212,7 @@ function edd_purchase_form_validate_discounts() {
 	// check for valid discount is present
 	if ( isset( $_POST['edd-discount'] ) && trim( $_POST['edd-discount'] ) != '' ) {
 		// clean discount
-		$discount = strip_tags( trim( $_POST['edd-discount'] ) );
+		$discount = sanitize_text_field( $_POST['edd-discount'] );
 		// check if validates
 		if (  edd_is_discount_valid( $discount ) ) {
 			// return clean discount
