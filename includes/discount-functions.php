@@ -337,6 +337,7 @@ function edd_is_discount_valid($code) {
  *
  * @access      public
  * @since       1.0 
+ * @param		$code string The discount code to retrieve an ID for
  * @return      void
 */
 
