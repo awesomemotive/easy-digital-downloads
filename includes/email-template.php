@@ -160,7 +160,14 @@ function edd_get_email_body_content( $payment_id, $payment_data ) {
 	
 	global $edd_options;	
 	
-	$email_body = edd_email_templage_tags($edd_options['purchase_receipt'], $payment_data);
+	$default_email_body = __("Dear", "edd") . " {name},\n\n";
+	$default_email_body .= __("Thank you for your purchase. Please click on the link(s) below to download your files.", "edd") . "\n\n";
+	$default_email_body .= "{download_list}\n\n";
+	$default_email_body .= "{sitename}";
+	
+	$email = isset($edd_options['purchase_receipt']) ? $edd_options['purchase_receipt'] : $default_email_body;
+	
+	$email_body = edd_email_templage_tags($email, $payment_data);
 	return apply_filters('edd_purchase_receipt', $email_body, $payment_id, $payment_data);
 }
 
