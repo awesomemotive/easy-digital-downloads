@@ -26,7 +26,7 @@ function edd_media_button($context) {
 
 	// Only run in post/page creation and edit screens
 	if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow != 'download' ) {
-		$img = '<img src="' . EDD_PLUGIN_URL . 'includes/images/edd-media.png" alt="' . __('Insert Download', 'edd') . '"/>';
+		$img = '<img src="' . EDD_PLUGIN_URL . 'includes/images/edd-media.png" alt="' . sprintf(__('Insert %s', 'edd'), edd_get_label_singular() ) . '"/>';
 		$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox" title="' . __('Insert Download', 'edd') . '">' . $img . '</a>';
 	}
 	return $context . $output;
@@ -85,10 +85,10 @@ function edd_admin_footer_for_thickbox() {
 			<?php
 			if($downloads) {
 			?>
-				<p><?php _e('Use the form below to insert the short code for purchasing a download.', 'edd'); ?></p>
+				<p><?php echo sprintf(__('Use the form below to insert the short code for purchasing a %s', 'edd'), edd_get_label_singular() ); ?></p>
 				<div>
 					<select id="select-edd-download" style="clear: both; display: block; margin-bottom: 1em;">
-						<option value=""><?php _e('Choose a download', 'edd'); ?></option>
+						<option value=""><?php echo sprintf(__('Choose a %s', 'edd'), edd_get_label_singular() ); ?></option>
 						<?php
 							foreach ( $downloads as $download )
 								echo '<option value="' . absint( $download->ID ) . '">' . esc_attr( $download->post_title ) . '</option>';
@@ -120,7 +120,7 @@ function edd_admin_footer_for_thickbox() {
 					<input type="text" class="regular-text" id="edd-text" value="" placeholder="<?php _e('Link text . . .', 'edd'); ?>"/>
 				</div>
 				<p class="submit">
-					<input type="button" id="edd-insert-download" class="button-primary" value="<?php _e('Insert Download', 'edd'); ?>" onclick="insertDownload();" />
+					<input type="button" id="edd-insert-download" class="button-primary" value="<?php echo sprintf(__('Insert %s', 'edd'), edd_get_label_singular() ); ?>" onclick="insertDownload();" />
 					<a id="edd-cancel-download-insert" class="button-secondary" onclick="tb_remove();" title="<?php _e('Cancel', 'edd'); ?>"><?php _e('Cancel', 'edd'); ?></a>
 				</p>
 				<p><?php _e('Button Styles', 'edd'); ?></p>
