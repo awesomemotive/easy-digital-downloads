@@ -262,7 +262,7 @@ function edd_purchase_form_validate_logged_in_user() {
 		'user_id' => -1 
 	);
 	
-	// verify there is an user_ID
+	// verify there is a user_ID
 	if ( $user_ID > 0 ) {
 
 		// get the logged in user data

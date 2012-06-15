@@ -48,8 +48,8 @@ function edd_complete_purchase($payment_id, $new_status, $old_status) {
 			
 		}
 		
-		if(isset($payment_data['user_info']['discount'])) {
-			edd_increase_discount_usage($payment_data['user_info']['discount']);
+		if(isset($user_info['discount'])) {
+			edd_increase_discount_usage($user_info['discount']);
 		}
 	}
 		

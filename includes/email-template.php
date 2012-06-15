@@ -22,7 +22,7 @@ function edd_email_templage_tags($message, $payment_data) {
 	
 	$user_info = maybe_unserialize($payment_data['user_info']);
 	
-	if(isset($user_info['id'])) {
+	if(isset($user_info['id']) && $user_info['id'] > 0) {
 		$user_data = get_userdata($user_info['id']);
 		$name = $user_data->display_name;
 	} elseif(isset($user_info['first_name'])) {
