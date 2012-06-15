@@ -28,7 +28,7 @@ function edd_show_download_sales_graph($bgcolor = 'white') {
 		    google.setOnLoadCallback(drawSalesChart);
 		    function drawSalesChart() {
 		        var data = new google.visualization.DataTable();
-		        data.addColumn('string', '<?php _e("Download", "edd"); ?>');
+		        data.addColumn('string', '<?php echo edd_get_label_plural(); ?>');
 		        data.addColumn('number', '<?php _e("Sales", "edd"); ?>');
 		        data.addRows([
 					<?php foreach($downloads as $download) { ?>
@@ -39,7 +39,7 @@ function edd_show_download_sales_graph($bgcolor = 'white') {
 		        ]);
 
 		        var options = {
-		          	title: "<?php _e('Downloads Performance in Sales', 'edd'); ?>",
+		          	title: "<?php echo sprintf(__('%s Performance in Sales', 'edd'), edd_get_label_singular() ); ?>",
 					colors:['#a3bcd3'],
 					fontSize: 12,
 					backgroundColor: '<?php echo $bgcolor; ?>'
@@ -85,7 +85,7 @@ function edd_show_download_earnings_graph($bgcolor = 'white') {
 		        ]);
 
 		        var options = {
-		          	title: "<?php _e('Downloads Performance in Earnings', 'edd'); ?>",
+		          	title: "<?php echo sprintf(__('%s Performance in Earnings', 'edd'), edd_get_label_singular() ); ?>",
 					colors:['#a3bcd3'],
 					fontSize: 12,
 					backgroundColor: '<?php echo $bgcolor; ?>'
