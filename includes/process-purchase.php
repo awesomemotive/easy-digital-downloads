@@ -186,6 +186,8 @@ function edd_purchase_form_validate_gateway() {
 		if ( edd_is_gateway_active( $gateway ) ) {
 			// return active gateway
 			return $gateway;
+		} else if ( edd_get_cart_amount() <= 0 ) {
+			return 'manual';
 		} else {
 			// set invalid gateway error
 			edd_set_error( 'invalid_gateway', __( 'The selected gateway is not active', 'edd' ) );
