@@ -25,9 +25,12 @@
 */
 
 function edd_complete_purchase($payment_id, $new_status, $old_status) {
+
+	if( $old_status == 'publish' || $old_status == 'complete')
+		return; // make sure that payments are only completed once
 	
-	if(!edd_is_test_mode()) {
-			
+	if( ! edd_is_test_mode() ) {
+				
 		$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
 		$downloads = maybe_unserialize($payment_data['downloads']);
 		$user_info = maybe_unserialize($payment_data['user_info']);
@@ -52,9 +55,6 @@ function edd_complete_purchase($payment_id, $new_status, $old_status) {
 			edd_increase_discount_usage($user_info['discount']);
 		}
 	}
-		
-	// send email with secure download link
-	edd_email_purchase_receipt($payment_id);
 	
 	// empty the shopping cart
 	edd_empty_cart();	
@@ -62,6 +62,27 @@ function edd_complete_purchase($payment_id, $new_status, $old_status) {
 }
 add_action('edd_update_payment_status', 'edd_complete_purchase', 10, 3);
 
+
+/**
+ * Trigger Purchase Receipt
+ *
+ * Causes the purchase receipt to be emailed. 
+ *
+ * @access      private
+ * @since       1.0.8.4 
+ * @return      void
+*/
+
+function edd_trigger_purchase_receipt($payment_id, $new_status, $old_status) {
+
+	if( $old_status == 'publish' || $old_status == 'complete')
+		return;
+
+	// send email with secure download link
+	edd_email_purchase_receipt($payment_id);
+
+}
+add_action('edd_update_payment_status', 'edd_trigger_purchase_receipt', 10, 3);
 
 /**
  * Update Edited Purchase

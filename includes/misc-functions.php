@@ -20,9 +20,10 @@
 
 function edd_is_test_mode() {
 	global $edd_options;
-	if(isset($edd_options['test_mode']))
-		return true;
-	return false;
+	if( !isset($edd_options['test_mode']) || is_null($edd_options['test_mode']) ) {
+		return false;
+	}
+	return true;
 }
 
 

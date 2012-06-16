@@ -141,25 +141,24 @@ function edd_insert_payment($payment_data = array()) {
  * @return      void
 */
 
-function edd_update_payment_status($payment_id, $status = 'publish') {
+function edd_update_payment_status($payment_id, $new_status = 'publish') {
 	
-	if($status == 'completed' || $status == 'complete') {
-		$status = 'publish';
+	if($new_status == 'completed' || $new_status == 'complete') {
+		$new_status = 'publish';
 	}
 	
 	$payment = get_post($payment_id);
-	if($payment->post_status == 'publish') {
-		// for some reason this is occasionally coming back as true even when the payment is not		
+	if($payment->post_status == 'publish') {		
 		//return;
 	}
 	
 	$old_status = $payment->post_status;	
 	
-	do_action('edd_before_payment_status_change', $payment_id, $status, $old_status);	
+	do_action('edd_before_payment_status_change', $payment_id, $new_status, $old_status);	
 	
-	wp_update_post(array('ID' => $payment_id, 'post_status' => $status));
+	wp_update_post(array('ID' => $payment_id, 'post_status' => $new_status));
 	
-	do_action('edd_update_payment_status', $payment_id, $status, $old_status);
+	do_action('edd_update_payment_status', $payment_id, $new_status, $old_status);
 }
 
 
