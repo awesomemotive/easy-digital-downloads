@@ -25,7 +25,7 @@ function edd_get_payment_gateways() {
 	// default, built-in gateways
 	$gateways = array(
 		'paypal' => array('admin_label' => 'PayPal', 'checkout_label' => 'PayPal'),
-		'manual' => array('admin_label' => __('Manual Payment', 'edd'), 'checkout_label' => __('Manual Payment', 'edd')),
+		'manual' => array('admin_label' => __('Test Payment', 'edd'), 'checkout_label' => __('Test Payment', 'edd')),
 	);
 	
 	return apply_filters('edd_payment_gateways', $gateways);
