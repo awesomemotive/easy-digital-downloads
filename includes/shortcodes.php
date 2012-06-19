@@ -314,6 +314,7 @@ function edd_downloads_query($atts, $content = null) {
 			'tags' => '',
 			'relation' => 'OR',
 			'number' => 10,
+			'price' => 'yes',
 			'excerpt' => 'yes',
 			'full_content' => 'no',
 			'excerpt_length' => 30,
@@ -368,7 +369,8 @@ function edd_downloads_query($atts, $content = null) {
 			<?php foreach($downloads as $download) : ?>
 				<div class="edd_download" style="width: <?php echo $column_width; ?>; float: left;">
 					<div class="edd_download_inner">
-						 <?php if ( function_exists( 'has_post_thumbnail' ) && has_post_thumbnail($download->ID) && $thumbnails != 'false'): ?>
+						 
+						<?php if ( function_exists( 'has_post_thumbnail' ) && has_post_thumbnail($download->ID) && $thumbnails != 'false'): ?>
 							<div class="edd_download_image">
 								<?php echo get_the_post_thumbnail($download->ID, $thumbsize); ?>
 							</div>
@@ -380,11 +382,17 @@ function edd_downloads_query($atts, $content = null) {
 							
 						<h3 class="edd_download_title"><?php echo get_the_title($download->ID); ?></h3>
 						<?php 
+						
 						if($excerpt == 'yes' && $full_content != 'yes') {
 							echo apply_filters('edd_downloads_excerpt', wp_trim_words( $download->post_content, (int)$excerpt_length ) ); 
 						} else if($full_content == 'yes') {
 							echo apply_filters('edd_downloads_content', $download->post_content);
 						} 
+						
+						if($price == 'yes' && !edd_has_variable_prices($download->ID)) {
+							echo '<div class="edd_price">' . edd_price($download->ID) . '</div>';
+						}
+						
 						if($buy_button == 'yes') {
 							echo edd_get_purchase_link($download->ID, $text, $style, $color); 
 						}	
