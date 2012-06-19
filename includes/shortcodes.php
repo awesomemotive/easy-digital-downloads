@@ -325,7 +325,9 @@ function edd_downloads_query($atts, $content = null) {
 			'columns' => 3,
 			'fallback' => false,
 			'thumbsize' => 'thumbnail',
-			'thumbnails' => 'true'
+			'thumbnails' => 'true',
+			'link_title' => 'yes',
+			'title_wrap' => 'h3'
 		), $atts )
 	);
 
@@ -378,10 +380,16 @@ function edd_downloads_query($atts, $content = null) {
 							<div class="edd_download_image">
 								<img src="<?php echo $fallback; ?>" alt="<?php the_title(); ?>"/>
 							</div>
-						<?php endif ?>
-							
-						<h3 class="edd_download_title"><?php echo get_the_title($download->ID); ?></h3>
-						<?php 
+						<?php endif;
+						
+						$title = get_the_title($download->ID);
+						if($link_title == 'yes')
+							$title = '<a href="' . get_permalink( $download->ID ) . '">' . $title . '</a>';
+						
+						$title_before = '<' . $title_wrap . ' class="edd_download_title">';
+						$title_after = '</' . $title_wrap . '>';
+						
+						echo sprintf( '%s%s%s', $title_before, $title, $title_after);
 						
 						if($excerpt == 'yes' && $full_content != 'yes') {
 							echo apply_filters('edd_downloads_excerpt', wp_trim_words( $download->post_content, (int)$excerpt_length ) ); 
