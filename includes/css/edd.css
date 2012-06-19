@@ -68,6 +68,7 @@
 /* =Purchase buttons
 -------------------------------------------------------------- */
 input.edd_submit_plain { background: none !important; border: none !important; padding: none !important; display: inline; cursor: pointer; }
+.edd_price_options { margin: 0 0 15px; }
 
 /* general */
 .edd_button { 
