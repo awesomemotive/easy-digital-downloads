@@ -245,3 +245,14 @@ function edd_show_has_purchased_item_message($user_id, $download_id) {
 	echo '<p class="edd_has_purchased">' . __('You have already purchased this item, but you may purchase it again.', 'edd') . '</p>';
 }
 add_action('edd_has_purchased_item_message', 'edd_show_has_purchased_item_message', 10, 2);
+
+
+function edd_downloads_default_excerpt( $excerpt ) {
+	return do_shortcode( wpautop( $excerpt ) );
+}
+add_filter('edd_downloads_excerpt', 'edd_downloads_default_excerpt');
+
+function edd_downloads_default_content( $content ) {
+	return do_shortcode( wpautop( $content ) );
+}
+add_filter('edd_downloads_content', 'edd_downloads_default_content');

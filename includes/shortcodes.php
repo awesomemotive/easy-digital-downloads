@@ -315,6 +315,7 @@ function edd_downloads_query($atts, $content = null) {
 			'relation' => 'OR',
 			'number' => 10,
 			'excerpt' => 'yes',
+			'full_content' => 'no',
 			'excerpt_length' => 30,
 			'buy_button' => 'yes',
 			'style' => 'button',
@@ -379,9 +380,11 @@ function edd_downloads_query($atts, $content = null) {
 							
 						<h3 class="edd_download_title"><?php echo get_the_title($download->ID); ?></h3>
 						<?php 
-						if($excerpt == 'yes') {
-							echo wpautop( wp_trim_words( $download->post_content, (int)$excerpt_length ) ); 
-						}
+						if($excerpt == 'yes' && $full_content != 'yes') {
+							echo apply_filters('edd_downloads_excerpt', wp_trim_words( $download->post_content, (int)$excerpt_length ) ); 
+						} else if($full_content == 'yes') {
+							echo apply_filters('edd_downloads_content', $download->post_content);
+						} 
 						if($buy_button == 'yes') {
 							echo edd_get_purchase_link($download->ID, $text, $style, $color); 
 						}	
