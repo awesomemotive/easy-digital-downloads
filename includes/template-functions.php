@@ -81,10 +81,6 @@ function edd_get_purchase_link($download_id = null, $link_text = null, $style = 
 		
 		$purchase_form .= '<div class="edd_purchase_submit_wrapper">';
 		
-			if(edd_has_user_purchased($user_ID, $download_id)) {
-				do_action('edd_has_purchased_item_message', $user_ID, $download_id);
-			}
-				
 			$data_variable = $variable_pricing ? ' data-variable-price="yes"' : '';
 			
 			if( edd_item_in_cart($download_id) ) {
@@ -178,7 +174,6 @@ function edd_after_download_content($content) {
 }
 add_filter('the_content', 'edd_after_download_content');
 
-
 /**
  * Filter Success Page Content
  *
@@ -241,16 +236,40 @@ function edd_get_button_colors() {
  * @return      void
 */
 
-function edd_show_has_purchased_item_message($user_id, $download_id) {
-	echo '<p class="edd_has_purchased">' . __('You have already purchased this item, but you may purchase it again.', 'edd') . '</p>';
+function edd_show_has_purchased_item_message( $download_id ) {
+	global $user_ID;
+	if(edd_has_user_purchased($user_ID, $download_id)) {
+		echo '<p class="edd_has_purchased">' . __('You have already purchased this item, but you may purchase it again.', 'edd') . '</p>';
+	}
 }
-add_action('edd_has_purchased_item_message', 'edd_show_has_purchased_item_message', 10, 2);
+add_action('edd_after_download_content', 'edd_show_has_purchased_item_message');
 
+
+/**
+ * Default formatting for download excerpts
+ *
+ * This excerpt is primarily used in the [downloads] short code
+ *
+ * @access      private
+ * @since       1.0.8.4
+ * @return      string
+*/
 
 function edd_downloads_default_excerpt( $excerpt ) {
 	return do_shortcode( wpautop( $excerpt ) );
 }
 add_filter('edd_downloads_excerpt', 'edd_downloads_default_excerpt');
+
+
+/**
+ * Default formatting for full download content
+ *
+ * This is primarily used in the [downloads] short code
+ *
+ * @access      private
+ * @since       1.0.8.4
+ * @return      string
+*/
 
 function edd_downloads_default_content( $content ) {
 	return do_shortcode( wpautop( $content ) );
