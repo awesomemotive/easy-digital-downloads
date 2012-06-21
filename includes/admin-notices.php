@@ -32,6 +32,9 @@ function edd_admin_messages() {
 	if(isset($_GET['edd-message']) && $_GET['edd-message'] == 'email_sent' && current_user_can($edd_access_level)) {
 		add_settings_error( 'edd-notices', 'edd-payment-sent', __('The purchase receipt has been resent.', 'edd'), 'updated' );
 	}
+	if(isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') {
+	     add_settings_error( 'edd-notices', 'edd-settings-updated', __('Settings Updated.', 'edd'), 'updated' );
+	}	
 	settings_errors( 'edd-notices' );
 }
 add_action('admin_notices', 'edd_admin_messages');
