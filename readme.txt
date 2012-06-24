@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.4
-Stable Tag: 1.0.8.3
+Stable Tag: 1.0.8.4
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -125,6 +125,23 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.0.8.4 =
+
+* Fixed a bug with download sale/earning stats going negative when reversing purchases
+* Removed some blank form action attributes that caused the HTML to invalidate
+* Added "Settings Updated" notification when saving plugin settings
+* Made some improvements to the default purchase receipt email template 
+* Renamed the "Manual Payment" gateway to "Test"
+* Added options for linking the download titles in the [downloads] short code
+* Removed the "You have already purchased this" message from the purchase link short code / template
+* Added a "price" parameter to the [downloads] short code
+* Improved the CSS on the variable price option forms
+* Add a parameter to the [downloads] short code for showing the complete content
+* Fixed a bug with free downloads
+* Moved the function that triggers the purchase receipt to its own function/hook so that it can be modified more easily
+* Added a few new action hooks
+* Updated Spanish language files
 
 = 1.0.8.3 =
 
@@ -327,6 +344,23 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.0.8.4 =
+
+* Fixed a bug with download sale/earning stats going negative when reversing purchases
+* Removed some blank form action attributes that caused the HTML to invalidate
+* Added "Settings Updated" notification when saving plugin settings
+* Made some improvements to the default purchase receipt email template 
+* Renamed the "Manual Payment" gateway to "Test"
+* Added options for linking the download titles in the [downloads] short code
+* Removed the "You have already purchased this" message from the purchase link short code / template
+* Added a "price" parameter to the [downloads] short code
+* Improved the CSS on the variable price option forms
+* Add a parameter to the [downloads] short code for showing the complete content
+* Fixed a bug with free downloads
+* Moved the function that triggers the purchase receipt to its own function/hook so that it can be modified more easily
+* Added a few new action hooks
+* Updated Spanish language files
 
 = 1.0.8.3 =
 
