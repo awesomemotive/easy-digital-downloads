@@ -318,7 +318,9 @@ function edd_increase_purchase_count($download_id) {
 
 function edd_decrease_purchase_count($download_id) {
 	$sales = edd_get_download_sales_stats($download_id);
-	$sales = $sales - 1;
+	if($sales > 0) // only decrease if not already zero
+		$sales = $sales - 1;
+	
 	if(update_post_meta($download_id, '_edd_download_sales', $sales))
 		return $sales;
 
@@ -359,7 +361,9 @@ function edd_increase_earnings($download_id, $amount) {
 
 function edd_decrease_earnings($download_id, $amount) {
 	$earnings = edd_get_download_earnings_stats($download_id);
-	$earnings = $earnings - $amount;
+	
+	if($earnings > 0) // only decrease if greater than zero
+		$earnings = $earnings - $amount;
 	
 	if(update_post_meta($download_id, '_edd_download_earnings', $earnings))
 		return $earnings;
