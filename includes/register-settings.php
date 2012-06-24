@@ -30,6 +30,7 @@ function edd_register_settings() {
 		  	$pages_options[$page->ID] = $page->post_title;
 		}
 	}
+	array_unshift($pages_options, ''); // blank option
 	
 	/* white list our settings, each in their respective section
 	   filters can be used to add more options to each section */
