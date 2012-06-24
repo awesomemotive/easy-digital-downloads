@@ -61,7 +61,7 @@ function edd_get_purchase_link($download_id = null, $link_text = null, $style = 
 		$color = get_post_meta($post->ID, '_edd_purchase_color', true) ? str_replace(' ', '_', get_post_meta($post->ID, '_edd_purchase_color', true)) : 'blue';
 	}
 	
-	$purchase_form = '<form id="edd_purchase_' . $download_id . '" class="edd_download_purchase_form" action="" method="POST">';
+	$purchase_form = '<form id="edd_purchase_' . $download_id . '" class="edd_download_purchase_form" method="POST">';
 		
 		if($variable_pricing) {
 			$prices = get_post_meta($download_id, 'edd_variable_prices', true);
