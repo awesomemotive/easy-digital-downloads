@@ -39,7 +39,7 @@ function edd_options_page() {
 			
 		<div id="tab_container">
 			
-			<?php settings_errors(); ?>  
+			<?php settings_errors('edd-notices'); ?>  
 			
 			<form method="post" action="options.php">
 	
