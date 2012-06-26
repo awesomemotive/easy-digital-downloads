@@ -255,16 +255,21 @@ function edd_get_download_price($download_id) {
  * @access      public
  * @since       1.0
  * @param       int $download_id the ID of the download price to show
- * @return      void
+ * @param		bool whether to echo or return the results
+* @return       void
 */
 
-function edd_price($download_id) {
+function edd_price($download_id, $echo = true) {
 	if(edd_has_variable_prices($download_id)) {
 		$prices = get_post_meta($download_id, 'edd_variable_prices', true);
-		echo edd_currency_filter($prices[0]['amount']); // show the first price option
+		$price = edd_currency_filter($prices[0]['amount']); // show the first price option
 	} else {
-		echo edd_currency_filter(edd_get_download_price($download_id));
+		$price = edd_currency_filter(edd_get_download_price($download_id));
 	}
+	if( $echo )
+		echo $price;
+	else
+		return $price;
 }
 
 

@@ -398,7 +398,7 @@ function edd_downloads_query($atts, $content = null) {
 						} 
 						
 						if($price == 'yes' && !edd_has_variable_prices($download->ID)) {
-							echo '<div class="edd_price">' . edd_price($download->ID) . '</div>';
+							echo '<div class="edd_price">' . edd_price($download->ID, false) . '</div>';
 						}
 						
 						if($buy_button == 'yes') {
