@@ -37,11 +37,6 @@ function edd_setup_edd_post_types() {
 		$rewrite = false;
 	}
 	
-	$menu_position = 15;
-	if(defined('EDD_MENU_POSITION') && is_numeric(EDD_MENU_POSITION)) {
-		$menu_position = EDD_MENU_POSITION;
-	}
-	
 	$download_labels =  apply_filters('edd_download_labels', array(
 		'name' => '%2$s',
 		'singular_name' => '%1$s',
@@ -73,7 +68,6 @@ function edd_setup_edd_post_types() {
 		'capability_type' => 'post',
 		'has_archive' => $archives, 
 		'hierarchical' => false,
-		'menu_position' => $menu_position,
 		'supports' => apply_filters('edd_download_supports', array( 'title', 'editor', 'thumbnail' ) ),
 	); 
 	register_post_type('download', $download_args);
