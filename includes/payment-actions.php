@@ -31,10 +31,10 @@ function edd_complete_purchase($payment_id, $new_status, $old_status) {
 	
 	if( ! edd_is_test_mode() ) {
 				
-		$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
-		$downloads = maybe_unserialize($payment_data['downloads']);
-		$user_info = maybe_unserialize($payment_data['user_info']);
-		$cart_details = maybe_unserialize($payment_data['cart_details']);				
+		$payment_data 	= get_post_meta($payment_id, '_edd_payment_meta', true);
+		$downloads 		= maybe_unserialize($payment_data['downloads']);
+		$user_info 		= maybe_unserialize($payment_data['user_info']);
+		$cart_details 	= maybe_unserialize($payment_data['cart_details']);				
 								
 		// increase purchase count and earnings
 		foreach($downloads as $download) {
