@@ -5,8 +5,8 @@ Contributors: mordauk, sksmatt
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
-Tested up to: 3.4
-Stable Tag: 1.0.8.4
+Tested up to: 3.4.1
+Stable Tag: 1.0.8.5
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -125,6 +125,17 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.0.8.5 =
+
+* Added {payment_method} to the list of email template tags for showing the method of payment used for a purchase
+* Removed the menu_position attribute from the "download" post type to help prevent menu conflicts
+* Fixed a bug with the page options in settings
+* Updated the edd_read_file() function to convert local URLs to absolute file paths
+* Fixed a bug with the [downloads] short code
+* Enhanced the function for checking if a user has purchased a download to add support for checking for specific price options
+* Fixed a bug with the function that checks if a user has purchased a specific download
+* Fixed a potential bug with the "settings updated" notice that could have caused duplicate messages to be shown
 
 = 1.0.8.4 =
 
@@ -344,6 +355,17 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.0.8.5 =
+
+* Added {payment_method} to the list of email template tags for showing the method of payment used for a purchase
+* Removed the menu_position attribute from the "download" post type to help prevent menu conflicts
+* Fixed a bug with the page options in settings
+* Updated the edd_read_file() function to convert local URLs to absolute file paths
+* Fixed a bug with the [downloads] short code
+* Enhanced the function for checking if a user has purchased a download to add support for checking for specific price options
+* Fixed a bug with the function that checks if a user has purchased a specific download
+* Fixed a potential bug with the "settings updated" notice that could have caused duplicate messages to be shown
 
 = 1.0.8.4 =
 
