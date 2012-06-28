@@ -18,7 +18,7 @@
  * @return      string
 */
 
-function edd_email_templage_tags($message, $payment_data) {
+function edd_email_templage_tags($message, $payment_data, $payment_id) {
 	
 	$user_info = maybe_unserialize($payment_data['user_info']);
 	
@@ -51,11 +51,14 @@ function edd_email_templage_tags($message, $payment_data) {
 	
 	$price = $payment_data['amount'];	
 	
+	$gateway = edd_get_gateway_checkout_label( get_post_meta($payment_id, '_edd_payment_gateway', true) );
+
 	$message = str_replace('{name}', $name, $message);
 	$message = str_replace('{download_list}', $download_list, $message);
 	$message = str_replace('{date}', $payment_data['date'], $message);
 	$message = str_replace('{sitename}', get_bloginfo('name'), $message);
 	$message = str_replace('{price}', $price, $message);
+	$message = str_replace('{payment_method}', $gateway, $message);
 	$message = apply_filters('edd_email_template_tags', $message, $payment_data);
 	
 	return $message;
@@ -83,11 +86,14 @@ function edd_email_preview_templage_tags( $message ) {
 	
 	$price = edd_currency_filter(9.50);	
 	
+	$gateway = edd_get_gateway_checkout_label( get_post_meta($payment_id, '_edd_payment_gateway', true) );
+
 	$message = str_replace('{name}', 'John Doe', $message);
 	$message = str_replace('{download_list}', $download_list, $message);
 	$message = str_replace('{date}', date( get_option('date_format'), time() ), $message);
 	$message = str_replace('{sitename}', get_bloginfo('name'), $message);
 	$message = str_replace('{price}', $price, $message);
+	$message = str_replace('{payment_method}', $gateway, $message);
 	
 	return wpautop($message);
 	
@@ -167,7 +173,7 @@ function edd_get_email_body_content( $payment_id, $payment_data ) {
 	
 	$email = isset($edd_options['purchase_receipt']) ? $edd_options['purchase_receipt'] : $default_email_body;
 	
-	$email_body = edd_email_templage_tags($email, $payment_data);
+	$email_body = edd_email_templage_tags($email, $payment_data, $payment_id);
 	return apply_filters('edd_purchase_receipt', $email_body, $payment_id, $payment_data);
 }
 

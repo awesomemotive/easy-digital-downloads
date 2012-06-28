@@ -52,9 +52,12 @@ function edd_email_purchase_receipt($payment_id, $admin_notice = true) {
 			$id = isset($payment_data['cart_details']) ? $download['id'] : $download;
 			$download_list .= get_the_title($id) . "\n";
 		}
+
+		$gateway = edd_get_gateway_checkout_label( get_post_meta($payment_id, '_edd_payment_gateway', true) );
 		
 		$admin_message .= $download_list . "\n";
 		$admin_message .= __('Amount: ', 'edd') . " " . html_entity_decode(edd_currency_filter($payment_data['amount'])) . "\n\n";
+		$admin_message .= __('Payment Method: ', 'edd') . " " . $gateway . "\n\n";
 		$admin_message .= __('Thank you', 'edd');
 		$admin_message = apply_filters('edd_admin_purchase_notification', $admin_message, $payment_id, $payment_data);
 		wp_mail( $admin_email, __('New download purchase', 'edd'), $admin_message );
