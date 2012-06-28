@@ -53,7 +53,7 @@ function edd_email_purchase_receipt($payment_id, $admin_notice = true) {
 			$download_list .= get_the_title($id) . "\n";
 		}
 
-		$gateway = edd_get_gateway_checkout_label( get_post_meta($payment_id, '_edd_payment_gateway', true) );
+		$gateway = edd_get_gateway_admin_label( get_post_meta($payment_id, '_edd_payment_gateway', true) );
 		
 		$admin_message .= $download_list . "\n";
 		$admin_message .= __('Amount: ', 'edd') . " " . html_entity_decode(edd_currency_filter($payment_data['amount'])) . "\n\n";
