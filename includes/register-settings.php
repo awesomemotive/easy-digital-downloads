@@ -24,8 +24,7 @@ function edd_register_settings() {
 	
 	// setup some default option sets
 	$pages = get_pages();	
-	$pages_options = array();
-	array_unshift($pages_options, ''); // blank option
+	$pages_options = array(0 => ''); // blank option
 	if($pages) {
 		foreach ( $pages as $page ) {
 		  	$pages_options[$page->ID] = $page->post_title;
