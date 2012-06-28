@@ -85,7 +85,7 @@ function edd_process_download() {
 			header("Robots: none");
 			header("Content-Type: " . $ctype . "");
 			header("Content-Description: File Transfer");	
-		   header("Content-Disposition: attachment; filename=\"" . basename($requested_file) . "\";");
+		    header("Content-Disposition: attachment; filename=\"" . basename($requested_file) . "\";");
 			header("Content-Transfer-Encoding: binary");
 			edd_read_file( $requested_file );			
 			exit;
