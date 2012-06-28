@@ -93,6 +93,23 @@ function edd_get_gateway_admin_label($gateway) {
 	return $gateways[$gateway]['admin_label'];
 }
 
+
+/**
+ * Get gateway checkout label
+ *
+ * Returns the checkout label for the specified gateway.
+ *
+ * @access      public
+ * @since       1.0.8.5
+ * @param       string - The ID name of the gateway to retrieve a label for
+ * @return      string
+*/
+
+function edd_get_gateway_checkout_label($gateway) {
+	$gateways = edd_get_enabled_payment_gateways();
+	return $gateways[$gateway]['checkout_label'];
+}
+
 /**
  * Send to Gateway
  *
