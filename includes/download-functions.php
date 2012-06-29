@@ -411,7 +411,9 @@ function edd_get_download_file_url($key, $email, $filekey, $download) {
 		'file' => $filekey,
 		'download' => $download, 
 		'expire' => urlencode(base64_encode(strtotime('+1 day', time())))
-	);	
+	);
+
+	$params = apply_filters('edd_download_file_url_args', $params);
 	
 	$download_url = add_query_arg($params, home_url());
 	return $download_url;	
