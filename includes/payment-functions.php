@@ -319,68 +319,6 @@ function edd_is_payment_complete($payment_id) {
 	return false;
 }
 
-/**
- * Get Users Purchases
- *
- * Retrieves a list of all purchases by a specific user.
- *
- * @access      public
- * @since       1.0 
- * @return      array
-*/
-
-function edd_get_users_purchases($user_id) {
-	
-	$purchases = get_transient('edd_user_' . $user_id . '_purchases');
-	if(false === $purchases || edd_is_test_mode()) {
-		$mode = edd_is_test_mode() ? 'test' : 'live';
-		$purchases = get_posts(
-			array(
-				'meta_query' => array(
-					'relation' => 'AND',
-					array(
-						'key' => '_edd_payment_mode',
-						'value' => $mode
-					),
-					array(
-						'key' => '_edd_payment_user_id',
-						'value' => $user_id
-					)
-				),
-				'post_type' => 'edd_payment', 
-				'posts_per_page' => -1
-			)
-		);
-		set_transient('edd_user_' . $user_id . '_purchases', $purchases, 7200);
-	}
-	if($purchases) {
-	    // return the download list
-		return $purchases;
-	}
-	
-	// no downloads	
-	return false;	
-}
-
-
-/**
- * Has Purchases
- *
- * Checks to see if a user has purchased at least one item.
- *
- * @access      public
- * @since       1.0 
- * @param       $user_id int - the ID of the user to check
- * @return      bool - true if has purchased, false other wise.
-*/
-
-function edd_has_purchases($user_id) {
-	if(edd_get_users_purchases($user_id)) {
-		return true; // user has at least one purchase
-	}
-	return false; // user has never purchased anything
-}
-
 
 /**
  * Get Downloads Of Purchase
