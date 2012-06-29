@@ -431,6 +431,11 @@ function edd_get_download_file_url($key, $email, $filekey, $download) {
 
 function edd_read_file( $file ) {
 	
+	// some hosts do not allow files to be read via URL, so this permits that to be over written
+	if( defined('EDD_READ_FILE_MODE') && EDD_READ_FILE_MODE == 'header' )
+		header("Location: " . $file);
+
+
 	if( strpos($file, home_url()) !== false) {
 		// this is a local file, convert the URL to a path
 
@@ -440,12 +445,7 @@ function edd_read_file( $file ) {
 	
 	}
 	
-	// some hosts do not allow files to be read via URL, so this permits that to be over written
-	if( defined('EDD_READ_FILE_MODE') && EDD_READ_FILE_MODE == 'header' ) {
-		header("Location: " . $file);
-	} else {
-		readfile($file);	
-	}
+	readfile($file);	
 }
 
 
