@@ -97,8 +97,8 @@ function edd_process_login_form($data) {
 		// check for errors and redirect if none present
 		$errors = edd_get_errors();
 		if(!$errors) {
-			$redirect = apply_filters('edd_login_redirect', $data['edd_redirect']);
-			wp_redirect($redirect); exit;
+			$redirect = apply_filters('edd_login_redirect', $data['edd_redirect'], $user_ID);
+			w_epredirect($redirect); exit;
 		}
 	}
 }
