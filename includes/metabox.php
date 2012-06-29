@@ -293,7 +293,7 @@ function edd_render_meta_notes($post_id) {
 	// short code
 	echo '<tr>';
 		echo '<th style="width:20%"><label>' . __('Short Code', 'edd') . '</label></th>';
-		echo '<td><em>[purchase_link id="' . $post_id . '" text="' . __('Purchase', 'edd') . '" style="button" color="gray"]</em><br/>' . __('This short code can be placed anywhere on your site', 'edd') . '</td>';
+		echo '<td><em>[purchase_link id="' . $post_id . '" text="' . __('Purchase', 'edd') . '" style="button" color="' . get_post_meta( $post_id, '_edd_purchase_color', true ) . '"]</em><br/>' . __('This short code can be placed anywhere on your site', 'edd') . '</td>';
 	echo '</tr>';
 }
 add_action('edd_meta_box_fields', 'edd_render_meta_notes', 70);
