@@ -141,7 +141,7 @@ function edd_payment_history_page() {
 											<ul class="purchased-files-list">
 											<?php 
 												if($downloads) {
-													foreach($downloads as $download) {
+													foreach($downloads as $key => $download) {
 														echo '<li>';
 															
 															// retrieve the ID of the download
@@ -150,9 +150,26 @@ function edd_payment_history_page() {
 															// if download has variable prices, override the default price
 															$price_override = isset($payment_meta['cart_details']) ? $download['price'] : null; 
 															
+															$user_info = unserialize($payment_meta['user_info']);
+															
 															// calculate the final price
-															$price = edd_get_download_final_price($id, unserialize($payment_meta['user_info']), $price_override);
-															echo '<a href="' . admin_url('post.php?post=' . $id . '&action=edit') . '" target="_blank">' . get_the_title($id) . '</a> - ' . __('Price: ', 'edd') . edd_currency_filter($price);
+															$price = edd_get_download_final_price($id, $user_info, $price_override);
+															
+															// show name of download
+															echo '<a href="' . admin_url('post.php?post=' . $id . '&action=edit') . '" target="_blank">' . get_the_title($id) . '</a>';
+															
+															echo  ' - ';
+															
+															$price_options = $downloads[$key]['item_number']['options'];
+																														
+															if( isset($price_options['price_id']) ) {
+																echo edd_get_price_option_name($id, $price_options['price_id']);
+																echo ' - ';
+															}
+															
+															// show price
+															echo edd_currency_filter($price);
+														
 														echo '</li>';
 													}
 												}
