@@ -12,6 +12,7 @@ jQuery(document).ready(function ($) {
 	// toggle the pricing options
 	$('#edd_variable_pricing').on('click', function() {
 		$('.edd_pricing_fields').toggle();
+		$('.edd_repeatable_condition_field').toggle();
 	});
 	
 	// toggle the color options
@@ -40,7 +41,7 @@ jQuery(document).ready(function ($) {
 
         name = id + '[' + count + '][name]';
         price = id + '[' + count + '][amount]';
-
+		
         $('input.edd_variable_prices_name', field).attr("name", name).attr("id", name);
         $('input.edd_variable_prices_amount', field).attr("name", price).attr("id", price);
 
@@ -57,12 +58,10 @@ jQuery(document).ready(function ($) {
             fieldLocation = $this.closest('td').find('div.edd_repeatable_upload_wrapper:last');
 
         // get the hidden field that has the name value
-        var name_field = $("input.edd_repeatable_upload_name_field", container),
-            file_field = $("input.edd_repeatable_upload_file_field", container);
+        var name_field = $("input.edd_repeatable_upload_name_field", container);
 
         // set the base of the new field name
-        var name = $(name_field).attr("id"),
-            file_name = $(file_field).attr("id");
+        var name = $(name_field).attr("id");
 
         // set the new field val to blank
         $('input[type="text"]', field).val("");
@@ -71,10 +70,12 @@ jQuery(document).ready(function ($) {
         var count = $('.edd_repeatable_upload_wrapper', container).size();
 
         name = name + '[' + count + '][name]';
-        file_name = file_name + '[' + count + '][file]';
+        file_name = name + '[' + count + '][file]';
+		condition = name + '[' + count + '][condition]';
 
         $('input.edd_repeatable_name_field', field).attr("name", name).attr("id", name);
         $('input.edd_repeatable_upload_field', field).attr("name", file_name).attr("id", file_name);
+        $('select.edd_repeatable_condition_field', field).attr("name", condition).attr("id", condition);
 
         field.insertAfter(fieldLocation, $this.closest('td'));
 

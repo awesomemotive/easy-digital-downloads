@@ -413,6 +413,26 @@ function edd_get_download_files($download_id) {
 
 
 /**
+ * Gets the Price ID that can download a file
+ *
+ * @access      public
+ * @since       1.0.9 
+ * @return      string - the price ID if restricted, "all" otherwise
+*/
+
+function edd_get_file_price_condition( $download_id, $file_key ) {
+	$files = edd_get_download_files( $download_id );
+	if( ! $files )
+		return false;
+		
+	$condition = isset($files[$file_key]['condition']) ? $files[$file_key]['condition'] : 'all';
+	
+	return $condition;
+	
+}
+
+
+/**
  * Get Download File Url
  *
  * Constructs the file download url for a specific file.
@@ -503,9 +523,24 @@ function edd_verify_download_link($download_id, $key, $email, $expire, $file_key
 		foreach($payments as $payment) {
 			$payment_meta = get_post_meta($payment->ID, '_edd_payment_meta', true);
 			$downloads = maybe_unserialize($payment_meta['downloads']);
+			$cart_details = unserialize( $payment_meta['cart_details'] );
 			if($downloads) {
-				foreach($downloads as $download) {
+				foreach($downloads as $key => $download) {
+					
 					$id = isset($payment_meta['cart_details']) ? $download['id'] : $download;
+					
+					$price_options = $cart_details[$key]['item_number']['options'];
+
+					$file_condition = edd_get_file_price_condition( $id, $file_key );
+					
+					$variable_prices_enabled = get_post_meta($id, '_variable_pricing', true);
+							
+					// if this download has variable prices, we have to confirm that this file was included in their purchase
+					if( !empty( $price_options ) && $file_condition != 'all' && $variable_prices_enabled) {
+						
+						if( $file_condition !== $price_options['price_id'] )
+							return false;
+					}
 					
 					if($id == $download_id) {
 						if(time() < $expire) {
