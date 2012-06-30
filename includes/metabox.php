@@ -146,7 +146,11 @@ function edd_render_files_field($post_id) {
 	echo '<tr id="edd_download_files" class="edd_table_row">';
 		echo '<th style="width:20%"><label for="edd_download_files">' . __('Download Files', 'edd') . '</label></th>';
 		echo '<td>';
-			$field_html = '<input type="hidden" id="edd_download_files" class="edd_repeatable_upload_name_field" value=""/>';
+			$field_html = '<div class="edd_file_help_labels">';
+				$field_html	.= '<div class="edd_files_name_label">' . __('File Name', 'edd') . '</div>';
+				$field_html	.= '<div class="edd_files_src_label">' . __('File URL', 'edd') . '</div>';
+			$field_html .= '</div>';
+			$field_html .= '<input type="hidden" id="edd_download_files" class="edd_repeatable_upload_name_field" value=""/>';
 			$field_html .= '<input type="hidden" class="edd_repeatable_upload_file_field" value=""/>';
 			if(is_array($files)) {
 				$count = 1;

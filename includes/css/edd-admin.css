@@ -1,5 +1,5 @@
 /**
- * Add Ons Admin CSS
+ * EDD  Admin CSS
  *
  * @package     Easy Digital Downloads
  * @subpackage  Admin CSS
@@ -18,3 +18,11 @@
 /* Payment History Styles
 -------------------------------------------------------------- */
 tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
+
+/* Metabox Styles
+-------------------------------------------------------------- */
+.edd_file_help_labels { }
+.edd_files_name_label { width: 225px; float: left; }
+.edd_files_url_label { width: 220px; float: left; }
+#postbox-container-1 .edd_files_name_label { width: 80px; }
+#postbox-container-1 .edd_files_url_label { width: 80px; }
