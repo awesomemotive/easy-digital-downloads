@@ -29,7 +29,7 @@ function edd_process_download() {
 		$expire = urldecode(base64_decode($_GET['expire']));
 				
 
-		$payment = edd_verify_download_link($download, $key, $email, $expire);
+		$payment = edd_verify_download_link($download, $key, $email, $expire, $file_key);
 		
 		 // defaulting this to true for now because the method below doesn't work well
 		$has_access = true;
