@@ -326,7 +326,7 @@ function edd_get_cart_content_details() {
 				'id' => $item['id'],
 				'item_number' => $item,
 				'price' => edd_get_cart_item_price($item['id'], $item['options']),
-				'quantity' => 1
+				'quantity' => 1,
 			);
 		}
 	}
