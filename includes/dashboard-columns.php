@@ -66,7 +66,7 @@ function edd_render_download_columns($column_name, $post_id) {
 				echo edd_currency_filter($earnings);
 				break;
 			case 'shortcode':
-				echo '[purchase_link id="' . $post_id . '" text="' . __('Purchase', 'edd') . '" style="button" color="gray"]';
+				echo '[purchase_link id="' . $post_id . '" text="' . __('Purchase', 'edd') . '" style="button" color="' . get_post_meta( $post_id, '_edd_purchase_color', true ) . ']';
 				break;
 		}
 	}
