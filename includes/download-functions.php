@@ -75,6 +75,25 @@ function edd_get_download_final_price($download_id, $user_purchase_info, $amount
 
 
 /**
+ * Get Download Price Name
+ *
+ * retrieves the name of a variable price option
+ *
+ * @access      public
+ * @since       1.0.9
+ * @param       int $download_id - the ID of the download
+ * @param		int $price_id - the ID of the price option
+ * @return      string - the name of the price option
+*/
+
+function edd_get_price_option_name($download_id, $price_id) {
+	$prices = get_post_meta($download_id, 'edd_variable_prices', true);
+	$price_name = $prices[$price_id]['name'];
+	return $price_name;
+}
+
+
+/**
  * Get Download Earnings Stats
  *
  * Returns the total earnings for a download.
@@ -465,7 +484,7 @@ function edd_read_file( $file ) {
  * @return      boolean
 */
 
-function edd_verify_download_link($download_id, $key, $email, $expire) {
+function edd_verify_download_link($download_id, $key, $email, $expire, $file_key) {
 
 	$meta_query = array(
 		'relation' => 'AND',
@@ -487,6 +506,7 @@ function edd_verify_download_link($download_id, $key, $email, $expire) {
 			if($downloads) {
 				foreach($downloads as $download) {
 					$id = isset($payment_meta['cart_details']) ? $download['id'] : $download;
+					
 					if($id == $download_id) {
 						if(time() < $expire) {
 							return true; // payment has been verified and link is still valid
