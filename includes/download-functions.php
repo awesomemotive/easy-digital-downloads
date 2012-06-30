@@ -405,12 +405,16 @@ function edd_get_download_files($download_id) {
 
 function edd_get_download_file_url($key, $email, $filekey, $download) {
 	
+	global $edd_options;
+
+	$hours = isset($edd_options['download_link_expiration']) && is_numeric($edd_options['download_link_expiration']) ? absint($edd_options['download_link_expiration']) : 24;
+
 	$params = array(
 		'download_key' => $key,
 		'email' => urlencode($email),
 		'file' => $filekey,
 		'download' => $download, 
-		'expire' => urlencode(base64_encode(strtotime('+1 day', time())))
+		'expire' => urlencode(base64_encode(strtotime('+' . $hours . 'hours', time())))
 	);
 
 	$params = apply_filters('edd_download_file_url_args', $params);

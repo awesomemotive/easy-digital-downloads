@@ -227,13 +227,20 @@ function edd_register_settings() {
 				array(
 					'id' => 'show_register_form',
 					'name' => __('Show Register / Login Form?', 'edd'),
-					'desc' => __('Display the registration and login forms on the checkout page for non-logged-in users', 'edd'),
+					'desc' => __('Display the registration and login forms on the checkout page for non-logged-in users.', 'edd'),
 					'type' => 'checkbox',
+				),
+				array(
+					'id' => 'download_link_expiration',
+					'name' => __('Download Link Expiration', 'edd'),
+					'desc' => __('How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours.', 'edd'),
+					'type' => 'text',
+					'size' => 'small'
 				),
 				array(
 					'id' => 'disable_redownload',
 					'name' => __('Disable Redownload?', 'edd'),
-					'desc' => __('Check this if you do not want to allow users to redownload items from their purchase history', 'edd'),
+					'desc' => __('Check this if you do not want to allow users to redownload items from their purchase history.', 'edd'),
 					'type' => 'checkbox',
 				),
 				array(
@@ -245,20 +252,20 @@ function edd_register_settings() {
 				array(
 					'id' => 'show_agree_to_terms',
 					'name' => __('Agree to Terms', 'edd'),
-					'desc' => __('Check this to show an agree to terms on the checkout that users must agree to before purchasing', 'edd'),
+					'desc' => __('Check this to show an agree to terms on the checkout that users must agree to before purchasing.', 'edd'),
 					'type' => 'checkbox',
 				),
 				array(
 					'id' => 'agree_label',
 					'name' => __('Agree to Terms Label', 'edd'),
-					'desc' => __('Label shown next to the agree to terms check box', 'edd'),
+					'desc' => __('Label shown next to the agree to terms check box.', 'edd'),
 					'type' => 'text',
 					'size' => 'regular'
 				),
 				array(
 					'id' => 'agree_text',
 					'name' => __('Agreement Text', 'edd'),
-					'desc' => __('If Agree to Terms is checked, enter the agreement terms here', 'edd'),
+					'desc' => __('If Agree to Terms is checked, enter the agreement terms here.', 'edd'),
 					'type' => 'rich_editor',
 				)
 			)
