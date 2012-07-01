@@ -255,8 +255,8 @@ function edd_process_paypal_ipn() {
 	if( is_wp_error( $api_response) )
 		return; // something went wrong   
    
-   if ($api_response['body'] !== 'VERIFIED')
-   	return; // response not okay
+   if ($api_response['body'] !== 'VERIFIED' && !isset($edd_options['disable_paypal_verification']) )
+		return; // response not okay
    	 
    // convert collected post data to an array
    parse_str( $post_data, $post_data_array );   

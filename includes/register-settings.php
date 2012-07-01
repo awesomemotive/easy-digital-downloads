@@ -137,6 +137,12 @@ function edd_register_settings() {
 					'name' => __('Alternate PayPal Purchase Verification', 'edd'),
 					'desc' => __('If payments are not getting marked as complete, then check this box. Note, this requires that buyers return to your site from PayPal.', 'edd'),
 					'type' => 'checkbox'
+				),
+				array(
+					'id' => 'disable_paypal_verification',
+					'name' => __('Disable PayPal IPN Verification', 'edd'),
+					'desc' => __('If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifiyin purchases.', 'edd'),
+					'type' => 'checkbox'
 				)
 			)
 		),
