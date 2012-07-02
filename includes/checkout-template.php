@@ -65,7 +65,7 @@ function edd_checkout_form() {
 					<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
 						<fieldset id="edd_payment_mode_select">
 							<?php do_action('edd_payment_mode_before_gateways'); ?>
-							<p>
+							<p id="edd-payment-mode-wrap">
 								<?php								
 									echo '<select class="edd-select" name="payment-mode" id="edd-gateway">';
 										foreach($gateways as $gateway_id => $gateway) :
@@ -78,7 +78,7 @@ function edd_checkout_form() {
 							<?php do_action('edd_payment_mode_after_gateways'); ?>
 						</fieldset>
 						<fieldset id="edd_payment_mode_submit">
-							<p>
+							<p id="edd-next-submit-wrap">
 								<?php $color = isset($edd_options['checkout_color']) ? $edd_options['checkout_color'] : 'gray'; ?> 
 								<span class="edd_button edd_<?php echo $color; ?>">
 									<span class="edd_button_outer">
@@ -130,16 +130,16 @@ function edd_checkout_form() {
 							<?php if( (!isset($_GET['login']) && is_user_logged_in()) || !isset($edd_options['show_register_form'])) { ?>											
 							<fieldset id="edd_checkout_user_info">
 								<?php do_action('edd_purchase_form_before_email'); ?>
-								<p>
+								<p id="edd-email-wrap">
 									<input class="edd-input required" type="email" name="edd_email" placeholder="<?php _e('Email address', 'edd'); ?>" id="edd-email" value="<?php echo is_user_logged_in() ? $user_data->user_email : ''; ?>"/>
 									<label class="edd-label" for="edd-email"><?php _e('Email Address', 'edd'); ?></label>
 								</p>
 								<?php do_action('edd_purchase_form_after_email'); ?>
-								<p>
+								<p id="edd-first-name-wrap">
 									<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e('First Name', 'edd'); ?>" id="edd-first" value="<?php echo is_user_logged_in() ? $user_data->first_name : ''; ?>"/>
 									<label class="edd-label" for="edd-first"><?php _e('First Name', 'edd'); ?></label>
 								</p>
-								<p>
+								<p id="edd-last-name-wrap">
 									<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e('Last name', 'edd'); ?>" value="<?php echo is_user_logged_in() ? $user_data->last_name : ''; ?>"/>
 									<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
 								</p>	
@@ -148,7 +148,7 @@ function edd_checkout_form() {
 							<?php } ?>
 							<?php if(edd_has_active_discounts()) { // only show if we have at least one active discount ?>
 							<fieldset id="edd_discount_code">
-								<p>
+								<p id="edd-discount-code-wrap">
 									<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e('Enter discount', 'edd'); ?>"/>
 									<label class="edd-label" for="edd-discount">
 										<?php _e('Discount', 'edd'); ?>
