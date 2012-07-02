@@ -111,12 +111,13 @@ function edd_register_settings() {
 					'name' => __('Accepted Payment Method Icons', 'edd'),
 					'desc' => __('Display icons for the selected payment methods', 'edd') . '<br/>' . __('You will also need to configure your gateway settings if you are accepting credit cards', 'edd'),
 					'type' => 'multicheck',
-					'options' => array(
-						'Mastercard',
-						'Visa',
-						'American Express',
-						'Discover',
-						'PayPal'
+					'options' => apply_filters('edd_accepted_payment_icons', array(
+							'mastercard' => 'Mastercard',
+							'visa' => 'Visa',
+							'americanexpress' => 'American Express',
+							'discover' => 'Discover',
+							'paypal' => 'PayPal'
+						)
 					)
 				),
 				array(

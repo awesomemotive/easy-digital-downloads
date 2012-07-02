@@ -414,9 +414,15 @@ function edd_get_login_fields() {
 function edd_show_payment_icons() {
 	global $edd_options;
 	if(isset($edd_options['accepted_cards'])) {
+		echo '<div class="edd-payment-icons">';
 		foreach($edd_options['accepted_cards'] as $key => $card) {
-			echo '<img class="payment-icon" src="' . EDD_PLUGIN_URL . 'includes/images/icons/' . strtolower(str_replace(' ', '', $card)) . '.png"/>';
+			if( edd_string_is_image_url($key)) {
+				echo '<img class="payment-icon" src="' . $key . '"/>';
+			} else {
+				echo '<img class="payment-icon" src="' . EDD_PLUGIN_URL . 'includes/images/icons/' . strtolower(str_replace(' ', '', $card)) . '.png"/>';
+			}
 		}
+		echo '</div>';
 	}
 }
 add_action('edd_payment_mode_top', 'edd_show_payment_icons');
