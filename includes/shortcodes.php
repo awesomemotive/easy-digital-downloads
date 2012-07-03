@@ -69,29 +69,48 @@ function edd_download_history() {
 					</thead>
 					<?php 
 					foreach($purchases as $purchase) {
+
 						$downloads = edd_get_downloads_of_purchase($purchase->ID);
 						$payment_meta = get_post_meta($purchase->ID, '_edd_payment_meta', true);
+
 						if($downloads) {
 							foreach($downloads as $download) {
+
 								echo '<tr class="edd_download_history_row">';
+
 									$id = isset($payment_meta['cart_details']) ? $download['id'] : $download;
-									$download_files = get_post_meta($id, 'edd_download_files', true);
+
+									$price_id = isset($download['options']['price_id']) ? $download['options']['price_id'] : null;
+									
+									$download_files = edd_get_downloads_of_user_purchase($user_ID, $id, $price_id);
+
 									do_action('edd_user_history_table_begin', $purchase->ID);
+
 									echo '<td>' . get_the_title($id) . '</td>';
-									if( ! edd_no_redownload() ) {									
+
+									if( ! edd_no_redownload() ) {		
+
 										echo '<td>';
+
 										if($download_files) {
 											foreach($download_files as $filekey => $file) {
-													$download_url = edd_get_download_file_url($payment_meta['key'], $payment_meta['email'], $filekey, $id);
-													echo'<div class="edd_download_file"><a href="' . $download_url . '" class="edd_download_file_link">' . $file['name'] . '</a></div>';
+
+												$download_url = edd_get_download_file_url($payment_meta['key'], $payment_meta['email'], $filekey, $id);
+												echo'<div class="edd_download_file"><a href="' . $download_url . '" class="edd_download_file_link">' . $file['name'] . '</a></div>';
+											
 											} 
 										} else {
 											_e('No downloadable files found.', 'edd');
 										}
+
 										echo '</td>';
+
 									}
+
 									do_action('edd_user_history_table_end', $purchase->ID);
+
 								echo '</tr>';
+
 							}
 						}
 					}
