@@ -69,12 +69,12 @@ jQuery(document).ready(function ($) {
         // set up a count var
         var count = $('.edd_repeatable_upload_wrapper', container).size();
 
-        name = name + '[' + count + '][name]';
-        file_name = name + '[' + count + '][file]';
+        file_name = name + '[' + count + '][name]';
+        file_url = name + '[' + count + '][file]';
 		condition = name + '[' + count + '][condition]';
 
-        $('input.edd_repeatable_name_field', field).attr("name", name).attr("id", name);
-        $('input.edd_repeatable_upload_field', field).attr("name", file_name).attr("id", file_name);
+        $('input.edd_repeatable_name_field', field).attr("name", file_name).attr("id", file_name);
+        $('input.edd_repeatable_upload_field', field).attr("name", file_url).attr("id", file_url);
         $('select.edd_repeatable_condition_field', field).attr("name", condition).attr("id", condition);
 
         field.insertAfter(fieldLocation, $this.closest('td'));

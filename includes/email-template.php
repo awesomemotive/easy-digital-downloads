@@ -124,7 +124,7 @@ add_filter('edd_purchase_receipt', 'edd_email_default_formatting');
 function edd_email_template_preview() {
 	global $edd_options;
 	ob_start(); ?>
-		<a href="#TB_inline?&amp;inlineId=email-preview" id="open-email-preview" class="thickbox button-secondary" title="<?php _e('Purchase Receipt Preview', 'edd'); ?> "><?php _e('Preview Purchase Receipt', 'edd'); ?></a>
+		<a href="#TB_inline?&amp;inlineId=email-preview&amp;width=650" id="open-email-preview" class="thickbox button-secondary" title="<?php _e('Purchase Receipt Preview', 'edd'); ?> "><?php _e('Preview Purchase Receipt', 'edd'); ?></a>
 		<div id="email-preview" style="display:none;">
 					
 			<?php echo edd_apply_email_template($edd_options['purchase_receipt'], null, null); ?>			
@@ -225,18 +225,20 @@ function edd_apply_email_template( $body, $payment_id, $payment_data ) {
 	
 	$template = ob_get_clean();	
 	
-	if(is_admin())
+	if(is_admin()) 
 		$body = edd_email_preview_templage_tags($body);	
-	
+
 	$email = str_replace('{email}', $body, $template );
 	
+	$email = apply_filters('edd_purchase_receipt_' . $template_name, $email);
+
 	$first_p = strpos($email, '<p>');
 	$email = substr_replace($email, '<p style="margin-top:0;">', $first_p, 3);
 		
 	return $email;	
 	
 }
-add_filter('edd_purchase_receipt', 'edd_apply_email_template', 10, 3);
+add_filter('edd_purchase_receipt', 'edd_apply_email_template', 20, 3);
 
 
 /**
