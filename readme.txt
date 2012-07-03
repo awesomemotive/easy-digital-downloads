@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable Tag: 1.0.8.5
+Stable Tag: 1.0.9
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -125,6 +125,25 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.0.9 =
+
+* Updated the purchase/download history short codes to only show files for the price options the user has purchased
+* Fixed a bug with the file upload meta box fields
+* Added the ability to register custom payment method icons
+* Added unique IDs to P tags on the checkout form
+* Added an option to disable the PayPal IPN verification
+* Added a new feature that allows source files to be restricted to specific price options
+* Updated the "View Purchase Details" modal to include the price option purchased, if any
+* Added labels above the file name and file URL fields to help users using browsers without placeholder support
+* Made improvements to the checkout registration form layout
+* Added an option in Settings > Misc to define the expiration length for download links - default is 24 hours
+* Updated the [purchase_link] short code in the Download Configuration meta box to reflect the chosen button color
+* Updated the "Short Code" column in the list table to include the correct button color option
+* Added a new filter, edd_download_file_url_args,  for changing the arguments passed to the function that generages download URLs
+* Fixed a bug with the EDD_READ_FILE_MODE constant
+* Added a new filter to allow developers to change the redirect URL for the edd_login form
+* Improved some file / function organization
 
 = 1.0.8.5 =
 
@@ -355,6 +374,25 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.0.9 =
+
+* Updated the purchase/download history short codes to only show files for the price options the user has purchased
+* Fixed a bug with the file upload meta box fields
+* Added the ability to register custom payment method icons
+* Added unique IDs to P tags on the checkout form
+* Added an option to disable the PayPal IPN verification
+* Added a new feature that allows source files to be restricted to specific price options
+* Updated the "View Purchase Details" modal to include the price option purchased, if any
+* Added labels above the file name and file URL fields to help users using browsers without placeholder support
+* Made improvements to the checkout registration form layout
+* Added an option in Settings > Misc to define the expiration length for download links - default is 24 hours
+* Updated the [purchase_link] short code in the Download Configuration meta box to reflect the chosen button color
+* Updated the "Short Code" column in the list table to include the correct button color option
+* Added a new filter, edd_download_file_url_args,  for changing the arguments passed to the function that generages download URLs
+* Fixed a bug with the EDD_READ_FILE_MODE constant
+* Added a new filter to allow developers to change the redirect URL for the edd_login form
+* Improved some file / function organization
 
 = 1.0.8.5 =
 
