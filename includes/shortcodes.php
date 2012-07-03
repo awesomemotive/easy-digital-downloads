@@ -167,7 +167,8 @@ function edd_purchase_history() {
 									if($downloads) {
 										foreach($downloads as $download) {
 											$id = isset($purchase_data['cart_details']) ? $download['id'] : $download;
-											$download_files = get_post_meta($id, 'edd_download_files', true);
+											$price_id = isset($download['options']['price_id']) ? $download['options']['price_id'] : null;
+											$download_files = edd_get_downloads_of_user_purchase($user_ID, $id, $price_id);
 											echo '<div class="edd_purchased_download_name">' . get_the_title($id) . '</div>';
 											if( ! edd_no_redownload() ) {
 												if($download_files) {
