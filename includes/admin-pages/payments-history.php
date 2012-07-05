@@ -135,12 +135,17 @@ function edd_payment_history_page() {
 									<td><a href="#TB_inline?width=640&amp;inlineId=purchased-files-<?php echo $payment->ID; ?>" class="thickbox" title="<?php printf(__('Purchase Details for Payment #%s', 'edd'), $payment->ID); ?> "><?php _e('View Order Details', 'edd'); ?></a>
 										<div id="purchased-files-<?php echo $payment->ID; ?>" style="display:none;">
 											<?php 
-												$downloads = isset($payment_meta['cart_details']) ? maybe_unserialize($payment_meta['cart_details']) : maybe_unserialize($payment_meta['downloads']);
+												$downloads = isset($payment_meta['cart_details']) ? maybe_unserialize($payment_meta['cart_details']) : false;
+												if( empty( $downloads ) || !$downloads ) {
+													$downloads = maybe_unserialize($payment_meta['downloads']);
+												}
 											?>
 											<h4><?php echo _n(__('Purchased File', 'edd'), __('Purchased Files', 'edd'), count($downloads)); ?></h4>
 											<ul class="purchased-files-list">
 											<?php 
+
 												if($downloads) {
+
 													foreach($downloads as $key => $download) {
 														echo '<li>';
 															
@@ -160,13 +165,16 @@ function edd_payment_history_page() {
 															
 															echo  ' - ';
 															
-															$price_options = $downloads[$key]['item_number']['options'];
-																														
-															if( isset($price_options['price_id']) ) {
-																echo edd_get_price_option_name($id, $price_options['price_id']);
-																echo ' - ';
-															}
-															
+															if( isset( $downloads[$key]['item_number'])) {
+
+																$price_options = $downloads[$key]['item_number']['options'];
+																															
+																if( isset($price_options['price_id']) ) {
+																	echo edd_get_price_option_name($id, $price_options['price_id']);
+																	echo ' - ';
+																}
+															}	
+
 															// show price
 															echo edd_currency_filter($price);
 														
