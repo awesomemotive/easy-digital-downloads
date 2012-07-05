@@ -86,7 +86,7 @@ function edd_insert_payment($payment_data = array()) {
 	}
 	
 	// create a blank payment
-	$payment = wp_insert_post( array('post_title' => $payment_title, 'post_status' => $status, 'post_type' => 'edd_payment'));
+	$payment = wp_insert_post( array('post_title' => $payment_title, 'post_status' => $status, 'post_type' => 'edd_payment', 'post_date' => $payment_data['date']));
 	
 	if($payment) {
 		$payment_meta = array( 
