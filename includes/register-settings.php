@@ -676,6 +676,31 @@ function edd_rich_editor_callback($args) {
 
 
 /**
+ * Upload Callback
+ *
+ * Renders upload fields.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
+function edd_upload_callback($args) { 
+ 
+	global $edd_options;
+
+	if(isset($edd_options[$args['id']])) { $value = $edd_options[$args['id']]; } else { $value = isset($args['std']) ? $args['std'] : ''; }
+	$size = isset($args['size']) && !is_null($args['size']) ? $args['size'] : 'regular';
+    $html = '<input type="text" class="' . $args['size'] . '-text edd_upload_field" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . $value . '"/>';   
+    $html .= '&nbsp;<input type="button" class="edd_upload_image_button button-secondary" value="' . __('Upload File', 'edd') . '"/>';
+    $html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';  
+ 
+    echo $html; 
+ 
+}
+
+
+/**
  * Hook Callback
  *
  * Adds a do_action() hook in place of the field

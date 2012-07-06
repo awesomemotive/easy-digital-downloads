@@ -101,7 +101,10 @@ jQuery(document).ready(function ($) {
     		window.tbframe_interval = setInterval(function() {
     		    jQuery('#TB_iframeContent').contents().find('.savesend .button').val(edd_vars.use_this_file).end().find('#insert-gallery, .wp-post-thumbnail').hide();
     		}, 2000);
-            tb_show(edd_vars.add_new_download, 'media-upload.php?post_id=' + edd_vars.post_id + '&TB_iframe=true');
+            if (edd_vars.post_id != null ) {
+                var post_id = 'post_id=' + edd_vars.post_id + '&';
+            }
+            tb_show(edd_vars.add_new_download, 'media-upload.php?' + post_id +'TB_iframe=true');
         });
         
         window.original_send_to_editor = window.send_to_editor;
