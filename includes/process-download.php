@@ -36,6 +36,8 @@ function edd_process_download() {
 		//$has_access = ( edd_logged_in_only() && is_user_logged_in() ) || !edd_logged_in_only() ? true : false;
 		if($payment && $has_access) {
 			
+			do_action('edd_process_verified_download', $download, $email);;
+
 			// payment has been verified, setup the download
 			$download_files = get_post_meta($download, 'edd_download_files', true);
 			
