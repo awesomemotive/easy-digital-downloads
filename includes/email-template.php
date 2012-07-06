@@ -228,12 +228,9 @@ function edd_apply_email_template( $body, $payment_id, $payment_data ) {
 	if(is_admin()) 
 		$body = edd_email_preview_templage_tags($body);	
 
-	$email = str_replace('{email}', $body, $template );
-	
-	$email = apply_filters('edd_purchase_receipt_' . $template_name, $email);
+	$body = apply_filters('edd_purchase_receipt_' . $template_name, $body);
 
-	$first_p = strpos($email, '<p>');
-	$email = substr_replace($email, '<p style="margin-top:0;">', $first_p, 3);
+	$email = str_replace('{email}', $body, $template );
 		
 	return $email;	
 	
@@ -259,6 +256,24 @@ function edd_default_email_template() {
 	
 }
 add_action('edd_email_template_default', 'edd_default_email_template');
+
+
+/**
+ * Default Email Template Styling Extras
+ *
+ * @access     private
+ * @since      1.0.9.1
+ * @return     string
+*/
+
+function edd_default_email_styling( $email_body ) {
+
+	$first_p = strpos($email_body, '<p>');
+	$email_body = substr_replace($email_body, '<p style="margin-top:0;">', $first_p, 3);
+
+	return $email_body;
+}
+add_filter('edd_purchase_receipt_default', 'edd_default_email_styling');
 
 
 /**
