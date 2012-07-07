@@ -266,6 +266,20 @@ function edd_get_payment_statuses() {
 }
 
 /**
+ * Registers custom statuses
+ *
+ * @access      public
+ * @since       1.0.9.1
+ * @return      integer
+*/
+
+function edd_register_payment_status() {
+	register_post_status('refunded');
+}
+add_action( 'init', 'edd_register_payment_status' );
+
+
+/**
  * Get Earnings By Date
  *
  * @access      public
