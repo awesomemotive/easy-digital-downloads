@@ -53,12 +53,15 @@ function edd_email_templage_tags($message, $payment_data, $payment_id) {
 	
 	$gateway = edd_get_gateway_checkout_label( get_post_meta($payment_id, '_edd_payment_gateway', true) );
 
+	$receipt_id = $payment_data['key'];
+
 	$message = str_replace('{name}', $name, $message);
 	$message = str_replace('{download_list}', $download_list, $message);
 	$message = str_replace('{date}', $payment_data['date'], $message);
 	$message = str_replace('{sitename}', get_bloginfo('name'), $message);
 	$message = str_replace('{price}', $price, $message);
 	$message = str_replace('{payment_method}', $gateway, $message);
+	$message = str_replace('{receipt_id}', $receipt_id, $message);
 	$message = apply_filters('edd_email_template_tags', $message, $payment_data);
 	
 	return $message;
@@ -88,12 +91,15 @@ function edd_email_preview_templage_tags( $message ) {
 	
 	$gateway = edd_get_gateway_checkout_label( get_post_meta($payment_id, '_edd_payment_gateway', true) );
 
+	$receipt_id = strtolower( md5( uniqid() ) );
+
 	$message = str_replace('{name}', 'John Doe', $message);
 	$message = str_replace('{download_list}', $download_list, $message);
 	$message = str_replace('{date}', date( get_option('date_format'), time() ), $message);
 	$message = str_replace('{sitename}', get_bloginfo('name'), $message);
 	$message = str_replace('{price}', $price, $message);
 	$message = str_replace('{payment_method}', $gateway, $message);
+	$message = str_replace('{receipt_id}', $receipt_id, $message);
 	
 	return wpautop($message);
 	

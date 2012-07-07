@@ -188,6 +188,7 @@ function edd_register_settings() {
 						'{name} - ' . __('The buyer\'s name', 'edd') . '<br/>' .
 						'{date} - ' . __('The date of the purchase', 'edd') . '<br/>' .
 						'{price} - ' . __('The total price of the purchase', 'edd') . '<br/>' .
+						'{receipt_id} - ' . __('The unique ID number for this purchase receipt', 'edd') . '<br/>' .
 						'{payment_method} - ' . __('The method of payment used for this purchase', 'edd') . '<br/>' .
 						'{sitename} - ' . __('Your site name', 'edd'),
 					'type' => 'rich_editor'
