@@ -126,6 +126,26 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 1.1.0 =
+
+* Added new French translation files, thanks for Boddhi
+* Updated default language files
+* Fixed the width of the "Email" column in the payment history page
+* Added payment "status" filters to the payment history page
+* Added an option to filter the payment history page by user/buyer
+* Added a "Price" column to the Downloads page
+* Fixed a bug with duplicate "Settings Updated" notices
+* Added a missing text domain to the Settings Updated notice
+* Fixed a bug with the add-ons cache that caused them to never refresh
+* Added new {receipt_id} template tag for purchase receipts
+* Improved CSS for the checkout page
+* Improved CSS for the payment method icons
+* Added a new "upload" callback for settings field types
+* Added a new hook, edd_process_verified_download, to the download processing function
+* Minor improvements to the email templating system
+* Minor improvements to the View Order Details pop up
+* Updated edd_sert_payment() to apply the date of the payment to the post_date field
+
 = 1.0.9 =
 
 * Updated the purchase/download history short codes to only show files for the price options the user has purchased
@@ -374,6 +394,26 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+
+* Updated French translation files, thanks for Boddhi
+* Updated default language files
+* Fixed the width of the "Email" column in the payment history page
+* Added payment "status" filters to the payment history page
+* Added an option to filter the payment history page by user/buyer
+* Added a "Price" column to the Downloads page
+* Fixed a bug with duplicate "Settings Updated" notices
+* Added a missing text domain to the Settings Updated notice
+* Fixed a bug with the add-ons cache that caused them to never refresh
+* Added new {receipt_id} template tag for purchase receipts
+* Improved CSS for the checkout page
+* Improved CSS for the payment method icons
+* Added a new "upload" callback for settings field types
+* Added a new hook, edd_process_verified_download, to the download processing function
+* Minor improvements to the email templating system
+* Minor improvements to the View Order Details pop up
+* Updated edd_sert_payment() to apply the date of the payment to the post_date field
 
 = 1.0.9 =
 
