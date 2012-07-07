@@ -20,16 +20,16 @@
  * @return      object
 */
 
-function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby = 'ID', $order = 'DESC', $user = null ) {
+function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby = 'ID', $order = 'DESC', $user = null, $status = 'any' ) {
 	$payment_args = array(
 		'post_type' => 'edd_payment', 
 		'posts_per_page' => $number, 
-		'post_status' => 'any', 
 		'offset' => $offset,
 		'meta_key' => '_edd_payment_mode',
 		'meta_value' => $mode,
 		'order' => $order,
-		'orderby' => $orderby
+		'orderby' => $orderby,
+		'post_status' => $status
 	);
 
 	if( !is_null( $user ) ) {
@@ -52,26 +52,6 @@ function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby =
 		return $payments;
 	}
 	return false;
-}
-
-
-/**
- * Count Payments
- *
- * Returns the total number of payments recorded.
- *
- * @access      public
- * @since       1.0 
- * @return      integer
-*/
-
-function edd_count_payments($mode, $user = null) {
-	$payments = edd_get_payments(0, -1, $mode, 'ID', 'DESC', $user );
-	$count = 0;
-	if($payments) {
-		$count = count($payments);
-	}
-	return $count;
 }
 
 
