@@ -12,17 +12,17 @@
 .edd_clearfix:after { display: block; visibility: hidden; float: none; clear: both; text-indent: -9999px; content: "."; }
 
 /* cart contents */
-#edd_checkout_cart { text-align: left; width: 100%; border-top: 1px solid #f0f0f0; border-bottom: none;}
+#edd_checkout_cart { text-align: left; width: 100%; border-top: 1px solid #f0f0f0; border-bottom: none; margin: 0 0 10px; }
 #edd_checkout_cart th,
-#edd_checkout_cart td { text-align: left; padding: 3px 5px; border-bottom: 1px solid #f0f0f0; border-top: none; }
-#edd_checkout_cart th { font-weight: bold; background: #f5f5f5;}
+#edd_checkout_cart td { text-align: left; padding: 3px 5px; border-bottom: 1px solid #f0f0f0; border-top: none; color: #666; }
+#edd_checkout_cart th { font-weight: bold; background: #f5f5f5; }
 #edd_checkout_cart td { line-height: 25px; vertical-align: middle; }
 #edd_checkout_cart th.edd_cart_actions,
 #edd_checkout_cart td.edd_cart_actions,
 #edd_checkout_cart th:last-child,
 #edd_checkout_cart td:last-child,
 #edd_checkout_cart th.edd_cart_total { text-align: right; }
-#edd_checkout_cart td img { float: left; margin: 0 8px 0 0;}
+#edd_checkout_cart td img { float: left; margin: 0 8px 0 0; background: none; padding: none; border: none; }
 
 /* checkout fields */
 #edd_purchase_form input.edd-input { display: inline-block; width: 200px; }
@@ -47,6 +47,8 @@
 
 /* =Cart Widget
 -------------------------------------------------------------- */
+
+
 
 /* =Purchase History
 -------------------------------------------------------------- */
