@@ -429,11 +429,11 @@ function edd_register_settings() {
 	}
 	
 	// creates our settings in the options table
-	register_setting('edd_settings_general', 'edd_settings_general');
-	register_setting('edd_settings_gateways', 'edd_settings_gateways');
-	register_setting('edd_settings_emails', 'edd_settings_emails');
-	register_setting('edd_settings_styles', 'edd_settings_styles');
-	register_setting('edd_settings_misc', 'edd_settings_misc');
+	register_setting('edd_settings_general', 'edd_settings_general', 'edd_settings_sanitize');
+	register_setting('edd_settings_gateways', 'edd_settings_gateways', 'edd_settings_sanitize');
+	register_setting('edd_settings_emails', 'edd_settings_emails', 'edd_settings_sanitize');
+	register_setting('edd_settings_styles', 'edd_settings_styles', 'edd_settings_sanitize');
+	register_setting('edd_settings_misc', 'edd_settings_misc', 'edd_settings_sanitize');
 }
 add_action('admin_init', 'edd_register_settings');
 
@@ -715,6 +715,24 @@ function edd_hook_callback($args) {
  	
 	do_action('edd_' . $args['id']);
  
+}
+
+
+
+/**
+ * Settings Sanitization
+ *
+ * Adds a settings error (for the updated message)
+ * At some point this will validate input
+ *
+ * @access      private
+ * @since       1.0.8.2 
+ * @return      void
+*/
+
+function edd_settings_sanitize( $input ) {
+	add_settings_error('edd-notices', '', 'Settings Updated', 'updated');
+	return $input;
 }
 
 

@@ -72,7 +72,6 @@ function edd_payment_history_page() {
 						    <a href="<?php echo add_query_arg( array( 'orderby' => 'ID', 'order' => $order_inverse ) ); ?>" title="<?php _e('ID', 'edd'); ?>"><span><?php _e('ID', 'edd'); ?></span> <span class="sorting-indicator"></span></a>
 						</th>
 						<th style="width: 165px;"><?php _e('Email', 'edd'); ?></th>
-						<th style="width: 240px;"><?php _e('Key', 'edd'); ?></th>
 						<th><?php _e('Products', 'edd'); ?></th>
 						<th><?php _e('Price', 'edd'); ?></th>
 						<th class="manage-column column-title sortable <?php echo $order_class; echo $orderby == 'Date' ? ' sorted' : ''; ?>">
@@ -87,8 +86,7 @@ function edd_payment_history_page() {
 				<tfoot>
 					<tr>
 						<th style="width: 40px;"><?php _e('ID', 'edd'); ?></th>
-						<th style="width: 150px;"><?php _e('Email', 'edd'); ?></th>
-						<th style="width: 240px;"><?php _e('Key', 'edd'); ?></th>
+						<th style="width: 250px;"><?php _e('Email', 'edd'); ?></th>
 						<th><?php _e('Products', 'edd'); ?></th>
 						<th><?php _e('Price', 'edd'); ?></th>
 						<th><?php _e('Date', 'edd'); ?></th>
@@ -131,7 +129,6 @@ function edd_payment_history_page() {
 											?>
 										</div>
 									</td>
-									<td><?php echo $payment_meta['key']; ?></td>
 									<td><a href="#TB_inline?width=640&amp;inlineId=purchased-files-<?php echo $payment->ID; ?>" class="thickbox" title="<?php printf(__('Purchase Details for Payment #%s', 'edd'), $payment->ID); ?> "><?php _e('View Order Details', 'edd'); ?></a>
 										<div id="purchased-files-<?php echo $payment->ID; ?>" style="display:none;">
 											<?php 
@@ -203,6 +200,10 @@ function edd_payment_history_page() {
 												<span class="payment-method-name"><?php echo edd_get_gateway_admin_label( $gateway ); ?></span>
 											</div>
 											<?php } ?>
+											<div class="purchase-key-wrap">
+												<h4><?php _e('Purchase Key', 'edd'); ?></h4>
+												<span class="purchase-key"><?php echo $payment_meta['key']; ?></span>
+											</div>
 											<p><a id="edd-close-purchase-details" class="button-secondary" onclick="tb_remove();" title="<?php _e('Close', 'edd'); ?>"><?php _e('Close', 'edd'); ?></a></p>
 										</div>
 									</td>
@@ -215,7 +216,7 @@ function edd_payment_history_page() {
 							$i++;
 							endforeach;
 						else : ?>
-						<tr><td colspan="8"><?php _e('No payments recorded yet', 'edd'); ?></td></tr>
+						<tr><td colspan="7"><?php _e('No payments recorded yet', 'edd'); ?></td></tr>
 					<?php endif;?>
 				</table>
 				<?php if ($total_pages > 1) : ?>
