@@ -20,7 +20,7 @@
  * @return      object
 */
 
-function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby = 'ID', $order = 'DESC' ) {
+function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby = 'ID', $order = 'DESC', $user = null ) {
 	$payment_args = array(
 		'post_type' => 'edd_payment', 
 		'posts_per_page' => $number, 
@@ -31,6 +31,22 @@ function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby =
 		'order' => $order,
 		'orderby' => $orderby
 	);
+
+	if( !is_null( $user ) ) {
+		if( is_numeric( $user ) ) {
+			$user_key = '_edd_payment_user_id';
+		} else {
+			$user_key = '_edd_payment_user_email';
+		}
+		$payment_args['meta_query'] = array(
+			array(
+				'key' => $user_key,
+				'value' => $user
+			)
+		);
+	}
+
+
 	$payments = get_posts($payment_args);
 	if($payments) {
 		return $payments;
@@ -49,8 +65,8 @@ function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby =
  * @return      integer
 */
 
-function edd_count_payments($mode) {
-	$payments = edd_get_payments(0, -1, $mode);
+function edd_count_payments($mode, $user = null) {
+	$payments = edd_get_payments(0, -1, $mode, 'ID', 'DESC', $user );
 	$count = 0;
 	if($payments) {
 		$count = count($payments);

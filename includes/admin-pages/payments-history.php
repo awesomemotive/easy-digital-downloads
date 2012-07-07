@@ -47,8 +47,10 @@ function edd_payment_history_page() {
 			$order_inverse = $order == 'DESC' ? 'ASC' : 'DESC';
 			$order_class = strtolower($order_inverse);
 			
-			$payments = edd_get_payments($offset, $per_page, $mode, $orderby, $order);
-			$payment_count = edd_count_payments($mode);
+			$user = isset( $_GET['user'] ) ? $_GET['user'] : null;
+
+			$payments = edd_get_payments($offset, $per_page, $mode, $orderby, $order, $user);
+			$payment_count = edd_count_payments($mode, $user);
 			$total_pages = ceil($payment_count/$per_page);
 			
 			?>
@@ -61,6 +63,9 @@ function edd_payment_history_page() {
 				</select>
 				<input type="hidden" name="page" value="edd-payment-history"/>
 				<input type="hidden" name="post_type" value="download"/>
+				<?php if(isset( $_GET['user'] ) ) { ?>
+					<input type="hidden" name="user" value="<?php echo $_GET['user']; ?>"/>
+				<?php } ?>
 				<label for="edd_show"><?php _e('Payments per page', 'edd'); ?></label>
 				<input type="text" class="regular-text" style="width:30px;" id="edd_show" name="show" value="<?php echo isset($_GET['show']) ? $_GET['show'] : ''; ?>"/>
 				<input type="submit" class="button-secondary" value="<?php _e('Show', 'edd'); ?>"/>
@@ -209,7 +214,12 @@ function edd_payment_history_page() {
 									</td>
 									<td style="text-transform:uppercase;"><?php echo edd_currency_filter( $payment_meta['amount']); ?></td>
 									<td><?php echo date(get_option('date_format'), strtotime($payment->post_date)); ?></td>
-									<td><?php echo isset($user_info['id']) && $user_info['id'] != -1 ? get_user_by('id', $user_info['id'])->display_name : __('guest', 'edd'); ?></td>
+									<td>
+										<?php $user_id = isset($user_info['id']) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email']?>
+										<a href="<?php echo remove_query_arg('p', add_query_arg('user', $user_id) ); ?>">
+											<?php echo is_numeric( $user_id ) ? get_user_by('id', $user_id)->display_name : __('guest', 'edd'); ?>
+										</a>
+									</td>
 									<td><?php echo edd_get_payment_status($payment, true); ?></td>
 								</tr>
 							<?php
@@ -223,11 +233,11 @@ function edd_payment_history_page() {
 					<div class="tablenav">
 						<div class="tablenav-pages alignright">
 							<?php
-								if(isset($_GET['show']) && $_GET['show'] > 0) {
-									$base = 'edit.php?post_type=download&page=edd-payment-history&mode=' . $mode . '&show=' . $_GET['show'] . '%_%';
-								} else {
-									$base = 'edit.php?post_type=download&page=edd-payment-history&mode=' . $mode . '%_%';
-								}
+
+								$query_string = $_SERVER['QUERY_STRING'];
+
+								$base = 'edit.php?' . remove_query_arg('p', $query_string) . '%_%';
+
 								echo paginate_links( array(
 									'base' => $base,
 									'format' => '&p=%#%',
