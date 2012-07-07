@@ -46,15 +46,51 @@ function edd_payment_history_page() {
 			$order = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 			$order_inverse = $order == 'DESC' ? 'ASC' : 'DESC';
 			$order_class = strtolower($order_inverse);
-			
 			$user = isset( $_GET['user'] ) ? $_GET['user'] : null;
+			$status = isset( $_GET['status'] ) ? $_GET['status'] : null;
 
-			$payments = edd_get_payments($offset, $per_page, $mode, $orderby, $order, $user);
-			$payment_count = edd_count_payments($mode, $user);
-			$total_pages = ceil($payment_count/$per_page);
+			$payments = edd_get_payments($offset, $per_page, $mode, $orderby, $order, $user, $status);
+			$payment_count = wp_count_posts('edd_payment');
+
+			switch( $status ) {
+				case 'publish':
+					$current_count = $payment_count->publish;
+					break;
+				case 'pending':
+					$current_count = $payment_count->pending;
+					break;
+				case 'refunded':
+					$current_count = $payment_count->refunded;
+					break;
+				case 'trash':
+					$current_count = $payment_count->trash;
+					break;
+				default:
+					$current_count = $payment_count->publish;
+					break;
+			}
+
+			$total_pages = ceil($current_count/$per_page);
 			
 			?>
 			<h2><?php _e('Payment History', 'edd'); ?></h2>
+			<ul class="subsubsub">
+				<li class="all">
+					<a href="<?php echo remove_query_arg('status'); ?>" class="current"><?php _e('All'); ?> <span class="count">(<?php echo $payment_count->publish; ?>)</span></a> |
+				</li>
+				<li class="publish">
+					<a href="<?php echo add_query_arg('status', 'publish'); ?>"><?php _e('Completed', 'edd'); ?> <span class="count">(<?php echo $payment_count->publish; ?>)</span></a> |
+				</li>
+				<li class="pending">
+					<a href="<?php echo add_query_arg('status', 'pending'); ?>"><?php _e('Pending', 'edd'); ?> <span class="count">(<?php echo $payment_count->pending; ?>)</span></a> |
+				</li>
+				<li class="refunded">
+					<a href="<?php echo add_query_arg('status', 'refunded'); ?>"><?php _e('Refunded', 'edd'); ?> <span class="count">(<?php echo $payment_count->refunded; ?>)</span></a> |
+				</li>
+				<li class="trash">
+					<a href="<?php echo add_query_arg('status', 'trash'); ?>"><?php _e('Deleted', 'edd'); ?> <span class="count">(<?php echo $payment_count->trash; ?>)</span></a>
+				</li>
+			</ul>
 			<form id="payments-filter" action="<?php echo admin_url('edit.php'); ?>" method="get" style="float: right; margin-bottom: 5px;">
 				<label for="edd-mode"><?php _e('Payment mode', 'edd'); ?></label>
 				<select name="mode" id="edd-mode">
@@ -65,6 +101,9 @@ function edd_payment_history_page() {
 				<input type="hidden" name="post_type" value="download"/>
 				<?php if(isset( $_GET['user'] ) ) { ?>
 					<input type="hidden" name="user" value="<?php echo $_GET['user']; ?>"/>
+				<?php } ?>
+				<?php if(isset( $_GET['status'] ) ) { ?>
+					<input type="hidden" name="status" value="<?php echo $_GET['status']; ?>"/>
 				<?php } ?>
 				<label for="edd_show"><?php _e('Payments per page', 'edd'); ?></label>
 				<input type="text" class="regular-text" style="width:30px;" id="edd_show" name="show" value="<?php echo isset($_GET['show']) ? $_GET['show'] : ''; ?>"/>
