@@ -26,6 +26,7 @@ function edd_download_columns($download_columns){
 		'title' => __('Name', 'edd'),
 		'download_category' => __('Categories', 'edd'),
 		'download_tag' => __('Tags', 'edd'),
+		'price' => __('Price', 'edd'),
 		'sales' => __('Sales', 'edd'),
 		'earnings' => __('Earnings', 'edd'),
 		'shortcode' => __('Short Code', 'edd'),
@@ -58,6 +59,9 @@ function edd_render_download_columns($column_name, $post_id) {
 				break;
 			case 'download_tag':
 				echo get_the_term_list($post_id, 'download_tag', '', ', ', '');
+				break;
+			case 'price':
+				echo edd_price($post_id, false);
 				break;
 			case 'sales':
 				echo $sales;
