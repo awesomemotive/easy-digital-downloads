@@ -115,7 +115,7 @@ function edd_payment_history_page() {
 						<th style="width: 60px;" class="manage-column column-title sortable <?php echo $order_class; echo $orderby == 'ID' ? ' sorted' : ''; ?>">
 						    <a href="<?php echo add_query_arg( array( 'orderby' => 'ID', 'order' => $order_inverse ) ); ?>" title="<?php _e('ID', 'edd'); ?>"><span><?php _e('ID', 'edd'); ?></span> <span class="sorting-indicator"></span></a>
 						</th>
-						<th style="width: 165px;"><?php _e('Email', 'edd'); ?></th>
+						<th style="width: 250px;"><?php _e('Email', 'edd'); ?></th>
 						<th><?php _e('Products', 'edd'); ?></th>
 						<th><?php _e('Price', 'edd'); ?></th>
 						<th class="manage-column column-title sortable <?php echo $order_class; echo $orderby == 'Date' ? ' sorted' : ''; ?>">
