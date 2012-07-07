@@ -76,19 +76,22 @@ function edd_payment_history_page() {
 			<h2><?php _e('Payment History', 'edd'); ?></h2>
 			<ul class="subsubsub">
 				<li class="all">
-					<a href="<?php echo remove_query_arg('status'); ?>" class="current"><?php _e('All'); ?> <span class="count">(<?php echo $payment_count->publish; ?>)</span></a> |
+					<a href="<?php echo remove_query_arg('status'); ?>" <?php echo !isset( $_GET['status'] ) ? 'class="current"' : ''; ?>>
+						<?php _e('All'); ?> 
+						<span class="count">(<?php echo $payment_count->publish; ?>)</span>
+					</a> |
 				</li>
 				<li class="publish">
-					<a href="<?php echo add_query_arg('status', 'publish'); ?>"><?php _e('Completed', 'edd'); ?> <span class="count">(<?php echo $payment_count->publish; ?>)</span></a> |
+					<a href="<?php echo add_query_arg('status', 'publish'); ?>" <?php echo isset( $_GET['status'] ) && $_GET['status'] == 'publish' ? 'class="current"' : ''; ?>><?php _e('Completed', 'edd'); ?> <span class="count">(<?php echo $payment_count->publish; ?>)</span></a> |
 				</li>
 				<li class="pending">
-					<a href="<?php echo add_query_arg('status', 'pending'); ?>"><?php _e('Pending', 'edd'); ?> <span class="count">(<?php echo $payment_count->pending; ?>)</span></a> |
+					<a href="<?php echo add_query_arg('status', 'pending'); ?>" <?php echo isset( $_GET['status'] ) && $_GET['status'] == 'pending' ? 'class="current"' : ''; ?>><?php _e('Pending', 'edd'); ?> <span class="count">(<?php echo $payment_count->pending; ?>)</span></a> |
 				</li>
 				<li class="refunded">
-					<a href="<?php echo add_query_arg('status', 'refunded'); ?>"><?php _e('Refunded', 'edd'); ?> <span class="count">(<?php echo $payment_count->refunded; ?>)</span></a> |
+					<a href="<?php echo add_query_arg('status', 'refunded'); ?>" <?php echo isset( $_GET['status'] ) && $_GET['status'] == 'refunded' ? 'class="current"' : ''; ?>><?php _e('Refunded', 'edd'); ?> <span class="count">(<?php echo $payment_count->refunded; ?>)</span></a> |
 				</li>
 				<li class="trash">
-					<a href="<?php echo add_query_arg('status', 'trash'); ?>"><?php _e('Deleted', 'edd'); ?> <span class="count">(<?php echo $payment_count->trash; ?>)</span></a>
+					<a href="<?php echo add_query_arg('status', 'trash'); ?>" <?php echo isset( $_GET['status'] ) && $_GET['status'] == 'trash' ? 'class="current"' : ''; ?>><?php _e('Deleted', 'edd'); ?> <span class="count">(<?php echo $payment_count->trash; ?>)</span></a>
 				</li>
 			</ul>
 			<form id="payments-filter" action="<?php echo admin_url('edit.php'); ?>" method="get" style="float: right; margin-bottom: 5px;">
@@ -109,6 +112,12 @@ function edd_payment_history_page() {
 				<input type="text" class="regular-text" style="width:30px;" id="edd_show" name="show" value="<?php echo isset($_GET['show']) ? $_GET['show'] : ''; ?>"/>
 				<input type="submit" class="button-secondary" value="<?php _e('Show', 'edd'); ?>"/>
 			</form>
+			<?php if( isset( $_GET['user'] ) ) { 
+				$user = is_numeric( $user ) ? get_userdata( $user ) : $user; 
+				$user = is_object( $user ) ? $user->display_name : $user;
+				?>
+				<p class="clear"><?php echo __('Showing payments for: ', 'edd') . '&nbsp' . $user; ?>&nbsp;-&nbsp;<a href="<?php echo remove_query_arg('user'); ?>"><?php _e('clear', 'edd'); ?></a></div>
+			<?php } ?>
 			<table class="wp-list-table widefat fixed posts edd-payments">
 				<thead>
 					<tr>
