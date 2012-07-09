@@ -47,10 +47,12 @@ function edd_payment_history_page() {
 			$order_inverse = $order == 'DESC' ? 'ASC' : 'DESC';
 			$order_class = strtolower($order_inverse);
 			$user = isset( $_GET['user'] ) ? $_GET['user'] : null;
-			$status = isset( $_GET['status'] ) ? $_GET['status'] : null;
+			$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
 
 			$payments = edd_get_payments($offset, $per_page, $mode, $orderby, $order, $user, $status);
 			$payment_count = wp_count_posts('edd_payment');
+
+			$total_count = $payment_count->publish + $payment_count->pending + $payment_count->refunded + $payment_count->trash;
 
 			switch( $status ) {
 				case 'publish':
@@ -65,8 +67,8 @@ function edd_payment_history_page() {
 				case 'trash':
 					$current_count = $payment_count->trash;
 					break;
-				default:
-					$current_count = $payment_count->publish;
+				case 'any':
+					$current_count = $total_count;
 					break;
 			}
 
@@ -78,7 +80,7 @@ function edd_payment_history_page() {
 				<li class="all">
 					<a href="<?php echo remove_query_arg('status'); ?>" <?php echo !isset( $_GET['status'] ) ? 'class="current"' : ''; ?>>
 						<?php _e('All'); ?> 
-						<span class="count">(<?php echo $payment_count->publish; ?>)</span>
+						<span class="count">(<?php echo $total_count; ?>)</span>
 					</a> |
 				</li>
 				<li class="publish">
