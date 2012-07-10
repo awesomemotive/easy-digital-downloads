@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable Tag: 1.1.0
+Stable Tag: 1.1.1
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -125,6 +125,14 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.1.1 =
+
+* Added a couple of new filters to the file download processing function
+* Fixed a couple of undefined index errors
+* Fixed a bug with the "All" filter in the Payment History page
+* Fixed an amount comparision error in the PayPal IPN processer
+* Added Japanese language files
 
 = 1.1.0 =
 
@@ -394,6 +402,15 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.1.1 =
+
+* Added a couple of new filters to the file download processing function
+* Fixed a couple of undefined index errors
+* Fixed a bug with the "All" filter in the Payment History page
+* Fixed an amount comparision error in the PayPal IPN processer
+* Added Japanese language files
+
 
 = 1.1.0 =
 
