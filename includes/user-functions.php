@@ -149,8 +149,10 @@ function edd_get_downloads_of_user_purchase($user_id, $download_id, $variable_pr
 	if( $download_files ) {
 		if( !is_null( $variable_price_id ) ) {
 			foreach( $download_files as $key => $file_info ) {
-				if( $file_info['condition'] == $variable_price_id || $file_info['condition'] == 'all' ) {
-					$purchased_files[$key] = $file_info;
+				if( isset( $file_info['condition'] ) ) {
+					if( $file_info['condition'] == $variable_price_id || $file_info['condition'] == 'all' ) {
+						$purchased_files[$key] = $file_info;
+					}
 				}
 			}
 		} else {
