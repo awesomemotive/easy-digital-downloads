@@ -41,8 +41,8 @@ function edd_process_download() {
 			// payment has been verified, setup the download
 			$download_files = get_post_meta($download, 'edd_download_files', true);
 			
-			$requested_file = $download_files[$file_key]['file'];
-			
+			$requested_file = apply_filters('edd_requested_file', $download_files[$file_key]['file'] );
+		
 			$user_info = array();
 			$user_info['email'] = $email;
 			if(is_user_logged_in()) {
@@ -87,7 +87,7 @@ function edd_process_download() {
 			header("Robots: none");
 			header("Content-Type: " . $ctype . "");
 			header("Content-Description: File Transfer");	
-		    header("Content-Disposition: attachment; filename=\"" . basename($requested_file) . "\";");
+		    header("Content-Disposition: attachment; filename=\"" . apply_filters('edd_requested_file_name', basename($requested_file) ) . "\";");
 			header("Content-Transfer-Encoding: binary");
 			edd_read_file( $requested_file );			
 			exit;
