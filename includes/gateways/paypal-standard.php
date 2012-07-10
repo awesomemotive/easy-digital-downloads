@@ -165,7 +165,7 @@ function edd_listen_for_paypal_ipn() {
             if ( $currency != $edd_options['currency'] ) {
                 return; // the currency code is invalid
             }
-            if ( $paypal_amount != $payment_amount ) {
+            if ( number_format((float)$paypal_amount, 2) != $payment_amount ) {
                 return; // the prices don't match
             }
             if ( $purchase_key != $payment_meta['key'] ) {
