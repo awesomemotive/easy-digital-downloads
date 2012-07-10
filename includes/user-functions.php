@@ -71,6 +71,9 @@ function edd_get_users_purchases($user_id) {
 
 function edd_has_user_purchased($user_id, $download_id, $variable_price_id = null) {
 	
+	if( !is_user_logged_in() )
+		return false; // at some point this should support email checking
+
 	$users_purchases = edd_get_users_purchases($user_id);
 
 	$return = false;
