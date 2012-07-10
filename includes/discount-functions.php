@@ -346,7 +346,7 @@ function edd_get_discount_id_by_code($code) {
 	$code_id = false;
 	if($discounts) {
 		foreach($discounts as $key => $discount) {
-			if(trim($discount['code']) === trim($code)) {
+			if( isset( $discount['code'] ) && trim($discount['code']) === trim($code)) {
 				$code_id = $key;
 			}
 		}

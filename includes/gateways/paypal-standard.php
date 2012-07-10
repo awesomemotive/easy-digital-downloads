@@ -281,7 +281,7 @@ function edd_process_paypal_ipn() {
         // the currency code is invalid
         return;
     }
-    if ( number_format($paypal_amount) != number_format($payment_amount) ) {
+    if ( number_format((float)$paypal_amount, 2) != $payment_amount ) {
         // the prices don't match
        return;
     }
