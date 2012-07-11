@@ -116,6 +116,7 @@ if(is_admin()) {
 	include_once(EDD_PLUGIN_DIR . 'includes/thickbox.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/graphing.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/upload-functions.php');
+	include_once(EDD_PLUGIN_DIR . 'includes/export-functions.php');
 } else {
 	include_once(EDD_PLUGIN_DIR . 'includes/process-purchase.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/process-download.php');
