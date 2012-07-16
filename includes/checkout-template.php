@@ -121,8 +121,13 @@ function edd_checkout_form() {
 						} elseif(!isset($edd_options['logged_in_only'])) {
 							$can_checkout = true;
 						}
+						$can_checkout = true;
 						if($can_checkout) { ?>
-							<?php do_action('edd_purchase_form_before_user_info'); ?>
+							<?php if(isset($edd_options['show_register_form']) && !is_user_logged_in() && !isset($_GET['login'])) { ?>
+								<div id="edd_checkout_login_register"><?php echo edd_get_register_fields(); ?></div>
+							<?php } elseif(isset($edd_options['show_register_form']) && !is_user_logged_in() && isset($_GET['login'])) { ?>
+								<div id="edd_checkout_login_register"><?php echo edd_get_login_fields(); ?></div>
+							<?php } ?>
 							<?php if( (!isset($_GET['login']) && is_user_logged_in()) || !isset($edd_options['show_register_form'])) { ?>											
 							<fieldset id="edd_checkout_user_info">
 								<legend><?php _e('Personal Info', 'edd'); ?></legend>
@@ -236,6 +241,7 @@ function edd_get_cc_form() {
 	ob_start(); ?>
 	
 	<?php do_action('edd_before_cc_fields'); ?>
+
 	<fieldset id="edd_cc_fields">
 		<legend><?php _e('Credit Card Info', 'edd'); ?></legend>
 		<p>
@@ -309,16 +315,6 @@ function edd_default_cc_address_fields() {
 }
 add_action('edd_after_cc_expiration', 'edd_default_cc_address_fields');
 
-
-function edd_show_register_login_fields() {
-	global $edd_options;
-	if(isset($edd_options['show_register_form']) && !is_user_logged_in() && !isset($_GET['login'])) { ?>
-		<div id="edd_checkout_login_register"><?php echo edd_get_register_fields(); ?></div>
-	<?php } elseif(isset($edd_options['show_register_form']) && !is_user_logged_in() && isset($_GET['login'])) { ?>
-		<div id="edd_checkout_login_register"><?php echo edd_get_login_fields(); ?></div>
-	<?php }
-}
-add_action('edd_purchase_form_after_user_info', 'edd_show_register_login_fields');
 
 /**
  * Get Register Fields
