@@ -239,6 +239,7 @@ function edd_get_cc_form() {
 	
 	<?php do_action('edd_before_cc_fields'); ?>
 	<fieldset id="edd_cc_fields">
+		<legend><?php _e('Credit Card Info', 'edd'); ?></legend>
 		<p>
 			<input type="text" autocomplete="off" name="card_name" class="card-name edd-input required" placeholder="<?php _e('Card name', 'edd'); ?>" />
 			<label class="edd-label"><?php _e('Name on the Card', 'edd'); ?></label>
@@ -258,10 +259,10 @@ function edd_get_cc_form() {
 			<input type="text" size="4" name="card_exp_year" placeholder="<?php _e('Year', 'edd'); ?>" class="card-expiry-year edd-input required"/>
 			<label class="edd-label"><?php _e('Expiration (MM/YYYY)', 'edd'); ?></label>
 		</p>
-		<?php do_action('edd_after_cc_expiration'); ?>
-	</fieldset>
 
-	<?php do_action('edd_cc_form_address_fields'); ?>
+		<?php do_action('edd_after_cc_expiration'); ?>
+	
+	</fieldset>
 
 	<?php do_action('edd_after_cc_fields'); ?>
 		
@@ -284,7 +285,6 @@ add_action('edd_cc_form', 'edd_get_cc_form');
 function edd_default_cc_address_fields() {
 	ob_start(); ?>
 	<fieldset id="edd_cc_address" class="cc-address">
-		<legend><?php _e('Credit Card Info', 'edd'); ?></legend>
 		<p>
 			<input type="text" name="card_address" class="card-address edd-input required" placeholder="<?php _e('Address line 1', 'edd'); ?>"/>
 			<label class="edd-label"><?php _e('Billing Address', 'edd'); ?></label>
@@ -309,7 +309,7 @@ function edd_default_cc_address_fields() {
 	<?php
 	echo ob_get_clean();
 }
-add_action('edd_cc_form_address_fields', 'edd_default_cc_address_fields');
+add_action('edd_after_cc_expiration', 'edd_default_cc_address_fields');
 
 
 /**
