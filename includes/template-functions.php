@@ -42,7 +42,7 @@ add_filter('the_content', 'edd_append_purchase_link');
  * @return      string
 */
 
-function edd_get_purchase_link($download_id = null, $link_text = null, $style = null, $color = null) {
+function edd_get_purchase_link($download_id = null, $link_text = null, $style = null, $color = null, $class = '') {
 	global $edd_options, $post, $user_ID;
 
 	$page = get_permalink($post->ID); // current page
@@ -96,7 +96,7 @@ function edd_get_purchase_link($download_id = null, $link_text = null, $style = 
 				$purchase_button = '<span class="edd_button edd_add_to_cart_wrap edd_' . $color . '"' . $button_display . '>';
 					$purchase_button .= '<span class="edd_button_outer">';
 						$purchase_button .= '<span class="edd_button_inner">';
-							$purchase_button .= '<input type="submit" class="edd_button_text edd-submit edd-add-to-cart" name="edd_purchase_download" value="' . $link_text . '" data-action="edd_add_to_cart" data-download-id="' . $download_id . '"' . $data_variable . '/>';
+							$purchase_button .= '<input type="submit" class="edd_button_text edd-submit edd-add-to-cart ' . $class . '" name="edd_purchase_download" value="' . $link_text . '" data-action="edd_add_to_cart" data-download-id="' . $download_id . '"' . $data_variable . '/>';
 						$purchase_button .= '</span>';
 					$purchase_button .= '</span>';
 				$purchase_button .= '</span>';
@@ -111,7 +111,7 @@ function edd_get_purchase_link($download_id = null, $link_text = null, $style = 
 				
 			} else {
 				
-				$purchase_text = '<input type="submit" class="edd_submit_plain edd-add-to-cart" name="edd_purchase_download" value="' . $link_text . '" data-action="edd_add_to_cart" data-download-id="' . $download_id . '"' . $data_variable . ' ' . $button_display . '/>';
+				$purchase_text = '<input type="submit" class="edd_submit_plain edd-add-to-cart ' . $class . '" name="edd_purchase_download" value="' . $link_text . '" data-action="edd_add_to_cart" data-download-id="' . $download_id . '"' . $data_variable . ' ' . $button_display . '/>';
 				
 				$checkout_link = '<a href="' . $checkout_url . '" class="edd_go_to_checkout edd_button edd_' . $color . '" ' . $checkout_display . '>';
 				 	$checkout_link .= __('Checkout', 'edd');

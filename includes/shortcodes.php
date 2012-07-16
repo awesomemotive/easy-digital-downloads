@@ -25,14 +25,15 @@ function edd_download_shortcode( $atts, $content = null ) {
 			'id' => '',
 			'text' => __('Purchase', 'edd'),
 			'style' => 'button',
-			'color' => 'blue'
+			'color' => 'blue',
+			'class' => ''
 		), $atts )
 	);
 	
 	$download = edd_get_download($id);
 	
 	if($download) {
-		return edd_get_purchase_link($download->ID, $text, $style, $color);
+		return edd_get_purchase_link($download->ID, $text, $style, $color, $class);
 	}
 }
 add_shortcode('purchase_link', 'edd_download_shortcode');
