@@ -146,21 +146,21 @@ function edd_checkout_form() {
 									<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
 								</p>	
 								<?php do_action('edd_purchase_form_user_info'); ?>
+								<?php if(edd_has_active_discounts()) { // only show if we have at least one active discount ?>
+								<fieldset id="edd_discount_code">
+									<p id="edd-discount-code-wrap">
+										<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e('Enter discount', 'edd'); ?>"/>
+										<label class="edd-label" for="edd-discount">
+											<?php _e('Discount', 'edd'); ?>
+											<?php if(edd_is_ajax_enabled()) { ?>
+												- <a href="#" class="edd-apply-discount"><?php _e('Apply Discount', 'edd'); ?></a>
+											<?php } ?>
+										</label>
+									</p>
+								</fieldset>	
+								<?php } ?>
 							</fieldset>	
 							<?php do_action('edd_purchase_form_after_user_info'); ?>		
-							<?php } ?>
-							<?php if(edd_has_active_discounts()) { // only show if we have at least one active discount ?>
-							<fieldset id="edd_discount_code">
-								<p id="edd-discount-code-wrap">
-									<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e('Enter discount', 'edd'); ?>"/>
-									<label class="edd-label" for="edd-discount">
-										<?php _e('Discount', 'edd'); ?>
-										<?php if(edd_is_ajax_enabled()) { ?>
-											- <a href="#" class="edd-apply-discount"><?php _e('Apply Discount', 'edd'); ?></a>
-										<?php } ?>
-									</label>
-								</p>
-							</fieldset>	
 							<?php } ?>
 							<?php 
 								// load the credit card form and allow gateways to load their own if they wish
