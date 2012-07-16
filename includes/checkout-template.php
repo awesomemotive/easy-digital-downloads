@@ -122,11 +122,7 @@ function edd_checkout_form() {
 							$can_checkout = true;
 						}
 						if($can_checkout) { ?>
-							<?php if(isset($edd_options['show_register_form']) && !is_user_logged_in() && !isset($_GET['login'])) { ?>
-								<div id="edd_checkout_login_register"><?php echo edd_get_register_fields(); ?></div>
-							<?php } elseif(isset($edd_options['show_register_form']) && !is_user_logged_in() && isset($_GET['login'])) { ?>
-								<div id="edd_checkout_login_register"><?php echo edd_get_login_fields(); ?></div>
-							<?php } ?>
+							<?php do_action('edd_purchase_form_before_user_info'); ?>
 							<?php if( (!isset($_GET['login']) && is_user_logged_in()) || !isset($edd_options['show_register_form'])) { ?>											
 							<fieldset id="edd_checkout_user_info">
 								<legend><?php _e('Personal Info', 'edd'); ?></legend>
@@ -145,7 +141,8 @@ function edd_checkout_form() {
 									<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
 								</p>	
 								<?php do_action('edd_purchase_form_user_info'); ?>
-							</fieldset>				
+							</fieldset>	
+							<?php do_action('edd_purchase_form_after_user_info'); ?>		
 							<?php } ?>
 							<?php if(edd_has_active_discounts()) { // only show if we have at least one active discount ?>
 							<fieldset id="edd_discount_code">
@@ -312,6 +309,16 @@ function edd_default_cc_address_fields() {
 }
 add_action('edd_after_cc_expiration', 'edd_default_cc_address_fields');
 
+
+function edd_show_register_login_fields() {
+	global $edd_options;
+	if(isset($edd_options['show_register_form']) && !is_user_logged_in() && !isset($_GET['login'])) { ?>
+		<div id="edd_checkout_login_register"><?php echo edd_get_register_fields(); ?></div>
+	<?php } elseif(isset($edd_options['show_register_form']) && !is_user_logged_in() && isset($_GET['login'])) { ?>
+		<div id="edd_checkout_login_register"><?php echo edd_get_login_fields(); ?></div>
+	<?php }
+}
+add_action('edd_purchase_form_after_user_info', 'edd_show_register_login_fields');
 
 /**
  * Get Register Fields
