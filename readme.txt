@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable Tag: 1.1.1
+Stable Tag: 1.1.2
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -125,6 +125,18 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.1.2 =
+
+* Fixed a bug with the ajax function that adds items to the cart - it did not show the price option name until page was refreshed
+* Fixed a bug in the purchase receipt that caused it to include all source file links, not just the ones set to the price option purchase
+* Added a new "class" parameter to the [purchas_link} short code
+* Moved the discount code fieldset inside of the user info fieldset on the checkout form
+* Added a legend to the user info fieldset 
+* Improved the markup of the default CC fields
+* Added new edd_is_checkout() conditional function
+* Updated Spanish language files
+* Added new payment export system, thanks to MadeByMike
 
 = 1.1.1 =
 
@@ -402,6 +414,18 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.1.2 =
+
+* Fixed a bug with the ajax function that adds items to the cart - it did not show the price option name until page was refreshed
+* Fixed a bug in the purchase receipt that caused it to include all source file links, not just the ones set to the price option purchase
+* Added a new "class" parameter to the [purchas_link} short code
+* Moved the discount code fieldset inside of the user info fieldset on the checkout form
+* Added a legend to the user info fieldset 
+* Improved the markup of the default CC fields
+* Added new edd_is_checkout() conditional function
+* Updated Spanish language files
+* Added new payment export system, thanks to MadeByMike
 
 = 1.1.1 =
 
