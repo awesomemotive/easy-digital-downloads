@@ -69,7 +69,11 @@ function edd_ajax_add_to_cart() {
 		if(!edd_item_in_cart($_POST['download_id'])) {
 			$options = is_numeric($_POST['price_id']) ? array('price_id' => $_POST['price_id']) : array();
 			$key = edd_add_to_cart($_POST['download_id'], $options);
-			$cart_item = edd_get_cart_item_template($key, $_POST['download_id'], true);
+			$item = array(
+				'id' => $_POST['download_id'],
+				'options' => $options
+			);
+			$cart_item = edd_get_cart_item_template($key, $item, true);
 			echo $cart_item;
 		} else {
 			echo 'incart';
