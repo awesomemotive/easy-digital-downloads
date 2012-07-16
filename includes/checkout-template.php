@@ -129,6 +129,7 @@ function edd_checkout_form() {
 							<?php } ?>
 							<?php if( (!isset($_GET['login']) && is_user_logged_in()) || !isset($edd_options['show_register_form'])) { ?>											
 							<fieldset id="edd_checkout_user_info">
+								<legend><?php _e('Personal Info', 'edd'); ?></legend>
 								<?php do_action('edd_purchase_form_before_email'); ?>
 								<p id="edd-email-wrap">
 									<input class="edd-input required" type="email" name="edd_email" placeholder="<?php _e('Email address', 'edd'); ?>" id="edd-email" value="<?php echo is_user_logged_in() ? $user_data->user_email : ''; ?>"/>
