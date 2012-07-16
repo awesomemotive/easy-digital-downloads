@@ -123,6 +123,11 @@ function edd_checkout_form() {
 						}
 						$can_checkout = true;
 						if($can_checkout) { ?>
+							<?php if(isset($edd_options['show_register_form']) && !is_user_logged_in() && !isset($_GET['login'])) { ?>
+								<div id="edd_checkout_login_register"><?php echo edd_get_register_fields(); ?></div>
+							<?php } elseif(isset($edd_options['show_register_form']) && !is_user_logged_in() && isset($_GET['login'])) { ?>
+								<div id="edd_checkout_login_register"><?php echo edd_get_login_fields(); ?></div>
+							<?php } ?>
 							<?php if( (!isset($_GET['login']) && is_user_logged_in()) || !isset($edd_options['show_register_form'])) { ?>											
 							<fieldset id="edd_checkout_user_info">
 								<legend><?php _e('Personal Info', 'edd'); ?></legend>
@@ -142,11 +147,6 @@ function edd_checkout_form() {
 								</p>	
 								<?php do_action('edd_purchase_form_user_info'); ?>
 							</fieldset>	
-							<?php if(isset($edd_options['show_register_form']) && !is_user_logged_in() && !isset($_GET['login'])) { ?>
-								<div id="edd_checkout_login_register"><?php echo edd_get_register_fields(); ?></div>
-							<?php } elseif(isset($edd_options['show_register_form']) && !is_user_logged_in() && isset($_GET['login'])) { ?>
-								<div id="edd_checkout_login_register"><?php echo edd_get_login_fields(); ?></div>
-							<?php } ?>
 							<?php do_action('edd_purchase_form_after_user_info'); ?>		
 							<?php } ?>
 							<?php if(edd_has_active_discounts()) { // only show if we have at least one active discount ?>
