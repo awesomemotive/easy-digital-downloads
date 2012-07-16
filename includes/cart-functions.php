@@ -412,6 +412,22 @@ function edd_get_checkout_uri() {
 
 
 /**
+ * Checks if on checkout page
+ *
+ * Determines if the current page is the checkout page
+ *
+ * @access      public
+ * @since       1.1.2
+ * @return      bool - true if on the page, false otherwise
+*/
+
+function edd_is_checkout() {
+    global $edd_options;
+    return isset( $edd_options['purchase_page'] ) ? is_page( $edd_options['purchase_page'] ) : false;
+}
+
+
+/**
  * Empty Cart
  *
  * Empties the cart.
