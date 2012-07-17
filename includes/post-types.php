@@ -97,6 +97,7 @@ function edd_setup_edd_post_types() {
 		'publicly_queryable' => true,
 		'show_ui' => true, 
 		'show_in_menu' => false, 
+		'show_in_nav_menu' => false, 
 		'query_var' => true,
 		'rewrite' => false,
 		'capability_type' => 'post',
