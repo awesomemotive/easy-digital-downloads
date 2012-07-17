@@ -262,15 +262,15 @@ function edd_process_paypal_ipn() {
    parse_str( $post_data, $post_data_array );   
    	 
     // check if $post_data_array has been populated
-    if ( ! is_array( $post_data_array ) && ! empty( $post_data_array ) )
+    if ( ! is_array( $encoded_data_array ) && ! empty( $encoded_data_array ) )
     return;
     
     // collect payment details
-    $payment_id     = $post_data_array['custom'];
-    $purchase_key   = $post_data_array['item_number'];
-    $paypal_amount  = $post_data_array['mc_gross'];
-    $payment_status = $post_data_array['payment_status'];
-    $currency_code  = strtolower( $post_data_array['mc_currency'] );
+    $payment_id     = $encoded_data_array['custom'];
+    $purchase_key   = $encoded_data_array['item_number'];
+    $paypal_amount  = $encoded_data_array['mc_gross'];
+    $payment_status = $encoded_data_array['payment_status'];
+    $currency_code  = strtolower( $encoded_data_array['mc_currency'] );
     
     // retrieve the meta info for this payment
     $payment_meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
@@ -290,7 +290,7 @@ function edd_process_paypal_ipn() {
         return;
     }
          
-    if ( isset( $post_data_array['txn_type'] ) && $post_data_array['txn_type'] == 'web_accept' ) {
+    if ( isset( $encoded_data_array['txn_type'] ) && $encoded_data_array['txn_type'] == 'web_accept' ) {
         
         $status = strtolower( $payment_status );
                 
