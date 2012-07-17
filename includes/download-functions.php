@@ -525,6 +525,9 @@ function edd_verify_download_link($download_id, $key, $email, $expire, $file_key
 			$payment_meta = get_post_meta($payment->ID, '_edd_payment_meta', true);
 			$downloads = maybe_unserialize($payment_meta['downloads']);
 			$cart_details = unserialize( $payment_meta['cart_details'] );
+			if( $payment->post_status != 'publish' && $payment->post_status != 'complete' )
+				return false;
+
 			if($downloads) {
 				foreach($downloads as $key => $download) {
 					
