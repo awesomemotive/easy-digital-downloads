@@ -110,7 +110,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
          );
 
         // build query
-        $paypal_redirect .= http_build_query( $paypal_args );
+        $paypal_redirect .= http_build_query( apply_filters('edd_paypal_redirect_args', $paypal_args, $purchase_data ) );
         
         // get rid of cart contents
         edd_empty_cart();
