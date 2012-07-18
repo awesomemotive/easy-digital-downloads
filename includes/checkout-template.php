@@ -94,13 +94,17 @@ function edd_checkout_form() {
 			
 				<?php } else { ?>
 		
-					<?php					
-						foreach($gateways as $gateway_id => $gateway) :
-							$enabled_gateway = $gateway_id;
-							if(edd_get_cart_amount() <= 0) {
-								$enabled_gateway = 'manual'; // this allows a free download by filling in the info
-							}
-						endforeach;
+					<?php
+						if(count($gateways) > 1 && !isset($_GET['payment-mode'])) {					
+							foreach($gateways as $gateway_id => $gateway) :
+								$enabled_gateway = $gateway_id;
+								if(edd_get_cart_amount() <= 0) {
+									$enabled_gateway = 'manual'; // this allows a free download by filling in the info
+								}
+							endforeach;
+						} else if(edd_get_cart_amount() <= 0) {
+							$enabled_gateway = 'manual';
+						}
 						$payment_mode = isset($_GET['payment-mode']) ? urldecode($_GET['payment-mode']) : $enabled_gateway;	
 					?>
 					
