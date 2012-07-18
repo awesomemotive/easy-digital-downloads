@@ -30,7 +30,8 @@ function edd_export_payment_history() {
 			$i = 0;
 			echo '"' . __('ID', 'edd') .  '",';
 			echo '"' . __('Email', 'edd') .  '",';
-			echo '"' . __('Name', 'edd') .  '",';
+			echo '"' . __('First Name', 'edd') .  '",';
+			echo '"' . __('Last Name', 'edd') .  '",';
 			echo '"' . __('Products', 'edd') .  '",';
 			echo '"' . __('Discounts,', 'edd') .  '",';
 			echo '"' . __('Amount paid', 'edd') .  '",';
@@ -47,7 +48,8 @@ function edd_export_payment_history() {
 				
 				echo '"' . $payment->ID . '",';
 				echo '"' . $payment_meta['email'] . '",';
-				echo '"' . $user_info['first_name'] . ' ' . $user_info['last_name']. '",';
+				echo '"' . $user_info['first_name'] . '",';
+				echo '"' . $user_info['last_name']. '",';
 				$downloads = isset($payment_meta['cart_details']) ? maybe_unserialize($payment_meta['cart_details']) : false;
 				if (empty($downloads ) || !$downloads ) {
 					$downloads = maybe_unserialize($payment_meta['downloads']);
