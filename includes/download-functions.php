@@ -490,8 +490,17 @@ function edd_read_file( $file ) {
 		$file = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $file);	
 	
 	}
+
+	set_time_limit(0);
+	$file = @fopen($file,"rb");
+	while(!feof($file))
+	{
+		print(@fread($file, 1024*8));
+		ob_flush();
+		flush();
+	}
 	
-	readfile($file);	
+	//readfile($file);	
 }
 
 
