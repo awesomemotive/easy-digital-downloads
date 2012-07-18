@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable Tag: 1.1.2
+Stable Tag: 1.1.3
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -42,7 +42,7 @@ Easy Digital Downloads has an [integration pack for the awesome Affiliates Pro p
 
 **Build Up Your Email Subscribers**
 
-With add-ons for both [Mail Chimp](http://easydigitaldownloads.com/extension/mail-chimp/) and [Campaign Monitor](http://easydigitaldownloads.com/extension/campaign-monitor/), Easy Digital Downloads can easily grow your email subscription lists while making you money at the same time.
+With add-ons for [Mail Chimp](http://easydigitaldownloads.com/extension/mail-chimp/), [Campaign Monitor](http://easydigitaldownloads.com/extension/campaign-monitor/), and [AWeber](http://easydigitaldownloads.com/extension/aweber/), Easy Digital Downloads can easily grow your email subscription lists while making you money at the same time.
 
 **Languages**
 
@@ -125,6 +125,19 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.1.3 =
+
+* Fixed a bug with free downloads that happened when no payment gateway was selected
+* Separated First and Last name fields in the payment's CSV export
+* Fixed a bug that prevented large files from being able to be downloaded
+* Improved the countries drop down field in the default CC form for payment gateways
+* Fixed an error that showed up when purchasing a download without any downloadable files
+* Added a new filter to the PayPal redirect arguments array
+* Fixed a bug with the PayPal Standard gateway that was present when allow_url_fopen wasn't enabled
+* Removed the edd_payment post type from the WP Nav Menus
+* Added a check to the download processing function to ensure the purchase has been marked as complete
+* Fixed a padding bug on the checkout form
 
 = 1.1.2 =
 
@@ -414,6 +427,19 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.1.3 =
+
+* Fixed a bug with free downloads that happened when no payment gateway was selected
+* Separated First and Last name fields in the payment's CSV export
+* Fixed a bug that prevented large files from being able to be downloaded
+* Improved the countries drop down field in the default CC form for payment gateways
+* Fixed an error that showed up when purchasing a download without any downloadable files
+* Added a new filter to the PayPal redirect arguments array
+* Fixed a bug with the PayPal Standard gateway that was present when allow_url_fopen wasn't enabled
+* Removed the edd_payment post type from the WP Nav Menus
+* Added a check to the download processing function to ensure the purchase has been marked as complete
+* Fixed a padding bug on the checkout form
 
 = 1.1.2 =
 
