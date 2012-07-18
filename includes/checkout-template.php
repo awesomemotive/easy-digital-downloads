@@ -95,7 +95,7 @@ function edd_checkout_form() {
 				<?php } else { ?>
 		
 					<?php
-						if(count($gateways) > 1 && !isset($_GET['payment-mode'])) {					
+						if(count($gateways) >= 1 && !isset($_GET['payment-mode'])) {					
 							foreach($gateways as $gateway_id => $gateway) :
 								$enabled_gateway = $gateway_id;
 								if(edd_get_cart_amount() <= 0) {
