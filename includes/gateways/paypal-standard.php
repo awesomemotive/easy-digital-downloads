@@ -300,7 +300,7 @@ function edd_process_paypal_ipn() {
         
     }
 }
-add_action( 'init', 'edd_process_paypal_ipn' );
+add_action( 'edd_verify_paypal_ipn', 'edd_process_paypal_ipn' );
 
 
 /**
