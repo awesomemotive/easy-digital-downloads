@@ -26,10 +26,12 @@ function edd_reports_page() {
 	?>
 	<div class="wrap">
 		<h2><?php _e('Reports', 'edd'); ?></h2>
-		<?php 
+		<?php
+			do_action('edd_reports_page_top'); 
 			edd_show_download_sales_graph(); 
 			edd_show_download_earnings_graph(); 
 			edd_show_monthly_eanings_graph();
+			do_action('edd_reports_page_bottom');
 		?>
 		<p><?php _e('Transactions created while in test mode are not included on this page.', 'edd'); ?></p>
 	</div><!--end wrap-->
