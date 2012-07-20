@@ -368,6 +368,7 @@ function edd_get_discount_id_by_code($code) {
 */
 
 function edd_get_discounted_amount($code, $base_price) {
+
 	$discount_id = edd_get_discount_id_by_code($code);
 	$discounts = edd_get_discounts();
 	$type = $discounts[$discount_id]['type'];
