@@ -78,7 +78,9 @@ function edd_process_download() {
                 default: $ctype = "application/force-download";
             endswitch;
 			
-			set_time_limit(0);
+			if( !ini_get('safe_mode') ){ 
+				set_time_limit(0);
+			}
 			set_magic_quotes_runtime(0);
 				
 			header("Pragma: no-cache");
