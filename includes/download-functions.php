@@ -88,7 +88,11 @@ function edd_get_download_final_price($download_id, $user_purchase_info, $amount
 
 function edd_get_price_option_name($download_id, $price_id) {
 	$prices = get_post_meta($download_id, 'edd_variable_prices', true);
-	$price_name = $prices[$price_id]['name'];
+	if( $prices && is_array( $prices ) ) {
+		$price_name = $prices[$price_id]['name'];
+	} else {
+		$price_name = '';
+	}
 	return $price_name;
 }
 
