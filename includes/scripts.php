@@ -24,7 +24,9 @@ function edd_load_scripts() {
 
 	global $edd_options, $post;
 
-	wp_enqueue_script('jquery');
+	if ( ! jQuery ) {
+		wp_enqueue_script('jquery');
+	}
 	
 	// Get position in cart of current download
 	if(isset($post->ID)) {
