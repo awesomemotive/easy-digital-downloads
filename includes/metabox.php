@@ -407,11 +407,7 @@ function edd_render_stats_meta_box() {
 		echo '<tr>';
 			echo '<th style="width:20%">' . __('Earnings:', 'edd') . '</th>';
 			echo '<td class="edd_download_stats">';
-				if(!isset($edd_options['currency_position']) || $edd_options['currency_position'] == 'before') {
-					echo edd_currency_filter('') . $earnings;
-				} else {
-					echo $earnings . edd_currency_filter('');
-				}
+				echo edd_currency_filter($earnings);
 			echo '</td>';
 		echo '</tr>';
 		do_action('edd_stats_meta_box');
