@@ -37,7 +37,7 @@ function edd_email_purchase_receipt($payment_id, $admin_notice = true) {
 	$headers = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
 	$headers .= "Reply-To: ". $from_email . "\r\n";
 	$headers .= "MIME-Version: 1.0\r\n";
-	$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";	
+	$headers .= "Content-Type: text/html; charset=utf-8\r\n";	
 		
 	wp_mail( $payment_data['email'], $edd_options['purchase_subject'], $message, $headers);
 	
