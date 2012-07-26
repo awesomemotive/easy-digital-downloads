@@ -377,6 +377,10 @@ function edd_get_discounted_amount($code, $base_price) {
 	if($type == 'flat') { 
 	    // set amount
 		$discounted_price = $base_price - $rate;
+		if( $discounted_price < 0 ) {
+			$discounted_price = 0;
+		}
+
 	} else { 
 	    // percentage discount
 		$discounted_price = $base_price - ( $base_price * ( $rate / 100 ) );
