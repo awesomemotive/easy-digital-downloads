@@ -182,12 +182,12 @@ jQuery(document).ready(function ($) {
 
         var $edd_inline_data = $('#post-' + post_id);
 
-        var regprice   = $edd_inline_data.find('.downloadprice-' + post_id).val();
+        var regprice = $edd_inline_data.find('.downloadprice-' + post_id).val();
 
         //Trying to see if hidden input field in price column exists, if not...hide the #edd-download-data div
         //if ( $('.downloadprice-' + post_id ).length ) { alert( regprice ); $('#edd-download-data').remove(); }
 
-        $('input[name="_regprice"]', '#edd-download-data').val(regprice);
+        $('input[name="_edd_regprice"]', '#edd-download-data').val(regprice);
     });
 	
 });

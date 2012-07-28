@@ -205,12 +205,13 @@ function edd_add_download_filters() {
 }
 add_action( 'restrict_manage_posts', 'edd_add_download_filters', 100 );
 
+
 /**
  * Adds price field to Quick Edit options
  *
- *@access		public
- *@since 		1.1.3.2
- *@return		void
+ * @access		public
+ * @since 		1.1.3.4
+ * @return		void
 */
 
 function edd_price_field_quick_edit( $column_name, $post_type ) {
@@ -219,12 +220,12 @@ function edd_price_field_quick_edit( $column_name, $post_type ) {
 	<fieldset class="inline-edit-col-left">
 		<div id="edd-download-data" class="inline-edit-col">
 
-			<h4><?php _e( 'Download Data', 'edd' ); ?></h4>
+			<h4><?php echo sprintf( __( '%s Data', 'edd' ), edd_get_label_singular() ); ?></h4>
 
 			<label>
 				<span class="title"><?php _e( 'Price', 'edd' ); ?></span>
 				<span class="input-text-wrap">
-					<input type="text" name="_regprice" class="text regprice" value="" placeholder="<?php _e( 'Price', 'edd' ); ?>" />
+					<input type="text" name="_edd_regprice" class="text regprice" value="" placeholder="<?php _e( 'Price', 'edd' ); ?>" />
 				</span>
 			</label>
 			<br class="clear" />
@@ -233,25 +234,24 @@ function edd_price_field_quick_edit( $column_name, $post_type ) {
 	</fieldset>
 	<?php
 }
-
 add_action( 'quick_edit_custom_box', 'edd_price_field_quick_edit', 10, 2 );
+
 
 /**
  * Updates price when saving post
  *
- *@access		private
- *@since		1.1.3.2
- *@return		void
+ * @access		private
+ * @since		1.1.3.4
+ * @return		void
  */
 
-function edd_price_update_save( $post_id ) {
+function edd_price_save_quick_edit( $post_id ) {
 	if ( 'download' !== $_POST['post_type'] ) return;
 	if ( !current_user_can( 'edit_post', $post_id ) ) return $post_id;
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return $post_id;
 
-	if ( isset( $_REQUEST['_regprice'] ) ) {
-		update_post_meta( $post_id, 'edd_price', esc_html(stripslashes($_REQUEST['_regprice'] )));
+	if ( isset( $_REQUEST['_edd_regprice'] ) ) {
+		update_post_meta( $post_id, 'edd_price', esc_html(stripslashes($_REQUEST['_edd_regprice'] )));
 	}
 }
-
-add_action( 'save_post', 'edd_price_update_save' );
+add_action( 'save_post', 'edd_price_save_quick_edit' );
