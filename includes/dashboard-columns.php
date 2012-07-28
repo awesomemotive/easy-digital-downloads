@@ -62,6 +62,9 @@ function edd_render_download_columns($column_name, $post_id) {
 				break;
 			case 'price':
 				echo edd_price($post_id, false);
+				if ( !edd_has_variable_prices($post_id) ) {
+					echo '<input type="hidden" class="downloadprice-' . $post_id . '" value="' . edd_get_download_price($post_id) . '" />';
+				}
 				break;
 			case 'sales':
 				echo $sales;
@@ -201,3 +204,54 @@ function edd_add_download_filters() {
 
 }
 add_action( 'restrict_manage_posts', 'edd_add_download_filters', 100 );
+
+/**
+ * Adds price field to Quick Edit options
+ *
+ *@access		public
+ *@since 		1.1.3.2
+ *@return		void
+*/
+
+function edd_price_field_quick_edit( $column_name, $post_type ) {
+	if ( $column_name != 'price' || $post_type != 'download' ) return;
+	?>
+	<fieldset class="inline-edit-col-left">
+		<div id="edd-download-data" class="inline-edit-col">
+
+			<h4><?php _e( 'Download Data', 'edd' ); ?></h4>
+
+			<label>
+				<span class="title"><?php _e( 'Price', 'edd' ); ?></span>
+				<span class="input-text-wrap">
+					<input type="text" name="_regprice" class="text regprice" value="" placeholder="<?php _e( 'Price', 'edd' ); ?>" />
+				</span>
+			</label>
+			<br class="clear" />
+
+		</div>
+	</fieldset>
+	<?php
+}
+
+add_action( 'quick_edit_custom_box', 'edd_price_field_quick_edit', 10, 2 );
+
+/**
+ * Updates price when saving post
+ *
+ *@access		private
+ *@since		1.1.3.2
+ *@return		void
+ */
+
+function edd_price_update_save( $post_id ) {
+	if ( 'download' !== $_POST['post_type'] ) return;
+	if ( !current_user_can( 'edit_post', $post_id ) ) return $post_id;
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return $post_id;
+
+	if ( isset( $_REQUEST['_regprice'] ) ) {
+		update_post_meta( $post_id, 'edd_price', esc_html(stripslashes($_REQUEST['_regprice'] )));
+	}
+}
+
+add_action( 'save_post', 'edd_price_update_save' );
