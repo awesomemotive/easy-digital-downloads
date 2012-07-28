@@ -172,5 +172,22 @@ jQuery(document).ready(function ($) {
 		}		
 		return false;
 	});	
+
+    $('#the-list').on('click', '.editinline', function() {
+        inlineEditPost.revert();
+
+        var post_id = $(this).closest('tr').attr('id');
+
+        post_id = post_id.replace("post-", "");
+
+        var $edd_inline_data = $('#post-' + post_id);
+
+        var regprice   = $edd_inline_data.find('.downloadprice-' + post_id).val();
+
+        //Trying to see if hidden input field in price column exists, if not...hide the #edd-download-data div
+        //if ( $('.downloadprice-' + post_id ).length ) { alert( regprice ); $('#edd-download-data').remove(); }
+
+        $('input[name="_regprice"]', '#edd-download-data').val(regprice);
+    });
 	
 });
