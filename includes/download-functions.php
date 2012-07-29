@@ -454,7 +454,7 @@ function edd_get_download_file_url($key, $email, $filekey, $download) {
 
 	$params = array(
 		'download_key' => $key,
-		'email' => urlencode($email),
+		'email' => rawurlencode($email),
 		'file' => $filekey,
 		'download' => $download, 
 		'expire' => urlencode(base64_encode(strtotime('+' . $hours . 'hours', time())))
