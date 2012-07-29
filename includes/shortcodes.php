@@ -440,3 +440,30 @@ function edd_downloads_query($atts, $content = null) {
 	return $display;
 }
 add_shortcode('downloads', 'edd_downloads_query');
+
+
+/**
+ * Price Shortcode
+ *
+ * Shows the price of a download.
+ *
+ * @access      private
+ * @since       1.1.3.3
+ * @return      string
+*/
+
+function edd_download_price_shortcode($atts, $content = null) {
+	
+	extract( shortcode_atts( array(
+			'id' => NULL,
+		), $atts )
+	);
+
+
+	if( is_null( $id ) )
+		$id = get_the_ID();
+
+	return edd_price( $id, false );
+
+}
+add_shortcode('edd_price', 'edd_download_price_shortcode');
