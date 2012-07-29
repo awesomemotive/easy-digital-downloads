@@ -11,7 +11,7 @@
 */
 
 // Load WordPress and FPDF
-include_once('../../../wp-load.php');
+include_once('../../../../wp-load.php');
 include_once(EDD_PLUGIN_DIR . 'includes/fpdf/fpdf.php');
 include_once(EDD_PLUGIN_DIR . 'includes/fpdf/mc_table.php');
 
