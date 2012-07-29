@@ -18,24 +18,6 @@ if ( isset ( $_GET['title'] ) && isset ( $_GET['report'] ) ) {
 	
 	if( $_GET['report'] == 'sales_and_earnings' ) {
 		
-		function edd_get_sales_by_date( $month_num, $year ) {
-			$sales = get_posts(
-				array(
-					'post_type' => 'download', 
-					'posts_per_page' => -1, 
-					'year' => $year, 
-					'monthnum' => $month_num
-				)
-			);
-			$total = 0;
-			if( $sales ) {
-				foreach( $sales as $sale ) {
-					$sale_meta = get_post_meta( $sale->ID, '_edd_download_sales', true );
-				}
-			}
-			return $sale_meta;
-		}
-		
 		$chart = new GoogleChart( 'lc', 900, 330 );
 		
 		$i = 1;
