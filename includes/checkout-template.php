@@ -360,7 +360,7 @@ function edd_get_register_fields() {
 			<?php do_action('edd_register_account_fields_before'); ?>
 			<p>
 				<input name="edd_user_login" id="edd_user_login" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" type="text" placeholder="<?php _e('Username', 'edd'); ?>" title="<?php _e('Username', 'edd'); ?>"/>
-				<label for="edd_user_Login"><?php _e('Username', 'edd'); ?></label>
+				<label for="edd_user_login"><?php _e('Username', 'edd'); ?></label>
 			</p>
 			<p>
 				<input name="edd_user_pass" id="edd_user_pass" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" placeholder="<?php _e('Password', 'edd'); ?>" type="password"/>
