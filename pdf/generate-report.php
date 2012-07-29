@@ -32,6 +32,7 @@ if (current_user_can("manage_options")) {
 
 	        $pdf->SetTitle('Sales reports for the current year for all products');
 	        $pdf->SetAuthor('Easy Digital Downloads');
+	        $pdf->SetCreator('Easy Digital Downloads');
 
 	        $pdf->Image(EDD_PLUGIN_URL . 'includes/images/edd-logo.png', 205, 10);
 
