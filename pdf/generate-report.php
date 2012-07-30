@@ -18,6 +18,7 @@ include_once(EDD_PLUGIN_DIR . 'includes/fpdf/mc_table.php');
 ob_end_clean();
 
 if (current_user_can("manage_options")) {
+
 	if ( isset( $_GET['report'] ) ) {
 
 		if ( $_GET['report'] == 'sales_and_earnings' ) {
@@ -83,14 +84,10 @@ if (current_user_can("manage_options")) {
 						$price = html_entity_decode( edd_currency_filter( edd_get_download_price( $post->ID ) ) );
 				}
 				
-				$categories = strip_tags (get_the_term_list( $post->ID, 'download_category', '', ', ', '' ) );
-				
+				$categories = strip_tags( get_the_term_list( $post->ID, 'download_category', '', ', ', '' ) );
 				$tags = strip_tags( get_the_term_list( $post->ID, 'download_tag', '', ', ', '' ) );
-				
 				$sales = edd_get_download_sales_stats( $post->ID );
-				
 				$link = get_permalink( $post->ID );
-				
 				$earnings = html_entity_decode ( edd_currency_filter( edd_get_download_earnings_stats( $post->ID ) ) );
 				
 				$pdf->Row( array( $title, $price, $categories, $tags, $sales, $earnings ) );
@@ -104,15 +101,7 @@ if (current_user_can("manage_options")) {
 			
 			$pdf->SetX( 25 );
 			$pdf->Image( EDD_PLUGIN_URL . 'includes/pdf-reports.php?title=all+Products&report=sales_and_earnings&file.png' );
-			$pdf->Ln( 7 ); 
-			
-			while ( $query->have_posts() ) : $query->the_post();
-				$earnings = edd_get_download_earnings_stats( $post->ID ) . ",";
-				$download_name = str_replace( ' ', '+', get_the_title() );
-				$pdf->SetX( 25 );
-				$pdf->Image( EDD_PLUGIN_URL . 'includes/pdf-reports.php?id='. $post->ID .'&title='. $download_name .'&report=sales_and_earnings&file=.png' );
-				$pdf->Ln( 7 );
-			endwhile;
+			$pdf->Ln( 7 );
 
 			$pdf->Output();
 		}
@@ -120,6 +109,9 @@ if (current_user_can("manage_options")) {
 	} else {
 		
 	}
+
 } else {
+
 	header( 'Location: ' . wp_login_url( EDD_PLUGIN_URL . 'pdf/generate-report.php?report=' . $_GET['report'] ) );
+
 }
