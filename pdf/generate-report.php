@@ -30,7 +30,7 @@ if (current_user_can("manage_options")) {
 			$pdf = new PDF_MC_Table();
 			$pdf->AddPage('L', 'A4');
 
-	        $pdf->SetTitle('Sales reports for the current year for all products');
+	        $pdf->SetTitle('Sales and earnings reports for the current year for all products');
 	        $pdf->SetAuthor('Easy Digital Downloads');
 	        $pdf->SetCreator('Easy Digital Downloads');
 
@@ -41,7 +41,7 @@ if (current_user_can("manage_options")) {
 
 	        $pdf->SetFont( 'Helvetica', '', 16 );
 	        $pdf->SetTextColor( 50, 50, 50 );
-	        $pdf->Cell( 0, 3,'Sales reports for the current year for all products', 0, 2, 'L', false );
+	        $pdf->Cell( 0, 3,'Sales and earnings reports for the current year for all products', 0, 2, 'L', false );
 
 	        $pdf->SetFont( 'Helvetica', '', 13 );
 	        $pdf->Ln();
