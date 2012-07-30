@@ -24,7 +24,7 @@ function edd_process_download() {
 	if(isset($_GET['download']) && isset($_GET['email']) && isset($_GET['file'])) {
 		$download = urldecode($_GET['download']);
 		$key = urldecode($_GET['download_key']);
-		$email = urldecode($_GET['email']);
+		$email = rawurldecode($_GET['email']);
 		$file_key = urldecode($_GET['file']);
 		$expire = urldecode(base64_decode($_GET['expire']));
 				
