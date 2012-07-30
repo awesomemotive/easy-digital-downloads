@@ -189,5 +189,15 @@ jQuery(document).ready(function ($) {
 
         $('input[name="_edd_regprice"]', '#edd-download-data').val(regprice);
     });
+
+    // show the email template previews
+    if( $('#email-preview-wrap').length ) {
+        $('#open-email-preview').colorbox({
+            inline: true,
+            href: '#email-preview',
+            width: '80%',
+            height: 'auto'
+        });
+    }
 	
 });
