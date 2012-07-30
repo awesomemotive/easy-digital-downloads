@@ -59,7 +59,6 @@ function edd_generate_pdf( $data ) {
 		$pdf->Cell( 30, 6, 'Earnings', 1, 1, 'L', true );
 		
 		$pdf->SetWidths( array( 75, 30, 50, 50, 45, 30 ) );
-		
 		$downloads = get_posts( array( 'post_type' => 'download', 'year' => $year ) );
 		if( $downloads ) :
 			foreach( $downloads as $download ) :
