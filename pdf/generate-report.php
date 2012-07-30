@@ -27,7 +27,7 @@ if (current_user_can("manage_options")) {
 			
 			$daterange = '1st January ' . date('Y') . ' to ' . date('jS F Y');
 			
-			$pdf = new PDF_MC_Table();
+			$pdf = new edd_pdf();
 			$pdf->AddPage('L', 'A4');
 			
 			$pdf->SetTitle('Sales and earnings reports for the current year for all products');
@@ -123,5 +123,3 @@ if (current_user_can("manage_options")) {
 } else {
 	header( 'Location: ' . wp_login_url( EDD_PLUGIN_URL . 'pdf/generate-report.php?report=' . $_GET['report'] ) );
 }
-
-?>
