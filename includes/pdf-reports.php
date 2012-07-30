@@ -18,8 +18,8 @@ include_once(EDD_PLUGIN_DIR . 'includes/googlechartlib/markers/GoogleChartTextMa
 
 if ( isset ( $_GET['title'] ) && isset ( $_GET['report'] ) ) {
 	
-	if( $_GET['report'] == 'sales_and_earnings' ) {
-		
+	if( $_GET['report'] == 'sales_and_earnings' && $_GET['title'] == 'all Products' ) {
+
 		$chart = new GoogleChart( 'lc', 900, 330 );
 		
 		$i = 1;
@@ -123,6 +123,11 @@ if ( isset ( $_GET['title'] ) && isset ( $_GET['report'] ) ) {
 		header('Content-Type: image/png');
 		echo $chart;
 
+	} elseif ( $_GET['report'] == 'sales_and_earnings' && $_GET['title'] !== 'all Products' ) {
+		$chart = new GoogleChart( 'lc', 900, 330 );
+
+		header('Content-Type: image/png');
+		echo $chart;
 	}
 
 }
