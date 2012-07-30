@@ -10,9 +10,9 @@
  * @since       1.1.3.2
 */
 include_once('../../../../wp-load.php');
-include_once('googlechartlib/GoogleChart.php');
-include_once('googlechartlib/markers/GoogleChartShapeMarker.php');
-include_once('googlechartlib/markers/GoogleChartTextMarker.php');
+include_once(EDD_PLUGIN_DIR . 'includes/googlechartlib/GoogleChart.php');
+include_once(EDD_PLUGIN_DIR . 'includes/googlechartlib/markers/GoogleChartShapeMarker.php');
+include_once(EDD_PLUGIN_DIR . 'includes/googlechartlib/markers/GoogleChartTextMarker.php');
 
 if ( isset ( $_GET['title'] ) && isset ( $_GET['report'] ) ) {
 	
