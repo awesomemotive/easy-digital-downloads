@@ -121,7 +121,7 @@ if (current_user_can("manage_options")) {
 		
 	}
 } else {
-	header( 'Location: ' . wp_login_url( EDD_PLUGIN_URL . 'generate-report.php?report=' . $_GET['report'] ) );
+	header( 'Location: ' . wp_login_url( EDD_PLUGIN_URL . 'pdf/generate-report.php?report=' . $_GET['report'] ) );
 }
 
 ?>
