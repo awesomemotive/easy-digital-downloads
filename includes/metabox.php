@@ -119,9 +119,9 @@ function edd_render_price_field($post_id) {
 				
 				echo '<div id="edd_regular_price_field" class="edd_pricing_fields" ' . $price_display . '>';
 					if(!isset($edd_options['currency_position']) || $edd_options['currency_position'] == 'before') {
-						echo edd_currency_filter('') . '<input type="text" name="edd_price" id="edd_price" value="', $price ? $price : '', '" size="30" style="width:50px;" placeholder="9.99"/>';
+						echo edd_currency_filter('') . '<input type="text" name="edd_price" id="edd_price" value="', isset($price) ? $price : '', '" size="30" style="width:50px;" placeholder="9.99"/>';
 					} else {
-						echo '<input type="text" name="edd_price" id="edd_price" value="', $price ? $price : '', '" size="30" style="width:50px;" placeholder="9.99"/>' . edd_currency_filter('');
+						echo '<input type="text" name="edd_price" id="edd_price" value="', isset($price) ? $price : '', '" size="30" style="width:50px;" placeholder="9.99"/>' . edd_currency_filter('');
 					}
 					echo __('Enter the download price. Do not include a currency symbol', 'edd');						
 				echo '</div>';
