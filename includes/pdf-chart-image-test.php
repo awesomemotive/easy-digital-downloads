@@ -1,17 +1,5 @@
 <?php
-/**
- * Charts Functions for PDF Reports
- *
- * @package     Easy Digital Downloads
- * @subpackage  PDF Report Generation
- * @copyright   Copyright (c) 2012, Pippin Williamson
- * @author      Sunny Ratilal
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.1.3.2
-*/
-
-
-
+include_once('../../../../wp-load.php');
 include_once('libraries/googlechartlib/GoogleChart.php');
 include_once('libraries/googlechartlib/markers/GoogleChartShapeMarker.php');
 include_once('libraries/googlechartlib/markers/GoogleChartTextMarker.php');
@@ -116,4 +104,4 @@ $value_marker = new GoogleChartTextMarker( GoogleChartTextMarker::VALUE );
 $value_marker->setData( $data );
 $chart->addMarker( $value_marker );
 
-echo $chart->getValidationURL();
+echo $chart->toHTML();
