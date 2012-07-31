@@ -29,7 +29,7 @@ function edd_email_purchase_receipt($payment_id, $admin_notice = true) {
 
 		$message .= edd_get_email_body_content( $payment_id, $payment_data );
 		
-	$message .= edd_get_email_body_header();	
+	$message .= edd_get_email_body_footer();	
 	
 	$from_name = isset($edd_options['from_name']) ? $edd_options['from_name'] : get_bloginfo('name');
 	$from_email = isset($edd_options['from_email']) ? $edd_options['from_email'] : get_option('admin_email');
