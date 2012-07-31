@@ -184,13 +184,11 @@ jQuery(document).ready(function ($) {
 
         var regprice = $edd_inline_data.find('.column-price .downloadprice-' + post_id).val();
 
-        var var_product_input_message = 'Sorry, not available for variable priced products.';
-
         // If variable priced product disable editing, otherwise allow price changes
         if ( regprice != $('#post-' + post_id + '.column-price .downloadprice-' + post_id).val() ) {
             $('.regprice', '#edd-download-data').val(regprice).attr('disabled', false);
         } else {
-            $('.regprice', '#edd-download-data').val(var_product_input_message).attr('disabled', 'disabled');
+            $('.regprice', '#edd-download-data').val( edd_vars.quick_edit_warning ).attr('disabled', 'disabled');
         }
     });
 

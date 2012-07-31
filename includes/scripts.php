@@ -117,6 +117,7 @@ function edd_load_admin_scripts($hook) {
         'post_id' 			=> isset($post->ID) ? $post->ID : null,
         'add_new_download' 	=> __('Add New Download', 'edd'), // thickbox title
         'use_this_file' 	=> __('Use This File','edd'), // "use this file" button
+        'quick_edit_warning'=> __('Sorry, not available for variable priced products.', 'edd'),
         'delete_payment' 	=> __('Are you sure you wish to delete this payment?', 'edd')
     ));
 	wp_enqueue_style('thickbox');

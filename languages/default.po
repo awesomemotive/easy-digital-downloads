@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-31 10:12-0600\n"
-"PO-Revision-Date: 2012-07-31 10:12-0600\n"
+"POT-Creation-Date: 2012-07-31 10:22-0600\n"
+"PO-Revision-Date: 2012-07-31 10:22-0600\n"
 "Last-Translator: Pippin Williamson <pippin@pippinsplugins.com>\n"
 "Language-Team: Easy Digital Downloads <pippin@pippinsplugins.com>\n"
 "Language: \n"
@@ -572,7 +572,6 @@ msgstr ""
 
 #: ../includes/dashboard-columns.php:29
 #: ../includes/dashboard-columns.php:226
-#: ../includes/dashboard-columns.php:228
 msgid "Price"
 msgstr ""
 
@@ -749,6 +748,10 @@ msgid "Use This File"
 msgstr ""
 
 #: ../includes/scripts.php:120
+msgid "Sorry, not available for variable priced products."
+msgstr ""
+
+#: ../includes/scripts.php:121
 msgid "Are you sure you wish to delete this payment?"
 msgstr ""
 
