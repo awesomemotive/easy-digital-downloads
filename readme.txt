@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable Tag: 1.1.3.2
+Stable Tag: 1.1.4.0
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -125,6 +125,30 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.1.4.0 =
+
+* Fixed a bug with the purchase receipt templates
+* Updated default language files with a lot of new strings
+* Added new edd_cart_contents filter
+* Replaced Thickbox with Colorbox for email template previews
+* Fixed a bug with + signs in email addresses
+* Fixed a bug with prices not saving when set to 0
+* Added a new PDF Report generation feature for Sales and Earnings, thanks to SunnyRatilal
+* Added a new [edd_price] short code
+* Fixed a miss spelled FOR attribute on a checkout label
+* Added Quick Edit ability to the Download Price option
+* Fixed a bug with the discount code field on the checkout page
+* Fixed an encoded bug with the purchase receipts
+* Updated the charset from ISO-8859-1 to utf-8 for the purchase receipts
+* Fixed a bug with the way the currency sign was displayed in the meta box price field
+* Fixed a bug where flat rate discounts could result in negative checkout values
+* Update the date in purchase receipts to reflect the date_format setting in WordPress
+* Added a check to existing jQuery libraries before enqueing
+* Added is_array() check to the price options name function to fix a potential error
+* Improved the formatting of country names
+* Added an php_ini check for safe mode
+* Fixed a missing currency sign in the email {price} template tag
 
 = 1.1.3.2 =
 
@@ -437,6 +461,30 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.1.4.0 =
+
+* Fixed a bug with the purchase receipt templates
+* Updated default language files with a lot of new strings
+* Added new edd_cart_contents filter
+* Replaced Thickbox with Colorbox for email template previews
+* Fixed a bug with + signs in email addresses
+* Fixed a bug with prices not saving when set to 0
+* Added a new PDF Report generation feature for Sales and Earnings, thanks to SunnyRatilal
+* Added a new [edd_price] short code
+* Fixed a miss spelled FOR attribute on a checkout label
+* Added Quick Edit ability to the Download Price option
+* Fixed a bug with the discount code field on the checkout page
+* Fixed an encoded bug with the purchase receipts
+* Updated the charset from ISO-8859-1 to utf-8 for the purchase receipts
+* Fixed a bug with the way the currency sign was displayed in the meta box price field
+* Fixed a bug where flat rate discounts could result in negative checkout values
+* Update the date in purchase receipts to reflect the date_format setting in WordPress
+* Added a check to existing jQuery libraries before enqueing
+* Added is_array() check to the price options name function to fix a potential error
+* Improved the formatting of country names
+* Added an php_ini check for safe mode
+* Fixed a missing currency sign in the email {price} template tag
 
 = 1.1.3.2 =
 
