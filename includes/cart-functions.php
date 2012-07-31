@@ -21,7 +21,7 @@
 */
 
 function edd_get_cart_contents() {
-	return isset($_SESSION['edd_cart']) ? $_SESSION['edd_cart'] : false;
+	return isset($_SESSION['edd_cart']) ? apply_filters( 'edd_cart_contents', $_SESSION['edd_cart'] ) : false;
 }
 
 
