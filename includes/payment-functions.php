@@ -315,7 +315,7 @@ function edd_get_earnings_by_date($month_num, $year) {
  * @access      public
  * @author      Sunny Ratilal
  * @since       1.1.4.0
- * @return      array
+ * @return      int
 */
 
 function edd_get_sales_by_date( $month_num, $year ) {
