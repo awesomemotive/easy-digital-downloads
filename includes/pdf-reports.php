@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @author      Sunny Ratilal
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.1.3.2
+ * @since       1.1.4.0
 */
 
 
@@ -17,7 +17,7 @@
  * Generates PDF report on sales and earnings for all downloads for the current year.
  *
  * @access      public
- * @since       1.1.3.2
+ * @since       1.1.4.0
  * @param 		string $data
  * @author 		Sunny Ratilal
 */

@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  FPDF
- * @since       1.1.3.2
+ * @since       1.1.4.0
 */
 
 class edd_pdf extends FPDF {
