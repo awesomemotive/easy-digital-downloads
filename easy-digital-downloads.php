@@ -28,7 +28,7 @@ along with Easy Digital Downloads. If not, see <http://www.gnu.org/licenses/>.
 |--------------------------------------------------------------------------
 */
 
-ini_set('display_errors', 'on');
+@ini_set('display_errors', 'on');
 
 /*
 |--------------------------------------------------------------------------
