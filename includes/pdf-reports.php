@@ -129,7 +129,7 @@ add_action('edd_generate_pdf', 'edd_generate_pdf');
  * Draws the sales and earnings chart for the PDF report.
  *
  * @access      public
- * @since       1.1.3.2
+ * @since       1.1.4.0
  * @author      Sunny Ratilal
  * @return      string
 */
