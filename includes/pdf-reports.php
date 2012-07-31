@@ -33,14 +33,14 @@ function edd_generate_pdf( $data ) {
 
 		ob_end_clean(); // Fixes a glitch in Internet Explorer
 
-		$daterange = '1st January ' . date('Y') . ' to ' . date('jS F Y');
+		$daterange = date('F jS', mktime(0,0,0,1,1, date('Y') ) ) . ' ' . __('to', 'edd') . ' ' . date('F jS Y');
 
 		$pdf = new edd_pdf();
 		$pdf->AddPage('L', 'A4');
 
-		$pdf->SetTitle('Sales and earnings reports for the current year for all products');
-		$pdf->SetAuthor('Easy Digital Downloads');
-		$pdf->SetCreator('Easy Digital Downloads');
+		$pdf->SetTitle( __('Sales and earnings reports for the current year for all products', 'edd') );
+		$pdf->SetAuthor( __('Easy Digital Downloads', 'edd') );
+		$pdf->SetCreator( __('Easy Digital Downloads', 'edd') );
 
 		$pdf->Image(EDD_PLUGIN_URL . 'includes/images/edd-logo.png', 205, 10);
 
@@ -49,25 +49,25 @@ function edd_generate_pdf( $data ) {
 
 		$pdf->SetFont( 'Helvetica', '', 16 );
 		$pdf->SetTextColor( 50, 50, 50 );
-		$pdf->Cell( 0, 3,'Sales and earnings reports for the current year for all products', 0, 2, 'L', false );
+		$pdf->Cell( 0, 3, __('Sales and earnings reports for the current year for all products', 'edd'), 0, 2, 'L', false );
 
 		$pdf->SetFont( 'Helvetica', '', 13 );
 		$pdf->Ln();
 		$pdf->SetTextColor( 150, 150, 150 );
-		$pdf->Cell( 0, 6, 'Date Range: ' . $daterange, 0, 2, 'L', false );
+		$pdf->Cell( 0, 6, __('Date Range: ', 'edd') . $daterange, 0, 2, 'L', false );
 		$pdf->Ln();
 		$pdf->SetTextColor( 50, 50, 50 );
 		$pdf->SetFont( 'Helvetica', '', 14 ); 
-		$pdf->Cell( 0, 10, 'Table View', 0, 2, 'L', false );
+		$pdf->Cell( 0, 10, __('Table View', 'edd'), 0, 2, 'L', false );
 		$pdf->SetFont( 'Helvetica', '', 12 );
 
 		$pdf->SetFillColor( 238, 238, 238 );
-		$pdf->Cell( 70, 6, 'Product Name', 1, 0, 'L', true );
-		$pdf->Cell( 30, 6, 'Price', 1, 0, 'L', true );
-		$pdf->Cell( 50, 6, 'Categories', 1, 0, 'L', true );
-		$pdf->Cell( 50, 6, 'Tags', 1, 0, 'L', true );
-		$pdf->Cell( 45, 6, 'Number of Sales', 1, 0, 'L', true );
-		$pdf->Cell( 35, 6, 'Earnings to Date', 1, 1, 'L', true );
+		$pdf->Cell( 70, 6, __('Product Name', 'edd'), 1, 0, 'L', true );
+		$pdf->Cell( 30, 6, __('Price', 'edd'), 1, 0, 'L', true );
+		$pdf->Cell( 50, 6, __('Categories', 'edd'), 1, 0, 'L', true );
+		$pdf->Cell( 50, 6, __('Tags', 'edd'), 1, 0, 'L', true );
+		$pdf->Cell( 45, 6, __('Number of Sales', 'edd'), 1, 0, 'L', true );
+		$pdf->Cell( 35, 6, __('Earnings to Date', 'edd'), 1, 1, 'L', true );
 
 		$pdf->SetWidths( array( 70, 30, 50, 50, 45, 35 ) );
 		$year = date('Y');
@@ -107,7 +107,7 @@ function edd_generate_pdf( $data ) {
 		$pdf->Ln();
 		$pdf->SetTextColor( 50, 50, 50 );
 		$pdf->SetFont( 'Helvetica', '', 14 );
-		$pdf->Cell( 0, 10, 'Graph View', 0, 2, 'L', false );
+		$pdf->Cell( 0, 10, __('Graph View', 'edd'), 0, 2, 'L', false );
 		$pdf->SetFont( 'Helvetica', '', 12 );
 
 		$image = html_entity_decode( urldecode( edd_draw_chart_image() ) );
@@ -179,7 +179,7 @@ function edd_draw_chart_image() {
 		$earnings_array[11]
 	) );
 
-	$data->setLegend( 'Earnings' );
+	$data->setLegend( __('Earnings', 'edd') );
 	$data->setColor( '1b58a3' );
 	$chart->addData( $data );
 
@@ -200,7 +200,7 @@ function edd_draw_chart_image() {
 	$data->setColor( 'ff6c1c' );
 	$chart->addData( $data );
 
-	$chart->setTitle( 'Sales and Earnings by Month for all Products', '336699', 18 );
+	$chart->setTitle( __('Sales and Earnings by Month for all Products', 'edd'), '336699', 18 );
 
 	$chart->setScale( 0, $max_earnings );
 
