@@ -182,12 +182,16 @@ jQuery(document).ready(function ($) {
 
         var $edd_inline_data = $('#post-' + post_id);
 
-        var regprice = $edd_inline_data.find('.downloadprice-' + post_id).val();
+        var regprice = $edd_inline_data.find('.column-price .downloadprice-' + post_id).val();
 
-        //Trying to see if hidden input field in price column exists, if not...hide the #edd-download-data div
-        //if ( $('.downloadprice-' + post_id ).length ) { alert( regprice ); $('#edd-download-data').remove(); }
+        var var_product_input_message = 'Sorry, not available for variable priced products.';
 
-        $('input[name="_edd_regprice"]', '#edd-download-data').val(regprice);
+        // If variable priced product disable editing, otherwise allow price changes
+        if ( regprice != $('#post-' + post_id + '.column-price .downloadprice-' + post_id).val() ) {
+            $('.regprice', '#edd-download-data').val(regprice).attr('disabled', false);
+        } else {
+            $('.regprice', '#edd-download-data').val(var_product_input_message).attr('disabled', 'disabled');
+        }
     });
 
     // show the email template previews

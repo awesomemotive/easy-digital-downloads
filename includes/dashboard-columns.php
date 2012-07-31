@@ -225,7 +225,7 @@ function edd_price_field_quick_edit( $column_name, $post_type ) {
 			<label>
 				<span class="title"><?php _e( 'Price', 'edd' ); ?></span>
 				<span class="input-text-wrap">
-					<input type="text" name="_edd_regprice" class="text regprice" value="" placeholder="<?php _e( 'Price', 'edd' ); ?>" />
+					<input type="text" name="_edd_regprice" class="text regprice" />
 				</span>
 			</label>
 			<br class="clear" />
