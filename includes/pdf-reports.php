@@ -17,14 +17,14 @@ function edd_generate_pdf( $data ) {
 	if( wp_verify_nonce( $nonce, 'edd_generate_pdf' ) ) {
 
 		include_once(EDD_PLUGIN_DIR . 'includes/libraries/fpdf/fpdf.php');
-		include_once(EDD_PLUGIN_DIR . 'includes/libraries/fpdf/mc_table.php');
+		include_once(EDD_PLUGIN_DIR . 'includes/libraries/fpdf/edd_pdf.php');
 
 		ob_end_clean();
-						
+
 		$year = date('Y');		
 		$daterange = '1st January ' . date('Y') . ' to ' . date('jS F Y');
 		
-		$pdf = new PDF_HTML();
+		$pdf = new edd_pdf();
 		$pdf->AddPage('L', 'A4');
 		
 		$pdf->SetTitle('Sales and earnings reports for the current year for all products');
@@ -56,7 +56,7 @@ function edd_generate_pdf( $data ) {
 		$pdf->Cell( 50, 6, 'Categories', 1, 0, 'L', true );
 		$pdf->Cell( 50, 6, 'Tags', 1, 0, 'L', true );
 		$pdf->Cell( 45, 6, 'Number of Sales', 1, 0, 'L', true );
-		$pdf->Cell( 35, 6, 'Earnings To Date', 1, 1, 'L', true );
+		$pdf->Cell( 35, 6, 'Earnings to Date', 1, 1, 'L', true );
 		
 		$pdf->SetWidths( array( 70, 30, 50, 50, 45, 35 ) );
 		$downloads = get_posts( array( 'post_type' => 'download', 'year' => $year ) );
