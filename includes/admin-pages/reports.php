@@ -32,8 +32,10 @@ function edd_reports_page() {
 			edd_show_download_earnings_graph(); 
 			edd_show_monthly_eanings_graph();
 			do_action('edd_reports_page_bottom');
+			$edd_generate_pdf_nonce = wp_create_nonce('edd_generate_pdf');
 		?>
-		<p><?php _e('Transactions created while in test mode are not included on this page.', 'edd'); ?></p>
+		<p><a class="button" href="<?php echo add_query_arg('edd-action', 'generate_pdf', add_query_arg('_wpnonce', $edd_generate_pdf_nonce)); ?>"><?php _e('Download Sales and Earnings PDF Report for all Products', 'edd'); ?></a></p>
+		<p><?php _e('Please Note: Transactions created while in test mode are not included on this page or in the PDF reports.', 'edd'); ?></p>
 	</div><!--end wrap-->
 	<?php
 }
