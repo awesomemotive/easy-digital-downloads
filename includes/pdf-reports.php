@@ -196,7 +196,7 @@ function edd_draw_chart_image() {
 	$chart->addMarker( $value_marker );
 
 	$data = new GoogleChartData( array( $sales_array[0],$sales_array[1], $sales_array[2],$sales_array[3], $sales_array[4],$sales_array[5],$sales_array[6],$sales_array[7],$sales_array[8],$sales_array[9],$sales_array[10],$sales_array[11] ) );
-	$data->setLegend( 'Sales' );
+	$data->setLegend( __('Sales', 'edd') );
 	$data->setColor( 'ff6c1c' );
 	$chart->addData( $data );
 
@@ -214,18 +214,18 @@ function edd_draw_chart_image() {
 	$x_axis = new GoogleChartAxis( 'x' );
 	$x_axis->setTickMarks( 5 );
 	$x_axis->setLabels( array(
-		'Jan', 
-		'Feb', 
-		'Mar', 
-		'Apr', 
-		'May', 
-		'June', 
-		'July', 
-		'Aug', 
-		'Sept', 
-		'Oct', 
-		'Nov', 
-		'Dec' 
+		__('Jan', 'edd'),
+		__('Feb', 'edd'),
+		__('Mar', 'edd'),
+		__('Apr', 'edd'),
+		__('May', 'edd'),
+		__('June', 'edd'),
+		__('July', 'edd'),
+		__('Aug', 'edd'),
+		__('Sept', 'edd'),
+		__('Oct', 'edd'),
+		__('Nov', 'edd'),
+		__('Dec', 'edd')
 	) );
 	$chart->addAxis( $x_axis );
 
