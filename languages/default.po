@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-31 10:09-0600\n"
-"PO-Revision-Date: 2012-07-31 10:09-0600\n"
+"POT-Creation-Date: 2012-07-31 10:12-0600\n"
+"PO-Revision-Date: 2012-07-31 10:12-0600\n"
 "Last-Translator: Pippin Williamson <pippin@pippinsplugins.com>\n"
 "Language-Team: Easy Digital Downloads <pippin@pippinsplugins.com>\n"
 "Language: \n"
@@ -641,6 +641,54 @@ msgstr ""
 
 #: ../includes/pdf-reports.php:203
 msgid "Sales and Earnings by Month for all Products"
+msgstr ""
+
+#: ../includes/pdf-reports.php:217
+msgid "Jan"
+msgstr ""
+
+#: ../includes/pdf-reports.php:218
+msgid "Feb"
+msgstr ""
+
+#: ../includes/pdf-reports.php:219
+msgid "Mar"
+msgstr ""
+
+#: ../includes/pdf-reports.php:220
+msgid "Apr"
+msgstr ""
+
+#: ../includes/pdf-reports.php:221
+msgid "May"
+msgstr ""
+
+#: ../includes/pdf-reports.php:222
+msgid "June"
+msgstr ""
+
+#: ../includes/pdf-reports.php:223
+msgid "July"
+msgstr ""
+
+#: ../includes/pdf-reports.php:224
+msgid "Aug"
+msgstr ""
+
+#: ../includes/pdf-reports.php:225
+msgid "Sept"
+msgstr ""
+
+#: ../includes/pdf-reports.php:226
+msgid "Oct"
+msgstr ""
+
+#: ../includes/pdf-reports.php:227
+msgid "Nov"
+msgstr ""
+
+#: ../includes/pdf-reports.php:228
+msgid "Dec"
 msgstr ""
 
 #: ../includes/widgets.php:38
