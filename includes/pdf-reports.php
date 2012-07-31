@@ -97,13 +97,14 @@ function edd_generate_pdf( $data ) {
 		$pdf->Cell( 0, 10, 'Graph View', 0, 2, 'L', false );
 		$pdf->SetFont( 'Helvetica', '', 12 );
 
-		$image = edd_draw_chart_image();
+		$image = html_entity_decode( urldecode( edd_draw_chart_image() ) );
+
+		$image = str_replace(' ', '%20', $image);
 
 		$pdf->SetX( 25 );
-		//$pdf->WriteHTML( '<img src="' . $image . '" width="900">' );
+		$pdf->Image($image .'&file=.png');
 		$pdf->Ln( 7 );
-
-		$pdf->Output();
+		$pdf->Output('edd-report' . date('Y-m-d') . '.pdf', D);
 
 
 	}
@@ -112,7 +113,6 @@ add_action('edd_generate_pdf', 'edd_generate_pdf');
 
 
 function edd_draw_chart_image() {
-
 	include_once(EDD_PLUGIN_DIR . 'includes/libraries/googlechartlib/GoogleChart.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/libraries/googlechartlib/markers/GoogleChartShapeMarker.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/libraries/googlechartlib/markers/GoogleChartTextMarker.php');
@@ -217,6 +217,5 @@ function edd_draw_chart_image() {
 	$value_marker->setData( $data );
 	$chart->addMarker( $value_marker );
 
-	return $chart->toHTML();
-
+	return $chart->getUrl();
 }
