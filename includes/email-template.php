@@ -138,12 +138,11 @@ add_filter('edd_purchase_receipt', 'edd_email_default_formatting');
 function edd_email_template_preview() {
 	global $edd_options;
 	ob_start(); ?>
-		<a href="#TB_inline?&amp;inlineId=email-preview&amp;width=640&amp;height=700" id="open-email-preview" class="thickbox button-secondary" title="<?php _e('Purchase Receipt Preview', 'edd'); ?> "><?php _e('Preview Purchase Receipt', 'edd'); ?></a>
-		<div id="email-preview" style="display:none;">
-					
-			<?php echo edd_apply_email_template($edd_options['purchase_receipt'], null, null); ?>			
-						
-			<p><a id="edd-close-preview" class="button-secondary" onclick="tb_remove();" title="<?php _e('Close', 'edd'); ?>"><?php _e('Close', 'edd'); ?></a></p>
+		<a href="#email-preview" id="open-email-preview" class="button-secondary" title="<?php _e('Purchase Receipt Preview', 'edd'); ?> "><?php _e('Preview Purchase Receipt', 'edd'); ?></a>
+		<div id="email-preview-wrap" style="display:none;">
+			<div id="email-preview">			
+				<?php echo edd_apply_email_template($edd_options['purchase_receipt'], null, null); ?>									
+			</div>
 		</div>
 	<?php
 	echo ob_get_clean();
