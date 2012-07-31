@@ -310,18 +310,18 @@ function edd_get_earnings_by_date($month_num, $year) {
 }
 
 /**
- * Get Sales By Date
+ * Get Sales of By Date
  *
  * @access      public
  * @author      Sunny Ratilal
- * @since       1.1.3.2
+ * @since       1.1.4.0
  * @return      array
 */
 
 function edd_get_sales_by_date( $month_num, $year ) {
 	$sales = get_posts(
 		array(
-			'post_type' => 'download', 
+			'post_type' => 'edd_payment', 
 			'posts_per_page' => -1, 
 			'year' => $year, 
 			'monthnum' => $month_num
@@ -329,11 +329,9 @@ function edd_get_sales_by_date( $month_num, $year ) {
 	);
 	$total = 0;
 	if( $sales ) {
-		foreach( $sales as $sale ) {
-			$sale_meta = get_post_meta( $sale->ID, '_edd_download_sales', true );
-		}
+		$total = count( $sales );
 	}
-	return $sale_meta;
+	return $total;
 }
 
 

@@ -31,6 +31,7 @@ function edd_reports_page() {
 			edd_show_download_sales_graph(); 
 			edd_show_download_earnings_graph(); 
 			edd_show_monthly_eanings_graph();
+			edd_show_monthly_sales_graph();
 			do_action('edd_reports_page_bottom');
 			$edd_generate_pdf_nonce = wp_create_nonce('edd_generate_pdf');
 		?>
