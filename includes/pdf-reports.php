@@ -51,14 +51,14 @@ function edd_generate_pdf( $data ) {
 		$pdf->SetFont( 'Helvetica', '', 12 );
 		
 		$pdf->SetFillColor( 238, 238, 238 );
-		$pdf->Cell( 75, 6, 'Product Name', 1, 0, 'L', true );
+		$pdf->Cell( 70, 6, 'Product Name', 1, 0, 'L', true );
 		$pdf->Cell( 30, 6, 'Price', 1, 0, 'L', true );
 		$pdf->Cell( 50, 6, 'Categories', 1, 0, 'L', true );
 		$pdf->Cell( 50, 6, 'Tags', 1, 0, 'L', true );
 		$pdf->Cell( 45, 6, 'Number of Sales', 1, 0, 'L', true );
-		$pdf->Cell( 30, 6, 'Earnings To Date', 1, 1, 'L', true );
+		$pdf->Cell( 35, 6, 'Earnings To Date', 1, 1, 'L', true );
 		
-		$pdf->SetWidths( array( 75, 30, 50, 50, 45, 30 ) );
+		$pdf->SetWidths( array( 70, 30, 50, 50, 45, 35 ) );
 		$downloads = get_posts( array( 'post_type' => 'download', 'year' => $year ) );
 		if( $downloads ) :
 			foreach( $downloads as $download ) :
@@ -100,7 +100,7 @@ function edd_generate_pdf( $data ) {
 		$image = edd_draw_chart_image();
 
 		$pdf->SetX( 25 );
-		$pdf->WriteHTML( '<img src="' . $image . '" width="900">' );
+		//$pdf->WriteHTML( '<img src="' . $image . '" width="900">' );
 		$pdf->Ln( 7 );
 
 		$pdf->Output();
