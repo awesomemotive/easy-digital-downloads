@@ -1,4 +1,11 @@
 <?php
+/**
+ * FPDF Class
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  FPDF
+ * @since       1.1.3.2
+*/
 
 define( 'FPDF_VERSION', '1.7' );
 

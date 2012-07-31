@@ -13,44 +13,59 @@ class edd_pdf extends FPDF {
 	var $aligns;
 
 	function Footer() {
+
 		$this->SetY( -15 );
 		$this->SetFont( 'Helvetica', 'I', 8 );
 		$this->Cell( 0, 10, 'Page '. $this->PageNo(), 0, 0, 'C');
+
 	}
 
 	function SetWidths( $w ) {
+
 		$this->widths = $w;
+
 	}
 
 	function SetAligns( $a ) {
+
 		$this->aligns = $a;
+
 	}
 
 	function Row( $data ) {
+
 		$nb = 0;
+
 		for ( $i = 0; $i < count( $data ); $i++ )
 			$nb = max( $nb, $this->NbLines( $this->widths[$i], $data[$i] ) );
 			$h = 5 * $nb;
+
 		$this->CheckPageBreak($h);
+
 		for ( $i = 0; $i < count( $data ); $i++ ) {
-			$w = $this->widths[$i];
-			$a = isset( $this->aligns[$i] ) ? $this->aligns[$i] : 'L';
+			$w = $this->widths[ $i ];
+			$a = isset( $this->aligns[ $i ] ) ? $this->aligns[ $i ] : 'L';
 			$x = $this->GetX();
 			$y = $this->GetY();
 			$this->Rect( $x, $y, $w, $h );
-			$this->MultiCell( $w, 5 , $data[$i], 0, $a);
+			$this->MultiCell( $w, 5 , $data[ $i ], 0, $a);
 			$this->SetXY( $x + $w , $y );
 		}
+
 		$this->Ln( $h );
+
 	}
 
 	function CheckPageBreak( $h ) {
+
 		if ( $this->GetY() + $h > $this->PageBreakTrigger ) {
 			$this->AddPage( $this->CurOrientation );
 		}
+
 	}
 
 	function NbLines( $w, $txt ) {
+
 		$cw = &$this->CurrentFont['cw'];
 
 		if ( $w == 0 ) {
@@ -61,15 +76,15 @@ class edd_pdf extends FPDF {
 		$s = str_replace( "\r", '', $txt );
 		$nb = strlen( $s );
 		
-		if ( $nb > 0 and $s[ $nb - 1 ] == "\n") {
+		if ( $nb > 0 and $s[ $nb - 1 ] == "\n" ) {
 			$nb--;
 		}
 		
 		$sep = -1;
-		$i = 0;
-		$j = 0;
-		$l = 0;
-		$nl = 1;
+		$i   = 0;
+		$j   = 0;
+		$l   = 0;
+		$nl  = 1;
 		
 		while ( $i < $nb ) :
 			$c = $s[$i];
@@ -89,7 +104,7 @@ class edd_pdf extends FPDF {
 		
 			$l += $cw[ $c ];
 		
-			if ($l > $wmax) {
+			if ( $l > $wmax ) {
 				if ( $sep == -1 ) {
 					if ( $i == $j )
 						$i++;
@@ -104,7 +119,9 @@ class edd_pdf extends FPDF {
 			else
 				$i++;
 		endwhile;
+
 		return $nl;
+
 	}
 
 }
