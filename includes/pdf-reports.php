@@ -77,7 +77,7 @@ function edd_generate_pdf( $data ) {
 
 				$pdf->SetFillColor( 255, 255, 255 );
 				
-				$title = get_the_title( $download->ID );
+				$title = utf8_decode( get_the_title( $download->ID ) );
 				
 				if ( edd_has_variable_prices( $download->ID ) ) {
 					$prices = get_post_meta( $download->ID, 'edd_variable_prices', true );
