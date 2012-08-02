@@ -32,7 +32,7 @@ function edd_show_download_sales_graph($bgcolor = 'white') {
 		        data.addColumn('number', '<?php _e("Sales", "edd"); ?>');
 		        data.addRows([
 					<?php foreach($downloads as $download) { ?>
-		          		['<?php echo get_the_title($download->ID); ?>', 
+		          		['<?php echo html_entity_decode( get_the_title($download->ID), ENT_COMPAT, 'UTF-8'); ?>', 
 							<?php echo edd_get_download_sales_stats($download->ID); ?>, 
 						],
 					<?php } ?>
@@ -78,7 +78,7 @@ function edd_show_download_earnings_graph($bgcolor = 'white') {
 		        data.addColumn('number', '<?php _e("Earnings", "edd"); ?>');
 		        data.addRows([
 					<?php foreach($downloads as $download) { ?>
-		          		['<?php echo get_the_title($download->ID); ?>', 
+		          		['<?php echo html_entity_decode(get_the_title($download->ID), ENT_COMPAT, 'UTF-8'); ?>', 
 							<?php echo edd_get_download_earnings_stats($download->ID); ?>
 						],
 					<?php } ?>
