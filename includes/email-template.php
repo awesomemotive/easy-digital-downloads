@@ -160,7 +160,7 @@ add_action('edd_email_settings', 'edd_email_template_preview');
 
 function edd_get_email_body_header() {
 	ob_start(); ?>
-	<html><body>
+	<html><head><style type="text/css">#outlook a{padding: 0;}</style></head><body>
 	<?php
 	do_action('edd_email_body_header');
 	return ob_get_clean();	
