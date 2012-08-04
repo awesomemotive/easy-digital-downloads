@@ -362,25 +362,23 @@ function edd_downloads_query($atts, $content = null) {
 		'orderby' => $orderby,
 		'order' => $order
 	);
+	
+	switch ( $orderby ) {
+		case 'title':
+			$orderby = 'title';
+		break;
 
-	if ( $orderby !== 'post_date' ) {
-		switch ( $orderby ) {
-			case 'title':
-				$orderby = 'title';
-			break;
+		case 'id':
+			$orderby = 'ID';
+		break;
 
-			case 'id':
-				$orderby = 'ID';
-			break;
+		case 'random':
+			$orderby = 'rand';
+		break;
 
-			case 'random':
-				$orderby = 'rand';
-			break;
-
-			default:
-				$orderby = 'post_date';
-			break;
-		}
+		default:
+			$orderby = 'post_date';
+		break;
 	}
 
 	if($tags) {
