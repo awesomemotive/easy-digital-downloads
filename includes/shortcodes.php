@@ -324,6 +324,8 @@ add_shortcode('purchase_collection', 'edd_purchase_collection_shortcode');
  *
  * Incomplete short code for querying downloads.
  *
+ * Contributor: Sunny Ratilal
+ *
  * @access      private
  * @since       1.0.6
  * @return      string
@@ -364,7 +366,7 @@ function edd_downloads_query($atts, $content = null) {
 			break;
 
 			case 'id':
-				$orderby = '';
+				$orderby = 'ID';
 			break;
 
 			case 'random':
