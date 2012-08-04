@@ -362,8 +362,14 @@ function edd_downloads_query($atts, $content = null) {
 		'orderby' => $orderby,
 		'order' => $order
 	);
-	
+
 	switch ( $orderby ) {
+		case 'price':
+			$orderby = 'meta_value';
+			$meta_key = array( 'meta_key' => 'edd_price' );
+			$query = array_merge( $meta_key, $query );
+		break;
+
 		case 'title':
 			$orderby = 'title';
 		break;
@@ -381,14 +387,14 @@ function edd_downloads_query($atts, $content = null) {
 		break;
 	}
 
-	if($tags) {
+	if ( $tags ) {
 		$query['download_tag'] = $tags;
 	}
-	if($category) {
+	if ( $category ) {
 		$query['download_category'] = $category;
 	}
 	
-	switch(intval($columns)) :
+	switch( intval( $columns ) ) :
 	
 		case 1:
 			$column_width = '100%'; break;
@@ -408,12 +414,12 @@ function edd_downloads_query($atts, $content = null) {
 	// allow the query to be manipulated by other plugins
 	$query = apply_filters('edd_downloads_query', $query);
 	
-	$downloads = get_posts($query);
-	if($downloads) :
+	$downloads = get_posts( $query );
+	if ( $downloads ) :
 		$i = 1;
 		ob_start(); ?>
 		<div class="edd_downloads_list">
-			<?php foreach($downloads as $download) : ?>
+			<?php foreach ( $downloads as $download ) : ?>
 				<div class="edd_download" style="width: <?php echo $column_width; ?>; float: left;">
 					<div class="edd_download_inner">
 						 
@@ -427,7 +433,7 @@ function edd_downloads_query($atts, $content = null) {
 							</div>
 						<?php endif;
 						
-						$title = get_the_title($download->ID);
+						$title = get_the_title( $download->ID );
 						if($link_title == 'yes')
 							$title = '<a href="' . get_permalink( $download->ID ) . '">' . $title . '</a>';
 						
