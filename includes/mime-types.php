@@ -22,6 +22,7 @@ function edd_allowed_mime_types( $existing_mimes ) {
  
 	$existing_mimes['zip'] = 'application/zip';
 	$existing_mimes['epub'] = 'application/epub+zip';
+	$existing_mimes['mobi'] = 'application/x-mobipocket-ebook';
  	return $existing_mimes;
  
 }
