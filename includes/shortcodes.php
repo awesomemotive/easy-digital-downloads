@@ -324,6 +324,8 @@ add_shortcode('purchase_collection', 'edd_purchase_collection_shortcode');
  *
  * Incomplete short code for querying downloads.
  *
+ * Contributor: Sunny Ratilal
+ *
  * @access      private
  * @since       1.0.6
  * @return      string
@@ -348,23 +350,51 @@ function edd_downloads_query($atts, $content = null) {
 			'thumbsize' => 'thumbnail',
 			'thumbnails' => 'true',
 			'link_title' => 'yes',
-			'title_wrap' => 'h3'
+			'title_wrap' => 'h3',
+			'orderby' => 'post_date',
+			'order' => 'DESC'
 		), $atts )
 	);
 
 	$query = array(
 		'post_type' => 'download',
 		'posts_per_page' => absint($number),
+		'orderby' => $orderby,
+		'order' => $order
 	);
 
-	if($tags) {
+	switch ( $orderby ) {
+		case 'price':
+			$orderby = 'meta_value';
+			$meta_key = array( 'meta_key' => 'edd_price' );
+			$query = array_merge( $meta_key, $query );
+		break;
+
+		case 'title':
+			$orderby = 'title';
+		break;
+
+		case 'id':
+			$orderby = 'ID';
+		break;
+
+		case 'random':
+			$orderby = 'rand';
+		break;
+
+		default:
+			$orderby = 'post_date';
+		break;
+	}
+
+	if ( $tags ) {
 		$query['download_tag'] = $tags;
 	}
-	if($category) {
+	if ( $category ) {
 		$query['download_category'] = $category;
 	}
 	
-	switch(intval($columns)) :
+	switch( intval( $columns ) ) :
 	
 		case 1:
 			$column_width = '100%'; break;
@@ -384,12 +414,12 @@ function edd_downloads_query($atts, $content = null) {
 	// allow the query to be manipulated by other plugins
 	$query = apply_filters('edd_downloads_query', $query);
 	
-	$downloads = get_posts($query);
-	if($downloads) :
+	$downloads = get_posts( $query );
+	if ( $downloads ) :
 		$i = 1;
 		ob_start(); ?>
 		<div class="edd_downloads_list">
-			<?php foreach($downloads as $download) : ?>
+			<?php foreach ( $downloads as $download ) : ?>
 				<div class="edd_download" style="width: <?php echo $column_width; ?>; float: left;">
 					<div class="edd_download_inner">
 						 
@@ -397,13 +427,13 @@ function edd_downloads_query($atts, $content = null) {
 							<div class="edd_download_image">
 								<?php echo get_the_post_thumbnail($download->ID, $thumbsize); ?>
 							</div>
-						<?php elseif (false !== $fallback): ?>
+						<?php elseif ( false !== $fallback ): ?>
 							<div class="edd_download_image">
 								<img src="<?php echo $fallback; ?>" alt="<?php the_title(); ?>"/>
 							</div>
 						<?php endif;
 						
-						$title = get_the_title($download->ID);
+						$title = get_the_title( $download->ID );
 						if($link_title == 'yes')
 							$title = '<a href="' . get_permalink( $download->ID ) . '">' . $title . '</a>';
 						
