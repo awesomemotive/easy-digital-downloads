@@ -246,7 +246,7 @@ add_action( 'quick_edit_custom_box', 'edd_price_field_quick_edit', 10, 2 );
  */
 
 function edd_price_save_quick_edit( $post_id ) {
-	if ( 'download' !== $_POST['post_type'] ) return;
+	if ( !isset($_POST['post_type']) || 'download' !== $_POST['post_type'] ) return;
 	if ( !current_user_can( 'edit_post', $post_id ) ) return $post_id;
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return $post_id;
 
