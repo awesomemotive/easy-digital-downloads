@@ -427,7 +427,7 @@ function edd_downloads_query($atts, $content = null) {
 							<div class="edd_download_image">
 								<?php echo get_the_post_thumbnail($download->ID, $thumbsize); ?>
 							</div>
-						<?php elseif (false !== $fallback): ?>
+						<?php elseif ( false !== $fallback ): ?>
 							<div class="edd_download_image">
 								<img src="<?php echo $fallback; ?>" alt="<?php the_title(); ?>"/>
 							</div>
