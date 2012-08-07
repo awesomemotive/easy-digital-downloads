@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable Tag: 1.1.4.0
+Stable Tag: 1.1.4.1
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -125,6 +125,18 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.1.4.1 =
+
+* Fixed a bug with the source file download processing
+* Added support for .mobi files
+* Removed deprecated get_magic_quotes_runtime()
+* Fixed an error notice warning
+* Added "order" and "orderby" parameters to the [downloads] short code
+* Fixed some errors with aposthrophe encoding
+* Removed a conditional check for the jQuery library as it was causing problems with jQuery not loading
+* Add a "No Download Found" message to the PDF reports for when there are no products
+* Fixed a rendering issue with purchase receipts in Outlook
 
 = 1.1.4.0 =
 
@@ -461,6 +473,18 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.1.4.1 =
+
+* Fixed a bug with the source file download processing
+* Added support for .mobi files
+* Removed deprecated get_magic_quotes_runtime()
+* Fixed an error notice warning
+* Added "order" and "orderby" parameters to the [downloads] short code
+* Fixed some errors with aposthrophe encoding
+* Removed a conditional check for the jQuery library as it was causing problems with jQuery not loading
+* Add a "No Download Found" message to the PDF reports for when there are no products
+* Fixed a rendering issue with purchase receipts in Outlook
 
 = 1.1.4.0 =
 
