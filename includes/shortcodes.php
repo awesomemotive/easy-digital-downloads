@@ -366,24 +366,24 @@ function edd_downloads_query($atts, $content = null) {
 	switch ( $orderby ) {
 		case 'price':
 			$orderby = 'meta_value';
-			$meta_key = array( 'meta_key' => 'edd_price' );
-			$query = array_merge( $meta_key, $query );
+			$query['meta_key'] = 'edd_price';
+			$query['orderby'] = 'meta_value_num';
 		break;
 
 		case 'title':
-			$orderby = 'title';
+			$query['orderby'] = 'title';
 		break;
 
 		case 'id':
-			$orderby = 'ID';
+			$query['orderby'] = 'ID';
 		break;
 
 		case 'random':
-			$orderby = 'rand';
+			$query['orderby'] = 'rand';
 		break;
 
 		default:
-			$orderby = 'post_date';
+			$query['orderby'] = 'post_date';
 		break;
 	}
 
@@ -393,7 +393,7 @@ function edd_downloads_query($atts, $content = null) {
 	if ( $category ) {
 		$query['download_category'] = $category;
 	}
-	
+
 	switch( intval( $columns ) ) :
 	
 		case 1:
@@ -410,7 +410,7 @@ function edd_downloads_query($atts, $content = null) {
 			$column_width = '16.6%'; break;
 	
 	endswitch;
-	
+
 	// allow the query to be manipulated by other plugins
 	$query = apply_filters('edd_downloads_query', $query);
 	
