@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-31 10:22-0600\n"
-"PO-Revision-Date: 2012-07-31 10:22-0600\n"
+"POT-Creation-Date: 2012-08-07 12:23-0600\n"
+"PO-Revision-Date: 2012-08-07 12:23-0600\n"
 "Last-Translator: Pippin Williamson <pippin@pippinsplugins.com>\n"
 "Language-Team: Easy Digital Downloads <pippin@pippinsplugins.com>\n"
 "Language: \n"
@@ -634,59 +634,63 @@ msgstr ""
 msgid "Earnings to Date"
 msgstr ""
 
-#: ../includes/pdf-reports.php:110
+#: ../includes/pdf-reports.php:108
+msgid "No Downloads found."
+msgstr ""
+
+#: ../includes/pdf-reports.php:115
 msgid "Graph View"
 msgstr ""
 
-#: ../includes/pdf-reports.php:203
+#: ../includes/pdf-reports.php:208
 msgid "Sales and Earnings by Month for all Products"
 msgstr ""
 
-#: ../includes/pdf-reports.php:217
+#: ../includes/pdf-reports.php:222
 msgid "Jan"
 msgstr ""
 
-#: ../includes/pdf-reports.php:218
+#: ../includes/pdf-reports.php:223
 msgid "Feb"
 msgstr ""
 
-#: ../includes/pdf-reports.php:219
+#: ../includes/pdf-reports.php:224
 msgid "Mar"
 msgstr ""
 
-#: ../includes/pdf-reports.php:220
+#: ../includes/pdf-reports.php:225
 msgid "Apr"
 msgstr ""
 
-#: ../includes/pdf-reports.php:221
+#: ../includes/pdf-reports.php:226
 msgid "May"
 msgstr ""
 
-#: ../includes/pdf-reports.php:222
+#: ../includes/pdf-reports.php:227
 msgid "June"
 msgstr ""
 
-#: ../includes/pdf-reports.php:223
+#: ../includes/pdf-reports.php:228
 msgid "July"
 msgstr ""
 
-#: ../includes/pdf-reports.php:224
+#: ../includes/pdf-reports.php:229
 msgid "Aug"
 msgstr ""
 
-#: ../includes/pdf-reports.php:225
+#: ../includes/pdf-reports.php:230
 msgid "Sept"
 msgstr ""
 
-#: ../includes/pdf-reports.php:226
+#: ../includes/pdf-reports.php:231
 msgid "Oct"
 msgstr ""
 
-#: ../includes/pdf-reports.php:227
+#: ../includes/pdf-reports.php:232
 msgid "Nov"
 msgstr ""
 
-#: ../includes/pdf-reports.php:228
+#: ../includes/pdf-reports.php:233
 msgid "Dec"
 msgstr ""
 
@@ -719,39 +723,39 @@ msgstr ""
 msgid "Taxonomy:"
 msgstr ""
 
-#: ../includes/scripts.php:42
+#: ../includes/scripts.php:40
 msgid "Please enter a discount code"
 msgstr ""
 
-#: ../includes/scripts.php:43
+#: ../includes/scripts.php:41
 msgid "Discount Applied"
 msgstr ""
 
-#: ../includes/scripts.php:45
+#: ../includes/scripts.php:43
 msgid "You have already added this item to your cart"
 msgstr ""
 
-#: ../includes/scripts.php:46
+#: ../includes/scripts.php:44
 msgid "Your cart is empty"
 msgstr ""
 
-#: ../includes/scripts.php:47
+#: ../includes/scripts.php:45
 msgid "Loading"
 msgstr ""
 
-#: ../includes/scripts.php:118
+#: ../includes/scripts.php:116
 msgid "Add New Download"
 msgstr ""
 
-#: ../includes/scripts.php:119
+#: ../includes/scripts.php:117
 msgid "Use This File"
 msgstr ""
 
-#: ../includes/scripts.php:120
+#: ../includes/scripts.php:118
 msgid "Sorry, not available for variable priced products."
 msgstr ""
 
-#: ../includes/scripts.php:121
+#: ../includes/scripts.php:119
 msgid "Are you sure you wish to delete this payment?"
 msgstr ""
 
@@ -770,12 +774,17 @@ msgid "%s Performance in Earnings"
 msgstr ""
 
 #: ../includes/graphing.php:121
+#: ../includes/graphing.php:168
 #: ../includes/checkout-template.php:271
 msgid "Month"
 msgstr ""
 
 #: ../includes/graphing.php:136
 msgid "Earnings per month"
+msgstr ""
+
+#: ../includes/graphing.php:183
+msgid "Sales per month"
 msgstr ""
 
 #: ../includes/metabox.php:22
@@ -1167,11 +1176,11 @@ msgstr ""
 msgid "Turkish Lira"
 msgstr ""
 
-#: ../includes/process-download.php:98
+#: ../includes/process-download.php:99
 msgid "You do not have permission to download this file"
 msgstr ""
 
-#: ../includes/process-download.php:98
+#: ../includes/process-download.php:99
 msgid "Purchase Verification Failed"
 msgstr ""
 
@@ -1686,11 +1695,11 @@ msgstr ""
 msgid "You have not made any purchases"
 msgstr ""
 
-#: ../includes/shortcodes.php:345
+#: ../includes/shortcodes.php:347
 msgid "Add to Cart"
 msgstr ""
 
-#: ../includes/shortcodes.php:438
+#: ../includes/shortcodes.php:468
 msgid "No downloads found"
 msgstr ""
 
@@ -1783,11 +1792,11 @@ msgstr ""
 msgid "No discount codes have been created."
 msgstr ""
 
-#: ../includes/admin-pages/reports.php:37
+#: ../includes/admin-pages/reports.php:38
 msgid "Download Sales and Earnings PDF Report for all Products"
 msgstr ""
 
-#: ../includes/admin-pages/reports.php:38
+#: ../includes/admin-pages/reports.php:39
 msgid "Please Note: Transactions created while in test mode are not included on this page or in the PDF reports."
 msgstr ""
 
