@@ -387,8 +387,8 @@ function edd_add_collection_to_cart($taxonomy, $terms) {
 
 function edd_remove_item_url($cart_key, $post, $ajax = false) {
 	global $post;
-	$current_page = ($ajax || !isset($post->ID)) ? home_url() : get_permalink($post->ID);
-	$remove_url = add_query_arg('cart_item', $cart_key, add_query_arg('edd_action', 'remove', $current_page));
+	$current_page = edd_get_current_page_url();
+	$remove_url = add_query_arg( array('cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page);
 	return apply_filters('edd_remove_item_url', $remove_url);
 }
 
