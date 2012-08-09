@@ -134,24 +134,6 @@ function edd_get_purchase_link($download_id = null, $link_text = null, $style = 
 
 
 /**
- * Remove Item URL
- *
- * Returns the URL to remove an item.
- *
- * @access      public
- * @since       1.0 
- * @return      string
-*/
-
-function edd_remove_item_url($cart_key, $post, $ajax = false) {
-	global $post;
-	$current_page = ($ajax || !isset($post->ID)) ? home_url() : get_permalink($post->ID);
-	$remove_url = add_query_arg('cart_item', $cart_key, add_query_arg('edd_action', 'remove', $current_page));
-	return apply_filters('edd_remove_item_url', $remove_url);
-}
-
-
-/**
  * After Download Content
  *
  * Adds an action to the end of download post content 
