@@ -93,12 +93,12 @@ function edd_setup_edd_post_types() {
 	
 	$payment_args = array(
 		'labels' => apply_filters('edd_payment_labels', $payment_labels),
-		'public' => true,
-		'publicly_queryable' => true,
-		'show_ui' => true, 
+		'public' => false,
+		'publicly_queryable' => false,
+		'show_ui' => false, 
 		'show_in_menu' => false, 
 		'show_in_nav_menu' => false, 
-		'query_var' => true,
+		'query_var' => false,
 		'rewrite' => false,
 		'capability_type' => 'post',
 		'has_archive' => false, 
