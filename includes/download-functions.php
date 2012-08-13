@@ -401,20 +401,35 @@ function edd_decrease_earnings($download_id, $amount) {
 
 
 /**
- * Get Download Files
+ * Gets all download files for a product
+ *
+ * Can retrieve files specific to price ID
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      array
 */
 
-function edd_get_download_files($download_id) {
-	$files = get_post_meta($download_id, 'edd_download_files', true);
-	if($files)
-		return $files;
-	return false;
-}
+function edd_get_download_files( $download_id, $variable_price_id = null ) {
 
+	$files = array();
+	$download_files = get_post_meta($download_id, 'edd_download_files', true);
+	if( $download_files ) {
+		if( !is_null( $variable_price_id ) ) {
+			foreach( $download_files as $key => $file_info ) {
+				if( isset( $file_info['condition'] ) ) {
+					if( $file_info['condition'] == $variable_price_id || $file_info['condition'] == 'all' ) {
+						$files[$key] = $file_info;
+					}
+				}
+			}
+		} else {
+			$files = $download_files;
+		}
+	}
+
+	return $files;
+}
 
 /**
  * Gets the Price ID that can download a file
@@ -446,7 +461,7 @@ function edd_get_file_price_condition( $download_id, $file_key ) {
  * @return      string
 */
 
-function edd_get_download_file_url($key, $email, $filekey, $download) {
+function edd_get_download_file_url($key, $email, $filekey, $download_id) {
 	
 	global $edd_options;
 
@@ -456,7 +471,7 @@ function edd_get_download_file_url($key, $email, $filekey, $download) {
 		'download_key' => $key,
 		'email' => rawurlencode($email),
 		'file' => $filekey,
-		'download' => $download, 
+		'download' => $download_id, 
 		'expire' => urlencode(base64_encode(strtotime('+' . $hours . 'hours', time())))
 	);
 

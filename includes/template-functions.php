@@ -175,7 +175,25 @@ function edd_filter_success_page_content($content) {
 		if(has_filter('edd_payment_confirm_' . $_GET['payment-confirmation'])) {
 			$content = apply_filters('edd_payment_confirm_' . $_GET['payment-confirmation'], $content);
 		}
+
 	}
+
+	if(isset($edd_options['success_page']) && is_page($edd_options['success_page'])) {
+
+		if( isset( $edd_options['show_links_on_success'] ) ) {
+
+			// show download links to non logged-in users
+			$purchase_data = edd_get_purchase_session();
+			if( $purchase_data ) {
+
+				$content .= edd_get_purchase_download_links( $purchase_data );
+
+			}
+
+		}
+
+	}
+
 	return $content;
 }
 add_filter('the_content', 'edd_filter_success_page_content');
@@ -257,3 +275,40 @@ function edd_downloads_default_content( $content ) {
 	return do_shortcode( wpautop( $content ) );
 }
 add_filter('edd_downloads_content', 'edd_downloads_default_content');
+
+
+/**
+ * Gets the download links for each item purchased
+ *
+ * @access      private
+ * @since       1.1.5
+ * @return      string
+*/
+
+function edd_get_purchase_download_links( $purchase_data ) {
+
+	$links = '';
+
+	$links .= '<ul class="edd_download_links">';
+	foreach( $purchase_data['downloads'] as $download ) {
+
+		$links .= '<li>';
+			$links .= '<h3 class="edd_download_link_title">' . get_the_title( $download['id'] ) . '</h3>';
+			$price_id = isset( $download['options'] ) && isset( $download['options']['price_id'] ) ? $download['options']['price_id'] : null;
+			$files = edd_get_download_files( $download['id'], $price_id );
+			if( is_array( $files ) ) {
+				foreach( $files as $filekey => $file ) {
+					$links .= '<div class="edd_download_link_file">';
+						$links .= '<a href="' . edd_get_download_file_url( $purchase_data['purchase_key'], $purchase_data['user_email'], $filekey, $download['id'] ) . '">';
+							$links .= $file['name'];
+						$links .= '</a>';
+					$links .= '</div>';
+				}
+			}
+		$links .= '</li>';
+
+	}
+	$links .= '</ul>';
+
+	return $links;
+}

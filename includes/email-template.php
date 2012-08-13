@@ -41,7 +41,7 @@ function edd_email_templage_tags($message, $payment_data, $payment_id) {
 
 				$price_id = isset($download['options']['price_id']) ? $download['options']['price_id'] : null;
 				
-				$files = edd_get_downloads_of_user_purchase($user_info['id'], $id, $price_id);
+				$files = edd_get_download_files( $id, $price_id );
 
 				if($files) {
 					foreach($files as $filekey => $file) {

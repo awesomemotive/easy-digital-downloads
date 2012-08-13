@@ -461,6 +461,37 @@ function edd_empty_cart() {
 }
 
 
+/**
+ * Store Purchase Data in Sessions
+ *
+ * Used for storing info about purchase
+ *
+ * @access      public
+ * @since       1.1.5
+ * @return      void
+*/
+
+function edd_set_purchase_session( $purchase_data ) {
+	$_SESSION['edd_purchase_info'] = $purchase_data;
+}
+
+
+/**
+ * Retrieve Purchase Data from Session
+ *
+ * Used for retrieving info about purchase
+ * after completing a purchase
+ *
+ * @access      public
+ * @since       1.1.5
+ * @return      array / false
+*/
+
+function edd_get_purchase_session() {
+	return isset( $_SESSION['edd_purchase_info'] ) ? $_SESSION['edd_purchase_info'] : false;
+}
+
+
 // make sure a session is started
 if(!session_id()){
 	add_action( 'init', 'session_start', -1 );
