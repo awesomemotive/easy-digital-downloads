@@ -50,7 +50,7 @@ function edd_email_purchase_receipt($payment_id, $admin_notice = true) {
 		$download_list = '';	
 		foreach(maybe_unserialize($payment_data['downloads']) as $download) {
 			$id = isset($payment_data['cart_details']) ? $download['id'] : $download;
-			$download_list .= get_the_title($id) . "\n";
+			$download_list .= html_entity_decode(get_the_title($id), ENT_COMPAT, 'UTF-8') . "\n";
 		}
 
 		$gateway = edd_get_gateway_admin_label( get_post_meta($payment_id, '_edd_payment_gateway', true) );
