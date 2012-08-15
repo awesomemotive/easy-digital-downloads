@@ -97,7 +97,7 @@ add_action('wp_ajax_nopriv_edd_add_to_cart', 'edd_ajax_add_to_cart');
 
 function edd_ajax_validate_discount() {
 	if(isset($_POST['code']) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' )) {
-		if(edd_is_discount_valid($_POST['code'])) {
+		if( edd_is_discount_valid( $_POST['code'], $_POST['email'] ) ) {
 			$price = edd_get_cart_amount();
 			$discounted_price = edd_get_discounted_amount($_POST['code'], $price);
 		

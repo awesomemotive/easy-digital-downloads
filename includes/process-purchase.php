@@ -220,8 +220,9 @@ function edd_purchase_form_validate_discounts() {
 	if ( isset( $_POST['edd-discount'] ) && trim( $_POST['edd-discount'] ) != '' ) {
 		// clean discount
 		$discount = sanitize_text_field( $_POST['edd-discount'] );
+		$email = sanitize_email( $_POST['edd_email'] );
 		// check if validates
-		if (  edd_is_discount_valid( $discount ) ) {
+		if (  edd_is_discount_valid( $discount, $email ) ) {
 			// return clean discount
 			return $discount;
 		// invalid discount
