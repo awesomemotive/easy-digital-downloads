@@ -27,12 +27,18 @@ function edd_change_downloads_upload_dir() {
         if ( 'download' == get_post_type( $_REQUEST['post_id'] ) ) {
             $wp_upload_dir = wp_upload_dir();
             $upload_path = $wp_upload_dir['basedir'] . '/edd' . $wp_upload_dir['subdir'];
-            if (wp_mkdir_p($upload_path) && !file_exists($upload_path.'/.htaccess')) {
-                if ($file_handle = @fopen( $upload_path . '/.htaccess', 'w' )) {
-                    fwrite($file_handle, 'Options All -Indexes');
-                    fclose($file_handle);
+            if ( wp_mkdir_p($upload_path) ) {
+                // create .htaccess file if it doesn't exist
+                $contents = @file_get_contents( $upload_path.'/.htaccess' );
+                if( strpos( $contents, 'Deny from all' ) === false || ! $contents ) {
+                    $rules = 'Order Deny,Allow' . PHP_EOL . 'Deny from all';
+                    file_put_contents( $upload_path.'/.htaccess', $rules );
                 }
 
+                if( !file_exists( $folder . 'index.php' ) ) {
+                    file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// silence is golden' );
+                }
+ 
             }
             add_filter( 'upload_dir', 'edd_set_upload_dir' );
         }
@@ -57,3 +63,68 @@ function edd_set_upload_dir($upload) {
 	$upload['url']	= $upload['baseurl'] . $upload['subdir'];
 	return $upload;
 }
+
+
+/**
+ * Creates blank index.php and .htaccess files
+ *
+ * This function runs approximately once per month in order
+ * to ensure all folders have their necessary protection files
+ *
+ * @access      private
+ * @since       1.1.5
+ * @return      void
+*/
+
+function edd_create_protection_files() {
+
+    if( false === get_transient( 'edd_check_protection_files' ) ) {
+        $wp_upload_dir = wp_upload_dir();
+        $upload_path = $wp_upload_dir['basedir'] . '/edd';
+        $folders = edd_scan_folders( $upload_path );
+        foreach( $folders as $folder ) {
+            // create or replace .htaccess file
+            $contents = @file_get_contents( $folder . '.htaccess' );
+            if( strpos( $contents, 'Deny from all' ) === false || ! $contents ) {
+                $rules = 'Order Deny,Allow' . PHP_EOL . 'Deny from all';
+                file_put_contents( $folder . '.htaccess', $rules );
+            }
+
+            if( !file_exists( $folder . 'index.php' ) ) {
+                file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// silence is golden' );
+            }
+        }
+        // only have this run the first time. This is just to create .htaccess files in existing folders
+        set_transient( 'edd_check_protection_files', true, 2678400 );
+    }
+}
+add_action('admin_init', 'edd_create_protection_files');
+
+
+/**
+ * Scans all folders inside of /uploads/edd
+ *
+ * @access      private
+ * @since       1.1.5
+ * @return      array
+*/
+
+function edd_scan_folders($path = '', &$return = array() ) {
+    $path = $path == ''? dirname(__FILE__) : $path;
+    $lists = @scandir($path);
+
+    if( !empty( $lists ) ) {
+        foreach( $lists as $f ) { 
+
+            if( is_dir( $path . DIRECTORY_SEPARATOR . $f ) && $f != "." && $f != "..") {
+                if( !in_array( $path . DIRECTORY_SEPARATOR . $f, $return ) )
+                    $return[] = trailingslashit( $path . DIRECTORY_SEPARATOR . $f );
+
+                edd_scan_folders( $path . DIRECTORY_SEPARATOR . $f, &$return); 
+            }
+        
+        }
+    }
+    return $return;
+}
+
