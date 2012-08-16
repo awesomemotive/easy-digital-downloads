@@ -484,45 +484,6 @@ function edd_get_download_file_url($key, $email, $filekey, $download_id) {
 
 
 /**
- * Outputs the download file
- *
- * Delivers the requested file to the user's browser
- *
- * @access      public
- * @since       1.0.8.3
- * @param		$file string the URL to the file 
- * @return      string
-*/
-
-function edd_read_file( $file ) {
-
-	// some hosts do not allow files to be read via URL, so this permits that to be over written
-	if( defined('EDD_READ_FILE_MODE') && EDD_READ_FILE_MODE == 'header' ) {
-		header("Location: " . $file);
-	} else {
-
-		if( strpos($file, home_url()) !== false) {
-			// this is a local file, convert the URL to a path
-
-			$upload_dir = wp_upload_dir();
-			
-			$file = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $file);	
-		
-		}
-
-		set_time_limit(0);
-		$file = @fopen($file,"rb");
-		while(!feof($file))
-		{
-			print(@fread($file, 1024*8));
-			ob_flush();
-			flush();
-		}
-	}
-}
-
-
-/**
  * Verify Download Link
  *
  * Verifies a download purchase using a purchase key and email.

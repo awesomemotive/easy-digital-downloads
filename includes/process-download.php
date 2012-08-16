@@ -92,7 +92,29 @@ function edd_process_download() {
 			header("Content-Description: File Transfer");	
 		    header("Content-Disposition: attachment; filename=\"" . apply_filters('edd_requested_file_name', basename($requested_file) ) . "\";");
 			header("Content-Transfer-Encoding: binary");
-			edd_read_file( $requested_file );			
+			
+			if( strpos( $requested_file, home_url() ) !== false) {
+				// local requested_file
+				$upload_dir = wp_upload_dir();
+					
+				$requested_file = str_replace( $upload_dir['baseurl'], $upload_dir['basedir'], $requested_file);	
+					
+				$requested_file = realpath( $requested_file );
+
+				header("Content-Length: " . @requested_filesize( $requested_file ) );
+
+				$requested_file = @fopen( $requested_file, "rb" );
+				while( !feof( $requested_file ) ) {
+					print( @fread( $requested_file, 1024*8 ) );
+					ob_flush();
+					flush();
+				}
+
+			} else {
+				// this is a remote 
+				header("Location: " . $requested_file);
+			}
+
 			exit;
 			
 		} else {
