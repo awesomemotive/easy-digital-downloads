@@ -94,7 +94,7 @@ function edd_process_download() {
 			header("Content-Transfer-Encoding: binary");
 			
 			if( strpos( $requested_file, home_url() ) !== false) {
-				// local requested_file
+				// local file
 				$upload_dir = wp_upload_dir();
 					
 				$requested_file = str_replace( $upload_dir['baseurl'], $upload_dir['basedir'], $requested_file);	
@@ -111,7 +111,7 @@ function edd_process_download() {
 				}
 
 			} else {
-				// this is a remote 
+				// this is a remote file
 				header("Location: " . $requested_file);
 			}
 
