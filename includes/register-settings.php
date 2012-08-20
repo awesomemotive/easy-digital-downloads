@@ -44,7 +44,7 @@ function edd_register_settings() {
 				),
 				array(
 					'id' => 'purchase_page',
-					'name' => __('Purchase Page', 'edd'),
+					'name' => __('Checkout Page', 'edd'),
 					'desc' => __('This is the checkout page where buyers will complete their purchases', 'edd'),
 					'type' => 'select',
 					'options' => $pages_options
