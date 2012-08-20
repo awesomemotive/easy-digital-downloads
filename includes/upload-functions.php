@@ -25,16 +25,30 @@ function edd_change_downloads_upload_dir() {
 
     if ( ! empty( $_POST['post_id'] ) && ( 'async-upload.php' == $pagenow || 'media-upload.php' == $pagenow ) ) {
         if ( 'download' == get_post_type( $_REQUEST['post_id'] ) ) {
+        
             $wp_upload_dir = wp_upload_dir();
             $upload_path = $wp_upload_dir['basedir'] . '/edd' . $wp_upload_dir['subdir'];
-            if ( wp_mkdir_p($upload_path) ) {
-                // create .htaccess file if it doesn't exist
-                $contents = @file_get_contents( $upload_path.'/.htaccess' );
-                if( strpos( $contents, 'Deny from all' ) === false || ! $contents ) {
-                    $rules = 'Order Deny,Allow' . PHP_EOL . 'Deny from all';
-                    file_put_contents( $upload_path.'/.htaccess', $rules );
+            
+            // We don't want users snooping in the EDD root, so let's add htacess there, first
+            // Creating the directory if it doesn't already exist.
+            $rules = 'Options -Indexes';
+            if( ! @file_get_contents( $wp_upload_dir['basedir'] . '/edd/.htaccess' ) ) {
+            	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd' );
+            } // end if
+            file_put_contents( $wp_upload_dir['basedir'] . '/edd/.htaccess', $rules );
+            
+            // Now let's repeat the same for the upload directory
+            if ( wp_mkdir_p( $upload_path ) ) {
+            
+                // create .htaccess file if it doesn't exist using the same rules as above
+                $contents = @file_get_contents( $upload_path . '/.htaccess' );
+                if( false === strpos( $contents, 'Options -Indexes' ) || ! $contents ) {
+                    file_put_contents( $upload_path . '/.htaccess', $rules );
                 }
 
+                // Initialize the folder variable. Was throwing an uninitialized variable notice 
+                // in local the development environment
+                $folder = '.';
                 if( !file_exists( $folder . 'index.php' ) ) {
                     file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// silence is golden' );
                 }
@@ -82,14 +96,8 @@ function edd_create_protection_files() {
         $wp_upload_dir = wp_upload_dir();
         $upload_path = $wp_upload_dir['basedir'] . '/edd';
         $folders = edd_scan_folders( $upload_path );
-        foreach( $folders as $folder ) {
-            // create or replace .htaccess file
-            $contents = @file_get_contents( $folder . '.htaccess' );
-            if( strpos( $contents, 'Deny from all' ) === false || ! $contents ) {
-                $rules = 'Order Deny,Allow' . PHP_EOL . 'Deny from all';
-                file_put_contents( $folder . '.htaccess', $rules );
-            }
-
+        foreach( $folders as $folder ) {    
+            // create index.php, if it doesn't exist
             if( !file_exists( $folder . 'index.php' ) ) {
                 file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// silence is golden' );
             }
@@ -103,6 +111,8 @@ add_action('admin_init', 'edd_create_protection_files');
 
 /**
  * Scans all folders inside of /uploads/edd
+ *
+ * Not used at this time
  *
  * @access      private
  * @since       1.1.5
