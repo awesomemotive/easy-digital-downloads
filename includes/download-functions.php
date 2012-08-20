@@ -108,10 +108,17 @@ function edd_get_price_option_name($download_id, $price_id) {
 */
 
 function edd_get_download_earnings_stats($download_id) {
-	$earnings = get_post_meta($download_id, '_edd_download_earnings', true);
-	if($earnings)
-		return $earnings;
-	return 0;
+
+	// If the current Download CPT has no earnings value associated wht it, we need to initialize it.
+	// This is what enables us to sort it.
+	if ( '' == get_post_meta($download_id, '_edd_download_earnings', true) ) {
+		add_post_meta( $download_id, '_edd_download_earnings', 0 );
+	} // end if
+	
+	$earnings = get_post_meta( $download_id, '_edd_download_earnings', true );
+	
+	return $earnings;
+	
 }
 
 
@@ -126,10 +133,16 @@ function edd_get_download_earnings_stats($download_id) {
 */
 
 function edd_get_download_sales_stats($download_id) {
-	$sales = get_post_meta($download_id, '_edd_download_sales', true);
-	if($sales)
-		return $sales;
-	return 0;
+	
+	// If the current Download CPT has no sales value associated wht it, we need to initialize it.
+	// This is what enables us to sort it.
+	if ( '' == get_post_meta($download_id, '_edd_download_sales', true) ) {
+		add_post_meta( $download_id, '_edd_download_sales', 0 );
+	} // end if
+	
+	$sales = get_post_meta( $download_id, '_edd_download_sales', true );
+	
+	return $sales;
 }
 
 
