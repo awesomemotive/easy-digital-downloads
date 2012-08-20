@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable Tag: 1.1.4.1
+Stable Tag: 1.1.5
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -21,7 +21,7 @@ Features of the plugin include:
 
 * Cart system for purchasing multiple downloads at once
 * Complete promotional code system
-* Many payment gateways. PayPal and Manual are included by default with Stripe, PayPal Pro, PayPal Express, and others available as add-ons
+* Many payment gateways. PayPal and Manual are included by default with Stripe, PayPal Pro, PayPal Express, and others available as [add-ons](http://easydigitaldownloads.com/extensions/)
 * Complete payment history
 * User purchase history and ability to redownload files
 * Multiple files per downloadable product
@@ -125,6 +125,25 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.1.5 =
+
+* Updated default language files
+* Changed "Purchase Page" label to "Checkout Page" in settings
+* Fixed a problem with serving download files
+* Fixed a bug that caused images to break when uploaded to download products
+* Made significant security improvements for protecting files against unauthorized downloads
+* Updated discounts so taht users can only use a discount code once
+* Download titles are now decoded for html entities in payment history
+* Updated payment history to fix an error notice when a user isn't found
+* Added a new option for showing download links on the success page after completing a payment
+* Fixed a couple of undefined index errors
+* Added item prices to the cart widget
+* Added support for the Iranian Rial currency. Make sure your gateway supports it before using it
+* Updated the edd_remove_item_url() to use the current page URL instead of the home URL
+* Added new edd_get_current_page_url() function
+* Made the edd_payment post type not public
+* Updated French language files
 
 = 1.1.4.1 =
 
@@ -473,6 +492,25 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * First offical release!
 
 == Upgrade Notice ==
+
+= 1.1.5 =
+
+* Updated default language files
+* Changed "Purchase Page" label to "Checkout Page" in settings
+* Fixed a problem with serving download files
+* Fixed a bug that caused images to break when uploaded to download products
+* Made significant security improvements for protecting files against unauthorized downloads
+* Updated discounts so taht users can only use a discount code once
+* Download titles are now decoded for html entities in payment history
+* Updated payment history to fix an error notice when a user isn't found
+* Added a new option for showing download links on the success page after completing a payment
+* Fixed a couple of undefined index errors
+* Added item prices to the cart widget
+* Added support for the Iranian Rial currency. Make sure your gateway supports it before using it
+* Updated the edd_remove_item_url() to use the current page URL instead of the home URL
+* Added new edd_get_current_page_url() function
+* Made the edd_payment post type not public
+* Updated French language files
 
 = 1.1.4.1 =
 
