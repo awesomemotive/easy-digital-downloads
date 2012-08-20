@@ -37,17 +37,9 @@ function edd_change_downloads_upload_dir() {
             } // end if
             file_put_contents( $wp_upload_dir['basedir'] . '/edd/.htaccess', $rules );
             
-            // Now let's repeat the same for the upload directory
-            if ( wp_mkdir_p( $upload_path ) ) {
-            
-                // create .htaccess file if it doesn't exist using the same rules as above
-                $contents = @file_get_contents( $upload_path . '/.htaccess' );
-                if( false === strpos( $contents, 'Options -Indexes' ) || ! $contents ) {
-                    file_put_contents( $upload_path . '/.htaccess', $rules );
-                }
+            // now add blank index.php files to the {year}/{month} directory
+            if ( wp_mkdir_p( $upload_path ) ) {           
 
-                // Initialize the folder variable. Was throwing an uninitialized variable notice 
-                // in local the development environment
                 $folder = '.';
                 if( !file_exists( $folder . 'index.php' ) ) {
                     file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// silence is golden' );
@@ -95,6 +87,20 @@ function edd_create_protection_files() {
     if( false === get_transient( 'edd_check_protection_files' ) ) {
         $wp_upload_dir = wp_upload_dir();
         $upload_path = $wp_upload_dir['basedir'] . '/edd';
+        
+        // top level blank index.php
+        if( !file_exists( $upload_path . '/index.php' ) ) {
+            file_put_contents( $upload_path . '/index.php', '<?php' . PHP_EOL . '// silence is golden' );
+        }
+
+        // top level .htaccess file
+        $rules = 'Options -Indexes';
+        $contents = @file_get_contents( $upload_path . '/.htaccess' );
+        if( false === strpos( $contents, 'Options -Indexes' ) || ! $contents ) {
+            file_put_contents( $upload_path . '/.htaccess', $rules );
+        }
+
+        // now place index.php files in all sub folders
         $folders = edd_scan_folders( $upload_path );
         foreach( $folders as $folder ) {    
             // create index.php, if it doesn't exist
@@ -112,7 +118,6 @@ add_action('admin_init', 'edd_create_protection_files');
 /**
  * Scans all folders inside of /uploads/edd
  *
- * Not used at this time
  *
  * @access      private
  * @since       1.1.5
