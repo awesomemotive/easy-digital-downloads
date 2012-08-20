@@ -80,43 +80,9 @@ function edd_set_upload_dir($upload) {
 
 
 /**
- * Creates blank index.php and .htaccess files
- *
- * This function runs approximately once per month in order
- * to ensure all folders have their necessary protection files
- *
- * @access      private
- * @since       1.1.5
- * @return      void
-*/
-
-function edd_create_protection_files() {
-
-    if( false === get_transient( 'edd_check_protection_files' ) ) {
-        $wp_upload_dir = wp_upload_dir();
-        $upload_path = $wp_upload_dir['basedir'] . '/edd';
-        $folders = edd_scan_folders( $upload_path );
-        foreach( $folders as $folder ) {
-            // create or replace .htaccess file
-            $contents = @file_get_contents( $folder . '.htaccess' );
-            if( strpos( $contents, 'Deny from all' ) === false || ! $contents ) {
-                $rules = 'Order Deny,Allow' . PHP_EOL . 'Deny from all';
-                file_put_contents( $folder . '.htaccess', $rules );
-            }
-
-            if( !file_exists( $folder . 'index.php' ) ) {
-                file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// silence is golden' );
-            }
-        }
-        // only have this run the first time. This is just to create .htaccess files in existing folders
-        set_transient( 'edd_check_protection_files', true, 2678400 );
-    }
-}
-add_action('admin_init', 'edd_create_protection_files');
-
-
-/**
  * Scans all folders inside of /uploads/edd
+ *
+ * Not used at this time
  *
  * @access      private
  * @since       1.1.5
