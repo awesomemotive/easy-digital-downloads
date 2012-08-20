@@ -99,6 +99,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
             'item_name'     => stripslashes_deep( html_entity_decode( $cart_summary, ENT_COMPAT, 'UTF-8' ) ), 
             'email'         => $purchase_data['user_email'], 
             'no_shipping'   => '1', 
+            'shipping'      => '0',
             'no_note'       => '1', 
             'currency_code' => $edd_options['currency'], 
             'item_number'   => $purchase_data['purchase_key'], 

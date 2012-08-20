@@ -1,4 +1,11 @@
 <?php
+
+/**
+ * THIS IS THE OLD PAYPAL GATEWAY AND IS NO LONGER USED
+ * ONLY HERE IN CASE IT'S NEEDED
+*/
+
+
 /**
  * PayPal Standard Gateway
  *
