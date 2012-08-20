@@ -93,6 +93,7 @@ add_action('manage_posts_custom_column', 'edd_render_download_columns', 10, 2);
 
 function edd_sortable_download_columns( $columns ) {
 
+	$columns['price'] = 'price';
 	$columns['sales'] = 'sales';
 	$columns['earnings'] = 'earnings';
 
