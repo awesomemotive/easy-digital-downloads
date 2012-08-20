@@ -332,6 +332,7 @@ add_shortcode('purchase_collection', 'edd_purchase_collection_shortcode');
 */
 
 function edd_downloads_query($atts, $content = null) {
+
 	extract( shortcode_atts( array(
 			'category' => '',
 			'tags' => '',
