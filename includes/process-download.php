@@ -101,7 +101,7 @@ function edd_process_download() {
 					
 				$requested_file = realpath( $requested_file );
 
-				header("Content-Length: " . @requested_filesize( $requested_file ) );
+				header("Content-Length: " . @filesize( $requested_file ) );
 
 				$requested_file = @fopen( $requested_file, "rb" );
 				while( !feof( $requested_file ) ) {
