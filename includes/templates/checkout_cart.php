@@ -13,7 +13,7 @@
 		<?php $cart_items = edd_get_cart_contents(); ?>
 		<?php if($cart_items) : ?>
 			<?php foreach($cart_items as $key => $item) : ?>
-				<tr>
+				<tr class="edd_cart_item" id="edd_cart_item_<?php echo $item['id']; ?>">
 					<?php do_action('edd_checkout_table_body_first', $item['id']); ?>
 					<td class="edd_cart_item_name">
 						<?php 
@@ -38,7 +38,7 @@
 				</tr>
 			<?php endforeach; ?>
 		<?php else: ?>
-			<tr class="edd_cart_item" id="edd_cart_item_<?php echo $item['id']; ?>">
+			<tr class="edd_cart_item">
 				<td colspan="3"  class="edd_cart_item_empty"><?php do_action('edd_empty_cart'); ?></td>
 			</tr>
 		<?php endif; ?>
