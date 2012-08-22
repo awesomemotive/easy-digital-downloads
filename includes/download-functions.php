@@ -302,6 +302,7 @@ function edd_price($download_id, $echo = true) {
 	} else {
 		$price = edd_currency_filter(edd_get_download_price($download_id));
 	}
+	$price = '<span class="edd_price" id="edd_download_' . $download_id . '_price">' . $price . '</span>';
 	if( $echo )
 		echo $price;
 	else
