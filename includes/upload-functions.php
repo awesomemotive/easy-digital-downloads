@@ -35,14 +35,14 @@ function edd_change_downloads_upload_dir() {
             if( ! @file_get_contents( $wp_upload_dir['basedir'] . '/edd/.htaccess' ) ) {
             	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd' );
             } // end if
-            file_put_contents( $wp_upload_dir['basedir'] . '/edd/.htaccess', $rules );
+            @file_put_contents( $wp_upload_dir['basedir'] . '/edd/.htaccess', $rules );
             
             // now add blank index.php files to the {year}/{month} directory
             if ( wp_mkdir_p( $upload_path ) ) {           
 
                 $folder = '.';
                 if( !file_exists( $folder . 'index.php' ) ) {
-                    file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// silence is golden' );
+                    @file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// silence is golden' );
                 }
  
             }
@@ -90,14 +90,14 @@ function edd_create_protection_files() {
         
         // top level blank index.php
         if( !file_exists( $upload_path . '/index.php' ) ) {
-            file_put_contents( $upload_path . '/index.php', '<?php' . PHP_EOL . '// silence is golden' );
+            @file_put_contents( $upload_path . '/index.php', '<?php' . PHP_EOL . '// silence is golden' );
         }
 
         // top level .htaccess file
         $rules = 'Options -Indexes';
         $contents = @file_get_contents( $upload_path . '/.htaccess' );
         if( false === strpos( $contents, 'Options -Indexes' ) || ! $contents ) {
-            file_put_contents( $upload_path . '/.htaccess', $rules );
+            @file_put_contents( $upload_path . '/.htaccess', $rules );
         }
 
         // now place index.php files in all sub folders
@@ -105,7 +105,7 @@ function edd_create_protection_files() {
         foreach( $folders as $folder ) {    
             // create index.php, if it doesn't exist
             if( !file_exists( $folder . 'index.php' ) ) {
-                file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// silence is golden' );
+                @file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// silence is golden' );
             }
         }
         // only have this run the first time. This is just to create .htaccess files in existing folders
