@@ -124,7 +124,7 @@ add_action('admin_init', 'edd_create_protection_files');
  * @return      array
 */
 
-function edd_scan_folders($path = '', &$return = array() ) {
+function edd_scan_folders($path = '', $return = array() ) {
     $path = $path == ''? dirname(__FILE__) : $path;
     $lists = @scandir($path);
 
@@ -135,7 +135,7 @@ function edd_scan_folders($path = '', &$return = array() ) {
                 if( !in_array( $path . DIRECTORY_SEPARATOR . $f, $return ) )
                     $return[] = trailingslashit( $path . DIRECTORY_SEPARATOR . $f );
 
-                edd_scan_folders( $path . DIRECTORY_SEPARATOR . $f, &$return); 
+                edd_scan_folders( $path . DIRECTORY_SEPARATOR . $f, $return); 
             }
         
         }
