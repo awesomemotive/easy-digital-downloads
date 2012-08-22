@@ -5,7 +5,7 @@ Plugin URI: http://easydigitaldownloads.com
 Description: Serve Digital Downloads Through WordPress
 Author: Pippin Williamson
 Author URI: http://pippinsplugins.com
-Version: 1.1.5.1
+Version: 1.1.5.2
 
 Easy Digital Downloads is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
