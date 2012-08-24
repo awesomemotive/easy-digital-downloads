@@ -9,19 +9,7 @@ delete_option('edd_settings_gateways');
 delete_option('edd_settings_emails');
 delete_option('edd_settings_styles');
 delete_option('edd_settings_misc');
-
-// Remove post types and post data
-global $wp_post_types;
-
-$edd_post_types = array('download', 'edd_payment');
-
-foreach($edd_post_types as $post_type) {
-	if ( isset( $wp_post_types[ $post_type ] ) ) {
-		unset( $wp_post_types[ $post_type ] );
-		$slug = 'edit.php?post_type=' . $post_type;
-		remove_menu_page( $slug );
-	}
-}
+delete_option('edd_discounts'); 
 
 // Remove custom post type data
 foreach($edd_post_types as $post_type) {
@@ -36,6 +24,7 @@ foreach($edd_post_types as $post_type) {
 
 $edd_taxonomies = array('download_tag', 'download_category');
 
+// Remove taxonomies and terms
 foreach($edd_taxonomies as $taxonomy) {
 	global $wp_taxonomies;
 	$terms = get_terms( $taxonomy ); 
@@ -46,6 +35,5 @@ foreach($edd_taxonomies as $taxonomy) {
 }
 
 // Flush rewrite rules
-$GLOBALS['wp_rewrite']->flush_rules(); // Is this needed?
-
+$GLOBALS['wp_rewrite']->flush_rules();
 ?>
