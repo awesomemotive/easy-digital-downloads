@@ -270,7 +270,14 @@ function edd_payment_history_page() {
 									<td>
 										<?php $user_id = isset($user_info['id']) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email']?>
 										<a href="<?php echo remove_query_arg('p', add_query_arg('user', $user_id) ); ?>">
-											<?php echo is_numeric( $user_id ) ? get_user_by('id', $user_id)->display_name : __('guest', 'edd'); ?>
+											<?php 
+											if ( is_numeric( $user_id ) ) {
+												$user = get_user_by('id', $user_id);
+												echo is_object( $user ) ? $user->display_name : __('guest', 'edd');												
+											} else {
+												echo __('guest', 'edd');
+											}
+											?>
 										</a>
 									</td>
 									<td><?php echo edd_get_payment_status($payment, true); ?></td>

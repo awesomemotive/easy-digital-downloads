@@ -39,12 +39,13 @@ function edd_load_scripts() {
 				'ajax_nonce' => wp_create_nonce( 'edd_ajax_nonce' ),
 				'no_discount' => __('Please enter a discount code', 'edd'), // blank discount code message
 				'discount_applied' => __('Discount Applied', 'edd'), // discount verified message
+				'no_email' => __('Please enter an email address before applying a discount code', 'edd'),
 				'position_in_cart' => isset($position) ? $position : -1,
 				'already_in_cart_message' => __('You have already added this item to your cart', 'edd'), // item already in the cart message
 				'empty_cart_message' => __('Your cart is empty', 'edd'), // item already in the cart message
 				'loading' => __('Loading', 'edd') , // general loading message
 				'ajax_loader' => EDD_PLUGIN_URL . 'includes/images/loading.gif', // ajax loading image
-				'checkout_page' => get_permalink($edd_options['purchase_page'])
+				'checkout_page' => isset($edd_options['purchase_page']) ? get_permalink($edd_options['purchase_page']) : ''
 			)
 		);
 	}

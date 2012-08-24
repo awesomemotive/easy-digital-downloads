@@ -93,6 +93,7 @@ add_action('manage_posts_custom_column', 'edd_render_download_columns', 10, 2);
 
 function edd_sortable_download_columns( $columns ) {
 
+	$columns['price'] = 'price';
 	$columns['sales'] = 'sales';
 	$columns['earnings'] = 'earnings';
 
@@ -112,36 +113,36 @@ add_filter( 'manage_edit-download_sortable_columns', 'edd_sortable_download_colu
 */
 
 function edd_sort_downloads( $vars ) {
-	// check if we're viewing the "movie" post type
+	
+	// check if we're viewing the "download" post type
 	if ( isset( $vars['post_type'] ) && 'download' == $vars['post_type'] ) {
 
 		// check if 'orderby' is set to "sales"
-		if ( isset( $vars['orderby'] ) && isset( $vars['sales'] ) && 'sales' == $vars['sales'] ) {
+		if ( isset( $vars['orderby'] ) && 'sales' == $vars['orderby'] ) {
 
 			// merge the query vars with our custom variables
 			$vars = array_merge(
 				$vars,
 				array(
 					'meta_key' => '_edd_download_sales',
-					'orderby' => '_edd_download_sales'
+					'orderby' => 'meta_value_num'
 				)
 			);
 		}
 		
 		// check if "orderby" is set to "earnings"
-		if ( isset( $vars['orderby'] ) && isset( $vars['earnings'] ) && 'earnings' == $vars['earnings'] ) {
-
+		if ( isset( $vars['orderby'] ) && 'earnings' == $vars['orderby'] ) {
 			// merge the query vars with our custom variables
 			$vars = array_merge(
 				$vars,
 				array(
 					'meta_key' => '_edd_download_earnings',
-					'orderby' => '_edd_download_earnings'
+					'orderby' => 'meta_value_num'
 				)
 			);
 		}
 	}
-
+	
 	return $vars;
 }
 

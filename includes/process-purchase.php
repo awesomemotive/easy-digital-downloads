@@ -91,6 +91,11 @@ function edd_process_purchase_form() {
 		$valid_data['gateway'] = 'manual';
 	}
 
+	if( isset( $edd_options['show_links_on_success'] ) ) {
+		// used for showing download links to non logged-in users after purchase
+		edd_set_purchase_session( $purchase_data );
+	}
+
 	// send info to the gateway for payment processing
 	edd_send_to_gateway( $valid_data['gateway'], $purchase_data );
 	
@@ -215,8 +220,9 @@ function edd_purchase_form_validate_discounts() {
 	if ( isset( $_POST['edd-discount'] ) && trim( $_POST['edd-discount'] ) != '' ) {
 		// clean discount
 		$discount = sanitize_text_field( $_POST['edd-discount'] );
+		$email = sanitize_email( $_POST['edd_email'] );
 		// check if validates
-		if (  edd_is_discount_valid( $discount ) ) {
+		if (  edd_is_discount_valid( $discount, $email ) ) {
 			// return clean discount
 			return $discount;
 		// invalid discount

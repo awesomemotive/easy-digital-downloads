@@ -44,7 +44,7 @@ function edd_register_settings() {
 				),
 				array(
 					'id' => 'purchase_page',
-					'name' => __('Purchase Page', 'edd'),
+					'name' => __('Checkout Page', 'edd'),
 					'desc' => __('This is the checkout page where buyers will complete their purchases', 'edd'),
 					'type' => 'select',
 					'options' => $pages_options
@@ -55,6 +55,12 @@ function edd_register_settings() {
 					'desc' => __('This is the page buyers are sent to after completing their purchases', 'edd'),
 					'type' => 'select',
 					'options' => $pages_options
+				),
+				array(
+					'id' => 'show_links_on_success',
+					'name' => __('Download Links on Success Page', 'edd'),
+					'desc' => __('Show a list of all download links on the success page after completing a purchase?', 'edd'),
+					'type' => 'checkbox'
 				),
 				array(
 					'id' => 'currency_settings',

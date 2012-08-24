@@ -95,18 +95,32 @@ jQuery(document).ready(function ($) {
         return false;
     });
 
-    // validate and apply a discount
+    // For tricksters
+	var before_discount = $('.edd_cart_amount').text();	
+	$('#edd_checkout_form_wrap').on('change', '#edd-email', function (event) {
+		$('.edd_cart_amount').html(before_discount);
+		$('#edd-discount').val('');
+	});
+
+	// validate and apply a discount
     $('#edd_checkout_form_wrap').on('click', '.edd-apply-discount', function (event) {
-        var $this = $(this),
-            discount_code = $('#edd-discount').val();
+        
+		var $this = $(this),
+            discount_code = $('#edd-discount').val(),
+			edd_email = $('#edd-email').val();
         if (discount_code == '') {
             alert(edd_scripts.no_discount);
+            return false;
+        }
+		if (edd_email == '') {
+            alert(edd_scripts.no_email);
             return false;
         }
 
         var postData = {
             action: 'edd_apply_discount',
             code: discount_code,
+            email: edd_email,
             nonce: edd_scripts.ajax_nonce
         };
 

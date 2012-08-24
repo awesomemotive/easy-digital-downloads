@@ -206,7 +206,8 @@ function edd_get_currencies() {
 		'TWD' => __('Taiwan New Dollars', 'edd'),
 		'THB' => __('Thai Baht', 'edd'),
 		'INR' => __('Indian Rupee', 'edd'),
-		'TRY' => __('Turkish Lira', 'edd')
+		'TRY' => __('Turkish Lira', 'edd'),
+		'RIAL' => __('Iranian Rial', 'edd')
 	);
 	return apply_filters('edd_currencies', $currencies);
 }
@@ -552,3 +553,20 @@ function edd_get_php_arg_separator_output() {
     return ini_get('arg_separator.output');
 }
 
+
+function edd_get_current_page_url() {
+
+	global $post;	
+			
+	if (is_singular()) :
+		$pageURL =  get_permalink($post->ID);
+	else :
+		$pageURL = 'http';
+		if ( isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") $pageURL .= "s";
+		$pageURL .= "://";
+		if ($_SERVER["SERVER_PORT"] != "80") $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+		else $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+	endif;	
+
+	return $pageURL;
+}

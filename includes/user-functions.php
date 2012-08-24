@@ -142,26 +142,3 @@ function edd_has_purchases($user_id = null) {
 	}
 	return false; // user has never purchased anything
 }
-
-
-
-function edd_get_downloads_of_user_purchase($user_id, $download_id, $variable_price_id = null) {
-
-	$purchased_files = array();
-	$download_files = get_post_meta($download_id, 'edd_download_files', true);
-	if( $download_files ) {
-		if( !is_null( $variable_price_id ) ) {
-			foreach( $download_files as $key => $file_info ) {
-				if( isset( $file_info['condition'] ) ) {
-					if( $file_info['condition'] == $variable_price_id || $file_info['condition'] == 'all' ) {
-						$purchased_files[$key] = $file_info;
-					}
-				}
-			}
-		} else {
-			$purchased_files = $download_files;
-		}
-	}
-
-	return $purchased_files;
-}

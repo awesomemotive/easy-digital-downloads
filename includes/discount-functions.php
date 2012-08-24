@@ -309,6 +309,44 @@ function edd_is_discount_maxed_out($code_id) {
 
 
 /**
+ * Is Discount Used
+ *
+ * Checks to see if a user has already used a discount.
+ *
+ * @access      public
+ * @since       1.1.5
+ * @return      bool
+*/
+
+function edd_is_discount_used($code, $email) {
+
+	$query_args = array(
+		'post_type' => 'edd_payment',
+		'meta_query' => array(
+			array(
+				'key' => '_edd_payment_user_email',
+				'value' => $email,
+				'compare' => '='
+			)
+		)
+	);
+	$discounts_query = new WP_Query($query_args); // Get all payments with matching email
+	if( $discounts_query->have_posts() ) {
+		foreach ( $discounts_query->posts as $payment ) { 
+			// Check all matching payments for discount code.
+			$payment_meta = get_post_meta( $payment->ID, '_edd_payment_meta', true );
+			$user_info = maybe_unserialize( $payment_meta['user_info'] );
+			if ($user_info['discount'] == $code){
+				return true; // discount used
+			}
+		}
+	}
+	// discount not used
+	return false;
+}
+
+
+/**
  * Is Discount Valid
  *
  * Check whether a discount code is valid (when purchasing).
@@ -318,10 +356,16 @@ function edd_is_discount_maxed_out($code_id) {
  * @return      void
 */
 
-function edd_is_discount_valid($code) {
+function edd_is_discount_valid($code, $email = '') {
 	$discount_id = edd_get_discount_id_by_code($code);
-	if($discount_id !== false) {
-		if(edd_is_discount_active($discount_id) && !edd_is_discount_maxed_out($discount_id) && edd_is_discount_started($discount_id)) {
+	$email = trim($email);
+	if($discount_id !== false && $email !== "") {
+		if(
+			edd_is_discount_active( $discount_id ) && 
+			edd_is_discount_started( $discount_id ) && 
+			!edd_is_discount_maxed_out( $discount_id ) && 
+			!edd_is_discount_used( $code, $email ) 
+		) {
 			return true;
 		}
 	}

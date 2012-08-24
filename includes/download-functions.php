@@ -108,10 +108,17 @@ function edd_get_price_option_name($download_id, $price_id) {
 */
 
 function edd_get_download_earnings_stats($download_id) {
-	$earnings = get_post_meta($download_id, '_edd_download_earnings', true);
-	if($earnings)
-		return $earnings;
-	return 0;
+
+	// If the current Download CPT has no earnings value associated wht it, we need to initialize it.
+	// This is what enables us to sort it.
+	if ( '' == get_post_meta($download_id, '_edd_download_earnings', true) ) {
+		add_post_meta( $download_id, '_edd_download_earnings', 0 );
+	} // end if
+	
+	$earnings = get_post_meta( $download_id, '_edd_download_earnings', true );
+	
+	return $earnings;
+	
 }
 
 
@@ -126,10 +133,16 @@ function edd_get_download_earnings_stats($download_id) {
 */
 
 function edd_get_download_sales_stats($download_id) {
-	$sales = get_post_meta($download_id, '_edd_download_sales', true);
-	if($sales)
-		return $sales;
-	return 0;
+	
+	// If the current Download CPT has no sales value associated wht it, we need to initialize it.
+	// This is what enables us to sort it.
+	if ( '' == get_post_meta($download_id, '_edd_download_sales', true) ) {
+		add_post_meta( $download_id, '_edd_download_sales', 0 );
+	} // end if
+	
+	$sales = get_post_meta( $download_id, '_edd_download_sales', true );
+	
+	return $sales;
 }
 
 
@@ -289,6 +302,7 @@ function edd_price($download_id, $echo = true) {
 	} else {
 		$price = edd_currency_filter(edd_get_download_price($download_id));
 	}
+	$price = apply_filters( 'edd_download_price', $price, $download_id );
 	if( $echo )
 		echo $price;
 	else
@@ -401,20 +415,35 @@ function edd_decrease_earnings($download_id, $amount) {
 
 
 /**
- * Get Download Files
+ * Gets all download files for a product
+ *
+ * Can retrieve files specific to price ID
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      array
 */
 
-function edd_get_download_files($download_id) {
-	$files = get_post_meta($download_id, 'edd_download_files', true);
-	if($files)
-		return $files;
-	return false;
-}
+function edd_get_download_files( $download_id, $variable_price_id = null ) {
 
+	$files = array();
+	$download_files = get_post_meta($download_id, 'edd_download_files', true);
+	if( $download_files ) {
+		if( !is_null( $variable_price_id ) ) {
+			foreach( $download_files as $key => $file_info ) {
+				if( isset( $file_info['condition'] ) ) {
+					if( $file_info['condition'] == $variable_price_id || $file_info['condition'] == 'all' ) {
+						$files[$key] = $file_info;
+					}
+				}
+			}
+		} else {
+			$files = $download_files;
+		}
+	}
+
+	return $files;
+}
 
 /**
  * Gets the Price ID that can download a file
@@ -446,7 +475,7 @@ function edd_get_file_price_condition( $download_id, $file_key ) {
  * @return      string
 */
 
-function edd_get_download_file_url($key, $email, $filekey, $download) {
+function edd_get_download_file_url($key, $email, $filekey, $download_id) {
 	
 	global $edd_options;
 
@@ -456,7 +485,7 @@ function edd_get_download_file_url($key, $email, $filekey, $download) {
 		'download_key' => $key,
 		'email' => rawurlencode($email),
 		'file' => $filekey,
-		'download' => $download, 
+		'download' => $download_id, 
 		'expire' => urlencode(base64_encode(strtotime('+' . $hours . 'hours', time())))
 	);
 
@@ -465,45 +494,6 @@ function edd_get_download_file_url($key, $email, $filekey, $download) {
 	$download_url = add_query_arg($params, home_url());
 	
 	return $download_url;	
-}
-
-
-/**
- * Outputs the download file
- *
- * Delivers the requested file to the user's browser
- *
- * @access      public
- * @since       1.0.8.3
- * @param		$file string the URL to the file 
- * @return      string
-*/
-
-function edd_read_file( $file ) {
-	
-	// some hosts do not allow files to be read via URL, so this permits that to be over written
-	if( defined('EDD_READ_FILE_MODE') && EDD_READ_FILE_MODE == 'header' ) {
-		header("Location: " . $file);
-	} else {
-
-		if( strpos($file, home_url()) !== false) {
-			// this is a local file, convert the URL to a path
-
-			$upload_dir = wp_upload_dir();
-			
-			$file = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $file);	
-		
-		}
-
-		set_time_limit(0);
-		$file = @fopen($file,"rb");
-		while(!feof($file))
-		{
-			print(@fread($file, 1024*8));
-			ob_flush();
-			flush();
-		}
-	}
 }
 
 

@@ -2,9 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2012-08-22 16:38+0100\n"
 "PO-Revision-Date: 2012-08-22 16:38+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
+=======
+"POT-Creation-Date: 2012-08-20 10:41-0600\n"
+"PO-Revision-Date: 2012-08-20 10:42-0600\n"
+"Last-Translator: Pippin Williamson <pippin@pippinsplugins.com>\n"
+>>>>>>> theluke/master
 "Language-Team: Easy Digital Downloads <pippin@pippinsplugins.com>\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
@@ -16,6 +22,7 @@ msgstr ""
 "X-Poedit-SearchPath-1: ../includes\n"
 "X-Poedit-SearchPath-2: .\n"
 
+<<<<<<< HEAD
 #: ../includes/admin-notices.php:24
 msgid "Discount code updated."
 msgstr ""
@@ -74,6 +81,70 @@ msgstr ""
 
 #: ../includes/ajax-functions.php:102
 msgid "This discount code has been used already"
+=======
+#: ../includes/template-functions.php:49
+msgid "No checkout page has been configured."
+msgstr ""
+
+#: ../includes/template-functions.php:62
+#: ../includes/thickbox.php:61
+msgid "Purchase"
+msgstr ""
+
+#: ../includes/template-functions.php:113
+#: ../includes/template-functions.php:124
+#: ../includes/cart-template.php:50
+#: ../includes/cart-template.php:53
+msgid "Checkout"
+msgstr ""
+
+#: ../includes/template-functions.php:131
+msgid "added to your cart"
+msgstr ""
+
+#: ../includes/template-functions.php:221
+msgid "Gray"
+msgstr ""
+
+#: ../includes/template-functions.php:222
+msgid "Pink"
+msgstr ""
+
+#: ../includes/template-functions.php:223
+msgid "Blue"
+msgstr ""
+
+#: ../includes/template-functions.php:224
+msgid "Green"
+msgstr ""
+
+#: ../includes/template-functions.php:225
+msgid "Teal"
+msgstr ""
+
+#: ../includes/template-functions.php:226
+msgid "Black"
+msgstr ""
+
+#: ../includes/template-functions.php:227
+msgid "Dark Gray"
+msgstr ""
+
+#: ../includes/template-functions.php:228
+msgid "Orange"
+msgstr ""
+
+#: ../includes/template-functions.php:229
+msgid "Purple"
+msgstr ""
+
+#: ../includes/template-functions.php:230
+msgid "Slate"
+msgstr ""
+
+#: ../includes/template-functions.php:249
+msgid "You have already purchased this item, but you may purchase it again."
+>>>>>>> theluke/master
 msgstr ""
 
 #: ../includes/ajax-functions.php:118 ../includes/process-purchase.php:231
@@ -117,8 +188,13 @@ msgstr ""
 msgid "Personal Info"
 msgstr ""
 
+<<<<<<< HEAD
 #: ../includes/checkout-template.php:142
 msgid "Email address"
+=======
+#: ../includes/export-functions.php:40
+msgid "Date"
+>>>>>>> theluke/master
 msgstr ""
 
 #: ../includes/checkout-template.php:143
@@ -191,12 +267,21 @@ msgstr ""
 msgid "Name on the Card"
 msgstr ""
 
+<<<<<<< HEAD
 #: ../includes/checkout-template.php:262
 msgid "Card number"
 msgstr ""
 
 #: ../includes/checkout-template.php:263
 msgid "Card Number"
+=======
+#: ../includes/cart-template.php:84
+msgid "remove"
+msgstr ""
+
+#: ../includes/cart-template.php:103
+msgid "Your cart is empty."
+>>>>>>> theluke/master
 msgstr ""
 
 #: ../includes/checkout-template.php:266
@@ -248,8 +333,13 @@ msgstr ""
 msgid "Billing State / Province"
 msgstr ""
 
+<<<<<<< HEAD
 #: ../includes/checkout-template.php:326
 msgid "State / Province"
+=======
+#: ../includes/register-settings.php:47
+msgid "Checkout Page"
+>>>>>>> theluke/master
 msgstr ""
 
 #: ../includes/checkout-template.php:330
@@ -264,6 +354,7 @@ msgstr ""
 msgid "Already have an account?"
 msgstr ""
 
+<<<<<<< HEAD
 #: ../includes/checkout-template.php:357 ../includes/login-register.php:58
 msgid "Login"
 msgstr ""
@@ -603,12 +694,318 @@ msgstr ""
 
 #: ../includes/metabox.php:73
 msgid "Check this to enable variable pricing."
+=======
+#: ../includes/register-settings.php:61
+msgid "Download Links on Success Page"
+msgstr ""
+
+#: ../includes/register-settings.php:62
+msgid "Show a list of all download links on the success page after completing a purchase?"
+msgstr ""
+
+#: ../includes/register-settings.php:67
+msgid "Currency Settings"
+msgstr ""
+
+#: ../includes/register-settings.php:68
+msgid "Configure the currency options"
+msgstr ""
+
+#: ../includes/register-settings.php:73
+msgid "Currency"
+msgstr ""
+
+#: ../includes/register-settings.php:74
+msgid "Choose your currency. Note that some payment gateways have currency restrictions."
+msgstr ""
+
+#: ../includes/register-settings.php:80
+msgid "Currency Position"
+msgstr ""
+
+#: ../includes/register-settings.php:81
+msgid "Choose the location of the currency sign."
+msgstr ""
+
+#: ../includes/register-settings.php:84
+msgid "Before - $10"
+msgstr ""
+
+#: ../includes/register-settings.php:85
+msgid "After - 10$"
+msgstr ""
+
+#: ../includes/register-settings.php:90
+msgid "Thousands Separator"
+msgstr ""
+
+#: ../includes/register-settings.php:91
+msgid "The symbol (usually , or .) to separate thousands"
+msgstr ""
+
+#: ../includes/register-settings.php:98
+msgid "Decimal Separator"
+msgstr ""
+
+#: ../includes/register-settings.php:99
+msgid "The symbol (usually , or .) to separate decimal points"
+msgstr ""
+
+#: ../includes/register-settings.php:110
+msgid "Payment Gateways"
+msgstr ""
+
+#: ../includes/register-settings.php:111
+msgid "Choose the payment gateways you want to enable."
+msgstr ""
+
+#: ../includes/register-settings.php:117
+msgid "Accepted Payment Method Icons"
+msgstr ""
+
+#: ../includes/register-settings.php:118
+msgid "Display icons for the selected payment methods"
+msgstr ""
+
+#: ../includes/register-settings.php:118
+msgid "You will also need to configure your gateway settings if you are accepting credit cards"
+msgstr ""
+
+#: ../includes/register-settings.php:131
+msgid "PayPal Settings"
+msgstr ""
+
+#: ../includes/register-settings.php:132
+msgid "Configure the PayPal settings"
+msgstr ""
+
+#: ../includes/register-settings.php:137
+msgid "PayPal Email"
+msgstr ""
+
+#: ../includes/register-settings.php:138
+msgid "Enter your PayPal account's email"
+msgstr ""
+
+#: ../includes/register-settings.php:144
+msgid "Alternate PayPal Purchase Verification"
+msgstr ""
+
+#: ../includes/register-settings.php:145
+msgid "If payments are not getting marked as complete, then check this box. Note, this requires that buyers return to your site from PayPal."
+msgstr ""
+
+#: ../includes/register-settings.php:150
+msgid "Disable PayPal IPN Verification"
+msgstr ""
+
+#: ../includes/register-settings.php:151
+msgid "If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifiyin purchases."
+msgstr ""
+
+#: ../includes/register-settings.php:160
+msgid "Email Template"
+msgstr ""
+
+#: ../includes/register-settings.php:161
+msgid "Choose a template. Click \"Save Changes\" then \"Preview Purchase Receipt\" to see the new template."
+msgstr ""
+
+#: ../includes/register-settings.php:173
+msgid "From Name"
+msgstr ""
+
+#: ../includes/register-settings.php:174
+msgid "The name purchase receipts are said to come from. This should probably be your site or shop name."
+msgstr ""
+
+#: ../includes/register-settings.php:179
+msgid "From Email"
+msgstr ""
+
+#: ../includes/register-settings.php:180
+msgid "Email to send purchase receipts from. This will act as the \"from\" and \"reply-to\" address."
+msgstr ""
+
+#: ../includes/register-settings.php:185
+msgid "Purchase Email Subject"
+msgstr ""
+
+#: ../includes/register-settings.php:186
+msgid "Enter the subject line for the purchase receipt email"
+msgstr ""
+
+#: ../includes/register-settings.php:191
+msgid "Purchase Receipt"
+msgstr ""
+
+#: ../includes/register-settings.php:192
+msgid "Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:"
+msgstr ""
+
+#: ../includes/register-settings.php:193
+msgid "A list of download URLs for each download purchased"
+msgstr ""
+
+#: ../includes/register-settings.php:194
+msgid "The buyer's name"
+msgstr ""
+
+#: ../includes/register-settings.php:195
+msgid "The date of the purchase"
+msgstr ""
+
+#: ../includes/register-settings.php:196
+msgid "The total price of the purchase"
+msgstr ""
+
+#: ../includes/register-settings.php:197
+msgid "The unique ID number for this purchase receipt"
+msgstr ""
+
+#: ../includes/register-settings.php:198
+msgid "The method of payment used for this purchase"
+msgstr ""
+
+#: ../includes/register-settings.php:199
+msgid "Your site name"
+msgstr ""
+
+#: ../includes/register-settings.php:208
+msgid "Disable Styles"
+msgstr ""
+
+#: ../includes/register-settings.php:209
+msgid "Check this to disable all included styling"
+msgstr ""
+
+#: ../includes/register-settings.php:214
+msgid "Checkout Button Color"
+msgstr ""
+
+#: ../includes/register-settings.php:215
+msgid "Choose the button color you want to use for the checkout buttons."
+msgstr ""
+
+#: ../includes/register-settings.php:225
+msgid "Disable Ajax"
+msgstr ""
+
+#: ../includes/register-settings.php:226
+msgid "Check this to disable AJAX for the shopping cart."
+msgstr ""
+
+#: ../includes/register-settings.php:231
+msgid "Enable jQuery Validation"
+msgstr ""
+
+#: ../includes/register-settings.php:232
+msgid "Check this to enable jQuery validation on the checkout form."
+msgstr ""
+
+#: ../includes/register-settings.php:237
+msgid "Disable Guest Checkout"
+msgstr ""
+
+#: ../includes/register-settings.php:238
+msgid "Require that users be logged-in to purchase files."
+msgstr ""
+
+#: ../includes/register-settings.php:243
+msgid "Show Register / Login Form?"
+msgstr ""
+
+#: ../includes/register-settings.php:244
+msgid "Display the registration and login forms on the checkout page for non-logged-in users."
+msgstr ""
+
+#: ../includes/register-settings.php:249
+msgid "Download Link Expiration"
+msgstr ""
+
+#: ../includes/register-settings.php:250
+msgid "How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours."
+msgstr ""
+
+#: ../includes/register-settings.php:256
+msgid "Disable Redownload?"
+msgstr ""
+
+#: ../includes/register-settings.php:257
+msgid "Check this if you do not want to allow users to redownload items from their purchase history."
+msgstr ""
+
+#: ../includes/register-settings.php:262
+msgid "Terms of Agreement"
+msgstr ""
+
+#: ../includes/register-settings.php:268
+msgid "Agree to Terms"
+msgstr ""
+
+#: ../includes/register-settings.php:269
+msgid "Check this to show an agree to terms on the checkout that users must agree to before purchasing."
+msgstr ""
+
+#: ../includes/register-settings.php:274
+msgid "Agree to Terms Label"
+msgstr ""
+
+#: ../includes/register-settings.php:275
+msgid "Label shown next to the agree to terms check box."
+msgstr ""
+
+#: ../includes/register-settings.php:281
+msgid "Agreement Text"
+msgstr ""
+
+#: ../includes/register-settings.php:282
+msgid "If Agree to Terms is checked, enter the agreement terms here."
+msgstr ""
+
+#: ../includes/register-settings.php:308
+msgid "General Settings"
+msgstr ""
+
+#: ../includes/register-settings.php:334
+msgid "Payment Gateway Settings"
+msgstr ""
+
+#: ../includes/register-settings.php:360
+msgid "Email Settings"
+msgstr ""
+
+#: ../includes/register-settings.php:386
+msgid "Style Settings"
+msgstr ""
+
+#: ../includes/register-settings.php:413
+msgid "Misc Settings"
+msgstr ""
+
+#: ../includes/register-settings.php:702
+msgid "Upload File"
+msgstr ""
+
+#: ../includes/register-settings.php:740
+msgid "Settings Updated"
+msgstr ""
+
+#: ../includes/cart-functions.php:409
+#, php-format
+msgid "You have successfully added %s to your shopping cart."
+msgstr ""
+
+#: ../includes/cart-functions.php:410
+msgid "Checkout."
+>>>>>>> theluke/master
 msgstr ""
 
 #: ../includes/metabox.php:96
 msgid "price option name"
 msgstr ""
 
+<<<<<<< HEAD
 #: ../includes/metabox.php:97 ../includes/metabox.php:107
 msgid "9.99"
 msgstr ""
@@ -643,6 +1040,56 @@ msgstr ""
 
 #: ../includes/metabox.php:169 ../includes/metabox.php:188
 msgid "file url"
+=======
+#: ../includes/dashboard-columns.php:27
+#: ../includes/pdf-reports.php:67
+#: ../includes/widgets.php:168
+msgid "Categories"
+msgstr ""
+
+#: ../includes/dashboard-columns.php:28
+#: ../includes/pdf-reports.php:68
+#: ../includes/widgets.php:169
+msgid "Tags"
+msgstr ""
+
+#: ../includes/dashboard-columns.php:29
+#: ../includes/dashboard-columns.php:227
+#: ../includes/pdf-reports.php:66
+msgid "Price"
+msgstr ""
+
+#: ../includes/dashboard-columns.php:30
+#: ../includes/pdf-reports.php:204
+#: ../includes/graphing.php:32
+#: ../includes/graphing.php:169
+msgid "Sales"
+msgstr ""
+
+#: ../includes/dashboard-columns.php:31
+#: ../includes/pdf-reports.php:187
+#: ../includes/graphing.php:78
+#: ../includes/graphing.php:122
+msgid "Earnings"
+msgstr ""
+
+#: ../includes/dashboard-columns.php:32
+#: ../includes/metabox.php:314
+msgid "Short Code"
+msgstr ""
+
+#: ../includes/dashboard-columns.php:185
+msgid "Show all categories"
+msgstr ""
+
+#: ../includes/dashboard-columns.php:196
+msgid "Show all tags"
+msgstr ""
+
+#: ../includes/dashboard-columns.php:224
+#, php-format
+msgid "%s Data"
+>>>>>>> theluke/master
 msgstr ""
 
 #: ../includes/metabox.php:171
@@ -779,6 +1226,7 @@ msgstr ""
 msgid "No file downloads yet yet"
 msgstr ""
 
+<<<<<<< HEAD
 #: ../includes/misc-functions.php:185
 #: ../includes/admin-pages/settings-old.php:232
 msgid "US Dollars (&#36;)"
@@ -812,6 +1260,38 @@ msgstr ""
 #: ../includes/misc-functions.php:191
 #: ../includes/admin-pages/settings-old.php:238
 msgid "Czech Koruna"
+=======
+#: ../includes/scripts.php:42
+msgid "Please enter an email address before applying a discount code"
+msgstr ""
+
+#: ../includes/scripts.php:44
+msgid "You have already added this item to your cart"
+msgstr ""
+
+#: ../includes/scripts.php:45
+msgid "Your cart is empty"
+msgstr ""
+
+#: ../includes/scripts.php:46
+msgid "Loading"
+msgstr ""
+
+#: ../includes/scripts.php:117
+msgid "Add New Download"
+msgstr ""
+
+#: ../includes/scripts.php:118
+msgid "Use This File"
+msgstr ""
+
+#: ../includes/scripts.php:119
+msgid "Sorry, not available for variable priced products."
+msgstr ""
+
+#: ../includes/scripts.php:120
+msgid "Are you sure you wish to delete this payment?"
+>>>>>>> theluke/master
 msgstr ""
 
 #: ../includes/misc-functions.php:192
@@ -1079,8 +1559,17 @@ msgstr ""
 msgid "New Payment"
 msgstr ""
 
+<<<<<<< HEAD
 #: ../includes/post-types.php:85
 msgid "All Payments"
+=======
+#: ../includes/ajax-functions.php:102
+msgid "This discount code has been used already"
+msgstr ""
+
+#: ../includes/ajax-functions.php:118
+msgid "The discount you entered is invalid"
+>>>>>>> theluke/master
 msgstr ""
 
 #: ../includes/post-types.php:86
@@ -1255,6 +1744,7 @@ msgstr ""
 msgid "Enter the password confirmation"
 msgstr ""
 
+<<<<<<< HEAD
 #: ../includes/process-purchase.php:446
 msgid "You must login or register to complete your purchase"
 msgstr ""
@@ -1264,6 +1754,18 @@ msgstr ""
 #: ../includes/admin-pages/settings-old.php:101
 #: ../includes/admin-pages/settings-old.php:106
 msgid "Test Mode"
+=======
+#: ../includes/misc-functions.php:210
+msgid "Iranian Rial"
+msgstr ""
+
+#: ../includes/process-download.php:121
+msgid "You do not have permission to download this file"
+msgstr ""
+
+#: ../includes/process-download.php:121
+msgid "Purchase Verification Failed"
+>>>>>>> theluke/master
 msgstr ""
 
 #: ../includes/register-settings.php:42
@@ -1515,6 +2017,7 @@ msgstr ""
 msgid "Choose the button color you want to use for the checkout buttons."
 msgstr ""
 
+<<<<<<< HEAD
 #: ../includes/register-settings.php:225
 msgid "Disable Ajax"
 msgstr ""
@@ -1582,6 +2085,69 @@ msgstr ""
 msgid ""
 "Check this to show an agree to terms on the checkout that users must agree "
 "to before purchasing."
+=======
+#: ../includes/process-purchase.php:198
+msgid "The selected gateway is not active"
+msgstr ""
+
+#: ../includes/process-purchase.php:202
+msgid "No gateway has been selected"
+msgstr ""
+
+#: ../includes/process-purchase.php:251
+msgid "You must agree to the terms of use"
+msgstr ""
+
+#: ../includes/process-purchase.php:281
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: ../includes/process-purchase.php:295
+msgid "The user information is invalid."
+msgstr ""
+
+#: ../includes/process-purchase.php:341
+msgid "Username already taken"
+msgstr ""
+
+#: ../includes/process-purchase.php:347
+msgid "Invalid username"
+msgstr ""
+
+#: ../includes/process-purchase.php:358
+msgid "You must register or login to complete your purchase"
+msgstr ""
+
+#: ../includes/process-purchase.php:370
+#: ../includes/process-purchase.php:514
+msgid "Invalid email"
+msgstr ""
+
+#: ../includes/process-purchase.php:376
+msgid "Email already used"
+msgstr ""
+
+#: ../includes/process-purchase.php:388
+#: ../includes/process-purchase.php:521
+msgid "Enter an email"
+msgstr ""
+
+#: ../includes/process-purchase.php:399
+msgid "Passwords don't match"
+msgstr ""
+
+#: ../includes/process-purchase.php:414
+#: ../includes/process-purchase.php:479
+msgid "Enter a password"
+msgstr ""
+
+#: ../includes/process-purchase.php:419
+msgid "Enter the password confirmation"
+msgstr ""
+
+#: ../includes/process-purchase.php:446
+msgid "You must login or register to complete your purchase"
+>>>>>>> theluke/master
 msgstr ""
 
 #: ../includes/register-settings.php:274
@@ -1803,14 +2369,20 @@ msgstr ""
 msgid "Downloads Cart"
 msgstr ""
 
+<<<<<<< HEAD
 #: ../includes/widgets.php:38
 msgid "Display the downloads shopping cart"
+=======
+#: ../includes/shortcodes.php:152
+msgid "Amount"
+>>>>>>> theluke/master
 msgstr ""
 
 #: ../includes/widgets.php:81 ../includes/widgets.php:161
 msgid "Title:"
 msgstr ""
 
+<<<<<<< HEAD
 #: ../includes/widgets.php:86
 msgid "Show Quantity:"
 msgstr ""
@@ -1821,6 +2393,18 @@ msgstr ""
 
 #: ../includes/widgets.php:111
 msgid "Display the downloads categories or tags"
+=======
+#: ../includes/shortcodes.php:348
+msgid "Add to Cart"
+msgstr ""
+
+#: ../includes/shortcodes.php:469
+msgid "No downloads found"
+msgstr ""
+
+#: ../includes/gateways/paypal.php:271
+msgid "Invalid IPN"
+>>>>>>> theluke/master
 msgstr ""
 
 #: ../includes/widgets.php:166
@@ -1831,8 +2415,13 @@ msgstr ""
 msgid "Add Ons for Easy Digital Downloads"
 msgstr ""
 
+<<<<<<< HEAD
 #: ../includes/admin-pages/add-ons.php:70
 msgid "These add-ons extend the functionality of Easy Digital Downloads."
+=======
+#: ../includes/templates/checkout_cart.php:8
+msgid "Actions"
+>>>>>>> theluke/master
 msgstr ""
 
 #: ../includes/admin-pages/add-ons.php:73
@@ -1841,15 +2430,25 @@ msgstr ""
 
 #: ../includes/admin-pages/discount-codes.php:40
 #: ../includes/admin-pages/discount-codes.php:54
+<<<<<<< HEAD
 #: ../includes/admin-pages/forms/add-discount.php:27
 #: ../includes/admin-pages/forms/edit-discount.php:32
+=======
+#: ../includes/admin-pages/forms/edit-discount.php:32
+#: ../includes/admin-pages/forms/add-discount.php:27
+>>>>>>> theluke/master
 msgid "Code"
 msgstr ""
 
 #: ../includes/admin-pages/discount-codes.php:41
 #: ../includes/admin-pages/discount-codes.php:55
+<<<<<<< HEAD
 #: ../includes/admin-pages/forms/add-discount.php:36
 #: ../includes/admin-pages/forms/edit-discount.php:41
+=======
+#: ../includes/admin-pages/forms/edit-discount.php:41
+#: ../includes/admin-pages/forms/add-discount.php:36
+>>>>>>> theluke/master
 msgid "Type"
 msgstr ""
 
@@ -1860,8 +2459,13 @@ msgstr ""
 
 #: ../includes/admin-pages/discount-codes.php:44
 #: ../includes/admin-pages/discount-codes.php:58
+<<<<<<< HEAD
 #: ../includes/admin-pages/forms/add-discount.php:75
 #: ../includes/admin-pages/forms/edit-discount.php:80
+=======
+#: ../includes/admin-pages/forms/edit-discount.php:80
+#: ../includes/admin-pages/forms/add-discount.php:75
+>>>>>>> theluke/master
 msgid "Max Uses"
 msgstr ""
 

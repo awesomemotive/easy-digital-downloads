@@ -83,7 +83,7 @@ function edd_download_history() {
 
 									$price_id = isset($download['options']['price_id']) ? $download['options']['price_id'] : null;
 									
-									$download_files = edd_get_downloads_of_user_purchase($user_ID, $id, $price_id);
+									$download_files = edd_get_download_files( $id, $price_id );
 
 									do_action('edd_user_history_table_begin', $purchase->ID);
 
@@ -169,7 +169,7 @@ function edd_purchase_history() {
 										foreach($downloads as $download) {
 											$id = isset($purchase_data['cart_details']) ? $download['id'] : $download;
 											$price_id = isset($download['options']['price_id']) ? $download['options']['price_id'] : null;
-											$download_files = edd_get_downloads_of_user_purchase($user_ID, $id, $price_id);
+											$download_files = edd_get_download_files( $id, $price_id );
 											echo '<div class="edd_purchased_download_name">' . get_the_title($id) . '</div>';
 											if( ! edd_no_redownload() ) {
 												if($download_files) {
@@ -332,6 +332,7 @@ add_shortcode('purchase_collection', 'edd_purchase_collection_shortcode');
 */
 
 function edd_downloads_query($atts, $content = null) {
+
 	extract( shortcode_atts( array(
 			'category' => '',
 			'tags' => '',
