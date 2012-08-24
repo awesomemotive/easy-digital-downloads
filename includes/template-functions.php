@@ -170,7 +170,7 @@ function edd_get_purchase_link( $download_id = null, $link_text = null, $style =
 			}
 			if ( edd_is_ajax_enabled() ) {
 				$purchase_form .= sprintf( '<div class="edd-cart-ajax-alert"><img src="%1$s" class="edd-cart-ajax" style="display: none;"/>', 
-					esc_url( EDD_PLUGIN_URL . 'includes/images/loading.gif' );
+					esc_url( EDD_PLUGIN_URL . 'includes/images/loading.gif' )
 				);
 				$purchase_form .= '&nbsp;<span style="display:none;" class="edd-cart-added-alert">' . __( 'added to your cart', 'edd' ) . '</span></div>';
 			}
