@@ -359,7 +359,7 @@ function edd_get_purchase_download_links( $purchase_data ) {
 	foreach( $purchase_data['downloads'] as $download ) {
 
 		$links .= '<li>';
-			$links .= '<h3 class="edd_download_link_title">' . get_the_title( $download['id'] ) . '</h3>';
+			$links .= '<h3 class="edd_download_link_title">' . esc_html( get_the_title( $download['id'] ) ) . '</h3>';
 			$price_id = isset( $download['options'] ) && isset( $download['options']['price_id'] ) ? $download['options']['price_id'] : null;
 			$files = edd_get_download_files( $download['id'], $price_id );
 			if ( is_array( $files ) ) {
