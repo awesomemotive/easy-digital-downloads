@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-30 21:43-0600\n"
-"PO-Revision-Date: 2012-05-08 11:51+0100\n"
-"Last-Translator: Tibor Paulsch <4tibor@gmail.com>\n"
+"PO-Revision-Date: 2012-08-24 08:55+0830\n"
+"Last-Translator: Piet Bos <piet@senlinonline.com>\n"
 "Language-Team: Pippin's Plugins\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -739,99 +739,99 @@ msgstr "Fout"
 
 #: ../includes/misc-functions.php:40
 msgid "US Dollars (&#36;)"
-msgstr ""
+msgstr "Amerikaanse dollars (&#36;)"
 
 #: ../includes/misc-functions.php:41
 msgid "Euros (&euro;)"
-msgstr ""
+msgstr "Euros (&euro;)"
 
 #: ../includes/misc-functions.php:42
 msgid "Pounds Sterling (&pound;)"
-msgstr ""
+msgstr "Britse ponden (&pound;)"
 
 #: ../includes/misc-functions.php:43
 msgid "Australian Dollars (&#36;)"
-msgstr ""
+msgstr "Australische dollars (&#36;)"
 
 #: ../includes/misc-functions.php:44
 msgid "Brazilian Real (&#36;)"
-msgstr ""
+msgstr "Braziliaanse reals (&#36;)"
 
 #: ../includes/misc-functions.php:45
 msgid "Canadian Dollars (&#36;)"
-msgstr ""
+msgstr "Canadese dollars (&#36;)"
 
 #: ../includes/misc-functions.php:46
 msgid "Czech Koruna"
-msgstr ""
+msgstr "Tsjechische kronen"
 
 #: ../includes/misc-functions.php:47
 msgid "Danish Krone"
-msgstr ""
+msgstr "Deense kronen"
 
 #: ../includes/misc-functions.php:48
 msgid "Hong Kong Dollar (&#36;)"
-msgstr ""
+msgstr "Hong Kong dollars (&#36;)"
 
 #: ../includes/misc-functions.php:49
 msgid "Hungarian Forint"
-msgstr ""
+msgstr "Hongaarse forinten"
 
 #: ../includes/misc-functions.php:50
 msgid "Israeli Shekel"
-msgstr ""
+msgstr "Isra&#235;lische shekels"
 
 #: ../includes/misc-functions.php:51
 msgid "Japanese Yen (&yen;)"
-msgstr ""
+msgstr "Japanse yen (&yen;)"
 
 #: ../includes/misc-functions.php:52
 msgid "Malaysian Ringgits"
-msgstr ""
+msgstr "Maleisische ringgits"
 
 #: ../includes/misc-functions.php:53
 msgid "Mexican Peso (&#36;)"
-msgstr ""
+msgstr "Mexicaanse peso&#039;s (&#36;)"
 
 #: ../includes/misc-functions.php:54
 msgid "New Zealand Dollar (&#36;)"
-msgstr ""
+msgstr "Nieuwzeelandse dollars (&#36;)"
 
 #: ../includes/misc-functions.php:55
 msgid "Norwegian Krone"
-msgstr ""
+msgstr "Noorse kronen"
 
 #: ../includes/misc-functions.php:56
 msgid "Philippine Pesos"
-msgstr ""
+msgstr "Filippijnse Peso&#039;s"
 
 #: ../includes/misc-functions.php:57
 msgid "Polish Zloty"
-msgstr ""
+msgstr "Poolse zloty"
 
 #: ../includes/misc-functions.php:58
 msgid "Singapore Dollar (&#36;)"
-msgstr ""
+msgstr "Singaporese dollars (&#36;)"
 
 #: ../includes/misc-functions.php:59
 msgid "Swedish Krona"
-msgstr ""
+msgstr "Zweedse kronen"
 
 #: ../includes/misc-functions.php:60
 msgid "Swiss Franc"
-msgstr ""
+msgstr "Zwitserse franken"
 
 #: ../includes/misc-functions.php:61
 msgid "Taiwan New Dollars"
-msgstr ""
+msgstr "Taiwanese nieuwe dollars"
 
 #: ../includes/misc-functions.php:62
 msgid "Thai Baht"
-msgstr ""
+msgstr "Thaise baht"
 
 #: ../includes/misc-functions.php:63
 msgid "Indian Rupee"
-msgstr ""
+msgstr "Indiase rupee"
 
 #: ../includes/process-download.php:64
 msgid "You do not have permission to download this file"
