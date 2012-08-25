@@ -87,6 +87,8 @@ function edd_create_protection_files() {
     if( false === get_transient( 'edd_check_protection_files' ) ) {
         $wp_upload_dir = wp_upload_dir();
         $upload_path = $wp_upload_dir['basedir'] . '/edd';
+
+        wp_mkdir_p( $upload_path );
         
         // top level blank index.php
         if( !file_exists( $upload_path . '/index.php' ) ) {
@@ -95,9 +97,11 @@ function edd_create_protection_files() {
 
         // top level .htaccess file
         $rules = 'Options -Indexes';
-        $contents = @file_get_contents( $upload_path . '/.htaccess' );
-        if( false === strpos( $contents, 'Options -Indexes' ) || ! $contents ) {
-            @file_put_contents( $upload_path . '/.htaccess', $rules );
+        if ( file_exists( $upload_path . '/.htaccess' ) ) {
+            $contents = @file_get_contents( $upload_path . '/.htaccess' );
+            if( false === strpos( $contents, 'Options -Indexes' ) || ! $contents ) {
+                @file_put_contents( $upload_path . '/.htaccess', $rules );
+            }
         }
 
         // now place index.php files in all sub folders
