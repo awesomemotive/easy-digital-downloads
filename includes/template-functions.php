@@ -120,30 +120,20 @@ function edd_get_purchase_link( $download_id = null, $link_text = null, $style =
 			
 			if ( $style == 'button' ) {
 				
-				$purchase_button .= sprintf( '<span class="%1$s" %2$s>',
-					esc_attr( 'edd_button edd_add_to_cart_wrap edd_' . $color ),
-					$button_display
-				);
-					$purchase_button .= '<span class="edd_button_outer">';
-						$purchase_button .= '<span class="edd_button_inner">';
-							$purchase_button .= sprintf( '<input type="submit" class="%1$s" name="edd_purchase_download" value="%2$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s/>',
-								esc_attr( 'edd_button_text edd-submit edd-add-to-cart ' . $class ),
-								esc_attr( $link_text ),
-								esc_attr( $download_id ),
-								$data_variable
-							 );
-						$purchase_button .= '</span>';
-					$purchase_button .= '</span>';
-				$purchase_button .= '</span>';
+				$purchase_button = sprintf( '<input type="submit" class="%1$s" name="edd_purchase_download" value="%2$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s/>',
+					esc_attr( 'edd_button  edd-submit edd-add-to-cart edd_' . $color . ' ' . $class ),
+					esc_attr( $link_text ),
+					esc_attr( $download_id ),
+					esc_attr( $data_variable),
+					esc_attr( $button_display )
+				 );
 				
 				$checkout_link = sprintf( '<a href="%1$s" class="%2$s" %3$s>',
 					esc_url( $checkout_url ),
 					esc_attr( 'edd_go_to_checkout edd_button edd_' . $color ),
 					$checkout_display
 				);
-				 	$checkout_link .= '<span class="edd_button_outer"><span class="edd_button_inner">';
-						$checkout_link .= '<span class="edd_button_text"><span>' . __( 'Checkout', 'edd' ) . '</span></span>';
-					$checkout_link .= '</span></span>';
+				$checkout_link .=  __( 'Checkout', 'edd' );
 				$checkout_link .= '</a>';
 				
 				$purchase_form .= $purchase_button . $checkout_link;
@@ -151,7 +141,7 @@ function edd_get_purchase_link( $download_id = null, $link_text = null, $style =
 			} else {
 				
 				$purchase_text = sprintf( '<input type="submit" class="%1$s" name="edd_purchase_download" value="%2$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s/>', 
-					esc_attr( 'edd_submit_plain edd-add-to-cart ' . $class ),
+					esc_attr( 'edd_button  edd-submit edd-add-to-cart edd_' . $color . ' ' . $class ),
 					esc_attr( $link_text ),
 					esc_attr( $download_id ),
 					esc_attr( $data_variable ),
