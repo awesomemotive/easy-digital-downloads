@@ -75,7 +75,7 @@ function edd_manual_payment($purchase_data) {
 		edd_send_to_success_page();
 	} else {
 		// if errors are present, send the user back to the purchase page so they can be corrected
-		edd_send_back_to_checkout('?payment-mode=' . $purchase_data['post_data']['edd-gateway']);
+		edd_send_back_to_checkout( array( 'payment-mode' => $purchase_data['post_data']['edd-gateway'] ) );
 	}
 }
 add_action('edd_gateway_manual', 'edd_manual_payment');

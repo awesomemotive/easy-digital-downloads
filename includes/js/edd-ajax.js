@@ -170,13 +170,21 @@ jQuery(document).ready(function ($) {
         } else {
             var payment_mode = $('#edd-gateway').val();
         }
-        var form = $(this),
-            action = form.attr("action") + '?payment-mode=' + payment_mode;
+
         // show the ajax loader
         $('.edd-cart-ajax').show();
         $('#edd_checkout_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
-        $('#edd_checkout_form_wrap').load(action + ' #edd_checkout_form_wrap');
-        return false;
+
+        data = {
+        	action  : 'edd_ajax_get_payment_gateway',
+        	gateway :  payment_mode
+        }
+       
+        $.post( edd_scripts.ajaxurl, data, function(response) {
+        	$( '#edd_checkout_form_wrap' ).html( response );
+        });
+
+        e.preventDefault();
     });
 
 });

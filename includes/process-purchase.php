@@ -34,21 +34,21 @@ function edd_process_purchase_form() {
 
 	// validate the form $_POST data
 	$valid_data = edd_purchase_form_validate_fields(); 
-
+	
 	// allow themes and plugins to hoook to errors
 	do_action('edd_checkout_error_checks', $_POST);
 
 	// check errors
 	if ( false !== $errors = edd_get_errors() ) {
 		// we have errors, send back to checkout
-		edd_send_back_to_checkout('?payment-mode=' . $valid_data['gateway']);
+		edd_send_back_to_checkout( array( 'payment-mode' => $valid_data['gateway'] ) );
 		exit;
 	}
 
 	// check user
 	if ( false === $user = edd_get_purchase_form_user( $valid_data ) ) {
 		// something went wrong when collecting data, send back to checkout
-		edd_send_back_to_checkout('?payment-mode=' . $valid_data['gateway']);
+		edd_send_back_to_checkout( array( 'payment-mode' => $valid_data['gateway'] ) );
 		exit;
 	}
 
@@ -114,7 +114,7 @@ add_action('edd_purchase', 'edd_process_purchase_form');
 
 function edd_purchase_form_validate_fields() {
 	global $edd_options;
-		
+	
 	// check if there is $_POST
 	if ( empty( $_POST ) ) return;
 	
@@ -658,12 +658,16 @@ function edd_send_to_success_page($query_string = null) {
  * @return      void
 */
 
-function edd_send_back_to_checkout($query_string = null) {
+function edd_send_back_to_checkout( $query_args = null ) {
 	global $edd_options;
-	$redirect = get_permalink($edd_options['purchase_page']);
-	if($query_string)
-		$redirect .= $query_string;
-	wp_redirect($redirect); exit;
+	
+	$redirect = get_permalink( $edd_options[ 'purchase_page' ] );
+	
+	if( $query_args )
+		$redirect = add_query_arg( $query_args, $redirect );
+
+	wp_redirect( $redirect );
+	exit;
 }
 
 
