@@ -284,7 +284,7 @@ function edd_process_paypal_ipn() {
     }
     if ( number_format((float)$paypal_amount, 2) != $payment_amount ) {
         // the prices don't match
-       return;
+       //return;
     }
     if ( $purchase_key != $payment_meta['key'] ) {
         // purchase keys don't match
