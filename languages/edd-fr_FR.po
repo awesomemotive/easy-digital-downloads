@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads v1.1.5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-22 16:11+0100\n"
-"PO-Revision-Date: 2012-08-22 16:37+0100\n"
+"POT-Creation-Date: 2012-08-26 11:53+0100\n"
+"PO-Revision-Date: 2012-08-26 11:54+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
 "Language-Team: FxB <fx@fxbenard.com>\n"
 "Language: fr_FR\n"
@@ -12,8 +12,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
-"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
+"X-Poedit-KeywordsList: __;_e;esc_attr__;esc_attr_e;esc_html__;esc_html_e;_n;"
+"_x;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c\n"
 "X-Poedit-Basepath: ../\n"
 "X-Textdomain-Support: yes\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -97,25 +97,25 @@ msgid "The discount you entered is invalid"
 msgstr "La remise que vous avez encodé est invalide"
 
 # @ edd
-#: includes/cart-functions.php:409
+#: includes/cart-functions.php:419
 #, php-format
 msgid "You have successfully added %s to your shopping cart."
 msgstr "Vous venez d'ajouter avec succès %s à votre panier."
 
 # @ edd
-#: includes/cart-functions.php:410
+#: includes/cart-functions.php:420
 msgid "Checkout."
 msgstr "Commander."
 
 # @ edd
 #: includes/cart-template.php:50 includes/cart-template.php:53
-#: includes/install.php:31 includes/template-functions.php:113
-#: includes/template-functions.php:124
+#: includes/install.php:31 includes/template-functions.php:145
+#: includes/template-functions.php:166
 msgid "Checkout"
 msgstr "Commander"
 
 # @ edd
-#: includes/cart-template.php:84 includes/templates/checkout_cart.php:34
+#: includes/cart-template.php:84 includes/templates/checkout_cart.php:36
 msgid "remove"
 msgstr "retirer"
 
@@ -198,7 +198,7 @@ msgstr "Accepter les conditions ?"
 # @ edd
 #: includes/checkout-template.php:216 includes/dashboard-columns.php:76
 #: includes/metabox.php:215 includes/metabox.php:315
-#: includes/shortcodes.php:26 includes/template-functions.php:62
+#: includes/shortcodes.php:26 includes/template-functions.php:68
 #: includes/thickbox.php:61
 msgid "Purchase"
 msgstr "Acheter"
@@ -945,117 +945,117 @@ msgid "No file downloads yet yet"
 msgstr "Aucun fichier encore téléchargé"
 
 # @ edd
-#: includes/misc-functions.php:185 includes/admin-pages/settings-old.php:232
+#: includes/misc-functions.php:185
 msgid "US Dollars (&#36;)"
 msgstr "Dollar US (&#36;)"
 
 # @ edd
-#: includes/misc-functions.php:186 includes/admin-pages/settings-old.php:233
+#: includes/misc-functions.php:186
 msgid "Euros (&euro;)"
 msgstr "Euro (&euro;)"
 
 # @ edd
-#: includes/misc-functions.php:187 includes/admin-pages/settings-old.php:234
+#: includes/misc-functions.php:187
 msgid "Pounds Sterling (&pound;)"
 msgstr "Livre Sterling (&pound;)"
 
 # @ edd
-#: includes/misc-functions.php:188 includes/admin-pages/settings-old.php:235
+#: includes/misc-functions.php:188
 msgid "Australian Dollars (&#36;)"
 msgstr "Dollar Australien (&#36;)"
 
 # @ edd
-#: includes/misc-functions.php:189 includes/admin-pages/settings-old.php:236
+#: includes/misc-functions.php:189
 msgid "Brazilian Real (&#36;)"
 msgstr "Réal brésilien (&#36;)"
 
 # @ edd
-#: includes/misc-functions.php:190 includes/admin-pages/settings-old.php:237
+#: includes/misc-functions.php:190
 msgid "Canadian Dollars (&#36;)"
 msgstr "Dollar canadien (&#36;)"
 
 # @ edd
-#: includes/misc-functions.php:191 includes/admin-pages/settings-old.php:238
+#: includes/misc-functions.php:191
 msgid "Czech Koruna"
 msgstr "Couronne tchèque"
 
 # @ edd
-#: includes/misc-functions.php:192 includes/admin-pages/settings-old.php:239
+#: includes/misc-functions.php:192
 msgid "Danish Krone"
 msgstr "Couronne danoise"
 
 # @ edd
-#: includes/misc-functions.php:193 includes/admin-pages/settings-old.php:240
+#: includes/misc-functions.php:193
 msgid "Hong Kong Dollar (&#36;)"
 msgstr "Dollar de Hong Kong (&#36;)"
 
 # @ edd
-#: includes/misc-functions.php:194 includes/admin-pages/settings-old.php:241
+#: includes/misc-functions.php:194
 msgid "Hungarian Forint"
 msgstr "Forint hongrois"
 
 # @ edd
-#: includes/misc-functions.php:195 includes/admin-pages/settings-old.php:242
+#: includes/misc-functions.php:195
 msgid "Israeli Shekel"
 msgstr "Nouveau Shekel"
 
 # @ edd
-#: includes/misc-functions.php:196 includes/admin-pages/settings-old.php:243
+#: includes/misc-functions.php:196
 msgid "Japanese Yen (&yen;)"
 msgstr "Yen Japonais (&yen;)"
 
 # @ edd
-#: includes/misc-functions.php:197 includes/admin-pages/settings-old.php:244
+#: includes/misc-functions.php:197
 msgid "Malaysian Ringgits"
 msgstr "Ringgit malaisien"
 
 # @ edd
-#: includes/misc-functions.php:198 includes/admin-pages/settings-old.php:245
+#: includes/misc-functions.php:198
 msgid "Mexican Peso (&#36;)"
 msgstr "Peso mexicain (&#36;)"
 
 # @ edd
-#: includes/misc-functions.php:199 includes/admin-pages/settings-old.php:246
+#: includes/misc-functions.php:199
 msgid "New Zealand Dollar (&#36;)"
 msgstr "Dollar Nouvelle Zélande (&#36;)"
 
 # @ edd
-#: includes/misc-functions.php:200 includes/admin-pages/settings-old.php:247
+#: includes/misc-functions.php:200
 msgid "Norwegian Krone"
 msgstr "Couronne norvégienne"
 
 # @ edd
-#: includes/misc-functions.php:201 includes/admin-pages/settings-old.php:248
+#: includes/misc-functions.php:201
 msgid "Philippine Pesos"
 msgstr "Peso philippin"
 
 # @ edd
-#: includes/misc-functions.php:202 includes/admin-pages/settings-old.php:249
+#: includes/misc-functions.php:202
 msgid "Polish Zloty"
 msgstr "Zloty polonais"
 
 # @ edd
-#: includes/misc-functions.php:203 includes/admin-pages/settings-old.php:250
+#: includes/misc-functions.php:203
 msgid "Singapore Dollar (&#36;)"
 msgstr "Dollar de Singapour (&#36;)"
 
 # @ edd
-#: includes/misc-functions.php:204 includes/admin-pages/settings-old.php:251
+#: includes/misc-functions.php:204
 msgid "Swedish Krona"
 msgstr "Couronne suédoise"
 
 # @ edd
-#: includes/misc-functions.php:205 includes/admin-pages/settings-old.php:252
+#: includes/misc-functions.php:205
 msgid "Swiss Franc"
 msgstr "Franc suisse"
 
 # @ edd
-#: includes/misc-functions.php:206 includes/admin-pages/settings-old.php:253
+#: includes/misc-functions.php:206
 msgid "Taiwan New Dollars"
 msgstr "Nouveau dollar de Taiwan"
 
 # @ edd
-#: includes/misc-functions.php:207 includes/admin-pages/settings-old.php:254
+#: includes/misc-functions.php:207
 msgid "Thai Baht"
 msgstr "Baht thaïlandais"
 
@@ -1100,7 +1100,6 @@ msgstr ""
 
 # @ edd
 #: includes/pdf-reports.php:42 includes/pdf-reports.php:43
-#: includes/admin-pages/settings-old.php:11
 msgid "Easy Digital Downloads"
 msgstr "Easy Digital Downloads"
 
@@ -1501,9 +1500,7 @@ msgid "You must login or register to complete your purchase"
 msgstr "Vous devez être connecté ou enregistré afin de terminer votre achat"
 
 # @ edd
-#: includes/register-settings.php:41 includes/admin-pages/settings-old.php:95
-#: includes/admin-pages/settings-old.php:101
-#: includes/admin-pages/settings-old.php:106
+#: includes/register-settings.php:41
 msgid "Test Mode"
 msgstr "Mode de test"
 
@@ -1529,8 +1526,7 @@ msgid "This is the checkout page where buyers will complete their purchases"
 msgstr "La page de commande où les acheteurs réalisent leurs achats."
 
 # @ edd
-#: includes/register-settings.php:54 includes/admin-pages/settings-old.php:60
-#: includes/admin-pages/settings-old.php:65
+#: includes/register-settings.php:54
 msgid "Success Page"
 msgstr "Page d'achat réussi"
 
@@ -1554,7 +1550,7 @@ msgstr ""
 "réussi après avoir terminé un achat ?"
 
 # @ edd
-#: includes/register-settings.php:67 includes/admin-pages/settings-old.php:215
+#: includes/register-settings.php:67
 msgid "Currency Settings"
 msgstr "Réglages de monnaie"
 
@@ -1564,8 +1560,7 @@ msgid "Configure the currency options"
 msgstr "Configurer les réglages de monnaie"
 
 # @ edd
-#: includes/register-settings.php:73 includes/admin-pages/settings-old.php:221
-#: includes/admin-pages/settings-old.php:226
+#: includes/register-settings.php:73
 msgid "Currency"
 msgstr "Monnaie"
 
@@ -1579,23 +1574,22 @@ msgstr ""
 "paiement ont des limitations quant à la monnaie."
 
 # @ edd
-#: includes/register-settings.php:80 includes/admin-pages/settings-old.php:268
-#: includes/admin-pages/settings-old.php:273
+#: includes/register-settings.php:80
 msgid "Currency Position"
 msgstr "Position du symbole monétaire"
 
 # @ edd
-#: includes/register-settings.php:81 includes/admin-pages/settings-old.php:280
+#: includes/register-settings.php:81
 msgid "Choose the location of the currency sign."
 msgstr "Choisissez l'emplacement du symbole monétaire."
 
 # @ edd
-#: includes/register-settings.php:84 includes/admin-pages/settings-old.php:277
+#: includes/register-settings.php:84
 msgid "Before - $10"
 msgstr "Avant - $10"
 
 # @ edd
-#: includes/register-settings.php:85 includes/admin-pages/settings-old.php:278
+#: includes/register-settings.php:85
 msgid "After - 10$"
 msgstr "Après - 10$"
 
@@ -1620,9 +1614,7 @@ msgid "The symbol (usually , or .) to separate decimal points"
 msgstr "Le séparateur (le plus souvent , ou .) pour séparer les décimales."
 
 # @ edd
-#: includes/register-settings.php:110 includes/admin-pages/settings-old.php:13
-#: includes/admin-pages/settings-old.php:118
-#: includes/admin-pages/settings.php:34
+#: includes/register-settings.php:110 includes/admin-pages/settings.php:34
 msgid "Payment Gateways"
 msgstr "Portails de paiement"
 
@@ -1652,7 +1644,6 @@ msgstr ""
 
 # @ edd
 #: includes/register-settings.php:131
-#: includes/admin-pages/settings-old.php:148
 msgid "PayPal Settings"
 msgstr "Réglages PayPal"
 
@@ -1663,8 +1654,6 @@ msgstr "Configurer les réglages PayPal"
 
 # @ edd
 #: includes/register-settings.php:137
-#: includes/admin-pages/settings-old.php:154
-#: includes/admin-pages/settings-old.php:159
 msgid "PayPal Email"
 msgstr "E-mail PayPal"
 
@@ -1846,7 +1835,6 @@ msgstr "Désactiver la commande pour les comptes invité"
 
 # @ edd
 #: includes/register-settings.php:238
-#: includes/admin-pages/settings-old.php:208
 msgid "Require that users be logged-in to purchase files."
 msgstr ""
 "Exiger que les utilisateurs soient connectés pour acheter des fichiers."
@@ -2052,60 +2040,60 @@ msgstr "Ajouter au panier"
 msgid "No downloads found"
 msgstr "Aucun téléchargement trouvé"
 
-#: includes/template-functions.php:49
+#: includes/template-functions.php:54
 msgid "No checkout page has been configured."
 msgstr "Aucune page de commande n'a été configurée."
 
 # @ edd
-#: includes/template-functions.php:131
+#: includes/template-functions.php:175
 msgid "added to your cart"
 msgstr "ajouté au panier"
 
-#: includes/template-functions.php:221
+#: includes/template-functions.php:271
 msgid "Gray"
 msgstr "Gris"
 
-#: includes/template-functions.php:222
+#: includes/template-functions.php:272
 msgid "Pink"
 msgstr "Rose"
 
-#: includes/template-functions.php:223
+#: includes/template-functions.php:273
 msgid "Blue"
 msgstr "Bleu"
 
-#: includes/template-functions.php:224
+#: includes/template-functions.php:274
 msgid "Green"
 msgstr "Vert"
 
 # @ edd
-#: includes/template-functions.php:225
+#: includes/template-functions.php:275
 msgid "Teal"
 msgstr "Sarcelle (bleu-vert)"
 
 # @ edd
-#: includes/template-functions.php:226
+#: includes/template-functions.php:276
 msgid "Black"
 msgstr "Noir"
 
-#: includes/template-functions.php:227
+#: includes/template-functions.php:277
 msgid "Dark Gray"
 msgstr "Gris foncé"
 
-#: includes/template-functions.php:228
+#: includes/template-functions.php:278
 msgid "Orange"
 msgstr "Orange"
 
-#: includes/template-functions.php:229
+#: includes/template-functions.php:279
 msgid "Purple"
 msgstr "Violet"
 
 # @ edd
-#: includes/template-functions.php:230
+#: includes/template-functions.php:280
 msgid "Slate"
 msgstr "Ardoise"
 
 # @ edd
-#: includes/template-functions.php:249
+#: includes/template-functions.php:303
 msgid "You have already purchased this item, but you may purchase it again."
 msgstr ""
 "Vous avez déjà acheté cet article, mais vous pouvez l'acheter à nouveau."
@@ -2446,125 +2434,6 @@ msgstr ""
 "Veuillez noter : Les transactions créées en mode test ne sont pas incluses "
 "sur cette page ou dans les rapports en PDF."
 
-#: includes/admin-pages/settings-old.php:12
-msgid "Pages"
-msgstr "Pages"
-
-# @ edd
-#: includes/admin-pages/settings-old.php:14
-#: includes/admin-pages/settings.php:37
-msgid "Misc"
-msgstr "Divers"
-
-# @ edd
-#: includes/admin-pages/settings-old.php:25
-msgid "Purchase Form"
-msgstr "Formulaire d'achat"
-
-# @ edd
-#: includes/admin-pages/settings-old.php:31
-#: includes/admin-pages/settings-old.php:36
-msgid "Purchase Page"
-msgstr "Page d'achat"
-
-# @ edd
-#: includes/admin-pages/settings-old.php:49
-#: includes/admin-pages/settings-old.php:78
-msgid "No pages found"
-msgstr "Aucune page trouvée"
-
-#: includes/admin-pages/settings-old.php:53
-msgid "Choose the page that holds the checkout form short code."
-msgstr ""
-"Choisissez la page sur laquelle se trouve le code macro du formulaire de "
-"commande"
-
-# @ edd
-#: includes/admin-pages/settings-old.php:82
-msgid "Choose the page users are directed to after a successful purchase."
-msgstr ""
-"Choisissez la page vers laquelle les utilisateurs seront redifigés après un "
-"achat réussi."
-
-#: includes/admin-pages/settings-old.php:110
-msgid "Check this to use the plugin in test mode."
-msgstr "Cocher pour utiliser l'extension en mode test."
-
-# @ edd
-#: includes/admin-pages/settings-old.php:124
-#: includes/admin-pages/settings-old.php:129
-msgid "Gateways"
-msgstr "Passerelles"
-
-#: includes/admin-pages/settings-old.php:140
-msgid ""
-"Check each of the payment gateways you would like to enable. Configure the "
-"selected gateways below."
-msgstr ""
-"Cocher chaque passerelle de paiement que vous désirez activer. Configurez "
-"les passerelles sélectionnées ci-dessous."
-
-# @ edd
-#: includes/admin-pages/settings-old.php:163
-msgid "Enter your PayPal Email."
-msgstr "Entrez l'adresse e-mail associée à votre compte PayPal."
-
-#: includes/admin-pages/settings-old.php:177
-msgid "Miscellaneous"
-msgstr "Divers"
-
-# @ edd
-#: includes/admin-pages/settings-old.php:183
-#: includes/admin-pages/settings-old.php:188
-msgid "Enable Ajax"
-msgstr "Activer Ajax"
-
-# @ edd
-#: includes/admin-pages/settings-old.php:192
-msgid "Check this to enable AJAX for the shopping cart."
-msgstr "Cocher pour activer AJAX pour le panier."
-
-#: includes/admin-pages/settings-old.php:199
-#: includes/admin-pages/settings-old.php:204
-msgid "Logged-In Only"
-msgstr "Connecté uniquement"
-
-#: includes/admin-pages/settings-old.php:261
-msgid "Choose your currency."
-msgstr "Choisissez votre monnaie."
-
-# @ edd
-#: includes/admin-pages/settings-old.php:261
-msgid "Note"
-msgstr "Note"
-
-#: includes/admin-pages/settings-old.php:261
-msgid "If you use Stripe, you MUST use USD."
-msgstr "Si vous utilisez Stripe, vous DEVEZ utiliser USD."
-
-#: includes/admin-pages/settings-old.php:288
-msgid "Messages"
-msgstr "Messages"
-
-# @ edd
-#: includes/admin-pages/settings-old.php:294
-#: includes/admin-pages/settings-old.php:299
-msgid "Payment Confirmation"
-msgstr "Confirmation de paiement"
-
-# @ edd
-#: includes/admin-pages/settings-old.php:303
-msgid ""
-"Enter the message displayed after a user makes a successful purchase. HTML "
-"is accepted."
-msgstr ""
-"Entrez le message à afficher après un paiement réussi par l'utilisateur. "
-"HTML autorisé."
-
-#: includes/admin-pages/settings-old.php:313
-msgid "Save Options"
-msgstr "Sauvegarder Options"
-
 # @ edd
 #: includes/admin-pages/settings.php:33
 msgid "General"
@@ -2579,6 +2448,11 @@ msgstr "E-mails"
 #: includes/admin-pages/settings.php:36
 msgid "Styles"
 msgstr "Styles"
+
+# @ edd
+#: includes/admin-pages/settings.php:37
+msgid "Misc"
+msgstr "Divers"
 
 # @ edd
 #: includes/admin-pages/forms/add-discount.php:12
@@ -2774,6 +2648,9 @@ msgid "Item Price"
 msgstr "Prix de l'article"
 
 # @ edd
-#: includes/templates/checkout_cart.php:47
+#: includes/templates/checkout_cart.php:49
 msgid "Total"
 msgstr "Total"
+
+#~ msgid "Pages"
+#~ msgstr "Pages"
