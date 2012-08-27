@@ -183,3 +183,23 @@ function edd_ajax_get_download_title() {
 }
 add_action('wp_ajax_edd_get_download_title', 'edd_ajax_get_download_title');
 add_action('wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_title');
+
+/**
+ * Get Download Title
+ *
+ * Used only in the admin
+ *
+ * @access      private
+ * @since       1.1.5.2
+ * @return      string
+*/
+
+function edd_ajax_get_payment_gateway() {
+	$payment_mode = esc_attr( $_POST[ 'gateway' ] );
+	
+	echo edd_get_checkout_form( $payment_mode );
+
+	die();
+}
+add_action('wp_ajax_edd_ajax_get_payment_gateway', 'edd_ajax_get_payment_gateway');
+add_action('wp_ajax_nopriv_edd_ajax_get_payment_gateway', 'edd_ajax_get_payment_gateway');

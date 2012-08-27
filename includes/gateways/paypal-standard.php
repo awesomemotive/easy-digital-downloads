@@ -77,7 +77,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
     // check payment
     if ( ! $payment ) {
         // problems? send back
-        edd_send_back_to_checkout( '?payment-mode=' . $purchase_data['post_data']['edd-gateway'] );
+        edd_send_back_to_checkout( array( 'payment-mode' => $purchase_data['post_data']['edd-gateway'] ) );
     } else {
         // only send to PayPal if the pending payment is created successfully
         $listener_url = trailingslashit( home_url() ).'?edd-listener=IPN';
