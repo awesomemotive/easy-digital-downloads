@@ -148,7 +148,7 @@ function edd_register_settings() {
 				array(
 					'id' => 'disable_paypal_verification',
 					'name' => __('Disable PayPal IPN Verification', 'edd'),
-					'desc' => __('If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifiyin purchases.', 'edd'),
+					'desc' => __('If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases.', 'edd'),
 					'type' => 'checkbox'
 				)
 			)
@@ -288,19 +288,19 @@ function edd_register_settings() {
 	
 	if( false == get_option( 'edd_settings_general' ) ) {  
         add_option( 'edd_settings_general' );  
-   }
+   	}	
 	if( false == get_option( 'edd_settings_gateways' ) ) {  
         add_option( 'edd_settings_gateways' );  
-   }
+   	}
 	if( false == get_option( 'edd_settings_emails' ) ) {  
         add_option( 'edd_settings_emails' );  
-   }
-   if( false == get_option( 'edd_settings_styles' ) ) {  
+   	}
+   	if( false == get_option( 'edd_settings_styles' ) ) {  
         add_option( 'edd_settings_styles' );  
-   }
+   	}
 	if( false == get_option( 'edd_settings_misc' ) ) {  
         add_option( 'edd_settings_misc' );  
-   } 
+   	} 
 	
 	
 	add_settings_section(
