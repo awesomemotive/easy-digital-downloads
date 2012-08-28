@@ -383,7 +383,7 @@ function edd_is_discount_used($code, $email) {
 */
 
 function edd_is_discount_valid($code, $email = '') {
-	
+
 	$discount_id 	= edd_get_discount_id_by_code($code);
 	$email 			= trim($email);
 
