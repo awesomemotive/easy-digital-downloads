@@ -109,8 +109,8 @@ $discount = edd_get_discount($_GET['discount']);
 	</table>
 	<p class="submit">
 		<input type="hidden" name="edd-action" value="edit_discount"/>
-		<input type="hidden" name="discount-id" value="<?php echo $_GET['discount']; ?>"/>
-		<input type="hidden" name="edd-redirect" value="<?php echo admin_url('edit.php?post_type=download&page=edd-discounts'); ?>"/>
+		<input type="hidden" name="discount-id" value="<?php echo absint( $_GET['discount'] ); ?>"/>
+		<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url('edit.php?post_type=download&page=edd-discounts') ); ?>"/>
 		<input type="hidden" name="edd-discount-nonce" value="<?php echo wp_create_nonce('edd_discount_nonce'); ?>"/>
 		<input type="submit" value="<?php _e('Update Discount Code', 'edd'); ?>" class="button-primary"/>
 	</p>
