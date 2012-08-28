@@ -21,7 +21,7 @@
 
 function edd_resend_purchase_receipt($data) {
 	$purchase_id = $data['purchase_id'];
-	edd_email_purchase_receipt($purchase_id, false);
-	wp_redirect(add_query_arg('edd-message', 'email_sent', remove_query_arg('edd-action', remove_query_arg('purchase_id')))); exit;
+	edd_email_purchase_receipt( $purchase_id, false );
+	wp_redirect( add_query_arg( array( 'edd-message' => 'email_sent', 'edd-action' => false, 'purchase_id' => false ) ) ); exit;
 }
 add_action('edd_email_links', 'edd_resend_purchase_receipt');
