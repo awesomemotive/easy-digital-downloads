@@ -281,6 +281,12 @@ function edd_register_settings() {
 					'name' => __('Agreement Text', 'edd'),
 					'desc' => __('If Agree to Terms is checked, enter the agreement terms here.', 'edd'),
 					'type' => 'rich_editor',
+				),
+				array(
+					'id' => 'checkout_label',
+					'name' => __('Complete Purchase Text', 'edd'),
+					'desc' => __('The button label for completing a purchase.', 'edd'),
+					'type' => 'text',
 				)
 			)
 		)
