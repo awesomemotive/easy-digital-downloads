@@ -213,7 +213,8 @@ function edd_checkout_form() {
 									<span class="edd_button edd_<?php echo $color; ?>">
 										<span class="edd_button_outer">
 											<span class="edd_button_inner">
-												<input type="submit" class="edd_button_text edd-submit" id="edd-purchase-button" name="edd-purchase" value="<?php _e('Purchase', 'edd'); ?>"/>
+												<?php $complete_purchase = isset( $edd_options['checkout_label'] ) && strlen( trim( $edd_options['checkout_label'] ) ) > 0 ? $edd_options['checkout_label'] : __('Purchase', 'edd'); ?>
+												<input type="submit" class="edd_button_text edd-submit" id="edd-purchase-button" name="edd-purchase" value="<?php echo $complete_purchase; ?>"/>
 											</span>
 										</span>
 									</span>

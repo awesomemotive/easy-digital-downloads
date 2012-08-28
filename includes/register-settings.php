@@ -148,7 +148,7 @@ function edd_register_settings() {
 				array(
 					'id' => 'disable_paypal_verification',
 					'name' => __('Disable PayPal IPN Verification', 'edd'),
-					'desc' => __('If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifiyin purchases.', 'edd'),
+					'desc' => __('If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases.', 'edd'),
 					'type' => 'checkbox'
 				)
 			)
@@ -281,6 +281,12 @@ function edd_register_settings() {
 					'name' => __('Agreement Text', 'edd'),
 					'desc' => __('If Agree to Terms is checked, enter the agreement terms here.', 'edd'),
 					'type' => 'rich_editor',
+				),
+				array(
+					'id' => 'checkout_label',
+					'name' => __('Complete Purchase Text', 'edd'),
+					'desc' => __('The button label for completing a purchase.', 'edd'),
+					'type' => 'text',
 				)
 			)
 		)
@@ -288,19 +294,19 @@ function edd_register_settings() {
 	
 	if( false == get_option( 'edd_settings_general' ) ) {  
         add_option( 'edd_settings_general' );  
-   }
+   	}	
 	if( false == get_option( 'edd_settings_gateways' ) ) {  
         add_option( 'edd_settings_gateways' );  
-   }
+   	}
 	if( false == get_option( 'edd_settings_emails' ) ) {  
         add_option( 'edd_settings_emails' );  
-   }
-   if( false == get_option( 'edd_settings_styles' ) ) {  
+   	}
+   	if( false == get_option( 'edd_settings_styles' ) ) {  
         add_option( 'edd_settings_styles' );  
-   }
+   	}
 	if( false == get_option( 'edd_settings_misc' ) ) {  
         add_option( 'edd_settings_misc' );  
-   } 
+   	} 
 	
 	
 	add_settings_section(
@@ -620,7 +626,7 @@ function edd_text_callback($args) {
 
 	if(isset($edd_options[$args['id']])) { $value = $edd_options[$args['id']]; } else { $value = isset($args['std']) ? $args['std'] : ''; }
 	$size = isset($args['size']) && !is_null($args['size']) ? $args['size'] : 'regular';
-    $html = '<input type="text" class="' . $args['size'] . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . $value . '"/>';   
+    $html = '<input type="text" class="' . $args['size'] . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';   
     $html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';  
  
     echo $html; 
@@ -673,7 +679,7 @@ function edd_rich_editor_callback($args) {
     if($wp_version >= 3.3 && function_exists('wp_editor')) {
 		$html = wp_editor($value, 'edd_settings_' . $args['section'] . '[' . $args['id'] . ']', array('textarea_name' => 'edd_settings_' . $args['section'] . '[' . $args['id'] . ']'));
     } else {
-		$html = '<textarea class="large-text" rows="10" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']">' . $value . '</textarea>';
+		$html = '<textarea class="large-text" rows="10" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']">' . esc_textarea( $value ) . '</textarea>';
 	}	
 	$html .= '<br/><label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';  
  
@@ -698,7 +704,7 @@ function edd_upload_callback($args) {
 
 	if(isset($edd_options[$args['id']])) { $value = $edd_options[$args['id']]; } else { $value = isset($args['std']) ? $args['std'] : ''; }
 	$size = isset($args['size']) && !is_null($args['size']) ? $args['size'] : 'regular';
-    $html = '<input type="text" class="' . $args['size'] . '-text edd_upload_field" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . $value . '"/>';   
+    $html = '<input type="text" class="' . $args['size'] . '-text edd_upload_field" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';   
     $html .= '&nbsp;<input type="button" class="edd_upload_image_button button-secondary" value="' . __('Upload File', 'edd') . '"/>';
     $html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';  
  
@@ -754,11 +760,11 @@ function edd_settings_sanitize( $input ) {
 */
 
 function edd_get_settings() {
-	$page_settings = is_array(get_option('edd_settings_general')) ? get_option('edd_settings_general') : array();
-	$gateway_settings = is_array(get_option('edd_settings_gateways')) ? get_option('edd_settings_gateways') : array();
-	$email_settings = is_array(get_option('edd_settings_emails')) ? get_option('edd_settings_emails') : array();
-	$style_settings = is_array(get_option('edd_settings_styles')) ? get_option('edd_settings_styles') : array();
-	$misc_settings = is_array(get_option('edd_settings_misc')) ? get_option('edd_settings_misc') : array();
+	$page_settings 		= is_array(get_option('edd_settings_general')) 	? get_option('edd_settings_general') 	: array();
+	$gateway_settings 	= is_array(get_option('edd_settings_gateways')) ? get_option('edd_settings_gateways') 	: array();
+	$email_settings 	= is_array(get_option('edd_settings_emails')) 	? get_option('edd_settings_emails') 	: array();
+	$style_settings 	= is_array(get_option('edd_settings_styles')) 	? get_option('edd_settings_styles') 	: array();
+	$misc_settings 		= is_array(get_option('edd_settings_misc')) 	? get_option('edd_settings_misc') 	: array();
 
 	return array_merge($page_settings, $gateway_settings, $email_settings, $style_settings, $misc_settings);
 }

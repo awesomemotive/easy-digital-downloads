@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads v1.1.4.1\n"
+"Project-Id-Version: Easy Digital Downloads v1.1.5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-09 01:11+0100\n"
-"PO-Revision-Date: 2012-08-09 01:11+0100\n"
+"POT-Creation-Date: 2012-08-26 11:53+0100\n"
+"PO-Revision-Date: 2012-08-26 11:54+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
 "Language-Team: FxB <fx@fxbenard.com>\n"
 "Language: fr_FR\n"
@@ -12,8 +12,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
-"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
+"X-Poedit-KeywordsList: __;_e;esc_attr__;esc_attr_e;esc_html__;esc_html_e;_n;"
+"_x;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c\n"
 "X-Poedit-Basepath: ../\n"
 "X-Textdomain-Support: yes\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -87,35 +87,40 @@ msgid "Add Ons"
 msgstr "Modules complémentaires"
 
 # @ edd
-#: includes/ajax-functions.php:112 includes/process-purchase.php:225
+#: includes/ajax-functions.php:102
+msgid "This discount code has been used already"
+msgstr "Ce code de promo a déja été utilisé"
+
+# @ edd
+#: includes/ajax-functions.php:118 includes/process-purchase.php:231
 msgid "The discount you entered is invalid"
 msgstr "La remise que vous avez encodé est invalide"
 
 # @ edd
-#: includes/cart-functions.php:390
+#: includes/cart-functions.php:419
 #, php-format
 msgid "You have successfully added %s to your shopping cart."
 msgstr "Vous venez d'ajouter avec succès %s à votre panier."
 
 # @ edd
-#: includes/cart-functions.php:391
+#: includes/cart-functions.php:420
 msgid "Checkout."
 msgstr "Commander."
 
 # @ edd
 #: includes/cart-template.php:50 includes/cart-template.php:53
-#: includes/install.php:31 includes/template-functions.php:106
-#: includes/template-functions.php:117
+#: includes/install.php:31 includes/template-functions.php:145
+#: includes/template-functions.php:166
 msgid "Checkout"
 msgstr "Commander"
 
 # @ edd
-#: includes/cart-template.php:83 includes/templates/checkout_cart.php:34
+#: includes/cart-template.php:84 includes/templates/checkout_cart.php:36
 msgid "remove"
 msgstr "retirer"
 
 # @ edd
-#: includes/cart-template.php:100
+#: includes/cart-template.php:103
 msgid "Your cart is empty."
 msgstr "Votre panier est vide."
 
@@ -126,7 +131,7 @@ msgstr "Choisissez votre méthode de paiement"
 
 # @ edd
 #: includes/checkout-template.php:86 includes/metabox.php:493
-#: includes/metabox.php:590 includes/admin-pages/payments-history.php:298
+#: includes/metabox.php:590 includes/admin-pages/payments-history.php:305
 msgid "Next"
 msgstr "Suivant"
 
@@ -193,7 +198,7 @@ msgstr "Accepter les conditions ?"
 # @ edd
 #: includes/checkout-template.php:216 includes/dashboard-columns.php:76
 #: includes/metabox.php:215 includes/metabox.php:315
-#: includes/shortcodes.php:26 includes/template-functions.php:55
+#: includes/shortcodes.php:26 includes/template-functions.php:68
 #: includes/thickbox.php:61
 msgid "Purchase"
 msgstr "Acheter"
@@ -411,7 +416,7 @@ msgid "Tags"
 msgstr "Mots-clefs"
 
 # @ edd
-#: includes/dashboard-columns.php:29 includes/dashboard-columns.php:226
+#: includes/dashboard-columns.php:29 includes/dashboard-columns.php:227
 #: includes/pdf-reports.php:66 includes/admin-pages/payments-history.php:134
 #: includes/admin-pages/payments-history.php:149
 msgid "Price"
@@ -442,16 +447,16 @@ msgid "Date"
 msgstr "Date"
 
 # @ edd
-#: includes/dashboard-columns.php:184
+#: includes/dashboard-columns.php:185
 msgid "Show all categories"
 msgstr "Montrer toutes les catégories"
 
 # @ edd
-#: includes/dashboard-columns.php:195
+#: includes/dashboard-columns.php:196
 msgid "Show all tags"
 msgstr "Montrer tous les tags"
 
-#: includes/dashboard-columns.php:223
+#: includes/dashboard-columns.php:224
 #, php-format
 msgid "%s Data"
 msgstr "%s Data"
@@ -595,13 +600,14 @@ msgstr "aucun"
 
 # @ edd
 #: includes/export-functions.php:119
-#: includes/admin-pages/payments-history.php:273
+#: includes/admin-pages/payments-history.php:276
+#: includes/admin-pages/payments-history.php:278
 msgid "guest"
 msgstr "invité"
 
 # @ edd
 #: includes/export-functions.php:127
-#: includes/admin-pages/payments-history.php:282
+#: includes/admin-pages/payments-history.php:289
 msgid "No payments recorded yet"
 msgstr "Aucun paiement encore enregistré"
 
@@ -672,12 +678,12 @@ msgid "You are already logged in"
 msgstr "Vous êtes déjà connecté(e)."
 
 # @ edd
-#: includes/login-register.php:92 includes/process-purchase.php:458
+#: includes/login-register.php:92 includes/process-purchase.php:464
 msgid "The password you entered is incorrect"
 msgstr "Le mot de passe fourni ne correspond pas"
 
 # @ edd
-#: includes/login-register.php:95 includes/process-purchase.php:477
+#: includes/login-register.php:95 includes/process-purchase.php:483
 msgid "The username you entered does not exist"
 msgstr "Le nom d'utilisateur fourni n'existe pas"
 
@@ -771,7 +777,7 @@ msgstr "Prix catalogue"
 
 # @ edd
 #: includes/metabox.php:178 includes/metabox.php:189
-#: includes/register-settings.php:696
+#: includes/register-settings.php:702
 msgid "Upload File"
 msgstr "Télécharger fichier"
 
@@ -902,7 +908,7 @@ msgstr "Pas encore de ventes"
 
 # @ edd
 #: includes/metabox.php:492 includes/metabox.php:589
-#: includes/admin-pages/payments-history.php:297
+#: includes/admin-pages/payments-history.php:304
 msgid "Previous"
 msgstr "Précédent"
 
@@ -1061,6 +1067,10 @@ msgstr "Roupie indienne"
 #: includes/misc-functions.php:209
 msgid "Turkish Lira"
 msgstr "Lire Turque (TL)"
+
+#: includes/misc-functions.php:210
+msgid "Iranian Rial"
+msgstr "Rial iranian"
 
 # @ edd
 #: includes/payment-functions.php:259
@@ -1409,83 +1419,83 @@ msgid "Download submitted."
 msgstr "Téléchargement ajouté."
 
 # @ edd
-#: includes/process-download.php:99
+#: includes/process-download.php:121
 msgid "You do not have permission to download this file"
 msgstr "Vous n'avez pas la permission de télécharger ce fichier"
 
 # @ edd
-#: includes/process-download.php:99
+#: includes/process-download.php:121
 msgid "Purchase Verification Failed"
 msgstr "Erreur lors de la vérification de l'achat"
 
-#: includes/process-purchase.php:193
+#: includes/process-purchase.php:198
 msgid "The selected gateway is not active"
 msgstr "La passerelle sélectionnée n'est pas active"
 
-#: includes/process-purchase.php:197
+#: includes/process-purchase.php:202
 msgid "No gateway has been selected"
 msgstr "Aucune passerelle n'a été sélectionné"
 
-#: includes/process-purchase.php:245
+#: includes/process-purchase.php:251
 msgid "You must agree to the terms of use"
 msgstr "Vous devez accepter les conditions d'utilisation"
 
 # @ edd
-#: includes/process-purchase.php:275
+#: includes/process-purchase.php:281
 msgid "Please enter a valid email address."
 msgstr "Veuillez saisir une adresse de messagerie valide."
 
-#: includes/process-purchase.php:289
+#: includes/process-purchase.php:295
 msgid "The user information is invalid."
 msgstr "Les informations sur l'utilisateur sont incorrectes."
 
 # @ edd
-#: includes/process-purchase.php:335
+#: includes/process-purchase.php:341
 msgid "Username already taken"
 msgstr "Nom d'utilisateur déjà utilisé"
 
 # @ edd
-#: includes/process-purchase.php:341
+#: includes/process-purchase.php:347
 msgid "Invalid username"
 msgstr "Nom d'utilisateur incorrect"
 
 # @ edd
-#: includes/process-purchase.php:352
+#: includes/process-purchase.php:358
 msgid "You must register or login to complete your purchase"
 msgstr "Vous devez être enregistré ou connecté afin de terminer votre achat"
 
 # @ edd
-#: includes/process-purchase.php:364 includes/process-purchase.php:508
+#: includes/process-purchase.php:370 includes/process-purchase.php:514
 msgid "Invalid email"
 msgstr "E-mail incorrect"
 
 # @ edd
-#: includes/process-purchase.php:370
+#: includes/process-purchase.php:376
 msgid "Email already used"
 msgstr "E-mail déjà utilisé"
 
 # @ edd
-#: includes/process-purchase.php:382 includes/process-purchase.php:515
+#: includes/process-purchase.php:388 includes/process-purchase.php:521
 msgid "Enter an email"
 msgstr "Entrez une adresse e-mail"
 
 # @ edd
-#: includes/process-purchase.php:393
+#: includes/process-purchase.php:399
 msgid "Passwords don't match"
 msgstr "Les mote de passe ne correspondent pas"
 
 # @ edd
-#: includes/process-purchase.php:408 includes/process-purchase.php:473
+#: includes/process-purchase.php:414 includes/process-purchase.php:479
 msgid "Enter a password"
 msgstr "Entrez un mot de passe"
 
 # @ edd
-#: includes/process-purchase.php:413
+#: includes/process-purchase.php:419
 msgid "Enter the password confirmation"
 msgstr "Entrez la confirmation de mot de passe"
 
 # @ edd
-#: includes/process-purchase.php:440
+#: includes/process-purchase.php:446
 msgid "You must login or register to complete your purchase"
 msgstr "Vous devez être connecté ou enregistré afin de terminer votre achat"
 
@@ -1507,13 +1517,13 @@ msgstr ""
 
 # @ edd
 #: includes/register-settings.php:47
-msgid "Purchase Page"
-msgstr "Page d'achat"
+msgid "Checkout Page"
+msgstr "Page de commande"
 
 # @ edd
 #: includes/register-settings.php:48
 msgid "This is the checkout page where buyers will complete their purchases"
-msgstr "Ceci est la page de commande où les acheteurs réalisent leurs achats."
+msgstr "La page de commande où les acheteurs réalisent leurs achats."
 
 # @ edd
 #: includes/register-settings.php:54
@@ -1524,26 +1534,38 @@ msgstr "Page d'achat réussi"
 #: includes/register-settings.php:55
 msgid "This is the page buyers are sent to after completing their purchases"
 msgstr ""
-"Ceci est la page vers laquelle sont redirigés les acheteurs après avoir "
-"réalisé leurs achats."
+"La page vers laquelle les acheteurs sont redirigés après avoir réalisé leurs "
+"achats."
+
+#: includes/register-settings.php:61
+msgid "Download Links on Success Page"
+msgstr "Liens des téléchargements sur la page d'achat réussi"
+
+#: includes/register-settings.php:62
+msgid ""
+"Show a list of all download links on the success page after completing a "
+"purchase?"
+msgstr ""
+"Afficher la liste de tous les liens des téléchargements sur la page d'achat "
+"réussi après avoir terminé un achat ?"
 
 # @ edd
-#: includes/register-settings.php:61
+#: includes/register-settings.php:67
 msgid "Currency Settings"
 msgstr "Réglages de monnaie"
 
 # @ edd
-#: includes/register-settings.php:62
+#: includes/register-settings.php:68
 msgid "Configure the currency options"
 msgstr "Configurer les réglages de monnaie"
 
 # @ edd
-#: includes/register-settings.php:67
+#: includes/register-settings.php:73
 msgid "Currency"
 msgstr "Monnaie"
 
 # @ edd
-#: includes/register-settings.php:68
+#: includes/register-settings.php:74
 msgid ""
 "Choose your currency. Note that some payment gateways have currency "
 "restrictions."
@@ -1552,67 +1574,67 @@ msgstr ""
 "paiement ont des limitations quant à la monnaie."
 
 # @ edd
-#: includes/register-settings.php:74
+#: includes/register-settings.php:80
 msgid "Currency Position"
 msgstr "Position du symbole monétaire"
 
 # @ edd
-#: includes/register-settings.php:75
+#: includes/register-settings.php:81
 msgid "Choose the location of the currency sign."
 msgstr "Choisissez l'emplacement du symbole monétaire."
 
 # @ edd
-#: includes/register-settings.php:78
+#: includes/register-settings.php:84
 msgid "Before - $10"
 msgstr "Avant - $10"
 
 # @ edd
-#: includes/register-settings.php:79
+#: includes/register-settings.php:85
 msgid "After - 10$"
 msgstr "Après - 10$"
 
 # @ edd
-#: includes/register-settings.php:84
+#: includes/register-settings.php:90
 msgid "Thousands Separator"
 msgstr "Séparateur des milliers"
 
 # @ edd
-#: includes/register-settings.php:85
+#: includes/register-settings.php:91
 msgid "The symbol (usually , or .) to separate thousands"
 msgstr "Le séparateur (le plus souvent , ou .) pour séparer les milliers."
 
 # @ edd
-#: includes/register-settings.php:92
+#: includes/register-settings.php:98
 msgid "Decimal Separator"
 msgstr "Séparateur décimal"
 
 # @ edd
-#: includes/register-settings.php:93
+#: includes/register-settings.php:99
 msgid "The symbol (usually , or .) to separate decimal points"
 msgstr "Le séparateur (le plus souvent , ou .) pour séparer les décimales."
 
 # @ edd
-#: includes/register-settings.php:104 includes/admin-pages/settings.php:34
+#: includes/register-settings.php:110 includes/admin-pages/settings.php:34
 msgid "Payment Gateways"
 msgstr "Portails de paiement"
 
 # @ edd
-#: includes/register-settings.php:105
+#: includes/register-settings.php:111
 msgid "Choose the payment gateways you want to enable."
 msgstr "Choisissez les passerelles de paiement que vous désirez activer."
 
 # @ edd
-#: includes/register-settings.php:111
+#: includes/register-settings.php:117
 msgid "Accepted Payment Method Icons"
 msgstr "Icônes des méthodes de paiement acceptées"
 
 # @ edd
-#: includes/register-settings.php:112
+#: includes/register-settings.php:118
 msgid "Display icons for the selected payment methods"
 msgstr "Afficher les icônes pour les méthodes de paiement acceptées"
 
 # @ edd
-#: includes/register-settings.php:112
+#: includes/register-settings.php:118
 msgid ""
 "You will also need to configure your gateway settings if you are accepting "
 "credit cards"
@@ -1621,32 +1643,32 @@ msgstr ""
 "acceptez les cartes de crédit."
 
 # @ edd
-#: includes/register-settings.php:125
+#: includes/register-settings.php:131
 msgid "PayPal Settings"
 msgstr "Réglages PayPal"
 
 # @ edd
-#: includes/register-settings.php:126
+#: includes/register-settings.php:132
 msgid "Configure the PayPal settings"
 msgstr "Configurer les réglages PayPal"
 
 # @ edd
-#: includes/register-settings.php:131
+#: includes/register-settings.php:137
 msgid "PayPal Email"
 msgstr "E-mail PayPal"
 
 # @ edd
-#: includes/register-settings.php:132
+#: includes/register-settings.php:138
 msgid "Enter your PayPal account's email"
 msgstr "Fournissez votre adresse e-mail PayPal."
 
 # @ edd
-#: includes/register-settings.php:138
+#: includes/register-settings.php:144
 msgid "Alternate PayPal Purchase Verification"
 msgstr "Vérification d'achat PayPal alternative"
 
 # @ edd
-#: includes/register-settings.php:139
+#: includes/register-settings.php:145
 msgid ""
 "If payments are not getting marked as complete, then check this box. Note, "
 "this requires that buyers return to your site from PayPal."
@@ -1655,12 +1677,12 @@ msgstr ""
 "Remarque, ce qui exige que les acheteurs reviennent sur votre site de PayPal."
 
 # @ edd
-#: includes/register-settings.php:144
+#: includes/register-settings.php:150
 msgid "Disable PayPal IPN Verification"
 msgstr "Désactiver cURL pour l'IPN PayPal"
 
 # @ edd
-#: includes/register-settings.php:145
+#: includes/register-settings.php:151
 msgid ""
 "If payments are not getting marked as complete, then check this box. This "
 "forces the site to use a slightly less secure method of verifiyin purchases."
@@ -1669,11 +1691,11 @@ msgstr ""
 "cURL ne règle pas le problème, cocher cette case. Cela force le site a "
 "utiliser une méthode un peu moins sécurisée pour vérifier les achats."
 
-#: includes/register-settings.php:154
+#: includes/register-settings.php:160
 msgid "Email Template"
 msgstr "Modèle d'e-mail"
 
-#: includes/register-settings.php:155
+#: includes/register-settings.php:161
 msgid ""
 "Choose a template. Click \"Save Changes\" then \"Preview Purchase Receipt\" "
 "to see the new template."
@@ -1682,12 +1704,12 @@ msgstr ""
 "\"Aperçu de reçu d'achat\" pour voir le nouveau modèle."
 
 # @ edd
-#: includes/register-settings.php:167
+#: includes/register-settings.php:173
 msgid "From Name"
 msgstr "Nom de l'expéditeur"
 
 # @ edd
-#: includes/register-settings.php:168
+#: includes/register-settings.php:174
 msgid ""
 "The name purchase receipts are said to come from. This should probably be "
 "your site or shop name."
@@ -1696,34 +1718,34 @@ msgstr ""
 "site ou magasin."
 
 # @ edd
-#: includes/register-settings.php:173
+#: includes/register-settings.php:179
 msgid "From Email"
 msgstr "E-mail de l'expéditeur"
 
 # @ edd
-#: includes/register-settings.php:174
+#: includes/register-settings.php:180
 msgid ""
 "Email to send purchase receipts from. This will act as the \"from\" and "
 "\"reply-to\" address."
 msgstr "Adresse e-mail de l'expéditeur."
 
 # @ edd
-#: includes/register-settings.php:179
+#: includes/register-settings.php:185
 msgid "Purchase Email Subject"
 msgstr "Sujet de l'e-mail relatif à l'achat"
 
 # @ edd
-#: includes/register-settings.php:180
+#: includes/register-settings.php:186
 msgid "Enter the subject line for the purchase receipt email"
 msgstr "Le sujet de l'e-mail correspondant à la facture de l'achat."
 
 # @ edd
-#: includes/register-settings.php:185
+#: includes/register-settings.php:191
 msgid "Purchase Receipt"
 msgstr "Facture d'achat"
 
 # @ edd
-#: includes/register-settings.php:186
+#: includes/register-settings.php:192
 msgid ""
 "Enter the email that is sent to users after completing a successful "
 "purchase. HTML is accepted. Available template tags:"
@@ -1732,98 +1754,98 @@ msgstr ""
 "HTML autorisé. Balises autorisées :"
 
 # @ edd
-#: includes/register-settings.php:187
+#: includes/register-settings.php:193
 msgid "A list of download URLs for each download purchased"
 msgstr "Liste des URL de téléchargements pour chaque téléchargement acheté"
 
 # @ edd
-#: includes/register-settings.php:188
+#: includes/register-settings.php:194
 msgid "The buyer's name"
 msgstr "Nom de l'acheteur"
 
 # @ edd
-#: includes/register-settings.php:189
+#: includes/register-settings.php:195
 msgid "The date of the purchase"
 msgstr "Date de l'achat"
 
 # @ edd
-#: includes/register-settings.php:190
+#: includes/register-settings.php:196
 msgid "The total price of the purchase"
 msgstr "Le prix total de l'achat"
 
 # @ edd
-#: includes/register-settings.php:191
+#: includes/register-settings.php:197
 msgid "The unique ID number for this purchase receipt"
 msgstr "Le nombre de l'ID unique pour cette facture d'achat."
 
 # @ edd
-#: includes/register-settings.php:192
+#: includes/register-settings.php:198
 msgid "The method of payment used for this purchase"
 msgstr "La méthode de paiement utilisée pour cet achat"
 
 # @ edd
-#: includes/register-settings.php:193
+#: includes/register-settings.php:199
 msgid "Your site name"
 msgstr "Nom du site web"
 
-#: includes/register-settings.php:202
+#: includes/register-settings.php:208
 msgid "Disable Styles"
 msgstr "Désactiver les styles"
 
-#: includes/register-settings.php:203
+#: includes/register-settings.php:209
 msgid "Check this to disable all included styling"
 msgstr "Cocher cette case pour désactiver tous les style inclus."
 
 # @ edd
-#: includes/register-settings.php:208
+#: includes/register-settings.php:214
 msgid "Checkout Button Color"
 msgstr "Couleur du bouton Commander"
 
-#: includes/register-settings.php:209
+#: includes/register-settings.php:215
 msgid "Choose the button color you want to use for the checkout buttons."
 msgstr ""
 "Choisir la couleur du bouton que vous souhaitez utiliser pour les boutons "
 "commander."
 
 # @ edd
-#: includes/register-settings.php:219
+#: includes/register-settings.php:225
 msgid "Disable Ajax"
 msgstr "Desactiver Ajax"
 
 # @ edd
-#: includes/register-settings.php:220
+#: includes/register-settings.php:226
 msgid "Check this to disable AJAX for the shopping cart."
 msgstr "Cocher pour desactiver AJAX pour le panier."
 
 # @ edd
-#: includes/register-settings.php:225
+#: includes/register-settings.php:231
 msgid "Enable jQuery Validation"
 msgstr "Activer la validation jQuery"
 
 # @ edd
-#: includes/register-settings.php:226
+#: includes/register-settings.php:232
 msgid "Check this to enable jQuery validation on the checkout form."
 msgstr ""
 "Cocher pour activer la validation jQuery sur le formulaire de commande."
 
 # @ edd
-#: includes/register-settings.php:231
+#: includes/register-settings.php:237
 msgid "Disable Guest Checkout"
 msgstr "Désactiver la commande pour les comptes invité"
 
 # @ edd
-#: includes/register-settings.php:232
+#: includes/register-settings.php:238
 msgid "Require that users be logged-in to purchase files."
 msgstr ""
 "Exiger que les utilisateurs soient connectés pour acheter des fichiers."
 
 # @ edd
-#: includes/register-settings.php:237
+#: includes/register-settings.php:243
 msgid "Show Register / Login Form?"
 msgstr "Montrer le fomualire de connection / inscription ?"
 
 # @ edd
-#: includes/register-settings.php:238
+#: includes/register-settings.php:244
 msgid ""
 "Display the registration and login forms on the checkout page for non-logged-"
 "in users."
@@ -1832,11 +1854,11 @@ msgstr ""
 "commande pour les utilisateurs non connectés."
 
 # @ edd
-#: includes/register-settings.php:243
+#: includes/register-settings.php:249
 msgid "Download Link Expiration"
 msgstr "Expiration du lien de téléchargement"
 
-#: includes/register-settings.php:244
+#: includes/register-settings.php:250
 msgid ""
 "How long should download links be valid for? Default is 24 hours from the "
 "time they are generated. Enter a time in hours."
@@ -1846,12 +1868,12 @@ msgstr ""
 "Entrez un temps en heures."
 
 # @ edd
-#: includes/register-settings.php:250
+#: includes/register-settings.php:256
 msgid "Disable Redownload?"
 msgstr "Désactiver le re-téléchargement"
 
 # @ edd
-#: includes/register-settings.php:251
+#: includes/register-settings.php:257
 msgid ""
 "Check this if you do not want to allow users to redownload items from their "
 "purchase history."
@@ -1859,15 +1881,15 @@ msgstr ""
 "Cocher si vous ne désirez pas autoriser les utilisateurs à re-télécharger "
 "les articles de leur historique d'achat."
 
-#: includes/register-settings.php:256
+#: includes/register-settings.php:262
 msgid "Terms of Agreement"
 msgstr "Termes du Contrat"
 
-#: includes/register-settings.php:262
+#: includes/register-settings.php:268
 msgid "Agree to Terms"
 msgstr "Accepter les termes du contrat"
 
-#: includes/register-settings.php:263
+#: includes/register-settings.php:269
 msgid ""
 "Check this to show an agree to terms on the checkout that users must agree "
 "to before purchasing."
@@ -1875,51 +1897,51 @@ msgstr ""
 "Cocher pour afficher un accord aux termes du contrat que les utilisateurs "
 "doivent accepter avant l'achat."
 
-#: includes/register-settings.php:268
+#: includes/register-settings.php:274
 msgid "Agree to Terms Label"
 msgstr "Accepter les termes"
 
-#: includes/register-settings.php:269
+#: includes/register-settings.php:275
 msgid "Label shown next to the agree to terms check box."
 msgstr "Étiquette affiché à côté de la case accepter les termes du contrat."
 
-#: includes/register-settings.php:275
+#: includes/register-settings.php:281
 msgid "Agreement Text"
 msgstr "Texte du contrat"
 
-#: includes/register-settings.php:276
+#: includes/register-settings.php:282
 msgid "If Agree to Terms is checked, enter the agreement terms here."
 msgstr ""
 "Si accepter les termes du contrat est coché, entrez les termes de l'accord "
 "ci-dessus."
 
 # @ edd
-#: includes/register-settings.php:302
+#: includes/register-settings.php:308
 msgid "General Settings"
 msgstr "Réglages généraux"
 
 # @ edd
-#: includes/register-settings.php:328
+#: includes/register-settings.php:334
 msgid "Payment Gateway Settings"
 msgstr "Réglages des passerelles de paiement"
 
 # @ edd
-#: includes/register-settings.php:354
+#: includes/register-settings.php:360
 msgid "Email Settings"
 msgstr "Réglages de l'e-mail"
 
 # @ edd
-#: includes/register-settings.php:380
+#: includes/register-settings.php:386
 msgid "Style Settings"
 msgstr "Réglages de style"
 
 # @ edd
-#: includes/register-settings.php:407
+#: includes/register-settings.php:413
 msgid "Misc Settings"
 msgstr "Réglages divers"
 
 # @ edd
-#: includes/register-settings.php:734
+#: includes/register-settings.php:740
 msgid "Settings Updated"
 msgstr "Réglages mis à jour"
 
@@ -1934,34 +1956,39 @@ msgid "Discount Applied"
 msgstr "Code promo appliqué"
 
 # @ edd
-#: includes/scripts.php:43
+#: includes/scripts.php:42
+msgid "Please enter an email address before applying a discount code"
+msgstr "Veuillez fournir une adresse e-mail avant d'appliquer un code promo"
+
+# @ edd
+#: includes/scripts.php:44
 msgid "You have already added this item to your cart"
 msgstr "Vous avez déjà ajouté cet article à votre panier"
 
 # @ edd
-#: includes/scripts.php:44
+#: includes/scripts.php:45
 msgid "Your cart is empty"
 msgstr "Votre panier est vide"
 
 # @ edd
-#: includes/scripts.php:45
+#: includes/scripts.php:46
 msgid "Loading"
 msgstr "Chargement en cours"
 
 # @ edd
-#: includes/scripts.php:116
+#: includes/scripts.php:117
 msgid "Add New Download"
 msgstr "Ajouter un téléchargement"
 
-#: includes/scripts.php:117
+#: includes/scripts.php:118
 msgid "Use This File"
 msgstr "Utiliser ce fichier"
 
-#: includes/scripts.php:118
+#: includes/scripts.php:119
 msgid "Sorry, not available for variable priced products."
 msgstr "Désolé, non disponible pour des produits à prix variables."
 
-#: includes/scripts.php:119
+#: includes/scripts.php:120
 msgid "Are you sure you wish to delete this payment?"
 msgstr "Etes-vous sûr de vouloir supprimer ce paiement ?"
 
@@ -2004,65 +2031,69 @@ msgid "You have not made any purchases"
 msgstr "Vous n'avez fait aucun achat"
 
 # @ edd
-#: includes/shortcodes.php:347
+#: includes/shortcodes.php:348
 msgid "Add to Cart"
 msgstr "Ajouter au panier"
 
 # @ edd
-#: includes/shortcodes.php:468
+#: includes/shortcodes.php:469
 msgid "No downloads found"
 msgstr "Aucun téléchargement trouvé"
 
+#: includes/template-functions.php:54
+msgid "No checkout page has been configured."
+msgstr "Aucune page de commande n'a été configurée."
+
 # @ edd
-#: includes/template-functions.php:124
+#: includes/template-functions.php:175
 msgid "added to your cart"
 msgstr "ajouté au panier"
 
-#: includes/template-functions.php:214
+#: includes/template-functions.php:271
 msgid "Gray"
 msgstr "Gris"
 
-#: includes/template-functions.php:215
+#: includes/template-functions.php:272
 msgid "Pink"
 msgstr "Rose"
 
-#: includes/template-functions.php:216
+#: includes/template-functions.php:273
 msgid "Blue"
 msgstr "Bleu"
 
-#: includes/template-functions.php:217
+#: includes/template-functions.php:274
 msgid "Green"
 msgstr "Vert"
 
 # @ edd
-#: includes/template-functions.php:218
+#: includes/template-functions.php:275
 msgid "Teal"
 msgstr "Sarcelle (bleu-vert)"
 
 # @ edd
-#: includes/template-functions.php:219
+#: includes/template-functions.php:276
 msgid "Black"
 msgstr "Noir"
 
-#: includes/template-functions.php:220
+#: includes/template-functions.php:277
 msgid "Dark Gray"
 msgstr "Gris foncé"
 
-#: includes/template-functions.php:221
+#: includes/template-functions.php:278
 msgid "Orange"
 msgstr "Orange"
 
-#: includes/template-functions.php:222
+#: includes/template-functions.php:279
 msgid "Purple"
 msgstr "Violet"
 
 # @ edd
-#: includes/template-functions.php:223
+#: includes/template-functions.php:280
 msgid "Slate"
 msgstr "Ardoise"
 
 # @ edd
-#: includes/template-functions.php:242
+#: includes/template-functions.php:303
 msgid "You have already purchased this item, but you may purchase it again."
 msgstr ""
 "Vous avez déjà acheté cet article, mais vous pouvez l'acheter à nouveau."
@@ -2602,7 +2633,7 @@ msgid "Add Selected Downloads"
 msgstr "Ajouter les téléchargements sélectionnés"
 
 # @ edd
-#: includes/gateways/paypal.php:264
+#: includes/gateways/paypal.php:271
 msgid "Invalid IPN"
 msgstr "IPN incorrect"
 
@@ -2617,6 +2648,9 @@ msgid "Item Price"
 msgstr "Prix de l'article"
 
 # @ edd
-#: includes/templates/checkout_cart.php:47
+#: includes/templates/checkout_cart.php:49
 msgid "Total"
 msgstr "Total"
+
+#~ msgid "Pages"
+#~ msgstr "Pages"

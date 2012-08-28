@@ -309,6 +309,32 @@ function edd_is_discount_maxed_out($code_id) {
 
 
 /**
+ * Is Cart Minimum Met
+ *
+ * Checks to see if the minimum purchase amount has been met
+ *
+ * @access      public
+ * @since       1.1.7
+ * @return      void
+*/
+
+function edd_discount_is_min_met($code_id) {
+	$discount = edd_get_discount($code_id);
+	if($discount) {
+		$min 			= isset($discount['min_price']) ? $discount['min_price'] : 0;
+		$cart_amount 	= edd_get_cart_amount();
+
+		if( (float)$cart_amount >= (float)$min ) {
+            // minimum has been met
+			return true;
+		}	
+	}
+	// no code found, so false by default
+	return false;
+}
+
+
+/**
  * Is Discount Used
  *
  * Checks to see if a user has already used a discount.
@@ -357,14 +383,17 @@ function edd_is_discount_used($code, $email) {
 */
 
 function edd_is_discount_valid($code, $email = '') {
-	$discount_id = edd_get_discount_id_by_code($code);
-	$email = trim($email);
+	
+	$discount_id 	= edd_get_discount_id_by_code($code);
+	$email 			= trim($email);
+
 	if($discount_id !== false && $email !== "") {
 		if(
 			edd_is_discount_active( $discount_id ) && 
 			edd_is_discount_started( $discount_id ) && 
 			!edd_is_discount_maxed_out( $discount_id ) && 
-			!edd_is_discount_used( $code, $email ) 
+			!edd_is_discount_used( $code, $email ) &&
+			edd_discount_is_min_met( $discount_id )
 		) {
 			return true;
 		}

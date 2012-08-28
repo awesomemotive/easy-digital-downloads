@@ -48,17 +48,19 @@ add_action('edd_add_discount', 'edd_add_discount');
 */
 
 function edd_edit_discount($data) {
-	if(isset($data['edd-discount-nonce']) && wp_verify_nonce($data['edd-discount-nonce'], 'edd_discount_nonce')) {
+	if( isset( $data['edd-discount-nonce'] ) && wp_verify_nonce( $data['edd-discount-nonce'], 'edd_discount_nonce') ) {
 		// setup the discount code details
 		$discount = array();
 		foreach($data as $key => $value) {
-			if($key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'discount-id' && $key != 'edd-redirect')
-			$discount[$key] = strip_tags(addslashes($value));
+			if( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'discount-id' && $key != 'edd-redirect' )
+			$discount[$key] = strip_tags( addslashes( $value ) );
 		}
-		if(edd_store_discount($discount, $data['discount-id'])) {
-			wp_redirect(add_query_arg('edd-message', 'discount_updated', $data['edd-redirect'])); exit;
+		$old_discount = edd_get_discount_by_code( $data['code'] );
+		$discount['uses'] = $old_discount['uses']; 
+		if( edd_store_discount( $discount, $data['discount-id'] ) ) {
+			wp_redirect( add_query_arg( 'edd-message', 'discount_updated', $data['edd-redirect'] ) ); exit;
 		} else {
-			wp_redirect(add_query_arg('edd-message', 'discount_update_failed', $data['edd-redirect'])); exit;
+			wp_redirect( add_query_arg( 'edd-message', 'discount_update_failed', $data['edd-redirect'] ) ); exit;
 		}
 	}
 }

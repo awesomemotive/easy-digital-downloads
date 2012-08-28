@@ -20,10 +20,20 @@
  * @return      void
 */
 
-function edd_email_purchase_receipt($payment_id, $admin_notice = true) {
+function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	global $edd_options;
 	
-	$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
+	$payment_data = get_post_meta( $payment_id, '_edd_payment_meta', true );
+	$user_info = maybe_unserialize( $payment_data['user_info'] );
+
+	if(isset($user_info['id']) && $user_info['id'] > 0) {
+		$user_data = get_userdata($user_info['id']);
+		$name = $user_data->display_name;
+	} elseif( isset( $user_info['first_name'] ) && isset($user_info['last_name'] ) ) {
+		$name = $user_info['first_name'] . ' ' . $user_info['last_name'];
+	} else {
+		$name = $user_info['email'];
+	}
 
 	$message = edd_get_email_body_header();
 
@@ -56,6 +66,7 @@ function edd_email_purchase_receipt($payment_id, $admin_notice = true) {
 		$gateway = edd_get_gateway_admin_label( get_post_meta($payment_id, '_edd_payment_gateway', true) );
 		
 		$admin_message .= $download_list . "\n";
+		$admin_message .= __('Purchased by: ', 'edd') . " " . html_entity_decode( $name, ENT_COMPAT, 'UTF-8' ) . "\n";
 		$admin_message .= __('Amount: ', 'edd') . " " . html_entity_decode(edd_currency_filter($payment_data['amount']), ENT_COMPAT, 'UTF-8') . "\n\n";
 		$admin_message .= __('Payment Method: ', 'edd') . " " . $gateway . "\n\n";
 		$admin_message .= __('Thank you', 'edd');

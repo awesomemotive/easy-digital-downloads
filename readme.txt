@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable Tag: 1.1.5.2
+Stable Tag: 1.1.6
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -125,6 +125,29 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.1.6 =
+
+* Added the name of the buyer to the admin purchase notifications
+* Added a new setting for "Complete Purchase" button text
+* Escaped values of settings field callbacks
+* Fixed a bug with button colors when inserting a short code
+* Fixed a spelling error in Downloads > Settings > Payment Gateways
+* Removed ini_set error display
+* Fixed a major bug with discount codes that caused the "uses" value to get erased when updated a code
+* Fixed a bug with download sales/earnings stats and variable priced downloads
+* Removed an old and unused add_meta_box() call
+* Fixed an incorrect check for missing directory and creation of /uploads/edd
+* Escaped attributes and improved code formating in template-functions.php
+* Added new actions to top and bottom of payment history page
+* Escaped attributes and improved code formating in download-functions.php
+* Updated Dutch language files
+* Added pre_ and post_ actions to the add to cart function
+* Added a new edd_download_price filter to the edd_price() function
+* Fixed a misnamed class on the empty cart element
+* Added class names to all table rows and cells in the checkout template
+* Updated French translation files
+* Removed call by reference in edd_scan_folders()
 
 = 1.1.5.2 =
 
@@ -500,8 +523,33 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 * First offical release!
 
+
+
+
 == Upgrade Notice ==
 
+= 1.1.6 =
+
+* Added the name of the buyer to the admin purchase notifications
+* Added a new setting for "Complete Purchase" button text
+* Escaped values of settings field callbacks
+* Fixed a bug with button colors when inserting a short code
+* Fixed a spelling error in Downloads > Settings > Payment Gateways
+* Removed ini_set error display
+* Fixed a major bug with discount codes that caused the "uses" value to get erased when updated a code
+* Fixed a bug with download sales/earnings stats and variable priced downloads
+* Removed an old and unused add_meta_box() call
+* Fixed an incorrect check for missing directory and creation of /uploads/edd
+* Escaped attributes and improved code formating in template-functions.php
+* Added new actions to top and bottom of payment history page
+* Escaped attributes and improved code formating in download-functions.php
+* Updated Dutch language files
+* Added pre_ and post_ actions to the add to cart function
+* Added a new edd_download_price filter to the edd_price() function
+* Fixed a misnamed class on the empty cart element
+* Added class names to all table rows and cells in the checkout template
+* Updated French translation files
+* Removed call by reference in edd_scan_folders()
 
 = 1.1.5.2 =
 

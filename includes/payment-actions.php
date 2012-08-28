@@ -26,15 +26,15 @@
 
 function edd_complete_purchase($payment_id, $new_status, $old_status) {
 
-	if( $old_status == 'publish' || $old_status == 'complete')
+	if( $old_status == 'publish' || $old_status == 'complete' )
 		return; // make sure that payments are only completed once
 	
 	if( ! edd_is_test_mode() ) {
 				
-		$payment_data 	= get_post_meta($payment_id, '_edd_payment_meta', true);
-		$downloads 		= maybe_unserialize($payment_data['downloads']);
-		$user_info 		= maybe_unserialize($payment_data['user_info']);
-		$cart_details 	= maybe_unserialize($payment_data['cart_details']);				
+		$payment_data 	= get_post_meta( $payment_id, '_edd_payment_meta', true );
+		$downloads 		= maybe_unserialize( $payment_data['downloads'] );
+		$user_info 		= maybe_unserialize( $payment_data['user_info'] );
+		$cart_details 	= maybe_unserialize( $payment_data['cart_details'] );				
 								
 		// increase purchase count and earnings
 		foreach($downloads as $download) {
@@ -43,16 +43,24 @@ function edd_complete_purchase($payment_id, $new_status, $old_status) {
 			edd_increase_purchase_count($download['id']);
 			$amount = null;
 			if(is_array($cart_details)) {
-				$cart_item_id = array_search($download['id'], $cart_details);
-				$amount = isset($cart_details[$cart_item_id]['price']) ? $cart_details[$cart_item_id]['price'] : null;
+				
+				foreach( $cart_details as $key => $item ) {
+					if( array_search( $download['id'], $item ) ) {
+						$cart_item_id = $key;
+					}
+				}
+
+				$amount = isset( $cart_details[$cart_item_id]['price'] ) ? $cart_details[$cart_item_id]['price'] : null;
+		
+
 			}
-			$amount = edd_get_download_final_price($download['id'], $user_info, $amount);
-			edd_increase_earnings($download['id'], $amount);
+			$amount = edd_get_download_final_price( $download['id'], $user_info, $amount );
+			edd_increase_earnings( $download['id'], $amount );
 			
 		}
 		
-		if(isset($user_info['discount'])) {
-			edd_increase_discount_usage($user_info['discount']);
+		if( isset( $user_info['discount'] ) ) {
+			edd_increase_discount_usage( $user_info['discount'] );
 		}
 	}
 	

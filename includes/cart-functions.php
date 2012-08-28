@@ -61,6 +61,9 @@ function edd_get_cart_quantity() {
 function edd_add_to_cart($download_id, $options = array()) {
 	$cart = edd_get_cart_contents();
 	if(!edd_item_in_cart($download_id)) {
+
+		do_action( 'edd_pre_add_to_cart', $download_id, $options );
+
 		if(is_array($cart)) {
 			$cart[] = array('id' => $download_id, 'options' => $options);
 		} else {
@@ -69,6 +72,8 @@ function edd_add_to_cart($download_id, $options = array()) {
 	
 		$_SESSION['edd_cart'] = $cart;
 	
+		do_action( 'edd_post_add_to_cart', $download_id, $options );
+
 		// clear all the checkout errors, if any
 		edd_clear_errors();
 	
@@ -91,6 +96,9 @@ function edd_add_to_cart($download_id, $options = array()) {
 
 function edd_remove_from_cart($cart_key) {
 	$cart = edd_get_cart_contents();
+
+	do_action( 'edd_pre_remove_from_cart', $cart_key );
+
 	if(!is_array($cart)) {
 		return true; // empty cart
 	} else {
@@ -98,6 +106,8 @@ function edd_remove_from_cart($cart_key) {
 	}
 	$_SESSION['edd_cart'] = $cart;
 	
+	do_action( 'edd_post_remove_from_cart', $cart_key );
+
 	// clear all the checkout errors, if any
 	edd_clear_errors();
 	

@@ -76,6 +76,7 @@ function edd_payment_history_page() {
 			
 			?>
 			<h2><?php _e('Payment History', 'edd'); ?></h2>
+			<?php do_action('edd_payments_page_top'); ?>
 			<ul class="subsubsub">
 				<li class="all">
 					<a href="<?php echo remove_query_arg('status'); ?>" <?php echo !isset( $_GET['status'] ) ? 'class="current"' : ''; ?>>
@@ -95,9 +96,11 @@ function edd_payment_history_page() {
 				<li class="trash">
 					<a href="<?php echo add_query_arg('status', 'trash'); ?>" <?php echo isset( $_GET['status'] ) && $_GET['status'] == 'trash' ? 'class="current"' : ''; ?>><?php _e('Deleted', 'edd'); ?> <span class="count">(<?php echo $payment_count->trash; ?>)</span></a>
 				</li>
+				<?php do_action('edd_payments_page_statuses'); ?>
 			</ul>
 			<ul class="subsubsub edd-export-payments">
 				<li> | <?php _e('Export', 'edd'); ?>: <a href="<?php echo add_query_arg('export', 'csv'); ?>">CSV</a></li>
+				<?php do_action('edd_payments_page_export_options'); ?>
 			</ul>	
 			<form id="payments-filter" action="<?php echo admin_url('edit.php'); ?>" method="get" style="float: right; margin-bottom: 5px;">
 				<label for="edd-mode"><?php _e('Payment mode', 'edd'); ?></label>
@@ -312,7 +315,7 @@ function edd_payment_history_page() {
 						</div>
 					</div><!--end .tablenav-->
 				<?php endif; ?>
-				
+				<?php do_action('edd_payments_page_bottom'); ?>
 		</div><!--end wrap-->
 		<?php
 	}

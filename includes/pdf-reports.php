@@ -95,8 +95,12 @@ function edd_generate_pdf( $data ) {
 					$price = html_entity_decode( edd_currency_filter( edd_get_download_price( $download->ID ) ) );
 				}
 				
-				$categories = strip_tags( get_the_term_list( $download->ID, 'download_category', '', ', ', '' ) );
-				$tags = strip_tags( get_the_term_list( $download->ID, 'download_tag', '', ', ', '' ) );
+				$categories = get_the_term_list( $download->ID, 'download_category', '', ', ', '' );
+				$categories = $categories ? strip_tags( $categories ) : '';
+				
+				$tags = get_the_term_list( $download->ID, 'download_tag', '', ', ', '' );
+				$tags = $tags ? strip_tags( $tags ) : '';
+				
 				$sales = edd_get_download_sales_stats( $download->ID );
 				$link = get_permalink( $download->ID );
 				$earnings = html_entity_decode ( edd_currency_filter( edd_get_download_earnings_stats( $download->ID ) ) );
