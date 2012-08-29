@@ -84,6 +84,7 @@ function edd_process_download() {
 			if( function_exists('get_magic_quotes_runtime') && get_magic_quotes_runtime() ) {
 				set_magic_quotes_runtime(0);
 			}
+			
 			header("Pragma: no-cache");
 			header("Expires: 0");
 			header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
@@ -93,13 +94,15 @@ function edd_process_download() {
 		    header("Content-Disposition: attachment; filename=\"" . apply_filters('edd_requested_file_name', basename($requested_file) ) . "\";");
 			header("Content-Transfer-Encoding: binary");
 			
-			if( strpos( $requested_file, home_url() ) !== false) {
+			if( strpos( $requested_file, WP_CONTENT_URL ) !== false) {
+
 				// local file
 				$upload_dir = wp_upload_dir();
-					
-				$requested_file = str_replace( $upload_dir['baseurl'], $upload_dir['basedir'], $requested_file);	
+				
+				$requested_file = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );	
 					
 				$requested_file = realpath( $requested_file );
+
 
 				//header("Content-Length: " . @filesize( $requested_file ) );
 
