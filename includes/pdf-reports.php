@@ -31,7 +31,7 @@ function edd_generate_pdf( $data ) {
 		include_once(EDD_PLUGIN_DIR . '/includes/libraries/fpdf/fpdf.php');
 		include_once(EDD_PLUGIN_DIR . '/includes/libraries/fpdf/edd_pdf.php');
 
-		ob_end_clean(); // Fixes a glitch in Internet Explorer
+		//ob_end_clean(); // Fixes a glitch in Internet Explorer
 
 		$daterange = date('F jS', mktime(0,0,0,1,1, date('Y') ) ) . ' ' . __('to', 'edd') . ' ' . date('F jS Y');
 
