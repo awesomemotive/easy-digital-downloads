@@ -31,7 +31,7 @@ function edd_generate_pdf( $data ) {
 		include_once(EDD_PLUGIN_DIR . '/includes/libraries/fpdf/fpdf.php');
 		include_once(EDD_PLUGIN_DIR . '/includes/libraries/fpdf/edd_pdf.php');
 
-		ob_end_clean(); // Fixes a glitch in Internet Explorer
+		//ob_end_clean(); // Fixes a glitch in Internet Explorer
 
 		$daterange = date('F jS', mktime(0,0,0,1,1, date('Y') ) ) . ' ' . __('to', 'edd') . ' ' . date('F jS Y');
 
@@ -125,7 +125,7 @@ function edd_generate_pdf( $data ) {
 		$pdf->SetX( 25 );
 		$pdf->Image( $image .'&file=.png' );
 		$pdf->Ln( 7 );
-		$pdf->Output( 'edd-report' . date('Y-m-d') . '.pdf', D );
+		$pdf->Output( 'edd-report' . date('Y-m-d') . '.pdf', 'D' );
 
 	}
 }
@@ -154,7 +154,7 @@ function edd_draw_chart_image() {
 	$earnings = "";
 	$sales = "";
 	while( $i <= 12 ) :
-		$earnings .= edd_get_earnings_by_date( $i, date('Y') ) . ",";
+		$earnings .= edd_get_earnings_by_date( null, $i, date('Y') ) . ",";
 		$sales .= edd_get_sales_by_date( $i, date('Y') ) . ",";
 		$i++;
 	endwhile;
