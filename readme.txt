@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable Tag: 1.1.6
+Stable Tag: 1.1.7
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -125,6 +125,15 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.1.7 =
+
+* Fixed major bug with processing file downloads
+* Removed price check from PayPal purchase verification temporarily
+* Added filters to all discount validation functions for developers
+* Improved data sanitization to discount creation / edit forms
+* Removed the "type" column from the discounts page
+* Added option to set minimum purchase amount required before discount can be applied
 
 = 1.1.6 =
 
@@ -527,6 +536,15 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Upgrade Notice ==
+
+= 1.1.7 =
+
+* Fixed major bug with processing file downloads
+* Removed price check from PayPal purchase verification temporarily
+* Added filters to all discount validation functions for developers
+* Improved data sanitization to discount creation / edit forms
+* Removed the "type" column from the discounts page
+* Added option to set minimum purchase amount required before discount can be applied
 
 = 1.1.6 =
 

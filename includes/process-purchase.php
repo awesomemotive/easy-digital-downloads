@@ -62,7 +62,6 @@ function edd_process_purchase_form() {
 		'discount' => $valid_data['discount']
 	);
 
-
 	// setup purchase information
 	$purchase_data = array(
 		'downloads' => edd_get_cart_contents(),
@@ -663,6 +662,7 @@ function edd_send_back_to_checkout($query_string = null) {
 	$redirect = get_permalink($edd_options['purchase_page']);
 	if($query_string)
 		$redirect .= $query_string;
+	
 	wp_redirect($redirect); exit;
 }
 
