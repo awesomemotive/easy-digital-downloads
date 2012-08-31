@@ -22,8 +22,8 @@
 */
 
 function edd_cart_get_actions() {
-	if(isset($_GET['edd_action'])) {
-		do_action('edd_' . $_GET['edd_action'], $_GET);		
+	if( isset( $_GET['edd_action'] ) ) {
+		do_action( 'edd_' . $_GET['edd_action'], $_GET );		
 	}
 }
 add_action('init', 'edd_cart_get_actions');
@@ -40,8 +40,8 @@ add_action('init', 'edd_cart_get_actions');
 */
 
 function edd_cart_post_actions() {
-	if(isset($_POST['edd_action'])) {
-		do_action('edd_' . $_POST['edd_action'], $_POST);		
+	if( isset( $_POST['edd_action'] ) ) {
+		do_action( 'edd_' . $_POST['edd_action'], $_POST );		
 	}
 }
 add_action('init', 'edd_cart_post_actions');
