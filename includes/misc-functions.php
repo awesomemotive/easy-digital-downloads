@@ -524,6 +524,114 @@ function edd_get_country_list() {
 
 
 /**
+ * Get States List 
+ *
+ * @access      public
+ * @since       1.1.9
+ * @return      array
+*/
+
+function edd_get_states_list() {
+	$states =array(
+		'AL' => 'Alabama',
+		'AK' => 'Alaska',
+		'AZ' => 'Arizona',
+		'AR' => 'Arkansas',
+		'CA' => 'California',
+		'CO' => 'Colorado',
+		'CT' => 'Connecticut',
+		'DE' => 'Delaware',
+		'DC' => 'District of Columbia',
+		'FL' => 'Florida',
+		'GA' => 'Georgia',
+		'HI' => 'Hawaii',
+		'ID' => 'Idaho',
+		'IL' => 'Illinois',
+		'IN' => 'Indiana',
+		'IA' => 'Iowa',
+		'KS' => 'Kansas',
+		'KY' => 'Kentucky',
+		'LA' => 'Louisiana',
+		'ME' => 'Maine',
+		'MD' => 'Maryland',
+		'MA' => 'Massachusetts',
+		'MI' => 'Michigan',
+		'MN' => 'Minnesota',
+		'MS' => 'Mississippi',
+		'MO' => 'Missouri',
+		'MT' => 'Montana',
+		'NE' => 'Nebraksa',
+		'NV' => 'Nevada',
+		'NH' => 'New Hampshire',
+		'NJ' => 'New Jersey',
+		'NM' => 'New Mexico',
+		'NY' => 'New York',
+		'NC' => 'North Carolina',
+		'ND' => 'North Dakota',
+		'OH' => 'Ohio',
+		'OK' => 'Oklahoma',
+		'OR' => 'Oregon',
+		'PA' => 'Pennsylvania',
+		'RI' => 'Rhode Island',
+		'SC' => 'South Carolina',
+		'SD' => 'South Dakota',
+		'TN' => 'Tennessee',
+		'TX' => 'Texas',
+		'UT' => 'Utah',
+		'VT' => 'Vermont',
+		'VA' => 'Virginia',
+		'WA' => 'Washington',
+		'WV' => 'West Virginia',
+		'WI' => 'Wisconsin',
+		'WY' => 'Wyoming',
+		'AS' => 'American Samoa',
+		'CZ' => 'Canal Zone',
+		'CM' => 'Commonwealth of the Northern Mariana Islands',
+		'FM' => 'Federated States of Micronesia',
+		'GU' => 'Guam',
+		'MH' => 'Marshall Islands',
+		'MP' => 'Northern Mariana Islands',
+		'PW' => 'Palau',
+		'PI' => 'Philippine Islands',
+		'PR' => 'Puerto Rico',
+		'TT' => 'Trust Territory of the Pacific Islands',
+		'VI' => 'Virgin Islands',
+		'AA' => 'Armed Forces - Americas',
+		'AE' => 'Armed Forces - Europe, Canada, Middle East, Africa',
+		'AP' => 'Armed Forces - Pacific'
+	);
+	return $states;
+}
+
+
+/**
+ * Get Provinces List 
+ *
+ * @access      public
+ * @since       1.1.9
+ * @return      array
+*/
+
+function edd_get_provinces_list() {
+	$provinces =array(
+		'AB' => 'Alberta',
+		'BC' => 'British Columbia',
+		'MB' => 'Manitoba',
+		'NB' => 'New Brunswick',
+		'NL' => 'Newfoundland and Labrador',
+		'NS' => 'Nova Scotia',
+		'NT' => 'Northwest Territories',
+		'NU' => 'Nunavut',
+		'ON' => 'Ontario',
+		'PE' => 'Prince Edward Island',
+		'QC' => 'Quebec',
+		'SK' => 'Saskatchewan',
+		'YT' => 'Yukon'
+	);
+}
+
+
+/**
  * Month Num To Name 
  *
  * Takes a month number and returns the 

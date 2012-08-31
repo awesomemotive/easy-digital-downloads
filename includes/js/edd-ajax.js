@@ -143,6 +143,24 @@ jQuery(document).ready(function ($) {
         return false;
     });
 
+	// update state/province field on checkout page
+	$('select[name=billing_country]').change(function() {
+		if( $('select[name=billing_country]').val() == 'US') {
+			$('input.card-state-other').css('display', 'none');
+			$('input.card-state-us').css('display', '');
+			$('input.card-state-ca').css('display', 'none');
+		} else if( $('select[name=billing_country]').val() == 'CA') {
+			$('input.card-state-other').css('display', 'none');
+			$('input.card-state-us').css('display', 'none');
+			$('input.card-state-ca').css('display', '');
+		} else {
+			$('input.card-state-other').css('display', '');
+			$('input.card-state-us').css('display', 'none');
+			$('input.card-state-ca').css('display', 'none');
+		}
+	});
+
+
     // show the login form on the checkout page
     $('#edd_checkout_form_wrap').on('click', '.edd_checkout_register_login', function () {
         var $this = $(this),
