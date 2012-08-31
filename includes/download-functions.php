@@ -296,18 +296,37 @@ function edd_get_download_price($download_id) {
 */
 
 function edd_price($download_id, $echo = true) {
-	if(edd_has_variable_prices($download_id)) {
-		$prices = get_post_meta($download_id, 'edd_variable_prices', true);
-		$price = edd_currency_filter($prices[0]['amount']); // show the first price option
+	if( edd_has_variable_prices( $download_id ) ) {
+		$prices = get_post_meta( $download_id, 'edd_variable_prices', true);
+		$price = $prices[0]['amount']; // show the first price option
 	} else {
-		$price = edd_currency_filter(edd_get_download_price($download_id));
+		$price = edd_get_download_price( $download_id );
 	}
+	
 	$price = apply_filters( 'edd_download_price', $price, $download_id );
+
 	if( $echo )
 		echo $price;
 	else
 		return $price;
 }
+
+
+/**
+ * Formats a download price with decimal places and currency sign
+ *
+ * Displays a formatted price for a download.
+ *
+ * @access      public
+ * @since       1.1.9
+ * @param       float the price to format
+* @return       float
+*/
+
+function edd_format_price( $price ) {
+	return edd_currency_filter( number_format( (float) $price, 2 ) );
+}
+add_filter( 'edd_download_price', 'edd_format_price' );
 
 
 /**
