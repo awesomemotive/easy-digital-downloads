@@ -22,9 +22,9 @@ jQuery(document).ready(function ($) {
                 var quantity = $('span.edd-cart-quantity').text();
                 quantity = parseInt(quantity, 10) - 1;
                 $('span.edd-cart-quantity').text(quantity);
-				if(!$('.edd-cart-item').length) {
-					$('.cart_item.edd_checkout').replaceWith('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
-				}
+                if(!$('.edd-cart-item').length) {
+                    $('.cart_item.edd_checkout').replaceWith('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
+                }
             }
         });
         return false;
@@ -33,59 +33,59 @@ jQuery(document).ready(function ($) {
     // send Add to Cart request
     $('body').on('click.eddAddToCart', '.edd-add-to-cart', function (e) {
         
-		e.preventDefault();
-		
-		var $this = $(this);
-			
-		var container = $this.closest('div');	
+        e.preventDefault();
+        
+        var $this = $(this);
+            
+        var container = $this.closest('div');    
  
        // show the ajax loader
         $('.edd-cart-ajax', container).show();
 
-		var download = $this.data('download-id');
-		var variable_price = $this.data('variable-price');
-		var item_price_id = false;
-		if(typeof variable_price !== 'undefined' && variable_price !== false) {
-			item_price_id = $('.edd_price_option_' + download + ':checked').val();
-		}
-		
+        var download = $this.data('download-id');
+        var variable_price = $this.data('variable-price');
+        var item_price_id = false;
+        if(typeof variable_price !== 'undefined' && variable_price !== false) {
+            item_price_id = $('.edd_price_option_' + download + ':checked').val();
+        }
+        
         var action = $this.data('action'),
             data = {
                 action: action,
                 download_id: download,
-				price_id : item_price_id,
+                price_id : item_price_id,
                 nonce: edd_scripts.ajax_nonce
             };
 
         $.post(edd_scripts.ajaxurl, data, function (cart_item_response) {
             // item already in the cart
-			if(cart_item_response == 'incart') {
-				alert(edd_scripts.already_in_cart_message);
-				$('.edd-cart-ajax').hide();
-				return;
-			}
-			
-			// add the new item to the cart widget
-			if ($('.cart_item.empty').length) {
+            if(cart_item_response == 'incart') {
+                alert(edd_scripts.already_in_cart_message);
+                $('.edd-cart-ajax').hide();
+                return;
+            }
+            
+            // add the new item to the cart widget
+            if ($('.cart_item.empty').length) {
                 $(cart_item_response).insertBefore('.cart_item.empty');
                 $('.cart_item.edd_checkout').show();
                 $('.cart_item.empty').remove();
             } else {
                 $(cart_item_response).insertBefore('.cart_item.edd_checkout');
             }
-			
-			// update the cart quantity
+            
+            // update the cart quantity
             var quantity = $('span.edd-cart-quantity').text();
             quantity = parseInt(quantity, 10) + 1;
             $('span.edd-cart-quantity').text(quantity);
 
             // hide the ajax loader
             $('.edd-cart-ajax', container).hide();
-			
-			// switch purchase to checkout
-			$('.edd_go_to_checkout, .edd_add_to_cart_wrap, .edd_submit_plain.edd-add-to-cart', container).toggle();
-				
-			// show the added message
+            
+            // switch purchase to checkout
+            $('.edd_go_to_checkout, .edd_add_to_cart_wrap, .edd_submit_plain.edd-add-to-cart', container).toggle();
+                
+            // show the added message
             $('.edd-cart-added-alert', container).fadeIn();
             setTimeout(function () {
                 $('.edd-cart-added-alert', container).fadeOut();
@@ -96,23 +96,23 @@ jQuery(document).ready(function ($) {
     });
 
     // For tricksters
-	var before_discount = $('.edd_cart_amount').text();	
-	$('#edd_checkout_form_wrap').on('change', '#edd-email', function (event) {
-		$('.edd_cart_amount').html(before_discount);
-		$('#edd-discount').val('');
-	});
+    var before_discount = $('.edd_cart_amount').text();    
+    $('#edd_checkout_form_wrap').on('change', '#edd-email', function (event) {
+        $('.edd_cart_amount').html(before_discount);
+        $('#edd-discount').val('');
+    });
 
-	// validate and apply a discount
+    // validate and apply a discount
     $('#edd_checkout_form_wrap').on('click', '.edd-apply-discount', function (event) {
         
-		var $this = $(this),
+        var $this = $(this),
             discount_code = $('#edd-discount').val(),
-			edd_email = $('#edd-email').val();
+            edd_email = $('#edd-email').val();
         if (discount_code == '') {
             alert(edd_scripts.no_discount);
             return false;
         }
-		if (edd_email == '') {
+        if (edd_email == '') {
             alert(edd_scripts.no_email);
             return false;
         }
@@ -143,22 +143,22 @@ jQuery(document).ready(function ($) {
         return false;
     });
 
-	// update state/province field on checkout page
-	$('select[name=billing_country]').change(function() {
-		if( $('select[name=billing_country]').val() == 'US') {
-			$('input.card-state-other').css('display', 'none');
-			$('input.card-state-us').css('display', '');
-			$('input.card-state-ca').css('display', 'none');
-		} else if( $('select[name=billing_country]').val() == 'CA') {
-			$('input.card-state-other').css('display', 'none');
-			$('input.card-state-us').css('display', 'none');
-			$('input.card-state-ca').css('display', '');
-		} else {
-			$('input.card-state-other').css('display', '');
-			$('input.card-state-us').css('display', 'none');
-			$('input.card-state-ca').css('display', 'none');
-		}
-	});
+    // update state/province field on checkout page
+    $('select[name=billing_country]').change(function() {
+        if( $('select[name=billing_country]').val() == 'US') {
+            $('input.card-state-other').css('display', 'none');
+            $('input.card-state-us').css('display', '');
+            $('input.card-state-ca').css('display', 'none');
+        } else if( $('select[name=billing_country]').val() == 'CA') {
+            $('input.card-state-other').css('display', 'none');
+            $('input.card-state-us').css('display', 'none');
+            $('input.card-state-ca').css('display', '');
+        } else {
+            $('input.card-state-other').css('display', '');
+            $('input.card-state-us').css('display', 'none');
+            $('input.card-state-ca').css('display', 'none');
+        }
+    });
 
 
     // show the login form on the checkout page
