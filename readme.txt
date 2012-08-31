@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable Tag: 1.1.7
+Stable Tag: 1.1.8
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -125,6 +125,14 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.1.8 =
+
+* Fixed a major bug with discount codes not being accepted
+* Fixed a bug in the PDF reports
+* Added a new "Earnings per day" graph on the Reports page
+* Improved URL > path conversion for locally stored download files
+* Improved organization of email templating functions
 
 = 1.1.7 =
 
@@ -536,6 +544,14 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Upgrade Notice ==
+
+= 1.1.8 =
+
+* Fixed a major bug with discount codes not being accepted
+* Fixed a bug in the PDF reports
+* Added a new "Earnings per day" graph on the Reports page
+* Improved URL > path conversion for locally stored download files
+* Improved organization of email templating functions
 
 = 1.1.7 =
 
