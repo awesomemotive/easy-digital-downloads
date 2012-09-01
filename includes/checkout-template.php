@@ -323,9 +323,10 @@ function edd_default_cc_address_fields() {
             </select>
             <label class="edd-label"><?php _e('Billing Country', 'edd'); ?></label>
         </p>
-        <p>
-            <input type="text" size="6" name="card_state" class="card-state card-state-other edd-input required" placeholder="<?php _e('State / Province', 'edd'); ?>"/>
-            <select name="card_state" class="card-state card-state-us edd-select required" style="display: none;">
+		<p>
+			<input type="hidden" name="card_state" id="card_state" />
+            <input type="text" size="6" name="card_state_other" id="card_state_other" class="card-state edd-input required" placeholder="<?php _e('State / Province', 'edd'); ?>"/>
+            <select name="card_state_us" id="card_state_us" class="card-state edd-select required" style="display: none;">
                 <?php
                 $states = edd_get_states_list();
                 foreach($states as $state_code => $state) {
@@ -333,7 +334,7 @@ function edd_default_cc_address_fields() {
                 }
                 ?>
             </select>
-            <select name="card_state" class="card-state card-state-ca edd-select required" style="display: none;">
+            <select name="card_state_ca" id="card_state_ca" class="card-state edd-select required" style="display: none;">
                 <?php
                 $provinces = edd_get_provinces_list();
                 foreach($provinces as $province_code => $province) {
