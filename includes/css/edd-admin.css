@@ -18,6 +18,7 @@
 /* Payment History Styles
 -------------------------------------------------------------- */
 tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
+.tablenav .edd-total-earnings { float: left; }
 
 /* Metabox Styles
 -------------------------------------------------------------- */

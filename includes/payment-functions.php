@@ -377,3 +377,29 @@ function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
 		return $downloads;
 	return false;
 }
+
+
+/**
+ * Get Total Earnings
+ *
+ * @access      public
+ * @since       1.1.9
+ * @return      float
+*/
+
+function edd_get_total_earnings() {
+
+	$total = (float) 0;
+	$payments = get_transient( 'edd_total_earnings' );
+	if( false === $payments ) {
+		$payments = edd_get_payments( 0, -1, 'live', 'ID', 'DESC', null, 'publish' );
+		set_transient( 'edd_total_earnings', $payments, 3600 );
+	}
+	if( $payments ) {
+		foreach( $payments as $payment ) {
+			$meta = get_post_meta( $payment->ID, '_edd_payment_meta', true );
+			$total += $meta['amount'];
+		}
+	}
+	return edd_currency_filter( $total );
+}

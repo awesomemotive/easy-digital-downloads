@@ -292,8 +292,13 @@ function edd_payment_history_page() {
 						<tr><td colspan="7"><?php _e('No payments recorded yet', 'edd'); ?></td></tr>
 					<?php endif;?>
 				</table>
-				<?php if ($total_pages > 1) : ?>
-					<div class="tablenav">
+				<div class="tablenav">
+
+					<div class="left edd-total-earnings">
+						<p><?php _e('Total Earnings:', 'edd'); ?>&nbsp;<strong><?php echo edd_get_total_earnings(); ?></strong></p>
+						<?php do_action( 'edd_payments_page_earnings' ); ?>
+					</div>
+					<?php if ($total_pages > 1) : ?>
 						<div class="tablenav-pages alignright">
 							<?php
 
@@ -313,8 +318,8 @@ function edd_payment_history_page() {
 								));
 							?>	
 						</div>
-					</div><!--end .tablenav-->
-				<?php endif; ?>
+					<?php endif; ?>
+				</div><!--end .tablenav-->
 				<?php do_action('edd_payments_page_bottom'); ?>
 		</div><!--end wrap-->
 		<?php

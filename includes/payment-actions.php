@@ -195,3 +195,17 @@ function edd_delete_purchase($data) {
 	}
 }
 add_action('edd_delete_payment', 'edd_delete_purchase');
+
+
+/**
+ * Flushes the Total Earnings Cache when a payment is created
+ *
+ * @access      private
+ * @since       1.1.9
+ * @return      void
+*/
+
+function edd_clear_earnings_cache( $payment, $payment_data ) {
+	delete_transient( 'edd_total_earnings' );
+}
+add_action( 'edd_insert_payment', 'edd_clear_earnings_cache', 10, 2 );
