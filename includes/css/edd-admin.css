@@ -18,7 +18,6 @@
 /* Payment History Styles
 -------------------------------------------------------------- */
 tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
-.tablenav .edd-total-earnings { float: left; }
 
 /* Metabox Styles
 -------------------------------------------------------------- */
@@ -27,3 +26,6 @@ tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 .edd_files_url_label { width: 220px; float: left; }
 #postbox-container-1 .edd_files_name_label { width: 80px; }
 #postbox-container-1 .edd_files_url_label { width: 80px; }
+
+.edd_remove_repeatable { background: url(../../../../wp-admin/images/xit.gif) no-repeat; margin: 0; cursor: pointer; width: 10px; height: 10px; display: inline-block; text-indent: -9999px; overflow: hidden; }
+.edd_remove_repeatable:active, .edd_remove_repeatable:hover { background: url(../../../../wp-admin/images/xit.gif) no-repeat -10px 0 }
