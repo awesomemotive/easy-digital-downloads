@@ -9,319 +9,317 @@
  * @since       1.0 
 */
 
+/**
+ * 
+ */
+function edd_filter_payments() {
+	global $typenow, $wp_query;
+
+	if ( $typenow != 'edd_payment' )
+		return;
+
+	$users = get_users();
+
+	$selected = $_GET[ 'user_email' ];
+?>
+	<select name="user_email">
+		<option value=""><?php _e( 'All Customers', 'edd' ); ?></option>
+		<?php foreach ( $users as $user ) : ?>
+		<option value="<?php echo $user->user_email; ?>" <?php selected( $selected, $user->user_email ); ?>><?php echo $user->display_name; ?> (<?php echo $user->user_email; ?>)</option>
+		<?php endforeach; ?>
+	</select>
+<?php
+}
+add_action( 'restrict_manage_posts', 'edd_filter_payments' );
 
 /**
- * Payment History Page
- *
- * Renders the payment history page contents.
- *
- * @access      private
- * @since       1.0
- * @return      void
-*/
+ * 
+ */
+function edd_payments_order_by_user( $vars ) {
+	global $typenow, $wp_query;
 
-function edd_payment_history_page() {
-	global $edd_options;
-	
-	if(isset($_GET['edd-action']) && $_GET['edd-action'] == 'edit-payment') {
-		include_once(EDD_PLUGIN_DIR . '/includes/admin-pages/forms/edit-payment.php');
-	} else {
-		
-		$current_page = admin_url('edit.php?post_type=download&page=edd-payment-history');
-		?>
-		<div class="wrap">
-			<?php 
-			if (isset($_GET['p'])) $page = $_GET['p']; else $page = 1;
-			$per_page = 20;
-			if(isset($_GET['show']) && $_GET['show'] > 0) {
-				$per_page = intval($_GET['show']);
+	if ( $typenow != 'edd_payment' )
+		return $vars;
+
+	if ( ! isset( $_GET[ 'user_email' ] ) )
+		return $vars;
+
+	if ( ! is_email( $_GET[ 'user_email' ] ) )
+		return $vars;
+
+	$vars[ 'meta_key' ]   = '_edd_payment_user_email';
+	$vars[ 'meta_value' ] = $_GET[ 'user_email' ];
+
+	return $vars;
+}
+add_filter( 'request', 'edd_payments_order_by_user' );
+
+function edd_payment_history_columns( $cols ) {
+	$cols = array(
+		'cb'       => '<input type="checkbox" />',
+		'order_title' => __( 'Order', 'edd' ),
+		'email'    => __( 'Email', 'edd' ),
+		'price'    => __( 'Price', 'edd' ),
+		'ordered'  => __( 'Date', 'edd' ),
+		'user'     => __( 'User', 'edd' ),
+		'status'   => __( 'Status', 'edd' )
+	);
+
+	return $cols;
+}
+add_filter( 'manage_edd_payment_posts_columns', 'edd_payment_history_columns' );
+
+function edd_payment_history_custom_columns( $column, $post_id ) {
+	global $post;
+
+	$payment_meta = get_post_meta( $post->ID, '_edd_payment_meta', true);
+	$user_info    = maybe_unserialize( $payment_meta[ 'user_info' ] );
+	$user         = new WP_User( $user_info[ 'id' ] );
+	$email        = get_post_meta( $post->ID, '_edd_payment_user_email', true );
+	$payment      = $post;
+
+	$post_type_object = get_post_type_object( 'edd_payment' );
+
+	$can_edit_post = current_user_can( $post_type_object->cap->edit_post, $post->ID );
+
+	switch ( $column ) {
+		case 'order_title':
+			echo '<strong><a href="' . admin_url( sprintf( 'post.php?post=%d&action=edit', $post_id ) ) . '" class="row-title">';
+			echo sprintf( __( 'Order #%d', 'edd' ), $post_id );
+			echo '</a></strong>';
+			echo '<div class="row-actions">';
+
+			if ( $can_edit_post && 'trash' != $post->post_status ) {
+				echo '<span class="edit">';
+				echo '<a href="' . get_edit_post_link( $post->ID, true ) . '" title="' . esc_attr( __( 'Edit this item' ) ) . '">' . __( 'Edit' ) . '</a>';
+				echo '</span>';
+
+				echo ' | ';
 			}
-			$total_pages = 1;
-			$offset = $per_page * ($page-1);
-			
-			$mode = isset($_GET['mode']) ? $_GET['mode'] : 'live';
-			if(edd_is_test_mode() && !isset($_GET['mode'])) $mode = 'test';
-			
-			$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'ID';
-			$order = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-			$order_inverse = $order == 'DESC' ? 'ASC' : 'DESC';
-			$order_class = strtolower($order_inverse);
-			$user = isset( $_GET['user'] ) ? $_GET['user'] : null;
-			$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
 
-			$payments = edd_get_payments($offset, $per_page, $mode, $orderby, $order, $user, $status);
-			$payment_count = wp_count_posts('edd_payment');
+			echo '<span class="resend">';
+			echo "<a title='" . esc_attr( __( 'Resend Purchase Receipt', 'edd' ) ) . "' href='" . admin_url( sprintf( 'edit.php?post_type=edd_payment&edd-action=email_links&purchase_id=%d', $post->ID ) ) . "'>" . __( 'Resend Purchase Receipt' ) . "</a>";
+			echo '</span>';
 
-			$total_count = $payment_count->publish + $payment_count->pending + $payment_count->refunded + $payment_count->trash;
+			echo ' | ';
 
-			switch( $status ) {
-				case 'publish':
-					$current_count = $payment_count->publish;
-					break;
-				case 'pending':
-					$current_count = $payment_count->pending;
-					break;
-				case 'refunded':
-					$current_count = $payment_count->refunded;
-					break;
-				case 'trash':
-					$current_count = $payment_count->trash;
-					break;
-				case 'any':
-					$current_count = $total_count;
-					break;
+			if ( current_user_can( $post_type_object->cap->delete_post, $post->ID ) ) {
+				echo '<span class="trash">';
+				if ( 'trash' == $post->post_status )
+					echo "<a title='" . esc_attr( __( 'Restore this item from the Trash' ) ) . "' href='" . wp_nonce_url( admin_url( sprintf( $post_type_object->_edit_link . '&amp;action=untrash', $post->ID ) ), 'untrash-post_' . $post->ID ) . "'>" . __( 'Restore' ) . "</a>";
+				elseif ( EMPTY_TRASH_DAYS )
+						echo "<a class='submitdelete' title='" . esc_attr( __( 'Move this item to the Trash' ) ) . "' href='" . get_delete_post_link( $post->ID ) . "'>" . __( 'Trash' ) . "</a>";
+				
+				if ( 'trash' == $post->post_status || !EMPTY_TRASH_DAYS )
+					echo "<a class='submitdelete' title='" . esc_attr( __( 'Delete this item permanently' ) ) . "' href='" . get_delete_post_link( $post->ID, '', true ) . "'>" . __( 'Delete Permanently' ) . "</a>";
+
+				echo '</span>';
 			}
 
-			$total_pages = ceil($current_count/$per_page);
-			
-			?>
-			<h2><?php _e('Payment History', 'edd'); ?></h2>
-			<?php do_action('edd_payments_page_top'); ?>
-			<ul class="subsubsub">
-				<li class="all">
-					<a href="<?php echo remove_query_arg('status'); ?>" <?php echo !isset( $_GET['status'] ) ? 'class="current"' : ''; ?>>
-						<?php _e('All'); ?> 
-						<span class="count">(<?php echo $total_count; ?>)</span>
-					</a> |
-				</li>
-				<li class="publish">
-					<a href="<?php echo add_query_arg('status', 'publish'); ?>" <?php echo isset( $_GET['status'] ) && $_GET['status'] == 'publish' ? 'class="current"' : ''; ?>><?php _e('Completed', 'edd'); ?> <span class="count">(<?php echo $payment_count->publish; ?>)</span></a> |
-				</li>
-				<li class="pending">
-					<a href="<?php echo add_query_arg('status', 'pending'); ?>" <?php echo isset( $_GET['status'] ) && $_GET['status'] == 'pending' ? 'class="current"' : ''; ?>><?php _e('Pending', 'edd'); ?> <span class="count">(<?php echo $payment_count->pending; ?>)</span></a> |
-				</li>
-				<li class="refunded">
-					<a href="<?php echo add_query_arg('status', 'refunded'); ?>" <?php echo isset( $_GET['status'] ) && $_GET['status'] == 'refunded' ? 'class="current"' : ''; ?>><?php _e('Refunded', 'edd'); ?> <span class="count">(<?php echo $payment_count->refunded; ?>)</span></a> |
-				</li>
-				<li class="trash">
-					<a href="<?php echo add_query_arg('status', 'trash'); ?>" <?php echo isset( $_GET['status'] ) && $_GET['status'] == 'trash' ? 'class="current"' : ''; ?>><?php _e('Deleted', 'edd'); ?> <span class="count">(<?php echo $payment_count->trash; ?>)</span></a>
-				</li>
-				<?php do_action('edd_payments_page_statuses'); ?>
-			</ul>
-			<ul class="subsubsub edd-export-payments">
-				<li> | <?php _e('Export', 'edd'); ?>: <a href="<?php echo add_query_arg('export', 'csv'); ?>">CSV</a></li>
-				<?php do_action('edd_payments_page_export_options'); ?>
-			</ul>	
-			<form id="payments-filter" action="<?php echo admin_url('edit.php'); ?>" method="get" style="float: right; margin-bottom: 5px;">
-				<label for="edd-mode"><?php _e('Payment mode', 'edd'); ?></label>
-				<select name="mode" id="edd-mode">
-					<option value="live" <?php selected('live', $mode); ?>><?php _e('Live', 'edd'); ?></option>
-					<option value="test" <?php selected('test', $mode); ?>><?php _e('Test', 'edd'); ?></option>
-				</select>
-				<input type="hidden" name="page" value="edd-payment-history"/>
-				<input type="hidden" name="post_type" value="download"/>
-				<?php if(isset( $_GET['user'] ) ) { ?>
-					<input type="hidden" name="user" value="<?php echo $_GET['user']; ?>"/>
-				<?php } ?>
-				<?php if(isset( $_GET['status'] ) ) { ?>
-					<input type="hidden" name="status" value="<?php echo $_GET['status']; ?>"/>
-				<?php } ?>
-				<label for="edd_show"><?php _e('Payments per page', 'edd'); ?></label>
-				<input type="text" class="regular-text" style="width:30px;" id="edd_show" name="show" value="<?php echo isset($_GET['show']) ? $_GET['show'] : ''; ?>"/>
-				<input type="submit" class="button-secondary" value="<?php _e('Show', 'edd'); ?>"/>
-			</form>
-			<?php if( isset( $_GET['user'] ) ) { 
-				$user = is_numeric( $user ) ? get_userdata( $user ) : $user; 
-				$user = is_object( $user ) ? $user->display_name : $user;
-				?>
-				<p class="clear"><?php echo __('Showing payments for: ', 'edd') . '&nbsp' . $user; ?>&nbsp;-&nbsp;<a href="<?php echo remove_query_arg('user'); ?>"><?php _e('clear', 'edd'); ?></a></div>
-			<?php } ?>
-			<table class="wp-list-table widefat fixed posts edd-payments">
-				<thead>
-					<tr>
-						<th style="width: 60px;" class="manage-column column-title sortable <?php echo $order_class; echo $orderby == 'ID' ? ' sorted' : ''; ?>">
-						    <a href="<?php echo add_query_arg( array( 'orderby' => 'ID', 'order' => $order_inverse ) ); ?>" title="<?php _e('ID', 'edd'); ?>"><span><?php _e('ID', 'edd'); ?></span> <span class="sorting-indicator"></span></a>
-						</th>
-						<th style="width: 250px;"><?php _e('Email', 'edd'); ?></th>
-						<th><?php _e('Products', 'edd'); ?></th>
-						<th><?php _e('Price', 'edd'); ?></th>
-						<th class="manage-column column-title sortable <?php echo $order_class; echo $orderby == 'Date' ? ' sorted' : ''; ?>">
-						    <a href="<?php echo add_query_arg( array( 'orderby' => 'post_date', 'order' => $order_inverse ) ); ?>" title="<?php _e('Date', 'edd'); ?>"><span><?php _e('Date', 'edd'); ?></span> <span class="sorting-indicator"></span></a>
-						</th>
-						<th><?php _e('User', 'edd'); ?></span></th>
-						<th class="manage-column column-title sortable <?php echo $order_class; echo $orderby == 'Status' ? ' sorted' : ''; ?>">
-						    <a href="<?php echo add_query_arg( array( 'orderby' => 'post_status', 'order' => $order_inverse ) ); ?>" title="<?php _e('Status', 'edd'); ?>"><span><?php _e('Status', 'edd'); ?></span> <span class="sorting-indicator"></span></a>
-						</th>
-					</tr>
-				</thead>
-				<tfoot>
-					<tr>
-						<th style="width: 40px;"><?php _e('ID', 'edd'); ?></th>
-						<th style="width: 250px;"><?php _e('Email', 'edd'); ?></th>
-						<th><?php _e('Products', 'edd'); ?></th>
-						<th><?php _e('Price', 'edd'); ?></th>
-						<th><?php _e('Date', 'edd'); ?></th>
-						<th><?php _e('User', 'edd'); ?></th>
-						<th><?php _e('Status', 'edd'); ?></th>
-					</tr>
-				</tfoot>
-				<tbody>
-					<?php
-						if($payments) :
-							$i = 0;
-							foreach($payments as $payment) : ?>							
-								<?php 
-								$payment_meta = get_post_meta($payment->ID, '_edd_payment_meta', true);
-								$user_info = maybe_unserialize($payment_meta['user_info']); 
-								$classes = array();
-								$classes[] = edd_is_odd($i) ? 'alternate' : '';
-								$payment_classes = get_post_class( apply_filters( 'edd_payment_row_classes', $classes ), $payment->ID );						
-								?>
-								<tr class="edd_payment <?php echo implode( ' ', $payment_classes ); ?>">
-									<td>
-										<?php echo $payment->ID; ?>
-									</td>
-									<td>
-										<?php echo $payment_meta['email']; ?>
-										<div class="row-actions">
-											<?php 
-											$row_actions = array(
-												'edit' => '<a href="' . add_query_arg( array( 'edd-action' => 'edit-payment', 'purchase_id' => $payment->ID ) ) . '">' . __('Edit', 'edd') . '</a>',
-												'email_links' => edd_is_payment_complete($payment->ID) ? '<a href="' . add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment->ID) ) . '">' . __('Resend Purchase Receipt', 'edd') . '</a>' : NULL,
-												'delete' => '<a href="' . wp_nonce_url(add_query_arg( array( 'edd-action' => 'delete_payment', 'purchase_id' => $payment->ID ) ), 'edd_payment_nonce') . '">' . __('Delete', 'edd') . '</a>'
-											);
-											$row_actions = apply_filters('edd_payment_row_actions', $row_actions, $payment);
-											$action_count = count($row_actions); $i = 1;
-											foreach($row_actions as $key => $action) {
-												if($action_count == $i) { $sep = ''; } else { $sep = ' | '; }
-												echo !is_null( $action ) ? '<span class="' . $key . '">' . $action . '</span>' . $sep : '';
-												$i++;
-											}
-											?>
-										</div>
-									</td>
-									<td><a href="#TB_inline?width=640&amp;inlineId=purchased-files-<?php echo $payment->ID; ?>" class="thickbox" title="<?php printf(__('Purchase Details for Payment #%s', 'edd'), $payment->ID); ?> "><?php _e('View Order Details', 'edd'); ?></a>
-										<div id="purchased-files-<?php echo $payment->ID; ?>" style="display:none;">
-											<?php 
-												$downloads = isset($payment_meta['cart_details']) ? maybe_unserialize($payment_meta['cart_details']) : false;
-												if( empty( $downloads ) || !$downloads ) {
-													$downloads = maybe_unserialize($payment_meta['downloads']);
-												}
-											?>
-											<h4><?php echo _n(__('Purchased File', 'edd'), __('Purchased Files', 'edd'), count($downloads)); ?></h4>
-											<ul class="purchased-files-list">
-											<?php 
+			echo '</div>';
+			break;
+		case 'email':
+			echo $payment_meta[ 'email' ];
+			break;
+		case 'price' :
+			echo edd_currency_filter( $payment_meta[ 'amount' ] );
+			break;
+		case 'ordered' :
+			echo date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) );
+			break;
+		case 'user' :
+			$name = $user->display_name;
 
-												if($downloads) {
+			if ( ! empty ( $user_info[ 'first_name' ] ) || ! empty( $user_info[ 'last_name' ] ) )
+				$name = $user_info[ 'first_name' ] . ' ' . $user_info[ 'last_name' ];
 
-													foreach($downloads as $key => $download) {
-														echo '<li>';
-															
-															// retrieve the ID of the download
-															$id = isset($payment_meta['cart_details']) ? $download['id'] : $download;
-															
-															// if download has variable prices, override the default price
-															$price_override = isset($payment_meta['cart_details']) ? $download['price'] : null; 
-															
-															$user_info = unserialize($payment_meta['user_info']);
-															
-															// calculate the final price
-															$price = edd_get_download_final_price($id, $user_info, $price_override);
-															
-															// show name of download
-															echo '<a href="' . admin_url('post.php?post=' . $id . '&action=edit') . '" target="_blank">' . get_the_title($id) . '</a>';
-															
-															echo  ' - ';
-															
-															if( isset( $downloads[$key]['item_number'])) {
+			if ( $user->ID == 0 )
+				$name = sprintf( __( '%s (Guest)', 'edd' ), $name );
+				
+			$name = sprintf( '<a href="%s">%s</a>', self_admin_url( sprintf( 'edit.php?post_type=edd_payment&user_email=%s', $email ) ), $name );
 
-																$price_options = $downloads[$key]['item_number']['options'];
-																															
-																if( isset($price_options['price_id']) ) {
-																	echo edd_get_price_option_name($id, $price_options['price_id']);
-																	echo ' - ';
-																}
-															}	
+			echo $name;
 
-															// show price
-															echo edd_currency_filter($price);
-														
-														echo '</li>';
-													}
-												}
-											?>
-											</ul>
-											<p><?php echo __('Discount used:', 'edd') . ' '; if(isset($user_info['discount']) && $user_info['discount'] != 'none') { echo $user_info['discount']; } else { _e('none', 'edd'); } ?>
-											<p><?php echo __('Total:', 'edd') . ' ' . edd_currency_filter($payment_meta['amount']); ?></p>
-											
-											<div class="purcase-personal-details">
-												<h4><?php _e('Buyer\'s Personal Details:', 'edd'); ?></h4>
-												<ul>
-													<li><?php echo __('Name:', 'edd') . ' ' . $user_info['first_name'] . ' ' . $user_info['last_name']; ?></li>
-													<li><?php echo __('Email:', 'edd') . ' ' . $payment_meta['email']; ?></li>
-													<?php do_action('edd_payment_personal_details_list', $payment_meta, $user_info); ?>
-												</ul>
-											</div>
-											
-											<?php
-											$gateway = get_post_meta( $payment->ID, '_edd_payment_gateway', true);
-											if( $gateway ) { ?>
-											<div class="payment-method">
-												<h4><?php _e('Payment Method:', 'edd'); ?></h4>
-												<span class="payment-method-name"><?php echo edd_get_gateway_admin_label( $gateway ); ?></span>
-											</div>
-											<?php } ?>
-											<div class="purchase-key-wrap">
-												<h4><?php _e('Purchase Key', 'edd'); ?></h4>
-												<span class="purchase-key"><?php echo $payment_meta['key']; ?></span>
-											</div>
-											<p><a id="edd-close-purchase-details" class="button-secondary" onclick="tb_remove();" title="<?php _e('Close', 'edd'); ?>"><?php _e('Close', 'edd'); ?></a></p>
-										</div>
-									</td>
-									<td style="text-transform:uppercase;"><?php echo edd_currency_filter( $payment_meta['amount']); ?></td>
-									<td><?php echo date(get_option('date_format'), strtotime($payment->post_date)); ?></td>
-									<td>
-										<?php $user_id = isset($user_info['id']) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email']?>
-										<a href="<?php echo remove_query_arg('p', add_query_arg('user', $user_id) ); ?>">
-											<?php 
-											if ( is_numeric( $user_id ) ) {
-												$user = get_user_by('id', $user_id);
-												echo is_object( $user ) ? $user->display_name : __('guest', 'edd');												
-											} else {
-												echo __('guest', 'edd');
-											}
-											?>
-										</a>
-									</td>
-									<td><?php echo edd_get_payment_status($payment, true); ?></td>
-								</tr>
-							<?php
-							$i++;
-							endforeach;
-						else : ?>
-						<tr><td colspan="7"><?php _e('No payments recorded yet', 'edd'); ?></td></tr>
-					<?php endif;?>
-				</table>
-				<div class="tablenav">
-
-					<div class="left edd-total-earnings">
-						<p><?php _e('Total Earnings:', 'edd'); ?>&nbsp;<strong><?php echo edd_get_total_earnings(); ?></strong></p>
-						<?php do_action( 'edd_payments_page_earnings' ); ?>
-					</div>
-					<?php if ($total_pages > 1) : ?>
-						<div class="tablenav-pages alignright">
-							<?php
-
-								$query_string = $_SERVER['QUERY_STRING'];
-
-								$base = 'edit.php?' . remove_query_arg('p', $query_string) . '%_%';
-
-								echo paginate_links( array(
-									'base' => $base,
-									'format' => '&p=%#%',
-									'prev_text' => '&laquo; ' . __('Previous', 'edd'),
-									'next_text' => __('Next', 'edd') . ' &raquo;',
-									'total' => $total_pages,
-									'current' => $page,
-									'end_size' => 1,
-									'mid_size' => 5,
-								));
-							?>	
-						</div>
-					<?php endif; ?>
-				</div><!--end .tablenav-->
-				<?php do_action('edd_payments_page_bottom'); ?>
-		</div><!--end wrap-->
-		<?php
+			break;
+		case 'status' :
+			echo edd_get_payment_status( $payment, true );
+			break;
 	}
+}
+add_action( 'manage_posts_custom_column', 'edd_payment_history_custom_columns', 10, 2 );
+
+function edd_add_payment_meta_boxes() {
+	add_meta_box( 'buyer-information', __( 'Purchase Information', 'edd' ), 'edd_render_buyer_info_meta_box', 'edd_payment', 'normal', 'default' );
+	add_meta_box( 'purchased-files', __( 'Download Information', 'edd' ), 'edd_render_purchased_files_meta_box', 'edd_payment', 'normal', 'default' );
+}
+add_action( 'add_meta_boxes', 'edd_add_payment_meta_boxes');
+
+function edd_render_buyer_info_meta_box() {
+	global $post;
+
+	$payment_meta = get_post_meta( $post->ID, '_edd_payment_meta', true );
+	$user_info    = maybe_unserialize( $payment_meta['user_info'] ); 
+	$user         = new WP_user( $user_info[ 'id' ] );
+
+	$email        = get_post_meta( $post->ID, '_edd_payment_user_email', true );
+
+	$gateways = edd_get_enabled_payment_gateways();
+	$gateway  = get_post_meta( $post->ID, '_edd_payment_gateway', true );
+
+	$status   = $post->post_status;
+	$statuses = edd_get_payment_statuses();
+
+	$name = $user->display_name;
+
+	if ( ! empty ( $user_info[ 'first_name' ] ) || ! empty( $user_info[ 'last_name' ] ) )
+		$name = $user_info[ 'first_name' ] . ' ' . $user_info[ 'last_name' ];
+
+	if ( $user->ID == 0 )
+		$name = sprintf( __( '%s (Guest)', 'edd' ), $name );
+		
+	$name = sprintf( '<a href="%s">%s</a>', self_admin_url( sprintf( 'edit.php?post_type=edd_payment&user_email=%s', $email ) ), $name );
+?>
+	<div class="purcase-personal-details">
+		<p>
+			<label for="edd_payment_buyer_name">
+				<strong><?php _e( 'Buyer', 'edd' ); ?></strong>: <?php echo $name; ?><br />
+				<input type="text" name="edd_payment_buyer_email" value="<?php echo $payment_meta['email']; ?>" class="regular-text" />
+			</label>
+		</p>
+
+		<?php do_action('edd_payment_personal_details_list', $payment_meta, $user_info); ?>
+	</div>
+
+	<div class="status-wrap">
+		<p>
+			<label for="edd_payment_status">
+				<strong><?php _e( 'Payment Status', 'edd' ); ?></strong>: <br />
+				<select name="edd-payment-status" id="edd_payment_status">
+					<?php foreach( $statuses as $status_id => $label ) : ?>
+					<option value="<?php echo $status_id; ?>" <?php selected( $status, $status_id ); ?>><?php echo $label; ?></option>
+					<?php endforeach; ?>
+				</select>
+			</label>
+			<label for="edd_send_email">
+				<input type="checkbox" name="edd-payment-send-email" id="edd_send_email" value="yes"/>
+				<span class="description"><?php _e('Send Purchase Receipt', 'edd'); ?></span>
+			</label>
+		</p>
+	</div>
+
+	<div class="payment-method">
+		<p>
+			<label for="edd_payment_gateway">
+				<strong><?php _e( 'Payment Method', 'edd' ); ?></strong>: <br />
+				<select class="edd-select" name="payment-mode" id="edd-gateway">
+				<?php foreach( $gateways as $gateway_id => $_gateway ) : ?>
+					<option value="<?php echo $gateway_id; ?>" <?php selected( $gateway_id, $gateway ); ?>><?php echo $_gateway[ 'checkout_label' ]; ?></option>
+				<?php endforeach; ?>
+				</select>
+			</label>
+		</p>
+	</div>
+
+	<?php if( isset( $user_info['discount']) && $user_info['discount'] != 'none') : ?>
+	<div class="discount-wrap">
+		<p>
+			<label for="edd_payment_discount">
+				<strong><?php _e( 'Discount Code', 'edd'); ?></strong>: <br />
+				<input type="text" name="edd_payment_discount" value="<?php echo $user_info['discount']; ?>" class="regular-text" readonly="readonly" />
+			</label>
+		</p>
+	</div>
+	<?php endif; ?>
+
+	<div class="total-wrap">
+		<p>
+			<label for="edd_payment_total">
+				<strong><?php _e( 'Total', 'edd' ); ?></strong>: <br />
+				<input type="text" name="edd_payment_discount" value="<?php echo edd_currency_filter( $payment_meta[ 'amount' ] ); ?>" class="regular-text" readonly="readonly" />
+			</label>
+		</p>
+	</div>
+
+	<div class="purchase-key-wrap">
+		<p>
+			<label for="edd_payment_gateway">
+				<strong><?php _e( 'Purchase Key', 'edd' ); ?></strong>: <br />
+				<input type="text" name="edd_payment_purchase_key" value="<?php echo $payment_meta['key']; ?>" class="regular-text"  readonly="readonly" />
+			</label>
+		</p>
+	</div>
+<?php
+}
+
+function edd_render_purchased_files_meta_box() {
+	global $post;
+
+	$payment_meta = get_post_meta( $post->ID, '_edd_payment_meta', true );
+	$user_info    = maybe_unserialize( $payment_meta[ 'user_info' ] ); 
+	$downloads    = isset( $payment_meta[ 'cart_details' ] ) ? maybe_unserialize( $payment_meta[ 'cart_details' ] ) : false;
+	
+	if ( empty( $downloads ) || ! $downloads ) {
+		$downloads = maybe_unserialize( $payment_meta[ 'downloads' ] );
+	}
+?>
+		
+	<p>
+		<strong><?php _e( 'Current Downloads', 'edd' ); ?></strong>: 
+	</p>
+
+	<div id="postcustomstuff">
+		<table id="newmeta" class="widefat">
+			<thead>
+				<tr>
+					<th align="left"><?php _e( 'Download', 'edd' ); ?></th>
+					<th align="left"><?php _e( 'Price', 'edd' ); ?></th>
+					<th align="left"><?php _e( 'Options', 'edd' ); ?></th>
+				</tr>
+			<thead>
+			<tbody>
+				<?php if ( $downloads ) : foreach( $downloads as $key => $download ) : ?>
+					<?php
+						$id = isset($payment_meta['cart_details']) ? $download['id'] : $download;
+						$price_override = isset($payment_meta['cart_details']) ? $download['price'] : null; 
+						$user_info = unserialize($payment_meta['user_info']);
+						$price = edd_get_download_final_price($id, $user_info, $price_override);
+					?>
+					<tr>
+						<td>
+							<strong><a href="<?php echo self_admin_url( sprintf( 'post.php?post=%d&action=edit', $id ) ); ?>" target="_blank" class="row-title"><?php echo get_the_title( $id ); ?></a></strong>
+
+							<div class="row-actions">
+								<?php printf( 'ID: #%d', $id ); ?> | 
+								<a href="<?php echo esc_url( admin_url( sprintf( 'post.php?post=%d&action=edit', $id ) ) ); ?>"><?php _e( 'Edit', 'edd' ); ?></a> | <span class="trash"><a href="#" class="submitdelete"><?php _e( 'Remove', 'edd' ); ?></a></span>
+							</div>
+
+							<input type="hidden" name="edd-purchased-downloads[]" value="<?php echo $id; ?>" />
+						</td>
+						<td>
+							<?php echo edd_currency_filter($price); ?>
+						</td>
+						<td>
+							<?php
+								if ( isset( $downloads[$key][ 'item_number' ] ) ) {
+									$price_options = $downloads[ $key ][ 'item_number' ][ 'options' ];
+																					
+									if ( isset( $price_options['price_id'] ) ) {
+										echo edd_get_price_option_name( $id, $price_options[ 'price_id' ] );
+									}
+								}
+							?>
+						</td>
+					</tr>
+				<?php endforeach; endif; ?>
+				<tr>
+					<td class="submit" colspan="3" style="clear: both; float: none;">
+						<p id="edit-downloads" style="margin: 6px 0;">
+							<a href="#TB_inline?width=640&inlineId=available-downloads" class="thickbox button button-secondary" title="<?php _e( 'Add New Download', 'edd' ) ; ?>" style="display: inline-block;"><?php _e( 'Add New Download', 'edd' ) ; ?></a>
+						</p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+<?php
 }

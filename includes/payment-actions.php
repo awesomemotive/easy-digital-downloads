@@ -103,66 +103,68 @@ add_action('edd_update_payment_status', 'edd_trigger_purchase_receipt', 10, 3);
  * @return      void
 */
 
-function edd_update_edited_purchase($data) {
+function edd_update_edited_purchase( $post_id, $post ) {
+	/** Don't save when autosaving */
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
+		return $post_id;
 	
-	if(wp_verify_nonce($data['edd-payment-nonce'], 'edd_payment_nonce')) {
+	/** Make sure we are on a product */
+	if ( 'edd_payment' != $post->post_type )
+		return $post_id;
+
+	$payment_data = get_post_meta( $post->ID, '_edd_payment_meta', true);
+	$downloads    = $_POST[ 'edd-purchased-downloads' ];
+
+
+	if( $downloads ) {
+		$updated_downloads = array();
 		
-		$payment_id = $_POST['payment-id'];
+		foreach( $downloads as $download ) {
+			if( isset( $payment_data[ 'cart_details' ] ) ) {
+				$updated_downloads[] = array( 'id' => $download );	
+			} else {
+				$updated_downloads[] = $download;	
+			}
+		}	
 		
-		$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
+		$payment_data[ 'downloads' ] = serialize( $updated_downloads );
+	}		
+	
+	$email = $_POST[ 'edd_payment_buyer_email' ];
+
+	if ( is_email( $email ) )
+		$payment_data[ 'email' ] = strip_tags( $email );
+	
+	/** update all data */
+	update_post_meta( $post_id, '_edd_payment_meta', $payment_data );
+	
+	/** update user email */
+	update_post_meta( $post_id, '_edd_payment_user_email', $payment_data['email'] );
 		
-		if(isset($_POST['edd-purchased-downloads'])) {
-			
-			$updated_downloads = array();
-			
-			foreach( $_POST['edd-purchased-downloads'] as $download ) {
-				
-				if(isset($payment_data['cart_details'])) {
-					
-					$updated_downloads[] = array('id' => $download );
-					
-				} else {
-					
-					$updated_downloads[] = $download;	
-					
-				}
-			}	
-			
-			$payment_data['downloads'] = serialize($updated_downloads);
-			
-		}		
-		
-		$payment_data['email'] = strip_tags($_POST['edd-buyer-email']);
-		
-		update_post_meta($payment_id, '_edd_payment_meta', $payment_data);
-		
-		update_post_meta($payment_id, '_edd_payment_user_email', $payment_data['email']);
-		
-		if($_POST['edd-old-status'] != $_POST['edd-payment-status']) {
-			
-			if( $_POST['edd-payment-status'] == 'refunded' ) {
-				
-				// update sale counts and earnings for all purchased products
-				foreach( $_POST['edd-purchased-downloads'] as $download ) {
-					
-					edd_undo_purchase( $download, $payment_id );					
-					
-				}
-				
-			}			
-			
-			wp_update_post(array('ID' => $payment_id, 'post_status' => $_POST['edd-payment-status']));
-			
-		}
-		
-		if( $_POST['edd-payment-status'] == 'publish' && isset( $_POST['edd-payment-send-email'] ) ) {
-			// send the purchase receipt
-			edd_email_purchase_receipt( $payment_id, false );
+	$status = $_POST[ 'edd-payment-status' ];
+
+	if( 'refunded' == $status ) {
+		foreach( $downloads as $download ) {
+			edd_undo_purchase( $download, $payment_id );					
 		}
 	}
 	
+	remove_action( 'save_post', 'edd_update_edited_purchase', 10, 2 );
+
+	wp_update_post( array(
+		'ID'          => $post->ID, 
+		'post_status' => $status
+	) );
+
+	add_action( 'save_post', 'edd_update_edited_purchase', 10, 2 );
+	
+	if( 'publish' == $status && isset( $_POST[ 'edd-payment-send-email' ] ) ) {
+		edd_email_purchase_receipt( $post->ID, false );
+	}
+
+	return $post_id;
 }
-add_action('edd_edit_payment', 'edd_update_edited_purchase');
+add_action( 'save_post', 'edd_update_edited_purchase', 10, 2 );
 
 
 /**
