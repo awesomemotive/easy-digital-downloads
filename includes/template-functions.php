@@ -120,7 +120,7 @@ function edd_get_purchase_link( $download_id = null, $link_text = null, $style =
 			
 			if ( $style == 'button' ) {
 				
-				$purchase_button .= sprintf( '<span class="%1$s" %2$s>',
+				$purchase_button = sprintf( '<span class="%1$s" %2$s>',
 					esc_attr( 'edd_button edd_add_to_cart_wrap edd_' . $color ),
 					$button_display
 				);
