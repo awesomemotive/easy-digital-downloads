@@ -82,7 +82,11 @@ function edd_process_purchase_form() {
 	do_action( 'edd_checkout_before_gateway', $_POST, $user_info, $valid_data );
 
 	// allow the purchase data to be modified before it is sent to the gateway
-	$purchase_data = apply_filters( 'edd_purchase_data_before_gateway', $purchase_data, $valid_data );
+	$purchase_data = apply_filters( 
+		'edd_purchase_data_before_gateway', 
+		$purchase_data, 
+		$valid_data 
+	);
 
 	// if the total amount in the cart is 0, send to the manaul gateway. This emulates a free download purchase
 	if ( $purchase_data['price'] <= 0 ) {

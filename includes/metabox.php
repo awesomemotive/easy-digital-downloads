@@ -64,20 +64,19 @@ function edd_render_price_field($post_id) {
 	global $edd_options;
 
 	/**
+	 * TODO
 	 * These functions don't exist yet,
 	 * but should be created for filterable/reusable option fetching.
-	 *
-	$variable_pricing = edd_get_variable_pricing( $post_id );
-	$price            = edd_get_price( $post_id );
-	$prices           = edd_get_variable_prices( $post_id );
+	 * $variable_pricing = edd_get_variable_pricing( $post_id );
+	 * $prices           = edd_get_variable_prices( $post_id );
 	*/
 
-	$variable_pricing = get_post_meta($post_id, '_variable_pricing', true);
-	$price = get_post_meta($post_id, 'edd_price', true);
-	$prices = get_post_meta($post_id, 'edd_variable_prices', true);
+	$variable_pricing 	= get_post_meta($post_id, '_variable_pricing', true);
+	$price 				= edd_get_download_price( $post_id );
+	$prices 			= get_post_meta($post_id, 'edd_variable_prices', true);
 
-	$price_display    = $variable_pricing ? ' style="display:none;"' : '';
-	$variable_display = $variable_pricing ? '' : ' style="display:none;"';	
+	$price_display    	= $variable_pricing ? ' style="display:none;"' : '';
+	$variable_display 	= $variable_pricing ? '' : ' style="display:none;"';	
 ?>
 
 	<tr id="edd_price" class="edd_table_row">
@@ -123,7 +122,7 @@ function edd_render_price_field($post_id) {
 							<?php do_action( 'edd_variable_price_after_name', $key ); ?>
 
 							<?php if( $count > 1 ) : ?>
-								<a href="#" class="edd_remove_repeatable">&times;</a> <br/>
+								<a href="#" class="edd_remove_repeatable" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a> <br/>
 							<?php endif; ?>
 						</div>
 				<?php
@@ -206,7 +205,7 @@ function edd_render_files_field($post_id) {
 						$field_html .= '</select>';
 						$field_html .= '<button class="button-secondary edd_upload_image_button">' . __('Upload File', 'edd') . '</button>';
 					if($count > 1) {
-						$field_html .= '<a href="#" class="edd_remove_repeatable button-secondary">x</a><br/>';
+						$field_html .= '<a href="#" class="edd_remove_repeatable" style="background: url(' . admin_url('/images/xit.gif') . ') no-repeat;">x</a><br/>';
 					}
 					$field_html .= '</div>';
 					$count++;
