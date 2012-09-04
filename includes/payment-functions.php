@@ -326,7 +326,9 @@ function edd_get_sales_by_date( $month_num, $year ) {
 			'post_type' => 'edd_payment', 
 			'posts_per_page' => -1, 
 			'year' => $year, 
-			'monthnum' => $month_num
+			'monthnum' => $month_num,
+			'meta_key' => '_edd_payment_mode',
+			'meta_value' => 'live'
 		)
 	);
 	$total = 0;
