@@ -57,25 +57,26 @@ function edd_process_download() {
 			$file_extension = edd_get_file_extension($requested_file);
 
             switch ($file_extension) :
-                case "pdf": $ctype 	= "application/pdf"; break;
-                case "exe": $ctype 	= "application/octet-stream"; break;
-                case "zip": $ctype 	= "application/zip"; break;
-                case "doc": $ctype 	= "application/msword"; break;
-                case "xls": $ctype 	= "application/vnd.ms-excel"; break;
-                case "ppt": $ctype 	= "application/vnd.ms-powerpoint"; break;
-                case "gif": $ctype 	= "image/gif"; break;
-                case "png": $ctype 	= "image/png"; break;
-                case "jpe": $ctype 	= "image/jpg"; break;
-                case "jpeg": $ctype = "image/jpg"; break;
-                case "jpg": $ctype 	= "image/jpg"; break;
-                case 'mp3': $ctype 	= "audio/mpeg"; break;
-                case 'wav': $ctype 	= "audio/x-wav"; break;
-                case 'mpeg': $ctype = "video/mpeg"; break;
-                case 'mpg': $ctype 	= "video/mpeg"; break;
-                case 'mpe': $ctype 	= "video/mpeg"; break;
-                case 'mov': $ctype 	= "video/quicktime"; break;
-                case 'avi': $ctype 	= "video/x-msvideo"; break;
-                default: $ctype 	= "application/force-download";
+                case 'pdf'	: $ctype 	= "application/pdf"; break;
+                case 'exe'	: $ctype 	= "application/octet-stream"; break;
+                case 'zip'	: $ctype 	= "application/zip"; break;
+                case 'doc'	: $ctype 	= "application/msword"; break;
+                case 'xls'	: $ctype 	= "application/vnd.ms-excel"; break;
+                case 'ppt'	: $ctype 	= "application/vnd.ms-powerpoint"; break;
+                case 'gif'	: $ctype 	= "image/gif"; break;
+                case 'png'	: $ctype 	= "image/png"; break;
+                case 'jpe'	: $ctype 	= "image/jpg"; break;
+                case 'jpeg'	: $ctype 	= "image/jpg"; break;
+                case 'jpg'	: $ctype 	= "image/jpg"; break;
+                case 'mp3'	: $ctype 	= "audio/mpeg"; break;
+                case 'mp4'	: $ctype 	= "video/mp4"; break;
+                case 'wav'	: $ctype 	= "audio/x-wav"; break;
+                case 'mpeg'	: $ctype 	= "video/mpeg"; break;
+                case 'mpg'	: $ctype 	= "video/mpeg"; break;
+                case 'mpe'	: $ctype 	= "video/mpeg"; break;
+                case 'mov'	: $ctype 	= "video/quicktime"; break;
+                case 'avi'	: $ctype 	= "video/x-msvideo"; break;
+                default 	: $ctype 	= "application/force-download";
             endswitch;
 			
 			if( !ini_get('safe_mode') ){ 
