@@ -85,6 +85,12 @@ function edd_process_download() {
 			if( function_exists('get_magic_quotes_runtime') && get_magic_quotes_runtime() ) {
 				set_magic_quotes_runtime(0);
 			}
+
+	        @session_write_close();
+	        if (function_exists('apache_setenv')) @apache_setenv('no-gzip', 1);
+	        @ini_set('zlib.output_compression', 'Off');
+			@ob_end_clean();
+			if (ob_get_level()) @ob_end_clean(); // Zip corruption fix
 			
 			header("Pragma: no-cache");
 			header("Expires: 0");
@@ -104,14 +110,15 @@ function edd_process_download() {
 					
 				$requested_file = realpath( $requested_file );
 
-				//header("Content-Length: " . @filesize( $requested_file ) );
-
+				if ($size = @filesize($requested_file)) header("Content-Length: ".$size);
+				/*
 				$requested_file = @fopen( $requested_file, "rb" );
 				while( !feof( $requested_file ) ) {
 					print( @fread( $requested_file, 1024*8 ) );
 					ob_flush();
 					flush();
-				}
+				}*/
+				@edd_readfile_chunked( $requested_file );
 
 			} else {
 				// this is a remote file
@@ -127,3 +134,40 @@ function edd_process_download() {
 	}
 }
 add_action('init', 'edd_process_download', 100);
+
+
+/**
+ * readfile_chunked
+ *
+ * Reads file in chunks so big downloads are possible without changing PHP.INI - http://codeigniter.com/wiki/Download_helper_for_large_files/
+ *
+ * @access   public
+ * @param    string    file
+ * @param    boolean    return bytes of file
+ * @return   void
+ */
+
+function edd_readfile_chunked($file, $retbytes=TRUE) {
+
+	$chunksize = 1 * (1024 * 1024);
+	$buffer = '';
+	$cnt = 0;
+
+	$handle = fopen($file, 'r');
+	if ($handle === FALSE) return FALSE;
+
+	while (!feof($handle)) :
+	   $buffer = fread($handle, $chunksize);
+	   echo $buffer;
+	   ob_flush();
+	   flush();
+
+	   if ($retbytes) $cnt += strlen($buffer);
+	endwhile;
+
+	$status = fclose($handle);
+
+	if ($retbytes AND $status) return $cnt;
+
+	return $status;
+}
