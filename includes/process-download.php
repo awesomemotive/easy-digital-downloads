@@ -228,7 +228,6 @@ function edd_process_download() {
 				case 'xwd'	 : $ctype 	= "image/x-xwindowdump"; break;
 				case 'xyz'	 : $ctype 	= "chemical/x-xyz"; break;
 				case 'zip'	 : $ctype 	= "application/zip"; break;
-				
 				default 	: $ctype 	= "application/force-download";
 			endswitch;
 			
