@@ -15,10 +15,6 @@
 #edd-add-ons .edd-extension .button-secondary { position: absolute; bottom: 8px; left: 8px; }
 #edd-add-ons .edd-browse-all { clear:both; width:100%; }
 
-/* Payment History Styles
--------------------------------------------------------------- */
-tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
-
 /* Metabox Styles
 -------------------------------------------------------------- */
 .edd_file_help_labels { }
@@ -29,3 +25,6 @@ tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 
 .edd_remove_repeatable { margin: 3px 0 0 5px; cursor: pointer; width: 10px; height: 10px; display: inline-block; text-indent: -9999px; overflow: hidden; }
 .edd_remove_repeatable:active, .edd_remove_repeatable:hover { background-position: -10px 0!important }
+
+#normal-sortables .postbox #edd-add-download {	float: none; margin: 10px 0; padding: 0; }
+#purchased-files tbody tr:last-child td { border-bottom: 0; }

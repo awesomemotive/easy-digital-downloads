@@ -268,7 +268,12 @@ function edd_get_payment_statuses() {
 */
 
 function edd_register_payment_status() {
-	register_post_status('refunded');
+	register_post_status( 'refunded', array(
+		'label'                     => __( 'Refunded', 'edd' ),
+		'label_count'               => _n_noop( 'Refunded <span class="count">(%s)</span>', 'Refunded <span class="count">(%s)</span>', 'edd' ),
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true 
+	) );
 }
 add_action( 'init', 'edd_register_payment_status' );
 
