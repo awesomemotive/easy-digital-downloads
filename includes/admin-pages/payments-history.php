@@ -2,6 +2,8 @@
 /**
  * Admin Payment History
  *
+ * @TODO        Update all meta calls with new helper functions.
+ *
  * @package     Easy Digital Downloads
  * @subpackage  Admin Payment History
  * @copyright   Copyright (c) 2012, Pippin Williamson
@@ -9,105 +11,56 @@
  * @since       1.0 
 */
 
-function edd_payments_remove_download() {
-	check_admin_referer( sprintf( 'edd-remove-download_%d', $_GET[ 'download' ] ) );
-
-	if ( ! isset ( $_REQUEST[ 'action' ] ) && ( $_REQUEST[ 'action' ] == 'edd-remove-download' ) )
-		return;
-
-	if ( ! isset( $_GET[ 'payment' ] ) )
-		return;
-
-	if ( ! isset( $_GET[ 'download' ] ) )
-		return;
-
-	$download_id = absint( $_GET[ 'edd-remove-download' ] );
-	$post_id     = absint( $_GET[ 'payment' ] );
-	$download    = absint( $_GET[ 'download' ] );
-
-	$payment_data = get_post_meta( $post_id, '_edd_payment_meta', true );
-	$downloads    = maybe_unserialize( $payment_data[ 'downloads' ] );
-
-	foreach ( $downloads as $key => $c_download ) {
-		if ( $c_download[ 'id' ] == $download ) {
-			unset( $downloads[ $key ] );
-		}
-	}
-
-	$payment_data[ 'downloads' ] = serialize( $downloads );
-	update_post_meta( $post_id, '_edd_payment_meta', $payment_data );
-
-	wp_redirect( admin_url( sprintf( 'post.php?action=edit&post=%d', $post_id ) ) );
-	exit;
-}
-add_action( 'admin_action_edd-remove-download', 'edd_payments_remove_download' );
+/** Columns *****************************************************************/
 
 /**
- * 
- */
-function edd_payment_history_search_fields( $wp ) {
-	global $pagenow, $wpdb;
-
-	if( 'edit.php' != $pagenow ) 
-		return $wp;
-
-	if( ! isset( $wp->query_vars[ 's' ] ) || ! $wp->query_vars[ 's' ] ) 
-		return $wp;
-
-	if ( $wp->query_vars[ 'post_type' ] != 'edd_payment' )
-		return $wp;
-
-	$search_fields = apply_filters( 'edd_payment_history_search_fields', array(
-		'_edd_payment_user_email',
-		'_edd_payment_user_id',
-		'_edd_payment_purchase_key',
-		'_edd_payment_user_ip'
-	) );
-
-	$post_ids = $wpdb->get_col( $wpdb->prepare( 'SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key IN ( '.'"'.implode('","', $search_fields).'"'.' ) AND meta_value LIKE "%%%s%%"', esc_attr( $_GET[ 's' ] ) ) );
-
-	unset( $wp->query_vars['s'] );
-
-	$wp->query_vars[ 'edd_payment_search' ] = true;
-
-	$wp->query_vars['post__in'] = $post_ids;
-}
-
-/**
- * 
- */
-function edd_payment_history_search_label( $query ) {
-	global $pagenow, $typenow;
-
-    if( 'edit.php' != $pagenow ) 
-    	return $query;
-
-    if ( $typenow != 'edd_payment' ) 
-    	return $query;
-
-	if ( ! get_query_var( 'edd_payment_search' ) ) 
-		return $query;
-
-	return $_GET['s'];
-}
-add_filter( 'parse_query', 'edd_payment_history_search_fields' );
-add_filter( 'get_search_query', 'edd_payment_history_search_label' );
-
-/**
- * Query vars for custom searches.
+ * Define columns for payment post type.
  *
- * @access public
- * @param mixed $public_query_vars
- * @return array
+ * @access      public
+ * @since       1.1.8
+ * @param       array $cols The array of columns
+ * @return      array $cols The modified array of columns
  */
-function woocommerce_add_custom_query_var($public_query_vars) {
-	$public_query_vars[] = 'edd_payment_search';
-	$public_query_vars[] = 'edd_delete_payment';
+function edd_payment_history_columns( $cols ) {
+	$cols = array(
+		'cb'          => '<input type="checkbox" />',
+		'order_title' => __( 'Order', 'edd' ),
+		'price'       => __( 'Price', 'edd' ),
+		'email'       => __( 'Email', 'edd' ),
+		'user'        => __( 'User', 'edd' ),
+		'ordered'     => __( 'Date', 'edd' ),
+		'status'      => __( 'Status', 'edd' )
+	);
 
-	return $public_query_vars;
+	return $cols;
 }
-add_filter( 'query_vars', 'woocommerce_add_custom_query_var' );
+add_filter( 'manage_edd_payment_posts_columns', 'edd_payment_history_columns' );
 
+/**
+ * Define which columns are sortable
+ *
+ * @access      public
+ * @since       1.1.8
+ * @param       array $columns Array of columns
+ * @return      array $columns Which columns can be sorted
+ */
+function edd_payments_column_register_sortable( $columns ) {
+	$columns[ 'order_title' ] = 'id';
+	$columns[ 'email' ] = 'email';
+ 
+	return $columns;
+}
+add_filter( 'manage_edit-edd_payment_sortable_columns', 'edd_payments_column_register_sortable' );
+
+/**
+ * Monitor the query request for sorting based on a column.
+ * Depending on which column, modify the query differently.
+ *
+ * @access      public
+ * @since       1.1.8
+ * @param       array $vars Current query variables
+ * @return      array $vars Modified query variables, with meta set
+ */
 function edd_payments_column_orderby( $vars ) {
 	if ( isset( $vars[ 'orderby' ] ) && 'id' == $vars[ 'orderby' ] ) {
 		$vars['orderby'] = 'id';
@@ -124,51 +77,16 @@ function edd_payments_column_orderby( $vars ) {
 }
 add_filter( 'request', 'edd_payments_column_orderby' );
 
-function edd_payments_column_register_sortable( $columns ) {
-	$columns[ 'order_title' ] = 'id';
-	$columns[ 'email' ] = 'email';
- 
-	return $columns;
-}
-add_filter( 'manage_edit-edd_payment_sortable_columns', 'edd_payments_column_register_sortable' );
-
 /**
- * 
+ * Output custom column data for payment post type, such as 
+ * custom title, price, email, etc.
+ *
+ * @access      public
+ * @since       1.1.8
+ * @param       string $column The current column
+ * @param       int $post_id The ID of the post being edited
+ * @return      void
  */
-function edd_payments_order_by_user( $vars ) {
-	global $typenow, $wp_query;
-
-	if ( $typenow != 'edd_payment' )
-		return $vars;
-
-	if ( ! isset( $_GET[ 'user_email' ] ) )
-		return $vars;
-
-	if ( ! is_email( $_GET[ 'user_email' ] ) )
-		return $vars;
-
-	$vars[ 'meta_key' ]   = '_edd_payment_user_email';
-	$vars[ 'meta_value' ] = $_GET[ 'user_email' ];
-
-	return $vars;
-}
-add_filter( 'request', 'edd_payments_order_by_user' );
-
-function edd_payment_history_columns( $cols ) {
-	$cols = array(
-		'cb'       => '<input type="checkbox" />',
-		'order_title' => __( 'Order', 'edd' ),
-		'price'    => __( 'Price', 'edd' ),
-		'email'    => __( 'Email', 'edd' ),
-		'user'     => __( 'User', 'edd' ),
-		'ordered'  => __( 'Date', 'edd' ),
-		'status'   => __( 'Status', 'edd' )
-	);
-
-	return $cols;
-}
-add_filter( 'manage_edd_payment_posts_columns', 'edd_payment_history_columns' );
-
 function edd_payment_history_custom_columns( $column, $post_id ) {
 	global $post;
 
@@ -255,13 +173,120 @@ function edd_payment_history_custom_columns( $column, $post_id ) {
 }
 add_action( 'manage_posts_custom_column', 'edd_payment_history_custom_columns', 10, 2 );
 
+/** Sorting *****************************************************************/
+
+/**
+ * Register query variables for managing payments.
+ *
+ * @access      public
+ * @since       1.1.8
+ * @return      void
+ */
+function woocommerce_add_custom_query_var($public_query_vars) {
+	$public_query_vars[] = 'edd_payment_search';
+	$public_query_vars[] = 'edd_delete_payment';
+
+	return $public_query_vars;
+}
+add_filter( 'query_vars', 'woocommerce_add_custom_query_var' );
+
+/**
+ * Allow certain meta fields to be searchable.
+ * Until price is a separate field, it remains unsearchable.
+ *
+ * Code from WooCommerce
+ *
+ * @link        https://github.com/woothemes/woocommerce
+ *
+ * @access      public
+ * @since       1.1.8
+ * @param       object $query The main query
+ * @return      void
+ */
+function edd_payment_history_search_fields( $query ) {
+	global $pagenow, $wpdb;
+
+	if( 'edit.php' != $pagenow ) 
+		return $query;
+
+	if( ! isset( $query->query_vars[ 's' ] ) || ! $query->query_vars[ 's' ] ) 
+		return $query;
+
+	if ( $query->query_vars[ 'post_type' ] != 'edd_payment' )
+		return $query;
+
+	$search_fields = apply_filters( 'edd_payment_history_search_fields', array(
+		'_edd_payment_user_email',
+		'_edd_payment_user_id',
+		'_edd_payment_purchase_key',
+		'_edd_payment_user_ip'
+	) );
+
+	$post_ids = $wpdb->get_col( $wpdb->prepare( 'SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key IN ( '.'"'.implode('","', $search_fields).'"'.' ) AND meta_value LIKE "%%%s%%"', esc_attr( $_GET[ 's' ] ) ) );
+
+	unset( $wp->query_vars[ 's' ] );
+
+	$query->query_vars[ 'edd_payment_search' ] = true;
+
+	$query->query_vars[ 'post__in' ] = $post_ids;
+}
+add_filter( 'parse_query', 'edd_payment_history_search_fields' );
+
+/**
+ * Output the current search query at the top of the admin page.
+ *
+ * Code from WooCommerce
+ *
+ * @link        https://github.com/woothemes/woocommerce
+ *
+ * @access      public
+ * @since       1.1.8
+ * @param       object $query The main query
+ * @return      void
+ */
+function edd_payment_history_search_label( $query ) {
+	global $pagenow, $typenow;
+
+    if( 'edit.php' != $pagenow ) 
+    	return $query;
+
+    if ( $typenow != 'edd_payment' ) 
+    	return $query;
+
+	if ( ! get_query_var( 'edd_payment_search' ) ) 
+		return $query;
+
+	return $_GET['s'];
+}
+add_filter( 'get_search_query', 'edd_payment_history_search_label' );
+
+/** Metaboxes *****************************************************************/
+
+/**
+ * Payment metaboxes.
+ *
+ * @access      public
+ * @since       1.1.8
+ * @return      void
+ */
 function edd_add_payment_meta_boxes() {
-	add_meta_box( 'buyer-information', __( 'Purchase Information', 'edd' ), 'edd_render_buyer_info_meta_box', 'edd_payment', 'normal', 'default' );
+	add_meta_box( 'purchase-information', __( 'Purchase Information', 'edd' ), 'edd_render_purchase_info_meta_box', 'edd_payment', 'normal', 'default' );
 	add_meta_box( 'purchased-files', __( 'Download Information', 'edd' ), 'edd_render_purchased_files_meta_box', 'edd_payment', 'normal', 'default' );
 }
 add_action( 'add_meta_boxes', 'edd_add_payment_meta_boxes');
 
-function edd_render_buyer_info_meta_box() {
+/**
+ * Purchase Information metabox
+ *
+ * All purchase information relating to the payment.
+ *
+ * @TODO        Add hooks for more column/data output.
+ *
+ * @access      public
+ * @since       1.1.8
+ * @return      void
+ */
+function edd_render_purchase_info_meta_box() {
 	global $post;
 
 	$payment_meta = get_post_meta( $post->ID, '_edd_payment_meta', true );
@@ -365,6 +390,18 @@ function edd_render_buyer_info_meta_box() {
 <?php
 }
 
+/**
+ * Downloads metabox.
+ *
+ * Outputs current downloads (if any) and gives admins the ability to 
+ * add a new download to the purchase. 
+ *
+ * @TODO        Add hooks for more column/data output.
+ *
+ * @access      public
+ * @since       1.1.8
+ * @return      void
+ */
 function edd_render_purchased_files_meta_box() {
 	global $post;
 
@@ -392,10 +429,10 @@ function edd_render_purchased_files_meta_box() {
 			<tbody>
 				<?php foreach( $downloads as $key => $download ) : ?>
 					<?php
-						$id = $download[ 'id' ];
-						$user_info = unserialize( $payment_meta[ 'user_info' ]);
-						$price = edd_get_download_final_price( $id, $user_info );
-						$price_option = isset( $download[ 'options' ]['price_id'] ) ? $download[ 'options' ]['price_id'] : null;
+						$id           = $download[ 'id' ];
+						$user_info    = unserialize( $payment_meta[ 'user_info' ]);
+						$price        = edd_get_download_final_price( $id, $user_info );
+						$price_option = isset( $download[ 'options' ]['price_id'] ) ? $download[ 'options' ][ 'price_id' ] : null;
 					?>
 					<tr>
 						<td>
@@ -466,12 +503,17 @@ function edd_render_purchased_files_meta_box() {
 }
 
 /**
- * 
+ * Save/Edit/Update a payment's details. Used for editing, as well
+ * as creating a manual payment. 
+ *
+ * Download adding is a bit janky, but works. 
  *
  * @access      public
  * @since       1.1.8
- * @return      int $post_id The ID of the updated payment.
-*/
+ * @param       int $post_id The ID of the post being edited
+ * @param       object $post The post object being edited
+ * @return      int $post_id The ID of the post being edited
+ */
 function edd_update_edited_purchase( $post_id, $post ) {
 	/** Don't save when autosaving */
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
@@ -555,3 +597,43 @@ function edd_update_edited_purchase( $post_id, $post ) {
 	return $post_id;
 }
 add_action( 'save_post', 'edd_update_edited_purchase', 10, 2 );
+
+/**
+ * Remove a download from a purchase.
+ *
+ * @access      private
+ * @since       1.1.8
+ * @return      void
+ */
+function edd_payments_remove_download() {
+	check_admin_referer( sprintf( 'edd-remove-download_%d', $_GET[ 'download' ] ) );
+
+	if ( ! isset ( $_REQUEST[ 'action' ] ) && ( $_REQUEST[ 'action' ] == 'edd-remove-download' ) )
+		return;
+
+	if ( ! isset( $_GET[ 'payment' ] ) )
+		return;
+
+	if ( ! isset( $_GET[ 'download' ] ) )
+		return;
+
+	$download_id = absint( $_GET[ 'edd-remove-download' ] );
+	$post_id     = absint( $_GET[ 'payment' ] );
+	$download    = absint( $_GET[ 'download' ] );
+
+	$payment_data = get_post_meta( $post_id, '_edd_payment_meta', true );
+	$downloads    = maybe_unserialize( $payment_data[ 'downloads' ] );
+
+	foreach ( $downloads as $key => $c_download ) {
+		if ( $c_download[ 'id' ] == $download ) {
+			unset( $downloads[ $key ] );
+		}
+	}
+
+	$payment_data[ 'downloads' ] = serialize( $downloads );
+	update_post_meta( $post_id, '_edd_payment_meta', $payment_data );
+
+	wp_redirect( admin_url( sprintf( 'post.php?action=edit&post=%d', $post_id ) ) );
+	exit;
+}
+add_action( 'admin_action_edd-remove-download', 'edd_payments_remove_download' );
