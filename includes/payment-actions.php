@@ -113,8 +113,8 @@ function edd_update_edited_purchase( $post_id, $post ) {
 		return $post_id;
 
 	$payment_data = get_post_meta( $post->ID, '_edd_payment_meta', true);
-	$downloads    = $_POST[ 'edd-purchased-downloads' ];
-
+	
+	/*$downloads    = $_POST[ 'edd-purchased-downloads' ];
 
 	if( $downloads ) {
 		$updated_downloads = array();
@@ -128,7 +128,33 @@ function edd_update_edited_purchase( $post_id, $post ) {
 		}	
 		
 		$payment_data[ 'downloads' ] = serialize( $updated_downloads );
-	}		
+	}*/
+
+	$current_downloads = maybe_unserialize( $payment_data[ 'downloads' ] );
+
+	if ( ! $current_downloads )
+		$current_downloads = array();
+
+	$new_download = $_POST[ 'edd-add-download' ];
+
+	if ( $new_download != 0 ) {
+		$updated_downloads = array();
+
+		$new_download = explode( '.', $new_download );
+
+		$updated_downloads[ $new_download[0] ] = $new_download[0];
+
+		if ( count( $new_download ) > 1 ) {
+			$updated_downloads[ $new_download[0] ] = array(
+				'id'      => $new_download[0],
+				'options' => array(
+					'price_id' => $new_download[1]
+				)
+			);
+		}
+
+		$payment_data[ 'downloads' ] = serialize( array_merge( $current_downloads, $updated_downloads ) );
+	}
 	
 	$email = $_POST[ 'edd_payment_buyer_email' ];
 
@@ -143,20 +169,22 @@ function edd_update_edited_purchase( $post_id, $post ) {
 		
 	$status = $_POST[ 'edd-payment-status' ];
 
-	if( 'refunded' == $status ) {
-		foreach( $downloads as $download ) {
-			edd_undo_purchase( $download, $payment_id );					
+	if ( $status ) {
+		if( 'refunded' == $status ) {
+			foreach( $downloads as $download ) {
+				edd_undo_purchase( $download, $payment_id );					
+			}
 		}
+		
+		remove_action( 'save_post', 'edd_update_edited_purchase', 10, 2 );
+
+		wp_update_post( array(
+			'ID'          => $post->ID, 
+			'post_status' => $status
+		) );
+
+		add_action( 'save_post', 'edd_update_edited_purchase', 10, 2 );
 	}
-	
-	remove_action( 'save_post', 'edd_update_edited_purchase', 10, 2 );
-
-	wp_update_post( array(
-		'ID'          => $post->ID, 
-		'post_status' => $status
-	) );
-
-	add_action( 'save_post', 'edd_update_edited_purchase', 10, 2 );
 	
 	if( 'publish' == $status && isset( $_POST[ 'edd-payment-send-email' ] ) ) {
 		edd_email_purchase_receipt( $post->ID, false );
