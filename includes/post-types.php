@@ -82,7 +82,6 @@ function edd_setup_edd_post_types() {
 		'add_new_item' => __('Add New Payment', 'edd'),
 		'edit_item' => __('Edit Payment', 'edd'),
 		'new_item' => __('New Payment', 'edd'),
-		'all_items' => __('All Payments', 'edd'),
 		'view_item' => __('View Payment', 'edd'),
 		'search_items' => __('Search Payments', 'edd'),
 		'not_found' =>  __('No Payments found', 'edd'),
@@ -93,17 +92,17 @@ function edd_setup_edd_post_types() {
 	
 	$payment_args = array(
 		'labels' => apply_filters('edd_payment_labels', $payment_labels),
-		'public' => false,
+		'public' => true,
 		'publicly_queryable' => false,
-		'show_ui' => false, 
-		'show_in_menu' => false, 
+		'show_ui' => true, 
+		'show_in_menu' => 'edit.php?post_type=download', 
 		'show_in_nav_menu' => false, 
 		'query_var' => false,
 		'rewrite' => false,
 		'capability_type' => 'post',
 		'has_archive' => false, 
 		'hierarchical' => false,
-		'supports' => array( 'title' ),
+		'supports' => array( '' ),
 		'menu_icon' => EDD_PLUGIN_URL . 'includes/images/media-button.png'
 	); 
 	register_post_type('edd_payment', $payment_args);
