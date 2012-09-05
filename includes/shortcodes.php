@@ -72,7 +72,7 @@ function edd_download_history() {
 					foreach($purchases as $purchase) {
 
 						$downloads = edd_get_downloads_of_purchase($purchase->ID);
-						$payment_meta = edd_get_paymeny_meta( $purchase->ID );
+						$payment_meta = edd_get_payment_meta( $purchase->ID );
 
 						if($downloads) {
 							foreach($downloads as $download) {

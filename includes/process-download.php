@@ -253,7 +253,18 @@ function edd_process_download() {
 			header("Content-Disposition: attachment; filename=\"" . apply_filters('edd_requested_file_name', basename($requested_file) ) . "\";");
 			header("Content-Transfer-Encoding: binary");
 			
-			if( strpos( $requested_file, WP_CONTENT_URL ) !== false) {
+
+			if( realpath( $requested_file ) !== false ) {
+				// this is an absolute path
+
+				$requested_file = realpath( $requested_file );
+				echo $requested_file; exit;
+				if ($size = @filesize($requested_file)) header("Content-Length: ".$size);
+
+				@edd_readfile_chunked( $requested_file );
+
+			} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false) {
+				// this is a local file given by URL
 
 				// local file
 				$upload_dir = wp_upload_dir();
@@ -263,13 +274,7 @@ function edd_process_download() {
 				$requested_file = realpath( $requested_file );
 
 				if ($size = @filesize($requested_file)) header("Content-Length: ".$size);
-				/*
-				$requested_file = @fopen( $requested_file, "rb" );
-				while( !feof( $requested_file ) ) {
-					print( @fread( $requested_file, 1024*8 ) );
-					ob_flush();
-					flush();
-				}*/
+
 				@edd_readfile_chunked( $requested_file );
 
 			} else {
