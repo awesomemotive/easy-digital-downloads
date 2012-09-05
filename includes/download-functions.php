@@ -75,6 +75,22 @@ function edd_get_download_final_price($download_id, $user_purchase_info, $amount
 
 
 /**
+ * Get Download Variable Prices
+ *
+ * retrieves the variable prices for a download
+ *
+ * @access      public
+ * @since       1.1.9
+ * @param       int $download_id - the ID of the download
+ * @return      array
+*/
+
+function edd_get_variable_prices( $download_id ) {
+	return get_post_meta($download_id, 'edd_variable_prices', true);
+}
+
+
+/**
  * Get Download Price Name
  *
  * retrieves the name of a variable price option
