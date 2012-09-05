@@ -31,7 +31,7 @@ function edd_complete_purchase($payment_id, $new_status, $old_status) {
 	
 	if( ! edd_is_test_mode() ) {
 				
-		$payment_data 	= get_post_meta( $payment_id, '_edd_payment_meta', true );
+		$payment_data 	= edd_get_payment_meta( $payment_id );
 		$downloads 		= maybe_unserialize( $payment_data['downloads'] );
 		$user_info 		= maybe_unserialize( $payment_data['user_info'] );
 		$cart_details 	= maybe_unserialize( $payment_data['cart_details'] );				
@@ -42,6 +42,7 @@ function edd_complete_purchase($payment_id, $new_status, $old_status) {
 			edd_record_sale_in_log($download['id'], $payment_id, $user_info, $payment_data['date']);
 			edd_increase_purchase_count($download['id']);
 			$amount = null;
+
 			if(is_array($cart_details)) {
 				
 				foreach( $cart_details as $key => $item ) {
@@ -51,9 +52,9 @@ function edd_complete_purchase($payment_id, $new_status, $old_status) {
 				}
 
 				$amount = isset( $cart_details[$cart_item_id]['price'] ) ? $cart_details[$cart_item_id]['price'] : null;
-		
 
 			}
+
 			$amount = edd_get_download_final_price( $download['id'], $user_info, $amount );
 			edd_increase_earnings( $download['id'], $amount );
 			
@@ -109,7 +110,7 @@ function edd_update_edited_purchase($data) {
 		
 		$payment_id = $_POST['payment-id'];
 		
-		$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
+		$payment_data = edd_get_payment_meta( $payment_id );
 		
 		if(isset($_POST['edd-purchased-downloads'])) {
 			
@@ -178,7 +179,7 @@ function edd_delete_purchase($data) {
 		
 		$payment_id = $data['purchase_id'];
 		
-		$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
+		$payment_data = edd_get_payment_meta( $payment_id );
 
 		$downloads = maybe_unserialize( $payment_data['downloads'] );
 
