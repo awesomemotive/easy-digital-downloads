@@ -10,6 +10,8 @@
 */
 
 function edd_payments_remove_download() {
+	check_admin_referer( sprintf( 'edd-remove-download_%d', $_GET[ 'download' ] ) );
+
 	if ( ! isset ( $_REQUEST[ 'action' ] ) && ( $_REQUEST[ 'action' ] == 'edd-remove-download' ) )
 		return;
 
@@ -18,8 +20,6 @@ function edd_payments_remove_download() {
 
 	if ( ! isset( $_GET[ 'download' ] ) )
 		return;
-
-	//check_admin_referer( sprintf( 'edd-remove-download_%d', $_GET[ 'download' ] ) );
 
 	$download_id = absint( $_GET[ 'edd-remove-download' ] );
 	$post_id     = absint( $_GET[ 'payment' ] );
@@ -43,13 +43,9 @@ function edd_payments_remove_download() {
 add_action( 'admin_action_edd-remove-download', 'edd_payments_remove_download' );
 
 /**
- * Search custom fields as well as content.
- *
- * @access public
- * @param mixed $wp
- * @return void
+ * 
  */
-function woocommerce_shop_order_search_custom_fields( $wp ) {
+function edd_payment_history_search_fields( $wp ) {
 	global $pagenow, $wpdb;
 
 	if( 'edit.php' != $pagenow ) 
@@ -78,13 +74,9 @@ function woocommerce_shop_order_search_custom_fields( $wp ) {
 }
 
 /**
- * Change the label when searching orders.
- *
- * @access public
- * @param mixed $query
- * @return string
+ * 
  */
-function woocommerce_shop_order_search_label($query) {
+function edd_payment_history_search_label( $query ) {
 	global $pagenow, $typenow;
 
     if( 'edit.php' != $pagenow ) 
@@ -98,10 +90,8 @@ function woocommerce_shop_order_search_label($query) {
 
 	return $_GET['s'];
 }
-if ( is_admin() ) {
-	add_filter( 'parse_query', 'woocommerce_shop_order_search_custom_fields' );
-	add_filter( 'get_search_query', 'woocommerce_shop_order_search_label' );
-}
+add_filter( 'parse_query', 'edd_payment_history_search_fields' );
+add_filter( 'get_search_query', 'edd_payment_history_search_label' );
 
 /**
  * Query vars for custom searches.
@@ -405,13 +395,13 @@ function edd_render_purchased_files_meta_box() {
 					?>
 					<tr>
 						<td>
-							<strong><a href="<?php echo self_admin_url( sprintf( 'post.php?post=%d&action=edit', $id ) ); ?>" target="_blank" class="row-title"><?php echo get_the_title( $id ); ?></a></strong>
+							<strong><a href="<?php echo admin_url( sprintf( 'post.php?post=%d&action=edit', $id ) ); ?>" target="_blank" class="row-title"><?php echo get_the_title( $id ); ?></a></strong>
 
 							<div class="row-actions">
-								<a href="<?php echo esc_url( self_admin_url( sprintf( 'post.php?post=%d&action=edit', $id ) ) ); ?>"><?php _e( 'Edit Download', 'edd' ); ?></a> 
+								<a href="<?php echo esc_url( admin_url( sprintf( 'post.php?post=%d&action=edit', $id ) ) ); ?>"><?php _e( 'Edit Download', 'edd' ); ?></a> 
 									| 
 								<span class="trash">
-									<a href="<?php echo esc_url( wp_nonce_url( self_admin_url( sprintf( '?action=edd-remove-download&payment=%d&download=%d', $post->ID, $id ) ) ), sprintf( 'edd-remove-download_%d', $id ) ); ?>" class="submitdelete"><?php _e( 'Remove', 'edd' ); ?></a>
+									<a href="<?php echo esc_url( wp_nonce_url( admin_url( sprintf( '?action=edd-remove-download&payment=%d&download=%d', $post->ID, $id ) ), 'edd-remove-download_' . $id ) ); ?>" class="submitdelete"><?php _e( 'Remove', 'edd' ); ?></a>
 								</span>
 							</div>
 
