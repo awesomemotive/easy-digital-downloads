@@ -1,4 +1,4 @@
-case <?php
+<?php
 /**
  * Process Download
  *
