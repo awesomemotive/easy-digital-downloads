@@ -46,7 +46,7 @@ add_filter( 'manage_edd_payment_posts_columns', 'edd_payment_history_columns' );
  */
 function edd_payments_column_register_sortable( $columns ) {
 	$columns[ 'order_title' ] = 'id';
-	$columns[ 'email' ] = 'email';
+	$columns[ 'email' ]       = 'email';
  
 	return $columns;
 }
@@ -182,13 +182,13 @@ add_action( 'manage_posts_custom_column', 'edd_payment_history_custom_columns', 
  * @since       1.1.8
  * @return      void
  */
-function woocommerce_add_custom_query_var($public_query_vars) {
+function edd_payments_add_query_vars( $public_query_vars ) {
 	$public_query_vars[] = 'edd_payment_search';
 	$public_query_vars[] = 'edd_delete_payment';
 
 	return $public_query_vars;
 }
-add_filter( 'query_vars', 'woocommerce_add_custom_query_var' );
+add_filter( 'query_vars', 'edd_payments_add_query_vars' );
 
 /**
  * Allow certain meta fields to be searchable.
@@ -475,7 +475,7 @@ function edd_render_purchased_files_meta_box() {
 				if ( $downloads ) :
 			?>
 				<select name="edd-add-download">
-					<option value="0"><?php _e( 'Select Download', 'edd' ); ?></option>
+					<option value="0"><?php _e( 'Choose Download', 'edd' ); ?></option>
 					<?php foreach ( $downloads as $download ) : ?>
 					<option value="<?php echo $download->ID; ?>"><?php echo $download->post_title; ?></option>
 					<?php 
@@ -575,7 +575,7 @@ function edd_update_edited_purchase( $post_id, $post ) {
 
 	if ( $status ) {
 		if( 'refunded' == $status ) {
-			foreach( $downloads as $download ) {
+			foreach( $current_downloads as $download ) {
 				edd_undo_purchase( $download, $payment_id );					
 			}
 		}
