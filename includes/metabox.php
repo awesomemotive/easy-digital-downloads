@@ -172,7 +172,7 @@ function edd_render_files_field($post_id) {
 	
 	// downloadable files
 	
-	$files 				= get_post_meta($post_id, 'edd_download_files', true);
+	$files 				= edd_get_download_files( $post_id );
 	$variable_pricing 	= edd_has_variable_prices( $post_id );
 	$prices 			= edd_get_variable_prices( $post_id );
 	$variable_display 	= $variable_pricing ? '' : ' style="display:none;"';
