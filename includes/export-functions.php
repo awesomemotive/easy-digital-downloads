@@ -43,7 +43,7 @@ function edd_export_payment_history() {
 			echo "\r\n";
 			foreach($payments as $payment){
 
-				$payment_meta = get_post_meta($payment->ID, '_edd_payment_meta', true);
+				$payment_meta = edd_get_payment_meta( $payment->ID );
 				$user_info = maybe_unserialize($payment_meta['user_info']);
 				
 				echo '"' . $payment->ID . '",';

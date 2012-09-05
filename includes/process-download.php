@@ -39,7 +39,7 @@ function edd_process_download() {
 			do_action('edd_process_verified_download', $download, $email);
 
 			// payment has been verified, setup the download
-			$download_files = get_post_meta($download, 'edd_download_files', true);
+			$download_files = edd_get_download_files( $download );
 			
 			$requested_file = apply_filters('edd_requested_file', $download_files[$file_key]['file'] );
 		
