@@ -23,7 +23,7 @@
 function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	global $edd_options;
 	
-	$payment_data = get_post_meta( $payment_id, '_edd_payment_meta', true );
+	$payment_data = edd_get_payment_meta( $payment_id );
 	$user_info = maybe_unserialize( $payment_data['user_info'] );
 
 	if(isset($user_info['id']) && $user_info['id'] > 0) {

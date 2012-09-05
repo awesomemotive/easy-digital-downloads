@@ -97,17 +97,11 @@ function edd_insert_payment($payment_data = array()) {
 			'user_id' => $payment_data['user_info']['id']
 		);
 		
-		if ( isset( $_SERVER['HTTP_X_FORWARD_FOR'] ) ) {
-			$ip = $_SERVER['HTTP_X_FORWARD_FOR'];
-		} else {
-			$ip = $_SERVER['REMOTE_ADDR'];
-		}
-		
 		// record the payment details
 		update_post_meta($payment, '_edd_payment_meta', apply_filters('edd_payment_meta', $payment_meta, $payment_data));
 		update_post_meta($payment, '_edd_payment_user_id', $payment_data['user_info']['id']);
 		update_post_meta($payment, '_edd_payment_user_email', $payment_data['user_email']);
-		update_post_meta($payment, '_edd_payment_user_ip', $ip);
+		update_post_meta($payment, '_edd_payment_user_ip', edd_get_ip() );
 		update_post_meta($payment, '_edd_payment_purchase_key', $payment_data['purchase_key']);
 		$mode = edd_is_test_mode() ? 'test' : 'live';
 		update_post_meta($payment, '_edd_payment_mode', $mode);
@@ -179,7 +173,7 @@ function edd_undo_purchase( $download_id, $payment_id ) {
 	
 	edd_decrease_purchase_count( $download_id );
 				
-	$purchase_meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
+	$purchase_meta = edd_get_payment_meta( $payment_id );
 	
 	$user_purchase_info = maybe_unserialize( $purchase_meta['user_info'] );
 	
@@ -303,7 +297,7 @@ function edd_get_earnings_by_date($day = null, $month_num, $year) {
 	$total = 0;
 	if($sales) {
 		foreach($sales as $sale) {
-			$sale_meta = get_post_meta($sale->ID, '_edd_payment_meta', true);
+			$sale_meta = edd_get_payment_meta( $sale->ID );
 			$amount = $sale_meta['amount'];
 			$total = $total + $amount;
 		}
@@ -372,7 +366,7 @@ function edd_is_payment_complete($payment_id) {
 
 function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
 	if(is_null($payment_meta)) {
-		$payment_meta = get_post_meta($payment_id, '_edd_payment_meta', true);
+		$payment_meta = edd_get_payment_meta( $payment_id );
 	}
 	$downloads = maybe_unserialize($payment_meta['downloads']);
 	if($downloads)
@@ -404,4 +398,17 @@ function edd_get_total_earnings() {
 		}
 	}
 	return edd_currency_filter( $total );
+}
+
+
+/**
+ * Get Payment Meta
+ *
+ * @access      public
+ * @since       1.1.9
+ * @return      array
+*/
+
+function edd_get_payment_meta( $payment_id ) {
+	return get_post_meta($payment_id, '_edd_payment_meta', true);
 }

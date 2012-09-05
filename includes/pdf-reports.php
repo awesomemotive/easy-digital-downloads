@@ -81,7 +81,7 @@ function edd_generate_pdf( $data ) {
 				$title = utf8_decode( get_the_title( $download->ID ) );
 				
 				if ( edd_has_variable_prices( $download->ID ) ) {
-					$prices = get_post_meta( $download->ID, 'edd_variable_prices', true );
+					$prices = edd_get_variable_prices( $download->ID );
 					$total = count( $prices ) - 1;
 					if ( $prices[0]['amount'] < $prices[$total]['amount'] ) {
 						$min = $prices[0]['amount'];

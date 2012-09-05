@@ -72,7 +72,7 @@ function edd_download_history() {
 					foreach($purchases as $purchase) {
 
 						$downloads = edd_get_downloads_of_purchase($purchase->ID);
-						$payment_meta = get_post_meta($purchase->ID, '_edd_payment_meta', true);
+						$payment_meta = edd_get_paymeny_meta( $purchase->ID );
 
 						if($downloads) {
 							foreach($downloads as $download) {
@@ -155,7 +155,7 @@ function edd_purchase_history() {
 						</tr>
 					</thead>
 					<?php foreach($purchases as $purchase) { ?>
-						<?php $purchase_data = get_post_meta($purchase->ID, '_edd_payment_meta', true); ?>
+						<?php $purchase_data = edd_get_paymeny_meta( $purchase->ID ); ?>
 						<?php do_action('edd_purchase_history_body_start', $purchase, $purchase_data); ?>
 						<tr class="edd_purchase_row">
 							<td>#<?php echo $purchase->ID; ?></td>

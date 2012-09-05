@@ -169,22 +169,24 @@ function edd_show_daily_eanings_graph($bgcolor = 'white') {
 	        data.addColumn('number', '<?php _e("Earnings", "edd"); ?>');
 	        data.addRows([
 				<?php
-				$day = date('d');
-				$month = date('n');
-				$year = date('Y');
-				$num_of_days = cal_days_in_month(CAL_GREGORIAN, $month, $year );
-				$i = 1;
-				while($i <= $num_of_days) :?>
-					['<?php echo date("d", mktime(0, 0, 0, $month, $i, $year)); ?>', 
-					<?php echo edd_get_earnings_by_date($i, $month, $year ); ?>,
+				$num_of_days = apply_filters( 'edd_earnings_per_day_days', 30 ); // show payments for the last 30 days
+				$i = $num_of_days;
+				while( $i > 1 ) : 
+					$day_time 	= strtotime( '-' . $num_of_days - $i . ' days', time() );
+					$day 		= date( 'd', $day_time );
+					$month 		= date( 'n', $day_time ) + 1; // I have no idea why the +1 is needed, but it is
+					$year 		= date( 'Y', $day_time );
+					?>
+					['<?php echo date( "n/d", mktime( 0, 0, 0, $month, $day, $year ) ); ?>', 
+					<?php echo edd_get_earnings_by_date( $day, $month, $year ); ?>,
 					],
-					<?php $i++;
+					<?php $i--;
 				endwhile;
 				?>
 	        ]);
 
 	        var options = {
-	          	title: "<?php _e('Earnings per day', 'edd'); ?>",
+	          	title: "<?php printf( __('Earnings per day for last %s days', 'edd'), $num_of_days ); ?>",
 				colors:['#a3bcd3'],
 				fontSize: 12,
 				backgroundColor: '#ffffff'

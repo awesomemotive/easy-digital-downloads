@@ -52,9 +52,7 @@ function edd_get_purchase_link( $download_id = null, $link_text = null, $style =
 
 	if ( ! isset( $edd_options['purchase_page'] ) ){
 		edd_set_error( 'set_checkout', __( 'No checkout page has been configured.', 'edd' ) );
-		edd_print_errors(); // Not really how edd_print_errors was intended to be used but didn't want to add hook 
-		// Potentially this error could be hidden from customers as a html comment just to give the developer a hint
-		// It will confuse customers that can't find the purchase link but we don't want to much info about the backend to them either. 
+		edd_print_errors();
 		return false;
 	}
 	
@@ -62,7 +60,7 @@ function edd_get_purchase_link( $download_id = null, $link_text = null, $style =
 	$link_args = array( 'download_id' => $download_id, 'edd_action' => 'add_to_cart' );
 	$link = add_query_arg( $link_args, $page );
 	$checkout_url = get_permalink( $edd_options['purchase_page'] );
-	$variable_pricing = get_post_meta( $download_id, '_variable_pricing', true );
+	$variable_pricing = edd_has_variable_prices( $download_id );
 	
 	if ( is_null( $link_text ) ) {
 		$link_text = get_post_meta( $post->ID, '_edd_purchase_text', true ) ? get_post_meta( $post->ID, '_edd_purchase_text', true ) : __( 'Purchase', 'edd' );
@@ -79,7 +77,7 @@ function edd_get_purchase_link( $download_id = null, $link_text = null, $style =
 	$purchase_form = '<form id="edd_purchase_' . $download_id . '" class="edd_download_purchase_form" method="POST">';
 		
 		if ( $variable_pricing ) {
-			$prices = get_post_meta( $download_id, 'edd_variable_prices', true );
+			$prices = edd_get_variable_prices( $download_id );
 			$purchase_form .= '<div class="edd_price_options">';
 				if ( $prices ) {
 					foreach( $prices as $key => $price ) {
@@ -353,9 +351,7 @@ add_filter( 'edd_downloads_content', 'edd_downloads_default_content' );
 
 function edd_get_purchase_download_links( $purchase_data ) {
 
-	$links = '';
-
-	$links .= '<ul class="edd_download_links">';
+	$links = '<ul class="edd_download_links">';
 	foreach( $purchase_data['downloads'] as $download ) {
 
 		$links .= '<li>';
