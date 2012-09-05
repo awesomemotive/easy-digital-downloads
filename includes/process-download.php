@@ -237,7 +237,7 @@ function edd_process_download() {
 			if( function_exists('get_magic_quotes_runtime') && get_magic_quotes_runtime() ) {
 				set_magic_quotes_runtime(0);
 			}
-
+/*
 	        @session_write_close();
 	        if (function_exists('apache_setenv')) @apache_setenv('no-gzip', 1);
 	        @ini_set('zlib.output_compression', 'Off');
@@ -252,30 +252,36 @@ function edd_process_download() {
 			header("Content-Description: File Transfer");	
 			header("Content-Disposition: attachment; filename=\"" . apply_filters('edd_requested_file_name', basename($requested_file) ) . "\";");
 			header("Content-Transfer-Encoding: binary");
+			*/
+
+			if( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false ) {
 			
-
-			if( realpath( $requested_file ) !== false ) {
 				// this is an absolute path
-
+			
 				$requested_file = realpath( $requested_file );
-				echo $requested_file; exit;
-				if ($size = @filesize($requested_file)) header("Content-Length: ".$size);
-
-				@edd_readfile_chunked( $requested_file );
+				if( file_exists( $requested_file ) ) {
+					if ($size = @filesize($requested_file)) header("Content-Length: ".$size);
+					@edd_readfile_chunked( $requested_file );
+				} else {
+					wp_die( __('Sorry but this file does not exist.', 'edd'), __('Error') );
+				}
 
 			} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false) {
+
 				// this is a local file given by URL
 
-				// local file
 				$upload_dir = wp_upload_dir();
 				
 				$requested_file = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );	
 					
 				$requested_file = realpath( $requested_file );
 
-				if ($size = @filesize($requested_file)) header("Content-Length: ".$size);
-
-				@edd_readfile_chunked( $requested_file );
+				if( file_exists( $requested_file ) ) {
+					if ($size = @filesize($requested_file)) header("Content-Length: ".$size);
+					@edd_readfile_chunked( $requested_file );
+				} else {
+					wp_die( __('Sorry but this file does not exist.', 'edd'), __('Error') );
+				}
 
 			} else {
 				// this is a remote file
