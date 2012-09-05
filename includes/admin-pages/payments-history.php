@@ -294,7 +294,7 @@ function edd_render_buyer_info_meta_box() {
 	<div class="purcase-personal-details">
 		<p>
 			<label for="edd_payment_buyer_name">
-				<strong><?php _e( 'Buyer', 'edd' ); ?></strong>: <?php echo $name; ?><br />
+				<strong><?php _e( 'Buyer', 'edd' ); ?></strong>: <?php if ( $payment_meta ) : ?><?php echo $name; ?><?php endif; ?><br />
 				<input type="text" name="edd_payment_buyer_email" value="<?php echo $payment_meta['email']; ?>" class="regular-text" />
 			</label>
 		</p>
@@ -346,12 +346,13 @@ function edd_render_buyer_info_meta_box() {
 	<div class="total-wrap">
 		<p>
 			<label for="edd_payment_total">
-				<strong><?php _e( 'Total', 'edd' ); ?></strong>: <br />
-				<input type="text" name="edd_payment_discount" value="<?php echo edd_currency_filter( $payment_meta[ 'amount' ] ); ?>" class="regular-text" readonly="readonly" />
+				<strong><?php _e( 'Total', 'edd' ); ?></strong>: (<?php echo edd_currency_filter(''); ?>) <br />
+				<input type="text" name="edd_payment_discount" value="<?php echo $payment_meta[ 'amount' ]; ?>" class="regular-text" <?php if ( $payment_meta ) : ?>readonly="readonly"<?php endif; ?> />
 			</label>
 		</p>
 	</div>
 
+	<?php if ( $payment_meta ) : ?>
 	<div class="purchase-key-wrap">
 		<p>
 			<label for="edd_payment_gateway">
@@ -360,6 +361,7 @@ function edd_render_buyer_info_meta_box() {
 			</label>
 		</p>
 	</div>
+	<?php endif; ?>
 <?php
 }
 
@@ -371,6 +373,8 @@ function edd_render_purchased_files_meta_box() {
 
 	$downloads    = maybe_unserialize( $payment_meta[ 'downloads' ] );
 ?>
+
+	<?php if ( $downloads ) : ?>
 		
 	<p>
 		<strong><?php _e( 'Current Downloads', 'edd' ); ?></strong>: 
@@ -386,7 +390,7 @@ function edd_render_purchased_files_meta_box() {
 				</tr>
 			<thead>
 			<tbody>
-				<?php if ( $downloads ) : foreach( $downloads as $key => $download ) : ?>
+				<?php foreach( $downloads as $key => $download ) : ?>
 					<?php
 						$id = $download[ 'id' ];
 						$user_info = unserialize( $payment_meta[ 'user_info' ]);
@@ -418,9 +422,11 @@ function edd_render_purchased_files_meta_box() {
 							?>
 						</td>
 					</tr>
-				<?php endforeach; endif; ?>
+				<?php endforeach; ?>
 			</tbody>
 		</table>
+
+		<?php endif; ?>
 
 		<p id="edd-add-download" class="submit">
 			<?php
