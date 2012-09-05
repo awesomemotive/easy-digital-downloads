@@ -9,6 +9,115 @@
  * @since       1.0 
 */
 
+function edd_payments_remove_download() {
+	if ( ! isset ( $_REQUEST[ 'action' ] ) && ( $_REQUEST[ 'action' ] == 'edd-remove-download' ) )
+		return;
+
+	if ( ! isset( $_GET[ 'payment' ] ) )
+		return;
+
+	if ( ! isset( $_GET[ 'download' ] ) )
+		return;
+
+	//check_admin_referer( sprintf( 'edd-remove-download_%d', $_GET[ 'download' ] ) );
+
+	$download_id = absint( $_GET[ 'edd-remove-download' ] );
+	$post_id     = absint( $_GET[ 'payment' ] );
+	$download    = absint( $_GET[ 'download' ] );
+
+	$payment_data = get_post_meta( $post_id, '_edd_payment_meta', true );
+	$downloads    = maybe_unserialize( $payment_data[ 'downloads' ] );
+
+	foreach ( $downloads as $key => $c_download ) {
+		if ( $c_download[ 'id' ] == $download ) {
+			unset( $downloads[ $key ] );
+		}
+	}
+
+	$payment_data[ 'downloads' ] = serialize( $downloads );
+	update_post_meta( $post_id, '_edd_payment_meta', $payment_data );
+
+	wp_redirect( admin_url( sprintf( 'post.php?action=edit&post=%d', $post_id ) ) );
+	exit;
+}
+add_action( 'admin_action_edd-remove-download', 'edd_payments_remove_download' );
+
+/**
+ * Search custom fields as well as content.
+ *
+ * @access public
+ * @param mixed $wp
+ * @return void
+ */
+function woocommerce_shop_order_search_custom_fields( $wp ) {
+	global $pagenow, $wpdb;
+
+	if( 'edit.php' != $pagenow ) 
+		return $wp;
+
+	if( ! isset( $wp->query_vars[ 's' ] ) || ! $wp->query_vars[ 's' ] ) 
+		return $wp;
+
+	if ( $wp->query_vars[ 'post_type' ] != 'edd_payment' )
+		return $wp;
+
+	$search_fields = apply_filters( 'edd_payment_history_search_fields', array(
+		'_edd_payment_user_email',
+		'_edd_payment_user_id',
+		'_edd_payment_purchase_key',
+		'_edd_payment_user_ip'
+	) );
+
+	$post_ids = $wpdb->get_col( $wpdb->prepare( 'SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key IN ( '.'"'.implode('","', $search_fields).'"'.' ) AND meta_value LIKE "%%%s%%"', esc_attr( $_GET[ 's' ] ) ) );
+
+	unset( $wp->query_vars['s'] );
+
+	$wp->query_vars[ 'edd_payment_search' ] = true;
+
+	$wp->query_vars['post__in'] = $post_ids;
+}
+
+/**
+ * Change the label when searching orders.
+ *
+ * @access public
+ * @param mixed $query
+ * @return string
+ */
+function woocommerce_shop_order_search_label($query) {
+	global $pagenow, $typenow;
+
+    if( 'edit.php' != $pagenow ) 
+    	return $query;
+
+    if ( $typenow != 'edd_payment' ) 
+    	return $query;
+
+	if ( ! get_query_var( 'edd_payment_search' ) ) 
+		return $query;
+
+	return $_GET['s'];
+}
+if ( is_admin() ) {
+	add_filter( 'parse_query', 'woocommerce_shop_order_search_custom_fields' );
+	add_filter( 'get_search_query', 'woocommerce_shop_order_search_label' );
+}
+
+/**
+ * Query vars for custom searches.
+ *
+ * @access public
+ * @param mixed $public_query_vars
+ * @return array
+ */
+function woocommerce_add_custom_query_var($public_query_vars) {
+	$public_query_vars[] = 'edd_payment_search';
+	$public_query_vars[] = 'edd_delete_payment';
+
+	return $public_query_vars;
+}
+add_filter( 'query_vars', 'woocommerce_add_custom_query_var' );
+
 function edd_payments_column_orderby( $vars ) {
 	if ( isset( $vars[ 'orderby' ] ) && 'id' == $vars[ 'orderby' ] ) {
 		$vars['orderby'] = 'id';
@@ -36,29 +145,6 @@ add_filter( 'manage_edit-edd_payment_sortable_columns', 'edd_payments_column_reg
 /**
  * 
  */
-function edd_filter_payments() {
-	global $typenow, $wp_query;
-
-	if ( $typenow != 'edd_payment' )
-		return;
-
-	$users = get_users();
-
-	$selected = $_GET[ 'user_email' ];
-?>
-	<select name="user_email">
-		<option value=""><?php _e( 'All Customers', 'edd' ); ?></option>
-		<?php foreach ( $users as $user ) : ?>
-		<option value="<?php echo $user->user_email; ?>" <?php selected( $selected, $user->user_email ); ?>><?php echo $user->display_name; ?> (<?php echo $user->user_email; ?>)</option>
-		<?php endforeach; ?>
-	</select>
-<?php
-}
-add_action( 'restrict_manage_posts', 'edd_filter_payments' );
-
-/**
- * 
- */
 function edd_payments_order_by_user( $vars ) {
 	global $typenow, $wp_query;
 
@@ -82,10 +168,10 @@ function edd_payment_history_columns( $cols ) {
 	$cols = array(
 		'cb'       => '<input type="checkbox" />',
 		'order_title' => __( 'Order', 'edd' ),
-		'email'    => __( 'Email', 'edd' ),
 		'price'    => __( 'Price', 'edd' ),
-		'ordered'  => __( 'Date', 'edd' ),
+		'email'    => __( 'Email', 'edd' ),
 		'user'     => __( 'User', 'edd' ),
+		'ordered'  => __( 'Date', 'edd' ),
 		'status'   => __( 'Status', 'edd' )
 	);
 
@@ -292,14 +378,8 @@ function edd_render_purchased_files_meta_box() {
 
 	$payment_meta = get_post_meta( $post->ID, '_edd_payment_meta', true );
 	$user_info    = maybe_unserialize( $payment_meta[ 'user_info' ] ); 
-	
-	/*$downloads    = isset( $payment_meta[ 'cart_details' ] ) ? maybe_unserialize( $payment_meta[ 'cart_details' ] ) : false;
-	
-	if ( empty( $downloads ) || ! $downloads ) {
-		$downloads = maybe_unserialize( $payment_meta[ 'downloads' ] );
-	}*/
 
-	$downloads = maybe_unserialize( $payment_meta[ 'downloads' ] );
+	$downloads    = maybe_unserialize( $payment_meta[ 'downloads' ] );
 ?>
 		
 	<p>
@@ -321,25 +401,29 @@ function edd_render_purchased_files_meta_box() {
 						$id = $download[ 'id' ];
 						$user_info = unserialize( $payment_meta[ 'user_info' ]);
 						$price = edd_get_download_final_price( $id, $user_info );
+						$price_option = isset( $download[ 'options' ]['price_id'] ) ? $download[ 'options' ]['price_id'] : null;
 					?>
 					<tr>
 						<td>
 							<strong><a href="<?php echo self_admin_url( sprintf( 'post.php?post=%d&action=edit', $id ) ); ?>" target="_blank" class="row-title"><?php echo get_the_title( $id ); ?></a></strong>
 
 							<div class="row-actions">
-								<?php printf( 'ID: #%d', $id ); ?> | 
-								<a href="<?php echo esc_url( admin_url( sprintf( 'post.php?post=%d&action=edit', $id ) ) ); ?>"><?php _e( 'Edit', 'edd' ); ?></a> | <span class="trash"><a href="#" class="submitdelete"><?php _e( 'Remove', 'edd' ); ?></a></span>
+								<a href="<?php echo esc_url( self_admin_url( sprintf( 'post.php?post=%d&action=edit', $id ) ) ); ?>"><?php _e( 'Edit Download', 'edd' ); ?></a> 
+									| 
+								<span class="trash">
+									<a href="<?php echo esc_url( wp_nonce_url( self_admin_url( sprintf( '?action=edd-remove-download&payment=%d&download=%d', $post->ID, $id ) ) ), sprintf( 'edd-remove-download_%d', $id ) ); ?>" class="submitdelete"><?php _e( 'Remove', 'edd' ); ?></a>
+								</span>
 							</div>
 
-							<input type="hidden" name="edd-purchased-downloads[]" value="<?php echo $id; ?>" />
+							<input type="hidden" name="edd-purchased-downloads[<?php echo $id; ?>]" value="<?php echo $price_option; ?>" />
 						</td>
 						<td>
 							<?php echo edd_currency_filter( $price ); ?>
 						</td>
 						<td>
 							<?php
-								if ( isset( $download[ 'options' ]['price_id'] ) ) {
-										echo edd_get_price_option_name( $id, $download[ 'options' ]['price_id'] );
+								if ( $price_option ) {
+									echo edd_get_price_option_name( $id, $price_option );
 								}
 							?>
 						</td>
@@ -363,7 +447,9 @@ function edd_render_purchased_files_meta_box() {
 					<option value="<?php echo $download->ID; ?>"><?php echo $download->post_title; ?></option>
 					<?php 
 						$prices = get_post_meta( $download->ID, 'edd_variable_prices', true ); 
-						if ( $prices ) :  foreach ( $prices as $key => $price ) :
+						$has_variable = get_post_meta( $download->ID, '_variable_pricing', true );
+
+						if ( $prices && $has_variable ) :  foreach ( $prices as $key => $price ) :
 					?>
 
 						<option value="<?php echo $download->ID; ?>.<?php echo $key; ?>">&nbsp; &mdash; <?php echo $price[ 'name' ]; ?></option>
@@ -382,3 +468,94 @@ function edd_render_purchased_files_meta_box() {
 	</script>
 <?php
 }
+
+/**
+ * 
+ *
+ * @access      public
+ * @since       1.1.8
+ * @return      int $post_id The ID of the updated payment.
+*/
+function edd_update_edited_purchase( $post_id, $post ) {
+	/** Don't save when autosaving */
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
+		return $post_id;
+	
+	/** Make sure we are on a product */
+	if ( 'edd_payment' != $post->post_type )
+		return $post_id;
+
+	$payment_data = get_post_meta( $post->ID, '_edd_payment_meta', true);
+
+	$current_downloads = $_POST[ 'edd-purchased-downloads' ];
+
+	if ( $current_downloads ) {
+		foreach ( $current_downloads as $id => $price_id ) {
+			$current_downloads[ $id ] = array(
+				'id' => $id,
+				'options' => array(
+					'price_id' => $price_id
+				)
+			);
+		}
+	} else 
+		$current_downloads = array();
+
+	$new_download = $_POST[ 'edd-add-download' ];
+
+	if ( $new_download != 0 ) {
+		$updated_downloads = array();
+
+		$new_download = explode( '.', $new_download );
+
+		$updated_downloads[ $new_download[0] ] = array( 'id' => $new_download[0] );
+
+		if ( count( $new_download ) > 1 ) {
+			$updated_downloads[ $new_download[0] ] = array(
+				'id'      => $new_download[0],
+				'options' => array(
+					'price_id' => $new_download[1]
+				)
+			);
+		}
+
+		$payment_data[ 'downloads' ] = serialize( array_merge( $current_downloads, $updated_downloads ) );
+	}
+	
+	$email = $_POST[ 'edd_payment_buyer_email' ];
+
+	if ( is_email( $email ) )
+		$payment_data[ 'email' ] = strip_tags( $email );
+	
+	/** update all data */
+	update_post_meta( $post_id, '_edd_payment_meta', $payment_data );
+	
+	/** update user email */
+	update_post_meta( $post_id, '_edd_payment_user_email', $payment_data['email'] );
+		
+	$status = $_POST[ 'edd-payment-status' ];
+
+	if ( $status ) {
+		if( 'refunded' == $status ) {
+			foreach( $downloads as $download ) {
+				edd_undo_purchase( $download, $payment_id );					
+			}
+		}
+		
+		remove_action( 'save_post', 'edd_update_edited_purchase', 10, 2 );
+
+		wp_update_post( array(
+			'ID'          => $post->ID, 
+			'post_status' => $status
+		) );
+
+		add_action( 'save_post', 'edd_update_edited_purchase', 10, 2 );
+	}
+	
+	if( 'publish' == $status && isset( $_POST[ 'edd-payment-send-email' ] ) ) {
+		edd_email_purchase_receipt( $post->ID, false );
+	}
+
+	return $post_id;
+}
+add_action( 'save_post', 'edd_update_edited_purchase', 10, 2 );
