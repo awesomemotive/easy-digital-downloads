@@ -71,9 +71,9 @@ function edd_render_price_field($post_id) {
 	 * $prices           = edd_get_variable_prices( $post_id );
 	*/
 
-	$variable_pricing 	= get_post_meta($post_id, '_variable_pricing', true);
 	$price 				= edd_get_download_price( $post_id );
-	$prices 			= get_post_meta($post_id, 'edd_variable_prices', true);
+	$variable_pricing 	= edd_has_variable_prices( $post_id );
+	$prices 			= edd_get_variable_prices( $post_id );
 
 	$price_display    	= $variable_pricing ? ' style="display:none;"' : '';
 	$variable_display 	= $variable_pricing ? '' : ' style="display:none;"';	
@@ -172,10 +172,10 @@ function edd_render_files_field($post_id) {
 	
 	// downloadable files
 	
-	$files = get_post_meta($post_id, 'edd_download_files', true);
-	$variable_pricing = get_post_meta($post_id, '_variable_pricing', true);
-	$prices = get_post_meta($post_id, 'edd_variable_prices', true);
-	$variable_display = $variable_pricing ? '' : ' style="display:none;"';
+	$files 				= get_post_meta($post_id, 'edd_download_files', true);
+	$variable_pricing 	= edd_has_variable_prices( $post_id );
+	$prices 			= edd_get_variable_prices( $post_id );
+	$variable_display 	= $variable_pricing ? '' : ' style="display:none;"';
 	
 	echo '<tr id="edd_download_files" class="edd_table_row">';
 		echo '<th style="width:20%"><label for="edd_download_files">' . __('Download Files', 'edd') . '</label></th>';
