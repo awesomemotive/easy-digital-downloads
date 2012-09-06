@@ -38,12 +38,12 @@ jQuery(document).ready(function($) {
         }
     });
     $('#card_state_other').change(function() {
-        $('#card_state').val($('#card_state_other').val());
-    }
+        $('#card_state').val( $('#card_state_other').val() );
+    });
     $('#card_state_us').change(function() {
-		$('#card_state').val($('#card_state_us').val());
-    }
+		$('#card_state').val( $('#card_state_us').val() );
+    });
     $('#card_state_ca').change(function() {
-        $('#card_state').val($('#card_state_ca').val());
-    }
+        $('#card_state').val( $('#card_state_ca').val() );
+    });
 });

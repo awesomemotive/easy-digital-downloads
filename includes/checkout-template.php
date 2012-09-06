@@ -104,6 +104,8 @@ function edd_checkout_form() {
 							endforeach;
 						} else if(edd_get_cart_amount() <= 0) {
 							$enabled_gateway = 'manual';
+						} else {
+							$enabled_gateway = 'none';
 						}
 						$payment_mode = isset($_GET['payment-mode']) ? urldecode($_GET['payment-mode']) : $enabled_gateway;	
 					?>

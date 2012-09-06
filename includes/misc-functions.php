@@ -628,6 +628,7 @@ function edd_get_provinces_list() {
 		'SK' => 'Saskatchewan',
 		'YT' => 'Yukon'
 	);
+	return $provinces;
 }
 
 
