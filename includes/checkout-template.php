@@ -269,7 +269,9 @@ function edd_get_cc_form() {
 			<input type="text" size="4" autocomplete="off" name="card_cvc" class="card-cvc edd-input required" placeholder="<?php _e('Security code', 'edd'); ?>" />
 			<label class="edd-label"><?php _e('CVC', 'edd'); ?></label>
 		</p>
+
 		<?php do_action('edd_before_cc_expiration'); ?>
+
 		<p class="card-expiration">
 			<input type="text" size="2" name="card_exp_month"  placeholder="<?php _e('Month', 'edd'); ?>" class="card-expiry-month edd-input required"/>
 			<span class="exp-divider"> / </span>
@@ -302,6 +304,7 @@ add_action('edd_cc_form', 'edd_get_cc_form');
 function edd_default_cc_address_fields() {
 	ob_start(); ?>
 	<fieldset id="edd_cc_address" class="cc-address">
+		<?php do_action( 'edd_cc_billing_top' ); ?>
 		<p>
 			<input type="text" name="card_address" class="card-address edd-input required" placeholder="<?php _e('Address line 1', 'edd'); ?>"/>
 			<label class="edd-label"><?php _e('Billing Address', 'edd'); ?></label>
@@ -326,9 +329,8 @@ function edd_default_cc_address_fields() {
 			<label class="edd-label"><?php _e('Billing Country', 'edd'); ?></label>
 		</p>
 		<p>
-			<input type="hidden" name="card_state" id="card_state" />
-			<input type="text" size="6" name="card_state_other" id="card_state_other" class="card-state edd-input required" placeholder="<?php _e('State / Province', 'edd'); ?>"/>
-            <select name="card_state_us" id="card_state_us" class="card-state edd-select required" style="display: none;">
+			<input type="text" size="6" name="card_state_other" id="card_state_other" class="card-state edd-input" placeholder="<?php _e('State / Province', 'edd'); ?>" style="display:none;"/>
+            <select name="card_state_us" id="card_state_us" class="card-state edd-select required">
                 <?php
                     $states = edd_get_states_list();
                     foreach($states as $state_code => $state) {
@@ -350,6 +352,7 @@ function edd_default_cc_address_fields() {
 			<input type="text" size="4" name="card_zip" class="card-zip edd-input required" placeholder="<?php _e('Zip / Postal code', 'edd'); ?>"/>
 			<label class="edd-label"><?php _e('Billing Zip / Postal Code', 'edd'); ?></label>
 		</p>
+		<?php do_action( 'edd_cc_billing_bottom' ); ?>
 	</fieldset>
 	<?php
 	echo ob_get_clean();

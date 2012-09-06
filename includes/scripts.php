@@ -57,6 +57,7 @@ function edd_load_scripts() {
 		$required = array( 'firstname' => true, 'lastname' => true );
 		wp_localize_script('edd-validation', 'edd_scripts_validation', apply_filters('edd_scripts_validation',$required));
 	}
+	wp_enqueue_script('edd-checkout-global', EDD_PLUGIN_URL . 'includes/js/edd-checkout-global.js');
 }
 add_action('wp_enqueue_scripts', 'edd_load_scripts');
 
