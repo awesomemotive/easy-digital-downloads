@@ -671,8 +671,6 @@ function edd_get_purchase_cc_info( $valid_data = array() ) {
 
 	endswitch;
 	
-	echo '<pre>'; print_r( $cc_info ); echo '</pre>'; exit;
-
 	// return cc info
 	return $cc_info;
 }
