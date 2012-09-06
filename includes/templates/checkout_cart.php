@@ -13,7 +13,7 @@
 		<?php $cart_items = edd_get_cart_contents(); ?>
 		<?php if ( $cart_items ) : ?>
 			<?php foreach ( $cart_items as $key => $item ) : ?>
-				<tr class="edd_cart_item" id="edd_cart_item_<?php echo $item['id']; ?>">
+				<tr class="edd_cart_item" id="edd_cart_item_<?php echo esc_attr( $item['id'] ); ?>">
 					<?php do_action( 'edd_checkout_table_body_first', $item['id'] ); ?>
 					<td class="edd_cart_item_name">
 						<?php 
@@ -29,11 +29,15 @@
 							if ( !empty( $item['options'] ) ) {
 								$item_title .= ' - ' . edd_get_price_name( $item['id'], $item['options'] );							
 							}
-							echo '<span class="edd_checkout_cart_item_title">' . $item_title . '</span>'; 
+							echo '<span class="edd_checkout_cart_item_title">' . esc_html( $item_title ) . '</span>'; 
 						?>
 					</td>
-					<td class="edd_cart_item_price"><?php echo edd_currency_filter( edd_get_cart_item_price( $item['id'], $item['options'] ) ); ?></td>
-					<td class="edd_cart_actions"><a href="<?php echo edd_remove_item_url( $key, $post ); ?>"><?php _e( 'remove', 'edd' ); ?></td>
+					<td class="edd_cart_item_price">
+						<?php echo esc_html( edd_currency_filter( edd_get_cart_item_price( $item['id'], $item['options'] ) ) ); ?>
+					</td>
+					<td class="edd_cart_actions">
+						<a href="<?php echo esc_url( edd_remove_item_url( $key, $post ) ); ?>"><?php _e( 'remove', 'edd' ); ?>
+					</td>
 					<?php do_action( 'edd_checkout_table_body_last', $item ); ?>
 				</tr>
 			<?php endforeach; ?>
@@ -46,7 +50,9 @@
 	<tfoot>
 		<tr class="edd_cart_footer_row">
 			<?php do_action( 'edd_checkout_table_footer_first' ); ?>
-			<th colspan="3" class="edd_cart_total"><?php _e( 'Total', 'edd' ); ?>: <span class="edd_cart_amount"><?php echo edd_currency_filter( edd_format_amount( edd_get_cart_amount() ) ); ?></span></th>
+			<th colspan="3" class="edd_cart_total">
+				<?php _e( 'Total', 'edd' ); ?>: <span class="edd_cart_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_amount() ) ) ); ?></span>
+			</th>
 			<?php do_action( 'edd_checkout_table_footer_last' ); ?>
 		</tr>
 	</tfoot>
