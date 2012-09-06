@@ -218,20 +218,21 @@ class edd_purchase_history_widget extends WP_Widget {
                         foreach($downloads as $download) {
                             $id = isset($purchase_data['cart_details']) ? $download['id'] : $download;
                             $price_id = isset($download['options']['price_id']) ? $download['options']['price_id'] : null;
-                            $download_files = edd_get_download_files( $id, $price_id );
-                            echo '<div class="edd-purchased-download-name-widget">' . get_the_title($id) . '</div>';
-                            echo '<ul>';
+							$download_files = edd_get_download_files( $id, $price_id );
+							echo '<div class="edd-purchased-widget-purchase edd-purchased-widget-purchase-' . $purchase->ID . '" id="edd-purchased-widget-purchase-' . $id . '">';
+                            echo '<div class="edd-purchased-widget-purchase-name">' . get_the_title($id) . '</div>';
+                            echo '<ul class="edd-purchased-widget-file-list">';
                             if( ! edd_no_redownload() ) {
                                 if($download_files) {
                                     foreach($download_files as $filekey => $file) {
-                                        $download_url = edd_get_download_file_url($purchase_data['key'], $purchase_data['email'], $filekey, $id);
-                                        echo '<li class="edd-download-file-widget"><a href="' . $download_url . '" class="edd-download-file-link-widget">' .  $file['name'] . '</a></li>';
+										$download_url = edd_get_download_file_url($purchase_data['key'], $purchase_data['email'], $filekey, $id);
+										echo '<li class="edd-purchased-widget-file"><a href="' . $download_url . '" class="edd-purchased-widget-file-link">' .  $file['name'] . '</a></li>';
                                     }
                                 } else {
-                                    echo '<li class="edd-no-download-file-widget">' . __('No downloadable files found.', 'edd');
+                                    echo '<li class="edd-purchased-widget-no-file">' . __('No downloadable files found.', 'edd');
                                 }
                             }
-                            echo '</ul>';
+                            echo '</ul></div>';
                         }
                     }
                 }
