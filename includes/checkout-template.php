@@ -321,10 +321,27 @@ function edd_default_cc_address_fields() {
 				}
 				?>
 			</select>
-			<label class="edd-label"><?php _e('Billing State / Province', 'edd'); ?></label>
+			<label class="edd-label"><?php _e('Billing Country', 'edd'); ?></label>
 		</p>
 		<p>
-			<input type="text" size="6" name="card_state" class="card-state edd-input required" placeholder="<?php _e('State / Province', 'edd'); ?>"/>
+			<input type="hidden" name="card_state" id="card_state" />
+			<input type="text" size="6" name="card_state_other" id="card_state_other" class="card-state edd-input required" placeholder="<?php _e('State / Province', 'edd'); ?>"/>
+            <select name="card_state_us" id="card_state_us" class="card-state edd-select required" style="display: none;">
+                <?php
+                    $states = edd_get_states_list();
+                    foreach($states as $state_code => $state) {
+                        echo '<option value="' . $state_code . '">' . $state . '</option>';
+                    }
+                ?>
+            </select>
+            <select name="card_state_ca" id="card_state_ca" class="card-state edd-select required" style="display: none;">
+                <?php
+                    $provinces = edd_get_provinces_list();
+                    foreach($provinces as $province_code => $province) {
+                        echo '<option value="' . $province_code . '">' . $province . '</option>';
+                    }
+                ?>
+            </select>
 			<label class="edd-label"><?php _e('Billing State / Province', 'edd'); ?></label>
 		</p>
 		<p>
