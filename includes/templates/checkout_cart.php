@@ -3,8 +3,8 @@
 	<thead>
 		<tr class="edd_cart_header_row">
 			<?php do_action( 'edd_checkout_table_header_first' ); ?>
-			<th class="edd_cart_header_name"><?php _e( 'Item Name', 'edd' ); ?></th>
-			<th class="edd_cart_header_price"><?php _e( 'Item Price', 'edd' ); ?></th>
+			<th class="edd_cart_item_name"><?php _e( 'Item Name', 'edd' ); ?></th>
+			<th class="edd_cart_item_price"><?php _e( 'Item Price', 'edd' ); ?></th>
 			<th class="edd_cart_actions"><?php _e( 'Actions', 'edd' ); ?></th>
 			<?php do_action( 'edd_checkout_table_header_last' ); ?>
 		</tr>
