@@ -170,8 +170,12 @@ jQuery(document).ready(function ($) {
         } else {
             var payment_mode = $('#edd-gateway').val();
         }
+
+        var arg_separator = edd_scripts.permalinks == '1' ? '?' : '&';
+
         var form = $(this),
-            action = form.attr("action") + '?payment-mode=' + payment_mode;
+            action = form.attr("action") + arg_separator + 'payment-mode=' + payment_mode;
+            
         // show the ajax loader
         $('.edd-cart-ajax').show();
         $('#edd_checkout_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
