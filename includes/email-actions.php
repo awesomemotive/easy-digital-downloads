@@ -41,18 +41,14 @@ function edd_export_all_customers() {
 		
 		if( ! empty( $emails ) ) {
 			header("Content-type: text/csv");
-			header("Content-Disposition: attachment; filename=user_emails.csv");
+			$today = date("Y-m-d");
+			header("Content-Disposition: attachment; filename=user_emails-$today.csv");
 			header("Pragma: no-cache");
 			header("Expires: 0");
-			
 			
 			echo implode( "\n", $emails );
 			exit;
 		}
-// 		if( ! empty( $results ) ) {
-// 			$author_ids = implode(',', $results);
-// 			var_dump($author_ids); die();
-// 		}  
 	} else {
 		wp_die(__( 'Export not allowed for non-administrators.', 'edd' ) );
 	}
