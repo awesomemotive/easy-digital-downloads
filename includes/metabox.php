@@ -101,7 +101,7 @@ function edd_render_price_field($post_id) {
 			<div id="edd_variable_price_fields" class="edd_pricing_fields" <?php echo $variable_display; ?>>
 				<input type="hidden" id="edd_variable_prices" class="edd_variable_prices_name_field" value=""/>
 				<?php 
-					if ( is_array( $prices ) ) : 
+					if ( ! empty( $prices ) ) : 
 						$count = 1; 
 
 						foreach ( $prices as $key => $value ) : 
@@ -186,7 +186,7 @@ function edd_render_files_field($post_id) {
 			$field_html .= '</div>';
 			$field_html .= '<input type="hidden" id="edd_download_files" class="edd_repeatable_upload_name_field" value=""/>';
 			
-			if(is_array($files)) {
+			if( ! empty($files)) {
 				$count = 1;
 				foreach($files as $key => $value) {
 					$field_html .= '<div class="edd_repeatable_upload_wrapper">';
