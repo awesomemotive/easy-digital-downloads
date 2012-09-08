@@ -69,8 +69,7 @@ function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby =
 		}
 	}
 
-	//echo '<pre>'; print_r( $payment_args ); echo '</pre>'; exit;
-	$payments = get_posts($payment_args);
+	$payments = get_posts( apply_filters( 'edd_get_payments_args', $payment_args ) );
 	if($payments) {
 		return $payments;
 	}
