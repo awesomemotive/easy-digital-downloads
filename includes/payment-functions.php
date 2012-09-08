@@ -97,17 +97,18 @@ function edd_insert_payment($payment_data = array()) {
 			'user_id' => $payment_data['user_info']['id']
 		);
 		
-		// record the payment details
-		update_post_meta($payment, '_edd_payment_meta', apply_filters('edd_payment_meta', $payment_meta, $payment_data));
-		update_post_meta($payment, '_edd_payment_user_id', $payment_data['user_info']['id']);
-		update_post_meta($payment, '_edd_payment_user_email', $payment_data['user_email']);
-		update_post_meta($payment, '_edd_payment_user_ip', edd_get_ip() );
-		update_post_meta($payment, '_edd_payment_purchase_key', $payment_data['purchase_key']);
 		$mode = edd_is_test_mode() ? 'test' : 'live';
-		update_post_meta($payment, '_edd_payment_mode', $mode);
-		
 		$gateway = isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : ''; 
-		update_post_meta($payment, '_edd_payment_gateway', $gateway);
+
+		// record the payment details
+		update_post_meta( $payment, '_edd_payment_meta', 		apply_filters( 'edd_payment_meta', $payment_meta, $payment_data) );
+		update_post_meta( $payment, '_edd_payment_user_id', 	$payment_data['user_info']['id']);
+		update_post_meta( $payment, '_edd_payment_user_email', 	$payment_data['user_email']);
+		update_post_meta( $payment, '_edd_payment_user_ip', 	edd_get_ip() );
+		update_post_meta( $payment, '_edd_payment_purchase_key',$payment_data['purchase_key']);
+		update_post_meta( $payment, '_edd_payment_total', 		$payment_data['price']);
+		update_post_meta( $payment, '_edd_payment_mode', 		$mode);
+		update_post_meta( $payment, '_edd_payment_gateway', 	$gateway);
 		
 		// clear the user's purchased cache
 		delete_transient('edd_user_' . $payment_data['user_info']['id'] . '_purchases');
