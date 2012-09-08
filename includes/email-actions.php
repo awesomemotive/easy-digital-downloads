@@ -25,3 +25,36 @@ function edd_resend_purchase_receipt($data) {
 	wp_redirect( add_query_arg( array( 'edd-message' => 'email_sent', 'edd-action' => false, 'purchase_id' => false ) ) ); exit;
 }
 add_action('edd_email_links', 'edd_resend_purchase_receipt');
+
+
+/**
+ * Export all customers to CSV
+ * 
+ * Using wpdb directly for performance reasons (workaround of calling all posts and fetch data respectively)
+ * 
+ */
+function edd_export_all_customers() {
+	if( current_user_can( 'administrator' ) ) {
+		global $wpdb;
+		
+		$emails = $wpdb->get_col("SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' ");
+		
+		if( ! empty( $emails ) ) {
+			header("Content-type: text/csv");
+			header("Content-Disposition: attachment; filename=user_emails.csv");
+			header("Pragma: no-cache");
+			header("Expires: 0");
+			
+			
+			echo implode( "\n", $emails );
+			exit;
+		}
+// 		if( ! empty( $results ) ) {
+// 			$author_ids = implode(',', $results);
+// 			var_dump($author_ids); die();
+// 		}  
+	} else {
+		wp_die(__( 'Export not allowed for non-administrators.', 'edd' ) );
+	}
+}
+add_action( 'edd_email_export', 'edd_export_all_customers' );
