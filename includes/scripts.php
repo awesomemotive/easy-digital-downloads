@@ -98,7 +98,24 @@ function edd_load_admin_scripts($hook) {
 
 	$edd_pages = array($edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page);
 
-	if( ( !isset($post) || 'download' != $post->post_type ) && !in_array($hook, $edd_pages) )
+	$exit = false;
+
+	if( !isset( $post ) || !is_object( $post ) )
+		$exit = true;
+	else
+		$exit = false;
+
+	if( ! $exit && 'download' != $post->post_type )
+		$exit = true;
+	else
+		$exit = false;
+
+	if( ! $exit && !in_array( $hook, $edd_pages ) )
+		$exit = true;
+	else
+		$exit = false;
+
+	if( $exit )
 		return; // load the scripts only on the Download pages
 	
 	if($hook == 'download_page_edd-reports') {
