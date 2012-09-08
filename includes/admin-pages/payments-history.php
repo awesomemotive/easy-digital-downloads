@@ -42,17 +42,18 @@ function edd_payment_history_page() {
 			$mode = isset($_GET['mode']) ? $_GET['mode'] : 'live';
 			if(edd_is_test_mode() && !isset($_GET['mode'])) $mode = 'test';
 			
-			$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'ID';
-			$order = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-			$order_inverse = $order == 'DESC' ? 'ASC' : 'DESC';
-			$order_class = strtolower($order_inverse);
-			$user = isset( $_GET['user'] ) ? $_GET['user'] : null;
-			$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
+			$orderby 		= isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'ID';
+			$order 			= isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+			$order_inverse 	= $order == 'DESC' ? 'ASC' : 'DESC';
+			$order_class 	= strtolower($order_inverse);
+			$user 			= isset( $_GET['user'] ) ? $_GET['user'] : null;
+			$status 		= isset( $_GET['status'] ) ? $_GET['status'] : 'any';
+			$meta_key		= isset( $_GET['meta_key'] ) ? $_GET['meta_key'] : null;
 
-			$payments = edd_get_payments($offset, $per_page, $mode, $orderby, $order, $user, $status);
-			$payment_count = wp_count_posts('edd_payment');
+			$payments 		= edd_get_payments($offset, $per_page, $mode, $orderby, $order, $user, $status, $meta_key );
+			$payment_count 	= wp_count_posts('edd_payment');
 
-			$total_count = $payment_count->publish + $payment_count->pending + $payment_count->refunded + $payment_count->trash;
+			$total_count 	= $payment_count->publish + $payment_count->pending + $payment_count->refunded + $payment_count->trash;
 
 			switch( $status ) {
 				case 'publish':
@@ -134,7 +135,9 @@ function edd_payment_history_page() {
 						</th>
 						<th style="width: 250px;"><?php _e('Email', 'edd'); ?></th>
 						<th><?php _e('Products', 'edd'); ?></th>
-						<th><?php _e('Price', 'edd'); ?></th>
+						<th>
+							<a href="<?php echo add_query_arg( array( 'meta_key' => '_edd_payment_total', 'order' => $order_inverse, 'orderby' => 'meta_value_num' ) ); ?>" title="<?php _e('Price', 'edd'); ?>"><span><?php _e('Price', 'edd'); ?></span> <span class="sorting-indicator"></span></a>
+						</th>
 						<th class="manage-column column-title sortable <?php echo $order_class; echo $orderby == 'Date' ? ' sorted' : ''; ?>">
 						    <a href="<?php echo add_query_arg( array( 'orderby' => 'post_date', 'order' => $order_inverse ) ); ?>" title="<?php _e('Date', 'edd'); ?>"><span><?php _e('Date', 'edd'); ?></span> <span class="sorting-indicator"></span></a>
 						</th>

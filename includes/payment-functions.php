@@ -20,7 +20,7 @@
  * @return      object
 */
 
-function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby = 'ID', $order = 'DESC', $user = null, $status = 'any' ) {
+function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby = 'ID', $order = 'DESC', $user = null, $status = 'any', $meta_key = null ) {
 	$payment_args = array(
 		'post_type' => 'edd_payment', 
 		'posts_per_page' => $number, 
@@ -30,10 +30,8 @@ function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby =
 		'post_status' => $status
 	);
 
-	if( $mode != 'all' ) {
-		$payment_args['meta_key'] = '_edd_payment_mode';
-		$payment_args['meta_value'] = $mode;
-	}
+	if( !is_null( $meta_key ) )
+		$payment_args['meta_key'] = $meta_key;
 
 	if( !is_null( $user ) ) {
 		if( is_numeric( $user ) ) {
@@ -49,7 +47,29 @@ function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby =
 		);
 	}
 
+	if( $mode != 'all' ) {
+		if( isset( $payment_args['meta_query'] ) ) {
 
+			// append to the user meta query
+			$payment_args['meta_query'][1] = array(
+				'key' => '_edd_payment_mode',
+				'vale' => $mode
+			);
+
+		} else {
+
+			// create a new meta query
+			$payment_args['meta_query'] = array(
+				array(
+					'key' => '_edd_payment_mode',
+					'vale' => $mode
+				)
+			);
+
+		}
+	}
+
+	//echo '<pre>'; print_r( $payment_args ); echo '</pre>'; exit;
 	$payments = get_posts($payment_args);
 	if($payments) {
 		return $payments;
