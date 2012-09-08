@@ -760,11 +760,11 @@ function edd_settings_sanitize( $input ) {
 */
 
 function edd_get_settings() {
-	$page_settings 		= is_array(get_option('edd_settings_general')) 	? get_option('edd_settings_general') 	: array();
+	$general_settings 	= is_array(get_option('edd_settings_general')) 	? get_option('edd_settings_general') 	: array();
 	$gateway_settings 	= is_array(get_option('edd_settings_gateways')) ? get_option('edd_settings_gateways') 	: array();
 	$email_settings 	= is_array(get_option('edd_settings_emails')) 	? get_option('edd_settings_emails') 	: array();
 	$style_settings 	= is_array(get_option('edd_settings_styles')) 	? get_option('edd_settings_styles') 	: array();
 	$misc_settings 		= is_array(get_option('edd_settings_misc')) 	? get_option('edd_settings_misc') 	: array();
 
-	return array_merge($page_settings, $gateway_settings, $email_settings, $style_settings, $misc_settings);
+	return array_merge($general_settings, $gateway_settings, $email_settings, $style_settings, $misc_settings);
 }
