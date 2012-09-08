@@ -89,7 +89,7 @@ function edd_add_ons_page() {
 */
 
 function edd_add_ons_get_feed() {
-	if (false === $cache = get_transient('easydigitaldownloads_add_ons_feed')) {
+	if (false === ( $cache = get_transient('easydigitaldownloads_add_ons_feed') ) ) {
 		$feed = wp_remote_get('http://easydigitaldownloads.com/?feed=extensions');
 		if (isset($feed['body']) && strlen($feed['body'])>0) {
 			$cache = $feed['body'];
