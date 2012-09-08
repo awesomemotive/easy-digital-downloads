@@ -25,12 +25,15 @@ function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby =
 		'post_type' => 'edd_payment', 
 		'posts_per_page' => $number, 
 		'offset' => $offset,
-		'meta_key' => '_edd_payment_mode',
-		'meta_value' => $mode,
 		'order' => $order,
 		'orderby' => $orderby,
 		'post_status' => $status
 	);
+
+	if( $mode != 'all' ) {
+		$payment_args['meta_key'] = '_edd_payment_mode';
+		$payment_args['meta_value'] = $mode;
+	}
 
 	if( !is_null( $user ) ) {
 		if( is_numeric( $user ) ) {
@@ -413,3 +416,4 @@ function edd_get_total_earnings() {
 function edd_get_payment_meta( $payment_id ) {
 	return get_post_meta($payment_id, '_edd_payment_meta', true);
 }
+

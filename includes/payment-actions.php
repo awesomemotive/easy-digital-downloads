@@ -210,3 +210,36 @@ function edd_clear_earnings_cache( $payment, $payment_data ) {
 	delete_transient( 'edd_total_earnings' );
 }
 add_action( 'edd_insert_payment', 'edd_clear_earnings_cache', 10, 2 );
+
+
+/**
+ * Updates all old payments, prior to 1.1.9, with new 
+ * meta for the total purcahse amount
+ *
+ * This is so that payments can be queried by their totals
+ *
+ * @access      private
+ * @since       1.1.9
+ * @return      void
+*/
+
+function edd_update_old_payments_with_totals( $data ) {
+	if( ! wp_verify_nonce( $data['_wpnonce'], 'edd_upgrade_payments_nonce' ) )
+		return;
+
+	if( get_option( 'edd_payment_totals_upgraded' ) )
+		return;
+
+	$payments = edd_get_payments( 0, -1, 'all' );
+	if( $payments ) {
+		foreach( $payments as $payment ) {
+			$meta = edd_get_payment_meta( $payment->ID );
+			update_post_meta( $payment->ID, '_edd_payment_total', $meta['amount'] );
+		}
+		add_option( 'edd_payment_totals_upgraded', 1 );
+	}
+
+}
+add_action( 'edd_upgrade_payments', 'edd_update_old_payments_with_totals' );
+
+
