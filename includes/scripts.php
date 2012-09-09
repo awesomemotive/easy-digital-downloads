@@ -97,26 +97,13 @@ function edd_load_admin_scripts($hook) {
 	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page;
 
 	$edd_pages = array($edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page);
+	$edd_cpt   = apply_filters( 'edd_load_scripts_for_these_types', array( 'download', 'edd_payment' ) );
 
-	$exit = false;
+	if ( ! in_array( $hook, $edd_pages ) && ! is_object( $post ) )
+	    return;
 
-	if( !isset( $post ) || !is_object( $post ) )
-		$exit = true;
-	else
-		$exit = false;
-
-	if( ! $exit && 'download' != $post->post_type )
-		$exit = true;
-	else
-		$exit = false;
-
-	if( ! $exit && !in_array( $hook, $edd_pages ) )
-		$exit = true;
-	else
-		$exit = false;
-
-	if( $exit )
-		return; // load the scripts only on the Download pages
+	if ( is_object( $post ) && ! in_array( $post->post_type, $edd_cpt ) )
+	    return;
 	
 	if($hook == 'download_page_edd-reports') {
 		wp_enqueue_script('google-charts', 'https://www.google.com/jsapi');
