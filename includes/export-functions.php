@@ -129,4 +129,36 @@ function edd_export_payment_history() {
 	}
 	die();	
 }
-add_action('admin_init', 'edd_export_payment_history'); //Sorry about this, need to serve header :)
+add_action('admin_init', 'edd_export_payment_history');
+
+
+/**
+ * Export all customers to CSV
+ * 
+ * Using wpdb directly for performance reasons (workaround of calling all posts and fetch data respectively)
+ * 
+ * @access      private
+ * @since       1.1.9
+ * @return      void
+*/
+function edd_export_all_customers() {
+	if( current_user_can( 'administrator' ) ) {
+		global $wpdb;
+		
+		$emails = $wpdb->get_col("SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' ");
+		
+		if( ! empty( $emails ) ) {
+			header("Content-type: text/csv");
+			$today = date("Y-m-d");
+			header("Content-Disposition: attachment; filename=user_emails-$today.csv");
+			header("Pragma: no-cache");
+			header("Expires: 0");
+			
+			echo implode( "\n", $emails );
+			exit;
+		}
+	} else {
+		wp_die(__( 'Export not allowed for non-administrators.', 'edd' ) );
+	}
+}
+add_action( 'edd_email_export', 'edd_export_all_customers' );
