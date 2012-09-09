@@ -436,3 +436,23 @@ function edd_get_payment_meta( $payment_id ) {
 	return get_post_meta($payment_id, '_edd_payment_meta', true);
 }
 
+/**
+ * Format the date in the Payment History page
+ * 
+ * Add a hook for further filtering
+ * 
+ * @param 	payment_date the $payment->post_date variable from the payments-history page
+ * @access 	public
+ * @since 	1.1.9
+ * @return 	string filtered date
+ */
+function edd_format_payment_date( $payment_date ) {
+	 $payment_filtered_date = apply_filters( 'edd_payment_date_filter', $payment_date );
+	
+	 if( $payment_filtered_date === $payment_date ) {
+	 	return date( get_option('date_format'), strtotime($payment_date) ); 
+	 }
+	 
+	 return $payment_filtered_date;
+}
+
