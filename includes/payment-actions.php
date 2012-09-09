@@ -236,9 +236,8 @@ function edd_update_old_payments_with_totals( $data ) {
 			$meta = edd_get_payment_meta( $payment->ID );
 			update_post_meta( $payment->ID, '_edd_payment_total', $meta['amount'] );
 		}
-		add_option( 'edd_payment_totals_upgraded', 1 );
 	}
-
+	add_option( 'edd_payment_totals_upgraded', 1 );
 }
 add_action( 'edd_upgrade_payments', 'edd_update_old_payments_with_totals' );
 
