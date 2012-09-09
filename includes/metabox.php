@@ -330,9 +330,9 @@ add_action('edd_meta_box_fields', 'edd_render_disable_button', 60);
 
 function edd_render_meta_notes($post_id) {
 	$purchase_text = get_post_meta($post_id, '_edd_purchase_text', true);
-	if ( '' == $purchase_text ) {
-		$purchase_text = __('Purchase', 'edd');
-	}
+	$purchase_text = ( $purchase_text && '' !== $purchase_text ) ? $purchase_text : __('Purchase', 'edd');
+	$color = get_post_meta( $post_id, '_edd_purchase_color', true );
+	$color = $color ? $color : 'blue';
 	// notes
 	echo '<tr>';
 		echo '<td style="width:20%" colspan=2><strong>' . __('Notes', 'edd') . '</strong></td>';
@@ -344,7 +344,7 @@ function edd_render_meta_notes($post_id) {
 	// short code
 	echo '<tr>';
 		echo '<th style="width:20%"><label>' . __('Short Code', 'edd') . '</label></th>';
-		echo '<td><em>[purchase_link id="' . $post_id . '" text="' . $purchase_text . '" style="button" color="' . get_post_meta( $post_id, '_edd_purchase_color', true ) . '"]</em><br/>' . __('This short code can be placed anywhere on your site', 'edd') . '</td>';
+		echo '<td><em>[purchase_link id="' . absint( $post_id ) . '" text="' . esc_attr( $purchase_text ) . '" style="button" color="' . esc_attr( $color ) . '"]</em><br/>' . __('This short code can be placed anywhere on your site', 'edd') . '</td>';
 	echo '</tr>';
 }
 add_action('edd_meta_box_fields', 'edd_render_meta_notes', 70);
