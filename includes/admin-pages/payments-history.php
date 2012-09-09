@@ -65,9 +65,6 @@ function edd_payment_history_page() {
 				case 'refunded':
 					$current_count = $payment_count->refunded;
 					break;
-				case 'trash':
-					$current_count = $payment_count->trash;
-					break;
 				case 'any':
 					$current_count = $total_count;
 					break;
@@ -94,13 +91,10 @@ function edd_payment_history_page() {
 				<li class="refunded">
 					<a href="<?php echo add_query_arg('status', 'refunded'); ?>" <?php echo isset( $_GET['status'] ) && $_GET['status'] == 'refunded' ? 'class="current"' : ''; ?>><?php _e('Refunded', 'edd'); ?> <span class="count">(<?php echo $payment_count->refunded; ?>)</span></a> |
 				</li>
-				<li class="trash">
-					<a href="<?php echo add_query_arg('status', 'trash'); ?>" <?php echo isset( $_GET['status'] ) && $_GET['status'] == 'trash' ? 'class="current"' : ''; ?>><?php _e('Deleted', 'edd'); ?> <span class="count">(<?php echo $payment_count->trash; ?>)</span></a>
-				</li>
 				<?php do_action('edd_payments_page_statuses'); ?>
 			</ul>
 			<ul class="subsubsub edd-export-payments">
-				<li> | <?php _e('Export', 'edd'); ?>: <a href="<?php echo add_query_arg('export', 'csv'); ?>">CSV</a></li>
+				<li>&nbsp;<?php _e('Export', 'edd'); ?>: <a href="<?php echo add_query_arg('export', 'csv'); ?>">CSV</a></li>
 				<?php do_action('edd_payments_page_export_options'); ?>
 			</ul>	
 			<form id="payments-filter" action="<?php echo admin_url('edit.php'); ?>" method="get" style="float: right; margin-bottom: 5px;">
