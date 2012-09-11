@@ -35,17 +35,18 @@ function edd_load_scripts() {
 	if( edd_is_ajax_enabled()) {
 		wp_enqueue_script('edd-ajax', EDD_PLUGIN_URL . 'includes/js/edd-ajax.js');
 		wp_localize_script('edd-ajax', 'edd_scripts', array(
-				'ajaxurl' => admin_url( 'admin-ajax.php' ),
-				'ajax_nonce' => wp_create_nonce( 'edd_ajax_nonce' ),
-				'no_discount' => __('Please enter a discount code', 'edd'), // blank discount code message
-				'discount_applied' => __('Discount Applied', 'edd'), // discount verified message
-				'no_email' => __('Please enter an email address before applying a discount code', 'edd'),
-				'position_in_cart' => isset($position) ? $position : -1,
-				'already_in_cart_message' => __('You have already added this item to your cart', 'edd'), // item already in the cart message
-				'empty_cart_message' => __('Your cart is empty', 'edd'), // item already in the cart message
-				'loading' => __('Loading', 'edd') , // general loading message
-				'ajax_loader' => EDD_PLUGIN_URL . 'includes/images/loading.gif', // ajax loading image
-				'checkout_page' => isset($edd_options['purchase_page']) ? get_permalink($edd_options['purchase_page']) : ''
+				'ajaxurl' 					=> admin_url( 'admin-ajax.php' ),
+				'ajax_nonce' 				=> wp_create_nonce( 'edd_ajax_nonce' ),
+				'no_discount' 				=> __('Please enter a discount code', 'edd'), // blank discount code message
+				'discount_applied' 			=> __('Discount Applied', 'edd'), // discount verified message
+				'no_email' 					=> __('Please enter an email address before applying a discount code', 'edd'),
+				'position_in_cart' 			=> isset($position) ? $position : -1,
+				'already_in_cart_message' 	=> __('You have already added this item to your cart', 'edd'), // item already in the cart message
+				'empty_cart_message' 		=> __('Your cart is empty', 'edd'), // item already in the cart message
+				'loading' 					=> __('Loading', 'edd') , // general loading message
+				'ajax_loader' 				=> EDD_PLUGIN_URL . 'includes/images/loading.gif', // ajax loading image
+				'checkout_page' 			=> isset($edd_options['purchase_page']) ? get_permalink($edd_options['purchase_page']) : '',
+				'permalinks' 				=> get_option( 'permalink_structure' ) ? '1' : '0'
 			)
 		);
 	}
@@ -57,6 +58,7 @@ function edd_load_scripts() {
 		$required = array( 'firstname' => true, 'lastname' => true );
 		wp_localize_script('edd-validation', 'edd_scripts_validation', apply_filters('edd_scripts_validation',$required));
 	}
+	wp_enqueue_script('edd-checkout-global', EDD_PLUGIN_URL . 'includes/js/edd-checkout-global.js');
 }
 add_action('wp_enqueue_scripts', 'edd_load_scripts');
 
@@ -95,9 +97,13 @@ function edd_load_admin_scripts($hook) {
 	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page;
 
 	$edd_pages = array($edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page);
+	$edd_cpt   = apply_filters( 'edd_load_scripts_for_these_types', array( 'download', 'edd_payment' ) );
 
-	if( ( !isset($post) || 'download' != $post->post_type ) && !in_array($hook, $edd_pages) )
-		return; // load the scripts only on the Download pages
+	if ( ! in_array( $hook, $edd_pages ) && ! is_object( $post ) )
+	    return;
+
+	if ( is_object( $post ) && ! in_array( $post->post_type, $edd_cpt ) )
+	    return;
 	
 	if($hook == 'download_page_edd-reports') {
 		wp_enqueue_script('google-charts', 'https://www.google.com/jsapi');

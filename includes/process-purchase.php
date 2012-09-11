@@ -62,7 +62,6 @@ function edd_process_purchase_form() {
 		'discount' => $valid_data['discount']
 	);
 
-
 	// setup purchase information
 	$purchase_data = array(
 		'downloads' => edd_get_cart_contents(),
@@ -73,7 +72,8 @@ function edd_process_purchase_form() {
 		'user_info' => $user_info,
 		'post_data' => $_POST,
 		'cart_details' => edd_get_cart_content_details(),
-		'gateway' => $valid_data['gateway']
+		'gateway' => $valid_data['gateway'],
+		'card_info' => $valid_data['cc_info']
 	);
 	
 	// add the user data for hooks
@@ -83,7 +83,11 @@ function edd_process_purchase_form() {
 	do_action( 'edd_checkout_before_gateway', $_POST, $user_info, $valid_data );
 
 	// allow the purchase data to be modified before it is sent to the gateway
-	$purchase_data = apply_filters( 'edd_purchase_data_before_gateway', $purchase_data, $valid_data );
+	$purchase_data = apply_filters( 
+		'edd_purchase_data_before_gateway', 
+		$purchase_data, 
+		$valid_data 
+	);
 
 	// if the total amount in the cart is 0, send to the manaul gateway. This emulates a free download purchase
 	if ( $purchase_data['price'] <= 0 ) {
@@ -128,6 +132,7 @@ function edd_purchase_form_validate_fields() {
 		'new_user_data'			=> array(),	 // new user collected data
 		'login_user_data'		=> array(),	 // login user collected data
 		'guest_user_data'		=> array(),	 // guest user collected data
+		'cc_info'				=> array()	 // credit card info
 	);
 	
 	// validate the gateway
@@ -135,6 +140,9 @@ function edd_purchase_form_validate_fields() {
 	
 	// validate discounts
 	$valid_data['discount'] = edd_purchase_form_validate_discounts();
+
+	// collect credit card info
+	$valid_data['cc_info'] = edd_get_purchase_cc_info();
 
     // validate agree to terms
     if ( isset( $edd_options['show_agree_to_terms'] ) )
@@ -628,6 +636,47 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 
 
 /**
+ * Get Credit Card Info
+ *
+ * @access		private
+ * @since		1.1.9
+ * @return		array
+*/
+
+function edd_get_purchase_cc_info( $valid_data = array() ) {
+	
+	$cc_info = array();
+	$cc_info['card_name'] 		= isset( $_POST['card_name'] ) 		? sanitize_text_field( $_POST['card_name'] ) 		: '';
+	$cc_info['card_number'] 	= isset( $_POST['card_number'] ) 	? sanitize_text_field( $_POST['card_number'] ) 		: '';
+	$cc_info['card_cvc'] 		= isset( $_POST['card_cvc'] ) 		? sanitize_text_field( $_POST['card_cvc'] ) 		: '';
+	$cc_info['card_exp_month'] 	= isset( $_POST['card_exp_month'] ) ? sanitize_text_field( $_POST['card_exp_month'] ) 	: '';
+	$cc_info['card_exp_year'] 	= isset( $_POST['card_exp_year'] ) 	? sanitize_text_field( $_POST['card_exp_year'] ) 	: '';
+	$cc_info['card_address'] 	= isset( $_POST['card_address'] ) 	? sanitize_text_field( $_POST['card_address'] ) 	: '';
+	$cc_info['card_address_2'] 	= isset( $_POST['card_address_2'] ) ? sanitize_text_field( $_POST['card_address_2'] ) 	: '';
+	$cc_info['card_city'] 		= isset( $_POST['card_city'] ) 		? sanitize_text_field( $_POST['card_city'] ) 		: '';
+	$cc_info['card_country'] 	= isset( $_POST['billing_country'] )? sanitize_text_field( $_POST['billing_country'] ) 	: '';
+	$cc_info['card_zip'] 		= isset( $_POST['card_zip'] )		? sanitize_text_field( $_POST['card_zip'] ) 		: '';
+
+	switch( $cc_info['card_country'] ) :
+
+		case 'US' :
+			$cc_info['card_state'] = isset( $_POST['card_state_us'] )	? sanitize_text_field( $_POST['card_state_us'] ) 	: '';
+			break;
+		case 'CA' :
+			$cc_info['card_state'] = isset( $_POST['card_state_ca'] )	? sanitize_text_field( $_POST['card_state_ca'] ) 	: '';
+			break;
+		default :
+			$cc_info['card_state'] = isset( $_POST['card_state_other'] )? sanitize_text_field( $_POST['card_state_other'] ) : '';
+			break;
+
+	endswitch;
+	
+	// return cc info
+	return $cc_info;
+}
+
+
+/**
  * Send To Success Page
  *
  * Sends the user to the succes page.
@@ -663,6 +712,7 @@ function edd_send_back_to_checkout($query_string = null) {
 	$redirect = get_permalink($edd_options['purchase_page']);
 	if($query_string)
 		$redirect .= $query_string;
+	
 	wp_redirect($redirect); exit;
 }
 

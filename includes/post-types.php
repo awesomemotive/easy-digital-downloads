@@ -70,7 +70,7 @@ function edd_setup_edd_post_types() {
 		'hierarchical' => false,
 		'supports' => apply_filters('edd_download_supports', array( 'title', 'editor', 'thumbnail' ) ),
 	); 
-	register_post_type('download', $download_args);
+	register_post_type('download', apply_filters( 'edd_download_post_type_args', $download_args ) );
 	
 	
 	/* payment post type */	

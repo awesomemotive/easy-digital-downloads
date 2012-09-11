@@ -38,7 +38,6 @@ function edd_discounts_page() {
 					<tr>
 						<th><?php _e('Name', 'edd'); ?></th>
 						<th><?php _e('Code', 'edd'); ?></th>
-						<th><?php _e('Type', 'edd'); ?></th>
 						<th><?php _e('Amount', 'edd'); ?></th>
 						<th><?php _e('Uses', 'edd'); ?></th>
 						<th><?php _e('Max Uses', 'edd'); ?></th>
@@ -52,7 +51,6 @@ function edd_discounts_page() {
 					<tr>
 						<th><?php _e('Name', 'edd'); ?></th>
 						<th><?php _e('Code', 'edd'); ?></th>
-						<th><?php _e('Type', 'edd'); ?></th>
 						<th><?php _e('Amount', 'edd'); ?></th>
 						<th><?php _e('Uses', 'edd'); ?></th>
 						<th><?php _e('Max Uses', 'edd'); ?></th>
@@ -68,7 +66,6 @@ function edd_discounts_page() {
 							<tr>
 								<td><?php if(isset($discount['name'])) echo $discount['name']; ?></td>
 								<td><?php if(isset($discount['code'])) echo $discount['code']; ?></td>
-								<td><?php if(isset($discount['type'])) echo $discount['type']; ?></td>
 								<td><?php if(isset($discount['amount'])) echo edd_format_discount_rate($discount['type'], $discount['amount']); ?></td>
 								<td>
 									<?php 

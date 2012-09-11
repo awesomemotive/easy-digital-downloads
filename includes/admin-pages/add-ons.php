@@ -89,11 +89,13 @@ function edd_add_ons_page() {
 */
 
 function edd_add_ons_get_feed() {
-	if (false === $cache = get_transient('easydigitaldownloads_add_ons_feed')) {
+	if (false === ( $cache = get_transient('easydigitaldownloads_add_ons_feed') ) ) {
 		$feed = wp_remote_get('http://easydigitaldownloads.com/?feed=extensions');
-		if (isset($feed['body']) && strlen($feed['body'])>0) {
-			$cache = $feed['body'];
-			set_transient('easydigitaldownloads_add_ons_feed', $cache, 3600);
+		if( !is_wp_error( $feed ) ) {
+			if (isset($feed['body']) && strlen($feed['body'])>0) {
+				$cache = wp_remote_retrieve_body( $feed );
+				set_transient('easydigitaldownloads_add_ons_feed', $cache, 3600);
+			}
 		}
 	}
 	return $cache;

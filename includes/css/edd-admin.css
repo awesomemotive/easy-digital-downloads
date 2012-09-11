@@ -26,3 +26,6 @@ tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 .edd_files_url_label { width: 220px; float: left; }
 #postbox-container-1 .edd_files_name_label { width: 80px; }
 #postbox-container-1 .edd_files_url_label { width: 80px; }
+
+.edd_remove_repeatable { margin: 3px 0 0 5px; cursor: pointer; width: 10px; height: 10px; display: inline-block; text-indent: -9999px; overflow: hidden; }
+.edd_remove_repeatable:active, .edd_remove_repeatable:hover { background-position: -10px 0!important }

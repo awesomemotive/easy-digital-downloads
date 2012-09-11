@@ -20,10 +20,20 @@
  * @return      void
 */
 
-function edd_email_purchase_receipt($payment_id, $admin_notice = true) {
+function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	global $edd_options;
 	
-	$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
+	$payment_data = edd_get_payment_meta( $payment_id );
+	$user_info = maybe_unserialize( $payment_data['user_info'] );
+
+	if(isset($user_info['id']) && $user_info['id'] > 0) {
+		$user_data = get_userdata($user_info['id']);
+		$name = $user_data->display_name;
+	} elseif( isset( $user_info['first_name'] ) && isset($user_info['last_name'] ) ) {
+		$name = $user_info['first_name'] . ' ' . $user_info['last_name'];
+	} else {
+		$name = $user_info['email'];
+	}
 
 	$message = edd_get_email_body_header();
 
@@ -34,12 +44,14 @@ function edd_email_purchase_receipt($payment_id, $admin_notice = true) {
 	$from_name = isset($edd_options['from_name']) ? $edd_options['from_name'] : get_bloginfo('name');
 	$from_email = isset($edd_options['from_email']) ? $edd_options['from_email'] : get_option('admin_email');
 	
+	$subject = isset( $edd_options['purchase_subject'] ) ? $edd_options['purchase_subject'] : __('Purchase Receipt', 'edd');
+
 	$headers = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
 	$headers .= "Reply-To: ". $from_email . "\r\n";
 	$headers .= "MIME-Version: 1.0\r\n";
 	$headers .= "Content-Type: text/html; charset=utf-8\r\n";	
 		
-	wp_mail( $payment_data['email'], $edd_options['purchase_subject'], $message, $headers);
+	wp_mail( $payment_data['email'], $subject, $message, $headers);
 	
 	if($admin_notice) {
 		/* send an email notification to the admin */
@@ -56,6 +68,7 @@ function edd_email_purchase_receipt($payment_id, $admin_notice = true) {
 		$gateway = edd_get_gateway_admin_label( get_post_meta($payment_id, '_edd_payment_gateway', true) );
 		
 		$admin_message .= $download_list . "\n";
+		$admin_message .= __('Purchased by: ', 'edd') . " " . html_entity_decode( $name, ENT_COMPAT, 'UTF-8' ) . "\n";
 		$admin_message .= __('Amount: ', 'edd') . " " . html_entity_decode(edd_currency_filter($payment_data['amount']), ENT_COMPAT, 'UTF-8') . "\n\n";
 		$admin_message .= __('Payment Method: ', 'edd') . " " . $gateway . "\n\n";
 		$admin_message .= __('Thank you', 'edd');

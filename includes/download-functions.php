@@ -75,6 +75,41 @@ function edd_get_download_final_price($download_id, $user_purchase_info, $amount
 
 
 /**
+ * Get Download Variable Prices
+ *
+ * retrieves the variable prices for a download
+ *
+ * @access      public
+ * @since       1.1.9
+ * @param       int $download_id - the ID of the download
+ * @return      array
+*/
+
+function edd_get_variable_prices( $download_id ) {
+	return get_post_meta($download_id, 'edd_variable_prices', true);
+}
+
+
+/**
+ * Has Variable Prices
+ *
+ * Checks to see if a download has variable prices enabled.
+ *
+ * @access      public
+ * @since       1.0.7
+ * @param       int $download_id the ID number of the download to checl
+ * @return      boolean true if has variable prices, false otherwise
+*/
+
+function edd_has_variable_prices($download_id) {
+	if(get_post_meta($download_id, '_variable_pricing', true)) {
+		return true;	
+	}
+	return false;
+}
+
+
+/**
  * Get Download Price Name
  *
  * retrieves the name of a variable price option
@@ -87,7 +122,7 @@ function edd_get_download_final_price($download_id, $user_purchase_info, $amount
 */
 
 function edd_get_price_option_name($download_id, $price_id) {
-	$prices = get_post_meta($download_id, 'edd_variable_prices', true);
+	$prices = edd_get_variable_prices( $download_id );
 	if( $prices && is_array( $prices ) ) {
 		$price_name = $prices[$price_id]['name'];
 	} else {
@@ -296,13 +331,15 @@ function edd_get_download_price($download_id) {
 */
 
 function edd_price($download_id, $echo = true) {
-	if(edd_has_variable_prices($download_id)) {
-		$prices = get_post_meta($download_id, 'edd_variable_prices', true);
-		$price = edd_currency_filter($prices[0]['amount']); // show the first price option
+	if( edd_has_variable_prices( $download_id ) ) {
+		$prices = edd_get_variable_prices( $download_id );
+		$price = $prices[0]['amount']; // show the first price option
 	} else {
-		$price = edd_currency_filter(edd_get_download_price($download_id));
+		$price = edd_get_download_price( $download_id );
 	}
+	
 	$price = apply_filters( 'edd_download_price', $price, $download_id );
+
 	if( $echo )
 		echo $price;
 	else
@@ -311,22 +348,20 @@ function edd_price($download_id, $echo = true) {
 
 
 /**
- * Has Variable Prices
+ * Formats a download price with decimal places and currency sign
  *
- * Checks to see if a download has variable prices enabled.
+ * Displays a formatted price for a download.
  *
  * @access      public
- * @since       1.0.7
- * @param       int $download_id the ID number of the download to checl
- * @return      boolean true if has variable prices, false otherwise
+ * @since       1.1.9
+ * @param       float the price to format
+* @return       float
 */
 
-function edd_has_variable_prices($download_id) {
-	if(get_post_meta($download_id, '_variable_pricing', true)) {
-		return true;	
-	}
-	return false;
+function edd_format_price( $price ) {
+	return edd_currency_filter( number_format( (float) $price, 2 ) );
 }
+add_filter( 'edd_download_price', 'edd_format_price' );
 
 
 /**
@@ -479,14 +514,19 @@ function edd_get_download_file_url($key, $email, $filekey, $download_id) {
 	
 	global $edd_options;
 
-	$hours = isset($edd_options['download_link_expiration']) && is_numeric($edd_options['download_link_expiration']) ? absint($edd_options['download_link_expiration']) : 24;
+	$hours = isset( $edd_options['download_link_expiration'] ) 
+			&& is_numeric( $edd_options['download_link_expiration'] ) 
+			? absint($edd_options['download_link_expiration']) : 24;
 
+	if( ! ( $date = strtotime( '+' . $hours . 'hours' ) ) )
+		$date = 2147472000; // highest possible date, January 19, 2038
+		
 	$params = array(
 		'download_key' => $key,
-		'email' => rawurlencode($email),
+		'email' => rawurlencode( $email ),
 		'file' => $filekey,
 		'download' => $download_id, 
-		'expire' => urlencode(base64_encode(strtotime('+' . $hours . 'hours', time())))
+		'expire' => rawurlencode( base64_encode( $date ) )
 	);
 
 	$params = apply_filters('edd_download_file_url_args', $params);
