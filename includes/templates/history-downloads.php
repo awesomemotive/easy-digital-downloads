@@ -15,9 +15,7 @@ if($purchases) :
 			</tr>
 		</thead>
 		<?php 
-		foreach($purchases as $post) {
-
-			setup_postdata( $post );
+		foreach($purchases as $post) : setup_postdata( $post );
 
 			$downloads = edd_get_downloads_of_purchase( $post->ID );
 			$payment_meta = edd_get_payment_meta( $post->ID );
@@ -63,7 +61,8 @@ if($purchases) :
 
 				}
 				wp_reset_postdata();
-			}
+			
+			endforeach;
 		}
 	?>
 	</table>
