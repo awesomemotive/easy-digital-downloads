@@ -21,8 +21,13 @@
  * @return      array
 */
 
-function edd_get_users_purchases($user_id) {
+function edd_get_users_purchases( $user_id = 0 ) {
 	
+	if( empty( $user_id ) ) {
+		global $user_ID;
+		$user_id = $user_ID;
+	}
+
 	$purchases = get_transient('edd_user_' . $user_id . '_purchases');
 	if(false === $purchases || edd_is_test_mode()) {
 		$mode = edd_is_test_mode() ? 'test' : 'live';
