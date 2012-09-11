@@ -330,7 +330,7 @@ function edd_downloads_query($atts, $content = null) {
 		<?php
 		$display = ob_get_clean();
 	else:
-		$display = __('No downloads found', 'edd');
+		$display = sprintf( _x('No %s found', 'download post type name', 'edd'), edd_get_label_plural() );
 	endif;
 	return $display;
 }
