@@ -107,7 +107,7 @@ function edd_get_gateway_admin_label($gateway) {
 
 function edd_get_gateway_checkout_label($gateway) {
 	$gateways = edd_get_enabled_payment_gateways();
-	return $gateways[$gateway]['checkout_label'];
+	return isset( $gateways[$gateway] ) ? $gateways[$gateway]['checkout_label'] : $gateway;
 }
 
 /**
