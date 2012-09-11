@@ -31,12 +31,12 @@ if($purchases) : ?>
 								$id = isset($purchase_data['cart_details']) ? $download['id'] : $download;
 								$price_id = isset($download['options']['price_id']) ? $download['options']['price_id'] : null;
 								$download_files = edd_get_download_files( $id, $price_id );
-								echo '<div class="edd_purchased_download_name">' . get_the_title($id) . '</div>';
+								echo '<div class="edd_purchased_download_name">' . esc_html( get_the_title($id) ) . '</div>';
 								if( ! edd_no_redownload() ) {
 									if($download_files) {
 										foreach($download_files as $filekey => $file) {
 											$download_url = edd_get_download_file_url($purchase_data['key'], $purchase_data['email'], $filekey, $id);
-											echo '<div class="edd_download_file"><a href="' . $download_url . '" class="edd_download_file_link">' . $file['name'] . '</a></div>';
+											echo '<div class="edd_download_file"><a href="' . esc_url( $download_url ) . '" class="edd_download_file_link">' . esc_html( $file['name'] ) . '</a></div>';
 										} 
 									} else {
 										_e('No downloadable files found.', 'edd');

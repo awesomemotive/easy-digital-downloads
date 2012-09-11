@@ -7,9 +7,9 @@ if($purchases) :
 		<thead>
 			<tr class="edd_download_history_row">
 				<?php do_action('edd_user_history_header_before'); ?>
-				<th class="edd_download_download_name_header"><?php _e('Download Name', 'edd'); ?></th>
+				<th class="edd_download_download_name"><?php _e('Download Name', 'edd'); ?></th>
 				<?php if( ! edd_no_redownload() ) { ?>
-					<th class="edd_download_download_files_header"><?php _e('Files', 'edd'); ?></th>
+					<th class="edd_download_download_files"><?php _e('Files', 'edd'); ?></th>
 				<?php } ?>							
 				<?php do_action('edd_user_history_header_after'); ?>
 			</tr>
@@ -34,11 +34,11 @@ if($purchases) :
 
 						do_action( 'edd_user_history_table_begin', $post->ID );
 
-						echo '<td>' . get_the_title( $id ) . '</td>';
+						echo '<td class="edd_download_download_name">' . get_the_title( $id ) . '</td>';
 
 						if( ! edd_no_redownload() ) {		
 
-							echo '<td>';
+							echo '<td class="edd_download_download_files">';
 
 							if($download_files) {
 								foreach($download_files as $filekey => $file) {
