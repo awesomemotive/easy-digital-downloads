@@ -19,7 +19,7 @@ if($purchases) :
 
 			setup_postdata( $post );
 
-			$downloads = edd_get_downloads_of_post( $post->ID );
+			$downloads = edd_get_downloads_of_purchase( $post->ID );
 			$payment_meta = edd_get_payment_meta( $post->ID );
 
 			if($downloads) {
