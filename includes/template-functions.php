@@ -397,7 +397,7 @@ function edd_get_templates_dir() {
  * @uses get_template_part()
  */
 
-function edd_get_template_part( $slug, $name = null ) {
+function edd_get_template_part( $slug, $name = null, $load = true ) {
 
 	// Execute code for this part
 	do_action( 'get_template_part_' . $slug, $slug, $name );
@@ -412,7 +412,7 @@ function edd_get_template_part( $slug, $name = null ) {
 	$templates = apply_filters( 'edd_get_template_part', $templates, $slug, $name );
 
 	// Return the part that is found
-	return edd_locate_template( $templates, true, false );
+	return edd_locate_template( $templates, $load, false );
 
 }
 
