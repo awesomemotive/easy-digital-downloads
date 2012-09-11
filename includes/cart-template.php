@@ -19,11 +19,7 @@
 */
 
 function edd_checkout_cart() {
-	if(file_exists(trailingslashit(get_stylesheet_directory()) . 'edd_templates/checkout_cart.php')) {
-		include_once(trailingslashit(get_stylesheet_directory()) . 'edd_templates/checkout_cart.php');
-	} else {
-		include_once(EDD_PLUGIN_DIR . '/includes/templates/checkout_cart.php');
-	}
+	edd_get_template_part( 'checkout_cart' );
 }
 
 

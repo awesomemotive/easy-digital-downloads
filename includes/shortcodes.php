@@ -155,7 +155,7 @@ function edd_purchase_history() {
 						</tr>
 					</thead>
 					<?php foreach($purchases as $purchase) { ?>
-						<?php $purchase_data = edd_get_paymeny_meta( $purchase->ID ); ?>
+						<?php $purchase_data = edd_get_payment_meta( $purchase->ID ); ?>
 						<?php do_action('edd_purchase_history_body_start', $purchase, $purchase_data); ?>
 						<tr class="edd_purchase_row">
 							<td>#<?php echo $purchase->ID; ?></td>
