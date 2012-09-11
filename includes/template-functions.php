@@ -450,13 +450,13 @@ function edd_locate_template( $template_names, $load = false, $require_once = tr
 		$template_name = ltrim( $template_name, '/' );
 
 		// Check child theme first
-		if ( file_exists( trailingslashit( STYLESHEETPATH ) . 'edd_templates/' . $template_name ) ) {
-			$located = trailingslashit( STYLESHEETPATH ) . 'edd_templates/' . $template_name;
+		if ( file_exists( trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $template_name ) ) {
+			$located = trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $template_name;
 			break;
 
 		// Check parent theme next
-		} elseif ( file_exists( trailingslashit( TEMPLATEPATH ) . 'edd_templates/' . $template_name ) ) {
-			$located = trailingslashit( TEMPLATEPATH ) . 'edd_templates/' . $template_name;
+		} elseif ( file_exists( trailingslashit( get_template_directory() ) . 'edd_templates/' . $template_name ) ) {
+			$located = trailingslashit( get_template_directory() ) . 'edd_templates/' . $template_name;
 			break;
 
 		// Check theme compatibility last
