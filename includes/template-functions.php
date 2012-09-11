@@ -20,20 +20,14 @@
  * @return      string
 */
 
-function edd_append_purchase_link( $content ) {
+function edd_append_purchase_link( $download_id ) {
 	
-	global $post;
-	
-	if ( $post->post_type == 'download' && is_singular() && is_main_query() ) {
-		if ( ! get_post_meta( $post->ID, '_edd_hide_purchase_link', true ) ) {			
-			$content .= edd_get_purchase_link( $post->ID );
-		}
+	if ( ! get_post_meta( $download_id, '_edd_hide_purchase_link', true ) ) {			
+		echo edd_get_purchase_link( $download_id );
 	}
-	
-	return $content;
-	
+		
 }
-add_filter( 'the_content', 'edd_append_purchase_link' );
+add_action( 'edd_after_download_content', 'edd_append_purchase_link' );
 
 
 /**
