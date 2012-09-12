@@ -19,6 +19,12 @@
 */
 
 function edd_admin_messages() {
+
+	global $typenow;
+
+	if( 'download' != $typenow )
+		return;
+
 	$edd_access_level = edd_get_menu_access_level();
 	if( isset( $_GET['edd-message'] ) && $_GET['edd-message'] == 'discount_updated' && current_user_can( $edd_access_level ) ) {
 		 add_settings_error( 'edd-notices', 'edd-discount-updated', __('Discount code updated.', 'edd'), 'updated' );
@@ -38,6 +44,7 @@ function edd_admin_messages() {
 		$upgrade_notice = sprintf( __( 'The payment history needs updated. %s'), '<a href="' . wp_nonce_url( $url, 'edd_upgrade_payments_nonce' ) . '">' . __('Click to Upgrade', 'edd') . '</a>' );
 		add_settings_error( 'edd-notices', 'edd-payments-upgrade', $upgrade_notice, 'error' );
 	}
+
 	settings_errors( 'edd-notices' );
 }
 add_action( 'admin_notices', 'edd_admin_messages' );
