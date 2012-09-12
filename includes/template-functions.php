@@ -49,12 +49,12 @@ add_filter( 'the_content', 'edd_append_purchase_link' );
 function edd_get_purchase_link( $download_id = null, $link_text = null, $style = null, $color = null, $class = '' ) {
 
 	global $edd_options, $post, $user_ID;
-
+	
 	if ( ! isset( $edd_options['purchase_page'] ) ){
-		edd_set_error( 'set_checkout', __( 'No checkout page has been configured.', 'edd' ) );
+		edd_set_error( 'set_checkout', __( 'No checkout page has been configured. Visit your ', 'edd' ) . '<a href="' . site_url() . '/wp-admin/edit.php?post_type=download&page=edd-settings">' . __( 'Settings', 'edd' ) . '</a> ' . __( 'to set one.', 'edd' ) );
 		edd_print_errors(); // Not really how edd_print_errors was intended to be used but didn't want to add hook 
 		// Potentially this error could be hidden from customers as a html comment just to give the developer a hint
-		// It will confuse customers that can't find the purchase link but we don't want to much info about the backend to them either. 
+		// It will confuse customers that can't find the purchase link but we don't want to give too much info about the backend to them either. 
 		return false;
 	}
 	
