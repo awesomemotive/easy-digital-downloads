@@ -20,7 +20,7 @@
 
 function edd_admin_messages() {
 
-	global $pagenow;
+	global $typenow;
 
 	if( 'download' != $typenow )
 		return;
