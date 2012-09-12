@@ -71,7 +71,7 @@ function edd_get_payments( $args = array() ) {
 			// append to the user meta query
 			$payment_args['meta_query'][1] = array(
 				'key' => '_edd_payment_mode',
-				'vale' => $mode
+				'value' => $mode
 			);
 
 		} else {
@@ -80,13 +80,12 @@ function edd_get_payments( $args = array() ) {
 			$payment_args['meta_query'] = array(
 				array(
 					'key' => '_edd_payment_mode',
-					'vale' => $mode
+					'value' => $mode
 				)
 			);
 
 		}
 	}
-
 	$payments = get_posts( apply_filters( 'edd_get_payments_args', $payment_args ) );
 	if($payments) {
 		return $payments;
