@@ -15,12 +15,30 @@
  *
  * Retrieve payments from the database.
  *
+ * Since 1.1.9, this function takes an array of arguments, instead of individual parameters.
+ * All of the original paremeters remain, but can be passed in any order via the array.
+ *
+ * $offset = 0, $number = 20, $mode = 'live', $orderby = 'ID', $order = 'DESC', $user = null, $status = 'any', $meta_key = null
+ *
  * @access      public
  * @since       1.0 
  * @return      object
-*/
+ */
+function edd_get_payments( $args = array() ) {
+	$defaults = array(
+		'offset'   => 0,
+		'number'   => 20,
+		'mode'     => 'live',
+		'orderby'  => 'ID',
+		'order'    => 'DESC',
+		'user'     => null,
+		'status'   => 'any',
+		'meta_key' => 'null'
+	);
 
-function edd_get_payments( $offset = 0, $number = 20, $mode = 'live', $orderby = 'ID', $order = 'DESC', $user = null, $status = 'any', $meta_key = null ) {
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
+
 	$payment_args = array(
 		'post_type' => 'edd_payment', 
 		'posts_per_page' => $number, 
@@ -413,7 +431,15 @@ function edd_get_total_earnings() {
 	$total = (float) 0;
 	$payments = get_transient( 'edd_total_earnings' );
 	if( false === $payments ) {
-		$payments = edd_get_payments( 0, -1, 'live', 'ID', 'DESC', null, 'publish' );
+		$payments = edd_get_payments( array(
+			'offset' => 0, 
+			'number' => -1, 
+			'mode'   => 'live', 
+			'orderby' => 'ID', 
+			'order'   => 'DESC', 
+			'user'    => null, 
+			'status'  => 'publish' 
+		) );
 		set_transient( 'edd_total_earnings', $payments, 3600 );
 	}
 	if( $payments ) {

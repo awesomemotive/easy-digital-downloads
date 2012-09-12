@@ -23,7 +23,14 @@
 */
 
 function edd_count_payments($mode, $user = null) {
-	$payments = edd_get_payments(0, -1, $mode, 'ID', 'DESC', $user );
+	$payments = edd_get_payments( array(
+		'offset'  => 0, 
+		'number'  => -1, 
+		'mode'    => $mode, 
+		'orderby' => 'ID', 
+		'order'   => 'DESC', 
+		'user'    => $user 
+	) );
 	$count = 0;
 	if($payments) {
 		$count = count($payments);
