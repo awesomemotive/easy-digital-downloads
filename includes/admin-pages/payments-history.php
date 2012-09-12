@@ -87,7 +87,7 @@ function edd_payment_history_page() {
 			<ul class="subsubsub">
 				<li class="all">
 					<a href="<?php echo remove_query_arg('status'); ?>" <?php echo !isset( $_GET['status'] ) ? 'class="current"' : ''; ?>>
-						<?php _e('All'); ?> 
+						<?php _e('All', 'edd'); ?> 
 						<span class="count">(<?php echo $total_count; ?>)</span>
 					</a> |
 				</li>

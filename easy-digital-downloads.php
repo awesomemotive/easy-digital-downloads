@@ -56,7 +56,13 @@ global $edd_options;
 */
 
 function edd_textdomain() {
-	load_plugin_textdomain( 'edd', false, dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/' );
+
+	// Set filter for plugin's languages directory
+	$edd_lang_dir = dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/';
+	$edd_lang_dir = apply_filters( 'edd_languages_directory', $edd_lang_dir );
+
+	// Load the translations
+	load_plugin_textdomain( 'edd', false, $edd_lang_dir );
 }
 add_action('init', 'edd_textdomain');
 
