@@ -44,8 +44,8 @@ function edd_get_purchase_link( $download_id = null, $link_text = null, $style =
 
 	global $edd_options, $post, $user_ID;
 
-	if ( ! isset( $edd_options['purchase_page'] ) ){
-		edd_set_error( 'set_checkout', __( 'No checkout page has been configured.', 'edd' ) );
+	if ( ! isset( $edd_options['purchase_page'] ) || $edd_options['purchase_page'] == 0 ) {
+		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) );
 		edd_print_errors();
 		return false;
 	}
