@@ -95,7 +95,7 @@ function edd_render_price_field($post_id) {
 			</div>
 			<p>
 				<input type="checkbox" name="_variable_pricing" id="edd_variable_pricing" value="1" <?php checked( 1, $variable_pricing ); ?> />
-				<?php _e( 'Enable variable pricing', 'edd' ); ?><br/>
+				<label for="edd_variable_pricing"><?php _e( 'Enable variable pricing', 'edd' ); ?></label><br/>
 			</p>
 
 			<div id="edd_variable_price_fields" class="edd_pricing_fields" <?php echo $variable_display; ?>>
@@ -313,7 +313,7 @@ function edd_render_disable_button($post_id) {
 		echo '<th style="width:20%"><label for="_edd_hide_purchase_link">' . __('Disable the purchase button?', 'edd') . '</label></th>';
 		echo '<td>';
 			echo '<input type="checkbox" name="_edd_hide_purchase_link" id="_edd_hide_purchase_link" value="1" ' . checked(1, $show_button, false) . '/>&nbsp;';
-			echo __('Check this if you do not want the purchase button displayed.', 'edd');
+			echo '<label for="_edd_hide_purchase_link">' . __('Check this if you do not want the purchase button displayed.', 'edd') . '</label>';
 		echo '</td>';
 	echo '</tr>';
 }
