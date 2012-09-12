@@ -445,8 +445,9 @@ function edd_get_payment_meta( $payment_id ) {
  * @since       1.1.9
  * @return      array
  */
-function edd_get_payment_meta_user_info( $payment_meta ) {
-	$user_info = maybe_unserialize( $payment_meta[ 'user_info' ] );
+function edd_get_payment_meta_user_info( $payment_id ) {
+	$payment_meta = edd_get_payment_meta( $payment_id );
+	$user_info    = maybe_unserialize( $payment_meta[ 'user_info' ] );
 
 	return apply_filters( 'edd_payment_meta_user_info', $user_info );
 }
@@ -458,8 +459,9 @@ function edd_get_payment_meta_user_info( $payment_meta ) {
  * @since       1.1.9
  * @return      array
  */
-function edd_get_payment_meta_downloads( $payment_meta ) {
-	$downloads = maybe_unserialize( $payment_meta[ 'downloads' ] );
+function edd_get_payment_meta_downloads( $payment_id ) {
+	$payment_meta = edd_get_payment_meta( $payment_id );
+	$downloads    = maybe_unserialize( $payment_meta[ 'downloads' ] );
 
 	return apply_filters( 'edd_payment_meta_downloads', $downloads );
 }
@@ -471,7 +473,8 @@ function edd_get_payment_meta_downloads( $payment_meta ) {
  * @since       1.1.9
  * @return      array
  */
-function edd_get_payment_meta_cart_details( $payment_meta ) {
+function edd_get_payment_meta_cart_details( $payment_id ) {
+	$payment_meta = edd_get_payment_meta( $payment_id );
 	$cart_details = maybe_unserialize( $payment_meta[ 'cart_details' ] );
 
 	return apply_filters( 'edd_payment_meta_cart_details', $cart_details );
