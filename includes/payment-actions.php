@@ -230,7 +230,11 @@ function edd_update_old_payments_with_totals( $data ) {
 	if( get_option( 'edd_payment_totals_upgraded' ) )
 		return;
 
-	$payments = edd_get_payments( 0, -1, 'all' );
+	$payments = edd_get_payments( array(
+		'offset' => 0, 
+		'number' => -1, 
+		'mode'   => 'all' 
+	) );
 	if( $payments ) {
 		foreach( $payments as $payment ) {
 			$meta = edd_get_payment_meta( $payment->ID );

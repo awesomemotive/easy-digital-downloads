@@ -25,7 +25,15 @@ function edd_export_payment_history() {
 		header("Pragma: no-cache");
 		header("Expires: 0");
 
-		$payments = edd_get_payments(0, -1, $mode, $orderby, $order, $user, $status);
+		$payments = edd_get_payments( array(
+			'offset'  => 0, 
+			'number'  => -1, 
+			'mode'    => $mode, 
+			'orderby' => $orderby, 
+			'order'   => $order, 
+			'user'    => $user, 
+			'status'  => $status
+		) );
 		if($payments){
 			$i = 0;
 			echo '"' . __('ID', 'edd') .  '",';
