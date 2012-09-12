@@ -20,7 +20,7 @@
 
 function edd_admin_messages() {
 
-	global $typenow;
+	global $pagenow;
 
 	if( 'download' != $typenow )
 		return;
@@ -44,6 +44,8 @@ function edd_admin_messages() {
 		$upgrade_notice = sprintf( __( 'The payment history needs updated. %s'), '<a href="' . wp_nonce_url( $url, 'edd_upgrade_payments_nonce' ) . '">' . __('Click to Upgrade', 'edd') . '</a>' );
 		add_settings_error( 'edd-notices', 'edd-payments-upgrade', $upgrade_notice, 'error' );
 	}
+
+	settings_errors( 'edd-notices' );
 }
 add_action( 'admin_notices', 'edd_admin_messages' );
 
