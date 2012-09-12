@@ -425,16 +425,83 @@ function edd_get_total_earnings() {
 	return edd_currency_filter( $total );
 }
 
-
 /**
  * Get Payment Meta
  *
  * @access      public
  * @since       1.1.9
  * @return      array
-*/
-
+ */
 function edd_get_payment_meta( $payment_id ) {
-	return get_post_meta($payment_id, '_edd_payment_meta', true);
+	$meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
+
+	return apply_filters( 'edd_payment_meta', $meta );
 }
 
+/**
+ * Get `user_info` from payment meta
+ *
+ * @access      public
+ * @since       1.1.9
+ * @return      array
+ */
+function edd_get_payment_meta_user_info( $payment_id ) {
+	$payment_meta = edd_get_payment_meta( $payment_id );
+	$user_info    = maybe_unserialize( $payment_meta[ 'user_info' ] );
+
+	return apply_filters( 'edd_payment_meta_user_info', $user_info );
+}
+
+/**
+ * Get `downloads` from payment meta
+ *
+ * @access      public
+ * @since       1.1.9
+ * @return      array
+ */
+function edd_get_payment_meta_downloads( $payment_id ) {
+	$payment_meta = edd_get_payment_meta( $payment_id );
+	$downloads    = maybe_unserialize( $payment_meta[ 'downloads' ] );
+
+	return apply_filters( 'edd_payment_meta_downloads', $downloads );
+}
+
+/**
+ * Get `cart_details` from payment meta
+ *
+ * @access      public
+ * @since       1.1.9
+ * @return      array
+ */
+function edd_get_payment_meta_cart_details( $payment_id ) {
+	$payment_meta = edd_get_payment_meta( $payment_id );
+	$cart_details = maybe_unserialize( $payment_meta[ 'cart_details' ] );
+
+	return apply_filters( 'edd_payment_meta_cart_details', $cart_details );
+}
+
+/**
+ * Get the user email associated with a payment
+ *
+ * @access      public
+ * @since       1.1.9
+ * @return      array
+ */
+function edd_get_payment_user_email( $payment_id ) {
+	$email = get_post_meta( $payment_id, '_edd_payment_user_email', true );
+
+	return apply_filters( 'edd_payment_user_email', $email );
+}
+
+/**
+ * Get the gateway associated with a payment
+ *
+ * @access      public
+ * @since       1.1.9
+ * @return      array
+ */
+function edd_get_payment_gateway( $payment_id ) {
+	$gateway = get_post_meta( $payment_id, '_edd_payment_gateway', true );
+
+	return apply_filters( 'edd_payment_gateway', $gateway );
+}

@@ -114,7 +114,7 @@ function edd_email_preview_templage_tags( $message ) {
 	
 	$price = edd_currency_filter(9.50);	
 	
-	$gateway = edd_get_gateway_checkout_label( get_post_meta($payment_id, '_edd_payment_gateway', true) );
+	$gateway = 'PayPal';
 
 	$receipt_id = strtolower( md5( uniqid() ) );
 
