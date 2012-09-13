@@ -60,11 +60,13 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 		$admin_message .= __('Downloads sold:', 'edd') .  "\n\n";
 			
 		$download_list = '';	
-		foreach(maybe_unserialize($payment_data['downloads']) as $download) {
-			$id = isset($payment_data['cart_details']) ? $download['id'] : $download;
-			$download_list .= html_entity_decode(get_the_title($id), ENT_COMPAT, 'UTF-8') . "\n";
+		$downloads = maybe_unserialize($payment_data['downloads']);
+		if( is_array( $downloads ) ) {
+			foreach( $downloads as $download ) {
+				$id = isset($payment_data['cart_details']) ? $download['id'] : $download;
+				$download_list .= html_entity_decode(get_the_title($id), ENT_COMPAT, 'UTF-8') . "\n";
+			}
 		}
-
 		$gateway = edd_get_gateway_admin_label( get_post_meta($payment_id, '_edd_payment_gateway', true) );
 		
 		$admin_message .= $download_list . "\n";

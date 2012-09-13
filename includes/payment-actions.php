@@ -35,29 +35,32 @@ function edd_complete_purchase($payment_id, $new_status, $old_status) {
 		$downloads 		= maybe_unserialize( $payment_data['downloads'] );
 		$user_info 		= maybe_unserialize( $payment_data['user_info'] );
 		$cart_details 	= maybe_unserialize( $payment_data['cart_details'] );				
-								
-		// increase purchase count and earnings
-		foreach($downloads as $download) {
-			
-			edd_record_sale_in_log($download['id'], $payment_id, $user_info, $payment_data['date']);
-			edd_increase_purchase_count($download['id']);
-			$amount = null;
+					
 
-			if(is_array($cart_details)) {
+		if( is_array( $downloads ) ) { 			
+			// increase purchase count and earnings
+			foreach($downloads as $download) {
 				
-				foreach( $cart_details as $key => $item ) {
-					if( array_search( $download['id'], $item ) ) {
-						$cart_item_id = $key;
+				edd_record_sale_in_log($download['id'], $payment_id, $user_info, $payment_data['date']);
+				edd_increase_purchase_count($download['id']);
+				$amount = null;
+
+				if(is_array($cart_details)) {
+					
+					foreach( $cart_details as $key => $item ) {
+						if( array_search( $download['id'], $item ) ) {
+							$cart_item_id = $key;
+						}
 					}
+
+					$amount = isset( $cart_details[$cart_item_id]['price'] ) ? $cart_details[$cart_item_id]['price'] : null;
+
 				}
 
-				$amount = isset( $cart_details[$cart_item_id]['price'] ) ? $cart_details[$cart_item_id]['price'] : null;
-
+				$amount = edd_get_download_final_price( $download['id'], $user_info, $amount );
+				edd_increase_earnings( $download['id'], $amount );
+				
 			}
-
-			$amount = edd_get_download_final_price( $download['id'], $user_info, $amount );
-			edd_increase_earnings( $download['id'], $amount );
-			
 		}
 		
 		if( isset( $user_info['discount'] ) ) {
