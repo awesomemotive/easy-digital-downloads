@@ -172,7 +172,7 @@ function edd_get_purchase_link( $download_id = null, $link_text = null, $style =
 		$purchase_form .= '<input type="hidden" name="edd_action" value="add_to_cart">';
 	$purchase_form .= '</form><!--end #edd_purchase_' . esc_html( $download_id ) . '-->';
 		
-	return apply_filters( 'edd_purchase_download_form', $purchase_form, $download_id, $link_text, $style, $color );
+	return apply_filters( 'edd_purchase_download_form', $purchase_form, $download_id, $link_text, $style, $color, $class );
 	
 }
 
