@@ -36,6 +36,12 @@ More information at [Easy Digital Downloads.com](http://easydigitaldownloads.com
 
 [youtube http://www.youtube.com/watch?v=SjOeSZ08_IA]
 
+**Sell and Track Software License Keys**
+
+Software Licensing for Easy Digital Downloads provides a complete license key generation, activation, and checking system. It allows you to provide license keys along with your digital products that can then be used to properly license and activate the buyer’s copy of the software.
+
+Includes a complete integration pack for delivering automatic upgrades for premium WordPress plugins and themes.
+
 **Add an Affiliate System to Your Store**
 
 Easy Digital Downloads has an [integration pack for the awesome Affiliates Pro plugin](http://easydigitaldownloads.com/extension/affiliates-pro-integration-pack/), which gives you everything you need to build a complete affiliate system and dramatically boost your traffic and sales.
