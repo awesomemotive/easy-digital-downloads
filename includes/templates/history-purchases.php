@@ -17,7 +17,7 @@ if($purchases) : ?>
 		</thead>
 		<?php foreach($purchases as $post) : setup_postdata( $post ); ?>
 			<?php $purchase_data = edd_get_payment_meta( $post->ID ); ?>
-			<?php do_action('edd_purchase_history_body_start', $purchase, $purchase_data); ?>
+			<?php do_action('edd_purchase_history_body_start', $post->ID, $purchase_data); ?>
 			<tr class="edd_purchase_row">
 				<td class="edd_purchase_id">#<?php echo absint( $post->ID ); ?></td>
 				<td class="edd_purchase_date"><?php echo date_i18n(get_option('date_format'), strtotime( get_post_field( 'post_date', $post->ID ) ) ); ?></td>
@@ -47,7 +47,7 @@ if($purchases) : ?>
 					?>
 				</td>
 			</tr>
-			<?php do_action('edd_purchase_history_body_end', $purchase, $purchase_data); ?>
+			<?php do_action('edd_purchase_history_body_end', $post->ID, $purchase_data); ?>
 		<?php endforeach; ?>
 	</table>
 <?php else : ?>

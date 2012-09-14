@@ -15,7 +15,7 @@
  *
  * Retrieves a download and displays the purchase form.
  *
- * @access      private
+ * @access      public
  * @since       1.0 
  * @return      string
 */
@@ -44,7 +44,7 @@ add_shortcode('purchase_link', 'edd_download_shortcode');
  *
  * Displays a user's download history.
  *
- * @access      private
+ * @access      public
  * @since       1.0 
  * @return      string
 */
@@ -64,7 +64,7 @@ add_shortcode('download_history', 'edd_download_history');
  *
  * Displays a user's purchsae history.
  *
- * @access      private
+ * @access      public
  * @since       1.0 
  * @return      string
 */
@@ -84,7 +84,7 @@ add_shortcode('purchase_history', 'edd_purchase_history');
  *
  * Show the checkout form.
  *
- * @access      private
+ * @access      public
  * @since       1.0 
  * @return      string
 */
@@ -100,7 +100,7 @@ add_shortcode('download_checkout', 'edd_checkout_form_shortcode');
  *
  * Show the shopping cart.
  *
- * @access      private
+ * @access      public
  * @since       1.0 
  * @return      string
 */
@@ -116,7 +116,7 @@ add_shortcode('download_cart', 'edd_cart_shortcode');
  *
  * Shows the login form.
  *
- * @access      private
+ * @access      public
  * @since       1.0 
  * @return      string
 */
@@ -137,7 +137,7 @@ add_shortcode('edd_login', 'edd_login_form_shortcode');
  *
  * Displays a list of all active discounts 
  *
- * @access      private
+ * @access      public
  * @since       1.0.8.2
  * @return      string
 */
@@ -182,7 +182,7 @@ add_shortcode('download_discounts', 'edd_discounts_shortcode');
  * Displays a collection purchase link for adding all 
  * items in a taxonomy term to the cart.
  *
- * @access      private
+ * @access      public
  * @since       1.0.6
  * @return      string
 */
@@ -206,7 +206,7 @@ add_shortcode('purchase_collection', 'edd_purchase_collection_shortcode');
  *
  * Contributor: Sunny Ratilal
  *
- * @access      private
+ * @access      public
  * @since       1.0.6
  * @return      string
 */
@@ -342,7 +342,7 @@ add_shortcode('downloads', 'edd_downloads_query');
  *
  * Shows the price of a download.
  *
- * @access      private
+ * @access      public
  * @since       1.1.3.3
  * @return      string
 */
