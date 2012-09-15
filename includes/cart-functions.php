@@ -211,23 +211,8 @@ function edd_get_cart_item_price($item_id, $options = array()) {
 	}
 	return apply_filters( 'edd_cart_item_price', $price );
 }
+add_filter( 'edd_cart_item_price', 'edd_format_amount' );
 
-
-/**
- * Formats a cart item price with decimal places and currency sign
- *
- * Displays a formatted price for an item in the cart.
- *
- * @access      public
- * @since       1.1.9
- * @param       float the price to format
-* @return       float
-*/
-
-function edd_format_cart_item_price( $price ) {
-	return number_format( (float) $price, 2 );
-}
-add_filter( 'edd_cart_item_price', 'edd_format_cart_item_price' );
 
 /**
  * Get Price Name

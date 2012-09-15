@@ -345,23 +345,8 @@ function edd_price($download_id, $echo = true) {
 	else
 		return $price;
 }
+add_filter( 'edd_download_price', 'edd_format_amount' );
 
-
-/**
- * Formats a download price with decimal places and currency sign
- *
- * Displays a formatted price for a download.
- *
- * @access      public
- * @since       1.1.9
- * @param       float the price to format
-* @return       float
-*/
-
-function edd_format_price( $price ) {
-	return edd_currency_filter( number_format( (float) $price, 2 ) );
-}
-add_filter( 'edd_download_price', 'edd_format_price' );
 
 
 /**
