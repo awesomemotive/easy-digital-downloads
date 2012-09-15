@@ -147,7 +147,7 @@ function edd_get_purchase_link( $download_id = null, $link_text = null, $style =
 					esc_attr( $link_text ),
 					esc_attr( $download_id ),
 					esc_attr( $data_variable ),
-					esc_attr( $button_display )
+					$button_display
 				);
 				
 				$checkout_link = sprintf( '<a href="%1$s" class="%2$s" %3$s>', 
