@@ -214,58 +214,6 @@ function edd_get_currencies() {
 
 
 /**
- * Get Currency Filter 
- *
- * @access      public
- * @since       1.0 
- * @return      array
-*/
-
-function edd_currency_filter( $price ) {
-	global $edd_options;
-	$currency = isset($edd_options['currency']) ? $edd_options['currency'] : 'USD';
-	$position = isset($edd_options['currency_position']) ? $edd_options['currency_position'] : 'before';
-	if($position == 'before') :
-		switch ($currency) :
-			case "GBP" : return '&pound;' . $price; break;
-			case "USD" : 
-			case "AUD" : 
-			case "BRL" : 
-			case "CAD" : 
-			case "HKD" : 
-			case "MXN" : 
-			case "SGD" : 
-				return '&#36;' . $price; 
-			break;
-			case "JPY" : return '&yen;' . $price; break;
-			default :
-			    $formatted = $currency . ' ' . $price;
-    		    return apply_filters('edd_' . strtolower($currency) . '_currency_filter_before', $formatted, $currency, $price);
-			break;
-		endswitch;
-	else :
-		switch ($currency) :
-			case "GBP" : return $price . '&pound;'; break;
-			case "USD" : 
-			case "AUD" : 
-			case "BRL" : 
-			case "CAD" : 
-			case "HKD" : 
-			case "MXN" : 
-			case "SGD" : 
-				return $price . '&#36;'; 
-			break;
-			case "JPY" : return $price . '&yen;'; break;
-			default : 
-			    $formatted = $price . ' ' . $currency;
-			    return apply_filters('edd_' . strtolower($currency) . '_currency_filter_after', $formatted, $currency, $price);
-			break;
-		endswitch;	
-	endif;
-}
-
-
-/**
  * Get Country List 
  *
  * @access      public

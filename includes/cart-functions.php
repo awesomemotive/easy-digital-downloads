@@ -272,25 +272,6 @@ function edd_get_cart_amount() {
 }
 
 
-/**
- * Format Amount
- *
- * Returns a nicely formatted amount.
- *
- * @access      public
- * @since       1.0
- * @param       $amount string the price amount to format
- * @param       $options array optional parameters, used for defining variable prices
- * @return      string - the newly formatted amount
-*/
-
-function edd_format_amount($amount) {
-	global $edd_options;
-	$thousands_sep = isset($edd_options['thousands_separator']) ? $edd_options['thousands_separator'] : ',';
-	$decimal_sep = isset($edd_options['decimal_separator']) ? $edd_options['decimal_separator'] : '.';
-	return number_format($amount, 2, $decimal_sep, $thousands_sep);
-}
-
 
 /**
  * Get Purchase Summary

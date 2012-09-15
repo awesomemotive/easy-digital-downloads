@@ -83,6 +83,7 @@ include_once(EDD_PLUGIN_DIR . 'includes/cart-template.php');
 include_once(EDD_PLUGIN_DIR . 'includes/cart-functions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/cart-actions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/ajax-functions.php');
+include_once(EDD_PLUGIN_DIR . 'includes/formatting.php');
 include_once(EDD_PLUGIN_DIR . 'includes/widgets.php');
 include_once(EDD_PLUGIN_DIR . 'includes/mime-types.php');
 include_once(EDD_PLUGIN_DIR . 'includes/gateway-functions.php');
