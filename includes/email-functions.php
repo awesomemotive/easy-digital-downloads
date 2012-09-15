@@ -44,7 +44,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$from_name = isset($edd_options['from_name']) ? $edd_options['from_name'] : get_bloginfo('name');
 	$from_email = isset($edd_options['from_email']) ? $edd_options['from_email'] : get_option('admin_email');
 	
-	$subject = isset( $edd_options['purchase_subject'] ) ? $edd_options['purchase_subject'] : __('Purchase Receipt', 'edd');
+	$subject = isset( $edd_options['purchase_subject'] ) && strlen( trim( $edd_options['purchase_subject'] ) ) > 0 ? $edd_options['purchase_subject'] : __('Purchase Receipt', 'edd');
 
 	$headers = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
 	$headers .= "Reply-To: ". $from_email . "\r\n";
