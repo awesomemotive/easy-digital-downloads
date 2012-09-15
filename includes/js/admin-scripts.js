@@ -16,7 +16,7 @@ jQuery(document).ready(function ($) {
 	});
 	
 	// toggle the color options
-	$('#edd_purchase_style input').on('click', function() {
+	$('#edd_purchase_style input').change(function() {
 		$('#edd_purchase_color').toggle();
 	});
 	
