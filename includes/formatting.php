@@ -25,8 +25,16 @@
 
 function edd_format_amount($amount) {
 	global $edd_options;
-	$thousands_sep = isset($edd_options['thousands_separator']) ? $edd_options['thousands_separator'] : ',';
-	$decimal_sep = isset($edd_options['decimal_separator']) ? $edd_options['decimal_separator'] : '.';
+	$thousands_sep 	= isset($edd_options['thousands_separator']) 	? $edd_options['thousands_separator'] 	: ',';
+	$decimal_sep 	= isset($edd_options['decimal_separator']) 		? $edd_options['decimal_separator'] 	: '.';
+
+	// sanitize the amount
+	if( false !== ( $comma_found = strpos( $amount, ',' ) ) )
+		$amount = substr( $amount, 0, $comma_found );
+
+	if( false !== ( $period_found = strpos( $amount, ',' ) ) )
+		$amount = substr( $amount, 0, $period_found );
+
 	return number_format($amount, 2, $decimal_sep, $thousands_sep);
 }
 
