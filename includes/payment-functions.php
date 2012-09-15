@@ -429,7 +429,7 @@ function edd_get_total_earnings() {
 
 	$total = (float) 0;
 	$payments = get_transient( 'edd_total_earnings' );
-	if( false === $payments ) {
+	if( false === $payments || '' === $payments ) {
 		$payments = edd_get_payments( array(
 			'offset' => 0, 
 			'number' => -1, 
@@ -437,7 +437,8 @@ function edd_get_total_earnings() {
 			'orderby' => 'ID', 
 			'order'   => 'DESC', 
 			'user'    => null, 
-			'status'  => 'publish' 
+			'status'  => 'publish',
+			'meta_key'=> '_edd_payment_total'
 		) );
 		set_transient( 'edd_total_earnings', $payments, 3600 );
 	}
