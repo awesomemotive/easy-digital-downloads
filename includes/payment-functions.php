@@ -447,7 +447,7 @@ function edd_get_total_earnings() {
 			$total += $meta['amount'];
 		}
 	}
-	return edd_currency_filter( $total );
+	return edd_currency_filter( edd_format_amount( $total ) );
 }
 
 /**
