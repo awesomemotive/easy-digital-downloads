@@ -530,3 +530,20 @@ function edd_get_payment_gateway( $payment_id ) {
 
 	return apply_filters( 'edd_payment_gateway', $gateway );
 }
+
+
+/**
+ * Get the amount associated with a payment
+ *
+ * @access      public
+ * @since       1.1.9
+ * @return      array
+ */
+function edd_get_payment_amount( $payment_id ) {
+	$payment_meta = edd_get_payment_meta( $payment_id );
+	$amount = $payment_meta['amount'];
+
+	return apply_filters( 'edd_payment_amount', $amount );
+}
+add_filter( 'edd_payment_amount', 'edd_format_amount', 10 );
+add_filter( 'edd_payment_amount', 'edd_currency_filter', 20 );
