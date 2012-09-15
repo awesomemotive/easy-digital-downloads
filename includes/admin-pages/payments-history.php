@@ -245,6 +245,8 @@ function edd_payment_history_page() {
 												}
 											?>
 											</ul>
+											<?php $payment_date = strtotime( $payment->post_date ); ?>
+											<p><?php echo __('Date and Time:', 'edd') . ' ' . date_i18n( get_option( 'date_format' ), $payment_date ) . ' ' . date_i18n( get_option( 'time_format' ), $payment_date ) ?>
 											<p><?php echo __('Discount used:', 'edd') . ' '; if(isset($user_info['discount']) && $user_info['discount'] != 'none') { echo $user_info['discount']; } else { _e('none', 'edd'); } ?>
 											<p><?php echo __('Total:', 'edd') . ' ' . edd_get_payment_amount( $payment->ID ); ?></p>
 											
