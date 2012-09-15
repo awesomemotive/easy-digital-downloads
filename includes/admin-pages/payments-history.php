@@ -197,46 +197,46 @@ function edd_payment_history_page() {
 									<td><a href="#TB_inline?width=640&amp;inlineId=purchased-files-<?php echo $payment->ID; ?>" class="thickbox" title="<?php printf(__('Purchase Details for Payment #%s', 'edd'), $payment->ID); ?> "><?php _e('View Order Details', 'edd'); ?></a>
 										<div id="purchased-files-<?php echo $payment->ID; ?>" style="display:none;">
 											<?php 
-												$downloads = isset($payment_meta['cart_details']) ? maybe_unserialize($payment_meta['cart_details']) : false;
-												if( empty( $downloads ) || !$downloads ) {
-													$downloads = maybe_unserialize($payment_meta['downloads']);
+												$cart_items = isset($payment_meta['cart_details']) ? maybe_unserialize($payment_meta['cart_details']) : false;
+												if( empty( $cart_items ) || !$cart_items ) {
+													$cart_items = maybe_unserialize($payment_meta['downloads']);
 												}
 											?>
-											<h4><?php echo _n(__('Purchased File', 'edd'), __('Purchased Files', 'edd'), count($downloads)); ?></h4>
+											<h4><?php echo _n(__('Purchased File', 'edd'), __('Purchased Files', 'edd'), count($cart_items)); ?></h4>
 											<ul class="purchased-files-list">
 											<?php 
 
-												if($downloads) {
+												if($cart_items) {
 
-													foreach($downloads as $key => $download) {
+													foreach($cart_items as $key => $cart_item) {
 														echo '<li>';
 															
 															// retrieve the ID of the download
-															$id = isset($payment_meta['cart_details']) ? $download['id'] : $download;
+															$id = isset($payment_meta['cart_details']) ? $cart_item['id'] : $cart_item;
 															
 															// if download has variable prices, override the default price
-															$price_override = isset($payment_meta['cart_details']) ? $download['price'] : null; 
+															$price_override = isset($payment_meta['cart_details']) ? $cart_item['price'] : null; 
+
+															// get the user information
+															$user_info = edd_get_payment_meta_user_info( $payment->ID );
 															
-															$user_info = unserialize($payment_meta['user_info']);
-															
-															// calculate the final price
-															$price = edd_get_download_final_price($id, $user_info, $price_override);
+															// calculate the final item price
+															$price = edd_get_download_final_price( $id, $user_info, $price_override );
 															
 															// show name of download
 															echo '<a href="' . admin_url('post.php?post=' . $id . '&action=edit') . '" target="_blank">' . get_the_title($id) . '</a>';
 															
 															echo  ' - ';
 															
-															if( isset( $downloads[$key]['item_number'])) {
+															if( isset( $cart_items[$key]['item_number'])) {
 
-																$price_options = $downloads[$key]['item_number']['options'];
+																$price_options = $cart_items[$key]['item_number']['options'];
 																															
-																if( isset($price_options['price_id']) ) {
-																	echo edd_get_price_option_name($id, $price_options['price_id']);
+																if( isset( $price_options['price_id'] ) ) {
+																	echo edd_get_price_option_name( $id, $price_options['price_id'] );
 																	echo ' - ';
 																}
 															}	
-
 															// show price
 															echo edd_currency_filter( edd_format_amount( $price ) );
 														
