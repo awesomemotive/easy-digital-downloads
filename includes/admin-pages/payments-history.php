@@ -238,7 +238,7 @@ function edd_payment_history_page() {
 															}	
 
 															// show price
-															echo edd_currency_filter($price);
+															echo edd_currency_filter( edd_format_amount( $price ) );
 														
 														echo '</li>';
 													}
