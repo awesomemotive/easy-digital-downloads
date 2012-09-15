@@ -198,6 +198,7 @@ function edd_checkout_form() {
 							<fieldset id="edd_purchase_submit">
 								<p>
 									<?php do_action('edd_purchase_form_before_submit'); ?>
+									
 									<?php if(is_user_logged_in()) { ?>
 									<input type="hidden" name="edd-user-id" value="<?php echo $user_data->ID; ?>"/>
 									<?php } ?>
