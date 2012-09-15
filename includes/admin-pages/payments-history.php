@@ -174,9 +174,7 @@ function edd_payment_history_page() {
 								$payment_classes = get_post_class( apply_filters( 'edd_payment_row_classes', $classes ), $payment->ID );						
 								?>
 								<tr class="edd_payment <?php echo implode( ' ', $payment_classes ); ?>">
-									<td>
-										<?php echo $payment->ID; ?>
-									</td>
+									<td><?php echo $payment->ID; ?></td>
 									<td>
 										<?php echo $payment_meta['email']; ?>
 										<div class="row-actions">
@@ -248,7 +246,7 @@ function edd_payment_history_page() {
 											?>
 											</ul>
 											<p><?php echo __('Discount used:', 'edd') . ' '; if(isset($user_info['discount']) && $user_info['discount'] != 'none') { echo $user_info['discount']; } else { _e('none', 'edd'); } ?>
-											<p><?php echo __('Total:', 'edd') . ' ' . edd_currency_filter($payment_meta['amount']); ?></p>
+											<p><?php echo __('Total:', 'edd') . ' ' . edd_get_payment_amount( $payment->ID ); ?></p>
 											
 											<div class="purcase-personal-details">
 												<h4><?php _e('Buyer\'s Personal Details:', 'edd'); ?></h4>
