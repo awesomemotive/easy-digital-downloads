@@ -53,7 +53,7 @@ function edd_get_purchase_link( $download_id = null, $link_text = null, $style =
 	$page = get_permalink( $post->ID ); // current page
 	$link_args = array( 'download_id' => $download_id, 'edd_action' => 'add_to_cart' );
 	$link = add_query_arg( $link_args, $page );
-	$checkout_url = get_permalink( $edd_options['purchase_page'] );
+	$checkout_url = edd_get_checkout_uri();
 	$variable_pricing = edd_has_variable_prices( $download_id );
 	
 	if ( is_null( $link_text ) ) {
