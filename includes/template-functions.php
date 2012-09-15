@@ -374,7 +374,7 @@ function edd_get_purchase_download_links( $purchase_data ) {
  * Returns the path to the EDD templates directory
  *
  * @access      private
- * @since       1.1.9
+ * @since       1.2
  * @return      string
 */
 
@@ -386,7 +386,7 @@ function edd_get_templates_dir() {
 /**
  * Retrieves a template part
  *
- * @since v1.1.9
+ * @since v1.2
  *
  * Taken from bbPress
  *
@@ -426,7 +426,7 @@ function edd_get_template_part( $slug, $name = null, $load = true ) {
  *
  * Taken from bbPress
  *
- * @since v1.1.9
+ * @since v1.2
  *
  * @param string|array $template_names Template file(s) to search for, in order.
  * @param bool $load If true the template file will be loaded if it is found.

@@ -80,7 +80,7 @@ function edd_get_download_final_price($download_id, $user_purchase_info, $amount
  * retrieves the variable prices for a download
  *
  * @access      public
- * @since       1.1.9
+ * @since       1.2
  * @param       int $download_id - the ID of the download
  * @return      array
 */

@@ -181,7 +181,7 @@ class edd_categories_tags_widget extends WP_Widget {
  * Displays a user's purchase history.
  *
  * @access        private
- * @since        1.1.9
+ * @since        1.2
  * @return        void
  */
 

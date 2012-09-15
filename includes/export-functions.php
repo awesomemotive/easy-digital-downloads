@@ -146,7 +146,7 @@ add_action('admin_init', 'edd_export_payment_history');
  * Using wpdb directly for performance reasons (workaround of calling all posts and fetch data respectively)
  * 
  * @access      private
- * @since       1.1.9
+ * @since       1.2
  * @return      void
 */
 function edd_export_all_customers() {

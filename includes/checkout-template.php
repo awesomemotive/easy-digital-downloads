@@ -443,7 +443,7 @@ function edd_get_login_fields() {
  * The checkout Next button
  *
  * @access      public
- * @since       1.1.9
+ * @since       1.2
  * @return      string
 */
 
@@ -467,7 +467,7 @@ function edd_checkout_button_next() {
  * The checkout Purchase button
  *
  * @access      public
- * @since       1.1.9
+ * @since       1.2
  * @return      string
 */
 

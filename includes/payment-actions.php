@@ -204,7 +204,7 @@ add_action('edd_delete_payment', 'edd_delete_purchase');
  * Flushes the Total Earnings Cache when a payment is created
  *
  * @access      private
- * @since       1.1.9
+ * @since       1.2
  * @return      void
 */
 
@@ -215,13 +215,13 @@ add_action( 'edd_insert_payment', 'edd_clear_earnings_cache', 10, 2 );
 
 
 /**
- * Updates all old payments, prior to 1.1.9, with new 
+ * Updates all old payments, prior to 1.2, with new 
  * meta for the total purcahse amount
  *
  * This is so that payments can be queried by their totals
  *
  * @access      private
- * @since       1.1.9
+ * @since       1.2
  * @return      void
 */
 

@@ -639,7 +639,7 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
  * Get Credit Card Info
  *
  * @access		private
- * @since		1.1.9
+ * @since		1.2
  * @return		array
 */
 

@@ -15,7 +15,7 @@
  *
  * Retrieve payments from the database.
  *
- * Since 1.1.9, this function takes an array of arguments, instead of individual parameters.
+ * Since 1.2, this function takes an array of arguments, instead of individual parameters.
  * All of the original paremeters remain, but can be passed in any order via the array.
  *
  * $offset = 0, $number = 20, $mode = 'live', $orderby = 'ID', $order = 'DESC', $user = null, $status = 'any', $meta_key = null
@@ -421,7 +421,7 @@ function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
  * Get Total Earnings
  *
  * @access      public
- * @since       1.1.9
+ * @since       1.2
  * @return      float
 */
 
@@ -454,7 +454,7 @@ function edd_get_total_earnings() {
  * Get Payment Meta
  *
  * @access      public
- * @since       1.1.9
+ * @since       1.2
  * @return      array
  */
 function edd_get_payment_meta( $payment_id ) {
@@ -467,7 +467,7 @@ function edd_get_payment_meta( $payment_id ) {
  * Get `user_info` from payment meta
  *
  * @access      public
- * @since       1.1.9
+ * @since       1.2
  * @return      array
  */
 function edd_get_payment_meta_user_info( $payment_id ) {
@@ -481,7 +481,7 @@ function edd_get_payment_meta_user_info( $payment_id ) {
  * Get `downloads` from payment meta
  *
  * @access      public
- * @since       1.1.9
+ * @since       1.2
  * @return      array
  */
 function edd_get_payment_meta_downloads( $payment_id ) {
@@ -495,7 +495,7 @@ function edd_get_payment_meta_downloads( $payment_id ) {
  * Get `cart_details` from payment meta
  *
  * @access      public
- * @since       1.1.9
+ * @since       1.2
  * @return      array
  */
 function edd_get_payment_meta_cart_details( $payment_id ) {
@@ -509,7 +509,7 @@ function edd_get_payment_meta_cart_details( $payment_id ) {
  * Get the user email associated with a payment
  *
  * @access      public
- * @since       1.1.9
+ * @since       1.2
  * @return      array
  */
 function edd_get_payment_user_email( $payment_id ) {
@@ -522,7 +522,7 @@ function edd_get_payment_user_email( $payment_id ) {
  * Get the gateway associated with a payment
  *
  * @access      public
- * @since       1.1.9
+ * @since       1.2
  * @return      array
  */
 function edd_get_payment_gateway( $payment_id ) {
@@ -536,7 +536,7 @@ function edd_get_payment_gateway( $payment_id ) {
  * Get the amount associated with a payment
  *
  * @access      public
- * @since       1.1.9
+ * @since       1.2
  * @return      array
  */
 function edd_get_payment_amount( $payment_id ) {
