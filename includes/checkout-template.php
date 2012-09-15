@@ -79,14 +79,7 @@ function edd_checkout_form() {
 						</fieldset>
 						<fieldset id="edd_payment_mode_submit">
 							<p id="edd-next-submit-wrap">
-								<?php $color = isset($edd_options['checkout_color']) ? $edd_options['checkout_color'] : 'gray'; ?> 
-								<span class="edd_button edd_<?php echo $color; ?>">
-									<span class="edd_button_outer">
-										<span class="edd_button_inner">
-											<input type="submit" id="edd_next_button" class="edd_button_text edd-submit" value="<?php _e('Next', 'edd'); ?>"/>
-										</span>
-									</span>
-								</span>
+								<?php echo edd_checkout_button_next(); ?>
 							</p>
 						</fieldset>
 					</form>
@@ -211,15 +204,9 @@ function edd_checkout_form() {
 									<input type="hidden" name="edd_action" value="purchase"/>
 									<input type="hidden" name="edd-gateway" value="<?php echo $payment_mode; ?>" />
 									<input type="hidden" name="edd-nonce" value="<?php echo wp_create_nonce('edd-purchase-nonce'); ?>"/>
-									<?php $color = isset($edd_options['checkout_color']) ? $edd_options['checkout_color'] : 'gray'; ?>
-									<span class="edd_button edd_<?php echo $color; ?>">
-										<span class="edd_button_outer">
-											<span class="edd_button_inner">
-												<?php $complete_purchase = isset( $edd_options['checkout_label'] ) && strlen( trim( $edd_options['checkout_label'] ) ) > 0 ? $edd_options['checkout_label'] : __('Purchase', 'edd'); ?>
-												<input type="submit" class="edd_button_text edd-submit" id="edd-purchase-button" name="edd-purchase" value="<?php echo $complete_purchase; ?>"/>
-											</span>
-										</span>
-									</span>
+									
+									<?php echo edd_checkout_button_purchase(); ?>
+									
 									<?php do_action('edd_purchase_form_after_submit'); ?>
 								</p>
 								<?php if(!edd_is_ajax_enabled()) { ?>
@@ -448,6 +435,55 @@ function edd_get_login_fields() {
 		</p>	
 	<?php
 	return ob_get_clean();
+}
+
+
+/**
+ * The checkout Next button
+ *
+ * @access      public
+ * @since       1.1.9
+ * @return      string
+*/
+
+function edd_checkout_button_next() {
+	global $edd_options;
+	$color = isset($edd_options['checkout_color']) ? $edd_options['checkout_color'] : 'gray';
+	ob_start(); ?>
+	<span class="edd_button edd_<?php echo $color; ?>">
+		<span class="edd_button_outer">
+			<span class="edd_button_inner">
+				<input type="submit" id="edd_next_button" class="edd_button_text edd-submit" value="<?php _e('Next', 'edd'); ?>"/>
+			</span>
+		</span>
+	</span>
+	<?php
+	return apply_filters( 'edd_checkout_button_next', ob_get_clean() );
+}
+
+
+/**
+ * The checkout Purchase button
+ *
+ * @access      public
+ * @since       1.1.9
+ * @return      string
+*/
+
+function edd_checkout_button_purchase() {
+	global $edd_options;
+	$color = isset($edd_options['checkout_color']) ? $edd_options['checkout_color'] : 'gray';
+	ob_start(); ?>
+	<span class="edd_button edd_<?php echo $color; ?>">
+		<span class="edd_button_outer">
+			<span class="edd_button_inner">
+				<?php $complete_purchase = isset( $edd_options['checkout_label'] ) && strlen( trim( $edd_options['checkout_label'] ) ) > 0 ? $edd_options['checkout_label'] : __('Purchase', 'edd'); ?>
+				<input type="submit" class="edd_button_text edd-submit" id="edd-purchase-button" name="edd-purchase" value="<?php echo $complete_purchase; ?>"/>
+			</span>
+		</span>
+	</span>
+	<?php
+	return apply_filters( 'edd_checkout_button_purchase', ob_get_clean() );
 }
 
 
