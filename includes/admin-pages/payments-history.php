@@ -258,7 +258,7 @@ function edd_payment_history_page() {
 											</div>
 											
 											<?php
-											$gateway = get_post_meta( $payment->ID, '_edd_payment_gateway', true);
+											$gateway = edd_get_payment_gateway( $payment->ID );
 											if( $gateway ) { ?>
 											<div class="payment-method">
 												<h4><?php _e('Payment Method:', 'edd'); ?></h4>
@@ -272,7 +272,7 @@ function edd_payment_history_page() {
 											<p><a id="edd-close-purchase-details" class="button-secondary" onclick="tb_remove();" title="<?php _e('Close', 'edd'); ?>"><?php _e('Close', 'edd'); ?></a></p>
 										</div>
 									</td>
-									<td style="text-transform:uppercase;"><?php echo edd_currency_filter( $payment_meta['amount']); ?></td>
+									<td style="text-transform:uppercase;"><?php echo edd_get_payment_amount( $payment->ID ); ?></td>
 									<td><?php echo date( apply_filters( 'edd_payments_page_date_format', get_option('date_format') ), strtotime($payment->post_date)); ?></td>
 									<td>
 										<?php $user_id = isset($user_info['id']) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email']?>
