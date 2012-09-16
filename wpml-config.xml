@@ -1,0 +1,22 @@
+<wpml-config>
+    <admin-texts>
+        <key name="edd_settings_general">
+	        <key name="purchase_page" />
+	        <key name="success_page" />
+        </key>
+        
+        <key name="edd_settings_emails">
+            <key name="from_name" />
+            <key name="from_email" />
+            <key name="purchase_subject" />
+            <key name="purchase_receipt" />
+        </key>
+        <key name="edd_settings_misc">
+            <key name="agree_label" />
+            <key name="agree_text" />
+            <key name="checkout_label" />
+        </key>
+    </admin-texts>
+</wpml-config>
+
+
