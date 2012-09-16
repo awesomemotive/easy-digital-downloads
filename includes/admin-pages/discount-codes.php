@@ -97,7 +97,7 @@ function edd_discounts_page() {
 								<td>
 								<?php 
 									if(isset($discount['expiration']) && $discount['expiration'] != '') {
-										echo edd_is_discount_expired($discount_key) ? __('Expired', 'edd') : $discount['expiration']; 
+										echo edd_is_discount_expired($discount_key) ? __('Expired', 'edd') : date_i18n(get_option('date_format'), strtotime( $discount['expiration'] )); 
 									} else {
 										_e('no expiration', 'edd');
 									}	
