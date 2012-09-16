@@ -31,7 +31,7 @@ function edd_generate_pdf( $data ) {
 		include_once(EDD_PLUGIN_DIR . '/includes/libraries/fpdf/fpdf.php');
 		include_once(EDD_PLUGIN_DIR . '/includes/libraries/fpdf/edd_pdf.php');
 
-		ob_end_clean(); // Fixes a glitch in Internet Explorer
+		//ob_end_clean(); // Fixes a glitch in Internet Explorer
 
 		$daterange = date('F jS', mktime(0,0,0,1,1, date('Y') ) ) . ' ' . __('to', 'edd') . ' ' . date('F jS Y');
 
@@ -81,7 +81,7 @@ function edd_generate_pdf( $data ) {
 				$title = utf8_decode( get_the_title( $download->ID ) );
 				
 				if ( edd_has_variable_prices( $download->ID ) ) {
-					$prices = get_post_meta( $download->ID, 'edd_variable_prices', true );
+					$prices = edd_get_variable_prices( $download->ID );
 					$total = count( $prices ) - 1;
 					if ( $prices[0]['amount'] < $prices[$total]['amount'] ) {
 						$min = $prices[0]['amount'];
@@ -95,8 +95,12 @@ function edd_generate_pdf( $data ) {
 					$price = html_entity_decode( edd_currency_filter( edd_get_download_price( $download->ID ) ) );
 				}
 				
-				$categories = strip_tags( get_the_term_list( $download->ID, 'download_category', '', ', ', '' ) );
-				$tags = strip_tags( get_the_term_list( $download->ID, 'download_tag', '', ', ', '' ) );
+				$categories = get_the_term_list( $download->ID, 'download_category', '', ', ', '' );
+				$categories = $categories ? strip_tags( $categories ) : '';
+				
+				$tags = get_the_term_list( $download->ID, 'download_tag', '', ', ', '' );
+				$tags = $tags ? strip_tags( $tags ) : '';
+				
 				$sales = edd_get_download_sales_stats( $download->ID );
 				$link = get_permalink( $download->ID );
 				$earnings = html_entity_decode ( edd_currency_filter( edd_get_download_earnings_stats( $download->ID ) ) );
@@ -121,7 +125,7 @@ function edd_generate_pdf( $data ) {
 		$pdf->SetX( 25 );
 		$pdf->Image( $image .'&file=.png' );
 		$pdf->Ln( 7 );
-		$pdf->Output( 'edd-report' . date('Y-m-d') . '.pdf', D );
+		$pdf->Output( 'edd-report' . date('Y-m-d') . '.pdf', 'D' );
 
 	}
 }
@@ -150,7 +154,7 @@ function edd_draw_chart_image() {
 	$earnings = "";
 	$sales = "";
 	while( $i <= 12 ) :
-		$earnings .= edd_get_earnings_by_date( $i, date('Y') ) . ",";
+		$earnings .= edd_get_earnings_by_date( null, $i, date('Y') ) . ",";
 		$sales .= edd_get_sales_by_date( $i, date('Y') ) . ",";
 		$i++;
 	endwhile;

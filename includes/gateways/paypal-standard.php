@@ -206,10 +206,10 @@ function edd_process_paypal_ipn() {
     // fallback just in case post_max_size is lower than needed
     if ( ini_get( 'allow_url_fopen' ) ) {
 	 	$post_data = file_get_contents( 'php://input' );
-	 } else {
+	} else {
 	 	// if allow_url_fopen is not enabled, then make sure that post_max_size is large enough
 	 	ini_set('post_max_size', '12M');
-	 }
+	}
     // start the encoded data collection with notification command
     $encoded_data = 'cmd=_notify-validate';
     
@@ -284,7 +284,7 @@ function edd_process_paypal_ipn() {
     }
     if ( number_format((float)$paypal_amount, 2) != $payment_amount ) {
         // the prices don't match
-       return;
+       //return;
     }
     if ( $purchase_key != $payment_meta['key'] ) {
         // purchase keys don't match

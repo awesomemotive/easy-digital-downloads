@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable Tag: 1.1.5.2
+Stable Tag: 1.2
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -35,6 +35,12 @@ Features of the plugin include:
 More information at [Easy Digital Downloads.com](http://easydigitaldownloads.com/).
 
 [youtube http://www.youtube.com/watch?v=SjOeSZ08_IA]
+
+**Sell and Track Software License Keys**
+
+[Software Licensing](https://easydigitaldownloads.com/extension/software-licensing/) for Easy Digital Downloads provides a complete license key generation, activation, and checking system. It allows you to provide license keys along with your digital products that can then be used to properly license and activate the buyer’s copy of the software.
+
+Includes a complete integration pack for delivering automatic upgrades for premium WordPress plugins and themes.
 
 **Add an Affiliate System to Your Store**
 
@@ -125,6 +131,100 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.2 = 
+
+* Added reset styles to default fieldsets to account for themes without fieldset styling
+* Added new Date and Time to the View Details purchase popup
+* Fixed a bug with radio button toggling in Download Configuration
+* Added new CSS for improved styling of checkout error messages
+* Added new filter to edd_get_checkout_uri
+* Updated [purchase_collection] to support custom link text
+* Improved the edd_delete_purchase() function
+* Added a missing closing anchor tag
+* Added an error notice on download pages if no checkout page is set
+* Added labels to the checkboxes in the Download Configuration meta box to make fields easier to click on
+* Added new filter to the EDD languages directory
+* Fixed a bug in the email template preview
+* Updated Italian language files
+* Updated German language files
+* Replaced hard-coded instance of "Downloads" with plural label function
+* Updated French translation
+* Added huge new templating system to [download_history] and [purchase_history] short codes
+* Added huge new templating system for [downloads] short code
+* Improved the edd_append_purchase_link() function
+* Added new edd_payments_page_date_format filter to allow date format in Payment History to be changed
+* Removed "Deleted" from the payment hsitory filter options
+* Made improvements to script loading
+* Fixed a problem with the auto-generated short code on the All Downloads page
+* Added a new edd_get_payments_args filter
+* Added the ability to sort payments by their total price
+* Minor improvements to the add-ons page
+* Added a new meta key for payment total so that payments can be sorted by amount
+* Fixed a problem with new downloads not being able to add download files
+* Improvements to add/remove to/from cart functions with ajax
+* Updated default language files
+* Fixed an incorrect variable name in register-settings.php
+* Added a new option to export all customer emails from Payment History
+* Fixed a problem with checkout ajax when permalinks are not enabled
+* Created new global checkout fields and validation methods for use by payment gateways
+* Added new "Purchase History" widget
+* Added new classes/div to the purchase history widget
+* Improved data sanitization in many files
+* Improved code formatting in many files
+* Fixed a few small typos in labels
+* Added support for absolute file paths for download files
+* Added a lot of new helper functions for developers
+* Changed the Earnings Per Day graph to show the latest 30 days, instead of the current month
+* Improved the way files are downloaded, especially for large files
+* Fixed a discrepancy with the sales per month graph
+* Added dozens of new content types to the download processing function
+* Fixed several undefined index errors
+* Improved the UI of Download Configuration meta box
+* Added new "Total Earnings" stat to the bottom of Payment History
+* Added CSS styles specific to Twenty Twelve
+* Improved number formatting for prices
+* Added new edd_download_post_type_args filter
+
+= 1.1.8 =
+
+* Fixed a major bug with discount codes not being accepted
+* Fixed a bug in the PDF reports
+* Added a new "Earnings per day" graph on the Reports page
+* Improved URL > path conversion for locally stored download files
+* Improved organization of email templating functions
+
+= 1.1.7 =
+
+* Fixed major bug with processing file downloads
+* Removed price check from PayPal purchase verification temporarily
+* Added filters to all discount validation functions for developers
+* Improved data sanitization to discount creation / edit forms
+* Removed the "type" column from the discounts page
+* Added option to set minimum purchase amount required before discount can be applied
+
+= 1.1.6 =
+
+* Added the name of the buyer to the admin purchase notifications
+* Added a new setting for "Complete Purchase" button text
+* Escaped values of settings field callbacks
+* Fixed a bug with button colors when inserting a short code
+* Fixed a spelling error in Downloads > Settings > Payment Gateways
+* Removed ini_set error display
+* Fixed a major bug with discount codes that caused the "uses" value to get erased when updated a code
+* Fixed a bug with download sales/earnings stats and variable priced downloads
+* Removed an old and unused add_meta_box() call
+* Fixed an incorrect check for missing directory and creation of /uploads/edd
+* Escaped attributes and improved code formating in template-functions.php
+* Added new actions to top and bottom of payment history page
+* Escaped attributes and improved code formating in download-functions.php
+* Updated Dutch language files
+* Added pre_ and post_ actions to the add to cart function
+* Added a new edd_download_price filter to the edd_price() function
+* Fixed a misnamed class on the empty cart element
+* Added class names to all table rows and cells in the checkout template
+* Updated French translation files
+* Removed call by reference in edd_scan_folders()
 
 = 1.1.5.2 =
 
@@ -500,8 +600,104 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 * First offical release!
 
+
+
+
 == Upgrade Notice ==
 
+= 1.2 = 
+
+* Added reset styles to default fieldsets to account for themes without fieldset styling
+* Added new Date and Time to the View Details purchase popup
+* Fixed a bug with radio button toggling in Download Configuration
+* Added new CSS for improved styling of checkout error messages
+* Added new filter to edd_get_checkout_uri
+* Updated [purchase_collection] to support custom link text
+* Improved the edd_delete_purchase() function
+* Added a missing closing anchor tag
+* Added an error notice on download pages if no checkout page is set
+* Added labels to the checkboxes in the Download Configuration meta box to make fields easier to click on
+* Added new filter to the EDD languages directory
+* Fixed a bug in the email template preview
+* Updated Italian language files
+* Updated German language files
+* Replaced hard-coded instance of "Downloads" with plural label function
+* Updated French translation
+* Added huge new templating system to [download_history] and [purchase_history] short codes
+* Added huge new templating system for [downloads] short code
+* Improved the edd_append_purchase_link() function
+* Added new edd_payments_page_date_format filter to allow date format in Payment History to be changed
+* Removed "Deleted" from the payment hsitory filter options
+* Made improvements to script loading
+* Fixed a problem with the auto-generated short code on the All Downloads page
+* Added a new edd_get_payments_args filter
+* Added the ability to sort payments by their total price
+* Minor improvements to the add-ons page
+* Added a new meta key for payment total so that payments can be sorted by amount
+* Fixed a problem with new downloads not being able to add download files
+* Improvements to add/remove to/from cart functions with ajax
+* Updated default language files
+* Fixed an incorrect variable name in register-settings.php
+* Added a new option to export all customer emails from Payment History
+* Fixed a problem with checkout ajax when permalinks are not enabled
+* Created new global checkout fields and validation methods for use by payment gateways
+* Added new "Purchase History" widget
+* Added new classes/div to the purchase history widget
+* Improved data sanitization in many files
+* Improved code formatting in many files
+* Fixed a few small typos in labels
+* Added support for absolute file paths for download files
+* Added a lot of new helper functions for developers
+* Changed the Earnings Per Day graph to show the latest 30 days, instead of the current month
+* Improved the way files are downloaded, especially for large files
+* Fixed a discrepancy with the sales per month graph
+* Added dozens of new content types to the download processing function
+* Fixed several undefined index errors
+* Improved the UI of Download Configuration meta box
+* Added new "Total Earnings" stat to the bottom of Payment History
+* Added CSS styles specific to Twenty Twelve
+* Improved number formatting for prices
+* Added new edd_download_post_type_args filter
+
+= 1.1.8 =
+
+* Fixed a major bug with discount codes not being accepted
+* Fixed a bug in the PDF reports
+* Added a new "Earnings per day" graph on the Reports page
+* Improved URL > path conversion for locally stored download files
+* Improved organization of email templating functions
+
+= 1.1.7 =
+
+* Fixed major bug with processing file downloads
+* Removed price check from PayPal purchase verification temporarily
+* Added filters to all discount validation functions for developers
+* Improved data sanitization to discount creation / edit forms
+* Removed the "type" column from the discounts page
+* Added option to set minimum purchase amount required before discount can be applied
+
+= 1.1.6 =
+
+* Added the name of the buyer to the admin purchase notifications
+* Added a new setting for "Complete Purchase" button text
+* Escaped values of settings field callbacks
+* Fixed a bug with button colors when inserting a short code
+* Fixed a spelling error in Downloads > Settings > Payment Gateways
+* Removed ini_set error display
+* Fixed a major bug with discount codes that caused the "uses" value to get erased when updated a code
+* Fixed a bug with download sales/earnings stats and variable priced downloads
+* Removed an old and unused add_meta_box() call
+* Fixed an incorrect check for missing directory and creation of /uploads/edd
+* Escaped attributes and improved code formating in template-functions.php
+* Added new actions to top and bottom of payment history page
+* Escaped attributes and improved code formating in download-functions.php
+* Updated Dutch language files
+* Added pre_ and post_ actions to the add to cart function
+* Added a new edd_download_price filter to the edd_price() function
+* Fixed a misnamed class on the empty cart element
+* Added class names to all table rows and cells in the checkout template
+* Updated French translation files
+* Removed call by reference in edd_scan_folders()
 
 = 1.1.5.2 =
 

@@ -11,6 +11,23 @@
 
 
 /**
+ * Get Email Templates
+ *
+ * @access     private
+ * @since      1.0.8.2
+ * @return     array
+*/
+
+function edd_get_email_templates() {
+	$templates = array(
+		'default' => __('Default Template', 'edd'),
+		'none' => __('No template, plain text only', 'edd')
+	);
+	return apply_filters( 'edd_email_templates', $templates );
+}	
+
+
+/**
  * Email Template Tags
  *
  * @access      private
@@ -97,7 +114,7 @@ function edd_email_preview_templage_tags( $message ) {
 	
 	$price = edd_currency_filter(9.50);	
 	
-	$gateway = edd_get_gateway_checkout_label( get_post_meta($payment_id, '_edd_payment_gateway', true) );
+	$gateway = 'PayPal';
 
 	$receipt_id = strtolower( md5( uniqid() ) );
 
@@ -288,19 +305,3 @@ function edd_default_email_styling( $email_body ) {
 }
 add_filter('edd_purchase_receipt_default', 'edd_default_email_styling');
 
-
-/**
- * Get Email Templates
- *
- * @access     private
- * @since      1.0.8.2
- * @return     array
-*/
-
-function edd_get_email_templates() {
-	$templates = array(
-		'default' => __('Default Template', 'edd'),
-		'none' => __('No template, plain text only', 'edd')
-	);
-	return apply_filters( 'edd_email_templates', $templates );
-}	

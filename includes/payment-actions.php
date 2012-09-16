@@ -26,33 +26,45 @@
 
 function edd_complete_purchase($payment_id, $new_status, $old_status) {
 
-	if( $old_status == 'publish' || $old_status == 'complete')
+	if( $old_status == 'publish' || $old_status == 'complete' )
 		return; // make sure that payments are only completed once
 	
 	if( ! edd_is_test_mode() ) {
 				
-		$payment_data 	= get_post_meta($payment_id, '_edd_payment_meta', true);
-		$downloads 		= maybe_unserialize($payment_data['downloads']);
-		$user_info 		= maybe_unserialize($payment_data['user_info']);
-		$cart_details 	= maybe_unserialize($payment_data['cart_details']);				
-								
-		// increase purchase count and earnings
-		foreach($downloads as $download) {
-			
-			edd_record_sale_in_log($download['id'], $payment_id, $user_info, $payment_data['date']);
-			edd_increase_purchase_count($download['id']);
-			$amount = null;
-			if(is_array($cart_details)) {
-				$cart_item_id = array_search($download['id'], $cart_details);
-				$amount = isset($cart_details[$cart_item_id]['price']) ? $cart_details[$cart_item_id]['price'] : null;
+		$payment_data 	= edd_get_payment_meta( $payment_id );
+		$downloads 		= maybe_unserialize( $payment_data['downloads'] );
+		$user_info 		= maybe_unserialize( $payment_data['user_info'] );
+		$cart_details 	= maybe_unserialize( $payment_data['cart_details'] );				
+					
+
+		if( is_array( $downloads ) ) { 			
+			// increase purchase count and earnings
+			foreach($downloads as $download) {
+				
+				edd_record_sale_in_log($download['id'], $payment_id, $user_info, $payment_data['date']);
+				edd_increase_purchase_count($download['id']);
+				$amount = null;
+
+				if(is_array($cart_details)) {
+					
+					foreach( $cart_details as $key => $item ) {
+						if( array_search( $download['id'], $item ) ) {
+							$cart_item_id = $key;
+						}
+					}
+
+					$amount = isset( $cart_details[$cart_item_id]['price'] ) ? $cart_details[$cart_item_id]['price'] : null;
+
+				}
+
+				$amount = edd_get_download_final_price( $download['id'], $user_info, $amount );
+				edd_increase_earnings( $download['id'], $amount );
+				
 			}
-			$amount = edd_get_download_final_price($download['id'], $user_info, $amount);
-			edd_increase_earnings($download['id'], $amount);
-			
 		}
 		
-		if(isset($user_info['discount'])) {
-			edd_increase_discount_usage($user_info['discount']);
+		if( isset( $user_info['discount'] ) ) {
+			edd_increase_discount_usage( $user_info['discount'] );
 		}
 	}
 	
@@ -101,7 +113,7 @@ function edd_update_edited_purchase($data) {
 		
 		$payment_id = $_POST['payment-id'];
 		
-		$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
+		$payment_data = edd_get_payment_meta( $payment_id );
 		
 		if(isset($_POST['edd-purchased-downloads'])) {
 			
@@ -126,24 +138,13 @@ function edd_update_edited_purchase($data) {
 		
 		$payment_data['email'] = strip_tags($_POST['edd-buyer-email']);
 		
-		update_post_meta($payment_id, '_edd_payment_meta', $payment_data);
+		update_post_meta( $payment_id, '_edd_payment_meta', $payment_data);
 		
-		update_post_meta($payment_id, '_edd_payment_user_email', $payment_data['email']);
+		update_post_meta( $payment_id, '_edd_payment_user_email', $payment_data['email']);
 		
-		if($_POST['edd-old-status'] != $_POST['edd-payment-status']) {
+		if( $_POST['edd-old-status'] != $_POST['edd-payment-status'] ) {
 			
-			if( $_POST['edd-payment-status'] == 'refunded' ) {
-				
-				// update sale counts and earnings for all purchased products
-				foreach( $_POST['edd-purchased-downloads'] as $download ) {
-					
-					edd_undo_purchase( $download, $payment_id );					
-					
-				}
-				
-			}			
-			
-			wp_update_post(array('ID' => $payment_id, 'post_status' => $_POST['edd-payment-status']));
+			edd_update_payment_status( $payment_id, $_POST['edd-payment-status'] );
 			
 		}
 		
@@ -168,22 +169,71 @@ add_action('edd_edit_payment', 'edd_update_edited_purchase');
 function edd_delete_purchase($data) {
 	if(wp_verify_nonce($data['_wpnonce'], 'edd_payment_nonce')) {
 		
-		$payment_id = $data['purchase_id'];
+		$payment_id = absint( $data['purchase_id'] );
+		$downloads = edd_get_payment_meta_downloads( $payment_id );
+		if( is_array( $downloads ) ) {
+			// update sale counts and earnings for all purchased products
+			foreach( $downloads as $download ) {
+
+				edd_undo_purchase( $download['id'], $payment_id );					
+					
+			}
+		}					
 		
-		$payment_data = get_post_meta($payment_id, '_edd_payment_meta', true);
-
-		$downloads = maybe_unserialize( $payment_data['downloads'] );
-
-		// update sale counts and earnings for all purchased products
-		foreach( $downloads as $download ) {
-
-			edd_undo_purchase( $download['id'], $payment_id );					
-				
-		}
-				
-		
-		wp_delete_post($payment_id, true);
-		wp_redirect(admin_url('/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted')); exit;
+		do_action( 'edd_payment_delete', $payment_id );
+		wp_delete_post( $payment_id, true );
+		do_action( 'edd_payment_deleted', $payment_id );
+		wp_redirect( admin_url('/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted')) ; exit;
 	}
 }
 add_action('edd_delete_payment', 'edd_delete_purchase');
+
+
+/**
+ * Flushes the Total Earnings Cache when a payment is created
+ *
+ * @access      private
+ * @since       1.2
+ * @return      void
+*/
+
+function edd_clear_earnings_cache( $payment, $payment_data ) {
+	delete_transient( 'edd_total_earnings' );
+}
+add_action( 'edd_insert_payment', 'edd_clear_earnings_cache', 10, 2 );
+
+
+/**
+ * Updates all old payments, prior to 1.2, with new 
+ * meta for the total purcahse amount
+ *
+ * This is so that payments can be queried by their totals
+ *
+ * @access      private
+ * @since       1.2
+ * @return      void
+*/
+
+function edd_update_old_payments_with_totals( $data ) {
+	if( ! wp_verify_nonce( $data['_wpnonce'], 'edd_upgrade_payments_nonce' ) )
+		return;
+
+	if( get_option( 'edd_payment_totals_upgraded' ) )
+		return;
+
+	$payments = edd_get_payments( array(
+		'offset' => 0, 
+		'number' => -1, 
+		'mode'   => 'all' 
+	) );
+	if( $payments ) {
+		foreach( $payments as $payment ) {
+			$meta = edd_get_payment_meta( $payment->ID );
+			update_post_meta( $payment->ID, '_edd_payment_total', $meta['amount'] );
+		}
+	}
+	add_option( 'edd_payment_totals_upgraded', 1 );
+}
+add_action( 'edd_upgrade_payments', 'edd_update_old_payments_with_totals' );
+
+

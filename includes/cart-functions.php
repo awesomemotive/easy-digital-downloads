@@ -200,17 +200,18 @@ function edd_get_cart_item_quantity($item) {
 
 function edd_get_cart_item_price($item_id, $options = array()) {
 	
-	$variable_pricing = get_post_meta($item_id, '_variable_pricing', true);
-	$price = get_post_meta($item_id, 'edd_price', true); 
-	if($variable_pricing && !empty($options)) {
+	$variable_pricing = get_post_meta( $item_id, '_variable_pricing', true) ;
+	$price = get_post_meta( $item_id, 'edd_price', true ); 
+	if( $variable_pricing && !empty( $options ) ) {
 		// if variable prices are enabled, retrieve the options
-		$prices = get_post_meta($item_id, 'edd_variable_prices', true);
-		if($prices) {
+		$prices = get_post_meta( $item_id, 'edd_variable_prices', true );
+		if( $prices ) {
 			$price = $prices[$options['price_id']]['amount'];
 		}
 	}
-	return $price;
+	return apply_filters( 'edd_cart_item_price', $price );
 }
+add_filter( 'edd_cart_item_price', 'edd_format_amount' );
 
 
 /**
@@ -270,25 +271,6 @@ function edd_get_cart_amount() {
 	return 0;
 }
 
-
-/**
- * Format Amount
- *
- * Returns a nicely formatted amount.
- *
- * @access      public
- * @since       1.0
- * @param       $amount string the price amount to format
- * @param       $options array optional parameters, used for defining variable prices
- * @return      string - the newly formatted amount
-*/
-
-function edd_format_amount($amount) {
-	global $edd_options;
-	$thousands_sep = isset($edd_options['thousands_separator']) ? $edd_options['thousands_separator'] : ',';
-	$decimal_sep = isset($edd_options['decimal_separator']) ? $edd_options['decimal_separator'] : '.';
-	return number_format($amount, 2, $decimal_sep, $thousands_sep);
-}
 
 
 /**
@@ -436,7 +418,8 @@ add_action('edd_after_download_content', 'edd_show_added_to_cart_messages');
 
 function edd_get_checkout_uri() {
     global $edd_options;
-    return isset( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) : NULL;
+    $uri = isset( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) : NULL;
+    return apply_filters( 'edd_get_checkout_uri', $uri );
 }
 
 

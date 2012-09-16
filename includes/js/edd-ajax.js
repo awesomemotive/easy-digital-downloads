@@ -6,6 +6,7 @@ jQuery(document).ready(function ($) {
         var $this = $(this),
             item = $this.data('cart-item'),
             action = $this.data('action'),
+            id = $this.data('download-id'),
             data = {
                 action: action,
                 cart_item: item,
@@ -19,12 +20,21 @@ jQuery(document).ready(function ($) {
                     return false;
                 }
                 $this.parent().remove();
+                
+                // check to see if the purchase form for this download is present on this page
+                if( $( '#edd_purchase_' + id ).length ) {
+                    $( '#edd_purchase_' + id + ' .edd_go_to_checkout' ).hide();
+                    $( '#edd_purchase_' + id + ' .edd_add_to_cart_wrap' ).show();
+                }
                 var quantity = $('span.edd-cart-quantity').text();
                 quantity = parseInt(quantity, 10) - 1;
                 $('span.edd-cart-quantity').text(quantity);
 				if(!$('.edd-cart-item').length) {
-					$('.cart_item.edd_checkout').replaceWith('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
-				}
+                    $('.cart_item.edd_checkout').hide();
+					$('.edd-cart').append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
+				} else {
+
+                }
             }
         });
         return false;
@@ -67,10 +77,11 @@ jQuery(document).ready(function ($) {
 			
 			// add the new item to the cart widget
 			if ($('.cart_item.empty').length) {
-                $(cart_item_response).insertBefore('.cart_item.empty');
+                $(cart_item_response).insertBefore('.cart_item.edd_checkout');
                 $('.cart_item.edd_checkout').show();
                 $('.cart_item.empty').remove();
             } else {
+
                 $(cart_item_response).insertBefore('.cart_item.edd_checkout');
             }
 			
@@ -170,8 +181,12 @@ jQuery(document).ready(function ($) {
         } else {
             var payment_mode = $('#edd-gateway').val();
         }
+
+        var arg_separator = edd_scripts.permalinks == '1' ? '?' : '&';
+
         var form = $(this),
-            action = form.attr("action") + '?payment-mode=' + payment_mode;
+            action = form.attr("action") + arg_separator + 'payment-mode=' + payment_mode;
+            
         // show the ajax loader
         $('.edd-cart-ajax').show();
         $('#edd_checkout_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');

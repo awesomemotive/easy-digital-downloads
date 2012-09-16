@@ -25,7 +25,15 @@ function edd_export_payment_history() {
 		header("Pragma: no-cache");
 		header("Expires: 0");
 
-		$payments = edd_get_payments(0, -1, $mode, $orderby, $order, $user, $status);
+		$payments = edd_get_payments( array(
+			'offset'  => 0, 
+			'number'  => -1, 
+			'mode'    => $mode, 
+			'orderby' => $orderby, 
+			'order'   => $order, 
+			'user'    => $user, 
+			'status'  => $status
+		) );
 		if($payments){
 			$i = 0;
 			echo '"' . __('ID', 'edd') .  '",';
@@ -43,7 +51,7 @@ function edd_export_payment_history() {
 			echo "\r\n";
 			foreach($payments as $payment){
 
-				$payment_meta = get_post_meta($payment->ID, '_edd_payment_meta', true);
+				$payment_meta = edd_get_payment_meta( $payment->ID );
 				$user_info = maybe_unserialize($payment_meta['user_info']);
 				
 				echo '"' . $payment->ID . '",';
@@ -129,4 +137,36 @@ function edd_export_payment_history() {
 	}
 	die();	
 }
-add_action('admin_init', 'edd_export_payment_history'); //Sorry about this, need to serve header :)
+add_action('admin_init', 'edd_export_payment_history');
+
+
+/**
+ * Export all customers to CSV
+ * 
+ * Using wpdb directly for performance reasons (workaround of calling all posts and fetch data respectively)
+ * 
+ * @access      private
+ * @since       1.2
+ * @return      void
+*/
+function edd_export_all_customers() {
+	if( current_user_can( 'administrator' ) ) {
+		global $wpdb;
+		
+		$emails = $wpdb->get_col("SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' ");
+		
+		if( ! empty( $emails ) ) {
+			header("Content-type: text/csv");
+			$today = date("Y-m-d");
+			header("Content-Disposition: attachment; filename=user_emails-$today.csv");
+			header("Pragma: no-cache");
+			header("Expires: 0");
+			
+			echo implode( "\n", $emails );
+			exit;
+		}
+	} else {
+		wp_die(__( 'Export not allowed for non-administrators.', 'edd' ) );
+	}
+}
+add_action( 'edd_email_export', 'edd_export_all_customers' );

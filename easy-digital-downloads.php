@@ -5,7 +5,7 @@ Plugin URI: http://easydigitaldownloads.com
 Description: Serve Digital Downloads Through WordPress
 Author: Pippin Williamson
 Author URI: http://pippinsplugins.com
-Version: 1.1.5.2
+Version: 1.2
 
 Easy Digital Downloads is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,13 +21,6 @@ You should have received a copy of the GNU General Public License
 along with Easy Digital Downloads. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-|--------------------------------------------------------------------------
-| ERRORS DISPLAY
-|--------------------------------------------------------------------------
-*/
-
-@ini_set('display_errors', 'on');
 
 /*
 |--------------------------------------------------------------------------
@@ -63,7 +56,13 @@ global $edd_options;
 */
 
 function edd_textdomain() {
-	load_plugin_textdomain( 'edd', false, dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/' );
+
+	// Set filter for plugin's languages directory
+	$edd_lang_dir = dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/';
+	$edd_lang_dir = apply_filters( 'edd_languages_directory', $edd_lang_dir );
+
+	// Load the translations
+	load_plugin_textdomain( 'edd', false, $edd_lang_dir );
 }
 add_action('init', 'edd_textdomain');
 
@@ -84,6 +83,7 @@ include_once(EDD_PLUGIN_DIR . 'includes/cart-template.php');
 include_once(EDD_PLUGIN_DIR . 'includes/cart-functions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/cart-actions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/ajax-functions.php');
+include_once(EDD_PLUGIN_DIR . 'includes/formatting.php');
 include_once(EDD_PLUGIN_DIR . 'includes/widgets.php');
 include_once(EDD_PLUGIN_DIR . 'includes/mime-types.php');
 include_once(EDD_PLUGIN_DIR . 'includes/gateway-functions.php');

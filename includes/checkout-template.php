@@ -79,14 +79,7 @@ function edd_checkout_form() {
 						</fieldset>
 						<fieldset id="edd_payment_mode_submit">
 							<p id="edd-next-submit-wrap">
-								<?php $color = isset($edd_options['checkout_color']) ? $edd_options['checkout_color'] : 'gray'; ?> 
-								<span class="edd_button edd_<?php echo $color; ?>">
-									<span class="edd_button_outer">
-										<span class="edd_button_inner">
-											<input type="submit" id="edd_next_button" class="edd_button_text edd-submit" value="<?php _e('Next', 'edd'); ?>"/>
-										</span>
-									</span>
-								</span>
+								<?php echo edd_checkout_button_next(); ?>
 							</p>
 						</fieldset>
 					</form>
@@ -104,6 +97,8 @@ function edd_checkout_form() {
 							endforeach;
 						} else if(edd_get_cart_amount() <= 0) {
 							$enabled_gateway = 'manual';
+						} else {
+							$enabled_gateway = 'none';
 						}
 						$payment_mode = isset($_GET['payment-mode']) ? urldecode($_GET['payment-mode']) : $enabled_gateway;	
 					?>
@@ -203,20 +198,16 @@ function edd_checkout_form() {
 							<fieldset id="edd_purchase_submit">
 								<p>
 									<?php do_action('edd_purchase_form_before_submit'); ?>
+									
 									<?php if(is_user_logged_in()) { ?>
 									<input type="hidden" name="edd-user-id" value="<?php echo $user_data->ID; ?>"/>
 									<?php } ?>
 									<input type="hidden" name="edd_action" value="purchase"/>
 									<input type="hidden" name="edd-gateway" value="<?php echo $payment_mode; ?>" />
 									<input type="hidden" name="edd-nonce" value="<?php echo wp_create_nonce('edd-purchase-nonce'); ?>"/>
-									<?php $color = isset($edd_options['checkout_color']) ? $edd_options['checkout_color'] : 'gray'; ?>
-									<span class="edd_button edd_<?php echo $color; ?>">
-										<span class="edd_button_outer">
-											<span class="edd_button_inner">
-												<input type="submit" class="edd_button_text edd-submit" id="edd-purchase-button" name="edd-purchase" value="<?php _e('Purchase', 'edd'); ?>"/>
-											</span>
-										</span>
-									</span>
+									
+									<?php echo edd_checkout_button_purchase(); ?>
+									
 									<?php do_action('edd_purchase_form_after_submit'); ?>
 								</p>
 								<?php if(!edd_is_ajax_enabled()) { ?>
@@ -266,7 +257,9 @@ function edd_get_cc_form() {
 			<input type="text" size="4" autocomplete="off" name="card_cvc" class="card-cvc edd-input required" placeholder="<?php _e('Security code', 'edd'); ?>" />
 			<label class="edd-label"><?php _e('CVC', 'edd'); ?></label>
 		</p>
+
 		<?php do_action('edd_before_cc_expiration'); ?>
+
 		<p class="card-expiration">
 			<input type="text" size="2" name="card_exp_month"  placeholder="<?php _e('Month', 'edd'); ?>" class="card-expiry-month edd-input required"/>
 			<span class="exp-divider"> / </span>
@@ -299,6 +292,7 @@ add_action('edd_cc_form', 'edd_get_cc_form');
 function edd_default_cc_address_fields() {
 	ob_start(); ?>
 	<fieldset id="edd_cc_address" class="cc-address">
+		<?php do_action( 'edd_cc_billing_top' ); ?>
 		<p>
 			<input type="text" name="card_address" class="card-address edd-input required" placeholder="<?php _e('Address line 1', 'edd'); ?>"/>
 			<label class="edd-label"><?php _e('Billing Address', 'edd'); ?></label>
@@ -320,16 +314,33 @@ function edd_default_cc_address_fields() {
 				}
 				?>
 			</select>
-			<label class="edd-label"><?php _e('Billing State / Province', 'edd'); ?></label>
+			<label class="edd-label"><?php _e('Billing Country', 'edd'); ?></label>
 		</p>
 		<p>
-			<input type="text" size="6" name="card_state" class="card-state edd-input required" placeholder="<?php _e('State / Province', 'edd'); ?>"/>
+			<input type="text" size="6" name="card_state_other" id="card_state_other" class="card-state edd-input" placeholder="<?php _e('State / Province', 'edd'); ?>" style="display:none;"/>
+            <select name="card_state_us" id="card_state_us" class="card-state edd-select required">
+                <?php
+                    $states = edd_get_states_list();
+                    foreach($states as $state_code => $state) {
+                        echo '<option value="' . $state_code . '">' . $state . '</option>';
+                    }
+                ?>
+            </select>
+            <select name="card_state_ca" id="card_state_ca" class="card-state edd-select required" style="display: none;">
+                <?php
+                    $provinces = edd_get_provinces_list();
+                    foreach($provinces as $province_code => $province) {
+                        echo '<option value="' . $province_code . '">' . $province . '</option>';
+                    }
+                ?>
+            </select>
 			<label class="edd-label"><?php _e('Billing State / Province', 'edd'); ?></label>
 		</p>
 		<p>
 			<input type="text" size="4" name="card_zip" class="card-zip edd-input required" placeholder="<?php _e('Zip / Postal code', 'edd'); ?>"/>
 			<label class="edd-label"><?php _e('Billing Zip / Postal Code', 'edd'); ?></label>
 		</p>
+		<?php do_action( 'edd_cc_billing_bottom' ); ?>
 	</fieldset>
 	<?php
 	echo ob_get_clean();
@@ -425,6 +436,55 @@ function edd_get_login_fields() {
 		</p>	
 	<?php
 	return ob_get_clean();
+}
+
+
+/**
+ * The checkout Next button
+ *
+ * @access      public
+ * @since       1.2
+ * @return      string
+*/
+
+function edd_checkout_button_next() {
+	global $edd_options;
+	$color = isset($edd_options['checkout_color']) ? $edd_options['checkout_color'] : 'gray';
+	ob_start(); ?>
+	<span class="edd_button edd_<?php echo $color; ?>">
+		<span class="edd_button_outer">
+			<span class="edd_button_inner">
+				<input type="submit" id="edd_next_button" class="edd_button_text edd-submit" value="<?php _e('Next', 'edd'); ?>"/>
+			</span>
+		</span>
+	</span>
+	<?php
+	return apply_filters( 'edd_checkout_button_next', ob_get_clean() );
+}
+
+
+/**
+ * The checkout Purchase button
+ *
+ * @access      public
+ * @since       1.2
+ * @return      string
+*/
+
+function edd_checkout_button_purchase() {
+	global $edd_options;
+	$color = isset($edd_options['checkout_color']) ? $edd_options['checkout_color'] : 'gray';
+	ob_start(); ?>
+	<span class="edd_button edd_<?php echo $color; ?>">
+		<span class="edd_button_outer">
+			<span class="edd_button_inner">
+				<?php $complete_purchase = isset( $edd_options['checkout_label'] ) && strlen( trim( $edd_options['checkout_label'] ) ) > 0 ? $edd_options['checkout_label'] : __('Purchase', 'edd'); ?>
+				<input type="submit" class="edd_button_text edd-submit" id="edd-purchase-button" name="edd-purchase" value="<?php echo $complete_purchase; ?>"/>
+			</span>
+		</span>
+	</span>
+	<?php
+	return apply_filters( 'edd_checkout_button_purchase', ob_get_clean() );
 }
 
 

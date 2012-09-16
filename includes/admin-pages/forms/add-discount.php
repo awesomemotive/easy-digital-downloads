@@ -72,6 +72,15 @@
 			</tr>
 			<tr class="form-field">
 				<th scope="row" valign="top">
+					<label for="edd-min-cart-amount"><?php _e('Minimum Amount', 'edd'); ?></label>
+				</th>
+				<td>
+					<input type="text" id="edd-min-cart-amount" name="min_price" value="" style="width: 40px;"/>
+					<p class="description"><?php _e('The minimum amount that must be purchased before this discount can be used. Leave blank for no minimum.', 'edd'); ?></p>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
 					<label for="edd-max-uses"><?php _e('Max Uses', 'edd'); ?></label>
 				</th>
 				<td>

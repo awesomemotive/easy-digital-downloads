@@ -21,8 +21,13 @@
  * @return      array
 */
 
-function edd_get_users_purchases($user_id) {
+function edd_get_users_purchases( $user_id = 0 ) {
 	
+	if( empty( $user_id ) ) {
+		global $user_ID;
+		$user_id = $user_ID;
+	}
+
 	$purchases = get_transient('edd_user_' . $user_id . '_purchases');
 	if(false === $purchases || edd_is_test_mode()) {
 		$mode = edd_is_test_mode() ? 'test' : 'live';
@@ -81,7 +86,7 @@ function edd_has_user_purchased($user_id, $download_id, $variable_price_id = nul
 	if($users_purchases) {
 		foreach($users_purchases as $purchase) {
 
-			$purchase_meta = get_post_meta($purchase->ID, '_edd_payment_meta', true);
+			$purchase_meta = edd_get_payment_meta( $purchase->ID );
 			$purchased_files = maybe_unserialize($purchase_meta['downloads']);
 
 			if(is_array($purchased_files)) {

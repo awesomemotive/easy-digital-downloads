@@ -16,7 +16,7 @@ jQuery(document).ready(function ($) {
 	});
 	
 	// toggle the color options
-	$('#edd_purchase_style input').on('click', function() {
+	$('#edd_purchase_style input').change(function() {
 		$('#edd_purchase_color').toggle();
 	});
 	
@@ -38,12 +38,18 @@ jQuery(document).ready(function ($) {
 
         // set up a count var
         var count = $('.edd_variable_prices_wrapper', container).size();
-
-        name = id + '[' + count + '][name]';
-        price = id + '[' + count + '][amount]';
-		
-        $('input.edd_variable_prices_name', field).attr("name", name).attr("id", name);
-        $('input.edd_variable_prices_amount', field).attr("name", price).attr("id", price);
+        
+		field.find( 'input, select' ).each(function() {
+			var name = $( this ).attr( 'name' );
+			
+			name = name.replace( /\[(\d+)\]/, function() {
+				return '[' + count + ']'
+			});
+			
+			$( this )
+				.attr( 'name', name )
+				.attr( 'id', name );
+		});
 
         field.insertAfter(fieldLocation, $this.closest('td'));
 
