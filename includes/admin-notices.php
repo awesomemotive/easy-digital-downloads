@@ -41,7 +41,7 @@ function edd_admin_messages() {
 	if( ! get_option( 'edd_payment_totals_upgraded' ) ) {
 		// the payment history needs updated for version 1.2
 		$url = add_query_arg( 'edd-action', 'upgrade_payments' );
-		$upgrade_notice = sprintf( __( 'The payment history needs updated. %s'), '<a href="' . wp_nonce_url( $url, 'edd_upgrade_payments_nonce' ) . '">' . __('Click to Upgrade', 'edd') . '</a>' );
+		$upgrade_notice = sprintf( __( 'The payment history needs updated. %s', 'edd'), '<a href="' . wp_nonce_url( $url, 'edd_upgrade_payments_nonce' ) . '">' . __('Click to Upgrade', 'edd') . '</a>' );
 		add_settings_error( 'edd-notices', 'edd-payments-upgrade', $upgrade_notice, 'error' );
 	}
 
