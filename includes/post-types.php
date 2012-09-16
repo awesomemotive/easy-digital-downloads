@@ -170,50 +170,50 @@ function edd_get_label_plural($lowercase = false) {
 function edd_setup_download_taxonomies() {
 
 	$category_labels = array(
-		'name' => _x( 'Categories', 'taxonomy general name', 'edd' ),
-		'singular_name' => _x( 'Category', 'taxonomy singular name', 'edd' ),
-		'search_items' =>  __( 'Search Categories', 'edd'  ),
-		'all_items' => __( 'All Categories', 'edd'  ),
-		'parent_item' => __( 'Parent Category', 'edd'  ),
+		'name' 				=> _x( 'Categories', 'taxonomy general name', 'edd' ),
+		'singular_name' 	=> _x( 'Category', 'taxonomy singular name', 'edd' ),
+		'search_items' 		=>  __( 'Search Categories', 'edd'  ),
+		'all_items' 		=> __( 'All Categories', 'edd'  ),
+		'parent_item' 		=> __( 'Parent Category', 'edd'  ),
 		'parent_item_colon' => __( 'Parent Category:', 'edd'  ),
-		'edit_item' => __( 'Edit Category', 'edd'  ), 
-		'update_item' => __( 'Update Category', 'edd'  ),
-		'add_new_item' => __( 'Add New Category', 'edd'  ),
-		'new_item_name' => __( 'New Category Name', 'edd'  ),
-		'menu_name' => __( 'Categories', 'edd'  ),
+		'edit_item' 		=> __( 'Edit Category', 'edd'  ), 
+		'update_item' 		=> __( 'Update Category', 'edd'  ),
+		'add_new_item' 		=> __( 'Add New Category', 'edd'  ),
+		'new_item_name' 	=> __( 'New Category Name', 'edd'  ),
+		'menu_name' 		=> __( 'Categories', 'edd'  ),
 	); 	
 
 	$category_args = apply_filters( 'edd_download_category_args', array(
-			'hierarchical' => true,
-			'labels' => apply_filters('edd_download_category_labels', $category_labels),
-			'show_ui' => true,
-			'query_var' => 'download_category',
-			'rewrite' => array('slug' => 'downloads/category')
+			'hierarchical' 	=> true,
+			'labels' 		=> apply_filters('edd_download_category_labels', $category_labels),
+			'show_ui' 		=> true,
+			'query_var' 	=> 'download_category',
+			'rewrite' 		=> array('slug' => 'downloads/category')
 		)
 	);
 
 	register_taxonomy('download_category', array('download'), $category_args );
 	
 	$tag_labels = array(
-		'name' => _x( 'Tags', 'taxonomy general name', 'edd' ),
-		'singular_name' => _x( 'Tag', 'taxonomy singular name', 'edd' ),
-		'search_items' =>  __( 'Search Tags', 'edd'  ),
-		'all_items' => __( 'All Tags', 'edd'  ),
-		'parent_item' => __( 'Parent Tag', 'edd'  ),
+		'name' 				=> _x( 'Tags', 'taxonomy general name', 'edd' ),
+		'singular_name' 	=> _x( 'Tag', 'taxonomy singular name', 'edd' ),
+		'search_items' 		=>  __( 'Search Tags', 'edd'  ),
+		'all_items' 		=> __( 'All Tags', 'edd'  ),
+		'parent_item' 		=> __( 'Parent Tag', 'edd'  ),
 		'parent_item_colon' => __( 'Parent Tag:', 'edd'  ),
-		'edit_item' => __( 'Edit Tag', 'edd'  ), 
-		'update_item' => __( 'Update Tag', 'edd'  ),
-		'add_new_item' => __( 'Add New Tag', 'edd'  ),
-		'new_item_name' => __( 'New Tag Name', 'edd'  ),
-		'menu_name' => __( 'Tags', 'edd'  ),
+		'edit_item' 		=> __( 'Edit Tag', 'edd'  ), 
+		'update_item' 		=> __( 'Update Tag', 'edd'  ),
+		'add_new_item' 		=> __( 'Add New Tag', 'edd'  ),
+		'new_item_name' 	=> __( 'New Tag Name', 'edd'  ),
+		'menu_name' 		=> __( 'Tags', 'edd'  ),
 	); 	
 
 	$tag_args = apply_filters( 'edd_download_tag_args', array(
-			'hierarchical' => false,
-			'labels' => apply_filters('edd_download_tag_labels', $tag_labels),
-			'show_ui' => true,
-			'query_var' => 'download_tag',
-			'rewrite' => array('slug' => 'downloads/tag')
+			'hierarchical' 	=> false,
+			'labels' 		=> apply_filters('edd_download_tag_labels', $tag_labels),
+			'show_ui' 		=> true,
+			'query_var' 	=> 'download_tag',
+			'rewrite' 		=> array('slug' => 'downloads/tag')
 		)
 	);
 
