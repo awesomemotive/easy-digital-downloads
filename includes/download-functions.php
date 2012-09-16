@@ -46,6 +46,56 @@ function edd_get_download($download) {
 
 
 /**
+ * Get Download Price
+ *
+ * Returns the price of a download, but only for non-variable priced downloads.
+ *
+ * @access      public
+ * @since       1.0 
+ * @param       $download_id INT the ID number of the download to retrieve a price for
+ * @return      $string/int the price of the download
+*/
+
+function edd_get_download_price($download_id) {
+	$price = get_post_meta($download_id, 'edd_price', true);
+	if($price)
+		return edd_sanitize_amount( $price );
+	return  0;
+}
+
+
+/**
+ * Price
+ *
+ * Displays a formatted price for a download.
+ *
+ * @access      public
+ * @since       1.0
+ * @param       int $download_id the ID of the download price to show
+ * @param		bool whether to echo or return the results
+* @return       void
+*/
+
+function edd_price($download_id, $echo = true) {
+	if( edd_has_variable_prices( $download_id ) ) {
+		$prices = edd_get_variable_prices( $download_id );
+		$price = edd_sanitize_amount( $prices[0]['amount'] ); // show the first price option
+	} else {
+		$price = edd_get_download_price( $download_id );
+	}
+	
+	$price = apply_filters( 'edd_download_price', $price, $download_id );
+
+	if( $echo )
+		echo $price;
+	else
+		return $price;
+}
+add_filter( 'edd_download_price', 'edd_format_amount', 10 );
+add_filter( 'edd_download_price', 'edd_currency_filter', 20 );
+
+
+/**
  * Get Download Final Price
  *
  * retrieves the price of a downloadable product after purchase
@@ -297,56 +347,6 @@ function edd_record_download_in_log($download_id, $file_id, $user_info, $ip, $da
 	
 	update_post_meta($download_id, '_edd_file_download_log', $log);
 }
-
-
-/**
- * Get Download Price
- *
- * Returns the price of a download, but only for non-variable priced downloads.
- *
- * @access      public
- * @since       1.0 
- * @param       $download_id INT the ID number of the download to retrieve a price for
- * @return      $string/int the price of the download
-*/
-
-function edd_get_download_price($download_id) {
-	$price = get_post_meta($download_id, 'edd_price', true);
-	if($price)
-		return $price;
-	return 0;
-}
-
-
-/**
- * Price
- *
- * Displays a formatted price for a download.
- *
- * @access      public
- * @since       1.0
- * @param       int $download_id the ID of the download price to show
- * @param		bool whether to echo or return the results
-* @return       void
-*/
-
-function edd_price($download_id, $echo = true) {
-	if( edd_has_variable_prices( $download_id ) ) {
-		$prices = edd_get_variable_prices( $download_id );
-		$price = $prices[0]['amount']; // show the first price option
-	} else {
-		$price = edd_get_download_price( $download_id );
-	}
-	
-	$price = apply_filters( 'edd_download_price', $price, $download_id );
-
-	if( $echo )
-		echo $price;
-	else
-		return $price;
-}
-add_filter( 'edd_download_price', 'edd_format_amount' );
-
 
 
 /**

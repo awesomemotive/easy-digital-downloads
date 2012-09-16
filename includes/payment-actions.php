@@ -138,24 +138,13 @@ function edd_update_edited_purchase($data) {
 		
 		$payment_data['email'] = strip_tags($_POST['edd-buyer-email']);
 		
-		update_post_meta($payment_id, '_edd_payment_meta', $payment_data);
+		update_post_meta( $payment_id, '_edd_payment_meta', $payment_data);
 		
-		update_post_meta($payment_id, '_edd_payment_user_email', $payment_data['email']);
+		update_post_meta( $payment_id, '_edd_payment_user_email', $payment_data['email']);
 		
-		if($_POST['edd-old-status'] != $_POST['edd-payment-status']) {
+		if( $_POST['edd-old-status'] != $_POST['edd-payment-status'] ) {
 			
-			if( $_POST['edd-payment-status'] == 'refunded' ) {
-				
-				// update sale counts and earnings for all purchased products
-				foreach( $_POST['edd-purchased-downloads'] as $download ) {
-					
-					edd_undo_purchase( $download, $payment_id );					
-					
-				}
-				
-			}			
-			
-			wp_update_post(array('ID' => $payment_id, 'post_status' => $_POST['edd-payment-status']));
+			edd_update_payment_status( $payment_id, $_POST['edd-payment-status'] );
 			
 		}
 		

@@ -201,7 +201,7 @@ function edd_get_cart_item_quantity($item) {
 function edd_get_cart_item_price($item_id, $options = array()) {
 	
 	$variable_pricing = get_post_meta( $item_id, '_variable_pricing', true) ;
-	$price = get_post_meta( $item_id, 'edd_price', true ); 
+	$price = edd_get_download_price( $item_id ); 
 	if( $variable_pricing && !empty( $options ) ) {
 		// if variable prices are enabled, retrieve the options
 		$prices = get_post_meta( $item_id, 'edd_variable_prices', true );
@@ -211,7 +211,6 @@ function edd_get_cart_item_price($item_id, $options = array()) {
 	}
 	return apply_filters( 'edd_cart_item_price', $price );
 }
-add_filter( 'edd_cart_item_price', 'edd_format_amount' );
 
 
 /**
@@ -258,7 +257,7 @@ function edd_get_cart_amount() {
 	$amount = 0;
 	if($cart_items) {
 		foreach($cart_items as $item) {
-			$item_price = edd_get_cart_item_price($item['id'], $item['options']);
+			$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
 			$amount = $amount + $item_price;
 		}
 		if(isset($_POST['edd-discount']) && $_POST['edd-discount'] != '') {
