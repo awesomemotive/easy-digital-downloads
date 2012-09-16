@@ -601,3 +601,20 @@ function edd_verify_download_link($download_id, $key, $email, $expire, $file_key
 	// payment not verified
 	return false;
 }
+
+/**
+ * Get product notes
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      boolean
+ */
+function edd_get_product_notes( $download_id ) {
+	$post  = get_post( $download_id );
+	$notes = $post->post_excerpt;
+
+	if ( $notes )
+		return apply_filters( 'edd_product_notes', $notes, $download_id );
+
+	return;
+}
