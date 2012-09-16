@@ -75,7 +75,7 @@ function edd_email_templage_tags($message, $payment_data, $payment_id) {
 			$download_list .= '</ul>';
 			
 			if ( '' != edd_get_product_notes( $id ) )
-				$download_list .= ' - <small>' . edd_get_product_notes( $id ) . '</small>';
+				$download_list .= ' &mdash; <small>' . edd_get_product_notes( $id ) . '</small>';
 
 			$download_list .= '</li>';
 		}
