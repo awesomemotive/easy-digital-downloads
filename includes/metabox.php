@@ -20,6 +20,7 @@
 
 function edd_add_download_meta_box() {
 	add_meta_box('downloadinformation', sprintf(__('%1$s Configuration', 'edd'), edd_get_label_singular(), edd_get_label_plural() ),  'edd_render_download_meta_box', 'download', 'normal', 'default');
+	add_meta_box( 'edd_product_notes', __( 'Product Notes', 'edd' ), 'edd_render_product_notes_meta_box', 'download', 'normal', 'default' );
 	add_meta_box('edd_download_stats', sprintf( __('%1$s Stats', 'edd'), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', 'download', 'side', 'high');
 	add_meta_box('edd_purchase_log', __('Purchase Log', 'edd'), 'edd_render_purchase_log_meta_box', 'download', 'normal', 'default');
 	add_meta_box('edd_file_download_log', __('File Download Log', 'edd'), 'edd_render_download_log_meta_box', 'download', 'normal', 'default');
@@ -51,6 +52,38 @@ function edd_render_download_meta_box() {
 	echo '</table>';
 }
 
+/**
+ * Product Notes Meta Box
+ *
+ * Render the product notes meta box.
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+ */
+function edd_render_product_notes_meta_box() {
+	global $post, $edd_options;
+	
+	do_action( 'edd_product_notes_meta_box_fields', $post->ID );
+}
+
+/**
+ * Render Product NOtes Field
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+ */
+function edd_render_product_notes_field( $post_id ) {
+	global $edd_options;
+
+	$product_notes = edd_get_product_notes( $post_id );
+?>
+	<textarea rows="1" cols="40" name="edd_product_notes" id="edd_product_notes"><?php echo $product_notes; ?></textarea>
+	<p><?php _e( 'Notes and instructions about this product will automatically be attached to purchase receipts.', 'edd' ); ?></p>
+<?php
+}
+add_action( 'edd_product_notes_meta_box_fields', 'edd_render_product_notes_field' );
 
 /**
  * Render Price Field
@@ -392,7 +425,8 @@ function edd_download_meta_box_save($post_id) {
 			'_edd_purchase_text',
 			'_edd_purchase_style',
 			'_edd_purchase_color',
-			'_edd_hide_purchase_link'
+			'_edd_hide_purchase_link',
+			'edd_product_notes'
 		)
 	);
 	foreach($fields as $field) {
