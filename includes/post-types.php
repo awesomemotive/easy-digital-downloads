@@ -183,13 +183,16 @@ function edd_setup_download_taxonomies() {
 		'menu_name' => __( 'Categories', 'edd'  ),
 	); 	
 
-	register_taxonomy('download_category', array('download'), array(
-		'hierarchical' => true,
-		'labels' => apply_filters('edd_download_category_labels', $category_labels),
-		'show_ui' => true,
-		'query_var' => 'download_category',
-		'rewrite' => array('slug' => 'downloads/category')
-	));
+	$category_args = apply_filters( 'edd_download_category_args', array(
+			'hierarchical' => true,
+			'labels' => apply_filters('edd_download_category_labels', $category_labels),
+			'show_ui' => true,
+			'query_var' => 'download_category',
+			'rewrite' => array('slug' => 'downloads/category')
+		)
+	);
+
+	register_taxonomy('download_category', array('download'), $category_args );
 	
 	$tag_labels = array(
 		'name' => _x( 'Tags', 'taxonomy general name', 'edd' ),
@@ -205,13 +208,16 @@ function edd_setup_download_taxonomies() {
 		'menu_name' => __( 'Tags', 'edd'  ),
 	); 	
 
-	register_taxonomy('download_tag', array('download'), array(
-		'hierarchical' => false,
-		'labels' => apply_filters('edd_download_tag_labels', $tag_labels),
-		'show_ui' => true,
-		'query_var' => 'download_tag',
-		'rewrite' => array('slug' => 'downloads/tag')
-	));
+	$tag_args = apply_filters( 'edd_download_tag_args', array(
+			'hierarchical' => false,
+			'labels' => apply_filters('edd_download_tag_labels', $tag_labels),
+			'show_ui' => true,
+			'query_var' => 'download_tag',
+			'rewrite' => array('slug' => 'downloads/tag')
+		)
+	);
+
+	register_taxonomy('download_tag', array('download'), $tag_args );
 }
 add_action('init', 'edd_setup_download_taxonomies', 10);
 
