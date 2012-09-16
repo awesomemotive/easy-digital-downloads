@@ -49,9 +49,11 @@ function edd_email_templage_tags($message, $payment_data, $payment_id) {
 	}	
 	
 	$download_list = '<ul>';
-	$downloads = maybe_unserialize($payment_data['downloads']);
+	$downloads = edd_get_downloads_of_purchase( $payment_id, $payment_data );
 	if( $downloads ) {
-		foreach(maybe_unserialize($payment_data['downloads']) as $download) {
+
+		foreach( $downloads as $download) {
+
 			$id = isset($payment_data['cart_details']) ? $download['id'] : $download;
 			$download_list .= '<li>' . get_the_title($id) . '<br/>';
 			$download_list .= '<ul>';	
@@ -66,14 +68,16 @@ function edd_email_templage_tags($message, $payment_data, $payment_id) {
 							$file_url = edd_get_download_file_url($payment_data['key'], $payment_data['email'], $filekey, $id);
 							$download_list .= '<a href="' . $file_url . '">' . $file['name'] . '</a>';
 
-							if ( '' != edd_get_product_notes( $id ) )
-								$download_list .= ' - <small>' . edd_get_product_notes( $id ) . '</small>';
-
 						$download_list .= '</li>';
 					}
 				}
 
-			$download_list .= '</ul></li>';
+			$download_list .= '</ul>';
+			
+			if ( '' != edd_get_product_notes( $id ) )
+				$download_list .= ' - <small>' . edd_get_product_notes( $id ) . '</small>';
+
+			$download_list .= '</li>';
 		}
 	}
 	$download_list .= '</ul>';
