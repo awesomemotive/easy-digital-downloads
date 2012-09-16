@@ -79,7 +79,7 @@ function edd_get_cart_item_template($cart_key, $item, $ajax = false) {
 	}
 	$remove = '<a href="' . esc_url( $remove_url ) . '" data-cart-item="' . absint( $cart_key ) . '" data-download-id="' . absint( $id ) . '" data-action="edd_remove_from_cart" class="edd-remove-from-cart">' . __('remove', 'edd') . '</a>';	
 	$item = '<li class="edd-cart-item"><span class="edd-cart-item-title">' . $title . '</span>&nbsp;';
-	$item .= '<span class="edd-cart-item-separator">-</span>&nbsp;' . edd_currency_filter( edd_get_cart_item_price($id, $options) ) . '&nbsp;';
+	$item .= '<span class="edd-cart-item-separator">-</span>&nbsp;' . edd_currency_filter( edd_format_amount( edd_get_cart_item_price($id, $options) ) ) . '&nbsp;';
 	$item .= '<span class="edd-cart-item-separator">-</span> ' . $remove . '</li>';
 	return apply_filters('edd_cart_item', $item, $id);
 }

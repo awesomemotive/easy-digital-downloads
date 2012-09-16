@@ -10,6 +10,34 @@
 */
 
 
+/**
+ * Sanitize Amount
+ *
+ * Returns a sanitized amount by stripping out thousands separators.
+ *
+ * @access      public
+ * @since       1.0
+ * @param       $amount string the price amount to format
+ * @return      string - the newly sanitize amount
+*/
+
+function edd_sanitize_amount( $amount ) {
+
+	global $edd_options;
+	$thousands_sep 	= isset($edd_options['thousands_separator']) 	? $edd_options['thousands_separator'] 	: ',';
+	$decimal_sep 	= isset($edd_options['decimal_separator']) 		? $edd_options['decimal_separator'] 	: '.';
+
+	// sanitize the amount
+	if( $thousands_sep == '.' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+		$amount = str_replace( $thousands_sep, '', $amount );
+	}
+	if( $decimal_sep == ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
+		$amount = str_replace( $decimal_sep, '.', $amount );
+	}
+
+	return apply_filters( 'edd_sanitize_amount', $amount );
+}
+
 
 /**
  * Format Amount
@@ -19,7 +47,6 @@
  * @access      public
  * @since       1.0
  * @param       $amount string the price amount to format
- * @param       $options array optional parameters, used for defining variable prices
  * @return      string - the newly formatted amount
 */
 
@@ -28,14 +55,14 @@ function edd_format_amount($amount) {
 	$thousands_sep 	= isset($edd_options['thousands_separator']) 	? $edd_options['thousands_separator'] 	: ',';
 	$decimal_sep 	= isset($edd_options['decimal_separator']) 		? $edd_options['decimal_separator'] 	: '.';
 
-	// sanitize the amount
-	if( false !== ( $comma_found = strpos( $amount, ',' ) ) )
-		$amount = substr( $amount, 0, $comma_found );
 
-	if( false !== ( $period_found = strpos( $amount, ',' ) ) )
-		$amount = substr( $amount, 0, $period_found );
-
-	return number_format($amount, 2, $decimal_sep, $thousands_sep);
+	// format the amount
+	if( $decimal_sep == ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
+		$whole = substr( $amount, 0, $sep_found );
+		$part = substr( $amount, $sep_found + 1, ( strlen( $amount ) - 1 ) );
+		$amount = $whole . '.' . $part;
+	}
+	return number_format( $amount, 2, $decimal_sep, $thousands_sep );
 }
 
 

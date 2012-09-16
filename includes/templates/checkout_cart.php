@@ -32,7 +32,7 @@
 							echo '<span class="edd_checkout_cart_item_title">' . esc_html( $item_title ) . '</span>'; 
 						?>
 					</td>
-					<td class="edd_cart_item_price"><?php echo esc_html( edd_currency_filter( edd_get_cart_item_price( $item['id'], $item['options'] ) ) ); ?></td>
+					<td class="edd_cart_item_price"><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_item_price( $item['id'], $item['options'] ) ) ) ); ?></td>
 					<td class="edd_cart_actions"><a href="<?php echo esc_url( edd_remove_item_url( $key, $post ) ); ?>"><?php _e( 'remove', 'edd' ); ?></a></td>
 					<?php do_action( 'edd_checkout_table_body_last', $item ); ?>
 				</tr>

@@ -361,7 +361,7 @@ function edd_download_price_shortcode($atts, $content = null) {
 	if( is_null( $id ) )
 		$id = get_the_ID();
 
-	return edd_currency_filter( edd_format_amount( edd_price( $id, false ) ) );
+	return edd_price( $id, false );
 
 }
 add_shortcode('edd_price', 'edd_download_price_shortcode');
