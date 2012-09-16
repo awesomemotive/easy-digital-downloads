@@ -263,7 +263,7 @@ function edd_process_download() {
 					if ($size = @filesize($requested_file)) header("Content-Length: ".$size);
 					@edd_readfile_chunked( $requested_file );
 				} else {
-					wp_die( __('Sorry but this file does not exist.', 'edd'), __('Error') );
+					wp_die( __('Sorry but this file does not exist.', 'edd'), __('Error', 'edd') );
 				}
 
 			} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false) {
@@ -280,7 +280,7 @@ function edd_process_download() {
 					if ($size = @filesize($requested_file)) header("Content-Length: ".$size);
 					@edd_readfile_chunked( $requested_file );
 				} else {
-					wp_die( __('Sorry but this file does not exist.', 'edd'), __('Error') );
+					wp_die( __('Sorry but this file does not exist.', 'edd'), __('Error', 'edd') );
 				}
 
 			} else {
