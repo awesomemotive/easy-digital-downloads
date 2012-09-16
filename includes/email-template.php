@@ -53,7 +53,6 @@ function edd_email_templage_tags($message, $payment_data, $payment_id) {
 	if( $downloads ) {
 		foreach(maybe_unserialize($payment_data['downloads']) as $download) {
 			$id = isset($payment_data['cart_details']) ? $download['id'] : $download;
-			$download_data = get_post( $id );
 			$download_list .= '<li>' . get_the_title($id) . '<br/>';
 			$download_list .= '<ul>';	
 
@@ -67,8 +66,8 @@ function edd_email_templage_tags($message, $payment_data, $payment_id) {
 							$file_url = edd_get_download_file_url($payment_data['key'], $payment_data['email'], $filekey, $id);
 							$download_list .= '<a href="' . $file_url . '">' . $file['name'] . '</a>';
 
-							if ( '' != $download_data->post_excerpt )
-								$download_list .= ' - <small>' . $download_data->post_excerpt . '</small>';
+							if ( '' != edd_get_product_notes( $id ) )
+								$download_list .= ' - <small>' . edd_get_product_notes( $id ) . '</small>';
 
 						$download_list .= '</li>';
 					}

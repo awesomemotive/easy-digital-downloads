@@ -79,7 +79,7 @@ function edd_render_product_notes_field( $post_id ) {
 
 	$product_notes = edd_get_product_notes( $post_id );
 ?>
-	<textarea rows="1" cols="40" name="excerpt" id="excerpt"><?php echo $product_notes; ?></textarea>
+	<textarea rows="1" cols="40" name="edd_product_notes" id="edd_product_notes"><?php echo $product_notes; ?></textarea>
 	<p><?php _e( 'Notes and instructions about this product will automatically be attached to purchase receipts.', 'edd' ); ?></p>
 <?php
 }
@@ -425,7 +425,8 @@ function edd_download_meta_box_save($post_id) {
 			'_edd_purchase_text',
 			'_edd_purchase_style',
 			'_edd_purchase_color',
-			'_edd_hide_purchase_link'
+			'_edd_hide_purchase_link',
+			'edd_product_notes'
 		)
 	);
 	foreach($fields as $field) {
