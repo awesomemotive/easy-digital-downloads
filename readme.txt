@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable Tag: 1.2
+Stable Tag: 1.2.1
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -131,6 +131,17 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.2.1 =
+
+* Added new filters to the taxonomy args for download categories and tags
+* Fixed incorrect help text for the start/end date of discount codes
+* Fixed a couple of typos
+* Added a new "Product Notes" meta box to the Edit Download page
+* Updated German translation
+* Added some missing text domains for strings
+* Fixed a problem with manually completing purchases
+* Fixed some problems with international number formatting
 
 = 1.2 = 
 
@@ -604,6 +615,17 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Upgrade Notice ==
+
+= 1.2.1 =
+
+* Added new filters to the taxonomy args for download categories and tags
+* Fixed incorrect help text for the start/end date of discount codes
+* Fixed a couple of typos
+* Added a new "Product Notes" meta box to the Edit Download page
+* Updated German translation
+* Added some missing text domains for strings
+* Fixed a problem with manually completing purchases
+* Fixed some problems with international number formatting
 
 = 1.2 = 
 
