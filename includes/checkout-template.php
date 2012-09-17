@@ -130,44 +130,30 @@ function edd_checkout_form() {
 							<?php } ?>
 
 							<?php if( (!isset($_GET['login']) && is_user_logged_in()) || !isset($edd_options['show_register_form'])) { ?>											
-							<fieldset id="edd_checkout_user_info">
-								<legend><?php _e('Personal Info', 'edd'); ?></legend>
-								<?php do_action('edd_purchase_form_before_email'); ?>
-								<p id="edd-email-wrap">
-									<input class="edd-input required" type="email" name="edd_email" placeholder="<?php _e('Email address', 'edd'); ?>" id="edd-email" value="<?php echo is_user_logged_in() ? $user_data->user_email : ''; ?>"/>
-									<label class="edd-label" for="edd-email"><?php _e('Email Address', 'edd'); ?></label>
-								</p>
-								<?php do_action('edd_purchase_form_after_email'); ?>
-								<p id="edd-first-name-wrap">
-									<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e('First Name', 'edd'); ?>" id="edd-first" value="<?php echo is_user_logged_in() ? $user_data->first_name : ''; ?>"/>
-									<label class="edd-label" for="edd-first"><?php _e('First Name', 'edd'); ?></label>
-								</p>
-								<p id="edd-last-name-wrap">
-									<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e('Last name', 'edd'); ?>" value="<?php echo is_user_logged_in() ? $user_data->last_name : ''; ?>"/>
-									<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
-								</p>	
-								<?php do_action('edd_purchase_form_user_info'); ?>
-							</fieldset>	
-							
-							<?php do_action('edd_purchase_form_after_user_info'); ?>
-
-							<?php } ?>
-							
-							<?php if(edd_has_active_discounts()) { // only show if we have at least one active discount ?>
-								<fieldset id="edd_discount_code">
-									<p id="edd-discount-code-wrap">
-										<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e('Enter discount', 'edd'); ?>"/>
-										<label class="edd-label" for="edd-discount">
-											<?php _e('Discount', 'edd'); ?>
-											<?php if(edd_is_ajax_enabled()) { ?>
-												- <a href="#" class="edd-apply-discount"><?php _e('Apply Discount', 'edd'); ?></a>
-											<?php } ?>
-										</label>
+								<fieldset id="edd_checkout_user_info">
+									<legend><?php _e('Personal Info', 'edd'); ?></legend>
+									<?php do_action('edd_purchase_form_before_email'); ?>
+									<p id="edd-email-wrap">
+										<input class="edd-input required" type="email" name="edd_email" placeholder="<?php _e('Email address', 'edd'); ?>" id="edd-email" value="<?php echo is_user_logged_in() ? $user_data->user_email : ''; ?>"/>
+										<label class="edd-label" for="edd-email"><?php _e('Email Address', 'edd'); ?></label>
 									</p>
+									<?php do_action('edd_purchase_form_after_email'); ?>
+									<p id="edd-first-name-wrap">
+										<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e('First Name', 'edd'); ?>" id="edd-first" value="<?php echo is_user_logged_in() ? $user_data->first_name : ''; ?>"/>
+										<label class="edd-label" for="edd-first"><?php _e('First Name', 'edd'); ?></label>
+									</p>
+									<p id="edd-last-name-wrap">
+										<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e('Last name', 'edd'); ?>" value="<?php echo is_user_logged_in() ? $user_data->last_name : ''; ?>"/>
+										<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
+									</p>	
+									<?php do_action('edd_purchase_form_user_info'); ?>
 								</fieldset>	
-							<?php } ?>
+								
+								<?php do_action('edd_purchase_form_after_user_info');
+							}
 
-							<?php 
+							do_action( 'edd_purchase_form_before_cc_form' ); 
+							
 								// load the credit card form and allow gateways to load their own if they wish
 								if(has_action('edd_' . $payment_mode . '_cc_form')) {
 									do_action('edd_' . $payment_mode . '_cc_form'); 
@@ -437,6 +423,33 @@ function edd_get_login_fields() {
 	<?php
 	return ob_get_clean();
 }
+
+
+/**
+ * The discount field
+ *
+ * @access      public
+ * @since       1.2.2
+ * @return      string
+*/
+
+function edd_discount_field() {
+	if(edd_has_active_discounts()) { // only show if we have at least one active discount ?>
+		<fieldset id="edd_discount_code">
+			<p id="edd-discount-code-wrap">
+				<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e('Enter discount', 'edd'); ?>"/>
+				<label class="edd-label" for="edd-discount">
+					<?php _e('Discount', 'edd'); ?>
+					<?php if(edd_is_ajax_enabled()) { ?>
+						- <a href="#" class="edd-apply-discount"><?php _e('Apply Discount', 'edd'); ?></a>
+					<?php } ?>
+				</label>
+			</p>
+		</fieldset>	
+	<?php 
+	}
+}
+add_action( 'edd_purchase_form_before_cc_form', 'edd_discount_field' );
 
 
 /**
