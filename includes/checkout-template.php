@@ -54,6 +54,7 @@ function edd_checkout_form() {
 				if($show_gateways) {
 					do_action( 'edd_payment_payment_mode_select', $gateways );
 				} else {
+
 					if(count($gateways) >= 1 && !isset($_GET['payment-mode'])) {					
 						foreach($gateways as $gateway_id => $gateway) :
 							$enabled_gateway = $gateway_id;
@@ -120,15 +121,14 @@ function edd_checkout_form() {
 
 							do_action( 'edd_purchase_form_before_cc_form' ); 
 							
-								// load the credit card form and allow gateways to load their own if they wish
-								if(has_action('edd_' . $payment_mode . '_cc_form')) {
-									do_action('edd_' . $payment_mode . '_cc_form'); 
-								} else {
-									do_action('edd_cc_form');
-								}
-							?>			
+							// load the credit card form and allow gateways to load their own if they wish
+							if(has_action('edd_' . $payment_mode . '_cc_form')) {
+								do_action('edd_' . $payment_mode . '_cc_form'); 
+							} else {
+								do_action('edd_cc_form');
+							}
 							
-							<?php if(isset($edd_options['show_agree_to_terms'])) { ?>
+							if(isset($edd_options['show_agree_to_terms'])) { ?>
 								<fieldset id="edd_terms_agreement">
 									<p>
 										<div id="edd_terms" style="display:none;">
