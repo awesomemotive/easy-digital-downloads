@@ -22,18 +22,9 @@ function edd_checkout_form() {
 
 	global $edd_options, $user_ID, $post;
 	
-	if (is_singular()) :
-		$page_URL =  get_permalink($post->ID);
-	else :
-		$page_URL = 'http';
-		if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") $pageURL .= "s";
-		$page_URL .= "://";
-		if (isset($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"] != "80") $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-		else $page_URL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-	endif;	
-	
+	$page_URL = edd_get_current_page_url();
+
 	if(is_user_logged_in()) :
-		global $user_ID;
 		$user_data = get_userdata($user_ID);
 	endif;
 	
@@ -60,47 +51,22 @@ function edd_checkout_form() {
 						$show_gateways = false;
 					}
 				}
-				if($show_gateways) { ?>
-					<?php do_action('edd_payment_mode_top'); ?>
-					<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
-						<fieldset id="edd_payment_mode_select">
-							<?php do_action('edd_payment_mode_before_gateways'); ?>
-							<p id="edd-payment-mode-wrap">
-								<?php								
-									echo '<select class="edd-select" name="payment-mode" id="edd-gateway">';
-										foreach($gateways as $gateway_id => $gateway) :
-											echo '<option value="' . $gateway_id . '">' . $gateway['checkout_label'] . '</option>';
-										endforeach;
-									echo '</select>';
-									echo '<label for="edd-gateway">' . __('Choose Your Payment Method', 'edd') . '</label>';
-								?>
-							</p>
-							<?php do_action('edd_payment_mode_after_gateways'); ?>
-						</fieldset>
-						<fieldset id="edd_payment_mode_submit">
-							<p id="edd-next-submit-wrap">
-								<?php echo edd_checkout_button_next(); ?>
-							</p>
-						</fieldset>
-					</form>
-					<?php do_action('edd_payment_mode_bottom'); ?>
-			
-				<?php } else { ?>
-		
-					<?php
-						if(count($gateways) >= 1 && !isset($_GET['payment-mode'])) {					
-							foreach($gateways as $gateway_id => $gateway) :
-								$enabled_gateway = $gateway_id;
-								if(edd_get_cart_amount() <= 0) {
-									$enabled_gateway = 'manual'; // this allows a free download by filling in the info
-								}
-							endforeach;
-						} else if(edd_get_cart_amount() <= 0) {
-							$enabled_gateway = 'manual';
-						} else {
-							$enabled_gateway = 'none';
-						}
-						$payment_mode = isset($_GET['payment-mode']) ? urldecode($_GET['payment-mode']) : $enabled_gateway;	
+				if($show_gateways) {
+					do_action( 'edd_payment_payment_mode_select', $gateways );
+				} else {
+					if(count($gateways) >= 1 && !isset($_GET['payment-mode'])) {					
+						foreach($gateways as $gateway_id => $gateway) :
+							$enabled_gateway = $gateway_id;
+							if(edd_get_cart_amount() <= 0) {
+								$enabled_gateway = 'manual'; // this allows a free download by filling in the info
+							}
+						endforeach;
+					} else if(edd_get_cart_amount() <= 0) {
+						$enabled_gateway = 'manual';
+					} else {
+						$enabled_gateway = 'none';
+					}
+					$payment_mode = isset($_GET['payment-mode']) ? urldecode($_GET['payment-mode']) : $enabled_gateway;	
 					?>
 					
 					<?php do_action('edd_before_purchase_form'); ?>
@@ -426,11 +392,48 @@ function edd_get_login_fields() {
 
 
 /**
+ * The payment mode select form
+ *
+ * @access      public
+ * @since       1.2.2
+ * @return      void
+*/
+
+function edd_payment_mode_select( $gateways ) {
+	$page_URL = edd_get_current_page_url();
+	do_action('edd_payment_mode_top'); ?>
+	<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
+		<fieldset id="edd_payment_mode_select">
+			<?php do_action('edd_payment_mode_before_gateways'); ?>
+			<p id="edd-payment-mode-wrap">
+				<?php								
+					echo '<select class="edd-select" name="payment-mode" id="edd-gateway">';
+						foreach($gateways as $gateway_id => $gateway) :
+							echo '<option value="' . $gateway_id . '">' . $gateway['checkout_label'] . '</option>';
+						endforeach;
+					echo '</select>';
+					echo '<label for="edd-gateway">' . __('Choose Your Payment Method', 'edd') . '</label>';
+				?>
+			</p>
+			<?php do_action('edd_payment_mode_after_gateways'); ?>
+		</fieldset>
+		<fieldset id="edd_payment_mode_submit">
+			<p id="edd-next-submit-wrap">
+				<?php echo edd_checkout_button_next(); ?>
+			</p>
+		</fieldset>
+	</form>
+	<?php do_action('edd_payment_mode_bottom');
+}
+add_action( 'edd_payment_payment_mode_select', 'edd_payment_mode_select' );
+
+
+/**
  * The discount field
  *
  * @access      public
  * @since       1.2.2
- * @return      string
+ * @return      void
 */
 
 function edd_discount_field() {
