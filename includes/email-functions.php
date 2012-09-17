@@ -52,7 +52,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$headers .= "Content-Type: text/html; charset=utf-8\r\n";	
 		
 	// allow add-ons to add file attachments
-	$attachments = apply_filters( 'edd_receipt_attachments', array() );
+	$attachments = apply_filters( 'edd_receipt_attachments', array(), $payment_id, $payment_data );
 
 	wp_mail( $payment_data['email'], $subject, $message, $headers, $attachments );
 	
