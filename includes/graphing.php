@@ -173,7 +173,7 @@ function edd_show_daily_eanings_graph($bgcolor = 'white') {
 				$i = $num_of_days;
 				while( $i > 1 ) : 
 					$day_time 	= strtotime( '-' . $num_of_days - $i . ' days', time() );
-					$day 		= date( 'd', $day_time );
+					$day 		= date( 'd', $day_time ) + 1;
 					$month 		= date( 'n', $day_time ) + 1; // I have no idea why the +1 is needed, but it is
 					$year 		= date( 'Y', $day_time );
 					?>
