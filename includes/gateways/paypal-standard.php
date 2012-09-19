@@ -81,12 +81,12 @@ function edd_process_paypal_purchase( $purchase_data ) {
     } else {
         // only send to PayPal if the pending payment is created successfully
         $listener_url = trailingslashit( home_url() ).'?edd-listener=IPN';
-        
-        // get the success url
+       
+         // get the success url
         $return_url = add_query_arg( 'payment-confirmation', 'paypal', get_permalink( $edd_options['success_page'] ) );
         
-        // get the complete cart summary
-        $cart_summary = edd_get_purchase_summary( $purchase_data, false );      
+        // get the complete cart cart_summary
+        $summary = edd_get_purchase_summary( $purchase_data, false );      
         
         // get the PayPal redirect uri
         $paypal_redirect = trailingslashit( edd_get_paypal_redirect() ) . '?';
