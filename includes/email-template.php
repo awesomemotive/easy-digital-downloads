@@ -95,7 +95,7 @@ function edd_email_templage_tags($message, $payment_data, $payment_id) {
 	$message = str_replace('{price}', $price, $message);
 	$message = str_replace('{payment_method}', $gateway, $message);
 	$message = str_replace('{receipt_id}', $receipt_id, $message);
-	$message = apply_filters('edd_email_template_tags', $message, $payment_data);
+	$message = apply_filters('edd_email_template_tags', $message, $payment_data, $payment_id);
 	
 	return $message;
 }
