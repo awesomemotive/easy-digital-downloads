@@ -240,7 +240,7 @@ function edd_render_file_row( $key = '', $args = array(), $download_id ) {
 		<input type="text" class="edd_repeatable_upload_field edd_upload_field" name="edd_download_files[<?php echo $key; ?>][file]" id="edd_download_files[<?php echo $key; ?>][file]" value="<?php echo $file; ?>" size="30" style="width:100%" />
 
 		<span class="edd_upload_file">
-			<a href="#" class="edd_upload_image_button thickbox" onclick="return false;"><?php _e( 'Upload a File', 'edd' ); ?></a>
+			<a href="#" class="edd_upload_image_button" onclick="return false;"><?php _e( 'Upload a File', 'edd' ); ?></a>
 		</span>
 	</td>
 

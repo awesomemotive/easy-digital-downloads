@@ -54,7 +54,7 @@ jQuery(document).ready(function ($) {
 				
 				var type = $(this).data('type');
 
-				if( count >  ) {
+				if( count > 1 ) {
 					$( 'input, select', row ).val( '' );
 					row.fadeOut( 'fast' ).remove();
 				} else {
@@ -80,36 +80,34 @@ jQuery(document).ready(function ($) {
 
 		files : function() {
 			if ( $( '.edd_upload_image_button' ).length > 0 ) {
-				$( '.edd_upload_image_button' ).on('click', function(e) {
-					e.preventDefault();
-
-					formfield = $( this ).parent().prev( '.edd_upload_field' );
-					
-					window.tbframe_interval = setInterval(function() {
-		    			jQuery( '#TB_iframeContent' )
-		    				.contents()
-		    				.find( '.savesend .button' )
-		    				.val(edd_vars.use_this_file)
-		    				.end()
-		    				.find( '#insert-gallery, .wp-post-thumbnail' )
-		    				.hide();
+						// Media Uploader
+		        window.formfield = '';
+		        
+		        $('.edd_upload_image_button').on('click', function(e) {
+		            e.preventDefault();
+		            window.formfield = $(this).parent().prev();
+		    		window.tbframe_interval = setInterval(function() {
+		    		    jQuery('#TB_iframeContent').contents().find('.savesend .button').val(edd_vars.use_this_file).end().find('#insert-gallery, .wp-post-thumbnail').hide();
 		    		}, 2000);
-
-					if (edd_vars.post_id != null ) {
-						var post_id = 'post_id=' + edd_vars.post_id + '&';
-					}
-
-					tb_show( edd_vars.add_new_download, 'media-upload.php?' + post_id +'TB_iframe=true' );
-					
-					return false;
-				});
-				 
-				window.send_to_editor = function(html) {
-					imgurl = $( 'a', '<div>' + html + '</div>' ).attr('href');
-					formfield.val( imgurl );
-
-					tb_remove();
-				}				
+		            if (edd_vars.post_id != null ) {
+		                var post_id = 'post_id=' + edd_vars.post_id + '&';
+		            }
+		            tb_show(edd_vars.add_new_download, 'media-upload.php?' + post_id +'TB_iframe=true');
+		        });
+		        
+		        window.original_send_to_editor = window.send_to_editor;
+		        window.send_to_editor = function (html) {            
+		            if (window.formfield) {
+		                imgurl = $('a', '<div>' + html + '</div>').attr('href');
+		                window.formfield.val(imgurl);
+		                window.clearInterval(window.tbframe_interval);
+		                tb_remove();
+		            } else {
+		                window.original_send_to_editor(html);
+		            }
+		            window.formfield = '';
+		            window.imagefield = false;
+		        }				
 			}
 		}
 	}
