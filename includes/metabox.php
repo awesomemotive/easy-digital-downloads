@@ -200,9 +200,7 @@ function edd_render_files_field( $download_id ) {
 					else : 
 				?>
 					<tr class="edd_no_items">
-						<td colspan="4">
-							<?php _e( 'No files have been attached to this download.', 'edd' ); ?>
-						</td>
+						<?php do_action( 'edd_render_file_row', 0, array(), $download_id ); ?>
 					</tr>
 				<?php endif; ?>
 					<tr>
@@ -334,7 +332,7 @@ function edd_download_meta_box_save($post_id) {
 	global $post;
 	
 	// verify nonce
-	if ( ! wp_verify_nonce( $_POST[ 'edd_download_meta_box_nonce' ], basename( __FILE__ ) ) )
+	if ( !isset( $_POST[ 'edd_download_meta_box_nonce' ] ) || ! wp_verify_nonce( $_POST[ 'edd_download_meta_box_nonce' ], basename( __FILE__ ) ) )
 		return $post_id;
 
 	// check autosave
