@@ -54,7 +54,7 @@ jQuery(document).ready(function ($) {
 				
 				var type = $(this).data('type');
 
-				if( count > 1 ) {
+				if( count >  ) {
 					$( 'input, select', row ).val( '' );
 					row.fadeOut( 'fast' ).remove();
 				} else {
