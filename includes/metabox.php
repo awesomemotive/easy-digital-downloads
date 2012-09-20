@@ -199,7 +199,7 @@ function edd_render_files_field( $download_id ) {
 						endforeach;
 					else : 
 				?>
-					<tr class="edd_no_items">
+					<tr class="edd_repeatable_upload_wrapper">
 						<?php do_action( 'edd_render_file_row', 0, array(), $download_id ); ?>
 					</tr>
 				<?php endif; ?>
