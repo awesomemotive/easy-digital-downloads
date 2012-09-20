@@ -12,11 +12,11 @@ jQuery(document).ready(function ($) {
 		},
 
 		add : function() {
-			$( '.submit .edd_add_repeatable' ).on( 'click', function(e) {
+			$( 'body' ).on( 'click', '.submit .edd_add_repeatable', function(e) {
 				e.preventDefault();
 
 				var button = $( this ),
-					row    = button.parent().parent().prev( '.edd_add_blank' ),
+					row    = button.parent().parent().prev( 'tr' ),
 					clone  = row.clone();
 
 				/** manually update any select box values */
@@ -48,7 +48,7 @@ jQuery(document).ready(function ($) {
 		},
 
 		remove : function() {
-			$( '.edd_remove_repeatable' ).live( 'click', function(e) {
+			$( 'body' ).on( 'click', '.edd_remove_repeatable', function(e) {
 				e.preventDefault();
 				
 				var row = $(this).parent().parent( 'tr' );
@@ -59,7 +59,7 @@ jQuery(document).ready(function ($) {
 		},
 
 		prices : function() {
-			$( '#edd_variable_pricing' ).on( 'change', function(e) {
+			$( 'body' ).on( 'change', '#edd_variable_pricing', function(e) {
 				$( '.edd_pricing_fields' ).toggle();
 				$( '.edd_repeatable_condition_field' ).toggle();
 				$( '#edd_download_files table .pricing' ).toggle();
