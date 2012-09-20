@@ -227,8 +227,16 @@ function edd_render_files_field($post_id) {
 }
 add_action( 'edd_meta_box_fields', 'edd_render_files_field', 20 );
 
-function edd_render_file_row( $key, $args ) {
-	extract( $args );
+function edd_render_file_row( $key = '', $args = array()  ) {
+
+	$defaults = array(
+		'name' 	=> '',
+		'file' 	=> ''
+	);
+
+	$args = wp_parse_args( $args, $defaults );
+
+	extract( $args, EXTR_SKIP  );
 ?>
 	<td>
 		<input type="text" class="edd_repeatable_name_field" name="edd_download_files[<?php echo $key; ?>][name]" id="edd_download_files[<?php echo $key; ?>][name]" value="<?php echo $name; ?>" size="20" style="width:100%" />
