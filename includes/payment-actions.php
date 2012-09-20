@@ -204,6 +204,23 @@ add_action( 'edd_insert_payment', 'edd_clear_earnings_cache', 10, 2 );
 
 
 /**
+ * Flushes the Current user's purchase history transient
+ *
+ * @access      private
+ * @since       1.2.2
+ * @return      void
+*/
+
+function edd_clear_user_history_cache( $payment_id, $new_status, $old_status ) {
+
+	$user_info = edd_get_payment_meta_user_info( $payment_id );
+
+	delete_transient( 'edd_user_' . $user_info['id'] . '_purchases' );
+}
+add_action( 'edd_update_payment_status', 'edd_clear_user_history_cache', 10, 3 );
+
+
+/**
  * Updates all old payments, prior to 1.2, with new 
  * meta for the total purcahse amount
  *
