@@ -27,17 +27,14 @@ jQuery(document).ready(function ($) {
 				if ( row.prev().hasClass( 'edd_no_items' ) )
 					row.prev().remove();
 
-				var count  = row.parent().find( 'tr' ).length - 2;
-
+				var count  = row.parent().find( 'tr' ).length + 1;
 				clone
 					.removeClass( 'edd_add_blank' )
 					.insertBefore( row )
 					.find( 'input, select' ).each(function() {
 						var name = $( this ).attr( 'name' );
 
-						name = name.replace( /\[(\d+)\]/, function() {
-							return '[' + count + ']'
-						});
+						name = name.replace( /\[(\d+)\]/, '[' + parseInt(count) + ']');
 						
 						$( this )
 							.attr( 'name', name );
