@@ -217,6 +217,33 @@ function edd_register_settings() {
 					'options' => edd_get_button_colors()
 				)
 			)
+		),
+		'taxes' => apply_filters('edd_settings_taxes', 
+			array(
+				array(
+					'id' => 'enable_taxes',
+					'name' => __('Enable Taxes', 'edd'),
+					'desc' => __('Check this to enable taxes on purchases.', 'edd'),
+					'type' => 'checkbox'
+				),
+				array(
+					'id' => 'tax_rate',
+					'name' => __('Tax Rate', 'edd'),
+					'desc' => __('Enter a percentage, such as 6.5.', 'edd'),
+					'type' => 'text',
+					'size' => 'small'
+				),
+				array(
+					'id' => 'tax_condition',
+					'name' => __('Apply Taxes to:', 'edd'),
+					'desc' => __('Who should have tax added to their purchases?', 'edd'),
+					'type' => 'radio',
+					'options' => array(
+						'all' 	=> __('Everyone', 'edd'),
+						'local' => __('Local residents only', 'edd')
+					)
+				)
+			)
 		),		
 		'misc' => apply_filters('edd_settings_misc', 
 			array(
@@ -303,6 +330,9 @@ function edd_register_settings() {
    	}
    	if( false == get_option( 'edd_settings_styles' ) ) {  
         add_option( 'edd_settings_styles' );  
+   	}
+   	if( false == get_option( 'edd_settings_taxes' ) ) {  
+        add_option( 'edd_settings_taxes' );  
    	}
 	if( false == get_option( 'edd_settings_misc' ) ) {  
         add_option( 'edd_settings_misc' );  
@@ -411,6 +441,32 @@ function edd_register_settings() {
 				'std' => isset($option['std']) ? $option['std'] : ''
 	    	)
 		);
+	}
+
+	add_settings_section(
+		'edd_settings_taxes',
+		__('Tax Settings', 'edd'),
+		'edd_settings_taxes_description_callback',
+		'edd_settings_taxes'
+	);
+	
+	foreach($edd_settings['taxes'] as $option) {
+		add_settings_field(
+			'edd_settings_taxes[' . $option['id'] . ']',
+			$option['name'],
+			'edd_' . $option['type'] . '_callback',
+			'edd_settings_taxes',
+			'edd_settings_taxes',
+			array(
+				'id' => $option['id'],
+				'desc' => $option['desc'],
+				'name' => $option['name'],
+				'section' => 'taxes',
+				'size' => isset($option['size']) ? $option['size'] : '' ,
+				'options' => isset($option['options']) ? $option['options'] : '',
+				'std' => isset($option['std']) ? $option['std'] : ''
+	    	)
+		);
 	}	
 	
 	
@@ -445,6 +501,7 @@ function edd_register_settings() {
 	register_setting('edd_settings_gateways', 'edd_settings_gateways', 'edd_settings_sanitize');
 	register_setting('edd_settings_emails', 'edd_settings_emails', 'edd_settings_sanitize');
 	register_setting('edd_settings_styles', 'edd_settings_styles', 'edd_settings_sanitize');
+	register_setting('edd_settings_taxes', 'edd_settings_taxes', 'edd_settings_sanitize');
 	register_setting('edd_settings_misc', 'edd_settings_misc', 'edd_settings_sanitize');
 }
 add_action('admin_init', 'edd_register_settings');
@@ -507,6 +564,21 @@ function edd_settings_emails_description_callback() {
 
 function edd_settings_styles_description_callback() {
 	//echo __('Configure the settings below', 'edd');
+}
+
+
+/**
+ * Settings Taxes Description Callback
+ *
+ * Renders the taxes section description.
+ *
+ * @access      private
+ * @since       1.3 
+ * @return      void
+*/
+
+function edd_settings_taxes_description_callback() {
+	echo __('These settings will let you configure simple tax rules for purchases.', 'edd');
 }
 
 
@@ -580,6 +652,31 @@ function edd_multicheck_callback($args) {
 	foreach($args['options'] as $key => $option) :
 		if(isset($edd_options[$args['id']][$key])) { $enabled = $option; } else { $enabled = NULL; }
 		echo '<input name="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
+		echo '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
+	endforeach;
+	echo '<p class="description">' . $args['desc'] . '</p>';
+
+}
+
+
+/**
+ * Radio Callback
+ *
+ * Renders radio boxes.
+ *
+ * @access      private
+ * @since       1.2.2
+ * @return      void
+*/
+
+function edd_radio_callback($args) { 
+ 
+	global $edd_options;
+
+	foreach($args['options'] as $key => $option) :
+		$checked = false;
+		if( isset( $edd_options[ $args['id'] ] ) && $edd_options[ $args['id'] ] == $key ) $checked = true;
+		echo '<input name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" type="radio" value="' . $key . '" ' . checked(true, $checked, false) . '/>&nbsp;';
 		echo '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
 	endforeach;
 	echo '<p class="description">' . $args['desc'] . '</p>';
@@ -764,7 +861,8 @@ function edd_get_settings() {
 	$gateway_settings 	= is_array(get_option('edd_settings_gateways')) ? get_option('edd_settings_gateways') 	: array();
 	$email_settings 	= is_array(get_option('edd_settings_emails')) 	? get_option('edd_settings_emails') 	: array();
 	$style_settings 	= is_array(get_option('edd_settings_styles')) 	? get_option('edd_settings_styles') 	: array();
+	$tax_settings 		= is_array(get_option('edd_settings_taxes')) 	? get_option('edd_settings_taxes') 		: array();
 	$misc_settings 		= is_array(get_option('edd_settings_misc')) 	? get_option('edd_settings_misc') 		: array();
 
-	return array_merge($general_settings, $gateway_settings, $email_settings, $style_settings, $misc_settings);
+	return array_merge($general_settings, $gateway_settings, $email_settings, $style_settings, $tax_settings, $misc_settings);
 }
