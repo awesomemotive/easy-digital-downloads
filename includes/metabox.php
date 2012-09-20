@@ -267,8 +267,8 @@ add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
  * @since       1.0 
  * @return      void
  */
-function edd_render_disable_button($post_id) {	
-	
+function edd_render_disable_button( $post_id ) {	
+	$hide_button = get_post_meta( $post_id, '_edd_hide_purchase_link', true ) ? true : false;
 ?>
 	<p>
 		<strong><?php _e( 'Button Options', 'edd' ); ?>:</strong>
@@ -276,8 +276,8 @@ function edd_render_disable_button($post_id) {
 
 	<p>
 		<label for="_edd_hide_purchase_link">
-			<input type="checkbox" name="_edd_hide_purchase_link" id="_edd_hide_purchase_link" value="1" <?php checked( false, $show_button ); ?> />
-			<?php _e( 'Automatically attach and display the purchase button', 'edd' ); ?>
+			<input type="checkbox" name="_edd_hide_purchase_link" id="_edd_hide_purchase_link" value="1" <?php checked( true, $hide_button ); ?> />
+			<?php _e( 'Disable the purchase button', 'edd' ); ?>
 		</label>
 	</p>
 <?php
