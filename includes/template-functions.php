@@ -57,15 +57,15 @@ function edd_get_purchase_link( $download_id = null, $link_text = null, $style =
 	$variable_pricing = edd_has_variable_prices( $download_id );
 	
 	if ( is_null( $link_text ) ) {
-		$link_text = get_post_meta( $post->ID, '_edd_purchase_text', true ) ? get_post_meta( $post->ID, '_edd_purchase_text', true ) : __( 'Purchase', 'edd' );
+		$link_text = isset( $edd_options['add_to_cart_text'] ) ? $edd_options['add_to_cart_text'] : __( 'Purchase', 'edd' );
 	}
 	
 	if ( is_null( $style ) ) {
-		$style = get_post_meta( $post->ID, '_edd_purchase_style', true ) ? get_post_meta( $post->ID, '_edd_purchase_style', true ) : 'button';
+		$style = isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button';
 	}
 	
 	if ( is_null( $color ) ) {		
-		$color = get_post_meta( $post->ID, '_edd_purchase_color', true ) ? str_replace( ' ', '_', get_post_meta( $post->ID, '_edd_purchase_color', true ) ) : 'blue';
+		$color = isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue';
 	}
 	
 	$purchase_form = '<form id="edd_purchase_' . $download_id . '" class="edd_download_purchase_form" method="POST">';
@@ -273,6 +273,28 @@ function edd_get_button_colors() {
 	);
 	
 	return apply_filters( 'edd_button_colors', $colors );
+
+}
+
+
+/**
+ * Get Button Styles
+ *
+ * Returns an array of button styles.
+ *
+ * @access      public
+ * @since       1.2.2
+ * @return      array
+*/
+
+function edd_get_button_styles() {
+	
+	$styles = array( 
+		'button'	=> __( 'Button', 'edd' ), 
+		'plain'     => __( 'Plain Text', 'edd' )
+	);
+	
+	return apply_filters( 'edd_button_styles', $styles );
 
 }
 
