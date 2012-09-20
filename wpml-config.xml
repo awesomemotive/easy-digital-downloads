@@ -9,9 +9,9 @@
         <custom-field action="copy">edd_price</custom-field>
         <custom-field action="copy">edd_variable_prices</custom-field>
         <custom-field action="copy">edd_download_files</custom-field>
+        <custom-field action="copy">_edd_purchase_style</custom-field>
+        <custom-field action="copy">_edd_purchase_color</custom-field>
         <custom-field action="translate">_edd_purchase_text</custom-field>
-        <custom-field action="translate">_edd_purchase_style</custom-field>
-        <custom-field action="translate">_edd_purchase_color</custom-field>
         <custom-field action="translate">edd_product_notes</custom-field>
     </custom-fields>
     <taxonomies>
