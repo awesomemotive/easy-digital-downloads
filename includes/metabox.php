@@ -114,7 +114,7 @@ function edd_render_price_field($post_id) {
 								<?php endif; ?>
 							</td>
 							<td>
-								<a href="#" class="edd_remove_repeatable" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
+								<a href="#" class="edd_remove_repeatable" data-type="price" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
 							</td>
 						</tr>
 					<?php
@@ -122,8 +122,18 @@ function edd_render_price_field($post_id) {
 						else : // no prices
 					?>
 						<tr class="edd_no_items">
-							<td colspan="3">
-								<?php _e( 'No prices have been added to this download.', 'edd' ); ?>
+							<td>
+								<input type="text" class="edd_variable_prices_name" placeholder="<?php _e( 'Option Name', 'edd'); ?>" name="edd_variable_prices[0][name]" id="edd_variable_prices[0][name]" value="" size="20" style="width:100%" />
+							</td>
+							<td>
+								<?php if( ! isset( $edd_options[ 'currency_position' ] ) || $edd_options[ 'currency_position' ] == 'before' ) : ?>
+									<span><?php echo edd_currency_filter( '' ); ?></span> <input type="text" class="edd_variable_prices_amount text" value="" name="edd_variable_prices[0][amount]" id="edd_variable_prices[0][amount]" size="30" style="width:80px;" />
+								<?php else : ?>
+									<input type="text" class="edd_variable_prices_amount text" value="" name="edd_variable_prices[0][amount]" id="edd_variable_prices[0][amount]" size="30" style="width:80px;" /><?php echo edd_currency_filter( '' ); ?>
+								<?php endif; ?>
+							</td>
+							<td>
+								<a href="#" class="edd_remove_repeatable" data-type="price" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
 							</td>
 						</tr>
 					<?php endif; ?>
@@ -246,7 +256,7 @@ function edd_render_file_row( $key = '', $args = array(), $download_id ) {
 	</td>
 
 	<td>
-		<a href="#" class="edd_remove_repeatable" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
+		<a href="#" class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
 	</td>
 <?php
 }

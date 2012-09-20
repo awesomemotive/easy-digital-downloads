@@ -50,8 +50,23 @@ jQuery(document).ready(function ($) {
 				
 				var row = $(this).parent().parent( 'tr' );
 				
-				$( 'input, select', row ).val( '' );
-				row.fadeOut( 'fast' ).remove();
+				var count  = row.parent().find( 'tr' ).length - 1;
+				
+				var type = $(this).data('type');
+
+				if( count > 1 ) {
+					$( 'input, select', row ).val( '' );
+					row.fadeOut( 'fast' ).remove();
+				} else {
+					switch( type ) {
+						case 'price' :
+							alert( edd_vars.one_price_min );
+							break;
+						case 'file' :
+							alert( edd_vars.one_file_min );
+							break;
+					}
+				}
 			});
 		},
 
