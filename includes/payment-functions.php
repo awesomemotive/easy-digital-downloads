@@ -178,6 +178,10 @@ function edd_update_payment_status($payment_id, $new_status = 'publish') {
 	}
 	
 	$payment = get_post($payment_id);
+
+	if( is_wp_error( $payment ) || !is_object( $payment ) )
+		return;
+
 	if($payment->post_status == 'publish') {		
 		//return;
 	}
