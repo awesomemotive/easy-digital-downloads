@@ -24,10 +24,8 @@ jQuery(document).ready(function ($) {
 					$( this ).val( row.find( 'select[name="' + $( this ).attr( 'name' ) + '"]' ).val() );
 				});
 
-				if ( row.prev().hasClass( 'edd_no_items' ) )
-					row.prev().remove();
-
 				var count  = row.parent().find( 'tr' ).length + 1;
+
 				clone
 					.removeClass( 'edd_add_blank' )
 					.insertBefore( row )
@@ -48,11 +46,9 @@ jQuery(document).ready(function ($) {
 			$( 'body' ).on( 'click', '.edd_remove_repeatable', function(e) {
 				e.preventDefault();
 				
-				var row = $(this).parent().parent( 'tr' );
-				
-				var count  = row.parent().find( 'tr' ).length - 1;
-				
-				var type = $(this).data('type');
+				var row   = $(this).parent().parent( 'tr' ),
+					count = row.parent().find( 'tr' ).length - 1,
+					type  = $(this).data('type');
 
 				if( count > 1 ) {
 					$( 'input, select', row ).val( '' );
@@ -80,8 +76,7 @@ jQuery(document).ready(function ($) {
 
 		files : function() {
 			if ( $( '.edd_upload_image_button' ).length > 0 ) {
-						// Media Uploader
-		        window.formfield = '';
+				window.formfield = '';
 		        
 		        $('.edd_upload_image_button').on('click', function(e) {
 		            e.preventDefault();
