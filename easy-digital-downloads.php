@@ -101,6 +101,7 @@ include_once(EDD_PLUGIN_DIR . 'includes/email-template.php');
 include_once(EDD_PLUGIN_DIR . 'includes/email-actions.php');
 include_once(EDD_PLUGIN_DIR . 'includes/error-tracking.php');
 include_once(EDD_PLUGIN_DIR . 'includes/user-functions.php');
+include_once(EDD_PLUGIN_DIR . 'includes/query-filters.php');
 if(is_admin()) {
 	include_once(EDD_PLUGIN_DIR . 'includes/admin-actions.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/metabox.php');
