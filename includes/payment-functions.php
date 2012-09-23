@@ -422,6 +422,32 @@ function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
 
 
 /**
+ * Get Total Sales
+ *
+ * @access      public
+ * @author      Sunny Ratilal
+ * @since       1.2.2
+ * @return      int
+*/
+
+function edd_get_total_sales() {
+	$sales = get_posts(
+		array(
+			'post_type' => 'edd_payment', 
+			'posts_per_page' => -1,
+			'meta_key' => '_edd_payment_mode',
+			'meta_value' => 'live'
+		)
+	);
+	$total = 0;
+	if( $sales ) {
+		$total = count( $sales );
+	}
+	return $total;
+}
+
+
+/**
  * Get Total Earnings
  *
  * @access      public
