@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-23 16:44-0000\n"
-"PO-Revision-Date: 2012-09-23 16:45-0000\n"
+"POT-Creation-Date: 2012-09-23 20:03-0000\n"
+"PO-Revision-Date: 2012-09-23 20:03-0000\n"
 "Last-Translator: Sunny Ratilal <ratilal.sunny@gmail.com>\n"
 "Language-Team: Easy Digital Downloads <pippin@pippinsplugins.com>\n"
 "Language: en_US\n"
@@ -365,12 +365,13 @@ msgstr ""
 
 #: includes/dashboard-columns.php:30 includes/graphing.php:32
 #: includes/graphing.php:222 includes/pdf-reports.php:208
+#: includes/widgets.php:329
 msgid "Sales"
 msgstr ""
 
 #: includes/dashboard-columns.php:31 includes/graphing.php:78
 #: includes/graphing.php:122 includes/graphing.php:169
-#: includes/pdf-reports.php:191
+#: includes/pdf-reports.php:191 includes/widgets.php:325
 msgid "Earnings"
 msgstr ""
 
@@ -396,18 +397,6 @@ msgstr ""
 #: includes/dashboard-columns.php:228
 #, php-format
 msgid "%s Data"
-msgstr ""
-
-#: includes/dashboard.php:28
-msgid "Easy Digital Downloads Sales Summary"
-msgstr ""
-
-#: includes/dashboard.php:36
-msgid "Current Month"
-msgstr ""
-
-#: includes/dashboard.php:51
-msgid "Totals"
 msgstr ""
 
 #: includes/email-functions.php:47 includes/register-settings.php:191
@@ -1852,6 +1841,26 @@ msgstr ""
 
 #: includes/widgets.php:259
 msgid "Title"
+msgstr ""
+
+#: includes/widgets.php:301
+msgid "Easy Digital Downloads Sales Summary"
+msgstr ""
+
+#: includes/widgets.php:320
+msgid "Current Month"
+msgstr ""
+
+#: includes/widgets.php:335
+msgid "Totals"
+msgstr ""
+
+#: includes/widgets.php:340
+msgid "Total Earnings"
+msgstr ""
+
+#: includes/widgets.php:344
+msgid "Total Sales"
 msgstr ""
 
 #: includes/admin-pages/add-ons.php:69

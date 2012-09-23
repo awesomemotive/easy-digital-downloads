@@ -322,11 +322,11 @@ function edd_dashboard_sales_widget() {
             <tbody>
                 <tr class="first">
                     <td class="first b"><?php echo edd_currency_filter( edd_get_earnings_by_date(null, date('n'), date('Y')) ); ?></td>
-                    <td class="t monthly_earnings">Earnings</td>
+                    <td class="t monthly_earnings"><?php _e('Earnings', 'edd'); ?></td>
                 </tr>
                 <tr>
                     <td class="first b"><?php echo edd_get_sales_by_date( date('n'), date('Y') ); ?></td>
-                    <td class="t monthly_sales">Sales</td>
+                    <td class="t monthly_sales"><?php _e('Sales', 'edd'); ?></td>
                 </tr>
             </tbody>
         </table>
@@ -337,11 +337,11 @@ function edd_dashboard_sales_widget() {
             <tbody>
                 <tr class="first">
                     <td class="b b-earnings"><?php echo edd_get_total_earnings(); ?></td>
-                    <td class="last t earnings">Total Earnings</td>
+                    <td class="last t earnings"><?php _e('Total Earnings', 'edd'); ?></td>
                 </tr>
                 <tr>
                     <td class="b b-sales"><?php echo edd_get_total_sales(); ?></td>
-                    <td class="last t sales">Total Sales</td>
+                    <td class="last t sales"><?php _e('Total Sales', 'edd'); ?></td>
                 </tr>
             </tbody>
         </table>
