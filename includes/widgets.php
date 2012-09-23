@@ -297,7 +297,7 @@ function edd_register_dashboard_widgets() {
 
     global $edd_options;
 
-    if ( ! $edd_options['disable_widget'] ) {
+    if ( ! isset( $edd_options['disable_widget'] ) ) {
         wp_add_dashboard_widget( 'edd_dashboard_sales', __('Easy Digital Downloads Sales Summary', 'edd'), 'edd_dashboard_sales_widget' );
     }
 
@@ -309,7 +309,7 @@ add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets' );
  * Sales Summary Dashboard Widget
  *
  *
- * @access      public
+ * @access      private
  * @author      Sunny Ratilal
  * @since       1.2.2
 */
@@ -349,27 +349,3 @@ function edd_dashboard_sales_widget() {
     <div style="clear: both"></div>
     <?php
 }
-
-/*
-|--------------------------------------------------------------------------
-| DASHBOARD WIDGETS
-|--------------------------------------------------------------------------
-|
-| Disabled for now.
-|
-*/
-/*
-function edd_stats_widgets() {
-   wp_add_dashboard_widget('edd_sales_widget', __('Download Sales', 'edd'), 'edd_dashboard_sales_widget');
-   wp_add_dashboard_widget('edd_earnings_widget', __('Download Earnings', 'edd'), 'edd_dashboard_earnings_widget');
-}
-add_action('wp_dashboard_setup', 'edd_stats_widgets', 999);
-
-function edd_dashboard_sales_widget() {
-    edd_show_download_sales_graph();
-}
-
-function edd_dashboard_earnings_widget() {
-    edd_show_download_earnings_graph();
-}
-*/
