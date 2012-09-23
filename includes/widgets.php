@@ -282,6 +282,74 @@ function edd_register_widgets() {
 }
 add_action('widgets_init', 'edd_register_widgets');
 
+
+/**
+ * Register Dashboard Widgets
+ *
+ * Registers the dashboard widgets.
+ *
+ * @access      private
+ * @author      Sunny Ratilal
+ * @since       1.2.2
+*/
+
+function edd_register_dashboard_widgets() {
+
+    global $edd_options;
+
+    if ( ! $edd_options['disable_widget'] ) {
+        wp_add_dashboard_widget( 'edd_dashboard_sales', __('Easy Digital Downloads Sales Summary', 'edd'), 'edd_dashboard_sales_widget' );
+    }
+
+}
+add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets' ); 
+
+
+/**
+ * Sales Summary Dashboard Widget
+ *
+ *
+ * @access      public
+ * @author      Sunny Ratilal
+ * @since       1.2.2
+*/
+
+function edd_dashboard_sales_widget() {
+    ?>
+    <div class="table table_current_month">
+        <p class="sub"><?php _e('Current Month', 'edd') ?></p>
+        <table>
+            <tbody>
+                <tr class="first">
+                    <td class="first b"><?php echo edd_currency_filter( edd_get_earnings_by_date(null, date('n'), date('Y')) ); ?></td>
+                    <td class="t monthly_earnings">Earnings</td>
+                </tr>
+                <tr>
+                    <td class="first b"><?php echo edd_get_sales_by_date( date('n'), date('Y') ); ?></td>
+                    <td class="t monthly_sales">Sales</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="table table_totals">
+        <p class="sub"><?php _e('Totals', 'edd') ?></p>
+        <table>
+            <tbody>
+                <tr class="first">
+                    <td class="b b-earnings"><?php echo edd_get_total_earnings(); ?></td>
+                    <td class="last t earnings">Total Earnings</td>
+                </tr>
+                <tr>
+                    <td class="b b-sales"><?php echo edd_get_total_sales(); ?></td>
+                    <td class="last t sales">Total Sales</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="clear: both"></div>
+    <?php
+}
+
 /*
 |--------------------------------------------------------------------------
 | DASHBOARD WIDGETS
@@ -290,7 +358,6 @@ add_action('widgets_init', 'edd_register_widgets');
 | Disabled for now.
 |
 */
-
 /*
 function edd_stats_widgets() {
    wp_add_dashboard_widget('edd_sales_widget', __('Download Sales', 'edd'), 'edd_dashboard_sales_widget');
