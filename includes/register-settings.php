@@ -287,12 +287,6 @@ function edd_register_settings() {
 					'name' => __('Complete Purchase Text', 'edd'),
 					'desc' => __('The button label for completing a purchase.', 'edd'),
 					'type' => 'text',
-				),
-				array(
-					'id' => 'disable_widget',
-					'name' => __('Disable Sales Summary Dashboard Widget', 'edd'),
-					'desc' => __('Check this to diasble the Sales Summary widget for everyone\'s Dashboard', 'edd'),
-					'type' => 'checkbox',
 				)
 			)
 		)

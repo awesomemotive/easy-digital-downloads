@@ -295,9 +295,7 @@ add_action('widgets_init', 'edd_register_widgets');
 
 function edd_register_dashboard_widgets() {
 
-    global $edd_options;
-
-    if ( ! isset( $edd_options['disable_widget'] ) ) {
+    if ( current_user_can( apply_filters( 'edd_dashboard_stats_cap', 'edit_pages' ) ) ) {
         wp_add_dashboard_widget( 'edd_dashboard_sales', __('Easy Digital Downloads Sales Summary', 'edd'), 'edd_dashboard_sales_widget' );
     }
 
