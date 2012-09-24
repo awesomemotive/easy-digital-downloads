@@ -60,11 +60,7 @@ function edd_download_meta_box_save($post_id) {
 		return $post_id;
 
 	// check permissions
-	if ( isset( $_POST[ 'post_type' ] ) && 'page' == $_POST[ 'post_type' ] ) {
-		if ( ! current_user_can('edit_page', $post_id ) ) {
-			return $post_id;
-		}
-	} elseif ( ! current_user_can( 'edit_post', $post_id ) ) {
+	if ( ! current_user_can( 'edit_pages', $post_id ) ) {
 		return $post_id;
 	}
 	
@@ -167,13 +163,13 @@ function edd_render_price_field($post_id) {
 	<div id="edd_variable_price_fields" class="edd_pricing_fields" <?php echo $variable_display; ?>>
 		<input type="hidden" id="edd_variable_prices" class="edd_variable_prices_name_field" value=""/>
 		
-		<div id="postcustomstuff">
-			<table id="newmeta" class="widefat" width="100%" cellpadding="0" cellspacing="0">
+		<div id="edd_price_fields" class="edd_meta_table_wrap">
+			<table class="widefat" width="100%" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
 						<th><?php _e( 'Option Name', 'edd' ); ?></th>
 						<th style="width: 90px"><?php _e( 'Price', 'edd' ); ?></th>
-						<?php do_action( 'edd_download_price_table_head', $download_id ); ?>
+						<?php do_action( 'edd_download_price_table_head', $post_id ); ?>
 						<th style="width: 2%"></th>
 					</tr>
 				</thead>
@@ -187,14 +183,14 @@ function edd_render_price_field($post_id) {
 								$args = apply_filters( 'edd_price_row_args', compact( 'name', 'amount' ) );
 					?>
 						<tr class="edd_variable_prices_wrapper">
-							<?php do_action( 'edd_render_price_row', $key, $args, $download_id ); ?>
+							<?php do_action( 'edd_render_price_row', $key, $args, $post_id ); ?>
 						</tr>
 					<?php
 							endforeach;
 						else :
 					?>
 						<tr class="edd_variable_prices_wrapper">
-							<?php do_action( 'edd_render_price_row', 0, array(), $download_id ); ?>
+							<?php do_action( 'edd_render_price_row', 0, array(), $post_id ); ?>
 						</tr>
 					<?php endif; ?>
 
@@ -211,6 +207,7 @@ function edd_render_price_field($post_id) {
 }
 add_action( 'edd_meta_box_fields', 'edd_render_price_field', 10 );
 
+
 /**
  * Individual price row.
  *
@@ -221,7 +218,7 @@ add_action( 'edd_meta_box_fields', 'edd_render_price_field', 10 );
  * @since       1.2.2
  * @return      void
  */
-function edd_render_price_row( $key, $args = array(), $download_id ) {
+function edd_render_price_row( $key, $args = array(), $post_id ) {
 	global $edd_options;
 
 	$defaults = array(
@@ -244,7 +241,7 @@ function edd_render_price_row( $key, $args = array(), $download_id ) {
 		<?php endif; ?>
 	</td>
 
-	<?php do_action( 'edd_download_price_table_row', $download_id, $key, $args ); ?>
+	<?php do_action( 'edd_download_price_table_row', $post_id, $key, $args ); ?>
 
 	<td>
 		<a href="#" class="edd_remove_repeatable" data-type="price" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
@@ -252,6 +249,7 @@ function edd_render_price_row( $key, $args = array(), $download_id ) {
 <?php
 }
 add_action( 'edd_render_price_row', 'edd_render_price_row', 10, 3 );
+
 
 /**
  * File Downloads section.
@@ -266,9 +264,9 @@ add_action( 'edd_render_price_row', 'edd_render_price_row', 10, 3 );
  * @since       1.0 
  * @return      void
  */
-function edd_render_files_field( $download_id ) {	
-	$files 				= edd_get_download_files( $download_id );
-	$variable_pricing 	= edd_has_variable_prices( $download_id );
+function edd_render_files_field( $post_id ) {	
+	$files 				= edd_get_download_files( $post_id );
+	$variable_pricing 	= edd_has_variable_prices( $post_id );
 	$variable_display 	= $variable_pricing ? '' : 'display:none;';
 ?>
 	<div id="edd_download_files">
@@ -279,14 +277,14 @@ function edd_render_files_field( $download_id ) {
 
 		<input type="hidden" id="edd_download_files" class="edd_repeatable_upload_name_field" value=""/>
 
-		<div id="postcustomstuff">
-			<table id="newmeta" class="widefat" width="100%" cellpadding="0" cellspacing="0">
+		<div id="edd_file_fields" class="edd_meta_table_wrap">
+			<table class="widefat" width="100%" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
 						<th style="width: 20%"><?php _e( 'File Name', 'edd' ); ?></th>
 						<th><?php _e( 'File URL', 'edd' ); ?></th>
 						<th class="pricing" style="width: 20%; <?php echo $variable_display; ?>"><?php _e( 'Price Assignment', 'edd' ); ?></th>
-						<?php do_action( 'edd_download_file_table_head', $download_id ); ?>
+						<?php do_action( 'edd_download_file_table_head', $post_id ); ?>
 						<th style="width: 2%"></th>
 					</tr>
 				</thead>
@@ -301,14 +299,14 @@ function edd_render_files_field( $download_id ) {
 							$args = apply_filters( 'edd_file_row_args', compact( 'name', 'file', 'condition' ) );
 				?>
 						<tr class="edd_repeatable_upload_wrapper">
-							<?php do_action( 'edd_render_file_row', $key, $args, $download_id ); ?>
+							<?php do_action( 'edd_render_file_row', $key, $args, $post_id ); ?>
 						</tr>
 				<?php 
 						endforeach;
 					else : 
 				?>
 					<tr class="edd_repeatable_upload_wrapper">
-						<?php do_action( 'edd_render_file_row', 0, array(), $download_id ); ?>
+						<?php do_action( 'edd_render_file_row', 0, array(), $post_id ); ?>
 					</tr>
 				<?php endif; ?>
 					<tr>
@@ -334,7 +332,7 @@ add_action( 'edd_meta_box_fields', 'edd_render_files_field', 20 );
  * @since       1.2.2
  * @return      void
  */
-function edd_render_file_row( $key = '', $args = array(), $download_id ) {
+function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 	$defaults = array(
 		'name'      => null,
 		'file'      => null,
@@ -344,9 +342,9 @@ function edd_render_file_row( $key = '', $args = array(), $download_id ) {
 	$args = wp_parse_args( $args, $defaults );
 	extract( $args, EXTR_SKIP  );
 
-	$prices = edd_get_variable_prices( $download_id );
+	$prices = edd_get_variable_prices( $post_id );
 
-	$variable_pricing = edd_has_variable_prices( $download_id );
+	$variable_pricing = edd_has_variable_prices( $post_id );
 	$variable_display = $variable_pricing ? '' : ' style="display:none;"';
 ?>
 	<td>
@@ -370,7 +368,7 @@ function edd_render_file_row( $key = '', $args = array(), $download_id ) {
 		</select>
 	</td>
 
-	<?php do_action( 'edd_download_file_table_row', $download_id, $key, $args ); ?>
+	<?php do_action( 'edd_download_file_table_row', $post_id, $key, $args ); ?>
 
 	<td>
 		<a href="#" class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
