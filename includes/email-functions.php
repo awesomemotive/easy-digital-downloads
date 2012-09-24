@@ -51,7 +51,10 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$headers .= "MIME-Version: 1.0\r\n";
 	$headers .= "Content-Type: text/html; charset=utf-8\r\n";	
 		
-	wp_mail( $payment_data['email'], $subject, $message, $headers);
+	// allow add-ons to add file attachments
+	$attachments = apply_filters( 'edd_receipt_attachments', array(), $payment_id, $payment_data );
+
+	wp_mail( $payment_data['email'], $subject, $message, $headers, $attachments );
 	
 	if($admin_notice) {
 		/* send an email notification to the admin */
@@ -75,6 +78,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 		$admin_message .= __('Payment Method: ', 'edd') . " " . $gateway . "\n\n";
 		$admin_message .= __('Thank you', 'edd');
 		$admin_message = apply_filters('edd_admin_purchase_notification', $admin_message, $payment_id, $payment_data);
+
 		wp_mail( $admin_email, __('New download purchase', 'edd'), $admin_message );
 	}
 }

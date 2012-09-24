@@ -178,6 +178,10 @@ function edd_update_payment_status($payment_id, $new_status = 'publish') {
 	}
 	
 	$payment = get_post($payment_id);
+
+	if( is_wp_error( $payment ) || !is_object( $payment ) )
+		return;
+
 	if($payment->post_status == 'publish') {		
 		//return;
 	}
@@ -414,6 +418,32 @@ function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
 	if($downloads)
 		return $downloads;
 	return false;
+}
+
+
+/**
+ * Get Total Sales
+ *
+ * @access      public
+ * @author      Sunny Ratilal
+ * @since       1.2.2
+ * @return      int
+*/
+
+function edd_get_total_sales() {
+	$sales = get_posts(
+		array(
+			'post_type' => 'edd_payment', 
+			'posts_per_page' => -1,
+			'meta_key' => '_edd_payment_mode',
+			'meta_value' => 'live'
+		)
+	);
+	$total = 0;
+	if( $sales ) {
+		$total = count( $sales );
+	}
+	return $total;
 }
 
 

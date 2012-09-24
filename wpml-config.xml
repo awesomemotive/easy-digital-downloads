@@ -1,0 +1,41 @@
+<wpml-config>
+    <custom-types>
+        <custom-type translate="1">download</custom-type>
+        <custom-type translate="0">edd_payment</custom-type>
+    </custom-types>
+    <custom-fields>
+        <custom-field action="ignore">_edd_download_earnings</custom-field>
+        <custom-field action="ignore">_edd_download_sales</custom-field>
+        <custom-field action="copy">edd_price</custom-field>
+        <custom-field action="copy">edd_variable_prices</custom-field>
+        <custom-field action="copy">edd_download_files</custom-field>
+        <custom-field action="copy">_edd_purchase_style</custom-field>
+        <custom-field action="copy">_edd_purchase_color</custom-field>
+        <custom-field action="translate">_edd_purchase_text</custom-field>
+        <custom-field action="translate">edd_product_notes</custom-field>
+    </custom-fields>
+    <taxonomies>
+        <taxonomy translate="1">download_category</taxonomy>
+        <taxonomy translate="1">download_tag</taxonomy>
+    </taxonomies>
+    <admin-texts>
+        <key name="edd_settings_general">
+	        <key name="purchase_page" />
+	        <key name="success_page" />
+        </key>
+        
+        <key name="edd_settings_emails">
+            <key name="from_name" />
+            <key name="from_email" />
+            <key name="purchase_subject" />
+            <key name="purchase_receipt" />
+        </key>
+        <key name="edd_settings_misc">
+            <key name="agree_label" />
+            <key name="agree_text" />
+            <key name="checkout_label" />
+        </key>
+    </admin-texts>
+</wpml-config>
+
+

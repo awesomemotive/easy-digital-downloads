@@ -96,7 +96,7 @@ function edd_load_admin_scripts($hook) {
 
 	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page;
 
-	$edd_pages = array($edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page);
+	$edd_pages = array($edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page, 'index.php');
 	$edd_cpt   = apply_filters( 'edd_load_scripts_for_these_types', array( 'download', 'edd_payment' ) );
 
 	if ( ! in_array( $hook, $edd_pages ) && ! is_object( $post ) )

@@ -64,6 +64,11 @@ function edd_add_to_cart($download_id, $options = array()) {
 
 		do_action( 'edd_pre_add_to_cart', $download_id, $options );
 
+		if( edd_has_variable_prices( $download_id )  && ! isset( $options['price_id'] ) ) {
+			// forces to the first price ID if none is specified and download has variable prices
+			$options['price_id'] = 0;
+		}
+
 		if(is_array($cart)) {
 			$cart[] = array('id' => $download_id, 'options' => $options);
 		} else {
@@ -265,7 +270,7 @@ function edd_get_cart_amount() {
 			$amount = edd_get_discounted_amount($_POST['edd-discount'], $amount);
 		}
 		
-		return $amount;
+		return number_format( $amount, 2 );
 	}
 	return 0;
 }

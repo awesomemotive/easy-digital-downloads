@@ -98,7 +98,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 }
 .edd_button_text, input.edd_button_text, input#edd-purchase-button, input#edd_next_button { 
 	display: block; height: 32px !important; background-image: url(../images/button-mid.png) !important; 
-	padding: 0 4px !important; margin: 0; border: none !important;  text-shadow: none; color: #555; 
+	padding: 0 4px !important; margin: 0; border: none !important;  text-shadow: none; color: #555; width: auto;
 	-webkit-border-radius: 0 !important; -moz-border-radius: 0 !important; border-radius: 0 !important; cursor: pointer;
 }
 input.edd_button_text, input#edd-purchase-button, input#edd_next_button  { 

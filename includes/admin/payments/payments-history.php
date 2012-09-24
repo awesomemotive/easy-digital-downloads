@@ -24,7 +24,7 @@ function edd_payment_history_page() {
 	global $edd_options;
 	
 	if(isset($_GET['edd-action']) && $_GET['edd-action'] == 'edit-payment') {
-		include_once(EDD_PLUGIN_DIR . '/includes/admin-pages/forms/edit-payment.php');
+		include_once(EDD_PLUGIN_DIR . '/includes/admin/payments/edit-payment.php');
 	} else {
 		
 		$current_page = admin_url('edit.php?post_type=download&page=edd-payment-history');
