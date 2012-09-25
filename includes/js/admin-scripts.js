@@ -24,21 +24,24 @@ jQuery(document).ready(function ($) {
 					$( this ).val( row.find( 'select[name="' + $( this ).attr( 'name' ) + '"]' ).val() );
 				});
 
-				var count  = row.parent().find( 'tr' ).length + 1;
-				//alert( count );
-				clone
-					.removeClass( 'edd_add_blank' )
-					.insertBefore( row )
-					.find( 'input, select' ).each(function() {
-						var name = $( this ).attr( 'name' );
+				var count  = row.parent().find( 'tr' ).length - 1;
 
-						name = name.replace( /\[(\d+)\]/, '[' + parseInt(count) + ']');
+				clone.removeClass( 'edd_add_blank' );
+				
+
+				clone.find( 'td input, td select' ).val( '' );
+				clone.find( 'input, select' ).each(function() {
+						var name 	= $( this ).attr( 'name' );
+
+						name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
 						
 						$( this )
-							.attr( 'name', name );
+							.attr( 'name', name )
+							.attr( 'id', name );
 					});
 
-				row.find( 'td input, td select' ).val( '' );
+				clone.insertAfter( row );
+				
 			});
 		},
 
