@@ -125,7 +125,8 @@ function edd_load_admin_scripts($hook) {
         'quick_edit_warning'=> __('Sorry, not available for variable priced products.', 'edd'),
         'delete_payment' 	=> __('Are you sure you wish to delete this payment?', 'edd'),
         'one_price_min' 	=> __('You must have at least one price', 'edd'),
-        'one_file_min' 		=> __('You must have at least one file', 'edd')
+        'one_file_min' 		=> __('You must have at least one file', 'edd'),
+        'one_field_min'		=> __('You must have at least one field', 'edd')
     ));
 	wp_enqueue_style('thickbox');
 	wp_enqueue_style('jquery-ui-css', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css', false, '1.8', 'all');
