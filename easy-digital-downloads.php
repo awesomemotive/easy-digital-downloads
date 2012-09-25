@@ -107,10 +107,10 @@ if(is_admin()) {
 	include_once(EDD_PLUGIN_DIR . 'includes/admin/admin-notices.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/admin/export-functions.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/metabox.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/admin/thickbox.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/admin/downloads/dashboard-columns.php');
+	include_once(EDD_PLUGIN_DIR . 'includes/admin/downloads/metabox.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-actions.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php');
 	include_once(EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php');
