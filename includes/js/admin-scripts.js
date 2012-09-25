@@ -25,7 +25,7 @@ jQuery(document).ready(function ($) {
 				});
 
 				var count  = row.parent().find( 'tr' ).length + 1;
-
+				//alert( count );
 				clone
 					.removeClass( 'edd_add_blank' )
 					.insertBefore( row )
@@ -60,6 +60,9 @@ jQuery(document).ready(function ($) {
 							break;
 						case 'file' :
 							alert( edd_vars.one_file_min );
+							break;
+						default:
+							alert( edd_vars.one_field_min );
 							break;
 					}
 				}
