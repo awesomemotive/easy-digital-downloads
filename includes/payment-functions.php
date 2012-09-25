@@ -33,7 +33,7 @@ function edd_get_payments( $args = array() ) {
 		'order'    => 'DESC',
 		'user'     => null,
 		'status'   => 'any',
-		'meta_key' => 'null'
+		'meta_key' => null
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -461,14 +461,13 @@ function edd_get_total_earnings() {
 	$payments = get_transient( 'edd_total_earnings' );
 	if( false === $payments || '' === $payments ) {
 		$payments = edd_get_payments( array(
-			'offset' => 0, 
-			'number' => -1, 
-			'mode'   => 'live', 
-			'orderby' => 'ID', 
-			'order'   => 'DESC', 
-			'user'    => null, 
-			'status'  => 'publish',
-			'meta_key'=> '_edd_payment_total'
+			'offset' 	=> 0, 
+			'number' 	=> -1, 
+			'mode'   	=> 'live', 
+			'orderby' 	=> 'ID', 
+			'order'   	=> 'DESC', 
+			'user'    	=> null, 
+			'status'  	=> 'publish',
 		) );
 		set_transient( 'edd_total_earnings', $payments, 3600 );
 	}
