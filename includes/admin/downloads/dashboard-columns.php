@@ -144,6 +144,18 @@ function edd_sort_downloads( $vars ) {
 				)
 			);
 		}
+
+		// check if "orderby" is set to "earnings"
+		if ( isset( $vars['orderby'] ) && 'price' == $vars['orderby'] ) {
+			// merge the query vars with our custom variables
+			$vars = array_merge(
+				$vars,
+				array(
+					'meta_key' => 'edd_price',
+					'orderby' => 'meta_value_num'
+				)
+			);
+		}
 	}
 	
 	return $vars;
@@ -163,7 +175,7 @@ function edd_sort_downloads( $vars ) {
 function edd_download_load() {
 	add_filter( 'request', 'edd_sort_downloads' );
 }
-add_action( 'load-edit.php', 'edd_download_load' );
+add_action( 'load-edit.php', 'edd_download_load', 9999 );
 
 
 /**
