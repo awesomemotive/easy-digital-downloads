@@ -247,6 +247,35 @@ function edd_get_price_name($item_id, $options = array()) {
 
 
 /**
+ * Get Cart Subtotal
+ *
+ * Gets the total price amount in the cart before taxes and before any discounts
+ * uses edd_get_cart_contents().
+ *
+ * @access      public
+ * @since       1.2.3
+ * @return      float - the total amount before taxes
+*/
+
+function edd_get_cart_subtotal() {
+
+	$cart_items = edd_get_cart_contents();
+
+	$amount = (float) 0;
+
+	if( $cart_items ) {
+
+		foreach( $cart_items as $item ) {
+			$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
+			$amount += $item_price;
+		}
+		
+	}
+	return number_format( $amount, 2 );
+}
+
+
+/**
  * Get Cart Amount
  *
  * Gets the total price amount in the cart.
@@ -254,25 +283,26 @@ function edd_get_price_name($item_id, $options = array()) {
  *
  * @access      public
  * @since       1.0
- * @return      string - the name of the price option
+ * @return      float the total amount
 */
 
 function edd_get_cart_amount() {
-	$cart_items = edd_get_cart_contents();
-	$amount = 0;
-	if($cart_items) {
-		foreach($cart_items as $item) {
-			$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
-			$amount = $amount + $item_price;
-		}
-		if(isset($_POST['edd-discount']) && $_POST['edd-discount'] != '') {
-			// discount is validated before this function runs, so no need to check for it
-			$amount = edd_get_discounted_amount($_POST['edd-discount'], $amount);
-		}
-		
-		return number_format( $amount, 2 );
+
+	$amount = edd_get_cart_subtotal();
+
+	
+	if( isset( $_POST['edd-discount'] ) && $_POST['edd-discount'] != '' ) {
+		// discount is validated before this function runs, so no need to check for it
+		$amount = edd_get_discounted_amount( $_POST['edd-discount'], $amount );
 	}
-	return 0;
+
+	if( edd_use_taxes() ) {
+		// add the taxes amount if enabled
+		$tax = edd_get_cart_tax();
+		$amount += $tax;
+	}
+
+	return number_format( $amount, 2 );
 }
 
 
@@ -312,7 +342,7 @@ function edd_get_purchase_summary($purchase_data, $email = true) {
 
 function edd_get_cart_tax() {
 
-	$cart_sub_total = edd_get_cart_amount();
+	$cart_sub_total = edd_get_cart_subtotal();
 	$cart_tax 		= edd_calculate_tax( $cart_sub_total );
 	$cart_tax 		= edd_format_amount( $cart_tax );
 
