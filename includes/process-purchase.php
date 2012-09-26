@@ -64,16 +64,18 @@ function edd_process_purchase_form() {
 
 	// setup purchase information
 	$purchase_data = array(
-		'downloads' => edd_get_cart_contents(),
-		'price' => edd_get_cart_amount(),
-		'purchase_key' => strtolower( md5( uniqid() ) ), // random key
-		'user_email' => $user['user_email'],
-		'date' => date( 'Y-m-d H:i:s' ),
-		'user_info' => $user_info,
-		'post_data' => $_POST,
-		'cart_details' => edd_get_cart_content_details(),
-		'gateway' => $valid_data['gateway'],
-		'card_info' => $valid_data['cc_info']
+		'downloads' 	=> edd_get_cart_contents(),
+		'subtotal'		=> edd_get_cart_amount( false ), 	// amount before taxes
+		'tax'			=> edd_get_cart_tax(), 				// taxed amount
+		'price' 		=> edd_get_cart_amount(), 			// amount after taxes
+		'purchase_key' 	=> strtolower( md5( uniqid() ) ), 	// random key
+		'user_email' 	=> $user['user_email'],
+		'date' 			=> date( 'Y-m-d H:i:s' ),
+		'user_info' 	=> $user_info,
+		'post_data' 	=> $_POST,
+		'cart_details' 	=> edd_get_cart_content_details(),
+		'gateway' 		=> $valid_data['gateway'],
+		'card_info' 	=> $valid_data['cc_info']
 	);
 	
 	// add the user data for hooks
