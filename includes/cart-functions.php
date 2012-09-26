@@ -303,6 +303,20 @@ function edd_get_purchase_summary($purchase_data, $email = true) {
 
 
 /**
+ * Gets the total tax amount for the cart contents
+ *
+ * Returns a fully formatted amount
+ *
+ * @access      public
+ * @since       1.2.3
+ * @return      string
+*/
+
+function edd_cart_tax( $echo = true ) {
+
+}
+
+/**
  * Get Cart Content Details
  *
  * Retrieves the cart contnet details.
