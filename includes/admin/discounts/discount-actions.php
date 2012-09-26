@@ -21,20 +21,20 @@
  * @return      void
 */
 
-function edd_add_discount($data) {
-	if(wp_verify_nonce($data['edd-discount-nonce'], 'edd_discount_nonce')) {
+function edd_add_discount( $data ) {
+	if (wp_verify_nonce( $data['edd-discount-nonce'], 'edd_discount_nonce' ) ) {
 		// setup the discount code details
 		$posted = array();
-		foreach($data as $key => $value) {
-			if($key != 'edd-discount-nonce' && $key != 'edd-action')
-			$posted[$key] = strip_tags(addslashes($value));
+		foreach( $data as $key => $value ) {
+			if( $key != 'edd-discount-nonce' && $key != 'edd-action' )
+			$posted[$key] = strip_tags(addslashes( $value ) );
 		}
 		// set the discount code's default status to active
 		$posted['status'] = 'active';
-		$save = edd_store_discount($posted);
+		$save = edd_store_discount( $posted );
 	}
 }
-add_action('edd_add_discount', 'edd_add_discount');
+add_action( 'edd_add_discount', 'edd_add_discount' );
 
 
 /**
@@ -47,11 +47,11 @@ add_action('edd_add_discount', 'edd_add_discount');
  * @return      void
 */
 
-function edd_edit_discount($data) {
-	if( isset( $data['edd-discount-nonce'] ) && wp_verify_nonce( $data['edd-discount-nonce'], 'edd_discount_nonce') ) {
+function edd_edit_discount( $data ) {
+	if( isset( $data['edd-discount-nonce'] ) && wp_verify_nonce( $data['edd-discount-nonce'], 'edd_discount_nonce' ) ) {
 		// setup the discount code details
 		$discount = array();
-		foreach($data as $key => $value) {
+		foreach( $data as $key => $value ) {
 			if( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'discount-id' && $key != 'edd-redirect' )
 			$discount[$key] = strip_tags( addslashes( $value ) );
 		}
@@ -64,7 +64,7 @@ function edd_edit_discount($data) {
 		}
 	}
 }
-add_action('edd_edit_discount', 'edd_edit_discount');
+add_action( 'edd_edit_discount', 'edd_edit_discount' );
 
 /**
  * Delete Discount
@@ -76,11 +76,11 @@ add_action('edd_edit_discount', 'edd_edit_discount');
  * @return      void
 */
 
-function edd_delete_discount($data) {
+function edd_delete_discount( $data ) {
 	$discount_id = $data['discount'];
-	edd_remove_discount($discount_id);
+	edd_remove_discount( $discount_id );
 }
-add_action('edd_delete_discount', 'edd_delete_discount');
+add_action( 'edd_delete_discount', 'edd_delete_discount' );
 
 
 /**
@@ -93,11 +93,11 @@ add_action('edd_delete_discount', 'edd_delete_discount');
  * @return      void
 */
 
-function edd_activate_discount($data) {
+function edd_activate_discount( $data ) {
 	$id = $data['discount'];
-	edd_update_discount_status($id, 'active');
+	edd_update_discount_status( $id, 'active' );
 }
-add_action('edd_activate_discount', 'edd_activate_discount');
+add_action( 'edd_activate_discount', 'edd_activate_discount' );
 
 
 /**
@@ -108,8 +108,8 @@ add_action('edd_activate_discount', 'edd_activate_discount');
  * @return      void
 */
 
-function edd_deactivate_discount($data) {
+function edd_deactivate_discount( $data) {
 	$id = $data['discount'];
-	edd_update_discount_status($id, 'inactive');
+	edd_update_discount_status( $id, 'inactive' );
 }
-add_action('edd_deactivate_discount', 'edd_deactivate_discount');
+add_action( 'edd_deactivate_discount', 'edd_deactivate_discount' );

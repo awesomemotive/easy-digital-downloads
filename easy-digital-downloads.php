@@ -29,16 +29,16 @@ along with Easy Digital Downloads. If not, see <http://www.gnu.org/licenses/>.
 */
 
 // plugin folder url
-if(!defined('EDD_PLUGIN_URL')) {
-	define('EDD_PLUGIN_URL', plugin_dir_url( __FILE__ ));
+if( ! defined( 'EDD_PLUGIN_URL' ) ) {
+	define( 'EDD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 }
 // plugin folder path
-if(!defined('EDD_PLUGIN_DIR')) {
-	define('EDD_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
+if( ! defined( 'EDD_PLUGIN_DIR' ) ) {
+	define( 'EDD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 }
 // plugin root file
-if(!defined('EDD_PLUGIN_FILE')) {
-	define('EDD_PLUGIN_FILE', __FILE__);
+if( ! defined( 'EDD_PLUGIN_FILE' ) ) {
+	define( 'EDD_PLUGIN_FILE', __FILE__ );
 }
 
 /*
@@ -64,7 +64,7 @@ function edd_textdomain() {
 	// Load the translations
 	load_plugin_textdomain( 'edd', false, $edd_lang_dir );
 }
-add_action('init', 'edd_textdomain');
+add_action( 'init', 'edd_textdomain' );
 
 /*
 |--------------------------------------------------------------------------
@@ -72,57 +72,57 @@ add_action('init', 'edd_textdomain');
 |--------------------------------------------------------------------------
 */
 
-include_once(EDD_PLUGIN_DIR . 'includes/register-settings.php');
+include_once( EDD_PLUGIN_DIR . 'includes/register-settings.php' );
 $edd_options = edd_get_settings();
-include_once(EDD_PLUGIN_DIR . 'includes/install.php');
-include_once(EDD_PLUGIN_DIR . 'includes/actions.php');
-include_once(EDD_PLUGIN_DIR . 'includes/deprecated-functions.php');
-include_once(EDD_PLUGIN_DIR . 'includes/template-functions.php');
-include_once(EDD_PLUGIN_DIR . 'includes/checkout-template.php');
-include_once(EDD_PLUGIN_DIR . 'includes/cart-template.php');
-include_once(EDD_PLUGIN_DIR . 'includes/cart-functions.php');
-include_once(EDD_PLUGIN_DIR . 'includes/cart-actions.php');
-include_once(EDD_PLUGIN_DIR . 'includes/ajax-functions.php');
-include_once(EDD_PLUGIN_DIR . 'includes/formatting.php');
-include_once(EDD_PLUGIN_DIR . 'includes/widgets.php');
-include_once(EDD_PLUGIN_DIR . 'includes/mime-types.php');
-include_once(EDD_PLUGIN_DIR . 'includes/gateway-functions.php');
-include_once(EDD_PLUGIN_DIR . 'includes/discount-functions.php');
-include_once(EDD_PLUGIN_DIR . 'includes/payment-functions.php');
-include_once(EDD_PLUGIN_DIR . 'includes/payment-actions.php');
-include_once(EDD_PLUGIN_DIR . 'includes/misc-functions.php');
-include_once(EDD_PLUGIN_DIR . 'includes/download-functions.php');
-include_once(EDD_PLUGIN_DIR . 'includes/scripts.php');
-include_once(EDD_PLUGIN_DIR . 'includes/post-types.php');
-include_once(EDD_PLUGIN_DIR . 'includes/plugin-compatibility.php');
-include_once(EDD_PLUGIN_DIR . 'includes/email-functions.php');
-include_once(EDD_PLUGIN_DIR . 'includes/email-template.php');
-include_once(EDD_PLUGIN_DIR . 'includes/email-actions.php');
-include_once(EDD_PLUGIN_DIR . 'includes/error-tracking.php');
-include_once(EDD_PLUGIN_DIR . 'includes/user-functions.php');
-include_once(EDD_PLUGIN_DIR . 'includes/query-filters.php');
-if(is_admin()) {
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/add-ons.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/admin-notices.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/export-functions.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/thickbox.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/downloads/dashboard-columns.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/downloads/metabox.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-actions.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php');	
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/admin/settings/settings.php');
+include_once( EDD_PLUGIN_DIR . 'includes/install.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/actions.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/template-functions.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/checkout-template.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/cart-template.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/cart-functions.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/cart-actions.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/ajax-functions.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/formatting.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/widgets.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/mime-types.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/gateway-functions.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/discount-functions.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/payment-functions.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/payment-actions.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/misc-functions.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/download-functions.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/scripts.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/post-types.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/plugin-compatibility.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/email-functions.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/email-template.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/email-actions.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/error-tracking.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/user-functions.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/query-filters.php' );
+if ( is_admin()) {
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/add-ons.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/admin-notices.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/export-functions.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/thickbox.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/downloads/dashboard-columns.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/downloads/metabox.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-actions.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php' );	
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/settings/settings.php' );
 } else {
-	include_once(EDD_PLUGIN_DIR . 'includes/process-purchase.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/process-download.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/shortcodes.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/gateways/manual.php');
-	include_once(EDD_PLUGIN_DIR . 'includes/login-register.php');
+	include_once( EDD_PLUGIN_DIR . 'includes/process-purchase.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/process-download.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/shortcodes.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/gateways/manual.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/login-register.php' );
 }
