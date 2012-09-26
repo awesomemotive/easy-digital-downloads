@@ -305,6 +305,26 @@ function edd_get_purchase_summary($purchase_data, $email = true) {
 /**
  * Gets the total tax amount for the cart contents
  *
+ * @access      public
+ * @since       1.2.3
+ * @return      string
+*/
+
+function edd_get_cart_tax() {
+
+	$cart_sub_total = edd_get_cart_amount();
+	$cart_tax 		= edd_calculate_tax( $cart_sub_total );
+	$cart_tax 		= edd_format_amount( $cart_tax );
+
+	$tax = apply_filters( 'edd_get_cart_tax', $cart_tax, $cart_sub_total );
+
+	return $tax;
+
+}
+
+/**
+ * Gets the total tax amount for the cart contents
+ *
  * Returns a fully formatted amount
  *
  * @access      public
@@ -312,7 +332,16 @@ function edd_get_purchase_summary($purchase_data, $email = true) {
  * @return      string
 */
 
-function edd_cart_tax( $echo = true ) {
+function edd_cart_tax( $echo = false ) {
+
+	$cart_tax = edd_get_cart_tax();
+	$cart_tax = edd_currency_filter( edd_format_amount( $cart_tax ) );
+
+	$tax = apply_filters( 'edd_cart_tax', $cart_tax );
+
+	if( $echo )
+		echo $tax;
+	return $tax;
 
 }
 
