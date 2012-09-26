@@ -1,0 +1,2262 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Easy Digital Downloads\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-09-20 17:46+0300\n"
+"PO-Revision-Date: 2012-09-24 20:40+0300\n"
+"Last-Translator: Maoeah <vanyavan@live.com>\n"
+"Language-Team: Easy Digital Downloads <pippin@pippinsplugins.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
+"X-Poedit-KeywordsList: __;_e;_x;_n\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-Language: Arabic\n"
+"X-Poedit-Country: SAUDI ARABIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-SearchPath-1: ../includes\n"
+"X-Poedit-SearchPath-2: .\n"
+
+#: ../includes/admin-notices.php:30
+msgid "Discount code updated."
+msgstr "رمز خصم محدث"
+
+#: ../includes/admin-notices.php:33
+msgid "There was a problem updating your discount code, please try again."
+msgstr "حدثت مشكلة أثناء تحديث رمز خصمك، حاول مرة ثانية"
+
+#: ../includes/admin-notices.php:36
+msgid "The payment has been deleted."
+msgstr "تم إلغاء الدفع"
+
+#: ../includes/admin-notices.php:39
+msgid "The purchase receipt has been resent."
+msgstr "تم إعادة إرسال فاتورة الشراء"
+
+#: ../includes/admin-notices.php:44
+#, php-format
+msgid "The payment history needs updated. %s"
+msgstr "ينبغي تحديث تاريخ الدفع %s"
+
+#: ../includes/admin-notices.php:44
+msgid "Click to Upgrade"
+msgstr "أنقر للترقية"
+
+#: ../includes/admin-notices.php:62
+msgid "There seems to be an issue with the server. Please try again in a few minutes."
+msgstr "يبدو أن هناك مشكلة بالخادم ، نرجو المحاولة مرة أخرى بعد دقائق"
+
+#: ../includes/admin-pages.php:26
+msgid "Payment History"
+msgstr "تاريخ الدفع"
+
+#: ../includes/admin-pages.php:27
+msgid "Discount Codes"
+msgstr "رموز الخصم"
+
+#: ../includes/admin-pages.php:28
+msgid "Earnings and Sales Reports"
+msgstr "تقارير المبيعات و الأرباح"
+
+#: ../includes/admin-pages.php:28
+msgid "Reports"
+msgstr "تقارير"
+
+#: ../includes/admin-pages.php:29
+msgid "Easy Digital Download Settings"
+msgstr "إعدادات إيزي ديجيتل داونلودز"
+
+#: ../includes/admin-pages.php:29
+msgid "Settings"
+msgstr "الإعدادات"
+
+#: ../includes/admin-pages.php:30
+msgid "Easy Digital Download Add Ons"
+msgstr "إضافات إيزي ديجيتل داونلودز"
+
+#: ../includes/admin-pages.php:30
+msgid "Add Ons"
+msgstr "الإضافات"
+
+#: ../includes/ajax-functions.php:102
+msgid "This discount code has been used already"
+msgstr "رمز الخصم هذا مستخدم"
+
+#: ../includes/ajax-functions.php:118
+msgid "The discount you entered is invalid"
+msgstr "الخصم الذي أدخلته غير صالح"
+
+#: ../includes/cart-functions.php:405
+#, php-format
+msgid "You have successfully added %s to your shopping cart."
+msgstr "لقد نجحت باضافة % لسلتك"
+
+#: ../includes/cart-functions.php:406
+msgid "Checkout."
+msgstr "الدفع و الخروج"
+
+#: ../includes/cart-template.php:46
+#: ../includes/cart-template.php:49
+msgid "Checkout"
+msgstr "الدفع و الخروج"
+
+#: ../includes/cart-template.php:80
+msgid "remove"
+msgstr "حذف"
+
+#: ../includes/cart-template.php:99
+msgid "Your cart is empty."
+msgstr "سلتك فارغة"
+
+#: ../includes/checkout-template.php:101
+msgid "Personal Info"
+msgstr "معلومات شخصية"
+
+#: ../includes/checkout-template.php:104
+msgid "Email address"
+msgstr "البريد الإلكتروني"
+
+#: ../includes/checkout-template.php:105
+msgid "Email Address"
+msgstr "البريد الإلكتروني"
+
+#: ../includes/checkout-template.php:109
+#: ../includes/checkout-template.php:110
+#: ../includes/checkout-template.php:343
+#: ../includes/checkout-template.php:344
+msgid "First Name"
+msgstr "الإسم الأول"
+
+#: ../includes/checkout-template.php:113
+#: ../includes/checkout-template.php:347
+msgid "Last name"
+msgstr "الاسم الأخير"
+
+#: ../includes/checkout-template.php:114
+#: ../includes/checkout-template.php:348
+msgid "Last Name"
+msgstr "الإسم الأخير"
+
+#: ../includes/checkout-template.php:142
+msgid "Show Terms"
+msgstr "عرض الشروط"
+
+#: ../includes/checkout-template.php:143
+msgid "Hide Terms"
+msgstr "إخفاء الشروط"
+
+#: ../includes/checkout-template.php:146
+msgid "Agree to Terms?"
+msgstr "موافق على الشروط؟"
+
+#: ../includes/checkout-template.php:166
+msgid "Go back"
+msgstr "الرجوع"
+
+#: ../includes/checkout-template.php:170
+msgid "You must be logged in to complete your purchase"
+msgstr "ينبغي أن تسجل دخولك لتشتري"
+
+#: ../includes/checkout-template.php:199
+msgid "Credit Card Info"
+msgstr "معلومات البطاقة الإئتمانية"
+
+#: ../includes/checkout-template.php:201
+msgid "Card name"
+msgstr "اسم البطاقة الإئتمانية"
+
+#: ../includes/checkout-template.php:202
+msgid "Name on the Card"
+msgstr "الإسم الذي على البطاقة الإئتمانية"
+
+#: ../includes/checkout-template.php:205
+msgid "Card number"
+msgstr "رقم البطاقة الإئتمانية"
+
+#: ../includes/checkout-template.php:206
+msgid "Card Number"
+msgstr "رقم البطاقة الإئتمانية"
+
+#: ../includes/checkout-template.php:209
+msgid "Security code"
+msgstr "الرمز السري"
+
+#: ../includes/checkout-template.php:210
+msgid "CVC"
+msgstr "CVC الأرقام الثلاثة الأخير التي خلف البطاقة الإئتمانية"
+
+#: ../includes/checkout-template.php:216
+msgid "Month"
+msgstr "شهر"
+
+#: ../includes/checkout-template.php:218
+msgid "Year"
+msgstr "السنة"
+
+#: ../includes/checkout-template.php:219
+msgid "Expiration (MM/YYYY)"
+msgstr "نهاية الصلاحية ( الشهر/السنة )"
+
+#: ../includes/checkout-template.php:249
+msgid "Address line 1"
+msgstr "سطر العنوان 1"
+
+#: ../includes/checkout-template.php:250
+msgid "Billing Address"
+msgstr "العنوان الذي ترسل إليه الفاتورة"
+
+#: ../includes/checkout-template.php:253
+msgid "Address line 2"
+msgstr "سطر العنوان 2"
+
+#: ../includes/checkout-template.php:254
+msgid "Billing Address Line 2"
+msgstr "العنوان الثاني الذي سترسل إليه الفاتورة"
+
+#: ../includes/checkout-template.php:257
+msgid "City"
+msgstr "المدينة"
+
+#: ../includes/checkout-template.php:258
+msgid "Billing City"
+msgstr "المدينة التي سترسل إليها الفاتورة"
+
+#: ../includes/checkout-template.php:269
+msgid "Billing Country"
+msgstr "البلد الذي سترسل إليه الفاتورة"
+
+#: ../includes/checkout-template.php:272
+msgid "State / Province"
+msgstr "المنطقة/الولاية"
+
+#: ../includes/checkout-template.php:289
+msgid "Billing State / Province"
+msgstr "المنطقةالتي سترسل إليها الفاتورة"
+
+#: ../includes/checkout-template.php:292
+msgid "Zip / Postal code"
+msgstr "الرمز البريدي"
+
+#: ../includes/checkout-template.php:293
+msgid "Billing Zip / Postal Code"
+msgstr "رمز البريد الذي سيرسل الفاتورة"
+
+#: ../includes/checkout-template.php:320
+msgid "Already have an account?"
+msgstr "لديك حساب مسبقاً؟"
+
+#: ../includes/checkout-template.php:320
+msgid "Login"
+msgstr "أدخل"
+
+#: ../includes/checkout-template.php:322
+msgid "Create an account"
+msgstr "انشاء حساب"
+
+#: ../includes/checkout-template.php:322
+msgid "(optional)"
+msgstr "(اختياري)"
+
+#: ../includes/checkout-template.php:325
+#: ../includes/checkout-template.php:326
+#: ../includes/checkout-template.php:373
+msgid "Username"
+msgstr "اسم المستخدم:"
+
+#: ../includes/checkout-template.php:329
+#: ../includes/checkout-template.php:330
+#: ../includes/checkout-template.php:377
+msgid "Password"
+msgstr "كلمة المرور:"
+
+#: ../includes/checkout-template.php:333
+msgid "Confirm password"
+msgstr "تأكيد كلمة المرور"
+
+#: ../includes/checkout-template.php:334
+msgid "Password Again"
+msgstr "كلمة المرور مرة أخرى"
+
+#: ../includes/checkout-template.php:339
+#: ../includes/checkout-template.php:340
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+#: ../includes/checkout-template.php:369
+msgid "Login to your account"
+msgstr "الدخول إلى حسابك"
+
+#: ../includes/checkout-template.php:372
+msgid "Your username"
+msgstr "اسمك"
+
+#: ../includes/checkout-template.php:376
+msgid "Your password"
+msgstr "كلمتك السرية"
+
+#: ../includes/checkout-template.php:384
+msgid "Need to create an account?"
+msgstr "تريد أنشاء حساب؟"
+
+#: ../includes/checkout-template.php:386
+msgid "Register"
+msgstr "التسجيل"
+
+#: ../includes/checkout-template.php:386
+msgid "or checkout as a guest."
+msgstr "أو الدفع و الخروج كزائر."
+
+#: ../includes/checkout-template.php:415
+msgid "Choose Your Payment Method"
+msgstr "اختيار طريقة الدفع"
+
+#: ../includes/checkout-template.php:443
+msgid "Enter discount"
+msgstr "أدخل الخصم"
+
+#: ../includes/checkout-template.php:445
+msgid "Discount"
+msgstr "الخصم"
+
+#: ../includes/checkout-template.php:447
+msgid "Apply Discount"
+msgstr "تطبيق الخصم"
+
+#: ../includes/checkout-template.php:473
+msgid "Next"
+msgstr "التالي"
+
+#: ../includes/checkout-template.php:497
+#: ../includes/dashboard-columns.php:58
+msgid "Purchase"
+msgstr "شراء"
+
+#: ../includes/dashboard-columns.php:26
+msgid "Name"
+msgstr "الاسم"
+
+#: ../includes/dashboard-columns.php:27
+msgid "Categories"
+msgstr "الفئة"
+
+#: ../includes/dashboard-columns.php:28
+msgid "Tags"
+msgstr "العلامات"
+
+#: ../includes/dashboard-columns.php:29
+#: ../includes/dashboard-columns.php:231
+msgid "Price"
+msgstr "السعر"
+
+#: ../includes/dashboard-columns.php:30
+msgid "Sales"
+msgstr "المبيعات"
+
+#: ../includes/dashboard-columns.php:31
+msgid "Earnings"
+msgstr "الأرباح"
+
+#: ../includes/dashboard-columns.php:32
+msgid "Short Code"
+msgstr "الكود القصير"
+
+#: ../includes/dashboard-columns.php:33
+msgid "Date"
+msgstr "التاريخ"
+
+#: ../includes/dashboard-columns.php:189
+msgid "Show all categories"
+msgstr "اظهر جميع الفئات"
+
+#: ../includes/dashboard-columns.php:200
+msgid "Show all tags"
+msgstr "اظهر جميع العلامات "
+
+#: ../includes/dashboard-columns.php:228
+#, php-format
+msgid "%s Data"
+msgstr "بيانات النسبة %"
+
+#: ../includes/email-functions.php:47
+msgid "Purchase Receipt"
+msgstr "فاتورة الشراء"
+
+#: ../includes/email-functions.php:62
+msgid "Hello"
+msgstr "مرحباً"
+
+#: ../includes/email-functions.php:62
+msgid "A download purchase has been made"
+msgstr "تم شراء التحميل"
+
+#: ../includes/email-functions.php:63
+msgid "Downloads sold:"
+msgstr "التحميلات المباعة:"
+
+#: ../includes/email-functions.php:76
+msgid "Purchased by: "
+msgstr "اشتراه:"
+
+#: ../includes/email-functions.php:77
+msgid "Amount: "
+msgstr "المبلغ:"
+
+#: ../includes/email-functions.php:78
+msgid "Payment Method: "
+msgstr "طرق الدفع:"
+
+#: ../includes/email-functions.php:79
+msgid "Thank you"
+msgstr "شكراً"
+
+#: ../includes/email-functions.php:82
+msgid "New download purchase"
+msgstr "شراء تحميل جديد"
+
+#: ../includes/email-template.php:23
+msgid "Default Template"
+msgstr "القالب الإفتراضي"
+
+#: ../includes/email-template.php:24
+msgid "No template, plain text only"
+msgstr "لا قالب، فقط نص عادي"
+
+#: ../includes/email-template.php:115
+msgid "Sample Product Title"
+msgstr "اسم عينة المنتج"
+
+#: ../includes/email-template.php:118
+msgid "Sample Download File Name"
+msgstr "اسم عينة ملف التحميل"
+
+#: ../includes/email-template.php:118
+msgid "Optional notes about this download."
+msgstr "ملاحظات اختيارية عن هذا التحميل"
+
+#: ../includes/email-template.php:129
+msgid "These are some sample notes added to a product."
+msgstr "هناك عينة ملاحظات أضيفت للمنتج"
+
+#: ../includes/email-template.php:168
+msgid "Purchase Receipt Preview"
+msgstr "شراء معاينة الفاتورة"
+
+#: ../includes/email-template.php:168
+msgid "Preview Purchase Receipt"
+msgstr "معاينة فاتورة المشتريات"
+
+#: ../includes/email-template.php:209
+msgid "Dear"
+msgstr "عزيزي"
+
+#: ../includes/email-template.php:210
+msgid "Thank you for your purchase. Please click on the link(s) below to download your files."
+msgstr "شكراً لك على شرائك، نرجو أن تضغط على الرابط أدناه لتحميل الملف."
+
+#: ../includes/error-tracking.php:30
+msgid "Error"
+msgstr "خطأ"
+
+#: ../includes/export-functions.php:39
+msgid "ID"
+msgstr "المعرف"
+
+#: ../includes/export-functions.php:43
+msgid "Products"
+msgstr "المنتج"
+
+#: ../includes/export-functions.php:44
+msgid "Discounts,"
+msgstr "الخصم"
+
+#: ../includes/export-functions.php:45
+msgid "Amount paid"
+msgstr "مبلغ الدفع"
+
+#: ../includes/export-functions.php:46
+msgid "Payment method"
+msgstr "طريقة الدفع"
+
+#: ../includes/export-functions.php:47
+msgid "Key"
+msgstr "مفتاح"
+
+#: ../includes/export-functions.php:49
+msgid "User"
+msgstr "المستخدم"
+
+#: ../includes/export-functions.php:50
+msgid "Status"
+msgstr "الحالة"
+
+#: ../includes/export-functions.php:111
+#: ../includes/export-functions.php:119
+msgid "none"
+msgstr "لا شئ"
+
+#: ../includes/export-functions.php:127
+msgid "guest"
+msgstr "ضيف"
+
+#: ../includes/export-functions.php:135
+msgid "No payments recorded yet"
+msgstr "لم يتم تسجيل أي مدفوعات"
+
+#: ../includes/export-functions.php:169
+msgid "Export not allowed for non-administrators."
+msgstr "لا يسمح التصدير لغير المسئولين"
+
+#: ../includes/gateway-functions.php:28
+msgid "Test Payment"
+msgstr "اختبار الدفع"
+
+#: ../includes/graphing.php:42
+#, php-format
+msgid "%s Performance in Sales"
+msgstr "أداء المبيعات بالنسبة"
+
+#: ../includes/graphing.php:77
+msgid "Download"
+msgstr "حملّ"
+
+#: ../includes/graphing.php:88
+#, php-format
+msgid "%s Performance in Earnings"
+msgstr "أداء الأرباح بالنسبة"
+
+#: ../includes/graphing.php:136
+msgid "Earnings per month"
+msgstr "الأرباح شهرياً"
+
+#: ../includes/graphing.php:168
+msgid "Day"
+msgstr "يوم"
+
+#: ../includes/graphing.php:189
+#, php-format
+msgid "Earnings per day for last %s days"
+msgstr "الأرباح اليومية لآخر  %s أيام"
+
+#: ../includes/graphing.php:236
+msgid "Sales per month"
+msgstr "المبيعات شهرياً"
+
+#: ../includes/install.php:42
+msgid "Purchase Confirmation"
+msgstr "توكيد الشراء"
+
+#: ../includes/install.php:43
+msgid "Thank you for your purchase!"
+msgstr "شكراً لك على تسوقك عندنا"
+
+#: ../includes/install.php:53
+msgid "Purchase History"
+msgstr "تاريخ الشراء"
+
+#: ../includes/login-register.php:45
+msgid "Log into Your Account"
+msgstr "الدخول إلى حسابك"
+
+#: ../includes/login-register.php:61
+msgid "Lost Password"
+msgstr "فقدان الكلمة السرية"
+
+#: ../includes/login-register.php:62
+msgid "Lost Password?"
+msgstr "فقدت الكلمة السرية؟"
+
+#: ../includes/login-register.php:69
+msgid "You are already logged in"
+msgstr "لقد دخلت مسبقاً"
+
+#: ../includes/login-register.php:92
+msgid "The password you entered is incorrect"
+msgstr "كلمة المرور التي أدخلتها غير صحيحة"
+
+#: ../includes/login-register.php:95
+msgid "The username you entered does not exist"
+msgstr "اسم المستخدم الذي أدخلته ليس موجود"
+
+#: ../includes/metabox.php:22
+#, php-format
+msgid "%1$s Configuration"
+msgstr "الترتيب 1$ %"
+
+#: ../includes/metabox.php:23
+msgid "Product Notes"
+msgstr "ملاحظة المنتج"
+
+#: ../includes/metabox.php:24
+#, php-format
+msgid "%1$s Stats"
+msgstr "احصائيات  1$ %"
+
+#: ../includes/metabox.php:25
+msgid "Purchase Log"
+msgstr "سجل أداء الشراء"
+
+#: ../includes/metabox.php:26
+msgid "File Download Log"
+msgstr "سجل أداء ملف التحميل"
+
+#: ../includes/metabox.php:84
+msgid "Pricing"
+msgstr "التسعير"
+
+#: ../includes/metabox.php:98
+msgid "Enable variable pricing"
+msgstr "تمكين التسعير المتغير"
+
+#: ../includes/metabox.php:113
+#: ../includes/metabox.php:115
+#: ../includes/metabox.php:135
+#: ../includes/metabox.php:137
+msgid "9.99"
+msgstr "9.99"
+
+#: ../includes/metabox.php:120
+#: ../includes/metabox.php:142
+msgid "Option Name"
+msgstr "اسم الخيار"
+
+#: ../includes/metabox.php:149
+#: ../includes/metabox.php:220
+msgid "Add New"
+msgstr "أضف جديد"
+
+#: ../includes/metabox.php:159
+msgid "for"
+msgstr "لأجل"
+
+#: ../includes/metabox.php:181
+msgid "Download Files"
+msgstr "تحميل الملفات"
+
+#: ../includes/metabox.php:184
+msgid "File Name"
+msgstr "اسم الملف"
+
+#: ../includes/metabox.php:185
+msgid "File URL"
+msgstr "رابط الملف"
+
+#: ../includes/metabox.php:196
+#: ../includes/metabox.php:215
+msgid "file name"
+msgstr "اسم الملف"
+
+#: ../includes/metabox.php:197
+#: ../includes/metabox.php:216
+msgid "file url"
+msgstr "رابط الملف"
+
+#: ../includes/metabox.php:199
+msgid "All Prices"
+msgstr "جميع الأسعار"
+
+#: ../includes/metabox.php:206
+#: ../includes/metabox.php:217
+msgid "Upload File"
+msgstr "رفع ملف"
+
+#: ../includes/metabox.php:220
+msgid "Upload the downloadable files."
+msgstr "رفع الملفات القابلة للتحميل"
+
+#: ../includes/metabox.php:241
+msgid "Purchase Text"
+msgstr "نص الشراء"
+
+#: ../includes/metabox.php:243
+msgid "Add the text you would like displayed for the purchase text"
+msgstr "اضف النص الذي تريده لنص الشراء"
+
+#: ../includes/metabox.php:262
+msgid "Link Style"
+msgstr "نمط الرابط"
+
+#: ../includes/metabox.php:264
+msgid "Button"
+msgstr "زر"
+
+#: ../includes/metabox.php:265
+msgid "Text"
+msgstr "نص"
+
+#: ../includes/metabox.php:266
+msgid "Choose the style of the purchase link"
+msgstr "اختار نمط رابط الشراء"
+
+#: ../includes/metabox.php:287
+msgid "Button Color"
+msgstr "لون الزر"
+
+#: ../includes/metabox.php:295
+msgid "Choose the color of the purchase link, if button was selected above."
+msgstr "اختار لون رابط الشراء، إذا كنت قد اخترت الزر "
+
+#: ../includes/metabox.php:313
+msgid "Disable the purchase button?"
+msgstr "تعطيل زر الشراء؟"
+
+#: ../includes/metabox.php:316
+msgid "Check this if you do not want the purchase button displayed."
+msgstr "علم على هذا إن كنت لا تريد عرض الزر"
+
+#: ../includes/metabox.php:338
+msgid "Notes"
+msgstr "ملاحظات"
+
+#: ../includes/metabox.php:341
+msgid "The style options above do NOT reflect the style of short code. The short code allows you to place a purchase button for this download anywhere on the site."
+msgstr "خيار النمط أعلاه لا يعكس نمط الرمز القصير. الرمز القصير يسمح لك بوضع زر الشراء لهذا التحميل بأي مكان على الموقع"
+
+#: ../includes/metabox.php:347
+msgid "This short code can be placed anywhere on your site"
+msgstr "هذا الرمز القصير يمكن وضعه في أي مكان في موقعك"
+
+#: ../includes/metabox.php:381
+msgid "Special notes or instructions for this product. These notes will be added to the purchase receipt."
+msgstr "ملاحظات أو تعليمات خاصة لهذا المنتج. هذه الملاحظات ستضاف لفاتورة الشراء"
+
+#: ../includes/metabox.php:469
+msgid "Sales:"
+msgstr "المبيعات:"
+
+#: ../includes/metabox.php:475
+msgid "Earnings:"
+msgstr "الأرباح:"
+
+#: ../includes/metabox.php:511
+msgid "Sales Log"
+msgstr "أداء المبيعات"
+
+#: ../includes/metabox.php:513
+msgid "Each sale for this download is listed below."
+msgstr "كل بيع لهذا التحميل يتم سرده أدناه"
+
+#: ../includes/metabox.php:527
+#: ../includes/metabox.php:619
+msgid "Date:"
+msgstr "التاريخ:"
+
+#: ../includes/metabox.php:531
+msgid "Buyer:"
+msgstr "المشتري:"
+
+#: ../includes/metabox.php:535
+msgid "Purchase ID:"
+msgstr "هوية الشراء:"
+
+#: ../includes/metabox.php:543
+msgid "No sales yet"
+msgstr "ليس هناك مبيعات بعد"
+
+#: ../includes/metabox.php:559
+#: ../includes/metabox.php:656
+msgid "Previous"
+msgstr "السابق"
+
+#: ../includes/metabox.php:600
+msgid "Download Log"
+msgstr "أداء التحميل"
+
+#: ../includes/metabox.php:602
+msgid "Each time a file is downloaded, it is recorded below."
+msgstr "كل مرة يتم فيها تحميل ملف، فهو مسجل بالأسفل"
+
+#: ../includes/metabox.php:623
+msgid "Downloaded by:"
+msgstr "تم تحميلة بواسطة:"
+
+#: ../includes/metabox.php:627
+msgid "IP Address:"
+msgstr "عنوان الآيبي:"
+
+#: ../includes/metabox.php:631
+msgid "File: "
+msgstr "ملف:"
+
+#: ../includes/metabox.php:640
+msgid "No file downloads yet yet"
+msgstr "ليس هناك ملفات تحميل بعد بعد"
+
+#: ../includes/misc-functions.php:185
+msgid "US Dollars (&#36;)"
+msgstr "دولار أمريكي (&#36;)"
+
+#: ../includes/misc-functions.php:186
+msgid "Euros (&euro;)"
+msgstr "يورو (&euro;)"
+
+#: ../includes/misc-functions.php:187
+msgid "Pounds Sterling (&pound;)"
+msgstr "جنيه استرليني (&pound;)"
+
+#: ../includes/misc-functions.php:188
+msgid "Australian Dollars (&#36;)"
+msgstr "دولار أسترالي (&#36;)"
+
+#: ../includes/misc-functions.php:189
+msgid "Brazilian Real (&#36;)"
+msgstr "ريال برازيلي (&#36;)"
+
+#: ../includes/misc-functions.php:190
+msgid "Canadian Dollars (&#36;)"
+msgstr "دولار كندي (&#36;)"
+
+#: ../includes/misc-functions.php:191
+msgid "Czech Koruna"
+msgstr "الكورونا التشيكية"
+
+#: ../includes/misc-functions.php:192
+msgid "Danish Krone"
+msgstr "الكورونا الدنماركية"
+
+#: ../includes/misc-functions.php:193
+msgid "Hong Kong Dollar (&#36;)"
+msgstr "دولار هوج كونج (&#36;)"
+
+#: ../includes/misc-functions.php:194
+msgid "Hungarian Forint"
+msgstr "الفرونت الهنغاري"
+
+#: ../includes/misc-functions.php:195
+msgid "Israeli Shekel"
+msgstr "الشيكل الإسرائيلي"
+
+#: ../includes/misc-functions.php:196
+msgid "Japanese Yen (&yen;)"
+msgstr "ين ياباني (&yen;)"
+
+#: ../includes/misc-functions.php:197
+msgid "Malaysian Ringgits"
+msgstr "رينغيت ماليزي"
+
+#: ../includes/misc-functions.php:198
+msgid "Mexican Peso (&#36;)"
+msgstr "بيزو مكسيكي (&#36;)"
+
+#: ../includes/misc-functions.php:199
+msgid "New Zealand Dollar (&#36;)"
+msgstr "الدولار النيوزلندي (&#36;)"
+
+#: ../includes/misc-functions.php:200
+msgid "Norwegian Krone"
+msgstr "الكرونا النرويجية"
+
+#: ../includes/misc-functions.php:201
+msgid "Philippine Pesos"
+msgstr "البيزو الفلبيني"
+
+#: ../includes/misc-functions.php:202
+msgid "Polish Zloty"
+msgstr "الزلوتي البولندي"
+
+#: ../includes/misc-functions.php:203
+msgid "Singapore Dollar (&#36;)"
+msgstr "الدولار السنغافوري (&#36;)"
+
+#: ../includes/misc-functions.php:204
+msgid "Swedish Krona"
+msgstr "الكرونا السويدية"
+
+#: ../includes/misc-functions.php:205
+msgid "Swiss Franc"
+msgstr "الفرنك السويسر"
+
+#: ../includes/misc-functions.php:206
+msgid "Taiwan New Dollars"
+msgstr "الدولارات التايوانية الجديدة"
+
+#: ../includes/misc-functions.php:207
+msgid "Thai Baht"
+msgstr "البات التايلندي"
+
+#: ../includes/misc-functions.php:208
+msgid "Indian Rupee"
+msgstr "الربية الهندية"
+
+#: ../includes/misc-functions.php:209
+msgid "Turkish Lira"
+msgstr "الليرة التركية"
+
+#: ../includes/misc-functions.php:210
+msgid "Iranian Rial"
+msgstr "ريال إيراني"
+
+#: ../includes/payment-functions.php:295
+msgid "Pending"
+msgstr "في الانتظار"
+
+#: ../includes/payment-functions.php:296
+msgid "Complete"
+msgstr "تم"
+
+#: ../includes/payment-functions.php:297
+msgid "Refunded"
+msgstr "إستعادة المال"
+
+#: ../includes/pdf-reports.php:36
+msgid "to"
+msgstr "إلى"
+
+#: ../includes/pdf-reports.php:41
+#: ../includes/pdf-reports.php:52
+msgid "Sales and earnings reports for the current year for all products"
+msgstr "تقرير مبيعات و أرباح السنة الحالية لجميع المنتجات"
+
+#: ../includes/pdf-reports.php:42
+#: ../includes/pdf-reports.php:43
+msgid "Easy Digital Downloads"
+msgstr "Easy Digital Downloads ( التحميل الرقمي السهل )"
+
+#: ../includes/pdf-reports.php:57
+msgid "Date Range: "
+msgstr "نطاق التاريخ:"
+
+#: ../includes/pdf-reports.php:61
+msgid "Table View"
+msgstr "مشاهدة الجدول"
+
+#: ../includes/pdf-reports.php:65
+msgid "Product Name"
+msgstr "اسم المنتج"
+
+#: ../includes/pdf-reports.php:69
+msgid "Number of Sales"
+msgstr "عدد المبيعات"
+
+#: ../includes/pdf-reports.php:70
+msgid "Earnings to Date"
+msgstr "تاريخ الأرباح"
+
+#: ../includes/pdf-reports.php:112
+msgid "No Downloads found."
+msgstr "ليس هناك تحميلات"
+
+#: ../includes/pdf-reports.php:119
+msgid "Graph View"
+msgstr "مشاهدة الرسم البياني"
+
+#: ../includes/pdf-reports.php:212
+msgid "Sales and Earnings by Month for all Products"
+msgstr "مبيعات و أرباح كل المنتجات خلال شهر"
+
+#: ../includes/pdf-reports.php:226
+msgid "Jan"
+msgstr "يناير"
+
+#: ../includes/pdf-reports.php:227
+msgid "Feb"
+msgstr "فبراير"
+
+#: ../includes/pdf-reports.php:228
+msgid "Mar"
+msgstr "مارس"
+
+#: ../includes/pdf-reports.php:229
+msgid "Apr"
+msgstr "أبريل"
+
+#: ../includes/pdf-reports.php:230
+msgid "May"
+msgstr "مايو"
+
+#: ../includes/pdf-reports.php:231
+msgid "June"
+msgstr "يونيو"
+
+#: ../includes/pdf-reports.php:232
+msgid "July"
+msgstr "يوليو"
+
+#: ../includes/pdf-reports.php:233
+msgid "Aug"
+msgstr "أغسطس"
+
+#: ../includes/pdf-reports.php:234
+msgid "Sept"
+msgstr "سبتمبر"
+
+#: ../includes/pdf-reports.php:235
+msgid "Oct"
+msgstr "أوكتوبر"
+
+#: ../includes/pdf-reports.php:236
+msgid "Nov"
+msgstr "نوفمبر"
+
+#: ../includes/pdf-reports.php:237
+msgid "Dec"
+msgstr "ديسمبر"
+
+#: ../includes/post-types.php:44
+#, php-format
+msgid "Add New %1$s"
+msgstr "أضف %1$ جديد"
+
+#: ../includes/post-types.php:45
+#, php-format
+msgid "Edit %1$s"
+msgstr "تحرير %1$"
+
+#: ../includes/post-types.php:46
+#, php-format
+msgid "New %1$s"
+msgstr "%1$ جديد"
+
+#: ../includes/post-types.php:47
+#, php-format
+msgid "All %2$s"
+msgstr "الكل %2$"
+
+#: ../includes/post-types.php:48
+#, php-format
+msgid "View %1$s"
+msgstr "عرض %1$"
+
+#: ../includes/post-types.php:49
+#, php-format
+msgid "Search %2$s"
+msgstr "بحث %2$"
+
+#: ../includes/post-types.php:50
+#, php-format
+msgid "No %2$s found"
+msgstr "لم يتم العثور على %2$"
+
+#: ../includes/post-types.php:51
+#, php-format
+msgid "No %2$s found in Trash"
+msgstr "لم يتم العثور على %2$ في سلة المحذوفات"
+
+#: ../includes/post-types.php:53
+#, php-format
+msgid "%2$s"
+msgstr "%2$"
+
+#: ../includes/post-types.php:79
+msgid "Payments"
+msgstr "المدفوعات"
+
+#: ../includes/post-types.php:80
+msgid "Payment"
+msgstr "الدفع"
+
+#: ../includes/post-types.php:82
+msgid "Add New Payment"
+msgstr "أضف دفع جديد"
+
+#: ../includes/post-types.php:83
+msgid "Edit Payment"
+msgstr "تحرير الدفع"
+
+#: ../includes/post-types.php:84
+msgid "New Payment"
+msgstr "دفع جديد"
+
+#: ../includes/post-types.php:85
+msgid "All Payments"
+msgstr "كل المدفوعات"
+
+#: ../includes/post-types.php:86
+msgid "View Payment"
+msgstr "عرض الدفع"
+
+#: ../includes/post-types.php:87
+msgid "Search Payments"
+msgstr "البحث في المدفوعات"
+
+#: ../includes/post-types.php:88
+msgid "No Payments found"
+msgstr "لم يتم العثور على المدفوعات"
+
+#: ../includes/post-types.php:89
+msgid "No Payments found in Trash"
+msgstr "لم يتم العثور على مدفوعات في سلة المحذوفات"
+
+#: ../includes/post-types.php:126
+msgid "Downloads"
+msgstr "التحميلات"
+
+#: ../includes/post-types.php:174
+msgid "Category"
+msgstr "الفئة"
+
+#: ../includes/post-types.php:175
+msgid "Search Categories"
+msgstr "بحث في الفئة"
+
+#: ../includes/post-types.php:176
+msgid "All Categories"
+msgstr "كل الفئات"
+
+#: ../includes/post-types.php:177
+msgid "Parent Category"
+msgstr "الفئة الرئيسية"
+
+#: ../includes/post-types.php:178
+msgid "Parent Category:"
+msgstr "الفئة الرئيسية:"
+
+#: ../includes/post-types.php:179
+msgid "Edit Category"
+msgstr "تحرير الفئة"
+
+#: ../includes/post-types.php:180
+msgid "Update Category"
+msgstr "تحديث الفئة"
+
+#: ../includes/post-types.php:181
+msgid "Add New Category"
+msgstr "أضافة فئة جديدة"
+
+#: ../includes/post-types.php:182
+msgid "New Category Name"
+msgstr "اسم فئة جديدة"
+
+#: ../includes/post-types.php:199
+msgid "Tag"
+msgstr "علامة"
+
+#: ../includes/post-types.php:200
+msgid "Search Tags"
+msgstr "البحث في العلامات"
+
+#: ../includes/post-types.php:201
+msgid "All Tags"
+msgstr "كل العلامات"
+
+#: ../includes/post-types.php:202
+msgid "Parent Tag"
+msgstr "العلامة الرئيسية"
+
+#: ../includes/post-types.php:203
+msgid "Parent Tag:"
+msgstr "العلامة الرئيسية:"
+
+#: ../includes/post-types.php:204
+msgid "Edit Tag"
+msgstr "تحرير العلامة"
+
+#: ../includes/post-types.php:205
+msgid "Update Tag"
+msgstr "تحديث العلامة"
+
+#: ../includes/post-types.php:206
+msgid "Add New Tag"
+msgstr "إضافة علامة جديدة"
+
+#: ../includes/post-types.php:207
+msgid "New Tag Name"
+msgstr "اسم علامة جديدة"
+
+#: ../includes/post-types.php:239
+#: ../includes/post-types.php:240
+msgid "Download updated."
+msgstr "تحميل محدث"
+
+#: ../includes/post-types.php:241
+msgid "Download published."
+msgstr "تحميل منشور"
+
+#: ../includes/post-types.php:242
+msgid "Download saved."
+msgstr "تحميل محفوظ"
+
+#: ../includes/post-types.php:243
+msgid "Download submitted."
+msgstr "تم عرض التحميل"
+
+#: ../includes/process-download.php:266
+#: ../includes/process-download.php:283
+msgid "Sorry but this file does not exist."
+msgstr "عفواً لكن هذا الملف غير موجود"
+
+#: ../includes/process-download.php:294
+msgid "You do not have permission to download this file"
+msgstr "غير مصرح لك بتحميل هذا الملف"
+
+#: ../includes/process-download.php:294
+msgid "Purchase Verification Failed"
+msgstr "فشل التحقق من الشراء"
+
+#: ../includes/process-purchase.php:206
+msgid "The selected gateway is not active"
+msgstr "البوابة التي اخترتها ليست نشطة"
+
+#: ../includes/process-purchase.php:210
+msgid "No gateway has been selected"
+msgstr "لم يتم اختيار البوابة"
+
+#: ../includes/process-purchase.php:259
+msgid "You must agree to the terms of use"
+msgstr "يجب أن توافق على شروط الاستخدام"
+
+#: ../includes/process-purchase.php:289
+msgid "Please enter a valid email address."
+msgstr "رجاءً أدخل نوان بريد إلكتروني صحيح"
+
+#: ../includes/process-purchase.php:303
+msgid "The user information is invalid."
+msgstr "معلومات المستخدم غير صحيحة"
+
+#: ../includes/process-purchase.php:349
+msgid "Username already taken"
+msgstr "هذا الاسم قد اختير مسبقاً"
+
+#: ../includes/process-purchase.php:355
+msgid "Invalid username"
+msgstr "اسم مستخدم غير صالح"
+
+#: ../includes/process-purchase.php:366
+msgid "You must register or login to complete your purchase"
+msgstr "يجب أن تسجل او تدخل لتشتري"
+
+#: ../includes/process-purchase.php:378
+#: ../includes/process-purchase.php:522
+msgid "Invalid email"
+msgstr "بريد إلكتروني غير صالح"
+
+#: ../includes/process-purchase.php:384
+msgid "Email already used"
+msgstr "البريد الإلكتروني موجود مسبقاً"
+
+#: ../includes/process-purchase.php:396
+#: ../includes/process-purchase.php:529
+msgid "Enter an email"
+msgstr "أدخل البريد الإلكتروني"
+
+#: ../includes/process-purchase.php:407
+msgid "Passwords don't match"
+msgstr "كلمة المرور غير متطابقة"
+
+#: ../includes/process-purchase.php:422
+#: ../includes/process-purchase.php:487
+msgid "Enter a password"
+msgstr "أدخل كلمة المرور"
+
+#: ../includes/process-purchase.php:427
+msgid "Enter the password confirmation"
+msgstr "أدخل توكيد كلمة السر"
+
+#: ../includes/process-purchase.php:454
+msgid "You must login or register to complete your purchase"
+msgstr "يجب أن تسجل أو تدخل لتتم عملية الشراء"
+
+#: ../includes/register-settings.php:41
+msgid "Test Mode"
+msgstr "اختبار الوضع"
+
+#: ../includes/register-settings.php:42
+msgid "While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing."
+msgstr "في وضع التجربة لن تتم معالجة أي عمليات مباشرة. لاستخدام وضع التجربة بشكل تام, يجب أن يكون لديك حساب sandbox / تجربة  لبوابة الدفع التي تجربها"
+
+#: ../includes/register-settings.php:47
+msgid "Checkout Page"
+msgstr "صفحة الدفع و الخروج"
+
+#: ../includes/register-settings.php:48
+msgid "This is the checkout page where buyers will complete their purchases"
+msgstr "هذه صفحة الدفع و الخروج حيث يستكمل المشترين شرائهم"
+
+#: ../includes/register-settings.php:54
+msgid "Success Page"
+msgstr "صفحة نجاح العملية"
+
+#: ../includes/register-settings.php:55
+msgid "This is the page buyers are sent to after completing their purchases"
+msgstr "هذه الصفحة التي يُرسل لها المشترين بعد إتمام عملية الشراء"
+
+#: ../includes/register-settings.php:61
+msgid "Download Links on Success Page"
+msgstr "تحميل الروابط على صفحة اتمام العملية بنجاح"
+
+#: ../includes/register-settings.php:62
+msgid "Show a list of all download links on the success page after completing a purchase?"
+msgstr "هل تريد عرض قائمة بجميع روابط التحميل في صفحة تمت العملية بنجاح  بعد اتمام الشراء؟"
+
+#: ../includes/register-settings.php:67
+msgid "Currency Settings"
+msgstr "إعدادات العملة"
+
+#: ../includes/register-settings.php:68
+msgid "Configure the currency options"
+msgstr "تكوين خيارات العملة"
+
+#: ../includes/register-settings.php:73
+msgid "Currency"
+msgstr "العملة"
+
+#: ../includes/register-settings.php:74
+msgid "Choose your currency. Note that some payment gateways have currency restrictions."
+msgstr "اختر العملة. لاحظ أن بعض بوابات الدفع لديها قيود للعملة"
+
+#: ../includes/register-settings.php:80
+msgid "Currency Position"
+msgstr "مكان العملة"
+
+#: ../includes/register-settings.php:81
+msgid "Choose the location of the currency sign."
+msgstr "اختر مكان علامة العملة"
+
+#: ../includes/register-settings.php:84
+msgid "Before - $10"
+msgstr "قبل - 10$"
+
+#: ../includes/register-settings.php:85
+msgid "After - 10$"
+msgstr "بعد - $10"
+
+#: ../includes/register-settings.php:90
+msgid "Thousands Separator"
+msgstr "فواصل الألوف"
+
+#: ../includes/register-settings.php:91
+msgid "The symbol (usually , or .) to separate thousands"
+msgstr "الرمز ( بالعادة , أو . ) لفصل الألوف"
+
+#: ../includes/register-settings.php:98
+msgid "Decimal Separator"
+msgstr "الفاصل العشري"
+
+#: ../includes/register-settings.php:99
+msgid "The symbol (usually , or .) to separate decimal points"
+msgstr "بالعادة الرمز ( , أو . ) للفصل بين النقاط العشرية"
+
+#: ../includes/register-settings.php:110
+msgid "Payment Gateways"
+msgstr "بوابات الدفع الألكتروني"
+
+#: ../includes/register-settings.php:111
+msgid "Choose the payment gateways you want to enable."
+msgstr "اختر بوابات الدفع التي تريد تمكينها"
+
+#: ../includes/register-settings.php:117
+msgid "Accepted Payment Method Icons"
+msgstr "أيقونات طرق الدفع المقبولة"
+
+#: ../includes/register-settings.php:118
+msgid "Display icons for the selected payment methods"
+msgstr "عرض أيقونات طرق الدفع المحددة"
+
+#: ../includes/register-settings.php:118
+msgid "You will also need to configure your gateway settings if you are accepting credit cards"
+msgstr "ينبغي أن تضبط إعدادات بوابة الدفع الخاصة بك إن كنت تقبل بطاقات الائتمان"
+
+#: ../includes/register-settings.php:131
+msgid "PayPal Settings"
+msgstr "إعدادات paypal"
+
+#: ../includes/register-settings.php:132
+msgid "Configure the PayPal settings"
+msgstr "ضبط اعدادات paypal"
+
+#: ../includes/register-settings.php:137
+msgid "PayPal Email"
+msgstr "البريد الإلكتروني للـ paypal"
+
+#: ../includes/register-settings.php:138
+msgid "Enter your PayPal account's email"
+msgstr "ادخل حسابك الإلكتروني في الـ paypal"
+
+#: ../includes/register-settings.php:144
+msgid "Alternate PayPal Purchase Verification"
+msgstr "بديل التحقق من الشراء في الـ PayPal"
+
+#: ../includes/register-settings.php:145
+msgid "If payments are not getting marked as complete, then check this box. Note, this requires that buyers return to your site from PayPal."
+msgstr "إن لم يؤشر على أن الدفع قد تم, فتحقق من هذه الخانة. علماً أن هذا سيعيد المشترين إلى موقعك من الـ Paypal"
+
+#: ../includes/register-settings.php:150
+msgid "Disable PayPal IPN Verification"
+msgstr "تعطيل التحقق من  PayPal IPN"
+
+#: ../includes/register-settings.php:151
+msgid "If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases."
+msgstr "إن لم يؤشر على أن الدفع قد تم. فعلم على هذه الخانة، و أشر هذه الخانة. هذا يفرض على الموقع بأن يستخدم طرق أقل أمناً للتحقق من المشتريات"
+
+#: ../includes/register-settings.php:160
+msgid "Email Template"
+msgstr "قالب البريد الألكتروني"
+
+#: ../includes/register-settings.php:161
+msgid "Choose a template. Click \"Save Changes\" then \"Preview Purchase Receipt\" to see the new template."
+msgstr "اختر قالباً. اضغط /\"حفظ التغييرات/\" ثم / \"عرض فاتورة المشتريات /\" لرؤية القالب الجديد"
+
+#: ../includes/register-settings.php:173
+msgid "From Name"
+msgstr "من الاسم"
+
+#: ../includes/register-settings.php:174
+msgid "The name purchase receipts are said to come from. This should probably be your site or shop name."
+msgstr "اسم المكان الذي أصدرت منه فاتورة مشترياتك. يحتمل أن يكون اسم موقعك او محلك التجاري"
+
+#: ../includes/register-settings.php:179
+msgid "From Email"
+msgstr "من البريد الإلكتروني"
+
+#: ../includes/register-settings.php:180
+msgid "Email to send purchase receipts from. This will act as the \"from\" and \"reply-to\" address."
+msgstr "البريد الإلكتروني لإرسال فاتورة المشتريات منه. و هذا يمثل / \"من/\" و / \"رد على/\" العنوان"
+
+#: ../includes/register-settings.php:185
+msgid "Purchase Email Subject"
+msgstr "موضوع رسالة الشراء"
+
+#: ../includes/register-settings.php:186
+msgid "Enter the subject line for the purchase receipt email"
+msgstr "ادخل سطر موضوع رسالة  فاتورة الشراء "
+
+#: ../includes/register-settings.php:192
+msgid "Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:"
+msgstr "أدخل عنوان البريد الإلكتروني الذي يرسل للمستخدمين بعد عملية شراء ناجحة. HTML مقبول. قالب علامات مقبول"
+
+#: ../includes/register-settings.php:193
+msgid "A list of download URLs for each download purchased"
+msgstr "قائمة بروابط التحميل لكل تحميل تم شراءه"
+
+#: ../includes/register-settings.php:194
+msgid "The buyer's name"
+msgstr "اسم المشتري"
+
+#: ../includes/register-settings.php:195
+msgid "The date of the purchase"
+msgstr "تاريخ الشراء"
+
+#: ../includes/register-settings.php:196
+msgid "The total price of the purchase"
+msgstr "السعر الإجمالي للشراء"
+
+#: ../includes/register-settings.php:197
+msgid "The unique ID number for this purchase receipt"
+msgstr "رقم المعرف لفاتورة الشراء"
+
+#: ../includes/register-settings.php:198
+msgid "The method of payment used for this purchase"
+msgstr "طريقة الدفع المستخدمة لهذا الشراء"
+
+#: ../includes/register-settings.php:199
+msgid "Your site name"
+msgstr "اسم موقعك"
+
+#: ../includes/register-settings.php:208
+msgid "Disable Styles"
+msgstr "تعطيل الأنماط"
+
+#: ../includes/register-settings.php:209
+msgid "Check this to disable all included styling"
+msgstr "علم على هذا لتعطيل كل الأنماط"
+
+#: ../includes/register-settings.php:214
+msgid "Checkout Button Color"
+msgstr "لون زر الدفع و الخروج"
+
+#: ../includes/register-settings.php:215
+msgid "Choose the button color you want to use for the checkout buttons."
+msgstr "اختر لون الزر الذي تريد استخدامه لزر الدفع و الخروج"
+
+#: ../includes/register-settings.php:225
+msgid "Disable Ajax"
+msgstr "عطل الأجاكس Ajax"
+
+#: ../includes/register-settings.php:226
+msgid "Check this to disable AJAX for the shopping cart."
+msgstr "علم على هذا لتعطيل Ajax سلة التسوق"
+
+#: ../includes/register-settings.php:231
+msgid "Enable jQuery Validation"
+msgstr "شغيل فاعلية jQuery "
+
+#: ../includes/register-settings.php:232
+msgid "Check this to enable jQuery validation on the checkout form."
+msgstr "علم هذا لتشغيل فاعلية jQuery  في استمارة الدفع و الخروج"
+
+#: ../includes/register-settings.php:237
+msgid "Disable Guest Checkout"
+msgstr "تعطيل دفع و خروج الزائر"
+
+#: ../includes/register-settings.php:238
+msgid "Require that users be logged-in to purchase files."
+msgstr "أطلب أن يكون المستخدمين مسجلين لشراء الملفات"
+
+#: ../includes/register-settings.php:243
+msgid "Show Register / Login Form?"
+msgstr "اضهار استمارة التسجيل/الدخول؟"
+
+#: ../includes/register-settings.php:244
+msgid "Display the registration and login forms on the checkout page for non-logged-in users."
+msgstr "اعرض استمارة التسجيل و الدخول في صفحة الدفع و الخروج لغير المشتركين"
+
+#: ../includes/register-settings.php:249
+msgid "Download Link Expiration"
+msgstr "انتهاء صلاحية الرابط"
+
+#: ../includes/register-settings.php:250
+msgid "How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours."
+msgstr "إلى متى سيظل رابط التحميل فعال؟ المدة الإفتراضية 24 ساعة من وقت شراءه. ادخل الوقت بالساعات"
+
+#: ../includes/register-settings.php:256
+msgid "Disable Redownload?"
+msgstr "عطل إعادة التحميل؟"
+
+#: ../includes/register-settings.php:257
+msgid "Check this if you do not want to allow users to redownload items from their purchase history."
+msgstr "علو على هذا إن لم تكن تريد للمستخدمين أن يعيدو التحميل من صفحة تاريخ مشترياتهم"
+
+#: ../includes/register-settings.php:262
+msgid "Terms of Agreement"
+msgstr "شروط الاتفاقية"
+
+#: ../includes/register-settings.php:268
+msgid "Agree to Terms"
+msgstr "الموافقة على الشروط"
+
+#: ../includes/register-settings.php:269
+msgid "Check this to show an agree to terms on the checkout that users must agree to before purchasing."
+msgstr "علو على هذا لاظهار الموافقة على شروط الاتفاقية في صفحة الدفع و الخروج التي ينبغي على المستخدمين الموافقة عليها قبل الشراء"
+
+#: ../includes/register-settings.php:274
+msgid "Agree to Terms Label"
+msgstr "ملصق شروط الاتفاقية"
+
+#: ../includes/register-settings.php:275
+msgid "Label shown next to the agree to terms check box."
+msgstr "التسمية التي تظهر بجانب خانة الإختيار من الموافقة على الشروط"
+
+#: ../includes/register-settings.php:281
+msgid "Agreement Text"
+msgstr "نص الإتفاقية"
+
+#: ../includes/register-settings.php:282
+msgid "If Agree to Terms is checked, enter the agreement terms here."
+msgstr "إن علمت على شروط الموافقة، فأدخل شروط الإتفاقية هنا"
+
+#: ../includes/register-settings.php:287
+msgid "Complete Purchase Text"
+msgstr "نص الشراء الكامل"
+
+#: ../includes/register-settings.php:288
+msgid "The button label for completing a purchase."
+msgstr "زر التسمية لإكمال عملية الشراء"
+
+#: ../includes/register-settings.php:314
+msgid "General Settings"
+msgstr "إعدادات عامة"
+
+#: ../includes/register-settings.php:340
+msgid "Payment Gateway Settings"
+msgstr "إعدادات بوابة الدفع"
+
+#: ../includes/register-settings.php:366
+msgid "Email Settings"
+msgstr "إعدادات البريد الإلكتروني"
+
+#: ../includes/register-settings.php:392
+msgid "Style Settings"
+msgstr "إعدادات النمط (ستايل)"
+
+#: ../includes/register-settings.php:419
+msgid "Misc Settings"
+msgstr "إعدادات منوعة"
+
+#: ../includes/register-settings.php:746
+msgid "Settings Updated"
+msgstr "الإعدادات المحدثة"
+
+#: ../includes/scripts.php:40
+msgid "Please enter a discount code"
+msgstr "يرجى ادخال رمز الخصم"
+
+#: ../includes/scripts.php:41
+msgid "Discount Applied"
+msgstr "الخصم التطبيقي"
+
+#: ../includes/scripts.php:42
+msgid "Please enter an email address before applying a discount code"
+msgstr "يرجى ادخال عنوان البريد الإلكتروني قبل تطبيق رمز الخصم"
+
+#: ../includes/scripts.php:44
+msgid "You have already added this item to your cart"
+msgstr "لقد سبق و أن اضفت هذا المنتج إلى سلتك"
+
+#: ../includes/scripts.php:45
+msgid "Your cart is empty"
+msgstr "سلتك فارغة"
+
+#: ../includes/scripts.php:46
+msgid "Loading"
+msgstr "تحميل"
+
+#: ../includes/scripts.php:123
+msgid "Add New Download"
+msgstr "أضف تحميل جديد"
+
+#: ../includes/scripts.php:124
+msgid "Use This File"
+msgstr "استخدم هذا الملف"
+
+#: ../includes/scripts.php:125
+msgid "Sorry, not available for variable priced products."
+msgstr "عذراً، غير متوفر لمنتج متغير سعره"
+
+#: ../includes/scripts.php:126
+msgid "Are you sure you wish to delete this payment?"
+msgstr "هل أنت متأكد من حذفك لهذا الدفع"
+
+#: ../includes/shortcodes.php:194
+msgid "Purchase All Items"
+msgstr "شراء كل المواد"
+
+#: ../includes/shortcodes.php:336
+#, php-format
+msgid "No %s found"
+msgstr "لم يتم العثور على %s"
+
+#: ../includes/template-functions.php:48
+#, php-format
+msgid "No checkout page has been configured. Visit <a href=\"%s\">Settings</a> to set one."
+msgstr "لم يتم تكوين صفحة الدفع و الخروج. اذهب إلى  <a href=\"%s\">إعدادات</a> to set one لتكوين واحدة"
+
+#: ../includes/template-functions.php:167
+msgid "added to your cart"
+msgstr "أضيف إلى سلتك"
+
+#: ../includes/template-functions.php:263
+msgid "Gray"
+msgstr "رمادي"
+
+#: ../includes/template-functions.php:264
+msgid "Pink"
+msgstr "وردي"
+
+#: ../includes/template-functions.php:265
+msgid "Blue"
+msgstr "أزرق"
+
+#: ../includes/template-functions.php:266
+msgid "Green"
+msgstr "أخضر"
+
+#: ../includes/template-functions.php:267
+msgid "Teal"
+msgstr "فيروزي"
+
+#: ../includes/template-functions.php:268
+msgid "Black"
+msgstr "أسود"
+
+#: ../includes/template-functions.php:269
+msgid "Dark Gray"
+msgstr "رمادي غامق"
+
+#: ../includes/template-functions.php:270
+msgid "Orange"
+msgstr "برتقالي"
+
+#: ../includes/template-functions.php:271
+msgid "Purple"
+msgstr "بنفسجي"
+
+#: ../includes/template-functions.php:272
+msgid "Slate"
+msgstr "حجري"
+
+#: ../includes/template-functions.php:295
+msgid "You have already purchased this item, but you may purchase it again."
+msgstr "سبق و اشتريت هذه المادة، لكن يمكنك شرائها مرة أخرى."
+
+#: ../includes/thickbox.php:29
+#: ../includes/thickbox.php:123
+#, php-format
+msgid "Insert %s"
+msgstr "إدراج  %"
+
+#: ../includes/thickbox.php:30
+msgid "Insert Download"
+msgstr "إدراج تحميل"
+
+#: ../includes/thickbox.php:65
+msgid "You must choose a download"
+msgstr "ينبغي أن تختار تحميل"
+
+#: ../includes/thickbox.php:88
+#, php-format
+msgid "Use the form below to insert the short code for purchasing a %s"
+msgstr "استخدم النموذج أدناه لإدراج كود قصير للشراء %"
+
+#: ../includes/thickbox.php:91
+#, php-format
+msgid "Choose a %s"
+msgstr "اختيار %"
+
+#: ../includes/thickbox.php:100
+msgid "Choose a style"
+msgstr "اختيار النمط"
+
+#: ../includes/thickbox.php:111
+msgid "Choose a button color"
+msgstr "اختيار لون الأزرار"
+
+#: ../includes/thickbox.php:120
+msgid "Link text . . ."
+msgstr "ابط النص..."
+
+#: ../includes/thickbox.php:124
+msgid "Cancel"
+msgstr "إلغاء"
+
+#: ../includes/thickbox.php:126
+msgid "Button Styles"
+msgstr "نمط الأزرار"
+
+#: ../includes/widgets.php:39
+msgid "Downloads Cart"
+msgstr "سلة التحميلات"
+
+#: ../includes/widgets.php:39
+msgid "Display the downloads shopping cart"
+msgstr "تعطيل سلة تسوق التحميلات"
+
+#: ../includes/widgets.php:82
+#: ../includes/widgets.php:162
+msgid "Title:"
+msgstr "الاسم:"
+
+#: ../includes/widgets.php:87
+msgid "Show Quantity:"
+msgstr "اظهار الكمية:"
+
+#: ../includes/widgets.php:112
+msgid "Downloads Categories / Tags"
+msgstr "فئات/علامات التحميلات"
+
+#: ../includes/widgets.php:112
+msgid "Display the downloads categories or tags"
+msgstr "عرض فئات أو علامات التحميلات"
+
+#: ../includes/widgets.php:167
+msgid "Taxonomy:"
+msgstr "التصنيف:"
+
+#: ../includes/widgets.php:193
+msgid "Display a user's purchase history"
+msgstr "عرض تاريخ شراء المستخدم"
+
+#: ../includes/widgets.php:232
+msgid "No downloadable files found."
+msgstr "لم يُعثر على ملفات قابلة للتحميل"
+
+#: ../includes/widgets.php:259
+msgid "Title"
+msgstr "الاسم"
+
+#: ../includes/admin-pages/add-ons.php:69
+msgid "Add Ons for Easy Digital Downloads"
+msgstr "إضافات Easy Digital Downloads "
+
+#: ../includes/admin-pages/add-ons.php:70
+msgid "These add-ons extend the functionality of Easy Digital Downloads."
+msgstr "هذه الإضافات تعزز وظائف  Easy Digital Downloads"
+
+#: ../includes/admin-pages/add-ons.php:73
+msgid "Browse All Extensions"
+msgstr "تصفح جميع الملحقات"
+
+#: ../includes/admin-pages/discount-codes.php:40
+#: ../includes/admin-pages/discount-codes.php:53
+msgid "Code"
+msgstr "رمز"
+
+#: ../includes/admin-pages/discount-codes.php:41
+#: ../includes/admin-pages/discount-codes.php:54
+msgid "Amount"
+msgstr "الكمية"
+
+#: ../includes/admin-pages/discount-codes.php:42
+#: ../includes/admin-pages/discount-codes.php:55
+msgid "Uses"
+msgstr "استخدام"
+
+#: ../includes/admin-pages/discount-codes.php:43
+#: ../includes/admin-pages/discount-codes.php:56
+msgid "Max Uses"
+msgstr "أقصى استخدام"
+
+#: ../includes/admin-pages/discount-codes.php:44
+#: ../includes/admin-pages/discount-codes.php:57
+msgid "Start Date"
+msgstr "تاريخ البدء"
+
+#: ../includes/admin-pages/discount-codes.php:45
+#: ../includes/admin-pages/discount-codes.php:58
+msgid "Expiration"
+msgstr "انتهاء الصلاحية"
+
+#: ../includes/admin-pages/discount-codes.php:47
+#: ../includes/admin-pages/discount-codes.php:60
+msgid "Actions"
+msgstr "الإجراءات"
+
+#: ../includes/admin-pages/discount-codes.php:82
+#: ../includes/admin-pages/discount-codes.php:84
+msgid "unlimited"
+msgstr "غير محدود"
+
+#: ../includes/admin-pages/discount-codes.php:93
+msgid "No start date"
+msgstr "لا يوجد تاريخ للبدء"
+
+#: ../includes/admin-pages/discount-codes.php:100
+msgid "Expired"
+msgstr "انتهت صلاحيته"
+
+#: ../includes/admin-pages/discount-codes.php:102
+msgid "no expiration"
+msgstr "لا يوجد انتهاء للصلاحية"
+
+#: ../includes/admin-pages/discount-codes.php:108
+#: ../includes/admin-pages/payments-history.php:183
+msgid "Edit"
+msgstr "تحرير"
+
+#: ../includes/admin-pages/discount-codes.php:110
+msgid "Deactivate"
+msgstr "تعطيل"
+
+#: ../includes/admin-pages/discount-codes.php:112
+msgid "Activate"
+msgstr "تفعيل"
+
+#: ../includes/admin-pages/discount-codes.php:114
+#: ../includes/admin-pages/payments-history.php:185
+msgid "Delete"
+msgstr "إلغاء"
+
+#: ../includes/admin-pages/discount-codes.php:119
+msgid "No discount codes have been created."
+msgstr "لم ينشأ رمز للخصم"
+
+#: ../includes/admin-pages/payments-history.php:90
+msgid "All"
+msgstr "الكل"
+
+#: ../includes/admin-pages/payments-history.php:95
+msgid "Completed"
+msgstr "تم"
+
+#: ../includes/admin-pages/payments-history.php:106
+msgid "Export"
+msgstr "تصدير"
+
+#: ../includes/admin-pages/payments-history.php:110
+msgid "Payment mode"
+msgstr "حالة الدفع"
+
+#: ../includes/admin-pages/payments-history.php:112
+msgid "Live"
+msgstr "مباشر"
+
+#: ../includes/admin-pages/payments-history.php:113
+msgid "Test"
+msgstr "تجربة"
+
+#: ../includes/admin-pages/payments-history.php:123
+msgid "Payments per page"
+msgstr "المدفوعات في كل صفحة"
+
+#: ../includes/admin-pages/payments-history.php:125
+msgid "Show"
+msgstr "اعرض"
+
+#: ../includes/admin-pages/payments-history.php:131
+msgid "Showing payments for: "
+msgstr "عرض المدفوعات لـ:"
+
+#: ../includes/admin-pages/payments-history.php:131
+msgid "clear"
+msgstr "مسح"
+
+#: ../includes/admin-pages/payments-history.php:184
+msgid "Resend Purchase Receipt"
+msgstr "إعادة إرسال فاتورة الشراء"
+
+#: ../includes/admin-pages/payments-history.php:197
+#, php-format
+msgid "Purchase Details for Payment #%s"
+msgstr "تفاصيل دفع المشتريات"
+
+#: ../includes/admin-pages/payments-history.php:197
+msgid "View Order Details"
+msgstr "عرض تفاصيل الطلب"
+
+#: ../includes/admin-pages/payments-history.php:205
+msgid "Purchased File"
+msgstr "ملف الشراء"
+
+#: ../includes/admin-pages/payments-history.php:205
+msgid "Purchased Files"
+msgstr "الملفات التي تم شراءها"
+
+#: ../includes/admin-pages/payments-history.php:249
+msgid "Date and Time:"
+msgstr "الوقت و التاريخ:"
+
+#: ../includes/admin-pages/payments-history.php:250
+msgid "Discount used:"
+msgstr "الخصم المستخدم"
+
+#: ../includes/admin-pages/payments-history.php:251
+msgid "Total:"
+msgstr "إجمالي:"
+
+#: ../includes/admin-pages/payments-history.php:254
+msgid "Buyer's Personal Details:"
+msgstr "تفاصيل المشتري الشخصية:"
+
+#: ../includes/admin-pages/payments-history.php:256
+msgid "Name:"
+msgstr "الاسم:"
+
+#: ../includes/admin-pages/payments-history.php:257
+msgid "Email:"
+msgstr "البريد الإلكتروني:"
+
+#: ../includes/admin-pages/payments-history.php:266
+msgid "Payment Method:"
+msgstr "طرق الدفع:"
+
+#: ../includes/admin-pages/payments-history.php:271
+msgid "Purchase Key"
+msgstr "مفتاح الشراء"
+
+#: ../includes/admin-pages/payments-history.php:274
+msgid "Close"
+msgstr "مغلق"
+
+#: ../includes/admin-pages/payments-history.php:304
+msgid "Total Earnings:"
+msgstr "إجمالي الأرباح:"
+
+#: ../includes/admin-pages/reports.php:41
+msgid "Download Sales and Earnings PDF Report for all Products"
+msgstr "تقارير PDF لمبيعات و أرباح كل المنتجات"
+
+#: ../includes/admin-pages/reports.php:42
+msgid "Download a CSV Customers List"
+msgstr "تحميل قائمة العملاء CSV"
+
+#: ../includes/admin-pages/reports.php:44
+msgid "Please Note: Transactions created while in test mode are not included on this page or in the PDF reports."
+msgstr "ملاحظة: العمليات التي تتم في حالة التجربة ليست موجودة في هذه الصفحة أو في تقارير PDF"
+
+#: ../includes/admin-pages/settings-old.php:12
+msgid "Pages"
+msgstr "الصفحات"
+
+#: ../includes/admin-pages/settings-old.php:14
+#: ../includes/admin-pages/settings.php:37
+msgid "Misc"
+msgstr "منوع"
+
+#: ../includes/admin-pages/settings-old.php:25
+msgid "Purchase Form"
+msgstr "نموذج شراء"
+
+#: ../includes/admin-pages/settings-old.php:31
+#: ../includes/admin-pages/settings-old.php:36
+msgid "Purchase Page"
+msgstr "صفحة الشراء"
+
+#: ../includes/admin-pages/settings-old.php:49
+#: ../includes/admin-pages/settings-old.php:78
+msgid "No pages found"
+msgstr "لم يتم العثور على صفحات"
+
+#: ../includes/admin-pages/settings-old.php:53
+msgid "Choose the page that holds the checkout form short code."
+msgstr "اختيار الصفحة التي تحمل شكل الرمز القصير للدفع و الخروج"
+
+#: ../includes/admin-pages/settings-old.php:82
+msgid "Choose the page users are directed to after a successful purchase."
+msgstr "اختارصفحة يرسل إليها المشترين بعد إتمام عملية الشراء بنجاح"
+
+#: ../includes/admin-pages/settings-old.php:110
+msgid "Check this to use the plugin in test mode."
+msgstr "ضع علامة على هذا لتستخدم الإضافة في حالة التجربة"
+
+#: ../includes/admin-pages/settings-old.php:124
+#: ../includes/admin-pages/settings-old.php:129
+msgid "Gateways"
+msgstr "بوابات الدفع "
+
+#: ../includes/admin-pages/settings-old.php:140
+msgid "Check each of the payment gateways you would like to enable. Configure the selected gateways below."
+msgstr "jتحقق من كل بوابات الدفع التي ترغب بتمكينها. اضبط البوابة المختارة أدناه"
+
+#: ../includes/admin-pages/settings-old.php:163
+msgid "Enter your PayPal Email."
+msgstr "ادخل حساب بريدك الإلكتروني في الـ paypal"
+
+#: ../includes/admin-pages/settings-old.php:177
+msgid "Miscellaneous"
+msgstr "منوعات"
+
+#: ../includes/admin-pages/settings-old.php:183
+#: ../includes/admin-pages/settings-old.php:188
+msgid "Enable Ajax"
+msgstr "تمكين الأجاكس Ajax"
+
+#: ../includes/admin-pages/settings-old.php:192
+msgid "Check this to enable AJAX for the shopping cart."
+msgstr "علم على هذا لتمكين Ajax  لسلة التسوق"
+
+#: ../includes/admin-pages/settings-old.php:199
+#: ../includes/admin-pages/settings-old.php:204
+msgid "Logged-In Only"
+msgstr "تسجيل الدخول فقط"
+
+#: ../includes/admin-pages/settings-old.php:261
+msgid "Choose your currency."
+msgstr "اختار عملتك"
+
+#: ../includes/admin-pages/settings-old.php:261
+msgid "Note"
+msgstr "ملاحظة"
+
+#: ../includes/admin-pages/settings-old.php:261
+msgid "If you use Stripe, you MUST use USD."
+msgstr "إن كنت تستخدم شريط الرسوم، فعليك استخدام  USD"
+
+#: ../includes/admin-pages/settings-old.php:288
+msgid "Messages"
+msgstr "رسائل"
+
+#: ../includes/admin-pages/settings-old.php:294
+#: ../includes/admin-pages/settings-old.php:299
+msgid "Payment Confirmation"
+msgstr "توكيد الدفع"
+
+#: ../includes/admin-pages/settings-old.php:303
+msgid "Enter the message displayed after a user makes a successful purchase. HTML is accepted."
+msgstr "أدخل العبارة التي ستظهر للمستخدم بعد عملية شراء ناجحة. HTML مقبول"
+
+#: ../includes/admin-pages/settings-old.php:313
+msgid "Save Options"
+msgstr "حفظ الخيارات"
+
+#: ../includes/admin-pages/settings.php:33
+msgid "General"
+msgstr "عام"
+
+#: ../includes/admin-pages/settings.php:35
+msgid "Emails"
+msgstr "عناوين البريد الإلكتروني"
+
+#: ../includes/admin-pages/settings.php:36
+msgid "Styles"
+msgstr "أنماط"
+
+#: ../includes/admin-pages/forms/add-discount.php:12
+msgid "Add New Discount"
+msgstr "أضف خصم جديد"
+
+#: ../includes/admin-pages/forms/add-discount.php:22
+#: ../includes/admin-pages/forms/edit-discount.php:27
+msgid "The name of this discount"
+msgstr "اسم هذا الخصم"
+
+#: ../includes/admin-pages/forms/add-discount.php:31
+#: ../includes/admin-pages/forms/edit-discount.php:36
+msgid "Enter a code for this discount, such as 10PERCENT"
+msgstr "أدخل رمز لهذا الخصم، مثل 10%"
+
+#: ../includes/admin-pages/forms/add-discount.php:36
+#: ../includes/admin-pages/forms/edit-discount.php:41
+msgid "Type"
+msgstr "نوع"
+
+#: ../includes/admin-pages/forms/add-discount.php:40
+#: ../includes/admin-pages/forms/edit-discount.php:45
+msgid "Percentage"
+msgstr "النسبة "
+
+#: ../includes/admin-pages/forms/add-discount.php:41
+#: ../includes/admin-pages/forms/edit-discount.php:46
+msgid "Flat amount"
+msgstr "المبلغ المبسط"
+
+#: ../includes/admin-pages/forms/add-discount.php:43
+#: ../includes/admin-pages/forms/edit-discount.php:48
+msgid "The kind of discount to apply for this discount."
+msgstr "نوع الخصم ليطبق على هذا الخصم"
+
+#: ../includes/admin-pages/forms/add-discount.php:52
+#: ../includes/admin-pages/forms/edit-discount.php:57
+msgid "The amount of this discount code."
+msgstr "مبلغ رمز الخصم هذا"
+
+#: ../includes/admin-pages/forms/add-discount.php:57
+#: ../includes/admin-pages/forms/edit-discount.php:62
+msgid "Start date"
+msgstr "تاريخ البدء"
+
+#: ../includes/admin-pages/forms/add-discount.php:61
+#: ../includes/admin-pages/forms/edit-discount.php:66
+msgid "Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date."
+msgstr "ادخل تاريخ بدء كود الخصم هذا على شكل سنوات-شهور- أيام. دعه فارغ إن لم ترد تحديد تاريخ البدء. إن أدخلته فالخصم سيستخدم فقط بعد أو في هذا التاريخ"
+
+#: ../includes/admin-pages/forms/add-discount.php:66
+#: ../includes/admin-pages/forms/edit-discount.php:71
+msgid "Expiration date"
+msgstr "تاريخ نهاية الصلاحية"
+
+#: ../includes/admin-pages/forms/add-discount.php:70
+#: ../includes/admin-pages/forms/edit-discount.php:75
+msgid "Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank"
+msgstr "ادخل تاريخ نهاية صلاحية كود الخصم هذا على شكل سنوات-شهور- أيام. دعه فارغ إن لم ترغب بتحديد  تاريخ نهاية الصلاحية"
+
+#: ../includes/admin-pages/forms/add-discount.php:75
+#: ../includes/admin-pages/forms/edit-discount.php:89
+msgid "Minimum Amount"
+msgstr "الحد الأدنى للمبلغ"
+
+#: ../includes/admin-pages/forms/add-discount.php:79
+#: ../includes/admin-pages/forms/edit-discount.php:93
+msgid "The minimum amount that must be purchased before this discount can be used. Leave blank for no minimum."
+msgstr " الحد الأدنى الذي يجب شراؤه قبل هذا الخصم.. دعه فارغ في حال عدم وجود حد أدنى"
+
+#: ../includes/admin-pages/forms/add-discount.php:88
+#: ../includes/admin-pages/forms/edit-discount.php:84
+msgid "The maximum number of times this discount can be used. Leave blank for unlimited."
+msgstr "الحد الأقصى لعدد مرات استخدام هذا الخصم. دعه فارغ في حالة إن كان غير محدود"
+
+#: ../includes/admin-pages/forms/add-discount.php:96
+msgid "Add Discount Code"
+msgstr "أضف كود الخصم"
+
+#: ../includes/admin-pages/forms/edit-discount.php:13
+msgid "Something went wrong."
+msgstr "حث خطأ ما"
+
+#: ../includes/admin-pages/forms/edit-discount.php:17
+msgid "Edit Discount"
+msgstr "تحرير الخصم"
+
+#: ../includes/admin-pages/forms/edit-discount.php:17
+#: ../includes/admin-pages/forms/edit-payment.php:16
+msgid "Go Back"
+msgstr "الرجوع"
+
+#: ../includes/admin-pages/forms/edit-discount.php:102
+msgid "Active"
+msgstr "فعال"
+
+#: ../includes/admin-pages/forms/edit-discount.php:103
+msgid "Inactive"
+msgstr "غير فعال"
+
+#: ../includes/admin-pages/forms/edit-discount.php:105
+msgid "The status of this discount code."
+msgstr "حالة كود الخصم هذا"
+
+#: ../includes/admin-pages/forms/edit-discount.php:115
+msgid "Update Discount Code"
+msgstr "تحديث كود الخصم"
+
+#: ../includes/admin-pages/forms/edit-payment.php:22
+msgid "Buyer's Email"
+msgstr "البريد الإلكتروني للمشتري"
+
+#: ../includes/admin-pages/forms/edit-payment.php:26
+msgid "If needed, you can update the buyer's email here."
+msgstr "إن احتجت ذلك، يمكنك تحديث البريد الإلكتروني الخاص بالمشتري"
+
+#: ../includes/admin-pages/forms/edit-payment.php:31
+msgid "Downloads Purchased"
+msgstr "التحميلات التي اشتريت"
+
+#: ../includes/admin-pages/forms/edit-payment.php:43
+#, php-format
+msgid "Add download to purchase #%s"
+msgstr "أضف تحميل لتشتري #%"
+
+#: ../includes/admin-pages/forms/edit-payment.php:43
+msgid "Add download to purchase"
+msgstr "أضف تحميل للشراء"
+
+#: ../includes/admin-pages/forms/edit-payment.php:48
+msgid "Payment Status"
+msgstr "حالة الدفع"
+
+#: ../includes/admin-pages/forms/edit-payment.php:64
+msgid "Send Purchase Receipt"
+msgstr "أرسل فاتورة شراء"
+
+#: ../includes/admin-pages/forms/edit-payment.php:68
+msgid "Check this box to send the purchase receipt, including all download links."
+msgstr "علم في المربع لإرسال فاتورة الشراء، بالإضافة لجميع الروابط المحملة"
+
+#: ../includes/admin-pages/forms/edit-payment.php:78
+msgid "Update Payment"
+msgstr "تحديق الدفع"
+
+#: ../includes/admin-pages/forms/edit-payment.php:91
+msgid "Add Selected Downloads"
+msgstr "إضافة التحميلات المختارة"
+
+#: ../includes/gateways/paypal.php:271
+msgid "Invalid IPN"
+msgstr "IPN غير صالح"
+
+#: ../includes/templates/checkout_cart.php:6
+msgid "Item Name"
+msgstr "اسم المادة"
+
+#: ../includes/templates/checkout_cart.php:7
+msgid "Item Price"
+msgstr "سعر المادة"
+
+#: ../includes/templates/checkout_cart.php:49
+msgid "Total"
+msgstr "الإجمالي"
+
+#: ../includes/templates/history-downloads.php:10
+msgid "Download Name"
+msgstr "اسم التحميل"
+
+#: ../includes/templates/history-downloads.php:12
+#: ../includes/templates/history-purchases.php:14
+msgid "Files"
+msgstr "ملفات"
+
+#: ../includes/templates/history-downloads.php:68
+msgid "You have not purchased any downloads"
+msgstr "لم تشتري أي تحميلات"
+
+#: ../includes/templates/history-purchases.php:11
+msgid "Purchase ID"
+msgstr "معرف الشراء"
+
+#: ../includes/templates/history-purchases.php:61
+msgid "You have not made any purchases"
+msgstr "لم تقم بشراء أي شئ"
+
+#~ msgid "Payment Info"
+#~ msgstr "معلومات الدفع"
+#~ msgid "price name"
+#~ msgstr "اسم السعر"
+#~ msgid "Add New Price Option"
+#~ msgstr "اضف اختيار سعر جديد"
+#~ msgid "Enter the download price. Do not include a currency symbol"
+#~ msgstr "ادخل سعر للتحميل. لا تدرج رمز العملة"
+#~ msgid "Add to Cart"
+#~ msgstr "إضافة لسلة التسوق"
+#~ msgid "No downloads found"
+#~ msgstr "لم يتم العثور على تحميلات"
+#~ msgid "Deleted"
+#~ msgstr "تم الحذف"
+

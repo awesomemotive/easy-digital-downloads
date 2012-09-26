@@ -1,132 +1,129 @@
 jQuery(document).ready(function ($) {
-    //$('#edit-slug-box').remove();
-    
-    // date picker
-    if ($('.form-table .edd_datepicker').length > 0) {
-        var dateFormat = 'mm/dd/yy';
-        $('.edd_datepicker').datepicker({
-            dateFormat: dateFormat
-        });
-    }
 
-	// toggle the pricing options
-	$('#edd_variable_pricing').on('click', function() {
-		$('.edd_pricing_fields').toggle();
-		$('.edd_repeatable_condition_field').toggle();
-	});
-	
-	// toggle the color options
-	$('#edd_purchase_style input').change(function() {
-		$('#edd_purchase_color').toggle();
-	});
-	
-	// add new price option 
-    $(".edd_add_new_price").on('click', function (e) {
-        var $this = $(this),
-            container = $this.closest('tr'),
-            field = $this.closest('td').find("div.edd_variable_prices_wrapper:last").clone(true),
-            fieldLocation = $this.closest('td').find('div.edd_variable_prices_wrapper:last');
+	/**
+	 * Download Configuration Metabox
+	 */
+	var EDD_Download_Configuration = {
+		init : function() {
+			this.add();
+			this.remove();
+			this.prices();
+			this.files();
+		},
 
-        // get the hidden field that has the name value
-        var name_field = $("input.edd_variable_prices_name_field", container);
+		add : function() {
+			$( 'body' ).on( 'click', '.submit .edd_add_repeatable', function(e) {
+				e.preventDefault();
 
-        // set the base of the new field name
-        var id = $(name_field).attr("id");
+				var button = $( this ),
+					row    = button.parent().parent().prev( 'tr' ),
+					clone  = row.clone();
 
-        // set the new field val to blank
-        $('input[type="text"]', field).val("");
+				/** manually update any select box values */
+				clone.find( 'select' ).each(function() {
+					$( this ).val( row.find( 'select[name="' + $( this ).attr( 'name' ) + '"]' ).val() );
+				});
 
-        // set up a count var
-        var count = $('.edd_variable_prices_wrapper', container).size();
-        
-		field.find( 'input, select' ).each(function() {
-			var name = $( this ).attr( 'name' );
-			
-			name = name.replace( /\[(\d+)\]/, function() {
-				return '[' + count + ']'
+				var count  = row.parent().find( 'tr' ).length - 1;
+
+				clone.removeClass( 'edd_add_blank' );
+				
+
+				clone.find( 'td input, td select' ).val( '' );
+				clone.find( 'input, select' ).each(function() {
+						var name 	= $( this ).attr( 'name' );
+
+						name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
+						
+						$( this )
+							.attr( 'name', name )
+							.attr( 'id', name );
+					});
+
+				clone.insertAfter( row );
+				
 			});
-			
-			$( this )
-				.attr( 'name', name )
-				.attr( 'id', name );
-		});
+		},
 
-        field.insertAfter(fieldLocation, $this.closest('td'));
+		remove : function() {
+			$( 'body' ).on( 'click', '.edd_remove_repeatable', function(e) {
+				e.preventDefault();
+				
+				var row   = $(this).parent().parent( 'tr' ),
+					count = row.parent().find( 'tr' ).length - 1,
+					type  = $(this).data('type');
 
-        return false;
-    });
+				if( count > 1 ) {
+					$( 'input, select', row ).val( '' );
+					row.fadeOut( 'fast' ).remove();
+				} else {
+					switch( type ) {
+						case 'price' :
+							alert( edd_vars.one_price_min );
+							break;
+						case 'file' :
+							alert( edd_vars.one_file_min );
+							break;
+						default:
+							alert( edd_vars.one_field_min );
+							break;
+					}
+				}
+			});
+		},
+
+		prices : function() {
+			$( 'body' ).on( 'change', '#edd_variable_pricing', function(e) {
+				$( '.edd_pricing_fields' ).toggle();
+				$( '.edd_repeatable_condition_field' ).toggle();
+				$( '#edd_download_files table .pricing' ).toggle();
+			});
+		},
+
+		files : function() {
+			if ( $( '.edd_upload_image_button' ).length > 0 ) {
+				window.formfield = '';
+		        
+		        $('.edd_upload_image_button').on('click', function(e) {
+		            e.preventDefault();
+		            window.formfield = $(this).parent().prev();
+		    		window.tbframe_interval = setInterval(function() {
+		    		    jQuery('#TB_iframeContent').contents().find('.savesend .button').val(edd_vars.use_this_file).end().find('#insert-gallery, .wp-post-thumbnail').hide();
+		    		}, 2000);
+		            if (edd_vars.post_id != null ) {
+		                var post_id = 'post_id=' + edd_vars.post_id + '&';
+		            }
+		            tb_show(edd_vars.add_new_download, 'media-upload.php?' + post_id +'TB_iframe=true');
+		        });
+		        
+		        window.original_send_to_editor = window.send_to_editor;
+		        window.send_to_editor = function (html) {            
+		            if (window.formfield) {
+		                imgurl = $('a', '<div>' + html + '</div>').attr('href');
+		                window.formfield.val(imgurl);
+		                window.clearInterval(window.tbframe_interval);
+		                tb_remove();
+		            } else {
+		                window.original_send_to_editor(html);
+		            }
+		            window.formfield = '';
+		            window.imagefield = false;
+		        }				
+			}
+		}
+	}
+
+	EDD_Download_Configuration.init();	
+
+	//$('#edit-slug-box').remove();
 	
-    // add new repeatable upload field
-    $(".edd_add_new_upload_field").on('click', function () {
-        var $this = $(this),
-            container = $this.closest('tr'),
-            field = $this.closest('td').find("div.edd_repeatable_upload_wrapper:last").clone(true),
-            fieldLocation = $this.closest('td').find('div.edd_repeatable_upload_wrapper:last');
-
-        // get the hidden field that has the name value
-        var name_field = $("input.edd_repeatable_upload_name_field", container);
-
-        // set the base of the new field name
-        var name = $(name_field).attr("id");
-
-        // set the new field val to blank
-        $('input[type="text"]', field).val("");
-
-        // set up a count var
-        var count = $('.edd_repeatable_upload_wrapper', container).size();
-
-        file_name = name + '[' + count + '][name]';
-        file_url = name + '[' + count + '][file]';
-		condition = name + '[' + count + '][condition]';
-
-        $('input.edd_repeatable_name_field', field).attr("name", file_name).attr("id", file_name);
-        $('input.edd_repeatable_upload_field', field).attr("name", file_url).attr("id", file_url);
-        $('select.edd_repeatable_condition_field', field).attr("name", condition).attr("id", condition);
-
-        field.insertAfter(fieldLocation, $this.closest('td'));
-
-        return false;
-    });
-
-    // remove repeatable field
-    $('.edd_remove_repeatable').on('click', function (e) {
-        e.preventDefault();
-        var field = $(this).parent();
-        $('input', field).val("");
-        field.remove();
-        return false;
-    });
-
-    if ($('.edd_upload_image_button').length > 0) {
-        // Media Uploader
-        window.formfield = '';
-        
-        $('.edd_upload_image_button').on('click', function (e) {
-            e.preventDefault();
-            window.formfield = $('.edd_upload_field', $(this).parent());
-    		window.tbframe_interval = setInterval(function() {
-    		    jQuery('#TB_iframeContent').contents().find('.savesend .button').val(edd_vars.use_this_file).end().find('#insert-gallery, .wp-post-thumbnail').hide();
-    		}, 2000);
-            if (edd_vars.post_id != null ) {
-                var post_id = 'post_id=' + edd_vars.post_id + '&';
-            }
-            tb_show(edd_vars.add_new_download, 'media-upload.php?' + post_id +'TB_iframe=true');
-        });
-        
-        window.original_send_to_editor = window.send_to_editor;
-        window.send_to_editor = function (html) {            
-            if (window.formfield) {
-                imgurl = $('a', '<div>' + html + '</div>').attr('href');
-                window.formfield.val(imgurl);
-                window.clearInterval(window.tbframe_interval);
-                tb_remove();
-            } else {
-                window.original_send_to_editor(html);
-            }
-            window.formfield = '';
-            window.imagefield = false;
-        }
-    }
+	// date picker
+	if ($('.form-table .edd_datepicker').length > 0) {
+		var dateFormat = 'mm/dd/yy';
+		$('.edd_datepicker').datepicker({
+			dateFormat: dateFormat
+		});
+	}
 	
 	$('#edd-add-download').on('click', function() {
 		var downloads = [];
@@ -179,33 +176,33 @@ jQuery(document).ready(function ($) {
 		return false;
 	});	
 
-    $('#the-list').on('click', '.editinline', function() {
-        inlineEditPost.revert();
+	$('#the-list').on('click', '.editinline', function() {
+		inlineEditPost.revert();
 
-        var post_id = $(this).closest('tr').attr('id');
+		var post_id = $(this).closest('tr').attr('id');
 
-        post_id = post_id.replace("post-", "");
+		post_id = post_id.replace("post-", "");
 
-        var $edd_inline_data = $('#post-' + post_id);
+		var $edd_inline_data = $('#post-' + post_id);
 
-        var regprice = $edd_inline_data.find('.column-price .downloadprice-' + post_id).val();
+		var regprice = $edd_inline_data.find('.column-price .downloadprice-' + post_id).val();
 
-        // If variable priced product disable editing, otherwise allow price changes
-        if ( regprice != $('#post-' + post_id + '.column-price .downloadprice-' + post_id).val() ) {
-            $('.regprice', '#edd-download-data').val(regprice).attr('disabled', false);
-        } else {
-            $('.regprice', '#edd-download-data').val( edd_vars.quick_edit_warning ).attr('disabled', 'disabled');
-        }
-    });
+		// If variable priced product disable editing, otherwise allow price changes
+		if ( regprice != $('#post-' + post_id + '.column-price .downloadprice-' + post_id).val() ) {
+			$('.regprice', '#edd-download-data').val(regprice).attr('disabled', false);
+		} else {
+			$('.regprice', '#edd-download-data').val( edd_vars.quick_edit_warning ).attr('disabled', 'disabled');
+		}
+	});
 
-    // show the email template previews
-    if( $('#email-preview-wrap').length ) {
-        $('#open-email-preview').colorbox({
-            inline: true,
-            href: '#email-preview',
-            width: '80%',
-            height: 'auto'
-        });
-    }
+	// show the email template previews
+	if( $('#email-preview-wrap').length ) {
+		$('#open-email-preview').colorbox({
+			inline: true,
+			href: '#email-preview',
+			width: '80%',
+			height: 'auto'
+		});
+	}
 	
 });

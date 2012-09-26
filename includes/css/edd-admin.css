@@ -27,7 +27,28 @@ tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 #postbox-container-1 .edd_files_name_label { width: 80px; }
 #postbox-container-1 .edd_files_url_label { width: 80px; }
 
-.edd_remove_repeatable { margin: 3px 0 0 5px; cursor: pointer; width: 10px; height: 10px; display: inline-block; text-indent: -9999px; overflow: hidden; }
+.edd_remove_repeatable { margin: 11px 0 0 0; cursor: pointer; width: 10px; height: 10px; display: inline-block; text-indent: -9999px; overflow: hidden; }
 .edd_remove_repeatable:active, .edd_remove_repeatable:hover { background-position: -10px 0!important }
 
 textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
+
+
+/* Dashboard Widget Styles
+-------------------------------------------------------------- */
+#edd_dashboard_sales .table { margin: 20px 0 0 0; padding: 0; position: relative; }
+#edd_dashboard_sales .table_current_month { float: left; width: 45%; border-top: 1px solid #ececec; }
+#edd_dashboard_sales .table_totals { float: right; width: 45%; border-top: 1px solid #ececec; }
+#edd_dashboard_sales p.sub { margin: -7px -14px !important; padding: 5px 0 15px; color: #8f8f8f; font-size: 14px; position: absolute; top: -22px; left: 15px; }
+#edd_dashboard_sales .inside { font-size: 12px; }
+#edd_dashboard_sales table td { padding: 3px 0; white-space: nowrap; }
+#edd_dashboard_sales td.b { font-size: 14px; font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif; text-align: right; padding-right: 6px; width: auto; }
+#edd_dashboard_sales .t { font-size: 12px; padding-right: 12px; padding-top: 6px; color: #777; }
+
+.edd_add_repeatable { display: inline-block; }
+#downloadinformation .edd_meta_table_wrap table input, 
+#downloadinformation .edd_meta_table_wrap table select, 
+#downloadinformation .edd_meta_table_wrap table textarea { margin: 4px 0; width: 100%; }
+#downloadinformation .edd_meta_table_wrap table .submit input { width: auto; }
+.edd_repeatable_upload_wrapper td { position: relative; }
+.edd_upload_file { position: absolute; top: 9px; right: 9px; padding: 3px 8px 2px; display: block; background: #fff; }
+

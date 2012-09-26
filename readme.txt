@@ -1,12 +1,12 @@
 === Easy Digital Downloads ===
 Author URI: http://pippinsplugins.com
 Plugin URI: http://easydigitaldownloads.com
-Contributors: mordauk, sksmatt
+Contributors: mordauk, sksmatt, sunnyratilal, spencerfinnell
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
-Tested up to: 3.4.1
-Stable Tag: 1.2.1.1
+Tested up to: 3.4.2
+Stable Tag: 1.2.2
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -62,6 +62,7 @@ Easy Digital Downloads as been translated into the following languages:
 6. Dutch
 7. European Portuguese
 8. Turkish
+9. Arabic
 
 Would you like to help translate the plugin into more langauges? [Contact Pippin](http://easydigitaldownloads.com/contact-developer/).
 
@@ -86,6 +87,10 @@ There are three ways you can show the downloads shopping cart:
 3. Use the template tag and place the following the template file of your choosing:
 
 `echo edd_shopping_cart();`
+
+= My Payments Marked as Pending = 
+
+There are several reasons this happens. Please follow the suggestions [here](https://easydigitaldownloads.com/documentation/faqs/).
 
 = Getting a 404 error? =
 
@@ -119,18 +124,38 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Screenshots ==
 
-1. Screenshot 1
-2. Screenshot 2
-3. Screenshot 3
-4. Screenshot 4
-5. Screenshot 5
-6. Screenshot 6
-7. Screenshot 7
-8. Screenshot 8
-9. Screenshot 9
+1. Download products overview
+2. Download configuration
+3. Download configuration details
+4. Download configuration with variable prices
+5. Payment history
+6. Discount codes
+7. Earnings and sales reports
+8. Add to cart / purchase button
+9. Checkout screen
 
 
 == Changelog ==
+
+= 1.2.2 =
+
+* Fixed problem with sorting downloads by price and added compatibility for Post Types Order plugin
+* Improved file organization
+* Added new Arabic language files
+* Added a Sales Summary dashboard widget
+* Updated download configuration with brand new UI and simplified options
+* Removed button text / style from Download Configuration
+* Added new default button color/style options to Settings > Styles
+* Added new default add-to-cart button text option in Settings > Misc
+* Added a new query filter to block direct access to attachments of downloads
+* Fixed bug with undefined index error with the metabox nonce
+* Added a check to prevent users from deleting all price/download files in download configuration
+* Added WPML config file for more WPML compatibility
+* Dramatically improved admin javascript functions to be more extendable
+* Updated French language files
+* Added cache flush for user purchase history when payments are created
+* Fixed a bug with percentage based discount codes
+* Updated edd_email_template_tags with $payment_id
 
 = 1.2.1.1 =
 
@@ -623,6 +648,26 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Upgrade Notice ==
+
+= 1.2.2 =
+
+* Fixed problem with sorting downloads by price and added compatibility for Post Types Order plugin
+* Improved file organization
+* Added new Arabic language files
+* Added a Sales Summary dashboard widget
+* Updated download configuration with brand new UI and simplified options
+* Removed button text / style from Download Configuration
+* Added new default button color/style options to Settings > Styles
+* Added new default add-to-cart button text option in Settings > Misc
+* Added a new query filter to block direct access to attachments of downloads
+* Fixed bug with undefined index error with the metabox nonce
+* Added a check to prevent users from deleting all price/download files in download configuration
+* Added WPML config file for more WPML compatibility
+* Dramatically improved admin javascript functions to be more extendable
+* Updated French language files
+* Added cache flush for user purchase history when payments are created
+* Fixed a bug with percentage based discount codes
+* Updated edd_email_template_tags with $payment_id
 
 = 1.2.1.1 =
 

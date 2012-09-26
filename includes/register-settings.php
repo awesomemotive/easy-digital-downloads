@@ -210,9 +210,22 @@ function edd_register_settings() {
 					'type' => 'checkbox'
 				),
 				array(
+					'id' => 'buton_header',
+					'name' => '<strong>' . __('Buttons', 'edd') . '</strong>',
+					'desc' => __('Options for add to cart and purchase buttons', 'edd'),
+					'type' => 'header'
+				),
+				array(
+					'id' => 'button_style',
+					'name' => __('Default Button Style', 'edd'),
+					'desc' => __('Choose the style you want to use for the buttons.', 'edd'),
+					'type' => 'select',
+					'options' => edd_get_button_styles()
+				),
+				array(
 					'id' => 'checkout_color',
-					'name' => __('Checkout Button Color', 'edd'),
-					'desc' => __('Choose the button color you want to use for the checkout buttons.', 'edd'),
+					'name' => __('Default Button Color', 'edd'),
+					'desc' => __('Choose the color you want to use for the buttons.', 'edd'),
 					'type' => 'select',
 					'options' => edd_get_button_colors()
 				)
@@ -287,6 +300,12 @@ function edd_register_settings() {
 					'name' => __('Complete Purchase Text', 'edd'),
 					'desc' => __('The button label for completing a purchase.', 'edd'),
 					'type' => 'text',
+				),
+				array(
+					'id' => 'add_to_cart_text',
+					'name' => __('Add to Cart Text', 'edd'),
+					'desc' => __('Text shown on the Add to Cart Buttons', 'edd'),
+					'type' => 'text'
 				)
 			)
 		)
