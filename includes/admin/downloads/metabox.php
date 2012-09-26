@@ -388,7 +388,7 @@ function edd_render_disable_button( $post_id ) {
 	$hide_button = get_post_meta( $post_id, '_edd_hide_purchase_link', true ) ? true : false;
 ?>
 	<p>
-		<strong><?php _e( 'Button Options', 'edd' ); ?>:</strong>
+		<strong><?php _e( 'Button Options:', 'edd' ); ?></strong>
 	</p>
 
 	<p>
