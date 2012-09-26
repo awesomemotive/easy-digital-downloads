@@ -94,9 +94,10 @@ function edd_process_paypal_purchase( $purchase_data ) {
         // setup PayPal arguments
         $paypal_args = array( 
             'cmd'           => '_xclick', 
-            'amount'        => $purchase_data['price'], 
+            'amount'        => $purchase_data['subtotal'],
+            'tax'           => $purchase_data['tax'],
             'business'      => $edd_options['paypal_email'], 
-            'item_name'     => stripslashes_deep( html_entity_decode( $cart_summary, ENT_COMPAT, 'UTF-8' ) ), 
+            'item_name'     => stripslashes_deep( html_entity_decode( $summary, ENT_COMPAT, 'UTF-8' ) ), 
             'email'         => $purchase_data['user_email'], 
             'no_shipping'   => '1', 
             'shipping'      => '0',
@@ -148,7 +149,7 @@ function edd_listen_for_paypal_ipn() {
         
     // alternate purchase verification  
     } else { 
-	
+    
         if ( isset( $_GET['tx'] ) && isset( $_GET['st'] ) && isset( $_GET['amt'] ) && isset( $_GET['cc'] ) && isset( $_GET['cm'] ) && isset( $_GET['item_number'] ) ) {
             // we are using the alternate method of verifying PayPal purchases
             
@@ -205,11 +206,11 @@ function edd_process_paypal_ipn() {
     
     // fallback just in case post_max_size is lower than needed
     if ( ini_get( 'allow_url_fopen' ) ) {
-	 	$post_data = file_get_contents( 'php://input' );
-	} else {
-	 	// if allow_url_fopen is not enabled, then make sure that post_max_size is large enough
-	 	ini_set('post_max_size', '12M');
-	}
+        $post_data = file_get_contents( 'php://input' );
+    } else {
+        // if allow_url_fopen is not enabled, then make sure that post_max_size is large enough
+        ini_set('post_max_size', '12M');
+    }
     // start the encoded data collection with notification command
     $encoded_data = 'cmd=_notify-validate';
     
@@ -234,34 +235,34 @@ function edd_process_paypal_ipn() {
         }
     }
    
-	// convert collected post data to an array
+    // convert collected post data to an array
    parse_str( $encoded_data, $encoded_data_array );     
    
    // get the PayPal redirect uri
    $paypal_redirect = edd_get_paypal_redirect(true);
     
-	$remote_post_vars = array(
-		'method' => 'POST',
-		'timeout' => 45,
-		'redirection' => 5,
-		'httpversion' => '1.0',
-		'blocking' => true,
-		'headers' => array(),
-		'body' => $encoded_data_array
+    $remote_post_vars = array(
+        'method' => 'POST',
+        'timeout' => 45,
+        'redirection' => 5,
+        'httpversion' => '1.0',
+        'blocking' => true,
+        'headers' => array(),
+        'body' => $encoded_data_array
    );
    
     // get response
    $api_response = wp_remote_post( edd_get_paypal_redirect(), $remote_post_vars );
    
-	if( is_wp_error( $api_response) )
-		return; // something went wrong   
+    if( is_wp_error( $api_response) )
+        return; // something went wrong   
    
    if ($api_response['body'] !== 'VERIFIED' && !isset($edd_options['disable_paypal_verification']) )
-		return; // response not okay
-   	 
+        return; // response not okay
+     
    // convert collected post data to an array
    parse_str( $post_data, $post_data_array );   
-   	 
+     
     // check if $post_data_array has been populated
     if ( ! is_array( $encoded_data_array ) && ! empty( $encoded_data_array ) )
     return;
@@ -315,11 +316,11 @@ add_action( 'edd_verify_paypal_ipn', 'edd_process_paypal_ipn' );
 function edd_get_paypal_redirect( $ssl_check = false ) {
     global $edd_options;
     
-	if( is_ssl() || ! $ssl_check ) {
-		$protocal = 'https://';
-	} else {
-		$protocal = 'http://';	
-	}	
+    if( is_ssl() || ! $ssl_check ) {
+        $protocal = 'https://';
+    } else {
+        $protocal = 'http://';  
+    }   
 
     // check the current payment mode
     if ( edd_is_test_mode() ) {
