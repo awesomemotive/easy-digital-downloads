@@ -283,10 +283,11 @@ function edd_get_cart_subtotal() {
  *
  * @access      public
  * @since       1.0
+ * @param 		$add_taxes bool Whether to apply taxes (if enabled) 
  * @return      float the total amount
 */
 
-function edd_get_cart_amount() {
+function edd_get_cart_amount( $add_taxes = true ) {
 
 	$amount = edd_get_cart_subtotal();
 
@@ -296,7 +297,7 @@ function edd_get_cart_amount() {
 		$amount = edd_get_discounted_amount( $_POST['edd-discount'], $amount );
 	}
 
-	if( edd_use_taxes() ) {
+	if( edd_use_taxes() && $add_taxes ) {
 		// add the taxes amount if enabled
 		$tax = edd_get_cart_tax();
 		$amount += $tax;
@@ -344,8 +345,7 @@ function edd_get_cart_tax() {
 
 	$cart_sub_total = edd_get_cart_subtotal();
 	$cart_tax 		= edd_calculate_tax( $cart_sub_total );
-	$cart_tax 		= edd_format_amount( $cart_tax );
-
+	$cart_tax 		= number_format( $cart_tax, 2 );
 	$tax = apply_filters( 'edd_get_cart_tax', $cart_tax, $cart_sub_total );
 
 	return $tax;
