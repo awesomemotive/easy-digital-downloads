@@ -242,7 +242,14 @@ function edd_register_settings() {
 						'all' 	=> __('Everyone', 'edd'),
 						'local' => __('Local residents only', 'edd')
 					)
-				)
+				),
+				array(
+					'id' => 'tax_location',
+					'name' => __('Tax Opt-In', 'edd'),
+					'desc' => __('Customers will be given a checkbox to click if they reside in your local area. Please enter directions for them here.', 'edd'),
+					'type' => 'text',
+					'size' => 'large'
+				),
 			)
 		),		
 		'misc' => apply_filters('edd_settings_misc', 
