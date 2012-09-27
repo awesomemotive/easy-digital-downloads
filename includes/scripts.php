@@ -6,7 +6,7 @@
  * @subpackage  Scripts
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 
@@ -16,7 +16,7 @@
  * Enqueues the required scripts.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -25,17 +25,17 @@ function edd_load_scripts() {
 	global $edd_options, $post;
 
 	wp_enqueue_script('jquery');
-	
+
 	// Get position in cart of current download
 	if(isset($post->ID)) {
 	    $position = edd_get_item_position_in_cart($post->ID);
 	}
-		
+
 	// Load AJAX scripts, if enabled
 	if( edd_is_ajax_enabled()) {
 		wp_enqueue_script('edd-ajax', EDD_PLUGIN_URL . 'includes/js/edd-ajax.js');
 		wp_localize_script('edd-ajax', 'edd_scripts', array(
-				'ajaxurl' 					=> admin_url( 'admin-ajax.php' ),
+				'ajaxurl' 					=> edd_get_ajax_url(),
 				'ajax_nonce' 				=> wp_create_nonce( 'edd_ajax_nonce' ),
 				'no_discount' 				=> __('Please enter a discount code', 'edd'), // blank discount code message
 				'discount_applied' 			=> __('Discount Applied', 'edd'), // discount verified message
@@ -50,7 +50,7 @@ function edd_load_scripts() {
 			)
 		);
 	}
-	
+
 	// Load jQuery validation
 	if(isset($edd_options['jquery_validation']) && is_page($edd_options['purchase_page'])) {
 		wp_enqueue_script('jquery-validation', EDD_PLUGIN_URL . 'includes/js/jquery.validate.min.js');
@@ -69,7 +69,7 @@ add_action('wp_enqueue_scripts', 'edd_load_scripts');
  * Checks the styles option and hooks the required filter.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -88,7 +88,7 @@ add_action('wp_enqueue_scripts', 'edd_register_styles');
  * Enqueues the required admin scripts.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -104,7 +104,7 @@ function edd_load_admin_scripts($hook) {
 
 	if ( is_object( $post ) && ! in_array( $post->post_type, $edd_cpt ) )
 	    return;
-	
+
 	if($hook == 'download_page_edd-reports') {
 		wp_enqueue_script('google-charts', 'https://www.google.com/jsapi');
 	}
@@ -115,9 +115,9 @@ function edd_load_admin_scripts($hook) {
 		wp_enqueue_style('colorbox', EDD_PLUGIN_URL . 'includes/css/colorbox.css');
 		wp_enqueue_script('colorbox', EDD_PLUGIN_URL . 'includes/js/jquery.colorbox-min.js', array('jquery'), '1.3.19.3');
 	}
-	wp_enqueue_script('media-upload'); 
+	wp_enqueue_script('media-upload');
 	wp_enqueue_script('thickbox');
-	wp_enqueue_script('edd-admin-scripts', EDD_PLUGIN_URL . 'includes/js/admin-scripts.js');	
+	wp_enqueue_script('edd-admin-scripts', EDD_PLUGIN_URL . 'includes/js/admin-scripts.js');
 	wp_localize_script('edd-admin-scripts', 'edd_vars', array(
         'post_id' 			=> isset($post->ID) ? $post->ID : null,
         'add_new_download' 	=> __('Add New Download', 'edd'), // thickbox title
@@ -141,20 +141,20 @@ add_action('admin_enqueue_scripts', 'edd_load_admin_scripts', 100);
  * Echoes the CSS for the downloads post type icon.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
 function edd_admin_downloads_icon() {
     global $post_type;
-	$icon_url = EDD_PLUGIN_URL . 'includes/images/edd-icon.png';	
+	$icon_url = EDD_PLUGIN_URL . 'includes/images/edd-icon.png';
 	?>
 	<style type="text/css" media="screen">
 		body #adminmenu #menu-posts-download div.wp-menu-image { background:transparent url( "<?php echo $icon_url; ?>" ) no-repeat 7px -32px; }
-		body #adminmenu #menu-posts-download:hover div.wp-menu-image, 
+		body #adminmenu #menu-posts-download:hover div.wp-menu-image,
 		body #adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image { background:transparent url( "<?php echo $icon_url; ?>" ) no-repeat 7px 0; }
 		<?php if (( isset($_GET['post_type'])) && ($_GET['post_type'] == 'download') || ($post_type == 'download')) : ?>
-        #icon-edit { background:transparent url("<?php echo EDD_PLUGIN_URL .'includes/images/edd-cpt.png'; ?>") no-repeat; }		
+        #icon-edit { background:transparent url("<?php echo EDD_PLUGIN_URL .'includes/images/edd-cpt.png'; ?>") no-repeat; }
         <?php endif; ?>
 	</style>
     <?php
