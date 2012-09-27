@@ -626,23 +626,3 @@ function edd_get_current_page_url() {
 
 	return $pageURL;
 }
-
-
-/**
- * Get AJAX URL
- *
- * @access      public
- * @since       1.2.3
- * @return      string
-*/
-
-function edd_get_ajax_url() {
-	$site_url = get_site_url();
-	$admin_url = admin_url( 'admin-ajax.php' );
-	if ( preg_match( '/^https/', $admin_url ) && ! preg_match( '/^https/', $site_url ) ) {
-		$admin_url = preg_replace( '/^https/', 'http', $admin_url );
-	} else if ( preg_match( '/^https/', $site_url ) && ! preg_match( '/^https/', $admin_url ) ) {
-		$admin_url = preg_replace( '/^http/', 'https', $admin_url );
-	}
-	return $admin_url;
-}
