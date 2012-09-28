@@ -84,7 +84,7 @@ jQuery(document).ready(function ($) {
 			if ( $( '.edd_upload_image_button' ).length > 0 ) {
 				window.formfield = '';
 		        
-		        $('.edd_upload_image_button').on('click', function(e) {
+		        $('body').on('click', '.edd_upload_image_button', function(e) {
 		            e.preventDefault();
 		            window.formfield = $(this).parent().prev();
 		    		window.tbframe_interval = setInterval(function() {
