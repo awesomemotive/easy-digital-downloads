@@ -34,12 +34,10 @@ function edd_reports_page() {
 			edd_show_monthly_sales_graph();
 			edd_show_daily_eanings_graph();
 			do_action('edd_reports_page_bottom');
-			$edd_generate_pdf_nonce = wp_create_nonce('edd_generate_pdf');
-			$edd_email_export_nonce = wp_create_nonce('edd_email_export');
 		?>
 		<p>
-			<a class="button" href="<?php echo add_query_arg('edd-action', 'generate_pdf', add_query_arg('_wpnonce', $edd_generate_pdf_nonce)); ?>"><?php _e('Download Sales and Earnings PDF Report for all Products', 'edd'); ?></a>
-			<a class="button" href="<?php echo add_query_arg('edd-action', 'email_export', add_query_arg('_wpnonce', $edd_email_export_nonce)); ?>"><?php _e('Download a CSV Customers List', 'edd'); ?></a>
+			<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'generate_pdf' ) ), 'edd_generate_pdf' ); ?>"><?php _e('Download Sales and Earnings PDF Report for all Products', 'edd'); ?></a>
+			<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'email_export' ) ), 'edd_email_export' ); ?>"><?php _e('Download a CSV Customers List', 'edd'); ?></a>
 		</p>
 		<p><?php _e('Please Note: Transactions created while in test mode are not included on this page or in the PDF reports.', 'edd'); ?></p>
 	</div><!--end wrap-->
