@@ -26,15 +26,9 @@ function edd_reports_page() {
 	?>
 	<div class="wrap">
 		<h2><?php _e('Reports', 'edd'); ?></h2>
-		<?php
-			do_action('edd_reports_page_top'); 
-			edd_show_download_sales_graph(); 
-			edd_show_download_earnings_graph(); 
-			edd_show_monthly_eanings_graph();
-			edd_show_monthly_sales_graph();
-			edd_show_daily_eanings_graph();
-			do_action('edd_reports_page_bottom');
-		?>
+		<?php do_action('edd_reports_page_top'); ?>
+		<?php do_action('edd_reports_page'); ?>
+		<?php do_action('edd_reports_page_bottom'); ?>
 		<p>
 			<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'generate_pdf' ) ), 'edd_generate_pdf' ); ?>"><?php _e('Download Sales and Earnings PDF Report for all Products', 'edd'); ?></a>
 			<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'email_export' ) ), 'edd_email_export' ); ?>"><?php _e('Download a CSV Customers List', 'edd'); ?></a>

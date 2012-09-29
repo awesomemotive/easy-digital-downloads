@@ -54,6 +54,7 @@ function edd_show_download_sales_graph($bgcolor = 'white') {
 		echo ob_get_clean();
 	}
 }
+add_action( 'edd_reports_page', 'edd_show_download_sales_graph' );
 
 
 /**
@@ -100,6 +101,7 @@ function edd_show_download_earnings_graph($bgcolor = 'white') {
 		echo ob_get_clean();
 	}
 }
+add_action( 'edd_reports_page', 'edd_show_download_earnings_graph' );
 
 
 /**
@@ -110,7 +112,7 @@ function edd_show_download_earnings_graph($bgcolor = 'white') {
  * @return      void
 */
 
-function edd_show_monthly_eanings_graph($bgcolor = 'white') {
+function edd_show_monthly_earnings_graph($bgcolor = 'white') {
 	ob_start(); ?>
     <script type="text/javascript">
 	    google.load("visualization", "1", {packages:["corechart"]});
@@ -147,6 +149,7 @@ function edd_show_monthly_eanings_graph($bgcolor = 'white') {
 	<?php
 	echo ob_get_clean();
 }
+add_action( 'edd_reports_page', 'edd_show_monthly_earnings_graph' );
 
 
 /**
@@ -157,7 +160,7 @@ function edd_show_monthly_eanings_graph($bgcolor = 'white') {
  * @return      void
 */
 
-function edd_show_daily_eanings_graph($bgcolor = 'white') {
+function edd_show_daily_earnings_graph($bgcolor = 'white') {
 	ob_start(); ?>
     <script type="text/javascript">
 	    google.load("visualization", "1", {packages:["corechart"]});
@@ -200,6 +203,7 @@ function edd_show_daily_eanings_graph($bgcolor = 'white') {
 	<?php
 	echo ob_get_clean();
 }
+add_action( 'edd_reports_page', 'edd_show_daily_earnings_graph' );
 
 
 /**
@@ -247,3 +251,4 @@ function edd_show_monthly_sales_graph($bgcolor = 'white') {
 	<?php
 	echo ob_get_clean();
 }
+add_action( 'edd_reports_page', 'edd_show_monthly_sales_graph' );
