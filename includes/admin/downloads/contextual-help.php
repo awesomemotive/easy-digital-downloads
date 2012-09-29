@@ -27,7 +27,7 @@ function edd_downloads_contextual_help() {
 
 	$screen->set_help_sidebar(
 		'<p><strong>' . sprintf( __( 'For more information:', 'edd' ) . '</strong></p>' .
-		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> Easy Digital Downloads website.', 'edd' ), esc_url( 'https://easydigitaldownloads.com/documentation/' ) ) ) . '</p>' .
+		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'edd' ), esc_url( 'https://easydigitaldownloads.com/documentation/' ) ) ) . '</p>' .
 		'<p>' . sprintf( 
 					__( '<a href="%s">Post an issue</a> on <a href="%s">Github</a>. View <a href="%s">extensions</a> or <a href="%s">themes</a>.', 'edd' ),
 					esc_url( 'https://github.com/pippinsplugins/Easy-Digital-Downloads/issues' ), 
@@ -70,7 +70,7 @@ function edd_downloads_contextual_help() {
 			'<ul>
 				<li><strong>id</strong> - ' . __( 'The ID of a specific download to purchase.', 'edd' ) . '</li>
 				<li><strong>text</strong> - ' . __( 'The text to be displayed on the button or link.', 'edd' ) . '</li>
-				<li><strong>style</strong> - ' . __( '<em>button</em> | <em>link</em> - The style of the purchase link.', 'edd' ) . '</li>
+				<li><strong>style</strong> - ' . __( '<em>button</em> | <em>text</em> - The style of the purchase link.', 'edd' ) . '</li>
 				<li><strong>color</strong> - <em>' . implode( '</em> | <em>', $colors ) . '</em></li>
 				<li><strong>class</strong> - ' . __( 'One or more custom CSS classes you want applied to the button.', 'edd' ) . '</li>
 			</ul>' .
