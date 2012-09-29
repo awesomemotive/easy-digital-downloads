@@ -129,8 +129,12 @@ function edd_load_admin_scripts($hook) {
         'one_field_min'		=> __('You must have at least one field', 'edd')
     ));
 	wp_enqueue_style('thickbox');
-	$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
-	wp_enqueue_style('jquery-ui-css', EDD_PLUGIN_URL . 'includes/css/jquery-ui-' . $ui_style . '.css' );
+	
+	if($hook == 'download_page_edd-discounts') {
+		$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
+		wp_enqueue_style('jquery-ui-css', EDD_PLUGIN_URL . 'includes/css/jquery-ui-' . $ui_style . '.css' );
+	}
+	
 	wp_enqueue_style('edd-admin', EDD_PLUGIN_URL . 'includes/css/edd-admin.css');
 }
 add_action('admin_enqueue_scripts', 'edd_load_admin_scripts', 100);
