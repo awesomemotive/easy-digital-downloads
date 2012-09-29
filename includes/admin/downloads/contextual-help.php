@@ -1,5 +1,24 @@
 <?php
+/**
+ * Contextual Help
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Downloads
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0 
+ */
 
+/**
+ * Donwload contextual help.
+ *
+ * Adds help for default metaboxes, as well as notes about using the shortcodes.
+ * Links to Github, themes, and extensions
+ *
+ * @access      private
+ * @since       1.2.3
+ * @return      void
+ */
 function edd_downloads_contextual_help() {
 	$screen = get_current_screen();
 
@@ -24,9 +43,9 @@ function edd_downloads_contextual_help() {
 		'content'	=> 
 			'<p>' . __( '<strong>Pricing Options</strong> - Either define a single fixed price, or enable variable pricing. By enabling variable pricing, multiple download options and prices can be configured.', 'edd' ) . '</p>' . 
 
-			'<p>' . __( '<strong>File Downloads</strong> - Define download file names and their respsective file URL. Multiple files can be assigned to a single price, or variable prices.' ) . '</p>' . 
+			'<p>' . __( '<strong>File Downloads</strong> - Define download file names and their respsective file URL. Multiple files can be assigned to a single price, or variable prices.', 'edd' ) . '</p>' . 
 
-			'<p>' . __( '<strong>Button Options</strong> - Disable the automatic output the purchase button. If disabled, no button will be added to the download page unless the <code>[purchase_link]</code> shortcode is used.' ) . '</p>'
+			'<p>' . __( '<strong>Button Options</strong> - Disable the automatic output the purchase button. If disabled, no button will be added to the download page unless the <code>[purchase_link]</code> shortcode is used.', 'edd' ) . '</p>'
 	) );
 
 	$screen->add_help_tab( array(
@@ -49,11 +68,11 @@ function edd_downloads_contextual_help() {
 			'<p><code>[purchase_link]</code></p>' . 
 
 			'<ul>
-				<li><strong>id</strong> - The ID of a specific download to purchase.</li>
-				<li><strong>text</strong> - The text to be displayed on the button or link.</li>
-				<li><strong>style</strong> - <em>button</em> | <em>link</em> - The style of the purchase link.</li>
+				<li><strong>id</strong> - ' . __( 'The ID of a specific download to purchase.', 'edd' ) . '</li>
+				<li><strong>text</strong> - ' . __( 'The text to be displayed on the button or link.', 'edd' ) . '</li>
+				<li><strong>style</strong> - ' . __( '<em>button</em> | <em>link</em> - The style of the purchase link.', 'edd' ) . '</li>
 				<li><strong>color</strong> - <em>' . implode( '</em> | <em>', $colors ) . '</em></li>
-				<li><strong>class</strong> - One or more custom CSS classes you want applied to the button.</li>
+				<li><strong>class</strong> - ' . __( 'One or more custom CSS classes you want applied to the button.', 'edd' ) . '</li>
 			</ul>' .
 
 			'<p>' . sprintf( __( 'For more information, see <a href="%s">using Shortcodes</a> on the WordPress.org Codex or <a href="%s">Easy Digital Downloads Documentation</a>', 'edd' ), 'http://codex.wordpress.org/Shortcode', 'https://easydigitaldownloads.com/docs/display-purchase-buttons-purchase_link/' ) . '</p>'
