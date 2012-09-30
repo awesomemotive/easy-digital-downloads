@@ -48,9 +48,9 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$defaults = array(
 		'download_id' => $post->ID,
-		'text'        => isset( $edd_options[ 'add_to_cart_text' ] ) ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
-		'style'       => isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button',
-		'color'       => isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'blue',
+		'text'        => isset( $edd_options[ 'add_to_cart_text' ] ) 	? $edd_options[ 'add_to_cart_text' ] 	: __( 'Purchase', 'edd' ),
+		'style'       => isset( $edd_options[ 'button_style' ] ) 		? $edd_options[ 'button_style' ] 		: 'button',
+		'color'       => isset( $edd_options[ 'checkout_color' ] ) 		? $edd_options[ 'checkout_color' ] 		: 'blue',
 		'class'       => 'edd-submit'
 	);
 
