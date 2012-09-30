@@ -53,16 +53,6 @@ function edd_reports_page() {
 
 		?>
 
-		<p>
-			<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'generate_pdf' ) ), 'edd_generate_pdf' ); ?>">
-				<?php _e( 'Download Sales and Earnings PDF Report for all Products', 'edd' ); ?>
-			</a>
-			<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'email_export' ) ), 'edd_email_export' ); ?>">
-				<?php _e( 'Download a CSV Customers List', 'edd') ; ?>
-			</a>
-		</p>
-		<p><?php _e( 'Please Note: Transactions created while in test mode are not included on this page or in the PDF reports.', 'edd' ); ?></p>
-
 	</div><!--end wrap-->
 	<?php
 }
@@ -112,6 +102,22 @@ function edd_reports_tab_reports() {
 
 }
 add_action( 'edd_reports_tab_reports', 'edd_reports_tab_reports' );
+
+
+function edd_reports_tab_export() {
+	
+	?>
+	<p>
+		<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'generate_pdf' ) ), 'edd_generate_pdf' ); ?>">
+			<?php _e( 'Download Sales and Earnings PDF Report for all Products', 'edd' ); ?>
+		</a>
+		<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'email_export' ) ), 'edd_email_export' ); ?>">
+			<?php _e( 'Download a CSV Customers List', 'edd') ; ?>
+		</a>
+	</p>
+	<?php
+}
+add_action( 'edd_reports_tab_export', 'edd_reports_tab_export' );
 
 
 /**
