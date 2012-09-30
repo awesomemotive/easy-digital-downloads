@@ -18,7 +18,7 @@
  * @return      void
 */
 
-function edd_show_download_sales_graph($bgcolor = 'white') {
+function edd_show_download_sales_graph() {
 	$downloads = get_posts(array('post_type' => 'download', 'posts_per_page' => -1));
 	if($downloads) {
 		ob_start(); ?>
@@ -54,7 +54,7 @@ function edd_show_download_sales_graph($bgcolor = 'white') {
 		echo ob_get_clean();
 	}
 }
-add_action( 'edd_reports_page', 'edd_show_download_sales_graph' );
+//add_action( 'edd_reports_page', 'edd_show_download_sales_graph' );
 
 
 /**
@@ -65,7 +65,7 @@ add_action( 'edd_reports_page', 'edd_show_download_sales_graph' );
  * @return      void
 */
 
-function edd_show_download_earnings_graph($bgcolor = 'white') {
+function edd_show_download_earnings_graph() {
 	$downloads = get_posts(array('post_type' => 'download', 'posts_per_page' => -1));
 	if($downloads) {
 		ob_start(); ?>
@@ -101,7 +101,7 @@ function edd_show_download_earnings_graph($bgcolor = 'white') {
 		echo ob_get_clean();
 	}
 }
-add_action( 'edd_reports_page', 'edd_show_download_earnings_graph' );
+//add_action( 'edd_reports_page', 'edd_show_download_earnings_graph' );
 
 
 /**
@@ -112,7 +112,7 @@ add_action( 'edd_reports_page', 'edd_show_download_earnings_graph' );
  * @return      void
 */
 
-function edd_show_monthly_earnings_graph($bgcolor = 'white') {
+function edd_show_monthly_earnings_graph() {
 	ob_start(); ?>
     <script type="text/javascript">
 	    google.load("visualization", "1", {packages:["corechart"]});
@@ -138,7 +138,7 @@ function edd_show_monthly_earnings_graph($bgcolor = 'white') {
 	          	title: "<?php _e('Earnings per month', 'edd'); ?>",
 				colors:['#a3bcd3'],
 				fontSize: 12,
-				backgroundColor: '#ffffff'
+				backgroundColor: '#f7f7f7'
 	        };
 
 	        var chart = new google.visualization.ColumnChart(document.getElementById('monthly_earnings_chart_div'));
@@ -149,7 +149,7 @@ function edd_show_monthly_earnings_graph($bgcolor = 'white') {
 	<?php
 	echo ob_get_clean();
 }
-add_action( 'edd_reports_page', 'edd_show_monthly_earnings_graph' );
+//add_action( 'edd_reports_overview', 'edd_show_monthly_earnings_graph' );
 
 
 /**
@@ -160,7 +160,7 @@ add_action( 'edd_reports_page', 'edd_show_monthly_earnings_graph' );
  * @return      void
 */
 
-function edd_show_daily_earnings_graph($bgcolor = 'white') {
+function edd_show_daily_earnings_graph() {
 	ob_start(); ?>
     <script type="text/javascript">
 	    google.load("visualization", "1", {packages:["corechart"]});
@@ -192,7 +192,7 @@ function edd_show_daily_earnings_graph($bgcolor = 'white') {
 	          	title: "<?php printf( __('Earnings per day for last %s days', 'edd'), $num_of_days ); ?>",
 				colors:['#a3bcd3'],
 				fontSize: 12,
-				backgroundColor: '#ffffff'
+				backgroundColor: '#f7f7f7'
 	        };
 
 	        var chart = new google.visualization.ColumnChart(document.getElementById('daily_earnings_chart_div'));
@@ -203,7 +203,7 @@ function edd_show_daily_earnings_graph($bgcolor = 'white') {
 	<?php
 	echo ob_get_clean();
 }
-add_action( 'edd_reports_page', 'edd_show_daily_earnings_graph' );
+//add_action( 'edd_reports_overview', 'edd_show_daily_earnings_graph' );
 
 
 /**
@@ -214,7 +214,7 @@ add_action( 'edd_reports_page', 'edd_show_daily_earnings_graph' );
  * @return      void
 */
 
-function edd_show_monthly_sales_graph($bgcolor = 'white') {
+function edd_show_monthly_sales_graph() {
 	ob_start(); ?>
     <script type="text/javascript">
 	    google.load("visualization", "1", {packages:["corechart"]});
@@ -240,7 +240,7 @@ function edd_show_monthly_sales_graph($bgcolor = 'white') {
 	          	title: "<?php _e('Sales per month', 'edd'); ?>",
 				colors:['#a3bcd3'],
 				fontSize: 12,
-				backgroundColor: '#ffffff'
+				backgroundColor: '#f7f7f7'
 	        };
 
 	        var chart = new google.visualization.ColumnChart(document.getElementById('monthly_sales_chart_div'));
@@ -251,4 +251,4 @@ function edd_show_monthly_sales_graph($bgcolor = 'white') {
 	<?php
 	echo ob_get_clean();
 }
-add_action( 'edd_reports_page', 'edd_show_monthly_sales_graph' );
+//add_action( 'edd_reports_page', 'edd_show_monthly_sales_graph' );
