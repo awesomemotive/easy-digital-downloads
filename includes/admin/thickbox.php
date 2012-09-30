@@ -123,8 +123,6 @@ function edd_admin_footer_for_thickbox() {
 					<input type="button" id="edd-insert-download" class="button-primary" value="<?php echo sprintf(__('Insert %s', 'edd'), edd_get_label_singular() ); ?>" onclick="insertDownload();" />
 					<a id="edd-cancel-download-insert" class="button-secondary" onclick="tb_remove();" title="<?php _e('Cancel', 'edd'); ?>"><?php _e('Cancel', 'edd'); ?></a>
 				</p>
-				<p><?php _e('Button Styles', 'edd'); ?></p>
-				<p><img src="<?php echo EDD_PLUGIN_URL; ?>includes/images/button-previews.jpg"/></p>
 			</div>
 		</div>
 		<?php
