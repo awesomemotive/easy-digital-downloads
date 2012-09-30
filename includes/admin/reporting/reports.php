@@ -72,7 +72,8 @@ function edd_reports_tab_reports() {
 	// default reporting views
 	$views = array(
 		'downloads' => edd_get_label_plural(),
-		'customers'	=> __( 'Customers', 'edd' )
+		'customers'	=> __( 'Customers', 'edd' ),
+		'earnings'	=> __( 'Earnings', 'edd' )
 	);
 
 	$views = apply_filters( 'edd_report_views', $views );
