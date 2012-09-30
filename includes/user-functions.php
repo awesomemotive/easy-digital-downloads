@@ -155,7 +155,7 @@ function edd_has_purchases( $user_id = null ) {
  * Returns total number of purchases a customer has made
  *
  * @access      public
- * @since       1.2.3
+ * @since       1.3
  * @param       $user mixed - ID or email
  * @return      int - the total number of purchases
 */
@@ -180,7 +180,7 @@ function edd_count_purchases_of_customer( $user = null ) {
  * Calculates the total amount spent by a user
  *
  * @access      public
- * @since       1.2.3
+ * @since       1.3
  * @param       $user mixed - ID or email
  * @return      float - the total amount the user has spent
 */

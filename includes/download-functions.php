@@ -440,7 +440,7 @@ function edd_decrease_earnings($download_id, $amount) {
  * Retreives the average monthly earnings for a specific download
  *
  * @access      public
- * @since       1.2.3
+ * @since       1.3
  * @return      float
 */
 
@@ -467,7 +467,7 @@ function edd_get_average_monthly_download_earnings( $download_id ) {
  * Retreives the average monthly sales for a specific download
  *
  * @access      public
- * @since       1.2.3
+ * @since       1.3
  * @return      float
 */
 
