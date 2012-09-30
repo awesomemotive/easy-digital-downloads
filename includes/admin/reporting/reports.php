@@ -69,6 +69,24 @@ function edd_reports_page() {
 
 function edd_reports_tab_reports() {
 
+	// current view
+	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'downloads';
+
+	do_action( 'edd_reports_view_' . $current_view );
+
+}
+add_action( 'edd_reports_tab_reports', 'edd_reports_tab_reports' );
+
+
+/**
+ * Renders the Reports page views drop down
+ *
+ * @access      public
+ * @since       1.2.3
+ * @return      void
+*/
+
+function edd_report_views() {
 	// default reporting views
 	$views = array(
 		'downloads' => edd_get_label_plural(),
@@ -98,12 +116,16 @@ function edd_reports_tab_reports() {
 		</div>
 	</form>
 	<?php
-
-	do_action( 'edd_reports_view_' . $current_view );
-
 }
-add_action( 'edd_reports_tab_reports', 'edd_reports_tab_reports' );
 
+
+/**
+ * Renders the Reports page Export tab
+ *
+ * @access      public
+ * @since       1.2.3
+ * @return      void
+*/
 
 function edd_reports_tab_export() {
 	

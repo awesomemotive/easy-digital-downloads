@@ -44,6 +44,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
         return $columns;
     }
 
+    function bulk_actions() {
+        // these are really bulk actions but this outputs the markup in the right place
+        edd_report_views();
+    }
+
 
     function reports_data() {
 
