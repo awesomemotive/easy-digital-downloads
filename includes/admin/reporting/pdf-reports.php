@@ -155,7 +155,7 @@ function edd_draw_chart_image() {
 	$sales = "";
 	while( $i <= 12 ) :
 		$earnings .= edd_get_earnings_by_date( null, $i, date('Y') ) . ",";
-		$sales .= edd_get_sales_by_date( $i, date('Y') ) . ",";
+		$sales .= edd_get_sales_by_date( null, $i, date('Y') ) . ",";
 		$i++;
 	endwhile;
 
