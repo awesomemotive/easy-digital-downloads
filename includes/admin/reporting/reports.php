@@ -70,7 +70,7 @@ function edd_reports_page() {
 function edd_reports_tab_reports() {
 
 	// current view
-	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'downloads';
+	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'earnings';
 
 	do_action( 'edd_reports_view_' . $current_view );
 
@@ -89,15 +89,15 @@ add_action( 'edd_reports_tab_reports', 'edd_reports_tab_reports' );
 function edd_report_views() {
 	// default reporting views
 	$views = array(
+		'earnings'	=> __( 'Earnings', 'edd' ),
 		'downloads' => edd_get_label_plural(),
-		'customers'	=> __( 'Customers', 'edd' ),
-		'earnings'	=> __( 'Earnings', 'edd' )
+		'customers'	=> __( 'Customers', 'edd' )
 	);
 
 	$views = apply_filters( 'edd_report_views', $views );
 
 	// current view
-	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'downloads';
+	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'earnings';
 
 	?>
 	<form id="edd-reports-filter" method="get">
@@ -169,9 +169,8 @@ add_action( 'edd_reports_view_customers', 'edd_reports_customers_table' );
 
 function edd_reports_earnings() {
 
-	edd_show_daily_earnings_graph();
-	edd_show_monthly_earnings_graph();
-	edd_show_monthly_sales_graph();	
+	edd_report_views();
+	edd_reports_graph();	
 
 }
 add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
