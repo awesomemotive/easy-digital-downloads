@@ -94,7 +94,7 @@ jQuery(document).ready(function ($) {
             $('.edd-cart-ajax', container).hide();
 			
 			// switch purchase to checkout
-			$('.edd_go_to_checkout, .edd_add_to_cart_wrap, .edd_submit_plain.edd-add-to-cart', container).toggle();
+			$('.edd_go_to_checkout, .edd-add-to-cart', container).toggle();
 				
 			// show the added message
             $('.edd-cart-added-alert', container).fadeIn();

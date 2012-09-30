@@ -20,23 +20,21 @@
  * @return      string
 */
 
-function edd_download_shortcode( $atts, $content = null ) {	
+function edd_download_shortcode( $atts, $content = null ) {
+	global $post;
+
 	extract( shortcode_atts( array(
-			'id' => '',
-			'text' => __('Purchase', 'edd'),
-			'style' => 'button',
-			'color' => 'blue',
-			'class' => ''
+			'id'    => $post->ID,
 		), $atts )
 	);
+
+	$download = edd_get_download( $id );
 	
-	$download = edd_get_download($id);
-	
-	if($download) {
-		return edd_get_purchase_link($download->ID, $text, $style, $color, $class);
+	if( $download ) {
+		return edd_get_purchase_link( $atts );
 	}
 }
-add_shortcode('purchase_link', 'edd_download_shortcode');
+add_shortcode( 'purchase_link', 'edd_download_shortcode' );
 
 
 /**
