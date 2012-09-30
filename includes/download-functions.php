@@ -435,6 +435,60 @@ function edd_decrease_earnings($download_id, $amount) {
 
 
 /**
+ * Average Earnings
+ *
+ * Retreives the average monthly earnings for a specific download
+ *
+ * @access      public
+ * @since       1.2.3
+ * @return      float
+*/
+
+function edd_get_average_monthly_download_earnings( $download_id ) {
+
+	$earnings 		= edd_get_download_earnings_stats( $download_id );
+	$release_date 	= get_post_field( 'post_date', $download_id );
+
+	$diff 	= abs( time() - strtotime( $release_date ) );
+
+	$years 	= floor( $diff / ( 365*60*60*24 ) );							// number of years since publication
+	$months = floor( ( $diff - $years * 365*60*60*24 ) / ( 30*60*60*24 ) ); // number of months since publication
+
+	if ( $months > 0 )
+		return ( $earnings / $months );
+	return $earnings;
+}
+
+
+
+/**
+ * Average Sales
+ *
+ * Retreives the average monthly sales for a specific download
+ *
+ * @access      public
+ * @since       1.2.3
+ * @return      float
+*/
+
+function edd_get_average_monthly_download_sales( $download_id ) {
+
+	$sales 		= edd_get_download_sales_stats( $download_id );
+	$release_date 	= get_post_field( 'post_date', $download_id );
+
+	$diff 	= abs( time() - strtotime( $release_date ) );
+
+	$years 	= floor( $diff / ( 365*60*60*24 ) );							// number of years since publication
+	$months = floor( ( $diff - $years * 365*60*60*24 ) / ( 30*60*60*24 ) ); // number of months since publication
+
+	if ( $months > 0 )
+		return ( $sales / $months );
+	return $sales;
+}
+
+
+
+/**
  * Gets all download files for a product
  *
  * Can retrieve files specific to price ID
