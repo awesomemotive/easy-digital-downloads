@@ -204,7 +204,6 @@ function edd_reports_graph() {
     </script>
     <div id="edd_monthly_stats" style="height: 300px;"></div>
 	
-
     <h3><?php _e( 'Daily Stats for Last 30 Days', 'edd' ); ?></h3>
     <div id="edd_daily_stats" style="height: 300px;"></div>
 
@@ -236,13 +235,6 @@ function edd_reports_graph_controls() {
 		       	<input type="hidden" name="page" value="edd-reports"/>
 		       	<input type="hidden" name="view" value="earnings"/>
 
-		       	<?php if( $years_end > 2012 ) : ?>
-			       	<select id="edd-graphs-year" name="year">
-			       		<?php for( $i = 2012; $i <= $years_end; $i++ ) : ?>
-			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $year ); ?>><?php echo $i; ?></option>
-				       	<?php endfor; ?>
-			       	</select>
-			    <?php endif; ?>
 			    <span><?php _e( 'From', 'edd' ); ?>&nbsp;</span>
 		       	<select id="edd-graphs-month-start" name="m_start">
 		       		<?php for( $i = 1; $i <= 12; $i++ ) : ?>
@@ -253,6 +245,11 @@ function edd_reports_graph_controls() {
 		       	<select id="edd-graphs-month-start" name="m_end">
 		       		<?php for( $i = 1; $i <= 12; $i++ ) : ?>
 		       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $month_end ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
+			       	<?php endfor; ?>
+		       	</select>
+		       	<select id="edd-graphs-year" name="year">
+		       		<?php for( $i = 2007; $i <= $years_end; $i++ ) : ?>
+		       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $year ); ?>><?php echo $i; ?></option>
 			       	<?php endfor; ?>
 		       	</select>
 		       	<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'edd' ); ?>"/>
