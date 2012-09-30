@@ -187,14 +187,37 @@ add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
 function edd_reports_tab_export() {
 	
 	?>
-	<p>
-		<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'generate_pdf' ) ), 'edd_generate_pdf' ); ?>">
-			<?php _e( 'Download Sales and Earnings PDF Report for all Products', 'edd' ); ?>
-		</a>
-		<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'email_export' ) ), 'edd_email_export' ); ?>">
-			<?php _e( 'Download a CSV Customers List', 'edd') ; ?>
-		</a>
-	</p>
+	<div class="metabox-holder">
+		<div id="post-body">
+			<div id="post-body-content">
+				
+				<div class="postbox">
+					<h3><span><?php _e('Export PDF of Sales and Earnings', 'rcp'); ?></span></h3>
+					<div class="inside">
+						<p><?php _e( 'Download a PDF of Sales and Earnings reports for all products for the current year.', 'edd' ); ?> <?php _e( 'Date range reports will be coming soon.', 'edd' ); ?></p>
+						<p>
+							<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'generate_pdf' ) ), 'edd_generate_pdf' ); ?>">
+								<?php _e( 'Generate PDF', 'edd' ); ?>
+							</a>
+						</p>
+					</div><!--end inside-->
+				</div><!--end postbox-->
+
+				<div class="postbox">
+					<h3><span><?php _e('Export Customers in CSV', 'rcp'); ?></span></h3>
+					<div class="inside">
+						<p><?php _e( 'Download a CSV of all customer emails.', 'edd' ); ?></p>
+						<p>
+							<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'email_export' ) ), 'edd_email_export' ); ?>">
+								<?php _e( 'Generate CSVt', 'edd' ) ; ?>
+							</a>
+						</p>
+					</div><!--end inside-->
+				</div><!--end postbox-->
+
+			</div><!--endpost-body-content-->
+		</div><!--end post-body-->
+	</div><!--end metabox-holder-->
 	<?php
 }
 add_action( 'edd_reports_tab_export', 'edd_reports_tab_export' );
