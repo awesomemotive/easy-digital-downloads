@@ -192,7 +192,7 @@ function edd_reports_graph() {
 								edd_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y + edd_vars.currency_sign );
 	                    	}
 	                    } else {
-		                    edd_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y );                    	
+		                    edd_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y.replace( '.00', '' ) );                    	
 	                    }
 	                }
 	            } else {
