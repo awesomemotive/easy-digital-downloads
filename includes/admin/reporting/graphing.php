@@ -42,7 +42,7 @@ function edd_show_download_sales_graph() {
 		          	title: "<?php echo sprintf(__('%s Performance in Sales', 'edd'), edd_get_label_singular() ); ?>",
 					colors:['#a3bcd3'],
 					fontSize: 12,
-					backgroundColor: '<?php echo $bgcolor; ?>'
+					backgroundColor: '#ffffff'
 		        };
 
 		        var chart = new google.visualization.ColumnChart(document.getElementById('sales_chart_div'));
@@ -89,7 +89,7 @@ function edd_show_download_earnings_graph() {
 		          	title: "<?php echo sprintf(__('%s Performance in Earnings', 'edd'), edd_get_label_singular() ); ?>",
 					colors:['#a3bcd3'],
 					fontSize: 12,
-					backgroundColor: '<?php echo $bgcolor; ?>'
+					backgroundColor: '#ffffff'
 		        };
 
 		        var chart = new google.visualization.ColumnChart(document.getElementById('earnings_chart_div'));
@@ -138,7 +138,7 @@ function edd_show_monthly_earnings_graph() {
 	          	title: "<?php _e('Earnings per month', 'edd'); ?>",
 				colors:['#a3bcd3'],
 				fontSize: 12,
-				backgroundColor: '#f7f7f7'
+				backgroundColor: '#ffffff'
 	        };
 
 	        var chart = new google.visualization.ColumnChart(document.getElementById('monthly_earnings_chart_div'));
@@ -192,7 +192,7 @@ function edd_show_daily_earnings_graph() {
 	          	title: "<?php printf( __('Earnings per day for last %s days', 'edd'), $num_of_days ); ?>",
 				colors:['#a3bcd3'],
 				fontSize: 12,
-				backgroundColor: '#f7f7f7'
+				backgroundColor: '#ffffff'
 	        };
 
 	        var chart = new google.visualization.ColumnChart(document.getElementById('daily_earnings_chart_div'));
@@ -240,7 +240,7 @@ function edd_show_monthly_sales_graph() {
 	          	title: "<?php _e('Sales per month', 'edd'); ?>",
 				colors:['#a3bcd3'],
 				fontSize: 12,
-				backgroundColor: '#f7f7f7'
+				backgroundColor: '#ffffff'
 	        };
 
 	        var chart = new google.visualization.ColumnChart(document.getElementById('monthly_sales_chart_div'));
