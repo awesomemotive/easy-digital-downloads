@@ -63,7 +63,7 @@ function edd_reports_page() {
  * Renders the Reports page
  *
  * @access      public
- * @since       1.2.3
+ * @since       1.3
  * @return      void
 */
 
@@ -82,7 +82,7 @@ add_action( 'edd_reports_tab_reports', 'edd_reports_tab_reports' );
  * Renders the Reports page views drop down
  *
  * @access      public
- * @since       1.2.3
+ * @since       1.3
  * @return      void
 */
 
@@ -123,7 +123,7 @@ function edd_report_views() {
  * Renders the Reports Downloads table
  *
  * @access      public
- * @since       1.2.3
+ * @since       1.3
  * @return      void
 */
 
@@ -143,7 +143,7 @@ add_action( 'edd_reports_view_downloads', 'edd_reports_downloads_table' );
  * Renders the Reports Customers table
  *
  * @access      public
- * @since       1.2.3
+ * @since       1.3
  * @return      void
 */
 
@@ -163,7 +163,7 @@ add_action( 'edd_reports_view_customers', 'edd_reports_customers_table' );
  * Renders the Reports earnings graphs
  *
  * @access      public
- * @since       1.2.3
+ * @since       1.3
  * @return      void
 */
 
@@ -180,7 +180,7 @@ add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
  * Renders the Reports page Export tab
  *
  * @access      public
- * @since       1.2.3
+ * @since       1.3
  * @return      void
 */
 
