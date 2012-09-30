@@ -120,30 +120,6 @@ function edd_report_views() {
 
 
 /**
- * Renders the Reports page Export tab
- *
- * @access      public
- * @since       1.2.3
- * @return      void
-*/
-
-function edd_reports_tab_export() {
-	
-	?>
-	<p>
-		<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'generate_pdf' ) ), 'edd_generate_pdf' ); ?>">
-			<?php _e( 'Download Sales and Earnings PDF Report for all Products', 'edd' ); ?>
-		</a>
-		<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'email_export' ) ), 'edd_email_export' ); ?>">
-			<?php _e( 'Download a CSV Customers List', 'edd') ; ?>
-		</a>
-	</p>
-	<?php
-}
-add_action( 'edd_reports_tab_export', 'edd_reports_tab_export' );
-
-
-/**
  * Renders the Reports Downloads table
  *
  * @access      public
@@ -199,3 +175,27 @@ function edd_reports_earnings() {
 
 }
 add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
+
+
+/**
+ * Renders the Reports page Export tab
+ *
+ * @access      public
+ * @since       1.2.3
+ * @return      void
+*/
+
+function edd_reports_tab_export() {
+	
+	?>
+	<p>
+		<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'generate_pdf' ) ), 'edd_generate_pdf' ); ?>">
+			<?php _e( 'Download Sales and Earnings PDF Report for all Products', 'edd' ); ?>
+		</a>
+		<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'email_export' ) ), 'edd_email_export' ); ?>">
+			<?php _e( 'Download a CSV Customers List', 'edd') ; ?>
+		</a>
+	</p>
+	<?php
+}
+add_action( 'edd_reports_tab_export', 'edd_reports_tab_export' );
