@@ -209,7 +209,7 @@ function edd_reports_tab_export() {
 						<p><?php _e( 'Download a CSV of all customer emails.', 'edd' ); ?></p>
 						<p>
 							<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'email_export' ) ), 'edd_email_export' ); ?>">
-								<?php _e( 'Generate CSVt', 'edd' ) ; ?>
+								<?php _e( 'Generate CSV', 'edd' ) ; ?>
 							</a>
 						</p>
 					</div><!--end inside-->
