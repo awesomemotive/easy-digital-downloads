@@ -461,20 +461,17 @@ add_action( 'edd_purchase_form_before_cc_form', 'edd_discount_field' );
  * @access      public
  * @since       1.2
  * @return      string
-*/
-
+ */
 function edd_checkout_button_next() {
 	global $edd_options;
-	$color = isset($edd_options['checkout_color']) ? $edd_options['checkout_color'] : 'gray';
-	ob_start(); ?>
-	<span class="edd_button edd_<?php echo $color; ?>">
-		<span class="edd_button_outer">
-			<span class="edd_button_inner">
-				<input type="submit" id="edd_next_button" class="edd_button_text edd-submit" value="<?php _e('Next', 'edd'); ?>"/>
-			</span>
-		</span>
-	</span>
-	<?php
+
+	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
+	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
+
+	ob_start(); 
+?>
+	<input type="submit" id="edd_next_button" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" value="<?php _e('Next', 'edd'); ?>"/>
+<?php
 	return apply_filters( 'edd_checkout_button_next', ob_get_clean() );
 }
 
@@ -485,21 +482,18 @@ function edd_checkout_button_next() {
  * @access      public
  * @since       1.2
  * @return      string
-*/
-
+ */
 function edd_checkout_button_purchase() {
 	global $edd_options;
-	$color = isset($edd_options['checkout_color']) ? $edd_options['checkout_color'] : 'gray';
-	ob_start(); ?>
-	<span class="edd_button edd_<?php echo $color; ?>">
-		<span class="edd_button_outer">
-			<span class="edd_button_inner">
-				<?php $complete_purchase = isset( $edd_options['checkout_label'] ) && strlen( trim( $edd_options['checkout_label'] ) ) > 0 ? $edd_options['checkout_label'] : __('Purchase', 'edd'); ?>
-				<input type="submit" class="edd_button_text edd-submit" id="edd-purchase-button" name="edd-purchase" value="<?php echo $complete_purchase; ?>"/>
-			</span>
-		</span>
-	</span>
-	<?php
+	
+	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
+	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
+
+	$complete_purchase = isset( $edd_options['checkout_label'] ) && strlen( trim( $edd_options['checkout_label'] ) ) > 0 ? $edd_options['checkout_label'] : __('Purchase', 'edd');
+	ob_start(); 
+?>
+	<input type="submit" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-purchase-button" name="edd-purchase" value="<?php echo $complete_purchase; ?>"/>
+<?php
 	return apply_filters( 'edd_checkout_button_purchase', ob_get_clean() );
 }
 
