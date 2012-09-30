@@ -14,7 +14,7 @@
  * Show reports raph
  *
  * @access      public
- * @since       1.2.3
+ * @since       1.3
  * @return      void
 */
 
@@ -217,7 +217,7 @@ function edd_reports_graph() {
  * Show report graph date filters
  *
  * @access      public
- * @since       1.2.3
+ * @since       1.3
  * @return      void
 */
 
