@@ -575,5 +575,3 @@ function edd_get_payment_amount( $payment_id ) {
 
 	return apply_filters( 'edd_payment_amount', $amount );
 }
-add_filter( 'edd_payment_amount', 'edd_format_amount', 10 );
-add_filter( 'edd_payment_amount', 'edd_currency_filter', 20 );
