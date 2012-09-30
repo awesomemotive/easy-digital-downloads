@@ -196,15 +196,20 @@ function edd_purchase_total_of_user( $user = null ) {
 
 	$customer_purchases = edd_get_payments( $args );
 
-	$amount = 0;
+	$amount = get_transient( md5( 'edd_customer_total_' . $user ) );
+	if( false === $amount ) {
 
-	if( $customer_purchases ) :
-		foreach( $customer_purchases as $purchase ) :
+		$amount = 0;
 
-			$amount += edd_get_payment_amount( $purchase->ID );
+		if( $customer_purchases ) :
+			foreach( $customer_purchases as $purchase ) :
 
-		endforeach;
-	endif;
-	
+				$amount += edd_get_payment_amount( $purchase->ID );
+
+			endforeach;
+		endif;
+		set_transient( md5( 'edd_customer_total_' . $user ), $amount, 7200 );
+	}	
+
 	return $amount;
 }
