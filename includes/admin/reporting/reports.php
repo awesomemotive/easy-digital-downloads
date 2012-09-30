@@ -67,6 +67,15 @@ function edd_reports_page() {
 	<?php
 }
 
+
+/**
+ * Renders the Reports page
+ *
+ * @access      public
+ * @since       1.2.3
+ * @return      void
+*/
+
 function edd_reports_tab_reports() {
 
 	// default reporting views
@@ -105,6 +114,13 @@ function edd_reports_tab_reports() {
 add_action( 'edd_reports_tab_reports', 'edd_reports_tab_reports' );
 
 
+/**
+ * Renders the Reports Downloads table
+ *
+ * @access      public
+ * @since       1.2.3
+ * @return      void
+*/
 
 function edd_reports_downloads_table() {
 
@@ -118,6 +134,14 @@ function edd_reports_downloads_table() {
 add_action( 'edd_reports_view_downloads', 'edd_reports_downloads_table' );
 
 
+/**
+ * Renders the Reports Customers table
+ *
+ * @access      public
+ * @since       1.2.3
+ * @return      void
+*/
+
 function edd_reports_customers_table() {
 
 	include( dirname( __FILE__ ) . '/class-customer-reports-table.php' );
@@ -129,3 +153,20 @@ function edd_reports_customers_table() {
 }
 add_action( 'edd_reports_view_customers', 'edd_reports_customers_table' );
 
+
+/**
+ * Renders the Reports earnings graphs
+ *
+ * @access      public
+ * @since       1.2.3
+ * @return      void
+*/
+
+function edd_reports_earnings() {
+
+	edd_show_daily_earnings_graph();
+	edd_show_monthly_earnings_graph();
+	edd_show_monthly_sales_graph();	
+
+}
+add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
