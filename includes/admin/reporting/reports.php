@@ -37,6 +37,7 @@ function edd_reports_page() {
 			<a href="<?php echo add_query_arg( array( 'tab' => 'export', 'settings-updated' => false ) ); ?>" class="nav-tab <?php echo $active_tab == 'export' ? 'nav-tab-active' : ''; ?>">
 				<?php _e('Export', 'edd'); ?>
 			</a>
+			<?php do_action( 'edd_reports_tabs' ); ?>
 		</h2>
 	
 		<?php
