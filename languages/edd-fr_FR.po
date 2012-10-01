@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads v1.1.5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-26 13:25+0100\n"
-"PO-Revision-Date: 2012-09-26 13:26+0100\n"
+"POT-Creation-Date: 2012-10-01 22:04+0100\n"
+"PO-Revision-Date: 2012-10-01 22:49+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
 "Language-Team: FxB <fx@fxbenard.com>\n"
 "Language: fr_FR\n"
@@ -42,8 +42,7 @@ msgstr "Commander."
 
 # @ edd
 #: includes/cart-template.php:46 includes/cart-template.php:49
-#: includes/install.php:31 includes/template-functions.php:137
-#: includes/template-functions.php:158
+#: includes/install.php:31 includes/template-functions.php:92
 msgid "Checkout"
 msgstr "Commander"
 
@@ -327,8 +326,8 @@ msgid "Next"
 msgstr "Suivant"
 
 # @ edd
-#: includes/checkout-template.php:497 includes/shortcodes.php:26
-#: includes/template-functions.php:60 includes/admin/thickbox.php:61
+#: includes/checkout-template.php:492 includes/template-functions.php:51
+#: includes/admin/thickbox.php:61
 #: includes/admin/downloads/dashboard-columns.php:57
 msgid "Purchase"
 msgstr "Acheter"
@@ -378,47 +377,47 @@ msgstr "Merci"
 msgid "New download purchase"
 msgstr "Nouvel achat de téléchargement enregistré"
 
-#: includes/email-template.php:23
+#: includes/email-template.php:24 includes/email-template.php:342
 msgid "Default Template"
 msgstr "Modèle par défaut"
 
-#: includes/email-template.php:24
+#: includes/email-template.php:25 includes/email-template.php:343
 msgid "No template, plain text only"
 msgstr "Pas de modèle, uniquement du texte"
 
-#: includes/email-template.php:115
+#: includes/email-template.php:116 includes/email-template.php:442
 msgid "Sample Product Title"
 msgstr "Le titre du produit de test"
 
 # @ edd
-#: includes/email-template.php:118
+#: includes/email-template.php:119 includes/email-template.php:445
 msgid "Sample Download File Name"
 msgstr "Le nom du fichier de test de téléchargement"
 
-#: includes/email-template.php:118
+#: includes/email-template.php:119 includes/email-template.php:445
 msgid "Optional notes about this download."
 msgstr "Remarques facultatives sur ce téléchargement."
 
-#: includes/email-template.php:129
+#: includes/email-template.php:130 includes/email-template.php:456
 msgid "These are some sample notes added to a product."
 msgstr "Voici quelques exemples de remarques ajoutées à un produit."
 
 # @ edd
-#: includes/email-template.php:168
+#: includes/email-template.php:169 includes/email-template.php:495
 msgid "Purchase Receipt Preview"
 msgstr "Aperçu du reçu d'achat"
 
 # @ edd
-#: includes/email-template.php:168
+#: includes/email-template.php:169 includes/email-template.php:495
 msgid "Preview Purchase Receipt"
 msgstr "Aperçu du reçu d'achat"
 
 # @ edd
-#: includes/email-template.php:209
+#: includes/email-template.php:210 includes/email-template.php:536
 msgid "Dear"
 msgstr "Cher"
 
-#: includes/email-template.php:210
+#: includes/email-template.php:211 includes/email-template.php:537
 msgid ""
 "Thank you for your purchase. Please click on the link(s) below to download "
 "your files."
@@ -1489,48 +1488,48 @@ msgid "Loading"
 msgstr "Chargement en cours"
 
 # @ edd
-#: includes/scripts.php:123
+#: includes/scripts.php:125
 msgid "Add New Download"
 msgstr "Ajouter un téléchargement"
 
-#: includes/scripts.php:124
+#: includes/scripts.php:126
 msgid "Use This File"
 msgstr "Utiliser ce fichier"
 
-#: includes/scripts.php:125
+#: includes/scripts.php:127
 msgid "Sorry, not available for variable priced products."
 msgstr "Désolé, non disponible pour des produits à prix variables."
 
-#: includes/scripts.php:126
+#: includes/scripts.php:128
 msgid "Are you sure you wish to delete this payment?"
 msgstr "Etes-vous sûr de vouloir supprimer ce paiement ?"
 
-#: includes/scripts.php:127
+#: includes/scripts.php:129
 msgid "You must have at least one price"
 msgstr "Vous devez avoir au moins un prix"
 
-#: includes/scripts.php:128
+#: includes/scripts.php:130
 msgid "You must have at least one file"
 msgstr "Vous devez avoir au moins un fichier"
 
 # @ edd
-#: includes/scripts.php:129
+#: includes/scripts.php:131
 msgid "You must have at least one field"
 msgstr "Vous devez avoir au moins un champ"
 
 # @ edd
-#: includes/shortcodes.php:194
+#: includes/shortcodes.php:192
 msgid "Purchase All Items"
 msgstr "Tout Acheter"
 
 # @ edd
-#: includes/shortcodes.php:336
+#: includes/shortcodes.php:334
 #, php-format
 msgctxt "download post type name"
 msgid "No %s found"
 msgstr "Aucun %s trouvé"
 
-#: includes/template-functions.php:48
+#: includes/template-functions.php:44
 #, php-format
 msgid ""
 "No checkout page has been configured. Visit <a href=\"%s\">Settings</a> to "
@@ -1540,65 +1539,43 @@ msgstr ""
 "\">Réglages</a> pour en configurer une."
 
 # @ edd
-#: includes/template-functions.php:167
-msgid "added to your cart"
-msgstr "ajouté au panier"
+#: includes/template-functions.php:103
+msgid "Item successfully added to your cart."
+msgstr "Produit ajouté avec succès à votre panier."
 
-#: includes/template-functions.php:263
+#: includes/template-functions.php:242
 msgid "Gray"
 msgstr "Gris"
 
-#: includes/template-functions.php:264
-msgid "Pink"
-msgstr "Rose"
-
-#: includes/template-functions.php:265
+#: includes/template-functions.php:243
 msgid "Blue"
 msgstr "Bleu"
 
-#: includes/template-functions.php:266
+#: includes/template-functions.php:244
 msgid "Green"
 msgstr "Vert"
 
 # @ edd
-#: includes/template-functions.php:267
-msgid "Teal"
-msgstr "Sarcelle (bleu-vert)"
+#: includes/template-functions.php:245
+msgid "Yellow"
+msgstr "Jaune"
 
-# @ edd
-#: includes/template-functions.php:268
-msgid "Black"
-msgstr "Noir"
-
-#: includes/template-functions.php:269
+#: includes/template-functions.php:246
 msgid "Dark Gray"
 msgstr "Gris foncé"
 
-#: includes/template-functions.php:270
-msgid "Orange"
-msgstr "Orange"
-
-#: includes/template-functions.php:271
-msgid "Purple"
-msgstr "Violet"
-
 # @ edd
-#: includes/template-functions.php:272
-msgid "Slate"
-msgstr "Ardoise"
-
-# @ edd
-#: includes/template-functions.php:293
+#: includes/template-functions.php:266
 msgid "Button"
 msgstr "Bouton"
 
 # @ edd
-#: includes/template-functions.php:294
+#: includes/template-functions.php:267
 msgid "Plain Text"
 msgstr "Texte brut"
 
 # @ edd
-#: includes/template-functions.php:317
+#: includes/template-functions.php:290
 msgid "You have already purchased this item, but you may purchase it again."
 msgstr ""
 "Vous avez déjà acheté cet article, mais vous pouvez l'acheter à nouveau."
@@ -1915,11 +1892,6 @@ msgid "Cancel"
 msgstr "Annuler"
 
 # @ edd
-#: includes/admin/thickbox.php:126
-msgid "Button Styles"
-msgstr "Styles des boutons"
-
-# @ edd
 #: includes/admin/discounts/add-discount.php:12
 msgid "Add New Discount"
 msgstr "Ajouter une Nouvelle Promo"
@@ -2174,6 +2146,123 @@ msgstr "L'état de ce code promo."
 msgid "Update Discount Code"
 msgstr "Mettre à jour Code Promo"
 
+#: includes/admin/downloads/contextual-help.php:29
+msgid "For more information:"
+msgstr "Pour plus d'informations :"
+
+#: includes/admin/downloads/contextual-help.php:30
+#, php-format
+msgid ""
+"Visit the <a href=\"%s\">documentation</a> on the Easy Digital Downloads "
+"website."
+msgstr ""
+"Rendez-vous sur la <a href=\"%s\">documentation</a> sur le site d'Easy "
+"Digital Downloads."
+
+#: includes/admin/downloads/contextual-help.php:32
+#, php-format
+msgid ""
+"<a href=\"%s\">Post an issue</a> on <a href=\"%s\">Github</a>. View <a href="
+"\"%s\">extensions</a> or <a href=\"%s\">themes</a>."
+msgstr ""
+"<a href=\"%s\">Poster un problème</a> sur <a href=\"%s\">Github</a>. Voir "
+"les <a href=\"%s\">extensions</a> ou les <a href=\"%s\">themes</a>."
+
+# @ edd
+#: includes/admin/downloads/contextual-help.php:42
+msgid "Download Configuration"
+msgstr "Configuration du Téléchargement"
+
+#: includes/admin/downloads/contextual-help.php:44
+msgid ""
+"<strong>Pricing Options</strong> - Either define a single fixed price, or "
+"enable variable pricing. By enabling variable pricing, multiple download "
+"options and prices can be configured."
+msgstr ""
+"<strong>Options de prix</strong> - Soit définir un prix fixe, ou permettre "
+"la tarification variable. En permettant la tarification variable, plusieurs "
+"options de téléchargement et de prix peuvent être configurées."
+
+#: includes/admin/downloads/contextual-help.php:46
+msgid ""
+"<strong>File Downloads</strong> - Define download file names and their "
+"respsective file URL. Multiple files can be assigned to a single price, or "
+"variable prices."
+msgstr ""
+"<strong>Téléchargements de fichiers</strong> - Téléchargements de fichiers "
+"</ strong> - Défini les noms du fichier de téléchargement et  l'URL de leurs "
+"fichiers respectives. Plusieurs fichiers peuvent être affectés à un prix "
+"unique, ou à des prix variables."
+
+#: includes/admin/downloads/contextual-help.php:48
+msgid ""
+"<strong>Button Options</strong> - Disable the automatic output the purchase "
+"button. If disabled, no button will be added to the download page unless the "
+"<code>[purchase_link]</code> shortcode is used."
+msgstr ""
+"<strong> Options du bouton </strong> - Désactive l'affichage automatique du "
+"bouton d'achat. Si désactivé, aucun bouton ne sera ajouté à la page des "
+"téléchargements à moins que le  <code>[purchase_link]</code> soit utilisé."
+
+# @ edd
+#: includes/admin/downloads/contextual-help.php:53
+#: includes/admin/downloads/metabox.php:26
+msgid "Product Notes"
+msgstr "Notes du produit"
+
+#: includes/admin/downloads/contextual-help.php:55
+msgid ""
+"Special notes or instructions for the product. These notes will be added to "
+"the purchase receipt, and additionaly may be used by some extensions or "
+"themes on the frontend."
+msgstr ""
+"Remarques particulières ou des instructions pour ce produit. Ces remarques "
+"seront ajoutées à la facture d'achat et additionnelement pourront être "
+"utilisé par quelques extensions ou thèmes."
+
+# @ edd
+#: includes/admin/downloads/contextual-help.php:64
+msgid "Purchase Shortcode"
+msgstr "Raccourci d'achat"
+
+#: includes/admin/downloads/contextual-help.php:66
+msgid ""
+"<strong>Purchase Shortcode</strong> - If the automatic output of the "
+"purchase button has been disabled via the Download Configuration box, a "
+"shortcode can be used to output the button or link."
+msgstr ""
+"<strong> Raccourci d'achat </strong> - Si l'affichage automatique du bouton "
+"d'achat a été désactivé via la boîte de configuration du Téléchargement un "
+"raccourci peut être utilisé pour afficher le bouton ou le lien."
+
+# @ edd
+#: includes/admin/downloads/contextual-help.php:71
+msgid "The ID of a specific download to purchase."
+msgstr "L'ID d'un téléchargement spécifique à acheter."
+
+#: includes/admin/downloads/contextual-help.php:72
+msgid "The text to be displayed on the button or link."
+msgstr "Le texte à afficher sur le bouton ou le lien."
+
+#: includes/admin/downloads/contextual-help.php:73
+msgid "<em>button</em> | <em>text</em> - The style of the purchase link."
+msgstr "<em>bouton</em> | <em>texte</em> - Le style du lien d'achat."
+
+#: includes/admin/downloads/contextual-help.php:75
+msgid "One or more custom CSS classes you want applied to the button."
+msgstr "Une ou plusieurs classes CSS que vous voulez appliquer au bouton."
+
+#: includes/admin/downloads/contextual-help.php:78
+#, php-format
+msgid ""
+"For more information, see <a href=\"%s\">using Shortcodes</a> on the "
+"WordPress.org Codex or <a href=\"%s\">Easy Digital Downloads Documentation</"
+"a>"
+msgstr ""
+"Pour plus d'information, voir <a href=\"%s\">utiliser des raccourcis</a> sur "
+"le codex de WordPress.org ou sur la <a href=\"%s\">Documentation d'Easy "
+"Digital Downloads </a>"
+
 # @ edd
 #: includes/admin/downloads/dashboard-columns.php:29
 #: includes/admin/downloads/dashboard-columns.php:242
@@ -2209,11 +2298,6 @@ msgstr "%s Data"
 #, php-format
 msgid "%1$s Configuration"
 msgstr "Configuration %1$s "
-
-# @ edd
-#: includes/admin/downloads/metabox.php:26
-msgid "Product Notes"
-msgstr "Notes du produit"
 
 # @ edd
 #: includes/admin/downloads/metabox.php:29
@@ -2780,10 +2864,3 @@ msgstr "ID de l'achat "
 #: includes/templates/history-purchases.php:61
 msgid "You have not made any purchases"
 msgstr "Vous n'avez fait aucun achat"
-
-#~ msgid "9.99"
-#~ msgstr "9.99"
-
-#~ msgctxt "Variable price preposition. $2.99 for {X}"
-#~ msgid "for"
-#~ msgstr "pour"
