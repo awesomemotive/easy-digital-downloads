@@ -8,7 +8,7 @@
  * @subpackage  AJAX
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 
@@ -183,3 +183,23 @@ function edd_ajax_get_download_title() {
 }
 add_action( 'wp_ajax_edd_get_download_title', 'edd_ajax_get_download_title' );
 add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_title' );
+
+
+/**
+ * Get AJAX URL
+ *
+ * @access      public
+ * @since       1.2.3
+ * @return      string
+*/
+
+function edd_get_ajax_url() {
+	$site_url = get_site_url();
+	$admin_url = admin_url( 'admin-ajax.php' );
+	if ( preg_match( '/^https/', $admin_url ) && ! preg_match( '/^https/', $site_url ) ) {
+		$admin_url = preg_replace( '/^https/', 'http', $admin_url );
+	} else if ( preg_match( '/^https/', $site_url ) && ! preg_match( '/^https/', $admin_url ) ) {
+		$admin_url = preg_replace( '/^http/', 'https', $admin_url );
+	}
+	return $admin_url;
+}

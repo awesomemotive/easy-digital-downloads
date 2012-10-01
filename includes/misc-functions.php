@@ -6,7 +6,7 @@
  * @subpackage  Misc Functions
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 
@@ -14,7 +14,7 @@
  * Is Test Mode
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      boolean
 */
 
@@ -31,7 +31,7 @@ function edd_is_test_mode() {
  * No Guest Checkout
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      boolean
 */
 
@@ -47,7 +47,7 @@ function edd_no_guest_checkout() {
  * Logged in Only
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      boolean
 */
 
@@ -71,18 +71,18 @@ function edd_no_redownload() {
 	global $edd_options;
 	if(isset($edd_options['disable_redownload']))
 		return true;
-	return false;	
+	return false;
 }
 
 /**
- * Get Menu Access Level 
+ * Get Menu Access Level
  *
- * Returns the access level required to access 
+ * Returns the access level required to access
  * the downloads menu. Currently not changeable,
  * but here for a future update.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
@@ -93,12 +93,12 @@ function edd_get_menu_access_level() {
 
 
 /**
- * Is Odd 
+ * Is Odd
  *
  * Checks wether an integer is odd.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      boolean
 */
 
@@ -113,7 +113,7 @@ function edd_is_odd( $int ) {
  * Returns the file extension of a filename.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
@@ -173,10 +173,10 @@ function edd_get_ip()
 
 
 /**
- * Get Currencies 
+ * Get Currencies
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      array
 */
 
@@ -214,10 +214,10 @@ function edd_get_currencies() {
 
 
 /**
- * Get Country List 
+ * Get Country List
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      array
 */
 
@@ -472,7 +472,7 @@ function edd_get_country_list() {
 
 
 /**
- * Get States List 
+ * Get States List
  *
  * @access      public
  * @since       1.2
@@ -553,7 +553,7 @@ function edd_get_states_list() {
 
 
 /**
- * Get Provinces List 
+ * Get Provinces List
  *
  * @access      public
  * @since       1.2
@@ -581,13 +581,13 @@ function edd_get_provinces_list() {
 
 
 /**
- * Month Num To Name 
+ * Month Num To Name
  *
- * Takes a month number and returns the 
+ * Takes a month number and returns the
  * name three letter name of it.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
@@ -612,8 +612,8 @@ function edd_get_php_arg_separator_output() {
 
 function edd_get_current_page_url() {
 
-	global $post;	
-			
+	global $post;
+
 	if (is_singular()) :
 		$pageURL =  get_permalink($post->ID);
 	else :
@@ -622,7 +622,7 @@ function edd_get_current_page_url() {
 		$pageURL .= "://";
 		if ($_SERVER["SERVER_PORT"] != "80") $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
 		else $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-	endif;	
+	endif;
 
 	return $pageURL;
 }

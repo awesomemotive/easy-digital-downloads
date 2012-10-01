@@ -96,7 +96,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
             'cmd'           => '_xclick', 
             'amount'        => $purchase_data['price'], 
             'business'      => $edd_options['paypal_email'], 
-            'item_name'     => stripslashes_deep( html_entity_decode( $cart_summary, ENT_COMPAT, 'UTF-8' ) ), 
+            'item_name'     => stripslashes_deep( html_entity_decode( $summary, ENT_COMPAT, 'UTF-8' ) ), 
             'email'         => $purchase_data['user_email'], 
             'no_shipping'   => '1', 
             'shipping'      => '0',

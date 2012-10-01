@@ -81,156 +81,146 @@
 -------------------------------------------------------------- */
 input.edd_submit_plain { background: none !important; border: none !important; padding: 0 !important; display: inline; cursor: pointer; }
 .edd_price_options { margin: 0 0 15px; }
+.edd_price_options ul { margin: 0; padding: 0; list-style: none; }
 
-/* general */
-.edd_button { 
-	display: inline-block; *display: block; zoom: 1; position: relative; 
-	height: 32px; line-height: 28px; text-decoration: none; color: #555; cursor: pointer;
-}
-.edd_button_outer { 
-	padding: 0 0 0 5px; display: block; height: 32px; line-height: 26px;
-	background: url(../images/button-start.png) no-repeat; 
-}
-.edd_button_outer br, .edd_button_outer p { display: none !important; }
-.edd_button_inner { 
-	display: block; height: 32px; background: url(../images/button-end.png) no-repeat right top; 
-	padding: 0 4px 0 0; 
-}
-.edd_button_text, input.edd_button_text, input#edd-purchase-button, input#edd_next_button { 
-	display: block; height: 32px !important; background-image: url(../images/button-mid.png) !important; 
-	padding: 0 4px !important; margin: 0; border: none !important;  text-shadow: none; color: #555; width: auto;
-	-webkit-border-radius: 0 !important; -moz-border-radius: 0 !important; border-radius: 0 !important; cursor: pointer;
-}
-input.edd_button_text, input#edd-purchase-button, input#edd_next_button  { 
-	padding: 0 4px 4px !important; margin: 0 !important; 
-}
-.edd_button:hover, input.edd_button_text:hover, input#edd-purchase-button:hover, input#edd_next_button:hover { 
-	filter: alpha(opacity=100) !important; -moz-opacity: 1 !important; -khtml-opacity: 1 !important; opacity: 1 !important;
-}
-.edd_button:active, input.edd_button_text:active, input#edd-purchase-button:active, input#edd_next_button:active { 
-	line-height: 30px; 
+.edd-submit {
+	text-shadow: 1px 1px #FAFAFA;
+	line-height: normal;
+	cursor: pointer;
 }
 
-/* gray */
-.edd_button.edd_gray { color: #555; text-shadow: 0 0 1px #fff; }
-.edd_button.edd_gray:hover .edd_button_outer,
-.edd_button.edd_gray:hover .edd_button_text,
-.edd_button.edd_gray:hover  input#edd-purchase-button,
-.edd_button.edd_gray:hover input#edd_next_button { background-position: 0 -33px !important; }
-.edd_button.edd_gray:hover .edd_button_inner { background-position: right -33px !important; }
-.edd_button.edd_gray:active .edd_button_outer,
-.edd_button.edd_gray:active .edd_button_text,
-.edd_button.edd_gray:active  input#edd-purchase-button, 
-.edd_button.edd_gray:active  input#edd_next_button { background-position: 0 -65px !important; }
-.edd_button.edd_gray:active .edd_button_inner { background-position: right -65px !important; }
+.edd-submit.plain {
+	text-shadow: none;
+	margin: 0;
+	padding: 0;
+	background: none;
+	border: 0;
+}
 
-/* pink */
-.edd_button.edd_pink { color: #913944; text-shadow: 0 0 1px #f9a0ad; }
-.edd_button.edd_pink .edd_button_outer,
-.edd_button.edd_pink .edd_button_text { background-position: 0 -98px !important; }
-.edd_button.edd_pink .edd_button_inner { background-position: right -98px !important; }
-.edd_button.edd_pink:hover .edd_button_outer,
-.edd_button.edd_pink:hover .edd_button_text { background-position: 0 -132px !important; }
-.edd_button.edd_pink:hover .edd_button_inner { background-position: right -132px !important; }
-.edd_button.edd_pink:active .edd_button_outer,
-.edd_button.edd_pink:active .edd_button_text { background-position: 0 -164px !important; }
-.edd_button.edd_pink:active .edd_button_inner { background-position: right -164px !important; }
+.edd-submit.plain:hover {
+	text-decoration: underline;
+}
 
-/* blue */
-.edd_button.edd_blue { color: #42788e; text-shadow: 0 0 1px #99cade; }
-.edd_button.edd_blue .edd_button_outer,
-.edd_button.edd_blue .edd_button_text { background-position: 0 -196px !important; }
-.edd_button.edd_blue .edd_button_inner { background-position: right -196px !important; }
-.edd_button.edd_blue:hover .edd_button_outer,
-.edd_button.edd_blue:hover .edd_button_text { background-position: 0 -230px !important; }
-.edd_button.edd_blue:hover .edd_button_inner { background-position: right -230px !important; }
-.edd_button.edd_blue:active .edd_button_outer,
-.edd_button.edd_blue:active .edd_button_text { background-position: 0 -262px !important; }
-.edd_button.edd_blue:active .edd_button_inner { background-position: right -262px !important; }
+/** Gray (Default) */
+.edd-submit.button {
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
+	line-height: normal;
+	cursor: pointer;
+	padding: 5px 15px 6px;
+	outline: none;
+	position: relative;
+	border: 1px solid;
 
-/* green */
-.edd_button.edd_green { color: #5d7731; text-shadow: 0 0 1px #d0e5a4; }
-.edd_button.edd_green .edd_button_outer,
-.edd_button.edd_green .edd_button_text { background-position: 0 -294px !important; }
-.edd_button.edd_green .edd_button_inner { background-position: right -294px !important; }
-.edd_button.edd_green:hover .edd_button_outer,
-.edd_button.edd_green:hover .edd_button_text { background-position: 0 -328px !important; }
-.edd_button.edd_green:hover .edd_button_inner { background-position: right -328px !important; }
-.edd_button.edd_green:active .edd_button_outer,
-.edd_button.edd_green:active .edd_button_text { background-position: 0 -360px !important; }
-.edd_button.edd_green:active .edd_button_inner { background-position: right -360px !important; }
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 1px 3px rgba(0, 0, 0, .10);
+	-moz-box-shadow:    inset 0 1px 0 rgba(255, 255, 255, .25), 0 1px 3px rgba(0, 0, 0, .10);
+	box-shadow:         inset 0 1px 0 rgba(255, 255, 255, .25), 0 1px 3px rgba(0, 0, 0, .10);
 
-/* teal */
-.edd_button.edd_teal { color: #437b7d; text-shadow: 0 0 1px #bef3f5; }
-.edd_button.edd_teal .edd_button_outer,
-.edd_button.edd_teal .edd_button_text { background-position: 0 -391px !important; }
-.edd_button.edd_teal .edd_button_inner { background-position: right -391px !important; }
-.edd_button.edd_teal:hover .edd_button_outer,
-.edd_button.edd_teal:hover .edd_button_text { background-position: 0 -424px !important; }
-.edd_button.edd_teal:hover .edd_button_inner { background-position: right -424px !important; }
-.edd_button.edd_teal:active .edd_button_outer,
-.edd_button.edd_teal:active .edd_button_text { background-position: 0 -457px !important; }
-.edd_button.edd_teal:active .edd_button_inner { background-position: right -457px !important; }
+	border-radius:  3px;
 
-/* black */
-.edd_button.edd_black { color: #fff; text-shadow: 0 0 1px #2f2f2f; }
-.edd_button.edd_black .edd_button_outer,
-.edd_button.edd_black .edd_button_text { background-position: 0 -489px !important; color: #fff; }
-.edd_button.edd_black .edd_button_inner { background-position: right -489px !important; }
-.edd_button.edd_black:hover .edd_button_outer,
-.edd_button.edd_black:hover .edd_button_text { background-position: 0 -521px !important; }
-.edd_button.edd_black:hover .edd_button_inner { background-position: right -521px !important; }
-.edd_button.edd_black:active .edd_button_outer,
-.edd_button.edd_black:active .edd_button_text { background-position: 0 -552px !important; }
-.edd_button.edd_black:active .edd_button_inner { background-position: right -552px !important; }
+	color: #555;
+	border-color: #BBB;
+	background: #E8E8E8;
+	background:    -moz-linear-gradient(top, #eeeeee, #e2e2e2);
+	background: -webkit-linear-gradient(top, #eeeeee, #e2e2e2);
+	background:         linear-gradient(top, #eeeeee, #e2e2e2);
+}
 
-/* dark gray */
-.edd_button.edd_dark_gray { color: #555; text-shadow: 0 0 1px #d6d6d6; }
-.edd_button.edd_dark_gray .edd_button_outer,
-.edd_button.edd_dark_gray .edd_button_text { background-position: 0 -584px !important; }
-.edd_button.edd_dark_gray .edd_button_inner { background-position: right -584px !important; }
-.edd_button.edd_dark_gray:hover .edd_button_outer,
-.edd_button.edd_dark_gray:hover .edd_button_text { background-position: 0 -617px !important; }
-.edd_button.edd_dark_gray:hover .edd_button_inner { background-position: right -617px !important; }
-.edd_button.edd_dark_gray:active .edd_button_outer,
-.edd_button.edd_dark_gray:active .edd_button_text { background-position: 0 -649px !important; }
-.edd_button.edd_dark_gray:active .edd_button_inner { background-position: right -649px !important; }
+.edd-submit.button.gray {
+	text-shadow: 0 -1px 0 rgba(255, 255, 255, .25);
+}
 
-/* orange */
-.edd_button.edd_orange { color: #996633; text-shadow: 0 0 1px #fedd9b; }
-.edd_button.edd_orange .edd_button_outer,
-.edd_button.edd_orange .edd_button_text { background-position: 0 -681px !important; }
-.edd_button.edd_orange .edd_button_inner { background-position: right -681px !important; }
-.edd_button.edd_orange:hover .edd_button_outer,
-.edd_button.edd_orange:hover .edd_button_text { background-position: 0 -713px !important; }
-.edd_button.edd_orange:hover .edd_button_inner { background-position: right -713px !important; }
-.edd_button.edd_orange:active .edd_button_outer,
-.edd_button.edd_orange:active .edd_button_text { background-position: 0 -745px !important; }
-.edd_button.edd_orange:active .edd_button_inner { background-position: right -745px !important; }
+.edd-submit.button:hover {
+	text-decoration: none;
 
-/* purple */
-.edd_button.edd_purple { color: #7b5777; text-shadow: 0 0 1px #eacae6; }
-.edd_button.edd_purple .edd_button_outer,
-.edd_button.edd_purple .edd_button_text { background-position: 0 -776px !important; }
-.edd_button.edd_purple .edd_button_inner { background-position: right -776px !important; }
-.edd_button.edd_purple:hover .edd_button_outer,
-.edd_button.edd_purple:hover .edd_button_text { background-position: 0 -808px !important; }
-.edd_button.edd_purple:hover .edd_button_inner { background-position: right -808px !important; }
-.edd_button.edd_purple:active .edd_button_outer,
-.edd_button.edd_purple:active .edd_button_text { background-position: 0 -841px !important; }
-.edd_button.edd_purple:active .edd_button_inner { background-position: right -841px !important; }
+	background: #E8E8E8;
+}
 
-/* slate */
-.edd_button.edd_slate { color: #515f6a; text-shadow: 0 0 1px #c4d0da; }
-.edd_button.edd_slate .edd_button_outer,
-.edd_button.edd_slate .edd_button_text { background-position: 0 -873px !important; }
-.edd_button.edd_slate .edd_button_inner { background-position: right -873px !important; }
-.edd_button.edd_slate:hover .edd_button_outer,
-.edd_button.edd_slate:hover .edd_button_text { background-position: 0 -905px !important; }
-.edd_button.edd_slate:hover .edd_button_inner { background-position: right -905px !important; }
-.edd_button.edd_slate:active .edd_button_outer,
-.edd_button.edd_slate:active .edd_button_text { background-position: 0 -938px !important; }
-.edd_button.edd_slate:active .edd_button_inner { background-position: right -938px !important; }
+.edd-submit.button:active {
+	text-decoration: none;
+
+	-webkit-box-shadow: none;
+	-moz-box-shadow:    none;
+	box-shadow:         none;
+
+	border-top: 1px solid #959595;
+	background: #E3E3E3;
+}
+
+/** Blue */
+.edd-submit.button.blue {
+	color: #FFFFFF;
+	border-color: #04C #04C #002A80;
+	background: #006DCC;
+	background:    -moz-linear-gradient(top, #08C, #04C);
+	background: -webkit-linear-gradient(top, #08C, #04C);
+	background:         linear-gradient(top, #08C, #04C);
+}
+
+x.edd-submit.button.blue:hover {
+	background: #006DCC;
+}
+
+.edd-submit.button.blue:active {
+	border-color: #002A80 #04C #04C;
+	background: #005fb1;
+}
+
+/** Green */
+.edd-submit.button.green {
+	color: #FFFFFF;
+	border-color: #51A351 #51A351 #387038;
+	background: #5BB75B;
+	background:    -moz-linear-gradient(top, #62C462, #51A351);
+	background: -webkit-linear-gradient(top, #62C462, #51A351);
+	background:         linear-gradient(top, #62C462, #51A351);
+}
+
+.edd-submit.button.green:hover {
+	background: #5BB75B;
+}
+
+.edd-submit.button.green:active {
+	border-color: #387038 #51A351 #51A351;
+	background: #51a451;
+}
+
+/** Yellow */
+.edd-submit.button.yellow {
+	color: #FFFFFF;
+	border-color: #F89406 #F89406 #AD6704;
+	background: #FAA732;
+	background:    -moz-linear-gradient(top, #FBB450, #F89406);
+	background: -webkit-linear-gradient(top, #FBB450, #F89406);
+	background:         linear-gradient(top, #FBB450, #F89406);
+}
+
+.edd-submit.button.yellow:hover {
+	background: #FAA732;
+}
+
+.edd-submit.button.yellow:active {
+	border-color: #AD6704 #F89406 #F89406;
+	background: #f09e2b;
+}
+
+/** Dark Gray */
+.edd-submit.button.dark-gray {
+	color: #FFFFFF;
+	border-color: #222 #222 black;
+	background: #363636;
+	background:    -moz-linear-gradient(top, #444, #222);
+	background: -webkit-linear-gradient(top, #444, #222);
+	background:         linear-gradient(top, #444, #222);
+}
+
+.edd-submit.button.dark-gray:hover {
+	background: #363636;
+}
+
+.edd-submit.button.dark-gray:active {
+	border-color: #000 #222 #222; 
+	background: #2b2b2b;
+}
 
 /* =Downloads Shortcode
 -------------------------------------------------------------- */
