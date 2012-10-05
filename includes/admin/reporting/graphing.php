@@ -20,53 +20,64 @@
 
 function edd_reports_graph() {
 
+	// retrieve the queried dates
 	$dates = edd_get_report_dates();
 
-	$dates['m_start'] 	= isset( $_GET['m_start'] ) ? $_GET['m_start'] 	: 1;
-	$dates['m_end'] 		= isset( $_GET['m_end'] ) 	? $_GET['m_end'] 	: 12;
-	$dates['year'] 			= isset( $_GET['year'] ) 	? $_GET['year'] 	: date( 'Y' );
+	// setup some graph options
+	$time_format 	= '%d/%b'; 	// show days by default
+	$tick_size		= 'day'; 	// default graph interval
 
-	$dates = edd_get_report_dates();
+	switch( $dates['range'] ) :
 
+		case 'last_year' : 
+			$time_format 	= '%b'; 
+			$tick_size		= 'month';
+			break;
+		case 'this_year' :
+			$time_format 	= '%b'; 
+			$tick_size		= 'month';
+			break;
+
+
+	endswitch;
 
 	echo '<h3>' . __( 'Earnings Over Time', 'edd' ) . '</h3>';
 
+	// show the date controls
 	edd_reports_graph_controls();
 
 	ob_start(); ?>
 	<script type="text/javascript">
 	   jQuery( document ).ready( function($) {
-	   		$.plot( 
+	   		$.plot(
 	   			$("#edd_monthly_stats"), 
-	   			[
-	   				{ 
-	   					data: [
-		   					<?php
-		   					$i = $dates['m_start'];
-							while($i <= $dates['m_end']) : ?>
-								[<?php echo mktime( 0, 0, 0, $i, 0, $dates['year'] ) * 1000; ?>, <?php echo edd_get_sales_by_date( null, $i, $dates['year'] ); ?>],
-								<?php $i++;
-							endwhile;
-		   					?>,
-		   				],
-		   				yaxis: 2,
-	   					label: "<?php _e( 'Sales', 'edd' ); ?>",
-	   					id: 'sales'
-	   				}, 
-	   				{ 
-	   					data: [
-		   					<?php
-		   					$i = $dates['m_start'];
-							while($i <= $dates['m_end']) : ?>
-								[<?php echo mktime( 0, 0, 0, $i, 0, $dates['year'] ) * 1000; ?>, <?php echo edd_get_earnings_by_date( null, $i, $dates['year'] ); ?>],
-								<?php $i++;
-							endwhile;
-		   					?>
-		   				],
-	   					label: "<?php _e( 'Earnings', 'edd' ); ?>",
-	   					id: 'earnings'
-	   				}
-	   			],
+	   			[{ 
+   					data: [
+	   					<?php
+	   					$i = $dates['m_start'];
+						while($i <= $dates['m_end']) : ?>
+							[<?php echo mktime( 0, 0, 0, $i, 0, $dates['year'] ) * 1000; ?>, <?php echo edd_get_sales_by_date( null, $i, $dates['year'] ); ?>],
+							<?php $i++;
+						endwhile;
+	   					?>,
+	   				],
+	   				yaxis: 2,
+   					label: "<?php _e( 'Sales', 'edd' ); ?>",
+   					id: 'sales'
+   				}, 
+   				{ 
+   					data: [
+	   					<?php
+	   					$i = $dates['m_start'];
+						while($i <= $dates['m_end']) : ?>
+							[<?php echo mktime( 0, 0, 0, $i, 0, $dates['year'] ) * 1000; ?>, <?php echo edd_get_earnings_by_date( null, $i, $dates['year'] ); ?>],
+							<?php $i++;
+						endwhile;
+	   					?>
+	   				],
+   					label: "<?php _e( 'Earnings', 'edd' ); ?>",
+   					id: 'earnings'
+	   			}],
 	   		{
                	series: {
                    lines: { show: true },
@@ -84,88 +95,15 @@ function edd_reports_graph() {
            		},
             	xaxis: {
 	   				mode: "time",
-	   				timeFormat: "%b",
-	   				minTickSize: [1, "month"]
+	   				timeFormat: "<?php echo $time_format; ?>",
+	   				minTickSize: [1, "<?php echo $tick_size; ?>"]
    				},
    				yaxis: [
    					{ min: 0, tickSize: 1, tickDecimals: 2 },
    					{ min: 0, tickDecimals: 0 }
    				]
            		
-             });
-
-			$.plot( 
-	   			$("#edd_daily_stats"), 
-	   			[
-	   				{ 
-	   					data: [
-		   					<?php
-							$num_of_days = apply_filters( 'edd_earnings_per_day_days', 30 ); // show payments for the last 30 days
-							$i = $num_of_days;
-							while( $i > 1 ) : 
-								$day_time 	= strtotime( '-' . $num_of_days - $i . ' days', time() );
-								$day 		= date( 'd', $day_time ) + 1;
-								$month 		= date( 'n', $day_time ) + 1; // I have no idea why the +1 is needed, but it is
-								$dates['year'] 		= date( 'Y', $day_time );
-								?>
-								['<?php echo mktime( 0, 0, 0, $month, $day, $dates['year'] ) * 1000; ?>', 
-								<?php echo edd_get_sales_by_date( $day, $month, $dates['year'] ); ?>,
-								],
-								<?php $i--;
-							endwhile;
-							?>
-		   				],
-		   				yaxis: 2,
-	   					label: "<?php _e( 'Sales', 'edd' ); ?>",
-	   					id: 'sales'
-	   				}, 
-	   				{ 
-	   					data: [
-		   					<?php
-							$i = $num_of_days;
-							while( $i > 1 ) : 
-								$day_time 	= strtotime( '-' . $num_of_days - $i . ' days', time() );
-								$day 		= date( 'd', $day_time ) + 1;
-								$month 		= date( 'n', $day_time ) + 1; // I have no idea why the +1 is needed, but it is
-								$dates['year'] 		= date( 'Y', $day_time );
-								?>
-								['<?php echo mktime( 0, 0, 0, $month, $day, $dates['year'] ) * 1000; ?>', 
-								<?php echo edd_get_earnings_by_date( $day, $month, $dates['year'] ); ?>,
-								],
-								<?php $i--;
-							endwhile;
-							?>
-		   				],
-	   					label: "<?php _e( 'Earnings', 'edd' ); ?>",
-	   					id: 'earnings'
-	   				}
-	   			],
-	   		{
-               	series: {
-                   lines: { show: true },
-                   points: { show: true }
-            	},
-            	grid: {
-           			show: true,
-					aboveData: false,
-					color: '#ccc',
-					backgroundColor: '#fff',
-					borderWidth: 2,
-					borderColor: '#ccc',
-					clickable: false,
-					hoverable: true
-           		},
-            	xaxis: {
-	   				mode: "time",
-	   				timeFormat: "%d/%b",
-	   				minTickSize: [1, "day"]
-   				},
-   				yaxis: [
-   					{ min: 0, tickSize: 1, tickDecimals: 2 },
-   					{ min: 0, tickDecimals: 0 }
-   				]
-           		
-             });
+            });
 
 	   		function edd_flot_tooltip(x, y, contents) {
 		        $('<div id="edd-flot-tooltip">' + contents + '</div>').css( {
@@ -181,7 +119,7 @@ function edd_reports_graph() {
 		    }
 		    
 		    var previousPoint = null;
-		    $("#edd_monthly_stats, #edd_daily_stats").bind("plothover", function (event, pos, item) {
+		    $("#edd_monthly_stats").bind("plothover", function (event, pos, item) {
 		        $("#x").text(pos.x.toFixed(2));
 		        $("#y").text(pos.y.toFixed(2));
 	            if (item) {
@@ -208,10 +146,6 @@ function edd_reports_graph() {
 	   });
     </script>
     <div id="edd_monthly_stats" style="height: 300px;"></div>
-	
-    <h3><?php _e( 'Daily Stats for Last 30 Days', 'edd' ); ?></h3>
-    <div id="edd_daily_stats" style="height: 300px;"></div>
-
 	<?php
 	echo ob_get_clean();
 }
