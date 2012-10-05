@@ -20,9 +20,14 @@
 
 function edd_reports_graph() {
 
-	$month_start 	= isset( $_GET['m_start'] ) ? $_GET['m_start'] 	: 1;
-	$month_end 		= isset( $_GET['m_end'] ) 	? $_GET['m_end'] 	: 12;
-	$year 			= isset( $_GET['year'] ) 	? $_GET['year'] 	: date( 'Y' );
+	$dates = edd_get_report_dates();
+
+	$dates['m_start'] 	= isset( $_GET['m_start'] ) ? $_GET['m_start'] 	: 1;
+	$dates['m_end'] 		= isset( $_GET['m_end'] ) 	? $_GET['m_end'] 	: 12;
+	$dates['year'] 			= isset( $_GET['year'] ) 	? $_GET['year'] 	: date( 'Y' );
+
+	$dates = edd_get_report_dates();
+
 
 	echo '<h3>' . __( 'Earnings Over Time', 'edd' ) . '</h3>';
 
@@ -37,9 +42,9 @@ function edd_reports_graph() {
 	   				{ 
 	   					data: [
 		   					<?php
-		   					$i = $month_start;
-							while($i <= $month_end) : ?>
-								[<?php echo mktime( 0,0,0,$i,0,$year ) * 1000; ?>, <?php echo edd_get_sales_by_date( null, $i, $year ); ?>],
+		   					$i = $dates['m_start'];
+							while($i <= $dates['m_end']) : ?>
+								[<?php echo mktime( 0,0,0,$i,0,$dates['year'] ) * 1000; ?>, <?php echo edd_get_sales_by_date( null, $i, $dates['year'] ); ?>],
 								<?php $i++;
 							endwhile;
 		   					?>,
@@ -51,9 +56,9 @@ function edd_reports_graph() {
 	   				{ 
 	   					data: [
 		   					<?php
-		   					$i = $month_start;
-							while($i <= $month_end) : ?>
-								[<?php echo mktime( 0,0,0,$i,0,$year ) * 1000; ?>, <?php echo edd_get_earnings_by_date( null, $i, $year ); ?>],
+		   					$i = $dates['m_start'];
+							while($i <= $dates['m_end']) : ?>
+								[<?php echo mktime( 0,0,0,$i,0,$dates['year'] ) * 1000; ?>, <?php echo edd_get_earnings_by_date( null, $i, $dates['year'] ); ?>],
 								<?php $i++;
 							endwhile;
 		   					?>
@@ -101,10 +106,10 @@ function edd_reports_graph() {
 								$day_time 	= strtotime( '-' . $num_of_days - $i . ' days', time() );
 								$day 		= date( 'd', $day_time ) + 1;
 								$month 		= date( 'n', $day_time ) + 1; // I have no idea why the +1 is needed, but it is
-								$year 		= date( 'Y', $day_time );
+								$dates['year'] 		= date( 'Y', $day_time );
 								?>
-								['<?php echo mktime( 0, 0, 0, $month, $day, $year ) * 1000; ?>', 
-								<?php echo edd_get_sales_by_date( $day, $month, $year ); ?>,
+								['<?php echo mktime( 0, 0, 0, $month, $day, $dates['year'] ) * 1000; ?>', 
+								<?php echo edd_get_sales_by_date( $day, $month, $dates['year'] ); ?>,
 								],
 								<?php $i--;
 							endwhile;
@@ -122,10 +127,10 @@ function edd_reports_graph() {
 								$day_time 	= strtotime( '-' . $num_of_days - $i . ' days', time() );
 								$day 		= date( 'd', $day_time ) + 1;
 								$month 		= date( 'n', $day_time ) + 1; // I have no idea why the +1 is needed, but it is
-								$year 		= date( 'Y', $day_time );
+								$dates['year'] 		= date( 'Y', $day_time );
 								?>
-								['<?php echo mktime( 0, 0, 0, $month, $day, $year ) * 1000; ?>', 
-								<?php echo edd_get_earnings_by_date( $day, $month, $year ); ?>,
+								['<?php echo mktime( 0, 0, 0, $month, $day, $dates['year'] ) * 1000; ?>', 
+								<?php echo edd_get_earnings_by_date( $day, $month, $dates['year'] ); ?>,
 								],
 								<?php $i--;
 							endwhile;
@@ -222,39 +227,73 @@ function edd_reports_graph() {
 
 function edd_reports_graph_controls() {
 
-	$day 			= isset( $_GET['day'] ) 	? $_GET['day'] 		: null;
-	$month_start 	= isset( $_GET['m_start'] ) ? $_GET['m_start'] 	: 1;
-	$month_end 		= isset( $_GET['m_end'] ) 	? $_GET['m_end'] 	: 12;
-	$year 			= isset( $_GET['year'] ) 	? $_GET['year'] 	: date( 'Y' );
-	$years_end	 	= date( 'Y' );
+	$date_options = apply_filters( 'edd_report_date_options', array(
+		'this_month' 	=> __( 'This Month', 'edd' ),
+		'last_month' 	=> __( 'Last Month', 'edd' ),
+		'this_quarter'	=> __( 'This Quarter', 'edd' ),
+		'last_quarter'	=> __( 'Last Quarter', 'edd' ),
+		'other'			=> __( 'Other', 'edd' )
+	) );
+
+	$dates = edd_get_report_dates();
+
+	$display = $dates['range'] == 'other' ? '' : 'style="display:none;"';
+
 	?>
 	<form id="edd-garphs-filter" method="get">
 		<div class="tablenav top">
 			<div class="alignleft actions">
+
 		       	<input type="hidden" name="post_type" value="download"/>
 		       	<input type="hidden" name="page" value="edd-reports"/>
 		       	<input type="hidden" name="view" value="earnings"/>
 
-			    <span><?php _e( 'From', 'edd' ); ?>&nbsp;</span>
-		       	<select id="edd-graphs-month-start" name="m_start">
-		       		<?php for( $i = 1; $i <= 12; $i++ ) : ?>
-		       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $month_start ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
-			       	<?php endfor; ?>
+		       	<select id="edd-graphs-date-options" name="range">
+		       		<?php
+		       		foreach( $date_options as $key => $option ) {
+		       			echo '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $dates['range'] ) . '>' . esc_html( $option ) . '</option>';
+		       		}
+		       		?>
 		       	</select>
-		       	<span><?php _e( 'To', 'edd' ); ?>&nbsp;</span>
-		       	<select id="edd-graphs-month-start" name="m_end">
-		       		<?php for( $i = 1; $i <= 12; $i++ ) : ?>
-		       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $month_end ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
-			       	<?php endfor; ?>
-		       	</select>
-		       	<select id="edd-graphs-year" name="year">
-		       		<?php for( $i = 2007; $i <= $years_end; $i++ ) : ?>
-		       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $year ); ?>><?php echo $i; ?></option>
-			       	<?php endfor; ?>
-		       	</select>
+
+		       	<div id="edd-date-range-options" <?php echo $display; ?>>
+					&mdash;
+				    <span><?php _e( 'From', 'edd' ); ?>&nbsp;</span>
+			       	<select id="edd-graphs-month-start" name="m_start">
+			       		<?php for( $i = 1; $i <= 12; $i++ ) : ?>
+			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_start'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
+				       	<?php endfor; ?>
+			       	</select>
+			       	<span><?php _e( 'To', 'edd' ); ?>&nbsp;</span>
+			       	<select id="edd-graphs-month-start" name="m_end">
+			       		<?php for( $i = 1; $i <= 12; $i++ ) : ?>
+			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_end'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
+				       	<?php endfor; ?>
+			       	</select>
+			       	<select id="edd-graphs-year" name="year">
+			       		<?php for( $i = 2007; $i <= $dates['year_end']; $i++ ) : ?>
+			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year'] ); ?>><?php echo $i; ?></option>
+				       	<?php endfor; ?>
+			       	</select>
+			       </div>
 		       	<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'edd' ); ?>"/>
 			</div>
 		</div>
 	</form>
 	<?php
 }
+
+function edd_get_report_dates() {
+
+	$dates = array();
+
+	$dates['range']		= isset( $_GET['range'] )	? $_GET['range']	: null;
+	$dates['day']		= isset( $_GET['day'] ) 	? $_GET['day'] 		: null;	
+	$dates['m_start'] 	= isset( $_GET['m_start'] ) ? $_GET['m_start'] 	: 1;
+	$dates['m_end']		= isset( $_GET['m_end'] ) 	? $_GET['m_end'] 	: 12;
+	$dates['year'] 		= isset( $_GET['year'] ) 	? $_GET['year'] 	: date( 'Y' );
+	$dates['year_end']	= date( 'Y' );
+
+	return apply_filters( 'edd_report_dates', $dates );
+}
+
