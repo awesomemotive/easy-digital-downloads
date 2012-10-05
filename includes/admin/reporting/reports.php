@@ -111,6 +111,7 @@ function edd_report_views() {
 		       			<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
 			       	<?php endforeach; ?>
 		       	</select>
+		       	<?php do_action( 'edd_report_view_actions' ); ?>
 		       	<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
 			</div>
 		</div>

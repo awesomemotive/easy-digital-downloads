@@ -11,7 +11,7 @@
 
 
 /**
- * Show reports raph
+ * Show report graphs
  *
  * @access      public
  * @since       1.3
@@ -23,10 +23,7 @@ function edd_reports_graph() {
 	// retrieve the queried dates
 	$dates = edd_get_report_dates();
 
-	// setup some graph options
-	$time_format 	= '%d/%b'; 	// show days by default
-	$tick_size		= 'day'; 	// default graph interval
-
+	// determine graph options
 	switch( $dates['range'] ) :
 
 		case 'last_year' : 
@@ -37,8 +34,11 @@ function edd_reports_graph() {
 			$time_format 	= '%b'; 
 			$tick_size		= 'month';
 			break;
-
-
+		default:
+			$time_format 	= '%d/%b'; 	// show days by default
+			$tick_size		= 'day'; 	// default graph interval
+			break;
+			
 	endswitch;
 
 	echo '<h3>' . __( 'Earnings Over Time', 'edd' ) . '</h3>';
