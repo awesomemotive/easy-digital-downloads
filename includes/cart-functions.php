@@ -439,7 +439,8 @@ function edd_get_checkout_uri() {
 
 function edd_is_checkout() {
     global $edd_options;
-    return isset( $edd_options['purchase_page'] ) ? is_page( $edd_options['purchase_page'] ) : false;
+    $is_checkout = isset( $edd_options['purchase_page'] ) ? is_page( $edd_options['purchase_page'] ) : false;
+    return apply_filters( 'edd_is_checkout', $is_checkout );
 }
 
 
