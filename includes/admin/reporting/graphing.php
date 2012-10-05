@@ -232,6 +232,8 @@ function edd_reports_graph_controls() {
 		'last_month' 	=> __( 'Last Month', 'edd' ),
 		'this_quarter'	=> __( 'This Quarter', 'edd' ),
 		'last_quarter'	=> __( 'Last Quarter', 'edd' ),
+		'this_year'		=> __( 'This Year', 'edd' ),
+		'last_year'		=> __( 'Last Year', 'edd' ),
 		'other'			=> __( 'Other', 'edd' )
 	) );
 
@@ -276,12 +278,23 @@ function edd_reports_graph_controls() {
 				       	<?php endfor; ?>
 			       	</select>
 			       </div>
+
+			    <input type="hidden" name="edd_action" value="filter_reports" />  
 		       	<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'edd' ); ?>"/>
 			</div>
 		</div>
 	</form>
 	<?php
 }
+
+
+/**
+ * Sets up the dates used to filter graph data
+ *
+ * @access      public
+ * @since       1.3
+ * @return      void
+*/
 
 function edd_get_report_dates() {
 
@@ -294,6 +307,109 @@ function edd_get_report_dates() {
 	$dates['year'] 		= isset( $_GET['year'] ) 	? $_GET['year'] 	: date( 'Y' );
 	$dates['year_end']	= date( 'Y' );
 
+	// modify dates based on predefined ranges
+	switch( $dates['range'] ) :
+
+		case 'this_month' :
+
+			$dates['m_start'] 	= date( 'n' );
+			$dates['m_end']		= date( 'n' ) + 1;
+			$dates['year']		= date( 'Y' );
+
+			break;
+
+		case 'last_month' :
+
+			$dates['m_start'] 	= date( 'n' ) - 1;
+			$dates['m_end']		= date( 'n' );
+			$dates['year']		= date( 'Y' );
+
+			break;
+
+		case 'this_quarter' :
+
+			$month_now = date( 'n' );
+
+			if( $month_now <= 3 ) {
+
+				$dates['m_start'] 	= 1;
+				$dates['m_end']		= 3;
+				$dates['year']		= date( 'Y' );
+
+			} else if ( $month_now <= 6 ) {
+
+				$dates['m_start'] 	= 4;
+				$dates['m_end']		= 6;
+				$dates['year']		= date( 'Y' );
+
+			} else if ( $month_now <= 9 ) {
+
+				$dates['m_start'] 	= 7;
+				$dates['m_end']		= 9;
+				$dates['year']		= date( 'Y' );
+
+			} else {
+
+				$dates['m_start'] 	= 10;
+				$dates['m_end']		= 12;
+				$dates['year']		= date( 'Y' );
+
+			}
+
+			break;
+
+		case 'last_quarter' :
+
+			$month_now = date( 'n' );
+
+			if( $month_now <= 3 ) {
+
+				$dates['m_start'] 	= 10;
+				$dates['m_end']		= 12;
+				$dates['year']		= date( 'Y' ) - 1; // previous year
+
+			} else if ( $month_now <= 6 ) {
+
+				$dates['m_start'] 	= 1;
+				$dates['m_end']		= 3;
+				$dates['year']		= date( 'Y' );
+
+			} else if ( $month_now <= 9 ) {
+
+				$dates['m_start'] 	= 4;
+				$dates['m_end']		= 6;
+				$dates['year']		= date( 'Y' );
+
+			} else {
+
+				$dates['m_start'] 	= 7;
+				$dates['m_end']		= 9;
+				$dates['year']		= date( 'Y' );
+
+			}
+
+			break;
+
+	endswitch;
+
 	return apply_filters( 'edd_report_dates', $dates );
 }
+
+
+/**
+ * Grabs all of the selected date info and then redirects appropriately
+ *
+ * @access      public
+ * @since       1.3
+ * @return      void
+*/
+
+function edd_parse_report_dates( $data ) {
+
+	$dates = edd_get_report_dates();
+
+	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=earnings' ) ) ); exit;
+
+}
+add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
 
