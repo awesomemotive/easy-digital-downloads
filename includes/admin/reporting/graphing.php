@@ -44,7 +44,7 @@ function edd_reports_graph() {
 		   					<?php
 		   					$i = $dates['m_start'];
 							while($i <= $dates['m_end']) : ?>
-								[<?php echo mktime( 0,0,0,$i,0,$dates['year'] ) * 1000; ?>, <?php echo edd_get_sales_by_date( null, $i, $dates['year'] ); ?>],
+								[<?php echo mktime( 0, 0, 0, $i, 0, $dates['year'] ) * 1000; ?>, <?php echo edd_get_sales_by_date( null, $i, $dates['year'] ); ?>],
 								<?php $i++;
 							endwhile;
 		   					?>,
@@ -58,7 +58,7 @@ function edd_reports_graph() {
 		   					<?php
 		   					$i = $dates['m_start'];
 							while($i <= $dates['m_end']) : ?>
-								[<?php echo mktime( 0,0,0,$i,0,$dates['year'] ) * 1000; ?>, <?php echo edd_get_earnings_by_date( null, $i, $dates['year'] ); ?>],
+								[<?php echo mktime( 0, 0, 0, $i, 0, $dates['year'] ) * 1000; ?>, <?php echo edd_get_earnings_by_date( null, $i, $dates['year'] ); ?>],
 								<?php $i++;
 							endwhile;
 		   					?>
@@ -291,6 +291,8 @@ function edd_reports_graph_controls() {
 /**
  * Sets up the dates used to filter graph data
  *
+ * Date sent via $_GET is read first and then modified (if needed) to match the selected date-range (if any)
+ *
  * @access      public
  * @since       1.3
  * @return      void
@@ -387,6 +389,22 @@ function edd_get_report_dates() {
 				$dates['year']		= date( 'Y' );
 
 			}
+
+			break;
+
+		case 'this_year' :
+
+			$dates['m_start'] 	= 1;
+			$dates['m_end']		= 12;
+			$dates['year']		= date( 'Y' );
+
+			break;
+
+		case 'last_year' :
+
+			$dates['m_start'] 	= 1;
+			$dates['m_end']		= 12;
+			$dates['year']		= date( 'Y' ) - 1;
 
 			break;
 
