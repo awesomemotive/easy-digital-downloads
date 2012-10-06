@@ -319,11 +319,11 @@ function edd_dashboard_sales_widget() {
         <table>
             <tbody>
                 <tr class="first">
-                    <td class="first b"><?php echo edd_currency_filter( edd_get_earnings_by_date(null, date('n'), date('Y')) ); ?></td>
+                    <td class="first b"><?php echo edd_currency_filter( edd_get_earnings_by_date( null, date('n'), date('Y')) ); ?></td>
                     <td class="t monthly_earnings"><?php _e('Earnings', 'edd'); ?></td>
                 </tr>
                 <tr>
-                    <td class="first b"><?php echo edd_get_sales_by_date( date('n'), date('Y') ); ?></td>
+                    <td class="first b"><?php echo edd_get_sales_by_date( null, date('n'), date('Y') ); ?></td>
                     <td class="t monthly_sales"><?php _e('Sales', 'edd'); ?></td>
                 </tr>
             </tbody>

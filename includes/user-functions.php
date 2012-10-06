@@ -21,7 +21,7 @@
  * @return      array
 */
 
-function edd_get_users_purchases( $user_id = 0 ) {
+function edd_get_users_purchases( $user_id = 0, $number = -1 ) {
 	
 	if( empty( $user_id ) ) {
 		global $user_ID;
@@ -45,7 +45,7 @@ function edd_get_users_purchases( $user_id = 0 ) {
 					)
 				),
 				'post_type' => 'edd_payment', 
-				'posts_per_page' => -1
+				'posts_per_page' => $number
 			)
 		);
 		set_transient('edd_user_' . $user_id . '_purchases', $purchases, 7200);
@@ -135,15 +135,81 @@ function edd_has_user_purchased($user_id, $download_id, $variable_price_id = nul
  * @return      bool - true if has purchased, false other wise.
 */
 
-function edd_has_purchases($user_id = null) {
+function edd_has_purchases( $user_id = null ) {
 	
-	if(is_null($user_id)) {
+	if( is_null( $user_id ) ) {
 		global $user_ID;
 		$user_id = $user_ID;
 	}
 	
-	if(edd_get_users_purchases($user_id)) {
+	if( edd_get_users_purchases( $user_id, 1 ) ) {
 		return true; // user has at least one purchase
 	}
 	return false; // user has never purchased anything
+}
+
+
+/**
+ * Count number of purchases of a customer
+ *
+ * Returns total number of purchases a customer has made
+ *
+ * @access      public
+ * @since       1.3
+ * @param       $user mixed - ID or email
+ * @return      int - the total number of purchases
+*/
+
+function edd_count_purchases_of_customer( $user = null ) {
+
+	$args = array(
+		'number'   => -1,
+		'mode'     => 'live',
+		'user'     => $user,
+		'status'   => 'publish'
+	);
+
+	$customer_purchases = edd_get_payments( $args );
+	if( $customer_purchases )
+		return count( $customer_purchases );
+	return 0;
+}
+
+
+/**
+ * Calculates the total amount spent by a user
+ *
+ * @access      public
+ * @since       1.3
+ * @param       $user mixed - ID or email
+ * @return      float - the total amount the user has spent
+*/
+
+function edd_purchase_total_of_user( $user = null ) {
+
+	$args = array(
+		'number'   => -1,
+		'mode'     => 'live',
+		'user'     => $user,
+		'status'   => 'publish'
+	);
+
+	$customer_purchases = edd_get_payments( $args );
+
+	$amount = get_transient( md5( 'edd_customer_total_' . $user ) );
+	if( false === $amount ) {
+
+		$amount = 0;
+
+		if( $customer_purchases ) :
+			foreach( $customer_purchases as $purchase ) :
+
+				$amount += edd_get_payment_amount( $purchase->ID );
+
+			endforeach;
+		endif;
+		set_transient( md5( 'edd_customer_total_' . $user ), $amount );
+	}	
+
+	return $amount;
 }
