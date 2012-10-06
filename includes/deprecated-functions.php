@@ -22,7 +22,7 @@
  * @return      integer
 */
 
-function edd_count_payments($mode, $user = null) {
+function edd_count_payments( $mode, $user = null ) {
 	$payments = edd_get_payments( array(
 		'offset'  => 0, 
 		'number'  => -1, 
@@ -32,8 +32,8 @@ function edd_count_payments($mode, $user = null) {
 		'user'    => $user 
 	) );
 	$count = 0;
-	if($payments) {
-		$count = count($payments);
+	if( $payments ) {
+		$count = count( $payments );
 	}
 	return $count;
 }
