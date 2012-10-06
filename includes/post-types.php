@@ -23,21 +23,21 @@
 function edd_setup_edd_post_types() {
 
 	$archives = true;
-	if(defined('EDD_DISABLE_ARCHIVE') && EDD_DISABLE_ARCHIVE == true) {
+	if( defined( 'EDD_DISABLE_ARCHIVE' ) && EDD_DISABLE_ARCHIVE == true ) {
 		$archives = false;
 	}
 	
 	$slug = 'downloads';
-	if(defined('EDD_SLUG')) {
+	if( defined( 'EDD_SLUG' ) ) {
 		$slug = EDD_SLUG;
 	}
 	
 	$rewrite = array('slug' => $slug, 'with_front' => false);
-	if(defined('EDD_DISABLE_REWRITE') && EDD_DISABLE_REWRITE == true) {
+	if( defined( 'EDD_DISABLE_REWRITE' ) && EDD_DISABLE_REWRITE == true ) {
 		$rewrite = false;
 	}
 	
-	$download_labels =  apply_filters('edd_download_labels', array(
+	$download_labels =  apply_filters( 'edd_download_labels', array(
 		'name' => '%2$s',
 		'singular_name' => '%1$s',
 		'add_new' => __('Add New', 'edd'),
@@ -53,8 +53,8 @@ function edd_setup_edd_post_types() {
 		'menu_name' => __('%2$s', 'edd')
 	) );
 	
-	foreach ($download_labels as $key => $value) {
-	   $download_labels[$key] = sprintf( $value, edd_get_label_singular(), edd_get_label_plural() );
+	foreach ( $download_labels as $key => $value ) {
+	   $download_labels[ $key ] = sprintf( $value, edd_get_label_singular(), edd_get_label_plural() );
 	}
 	
 	$download_args = array(
@@ -70,7 +70,7 @@ function edd_setup_edd_post_types() {
 		'hierarchical' => false,
 		'supports' => apply_filters('edd_download_supports', array( 'title', 'editor', 'thumbnail' ) ),
 	); 
-	register_post_type('download', apply_filters( 'edd_download_post_type_args', $download_args ) );
+	register_post_type( 'download', apply_filters( 'edd_download_post_type_args', $download_args ) );
 	
 	
 	/* payment post type */	
@@ -92,7 +92,7 @@ function edd_setup_edd_post_types() {
 	);
 	
 	$payment_args = array(
-		'labels' => apply_filters('edd_payment_labels', $payment_labels),
+		'labels' => apply_filters( 'edd_payment_labels', $payment_labels ),
 		'public' => false,
 		'publicly_queryable' => false,
 		'show_ui' => false, 
@@ -106,10 +106,10 @@ function edd_setup_edd_post_types() {
 		'supports' => array( 'title' ),
 		'menu_icon' => EDD_PLUGIN_URL . 'includes/images/media-button.png'
 	); 
-	register_post_type('edd_payment', $payment_args);
+	register_post_type( 'edd_payment', $payment_args );
 	
 }
-add_action('init', 'edd_setup_edd_post_types', 100);
+add_action( 'init', 'edd_setup_edd_post_types', 100 );
 
 
 /**
@@ -137,9 +137,9 @@ function edd_get_default_labels() {
  * @return      string
 */
 
-function edd_get_label_singular($lowercase = false) {
+function edd_get_label_singular( $lowercase = false ) {
 	$defaults = edd_get_default_labels();
-	return ($lowercase) ? strtolower($defaults['singular']) : $defaults['singular'];
+	return ($lowercase) ? strtolower( $defaults['singular'] ) : $defaults['singular'];
 }
 
 
@@ -151,9 +151,9 @@ function edd_get_label_singular($lowercase = false) {
  * @return      string
 */
 
-function edd_get_label_plural($lowercase = false) {
+function edd_get_label_plural( $lowercase = false ) {
 	$defaults = edd_get_default_labels();
-	return ($lowercase) ? strtolower($defaults['plural']) : $defaults['plural'];
+	return ( $lowercase ) ? strtolower( $defaults['plural'] ) : $defaults['plural'];
 }
 
 
@@ -168,11 +168,10 @@ function edd_get_label_plural($lowercase = false) {
 */
 
 function edd_setup_download_taxonomies() {
-
 	$category_labels = array(
 		'name' 				=> _x( 'Categories', 'taxonomy general name', 'edd' ),
 		'singular_name' 	=> _x( 'Category', 'taxonomy singular name', 'edd' ),
-		'search_items' 		=>  __( 'Search Categories', 'edd'  ),
+		'search_items' 		=> __( 'Search Categories', 'edd'  ),
 		'all_items' 		=> __( 'All Categories', 'edd'  ),
 		'parent_item' 		=> __( 'Parent Category', 'edd'  ),
 		'parent_item_colon' => __( 'Parent Category:', 'edd'  ),
@@ -192,12 +191,12 @@ function edd_setup_download_taxonomies() {
 		)
 	);
 
-	register_taxonomy('download_category', array('download'), $category_args );
+	register_taxonomy( 'download_category', array('download'), $category_args );
 	
 	$tag_labels = array(
 		'name' 				=> _x( 'Tags', 'taxonomy general name', 'edd' ),
 		'singular_name' 	=> _x( 'Tag', 'taxonomy singular name', 'edd' ),
-		'search_items' 		=>  __( 'Search Tags', 'edd'  ),
+		'search_items' 		=> __( 'Search Tags', 'edd'  ),
 		'all_items' 		=> __( 'All Tags', 'edd'  ),
 		'parent_item' 		=> __( 'Parent Tag', 'edd'  ),
 		'parent_item_colon' => __( 'Parent Tag:', 'edd'  ),
@@ -210,16 +209,16 @@ function edd_setup_download_taxonomies() {
 
 	$tag_args = apply_filters( 'edd_download_tag_args', array(
 			'hierarchical' 	=> false,
-			'labels' 		=> apply_filters('edd_download_tag_labels', $tag_labels),
+			'labels' 		=> apply_filters( 'edd_download_tag_labels', $tag_labels ),
 			'show_ui' 		=> true,
 			'query_var' 	=> 'download_tag',
-			'rewrite' 		=> array('slug' => 'downloads/tag')
+			'rewrite' 		=> array( 'slug' => 'downloads/tag ')
 		)
 	);
 
-	register_taxonomy('download_tag', array('download'), $tag_args );
+	register_taxonomy( 'download_tag', array( 'download' ), $tag_args );
 }
-add_action('init', 'edd_setup_download_taxonomies', 10);
+add_action( 'init', 'edd_setup_download_taxonomies', 10 );
 
 
 /**

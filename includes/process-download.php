@@ -21,42 +21,41 @@
 */
 
 function edd_process_download() {
-	if(isset($_GET['download']) && isset($_GET['email']) && isset($_GET['file'])) {
-		$download = urldecode($_GET['download']);
-		$key = urldecode($_GET['download_key']);
-		$email = rawurldecode($_GET['email']);
-		$file_key = urldecode($_GET['file']);
-		$expire = urldecode(base64_decode($_GET['expire']));
-				
+	if( isset( $_GET['download'] ) && isset( $_GET['email'] ) && isset( $_GET['file'] ) ) {
+		$download = urldecode( $_GET['download'] );
+		$key = urldecode( $_GET['download_key'] );
+		$email = rawurldecode( $_GET['email'] );
+		$file_key = urldecode( $_GET['file'] );
+		$expire = urldecode( base64_decode( $_GET['expire'] ) );
 
-		$payment = edd_verify_download_link($download, $key, $email, $expire, $file_key);
+		$payment = edd_verify_download_link( $download, $key, $email, $expire, $file_key );
 		
-			// defaulting this to true for now because the method below doesn't work well
+		// Defaulting this to true for now because the method below doesn't work well
 		$has_access = true;
 		//$has_access = ( edd_logged_in_only() && is_user_logged_in() ) || !edd_logged_in_only() ? true : false;
-		if($payment && $has_access) {
-			
-			do_action('edd_process_verified_download', $download, $email);
+		if( $payment && $has_access ) {
+
+			do_action( 'edd_process_verified_download', $download, $email );
 
 			// payment has been verified, setup the download
 			$download_files = edd_get_download_files( $download );
 			
-			$requested_file = apply_filters('edd_requested_file', $download_files[$file_key]['file'] );
+			$requested_file = apply_filters( 'edd_requested_file', $download_files[ $file_key ]['file'] );
 		
 			$user_info = array();
 			$user_info['email'] = $email;
-			if(is_user_logged_in()) {
+			if( is_user_logged_in() ) {
 				global $user_ID;
-				$user_data = get_userdata($user_ID);
+				$user_data = get_userdata( $user_ID );
 				$user_info['id'] = $user_ID;
 				$user_info['name'] = $user_data->display_name;
 			}
 			
-			edd_record_download_in_log($download, $file_key, $user_info, edd_get_ip(), date('Y-m-d H:i:s'));
+			edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip(), date( 'Y-m-d H:i:s' ) );
 			
-			$file_extension = edd_get_file_extension($requested_file);
+			$file_extension = edd_get_file_extension( $requested_file );
 
-			switch ($file_extension) :
+			switch( $file_extension ):
 				case 'ai'		: $ctype	= "application/postscript"; break;
 				case 'aif'		: $ctype	= "audio/x-aiff"; break;
 				case 'aifc'		: $ctype	= "audio/x-aiff"; break;
@@ -231,28 +230,28 @@ function edd_process_download() {
 				default			: $ctype	= "application/force-download";
 			endswitch;
 			
-			if( !ini_get('safe_mode') ){ 
+			if( !ini_get('safe_mode') ) { 
 				set_time_limit(0);
 			}
-			if( function_exists('get_magic_quotes_runtime') && get_magic_quotes_runtime() ) {
+			if( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() ) {
 				set_magic_quotes_runtime(0);
 			}
 
-	        @session_write_close();
-	        if (function_exists('apache_setenv')) @apache_setenv('no-gzip', 1);
-	        @ini_set('zlib.output_compression', 'Off');
+			@session_write_close();
+			if( function_exists( 'apache_setenv' ) ) @apache_setenv('no-gzip', 1);
+			@ini_set( 'zlib.output_compression', 'Off' );
 			@ob_end_clean();
-			if (ob_get_level()) @ob_end_clean(); // Zip corruption fix
-			
+			if( ob_get_level() ) @ob_end_clean(); // Zip corruption fix
+
 			header("Pragma: no-cache");
 			header("Expires: 0");
 			header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 			header("Robots: none");
 			header("Content-Type: " . $ctype . "");
 			header("Content-Description: File Transfer");	
-			header("Content-Disposition: attachment; filename=\"" . apply_filters('edd_requested_file_name', basename($requested_file) ) . "\";");
+			header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\";");
 			header("Content-Transfer-Encoding: binary");
-			
+
 
 			if( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false ) {
 			
@@ -260,7 +259,7 @@ function edd_process_download() {
 			
 				$requested_file = realpath( $requested_file );
 				if( file_exists( $requested_file ) ) {
-					if ($size = @filesize($requested_file)) header("Content-Length: ".$size);
+					if( $size = @filesize( $requested_file ) ) header("Content-Length: ".$size);
 					@edd_readfile_chunked( $requested_file );
 				} else {
 					wp_die( __('Sorry but this file does not exist.', 'edd'), __('Error', 'edd') );
@@ -268,23 +267,21 @@ function edd_process_download() {
 
 			} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false) {
 
-				// this is a local file given by URL
-
+				// This is a local file given by URL
 				$upload_dir = wp_upload_dir();
-				
+
 				$requested_file = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );	
-					
 				$requested_file = realpath( $requested_file );
 
 				if( file_exists( $requested_file ) ) {
-					if ($size = @filesize($requested_file)) header("Content-Length: ".$size);
+					if( $size = @filesize( $requested_file ) ) header("Content-Length: ".$size);
 					@edd_readfile_chunked( $requested_file );
 				} else {
 					wp_die( __('Sorry but this file does not exist.', 'edd'), __('Error', 'edd') );
 				}
 
 			} else {
-				// this is a remote file
+				// This is a remote file
 				header("Location: " . $requested_file);
 			}
 
@@ -296,7 +293,7 @@ function edd_process_download() {
 		exit;
 	}
 }
-add_action('init', 'edd_process_download', 100);
+add_action( 'init', 'edd_process_download', 100 );
 
 
 /**
@@ -306,31 +303,31 @@ add_action('init', 'edd_process_download', 100);
  *
  * @access   public
  * @param    string    file
- * @param    boolean    return bytes of file
+ * @param    boolean   return bytes of file
  * @return   void
  */
 
-function edd_readfile_chunked($file, $retbytes=TRUE) {
+function edd_readfile_chunked( $file, $retbytes = TRUE ) {
 
 	$chunksize = 1 * (1024 * 1024);
 	$buffer = '';
 	$cnt = 0;
 
-	$handle = fopen($file, 'r');
-	if ($handle === FALSE) return FALSE;
+	$handle = fopen( $file, 'r' );
+	if( $handle === FALSE ) return FALSE;
 
-	while (!feof($handle)) :
-	   $buffer = fread($handle, $chunksize);
+	while( !feof($handle) ) :
+	   $buffer = fread( $handle, $chunksize );
 	   echo $buffer;
 	   ob_flush();
 	   flush();
 
-	   if ($retbytes) $cnt += strlen($buffer);
+	   if ( $retbytes ) $cnt += strlen( $buffer );
 	endwhile;
 
-	$status = fclose($handle);
+	$status = fclose( $handle );
 
-	if ($retbytes AND $status) return $cnt;
+	if( $retbytes AND $status ) return $cnt;
 
 	return $status;
 }

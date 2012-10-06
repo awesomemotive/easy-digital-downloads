@@ -22,12 +22,12 @@
  * @return      array
 */
 
-function edd_remove_restrict_meta_box($post_types) {
+function edd_remove_restrict_meta_box( $post_types ) {
 	$post_types[] = 'download';
-	
+
 	return $post_types;
 }
-add_filter('rcp_metabox_excluded_post_types', 'edd_remove_restrict_meta_box', 999);
+add_filter( 'rcp_metabox_excluded_post_types', 'edd_remove_restrict_meta_box', 999 );
 
 
 /**
@@ -42,6 +42,6 @@ add_filter('rcp_metabox_excluded_post_types', 'edd_remove_restrict_meta_box', 99
 */
 
 function edd_remove_post_types_order() {
-	remove_filter('posts_orderby', 'CPTOrderPosts');
+	remove_filter( 'posts_orderby', 'CPTOrderPosts' );
 }
 add_action( 'load-edit.php', 'edd_remove_post_types_order' );
