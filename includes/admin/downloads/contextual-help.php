@@ -10,7 +10,7 @@
  */
 
 /**
- * Donwload contextual help.
+ * Download contextual help.
  *
  * Adds help for default metaboxes, as well as notes about using the shortcodes.
  * Links to Github, themes, and extensions
