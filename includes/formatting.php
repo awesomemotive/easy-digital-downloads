@@ -53,8 +53,8 @@ function edd_sanitize_amount( $amount ) {
 function edd_format_amount( $amount ) {
 	global $edd_options;
 
-	$thousands_sep 	= isset($edd_options['thousands_separator']) ? $edd_options['thousands_separator'] 	: ',';
-	$decimal_sep 	= isset($edd_options['decimal_separator']) 	 ? $edd_options['decimal_separator'] 	: '.';
+	$thousands_sep 	= isset( $edd_options['thousands_separator'] ) ? $edd_options['thousands_separator'] : ',';
+	$decimal_sep 	= isset( $edd_options['decimal_separator'] )   ? $edd_options['decimal_separator'] 	 : '.';
 
 	// format the amount
 	if( $decimal_sep == ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
