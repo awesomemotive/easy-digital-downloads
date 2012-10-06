@@ -204,5 +204,15 @@ jQuery(document).ready(function ($) {
 			height: 'auto'
 		});
 	}
+
+	// reporting
+	$( '#edd-graphs-date-options' ).change( function() {
+		var $this = $(this);
+		if( $this.val() == 'other' ) {
+			$( '#edd-date-range-options' ).show();
+		} else {
+			$( '#edd-date-range-options' ).hide();
+		}
+	});
 	
 });

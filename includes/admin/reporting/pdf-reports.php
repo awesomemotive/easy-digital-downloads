@@ -81,6 +81,7 @@ function edd_generate_pdf( $data ) {
 				$title = utf8_decode( get_the_title( $download->ID ) );
 				
 				if ( edd_has_variable_prices( $download->ID ) ) {
+					/*
 					$prices = edd_get_variable_prices( $download->ID );
 					$total = count( $prices ) - 1;
 					if ( $prices[0]['amount'] < $prices[$total]['amount'] ) {
@@ -90,7 +91,8 @@ function edd_generate_pdf( $data ) {
 						$min = $prices[$total]['amount'];
 						$max = $prices[0]['amount'];
 					}
-					$price = html_entity_decode( sprintf( '%s - %s', edd_currency_filter( $min ), edd_currency_filter( $max ) ) );
+					*/
+					$price = html_entity_decode( edd_price( $download->ID, false ) );
 				} else {
 					$price = html_entity_decode( edd_currency_filter( edd_get_download_price( $download->ID ) ) );
 				}
@@ -155,7 +157,7 @@ function edd_draw_chart_image() {
 	$sales = "";
 	while( $i <= 12 ) :
 		$earnings .= edd_get_earnings_by_date( null, $i, date('Y') ) . ",";
-		$sales .= edd_get_sales_by_date( $i, date('Y') ) . ",";
+		$sales .= edd_get_sales_by_date( null, $i, date('Y') ) . ",";
 		$i++;
 	endwhile;
 

@@ -139,7 +139,7 @@ function edd_payment_history_page() {
 						<th style="width: 250px;"><?php _e('Email', 'edd'); ?></th>
 						<th><?php _e('Products', 'edd'); ?></th>
 						<th>
-							<a href="<?php echo add_query_arg( array( 'meta_key' => '_edd_payment_total', 'order' => $order_inverse, 'orderby' => 'meta_value_num' ) ); ?>" title="<?php _e('Price', 'edd'); ?>"><span><?php _e('Price', 'edd'); ?></span> <span class="sorting-indicator"></span></a>
+							<a href="<?php echo add_query_arg( array( 'meta_key' => '_edd_payment_total', 'order' => $order_inverse, 'orderby' => 'meta_value_num' ) ); ?>" title="<?php _e('Price', 'edd'); ?>"><span><?php _e('Amount', 'edd'); ?></span> <span class="sorting-indicator"></span></a>
 						</th>
 						<th class="manage-column column-title sortable <?php echo $order_class; echo $orderby == 'Date' ? ' sorted' : ''; ?>">
 						    <a href="<?php echo add_query_arg( array( 'orderby' => 'post_date', 'order' => $order_inverse ) ); ?>" title="<?php _e('Date', 'edd'); ?>"><span><?php _e('Date', 'edd'); ?></span> <span class="sorting-indicator"></span></a>
@@ -155,7 +155,7 @@ function edd_payment_history_page() {
 						<th style="width: 40px;"><?php _e('ID', 'edd'); ?></th>
 						<th style="width: 250px;"><?php _e('Email', 'edd'); ?></th>
 						<th><?php _e('Products', 'edd'); ?></th>
-						<th><?php _e('Price', 'edd'); ?></th>
+						<th><?php _e('Amount', 'edd'); ?></th>
 						<th><?php _e('Date', 'edd'); ?></th>
 						<th><?php _e('User', 'edd'); ?></th>
 						<th><?php _e('Status', 'edd'); ?></th>
@@ -248,7 +248,7 @@ function edd_payment_history_page() {
 											<?php $payment_date = strtotime( $payment->post_date ); ?>
 											<p><?php echo __('Date and Time:', 'edd') . ' ' . date_i18n( get_option( 'date_format' ), $payment_date ) . ' ' . date_i18n( get_option( 'time_format' ), $payment_date ) ?>
 											<p><?php echo __('Discount used:', 'edd') . ' '; if(isset($user_info['discount']) && $user_info['discount'] != 'none') { echo $user_info['discount']; } else { _e('none', 'edd'); } ?>
-											<p><?php echo __('Total:', 'edd') . ' ' . edd_get_payment_amount( $payment->ID ); ?></p>
+											<p><?php echo __('Total:', 'edd') . ' ' . edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment->ID ) ) ); ?></p>
 											
 											<div class="purcase-personal-details">
 												<h4><?php _e('Buyer\'s Personal Details:', 'edd'); ?></h4>
@@ -274,7 +274,7 @@ function edd_payment_history_page() {
 											<p><a id="edd-close-purchase-details" class="button-secondary" onclick="tb_remove();" title="<?php _e('Close', 'edd'); ?>"><?php _e('Close', 'edd'); ?></a></p>
 										</div>
 									</td>
-									<td style="text-transform:uppercase;"><?php echo edd_get_payment_amount( $payment->ID ); ?></td>
+									<td style="text-transform:uppercase;"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment->ID ) ) ); ?></td>
 									<td><?php echo date( apply_filters( 'edd_payments_page_date_format', get_option('date_format') ), strtotime($payment->post_date)); ?></td>
 									<td>
 										<?php $user_id = isset($user_info['id']) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email']?>

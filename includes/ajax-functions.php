@@ -189,7 +189,7 @@ add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_titl
  * Get AJAX URL
  *
  * @access      public
- * @since       1.2.3
+ * @since       1.3
  * @return      string
 */
 

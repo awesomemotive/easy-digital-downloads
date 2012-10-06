@@ -94,7 +94,7 @@ add_action('wp_enqueue_scripts', 'edd_register_styles');
 
 function edd_load_admin_scripts($hook) {
 
-	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page;
+	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page, $edd_options;
 
 	$edd_pages = array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page, 'index.php' );
 	$edd_cpt   = apply_filters( 'edd_load_scripts_for_these_types', array( 'download', 'edd_payment' ) );
@@ -106,7 +106,7 @@ function edd_load_admin_scripts($hook) {
 	    return;
 
 	if( $hook == 'download_page_edd-reports' ) {
-		wp_enqueue_script( 'google-charts', 'https://www.google.com/jsapi' );
+		wp_enqueue_script( 'jquery-flot', EDD_PLUGIN_URL . 'includes/js/jquery.flot.js' );
 	}
 	if( $hook == 'download_page_edd-discounts' ) {
 		wp_enqueue_script( 'jquery-ui-datepicker' );
@@ -128,7 +128,9 @@ function edd_load_admin_scripts($hook) {
         'delete_payment' 	=> __( 'Are you sure you wish to delete this payment?', 'edd' ),
         'one_price_min' 	=> __( 'You must have at least one price', 'edd' ),
         'one_file_min' 		=> __( 'You must have at least one file', 'edd' ),
-        'one_field_min'		=> __( 'You must have at least one field', 'edd' )
+        'one_field_min'		=> __( 'You must have at least one field', 'edd' ),
+        'currency_sign'		=> edd_currency_filter(''),
+        'currency_pos'		=> $edd_options['currency_position']
     ));
 	wp_enqueue_style( 'thickbox' );
 
