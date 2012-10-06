@@ -16,9 +16,9 @@
  * Performs all necessary actions to complete a purchase. 
  * Triggered by the edd_update_payment_status() function.
  *
- * @param		 int $payment_id the ID number of the payment
- * @param		 string $new_status the status of the payment, probably "publish"
- * @param		 string $old_status the status of the payment prior to being marked as "complete", probably "pending"
+ * @param		int $payment_id the ID number of the payment
+ * @param		string $new_status the status of the payment, probably "publish"
+ * @param		string $old_status the status of the payment prior to being marked as "complete", probably "pending"
  * @access      private
  * @since       1.0.8.3
  * @return      void
