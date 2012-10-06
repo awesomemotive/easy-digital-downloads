@@ -21,14 +21,22 @@
 */
 
 function edd_download_shortcode( $atts, $content = null ) {
-	global $post;
+	global $post, $edd_options;
 
 	extract( shortcode_atts( array(
-			'id'    => $post->ID,
-		), $atts )
+			'id' 	=> $post->ID,
+			'text'	=> isset( $edd_options[ 'add_to_cart_text' ] ) && $edd_options[ 'add_to_cart_text' ] != '' ? $edd_options[ 'add_to_cart_text' ] 	: __( 'Purchase', 'edd' ),
+			'style' => isset( $edd_options[ 'button_style' ] ) 	 	? $edd_options[ 'button_style' ] 		: 'button',
+			'color' => isset( $edd_options[ 'checkout_color' ] ) 	 ? $edd_options[ 'checkout_color' ] 	: 'blue',
+			'class' => 'edd-submit'
+		),
+		$atts )
 	);
 
-	$download = edd_get_download( $id );
+	// edd_get_purchase_link() expects the ID to be download_id since v1.3
+	$atts['download_id'] = $atts['id'];
+
+	$download = edd_get_download( $atts['download_id'] );
 	
 	if( $download ) {
 		return edd_get_purchase_link( $atts );
