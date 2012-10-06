@@ -236,7 +236,7 @@ function edd_get_report_dates() {
 
 	$dates = array();
 
-	$dates['range']		= isset( $_GET['range'] )	? $_GET['range']	: null;
+	$dates['range']		= isset( $_GET['range'] )	? $_GET['range']	: 'this_month';
 	$dates['day']		= isset( $_GET['day'] ) 	? $_GET['day'] 		: null;	
 	$dates['m_start'] 	= isset( $_GET['m_start'] ) ? $_GET['m_start'] 	: 1;
 	$dates['m_end']		= isset( $_GET['m_end'] ) 	? $_GET['m_end'] 	: 12;
