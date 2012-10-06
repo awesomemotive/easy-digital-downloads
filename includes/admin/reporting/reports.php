@@ -32,10 +32,10 @@ function edd_reports_page() {
 
 		<h2 class="nav-tab-wrapper">
 			<a href="<?php echo add_query_arg( array( 'tab' => 'reports', 'settings-updated' => false ) ); ?>" class="nav-tab <?php echo $active_tab == 'reports' ? 'nav-tab-active' : ''; ?>">
-				<?php _e('Reports', 'edd'); ?>
+				<?php _e( 'Reports', 'edd' ); ?>
 			</a>
 			<a href="<?php echo add_query_arg( array( 'tab' => 'export', 'settings-updated' => false ) ); ?>" class="nav-tab <?php echo $active_tab == 'export' ? 'nav-tab-active' : ''; ?>">
-				<?php _e('Export', 'edd'); ?>
+				<?php _e( 'Export', 'edd' ); ?>
 			</a>
 			<?php do_action( 'edd_reports_tabs' ); ?>
 		</h2>
@@ -193,7 +193,7 @@ function edd_reports_tab_export() {
 			<div id="post-body-content">
 				
 				<div class="postbox">
-					<h3><span><?php _e('Export PDF of Sales and Earnings', 'rcp'); ?></span></h3>
+					<h3><span><?php _e( 'Export PDF of Sales and Earnings', 'edd' ); ?></span></h3>
 					<div class="inside">
 						<p><?php _e( 'Download a PDF of Sales and Earnings reports for all products for the current year.', 'edd' ); ?> <?php _e( 'Date range reports will be coming soon.', 'edd' ); ?></p>
 						<p>
@@ -205,7 +205,7 @@ function edd_reports_tab_export() {
 				</div><!--end postbox-->
 
 				<div class="postbox">
-					<h3><span><?php _e('Export Customers in CSV', 'rcp'); ?></span></h3>
+					<h3><span><?php _e('Export Customers in CSV', 'edd'); ?></span></h3>
 					<div class="inside">
 						<p><?php _e( 'Download a CSV of all customer emails.', 'edd' ); ?></p>
 						<p>
