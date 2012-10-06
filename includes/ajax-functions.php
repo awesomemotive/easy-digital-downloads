@@ -12,7 +12,6 @@
 */
 
 
-
 /**
  * AJAX enabled
  *
