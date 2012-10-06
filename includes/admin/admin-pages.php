@@ -28,5 +28,8 @@ function edd_add_options_link() {
 	$edd_reports_page = add_submenu_page( 'edit.php?post_type=download', __('Earnings and Sales Reports', 'edd'), __('Reports', 'edd'), 'manage_options', 'edd-reports', 'edd_reports_page' );
 	$edd_settings_page = add_submenu_page( 'edit.php?post_type=download', __('Easy Digital Download Settings', 'edd'), __('Settings', 'edd'), 'manage_options', 'edd-settings', 'edd_options_page' );
 	$edd_add_ons_page = add_submenu_page( 'edit.php?post_type=download', __('Easy Digital Download Add Ons', 'edd'), __('Add Ons', 'edd'), 'manage_options', 'edd-addons', 'edd_add_ons_page' );
+
+	add_action( 'load-' . $edd_discounts_page, 'edd_discounts_contextual_help' );
+
 }
 add_action( 'admin_menu', 'edd_add_options_link', 10 );

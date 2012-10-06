@@ -112,6 +112,7 @@ if ( is_admin()) {
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/downloads/dashboard-columns.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/downloads/metabox.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/downloads/contextual-help.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/contextual-help.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-actions.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php' );
