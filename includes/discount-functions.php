@@ -71,7 +71,7 @@ function edd_has_active_discounts() {
 function edd_get_discount( $key ) {
 	$discounts = edd_get_discounts();
 	if( $discounts ) {
-		return isset($discounts[$key]) ? $discounts[$key] : false;
+		return isset( $discounts[ $key ] ) ? $discounts[ $key ] : false;
 	}
 	return false;
 }
