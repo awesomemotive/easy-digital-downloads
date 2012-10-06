@@ -41,6 +41,9 @@ function edd_reports_graph() {
 			
 	endswitch;
 
+	$time_format = apply_filters( 'edd_graph_timeformat', $time_format );
+	$tick_size = apply_filters( 'edd_graph_ticksize', $tick_size );
+
 	echo '<h3>' . __( 'Earnings Over Time', 'edd' ) . '</h3>';
 
 	// show the date controls
