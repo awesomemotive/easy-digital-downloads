@@ -29,14 +29,27 @@ function edd_reports_graph() {
 		case 'last_year' : 
 			$time_format 	= '%b'; 
 			$tick_size		= 'month';
+			$day_by_day		= false;
 			break;
 		case 'this_year' :
 			$time_format 	= '%b'; 
 			$tick_size		= 'month';
+			$day_by_day		= false;
+			break;
+		case 'last_quarter' :
+			$time_format	= '%b';
+			$tick_size		= 'month';
+			$day_by_day 	= false;
+			break;
+		case 'this_quarter' :
+			$time_format	= '%b';
+			$tick_size		= 'month';
+			$day_by_day 	= false;
 			break;
 		default:
 			$time_format 	= '%d/%b'; 	// show days by default
 			$tick_size		= 'day'; 	// default graph interval
+			$day_by_day 	= true;
 			break;
 			
 	endswitch;
@@ -58,9 +71,20 @@ function edd_reports_graph() {
    					data: [
 	   					<?php
 	   					$i = $dates['m_start'];
-						while($i <= $dates['m_end']) : ?>
-							[<?php echo mktime( 0, 0, 0, $i, 0, $dates['year'] ) * 1000; ?>, <?php echo edd_get_sales_by_date( null, $i, $dates['year'] ); ?>],
-							<?php $i++;
+						while( $i <= $dates['m_end'] ) : 
+							if( $day_by_day ) :
+								$num_of_days 	= cal_days_in_month(CAL_GREGORIAN, $i, $dates['year'] );
+								$d 				= 1;
+								while( $d <= $num_of_days ) : $date = mktime( 0, 0, 0, $i, $d, $dates['year'] ); ?>
+									[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( $d, $i, $dates['year'] ); ?>],
+								<?php $d++; endwhile;
+							else : 
+								$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
+								?>
+								[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( null, $i, $dates['year'] ); ?>],
+							<?php 
+							endif;
+							$i++;
 						endwhile;
 	   					?>,
 	   				],
@@ -72,9 +96,20 @@ function edd_reports_graph() {
    					data: [
 	   					<?php
 	   					$i = $dates['m_start'];
-						while($i <= $dates['m_end']) : ?>
-							[<?php echo mktime( 0, 0, 0, $i, 0, $dates['year'] ) * 1000; ?>, <?php echo edd_get_earnings_by_date( null, $i, $dates['year'] ); ?>],
-							<?php $i++;
+						while( $i <= $dates['m_end'] ) : 
+							if( $day_by_day ) :
+								$num_of_days 	= cal_days_in_month(CAL_GREGORIAN, $i, $dates['year'] );
+								$d 				= 1;
+								while( $d <= $num_of_days ) : $date = mktime( 0, 0, 0, $i, $d, $dates['year'] ); ?>
+									[<?php echo $date * 1000; ?>, <?php echo edd_get_earnings_by_date( $d, $i, $dates['year'] ); ?>],
+								<?php $d++; endwhile;
+							else : 
+								$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
+								?>
+								[<?php echo $date * 1000; ?>, <?php echo edd_get_earnings_by_date( null, $i, $dates['year'] ); ?>],
+							<?php 
+							endif;
+							$i++;
 						endwhile;
 	   					?>
 	   				],
