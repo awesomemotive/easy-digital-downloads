@@ -322,7 +322,7 @@ function edd_downloads_query($atts, $content = null) {
 						?>
 					</div>
 				</div>
-				<?php if $i % $columns == 0 ) { ?><div style="clear:both;"></div><?php } ?>
+				<?php if( $i % $columns == 0 ) { ?><div style="clear:both;"></div><?php } ?>
 			<?php $i++; endwhile; ?>
 			<?php wp_reset_postdata(); ?>
 			<div style="clear:both;"></div>
