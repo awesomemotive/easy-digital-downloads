@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * Registers front end query vars
   *
@@ -14,8 +12,7 @@ function edd_query_vars( $vars ) {
 	$vars[] = 'cart_item';
 	return $vars;
 }
-add_filter('query_vars', 'edd_query_vars');
-
+add_filter( 'query_vars', 'edd_query_vars' );
 
 
 /**
@@ -28,7 +25,7 @@ add_filter('query_vars', 'edd_query_vars');
 
 function edd_block_attachments() {
 
-	if( ! is_attachment() )
+	if( !is_attachment() )
 		return;
 
 	$parent = get_post_field( 'post_parent', get_the_ID() );

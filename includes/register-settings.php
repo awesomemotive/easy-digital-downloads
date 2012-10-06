@@ -24,10 +24,10 @@ function edd_register_settings() {
 	
 	// setup some default option sets
 	$pages = get_pages();	
-	$pages_options = array(0 => ''); // blank option
-	if($pages) {
-		foreach ( $pages as $page ) {
-		  	$pages_options[$page->ID] = $page->post_title;
+	$pages_options = array( 0 => '' ); // blank option
+	if( $pages ) {
+		foreach( $pages as $page ) {
+			$pages_options[ $page->ID ] = $page->post_title;
 		}
 	}
 	
@@ -312,20 +312,20 @@ function edd_register_settings() {
 	);
 	
 	if( false == get_option( 'edd_settings_general' ) ) {  
-        add_option( 'edd_settings_general' );  
-   	}	
+		add_option( 'edd_settings_general' );  
+	}	
 	if( false == get_option( 'edd_settings_gateways' ) ) {  
-        add_option( 'edd_settings_gateways' );  
-   	}
+		add_option( 'edd_settings_gateways' );  
+	}
 	if( false == get_option( 'edd_settings_emails' ) ) {  
-        add_option( 'edd_settings_emails' );  
-   	}
-   	if( false == get_option( 'edd_settings_styles' ) ) {  
-        add_option( 'edd_settings_styles' );  
-   	}
+		add_option( 'edd_settings_emails' );  
+	}
+	if( false == get_option( 'edd_settings_styles' ) ) {  
+		add_option( 'edd_settings_styles' );  
+	}
 	if( false == get_option( 'edd_settings_misc' ) ) {  
-        add_option( 'edd_settings_misc' );  
-   	} 
+		add_option( 'edd_settings_misc' );  
+	} 
 	
 	
 	add_settings_section(
@@ -335,7 +335,7 @@ function edd_register_settings() {
 		'edd_settings_general'
 	);
 	
-	foreach($edd_settings['general'] as $option) {
+	foreach( $edd_settings['general'] as $option ) {
 		add_settings_field(
 			'edd_settings_general[' . $option['id'] . ']',
 			$option['name'],
@@ -350,7 +350,7 @@ function edd_register_settings() {
 				'size' => isset($option['size']) ? $option['size'] : null,
 				'options' => isset($option['options']) ? $option['options'] : '',
 				'std' => isset($option['std']) ? $option['std'] : ''
-	    	)
+			)
 		);
 	}
 
@@ -361,7 +361,7 @@ function edd_register_settings() {
 		'edd_settings_gateways'
 	);
 	
-	foreach($edd_settings['gateways'] as $option) {
+	foreach( $edd_settings['gateways'] as $option ) {
 		add_settings_field(
 			'edd_settings_gateways[' . $option['id'] . ']',
 			$option['name'],
@@ -376,7 +376,7 @@ function edd_register_settings() {
 				'size' => isset($option['size']) ? $option['size'] : null,
 				'options' => isset($option['options']) ? $option['options'] : '',
 				'std' => isset($option['std']) ? $option['std'] : ''
-	    	)
+			)
 		);
 	}
 	
@@ -387,7 +387,7 @@ function edd_register_settings() {
 		'edd_settings_emails'
 	);
 	
-	foreach($edd_settings['emails'] as $option) {
+	foreach( $edd_settings['emails'] as $option ) {
 		add_settings_field(
 			'edd_settings_emails[' . $option['id'] . ']',
 			$option['name'],
@@ -402,7 +402,7 @@ function edd_register_settings() {
 				'size' => isset($option['size']) ? $option['size'] : null,
 				'options' => isset($option['options']) ? $option['options'] : '',
 				'std' => isset($option['std']) ? $option['std'] : ''
-	    	)
+			)
 		);
 	}
 	
@@ -413,7 +413,7 @@ function edd_register_settings() {
 		'edd_settings_styles'
 	);
 	
-	foreach($edd_settings['styles'] as $option) {
+	foreach( $edd_settings['styles'] as $option ) {
 		add_settings_field(
 			'edd_settings_styles[' . $option['id'] . ']',
 			$option['name'],
@@ -428,7 +428,7 @@ function edd_register_settings() {
 				'size' => isset($option['size']) ? $option['size'] : '' ,
 				'options' => isset($option['options']) ? $option['options'] : '',
 				'std' => isset($option['std']) ? $option['std'] : ''
-	    	)
+			)
 		);
 	}	
 	
@@ -452,19 +452,19 @@ function edd_register_settings() {
 				'desc' => $option['desc'],
 				'name' => $option['name'],
 				'section' => 'misc',
-				'size' => isset($option['size']) ? $option['size'] : '' ,
-				'options' => isset($option['options']) ? $option['options'] : '',
-				'std' => isset($option['std']) ? $option['std'] : ''
-	    	)
+				'size' => isset( $option['size'] ) ? $option['size'] : '' ,
+				'options' => isset( $option['options'] ) ? $option['options'] : '',
+				'std' => isset( $option['std'] ) ? $option['std'] : ''
+			)
 		);
 	}
 	
 	// creates our settings in the options table
-	register_setting('edd_settings_general', 'edd_settings_general', 'edd_settings_sanitize');
-	register_setting('edd_settings_gateways', 'edd_settings_gateways', 'edd_settings_sanitize');
-	register_setting('edd_settings_emails', 'edd_settings_emails', 'edd_settings_sanitize');
-	register_setting('edd_settings_styles', 'edd_settings_styles', 'edd_settings_sanitize');
-	register_setting('edd_settings_misc', 'edd_settings_misc', 'edd_settings_sanitize');
+	register_setting( 'edd_settings_general', 'edd_settings_general', 'edd_settings_sanitize' );
+	register_setting( 'edd_settings_gateways', 'edd_settings_gateways', 'edd_settings_sanitize' );
+	register_setting( 'edd_settings_emails', 'edd_settings_emails', 'edd_settings_sanitize' );
+	register_setting( 'edd_settings_styles', 'edd_settings_styles', 'edd_settings_sanitize' );
+	register_setting( 'edd_settings_misc', 'edd_settings_misc', 'edd_settings_sanitize' );
 }
 add_action('admin_init', 'edd_register_settings');
 
@@ -555,7 +555,7 @@ function edd_settings_misc_description_callback() {
 */
 
 function edd_header_callback($args) { 
-    echo '';  
+	echo '';  
 }
 
 
@@ -570,15 +570,13 @@ function edd_header_callback($args) {
 */
 
 function edd_checkbox_callback($args) { 
- 
 	global $edd_options;
 
 	$checked = isset($edd_options[$args['id']]) ? checked(1, $edd_options[$args['id']], false) : '';
-    $html = '<input type="checkbox" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="1" ' . $checked . '/>';   
-    $html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';  
+	$html = '<input type="checkbox" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="1" ' . $checked . '/>';   
+	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';  
  
-    echo $html; 
- 
+	echo $html;
 }
 
 
@@ -593,16 +591,14 @@ function edd_checkbox_callback($args) {
 */
 
 function edd_multicheck_callback($args) { 
- 
 	global $edd_options;
 
-	foreach($args['options'] as $key => $option) :
-		if(isset($edd_options[$args['id']][$key])) { $enabled = $option; } else { $enabled = NULL; }
+	foreach( $args['options'] as $key => $option ):
+		if( isset( $edd_options[$args['id']][$key] ) ) { $enabled = $option; } else { $enabled = NULL; }
 		echo '<input name="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
 		echo '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
 	endforeach;
 	echo '<p class="description">' . $args['desc'] . '</p>';
-
 }
 
 
@@ -617,15 +613,13 @@ function edd_multicheck_callback($args) {
 */
 
 function edd_gateways_callback($args) { 
- 
 	global $edd_options;
 
-	foreach($args['options'] as $key => $option) :
-		if(isset($edd_options['gateways'][$key])) { $enabled = '1'; } else { $enabled = NULL; }
+	foreach( $args['options'] as $key => $option ):
+		if( isset( $edd_options['gateways'][$key] ) ) { $enabled = '1'; } else { $enabled = NULL; }
 		echo '<input name="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
 		echo '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']">' . $option['admin_label'] . '</label><br/>';
 	endforeach;
-
 }
 
 
@@ -640,16 +634,14 @@ function edd_gateways_callback($args) {
 */
 
 function edd_text_callback($args) { 
- 
 	global $edd_options;
 
-	if(isset($edd_options[$args['id']])) { $value = $edd_options[$args['id']]; } else { $value = isset($args['std']) ? $args['std'] : ''; }
-	$size = isset($args['size']) && !is_null($args['size']) ? $args['size'] : 'regular';
-    $html = '<input type="text" class="' . $args['size'] . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';   
-    $html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';  
+	if( isset( $edd_options[ $args['id'] ] ) ) { $value = $edd_options[ $args['id'] ]; } else { $value = isset( $args['std'] ) ? $args['std'] : ''; }
+	$size = isset( $args['size'] ) && !is_null($args['size']) ? $args['size'] : 'regular';
+	$html = '<input type="text" class="' . $args['size'] . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';   
+	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';  
  
-    echo $html; 
- 
+	echo $html; 
 }
 
 
@@ -664,19 +656,17 @@ function edd_text_callback($args) {
 */
 
 function edd_select_callback($args) { 
- 
 	global $edd_options;
 
-    $html = '<select id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"/>';   
-    foreach($args['options'] as $option => $name) {
-		$selected = isset($edd_options[$args['id']]) ? selected($option, $edd_options[$args['id']], false) : '';
+	$html = '<select id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"/>';   
+	foreach( $args['options'] as $option => $name ) {
+		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $option, $edd_options[$args['id']], false ) : '';
 		$html .= '<option value="' . $option . '" ' . $selected . '>' . $name . '</option>';
 	}
 	$html .= '</select>';
 	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';  
  
-    echo $html; 
- 
+	echo $html;
 }
 
 
@@ -691,19 +681,17 @@ function edd_select_callback($args) {
 */
 
 function edd_rich_editor_callback($args) { 
- 
 	global $edd_options, $wp_version;
 	
-	if(isset($edd_options[$args['id']])) { $value = $edd_options[$args['id']]; } else { $value = isset($args['std']) ? $args['std'] : ''; }
-    if($wp_version >= 3.3 && function_exists('wp_editor')) {
-		$html = wp_editor($value, 'edd_settings_' . $args['section'] . '[' . $args['id'] . ']', array('textarea_name' => 'edd_settings_' . $args['section'] . '[' . $args['id'] . ']'));
-    } else {
+	if( isset( $edd_options[ $args['id'] ] ) ) { $value = $edd_options[ $args['id'] ]; } else { $value = isset( $args['std'] ) ? $args['std'] : ''; }
+	if( $wp_version >= 3.3 && function_exists('wp_editor')) {
+		$html = wp_editor( $value, 'edd_settings_' . $args['section'] . '[' . $args['id'] . ']', array( 'textarea_name' => 'edd_settings_' . $args['section'] . '[' . $args['id'] . ']' ) );
+	} else {
 		$html = '<textarea class="large-text" rows="10" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']">' . esc_textarea( $value ) . '</textarea>';
 	}	
 	$html .= '<br/><label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';  
  
-    echo $html;
- 
+	echo $html;
 }
 
 
@@ -718,17 +706,15 @@ function edd_rich_editor_callback($args) {
 */
 
 function edd_upload_callback($args) { 
- 
 	global $edd_options;
 
-	if(isset($edd_options[$args['id']])) { $value = $edd_options[$args['id']]; } else { $value = isset($args['std']) ? $args['std'] : ''; }
-	$size = isset($args['size']) && !is_null($args['size']) ? $args['size'] : 'regular';
-    $html = '<input type="text" class="' . $args['size'] . '-text edd_upload_field" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';   
-    $html .= '<span>&nbsp;<input type="button" class="edd_upload_image_button button-secondary" value="' . __('Upload File', 'edd') . '"/></span>';
-    $html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';  
+	if( isset( $edd_options[ $args['id'] ] ) ) { $value = $edd_options[$args['id']]; } else { $value = isset($args['std']) ? $args['std'] : ''; }
+	$size = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
+	$html = '<input type="text" class="' . $args['size'] . '-text edd_upload_field" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';   
+	$html .= '<span>&nbsp;<input type="button" class="edd_upload_image_button button-secondary" value="' . __('Upload File', 'edd') . '"/></span>';
+	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';  
  
-    echo $html; 
- 
+	echo $html;
 }
 
 
@@ -742,10 +728,8 @@ function edd_upload_callback($args) {
  * @return      void
 */
 
-function edd_hook_callback($args) { 
- 	
-	do_action('edd_' . $args['id']);
- 
+function edd_hook_callback( $args ) {
+	do_action( 'edd_' . $args['id'] );
 }
 
 
@@ -762,7 +746,7 @@ function edd_hook_callback($args) {
 */
 
 function edd_settings_sanitize( $input ) {
-	add_settings_error('edd-notices', '', __('Settings Updated', 'edd'), 'updated');
+	add_settings_error( 'edd-notices', '', __('Settings Updated', 'edd'), 'updated' );
 	return $input;
 }
 
@@ -779,11 +763,11 @@ function edd_settings_sanitize( $input ) {
 */
 
 function edd_get_settings() {
-	$general_settings 	= is_array(get_option('edd_settings_general')) 	? get_option('edd_settings_general') 	: array();
-	$gateway_settings 	= is_array(get_option('edd_settings_gateways')) ? get_option('edd_settings_gateways') 	: array();
-	$email_settings 	= is_array(get_option('edd_settings_emails')) 	? get_option('edd_settings_emails') 	: array();
-	$style_settings 	= is_array(get_option('edd_settings_styles')) 	? get_option('edd_settings_styles') 	: array();
-	$misc_settings 		= is_array(get_option('edd_settings_misc')) 	? get_option('edd_settings_misc') 		: array();
+	$general_settings 	= is_array( get_option( 'edd_settings_general' ) ) 	? get_option( 'edd_settings_general' ) 	: array();
+	$gateway_settings 	= is_array( get_option( 'edd_settings_gateways' ) ) ? get_option( 'edd_settings_gateways' ) : array();
+	$email_settings 	= is_array( get_option( 'edd_settings_emails' ) ) 	? get_option( 'edd_settings_emails' ) 	: array();
+	$style_settings 	= is_array( get_option( 'edd_settings_styles' ) ) 	? get_option( 'edd_settings_styles' ) 	: array();
+	$misc_settings 		= is_array( get_option( 'edd_settings_misc' ) ) 	? get_option( 'edd_settings_misc' ) 	: array();
 
-	return array_merge($general_settings, $gateway_settings, $email_settings, $style_settings, $misc_settings);
+	return array_merge( $general_settings, $gateway_settings, $email_settings, $style_settings, $misc_settings );
 }

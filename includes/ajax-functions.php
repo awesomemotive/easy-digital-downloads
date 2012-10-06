@@ -12,7 +12,6 @@
 */
 
 
-
 /**
  * AJAX enabled
  *
@@ -139,7 +138,8 @@ add_action( 'wp_ajax_nopriv_edd_apply_discount', 'edd_ajax_validate_discount' );
 */
 
 function edd_load_checkout_login_fields() {
-	echo edd_get_login_fields(); die();
+	echo edd_get_login_fields();
+	die();
 }
 add_action('wp_ajax_nopriv_checkout_login', 'edd_load_checkout_login_fields');
 
@@ -155,7 +155,8 @@ add_action('wp_ajax_nopriv_checkout_login', 'edd_load_checkout_login_fields');
 */
 
 function edd_load_checkout_register_fields() {
-	echo edd_get_register_fields(); die();
+	echo edd_get_register_fields();
+	die();
 }
 add_action('wp_ajax_nopriv_checkout_register', 'edd_load_checkout_register_fields');
 
@@ -173,7 +174,7 @@ add_action('wp_ajax_nopriv_checkout_register', 'edd_load_checkout_register_field
 function edd_ajax_get_download_title() {
 	if( isset( $_POST['download_id'] ) ) {
 		$title = get_the_title( $_POST['download_id'] );
-		if($title) {
+		if( $title ) {
 			echo $title;
 		} else {
 			echo 'fail';
@@ -196,9 +197,9 @@ add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_titl
 function edd_get_ajax_url() {
 	$site_url = get_site_url();
 	$admin_url = admin_url( 'admin-ajax.php' );
-	if ( preg_match( '/^https/', $admin_url ) && ! preg_match( '/^https/', $site_url ) ) {
+	if( preg_match( '/^https/', $admin_url ) && ! preg_match( '/^https/', $site_url ) ) {
 		$admin_url = preg_replace( '/^https/', 'http', $admin_url );
-	} else if ( preg_match( '/^https/', $site_url ) && ! preg_match( '/^https/', $admin_url ) ) {
+	} else if( preg_match( '/^https/', $site_url ) && ! preg_match( '/^https/', $admin_url ) ) {
 		$admin_url = preg_replace( '/^http/', 'https', $admin_url );
 	}
 	return $admin_url;
