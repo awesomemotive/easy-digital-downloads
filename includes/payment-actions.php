@@ -223,7 +223,7 @@ add_action( 'edd_update_payment_status', 'edd_clear_user_history_cache', 10, 3 )
 
 /**
  * Updates all old payments, prior to 1.2, with new 
- * meta for the total purcahse amount
+ * meta for the total purchase amount
  *
  * This is so that payments can be queried by their totals
  *
