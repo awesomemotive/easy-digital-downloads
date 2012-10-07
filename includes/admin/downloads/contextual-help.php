@@ -13,7 +13,7 @@
  * Download contextual help.
  *
  * Adds help for default metaboxes, as well as notes about using the shortcodes.
- * Links to Github, themes, and extensions
+ * Links to GitHub, themes, and extensions
  *
  * @access      private
  * @since       1.2.3
@@ -29,7 +29,7 @@ function edd_downloads_contextual_help() {
 		'<p><strong>' . sprintf( __( 'For more information:', 'edd' ) . '</strong></p>' .
 		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'edd' ), esc_url( 'https://easydigitaldownloads.com/documentation/' ) ) ) . '</p>' .
 		'<p>' . sprintf( 
-					__( '<a href="%s">Post an issue</a> on <a href="%s">Github</a>. View <a href="%s">extensions</a> or <a href="%s">themes</a>.', 'edd' ),
+					__( '<a href="%s">Post an issue</a> on <a href="%s">GitHub</a>. View <a href="%s">extensions</a> or <a href="%s">themes</a>.', 'edd' ),
 					esc_url( 'https://github.com/pippinsplugins/Easy-Digital-Downloads/issues' ), 
 					esc_url( 'https://github.com/pippinsplugins/Easy-Digital-Downloads' ),
 					esc_url( 'https://easydigitaldownloads.com/extensions/' ),
