@@ -22,7 +22,7 @@
 
 function edd_add_ons_init() {
 	global $edd_add_ons_page;
-	add_action( 'load-'.$edd_add_ons_page, 'edd_add_ons_check_feed' );
+	add_action( 'load-' . $edd_add_ons_page, 'edd_add_ons_check_feed' );
 }
 add_action( 'admin_menu', 'edd_add_ons_init');
 
@@ -40,7 +40,7 @@ add_action( 'admin_menu', 'edd_add_ons_init');
 function edd_add_ons_check_feed() {
 	global $edd_addons_feed_content;
 	$screen = get_current_screen();
-	if (isset( $screen->base ) && $screen->base === 'download_page_edd-addons') {
+	if( isset( $screen->base ) && $screen->base === 'download_page_edd-addons' ) {
 		$cache = edd_add_ons_get_feed();
 		if ( false === $cache ) {
 			add_action( 'admin_notices', 'edd_admin_addons_notices' );
@@ -66,11 +66,11 @@ function edd_add_ons_page() {
 
 	ob_start(); ?>
 	<div class="wrap" id="edd-add-ons">
-		<h2><?php _e('Add Ons for Easy Digital Downloads', 'edd'); ?></h2>
-		<p><?php _e('These add-ons extend the functionality of Easy Digital Downloads.', 'edd'); ?></p>
+		<h2><?php _e( 'Add Ons for Easy Digital Downloads', 'edd' ); ?></h2>
+		<p><?php _e( 'These add-ons extend the functionality of Easy Digital Downloads.', 'edd' ); ?></p>
 		<?php echo $edd_addons_feed_content; ?>
 		<p class="edd-browse-all">
-			<a href="http://easydigitaldownloads.com/extensions/?ref=1" class="button-primary" title="<?php _e('Browse All Extensions', 'edd'); ?>" target="_blank"><?php _e('Browse All Extensions', 'edd'); ?></a>
+			<a href="http://easydigitaldownloads.com/extensions/?ref=1" class="button-primary" title="<?php _e( 'Browse All Extensions', 'edd' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'edd' ); ?></a>
 		</p>
 	</div>
 	<?php
@@ -89,12 +89,12 @@ function edd_add_ons_page() {
 */
 
 function edd_add_ons_get_feed() {
-	if (false === ( $cache = get_transient('easydigitaldownloads_add_ons_feed') ) ) {
-		$feed = wp_remote_get('http://easydigitaldownloads.com/?feed=extensions');
+	if( false === ( $cache = get_transient( 'easydigitaldownloads_add_ons_feed' ) ) ) {
+		$feed = wp_remote_get( 'http://easydigitaldownloads.com/?feed=extensions' );
 		if( !is_wp_error( $feed ) ) {
-			if (isset($feed['body']) && strlen($feed['body'])>0) {
+			if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
 				$cache = wp_remote_retrieve_body( $feed );
-				set_transient('easydigitaldownloads_add_ons_feed', $cache, 3600);
+				set_transient( 'easydigitaldownloads_add_ons_feed', $cache, 3600 );
 			}
 		}
 	}
