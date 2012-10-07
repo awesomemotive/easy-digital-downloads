@@ -104,15 +104,15 @@ function edd_report_views() {
 		<div class="tablenav top">
 			<div class="alignleft actions">
 				<span><?php _e( 'Reporting Views', 'edd' ); ?></span>
-		       	<input type="hidden" name="post_type" value="download"/>
-		       	<input type="hidden" name="page" value="edd-reports"/>
-		       	<select id="edd-reports-view" name="view">
-		       		<?php foreach( $views as $view_id => $label ) : ?>
-		       			<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
-			       	<?php endforeach; ?>
-		       	</select>
-		       	<?php do_action( 'edd_report_view_actions' ); ?>
-		       	<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
+				<input type="hidden" name="post_type" value="download"/>
+				<input type="hidden" name="page" value="edd-reports"/>
+				<select id="edd-reports-view" name="view">
+					<?php foreach( $views as $view_id => $label ): ?>
+						<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
+					<?php endforeach; ?>
+				</select>
+				<?php do_action( 'edd_report_view_actions' ); ?>
+				<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
 			</div>
 		</div>
 	</form>
@@ -129,13 +129,11 @@ function edd_report_views() {
 */
 
 function edd_reports_downloads_table() {
-
 	include( dirname( __FILE__ ) . '/class-download-reports-table.php' );
 
 	$downloads_table = new EDD_Download_Reports_Table();
-    $downloads_table->prepare_items();
-    $downloads_table->display();
-
+	$downloads_table->prepare_items();
+	$downloads_table->display();
 }
 add_action( 'edd_reports_view_downloads', 'edd_reports_downloads_table' );
 
@@ -149,13 +147,11 @@ add_action( 'edd_reports_view_downloads', 'edd_reports_downloads_table' );
 */
 
 function edd_reports_customers_table() {
-
 	include( dirname( __FILE__ ) . '/class-customer-reports-table.php' );
 
 	$downloads_table = new EDD_Customer_Reports_Table();
-    $downloads_table->prepare_items();
-    $downloads_table->display();
-
+	$downloads_table->prepare_items();
+	$downloads_table->display();
 }
 add_action( 'edd_reports_view_customers', 'edd_reports_customers_table' );
 
@@ -169,10 +165,8 @@ add_action( 'edd_reports_view_customers', 'edd_reports_customers_table' );
 */
 
 function edd_reports_earnings() {
-
 	edd_report_views();
-	edd_reports_graph();	
-
+	edd_reports_graph();
 }
 add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
 
@@ -186,7 +180,6 @@ add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
 */
 
 function edd_reports_tab_export() {
-	
 	?>
 	<div class="metabox-holder">
 		<div id="post-body">
