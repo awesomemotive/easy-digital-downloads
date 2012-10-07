@@ -23,8 +23,8 @@
 function edd_change_downloads_upload_dir() {
     global $pagenow;
 
-    if ( ! empty( $_POST['post_id'] ) && ( 'async-upload.php' == $pagenow || 'media-upload.php' == $pagenow ) ) {
-        if ( 'download' == get_post_type( $_REQUEST['post_id'] ) ) {
+    if( !empty( $_POST['post_id'] ) && ( 'async-upload.php' == $pagenow || 'media-upload.php' == $pagenow ) ) {
+        if( 'download' == get_post_type( $_REQUEST['post_id'] ) ) {
         
             $wp_upload_dir = wp_upload_dir();
             $upload_path = $wp_upload_dir['basedir'] . '/edd' . $wp_upload_dir['subdir'];
@@ -32,7 +32,7 @@ function edd_change_downloads_upload_dir() {
             // We don't want users snooping in the EDD root, so let's add htacess there, first
             // Creating the directory if it doesn't already exist.
             $rules = 'Options -Indexes';
-            if( ! @file_get_contents( $wp_upload_dir['basedir'] . '/edd/.htaccess' ) ) {
+            if( !@file_get_contents( $wp_upload_dir['basedir'] . '/edd/.htaccess' ) ) {
             	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd' );
             } // end if
             @file_put_contents( $wp_upload_dir['basedir'] . '/edd/.htaccess', $rules );
@@ -42,7 +42,7 @@ function edd_change_downloads_upload_dir() {
 
                 $folder = '.';
                 if( !file_exists( $folder . 'index.php' ) ) {
-                    @file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// silence is golden' );
+                    @file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
                 }
  
             }
@@ -50,7 +50,7 @@ function edd_change_downloads_upload_dir() {
         }
     }
 }
-add_action('admin_init', 'edd_change_downloads_upload_dir', 999);
+add_action( 'admin_init', 'edd_change_downloads_upload_dir', 999 );
 
 
 /**
@@ -63,7 +63,7 @@ add_action('admin_init', 'edd_change_downloads_upload_dir', 999);
  * @return      array
 */
 
-function edd_set_upload_dir($upload) {
+function edd_set_upload_dir( $upload ) {
 	$upload['subdir']	= '/edd' . $upload['subdir'];
 	$upload['path'] = $upload['basedir'] . $upload['subdir'];
 	$upload['url']	= $upload['baseurl'] . $upload['subdir'];
@@ -83,7 +83,6 @@ function edd_set_upload_dir($upload) {
 */
 
 function edd_create_protection_files() {
-
     if( false === get_transient( 'edd_check_protection_files' ) ) {
         $wp_upload_dir = wp_upload_dir();
         $upload_path = $wp_upload_dir['basedir'] . '/edd';
@@ -92,7 +91,7 @@ function edd_create_protection_files() {
         
         // top level blank index.php
         if( !file_exists( $upload_path . '/index.php' ) ) {
-            @file_put_contents( $upload_path . '/index.php', '<?php' . PHP_EOL . '// silence is golden' );
+            @file_put_contents( $upload_path . '/index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
         }
 
         // top level .htaccess file
@@ -109,14 +108,14 @@ function edd_create_protection_files() {
         foreach( $folders as $folder ) {    
             // create index.php, if it doesn't exist
             if( !file_exists( $folder . 'index.php' ) ) {
-                @file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// silence is golden' );
+                @file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
             }
         }
         // only have this run the first time. This is just to create .htaccess files in existing folders
         set_transient( 'edd_check_protection_files', true, 2678400 );
     }
 }
-add_action('admin_init', 'edd_create_protection_files');
+add_action( 'admin_init', 'edd_create_protection_files' );
 
 
 /**
@@ -128,14 +127,14 @@ add_action('admin_init', 'edd_create_protection_files');
  * @return      array
 */
 
-function edd_scan_folders($path = '', $return = array() ) {
-    $path = $path == ''? dirname(__FILE__) : $path;
-    $lists = @scandir($path);
+function edd_scan_folders( $path = '', $return = array() ) {
+    $path = $path == ''? dirname( __FILE__ ) : $path;
+    $lists = @scandir( $path );
 
     if( !empty( $lists ) ) {
         foreach( $lists as $f ) { 
 
-            if( is_dir( $path . DIRECTORY_SEPARATOR . $f ) && $f != "." && $f != "..") {
+            if( is_dir( $path . DIRECTORY_SEPARATOR . $f ) && $f != "." && $f != ".." ) {
                 if( !in_array( $path . DIRECTORY_SEPARATOR . $f, $return ) )
                     $return[] = trailingslashit( $path . DIRECTORY_SEPARATOR . $f );
 
@@ -146,4 +145,3 @@ function edd_scan_folders($path = '', $return = array() ) {
     }
     return $return;
 }
-

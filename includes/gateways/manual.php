@@ -23,7 +23,7 @@
 function edd_manual_remove_cc_form() {
 	// we only register the action so that the default CC form is not shown
 }
-add_action('edd_manual_cc_form', 'edd_manual_remove_cc_form');
+add_action( 'edd_manual_cc_form', 'edd_manual_remove_cc_form' );
 
 
 /**
@@ -34,7 +34,7 @@ add_action('edd_manual_cc_form', 'edd_manual_remove_cc_form');
  * @return      void
 */
 
-function edd_manual_payment($purchase_data) {
+function edd_manual_payment( $purchase_data ) {
 	global $edd_options;
 
 	/* 
@@ -66,16 +66,16 @@ function edd_manual_payment($purchase_data) {
 	);
 	
 	// record the pending payment
-	$payment = edd_insert_payment($payment);
+	$payment = edd_insert_payment( $payment );
 		
 	if($payment) {
-		edd_update_payment_status($payment, 'publish');
+		edd_update_payment_status( $payment, 'publish' );
 		// empty the shopping cart
 		edd_empty_cart();
 		edd_send_to_success_page();
 	} else {
 		// if errors are present, send the user back to the purchase page so they can be corrected
-		edd_send_back_to_checkout('?payment-mode=' . $purchase_data['post_data']['edd-gateway']);
+		edd_send_back_to_checkout( '?payment-mode=' . $purchase_data['post_data']['edd-gateway'] );
 	}
 }
-add_action('edd_gateway_manual', 'edd_manual_payment');
+add_action( 'edd_gateway_manual', 'edd_manual_payment' );

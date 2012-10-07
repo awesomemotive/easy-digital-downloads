@@ -10,7 +10,7 @@
 */
 
 if ( !isset( $_GET['discount'] ) || !is_numeric( $_GET['discount'] ) ) {
-	wp_die(__( 'Something went wrong.', 'edd' ), __( 'Error', 'edd' ) );
+	wp_die( __( 'Something went wrong.', 'edd' ), __( 'Error', 'edd' ) );
 }
 $discount = edd_get_discount( $_GET['discount']);
 ?>

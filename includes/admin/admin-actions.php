@@ -26,4 +26,4 @@ function edd_process_actions() {
 		do_action( 'edd_' . $_GET['edd-action'], $_GET );
 	}
 }
-add_action('admin_init', 'edd_process_actions');
+add_action( 'admin_init', 'edd_process_actions' );
