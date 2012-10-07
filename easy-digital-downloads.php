@@ -28,16 +28,16 @@ along with Easy Digital Downloads. If not, see <http://www.gnu.org/licenses/>.
 |--------------------------------------------------------------------------
 */
 
-// plugin folder url
-if( ! defined( 'EDD_PLUGIN_URL' ) ) {
+// Plugin Folder URL
+if( !defined( 'EDD_PLUGIN_URL' ) ) {
 	define( 'EDD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 }
-// plugin folder path
-if( ! defined( 'EDD_PLUGIN_DIR' ) ) {
+// Plugin Folder Path
+if( !defined( 'EDD_PLUGIN_DIR' ) ) {
 	define( 'EDD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 }
-// plugin root file
-if( ! defined( 'EDD_PLUGIN_FILE' ) ) {
+// Plugin Root File
+if( !defined( 'EDD_PLUGIN_FILE' ) ) {
 	define( 'EDD_PLUGIN_FILE', __FILE__ );
 }
 
@@ -56,7 +56,6 @@ global $edd_options;
 */
 
 function edd_textdomain() {
-
 	// Set filter for plugin's languages directory
 	$edd_lang_dir = dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/';
 	$edd_lang_dir = apply_filters( 'edd_languages_directory', $edd_lang_dir );
@@ -101,7 +100,7 @@ include_once( EDD_PLUGIN_DIR . 'includes/email-actions.php' );
 include_once( EDD_PLUGIN_DIR . 'includes/error-tracking.php' );
 include_once( EDD_PLUGIN_DIR . 'includes/user-functions.php' );
 include_once( EDD_PLUGIN_DIR . 'includes/query-filters.php' );
-if ( is_admin()) {
+if( is_admin() ) {
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/add-ons.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/admin-notices.php' );

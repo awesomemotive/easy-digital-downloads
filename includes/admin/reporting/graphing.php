@@ -19,7 +19,6 @@
 */
 
 function edd_reports_graph() {
-
 	// retrieve the queried dates
 	$dates = edd_get_report_dates();
 
@@ -73,7 +72,7 @@ function edd_reports_graph() {
 	   					$i = $dates['m_start'];
 						while( $i <= $dates['m_end'] ) : 
 							if( $day_by_day ) :
-								$num_of_days 	= cal_days_in_month(CAL_GREGORIAN, $i, $dates['year'] );
+								$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
 								$d 				= 1;
 								while( $d <= $num_of_days ) : $date = mktime( 0, 0, 0, $i, $d, $dates['year'] ); ?>
 									[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( $d, $i, $dates['year'] ); ?>],
@@ -98,7 +97,7 @@ function edd_reports_graph() {
 	   					$i = $dates['m_start'];
 						while( $i <= $dates['m_end'] ) : 
 							if( $day_by_day ) :
-								$num_of_days 	= cal_days_in_month(CAL_GREGORIAN, $i, $dates['year'] );
+								$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
 								$d 				= 1;
 								while( $d <= $num_of_days ) : $date = mktime( 0, 0, 0, $i, $d, $dates['year'] ); ?>
 									[<?php echo $date * 1000; ?>, <?php echo edd_get_earnings_by_date( $d, $i, $dates['year'] ); ?>],
@@ -198,7 +197,6 @@ function edd_reports_graph() {
 */
 
 function edd_reports_graph_controls() {
-
 	$date_options = apply_filters( 'edd_report_date_options', array(
 		'this_month' 	=> __( 'This Month', 'edd' ),
 		'last_month' 	=> __( 'Last Month', 'edd' ),
@@ -271,7 +269,6 @@ function edd_reports_graph_controls() {
 */
 
 function edd_get_report_dates() {
-
 	$dates = array();
 
 	$dates['range']		= isset( $_GET['range'] )	? $_GET['range']	: 'this_month';
@@ -395,11 +392,8 @@ function edd_get_report_dates() {
 */
 
 function edd_parse_report_dates( $data ) {
-
 	$dates = edd_get_report_dates();
 
 	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=earnings' ) ) ); exit;
-
 }
 add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
-
