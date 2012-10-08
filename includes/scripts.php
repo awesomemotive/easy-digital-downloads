@@ -45,14 +45,14 @@ function edd_load_scripts() {
 				'empty_cart_message' 		=> __('Your cart is empty', 'edd'), // item already in the cart message
 				'loading' 					=> __('Loading', 'edd') , // general loading message
 				'ajax_loader' 				=> EDD_PLUGIN_URL . 'includes/images/loading.gif', // ajax loading image
-				'checkout_page' 			=> isset( $edd_options['purchase_page'] ) ? get_permalink($edd_options['purchase_page']) : '',
+				'checkout_page' 			=> edd_get_checkout_uri(),
 				'permalinks' 				=> get_option( 'permalink_structure' ) ? '1' : '0'
 			)
 		);
 	}
 
 	// Load jQuery validation
-	if( isset( $edd_options['jquery_validation'] ) && is_page( $edd_options['purchase_page'] ) ) {
+	if( isset( $edd_options['jquery_validation'] ) && edd_is_checkout() ) {
 		wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'includes/js/jquery.validate.min.js' );
 		wp_enqueue_script( 'edd-validation', EDD_PLUGIN_URL . 'includes/js/form-validation.js' );
 		$required = array( 'firstname' => true, 'lastname' => true );
