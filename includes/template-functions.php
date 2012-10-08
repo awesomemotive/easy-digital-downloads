@@ -161,6 +161,32 @@ function edd_purchase_variable_pricing( $download_id ) {
 }
 add_action( 'edd_purchase_variable_pricing', 'edd_purchase_variable_pricing' );
 
+/**
+ * Before Download Content
+ *
+ * Adds an action to the begining of download post content 
+ * that can be hooked to by other functions
+ *
+ * @access      private
+ * @since       1.0.8
+ * @param       $content string the the_content field of the download object
+ * @return      $content string the content with any additional data attached
+*/
+
+function edd_before_download_content( $content ) {
+	
+	global $post;
+	
+	if ( $post->post_type == 'download' && is_singular() && is_main_query() ) {
+		ob_start();
+		$content .= ob_get_clean();
+		do_action( 'edd_before_download_content', $post->ID );
+	}
+	
+	return $content;
+	
+}
+add_filter( 'the_content', 'edd_before_download_content' );
 
 /**
  * After Download Content
