@@ -29,7 +29,7 @@ if( $purchases ) :
 						$price_id 		= isset($download['options']['price_id']) ? $download['options']['price_id'] : null;
 						$download_files = edd_get_download_files( $id, $price_id );
 
-						do_action( 'edd_download_history_row_start', $post->ID );
+						do_action( 'edd_download_history_row_start', $post->ID, $id );
 
 						echo '<td class="edd_download_download_name">' . get_the_title( $id ) . '</td>';
 
