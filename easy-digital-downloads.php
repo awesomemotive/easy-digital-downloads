@@ -27,7 +27,10 @@ along with Easy Digital Downloads. If not, see <http://www.gnu.org/licenses/>.
 | CONSTANTS
 |--------------------------------------------------------------------------
 */
-
+// Plugin Root File
+if( !defined( 'EDD_VERSION' ) ) {
+	define( 'EDD_VERSION', '1.3' );
+}
 // Plugin Folder URL
 if( !defined( 'EDD_PLUGIN_URL' ) ) {
 	define( 'EDD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
