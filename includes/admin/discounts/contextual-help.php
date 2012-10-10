@@ -36,7 +36,7 @@ function edd_discounts_contextual_help() {
 
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-discount-general',
-		'title'	    => __( 'General' ),
+		'title'	    => __( 'General', 'edd' ),
 		'content'	=> 
 			'<p>' . __( 'Discount codes allow you to offer buyers special discounts by having them enter predefined codes during checkout.', 'edd' ) . '</p>' . 
 			'<p>' . __( 'Discount codes that are set to "inactive" cannot be redeemed.', 'edd' ) . '</p>' . 
@@ -45,7 +45,7 @@ function edd_discounts_contextual_help() {
 
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-discount-add',
-		'title'	    => __( 'Adding Discounts' ),
+		'title'	    => __( 'Adding Discounts', 'edd' ),
 		'content'	=> 
 			'<p>' . __( 'You can create any number of discount codes easily from this page.', 'edd' ) . '</p>' . 
 			'<p>' . __( 'Discount codes have several options:', 'edd' ) . '</p>' . 
