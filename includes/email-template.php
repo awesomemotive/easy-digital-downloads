@@ -1,29 +1,92 @@
 <?php
 /**
- * Email Template
- *
- * @package     Easy Digital Downloads
- * @subpackage  Email Template
- * @copyright   Copyright (c) 2012, Pippin Williamson
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0.8.2
+* Email Template
+*
+* @package Easy Digital Downloads
+* @subpackage Email Template
+* @copyright Copyright (c) 2012, Pippin Williamson
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License
+* @since 1.0.8.2
 */
 
 
 /**
- * Get Email Templates
- *
- * @access     private
- * @since      1.0.8.2
- * @return     array
+* Get Email Templates
+*
+* @access private
+* @since 1.0.8.2
+* @return array
 */
 
 function edd_get_email_templates() {
-	$templates = array(
-		'default' => __('Default Template', 'edd'),
-		'none' => __('No template, plain text only', 'edd')
-	);
-	return apply_filters( 'edd_email_templates', $templates );
+$templates = array(
+'default' => __('Default Template', 'edd'),
+'none' => __('No template, plain text only', 'edd')
+);
+return apply_filters( 'edd_email_templates', $templates );
+}
+
+
+/**
+* Email Template Tags
+*
+* @access private
+* @since 1.0
+* @return string
+*/
+
+function edd_email_templage_tags($message, $payment_data, $payment_id) {
+
+$user_info = maybe_unserialize( $payment_data['user_info'] );
+
+if( isset( $user_info['id'] ) && $user_info['id'] > 0 ) {
+$user_data = get_userdata($user_info['id']);
+$name = $user_data->display_name;
+} elseif( isset( $user_info['first_name'] ) ) {
+$name = $user_info['first_name'];
+} else {
+$name = $user_info['email'];
+}
+
+$download_list = '<ul>';
+$downloads = edd_get_downloads_of_purchase( $payment_id, $payment_data );
+if( $downloads ) {
+
+$show_names = apply_filters( 'edd_email_show_names', true );
+
+foreach( $downloads as $download) {
+
+$id = isset( $payment_data['cart_details'] ) ? $download['id'] : $download;
+
+if( $show_names ) {
+$download_list .= '<li>' . get_the_title($id) . '<br/>';
+$download_list .= '<ul>';
+}
+
+$price_id = isset( $download['options']['price_id'] ) ? $download['options']['price_id'] : null;
+
+$files = edd_get_download_files( $id, $price_id );
+
+if( $files ) {
+foreach( $files as $filekey => $file ) {
+$download_list .= '<li>';
+$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $id) ;
+$download_list .= '<a href="' . esc_url( $file_url ) . '">' . $file['name'] . '</a>';
+
+$download_list .= '</li>';
+}
+}
+if( $show_names ) {
+$download_list .= '</ul>';
+}
+
+if ( '' != edd_get_product_notes( $id ) )
+$download_list .= ' &mdash; <small>' . edd_get_product_notes( $id ) . '</small>';
+
+if( $show_names ) {
+$download_list .= '</li>';
+}
+}
 }
 $download_list .= '</ul>';
 
