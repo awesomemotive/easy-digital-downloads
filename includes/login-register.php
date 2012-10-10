@@ -18,24 +18,24 @@
  * @return      string
 */
 
-function edd_login_form($redirect = '') {
+function edd_login_form( $redirect = '' ) {
 	global $edd_options, $post;
 
-	if($redirect == '') {
-		if (is_singular()) :
+	if( $redirect == '' ) {
+		if ( is_singular() ):
 			$redirect = home_url();
 		else :
 			$redirect = 'http';
-			if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") $redirect .= "s";
+			if( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on") $redirect .= "s";
 			$redirect .= "://";
-			if ($_SERVER["SERVER_PORT"] != "80") $redirect .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+			if( $_SERVER["SERVER_PORT"] != "80" ) $redirect .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
 			else $redirect .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 		endif;	
 	}
 	
 	ob_start();		
 	
-	if(!is_user_logged_in()) { ?>
+	if( !is_user_logged_in() ) { ?>
 		<?php
 		// show any error messages after form submission
 		edd_print_errors(); ?>
@@ -80,29 +80,30 @@ function edd_login_form($redirect = '') {
  * @return      void
 */
 
-function edd_process_login_form($data) {
-	if(wp_verify_nonce($data['edd_login_nonce'], 'edd-login-nonce')) {
-		$user_data = get_user_by('login', $data['edd_user_login']);
-		if($user_data) {
+function edd_process_login_form( $data ) {
+	if( wp_verify_nonce( $data['edd_login_nonce'], 'edd-login-nonce' ) ) {
+		$user_data = get_user_by( 'login', $data['edd_user_login'] );
+		if( $user_data ) {
 			$user_ID = $user_data->ID;
 			$user_email = $user_data->user_email;
-			if(wp_check_password($data['edd_user_pass'], $user_data->user_pass, $user_data->ID)) {
-				edd_log_user_in($user_data->ID, $data['edd_user_login'], $data['edd_user_pass']);
+			if( wp_check_password( $data['edd_user_pass'], $user_data->user_pass, $user_data->ID ) ) {
+				edd_log_user_in( $user_data->ID, $data['edd_user_login'], $data['edd_user_pass'] );
 			} else {
-				edd_set_error('password_incorrect', __('The password you entered is incorrect', 'edd'));
+				edd_set_error( 'password_incorrect', __('The password you entered is incorrect', 'edd') );
 			}
 		} else {
-			edd_set_error('username_incorrect', __('The username you entered does not exist', 'edd'));
+			edd_set_error( 'username_incorrect', __('The username you entered does not exist', 'edd') );
 		}
 		// check for errors and redirect if none present
 		$errors = edd_get_errors();
-		if(!$errors) {
-			$redirect = apply_filters('edd_login_redirect', $data['edd_redirect'], $user_ID);
-			wp_redirect($redirect); exit;
+		if( !$errors ) {
+			$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], $user_ID );
+			wp_redirect( $redirect );
+			exit;
 		}
 	}
 }
-add_action('edd_user_login', 'edd_process_login_form');
+add_action( 'edd_user_login', 'edd_process_login_form' );
 
 
 /**
@@ -113,9 +114,9 @@ add_action('edd_user_login', 'edd_process_login_form');
  * @return      void
 */
 
-function edd_log_user_in($user_id, $user_login, $user_pass) {
-	wp_set_auth_cookie($user_id);
-	wp_set_current_user($user_id, $user_login);	
-	do_action('wp_login', $user_login);
-	do_action('edd_log_user_in', $user_id, $user_login, $user_pass);
+function edd_log_user_in( $user_id, $user_login, $user_pass ) {
+	wp_set_auth_cookie( $user_id );
+	wp_set_current_user( $user_id, $user_login );
+	do_action( 'wp_login', $user_login );
+	do_action( 'edd_log_user_in', $user_id, $user_login, $user_pass );
 }

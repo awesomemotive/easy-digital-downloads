@@ -1,6 +1,6 @@
 <?php
 $purchases = edd_get_users_purchases();	
-if($purchases) :
+if( $purchases ) :
 	do_action( 'edd_before_download_history' );
 	?>
 	<table id="edd_user_history">
@@ -29,7 +29,7 @@ if($purchases) :
 						$price_id 		= isset($download['options']['price_id']) ? $download['options']['price_id'] : null;
 						$download_files = edd_get_download_files( $id, $price_id );
 
-						do_action( 'edd_download_history_row_start', $post->ID );
+						do_action( 'edd_download_history_row_start', $post->ID, $id );
 
 						echo '<td class="edd_download_download_name">' . get_the_title( $id ) . '</td>';
 
@@ -41,18 +41,21 @@ if($purchases) :
 								foreach($download_files as $filekey => $file) {
 
 									$download_url = edd_get_download_file_url( $purchase_data['key'], $purchase_data['email'], $filekey, $id );
+									
 									echo'<div class="edd_download_file"><a href="' . esc_url( $download_url ) . '" class="edd_download_file_link">' . esc_html( $file['name'] ) . '</a></div>';
 								
+									do_action( 'edd_download_history_files', $filekey, $file, $id, $post->ID, $purchase_data );
+
 								} 
 							} else {
-								_e('No downloadable files found.', 'edd');
+								_e( 'No downloadable files found.', 'edd' );
 							}
 
 							echo '</td>';
 
 						} // end if ! edd_no_redownload()
 
-						do_action('edd_download_history_row_end', $post->ID);
+						do_action( 'edd_download_history_row_end', $post->ID, $id );
 
 					echo '</tr>';
 

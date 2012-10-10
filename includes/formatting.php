@@ -22,10 +22,10 @@
 */
 
 function edd_sanitize_amount( $amount ) {
-
 	global $edd_options;
-	$thousands_sep 	= isset($edd_options['thousands_separator']) 	? $edd_options['thousands_separator'] 	: ',';
-	$decimal_sep 	= isset($edd_options['decimal_separator']) 		? $edd_options['decimal_separator'] 	: '.';
+
+	$thousands_sep = isset( $edd_options['thousands_separator'] ) ? $edd_options['thousands_separator'] : ',';
+	$decimal_sep   = isset( $edd_options['decimal_separator'] )   ? $edd_options['decimal_separator'] 	 : '.';
 
 	// sanitize the amount
 	if( $thousands_sep == '.' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
@@ -50,11 +50,11 @@ function edd_sanitize_amount( $amount ) {
  * @return      string - the newly formatted amount
 */
 
-function edd_format_amount($amount) {
+function edd_format_amount( $amount ) {
 	global $edd_options;
-	$thousands_sep 	= isset($edd_options['thousands_separator']) 	? $edd_options['thousands_separator'] 	: ',';
-	$decimal_sep 	= isset($edd_options['decimal_separator']) 		? $edd_options['decimal_separator'] 	: '.';
 
+	$thousands_sep 	= isset( $edd_options['thousands_separator'] ) ? $edd_options['thousands_separator'] : ',';
+	$decimal_sep 	= isset( $edd_options['decimal_separator'] )   ? $edd_options['decimal_separator'] 	 : '.';
 
 	// format the amount
 	if( $decimal_sep == ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
@@ -62,6 +62,7 @@ function edd_format_amount($amount) {
 		$part = substr( $amount, $sep_found + 1, ( strlen( $amount ) - 1 ) );
 		$amount = $whole . '.' . $part;
 	}
+
 	return number_format( $amount, 2, $decimal_sep, $thousands_sep );
 }
 
@@ -77,10 +78,12 @@ function edd_format_amount($amount) {
 
 function edd_currency_filter( $price ) {
 	global $edd_options;
-	$currency = isset($edd_options['currency']) ? $edd_options['currency'] : 'USD';
-	$position = isset($edd_options['currency_position']) ? $edd_options['currency_position'] : 'before';
-	if($position == 'before') :
-		switch ($currency) :
+
+	$currency = isset( $edd_options['currency'] ) ? $edd_options['currency'] : 'USD';
+	$position = isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before';
+
+	if( $position == 'before' ):
+		switch ( $currency ):
 			case "GBP" : return '&pound;' . $price; break;
 			case "USD" : 
 			case "AUD" : 
@@ -94,11 +97,11 @@ function edd_currency_filter( $price ) {
 			case "JPY" : return '&yen;' . $price; break;
 			default :
 			    $formatted = $currency . ' ' . $price;
-    		    return apply_filters('edd_' . strtolower($currency) . '_currency_filter_before', $formatted, $currency, $price);
+    		    return apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
 			break;
 		endswitch;
 	else :
-		switch ($currency) :
+		switch ( $currency ) :
 			case "GBP" : return $price . '&pound;'; break;
 			case "USD" : 
 			case "AUD" : 
@@ -112,7 +115,7 @@ function edd_currency_filter( $price ) {
 			case "JPY" : return $price . '&yen;'; break;
 			default : 
 			    $formatted = $price . ' ' . $currency;
-			    return apply_filters('edd_' . strtolower($currency) . '_currency_filter_after', $formatted, $currency, $price);
+			    return apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
 			break;
 		endswitch;	
 	endif;
