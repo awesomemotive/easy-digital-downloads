@@ -284,7 +284,7 @@ function edd_get_report_dates() {
 		case 'this_month' :
 
 			$dates['m_start'] 	= date( 'n' );
-			$dates['m_end']		= date( 'n' ) + 1;
+			$dates['m_end']		= date( 'n' );
 			$dates['year']		= date( 'Y' );
 
 			break;
@@ -292,7 +292,7 @@ function edd_get_report_dates() {
 		case 'last_month' :
 
 			$dates['m_start'] 	= date( 'n' ) - 1;
-			$dates['m_end']		= date( 'n' );
+			$dates['m_end']		= date( 'n' ) - 1;
 			$dates['year']		= date( 'Y' );
 
 			break;
