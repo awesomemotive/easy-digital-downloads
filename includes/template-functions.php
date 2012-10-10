@@ -77,7 +77,7 @@ function edd_get_purchase_link( $args = array() ) {
 ?>
 	<form id="edd_purchase_<?php echo $download_id; ?>" class="edd_download_purchase_form" method="post">
 		
-		<?php do_action( 'edd_purchase_variable_pricing', $download_id ); ?>
+		<?php do_action( 'edd_purchase_link_top', $download_id ); ?>
 		
 		<div class="edd_purchase_submit_wrapper">
 			<p>
@@ -111,6 +111,9 @@ function edd_get_purchase_link( $args = array() ) {
 
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $download_id ); ?>">
 		<input type="hidden" name="edd_action" value="add_to_cart">
+
+		<?php do_action( 'edd_purchase_link_end', $download_id ); ?>
+
 	</form><!--end #edd_purchase_<?php echo esc_attr( $download_id ); ?>-->
 <?php
 	$purchase_form = ob_get_clean();
@@ -159,7 +162,7 @@ function edd_purchase_variable_pricing( $download_id ) {
 <?php
 	add_action( 'edd_after_price_options', $download_id );
 }
-add_action( 'edd_purchase_variable_pricing', 'edd_purchase_variable_pricing' );
+add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing' );
 
 /**
  * Before Download Content
