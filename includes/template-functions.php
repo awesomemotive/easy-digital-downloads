@@ -352,7 +352,12 @@ add_filter( 'edd_downloads_content', 'edd_downloads_default_content' );
 */
 
 function edd_get_purchase_download_links( $purchase_data ) {
+	
+	if( ! is_array( $purchase_data['downloads'] ) )
+		return '<div class="edd-error">' . __( 'No downloads found', 'edd' ) . '</div>';
+
 	$links = '<ul class="edd_download_links">';
+
 	foreach( $purchase_data['downloads'] as $download ) {
 
 		$links .= '<li>';
