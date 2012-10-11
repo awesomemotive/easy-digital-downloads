@@ -79,18 +79,22 @@ function edd_generate_pdf( $data ) {
 				$title = utf8_decode( get_the_title( $download->ID ) );
 				
 				if ( edd_has_variable_prices( $download->ID ) ) {
-					/*
+					
 					$prices = edd_get_variable_prices( $download->ID );
-					$total = count( $prices ) - 1;
-					if ( $prices[0]['amount'] < $prices[$total]['amount'] ) {
-						$min = $prices[0]['amount'];
-						$max = $prices[$total]['amount'];
+
+					$first = $prices[0]['amount'];
+					$last = array_pop( $prices );
+					$last = $last['amount'];
+
+					if ( $first < $last ) {
+						$min = $first;
+						$max = $last;
 					} else {
-						$min = $prices[$total]['amount'];
-						$max = $prices[0]['amount'];
+						$min = $last;
+						$max = $first;
 					}
-					*/
-					$price = html_entity_decode( edd_price( $download->ID, false ) );
+					
+					$price = html_entity_decode( edd_currency_filter( edd_format_amount( $min ) ) . ' - ' . edd_currency_filter( edd_format_amount( $max ) ) );
 				} else {
 					$price = html_entity_decode( edd_currency_filter( edd_get_download_price( $download->ID ) ) );
 				}
@@ -109,7 +113,7 @@ function edd_generate_pdf( $data ) {
 			endforeach;
 		else:
 			$pdf->SetWidths( array( 280 ) );
-			$title = __( 'No Downloads found.', 'edd' );
+			$title = sprintf( __( 'No %s found.', 'edd' ), edd_get_label_plural() );
 			$pdf->Row( array( $title ) );
 		endif;
 		
