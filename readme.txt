@@ -5,8 +5,8 @@ Contributors: mordauk, sksmatt, sunnyratilal, SpencerFinnell
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
-Tested up to: 3.4.2
-Stable Tag: 1.2.2
+Tested up to: 3.5
+Stable Tag: 1.3
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -115,12 +115,13 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * [Stripe](http://easydigitaldownloads.com/extension/stripe-payment-gateway/)
 * [Recurly](http://easydigitaldownloads.com/extension/recurly-com-checkout/)
 * [Authorize.net](http://easydigitaldownloads.com/extension/authorize-net-gateway/)
+* [Google Wallet](https://easydigitaldownloads.com/extension/google-checkout/)
 * [Moneybookers / Skrill](http://easydigitaldownloads.com/extension/moneybookers-skrill-payment-gateway/)
 * [2Checkout](http://easydigitaldownloads.com/extension/2checkout-gateway/)
 * [PayPal Pro / Express](http://easydigitaldownloads.com/extension/paypal-pro-express/)
-* [Mijireh Checkout](http://easydigitaldownloads.com/extension/mijireh-checkout/)
-* [MercadoPago](http://easydigitaldownloads.com/extension/mercadopago/)
-* More coming soon
+* [GoCardless](https://easydigitaldownloads.com/extension/gocardless-payment-gateway/)
+* [Amazon FPS](https://easydigitaldownloads.com/extension/amazon-fps-payment-gateway/)
+* [Payza](https://easydigitaldownloads.com/extension/payza-payment-gateway/)
 
 == Screenshots ==
 
@@ -136,6 +137,33 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.3 =
+
+* Completely rewrote the Reports page with new graphs and Downloads / Customers view
+* Introduced new CSS styles for purchase buttons
+* Fixed a problem with the add-ons page
+* Added new EDD_VERSION constant
+* Fixed a problem with thousands separator and price formatting
+* Replaced date() with date_i18n() for improved internationalization
+* Added new edd_before_download_content hook
+* Added new edd_purchase)history_files hook
+* Added new filter for edd_is_checkout
+* Introduced several new functions for calculating average sales / earnings for individual products
+* Introduced several new functions for counting number of purchases and amount spent for customers
+* Added a contextual help menu to the Discounts page
+* Added a contextual help menu to the edit Download page
+* Fixed a jQuery UI conflict
+* Added new jQuery UI styles that better match core WordPress styles
+* Improved data validation throughout the plugin
+* Fixed a problem with adding items to the cart via ajax when admin/front end http/s protocals are miss matched
+* Added a filter to remove product titles in purchase receipts
+* Added new Polish translation files
+* Fixed the upload field settings field callback JS
+* Significant cleanup of code formatting and adherence of WordPress coding standards
+* Fixed missing item description in PayPal checkout
+* Updated French translation files and default language files
+* Fixed a problem with the total earnings widget
 
 = 1.2.2 =
 
@@ -648,6 +676,33 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Upgrade Notice ==
+
+= 1.3 =
+
+* Completely rewrote the Reports page with new graphs and Downloads / Customers view
+* Introduced new CSS styles for purchase buttons
+* Fixed a problem with the add-ons page
+* Added new EDD_VERSION constant
+* Fixed a problem with thousands separator and price formatting
+* Replaced date() with date_i18n() for improved internationalization
+* Added new edd_before_download_content hook
+* Added new edd_purchase)history_files hook
+* Added new filter for edd_is_checkout
+* Introduced several new functions for calculating average sales / earnings for individual products
+* Introduced several new functions for counting number of purchases and amount spent for customers
+* Added a contextual help menu to the Discounts page
+* Added a contextual help menu to the edit Download page
+* Fixed a jQuery UI conflict
+* Added new jQuery UI styles that better match core WordPress styles
+* Improved data validation throughout the plugin
+* Fixed a problem with adding items to the cart via ajax when admin/front end http/s protocals are miss matched
+* Added a filter to remove product titles in purchase receipts
+* Added new Polish translation files
+* Fixed the upload field settings field callback JS
+* Significant cleanup of code formatting and adherence of WordPress coding standards
+* Fixed missing item description in PayPal checkout
+* Updated French translation files and default language files
+* Fixed a problem with the total earnings widget
 
 = 1.2.2 =
 
