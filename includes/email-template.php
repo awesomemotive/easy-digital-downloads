@@ -172,11 +172,18 @@ add_filter( 'edd_purchase_receipt', 'edd_email_default_formatting' );
 
 function edd_email_template_preview() {
 	global $edd_options;
+
+	$default_email_body = __( "Dear", "edd" ) . " {name},\n\n";
+	$default_email_body .= __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "edd" ) . "\n\n";
+	$default_email_body .= "{download_list}\n\n";
+	$default_email_body .= "{sitename}";
+
+	$email_body = isset( $edd_options['purchase_receipt'] ) ? $edd_options['purchase_receipt'] : $default_email_body;
 	ob_start(); ?>
 	<a href="#email-preview" id="open-email-preview" class="button-secondary" title="<?php _e( 'Purchase Receipt Preview', 'edd' ); ?> "><?php _e( 'Preview Purchase Receipt', 'edd' ); ?></a>
 	<div id="email-preview-wrap" style="display:none;">
 		<div id="email-preview">
-			<?php echo edd_apply_email_template( $edd_options['purchase_receipt'], null, null ); ?>
+			<?php echo edd_apply_email_template( $email_body, null, null ); ?>
 		</div>
 	</div>
 	<?php
