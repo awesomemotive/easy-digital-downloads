@@ -148,7 +148,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fixed a problem with thousands separator and price formatting
 * Replaced date() with date_i18n() for improved internationalization
 * Added new edd_before_download_content hook
-* Added new edd_purchase)history_files hook
+* Added new edd_purchase_history_files hook
 * Added new filter for edd_is_checkout
 * Introduced several new functions for calculating average sales / earnings for individual products
 * Introduced several new functions for counting number of purchases and amount spent for customers
