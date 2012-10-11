@@ -133,7 +133,7 @@ function edd_render_download_meta_box() {
 function edd_render_price_field( $post_id) {
 	global $edd_options;
 
-	$price 			= edd_get_download_price( $post_id );
+	$price 				= edd_get_download_price( $post_id );
 	$variable_pricing 	= edd_has_variable_prices( $post_id );
 	$prices 			= edd_get_variable_prices( $post_id );
 
@@ -154,9 +154,9 @@ function edd_render_price_field( $post_id) {
 
 	<div id="edd_regular_price_field" class="edd_pricing_fields" <?php echo $price_display; ?>>
 		<?php if(!isset( $edd_options['currency_position'] ) || $edd_options['currency_position'] == 'before') : ?>
-			<?php echo edd_currency_filter(''); ?><input type="text" name="edd_price" id="edd_price" value="<?php echo isset( $price ) ? $price : ''; ?>" size="30" style="width:80px;" placeholder="9.99"/>
+			<?php echo edd_currency_filter(''); ?><input type="text" name="edd_price" id="edd_price" value="<?php echo isset( $price ) ? esc_attr( edd_format_amount( $price ) ) : ''; ?>" size="30" style="width:80px;" placeholder="9.99"/>
 		<?php else : ?>
-			<input type="text" name="edd_price" id="edd_price" value="<?php echo isset( $price ) ? esc_attr( $price ) : ''; ?>" size="30" style="width:80px;" placeholder="9.99"/><?php echo edd_currency_filter(''); ?>
+			<input type="text" name="edd_price" id="edd_price" value="<?php echo isset( $price ) ? esc_attr( edd_format_amount( $price ) ) : ''; ?>" size="30" style="width:80px;" placeholder="9.99"/><?php echo edd_currency_filter(''); ?>
 		<?php endif; ?>			
 	</div>
 
