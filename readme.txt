@@ -63,6 +63,7 @@ Easy Digital Downloads as been translated into the following languages:
 7. European Portuguese
 8. Turkish
 9. Arabic
+10. Polish
 
 Would you like to help translate the plugin into more langauges? [Contact Pippin](http://easydigitaldownloads.com/contact-developer/).
 
