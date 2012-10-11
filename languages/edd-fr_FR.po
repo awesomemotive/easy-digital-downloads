@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads v1.1.5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-10 14:44+0100\n"
-"PO-Revision-Date: 2012-10-10 14:51+0100\n"
+"POT-Creation-Date: 2012-10-11 19:30+0100\n"
+"PO-Revision-Date: 2012-10-11 19:31+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
 "Language-Team: FxB <fx@fxbenard.com>\n"
 "Language: fr_FR\n"
@@ -402,27 +402,27 @@ msgid "These are some sample notes added to a product."
 msgstr "Voici quelques exemples de remarques ajoutées à un produit."
 
 # @ edd
-#: includes/email-template.php:176
-msgid "Purchase Receipt Preview"
-msgstr "Aperçu du reçu d'achat"
-
-# @ edd
-#: includes/email-template.php:176
-msgid "Preview Purchase Receipt"
-msgstr "Aperçu du reçu d'achat"
-
-# @ edd
-#: includes/email-template.php:217
+#: includes/email-template.php:176 includes/email-template.php:224
 msgid "Dear"
 msgstr "Cher"
 
-#: includes/email-template.php:218
+#: includes/email-template.php:177 includes/email-template.php:225
 msgid ""
 "Thank you for your purchase. Please click on the link(s) below to download "
 "your files."
 msgstr ""
 "Nous vous remercions de votre achat. S'il vous plaît cliquez sur le(s) lien"
 "(s) ci-dessous pour télécharger vos fichiers."
+
+# @ edd
+#: includes/email-template.php:183
+msgid "Purchase Receipt Preview"
+msgstr "Aperçu du reçu d'achat"
+
+# @ edd
+#: includes/email-template.php:183
+msgid "Preview Purchase Receipt"
+msgstr "Aperçu du reçu d'achat"
 
 # @ edd
 #: includes/error-tracking.php:30 includes/process-download.php:265
@@ -1543,42 +1543,47 @@ msgstr ""
 msgid "Item successfully added to your cart."
 msgstr "Produit ajouté avec succès à votre panier."
 
-#: includes/template-functions.php:263
+#: includes/template-functions.php:266
 msgid "Gray"
 msgstr "Gris"
 
-#: includes/template-functions.php:264
+#: includes/template-functions.php:267
 msgid "Blue"
 msgstr "Bleu"
 
-#: includes/template-functions.php:265
+#: includes/template-functions.php:268
 msgid "Green"
 msgstr "Vert"
 
 # @ edd
-#: includes/template-functions.php:266
+#: includes/template-functions.php:269
 msgid "Yellow"
 msgstr "Jaune"
 
-#: includes/template-functions.php:267
+#: includes/template-functions.php:270
 msgid "Dark Gray"
 msgstr "Gris foncé"
 
 # @ edd
-#: includes/template-functions.php:286
+#: includes/template-functions.php:289
 msgid "Button"
 msgstr "Bouton"
 
 # @ edd
-#: includes/template-functions.php:287
+#: includes/template-functions.php:290
 msgid "Plain Text"
 msgstr "Texte brut"
 
 # @ edd
-#: includes/template-functions.php:308
+#: includes/template-functions.php:311
 msgid "You have already purchased this item, but you may purchase it again."
 msgstr ""
 "Vous avez déjà acheté cet article, mais vous pouvez l'acheter à nouveau."
+
+# @ edd
+#: includes/template-functions.php:360
+msgid "No downloads found"
+msgstr "Aucun téléchargement trouvé"
 
 # @ edd
 #: includes/widgets.php:39
@@ -1643,7 +1648,7 @@ msgstr "Mois en cours"
 #: includes/widgets.php:323 includes/admin/downloads/dashboard-columns.php:31
 #: includes/admin/reporting/class-download-reports-table.php:40
 #: includes/admin/reporting/graphing.php:115
-#: includes/admin/reporting/pdf-reports.php:191
+#: includes/admin/reporting/pdf-reports.php:195
 #: includes/admin/reporting/reports.php:92
 msgid "Earnings"
 msgstr "Revenus"
@@ -1652,7 +1657,7 @@ msgstr "Revenus"
 #: includes/widgets.php:327 includes/admin/downloads/dashboard-columns.php:30
 #: includes/admin/reporting/class-download-reports-table.php:39
 #: includes/admin/reporting/graphing.php:91
-#: includes/admin/reporting/pdf-reports.php:208
+#: includes/admin/reporting/pdf-reports.php:212
 msgid "Sales"
 msgstr "Ventes"
 
@@ -1672,19 +1677,28 @@ msgid "Total Sales"
 msgstr "Total des ventes"
 
 # @ edd
-#: includes/admin/add-ons.php:69
+#: includes/admin/add-ons.php:43
 msgid "Add Ons for Easy Digital Downloads"
 msgstr "Modules complémentaires pour Easy Digital Downloads"
 
-#: includes/admin/add-ons.php:70
+#: includes/admin/add-ons.php:44
 msgid "These add-ons extend the functionality of Easy Digital Downloads."
 msgstr ""
 "Ces modules complémentaires étendent les fonctionnalités d'Easy Digital "
 "Downloads."
 
-#: includes/admin/add-ons.php:73
+#: includes/admin/add-ons.php:47
 msgid "Browse All Extensions"
 msgstr "Parcourir toutes les extensions"
+
+#: includes/admin/add-ons.php:74
+msgid ""
+"There was an error retrieving the extensions list from the server. Please "
+"try again later."
+msgstr ""
+"Il semble y avoir une erreur lors de la récupération de la liste des "
+"extensions sur le serveur. S'il vous plaît essayez de nouveau dans quelques "
+"minutes."
 
 # @ edd
 #: includes/admin/admin-notices.php:29
@@ -2900,63 +2914,64 @@ msgid "Earnings to Date"
 msgstr "Gains à ce jour"
 
 # @ edd
-#: includes/admin/reporting/pdf-reports.php:112
-msgid "No Downloads found."
-msgstr "Aucun téléchargement trouvé."
+#: includes/admin/reporting/pdf-reports.php:116
+#, php-format
+msgid "No %s found."
+msgstr "Aucun %s trouvée."
 
-#: includes/admin/reporting/pdf-reports.php:119
+#: includes/admin/reporting/pdf-reports.php:123
 msgid "Graph View"
 msgstr "Vu en graphique"
 
-#: includes/admin/reporting/pdf-reports.php:212
+#: includes/admin/reporting/pdf-reports.php:216
 msgid "Sales and Earnings by Month for all Products"
 msgstr "Ventes et bénéfices par mois pour tous les produits"
 
-#: includes/admin/reporting/pdf-reports.php:226
+#: includes/admin/reporting/pdf-reports.php:230
 msgid "Jan"
 msgstr "Jan"
 
-#: includes/admin/reporting/pdf-reports.php:227
+#: includes/admin/reporting/pdf-reports.php:231
 msgid "Feb"
 msgstr "Fév"
 
-#: includes/admin/reporting/pdf-reports.php:228
+#: includes/admin/reporting/pdf-reports.php:232
 msgid "Mar"
 msgstr "Mar"
 
-#: includes/admin/reporting/pdf-reports.php:229
+#: includes/admin/reporting/pdf-reports.php:233
 msgid "Apr"
 msgstr "Avr"
 
-#: includes/admin/reporting/pdf-reports.php:230
+#: includes/admin/reporting/pdf-reports.php:234
 msgid "May"
 msgstr "Mai"
 
-#: includes/admin/reporting/pdf-reports.php:231
+#: includes/admin/reporting/pdf-reports.php:235
 msgid "June"
 msgstr "Juin"
 
-#: includes/admin/reporting/pdf-reports.php:232
+#: includes/admin/reporting/pdf-reports.php:236
 msgid "July"
 msgstr "Juillet"
 
-#: includes/admin/reporting/pdf-reports.php:233
+#: includes/admin/reporting/pdf-reports.php:237
 msgid "Aug"
 msgstr "Août"
 
-#: includes/admin/reporting/pdf-reports.php:234
+#: includes/admin/reporting/pdf-reports.php:238
 msgid "Sept"
 msgstr "Sept"
 
-#: includes/admin/reporting/pdf-reports.php:235
+#: includes/admin/reporting/pdf-reports.php:239
 msgid "Oct"
 msgstr "Oct"
 
-#: includes/admin/reporting/pdf-reports.php:236
+#: includes/admin/reporting/pdf-reports.php:240
 msgid "Nov"
 msgstr "Nov"
 
-#: includes/admin/reporting/pdf-reports.php:237
+#: includes/admin/reporting/pdf-reports.php:241
 msgid "Dec"
 msgstr "Déc"
 
