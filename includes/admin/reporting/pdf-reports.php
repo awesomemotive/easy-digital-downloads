@@ -31,7 +31,7 @@ function edd_generate_pdf( $data ) {
 		include_once( EDD_PLUGIN_DIR . '/includes/libraries/fpdf/fpdf.php' );
 		include_once( EDD_PLUGIN_DIR . '/includes/libraries/fpdf/edd_pdf.php' );
 
-		$daterange = date( 'F jS', mktime( 0, 0, 0, 1, 1, date( 'Y' ) ) ) . ' ' . __( 'to', 'edd' ) . ' ' . date( 'F jS Y' );
+		$daterange = date_i18n( 'F jS', mktime( 0, 0, 0, 1, 1, date( 'Y' ) ) ) . ' ' . __( 'to', 'edd' ) . ' ' . date_i18n( 'F jS Y' );
 
 		$pdf = new edd_pdf();
 		$pdf->AddPage( 'L', 'A4' );
@@ -125,7 +125,7 @@ function edd_generate_pdf( $data ) {
 		$pdf->SetX( 25 );
 		$pdf->Image( $image .'&file=.png' );
 		$pdf->Ln( 7 );
-		$pdf->Output( 'edd-report-' . date('Y-m-d') . '.pdf', 'D' );
+		$pdf->Output( 'edd-report-' . date_i18n('Y-m-d') . '.pdf', 'D' );
 
 	}
 }
