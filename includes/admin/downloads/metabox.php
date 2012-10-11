@@ -156,7 +156,7 @@ function edd_render_price_field( $post_id) {
 		<?php if(!isset( $edd_options['currency_position'] ) || $edd_options['currency_position'] == 'before') : ?>
 			<?php echo edd_currency_filter(''); ?><input type="text" name="edd_price" id="edd_price" value="<?php echo isset( $price ) ? $price : ''; ?>" size="30" style="width:80px;" placeholder="9.99"/>
 		<?php else : ?>
-			<input type="text" name="edd_price" id="edd_price" value="<?php echo isset( $price ) ? $price : ''; ?>" size="30" style="width:80px;" placeholder="9.99"/><?php echo edd_currency_filter(''); ?>
+			<input type="text" name="edd_price" id="edd_price" value="<?php echo isset( $price ) ? esc_attr( $price ) : ''; ?>" size="30" style="width:80px;" placeholder="9.99"/><?php echo edd_currency_filter(''); ?>
 		<?php endif; ?>			
 	</div>
 
