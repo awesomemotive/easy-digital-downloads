@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-11 11:24-0600\n"
-"PO-Revision-Date: 2012-10-11 11:24-0600\n"
+"POT-Creation-Date: 2012-10-11 12:03-0600\n"
+"PO-Revision-Date: 2012-10-11 12:03-0600\n"
 "Last-Translator: Pippin Williamson <pippin@pippinsplugins.com>\n"
 "Language-Team: Easy Digital Downloads <pippin@pippinsplugins.com>\n"
 "Language: en_US\n"
@@ -109,19 +109,21 @@ msgid "These are some sample notes added to a product."
 msgstr ""
 
 #: includes/email-template.php:176
-msgid "Purchase Receipt Preview"
-msgstr ""
-
-#: includes/email-template.php:176
-msgid "Preview Purchase Receipt"
-msgstr ""
-
-#: includes/email-template.php:217
+#: includes/email-template.php:224
 msgid "Dear"
 msgstr ""
 
-#: includes/email-template.php:218
+#: includes/email-template.php:177
+#: includes/email-template.php:225
 msgid "Thank you for your purchase. Please click on the link(s) below to download your files."
+msgstr ""
+
+#: includes/email-template.php:183
+msgid "Purchase Receipt Preview"
+msgstr ""
+
+#: includes/email-template.php:183
+msgid "Preview Purchase Receipt"
 msgstr ""
 
 #: includes/cart-template.php:84
@@ -2246,63 +2248,64 @@ msgstr ""
 msgid "Earnings to Date"
 msgstr ""
 
-#: includes/admin/reporting/pdf-reports.php:112
-msgid "No Downloads found."
+#: includes/admin/reporting/pdf-reports.php:116
+#, php-format
+msgid "No %s found."
 msgstr ""
 
-#: includes/admin/reporting/pdf-reports.php:119
+#: includes/admin/reporting/pdf-reports.php:123
 msgid "Graph View"
 msgstr ""
 
-#: includes/admin/reporting/pdf-reports.php:212
+#: includes/admin/reporting/pdf-reports.php:216
 msgid "Sales and Earnings by Month for all Products"
 msgstr ""
 
-#: includes/admin/reporting/pdf-reports.php:226
+#: includes/admin/reporting/pdf-reports.php:230
 msgid "Jan"
 msgstr ""
 
-#: includes/admin/reporting/pdf-reports.php:227
+#: includes/admin/reporting/pdf-reports.php:231
 msgid "Feb"
 msgstr ""
 
-#: includes/admin/reporting/pdf-reports.php:228
+#: includes/admin/reporting/pdf-reports.php:232
 msgid "Mar"
 msgstr ""
 
-#: includes/admin/reporting/pdf-reports.php:229
+#: includes/admin/reporting/pdf-reports.php:233
 msgid "Apr"
 msgstr ""
 
-#: includes/admin/reporting/pdf-reports.php:230
+#: includes/admin/reporting/pdf-reports.php:234
 msgid "May"
 msgstr ""
 
-#: includes/admin/reporting/pdf-reports.php:231
+#: includes/admin/reporting/pdf-reports.php:235
 msgid "June"
 msgstr ""
 
-#: includes/admin/reporting/pdf-reports.php:232
+#: includes/admin/reporting/pdf-reports.php:236
 msgid "July"
 msgstr ""
 
-#: includes/admin/reporting/pdf-reports.php:233
+#: includes/admin/reporting/pdf-reports.php:237
 msgid "Aug"
 msgstr ""
 
-#: includes/admin/reporting/pdf-reports.php:234
+#: includes/admin/reporting/pdf-reports.php:238
 msgid "Sept"
 msgstr ""
 
-#: includes/admin/reporting/pdf-reports.php:235
+#: includes/admin/reporting/pdf-reports.php:239
 msgid "Oct"
 msgstr ""
 
-#: includes/admin/reporting/pdf-reports.php:236
+#: includes/admin/reporting/pdf-reports.php:240
 msgid "Nov"
 msgstr ""
 
-#: includes/admin/reporting/pdf-reports.php:237
+#: includes/admin/reporting/pdf-reports.php:241
 msgid "Dec"
 msgstr ""
 
