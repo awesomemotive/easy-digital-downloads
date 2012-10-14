@@ -337,7 +337,7 @@ function edd_get_earnings_by_date($day = null, $month_num, $year) {
 	if( $day )
 		$args['day'] = $day;
 	
-	$sales = get_posts( $args );
+	$sales = get_posts( apply_filters( 'edd_earnings_by_date_args', $args ) );
 	$total = 0;
 	if( $sales ) {
 		foreach( $sales as $sale ) {
