@@ -87,8 +87,7 @@ function edd_no_redownload() {
 */
 
 function edd_get_menu_access_level() {
-	global $edd_options;
-	return 'manage_options';
+	return apply_filters( 'edd_menu_access_level', 'manage_options' );
 }
 
 
