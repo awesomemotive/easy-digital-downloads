@@ -331,12 +331,13 @@ function edd_record_sale_in_log( $download_id, $payment_id, $user_info, $date ) 
 	$logs = new EDD_Logging();
 
 	$log_data = array(
-		'post_parent' => $payment_id,
+		'post_parent' => $download_id,
 	);
 
 	$log_meta = array( 
 		'type'		=> 'sale',
 		'user_info' => $user_info,
+		'payment_id'=> $payment_id
 	);
 
 	$logs->insert_log( $log_data, $log_meta );
