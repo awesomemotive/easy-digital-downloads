@@ -23,7 +23,7 @@
 function edd_change_downloads_upload_dir() {
     global $pagenow;
 
-    if( !empty( $_POST['post_id'] ) && ( 'async-upload.php' == $pagenow || 'media-upload.php' == $pagenow ) ) {
+    if( !empty( $_REQUEST['post_id'] ) && ( 'async-upload.php' == $pagenow || 'media-upload.php' == $pagenow ) ) {
         if( 'download' == get_post_type( $_REQUEST['post_id'] ) ) {
         
             $wp_upload_dir = wp_upload_dir();
