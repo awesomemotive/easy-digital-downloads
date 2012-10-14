@@ -641,7 +641,7 @@ function edd_get_current_page_url() {
 		else $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 	endif;
 
-	return $pageURL;
+	return apply_filters( 'edd_get_current_page_url', $pageURL );
 }
 
 
