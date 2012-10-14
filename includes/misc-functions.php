@@ -71,7 +71,7 @@ function edd_no_redownload() {
 	global $edd_options;
 	if( isset( $edd_options['disable_redownload'] ) )
 		return true;
-	return false;
+	return (bool) apply_filters( 'edd_no_redownload', false );
 }
 
 /**
