@@ -141,7 +141,7 @@ function edd_string_is_image_url( $str ) {
 		break;
 	}
 
-	return $return;
+	return (bool) apply_filters( 'edd_string_is_image', $return, $str );
 }
 
 
