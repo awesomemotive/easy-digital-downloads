@@ -308,6 +308,7 @@ function edd_get_file_download_log( $download_id, $paginate = false, $number = 1
 */
 
 function edd_record_sale_in_log( $download_id, $payment_id, $user_info, $date ) {
+
 	$log = get_post_meta( $download_id, '_edd_sales_log', true );
 
 	if( !$log ) {
@@ -323,6 +324,22 @@ function edd_record_sale_in_log( $download_id, $payment_id, $user_info, $date ) 
 	$log[] = $log_entry;
 	
 	update_post_meta( $download_id, '_edd_sales_log', $log );
+
+
+	// new logging clasee
+
+	$logs = new EDD_Logging();
+
+	$log_data = array(
+		'post_parent' => $payment_id,
+	);
+
+	$log_meta = array( 
+		'type'		=> 'sale',
+		'user_info' => $user_info,
+	);
+
+	$logs->insert_log( $log_data, $log_meta );
 }
 
 
