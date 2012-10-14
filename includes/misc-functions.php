@@ -468,7 +468,7 @@ function edd_get_country_list() {
 		'ZW' => 'Zimbabwe'
 	);
 
-	return $countries;
+	return apply_filters( 'edd_countries', $countries );
 }
 
 
