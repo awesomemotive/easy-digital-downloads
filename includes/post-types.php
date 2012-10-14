@@ -101,6 +101,20 @@ function edd_setup_edd_post_types() {
 		'can_export'		=> false
 	); 
 	register_post_type( 'edd_payment', $payment_args );
+
+
+	/* logs post type */	
+	
+	$log_args = array(
+		'labels' 			=> array( 'name' => __( 'Logs', 'edd' ) ),
+		'public' 			=> false,
+		'query_var' 		=> false,
+		'rewrite' 			=> false,
+		'capability_type' 	=> 'post',
+		'supports' 			=> array( 'title' ),
+		'can_export'		=> false
+	); 
+	register_post_type( 'edd_log', $log_args );
 	
 }
 add_action( 'init', 'edd_setup_edd_post_types', 100 );
