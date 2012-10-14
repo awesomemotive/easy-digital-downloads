@@ -503,7 +503,7 @@ function edd_render_stats_meta_box() {
 function edd_render_purchase_log_meta_box() {
 	global $post;
 		
-	$page = isset( $_GET['edd_sales_log_page'] ) ? intval( $_GET['edd_sales_log_page'] ) : 1;
+	$page = isset( $_GET['paged'] ) ? intval( $_GET['paged'] ) : 1;
 
 	$sales_log = new EDD_Logging();
 	$sales = $sales_log->get_logs( $post->ID, 'sale', $page );
