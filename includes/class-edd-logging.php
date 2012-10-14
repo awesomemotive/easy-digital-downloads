@@ -73,7 +73,6 @@ class EDD_Logging {
 	*/
 
 	function get_logs( $object_id = 0, $type = null, $paged = null ) {
-
 		return $this->get_connected_logs( array( 'post_parent' => $object_id, 'paged' => $paged ), $type );
 
 	}
