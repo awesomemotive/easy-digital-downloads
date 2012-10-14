@@ -502,19 +502,11 @@ function edd_render_stats_meta_box() {
  */
 function edd_render_purchase_log_meta_box() {
 	global $post;
-	
-	$sales = edd_get_download_sales_log( $post->ID);
-	
-	$per_page = 10;	
-	
-	if( isset( $_GET['edd_sales_log_page'] ) ) {
-		$page = intval( $_GET['edd_sales_log_page'] );
-		$offset = $per_page * ( $page - 1 );
-		$sales_log = edd_get_download_sales_log( $post->ID, true, $per_page, $offset );
-	} else {
-		$page = 1;
-		$sales_log = edd_get_download_sales_log( $post->ID, false );
-	}	
+		
+	$page = isset( $_GET['edd_sales_log_page'] ) ? intval( $_GET['edd_sales_log_page'] ) : 1;
+
+	$sales_log = new EDD_Logging();
+	$sales = $sales_log->get_logs( $post->ID, 'sale', $page );
 	
 	echo '<table class="form-table">';
 		echo '<tr>';
@@ -523,18 +515,22 @@ function edd_render_purchase_log_meta_box() {
 				_e('Each sale for this download is listed below.', 'edd' );
 			echo '</td>';
 		echo '</tr>';
-		if( $sales_log['sales']) {
-			foreach( $sales_log['sales'] as $sale ) {
-				if( $sale['user_info']['id'] != 0) {
-					$user_data = get_userdata( $sale['user_info']['id'] );
+		if(  $sales ) {
+			foreach( $sales as $log ) {
+
+				$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
+				$user_info = edd_get_payment_meta_user_info( $payment_id );
+
+				if( $user_info['id'] != 0) {
+					$user_data = get_userdata( $user_info['id'] );
 					$name = $user_data->display_name;
 				} else {
-					$name = $sale['user_info']['first_name'] . ' ' . $sale['user_info']['last_name'];
+					$name = $user_info['first_name'] . ' ' . $user_info['last_name'];
 				}
 				echo '<tr>';
 				
 					echo '<td class="edd_download_sales_log">';
-						echo '<strong>' . __( 'Date:', 'edd' ) . '</strong> ' . $sale['date'];
+						echo '<strong>' . __( 'Date:', 'edd' ) . '</strong> ' . get_post_field( 'post_date', $log->ID );
 					echo '</td>';
 				
 					echo '<td class="edd_download_sales_log">';
@@ -542,7 +538,7 @@ function edd_render_purchase_log_meta_box() {
 					echo '</td>';
 					
 					echo '<td colspan="3" class="edd_download_sales_log">';
-						echo '<strong>' . __( 'Purchase ID:', 'edd' ) . '</strong> <a href="' . admin_url('edit.php?post_type=download&page=edd-payment-history&purchase_id=' . $sale['payment_id'] . '&edd-action=edit-payment') . '">' . $sale['payment_id'] . '</a>';
+						echo '<strong>' . __( 'Purchase ID:', 'edd' ) . '</strong> <a href="' . admin_url('edit.php?post_type=download&page=edd-payment-history&purchase_id=' . $payment_id . '&edd-action=edit-payment') . '">' . $payment_id . '</a>';
 					echo '</td>';
 				echo '</tr>';
 			} // endforeach
@@ -556,6 +552,7 @@ function edd_render_purchase_log_meta_box() {
 		}
 	echo '</table>';
 	
+	/*
 	$total_log_entries = $sales_log['number'];		
 	$total_pages = ceil( $total_log_entries / $per_page );
 	
@@ -577,6 +574,7 @@ function edd_render_purchase_log_meta_box() {
 			echo '</div>';
 		echo '</div><!--end .tablenav-->';
 	endif;
+	*/
 	
 }
 
