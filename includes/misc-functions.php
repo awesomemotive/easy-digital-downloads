@@ -556,7 +556,7 @@ function edd_get_states_list() {
 		'AP' => 'Armed Forces - Pacific'
 	);
 
-	return $states;
+	return apply_filters( 'edd_us_states', $states );
 }
 
 
