@@ -629,3 +629,43 @@ function edd_get_current_page_url() {
 
 	return $pageURL;
 }
+
+
+
+/**
+ * Marks a function as deprecated and informs when it has been used.
+ *
+ * There is a hook edd_deprecated_function_run that will be called that can be used
+ * to get the backtrace up to what file and function called the deprecated
+ * function.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * This function is to be used in every function that is deprecated.
+ *
+ * @package Easy Digital Downloads
+ * @subpackage  Misc Functions
+ * @since 1.3.1
+ * @access private
+ *
+ * @uses do_action() Calls 'edd_deprecated_function_run' and passes the function name, what to use instead,
+ *   and the version the function was deprecated in.
+ * @uses apply_filters() Calls 'edd_deprecated_function_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string $function The function that was called
+ * @param string $version The version of WordPress that deprecated the function
+ * @param string $replacement Optional. The function that should have been called
+ */
+function _edd_deprecated_function( $function, $version, $replacement = null ) {
+
+	do_action( 'edd_deprecated_function_run', $function, $replacement, $version );
+
+	// Allow plugin to filter the output error trigger
+	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', true ) ) {
+		if ( ! is_null($replacement) )
+			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
+		else
+			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.', 'edd'), $function, $version ) );
+	}
+}
