@@ -588,19 +588,14 @@ function edd_render_purchase_log_meta_box() {
  */
 function edd_render_download_log_meta_box() {
 	global $post;
+
+	$page = isset( $_GET['paged'] ) ? intval( $_GET['paged'] ) : 1;
+
+	$download_log = new EDD_Logging();
+
+	$file_downloads = $download_log->get_logs( $post->ID, 'file_download', $page );
 	
-	$per_page = 10;	
-	
-	if( isset( $_GET['edd_log_page'] ) ) {
-		$page = intval( $_GET['edd_log_page'] );
-		$offset = $per_page * ( $page - 1 );
-		$download_log = edd_get_file_download_log( $post->ID, true, $per_page, $offset );
-	} else {
-		$page = 1;
-		$download_log = edd_get_file_download_log( $post->ID, true );
-	}
-	
-	$files = edd_get_download_files( $post->ID );
+	print_r( $file_downloads ); exit;
 	
 	echo '<table class="form-table">';
 		echo '<tr>';
@@ -609,21 +604,32 @@ function edd_render_download_log_meta_box() {
 				_e('Each time a file is downloaded, it is recorded below.', 'edd' );
 			echo '</td>';
 		echo '</tr>';
-		if( $download_log) {
-			foreach( $download_log['downloads'] as $file_download ) {
-				$user_id = isset( $file_download['user_info']['id']) ? $file_download['user_info']['id'] : 0;
+
+		if( $file_downloads) {
+
+			echo 'test'; exit;
+			
+			$files = edd_get_download_files( $post->ID );
+
+			foreach( $file_downloads as $log ) {
+
+				$user_info 	= get_post_meta( $log->ID, '_edd_log_user_info', true );
+				$file_id 	= get_post_meta( $log->ID, '_edd_log_file_id', true );
+
+				$user_id = isset( $user_info['id']) ? $user_info['id'] : 0;
+				
 				$user_data = get_userdata( $user_id );
 				if( $user_data ) {
 					$name = $user_data->display_name;
 				} else {
-					$name = $file_download['user_info']['email'];
+					$name = $user_info['email'];
 				}
-				$file_name = $files[$file_download['file_id']]['name'];
+				$file_name = $files[ $file_download['file_id'] ]['name'];
 				
 				echo '<tr>';
 				
 					echo '<td class="edd_download_sales_log">';
-						echo '<strong>' . __( 'Date:', 'edd' ) . '</strong> ' . $file_download['date'];
+						echo '<strong>' . __( 'Date:', 'edd' ) . '</strong> ' . $log->post_date;
 					echo '</td>';
 				
 					echo '<td class="edd_download_sales_log">';
@@ -631,7 +637,7 @@ function edd_render_download_log_meta_box() {
 					echo '</td>';
 					
 					echo '<td class="edd_download_sales_log">';
-						echo '<strong>' . __( 'IP Address:', 'edd' ) . '</strong> ' . $file_download['ip'];
+						echo '<strong>' . __( 'IP Address:', 'edd' ) . '</strong> ' . $user_info['ip'];
 					echo '</td>';
 					
 					echo '<td colspan="2" class="edd_download_sales_log">';
@@ -650,6 +656,7 @@ function edd_render_download_log_meta_box() {
 		}
 	echo '</table>';
 	
+	/*
 	$total_log_entries = $download_log['number'];		
 	$total_pages = ceil( $total_log_entries / $per_page );
 	
@@ -671,4 +678,5 @@ function edd_render_download_log_meta_box() {
 			echo '</div>';
 		echo '</div><!--end .tablenav-->';
 	endif;
+	*/
 }
