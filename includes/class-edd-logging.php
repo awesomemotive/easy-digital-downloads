@@ -48,7 +48,7 @@ class EDD_Logging {
 	 * @return      int The ID of the new log entry
 	*/
 
-	function log( $message = '', $parent = 0, $type = null ) {
+	function add( $message = '', $parent = 0, $type = null ) {
 
 		$log_data = array(
 			'post_content'	=> $message,
@@ -101,7 +101,8 @@ class EDD_Logging {
 			'post_type' 	=> 'edd_log',
 			'post_status'	=> 'publish',
 			'post_parent'	=> 0,
-			'post_content'	=> ''
+			'post_content'	=> '',
+			'post_date'		=> date( 'Y-m-d H:i:s' )
 		);
 
 		$args = wp_parse_args( $log_data, $defaults );
