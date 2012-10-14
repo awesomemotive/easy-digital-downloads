@@ -65,7 +65,7 @@ class EDD_Logging {
 
 
 	/**
-	 * Retrieves log items
+	 * Easily retrieves log items for a particular object ID
 	 *
 	 * @access      private
 	 * @since       x.x.x
@@ -75,9 +75,9 @@ class EDD_Logging {
 	 * @return      array
 	*/
 
-	function get_logs( $args = array() ) {
+	function get_logs( $object_id, $type = null, $paged = null ) {
 
-		return $this->get_connected_logs( $args );
+		return $this->get_connected_logs( array( 'post_parent' => $object_id ), $type );
 
 	}
 
@@ -183,7 +183,8 @@ class EDD_Logging {
 			'post_parent' 	=> 0,
 			'post_type'		=> 'edd_log',
 			'posts_per_page'=> 10,
-			'post_status'	=> 'publish'
+			'post_status'	=> 'publish',
+			'paged'			=> get_query_var( 'paged' )
 		);
 
 		$query_args = wp_parse_args( $args, $defaults );
