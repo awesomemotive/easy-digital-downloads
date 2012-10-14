@@ -614,6 +614,14 @@ function edd_get_php_arg_separator_output() {
 }
 
 
+/**
+ * Get the current page URL
+ *
+ * @access      public
+ * @since       1.3
+ * @return      string
+*/
+
 function edd_get_current_page_url() {
 	global $post;
 
