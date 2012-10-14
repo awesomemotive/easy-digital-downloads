@@ -13,7 +13,7 @@
 
 
 function edd_trigger_upgrades() {
-	if( ! get_option( 'edd_logs_upgraded' ) ) {
+	if( get_option( 'edd_logs_upgraded' ) ) {
 
 		if( wp_count_posts( 'edd_payment' )->publish < 1 )
 			return; // no payment exist yet
@@ -53,14 +53,14 @@ function edd_convert_purchase_logs() {
 				foreach( $logs['sales'] as $sale ) {
 
 					$log_data = array(
-						'post_parent'	=> $sale['payment_id'],
+						'post_parent'	=> $download->ID,
 						'post_date'		=> $sale['date']
 
 					);
 
 					$log_meta = array(
 						'type'		=> 'sale',
-						'user_info'	=> $sale['user_info']
+						'payment_id'=> $sale['payment_id']
 					);
 
 					$log = $edd_log->insert_log( $log_data, $log_meta );
