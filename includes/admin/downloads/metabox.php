@@ -591,7 +591,7 @@ function edd_render_purchase_log_meta_box() {
  */
 function edd_render_download_log_meta_box() {
 	global $post;
-	
+
 	$per_page = 10;	
 	
 	if( isset( $_GET['edd_log_page'] ) ) {
