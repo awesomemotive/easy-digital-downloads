@@ -111,7 +111,7 @@ class EDD_Logging {
 		// store the log entry
 		$log_id = wp_insert_post( $args );
 
-		if( $log_id ) {
+		if( $log_id && ! empty( $log_meta ) ) {
 			foreach( (array) $log_meta as $key => $meta ) {
 				if( ! empty( $meta ) )
 					update_post_meta( $log_id, '_edd_log_' . sanitize_key( $key ), $meta );
@@ -136,6 +136,28 @@ class EDD_Logging {
 	 * @return      bool True if successful, false otherwise
 	*/
 	function update_log( $log_data = array(), $log_meta = array() ) {
+
+		do_action( 'edd_pre_update_log', $log_id );
+
+		$defaults = array(
+			'post_type' 	=> 'edd_log',
+			'post_status'	=> 'publish',
+			'post_parent'	=> 0
+		);
+
+		$args = wp_parse_args( $log_data, $defaults );
+
+		// store the log entry
+		$log_id = wp_update_post( $args );
+
+		if( $log_id && ! empty( $log_meta ) ) {
+			foreach( (array) $log_meta as $key => $meta ) {
+				if( ! empty( $meta ) )
+					update_post_meta( $log_id, '_edd_log_' . sanitize_key( $key ), $meta );
+			}
+		}
+
+		do_action( 'edd_post_update_log', $log_id );
 
 	}
 
@@ -165,7 +187,12 @@ class EDD_Logging {
 
 		$query_args = wp_parse_args( $args, $defaults );
 
-		// TODO setup type options here
+		if( ! empty( $type ) ) {
+
+			$query_args['meta_key'] 	= '_edd_log_type';
+			$query_args['meta_value'] 	= $type;
+
+		}
 
 		$logs = get_posts( $query_args );
 
