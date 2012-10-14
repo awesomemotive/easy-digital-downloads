@@ -69,7 +69,7 @@ function edd_manual_payment( $purchase_data ) {
 	$payment = edd_insert_payment( $payment );
 		
 	if($payment) {
-		//edd_update_payment_status( $payment, 'publish' );
+		edd_update_payment_status( $payment, 'publish' );
 		// empty the shopping cart
 		edd_empty_cart();
 		edd_send_to_success_page();
