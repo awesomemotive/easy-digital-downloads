@@ -74,7 +74,7 @@ class EDD_Logging {
 
 	function get_logs( $object_id, $type = null, $paged = null ) {
 
-		return $this->get_connected_logs( array( 'post_parent' => $object_id ), $type );
+		return $this->get_connected_logs( array( 'post_parent' => $object_id, 'paged' => $paged ), $type );
 
 	}
 
@@ -200,6 +200,29 @@ class EDD_Logging {
 
 		// no logs found
 		return false;
+
+	}
+
+
+	function get_log_count( $object_id = 0, $type = null ) {
+
+		$args = array(
+			'post_parent' 	=> $object_id,
+			'post_type'		=> 'edd_log',
+			'posts_per_page'=> -1,
+			'post_status'	=> 'publish'
+		);
+
+		if( ! empty( $type ) ) {
+
+			$query_args['meta_key'] 	= '_edd_log_type';
+			$query_args['meta_value'] 	= $type;
+
+		}
+
+		$logs = new WP_Query( $args );
+
+		return (int) $logs->post_count;
 
 	}
 
