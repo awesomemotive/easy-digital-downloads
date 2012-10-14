@@ -393,10 +393,15 @@ function edd_get_sales_by_date( $day = null, $month_num, $year ) {
 
 function edd_is_payment_complete( $payment_id ) {
 	$payment = get_post($payment_id);
-	if( $payment )
+		
+	$ret = false;
+
+	if( $payment ) {
 		if( $payment->post_status == 'publish' )
-			return true;
-	return false;
+			$ret = true;
+	}
+
+	return apply_filters( 'edd_is_payment_complete', $ret, $payment_id );
 }
 
 
