@@ -594,9 +594,7 @@ function edd_render_download_log_meta_box() {
 	$download_log = new EDD_Logging();
 
 	$file_downloads = $download_log->get_logs( $post->ID, 'file_download', $page );
-	
-	print_r( $file_downloads ); exit;
-	
+		
 	echo '<table class="form-table">';
 		echo '<tr>';
 			echo '<th style="width:20%"><strong>' . __( 'Download Log', 'edd' ) . '</strong></th>';
