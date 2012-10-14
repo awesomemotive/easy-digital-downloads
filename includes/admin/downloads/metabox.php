@@ -551,10 +551,9 @@ function edd_render_purchase_log_meta_box() {
 			echo '</tr>';		
 		}
 	echo '</table>';
-	
-	/*
-	$total_log_entries = $sales_log['number'];		
-	$total_pages = ceil( $total_log_entries / $per_page );
+
+	$total_log_entries = $sales_log->get_log_count( $post->ID, 'sale' );	
+	$total_pages = ceil( $total_log_entries / 10 );
 	
 	if ( $total_pages > 1) :
 		echo '<div class="tablenav">';
@@ -562,7 +561,7 @@ function edd_render_purchase_log_meta_box() {
 				$base = 'post.php?post=' . $post->ID . '&action=edit%_%';		
 				echo paginate_links( array(
 					'base'         => $base,
-					'format'       => '&edd_sales_log_page=%#%',
+					'format'       => '&paged=%#%',
 					'prev_text'    => '&laquo; ' . __( 'Previous', 'edd' ),
 					'next_text'    => __( 'Next', 'edd' ) . ' &raquo;',
 					'total'        => $total_pages,
@@ -574,7 +573,7 @@ function edd_render_purchase_log_meta_box() {
 			echo '</div>';
 		echo '</div><!--end .tablenav-->';
 	endif;
-	*/
+	
 	
 }
 
