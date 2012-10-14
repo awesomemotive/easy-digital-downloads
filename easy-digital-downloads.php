@@ -123,6 +123,7 @@ if( is_admin() ) {
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php' );	
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/settings/settings.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/upgrades.php' );
 } else {
 	include_once( EDD_PLUGIN_DIR . 'includes/process-purchase.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/process-download.php' );
