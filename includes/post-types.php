@@ -38,19 +38,19 @@ function edd_setup_edd_post_types() {
 	}
 	
 	$download_labels =  apply_filters( 'edd_download_labels', array(
-		'name' => '%2$s',
-		'singular_name' => '%1$s',
-		'add_new' => __('Add New', 'edd'),
-		'add_new_item' => __('Add New %1$s', 'edd'),
-		'edit_item' => __('Edit %1$s', 'edd'),
-		'new_item' => __('New %1$s', 'edd'),
-		'all_items' => __('All %2$s', 'edd'),
-		'view_item' => __('View %1$s', 'edd'),
-		'search_items' => __('Search %2$s', 'edd'),
-		'not_found' =>  __('No %2$s found', 'edd'),
-		'not_found_in_trash' => __('No %2$s found in Trash', 'edd'), 
+		'name' 				=> '%2$s',
+		'singular_name' 	=> '%1$s',
+		'add_new' 			=> __('Add New', 'edd'),
+		'add_new_item' 		=> __('Add New %1$s', 'edd'),
+		'edit_item' 		=> __('Edit %1$s', 'edd'),
+		'new_item' 			=> __('New %1$s', 'edd'),
+		'all_items' 		=> __('All %2$s', 'edd'),
+		'view_item' 		=> __('View %1$s', 'edd'),
+		'search_items' 		=> __('Search %2$s', 'edd'),
+		'not_found' 		=>  __('No %2$s found', 'edd'),
+		'not_found_in_trash'=> __('No %2$s found in Trash', 'edd'), 
 		'parent_item_colon' => '',
-		'menu_name' => __('%2$s', 'edd')
+		'menu_name' 		=> __('%2$s', 'edd')
 	) );
 	
 	foreach ( $download_labels as $key => $value ) {
@@ -58,17 +58,17 @@ function edd_setup_edd_post_types() {
 	}
 	
 	$download_args = array(
-		'labels' => $download_labels,
-		'public' => true,
-		'publicly_queryable' => true,
-		'show_ui' => true, 
-		'show_in_menu' => true, 
-		'query_var' => true,
-		'rewrite' => $rewrite,
-		'capability_type' => 'post',
-		'has_archive' => $archives, 
-		'hierarchical' => false,
-		'supports' => apply_filters('edd_download_supports', array( 'title', 'editor', 'thumbnail' ) ),
+		'labels' 			=> $download_labels,
+		'public' 			=> true,
+		'publicly_queryable'=> true,
+		'show_ui' 			=> true, 
+		'show_in_menu' 		=> true, 
+		'query_var' 		=> true,
+		'rewrite' 			=> $rewrite,
+		'capability_type' 	=> 'post',
+		'has_archive' 		=> $archives, 
+		'hierarchical' 		=> false,
+		'supports' 			=> apply_filters('edd_download_supports', array( 'title', 'editor', 'thumbnail' ) ),
 	); 
 	register_post_type( 'download', apply_filters( 'edd_download_post_type_args', $download_args ) );
 	
@@ -76,35 +76,35 @@ function edd_setup_edd_post_types() {
 	/* payment post type */	
 	
 	$payment_labels = array(
-		'name' => _x('Payments', 'post type general name', 'edd'),
-		'singular_name' => _x('Payment', 'post type singular name', 'edd'),
-		'add_new' => __('Add New', 'edd'),
-		'add_new_item' => __('Add New Payment', 'edd'),
-		'edit_item' => __('Edit Payment', 'edd'),
-		'new_item' => __('New Payment', 'edd'),
-		'all_items' => __('All Payments', 'edd'),
-		'view_item' => __('View Payment', 'edd'),
-		'search_items' => __('Search Payments', 'edd'),
-		'not_found' =>  __('No Payments found', 'edd'),
-		'not_found_in_trash' => __('No Payments found in Trash', 'edd'), 
+		'name' 				=> _x('Payments', 'post type general name', 'edd'),
+		'singular_name' 	=> _x('Payment', 'post type singular name', 'edd'),
+		'add_new' 			=> __('Add New', 'edd'),
+		'add_new_item' 		=> __('Add New Payment', 'edd'),
+		'edit_item' 		=> __('Edit Payment', 'edd'),
+		'new_item' 			=> __('New Payment', 'edd'),
+		'all_items' 		=> __('All Payments', 'edd'),
+		'view_item' 		=> __('View Payment', 'edd'),
+		'search_items' 		=> __('Search Payments', 'edd'),
+		'not_found' 		=>  __('No Payments found', 'edd'),
+		'not_found_in_trash'=> __('No Payments found in Trash', 'edd'), 
 		'parent_item_colon' => '',
-		'menu_name' => __('Payment History', 'edd')
+		'menu_name' 		=> __('Payment History', 'edd')
 	);
 	
 	$payment_args = array(
-		'labels' => apply_filters( 'edd_payment_labels', $payment_labels ),
-		'public' => false,
-		'publicly_queryable' => false,
-		'show_ui' => false, 
-		'show_in_menu' => false, 
-		'show_in_nav_menu' => false, 
-		'query_var' => false,
-		'rewrite' => false,
-		'capability_type' => 'post',
-		'has_archive' => false, 
-		'hierarchical' => false,
-		'supports' => array( 'title' ),
-		'menu_icon' => EDD_PLUGIN_URL . 'includes/images/media-button.png'
+		'labels' 			=> apply_filters( 'edd_payment_labels', $payment_labels ),
+		'public' 			=> false,
+		'publicly_queryable'=> false,
+		'show_ui' 			=> false, 
+		'show_in_menu' 		=> false, 
+		'show_in_nav_menu' 	=> false, 
+		'query_var' 		=> false,
+		'rewrite' 			=> false,
+		'capability_type' 	=> 'post',
+		'has_archive' 		=> false, 
+		'hierarchical' 		=> false,
+		'supports' 			=> array( 'title' ),
+		'menu_icon' 		=> EDD_PLUGIN_URL . 'includes/images/media-button.png'
 	); 
 	register_post_type( 'edd_payment', $payment_args );
 	
