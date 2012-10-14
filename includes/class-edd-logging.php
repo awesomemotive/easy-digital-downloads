@@ -16,9 +16,6 @@
 /**
  * A general use class for logging events and errors.
  *
- * This class is extended to log each time someone downloads a file,
- * anytime there is an error processing payment, and anything else we may need to log
- *
  * @access      private
  * @since       x.x.x
  * @return      void
