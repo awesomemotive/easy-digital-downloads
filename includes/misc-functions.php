@@ -38,8 +38,11 @@ function edd_is_test_mode() {
 function edd_no_guest_checkout() {
 	global $edd_options;
 	if( isset( $edd_options['logged_in_only'] ) )
-		return true;
-	return false;
+		$ret = true;
+	else
+		$ret = false;
+
+	return (bool) apply_filters( 'edd_no_guest_checkout', $ret );
 }
 
 
