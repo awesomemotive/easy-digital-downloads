@@ -40,9 +40,8 @@ function edd_change_downloads_upload_dir() {
             // now add blank index.php files to the {year}/{month} directory
             if ( wp_mkdir_p( $upload_path ) ) {           
 
-                $folder = '.';
-                if( !file_exists( $folder . 'index.php' ) ) {
-                    @file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
+                if( !file_exists( $upload_path . '/index.php' ) ) {
+                    @file_put_contents( $upload_path . '/index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
                 }
  
             }
