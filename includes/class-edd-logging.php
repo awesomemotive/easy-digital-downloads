@@ -72,7 +72,7 @@ class EDD_Logging {
 	 * @return      array
 	*/
 
-	function get_logs( $object_id, $type = null, $paged = null ) {
+	function get_logs( $object_id = 0, $type = null, $paged = null ) {
 
 		return $this->get_connected_logs( array( 'post_parent' => $object_id, 'paged' => $paged ), $type );
 
@@ -203,6 +203,17 @@ class EDD_Logging {
 
 	}
 
+
+	/**
+	 * Retrieves number of log entries connected to particular object ID
+	 *
+	 * @access  private
+	 * @since 	x.x.x
+	 *
+	 * @uses 	WP_Query()
+	 *
+	 * @return  int
+	*/
 
 	function get_log_count( $object_id = 0, $type = null ) {
 
