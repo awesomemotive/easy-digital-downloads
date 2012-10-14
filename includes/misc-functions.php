@@ -569,7 +569,7 @@ function edd_get_states_list() {
 */
 
 function edd_get_provinces_list() {
-	$provinces =array(
+	$provinces = array(
 		'AB' => 'Alberta',
 		'BC' => 'British Columbia',
 		'MB' => 'Manitoba',
@@ -585,7 +585,7 @@ function edd_get_provinces_list() {
 		'YT' => 'Yukon'
 	);
 
-	return $provinces;
+	return apply_filters( 'edd_canada_provinces', $provinces );
 }
 
 
