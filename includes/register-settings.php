@@ -339,7 +339,7 @@ function edd_register_settings() {
 		add_settings_field(
 			'edd_settings_general[' . $option['id'] . ']',
 			$option['name'],
-			function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_text_callback',
+			function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
 			'edd_settings_general',
 			'edd_settings_general',
 			array(
@@ -365,7 +365,7 @@ function edd_register_settings() {
 		add_settings_field(
 			'edd_settings_gateways[' . $option['id'] . ']',
 			$option['name'],
-			function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_text_callback',
+			function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
 			'edd_settings_gateways',
 			'edd_settings_gateways',
 			array(
@@ -391,7 +391,7 @@ function edd_register_settings() {
 		add_settings_field(
 			'edd_settings_emails[' . $option['id'] . ']',
 			$option['name'],
-			function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_text_callback',
+			function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
 			'edd_settings_emails',
 			'edd_settings_emails',
 			array(
@@ -417,7 +417,7 @@ function edd_register_settings() {
 		add_settings_field(
 			'edd_settings_styles[' . $option['id'] . ']',
 			$option['name'],
-			function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_text_callback',
+			function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
 			'edd_settings_styles',
 			'edd_settings_styles',
 			array(
@@ -444,7 +444,7 @@ function edd_register_settings() {
 		add_settings_field(
 			'edd_settings_misc[' . $option['id'] . ']',
 			$option['name'],
-			function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_text_callback',
+			function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
 			'edd_settings_misc',
 			'edd_settings_misc',
 			array(
@@ -666,6 +666,20 @@ function edd_password_callback($args) {
 	echo $html; 
 }
 
+
+/**
+ * Missing Callback
+ *
+ * If a function is missing for settings callbacks alert the user.
+ *
+ * @access      private
+ * @since       1.3.1
+ * @return      void
+*/
+
+function edd_missing_callback($args) {
+	echo "The <strong>" . $args['id'] . "</strong> setting's callback function is missing."; 
+}
 
 /**
  * Select Callback
