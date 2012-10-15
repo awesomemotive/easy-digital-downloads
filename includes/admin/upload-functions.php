@@ -23,7 +23,7 @@
 function edd_change_downloads_upload_dir() {
     global $pagenow;
 
-    if( !empty( $_POST['post_id'] ) && ( 'async-upload.php' == $pagenow || 'media-upload.php' == $pagenow ) ) {
+    if( !empty( $_REQUEST['post_id'] ) && ( 'async-upload.php' == $pagenow || 'media-upload.php' == $pagenow ) ) {
         if( 'download' == get_post_type( $_REQUEST['post_id'] ) ) {
         
             $wp_upload_dir = wp_upload_dir();
@@ -40,9 +40,8 @@ function edd_change_downloads_upload_dir() {
             // now add blank index.php files to the {year}/{month} directory
             if ( wp_mkdir_p( $upload_path ) ) {           
 
-                $folder = '.';
-                if( !file_exists( $folder . 'index.php' ) ) {
-                    @file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
+                if( !file_exists( $upload_path . '/index.php' ) ) {
+                    @file_put_contents( $upload_path . '/index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
                 }
  
             }
