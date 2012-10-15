@@ -678,7 +678,7 @@ function edd_password_callback($args) {
 */
 
 function edd_missing_callback($args) {
-	echo "The <strong>" . $args['id'] . "</strong> setting's callback function is missing."; 
+	printf( __( 'The callback function used for the <strong>%s</strong> setting is missing.', 'edd' ), $args['id'] );
 }
 
 /**
