@@ -83,15 +83,15 @@ class EDD_Logging {
 	
 		register_taxonomy( 'edd_log_type', 'edd_log' );
 
-		if( !term_exists( 'sale', 'edd_log_type' ) ) {
+		if( ! term_exists( 'sale', 'edd_log_type' ) ) {
 			wp_insert_term( 'sale', 'edd_log_type' );
 		}
 
-		if( !term_exists( 'file_download', 'edd_log_type' ) ) {
+		if( ! term_exists( 'file_download', 'edd_log_type' ) ) {
 			wp_insert_term( 'file_download', 'edd_log_type' );
 		}
 
-		if( !term_exists( 'gateway_error', 'edd_log_type' ) ) {
+		if( ! term_exists( 'gateway_error', 'edd_log_type' ) ) {
 			wp_insert_term( 'gateway_error', 'edd_log_type' );
 		}
 
