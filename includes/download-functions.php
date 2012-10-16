@@ -549,6 +549,39 @@ function edd_get_file_download_limit( $download_id = 0 ) {
 
 
 /**
+ * Increments the total number of times a particular file has been downloaded
+ *
+ * @access      public
+ * @since       1.3.1 
+ * @return      int The new total count
+*/
+
+function edd_increase_file_download_count( $download_id = 0, $payment_id = 0, $file_id = 0 ) {
+
+	// this function needs to count log entries related to the particular download / purchase
+
+}
+
+
+/**
+ * Checks if a file is at its download limit
+ *
+ * This limit refers to the maximum number of times files connected to a product
+ * can be downloaded. 
+ *
+ * @access      public
+ * @since       1.3.1 
+ * @return      bool False if not at limit, True if at limit
+*/
+
+function edd_is_file_at_download_limit( $download_id = 0, $payment_id, $file_id = 0 ) {
+
+	// checks to see if at limit
+
+}
+
+
+/**
  * Gets the Price ID that can download a file
  *
  * @access      public
