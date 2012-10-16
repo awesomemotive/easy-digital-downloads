@@ -26,7 +26,75 @@ class EDD_Logging {
 
 	function __construct() {
 
-		// let's run this puppy!
+		// create the log post type
+		add_action( 'admin_init', array( $this, 'register_post_type' ) );
+		
+		// create types taxonomy and default types
+		add_action( 'admin_init', array( $this, 'register_taxonomy' ) );
+
+	}
+
+
+	/**
+	 * Registers the edd_log Post Type
+	 *
+	 * @access      private
+	 * @since       x.x.x
+	 *
+	 * @uses 		register_post_type()
+	 *
+	 * @return     void
+	*/
+
+	function register_post_type() {
+		
+		/* logs post type */	
+
+		$log_args = array(
+			'labels' 			=> array( 'name' => __( 'Logs', 'edd' ) ),
+			'public' 			=> false,
+			'query_var' 		=> false,
+			'rewrite' 			=> false,
+			'capability_type' 	=> 'post',
+			'supports' 			=> array( 'title' ),
+			'can_export'		=> false
+		); 
+		register_post_type( 'edd_log', $log_args );
+
+	}
+
+
+	/**
+	 * Registers the Type Taxonomy
+	 *
+	 * The Type taxonomy is used to determine the type of log entry
+	 *
+	 * @access      private
+	 * @since       x.x.x
+	 *
+	 * @uses 		register_taxonomy()
+	 * @uses 		term_exists()
+	 * @uses 		wp_insert_term()
+	 *
+	 * @return     void
+	*/
+
+	function register_taxonomy() {
+	
+		register_taxonomy( 'edd_log_type', 'edd_log' );
+
+		if( !term_exists( 'sale', 'edd_log_type' ) ) {
+			wp_insert_term( 'sale', 'edd_log_type' );
+		}
+
+		if( !term_exists( 'file_download', 'edd_log_type' ) ) {
+			wp_insert_term( 'file_download', 'edd_log_type' );
+		}
+
+		if( !term_exists( 'gateway_error', 'edd_log_type' ) ) {
+			wp_insert_term( 'gateway_error', 'edd_log_type' );
+		}
+
 
 	}
 
@@ -91,7 +159,7 @@ class EDD_Logging {
 	 * @return      int The ID of the newly created log item
 	*/
 
-	function insert_log( $log_data = array(), $log_meta = array() ) {
+	function insert_log( $log_data = array(), $type = false, $log_meta = array() ) {
 
 		$defaults = array(
 			'post_type' 	=> 'edd_log',
@@ -107,6 +175,12 @@ class EDD_Logging {
 
 		// store the log entry
 		$log_id = wp_insert_post( $args );
+
+		if( $type ) {
+			// define the log type
+			wp_set_object_terms( $log_id, $type, 'edd_log_type', false );
+		}
+
 
 		if( $log_id && ! empty( $log_meta ) ) {
 			foreach( (array) $log_meta as $key => $meta ) {
@@ -187,8 +261,13 @@ class EDD_Logging {
 
 		if( ! empty( $type ) ) {
 
-			$query_args['meta_key'] 	= '_edd_log_type';
-			$query_args['meta_value'] 	= $type;
+			$query_args['tax_query'] = array(
+				array(
+					'taxonomy' 	=> 'edd_log_type',
+					'field'		=> 'slug',
+					'terms'		=> $type
+				)
+			);
 
 		}
 
@@ -225,8 +304,13 @@ class EDD_Logging {
 
 		if( ! empty( $type ) ) {
 
-			$query_args['meta_key'] 	= '_edd_log_type';
-			$query_args['meta_value'] 	= $type;
+			$query_args['tax_query'] = array(
+				array(
+					'taxonomy' 	=> 'edd_log_type',
+					'field'		=> 'slug',
+					'terms'		=> $type
+				)
+			);
 
 		}
 
@@ -237,3 +321,6 @@ class EDD_Logging {
 	}
 
 }
+
+// initiate the logging system
+$GLOBALS['edd_logs'] = new EDD_Logging();
