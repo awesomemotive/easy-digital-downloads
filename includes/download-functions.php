@@ -675,6 +675,6 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 function edd_get_product_notes( $download_id ) {
 	$notes = get_post_meta( $download_id, 'edd_product_notes', true );
 	if ( $notes )
-		return apply_filters( 'edd_product_notes', $notes, $download_id );
+		return (string) apply_filters( 'edd_product_notes', $notes, $download_id );
 	return '';
 }
