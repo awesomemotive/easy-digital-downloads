@@ -172,7 +172,7 @@ class EDD_Logging {
 	*/
 
 	function get_logs( $object_id = 0, $type = null, $paged = null ) {
-		return $this->get_connected_logs( array( 'post_parent' => $object_id, 'paged' => $paged ), $type );
+		return $this->get_connected_logs( array( 'post_parent' => $object_id, 'paged' => $paged, 'log_type' => $type ) );
 
 	}
 
@@ -285,7 +285,7 @@ class EDD_Logging {
 			'post_type'		=> 'edd_log',
 			'posts_per_page'=> 10,
 			'post_status'	=> 'publish',
-			'paged'			=> get_query_var( 'paged' )
+			'paged'			=> get_query_var( 'paged' ),
 			'log_type'		=> false
 		);
 
