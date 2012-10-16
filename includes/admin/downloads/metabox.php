@@ -73,6 +73,7 @@ function edd_download_meta_box_save( $post_id) {
 			'_edd_purchase_text',
 			'_edd_purchase_style',
 			'_edd_purchase_color',
+			'_edd_download_limit',
 			'_edd_hide_purchase_link',
 			'edd_product_notes'
 		)
@@ -322,6 +323,7 @@ function edd_render_files_field( $post_id ) {
 }
 add_action( 'edd_meta_box_fields', 'edd_render_files_field', 20 );
 
+
 /**
  * Individual file row.
  *
@@ -376,6 +378,35 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 <?php
 }
 add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
+
+
+/**
+ * File download limit row
+ *
+ * The file download limit is the maximum number of times each file
+ * can be downloaded by the buyer
+ *
+ * @access      private
+ * @since       1.3.1
+ * @return      void
+ */
+
+function edd_render_download_limit_row( $post_id ) {
+	global $edd_options;
+	$edd_download_limit = edd_get_file_download_limit( $post_id );
+?>
+	<p>
+		<strong><?php _e( 'File Download Limit:', 'edd' ); ?></strong>
+	</p>
+	<label for="edd_download_limit">
+		<input type="text" name="_edd_download_limit" id="edd_download_limit" value="<?php echo isset( $edd_download_limit ) ? esc_attr( $edd_download_limit ) : ''; ?>" size="30" style="width:80px;" placeholder="0"/>
+		<?php _e( 'The maximum number of times a buyer can download each file', 'edd' ); ?>
+	</label>
+
+<?php
+}
+add_action( 'edd_meta_box_fields', 'edd_render_download_limit_row', 20 );
+
 
 /**
  * Render Disable Button

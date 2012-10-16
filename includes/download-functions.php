@@ -526,6 +526,28 @@ function edd_get_download_files( $download_id, $variable_price_id = null ) {
 	return $files;
 }
 
+
+/**
+ * Gets the file download file limit for a particular download
+ *
+ * This limit refers to the maximum number of times files connected to a product
+ * can be downloaded. 
+ *
+ * @access      public
+ * @since       1.3.1 
+ * @return      int The limit
+*/
+
+function edd_get_file_download_limit( $download_id = 0 ) {
+
+	$limit = get_post_meta( $download_id, '_edd_download_file_limit', true );
+	if( $limit )
+		return absint( $limit );
+	return 0;
+
+}
+
+
 /**
  * Gets the Price ID that can download a file
  *
