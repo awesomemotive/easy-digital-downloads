@@ -424,6 +424,7 @@ function edd_metabox_save_check_blank_rows( $new ) {
 add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_metabox_save_check_blank_rows' );
 add_filter( 'edd_metabox_save_edd_download_files', 'edd_metabox_save_check_blank_rows' );
 
+
 /** Product Notes *****************************************************************/
 
 /**
@@ -458,6 +459,7 @@ function edd_render_product_notes_field( $post_id ) {
 <?php
 }
 add_action( 'edd_product_notes_meta_box_fields', 'edd_render_product_notes_field' );
+
 
 /** Stats *****************************************************************/
 
@@ -604,8 +606,6 @@ function edd_render_download_log_meta_box() {
 		echo '</tr>';
 
 		if( $file_downloads) {
-
-			echo 'test'; exit;
 			
 			$files = edd_get_download_files( $post->ID );
 
@@ -613,6 +613,7 @@ function edd_render_download_log_meta_box() {
 
 				$user_info 	= get_post_meta( $log->ID, '_edd_log_user_info', true );
 				$file_id 	= get_post_meta( $log->ID, '_edd_log_file_id', true );
+				$ip 		= get_post_meta( $log->ID, '_edd_log_ip', true );
 
 				$user_id = isset( $user_info['id']) ? $user_info['id'] : 0;
 				
@@ -622,8 +623,10 @@ function edd_render_download_log_meta_box() {
 				} else {
 					$name = $user_info['email'];
 				}
-				$file_name = $files[ $file_download['file_id'] ]['name'];
-				
+
+				$file_id = $file_id !== false ? $file_id : 0;
+				$file_name = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
+
 				echo '<tr>';
 				
 					echo '<td class="edd_download_sales_log">';
@@ -635,7 +638,7 @@ function edd_render_download_log_meta_box() {
 					echo '</td>';
 					
 					echo '<td class="edd_download_sales_log">';
-						echo '<strong>' . __( 'IP Address:', 'edd' ) . '</strong> ' . $user_info['ip'];
+						echo '<strong>' . __( 'IP Address:', 'edd' ) . '</strong> ' . $ip;
 					echo '</td>';
 					
 					echo '<td colspan="2" class="edd_download_sales_log">';
@@ -643,6 +646,7 @@ function edd_render_download_log_meta_box() {
 					echo '</td>';
 					
 				echo '</tr>';
+
 				do_action('edd_download_log__meta_box');
 			} // endforeach
 		} else {
@@ -653,10 +657,9 @@ function edd_render_download_log_meta_box() {
 			echo '</tr>';		
 		}
 	echo '</table>';
-	
-	/*
-	$total_log_entries = $download_log['number'];		
-	$total_pages = ceil( $total_log_entries / $per_page );
+
+	$total_log_entries = $download_log->get_log_count( $post->ID, 'file_download' );	
+	$total_pages = ceil( $total_log_entries / 10 );
 	
 	if ( $total_pages > 1) :
 		echo '<div class="tablenav">';
@@ -664,7 +667,7 @@ function edd_render_download_log_meta_box() {
 				$base = 'post.php?post=' . $post->ID . '&action=edit%_%';		
 				echo paginate_links( array(
 					'base'         => $base,
-					'format'       => '&edd_log_page=%#%',
+					'format'       => '&paged=%#%',
 					'prev_text'    => '&laquo; ' . __( 'Previous', 'edd' ),
 					'next_text'    => __( 'Next', 'edd' ) . ' &raquo;',
 					'total'        => $total_pages,
@@ -676,5 +679,5 @@ function edd_render_download_log_meta_box() {
 			echo '</div>';
 		echo '</div><!--end .tablenav-->';
 	endif;
-	*/
+
 }
