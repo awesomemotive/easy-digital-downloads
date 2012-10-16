@@ -80,24 +80,58 @@ class EDD_Logging {
 	*/
 
 	function register_taxonomy() {
-	
+
 		register_taxonomy( 'edd_log_type', 'edd_log' );
 
-		if( ! term_exists( 'sale', 'edd_log_type' ) ) {
-			wp_insert_term( 'sale', 'edd_log_type' );
+		$types = $this->log_types();
+
+		foreach ( $types as $type ) {
+			if( ! term_exists( $type, 'edd_log_type' ) ) {
+				wp_insert_term( $type, 'edd_log_type' );
+			}
 		}
-
-		if( ! term_exists( 'file_download', 'edd_log_type' ) ) {
-			wp_insert_term( 'file_download', 'edd_log_type' );
-		}
-
-		if( ! term_exists( 'gateway_error', 'edd_log_type' ) ) {
-			wp_insert_term( 'gateway_error', 'edd_log_type' );
-		}
-
-
 	}
 
+
+	/**
+	 * Log types
+	 *
+	 * Sets up the default log types and allows for new ones to be created
+	 *
+	 * @access      private
+	 * @since       x.x.x
+	 *
+	 *
+	 * @return     array
+	*/
+
+	function log_types() {
+		$terms = array(
+			'sale', 'file_download', 'gateway_error'
+		);
+
+		return apply_filters( 'edd_log_types', $terms );
+	}
+
+
+	/**
+	 * Check if a log type is valid
+	 *
+	 * Checks to see if the specified type is in the registered list of types
+	 *
+	 * @access      private
+	 * @since       x.x.x
+	 *
+	 *
+	 * @return     array
+	*/
+
+	function valid_type( $type ) {
+		if ( in_array( $type, $this->log_types() ) )
+			return true;
+
+		return false;
+	}
 
 	/**
 	 * Create new log entry
@@ -159,14 +193,15 @@ class EDD_Logging {
 	 * @return      int The ID of the newly created log item
 	*/
 
-	function insert_log( $log_data = array(), $type = false, $log_meta = array() ) {
+	function insert_log( $log_data = array(), $log_meta = array() ) {
 
 		$defaults = array(
 			'post_type' 	=> 'edd_log',
 			'post_status'	=> 'publish',
 			'post_parent'	=> 0,
 			'post_content'	=> '',
-			'post_date'		=> date( 'Y-m-d H:i:s' )
+			'post_date'		=> date( 'Y-m-d H:i:s' ),
+			'log_type'		=> false
 		);
 
 		$args = wp_parse_args( $log_data, $defaults );
@@ -176,9 +211,8 @@ class EDD_Logging {
 		// store the log entry
 		$log_id = wp_insert_post( $args );
 
-		if( $type ) {
-			// define the log type
-			wp_set_object_terms( $log_id, $type, 'edd_log_type', false );
+		if( $log_data['log_type'] && $this->valid_type( $log_data['log_type'] ) ) {
+			wp_set_object_terms( $log_id, $log_data['log_type'], 'edd_log_type', false );
 		}
 
 
@@ -247,7 +281,7 @@ class EDD_Logging {
 	 * @return  array / false
 	*/
 
-	function get_connected_logs( $args = array(), $type = null ) {
+	function get_connected_logs( $args = array() ) {
 
 		$defaults = array(
 			'post_parent' 	=> 0,
@@ -255,17 +289,18 @@ class EDD_Logging {
 			'posts_per_page'=> 10,
 			'post_status'	=> 'publish',
 			'paged'			=> get_query_var( 'paged' )
+			'log_type'		=> false
 		);
 
 		$query_args = wp_parse_args( $args, $defaults );
 
-		if( ! empty( $type ) ) {
+		if( $query_args['log_type'] && $this->valid_type( $query_args['log_type'] ) ) {
 
 			$query_args['tax_query'] = array(
 				array(
 					'taxonomy' 	=> 'edd_log_type',
 					'field'		=> 'slug',
-					'terms'		=> $type
+					'terms'		=> $query_args['log_type']
 				)
 			);
 
@@ -302,7 +337,7 @@ class EDD_Logging {
 			'post_status'	=> 'publish'
 		);
 
-		if( ! empty( $type ) ) {
+		if( ! empty( $type ) && $this->valid_type( $type ) ) {
 
 			$query_args['tax_query'] = array(
 				array(
