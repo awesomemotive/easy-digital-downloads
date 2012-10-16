@@ -295,7 +295,7 @@ class EDD_Logging {
 
 	function get_log_count( $object_id = 0, $type = null ) {
 
-		$args = array(
+		$query_args = array(
 			'post_parent' 	=> $object_id,
 			'post_type'		=> 'edd_log',
 			'posts_per_page'=> -1,
@@ -314,7 +314,7 @@ class EDD_Logging {
 
 		}
 
-		$logs = new WP_Query( $args );
+		$logs = new WP_Query( $query_args );
 
 		return (int) $logs->post_count;
 
