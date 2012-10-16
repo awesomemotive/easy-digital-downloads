@@ -51,12 +51,12 @@ class EDD_Logging {
 		/* logs post type */	
 
 		$log_args = array(
-			'labels' 			=> array( 'name' => __( 'Logs', 'edd' ) ),
-			'public' 			=> false,
-			'query_var' 		=> false,
-			'rewrite' 			=> false,
-			'capability_type' 	=> 'post',
-			'supports' 			=> array( 'title' ),
+			'labels'			=> array( 'name' => __( 'Logs', 'edd' ) ),
+			'public'			=> false,
+			'query_var'			=> false,
+			'rewrite'			=> false,
+			'capability_type'	=> 'post',
+			'supports'			=> array( 'title' ),
 			'can_export'		=> false
 		); 
 		register_post_type( 'edd_log', $log_args );
