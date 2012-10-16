@@ -27,10 +27,10 @@ class EDD_Logging {
 	function __construct() {
 
 		// create the log post type
-		add_action( 'admin_init', array( $this, 'register_post_type' ) );
+		add_action( 'init', array( $this, 'register_post_type' ), -1 );
 		
 		// create types taxonomy and default types
-		add_action( 'admin_init', array( $this, 'register_taxonomy' ) );
+		add_action( 'init', array( $this, 'register_taxonomy' ), -1 );
 
 	}
 
@@ -129,7 +129,7 @@ class EDD_Logging {
 	function valid_type( $type ) {
 		return in_array( $type, $this->log_types() );
 	}
-	
+
 
 	/**
 	 * Create new log entry
@@ -206,11 +206,13 @@ class EDD_Logging {
 		// store the log entry
 		$log_id = wp_insert_post( $args );
 
+		// set the log type, if any
 		if( $log_data['log_type'] && $this->valid_type( $log_data['log_type'] ) ) {
 			wp_set_object_terms( $log_id, $log_data['log_type'], 'edd_log_type', false );
 		}
 
 
+		// set log meta, if any
 		if( $log_id && ! empty( $log_meta ) ) {
 			foreach( (array) $log_meta as $key => $meta ) {
 				if( ! empty( $meta ) )
