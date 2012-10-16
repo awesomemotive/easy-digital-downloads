@@ -151,14 +151,11 @@ class EDD_Logging {
 
 		$log_data = array(
 			'post_content'	=> $message,
-			'post_parent'	=> $parent
+			'post_parent'	=> $parent,
+			'log_type'		=> $type
 		);
 
-		$log_meta = array(
-			'type'	=> $type
-		);
-
-		return $this->insert_log( $log_data, $log_meta );
+		return $this->insert_log( $log_data );
 
 	}
 
