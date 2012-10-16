@@ -127,10 +127,7 @@ class EDD_Logging {
 	*/
 
 	function valid_type( $type ) {
-		if ( in_array( $type, $this->log_types() ) )
-			return true;
-
-		return false;
+		return in_array( $type, $this->log_types() );
 	}
 
 	/**
