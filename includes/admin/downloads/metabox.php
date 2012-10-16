@@ -405,7 +405,7 @@ function edd_render_download_limit_row( $post_id ) {
 
 <?php
 }
-add_action( 'edd_meta_box_fields', 'edd_render_download_limit_row', 20 );
+//add_action( 'edd_meta_box_fields', 'edd_render_download_limit_row', 20 );
 
 
 /**
