@@ -7,10 +7,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads Plugin (SIE-Version)\n"
+"Project-Id-Version: Easy Digital Downloads v1.3 (SIE-Version)\n"
 "Report-Msgid-Bugs-To: https://github.com/pippinsplugins/Easy-Digital-Downloads/issues\n"
 "POT-Creation-Date: 2012-04-14 16:16+0200\n"
-"PO-Revision-Date: 2012-09-16 13:08+0100\n"
+"PO-Revision-Date: 2012-10-16 14:43+0100\n"
 "Last-Translator: David Decker <deckerweb.mobil@googlemail.com>\n"
 "Language-Team: DECKERWEB <deckerweb.mobil@googlemail.com>\n"
 "MIME-Version: 1.0\n"
@@ -25,22 +25,32 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 #@ edd
+#: includes/admin/admin-notices.php:29
 #: includes/admin-notices.php:30
 msgid "Discount code updated."
 msgstr "Gutschein-Code aktualisiert."
 
 #@ edd
+#: includes/admin/admin-notices.php:32
 #: includes/admin-notices.php:33
 msgid "There was a problem updating your discount code, please try again."
 msgstr "Es gab ein Problem beim Aktualisieren Ihres Gutschein-Codes. Bitte versuchen Sie es erneut."
 
 #@ edd
+#: includes/admin/admin-pages.php:27
+#: includes/admin/discounts/discount-codes.php:34
 #: includes/admin-pages/discount-codes.php:34
 #: includes/admin-pages.php:27
 msgid "Discount Codes"
 msgstr "Gutschein-Codes"
 
 #@ edd
+#: includes/admin/discounts/add-discount.php:18
+#: includes/admin/discounts/discount-codes.php:39
+#: includes/admin/discounts/discount-codes.php:52
+#: includes/admin/discounts/edit-discount.php:23
+#: includes/admin/downloads/dashboard-columns.php:26
+#: includes/admin/reporting/class-customer-reports-table.php:38
 #: includes/admin-pages/discount-codes.php:39
 #: includes/admin-pages/discount-codes.php:52
 #: includes/admin-pages/forms/add-discount.php:18
@@ -50,6 +60,10 @@ msgid "Name"
 msgstr "Name"
 
 #@ edd
+#: includes/admin/discounts/add-discount.php:27
+#: includes/admin/discounts/discount-codes.php:40
+#: includes/admin/discounts/discount-codes.php:53
+#: includes/admin/discounts/edit-discount.php:32
 #: includes/admin-pages/discount-codes.php:40
 #: includes/admin-pages/discount-codes.php:53
 #: includes/admin-pages/forms/add-discount.php:27
@@ -58,12 +72,20 @@ msgid "Code"
 msgstr "Code"
 
 #@ edd
+#: includes/admin/discounts/add-discount.php:36
+#: includes/admin/discounts/edit-discount.php:41
 #: includes/admin-pages/forms/add-discount.php:36
 #: includes/admin-pages/forms/edit-discount.php:41
 msgid "Type"
 msgstr "Art"
 
 #@ edd
+#: includes/admin/discounts/add-discount.php:48
+#: includes/admin/discounts/discount-codes.php:41
+#: includes/admin/discounts/discount-codes.php:54
+#: includes/admin/discounts/edit-discount.php:53
+#: includes/admin/payments/payments-history.php:141
+#: includes/admin/payments/payments-history.php:157
 #: includes/admin-pages/discount-codes.php:41
 #: includes/admin-pages/discount-codes.php:54
 #: includes/admin-pages/forms/add-discount.php:48
@@ -73,12 +95,18 @@ msgid "Amount"
 msgstr "Betrag"
 
 #@ edd
+#: includes/admin/discounts/discount-codes.php:42
+#: includes/admin/discounts/discount-codes.php:55
 #: includes/admin-pages/discount-codes.php:42
 #: includes/admin-pages/discount-codes.php:55
 msgid "Uses"
 msgstr "Verwendung"
 
 #@ edd
+#: includes/admin/discounts/add-discount.php:84
+#: includes/admin/discounts/discount-codes.php:43
+#: includes/admin/discounts/discount-codes.php:56
+#: includes/admin/discounts/edit-discount.php:80
 #: includes/admin-pages/discount-codes.php:43
 #: includes/admin-pages/discount-codes.php:56
 #: includes/admin-pages/forms/add-discount.php:84
@@ -87,18 +115,28 @@ msgid "Max Uses"
 msgstr "Max. Verwendung"
 
 #@ edd
+#: includes/admin/discounts/discount-codes.php:44
+#: includes/admin/discounts/discount-codes.php:57
 #: includes/admin-pages/discount-codes.php:44
 #: includes/admin-pages/discount-codes.php:57
 msgid "Start Date"
 msgstr "Startdatum"
 
 #@ edd
+#: includes/admin/discounts/discount-codes.php:45
+#: includes/admin/discounts/discount-codes.php:58
 #: includes/admin-pages/discount-codes.php:45
 #: includes/admin-pages/discount-codes.php:58
 msgid "Expiration"
 msgstr "Enddatum"
 
 #@ edd
+#: includes/admin/discounts/discount-codes.php:46
+#: includes/admin/discounts/discount-codes.php:59
+#: includes/admin/discounts/edit-discount.php:98
+#: includes/admin/export-functions.php:50
+#: includes/admin/payments/payments-history.php:148
+#: includes/admin/payments/payments-history.php:160
 #: includes/admin-pages/discount-codes.php:46
 #: includes/admin-pages/discount-codes.php:59
 #: includes/admin-pages/forms/edit-discount.php:98
@@ -109,6 +147,8 @@ msgid "Status"
 msgstr "Status"
 
 #@ edd
+#: includes/admin/discounts/discount-codes.php:47
+#: includes/admin/discounts/discount-codes.php:60
 #: includes/admin-pages/discount-codes.php:47
 #: includes/admin-pages/discount-codes.php:60
 #: includes/templates/checkout_cart.php:8
@@ -116,213 +156,252 @@ msgid "Actions"
 msgstr "Aktionen"
 
 #@ edd
+#: includes/admin/discounts/discount-codes.php:82
+#: includes/admin/discounts/discount-codes.php:84
 #: includes/admin-pages/discount-codes.php:82
 #: includes/admin-pages/discount-codes.php:84
 msgid "unlimited"
 msgstr "unbegrenzt"
 
 #@ edd
+#: includes/admin/discounts/discount-codes.php:93
 #: includes/admin-pages/discount-codes.php:93
 msgid "No start date"
 msgstr "Kein Startdatum"
 
 #@ edd
+#: includes/admin/discounts/discount-codes.php:100
 #: includes/admin-pages/discount-codes.php:100
 msgid "Expired"
 msgstr "Verfallen"
 
 #@ edd
+#: includes/admin/discounts/discount-codes.php:102
 #: includes/admin-pages/discount-codes.php:102
 msgid "no expiration"
 msgstr "Verfällt nicht"
 
 #@ edd
+#: includes/admin/discounts/discount-codes.php:108
+#: includes/admin/payments/payments-history.php:182
 #: includes/admin-pages/discount-codes.php:108
 #: includes/admin-pages/payments-history.php:183
 msgid "Edit"
 msgstr "Bearbeiten"
 
 #@ edd
+#: includes/admin/discounts/discount-codes.php:110
 #: includes/admin-pages/discount-codes.php:110
 msgid "Deactivate"
 msgstr "Deaktivieren"
 
 #@ edd
+#: includes/admin/discounts/discount-codes.php:112
 #: includes/admin-pages/discount-codes.php:112
 msgid "Activate"
 msgstr "Aktivieren"
 
 #@ edd
+#: includes/admin/discounts/discount-codes.php:114
+#: includes/admin/payments/payments-history.php:184
 #: includes/admin-pages/discount-codes.php:114
 #: includes/admin-pages/payments-history.php:185
 msgid "Delete"
 msgstr "Löschen"
 
 #@ edd
+#: includes/admin/discounts/discount-codes.php:119
 #: includes/admin-pages/discount-codes.php:119
 msgid "No discount codes have been created."
 msgstr "Bisher wurden keine Gutschein-Codes erstellt."
 
 #@ edd
+#: includes/admin/discounts/add-discount.php:12
 #: includes/admin-pages/forms/add-discount.php:12
 msgid "Add New Discount"
 msgstr "Neuen Gutschein hinzufügen"
 
 #@ edd
+#: includes/admin/discounts/add-discount.php:22
+#: includes/admin/discounts/edit-discount.php:27
 #: includes/admin-pages/forms/add-discount.php:22
 #: includes/admin-pages/forms/edit-discount.php:27
 msgid "The name of this discount"
 msgstr "Der Name dieses Gutscheins"
 
 #@ edd
+#: includes/admin/discounts/add-discount.php:31
+#: includes/admin/discounts/edit-discount.php:36
 #: includes/admin-pages/forms/add-discount.php:31
 #: includes/admin-pages/forms/edit-discount.php:36
 msgid "Enter a code for this discount, such as 10PERCENT"
 msgstr "Geben Sie einen Code für diesen Gutschein ein, zum Beispiel 10PROZENT"
 
 #@ edd
+#: includes/admin/discounts/add-discount.php:40
+#: includes/admin/discounts/edit-discount.php:45
 #: includes/admin-pages/forms/add-discount.php:40
 #: includes/admin-pages/forms/edit-discount.php:45
 msgid "Percentage"
 msgstr "Prozentsatz"
 
 #@ edd
+#: includes/admin/discounts/add-discount.php:41
+#: includes/admin/discounts/edit-discount.php:46
 #: includes/admin-pages/forms/add-discount.php:41
 #: includes/admin-pages/forms/edit-discount.php:46
 msgid "Flat amount"
 msgstr "Pauschale"
 
 #@ edd
+#: includes/admin/discounts/add-discount.php:43
+#: includes/admin/discounts/edit-discount.php:48
 #: includes/admin-pages/forms/add-discount.php:43
 #: includes/admin-pages/forms/edit-discount.php:48
 msgid "The kind of discount to apply for this discount."
 msgstr "Die Art des Rabatts, die für diesen Gutschein verwendet wird."
 
 #@ edd
+#: includes/admin/discounts/add-discount.php:52
+#: includes/admin/discounts/edit-discount.php:57
 #: includes/admin-pages/forms/add-discount.php:52
 #: includes/admin-pages/forms/edit-discount.php:57
 msgid "The amount of this discount code."
 msgstr "Der Rabattbetrag des Gutschein-Codes."
 
 #@ edd
+#: includes/admin/discounts/add-discount.php:57
+#: includes/admin/discounts/edit-discount.php:62
 #: includes/admin-pages/forms/add-discount.php:57
 #: includes/admin-pages/forms/edit-discount.php:62
 msgid "Start date"
 msgstr "Startdatum"
 
 #@ edd
-#: includes/admin-pages/forms/add-discount.php:61
-#: includes/admin-pages/forms/edit-discount.php:66
-msgid "Enter the start date for this discount code in the format of yyyy-mm-dd. For no start date, leave blank. If entered, the discount can only be used after or on this date."
-msgstr "Geben Sie das Startdatum für diesen Gutschein-Code im Format JJJJ-MM-TT ein. Um kein Startdatum zu verwenden, einfach das Feld frei lassen. Falls jedoch ein Startdatum eingegeben wurde, kann der Gutschein nur <em>an</em> diesem Datum <em>oder danach</em> verwendet werden."
-
-#@ edd
+#: includes/admin/discounts/add-discount.php:66
+#: includes/admin/discounts/edit-discount.php:71
 #: includes/admin-pages/forms/add-discount.php:66
 #: includes/admin-pages/forms/edit-discount.php:71
 msgid "Expiration date"
 msgstr "Verfallsdatum"
 
 #@ edd
-#: includes/admin-pages/forms/add-discount.php:70
-#: includes/admin-pages/forms/edit-discount.php:75
-msgid "Enter the expiration date for this discount code in the format of yyyy-mm-dd. For no expiration, leave blank"
-msgstr "Geben Sie das Verfallsdatum (Enddatum) für diesen Gutschein-Code im Format JJJJ-MM-TT ein. Um kein Verfallsdatum zu verwenden, einfach das Feld frei lassen."
-
-#@ edd
+#: includes/admin/discounts/add-discount.php:88
+#: includes/admin/discounts/edit-discount.php:84
 #: includes/admin-pages/forms/add-discount.php:88
 #: includes/admin-pages/forms/edit-discount.php:84
 msgid "The maximum number of times this discount can be used. Leave blank for unlimited."
 msgstr "Wie oft der Gutschein-Code maximal verwendet werden darf. Das Feld frei lassen für unbegrenzte Verwendung."
 
 #@ edd
+#: includes/admin/discounts/add-discount.php:96
 #: includes/admin-pages/forms/add-discount.php:96
 msgid "Add Discount Code"
 msgstr "Gutschein-Code hinzufügen"
 
 #@ edd
+#: includes/admin/discounts/edit-discount.php:13
 #: includes/admin-pages/forms/edit-discount.php:13
 msgid "Something went wrong."
 msgstr "Etwas ging schief."
 
 #@ edd
-#@ default
+#: includes/admin/discounts/edit-discount.php:13
 #: includes/admin-pages/forms/edit-discount.php:13
 #: includes/error-tracking.php:30
-#: includes/process-download.php:266
-#: includes/process-download.php:283
+#: includes/process-download.php:265
+#: includes/process-download.php:280
+#: includes/query-filters.php:39
 msgid "Error"
 msgstr "Fehler"
 
 #@ edd
+#: includes/admin/discounts/edit-discount.php:17
 #: includes/admin-pages/forms/edit-discount.php:17
 msgid "Edit Discount"
 msgstr "Gutschein bearbeiten"
 
 #@ edd
+#: includes/admin/discounts/edit-discount.php:17
+#: includes/admin/payments/edit-payment.php:16
 #: includes/admin-pages/forms/edit-discount.php:17
 #: includes/admin-pages/forms/edit-payment.php:16
 msgid "Go Back"
 msgstr "Zurückgehen"
 
 #@ edd
+#: includes/admin/discounts/edit-discount.php:102
 #: includes/admin-pages/forms/edit-discount.php:102
 msgid "Active"
 msgstr "Aktiv"
 
 #@ edd
+#: includes/admin/discounts/edit-discount.php:103
 #: includes/admin-pages/forms/edit-discount.php:103
 msgid "Inactive"
 msgstr "Inaktiv"
 
 #@ edd
+#: includes/admin/discounts/edit-discount.php:105
 #: includes/admin-pages/forms/edit-discount.php:105
 msgid "The status of this discount code."
 msgstr "Der Status dieses Gutschein-Codes."
 
 #@ edd
+#: includes/admin/discounts/edit-discount.php:115
 #: includes/admin-pages/forms/edit-discount.php:115
 msgid "Update Discount Code"
 msgstr "Gutschein-Code aktualisieren"
 
 #@ edd
+#: includes/admin/payments/edit-payment.php:16
 #: includes/admin-pages/forms/edit-payment.php:16
 #: includes/post-types.php:83
 msgid "Edit Payment"
 msgstr "Zahlung bearbeiten"
 
 #@ edd
+#: includes/admin/payments/edit-payment.php:31
 #: includes/admin-pages/forms/edit-payment.php:31
 msgid "Downloads Purchased"
 msgstr "Gekaufte Downloads"
 
 #@ edd
+#: includes/admin/payments/edit-payment.php:43
 #: includes/admin-pages/forms/edit-payment.php:43
 #, php-format
 msgid "Add download to purchase #%s"
 msgstr "Download zum Kauf #%s hinzufügen"
 
 #@ edd
+#: includes/admin/payments/edit-payment.php:43
 #: includes/admin-pages/forms/edit-payment.php:43
 msgid "Add download to purchase"
 msgstr "Download zum Kauf hinzufügen"
 
 #@ edd
+#: includes/admin/payments/edit-payment.php:78
 #: includes/admin-pages/forms/edit-payment.php:78
 msgid "Update Payment"
 msgstr "Zahlung aktualisieren"
 
 #@ edd
+#: includes/admin/payments/edit-payment.php:91
 #: includes/admin-pages/forms/edit-payment.php:91
 msgid "Add Selected Downloads"
 msgstr "Ausgewählte Downloads hinzufügen"
 
 #@ edd
+#: includes/admin/payments/edit-payment.php:92
+#: includes/admin/payments/payments-history.php:273
 #: includes/admin-pages/forms/edit-payment.php:92
 #: includes/admin-pages/payments-history.php:274
 msgid "Close"
 msgstr "Schliessen"
 
 #@ edd
+#: includes/admin/admin-pages.php:26
+#: includes/admin/payments/payments-history.php:84
 #: includes/admin-pages/payments-history.php:85
 #: includes/admin-pages.php:26
 #: includes/post-types.php:91
@@ -330,31 +409,39 @@ msgid "Payment History"
 msgstr "Bisherige Zahlungen"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:109
 #: includes/admin-pages/payments-history.php:110
 msgid "Payment mode"
 msgstr "Zahlungsmodus"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:111
 #: includes/admin-pages/payments-history.php:112
 msgid "Live"
 msgstr "Live"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:112
 #: includes/admin-pages/payments-history.php:113
 msgid "Test"
 msgstr "Testmodus"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:122
 #: includes/admin-pages/payments-history.php:123
 msgid "Payments per page"
 msgstr "Zahlungen pro Seite"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:124
 #: includes/admin-pages/payments-history.php:125
 msgid "Show"
 msgstr "Zeigen"
 
 #@ edd
+#: includes/admin/export-functions.php:39
+#: includes/admin/payments/payments-history.php:136
+#: includes/admin/payments/payments-history.php:154
 #: includes/admin-pages/payments-history.php:137
 #: includes/admin-pages/payments-history.php:155
 #: includes/export-functions.php:39
@@ -362,20 +449,28 @@ msgid "ID"
 msgstr "ID"
 
 #@ edd
+#: includes/admin/export-functions.php:40
+#: includes/admin/payments/payments-history.php:138
+#: includes/admin/payments/payments-history.php:155
+#: includes/admin/reporting/class-customer-reports-table.php:39
 #: includes/admin-pages/payments-history.php:139
 #: includes/admin-pages/payments-history.php:156
-#: includes/checkout-template.php:387
-#: includes/checkout-template.php:388
+#: includes/checkout-template.php:338
+#: includes/checkout-template.php:339
 #: includes/export-functions.php:40
 msgid "Email"
 msgstr "E-Mail"
 
 #@ edd
+#: includes/admin/export-functions.php:47
 #: includes/export-functions.php:47
 msgid "Key"
 msgstr "Schlüssel"
 
 #@ edd
+#: includes/admin/export-functions.php:43
+#: includes/admin/payments/payments-history.php:139
+#: includes/admin/payments/payments-history.php:156
 #: includes/admin-pages/payments-history.php:140
 #: includes/admin-pages/payments-history.php:157
 #: includes/export-functions.php:43
@@ -383,6 +478,11 @@ msgid "Products"
 msgstr "Produkte"
 
 #@ edd
+#: includes/admin/downloads/dashboard-columns.php:29
+#: includes/admin/downloads/dashboard-columns.php:242
+#: includes/admin/downloads/metabox.php:172
+#: includes/admin/payments/payments-history.php:141
+#: includes/admin/reporting/pdf-reports.php:64
 #: includes/admin-pages/payments-history.php:142
 #: includes/admin-pages/payments-history.php:158
 #: includes/dashboard-columns.php:29
@@ -392,6 +492,10 @@ msgid "Price"
 msgstr "Preis"
 
 #@ edd
+#: includes/admin/downloads/dashboard-columns.php:33
+#: includes/admin/export-functions.php:48
+#: includes/admin/payments/payments-history.php:144
+#: includes/admin/payments/payments-history.php:158
 #: includes/admin-pages/payments-history.php:145
 #: includes/admin-pages/payments-history.php:159
 #: includes/dashboard-columns.php:33
@@ -401,6 +505,9 @@ msgid "Date"
 msgstr "Datum"
 
 #@ edd
+#: includes/admin/export-functions.php:49
+#: includes/admin/payments/payments-history.php:146
+#: includes/admin/payments/payments-history.php:159
 #: includes/admin-pages/payments-history.php:147
 #: includes/admin-pages/payments-history.php:160
 #: includes/export-functions.php:49
@@ -408,32 +515,40 @@ msgid "User"
 msgstr "Benutzer"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:196
 #: includes/admin-pages/payments-history.php:197
 #, php-format
 msgid "Purchase Details for Payment #%s"
 msgstr "Kauf-Details für Zahlung #%s"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:196
 #: includes/admin-pages/payments-history.php:197
 msgid "View Order Details"
 msgstr "Bestelldetails ansehen"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:204
 #: includes/admin-pages/payments-history.php:205
 msgid "Purchased File"
 msgstr "Gekaufte Datei"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:204
 #: includes/admin-pages/payments-history.php:205
 msgid "Purchased Files"
 msgstr "Gekaufte Dateien"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:249
 #: includes/admin-pages/payments-history.php:250
 msgid "Discount used:"
 msgstr "Verwendeter Gutschein:"
 
 #@ edd
+#: includes/admin/export-functions.php:110
+#: includes/admin/export-functions.php:118
+#: includes/admin/payments/payments-history.php:249
 #: includes/admin-pages/payments-history.php:250
 #: includes/export-functions.php:111
 #: includes/export-functions.php:119
@@ -441,43 +556,54 @@ msgid "none"
 msgstr "keiner"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:250
 #: includes/admin-pages/payments-history.php:251
 msgid "Total:"
 msgstr "Gesamt:"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:253
 #: includes/admin-pages/payments-history.php:254
 msgid "Buyer's Personal Details:"
 msgstr "Persönliche Details des Käufers:"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:255
 #: includes/admin-pages/payments-history.php:256
 msgid "Name:"
 msgstr "Name:"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:256
 #: includes/admin-pages/payments-history.php:257
 msgid "Email:"
 msgstr "E-Mail:"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:183
 #: includes/admin-pages/payments-history.php:184
 msgid "Resend Purchase Receipt"
 msgstr "Bestellbestätigung erneut senden"
 
 #@ edd
+#: includes/admin/export-functions.php:134
+#: includes/admin/payments/payments-history.php:297
 #: includes/admin-pages/payments-history.php:298
 #: includes/export-functions.php:135
 msgid "No payments recorded yet"
 msgstr "Bisher keine Zahlungen eingegangen."
 
 #@ edd
+#: includes/admin/admin-pages.php:28
+#: includes/admin/reporting/reports.php:35
 #: includes/admin-pages/reports.php:28
 #: includes/admin-pages.php:28
 msgid "Reports"
 msgstr "Statistiken"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:40
+#: includes/admin/reporting/pdf-reports.php:41
 #: includes/admin-pages/settings-old.php:11
 #: includes/pdf-reports.php:42
 #: includes/pdf-reports.php:43
@@ -490,6 +616,7 @@ msgid "Pages"
 msgstr "Seiten"
 
 #@ edd
+#: includes/admin/settings/settings.php:33
 #: includes/admin-pages/settings-old.php:13
 #: includes/admin-pages/settings-old.php:118
 #: includes/admin-pages/settings.php:34
@@ -498,6 +625,7 @@ msgid "Payment Gateways"
 msgstr "Zahlungsweisen"
 
 #@ edd
+#: includes/admin/settings/settings.php:36
 #: includes/admin-pages/settings-old.php:14
 #: includes/admin-pages/settings.php:37
 msgid "Misc"
@@ -603,7 +731,7 @@ msgstr "Nur angemeldete Benutzer"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:208
-#: includes/register-settings.php:238
+#: includes/register-settings.php:251
 msgid "Require that users be logged-in to purchase files."
 msgstr "Erzwingen Sie, dass Benutzer/ Kunden angemeldet (d.h. registriert) sind, um Dateien kaufen zu können."
 
@@ -622,139 +750,139 @@ msgstr "Währung"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:232
-#: includes/misc-functions.php:185
+#: includes/misc-functions.php:190
 msgid "US Dollars (&#36;)"
 msgstr "US Dollar (&#36;)"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:233
-#: includes/misc-functions.php:186
+#: includes/misc-functions.php:191
 msgid "Euros (&euro;)"
 msgstr "Euro (&euro;)"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:234
-#: includes/misc-functions.php:187
+#: includes/misc-functions.php:192
 msgid "Pounds Sterling (&pound;)"
 msgstr "Pfund Sterling (&pound;)"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:235
-#: includes/misc-functions.php:188
+#: includes/misc-functions.php:193
 msgid "Australian Dollars (&#36;)"
 msgstr "Australische Dollar (&#36;)"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:236
-#: includes/misc-functions.php:189
+#: includes/misc-functions.php:194
 msgid "Brazilian Real (&#36;)"
 msgstr "Brasilianischer Real (&#36;)"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:237
-#: includes/misc-functions.php:190
+#: includes/misc-functions.php:195
 msgid "Canadian Dollars (&#36;)"
 msgstr "Kanadischer Dollar (&#36;)"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:238
-#: includes/misc-functions.php:191
+#: includes/misc-functions.php:196
 msgid "Czech Koruna"
 msgstr "Tschechische Krone"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:239
-#: includes/misc-functions.php:192
+#: includes/misc-functions.php:197
 msgid "Danish Krone"
 msgstr "Dänische Krone"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:240
-#: includes/misc-functions.php:193
+#: includes/misc-functions.php:198
 msgid "Hong Kong Dollar (&#36;)"
 msgstr "Hongkong Dollar (&#36;)"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:241
-#: includes/misc-functions.php:194
+#: includes/misc-functions.php:199
 msgid "Hungarian Forint"
 msgstr "Ungarischer Forint"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:242
-#: includes/misc-functions.php:195
+#: includes/misc-functions.php:200
 msgid "Israeli Shekel"
 msgstr "Israelischer Schekel"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:243
-#: includes/misc-functions.php:196
+#: includes/misc-functions.php:201
 msgid "Japanese Yen (&yen;)"
 msgstr "Japanischer Yen (&yen;)"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:244
-#: includes/misc-functions.php:197
+#: includes/misc-functions.php:202
 msgid "Malaysian Ringgits"
 msgstr "Malaysischer Ringgits"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:245
-#: includes/misc-functions.php:198
+#: includes/misc-functions.php:203
 msgid "Mexican Peso (&#36;)"
 msgstr "Mexikanischer Peso (&#36;)"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:246
-#: includes/misc-functions.php:199
+#: includes/misc-functions.php:204
 msgid "New Zealand Dollar (&#36;)"
 msgstr "Neuseeland Dollar (&#36;)"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:247
-#: includes/misc-functions.php:200
+#: includes/misc-functions.php:205
 msgid "Norwegian Krone"
 msgstr "Norwegische Krone"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:248
-#: includes/misc-functions.php:201
+#: includes/misc-functions.php:206
 msgid "Philippine Pesos"
 msgstr "Philipinischer Pesos"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:249
-#: includes/misc-functions.php:202
+#: includes/misc-functions.php:207
 msgid "Polish Zloty"
 msgstr "Polnischer Zloty"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:250
-#: includes/misc-functions.php:203
+#: includes/misc-functions.php:208
 msgid "Singapore Dollar (&#36;)"
 msgstr "Singapur Dollar (&#36;)"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:251
-#: includes/misc-functions.php:204
+#: includes/misc-functions.php:209
 msgid "Swedish Krona"
 msgstr "Schwedische Krone"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:252
-#: includes/misc-functions.php:205
+#: includes/misc-functions.php:210
 msgid "Swiss Franc"
 msgstr "Schweizer Franken"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:253
-#: includes/misc-functions.php:206
+#: includes/misc-functions.php:211
 msgid "Taiwan New Dollars"
 msgstr "Taiwan New Dollar"
 
 #@ edd
 #: includes/admin-pages/settings-old.php:254
-#: includes/misc-functions.php:207
+#: includes/misc-functions.php:212
 msgid "Thai Baht"
 msgstr "Thai Baht"
 
@@ -820,33 +948,39 @@ msgid "Save Options"
 msgstr "Einstellungen speichern"
 
 #@ edd
+#: includes/admin/discounts/contextual-help.php:39
+#: includes/admin/settings/settings.php:32
 #: includes/admin-pages/settings.php:33
 msgid "General"
 msgstr "Allgemein"
 
 #@ edd
+#: includes/admin/settings/settings.php:34
 #: includes/admin-pages/settings.php:35
 msgid "Emails"
 msgstr "E-Mails"
 
 #@ edd
+#: includes/admin/admin-pages.php:28
 #: includes/admin-pages.php:28
 msgid "Earnings and Sales Reports"
 msgstr "Einnahme- und Verkaufsstatistiken"
 
 #@ edd
+#: includes/admin/admin-pages.php:29
 #: includes/admin-pages.php:29
 msgid "Easy Digital Download Settings"
 msgstr "Einfache Digitale Downloads - Einstellungen"
 
 #@ edd
+#: includes/admin/admin-pages.php:29
 #: includes/admin-pages.php:29
 msgid "Settings"
 msgstr "Einstellungen"
 
 #@ edd
-#: includes/ajax-functions.php:118
-#: includes/process-purchase.php:239
+#: includes/ajax-functions.php:117
+#: includes/process-purchase.php:238
 msgid "The discount you entered is invalid"
 msgstr "Der Gutschein, den Sie eingegeben haben, ist ungültig."
 
@@ -866,7 +1000,7 @@ msgid "Item Price"
 msgstr "Preis des Elements"
 
 #@ edd
-#: includes/cart-template.php:80
+#: includes/cart-template.php:84
 #: includes/templates/checkout_cart.php:36
 msgid "remove"
 msgstr "entfernen"
@@ -877,352 +1011,376 @@ msgid "Total"
 msgstr "Gesamt"
 
 #@ edd
-#: includes/cart-template.php:46
-#: includes/cart-template.php:49
+#: includes/cart-template.php:47
+#: includes/cart-template.php:50
 #: includes/install.php:31
-#: includes/template-functions.php:137
-#: includes/template-functions.php:158
+#: includes/template-functions.php:95
 msgid "Checkout"
 msgstr "Kasse"
 
 #@ edd
-#: includes/checkout-template.php:75
+#: includes/checkout-template.php:414
 msgid "Choose Your Payment Method"
 msgstr "Zahlungsweise wählen"
 
 #@ edd
+#: includes/admin/downloads/metabox.php:601
+#: includes/admin/downloads/metabox.php:698
+#: includes/admin/payments/payments-history.php:318
 #: includes/admin-pages/payments-history.php:319
-#: includes/checkout-template.php:457
-#: includes/metabox.php:525
-#: includes/metabox.php:622
+#: includes/checkout-template.php:472
+#: includes/metabox.php:560
+#: includes/metabox.php:657
 msgid "Next"
 msgstr "Weiter"
 
 #@ edd
-#: includes/checkout-template.php:137
+#: includes/checkout-template.php:103
 msgid "Email address"
 msgstr "E-Mail-Adresse"
 
 #@ edd
-#: includes/checkout-template.php:138
+#: includes/checkout-template.php:104
 msgid "Email Address"
 msgstr "E-Mail-Adresse"
 
 #@ edd
-#: includes/checkout-template.php:142
-#: includes/checkout-template.php:143
-#: includes/checkout-template.php:391
-#: includes/checkout-template.php:392
+#: includes/admin/export-functions.php:41
+#: includes/checkout-template.php:108
+#: includes/checkout-template.php:109
+#: includes/checkout-template.php:342
+#: includes/checkout-template.php:343
 #: includes/export-functions.php:41
 msgid "First Name"
 msgstr "Vorname"
 
 #@ edd
-#: includes/checkout-template.php:146
-#: includes/checkout-template.php:395
+#: includes/checkout-template.php:112
+#: includes/checkout-template.php:346
 msgid "Last name"
 msgstr "Nachname"
 
 #@ edd
-#: includes/checkout-template.php:147
-#: includes/checkout-template.php:396
+#: includes/admin/export-functions.php:42
+#: includes/checkout-template.php:113
+#: includes/checkout-template.php:347
 #: includes/export-functions.php:42
 msgid "Last Name"
 msgstr "Nachname"
 
 #@ edd
-#: includes/checkout-template.php:159
+#: includes/checkout-template.php:442
 msgid "Enter discount"
 msgstr "Gutschein eingeben"
 
 #@ edd
-#: includes/checkout-template.php:161
+#: includes/checkout-template.php:444
 msgid "Discount"
 msgstr "Rabatt"
 
 #@ edd
-#: includes/checkout-template.php:163
+#: includes/checkout-template.php:446
 msgid "Apply Discount"
 msgstr "Gutschein zuweisen"
 
 #@ edd
-#: includes/checkout-template.php:481
+#: includes/admin/downloads/dashboard-columns.php:57
+#: includes/admin/thickbox.php:61
+#: includes/checkout-template.php:491
 #: includes/dashboard-columns.php:58
 #: includes/metabox.php:243
 #: includes/metabox.php:333
-#: includes/shortcodes.php:26
-#: includes/template-functions.php:60
+#: includes/shortcodes.php:28
+#: includes/template-functions.php:54
 #: includes/thickbox.php:61
 msgid "Purchase"
 msgstr "Kaufen"
 
 #@ edd
-#: includes/checkout-template.php:214
+#: includes/checkout-template.php:165
 msgid "Go back"
 msgstr "Zurück gehen"
 
 #@ edd
-#: includes/checkout-template.php:218
+#: includes/checkout-template.php:169
 msgid "You must be logged in to complete your purchase"
 msgstr "Sie müssen angemeldet sein, um Ihren Kauf abschliessen zu können."
 
 #@ edd
-#: includes/checkout-template.php:249
+#: includes/checkout-template.php:200
 msgid "Card name"
 msgstr "Kartenname"
 
 #@ edd
-#: includes/checkout-template.php:250
+#: includes/checkout-template.php:201
 msgid "Name on the Card"
 msgstr "Name auf der Karte"
 
 #@ edd
-#: includes/checkout-template.php:253
+#: includes/checkout-template.php:204
 msgid "Card number"
 msgstr "Kartennummer"
 
 #@ edd
-#: includes/checkout-template.php:254
+#: includes/checkout-template.php:205
 msgid "Card Number"
 msgstr "Kartennummer"
 
 #@ edd
-#: includes/checkout-template.php:257
+#: includes/checkout-template.php:208
 msgid "Security code"
 msgstr "Sicherheits-Code"
 
 #@ edd
-#: includes/checkout-template.php:258
+#: includes/checkout-template.php:209
 msgid "CVC"
 msgstr "Prüfziffer"
 
 #@ edd
-#: includes/checkout-template.php:264
+#: includes/checkout-template.php:215
 #: includes/graphing.php:121
 #: includes/graphing.php:221
 msgid "Month"
 msgstr "Monat"
 
 #@ edd
-#: includes/checkout-template.php:266
+#: includes/checkout-template.php:217
 msgid "Year"
 msgstr "Jahr"
 
 #@ edd
-#: includes/checkout-template.php:267
+#: includes/checkout-template.php:218
 msgid "Expiration (MM/YYYY)"
 msgstr "Gültig bis (MM/JJJJ)"
 
 #@ edd
-#: includes/checkout-template.php:247
+#: includes/checkout-template.php:198
 msgid "Credit Card Info"
 msgstr "Kreditkarten-Infos"
 
 #@ edd
-#: includes/checkout-template.php:297
+#: includes/checkout-template.php:248
 msgid "Address line 1"
 msgstr "Anschrift"
 
 #@ edd
-#: includes/checkout-template.php:298
+#: includes/checkout-template.php:249
 msgid "Billing Address"
 msgstr "Rechnungsanschrift"
 
 #@ edd
-#: includes/checkout-template.php:301
+#: includes/checkout-template.php:252
 msgid "Address line 2"
 msgstr "Anschrift - Zusatz"
 
 #@ edd
-#: includes/checkout-template.php:302
+#: includes/checkout-template.php:253
 msgid "Billing Address Line 2"
 msgstr "Rechnung: Anschrift - Zusatz"
 
 #@ edd
-#: includes/checkout-template.php:305
+#: includes/checkout-template.php:256
 msgid "City"
 msgstr "Ort"
 
 #@ edd
-#: includes/checkout-template.php:306
+#: includes/checkout-template.php:257
 msgid "Billing City"
 msgstr "Rechnung: Ort"
 
 #@ edd
-#: includes/checkout-template.php:320
+#: includes/checkout-template.php:271
 msgid "State / Province"
 msgstr "Bundesland/ Kanton"
 
 #@ edd
-#: includes/checkout-template.php:337
+#: includes/checkout-template.php:288
 msgid "Billing State / Province"
 msgstr "Rechnung: Bundesland/ Kanton"
 
 #@ edd
-#: includes/checkout-template.php:340
+#: includes/checkout-template.php:291
 msgid "Zip / Postal code"
 msgstr "Postleitzahl"
 
 #@ edd
-#: includes/checkout-template.php:341
+#: includes/checkout-template.php:292
 msgid "Billing Zip / Postal Code"
 msgstr "Rechnung: Postleitzahl"
 
 #@ edd
-#: includes/checkout-template.php:370
+#: includes/checkout-template.php:321
 msgid "Create an account"
 msgstr "Ein Benutzerkonto erstellen"
 
 #@ edd
-#: includes/checkout-template.php:373
-#: includes/checkout-template.php:374
-#: includes/checkout-template.php:421
+#: includes/checkout-template.php:324
+#: includes/checkout-template.php:325
+#: includes/checkout-template.php:372
 #: includes/login-register.php:47
 #: includes/login-register.php:48
 msgid "Username"
 msgstr "Benutzername"
 
 #@ edd
-#: includes/checkout-template.php:377
-#: includes/checkout-template.php:378
-#: includes/checkout-template.php:425
+#: includes/checkout-template.php:328
+#: includes/checkout-template.php:329
+#: includes/checkout-template.php:376
 #: includes/login-register.php:51
 msgid "Password"
 msgstr "Passwort"
 
 #@ edd
-#: includes/checkout-template.php:381
+#: includes/checkout-template.php:332
 msgid "Confirm password"
 msgstr "Passwort bestätigen"
 
 #@ edd
-#: includes/checkout-template.php:382
+#: includes/checkout-template.php:333
 msgid "Password Again"
 msgstr "Passwort nochmals"
 
 #@ edd
-#: includes/checkout-template.php:368
+#: includes/checkout-template.php:319
 msgid "Already have an account?"
 msgstr "Haben Sie schon ein Benutzerkonto?"
 
 #@ edd
-#: includes/checkout-template.php:368
+#: includes/checkout-template.php:319
 #: includes/login-register.php:58
 msgid "Login"
 msgstr "Anmelden"
 
 #@ edd
-#: includes/checkout-template.php:417
+#: includes/checkout-template.php:368
 msgid "Login to your account"
 msgstr "Bei Ihrem Benutzerkonto anmelden"
 
 #@ edd
-#: includes/checkout-template.php:420
+#: includes/checkout-template.php:371
 msgid "Your username"
 msgstr "Ihr Benutzername"
 
 #@ edd
-#: includes/checkout-template.php:424
+#: includes/checkout-template.php:375
 msgid "Your password"
 msgstr "Ihr Passwort"
 
 #@ edd
-#: includes/checkout-template.php:432
+#: includes/checkout-template.php:383
 msgid "Need to create an account?"
 msgstr "Benötigen Sie ein Benutzerkonto?"
 
 #@ edd
-#: includes/checkout-template.php:434
+#: includes/checkout-template.php:385
 msgid "Register"
 msgstr "Registrieren"
 
 #@ edd
+#: includes/admin/downloads/dashboard-columns.php:27
+#: includes/admin/reporting/pdf-reports.php:65
 #: includes/dashboard-columns.php:27
 #: includes/pdf-reports.php:67
-#: includes/post-types.php:183
+#: includes/post-types.php:176
 #: includes/widgets.php:169
 msgid "Categories"
 msgstr "Kategorien"
 
 #@ edd
+#: includes/admin/downloads/dashboard-columns.php:28
+#: includes/admin/reporting/pdf-reports.php:66
 #: includes/dashboard-columns.php:28
 #: includes/pdf-reports.php:68
-#: includes/post-types.php:205
+#: includes/post-types.php:201
 #: includes/widgets.php:170
 msgid "Tags"
 msgstr "Schlagwörter"
 
 #@ edd
+#: includes/admin/downloads/dashboard-columns.php:30
+#: includes/admin/reporting/class-download-reports-table.php:39
+#: includes/admin/reporting/graphing.php:91
+#: includes/admin/reporting/pdf-reports.php:212
 #: includes/dashboard-columns.php:30
 #: includes/graphing.php:32
 #: includes/graphing.php:222
 #: includes/pdf-reports.php:208
+#: includes/widgets.php:327
 msgid "Sales"
 msgstr "Verkäufe"
 
 #@ edd
+#: includes/admin/downloads/dashboard-columns.php:31
+#: includes/admin/reporting/class-download-reports-table.php:40
+#: includes/admin/reporting/graphing.php:115
+#: includes/admin/reporting/pdf-reports.php:195
+#: includes/admin/reporting/reports.php:92
 #: includes/dashboard-columns.php:31
 #: includes/graphing.php:78
 #: includes/graphing.php:122
 #: includes/graphing.php:169
 #: includes/pdf-reports.php:191
+#: includes/widgets.php:323
 msgid "Earnings"
 msgstr "Einnahmen"
 
 #@ edd
+#: includes/admin/downloads/dashboard-columns.php:32
 #: includes/dashboard-columns.php:32
 #: includes/metabox.php:346
 msgid "Short Code"
 msgstr "Shortcode"
 
 #@ edd
+#: includes/admin/downloads/dashboard-columns.php:200
 #: includes/dashboard-columns.php:189
 msgid "Show all categories"
 msgstr "Alle Kategorien"
 
 #@ edd
+#: includes/admin/downloads/dashboard-columns.php:211
 #: includes/dashboard-columns.php:200
 msgid "Show all tags"
 msgstr "Alle Schlagwörter"
 
 #@ edd
-#: includes/email-functions.php:59
+#: includes/email-functions.php:62
 msgid "Hello"
 msgstr "Hallo"
 
 #@ edd
-#: includes/email-functions.php:59
+#: includes/email-functions.php:62
 msgid "A download purchase has been made"
 msgstr "Ein Download-Kauf wurde getätigt"
 
 #@ edd
-#: includes/email-functions.php:60
+#: includes/email-functions.php:63
 msgid "Downloads sold:"
 msgstr "Verkaufte Downloads:"
 
 #@ edd
-#: includes/email-functions.php:74
+#: includes/email-functions.php:77
 msgid "Amount: "
 msgstr "Betrag: "
 
 #@ edd
-#: includes/email-functions.php:76
+#: includes/email-functions.php:79
 msgid "Thank you"
 msgstr "Danke!"
 
 #@ edd
-#: includes/email-functions.php:78
+#: includes/email-functions.php:82
 msgid "New download purchase"
 msgstr "Neuer Download-Kauf"
 
 #@ edd
-#: includes/gateways/paypal.php:271
+#: includes/gateways/paypal.php:267
 msgid "Invalid IPN"
 msgstr "Ungültige Sofortige Zahlungsbestätigung (IPN)"
 
 #@ edd
 #: includes/graphing.php:77
-#: includes/post-types.php:125
+#: includes/post-types.php:119
 msgid "Download"
 msgstr "Download"
 
@@ -1302,22 +1460,24 @@ msgid "The style options above do NOT reflect the style of short code. The short
 msgstr "Die Stil-Optionen oben spiegeln NICHT den Stil des Shortcodes wider! Der Shortcode erlaubt Ihnen, einen Kauf-Button für diesen Download an einer beliebigen Stelle Ihrer Webseite zu platzieren."
 
 #@ edd
-#: includes/metabox.php:434
+#: includes/admin/downloads/metabox.php:510
+#: includes/metabox.php:469
 msgid "Sales:"
 msgstr "Verkäufe:"
 
 #@ edd
-#: includes/metabox.php:440
+#: includes/admin/downloads/metabox.php:516
+#: includes/metabox.php:475
 msgid "Earnings:"
 msgstr "Einnahmen:"
 
 #@ edd
-#: includes/scripts.php:123
+#: includes/scripts.php:124
 msgid "Add New Download"
 msgstr "Neuen Download hinzufügen"
 
 #@ edd
-#: includes/post-types.php:126
+#: includes/post-types.php:120
 msgid "Downloads"
 msgstr "Downloads"
 
@@ -1369,181 +1529,181 @@ msgid "No Payments found in Trash"
 msgstr "Es befinden sich keine Zahlungen im Papierkorb."
 
 #@ edd
-#: includes/post-types.php:173
+#: includes/post-types.php:166
 msgctxt "taxonomy general name"
 msgid "Categories"
 msgstr "Kategorien"
 
 #@ edd
-#: includes/post-types.php:174
+#: includes/post-types.php:167
 msgctxt "taxonomy singular name"
 msgid "Category"
 msgstr "Kategorie"
 
 #@ edd
-#: includes/post-types.php:175
+#: includes/post-types.php:168
 msgid "Search Categories"
 msgstr "Kategorien suchen"
 
 #@ edd
-#: includes/post-types.php:176
+#: includes/post-types.php:169
 msgid "All Categories"
 msgstr "Alle Kategorien"
 
 #@ edd
-#: includes/post-types.php:177
+#: includes/post-types.php:170
 msgid "Parent Category"
 msgstr "Übergeordnete Kategorie"
 
 #@ edd
-#: includes/post-types.php:178
+#: includes/post-types.php:171
 msgid "Parent Category:"
 msgstr "Übergeordnete Kategorie:"
 
 #@ edd
-#: includes/post-types.php:179
+#: includes/post-types.php:172
 msgid "Edit Category"
 msgstr "Kategorie bearbeiten"
 
 #@ edd
-#: includes/post-types.php:180
+#: includes/post-types.php:173
 msgid "Update Category"
 msgstr "Kategorie aktualisieren"
 
 #@ edd
-#: includes/post-types.php:181
+#: includes/post-types.php:174
 msgid "Add New Category"
 msgstr "Neue Kategorie"
 
 #@ edd
-#: includes/post-types.php:182
+#: includes/post-types.php:175
 msgid "New Category Name"
 msgstr "Neuer Kategoriename"
 
 #@ edd
-#: includes/post-types.php:195
+#: includes/post-types.php:191
 msgctxt "taxonomy general name"
 msgid "Tags"
 msgstr "Schlagwörter"
 
 #@ edd
-#: includes/post-types.php:196
+#: includes/post-types.php:192
 msgctxt "taxonomy singular name"
 msgid "Tag"
 msgstr "Schlagwort"
 
 #@ edd
-#: includes/post-types.php:197
+#: includes/post-types.php:193
 msgid "Search Tags"
 msgstr "Schlagwörter suchen"
 
 #@ edd
-#: includes/post-types.php:198
+#: includes/post-types.php:194
 msgid "All Tags"
 msgstr "Alle Schlagwörter"
 
 #@ edd
-#: includes/post-types.php:199
+#: includes/post-types.php:195
 msgid "Parent Tag"
 msgstr "Übergeordnetes Schlagwort"
 
 #@ edd
-#: includes/post-types.php:200
+#: includes/post-types.php:196
 msgid "Parent Tag:"
 msgstr "Übergeordnetes Schlagwort:"
 
 #@ edd
-#: includes/post-types.php:201
+#: includes/post-types.php:197
 msgid "Edit Tag"
 msgstr "Schlagwort bearbeiten"
 
 #@ edd
-#: includes/post-types.php:202
+#: includes/post-types.php:198
 msgid "Update Tag"
 msgstr "Schlagwort aktualisieren"
 
 #@ edd
-#: includes/post-types.php:203
+#: includes/post-types.php:199
 msgid "Add New Tag"
 msgstr "Neues Schlagwort"
 
 #@ edd
-#: includes/post-types.php:204
+#: includes/post-types.php:200
 msgid "New Tag Name"
 msgstr "Neuer Schlagwortname"
 
 #@ edd
+#: includes/post-types.php:232
 #: includes/post-types.php:233
-#: includes/post-types.php:234
 msgid "Download updated."
 msgstr "Download aktualisiert."
 
 #@ edd
-#: includes/post-types.php:235
+#: includes/post-types.php:234
 msgid "Download published."
 msgstr "Download veröffentlicht."
 
 #@ edd
-#: includes/post-types.php:236
+#: includes/post-types.php:235
 msgid "Download saved."
 msgstr "Download gespeichert."
 
 #@ edd
-#: includes/post-types.php:237
+#: includes/post-types.php:236
 msgid "Download submitted."
 msgstr "Download hinzugefügt."
 
 #@ edd
-#: includes/process-download.php:294
+#: includes/process-download.php:291
 msgid "You do not have permission to download this file"
 msgstr "Sie haben keine Berechtigung, diese Datei herunterzuladen."
 
 #@ edd
-#: includes/process-download.php:294
+#: includes/process-download.php:291
 msgid "Purchase Verification Failed"
 msgstr "Die Kauf-Bestätigung schlug fehl."
 
 #@ edd
-#: includes/process-purchase.php:349
+#: includes/process-purchase.php:345
 msgid "Username already taken"
 msgstr "Dieser Benutzername existiert bereits."
 
 #@ edd
-#: includes/process-purchase.php:355
+#: includes/process-purchase.php:349
 msgid "Invalid username"
 msgstr "Ungültiger Benutzername"
 
 #@ edd
-#: includes/process-purchase.php:378
-#: includes/process-purchase.php:522
+#: includes/process-purchase.php:364
+#: includes/process-purchase.php:487
 msgid "Invalid email"
 msgstr "Ungültige E-Mail-Adresse"
 
 #@ edd
-#: includes/process-purchase.php:384
+#: includes/process-purchase.php:367
 msgid "Email already used"
 msgstr "Diese E-Mail-Adresse wird bereits verwendet"
 
 #@ edd
-#: includes/process-purchase.php:422
-#: includes/process-purchase.php:487
+#: includes/process-purchase.php:391
+#: includes/process-purchase.php:452
 msgid "Enter a password"
 msgstr "Geben Sie ein Passwort ein"
 
 #@ edd
-#: includes/process-purchase.php:407
+#: includes/process-purchase.php:382
 msgid "Passwords don't match"
 msgstr "Die beiden Passwörter stimmen nicht überein"
 
 #@ edd
 #: includes/login-register.php:92
-#: includes/process-purchase.php:472
+#: includes/process-purchase.php:437
 msgid "The password you entered is incorrect"
 msgstr "Das von Ihnen eingegeben Passwort ist falsch."
 
 #@ edd
 #: includes/login-register.php:95
-#: includes/process-purchase.php:491
+#: includes/process-purchase.php:456
 msgid "The username you entered does not exist"
 msgstr "Der von Ihnen eingegebene Benutzername existiert nicht."
 
@@ -1669,47 +1829,47 @@ msgid "Your site name"
 msgstr "Name Ihrer Webseite"
 
 #@ edd
-#: includes/register-settings.php:231
+#: includes/register-settings.php:244
 msgid "Enable jQuery Validation"
 msgstr "jQuery-Validierung aktivieren"
 
 #@ edd
-#: includes/register-settings.php:232
+#: includes/register-settings.php:245
 msgid "Check this to enable jQuery validation on the checkout form."
 msgstr "Wählen Sie diese Einstellung, um die jQuery-Validierung (via JavaScript) für das Bezahlformular zu aktivieren."
 
 #@ edd
-#: includes/register-settings.php:237
+#: includes/register-settings.php:250
 msgid "Disable Guest Checkout"
 msgstr "Gastbestellungen deaktivieren"
 
 #@ edd
-#: includes/register-settings.php:243
+#: includes/register-settings.php:256
 msgid "Show Register / Login Form?"
 msgstr "Registrierungs-/ Anmeldeformular anzeigen?"
 
 #@ edd
-#: includes/register-settings.php:256
+#: includes/register-settings.php:269
 msgid "Disable Redownload?"
 msgstr "Erneutes Herunterladen deaktivieren?"
 
 #@ edd
-#: includes/register-settings.php:314
+#: includes/register-settings.php:333
 msgid "General Settings"
 msgstr "Allgemeine Einstellungen"
 
 #@ edd
-#: includes/register-settings.php:340
+#: includes/register-settings.php:359
 msgid "Payment Gateway Settings"
 msgstr "Zahlungsweisen - Einstellungen"
 
 #@ edd
-#: includes/register-settings.php:366
+#: includes/register-settings.php:385
 msgid "Email Settings"
 msgstr "E-Mail-Einstellungen"
 
 #@ edd
-#: includes/register-settings.php:419
+#: includes/register-settings.php:438
 msgid "Misc Settings"
 msgstr "Sonstige Einstellungen"
 
@@ -1745,48 +1905,49 @@ msgid "Files"
 msgstr "Dateien"
 
 #@ edd
-#: includes/templates/history-downloads.php:48
-#: includes/templates/history-purchases.php:48
+#: includes/templates/history-downloads.php:51
+#: includes/templates/history-purchases.php:51
 #: includes/widgets.php:232
 msgid "No downloadable files found."
 msgstr "Keine herunterladbaren Dateien gefunden."
 
 #@ edd
-#: includes/templates/history-downloads.php:68
+#: includes/templates/history-downloads.php:71
 msgid "You have not purchased any downloads"
 msgstr "Sie haben bisher keine Downloads gekauft."
 
 #@ edd
-#: includes/template-functions.php:167
-msgid "added to your cart"
-msgstr "Zu Ihrem Warenkorb hinzugefügt."
-
-#@ edd
+#: includes/admin/thickbox.php:30
 #: includes/thickbox.php:30
 msgid "Insert Download"
 msgstr "Download einfügen"
 
 #@ edd
+#: includes/admin/thickbox.php:65
 #: includes/thickbox.php:65
 msgid "You must choose a download"
 msgstr "Sie müssen einen Download auswählen"
 
 #@ edd
+#: includes/admin/thickbox.php:100
 #: includes/thickbox.php:100
 msgid "Choose a style"
 msgstr "Stil auswählen"
 
 #@ edd
+#: includes/admin/thickbox.php:111
 #: includes/thickbox.php:111
 msgid "Choose a button color"
 msgstr "Buttonfarbe auswählen"
 
 #@ edd
+#: includes/admin/thickbox.php:120
 #: includes/thickbox.php:120
 msgid "Link text . . ."
 msgstr "Link-Text ..."
 
 #@ edd
+#: includes/admin/thickbox.php:124
 #: includes/thickbox.php:124
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -1818,30 +1979,36 @@ msgid "Show Quantity:"
 msgstr "Menge anzeigen:"
 
 #@ edd
+#: includes/admin/payments/edit-payment.php:48
 #: includes/admin-pages/forms/edit-payment.php:48
 msgid "Payment Status"
 msgstr "Zahlungsstatus"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:97
 #: includes/admin-pages/payments-history.php:98
-#: includes/payment-functions.php:295
+#: includes/payment-functions.php:297
 msgid "Pending"
 msgstr "In Bearbeitung"
 
 #@ edd
-#: includes/payment-functions.php:296
+#: includes/payment-functions.php:298
 msgid "Complete"
 msgstr "Abgeschlossen"
 
 #@ edd
+#: includes/admin/downloads/metabox.php:600
+#: includes/admin/downloads/metabox.php:697
+#: includes/admin/payments/payments-history.php:317
 #: includes/admin-pages/payments-history.php:318
-#: includes/metabox.php:524
-#: includes/metabox.php:621
+#: includes/metabox.php:559
+#: includes/metabox.php:656
 msgid "Previous"
 msgstr "Zurück"
 
 #@ edd
 #: includes/metabox.php:264
+#: includes/template-functions.php:289
 msgid "Button"
 msgstr "Button"
 
@@ -1851,80 +2018,95 @@ msgid "Text"
 msgstr "Text"
 
 #@ edd
-#: includes/metabox.php:24
+#: includes/admin/downloads/metabox.php:32
+#: includes/metabox.php:25
 msgid "Purchase Log"
 msgstr "Protokoll: Verkäufe"
 
 #@ edd
-#: includes/metabox.php:25
+#: includes/admin/downloads/metabox.php:35
+#: includes/metabox.php:26
 msgid "File Download Log"
 msgstr "Protokoll: Heruntergeladene Dateien"
 
 #@ edd
 #: includes/metabox.php:206
 #: includes/metabox.php:217
-#: includes/register-settings.php:708
+#: includes/register-settings.php:750
 msgid "Upload File"
 msgstr "Datei hochladen"
 
 #@ edd
-#: includes/metabox.php:476
+#: includes/admin/downloads/metabox.php:552
+#: includes/metabox.php:511
 msgid "Sales Log"
 msgstr "Umsatzverlauf"
 
 #@ edd
-#: includes/metabox.php:478
+#: includes/admin/downloads/metabox.php:554
+#: includes/metabox.php:513
 msgid "Each sale for this download is listed below."
 msgstr "Jeder Umsatz für diesen Download wird unten aufgelistet."
 
 #@ edd
-#: includes/metabox.php:492
-#: includes/metabox.php:584
+#: includes/admin/downloads/metabox.php:568
+#: includes/admin/downloads/metabox.php:660
+#: includes/metabox.php:527
+#: includes/metabox.php:619
 msgid "Date:"
 msgstr "Datum:"
 
 #@ edd
-#: includes/metabox.php:496
+#: includes/admin/downloads/metabox.php:572
+#: includes/metabox.php:531
 msgid "Buyer:"
 msgstr "Käufer:"
 
 #@ edd
-#: includes/metabox.php:500
+#: includes/admin/downloads/metabox.php:576
+#: includes/metabox.php:535
 msgid "Purchase ID:"
 msgstr "Kauf-ID:"
 
 #@ edd
-#: includes/metabox.php:508
+#: includes/admin/downloads/metabox.php:584
+#: includes/metabox.php:543
 msgid "No sales yet"
 msgstr "Bisher keine Verkäufe"
 
 #@ edd
-#: includes/metabox.php:565
+#: includes/admin/downloads/metabox.php:641
+#: includes/metabox.php:600
 msgid "Download Log"
 msgstr "Download-Verlauf"
 
 #@ edd
-#: includes/metabox.php:567
+#: includes/admin/downloads/metabox.php:643
+#: includes/metabox.php:602
 msgid "Each time a file is downloaded, it is recorded below."
 msgstr "Jedes Mal, wenn eine Datei heruntergeladen wird, wird es hier aufgezeichnet."
 
 #@ edd
-#: includes/metabox.php:588
+#: includes/admin/downloads/metabox.php:664
+#: includes/metabox.php:623
 msgid "Downloaded by:"
 msgstr "Heruntergeladen von:"
 
 #@ edd
-#: includes/metabox.php:592
+#: includes/admin/downloads/metabox.php:668
+#: includes/metabox.php:627
 msgid "IP Address:"
 msgstr "IP-Adresse:"
 
 #@ edd
-#: includes/metabox.php:596
+#: includes/admin/downloads/metabox.php:672
+#: includes/metabox.php:631
 msgid "File: "
 msgstr "Datei: "
 
 #@ edd
-#: includes/metabox.php:605
+#: includes/admin/downloads/metabox.php:681
+#: includes/metabox.php:640
 msgid "No file downloads yet yet"
 msgstr "Bisher keine Datei-Downloads"
 
@@ -1939,7 +2121,7 @@ msgid "The name purchase receipts are said to come from. This should probably be
 msgstr "Der Name, unter dem Bestellbestätigungen versandt werden. Wahrscheinlich wird dies Ihr Webseiten- oder Shop-Name sein."
 
 #@ edd
-#: includes/misc-functions.php:208
+#: includes/misc-functions.php:213
 msgid "Indian Rupee"
 msgstr "indische Rupie"
 
@@ -1954,6 +2136,9 @@ msgid "You will also need to configure your gateway settings if you are acceptin
 msgstr "Sie werden auch Ihre Zahlungsweisen entsprechend einrichten müssen, wenn Sie Kreditkarten akzeptieren."
 
 #@ edd
+#: includes/admin/export-functions.php:126
+#: includes/admin/payments/payments-history.php:284
+#: includes/admin/payments/payments-history.php:286
 #: includes/admin-pages/payments-history.php:285
 #: includes/admin-pages/payments-history.php:287
 #: includes/export-functions.php:127
@@ -1961,62 +2146,69 @@ msgid "guest"
 msgstr "Gast"
 
 #@ edd
-#: includes/checkout-template.php:370
+#: includes/checkout-template.php:321
 msgid "(optional)"
 msgstr "(optional)"
 
 #@ edd
+#: includes/admin/admin-notices.php:35
 #: includes/admin-notices.php:36
 msgid "The payment has been deleted."
 msgstr "Die Zahlung wurde gelöscht."
 
 #@ edd
+#: includes/admin/admin-notices.php:38
 #: includes/admin-notices.php:39
 msgid "The purchase receipt has been resent."
 msgstr "Die Bestellbestätigungs-E-Mail wurde erneut versandt."
 
 #@ edd
+#: includes/admin/add-ons.php:43
 #: includes/admin-pages/add-ons.php:69
 msgid "Add Ons for Easy Digital Downloads"
 msgstr "Erweiterungen für Einfache Digitale Downloads"
 
 #@ edd
+#: includes/admin/add-ons.php:44
 #: includes/admin-pages/add-ons.php:70
 msgid "These add-ons extend the functionality of Easy Digital Downloads."
 msgstr "Diese Zusatzmodule (Add-Ons) erweitern die Funktionalität von Einfache Digitale Downloads."
 
 #@ edd
+#: includes/admin/settings/settings.php:35
 #: includes/admin-pages/settings.php:36
 msgid "Styles"
 msgstr "Stile"
 
 #@ edd
+#: includes/admin/admin-pages.php:30
 #: includes/admin-pages.php:30
 msgid "Easy Digital Download Add Ons"
 msgstr "Einfache Digitale Downloads Erweiterungen"
 
 #@ edd
+#: includes/admin/admin-pages.php:30
 #: includes/admin-pages.php:30
 msgid "Add Ons"
 msgstr "Erweiterungen"
 
 #@ edd
-#: includes/cart-template.php:99
+#: includes/cart-template.php:103
 msgid "Your cart is empty."
 msgstr "Ihr Warenkorb ist noch leer."
 
 #@ edd
-#: includes/checkout-template.php:190
+#: includes/checkout-template.php:141
 msgid "Show Terms"
 msgstr "Bedingungen anzeigen"
 
 #@ edd
-#: includes/checkout-template.php:191
+#: includes/checkout-template.php:142
 msgid "Hide Terms"
 msgstr "Bedingungen verbergen"
 
 #@ edd
-#: includes/checkout-template.php:194
+#: includes/checkout-template.php:145
 msgid "Agree to Terms?"
 msgstr "Akzeptieren Sie unsere Bedingungen?"
 
@@ -2049,7 +2241,7 @@ msgid "This short code can be placed anywhere on your site"
 msgstr "Dieser Shortcode kann an einer beliebigen Stelle Ihrer Webseite eingefügt werden."
 
 #@ edd
-#: includes/process-purchase.php:259
+#: includes/process-purchase.php:258
 msgid "You must agree to the terms of use"
 msgstr "Sie müssen unseren Nutzungsbedigungen zustimmen"
 
@@ -2064,102 +2256,64 @@ msgid "Check this to disable all included styling"
 msgstr "Diese Einstellung auswählen, wenn Sie alle beigepackten CSS-Stile des Plugins deaktivieren wollen."
 
 #@ edd
-#: includes/register-settings.php:214
-msgid "Checkout Button Color"
-msgstr "Button-Farbe des 'Kasse'-Buttons"
-
-#@ edd
-#: includes/register-settings.php:215
-msgid "Choose the button color you want to use for the checkout buttons."
-msgstr "Wählen Sie die Button-Farbe, die Sie für die Buttons des Bezahlvorgangs möchten."
-
-#@ edd
-#: includes/register-settings.php:262
+#: includes/register-settings.php:275
 msgid "Terms of Agreement"
 msgstr "Verkaufs- und Zahlungsbedingungen (AGB)"
 
 #@ edd
-#: includes/register-settings.php:268
+#: includes/register-settings.php:281
 msgid "Agree to Terms"
 msgstr "Den AGB zustimmen"
 
 #@ edd
-#: includes/register-settings.php:274
+#: includes/register-settings.php:287
 msgid "Agree to Terms Label"
 msgstr "Beschriftung für die Zustimmung zu den Bedingungen"
 
 #@ edd
-#: includes/register-settings.php:281
+#: includes/register-settings.php:294
 msgid "Agreement Text"
 msgstr "Text der Bedingungen"
 
 #@ edd
-#: includes/register-settings.php:392
+#: includes/register-settings.php:411
 msgid "Style Settings"
 msgstr "Stil-Einstellungen"
 
 #@ edd
-#: includes/template-functions.php:263
+#: includes/template-functions.php:266
 msgid "Gray"
 msgstr "Grau"
 
 #@ edd
-#: includes/template-functions.php:264
-msgid "Pink"
-msgstr "Pink"
-
-#@ edd
-#: includes/template-functions.php:266
+#: includes/template-functions.php:268
 msgid "Green"
 msgstr "Grün"
 
 #@ edd
-#: includes/template-functions.php:267
-msgid "Teal"
-msgstr "Türkis"
-
-#@ edd
-#: includes/template-functions.php:268
-msgid "Black"
-msgstr "Schwarz"
-
-#@ edd
-#: includes/template-functions.php:269
+#: includes/template-functions.php:270
 msgid "Dark Gray"
 msgstr "Dunkelgrau"
 
 #@ edd
-#: includes/template-functions.php:270
-msgid "Orange"
-msgstr "Orange"
-
-#@ edd
-#: includes/template-functions.php:271
-msgid "Purple"
-msgstr "Violett"
-
-#@ edd
-#: includes/template-functions.php:272
-msgid "Slate"
-msgstr "Schieferfarben"
-
-#@ edd
-#: includes/template-functions.php:295
+#: includes/template-functions.php:311
 msgid "You have already purchased this item, but you may purchase it again."
 msgstr "Sie haben diese Datei bereits gekauft, doch Sie können sie auch mehrmals kaufen."
 
 #@ edd
+#: includes/admin/payments/edit-payment.php:22
 #: includes/admin-pages/forms/edit-payment.php:22
 msgid "Buyer's Email"
 msgstr "E-Mail des Kunden"
 
 #@ edd
+#: includes/admin/payments/edit-payment.php:26
 #: includes/admin-pages/forms/edit-payment.php:26
 msgid "If needed, you can update the buyer's email here."
 msgstr "Falls notwendig, können Sie hier die E-Mail-Adresse des Kunden aktualisieren."
 
 #@ edd
-#: includes/checkout-template.php:434
+#: includes/checkout-template.php:385
 msgid "or checkout as a guest."
 msgstr "oder bezahlen Sie als Gast."
 
@@ -2189,12 +2343,12 @@ msgid "The total price of the purchase"
 msgstr "Der Gesamtpreis der Bestellung"
 
 #@ edd
-#: includes/scripts.php:124
+#: includes/scripts.php:125
 msgid "Use This File"
 msgstr "Diese Datei verwenden"
 
 #@ edd
-#: includes/template-functions.php:265
+#: includes/template-functions.php:267
 msgid "Blue"
 msgstr "Blau"
 
@@ -2214,13 +2368,13 @@ msgid "Taxonomy:"
 msgstr "Taxonomie:"
 
 #@ edd
-#: includes/cart-functions.php:401
+#: includes/cart-functions.php:406
 #, php-format
 msgid "You have successfully added %s to your shopping cart."
 msgstr "Sie haben %s erfolgreich zu Ihrem Warenkorb hinzugefügt."
 
 #@ edd
-#: includes/cart-functions.php:402
+#: includes/cart-functions.php:407
 msgid "Checkout."
 msgstr "Kasse."
 
@@ -2241,7 +2395,7 @@ msgid "Purchase History"
 msgstr "Bestellhistorie"
 
 #@ edd
-#: includes/process-purchase.php:454
+#: includes/process-purchase.php:419
 msgid "You must login or register to complete your purchase"
 msgstr "Sie müssen sich anmelden oder neu registrieren, um Ihre Bestellung abschließen zu können."
 
@@ -2251,37 +2405,39 @@ msgid "Purchase ID"
 msgstr "Kauf-ID"
 
 #@ edd
-#: includes/templates/history-purchases.php:61
+#: includes/templates/history-purchases.php:64
 msgid "You have not made any purchases"
 msgstr "Sie haben noch keine Bestellungen getätigt."
 
 #@ edd
+#: includes/admin/admin-notices.php:65
 #: includes/admin-notices.php:62
 msgid "There seems to be an issue with the server. Please try again in a few minutes."
 msgstr "Es scheint Probleme mit dem Server zu geben. Bitte versuchen Sie es noch einmal in einigen Minuten."
 
 #@ edd
+#: includes/admin/add-ons.php:47
 #: includes/admin-pages/add-ons.php:73
 msgid "Browse All Extensions"
 msgstr "Alle Erweiterungen durchstöbern"
 
 #@ edd
-#: includes/email-template.php:107
+#: includes/email-template.php:123
 msgid "Sample Product Title"
 msgstr "Beispiel-Produkttitel"
 
 #@ edd
-#: includes/email-template.php:110
+#: includes/email-template.php:126
 msgid "Sample Download File Name"
 msgstr "Beispiel-Download-Dateiname"
 
 #@ edd
-#: includes/email-template.php:158
+#: includes/email-template.php:183
 msgid "Purchase Receipt Preview"
 msgstr "Bestellbestätigung-Vorschau"
 
 #@ edd
-#: includes/email-template.php:158
+#: includes/email-template.php:183
 msgid "Preview Purchase Receipt"
 msgstr "Vorschau der Bestellbestätigung"
 
@@ -2296,44 +2452,45 @@ msgid "No template, plain text only"
 msgstr "Keine Vorlage, nur reiner Text"
 
 #@ edd
-#: includes/misc-functions.php:209
+#: includes/misc-functions.php:214
 msgid "Turkish Lira"
 msgstr "Türkische Lira"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:100
 #: includes/admin-pages/payments-history.php:101
-#: includes/payment-functions.php:297
+#: includes/payment-functions.php:299
 msgid "Refunded"
 msgstr "Zurückerstattet"
 
 #@ edd
-#: includes/process-purchase.php:206
+#: includes/process-purchase.php:205
 msgid "The selected gateway is not active"
 msgstr "Die ausgewählte Zahlungsweise ist nicht aktiv"
 
 #@ edd
-#: includes/process-purchase.php:210
+#: includes/process-purchase.php:209
 msgid "No gateway has been selected"
 msgstr "Es wurde keine Zahlungsweise ausgewählt"
 
 #@ edd
-#: includes/process-purchase.php:303
+#: includes/process-purchase.php:302
 msgid "The user information is invalid."
 msgstr "Die Benutzerinformation ist ungültig."
 
 #@ edd
-#: includes/process-purchase.php:366
+#: includes/process-purchase.php:356
 msgid "You must register or login to complete your purchase"
 msgstr "Sie müssen sich registrieren oder anmelden, um Ihren Kauf abschließen zu können."
 
 #@ edd
-#: includes/process-purchase.php:396
-#: includes/process-purchase.php:529
+#: includes/process-purchase.php:374
+#: includes/process-purchase.php:494
 msgid "Enter an email"
 msgstr "Eine E-Mail-Adresse eingeben"
 
 #@ edd
-#: includes/process-purchase.php:427
+#: includes/process-purchase.php:394
 msgid "Enter the password confirmation"
 msgstr "Bestätigen Sie das Passwort"
 
@@ -2343,32 +2500,37 @@ msgid "If payments are not getting marked as complete, then check this box. Note
 msgstr "Falls Zahlungen als nicht vollständig/ abgeschlossen gekennzeichnet werden, aktivieren Sie bitte dieses Kontrollkästchen. Hinweis: Dies erfordert jedoch, dass die Käufer von PayPal entsprechend zu Ihrer Webseite zurückkehren."
 
 #@ edd
-#: includes/scripts.php:126
+#: includes/scripts.php:127
 msgid "Are you sure you wish to delete this payment?"
 msgstr "Sind Sie sicher, dass Sie diese Zahlung löschen wollen?"
 
 #@ edd
+#: includes/admin/payments/edit-payment.php:64
 #: includes/admin-pages/forms/edit-payment.php:64
 msgid "Send Purchase Receipt"
 msgstr "Bestellbestätigung senden"
 
 #@ edd
+#: includes/admin/payments/edit-payment.php:68
 #: includes/admin-pages/forms/edit-payment.php:68
 msgid "Check this box to send the purchase receipt, including all download links."
 msgstr "Diese Einstellung wählen, um eine Bestellbestätigung zu versenden, die auch alle Download-Links enthält."
 
 #@ edd
+#: includes/admin/payments/payments-history.php:265
 #: includes/admin-pages/payments-history.php:266
 msgid "Payment Method:"
 msgstr "Zahlungsweise:"
 
 #@ edd
-#: includes/email-template.php:199
+#: includes/email-template.php:176
+#: includes/email-template.php:224
 msgid "Dear"
 msgstr "Sehr geehrte/r"
 
 #@ edd
-#: includes/email-template.php:200
+#: includes/email-template.php:177
+#: includes/email-template.php:225
 msgid "Thank you for your purchase. Please click on the link(s) below to download your files."
 msgstr "Vielen Dank für Ihre Bestellung! Bitte klicken Sie auf die Links unten, um Ihre Datei(en) herunterzuladen."
 
@@ -2385,13 +2547,15 @@ msgid "%s Performance in Earnings"
 msgstr "%s-Performance bei den Einnahmen"
 
 #@ edd
+#: includes/admin/downloads/metabox.php:23
 #: includes/metabox.php:22
 #, php-format
 msgid "%1$s Configuration"
 msgstr "%1$s-Einstellungen"
 
 #@ edd
-#: includes/metabox.php:23
+#: includes/admin/downloads/metabox.php:29
+#: includes/metabox.php:24
 #, php-format
 msgid "%1$s Stats"
 msgstr "%1$s-Statistiken"
@@ -2451,21 +2615,23 @@ msgid "%2$s"
 msgstr "%2$s"
 
 #@ edd
-#: includes/process-purchase.php:289
+#: includes/process-purchase.php:288
 msgid "Please enter a valid email address."
 msgstr "Bitte geben Sie eine gültige E-Mail-Adresse an."
 
 #@ edd
-#: includes/register-settings.php:225
+#: includes/register-settings.php:238
 msgid "Disable Ajax"
 msgstr "AJAX deaktivieren"
 
 #@ edd
-#: includes/register-settings.php:226
+#: includes/register-settings.php:239
 msgid "Check this to disable AJAX for the shopping cart."
 msgstr "Wählen Sie diese Einstellung um AJAX für den Warenkorb zu deaktivieren."
 
 #@ edd
+#: includes/admin/thickbox.php:29
+#: includes/admin/thickbox.php:123
 #: includes/thickbox.php:29
 #: includes/thickbox.php:123
 #, php-format
@@ -2473,19 +2639,21 @@ msgid "Insert %s"
 msgstr "%s einfügen"
 
 #@ edd
+#: includes/admin/thickbox.php:88
 #: includes/thickbox.php:88
 #, php-format
 msgid "Use the form below to insert the short code for purchasing a %s"
 msgstr "Verwenden Sie das Formular unten, um einen Shortcode für den Kauf eines %s einzufügen"
 
 #@ edd
+#: includes/admin/thickbox.php:91
 #: includes/thickbox.php:91
 #, php-format
 msgid "Choose a %s"
 msgstr "Einen %s auswählen"
 
 #@ edd
-#: includes/email-functions.php:75
+#: includes/email-functions.php:78
 msgid "Payment Method: "
 msgstr "Zahlungsmethode: "
 
@@ -2510,31 +2678,38 @@ msgid "The method of payment used for this purchase"
 msgstr "Die Zahlungsweise, die für diesen Kauf verwendet wurde."
 
 #@ edd
+#: includes/admin/payments/payments-history.php:89
 #: includes/admin-pages/payments-history.php:90
 msgid "All"
 msgstr "Alle"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:94
 #: includes/admin-pages/payments-history.php:95
 msgid "Completed"
 msgstr "Abgeschlossen"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:105
+#: includes/admin/reporting/reports.php:38
 #: includes/admin-pages/payments-history.php:106
 msgid "Export"
 msgstr "Exportieren"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:130
 #: includes/admin-pages/payments-history.php:131
 msgid "Showing payments for: "
 msgstr "Zahlungen anzeigen für: "
 
 #@ edd
+#: includes/admin/payments/payments-history.php:130
 #: includes/admin-pages/payments-history.php:131
 msgid "clear"
 msgstr "leeren"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:270
 #: includes/admin-pages/payments-history.php:271
 msgid "Purchase Key"
 msgstr "Kaufschlüssel"
@@ -2542,7 +2717,7 @@ msgstr "Kaufschlüssel"
 #@ edd
 #: includes/admin-pages/reports.php:41
 msgid "Download Sales and Earnings PDF Report for all Products"
-msgstr "Umsatz- und Verdienst-Berichte (PDF) für alle Produkte herunterladen"
+msgstr "Umsatz- und Einnahmen-Berichte (PDF) für alle Produkte herunterladen"
 
 #@ edd
 #: includes/admin-pages/reports.php:44
@@ -2550,27 +2725,31 @@ msgid "Please Note: Transactions created while in test mode are not included on 
 msgstr "Bitte beachten: Transaktionen, die im Testmodus getätigt wurden, sind nicht auf dieser Seite oder in den PDF-Berichten enthalten."
 
 #@ edd
-#: includes/checkout-template.php:134
+#: includes/checkout-template.php:100
 msgid "Personal Info"
 msgstr "Persönliche Info"
 
 #@ edd
+#: includes/admin/downloads/dashboard-columns.php:239
 #: includes/dashboard-columns.php:228
 #, php-format
 msgid "%s Data"
 msgstr "%s Daten"
 
 #@ edd
+#: includes/admin/export-functions.php:44
 #: includes/export-functions.php:44
 msgid "Discounts,"
 msgstr "Rabatte"
 
 #@ edd
+#: includes/admin/export-functions.php:45
 #: includes/export-functions.php:45
 msgid "Amount paid"
 msgstr "Gezahlter Betrag"
 
 #@ edd
+#: includes/admin/export-functions.php:46
 #: includes/export-functions.php:46
 msgid "Payment method"
 msgstr "Zahlungsweise"
@@ -2581,122 +2760,148 @@ msgid "Sales per month"
 msgstr "Verkäufe pro Monat"
 
 #@ edd
+#: includes/admin/downloads/metabox.php:285
+#: includes/admin/downloads/metabox.php:353
 #: includes/metabox.php:184
 msgid "File Name"
 msgstr "Dateiname"
 
 #@ edd
+#: includes/admin/downloads/metabox.php:286
 #: includes/metabox.php:185
 msgid "File URL"
 msgstr "Datei-URL"
 
 #@ edd
+#: includes/admin/downloads/metabox.php:366
 #: includes/metabox.php:199
 msgid "All Prices"
 msgstr "Alle Preise"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:34
 #: includes/pdf-reports.php:36
 msgid "to"
 msgstr "bis"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:39
+#: includes/admin/reporting/pdf-reports.php:50
 #: includes/pdf-reports.php:41
 #: includes/pdf-reports.php:52
 msgid "Sales and earnings reports for the current year for all products"
-msgstr "Umsatz- und Verdienst-Berichte für das aktuelle Jahr für alle Produkte"
+msgstr "Umsatz- und Einnahmen-Berichte für das aktuelle Jahr für alle Produkte"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:55
 #: includes/pdf-reports.php:57
 msgid "Date Range: "
 msgstr "Datumsbereich: "
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:59
 #: includes/pdf-reports.php:61
 msgid "Table View"
 msgstr "Tabellarische Ansicht"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:63
 #: includes/pdf-reports.php:65
 msgid "Product Name"
 msgstr "Produktname"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:67
 #: includes/pdf-reports.php:69
 msgid "Number of Sales"
 msgstr "Anzahl der Verkäufe"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:68
 #: includes/pdf-reports.php:70
 msgid "Earnings to Date"
-msgstr "Bisheriger Verdienst"
+msgstr "Bisherige Einnahmen"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:123
 #: includes/pdf-reports.php:119
 msgid "Graph View"
 msgstr "Diagramm-Ansicht"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:216
 #: includes/pdf-reports.php:212
 msgid "Sales and Earnings by Month for all Products"
-msgstr "Umsätze und Verdienste pro Monat für alle Produkte"
+msgstr "Umsätze und Einnahmen pro Monat für alle Produkte"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:230
 #: includes/pdf-reports.php:226
 msgid "Jan"
 msgstr "Jan"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:231
 #: includes/pdf-reports.php:227
 msgid "Feb"
 msgstr "Feb"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:232
 #: includes/pdf-reports.php:228
 msgid "Mar"
 msgstr "März"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:233
 #: includes/pdf-reports.php:229
 msgid "Apr"
 msgstr "Apr"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:234
 #: includes/pdf-reports.php:230
 msgid "May"
 msgstr "Mai"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:235
 #: includes/pdf-reports.php:231
 msgid "June"
 msgstr "Juni"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:236
 #: includes/pdf-reports.php:232
 msgid "July"
 msgstr "Juli"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:237
 #: includes/pdf-reports.php:233
 msgid "Aug"
 msgstr "Aug"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:238
 #: includes/pdf-reports.php:234
 msgid "Sept"
 msgstr "Sept"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:239
 #: includes/pdf-reports.php:235
 msgid "Oct"
 msgstr "Okt"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:240
 #: includes/pdf-reports.php:236
 msgid "Nov"
 msgstr "Nov"
 
 #@ edd
+#: includes/admin/reporting/pdf-reports.php:241
 #: includes/pdf-reports.php:237
 msgid "Dec"
 msgstr "Dez"
@@ -2712,62 +2917,62 @@ msgid "The unique ID number for this purchase receipt"
 msgstr "Die einzigartige ID-Ziffer für diese Bestellbestätigung"
 
 #@ edd
-#: includes/register-settings.php:244
+#: includes/register-settings.php:257
 msgid "Display the registration and login forms on the checkout page for non-logged-in users."
 msgstr "Die Formulare zur Benutzerregistrierung und zum Anmelden auf der 'Kasse'-Seite auch für nicht angemeldete Besucher anzeigen."
 
 #@ edd
-#: includes/register-settings.php:249
+#: includes/register-settings.php:262
 msgid "Download Link Expiration"
 msgstr "Ablauf von Download-Links"
 
 #@ edd
-#: includes/register-settings.php:250
+#: includes/register-settings.php:263
 msgid "How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours."
 msgstr "Wie lange sollen Download-Links aktiv sein? Der Standard ist 24 Stunden vom Zeitpunkt der Generierung. Geben Sie eine Zeit in Stunden ein."
 
 #@ edd
-#: includes/register-settings.php:257
+#: includes/register-settings.php:270
 msgid "Check this if you do not want to allow users to redownload items from their purchase history."
 msgstr "Aktivieren Sie diese Einstellung, wenn Sie Benutzern erlauben wollen, Dateien erneut von Ihrer Benutzerseite herunterzuladen."
 
 #@ edd
-#: includes/register-settings.php:269
+#: includes/register-settings.php:282
 msgid "Check this to show an agree to terms on the checkout that users must agree to before purchasing."
 msgstr "Aktivieren Sie diese Einstellung, um beim Bezahlvorgang eine Zustimmung zu AGB/ Widerrufsbelehrung anzuzeigen, die Besucher bestätigen müssen, um die Bestellung abschliessen zu können."
 
 #@ edd
-#: includes/register-settings.php:275
+#: includes/register-settings.php:288
 msgid "Label shown next to the agree to terms check box."
 msgstr "Beschriftung neben dem Kontrollkästchen zur Zustimmung zu AGB/ Widerrufsbelehrung."
 
 #@ edd
-#: includes/register-settings.php:282
+#: includes/register-settings.php:295
 msgid "If Agree to Terms is checked, enter the agreement terms here."
 msgstr "Falls Zustimmung zu AGB/ Widerrufsbelehrung aktiviert ist, geben Sie hier den entsprechenden Text ein."
 
 #@ edd
-#: includes/register-settings.php:746
+#: includes/register-settings.php:785
 msgid "Settings Updated"
 msgstr "Einstellungen aktualisiert"
 
 #@ edd
-#: includes/scripts.php:125
+#: includes/scripts.php:126
 msgid "Sorry, not available for variable priced products."
 msgstr "Entschuldigung, dies ist nicht verfügbar für Produkte mit variablem Preis."
 
 #@ edd
-#: includes/ajax-functions.php:102
+#: includes/ajax-functions.php:101
 msgid "This discount code has been used already"
 msgstr "Dieser Gutschein-Code wurde bereits verwendet."
 
 #@ edd
-#: includes/email-functions.php:73
+#: includes/email-functions.php:76
 msgid "Purchased by: "
 msgstr "Gekauft von: "
 
 #@ edd
-#: includes/misc-functions.php:210
+#: includes/misc-functions.php:215
 msgid "Iranian Rial"
 msgstr "Iranischer Rial"
 
@@ -2797,12 +3002,12 @@ msgid "If payments are not getting marked as complete, then check this box. This
 msgstr "Wenn Zahlungen nicht als abgeschlossen gekennzeichnet werden, dann aktivieren Sie dieses Kontrollkästchen. Dies zwingt die Webseite dazu, eine leicht weniger sichere Methode zur Kauf-Verifizierung anzuwenden."
 
 #@ edd
-#: includes/register-settings.php:287
+#: includes/register-settings.php:300
 msgid "Complete Purchase Text"
 msgstr "Text für abgeschlossenen Kauf"
 
 #@ edd
-#: includes/register-settings.php:288
+#: includes/register-settings.php:301
 msgid "The button label for completing a purchase."
 msgstr "Die Button-Beschriftung, um eine Bestellung abzuschließen."
 
@@ -2812,12 +3017,16 @@ msgid "Please enter an email address before applying a discount code"
 msgstr "Geben Sie bitte eine E-Mail-Adresse ein, bevor Sie einen Gutschein-Code hinzufügen."
 
 #@ edd
+#: includes/admin/discounts/add-discount.php:75
+#: includes/admin/discounts/edit-discount.php:89
 #: includes/admin-pages/forms/add-discount.php:75
 #: includes/admin-pages/forms/edit-discount.php:89
 msgid "Minimum Amount"
 msgstr "Mindestbestellwert"
 
 #@ edd
+#: includes/admin/discounts/add-discount.php:79
+#: includes/admin/discounts/edit-discount.php:93
 #: includes/admin-pages/forms/add-discount.php:79
 #: includes/admin-pages/forms/edit-discount.php:93
 msgid "The minimum amount that must be purchased before this discount can be used. Leave blank for no minimum."
@@ -2828,26 +3037,29 @@ msgstr "Der Wert, welcher mindestens umgesetzt werden muss, bevor ein Gutschein 
 msgid "Day"
 msgstr "Tag"
 
-#@ default
+#@ edd
 #: includes/admin-notices.php:44
 #, php-format
 msgid "The payment history needs updated. %s"
 msgstr "Die bisherigen Zahlungen sollten aktualisiert werden. %s"
 
 #@ edd
+#: includes/admin/admin-notices.php:47
 #: includes/admin-notices.php:44
 msgid "Click to Upgrade"
 msgstr "Klicken, um zu aktualisieren"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:248
 #: includes/admin-pages/payments-history.php:249
 msgid "Date and Time:"
 msgstr "Datum und Zeit:"
 
 #@ edd
+#: includes/admin/payments/payments-history.php:303
 #: includes/admin-pages/payments-history.php:304
 msgid "Total Earnings:"
-msgstr "Gesamter Verdienst:"
+msgstr "Gesamte Einnahmen:"
 
 #@ edd
 #: includes/admin-pages/reports.php:42
@@ -2855,11 +3067,12 @@ msgid "Download a CSV Customers List"
 msgstr "Eine Kundenliste als CSV-Datei herunterladen"
 
 #@ edd
-#: includes/checkout-template.php:317
+#: includes/checkout-template.php:268
 msgid "Billing Country"
 msgstr "Land für Rechnungsstellung"
 
 #@ edd
+#: includes/admin/export-functions.php:168
 #: includes/export-functions.php:169
 msgid "Export not allowed for non-administrators."
 msgstr "Export ist für nicht-Administratoren nicht erlaubt."
@@ -2868,14 +3081,17 @@ msgstr "Export ist für nicht-Administratoren nicht erlaubt."
 #: includes/graphing.php:189
 #, php-format
 msgid "Earnings per day for last %s days"
-msgstr "Verdienst pro Tag für die letzten %s Tage"
+msgstr "Einnahmen pro Tag für die letzten %s Tage"
 
 #@ edd
+#: includes/admin/downloads/metabox.php:152
 #: includes/metabox.php:98
 msgid "Enable variable pricing"
 msgstr "Preis-Varianten aktivieren"
 
 #@ edd
+#: includes/admin/downloads/metabox.php:171
+#: includes/admin/downloads/metabox.php:234
 #: includes/metabox.php:120
 #: includes/metabox.php:142
 msgid "Option Name"
@@ -2888,25 +3104,25 @@ msgid "for"
 msgstr "für"
 
 #@ edd
-#: includes/process-download.php:266
-#: includes/process-download.php:283
+#: includes/process-download.php:265
+#: includes/process-download.php:280
 msgid "Sorry but this file does not exist."
 msgstr "Entschuldigung, aber diese Datei existiert nicht."
 
 #@ edd
-#: includes/shortcodes.php:194
+#: includes/shortcodes.php:200
 msgid "Purchase All Items"
 msgstr "Alle Elemente kaufen"
 
 #@ edd
-#: includes/shortcodes.php:336
+#: includes/shortcodes.php:341
 #, php-format
 msgctxt "download post type name"
 msgid "No %s found"
 msgstr "Kein %s gefunden"
 
 #@ edd
-#: includes/template-functions.php:48
+#: includes/template-functions.php:47
 #, php-format
 msgid "No checkout page has been configured. Visit <a href=\"%s\">Settings</a> to set one."
 msgstr "Es wurde keine 'Kasse'-Seite eingerichtet. Gehen Sie zu den <a href=\"%s\">Einstellungen</a>, um Eine einzurichten."
@@ -2920,4 +3136,530 @@ msgstr "Die Bestellhistorie eines Benutzers anzeigen"
 #: includes/widgets.php:259
 msgid "Title"
 msgstr "Titel"
+
+#@ edd
+#: includes/admin/discounts/add-discount.php:61
+#: includes/admin/discounts/edit-discount.php:66
+#: includes/admin-pages/forms/add-discount.php:61
+#: includes/admin-pages/forms/edit-discount.php:66
+msgid "Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date."
+msgstr "Geben Sie ein Startdatum für diesen Gutschein-Code an, im Format MM/TT/JJJJ. Um kein Startdatum zu verwenden, das Feld einfach leer lassen. Falls ein Datum angegeben wurde, kann diese Gutschein nur <em>an</em> oder <em>nach</em> diesem Datum verwendet werden."
+
+#@ edd
+#: includes/admin/discounts/add-discount.php:70
+#: includes/admin/discounts/edit-discount.php:75
+#: includes/admin-pages/forms/add-discount.php:70
+#: includes/admin-pages/forms/edit-discount.php:75
+msgid "Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank"
+msgstr "Geben Sie das Ablaufdatum für diesen Gutschein-Code an, im Format MM/TT/JJJJ. Um kein Ablaufdatum zu verwenden, das Feld einfach leer lassen."
+
+#@ edd
+#: includes/email-template.php:126
+msgid "Optional notes about this download."
+msgstr "Optionale Notizen für diesen Download."
+
+#@ edd
+#: includes/email-template.php:137
+msgid "These are some sample notes added to a product."
+msgstr "Dies sind einige Beispiel-Anmerkungen, die einem Produkt hinzugefügt werden."
+
+#@ edd
+#: includes/admin/downloads/contextual-help.php:53
+#: includes/admin/downloads/metabox.php:26
+#: includes/metabox.php:23
+msgid "Product Notes"
+msgstr "Produktnotizen"
+
+#@ edd
+#: includes/admin/downloads/metabox.php:488
+#: includes/metabox.php:381
+msgid "Special notes or instructions for this product. These notes will be added to the purchase receipt."
+msgstr "Besondere Anmerkungen oder Instruktionen für dieses Produkt. Diese Anmerkungen werden der Bestellbestätigung hinzugefügt."
+
+#@ edd
+#: includes/admin/downloads/metabox.php:146
+msgid "Pricing Options:"
+msgstr "Preis-Optionen:"
+
+#@ edd
+#: includes/admin/downloads/metabox.php:200
+msgid "Add New Price"
+msgstr "Neuen Preis hinzufügen"
+
+#@ edd
+#: includes/admin/downloads/metabox.php:276
+msgid "File Downloads:"
+msgstr "Datei-Downloads:"
+
+#@ edd
+#: includes/admin/downloads/metabox.php:287
+msgid "Price Assignment"
+msgstr "Preis-Zuordnung"
+
+#@ edd
+#: includes/admin/downloads/metabox.php:315
+msgid "Add New File"
+msgstr "Neue Datei hinzufügen"
+
+#@ edd
+#: includes/admin/downloads/metabox.php:357
+msgid "http://"
+msgstr "http://"
+
+#@ edd
+#: includes/admin/downloads/metabox.php:360
+msgid "Upload a File"
+msgstr "Eine Datei hochladen"
+
+#@ edd
+#: includes/admin/downloads/metabox.php:428
+msgid "Disable the automatic output of the purchase button"
+msgstr "Automatische Ausgabe des 'Kaufen'-Buttons deaktivieren"
+
+#@ edd
+#: includes/query-filters.php:39
+msgid "You do not have permission to view this file."
+msgstr "Sie haben keine Berechtigung, diese Datei anzuzeigen."
+
+#@ edd
+#: includes/register-settings.php:214
+msgid "Buttons"
+msgstr "Buttons"
+
+#@ edd
+#: includes/register-settings.php:215
+msgid "Options for add to cart and purchase buttons"
+msgstr "Optionen für die Buttons für 'In den Warenkorb' sowie zum 'Kaufen'"
+
+#@ edd
+#: includes/register-settings.php:220
+msgid "Default Button Style"
+msgstr "Standard Button-Stil"
+
+#@ edd
+#: includes/register-settings.php:221
+msgid "Choose the style you want to use for the buttons."
+msgstr "Wählen Sie den Stil, den Sie für die Buttons verwenden wollen."
+
+#@ edd
+#: includes/register-settings.php:227
+msgid "Default Button Color"
+msgstr "Standard Button-Farbe"
+
+#@ edd
+#: includes/register-settings.php:228
+msgid "Choose the color you want to use for the buttons."
+msgstr "Wählen Sie die Farbe, die Sie für die Buttons verwenden wollen."
+
+#@ edd
+#: includes/register-settings.php:306
+msgid "Add to Cart Text"
+msgstr "Text für 'In den Warenkorb'"
+
+#@ edd
+#: includes/register-settings.php:307
+msgid "Text shown on the Add to Cart Buttons"
+msgstr "Text, der auf den Buttons fürs Hinzufügen zum Warenkorb angezeigt wird"
+
+#@ edd
+#: includes/scripts.php:128
+msgid "You must have at least one price"
+msgstr "Sie müssen wenigstens einen Preis angeben"
+
+#@ edd
+#: includes/scripts.php:129
+msgid "You must have at least one file"
+msgstr "Sie müssen wenigstens eine Datei angeben"
+
+#@ edd
+#: includes/scripts.php:130
+msgid "You must have at least one field"
+msgstr "Sie müssen wenigstens ein Feld angeben"
+
+#@ edd
+#: includes/template-functions.php:290
+msgid "Plain Text"
+msgstr "Reiner Text"
+
+#@ edd
+#: includes/widgets.php:299
+msgid "Easy Digital Downloads Sales Summary"
+msgstr "Einfache Digitale Downloads Umsatzzusammenfassung"
+
+#@ edd
+#: includes/widgets.php:318
+msgid "Current Month"
+msgstr "Aktueller Monat"
+
+#@ edd
+#: includes/widgets.php:333
+msgid "Totals"
+msgstr "Gesamt"
+
+#@ edd
+#: includes/widgets.php:338
+msgid "Total Earnings"
+msgstr "Gesamte Einnamen"
+
+#@ edd
+#: includes/widgets.php:342
+msgid "Total Sales"
+msgstr "Gesamter Umsatz"
+
+#@ edd
+#: includes/admin/add-ons.php:74
+msgid "There was an error retrieving the extensions list from the server. Please try again later."
+msgstr "Es trat ein Fehler auf beim Laden der Erweiterungen-Liste vom Server. Bitte versuchen Sie es später noch einmal."
+
+#@ edd
+#: includes/admin/admin-notices.php:47
+#, php-format
+msgid "The Payment History needs to be updated. %s"
+msgstr "Die bisher erhaltenen Zahlungen müssen aktualisiert werden. %s"
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:26
+#: includes/admin/downloads/contextual-help.php:29
+msgid "For more information:"
+msgstr "Weitere Informationen:"
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:27
+#: includes/admin/downloads/contextual-help.php:30
+#, php-format
+msgid "Visit the <a href=\"%s\">documentation</a> on the Easy Digital Downloads website."
+msgstr "Besuchen Sie die <a href=\"%s\">Dokumentation (Engl.)</a> auf der Einfache Digitale Downloads Webseite."
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:29
+#, php-format
+msgid "<a href=\"%s\">Post an issue</a> on <a href=\"%s\">Github</a>. View <a href=\"%s\">extensions</a> or <a href=\"%s\">themes</a>."
+msgstr "<a href=\"%s\">Melden Sie ein Problem</a> im <a href=\"%s\">Github-Repositorium</a>. Stöbern Sie in <a href=\"%s\">Erweiterungen (Extensions)</a> oder in <a href=\"%s\">Themes</a>."
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:41
+msgid "Discount codes allow you to offer buyers special discounts by having them enter predefined codes during checkout."
+msgstr "Gutschein-Codes erlauben es Ihnen, Käufern spezielle Rabatte zu geben, indem vordefinierte Codes während des Bezahlvorgangs eingeben werden."
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:42
+msgid "Discount codes that are set to \"inactive\" cannot be redeemed."
+msgstr "Gutschein-Codes, die auf \"inaktiv\" gesetzt sind, können nicht eingelöst werden."
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:43
+msgid "Discount codes are setup to only be used only one time by each customer. If a customer attempts to use a code a second time, they will be given an error."
+msgstr "Gutschein-Codes sind so eingerichtet, dass sie nur einmal pro Kunde verwendet werden können. Wenn ein Kunde versucht solch einen Code ein weiteres Mal zu verwenden, wird eine Fehlermeldung ausgegeben."
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:48
+msgid "Adding Discounts"
+msgstr "Codes hinzufügen"
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:50
+msgid "You can create any number of discount codes easily from this page."
+msgstr "Sie können eine beliebige Anzahl von Gutschein-Codes von dieser Seite aus erstellen."
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:51
+msgid "Discount codes have several options:"
+msgstr "Gutschein-Codes haben verschiedene Optionen:"
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:53
+msgid "<strong>Name</strong>: this is the name given to the discount. Used primarily for administrative purposes."
+msgstr "<strong>Name</strong>: Dies ist der Name des Gutschein-Codes. Dieser wird in erster Linie für administrative Zwecke verwendet."
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:54
+msgid "<strong>Code</strong>: this is the unique code that customers will enter during checkout to redeem the code."
+msgstr "<strong>Code</strong>: Dies ist der einzigartige Code, den Kunden während des Bezahlvorgangs eingeben werden, um den Gutschein einzulösen."
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:55
+msgid "<strong>Type</strong>: this is the type of discount this code awards."
+msgstr "<strong>Typ</strong>: Dies ist die Art des Gutschein-Codes."
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:56
+msgid "<strong>Amount</strong>: this discount amount provided by this code. For percentage based discounts, enter a number such as 70 for 70%. Do not enter a percent sign."
+msgstr "<strong>Betrag</strong>: Dies ist der Rabattbetrag, welchem der Gutschein entspricht. Für Rabatte in Prozentsätzen geben Sie einfach einen Wert ein, zum Beispiel <code>70</code> oder <code>70%</code>. Geben Sie bitte kein Prozentzeichen ein!"
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:57
+msgid "<strong>Start Date</strong>: this is the date that this code becomes available. If a customer attempts to redeem the code prior to this date, they will be given an error. This is optional."
+msgstr "<strong>Startdatum</strong>: Dies ist das Datum, ab dem der Code verfügbar ist. Versucht ein Kunde den Code davor einzulösen, wird eine Fehlermeldung ausgegeben. Diese Einstellung ist optional."
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:58
+msgid "<strong>Expiration Date</strong>: this is the end date for the discount. After this date, the code will no longer be able to be used. This is optional."
+msgstr "<strong>Ablaufdatum</strong>: Dies ist das End-/ Ablaufdatum für den entsprechenden Rabatt. Nach diesem Dateum kann dieser Code nicht mehr verwendet werden. Diese Einstellung ist optional."
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:59
+msgid "<strong>Minimum Amount</strong>: this is the minimum purchase amount required to use this code. If a customer has less than this amount in their cart, they will be given an error. This is optional."
+msgstr "<strong>Mindestbetrag</strong>: Dies ist der Mindestumsatz, der erforderlich ist, um diesen Code verwenden zu können. Wenn ein Kunde weniger Warenwert im Warenkorb hat, wird eine entsprechende Fehlermeldung ausgegeben. Diese Einstellung ist optional."
+
+#@ edd
+#: includes/admin/discounts/contextual-help.php:60
+msgid "<strong>Max Uses</strong>: this is the maximum number of times this discount can be redemmed. Once this number is reached, no more customers will be allowed to use it."
+msgstr "<strong>Maximale Verwendung</strong>: Damit wird festgelegt, wie oft der Code eingelöst werden kann. Ist diese Zahl erreicht, ist es keinem weiteren Kunde erlaubt, diesen Code zu verwenden."
+
+#@ edd
+#: includes/admin/downloads/contextual-help.php:32
+#, php-format
+msgid "<a href=\"%s\">Post an issue</a> on <a href=\"%s\">GitHub</a>. View <a href=\"%s\">extensions</a> or <a href=\"%s\">themes</a>."
+msgstr "<a href=\"%s\">Melden Sie ein Problem</a> im <a href=\"%s\">Github-Repositorium</a>. Stöbern Sie in <a href=\"%s\">Erweiterungen (Extensions)</a> oder in <a href=\"%s\">Themes</a>."
+
+#@ edd
+#: includes/admin/downloads/contextual-help.php:42
+msgid "Download Configuration"
+msgstr "Download-Konfiguration"
+
+#@ edd
+#: includes/admin/downloads/contextual-help.php:44
+msgid "<strong>Pricing Options</strong> - Either define a single fixed price, or enable variable pricing. By enabling variable pricing, multiple download options and prices can be configured."
+msgstr "<strong>Preis-Optionen</strong> - Legen Sie einen einzelnen Preis fest, oder aktivieren Sie Preis-Varianten. Falls Preis-Varianten aktiv sind, können weitere Download-Optionen und -Preise eingerichtet werden."
+
+#@ edd
+#: includes/admin/downloads/contextual-help.php:46
+msgid "<strong>File Downloads</strong> - Define download file names and their respsective file URL. Multiple files can be assigned to a single price, or variable prices."
+msgstr "<strong>Datei-Downloads</strong> - Legen Sie die Download-Dateinamen und die entsprechende Datei-URL fest. Für Einzel-Preise und Preis-Varianten können jeweils mehrere Dateien zugewiesen werden."
+
+#@ edd
+#: includes/admin/downloads/contextual-help.php:48
+msgid "<strong>Button Options</strong> - Disable the automatic output the purchase button. If disabled, no button will be added to the download page unless the <code>[purchase_link]</code> shortcode is used."
+msgstr "<strong>Button-Optionen</strong> - Deaktivieren Sie die automatische Ausgabe des Kaufen-Buttons. Falls deaktiviert, wird kein Button der Seite dieses Downloads hinzugefügt, außer der Shortcode <code>[purchase_link]</code> wird verwendet."
+
+#@ edd
+#: includes/admin/downloads/contextual-help.php:55
+msgid "Special notes or instructions for the product. These notes will be added to the purchase receipt, and additionaly may be used by some extensions or themes on the frontend."
+msgstr "Besondere Hinweise oder Instruktionen für das Produkt. Diese Notizen werden der Bestellbestätigung hinzugefügt und könnten zusätzlich von einigen Erweiterungen (Extensions) bzw. Themes in der Besucheransicht (Frontend) verwendet werden."
+
+#@ edd
+#: includes/admin/downloads/contextual-help.php:64
+msgid "Purchase Shortcode"
+msgstr "Kaufen-Shortcode"
+
+#@ edd
+#: includes/admin/downloads/contextual-help.php:66
+msgid "<strong>Purchase Shortcode</strong> - If the automatic output of the purchase button has been disabled via the Download Configuration box, a shortcode can be used to output the button or link."
+msgstr "<strong>Kaufen-Shortcode</strong> - Wenn die automatische Ausgabe des Kaufen-Buttons über die Download-Konfiguration deaktiviert wurde, kann ein Shortcode verwendet werden, um den Button bzw. Link auszugeben."
+
+#@ edd
+#: includes/admin/downloads/contextual-help.php:71
+msgid "The ID of a specific download to purchase."
+msgstr "Die ID eines spezifischen Downloads zum Kaufen."
+
+#@ edd
+#: includes/admin/downloads/contextual-help.php:72
+msgid "The text to be displayed on the button or link."
+msgstr "Der Text, der auf dem Button bzw. Link angezeigt wird."
+
+#@ edd
+#: includes/admin/downloads/contextual-help.php:73
+msgid "<em>button</em> | <em>text</em> - The style of the purchase link."
+msgstr "<em>button</em> | <em>text</em> - Der Stil des Kaufen-Links."
+
+#@ edd
+#: includes/admin/downloads/contextual-help.php:75
+msgid "One or more custom CSS classes you want applied to the button."
+msgstr "Eine oder mehrere CSS-Klasse(n), die Sie dem Button zuweisen wollen."
+
+#@ edd
+#: includes/admin/downloads/contextual-help.php:78
+#, php-format
+msgid "For more information, see <a href=\"%s\">using Shortcodes</a> on the WordPress.org Codex or <a href=\"%s\">Easy Digital Downloads Documentation</a>"
+msgstr "Für weitere Informationen, besuchen Sie bitte die Seite zum <a href=\"%s\">Verwenden von Shortcodes im WordPress.org Codex (Engl.)</a> oder die <a href=\"%s\">Dokumentation für Einfache Digitale Downloads (Engl.)</a>."
+
+#@ edd
+#: includes/admin/downloads/metabox.php:422
+msgid "Button Options:"
+msgstr "Button-Optionen:"
+
+#@ edd
+#: includes/admin/reporting/class-customer-reports-table.php:14
+msgid "Customer"
+msgstr "Kunde"
+
+#@ edd
+#: includes/admin/reporting/class-customer-reports-table.php:15
+#: includes/admin/reporting/reports.php:94
+msgid "Customers"
+msgstr "Kunden"
+
+#@ edd
+#: includes/admin/reporting/class-customer-reports-table.php:40
+msgid "Number of Purchases"
+msgstr "Anzahl der Bestellungen"
+
+#@ edd
+#: includes/admin/reporting/class-customer-reports-table.php:41
+msgid "Total Amount Spent"
+msgstr "Gesamtumsatz"
+
+#@ edd
+#: includes/admin/reporting/class-customer-reports-table.php:75
+msgid "Guest"
+msgstr "Gast"
+
+#@ edd
+#: includes/admin/reporting/class-download-reports-table.php:41
+msgid "Monthly Average Sales"
+msgstr "Durchschnittlicher Monatsumsatz"
+
+#@ edd
+#: includes/admin/reporting/class-download-reports-table.php:42
+msgid "Monthly Average Earnings"
+msgstr "Durchschnittliche Monatseinnahmen"
+
+#@ edd
+#: includes/admin/reporting/graphing.php:59
+msgid "Earnings Over Time"
+msgstr "Einnahmen in Zeitspanne"
+
+#@ edd
+#: includes/admin/reporting/graphing.php:201
+msgid "This Month"
+msgstr "Diesen Monat"
+
+#@ edd
+#: includes/admin/reporting/graphing.php:202
+msgid "Last Month"
+msgstr "Letzten Monat"
+
+#@ edd
+#: includes/admin/reporting/graphing.php:203
+msgid "This Quarter"
+msgstr "Dieses Quartal"
+
+#@ edd
+#: includes/admin/reporting/graphing.php:204
+msgid "Last Quarter"
+msgstr "Letztes Quartal"
+
+#@ edd
+#: includes/admin/reporting/graphing.php:205
+msgid "This Year"
+msgstr "Dieses Jahr"
+
+#@ edd
+#: includes/admin/reporting/graphing.php:206
+msgid "Last Year"
+msgstr "Letztes Jahr"
+
+#@ edd
+#: includes/admin/reporting/graphing.php:207
+msgid "Other"
+msgstr "Anderer Zeitraum"
+
+#@ edd
+#: includes/admin/reporting/graphing.php:235
+msgid "From"
+msgstr "Von"
+
+#@ edd
+#: includes/admin/reporting/graphing.php:241
+msgid "To"
+msgstr "Bis"
+
+#@ edd
+#: includes/admin/reporting/graphing.php:255
+msgid "Filter"
+msgstr "Anwenden"
+
+#@ edd
+#: includes/admin/reporting/pdf-reports.php:116
+#, php-format
+msgid "No %s found."
+msgstr "Kein %s gefunden."
+
+#@ edd
+#: includes/admin/reporting/reports.php:106
+msgid "Reporting Views"
+msgstr "Berichtsanzeigen"
+
+#@ edd
+#: includes/admin/reporting/reports.php:115
+msgid "Apply"
+msgstr "Übernehmen"
+
+#@ edd
+#: includes/admin/reporting/reports.php:189
+msgid "Export PDF of Sales and Earnings"
+msgstr "PDF-Datei der Umsätze und Einnahmen exportieren"
+
+#@ edd
+#: includes/admin/reporting/reports.php:191
+msgid "Download a PDF of Sales and Earnings reports for all products for the current year."
+msgstr "Eine PDF-Datei der Umsätze und Einnahmen für alle Produkte des aktuellen Jahres herunterladen."
+
+#@ edd
+#: includes/admin/reporting/reports.php:191
+msgid "Date range reports will be coming soon."
+msgstr "Berichte für Zeitspannen kommen in Kürze."
+
+#@ edd
+#: includes/admin/reporting/reports.php:194
+msgid "Generate PDF"
+msgstr "PDF-Datei erzeugen"
+
+#@ edd
+#: includes/admin/reporting/reports.php:201
+msgid "Export Customers in CSV"
+msgstr "Kunden in CSV-Datei exportieren"
+
+#@ edd
+#: includes/admin/reporting/reports.php:203
+msgid "Download a CSV of all customer emails."
+msgstr "Eine CSV-Datei mit allen Kunden-E-Mail-Adressen herunterladen."
+
+#@ edd
+#: includes/admin/reporting/reports.php:206
+msgid "Generate CSV"
+msgstr "CSV-Datei erzeugen"
+
+#@ edd
+#: includes/template-functions.php:106
+msgid "Item successfully added to your cart."
+msgstr "Produkt wurde erfolgreich Ihrem Warenkorb hinzugefügt."
+
+#@ edd
+#: includes/template-functions.php:269
+msgid "Yellow"
+msgstr "Gelb"
+
+#@ edd
+#: includes/template-functions.php:360
+msgid "No downloads found"
+msgstr "Es wurden keine Downloads gefunden."
+
+#@ edd
+#: includes/admin/downloads/metabox.php:399
+msgid "File Download Limit:"
+msgstr "Datei-Downloadlimit:"
+
+#@ edd
+#: includes/admin/downloads/metabox.php:403
+msgid "The maximum number of times a buyer can download each file"
+msgstr "Wie oft ein Käufer jede Datei maximal herunterladen kann"
+
+#@ edd
+#: includes/misc-functions.php:681
+#, php-format
+msgid "%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead."
+msgstr "%1$s ist <strong>deprecated</strong> (veraltet/ aufgegeben) seit Einfache Digitale Downloads Version %2$s! Verwenden Sie %3$s stattdessen."
+
+#@ edd
+#: includes/misc-functions.php:683
+#, php-format
+msgid "%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available."
+msgstr "%1$s ist <strong>deprecated</strong> (veraltet/ aufgegeben) seit Einfache Digitale Downloads Version %2$s - es sind keine Alternativen verfügbar."
+
+#@ edd
+#: includes/register-settings.php:681
+#, php-format
+msgid "The callback function used for the <strong>%s</strong> setting is missing."
+msgstr "Die Callback-Funktion für die <strong>%s</strong> Einstellung fehlt!"
 

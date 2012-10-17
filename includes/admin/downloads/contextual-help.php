@@ -39,7 +39,7 @@ function edd_downloads_contextual_help() {
 
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-download-configuration',
-		'title'	    => __( 'Download Configuration' ),
+		'title'	    => __( 'Download Configuration', 'edd' ),
 		'content'	=> 
 			'<p>' . __( '<strong>Pricing Options</strong> - Either define a single fixed price, or enable variable pricing. By enabling variable pricing, multiple download options and prices can be configured.', 'edd' ) . '</p>' . 
 
@@ -50,7 +50,7 @@ function edd_downloads_contextual_help() {
 
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-product-notes',
-		'title'	    => __( 'Product Notes' ),
+		'title'	    => __( 'Product Notes', 'edd' ),
 		'content'	=> 
 			'<p>' . __( 'Special notes or instructions for the product. These notes will be added to the purchase receipt, and additionaly may be used by some extensions or themes on the frontend.', 'edd' ) . '</p>'
 	) );
@@ -61,7 +61,7 @@ function edd_downloads_contextual_help() {
 
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-purchase-shortcode',
-		'title'	    => __( 'Purchase Shortcode' ),
+		'title'	    => __( 'Purchase Shortcode', 'edd' ),
 		'content'	=> 
 			'<p>' . __( '<strong>Purchase Shortcode</strong> - If the automatic output of the purchase button has been disabled via the Download Configuration box, a shortcode can be used to output the button or link.', 'edd' ) . '</p>' .
 
