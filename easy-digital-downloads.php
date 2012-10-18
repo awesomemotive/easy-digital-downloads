@@ -29,7 +29,7 @@ along with Easy Digital Downloads. If not, see <http://www.gnu.org/licenses/>.
 */
 // Plugin version
 if( !defined( 'EDD_VERSION' ) ) {
-	define( 'EDD_VERSION', '1.3' );
+	define( 'EDD_VERSION', '1.3.1' );
 }
 // Plugin Folder URL
 if( !defined( 'EDD_PLUGIN_URL' ) ) {
