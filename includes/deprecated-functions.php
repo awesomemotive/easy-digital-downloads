@@ -58,6 +58,8 @@ function edd_count_payments( $mode, $user = null ) {
 
 function edd_get_download_sales_log( $download_id, $paginate = false, $number = 10, $offset = 0 ) {
 	
+	_edd_deprecated_function( __FUNCTION__, '1.3.1' );
+
 	$sales_log = get_post_meta( $download_id, '_edd_sales_log', true );
 	
 	if( $sales_log ) {
@@ -94,6 +96,9 @@ function edd_get_download_sales_log( $download_id, $paginate = false, $number = 
 */
 
 function edd_get_file_download_log( $download_id, $paginate = false, $number = 10, $offset = 0 ) {
+	
+	_edd_deprecated_function( __FUNCTION__, '1.3.1' );
+
 	$download_log = get_post_meta( $download_id, '_edd_file_download_log', true );
 	
 	if( $download_log ) {
