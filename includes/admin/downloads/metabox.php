@@ -612,7 +612,7 @@ function edd_render_download_log_meta_box() {
 			foreach( $file_downloads as $log ) {
 
 				$user_info 	= get_post_meta( $log->ID, '_edd_log_user_info', true );
-				$file_id 	= get_post_meta( $log->ID, '_edd_log_file_id', true );
+				$file_id 	= (int) get_post_meta( $log->ID, '_edd_log_file_id', true );
 				$ip 		= get_post_meta( $log->ID, '_edd_log_ip', true );
 
 				$user_id = isset( $user_info['id']) ? $user_info['id'] : 0;
