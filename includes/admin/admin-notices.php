@@ -37,7 +37,7 @@ function edd_admin_messages() {
 	if( isset( $_GET['edd-message']) && $_GET['edd-message'] == 'email_sent' && current_user_can( $edd_access_level ) ) {
 		add_settings_error( 'edd-notices', 'edd-payment-sent', __( 'The purchase receipt has been resent.', 'edd' ), 'updated' );
 	}
-	if( ! get_option( 'edd_payment_totals_upgraded' ) ) {
+	if( ! get_option( 'edd_payment_totals_upgraded' ) && ! get_option( 'edd_version' ) ) {
 
 		if( wp_count_posts( 'edd_payment' )->publish < 1 )
 			return; // no payment exist yet
