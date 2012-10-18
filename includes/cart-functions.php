@@ -271,7 +271,7 @@ function edd_get_cart_amount() {
 			$amount = edd_get_discounted_amount( $_POST['edd-discount'], $amount );
 		}
 		
-		return number_format( $amount, 2 );
+		return edd_sanitize_amount( $amount );
 	}
 	return 0;
 }
