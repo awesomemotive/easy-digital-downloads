@@ -11,27 +11,35 @@
 */
 
 
+function edd_schedule_upgrades() {
 
-function edd_trigger_upgrades() {
-	if( get_option( 'edd_logs_upgraded' ) ) {
+	if( ! get_option( 'edd_logs_upgraded' ) ) {
 
-		if( wp_count_posts( 'edd_payment' )->publish < 1 )
-			return; // no payment exist yet
+		//wp_schedule_single_event( time()+3600, 'edd_do_upgrades' );
+
+	}
+}
+add_action( 'admin_init', 'edd_schedule_upgrades' );
+
+
+function edd_perform_upgrades() {
+
+	// TODO make this run via a cron job
+
+	if( ! get_option( 'edd_logs_upgraded' ) ) {
 	
 		//edd_convert_purchase_logs();
 
 	}
 
 	if( ! get_option( 'edd_logs_upgraded' ) ) {
-
-		if( wp_count_posts( 'edd_payment' )->publish < 1 )
-			return; // no payment exist yet
 	
 		//edd_convert_download_logs();
 
 	}
 }
-add_action( 'admin_init', 'edd_trigger_upgrades' );
+add_action( 'edd_do_upgrades', 'edd_perform_upgrades' );
+
 
 
 /**
@@ -63,12 +71,12 @@ function edd_convert_purchase_logs() {
 
 					$log_data = array(
 						'post_parent'	=> $download->ID,
-						'post_date'		=> $sale['date']
+						'post_date'		=> $sale['date'],
+						'log_type'		=> 'sale'
 
 					);
 
 					$log_meta = array(
-						'type'		=> 'sale',
 						'payment_id'=> $sale['payment_id']
 					);
 
@@ -98,7 +106,7 @@ function edd_convert_download_logs() {
 	$downloads = get_posts( array( 
 		'post_type' 		=> 'download', 
 		'posts_per_page' 	=> -1, 
-		'post_status' 		=> 'any' 
+		'post_status' 		=> 'publish' 
 	) );
 
 	if( $downloads ) {
@@ -114,14 +122,15 @@ function edd_convert_download_logs() {
 
 					$log_data = array(
 						'post_parent'	=> $download->ID,
-						'post_date'		=> $log['date']
+						'post_date'		=> $log['date'],
+						'log_type'		=> 'file_download'
 
 					);
 
 					$log_meta = array(
-						'type'		=> 'file_download',
 						'user_info'	=> $log['user_info'],
-						'file_id'	=> $log['file_id']
+						'file_id'	=> $log['file_id'],
+						'ip'		=> $log['ip']
 					);
 
 					$log = $edd_log->insert_log( $log_data, $log_meta );
