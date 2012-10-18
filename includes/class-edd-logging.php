@@ -195,7 +195,6 @@ class EDD_Logging {
 			'post_status'	=> 'publish',
 			'post_parent'	=> 0,
 			'post_content'	=> '',
-			'post_date'		=> date( 'Y-m-d H:i:s' ),
 			'log_type'		=> false
 		);
 

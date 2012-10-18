@@ -307,26 +307,7 @@ function edd_get_file_download_log( $download_id, $paginate = false, $number = 1
  * @return      void
 */
 
-function edd_record_sale_in_log( $download_id, $payment_id, $user_info, $date ) {
-
-	$log = get_post_meta( $download_id, '_edd_sales_log', true );
-
-	if( !$log ) {
-		$log = array();
-	}
-	
-	$log_entry = array(
-		'payment_id' => $payment_id,
-		'user_info'  => $user_info,
-		'date'       => $date
-	);
-	
-	$log[] = $log_entry;
-	
-	update_post_meta( $download_id, '_edd_sales_log', $log );
-
-
-	// new logging clasee
+function edd_record_sale_in_log( $download_id, $payment_id ) {
 
 	$logs = new EDD_Logging();
 
@@ -336,7 +317,6 @@ function edd_record_sale_in_log( $download_id, $payment_id, $user_info, $date ) 
 	);
 
 	$log_meta = array( 
-		'user_info' => $user_info,
 		'payment_id'=> $payment_id
 	);
 
@@ -355,23 +335,25 @@ function edd_record_sale_in_log( $download_id, $payment_id, $user_info, $date ) 
  * @return      void
 */
 
-function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip, $date ) {
-	$log = get_post_meta( $download_id, '_edd_file_download_log', true );
-	
-	if( !$log ) {
-		$log = array();
-	}
-	
-	$log_entry = array(
-		'file_id'   => $file_id,
-		'user_info' => $user_info,
-		'ip'        => $ip,
-		'date'      => $date
+function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip ) {
+
+
+	$logs = new EDD_Logging();
+
+	$log_data = array(
+		'post_parent'	=> $download_id,
+		'log_type'		=> 'file_download'
 	);
-	
-	$log[] = $log_entry;
-	
-	update_post_meta( $download_id, '_edd_file_download_log', $log );
+
+	$log_meta = array(
+		'user_info'	=> $user_info,
+		'file_id'	=> $file_id,
+		'ip'		=> $ip
+	);
+
+	$log_id = $logs->insert_log( $log_data, $log_meta );
+
+
 }
 
 
