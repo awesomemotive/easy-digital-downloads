@@ -41,6 +41,9 @@ add_action( 'admin_init', 'edd_trigger_upgrades' );
 
 function edd_v131_upgrades() {
 
+	ignore_user_abort(true);
+	set_time_limit(0);
+
 	$downloads = get_posts( array( 
 		'post_type' 		=> 'download', 
 		'posts_per_page' 	=> -1, 
