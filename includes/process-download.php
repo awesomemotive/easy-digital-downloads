@@ -46,9 +46,9 @@ function edd_process_download() {
 			$user_info['email'] = $email;
 			if( is_user_logged_in() ) {
 				global $user_ID;
-				$user_data = get_userdata( $user_ID );
-				$user_info['id'] = $user_ID;
-				$user_info['name'] = $user_data->display_name;
+				$user_data 			= get_userdata( $user_ID );
+				$user_info['id'] 	= $user_ID;
+				$user_info['name'] 	= $user_data->display_name;
 			}
 			
 			edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip() );
