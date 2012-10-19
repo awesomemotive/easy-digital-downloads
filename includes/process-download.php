@@ -25,7 +25,7 @@ function edd_process_download() {
 		$download 	= urldecode( $_GET['download'] );
 		$key 		= urldecode( $_GET['download_key'] );
 		$email 		= rawurldecode( $_GET['email'] );
-		$file_key 	= urldecode( $_GET['file'] );
+		$file_key 	= (int) urldecode( $_GET['file'] );
 		$expire 	= urldecode( base64_decode( $_GET['expire'] ) );
 
 		$payment = edd_verify_download_link( $download, $key, $email, $expire, $file_key );
@@ -50,7 +50,7 @@ function edd_process_download() {
 				$user_info['id'] 	= $user_ID;
 				$user_info['name'] 	= $user_data->display_name;
 			}
-			
+
 			edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip() );
 			
 			$file_extension = edd_get_file_extension( $requested_file );

@@ -97,6 +97,7 @@ function edd_download_meta_box_save( $post_id) {
 }
 add_action( 'save_post', 'edd_download_meta_box_save' );
 
+
 /** Download Configuration *****************************************************************/
 
 /**
@@ -115,6 +116,7 @@ function edd_render_download_meta_box() {
 	do_action( 'edd_meta_box_fields', $post->ID );
 	wp_nonce_field( basename( __FILE__ ), 'edd_download_meta_box_nonce' );
 }
+
 
 /**
  * Price section.
@@ -399,13 +401,13 @@ function edd_render_download_limit_row( $post_id ) {
 		<strong><?php _e( 'File Download Limit:', 'edd' ); ?></strong>
 	</p>
 	<label for="edd_download_limit">
-		<input type="text" name="_edd_download_limit" id="edd_download_limit" value="<?php echo isset( $edd_download_limit ) ? esc_attr( $edd_download_limit ) : ''; ?>" size="30" style="width:80px;" placeholder="0"/>
-		<?php _e( 'The maximum number of times a buyer can download each file', 'edd' ); ?>
+		<input type="text" name="_edd_download_limit" id="edd_download_limit" value="<?php echo esc_attr( $edd_download_limit ); ?>" size="30" style="width:80px;" placeholder="0"/>
+		<?php _e( 'The maximum number of times a buyer can download each file. Leave blank or set to 0 for unlimited', 'edd' ); ?>
 	</label>
 
 <?php
 }
-//add_action( 'edd_meta_box_fields', 'edd_render_download_limit_row', 20 );
+add_action( 'edd_meta_box_fields', 'edd_render_download_limit_row', 20 );
 
 
 /**
