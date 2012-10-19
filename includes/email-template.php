@@ -42,10 +42,13 @@ function edd_email_templage_tags( $message, $payment_data, $payment_id ) {
 	if ( isset( $user_info['id'] ) && $user_info['id'] > 0 ) {
 		$user_data = get_userdata( $user_info['id'] );
 		$name = $user_data->display_name;
+		$username = $user_data->user_login;
 	} elseif ( isset( $user_info['first_name'] ) ) {
 		$name = $user_info['first_name'];
+		$username = $user_info['first_name'];
 	} else {
 		$name = $user_info['email'];
+		$username = $user_info['email'];
 	}
 
 	$download_list = '<ul>';
@@ -97,6 +100,7 @@ function edd_email_templage_tags( $message, $payment_data, $payment_id ) {
 	$receipt_id = $payment_data['key'];
 
 	$message = str_replace( '{name}', $name, $message );
+	$message = str_replace( '{username}', $username, $message );
 	$message = str_replace( '{download_list}', $download_list, $message );
 	$message = str_replace( '{date}', date( get_option( 'date_format' ), strtotime( $payment_data['date'] ) ), $message );
 	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
