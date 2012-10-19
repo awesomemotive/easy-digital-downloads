@@ -19,10 +19,14 @@
  *
  * @access      public
  * @since       1.0 
+ * @deprecated 	1.2
  * @return      integer
 */
 
 function edd_count_payments( $mode, $user = null ) {
+	
+	_edd_deprecated_function( __FUNCTION__, '1.2' );
+
 	$payments = edd_get_payments( array(
 		'offset'  => 0, 
 		'number'  => -1, 

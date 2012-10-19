@@ -20,10 +20,12 @@
 
 function edd_is_test_mode() {
 	global $edd_options;
-	if( !isset( $edd_options['test_mode'] ) || is_null( $edd_options['test_mode'] ) ) {
-		return false;
-	}
-	return true;
+	if( !isset( $edd_options['test_mode'] ) || is_null( $edd_options['test_mode'] ) )
+		$ret = false;
+	else
+		$ret = true;
+
+	return (bool) apply_filters( 'edd_is_test_mode', $ret );
 }
 
 
@@ -38,8 +40,11 @@ function edd_is_test_mode() {
 function edd_no_guest_checkout() {
 	global $edd_options;
 	if( isset( $edd_options['logged_in_only'] ) )
-		return true;
-	return false;
+		$ret = true;
+	else
+		$ret = false;
+
+	return (bool) apply_filters( 'edd_no_guest_checkout', $ret );
 }
 
 
@@ -54,8 +59,11 @@ function edd_no_guest_checkout() {
 function edd_logged_in_only() {
 	global $edd_options;
 	if( isset( $edd_options['logged_in_only'] ) )
-		return true;
-	return false;
+		$ret = true;
+	else
+		$ret = false;
+
+	return (bool) apply_filters( 'edd_logged_in_only', $ret );
 }
 
 
@@ -71,7 +79,7 @@ function edd_no_redownload() {
 	global $edd_options;
 	if( isset( $edd_options['disable_redownload'] ) )
 		return true;
-	return false;
+	return (bool) apply_filters( 'edd_no_redownload', false );
 }
 
 /**
@@ -87,8 +95,7 @@ function edd_no_redownload() {
 */
 
 function edd_get_menu_access_level() {
-	global $edd_options;
-	return 'manage_options';
+	return apply_filters( 'edd_menu_access_level', 'manage_options' );
 }
 
 
@@ -141,7 +148,7 @@ function edd_string_is_image_url( $str ) {
 		break;
 	}
 
-	return $return;
+	return (bool) apply_filters( 'edd_string_is_image', $return, $str );
 }
 
 
@@ -156,18 +163,17 @@ function edd_string_is_image_url( $str ) {
  * @return      string
 */
 
-function edd_get_ip()
-{
-	if( !empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+function edd_get_ip() {
+	if( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 		//check ip from share internet
 	  $ip = $_SERVER['HTTP_CLIENT_IP'];
-	} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+	} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
 		//to check ip is pass from proxy
 	  $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
 	} else {
 	  $ip = $_SERVER['REMOTE_ADDR'];
 	}
-	return $ip;
+	return apply_filters( 'edd_get_ip', $ip );
 }
 
 
@@ -468,7 +474,7 @@ function edd_get_country_list() {
 		'ZW' => 'Zimbabwe'
 	);
 
-	return $countries;
+	return apply_filters( 'edd_countries', $countries );
 }
 
 
@@ -550,7 +556,7 @@ function edd_get_states_list() {
 		'AP' => 'Armed Forces - Pacific'
 	);
 
-	return $states;
+	return apply_filters( 'edd_us_states', $states );
 }
 
 
@@ -563,7 +569,7 @@ function edd_get_states_list() {
 */
 
 function edd_get_provinces_list() {
-	$provinces =array(
+	$provinces = array(
 		'AB' => 'Alberta',
 		'BC' => 'British Columbia',
 		'MB' => 'Manitoba',
@@ -579,7 +585,7 @@ function edd_get_provinces_list() {
 		'YT' => 'Yukon'
 	);
 
-	return $provinces;
+	return apply_filters( 'edd_canada_provinces', $provinces );
 }
 
 
@@ -614,6 +620,14 @@ function edd_get_php_arg_separator_output() {
 }
 
 
+/**
+ * Get the current page URL
+ *
+ * @access      public
+ * @since       1.3
+ * @return      string
+*/
+
 function edd_get_current_page_url() {
 	global $post;
 
@@ -627,5 +641,45 @@ function edd_get_current_page_url() {
 		else $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 	endif;
 
-	return $pageURL;
+	return apply_filters( 'edd_get_current_page_url', $pageURL );
+}
+
+
+
+/**
+ * Marks a function as deprecated and informs when it has been used.
+ *
+ * There is a hook edd_deprecated_function_run that will be called that can be used
+ * to get the backtrace up to what file and function called the deprecated
+ * function.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * This function is to be used in every function that is deprecated.
+ *
+ * @package Easy Digital Downloads
+ * @subpackage  Misc Functions
+ * @since 1.3.1
+ * @access private
+ *
+ * @uses do_action() Calls 'edd_deprecated_function_run' and passes the function name, what to use instead,
+ *   and the version the function was deprecated in.
+ * @uses apply_filters() Calls 'edd_deprecated_function_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string $function The function that was called
+ * @param string $version The version of WordPress that deprecated the function
+ * @param string $replacement Optional. The function that should have been called
+ */
+function _edd_deprecated_function( $function, $version, $replacement = null ) {
+
+	do_action( 'edd_deprecated_function_run', $function, $replacement, $version );
+
+	// Allow plugin to filter the output error trigger
+	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', true ) ) {
+		if ( ! is_null($replacement) )
+			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
+		else
+			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'edd'), $function, $version ) );
+	}
 }

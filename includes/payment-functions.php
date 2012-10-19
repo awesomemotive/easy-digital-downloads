@@ -337,7 +337,7 @@ function edd_get_earnings_by_date($day = null, $month_num, $year) {
 	if( $day )
 		$args['day'] = $day;
 	
-	$sales = get_posts( $args );
+	$sales = get_posts( apply_filters( 'edd_earnings_by_date_args', $args ) );
 	$total = 0;
 	if( $sales ) {
 		foreach( $sales as $sale ) {
@@ -370,7 +370,7 @@ function edd_get_sales_by_date( $day = null, $month_num, $year ) {
 	if( $day )
 		$args['day'] = $day;
 	
-	$sales = get_posts( $args );
+	$sales = get_posts( apply_filters( 'edd_sales_by_date_args', $args ) );
 
 	$total = 0;
 	if( $sales ) {
@@ -393,10 +393,15 @@ function edd_get_sales_by_date( $day = null, $month_num, $year ) {
 
 function edd_is_payment_complete( $payment_id ) {
 	$payment = get_post($payment_id);
-	if( $payment )
+		
+	$ret = false;
+
+	if( $payment ) {
 		if( $payment->post_status == 'publish' )
-			return true;
-	return false;
+			$ret = true;
+	}
+
+	return apply_filters( 'edd_is_payment_complete', $ret, $payment_id );
 }
 
 

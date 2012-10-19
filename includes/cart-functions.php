@@ -60,7 +60,10 @@ function edd_get_cart_quantity() {
 
 function edd_add_to_cart( $download_id, $options = array() ) {
 	$cart = edd_get_cart_contents();
-	if( !edd_item_in_cart( $download_id ) ) {
+	if( ! edd_item_in_cart( $download_id ) ) {
+
+		if( 'download' != get_post_type( $download_id ) )
+			return; // not a download product
 
 		do_action( 'edd_pre_add_to_cart', $download_id, $options );
 
@@ -268,7 +271,7 @@ function edd_get_cart_amount() {
 			$amount = edd_get_discounted_amount( $_POST['edd-discount'], $amount );
 		}
 		
-		return number_format( $amount, 2 );
+		return edd_sanitize_amount( $amount );
 	}
 	return 0;
 }

@@ -92,10 +92,10 @@ function edd_get_purchase_link( $args = array() ) {
 					);
 
 					printf( 
-						'<a href="%1$s" class="%2$s edd-submit %3$s" %4$s>' . __( 'Checkout', 'edd' ) . '</a>', 
+						'<a href="%1$s" class="%2$s %3$s" %4$s>' . __( 'Checkout', 'edd' ) . '</a>', 
 						esc_url( $checkout_url ),
 						esc_attr( 'edd_go_to_checkout' ),
-						implode( ' ', array( $style, $color ) ),
+						implode( ' ', array( $style, $color, trim( $class ) ) ),
 						$checkout_display
 					);
 				?>
