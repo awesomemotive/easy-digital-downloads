@@ -214,8 +214,7 @@ class EDD_Logging {
 		// set log meta, if any
 		if( $log_id && ! empty( $log_meta ) ) {
 			foreach( (array) $log_meta as $key => $meta ) {
-				if( ! empty( $meta ) )
-					update_post_meta( $log_id, '_edd_log_' . sanitize_key( $key ), $meta );
+				update_post_meta( $log_id, '_edd_log_' . sanitize_key( $key ), $meta );
 			}
 		}
 
@@ -324,7 +323,7 @@ class EDD_Logging {
 	 * @return  int
 	*/
 
-	function get_log_count( $object_id = 0, $type = null ) {
+	function get_log_count( $object_id = 0, $type = null, $meta_query = null ) {
 
 		$query_args = array(
 			'post_parent' 	=> $object_id,
@@ -343,6 +342,10 @@ class EDD_Logging {
 				)
 			);
 
+		}
+
+		if( ! empty( $meta_query ) ) {
+			$query_args['meta_query'] = $meta_query;
 		}
 
 		$logs = new WP_Query( $query_args );
