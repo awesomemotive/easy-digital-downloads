@@ -102,7 +102,7 @@ function edd_payment_history_page() {
 				<?php do_action( 'edd_payments_page_statuses' ); ?>
 			</ul>
 			<ul class="subsubsub edd-export-payments">
-				<li>&nbsp;<?php _e( 'Export', 'edd' ); ?>: <a href="<?php echo add_query_arg( 'export', 'csv' ); ?>">CSV</a></li>
+				<li>&nbsp;<?php _e( 'Export', 'edd' ); ?>: <a href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'payment_export' ) ), 'edd_payments_export' ); ?>">CSV</a></li>
 				<?php do_action( 'edd_payments_page_export_options' ); ?>
 			</ul>	
 			<form id="payments-filter" action="<?php echo admin_url( 'edit.php' ); ?>" method="get" style="float: right; margin-bottom: 5px;">
