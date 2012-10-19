@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.5
-Stable Tag: 1.3
+Stable Tag: 1.3.1
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -138,6 +138,24 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.3.1 =
+
+* Updated German translation files
+* Added new file download limit option to limit the number of times buyers can download files
+* Fixed some text strings that were missing localization
+* Added new graceful failure for missing callback functions for settings fields
+* Added dozens of new filters for function returns
+* Added a new function for tracking deprecated function calls
+* Added a check to ensure items in the cart are of post_type "download"
+* Fixed a bug with creating the blank index.php in wp-content/uploads/edd/
+* Fixed a bug with an HTML class name in edd_get_purchase_link()
+* Added upgrade routine for converting old file download and purchase logs to the new EDD_Logging class
+* Added new upgrade routine for handling database upgrades
+* Added a new EDD_Logging class for logging events
+* Removed unnecessary parameters for register_post_type()
+* Code formatting improvements
+* Added support for custom reporting views
 
 = 1.3 =
 
@@ -677,6 +695,24 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Upgrade Notice ==
+
+= 1.3.1 =
+
+* Updated German translation files
+* Added new file download limit option to limit the number of times buyers can download files
+* Fixed some text strings that were missing localization
+* Added new graceful failure for missing callback functions for settings fields
+* Added dozens of new filters for function returns
+* Added a new function for tracking deprecated function calls
+* Added a check to ensure items in the cart are of post_type "download"
+* Fixed a bug with creating the blank index.php in wp-content/uploads/edd/
+* Fixed a bug with an HTML class name in edd_get_purchase_link()
+* Added upgrade routine for converting old file download and purchase logs to the new EDD_Logging class
+* Added new upgrade routine for handling database upgrades
+* Added a new EDD_Logging class for logging events
+* Removed unnecessary parameters for register_post_type()
+* Code formatting improvements
+* Added support for custom reporting views
 
 = 1.3 =
 
