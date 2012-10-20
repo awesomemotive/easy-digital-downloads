@@ -41,7 +41,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 			// increase purchase count and earnings
 			foreach( $downloads as $download ) {
 				
-				edd_record_sale_in_log( $download['id'], $payment_id, $user_info, $payment_data['date'] );
+				edd_record_sale_in_log( $download['id'], $payment_id, $user_info );
 				edd_increase_purchase_count( $download['id'] );
 				$amount = null;
 

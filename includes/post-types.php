@@ -101,7 +101,7 @@ function edd_setup_edd_post_types() {
 		'can_export'		=> false
 	); 
 	register_post_type( 'edd_payment', $payment_args );
-	
+
 }
 add_action( 'init', 'edd_setup_edd_post_types', 100 );
 

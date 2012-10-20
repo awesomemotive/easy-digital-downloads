@@ -37,17 +37,6 @@ function edd_admin_messages() {
 	if( isset( $_GET['edd-message']) && $_GET['edd-message'] == 'email_sent' && current_user_can( $edd_access_level ) ) {
 		add_settings_error( 'edd-notices', 'edd-payment-sent', __( 'The purchase receipt has been resent.', 'edd' ), 'updated' );
 	}
-	if( ! get_option( 'edd_payment_totals_upgraded' ) ) {
-
-		if( wp_count_posts( 'edd_payment' )->publish < 1 )
-			return; // no payment exist yet
-
-		// the payment history needs updated for version 1.2
-		$url = add_query_arg( 'edd-action', 'upgrade_payments' );
-		$upgrade_notice = sprintf( __( 'The Payment History needs to be updated. %s', 'edd' ), '<a href="' . wp_nonce_url( $url, 'edd_upgrade_payments_nonce' ) . '">' . __( 'Click to Upgrade', 'edd' ) . '</a>' );
-		add_settings_error( 'edd-notices', 'edd-payments-upgrade', $upgrade_notice, 'error' );
-	}
-
 	settings_errors( 'edd-notices' );
 }
 add_action( 'admin_notices', 'edd_admin_messages' );

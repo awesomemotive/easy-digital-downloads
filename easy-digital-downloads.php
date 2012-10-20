@@ -5,7 +5,7 @@ Plugin URI: http://easydigitaldownloads.com
 Description: Serve Digital Downloads Through WordPress
 Author: Pippin Williamson
 Author URI: http://pippinsplugins.com
-Version: 1.3
+Version: 1.3.1
 
 Easy Digital Downloads is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ along with Easy Digital Downloads. If not, see <http://www.gnu.org/licenses/>.
 */
 // Plugin version
 if( !defined( 'EDD_VERSION' ) ) {
-	define( 'EDD_VERSION', '1.3' );
+	define( 'EDD_VERSION', '1.3.1' );
 }
 // Plugin Folder URL
 if( !defined( 'EDD_PLUGIN_URL' ) ) {
@@ -84,6 +84,7 @@ include_once( EDD_PLUGIN_DIR . 'includes/checkout-template.php' );
 include_once( EDD_PLUGIN_DIR . 'includes/cart-template.php' );
 include_once( EDD_PLUGIN_DIR . 'includes/cart-functions.php' );
 include_once( EDD_PLUGIN_DIR . 'includes/cart-actions.php' );
+include_once( EDD_PLUGIN_DIR . 'includes/class-edd-logging.php' );
 include_once( EDD_PLUGIN_DIR . 'includes/ajax-functions.php' );
 include_once( EDD_PLUGIN_DIR . 'includes/formatting.php' );
 include_once( EDD_PLUGIN_DIR . 'includes/widgets.php' );
@@ -122,6 +123,8 @@ if( is_admin() ) {
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php' );	
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/settings/settings.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php' );
 } else {
 	include_once( EDD_PLUGIN_DIR . 'includes/process-purchase.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/process-download.php' );

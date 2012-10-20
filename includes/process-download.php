@@ -22,11 +22,11 @@
 
 function edd_process_download() {
 	if( isset( $_GET['download'] ) && isset( $_GET['email'] ) && isset( $_GET['file'] ) ) {
-		$download = urldecode( $_GET['download'] );
-		$key = urldecode( $_GET['download_key'] );
-		$email = rawurldecode( $_GET['email'] );
-		$file_key = urldecode( $_GET['file'] );
-		$expire = urldecode( base64_decode( $_GET['expire'] ) );
+		$download 	= urldecode( $_GET['download'] );
+		$key 		= urldecode( $_GET['download_key'] );
+		$email 		= rawurldecode( $_GET['email'] );
+		$file_key 	= (int) urldecode( $_GET['file'] );
+		$expire 	= urldecode( base64_decode( $_GET['expire'] ) );
 
 		$payment = edd_verify_download_link( $download, $key, $email, $expire, $file_key );
 		
@@ -46,12 +46,12 @@ function edd_process_download() {
 			$user_info['email'] = $email;
 			if( is_user_logged_in() ) {
 				global $user_ID;
-				$user_data = get_userdata( $user_ID );
-				$user_info['id'] = $user_ID;
-				$user_info['name'] = $user_data->display_name;
+				$user_data 			= get_userdata( $user_ID );
+				$user_info['id'] 	= $user_ID;
+				$user_info['name'] 	= $user_data->display_name;
 			}
-			
-			edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip(), date( 'Y-m-d H:i:s' ) );
+
+			edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip() );
 			
 			$file_extension = edd_get_file_extension( $requested_file );
 

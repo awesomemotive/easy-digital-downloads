@@ -198,6 +198,18 @@ function edd_reports_tab_export() {
 				</div><!--end postbox-->
 
 				<div class="postbox">
+					<h3><span><?php _e('Export Payment History', 'edd'); ?></span></h3>
+					<div class="inside">
+						<p><?php _e( 'Download a CSV of all payments recorded..', 'edd' ); ?></p>
+						<p>
+							<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'payment_export' ) ), 'edd_payments_export' ); ?>">
+								<?php _e( 'Generate CSV', 'edd' ) ; ?>
+							</a>
+						</p>
+					</div><!--end inside-->
+				</div><!--end postbox-->
+
+				<div class="postbox">
 					<h3><span><?php _e('Export Customers in CSV', 'edd'); ?></span></h3>
 					<div class="inside">
 						<p><?php _e( 'Download a CSV of all customer emails.', 'edd' ); ?></p>

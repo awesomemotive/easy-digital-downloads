@@ -307,22 +307,21 @@ function edd_get_file_download_log( $download_id, $paginate = false, $number = 1
  * @return      void
 */
 
-function edd_record_sale_in_log( $download_id, $payment_id, $user_info, $date ) {
-	$log = get_post_meta( $download_id, '_edd_sales_log', true );
+function edd_record_sale_in_log( $download_id, $payment_id ) {
 
-	if( !$log ) {
-		$log = array();
-	}
-	
-	$log_entry = array(
-		'payment_id' => $payment_id,
-		'user_info'  => $user_info,
-		'date'       => $date
+	$logs = new EDD_Logging();
+
+	$log_data = array(
+		'post_parent' 	=> $download_id,
+		'log_type'		=> 'sale'
 	);
-	
-	$log[] = $log_entry;
-	
-	update_post_meta( $download_id, '_edd_sales_log', $log );
+
+	$log_meta = array( 
+		'payment_id'=> $payment_id
+	);
+
+	$log_id = $logs->insert_log( $log_data, $log_meta );
+
 }
 
 
@@ -336,23 +335,25 @@ function edd_record_sale_in_log( $download_id, $payment_id, $user_info, $date ) 
  * @return      void
 */
 
-function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip, $date ) {
-	$log = get_post_meta( $download_id, '_edd_file_download_log', true );
-	
-	if( !$log ) {
-		$log = array();
-	}
-	
-	$log_entry = array(
-		'file_id'   => $file_id,
-		'user_info' => $user_info,
-		'ip'        => $ip,
-		'date'      => $date
+function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip ) {
+
+
+	$logs = new EDD_Logging();
+
+	$log_data = array(
+		'post_parent'	=> $download_id,
+		'log_type'		=> 'file_download'
 	);
-	
-	$log[] = $log_entry;
-	
-	update_post_meta( $download_id, '_edd_file_download_log', $log );
+
+	$log_meta = array(
+		'user_info'	=> $user_info,
+		'file_id'	=> (int)$file_id,
+		'ip'		=> $ip
+	);
+
+	$log_id = $logs->insert_log( $log_data, $log_meta );
+
+
 }
 
 
@@ -540,25 +541,10 @@ function edd_get_download_files( $download_id, $variable_price_id = null ) {
 
 function edd_get_file_download_limit( $download_id = 0 ) {
 
-	$limit = get_post_meta( $download_id, '_edd_download_file_limit', true );
+	$limit = get_post_meta( $download_id, '_edd_download_limit', true );
 	if( $limit )
 		return absint( $limit );
 	return 0;
-
-}
-
-
-/**
- * Increments the total number of times a particular file has been downloaded
- *
- * @access      public
- * @since       1.3.1 
- * @return      int The new total count
-*/
-
-function edd_increase_file_download_count( $download_id = 0, $payment_id = 0, $file_id = 0 ) {
-
-	// this function needs to count log entries related to the particular download / purchase
 
 }
 
@@ -574,10 +560,32 @@ function edd_increase_file_download_count( $download_id = 0, $payment_id = 0, $f
  * @return      bool False if not at limit, True if at limit
 */
 
-function edd_is_file_at_download_limit( $download_id = 0, $payment_id, $file_id = 0 ) {
+function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file_id = 0 ) {
 
 	// checks to see if at limit
 
+	$logs = new EDD_Logging();
+
+	$meta_query = array(
+		array(
+			'key' 	=> '_edd_log_file_id',
+			'value' => (int) $file_id
+		)
+	);
+
+	$ret = false;
+	$download_count = $logs->get_log_count( $download_id, 'file_download', $meta_query );
+	$download_limit = edd_get_file_download_limit( $download_id );
+
+	if( ! empty( $download_limit ) ) {
+
+		if( $download_count >= $download_limit ) {
+			$ret = true;
+		}
+
+	}
+
+	return (bool) apply_filters( 'edd_is_file_at_download_limit', $ret, $download_id, $payment_id, $file_id );
 }
 
 
@@ -650,6 +658,7 @@ function edd_get_download_file_url($key, $email, $filekey, $download_id) {
 */
 
 function edd_verify_download_link( $download_id, $key, $email, $expire, $file_key ) {
+
 	$meta_query = array(
 		'relation'  => 'AND',
 		array(
@@ -663,15 +672,20 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 	);
 
 	$payments = get_posts( array( 'meta_query' => $meta_query, 'post_type' => 'edd_payment' ) );
+
 	if( $payments ) {
+
 		foreach( $payments as $payment ) {
-			$payment_meta = get_post_meta( $payment->ID, '_edd_payment_meta', true );
-			$downloads = maybe_unserialize( $payment_meta['downloads'] );
-			$cart_details = unserialize( $payment_meta['cart_details'] );
+
+			$payment_meta 	= get_post_meta( $payment->ID, '_edd_payment_meta', true );
+			$downloads 		= maybe_unserialize( $payment_meta['downloads'] );
+			$cart_details 	= unserialize( $payment_meta['cart_details'] );
+
 			if( $payment->post_status != 'publish' && $payment->post_status != 'complete' )
 				return false;
 
 			if( $downloads ) {
+
 				foreach( $downloads as $key => $download ) {
 					
 					$id = isset( $payment_meta['cart_details'] ) ? $download['id'] : $download;
@@ -683,20 +697,30 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 					$variable_prices_enabled = get_post_meta( $id, '_variable_pricing', true );
 							
 					// if this download has variable prices, we have to confirm that this file was included in their purchase
-					if( !empty( $price_options ) && $file_condition != 'all' && $variable_prices_enabled) {
+					if( ! empty( $price_options ) && $file_condition != 'all' && $variable_prices_enabled ) {
 						if( $file_condition !== $price_options['price_id'] )
 							return false;
 					}
-					
+				
 					if( $id == $download_id ) {
+						
+						// check to see if the file download limit has been reached
+						if( edd_is_file_at_download_limit( $id, $payment->ID, $file_key ) )
+							wp_die( __('Sorry but you have hit your download limit for this file.', 'edd'), __('Error', 'edd') );
+
+						// make sure the link hasn't expired
 						if( time() < $expire ) {
 							return true; // payment has been verified and link is still valid
 						}
 						return false; // payment verified, but link is no longer valid
 					}
+
 				}
+
 			}
+
 		}
+
 	}
 	// payment not verified
 	return false;
@@ -712,6 +736,6 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 function edd_get_product_notes( $download_id ) {
 	$notes = get_post_meta( $download_id, 'edd_product_notes', true );
 	if ( $notes )
-		return apply_filters( 'edd_product_notes', $notes, $download_id );
+		return (string) apply_filters( 'edd_product_notes', $notes, $download_id );
 	return '';
 }
