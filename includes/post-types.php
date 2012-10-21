@@ -206,7 +206,7 @@ function edd_setup_download_taxonomies() {
 			'labels' 		=> apply_filters( 'edd_download_tag_labels', $tag_labels ),
 			'show_ui' 		=> true,
 			'query_var' 	=> 'download_tag',
-			'rewrite' 		=> array( 'slug' => 'downloads/tag ')
+			'rewrite' 		=> array( 'slug' => 'downloads/tag')
 		)
 	);
 
