@@ -675,7 +675,7 @@ function edd_send_to_success_page( $query_string = null ) {
 function edd_send_back_to_checkout( $query_string = null ) {
 	global $edd_options;
 
-	$redirect = get_permalink($edd_options['purchase_page']);
+	$redirect = edd_get_checkout_uri();
 
 	if($query_string)
 		$redirect .= $query_string;
