@@ -683,3 +683,78 @@ function _edd_deprecated_function( $function, $version, $replacement = null ) {
 			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'edd'), $function, $version ) );
 	}
 }
+
+
+
+
+/**
+ * PressTrends plugin API
+ *
+ * @access      public
+ * @since       1.3.2
+ * @return      void
+*/
+
+function edd_presstrends() {
+
+	global $edd_options;
+
+	if( ! isset( $edd_options['presstrends'] ) )
+		return;
+
+	// PressTrends Account API Key
+	$api_key = '5s8akq2i874z40j69yceyb54qodzg1ux3wtf';
+	$auth    = 'xz27f52esm948ogb5xah9bpk4x54usai8';
+
+	// Start of Metrics
+	global $wpdb;
+	$data = get_transient( 'presstrends_cache_data' );
+	if ( !$data || $data == '' ) {
+		$api_base = 'http://api.presstrends.io/index.php/api/pluginsites/update/auth/';
+		$url      = $api_base . $auth . '/api/' . $api_key . '/';
+
+		$count_posts    = wp_count_posts();
+		$count_pages    = wp_count_posts( 'page' );
+		$comments_count = wp_count_comments();
+
+		// wp_get_theme was introduced in 3.4, for compatibility with older versions, let's do a workaround for now.
+		if ( function_exists( 'wp_get_theme' ) ) {
+			$theme_data = wp_get_theme();
+			$theme_name = urlencode( $theme_data->Name );
+		} else {
+			$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
+			$theme_name = $theme_data['Name'];
+		}
+
+		$plugin_name = '&';
+		foreach ( get_plugins() as $plugin_info ) {
+			$plugin_name .= $plugin_info['Name'] . '&';
+		}
+		// CHANGE __FILE__ PATH IF LOCATED OUTSIDE MAIN PLUGIN FILE
+		$plugin_data         = get_plugin_data( __FILE__ );
+		$posts_with_comments = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_type='post' AND comment_count > 0" );
+		$data                = array(
+			'url'             => stripslashes( str_replace( array( 'http://', '/', ':' ), '', site_url() ) ),
+			'posts'           => $count_posts->publish,
+			'pages'           => $count_pages->publish,
+			'comments'        => $comments_count->total_comments,
+			'approved'        => $comments_count->approved,
+			'spam'            => $comments_count->spam,
+			'pingbacks'       => $wpdb->get_var( "SELECT COUNT(comment_ID) FROM $wpdb->comments WHERE comment_type = 'pingback'" ),
+			'post_conversion' => ( $count_posts->publish > 0 && $posts_with_comments > 0 ) ? number_format( ( $posts_with_comments / $count_posts->publish ) * 100, 0, '.', '' ) : 0,
+			'theme_version'   => $plugin_data['Version'],
+			'theme_name'      => $theme_name,
+			'site_name'       => str_replace( ' ', '', get_bloginfo( 'name' ) ),
+			'plugins'         => count( get_option( 'active_plugins' ) ),
+			'plugin'          => urlencode( $plugin_name ),
+			'wpversion'       => get_bloginfo( 'version' ),
+		);
+
+		foreach ( $data as $k => $v ) {
+			$url .= $k . '/' . $v . '/';
+		}
+		wp_remote_get( $url );
+		set_transient( 'presstrends_cache_data', $data, 60 * 60 * 24 );
+	}
+}
+add_action( 'admin_init', 'edd_presstrends' );
