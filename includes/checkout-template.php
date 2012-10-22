@@ -407,21 +407,22 @@ function edd_payment_mode_select( $gateways ) {
 			<p id="edd-payment-mode-wrap">
 				<?php								
 					echo '<select class="edd-select" name="payment-mode" id="edd-gateway">';
+						echo '<option value="0">' . __( 'Select payment method', 'edd' ) . '</option>';
 						foreach($gateways as $gateway_id => $gateway) :
 							echo '<option value="' . $gateway_id . '">' . $gateway['checkout_label'] . '</option>';
 						endforeach;
 					echo '</select>';
-					echo '<label for="edd-gateway">' . __('Choose Your Payment Method', 'edd') . '</label>';
 				?>
 			</p>
 			<?php do_action('edd_payment_mode_after_gateways'); ?>
 		</fieldset>
-		<fieldset id="edd_payment_mode_submit">
+		<fieldset id="edd_payment_mode_submit" class="edd-no-js">
 			<p id="edd-next-submit-wrap">
 				<?php echo edd_checkout_button_next(); ?>
 			</p>
 		</fieldset>
 	</form>
+	<div id="edd_purchase_form_wrap"></div><!-- the checkout fields are loaded into this-->
 	<?php do_action('edd_payment_mode_bottom');
 }
 add_action( 'edd_payment_payment_mode_select', 'edd_payment_mode_select' );
