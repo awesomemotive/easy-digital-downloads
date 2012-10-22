@@ -33,7 +33,7 @@ function edd_load_scripts() {
 
 	// Load AJAX scripts, if enabled
 	if( edd_is_ajax_enabled() ) {
-		wp_enqueue_script( 'edd-ajax', EDD_PLUGIN_URL . 'includes/js/edd-ajax.js' );
+		wp_enqueue_script( 'edd-ajax', EDD_PLUGIN_URL . 'includes/js/edd-ajax.js', array( 'jquery' ), EDD_VERSION );
 		wp_localize_script( 'edd-ajax', 'edd_scripts', array(
 				'ajaxurl' 					=> edd_get_ajax_url(),
 				'ajax_nonce' 				=> wp_create_nonce( 'edd_ajax_nonce' ),
@@ -54,11 +54,11 @@ function edd_load_scripts() {
 	// Load jQuery validation
 	if( isset( $edd_options['jquery_validation'] ) && edd_is_checkout() ) {
 		wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'includes/js/jquery.validate.min.js' );
-		wp_enqueue_script( 'edd-validation', EDD_PLUGIN_URL . 'includes/js/form-validation.js' );
+		wp_enqueue_script( 'edd-validation', EDD_PLUGIN_URL . 'includes/js/form-validation.js', array( 'jquery', 'jquery-validation' ), EDD_VERSION );
 		$required = array( 'firstname' => true, 'lastname' => true );
 		wp_localize_script( 'edd-validation', 'edd_scripts_validation', apply_filters( 'edd_scripts_validation',$required ) );
 	}
-	wp_enqueue_script( 'edd-checkout-global', EDD_PLUGIN_URL . 'includes/js/edd-checkout-global.js' );
+	wp_enqueue_script( 'edd-checkout-global', EDD_PLUGIN_URL . 'includes/js/edd-checkout-global.js', array( 'jquery' ), EDD_VERSION );
 }
 add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
 
