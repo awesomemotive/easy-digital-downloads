@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-20 11:49+0100\n"
-"PO-Revision-Date: 2012-10-20 11:49+0100\n"
+"POT-Creation-Date: 2012-10-23 08:15+0100\n"
+"PO-Revision-Date: 2012-10-23 08:16+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
 "Language-Team: Easy Digital Downloads <pippin@pippinsplugins.com>\n"
 "Language: en_US\n"
@@ -246,29 +246,29 @@ msgstr ""
 msgid "or checkout as a guest."
 msgstr ""
 
-#: includes/checkout-template.php:414
-msgid "Choose Your Payment Method"
+#: includes/checkout-template.php:410
+msgid "Select payment method"
 msgstr ""
 
-#: includes/checkout-template.php:442
+#: includes/checkout-template.php:443
 msgid "Enter discount"
 msgstr ""
 
-#: includes/checkout-template.php:444
+#: includes/checkout-template.php:445
 msgid "Discount"
 msgstr ""
 
-#: includes/checkout-template.php:446
+#: includes/checkout-template.php:447
 msgid "Apply Discount"
 msgstr ""
 
-#: includes/checkout-template.php:472 includes/admin/downloads/metabox.php:601
+#: includes/checkout-template.php:473 includes/admin/downloads/metabox.php:601
 #: includes/admin/downloads/metabox.php:706
 #: includes/admin/payments/payments-history.php:318
 msgid "Next"
 msgstr ""
 
-#: includes/checkout-template.php:491 includes/shortcodes.php:28
+#: includes/checkout-template.php:492 includes/shortcodes.php:28
 #: includes/template-functions.php:54 includes/admin/thickbox.php:61
 #: includes/admin/downloads/dashboard-columns.php:57
 msgid "Purchase"
@@ -288,7 +288,7 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: includes/email-functions.php:47 includes/register-settings.php:191
+#: includes/email-functions.php:47 includes/register-settings.php:203
 msgid "Purchase Receipt"
 msgstr ""
 
@@ -917,299 +917,314 @@ msgstr ""
 msgid "The symbol (usually , or .) to separate decimal points"
 msgstr ""
 
-#: includes/register-settings.php:110 includes/admin/settings/settings.php:33
+#: includes/register-settings.php:106
+msgid "Usage Tracking"
+msgstr ""
+
+#: includes/register-settings.php:112
+msgid "Enable Tracking"
+msgstr ""
+
+#: includes/register-settings.php:113
+msgid ""
+"Check this box to allow Easy Digital Downloads to track how the plugin is "
+"used. No personal info is ever collected. This helps us better improve the "
+"plugin."
+msgstr ""
+
+#: includes/register-settings.php:122 includes/admin/settings/settings.php:33
 msgid "Payment Gateways"
 msgstr ""
 
-#: includes/register-settings.php:111
+#: includes/register-settings.php:123
 msgid "Choose the payment gateways you want to enable."
 msgstr ""
 
-#: includes/register-settings.php:117
+#: includes/register-settings.php:129
 msgid "Accepted Payment Method Icons"
 msgstr ""
 
-#: includes/register-settings.php:118
+#: includes/register-settings.php:130
 msgid "Display icons for the selected payment methods"
 msgstr ""
 
-#: includes/register-settings.php:118
+#: includes/register-settings.php:130
 msgid ""
 "You will also need to configure your gateway settings if you are accepting "
 "credit cards"
 msgstr ""
 
-#: includes/register-settings.php:131
+#: includes/register-settings.php:143
 msgid "PayPal Settings"
 msgstr ""
 
-#: includes/register-settings.php:132
+#: includes/register-settings.php:144
 msgid "Configure the PayPal settings"
 msgstr ""
 
-#: includes/register-settings.php:137
+#: includes/register-settings.php:149
 msgid "PayPal Email"
 msgstr ""
 
-#: includes/register-settings.php:138
+#: includes/register-settings.php:150
 msgid "Enter your PayPal account's email"
 msgstr ""
 
-#: includes/register-settings.php:144
+#: includes/register-settings.php:156
 msgid "Alternate PayPal Purchase Verification"
 msgstr ""
 
-#: includes/register-settings.php:145
+#: includes/register-settings.php:157
 msgid ""
 "If payments are not getting marked as complete, then check this box. Note, "
 "this requires that buyers return to your site from PayPal."
 msgstr ""
 
-#: includes/register-settings.php:150
+#: includes/register-settings.php:162
 msgid "Disable PayPal IPN Verification"
 msgstr ""
 
-#: includes/register-settings.php:151
+#: includes/register-settings.php:163
 msgid ""
 "If payments are not getting marked as complete, then check this box. This "
 "forces the site to use a slightly less secure method of verifying purchases."
 msgstr ""
 
-#: includes/register-settings.php:160
+#: includes/register-settings.php:172
 msgid "Email Template"
 msgstr ""
 
-#: includes/register-settings.php:161
+#: includes/register-settings.php:173
 msgid ""
 "Choose a template. Click \"Save Changes\" then \"Preview Purchase Receipt\" "
 "to see the new template."
 msgstr ""
 
-#: includes/register-settings.php:173
+#: includes/register-settings.php:185
 msgid "From Name"
 msgstr ""
 
-#: includes/register-settings.php:174
+#: includes/register-settings.php:186
 msgid ""
 "The name purchase receipts are said to come from. This should probably be "
 "your site or shop name."
 msgstr ""
 
-#: includes/register-settings.php:179
+#: includes/register-settings.php:191
 msgid "From Email"
 msgstr ""
 
-#: includes/register-settings.php:180
+#: includes/register-settings.php:192
 msgid ""
 "Email to send purchase receipts from. This will act as the \"from\" and "
 "\"reply-to\" address."
 msgstr ""
 
-#: includes/register-settings.php:185
+#: includes/register-settings.php:197
 msgid "Purchase Email Subject"
 msgstr ""
 
-#: includes/register-settings.php:186
+#: includes/register-settings.php:198
 msgid "Enter the subject line for the purchase receipt email"
 msgstr ""
 
-#: includes/register-settings.php:192
+#: includes/register-settings.php:204
 msgid ""
 "Enter the email that is sent to users after completing a successful "
 "purchase. HTML is accepted. Available template tags:"
 msgstr ""
 
-#: includes/register-settings.php:193
+#: includes/register-settings.php:205
 msgid "A list of download URLs for each download purchased"
 msgstr ""
 
-#: includes/register-settings.php:194
+#: includes/register-settings.php:206
 msgid "The buyer's name"
 msgstr ""
 
-#: includes/register-settings.php:195
+#: includes/register-settings.php:207
 msgid "The date of the purchase"
 msgstr ""
 
-#: includes/register-settings.php:196
+#: includes/register-settings.php:208
 msgid "The total price of the purchase"
 msgstr ""
 
-#: includes/register-settings.php:197
+#: includes/register-settings.php:209
 msgid "The unique ID number for this purchase receipt"
 msgstr ""
 
-#: includes/register-settings.php:198
+#: includes/register-settings.php:210
 msgid "The method of payment used for this purchase"
 msgstr ""
 
-#: includes/register-settings.php:199
+#: includes/register-settings.php:211
 msgid "Your site name"
 msgstr ""
 
-#: includes/register-settings.php:208
+#: includes/register-settings.php:220
 msgid "Disable Styles"
 msgstr ""
 
-#: includes/register-settings.php:209
+#: includes/register-settings.php:221
 msgid "Check this to disable all included styling"
 msgstr ""
 
-#: includes/register-settings.php:214
+#: includes/register-settings.php:226
 msgid "Buttons"
 msgstr ""
 
-#: includes/register-settings.php:215
+#: includes/register-settings.php:227
 msgid "Options for add to cart and purchase buttons"
 msgstr ""
 
-#: includes/register-settings.php:220
+#: includes/register-settings.php:232
 msgid "Default Button Style"
 msgstr ""
 
-#: includes/register-settings.php:221
+#: includes/register-settings.php:233
 msgid "Choose the style you want to use for the buttons."
 msgstr ""
 
-#: includes/register-settings.php:227
+#: includes/register-settings.php:239
 msgid "Default Button Color"
 msgstr ""
 
-#: includes/register-settings.php:228
+#: includes/register-settings.php:240
 msgid "Choose the color you want to use for the buttons."
 msgstr ""
 
-#: includes/register-settings.php:238
+#: includes/register-settings.php:250
 msgid "Disable Ajax"
 msgstr ""
 
-#: includes/register-settings.php:239
+#: includes/register-settings.php:251
 msgid "Check this to disable AJAX for the shopping cart."
 msgstr ""
 
-#: includes/register-settings.php:244
+#: includes/register-settings.php:256
 msgid "Enable jQuery Validation"
 msgstr ""
 
-#: includes/register-settings.php:245
+#: includes/register-settings.php:257
 msgid "Check this to enable jQuery validation on the checkout form."
 msgstr ""
 
-#: includes/register-settings.php:250
+#: includes/register-settings.php:262
 msgid "Disable Guest Checkout"
 msgstr ""
 
-#: includes/register-settings.php:251
+#: includes/register-settings.php:263
 msgid "Require that users be logged-in to purchase files."
 msgstr ""
 
-#: includes/register-settings.php:256
+#: includes/register-settings.php:268
 msgid "Show Register / Login Form?"
 msgstr ""
 
-#: includes/register-settings.php:257
+#: includes/register-settings.php:269
 msgid ""
 "Display the registration and login forms on the checkout page for non-logged-"
 "in users."
 msgstr ""
 
-#: includes/register-settings.php:262
+#: includes/register-settings.php:274
 msgid "Download Link Expiration"
 msgstr ""
 
-#: includes/register-settings.php:263
+#: includes/register-settings.php:275
 msgid ""
 "How long should download links be valid for? Default is 24 hours from the "
 "time they are generated. Enter a time in hours."
 msgstr ""
 
-#: includes/register-settings.php:269
+#: includes/register-settings.php:281
 msgid "Disable Redownload?"
 msgstr ""
 
-#: includes/register-settings.php:270
+#: includes/register-settings.php:282
 msgid ""
 "Check this if you do not want to allow users to redownload items from their "
 "purchase history."
 msgstr ""
 
-#: includes/register-settings.php:275
+#: includes/register-settings.php:287
 msgid "Terms of Agreement"
 msgstr ""
 
-#: includes/register-settings.php:281
+#: includes/register-settings.php:293
 msgid "Agree to Terms"
 msgstr ""
 
-#: includes/register-settings.php:282
+#: includes/register-settings.php:294
 msgid ""
 "Check this to show an agree to terms on the checkout that users must agree "
 "to before purchasing."
 msgstr ""
 
-#: includes/register-settings.php:287
+#: includes/register-settings.php:299
 msgid "Agree to Terms Label"
 msgstr ""
 
-#: includes/register-settings.php:288
+#: includes/register-settings.php:300
 msgid "Label shown next to the agree to terms check box."
 msgstr ""
 
-#: includes/register-settings.php:294
+#: includes/register-settings.php:306
 msgid "Agreement Text"
 msgstr ""
 
-#: includes/register-settings.php:295
+#: includes/register-settings.php:307
 msgid "If Agree to Terms is checked, enter the agreement terms here."
 msgstr ""
 
-#: includes/register-settings.php:300
+#: includes/register-settings.php:312
 msgid "Complete Purchase Text"
 msgstr ""
 
-#: includes/register-settings.php:301
+#: includes/register-settings.php:313
 msgid "The button label for completing a purchase."
 msgstr ""
 
-#: includes/register-settings.php:306
+#: includes/register-settings.php:318
 msgid "Add to Cart Text"
 msgstr ""
 
-#: includes/register-settings.php:307
+#: includes/register-settings.php:319
 msgid "Text shown on the Add to Cart Buttons"
 msgstr ""
 
-#: includes/register-settings.php:333
+#: includes/register-settings.php:345
 msgid "General Settings"
 msgstr ""
 
-#: includes/register-settings.php:359
+#: includes/register-settings.php:371
 msgid "Payment Gateway Settings"
 msgstr ""
 
-#: includes/register-settings.php:385
+#: includes/register-settings.php:397
 msgid "Email Settings"
 msgstr ""
 
-#: includes/register-settings.php:411
+#: includes/register-settings.php:423
 msgid "Style Settings"
 msgstr ""
 
-#: includes/register-settings.php:438
+#: includes/register-settings.php:450
 msgid "Misc Settings"
 msgstr ""
 
-#: includes/register-settings.php:681
+#: includes/register-settings.php:693
 #, php-format
 msgid ""
 "The callback function used for the <strong>%s</strong> setting is missing."
 msgstr ""
 
-#: includes/register-settings.php:750
+#: includes/register-settings.php:762
 msgid "Upload File"
 msgstr ""
 
-#: includes/register-settings.php:785
+#: includes/register-settings.php:797
 msgid "Settings Updated"
 msgstr ""
 
