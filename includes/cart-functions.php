@@ -72,10 +72,12 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 			$options['price_id'] = 0;
 		}
 
+		$cart_item = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $options ) );
+
 		if( is_array( $cart ) ) {
-			$cart[] = array( 'id' => $download_id, 'options' => $options );
+			$cart[] = $cart_item;
 		} else {
-			$cart = array( array( 'id' => $download_id, 'options' => $options ) );
+			$cart = array( $cart_item );
 		}
 	
 		$_SESSION['edd_cart'] = $cart;
