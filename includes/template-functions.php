@@ -394,7 +394,7 @@ function edd_get_purchase_download_links( $purchase_data ) {
 */
 
 function edd_get_templates_dir() {
-	return EDD_PLUGIN_DIR . 'includes/templates';
+	return EDD_PLUGIN_DIR . 'templates';
 }
 
 

@@ -1,0 +1,240 @@
+/**
+ * Easy Digital Downloads Styles
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  CSS
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+*/
+
+/* =Checkout Form
+-------------------------------------------------------------- */
+.edd_clearfix:after { display: block; visibility: hidden; float: none; clear: both; text-indent: -9999px; content: "."; }
+
+/* cart contents */
+#edd_checkout_cart { text-align: left; width: 100%; border-top: 1px solid #f0f0f0; border-bottom: none; margin: 0 0 10px; }
+#edd_checkout_cart th,
+#edd_checkout_cart td { text-align: left; padding: 3px 5px; border-bottom: 1px solid #f0f0f0; border-top: none; color: #666; }
+#edd_checkout_cart th { font-weight: bold; background: #f5f5f5; }
+#edd_checkout_cart td { line-height: 25px; vertical-align: middle; }
+#edd_checkout_cart th.edd_cart_actions,
+#edd_checkout_cart td.edd_cart_actions,
+#edd_checkout_cart th:last-child,
+#edd_checkout_cart td:last-child,
+#edd_checkout_cart th.edd_cart_total { text-align: right; }
+#edd_checkout_cart td img { float: left; margin: 0 8px 0 0; background: none; padding: none; border: none; }
+
+/* checkout fields */
+#edd_purchase_form input.edd-input { display: inline-block; width: 200px; }
+#edd_purchase_form input.edd-input.error { border-color: #c4554e; }
+#edd_purchase_form label { display: inline-block;  width: 200px; }
+#edd_purchase_form input.card-expiry-month { width: 30px; }
+#edd_purchase_form input.card-expiry-year { width: 60px; }
+#edd_purchase_form span.exp-divider {  }
+#edd_checkout_form_wrap p { margin: 0 0 10px; }
+#edd_checkout_form_wrap input[type="text"], 
+#edd_checkout_form_wrap input[type="email"], 
+#edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; width: 200px; }
+#edd_checkout_form_wrap .edd-payment-icons { height: 32px; }
+#edd_checkout_form_wrap .edd-payment-icons img.payment-icon{ margin: 0 3px 0 0; float: left; background: none; padding: none; border: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
+#edd_checkout_form_wrap fieldset { border: none; padding: 0; margin: 0; }
+#edd_checkout_form_wrap fieldset#edd_register_account_fields,
+#edd_checkout_form_wrap fieldset#edd_login_fields { border: 1px solid #f0f0f0; padding: 10px; margin: 0 0 10px; }
+#edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_register_password,
+#edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_login_password { margin: 0; }
+#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="text"], 
+#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="email"], 
+#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="password"] { width: 188px; }
+
+
+/* =Theme Specific styling
+-------------------------------------------------------------- */
+
+/* Twenty Twelve */
+#edd_purchase_form input.edd-input.required { color: #000; }
+
+
+/* =Cart Widget
+-------------------------------------------------------------- */
+
+
+
+/* =Purchase History
+-------------------------------------------------------------- */
+#edd_user_history { text-align: left; width: 100%; border-top: 1px solid #f0f0f0; border-bottom: none;}
+#edd_user_history th,
+#edd_user_history td { text-align: left; padding: 3px 5px; border-bottom: 1px solid #f0f0f0; border-top: none; }
+#edd_user_history th { font-weight: bold; background: #f5f5f5;}
+#edd_user_history td { line-height: 25px; vertical-align: middle; }
+
+/* =Registration Form
+-------------------------------------------------------------- */
+#edd_registration_form .edd-input { display: inline-block; width: 200px; }
+#edd_registration_form label { display: inline-block; width: 200px; }
+
+/* =Alerts
+-------------------------------------------------------------- */
+.edd_added_to_cart_alert { padding: 5px; font-size: 14px;  border: 1px solid #046a9e; background: #9ecce2; color: #333; margin: 8px 0;}
+.edd_added_to_cart_alert a.edd_alert_checkout_link { color: #000 !important; }
+
+/* =Purchase buttons
+-------------------------------------------------------------- */
+input.edd_submit_plain { background: none !important; border: none !important; padding: 0 !important; display: inline; cursor: pointer; }
+.edd_price_options { margin: 0 0 15px; }
+.edd_price_options ul { margin: 0; padding: 0; list-style: none; }
+
+.edd-submit {
+	text-shadow: 1px 1px #FAFAFA;
+	line-height: normal;
+	cursor: pointer;
+}
+
+.edd-submit.plain {
+	text-shadow: none;
+	margin: 0;
+	padding: 0;
+	background: none;
+	border: 0;
+}
+
+.edd-submit.plain:hover {
+	text-decoration: underline;
+}
+
+/** Gray (Default) */
+.edd-submit.button {
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
+	line-height: normal;
+	cursor: pointer;
+	padding: 5px 15px 6px;
+	outline: none;
+	position: relative;
+	border: 1px solid;
+
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 1px 3px rgba(0, 0, 0, .10);
+	-moz-box-shadow:    inset 0 1px 0 rgba(255, 255, 255, .25), 0 1px 3px rgba(0, 0, 0, .10);
+	box-shadow:         inset 0 1px 0 rgba(255, 255, 255, .25), 0 1px 3px rgba(0, 0, 0, .10);
+
+	border-radius:  3px;
+
+	color: #555;
+	border-color: #BBB;
+	background: #E8E8E8;
+	background:    -moz-linear-gradient(top, #eeeeee, #e2e2e2);
+	background: -webkit-linear-gradient(top, #eeeeee, #e2e2e2);
+	background:         linear-gradient(top, #eeeeee, #e2e2e2);
+}
+
+.edd-submit.button.gray {
+	text-shadow: 0 -1px 0 rgba(255, 255, 255, .25);
+}
+
+.edd-submit.button:hover {
+	text-decoration: none;
+
+	background: #E8E8E8;
+}
+
+.edd-submit.button:active {
+	text-decoration: none;
+
+	-webkit-box-shadow: none;
+	-moz-box-shadow:    none;
+	box-shadow:         none;
+
+	border-top: 1px solid #959595;
+	background: #E3E3E3;
+}
+
+/** Blue */
+.edd-submit.button.blue {
+	color: #FFFFFF;
+	border-color: #04C #04C #002A80;
+	background: #006DCC;
+	background:    -moz-linear-gradient(top, #08C, #04C);
+	background: -webkit-linear-gradient(top, #08C, #04C);
+	background:         linear-gradient(top, #08C, #04C);
+}
+
+x.edd-submit.button.blue:hover {
+	background: #006DCC;
+}
+
+.edd-submit.button.blue:active {
+	border-color: #002A80 #04C #04C;
+	background: #005fb1;
+}
+
+/** Green */
+.edd-submit.button.green {
+	color: #FFFFFF;
+	border-color: #51A351 #51A351 #387038;
+	background: #5BB75B;
+	background:    -moz-linear-gradient(top, #62C462, #51A351);
+	background: -webkit-linear-gradient(top, #62C462, #51A351);
+	background:         linear-gradient(top, #62C462, #51A351);
+}
+
+.edd-submit.button.green:hover {
+	background: #5BB75B;
+}
+
+.edd-submit.button.green:active {
+	border-color: #387038 #51A351 #51A351;
+	background: #51a451;
+}
+
+/** Yellow */
+.edd-submit.button.yellow {
+	color: #FFFFFF;
+	border-color: #F89406 #F89406 #AD6704;
+	background: #FAA732;
+	background:    -moz-linear-gradient(top, #FBB450, #F89406);
+	background: -webkit-linear-gradient(top, #FBB450, #F89406);
+	background:         linear-gradient(top, #FBB450, #F89406);
+}
+
+.edd-submit.button.yellow:hover {
+	background: #FAA732;
+}
+
+.edd-submit.button.yellow:active {
+	border-color: #AD6704 #F89406 #F89406;
+	background: #f09e2b;
+}
+
+/** Dark Gray */
+.edd-submit.button.dark-gray {
+	color: #FFFFFF;
+	border-color: #222 #222 black;
+	background: #363636;
+	background:    -moz-linear-gradient(top, #444, #222);
+	background: -webkit-linear-gradient(top, #444, #222);
+	background:         linear-gradient(top, #444, #222);
+}
+
+.edd-submit.button.dark-gray:hover {
+	background: #363636;
+}
+
+.edd-submit.button.dark-gray:active {
+	border-color: #000 #222 #222; 
+	background: #2b2b2b;
+}
+
+/* =Downloads Shortcode
+-------------------------------------------------------------- */
+.edd_download_inner { padding: 0 8px 8px; margin: 0 0 10px; }
+.edd_download_image { max-width:100%; }
+.edd_download .edd_price { margin-bottom: 10px; }
+
+/* =Misc styles
+-------------------------------------------------------------- */
+.edd-cart-ajax { margin: 0 8px 0 4px; position: relative; top: 2px; }
+
+/* =Error styles
+-------------------------------------------------------------- */
+
+.edd_errors { -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; border: 1px solid #E6DB55; margin: 20px 0; background: #FFFFE0; color: #333; }
+.edd_error { padding:10px; }
+p.edd_error { margin: 0 !important; }
