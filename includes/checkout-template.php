@@ -296,7 +296,7 @@ function edd_default_cc_address_fields() {
 	<?php
 	echo ob_get_clean();
 }
-add_action('edd_after_cc_expiration', 'edd_default_cc_address_fields');
+add_action('edd_after_cc_fields', 'edd_default_cc_address_fields');
 
 
 /**
