@@ -76,7 +76,14 @@ add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
 function edd_register_styles() {
 	global $edd_options;
 	if( !isset( $edd_options['disable_styles'] ) ) {
-		wp_enqueue_style('edd-styles', EDD_PLUGIN_URL . 'includes/css/edd.css');
+
+		// allow the CSS to be overwritten from the templates directory
+		$edd_css = edd_locate_template( 'edd.css' );
+
+		// convert file path to URL
+		$edd_css = str_replace( ABSPATH, '/', $edd_css );
+
+		wp_enqueue_style('edd-styles', $edd_css, EDD_VERSION);
 	}
 }
 add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
