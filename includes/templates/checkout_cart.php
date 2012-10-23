@@ -17,7 +17,6 @@
 					<?php do_action( 'edd_checkout_table_body_first', $item['id'] ); ?>
 					<td class="edd_cart_item_name">
 						<?php 
-							//print_r( $item );
 							if ( current_theme_supports( 'post-thumbnails' ) ) {
 								if ( has_post_thumbnail( $item['id'] ) ) { 
 									echo '<div class="edd_cart_item_image">';
