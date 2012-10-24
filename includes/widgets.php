@@ -337,7 +337,7 @@ function edd_dashboard_sales_widget() {
 				</tr>
 				<tr>
 					<td class="first b"><?php echo edd_get_sales_by_date( null, date('n'), date('Y') ); ?></td>
-					<td class="t monthly_sales"><?php _e('Sales', 'edd'); ?></td>
+					<td class="t monthly_sales"><?php echo _n('Sale', 'Sales', edd_get_sales_by_date( null, date('n'), date('Y') ), 'edd'); ?></td>
 				</tr>
 			</tbody>
 		</table>
