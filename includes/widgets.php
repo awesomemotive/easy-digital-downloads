@@ -122,7 +122,7 @@ class edd_categories_tags_widget extends WP_Widget {
 		global $post, $edd_options;
 
 		echo $before_widget;
-		if ($title) {
+		if ( $title ) {
 			echo $before_title . $title . $after_title;
 		}
 		
