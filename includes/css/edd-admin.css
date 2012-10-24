@@ -50,6 +50,9 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 #edd_dashboard_sales table td { padding: 3px 0; white-space: nowrap; }
 #edd_dashboard_sales td.b { font-size: 14px; font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif; text-align: right; padding-right: 6px; width: auto; }
 #edd_dashboard_sales .t { font-size: 12px; padding-right: 12px; padding-top: 6px; color: #777; }
+#edd_dashboard_sales .label_heading { display: block; font-size: 12px; font-family: Helvetica, Arial, sans-serif; }
+#edd_dashboard_sales .lifetime_best_selling_label { background: rgb(0, 118, 156); padding: 2px 4px; border-radius: 3px; color: white; margin-right: 2px; }
+#edd_dashboard_sales .label_heading { color: #8f8f8f; font-weight: normal; padding-top: 10px; border-top: 1px solid #ececec; }
 
 
 /* Reports Styles
