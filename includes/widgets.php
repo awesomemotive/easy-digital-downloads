@@ -315,16 +315,37 @@ add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets' );
 function edd_dashboard_sales_widget() {
 
 	$top_selling_args = array(
-		'post_type'       => 'download',
-		'posts_per_page'  => 1,
-		'post_status'     => 'publish',
-		'meta_key'        => '_edd_download_sales',
-		'meta_compare'    => '>',
-		'meta_value'      => 0,
-		'orderby'         => 'meta_value_num'
+		'post_type'              => 'download',
+		'posts_per_page'         => 1,
+		'post_status'            => 'publish',
+		'meta_key'               => '_edd_download_sales',
+		'meta_compare'           => '>',
+		'meta_value'             => 0,
+		'orderby'                => 'meta_value_num',
+		'cache_results'          => false,
+		'update_post_term_cache' => false,
+		'no_found_rows'          => true,
+		'order'                  => 'DESC'
+	);
+
+	$top_selling_30_days_args = array(
+		'post_type'              => 'download',
+		'posts_per_page'         => 1,
+		'post_status'            => 'publish',
+		'meta_key'               => '_edd_download_sales',
+		'meta_compare'           => '>',
+		'meta_value'             => 0,
+		'orderby'                => 'meta_value_num',
+		'cache_results'          => false,
+		'update_post_term_cache' => false,
+		'no_found_rows'          => true,
+		'year'                   => date('Y'),
+		'monthnum'               => date('n'),
+		'order'                  => 'DESC'
 	);
 
 	$top_selling = get_posts( $top_selling_args );
+	$top_selling_30_days = get_posts( $top_selling_30_days_args );
 
 	?>
 	<div class="table table_current_month">
@@ -341,6 +362,10 @@ function edd_dashboard_sales_widget() {
 				</tr>
 			</tbody>
 		</table>
+		<?php if ( $top_selling_30_days ) { ?>
+		<p class="best_selling_30_days label_heading"><?php _e('Best Selling in Last 30 Days', 'edd') ?></p>
+		<p><span class="best_selling_30_days_label"><?php echo edd_get_download_sales_stats( $top_selling_30_days[0]->ID ); ?></span> <a href="<?php echo $top_selling_30_days[0]->guid; ?>"><?php echo $top_selling_30_days[0]->post_title; ?></a></p>
+		<?php } ?>
 	</div>
 	<div class="table table_totals">
 		<p class="sub"><?php _e('Totals', 'edd') ?></p>
@@ -356,10 +381,10 @@ function edd_dashboard_sales_widget() {
 				</tr>
 			</tbody>
 		</table>
-		<?php if ( $top_selling ): ?>
+		<?php if ( $top_selling ) { ?>
 		<p class="lifetime_best_selling label_heading"><?php _e('Lifetime Best Selling', 'edd') ?></p>
 		<p><span class="lifetime_best_selling_label"><?php echo edd_get_download_sales_stats( $top_selling[0]->ID ); ?></span> <a href="<?php echo $top_selling[0]->guid; ?>"><?php echo $top_selling[0]->post_title; ?></a></p>
-		<?php endif; ?>
+		<?php } ?>
 	</div>
 	<div style="clear: both"></div>
 	<?php
