@@ -45,6 +45,17 @@ function edd_reports_graph() {
 			$tick_size		= 'month';
 			$day_by_day 	= false;
 			break;
+		case 'other' :
+			if( ( $dates['m_end'] - $dates['m_start'] ) >= 2 ) {
+				$time_format	= '%b';
+				$tick_size		= 'month';
+				$day_by_day 	= false;
+			} else {
+				$time_format 	= '%d/%b';
+				$tick_size		= 'day';
+				$day_by_day 	= true;
+			}
+			break;
 		default:
 			$time_format 	= '%d/%b'; 	// show days by default
 			$tick_size		= 'day'; 	// default graph interval
