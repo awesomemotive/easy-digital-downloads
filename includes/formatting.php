@@ -28,10 +28,12 @@ function edd_sanitize_amount( $amount ) {
 	$decimal_sep   = isset( $edd_options['decimal_separator'] )   ? $edd_options['decimal_separator'] 	 : '.';
 
 	// sanitize the amount
-	if( $thousands_sep == '.' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
-		$amount = str_replace( $thousands_sep, '', $amount );
-	}
 	if( $decimal_sep == ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
+
+		if( $thousands_sep == '.' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+			$amount = str_replace( $thousands_sep, '', $amount );
+		}
+
 		$amount = str_replace( $decimal_sep, '.', $amount );
 	}
 
