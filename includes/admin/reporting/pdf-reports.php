@@ -31,7 +31,7 @@ function edd_generate_pdf( $data ) {
 		include_once( EDD_PLUGIN_DIR . '/includes/libraries/fpdf/fpdf.php' );
 		include_once( EDD_PLUGIN_DIR . '/includes/libraries/fpdf/edd_pdf.php' );
 
-		$daterange = date_i18n( 'F jS', mktime( 0, 0, 0, 1, 1, date( 'Y' ) ) ) . ' ' . utf8_decode( __( 'to', 'edd' ) ) . ' ' . date_i18n( 'F jS Y' );
+		$daterange = date_i18n( get_option( 'date_format' ), mktime( 0, 0, 0, 1, 1, date( 'Y' ) ) ) . ' ' . utf8_decode( __( 'to', 'edd' ) ) . ' ' . date_i18n( get_option( 'date_format' ) );
 
 		$pdf = new edd_pdf();
 		$pdf->AddPage( 'L', 'A4' );
