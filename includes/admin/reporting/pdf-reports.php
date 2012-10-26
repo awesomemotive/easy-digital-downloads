@@ -36,9 +36,9 @@ function edd_generate_pdf( $data ) {
 		$pdf = new edd_pdf();
 		$pdf->AddPage( 'L', 'A4' );
 
-		$pdf->SetTitle( __( 'Sales and earnings reports for the current year for all products', 'edd') );
-		$pdf->SetAuthor( __( 'Easy Digital Downloads', 'edd' ) );
-		$pdf->SetCreator( __( 'Easy Digital Downloads', 'edd' ) );
+		$pdf->SetTitle( utf8_decode(__( 'Sales and earnings reports for the current year for all products', 'edd') ) );
+		$pdf->SetAuthor( utf8_decode(__( 'Easy Digital Downloads', 'edd' ) ) );
+		$pdf->SetCreator( utf8_decode(__( 'Easy Digital Downloads', 'edd' ) ) );
 
 		$pdf->Image( EDD_PLUGIN_URL . 'includes/images/edd-logo.png', 205, 10 );
 
@@ -52,11 +52,11 @@ function edd_generate_pdf( $data ) {
 		$pdf->SetFont( 'Helvetica', '', 13 );
 		$pdf->Ln();
 		$pdf->SetTextColor( 150, 150, 150 );
-		$pdf->Cell( 0, 6, __( 'Date Range: ', 'edd' ) . $daterange, 0, 2, 'L', false );
+		$pdf->Cell( 0, 6, utf8_decode(__( 'Date Range: ', 'edd' ) ) . $daterange, 0, 2, 'L', false );
 		$pdf->Ln();
 		$pdf->SetTextColor( 50, 50, 50 );
 		$pdf->SetFont( 'Helvetica', '', 14 ); 
-		$pdf->Cell( 0, 10, __( 'Table View', 'edd' ), 0, 2, 'L', false );
+		$pdf->Cell( 0, 10, utf8_decode( __( 'Table View', 'edd' ) ), 0, 2, 'L', false );
 		$pdf->SetFont( 'Helvetica', '', 12 );
 
 		$pdf->SetFillColor( 238, 238, 238 );
@@ -113,14 +113,14 @@ function edd_generate_pdf( $data ) {
 			endforeach;
 		else:
 			$pdf->SetWidths( array( 280 ) );
-			$title = sprintf( __( 'No %s found.', 'edd' ), edd_get_label_plural() );
+			$title = utf8_decode( sprintf( __( 'No %s found.', 'edd' ), edd_get_label_plural() ) );
 			$pdf->Row( array( $title ) );
 		endif;
 		
 		$pdf->Ln();
 		$pdf->SetTextColor( 50, 50, 50 );
 		$pdf->SetFont( 'Helvetica', '', 14 );
-		$pdf->Cell( 0, 10, __('Graph View', 'edd'), 0, 2, 'L', false );
+		$pdf->Cell( 0, 10, utf8_decode( __('Graph View', 'edd') ), 0, 2, 'L', false );
 		$pdf->SetFont( 'Helvetica', '', 12 );
 
 		$image = html_entity_decode( urldecode( edd_draw_chart_image() ) );
