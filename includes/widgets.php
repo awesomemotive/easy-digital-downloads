@@ -362,10 +362,11 @@ function edd_dashboard_sales_widget() {
 				</tr>
 			</tbody>
 		</table>
-		<?php if ( $top_selling_30_days ) { ?>
+		<?php if ( $top_selling_30_days ) {
+			foreach( $top_selling_30_days as $list ) { ?>
 		<p class="best_selling_30_days label_heading"><?php _e('Best Selling in Last 30 Days', 'edd') ?></p>
-		<p><span class="best_selling_30_days_label"><?php echo edd_get_download_sales_stats( $top_selling_30_days[0]->ID ); ?></span> <a href="<?php echo $top_selling_30_days[0]->guid; ?>"><?php echo $top_selling_30_days[0]->post_title; ?></a></p>
-		<?php } ?>
+		<p><span class="best_selling_30_days_label"><?php echo edd_get_download_sales_stats( $list->ID ); ?></span> <a href="<?php echo get_permalink( $list->ID ) ?>"><?php echo get_the_title( $list->ID ); ?></a></p>
+		<?php } } ?>
 	</div>
 	<div class="table table_totals">
 		<p class="sub"><?php _e('Totals', 'edd') ?></p>
@@ -381,10 +382,11 @@ function edd_dashboard_sales_widget() {
 				</tr>
 			</tbody>
 		</table>
-		<?php if ( $top_selling ) { ?>
+		<?php if ( $top_selling ) {
+			foreach( $top_selling as $list ) { ?>
 		<p class="lifetime_best_selling label_heading"><?php _e('Lifetime Best Selling', 'edd') ?></p>
-		<p><span class="lifetime_best_selling_label"><?php echo edd_get_download_sales_stats( $top_selling[0]->ID ); ?></span> <a href="<?php echo $top_selling[0]->guid; ?>"><?php echo $top_selling[0]->post_title; ?></a></p>
-		<?php } ?>		
+		<p><span class="lifetime_best_selling_label"><?php echo edd_get_download_sales_stats( $list->ID ); ?></span> <a href="<?php echo get_permalink( $list->ID ); ?>"><?php echo get_the_title( $list->ID ); ?></a></p>
+		<?php } } ?>		
 	</div>
 	<div style="clear: both"></div>
 	<p class="edd_dashboard_widget_subheading"><?php _e( 'Recent Purchases', 'edd' ); ?></p>
@@ -407,7 +409,7 @@ function edd_dashboard_sales_widget() {
 						$payment_meta = get_post_meta( $payment->ID, '_edd_payment_meta', true );
 				?>
 				<tr>
-					<td><?php echo $payment->post_title; ?> - (<?php echo $payment_meta['email'] ?>) - <span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment->ID ) ) ); ?></span> - <a href="#TB_inline?width=640&amp;inlineId=purchased-files-<?php echo $payment->ID; ?>" class="thickbox" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> "><?php _e( 'View Order Details', 'edd' ); ?></a>
+					<td><?php echo get_the_title( $payment->ID ) ?> - (<?php echo $payment_meta['email'] ?>) - <span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment->ID ) ) ); ?></span> - <a href="#TB_inline?width=640&amp;inlineId=purchased-files-<?php echo $payment->ID; ?>" class="thickbox" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> "><?php _e( 'View Order Details', 'edd' ); ?></a>
 						<div id="purchased-files-<?php echo $payment->ID; ?>" style="display:none;">
 							<?php 
 								$cart_items = isset( $payment_meta['cart_details'] ) ? maybe_unserialize($payment_meta['cart_details']) : false;
