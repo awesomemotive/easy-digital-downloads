@@ -151,7 +151,7 @@ add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
 function edd_discounts_shortcode( $atts, $content = null ) {
 	
 	$discounts = edd_get_discounts();
-		
+
 	if( ! $discounts && edd_has_active_discounts() )
 		return;
 	

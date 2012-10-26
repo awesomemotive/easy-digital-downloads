@@ -421,7 +421,7 @@ function edd_is_discount_valid( $code = '', $email = '') {
 	$discount_id = edd_get_discount_id_by_code( $code );
 	$email 		 = trim( $email );
 
-	if( $discount_id !== false && $email !== "" ) {
+	if( $discount_id !== false ) {
 		if(
 			edd_is_discount_active( $discount_id ) && 
 			edd_is_discount_started( $discount_id ) && 

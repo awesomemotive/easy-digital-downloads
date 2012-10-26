@@ -186,7 +186,10 @@ function edd_render_price_field( $post_id) {
 			<?php echo edd_currency_filter(''); ?><input type="text" name="edd_price" id="edd_price" value="<?php echo isset( $price ) ? esc_attr( edd_format_amount( $price ) ) : ''; ?>" size="30" style="width:80px;" placeholder="9.99"/>
 		<?php else : ?>
 			<input type="text" name="edd_price" id="edd_price" value="<?php echo isset( $price ) ? esc_attr( edd_format_amount( $price ) ) : ''; ?>" size="30" style="width:80px;" placeholder="9.99"/><?php echo edd_currency_filter(''); ?>
-		<?php endif; ?>			
+		<?php endif; ?>		
+
+		<?php do_action( 'edd_price_field', $post_id ); ?>
+
 	</div>
 
 	<div id="edd_variable_price_fields" class="edd_pricing_fields" <?php echo $variable_display; ?>>
