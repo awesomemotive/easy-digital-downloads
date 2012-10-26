@@ -55,7 +55,13 @@ function edd_get_payments( $args = array() ) {
 		if( is_numeric( $user ) ) {
 			$user_key = '_edd_payment_user_id';
 		} else {
-			$user_key = '_edd_payment_user_email';
+			if( is_email( $user ) ) {
+				$user_key = '_edd_payment_user_email';
+			} else {
+				$user_data 	= get_user_by( 'login', $user );
+				$user_key 	= '_edd_payment_user_id';
+				$user 		= $user_data->ID;
+			}
 		}
 		$payment_args['meta_query'] = array(
 			array(
