@@ -228,12 +228,16 @@ add_action( 'init', 'edd_setup_download_taxonomies', 10 );
 function edd_updated_messages( $messages ) {
 	global $post, $post_ID;
 
+	$url1 = '<a href="' . get_permalink( $post_ID ) . '">';
+	$url2 = edd_get_label_singular();
+	$url3 = '</a>';
+
 	$messages['download'] = array(
-		1 => __('Download updated.', 'edd' ),
-		4 => __('Download updated.', 'edd' ),
-		6 => __('Download published.', 'edd' ),
-		7 => __('Download saved.', 'edd' ),
-		8 => __('Download submitted.', 'edd'),
+		1 => sprintf( __('Download updated. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
+		4 => sprintf( __('Download updated. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
+		6 => sprintf( __('Download published. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
+		7 => sprintf( __('Download saved. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
+		8 => sprintf( __('Download submitted. %1$sView %2$s%3$s.', 'edd'), $url1, $url2, $url3 )
 	);
 
 	return $messages;
