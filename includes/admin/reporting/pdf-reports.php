@@ -31,14 +31,14 @@ function edd_generate_pdf( $data ) {
 		include_once( EDD_PLUGIN_DIR . '/includes/libraries/fpdf/fpdf.php' );
 		include_once( EDD_PLUGIN_DIR . '/includes/libraries/fpdf/edd_pdf.php' );
 
-		$daterange = date_i18n( 'F jS', mktime( 0, 0, 0, 1, 1, date( 'Y' ) ) ) . ' ' . __( 'to', 'edd' ) . ' ' . date_i18n( 'F jS Y' );
+		$daterange = date_i18n( 'F jS', mktime( 0, 0, 0, 1, 1, date( 'Y' ) ) ) . ' ' . utf8_decode( __( 'to', 'edd' ) ) . ' ' . date_i18n( 'F jS Y' );
 
 		$pdf = new edd_pdf();
 		$pdf->AddPage( 'L', 'A4' );
 
-		$pdf->SetTitle( utf8_decode(__( 'Sales and earnings reports for the current year for all products', 'edd') ) );
-		$pdf->SetAuthor( utf8_decode(__( 'Easy Digital Downloads', 'edd' ) ) );
-		$pdf->SetCreator( utf8_decode(__( 'Easy Digital Downloads', 'edd' ) ) );
+		$pdf->SetTitle( utf8_decode( __( 'Sales and earnings reports for the current year for all products', 'edd') ) );
+		$pdf->SetAuthor( utf8_decode( __( 'Easy Digital Downloads', 'edd' ) ) );
+		$pdf->SetCreator( utf8_decode( __( 'Easy Digital Downloads', 'edd' ) ) );
 
 		$pdf->Image( EDD_PLUGIN_URL . 'includes/images/edd-logo.png', 205, 10 );
 
@@ -47,12 +47,12 @@ function edd_generate_pdf( $data ) {
 
 		$pdf->SetFont( 'Helvetica', '', 16 );
 		$pdf->SetTextColor( 50, 50, 50 );
-		$pdf->Cell( 0, 3, __( 'Sales and earnings reports for the current year for all products', 'edd' ), 0, 2, 'L', false );
+		$pdf->Cell( 0, 3, utf8_decode( __( 'Sales and earnings reports for the current year for all products', 'edd' ) ), 0, 2, 'L', false );
 
 		$pdf->SetFont( 'Helvetica', '', 13 );
 		$pdf->Ln();
 		$pdf->SetTextColor( 150, 150, 150 );
-		$pdf->Cell( 0, 6, utf8_decode(__( 'Date Range: ', 'edd' ) ) . $daterange, 0, 2, 'L', false );
+		$pdf->Cell( 0, 6, utf8_decode( __( 'Date Range: ', 'edd' ) ) . $daterange, 0, 2, 'L', false );
 		$pdf->Ln();
 		$pdf->SetTextColor( 50, 50, 50 );
 		$pdf->SetFont( 'Helvetica', '', 14 ); 
