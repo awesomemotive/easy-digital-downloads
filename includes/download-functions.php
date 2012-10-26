@@ -335,7 +335,7 @@ function edd_record_sale_in_log( $download_id, $payment_id ) {
  * @return      void
 */
 
-function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip ) {
+function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip, $payment_id ) {
 
 
 	$logs = new EDD_Logging();
@@ -347,8 +347,10 @@ function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip ) {
 
 	$log_meta = array(
 		'user_info'	=> $user_info,
-		'file_id'	=> (int)$file_id,
-		'ip'		=> $ip
+		'user_id'	=> (int) $user_info['id'],
+		'file_id'	=> (int) $file_id,
+		'ip'		=> $ip,
+		'payment_id'=> $payment_id
 	);
 
 	$log_id = $logs->insert_log( $log_data, $log_meta );
@@ -567,9 +569,14 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
 	$logs = new EDD_Logging();
 
 	$meta_query = array(
+		'relation'	=> 'AND',
 		array(
 			'key' 	=> '_edd_log_file_id',
 			'value' => (int) $file_id
+		),
+		array(
+			'key' 	=> '_edd_log_payment_id',
+			'value' => (int) $payment_id
 		)
 	);
 
@@ -710,7 +717,7 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 
 						// make sure the link hasn't expired
 						if( time() < $expire ) {
-							return true; // payment has been verified and link is still valid
+							return $payment->ID; // payment has been verified and link is still valid
 						}
 						return false; // payment verified, but link is no longer valid
 					}
