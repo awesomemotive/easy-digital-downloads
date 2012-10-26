@@ -93,7 +93,7 @@ function edd_email_templage_tags( $message, $payment_data, $payment_id ) {
 	}
 	$download_list .= '</ul>';
 
-	$price = edd_currency_filter( $payment_data['amount'] );
+	$price = edd_currency_filter( edd_format_amount( $payment_data['amount'] ) );
 
 	$gateway = edd_get_gateway_checkout_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
 
