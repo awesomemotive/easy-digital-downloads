@@ -22,15 +22,7 @@ function edd_login_form( $redirect = '' ) {
 	global $edd_options, $post;
 
 	if( $redirect == '' ) {
-		if ( is_singular() ):
-			$redirect = home_url();
-		else :
-			$redirect = 'http';
-			if( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on") $redirect .= "s";
-			$redirect .= "://";
-			if( $_SERVER["SERVER_PORT"] != "80" ) $redirect .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-			else $redirect .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-		endif;	
+		$redirect = edd_get_current_page_url();	
 	}
 	
 	ob_start();		
