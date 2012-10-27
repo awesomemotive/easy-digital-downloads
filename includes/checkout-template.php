@@ -24,7 +24,7 @@ function edd_checkout_form() {
 	
 	$page_URL = edd_get_current_page_url();
 
-	if(is_user_logged_in()) :
+	if( is_user_logged_in() ) :
 		$user_data = get_userdata( $user_ID );
 	endif;
 	
@@ -39,30 +39,12 @@ function edd_checkout_form() {
 				<?php 				
 				do_action( 'edd_checkout_form_top' );
 			
-				$gateways = edd_get_enabled_payment_gateways();
-				$show_gateways = false;
-				if( count( $gateways ) > 1 && !isset( $_GET['payment-mode'] ) ) {
-					$show_gateways = true;
-					if(edd_get_cart_amount() <= 0) {
-						$show_gateways = false;
-					}
-				}
-				if( $show_gateways ) {
-					do_action( 'edd_payment_payment_mode_select', $gateways );
+				if( edd_show_gateways() ) {
+					do_action( 'edd_payment_payment_mode_select'  );
 				} else {
 
-					if( count( $gateways ) >= 1 && !isset( $_GET['payment-mode'] ) ) {
-						foreach( $gateways as $gateway_id => $gateway ):
-							$enabled_gateway = $gateway_id;
-							if(edd_get_cart_amount() <= 0) {
-								$enabled_gateway = 'manual'; // this allows a free download by filling in the info
-							}
-						endforeach;
-					} else if( edd_get_cart_amount() <= 0 ) {
-						$enabled_gateway = 'manual';
-					} else {
-						$enabled_gateway = 'none';
-					}
+					$enabled_gateway = edd_get_chosen_gateway();
+
 					$payment_mode = isset( $_GET['payment-mode'] ) ? urldecode( $_GET['payment-mode'] ) : $enabled_gateway;
 					
 					do_action( 'edd_before_purchase_form' ); ?>
@@ -380,7 +362,8 @@ function edd_get_login_fields() {
  * @return      void
 */
 
-function edd_payment_mode_select( $gateways ) {
+function edd_payment_mode_select() {
+	$gateways = edd_get_enabled_payment_gateways();
 	$page_URL = edd_get_current_page_url();
 	do_action('edd_payment_mode_top'); ?>
 	<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
