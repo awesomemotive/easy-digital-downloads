@@ -129,3 +129,59 @@ function edd_send_to_gateway( $gateway, $payment_data ) {
 	// $gateway must match the ID used when registering the gateway
 	do_action( 'edd_gateway_' . $gateway, $payment_data );
 }
+
+
+/**
+ * Determines if the gateway menu should be shown
+ *
+ * If the cart amount is zero, no option is shown and the cart uses the manual gateway
+ * to emulate a no-gateway-setup for a free download
+ *
+ * @access      public
+ * @since       1.3.2
+ * @return      bool
+*/
+
+function edd_show_gateways() {
+	$gateways = edd_get_enabled_payment_gateways();
+	$show_gateways = false;
+	if( count( $gateways ) > 1 && ! isset( $_GET['payment-mode'] ) ) {
+		$show_gateways = true;
+		if( edd_get_cart_amount() <= 0 ) {
+			$show_gateways = false;
+		}
+	}
+	return apply_filters( 'edd_show_gateways', $show_gateways );
+}
+
+
+/**
+ * Determines what the currently selected gateway is
+ *
+ * If the cart amount is zero, no option is shown and the cart uses the manual gateway
+ * to emulate a no-gateway-setup for a free download
+ *
+ * @access      public
+ * @since       1.3.2
+ * @return      string The slug of the gateway
+*/
+
+function edd_get_chosen_gateway() {
+	
+	$gateways = edd_get_enabled_payment_gateways();
+	
+	if( count( $gateways ) >= 1 && ! isset( $_GET['payment-mode'] ) ) {
+		foreach( $gateways as $gateway_id => $gateway ):
+			$enabled_gateway = $gateway_id;
+			if( edd_get_cart_amount() <= 0 ) {
+				$enabled_gateway = 'manual'; // this allows a free download by filling in the info
+			}
+		endforeach;
+	} else if( edd_get_cart_amount() <= 0 ) {
+		$enabled_gateway = 'manual';
+	} else {
+		$enabled_gateway = 'none';
+	}
+
+	return apply_filters( 'edd_chosen_gateway', $enabled_gateway );
+}
