@@ -100,12 +100,7 @@ function edd_checkout_form() {
 								<p>
 									<?php do_action( 'edd_purchase_form_before_submit' ); ?>
 									
-									<?php if( is_user_logged_in() ) { ?>
-									<input type="hidden" name="edd-user-id" value="<?php echo $user_data->ID; ?>"/>
-									<?php } ?>
-									<input type="hidden" name="edd_action" value="purchase"/>
-									<input type="hidden" name="edd-gateway" value="<?php echo $payment_mode; ?>" />
-									<input type="hidden" name="edd-nonce" value="<?php echo wp_create_nonce('edd-purchase-nonce'); ?>"/>
+									<?php edd_checkout_hidden_fields(); ?>
 									
 									<?php echo edd_checkout_button_purchase(); ?>
 									
@@ -553,3 +548,24 @@ function edd_agree_to_terms_js() {
 	}
 }
 add_action( 'edd_checkout_form_top', 'edd_agree_to_terms_js' );
+
+
+/**
+ * Hidden checkout fields
+ *
+ * @access      private
+ * @since       1.3.2 * @return      void
+*/
+
+function edd_checkout_hidden_fields() {
+
+?>
+	<?php if( is_user_logged_in() ) { ?>
+	<input type="hidden" name="edd-user-id" value="<?php echo get_current_user_id(); ?>"/>
+	<?php } ?>
+	<input type="hidden" name="edd_action" value="purchase"/>
+	<input type="hidden" name="edd-gateway" value="<?php echo edd_get_chosen_gateway(); ?>" />
+	<input type="hidden" name="edd-nonce" value="<?php echo wp_create_nonce('edd-purchase-nonce'); ?>"/>
+<?php
+
+}
