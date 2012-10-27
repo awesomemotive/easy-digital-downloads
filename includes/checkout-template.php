@@ -32,11 +32,7 @@ function edd_checkout_form() {
 		
 		<?php if( edd_get_cart_contents() ) : ?>
 				
-			<?php 
-			do_action( 'edd_before_checkout_cart' );
-			edd_checkout_cart(); 
-			do_action( 'edd_after_checkout_cart' );
-			?>
+			<?php edd_checkout_cart(); ?>
 			
 			<div id="edd_checkout_form_wrap" class="edd_clearfix">
 			
