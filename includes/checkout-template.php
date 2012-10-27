@@ -127,25 +127,11 @@ function edd_checkout_form() {
 								do_action( 'edd_cc_form' );
 							}
 							
-							if( isset( $edd_options['show_agree_to_terms'] ) ) { ?>
-								<fieldset id="edd_terms_agreement">
-									<p>
-										<div id="edd_terms" style="display:none;">
-											<?php 
-												do_action( 'edd_before_terms' );
-												echo wpautop( $edd_options['agree_text'] );
-												do_action( 'edd_after_terms' );
-											?>
-										</div>
-										<div id="edd_show_terms">
-											<a href="#" class="edd_terms_links"><?php _e('Show Terms', 'edd'); ?></a>
-											<a href="#" class="edd_terms_links" style="display:none;"><?php _e('Hide Terms', 'edd'); ?></a>
-										</div>
-										<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
-										<label for="edd_agree_to_terms"><?php echo isset( $edd_options['agree_label'] ) ? $edd_options['agree_label'] : __('Agree to Terms?', 'edd'); ?></label>
-									</p>
-								</fieldset>
-							<?php } ?>	
+
+							do_action( 'edd_purchase_form_after_cc_form' );
+
+							?>
+
 							<fieldset id="edd_purchase_submit">
 								<p>
 									<?php do_action( 'edd_purchase_form_before_submit' ); ?>
@@ -453,6 +439,41 @@ function edd_discount_field() {
 	}
 }
 add_action( 'edd_purchase_form_before_cc_form', 'edd_discount_field' );
+
+
+/**
+ * The checkout Agree to Terms section
+ *
+ * @access      public
+ * @since       1.3.2
+ * @return      void
+ */
+
+function edd_terms_agreement() {
+	global $edd_options;
+	if( isset( $edd_options['show_agree_to_terms'] ) ) { 
+?>
+		<fieldset id="edd_terms_agreement">
+			<p>
+				<div id="edd_terms" style="display:none;">
+					<?php 
+						do_action( 'edd_before_terms' );
+						echo wpautop( $edd_options['agree_text'] );
+						do_action( 'edd_after_terms' );
+					?>
+				</div>
+				<div id="edd_show_terms">
+					<a href="#" class="edd_terms_links"><?php _e('Show Terms', 'edd'); ?></a>
+					<a href="#" class="edd_terms_links" style="display:none;"><?php _e('Hide Terms', 'edd'); ?></a>
+				</div>
+				<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
+				<label for="edd_agree_to_terms"><?php echo isset( $edd_options['agree_label'] ) ? $edd_options['agree_label'] : __('Agree to Terms?', 'edd'); ?></label>
+			</p>
+		</fieldset>
+<?php 
+	}
+}
+add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement' );
 
 
 /**
