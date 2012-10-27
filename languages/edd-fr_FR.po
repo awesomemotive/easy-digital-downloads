@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Easy Digital Downloads v1.1.5.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-10-26 07:58+0100\n"
-"PO-Revision-Date: 2012-10-26 08:00+0100\n"
+"PO-Revision-Date: 2012-10-26 20:32+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
 "Language-Team: FxB <fx@fxbenard.com>\n"
 "Language: fr_FR\n"
@@ -2961,7 +2961,7 @@ msgstr "Easy Digital Downloads"
 
 #: includes/admin/reporting/pdf-reports.php:55
 msgid "Date Range: "
-msgstr "Plage de dates :"
+msgstr "Plage de dates : Du "
 
 #: includes/admin/reporting/pdf-reports.php:59
 msgid "Table View"

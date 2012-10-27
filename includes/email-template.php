@@ -102,7 +102,7 @@ function edd_email_templage_tags( $message, $payment_data, $payment_id ) {
 	$message = str_replace( '{name}', $name, $message );
 	$message = str_replace( '{username}', $username, $message );
 	$message = str_replace( '{download_list}', $download_list, $message );
-	$message = str_replace( '{date}', date( get_option( 'date_format' ), strtotime( $payment_data['date'] ) ), $message );
+	$message = str_replace( '{date}', date_i18n( get_option( 'date_format' ), strtotime( $payment_data['date'] ) ), $message );
 	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
 	$message = str_replace( '{price}', $price, $message );
 	$message = str_replace( '{payment_method}', $gateway, $message );
