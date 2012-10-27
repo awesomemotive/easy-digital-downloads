@@ -41,11 +41,8 @@ function edd_checkout_form() {
 					do_action( 'edd_payment_payment_mode_select'  );
 				} else {
 
-					$enabled_gateway = edd_get_chosen_gateway();
-
-					$payment_mode = isset( $_GET['payment-mode'] ) ? urldecode( $_GET['payment-mode'] ) : $enabled_gateway;
-					
 					do_action( 'edd_before_purchase_form' ); ?>
+
 					<form id="edd_purchase_form" action="<?php echo esc_url( edd_get_current_page_url() ); ?>" method="POST">					
 					
 						<?php do_action( 'edd_purchase_form_top' ); ?>
@@ -85,6 +82,8 @@ function edd_checkout_form() {
 
 							do_action( 'edd_purchase_form_before_cc_form' ); 
 							
+							$payment_mode = edd_get_chosen_gateway();
+
 							// load the credit card form and allow gateways to load their own if they wish
 							if( has_action( 'edd_' . $payment_mode . '_cc_form' ) ) {
 								do_action( 'edd_' . $payment_mode . '_cc_form' );

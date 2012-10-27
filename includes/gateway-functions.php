@@ -170,7 +170,9 @@ function edd_get_chosen_gateway() {
 	
 	$gateways = edd_get_enabled_payment_gateways();
 	
-	if( count( $gateways ) >= 1 && ! isset( $_GET['payment-mode'] ) ) {
+	if( isset( $_GET['payment-mode'] ) ) {
+		$enabled_gateway = urldecode( $_GET['payment-mode'] );
+	} else if( count( $gateways ) >= 1 && ! isset( $_GET['payment-mode'] ) ) {
 		foreach( $gateways as $gateway_id => $gateway ):
 			$enabled_gateway = $gateway_id;
 			if( edd_get_cart_amount() <= 0 ) {
