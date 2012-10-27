@@ -19,7 +19,9 @@
 */
 
 function edd_checkout_cart() {
+	do_action( 'edd_before_checkout_cart' );
 	edd_get_template_part( 'checkout_cart' );
+	do_action( 'edd_after_checkout_cart' );
 }
 
 
