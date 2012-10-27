@@ -22,8 +22,6 @@ function edd_checkout_form() {
 
 	global $edd_options, $user_ID, $post;
 	
-	$page_URL = edd_get_current_page_url();
-
 	if( is_user_logged_in() ) :
 		$user_data = get_userdata( $user_ID );
 	endif;
@@ -48,24 +46,13 @@ function edd_checkout_form() {
 					$payment_mode = isset( $_GET['payment-mode'] ) ? urldecode( $_GET['payment-mode'] ) : $enabled_gateway;
 					
 					do_action( 'edd_before_purchase_form' ); ?>
-					<form id="edd_purchase_form" action="<?php echo $page_URL; ?>" method="POST">					
+					<form id="edd_purchase_form" action="<?php echo esc_url( edd_get_current_page_url() ); ?>" method="POST">					
 					
 						<?php do_action( 'edd_purchase_form_top' ); ?>
 					
 						<?php 
-						if( isset( $edd_options['logged_in_only'] ) && !isset( $edd_options['show_register_form'] ) ) {
-							if( is_user_logged_in() ) {
-								$can_checkout = true;
-							} else {
-								$can_checkout = false;
-							}
-						} elseif( isset( $edd_options['show_register_form'] ) && isset( $edd_options['logged_in_only'] ) ) {
-							$can_checkout = true;
-						} elseif( !isset( $edd_options['logged_in_only'] ) ) {
-							$can_checkout = true;
-						}
-						$can_checkout = true;
-						if( $can_checkout ) { ?>
+						
+						if( edd_can_checkout() ) { ?>
 							
 							<?php if( isset( $edd_options['show_register_form'] ) && !is_user_logged_in() && !isset( $_GET['login'] ) ) { ?>
 								<div id="edd_checkout_login_register"><?php echo edd_get_register_fields(); ?></div>
@@ -125,15 +112,20 @@ function edd_checkout_form() {
 									
 									<?php do_action( 'edd_purchase_form_after_submit' ); ?>
 								</p>
+
 								<?php if( !edd_is_ajax_enabled() ) { ?>
 									<p class="edd-cancel"><a href="javascript:history.go(-1)"><?php _e('Go back', 'edd'); ?></a></p>
-								<?php } ?>				
+								<?php } ?>
+
 							</fieldset>
 						<?php } else { ?>
 							<p><?php _e('You must be logged in to complete your purchase', 'edd'); ?></p>
 						<?php } ?>
+
 						<?php do_action( 'edd_purchase_form_bottom' ); ?>
+
 					</form>
+
 					<?php do_action( 'edd_after_purchase_form' ); ?>
 			<?php } ?>
 		</div><!--end #edd_checkout_form_wrap-->
@@ -142,6 +134,17 @@ function edd_checkout_form() {
 			do_action( 'edd_empty_cart' );
 		endif;
 	return ob_get_clean();
+}
+
+
+function edd_can_checkout() {
+
+	global $edd_options;
+
+	$can_checkout = true; // always true for now
+
+	return apply_filters( 'edd_can_checkout', $can_checkout );
+
 }
 
 
