@@ -412,7 +412,7 @@ function edd_dashboard_sales_widget() {
 					<td><?php echo get_the_title( $payment->ID ) ?> - (<?php echo $payment_meta['email'] ?>) - <span class="edd_price_label"><?php echo edd_get_payment_amount( $payment->ID ); ?></span> - <a href="#TB_inline?width=640&amp;inlineId=purchased-files-<?php echo $payment->ID; ?>" class="thickbox" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> "><?php _e( 'View Order Details', 'edd' ); ?></a>
 						<div id="purchased-files-<?php echo $payment->ID; ?>" style="display:none;">
 							<?php 
-								$cart_items = isset( $payment_meta['cart_details'] ) ? maybe_unserialize($payment_meta['cart_details']) : false;
+								$cart_items = edd_get_payment_meta_cart_details( $payment->ID );
 								if( empty( $cart_items ) || !$cart_items ) {
 									$cart_items = maybe_unserialize( $payment_meta['downloads'] );
 								}
