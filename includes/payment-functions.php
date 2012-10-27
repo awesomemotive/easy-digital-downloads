@@ -582,7 +582,7 @@ add_filter( 'edd_payment_amount', 'edd_currency_filter', 20 );
  * Retrieve the purchase ID based on the purchase key
  * 
  * @access		public
- * @since 		1.2.3
+ * @since 		1.3.2
  *
  * @param 		string $key the purchase key to search for
  * @return 		int $order_id
