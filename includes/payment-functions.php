@@ -598,7 +598,7 @@ function edd_get_purchase_id_by_key( $key ) {
 	$payments = get_posts( array( 'meta_query' => $meta_query, 'post_type' => 'edd_payment', 'numberposts' => 1, 'fields' => 'ids' ) );
 	
 	if ( count( $payments ) == 1 )
-		return $payments[0]->ID;
+		return $payments[0];
 		
 	return 0;
 }
