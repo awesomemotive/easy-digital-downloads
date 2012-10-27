@@ -577,3 +577,28 @@ function edd_get_payment_amount( $payment_id ) {
 }
 add_filter( 'edd_payment_amount', 'edd_format_amount', 10 );
 add_filter( 'edd_payment_amount', 'edd_currency_filter', 20 );
+
+/**
+ * Retrieve the purchase ID based on the purchase key
+ * 
+ * @access		public
+ * @since 		1.2.3
+ *
+ * @param 		string $key the purchase key to search for
+ * @return 		int $order_id
+ */
+function edd_get_purchase_id_by_key( $key ) {
+	$meta_query = array(
+		array(
+			'key' => '_edd_payment_purchase_key',
+			'value' => $key
+		),
+	);
+
+	$payments = get_posts( array( 'meta_query' => $meta_query, 'post_type' => 'edd_payment', 'numberposts' => 1, 'fields' => 'ids' ) );
+	
+	if ( count( $payments ) == 1 )
+		return $payments[0]->ID;
+		
+	return 0;
+}
