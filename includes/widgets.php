@@ -406,7 +406,7 @@ function edd_dashboard_sales_widget() {
 
 				if ( $payments ) {
 					foreach ( $payments as $payment ) {
-						$payment_meta = get_post_meta( $payment->ID, '_edd_payment_meta', true );
+						$payment_meta = edd_get_payment_meta( $payment->ID );
 				?>
 				<tr>
 					<td><?php echo get_the_title( $payment->ID ) ?> - (<?php echo $payment_meta['email'] ?>) - <span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment->ID ) ) ); ?></span> - <a href="#TB_inline?width=640&amp;inlineId=purchased-files-<?php echo $payment->ID; ?>" class="thickbox" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> "><?php _e( 'View Order Details', 'edd' ); ?></a>
