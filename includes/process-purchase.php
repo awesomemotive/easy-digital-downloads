@@ -95,10 +95,8 @@ function edd_process_purchase_form() {
 		$valid_data['gateway'] = 'manual';
 	}
 
-	if( isset( $edd_options['show_links_on_success'] ) ) {
-		// used for showing download links to non logged-in users after purchase
-		edd_set_purchase_session( $purchase_data );
-	}
+	// used for showing download links to non logged-in users after purchase, and for other plugins needing purchase data.
+	edd_set_purchase_session( $purchase_data );
 
 	// send info to the gateway for payment processing
 	edd_send_to_gateway( $valid_data['gateway'], $purchase_data );
