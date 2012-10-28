@@ -37,7 +37,9 @@ function edd_payment_history_page() {
 
 	        <input type="hidden" name="post_type" value="download" />
 	        <input type="hidden" name="page" value="edd-payment-history" />
-	        <!-- Now we can render the completed list table -->
+
+	        <?php $payments_table->search_box( __( 'Search', 'edd' ), 'edd-payments' ); ?>
+
 	        <?php $payments_table->views() ?>
 
 	        <?php $payments_table->display() ?>
