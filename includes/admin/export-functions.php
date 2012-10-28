@@ -175,20 +175,6 @@ function edd_export_all_downloads_history() {
     
     $downloads = get_posts( $report_args );
     
-		if( $downloads ) {
-			foreach( $downloads as $download ) {
-				$reports_data[] = array(
-					'ID' 				=> $download->ID,
-					'title' 			=> get_the_title( $download->ID ),
-					'sales' 			=> edd_get_download_sales_stats( $download->ID ),
-					'earnings'			=> edd_get_download_earnings_stats( $download->ID ),
-					'average_sales'   	=> edd_get_average_monthly_download_sales( $download->ID ),
-					'average_earnings'  => edd_get_average_monthly_download_earnings( $download->ID )
-				);
-			}
-		}
-    
-    
 		if( !empty( $downloads ) ) {
 			header( "Content-type: text/csv" );
 			$today = date( "Y-m-d" );
@@ -196,21 +182,47 @@ function edd_export_all_downloads_history() {
 			header( "Pragma: no-cache" );
 			header( "Expires: 0" );
 			
-  		echo '"' . __( 'ID', 'edd' ) .  '",';
-  		echo '"' . __( 'Title', 'edd' ) .  '",';
-  		echo '"' . __( 'Sales', 'edd' ) .  '",';
-  		echo '"' . __( 'Earnings', 'edd' ) .  '",';
-  		echo '"' . __( 'Average_sales', 'edd' ) .  '",';
-  		echo '"' . __( 'Average_earnings,', 'edd' ) .  '"';
+  		echo '"' . __( 'Date', 'edd' ) .  '",';
+  		echo '"' . __( 'Downloaded by', 'edd' ) .  '",';
+  		echo '"' . __( 'IP Address', 'edd' ) .  '",';
+  		echo '"' . __( 'File', 'edd' ) .  '"';
   		echo "\r\n";
-      foreach( $reports_data as $report ) {
-        echo '"' . $report['ID'] . '",';
-        echo '"' . $report['title'] . '",';
-        echo '"' . $report['sales'] . '",';
-        echo '"' . $report['earnings'] . '",';
-        echo '"' . $report['average_sales'] . '",';
-        echo '"' . $report['average_earnings'] . '"';
-        echo "\r\n";
+      
+      foreach( $downloads as $report ) {
+
+        $page = isset( $_GET['paged'] ) ? intval( $_GET['paged'] ) : 1;
+      	
+        $download_log = new EDD_Logging();
+
+      	$file_downloads = $download_log->get_logs( $report->ID, 'file_download', $page );
+        
+        $files = edd_get_download_files( $report->ID );
+        
+  			foreach( $file_downloads as $log ) {
+
+  				$user_info 	= get_post_meta( $log->ID, '_edd_log_user_info', true );
+  				$file_id 	= (int) get_post_meta( $log->ID, '_edd_log_file_id', true );
+  				$ip 		= get_post_meta( $log->ID, '_edd_log_ip', true );
+
+  				$user_id = isset( $user_info['id']) ? $user_info['id'] : 0;
+				
+  				$user_data = get_userdata( $user_id );
+  				if( $user_data ) {
+  					$name = $user_data->display_name;
+  				} else {
+  					$name = $user_info['email'];
+  				}
+
+  				$file_id = $file_id !== false ? $file_id : 0;
+  				$file_name = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
+
+          
+          echo '"' . $log->post_date . '",';
+          echo '"' . $name . '",';
+          echo '"' . $ip . '",';
+          echo '"' . $file_name . '"';
+          echo "\r\n";
+  			} // endforeach
       }
 			
       
