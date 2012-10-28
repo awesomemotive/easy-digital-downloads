@@ -119,7 +119,6 @@ if( is_admin() ) {
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-actions.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php' );
-	include_once( EDD_PLUGIN_DIR . 'includes/admin/payments/class-payments-table.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php' );	
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php' );
