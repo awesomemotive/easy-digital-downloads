@@ -153,3 +153,71 @@ function edd_export_all_customers() {
 	}
 }
 add_action( 'edd_email_export', 'edd_export_all_customers' );
+
+/**
+ * Export all downloads to CSV
+ * 
+ * 
+ * @access      private
+ * @since       1.2
+ * @return      void
+*/
+function edd_export_all_downloads_history() {
+
+	if( current_user_can( 'administrator' ) ) {
+		
+		$report_args = array(
+			'post_type' 	=> 'download',
+			'post_status'	=> 'publish',
+			'posts_per_page'=> -1,
+			'order'			=> 'post_date'
+		);
+    
+    $downloads = get_posts( $report_args );
+    
+		if( $downloads ) {
+			foreach( $downloads as $download ) {
+				$reports_data[] = array(
+					'ID' 				=> $download->ID,
+					'title' 			=> get_the_title( $download->ID ),
+					'sales' 			=> edd_get_download_sales_stats( $download->ID ),
+					'earnings'			=> edd_get_download_earnings_stats( $download->ID ),
+					'average_sales'   	=> edd_get_average_monthly_download_sales( $download->ID ),
+					'average_earnings'  => edd_get_average_monthly_download_earnings( $download->ID )
+				);
+			}
+		}
+    
+    
+		if( !empty( $downloads ) ) {
+			header( "Content-type: text/csv" );
+			$today = date( "Y-m-d" );
+			header( "Content-Disposition: attachment; filename=user_downloads_history-$today.csv" );
+			header( "Pragma: no-cache" );
+			header( "Expires: 0" );
+			
+  		echo '"' . __( 'ID', 'edd' ) .  '",';
+  		echo '"' . __( 'Title', 'edd' ) .  '",';
+  		echo '"' . __( 'Sales', 'edd' ) .  '",';
+  		echo '"' . __( 'Earnings', 'edd' ) .  '",';
+  		echo '"' . __( 'Average_sales', 'edd' ) .  '",';
+  		echo '"' . __( 'Average_earnings,', 'edd' ) .  '"';
+  		echo "\r\n";
+      foreach( $reports_data as $report ) {
+        echo '"' . $report['ID'] . '",';
+        echo '"' . $report['title'] . '",';
+        echo '"' . $report['sales'] . '",';
+        echo '"' . $report['earnings'] . '",';
+        echo '"' . $report['average_sales'] . '",';
+        echo '"' . $report['average_earnings'] . '"';
+        echo "\r\n";
+      }
+			
+      
+      exit;
+		}
+	} else {
+		wp_die(__( 'Export not allowed for non-administrators.', 'edd' ) );
+	}
+}
+add_action( 'edd_downloads_history_export', 'edd_export_all_downloads_history' );
