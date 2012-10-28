@@ -44,6 +44,7 @@ function edd_payment_history_page() {
 
 	        <?php $payments_table->display() ?>
 	    </form>
+	</div>
 <?php
 
 	}
