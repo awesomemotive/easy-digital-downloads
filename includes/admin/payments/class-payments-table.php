@@ -191,6 +191,21 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		return $details;
 	}
 
+	function column_user( $item ) {
+
+		$user_info = edd_get_payment_meta_user_info( $item['id'] );
+		$user_id = isset( $user_info['id'] ) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email'];
+
+		if( is_numeric( $user_id ) ) {
+			$user = get_user_by('id', $user_id);
+			$display_name = is_object( $user ) ? $user->display_name : __('guest', 'edd');												
+		} else {
+			$display_name = __( 'guest', 'edd' );
+		}
+
+		return '<a href="' . remove_query_arg( 'paged', add_query_arg( 'user', $user_id ) ) . '">' . $display_name . '</a>';
+	}
+
 
 	function bulk_actions() {
 		
