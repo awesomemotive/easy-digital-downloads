@@ -62,7 +62,7 @@ function edd_format_amount( $amount ) {
 	if( $decimal_sep == ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
 		$whole = substr( $amount, 0, $sep_found );
 		$part = substr( $amount, $sep_found + 1, ( strlen( $amount ) - 1 ) );
-		$amount = $whole . '.' . $part;
+		$amount = $whole . ',' . $part;
 	}
 
 	return number_format( $amount, 2, $decimal_sep, $thousands_sep );
