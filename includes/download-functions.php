@@ -704,9 +704,9 @@ function edd_get_download_file_url($key, $email, $filekey, $download_id) {
 		'expire' 		=> rawurlencode( base64_encode( $date ) )
 	);
 
-	$params = apply_filters('edd_download_file_url_args', $params);
+	$params = apply_filters( 'edd_download_file_url_args', $params );
 	
-	$download_url = add_query_arg($params, home_url());
+	$download_url = add_query_arg( $params, home_url() );
 	
 	return $download_url;	
 }
