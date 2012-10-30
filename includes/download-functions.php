@@ -552,6 +552,54 @@ function edd_get_file_download_limit( $download_id = 0 ) {
 
 
 /**
+ * Gets the file download file limit override for a particular download
+ *
+ * The override allows the main file download limit to be bypassed
+ *
+ * @access      public
+ * @since       1.3.2
+ * @return      int The new limit
+*/
+
+function edd_get_file_download_limit_override( $download_id = 0 ) {
+
+	$limit_override = get_post_meta( $download_id, '_edd_download_limit_override', true );
+	if( $limit_override ) {
+		return absint( $limit_override );
+	}
+	return 0;
+
+}
+
+
+/**
+ * Sets the file download file limit override for a particular download
+ *
+ * The override allows the main file download limit to be bypassed
+ * If no override is set yet, the override is set to the main limmit + 1
+ * If the override is already set, then it is simply incremented by 1
+ *
+ * @access      public
+ * @since       1.3.2
+ * @return      int The new limit
+*/
+
+function edd_set_file_download_limit_override( $download_id = 0 ) {
+
+	$override 	= edd_get_file_download_limit_override( $download_id );
+	$limit 		= edd_get_file_download_limit( $download_id );
+	
+	if( ! empty( $override ) ) {
+		$override = $override += 1;
+	} else {
+		$override = $limit += 1;	
+	}
+	update_post_meta( $download_id, '_edd_download_limit_override', $override );
+
+}
+
+
+/**
  * Checks if a file is at its download limit
  *
  * This limit refers to the maximum number of times files connected to a product
@@ -587,7 +635,17 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
 	if( ! empty( $download_limit ) ) {
 
 		if( $download_count >= $download_limit ) {
+
 			$ret = true;
+			
+			// check to make sure the limit isn't overwritten
+			// a limit is overwritten when purchase receipt is resent
+			$limit_override = edd_get_file_download_limit_override( $download_id );
+			
+			if( ! empty( $limit_override ) && $download_count < $limit_override ) {
+				$ret = false;
+			}
+
 		}
 
 	}
