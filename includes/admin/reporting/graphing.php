@@ -268,7 +268,7 @@ function edd_reports_graph_controls() {
 			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year'] ); ?>><?php echo $i; ?></option>
 				       	<?php endfor; ?>
 			       	</select>
-			       </div>
+			    </div>
 
 			    <input type="hidden" name="edd_action" value="filter_reports" />  
 		       	<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'edd' ); ?>"/>
