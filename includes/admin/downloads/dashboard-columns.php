@@ -48,10 +48,8 @@ add_filter( 'manage_edit-download_columns', 'edd_download_columns' );
 */
 
 function edd_render_download_columns( $column_name, $post_id ) {
-	if(get_post_type( $post_id) == 'download') {
+	if( get_post_type( $post_id ) == 'download' ) {
 		global $edd_options;
-		$sales 			= edd_get_download_sales_stats( $post_id );
-		$earnings 		= edd_get_download_earnings_stats( $post_id );
 		$style 			= isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button';
 		$color 			= isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue';
 		$purchase_text 	= isset( $edd_options['add_to_cart_text'] ) ? $edd_options['add_to_cart_text'] : __( 'Purchase', 'edd' );
@@ -70,10 +68,10 @@ function edd_render_download_columns( $column_name, $post_id ) {
 				}
 				break;
 			case 'sales':
-				echo $sales;
+				echo edd_get_download_sales_stats( $post_id );
 				break;
 			case 'earnings':
-				echo edd_currency_filter( edd_format_amount( $earnings ) );
+				echo edd_currency_filter( edd_format_amount( edd_get_download_earnings_stats( $post_id ) ) );
 				break;
 			case 'shortcode':
 				echo '[purchase_link id="' . absint( $post_id ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]';
