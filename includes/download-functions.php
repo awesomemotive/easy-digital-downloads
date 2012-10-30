@@ -697,11 +697,11 @@ function edd_get_download_file_url($key, $email, $filekey, $download_id) {
 		$date = 2147472000; // highest possible date, January 19, 2038
 		
 	$params = array(
-		'download_key' => $key,
-		'email' => rawurlencode( $email ),
-		'file' => $filekey,
-		'download' => $download_id, 
-		'expire' => rawurlencode( base64_encode( $date ) )
+		'download_key' 	=> $key,
+		'email' 		=> rawurlencode( $email ),
+		'file' 			=> $filekey,
+		'download' 		=> $download_id, 
+		'expire' 		=> rawurlencode( base64_encode( $date ) )
 	);
 
 	$params = apply_filters('edd_download_file_url_args', $params);
