@@ -73,7 +73,7 @@ function edd_render_download_columns( $column_name, $post_id ) {
 				echo $sales;
 				break;
 			case 'earnings':
-				echo edd_currency_filter( $earnings);
+				echo edd_currency_filter( edd_format_amount( $earnings ) );
 				break;
 			case 'shortcode':
 				echo '[purchase_link id="' . absint( $post_id ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]';
