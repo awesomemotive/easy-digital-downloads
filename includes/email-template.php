@@ -132,7 +132,7 @@ function edd_email_preview_templage_tags( $message ) {
 	$download_list .= '</ul></li>';
 	$download_list .= '</ul>';
 
-	$price = edd_currency_filter( 9.50 );
+	$price = edd_currency_filter( edd_format_amount( 9.50 ) );
 
 	$gateway = 'PayPal';
 
