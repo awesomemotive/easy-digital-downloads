@@ -119,7 +119,9 @@ function edd_checkout_form() {
 
 					</form>
 					<?php do_action( 'edd_after_purchase_form' ); ?>
-			<?php } ?>
+			<?php } 
+			do_action( 'edd_checkout_form_bottom' );
+			?>
 		</div><!--end #edd_checkout_form_wrap-->
 		<?php
 		else:
