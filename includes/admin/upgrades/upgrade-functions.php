@@ -102,6 +102,9 @@ function edd_v131_upgrades() {
 	if( get_option( 'edd_logs_upgraded' ) )
 		return;
 
+	if( version_compare( get_option( 'edd_version' ), '1.3', '>=' ) )
+		return;
+
 	ignore_user_abort(true);
 	set_time_limit(0);
 
