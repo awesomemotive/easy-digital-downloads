@@ -294,8 +294,8 @@ function edd_get_register_fields() {
 			<?php do_action( 'edd_register_account_fields_after' ); ?>
 		</fieldset>
 		<p>
-			<input name="edd_email" id="edd_email" class="required edd-input" type="email" placeholder="<?php _e('Email', 'edd'); ?>" title="<?php _e('Email', 'edd'); ?>"/>
-			<label for="edd_email"><?php _e('Email', 'edd'); ?></label>
+			<input name="edd_email" id="edd-email" class="required edd-input" type="email" placeholder="<?php _e('Email', 'edd'); ?>" title="<?php _e('Email', 'edd'); ?>"/>
+			<label for="edd-email"><?php _e('Email', 'edd'); ?></label>
 		</p>
 		<p>
 			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e('First Name', 'edd'); ?>" id="edd-first" value="<?php echo is_user_logged_in() ? $user_data->user_firstname : ''; ?>"/>

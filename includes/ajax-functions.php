@@ -95,14 +95,19 @@ add_action( 'wp_ajax_nopriv_edd_add_to_cart', 'edd_ajax_add_to_cart' );
 */
 
 function edd_ajax_validate_discount() {
-	if( isset($_POST['code'],$_POST['email']) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
+	if( isset( $_POST['code'], $_POST['email'] ) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
+		
 		if( edd_is_discount_used( $_POST['code'], $_POST['email'] ) ) {  // Called twice if discount is not used (again by edd_is_discount_valid) but allows for beter usr msg and less execution if discount is used.
+			
 			$return = array(
 				'msg' => __('This discount code has been used already', 'edd'),
 				'code' => $_POST['code']
 			);
+
 		} else {
+
 			if( edd_is_discount_valid( $_POST['code'],$_POST['email'] ) ) {
+
 				$price = edd_get_cart_amount();
 				$discounted_price = edd_get_discounted_amount( $_POST['code'], $price );
 
@@ -113,10 +118,12 @@ function edd_ajax_validate_discount() {
 				);
 
 			} else {
+
 				$return = array(
 					'msg' => __('The discount you entered is invalid', 'edd'),
 					'code' => $_POST['code']
 				);
+				
 			}
 		}
 		echo json_encode($return);
