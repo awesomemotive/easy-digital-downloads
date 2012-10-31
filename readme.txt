@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.5
-Stable Tag: 1.3.1
+Stable Tag: 1.3.2
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -138,6 +138,33 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.3.2 =
+
+* Fixed a problem with the Apply Discount link when not logged-in
+* Added Total Earnings For Period Shown to Reports page
+* Improved efficiency of downloads list table
+* Fixed a formatting issue with prices in the email template preview
+* Added option to export file download history
+* Improved the checkout template to be more modular
+* Added new edd_get_purchase_id_by_key() function, props Yoast
+* Added Recent Purchases to the Dashboard widget
+* Fixed a problem with amount formatting in the purchase receipts
+* Added ability to filter payments by username
+* Fixed a problem with the file download limit feature
+* Updated post updated messages with "View Download" link
+* With a problem with the [download_discounts] short code
+* Added new edd_price_field action to the download meta box
+* Fixed a problem with saving prices when they contain a thousands separator
+* Added Lifetime Best Selling into the Dashboard Sales widget
+* Moved all template files and CSS to /templates folder instead of the includes/ folder
+* Added new edd_add_to_cart_item filter for modifying the item info when adding items to the cart
+* Added version numbers to all scripts and stylesheets to help prevent caching issues on updates
+* Updated the checkout form to load the payment forms automatically when selecting a payment method
+* Fixed some UTF8 decoding problems with the PDF reports
+* Integrated Opt-In PressTrends tracking
+* Fixed a problem with the download Tags slug and archive views for the taxonomy
+* Updated French language files
 
 = 1.3.1 =
 
@@ -695,6 +722,33 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Upgrade Notice ==
+
+= 1.3.2 =
+
+* Fixed a problem with the Apply Discount link when not logged-in
+* Added Total Earnings For Period Shown to Reports page
+* Improved efficiency of downloads list table
+* Fixed a formatting issue with prices in the email template preview
+* Added option to export file download history
+* Improved the checkout template to be more modular
+* Added new edd_get_purchase_id_by_key() function, props Yoast
+* Added Recent Purchases to the Dashboard widget
+* Fixed a problem with amount formatting in the purchase receipts
+* Added ability to filter payments by username
+* Fixed a problem with the file download limit feature
+* Updated post updated messages with "View Download" link
+* With a problem with the [download_discounts] short code
+* Added new edd_price_field action to the download meta box
+* Fixed a problem with saving prices when they contain a thousands separator
+* Added Lifetime Best Selling into the Dashboard Sales widget
+* Moved all template files and CSS to /templates folder instead of the includes/ folder
+* Added new edd_add_to_cart_item filter for modifying the item info when adding items to the cart
+* Added version numbers to all scripts and stylesheets to help prevent caching issues on updates
+* Updated the checkout form to load the payment forms automatically when selecting a payment method
+* Fixed some UTF8 decoding problems with the PDF reports
+* Integrated Opt-In PressTrends tracking
+* Fixed a problem with the download Tags slug and archive views for the taxonomy
+* Updated French language files
 
 = 1.3.1 =
 
