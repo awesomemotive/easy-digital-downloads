@@ -561,9 +561,9 @@ function edd_get_file_download_limit( $download_id = 0 ) {
  * @return      int The new limit
 */
 
-function edd_get_file_download_limit_override( $download_id = 0 ) {
+function edd_get_file_download_limit_override( $download_id = 0, $payment_id = 0 ) {
 
-	$limit_override = get_post_meta( $download_id, '_edd_download_limit_override', true );
+	$limit_override = get_post_meta( $download_id, '_edd_download_limit_override_' . $payment_id, true );
 	if( $limit_override ) {
 		return absint( $limit_override );
 	}
@@ -584,7 +584,7 @@ function edd_get_file_download_limit_override( $download_id = 0 ) {
  * @return      int The new limit
 */
 
-function edd_set_file_download_limit_override( $download_id = 0 ) {
+function edd_set_file_download_limit_override( $download_id = 0, $payment_id = 0 ) {
 
 	$override 	= edd_get_file_download_limit_override( $download_id );
 	$limit 		= edd_get_file_download_limit( $download_id );
@@ -594,7 +594,7 @@ function edd_set_file_download_limit_override( $download_id = 0 ) {
 	} else {
 		$override = $limit += 1;	
 	}
-	update_post_meta( $download_id, '_edd_download_limit_override', $override );
+	update_post_meta( $download_id, '_edd_download_limit_override_' . $payment_id, $override );
 
 }
 
@@ -640,7 +640,7 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
 			
 			// check to make sure the limit isn't overwritten
 			// a limit is overwritten when purchase receipt is resent
-			$limit_override = edd_get_file_download_limit_override( $download_id );
+			$limit_override = edd_get_file_download_limit_override( $download_id, $payment_id );
 			
 			if( ! empty( $limit_override ) && $download_count < $limit_override ) {
 				$ret = false;
