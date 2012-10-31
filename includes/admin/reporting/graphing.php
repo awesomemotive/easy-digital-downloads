@@ -64,9 +64,9 @@ function edd_reports_graph() {
 			
 	endswitch;
 
-	$time_format = apply_filters( 'edd_graph_timeformat', $time_format );
-	$tick_size = apply_filters( 'edd_graph_ticksize', $tick_size );
-
+	$time_format 	= apply_filters( 'edd_graph_timeformat', $time_format );
+	$tick_size 		= apply_filters( 'edd_graph_ticksize', $tick_size );
+	$totals 		= (float) 0.00; // total earnings for time period shown
 	echo '<h3>' . __( 'Earnings Over Time', 'edd' ) . '</h3>';
 
 	// show the date controls
@@ -85,9 +85,12 @@ function edd_reports_graph() {
 							if( $day_by_day ) :
 								$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
 								$d 				= 1;
-								while( $d <= $num_of_days ) : $date = mktime( 0, 0, 0, $i, $d, $dates['year'] ); ?>
+								while( $d <= $num_of_days ) : 
+									$date = mktime( 0, 0, 0, $i, $d, $dates['year'] ); ?>
 									[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( $d, $i, $dates['year'] ); ?>],
-								<?php $d++; endwhile;
+								<?php 
+								$d++; 
+								endwhile;
 							else : 
 								$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
 								?>
@@ -110,13 +113,18 @@ function edd_reports_graph() {
 							if( $day_by_day ) :
 								$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
 								$d 				= 1;
-								while( $d <= $num_of_days ) : $date = mktime( 0, 0, 0, $i, $d, $dates['year'] ); ?>
-									[<?php echo $date * 1000; ?>, <?php echo edd_get_earnings_by_date( $d, $i, $dates['year'] ); ?>],
+								while( $d <= $num_of_days ) : 
+									$date = mktime( 0, 0, 0, $i, $d, $dates['year'] );
+									$earnings = edd_get_earnings_by_date( $d, $i, $dates['year'] ); 
+									$totals += $earnings; ?>
+									[<?php echo $date * 1000; ?>, <?php echo $earnings ?>],
 								<?php $d++; endwhile;
 							else : 
 								$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
+								$earnings = edd_get_earnings_by_date( null, $i, $dates['year'] );
+								$totals += $earnings;
 								?>
-								[<?php echo $date * 1000; ?>, <?php echo edd_get_earnings_by_date( null, $i, $dates['year'] ); ?>],
+								[<?php echo $date * 1000; ?>, <?php echo $earnings; ?>],
 							<?php 
 							endif;
 							$i++;
@@ -194,6 +202,9 @@ function edd_reports_graph() {
 	   });
     </script>
     <div id="edd_monthly_stats" style="height: 300px;"></div>
+    <div id="edd_graph_totals">
+    	<strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $totals ) ); ?></strong>
+    </div>
 	<?php
 	echo ob_get_clean();
 }
@@ -260,7 +271,7 @@ function edd_reports_graph_controls() {
 			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year'] ); ?>><?php echo $i; ?></option>
 				       	<?php endfor; ?>
 			       	</select>
-			       </div>
+			    </div>
 
 			    <input type="hidden" name="edd_action" value="filter_reports" />  
 		       	<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'edd' ); ?>"/>
