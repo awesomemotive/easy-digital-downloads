@@ -52,9 +52,9 @@ function edd_checkout_form() {
 						if( edd_can_checkout() ) { ?>
 							
 							<?php if( isset( $edd_options['show_register_form'] ) && !is_user_logged_in() && !isset( $_GET['login'] ) ) { ?>
-								<div id="edd_checkout_login_register"><?php echo edd_get_register_fields(); ?></div>
+								<div id="edd_checkout_login_register"><?php do_action( 'edd_purchase_form_register_fields' ); ?></div>
 							<?php } elseif( isset( $edd_options['show_register_form'] ) && !is_user_logged_in() && isset( $_GET['login'] ) ) { ?>
-								<div id="edd_checkout_login_register"><?php echo edd_get_login_fields(); ?></div>
+								<div id="edd_checkout_login_register"><?php do_action( 'edd_purchase_form_login_fields' ); ?></div>
 							<?php } ?>
 
 							<?php if( ( !isset( $_GET['login'] ) && is_user_logged_in() ) || !isset( $edd_options['show_register_form'] ) ) { ?>
@@ -268,7 +268,7 @@ add_action('edd_after_cc_fields', 'edd_default_cc_address_fields');
  * @return      string
 */
 
-function edd_get_register_fields() {
+function edd_get_register_fields( $echo = true ) {
 	global $edd_options;
 	global $user_ID;
 	
@@ -311,8 +311,13 @@ function edd_get_register_fields() {
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
 	</fieldset>
 	<?php
-	return ob_get_clean();
+
+	$fields = ob_get_clean();
+
+	echo $fields;
+
 }
+add_action( 'edd_purchase_form_register_fields', 'edd_get_register_fields' );
 
 
 /**
@@ -323,7 +328,7 @@ function edd_get_register_fields() {
  * @return      string
 */
 
-function edd_get_login_fields() {
+function edd_get_login_fields( $echo = true ) {
 	ob_start(); ?>
 		<fieldset id="edd_login_fields">
 			<legend><?php _e('Login to your account', 'edd'); ?></legend>
@@ -337,7 +342,6 @@ function edd_get_login_fields() {
 				<label class="edd-label" for="edd-password"><?php _e('Password', 'edd'); ?></label>
 				<input type="hidden" name="edd-purchase-var" value="needs-to-login"/>
 			</p>
-			<?php do_action('edd_purchase_form_login_fields'); // deprecated ?>
 			<?php do_action('edd_checkout_login_fields_after'); ?>	
 		</fieldset><!--end #edd_login_fields-->
 		<p>
@@ -347,8 +351,12 @@ function edd_get_login_fields() {
 			</a>
 		</p>	
 	<?php
-	return ob_get_clean();
+
+	$fields = ob_get_clean();
+
+	echo $fields;
 }
+add_action( 'edd_purchase_form_login_fields', 'edd_get_login_fields' );
 
 
 /**
