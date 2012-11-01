@@ -120,7 +120,7 @@ function edd_load_admin_scripts( $hook ) {
 		wp_enqueue_style( 'jquery-ui-css', EDD_PLUGIN_URL . 'includes/css/jquery-ui-' . $ui_style . '.css' );
 	}
 	if( $hook == $edd_settings_page ) {
-		wp_enqueue_style( 'colorbox', EDD_PLUGIN_URL . 'includes/css/colorbox.css' array(  ), '1.3.20' );
+		wp_enqueue_style( 'colorbox', EDD_PLUGIN_URL . 'includes/css/colorbox.css', array(  ), '1.3.20' );
 		wp_enqueue_script( 'colorbox', EDD_PLUGIN_URL . 'includes/js/jquery.colorbox-min.js', array( 'jquery' ), '1.3.20');
 	}
 	wp_enqueue_script( 'media-upload' );
