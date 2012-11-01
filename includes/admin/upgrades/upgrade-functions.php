@@ -46,7 +46,7 @@ function edd_show_upgrade_notices() {
 
 	if( version_compare( EDD_VERSION, $edd_version, '>' ) && ! get_option( 'edd_logs_upgraded' ) ) {
 		printf(
-			'<div class="updated"><p>' . esc_html__( 'The purchase and file download history in Easy Digital Downloads needs to be upgraded, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
+			'<div class="updated"><p>' . esc_html__( 'The purchase and file download history in Easy Digital Downloads needs upgraded, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
 			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
 			'</a>'
 		);
