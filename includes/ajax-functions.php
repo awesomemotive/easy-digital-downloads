@@ -145,7 +145,7 @@ add_action( 'wp_ajax_nopriv_edd_apply_discount', 'edd_ajax_validate_discount' );
 */
 
 function edd_load_checkout_login_fields() {
-	echo edd_get_login_fields();
+	do_action( 'edd_purchase_form_login_fields' );
 	die();
 }
 add_action('wp_ajax_nopriv_checkout_login', 'edd_load_checkout_login_fields');
@@ -162,7 +162,7 @@ add_action('wp_ajax_nopriv_checkout_login', 'edd_load_checkout_login_fields');
 */
 
 function edd_load_checkout_register_fields() {
-	echo edd_get_register_fields();
+	do_action( 'edd_purchase_form_register_fields' );
 	die();
 }
 add_action('wp_ajax_nopriv_checkout_register', 'edd_load_checkout_register_fields');
