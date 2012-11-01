@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-31 12:01+0100\n"
-"PO-Revision-Date: 2012-10-31 12:01+0100\n"
+"POT-Creation-Date: 2012-11-01 11:44+0100\n"
+"PO-Revision-Date: 2012-11-01 11:44+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
 "Language-Team: Easy Digital Downloads <pippin@pippinsplugins.com>\n"
 "Language: en_US\n"
@@ -61,16 +61,16 @@ msgid "Email Address"
 msgstr ""
 
 #: includes/checkout-template.php:70 includes/checkout-template.php:71
-#: includes/checkout-template.php:301 includes/checkout-template.php:302
+#: includes/checkout-template.php:303 includes/checkout-template.php:304
 #: includes/admin/export-functions.php:23
 msgid "First Name"
 msgstr ""
 
-#: includes/checkout-template.php:74 includes/checkout-template.php:305
+#: includes/checkout-template.php:74 includes/checkout-template.php:307
 msgid "Last name"
 msgstr ""
 
-#: includes/checkout-template.php:75 includes/checkout-template.php:306
+#: includes/checkout-template.php:75 includes/checkout-template.php:308
 #: includes/admin/export-functions.php:24
 msgid "Last Name"
 msgstr ""
@@ -83,126 +83,126 @@ msgstr ""
 msgid "You must be logged in to complete your purchase"
 msgstr ""
 
-#: includes/checkout-template.php:157
+#: includes/checkout-template.php:159
 msgid "Credit Card Info"
 msgstr ""
 
-#: includes/checkout-template.php:159
+#: includes/checkout-template.php:161
 msgid "Card name"
 msgstr ""
 
-#: includes/checkout-template.php:160
+#: includes/checkout-template.php:162
 msgid "Name on the Card"
 msgstr ""
 
-#: includes/checkout-template.php:163
+#: includes/checkout-template.php:165
 msgid "Card number"
 msgstr ""
 
-#: includes/checkout-template.php:164
+#: includes/checkout-template.php:166
 msgid "Card Number"
 msgstr ""
 
-#: includes/checkout-template.php:167
+#: includes/checkout-template.php:169
 msgid "Security code"
 msgstr ""
 
-#: includes/checkout-template.php:168
+#: includes/checkout-template.php:170
 msgid "CVC"
 msgstr ""
 
-#: includes/checkout-template.php:174
+#: includes/checkout-template.php:176
 msgid "Month"
 msgstr ""
 
-#: includes/checkout-template.php:176
+#: includes/checkout-template.php:178
 msgid "Year"
 msgstr ""
 
-#: includes/checkout-template.php:177
+#: includes/checkout-template.php:179
 msgid "Expiration (MM/YYYY)"
 msgstr ""
 
-#: includes/checkout-template.php:207
+#: includes/checkout-template.php:209
 msgid "Address line 1"
 msgstr ""
 
-#: includes/checkout-template.php:208
+#: includes/checkout-template.php:210
 msgid "Billing Address"
 msgstr ""
 
-#: includes/checkout-template.php:211
+#: includes/checkout-template.php:213
 msgid "Address line 2"
 msgstr ""
 
-#: includes/checkout-template.php:212
+#: includes/checkout-template.php:214
 msgid "Billing Address Line 2"
 msgstr ""
 
-#: includes/checkout-template.php:215
+#: includes/checkout-template.php:217
 msgid "City"
 msgstr ""
 
-#: includes/checkout-template.php:216
+#: includes/checkout-template.php:218
 msgid "Billing City"
 msgstr ""
 
-#: includes/checkout-template.php:227
+#: includes/checkout-template.php:229
 msgid "Billing Country"
 msgstr ""
 
-#: includes/checkout-template.php:230
+#: includes/checkout-template.php:232
 msgid "State / Province"
 msgstr ""
 
-#: includes/checkout-template.php:247
+#: includes/checkout-template.php:249
 msgid "Billing State / Province"
 msgstr ""
 
-#: includes/checkout-template.php:250
+#: includes/checkout-template.php:252
 msgid "Zip / Postal code"
 msgstr ""
 
-#: includes/checkout-template.php:251
+#: includes/checkout-template.php:253
 msgid "Billing Zip / Postal Code"
 msgstr ""
 
-#: includes/checkout-template.php:278
+#: includes/checkout-template.php:280
 msgid "Already have an account?"
 msgstr ""
 
-#: includes/checkout-template.php:278 includes/login-register.php:50
+#: includes/checkout-template.php:280 includes/login-register.php:50
 msgid "Login"
 msgstr ""
 
-#: includes/checkout-template.php:280
+#: includes/checkout-template.php:282
 msgid "Create an account"
 msgstr ""
 
-#: includes/checkout-template.php:280
+#: includes/checkout-template.php:282
 msgid "(optional)"
 msgstr ""
 
-#: includes/checkout-template.php:283 includes/checkout-template.php:284
-#: includes/checkout-template.php:331 includes/login-register.php:39
+#: includes/checkout-template.php:285 includes/checkout-template.php:286
+#: includes/checkout-template.php:333 includes/login-register.php:39
 #: includes/login-register.php:40
 msgid "Username"
 msgstr ""
 
-#: includes/checkout-template.php:287 includes/checkout-template.php:288
-#: includes/checkout-template.php:335 includes/login-register.php:43
+#: includes/checkout-template.php:289 includes/checkout-template.php:290
+#: includes/checkout-template.php:337 includes/login-register.php:43
 msgid "Password"
 msgstr ""
 
-#: includes/checkout-template.php:291
+#: includes/checkout-template.php:293
 msgid "Confirm password"
 msgstr ""
 
-#: includes/checkout-template.php:292
+#: includes/checkout-template.php:294
 msgid "Password Again"
 msgstr ""
 
-#: includes/checkout-template.php:297 includes/checkout-template.php:298
+#: includes/checkout-template.php:299 includes/checkout-template.php:300
 #: includes/admin/export-functions.php:22
 #: includes/admin/payments/payments-history.php:138
 #: includes/admin/payments/payments-history.php:155
@@ -210,65 +210,65 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: includes/checkout-template.php:327
+#: includes/checkout-template.php:329
 msgid "Login to your account"
 msgstr ""
 
-#: includes/checkout-template.php:330
+#: includes/checkout-template.php:332
 msgid "Your username"
 msgstr ""
 
-#: includes/checkout-template.php:334
+#: includes/checkout-template.php:336
 msgid "Your password"
 msgstr ""
 
-#: includes/checkout-template.php:342
+#: includes/checkout-template.php:344
 msgid "Need to create an account?"
 msgstr ""
 
-#: includes/checkout-template.php:344
+#: includes/checkout-template.php:346
 msgid "Register"
 msgstr ""
 
-#: includes/checkout-template.php:344
+#: includes/checkout-template.php:346
 msgid "or checkout as a guest."
 msgstr ""
 
-#: includes/checkout-template.php:370
+#: includes/checkout-template.php:372
 msgid "Select payment method"
 msgstr ""
 
-#: includes/checkout-template.php:403
+#: includes/checkout-template.php:405
 msgid "Enter discount"
 msgstr ""
 
-#: includes/checkout-template.php:405
+#: includes/checkout-template.php:407
 msgid "Discount"
 msgstr ""
 
-#: includes/checkout-template.php:407
+#: includes/checkout-template.php:409
 msgid "Apply Discount"
 msgstr ""
 
-#: includes/checkout-template.php:440
+#: includes/checkout-template.php:442
 msgid "Show Terms"
 msgstr ""
 
-#: includes/checkout-template.php:441
+#: includes/checkout-template.php:443
 msgid "Hide Terms"
 msgstr ""
 
-#: includes/checkout-template.php:444
+#: includes/checkout-template.php:446
 msgid "Agree to Terms?"
 msgstr ""
 
-#: includes/checkout-template.php:468 includes/admin/downloads/metabox.php:630
+#: includes/checkout-template.php:470 includes/admin/downloads/metabox.php:630
 #: includes/admin/downloads/metabox.php:735
 #: includes/admin/payments/payments-history.php:318
 msgid "Next"
 msgstr ""
 
-#: includes/checkout-template.php:487 includes/shortcodes.php:28
+#: includes/checkout-template.php:489 includes/shortcodes.php:28
 #: includes/template-functions.php:54 includes/admin/thickbox.php:61
 #: includes/admin/downloads/dashboard-columns.php:55
 msgid "Purchase"
@@ -1392,7 +1392,7 @@ msgstr ""
 
 #: includes/widgets.php:357 includes/admin/downloads/dashboard-columns.php:31
 #: includes/admin/reporting/class-download-reports-table.php:40
-#: includes/admin/reporting/graphing.php:131
+#: includes/admin/reporting/graphing.php:134
 #: includes/admin/reporting/pdf-reports.php:195
 #: includes/admin/reporting/reports.php:92
 msgid "Earnings"
@@ -1588,6 +1588,7 @@ msgid "Key"
 msgstr ""
 
 #: includes/admin/export-functions.php:30
+#: includes/admin/export-functions.php:185
 #: includes/admin/downloads/dashboard-columns.php:33
 #: includes/admin/payments/payments-history.php:144
 #: includes/admin/payments/payments-history.php:158
@@ -1622,7 +1623,20 @@ msgid "No payments recorded yet"
 msgstr ""
 
 #: includes/admin/export-functions.php:152
+#: includes/admin/export-functions.php:245
 msgid "Export not allowed for non-administrators."
+msgstr ""
+
+#: includes/admin/export-functions.php:186
+msgid "Downloaded by"
+msgstr ""
+
+#: includes/admin/export-functions.php:187
+msgid "IP Address"
+msgstr ""
+
+#: includes/admin/export-functions.php:188
+msgid "File"
 msgstr ""
 
 #: includes/admin/thickbox.php:29 includes/admin/thickbox.php:123
@@ -2066,7 +2080,7 @@ msgstr ""
 
 #: includes/admin/downloads/dashboard-columns.php:30
 #: includes/admin/reporting/class-download-reports-table.php:39
-#: includes/admin/reporting/graphing.php:102
+#: includes/admin/reporting/graphing.php:105
 #: includes/admin/reporting/pdf-reports.php:212
 msgid "Sales"
 msgstr ""
@@ -2367,47 +2381,47 @@ msgstr ""
 msgid "Earnings Over Time"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:203
+#: includes/admin/reporting/graphing.php:206
 msgid "Total earnings for period shown: "
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:220
+#: includes/admin/reporting/graphing.php:223
 msgid "This Month"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:221
+#: includes/admin/reporting/graphing.php:224
 msgid "Last Month"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:222
+#: includes/admin/reporting/graphing.php:225
 msgid "This Quarter"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:223
+#: includes/admin/reporting/graphing.php:226
 msgid "Last Quarter"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:224
+#: includes/admin/reporting/graphing.php:227
 msgid "This Year"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:225
+#: includes/admin/reporting/graphing.php:228
 msgid "Last Year"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:226
+#: includes/admin/reporting/graphing.php:229
 msgid "Other"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:254
+#: includes/admin/reporting/graphing.php:257
 msgid "From"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:260
+#: includes/admin/reporting/graphing.php:263
 msgid "To"
 msgstr ""
 
-#: includes/admin/reporting/graphing.php:274
+#: includes/admin/reporting/graphing.php:277
 msgid "Filter"
 msgstr ""
 
@@ -2542,6 +2556,7 @@ msgstr ""
 
 #: includes/admin/reporting/reports.php:206
 #: includes/admin/reporting/reports.php:218
+#: includes/admin/reporting/reports.php:230
 msgid "Generate CSV"
 msgstr ""
 
@@ -2551,6 +2566,14 @@ msgstr ""
 
 #: includes/admin/reporting/reports.php:215
 msgid "Download a CSV of all customer emails."
+msgstr ""
+
+#: includes/admin/reporting/reports.php:225
+msgid "Export Download History in CSV"
+msgstr ""
+
+#: includes/admin/reporting/reports.php:227
+msgid "Download a CSV of all file downloads for the current month."
 msgstr ""
 
 #: includes/admin/settings/settings.php:34
