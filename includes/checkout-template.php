@@ -268,7 +268,7 @@ add_action('edd_after_cc_fields', 'edd_default_cc_address_fields');
  * @return      string
 */
 
-function edd_get_register_fields( $echo = true ) {
+function edd_get_register_fields() {
 	global $edd_options;
 	global $user_ID;
 	
@@ -328,7 +328,7 @@ add_action( 'edd_purchase_form_register_fields', 'edd_get_register_fields' );
  * @return      string
 */
 
-function edd_get_login_fields( $echo = true ) {
+function edd_get_login_fields() {
 	ob_start(); ?>
 		<fieldset id="edd_login_fields">
 			<legend><?php _e('Login to your account', 'edd'); ?></legend>
