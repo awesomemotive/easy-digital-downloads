@@ -460,6 +460,22 @@ function edd_terms_agreement() {
 add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement' );
 
 
+function edd_show_local_tax_opt_in() {
+	global $edd_options;
+	if( isset( $edd_options['tax_condition'] ) && $edd_options['tax_condition'] == 'local' ) { 
+?>
+		<fieldset id="edd_tax_opt_in_fields">
+			<p>
+				<input name="edd_tax_opt_in" class="required" type="checkbox" id="edd_tax_opt_in" value="1"/>
+				<label for="edd_tax_opt_in"><?php echo isset( $edd_options['tax_location'] ) ? $edd_options['tax_location'] : __('Opt Into Taxes?', 'edd'); ?></label>
+			</p>
+		</fieldset>
+<?php 
+	}
+}
+add_action( 'edd_purchase_form_before_submit', 'edd_show_local_tax_opt_in' );
+
+
 /**
  * The checkout Next button
  *
