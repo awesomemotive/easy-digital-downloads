@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-01 11:44+0100\n"
-"PO-Revision-Date: 2012-11-01 11:44+0100\n"
+"POT-Creation-Date: 2012-11-02 12:30+0100\n"
+"PO-Revision-Date: 2012-11-02 12:31+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
 "Language-Team: Easy Digital Downloads <pippin@pippinsplugins.com>\n"
 "Language: en_US\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: __;_e;_x;_n;esc_attr__;esc_attr_e;esc_html__;"
-"esc_html_e;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c\n"
+"esc_html_e;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;_n:1,2\n"
 "X-Poedit-Basepath: ../\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -184,13 +184,13 @@ msgid "(optional)"
 msgstr ""
 
 #: includes/checkout-template.php:285 includes/checkout-template.php:286
-#: includes/checkout-template.php:333 includes/login-register.php:39
+#: includes/checkout-template.php:338 includes/login-register.php:39
 #: includes/login-register.php:40
 msgid "Username"
 msgstr ""
 
 #: includes/checkout-template.php:289 includes/checkout-template.php:290
-#: includes/checkout-template.php:337 includes/login-register.php:43
+#: includes/checkout-template.php:342 includes/login-register.php:43
 msgid "Password"
 msgstr ""
 
@@ -210,65 +210,65 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: includes/checkout-template.php:329
+#: includes/checkout-template.php:334
 msgid "Login to your account"
 msgstr ""
 
-#: includes/checkout-template.php:332
+#: includes/checkout-template.php:337
 msgid "Your username"
 msgstr ""
 
-#: includes/checkout-template.php:336
+#: includes/checkout-template.php:341
 msgid "Your password"
 msgstr ""
 
-#: includes/checkout-template.php:344
+#: includes/checkout-template.php:348
 msgid "Need to create an account?"
 msgstr ""
 
-#: includes/checkout-template.php:346
+#: includes/checkout-template.php:350
 msgid "Register"
 msgstr ""
 
-#: includes/checkout-template.php:346
+#: includes/checkout-template.php:350
 msgid "or checkout as a guest."
 msgstr ""
 
-#: includes/checkout-template.php:372
+#: includes/checkout-template.php:380
 msgid "Select payment method"
 msgstr ""
 
-#: includes/checkout-template.php:405
+#: includes/checkout-template.php:413
 msgid "Enter discount"
 msgstr ""
 
-#: includes/checkout-template.php:407
+#: includes/checkout-template.php:415
 msgid "Discount"
 msgstr ""
 
-#: includes/checkout-template.php:409
+#: includes/checkout-template.php:417
 msgid "Apply Discount"
 msgstr ""
 
-#: includes/checkout-template.php:442
+#: includes/checkout-template.php:450
 msgid "Show Terms"
 msgstr ""
 
-#: includes/checkout-template.php:443
+#: includes/checkout-template.php:451
 msgid "Hide Terms"
 msgstr ""
 
-#: includes/checkout-template.php:446
+#: includes/checkout-template.php:454
 msgid "Agree to Terms?"
 msgstr ""
 
-#: includes/checkout-template.php:470 includes/admin/downloads/metabox.php:630
+#: includes/checkout-template.php:478 includes/admin/downloads/metabox.php:630
 #: includes/admin/downloads/metabox.php:735
 #: includes/admin/payments/payments-history.php:318
 msgid "Next"
 msgstr ""
 
-#: includes/checkout-template.php:489 includes/shortcodes.php:28
+#: includes/checkout-template.php:497 includes/shortcodes.php:28
 #: includes/template-functions.php:54 includes/admin/thickbox.php:61
 #: includes/admin/downloads/dashboard-columns.php:55
 msgid "Purchase"
@@ -1400,7 +1400,9 @@ msgstr ""
 
 #: includes/widgets.php:361
 msgid "Sale"
-msgstr ""
+msgid_plural "Sales"
+msgstr[0] ""
+msgstr[1] ""
 
 #: includes/widgets.php:367
 msgid "Best Selling in Last 30 Days"

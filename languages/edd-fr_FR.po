@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads v1.1.5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-01 11:43+0100\n"
-"PO-Revision-Date: 2012-11-01 11:44+0100\n"
+"POT-Creation-Date: 2012-11-02 12:28+0100\n"
+"PO-Revision-Date: 2012-11-02 12:29+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
 "Language-Team: FxB <fx@fxbenard.com>\n"
 "Language: fr_FR\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;esc_attr__;esc_attr_e;esc_html__;esc_html_e;_n;"
-"_x;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c\n"
+"_x;_n:1,2;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c\n"
 "X-Poedit-Basepath: ../\n"
 "X-Textdomain-Support: yes\n"
 "X-Generator: Poedit 1.5.4\n"
@@ -226,14 +226,14 @@ msgstr "(facultatif)"
 
 # @ edd
 #: includes/checkout-template.php:285 includes/checkout-template.php:286
-#: includes/checkout-template.php:333 includes/login-register.php:39
+#: includes/checkout-template.php:338 includes/login-register.php:39
 #: includes/login-register.php:40
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
 # @ edd
 #: includes/checkout-template.php:289 includes/checkout-template.php:290
-#: includes/checkout-template.php:337 includes/login-register.php:43
+#: includes/checkout-template.php:342 includes/login-register.php:43
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -257,75 +257,75 @@ msgid "Email"
 msgstr "E-mail "
 
 # @ edd
-#: includes/checkout-template.php:329
+#: includes/checkout-template.php:334
 msgid "Login to your account"
 msgstr "Se connecter au compte"
 
 # @ edd
-#: includes/checkout-template.php:332
+#: includes/checkout-template.php:337
 msgid "Your username"
 msgstr "Votre nom d'utilisateur"
 
 # @ edd
-#: includes/checkout-template.php:336
+#: includes/checkout-template.php:341
 msgid "Your password"
 msgstr "Votre mot de passe"
 
 # @ edd
-#: includes/checkout-template.php:344
+#: includes/checkout-template.php:348
 msgid "Need to create an account?"
 msgstr "Besoin de créer un compte ?"
 
 # @ edd
-#: includes/checkout-template.php:346
+#: includes/checkout-template.php:350
 msgid "Register"
 msgstr "Enregistrer"
 
-#: includes/checkout-template.php:346
+#: includes/checkout-template.php:350
 msgid "or checkout as a guest."
 msgstr "ou commander en tant qu'invité."
 
 # @ edd
-#: includes/checkout-template.php:372
+#: includes/checkout-template.php:380
 msgid "Select payment method"
 msgstr "Selectionner la méthode de paiement"
 
 # @ edd
-#: includes/checkout-template.php:405
+#: includes/checkout-template.php:413
 msgid "Enter discount"
 msgstr "Entrer code de remise"
 
 # @ edd
-#: includes/checkout-template.php:407
+#: includes/checkout-template.php:415
 msgid "Discount"
 msgstr "Remise"
 
 # @ edd
-#: includes/checkout-template.php:409
+#: includes/checkout-template.php:417
 msgid "Apply Discount"
 msgstr "Appliquer la remise"
 
-#: includes/checkout-template.php:442
+#: includes/checkout-template.php:450
 msgid "Show Terms"
 msgstr "Afficher les conditions"
 
-#: includes/checkout-template.php:443
+#: includes/checkout-template.php:451
 msgid "Hide Terms"
 msgstr "Cacher les conditions"
 
-#: includes/checkout-template.php:446
+#: includes/checkout-template.php:454
 msgid "Agree to Terms?"
 msgstr "Accepter les conditions ?"
 
 # @ edd
-#: includes/checkout-template.php:470 includes/admin/downloads/metabox.php:630
+#: includes/checkout-template.php:478 includes/admin/downloads/metabox.php:630
 #: includes/admin/downloads/metabox.php:735
 #: includes/admin/payments/payments-history.php:318
 msgid "Next"
 msgstr "Suivant"
 
 # @ edd
-#: includes/checkout-template.php:489 includes/shortcodes.php:28
+#: includes/checkout-template.php:497 includes/shortcodes.php:28
 #: includes/template-functions.php:54 includes/admin/thickbox.php:61
 #: includes/admin/downloads/dashboard-columns.php:55
 msgid "Purchase"
@@ -1715,7 +1715,9 @@ msgstr "Revenus"
 # @ edd
 #: includes/widgets.php:361
 msgid "Sale"
-msgstr "Vente"
+msgid_plural "Sales"
+msgstr[0] "Vente"
+msgstr[1] "Ventes"
 
 #: includes/widgets.php:367
 msgid "Best Selling in Last 30 Days"
@@ -1738,7 +1740,7 @@ msgstr "Total des ventes"
 
 #: includes/widgets.php:387
 msgid "Lifetime Best Selling"
-msgstr "Meilleures ventes"
+msgstr "Meilleure vente de tous les temps"
 
 # @ edd
 #: includes/widgets.php:392
