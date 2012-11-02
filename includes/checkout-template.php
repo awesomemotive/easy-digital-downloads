@@ -22,10 +22,6 @@ function edd_checkout_form() {
 
 	global $edd_options, $user_ID, $post;
 	
-	if( is_user_logged_in() ) :
-		$user_data = get_userdata( $user_ID );
-	endif;
-	
 	ob_start(); ?>
 		
 		<?php if( edd_get_cart_contents() ) : ?>
@@ -57,27 +53,9 @@ function edd_checkout_form() {
 								<div id="edd_checkout_login_register"><?php do_action( 'edd_purchase_form_login_fields' ); ?></div>
 							<?php } ?>
 
-							<?php if( ( !isset( $_GET['login'] ) && is_user_logged_in() ) || !isset( $edd_options['show_register_form'] ) ) { ?>
-								<fieldset id="edd_checkout_user_info">
-									<legend><?php _e('Personal Info', 'edd'); ?></legend>
-									<?php do_action( 'edd_purchase_form_before_email' ); ?>
-									<p id="edd-email-wrap">
-										<input class="edd-input required" type="email" name="edd_email" placeholder="<?php _e('Email address', 'edd'); ?>" id="edd-email" value="<?php echo is_user_logged_in() ? $user_data->user_email : ''; ?>"/>
-										<label class="edd-label" for="edd-email"><?php _e('Email Address', 'edd'); ?></label>
-									</p>
-									<?php do_action( 'edd_purchase_form_after_email' ); ?>
-									<p id="edd-first-name-wrap">
-										<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e('First Name', 'edd'); ?>" id="edd-first" value="<?php echo is_user_logged_in() ? $user_data->first_name : ''; ?>"/>
-										<label class="edd-label" for="edd-first"><?php _e('First Name', 'edd'); ?></label>
-									</p>
-									<p id="edd-last-name-wrap">
-										<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e('Last name', 'edd'); ?>" value="<?php echo is_user_logged_in() ? $user_data->last_name : ''; ?>"/>
-										<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
-									</p>	
-									<?php do_action( 'edd_purchase_form_user_info' ); ?>
-								</fieldset>	
+							<?php if( ( !isset( $_GET['login'] ) && is_user_logged_in() ) || !isset( $edd_options['show_register_form'] ) ) {
 								
-								<?php do_action( 'edd_purchase_form_after_user_info' );
+								do_action( 'edd_purchase_form_after_user_info' );
 							}
 
 							do_action( 'edd_purchase_form_before_cc_form' ); 
@@ -131,15 +109,61 @@ function edd_checkout_form() {
 }
 
 
+
+/**
+ * Determines if a user can checkout or not
+ *
+ * @access      private
+ * @since       1.3.3
+ * @return      bool
+*/
+
 function edd_can_checkout() {
 
 	global $edd_options;
 
 	$can_checkout = true; // always true for now
 
-	return apply_filters( 'edd_can_checkout', $can_checkout );
+	return (bool) apply_filters( 'edd_can_checkout', $can_checkout );
 
 }
+
+
+
+/**
+ * Shows the User Info Fields
+ *
+ * @access      private
+ * @since       1.3.3
+ * @return      void
+*/
+
+function edd_user_info_fields() {
+	if( is_user_logged_in() ) :
+		$user_data = get_userdata( get_current_user_id() );
+	endif;
+	?>
+	<fieldset id="edd_checkout_user_info">
+		<legend><?php _e('Personal Info', 'edd'); ?></legend>
+		<?php do_action( 'edd_purchase_form_before_email' ); ?>
+		<p id="edd-email-wrap">
+			<input class="edd-input required" type="email" name="edd_email" placeholder="<?php _e('Email address', 'edd'); ?>" id="edd-email" value="<?php echo is_user_logged_in() ? $user_data->user_email : ''; ?>"/>
+			<label class="edd-label" for="edd-email"><?php _e('Email Address', 'edd'); ?></label>
+		</p>
+		<?php do_action( 'edd_purchase_form_after_email' ); ?>
+		<p id="edd-first-name-wrap">
+			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e('First Name', 'edd'); ?>" id="edd-first" value="<?php echo is_user_logged_in() ? $user_data->first_name : ''; ?>"/>
+			<label class="edd-label" for="edd-first"><?php _e('First Name', 'edd'); ?></label>
+		</p>
+		<p id="edd-last-name-wrap">
+			<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e('Last name', 'edd'); ?>" value="<?php echo is_user_logged_in() ? $user_data->last_name : ''; ?>"/>
+			<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
+		</p>	
+		<?php do_action( 'edd_purchase_form_user_info' ); ?>
+	</fieldset>	
+	<?php
+}
+add_action( 'edd_purchase_form_after_user_info', 'edd_user_info_fields' );
 
 
 /**
