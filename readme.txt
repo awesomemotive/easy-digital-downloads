@@ -1,12 +1,12 @@
 === Easy Digital Downloads ===
 Author URI: http://pippinsplugins.com
 Plugin URI: http://easydigitaldownloads.com
-Contributors: mordauk, sksmatt
+Contributors: mordauk, sksmatt, sunnyratilal, SpencerFinnell
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
-Tested up to: 3.4.1
-Stable Tag: 1.2.1.1
+Tested up to: 3.5
+Stable Tag: 1.3.2
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -62,6 +62,8 @@ Easy Digital Downloads as been translated into the following languages:
 6. Dutch
 7. European Portuguese
 8. Turkish
+9. Arabic
+10. Polish
 
 Would you like to help translate the plugin into more langauges? [Contact Pippin](http://easydigitaldownloads.com/contact-developer/).
 
@@ -87,6 +89,10 @@ There are three ways you can show the downloads shopping cart:
 
 `echo edd_shopping_cart();`
 
+= My Payments Marked as Pending = 
+
+There are several reasons this happens. Please follow the suggestions [here](https://easydigitaldownloads.com/documentation/faqs/).
+
 = Getting a 404 error? =
 
 To get rid of the 404 error when viewing a download, you need to resave your permalink structure. Go to Settings > Permalinks and click "Save Changes".
@@ -110,27 +116,120 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * [Stripe](http://easydigitaldownloads.com/extension/stripe-payment-gateway/)
 * [Recurly](http://easydigitaldownloads.com/extension/recurly-com-checkout/)
 * [Authorize.net](http://easydigitaldownloads.com/extension/authorize-net-gateway/)
+* [Google Wallet](https://easydigitaldownloads.com/extension/google-checkout/)
 * [Moneybookers / Skrill](http://easydigitaldownloads.com/extension/moneybookers-skrill-payment-gateway/)
 * [2Checkout](http://easydigitaldownloads.com/extension/2checkout-gateway/)
 * [PayPal Pro / Express](http://easydigitaldownloads.com/extension/paypal-pro-express/)
-* [Mijireh Checkout](http://easydigitaldownloads.com/extension/mijireh-checkout/)
-* [MercadoPago](http://easydigitaldownloads.com/extension/mercadopago/)
-* More coming soon
+* [GoCardless](https://easydigitaldownloads.com/extension/gocardless-payment-gateway/)
+* [Amazon FPS](https://easydigitaldownloads.com/extension/amazon-fps-payment-gateway/)
+* [Payza](https://easydigitaldownloads.com/extension/payza-payment-gateway/)
 
 == Screenshots ==
 
-1. Screenshot 1
-2. Screenshot 2
-3. Screenshot 3
-4. Screenshot 4
-5. Screenshot 5
-6. Screenshot 6
-7. Screenshot 7
-8. Screenshot 8
-9. Screenshot 9
+1. Download products overview
+2. Download configuration
+3. Download configuration details
+4. Download configuration with variable prices
+5. Payment history
+6. Discount codes
+7. Earnings and sales reports
+8. Add to cart / purchase button
+9. Checkout screen
 
 
 == Changelog ==
+
+= 1.3.2 =
+
+* Fixed a problem with the Apply Discount link when not logged-in
+* Added Total Earnings For Period Shown to Reports page
+* Improved efficiency of downloads list table
+* Fixed a formatting issue with prices in the email template preview
+* Added option to export file download history
+* Improved the checkout template to be more modular
+* Added new edd_get_purchase_id_by_key() function, props Yoast
+* Added Recent Purchases to the Dashboard widget
+* Fixed a problem with amount formatting in the purchase receipts
+* Added ability to filter payments by username
+* Fixed a problem with the file download limit feature
+* Updated post updated messages with "View Download" link
+* With a problem with the [download_discounts] short code
+* Added new edd_price_field action to the download meta box
+* Fixed a problem with saving prices when they contain a thousands separator
+* Added Lifetime Best Selling into the Dashboard Sales widget
+* Moved all template files and CSS to /templates folder instead of the includes/ folder
+* Added new edd_add_to_cart_item filter for modifying the item info when adding items to the cart
+* Added version numbers to all scripts and stylesheets to help prevent caching issues on updates
+* Updated the checkout form to load the payment forms automatically when selecting a payment method
+* Fixed some UTF8 decoding problems with the PDF reports
+* Integrated Opt-In PressTrends tracking
+* Fixed a problem with the download Tags slug and archive views for the taxonomy
+* Updated French language files
+
+= 1.3.1 =
+
+* Updated German translation files
+* Added new file download limit option to limit the number of times buyers can download files
+* Fixed some text strings that were missing localization
+* Added new graceful failure for missing callback functions for settings fields
+* Added dozens of new filters for function returns
+* Added a new function for tracking deprecated function calls
+* Added a check to ensure items in the cart are of post_type "download"
+* Fixed a bug with creating the blank index.php in wp-content/uploads/edd/
+* Fixed a bug with an HTML class name in edd_get_purchase_link()
+* Added upgrade routine for converting old file download and purchase logs to the new EDD_Logging class
+* Added new upgrade routine for handling database upgrades
+* Added a new EDD_Logging class for logging events
+* Removed unnecessary parameters for register_post_type()
+* Code formatting improvements
+* Added support for custom reporting views
+
+= 1.3 =
+
+* Completely rewrote the Reports page with new graphs and Downloads / Customers view
+* Introduced new CSS styles for purchase buttons
+* Fixed a problem with the add-ons page
+* Added new EDD_VERSION constant
+* Fixed a problem with thousands separator and price formatting
+* Replaced date() with date_i18n() for improved internationalization
+* Added new edd_before_download_content hook
+* Added new edd_purchase_history_files hook
+* Added new filter for edd_is_checkout
+* Introduced several new functions for calculating average sales / earnings for individual products
+* Introduced several new functions for counting number of purchases and amount spent for customers
+* Added a contextual help menu to the Discounts page
+* Added a contextual help menu to the edit Download page
+* Fixed a jQuery UI conflict
+* Added new jQuery UI styles that better match core WordPress styles
+* Improved data validation throughout the plugin
+* Fixed a problem with adding items to the cart via ajax when admin/front end http/s protocals are miss matched
+* Added a filter to remove product titles in purchase receipts
+* Added new Polish translation files
+* Fixed the upload field settings field callback JS
+* Significant cleanup of code formatting and adherence of WordPress coding standards
+* Fixed missing item description in PayPal checkout
+* Updated French translation files and default language files
+* Fixed a problem with the total earnings widget
+
+= 1.2.2 =
+
+* Fixed problem with sorting downloads by price and added compatibility for Post Types Order plugin
+* Improved file organization
+* Added new Arabic language files
+* Added a Sales Summary dashboard widget
+* Updated download configuration with brand new UI and simplified options
+* Removed button text / style from Download Configuration
+* Added new default button color/style options to Settings > Styles
+* Added new default add-to-cart button text option in Settings > Misc
+* Added a new query filter to block direct access to attachments of downloads
+* Fixed bug with undefined index error with the metabox nonce
+* Added a check to prevent users from deleting all price/download files in download configuration
+* Added WPML config file for more WPML compatibility
+* Dramatically improved admin javascript functions to be more extendable
+* Updated French language files
+* Added cache flush for user purchase history when payments are created
+* Fixed a bug with percentage based discount codes
+* Updated edd_email_template_tags with $payment_id
 
 = 1.2.1.1 =
 
@@ -623,6 +722,98 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Upgrade Notice ==
+
+= 1.3.2 =
+
+* Fixed a problem with the Apply Discount link when not logged-in
+* Added Total Earnings For Period Shown to Reports page
+* Improved efficiency of downloads list table
+* Fixed a formatting issue with prices in the email template preview
+* Added option to export file download history
+* Improved the checkout template to be more modular
+* Added new edd_get_purchase_id_by_key() function, props Yoast
+* Added Recent Purchases to the Dashboard widget
+* Fixed a problem with amount formatting in the purchase receipts
+* Added ability to filter payments by username
+* Fixed a problem with the file download limit feature
+* Updated post updated messages with "View Download" link
+* With a problem with the [download_discounts] short code
+* Added new edd_price_field action to the download meta box
+* Fixed a problem with saving prices when they contain a thousands separator
+* Added Lifetime Best Selling into the Dashboard Sales widget
+* Moved all template files and CSS to /templates folder instead of the includes/ folder
+* Added new edd_add_to_cart_item filter for modifying the item info when adding items to the cart
+* Added version numbers to all scripts and stylesheets to help prevent caching issues on updates
+* Updated the checkout form to load the payment forms automatically when selecting a payment method
+* Fixed some UTF8 decoding problems with the PDF reports
+* Integrated Opt-In PressTrends tracking
+* Fixed a problem with the download Tags slug and archive views for the taxonomy
+* Updated French language files
+
+= 1.3.1 =
+
+* Updated German translation files
+* Added new file download limit option to limit the number of times buyers can download files
+* Fixed some text strings that were missing localization
+* Added new graceful failure for missing callback functions for settings fields
+* Added dozens of new filters for function returns
+* Added a new function for tracking deprecated function calls
+* Added a check to ensure items in the cart are of post_type "download"
+* Fixed a bug with creating the blank index.php in wp-content/uploads/edd/
+* Fixed a bug with an HTML class name in edd_get_purchase_link()
+* Added upgrade routine for converting old file download and purchase logs to the new EDD_Logging class
+* Added new upgrade routine for handling database upgrades
+* Added a new EDD_Logging class for logging events
+* Removed unnecessary parameters for register_post_type()
+* Code formatting improvements
+* Added support for custom reporting views
+
+= 1.3 =
+
+* Completely rewrote the Reports page with new graphs and Downloads / Customers view
+* Introduced new CSS styles for purchase buttons
+* Fixed a problem with the add-ons page
+* Added new EDD_VERSION constant
+* Fixed a problem with thousands separator and price formatting
+* Replaced date() with date_i18n() for improved internationalization
+* Added new edd_before_download_content hook
+* Added new edd_purchase)history_files hook
+* Added new filter for edd_is_checkout
+* Introduced several new functions for calculating average sales / earnings for individual products
+* Introduced several new functions for counting number of purchases and amount spent for customers
+* Added a contextual help menu to the Discounts page
+* Added a contextual help menu to the edit Download page
+* Fixed a jQuery UI conflict
+* Added new jQuery UI styles that better match core WordPress styles
+* Improved data validation throughout the plugin
+* Fixed a problem with adding items to the cart via ajax when admin/front end http/s protocals are miss matched
+* Added a filter to remove product titles in purchase receipts
+* Added new Polish translation files
+* Fixed the upload field settings field callback JS
+* Significant cleanup of code formatting and adherence of WordPress coding standards
+* Fixed missing item description in PayPal checkout
+* Updated French translation files and default language files
+* Fixed a problem with the total earnings widget
+
+= 1.2.2 =
+
+* Fixed problem with sorting downloads by price and added compatibility for Post Types Order plugin
+* Improved file organization
+* Added new Arabic language files
+* Added a Sales Summary dashboard widget
+* Updated download configuration with brand new UI and simplified options
+* Removed button text / style from Download Configuration
+* Added new default button color/style options to Settings > Styles
+* Added new default add-to-cart button text option in Settings > Misc
+* Added a new query filter to block direct access to attachments of downloads
+* Fixed bug with undefined index error with the metabox nonce
+* Added a check to prevent users from deleting all price/download files in download configuration
+* Added WPML config file for more WPML compatibility
+* Dramatically improved admin javascript functions to be more extendable
+* Updated French language files
+* Added cache flush for user purchase history when payments are created
+* Fixed a bug with percentage based discount codes
+* Updated edd_email_template_tags with $payment_id
 
 = 1.2.1.1 =
 
