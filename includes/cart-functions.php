@@ -310,6 +310,26 @@ function edd_get_cart_amount( $add_taxes = true ) {
 }
 
 
+/**
+ * Get Total Cart Amount
+ *
+ * Gets the fully formatted total price amount in the cart.
+ * uses edd_get_cart_amount().
+ *
+ * @access      public
+ * @since       1.3.3
+ * @return      string - the cart amount
+*/
+
+function edd_cart_total( $echo = true ) {
+
+	$total = apply_filters( 'edd_cart_total', edd_currency_filter( edd_format_amount( edd_get_cart_amount() ) ) );
+
+	if( $echo )
+		echo $total;
+	return $total;
+}
+
 
 /**
  * Get Purchase Summary
