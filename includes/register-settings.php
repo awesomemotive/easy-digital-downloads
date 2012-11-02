@@ -538,6 +538,7 @@ function edd_register_settings() {
 	register_setting( 'edd_settings_gateways', 'edd_settings_gateways', 'edd_settings_sanitize' );
 	register_setting( 'edd_settings_emails', 'edd_settings_emails', 'edd_settings_sanitize' );
 	register_setting( 'edd_settings_styles', 'edd_settings_styles', 'edd_settings_sanitize' );
+	register_setting( 'edd_settings_taxes', 'edd_settings_taxes', 'edd_settings_sanitize' );
 	register_setting( 'edd_settings_misc', 'edd_settings_misc', 'edd_settings_sanitize' );
 }
 add_action('admin_init', 'edd_register_settings');
