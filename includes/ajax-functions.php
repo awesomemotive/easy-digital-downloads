@@ -209,5 +209,5 @@ function edd_get_ajax_url() {
 	} else if( preg_match( '/^https/', $site_url ) && ! preg_match( '/^https/', $admin_url ) ) {
 		$admin_url = preg_replace( '/^http/', 'https', $admin_url );
 	}
-	return $admin_url;
+	return apply_filters( 'edd_ajax_url', $admin_url );
 }
