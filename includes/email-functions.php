@@ -74,7 +74,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 		
 		$admin_message .= $download_list . "\n";
 		$admin_message .= __('Purchased by: ', 'edd') . " " . html_entity_decode( $name, ENT_COMPAT, 'UTF-8' ) . "\n";
-		$admin_message .= __('Amount: ', 'edd') . " " . html_entity_decode( edd_currency_filter( $payment_data['amount'] ), ENT_COMPAT, 'UTF-8' ) . "\n\n";
+		$admin_message .= __('Amount: ', 'edd') . " " . html_entity_decode( edd_currency_filter( edd_format_amount( $payment_data['amount'] ) ), ENT_COMPAT, 'UTF-8' ) . "\n\n";
 		$admin_message .= __('Payment Method: ', 'edd') . " " . $gateway . "\n\n";
 		$admin_message .= __('Thank you', 'edd');
 		$admin_message = apply_filters( 'edd_admin_purchase_notification', $admin_message, $payment_id, $payment_data );
