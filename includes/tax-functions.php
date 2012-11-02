@@ -4,7 +4,7 @@
  * Checks if taxes are enabled
  *
  * @access      public
- * @since       1.2.3
+ * @since       1.3.3
  * @return      bool
 */
 
@@ -19,7 +19,7 @@ function edd_use_taxes() {
  * Get taxation rate
  *
  * @access      public
- * @since       1.2.3
+ * @since       1.3.3
  * @return      float
 */
 
@@ -40,7 +40,7 @@ function edd_get_tax_rate() {
  * Calculate taxed amount
  *
  * @access      public
- * @since       1.2.3
+ * @since       1.3.3
  * @param 		$amount float The original amount to calculate a tax cost
  * @return      float
 */
