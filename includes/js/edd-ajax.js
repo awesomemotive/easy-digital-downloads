@@ -1,6 +1,9 @@
 var edd_scripts;
 jQuery(document).ready(function ($) {
 
+    // hide unneeded elements. These are things that are required in case JS breaks or isn't present
+    $('.edd-no-js').hide();
+
     // send Remove from Cart requests
     $('body').on('click.eddRemoveFromCart', '.edd-remove-from-cart', function (event) {
         var $this = $(this),
@@ -24,7 +27,7 @@ jQuery(document).ready(function ($) {
                 // check to see if the purchase form for this download is present on this page
                 if( $( '#edd_purchase_' + id ).length ) {
                     $( '#edd_purchase_' + id + ' .edd_go_to_checkout' ).hide();
-                    $( '#edd_purchase_' + id + ' .edd_add_to_cart_wrap' ).show();
+                    $( '#edd_purchase_' + id + ' .edd-add-to-cart' ).show();
                 }
                 var quantity = $('span.edd-cart-quantity').text();
                 quantity = parseInt(quantity, 10) - 1;
@@ -94,7 +97,7 @@ jQuery(document).ready(function ($) {
             $('.edd-cart-ajax', container).hide();
 			
 			// switch purchase to checkout
-			$('.edd_go_to_checkout, .edd_add_to_cart_wrap, .edd_submit_plain.edd-add-to-cart', container).toggle();
+			$('.edd_go_to_checkout, .edd-add-to-cart', container).toggle();
 				
 			// show the added message
             $('.edd-cart-added-alert', container).fadeIn();
@@ -174,13 +177,16 @@ jQuery(document).ready(function ($) {
         return false;
     });
 
-    // load the fields for the selected payment method
+    // load the fields for the selected payment method -- Not used as of 1.3.2 but still here just in case. See $('select#edd-gateway').change() below
     $('#edd_payment_mode').submit(function (e) {
         if ($('select#edd-gateway').length) {
             var payment_mode = $('option:selected', '#edd-gateway').val();
         } else {
             var payment_mode = $('#edd-gateway').val();
         }
+
+        if( payment_mode == '0' )
+            return false;
 
         var arg_separator = edd_scripts.permalinks == '1' ? '?' : '&';
 
@@ -189,8 +195,32 @@ jQuery(document).ready(function ($) {
             
         // show the ajax loader
         $('.edd-cart-ajax').show();
-        $('#edd_checkout_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
-        $('#edd_checkout_form_wrap').load(action + ' #edd_checkout_form_wrap');
+        $('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
+        $('#edd_payment_mode').hide();
+        $('#edd_purchase_form_wrap').load(action + ' #edd_purchase_form');
+        return false;
+    });
+
+    // load the fields for the selected payment method
+   $('select#edd-gateway').change( function (e) {
+        if ($('select#edd-gateway').length) {
+            var payment_mode = $('option:selected', '#edd-gateway').val();
+        } else {
+            var payment_mode = $('#edd-gateway').val();
+        }
+
+        if( payment_mode == '0' )
+            return false;
+
+        var arg_separator = edd_scripts.permalinks == '1' ? '?' : '&';
+
+        var form = $(this).closest( 'form' ),
+            action = form.attr("action") + arg_separator + 'payment-mode=' + payment_mode;
+            
+        // show the ajax loader
+        $('.edd-cart-ajax').show();
+        $('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
+        $('#edd_purchase_form_wrap').load(action + ' #edd_purchase_form');
         return false;
     });
 

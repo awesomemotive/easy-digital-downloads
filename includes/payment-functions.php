@@ -33,7 +33,7 @@ function edd_get_payments( $args = array() ) {
 		'order'    => 'DESC',
 		'user'     => null,
 		'status'   => 'any',
-		'meta_key' => 'null'
+		'meta_key' => null
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -178,6 +178,10 @@ function edd_update_payment_status($payment_id, $new_status = 'publish') {
 	}
 	
 	$payment = get_post($payment_id);
+
+	if( is_wp_error( $payment ) || !is_object( $payment ) )
+		return;
+
 	if($payment->post_status == 'publish') {		
 		//return;
 	}
@@ -323,7 +327,7 @@ add_action( 'init', 'edd_register_payment_status' );
  * @return      integer
 */
 
-function edd_get_earnings_by_date($day = null, $month_num, $year) {
+function edd_get_earnings_by_date( $day = null, $month_num, $year ) {
 	$args = array(
 		'post_type' => 'edd_payment', 
 		'posts_per_page' => -1, 
@@ -356,17 +360,19 @@ function edd_get_earnings_by_date($day = null, $month_num, $year) {
  * @return      int
 */
 
-function edd_get_sales_by_date( $month_num, $year ) {
-	$sales = get_posts(
-		array(
-			'post_type' => 'edd_payment', 
-			'posts_per_page' => -1, 
-			'year' => $year, 
-			'monthnum' => $month_num,
-			'meta_key' => '_edd_payment_mode',
-			'meta_value' => 'live'
-		)
+function edd_get_sales_by_date( $day = null, $month_num, $year ) {
+	$args = array(
+		'post_type' => 'edd_payment', 
+		'posts_per_page' => -1, 
+		'year' => $year, 
+		'monthnum' => $month_num, 
+		'meta_key' => '_edd_payment_mode',
+		'meta_value' => 'live'
 	);
+	if( ! empty( $day ) )
+		$args['day'] = $day;
+	
+	$sales = get_posts( $args );
 	$total = 0;
 	if( $sales ) {
 		$total = count( $sales );
@@ -418,6 +424,32 @@ function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
 
 
 /**
+ * Get Total Sales
+ *
+ * @access      public
+ * @author      Sunny Ratilal
+ * @since       1.2.2
+ * @return      int
+*/
+
+function edd_get_total_sales() {
+	$sales = get_posts(
+		array(
+			'post_type' => 'edd_payment', 
+			'posts_per_page' => -1,
+			'meta_key' => '_edd_payment_mode',
+			'meta_value' => 'live'
+		)
+	);
+	$total = 0;
+	if( $sales ) {
+		$total = count( $sales );
+	}
+	return $total;
+}
+
+
+/**
  * Get Total Earnings
  *
  * @access      public
@@ -431,14 +463,13 @@ function edd_get_total_earnings() {
 	$payments = get_transient( 'edd_total_earnings' );
 	if( false === $payments || '' === $payments ) {
 		$payments = edd_get_payments( array(
-			'offset' => 0, 
-			'number' => -1, 
-			'mode'   => 'live', 
-			'orderby' => 'ID', 
-			'order'   => 'DESC', 
-			'user'    => null, 
-			'status'  => 'publish',
-			'meta_key'=> '_edd_payment_total'
+			'offset' 	=> 0, 
+			'number' 	=> -1, 
+			'mode'   	=> 'live', 
+			'orderby' 	=> 'ID', 
+			'order'   	=> 'DESC', 
+			'user'    	=> null, 
+			'status'  	=> 'publish',
 		) );
 		set_transient( 'edd_total_earnings', $payments, 3600 );
 	}
@@ -546,5 +577,29 @@ function edd_get_payment_amount( $payment_id ) {
 
 	return apply_filters( 'edd_payment_amount', $amount );
 }
-add_filter( 'edd_payment_amount', 'edd_format_amount', 10 );
-add_filter( 'edd_payment_amount', 'edd_currency_filter', 20 );
+
+
+/**
+ * Retrieve the purchase ID based on the purchase key
+ * 
+ * @access		public
+ * @since 		1.3.2
+ *
+ * @param 		string $key the purchase key to search for
+ * @return 		int $order_id
+ */
+function edd_get_purchase_id_by_key( $key ) {
+	$meta_query = array(
+		array(
+			'key' => '_edd_payment_purchase_key',
+			'value' => $key
+		),
+	);
+
+	$payments = get_posts( array( 'meta_query' => $meta_query, 'post_type' => 'edd_payment', 'numberposts' => 1, 'fields' => 'ids' ) );
+	
+	if ( count( $payments ) == 1 )
+		return $payments[0];
+		
+	return 0;
+}

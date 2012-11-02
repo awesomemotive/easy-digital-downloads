@@ -6,7 +6,7 @@
  * @subpackage  Misc Functions
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 
@@ -14,16 +14,18 @@
  * Is Test Mode
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      boolean
 */
 
 function edd_is_test_mode() {
 	global $edd_options;
-	if( !isset($edd_options['test_mode']) || is_null($edd_options['test_mode']) ) {
-		return false;
-	}
-	return true;
+	if( !isset( $edd_options['test_mode'] ) || is_null( $edd_options['test_mode'] ) )
+		$ret = false;
+	else
+		$ret = true;
+
+	return (bool) apply_filters( 'edd_is_test_mode', $ret );
 }
 
 
@@ -31,15 +33,18 @@ function edd_is_test_mode() {
  * No Guest Checkout
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      boolean
 */
 
 function edd_no_guest_checkout() {
 	global $edd_options;
-	if(isset($edd_options['logged_in_only']))
-		return true;
-	return false;
+	if( isset( $edd_options['logged_in_only'] ) )
+		$ret = true;
+	else
+		$ret = false;
+
+	return (bool) apply_filters( 'edd_no_guest_checkout', $ret );
 }
 
 
@@ -47,15 +52,18 @@ function edd_no_guest_checkout() {
  * Logged in Only
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      boolean
 */
 
 function edd_logged_in_only() {
 	global $edd_options;
-	if(isset($edd_options['logged_in_only']))
-		return true;
-	return false;
+	if( isset( $edd_options['logged_in_only'] ) )
+		$ret = true;
+	else
+		$ret = false;
+
+	return (bool) apply_filters( 'edd_logged_in_only', $ret );
 }
 
 
@@ -69,36 +77,35 @@ function edd_logged_in_only() {
 
 function edd_no_redownload() {
 	global $edd_options;
-	if(isset($edd_options['disable_redownload']))
+	if( isset( $edd_options['disable_redownload'] ) )
 		return true;
-	return false;	
+	return (bool) apply_filters( 'edd_no_redownload', false );
 }
 
 /**
- * Get Menu Access Level 
+ * Get Menu Access Level
  *
- * Returns the access level required to access 
+ * Returns the access level required to access
  * the downloads menu. Currently not changeable,
  * but here for a future update.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
 function edd_get_menu_access_level() {
-	global $edd_options;
-	return 'manage_options';
+	return apply_filters( 'edd_menu_access_level', 'manage_options' );
 }
 
 
 /**
- * Is Odd 
+ * Is Odd
  *
  * Checks wether an integer is odd.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      boolean
 */
 
@@ -113,21 +120,20 @@ function edd_is_odd( $int ) {
  * Returns the file extension of a filename.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
-function edd_get_file_extension($str)
-{
-   $parts = explode('.', $str);
-   return end($parts);
+function edd_get_file_extension( $str ) {
+   $parts = explode( '.', $str );
+   return end( $parts );
 }
 
 
-function edd_string_is_image_url($str) {
-	$ext = edd_get_file_extension($str);
+function edd_string_is_image_url( $str ) {
+	$ext = edd_get_file_extension( $str );
 
-	switch( strtolower($ext) )  {
+	switch( strtolower( $ext ) ) {
 		case 'jpg';
 			$return = true;
 			break;
@@ -142,7 +148,7 @@ function edd_string_is_image_url($str) {
 		break;
 	}
 
-	return $return;
+	return (bool) apply_filters( 'edd_string_is_image', $return, $str );
 }
 
 
@@ -157,26 +163,25 @@ function edd_string_is_image_url($str) {
  * @return      string
 */
 
-function edd_get_ip()
-{
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-    	//check ip from share internet
-      $ip = $_SERVER['HTTP_CLIENT_IP'];
-    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-    	//to check ip is pass from proxy
-      $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else {
-      $ip = $_SERVER['REMOTE_ADDR'];
-    }
-    return $ip;
+function edd_get_ip() {
+	if( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+		//check ip from share internet
+	  $ip = $_SERVER['HTTP_CLIENT_IP'];
+	} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+		//to check ip is pass from proxy
+	  $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+	} else {
+	  $ip = $_SERVER['REMOTE_ADDR'];
+	}
+	return apply_filters( 'edd_get_ip', $ip );
 }
 
 
 /**
- * Get Currencies 
+ * Get Currencies
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      array
 */
 
@@ -209,15 +214,16 @@ function edd_get_currencies() {
 		'TRY' => __('Turkish Lira', 'edd'),
 		'RIAL' => __('Iranian Rial', 'edd')
 	);
-	return apply_filters('edd_currencies', $currencies);
+
+	return apply_filters( 'edd_currencies', $currencies );
 }
 
 
 /**
- * Get Country List 
+ * Get Country List
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      array
 */
 
@@ -467,12 +473,13 @@ function edd_get_country_list() {
 		'ZM' => 'Zambia',
 		'ZW' => 'Zimbabwe'
 	);
-	return $countries;
+
+	return apply_filters( 'edd_countries', $countries );
 }
 
 
 /**
- * Get States List 
+ * Get States List
  *
  * @access      public
  * @since       1.2
@@ -548,12 +555,13 @@ function edd_get_states_list() {
 		'AE' => 'Armed Forces - Europe, Canada, Middle East, Africa',
 		'AP' => 'Armed Forces - Pacific'
 	);
-	return $states;
+
+	return apply_filters( 'edd_us_states', $states );
 }
 
 
 /**
- * Get Provinces List 
+ * Get Provinces List
  *
  * @access      public
  * @since       1.2
@@ -561,7 +569,7 @@ function edd_get_states_list() {
 */
 
 function edd_get_provinces_list() {
-	$provinces =array(
+	$provinces = array(
 		'AB' => 'Alberta',
 		'BC' => 'British Columbia',
 		'MB' => 'Manitoba',
@@ -576,24 +584,26 @@ function edd_get_provinces_list() {
 		'SK' => 'Saskatchewan',
 		'YT' => 'Yukon'
 	);
-	return $provinces;
+
+	return apply_filters( 'edd_canada_provinces', $provinces );
 }
 
 
 /**
- * Month Num To Name 
+ * Month Num To Name
  *
- * Takes a month number and returns the 
+ * Takes a month number and returns the
  * name three letter name of it.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
-function edd_month_num_to_name($n) {
-    $timestamp = mktime(0, 0, 0, $n, 1, 2005);
-    return date("M", $timestamp);
+function edd_month_num_to_name( $n ) {
+	$timestamp = mktime( 0, 0, 0, $n, 1, 2005 );
+
+	return date( "M", $timestamp );
 }
 
 
@@ -606,23 +616,145 @@ function edd_month_num_to_name($n) {
 */
 
 function edd_get_php_arg_separator_output() {
-    return ini_get('arg_separator.output');
+	return ini_get('arg_separator.output');
 }
 
+
+/**
+ * Get the current page URL
+ *
+ * @access      public
+ * @since       1.3
+ * @return      string
+*/
 
 function edd_get_current_page_url() {
+	global $post;
 
-	global $post;	
-			
-	if (is_singular()) :
-		$pageURL =  get_permalink($post->ID);
+	if( is_singular() ):
+		$pageURL = get_permalink( $post->ID );
 	else :
 		$pageURL = 'http';
-		if ( isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") $pageURL .= "s";
+		if( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) $pageURL .= "s";
 		$pageURL .= "://";
-		if ($_SERVER["SERVER_PORT"] != "80") $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+		if( $_SERVER["SERVER_PORT"] != "80" ) $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
 		else $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-	endif;	
+	endif;
 
-	return $pageURL;
+	return apply_filters( 'edd_get_current_page_url', $pageURL );
 }
+
+
+
+/**
+ * Marks a function as deprecated and informs when it has been used.
+ *
+ * There is a hook edd_deprecated_function_run that will be called that can be used
+ * to get the backtrace up to what file and function called the deprecated
+ * function.
+ *
+ * The current behavior is to trigger a user error if WP_DEBUG is true.
+ *
+ * This function is to be used in every function that is deprecated.
+ *
+ * @package Easy Digital Downloads
+ * @subpackage  Misc Functions
+ * @since 1.3.1
+ * @access private
+ *
+ * @uses do_action() Calls 'edd_deprecated_function_run' and passes the function name, what to use instead,
+ *   and the version the function was deprecated in.
+ * @uses apply_filters() Calls 'edd_deprecated_function_trigger_error' and expects boolean value of true to do
+ *   trigger or false to not trigger error.
+ *
+ * @param string $function The function that was called
+ * @param string $version The version of WordPress that deprecated the function
+ * @param string $replacement Optional. The function that should have been called
+ */
+function _edd_deprecated_function( $function, $version, $replacement = null ) {
+
+	do_action( 'edd_deprecated_function_run', $function, $replacement, $version );
+
+	// Allow plugin to filter the output error trigger
+	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', true ) ) {
+		if ( ! is_null($replacement) )
+			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
+		else
+			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'edd'), $function, $version ) );
+	}
+}
+
+
+
+
+/**
+ * PressTrends plugin API
+ *
+ * @access      public
+ * @since       1.3.2
+ * @return      void
+*/
+
+function edd_presstrends() {
+
+	global $edd_options;
+
+	if( ! isset( $edd_options['presstrends'] ) )
+		return;
+
+	// PressTrends Account API Key
+	$api_key = '[REDACTED]';
+	$auth    = '[REDACTED]';
+
+	// Start of Metrics
+	global $wpdb;
+	$data = get_transient( 'presstrends_cache_data' );
+	if ( !$data || $data == '' ) {
+		$api_base = 'http://api.presstrends.io/index.php/api/pluginsites/update/auth/';
+		$url      = $api_base . $auth . '/api/' . $api_key . '/';
+
+		$count_posts    = wp_count_posts();
+		$count_pages    = wp_count_posts( 'page' );
+		$comments_count = wp_count_comments();
+
+		// wp_get_theme was introduced in 3.4, for compatibility with older versions, let's do a workaround for now.
+		if ( function_exists( 'wp_get_theme' ) ) {
+			$theme_data = wp_get_theme();
+			$theme_name = urlencode( $theme_data->Name );
+		} else {
+			$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
+			$theme_name = $theme_data['Name'];
+		}
+
+		$plugin_name = '&';
+		foreach ( get_plugins() as $plugin_info ) {
+			$plugin_name .= $plugin_info['Name'] . '&';
+		}
+		// CHANGE __FILE__ PATH IF LOCATED OUTSIDE MAIN PLUGIN FILE
+		$plugin_data         = get_plugin_data( __FILE__ );
+		$posts_with_comments = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_type='post' AND comment_count > 0" );
+		$data                = array(
+			'url'             => stripslashes( str_replace( array( 'http://', '/', ':' ), '', site_url() ) ),
+			'posts'           => $count_posts->publish,
+			'pages'           => $count_pages->publish,
+			'comments'        => $comments_count->total_comments,
+			'approved'        => $comments_count->approved,
+			'spam'            => $comments_count->spam,
+			'pingbacks'       => $wpdb->get_var( "SELECT COUNT(comment_ID) FROM $wpdb->comments WHERE comment_type = 'pingback'" ),
+			'post_conversion' => ( $count_posts->publish > 0 && $posts_with_comments > 0 ) ? number_format( ( $posts_with_comments / $count_posts->publish ) * 100, 0, '.', '' ) : 0,
+			'theme_version'   => $plugin_data['Version'],
+			'theme_name'      => $theme_name,
+			'site_name'       => str_replace( ' ', '', get_bloginfo( 'name' ) ),
+			'plugins'         => count( get_option( 'active_plugins' ) ),
+			'plugin'          => urlencode( $plugin_name ),
+			'wpversion'       => get_bloginfo( 'version' ),
+		);
+
+		foreach ( $data as $k => $v ) {
+			$url .= $k . '/' . $v . '/';
+		}
+		wp_remote_get( $url );
+		set_transient( 'presstrends_cache_data', $data, 60 * 60 * 24 );
+	}
+}
+add_action( 'admin_init', 'edd_presstrends' );

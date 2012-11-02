@@ -20,23 +20,29 @@
  * @return      string
 */
 
-function edd_download_shortcode( $atts, $content = null ) {	
+function edd_download_shortcode( $atts, $content = null ) {
+	global $post, $edd_options;
+
 	extract( shortcode_atts( array(
-			'id' => '',
-			'text' => __('Purchase', 'edd'),
-			'style' => 'button',
-			'color' => 'blue',
-			'class' => ''
-		), $atts )
+			'id' 	=> $post->ID,
+			'text'	=> isset( $edd_options[ 'add_to_cart_text' ] ) && $edd_options[ 'add_to_cart_text' ] != '' ? $edd_options[ 'add_to_cart_text' ] 	: __( 'Purchase', 'edd' ),
+			'style' => isset( $edd_options[ 'button_style' ] ) 	 	? $edd_options[ 'button_style' ] 		: 'button',
+			'color' => isset( $edd_options[ 'checkout_color' ] ) 	? $edd_options[ 'checkout_color' ] 		: 'blue',
+			'class' => 'edd-submit'
+		),
+		$atts )
 	);
+
+	// edd_get_purchase_link() expects the ID to be download_id since v1.3
+	$atts['download_id'] = $atts['id'];
+
+	$download = edd_get_download( $atts['download_id'] );
 	
-	$download = edd_get_download($id);
-	
-	if($download) {
-		return edd_get_purchase_link($download->ID, $text, $style, $color, $class);
+	if( $download ) {
+		return edd_get_purchase_link( $atts );
 	}
 }
-add_shortcode('purchase_link', 'edd_download_shortcode');
+add_shortcode( 'purchase_link', 'edd_download_shortcode' );
 
 
 /**
@@ -57,7 +63,7 @@ function edd_download_history() {
 		return ob_get_clean();
 	}
 }
-add_shortcode('download_history', 'edd_download_history');
+add_shortcode( 'download_history', 'edd_download_history' );
 
 /**
  * Purchase History Shortcode
@@ -70,13 +76,13 @@ add_shortcode('download_history', 'edd_download_history');
 */
 
 function edd_purchase_history() {	
-	if(is_user_logged_in()) {
+	if( is_user_logged_in() ) {
 		ob_start();
 		edd_get_template_part( 'history', 'purchases' );
 		return ob_get_clean();
 	}
 }
-add_shortcode('purchase_history', 'edd_purchase_history');
+add_shortcode( 'purchase_history', 'edd_purchase_history' );
 
 
 /**
@@ -89,10 +95,10 @@ add_shortcode('purchase_history', 'edd_purchase_history');
  * @return      string
 */
 
-function edd_checkout_form_shortcode($atts, $content = null) {
+function edd_checkout_form_shortcode( $atts, $content = null ) {
 	return edd_checkout_form();
 }
-add_shortcode('download_checkout', 'edd_checkout_form_shortcode');
+add_shortcode( 'download_checkout', 'edd_checkout_form_shortcode' );
 
 
 /**
@@ -105,10 +111,10 @@ add_shortcode('download_checkout', 'edd_checkout_form_shortcode');
  * @return      string
 */
 
-function edd_cart_shortcode($atts, $content = null) {
+function edd_cart_shortcode( $atts, $content = null ) {
 	return edd_shopping_cart();
 }
-add_shortcode('download_cart', 'edd_cart_shortcode');
+add_shortcode( 'download_cart', 'edd_cart_shortcode' );
 
 
 /**
@@ -121,15 +127,15 @@ add_shortcode('download_cart', 'edd_cart_shortcode');
  * @return      string
 */
 
-function edd_login_form_shortcode($atts, $content = null) {
+function edd_login_form_shortcode( $atts, $content = null ) {
 	
 	extract( shortcode_atts( array(
 			'redirect' => '',
 		), $atts )
 	);
-	return edd_login_form($redirect);
+	return edd_login_form( $redirect );
 }
-add_shortcode('edd_login', 'edd_login_form_shortcode');
+add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
 
 
 /**
@@ -145,7 +151,7 @@ add_shortcode('edd_login', 'edd_login_form_shortcode');
 function edd_discounts_shortcode( $atts, $content = null ) {
 	
 	$discounts = edd_get_discounts();
-		
+
 	if( ! $discounts && edd_has_active_discounts() )
 		return;
 	
@@ -172,7 +178,7 @@ function edd_discounts_shortcode( $atts, $content = null ) {
 	return $discounts_list;
 	
 }
-add_shortcode('download_discounts', 'edd_discounts_shortcode');
+add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
 
 
 
@@ -187,7 +193,7 @@ add_shortcode('download_discounts', 'edd_discounts_shortcode');
  * @return      string
 */
 
-function edd_purchase_collection_shortcode($atts, $content = null) {
+function edd_purchase_collection_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'taxonomy' => '',
 			'terms' => '',
@@ -197,9 +203,9 @@ function edd_purchase_collection_shortcode($atts, $content = null) {
 	
 	$link = is_null( $content ) ? $link : $content;
 
-	return '<a href="' . add_query_arg(array('edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms)) . '">' . $link . '</a>';
+	return '<a href="' . add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms ) ) . '">' . $link . '</a>';
 }
-add_shortcode('purchase_collection', 'edd_purchase_collection_shortcode');
+add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
 
 
 /**
@@ -234,7 +240,7 @@ function edd_downloads_query($atts, $content = null) {
 
 	$query = array(
 		'post_type' => 'download',
-		'posts_per_page' => absint($number),
+		'posts_per_page' => absint( $number ),
 		'orderby' => $orderby,
 		'order' => $order
 	);
@@ -288,7 +294,7 @@ function edd_downloads_query($atts, $content = null) {
 	endswitch;
 
 	// allow the query to be manipulated by other plugins
-	$query = apply_filters('edd_downloads_query', $query);
+	$query = apply_filters( 'edd_downloads_query', $query );
 	
 	$downloads = new WP_Query( $query );
 	if ( $downloads->have_posts() ) :
@@ -305,18 +311,17 @@ function edd_downloads_query($atts, $content = null) {
 						if( 'false' != $thumbnails ) :
 							edd_get_template_part( 'shortcode', 'content-image' );
 						endif;
-						
+
 						edd_get_template_part( 'shortcode', 'content-title' );
-						
+
 						if($excerpt == 'yes' && $full_content != 'yes')
 							edd_get_template_part( 'shortcode', 'content-excerpt' );
 						else if($full_content == 'yes')
 							edd_get_template_part( 'shortcode', 'content-full' );
-						
-						
+
 						if($price == 'yes')
 							edd_get_template_part( 'shortcode', 'content-price' );
-						
+
 						if($buy_button == 'yes')
 							edd_get_template_part( 'shortcode', 'content-cart-button' );
 
@@ -325,7 +330,7 @@ function edd_downloads_query($atts, $content = null) {
 						?>
 					</div>
 				</div>
-				<?php if($i % $columns == 0) { ?><div style="clear:both;"></div><?php } ?>
+				<?php if( $i % $columns == 0 ) { ?><div style="clear:both;"></div><?php } ?>
 			<?php $i++; endwhile; ?>
 			<?php wp_reset_postdata(); ?>
 			<div style="clear:both;"></div>
@@ -337,7 +342,7 @@ function edd_downloads_query($atts, $content = null) {
 	endif;
 	return $display;
 }
-add_shortcode('downloads', 'edd_downloads_query');
+add_shortcode( 'downloads', 'edd_downloads_query' );
 
 
 /**
@@ -350,7 +355,7 @@ add_shortcode('downloads', 'edd_downloads_query');
  * @return      string
 */
 
-function edd_download_price_shortcode($atts, $content = null) {
+function edd_download_price_shortcode( $atts, $content = null ) {
 	
 	extract( shortcode_atts( array(
 			'id' => NULL,
@@ -364,4 +369,4 @@ function edd_download_price_shortcode($atts, $content = null) {
 	return edd_price( $id, false );
 
 }
-add_shortcode('edd_price', 'edd_download_price_shortcode');
+add_shortcode( 'edd_price', 'edd_download_price_shortcode' );
