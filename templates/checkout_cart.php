@@ -45,7 +45,7 @@
 	<tfoot>
 		<tr class="edd_cart_footer_row">
 			<?php do_action( 'edd_checkout_table_footer_first' ); ?>
-			<th colspan="3" class="edd_cart_total"><?php _e( 'Total', 'edd' ); ?>: <span class="edd_cart_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_amount() ) ) ); ?></span></th>
+			<th colspan="3" class="edd_cart_total"><?php _e( 'Total', 'edd' ); ?>: <span class="edd_cart_amount"><?php edd_cart_total(); ?></span></th>
 			<?php do_action( 'edd_checkout_table_footer_last' ); ?>
 		</tr>
 	</tfoot>
