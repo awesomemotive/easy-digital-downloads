@@ -44,7 +44,7 @@
 	</tbody>
 	<tfoot>
 		<?php if( edd_use_taxes() ) : ?>
-		<tr class="edd_cart_footer_row edd_cart_tax_row">
+		<tr class="edd_cart_footer_row edd_cart_tax_row"<?php if( edd_local_taxes_only() ) echo ' style="display:none;"'; ?>>
 			<?php do_action( 'edd_checkout_table_tax_first' ); ?>
 			<th colspan="3" class="edd_cart_tax">
 				<?php _e( 'Tax', 'edd' ); ?>:&nbsp;<span class="edd_cart_tax_amount"><?php echo esc_html( edd_cart_tax() ); ?></span>

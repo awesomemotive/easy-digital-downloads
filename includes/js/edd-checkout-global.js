@@ -14,5 +14,13 @@ jQuery(document).ready(function($) {
             $('#card_state_us').css('display', 'none');
             $('#card_state_ca').css('display', 'none');
         }
-    }); 
+    });
+
+    $('body').on('click', '#edd_tax_opt_in', function() {
+        if( $(this).attr('checked') )
+            $('.edd_cart_tax_row').show();
+        else
+            $('.edd_cart_tax_row').hide();
+    });
+
 });
