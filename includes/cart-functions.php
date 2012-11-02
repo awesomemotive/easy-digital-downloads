@@ -257,7 +257,7 @@ function edd_get_price_name( $item_id, $options = array() ) {
  *
  * @access      public
  * @since       1.0
- * @return      string - the name of the price option
+ * @return     float
 */
 
 function edd_get_cart_amount() {
@@ -278,6 +278,26 @@ function edd_get_cart_amount() {
 	return 0;
 }
 
+
+/**
+ * Get Total Cart Amount
+ *
+ * Gets the fully formatted total price amount in the cart.
+ * uses edd_get_cart_amount().
+ *
+ * @access      public
+ * @since       1.3.3
+ * @return      string - the cart amount
+*/
+
+function edd_cart_total( $echo = true ) {
+
+	$total = apply_filters( 'edd_cart_total', edd_currency_filter( edd_format_amount( edd_get_cart_amount() ) ) );
+
+	if( $echo )
+		echo $total;
+	return $total;
+}
 
 
 /**
