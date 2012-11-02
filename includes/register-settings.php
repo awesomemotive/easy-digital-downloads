@@ -604,6 +604,21 @@ function edd_settings_styles_description_callback() {
 
 
 /**
+ * Settings Taxes Description Callback
+ *
+ * Renders the taxes section description.
+ *
+ * @access      private
+ * @since       1.3.3
+ * @return      void
+*/
+
+function edd_settings_taxes_description_callback() {
+	echo __('These settings will let you configure simple tax rules for purchases.', 'edd');
+}
+
+
+/**
  * Settings Misc Description Callback
  *
  * Renders the misc section description.
@@ -673,6 +688,31 @@ function edd_multicheck_callback($args) {
 		echo '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
 	endforeach;
 	echo '<p class="description">' . $args['desc'] . '</p>';
+}
+
+
+/**
+ * Radio Callback
+ *
+ * Renders radio boxes.
+ *
+ * @access      private
+ * @since       1.3.3
+ * @return      void
+*/
+
+function edd_radio_callback($args) { 
+ 
+	global $edd_options;
+
+	foreach($args['options'] as $key => $option) :
+		$checked = false;
+		if( isset( $edd_options[ $args['id'] ] ) && $edd_options[ $args['id'] ] == $key ) $checked = true;
+		echo '<input name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" type="radio" value="' . $key . '" ' . checked(true, $checked, false) . '/>&nbsp;';
+		echo '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
+	endforeach;
+	echo '<p class="description">' . $args['desc'] . '</p>';
+
 }
 
 
