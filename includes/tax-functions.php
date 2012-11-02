@@ -15,6 +15,13 @@ function edd_use_taxes() {
 }
 
 
+function edd_local_taxes_only() {
+	global $edd_options;
+
+	return isset( $edd_options['tax_condition'] ) && $edd_options['tax_condition'] == 'local';
+}
+
+
 /**
  * Get taxation rate
  *
