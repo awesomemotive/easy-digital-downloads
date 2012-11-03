@@ -109,6 +109,7 @@ if( is_admin() ) {
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/admin-notices.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php' );
+	include_once( EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/export-functions.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/thickbox.php' );
 	include_once( EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php' );
