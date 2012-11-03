@@ -491,7 +491,7 @@ function edd_get_discounted_amount( $code, $base_price ) {
 
 	} else { 
 	    // percentage discount
-		$discounted_price = $base_price - ( $base_price * ( $rate / 100 ) );
+		$discounted_price = number_format( $base_price - ( $base_price * ( $rate / 100 ) ), 2 );
 	}
 	return apply_filters( 'edd_discounted_amount', $discounted_price );
 }
