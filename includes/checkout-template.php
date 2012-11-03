@@ -40,11 +40,11 @@ function edd_checkout_form() {
 					do_action( 'edd_before_purchase_form' ); ?>
 
 					<form id="edd_purchase_form" action="<?php echo esc_url( edd_get_current_page_url() ); ?>" method="POST">					
-					
-						<?php do_action( 'edd_purchase_form_top' ); ?>
-					
+										
 						<?php 
 						
+						do_action( 'edd_purchase_form_top' );
+
 						if( edd_can_checkout() ) { ?>
 							
 							<?php if( isset( $edd_options['show_register_form'] ) && !is_user_logged_in() && !isset( $_GET['login'] ) ) { ?>
@@ -71,36 +71,18 @@ function edd_checkout_form() {
 
 							do_action( 'edd_purchase_form_after_cc_form' );
 
-							?>
+						} else {
+							// can't checkout
+							do_action( 'edd_purchase_form_no_access' );
+						}
 
-							<fieldset id="edd_purchase_submit">
-								<p>
-									<?php do_action( 'edd_purchase_form_before_submit' ); ?>
-									
-									<?php edd_checkout_hidden_fields(); ?>
-									
-									<?php echo edd_checkout_button_purchase(); ?>
-									
-									<?php do_action( 'edd_purchase_form_after_submit' ); ?>
-								</p>
-
-								<?php if( !edd_is_ajax_enabled() ) { ?>
-									<p class="edd-cancel"><a href="javascript:history.go(-1)"><?php _e('Go back', 'edd'); ?></a></p>
-								<?php } ?>
-
-							</fieldset>
-						<?php } else { ?>
-							<p><?php _e('You must be logged in to complete your purchase', 'edd'); ?></p>
-						<?php } ?>
-
-						<?php do_action( 'edd_purchase_form_bottom' ); ?>
+						do_action( 'edd_purchase_form_bottom' ); ?>
 
 					</form>
-					<?php do_action( 'edd_after_purchase_form' ); ?>
-			<?php } 
-			do_action( 'edd_checkout_form_bottom' );
-			?>
-		</div><!--end #edd_checkout_form_wrap-->
+					<?php do_action( 'edd_after_purchase_form' );
+				} 
+				do_action( 'edd_checkout_form_bottom' ); ?>
+			</div><!--end #edd_checkout_form_wrap-->
 		<?php
 		else:
 			do_action( 'edd_empty_cart' );
@@ -482,6 +464,36 @@ function edd_terms_agreement() {
 	}
 }
 add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement' );
+
+
+/**
+ * The checkout submit section
+ *
+ * @access      public
+ * @since       1.3.3
+ * @return      void
+ */
+function edd_checkout_submit() {
+?>
+	<fieldset id="edd_purchase_submit">
+		<p>
+			<?php do_action( 'edd_purchase_form_before_submit' ); ?>
+			
+			<?php edd_checkout_hidden_fields(); ?>
+			
+			<?php echo edd_checkout_button_purchase(); ?>
+			
+			<?php do_action( 'edd_purchase_form_after_submit' ); ?>
+		</p>
+
+		<?php if( ! edd_is_ajax_enabled() ) { ?>
+			<p class="edd-cancel"><a href="javascript:history.go(-1)"><?php _e( 'Go back', 'edd' ); ?></a></p>
+		<?php } ?>
+
+	</fieldset>
+<?php	
+}
+add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_submit', 100 );
 
 
 /**
