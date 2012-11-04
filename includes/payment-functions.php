@@ -573,7 +573,7 @@ function edd_get_payment_gateway( $payment_id ) {
  */
 function edd_get_payment_amount( $payment_id ) {
 	$payment_meta = edd_get_payment_meta( $payment_id );
-	$amount = $payment_meta['amount'];
+	$amount = edd_currency_filter( edd_format_amount( $payment_meta['amount'] ) );
 
 	return apply_filters( 'edd_payment_amount', $amount );
 }
