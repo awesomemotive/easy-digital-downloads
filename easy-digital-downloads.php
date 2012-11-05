@@ -24,7 +24,7 @@ along with Easy Digital Downloads. If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* PHP Hack to Get Plugin Headers in the .POT File */
-	$plugin_header_translate = array(
+	$edd_plugin_header_translate = array(
 		__( 'Easy Digital Downloads', 'edd' ),
     	__( 'Serve Digital Downloads Through WordPress', 'edd' ),
     	__( 'Pippin Williamson', 'edd' ),
