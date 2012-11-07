@@ -102,7 +102,7 @@ function edd_get_payments( $args = array() ) {
  * @return      void
 */
 
-function edd_insert_payment($payment_data = array()) {
+function edd_insert_payment( $payment_data = array() ) {
 
 	if(empty($payment_data))
 		return false;
@@ -124,23 +124,25 @@ function edd_insert_payment($payment_data = array()) {
 	$payment = wp_insert_post( array('post_title' => $payment_title, 'post_status' => $status, 'post_type' => 'edd_payment', 'post_date' => $payment_data['date']));
 	
 	if($payment) {
-		$payment_meta = array( 
-			'amount' => $payment_data['price'], 
-			'date' => $payment_data['date'], 
-			'email' => $payment_data['user_email'],
-			'key' => $payment_data['purchase_key'],
-			'currency' => $payment_data['currency'],
-			'downloads' => serialize($payment_data['downloads']),
-			'user_info' => serialize($payment_data['user_info']),
-			'cart_details' => serialize($payment_data['cart_details']),
-			'user_id' => $payment_data['user_info']['id']
+		$payment_meta = array(
+			'subtotal'		=> isset( $payment_data['subtotal'] ) ? $payment_data['subtotal'] : $payment_data['price'],
+			'tax'			=> isset( $payment_data['tax'] ) ? $payment_data['tax'] : 0,
+			'amount' 		=> $payment_data['price'], 
+			'date' 			=> $payment_data['date'], 
+			'email' 		=> $payment_data['user_email'],
+			'key' 			=> $payment_data['purchase_key'],
+			'currency' 		=> $payment_data['currency'],
+			'downloads' 	=> serialize($payment_data['downloads']),
+			'user_info' 	=> serialize($payment_data['user_info']),
+			'cart_details' 	=> serialize($payment_data['cart_details']),
+			'user_id' 		=> $payment_data['user_info']['id']
 		);
 		
 		$mode = edd_is_test_mode() ? 'test' : 'live';
 		$gateway = isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : ''; 
 
 		// record the payment details
-		update_post_meta( $payment, '_edd_payment_meta', 		apply_filters( 'edd_payment_meta', $payment_meta, $payment_data) );
+		update_post_meta( $payment, '_edd_payment_meta', 		apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
 		update_post_meta( $payment, '_edd_payment_user_id', 	$payment_data['user_info']['id']);
 		update_post_meta( $payment, '_edd_payment_user_email', 	$payment_data['user_email']);
 		update_post_meta( $payment, '_edd_payment_user_ip', 	edd_get_ip() );
@@ -577,6 +579,85 @@ function edd_get_payment_amount( $payment_id ) {
 
 	return apply_filters( 'edd_payment_amount', $amount );
 }
+
+/**
+ * Retrieves subtotal for payment
+ *
+ * This is the amount before taxes
+ *
+ * Returns a full formatted amount
+ *
+ * @access      public
+ * @since       1.3.3
+ * @return      string
+ */
+function edd_payment_subtotal( $payment_id = 0, $payment_meta = false ) {
+
+	$subtotal = edd_get_payment_subtotal( $payment_id, $payment_meta );
+
+	return edd_currency_filter( edd_format_amount( $subtotal ) );
+
+}
+
+
+	/**
+	 * Retrieves subtotal of payment
+	 *
+	 * This is the amount before taxes. If no subtotal is present, normal amount is returned
+	 *
+	 * Returns a non formatted amount
+	 *
+	 * @access      public
+	 * @since       1.3.3
+	 * @return      float
+	 */
+	function edd_get_payment_subtotal( $payment_id = 0, $payment_meta = false ) {
+		if( ! $payment_meta )
+			$payment_meta = edd_get_payment_meta( $payment_id );
+
+		$subtotal = isset( $payment_meta['subtotal'] ) ? $payment_meta['subtotal'] : $payment_meta['amount'];
+
+		return apply_filters( 'edd_get_payment_subtotal', $subtotal, $payment_id );
+
+	}
+
+
+/**
+ * Retrieves taxed amount on payment
+ *
+ * Returns a full formatted amount
+ *
+ * @access      public
+ * @since       1.3.3
+ * @return      string
+ */
+function edd_payment_tax( $payment_id = 0, $payment_meta = false ) {
+
+	$tax = edd_get_payment_tax( $payment_id, $payment_meta );
+
+	return edd_currency_filter( edd_format_amount( $tax ) );
+
+}
+
+
+	/**
+	 * Retrieves taxed amount on payment
+	 *
+	 * Returns a non formatted amount
+	 *
+	 * @access      public
+	 * @since       1.3.3
+	 * @return      float
+	 */
+	function edd_get_payment_tax( $payment_id = 0, $payment_meta = false ) {
+		if( ! $payment_meta )
+			$payment_meta = edd_get_payment_meta( $payment_id );
+
+		$tax = isset( $payment_meta['tax'] ) ? $payment_meta['tax'] : 0;
+
+		return apply_filters( 'edd_get_payment_tax', $tax, $payment_id );
+
+	}
 
 
 /**
