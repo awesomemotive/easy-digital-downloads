@@ -287,10 +287,11 @@ function edd_get_cart_subtotal() {
  * @access      public
  * @since       1.0
  * @param 		$add_taxes bool Whether to apply taxes (if enabled) 
+ * @param 		$local_override bool Force the local opt-in param - used for when not reading $_POST 
  * @return      float the total amount
 */
 
-function edd_get_cart_amount( $add_taxes = true ) {
+function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 
 	$amount = edd_get_cart_subtotal();
 
@@ -302,7 +303,7 @@ function edd_get_cart_amount( $add_taxes = true ) {
 
 	if( edd_use_taxes() && $add_taxes ) {
 
-		if( edd_local_taxes_only() && isset( $_POST['edd_tax_opt_in'] ) ) {
+		if( edd_local_taxes_only() && ( isset( $_POST['edd_tax_opt_in'] ) || $local_override ) ) {
 			
 			// add the tax amount for a local resident
 			$tax = edd_get_cart_tax();
