@@ -54,8 +54,6 @@ function edd_manual_payment( $purchase_data ) {
 	*/
 	
 	$payment = array( 
-		'subtotal' 		=> $purchase_data['subtotal'], 
-		'tax' 			=> $purchase_data['tax'], 
 		'price' 		=> $purchase_data['price'], 
 		'date' 			=> $purchase_data['date'], 
 		'user_email' 	=> $purchase_data['user_email'],
