@@ -55,11 +55,11 @@ function edd_process_purchase_form() {
 
 	// setup user information
 	$user_info = array(
-		'id' => $user['user_id'],
-		'email' => $user['user_email'],
-		'first_name' => $user['user_first'],
+		'id' 		=> $user['user_id'],
+		'email' 	=> $user['user_email'],
+		'first_name'=> $user['user_first'],
 		'last_name' => $user['user_last'], 
-		'discount' => $valid_data['discount']
+		'discount' 	=> $valid_data['discount']
 	);
 
 	// setup purchase information
