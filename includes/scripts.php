@@ -59,6 +59,10 @@ function edd_load_scripts() {
 		wp_localize_script( 'edd-validation', 'edd_scripts_validation', apply_filters( 'edd_scripts_validation',$required ) );
 	}
 	wp_enqueue_script( 'edd-checkout-global', EDD_PLUGIN_URL . 'includes/js/edd-checkout-global.js', array( 'jquery' ), EDD_VERSION );
+	wp_localize_script( 'edd-checkout-global', 'edd_global_vars', array(
+        'currency_sign'		=> edd_currency_filter(''),
+        'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before'
+    ));
 }
 add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
 
