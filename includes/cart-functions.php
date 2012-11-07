@@ -274,7 +274,7 @@ function edd_get_cart_subtotal() {
 		}
 
 	}
-	return number_format( $amount, 2 );
+	return apply_filters( 'edd_get_cart_subtotal', number_format( $amount, 2 ) );
 }
 
 
@@ -294,7 +294,6 @@ function edd_get_cart_subtotal() {
 function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 
 	$amount = edd_get_cart_subtotal();
-
 	
 	if( isset( $_POST['edd-discount'] ) && $_POST['edd-discount'] != '' ) {
 		// discount is validated before this function runs, so no need to check for it
@@ -319,7 +318,7 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 
 	}
 
-	return number_format( $amount, 2 );
+	return apply_filters( 'edd_get_cart_amount', number_format( $amount, 2 ), $add_taxes, $local_override );
 }
 
 
