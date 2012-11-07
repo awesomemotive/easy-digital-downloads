@@ -1,4 +1,17 @@
 <?php
+/**
+ * Tax Functions
+ *
+ * These are functions used for checking if taxes are enabled, calculating taxes, etc.
+ * Functions for retrieving tax amounts and such for individual payments are in includes/payment-functions.php
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Payment Functions
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.3.3
+*/
+
 
 /**
  * Checks if taxes are enabled
