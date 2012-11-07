@@ -19,12 +19,13 @@
 */
 
 function edd_resend_purchase_receipt( $data ) {
+
 	$purchase_id = $data['purchase_id'];
 	edd_email_purchase_receipt( $purchase_id, false );
 
 
 	// grab all downloads of the purchase and update their file download limits, if needed
-	// thisallows admins to resend purchase receipts to grant additional file downloads
+	// this allows admins to resend purchase receipts to grant additional file downloads
 	$downloads = edd_get_payment_meta_downloads( $purchase_id );
 	if( is_array( $downloads ) ) {
 		foreach( $downloads as $download ) {

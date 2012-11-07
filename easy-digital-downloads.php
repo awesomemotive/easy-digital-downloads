@@ -5,7 +5,9 @@ Plugin URI: http://easydigitaldownloads.com
 Description: Serve Digital Downloads Through WordPress
 Author: Pippin Williamson
 Author URI: http://pippinsplugins.com
-Version: 1.3.2
+Version: 1.3.2.1
+Text Domain: edd
+Domain Path: languages
 
 Easy Digital Downloads is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,6 +23,13 @@ You should have received a copy of the GNU General Public License
 along with Easy Digital Downloads. If not, see <http://www.gnu.org/licenses/>.
 */
 
+/* PHP Hack to Get Plugin Headers in the .POT File */
+	$edd_plugin_header_translate = array(
+		__( 'Easy Digital Downloads', 'edd' ),
+    	__( 'Serve Digital Downloads Through WordPress', 'edd' ),
+    	__( 'Pippin Williamson', 'edd' ),
+    	__( 'http://easydigitaldownloads.com/', 'edd' ),
+    );
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +38,7 @@ along with Easy Digital Downloads. If not, see <http://www.gnu.org/licenses/>.
 */
 // Plugin version
 if( !defined( 'EDD_VERSION' ) ) {
-	define( 'EDD_VERSION', '1.3.2' );
+	define( 'EDD_VERSION', '1.3.2.1' );
 }
 // Plugin Folder URL
 if( !defined( 'EDD_PLUGIN_URL' ) ) {
@@ -66,7 +75,7 @@ function edd_textdomain() {
 	// Load the translations
 	load_plugin_textdomain( 'edd', false, $edd_lang_dir );
 }
-add_action( 'init', 'edd_textdomain' );
+add_action( 'init', 'edd_textdomain', 1 );
 
 /*
 |--------------------------------------------------------------------------
