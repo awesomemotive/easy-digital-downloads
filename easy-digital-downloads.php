@@ -75,7 +75,7 @@ function edd_textdomain() {
 	// Load the translations
 	load_plugin_textdomain( 'edd', false, $edd_lang_dir );
 }
-add_action( 'init', 'edd_textdomain' );
+add_action( 'init', 'edd_textdomain', 1 );
 
 /*
 |--------------------------------------------------------------------------
