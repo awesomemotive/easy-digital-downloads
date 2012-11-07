@@ -60,9 +60,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
     */
     
     // collect payment data
-    $payment_data = array( 
-    	'subtotal'		=> $purchase_data['subtotal'],
-        'tax'			=> $purchase_data['tax'],
+    $payment_data = array(
         'price'         => $purchase_data['price'],
         'date'          => $purchase_data['date'], 
         'user_email'    => $purchase_data['user_email'], 
