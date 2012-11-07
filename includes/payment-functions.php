@@ -124,9 +124,8 @@ function edd_insert_payment( $payment_data = array() ) {
 	$payment = wp_insert_post( array('post_title' => $payment_title, 'post_status' => $status, 'post_type' => 'edd_payment', 'post_date' => $payment_data['date']));
 	
 	if($payment) {
+		
 		$payment_meta = array(
-			'subtotal'		=> isset( $payment_data['subtotal'] ) ? $payment_data['subtotal'] : $payment_data['price'],
-			'tax'			=> isset( $payment_data['tax'] ) ? $payment_data['tax'] : 0,
 			'amount' 		=> $payment_data['price'], 
 			'date' 			=> $payment_data['date'], 
 			'email' 		=> $payment_data['user_email'],
@@ -138,6 +137,8 @@ function edd_insert_payment( $payment_data = array() ) {
 			'user_id' 		=> $payment_data['user_info']['id']
 		);
 		
+		// NOTE: tax info is added to meta in tax-functions.php with edd_record_taxed_amount()
+
 		$mode = edd_is_test_mode() ? 'test' : 'live';
 		$gateway = isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : ''; 
 
