@@ -383,9 +383,8 @@ function edd_get_cart_tax() {
 	$cart_sub_total = edd_get_cart_subtotal();
 	$cart_tax 		= edd_calculate_tax( $cart_sub_total );
 	$cart_tax 		= number_format( $cart_tax, 2 );
-	$tax = apply_filters( 'edd_get_cart_tax', $cart_tax, $cart_sub_total );
 
-	return $tax;
+	return apply_filters( 'edd_get_cart_tax', $cart_tax, $cart_sub_total );
 
 }
 
