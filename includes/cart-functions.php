@@ -301,9 +301,21 @@ function edd_get_cart_amount( $add_taxes = true ) {
 	}
 
 	if( edd_use_taxes() && $add_taxes ) {
-		// add the taxes amount if enabled
-		$tax = edd_get_cart_tax();
-		$amount += $tax;
+
+		if( edd_local_taxes_only() && isset( $_POST['edd_tax_opt_in'] ) ) {
+			
+			// add the tax amount for a local resident
+			$tax = edd_get_cart_tax();
+			$amount += $tax;
+
+		} elseif( ! edd_local_taxes_only() ) {
+			
+			// add the global tax amount
+			$tax = edd_get_cart_tax();
+			$amount += $tax;
+		
+		}
+
 	}
 
 	return number_format( $amount, 2 );
