@@ -17,10 +17,36 @@ jQuery(document).ready(function($) {
     });
 
     $('body').on('click', '#edd_tax_opt_in', function() {
-        if( $(this).attr('checked') )
+        
+        var tax         = parseFloat( $('.edd_cart_tax_amount').data( 'tax' ) );
+        var subtotal    = parseFloat( $('.edd_cart_amount').data( 'subtotal' ) );
+        var total       = parseFloat( $('.edd_cart_amount').data( 'total' ) );
+        var sign        = edd_global_vars.currency_sign;
+        var pos         = edd_global_vars.currency_pos;
+
+        if( $(this).attr('checked') ) {
+
             $('.edd_cart_tax_row').show();
-        else
+            
+            if( pos == 'before' )
+                total = sign + total;
+            else
+                total = total + sign;
+
+            $('.edd_cart_amount').text( total );
+
+        } else {
+
             $('.edd_cart_tax_row').hide();
+
+            if( pos == 'before' )
+                subtotal = sign + '' + subtotal;
+            else
+                subtotal = subtotal + '' + sign;
+
+            $('.edd_cart_amount').text( subtotal );
+
+        }
     });
 
 });
