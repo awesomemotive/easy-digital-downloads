@@ -253,7 +253,7 @@ function edd_purchase_form_validate_agree_to_terms() {
 	// validate agree to terms
 	if ( !isset( $_POST['edd_agree_to_terms'] ) || $_POST['edd_agree_to_terms'] != 1 ) {
 		// user did not agree
-		edd_set_error( 'agree_to_terms', __( 'You must agree to the terms of use', 'edd' ) );
+		edd_set_error( 'agree_to_terms', apply_filters( 'edd_agree_to_terms_text', __( 'You must agree to the terms of use', 'edd' ) ) );
 	}
 }
 
