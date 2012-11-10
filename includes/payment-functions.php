@@ -363,15 +363,18 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year ) {
  * @return      int
 */
 
-function edd_get_sales_by_date( $day = null, $month_num, $year ) {
+function edd_get_sales_by_date( $day = null, $month_num = null, $year ) {
 	$args = array(
 		'post_type' => 'edd_payment', 
 		'posts_per_page' => -1, 
 		'year' => $year, 
-		'monthnum' => $month_num, 
 		'meta_key' => '_edd_payment_mode',
 		'meta_value' => 'live'
 	);
+
+	if( ! empty( $month_num ) )
+		$args['monthnum'] = $month_num;
+
 	if( ! empty( $day ) )
 		$args['day'] = $day;
 	
