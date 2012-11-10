@@ -91,7 +91,8 @@ function edd_report_views() {
 	$views = array(
 		'earnings'	=> __( 'Earnings', 'edd' ),
 		'downloads' => edd_get_label_plural(),
-		'customers'	=> __( 'Customers', 'edd' )
+		'customers'	=> __( 'Customers', 'edd' ),
+		'taxes'		=> __( 'Taxes', 'edd' )
 	);
 
 	$views = apply_filters( 'edd_report_views', $views );
@@ -169,6 +170,38 @@ function edd_reports_earnings() {
 	edd_reports_graph();
 }
 add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
+
+
+/**
+ * Renders the tax reports
+ *
+ * @access      public
+ * @since       1.3.3
+ * @return      void
+*/
+
+function edd_reports_taxes() {
+	?>
+	<div class="metabox-holder">
+		<div id="post-body">
+			<div id="post-body-content">
+				
+				<div class="postbox">
+					<h3><span><?php _e('Tax Report', 'edd'); ?></span></h3>
+					<div class="inside">
+						<p><?php _e( 'The total amount received in sales tax is displayed here.', 'edd' ); ?></p>
+
+						<p>2012: <?php edd_sales_tax_for_year( '2012' ); ?></p>
+
+					</div><!--end inside-->
+				</div><!--end postbox-->
+
+			</div><!--endpost-body-content-->
+		</div><!--end post-body-->
+	</div><!--end metabox-holder-->
+	<?php
+}
+add_action( 'edd_reports_view_taxes', 'edd_reports_taxes' );
 
 
 /**

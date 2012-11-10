@@ -108,3 +108,39 @@ function edd_record_taxed_amount( $payment_meta, $payment_data ) {
 
 }
 add_filter( 'edd_payment_meta', 'edd_record_taxed_amount', 10, 2 );
+
+
+function edd_sales_tax_for_year( $year = null ) {
+
+	//echo edd_currency_filter( edd_format_amount( edd_get_sales_tax_for_year( $year ) ) );
+	echo edd_get_sales_tax_for_year( $year );
+}
+
+	function edd_get_sales_tax_for_year( $year = null ) {
+
+		if( empty( $year ) )
+			return 0;
+
+		// start at zero
+		$tax = 0;
+		
+		$args = array(
+			'post_type' 		=> 'edd_payment', 
+			'posts_per_page' 	=> -1, 
+			'year' 				=> $year,
+			'meta_key' 			=> '_edd_payment_mode',
+			'meta_value' 		=> 'live',
+			'fields'			=> 'ids'
+		);
+
+		$payments = get_posts( $args );
+
+		if( $payments ) :
+			foreach( $payments as $payment ) :
+				$tax += edd_get_payment_tax( $payment );
+			endforeach;
+
+		endif;
+
+		return apply_filters( 'edd_get_sales_tax_for_year', $tax, $year );
+	}
