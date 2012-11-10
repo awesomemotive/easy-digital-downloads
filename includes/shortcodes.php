@@ -276,8 +276,12 @@ function edd_downloads_query($atts, $content = null) {
 		$query['download_category'] = $category;
 	}
 
-	$query['paged'] = get_query_var('paged');
-
+	if ( get_query_var( 'paged' ) )
+		$query['paged'] = get_query_var('paged');
+	else if ( get_query_var( 'page' ) )
+		$query['paged'] = get_query_var( 'page' );
+	else
+		$query['paged'] = 1;
 
 	switch( intval( $columns ) ) :
 	
@@ -344,7 +348,7 @@ function edd_downloads_query($atts, $content = null) {
 				echo paginate_links( array(
 					'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
 					'format' => '?paged=%#%',
-					'current' => max( 1, get_query_var('paged') ),
+					'current' => max( 1, $query['paged'] ),
 					'total' => $downloads->max_num_pages
 				) );
 				?>
