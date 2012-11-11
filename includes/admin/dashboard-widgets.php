@@ -132,7 +132,7 @@ function edd_dashboard_sales_widget() {
 					'orderby'  => 'post_date', 
 					'order'    => 'DESC', 
 					'user'     => null, 
-					'status'   => 'completed', 
+					'status'   => 'publish', 
 					'meta_key' => null
 				) );
 
