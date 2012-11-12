@@ -62,7 +62,7 @@ function edd_export_payment_history() {
 					$price = edd_get_download_final_price( $id, $user_info, $price_override );
 
 					// show name of download
-					echo get_the_title( $id );
+					echo '"' . get_the_title( $id );
 
 					echo  ' - ';
 
@@ -83,7 +83,7 @@ function edd_export_payment_history() {
 
 				}
 
-				echo ',';
+				echo '",';
 
 			}
 
