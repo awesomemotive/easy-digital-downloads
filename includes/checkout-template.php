@@ -126,7 +126,7 @@ function edd_user_info_fields() {
 	endif;
 	?>
 	<fieldset id="edd_checkout_user_info">
-		<legend><?php apply_filters( 'edd_checkout_personal_info_text', __('Personal Info', 'edd') ); ?></legend>
+		<legend><?php echo apply_filters( 'edd_checkout_personal_info_text', __('Personal Info', 'edd') ); ?></legend>
 		<?php do_action( 'edd_purchase_form_before_email' ); ?>
 		<p id="edd-email-wrap">
 			<input class="edd-input required" type="email" name="edd_email" placeholder="<?php _e('Email address', 'edd'); ?>" id="edd-email" value="<?php echo is_user_logged_in() ? $user_data->user_email : ''; ?>"/>
