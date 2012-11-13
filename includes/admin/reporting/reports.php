@@ -181,6 +181,10 @@ add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
 */
 
 function edd_reports_taxes() {
+	edd_report_views();
+
+	$year = isset( $_GET['year'] ) ? absint( $_GET['year'] ) : date( 'Y' );
+
 	?>
 	<div class="metabox-holder">
 		<div id="post-body">
@@ -189,9 +193,22 @@ function edd_reports_taxes() {
 				<div class="postbox">
 					<h3><span><?php _e('Tax Report', 'edd'); ?></span></h3>
 					<div class="inside">
-						<p><?php _e( 'The total amount received in sales tax is displayed here.', 'edd' ); ?></p>
 
-						<p>2012: <?php edd_sales_tax_for_year( '2012' ); ?></p>
+						<p><?php _e( 'The total amount received in sales tax is displayed here.', 'edd' ); ?></p>
+						
+						<p><strong><?php echo $year; ?></strong>: <?php edd_sales_tax_for_year( $year ); ?></p>
+
+						<form method="get" action="<?php echo admin_url( 'edit.php' ); ?>">
+							<select name="year">
+								<?php for( $i = 2009; $i <= date( 'Y' ); $i++ ) : ?>
+								<option value="<?php echo $i; ?>"<?php selected( $year, $i ); ?>><?php echo $i; ?></option>
+								<?php endfor; ?>
+							</select>
+							<input type="hidden" name="view" value="taxes" />
+							<input type="hidden" name="post_type" value="download" />
+							<input type="hidden" name="page" value="edd-reports" />
+							<input type="submit" class="button-secondary" value="<?php _e( 'Submit', 'edd' ); ?>"/>
+						</form>
 
 					</div><!--end inside-->
 				</div><!--end postbox-->
