@@ -572,8 +572,7 @@ function edd_get_payment_gateway( $payment_id ) {
  * @return      array
  */
 function edd_get_payment_amount( $payment_id ) {
-	$payment_meta = edd_get_payment_meta( $payment_id );
-	$amount = $payment_meta['amount'];
+	$amount = get_post_meta( $payment_id, '_edd_payment_total', true );
 
 	return apply_filters( 'edd_payment_amount', $amount );
 }
