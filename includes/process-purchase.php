@@ -700,5 +700,5 @@ function edd_get_success_page_url( $query_string = null ) {
 	if($query_string)
 		$success_page .= $query_string;
 
-	return $success_page;
+	return apply_filters( 'edd_success_page_url', $success_page );
 }
