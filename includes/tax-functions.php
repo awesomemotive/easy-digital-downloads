@@ -25,14 +25,16 @@
 function edd_use_taxes() {
 	global $edd_options;
 
-	return isset( $edd_options['enable_taxes'] );
+	return apply_filters( 'edd_use_taxes', isset( $edd_options['enable_taxes'] ) );
 }
 
 
 function edd_local_taxes_only() {
 	global $edd_options;
 
-	return isset( $edd_options['tax_condition'] ) && $edd_options['tax_condition'] == 'local';
+	$local_only = isset( $edd_options['tax_condition'] ) && $edd_options['tax_condition'] == 'local';
+
+	return apply_filters( 'edd_local_taxes_only', $local_only );
 }
 
 
@@ -110,11 +112,31 @@ function edd_record_taxed_amount( $payment_meta, $payment_data ) {
 add_filter( 'edd_payment_meta', 'edd_record_taxed_amount', 10, 2 );
 
 
-function edd_sales_tax_for_year( $year = null ) {
+/**
+ * Stores the tax info in the payment meta
+ *
+ * @access      public
+ * @since       1.3.3
+ * @param 		$year int The year to retrieve taxes for, i.e. 2012
+ * @uses 		edd_currency_filter()
+ * @uses 		edd_format_amount()
+ * @uses 		edd_get_sales_tax_for_year()
+ * @return      void
+*/
 
-	//echo edd_currency_filter( edd_format_amount( edd_get_sales_tax_for_year( $year ) ) );
-	echo edd_get_sales_tax_for_year( $year );
+function edd_sales_tax_for_year( $year = null ) {
+	echo edd_currency_filter( edd_format_amount( edd_get_sales_tax_for_year( $year ) ) );
 }
+
+	/**
+	 * Stores the tax info in the payment meta
+	 *
+	 * @access      public
+	 * @since       1.3.3
+	 * @param 		$year int The year to retrieve taxes for, i.e. 2012
+	 * @uses 		edd_get_payment_tax()
+	 * @return      float
+	*/
 
 	function edd_get_sales_tax_for_year( $year = null ) {
 
@@ -129,13 +151,14 @@ function edd_sales_tax_for_year( $year = null ) {
 			'posts_per_page' 	=> -1, 
 			'year' 				=> $year,
 			'meta_key' 			=> '_edd_payment_mode',
-			'meta_value' 		=> 'live',
+			'meta_value' 		=> edd_is_test_mode() ? 'test' : 'live',
 			'fields'			=> 'ids'
 		);
 
 		$payments = get_posts( $args );
 
 		if( $payments ) :
+
 			foreach( $payments as $payment ) :
 				$tax += edd_get_payment_tax( $payment );
 			endforeach;
