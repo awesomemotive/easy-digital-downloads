@@ -83,8 +83,11 @@ function edd_price( $download_id, $echo = true ) {
 		$price = edd_get_download_price( $download_id );
 	}
 	
+
 	$price = apply_filters( 'edd_download_price', $price, $download_id );
 
+	$price = '<span class="edd_price" id="edd_price_' . $download_id . '">' . $price . '</span>';
+	
 	if( $echo )
 		echo $price;
 	else
