@@ -55,25 +55,25 @@ function edd_process_purchase_form() {
 
 	// setup user information
 	$user_info = array(
-		'id' => $user['user_id'],
-		'email' => $user['user_email'],
-		'first_name' => $user['user_first'],
-		'last_name' => $user['user_last'], 
-		'discount' => $valid_data['discount']
+		'id' 			=> $user['user_id'],
+		'email' 		=> $user['user_email'],
+		'first_name' 	=> $user['user_first'],
+		'last_name' 	=> $user['user_last'], 
+		'discount' 		=> $valid_data['discount']
 	);
 
 	// setup purchase information
 	$purchase_data = array(
-		'downloads' => edd_get_cart_contents(),
-		'price' => edd_get_cart_amount(),
-		'purchase_key' => strtolower( md5( uniqid() ) ), // random key
-		'user_email' => $user['user_email'],
-		'date' => date( 'Y-m-d H:i:s' ),
-		'user_info' => $user_info,
-		'post_data' => $_POST,
-		'cart_details' => edd_get_cart_content_details(),
-		'gateway' => $valid_data['gateway'],
-		'card_info' => $valid_data['cc_info']
+		'downloads' 	=> edd_get_cart_contents(),
+		'price' 		=> edd_get_cart_amount(),
+		'purchase_key'	=> strtolower( md5( uniqid() ) ), // random key
+		'user_email' 	=> $user['user_email'],
+		'date'		 	=> date( 'Y-m-d H:i:s' ),
+		'user_info' 	=> $user_info,
+		'post_data' 	=> $_POST,
+		'cart_details' 	=> edd_get_cart_content_details(),
+		'gateway'		=> $valid_data['gateway'],
+		'card_info' 	=> $valid_data['cc_info']
 	);
 	
 	// add the user data for hooks
