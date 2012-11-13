@@ -475,11 +475,10 @@ function edd_get_total_earnings() {
 	}
 	if( $payments ) {
 		foreach( $payments as $payment ) {
-			$meta = get_post_meta( $payment->ID, '_edd_payment_meta', true );
-			$total += $meta['amount'];
+			$total += edd_get_payment_amount( $payment->ID );
 		}
 	}
-	return edd_currency_filter( edd_format_amount( $total ) );
+	return apply_filters( 'edd_total_earnings', $total );
 }
 
 /**
