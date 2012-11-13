@@ -498,7 +498,7 @@ function edd_get_total_earnings() {
 function edd_get_payment_meta( $payment_id ) {
 	$meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
 
-	return apply_filters( 'edd_payment_meta', $meta );
+	return apply_filters( 'edd_get_payment_meta', $meta );
 }
 
 /**
