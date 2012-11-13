@@ -81,7 +81,7 @@ function edd_price( $download_id, $echo = true ) {
 		// return the lowest price
 		$price_float = 0;
                 foreach($prices as $key => $value)
-                        if( ( ( (float)$prices[$key]['amount']) < $price) or ($price==0) )
+                        if( ( ( (float)$prices[$key]['amount']) < $price_float) or ($price_float==0) )
                                 $price_float = (float)$prices[$key]['amount'];
                 $price = edd_sanitize_amount($price_float);
 	} else {
