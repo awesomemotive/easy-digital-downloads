@@ -300,7 +300,7 @@ function edd_payment_history_page() {
 				<div class="tablenav">
 
 					<div class="left edd-total-earnings">
-						<p><?php _e( 'Total Earnings:', 'edd' ); ?>&nbsp;<strong><?php echo edd_get_total_earnings(); ?></strong></p>
+						<p><?php _e( 'Total Earnings:', 'edd' ); ?>&nbsp;<strong><?php echo edd_currency_filter( edd_format_amount( edd_get_total_earnings() ) ); ?></strong></p>
 						<?php do_action( 'edd_payments_page_earnings' ); ?>
 					</div>
 					<?php if( $total_pages > 1 ) : ?>
