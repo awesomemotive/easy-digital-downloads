@@ -44,7 +44,7 @@ function edd_show_upgrade_notices() {
 		add_settings_error( 'edd-notices', 'edd-payments-upgrade', $upgrade_notice, 'error' );
 	}
 
-	if( version_compare( EDD_VERSION, $edd_version, '>' ) && ! get_option( 'edd_logs_upgraded' ) ) {
+	if( version_compare( $edd_version, '1.3.2', '<' ) && ! get_option( 'edd_logs_upgraded' ) ) {
 		printf(
 			'<div class="updated"><p>' . esc_html__( 'The purchase and file download history in Easy Digital Downloads needs upgraded, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
 			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
