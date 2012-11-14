@@ -42,7 +42,7 @@ function edd_export_payment_history() {
 			echo '"' . $user_info['last_name']. '",';
 
 			$downloads = edd_get_payment_meta_cart_details( $payment->ID );
-			
+
 			if ( empty( $downloads ) || ! $downloads ) {
 				$downloads = maybe_unserialize( $payment_meta['downloads'] );
 			}
@@ -186,6 +186,7 @@ function edd_export_all_downloads_history() {
 			echo '"' . __( 'Date', 'edd' ) .  '",';
 			echo '"' . __( 'Downloaded by', 'edd' ) .  '",';
 			echo '"' . __( 'IP Address', 'edd' ) .  '",';
+			echo '"' . __( 'Product', 'edd' ) .  '",';
 			echo '"' . __( 'File', 'edd' ) .  '"';
 			echo "\r\n";
 
@@ -232,6 +233,7 @@ function edd_export_all_downloads_history() {
 						echo '"' . $log->post_date . '",';
 						echo '"' . $name . '",';
 						echo '"' . $ip . '",';
+						echo '"' . html_entity_decode( get_the_title( $report->ID ) ) . '",';
 						echo '"' . $file_name . '"';
 						echo "\r\n";
 						
