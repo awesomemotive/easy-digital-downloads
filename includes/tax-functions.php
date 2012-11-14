@@ -71,7 +71,7 @@ function edd_get_tax_rate() {
 function edd_calculate_tax( $amount ) {
 
 	$rate 	= edd_get_tax_rate();
-	$tax 	= $amount * $rate; // the tax amount
+	$tax 	= number_format( $amount * $rate, 2 ); // the tax amount
 
 	return apply_filters( 'edd_taxed_amount', $tax, $rate );
 }
