@@ -33,15 +33,16 @@ function edd_export_payment_history() {
 		echo "\r\n";
 		foreach ( $payments as $payment ) {
 
-			$payment_meta = edd_get_payment_meta( $payment->ID );
-			$user_info = maybe_unserialize( $payment_meta['user_info'] );
+			$payment_meta 	= edd_get_payment_meta( $payment->ID );
+			$user_info 		= edd_get_payment_meta_user_info( $payment->ID );
 
 			echo '"' . $payment->ID . '",';
 			echo '"' . $payment_meta['email'] . '",';
 			echo '"' . $user_info['first_name'] . '",';
 			echo '"' . $user_info['last_name']. '",';
 
-			$downloads = isset( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] )  : false;
+			$downloads = edd_get_payment_meta_cart_details( $payment->ID );
+			
 			if ( empty( $downloads ) || ! $downloads ) {
 				$downloads = maybe_unserialize( $payment_meta['downloads'] );
 			}
