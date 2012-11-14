@@ -1,4 +1,5 @@
 jQuery(document).ready(function($) {
+
     // update state/province field on checkout page
     $( 'body').change( 'select[name=billing_country]', function() {
         if( $('select[name=billing_country]').val() == 'US') {
@@ -16,6 +17,7 @@ jQuery(document).ready(function($) {
         }
     });
 
+    // toggle the tax amount shown on checkout
     $('body').on('click', '#edd_tax_opt_in', function() {
         
         var tax         = parseFloat( $('.edd_cart_tax_amount').data( 'tax' ) );
@@ -46,6 +48,15 @@ jQuery(document).ready(function($) {
 
             $('.edd_cart_amount').text( subtotal );
 
+        }
+    });
+
+    // make sure a gateway is selected
+    $('body').on('submit', '#edd_payment_mode', function() {
+        var gateway = $('#edd-gateway option:selected').val();
+        if( gateway == 0 ) {
+            alert( edd_global_vars.no_gateway );
+            return false;
         }
     });
 
