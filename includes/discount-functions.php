@@ -493,7 +493,7 @@ function edd_get_discounted_amount( $code, $base_price ) {
 	    // percentage discount
 		$discounted_price = $base_price - ( $base_price * ( $rate / 100 ) );
 	}
-	return apply_filters( 'edd_discounted_amount', $discounted_price );
+	return apply_filters( 'edd_discounted_amount', number_format( $discounted_price, 2 ) );
 }
 
 

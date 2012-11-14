@@ -481,11 +481,10 @@ function edd_get_total_earnings() {
 	}
 	if( $payments ) {
 		foreach( $payments as $payment ) {
-			$meta = get_post_meta( $payment->ID, '_edd_payment_meta', true );
-			$total += $meta['amount'];
+			$total += edd_get_payment_amount( $payment->ID );
 		}
 	}
-	return edd_currency_filter( edd_format_amount( $total ) );
+	return apply_filters( 'edd_total_earnings', $total );
 }
 
 /**
@@ -578,8 +577,7 @@ function edd_get_payment_gateway( $payment_id ) {
  * @return      array
  */
 function edd_get_payment_amount( $payment_id ) {
-	$payment_meta = edd_get_payment_meta( $payment_id );
-	$amount = $payment_meta['amount'];
+	$amount = get_post_meta( $payment_id, '_edd_payment_total', true );
 
 	return apply_filters( 'edd_payment_amount', $amount );
 }

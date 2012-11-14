@@ -391,12 +391,21 @@ function edd_get_purchase_download_links( $purchase_data ) {
  * @access      private
  * @since       1.2
  * @return      string
-*/
-
+ */
 function edd_get_templates_dir() {
 	return EDD_PLUGIN_DIR . 'templates';
 }
 
+/**
+ * Returns the URL to the EDD templates directory
+ *
+ * @access      private
+ * @since       1.3.2.1
+ * @return      string
+ */
+function edd_get_templates_url() {
+	return EDD_PLUGIN_URL . 'templates';
+}
 
 /**
  * Retrieves a template part
