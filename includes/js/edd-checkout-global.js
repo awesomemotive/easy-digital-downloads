@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
     // update state/province field on checkout page
-    $('select[name=billing_country]').change(function() {
+    $( 'body').change( 'select[name=billing_country]', function() {
         if( $('select[name=billing_country]').val() == 'US') {
             $('#card_state_other').css('display', 'none');
             $('#card_state_us').css('display', '');

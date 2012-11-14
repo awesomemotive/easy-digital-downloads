@@ -276,6 +276,13 @@ function edd_downloads_query($atts, $content = null) {
 		$query['download_category'] = $category;
 	}
 
+	if ( get_query_var( 'paged' ) )
+		$query['paged'] = get_query_var('paged');
+	else if ( get_query_var( 'page' ) )
+		$query['paged'] = get_query_var( 'page' );
+	else
+		$query['paged'] = 1;
+
 	switch( intval( $columns ) ) :
 	
 		case 1:
@@ -332,8 +339,21 @@ function edd_downloads_query($atts, $content = null) {
 				</div>
 				<?php if( $i % $columns == 0 ) { ?><div style="clear:both;"></div><?php } ?>
 			<?php $i++; endwhile; ?>
-			<?php wp_reset_postdata(); ?>
+
 			<div style="clear:both;"></div>
+
+			<div id="edd_download_pagination" class="navigation">
+				<?php
+				$big = 999999;
+				echo paginate_links( array(
+					'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+					'format' => '?paged=%#%',
+					'current' => max( 1, $query['paged'] ),
+					'total' => $downloads->max_num_pages
+				) );
+				?>
+			</div>
+			<?php wp_reset_postdata(); ?>
 		</div>
 		<?php
 		$display = ob_get_clean();
