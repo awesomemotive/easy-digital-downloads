@@ -181,6 +181,7 @@ add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
 */
 
 function edd_reports_taxes() {
+
 	edd_report_views();
 
 	$year = isset( $_GET['year'] ) ? absint( $_GET['year'] ) : date( 'Y' );
@@ -194,11 +195,11 @@ function edd_reports_taxes() {
 					<h3><span><?php _e('Tax Report', 'edd'); ?></span></h3>
 					<div class="inside">
 
-						<p><?php _e( 'The total amount received in sales tax is displayed here.', 'edd' ); ?></p>
+						<p><?php _e( 'This report shows the total amount collected in sales tax for the given year.', 'edd' ); ?></p>
 						
-						<p><strong><?php echo $year; ?></strong>: <?php edd_sales_tax_for_year( $year ); ?></p>
 
 						<form method="get" action="<?php echo admin_url( 'edit.php' ); ?>">
+							<span><?php echo $year; ?></span>: <strong><?php edd_sales_tax_for_year( $year ); ?></strong>&nbsp;&mdash;&nbsp;
 							<select name="year">
 								<?php for( $i = 2009; $i <= date( 'Y' ); $i++ ) : ?>
 								<option value="<?php echo $i; ?>"<?php selected( $year, $i ); ?>><?php echo $i; ?></option>
