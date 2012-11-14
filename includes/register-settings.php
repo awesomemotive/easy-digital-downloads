@@ -271,7 +271,7 @@ function edd_register_settings() {
 				array(
 					'id' => 'tax_location',
 					'name' => __('Tax Opt-In', 'edd'),
-					'desc' => __('Customers will be given a checkbox to click if they reside in your local area. Please enter directions for them here.', 'edd'),
+					'desc' => __('Customers will be given a checkbox to click if they reside in your local area. Please enter directions for them here. Customers <strong>must</strong> opt into this.', 'edd'),
 					'type' => 'text',
 					'size' => 'large'
 				),
