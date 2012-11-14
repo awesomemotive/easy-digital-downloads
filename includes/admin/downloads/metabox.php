@@ -385,11 +385,13 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 	</td>
 	
 	<td>
-		<input type="text" class="edd_repeatable_upload_field edd_upload_field" name="edd_download_files[<?php echo $key; ?>][file]" id="edd_download_files[<?php echo $key; ?>][file]" value="<?php echo $file; ?>" placeholder="<?php _e( 'http://', 'edd' ); ?>" style="width:100%" />
+		<div class="edd_repeatable_upload_field_container">
+			<input type="text" class="edd_repeatable_upload_field edd_upload_field" name="edd_download_files[<?php echo $key; ?>][file]" id="edd_download_files[<?php echo $key; ?>][file]" value="<?php echo $file; ?>" placeholder="<?php _e( 'http://', 'edd' ); ?>" style="width:100%" />
 
-		<span class="edd_upload_file">
-			<a href="#" class="edd_upload_image_button" onclick="return false;"><?php _e( 'Upload a File', 'edd' ); ?></a>
-		</span>
+			<span class="edd_upload_file">
+				<a href="#" class="edd_upload_image_button" onclick="return false;"><?php _e( 'Upload a File', 'edd' ); ?></a>
+			</span>
+		</div>
 	</td>
 
 	<td class="pricing"<?php echo $variable_display; ?>>						
