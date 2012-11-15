@@ -61,7 +61,8 @@ function edd_load_scripts() {
 	wp_enqueue_script( 'edd-checkout-global', EDD_PLUGIN_URL . 'includes/js/edd-checkout-global.js', array( 'jquery' ), EDD_VERSION );
 	wp_localize_script( 'edd-checkout-global', 'edd_global_vars', array(
         'currency_sign'		=> edd_currency_filter(''),
-        'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before'
+        'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
+        'no_gateway'		=> __( 'Please select a payment method', 'edd' )
     ));
 }
 add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
