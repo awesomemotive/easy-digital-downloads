@@ -189,3 +189,18 @@ function edd_get_chosen_gateway() {
 
 	return apply_filters( 'edd_chosen_gateway', $enabled_gateway );
 }
+
+
+/**
+ * Record a gateway error
+ *
+ * A simple wrapper function for edd_record_log()
+ *
+ * @access      public
+ * @since       1.3.3
+ * @return      int The ID of the new log entry
+*/
+
+function edd_record_gateway_error( $message = '', $parent = 0 ) {
+	return edd_record_log( $message, $parent, 'gateway_error' )
+}
