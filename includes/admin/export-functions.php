@@ -18,28 +18,28 @@ function edd_export_payment_history() {
 
 	if ( $payments ) {
 		$i = 0;
-		echo '"' . __( 'ID', 'edd' ) .  '",';
-		echo '"' . __( 'Email', 'edd' ) .  '",';
-		echo '"' . __( 'First Name', 'edd' ) .  '",';
-		echo '"' . __( 'Last Name', 'edd' ) .  '",';
-		echo '"' . __( 'Products', 'edd' ) .  '",';
-		echo '"' . __( 'Discounts,', 'edd' ) .  '",';
-		echo '"' . __( 'Amount paid', 'edd' ) .  '",';
-		echo '"' . __( 'Payment method', 'edd' ) .  '",';
-		echo '"' . __( 'Key', 'edd' ) .  '",';
-		echo '"' . __( 'Date', 'edd' ) .  '",';
-		echo '"' . __( 'User', 'edd' ) .  '",';
-		echo '"' . __( 'Status', 'edd' ) .  '"';
+		echo '"' . __( 'ID', 'edd' ) 			.  '",';
+		echo '"' . __( 'Email', 'edd' ) 		.  '",';
+		echo '"' . __( 'First Name', 'edd' ) 	.  '",';
+		echo '"' . __( 'Last Name', 'edd' ) 	.  '",';
+		echo '"' . __( 'Products', 'edd' ) 		.  '",';
+		echo '"' . __( 'Discounts,', 'edd' ) 	.  '",';
+		echo '"' . __( 'Amount paid', 'edd' ) 	.  '",';
+		echo '"' . __( 'Payment method', 'edd' ).  '",';
+		echo '"' . __( 'Key', 'edd' ) 			.  '",';
+		echo '"' . __( 'Date', 'edd' ) 			.  '",';
+		echo '"' . __( 'User', 'edd' ) 			.  '",';
+		echo '"' . __( 'Status', 'edd' ) 		.  '"';
 		echo "\r\n";
 		foreach ( $payments as $payment ) {
 
 			$payment_meta 	= edd_get_payment_meta( $payment->ID );
 			$user_info 		= edd_get_payment_meta_user_info( $payment->ID );
 
-			echo '"' . $payment->ID . '",';
-			echo '"' . $payment_meta['email'] . '",';
+			echo '"' . $payment->ID 			. '",';
+			echo '"' . $payment_meta['email'] 	. '",';
 			echo '"' . $user_info['first_name'] . '",';
-			echo '"' . $user_info['last_name']. '",';
+			echo '"' . $user_info['last_name']	. '",';
 
 			$downloads = edd_get_payment_meta_cart_details( $payment->ID );
 
