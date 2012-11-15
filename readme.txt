@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.5
-Stable Tag: 1.3.2.1
+Stable Tag: 1.3.3
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -29,6 +29,7 @@ Features of the plugin include:
 * Customizable purchase receipts
 * Earnings and sales charts
 * Detailed purchase and file download logs
+* Data export options for CSV and PDF
 * Extensible with many [add-ons](http://easydigitaldownloads.com/extensions/)
 * Developer friendly with dozens of actions and filters
 
@@ -138,6 +139,25 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.3.3 = 
+
+* Added new Tax system for calculating simple taxes on purchases
+* Added error / payment failure logging to PayPal standard gateway
+* Improved the error logging system
+* Fixed an issue with payment method select when ajax is disabled
+* Fixed a problem with a stray file upload button in IE and Firefox
+* Improved the Payment History export to CSV option
+* Removed old, out of date PayPal payment gateway
+* Fixed a problem with improperly formatted amounts after applying a flat rate discount
+* Fixed two conflicting filter names
+* Improved markup for the [edd_price] short code
+* Updated Dutch translation files
+* Improved front-end CSS for variable price options
+* Added new edd_file_download_has_access filter
+* Improved logic for determing the lower price on variable priced downloads
+* Improved stylesheet loading
+* Fixed a pagination bug with the [downloads] short code
 
 = 1.3.2.1 =
 
@@ -741,6 +761,25 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Upgrade Notice ==
+
+= 1.3.3 = 
+
+* Added new Tax system for calculating simple taxes on purchases
+* Added error / payment failure logging to PayPal standard gateway
+* Improved the error logging system
+* Fixed an issue with payment method select when ajax is disabled
+* Fixed a problem with a stray file upload button in IE and Firefox
+* Improved the Payment History export to CSV option
+* Removed old, out of date PayPal payment gateway
+* Fixed a problem with improperly formatted amounts after applying a flat rate discount
+* Fixed two conflicting filter names
+* Improved markup for the [edd_price] short code
+* Updated Dutch translation files
+* Improved front-end CSS for variable price options
+* Added new edd_file_download_has_access filter
+* Improved logic for determing the lower price on variable priced downloads
+* Improved stylesheet loading
+* Fixed a pagination bug with the [downloads] short code
 
 = 1.3.2.1 =
 
