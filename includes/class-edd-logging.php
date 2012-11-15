@@ -358,3 +358,23 @@ class EDD_Logging {
 
 // initiate the logging system
 $GLOBALS['edd_logs'] = new EDD_Logging();
+
+
+/**
+ * Record a log entry
+ *
+ * This is just a simple wrapper function for the log class insert_log() function
+ *
+ * @access      public
+ * @since       1.3.3
+ *
+ * @uses 		$this->insert_log()
+ *
+ * @return      int ID of the new log entry
+*/
+
+function edd_record_log( $log_data = array(), $log_meta = array() ) {
+	global $edd_logs;
+	$log = $edd_logs->insert_log( $log_data, $log_meta );
+	return $log;
+}
