@@ -146,7 +146,23 @@ function edd_export_all_customers() {
 			header( "Pragma: no-cache" );
 			header( "Expires: 0" );
 
-			echo implode( "\n", $emails );
+			echo '"' . __( 'Email', 'edd' ) 			.  '",';
+			echo '"' . __( 'Name', 'edd' ) 				.  '",';
+			echo '"' . __( 'Total Purchases', 'edd' ) 	.  '",';
+			echo '"' . __( 'Total Purchasesd', 'edd' ) 	.  '"';
+			echo "\r\n";
+			foreach( $emails as $email ) {
+				
+				$wp_user = get_user_by( 'email', $email );		
+				
+				echo $email . ',';
+				echo $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' );
+				echo ',';
+				echo edd_count_purchases_of_customer( $email ) . ',';
+				echo html_entity_decode( edd_currency_filter( edd_format_amount( edd_purchase_total_of_user( $email ) ) ) );
+				echo "\n";
+
+			}
 			exit;
 		}
 	} else {
