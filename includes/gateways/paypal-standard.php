@@ -48,7 +48,9 @@ function edd_process_paypal_purchase( $purchase_data ) {
     
     $purchase_data = array( 
         'downloads'     => array of download IDs, 
-        'price'         => total price of cart contents, 
+        'tax' 			=> taxed amount on shopping cart
+        'subtotal'		=> total price before tax
+        'price'         => total price of cart contents after taxes, 
         'purchase_key'  =>  // random key
         'user_email'    => $user_email, 
         'date'          => date( 'Y-m-d H:i:s' ), 
