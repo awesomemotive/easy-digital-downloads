@@ -201,6 +201,6 @@ function edd_get_chosen_gateway() {
  * @return      int The ID of the new log entry
 */
 
-function edd_record_gateway_error( $message = '', $parent = 0 ) {
-	return edd_record_log( $message, $parent, 'gateway_error' );
+function edd_record_gateway_error( $title = '', $message = '', $parent = 0 ) {
+	return edd_record_log( $title, $message, $parent, 'gateway_error' );
 }
