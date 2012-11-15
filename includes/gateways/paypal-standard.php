@@ -77,8 +77,9 @@ function edd_process_paypal_purchase( $purchase_data ) {
     
     // check payment
     if ( ! $payment ) {
+    	// record the error
+        edd_record_gateway_error( sprintf( __( 'Payment creation failed before sending buyer to PayPal. Payment data: %s', 'edd' ), json_encode( $payment_data ) ) );
         // problems? send back
-        edd_record_log( $log_data, $log_meta );
         edd_send_back_to_checkout( '?payment-mode=' . $purchase_data['post_data']['edd-gateway'] );
     } else {
         // only send to PayPal if the pending payment is created successfully
@@ -256,14 +257,15 @@ function edd_process_paypal_ipn() {
 	// get response
 	$api_response = wp_remote_post( edd_get_paypal_redirect(), $remote_post_vars );
 
-	if( is_wp_error( $api_response) )
+	if( is_wp_error( $api_response ) ) {
+		edd_record_gateway_error( sprintf( __( 'Invalid IPN verification response. IPN data: ', 'edd' ), json_encode( $api_response ) ) );
 		return; // something went wrong   
+	}
 
-	if( $api_response['body'] !== 'VERIFIED' && !isset($edd_options['disable_paypal_verification'] ) )
+	if( $api_response['body'] !== 'VERIFIED' && !isset( $edd_options['disable_paypal_verification'] ) ) {
+		edd_record_gateway_error( sprintf( __( 'Invalid IPN verification response. IPN data: ', 'edd' ), json_encode( $api_response ) ) );		
 		return; // response not okay
-
-	// convert collected post data to an array
-	parse_str( $post_data, $post_data_array );
+	}
 	
 	// check if $post_data_array has been populated
 	if( !is_array( $encoded_data_array ) && !empty( $encoded_data_array ) )
@@ -283,14 +285,17 @@ function edd_process_paypal_ipn() {
 	// verify details
 	if( $currency_code != strtolower( $edd_options['currency'] ) ) {
 		// the currency code is invalid
+		edd_record_gateway_error( sprintf( __( 'Invalid currency in IPN response. IPN data: ', 'edd' ), json_encode( $encoded_data_array ) ) );
 		return;
 	}
 	if( number_format((float)$paypal_amount, 2) != $payment_amount ) {
 		// the prices don't match
+		edd_record_gateway_error( sprintf( __( 'Invalid payment amount in IPN response. IPN data: ', 'edd' ), json_encode( $encoded_data_array ) ) );
 	   //return;
 	}
 	if( $purchase_key != $payment_meta['key'] ) {
 		// purchase keys don't match
+		edd_record_gateway_error( sprintf( __( 'Invalid purchase key in IPN response. IPN data: ', 'edd' ), json_encode( $encoded_data_array ) ) );
 		return;
 	}
 		 

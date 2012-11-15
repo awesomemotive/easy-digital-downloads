@@ -202,5 +202,5 @@ function edd_get_chosen_gateway() {
 */
 
 function edd_record_gateway_error( $message = '', $parent = 0 ) {
-	return edd_record_log( $message, $parent, 'gateway_error' )
+	return edd_record_log( $message, $parent, 'gateway_error' );
 }
