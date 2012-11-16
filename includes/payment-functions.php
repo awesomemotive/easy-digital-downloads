@@ -33,7 +33,10 @@ function edd_get_payments( $args = array() ) {
 		'order'    => 'DESC',
 		'user'     => null,
 		'status'   => 'any',
-		'meta_key' => null
+		'meta_key' => null,
+		'year'	   => null,
+		'month'	   => null,
+		'day'	   => null,
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -45,7 +48,10 @@ function edd_get_payments( $args = array() ) {
 		'offset' => $offset,
 		'order' => $order,
 		'orderby' => $orderby,
-		'post_status' => $status
+		'post_status' => $status,
+		'year' => $year,
+		'monthnum' => $month,
+		'day' => $day
 	);
 
 	if( !is_null( $meta_key ) )
@@ -337,7 +343,8 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year ) {
 		'year' => $year, 
 		'monthnum' => $month_num, 
 		'meta_key' => '_edd_payment_mode',
-		'meta_value' => 'live'
+		'meta_value' => 'live',
+		'post_status' => 'publish'
 	);
 	if( $day )
 		$args['day'] = $day;
