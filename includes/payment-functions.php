@@ -473,15 +473,12 @@ function edd_get_total_sales() {
 function edd_get_total_earnings() {
 
 	$total = (float) 0;
-	$earnings = get_transient( 'edd_earnings_total' );
-	if( false === $earnings ) {
+	//$earnings = get_transient( 'edd_searnings_total' );
+	//if( false === $earnings ) {
 		$payments = edd_get_payments( array(
 			'offset' 	=> 0, 
 			'number' 	=> -1, 
-			'mode'   	=> 'live', 
-			'orderby' 	=> 'ID', 
-			'order'   	=> 'DESC', 
-			'user'    	=> null, 
+			'mode'   	=> 'live',
 			'status'  	=> 'publish',
 		) );
 		if( $payments ) {
@@ -489,8 +486,8 @@ function edd_get_total_earnings() {
 				$total += edd_get_payment_amount( $payment->ID );
 			}
 		}
-		set_transient( 'edd_earnings_total', $payments, 1800 );
-	}
+		//set_transient( 'edd_earnings_total', $payments, 1800 );
+	//}
 	return apply_filters( 'edd_total_earnings', $total );
 }
 
@@ -585,7 +582,11 @@ function edd_get_payment_gateway( $payment_id ) {
  */
 function edd_get_payment_amount( $payment_id ) {
 	$amount = get_post_meta( $payment_id, '_edd_payment_total', true );
-
+	
+	if( ! $amount ) {
+		$payment_meta = edd_get_payment_meta( $payment_id );
+		$amount = $payment_meta['amount'];
+	}
 	return apply_filters( 'edd_payment_amount', $amount );
 }
 
