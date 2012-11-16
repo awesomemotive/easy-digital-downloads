@@ -472,7 +472,7 @@ function edd_show_local_tax_opt_in() {
 ?>
 		<fieldset id="edd_tax_opt_in_fields">
 			<p>
-				<input name="edd_tax_opt_in" class="required" type="checkbox" id="edd_tax_opt_in" value="1"/>
+				<input name="edd_tax_opt_in" type="checkbox" id="edd_tax_opt_in" value="1"/>
 				<label for="edd_tax_opt_in"><?php echo isset( $edd_options['tax_location'] ) ? $edd_options['tax_location'] : __('Opt Into Taxes?', 'edd'); ?></label>
 			</p>
 		</fieldset>
