@@ -48,6 +48,9 @@ function edd_payment_history_page() {
 			$user 			= isset( $_GET['user'] ) ? $_GET['user'] : null;
 			$status 		= isset( $_GET['status'] ) ? $_GET['status'] : 'any';
 			$meta_key		= isset( $_GET['meta_key'] ) ? $_GET['meta_key'] : null;
+			$year 			= isset( $_GET['year'] ) ? $_GET['year'] : null;
+			$month 			= isset( $_GET['m'] ) ? $_GET['m'] : null;
+			$day 			= isset( $_GET['day'] ) ? $_GET['day'] : null;
 
 			$payments 		= edd_get_payments( array(
 					'offset'   => $offset,
@@ -57,7 +60,10 @@ function edd_payment_history_page() {
 					'order'    => $order, 
 					'user'     => $user, 
 					'status'   => $status, 
-					'meta_key' => $meta_key 
+					'meta_key' => $meta_key,
+					'year'	   => $year,
+					'month'    => $month,
+					'day' 	   => $day
 			) );
 			$payment_count 	= wp_count_posts( 'edd_payment' );
 
