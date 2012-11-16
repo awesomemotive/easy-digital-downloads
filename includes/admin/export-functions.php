@@ -149,7 +149,7 @@ function edd_export_all_customers() {
 			echo '"' . __( 'Email', 'edd' ) 			.  '",';
 			echo '"' . __( 'Name', 'edd' ) 				.  '",';
 			echo '"' . __( 'Total Purchases', 'edd' ) 	.  '",';
-			echo '"' . __( 'Total Purchasesd', 'edd' ) 	.  '"';
+			echo '"' . __( 'Total Purchased', 'edd' ) 	.  '"';
 			echo "\r\n";
 			foreach( $emails as $email ) {
 				

@@ -466,8 +466,8 @@ function edd_get_total_sales() {
 function edd_get_total_earnings() {
 
 	$total = (float) 0;
-	$payments = get_transient( 'edd_total_earnings' );
-	if( false === $payments || '' === $payments ) {
+	$earnings = get_transient( 'edd_earnings_total' );
+	if( false === $earnings ) {
 		$payments = edd_get_payments( array(
 			'offset' 	=> 0, 
 			'number' 	=> -1, 
@@ -477,12 +477,12 @@ function edd_get_total_earnings() {
 			'user'    	=> null, 
 			'status'  	=> 'publish',
 		) );
-		set_transient( 'edd_total_earnings', $payments, 3600 );
-	}
-	if( $payments ) {
-		foreach( $payments as $payment ) {
-			$total += edd_get_payment_amount( $payment->ID );
+		if( $payments ) {
+			foreach( $payments as $payment ) {
+				$total += edd_get_payment_amount( $payment->ID );
+			}
 		}
+		set_transient( 'edd_earnings_total', $payments, 1800 );
 	}
 	return apply_filters( 'edd_total_earnings', $total );
 }
