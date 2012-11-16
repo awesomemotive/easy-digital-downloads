@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-15 00:51+0100\n"
-"PO-Revision-Date: 2012-11-15 00:51+0100\n"
+"POT-Creation-Date: 2012-11-16 09:40+0100\n"
+"PO-Revision-Date: 2012-11-16 09:40+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
 "Language-Team: Easy Digital Downloads <pippin@pippinsplugins.com>\n"
 "Language: en_US\n"
@@ -213,6 +213,7 @@ msgstr ""
 
 #: includes/checkout-template.php:305 includes/checkout-template.php:306
 #: includes/admin/export-functions.php:22
+#: includes/admin/export-functions.php:149
 #: includes/admin/payments/payments-history.php:138
 #: includes/admin/payments/payments-history.php:155
 #: includes/admin/reporting/class-customer-reports-table.php:39
@@ -1673,7 +1674,7 @@ msgid "Key"
 msgstr ""
 
 #: includes/admin/export-functions.php:30
-#: includes/admin/export-functions.php:186
+#: includes/admin/export-functions.php:202
 #: includes/admin/downloads/dashboard-columns.php:33
 #: includes/admin/payments/payments-history.php:144
 #: includes/admin/payments/payments-history.php:158
@@ -1707,24 +1708,47 @@ msgstr ""
 msgid "No payments recorded yet"
 msgstr ""
 
-#: includes/admin/export-functions.php:153
-#: includes/admin/export-functions.php:248
+#: includes/admin/export-functions.php:150
+#: includes/admin/discounts/add-discount.php:18
+#: includes/admin/discounts/discount-codes.php:39
+#: includes/admin/discounts/discount-codes.php:52
+#: includes/admin/discounts/edit-discount.php:23
+#: includes/admin/downloads/dashboard-columns.php:26
+#: includes/admin/reporting/class-customer-reports-table.php:38
+msgid "Name"
+msgstr ""
+
+#: includes/admin/export-functions.php:151
+msgid "Total Purchases"
+msgstr ""
+
+#: includes/admin/export-functions.php:152
+msgid "Total Purchased"
+msgstr ""
+
+#: includes/admin/export-functions.php:159
+#: includes/admin/reporting/class-customer-reports-table.php:75
+msgid "Guest"
+msgstr ""
+
+#: includes/admin/export-functions.php:169
+#: includes/admin/export-functions.php:264
 msgid "Export not allowed for non-administrators."
 msgstr ""
 
-#: includes/admin/export-functions.php:187
+#: includes/admin/export-functions.php:203
 msgid "Downloaded by"
 msgstr ""
 
-#: includes/admin/export-functions.php:188
+#: includes/admin/export-functions.php:204
 msgid "IP Address"
 msgstr ""
 
-#: includes/admin/export-functions.php:189
+#: includes/admin/export-functions.php:205
 msgid "Product"
 msgstr ""
 
-#: includes/admin/export-functions.php:190
+#: includes/admin/export-functions.php:206
 msgid "File"
 msgstr ""
 
@@ -1769,15 +1793,6 @@ msgstr ""
 
 #: includes/admin/discounts/add-discount.php:12
 msgid "Add New Discount"
-msgstr ""
-
-#: includes/admin/discounts/add-discount.php:18
-#: includes/admin/discounts/discount-codes.php:39
-#: includes/admin/discounts/discount-codes.php:52
-#: includes/admin/discounts/edit-discount.php:23
-#: includes/admin/downloads/dashboard-columns.php:26
-#: includes/admin/reporting/class-customer-reports-table.php:38
-msgid "Name"
 msgstr ""
 
 #: includes/admin/discounts/add-discount.php:22
@@ -2462,10 +2477,6 @@ msgstr ""
 msgid "Total Amount Spent"
 msgstr ""
 
-#: includes/admin/reporting/class-customer-reports-table.php:75
-msgid "Guest"
-msgstr ""
-
 #: includes/admin/reporting/class-download-reports-table.php:41
 msgid "Monthly Average Sales"
 msgstr ""
@@ -2675,7 +2686,9 @@ msgid "Export Customers in CSV"
 msgstr ""
 
 #: includes/admin/reporting/reports.php:266
-msgid "Download a CSV of all customer emails."
+msgid ""
+"Download a CSV of all customer emails. This export includes purchase numbers "
+"and amounts for each customer."
 msgstr ""
 
 #: includes/admin/reporting/reports.php:276
@@ -2722,6 +2735,41 @@ msgstr ""
 msgid ""
 "The upgrade process has started, please be patient. This could take several "
 "minutes. You will be automatically redirected when the upgrade is finished."
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:83
+msgid "Payment Error"
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:83
+#, php-format
+msgid ""
+"Payment creation failed before sending buyer to PayPal. Payment data: %s"
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:263
+#: includes/gateways/paypal-standard.php:268
+#: includes/gateways/paypal-standard.php:290
+#: includes/gateways/paypal-standard.php:295
+#: includes/gateways/paypal-standard.php:300
+msgid "IPN Error"
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:263
+#: includes/gateways/paypal-standard.php:268
+msgid "Invalid IPN verification response. IPN data: "
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:290
+msgid "Invalid currency in IPN response. IPN data: "
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:295
+msgid "Invalid payment amount in IPN response. IPN data: "
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:300
+msgid "Invalid purchase key in IPN response. IPN data: "
 msgstr ""
 
 #: templates/checkout_cart.php:6
