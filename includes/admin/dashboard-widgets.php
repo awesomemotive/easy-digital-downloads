@@ -105,7 +105,7 @@ function edd_dashboard_sales_widget() {
 		<table>
 			<tbody>
 				<tr class="first">
-					<td class="b b-earnings"><?php echo edd_get_total_earnings(); ?></td>
+					<td class="b b-earnings"><?php echo edd_currency_filter( edd_get_total_earnings() ); ?></td>
 					<td class="last t earnings"><?php _e('Total Earnings', 'edd'); ?></td>
 				</tr>
 				<tr>
