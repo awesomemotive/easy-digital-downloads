@@ -45,7 +45,7 @@ function edd_export_payment_history() {
 		echo '"' . __( 'Discounts,', 'edd' ) 	.  '",';
 		echo '"' . __( 'Amount paid', 'edd' ) 	.  '",';
 		if ( edd_use_taxes() ) {
-			echo '"' . __( 'Amount taxed', 'edd' ) 	.  '",';		
+			echo '"' . __( 'Amount taxed', 'edd' ) . '",';
 		}
 		echo '"' . __( 'Payment method', 'edd' ).  '",';
 		echo '"' . __( 'Key', 'edd' ) 			.  '",';
