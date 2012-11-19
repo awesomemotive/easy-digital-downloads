@@ -117,7 +117,7 @@ function edd_export_payment_history() {
 			echo '"' . html_entity_decode( edd_currency_filter( edd_format_amount( $payment_meta['amount'] ) ) ) . '",';
 
 			if ( edd_use_taxes() ) {
-				echo '"' . edd_payment_tax( $payment->ID, $payment_meta ) . '",';
+				echo '"' . html_entity_decode( edd_payment_tax( $payment->ID, $payment_meta ) ) . '",';
 			}
 
 			$gateway = get_post_meta( $payment->ID, '_edd_payment_gateway', true );
