@@ -129,7 +129,7 @@ function edd_export_payment_history() {
 
 			echo '"' . $payment_meta['key'] . '",';
 
-			echo '"' . date( get_option( 'date_format' ), strtotime( $payment->post_date ) ) . '",';
+			echo '"' . date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) ) . '",';
 
 			$user_id = isset( $user_info['id'] ) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email'];
 			echo '"' . is_numeric( $user_id ) ? get_user_by( 'id', $user_id )->display_name : __( 'guest', 'edd' ) . '",';
