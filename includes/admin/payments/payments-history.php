@@ -263,7 +263,7 @@ function edd_payment_history_page() {
 												<h4><?php _e( 'Buyer\'s Personal Details:', 'edd' ); ?></h4>
 												<ul>
 													<li><?php echo __( 'Name:', 'edd' ) . ' ' . $user_info['first_name'] . ' ' . $user_info['last_name']; ?></li>
-													<li><?php echo __( 'Email:', 'edd' ) . ' ' . $payment_meta['email']; ?></li>
+													<li><?php echo __( 'Email:', 'edd' ) . ' <a href="mailto:'.$payment_meta['email'].'">' . $payment_meta['email']; ?></a></li>
 													<?php do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info ); ?>
 												</ul>
 											</div>
