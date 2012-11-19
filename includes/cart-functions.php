@@ -274,7 +274,7 @@ function edd_get_cart_subtotal() {
 		}
 
 	}
-	return apply_filters( 'edd_get_cart_subtotal', number_format( $amount, 2 ) );
+	return apply_filters( 'edd_get_cart_subtotal', $amount );
 }
 
 
@@ -318,7 +318,7 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 
 	}
 
-	return apply_filters( 'edd_get_cart_amount', number_format( $amount, 2 ), $add_taxes, $local_override );
+	return apply_filters( 'edd_get_cart_amount', $amount, $add_taxes, $local_override );
 }
 
 
