@@ -45,3 +45,22 @@ function edd_remove_post_types_order() {
 	remove_filter( 'posts_orderby', 'CPTOrderPosts' );
 }
 add_action( 'load-edit.php', 'edd_remove_post_types_order' );
+
+
+/**
+ * Disables opengraph tags on the checkout page
+ *
+ * There is a bizarre conflict that makes the checkout errors not get displayed
+ * when the Jetpack opengraph tags are displayed
+ *
+ * @access      private
+ * @since       1.3.3.1
+ * @return      bool
+*/
+
+function edd_disable_jetpack_og_on_checkout() {
+	if( edd_is_checkout() )
+		return false;
+	return true;
+}
+add_filter( 'jetpack_enable_open_graph', 'edd_disable_jetpack_og_on_checkout', 999 );
