@@ -100,7 +100,6 @@ function edd_process_paypal_purchase( $purchase_data ) {
         $paypal_args = array( 
             'cmd'           => '_xclick', 
             'amount'        => $purchase_data['subtotal'],
-            'tax'           => $purchase_data['tax'],
             'business'      => $edd_options['paypal_email'], 
             'item_name'     => stripslashes_deep( html_entity_decode( wp_strip_all_tags( $summary ), ENT_COMPAT, 'UTF-8' ) ), 
             'email'         => $purchase_data['user_email'], 
@@ -114,7 +113,10 @@ function edd_process_paypal_purchase( $purchase_data ) {
             'rm'            => '2', 
             'return'        => $return_url, 
             'notify_url'    => $listener_url
-         );
+        );
+        
+        if( edd_use_taxes() )
+        	$paypal_args['tax'] = $purchase_data['tax'];
 
 		// build query
 		$paypal_redirect .= http_build_query( apply_filters('edd_paypal_redirect_args', $paypal_args, $purchase_data ) );
