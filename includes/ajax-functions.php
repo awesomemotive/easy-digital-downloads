@@ -203,13 +203,14 @@ add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_titl
 
 function edd_get_ajax_url() {
 	
-	$current_url = edd_get_current_page_url();
-	$ajax_url = admin_url( 'admin-ajax.php' );
+	$scheme = defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https' : 'admin';
 
-	if( preg_match( '/^https/', $ajax_url ) && ! preg_match( '/^https/', $current_url ) ) {
-		$ajax_url = preg_replace( '/^https/', 'http', $ajax_url );
-	} else if( preg_match( '/^https/', $current_url ) && ! preg_match( '/^https/', $ajax_url ) ) {
+	$current_url = edd_get_current_page_url();
+	$ajax_url = admin_url( 'admin-ajax.php', $scheme );
+	
+	if( preg_match( '/^https/', $current_url ) && ! preg_match( '/^https/', $ajax_url ) ) {
 		$ajax_url = preg_replace( '/^http/', 'https', $ajax_url );
 	}
+	
 	return apply_filters( 'edd_ajax_url', $ajax_url );
 }
