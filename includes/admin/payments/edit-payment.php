@@ -9,6 +9,9 @@
  * @since       1.0 
 */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
+
 $payment = get_post( $_GET['purchase_id'] );
 $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true );
 ?>

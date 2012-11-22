@@ -7,6 +7,10 @@
  * @return      array
 */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
+
+
 function edd_query_vars( $vars ) {
 	$vars[] = 'edd_action';
 	$vars[] = 'cart_item';

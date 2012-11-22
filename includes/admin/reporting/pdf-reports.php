@@ -10,6 +10,8 @@
  * @since       1.1.4.0
 */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Generate PDF Reports

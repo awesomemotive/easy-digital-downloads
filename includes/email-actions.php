@@ -9,6 +9,8 @@
  * @since       1.0.8.2
 */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Resend Email Purchase Receipt

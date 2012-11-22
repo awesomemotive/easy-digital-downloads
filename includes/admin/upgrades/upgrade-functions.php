@@ -10,7 +10,8 @@
  * @since       1.3.1
 */
 
-
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Display upgrade notices
