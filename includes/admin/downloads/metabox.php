@@ -570,12 +570,11 @@ function edd_render_stats_meta_box() {
  * @return      void
  */
 function edd_render_purchase_log_meta_box() {
-	global $post;
+	global $post, $edd_logs;
 		
 	$page = isset( $_GET['paged'] ) ? intval( $_GET['paged'] ) : 1;
 
-	$sales_log = new EDD_Logging();
-	$sales = $sales_log->get_logs( $post->ID, 'sale', $page );
+	$sales = $edd_logs->get_logs( $post->ID, 'sale', $page );
 	
 	echo '<table class="form-table">';
 		echo '<tr>';
@@ -621,7 +620,7 @@ function edd_render_purchase_log_meta_box() {
 		}
 	echo '</table>';
 
-	$total_log_entries = $sales_log->get_log_count( $post->ID, 'sale' );	
+	$total_log_entries = $edd_logs->get_log_count( $post->ID, 'sale' );	
 	$total_pages = ceil( $total_log_entries / 10 );
 	
 	if ( $total_pages > 1) :
@@ -656,14 +655,12 @@ function edd_render_purchase_log_meta_box() {
  * @return      void
  */
 function edd_render_download_log_meta_box() {
-	global $post;
+	global $post, $edd_logs;
 
 
 	$page = isset( $_GET['paged'] ) ? intval( $_GET['paged'] ) : 1;
 
-	$download_log = new EDD_Logging();
-
-	$file_downloads = $download_log->get_logs( $post->ID, 'file_download', $page );
+	$file_downloads = $edd_logs->get_logs( $post->ID, 'file_download', $page );
 	
 	echo '<table class="form-table">';
 		echo '<tr>';
@@ -726,7 +723,7 @@ function edd_render_download_log_meta_box() {
 		}
 	echo '</table>';
 
-	$total_log_entries = $download_log->get_log_count( $post->ID, 'file_download' );	
+	$total_log_entries = $edd_logs->get_log_count( $post->ID, 'file_download' );	
 	$total_pages = ceil( $total_log_entries / 10 );
 	
 	if ( $total_pages > 1) :
