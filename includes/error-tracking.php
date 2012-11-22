@@ -83,6 +83,25 @@ function edd_set_error( $error_id, $error_message ) {
 
 
 /**
+ * Unset an Error
+ *
+ * Removes a stored error
+ *
+ * @access      public
+ * @since       1.3.4
+ * @param       $error_id string - the ID of the error being set
+ * @return      void
+*/
+
+function edd_unset_error( $error_id ) {
+	$errors = edd_get_errors();
+	if( $errors ) {
+		unset( $errors[ $error_id ] );
+	}
+}
+
+
+/**
  * Clear Errors
  *
  * Clears all stored errors.
