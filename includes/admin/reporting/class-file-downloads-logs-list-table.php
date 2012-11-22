@@ -40,7 +40,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 	function get_columns() {
 		$columns = array(
-			'ID'		=> __( 'ID', 'edd' ),
+			'ID'		=> __( 'Log ID', 'edd' ),
 			'download'	=> edd_get_label_singular(),
 			'user_id'  	=> __( 'User', 'edd' ),
 			'payment_id'=> __( 'Payment ID', 'edd' ),
@@ -51,6 +51,10 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		return $columns;
 	}
 
+	function bulk_actions() {
+		// these aren't really bulk actions but this outputs the markup in the right place
+		edd_log_views();
+	}
    
 	function logs_data() {
 
