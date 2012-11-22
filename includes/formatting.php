@@ -9,6 +9,8 @@
  * @since       1.2
 */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Sanitize Amount

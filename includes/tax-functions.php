@@ -13,6 +13,8 @@
  * @since       1.3.3
 */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Checks if taxes are enabled

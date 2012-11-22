@@ -11,6 +11,8 @@
  * @since       1.0.8.6
 */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Get Users Purchases
