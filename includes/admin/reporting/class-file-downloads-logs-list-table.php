@@ -25,7 +25,13 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	function column_default( $item, $column_name ) {
 		switch( $column_name ){
 			case 'download' :
-				return '<a href="' . admin_url( '/post.php?post=' . $item[ $column_name ] . '&action=edit' ) . '" target="_blank">' . get_the_title( $item[ $column_name ] ) . '</a>';
+				return '<a href="' . 
+				admin_url( '/post.php?post=' . $item[ $column_name ] . '&action=edit' ) .
+				 '" target="_blank">' . get_the_title( $item[ $column_name ] ) . '</a>';
+			case 'user_id' :
+				return '<a href="' . 
+					admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item[ $column_name ] ) ) .
+					 '" target="_blank">' . $item[ 'user_name' ] . '</a>';
 			default:
 				return $item[ $column_name ];
 		}
@@ -36,7 +42,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		$columns = array(
 			'ID'		=> __( 'ID', 'edd' ),
 			'download'	=> edd_get_label_singular(),
-			'user'  	=> __( 'User', 'edd' ),
+			'user_id'  	=> __( 'User', 'edd' ),
 			'file'  	=> __( 'File', 'edd' ),
 			'ip'  		=> __( 'IP Address', 'edd' ),
 			'date'  	=> __( 'Date', 'edd' )
@@ -71,7 +77,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				$logs_data[] = array(
 					'ID' 		=> $log->ID,
 					'download'	=> $log->post_parent,
-					'user'		=> $user_data ? $user_data->display_name : $user_info['email'],
+					'user_id'	=> $user_data ? $user_data->ID : $user_info['email'],
+					'user_name'	=> $user_data ? $user_data->display_name : $user_info['email'],
 					'file'		=> $file_name,
 					'ip'		=> $ip,
 					'date'		=> $log->post_date
