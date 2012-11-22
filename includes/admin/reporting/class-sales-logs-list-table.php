@@ -24,12 +24,14 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 	function column_default( $item, $column_name ) {
 		switch( $column_name ){
-			case 'earnings' :
-				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
-			case 'average_sales' :
-				return round( $item[ $column_name ] );
-			case 'average_earnings' :
-				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
+			case 'download' :
+				return '<a href="' . 
+				admin_url( '/post.php?post=' . $item[ $column_name ] . '&action=edit' ) .
+				 '" target="_blank">' . get_the_title( $item[ $column_name ] ) . '</a>';
+			case 'user_id' :
+				return '<a href="' . 
+					admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item[ $column_name ] ) ) .
+					 '" target="_blank">' . $item[ 'user_name' ] . '</a>';
 			default:
 				return $item[ $column_name ];
 		}
@@ -38,80 +40,50 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 	function get_columns() {
 		$columns = array(
-			'title'     		=> edd_get_label_singular(),
-			'sales'  			=> __( 'Sales', 'edd' ),
-			'earnings'  		=> __( 'Earnings', 'edd' ),
-			'average_sales'  	=> __( 'Monthly Average Sales', 'edd' ),
-			'average_earnings'  => __( 'Monthly Average Earnings', 'edd' )
+			'ID'		=> __( 'Log ID', 'edd' ),
+			'payment_id'=> __( 'Payment ID', 'edd' ),
+			'user_id'  	=> __( 'User', 'edd' ),
+			'date'  	=> __( 'Date', 'edd' )
 		);
 		return $columns;
 	}
 
-
-	function get_sortable_columns() {
-		return array(
-			'title' 	=> array( 'title', true ),
-			'sales' 	=> array( 'sales', false ),
-			'earnings' 	=> array( 'earnings', false ),
-		);
-	}
-
-
 	function bulk_actions() {
-		// these are really bulk actions but this outputs the markup in the right place
-		edd_report_views();
+		// these aren't really bulk actions but this outputs the markup in the right place
+		edd_log_views();
 	}
+   
+	function logs_data() {
 
+		global $edd_logs;
 
-	function reports_data() {
+		$logs_data = array();
 
-		$reports_data = array();
+		$paged = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 
-		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'title';
-		$order = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+		$logs = $edd_logs->get_logs( null, 'sale', $paged );
 
-		$report_args = array(
-			'post_type' 	=> 'download',
-			'post_status'	=> 'publish',
-			'posts_per_page'=> -1,
-			'order'			=> $order
-		);
-			
-		switch( $orderby ) :
+		if( $logs ) {
 
-			case 'title' :
-				$report_args['orderby'] = 'title'; 
-				break;
+			foreach( $logs as $log ) {
 
-			case 'sales' :
-				$report_args['orderby'] = 'meta_value_num'; 
-				$report_args['meta_key'] = '_edd_download_sales';
-				break;
+				$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
+				$user_info = edd_get_payment_meta_user_info( $payment_id );
 
-			case 'earnings' :
-				$report_args['orderby'] = 'meta_value_num'; 
-				$report_args['meta_key'] = '_edd_download_earnings';
-				break;
-
-		endswitch;
-	 
-		$downloads = get_posts( $report_args );
-		if( $downloads ) {
-			foreach( $downloads as $download ) {
-				$reports_data[] = array(
-					'ID' 				=> $download->ID,
-					'title' 			=> get_the_title( $download->ID ),
-					'sales' 			=> edd_get_download_sales_stats( $download->ID ),
-					'earnings'			=> edd_get_download_earnings_stats( $download->ID ),
-					'average_sales'   	=> edd_get_average_monthly_download_sales( $download->ID ),
-					'average_earnings'  => edd_get_average_monthly_download_earnings( $download->ID )
+				$logs_data[] = array(
+					'ID' 		=> $log->ID,
+					'payment_id'=> $payment_id,
+					'user_id'	=> $user_info['id'],
+					'user_name'	=> $user_info['first_name'] . ' ' . $user_info['last_name'],
+					'date'		=> get_post_field( 'post_date', $payment_id )
 				);
 			}
 		}
-		return $reports_data;
+
+		return $logs_data;
 	}
 
-   
+
 	/** ************************************************************************
 	 * @uses $this->_column_headers
 	 * @uses $this->items
@@ -123,6 +95,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 	function prepare_items() {
 	   
+		global $edd_logs;
+
 		/**
 		 * First, lets decide how many records per page to show
 		 */
@@ -136,15 +110,11 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		 
-		$data = $this->reports_data();
-
 		$current_page = $this->get_pagenum();
 	
-		$total_items = count( $data );
+		$this->items = $this->logs_data();
 
-		$data = array_slice( $data, ( ( $current_page - 1 ) * $per_page ), $per_page );
-
-		$this->items = $data;
+		$total_items = $edd_logs->get_log_count( null, 'sale' );
 
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,                  	// WE have to calculate the total number of items

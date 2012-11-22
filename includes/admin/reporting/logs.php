@@ -22,3 +22,46 @@ function edd_logs_view_file_downloads() {
 
 }
 add_action( 'edd_logs_view_file_downloads', 'edd_logs_view_file_downloads' );
+
+
+/**
+ * Renders the Reports page views drop down
+ *
+ * @access      public
+ * @since       1.3
+ * @return      void
+*/
+
+function edd_log_views() {
+	// default log views
+	$views = array(
+		'sales' 			=> __( 'Sales', 'edd' ),
+		'file_downloads'	=> __( 'File Downloads', 'edd' ),
+		'gateway_errors'	=> __( 'Payment Errors', 'edd' )
+	);
+
+	$views = apply_filters( 'edd_log_views', $views );
+
+	// current view
+	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'sales';
+
+	?>
+	<form id="edd-sales-filter" method="get">
+		<div class="tablenav top">
+			<div class="alignleft actions">
+				<span><?php _e( 'Log Views', 'edd' ); ?></span>
+				<input type="hidden" name="post_type" value="download"/>
+				<input type="hidden" name="page" value="edd-reports"/>
+				<input type="hidden" name="tab" value="logs"/>
+				<select id="edd-logs-view" name="view">
+					<?php foreach( $views as $view_id => $label ): ?>
+						<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
+					<?php endforeach; ?>
+				</select>
+				<?php do_action( 'edd_log_view_actions' ); ?>
+				<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
+			</div>
+		</div>
+	</form>
+	<?php
+}
