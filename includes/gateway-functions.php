@@ -49,7 +49,8 @@ function edd_get_enabled_payment_gateways() {
 	global $edd_options;
 
 	$gateways = edd_get_payment_gateways();
-	$enabled_gateways = isset( $edd_options['gateways'] ) ? $edd_options['gateways'] : '';
+	$enabled_gateways = isset( $edd_options['gateways'] ) ? $edd_options['gateways'] : false;
+
 	$gateway_list = array();
 
 	foreach( $gateways as $key => $gateway ):
@@ -206,3 +207,23 @@ function edd_get_chosen_gateway() {
 function edd_record_gateway_error( $title = '', $message = '', $parent = 0 ) {
 	return edd_record_log( $title, $message, $parent, 'gateway_error' );
 }
+
+
+/**
+ * Sets an error on checkout if no gateways are enabled
+ *
+ * @access      public
+ * @since       1.3.4
+ * @return      void
+*/
+
+function edd_no_gateway_error() {
+
+	$gateways = edd_get_enabled_payment_gateways();
+
+	if( empty( $gateways ) )
+		edd_set_error( 'no_gateways', __( 'You must enable a payment gateway to use Easy Digital Downloads', 'edd' ) );
+	else
+		edd_unset_error( 'no_gateways' );
+}
+add_action( 'init', 'edd_no_gateway_error' );
