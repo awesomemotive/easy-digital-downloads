@@ -657,7 +657,6 @@ function edd_render_purchase_log_meta_box() {
 function edd_render_download_log_meta_box() {
 	global $post, $edd_logs;
 
-
 	$page = isset( $_GET['paged'] ) ? intval( $_GET['paged'] ) : 1;
 
 	$file_downloads = $edd_logs->get_logs( $post->ID, 'file_download', $page );
