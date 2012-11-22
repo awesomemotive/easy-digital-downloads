@@ -49,11 +49,7 @@ function edd_reports_page() {
 	
 		do_action( 'edd_reports_page_top' );
 
-		if( $active_tab == 'reports' ) {
-			do_action( 'edd_reports_tab_reports' );
-		} elseif ( $active_tab == 'export' ) {
-			do_action( 'edd_reports_tab_export' );
-		}
+		do_action( 'edd_reports_tab_' . $active_tab );
 
 		do_action( 'edd_reports_page_bottom' );
 
