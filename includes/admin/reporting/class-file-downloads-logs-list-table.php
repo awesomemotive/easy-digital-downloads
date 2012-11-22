@@ -43,6 +43,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			'ID'		=> __( 'ID', 'edd' ),
 			'download'	=> edd_get_label_singular(),
 			'user_id'  	=> __( 'User', 'edd' ),
+			'payment_id'=> __( 'Payment ID', 'edd' ),
 			'file'  	=> __( 'File', 'edd' ),
 			'ip'  		=> __( 'IP Address', 'edd' ),
 			'date'  	=> __( 'Date', 'edd' )
@@ -66,6 +67,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			foreach( $logs as $log ) {
 
 				$user_info 	= get_post_meta( $log->ID, '_edd_log_user_info', true );
+				$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
 				$ip 		= get_post_meta( $log->ID, '_edd_log_ip', true );
 				$user_id 	= isset( $user_info['id']) ? $user_info['id'] : 0;
 				$user_data 	= get_userdata( $user_id );
@@ -77,6 +79,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				$logs_data[] = array(
 					'ID' 		=> $log->ID,
 					'download'	=> $log->post_parent,
+					'payment_id'=> $payment_id,
 					'user_id'	=> $user_data ? $user_data->ID : $user_info['email'],
 					'user_name'	=> $user_data ? $user_data->display_name : $user_info['email'],
 					'file'		=> $file_name,
