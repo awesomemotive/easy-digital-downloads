@@ -291,3 +291,24 @@ function edd_reports_tab_export() {
 	<?php
 }
 add_action( 'edd_reports_tab_export', 'edd_reports_tab_export' );
+
+
+/**
+ * Renders the Reports page
+ *
+ * @access      public
+ * @since       1.3
+ * @return      void
+*/
+
+function edd_reports_tab_logs() {
+
+	require( EDD_PLUGIN_DIR . 'includes/admin/reporting/logs.php' );
+
+	// current view
+	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'sales';
+
+	do_action( 'edd_logs_view_' . $current_view );
+
+}
+add_action( 'edd_reports_tab_logs', 'edd_reports_tab_logs' );
