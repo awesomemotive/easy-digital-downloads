@@ -337,6 +337,7 @@ function edd_purchase_form_validate_new_user() {
 	$user_pass	  = isset( $_POST["edd_user_pass"] ) ? trim( $_POST["edd_user_pass"] ) : false;
 	$pass_confirm = isset( $_POST["edd_user_pass_confirm"] ) ? trim( $_POST["edd_user_pass_confirm"] ) : false;
 
+
 	// Check if we have an username to register
 	if( $user_login && strlen( $user_login ) > 0 ) {
 		$registering_new_user = true;
@@ -346,7 +347,7 @@ function edd_purchase_form_validate_new_user() {
 			// username already registered
 			edd_set_error( 'username_unavailable', __( 'Username already taken', 'edd' ) );
 		// Check if it's valid
-		} else if( !validate_username( $user_login ) ) {
+		} else if( ! edd_validate_username( $user_login ) ) {
 		   // invalid username
 			edd_set_error( 'username_invalid', __( 'Invalid username', 'edd' ) );
 		} else {
