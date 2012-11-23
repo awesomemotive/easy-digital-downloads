@@ -494,8 +494,9 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
 function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
 	global $post;
 	
-	$current_page = edd_get_current_page_url();
-	$remove_url = add_query_arg( array('cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page);
+	$current_page = trailingslashit( edd_get_current_page_url() );
+
+	$remove_url = $current_page . 'edd-remove/' . $cart_key;
 
 	return apply_filters('edd_remove_item_url', $remove_url);
 }
@@ -532,10 +533,13 @@ add_action('edd_after_download_content', 'edd_show_added_to_cart_messages');
  * @return      mixed - the full URL to the checkout page, if present, NULL if it doesn't exist
 */
 
-function edd_get_checkout_uri() {
+function edd_get_checkout_uri( $extras = false ) {
     global $edd_options;
 
-    $uri = isset( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) : NULL;
+    $uri = isset( $edd_options['purchase_page'] ) ? trailingslashit( get_permalink( $edd_options['purchase_page'] ) ) : NULL;
+    if( $extras )
+    	$uri .= $extras;
+
     return apply_filters( 'edd_get_checkout_uri', $uri );
 }
 

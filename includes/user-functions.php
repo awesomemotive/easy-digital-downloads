@@ -215,7 +215,6 @@ function edd_purchase_total_of_user( $user = null ) {
 }
 
 
-
 /**
  * Validate a potential username
  *
