@@ -45,15 +45,15 @@ function edd_get_payments( $args = array() ) {
 	extract( $args );
 
 	$payment_args = array(
-		'post_type' => 'edd_payment', 
+		'post_type'      => 'edd_payment', 
 		'posts_per_page' => $number, 
-		'offset' => $offset,
-		'order' => $order,
-		'orderby' => $orderby,
-		'post_status' => $status,
-		'year' => $year,
-		'monthnum' => $month,
-		'day' => $day
+		'offset'         => $offset,
+		'order'          => $order,
+		'orderby'        => $orderby,
+		'post_status'    => $status,
+		'year'           => $year,
+		'monthnum'       => $month,
+		'day'            => $day
 	);
 
 	if( !is_null( $meta_key ) )
@@ -67,7 +67,7 @@ function edd_get_payments( $args = array() ) {
 		}
 		$payment_args['meta_query'] = array(
 			array(
-				'key' => $user_key,
+				'key'   => $user_key,
 				'value' => $user
 			)
 		);
@@ -78,7 +78,7 @@ function edd_get_payments( $args = array() ) {
 
 			// append to the user meta query
 			$payment_args['meta_query'][1] = array(
-				'key' => '_edd_payment_mode',
+				'key'   => '_edd_payment_mode',
 				'value' => $mode
 			);
 
@@ -87,7 +87,7 @@ function edd_get_payments( $args = array() ) {
 			// create a new meta query
 			$payment_args['meta_query'] = array(
 				array(
-					'key' => '_edd_payment_mode',
+					'key'   => '_edd_payment_mode',
 					'value' => $mode
 				)
 			);
