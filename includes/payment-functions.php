@@ -39,6 +39,7 @@ function edd_get_payments( $args = array() ) {
 		'year'	   => null,
 		'month'	   => null,
 		'day'	   => null,
+		'children' => false
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -55,6 +56,9 @@ function edd_get_payments( $args = array() ) {
 		'monthnum'       => $month,
 		'day'            => $day
 	);
+
+	if( ! $children )
+		$payment_args['post_parent'] = 0; // only get top level payments
 
 	if( !is_null( $meta_key ) )
 		$payment_args['meta_key'] = $meta_key;
