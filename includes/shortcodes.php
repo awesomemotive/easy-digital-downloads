@@ -271,11 +271,28 @@ function edd_downloads_query($atts, $content = null) {
 		break;
 	}
 
-	if ( $tags ) {
-		$query['download_tag'] = $tags;
-	}
-	if ( $category ) {
-		$query['download_category'] = $category;
+	if( $tags || $category ) {
+
+		$query['tax_query'] = array(
+			'relation'     => $relation
+		);
+
+		if( $tags ) {
+			$query['tax_query'][] = array(
+				'taxonomy' => 'download_tag',
+				'terms'    => $tags,
+				'field'    => 'slug'
+			);
+		}
+
+		if( $category ) {
+			$query['tax_query'][] = array(
+				'taxonomy' => 'download_category',
+				'terms'    => $category,
+				'field'    => 'slug'
+			);
+		}
+
 	}
 
 	if ( get_query_var( 'paged' ) )
