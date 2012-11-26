@@ -781,7 +781,7 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 						
 						// check to see if the file download limit has been reached
 						if( edd_is_file_at_download_limit( $id, $payment->ID, $file_key ) )
-							wp_die( __('Sorry but you have hit your download limit for this file.', 'edd'), __('Error', 'edd') );
+							wp_die( apply_filters( 'edd_download_limit_reached_text', __('Sorry but you have hit your download limit for this file.' ), 'edd'), __('Error', 'edd') );
 
 						// make sure the link hasn't expired
 						if( time() < $expire ) {
