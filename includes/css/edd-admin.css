@@ -19,6 +19,7 @@
 /* Payment History Styles
 -------------------------------------------------------------- */
 tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
+.wp-list-table.downloads th#id { width: 80px; }
 
 /* Metabox Styles
 -------------------------------------------------------------- */
