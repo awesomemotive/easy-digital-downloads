@@ -277,7 +277,7 @@ function edd_process_paypal_ipn() {
 
 	if( has_action( 'edd_paypal_' . $encoded_data_array['txn_type'] ) ) {
 		// allow PayPal IPN types to be processed separately
-		do_action( 'edd_paypal_' . $encoded_data_array['txn_type'], $encoded_data_array, );
+		do_action( 'edd_paypal_' . $encoded_data_array['txn_type'], $encoded_data_array );
 	} else {
 		// fallback to web accept just in case the txn_type isn't present
 		do_action( 'edd_paypal_web_accept', $encoded_data_array );
@@ -296,7 +296,7 @@ add_action( 'edd_verify_paypal_ipn', 'edd_process_paypal_ipn' );
 */
 
 function edd_process_paypal_web_accept( $data ) {
-	
+
 	// collect payment details
 	$payment_id     = $data['custom'];
 	$purchase_key   = $data['item_number'];
