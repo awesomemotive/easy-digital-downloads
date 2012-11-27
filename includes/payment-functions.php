@@ -198,6 +198,31 @@ function edd_update_payment_status($payment_id, $new_status = 'publish') {
 }
 
 
+/**
+ * Delete Purchase
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
+function edd_delete_purchase( $payment_id = 0 ) {
+	
+	$downloads = edd_get_payment_meta_downloads( $payment_id );
+
+	if( is_array( $downloads ) ) {
+		// update sale counts and earnings for all purchased products
+		foreach( $downloads as $download ) {
+			edd_undo_purchase( $download['id'], $payment_id );
+		}
+	}					
+	
+	do_action( 'edd_payment_delete', $payment_id );
+	wp_delete_post( $payment_id, true );
+	do_action( 'edd_payment_deleted', $payment_id );
+
+}
+
 
 /**
  * Undos a purchase, including the decrease of sale and earning stats

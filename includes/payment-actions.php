@@ -150,32 +150,22 @@ add_action( 'edd_edit_payment', 'edd_update_edited_purchase' );
 
 
 /**
- * Delete Purchase
+ * Trigger a Purchase deletion
  *
  * @access      private
- * @since       1.0 
+ * @since       1.3.4
  * @return      void
 */
 
-function edd_delete_purchase( $data ) {
+function edd_trigger_purchase_delete( $data ) {
 	if( wp_verify_nonce( $data['_wpnonce'], 'edd_payment_nonce' ) ) {
 		$payment_id = absint( $data['purchase_id'] );
-		$downloads = edd_get_payment_meta_downloads( $payment_id );
-		if( is_array( $downloads ) ) {
-			// update sale counts and earnings for all purchased products
-			foreach( $downloads as $download ) {
-				edd_undo_purchase( $download['id'], $payment_id );
-			}
-		}					
-		
-		do_action( 'edd_payment_delete', $payment_id );
-		wp_delete_post( $payment_id, true );
-		do_action( 'edd_payment_deleted', $payment_id );
+		edd_delete_purchase( $payment_id );
 		wp_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
 		exit;
 	}
 }
-add_action( 'edd_delete_payment', 'edd_delete_purchase' );
+add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
 
 
 /**
