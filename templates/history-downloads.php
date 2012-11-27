@@ -37,8 +37,8 @@ if( $purchases ) :
 							echo '<td class="edd_download_download_files">';
 
 							if( $download_files ) {
-								
-								foreach($download_files as $filekey => $file) {
+
+								foreach( $download_files as $filekey => $file ) {
 
 									$download_url = edd_get_download_file_url( $purchase_data['key'], $purchase_data['email'], $filekey, $id );
 									
