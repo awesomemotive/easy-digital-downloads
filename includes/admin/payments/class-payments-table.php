@@ -215,7 +215,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 							echo '<li>';
 								
 								// retrieve the ID of the download
-								$id = isset( $payment_meta['cart_details'] ) ? $cart_item['ID'] : $cart_item;
+								$id = isset( $payment_meta['cart_details'] ) ? $cart_item['id'] : $cart_item;
 								
 								// if download has variable prices, override the default price
 								$price_override = isset( $payment_meta['cart_details'] ) ? $cart_item['price'] : null; 
@@ -292,10 +292,10 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	function column_user( $item ) {
 
 		$user_info = edd_get_payment_meta_user_info( $item['ID'] );
-		$user_id = isset( $user_info['ID'] ) && $user_info['ID'] != -1 ? $user_info['ID'] : $user_info['email'];
+		$user_id = isset( $user_info['id'] ) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email'];
 
 		if( is_numeric( $user_id ) ) {
-			$user = get_user_by('ID', $user_id);
+			$user = get_userdata( $user_id ) ;
 			$display_name = is_object( $user ) ? $user->display_name : __('guest', 'edd');												
 		} else {
 			$display_name = __( 'guest', 'edd' );
