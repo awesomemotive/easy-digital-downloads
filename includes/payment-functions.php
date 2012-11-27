@@ -49,20 +49,30 @@ function edd_get_payments( $args = array() ) {
 		'posts_per_page' => $number, 
 		'paged'          => $page,
 		'order'          => $order,
-		'orderby'        => $orderby,
 		'post_status'    => $status,
 		'year'           => $year,
 		'monthnum'       => $month,
 		'day'            => $day
 	);
 
+	switch( $orderby ) :
+
+		case 'amount' :
+			$payment_args['orderby']  = 'meta_value_num';
+			$payment_args['meta_key'] = '_edd_payment_total';
+			break;
+		default :
+			$payment_args['orderby']  = $status;
+			break;
+	endswitch;
+
 	if( ! $children )
 		$payment_args['post_parent'] = 0; // only get top level payments
 
-	if( !is_null( $meta_key ) )
+	if( ! is_null( $meta_key ) )
 		$payment_args['meta_key'] = $meta_key;
 
-	if( !is_null( $user ) ) {
+	if( ! is_null( $user ) ) {
 		if( is_numeric( $user ) ) {
 			$user_key = '_edd_payment_user_id';
 		} else {
