@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-22 20:12+0100\n"
-"PO-Revision-Date: 2012-11-22 20:12+0100\n"
+"POT-Creation-Date: 2012-11-27 17:24+0100\n"
+"PO-Revision-Date: 2012-11-27 17:24+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
 "Language-Team: FxB <fx@fxbenard.com>\n"
 "Language: fr_FR\n"
@@ -50,13 +50,13 @@ msgid "The discount you entered is invalid"
 msgstr "La remise que vous avez encodé est invalide"
 
 # @ edd
-#: includes/cart-functions.php:517
+#: includes/cart-functions.php:518
 #, php-format
 msgid "You have successfully added %s to your shopping cart."
 msgstr "Vous venez d'ajouter avec succès %s à votre panier."
 
 # @ edd
-#: includes/cart-functions.php:518
+#: includes/cart-functions.php:519
 msgid "Checkout."
 msgstr "Commander."
 
@@ -261,8 +261,9 @@ msgstr "Mot de passe à nouveau"
 #: includes/checkout-template.php:307 includes/checkout-template.php:308
 #: includes/admin/export-functions.php:43
 #: includes/admin/export-functions.php:176
-#: includes/admin/payments/payments-history.php:146
-#: includes/admin/payments/payments-history.php:163
+#: includes/admin/payments/class-payments-table.php:93
+#: includes/admin/payments/payments-history-old.php:138
+#: includes/admin/payments/payments-history-old.php:155
 #: includes/admin/reporting/class-customer-reports-table.php:42
 msgid "Email"
 msgstr "E-mail "
@@ -340,7 +341,7 @@ msgstr "Retour"
 # @ edd
 #: includes/checkout-template.php:532 includes/admin/downloads/metabox.php:634
 #: includes/admin/downloads/metabox.php:736
-#: includes/admin/payments/payments-history.php:330
+#: includes/admin/payments/payments-history-old.php:318
 msgid "Next"
 msgstr "Suivant"
 
@@ -508,12 +509,12 @@ msgid "You are already logged in"
 msgstr "Vous êtes déjà connecté(e)."
 
 # @ edd
-#: includes/login-register.php:86 includes/process-purchase.php:439
+#: includes/login-register.php:86 includes/process-purchase.php:440
 msgid "The password you entered is incorrect"
 msgstr "Le mot de passe fourni ne correspond pas"
 
 # @ edd
-#: includes/login-register.php:89 includes/process-purchase.php:458
+#: includes/login-register.php:89 includes/process-purchase.php:459
 msgid "The username you entered does not exist"
 msgstr "Le nom d'utilisateur fourni n'existe pas"
 
@@ -664,18 +665,20 @@ msgstr ""
 "Downloads avec aucune solution de rechange."
 
 # @ edd
-#: includes/payment-functions.php:310
-#: includes/admin/payments/payments-history.php:105
+#: includes/payment-functions.php:376
+#: includes/admin/payments/class-payments-table.php:75
+#: includes/admin/payments/payments-history-old.php:97
 msgid "Pending"
 msgstr "En attente"
 
 # @ edd
-#: includes/payment-functions.php:311
+#: includes/payment-functions.php:377
 msgid "Complete"
 msgstr "Terminé"
 
-#: includes/payment-functions.php:312
-#: includes/admin/payments/payments-history.php:108
+#: includes/payment-functions.php:378
+#: includes/admin/payments/class-payments-table.php:76
+#: includes/admin/payments/payments-history-old.php:100
 msgid "Refunded"
 msgstr "Remboursé"
 
@@ -789,7 +792,8 @@ msgstr "Aucun paiement trouvé dans la corbeille"
 
 # @ edd
 #: includes/post-types.php:93 includes/admin/admin-pages.php:28
-#: includes/admin/payments/payments-history.php:92
+#: includes/admin/payments/payments-history-old.php:84
+#: includes/admin/payments/payments-history.php:35
 msgid "Payment History"
 msgstr "Historique des paiements"
 
@@ -981,52 +985,52 @@ msgid "The user information is invalid."
 msgstr "Les informations sur l'utilisateur sont incorrectes."
 
 # @ edd
-#: includes/process-purchase.php:347
+#: includes/process-purchase.php:348
 msgid "Username already taken"
 msgstr "Nom d'utilisateur déjà utilisé"
 
 # @ edd
-#: includes/process-purchase.php:351
+#: includes/process-purchase.php:352
 msgid "Invalid username"
 msgstr "Nom d'utilisateur incorrect"
 
 # @ edd
-#: includes/process-purchase.php:358
+#: includes/process-purchase.php:359
 msgid "You must register or login to complete your purchase"
 msgstr "Vous devez être enregistré ou connecté afin de terminer votre achat"
 
 # @ edd
-#: includes/process-purchase.php:366 includes/process-purchase.php:489
+#: includes/process-purchase.php:367 includes/process-purchase.php:490
 msgid "Invalid email"
 msgstr "E-mail incorrect"
 
 # @ edd
-#: includes/process-purchase.php:369
+#: includes/process-purchase.php:370
 msgid "Email already used"
 msgstr "E-mail déjà utilisé"
 
 # @ edd
-#: includes/process-purchase.php:376 includes/process-purchase.php:496
+#: includes/process-purchase.php:377 includes/process-purchase.php:497
 msgid "Enter an email"
 msgstr "Entrez une adresse e-mail"
 
 # @ edd
-#: includes/process-purchase.php:384
+#: includes/process-purchase.php:385
 msgid "Passwords don't match"
 msgstr "Les mote de passe ne correspondent pas"
 
 # @ edd
-#: includes/process-purchase.php:393 includes/process-purchase.php:454
+#: includes/process-purchase.php:394 includes/process-purchase.php:455
 msgid "Enter a password"
 msgstr "Entrez un mot de passe"
 
 # @ edd
-#: includes/process-purchase.php:396
+#: includes/process-purchase.php:397
 msgid "Enter the password confirmation"
 msgstr "Entrez la confirmation de mot de passe"
 
 # @ edd
-#: includes/process-purchase.php:421
+#: includes/process-purchase.php:422
 msgid "You must login or register to complete your purchase"
 msgstr "Vous devez être connecté ou enregistré afin de terminer votre achat"
 
@@ -1673,7 +1677,7 @@ msgid "Purchase All Items"
 msgstr "Tout Acheter"
 
 # @ edd
-#: includes/shortcodes.php:363
+#: includes/shortcodes.php:380
 #, php-format
 msgctxt "download post type name"
 msgid "No %s found"
@@ -1928,37 +1932,43 @@ msgstr "Achats récents"
 
 # @ edd
 #: includes/admin/dashboard-widgets.php:145
-#: includes/admin/payments/payments-history.php:204
+#: includes/admin/payments/class-payments-table.php:196
+#: includes/admin/payments/payments-history-old.php:196
 #, php-format
 msgid "Purchase Details for Payment #%s"
 msgstr "Détails de la commande pour le paiement #%s"
 
 # @ edd
 #: includes/admin/dashboard-widgets.php:145
-#: includes/admin/payments/payments-history.php:204
+#: includes/admin/payments/class-payments-table.php:196
+#: includes/admin/payments/payments-history-old.php:196
 msgid "View Order Details"
 msgstr "Afficher les détails de la commande"
 
 # @ edd
 #: includes/admin/dashboard-widgets.php:153
-#: includes/admin/payments/payments-history.php:212
+#: includes/admin/payments/class-payments-table.php:208
+#: includes/admin/payments/payments-history-old.php:204
 msgid "Purchased File"
 msgstr "Fichier acheté"
 
 # @ edd
 #: includes/admin/dashboard-widgets.php:153
-#: includes/admin/payments/payments-history.php:212
+#: includes/admin/payments/class-payments-table.php:208
+#: includes/admin/payments/payments-history-old.php:204
 msgid "Purchased Files"
 msgstr "Fichiers achetés"
 
 #: includes/admin/dashboard-widgets.php:179
-#: includes/admin/payments/payments-history.php:256
+#: includes/admin/payments/class-payments-table.php:252
+#: includes/admin/payments/payments-history-old.php:248
 msgid "Date and Time:"
 msgstr "Date et Heure :"
 
 # @ edd
 #: includes/admin/dashboard-widgets.php:180
-#: includes/admin/payments/payments-history.php:257
+#: includes/admin/payments/class-payments-table.php:253
+#: includes/admin/payments/payments-history-old.php:249
 msgid "Discount used:"
 msgstr "Code de remise utilisé :"
 
@@ -1966,64 +1976,73 @@ msgstr "Code de remise utilisé :"
 #: includes/admin/dashboard-widgets.php:180
 #: includes/admin/export-functions.php:116
 #: includes/admin/export-functions.php:129
-#: includes/admin/payments/payments-history.php:257
+#: includes/admin/payments/class-payments-table.php:253
+#: includes/admin/payments/payments-history-old.php:249
 msgid "none"
 msgstr "aucun"
 
 # @ edd
 #: includes/admin/dashboard-widgets.php:181
-#: includes/admin/payments/payments-history.php:262
+#: includes/admin/payments/class-payments-table.php:254
+#: includes/admin/payments/payments-history-old.php:250
 msgid "Total:"
 msgstr "Total :"
 
 # @ edd
 #: includes/admin/dashboard-widgets.php:184
-#: includes/admin/payments/payments-history.php:265
+#: includes/admin/payments/class-payments-table.php:257
+#: includes/admin/payments/payments-history-old.php:253
 msgid "Buyer's Personal Details:"
 msgstr "Données personnelles de l'acheteur :"
 
 # @ edd
 #: includes/admin/dashboard-widgets.php:186
-#: includes/admin/payments/payments-history.php:267
+#: includes/admin/payments/class-payments-table.php:259
+#: includes/admin/payments/payments-history-old.php:255
 msgid "Name:"
 msgstr "Nom :"
 
 # @ edd
 #: includes/admin/dashboard-widgets.php:187
-#: includes/admin/payments/payments-history.php:268
+#: includes/admin/payments/class-payments-table.php:260
+#: includes/admin/payments/payments-history-old.php:256
 msgid "Email:"
 msgstr "E-mail :"
 
 # @ edd
 #: includes/admin/dashboard-widgets.php:195
-#: includes/admin/payments/payments-history.php:277
+#: includes/admin/payments/class-payments-table.php:269
+#: includes/admin/payments/payments-history-old.php:265
 msgid "Payment Method:"
 msgstr "Méthode de Paiement :"
 
 # @ edd
 #: includes/admin/dashboard-widgets.php:200
-#: includes/admin/payments/payments-history.php:282
+#: includes/admin/payments/class-payments-table.php:274
+#: includes/admin/payments/payments-history-old.php:270
 msgid "Purchase Key"
 msgstr "Clef d'achat"
 
 # @ edd
 #: includes/admin/dashboard-widgets.php:203
+#: includes/admin/payments/class-payments-table.php:277
 #: includes/admin/payments/edit-payment.php:95
-#: includes/admin/payments/payments-history.php:285
+#: includes/admin/payments/payments-history-old.php:273
 msgid "Close"
 msgstr "Fermer"
 
 # @ edd
 #: includes/admin/export-functions.php:42
-#: includes/admin/payments/payments-history.php:144
-#: includes/admin/payments/payments-history.php:162
+#: includes/admin/payments/class-payments-table.php:92
+#: includes/admin/payments/payments-history-old.php:136
+#: includes/admin/payments/payments-history-old.php:154
 msgid "ID"
 msgstr "ID"
 
 # @ edd
 #: includes/admin/export-functions.php:46
-#: includes/admin/payments/payments-history.php:147
-#: includes/admin/payments/payments-history.php:164
+#: includes/admin/payments/payments-history-old.php:139
+#: includes/admin/payments/payments-history-old.php:156
 msgid "Products"
 msgstr "Produits"
 
@@ -2056,16 +2075,18 @@ msgstr "Clé"
 #: includes/admin/export-functions.php:54
 #: includes/admin/export-functions.php:230
 #: includes/admin/downloads/dashboard-columns.php:35
-#: includes/admin/payments/payments-history.php:152
-#: includes/admin/payments/payments-history.php:166
+#: includes/admin/payments/class-payments-table.php:96
+#: includes/admin/payments/payments-history-old.php:144
+#: includes/admin/payments/payments-history-old.php:158
 #: templates/history-purchases.php:12
 msgid "Date"
 msgstr "Date"
 
 # @ edd
 #: includes/admin/export-functions.php:55
-#: includes/admin/payments/payments-history.php:154
-#: includes/admin/payments/payments-history.php:167
+#: includes/admin/payments/class-payments-table.php:97
+#: includes/admin/payments/payments-history-old.php:146
+#: includes/admin/payments/payments-history-old.php:159
 msgid "User"
 msgstr "Utilisateur"
 
@@ -2074,21 +2095,24 @@ msgstr "Utilisateur"
 #: includes/admin/discounts/discount-codes.php:48
 #: includes/admin/discounts/discount-codes.php:61
 #: includes/admin/discounts/edit-discount.php:101
-#: includes/admin/payments/payments-history.php:156
-#: includes/admin/payments/payments-history.php:168
+#: includes/admin/payments/class-payments-table.php:98
+#: includes/admin/payments/payments-history-old.php:148
+#: includes/admin/payments/payments-history-old.php:160
 msgid "Status"
 msgstr "État"
 
 # @ edd
 #: includes/admin/export-functions.php:137
-#: includes/admin/payments/payments-history.php:296
-#: includes/admin/payments/payments-history.php:298
+#: includes/admin/payments/class-payments-table.php:299
+#: includes/admin/payments/class-payments-table.php:301
+#: includes/admin/payments/payments-history-old.php:284
+#: includes/admin/payments/payments-history-old.php:286
 msgid "guest"
 msgstr "invité"
 
 # @ edd
 #: includes/admin/export-functions.php:144
-#: includes/admin/payments/payments-history.php:309
+#: includes/admin/payments/payments-history-old.php:297
 msgid "No payments recorded yet"
 msgstr "Aucun paiement encore enregistré"
 
@@ -2247,8 +2271,9 @@ msgstr "Le type de remise à lui appliquer."
 #: includes/admin/discounts/discount-codes.php:43
 #: includes/admin/discounts/discount-codes.php:56
 #: includes/admin/discounts/edit-discount.php:56
-#: includes/admin/payments/payments-history.php:149
-#: includes/admin/payments/payments-history.php:165
+#: includes/admin/payments/class-payments-table.php:95
+#: includes/admin/payments/payments-history-old.php:141
+#: includes/admin/payments/payments-history-old.php:157
 #: templates/history-purchases.php:13
 msgid "Amount"
 msgstr "Montant"
@@ -2519,7 +2544,8 @@ msgstr "pas d'expiration"
 
 # @ edd
 #: includes/admin/discounts/discount-codes.php:110
-#: includes/admin/payments/payments-history.php:190
+#: includes/admin/payments/class-payments-table.php:158
+#: includes/admin/payments/payments-history-old.php:182
 msgid "Edit"
 msgstr "Modifier"
 
@@ -2535,7 +2561,9 @@ msgstr "Activer"
 
 # @ edd
 #: includes/admin/discounts/discount-codes.php:116
-#: includes/admin/payments/payments-history.php:192
+#: includes/admin/payments/class-payments-table.php:163
+#: includes/admin/payments/class-payments-table.php:318
+#: includes/admin/payments/payments-history-old.php:184
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -2688,7 +2716,7 @@ msgstr ""
 #: includes/admin/downloads/dashboard-columns.php:31
 #: includes/admin/downloads/dashboard-columns.php:242
 #: includes/admin/downloads/metabox.php:206
-#: includes/admin/payments/payments-history.php:149
+#: includes/admin/payments/payments-history-old.php:141
 #: includes/admin/reporting/pdf-reports.php:66
 msgid "Price"
 msgstr "Prix"
@@ -2878,7 +2906,7 @@ msgstr "Pas encore de ventes"
 # @ edd
 #: includes/admin/downloads/metabox.php:633
 #: includes/admin/downloads/metabox.php:735
-#: includes/admin/payments/payments-history.php:329
+#: includes/admin/payments/payments-history-old.php:317
 msgid "Previous"
 msgstr "Précédent"
 
@@ -2913,6 +2941,28 @@ msgstr "Fichier :"
 #: includes/admin/downloads/metabox.php:719
 msgid "No file downloads yet yet"
 msgstr "Aucun fichier encore téléchargé"
+
+#: includes/admin/payments/class-payments-table.php:73
+#: includes/admin/payments/payments-history-old.php:89
+msgid "All"
+msgstr "Tous"
+
+# @ edd
+#: includes/admin/payments/class-payments-table.php:74
+#: includes/admin/payments/payments-history-old.php:94
+msgid "Completed"
+msgstr "Terminé"
+
+# @ edd
+#: includes/admin/payments/class-payments-table.php:94
+msgid "Details"
+msgstr "Détails"
+
+# @ edd
+#: includes/admin/payments/class-payments-table.php:161
+#: includes/admin/payments/payments-history-old.php:183
+msgid "Resend Purchase Receipt"
+msgstr "Renvoyer la facture d'achat"
 
 # @ edd
 #: includes/admin/payments/edit-payment.php:25
@@ -2966,75 +3016,56 @@ msgstr "Mettre à jour paiement"
 msgid "Add Selected Downloads"
 msgstr "Ajouter les téléchargements sélectionnés"
 
-#: includes/admin/payments/payments-history.php:97
-msgid "All"
-msgstr "Tous"
-
 # @ edd
-#: includes/admin/payments/payments-history.php:102
-msgid "Completed"
-msgstr "Terminé"
-
-# @ edd
-#: includes/admin/payments/payments-history.php:113
+#: includes/admin/payments/payments-history-old.php:105
 #: includes/admin/reporting/reports.php:40
 msgid "Export"
 msgstr "Exporter"
 
 # @ edd
-#: includes/admin/payments/payments-history.php:117
+#: includes/admin/payments/payments-history-old.php:109
 msgid "Payment mode"
 msgstr "Mode de paiement"
 
 # @ edd
-#: includes/admin/payments/payments-history.php:119
+#: includes/admin/payments/payments-history-old.php:111
 msgid "Live"
 msgstr "Réel"
 
 # @ edd
-#: includes/admin/payments/payments-history.php:120
+#: includes/admin/payments/payments-history-old.php:112
 msgid "Test"
 msgstr "Test"
 
 # @ edd
-#: includes/admin/payments/payments-history.php:130
+#: includes/admin/payments/payments-history-old.php:122
 msgid "Payments per page"
 msgstr "Paiements par page"
 
 # @ edd
-#: includes/admin/payments/payments-history.php:132
+#: includes/admin/payments/payments-history-old.php:124
 msgid "Show"
 msgstr "Afficher"
 
 # @ edd
-#: includes/admin/payments/payments-history.php:138
+#: includes/admin/payments/payments-history-old.php:130
 msgid "Showing payments for: "
 msgstr "Afficher les paiements de :"
 
 # @ edd
-#: includes/admin/payments/payments-history.php:138
+#: includes/admin/payments/payments-history-old.php:130
 msgid "clear"
 msgstr "effacer"
 
 # @ edd
-#: includes/admin/payments/payments-history.php:191
-msgid "Resend Purchase Receipt"
-msgstr "Renvoyer la facture d'achat"
-
-# @ edd
-#: includes/admin/payments/payments-history.php:259
-msgid "Subtotal:"
-msgstr "Sous-Total :"
-
-# @ edd
-#: includes/admin/payments/payments-history.php:260
-msgid "Taxed Amount:"
-msgstr "Montant taxé :"
-
-# @ edd
-#: includes/admin/payments/payments-history.php:315
+#: includes/admin/payments/payments-history-old.php:303
 msgid "Total Earnings:"
 msgstr "Total des gains :"
+
+# @ edd
+#: includes/admin/payments/payments-history.php:39
+msgid "Search"
+msgstr "Rechercher"
 
 #: includes/admin/reporting/class-customer-reports-table.php:17
 msgid "Customer"
@@ -3364,9 +3395,9 @@ msgstr ""
 # @ edd
 #: includes/gateways/paypal-standard.php:265
 #: includes/gateways/paypal-standard.php:270
-#: includes/gateways/paypal-standard.php:292
-#: includes/gateways/paypal-standard.php:297
-#: includes/gateways/paypal-standard.php:302
+#: includes/gateways/paypal-standard.php:314
+#: includes/gateways/paypal-standard.php:319
+#: includes/gateways/paypal-standard.php:324
 msgid "IPN Error"
 msgstr "Erreur IPN"
 
@@ -3375,15 +3406,15 @@ msgstr "Erreur IPN"
 msgid "Invalid IPN verification response. IPN data: "
 msgstr "Vérification IPN de la réponse incorrecte. Les données IPN :"
 
-#: includes/gateways/paypal-standard.php:292
+#: includes/gateways/paypal-standard.php:314
 msgid "Invalid currency in IPN response. IPN data: "
 msgstr "Monnaie invalide dans la réponse IPN. Les données IPN :"
 
-#: includes/gateways/paypal-standard.php:297
+#: includes/gateways/paypal-standard.php:319
 msgid "Invalid payment amount in IPN response. IPN data: "
 msgstr "Montant d'achat invalide dans la réponse IPN. Les données IPN :"
 
-#: includes/gateways/paypal-standard.php:302
+#: includes/gateways/paypal-standard.php:324
 msgid "Invalid purchase key in IPN response. IPN data: "
 msgstr "Clef d'achat invalide dans la réponse IPN. Les données IPN :"
 
@@ -3408,12 +3439,12 @@ msgid "Total"
 msgstr "Total"
 
 # @ edd
-#: templates/history-downloads.php:10
+#: templates/history-downloads.php:9
 msgid "Download Name"
 msgstr "Nom du téléchargement"
 
 # @ edd
-#: templates/history-downloads.php:12 templates/history-purchases.php:14
+#: templates/history-downloads.php:11 templates/history-purchases.php:14
 msgid "Files"
 msgstr "Fichiers"
 
@@ -3431,6 +3462,3 @@ msgstr "ID de l'achat "
 #: templates/history-purchases.php:64
 msgid "You have not made any purchases"
 msgstr "Vous n'avez fait aucun achat"
-
-#~ msgid "Download a CSV of all customer emails."
-#~ msgstr "Télécharger la liste CSV de vos clients"
