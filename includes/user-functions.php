@@ -11,6 +11,8 @@
  * @since       1.0.8.6
 */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Get Users Purchases
@@ -210,4 +212,20 @@ function edd_purchase_total_of_user( $user = null ) {
 	}	
 
 	return $amount;
+}
+
+
+/**
+ * Validate a potential username
+ *
+ * @access      public
+ * @since       1.3.4
+ * @param       $username string - the username to validate
+ * @return      bool
+*/
+
+function edd_validate_username( $username ) {
+	$sanitized = sanitize_user( $username, false );
+	$valid = ( $sanitized == $username );
+	return (bool) apply_filters( 'edd_validate_username', $valid, $username );
 }

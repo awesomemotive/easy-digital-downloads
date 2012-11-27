@@ -9,6 +9,8 @@
  * @since       1.0 
 */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Purchase Link Shortcode
@@ -269,12 +271,36 @@ function edd_downloads_query($atts, $content = null) {
 		break;
 	}
 
-	if ( $tags ) {
-		$query['download_tag'] = $tags;
+	if( $tags || $category ) {
+
+		$query['tax_query'] = array(
+			'relation'     => $relation
+		);
+
+		if( $tags ) {
+			$query['tax_query'][] = array(
+				'taxonomy' => 'download_tag',
+				'terms'    => $tags,
+				'field'    => 'slug'
+			);
+		}
+
+		if( $category ) {
+			$query['tax_query'][] = array(
+				'taxonomy' => 'download_category',
+				'terms'    => $category,
+				'field'    => 'slug'
+			);
+		}
+
 	}
-	if ( $category ) {
-		$query['download_category'] = $category;
-	}
+
+	if ( get_query_var( 'paged' ) )
+		$query['paged'] = get_query_var('paged');
+	else if ( get_query_var( 'page' ) )
+		$query['paged'] = get_query_var( 'page' );
+	else
+		$query['paged'] = 1;
 
 	switch( intval( $columns ) ) :
 	
@@ -332,8 +358,21 @@ function edd_downloads_query($atts, $content = null) {
 				</div>
 				<?php if( $i % $columns == 0 ) { ?><div style="clear:both;"></div><?php } ?>
 			<?php $i++; endwhile; ?>
-			<?php wp_reset_postdata(); ?>
+
 			<div style="clear:both;"></div>
+
+			<div id="edd_download_pagination" class="navigation">
+				<?php
+				$big = 999999;
+				echo paginate_links( array(
+					'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+					'format' => '?paged=%#%',
+					'current' => max( 1, $query['paged'] ),
+					'total' => $downloads->max_num_pages
+				) );
+				?>
+			</div>
+			<?php wp_reset_postdata(); ?>
 		</div>
 		<?php
 		$display = ob_get_clean();

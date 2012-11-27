@@ -9,6 +9,8 @@
  * @since       1.0 
 */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Get Discounts
@@ -375,6 +377,7 @@ function edd_discount_is_min_met( $code_id = null ) {
 */
 
 function edd_is_discount_used( $code = null, $email = '' ) {
+	
 	$return = false;
 
 	$query_args = array(
@@ -388,10 +391,10 @@ function edd_is_discount_used( $code = null, $email = '' ) {
 		)
 	);
 
-	$discounts_query = new WP_Query($query_args); // Get all payments with matching email
+	$payments = get_posts( $query_args ); // Get all payments with matching email
 
-	if( $discounts_query->have_posts() ) {
-		foreach ( $discounts_query->posts as $payment ) { 
+	if( $payments  ) {
+		foreach ( $payments as $payment ) { 
 			// Check all matching payments for discount code.
 			$payment_meta = get_post_meta( $payment->ID, '_edd_payment_meta', true );
 			$user_info = maybe_unserialize( $payment_meta['user_info'] );
@@ -492,7 +495,7 @@ function edd_get_discounted_amount( $code, $base_price ) {
 	    // percentage discount
 		$discounted_price = $base_price - ( $base_price * ( $rate / 100 ) );
 	}
-	return apply_filters( 'edd_discounted_amount', $discounted_price );
+	return apply_filters( 'edd_discounted_amount', number_format( $discounted_price, 2 ) );
 }
 
 
@@ -534,7 +537,7 @@ function edd_increase_discount_usage( $code ) {
 
 function edd_format_discount_rate( $type, $amount ) {
 	if( $type == 'flat' ) {
-		return edd_currency_filter( $amount );
+		return edd_currency_filter( edd_format_amount( $amount ) );
 	} else {
 		return $amount . '%';
 	}

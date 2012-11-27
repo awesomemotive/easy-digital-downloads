@@ -9,6 +9,8 @@
  * @since       1.0 
 */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Get Payments
@@ -49,6 +51,8 @@ function edd_get_payments( $args = array() ) {
 		'posts_per_page' => $number, 
 		'paged'          => $page,
 		'order'          => $order,
+		'order'          => $order,
+		'orderby'        => $orderby,
 		'post_status'    => $status,
 		'year'           => $year,
 		'monthnum'       => $month,
@@ -80,7 +84,7 @@ function edd_get_payments( $args = array() ) {
 		}
 		$payment_args['meta_query'] = array(
 			array(
-				'key' => $user_key,
+				'key'   => $user_key,
 				'value' => $user
 			)
 		);
@@ -124,7 +128,7 @@ function edd_get_payments( $args = array() ) {
 			// create a new meta query
 			$payment_args['meta_query'] = array(
 				array(
-					'key' => '_edd_payment_mode',
+					'key'   => '_edd_payment_mode',
 					'value' => $mode
 				)
 			);
@@ -147,7 +151,7 @@ function edd_get_payments( $args = array() ) {
  * @return      void
 */
 
-function edd_insert_payment($payment_data = array()) {
+function edd_insert_payment( $payment_data = array() ) {
 
 	if(empty($payment_data))
 		return false;
@@ -169,23 +173,26 @@ function edd_insert_payment($payment_data = array()) {
 	$payment = wp_insert_post( array('post_title' => $payment_title, 'post_status' => $status, 'post_type' => 'edd_payment', 'post_date' => $payment_data['date']));
 	
 	if($payment) {
-		$payment_meta = array( 
-			'amount' => $payment_data['price'], 
-			'date' => $payment_data['date'], 
-			'email' => $payment_data['user_email'],
-			'key' => $payment_data['purchase_key'],
-			'currency' => $payment_data['currency'],
-			'downloads' => serialize($payment_data['downloads']),
-			'user_info' => serialize($payment_data['user_info']),
-			'cart_details' => serialize($payment_data['cart_details']),
-			'user_id' => $payment_data['user_info']['id']
+		
+		$payment_meta = array(
+			'amount' 		=> $payment_data['price'], 
+			'date' 			=> $payment_data['date'], 
+			'email' 		=> $payment_data['user_email'],
+			'key' 			=> $payment_data['purchase_key'],
+			'currency' 		=> $payment_data['currency'],
+			'downloads' 	=> serialize($payment_data['downloads']),
+			'user_info' 	=> serialize($payment_data['user_info']),
+			'cart_details' 	=> serialize($payment_data['cart_details']),
+			'user_id' 		=> $payment_data['user_info']['id']
 		);
 		
+		// NOTE: tax info is added to meta in tax-functions.php with edd_record_taxed_amount()
+
 		$mode = edd_is_test_mode() ? 'test' : 'live';
 		$gateway = isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : ''; 
 
 		// record the payment details
-		update_post_meta( $payment, '_edd_payment_meta', 		apply_filters( 'edd_payment_meta', $payment_meta, $payment_data) );
+		update_post_meta( $payment, '_edd_payment_meta', 		apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
 		update_post_meta( $payment, '_edd_payment_user_id', 	$payment_data['user_info']['id']);
 		update_post_meta( $payment, '_edd_payment_user_email', 	$payment_data['user_email']);
 		update_post_meta( $payment, '_edd_payment_user_ip', 	edd_get_ip() );
@@ -397,14 +404,15 @@ add_action( 'init', 'edd_register_payment_status' );
  * @return      integer
 */
 
-function edd_get_earnings_by_date($day = null, $month_num, $year) {
+function edd_get_earnings_by_date( $day = null, $month_num, $year ) {
 	$args = array(
 		'post_type' => 'edd_payment', 
 		'posts_per_page' => -1, 
 		'year' => $year, 
 		'monthnum' => $month_num, 
 		'meta_key' => '_edd_payment_mode',
-		'meta_value' => 'live'
+		'meta_value' => 'live',
+		'post_status' => 'publish'
 	);
 	if( $day )
 		$args['day'] = $day;
@@ -430,17 +438,22 @@ function edd_get_earnings_by_date($day = null, $month_num, $year) {
  * @return      int
 */
 
-function edd_get_sales_by_date( $month_num, $year ) {
-	$sales = get_posts(
-		array(
-			'post_type' => 'edd_payment', 
-			'posts_per_page' => -1, 
-			'year' => $year, 
-			'monthnum' => $month_num,
-			'meta_key' => '_edd_payment_mode',
-			'meta_value' => 'live'
-		)
+function edd_get_sales_by_date( $day = null, $month_num = null, $year ) {
+	$args = array(
+		'post_type' => 'edd_payment', 
+		'posts_per_page' => -1, 
+		'year' => $year, 
+		'meta_key' => '_edd_payment_mode',
+		'meta_value' => 'live'
 	);
+
+	if( ! empty( $month_num ) )
+		$args['monthnum'] = $month_num;
+
+	if( ! empty( $day ) )
+		$args['day'] = $day;
+	
+	$sales = get_posts( $args );
 	$total = 0;
 	if( $sales ) {
 		$total = count( $sales );
@@ -528,26 +541,22 @@ function edd_get_total_sales() {
 function edd_get_total_earnings() {
 
 	$total = (float) 0;
-	$payments = get_transient( 'edd_total_earnings' );
-	if( false === $payments || '' === $payments ) {
+	//$earnings = get_transient( 'edd_searnings_total' );
+	//if( false === $earnings ) {
 		$payments = edd_get_payments( array(
 			'offset' 	=> 0, 
 			'number' 	=> -1, 
-			'mode'   	=> 'live', 
-			'orderby' 	=> 'ID', 
-			'order'   	=> 'DESC', 
-			'user'    	=> null, 
+			'mode'   	=> 'live',
 			'status'  	=> 'publish',
 		) );
-		set_transient( 'edd_total_earnings', $payments, 3600 );
-	}
-	if( $payments ) {
-		foreach( $payments as $payment ) {
-			$meta = get_post_meta( $payment->ID, '_edd_payment_meta', true );
-			$total += $meta['amount'];
+		if( $payments ) {
+			foreach( $payments as $payment ) {
+				$total += edd_get_payment_amount( $payment->ID );
+			}
 		}
-	}
-	return edd_currency_filter( edd_format_amount( $total ) );
+		//set_transient( 'edd_earnings_total', $payments, 1800 );
+	//}
+	return apply_filters( 'edd_total_earnings', $total );
 }
 
 /**
@@ -560,7 +569,7 @@ function edd_get_total_earnings() {
 function edd_get_payment_meta( $payment_id ) {
 	$meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
 
-	return apply_filters( 'edd_payment_meta', $meta );
+	return apply_filters( 'edd_get_payment_meta', $meta );
 }
 
 /**
@@ -640,11 +649,93 @@ function edd_get_payment_gateway( $payment_id ) {
  * @return      array
  */
 function edd_get_payment_amount( $payment_id ) {
-	$payment_meta = edd_get_payment_meta( $payment_id );
-	$amount = $payment_meta['amount'];
-
+	$amount = get_post_meta( $payment_id, '_edd_payment_total', true );
+	
+	if( ! $amount ) {
+		$payment_meta = edd_get_payment_meta( $payment_id );
+		$amount = $payment_meta['amount'];
+	}
 	return apply_filters( 'edd_payment_amount', $amount );
 }
+
+/**
+ * Retrieves subtotal for payment
+ *
+ * This is the amount before taxes
+ *
+ * Returns a full formatted amount
+ *
+ * @access      public
+ * @since       1.3.3
+ * @return      string
+ */
+function edd_payment_subtotal( $payment_id = 0, $payment_meta = false ) {
+
+	$subtotal = edd_get_payment_subtotal( $payment_id, $payment_meta );
+
+	return edd_currency_filter( edd_format_amount( $subtotal ) );
+
+}
+
+
+	/**
+	 * Retrieves subtotal of payment
+	 *
+	 * This is the amount before taxes. If no subtotal is present, normal amount is returned
+	 *
+	 * Returns a non formatted amount
+	 *
+	 * @access      public
+	 * @since       1.3.3
+	 * @return      float
+	 */
+	function edd_get_payment_subtotal( $payment_id = 0, $payment_meta = false ) {
+		if( ! $payment_meta )
+			$payment_meta = edd_get_payment_meta( $payment_id );
+
+		$subtotal = isset( $payment_meta['subtotal'] ) ? $payment_meta['subtotal'] : $payment_meta['amount'];
+
+		return apply_filters( 'edd_get_payment_subtotal', $subtotal, $payment_id );
+
+	}
+
+
+/**
+ * Retrieves taxed amount on payment
+ *
+ * Returns a full formatted amount
+ *
+ * @access      public
+ * @since       1.3.3
+ * @return      string
+ */
+function edd_payment_tax( $payment_id = 0, $payment_meta = false ) {
+
+	$tax = edd_get_payment_tax( $payment_id, $payment_meta );
+
+	return edd_currency_filter( edd_format_amount( $tax ) );
+
+}
+
+
+	/**
+	 * Retrieves taxed amount on payment
+	 *
+	 * Returns a non formatted amount
+	 *
+	 * @access      public
+	 * @since       1.3.3
+	 * @return      float
+	 */
+	function edd_get_payment_tax( $payment_id = 0, $payment_meta = false ) {
+		if( ! $payment_meta )
+			$payment_meta = edd_get_payment_meta( $payment_id );
+
+		$tax = isset( $payment_meta['tax'] ) ? $payment_meta['tax'] : 0;
+
+		return apply_filters( 'edd_get_payment_tax', $tax, $payment_id );
+
+	}
 
 
 /**

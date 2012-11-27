@@ -10,7 +10,8 @@
  * @since       1.3.1
 */
 
-
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Display upgrade notices
@@ -44,7 +45,7 @@ function edd_show_upgrade_notices() {
 		add_settings_error( 'edd-notices', 'edd-payments-upgrade', $upgrade_notice, 'error' );
 	}
 
-	if( version_compare( EDD_VERSION, $edd_version, '>' ) ) {
+	if( version_compare( $edd_version, '1.3.2', '<' ) && ! get_option( 'edd_logs_upgraded' ) ) {
 		printf(
 			'<div class="updated"><p>' . esc_html__( 'The purchase and file download history in Easy Digital Downloads needs upgraded, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
 			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
@@ -78,8 +79,9 @@ function edd_trigger_upgrades() {
 
 	if( version_compare( EDD_VERSION, $edd_version, '>' ) ) {
 		edd_v131_upgrades();
-		update_option( 'edd_version', '1.3.1' );
 	}
+
+	update_option( 'edd_version', EDD_VERSION );
 
 	if( DOING_AJAX )
 		die( 'complete' ); // ;et ajax know we are done
@@ -97,6 +99,12 @@ add_action( 'wp_ajax_edd_trigger_upgrades', 'edd_trigger_upgrades' );
 */
 
 function edd_v131_upgrades() {
+
+	if( get_option( 'edd_logs_upgraded' ) )
+		return;
+
+	if( version_compare( get_option( 'edd_version' ), '1.3', '>=' ) )
+		return;
 
 	ignore_user_abort(true);
 	set_time_limit(0);
@@ -166,5 +174,6 @@ function edd_v131_upgrades() {
 
 		}
 	}
+	add_option( 'edd_logs_upgraded', '1' );
 
 }

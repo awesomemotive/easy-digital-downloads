@@ -9,6 +9,8 @@
  * @since       1.0
 */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Load Scripts
@@ -59,6 +61,11 @@ function edd_load_scripts() {
 		wp_localize_script( 'edd-validation', 'edd_scripts_validation', apply_filters( 'edd_scripts_validation',$required ) );
 	}
 	wp_enqueue_script( 'edd-checkout-global', EDD_PLUGIN_URL . 'includes/js/edd-checkout-global.js', array( 'jquery' ), EDD_VERSION );
+	wp_localize_script( 'edd-checkout-global', 'edd_global_vars', array(
+        'currency_sign'		=> edd_currency_filter(''),
+        'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
+        'no_gateway'		=> __( 'Please select a payment method', 'edd' )
+    ));
 }
 add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
 
@@ -75,16 +82,21 @@ add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
 
 function edd_register_styles() {
 	global $edd_options;
-	if( !isset( $edd_options['disable_styles'] ) ) {
+	
+	if( isset( $edd_options['disable_styles'] ) )
+		return;
 
-		// allow the CSS to be overwritten from the templates directory
-		$edd_css = edd_locate_template( 'edd.css' );
+	$file = 'edd.css';
 
-		// convert file path to URL
-		$edd_css = str_replace( ABSPATH, '/', $edd_css );
-
-		wp_enqueue_style('edd-styles', $edd_css, EDD_VERSION);
+	if ( file_exists( trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $file ) ) {
+		$url = trailingslashit( get_stylesheet_directory_uri() ) . 'edd_templates/' . $file;
+	} elseif ( file_exists( trailingslashit( get_template_directory() ) . 'edd_templates/' . $file ) ) {
+		$url = trailingslashit( get_template_directory_uri() ) . 'edd_templates/' . $file;
+	} elseif ( file_exists( trailingslashit( edd_get_templates_dir() ) . $file ) ) {
+		$url = trailingslashit( edd_get_templates_url() ) . $file;
 	}
+
+	wp_enqueue_style( 'edd-styles', $url, EDD_VERSION );
 }
 add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
 
@@ -120,12 +132,12 @@ function edd_load_admin_scripts( $hook ) {
 		wp_enqueue_style( 'jquery-ui-css', EDD_PLUGIN_URL . 'includes/css/jquery-ui-' . $ui_style . '.css' );
 	}
 	if( $hook == $edd_settings_page ) {
-		wp_enqueue_style( 'colorbox', EDD_PLUGIN_URL . 'includes/css/colorbox.css');
-		wp_enqueue_script( 'colorbox', EDD_PLUGIN_URL . 'includes/js/jquery.colorbox-min.js', array('jquery'), '1.3.19.3');
+		wp_enqueue_style( 'colorbox', EDD_PLUGIN_URL . 'includes/css/colorbox.css', array(  ), '1.3.20' );
+		wp_enqueue_script( 'colorbox', EDD_PLUGIN_URL . 'includes/js/jquery.colorbox-min.js', array( 'jquery' ), '1.3.20');
 	}
 	wp_enqueue_script( 'media-upload' );
 	wp_enqueue_script( 'thickbox' );
-	wp_enqueue_script( 'edd-admin-scripts', EDD_PLUGIN_URL . 'includes/js/admin-scripts.js' );
+	wp_enqueue_script( 'edd-admin-scripts', EDD_PLUGIN_URL . 'includes/js/admin-scripts.js', array( 'jquery' ), EDD_VERSION, false );
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
         'post_id' 			=> isset( $post->ID ) ? $post->ID : null,
         'add_new_download' 	=> __( 'Add New Download', 'edd' ), 									// thickbox title
@@ -140,7 +152,7 @@ function edd_load_admin_scripts( $hook ) {
     ));
 	wp_enqueue_style( 'thickbox' );
 
-	wp_enqueue_style( 'edd-admin', EDD_PLUGIN_URL . 'includes/css/edd-admin.css' );
+	wp_enqueue_style( 'edd-admin', EDD_PLUGIN_URL . 'includes/css/edd-admin.css', EDD_VERSION );
 }
 add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
 

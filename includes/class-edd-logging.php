@@ -7,17 +7,18 @@
  * @subpackage  Logging
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       x.x.x
+ * @since       1.3.1
 */
 
-
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 
 /**
  * A general use class for logging events and errors.
  *
  * @access      private
- * @since       x.x.x
+ * @since       1.3.1
  * @return      void
 */
 
@@ -39,7 +40,7 @@ class EDD_Logging {
 	 * Registers the edd_log Post Type
 	 *
 	 * @access      private
-	 * @since       x.x.x
+	 * @since       1.3.1
 	 *
 	 * @uses 		register_post_type()
 	 *
@@ -70,7 +71,7 @@ class EDD_Logging {
 	 * The Type taxonomy is used to determine the type of log entry
 	 *
 	 * @access      private
-	 * @since       x.x.x
+	 * @since       1.3.1
 	 *
 	 * @uses 		register_taxonomy()
 	 * @uses 		term_exists()
@@ -99,7 +100,7 @@ class EDD_Logging {
 	 * Sets up the default log types and allows for new ones to be created
 	 *
 	 * @access      private
-	 * @since       x.x.x
+	 * @since       1.3.1
 	 *
 	 *
 	 * @return     array
@@ -120,7 +121,7 @@ class EDD_Logging {
 	 * Checks to see if the specified type is in the registered list of types
 	 *
 	 * @access      private
-	 * @since       x.x.x
+	 * @since       1.3.1
 	 *
 	 *
 	 * @return     array
@@ -138,16 +139,17 @@ class EDD_Logging {
 	 * if you need to store custom meta data
 	 *
 	 * @access      private
-	 * @since       x.x.x
+	 * @since       1.3.1
 	 *
 	 * @uses 		$this->insert_log()
 	 *
 	 * @return      int The ID of the new log entry
 	*/
 
-	function add( $message = '', $parent = 0, $type = null ) {
+	function add( $title = '', $message = '', $parent = 0, $type = null ) {
 
 		$log_data = array(
+			'post_title' 	=> $title,
 			'post_content'	=> $message,
 			'post_parent'	=> $parent,
 			'log_type'		=> $type
@@ -162,7 +164,7 @@ class EDD_Logging {
 	 * Easily retrieves log items for a particular object ID
 	 *
 	 * @access      private
-	 * @since       x.x.x
+	 * @since       1.3.1
 	 *
 	 * @uses 		$this->get_connected_logs()
 	 *
@@ -179,7 +181,7 @@ class EDD_Logging {
 	 * Stores a log entry
 	 *
 	 * @access      private
-	 * @since       x.x.x
+	 * @since       1.3.1
 	 *
 	 * @uses 		wp_parse_args()
 	 * @uses 		wp_insert_post()
@@ -229,7 +231,7 @@ class EDD_Logging {
 	 * Update and existing log item
 	 *
 	 * @access      private
-	 * @since       x.x.x
+	 * @since       1.3.1
 	 *
 	 * @uses 		wp_update_post()
 	 *
@@ -268,7 +270,7 @@ class EDD_Logging {
 	 * Used for retrieving logs related to particular items, such as a specific purchase.
 	 *
 	 * @access  private
-	 * @since 	x.x.x
+	 * @since 	1.3.1
 	 *
 	 * @uses 	wp_parse_args()
 	 * @uses 	get_posts()
@@ -316,7 +318,7 @@ class EDD_Logging {
 	 * Retrieves number of log entries connected to particular object ID
 	 *
 	 * @access  private
-	 * @since 	x.x.x
+	 * @since 	1.3.1
 	 *
 	 * @uses 	WP_Query()
 	 *
@@ -358,3 +360,23 @@ class EDD_Logging {
 
 // initiate the logging system
 $GLOBALS['edd_logs'] = new EDD_Logging();
+
+
+/**
+ * Record a log entry
+ *
+ * This is just a simple wrapper function for the log class add() function
+ *
+ * @access      public
+ * @since       1.3.3
+ *
+ * @uses 		$this->add()
+ *
+ * @return      int ID of the new log entry
+*/
+
+function edd_record_log( $title = '', $message = '', $parent = 0, $type = null ) {
+	global $edd_logs;
+	$log = $edd_logs->add( $title, $message, $parent, $type );
+	return $log;
+}

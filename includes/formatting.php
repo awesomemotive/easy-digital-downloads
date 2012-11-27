@@ -9,6 +9,8 @@
  * @since       1.2
 */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Sanitize Amount
@@ -35,6 +37,9 @@ function edd_sanitize_amount( $amount ) {
 		}
 
 		$amount = str_replace( $decimal_sep, '.', $amount );
+		
+		// make sure we don't have more than 2 decimals
+		$amount = number_format( $amount, 2 );
 	}
 
 	return apply_filters( 'edd_sanitize_amount', $amount );

@@ -9,6 +9,8 @@
  * @since       1.0 
 */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Get Cart Contents
@@ -250,6 +252,35 @@ function edd_get_price_name( $item_id, $options = array() ) {
 
 
 /**
+ * Get Cart Subtotal
+ *
+ * Gets the total price amount in the cart before taxes and before any discounts
+ * uses edd_get_cart_contents().
+ *
+ * @access      public
+ * @since       1.3.3
+ * @return      float - the total amount before taxes
+*/
+
+function edd_get_cart_subtotal() {
+
+	$cart_items = edd_get_cart_contents();
+
+	$amount = (float) 0;
+
+	if( $cart_items ) {
+
+		foreach( $cart_items as $item ) {
+			$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
+			$amount += $item_price;
+		}
+
+	}
+	return apply_filters( 'edd_get_cart_subtotal', $amount );
+}
+
+
+/**
  * Get Cart Amount
  *
  * Gets the total price amount in the cart.
@@ -257,27 +288,61 @@ function edd_get_price_name( $item_id, $options = array() ) {
  *
  * @access      public
  * @since       1.0
- * @return      string - the name of the price option
+ * @param 		$add_taxes bool Whether to apply taxes (if enabled) 
+ * @param 		$local_override bool Force the local opt-in param - used for when not reading $_POST 
+ * @return      float the total amount
 */
 
-function edd_get_cart_amount() {
-	$cart_items = edd_get_cart_contents();
-	$amount = 0;
-	if( $cart_items ) {
-		foreach( $cart_items as $item ) {
-			$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
-			$amount = $amount + $item_price;
-		}
-		if( isset( $_POST['edd-discount'] ) && $_POST['edd-discount'] != '' ) {
-			// discount is validated before this function runs, so no need to check for it
-			$amount = edd_get_discounted_amount( $_POST['edd-discount'], $amount );
-		}
-		
-		return edd_sanitize_amount( $amount );
+function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
+
+	$amount = edd_get_cart_subtotal();
+	
+	if( isset( $_POST['edd-discount'] ) && $_POST['edd-discount'] != '' ) {
+		// discount is validated before this function runs, so no need to check for it
+		$amount = edd_get_discounted_amount( $_POST['edd-discount'], $amount );
 	}
-	return 0;
+
+	if( edd_use_taxes() && $add_taxes ) {
+
+		if( edd_local_taxes_only() && ( isset( $_POST['edd_tax_opt_in'] ) || $local_override ) ) {
+			
+			// add the tax amount for a local resident
+			$tax = edd_get_cart_tax();
+			$amount += $tax;
+
+		} elseif( ! edd_local_taxes_only() ) {
+			
+			// add the global tax amount
+			$tax = edd_get_cart_tax();
+			$amount += $tax;
+		
+		}
+
+	}
+
+	return apply_filters( 'edd_get_cart_amount', $amount, $add_taxes, $local_override );
 }
 
+
+/**
+ * Get Total Cart Amount
+ *
+ * Gets the fully formatted total price amount in the cart.
+ * uses edd_get_cart_amount().
+ *
+ * @access      public
+ * @since       1.3.3
+ * @return      string - the cart amount
+*/
+
+function edd_cart_total( $echo = true ) {
+
+	$total = apply_filters( 'edd_cart_total', edd_currency_filter( edd_format_amount( edd_get_cart_amount() ) ) );
+
+	if( $echo )
+		echo $total;
+	return $total;
+}
 
 
 /**
@@ -303,6 +368,50 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
 	return $summary;
 }
 
+
+/**
+ * Gets the total tax amount for the cart contents
+ *
+ * @access      public
+ * @since       1.2.3
+ * @return      string
+*/
+
+function edd_get_cart_tax() {
+
+	if( ! edd_use_taxes() )
+		return 0;
+
+	$cart_sub_total = edd_get_cart_subtotal();
+	$cart_tax 		= edd_calculate_tax( $cart_sub_total );
+	$cart_tax 		= number_format( $cart_tax, 2 );
+
+	return apply_filters( 'edd_get_cart_tax', $cart_tax, $cart_sub_total );
+
+}
+
+/**
+ * Gets the total tax amount for the cart contents
+ *
+ * Returns a fully formatted amount
+ *
+ * @access      public
+ * @since       1.2.3
+ * @return      string
+*/
+
+function edd_cart_tax( $echo = false ) {
+
+	$cart_tax = edd_get_cart_tax();
+	$cart_tax = edd_currency_filter( edd_format_amount( $cart_tax ) );
+
+	$tax = apply_filters( 'edd_cart_tax', $cart_tax );
+
+	if( $echo )
+		echo $tax;
+	return $tax;
+
+}
 
 /**
  * Get Cart Content Details
@@ -385,8 +494,9 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
 function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
 	global $post;
 	
-	$current_page = edd_get_current_page_url();
-	$remove_url = add_query_arg( array('cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page);
+	$current_page = trailingslashit( edd_get_current_page_url() );
+
+	$remove_url = $current_page . 'edd-remove/' . $cart_key;
 
 	return apply_filters('edd_remove_item_url', $remove_url);
 }
@@ -423,10 +533,13 @@ add_action('edd_after_download_content', 'edd_show_added_to_cart_messages');
  * @return      mixed - the full URL to the checkout page, if present, NULL if it doesn't exist
 */
 
-function edd_get_checkout_uri() {
+function edd_get_checkout_uri( $extras = false ) {
     global $edd_options;
 
-    $uri = isset( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) : NULL;
+    $uri = isset( $edd_options['purchase_page'] ) ? trailingslashit( get_permalink( $edd_options['purchase_page'] ) ) : NULL;
+    if( $extras )
+    	$uri .= $extras;
+
     return apply_filters( 'edd_get_checkout_uri', $uri );
 }
 

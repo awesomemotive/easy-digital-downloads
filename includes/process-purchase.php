@@ -9,6 +9,8 @@
  * @since       1.0 
 */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Process Purchase Form
@@ -55,25 +57,27 @@ function edd_process_purchase_form() {
 
 	// setup user information
 	$user_info = array(
-		'id' => $user['user_id'],
-		'email' => $user['user_email'],
-		'first_name' => $user['user_first'],
+		'id' 		=> $user['user_id'],
+		'email' 	=> $user['user_email'],
+		'first_name'=> $user['user_first'],
 		'last_name' => $user['user_last'], 
-		'discount' => $valid_data['discount']
+		'discount' 	=> $valid_data['discount']
 	);
 
 	// setup purchase information
 	$purchase_data = array(
-		'downloads' => edd_get_cart_contents(),
-		'price' => edd_get_cart_amount(),
-		'purchase_key' => strtolower( md5( uniqid() ) ), // random key
-		'user_email' => $user['user_email'],
-		'date' => date( 'Y-m-d H:i:s' ),
-		'user_info' => $user_info,
-		'post_data' => $_POST,
-		'cart_details' => edd_get_cart_content_details(),
-		'gateway' => $valid_data['gateway'],
-		'card_info' => $valid_data['cc_info']
+		'downloads' 	=> edd_get_cart_contents(),
+		'subtotal'		=> edd_get_cart_amount( false ), 	// amount before taxes
+		'tax'			=> edd_get_cart_tax(), 				// taxed amount
+		'price' 		=> edd_get_cart_amount(), 			// amount after taxes
+		'purchase_key' 	=> strtolower( md5( uniqid() ) ), 	// random key
+		'user_email' 	=> $user['user_email'],
+		'date' 			=> date( 'Y-m-d H:i:s' ),
+		'user_info' 	=> $user_info,
+		'post_data' 	=> $_POST,
+		'cart_details' 	=> edd_get_cart_content_details(),
+		'gateway' 		=> $valid_data['gateway'],
+		'card_info' 	=> $valid_data['cc_info']
 	);
 	
 	// add the user data for hooks
@@ -253,7 +257,7 @@ function edd_purchase_form_validate_agree_to_terms() {
 	// validate agree to terms
 	if ( !isset( $_POST['edd_agree_to_terms'] ) || $_POST['edd_agree_to_terms'] != 1 ) {
 		// user did not agree
-		edd_set_error( 'agree_to_terms', __( 'You must agree to the terms of use', 'edd' ) );
+		edd_set_error( 'agree_to_terms', apply_filters( 'edd_agree_to_terms_text', __( 'You must agree to the terms of use', 'edd' ) ) );
 	}
 }
 
@@ -333,6 +337,7 @@ function edd_purchase_form_validate_new_user() {
 	$user_pass	  = isset( $_POST["edd_user_pass"] ) ? trim( $_POST["edd_user_pass"] ) : false;
 	$pass_confirm = isset( $_POST["edd_user_pass_confirm"] ) ? trim( $_POST["edd_user_pass_confirm"] ) : false;
 
+
 	// Check if we have an username to register
 	if( $user_login && strlen( $user_login ) > 0 ) {
 		$registering_new_user = true;
@@ -342,7 +347,7 @@ function edd_purchase_form_validate_new_user() {
 			// username already registered
 			edd_set_error( 'username_unavailable', __( 'Username already taken', 'edd' ) );
 		// Check if it's valid
-		} else if( !validate_username( $user_login ) ) {
+		} else if( ! edd_validate_username( $user_login ) ) {
 		   // invalid username
 			edd_set_error( 'username_invalid', __( 'Invalid username', 'edd' ) );
 		} else {
@@ -700,5 +705,5 @@ function edd_get_success_page_url( $query_string = null ) {
 	if($query_string)
 		$success_page .= $query_string;
 
-	return $success_page;
+	return apply_filters( 'edd_success_page_url', $success_page );
 }

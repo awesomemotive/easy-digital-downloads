@@ -214,5 +214,19 @@ jQuery(document).ready(function ($) {
 			$( '#edd-date-range-options' ).hide();
 		}
 	});
+
+	// hide local tax opt in
+    if( $('input[name="edd_settings_taxes[tax_condition]"]:checked').val() != 'local' ) {
+        $('input[name="edd_settings_taxes[tax_condition]"]').parent().parent().next().hide();
+    }
+    // toggle local tax option
+    $('input[name="edd_settings_taxes[tax_condition]"]').on('change', function() {
+        var tax_opt_in = $(this).parent().parent().next();
+        if( $(this).val() == 'local' ) {
+            tax_opt_in.fadeIn();
+        } else {
+            tax_opt_in.fadeOut();
+        }
+    });
 	
 });
