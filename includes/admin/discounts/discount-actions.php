@@ -9,6 +9,8 @@
  * @since       1.0.8.1
 */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Add Discount

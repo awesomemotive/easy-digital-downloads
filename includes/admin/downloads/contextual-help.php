@@ -9,6 +9,9 @@
  * @since       1.2.3 
  */
 
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
+
 /**
  * Download contextual help.
  *

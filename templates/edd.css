@@ -15,6 +15,7 @@
 #edd_checkout_cart { text-align: left; width: 100%; border-top: 1px solid #f0f0f0; border-bottom: none; margin: 0 0 10px; }
 #edd_checkout_cart th,
 #edd_checkout_cart td { text-align: left; padding: 3px 5px; border-bottom: 1px solid #f0f0f0; border-top: none; color: #666; }
+#edd_checkout_cart .edd_cart_tax_row th { background: #f9f9f9; }
 #edd_checkout_cart th { font-weight: bold; background: #f5f5f5; }
 #edd_checkout_cart td { line-height: 25px; vertical-align: middle; }
 #edd_checkout_cart th.edd_cart_actions,
@@ -28,6 +29,8 @@
 #edd_purchase_form input.edd-input { display: inline-block; width: 200px; }
 #edd_purchase_form input.edd-input.error { border-color: #c4554e; }
 #edd_purchase_form label { display: inline-block;  width: 200px; }
+#edd_purchase_form #edd_terms_agreement label,
+#edd_purchase_form #edd_tax_opt_in_fields label { display: inline-block;  width: auto; }
 #edd_purchase_form input.card-expiry-month { width: 30px; }
 #edd_purchase_form input.card-expiry-year { width: 60px; }
 #edd_purchase_form span.exp-divider {  }
@@ -80,8 +83,9 @@
 /* =Purchase buttons
 -------------------------------------------------------------- */
 input.edd_submit_plain { background: none !important; border: none !important; padding: 0 !important; display: inline; cursor: pointer; }
-.edd_price_options { margin: 0 0 15px; }
-.edd_price_options ul { margin: 0; padding: 0; list-style: none; }
+.edd_download_purchase_form .edd_price_options { margin: 0 0 15px; }
+.edd_download_purchase_form .edd_price_options ul { margin: 0; padding: 0; list-style: none; }
+.edd_download_purchase_form .edd_price_options li { display: block; padding: 0; margin: 0; }
 
 .edd-submit {
 	text-shadow: 1px 1px #FAFAFA;
