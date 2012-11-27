@@ -26,27 +26,38 @@
  */
 function edd_get_payments( $args = array() ) {
 	$defaults = array(
-		'offset'   => 0,
 		'number'   => 20,
+		'page'     => null,
 		'mode'     => 'live',
 		'orderby'  => 'ID',
 		'order'    => 'DESC',
 		'user'     => null,
 		'status'   => 'any',
-		'meta_key' => null
+		'meta_key' => null,
+		'year'	   => null,
+		'month'	   => null,
+		'day'	   => null,
+		's'        => null,
+		'children' => false
 	);
 
 	$args = wp_parse_args( $args, $defaults );
 	extract( $args );
 
 	$payment_args = array(
-		'post_type' => 'edd_payment', 
+		'post_type'      => 'edd_payment', 
 		'posts_per_page' => $number, 
-		'offset' => $offset,
-		'order' => $order,
-		'orderby' => $orderby,
-		'post_status' => $status
+		'paged'          => $page,
+		'order'          => $order,
+		'orderby'        => $orderby,
+		'post_status'    => $status,
+		'year'           => $year,
+		'monthnum'       => $month,
+		'day'            => $day
 	);
+
+	if( ! $children )
+		$payment_args['post_parent'] = 0; // only get top level payments
 
 	if( !is_null( $meta_key ) )
 		$payment_args['meta_key'] = $meta_key;
@@ -65,11 +76,35 @@ function edd_get_payments( $args = array() ) {
 		);
 	}
 
+	$search = trim( $args['s'] );
+
+	if( is_email( $search ) || strlen( $search ) == 32 ) {
+
+	    // this is a purchase key search
+	    
+		$key = is_email( $search ) ? '_edd_payment_user_email' : '_edd_payment_purchase_key';
+
+		$search_meta = array(
+            'key'   => $key,
+            'value' => $search
+        );
+
+		if( isset( $payment_args['meta_query'] ) ) {
+			$payment_args['meta_query'][1] = $search_meta;
+		} else {
+			// create a new meta query
+			$payment_args['meta_query'] = array( $search_meta );
+		}
+
+	} else {
+	    $payment_args['s'] = $search;
+	}
+
 	if( $mode != 'all' ) {
 		if( isset( $payment_args['meta_query'] ) ) {
 
 			// append to the user meta query
-			$payment_args['meta_query'][1] = array(
+			$payment_args['meta_query'][2] = array(
 				'key' => '_edd_payment_mode',
 				'value' => $mode
 			);
