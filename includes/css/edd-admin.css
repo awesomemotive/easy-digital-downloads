@@ -20,6 +20,8 @@
 -------------------------------------------------------------- */
 tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 .wp-list-table.downloads th#ID { width: 80px; }
+.wp-list-table.downloads th#amount { width: 130px; }
+.wp-list-table.downloads th#user { width: 130px; }
 
 /* Metabox Styles
 -------------------------------------------------------------- */
