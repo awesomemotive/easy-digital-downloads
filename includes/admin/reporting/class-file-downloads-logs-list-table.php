@@ -147,7 +147,21 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	
 		$this->items = $this->logs_data();
 
-		$total_items = $edd_logs->get_log_count( null, 'file_download' );
+		$parent = isset( $_GET['download'] ) ? absint( $_GET['download'] ) : null;
+
+		$user  = isset( $_GET['user'] ) ? absint( $_GET['user'] ) : false;
+
+		if( $user ) {
+			$meta_query = array(
+				array(
+					'key'   => '_edd_log_user_id',
+					'value' => $user
+				)
+			);
+		} else {
+			$meta_query = false;
+		}
+		$total_items = $edd_logs->get_log_count( $parent, 'file_download', $meta_query );
 
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,                  	// WE have to calculate the total number of items
