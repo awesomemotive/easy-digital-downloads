@@ -283,7 +283,7 @@ class EDD_Logging {
 		$defaults = array(
 			'post_parent' 	=> 0,
 			'post_type'		=> 'edd_log',
-			'posts_per_page'=> 10,
+			'posts_per_page'=> 30,
 			'post_status'	=> 'publish',
 			'paged'			=> get_query_var( 'paged' ),
 			'log_type'		=> false
