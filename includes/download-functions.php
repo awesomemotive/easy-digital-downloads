@@ -249,7 +249,7 @@ function edd_get_download_sales_stats($download_id) {
 
 function edd_record_sale_in_log( $download_id, $payment_id ) {
 
-	$logs = new EDD_Logging();
+	global $edd_logs;
 
 	$log_data = array(
 		'post_parent' 	=> $download_id,
@@ -260,7 +260,7 @@ function edd_record_sale_in_log( $download_id, $payment_id ) {
 		'payment_id'=> $payment_id
 	);
 
-	$log_id = $logs->insert_log( $log_data, $log_meta );
+	$log_id = $edd_logs->insert_log( $log_data, $log_meta );
 
 }
 
@@ -277,8 +277,7 @@ function edd_record_sale_in_log( $download_id, $payment_id ) {
 
 function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip, $payment_id ) {
 
-
-	$logs = new EDD_Logging();
+	global $edd_logs;
 
 	$log_data = array(
 		'post_parent'	=> $download_id,
@@ -293,7 +292,7 @@ function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip, $p
 		'payment_id'=> $payment_id
 	);
 
-	$log_id = $logs->insert_log( $log_data, $log_meta );
+	$log_id = $edd_logs->insert_log( $log_data, $log_meta );
 
 
 }
