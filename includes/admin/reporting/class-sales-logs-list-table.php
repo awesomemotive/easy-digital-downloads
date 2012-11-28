@@ -69,14 +69,15 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 				$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
 				$user_info = edd_get_payment_meta_user_info( $payment_id );
-
-				$logs_data[] = array(
-					'ID' 		=> $log->ID,
-					'payment_id'=> $payment_id,
-					'user_id'	=> $user_info['id'],
-					'user_name'	=> $user_info['first_name'] . ' ' . $user_info['last_name'],
-					'date'		=> get_post_field( 'post_date', $payment_id )
-				);
+				if( is_array( $user_info ) ) {
+					$logs_data[] = array(
+						'ID' 		=> $log->ID,
+						'payment_id'=> $payment_id,
+						'user_id'	=> $user_info['id'],
+						'user_name'	=> $user_info['first_name'] . ' ' . $user_info['last_name'],
+						'date'		=> get_post_field( 'post_date', $payment_id )
+					);
+				}
 			}
 		}
 
