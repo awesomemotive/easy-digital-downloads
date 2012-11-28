@@ -27,13 +27,9 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	function column_default( $item, $column_name ) {
 		switch( $column_name ){
 			case 'download' :
-				return '<a href="' . 
-				admin_url( '/post.php?post=' . $item[ $column_name ] . '&action=edit' ) .
-				 '" target="_blank">' . get_the_title( $item[ $column_name ] ) . '</a>';
+				return '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . get_the_title( $item[ $column_name ] ) . '</a>';
 			case 'user_id' :
-				return '<a href="' . 
-					admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&view=file_downloads&user=' . urlencode( $item[ $column_name ] ) ) .
-					 '" target="_blank">' . $item[ 'user_name' ] . '</a>';
+				return '<a href="' . add_query_arg( 'user', $item[ $column_name ] ) . '">' . $item[ 'user_name' ] . '</a>';
 			default:
 				return $item[ $column_name ];
 		}
@@ -68,8 +64,10 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		$user  = isset( $_GET['user'] ) ? absint( $_GET['user'] ) : false;
 
+		$download = isset( $_GET['download'] ) ? absint( $_GET['download'] ) : false;
+
 		$log_query = array(
-			'post_parent' => null, 
+			'post_parent' => isset( $_GET['download'] ) ? absint( $_GET['download'] ) : null, 
 			'log_type'    => 'file_download', 
 			'paged'       => $paged
 		);
