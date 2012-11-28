@@ -30,8 +30,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 				 '" target="_blank">' . get_the_title( $item[ $column_name ] ) . '</a>';
 			case 'user_id' :
 				return '<a href="' . 
-					admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item[ $column_name ] ) ) .
-					 '" target="_blank">' . $item[ 'user_name' ] . '</a>';
+					admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['user_id'] ) ) .
+					 '"" target="_blank">' . $item[ 'user_name' ] . '</a>';
 			default:
 				return $item[ $column_name ];
 		}
@@ -61,7 +61,15 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 		$paged = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 
-		$logs = $edd_logs->get_logs( null, 'sale', $paged );
+		$user  = isset( $_GET['user'] ) ? absint( $_GET['user'] ) : false;
+
+		$log_query = array(
+			'post_parent' => null, 
+			'log_type'    => 'sale', 
+			'paged'       => $paged
+		);
+
+		$logs = $edd_logs->get_connected_logs( $log_query );
 
 		if( $logs ) {
 
