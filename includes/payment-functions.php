@@ -514,8 +514,13 @@ function edd_get_payment_meta( $payment_id ) {
  * @return      array
  */
 function edd_get_payment_meta_user_info( $payment_id ) {
+	
+	$user_info = false;
+
 	$payment_meta = edd_get_payment_meta( $payment_id );
-	$user_info    = maybe_unserialize( $payment_meta[ 'user_info' ] );
+	
+	if( isset( $payment_meta['user_info'] ) )
+		$user_info = maybe_unserialize( $payment_meta[ 'user_info' ] );
 
 	return apply_filters( 'edd_payment_meta_user_info', $user_info );
 }
