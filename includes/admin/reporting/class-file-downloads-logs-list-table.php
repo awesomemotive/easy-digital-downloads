@@ -9,9 +9,11 @@ if( !class_exists( 'WP_List_Table' ) ) {
 
 class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
+	var $per_page = 30;
+
 	function __construct(){
 		global $status, $page;
-			   
+			
 		//Set parent defaults
 		parent::__construct( array(
 			'singular'  => edd_get_label_singular(),    // singular name of the listed records
@@ -113,7 +115,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		/**
 		 * First, lets decide how many records per page to show
 		 */
-		$per_page = 30;
+		$per_page = $this->per_page;
 	   
 		$columns = $this->get_columns();
 
