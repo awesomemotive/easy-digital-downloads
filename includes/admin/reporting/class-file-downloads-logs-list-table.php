@@ -32,7 +32,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				 '" target="_blank">' . get_the_title( $item[ $column_name ] ) . '</a>';
 			case 'user_id' :
 				return '<a href="' . 
-					admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item[ $column_name ] ) ) .
+					admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&view=file_downloads&user=' . urlencode( $item[ $column_name ] ) ) .
 					 '" target="_blank">' . $item[ 'user_name' ] . '</a>';
 			default:
 				return $item[ $column_name ];
@@ -66,7 +66,27 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		$paged = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 
-		$logs = $edd_logs->get_logs( null, 'file_download', $paged );
+		$user  = isset( $_GET['user'] ) ? absint( $_GET['user'] ) : false;
+
+		$log_query = array(
+			'post_parent' => null, 
+			'log_type'    => 'file_download', 
+			'paged'       => $paged
+		);
+
+		if( $user ) {
+
+			// show only logs from a specific user
+
+			$log_query['meta_query'] = array(
+				array(
+					'key'   => '_edd_log_user_id',
+					'value' => $user
+				)
+			);
+		}
+
+		$logs = $edd_logs->get_connected_logs( $log_query );
 
 		if( $logs ) {
 
