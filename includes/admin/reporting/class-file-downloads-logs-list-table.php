@@ -49,6 +49,18 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		return $columns;
 	}
 
+	function get_filtered_user() {
+		return isset( $_GET['user'] ) ? absint( $_GET['user'] ) : false;
+	}
+
+	function get_filtered_download() {
+		return isset( $_GET['download'] ) ? absint( $_GET['download'] ) : false;
+	}
+
+	function get_paged() {
+		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+	}
+
 	function bulk_actions() {
 		// these aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
@@ -60,11 +72,9 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		$logs_data = array();
 
-		$paged = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-
-		$user  = isset( $_GET['user'] ) ? absint( $_GET['user'] ) : false;
-
-		$download = isset( $_GET['download'] ) ? absint( $_GET['download'] ) : false;
+		$paged    = $this->get_paged();
+		$user     = $this->get_filtered_user();
+		$download = $this->get_filtered_download();
 
 		$log_query = array(
 			'post_parent' => isset( $_GET['download'] ) ? absint( $_GET['download'] ) : null, 
@@ -147,9 +157,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	
 		$this->items = $this->logs_data();
 
-		$parent = isset( $_GET['download'] ) ? absint( $_GET['download'] ) : null;
-
-		$user  = isset( $_GET['user'] ) ? absint( $_GET['user'] ) : false;
+		$user     = $this->get_filtered_user();
+		$download = $this->get_filtered_download();
 
 		if( $user ) {
 			$meta_query = array(
@@ -161,7 +170,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		} else {
 			$meta_query = false;
 		}
-		$total_items = $edd_logs->get_log_count( $parent, 'file_download', $meta_query );
+		$total_items = $edd_logs->get_log_count( $download, 'file_download', $meta_query );
 
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,                  	// WE have to calculate the total number of items
