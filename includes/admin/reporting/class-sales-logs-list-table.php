@@ -31,7 +31,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 			case 'user_id' :
 				return '<a href="' . 
 					admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['user_id'] ) ) .
-					 '"" target="_blank">' . $item[ 'user_name' ] . '</a>';
+					 '">' . $item[ 'user_name' ] . '</a>';
 			default:
 				return $item[ $column_name ];
 		}
