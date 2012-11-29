@@ -21,6 +21,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			'ajax'      => false             			// does this table support ajax?
 		) );
 
+		add_action( 'edd_log_view_actions', array( $this, 'downloads_filter' ) );
+
 	}
 
 
@@ -54,7 +56,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	}
 
 	function get_filtered_download() {
-		return isset( $_GET['download'] ) ? absint( $_GET['download'] ) : false;
+		return !empty( $_GET['download'] ) ? absint( $_GET['download'] ) : false;
 	}
 
 	function get_paged() {
@@ -66,6 +68,24 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		edd_log_views();
 	}
    
+	function downloads_filter() {
+		$downloads = get_posts( array( 
+			'post_type'      => 'download', 
+			'post_status'    => 'any', 
+			'posts_per_page' => -1, 
+			'orderby'        => 'title',
+			'order'          => 'ASC'
+		) );
+		if( $downloads ) {
+			echo '<select name="download" id="edd-log-download-filter">';
+				echo '<option value="0">' . __( 'All', 'edd' ) . '</option>';	
+				foreach( $downloads as $download ) {
+					echo '<option value="' . $download->ID . '"' . selected( $download->ID, $this->get_filtered_download() ) . '>' . esc_html( $download->post_title ) . '</option>';
+				}
+			echo '</select>';
+		}
+	}
+
 	function logs_data() {
 
 		global $edd_logs;
@@ -77,7 +97,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		$download = $this->get_filtered_download();
 
 		$log_query = array(
-			'post_parent' => isset( $_GET['download'] ) ? absint( $_GET['download'] ) : null, 
+			'post_parent' => $download,
 			'log_type'    => 'file_download', 
 			'paged'       => $paged
 		);
