@@ -121,13 +121,20 @@ jQuery(document).ready(function ($) {
         
 		var $this = $(this),
             discount_code = $('#edd-discount').val(),
-			edd_email = $('#edd-email').val();
+            edd_email = $('#edd-email').val();
+			edd_user = $('#edd_user_login').val();
         if (discount_code == '') {
             alert(edd_scripts.no_discount);
             return false;
         }
-		if (edd_email == '') {
+
+		if (edd_email == '' && edd_email != 'undefined') {
             alert(edd_scripts.no_email);
+            return false;
+        }
+
+        if(edd_email == 'undefined' && edd_user == '') {
+            alert(edd_scripts.no_username);
             return false;
         }
 
@@ -135,6 +142,7 @@ jQuery(document).ready(function ($) {
             action: 'edd_apply_discount',
             code: discount_code,
             email: edd_email,
+            user: edd_user,
             nonce: edd_scripts.ajax_nonce
         };
 
@@ -144,15 +152,19 @@ jQuery(document).ready(function ($) {
             dataType: "json",
             url: edd_scripts.ajaxurl,
             success: function (discount_response) {
-                if (discount_response.msg == 'valid') {
-                    $('.edd_cart_amount').html(discount_response.amount).text();
-                    $this.text(edd_scripts.discount_applied);
+                if( discount_response ) {
+                    if (discount_response.msg == 'valid') {
+                        $('.edd_cart_amount').html(discount_response.amount).text();
+                        $this.text(edd_scripts.discount_applied);
+                    } else {
+                        alert(discount_response.msg);
+                    }
                 } else {
-                    alert(discount_response.msg);
+                    console.log( discount_response );
                 }
             }
         }).fail(function (data) {
-            //console.log(data);
+            console.log(data);
         });
         return false;
     });

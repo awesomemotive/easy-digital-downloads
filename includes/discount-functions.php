@@ -376,35 +376,62 @@ function edd_discount_is_min_met( $code_id = null ) {
  * @return      bool
 */
 
-function edd_is_discount_used( $code = null, $email = '' ) {
+function edd_is_discount_used( $code = null, $user = '' ) {
 	
-	$return = false;
+	$return      = false;
+	$user_found  = true;
 
-	$query_args = array(
-		'post_type' => 'edd_payment',
-		'meta_query' => array(
-			array(
-				'key' => '_edd_payment_user_email',
-				'value' => $email,
-				'compare' => '='
-			)
-		)
-	);
+	if( is_email( $user ) ) {
+	
+		$user_found = true; // all we need is the email
+		$key        = '_edd_payment_user_email';
+		$value      = $user;
+	
+	} else {
+		
+		$user_data = get_user_by( 'login', $user );
+		
+		if( ! is_wp_error( $user_data ) ) {
 
-	$payments = get_posts( $query_args ); // Get all payments with matching email
+			$key   = '_edd_payment_user_id';
+			$value = $user_data->ID;
+		
+		} else {
 
-	if( $payments  ) {
-		foreach ( $payments as $payment ) { 
-			// Check all matching payments for discount code.
-			$payment_meta = get_post_meta( $payment->ID, '_edd_payment_meta', true );
-			$user_info = maybe_unserialize( $payment_meta['user_info'] );
-			if( $user_info['discount'] == $code ) {
-				$return = true;
-			}
+			$user_found = false; // bail, no user found
 		}
 	}
+
+	if( $user_found ) {
+
+		$query_args = array(
+			'post_type'       => 'edd_payment',
+			'meta_query'      => array(
+				array(
+					'key'     => $key,
+					'value'   => $value,
+					'compare' => '='
+				)
+			),
+			'fields'          => 'ids'
+		);
+
+		$payments = get_posts( $query_args ); // Get all payments with matching email
+
+		if( $payments  ) {
+			foreach ( $payments as $payment ) { 
+				// Check all matching payments for discount code.
+				$payment_meta = get_post_meta( $payment, '_edd_payment_meta', true );
+				$user_info    = maybe_unserialize( $payment_meta['user_info'] );
+				if( $user_info['discount'] == $code ) {
+					$return   = true;
+				}
+			}
+		}
 	
-	return apply_filters( 'edd_is_discount_used', $return, $code, $email );
+	}
+
+	return apply_filters( 'edd_is_discount_used', $return, $code, $user );
 }
 
 
@@ -418,25 +445,25 @@ function edd_is_discount_used( $code = null, $email = '' ) {
  * @return      void
 */
 
-function edd_is_discount_valid( $code = '', $email = '') {
+function edd_is_discount_valid( $code = '', $user = '') {
 
 	$return 	 = false;
 	$discount_id = edd_get_discount_id_by_code( $code );
-	$email 		 = trim( $email );
+	$user 		 = trim( $user );
 
 	if( $discount_id !== false ) {
 		if(
 			edd_is_discount_active( $discount_id ) && 
 			edd_is_discount_started( $discount_id ) && 
 			!edd_is_discount_maxed_out( $discount_id ) && 
-			!edd_is_discount_used( $code, $email ) &&
+			!edd_is_discount_used( $code, $user ) &&
 			edd_discount_is_min_met( $discount_id )
 		) {
 			$return = true;
 		}
 	}
 
-	return apply_filters( 'edd_is_discount_valid', $return, $discount_id, $code, $email );
+	return apply_filters( 'edd_is_discount_valid', $return, $discount_id, $code, $user );
 }
 
 
