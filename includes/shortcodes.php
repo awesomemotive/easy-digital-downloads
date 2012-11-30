@@ -341,15 +341,15 @@ function edd_downloads_query($atts, $content = null) {
 
 						edd_get_template_part( 'shortcode', 'content-title' );
 
-						if($excerpt == 'yes' && $full_content != 'yes')
+						if( $excerpt == 'yes' && $full_content != 'yes' )
 							edd_get_template_part( 'shortcode', 'content-excerpt' );
-						else if($full_content == 'yes')
+						else if( $full_content == 'yes' )
 							edd_get_template_part( 'shortcode', 'content-full' );
 
-						if($price == 'yes')
+						if( $price == 'yes' )
 							edd_get_template_part( 'shortcode', 'content-price' );
 
-						if($buy_button == 'yes')
+						if( $buy_button == 'yes' )
 							edd_get_template_part( 'shortcode', 'content-cart-button' );
 
 						do_action( 'edd_download_after' ); 
