@@ -366,10 +366,10 @@ function edd_downloads_query($atts, $content = null) {
 				<?php
 				$big = 999999;
 				echo paginate_links( array(
-					'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-					'format' => '?paged=%#%',
+					'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+					'format'  => '?paged=%#%',
 					'current' => max( 1, $query['paged'] ),
-					'total' => $downloads->max_num_pages
+					'total'   => $downloads->max_num_pages
 				) );
 				?>
 			</div>
