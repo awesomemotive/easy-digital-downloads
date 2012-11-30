@@ -82,7 +82,7 @@ class EDD_Logging {
 
 	function register_taxonomy() {
 
-		register_taxonomy( 'edd_log_type', 'edd_log' );
+		register_taxonomy( 'edd_log_type', 'edd_log', array( 'public' => false ) );
 
 		$types = $this->log_types();
 
