@@ -53,7 +53,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$defaults = array(
 		'download_id' => $post->ID,
-		'text'        => isset( $edd_options[ 'add_to_cart_text' ] ) && $edd_options[ 'add_to_cart_text' ] != '' ? $edd_options[ 'add_to_cart_text' ] 	: __( 'Purchase', 'edd' ),
+		'text'        => isset( $edd_options[ 'add_to_cart_text' ] ) && $edd_options[ 'add_to_cart_text' ]  != '' ? $edd_options[ 'add_to_cart_text' ] 	: __( 'Purchase', 'edd' ),
 		'style'       => isset( $edd_options[ 'button_style' ] ) 	 ? $edd_options[ 'button_style' ] 		: 'button',
 		'color'       => isset( $edd_options[ 'checkout_color' ] ) 	 ? $edd_options[ 'checkout_color' ] 	: 'blue',
 		'class'       => 'edd-submit'
@@ -62,16 +62,14 @@ function edd_get_purchase_link( $args = array() ) {
 	$args = wp_parse_args( $args, $defaults );
 	extract( $args );
 	
-	$checkout_url = edd_get_checkout_uri();
-
-	$variable_pricing = edd_has_variable_prices( $download_id );
-	$data_variable = $variable_pricing ? ' data-variable-price="yes"' : '';
+	$variable_pricing     = edd_has_variable_prices( $download_id );
+	$data_variable        = $variable_pricing ? ' data-variable-price="yes"' : '';
 				
 	if ( edd_item_in_cart( $download_id ) ) {
-		$button_display = 'style="display:none;"';
+		$button_display   = 'style="display:none;"';
 		$checkout_display = '';
 	} else {
-		$button_display = '';
+		$button_display   = '';
 		$checkout_display = 'style="display:none;"';
 	}
 
@@ -95,7 +93,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 					printf( 
 						'<a href="%1$s" class="%2$s %3$s" %4$s>' . __( 'Checkout', 'edd' ) . '</a>', 
-						esc_url( $checkout_url ),
+						esc_url( edd_get_checkout_uri() ),
 						esc_attr( 'edd_go_to_checkout' ),
 						implode( ' ', array( $style, $color, trim( $class ) ) ),
 						$checkout_display
