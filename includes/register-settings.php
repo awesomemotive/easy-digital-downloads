@@ -207,6 +207,8 @@ function edd_register_settings() {
 						'{download_list} - ' . __('A list of download URLs for each download purchased', 'edd') . '<br/>' .
 						'{name} - ' . __('The buyer\'s name', 'edd') . '<br/>' .
 						'{date} - ' . __('The date of the purchase', 'edd') . '<br/>' .
+						'{subtotal} - ' . __('The price of the purchase before taxes', 'edd') . '<br/>' .
+						'{tax} - ' . __('The taxed amount of the purchase', 'edd') . '<br/>' .
 						'{price} - ' . __('The total price of the purchase', 'edd') . '<br/>' .
 						'{receipt_id} - ' . __('The unique ID number for this purchase receipt', 'edd') . '<br/>' .
 						'{payment_method} - ' . __('The method of payment used for this purchase', 'edd') . '<br/>' .
