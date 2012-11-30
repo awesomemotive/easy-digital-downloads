@@ -60,12 +60,11 @@ function edd_get_purchase_link( $args = array() ) {
 	);
 
 	$args = wp_parse_args( $args, $defaults );
-	extract( $args );
 	
-	$variable_pricing     = edd_has_variable_prices( $download_id );
+	$variable_pricing     = edd_has_variable_prices( $args['download_id'] );
 	$data_variable        = $variable_pricing ? ' data-variable-price="yes"' : '';
 				
-	if ( edd_item_in_cart( $download_id ) ) {
+	if ( edd_item_in_cart( $args['download_id'] ) ) {
 		$button_display   = 'style="display:none;"';
 		$checkout_display = '';
 	} else {
@@ -75,17 +74,17 @@ function edd_get_purchase_link( $args = array() ) {
 
 	ob_start();
 ?>
-	<form id="edd_purchase_<?php echo $download_id; ?>" class="edd_download_purchase_form" method="post">
+	<form id="edd_purchase_<?php echo $args['download_id']; ?>" class="edd_download_purchase_form" method="post">
 		
-		<?php do_action( 'edd_purchase_link_top', $download_id ); ?>
+		<?php do_action( 'edd_purchase_link_top', $args['download_id'] ); ?>
 		
 		<div class="edd_purchase_submit_wrapper">
 			<?php
 				printf( 
 					'<input type="submit" class="edd-add-to-cart %1$s" name="edd_purchase_download" value="%2$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s/>', 
-					implode( ' ', array( $style, $color, trim( $class ) ) ),
-					esc_attr( $text ),
-					esc_attr( $download_id ),
+					implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
+					esc_attr( $args['text'] ),
+					esc_attr( $args['download_id'] ),
 					esc_attr( $data_variable ),
 					$button_display
 				);
@@ -94,7 +93,7 @@ function edd_get_purchase_link( $args = array() ) {
 					'<a href="%1$s" class="%2$s %3$s" %4$s>' . __( 'Checkout', 'edd' ) . '</a>', 
 					esc_url( edd_get_checkout_uri() ),
 					esc_attr( 'edd_go_to_checkout' ),
-					implode( ' ', array( $style, $color, trim( $class ) ) ),
+					implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
 					$checkout_display
 				);
 			?>
@@ -107,12 +106,12 @@ function edd_get_purchase_link( $args = array() ) {
 			<?php endif; ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
 
-		<input type="hidden" name="download_id" value="<?php echo esc_attr( $download_id ); ?>">
+		<input type="hidden" name="download_id" value="<?php echo esc_attr( $args['download_id'] ); ?>">
 		<input type="hidden" name="edd_action" value="add_to_cart">
 
-		<?php do_action( 'edd_purchase_link_end', $download_id ); ?>
+		<?php do_action( 'edd_purchase_link_end', $args['download_id'] ); ?>
 
-	</form><!--end #edd_purchase_<?php echo esc_attr( $download_id ); ?>-->
+	</form><!--end #edd_purchase_<?php echo esc_attr( $args['download_id'] ); ?>-->
 <?php
 	$purchase_form = ob_get_clean();
 
