@@ -226,33 +226,33 @@ add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
 function edd_downloads_query($atts, $content = null) {
 
 	extract( shortcode_atts( array(
-			'category' => '',
-			'tags' => '',
-			'relation' => 'OR',
-			'number' => 10,
-			'price' => 'yes',
-			'excerpt' => 'yes',
+			'category'     => '',
+			'tags'         => '',
+			'relation'     => 'OR',
+			'number'       => 10,
+			'price'        => 'yes',
+			'excerpt'      => 'yes',
 			'full_content' => 'no',
-			'buy_button' => 'yes',
-			'columns' => 3,
-			'thumbnails' => 'true',
-			'orderby' => 'post_date',
-			'order' => 'DESC'
+			'buy_button'   => 'yes',
+			'columns'      => 3,
+			'thumbnails'   => 'true',
+			'orderby'      => 'post_date',
+			'order'        => 'DESC'
 		), $atts )
 	);
 
 	$query = array(
-		'post_type' => 'download',
+		'post_type'      => 'download',
 		'posts_per_page' => absint( $number ),
-		'orderby' => $orderby,
-		'order' => $order
+		'orderby'        => $orderby,
+		'order'          => $order
 	);
 
 	switch ( $orderby ) {
 		case 'price':
-			$orderby = 'meta_value';
+			$orderby           = 'meta_value';
 			$query['meta_key'] = 'edd_price';
-			$query['orderby'] = 'meta_value_num';
+			$query['orderby']  = 'meta_value_num';
 		break;
 
 		case 'title':
