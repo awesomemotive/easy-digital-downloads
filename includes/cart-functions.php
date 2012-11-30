@@ -141,15 +141,16 @@ function edd_remove_from_cart($cart_key) {
 
 function edd_item_in_cart( $download_id ) {
 	$cart_items = edd_get_cart_contents();
-	if( !is_array($cart_items ) ) {
-		return false; // empty cart
+	if( ! is_array($cart_items ) ) {
+		$return = false; // empty cart
 	} else {
 		foreach( $cart_items as $item ) {
 			if( $item['id'] == $download_id ) {
-				return true;
+				$return = true;
 			}
 		}
 	}
+	return apply_filters( 'edd_item_in_cart', $return, $download_id );
 }
 
 
