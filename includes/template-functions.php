@@ -53,7 +53,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$defaults = array(
 		'download_id' => $post->ID,
-		'show_price'  => true,
+		'price'       => (bool) true,
 		'text'        => isset( $edd_options[ 'add_to_cart_text' ] ) && $edd_options[ 'add_to_cart_text' ]  != '' ? $edd_options[ 'add_to_cart_text' ] 	: __( 'Purchase', 'edd' ),
 		'style'       => isset( $edd_options[ 'button_style' ] ) 	 ? $edd_options[ 'button_style' ] 		: 'button',
 		'color'       => isset( $edd_options[ 'checkout_color' ] ) 	 ? $edd_options[ 'checkout_color' ] 	: 'blue',
@@ -65,7 +65,7 @@ function edd_get_purchase_link( $args = array() ) {
 	$variable_pricing     = edd_has_variable_prices( $args['download_id'] );
 	$data_variable        = $variable_pricing ? ' data-variable-price="yes"' : '';
 	
-	if( $args['show_price'] && ! $variable_pricing ) {
+	if( $args['price'] && ! $variable_pricing ) {
 
 		$args['text'] = edd_currency_filter( edd_get_download_price( $args['download_id'] ) ) . '&nbsp;&ndash;&nbsp;' . $args['text'];
 
