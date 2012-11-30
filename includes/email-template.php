@@ -101,20 +101,24 @@ function edd_email_templage_tags( $message, $payment_data, $payment_id ) {
 	}
 	$download_list .= '</ul>';
 
-	$price = edd_currency_filter( edd_format_amount( $payment_data['amount'] ) );
-
-	$gateway = edd_get_gateway_checkout_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
-
+	$subtotal   = isset( $payment_data['subtotal'] ) ? $payment_data['subtotal'] : $payment_data['amount'];
+	$subtotal   = edd_currency_filter( edd_format_amount( $subtotal ) );
+	$tax        = isset( $payment_data['tax'] ) ? $payment_data['tax'] : 0;
+	$tax        = edd_currency_filter( edd_format_amount( $tax ) );
+	$price      = edd_currency_filter( edd_format_amount( $payment_data['amount'] ) );
+	$gateway    = edd_get_gateway_checkout_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
 	$receipt_id = $payment_data['key'];
 
-	$message = str_replace( '{name}', $name, $message );
-	$message = str_replace( '{username}', $username, $message );
-	$message = str_replace( '{download_list}', $download_list, $message );
-	$message = str_replace( '{date}', date_i18n( get_option( 'date_format' ), strtotime( $payment_data['date'] ) ), $message );
-	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
-	$message = str_replace( '{price}', $price, $message );
+	$message = str_replace( '{name}',           $name, $message );
+	$message = str_replace( '{username}',       $username, $message );
+	$message = str_replace( '{download_list}',  $download_list, $message );
+	$message = str_replace( '{date}',           date_i18n( get_option( 'date_format' ), strtotime( $payment_data['date'] ) ), $message );
+	$message = str_replace( '{sitename}',       get_bloginfo( 'name' ), $message );
+	$message = str_replace( '{subtotal}',       $subtotal, $message );
+	$message = str_replace( '{tax}',            $tax, $message );
+	$message = str_replace( '{price}',          $price, $message );
 	$message = str_replace( '{payment_method}', $gateway, $message );
-	$message = str_replace( '{receipt_id}', $receipt_id, $message );
+	$message = str_replace( '{receipt_id}',     $receipt_id, $message );
 	$message = apply_filters( 'edd_email_template_tags', $message, $payment_data, $payment_id );
 
 	return $message;
