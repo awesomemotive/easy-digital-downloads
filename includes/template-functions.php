@@ -80,33 +80,31 @@ function edd_get_purchase_link( $args = array() ) {
 		<?php do_action( 'edd_purchase_link_top', $download_id ); ?>
 		
 		<div class="edd_purchase_submit_wrapper">
-			<p>
-				<?php
-					printf( 
-						'<input type="submit" class="edd-add-to-cart %1$s" name="edd_purchase_download" value="%2$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s/>', 
-						implode( ' ', array( $style, $color, trim( $class ) ) ),
-						esc_attr( $text ),
-						esc_attr( $download_id ),
-						esc_attr( $data_variable ),
-						$button_display
-					);
+			<?php
+				printf( 
+					'<input type="submit" class="edd-add-to-cart %1$s" name="edd_purchase_download" value="%2$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s/>', 
+					implode( ' ', array( $style, $color, trim( $class ) ) ),
+					esc_attr( $text ),
+					esc_attr( $download_id ),
+					esc_attr( $data_variable ),
+					$button_display
+				);
 
-					printf( 
-						'<a href="%1$s" class="%2$s %3$s" %4$s>' . __( 'Checkout', 'edd' ) . '</a>', 
-						esc_url( edd_get_checkout_uri() ),
-						esc_attr( 'edd_go_to_checkout' ),
-						implode( ' ', array( $style, $color, trim( $class ) ) ),
-						$checkout_display
-					);
-				?>
+				printf( 
+					'<a href="%1$s" class="%2$s %3$s" %4$s>' . __( 'Checkout', 'edd' ) . '</a>', 
+					esc_url( edd_get_checkout_uri() ),
+					esc_attr( 'edd_go_to_checkout' ),
+					implode( ' ', array( $style, $color, trim( $class ) ) ),
+					$checkout_display
+				);
+			?>
 
-				<?php if( edd_is_ajax_enabled() ) : ?>
-					<span class="edd-cart-ajax-alert">
-						<img src="<?php echo esc_url( EDD_PLUGIN_URL . 'includes/images/loading.gif' ); ?>" class="edd-cart-ajax" style="display: none;" />
-						<span class="edd-cart-added-alert" style="display: none;">&mdash;<?php _e( 'Item successfully added to your cart.', 'edd' ); ?></span>
-					</span>
-				<?php endif; ?>
-			</p>
+			<?php if( edd_is_ajax_enabled() ) : ?>
+				<span class="edd-cart-ajax-alert">
+					<img src="<?php echo esc_url( EDD_PLUGIN_URL . 'includes/images/loading.gif' ); ?>" class="edd-cart-ajax" style="display: none;" />
+					<span class="edd-cart-added-alert" style="display: none;">&mdash;<?php _e( 'Item successfully added to your cart.', 'edd' ); ?></span>
+				</span>
+			<?php endif; ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
 
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $download_id ); ?>">
