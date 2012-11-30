@@ -42,19 +42,25 @@ function edd_email_templage_tags( $message, $payment_data, $payment_id ) {
 	$user_info = maybe_unserialize( $payment_data['user_info'] );
 
 	if ( isset( $user_info['id'] ) && $user_info['id'] > 0 ) {
+
 		$user_data = get_userdata( $user_info['id'] );
-		$name = $user_data->display_name;
-		$username = $user_data->user_login;
+		$name      = $user_data->display_name;
+		$username  = $user_data->user_login;
+	
 	} elseif ( isset( $user_info['first_name'] ) ) {
-		$name = $user_info['first_name'];
-		$username = $user_info['first_name'];
+	
+		$name      = $user_info['first_name'];
+		$username  = $user_info['first_name'];
+	
 	} else {
-		$name = $user_info['email'];
-		$username = $user_info['email'];
+	
+		$name      = $user_info['email'];
+		$username  = $user_info['email'];
+	
 	}
 
 	$download_list = '<ul>';
-	$downloads = edd_get_downloads_of_purchase( $payment_id, $payment_data );
+	$downloads     = edd_get_downloads_of_purchase( $payment_id, $payment_data );
 	if ( $downloads ) {
 
 		$show_names = apply_filters( 'edd_email_show_names', true );
