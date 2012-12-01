@@ -260,6 +260,8 @@ function edd_update_payment_status($payment_id, $new_status = 'publish') {
 
 function edd_delete_purchase( $payment_id = 0 ) {
 	
+	global $edd_logs;
+
 	$downloads = edd_get_payment_meta_downloads( $payment_id );
 
 	if( is_array( $downloads ) ) {
@@ -270,7 +272,22 @@ function edd_delete_purchase( $payment_id = 0 ) {
 	}					
 	
 	do_action( 'edd_payment_delete', $payment_id );
+	
+	// remove the payment
 	wp_delete_post( $payment_id, true );
+
+	// remove related sale log entries
+	$edd_logs->delete_logs( 
+		null, 
+		'sale', 
+		array(
+			array(
+				'key'   => '_edd_log_payment_id',
+				'value' => $payment_id
+			)
+		) 
+	);
+
 	do_action( 'edd_payment_deleted', $payment_id );
 
 }
