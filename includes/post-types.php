@@ -189,7 +189,7 @@ function edd_setup_download_taxonomies() {
 			'labels' 		=> apply_filters('edd_download_category_labels', $category_labels),
 			'show_ui' 		=> true,
 			'query_var' 	=> 'download_category',
-			'rewrite' 		=> array('slug' => $slug . '/category')
+			'rewrite' 		=> array('slug' => $slug . '/category', 'with_front' => false )
 		)
 	);
 
@@ -214,7 +214,7 @@ function edd_setup_download_taxonomies() {
 			'labels' 		=> apply_filters( 'edd_download_tag_labels', $tag_labels ),
 			'show_ui' 		=> true,
 			'query_var' 	=> 'download_tag',
-			'rewrite' 		=> array( 'slug' => $slug . '/tag')
+			'rewrite' 		=> array( 'slug' => $slug . '/tag', 'with_front' => false )
 		)
 	);
 
