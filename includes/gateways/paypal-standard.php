@@ -256,6 +256,7 @@ function edd_process_paypal_ipn() {
 		'httpversion' => '1.0',
 		'blocking' => true,
 		'headers' => array(),
+		'sslverify' => false,
 		'body' => $encoded_data_array
 	);
 
