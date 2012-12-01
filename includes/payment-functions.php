@@ -109,6 +109,21 @@ function edd_get_payments( $args = array() ) {
 			// create a new meta query
 			$payment_args['meta_query'] = array( $search_meta );
 		}
+		
+	} elseif( is_numeric( $search ) ) {
+
+		// searching for payments by user ID
+		$search_meta = array(
+            'key'   => '_edd_payment_user_id',
+            'value' => $search
+        );
+
+		if( isset( $payment_args['meta_query'] ) ) {
+			$payment_args['meta_query'][1] = $search_meta;
+		} else {
+			// create a new meta query
+			$payment_args['meta_query'] = array( $search_meta );
+		}
 
 	} else {
 	    $payment_args['s'] = $search;
