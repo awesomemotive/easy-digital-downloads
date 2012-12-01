@@ -53,6 +53,14 @@ function edd_show_upgrade_notices() {
 		);
 	}
 
+	if( version_compare( $edd_version, '1.3.4', '<' ) ) {
+		printf(
+			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the plugin pages, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
+			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
+			'</a>'
+		);
+	}
+
 }
 add_action( 'admin_notices', 'edd_show_upgrade_notices' );
 
@@ -81,10 +89,14 @@ function edd_trigger_upgrades() {
 		edd_v131_upgrades();
 	}
 
+	if( version_compare( $edd_version, '1.3.4', '<' ) ) {
+		edd_v134_upgrades();
+	}
+
 	update_option( 'edd_version', EDD_VERSION );
 
 	if( DOING_AJAX )
-		die( 'complete' ); // ;et ajax know we are done
+		die( 'complete' ); // let ajax know we are done
 
 }
 add_action( 'wp_ajax_edd_trigger_upgrades', 'edd_trigger_upgrades' );
@@ -176,4 +188,30 @@ function edd_v131_upgrades() {
 	}
 	add_option( 'edd_logs_upgraded', '1' );
 
+}
+
+
+function edd_v134_upgrades() {
+
+	$general_options = get_option( 'edd_settings_general' );
+
+	if( isset( $general_options['failure_page'] ) )
+		return; // settings already updated
+
+	// Failed Purchase Page
+	$failed = wp_insert_post(
+		array(
+			'post_title'     => __( 'Transaction Failed', 'edd' ),
+			'post_content'   => __( 'Your transaction failed, please try again or contact site support.', 'edd' ),
+			'post_status'    => 'publish',
+			'post_author'    => 1,
+			'post_type'      => 'page',
+			'post_parent'    => $general_options['purchase_page'],
+			'comment_status' => 'closed'
+		)
+	);
+
+	$general_options['failure_page'] = $failed;
+
+	update_option( 'edd_settings_general', $general_options );
 }

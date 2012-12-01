@@ -111,7 +111,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
             'charset'       => get_bloginfo( 'charset' ), 
             'custom'        => $payment, 
             'rm'            => '2', 
-            'return'        => $return_url, 
+            'return'        => $return_url,
+            'cancel_return' => edd_get_failed_transaction_uri(),
             'notify_url'    => $listener_url
         );
         
