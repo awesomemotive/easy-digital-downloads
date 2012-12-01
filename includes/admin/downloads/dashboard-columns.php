@@ -31,7 +31,7 @@ function edd_download_columns( $download_columns ){
 		'price'             => __( 'Price', 'edd' ),
 		'sales'             => __( 'Sales', 'edd' ),
 		'earnings'          => __( 'Earnings', 'edd' ),
-		'shortcode'         => __( 'Short Code', 'edd' ),
+		'shortcode'         => __( 'Purchase Short Code', 'edd' ),
 		'date'              => __( 'Date', 'edd' )
 	);
 	return $download_columns;
