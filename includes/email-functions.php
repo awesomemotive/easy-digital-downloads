@@ -60,7 +60,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	
 	if( $admin_notice ) {
 		/* send an email notification to the admin */
-		$admin_email = isset( $edd_options['from_email'] ) ? $edd_options['from_email'] : get_option('admin_email');
+		$admin_email   = edd_get_admin_notice_emails();
 		$admin_message = __('Hello', 'edd') . "\n\n" . __('A download purchase has been made', 'edd') . ".\n\n";
 		$admin_message .= __('Downloads sold:', 'edd') .  "\n\n";
 			
@@ -83,4 +83,25 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 
 		wp_mail( $admin_email, __('New download purchase', 'edd'), $admin_message );
 	}
+}
+
+
+/**
+ * Retrieves the admin notice emails
+ * 
+ * If not emails are set, the WordPress admin email is used instead
+ *
+ * @access      private
+ * @since       1.0 
+ * @return      void
+*/
+
+function edd_get_admin_notice_emails() {
+
+	global $edd_options;
+
+	$emails = isset( $edd_options['admin_notice_emails'] ) && strlen( trim( $edd_options['admin_notice_emails'] ) ) > 0 ? $edd_options['admin_notice_emails'] : get_bloginfo( 'admin_email' );
+	$emails = array_map( 'trim', explode( "\n", $emails ) );
+
+	return apply_filters( 'edd_admin_notice_emails', $emails );
 }
