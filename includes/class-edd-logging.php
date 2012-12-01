@@ -384,6 +384,7 @@ class EDD_Logging {
 		}
 
 		$logs = get_posts( $query_args );
+		
 		if( $logs ) {
 			foreach( $logs as $log ) {
 				wp_delete_post( $log, true );
