@@ -47,6 +47,8 @@ function edd_downloads_contextual_help() {
 			'<p>' . __( '<strong>Pricing Options</strong> - Either define a single fixed price, or enable variable pricing. By enabling variable pricing, multiple download options and prices can be configured.', 'edd' ) . '</p>' . 
 
 			'<p>' . __( '<strong>File Downloads</strong> - Define download file names and their respsective file URL. Multiple files can be assigned to a single price, or variable prices.', 'edd' ) . '</p>' . 
+			
+			'<p>' . __( '<strong>File Download Limit</strong> - Define how many times customers are allowed to download their purchased files. Leave at 0 for unlimited. Resending the purchase receipt will permit the customer one additional download if their limit has already been reached.', 'edd' ) . '</p>' . 
 
 			'<p>' . __( '<strong>Button Options</strong> - Disable the automatic output the purchase button. If disabled, no button will be added to the download page unless the <code>[purchase_link]</code> shortcode is used.', 'edd' ) . '</p>'
 	) );
@@ -68,10 +70,11 @@ function edd_downloads_contextual_help() {
 		'content'	=> 
 			'<p>' . __( '<strong>Purchase Shortcode</strong> - If the automatic output of the purchase button has been disabled via the Download Configuration box, a shortcode can be used to output the button or link.', 'edd' ) . '</p>' .
 
-			'<p><code>[purchase_link]</code></p>' . 
+			'<p><code>[purchase_link id="#" price="1" text="Add to Cart" color="blue"]</code></p>' . 
 
 			'<ul>
 				<li><strong>id</strong> - ' . __( 'The ID of a specific download to purchase.', 'edd' ) . '</li>
+				<li><strong>price</strong> - ' . __( 'Whether to show the price on the purchase button. 1 to show the price, 0 to disable it.', 'edd' ) . '</li>
 				<li><strong>text</strong> - ' . __( 'The text to be displayed on the button or link.', 'edd' ) . '</li>
 				<li><strong>style</strong> - ' . __( '<em>button</em> | <em>text</em> - The style of the purchase link.', 'edd' ) . '</li>
 				<li><strong>color</strong> - <em>' . implode( '</em> | <em>', $colors ) . '</em></li>
