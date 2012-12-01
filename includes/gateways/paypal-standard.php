@@ -299,6 +299,8 @@ add_action( 'edd_verify_paypal_ipn', 'edd_process_paypal_ipn' );
 
 function edd_process_paypal_web_accept( $data ) {
 
+	global $edd_options;
+
 	// collect payment details
 	$payment_id     = $data['custom'];
 	$purchase_key   = $data['item_number'];
@@ -325,17 +327,14 @@ function edd_process_paypal_web_accept( $data ) {
 		// purchase keys don't match
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid purchase key in IPN response. IPN data: ', 'edd' ), json_encode( $data ) ) );
 		return;
-	}
-		 
-	if( isset( $data['txn_type'] ) && $data['txn_type'] == 'web_accept' ) {
+	}	 
 		
-		$status = strtolower( $payment_status );
-				
-		if ( $status == 'completed' || edd_is_test_mode() ) {
-			edd_update_payment_status( $payment_id, 'publish' );
-		}
-		
+	$status = strtolower( $payment_status );
+			
+	if ( $status == 'completed' || edd_is_test_mode() ) {
+		edd_update_payment_status( $payment_id, 'publish' );
 	}
+		
 }
 add_action( 'edd_paypal_web_accept', 'edd_process_paypal_web_accept' );
 
