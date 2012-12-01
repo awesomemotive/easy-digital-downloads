@@ -257,7 +257,7 @@ function edd_record_sale_in_log( $download_id, $payment_id ) {
 	);
 
 	$log_meta = array( 
-		'payment_id'=> $payment_id
+		'payment_id'    => $payment_id
 	);
 
 	$log_id = $edd_logs->insert_log( $log_data, $log_meta );
