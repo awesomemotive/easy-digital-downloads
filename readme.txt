@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.5
-Stable Tag: 1.3.4
+Stable Tag: 1.3.4.1
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -139,6 +139,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.3.4.1 =
+
+* Fixed major bug in PayPal standard gateway introduced in 1.3.4
+* Updated French langauge files
 
 = 1.3.4 =
 
@@ -794,6 +799,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Upgrade Notice ==
+
+= 1.3.4.1 =
+
+* Fixed major bug in PayPal standard gateway introduced in 1.3.4
+* Updated French langauge files
 
 = 1.3.4 =
 
