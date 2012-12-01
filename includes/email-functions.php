@@ -61,8 +61,8 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	if( $admin_notice ) {
 		/* send an email notification to the admin */
 		$admin_email   = edd_get_admin_notice_emails();
-		$admin_message = __('Hello', 'edd') . "\n\n" . __('A download purchase has been made', 'edd') . ".\n\n";
-		$admin_message .= __('Downloads sold:', 'edd') .  "\n\n";
+		$admin_message = __('Hello', 'edd') . "\n\n" . sprintf( __('A %s purchase has been made', 'edd'), edd_get_label_plural() ) . ".\n\n";
+		$admin_message .= sprintf( __('%s sold:', 'edd'), edd_get_label_plural() ) .  "\n\n";
 			
 		$download_list = '';	
 		$downloads = maybe_unserialize( $payment_data['downloads'] );
