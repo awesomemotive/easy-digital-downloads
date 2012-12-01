@@ -226,18 +226,20 @@ add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
 function edd_downloads_query($atts, $content = null) {
 
 	extract( shortcode_atts( array(
-			'category'     => '',
-			'tags'         => '',
-			'relation'     => 'OR',
-			'number'       => 10,
-			'price'        => 'no',
-			'excerpt'      => 'yes',
-			'full_content' => 'no',
-			'buy_button'   => 'yes',
-			'columns'      => 3,
-			'thumbnails'   => 'true',
-			'orderby'      => 'post_date',
-			'order'        => 'DESC'
+			'category'         => '',
+			'exclude_category' => '',
+			'tags'             => '',
+			'exclude_tags'     => '',
+			'relation'         => 'AND',
+			'number'           => 10,
+			'price'            => 'no',
+			'excerpt'          => 'yes',
+			'full_content'     => 'no',
+			'buy_button'       => 'yes',
+			'columns'          => 3,
+			'thumbnails'       => 'true',
+			'orderby'          => 'post_date',
+			'order'            => 'DESC'
 		), $atts )
 	);
 
@@ -272,7 +274,7 @@ function edd_downloads_query($atts, $content = null) {
 		break;
 	}
 
-	if( $tags || $category ) {
+	if( $tags || $category || $exclude_category || $exclude_tags ) {
 
 		$query['tax_query'] = array(
 			'relation'     => $relation
@@ -281,7 +283,7 @@ function edd_downloads_query($atts, $content = null) {
 		if( $tags ) {
 			$query['tax_query'][] = array(
 				'taxonomy' => 'download_tag',
-				'terms'    => $tags,
+				'terms'    => explode( ',', $tags ),
 				'field'    => 'slug'
 			);
 		}
@@ -289,8 +291,26 @@ function edd_downloads_query($atts, $content = null) {
 		if( $category ) {
 			$query['tax_query'][] = array(
 				'taxonomy' => 'download_category',
-				'terms'    => $category,
+				'terms'    => explode( ',', $category ),
 				'field'    => 'slug'
+			);
+		}
+
+		if( $exclude_category ) {
+			$query['tax_query'][] = array(
+				'taxonomy' => 'download_category',
+				'terms'    => explode( ',', $exclude_category ),
+				'field'    => 'slug',
+				'operator' => 'NOT IN',
+			);
+		}
+
+		if( $exclude_tags ) {
+			$query['tax_query'][] = array(
+				'taxonomy' => 'download_tag',
+				'terms'    => explode( ',', $exclude_tags ),
+				'field'    => 'slug',
+				'operator' => 'NOT IN',
 			);
 		}
 
