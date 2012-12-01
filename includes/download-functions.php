@@ -299,6 +299,30 @@ function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip, $p
 
 
 /**
+ * Delete log entries when deleting download product
+ *
+ * Removes all related log entries when a download is completely deleted.
+ *
+ * Does not run when a download is trashed 
+ *
+ * @access      public
+ * @since       1.3.4
+ * @return      void
+*/
+function edd_remove_download_logs_on_delete( $download_id = 0 ) {
+
+	if( 'download' != get_post_type( $download_id ) )
+		return;
+
+	global $edd_logs;
+
+	// remove all log entries related to this download
+	$edd_logs->delete_logs( $download_id );
+
+}
+add_action( 'delete_post', 'edd_remove_download_logs_on_delete' );
+
+/**
  * Increase Purchase Count
  *
  * Increases the sale count of a download.
