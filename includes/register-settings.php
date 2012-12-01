@@ -59,6 +59,13 @@ function edd_register_settings() {
 					'options' => $pages_options
 				),
 				array(
+					'id' => 'failure_page',
+					'name' => __('Failed Transaction Page', 'edd'),
+					'desc' => __('This is the page buyers are sent to if their transaction is canceled or fails', 'edd'),
+					'type' => 'select',
+					'options' => $pages_options
+				),
+				array(
 					'id' => 'show_links_on_success',
 					'name' => __('Download Links on Success Page', 'edd'),
 					'desc' => __('Show a list of all download links on the success page after completing a purchase?', 'edd'),

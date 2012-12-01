@@ -580,6 +580,27 @@ function edd_get_checkout_uri( $extras = false ) {
 
 
 /**
+ * Get Failed URI
+ *
+ * Retrieves the URL of the failed transaction page
+ *
+ * @access      public
+ * @since       1.3.4
+ * @return      string - the full URL to the failed transactions page, if present, home page if it doesn't exist
+*/
+
+function edd_get_failed_transaction_uri( $extras = false ) {
+    global $edd_options;
+
+    $uri = isset( $edd_options['failure_page'] ) ? trailingslashit( get_permalink( $edd_options['failure_page'] ) ) : home_url();
+    if( $extras )
+    	$uri .= $extras;
+
+    return apply_filters( 'edd_get_failed_transaction_uri', $uri );
+}
+
+
+/**
  * Checks if on checkout page
  *
  * Determines if the current page is the checkout page

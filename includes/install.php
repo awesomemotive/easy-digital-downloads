@@ -49,6 +49,18 @@ function edd_install() {
 				'comment_status' => 'closed'
 			)
 		);
+		// Failed Purchase Page
+		$failed = wp_insert_post(
+			array(
+				'post_title'     => __( 'Transaction Failed', 'edd' ),
+				'post_content'   => __( 'Your transaction failed, please try again or contact site support.', 'edd' ),
+				'post_status'    => 'publish',
+				'post_author'    => 1,
+				'post_type'      => 'page',
+				'post_parent'    => $checkout,
+				'comment_status' => 'closed'
+			)
+		);
 		// Purchase History (History) Page
 		$history = wp_insert_post(
 			array(
@@ -57,6 +69,7 @@ function edd_install() {
 				'post_status'    => 'publish',
 				'post_author'    => 1,
 				'post_type'      => 'page',
+				'post_parent'    => $checkout, 
 				'comment_status' => 'closed'
 			)
 		);
