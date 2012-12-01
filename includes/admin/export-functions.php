@@ -169,7 +169,7 @@ function edd_export_all_customers() {
 		if ( !empty( $emails ) ) {
 			header( "Content-type: text/csv" );
 			$today = date( "Y-m-d" );
-			header( "Content-Disposition: attachment; filename=user_emails-$today.csv" );
+			header( "Content-Disposition: attachment; filename=customers-$today.csv" );
 			header( "Pragma: no-cache" );
 			header( "Expires: 0" );
 

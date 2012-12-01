@@ -34,6 +34,21 @@ function edd_process_purchase_form() {
 	if ( ! isset( $_POST['edd-nonce'] ) || ! wp_verify_nonce( $_POST['edd-nonce'], 'edd-purchase-nonce' ) )
 		return;
 
+	// make sure the cart isn't empty
+	$cart = edd_get_cart_contents();
+	if( empty( $cart ) ) {
+
+		wp_die(
+			sprintf( 
+				__( 'Your cart is empty, please return to the %ssite%s and try again.', 'edd' ), 
+				'<a href="' . esc_url( home_url() ) . '" title="' . get_bloginfo( 'name' ) . '">',
+				'</a>'
+			),
+			__( 'Error', 'edd' ) 
+		);
+
+	}
+
 	// validate the form $_POST data
 	$valid_data = edd_purchase_form_validate_fields(); 
 
