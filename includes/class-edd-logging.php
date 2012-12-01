@@ -57,7 +57,7 @@ class EDD_Logging {
 			'query_var'			=> false,
 			'rewrite'			=> false,
 			'capability_type'	=> 'post',
-			'supports'			=> array( 'title' ),
+			'supports'			=> array( 'title', 'editor' ),
 			'can_export'		=> false
 		); 
 		register_post_type( 'edd_log', $log_args );
