@@ -39,11 +39,9 @@ if ( !defined( 'ABSPATH' ) ) exit;
 if ( !class_exists( 'Easy_Digital_Downloads' ) ) :
 
 /**
- * Main bbPress Class
+ * Main Easy_Digital_Downloads Class
  *
- * How doth the little busy bee, improve each shining hour...
- *
- * @since bbPress (r2464)
+ * @since v1.4
  */
 
 final class Easy_Digital_Downloads {
