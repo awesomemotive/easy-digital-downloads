@@ -12,6 +12,7 @@
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
+
 /**
  * Print Errors
  *
@@ -52,8 +53,11 @@ add_action( 'edd_before_checkout_register_form', 'edd_print_errors' );
 */
 
 function edd_get_errors() {
-	if( isset( $_SESSION['edd-errors'] ) ) {
-		$errors = $_SESSION['edd-errors'];
+
+	global $wp_session;
+
+	if( isset( $wp_session['edd-errors'] ) ) {
+		$errors = $wp_session['edd-errors'];
 		return $errors;
 	}
 	return false;
@@ -73,12 +77,15 @@ function edd_get_errors() {
 */
 
 function edd_set_error( $error_id, $error_message ) {
+
+	global $wp_session;
+
 	$errors = edd_get_errors();
 	if( !$errors ) {
 		$errors = array();
 	}
 	$errors[ $error_id ] = $error_message;
-	$_SESSION['edd-errors'] = $errors;
+	$wp_session['edd-errors'] = $errors;
 }
 
 
@@ -112,5 +119,8 @@ function edd_unset_error( $error_id ) {
 */
 
 function edd_clear_errors() {
-	if( isset( $_SESSION['edd-errors'] ) ) $_SESSION['edd-errors'] = null;
+
+	global $wp_session;
+
+	if( isset( $wp_session['edd-errors'] ) ) $wp_session['edd-errors'] = null;
 }

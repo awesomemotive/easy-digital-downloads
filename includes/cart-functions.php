@@ -12,28 +12,6 @@
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
-
-
-/**
- * Load WP_Session class
- *
- * This class provides a $_SESSION like system but does not require that
- * the host support sessions
- *
- * @since       1.3.4
-*/
-
-// make sure the 
-if( ! defined( 'WP_SESSION_COOKIE' ) )
-	define( 'WP_SESSION_COOKIE', '_wp_session' );
-
-// Only include the functionality if it's not pre-defined.
-if ( ! class_exists( 'WP_Session' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/libraries/wp_session/class-wp-session.php' );
-	require_once( EDD_PLUGIN_DIR . 'includes/libraries/wp_session/wp-session.php' );
-}
-
-
 /**
  * Get Cart Contents
  *
