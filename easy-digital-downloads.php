@@ -40,21 +40,24 @@ if ( !defined( 'ABSPATH' ) ) exit;
 |--------------------------------------------------------------------------
 */
 // Plugin version
-if( !defined( 'EDD_VERSION' ) ) {
+if( !defined( 'EDD_VERSION' ) )
 	define( 'EDD_VERSION', '1.3.4.1' );
-}
+
 // Plugin Folder URL
-if( !defined( 'EDD_PLUGIN_URL' ) ) {
+if( !defined( 'EDD_PLUGIN_URL' ) )
 	define( 'EDD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-}
+
 // Plugin Folder Path
-if( !defined( 'EDD_PLUGIN_DIR' ) ) {
+if( !defined( 'EDD_PLUGIN_DIR' ) )
 	define( 'EDD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-}
+
 // Plugin Root File
-if( !defined( 'EDD_PLUGIN_FILE' ) ) {
+if( !defined( 'EDD_PLUGIN_FILE' ) )
 	define( 'EDD_PLUGIN_FILE', __FILE__ );
-}
+
+// make sure the cookie is defined
+if( ! defined( 'WP_SESSION_COOKIE' ) )
+	define( 'WP_SESSION_COOKIE', '_wp_session' );
 
 /*
 |--------------------------------------------------------------------------
@@ -105,10 +108,18 @@ add_action( 'init', 'edd_textdomain', 1 );
 |--------------------------------------------------------------------------
 */
 
+
 include_once( EDD_PLUGIN_DIR . 'includes/register-settings.php' );
 $edd_options = edd_get_settings();
 include_once( EDD_PLUGIN_DIR . 'includes/install.php' );
 include_once( EDD_PLUGIN_DIR . 'includes/actions.php' );
+
+// Only include the functionality if it's not pre-defined.
+if ( ! class_exists( 'WP_Session' ) ) {
+	require_once( EDD_PLUGIN_DIR . 'includes/libraries/wp_session/class-wp-session.php' );
+	require_once( EDD_PLUGIN_DIR . 'includes/libraries/wp_session/wp-session.php' );
+}
+
 include_once( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' );
 include_once( EDD_PLUGIN_DIR . 'includes/template-functions.php' );
 include_once( EDD_PLUGIN_DIR . 'includes/checkout-template.php' );
