@@ -234,7 +234,7 @@ x.edd-submit.button.blue:hover {
 
 /* =Misc styles
 -------------------------------------------------------------- */
-.edd-cart-ajax { margin: 0 8px 0 4px; position: relative; top: 2px; }
+.edd-cart-ajax { margin: 0 8px 0 4px; position: relative; top: 2px; background: none; border: none; padding: 0; }
 
 /* =Error styles
 -------------------------------------------------------------- */
