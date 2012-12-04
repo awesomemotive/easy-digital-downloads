@@ -45,11 +45,13 @@ function edd_email_templage_tags( $message, $payment_data, $payment_id ) {
 
 		$user_data = get_userdata( $user_info['id'] );
 		$name      = $user_info['first_name'];
+		$fullname  = $user_info['first_name'] . ' ' . $user_info['last_name'];
 		$username  = $user_data->user_login;
 	
 	} elseif ( isset( $user_info['first_name'] ) ) {
 	
 		$name      = $user_info['first_name'];
+		$fullname  = $user_info['first_name'] . ' ' . $user_info['last_name'];
 		$username  = $user_info['first_name'];
 	
 	} else {
@@ -110,6 +112,7 @@ function edd_email_templage_tags( $message, $payment_data, $payment_id ) {
 	$receipt_id = $payment_data['key'];
 
 	$message = str_replace( '{name}',           $name, $message );
+	$message = str_replace( '{fullname}',       $fullname, $message );
 	$message = str_replace( '{username}',       $username, $message );
 	$message = str_replace( '{download_list}',  $download_list, $message );
 	$message = str_replace( '{date}',           date_i18n( get_option( 'date_format' ), strtotime( $payment_data['date'] ) ), $message );
