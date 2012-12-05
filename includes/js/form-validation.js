@@ -1,6 +1,6 @@
 var edd_scripts_validation;
 jQuery(document).ready(function($) {
-	$("body").on('click', '#edd-purchase-button', function() {
+	$("body").on('submit', '#edd_purchase_form', function() {
 		$('#edd_purchase_form').validate({
 			errorPlacement: function(error, element) {},
 			rules: {
