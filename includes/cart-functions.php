@@ -274,7 +274,7 @@ function edd_get_cart_subtotal() {
 		}
 
 	}
-	return apply_filters( 'edd_get_cart_subtotal', number_format( $amount, 2 ) );
+	return apply_filters( 'edd_get_cart_subtotal', $amount );
 }
 
 
@@ -318,7 +318,7 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 
 	}
 
-	return apply_filters( 'edd_get_cart_amount', number_format( $amount, 2 ), $add_taxes, $local_override );
+	return apply_filters( 'edd_get_cart_amount', $amount, $add_taxes, $local_override );
 }
 
 
@@ -530,11 +530,34 @@ add_action('edd_after_download_content', 'edd_show_added_to_cart_messages');
  * @return      mixed - the full URL to the checkout page, if present, NULL if it doesn't exist
 */
 
-function edd_get_checkout_uri() {
+function edd_get_checkout_uri( $extras = false ) {
     global $edd_options;
 
-    $uri = isset( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) : NULL;
+    $uri = isset( $edd_options['purchase_page'] ) ? trailingslashit( get_permalink( $edd_options['purchase_page'] ) ) : NULL;
+    if( $extras )
+    	$uri .= $extras;
     return apply_filters( 'edd_get_checkout_uri', $uri );
+}
+
+
+/**
+ * Get Failed URI
+ *
+ * Retrieves the URL of the failed transaction page
+ *
+ * @access      public
+ * @since       1.3.4
+ * @return      string - the full URL to the failed transactions page, if present, home page if it doesn't exist
+*/
+
+function edd_get_failed_transaction_uri( $extras = false ) {
+    global $edd_options;
+
+    $uri = isset( $edd_options['failure_page'] ) ? trailingslashit( get_permalink( $edd_options['failure_page'] ) ) : home_url();
+    if( $extras )
+    	$uri .= $extras;
+
+    return apply_filters( 'edd_get_failed_transaction_uri', $uri );
 }
 
 
