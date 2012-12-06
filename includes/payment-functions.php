@@ -172,7 +172,7 @@ function edd_insert_payment( $payment_data = array() ) {
 		return false;
 
 	// construct the payment title
-	if( isset( $payment_data['user_info']['first_name'] ) || isset($payment_data['user_info']['last_name'] ) ) {
+	if( isset( $payment_data['user_info']['first_name'] ) || isset( $payment_data['user_info']['last_name'] ) ) {
 		$payment_title = $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'];
 	} else {
 		$payment_title = $payment_data['user_email'];
@@ -189,7 +189,7 @@ function edd_insert_payment( $payment_data = array() ) {
 		)
 	);
 	
-	if($payment) {
+	if( $payment ) {
 		
 		$payment_meta = array(
 			'amount' 		=> $payment_data['price'], 
