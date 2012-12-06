@@ -9,9 +9,11 @@
  * @since       1.0 
 */
 
-// Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
 
+// make sure a session is started
+if( !session_id() ) {
+	add_action( 'init', 'session_start', -1 );
+}
 
 /**
  * Print Errors
@@ -53,11 +55,8 @@ add_action( 'edd_before_checkout_register_form', 'edd_print_errors' );
 */
 
 function edd_get_errors() {
-
-	global $wp_session;
-
-	if( isset( $wp_session['edd-errors'] ) ) {
-		$errors = $wp_session['edd-errors'];
+	if( isset( $_SESSION['edd-errors'] ) ) {
+		$errors = $_SESSION['edd-errors'];
 		return $errors;
 	}
 	return false;
@@ -77,17 +76,28 @@ function edd_get_errors() {
 */
 
 function edd_set_error( $error_id, $error_message ) {
-
-	global $wp_session;
-
 	$errors = edd_get_errors();
 	if( !$errors ) {
 		$errors = array();
 	}
 	$errors[ $error_id ] = $error_message;
-	$wp_session['edd-errors'] = $errors;
+	$_SESSION['edd-errors'] = $errors;
 }
 
+
+/**
+ * Clear Errors
+ *
+ * Clears all stored errors.
+ *
+ * @access      public
+ * @since       1.0 
+ * @return      void
+*/
+
+function edd_clear_errors() {
+	if( isset( $_SESSION['edd-errors'] ) ) $_SESSION['edd-errors'] = null;
+}
 
 /**
  * Unset an Error
@@ -105,22 +115,4 @@ function edd_unset_error( $error_id ) {
 	if( $errors ) {
 		unset( $errors[ $error_id ] );
 	}
-}
-
-
-/**
- * Clear Errors
- *
- * Clears all stored errors.
- *
- * @access      public
- * @since       1.0 
- * @return      void
-*/
-
-function edd_clear_errors() {
-
-	global $wp_session;
-
-	if( isset( $wp_session['edd-errors'] ) ) $wp_session['edd-errors'] = null;
 }
