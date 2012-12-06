@@ -115,10 +115,13 @@ include_once( EDD_PLUGIN_DIR . 'includes/install.php' );
 include_once( EDD_PLUGIN_DIR . 'includes/actions.php' );
 
 // Only include the functionality if it's not pre-defined.
+/*
+this is buggy and inefficient so it's been removed for now and we have gone back to SESSION storage
 if ( ! class_exists( 'WP_Session' ) ) {
 	require_once( EDD_PLUGIN_DIR . 'includes/libraries/wp_session/class-wp-session.php' );
 	require_once( EDD_PLUGIN_DIR . 'includes/libraries/wp_session/wp-session.php' );
 }
+*/
 
 include_once( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' );
 include_once( EDD_PLUGIN_DIR . 'includes/template-functions.php' );

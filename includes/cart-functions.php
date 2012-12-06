@@ -9,8 +9,6 @@
  * @since       1.0 
 */
 
-// Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Get Cart Contents
@@ -23,8 +21,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
 */
 
 function edd_get_cart_contents() {
-	global $wp_session;
-	return isset( $wp_session['edd_cart'] ) ? apply_filters( 'edd_cart_contents', $wp_session['edd_cart'] ) : false;
+	return isset( $_SESSION['edd_cart'] ) ? apply_filters( 'edd_cart_contents', $_SESSION['edd_cart'] ) : false;
 }
 
 
@@ -62,9 +59,6 @@ function edd_get_cart_quantity() {
 */
 
 function edd_add_to_cart( $download_id, $options = array() ) {
-
-	global $wp_session;
-
 	$cart = edd_get_cart_contents();
 	if( ! edd_item_in_cart( $download_id ) ) {
 
@@ -86,7 +80,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 			$cart = array( $cart_item );
 		}
 	
-		$wp_session['edd_cart'] = $cart;
+		$_SESSION['edd_cart'] = $cart;
 	
 		do_action( 'edd_post_add_to_cart', $download_id, $options );
 
@@ -111,9 +105,6 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 */
 
 function edd_remove_from_cart($cart_key) {
-
-	global $wp_session;
-
 	$cart = edd_get_cart_contents();
 
 	do_action( 'edd_pre_remove_from_cart', $cart_key );
@@ -123,7 +114,7 @@ function edd_remove_from_cart($cart_key) {
 	} else {
 		unset( $cart[ $cart_key ] );
 	}
-	$wp_session['edd_cart'] = $cart;
+	$_SESSION['edd_cart'] = $cart;
 	
 	do_action( 'edd_post_remove_from_cart', $cart_key );
 
@@ -147,22 +138,16 @@ function edd_remove_from_cart($cart_key) {
 */
 
 function edd_item_in_cart( $download_id ) {
-	
-	// default to not in the cart
-	$return = false;
-	
 	$cart_items = edd_get_cart_contents();
-	
-	if( ! is_array($cart_items ) ) {
-		$return = false; // empty cart
+	if( !is_array($cart_items ) ) {
+		return false; // empty cart
 	} else {
 		foreach( $cart_items as $item ) {
 			if( $item['id'] == $download_id ) {
-				$return = true;
+				return true;
 			}
 		}
 	}
-	return apply_filters( 'edd_item_in_cart', $return, $download_id );
 }
 
 
@@ -289,7 +274,7 @@ function edd_get_cart_subtotal() {
 		}
 
 	}
-	return apply_filters( 'edd_get_cart_subtotal', $amount );
+	return apply_filters( 'edd_get_cart_subtotal', number_format( $amount, 2 ) );
 }
 
 
@@ -333,7 +318,7 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 
 	}
 
-	return apply_filters( 'edd_get_cart_amount', $amount, $add_taxes, $local_override );
+	return apply_filters( 'edd_get_cart_amount', number_format( $amount, 2 ), $add_taxes, $local_override );
 }
 
 
@@ -507,9 +492,8 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
 function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
 	global $post;
 	
-	$current_page = trailingslashit( edd_get_current_page_url() );
-
-	$remove_url = $current_page . 'edd-remove/' . $cart_key;
+	$current_page = edd_get_current_page_url();
+	$remove_url = add_query_arg( array('cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page);
 
 	return apply_filters('edd_remove_item_url', $remove_url);
 }
@@ -546,35 +530,11 @@ add_action('edd_after_download_content', 'edd_show_added_to_cart_messages');
  * @return      mixed - the full URL to the checkout page, if present, NULL if it doesn't exist
 */
 
-function edd_get_checkout_uri( $extras = false ) {
+function edd_get_checkout_uri() {
     global $edd_options;
 
-    $uri = isset( $edd_options['purchase_page'] ) ? trailingslashit( get_permalink( $edd_options['purchase_page'] ) ) : NULL;
-    if( $extras )
-    	$uri .= $extras;
-
+    $uri = isset( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) : NULL;
     return apply_filters( 'edd_get_checkout_uri', $uri );
-}
-
-
-/**
- * Get Failed URI
- *
- * Retrieves the URL of the failed transaction page
- *
- * @access      public
- * @since       1.3.4
- * @return      string - the full URL to the failed transactions page, if present, home page if it doesn't exist
-*/
-
-function edd_get_failed_transaction_uri( $extras = false ) {
-    global $edd_options;
-
-    $uri = isset( $edd_options['failure_page'] ) ? trailingslashit( get_permalink( $edd_options['failure_page'] ) ) : home_url();
-    if( $extras )
-    	$uri .= $extras;
-
-    return apply_filters( 'edd_get_failed_transaction_uri', $uri );
 }
 
 
@@ -606,8 +566,7 @@ function edd_is_checkout() {
 */
 
 function edd_empty_cart() {
-	global $wp_session;
-	$wp_session['edd_cart'] = NULL;
+	$_SESSION['edd_cart'] = NULL;
 }
 
 
@@ -622,8 +581,7 @@ function edd_empty_cart() {
 */
 
 function edd_set_purchase_session( $purchase_data ) {
-	global $wp_session;
-	$wp_session['edd_purchase_info'] = $purchase_data;
+	$_SESSION['edd_purchase_info'] = $purchase_data;
 }
 
 
@@ -639,13 +597,11 @@ function edd_set_purchase_session( $purchase_data ) {
 */
 
 function edd_get_purchase_session() {
-	global $wp_session;
-	return isset( $wp_session['edd_purchase_info'] ) ? $wp_session['edd_purchase_info'] : false;
+	return isset( $_SESSION['edd_purchase_info'] ) ? $_SESSION['edd_purchase_info'] : false;
 }
 
-/*
+
 // make sure a session is started
 if( !session_id() ) {
 	add_action( 'init', 'session_start', -1 );
 }
-*/
