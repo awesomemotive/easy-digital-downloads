@@ -606,7 +606,7 @@ function edd_get_provinces_list() {
 function edd_month_num_to_name( $n ) {
 	$timestamp = mktime( 0, 0, 0, $n, 1, 2005 );
 
-	return date( "M", $timestamp );
+	return date_i18n( "M", $timestamp );
 }
 
 
