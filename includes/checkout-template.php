@@ -163,7 +163,7 @@ function edd_get_cc_form() {
 	
 	<?php do_action( 'edd_before_cc_fields' ); ?>
 
-	<fieldset id="edd_cc_fields">
+	<fieldset id="edd_cc_fields" class="edd-do-validate">
 		<legend><?php _e('Credit Card Info', 'edd'); ?></legend>
 		<p>
 			<input type="text" autocomplete="off" name="card_number" class="card-number edd-input required" placeholder="<?php _e('Card number', 'edd'); ?>" />

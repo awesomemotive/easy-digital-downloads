@@ -19,13 +19,14 @@ jQuery(document).ready(function($) {
 
     /* credit card verification */
 
-    $('body').on('keyup', '.card-number', function() {
+    $('body').on('keyup', '.edd-do-validate .card-number', function() {
         var card_field = $(this);
         card_field.validateCreditCard(function(result) {
             if(result.card_type == null) {
-                card_field.removeClass('off');
+                $('.card-type').addClass('off');
                 card_field.removeClass('valid');
             } else {
+                $('.card-type').removeClass('off');
                 $('.card-type').addClass( result.card_type.name );
                 if (result.length_valid && result.luhn_valid) {
                     return card_field.addClass('valid');
