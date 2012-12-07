@@ -166,27 +166,28 @@ function edd_get_cc_form() {
 	<fieldset id="edd_cc_fields">
 		<legend><?php _e('Credit Card Info', 'edd'); ?></legend>
 		<p>
-			<input type="text" autocomplete="off" name="card_name" class="card-name edd-input required" placeholder="<?php _e('Card name', 'edd'); ?>" />
-			<label class="edd-label"><?php _e('Name on the Card', 'edd'); ?></label>
-		</p>
-		<p>
 			<input type="text" autocomplete="off" name="card_number" class="card-number edd-input required" placeholder="<?php _e('Card number', 'edd'); ?>" />
-			<label class="edd-label"><?php _e('Card Number', 'edd'); ?></label>
+			<label class="edd-label"><?php _e('Card Number', 'edd'); ?><span class="card-type"></span></label>
 		</p>
 		<p>
 			<input type="text" size="4" autocomplete="off" name="card_cvc" class="card-cvc edd-input required" placeholder="<?php _e('Security code', 'edd'); ?>" />
 			<label class="edd-label"><?php _e('CVC', 'edd'); ?></label>
 		</p>
-
+		<p>
+			<input type="text" autocomplete="off" name="card_name" class="card-name edd-input required" placeholder="<?php _e('Card name', 'edd'); ?>" />
+			<label class="edd-label"><?php _e('Name on the Card', 'edd'); ?></label>
+		</p>
 		<?php do_action( 'edd_before_cc_expiration' ); ?>
-
 		<p class="card-expiration">
-			<input type="text" size="2" name="card_exp_month"  placeholder="<?php _e('Month', 'edd'); ?>" class="card-expiry-month edd-input required"/>
+			<select name="card_exp_month" class="card-expiry-month required"/>
+				<?php for( $i = 1; $i <= 12; $i++ ) { echo '<option value="' . $i . '">' . edd_month_num_to_name( $i ) . '</option>'; } ?>
+			</select>
 			<span class="exp-divider"> / </span>
-			<input type="text" size="4" name="card_exp_year" placeholder="<?php _e('Year', 'edd'); ?>" class="card-expiry-year edd-input required"/>
+			<select name="card_exp_year" class="card-expiry-year required"/>
+				<?php for( $i = date('Y'); $i <= date('Y') + 10; $i++ ) { echo '<option value="' . $i . '">' . $i . '</option>'; } ?>
+			</select>
 			<label class="edd-label"><?php _e('Expiration (MM/YYYY)', 'edd'); ?></label>
 		</p>
-
 		<?php do_action( 'edd_after_cc_expiration' ); ?>
 	
 	</fieldset>
