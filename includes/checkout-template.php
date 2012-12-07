@@ -180,7 +180,7 @@ function edd_get_cc_form() {
 		<?php do_action( 'edd_before_cc_expiration' ); ?>
 		<p class="card-expiration">
 			<select name="card_exp_month" class="card-expiry-month required">
-				<?php for( $i = 1; $i <= 12; $i++ ) { echo '<option value="' . $i . '">' . edd_month_num_to_name( $i ) . '</option>'; } ?>
+				<?php for( $i = 1; $i <= 12; $i++ ) { echo '<option value="' . $i . '">' . $i . '&nbsp;' . edd_month_num_to_name( $i ) . '</option>'; } ?>
 			</select>
 			<span class="exp-divider"> / </span>
 			<select name="card_exp_year" class="card-expiry-year required">
