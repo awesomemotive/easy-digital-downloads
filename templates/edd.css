@@ -34,6 +34,7 @@
 #edd_purchase_form input.edd-input.card-number.valid { background-image: url(../includes/images/tick.png); background-repeat: no-repeat; background-position: 98% 50%; }
 #edd_purchase_form span.exp-divider { display: inline; }
 #edd_purchase_form span.card-type { position: absolute; top: -2px; right: 0; width: 32px; height: 32px; }
+#edd_purchase_form span.card-type.off { display:none; }
 #edd_purchase_form span.card-type.visa { background: url( ../includes/images/icons/visa.png ) no-repeat; }
 #edd_purchase_form span.card-type.mastercard { background: url( ../includes/images/icons/mastercard.png ) no-repeat; }
 #edd_purchase_form span.card-type.discover { background: url( ../includes/images/icons/discover.png ) no-repeat; }
