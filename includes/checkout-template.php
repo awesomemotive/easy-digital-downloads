@@ -219,7 +219,7 @@ function edd_default_cc_address_fields() {
 			<label class="edd-label"><?php _e('Billing Address', 'edd'); ?></label>
 		</p>
 		<p>
-			<input type="text" name="card_address_2" class="card-address-2 edd-input required" placeholder="<?php _e('Address line 2', 'edd'); ?>"/>
+			<input type="text" name="card_address_2" class="card-address-2 edd-input" placeholder="<?php _e('Address line 2', 'edd'); ?>"/>
 			<label class="edd-label"><?php _e('Billing Address Line 2', 'edd'); ?></label>
 		</p>
 		<p>
