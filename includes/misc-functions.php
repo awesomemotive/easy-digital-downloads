@@ -95,6 +95,7 @@ function edd_no_redownload() {
 
 function edd_is_cc_verify_enabled() {
 	global $edd_options;
+	
 	$ret = true;
 	
 	/* 
