@@ -84,6 +84,36 @@ function edd_no_redownload() {
 	return (bool) apply_filters( 'edd_no_redownload', false );
 }
 
+
+/**
+ * Verify credit card numbers live?
+ *
+ * @access      public
+ * @since       1.4
+ * @return      boolean
+*/
+
+function edd_is_cc_verify_enabled() {
+	global $edd_options;
+	$ret = true;
+	
+	/* 
+	 * enable if use a single gateway other than PayPal or Manual. We have to assume it accepts cerdit cards
+	 * enable if using more than one gateway if they aren't both PayPal and manual, again assuming credit card usage
+	 */
+
+	$gateways = edd_get_enabled_payment_gateways();
+	if( count( $gateways ) == 1 && ! isset( $gateways['paypal'] ) && ! isset( $gateways['manual'] ) )
+		$ret = true;
+	else if( count( $gateways ) == 1 )
+		$ret = false;
+	else if( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) )
+		$ret = false;
+
+	return (bool) apply_filters( 'edd_verify_credit_cards', $ret );
+}
+
+
 /**
  * Get Menu Access Level
  *
