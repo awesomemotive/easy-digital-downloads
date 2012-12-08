@@ -59,12 +59,13 @@ function edd_load_scripts() {
 		wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'includes/js/jquery.validate.min.js' );
 		wp_enqueue_script( 'edd-validation', EDD_PLUGIN_URL . 'includes/js/form-validation.js', array( 'jquery' ), EDD_VERSION );
 		$required = array( 'firstname' => true, 'lastname' => true );
-		wp_localize_script( 'edd-validation', 'edd_scripts_validation', apply_filters( 'edd_scripts_validation',$required ) );
+		wp_localize_script( 'edd-validation', 'edd_scripts_validation', apply_filters( 'edd_scripts_validation', $required ) );
 	}
 	if( edd_is_checkout() ) {
 
-		// TODO: this needs to be loaded conditionally
-		wp_enqueue_script( 'creditCardValidator', EDD_PLUGIN_URL . 'includes/js/jquery.creditCardValidator.js', array( 'jquery' ), EDD_VERSION );
+		if( edd_is_cc_verify_enabled() ) {
+			wp_enqueue_script( 'creditCardValidator', EDD_PLUGIN_URL . 'includes/js/jquery.creditCardValidator.js', array( 'jquery' ), EDD_VERSION );
+		}
 
 		wp_enqueue_script( 'edd-checkout-global', EDD_PLUGIN_URL . 'includes/js/edd-checkout-global.js', array( 'jquery' ), EDD_VERSION );
 		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', array(
