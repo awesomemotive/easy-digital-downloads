@@ -57,7 +57,7 @@ function edd_load_scripts() {
 	// Load jQuery validation
 	if( isset( $edd_options['jquery_validation'] ) && edd_is_checkout() ) {
 		wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'includes/js/jquery.validate.min.js' );
-		wp_enqueue_script( 'edd-validation', EDD_PLUGIN_URL . 'includes/js/form-validation.js', array( 'jquery', 'jquery-validation' ), EDD_VERSION );
+		wp_enqueue_script( 'edd-validation', EDD_PLUGIN_URL . 'includes/js/form-validation.js', array( 'jquery' ), EDD_VERSION );
 		$required = array( 'firstname' => true, 'lastname' => true );
 		wp_localize_script( 'edd-validation', 'edd_scripts_validation', apply_filters( 'edd_scripts_validation',$required ) );
 	}
