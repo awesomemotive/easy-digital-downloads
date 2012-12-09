@@ -69,8 +69,10 @@ function edd_format_amount( $amount ) {
 		$part = substr( $amount, $sep_found + 1, ( strlen( $amount ) - 1 ) );
 		$amount = $whole . '.' . $part;
 	}
+	
+	$decimals = apply_filters( 'edd_format_amount_decimals', 2 );
 
-	return number_format( $amount, 2, $decimal_sep, $thousands_sep );
+	return number_format( $amount, $decimals, $decimal_sep, $thousands_sep );
 }
 
 
