@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.2
 Tested up to: 3.5
-Stable Tag: 1.3.4.1
+Stable Tag: 1.3.4.3
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -110,6 +110,11 @@ Yes! EDD has an add-on that provides a complete affiliate system that you can us
 
 [Checkout Affiliates Pro + EDD Integration Pack](http://easydigitaldownloads.com/extension/affiliates-pro-integration-pack/)
 
+= Can I give my customers downloadable PDF Invoices? =
+Yes, EDD has an add-on that allows for downloadable invoices to be generated for each payment.
+
+[PDF Invoices](https://easydigitaldownloads.com/extension/pdf-invoices)
+
 = Can Users Purchase Products without Using PayPal? =
 
 Yes, through the addition of one or more of the add-on payment gateways, you can accept payments in many different ways. The add-on gateways currently available:
@@ -124,6 +129,26 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * [GoCardless](https://easydigitaldownloads.com/extension/gocardless-payment-gateway/)
 * [Amazon FPS](https://easydigitaldownloads.com/extension/amazon-fps-payment-gateway/)
 * [Payza](https://easydigitaldownloads.com/extension/payza-payment-gateway/)
+* [Paymill](https://easydigitaldownloads.com/extension/paymill-payment-gateway/)
+* [MOLPay](https://easydigitaldownloads.com/extension/molpay-payment-gateway/)
+* [MercadoPago](https://easydigitaldownloads.com/extension/mercadopago/)
+* [NoChex](https://easydigitaldownloads.com/extension/nochex-gateway/)
+* [Recurly.com](https://easydigitaldownloads.com/extension/recurly-com-checkout/)
+* [Network Merchants](https://easydigitaldownloads.com/extension/network-merchants-gateway/)
+* [Direct One](https://easydigitaldownloads.com/extension/direct-one/)
+* [Moneybookers/Skrill](https://easydigitaldownloads.com/extension/moneybookers-skrill-payment-gateway/)
+* [Moneris Solutions](https://easydigitaldownloads.com/extension/moneris-solutions-gateway/)
+* [My Virtual Merchant](https://easydigitaldownloads.com/extension/my-virtual-merchant/)
+* [NAB](https://easydigitaldownloads.com/extension/6038/)
+* [Mijireh](https://easydigitaldownloads.com/extension/mijireh-checkout/)
+* [eWay](https://easydigitaldownloads.com/extension/eway-gateway/)
+* [Check](https://easydigitaldownloads.com/extension/check-payment-gateway/)
+* [PagSeguro](https://easydigitaldownloads.com/extension/pagseguro-payment-gateway/)
+* [Beanstream](https://easydigitaldownloads.com/extension/beanstream-payment-gateway/)
+* [Quickbooks](https://easydigitaldownloads.com/extension/quickbooks/)
+* [PayFast](https://easydigitaldownloads.com/extension/payfast-payment-gateway/())
+* [WorldPay](https://easydigitaldownloads.com/extension/worldpay-gateway/)
+* [Payment Express](https://easydigitaldownloads.com/extension/payment-express-gateway/)
 
 == Screenshots ==
 
@@ -139,6 +164,20 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.3.4.3 =
+
+* Fixed fatal error in PayPal
+
+= 1.3.4.2 =
+
+* Added a new {fullname} email template tag
+* Improved CSS for the ajax cart loader
+* Made download taxonomy rewrites hierarchical
+* Updated Italian language files
+* Fixed a potential issue with jQuery validation of the checkout form
+* made a JS file only load on the checkout page instead of all pages
+* Reverted back to $_SESSION based storage as WP_Session isn't quite ready for use yet
 
 = 1.3.4.1 =
 
@@ -799,6 +838,21 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Upgrade Notice ==
+
+= 1.3.4.3 =
+
+* Fixed fatal error in PayPal
+
+= 1.3.4.2 =
+
+* Added a new {fullname} email template tag
+* Improved CSS for the ajax cart loader
+* Made download taxonomy rewrites hierarchical
+* Updated Italian language files
+* Fixed a potential issue with jQuery validation of the checkout form
+* made a JS file only load on the checkout page instead of all pages
+* Reverted back to $_SESSION based storage as WP_Session isn't quite ready for use yet
+
 
 = 1.3.4.1 =
 

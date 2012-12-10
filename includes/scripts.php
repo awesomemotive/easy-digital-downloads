@@ -61,12 +61,14 @@ function edd_load_scripts() {
 		$required = array( 'firstname' => true, 'lastname' => true );
 		wp_localize_script( 'edd-validation', 'edd_scripts_validation', apply_filters( 'edd_scripts_validation',$required ) );
 	}
-	wp_enqueue_script( 'edd-checkout-global', EDD_PLUGIN_URL . 'includes/js/edd-checkout-global.js', array( 'jquery' ), EDD_VERSION );
-	wp_localize_script( 'edd-checkout-global', 'edd_global_vars', array(
-        'currency_sign'		=> edd_currency_filter(''),
-        'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
-        'no_gateway'		=> __( 'Please select a payment method', 'edd' )
-    ));
+	if( edd_is_checkout() ) {
+		wp_enqueue_script( 'edd-checkout-global', EDD_PLUGIN_URL . 'includes/js/edd-checkout-global.js', array( 'jquery' ), EDD_VERSION );
+		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', array(
+	        'currency_sign'		=> edd_currency_filter(''),
+	        'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
+	        'no_gateway'		=> __( 'Please select a payment method', 'edd' )
+	    ));
+	}
 }
 add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
 

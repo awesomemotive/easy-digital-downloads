@@ -37,7 +37,7 @@ function edd_get_email_templates() {
  * @return string
  */
 
-function edd_email_templage_tags( $message, $payment_data, $payment_id ) {
+function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 
 	$user_info = maybe_unserialize( $payment_data['user_info'] );
 
@@ -247,7 +247,7 @@ function edd_get_email_body_content( $payment_id, $payment_data ) {
 
 	$email = isset( $edd_options['purchase_receipt'] ) ? $edd_options['purchase_receipt'] : $default_email_body;
 
-	$email_body = edd_email_templage_tags( $email, $payment_data, $payment_id );
+	$email_body = edd_email_template_tags( $email, $payment_data, $payment_id );
 	return apply_filters( 'edd_purchase_receipt', $email_body, $payment_id, $payment_data );
 }
 
