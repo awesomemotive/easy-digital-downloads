@@ -24,7 +24,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
 
 function edd_append_purchase_link( $download_id ) {
 	if( !get_post_meta( $download_id, '_edd_hide_purchase_link', true ) ) {			
-		echo edd_get_purchase_link( array( 'id' => $download_id ) );
+		echo edd_get_purchase_link( array( 'download_id' => $download_id ) );
 	}
 }
 add_action( 'edd_after_download_content', 'edd_append_purchase_link' );
