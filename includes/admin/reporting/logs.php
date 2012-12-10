@@ -24,6 +24,18 @@ function edd_logs_view_file_downloads() {
 add_action( 'edd_logs_view_file_downloads', 'edd_logs_view_file_downloads' );
 
 
+function edd_logs_view_gateway_errors() {
+
+	include( dirname( __FILE__ ) . '/class-gateway-error-logs-list-table.php' );
+
+	$logs_table = new EDD_Gateway_Error_Log_Table();
+	$logs_table->prepare_items();
+	$logs_table->display();
+
+}
+add_action( 'edd_logs_view_gateway_errors', 'edd_logs_view_gateway_errors' );
+
+
 /**
  * Renders the Reports page views drop down
  *
