@@ -168,26 +168,28 @@ function edd_get_payments( $args = array() ) {
 
 function edd_insert_payment( $payment_data = array() ) {
 
-	if(empty($payment_data))
+	if( empty( $payment_data ) )
 		return false;
 
 	// construct the payment title
-	if(isset($payment_data['user_info']['first_name']) || isset($payment_data['user_info']['last_name'])) {
+	if( isset( $payment_data['user_info']['first_name'] ) || isset( $payment_data['user_info']['last_name'] ) ) {
 		$payment_title = $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'];
 	} else {
 		$payment_title = $payment_data['user_email'];
 	}
 	
-	if(isset($payment_data['status'])) {
-		$status = $payment_data['status'];
-	} else {
-		$status = 'pending';
-	}
-	
 	// create a blank payment
-	$payment = wp_insert_post( array('post_title' => $payment_title, 'post_status' => $status, 'post_type' => 'edd_payment', 'post_date' => $payment_data['date']));
+	$payment = wp_insert_post( 
+		array(
+			'post_title'  => $payment_title,
+			'post_status' => isset( $payment_data['status'] ) ? $payment_data['status'] : 'pending',
+			'post_type'   => 'edd_payment',
+			'post_date'   => $payment_data['date'],
+			'post_parent' => isset( $payment_data['parent'] ) ? $payment_data['parent'] : null
+		)
+	);
 	
-	if($payment) {
+	if( $payment ) {
 		
 		$payment_meta = array(
 			'amount' 		=> $payment_data['price'], 

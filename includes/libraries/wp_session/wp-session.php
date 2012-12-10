@@ -16,8 +16,7 @@
  * @return int
  */
 function wp_session_cache_expire() {
-	/** @var $wp_session WP_Session */
-	global $wp_session;
+	$wp_session = WP_Session::get_instance();
 
 	return $wp_session->cache_expiration();
 }
@@ -35,8 +34,7 @@ function wp_session_commit() {
  * @param string $data
  */
 function wp_session_decode( $data ) {
-	/** @var $wp_session WP_Session */
-	global $wp_session;
+	$wp_session = WP_Session::get_instance();
 
 	return $wp_session->json_in( $data );
 }
@@ -47,8 +45,7 @@ function wp_session_decode( $data ) {
  * @return string
  */
 function wp_session_encode() {
-	/** @var $wp_session WP_Session */
-	global $wp_session;
+	$wp_session = WP_Session::get_instance();
 
 	return $wp_session->json_out();
 }
@@ -61,8 +58,7 @@ function wp_session_encode() {
  * @return bool
  */
 function wp_session_regenerate_id( $delete_old_session = false ) {
-	/** @var $wp_session WP_Session */
-	global $wp_session;
+	$wp_session = WP_Session::get_instance();
 
 	$wp_session->regenerate_id( $delete_old_session );
 
@@ -77,8 +73,7 @@ function wp_session_regenerate_id( $delete_old_session = false ) {
  * @return bool
  */
 function wp_session_start() {
-	/** @var $wp_session WP_Session */
-	global $wp_session;
+	$wp_session = WP_Session::get_instance();
 
 	$wp_session = WP_Session::get_instance();
 	do_action( 'wp_session_start' );
@@ -93,8 +88,7 @@ add_action( 'plugins_loaded', 'wp_session_start' );
  * @return int
  */
 function wp_session_status() {
-	/** @var $wp_session WP_Session */
-	global $wp_session;
+	$wp_session = WP_Session::get_instance();
 
 	if ( $wp_session->session_started() ) {
 		return PHP_SESSION_ACTIVE;
@@ -107,8 +101,7 @@ function wp_session_status() {
  * Unset all session variables.
  */
 function wp_session_unset() {
-	/** @var $wp_session WP_Session */
-	global $wp_session;
+	$wp_session = WP_Session::get_instance();
 
 	$wp_session->reset();
 }
@@ -117,8 +110,7 @@ function wp_session_unset() {
  * Write session data and end session
  */
 function wp_session_write_close() {
-	/** @var $wp_session WP_Session */
-	global $wp_session;
+	$wp_session = WP_Session::get_instance();
 
 	$wp_session->write_data();
 	do_action( 'wp_session_commit' );
