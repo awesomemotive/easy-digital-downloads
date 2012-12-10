@@ -59,6 +59,7 @@ if($purchases) : ?>
 				<?php do_action( 'edd_purchase_history_row_end', $post->ID, $purchase_data ); ?>
 			</tr>
 		<?php endforeach; ?>
+		<?php wp_reset_postdata(); ?>
 	</table>
 <?php else : ?>
 	<p class="edd-no-purchases"><?php _e('You have not made any purchases', 'edd'); ?></p>
