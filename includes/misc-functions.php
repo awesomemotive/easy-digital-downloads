@@ -761,3 +761,18 @@ function edd_presstrends() {
 	}
 }
 add_action( 'admin_init', 'edd_presstrends' );
+
+/**
+ * Checks whether function is disabled.
+ *
+ * @access public
+ * @since  1.3.5
+ * 
+ * @param  string $function Name of the function.
+ * @return bool Whether or not function is disabled.
+ */
+function edd_is_func_disabled( $function ) {
+	$disabled = explode( ',',  ini_get( 'disable_functions' ) );
+
+	return in_array( $function, $disabled );
+}
