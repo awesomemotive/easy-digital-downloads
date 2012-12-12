@@ -233,7 +233,7 @@ function edd_process_download() {
 				default			: $ctype	= "application/force-download";
 			endswitch;
 			
-			if( !ini_get('safe_mode') ) { 
+			if( !edd_is_func_disabled( 'set_time_limit' ) && !ini_get('safe_mode') ) { 
 				set_time_limit(0);
 			}
 			if( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() ) {

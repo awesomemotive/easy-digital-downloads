@@ -119,7 +119,9 @@ function edd_v131_upgrades() {
 		return;
 
 	ignore_user_abort(true);
-	set_time_limit(0);
+
+	if ( !edd_is_func_disabled( 'set_time_limit' ) && !ini_get('safe_mode') )
+		set_time_limit(0);
 
 	$args = array( 
 		'post_type' 		=> 'download', 
