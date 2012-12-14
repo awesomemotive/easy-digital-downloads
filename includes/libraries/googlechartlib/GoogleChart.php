@@ -211,14 +211,14 @@ class GoogleChart extends GoogleChartApi
 	 *
 	 * Dynamic icon marker are different than regular marker. Technically, they
 	 * are defined using @c chem parameter instead of @c chm for regular marker.
-	 * 
+	 *
 	 * @param $marker (GoogleChartIcon)
 	 * @return $this
 	 */
 	public function addDynamicMarker(GoogleChartIcon $marker)
 	{
 		$this->dynamic_markers[] = $marker;
-		
+
 		return $this;
 	}
 
@@ -234,7 +234,7 @@ class GoogleChart extends GoogleChartApi
 	 * way you want. So you need to set a scale for the chart.
 	 *
 	 * @see http://code.google.com/p/googlechartphplib/wiki/Autoscaling
-	 * 
+	 *
 	 * @see http://code.google.com/apis/chart/docs/data_formats.html#data_scaling
 	 *
 	 * @param $autoscale (bool)
@@ -245,7 +245,7 @@ class GoogleChart extends GoogleChartApi
 		if ( $autoscale !== true && $autoscale !== false ) {
 			throw new InvalidArgumentException('Invalid autoscale mode.');
 		}
-	
+
 		$this->autoscale = $autoscale;
 		return $this;
 	}
@@ -280,7 +280,7 @@ class GoogleChart extends GoogleChartApi
 	{
 		return $this->scale;
 	}
-	
+
 	/**
 	 * Compute the @c chds parameter.
 	 * @internal
@@ -334,7 +334,7 @@ class GoogleChart extends GoogleChartApi
 
 		return str_replace(array("\r","\n"), array('','|'), $this->title);
 	}
-	
+
 	/**
 	 * Set the color of the title (@c chts).
 	 *
@@ -404,7 +404,7 @@ class GoogleChart extends GoogleChartApi
 	{
 		return $this->title_color.','.$this->title_size;
 	}
-	
+
 	/**
 	 * @internal
 	 * Return true if chts parameter is needed
@@ -419,7 +419,7 @@ class GoogleChart extends GoogleChartApi
 
 //@}
 
-/** 
+/**
  * @name Chart Legend Text and Style (@c chdl, @c chdlp, @c chma)
  */
 //@{
@@ -444,7 +444,7 @@ class GoogleChart extends GoogleChartApi
 		$this->legend_position = $position;
 		return $this;
 	}
-	
+
 	/**
 	 * Set labels order inside the legend box (chdlp).
 	 *
@@ -553,7 +553,7 @@ class GoogleChart extends GoogleChartApi
 		return $this;
 	}
 
-/** 
+/**
  * @name Gradient, Solid and Stripped Fills (chf)
  */
 //@{
@@ -578,7 +578,7 @@ class GoogleChart extends GoogleChartApi
 
 	/**
 	 * Set the opacity for solid background (fill).
-	 * 
+	 *
 	 * @param $opacity (int) Between 0 (transparent) and 100 (opaque)
 	 * @return $this
 	 */
@@ -590,10 +590,10 @@ class GoogleChart extends GoogleChartApi
 
 		// 100% = 255
 		$opacity = str_pad(dechex(round($opacity * 255 / 100)), 8, 0, STR_PAD_LEFT);
-		
+
 		// opacity doesn't work with other backgrounds
 		$this->fills[self::BACKGROUND] = 'a,s,'.$opacity;
-		
+
 		return $this;
 	}
 
@@ -650,17 +650,17 @@ class GoogleChart extends GoogleChartApi
 			}
 			$tmp[] = $color.','.round($centerpoint,2);
 		}
-		
+
 		$this->fills[$area] = $area.',lg,'.$angle.','.implode(',',$tmp);
 	}
-	
+
 	/**
 	 * Striped fill.
 	 * @todo
 	 */
 	public function setStripedFill($angle, array $colors, $area = self::BACKGROUND)
 	{
-		
+
 	}
 //@}
 
@@ -729,7 +729,7 @@ class GoogleChart extends GoogleChartApi
 		}
 		return $str;
 	}
-	
+
 	/**
 	 * @internal
 	 */
@@ -777,7 +777,7 @@ class GoogleChart extends GoogleChartApi
 		if ( $this->fills ) {
 			$q['chf'] = implode('|',$this->fills);
 		}
-		
+
 		if ( $this->hasChma() ) {
 			$q['chma'] = $this->computeChma();
 		}
@@ -820,7 +820,7 @@ class GoogleChart extends GoogleChartApi
 			$values = $d->getValues();
 			if ( $values === null || empty($values) )
 				continue;
-			
+
 			$max = max($values);
 			$min = min($values);
 			if ( $max > $value_max ) {
@@ -830,7 +830,7 @@ class GoogleChart extends GoogleChartApi
 				$value_min = $min;
 			}
 		}
-		
+
 		if ( $value_min > 0 )
 			$value_min = 0;
 
@@ -840,7 +840,7 @@ class GoogleChart extends GoogleChartApi
 
 	/**
 	 * Compute data series.
-	 * 
+	 *
 	 * @note This function is too long. I think it needs a redesign, but for the
 	 * moment I have no idea how to make it shorter.
 	 *
@@ -897,12 +897,12 @@ class GoogleChart extends GoogleChartApi
 			if ( $tmp ) {
 				$fills[] = $tmp;
 			}
-			
+
 			$legends[] = $d->getLegend();
 			if ( $legends_needed == false && $d->hasCustomLegend() ) {
 				$legends_needed = true;
 			}
-			
+
 			if ( $this->_compute_data_label ) {
 				$labels[] = $d->computeChl();
 			}
@@ -918,7 +918,7 @@ class GoogleChart extends GoogleChartApi
 		if ( $styles_needed ) {
 			$q['chls'] = implode('|',$styles);
 		}
-		
+
 		if ( $this->_compute_data_label ) {
 			$tmp = rtrim(implode('|',$labels),'|');
 			if ( $tmp ) {
@@ -947,7 +947,7 @@ class GoogleChart extends GoogleChartApi
 		return $this;
 	}
 
-	
+
 	/**
 	 * Compute the markers.
 	 * @internal
@@ -958,7 +958,7 @@ class GoogleChart extends GoogleChartApi
 		$markers = array();
 		$dynamic_markers = array();
 		$additional_data = array();
-		
+
 		$nb_data_series = sizeof($this->data);
 		$current_index = $nb_data_series;
 
@@ -1031,12 +1031,12 @@ class GoogleChart extends GoogleChartApi
 			if ( $tmp !== null ) {
 				$tick_marks[] = sprintf($tmp, $i);
 			}
-			
+
 			$tmp = $a->computeChxs($i, $this->type);
 			if ( $tmp !== null ) {
 				$styles[] = $tmp;
 			}
-			
+
 			if ( $a->hasChxp() ) {
 				$label_positions[] = $a->computeChxp($i);
 			}

@@ -6,7 +6,7 @@
  * @subpackage  Admin Pages
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -24,7 +24,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
 
 function edd_add_options_link() {
 	global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page, $edd_upgrades_screen;
-	
+
 	$edd_payments_page 	= add_submenu_page( 'edit.php?post_type=download', __( 'Payment History', 'edd' ), __( 'Payment History', 'edd' ), 'manage_options', 'edd-payment-history', 'edd_payment_history_page' );
 	$edd_discounts_page = add_submenu_page( 'edit.php?post_type=download', __( 'Discount Codes', 'edd' ), __( 'Discount Codes', 'edd' ), 'manage_options', 'edd-discounts', 'edd_discounts_page' );
 	$edd_reports_page 	= add_submenu_page( 'edit.php?post_type=download', __( 'Earnings and Sales Reports', 'edd' ), __( 'Reports', 'edd' ), 'manage_options', 'edd-reports', 'edd_reports_page' );

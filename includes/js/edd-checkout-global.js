@@ -19,7 +19,7 @@ jQuery(document).ready(function($) {
 
     // toggle the tax amount shown on checkout
     $('body').on('click', '#edd_tax_opt_in', function() {
-        
+
         var tax         = parseFloat( $('.edd_cart_tax_amount').data( 'tax' ) );
         var subtotal    = parseFloat( $('.edd_cart_amount').data( 'subtotal' ) );
         var total       = parseFloat( $('.edd_cart_amount').data( 'total' ) );
@@ -29,7 +29,7 @@ jQuery(document).ready(function($) {
         if( $(this).attr('checked') ) {
 
             $('.edd_cart_tax_row').show();
-            
+
             if( pos == 'before' )
                 total = sign + total;
             else

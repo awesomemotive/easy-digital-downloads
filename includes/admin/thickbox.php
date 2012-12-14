@@ -6,7 +6,7 @@
  * @subpackage  Thickbox
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -18,7 +18,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Returns the Insert Download TinyMCE button.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
@@ -39,11 +39,11 @@ add_filter( 'media_buttons_context', 'edd_media_button' );
 /**
  * Admin Footer For Thickbox
  *
- * Prints the footer code needed for the Insert Download 
+ * Prints the footer code needed for the Insert Download
  * TinyMCE button.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -53,7 +53,7 @@ function edd_admin_footer_for_thickbox() {
 	// Only run in post/page creation and edit screens
 	if( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow != 'download' ) {
 		$downloads = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1 ) );
-		
+
 		?>
 		<script type="text/javascript">
             function insertDownload() {

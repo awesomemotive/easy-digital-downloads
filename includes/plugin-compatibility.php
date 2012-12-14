@@ -8,7 +8,7 @@
  * @subpackage  Gateway Functions
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -20,7 +20,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Removes the "Restrict This Content" meta box from Restrict Content Pro.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      array
 */
 
@@ -35,7 +35,7 @@ add_filter( 'rcp_metabox_excluded_post_types', 'edd_remove_restrict_meta_box', 9
 /**
  * Disables admin sorting of Post Types Order
  *
- * When sorting downloads by price, earnings, sales, date, or name, 
+ * When sorting downloads by price, earnings, sales, date, or name,
  * we need to remove the posts_orderby that Post Types Order imposes
  *
  * @access      private

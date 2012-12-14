@@ -66,7 +66,7 @@ class GoogleChartTextMarker extends GoogleChartMarker
 	 * - GoogleChartTextMarker::TEXT
 	 * - GoogleChartTextMarker::ANNOTATION
 	 * - GoogleChartTextMarker::VALUE
-	 * 
+	 *
 	 * @param $text (string)
 	 * For FLAG, TEXT and ANNOTATION markers, specify the text to be displayed.
 	 * Ignored for VALUE marker.
@@ -195,9 +195,9 @@ class GoogleChartTextMarker extends GoogleChartMarker
 	public function getPlacement($bar_chart = false)
 	{
 		$str = '';
-		
+
 		$str .= $this->placement['horizontal_placement'].$this->placement['vertical_placement'];
-		
+
 		if ( $bar_chart ) {
 			$str .= $this->placement['bar_relative_placement'];
 		}
@@ -257,7 +257,7 @@ class GoogleChartTextMarker extends GoogleChartMarker
 
 		$str .= $this->marker_type;
 		if ( $this->marker_type === self::VALUE ) {
-		
+
 		}
 		else {
 			$str .= str_replace(',','\,',$this->text);
@@ -270,7 +270,7 @@ class GoogleChartTextMarker extends GoogleChartMarker
 			$points,
 			$this->size
 		);
-		
+
 		if ( $this->z_order !== null ) {
 			$str .= ','.$this->z_order;
 		}

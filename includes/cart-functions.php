@@ -6,7 +6,7 @@
  * @subpackage  Cart Functions
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 
@@ -16,7 +16,7 @@
  * Retrieve contents from the cart.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      array | false
 */
 
@@ -31,7 +31,7 @@ function edd_get_cart_contents() {
  * Gets the total quanity of items cart.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      INT - number of this item in the cart
 */
 
@@ -52,7 +52,7 @@ function edd_get_cart_quantity() {
  * Uses edd_get_cart_contents().
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @param       $download_id - INT the ID number of the download to add to the cart
  * @param       $options - array an array of options, such as variable price
  * @return      string - cart key of the new item
@@ -70,7 +70,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		if( edd_has_variable_prices( $download_id )  && ! isset( $options['price_id'] ) ) {
 			// forces to the first price ID if none is specified and download has variable prices
 			$options['price_id'] = 0;
-		} 
+		}
 
 		$cart_item = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $options ) );
 
@@ -79,14 +79,14 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		} else {
 			$cart = array( $cart_item );
 		}
-	
+
 		$_SESSION['edd_cart'] = $cart;
-	
+
 		do_action( 'edd_post_add_to_cart', $download_id, $options );
 
 		// clear all the checkout errors, if any
 		edd_clear_errors();
-	
+
 		return count( $cart ) - 1;
 	}
 }
@@ -99,7 +99,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
  * Uses edd_get_cart_contents().
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @param       $cart_key INT the cart key to remove
  * @return      array - of updated cart items
 */
@@ -115,12 +115,12 @@ function edd_remove_from_cart($cart_key) {
 		unset( $cart[ $cart_key ] );
 	}
 	$_SESSION['edd_cart'] = $cart;
-	
+
 	do_action( 'edd_post_remove_from_cart', $cart_key );
 
 	// clear all the checkout errors, if any
 	edd_clear_errors();
-	
+
 	return $cart; // the updated cart items
 }
 
@@ -132,7 +132,7 @@ function edd_remove_from_cart($cart_key) {
  * Uses edd_get_cart_contents().
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @param       $download_id - INT the ID number of the download to remove
  * @return      boolean
 */
@@ -183,7 +183,7 @@ function edd_get_item_position_in_cart( $download_id ) {
  * Gets the quanity for an item in the cart.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @param       $item INT the download (cart item) ID number
  * @return      $position - INT position of the item in the cart
 */
@@ -208,9 +208,9 @@ function edd_get_cart_item_quantity( $item ) {
  * @return      string - price for this item
 */
 
-function edd_get_cart_item_price( $item_id, $options = array() ) {	
+function edd_get_cart_item_price( $item_id, $options = array() ) {
 	$variable_pricing = get_post_meta( $item_id, '_variable_pricing', true) ;
-	$price = edd_get_download_price( $item_id ); 
+	$price = edd_get_download_price( $item_id );
 	if( $variable_pricing && !empty( $options ) ) {
 		// if variable prices are enabled, retrieve the options
 		$prices = get_post_meta( $item_id, 'edd_variable_prices', true );
@@ -225,7 +225,7 @@ function edd_get_cart_item_price( $item_id, $options = array() ) {
 /**
  * Get Price Name
  *
- * Gets the name of the specified price option, 
+ * Gets the name of the specified price option,
  * for variable pricing only.
  *
  * @access      public
@@ -286,15 +286,15 @@ function edd_get_cart_subtotal() {
  *
  * @access      public
  * @since       1.0
- * @param 		$add_taxes bool Whether to apply taxes (if enabled) 
- * @param 		$local_override bool Force the local opt-in param - used for when not reading $_POST 
+ * @param 		$add_taxes bool Whether to apply taxes (if enabled)
+ * @param 		$local_override bool Force the local opt-in param - used for when not reading $_POST
  * @return      float the total amount
 */
 
 function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 
 	$amount = edd_get_cart_subtotal();
-	
+
 	if( isset( $_POST['edd-discount'] ) && $_POST['edd-discount'] != '' ) {
 		// discount is validated before this function runs, so no need to check for it
 		$amount = edd_get_discounted_amount( $_POST['edd-discount'], $amount );
@@ -303,17 +303,17 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 	if( edd_use_taxes() && $add_taxes ) {
 
 		if( edd_local_taxes_only() && ( isset( $_POST['edd_tax_opt_in'] ) || $local_override ) ) {
-			
+
 			// add the tax amount for a local resident
 			$tax = edd_get_cart_tax();
 			$amount += $tax;
 
 		} elseif( ! edd_local_taxes_only() ) {
-			
+
 			// add the global tax amount
 			$tax = edd_get_cart_tax();
 			$amount += $tax;
-		
+
 		}
 
 	}
@@ -362,7 +362,7 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
 		$summary .= get_the_title( $download['id'] ) . ', ';
 	}
 	$summary = substr( $summary, 0, -2 );
-	
+
 	return $summary;
 }
 
@@ -456,24 +456,24 @@ function edd_get_cart_content_details() {
 
 function edd_add_collection_to_cart( $taxonomy, $terms ) {
 	if( !is_string( $taxonomy ) ) return false;
-	
+
 	$field = is_int( $terms ) ? 'id' : 'slug';
-	
-	$cart_item_ids = array();	
-	
+
+	$cart_item_ids = array();
+
 	$args = array(
 		'post_type' => 'download',
 		'posts_per_page' => -1,
 		$taxonomy => $terms
-	);	
-	
+	);
+
 	$items = get_posts( $args );
 	if( $items ) {
 
 		foreach( $items as $item ) {
 			edd_add_to_cart( $item->ID );
 			$cart_item_ids[] = $item->ID;
-		}	
+		}
 	}
 	return $cart_item_ids;
 }
@@ -485,13 +485,13 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
  * Returns the URL to remove an item.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
 function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
 	global $post;
-	
+
 	$current_page = edd_get_current_page_url();
 	$remove_url = add_query_arg( array('cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page);
 

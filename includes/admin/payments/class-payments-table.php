@@ -264,7 +264,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 						<?php do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info ); ?>
 					</ul>
 				</div>
-
 				<div class="payment-notes">
 					<h4><?php _e( 'Payment Notes', 'edd' ); ?></h4>
 					<?php
@@ -286,7 +285,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 					endif;
 					?>
 				</div>
-
 				<?php
 				$gateway = edd_get_payment_gateway( $item['ID'] );
 				if( $gateway ) { ?>

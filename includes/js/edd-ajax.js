@@ -23,7 +23,7 @@ jQuery(document).ready(function ($) {
                     return false;
                 }
                 $this.parent().remove();
-                
+
                 // check to see if the purchase form for this download is present on this page
                 if( $( '#edd_purchase_' + id ).length ) {
                     $( '#edd_purchase_' + id + ' .edd_go_to_checkout' ).hide();
@@ -45,13 +45,13 @@ jQuery(document).ready(function ($) {
 
     // send Add to Cart request
     $('body').on('click.eddAddToCart', '.edd-add-to-cart', function (e) {
-        
+
 		e.preventDefault();
-		
+
 		var $this = $(this);
-			
-		var container = $this.closest('div');	
- 
+
+		var container = $this.closest('div');
+
        // show the ajax loader
         $('.edd-cart-ajax', container).show();
 
@@ -61,7 +61,7 @@ jQuery(document).ready(function ($) {
 		if(typeof variable_price !== 'undefined' && variable_price !== false) {
 			item_price_id = $('.edd_price_option_' + download + ':checked').val();
 		}
-		
+
         var action = $this.data('action'),
             data = {
                 action: action,
@@ -77,7 +77,7 @@ jQuery(document).ready(function ($) {
 				$('.edd-cart-ajax').hide();
 				return;
 			}
-			
+
 			// add the new item to the cart widget
 			if ($('.cart_item.empty').length) {
                 $(cart_item_response).insertBefore('.cart_item.edd_checkout');
@@ -87,7 +87,7 @@ jQuery(document).ready(function ($) {
 
                 $(cart_item_response).insertBefore('.cart_item.edd_checkout');
             }
-			
+
 			// update the cart quantity
             var quantity = $('span.edd-cart-quantity').text();
             quantity = parseInt(quantity, 10) + 1;
@@ -95,10 +95,10 @@ jQuery(document).ready(function ($) {
 
             // hide the ajax loader
             $('.edd-cart-ajax', container).hide();
-			
+
 			// switch purchase to checkout
 			$('.edd_go_to_checkout, .edd-add-to-cart', container).toggle();
-				
+
 			// show the added message
             $('.edd-cart-added-alert', container).fadeIn();
             setTimeout(function () {
@@ -110,7 +110,7 @@ jQuery(document).ready(function ($) {
     });
 
     // For tricksters
-	var before_discount = $('.edd_cart_amount').text();	
+	var before_discount = $('.edd_cart_amount').text();
 	$('#edd_checkout_form_wrap').on('change', '#edd-email', function (event) {
 		$('.edd_cart_amount').html(before_discount);
 		$('#edd-discount').val('');
@@ -118,7 +118,7 @@ jQuery(document).ready(function ($) {
 
 	// validate and apply a discount
     $('#edd_checkout_form_wrap').on('click', '.edd-apply-discount', function (event) {
-        
+
 		var $this = $(this),
             discount_code = $('#edd-discount').val(),
             edd_email = $('#edd-email').val();
@@ -204,7 +204,7 @@ jQuery(document).ready(function ($) {
 
         var form = $(this),
             action = form.attr("action") + arg_separator + 'payment-mode=' + payment_mode;
-            
+
         // show the ajax loader
         $('.edd-cart-ajax').show();
         $('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
@@ -228,7 +228,7 @@ jQuery(document).ready(function ($) {
 
         var form = $(this).closest( 'form' ),
             action = form.attr("action") + arg_separator + 'payment-mode=' + payment_mode;
-            
+
         // show the ajax loader
         $('.edd-cart-ajax').show();
         $('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
