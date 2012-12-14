@@ -761,6 +761,7 @@ function edd_payment_tax( $payment_id = 0, $payment_meta = false ) {
  * @param 		string $key the purchase key to search for
  * @return 		int $order_id
  */
+
 function edd_get_purchase_id_by_key( $key ) {
 	$meta_query = array(
 		array(
@@ -775,4 +776,63 @@ function edd_get_purchase_id_by_key( $key ) {
 		return $payments[0];
 		
 	return 0;
+}
+
+
+/**
+ * Retrieve all notes attached to a purchase
+ * 
+ * @access		public
+ * @since 		1.4
+ *
+ * @param 		int $payment_id The payment ID to retrieve notes for
+ * @return 		array
+ */
+
+function edd_get_payment_notes( $payment_id = 0 ) {
+
+	if( empty( $payment_id ) )
+		return false;
+
+	return get_comments( array( 'post_id' => $payment_id, 'order' => 'ASC' ) );
+
+}
+
+
+/**
+ * Add a note to a payment
+ * 
+ * @access		public
+ * @since 		1.4
+ *
+ * @param 		int $payment_id The payment ID to store a note for
+ * @return 		int The new note ID
+ */
+
+function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
+
+	if( empty( $payment_id ) )
+		return false;
+
+	do_action( 'edd_pre_insert_payment_note', $payment_id, $note );
+
+	$note_id = wp_insert_comment( wp_filter_comment( array(
+			'comment_post_ID'      => $payment_id,
+			'comment_content'      => $note,
+			'user_id'              => is_admin() ? get_current_user_id() : 0,
+			'comment_date'         => current_time( 'mysql' ),
+			'comment_date_gmt'     => current_time( 'mysql', 1 ),
+			'comment_approved'     => 1,
+			'comment_parent'       => 0,
+			'comment_author'       => '',
+			'comment_author_IP'    => '',
+			'comment_author_url'   => '',
+			'comment_author_email' => ''
+
+	) ) );
+
+	do_action( 'edd_insert_payment_note', $note_id, $payment_id, $note );
+
+	return $note_id;
+
 }

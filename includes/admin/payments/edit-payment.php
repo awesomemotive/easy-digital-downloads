@@ -12,7 +12,7 @@
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
-$payment = get_post( $_GET['purchase_id'] );
+$payment = get_post( absint( $_GET['purchase_id'] ) );
 $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true );
 ?>
 <div class="wrap">
@@ -44,6 +44,32 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 							endif;
 						?>
 						<p id="edit-downloads"><a href="#TB_inline?width=640&inlineId=available-downloads" class="thickbox" title="<?php printf( __( 'Add download to purchase #%s', 'edd' ), $_GET['purchase_id'] ); ?> "><?php _e( 'Add download to purchase', 'edd' ); ?></p>
+					</td>
+				</tr>
+				<tr>				
+					<th scope="row" valign="top">
+						<span><?php _e( 'Payment Notes', 'edd' ); ?></span>
+					</th>
+					<td>
+						<?php
+							$notes = edd_get_payment_notes( $payment->ID );
+							if( ! empty( $notes ) ) :
+								echo '<ul id="payment-notes">';
+								foreach( $notes as $note ):
+									if( ! empty( $note->user_id ) ) {
+										$user = get_userdata( $note->user_id );
+										$user = $user->display_name;
+									} else {
+										$user = __( 'EDD Bot', 'edd' );
+									}
+									echo '<p><strong>' . $user . '</strong>&nbsp;<em>' . $note->comment_date . '</em>&nbsp;&mdash;' . $note->comment_content . '</p>';
+								endforeach;
+								echo '</ul>';
+							else :
+								echo '<p>' . __( 'No payment notes', 'edd' ) . '</p>';
+							endif;
+						?>
+						<textarea name="edd-payment-note" cols="30" rows="5"></textarea>
 					</td>
 				</tr>
 				<tr>
