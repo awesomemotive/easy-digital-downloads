@@ -232,7 +232,13 @@ jQuery(document).ready(function ($) {
         // show the ajax loader
         $('.edd-cart-ajax').show();
         $('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
-        $('#edd_purchase_form_wrap').load(action + ' #edd_purchase_form');
+
+        $.post(action, { edd_payment_mode: payment_mode },
+            function(response){
+                jQuery('#edd_purchase_form_wrap').html(response);
+            }
+        );
+
         return false;
     });
 
