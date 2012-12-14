@@ -545,8 +545,11 @@ function edd_show_payment_icons() {
 add_action( 'edd_payment_mode_top', 'edd_show_payment_icons' );
 add_action( 'edd_before_purchase_form', 'edd_show_payment_icons' );
 
-function edd_show_purchase_form() { ?>
-	<form id="edd_purchase_form" action="<?php echo esc_url( edd_get_current_page_url() ); ?>" method="POST">
+function edd_show_purchase_form() {
+	$payment_mode = edd_get_chosen_gateway();
+	$form_action = esc_url( edd_get_checkout_uri('payment-mode=' . $payment_mode) ); ?>
+
+	<form id="edd_purchase_form" action="<?php echo $form_action; ?>" method="POST">
 
 		<?php
 
@@ -566,8 +569,6 @@ function edd_show_purchase_form() { ?>
 			}
 
 			do_action( 'edd_purchase_form_before_cc_form' );
-
-			$payment_mode = edd_get_chosen_gateway();
 
 			// load the credit card form and allow gateways to load their own if they wish
 			if( has_action( 'edd_' . $payment_mode . '_cc_form' ) ) {
