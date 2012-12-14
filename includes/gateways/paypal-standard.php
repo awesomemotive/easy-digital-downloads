@@ -335,6 +335,7 @@ function edd_process_paypal_web_accept( $data ) {
 	$status = strtolower( $payment_status );
 
 	if ( $status == 'completed' || edd_is_test_mode() ) {
+		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $data['txn_id'] ) );
 		edd_update_payment_status( $payment_id, 'publish' );
 	}
 
