@@ -215,7 +215,7 @@ class edd_purchase_history_widget extends WP_Widget {
 
 				foreach ( $purchases as $purchase ) {
 					$purchase_data = get_post_meta( $purchase->ID, '_edd_payment_meta', true );
-					$downloads = edd_get_downloads_of_purchase( $purchase->ID );
+					$downloads = edd_get_payment_meta_downloads( $purchase->ID );
 					if ( $downloads ) {
 						foreach ( $downloads as $download ) {
 							$id = isset( $purchase_data['cart_details'] ) ? $download['id'] : $download;

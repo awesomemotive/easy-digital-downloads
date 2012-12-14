@@ -519,28 +519,6 @@ function edd_is_payment_complete($payment_id) {
 
 
 /**
- * Get Downloads Of Purchase
- *
- * Retrieves an array of all files purchased.
- *
- * @access      public
- * @since       1.0 
- * @param       int $payment_id - the ID number of the purchase
- * @return      mixed - array if purchase exists, false otherwise
-*/
-
-function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
-	if(is_null($payment_meta)) {
-		$payment_meta = edd_get_payment_meta( $payment_id );
-	}
-	$downloads = maybe_unserialize($payment_meta['downloads']);
-	if($downloads)
-		return $downloads;
-	return false;
-}
-
-
-/**
  * Get Total Sales
  *
  * @access      public

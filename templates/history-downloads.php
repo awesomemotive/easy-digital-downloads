@@ -16,7 +16,7 @@ if( $purchases ) :
 		<?php 
 		foreach( $purchases as $post ) : setup_postdata( $post );
 
-			$downloads 		= edd_get_downloads_of_purchase( $post->ID );
+			$downloads 		= edd_get_payment_meta_downloads( $post->ID );
 			$purchase_data 	= edd_get_payment_meta( $post->ID );
 
 			if( $downloads ) {

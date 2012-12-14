@@ -62,7 +62,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 	}
 
 	$download_list = '<ul>';
-	$downloads     = edd_get_downloads_of_purchase( $payment_id, $payment_data );
+	$downloads     = edd_get_payment_meta_downloads( $payment_id );
 	if ( $downloads ) {
 
 		$show_names = apply_filters( 'edd_email_show_names', true );
