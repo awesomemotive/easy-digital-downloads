@@ -121,3 +121,29 @@ function edd_get_file_download_log( $download_id, $paginate = false, $number = 1
 	
 	return false;
 }
+
+
+/**
+ * Get Downloads Of Purchase
+ *
+ * Retrieves an array of all files purchased.
+ *
+ * @access      public
+ * @since       1.0 
+ * @deprecated  1.4
+ * @param       int $payment_id - the ID number of the purchase
+ * @return      mixed - array if purchase exists, false otherwise
+*/
+
+function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
+
+	_edd_deprecated_function( __FUNCTION__, '1.4', 'edd_get_payment_meta_downloads' );
+
+	if(is_null($payment_meta)) {
+		$payment_meta = edd_get_payment_meta( $payment_id );
+	}
+	$downloads = maybe_unserialize($payment_meta['downloads']);
+	if($downloads)
+		return $downloads;
+	return false;
+}

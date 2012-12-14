@@ -25,7 +25,7 @@ if($purchases) : ?>
 				<td class="edd_purchased_files">
 					<?php
 						// show a list of downloadable files
-						$downloads = edd_get_downloads_of_purchase( $post->ID );
+						$downloads = edd_get_payment_meta_downloads( $post->ID );
 						if($downloads) {
 							foreach($downloads as $download) {
 
