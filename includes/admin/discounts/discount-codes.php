@@ -6,7 +6,7 @@
  * @subpackage  Discount Codes
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -23,11 +23,11 @@ if ( !defined( 'ABSPATH' ) ) exit;
 */
 
 function edd_discounts_page() {
-	global $edd_options;	
+	global $edd_options;
 	$current_page = get_bloginfo( 'wpurl' ) . '/wp-admin/admin.php?edit.php?post_type=download&page=edd-discounts';
 	?>
 	<div class="wrap">
-		
+
 		<?php if( isset( $_GET['edd-action'] ) && $_GET['edd-action'] == 'edit_discount' ): ?>
 
 			<?php include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/edit-discount.php' ); ?>
@@ -70,39 +70,39 @@ function edd_discounts_page() {
 								<td><?php if( isset( $discount['code'] ) ) echo $discount['code']; ?></td>
 								<td><?php if( isset( $discount['amount'] ) ) echo edd_format_discount_rate( $discount['type'], $discount['amount'] ); ?></td>
 								<td>
-									<?php 
+									<?php
 										if( isset( $discount['uses'] ) && isset( $discount['max'] ) && $discount['uses'] != '' && $discount['max'] != '' ) {
-											echo $discount['uses'] == '' ? 0 : $discount['uses'] . '/' . $discount['max']; 
+											echo $discount['uses'] == '' ? 0 : $discount['uses'] . '/' . $discount['max'];
 										} else {
 											echo isset( $discount['uses'] ) ? $discount['uses'] : 0;
 										}
 									?>
 								</td>
 								<td>
-									<?php 
+									<?php
 										if( isset( $discount['max'] ) ) {
-											echo $discount['max'] == '' ? __( 'unlimited', 'edd' ) : $discount['max'];  
+											echo $discount['max'] == '' ? __( 'unlimited', 'edd' ) : $discount['max'];
 										} else {
 											_e( 'unlimited', 'edd' );
 										}
 									?>
 								</td>
 								<td>
-								<?php 
+								<?php
 									if( isset( $discount['start'] ) && $discount['start'] != '' ) {
-										echo date( get_option( 'date_format' ), strtotime( $discount['start'] ) ); 
+										echo date( get_option( 'date_format' ), strtotime( $discount['start'] ) );
 									} else {
 										_e( 'No start date', 'edd' );
-									}	
+									}
 									?>
 								</td>
 								<td>
-								<?php 
+								<?php
 									if( isset( $discount['expiration'] ) && $discount['expiration'] != '' ) {
-										echo edd_is_discount_expired( $discount_key ) ? __( 'Expired', 'edd' ) : date_i18n( get_option( 'date_format' ), strtotime( $discount['expiration'] ) ); 
+										echo edd_is_discount_expired( $discount_key ) ? __( 'Expired', 'edd' ) : date_i18n( get_option( 'date_format' ), strtotime( $discount['expiration'] ) );
 									} else {
 										_e( 'no expiration', 'edd' );
-									}	
+									}
 									?>
 								</td>
 								<td><?php if( isset( $discount['status'] ) ) echo $discount['status']; ?></td>
@@ -121,13 +121,13 @@ function edd_discounts_page() {
 					<tr><td colspan=10><?php _e( 'No discount codes have been created.', 'edd' ); ?></td>
 					<?php endif; ?>
 				</tbody>
-			</table>		
-			<?php do_action( 'edd_discounts_below_table' ); ?>	
+			</table>
+			<?php do_action( 'edd_discounts_below_table' ); ?>
 
 			<?php include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/add-discount.php' ); ?>
-		
+
 		<?php endif; ?>
-		
+
 	</div><!--end wrap-->
 	<?php
 }

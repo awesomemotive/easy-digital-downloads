@@ -6,7 +6,7 @@
  * @subpackage  Shortcodes
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -18,7 +18,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Retrieves a download and displays the purchase form.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
@@ -40,7 +40,7 @@ function edd_download_shortcode( $atts, $content = null ) {
 	$atts['download_id'] = $atts['id'];
 
 	$download = edd_get_download( $atts['download_id'] );
-	
+
 	if( $download ) {
 		return edd_get_purchase_link( $atts );
 	}
@@ -54,12 +54,12 @@ add_shortcode( 'purchase_link', 'edd_download_shortcode' );
  * Displays a user's download history.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
 function edd_download_history() {
-	
+
 	if(is_user_logged_in()) {
 		ob_start();
 		edd_get_template_part( 'history', 'downloads' );
@@ -74,11 +74,11 @@ add_shortcode( 'download_history', 'edd_download_history' );
  * Displays a user's purchsae history.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
-function edd_purchase_history() {	
+function edd_purchase_history() {
 	if( is_user_logged_in() ) {
 		ob_start();
 		edd_get_template_part( 'history', 'purchases' );
@@ -94,7 +94,7 @@ add_shortcode( 'purchase_history', 'edd_purchase_history' );
  * Show the checkout form.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
@@ -110,7 +110,7 @@ add_shortcode( 'download_checkout', 'edd_checkout_form_shortcode' );
  * Show the shopping cart.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
@@ -126,12 +126,12 @@ add_shortcode( 'download_cart', 'edd_cart_shortcode' );
  * Shows the login form.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
 function edd_login_form_shortcode( $atts, $content = null ) {
-	
+
 	extract( shortcode_atts( array(
 			'redirect' => '',
 		), $atts )
@@ -144,7 +144,7 @@ add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
 /**
  * Discounts short code
  *
- * Displays a list of all active discounts 
+ * Displays a list of all active discounts
  *
  * @access      public
  * @since       1.0.8.2
@@ -152,34 +152,34 @@ add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
 */
 
 function edd_discounts_shortcode( $atts, $content = null ) {
-	
+
 	$discounts = edd_get_discounts();
 
 	if( ! $discounts && edd_has_active_discounts() )
 		return;
-	
+
 	$discounts_list = '<ul id="edd_discounts_list">';
-	
+
 	foreach( $discounts as $discount ) {
-		
+
 		if( edd_is_discount_valid( $discount['code'] ) ) {
-			
+
 			$discounts_list .= '<li class="edd_discount">';
-	
+
 				$discounts_list .= '<span class="edd_discount_name">' . $discount['name'] . '</span>';
 				$discounts_list .= '<span class="edd_discount_separator"> - </span>';
 				$discounts_list .= '<span class="edd_discount_amount">' . edd_format_discount_rate( $discount['type'], $discount['amount'] ) . '</span>';
-	
+
 			$discounts_list .= '</li>';
-			
-		}		
-		
+
+		}
+
 	}
-	
-	$discounts_list .= '</ul>';	
-	
+
+	$discounts_list .= '</ul>';
+
 	return $discounts_list;
-	
+
 }
 add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
 
@@ -188,7 +188,7 @@ add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
 /**
  * Purchase Collection Shortcode
  *
- * Displays a collection purchase link for adding all 
+ * Displays a collection purchase link for adding all
  * items in a taxonomy term to the cart.
  *
  * @access      public
@@ -203,7 +203,7 @@ function edd_purchase_collection_shortcode( $atts, $content = null ) {
 			'link' => __('Purchase All Items', 'edd')
 		), $atts )
 	);
-	
+
 	$link = is_null( $content ) ? $link : $content;
 
 	return '<a href="' . add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms ) ) . '">' . $link . '</a>';
@@ -324,7 +324,7 @@ function edd_downloads_query($atts, $content = null) {
 		$query['paged'] = 1;
 
 	switch( intval( $columns ) ) :
-	
+
 		case 1:
 			$column_width = '100%'; break;
 		case 2:
@@ -337,12 +337,12 @@ function edd_downloads_query($atts, $content = null) {
 			$column_width = '20%'; break;
 		case 6:
 			$column_width = '16.6%'; break;
-	
+
 	endswitch;
 
 	// allow the query to be manipulated by other plugins
 	$query = apply_filters( 'edd_downloads_query', $query );
-	
+
 	$downloads = new WP_Query( $query );
 	if ( $downloads->have_posts() ) :
 		$i = 1;
@@ -351,7 +351,7 @@ function edd_downloads_query($atts, $content = null) {
 			<?php while ( $downloads->have_posts() ) : $downloads->the_post(); ?>
 				<div class="edd_download" id="edd_download_<?php echo get_the_ID(); ?>" style="width: <?php echo $column_width; ?>; float: left;">
 					<div class="edd_download_inner">
-						<?php 
+						<?php
 
 						do_action( 'edd_download_before' );
 
@@ -372,7 +372,7 @@ function edd_downloads_query($atts, $content = null) {
 						if( $buy_button == 'yes' )
 							edd_get_template_part( 'shortcode', 'content-cart-button' );
 
-						do_action( 'edd_download_after' ); 
+						do_action( 'edd_download_after' );
 
 						?>
 					</div>
@@ -416,7 +416,7 @@ add_shortcode( 'downloads', 'edd_downloads_query' );
 */
 
 function edd_download_price_shortcode( $atts, $content = null ) {
-	
+
 	extract( shortcode_atts( array(
 			'id' => NULL,
 		), $atts )

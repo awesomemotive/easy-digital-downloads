@@ -47,18 +47,18 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 		$name      = $user_info['first_name'];
 		$fullname  = $user_info['first_name'] . ' ' . $user_info['last_name'];
 		$username  = $user_data->user_login;
-	
+
 	} elseif ( isset( $user_info['first_name'] ) ) {
-	
+
 		$name      = $user_info['first_name'];
 		$fullname  = $user_info['first_name'] . ' ' . $user_info['last_name'];
 		$username  = $user_info['first_name'];
-	
+
 	} else {
-	
+
 		$name      = $user_info['email'];
 		$username  = $user_info['email'];
-	
+
 	}
 
 	$download_list = '<ul>';

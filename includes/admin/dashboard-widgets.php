@@ -6,7 +6,7 @@
  * @subpackage  Dashboard Widgets
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -29,7 +29,7 @@ function edd_register_dashboard_widgets() {
 	}
 
 }
-add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets' ); 
+add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets' );
 
 
 /**
@@ -102,7 +102,7 @@ function edd_dashboard_sales_widget() {
 			foreach( $top_selling as $list ) { ?>
 				<p class="lifetime_best_selling label_heading"><?php _e('Lifetime Best Selling', 'edd') ?></p>
 				<p><span class="lifetime_best_selling_label"><?php echo edd_get_download_sales_stats( $list->ID ); ?></span> <a href="<?php echo get_permalink( $list->ID ); ?>"><?php echo get_the_title( $list->ID ); ?></a></p>
-		<?php } } ?>		
+		<?php } } ?>
 	</div>
 	<div style="clear: both"></div>
 	<p class="edd_dashboard_widget_subheading"><?php _e( 'Recent Purchases', 'edd' ); ?></p>
@@ -111,12 +111,12 @@ function edd_dashboard_sales_widget() {
 			<tbody>
 				<?php
 				$payments = edd_get_payments( array(
-					'number'   => 5, 
-					'mode'     => 'live', 
-					'orderby'  => 'post_date', 
-					'order'    => 'DESC', 
-					'user'     => null, 
-					'status'   => 'publish', 
+					'number'   => 5,
+					'mode'     => 'live',
+					'orderby'  => 'post_date',
+					'order'    => 'DESC',
+					'user'     => null,
+					'status'   => 'publish',
 					'meta_key' => null
 				) );
 
@@ -127,7 +127,7 @@ function edd_dashboard_sales_widget() {
 				<tr>
 					<td><?php echo get_the_title( $payment->ID ) ?> - (<?php echo $payment_meta['email'] ?>) - <span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment->ID ) ) ); ?></span> - <a href="#TB_inline?width=640&amp;inlineId=purchased-files-<?php echo $payment->ID; ?>" class="thickbox" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> "><?php _e( 'View Order Details', 'edd' ); ?></a>
 						<div id="purchased-files-<?php echo $payment->ID; ?>" style="display:none;">
-							<?php 
+							<?php
 								$cart_items = edd_get_payment_meta_cart_details( $payment->ID );
 								if( empty( $cart_items ) || !$cart_items ) {
 									$cart_items = maybe_unserialize( $payment_meta['downloads'] );
@@ -135,12 +135,12 @@ function edd_dashboard_sales_widget() {
 							?>
 							<h4><?php echo _n( __( 'Purchased File', 'edd' ), __( 'Purchased Files', 'edd' ), count( $cart_items ) ); ?></h4>
 							<ul class="purchased-files-list">
-							<?php 
+							<?php
 								if( $cart_items ) {
 									foreach( $cart_items as $key => $cart_item ) {
 										echo '<li>';
 											$id = isset( $payment_meta['cart_details'] ) ? $cart_item['id'] : $cart_item;
-											$price_override = isset( $payment_meta['cart_details'] ) ? $cart_item['price'] : null; 
+											$price_override = isset( $payment_meta['cart_details'] ) ? $cart_item['price'] : null;
 											$user_info = edd_get_payment_meta_user_info( $payment->ID );
 											$price = edd_get_download_final_price( $id, $user_info, $price_override );
 											echo '<a href="' . admin_url( 'post.php?post=' . $id . '&action=edit' ) . '" target="_blank">' . get_the_title( $id ) . '</a>';
@@ -151,7 +151,7 @@ function edd_dashboard_sales_widget() {
 													echo edd_get_price_option_name( $id, $price_options['price_id'] );
 													echo ' - ';
 												}
-											}	
+											}
 											echo edd_currency_filter( edd_format_amount( $price ) );
 										echo '</li>';
 									}
@@ -162,7 +162,7 @@ function edd_dashboard_sales_widget() {
 							<p><?php echo __( 'Date and Time:', 'edd' ) . ' ' . date_i18n( get_option( 'date_format' ), $payment_date ) . ' ' . date_i18n( get_option( 'time_format' ), $payment_date ) ?>
 							<p><?php echo __( 'Discount used:', 'edd' ) . ' '; if( isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ) { echo $user_info['discount']; } else { _e( 'none', 'edd' ); } ?>
 							<p><?php echo __( 'Total:', 'edd' ) . ' ' . edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment->ID ) ) ); ?></p>
-							
+
 							<div class="purcase-personal-details">
 								<h4><?php _e( 'Buyer\'s Personal Details:', 'edd' ); ?></h4>
 								<ul>

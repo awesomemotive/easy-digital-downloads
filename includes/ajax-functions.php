@@ -103,11 +103,11 @@ function edd_ajax_validate_discount() {
 
 		$return = array(
 			'msg'  => '',
-			'code' => $_POST['code'] 
+			'code' => $_POST['code']
 		);
 
 		if( edd_is_discount_used( $_POST['code'], $user ) ) {  // Called twice if discount is not used (again by edd_is_discount_valid) but allows for beter usr msg and less execution if discount is used.
-			
+
 			$return['msg']  = __('This discount code has been used already', 'edd');
 
 		} else {
@@ -126,7 +126,7 @@ function edd_ajax_validate_discount() {
 			} else {
 
 				$return['msg']  = __('The discount you entered is invalid', 'edd');
-				
+
 			}
 		}
 		echo json_encode($return);
@@ -205,15 +205,15 @@ add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_titl
 */
 
 function edd_get_ajax_url() {
-	
+
 	$scheme = defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https' : 'admin';
 
 	$current_url = edd_get_current_page_url();
 	$ajax_url = admin_url( 'admin-ajax.php', $scheme );
-	
+
 	if( preg_match( '/^https/', $current_url ) && ! preg_match( '/^https/', $ajax_url ) ) {
 		$ajax_url = preg_replace( '/^http/', 'https', $ajax_url );
 	}
-	
+
 	return apply_filters( 'edd_ajax_url', $ajax_url );
 }

@@ -37,7 +37,7 @@ function edd_sanitize_amount( $amount ) {
 		}
 
 		$amount = str_replace( $decimal_sep, '.', $amount );
-		
+
 		// make sure we don't have more than 2 decimals
 		$amount = number_format( $amount, 2 );
 	}
@@ -69,7 +69,7 @@ function edd_format_amount( $amount ) {
 		$part = substr( $amount, $sep_found + 1, ( strlen( $amount ) - 1 ) );
 		$amount = $whole . '.' . $part;
 	}
-	
+
 	$decimals = apply_filters( 'edd_format_amount_decimals', 2 );
 
 	return number_format( $amount, $decimals, $decimal_sep, $thousands_sep );
@@ -81,7 +81,7 @@ function edd_format_amount( $amount ) {
  * Formats the currency display
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      array
 */
 
@@ -94,14 +94,14 @@ function edd_currency_filter( $price ) {
 	if( $position == 'before' ):
 		switch ( $currency ):
 			case "GBP" : return '&pound;' . $price; break;
-			case "USD" : 
-			case "AUD" : 
-			case "BRL" : 
-			case "CAD" : 
-			case "HKD" : 
-			case "MXN" : 
-			case "SGD" : 
-				return '&#36;' . $price; 
+			case "USD" :
+			case "AUD" :
+			case "BRL" :
+			case "CAD" :
+			case "HKD" :
+			case "MXN" :
+			case "SGD" :
+				return '&#36;' . $price;
 			break;
 			case "JPY" : return '&yen;' . $price; break;
 			default :
@@ -112,20 +112,20 @@ function edd_currency_filter( $price ) {
 	else :
 		switch ( $currency ) :
 			case "GBP" : return $price . '&pound;'; break;
-			case "USD" : 
-			case "AUD" : 
-			case "BRL" : 
-			case "CAD" : 
-			case "HKD" : 
-			case "MXN" : 
-			case "SGD" : 
-				return $price . '&#36;'; 
+			case "USD" :
+			case "AUD" :
+			case "BRL" :
+			case "CAD" :
+			case "HKD" :
+			case "MXN" :
+			case "SGD" :
+				return $price . '&#36;';
 			break;
 			case "JPY" : return $price . '&yen;'; break;
-			default : 
+			default :
 			    $formatted = $price . ' ' . $currency;
 			    return apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
 			break;
-		endswitch;	
+		endswitch;
 	endif;
 }
