@@ -427,6 +427,7 @@ function edd_get_payment_statuses() {
 
 function edd_register_payment_status() {
 	register_post_status('refunded');
+	register_post_status('failed');
 }
 add_action( 'init', 'edd_register_payment_status' );
 
