@@ -137,6 +137,11 @@ function edd_update_edited_purchase( $data ) {
 		
 		update_post_meta( $payment_id, '_edd_payment_user_email', $payment_data['email'] );
 		
+		if( isset( $_POST['edd-payment-note'] ) ) {
+			$note    = wp_kses( $_POST['edd-payment-note'], array() );
+			$note_id = edd_insert_payment_note( $payment_id, $note );
+		}
+
 		if( $_POST['edd-old-status'] != $_POST['edd-payment-status'] ) {
 			edd_update_payment_status( $payment_id, $_POST['edd-payment-status'] );
 		}
