@@ -34,6 +34,6 @@ class GoogleChartCandlestickMarker extends GoogleChartMarker
 	 */
 	public function compute($index)
 	{
-		
+
 	}
 }

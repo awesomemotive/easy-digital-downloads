@@ -57,7 +57,7 @@ function edd_generate_pdf( $data ) {
 		$pdf->Cell( 0, 6, utf8_decode( __( 'Date Range: ', 'edd' ) ) . $daterange, 0, 2, 'L', false );
 		$pdf->Ln();
 		$pdf->SetTextColor( 50, 50, 50 );
-		$pdf->SetFont( 'Helvetica', '', 14 ); 
+		$pdf->SetFont( 'Helvetica', '', 14 );
 		$pdf->Cell( 0, 10, utf8_decode( __( 'Table View', 'edd' ) ), 0, 2, 'L', false );
 		$pdf->SetFont( 'Helvetica', '', 12 );
 
@@ -77,11 +77,11 @@ function edd_generate_pdf( $data ) {
 			foreach( $downloads as $download ):
 
 				$pdf->SetFillColor( 255, 255, 255 );
-				
+
 				$title = utf8_decode( get_the_title( $download->ID ) );
-				
+
 				if ( edd_has_variable_prices( $download->ID ) ) {
-					
+
 					$prices = edd_get_variable_prices( $download->ID );
 
 					$first = $prices[0]['amount'];
@@ -95,22 +95,22 @@ function edd_generate_pdf( $data ) {
 						$min = $last;
 						$max = $first;
 					}
-					
+
 					$price = html_entity_decode( edd_currency_filter( edd_format_amount( $min ) ) . ' - ' . edd_currency_filter( edd_format_amount( $max ) ) );
 				} else {
 					$price = html_entity_decode( edd_currency_filter( edd_get_download_price( $download->ID ) ) );
 				}
-				
+
 				$categories = get_the_term_list( $download->ID, 'download_category', '', ', ', '' );
 				$categories = $categories ? strip_tags( $categories ) : '';
-				
+
 				$tags = get_the_term_list( $download->ID, 'download_tag', '', ', ', '' );
 				$tags = $tags ? strip_tags( $tags ) : '';
-				
+
 				$sales = edd_get_download_sales_stats( $download->ID );
 				$link = get_permalink( $download->ID );
 				$earnings = html_entity_decode ( edd_currency_filter( edd_get_download_earnings_stats( $download->ID ) ) );
-				
+
 				$pdf->Row( array( $title, $price, $categories, $tags, $sales, $earnings ) );
 			endforeach;
 		else:
@@ -118,7 +118,7 @@ function edd_generate_pdf( $data ) {
 			$title = utf8_decode( sprintf( __( 'No %s found.', 'edd' ), edd_get_label_plural() ) );
 			$pdf->Row( array( $title ) );
 		endif;
-		
+
 		$pdf->Ln();
 		$pdf->SetTextColor( 50, 50, 50 );
 		$pdf->SetFont( 'Helvetica', '', 14 );
@@ -221,8 +221,8 @@ function edd_draw_chart_image() {
 
 	$y_axis = new GoogleChartAxis( 'y' );
 	$y_axis->setDrawTickMarks( true )->setLabels( array(
-		0, 
-		$max_earnings 
+		0,
+		$max_earnings
 	) );
 	$chart->addAxis( $y_axis );
 

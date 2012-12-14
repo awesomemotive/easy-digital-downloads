@@ -6,7 +6,7 @@
  * @subpackage  Login/Register
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -16,7 +16,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Login Form
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
@@ -24,16 +24,16 @@ function edd_login_form( $redirect = '' ) {
 	global $edd_options, $post;
 
 	if( $redirect == '' ) {
-		$redirect = edd_get_current_page_url();	
+		$redirect = edd_get_current_page_url();
 	}
-	
-	ob_start();		
-	
+
+	ob_start();
+
 	if( !is_user_logged_in() ) { ?>
 		<?php
 		// show any error messages after form submission
 		edd_print_errors(); ?>
-		
+
 		<form id="edd_login_form"  class="edd_form" action="" method="post">
 			<fieldset>
 				<legend><?php _e('Log into Your Account', 'edd'); ?></legend>
@@ -60,7 +60,7 @@ function edd_login_form( $redirect = '' ) {
 		</form>
 	<?php
 	} else {
-		echo '<p class="edd-logged-in">' . __('You are already logged in', 'edd') . '</p>';	
+		echo '<p class="edd-logged-in">' . __('You are already logged in', 'edd') . '</p>';
 	}
 	return ob_get_clean();
 }
@@ -70,7 +70,7 @@ function edd_login_form( $redirect = '' ) {
  * Process Login Form
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -104,7 +104,7 @@ add_action( 'edd_user_login', 'edd_process_login_form' );
  * Log User In
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 

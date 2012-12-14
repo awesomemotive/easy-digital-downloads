@@ -120,7 +120,7 @@ class GoogleChartApi
 				'Query method must be either GoogleChart::POST or GoogleChart::GET, "%s" given.',
 				$method
 			));
-		
+
 		$this->query_method = $method;
 		return $this;
 	}
@@ -145,7 +145,7 @@ class GoogleChartApi
 	 *
 	 * Use this method if you want to do the POST yourself, or for troubleshooting
 	 * a chart.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getQuery()
@@ -246,7 +246,7 @@ class GoogleChartApi
 /* --------------------------------------------------------------------------
  * Debug
  * -------------------------------------------------------------------------- */
- 
+
 	public function getValidationUrl($escape_amp = true)
 	{
 		$q = $this->computeQuery();

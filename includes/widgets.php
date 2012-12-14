@@ -6,7 +6,7 @@
  * @subpackage  Widgets
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -29,10 +29,10 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Downloads cart widget class.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
-	
+
 class edd_cart_widget extends WP_Widget {
 
 	/** constructor */
@@ -102,7 +102,7 @@ class edd_cart_widget extends WP_Widget {
  * Downloads categories / tags widget class.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -120,14 +120,14 @@ class edd_categories_tags_widget extends WP_Widget {
 		extract( $args );
 		$title = apply_filters('widget_title', $instance['title']);
 		$tax = $instance['taxonomy'];
-		
+
 		global $post, $edd_options;
 
 		echo $before_widget;
 		if ( $title ) {
 			echo $before_title . $title . $after_title;
 		}
-		
+
 		do_action( 'edd_before_taxonomy_widget' );
 		$terms = get_terms( $tax );
 
@@ -140,7 +140,7 @@ class edd_categories_tags_widget extends WP_Widget {
 				}
 				echo "</ul>\n";
 			}
-		
+
 		do_action( 'edd_after_taxonomy_widget' );
 		echo $after_widget;
 	}
@@ -273,7 +273,7 @@ class edd_purchase_history_widget extends WP_Widget {
  * Registers the EDD Widgets.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 

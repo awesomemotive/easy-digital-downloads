@@ -20,12 +20,12 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Retrieves a list of all purchases by a specific user.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      array
 */
 
 function edd_get_users_purchases( $user_id = 0, $number = -1 ) {
-	
+
 	if( empty( $user_id ) ) {
 		global $user_ID;
 		$user_id = $user_ID;
@@ -47,7 +47,7 @@ function edd_get_users_purchases( $user_id = 0, $number = -1 ) {
 						'value' => $user_id
 					)
 				),
-				'post_type'      => 'edd_payment', 
+				'post_type'      => 'edd_payment',
 				'posts_per_page' => $number
 			)
 		);
@@ -57,9 +57,9 @@ function edd_get_users_purchases( $user_id = 0, $number = -1 ) {
 	    // return the download list
 		return $purchases;
 	}
-	
-	// no downloads	
-	return false;	
+
+	// no downloads
+	return false;
 }
 
 
@@ -70,7 +70,7 @@ function edd_get_users_purchases( $user_id = 0, $number = -1 ) {
  * Checks to see if a user has purchased a download.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @param       int $user_id - the ID of the user to check
  * @param       int $download_Id - the ID of the download to check for
  * @param       int $variable_price_id - the variable price ID to check for
@@ -78,7 +78,7 @@ function edd_get_users_purchases( $user_id = 0, $number = -1 ) {
 */
 
 function edd_has_user_purchased( $user_id, $download_id, $variable_price_id = null ) {
-	
+
 	if( !is_user_logged_in() )
 		return false; // at some point this should support email checking
 
@@ -101,19 +101,19 @@ function edd_has_user_purchased( $user_id, $download_id, $variable_price_id = nu
 						if( !is_null( $variable_price_id ) && $variable_price_id !== false ) {
 
 							if( $variable_price_id == $download['options']['price_id'] ) {
-								
+
 								return true;
-							
+
 							} else {
-							
+
 								$return = false;
-							
+
 							}
 
 						} else {
-							
+
 							$return = true;
-						
+
 						}
 
 					}
@@ -133,7 +133,7 @@ function edd_has_user_purchased( $user_id, $download_id, $variable_price_id = nu
  * Checks to see if a user has purchased at least one item.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @param       $user_id int - the ID of the user to check
  * @return      bool - true if has purchased, false other wise.
 */
@@ -143,7 +143,7 @@ function edd_has_purchases( $user_id = null ) {
 		global $user_ID;
 		$user_id = $user_ID;
 	}
-	
+
 	if( edd_get_users_purchases( $user_id, 1 ) ) {
 		return true; // user has at least one purchase
 	}
@@ -209,7 +209,7 @@ function edd_purchase_total_of_user( $user = null ) {
 			endforeach;
 		endif;
 		set_transient( md5( 'edd_customer_total_' . $user ), $amount );
-	}	
+	}
 
 	return $amount;
 }
