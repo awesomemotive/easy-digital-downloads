@@ -316,16 +316,19 @@ function edd_process_paypal_web_accept( $data ) {
 	if( $currency_code != strtolower( $edd_options['currency'] ) ) {
 		// the currency code is invalid
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid currency in IPN response. IPN data: ', 'edd' ), json_encode( $data ) ) );
+		edd_update_payment_status( $payment_id, 'failed' );
 		return;
 	}
 	if( number_format((float)$paypal_amount, 2) != $payment_amount ) {
 		// the prices don't match
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid payment amount in IPN response. IPN data: ', 'edd' ), json_encode( $data ) ) );
-	   //return;
+	   	edd_update_payment_status( $payment_id, 'failed' );
+	   	return;
 	}
 	if( $purchase_key != $payment_meta['key'] ) {
 		// purchase keys don't match
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid purchase key in IPN response. IPN data: ', 'edd' ), json_encode( $data ) ) );
+		edd_update_payment_status( $payment_id, 'failed' );
 		return;
 	}	 
 		
