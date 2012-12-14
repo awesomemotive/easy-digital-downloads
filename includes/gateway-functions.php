@@ -245,4 +245,4 @@ function edd_load_ajax_gateway() {
 
 }
 
-add_action( 'init', 'edd_load_ajax_gateway', 99 );
+add_action( 'wp_ajax_edd_load_gateway', 'edd_load_ajax_gateway' );
