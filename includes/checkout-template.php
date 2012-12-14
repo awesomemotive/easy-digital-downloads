@@ -40,6 +40,7 @@ function edd_checkout_form() {
 				} else {
 					do_action( 'edd_purchase_form' );
 				}
+
 				do_action( 'edd_checkout_form_bottom' ); ?>
 			</div><!--end #edd_checkout_form_wrap-->
 		<?php
@@ -48,6 +49,15 @@ function edd_checkout_form() {
 		endif;
 	return ob_get_clean();
 }
+
+
+/**
+ * Get the purchase form
+ *
+ * @access      private
+ * @since       1.4
+ * @return      string
+*/
 
 function edd_show_purchase_form() {
 	$payment_mode = edd_get_chosen_gateway();
@@ -96,7 +106,6 @@ function edd_show_purchase_form() {
 
 	do_action( 'edd_after_purchase_form' );
 }
-
 add_action( 'edd_purchase_form', 'edd_show_purchase_form' );
 
 
@@ -117,7 +126,6 @@ function edd_can_checkout() {
 	return (bool) apply_filters( 'edd_can_checkout', $can_checkout );
 
 }
-
 
 
 /**
@@ -474,6 +482,14 @@ function edd_terms_agreement() {
 add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement' );
 
 
+/**
+ * Shows the tax opt-in checkbox
+ *
+ * @access      public
+ * @since       1.3.3
+ * @return      void
+ */
+
 function edd_show_local_tax_opt_in() {
 	global $edd_options;
 	if( isset( $edd_options['tax_condition'] ) && $edd_options['tax_condition'] == 'local' ) {
@@ -497,6 +513,7 @@ add_action( 'edd_purchase_form_before_submit', 'edd_show_local_tax_opt_in' );
  * @since       1.3.3
  * @return      void
  */
+
 function edd_checkout_submit() {
 ?>
 	<fieldset id="edd_purchase_submit">
@@ -527,6 +544,7 @@ add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_submit', 100 );
  * @since       1.2
  * @return      string
  */
+
 function edd_checkout_button_next() {
 	global $edd_options;
 
@@ -548,6 +566,7 @@ function edd_checkout_button_next() {
  * @since       1.2
  * @return      string
  */
+
 function edd_checkout_button_purchase() {
 	global $edd_options;
 
@@ -589,6 +608,7 @@ function edd_show_payment_icons() {
 add_action( 'edd_payment_mode_top', 'edd_show_payment_icons' );
 add_action( 'edd_before_purchase_form', 'edd_show_payment_icons' );
 
+
 /**
  * Agree To Terms JS
  *
@@ -621,7 +641,8 @@ add_action( 'edd_checkout_form_top', 'edd_agree_to_terms_js' );
  * Hidden checkout fields
  *
  * @access      private
- * @since       1.3.2 * @return      void
+ * @since       1.3.2
+ * @return      void
 */
 
 function edd_checkout_hidden_fields() {
