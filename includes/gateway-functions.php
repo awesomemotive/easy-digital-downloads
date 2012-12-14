@@ -6,7 +6,7 @@
  * @subpackage  Gateway Functions
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -18,18 +18,18 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Rreturns a list of all available gateways.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      array
 */
 
 function edd_get_payment_gateways() {
-	
+
 	// default, built-in gateways
 	$gateways = array(
 		'paypal' => array('admin_label' => 'PayPal', 'checkout_label' => 'PayPal'),
 		'manual' => array('admin_label' => __('Test Payment', 'edd'), 'checkout_label' => __('Test Payment', 'edd')),
 	);
-	
+
 	return apply_filters( 'edd_payment_gateways', $gateways );
 
 }
@@ -41,7 +41,7 @@ function edd_get_payment_gateways() {
  * Returns a list of all enabled gateways.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      array
 */
 
@@ -69,7 +69,7 @@ function edd_get_enabled_payment_gateways() {
  * Checks whether a specified gateway is activated.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @param       string - The ID name of the gateway to check for
  * @return      boolean - true if enabled, false otherwise
 */
@@ -124,7 +124,7 @@ function edd_get_gateway_checkout_label( $gateway ) {
  * Sends the registration data to the specified gateway.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -170,9 +170,9 @@ function edd_show_gateways() {
 */
 
 function edd_get_chosen_gateway() {
-	
+
 	$gateways = edd_get_enabled_payment_gateways();
-	
+
 	if( isset( $_GET['payment-mode'] ) ) {
 
 		$enabled_gateway = urldecode( $_GET['payment-mode'] );

@@ -86,13 +86,13 @@ class GoogleChartAxis
 		$this->labels = $labels;
 		return $this;
 	}
-	
+
 	public function getLabels($compute = true)
 	{
 		if ( ! $compute ) {
 			return $this->labels;
 		}
-		
+
 		if ( $this->labels === null )
 			return null;
 
@@ -125,7 +125,7 @@ class GoogleChartAxis
 	{
 		if ( ! $compute )
 			return $this->range;
-		
+
 		if ( $this->range === null )
 			return null;
 
@@ -148,15 +148,15 @@ class GoogleChartAxis
 
 		return $this;
 	}
-	
+
 	public function getTickMarks($compute = true)
 	{
 		if ( ! $compute )
 			return $this->tick_marks;
-		
+
 		if ( $this->tick_marks === null )
 			return null;
-		
+
 		return '%d,'.implode(',',$this->tick_marks);
 	}
 
@@ -180,7 +180,7 @@ class GoogleChartAxis
 		$str = $axis_index.','.implode(',',$this->label_positions);
 		return $str;
 	}
-	
+
 	public function hasChxp()
 	{
 		return $this->label_positions !== null;
@@ -290,7 +290,7 @@ class GoogleChartAxis
 		$str = $axis_index;
 
 		// @todo format string
-		
+
 		$str .= ','.$this->label_color;
 		if ( $this->chxs > 1 ) {
 			$str .= ','.$this->font_size;
@@ -323,7 +323,7 @@ class GoogleChartAxis
 
 	public function getLabelFormat($compute = true)
 	{
-		
+
 	}
 //@}
 }

@@ -85,7 +85,7 @@ add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
 
 function edd_register_styles() {
 	global $edd_options;
-	
+
 	if( isset( $edd_options['disable_styles'] ) )
 		return;
 
