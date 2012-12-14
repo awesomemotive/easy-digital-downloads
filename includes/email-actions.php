@@ -16,7 +16,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Resend Email Purchase Receipt
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 

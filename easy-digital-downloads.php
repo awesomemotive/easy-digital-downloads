@@ -11,10 +11,10 @@ Domain Path: languages
 
 Easy Digital Downloads is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or 
+the Free Software Foundation, either version 2 of the License, or
 any later version.
 
-Easy Digital Downloads is distributed in the hope that it will be useful, 
+Easy Digital Downloads is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
@@ -178,7 +178,7 @@ final class Easy_Digital_Downloads {
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php' );
-			include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php' );	
+			include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/settings/settings.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php' );

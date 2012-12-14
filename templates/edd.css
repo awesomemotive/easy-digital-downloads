@@ -35,8 +35,8 @@
 #edd_purchase_form input.card-expiry-year { width: 60px; }
 #edd_purchase_form span.exp-divider {  }
 #edd_checkout_form_wrap p { margin: 0 0 10px; }
-#edd_checkout_form_wrap input[type="text"], 
-#edd_checkout_form_wrap input[type="email"], 
+#edd_checkout_form_wrap input[type="text"],
+#edd_checkout_form_wrap input[type="email"],
 #edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; width: 200px; }
 #edd_checkout_form_wrap .edd-payment-icons { height: 32px; }
 #edd_checkout_form_wrap .edd-payment-icons img.payment-icon{ margin: 0 3px 0 0; float: left; background: none; padding: none; border: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
@@ -45,8 +45,8 @@
 #edd_checkout_form_wrap fieldset#edd_login_fields { border: 1px solid #f0f0f0; padding: 10px; margin: 0 0 10px; }
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_register_password,
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_login_password { margin: 0; }
-#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="text"], 
-#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="email"], 
+#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="text"],
+#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="email"],
 #edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="password"] { width: 188px; }
 
 
@@ -222,7 +222,7 @@ x.edd-submit.button.blue:hover {
 }
 
 .edd-submit.button.dark-gray:active {
-	border-color: #000 #222 #222; 
+	border-color: #000 #222 #222;
 	background: #2b2b2b;
 }
 

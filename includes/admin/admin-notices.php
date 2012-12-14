@@ -6,7 +6,7 @@
  * @subpackage  Admin Notices
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -16,7 +16,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Admin Messages
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -48,7 +48,7 @@ add_action( 'admin_notices', 'edd_admin_messages' );
  * Admin Addons Notices
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
