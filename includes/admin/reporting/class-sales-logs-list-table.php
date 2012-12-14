@@ -11,7 +11,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 	function __construct(){
 		global $status, $page;
-			   
+
 		//Set parent defaults
 		parent::__construct( array(
 			'singular'  => edd_get_label_singular(),    // singular name of the listed records
@@ -25,11 +25,11 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	function column_default( $item, $column_name ) {
 		switch( $column_name ){
 			case 'download' :
-				return '<a href="' . 
+				return '<a href="' .
 				admin_url( '/post.php?post=' . $item[ $column_name ] . '&action=edit' ) .
 				 '" target="_blank">' . get_the_title( $item[ $column_name ] ) . '</a>';
 			case 'user_id' :
-				return '<a href="' . 
+				return '<a href="' .
 					admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['user_id'] ) ) .
 					 '"" target="_blank">' . $item[ 'user_name' ] . '</a>';
 			default:
@@ -52,7 +52,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		// these aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
 	}
-   
+
 	function logs_data() {
 
 		global $edd_logs;
@@ -64,8 +64,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		$user  = isset( $_GET['user'] ) ? absint( $_GET['user'] ) : false;
 
 		$log_query = array(
-			'post_parent' => null, 
-			'log_type'    => 'sale', 
+			'post_parent' => null,
+			'log_type'    => 'sale',
 			'paged'       => $paged
 		);
 
@@ -103,14 +103,14 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 **************************************************************************/
 
 	function prepare_items() {
-	   
+
 		global $edd_logs;
 
 		/**
 		 * First, lets decide how many records per page to show
 		 */
 		$per_page = 30;
-	   
+
 		$columns = $this->get_columns();
 
 		$hidden = array(); // no hidden columns
@@ -118,9 +118,9 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		 
+
 		$current_page = $this->get_pagenum();
-	
+
 		$this->items = $this->logs_data();
 
 		$total_items = $edd_logs->get_log_count( null, 'sale' );
@@ -132,5 +132,5 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 			)
 		);
 	}
-   
+
 }

@@ -770,7 +770,7 @@ add_action( 'admin_init', 'edd_presstrends' );
  *
  * @access public
  * @since  1.3.5
- * 
+ *
  * @param  string $function Name of the function.
  * @return bool Whether or not function is disabled.
  */

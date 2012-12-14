@@ -179,9 +179,9 @@ function edd_export_all_customers() {
 			echo '"' . __( 'Total Purchased', 'edd' ) 	.  '"';
 			echo "\r\n";
 			foreach( $emails as $email ) {
-				
-				$wp_user = get_user_by( 'email', $email );		
-				
+
+				$wp_user = get_user_by( 'email', $email );
+
 				echo $email . ',';
 				echo $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' );
 				echo ',';
@@ -240,7 +240,7 @@ function edd_export_all_downloads_history() {
 
 				$download_log = new EDD_Logging();
 
-				$file_downloads = $download_log->get_connected_logs( 
+				$file_downloads = $download_log->get_connected_logs(
 					array(
 						'post_parent' 	=> $report->ID,
 						'posts_per_page'=> -1,
@@ -280,7 +280,7 @@ function edd_export_all_downloads_history() {
 						echo '"' . html_entity_decode( get_the_title( $report->ID ) ) . '",';
 						echo '"' . $file_name . '"';
 						echo "\r\n";
-						
+
 					} // endforeach
 				}
 			}

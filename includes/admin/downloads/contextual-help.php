@@ -6,7 +6,7 @@
  * @subpackage  Downloads
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.2.3 
+ * @since       1.2.3
  */
 
 // Exit if accessed directly
@@ -31,9 +31,9 @@ function edd_downloads_contextual_help() {
 	$screen->set_help_sidebar(
 		'<p><strong>' . sprintf( __( 'For more information:', 'edd' ) . '</strong></p>' .
 		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'edd' ), esc_url( 'https://easydigitaldownloads.com/documentation/' ) ) ) . '</p>' .
-		'<p>' . sprintf( 
+		'<p>' . sprintf(
 					__( '<a href="%s">Post an issue</a> on <a href="%s">GitHub</a>. View <a href="%s">extensions</a> or <a href="%s">themes</a>.', 'edd' ),
-					esc_url( 'https://github.com/pippinsplugins/Easy-Digital-Downloads/issues' ), 
+					esc_url( 'https://github.com/pippinsplugins/Easy-Digital-Downloads/issues' ),
 					esc_url( 'https://github.com/pippinsplugins/Easy-Digital-Downloads' ),
 					esc_url( 'https://easydigitaldownloads.com/extensions/' ),
 					esc_url( 'https://easydigitaldownloads.com/themes/' )
@@ -43,12 +43,12 @@ function edd_downloads_contextual_help() {
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-download-configuration',
 		'title'	    => __( 'Download Configuration', 'edd' ),
-		'content'	=> 
-			'<p>' . __( '<strong>Pricing Options</strong> - Either define a single fixed price, or enable variable pricing. By enabling variable pricing, multiple download options and prices can be configured.', 'edd' ) . '</p>' . 
+		'content'	=>
+			'<p>' . __( '<strong>Pricing Options</strong> - Either define a single fixed price, or enable variable pricing. By enabling variable pricing, multiple download options and prices can be configured.', 'edd' ) . '</p>' .
 
-			'<p>' . __( '<strong>File Downloads</strong> - Define download file names and their respsective file URL. Multiple files can be assigned to a single price, or variable prices.', 'edd' ) . '</p>' . 
-			
-			'<p>' . __( '<strong>File Download Limit</strong> - Define how many times customers are allowed to download their purchased files. Leave at 0 for unlimited. Resending the purchase receipt will permit the customer one additional download if their limit has already been reached.', 'edd' ) . '</p>' . 
+			'<p>' . __( '<strong>File Downloads</strong> - Define download file names and their respsective file URL. Multiple files can be assigned to a single price, or variable prices.', 'edd' ) . '</p>' .
+
+			'<p>' . __( '<strong>File Download Limit</strong> - Define how many times customers are allowed to download their purchased files. Leave at 0 for unlimited. Resending the purchase receipt will permit the customer one additional download if their limit has already been reached.', 'edd' ) . '</p>' .
 
 			'<p>' . __( '<strong>Button Options</strong> - Disable the automatic output the purchase button. If disabled, no button will be added to the download page unless the <code>[purchase_link]</code> shortcode is used.', 'edd' ) . '</p>'
 	) );
@@ -56,7 +56,7 @@ function edd_downloads_contextual_help() {
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-product-notes',
 		'title'	    => __( 'Product Notes', 'edd' ),
-		'content'	=> 
+		'content'	=>
 			'<p>' . __( 'Special notes or instructions for the product. These notes will be added to the purchase receipt, and additionaly may be used by some extensions or themes on the frontend.', 'edd' ) . '</p>'
 	) );
 
@@ -67,10 +67,10 @@ function edd_downloads_contextual_help() {
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-purchase-shortcode',
 		'title'	    => __( 'Purchase Shortcode', 'edd' ),
-		'content'	=> 
+		'content'	=>
 			'<p>' . __( '<strong>Purchase Shortcode</strong> - If the automatic output of the purchase button has been disabled via the Download Configuration box, a shortcode can be used to output the button or link.', 'edd' ) . '</p>' .
 
-			'<p><code>[purchase_link id="#" price="1" text="Add to Cart" color="blue"]</code></p>' . 
+			'<p><code>[purchase_link id="#" price="1" text="Add to Cart" color="blue"]</code></p>' .
 
 			'<ul>
 				<li><strong>id</strong> - ' . __( 'The ID of a specific download to purchase.', 'edd' ) . '</li>

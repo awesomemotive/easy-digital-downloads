@@ -27,28 +27,28 @@ jQuery(document).ready(function ($) {
 				var count  = row.parent().find( 'tr' ).length - 1;
 
 				clone.removeClass( 'edd_add_blank' );
-				
+
 
 				clone.find( 'td input, td select' ).val( '' );
 				clone.find( 'input, select' ).each(function() {
 						var name 	= $( this ).attr( 'name' );
 
 						name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
-						
+
 						$( this )
 							.attr( 'name', name )
 							.attr( 'id', name );
 					});
 
 				clone.insertAfter( row );
-				
+
 			});
 		},
 
 		remove : function() {
 			$( 'body' ).on( 'click', '.edd_remove_repeatable', function(e) {
 				e.preventDefault();
-				
+
 				var row   = $(this).parent().parent( 'tr' ),
 					count = row.parent().find( 'tr' ).length - 1,
 					type  = $(this).data('type');
@@ -83,7 +83,7 @@ jQuery(document).ready(function ($) {
 		files : function() {
 			if ( $( '.edd_upload_image_button' ).length > 0 ) {
 				window.formfield = '';
-		        
+
 		        $('body').on('click', '.edd_upload_image_button', function(e) {
 		            e.preventDefault();
 		            window.formfield = $(this).parent().prev();
@@ -95,9 +95,9 @@ jQuery(document).ready(function ($) {
 		            }
 		            tb_show(edd_vars.add_new_download, 'media-upload.php?' + post_id +'TB_iframe=true');
 		        });
-		        
+
 		        window.original_send_to_editor = window.send_to_editor;
-		        window.send_to_editor = function (html) {            
+		        window.send_to_editor = function (html) {
 		            if (window.formfield) {
 		                imgurl = $('a', '<div>' + html + '</div>').attr('href');
 		                window.formfield.val(imgurl);
@@ -108,15 +108,15 @@ jQuery(document).ready(function ($) {
 		            }
 		            window.formfield = '';
 		            window.imagefield = false;
-		        }				
+		        }
 			}
 		}
 	}
 
-	EDD_Download_Configuration.init();	
+	EDD_Download_Configuration.init();
 
 	//$('#edit-slug-box').remove();
-	
+
 	// date picker
 	if ($('.form-table .edd_datepicker').length > 0) {
 		var dateFormat = 'mm/dd/yy';
@@ -124,7 +124,7 @@ jQuery(document).ready(function ($) {
 			dateFormat: dateFormat
 		});
 	}
-	
+
 	$('#edd-add-download').on('click', function() {
 		var downloads = [];
 		$('.edd-download-to-add').each(function() {
@@ -145,7 +145,7 @@ jQuery(document).ready(function ($) {
 		tb_remove();
 		return false;
 	});
-	
+
 	$('#purchased-downloads').on('click', '.edd-remove-purchased-download', function() {
 		var $this = $(this);
 		data = {
@@ -159,7 +159,7 @@ jQuery(document).ready(function ($) {
 		});
 		return false;
 	});
-	
+
 	// show / hide the send purchase receipt check box on the Edit payment screen
 	$('#edd_payment_status').change(function() {
 		if( $('#edd_payment_status option:selected').val() == 'publish' ) {
@@ -167,14 +167,14 @@ jQuery(document).ready(function ($) {
 		} else {
 			$('#edd_payment_notification').slideUp();
 		}
-	});	
-	
+	});
+
 	$('.edd_payment .row-actions .delete a').on('click', function() {
 		if( confirm( edd_vars.delete_payment ) ) {
-			return true;	
-		}		
+			return true;
+		}
 		return false;
-	});	
+	});
 
 	$('#the-list').on('click', '.editinline', function() {
 		inlineEditPost.revert();
@@ -228,5 +228,5 @@ jQuery(document).ready(function ($) {
             tax_opt_in.fadeOut();
         }
     });
-	
+
 });

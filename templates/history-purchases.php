@@ -39,14 +39,14 @@ if($purchases) : ?>
 
 									if($download_files) {
 										foreach($download_files as $filekey => $file) {
-											
+
 											$download_url = edd_get_download_file_url($purchase_data['key'], $purchase_data['email'], $filekey, $id );
 
 											echo '<div class="edd_download_file"><a href="' . esc_url( $download_url ) . '" class="edd_download_file_link">' . esc_html( $file['name'] ) . '</a></div>';
-											
+
 											do_action( 'edd_purchase_history_files', $filekey, $file, $id, $post->ID, $purchase_data );
 
-										} 
+										}
 									} else {
 										_e('No downloadable files found.', 'edd');
 									}

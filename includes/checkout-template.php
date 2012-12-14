@@ -6,7 +6,7 @@
  * @subpackage  Checkout Template
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -16,39 +16,39 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Get Checkout Form
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
 function edd_checkout_form() {
 
 	global $edd_options, $user_ID, $post;
-	
+
 	ob_start(); ?>
-		
+
 		<?php if( edd_get_cart_contents() ) : ?>
-				
+
 			<?php edd_checkout_cart(); ?>
-			
+
 			<div id="edd_checkout_form_wrap" class="edd_clearfix">
-			
-				<?php 				
+
+				<?php
 				do_action( 'edd_checkout_form_top' );
-			
+
 				if( edd_show_gateways() ) {
 					do_action( 'edd_payment_payment_mode_select'  );
 				} else {
 
 					do_action( 'edd_before_purchase_form' ); ?>
 
-					<form id="edd_purchase_form" action="<?php echo esc_url( edd_get_current_page_url() ); ?>" method="POST">					
-										
-						<?php 
-						
+					<form id="edd_purchase_form" action="<?php echo esc_url( edd_get_current_page_url() ); ?>" method="POST">
+
+						<?php
+
 						do_action( 'edd_purchase_form_top' );
 
 						if( edd_can_checkout() ) { ?>
-							
+
 							<?php if( isset( $edd_options['show_register_form'] ) && !is_user_logged_in() && !isset( $_GET['login'] ) ) { ?>
 								<div id="edd_checkout_login_register"><?php do_action( 'edd_purchase_form_register_fields' ); ?></div>
 							<?php } elseif( isset( $edd_options['show_register_form'] ) && !is_user_logged_in() && isset( $_GET['login'] ) ) { ?>
@@ -56,12 +56,12 @@ function edd_checkout_form() {
 							<?php } ?>
 
 							<?php if( ( !isset( $_GET['login'] ) && is_user_logged_in() ) || !isset( $edd_options['show_register_form'] ) ) {
-								
+
 								do_action( 'edd_purchase_form_after_user_info' );
 							}
 
-							do_action( 'edd_purchase_form_before_cc_form' ); 
-							
+							do_action( 'edd_purchase_form_before_cc_form' );
+
 							$payment_mode = edd_get_chosen_gateway();
 
 							// load the credit card form and allow gateways to load their own if they wish
@@ -82,7 +82,7 @@ function edd_checkout_form() {
 
 					</form>
 					<?php do_action( 'edd_after_purchase_form' );
-				} 
+				}
 				do_action( 'edd_checkout_form_bottom' ); ?>
 			</div><!--end #edd_checkout_form_wrap-->
 		<?php
@@ -142,9 +142,9 @@ function edd_user_info_fields() {
 		<p id="edd-last-name-wrap">
 			<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e('Last name', 'edd'); ?>" value="<?php echo is_user_logged_in() ? $user_data->last_name : ''; ?>"/>
 			<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
-		</p>	
+		</p>
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
-	</fieldset>	
+	</fieldset>
 	<?php
 }
 add_action( 'edd_purchase_form_after_user_info', 'edd_user_info_fields' );
@@ -154,13 +154,13 @@ add_action( 'edd_purchase_form_after_user_info', 'edd_user_info_fields' );
  * Get CC Form
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
 function edd_get_cc_form() {
 	ob_start(); ?>
-	
+
 	<?php do_action( 'edd_before_cc_fields' ); ?>
 
 	<fieldset id="edd_cc_fields">
@@ -188,11 +188,11 @@ function edd_get_cc_form() {
 		</p>
 
 		<?php do_action( 'edd_after_cc_expiration' ); ?>
-	
+
 	</fieldset>
 
 	<?php do_action( 'edd_after_cc_fields' ); ?>
-		
+
 	<?php
 	echo ob_get_clean();
 }
@@ -205,7 +205,7 @@ add_action( 'edd_cc_form', 'edd_get_cc_form' );
  * Outputs the default credit card address fields
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -227,7 +227,7 @@ function edd_default_cc_address_fields() {
 		</p>
 		<p>
 			<select name="billing_country" class="billing-country edd-select required">
-				<?php 
+				<?php
 				$countries = edd_get_country_list();
 				foreach( $countries as $country_code => $country ) {
 				  echo '<option value="' . $country_code . '">' . $country . '</option>';
@@ -272,21 +272,21 @@ add_action('edd_after_cc_fields', 'edd_default_cc_address_fields');
  * Get Register Fields
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
 function edd_get_register_fields() {
 	global $edd_options;
 	global $user_ID;
-	
+
 	if ( is_user_logged_in() )
 	$user_data = get_userdata( $user_ID );
 
 	ob_start(); ?>
 	<fieldset id="edd_register_fields">
 		<p><?php _e('Already have an account?', 'edd'); ?> <a href="<?php echo add_query_arg('login', 1); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e('Login', 'edd'); ?></a></p>
-		<fieldset id="edd_register_account_fields">		
+		<fieldset id="edd_register_account_fields">
 			<legend><?php _e('Create an account', 'edd'); if( !edd_no_guest_checkout() ) { echo ' ' . __('(optional)', 'edd'); } ?></legend>
 			<?php do_action('edd_register_account_fields_before'); ?>
 			<p>
@@ -332,7 +332,7 @@ add_action( 'edd_purchase_form_register_fields', 'edd_get_register_fields' );
  * Get Login Fields
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
@@ -350,14 +350,14 @@ function edd_get_login_fields() {
 				<label class="edd-label" for="edd-password"><?php _e('Password', 'edd'); ?></label>
 				<input type="hidden" name="edd-purchase-var" value="needs-to-login"/>
 			</p>
-			<?php do_action('edd_checkout_login_fields_after'); ?>	
+			<?php do_action('edd_checkout_login_fields_after'); ?>
 		</fieldset><!--end #edd_login_fields-->
 		<p>
-			<?php _e('Need to create an account?', 'edd'); ?> 
+			<?php _e('Need to create an account?', 'edd'); ?>
 			<a href="<?php echo remove_query_arg('login'); ?>" class="edd_checkout_register_login" data-action="checkout_register">
 				<?php _e('Register', 'edd'); if(!edd_no_guest_checkout()) { echo ' ' . __('or checkout as a guest.', 'edd'); } ?>
 			</a>
-		</p>	
+		</p>
 	<?php
 
 	$fields = ob_get_clean();
@@ -383,7 +383,7 @@ function edd_payment_mode_select() {
 		<fieldset id="edd_payment_mode_select">
 			<?php do_action('edd_payment_mode_before_gateways'); ?>
 			<p id="edd-payment-mode-wrap">
-				<?php								
+				<?php
 					echo '<select class="edd-select" name="payment-mode" id="edd-gateway">';
 						echo '<option value="0">' . __( 'Select payment method', 'edd' ) . '</option>';
 						foreach($gateways as $gateway_id => $gateway) :
@@ -426,8 +426,8 @@ function edd_discount_field() {
 					<?php } ?>
 				</label>
 			</p>
-		</fieldset>	
-	<?php 
+		</fieldset>
+	<?php
 	}
 }
 add_action( 'edd_purchase_form_before_cc_form', 'edd_discount_field' );
@@ -443,12 +443,12 @@ add_action( 'edd_purchase_form_before_cc_form', 'edd_discount_field' );
 
 function edd_terms_agreement() {
 	global $edd_options;
-	if( isset( $edd_options['show_agree_to_terms'] ) ) { 
+	if( isset( $edd_options['show_agree_to_terms'] ) ) {
 ?>
 		<fieldset id="edd_terms_agreement">
 			<p>
 				<div id="edd_terms" style="display:none;">
-					<?php 
+					<?php
 						do_action( 'edd_before_terms' );
 						echo wpautop( $edd_options['agree_text'] );
 						do_action( 'edd_after_terms' );
@@ -462,7 +462,7 @@ function edd_terms_agreement() {
 				<label for="edd_agree_to_terms"><?php echo isset( $edd_options['agree_label'] ) ? $edd_options['agree_label'] : __('Agree to Terms?', 'edd'); ?></label>
 			</p>
 		</fieldset>
-<?php 
+<?php
 	}
 }
 add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement' );
@@ -470,7 +470,7 @@ add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement' );
 
 function edd_show_local_tax_opt_in() {
 	global $edd_options;
-	if( isset( $edd_options['tax_condition'] ) && $edd_options['tax_condition'] == 'local' ) { 
+	if( isset( $edd_options['tax_condition'] ) && $edd_options['tax_condition'] == 'local' ) {
 ?>
 		<fieldset id="edd_tax_opt_in_fields">
 			<p>
@@ -478,7 +478,7 @@ function edd_show_local_tax_opt_in() {
 				<label for="edd_tax_opt_in"><?php echo isset( $edd_options['tax_location'] ) ? $edd_options['tax_location'] : __('Opt Into Taxes?', 'edd'); ?></label>
 			</p>
 		</fieldset>
-<?php 
+<?php
 	}
 }
 add_action( 'edd_purchase_form_before_submit', 'edd_show_local_tax_opt_in' );
@@ -496,11 +496,11 @@ function edd_checkout_submit() {
 	<fieldset id="edd_purchase_submit">
 		<p>
 			<?php do_action( 'edd_purchase_form_before_submit' ); ?>
-			
+
 			<?php edd_checkout_hidden_fields(); ?>
-			
+
 			<?php echo edd_checkout_button_purchase(); ?>
-			
+
 			<?php do_action( 'edd_purchase_form_after_submit' ); ?>
 		</p>
 
@@ -509,7 +509,7 @@ function edd_checkout_submit() {
 		<?php } ?>
 
 	</fieldset>
-<?php	
+<?php
 }
 add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_submit', 100 );
 
@@ -527,7 +527,7 @@ function edd_checkout_button_next() {
 	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
 	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
 
-	ob_start(); 
+	ob_start();
 ?>
 	<input type="submit" id="edd_next_button" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" value="<?php _e('Next', 'edd'); ?>"/>
 <?php
@@ -544,12 +544,12 @@ function edd_checkout_button_next() {
  */
 function edd_checkout_button_purchase() {
 	global $edd_options;
-	
+
 	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
 	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
 
 	$complete_purchase = isset( $edd_options['checkout_label'] ) && strlen( trim( $edd_options['checkout_label'] ) ) > 0 ? $edd_options['checkout_label'] : __('Purchase', 'edd');
-	ob_start(); 
+	ob_start();
 ?>
 	<input type="submit" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-purchase-button" name="edd-purchase" value="<?php echo $complete_purchase; ?>"/>
 <?php
@@ -561,7 +561,7 @@ function edd_checkout_button_purchase() {
  * Show Payment Icons
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -588,7 +588,7 @@ add_action( 'edd_before_purchase_form', 'edd_show_payment_icons' );
  * Agree To Terms JS
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
