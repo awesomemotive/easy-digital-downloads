@@ -407,9 +407,10 @@ function edd_get_payment_status($payment = OBJECT, $return_label = false) {
 function edd_get_payment_statuses() {
 	
 	$payment_statuses = array(
-		'pending' => __('Pending', 'edd'),
-		'publish' => __('Complete', 'edd'),
-		'refunded' => __('Refunded', 'edd')
+		'pending'  => __( 'Pending', 'edd' ),
+		'publish'  => __( 'Complete', 'edd' ),
+		'refunded' => __( 'Refunded', 'edd' ),
+		'failed'   => __( 'Failed', 'edd' )
 	);
 	
 	return apply_filters( 'edd_payment_statuses', $payment_statuses ); 
