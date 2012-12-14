@@ -224,15 +224,16 @@ jQuery(document).ready(function ($) {
         if( payment_mode == '0' )
             return false;
 
-        var arg_separator = edd_scripts.permalinks == '1' ? '?' : '&';
-
-        var form = $(this).closest( 'form' ),
-            action = form.attr("action") + arg_separator + 'payment-mode=' + payment_mode;
-
         // show the ajax loader
         $('.edd-cart-ajax').show();
         $('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
-        $('#edd_purchase_form_wrap').load(action + ' #edd_purchase_form');
+
+        $.post(edd_scripts.ajaxurl + '?payment-mode=' + payment_mode, { action: 'edd_load_gateway', edd_payment_mode: payment_mode },
+            function(response){
+                jQuery('#edd_purchase_form_wrap').html(response);
+            }
+        );
+
         return false;
     });
 
