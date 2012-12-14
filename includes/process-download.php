@@ -6,7 +6,7 @@
  * @subpackage  Process Download
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -18,7 +18,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Handles the file download process.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -31,7 +31,7 @@ function edd_process_download() {
 		$expire 	= urldecode( base64_decode( $_GET['expire'] ) );
 
 		$payment = edd_verify_download_link( $download, $key, $email, $expire, $file_key );
-		
+
 		// Defaulting this to true for now because the method below doesn't work well
 		$has_access = apply_filters( 'edd_file_download_has_access', true );
 
@@ -42,9 +42,9 @@ function edd_process_download() {
 
 			// payment has been verified, setup the download
 			$download_files = edd_get_download_files( $download );
-			
+
 			$requested_file = apply_filters( 'edd_requested_file', $download_files[ $file_key ]['file'] );
-		
+
 			$user_info = array();
 			$user_info['email'] = $email;
 			if( is_user_logged_in() ) {
@@ -55,7 +55,7 @@ function edd_process_download() {
 			}
 
 			edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip(), $payment );
-			
+
 			$file_extension = edd_get_file_extension( $requested_file );
 
 			switch( $file_extension ):
@@ -232,8 +232,8 @@ function edd_process_download() {
 				case 'zip'		: $ctype	= "application/zip"; break;
 				default			: $ctype	= "application/force-download";
 			endswitch;
-			
-			if( !edd_is_func_disabled( 'set_time_limit' ) && !ini_get('safe_mode') ) { 
+
+			if( !edd_is_func_disabled( 'set_time_limit' ) && !ini_get('safe_mode') ) {
 				set_time_limit(0);
 			}
 			if( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() ) {
@@ -251,15 +251,15 @@ function edd_process_download() {
 			header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 			header("Robots: none");
 			header("Content-Type: " . $ctype . "");
-			header("Content-Description: File Transfer");	
+			header("Content-Description: File Transfer");
 			header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\";");
 			header("Content-Transfer-Encoding: binary");
 
 
 			if( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false ) {
-			
+
 				// this is an absolute path
-			
+
 				$requested_file = realpath( $requested_file );
 				if( file_exists( $requested_file ) ) {
 					if( $size = @filesize( $requested_file ) ) header("Content-Length: ".$size);
@@ -273,7 +273,7 @@ function edd_process_download() {
 				// This is a local file given by URL
 				$upload_dir = wp_upload_dir();
 
-				$requested_file = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );	
+				$requested_file = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );
 				$requested_file = realpath( $requested_file );
 
 				if( file_exists( $requested_file ) ) {
@@ -289,7 +289,7 @@ function edd_process_download() {
 			}
 
 			exit;
-			
+
 		} else {
 			wp_die(__('You do not have permission to download this file', 'edd'), __('Purchase Verification Failed', 'edd'));
 		}

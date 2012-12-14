@@ -6,7 +6,7 @@
  * @subpackage  Admin Payment History
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 
@@ -22,7 +22,7 @@
 
 function edd_payment_history_page() {
 	global $edd_options;
-	
+
 	if( isset( $_GET['edd-action'] ) && $_GET['edd-action'] == 'edit-payment' ) {
 		include_once( EDD_PLUGIN_DIR . '/includes/admin/payments/edit-payment.php' );
 	} else {
@@ -35,9 +35,9 @@ function edd_payment_history_page() {
 		<h2><?php _e( 'Payment History', 'edd' ); ?></h2>
 		<?php do_action( 'edd_payments_page_top' ); ?>
 		<form id="edd-payments-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">
-	
+
 	        <?php $payments_table->search_box( __( 'Search', 'edd' ), 'edd-payments' ); ?>
-	
+
 			<input type="hidden" name="post_type" value="download" />
 	        <input type="hidden" name="page" value="edd-payment-history" />
 

@@ -6,7 +6,7 @@
  * @subpackage  Cart Actions
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -51,7 +51,7 @@ function edd_process_cart_endpoints() {
 
 		$download_id = absint( $wp_query->query_vars['edd-add'] );
 		$cart        = edd_add_to_cart( $download_id, array() );
-	
+
 		wp_redirect( edd_get_checkout_uri() ); exit;
 	}
 
@@ -60,7 +60,7 @@ function edd_process_cart_endpoints() {
 
 		$cart_key = absint( $wp_query->query_vars['edd-remove'] );
 		$cart     = edd_remove_from_cart( $cart_key );
-	
+
 		wp_redirect( edd_get_checkout_uri() ); exit;
 	}
 
@@ -74,13 +74,13 @@ add_action( 'template_redirect', 'edd_process_cart_endpoints', 100 );
  * Process the add to cart request.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
 function edd_process_add_to_cart( $data ) {
 	$download_id = $data['download_id'];
-	$options = isset( $data['edd_options'] ) ? $data['edd_options'] : array(); 
+	$options = isset( $data['edd_options'] ) ? $data['edd_options'] : array();
 	$cart = edd_add_to_cart( $download_id, $options );
 }
 add_action( 'edd_add_to_cart', 'edd_process_add_to_cart' );
@@ -92,7 +92,7 @@ add_action( 'edd_add_to_cart', 'edd_process_add_to_cart' );
  * Process the remove form cart request.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -109,7 +109,7 @@ add_action( 'edd_remove', 'edd_process_remove_from_cart' );
  * Process the collection purchase request.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 

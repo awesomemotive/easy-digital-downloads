@@ -142,7 +142,7 @@ class GoogleChartShapeMarker extends GoogleChartMarker
 		return $this;
 	}
 
-	/** 
+	/**
 	 * Set a border to the shape.
 	 *
 	 * To create a border to a shape with Google Chart API, you need to create
