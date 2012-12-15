@@ -72,7 +72,7 @@ function edd_get_users_purchases( $user_id = 0, $number = -1 ) {
  * @access      public
  * @since       1.0
  * @param       int $user_id - the ID of the user to check
- * @param       int $download_Id - the ID of the download to check for
+ * @param       array $downloads - Array of IDs to check if purchased. If an int is passed, it will be converted to an array
  * @param       int $variable_price_id - the variable price ID to check for
  * @return      boolean - true if has purchased, false otherwise
 */
