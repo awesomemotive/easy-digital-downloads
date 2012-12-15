@@ -246,9 +246,7 @@ function edd_process_download() {
 			@ob_end_clean();
 			if( ob_get_level() ) @ob_end_clean(); // Zip corruption fix
 
-			header("Pragma: no-cache");
-			header("Expires: 0");
-			header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+			nocache_headers();
 			header("Robots: none");
 			header("Content-Type: " . $ctype . "");
 			header("Content-Description: File Transfer");
