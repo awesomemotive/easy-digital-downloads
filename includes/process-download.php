@@ -23,12 +23,22 @@ if ( !defined( 'ABSPATH' ) ) exit;
 */
 
 function edd_process_download() {
-	if( isset( $_GET['download'] ) && isset( $_GET['email'] ) && isset( $_GET['file'] ) ) {
-		$download 	= urldecode( $_GET['download'] );
-		$key 		= urldecode( $_GET['download_key'] );
-		$email 		= rawurldecode( $_GET['email'] );
-		$file_key 	= (int) urldecode( $_GET['file'] );
-		$expire 	= base64_decode( rawurldecode( $_GET['expire'] ) );
+	// Allow args to be provided via a filter.
+	$args = (array) apply_filters( 'edd_process_download_args', array() );
+		
+	if( ! empty( $args ) || ( isset( $_GET['download'] ) && isset( $_GET['email'] ) && isset( $_GET['file'] ) ) ) {
+		$defaults = array(
+			'download' => ( isset( $_GET['download'] ) )     ? (int) $_GET['download']                          : '',
+			'email'    => ( isset( $_GET['email'] ) )        ? rawurldecode( $_GET['email'] )                   : '',
+			'expire'   => ( isset( $_GET['expire'] ) )       ? base64_decode( rawurldecode( $_GET['expire'] ) ) : '',
+			'file_key' => ( isset( $_GET['file'] ) )         ? (int) $_GET['file']                              : '',
+			'key'      => ( isset( $_GET['download_key'] ) ) ? $_GET['download_key']                            : ''
+		);
+		
+		// Throw away invalid args and fill any missing defaults.
+		$args = array_intersect_key( $args, $defaults );
+		$args = wp_parse_args( $args, $defaults );
+		extract( $args, EXTR_SKIP );
 
 		$payment = edd_verify_download_link( $download, $key, $email, $expire, $file_key );
 
