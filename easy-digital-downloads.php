@@ -137,10 +137,11 @@ final class Easy_Digital_Downloads {
 
 		include_once( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/template-functions.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/checkout-template.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/cart-template.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/cart-functions.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/cart-actions.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/checkout/template.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/checkout/functions.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/cart/template.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/cart/functions.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/cart/actions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/class-edd-logging.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/ajax-functions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/formatting.php' );

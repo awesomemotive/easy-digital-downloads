@@ -109,24 +109,6 @@ function edd_show_purchase_form() {
 add_action( 'edd_purchase_form', 'edd_show_purchase_form' );
 
 
-/**
- * Determines if a user can checkout or not
- *
- * @access      private
- * @since       1.3.3
- * @return      bool
-*/
-
-function edd_can_checkout() {
-
-	global $edd_options;
-
-	$can_checkout = true; // always true for now
-
-	return (bool) apply_filters( 'edd_can_checkout', $can_checkout );
-
-}
-
 
 /**
  * Shows the User Info Fields
