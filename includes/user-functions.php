@@ -77,7 +77,7 @@ function edd_get_users_purchases( $user_id = 0, $number = -1 ) {
  * @return      boolean - true if has purchased, false otherwise
 */
 
-function edd_has_user_purchased( $user_id, $download_id, $variable_price_id = null ) {
+function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null ) {
 
 	if( !is_user_logged_in() )
 		return false; // at some point this should support email checking
@@ -85,6 +85,10 @@ function edd_has_user_purchased( $user_id, $download_id, $variable_price_id = nu
 	$users_purchases = edd_get_users_purchases( $user_id );
 
 	$return = false;
+
+	if( ! is_array( $downloads ) ) {
+		$downloads = array( $downloads );
+	}
 
 	if( $users_purchases ) {
 		foreach( $users_purchases as $purchase ) {
@@ -96,7 +100,7 @@ function edd_has_user_purchased( $user_id, $download_id, $variable_price_id = nu
 
 				foreach( $purchased_files as $download ) {
 
-					if( $download['id'] == $download_id ) {
+					if( in_array( $download['id'], $downloads ) ) {
 
 						if( !is_null( $variable_price_id ) && $variable_price_id !== false ) {
 
