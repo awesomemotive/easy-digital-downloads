@@ -781,7 +781,7 @@ function edd_get_purchase_id_by_key( $key ) {
 
 /**
  * Retrieve all notes attached to a purchase
- * 
+ *
  * @access		public
  * @since 		1.4
  *
@@ -801,7 +801,7 @@ function edd_get_payment_notes( $payment_id = 0 ) {
 
 /**
  * Add a note to a payment
- * 
+ *
  * @access		public
  * @since 		1.4
  *
