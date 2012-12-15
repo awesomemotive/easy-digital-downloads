@@ -24,113 +24,105 @@ if ( !defined( 'ABSPATH' ) ) exit;
 
 function edd_process_download() {
 
-	// Allow args to be provided via a filter.
-	$args = (array) apply_filters( 'edd_process_download_args', array() );
-
-	if( empty( $args ) && ( ! isset( $_GET['download'] ) && ! isset( $_GET['email'] ) && ! isset( $_GET['file'] ) ) )
-		return;
-
-	$defaults = array(
+	$args = apply_filters( 'edd_process_download_args', array(
 		'download' => ( isset( $_GET['download'] ) )     ? (int) $_GET['download']                          : '',
 		'email'    => ( isset( $_GET['email'] ) )        ? rawurldecode( $_GET['email'] )                   : '',
 		'expire'   => ( isset( $_GET['expire'] ) )       ? base64_decode( rawurldecode( $_GET['expire'] ) ) : '',
 		'file_key' => ( isset( $_GET['file'] ) )         ? (int) $_GET['file']                              : '',
 		'key'      => ( isset( $_GET['download_key'] ) ) ? $_GET['download_key']                            : ''
-	);
+	) );
 
-	// Throw away invalid args and fill any missing defaults.
-	$args = array_intersect_key( $args, $defaults );
-	$args = wp_parse_args( $args, $defaults );
-	extract( $args, EXTR_SKIP );
+	if( empty( $args ) || ( !$args['download'] && !$args['email'] && !$args['file_key'] ) )
+		return false;
 
-	$payment = edd_verify_download_link( $download, $key, $email, $expire, $file_key );
+    extract( $args );
+
+    $payment = edd_verify_download_link( $download, $key, $email, $expire, $file_key );
 
 	// Defaulting this to true for now because the method below doesn't work well
 	$has_access = apply_filters( 'edd_file_download_has_access', true );
 
 	//$has_access = ( edd_logged_in_only() && is_user_logged_in() ) || !edd_logged_in_only() ? true : false;
-	if( $payment && $has_access ) {
-
-		do_action( 'edd_process_verified_download', $download, $email );
-
-		// payment has been verified, setup the download
-		$download_files = edd_get_download_files( $download );
-
-		$requested_file = apply_filters( 'edd_requested_file', $download_files[ $file_key ]['file'] );
-
-		$user_info = array();
-		$user_info['email'] = $email;
-		if( is_user_logged_in() ) {
-			global $user_ID;
-			$user_data 			= get_userdata( $user_ID );
-			$user_info['id'] 	= $user_ID;
-			$user_info['name'] 	= $user_data->display_name;
-		}
-
-		edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip(), $payment );
-
-		$file_extension = edd_get_file_extension( $requested_file );
-		$ctype          = edd_get_file_ctype( $file_extension );
-
-		if( !edd_is_func_disabled( 'set_time_limit' ) && !ini_get('safe_mode') ) {
-			set_time_limit(0);
-		}
-		if( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() ) {
-			set_magic_quotes_runtime(0);
-		}
-
-		@session_write_close();
-		if( function_exists( 'apache_setenv' ) ) @apache_setenv('no-gzip', 1);
-		@ini_set( 'zlib.output_compression', 'Off' );
-		@ob_end_clean();
-		if( ob_get_level() ) @ob_end_clean(); // Zip corruption fix
-
-		nocache_headers();
-		header("Robots: none");
-		header("Content-Type: " . $ctype . "");
-		header("Content-Description: File Transfer");
-		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\";");
-		header("Content-Transfer-Encoding: binary");
-
-
-		if( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false ) {
-
-			// this is an absolute path
-
-			$requested_file = realpath( $requested_file );
-			if( file_exists( $requested_file ) ) {
-				if( $size = @filesize( $requested_file ) ) header("Content-Length: ".$size);
-				@edd_readfile_chunked( $requested_file );
-			} else {
-				wp_die( __('Sorry but this file does not exist.', 'edd'), __('Error', 'edd') );
-			}
-
-		} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false) {
-
-			// This is a local file given by URL
-			$upload_dir = wp_upload_dir();
-
-			$requested_file = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );
-			$requested_file = realpath( $requested_file );
-
-			if( file_exists( $requested_file ) ) {
-				if( $size = @filesize( $requested_file ) ) header("Content-Length: ".$size);
-				@edd_readfile_chunked( $requested_file );
-			} else {
-				wp_die( __('Sorry but this file does not exist.', 'edd'), __('Error', 'edd') );
-			}
-
-		} else {
-			// This is a remote file
-			header("Location: " . $requested_file);
-		}
-
-		exit;
-
-	} else {
+	if( !$payment && !$has_access ) {
 		wp_die(__('You do not have permission to download this file', 'edd'), __('Purchase Verification Failed', 'edd'));
 	}
+
+	do_action( 'edd_process_verified_download', $download, $email );
+
+	// payment has been verified, setup the download
+	$download_files = edd_get_download_files( $download );
+
+	$requested_file = apply_filters( 'edd_requested_file', $download_files[ $file_key ]['file'] );
+
+	$user_info = array();
+	$user_info['email'] = $email;
+	if( is_user_logged_in() ) {
+		global $user_ID;
+		$user_data 			= get_userdata( $user_ID );
+		$user_info['id'] 	= $user_ID;
+		$user_info['name'] 	= $user_data->display_name;
+	}
+
+	edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip(), $payment );
+
+	$file_extension = edd_get_file_extension( $requested_file );
+	$ctype          = edd_get_file_ctype( $file_extension );
+
+	if( !edd_is_func_disabled( 'set_time_limit' ) && !ini_get('safe_mode') ) {
+		set_time_limit(0);
+	}
+	if( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() ) {
+		set_magic_quotes_runtime(0);
+	}
+
+	@session_write_close();
+	if( function_exists( 'apache_setenv' ) ) @apache_setenv('no-gzip', 1);
+	@ini_set( 'zlib.output_compression', 'Off' );
+	@ob_end_clean();
+	if( ob_get_level() ) @ob_end_clean(); // Zip corruption fix
+
+	nocache_headers();
+	header("Robots: none");
+	header("Content-Type: " . $ctype . "");
+	header("Content-Description: File Transfer");
+	header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\";");
+	header("Content-Transfer-Encoding: binary");
+
+
+	if( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false ) {
+
+		// this is an absolute path
+
+		$requested_file = realpath( $requested_file );
+		if( file_exists( $requested_file ) ) {
+			if( $size = @filesize( $requested_file ) ) header("Content-Length: ".$size);
+			@edd_readfile_chunked( $requested_file );
+		} else {
+			wp_die( __('Sorry but this file does not exist.', 'edd'), __('Error', 'edd') );
+		}
+
+	} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false) {
+
+		// This is a local file given by URL
+		$upload_dir = wp_upload_dir();
+
+		$requested_file = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );
+		$requested_file = realpath( $requested_file );
+
+		if( file_exists( $requested_file ) ) {
+			if( $size = @filesize( $requested_file ) ) header("Content-Length: ".$size);
+			@edd_readfile_chunked( $requested_file );
+		} else {
+			wp_die( __('Sorry but this file does not exist.', 'edd'), __('Error', 'edd') );
+		}
+
+	} else {
+		// This is a remote file
+		header("Location: " . $requested_file);
+	}
+
 	exit;
+
 }
 add_action( 'init', 'edd_process_download', 100 );
 
