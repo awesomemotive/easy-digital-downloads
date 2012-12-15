@@ -38,51 +38,9 @@ function edd_checkout_form() {
 				if( edd_show_gateways() ) {
 					do_action( 'edd_payment_payment_mode_select'  );
 				} else {
-
-					do_action( 'edd_before_purchase_form' ); ?>
-
-					<form id="edd_purchase_form" action="<?php echo esc_url( edd_get_current_page_url() ); ?>" method="POST">
-
-						<?php
-
-						do_action( 'edd_purchase_form_top' );
-
-						if( edd_can_checkout() ) { ?>
-
-							<?php if( isset( $edd_options['show_register_form'] ) && !is_user_logged_in() && !isset( $_GET['login'] ) ) { ?>
-								<div id="edd_checkout_login_register"><?php do_action( 'edd_purchase_form_register_fields' ); ?></div>
-							<?php } elseif( isset( $edd_options['show_register_form'] ) && !is_user_logged_in() && isset( $_GET['login'] ) ) { ?>
-								<div id="edd_checkout_login_register"><?php do_action( 'edd_purchase_form_login_fields' ); ?></div>
-							<?php } ?>
-
-							<?php if( ( !isset( $_GET['login'] ) && is_user_logged_in() ) || !isset( $edd_options['show_register_form'] ) ) {
-
-								do_action( 'edd_purchase_form_after_user_info' );
-							}
-
-							do_action( 'edd_purchase_form_before_cc_form' );
-
-							$payment_mode = edd_get_chosen_gateway();
-
-							// load the credit card form and allow gateways to load their own if they wish
-							if( has_action( 'edd_' . $payment_mode . '_cc_form' ) ) {
-								do_action( 'edd_' . $payment_mode . '_cc_form' );
-							} else {
-								do_action( 'edd_cc_form' );
-							}
-
-							do_action( 'edd_purchase_form_after_cc_form' );
-
-						} else {
-							// can't checkout
-							do_action( 'edd_purchase_form_no_access' );
-						}
-
-						do_action( 'edd_purchase_form_bottom' ); ?>
-
-					</form>
-					<?php do_action( 'edd_after_purchase_form' );
+					do_action( 'edd_purchase_form' );
 				}
+
 				do_action( 'edd_checkout_form_bottom' ); ?>
 			</div><!--end #edd_checkout_form_wrap-->
 		<?php
@@ -93,24 +51,62 @@ function edd_checkout_form() {
 }
 
 
-
 /**
- * Determines if a user can checkout or not
+ * Get the purchase form
  *
  * @access      private
- * @since       1.3.3
- * @return      bool
+ * @since       1.4
+ * @return      string
 */
 
-function edd_can_checkout() {
+function edd_show_purchase_form() {
+	$payment_mode = edd_get_chosen_gateway();
+	$form_action = esc_url( edd_get_checkout_uri('payment-mode=' . $payment_mode) );
 
-	global $edd_options;
+	do_action( 'edd_before_purchase_form' ); ?>
 
-	$can_checkout = true; // always true for now
+	<form id="edd_purchase_form" action="<?php echo $form_action; ?>" method="POST">
 
-	return (bool) apply_filters( 'edd_can_checkout', $can_checkout );
+		<?php
 
+		do_action( 'edd_purchase_form_top' );
+
+		if( edd_can_checkout() ) { ?>
+
+			<?php if( isset( $edd_options['show_register_form'] ) && !is_user_logged_in() && !isset( $_GET['login'] ) ) { ?>
+				<div id="edd_checkout_login_register"><?php do_action( 'edd_purchase_form_register_fields' ); ?></div>
+			<?php } elseif( isset( $edd_options['show_register_form'] ) && !is_user_logged_in() && isset( $_GET['login'] ) ) { ?>
+				<div id="edd_checkout_login_register"><?php do_action( 'edd_purchase_form_login_fields' ); ?></div>
+			<?php } ?>
+
+			<?php if( ( !isset( $_GET['login'] ) && is_user_logged_in() ) || !isset( $edd_options['show_register_form'] ) ) {
+
+				do_action( 'edd_purchase_form_after_user_info' );
+			}
+
+			do_action( 'edd_purchase_form_before_cc_form' );
+
+			// load the credit card form and allow gateways to load their own if they wish
+			if( has_action( 'edd_' . $payment_mode . '_cc_form' ) ) {
+				do_action( 'edd_' . $payment_mode . '_cc_form' );
+			} else {
+				do_action( 'edd_cc_form' );
+			}
+
+			do_action( 'edd_purchase_form_after_cc_form' );
+
+		} else {
+			// can't checkout
+			do_action( 'edd_purchase_form_no_access' );
+		}
+
+		do_action( 'edd_purchase_form_bottom' ); ?>
+
+	</form> <?php
+
+	do_action( 'edd_after_purchase_form' );
 }
+add_action( 'edd_purchase_form', 'edd_show_purchase_form' );
 
 
 
@@ -468,6 +464,14 @@ function edd_terms_agreement() {
 add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement' );
 
 
+/**
+ * Shows the tax opt-in checkbox
+ *
+ * @access      public
+ * @since       1.3.3
+ * @return      void
+ */
+
 function edd_show_local_tax_opt_in() {
 	global $edd_options;
 	if( isset( $edd_options['tax_condition'] ) && $edd_options['tax_condition'] == 'local' ) {
@@ -491,6 +495,7 @@ add_action( 'edd_purchase_form_before_submit', 'edd_show_local_tax_opt_in' );
  * @since       1.3.3
  * @return      void
  */
+
 function edd_checkout_submit() {
 ?>
 	<fieldset id="edd_purchase_submit">
@@ -521,6 +526,7 @@ add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_submit', 100 );
  * @since       1.2
  * @return      string
  */
+
 function edd_checkout_button_next() {
 	global $edd_options;
 
@@ -542,6 +548,7 @@ function edd_checkout_button_next() {
  * @since       1.2
  * @return      string
  */
+
 function edd_checkout_button_purchase() {
 	global $edd_options;
 
@@ -616,7 +623,8 @@ add_action( 'edd_checkout_form_top', 'edd_agree_to_terms_js' );
  * Hidden checkout fields
  *
  * @access      private
- * @since       1.3.2 * @return      void
+ * @since       1.3.2
+ * @return      void
 */
 
 function edd_checkout_hidden_fields() {

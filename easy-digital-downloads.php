@@ -137,10 +137,11 @@ final class Easy_Digital_Downloads {
 
 		include_once( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/template-functions.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/checkout-template.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/cart-template.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/cart-functions.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/cart-actions.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/checkout/template.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/checkout/functions.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/cart/template.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/cart/functions.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/cart/actions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/class-edd-logging.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/ajax-functions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/formatting.php' );
@@ -150,16 +151,16 @@ final class Easy_Digital_Downloads {
 		include_once( EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/gateways/manual.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/discount-functions.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/payment-functions.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/payment-actions.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/payments/functions.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/payments/actions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/misc-functions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/download-functions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/scripts.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/post-types.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/plugin-compatibility.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/email-functions.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/email-template.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/email-actions.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/emails/functions.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/emails/template.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/emails/actions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/error-tracking.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/user-functions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/query-filters.php' );
