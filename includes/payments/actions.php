@@ -31,6 +31,10 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	if( $old_status == 'publish' || $old_status == 'complete' )
 		return; // make sure that payments are only completed once
 
+	// make sure the payment completion is only processed when new status is complete
+	if( $new_status != 'publish' && $new_status != 'complete' );
+		return;
+
 	if( !edd_is_test_mode() ) {
 
 		$payment_data 	= edd_get_payment_meta( $payment_id );
@@ -92,7 +96,7 @@ function edd_trigger_purchase_receipt( $payment_id, $new_status, $old_status ) {
 	// check if the payment was already set to complete
 	if( $old_status == 'publish' || $old_status == 'complete')
 		return;
-	
+
 	// make sure the purchase receipt is only sent if the new status is complete
 	if( $new_status != 'publish' && $new_status != 'complete' );
 		return;

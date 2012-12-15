@@ -227,3 +227,22 @@ function edd_no_gateway_error() {
 		edd_unset_error( 'no_gateways' );
 }
 add_action( 'init', 'edd_no_gateway_error' );
+
+/**
+ * Loads a payment gateway via AJAX
+ *
+ * @access      public
+ * @since       1.3.4
+ * @return      void
+*/
+
+function edd_load_ajax_gateway() {
+
+	if ( isset( $_POST['edd_payment_mode'] ) ) {
+		do_action( 'edd_purchase_form' );
+		exit();
+	}
+
+}
+
+add_action( 'wp_ajax_edd_load_gateway', 'edd_load_ajax_gateway' );
