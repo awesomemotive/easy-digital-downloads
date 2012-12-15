@@ -28,7 +28,7 @@ function edd_process_download() {
 		$key 		= urldecode( $_GET['download_key'] );
 		$email 		= rawurldecode( $_GET['email'] );
 		$file_key 	= (int) urldecode( $_GET['file'] );
-		$expire 	= urldecode( base64_decode( $_GET['expire'] ) );
+		$expire 	= base64_decode( rawurldecode( $_GET['expire'] ) );
 
 		$payment = edd_verify_download_link( $download, $key, $email, $expire, $file_key );
 
