@@ -158,9 +158,9 @@ final class Easy_Digital_Downloads {
 		include_once( EDD_PLUGIN_DIR . 'includes/scripts.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/post-types.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/plugin-compatibility.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/email-functions.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/email-template.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/email-actions.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/emails/functions.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/emails/template.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/emails/actions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/error-tracking.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/user-functions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/query-filters.php' );
