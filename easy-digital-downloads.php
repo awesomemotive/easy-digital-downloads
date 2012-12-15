@@ -151,8 +151,8 @@ final class Easy_Digital_Downloads {
 		include_once( EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/gateways/manual.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/discount-functions.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/payment-functions.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/payment-actions.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/payments/functions.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/payments/actions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/misc-functions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/download-functions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/scripts.php' );
