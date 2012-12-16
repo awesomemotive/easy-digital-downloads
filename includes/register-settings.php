@@ -211,7 +211,8 @@ function edd_register_settings() {
 					'id' => 'purchase_receipt',
 					'name' => __('Purchase Receipt', 'edd'),
 					'desc' => __('Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:', 'edd') . '<br/>' .
-						'{download_list} - ' . __('A list of download URLs for each download purchased', 'edd') . '<br/>' .
+						'{download_list} - ' . __('A list of download links for each download purchased', 'edd') . '<br/>' .
+						'{url_list} - ' . __('A list of download URLs for each download purchased', 'edd') . '<br/>' .
 						'{name} - ' . __('The buyer\'s first name', 'edd') . '<br/>' .
 						'{fullname} - ' . __('The buyer\'s full name, first and last', 'edd') . '<br/>' .
 						'{date} - ' . __('The date of the purchase', 'edd') . '<br/>' .
