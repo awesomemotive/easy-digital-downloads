@@ -27,7 +27,7 @@ function edd_process_download() {
 	// Allow args to be provided via a filter.
 	$args = (array) apply_filters( 'edd_process_download_args', array() );
 
-	if( empty( $args ) && ( ! isset( $_GET['download'] ) && ! isset( $_GET['email'] ) && ! isset( $_GET['file'] ) ) )
+	if( empty( $args ) && ( ! isset( $_GET['download'] ) || ! isset( $_GET['email'] ) || ! isset( $_GET['file'] ) ) )
 		return;
 
 	$defaults = array(
