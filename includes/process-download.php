@@ -35,9 +35,9 @@ function edd_process_download() {
 	if( $args['download'] === '' || $args['email'] === '' || $args['file_key'] === '' )
 		return false;
 
-    extract( $args );
+	extract( $args );
 
-    $payment = edd_verify_download_link( $download, $key, $email, $expire, $file_key );
+	$payment = edd_verify_download_link( $download, $key, $email, $expire, $file_key );
 
 	// Defaulting this to true for now because the method below doesn't work well
 	$has_access = apply_filters( 'edd_file_download_has_access', true );
