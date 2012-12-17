@@ -53,16 +53,17 @@ function edd_discounts_contextual_help() {
 			'<p>' . __( 'You can create any number of discount codes easily from this page.', 'edd' ) . '</p>' .
 			'<p>' . __( 'Discount codes have several options:', 'edd' ) . '</p>' .
 			'<ul>'.
-				'<li>' . __( '<strong>Name</strong>: this is the name given to the discount. Used primarily for administrative purposes.', 'edd' ) . '</li>' .
-				'<li>' . __( '<strong>Code</strong>: this is the unique code that customers will enter during checkout to redeem the code.', 'edd' ) . '</li>' .
-				'<li>' . __( '<strong>Type</strong>: this is the type of discount this code awards.', 'edd' ) . '</li>' .
-				'<li>' . __( '<strong>Amount</strong>: this discount amount provided by this code. For percentage based discounts, enter a number such as 70 for 70%. Do not enter a percent sign.', 'edd' ) . '</li>' .
-				'<li>' . __( '<strong>Start Date</strong>: this is the date that this code becomes available. If a customer attempts to redeem the code prior to this date, they will be given an error. This is optional.', 'edd' ) . '</li>' .
-				'<li>' . __( '<strong>Expiration Date</strong>: this is the end date for the discount. After this date, the code will no longer be able to be used. This is optional.', 'edd' ) . '</li>' .
-				'<li>' . __( '<strong>Minimum Amount</strong>: this is the minimum purchase amount required to use this code. If a customer has less than this amount in their cart, they will be given an error. This is optional.', 'edd' ) . '</li>' .
-				'<li>' . __( '<strong>Max Uses</strong>: this is the maximum number of times this discount can be redemmed. Once this number is reached, no more customers will be allowed to use it.', 'edd' ) . '</li>' .
+				'<li>' . __( '<strong>Name</strong> - this is the name given to the discount. Used primarily for administrative purposes.', 'edd' ) . '</li>' .
+				'<li>' . __( '<strong>Code</strong> - this is the unique code that customers will enter during checkout to redeem the code.', 'edd' ) . '</li>' .
+				'<li>' . __( '<strong>Type</strong> - this is the type of discount this code awards.', 'edd' ) . '</li>' .
+				'<li>' . __( '<strong>Amount</strong> - this discount amount provided by this code. For percentage based discounts, enter a number such as 70 for 70%. Do not enter a percent sign.', 'edd' ) . '</li>' .
+				'<li>' . __( '<strong>Start Date</strong> - this is the date that this code becomes available. If a customer attempts to redeem the code prior to this date, they will be given an error. This is optional.', 'edd' ) . '</li>' .
+				'<li>' . __( '<strong>Expiration Date</strong> - this is the end date for the discount. After this date, the code will no longer be able to be used. This is optional.', 'edd' ) . '</li>' .
+				'<li>' . __( '<strong>Minimum Amount</strong> - this is the minimum purchase amount required to use this code. If a customer has less than this amount in their cart, they will be given an error. This is optional.', 'edd' ) . '</li>' .
+				'<li>' . __( '<strong>Max Uses</strong> - this is the maximum number of times this discount can be redemmed. Once this number is reached, no more customers will be allowed to use it.', 'edd' ) . '</li>' .
 			'</ul>'
 	) );
 
 	do_action( 'edd_discounts_contextual_help', $screen );
 }
+add_action( 'load-download_page_edd-discounts', 'edd_discounts_contextual_help' );
