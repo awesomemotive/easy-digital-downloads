@@ -181,10 +181,12 @@ final class Easy_Digital_Downloads {
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-actions.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php' );
+			include_once( EDD_PLUGIN_DIR . 'includes/admin/payments/contextual-help.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/settings/settings.php' );
+			include_once( EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php' );
 		} else {
