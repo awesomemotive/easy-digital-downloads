@@ -19,7 +19,7 @@ __note__ GitHub is for bug reports and contributions only - if you have a suppor
 * Make the changes to your forked repository
   * Ensure you stick to the [WordPress Coding Standards](http://codex.wordpress.org/WordPress_Coding_Standards)
 * When committing, reference your issue (if present) and include a note about the fix
-* Push the changes to your fork and submit a pull request to the 'dev' branch of the Jigoshop repository
+* Push the changes to your fork and submit a pull request to the 'master' branch of the EDD repository
 
 At this point you're waiting on us to merge your pull request. We'll review all pull requests, and make suggestions and changes if necessary. 
 
