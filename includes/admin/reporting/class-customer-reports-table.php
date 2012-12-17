@@ -61,7 +61,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$customers = get_transient( 'edd_customer_list' );
 		if( false === $customers ) {
 
-			$customers = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' ORDER BY meta_id DESC " ) );
+			$customers = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' ORDER BY meta_id DESC " );
 			set_transient( 'edd_customer_list', $customers, 3600 );
 
 		}
