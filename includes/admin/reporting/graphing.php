@@ -69,10 +69,6 @@ function edd_reports_graph() {
 	$time_format 	= apply_filters( 'edd_graph_timeformat', $time_format );
 	$tick_size 		= apply_filters( 'edd_graph_ticksize', $tick_size );
 	$totals 		= (float) 0.00; // total earnings for time period shown
-	echo '<h3>' . __( 'Earnings Over Time', 'edd' ) . '</h3>';
-
-	// show the date controls
-	edd_reports_graph_controls();
 
 	ob_start(); ?>
 	<script type="text/javascript">
@@ -203,10 +199,18 @@ function edd_reports_graph() {
 		    });
 	   });
     </script>
-    <div id="edd_monthly_stats" style="height: 300px;"></div>
-    <div id="edd_graph_totals">
-    	<strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $totals ) ); ?></strong>
-    </div>
+
+	<div class="metabox-holder" style="padding-top: 0;">
+		<div class="postbox">
+			<h3><span><?php _e('Earnings Over Time', 'edd'); ?></span></h3>
+			
+			<div class="inside">
+				<?php edd_reports_graph_controls(); ?>
+				<div id="edd_monthly_stats" style="height: 300px;"></div>
+				<p id="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $totals ) ); ?></strong></p>
+			</div>
+		</div>
+	</div>
 	<?php
 	echo ob_get_clean();
 }
