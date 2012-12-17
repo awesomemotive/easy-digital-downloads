@@ -34,7 +34,6 @@ EDD does not need to be in the wp/plugins dir. For example in travis-ci().travis
     <?php
     /* Path to the WordPress codebase you'd like to test. Add a backslash in the end. */
     define( 'ABSPATH', 'path-to-WP/' );
-
     define( 'DB_NAME', 'edd_test' );
     define( 'DB_USER', 'user' );
     define( 'DB_PASSWORD', 'password' );
