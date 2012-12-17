@@ -59,6 +59,26 @@ function edd_reports_page() {
 	<?php
 }
 
+/**
+ * Default Report Views
+ *
+ * @access      public
+ * @since       1.4
+ * @return      void
+ */
+function edd_reports_default_views() {
+	$views = array(
+		'earnings'	=> __( 'Earnings', 'edd' ),
+		'downloads' => edd_get_label_plural(),
+		'customers'	=> __( 'Customers', 'edd' ),
+		'taxes'		=> __( 'Taxes', 'edd' )
+	);
+
+	$views = apply_filters( 'edd_report_views', $views );
+
+	return $views;
+}
+
 
 /**
  * Renders the Reports page
@@ -67,13 +87,14 @@ function edd_reports_page() {
  * @since       1.3
  * @return      void
 */
-
 function edd_reports_tab_reports() {
+	$current_view = 'earnings';
+	$views        = edd_reports_default_views();
 
-	// current view
-	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'earnings';
+	if ( isset( $_GET[ 'view' ] ) && array_key_exists( $_GET[ 'view' ], $views ) )
+		$current_view = $_GET[ 'view' ];
+
 	do_action( 'edd_reports_view_' . $current_view );
-
 }
 add_action( 'edd_reports_tab_reports', 'edd_reports_tab_reports' );
 
@@ -87,22 +108,12 @@ add_action( 'edd_reports_tab_reports', 'edd_reports_tab_reports' );
 */
 
 function edd_report_views() {
-	// default reporting views
-	$views = array(
-		'earnings'	=> __( 'Earnings', 'edd' ),
-		'downloads' => edd_get_label_plural(),
-		'customers'	=> __( 'Customers', 'edd' ),
-		'taxes'		=> __( 'Taxes', 'edd' )
-	);
-
-	$views = apply_filters( 'edd_report_views', $views );
-
-	// current view
+	$views        = edd_reports_default_views();
 	$current_view = isset( $_GET[ 'view' ] ) ? $_GET[ 'view' ] : 'earnings';
 ?>
 	<form id="edd-reports-filter" method="get">
 		<select id="edd-reports-view" name="view">
-			<option value="0"><?php _e( 'Report Type', 'edd' ); ?></option>
+			<option value="-1"><?php _e( 'Report Type', 'edd' ); ?></option>
 			<?php foreach( $views as $view_id => $label ): ?>
 				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
 			<?php endforeach; ?>
@@ -142,7 +153,6 @@ add_action( 'edd_reports_view_downloads', 'edd_reports_downloads_table' );
  * @since       1.3
  * @return      void
 */
-
 function edd_reports_customers_table() {
 	include( dirname( __FILE__ ) . '/class-customer-reports-table.php' );
 
@@ -151,7 +161,6 @@ function edd_reports_customers_table() {
 	$downloads_table->display();
 }
 add_action( 'edd_reports_view_customers', 'edd_reports_customers_table' );
-
 
 /**
  * Renders the Reports earnings graphs
@@ -292,16 +301,16 @@ add_action( 'edd_reports_tab_export', 'edd_reports_tab_export' );
  * @access      public
  * @since       1.3
  * @return      void
-*/
-
+ */
 function edd_reports_tab_logs() {
-
 	require( EDD_PLUGIN_DIR . 'includes/admin/reporting/logs.php' );
 
-	// current view
-	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'sales';
+	$current_view = 'sales';
+	$log_views    = edd_reports_default_views();
+
+	if ( isset( $_GET[ 'view' ] ) && in_array( $_GET[ 'view' ], $log_views ) )
+		$current_view = $_GET[ 'view' ];
 
 	do_action( 'edd_logs_view_' . $current_view );
-
 }
 add_action( 'edd_reports_tab_logs', 'edd_reports_tab_logs' );

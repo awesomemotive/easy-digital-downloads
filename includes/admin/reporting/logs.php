@@ -35,6 +35,24 @@ function edd_logs_view_gateway_errors() {
 }
 add_action( 'edd_logs_view_gateway_errors', 'edd_logs_view_gateway_errors' );
 
+/**
+ * Default Log Views
+ *
+ * @access      public
+ * @since       1.4
+ * @return      void
+ */
+function edd_log_default_views() {
+	$views = array(
+		'sales' 			=> __( 'Sales', 'edd' ),
+		'file_downloads'	=> __( 'File Downloads', 'edd' ),
+		'gateway_errors'	=> __( 'Payment Errors', 'edd' )
+	);
+
+	$views = apply_filters( 'edd_log_views', $views );
+
+	return $views;
+}
 
 /**
  * Renders the Reports page views drop down
@@ -45,22 +63,13 @@ add_action( 'edd_logs_view_gateway_errors', 'edd_logs_view_gateway_errors' );
 */
 
 function edd_log_views() {
-	// default log views
-	$views = array(
-		'sales' 			=> __( 'Sales', 'edd' ),
-		'file_downloads'	=> __( 'File Downloads', 'edd' ),
-		'gateway_errors'	=> __( 'Payment Errors', 'edd' )
-	);
-
-	$views = apply_filters( 'edd_log_views', $views );
-
-	// current view
+	$views        = edd_log_default_views();
 	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'sales';
 
 	?>
 	<form id="edd-sales-filter" method="get">
 		<select id="edd-logs-view" name="view">
-			<option value="0"><?php _e( 'Log Type', 'edd' ); ?></option>
+			<option value="-1"><?php _e( 'Log Type', 'edd' ); ?></option>
 			<?php foreach( $views as $view_id => $label ): ?>
 				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
 			<?php endforeach; ?>
