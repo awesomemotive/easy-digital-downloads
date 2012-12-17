@@ -67,6 +67,8 @@ branches:
   exclude:
     - master
 before_script:
+  - wget -O testsuite.zip https://github.com/nb/wordpress-tests/archive/460b9c4ad9db7eea4710f151851060ae1921ea7c.zip
+  - tar -xzf testsuite.zip -C vendor
   - cp tests/unittests-config.travis.php vendor/wordpress-tests/unittests-config.php
   - wget -O wordpress.tar.gz http://wordpress.org/wordpress-$WP_VERSION.tar.gz
   - tar -xzf wordpress.tar.gz -C vendor
