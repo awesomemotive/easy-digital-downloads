@@ -29,13 +29,13 @@ Copy & edit wordpress test environment file
 Now edit unittests-config.php in your favorite editor. Make sure to have an empty database ready(all data will die) and
 that your path to wordpress is correct.
 
-Jigoshop does not need to be in the wp/plugins dir. For example in travis-ci().travis.yml we copy wordpress into vendor/wordpress
+EDD does not need to be in the wp/plugins dir. For example in travis-ci().travis.yml we copy wordpress into vendor/wordpress
 
     <?php
     /* Path to the WordPress codebase you'd like to test. Add a backslash in the end. */
     define( 'ABSPATH', 'path-to-WP/' );
 
-    define( 'DB_NAME', 'jigoshop_test' );
+    define( 'DB_NAME', 'edd_test' );
     define( 'DB_USER', 'user' );
     define( 'DB_PASSWORD', 'password' );
 
