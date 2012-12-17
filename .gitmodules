@@ -1,3 +1,0 @@
-[submodule "vendor/wordpress-tests"]
-	path = vendor/wordpress-tests
-	url = git@github.com:nb/wordpress-tests/460b9c4ad9db7eea4710f151851060ae1921ea7c
