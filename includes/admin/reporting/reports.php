@@ -306,9 +306,9 @@ function edd_reports_tab_logs() {
 	require( EDD_PLUGIN_DIR . 'includes/admin/reporting/logs.php' );
 
 	$current_view = 'sales';
-	$log_views    = edd_reports_default_views();
+	$log_views    = edd_log_default_views();
 
-	if ( isset( $_GET[ 'view' ] ) && in_array( $_GET[ 'view' ], $log_views ) )
+	if ( isset( $_GET[ 'view' ] ) && array_key_exists( $_GET[ 'view' ], $log_views ) )
 		$current_view = $_GET[ 'view' ];
 
 	do_action( 'edd_logs_view_' . $current_view );
