@@ -35,6 +35,24 @@ function edd_logs_view_gateway_errors() {
 }
 add_action( 'edd_logs_view_gateway_errors', 'edd_logs_view_gateway_errors' );
 
+/**
+ * Default Log Views
+ *
+ * @access      public
+ * @since       1.4
+ * @return      void
+ */
+function edd_log_default_views() {
+	$views = array(
+		'sales' 			=> __( 'Sales', 'edd' ),
+		'file_downloads'	=> __( 'File Downloads', 'edd' ),
+		'gateway_errors'	=> __( 'Payment Errors', 'edd' )
+	);
+
+	$views = apply_filters( 'edd_log_views', $views );
+
+	return $views;
+}
 
 /**
  * Renders the Reports page views drop down
@@ -45,35 +63,24 @@ add_action( 'edd_logs_view_gateway_errors', 'edd_logs_view_gateway_errors' );
 */
 
 function edd_log_views() {
-	// default log views
-	$views = array(
-		'sales' 			=> __( 'Sales', 'edd' ),
-		'file_downloads'	=> __( 'File Downloads', 'edd' ),
-		'gateway_errors'	=> __( 'Payment Errors', 'edd' )
-	);
-
-	$views = apply_filters( 'edd_log_views', $views );
-
-	// current view
+	$views        = edd_log_default_views();
 	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'sales';
 
 	?>
 	<form id="edd-sales-filter" method="get">
-		<div class="tablenav top">
-			<div class="alignleft actions">
-				<span><?php _e( 'Log Views', 'edd' ); ?></span>
-				<input type="hidden" name="post_type" value="download"/>
-				<input type="hidden" name="page" value="edd-reports"/>
-				<input type="hidden" name="tab" value="logs"/>
-				<select id="edd-logs-view" name="view">
-					<?php foreach( $views as $view_id => $label ): ?>
-						<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
-					<?php endforeach; ?>
-				</select>
-				<?php do_action( 'edd_log_view_actions' ); ?>
-				<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
-			</div>
-		</div>
+		<select id="edd-logs-view" name="view">
+			<option value="-1"><?php _e( 'Log Type', 'edd' ); ?></option>
+			<?php foreach( $views as $view_id => $label ): ?>
+				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
+			<?php endforeach; ?>
+		</select>
+		
+		<?php do_action( 'edd_log_view_actions' ); ?>
+		<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
+
+		<input type="hidden" name="post_type" value="download"/>
+		<input type="hidden" name="page" value="edd-reports"/>
+		<input type="hidden" name="tab" value="logs"/>
 	</form>
 	<?php
 }
