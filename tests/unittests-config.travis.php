@@ -9,7 +9,7 @@ also see .travis.yml
 define( 'ABSPATH', realpath(dirname(__FILE__)).'/../wordpress/' );
 
 
-define( 'DB_NAME', 'jigoshop_test' );
+define( 'DB_NAME', 'edd_test' );
 define( 'DB_USER', 'root' );
 define( 'DB_PASSWORD', '' );
 define( 'DB_HOST', 'localhost' );
