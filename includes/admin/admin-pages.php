@@ -31,7 +31,5 @@ function edd_add_options_link() {
 	$edd_settings_page 	= add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download Settings', 'edd' ), __( 'Settings', 'edd' ), 'manage_options', 'edd-settings', 'edd_options_page' );
 	$edd_add_ons_page 	= add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download Add Ons', 'edd' ), __( 'Add Ons', 'edd' ), 'manage_options', 'edd-addons', 'edd_add_ons_page' );
 	$edd_upgrades_screen= add_submenu_page( null, __( 'EDD Upgrades', 'edd' ), __( 'EDD Upgrades', 'edd' ), 'manage_options', 'edd-upgrades', 'edd_upgrades_screen' );
-
-	add_action( 'load-' . $edd_discounts_page, 'edd_discounts_contextual_help' );
 }
 add_action( 'admin_menu', 'edd_add_options_link', 10 );
