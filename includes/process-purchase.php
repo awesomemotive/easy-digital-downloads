@@ -680,25 +680,29 @@ function edd_send_to_success_page( $query_string = null ) {
 
 
 /**
- * Send Back to Checkout
+ * Send back to checkout.
  *
  * Used to redirect a user back to the purchase
  * page if there are errors present.
  *
- * @access      public
- * @since       1.0
- * @return      void
-*/
-
-function edd_send_back_to_checkout( $query_string = null ) {
-	global $edd_options;
-
+ * @access public
+ * @since  1.0
+ * @return Void
+ */
+function edd_send_back_to_checkout( $args = array() ) {
 	$redirect = edd_get_checkout_uri();
 
-	if($query_string)
-		$redirect .= $query_string;
+	if ( ! empty( $args ) ) {
+		// check for backward compatibility
+		if ( is_string( $args ) )
+			$args = str_replace( '?', '', $args );
 
-	wp_redirect($redirect);
+		$args = wp_parse_args( $args );
+
+		$redirect = add_query_arg( $args, $redirect );
+	}
+	
+	wp_redirect( apply_filters( 'edd_send_back_to_checkout', $redirect, $args ) );
 	exit;
 }
 
