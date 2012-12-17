@@ -33,13 +33,13 @@ function edd_reports_page() {
 	<div class="wrap">
 
 		<h2 class="nav-tab-wrapper">
-			<a href="<?php echo add_query_arg( array( 'tab' => 'reports', 'settings-updated' => false ) ); ?>" class="nav-tab <?php echo $active_tab == 'reports' ? 'nav-tab-active' : ''; ?>">
+			<a href="<?php echo add_query_arg( array( 'tab' => 'reports', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'reports' ? 'nav-tab-active' : ''; ?>">
 				<?php _e( 'Reports', 'edd' ); ?>
 			</a>
-			<a href="<?php echo add_query_arg( array( 'tab' => 'export', 'settings-updated' => false ) ); ?>" class="nav-tab <?php echo $active_tab == 'export' ? 'nav-tab-active' : ''; ?>">
+			<a href="<?php echo add_query_arg( array( 'tab' => 'export', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'export' ? 'nav-tab-active' : ''; ?>">
 				<?php _e( 'Export', 'edd' ); ?>
 			</a>
-			<a href="<?php echo add_query_arg( array( 'tab' => 'logs', 'settings-updated' => false ) ); ?>" class="nav-tab <?php echo $active_tab == 'logs' ? 'nav-tab-active' : ''; ?>">
+			<a href="<?php echo add_query_arg( array( 'tab' => 'logs', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'logs' ? 'nav-tab-active' : ''; ?>">
 				<?php _e( 'Logs', 'edd' ); ?>
 			</a>
 			<?php do_action( 'edd_reports_tabs' ); ?>
@@ -72,7 +72,6 @@ function edd_reports_tab_reports() {
 
 	// current view
 	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'earnings';
-
 	do_action( 'edd_reports_view_' . $current_view );
 
 }
@@ -99,28 +98,24 @@ function edd_report_views() {
 	$views = apply_filters( 'edd_report_views', $views );
 
 	// current view
-	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'earnings';
-
-	?>
+	$current_view = isset( $_GET[ 'view' ] ) ? $_GET[ 'view' ] : 'earnings';
+?>
 	<form id="edd-reports-filter" method="get">
-		<div class="tablenav top">
-			<div class="alignleft actions">
-				<span><?php _e( 'Reporting Views', 'edd' ); ?></span>
-				<input type="hidden" name="post_type" value="download"/>
-				<input type="hidden" name="page" value="edd-reports"/>
-				<select id="edd-reports-view" name="view">
-					<?php foreach( $views as $view_id => $label ): ?>
-						<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
-					<?php endforeach; ?>
-				</select>
-				<?php do_action( 'edd_report_view_actions' ); ?>
-				<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
-			</div>
-		</div>
+		<select id="edd-reports-view" name="view">
+			<option value="0"><?php _e( 'Report Type', 'edd' ); ?></option>
+			<?php foreach( $views as $view_id => $label ): ?>
+				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
+			<?php endforeach; ?>
+		</select>
+		
+		<?php do_action( 'edd_report_view_actions' ); ?>
+		<input type="submit" class="button-secondary" value="<?php _e( 'Show', 'edd' ); ?>"/>
+
+		<input type="hidden" name="post_type" value="download"/>
+		<input type="hidden" name="page" value="edd-reports"/>
 	</form>
 	<?php
 }
-
 
 /**
  * Renders the Reports Downloads table
@@ -167,7 +162,11 @@ add_action( 'edd_reports_view_customers', 'edd_reports_customers_table' );
 */
 
 function edd_reports_earnings() {
-	edd_report_views();
+?>
+	<div class="tablenav top">
+		<div class="alignleft actions"><?php edd_report_views(); ?></div>
+	</div>
+<?php
 	edd_reports_graph();
 }
 add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
@@ -182,41 +181,35 @@ add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
 */
 
 function edd_reports_taxes() {
-
-	edd_report_views();
-
 	$year = isset( $_GET['year'] ) ? absint( $_GET['year'] ) : date( 'Y' );
+?>
+	<div class="tablenav top">
+		<div class="alignleft actions"><?php edd_report_views(); ?></div>
+	</div>
 
-	?>
-	<div class="metabox-holder">
-		<div id="post-body">
-			<div id="post-body-content">
+	<div class="metabox-holder" style="padding-top: 0;">		
+		<div class="postbox">
+			<h3><span><?php _e('Tax Report', 'edd'); ?></span></h3>
+			<div class="inside">
+
+				<p><?php _e( 'This report shows the total amount collected in sales tax for the given year.', 'edd' ); ?></p>
 				
-				<div class="postbox">
-					<h3><span><?php _e('Tax Report', 'edd'); ?></span></h3>
-					<div class="inside">
 
-						<p><?php _e( 'This report shows the total amount collected in sales tax for the given year.', 'edd' ); ?></p>
-						
+				<form method="get" action="<?php echo admin_url( 'edit.php' ); ?>">
+					<span><?php echo $year; ?></span>: <strong><?php edd_sales_tax_for_year( $year ); ?></strong>&nbsp;&mdash;&nbsp;
+					<select name="year">
+						<?php for( $i = 2009; $i <= date( 'Y' ); $i++ ) : ?>
+						<option value="<?php echo $i; ?>"<?php selected( $year, $i ); ?>><?php echo $i; ?></option>
+						<?php endfor; ?>
+					</select>
+					<input type="hidden" name="view" value="taxes" />
+					<input type="hidden" name="post_type" value="download" />
+					<input type="hidden" name="page" value="edd-reports" />
+					<input type="submit" class="button-secondary" value="<?php _e( 'Submit', 'edd' ); ?>"/>
+				</form>
 
-						<form method="get" action="<?php echo admin_url( 'edit.php' ); ?>">
-							<span><?php echo $year; ?></span>: <strong><?php edd_sales_tax_for_year( $year ); ?></strong>&nbsp;&mdash;&nbsp;
-							<select name="year">
-								<?php for( $i = 2009; $i <= date( 'Y' ); $i++ ) : ?>
-								<option value="<?php echo $i; ?>"<?php selected( $year, $i ); ?>><?php echo $i; ?></option>
-								<?php endfor; ?>
-							</select>
-							<input type="hidden" name="view" value="taxes" />
-							<input type="hidden" name="post_type" value="download" />
-							<input type="hidden" name="page" value="edd-reports" />
-							<input type="submit" class="button-secondary" value="<?php _e( 'Submit', 'edd' ); ?>"/>
-						</form>
-
-					</div><!--end inside-->
-				</div><!--end postbox-->
-
-			</div><!--endpost-body-content-->
-		</div><!--end post-body-->
+			</div><!--end inside-->
+		</div><!--end postbox-->
 	</div><!--end metabox-holder-->
 	<?php
 }

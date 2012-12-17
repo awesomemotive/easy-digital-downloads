@@ -59,21 +59,19 @@ function edd_log_views() {
 
 	?>
 	<form id="edd-sales-filter" method="get">
-		<div class="tablenav top">
-			<div class="alignleft actions">
-				<span><?php _e( 'Log Views', 'edd' ); ?></span>
-				<input type="hidden" name="post_type" value="download"/>
-				<input type="hidden" name="page" value="edd-reports"/>
-				<input type="hidden" name="tab" value="logs"/>
-				<select id="edd-logs-view" name="view">
-					<?php foreach( $views as $view_id => $label ): ?>
-						<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
-					<?php endforeach; ?>
-				</select>
-				<?php do_action( 'edd_log_view_actions' ); ?>
-				<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
-			</div>
-		</div>
+		<select id="edd-logs-view" name="view">
+			<option value="0"><?php _e( 'Log Type', 'edd' ); ?></option>
+			<?php foreach( $views as $view_id => $label ): ?>
+				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
+			<?php endforeach; ?>
+		</select>
+		
+		<?php do_action( 'edd_log_view_actions' ); ?>
+		<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
+
+		<input type="hidden" name="post_type" value="download"/>
+		<input type="hidden" name="page" value="edd-reports"/>
+		<input type="hidden" name="tab" value="logs"/>
 	</form>
 	<?php
 }
