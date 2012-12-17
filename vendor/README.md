@@ -1,7 +1,7 @@
-[Jigoshop](http://jigoshop.com) Vendors
+[Easy Digital Downloads](http://www.easydigitaldownloads.com) Vendors
 =================
 
-[![Build Status](https://secure.travis-ci.org/jigoshop/jigoshop.png?branch=dev)](http://travis-ci.org/jigoshop/jigoshop)
+[![Build Status](https://secure.travis-ci.org/pippinsplugins/Easy-Digital-Downloads.png?branch=dev)](http://travis-ci.org/pippinsplugins/Easy-Digital-Downloads)
 
 This folder is used by the test folder to store our test dependencies
 
