@@ -1,5 +1,5 @@
 # If you fork EDD and want to use Travis on your fork, please go to:
-# https://github.com/yourname/EDD/admin/hooks#travis_minibucket
+# https://github.com/yourname/Easy-Digital-Downloads/admin/hooks#travis_minibucket
 # and follow the instructions
 language: php
 php:
