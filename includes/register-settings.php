@@ -212,7 +212,7 @@ function edd_register_settings() {
 					'name' => __('Purchase Receipt', 'edd'),
 					'desc' => __('Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:', 'edd') . '<br/>' .
 						'{download_list} - ' . __('A list of download URLs for each download purchased', 'edd') . '<br/>' .
-						'{name} - ' . __('The buyer\'s name first', 'edd') . '<br/>' .
+						'{name} - ' . __('The buyer\'s first name', 'edd') . '<br/>' .
 						'{fullname} - ' . __('The buyer\'s full name, first and last', 'edd') . '<br/>' .
 						'{date} - ' . __('The date of the purchase', 'edd') . '<br/>' .
 						'{subtotal} - ' . __('The price of the purchase before taxes', 'edd') . '<br/>' .
@@ -294,6 +294,12 @@ function edd_register_settings() {
 					'type' => 'text',
 					'size' => 'large'
 				),
+				array(
+					'id' => 'taxes_on_prices',
+					'name' => __('Tax in Prices', 'edd'),
+					'desc' => __('Include taxes in individual product prices?', 'edd'),
+					'type' => 'checkbox'
+				)
 			)
 		),
 		'misc' => apply_filters('edd_settings_misc',
@@ -405,7 +411,7 @@ function edd_register_settings() {
 	add_settings_section(
 		'edd_settings_general',
 		__('General Settings', 'edd'),
-		'edd_settings_general_description_callback',
+		'__return_false',
 		'edd_settings_general'
 	);
 
@@ -431,7 +437,7 @@ function edd_register_settings() {
 	add_settings_section(
 		'edd_settings_gateways',
 		__('Payment Gateway Settings', 'edd'),
-		'edd_settings_gateways_description_callback',
+		'__return_false',
 		'edd_settings_gateways'
 	);
 
@@ -457,7 +463,7 @@ function edd_register_settings() {
 	add_settings_section(
 		'edd_settings_emails',
 		__('Email Settings', 'edd'),
-		'edd_settings_emails_description_callback',
+		'__return_false',
 		'edd_settings_emails'
 	);
 
@@ -483,7 +489,7 @@ function edd_register_settings() {
 	add_settings_section(
 		'edd_settings_styles',
 		__('Style Settings', 'edd'),
-		'edd_settings_styles_description_callback',
+		'__return_false',
 		'edd_settings_styles'
 	);
 
@@ -535,7 +541,7 @@ function edd_register_settings() {
 	add_settings_section(
 		'edd_settings_misc',
 		__('Misc Settings', 'edd'),
-		'edd_settings_misc_description_callback',
+		'__return_false',
 		'edd_settings_misc'
 	);
 
@@ -569,65 +575,6 @@ function edd_register_settings() {
 add_action('admin_init', 'edd_register_settings');
 
 
-/**
- * Settings General Description Callback
- *
- * Renders the general section description.
- *
- * @access      private
- * @since       1.0
- * @return      void
-*/
-
-function edd_settings_general_description_callback() {
-	//echo __('Configure the settings below', 'edd');
-}
-
-
-/**
- * Settings Gateways Description Callback
- *
- * Renders the gateways section description.
- *
- * @access      private
- * @since       1.0
- * @return      void
-*/
-
-function edd_settings_gateways_description_callback() {
-	//echo __('Configure the settings below', 'edd');
-}
-
-
-/**
- * Settings Emails Description Callback
- *
- * Renders the emails section description.
- *
- * @access      private
- * @since       1.0
- * @return      void
-*/
-
-function edd_settings_emails_description_callback() {
-	//echo __('Configure the settings below', 'edd');
-}
-
-
-/**
- * Settings Styles Description Callback
- *
- * Renders the styles section description.
- *
- * @access      private
- * @since       1.0
- * @return      void
-*/
-
-function edd_settings_styles_description_callback() {
-	//echo __('Configure the settings below', 'edd');
-}
-
 
 /**
  * Settings Taxes Description Callback
@@ -641,21 +588,6 @@ function edd_settings_styles_description_callback() {
 
 function edd_settings_taxes_description_callback() {
 	echo __('These settings will let you configure simple tax rules for purchases.', 'edd');
-}
-
-
-/**
- * Settings Misc Description Callback
- *
- * Renders the misc section description.
- *
- * @access      private
- * @since       1.0
- * @return      void
-*/
-
-function edd_settings_misc_description_callback() {
-	//echo __('Configure the settings below', 'edd');
 }
 
 

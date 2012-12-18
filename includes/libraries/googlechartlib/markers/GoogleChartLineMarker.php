@@ -92,7 +92,7 @@ class GoogleChartLineMarker extends GoogleChartMarker
 			$points,
 			$this->size
 		);
-		
+
 		if ( $this->z_order !== null )
 			$str .= ','.$this->z_order;
 

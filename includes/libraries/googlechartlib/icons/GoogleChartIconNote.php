@@ -11,7 +11,7 @@
  */
 
 require_once dirname(__FILE__).'/../GoogleChartIcon.php';
- 
+
 /**
  * A "Fun style notes with text and optional title".
  */
@@ -37,31 +37,31 @@ class GoogleChartIconNote extends GoogleChartIcon
 		$this->setText($text);
 		$this->setType($note_type);
 	}
-	
+
 	public function setTitle($title)
 	{
 		$this->title = $title;
 		return $this;
 	}
-	
+
 	public function setText($text)
 	{
 		$this->text = $text;
 		return $this;
 	}
-	
+
 	public function setType($note_type)
 	{
 		$this->type = $note_type;
 		return $this;
 	}
-	
+
 	public function setSize($size)
 	{
 		$this->size = $size;
 		return $this;
 	}
-	
+
 	public function setTextColor($color)
 	{
 		$this->text_color = $color;
@@ -81,7 +81,7 @@ class GoogleChartIconNote extends GoogleChartIcon
 		else
 			return 'd_fnote_title';
 	}
-	
+
 	public function computeChld($separator = '|', $eol='|', $escape = '')
 	{
 		$str = $this->type

@@ -11,7 +11,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 
 	function __construct(){
 		global $status, $page;
-			   
+
 		//Set parent defaults
 		parent::__construct( array(
 			'singular'  => edd_get_label_singular(),    // singular name of the listed records
@@ -76,25 +76,25 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 			'posts_per_page'=> -1,
 			'order'			=> $order
 		);
-			
+
 		switch( $orderby ) :
 
 			case 'title' :
-				$report_args['orderby'] = 'title'; 
+				$report_args['orderby'] = 'title';
 				break;
 
 			case 'sales' :
-				$report_args['orderby'] = 'meta_value_num'; 
+				$report_args['orderby'] = 'meta_value_num';
 				$report_args['meta_key'] = '_edd_download_sales';
 				break;
 
 			case 'earnings' :
-				$report_args['orderby'] = 'meta_value_num'; 
+				$report_args['orderby'] = 'meta_value_num';
 				$report_args['meta_key'] = '_edd_download_earnings';
 				break;
 
 		endswitch;
-	 
+
 		$downloads = get_posts( $report_args );
 		if( $downloads ) {
 			foreach( $downloads as $download ) {
@@ -111,7 +111,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		return $reports_data;
 	}
 
-   
+
 	/** ************************************************************************
 	 * @uses $this->_column_headers
 	 * @uses $this->items
@@ -122,12 +122,12 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 **************************************************************************/
 
 	function prepare_items() {
-	   
+
 		/**
 		 * First, lets decide how many records per page to show
 		 */
 		$per_page = 30;
-	   
+
 		$columns = $this->get_columns();
 
 		$hidden = array(); // no hidden columns
@@ -135,11 +135,11 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		 
+
 		$data = $this->reports_data();
 
 		$current_page = $this->get_pagenum();
-	
+
 		$total_items = count( $data );
 
 		$data = array_slice( $data, ( ( $current_page - 1 ) * $per_page ), $per_page );
@@ -153,5 +153,5 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 			)
 		);
 	}
-   
+
 }
