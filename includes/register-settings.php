@@ -294,6 +294,12 @@ function edd_register_settings() {
 					'type' => 'text',
 					'size' => 'large'
 				),
+				array(
+					'id' => 'taxes_on_prices',
+					'name' => __('Tax in Prices', 'edd'),
+					'desc' => __('Include taxes in individual product prices?', 'edd'),
+					'type' => 'checkbox'
+				)
 			)
 		),
 		'misc' => apply_filters('edd_settings_misc',

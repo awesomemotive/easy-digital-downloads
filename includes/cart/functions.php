@@ -199,6 +199,27 @@ function edd_get_cart_item_quantity( $item ) {
 /**
  * Get Cart Item Price
  *
+ * Gets the quanity for an item in the cart.
+ *
+ * @access      public
+ * @since       1.0
+ * @param       $item INT the download (cart item) ID number
+ * @param       $options - array optional parameters, used for defining variable prices
+ * @return      string - the fully formatted price
+*/
+function edd_cart_item_price( $item_id = 0, $options = array() ) {
+
+	$price = edd_get_cart_item_price( $item_id, $options );
+
+	if( edd_use_taxes() && edd_taxes_on_prices() )
+		$price += edd_calculate_tax( $price );
+
+	return esc_html( edd_currency_filter( edd_format_amount( $price ) ) );
+}
+
+/**
+ * Get Cart Item Price
+ *
  * Gets the price of the cart item.
  *
  * @access      public
@@ -248,6 +269,22 @@ function edd_get_price_name( $item_id, $options = array() ) {
 	return false;
 }
 
+
+
+/**
+ * Cart Subtotal
+ *
+ * Shows the subtotal for the shopping cart (no taxes)
+ *
+ * @access      public
+ * @since       1.4
+ * @uses        edd_get_cart_subtotal()
+ * @return      float - the total amount before taxes fully formatted
+*/
+
+function edd_cart_subtotal() {
+	return esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) );
+}
 
 /**
  * Get Cart Subtotal

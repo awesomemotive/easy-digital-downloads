@@ -31,12 +31,34 @@ function edd_use_taxes() {
 }
 
 
+/**
+ * Local taxes only meaning users must opt in
+ *
+ * @access      public
+ * @since       1.3.3
+ * @return      bool
+*/
+
 function edd_local_taxes_only() {
 	global $edd_options;
 
 	$local_only = isset( $edd_options['tax_condition'] ) && $edd_options['tax_condition'] == 'local';
 
 	return apply_filters( 'edd_local_taxes_only', $local_only );
+}
+
+
+/**
+ * Show taxes on individual prices?
+ *
+ * @access      public
+ * @since       1.4
+ * @return      bool
+*/
+
+function edd_taxes_on_prices() {
+	global $edd_options;
+	return apply_filters( 'edd_taxes_on_prices', isset( $edd_options['taxes_on_prices'] ) );
 }
 
 
