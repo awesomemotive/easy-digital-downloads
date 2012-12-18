@@ -1,4 +1,4 @@
-[Easy Digital Downloads](http://www.easydigitaldownloads.com) Testing Suite [![Build Status](https://secure.travis-ci.org/pippinsplugins/Easy-Digital-Downloads.png?branch=dev)](http://travis-ci.org/pippinsplugins/Easy-Digital-Downloads)
+[Easy Digital Downloads](http://www.easydigitaldownloads.com) Testing Suite [![Build Status](https://secure.travis-ci.org/pippinsplugins/Easy-Digital-Downloads.png?branch=master)](http://travis-ci.org/pippinsplugins/Easy-Digital-Downloads)
 =================
 
 This test-suite uses PHPUnit to ensure Easy Digital Downloads's code quality.
