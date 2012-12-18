@@ -32,7 +32,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		return; // make sure that payments are only completed once
 
 	// make sure the payment completion is only processed when new status is complete
-	if( $new_status != 'publish' && $new_status != 'complete' );
+	if( $new_status != 'publish' && $new_status != 'complete' )
 		return;
 
 	if( !edd_is_test_mode() ) {
