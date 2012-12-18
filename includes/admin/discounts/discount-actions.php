@@ -18,7 +18,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Setups and stores a new discount code.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -44,7 +44,7 @@ add_action( 'edd_add_discount', 'edd_add_discount' );
  * Saves an edited discount.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -57,7 +57,7 @@ function edd_edit_discount( $data ) {
 			$discount[ $key ] = strip_tags( addslashes( $value ) );
 		}
 		$old_discount = edd_get_discount_by_code( $data['code'] );
-		$discount['uses'] = $old_discount['uses']; 
+		$discount['uses'] = $old_discount['uses'];
 		if( edd_store_discount( $discount, $data['discount-id'] ) ) {
 			wp_redirect( add_query_arg( 'edd-message', 'discount_updated', $data['edd-redirect'] ) ); exit;
 		} else {
@@ -73,7 +73,7 @@ add_action( 'edd_edit_discount', 'edd_edit_discount' );
  * Listens for when a discount delete button is clicked.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -90,7 +90,7 @@ add_action( 'edd_delete_discount', 'edd_delete_discount' );
  * Sets a discount code to active.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -105,7 +105,7 @@ add_action( 'edd_activate_discount', 'edd_activate_discount' );
  * Deactivate Discount
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 

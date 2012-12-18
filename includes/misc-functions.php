@@ -709,8 +709,11 @@ function _edd_deprecated_function( $function, $version, $replacement = null ) {
 
 	do_action( 'edd_deprecated_function_run', $function, $replacement, $version );
 
+	$show_errors = current_user_can( 'manage_options' ) ? true : false;
+
+
 	// Allow plugin to filter the output error trigger
-	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', true ) ) {
+	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', $show_errors ) ) {
 		if ( ! is_null($replacement) )
 			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
 		else
@@ -792,3 +795,18 @@ function edd_presstrends() {
 	}
 }
 add_action( 'admin_init', 'edd_presstrends' );
+
+/**
+ * Checks whether function is disabled.
+ *
+ * @access public
+ * @since  1.3.5
+ *
+ * @param  string $function Name of the function.
+ * @return bool Whether or not function is disabled.
+ */
+function edd_is_func_disabled( $function ) {
+	$disabled = explode( ',',  ini_get( 'disable_functions' ) );
+
+	return in_array( $function, $disabled );
+}

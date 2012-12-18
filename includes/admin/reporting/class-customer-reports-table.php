@@ -8,7 +8,7 @@ if( !class_exists( 'WP_List_Table' ) ) {
 }
 
 class EDD_Customer_Reports_Table extends WP_List_Table {
-	
+
 	function __construct(){
 		global $status, $page;
 
@@ -25,8 +25,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	function column_default( $item, $column_name ) {
 		switch( $column_name ){
 			case 'name' :
-				return '<a href="' . esc_url( 
-						admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] ) ) 
+				return '<a href="' . esc_url(
+						admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] ) )
 					) . '">' . esc_html( $item[ $column_name ] ) . '</a>';
 			case 'amount_spent' :
 				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );

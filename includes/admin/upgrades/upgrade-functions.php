@@ -15,7 +15,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Display upgrade notices
- * 
+ *
  * @access      private
  * @since       1.3.1
  * @return      void
@@ -69,7 +69,7 @@ add_action( 'admin_notices', 'edd_show_upgrade_notices' );
  * Triggers all upgrade functions
  *
  * This function is usually triggered via ajax
- * 
+ *
  * @access      private
  * @since       1.3.1
  * @return      void
@@ -104,7 +104,7 @@ add_action( 'wp_ajax_edd_trigger_upgrades', 'edd_trigger_upgrades' );
 
 /**
  * Converts old sale and file download logs to new logging system
- * 
+ *
  * @access      private
  * @since       1.3.1
  * @return      void
@@ -119,12 +119,14 @@ function edd_v131_upgrades() {
 		return;
 
 	ignore_user_abort(true);
-	set_time_limit(0);
 
-	$args = array( 
-		'post_type' 		=> 'download', 
-		'posts_per_page' 	=> -1, 
-		'post_status' 		=> 'publish' 
+	if ( !edd_is_func_disabled( 'set_time_limit' ) && !ini_get('safe_mode') )
+		set_time_limit(0);
+
+	$args = array(
+		'post_type' 		=> 'download',
+		'posts_per_page' 	=> -1,
+		'post_status' 		=> 'publish'
 	);
 
 	$query = new WP_Query( $args );
@@ -135,7 +137,7 @@ function edd_v131_upgrades() {
 		$edd_log = new EDD_Logging();
 		$i = 0;
 		foreach( $downloads as $download ) {
-			
+
 			// convert sale logs
 			$sale_logs = edd_get_download_sales_log( $download->ID, false );
 
@@ -154,9 +156,9 @@ function edd_v131_upgrades() {
 					);
 
 					$log = $edd_log->insert_log( $log_data, $log_meta );
-				
+
 				}
-			
+
 			}
 
 			// convert file download logs
@@ -164,7 +166,7 @@ function edd_v131_upgrades() {
 
 			if( $file_logs ) {
 				foreach( $file_logs['downloads'] as $log ) {
-					
+
 					$log_data = array(
 						'post_parent'	=> $download->ID,
 						'post_date'		=> $log['date'],
@@ -179,9 +181,9 @@ function edd_v131_upgrades() {
 					);
 
 					$log = $edd_log->insert_log( $log_data, $log_meta );
-				
+
 				}
-			
+
 			}
 
 		}
