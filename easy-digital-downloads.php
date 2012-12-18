@@ -147,7 +147,7 @@ final class Easy_Digital_Downloads {
 		include_once( EDD_PLUGIN_DIR . 'includes/formatting.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/widgets.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/mime-types.php' );
-		include_once( EDD_PLUGIN_DIR . 'includes/gateway-functions.php' );
+		include_once( EDD_PLUGIN_DIR . 'includes/gateways/functions.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/gateways/manual.php' );
 		include_once( EDD_PLUGIN_DIR . 'includes/discount-functions.php' );
