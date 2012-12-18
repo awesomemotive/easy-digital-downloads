@@ -19,5 +19,6 @@ jQuery(document).ready(function($) {
 				form.submit();
 			}
 		});
+		return false;
 	});
 });

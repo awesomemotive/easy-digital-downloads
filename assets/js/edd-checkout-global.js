@@ -17,6 +17,29 @@ jQuery(document).ready(function($) {
         }
     });
 
+    /* credit card verification */
+
+    $('body').on('focusout', '.edd-do-validate .card-number', function() {
+        var card_field = $(this);
+        card_field.validateCreditCard(function(result) {
+            if(result.card_type == null) {
+                $('.card-type').addClass('off');
+                card_field.removeClass('valid');
+                card_field.addClass('error');
+            } else {
+                $('.card-type').removeClass('off');
+                $('.card-type').addClass( result.card_type.name );
+                if (result.length_valid && result.luhn_valid) {
+                    card_field.addClass('valid');
+                    card_field.removeClass('error');
+                } else {
+                    card_field.removeClass('valid');
+                    card_field.addClass('error');
+                }
+            }
+        });
+    });
+
     // toggle the tax amount shown on checkout
     $('body').on('click', '#edd_tax_opt_in', function() {
 

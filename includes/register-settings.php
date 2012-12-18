@@ -317,6 +317,12 @@ function edd_register_settings() {
 					'type' => 'checkbox'
 				),
 				array(
+					'id' => 'live_cc_validation',
+					'name' => __('Disable Live Credit Card Validation', 'edd'),
+					'desc' => __('Live credit card validation means that that card type and number will be validated as the customer enters the number.', 'edd'),
+					'type' => 'checkbox'
+				),
+				array(
 					'id' => 'logged_in_only',
 					'name' => __('Disable Guest Checkout', 'edd'),
 					'desc' => __('Require that users be logged-in to purchase files.', 'edd'),
@@ -567,6 +573,7 @@ function edd_register_settings() {
 	register_setting( 'edd_settings_misc', 'edd_settings_misc', 'edd_settings_sanitize' );
 }
 add_action('admin_init', 'edd_register_settings');
+
 
 
 /**
