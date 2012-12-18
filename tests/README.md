@@ -10,6 +10,8 @@ The dev branch of Easy Digital Downloads is automatically tested on Travis-ci.or
 Click on the image above to see the latest test's output.
 Travis-CI will also automatically test all new pull requests to make sure they will not break our build.
 
+### Note: Below instructions need to be updated. 
+
 
 Quick start (for manual runs)
 -----------------------------
