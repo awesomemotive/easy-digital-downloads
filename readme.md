@@ -1,12 +1,12 @@
 # Easy Digital Downloads #
-**Author URI:** http://pippinsplugins.com  
-**Plugin URI:** http://easydigitaldownloads.com  
-**Contributors:** mordauk, sksmatt, sunnyratilal, SpencerFinnell  
-**Donate link:** http://pippinsplugins.com/support-the-site  
-**Tags:** download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins  
-**Requires at least:** 3.2  
-**Tested up to:** 3.5  
-**Stable Tag:** 1.3.4.3  
+**Author URI:** http://pippinsplugins.com
+**Plugin URI:** http://easydigitaldownloads.com
+**Contributors:** mordauk, sksmatt, sunnyratilal, SpencerFinnell
+**Donate link:** http://pippinsplugins.com/support-the-site
+**Tags:** download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
+**Requires at least:** 3.3
+**Tested up to:** 3.5
+**Stable Tag:** 1.3.4.3
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -539,7 +539,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fixed a bug in the purchase receipt that caused it to include all source file links, not just the ones set to the price option purchase
 * Added a new "class" parameter to the [purchas_link} short code
 * Moved the discount code fieldset inside of the user info fieldset on the checkout form
-* Added a legend to the user info fieldset 
+* Added a legend to the user info fieldset
 * Improved the markup of the default CC fields
 * Added new edd_is_checkout() conditional function
 * Updated Spanish language files
@@ -608,7 +608,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fixed a bug with download sale/earning stats going negative when reversing purchases
 * Removed some blank form action attributes that caused the HTML to invalidate
 * Added "Settings Updated" notification when saving plugin settings
-* Made some improvements to the default purchase receipt email template 
+* Made some improvements to the default purchase receipt email template
 * Renamed the "Manual Payment" gateway to "Test"
 * Added options for linking the download titles in the [downloads] short code
 * Removed the "You have already purchased this" message from the purchase link short code / template
@@ -642,7 +642,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Added auto creation for .htaccess files in the uploads directory for EDD to help protect unauthorized file downloads
 * Added Turkish language files
 * Added detection for php.ini variables important to PayPal payment verification
-*** Added a new short code for showing a list of active discounts:** [download_discounts]  
+*** Added a new short code for showing a list of active discounts:** [download_discounts]
 
 ### 1.0.8.2 ###
 
@@ -701,7 +701,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fixed a bug with the discount code form on checkout. It now only shows if there is at least one active discount. Props to Sksmatt
 * Fixed a bug with the Media Uploader when adding media to the content of a Download. Props to Sksmatt
 * Added a wrapper div.edd-cart-ajax-alert around the message that shows when an item has been added to the cart
-* Fixed a small error notice present in the checkout form short code. Props to Sksmatt 
+* Fixed a small error notice present in the checkout form short code. Props to Sksmatt
 * Fixed a small bug wit the edd_remove_item_url() present when on a 404 error page. Props to Sksmatt
 
 ### 1.0.7 ###
@@ -718,7 +718,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ### 1.0.6 ###
 
-*** NOTE:** if you have modified the checkout_cart.php template via your theme, please consider updating it with the new version as many things have changed.  
+*** NOTE:** if you have modified the checkout_cart.php template via your theme, please consider updating it with the new version as many things have changed.
 * Fixed a bug with the empty cart message not being displayed on the checkout page
 * When purchasing a product with variable prices, the selected price option name is now shown on the checkout page
 * Fixed a bug with the in-checkout registration /login form
@@ -773,7 +773,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 ### 1.0.3 ###
 
 * Added first and last name fields to the checkout registration form.
-* Improved country list formatting. 
+* Improved country list formatting.
 * Improved the price input field to make it more clear and help prevent improper price formats.
 * Added backwards compatibility for WP versions < 3.3. The rich editors in the settings pages could not be rendered in < 3.3.
 * Added option to include an "Agree to terms" to the checkout.
@@ -805,8 +805,8 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ### 1.0.1.2 ###
 
-* Fixed a bug with the manual payment gateway. 
-* Fixed a bug where sales / earnings counts were increased before a purchase was confirmed. 
+* Fixed a bug with the manual payment gateway.
+* Fixed a bug where sales / earnings counts were increased before a purchase was confirmed.
 * Fixed a bug with the checkout registration / login forms.
 * Added a German translation, thanks to David Decker.
 * Added a partial European Portuguese translation, thanks to Takssista.
