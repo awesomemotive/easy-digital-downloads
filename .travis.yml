@@ -1,0 +1,78 @@
+# If you fork EDD and want to use Travis on your fork, please go to:
+# https://github.com/yourname/Easy-Digital-Downloads/admin/hooks#travis_minibucket
+# and follow the instructions
+language: php
+php:
+# PHP Versions EDD Officially Supports
+  - 5.3
+  - 5.4
+# Ones that support for legacy reasons
+  - 5.2
+env:
+# Officialy Supported WP Versions (w/ and w/o MS)
+  - WP_VERSION=3.5 WP_MULTISITE=0 
+  - WP_VERSION=3.5 WP_MULTISITE=1
+# Last WP Version (tested against but not supported by EDD)
+  - WP_VERSION=3.4.2 WP_MULTISITE=0
+  - WP_VERSION=3.4.2 WP_MULTISITE=1
+#  - WP_VERSION=3.5-beta2 WP_MULTISITE=0 
+#  - WP_VERSION=3.5-beta2 WP_MULTISITE=1
+#  - WP_VERSION=3.5-beta-1 WP_MULTISITE=0
+#  - WP_VERSION=3.5-beta-1 WP_MULTISITE=1
+# These versions of WordPress we do not officially support
+# To test EDD on them, uncomment the line, by removing the "#"
+#    and then uncomment the allowed failures line for the respective
+#    versions below. 
+#  - WP_VERSION=3.4.1 WP_MULTISITE=0
+#  - WP_VERSION=3.4.1 WP_MULTISITE=1
+#  - WP_VERSION=3.4 WP_MULTISITE=0
+#  - WP_VERSION=3.4 WP_MULTISITE=1 
+#  - WP_VERSION=3.3.3 WP_MULTISITE=0
+#  - WP_VERSION=3.3.3 WP_MULTISITE=1 
+#  - WP_VERSION=3.3.2 WP_MULTISITE=0
+#  - WP_VERSION=3.3.2 WP_MULTISITE=1
+#  - WP_VERSION=3.3.1 WP_MULTISITE=0
+#  - WP_VERSION=3.3 WP_MULTISITE=1
+#  - WP_VERSION=3.3 WP_MULTISITE=0
+#  - WP_VERSION=3.2.1 WP_MULTISITE=1
+#  - WP_VERSION=3.2.1 WP_MULTISITE=0
+#  - WP_VERSION=3.2 WP_MULTISITE=0
+#  - WP_VERSION=3.2 WP_MULTISITE=1
+# Test against (but allow fail) on older WP and PHP versions, as well as beta WP
+# Also test against the current Master (development) Github repo of WordPress
+matrix:
+  allow_failures:
+# Legacy Versions
+    - env: WP_VERSION=3.4.2 WP_MULTISITE=0 
+    - env: WP_VERSION=3.4.2 WP_MULTISITE=1
+# Old Versions (uncomment lines here and above to test)
+#  - WP_VERSION=3.4.1 WP_MULTISITE=0
+#  - WP_VERSION=3.4.1 WP_MULTISITE=1
+#  - WP_VERSION=3.4 WP_MULTISITE=0
+#  - WP_VERSION=3.4 WP_MULTISITE=1 
+#    - env: WP_VERSION=3.3.3 WP_MULTISITE=0
+#    - env: WP_VERSION=3.3.3 WP_MULTISITE=1 
+#    - env: WP_VERSION=3.3.2 WP_MULTISITE=0
+#    - env: WP_VERSION=3.3.2 WP_MULTISITE=1
+#    - env: WP_VERSION=3.3.1 WP_MULTISITE=0
+#    - env: WP_VERSION=3.3.1 WP_MULTISITE=1
+#    - env: WP_VERSION=3.3 WP_MULTISITE=0
+#    - env: WP_VERSION=3.3 WP_MULTISITE=1
+#    - env: WP_VERSION=3.2.1 WP_MULTISITE=0
+#    - env: WP_VERSION=3.2.1 WP_MULTISITE=1
+#    - env: WP_VERSION=3.2 WP_MULTISITE=0
+#    - env: WP_VERSION=3.2 WP_MULTISITE=1
+    - php: 5.2
+
+before_script:
+  - wget -O testsuite.zip https://github.com/nb/wordpress-tests/archive/460b9c4ad9db7eea4710f151851060ae1921ea7c.zip
+  - unzip testsuite.zip -d vendor
+  - cp -r vendor/wordpress-tests-460b9c4ad9db7eea4710f151851060ae1921ea7c vendor/wordpress-tests
+  - cp tests/unittests-config.travis.php vendor/wordpress-tests/unittests-config.php
+  - wget -O wordpress.tar.gz http://wordpress.org/wordpress-$WP_VERSION.tar.gz
+  - tar -xzf wordpress.tar.gz -C vendor
+  - mysql -e "create database IF NOT EXISTS edd_test;" -uroot
+    
+script: phpunit --coverage-text 
+notifications:
+  email: false
