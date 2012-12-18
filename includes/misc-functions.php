@@ -95,10 +95,10 @@ function edd_no_redownload() {
 
 function edd_is_cc_verify_enabled() {
 	global $edd_options;
-	
+
 	$ret = true;
-	
-	/* 
+
+	/*
 	 * enable if use a single gateway other than PayPal or Manual. We have to assume it accepts cerdit cards
 	 * enable if using more than one gateway if they aren't both PayPal and manual, again assuming credit card usage
 	 */
@@ -110,6 +110,9 @@ function edd_is_cc_verify_enabled() {
 		$ret = false;
 	else if( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) )
 		$ret = false;
+
+	if( isset( $edd_options['edd_is_cc_verify_enabled'] ) )
+		$ret = false; // global override
 
 	return (bool) apply_filters( 'edd_verify_credit_cards', $ret );
 }
