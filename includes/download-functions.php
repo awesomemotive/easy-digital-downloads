@@ -82,14 +82,16 @@ function edd_price( $download_id, $echo = true ) {
 		$prices = edd_get_variable_prices( $download_id );
 		// return the lowest price
 		$price_float = 0;
-                foreach($prices as $key => $value)
-                        if( ( ( (float)$prices[$key]['amount']) < $price_float) or ($price_float==0) )
-                                $price_float = (float)$prices[$key]['amount'];
-                $price = edd_sanitize_amount($price_float);
+        foreach($prices as $key => $value)
+            if( ( ( (float)$prices[$key]['amount']) < $price_float) or ($price_float==0) )
+                $price_float = (float)$prices[$key]['amount'];
+            $price = edd_sanitize_amount($price_float);
 	} else {
 		$price = edd_get_download_price( $download_id );
 	}
 
+	if( edd_use_taxes() && edd_taxes_on_prices() )
+		$price += edd_calculate_tax( $price );
 
 	$price = apply_filters( 'edd_download_price', $price, $download_id );
 

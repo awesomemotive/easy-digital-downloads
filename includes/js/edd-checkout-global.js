@@ -28,7 +28,7 @@ jQuery(document).ready(function($) {
 
         if( $(this).attr('checked') ) {
 
-            $('.edd_cart_tax_row').show();
+            $('.edd_cart_tax_row, .edd_cart_subtotal_row').show();
 
             if( pos == 'before' )
                 total = sign + total;
@@ -39,7 +39,7 @@ jQuery(document).ready(function($) {
 
         } else {
 
-            $('.edd_cart_tax_row').hide();
+            $('.edd_cart_tax_row, .edd_cart_subtotal_row').hide();
 
             if( pos == 'before' )
                 subtotal = sign + '' + subtotal;

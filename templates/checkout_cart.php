@@ -31,7 +31,7 @@
 							echo '<span class="edd_checkout_cart_item_title">' . esc_html( $item_title ) . '</span>';
 						?>
 					</td>
-					<td class="edd_cart_item_price"><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_item_price( $item['id'], $item['options'] ) ) ) ); ?></td>
+					<td class="edd_cart_item_price"><?php echo edd_cart_item_price( $item['id'], $item['options'] ); ?></td>
 					<td class="edd_cart_actions"><a href="<?php echo esc_url( edd_remove_item_url( $key, $post ) ); ?>"><?php _e( 'remove', 'edd' ); ?></a></td>
 					<?php do_action( 'edd_checkout_table_body_last', $item ); ?>
 				</tr>
@@ -44,6 +44,13 @@
 	</tbody>
 	<tfoot>
 		<?php if( edd_use_taxes() ) : ?>
+		<tr class="edd_cart_footer_row edd_cart_subtotal_row"<?php if( edd_local_taxes_only() ) echo ' style="display:none;"'; ?>>
+			<?php do_action( 'edd_checkout_table_subtotal_first' ); ?>
+			<th colspan="3" class="edd_cart_subtotal">
+				<?php _e( 'Subtotal', 'edd' ); ?>:&nbsp;<span class="edd_cart_subtotal"><?php echo edd_cart_subtotal(); ?></span>
+			</th>
+			<?php do_action( 'edd_checkout_table_subtotal_last' ); ?>
+		</tr>
 		<tr class="edd_cart_footer_row edd_cart_tax_row"<?php if( edd_local_taxes_only() ) echo ' style="display:none;"'; ?>>
 			<?php do_action( 'edd_checkout_table_tax_first' ); ?>
 			<th colspan="3" class="edd_cart_tax">
