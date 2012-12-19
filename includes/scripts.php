@@ -185,6 +185,30 @@ function edd_admin_downloads_icon() {
 		<?php if ( ( isset( $_GET['post_type'] ) ) && ( $_GET['post_type'] == 'download' ) || ( $post_type == 'download' ) ) : ?>
         #icon-edit { background:transparent url("<?php echo EDD_PLUGIN_URL .'assets/images/edd-cpt.png'; ?>") no-repeat; }
         <?php endif; ?>
+        @media
+        only screen and (-webkit-min-device-pixel-ratio: 1.5),
+        only screen and (   min--moz-device-pixel-ratio: 1.5),
+        only screen and (     -o-min-device-pixel-ratio: 3/2),
+        only screen and (        min-device-pixel-ratio: 1.5),
+        only screen and (        		 min-resolution: 1.5dppx) {
+        	/* Admin Menu - 16px @2x */
+        	#menu-posts-download .wp-menu-image {
+        		background: transparent url('<?php echo EDD_PLUGIN_URL; ?>assets/images/edd-icon-2x.png') no-repeat 7px -20px!important;
+        		-webkit-background-size: 16px 48px;
+        		-moz-background-size: 16px 48px;
+        		background-size: 16px 48px;
+        	}
+        	#menu-posts-download:hover .wp-menu-image {
+        		background-position: 7px 4px!important;
+        	}
+        	/* Post Screen - 32px @2x */
+        	.icon32-posts-download {
+        		background-image: url('<?php echo EDD_PLUGIN_URL; ?>assets/images/edd-cpt-2x.png') no-repeat 0 0!important;
+        		-webkit-background-size: 32px 32px;
+        		-moz-background-size: 32px 32px;
+        		background-size: 32px 32px;
+        	}
+        }
 	</style>
     <?php
 }
