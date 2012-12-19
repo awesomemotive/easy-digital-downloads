@@ -33,7 +33,7 @@ function edd_resend_purchase_receipt( $data ) {
 		foreach( $downloads as $download ) {
 			$limit = edd_get_file_download_limit( $download['id'] );
 			if( ! empty( $limit ) ) {
-				edd_set_file_download_limit_override( $download['id'] );
+				edd_set_file_download_limit_override( $download['id'], $purchase_id );
 			}
 		}
 	}
