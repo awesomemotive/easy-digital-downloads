@@ -13,7 +13,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 
 	function __construct(){
 		global $status, $page;
-			
+
 		//Set parent defaults
 		parent::__construct( array(
 			'singular'  => edd_get_label_singular(),    // singular name of the listed records
@@ -26,20 +26,56 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 
 	function column_default( $item, $column_name ) {
 		switch( $column_name ){
-			case 'download' :
-				return '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . get_the_title( $item[ $column_name ] ) . '</a>';
-			case 'user_id' :
-				return '<a href="' . add_query_arg( 'user', $item[ $column_name ] ) . '">' . $item[ 'user_name' ] . '</a>';
+
+			case 'error' :
+				echo get_the_title( $item['ID'] );
+				break;
+
+
+
 			default:
 				return $item[ $column_name ];
 		}
 	}
 
+	function column_message( $item ) {
+?>
+		<a href="#TB_inline?width=640&amp;inlineId=log-message-<?php echo $item['ID']; ?>" class="thickbox" title="<?php _e( 'View Log Message', 'edd' ); ?> "><?php _e( 'View Log Message', 'edd' ); ?></a>
+		<div id="log-message-<?php echo $item['ID']; ?>" style="display:none;">
+			<?php
+
+			$log_message = get_post_field( 'post_content', $item['ID'] );
+			$serialized = strpos( $log_message, '{"' );
+
+			// check to see if the log message contains serialized information
+			if( $serialized !== false ) {
+
+				$length  = strlen( $log_message ) - $serialized;
+				$intro   = substr( $log_message, 0, - $length );
+				$data    = substr( $log_message, $serialized, strlen( $log_message ) - 1 );
+
+				echo wpautop( $intro );
+
+				echo wpautop( __( '<strong>Log data:</strong>') );
+
+				echo '<div style="word-wrap: break-word;">' . wpautop( $data ) . '</div>';
+
+			} else {
+				// no serialized data found
+				echo wpautop( $log_message );
+			}
+			?>
+		</div>
+<?php
+	}
+
 
 	function get_columns() {
 		$columns = array(
-			'ID'      => __( 'Log ID', 'edd' ),
+			'ID'         => __( 'Log ID', 'edd' ),
+			'payment_id' => __( 'Payment ID', 'edd' ),
 			'error'   => __( 'Error', 'edd' ),
+			'message' => __( 'Error Message', 'edd' ),
 			'gateway' => __( 'Gateway', 'edd' ),
 			'buyer'   => __( 'Buyer', 'edd' ),
 			'date'    => __( 'Date', 'edd' )
@@ -63,7 +99,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 		// these aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
 	}
-   
+
 	function logs_data() {
 
 		global $edd_logs;
@@ -76,7 +112,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 
 		$log_query = array(
 			'post_parent' => $download,
-			'log_type'    => 'gateway_error', 
+			'log_type'    => 'gateway_error',
 			'paged'       => $paged
 		);
 
@@ -98,12 +134,13 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 
 			foreach( $logs as $log ) {
 
-				$user_info 	= get_post_meta( $log->ID, '_edd_log_user_info', true );
+				$user_info  = edd_get_payment_meta_user_info( $log->post_parent );
 				$user_id 	= isset( $user_info['id']) ? $user_info['id'] : 0;
 				$user_data 	= get_userdata( $user_id );
 
 				$logs_data[] = array(
 					'ID'      => $log->ID,
+					'payment_id' => $log->post_parent,
 					'error'   => 'error',
 					'gateway' => 'gateway',
 					'buyer'	  => $user_data ? $user_data->display_name : $user_info['email'],
@@ -126,14 +163,14 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 **************************************************************************/
 
 	function prepare_items() {
-	   
+
 		global $edd_logs;
 
 		/**
 		 * First, lets decide how many records per page to show
 		 */
 		$per_page = $this->per_page;
-	   
+
 		$columns = $this->get_columns();
 
 		$hidden = array(); // no hidden columns
@@ -141,9 +178,9 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		 
+
 		$current_page = $this->get_pagenum();
-	
+
 		$this->items = $this->logs_data();
 
 		$user     = $this->get_filtered_user();
@@ -168,5 +205,5 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 			)
 		);
 	}
-   
+
 }
