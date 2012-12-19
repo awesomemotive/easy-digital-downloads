@@ -228,6 +228,7 @@ function edd_no_gateway_error() {
 }
 add_action( 'init', 'edd_no_gateway_error' );
 
+
 /**
  * Loads a payment gateway via AJAX
  *
@@ -244,5 +245,5 @@ function edd_load_ajax_gateway() {
 	}
 
 }
-
 add_action( 'wp_ajax_edd_load_gateway', 'edd_load_ajax_gateway' );
+add_action( 'wp_ajax_nopriv_edd_load_gateway', 'edd_load_ajax_gateway' );
