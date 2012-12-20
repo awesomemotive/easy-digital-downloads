@@ -3,9 +3,9 @@
  *
  */
 
-global $args;
+global $edd_receipt_args;
 
-$payment   = get_post( $args[ 'id' ] );
+$payment   = get_post( $edd_receipt_args[ 'id' ] );
 $meta      = edd_get_payment_meta( $payment->ID );
 $cart      = edd_get_payment_meta_cart_details( $payment->ID );
 $user      = edd_get_payment_meta_user_info( $payment->ID );
@@ -14,55 +14,55 @@ $downloads = edd_get_payment_meta_downloads( $payment->ID );
 
 <table id="edd_purchase_receipt">
 	<tbody>
-		<?php do_action( 'edd_payment_receipt_before', $payment, $args ); ?>
+		<?php do_action( 'edd_payment_receipt_before', $payment, $edd_receipt_args ); ?>
 
-		<?php if ( $args[ 'payment_id' ] ) : ?>
+		<?php if ( $edd_receipt_args[ 'payment_id' ] ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Payment', 'edd' ); ?>:</strong></td>
 			<td>#<?php echo $payment->ID; ?></td>
 		</tr>
 		<?php endif; ?>
 
-		<?php if ( $args[ 'date' ] ) : ?>
+		<?php if ( $edd_receipt_args[ 'date' ] ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Date', 'edd' ); ?>:</strong></td>
 			<td><?php echo date( get_option( 'date_format' ), strtotime( $meta[ 'date' ] ) ); ?></td>
 		</tr>
 		<?php endif; ?>
 
-		<?php if ( $args[ 'price' ] ) : ?>
+		<?php if ( $edd_receipt_args[ 'price' ] ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
 			<td><?php echo edd_price( edd_get_payment_amount( $payment->ID ) ); ?></td>
 		</tr>
 		<?php endif; ?>
 
-		<?php if ( $args[ 'discount' ] ) : ?>
+		<?php if ( $edd_receipt_args[ 'discount' ] ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Discount', 'edd' ); ?>:</strong></td>
 			<td><?php echo $user[ 'discount' ]; ?></td>
 		</tr>
 		<?php endif; ?>
 
-		<?php if ( $args[ 'payment_method' ] ) : ?>
+		<?php if ( $edd_receipt_args[ 'payment_method' ] ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Payment Method', 'edd' ); ?>:</strong></td>
 			<td><?php echo edd_get_payment_gateway( $payment->ID ); ?></td>
 		</tr>
 		<?php endif; ?>
 
-		<?php if ( $args[ 'payment_key' ] ) : ?>
+		<?php if ( $edd_receipt_args[ 'payment_key' ] ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Payment Key', 'edd' ); ?>:</strong></td>
 			<td><?php echo get_post_meta( $payment->ID, '_edd_payment_purchase_key', true ); ?></td>
 		</tr>
 		<?php endif; ?>
 
-		<?php do_action( 'edd_payment_receipt_after', $payment, $args ); ?>
+		<?php do_action( 'edd_payment_receipt_after', $payment, $edd_receipt_args ); ?>
 	</tbody>
 </table>
 
-<?php if ( $args[ 'products' ] ) : ?>
+<?php if ( $edd_receipt_args[ 'products' ] ) : ?>
 	<h3><?php echo apply_filters( 'edd_payment_receipt_products_title', __( 'Products', 'edd' ) ); ?></h3>
 
 	<table>

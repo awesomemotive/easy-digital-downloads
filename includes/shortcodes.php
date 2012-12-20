@@ -441,9 +441,9 @@ add_shortcode( 'edd_price', 'edd_download_price_shortcode' );
  * @return      string
  */
 function edd_receipt_shortcode( $atts, $content = null ) {
-	global $args;
+	global $edd_receipt_args;
 
-	$args = shortcode_atts( array(
+	$edd_receipt_args = shortcode_atts( array(
 		'error'           => __( 'Sorry, trouble retrieving payment receipt.', 'edd' ),
 		'key'             => null,
 		'price'           => true,
@@ -460,22 +460,22 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	if ( isset( $_GET[ 'purchase_key' ] ) ) {
 		$purchase_key = $_GET[ 'purchase_key' ];
 	
-		if ( ! $args[ 'key' ] )
-			return $args[ 'error' ];
+		if ( ! $edd_receipt_args[ 'key' ] )
+			return $edd_receipt_args[ 'error' ];
 	} else if ( $session ) {
 		$purchase_key = $session[ 'purchase_key' ];
 	}
 
 	// No key found
 	if ( ! $purchase_key )
-		return $args[ 'error' ];
+		return $edd_receipt_args[ 'error' ];
 
-	$args[ 'id' ] = edd_get_purchase_id_by_key( $purchase_key );
-	$user = edd_get_payment_meta_user_info( $args[ 'id' ] );
+	$edd_receipt_args[ 'id' ] = edd_get_purchase_id_by_key( $purchase_key );
+	$user = edd_get_payment_meta_user_info( $edd_receipt_args[ 'id' ] );
 
 	// Not the proper user
 	if ( $user[ 'id' ] != get_current_user_id() ) {
-		return $args[ 'error' ];
+		return $edd_receipt_args[ 'error' ];
 	}
 
 	ob_start();
