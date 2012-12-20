@@ -80,7 +80,7 @@ $downloads = edd_get_payment_meta_downloads( $payment->ID );
 			<?php foreach ( $cart as $key => $item ) : ?>
 			<tr>
 				<td>
-					<em><?php echo $item[ 'name' ]; ?></em><br />
+					<em><?php echo esc_html( $item[ 'name' ] ); ?></em><br />
 
 					<?php if ( $downloads ) : ?>
 						<ul style="margin: 0">
