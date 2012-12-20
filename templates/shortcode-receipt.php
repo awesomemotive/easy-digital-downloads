@@ -89,7 +89,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 			<?php foreach ( $cart as $key => $item ) : ?>
 			<tr>
 				<td>
-					<em><?php echo esc_html( $item[ 'name' ] ); ?></em><br />
+					<em><?php echo esc_html( $item[ 'name' ] ); ?></em>
 					<ul style="margin: 0">
 					<?php
 						$price_id 		= isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
