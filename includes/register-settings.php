@@ -66,12 +66,6 @@ function edd_register_settings() {
 					'options' => $pages_options
 				),
 				array(
-					'id' => 'show_links_on_success',
-					'name' => __('Download Links on Success Page', 'edd'),
-					'desc' => __('Show a list of all download links on the success page after completing a purchase?', 'edd'),
-					'type' => 'checkbox'
-				),
-				array(
 					'id' => 'currency_settings',
 					'name' => '<strong>' . __('Currency Settings', 'edd') . '</strong>',
 					'desc' => __('Configure the currency options', 'edd'),
