@@ -19,49 +19,40 @@ if ( !defined( 'ABSPATH' ) ) exit;
  *
  * Retrieves a list of all purchases by a specific user.
  *
- * @access      public
- * @since       1.0
- * @return      array
-*/
-
-function edd_get_users_purchases( $user_id = 0, $number = -1 ) {
-
-	if( empty( $user_id ) ) {
+ * @access public
+ * @since  1.0
+ * @param  int|string $user   User ID or email address
+ * @param  int $number        Number of purchases to retrieve
+ * 
+ * @return array List of all user purchases
+ */
+function edd_get_users_purchases( $user = 0, $number = -1 ) {
+ 
+	if ( empty( $user ) ) {
 		global $user_ID;
-		$user_id = $user_ID;
+ 
+		$user = $user_ID;
 	}
-
-	$purchases = get_transient( 'edd_user_' . $user_id . '_purchases' );
-	if( false === $purchases || edd_is_test_mode() ) {
+ 
+	$purchases = get_transient( 'edd_user_' . $user . '_purchases' );
+ 
+	if ( false === $purchases || edd_is_test_mode() ) {
 		$mode = edd_is_test_mode() ? 'test' : 'live';
-		$purchases = get_posts(
-			array(
-				'meta_query'   => array(
-					'relation' => 'AND',
-					array(
-						'key'   => '_edd_payment_mode',
-						'value' => $mode
-					),
-					array(
-						'key'   => '_edd_payment_user_id',
-						'value' => $user_id
-					)
-				),
-				'post_type'      => 'edd_payment',
-				'posts_per_page' => $number
-			)
-		);
-		set_transient( 'edd_user_' . $user_id . '_purchases', $purchases, 7200 );
+ 
+		$purchases = edd_get_payments( array(
+			'mode' => $mode,
+			'user' => $user
+		) );
+ 
+		set_transient( 'edd_user_' . $user . '_purchases', $purchases, 7200 );
 	}
-	if( $purchases ) {
-	    // return the download list
-		return $purchases;
-	}
-
-	// no downloads
-	return false;
+ 
+	// no purchases
+	if ( ! $purchases )
+		return false;
+ 
+	return $purchases;
 }
-
 
 
 /**
