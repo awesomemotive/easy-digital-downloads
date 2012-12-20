@@ -536,8 +536,8 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 		'first_name'      => $user_data['user_first'],
 		'last_name'       => $user_data['user_last'],
 		'user_registered' => date('Y-m-d H:i:s'),
-		'role'            => get_option( 'default_role' );
-	)
+		'role'            => get_option( 'default_role' )
+	);
 
 	// insert new user
 	$user_id = wp_insert_user( apply_filters( 'edd_insert_user_args', $user_args ) );
@@ -702,7 +702,7 @@ function edd_send_back_to_checkout( $args = array() ) {
 
 		$redirect = add_query_arg( $args, $redirect );
 	}
-	
+
 	wp_redirect( apply_filters( 'edd_send_back_to_checkout', $redirect, $args ) );
 	exit;
 }
