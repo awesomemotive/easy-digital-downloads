@@ -18,8 +18,21 @@ function edd_logs_view_file_downloads() {
 
 	$logs_table = new EDD_File_Downloads_Log_Table();
 	$logs_table->prepare_items();
-	$logs_table->display();
-
+?>
+	<div class="wrap">
+		<?php do_action( 'edd_logs_file_downloads_top' ); ?>
+		<form id="edd-payments-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">
+			<?php
+			$logs_table->search_box( __( 'Search', 'edd' ), 'edd-payments' );
+			$logs_table->display();
+			?>
+			<input type="hidden" name="post_type" value="download" />
+	        <input type="hidden" name="page" value="edd-reports" />
+	        <input type="hidden" name="tab" value="logs" />
+		</form>
+		<?php do_action( 'edd_logs_file_downloads_bottom' ); ?>
+	</div>
+<?php
 }
 add_action( 'edd_logs_view_file_downloads', 'edd_logs_view_file_downloads' );
 
@@ -67,20 +80,21 @@ function edd_log_views() {
 	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'sales';
 
 	?>
-	<form id="edd-sales-filter" method="get">
+	<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">
 		<select id="edd-logs-view" name="view">
 			<option value="-1"><?php _e( 'Log Type', 'edd' ); ?></option>
 			<?php foreach( $views as $view_id => $label ): ?>
 				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
 			<?php endforeach; ?>
 		</select>
-		
+
 		<?php do_action( 'edd_log_view_actions' ); ?>
-		<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
 
 		<input type="hidden" name="post_type" value="download"/>
 		<input type="hidden" name="page" value="edd-reports"/>
 		<input type="hidden" name="tab" value="logs"/>
+
+		<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
 	</form>
 	<?php
 }
