@@ -657,24 +657,39 @@ function edd_get_payment_gateway( $payment_id ) {
 	return apply_filters( 'edd_payment_gateway', $gateway );
 }
 
+
 /**
- * Get the amount associated with a payment
+ * Payment amount
  *
  * @param int $payment_id
  *
  * @access      public
- * @since       1.2
- * @return      array
+ * @since       1.4
+ * @return      string Fully formatted payment amount
  */
-function edd_get_payment_amount( $payment_id ) {
-	$amount = get_post_meta( $payment_id, '_edd_payment_total', true );
-
-	if ( !$amount ) {
-		$payment_meta = edd_get_payment_meta( $payment_id );
-		$amount       = $payment_meta['amount'];
-	}
-	return apply_filters( 'edd_payment_amount', $amount );
+function edd_payment_amount( $payment_id = 0 ) {
+	$amount = edd_get_payment_amount( $payment_id );
+	return edd_currency_filter( edd_format_amount( $amount ) );
 }
+
+	/**
+	 * Get the amount associated with a payment
+	 *
+	 * @param int $payment_id
+	 *
+	 * @access      public
+	 * @since       1.2
+	 * @return      array
+	 */
+	function edd_get_payment_amount( $payment_id ) {
+		$amount = get_post_meta( $payment_id, '_edd_payment_total', true );
+
+		if ( !$amount ) {
+			$payment_meta = edd_get_payment_meta( $payment_id );
+			$amount       = $payment_meta['amount'];
+		}
+		return apply_filters( 'edd_payment_amount', $amount );
+	}
 
 /**
  * Retrieves subtotal for payment
