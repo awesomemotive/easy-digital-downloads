@@ -28,13 +28,15 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 		switch( $column_name ){
 
 			case 'error' :
-				echo get_the_title( $item['ID'] );
-				break;
-
-
-
+				return get_the_title( $item['ID'] );
+			case 'gateway' :
+				return edd_get_payment_gateway( $item['payment_id'] );
+			case 'buyer' :
+				$user = ! empty( $item['user_id'] ) ? $item['user_id'] : $item['buyer'];
+				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' ) . urlencode( $user ) . '">' . $item['buyer'] . '</a>';
 			default:
 				return $item[ $column_name ];
+
 		}
 	}
 
@@ -83,13 +85,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 		return $columns;
 	}
 
-	function get_filtered_user() {
-		return isset( $_GET['user'] ) ? absint( $_GET['user'] ) : false;
-	}
-
-	function get_filtered_download() {
-		return !empty( $_GET['download'] ) ? absint( $_GET['download'] ) : false;
-	}
 
 	function get_paged() {
 		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
@@ -105,28 +100,12 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 		global $edd_logs;
 
 		$logs_data = array();
-
-		$paged    = $this->get_paged();
-		$user     = $this->get_filtered_user();
-		$download = $this->get_filtered_download();
-
+		$paged     = $this->get_paged();
 		$log_query = array(
 			'post_parent' => $download,
 			'log_type'    => 'gateway_error',
 			'paged'       => $paged
 		);
-
-		if( $user ) {
-
-			// show only logs from a specific user
-
-			$log_query['meta_query'] = array(
-				array(
-					'key'   => '_edd_log_user_id',
-					'value' => $user
-				)
-			);
-		}
 
 		$logs = $edd_logs->get_connected_logs( $log_query );
 
@@ -143,6 +122,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 					'payment_id' => $log->post_parent,
 					'error'   => 'error',
 					'gateway' => 'gateway',
+					'user_id' => $user_id,
 					'buyer'	  => $user_data ? $user_data->display_name : $user_info['email'],
 					'date'	  => $log->post_date
 				);
@@ -183,20 +163,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 
 		$this->items = $this->logs_data();
 
-		$user     = $this->get_filtered_user();
-		$download = $this->get_filtered_download();
-
-		if( $user ) {
-			$meta_query = array(
-				array(
-					'key'   => '_edd_log_user_id',
-					'value' => $user
-				)
-			);
-		} else {
-			$meta_query = false;
-		}
-		$total_items = $edd_logs->get_log_count( $download, 'file_download', $meta_query );
+		$total_items = $edd_logs->get_log_count( $download, 'file_download' );
 
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,                  	// WE have to calculate the total number of items
