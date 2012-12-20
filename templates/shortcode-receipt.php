@@ -9,7 +9,6 @@ $payment   = get_post( $edd_receipt_args[ 'id' ] );
 $meta      = edd_get_payment_meta( $payment->ID );
 $cart      = edd_get_payment_meta_cart_details( $payment->ID );
 $user      = edd_get_payment_meta_user_info( $payment->ID );
-$downloads = edd_get_payment_meta_downloads( $payment->ID );
 ?>
 
 <table id="edd_purchase_receipt">
@@ -81,33 +80,31 @@ $downloads = edd_get_payment_meta_downloads( $payment->ID );
 			<tr>
 				<td>
 					<em><?php echo esc_html( $item[ 'name' ] ); ?></em><br />
+					<ul style="margin: 0">
+					<?php
+						$price_id 		= isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
+						$download_files = edd_get_download_files( $item['id'], $price_id );
 
-					<?php if ( $downloads ) : ?>
-						<ul style="margin: 0">
-						<?php
-							foreach ( $downloads as $download ) :
-								$id 			= isset($cart) ? $download['id'] : $download;
-								$price_id 		= isset($download['options']['price_id']) ? $download['options']['price_id'] : null;
-								$download_files = edd_get_download_files( $id, $price_id );
+						if ( edd_no_redownload() )
+							continue;
 
-								if ( edd_no_redownload() )
-									continue;
+						if ( $download_files ) :
 
-								if ( $download_files ) :
-									foreach( $download_files as $filekey => $file ) :
-										$download_url = edd_get_download_file_url($meta['key'], $meta['email'], $filekey, $id );
-							?>
-										<li class="edd_download_file"><a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a></li>
-							<?php
-										do_action( 'edd_purchase_history_files', $filekey, $file, $id, $post->ID, $meta );
-									endforeach;
-								else :
-									echo '<li>' . __( 'No downloadable files found.', 'edd') . '</li>';
-								endif;
-							?>
-						<?php endforeach; ?>
-						</ul>
-					<?php endif; ?>
+							foreach( $download_files as $filekey => $file ) :
+
+								$download_url = edd_get_download_file_url( $meta['key'], $meta['email'], $filekey, $item['id'] );
+					?>
+								<li class="edd_download_file"><a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a></li>
+					<?php
+								do_action( 'edd_purchase_history_files', $filekey, $file, $id, $post->ID, $meta );
+
+							endforeach;
+
+						else :
+							echo '<li>' . __( 'No downloadable files found.', 'edd') . '</li>';
+						endif;
+					?>
+					</ul>
 				</td>
 				<td><?php echo edd_price( $item[ 'price' ] ); ?></td>
 			</tr>
