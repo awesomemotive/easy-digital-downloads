@@ -250,15 +250,6 @@ function edd_filter_success_page_content( $content ) {
 		}
 	}
 
-	if ( isset( $edd_options['success_page'] ) && is_page( $edd_options['success_page'] ) && ! isset( $_GET['payment-confirmation'] ) ) {
-		if ( isset( $edd_options['show_links_on_success'] ) ) {
-			// show download links to non logged-in users
-			if ( ( $purchase_data = edd_get_purchase_session() ) ) {
-				$content .= edd_get_purchase_download_links( $purchase_data );
-			}
-		}
-	}
-
 	return $content;
 }
 add_filter( 'the_content', 'edd_filter_success_page_content' );
