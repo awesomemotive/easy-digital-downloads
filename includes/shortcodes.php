@@ -458,8 +458,8 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	$session = edd_get_purchase_session();
 
 	if ( isset( $_GET[ 'purchase_key' ] ) ) {
-		$purchase_key = $_GET[ 'purchase_key' ];
-	
+		$purchase_key = urldecode( $_GET[ 'purchase_key' ] );
+
 		if ( ! $edd_receipt_args[ 'key' ] )
 			return $edd_receipt_args[ 'error' ];
 	} else if ( $session ) {
