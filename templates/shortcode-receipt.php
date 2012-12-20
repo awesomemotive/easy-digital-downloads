@@ -30,6 +30,16 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 		<?php endif; ?>
 
 		<?php if ( $edd_receipt_args[ 'price' ] ) : ?>
+			<?php if( edd_use_taxes() ) : ?>
+				<tr>
+					<td><strong><?php _e( 'Subtotal', 'edd' ); ?></strong></td>
+					<td><?php echo edd_payment_subtotal( $payment->ID ); ?></td>
+				</tr>
+				<tr>
+					<td><strong><?php _e( 'Tax', 'edd' ); ?></strong></td>
+					<td><?php echo edd_payment_tax( $payment->ID ); ?></td>
+				</tr>
+			<?php endif; ?>
 		<tr>
 			<td><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
 			<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
