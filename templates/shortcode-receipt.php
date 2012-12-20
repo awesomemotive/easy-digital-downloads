@@ -96,7 +96,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 					?>
 								<li class="edd_download_file"><a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a></li>
 					<?php
-								do_action( 'edd_purchase_history_files', $filekey, $file, $id, $post->ID, $meta );
+								do_action( 'edd_receipt_files', $filekey, $file, $id, $post->ID, $meta );
 
 							endforeach;
 
