@@ -112,7 +112,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 							endforeach;
 
 						else :
-							echo '<li>' . __( 'No downloadable files found.', 'edd') . '</li>';
+							echo '<li>' . __( 'No downloadable files found.', 'edd' ) . '</li>';
 						endif;
 					?>
 					</ul>
