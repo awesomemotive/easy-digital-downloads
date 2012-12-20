@@ -53,7 +53,7 @@ function edd_show_upgrade_notices() {
 		);
 	}
 
-	if( version_compare( $edd_version, '1.3.4', '<' ) ) {
+	if( version_compare( $edd_version, '1.3.4', '<' ) || version_compare( $edd_version, '1.4', '<' ) ) {
 		printf(
 			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the plugin pages, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
 			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
@@ -91,6 +91,10 @@ function edd_trigger_upgrades() {
 
 	if( version_compare( $edd_version, '1.3.4', '<' ) ) {
 		edd_v134_upgrades();
+	}
+
+	if( version_compare( $edd_version, '1.4', '<' ) ) {
+		edd_v14_upgrades();
 	}
 
 	update_option( 'edd_version', EDD_VERSION );
@@ -193,6 +197,14 @@ function edd_v131_upgrades() {
 }
 
 
+/**
+ * Upgrade routine for v1.3.4
+ *
+ * @access      private
+ * @since       1.3.4
+ * @return      void
+*/
+
 function edd_v134_upgrades() {
 
 	$general_options = get_option( 'edd_settings_general' );
@@ -216,4 +228,30 @@ function edd_v134_upgrades() {
 	$general_options['failure_page'] = $failed;
 
 	update_option( 'edd_settings_general', $general_options );
+}
+
+
+/**
+ * Upgrade routine for v1.4
+ *
+ * @access      private
+ * @since       1.4
+ * @return      void
+*/
+
+function edd_v14_upgrades() {
+
+	global $edd_options;
+
+	$success_page = get_post( $edd_options['success_page'] );
+
+	// check for the [edd_receipt] short code and add it if not present
+	if( strpos( $success_page->post_content, '[edd_receipt' ) === false ) {
+
+		$page_content = $success_page->post_content .= "\n[edd_receipt]";
+
+		wp_update_post( array( 'ID' => $edd_options['success_page'], 'post_content' => $page_content ) );
+
+	}
+
 }
