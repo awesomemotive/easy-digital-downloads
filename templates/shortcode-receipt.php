@@ -8,6 +8,7 @@ global $edd_receipt_args;
 $payment   = get_post( $edd_receipt_args[ 'id' ] );
 $meta      = edd_get_payment_meta( $payment->ID );
 $cart      = edd_get_payment_meta_cart_details( $payment->ID );
+print_r( $cart );
 $user      = edd_get_payment_meta_user_info( $payment->ID );
 ?>
 
@@ -106,7 +107,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 					?>
 								<li class="edd_download_file"><a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a></li>
 					<?php
-								do_action( 'edd_receipt_files', $filekey, $file, $id, $post->ID, $meta );
+								do_action( 'edd_receipt_files', $filekey, $file, $item['id'], $payment->ID, $meta );
 
 							endforeach;
 
