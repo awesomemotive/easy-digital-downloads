@@ -73,7 +73,7 @@ $downloads = edd_get_payment_meta_downloads( $payment->ID );
 		<tfoot>
 			<tr>
 				<td><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
-				<td><?php echo edd_price( edd_get_payment_amount( $payment->ID ) ); ?></td>
+				<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
 			</tr>
 		</tfoot>
 		<tbody>
