@@ -445,7 +445,6 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 
 	$edd_receipt_args = shortcode_atts( array(
 		'error'           => __( 'Sorry, trouble retrieving payment receipt.', 'edd' ),
-		'key'             => null,
 		'price'           => true,
 		'discount'        => true,
 		'products'        => true,
@@ -459,9 +458,6 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 
 	if ( isset( $_GET[ 'purchase_key' ] ) ) {
 		$purchase_key = urldecode( $_GET[ 'purchase_key' ] );
-
-		if ( ! $edd_receipt_args[ 'key' ] )
-			return $edd_receipt_args[ 'error' ];
 	} else if ( $session ) {
 		$purchase_key = $session[ 'purchase_key' ];
 	}
