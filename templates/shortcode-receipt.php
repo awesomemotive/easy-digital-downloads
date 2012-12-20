@@ -17,8 +17,8 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 
 		<?php if ( $edd_receipt_args[ 'payment_id' ] ) : ?>
 		<tr>
-			<td><strong><?php _e( 'Payment', 'edd' ); ?>:</strong></td>
-			<td>#<?php echo $payment->ID; ?></td>
+			<th><strong><?php _e( 'Payment', 'edd' ); ?>:</strong></th>
+			<th>#<?php echo $payment->ID; ?></th>
 		</tr>
 		<?php endif; ?>
 
@@ -74,7 +74,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 <?php if ( $edd_receipt_args[ 'products' ] ) : ?>
 	<h3><?php echo apply_filters( 'edd_payment_receipt_products_title', __( 'Products', 'edd' ) ); ?></h3>
 
-	<table>
+	<table id="edd_purchase_receipt_products">
 		<thead>
 			<th><?php _e( 'Name', 'edd' ); ?></th>
 			<th><?php _e( 'Price', 'edd' ); ?></th>
