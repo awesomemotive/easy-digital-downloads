@@ -8,7 +8,6 @@ global $edd_receipt_args;
 $payment   = get_post( $edd_receipt_args[ 'id' ] );
 $meta      = edd_get_payment_meta( $payment->ID );
 $cart      = edd_get_payment_meta_cart_details( $payment->ID );
-print_r( $cart );
 $user      = edd_get_payment_meta_user_info( $payment->ID );
 ?>
 
@@ -117,7 +116,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 					?>
 					</ul>
 				</td>
-				<td><?php echo edd_price( $item[ 'price' ] ); ?></td>
+				<td><?php echo edd_currency_filter( edd_format_amount( $item[ 'price' ] ) ); ?></td>
 			</tr>
 			<?php endforeach; ?>
 		</tbody>
