@@ -53,7 +53,7 @@ function edd_manual_payment( $purchase_data ) {
 	);
 	*/
 
-	$payment = array(
+	$payment_data = array(
 		'price' 		=> $purchase_data['price'],
 		'date' 			=> $purchase_data['date'],
 		'user_email' 	=> $purchase_data['user_email'],
@@ -66,9 +66,10 @@ function edd_manual_payment( $purchase_data ) {
 	);
 
 	// record the pending payment
-	$payment = edd_insert_payment( $payment );
+	$payment = edd_insert_payment( $payment_data );
 
 	if( $payment ) {
+		edd_record_gateway_error( __( 'Payment Error', 'edd' ), sprintf( __( 'Payment creation failed before sending buyer to PayPal. Payment data: %s', 'edd' ), json_encode( $payment_data ) ), $payment );
 		edd_update_payment_status( $payment, 'publish' );
 		// empty the shopping cart
 		edd_empty_cart();
