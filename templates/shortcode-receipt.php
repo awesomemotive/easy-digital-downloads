@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * This template is used to display the purchase summary with [edd_receipt]
  */
 
 global $edd_receipt_args;
