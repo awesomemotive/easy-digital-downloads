@@ -26,7 +26,7 @@ $downloads = edd_get_payment_meta_downloads( $payment->ID );
 		<?php if ( $edd_receipt_args[ 'date' ] ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Date', 'edd' ); ?>:</strong></td>
-			<td><?php echo date( get_option( 'date_format' ), strtotime( $meta[ 'date' ] ) ); ?></td>
+			<td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $meta[ 'date' ] ) ); ?></td>
 		</tr>
 		<?php endif; ?>
 
@@ -84,7 +84,7 @@ $downloads = edd_get_payment_meta_downloads( $payment->ID );
 
 					<?php if ( $downloads ) : ?>
 						<ul style="margin: 0">
-						<?php 
+						<?php
 							foreach ( $downloads as $download ) :
 								$id 			= isset($cart) ? $download['id'] : $download;
 								$price_id 		= isset($download['options']['price_id']) ? $download['options']['price_id'] : null;
