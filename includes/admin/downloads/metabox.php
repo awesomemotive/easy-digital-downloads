@@ -716,7 +716,7 @@ function edd_render_download_log_meta_box() {
 		} else {
 			echo '<tr>';
 				echo '<td colspan=4" class="edd_download_sales_log">';
-					echo __( 'No file downloads yet yet', 'edd' );
+					echo __( 'No file downloads yet', 'edd' );
 				echo '</td>';
 			echo '</tr>';
 		}
