@@ -712,12 +712,12 @@ function _edd_deprecated_function( $function, $version, $replacement = null ) {
 
 	do_action( 'edd_deprecated_function_run', $function, $replacement, $version );
 
-	$show_errors = current_user_can( 'manage_options' ) ? true : false;
+	$show_errors = current_user_can( 'manage_options' );
 
 
 	// Allow plugin to filter the output error trigger
 	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', $show_errors ) ) {
-		if ( ! is_null($replacement) )
+		if ( ! is_null( $replacement ) )
 			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
 		else
 			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'edd'), $function, $version ) );
