@@ -35,8 +35,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 */
 
 	function search_box( $text, $input_id ) {
-		if ( empty( $_REQUEST['s'] ) && !$this->has_items() )
-			return;
 
 		$input_id = $input_id . '-search-input';
 
