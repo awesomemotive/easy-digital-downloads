@@ -121,7 +121,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		$paged    = $this->get_paged();
 		$user     = $this->get_filtered_user();
-		$download = $this->get_filtered_download();
+		$download = empty( $_GET['s'] ) ? $this->get_filtered_download() : null;
 
 		$log_query = array(
 			'post_parent' => $download,
@@ -140,7 +140,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			);
 		}
 
-		if( isset( $_GET['s'] ) ) {
+		if( ! empty( $_GET['s'] ) ) {
 			$search = urldecode( $_GET['s'] );
 
 			if( filter_var( $search, FILTER_VALIDATE_IP ) ) {
