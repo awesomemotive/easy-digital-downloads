@@ -149,13 +149,34 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				$compare = '=';
 
 			} else if( is_email( $search ) ) {
-				// this is an email search
+				// this is an email search. We use this to ensure it works for guest users and logged-in users
 				$key     = '_edd_log_user_info';
 				$compare = 'LIKE';
 
 			} else {
-				$key     = '';
-				$compare = '';
+				// look for a user
+				$key = '_edd_log_user_id';
+				$compare = 'LIKE';
+				if( ! is_numeric( $search ) ) {
+					// searching for user by username
+					$user = get_user_by( 'login', $search );
+					if( $user ) {
+						// found one, set meta value to user's ID
+						$search = $user->ID;
+					} else {
+						// no user found so let's do a real search query
+						$users = new WP_User_Query( array(
+							'search'         => $search,
+							'search_columns' => array( 'user_url', 'user_nicename' ),
+							'number'         => 1,
+							'fields'         => 'ids'
+						) );
+						$found_user = $users->get_results();
+						if( $found_user ) {
+							$search = $found_user[0];
+						}
+					}
+				}
 			}
 
 			$log_query['meta_query'][] = array(
