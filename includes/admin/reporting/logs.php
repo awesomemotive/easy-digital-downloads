@@ -80,7 +80,7 @@ function edd_log_views() {
 	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'sales';
 
 	?>
-	<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">
+	<form id="edd-logs-filter" method="get" action="edit.php">
 		<select id="edd-logs-view" name="view">
 			<option value="-1"><?php _e( 'Log Type', 'edd' ); ?></option>
 			<?php foreach( $views as $view_id => $label ): ?>
