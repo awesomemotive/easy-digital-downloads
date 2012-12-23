@@ -369,7 +369,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		$current_page          = $this->get_pagenum();
 		$this->items           = $this->get_logs();
-		$total_items           = $edd_logs->get_log_count( null, 'sale' );
+		$total_items           = $edd_logs->get_log_count( $this->get_filtered_download(), 'sale', $this->get_meta_query() );
 
 		$this->set_pagination_args( array(
 				'total_items'  => $total_items,
