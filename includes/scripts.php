@@ -139,7 +139,6 @@ function edd_load_admin_scripts( $hook ) {
 		wp_enqueue_script( 'colorbox', EDD_PLUGIN_URL . 'includes/js/jquery.colorbox-min.js', array( 'jquery' ), '1.3.20');
 	}
 	if( $hook == $edd_system_info_page ) {
-		wp_enqueue_style( 'systeminfocss', EDD_PLUGIN_URL . 'includes/css/sysinfo.css', array(  ), '1.3.20' );
 		wp_enqueue_script( 'generatefile', EDD_PLUGIN_URL . 'includes/js/jquery.generateFile.js', array( 'jquery' ), '1.3.20');
 		wp_enqueue_script( 'systeminfoscript', EDD_PLUGIN_URL . 'includes/js/system-info-script.js', array( 'jquery' ), '1.3.20');
 	}
