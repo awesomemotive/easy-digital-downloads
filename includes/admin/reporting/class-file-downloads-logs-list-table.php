@@ -7,6 +7,13 @@ if( !class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
+
+/**
+ * Sets up the WP list table for the File Downloads Logs View
+ *
+ * @since       1.4
+ */
+
 class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 	/**
@@ -280,6 +287,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      void
 	 */
+
 	function bulk_actions() {
 		// these aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
