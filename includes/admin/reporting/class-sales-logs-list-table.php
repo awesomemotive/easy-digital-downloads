@@ -92,6 +92,19 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 
 	/**
+	 * Retrieve the current page number
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      int
+	 */
+
+	function get_paged() {
+		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+	}
+
+
+	/**
 	 * Outputs the log filters filter
 	 *
 	 * @access      private
@@ -119,7 +132,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 		$logs_data = array();
 
-		$paged = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+		$paged = $this->get_paged();
 
 		$user  = isset( $_GET['user'] ) ? absint( $_GET['user'] ) : false;
 
