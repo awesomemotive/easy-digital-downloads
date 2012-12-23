@@ -6,7 +6,7 @@
  * @subpackage  Download Functions
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -18,7 +18,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Retrieves a download post object by ID or slug.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      object
 */
 
@@ -29,19 +29,19 @@ function edd_get_download( $download ) {
 			return null;
 		return $download;
 	}
-	
+
 	$args = array(
 		'post_type'   => 'download',
 		'name'        => $download,
 		'numberposts' => 1
 	);
-	
+
 	$download = get_posts($args);
-    
+
 	if ( $download ) {
 		return $download[0];
 	}
-	
+
 	return null;
 }
 
@@ -52,7 +52,7 @@ function edd_get_download( $download ) {
  * Returns the price of a download, but only for non-variable priced downloads.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @param       $download_id INT the ID number of the download to retrieve a price for
  * @return      $string/int the price of the download
 */
@@ -89,12 +89,12 @@ function edd_price( $download_id, $echo = true ) {
 	} else {
 		$price = edd_get_download_price( $download_id );
 	}
-	
+
 
 	$price = apply_filters( 'edd_download_price', $price, $download_id );
 
 	$price = '<span class="edd_price" id="edd_price_' . $download_id . '">' . $price . '</span>';
-	
+
 	if( $echo )
 		echo $price;
 	else
@@ -111,7 +111,7 @@ add_filter( 'edd_download_price', 'edd_currency_filter', 20 );
  * this price includes any necessary discounts that were applied.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @param       int $download_id - the ID of the download
  * @param       array $user_purchase_info - an array of all information for the payment
  * @param       string $amount_override a custom amount that over rides the 'edd_price' meta, used for variable prices
@@ -162,7 +162,7 @@ function edd_get_variable_prices( $download_id ) {
 
 function edd_has_variable_prices( $download_id ) {
 	if( get_post_meta( $download_id, '_variable_pricing', true ) ) {
-		return true;	
+		return true;
 	}
 	return false;
 }
@@ -197,7 +197,7 @@ function edd_get_price_option_name( $download_id, $price_id ) {
  * Returns the total earnings for a download.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      integer
 */
 
@@ -207,10 +207,10 @@ function edd_get_download_earnings_stats( $download_id ) {
 	if ( '' == get_post_meta( $download_id, '_edd_download_earnings', true ) ) {
 		add_post_meta( $download_id, '_edd_download_earnings', 0 );
 	} // end if
-	
+
 	$earnings = get_post_meta( $download_id, '_edd_download_earnings', true );
-	
-	return $earnings;	
+
+	return $earnings;
 }
 
 
@@ -220,7 +220,7 @@ function edd_get_download_earnings_stats( $download_id ) {
  * Return the sales number for a download.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      integer
 */
 
@@ -230,9 +230,9 @@ function edd_get_download_sales_stats($download_id) {
 	if ( '' == get_post_meta( $download_id, '_edd_download_sales', true ) ) {
 		add_post_meta( $download_id, '_edd_download_sales', 0 );
 	} // end if
-	
+
 	$sales = get_post_meta( $download_id, '_edd_download_sales', true );
-	
+
 	return $sales;
 }
 
@@ -241,32 +241,32 @@ function edd_get_download_sales_stats($download_id) {
  * Get Download Sales Log
  *
  * Returns an array of sales and sale info for a download.
- * 
+ *
  * @param		$download_id INT the ID number of the download to retrieve a log for
  * @param		$paginate bool whether to paginate the results or not
  * @param		$number int the number of results to return
  * @param		$offset int the number of items to skip
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      array
 */
 
 function edd_get_download_sales_log( $download_id, $paginate = false, $number = 10, $offset = 0 ) {
-	
+
 	$sales_log = get_post_meta( $download_id, '_edd_sales_log', true );
-	
+
 	if( $sales_log ) {
 		$sales_log = array_reverse( $sales_log );
 		$log = array();
-		$log['number'] = count( $sales_log );		
+		$log['number'] = count( $sales_log );
 		$log['sales'] = $sales_log;
 		if( $paginate ) {
 			$log['sales'] = array_slice( $sales_log, $offset, $number );
 		}
 		return $log;
 	}
-	
+
 	return false;
 }
 
@@ -277,8 +277,8 @@ function edd_get_download_sales_log( $download_id, $paginate = false, $number = 
  * Returns an array of file download dates and user info.
  *
  * @access      public
- * @since       1.0 
- * 
+ * @since       1.0
+ *
  * @param		$download_id INT the ID number of the download to retrieve a log for
  * @param		$paginate bool whether to paginate the results or not
  * @param		$number int the number of results to return
@@ -289,20 +289,20 @@ function edd_get_download_sales_log( $download_id, $paginate = false, $number = 
 
 function edd_get_file_download_log( $download_id, $paginate = false, $number = 10, $offset = 0 ) {
 	$download_log = get_post_meta( $download_id, '_edd_file_download_log', true );
-	
+
 	if( $download_log ) {
 		$download_log = array_reverse( $download_log );
 		$log = array();
 		$log['number'] = count( $download_log );
 		$log['downloads'] = $download_log;
-		
+
 		if( $paginate ) {
 			$log['downloads'] = array_slice( $download_log, $offset, $number );
 		}
-		
+
 		return $log;
 	}
-	
+
 	return false;
 }
 
@@ -313,7 +313,7 @@ function edd_get_file_download_log( $download_id, $paginate = false, $number = 1
  * Stores log information for a download sale.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -326,7 +326,7 @@ function edd_record_sale_in_log( $download_id, $payment_id ) {
 		'log_type'		=> 'sale'
 	);
 
-	$log_meta = array( 
+	$log_meta = array(
 		'payment_id'=> $payment_id
 	);
 
@@ -341,7 +341,7 @@ function edd_record_sale_in_log( $download_id, $payment_id ) {
  * Stores a log entry for a file download.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -375,7 +375,7 @@ function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip, $p
  * Increases the sale count of a download.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -402,7 +402,7 @@ function edd_decrease_purchase_count( $download_id ) {
 	$sales = edd_get_download_sales_stats( $download_id );
 	if( $sales > 0 ) // only decrease if not already zero
 		$sales = $sales - 1;
-	
+
 	if( update_post_meta( $download_id, '_edd_download_sales', $sales ) )
 		return $sales;
 
@@ -416,17 +416,17 @@ function edd_decrease_purchase_count( $download_id ) {
  * Increases the total earnings of a download.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
 function edd_increase_earnings( $download_id, $amount ) {
 	$earnings = edd_get_download_earnings_stats( $download_id );
 	$earnings = $earnings + $amount;
-	
+
 	if( update_post_meta( $download_id, '_edd_download_earnings', $earnings ) )
 		return $earnings;
-	
+
 	return false;
 }
 
@@ -437,19 +437,19 @@ function edd_increase_earnings( $download_id, $amount ) {
  * Decreases the total earnings of a download. Primarily for when a purchase is refunded.
  *
  * @access      public
- * @since       1.0.8.1 
+ * @since       1.0.8.1
  * @return      void
 */
 
 function edd_decrease_earnings( $download_id, $amount ) {
 	$earnings = edd_get_download_earnings_stats( $download_id );
-	
+
 	if( $earnings > 0 ) // only decrease if greater than zero
 		$earnings = $earnings - $amount;
-	
+
 	if( update_post_meta( $download_id, '_edd_download_earnings', $earnings ) )
 		return $earnings;
-	
+
 	return false;
 }
 
@@ -544,10 +544,10 @@ function edd_get_download_files( $download_id, $variable_price_id = null ) {
  * Gets the file download file limit for a particular download
  *
  * This limit refers to the maximum number of times files connected to a product
- * can be downloaded. 
+ * can be downloaded.
  *
  * @access      public
- * @since       1.3.1 
+ * @since       1.3.1
  * @return      int The limit
 */
 
@@ -598,11 +598,11 @@ function edd_set_file_download_limit_override( $download_id = 0, $payment_id = 0
 
 	$override 	= edd_get_file_download_limit_override( $download_id );
 	$limit 		= edd_get_file_download_limit( $download_id );
-	
+
 	if( ! empty( $override ) ) {
 		$override = $override += 1;
 	} else {
-		$override = $limit += 1;	
+		$override = $limit += 1;
 	}
 	update_post_meta( $download_id, '_edd_download_limit_override_' . $payment_id, $override );
 
@@ -613,10 +613,10 @@ function edd_set_file_download_limit_override( $download_id = 0, $payment_id = 0
  * Checks if a file is at its download limit
  *
  * This limit refers to the maximum number of times files connected to a product
- * can be downloaded. 
+ * can be downloaded.
  *
  * @access      public
- * @since       1.3.1 
+ * @since       1.3.1
  * @return      bool False if not at limit, True if at limit
 */
 
@@ -647,11 +647,11 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
 		if( $download_count >= $download_limit ) {
 
 			$ret = true;
-			
+
 			// check to make sure the limit isn't overwritten
 			// a limit is overwritten when purchase receipt is resent
 			$limit_override = edd_get_file_download_limit_override( $download_id, $payment_id );
-			
+
 			if( ! empty( $limit_override ) && $download_count < $limit_override ) {
 				$ret = false;
 			}
@@ -668,7 +668,7 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
  * Gets the Price ID that can download a file
  *
  * @access      public
- * @since       1.0.9 
+ * @since       1.0.9
  * @return      string - the price ID if restricted, "all" otherwise
 */
 
@@ -681,7 +681,7 @@ function edd_get_file_price_condition( $download_id, $file_key ) {
 	$condition = isset( $files[ $file_key ]['condition']) ? $files[ $file_key ]['condition'] : 'all';
 
 	return $condition;
-	
+
 }
 
 
@@ -691,34 +691,34 @@ function edd_get_file_price_condition( $download_id, $file_key ) {
  * Constructs the file download url for a specific file.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      string
 */
 
 function edd_get_download_file_url($key, $email, $filekey, $download_id) {
-	
+
 	global $edd_options;
 
-	$hours = isset( $edd_options['download_link_expiration'] ) 
-			&& is_numeric( $edd_options['download_link_expiration'] ) 
+	$hours = isset( $edd_options['download_link_expiration'] )
+			&& is_numeric( $edd_options['download_link_expiration'] )
 			? absint($edd_options['download_link_expiration']) : 24;
 
 	if( ! ( $date = strtotime( '+' . $hours . 'hours' ) ) )
 		$date = 2147472000; // highest possible date, January 19, 2038
-		
+
 	$params = array(
 		'download_key' 	=> $key,
 		'email' 		=> rawurlencode( $email ),
 		'file' 			=> $filekey,
-		'download' 		=> $download_id, 
+		'download' 		=> $download_id,
 		'expire' 		=> rawurlencode( base64_encode( $date ) )
 	);
 
 	$params = apply_filters( 'edd_download_file_url_args', $params );
-	
+
 	$download_url = add_query_arg( $params, home_url() );
-	
-	return $download_url;	
+
+	return $download_url;
 }
 
 
@@ -728,7 +728,7 @@ function edd_get_download_file_url($key, $email, $filekey, $download_id) {
  * Verifies a download purchase using a purchase key and email.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @return      boolean
 */
 
@@ -762,23 +762,23 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 			if( $downloads ) {
 
 				foreach( $downloads as $key => $download ) {
-					
+
 					$id = isset( $payment_meta['cart_details'] ) ? $download['id'] : $download;
-					
+
 					$price_options = $cart_details[ $key ]['item_number']['options'];
 
 					$file_condition = edd_get_file_price_condition( $id, $file_key );
-					
+
 					$variable_prices_enabled = get_post_meta( $id, '_variable_pricing', true );
-							
+
 					// if this download has variable prices, we have to confirm that this file was included in their purchase
 					if( ! empty( $price_options ) && $file_condition != 'all' && $variable_prices_enabled ) {
 						if( $file_condition !== $price_options['price_id'] )
 							return false;
 					}
-				
+
 					if( $id == $download_id ) {
-						
+
 						// check to see if the file download limit has been reached
 						if( edd_is_file_at_download_limit( $id, $payment->ID, $file_key ) )
 							wp_die( __('Sorry but you have hit your download limit for this file.', 'edd'), __('Error', 'edd') );

@@ -62,10 +62,15 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 				return '<a href="' .
 				admin_url( '/post.php?post=' . $item[ $column_name ] . '&action=edit' ) .
 				 '" target="_blank">' . get_the_title( $item[ $column_name ] ) . '</a>';
+
 			case 'user_id' :
 				return '<a href="' .
 					admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['user_id'] ) ) .
 					 '">' . $item[ 'user_name' ] . '</a>';
+
+			case 'amount' :
+				return edd_currency_filter( edd_format_amount( $item['amount'] ) );
+
 			default:
 				return $item[ $column_name ];
 		}
@@ -83,8 +88,10 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	function get_columns() {
 		$columns = array(
 			'ID'		=> __( 'Log ID', 'edd' ),
-			'payment_id'=> __( 'Payment ID', 'edd' ),
 			'user_id'  	=> __( 'User', 'edd' ),
+			'download'  => __( 'Download', 'edd' ),
+			'amount'    => __( 'Item Amount', 'edd' ),
+			'payment_id'=> __( 'Payment ID', 'edd' ),
 			'date'  	=> __( 'Date', 'edd' )
 		);
 		return $columns;
@@ -149,16 +156,34 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 			foreach( $logs as $log ) {
 
 				$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
-				$user_info = edd_get_payment_meta_user_info( $payment_id );
-				if( is_array( $user_info ) ) {
-					$logs_data[] = array(
-						'ID' 		=> $log->ID,
-						'payment_id'=> $payment_id,
-						'user_id'	=> $user_info['id'],
-						'user_name'	=> $user_info['first_name'] . ' ' . $user_info['last_name'],
-						'date'		=> get_post_field( 'post_date', $payment_id )
-					);
-				}
+
+				// make sure this payment hasn't been deleted
+				if( get_post( $payment_id ) ) :
+
+					$user_info  = edd_get_payment_meta_user_info( $payment_id );
+					$cart_items = edd_get_payment_meta_cart_details( $payment_id );
+					$amount     = 0;
+					//print_r( $cart_items ); exit;
+					if( is_array( $cart_items ) && is_array( $user_info ) ) {
+
+						foreach( $cart_items as $item ) {
+							$price_override = isset( $item['price'] ) ? $item['price'] : null;
+							if( isset( $item['id'] ) && $item['id'] == $log->post_parent ) {
+								$amount = edd_get_download_final_price( $item['id'], $user_info, $price_override );
+							}
+						}
+
+						$logs_data[] = array(
+							'ID' 		=> $log->ID,
+							'payment_id'=> $payment_id,
+							'download'  => $log->post_parent,
+							'amount'    => $amount,
+							'user_id'	=> $user_info['id'],
+							'user_name'	=> $user_info['first_name'] . ' ' . $user_info['last_name'],
+							'date'		=> get_post_field( 'post_date', $payment_id )
+						);
+					}
+				endif;
 			}
 		}
 
