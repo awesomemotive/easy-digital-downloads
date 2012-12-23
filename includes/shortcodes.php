@@ -597,20 +597,28 @@ function edd_process_profile_editor_updates( $data ) {
 		$user_id = get_current_user_id();
 
 		if ( ! empty( $data['edd_first_name'] ) || ! empty( $data['edd_last_name'] ) ) {
-			update_user_meta( $user_id, 'first_name', trim( sanitize_text_field( $data['edd_first_name'] ) ) );
-			update_user_meta( $user_id, 'last_name', trim( sanitize_text_field( $data['edd_last_name'] ) ) );
-			$updated = true;
+			$first_name = sanitize_text_field( $data['edd_first_name'] );
+			$last_name =  sanitize_text_field( $data['edd_last_name'] );
 		}
 
 		if ( ! empty( $data['edd_display_name'] ) ) {
-			wp_update_user( array( 'ID' => $user_id, 'display_name' => sanitize_text_field( $data['edd_display_name'] ) ) );
-			$updated = true;
+			$display_name = sanitize_text_field( $data['edd_display_name'] );
 		}
 
 		if ( ! empty( $data['edd_email'] ) ) {
-			wp_update_user( array( 'ID' => $user_id, 'user_email' => sanitize_email( $data['edd_email'] ) ) );
-			$updated = true;
+			$email = sanitize_email( $data['edd_email'] );
 		}
+
+		// Update user
+		wp_update_user( array(
+			'ID'           => $user_id,
+			'first_name'   => $first_name,
+			'last_name'    => $last_name,
+			'display_name' => $display_name,
+			'user_email'   => $email
+		) );
+
+		$updated = true;
 
 		if ( ! empty( $data['edd_new_user_pass1'] ) && ! empty( $data['edd_new_user_pass2'] ) ) {
 			if ( $data['edd_new_user_pass1'] !== $data['edd_new_user_pass2'] ) {
