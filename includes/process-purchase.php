@@ -22,10 +22,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @version     1.0.8.1
  * @return      void
 */
-
 function edd_process_purchase_form() {
-	global $edd_options;
-
 	// no need to run on admin
 	if ( is_admin() )
 		return;
@@ -130,14 +127,13 @@ add_action( 'edd_purchase', 'edd_process_purchase_form' );
  *
  * @access      private
  * @since       1.0.8.1
- * @return      array
+ * @return      bool|array
 */
-
 function edd_purchase_form_validate_fields() {
 	global $edd_options;
 
 	// check if there is $_POST
-	if ( empty( $_POST ) ) return;
+	if ( empty( $_POST ) ) return false;
 
 	// start an array to collect valid data
 	$valid_data = array(
@@ -197,7 +193,6 @@ function edd_purchase_form_validate_fields() {
 	return $valid_data;
 }
 
-
 /**
  * Purchase Form Validate Gateway
  *
@@ -205,7 +200,6 @@ function edd_purchase_form_validate_fields() {
  * @since       1.0
  * @return      string
 */
-
 function edd_purchase_form_validate_gateway() {
 	// check if a gateway value is present
 	if ( isset( $_POST['edd-gateway'] ) && trim( $_POST['edd-gateway'] ) != '' ) {
@@ -229,7 +223,6 @@ function edd_purchase_form_validate_gateway() {
 	// return empty
 	return '';
 }
-
 
 /**
  * Purchase Form Validate Discounts
@@ -267,7 +260,6 @@ function edd_purchase_form_validate_discounts() {
  * @since       1.0.8.1
  * @return      void
 */
-
 function edd_purchase_form_validate_agree_to_terms() {
 	// validate agree to terms
 	if ( !isset( $_POST['edd_agree_to_terms'] ) || $_POST['edd_agree_to_terms'] != 1 ) {
@@ -284,7 +276,6 @@ function edd_purchase_form_validate_agree_to_terms() {
  * @since       1.0
  * @return      array
 */
-
 function edd_purchase_form_validate_logged_in_user() {
 	global $user_ID;
 
@@ -332,7 +323,6 @@ function edd_purchase_form_validate_logged_in_user() {
  * @since       1.0.8.1
  * @return      array
 */
-
 function edd_purchase_form_validate_new_user() {
 	$registering_new_user = false;
 
@@ -416,15 +406,13 @@ function edd_purchase_form_validate_new_user() {
 	return $valid_user_data;
 }
 
-
 /**
  * Purchase Form Validate User Login
  *
  * @access      private
  * @since       1.0.8.1
- * @return      void
+ * @return      array
 */
-
 function edd_purchase_form_validate_user_login() {
 	// start an array to collect valid user data
 	$valid_user_data = array(
@@ -484,9 +472,8 @@ function edd_purchase_form_validate_user_login() {
  *
  * @access		private
  * @since		1.0.8.1
- * @return		void
+ * @return		array
 */
-
 function edd_purchase_form_validate_guest_user() {
 	// start an array to collect valid user data
 	$valid_user_data = array(
@@ -519,11 +506,12 @@ function edd_purchase_form_validate_guest_user() {
 /**
  * Register And Login New User
  *
+ * @param array $user_data
+ *
  * @access		private
  * @since		1.0.8.1
  * @return		integer
 */
-
 function edd_register_and_login_new_user( $user_data = array() ) {
 	// verify the array
 	if ( empty( $user_data ) )
@@ -560,11 +548,12 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 /**
  * Get Purchase Form User
  *
+ * @param array $valid_data
+ *
  * @access		private
  * @since		1.0.8.1
  * @return		array
 */
-
 function edd_get_purchase_form_user( $valid_data = array() ) {
 	// Initialize user
 	$user = false;
@@ -625,8 +614,7 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
  * @since		1.2
  * @return		array
 */
-
-function edd_get_purchase_cc_info( $valid_data = array() ) {
+function edd_get_purchase_cc_info() {
 
 	$cc_info = array();
 	$cc_info['card_name'] 		= isset( $_POST['card_name'] ) 		? sanitize_text_field( $_POST['card_name'] ) 		: '';
@@ -662,11 +650,11 @@ function edd_get_purchase_cc_info( $valid_data = array() ) {
  *
  * Sends the user to the succes page.
  *
+ * @param string $query_string
  * @access      public
  * @since       1.0
  * @return      void
 */
-
 function edd_send_to_success_page( $query_string = null ) {
 	global $edd_options;
 
@@ -686,6 +674,7 @@ function edd_send_to_success_page( $query_string = null ) {
  * Used to redirect a user back to the purchase
  * page if there are errors present.
  *
+ * @param array $args
  * @access public
  * @since  1.0
  * @return Void
@@ -713,11 +702,11 @@ function edd_send_back_to_checkout( $args = array() ) {
  *
  * Gets the success page URL.
  *
+ * @param string $query_string
  * @access      public
  * @since       1.0
  * @return      string
 */
-
 function edd_get_success_page_url( $query_string = null ) {
 	global $edd_options;
 
