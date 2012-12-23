@@ -25,15 +25,15 @@ if ( !defined( 'ABSPATH' ) ) exit;
 function edd_media_button( $context ) {
 	global $pagenow, $typenow, $wp_version;
 	$output = '';
-	
+
 	/** Only run in post/page creation and edit screens */
 	if( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow != 'download' ) {
 		/* check current WP version */
 		if ( version_compare( $wp_version, '3.5', '<' ) ) {
-			$img = '<img src="' . EDD_PLUGIN_URL . 'includes/images/edd-media.png" alt="' . sprintf( __( 'Insert %s', 'edd' ), edd_get_label_singular() ) . '"/>';
+			$img = '<img src="' . EDD_PLUGIN_URL . 'assets/images/edd-media.png" alt="' . sprintf( __( 'Insert %s', 'edd' ), edd_get_label_singular() ) . '"/>';
 			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox" title="' . __( 'Insert Download', 'edd' ) . '">' . $img . '</a>';
 		} else {
-			$img = '<span class="wp-media-buttons-icon" style="background-image: url(' . EDD_PLUGIN_URL . 'includes/images/edd-media.png' . '); margin-top: -1px;"></span>';
+			$img = '<span class="wp-media-buttons-icon" style="background-image: url(' . EDD_PLUGIN_URL . 'assets/images/edd-media.png' . '); margin-top: -1px;"></span>';
 			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button" title="' . __( 'Insert Download', 'edd' ) . '" style="padding-left: .4em;">' . $img . 'Insert Download'. '</a>';
 		}
 	}
