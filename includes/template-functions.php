@@ -112,7 +112,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 			<?php if( edd_is_ajax_enabled() ) : ?>
 				<span class="edd-cart-ajax-alert">
-					<img src="<?php echo esc_url( EDD_PLUGIN_URL . 'includes/images/loading.gif' ); ?>" class="edd-cart-ajax" style="display: none;" />
+					<img src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/loading.gif' ); ?>" class="edd-cart-ajax" style="display: none;" />
 					<span class="edd-cart-added-alert" style="display: none;">&mdash;<?php _e( 'Item successfully added to your cart.', 'edd' ); ?></span>
 				</span>
 			<?php endif; ?>
