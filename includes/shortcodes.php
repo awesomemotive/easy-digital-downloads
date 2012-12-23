@@ -503,6 +503,9 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 		$last_name = get_user_meta( $user_id, 'last_name', true );
 		$display_name = $current_user->display_name;
 	?>
+	<?php if ( isset( $_GET['updated'] ) && $_GET['updated'] == true ): ?>
+	<p class="edd_success"><strong><?php _e( 'Success', 'edd'); ?>:</strong> <?php _e( 'Your profile has been edited successfully.', 'edd' ); ?></p>
+	<?php endif; ?>
 	<form id="edd_profile_editor_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
 		<fieldset>
 			<legend><?php _e( 'Change your Name', 'edd' ); ?></legend>
@@ -596,14 +599,17 @@ function edd_process_profile_editor_updates( $data ) {
 		if ( ! empty( $data['edd_first_name'] ) || ! empty( $data['edd_last_name'] ) ) {
 			update_user_meta( $user_id, 'first_name', trim( sanitize_text_field( $data['edd_first_name'] ) ) );
 			update_user_meta( $user_id, 'last_name', trim( sanitize_text_field( $data['edd_last_name'] ) ) );
+			$updated = true;
 		}
 
 		if ( ! empty( $data['edd_display_name'] ) ) {
 			wp_update_user( array( 'ID' => $user_id, 'display_name' => sanitize_text_field( $data['edd_display_name'] ) ) );
+			$updated = true;
 		}
 
 		if ( ! empty( $data['edd_email'] ) ) {
 			wp_update_user( array( 'ID' => $user_id, 'user_email' => sanitize_email( $data['edd_email'] ) ) );
+			$updated = true;
 		}
 
 		if ( ! empty( $data['edd_new_user_pass1'] ) && ! empty( $data['edd_new_user_pass2'] ) ) {
@@ -611,10 +617,17 @@ function edd_process_profile_editor_updates( $data ) {
 				wp_die( __( 'The passwords you entered do not match. Please try again.', 'edd' ), __( 'Password Mismatch', 'edd' ) );
 			} else {
 				wp_set_password( $data['edd_new_user_pass1'], $user_id );
+				$updated = true;
 			}
+		}
+
+		if ( $updated ) {
+			wp_redirect( add_query_arg( 'updated', 'true', $data['edd_redirect'] ) );
+			exit;
 		}
 	} else {
 		wp_die( __( 'Security check failed. Please try again.', 'edd' ), __( 'Security Check Failed', 'edd' ) );
+		exit;
 	}
 }
 add_action( 'edd_edit_user_profile', 'edd_process_profile_editor_updates' );
