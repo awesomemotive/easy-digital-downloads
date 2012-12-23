@@ -141,29 +141,40 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		}
 
 		if( ! empty( $_GET['s'] ) ) {
+
 			$search = urldecode( $_GET['s'] );
+			$file_search = false; // default to searching for a user first
 
 			if( filter_var( $search, FILTER_VALIDATE_IP ) ) {
+
 				// this is an IP address search
 				$key     = '_edd_log_ip';
 				$compare = '=';
 
 			} else if( is_email( $search ) ) {
+
 				// this is an email search. We use this to ensure it works for guest users and logged-in users
 				$key     = '_edd_log_user_info';
 				$compare = 'LIKE';
 
 			} else {
+
 				// look for a user
 				$key = '_edd_log_user_id';
 				$compare = 'LIKE';
+
 				if( ! is_numeric( $search ) ) {
+
 					// searching for user by username
 					$user = get_user_by( 'login', $search );
+
 					if( $user ) {
+
 						// found one, set meta value to user's ID
 						$search = $user->ID;
+
 					} else {
+
 						// no user found so let's do a real search query
 						$users = new WP_User_Query( array(
 							'search'         => $search,
@@ -171,20 +182,32 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 							'number'         => 1,
 							'fields'         => 'ids'
 						) );
+
 						$found_user = $users->get_results();
+
 						if( $found_user ) {
+
 							$search = $found_user[0];
+
+						} else {
+
+							// no users were found so let's look for file names instead
+							$file_search = true;
+
 						}
 					}
 				}
 			}
 
-			$log_query['meta_query'][] = array(
-				'key'     => $key,
-				'value'   => $search,
-				'compare' => $compare
-			);
+			if( ! $file_search ) {
 
+				$log_query['meta_query'][] = array(
+					'key'     => $key,
+					'value'   => $search,
+					'compare' => $compare
+				);
+
+			}
 		}
 
 		$logs = $edd_logs->get_connected_logs( $log_query );
@@ -193,26 +216,30 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 			foreach( $logs as $log ) {
 
-				$user_info 	= get_post_meta( $log->ID, '_edd_log_user_info', true );
-				$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
-				$ip 		= get_post_meta( $log->ID, '_edd_log_ip', true );
-				$user_id 	= isset( $user_info['id']) ? $user_info['id'] : 0;
-				$user_data 	= get_userdata( $user_id );
-				$files 		= edd_get_download_files( $log->post_parent );
-				$file_id 	= (int) get_post_meta( $log->ID, '_edd_log_file_id', true );
-				$file_id 	= $file_id !== false ? $file_id : 0;
-				$file_name 	= isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
+				$user_info 	 = get_post_meta( $log->ID, '_edd_log_user_info', true );
+				$payment_id  = get_post_meta( $log->ID, '_edd_log_payment_id', true );
+				$ip 		 = get_post_meta( $log->ID, '_edd_log_ip', true );
+				$user_id 	 = isset( $user_info['id']) ? $user_info['id'] : 0;
+				$user_data 	 = get_userdata( $user_id );
+				$files 		 = edd_get_download_files( $log->post_parent );
+				$file_id 	 = (int) get_post_meta( $log->ID, '_edd_log_file_id', true );
+				$file_id 	 = $file_id !== false ? $file_id : 0;
+				$file_name 	 = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
 
-				$logs_data[] = array(
-					'ID' 		=> $log->ID,
-					'download'	=> $log->post_parent,
-					'payment_id'=> $payment_id,
-					'user_id'	=> $user_data ? $user_data->ID : $user_info['email'],
-					'user_name'	=> $user_data ? $user_data->display_name : $user_info['email'],
-					'file'		=> $file_name,
-					'ip'		=> $ip,
-					'date'		=> $log->post_date
-				);
+				if( $file_search && strpos( $file_name, $search ) !== false ) {
+
+					$logs_data[] = array(
+						'ID' 		=> $log->ID,
+						'download'	=> $log->post_parent,
+						'payment_id'=> $payment_id,
+						'user_id'	=> $user_data ? $user_data->ID : $user_info['email'],
+						'user_name'	=> $user_data ? $user_data->display_name : $user_info['email'],
+						'file'		=> $file_name,
+						'ip'		=> $ip,
+						'date'		=> $log->post_date
+					);
+
+				}
 			}
 		}
 
