@@ -7,6 +7,13 @@ if( !class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
+
+/**
+ * Sets up the WP list table for the Gateway Error Logs View
+ *
+ * @since       1.4
+ */
+
 class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 
 
