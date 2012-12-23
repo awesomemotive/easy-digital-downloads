@@ -3,7 +3,7 @@
  * Tax Functions
  *
  * These are functions used for checking if taxes are enabled, calculating taxes, etc.
- * Functions for retrieving tax amounts and such for individual payments are in 
+ * Functions for retrieving tax amounts and such for individual payments are in
  * includes/payment-functions.php and includes/cart-functions.php
  *
  * @package     Easy Digital Downloads
@@ -31,12 +31,34 @@ function edd_use_taxes() {
 }
 
 
+/**
+ * Local taxes only meaning users must opt in
+ *
+ * @access      public
+ * @since       1.3.3
+ * @return      bool
+*/
+
 function edd_local_taxes_only() {
 	global $edd_options;
 
 	$local_only = isset( $edd_options['tax_condition'] ) && $edd_options['tax_condition'] == 'local';
 
 	return apply_filters( 'edd_local_taxes_only', $local_only );
+}
+
+
+/**
+ * Show taxes on individual prices?
+ *
+ * @access      public
+ * @since       1.4
+ * @return      bool
+*/
+
+function edd_taxes_on_prices() {
+	global $edd_options;
+	return apply_filters( 'edd_taxes_on_prices', isset( $edd_options['taxes_on_prices'] ) );
 }
 
 
@@ -95,17 +117,17 @@ function edd_record_taxed_amount( $payment_meta, $payment_data ) {
 		return $payment_meta;
 
 	if( edd_local_taxes_only() && isset( $_POST['edd_tax_opt_in'] ) ) {
-		
+
 		// calculate local taxes
 		$payment_meta['subtotal'] 	= edd_get_cart_amount( false );
 		$payment_meta['tax'] 		= edd_get_cart_tax();
 
 	} elseif( ! edd_local_taxes_only() ) {
-		
+
 		// calculate global taxes
 		$payment_meta['subtotal'] 	= edd_get_cart_amount( false );
 		$payment_meta['tax'] 		= edd_get_cart_tax();
-	
+
 	}
 
 	return $payment_meta;
@@ -147,10 +169,10 @@ function edd_sales_tax_for_year( $year = null ) {
 
 		// start at zero
 		$tax = 0;
-		
+
 		$args = array(
-			'post_type' 		=> 'edd_payment', 
-			'posts_per_page' 	=> -1, 
+			'post_type' 		=> 'edd_payment',
+			'posts_per_page' 	=> -1,
 			'year' 				=> $year,
 			'meta_key' 			=> '_edd_payment_mode',
 			'meta_value' 		=> edd_is_test_mode() ? 'test' : 'live',

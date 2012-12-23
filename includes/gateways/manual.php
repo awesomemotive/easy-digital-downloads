@@ -68,8 +68,7 @@ function edd_manual_payment( $purchase_data ) {
 	// record the pending payment
 	$payment = edd_insert_payment( $payment_data );
 
-	if( $payment ) {
-		edd_record_gateway_error( __( 'Payment Error', 'edd' ), sprintf( __( 'Payment creation failed before sending buyer to PayPal. Payment data: %s', 'edd' ), json_encode( $payment_data ) ), $payment );
+	if($payment) {
 		edd_update_payment_status( $payment, 'publish' );
 		// empty the shopping cart
 		edd_empty_cart();

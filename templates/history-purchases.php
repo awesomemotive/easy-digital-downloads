@@ -25,7 +25,7 @@ if($purchases) : ?>
 				<td class="edd_purchased_files">
 					<?php
 						// show a list of downloadable files
-						$downloads = edd_get_downloads_of_purchase( $post->ID );
+						$downloads = edd_get_payment_meta_downloads( $post->ID );
 						if($downloads) {
 							foreach($downloads as $download) {
 
@@ -39,14 +39,14 @@ if($purchases) : ?>
 
 									if($download_files) {
 										foreach($download_files as $filekey => $file) {
-											
+
 											$download_url = edd_get_download_file_url($purchase_data['key'], $purchase_data['email'], $filekey, $id );
 
 											echo '<div class="edd_download_file"><a href="' . esc_url( $download_url ) . '" class="edd_download_file_link">' . esc_html( $file['name'] ) . '</a></div>';
-											
+
 											do_action( 'edd_purchase_history_files', $filekey, $file, $id, $post->ID, $purchase_data );
 
-										} 
+										}
 									} else {
 										_e('No downloadable files found.', 'edd');
 									}
@@ -59,6 +59,7 @@ if($purchases) : ?>
 				<?php do_action( 'edd_purchase_history_row_end', $post->ID, $purchase_data ); ?>
 			</tr>
 		<?php endforeach; ?>
+		<?php wp_reset_postdata(); ?>
 	</table>
 <?php else : ?>
 	<p class="edd-no-purchases"><?php _e('You have not made any purchases', 'edd'); ?></p>

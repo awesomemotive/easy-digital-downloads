@@ -21,7 +21,7 @@
  * its own class, that extends GoogleChartMarker.
  *
  * To display a marker, you need to set a data serie using setData() function.
- * A data serie is a GoogleChartData object. It contains points used by the 
+ * A data serie is a GoogleChartData object. It contains points used by the
  * marker. You can provides an existing data serie (i.e. a data serie that has been
  * or will be added to the chart with GoogleChart::addData()) or a new data serie.
  * In this case, the data serie will be hidden. Please refer to Google Chart API
@@ -42,7 +42,7 @@ abstract class GoogleChartMarker
 	 * @var string Color of the marker
 	 */
 	protected $color = '4D89F9';
-	
+
 	/**
 	 * @var float Z-order of the marker
 	 */
@@ -89,11 +89,11 @@ abstract class GoogleChartMarker
 		$this->data = $data;
 		return $this;
 	}
-	
+
 	public function getData()
 	{
 		return $this->data;
 	}
-	
+
 	abstract public function compute($index, $chart_type = null);
 }
