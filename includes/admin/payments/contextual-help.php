@@ -42,7 +42,8 @@ function edd_payments_contextual_help() {
 		'title'	    => __( 'Overview', 'edd' ),
 		'content'	=>
 			'<p>' . __( 'This screen provides access to all of your store&#39;s transactions. ', 'edd' ) . '</p>' . 
-			'<p>' . __( 'Payments can be searched by email address, user name, or filtered by status (completed, pending, etc.)', 'edd' ) . '</p>'
+			'<p>' . __( 'Payments can be searched by email address, user name, or filtered by status (completed, pending, etc.)', 'edd' ) . '</p>' .
+			'<p>' . __( 'You also have the option to bulk delete payment should you wish.', 'edd' ) . '</p>'
 	) );
 
 	$screen->add_help_tab( array(

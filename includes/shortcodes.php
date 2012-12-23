@@ -416,20 +416,18 @@ add_shortcode( 'downloads', 'edd_downloads_query' );
 */
 
 function edd_download_price_shortcode( $atts, $content = null ) {
-
 	extract( shortcode_atts( array(
 			'id' => NULL,
 		), $atts )
 	);
 
-
 	if( is_null( $id ) )
 		$id = get_the_ID();
 
 	return edd_price( $id, false );
-
 }
 add_shortcode( 'edd_price', 'edd_download_price_shortcode' );
+
 
 /**
  * Receipt Shortcode
@@ -483,3 +481,166 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	return $display;
 }
 add_shortcode( 'edd_receipt', 'edd_receipt_shortcode' );
+
+
+/**
+ * Profile Editor Shortcode
+ *
+ * Outputs the EDD Profile Editor to allow users to amend their details from the front-end
+ *
+ * @access      public
+ * @since       1.4
+ * @author      Sunny Ratilal
+ */
+
+function edd_profile_editor_shortcode( $atts, $content = null ) {
+	global $current_user;
+
+	ob_start();
+
+		if ( is_user_logged_in() ):
+
+			$user_id = get_current_user_id();
+			$first_name = get_user_meta( $user_id, 'first_name', true );
+			$last_name = get_user_meta( $user_id, 'last_name', true );
+			$display_name = $current_user->display_name;
+	?>
+	<?php if ( isset( $_GET['updated'] ) && $_GET['updated'] == true ): ?>
+	<p class="edd_success"><strong><?php _e( 'Success', 'edd'); ?>:</strong> <?php _e( 'Your profile has been edited successfully.', 'edd' ); ?></p>
+	<?php endif; ?>
+	<form id="edd_profile_editor_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
+		<fieldset>
+			<legend><?php _e( 'Change your Name', 'edd' ); ?></legend>
+			<p>
+				<label for="edd_first_name"><?php _e( 'First Name', 'edd' ); ?></label>
+				<input name="edd_first_name" id="edd_first_name" class="text edd-input" type="text" value="<?php echo $first_name; ?>" />
+				<br />
+				<label for="edd_last_name"><?php _e( 'Last Name', 'edd' ); ?></label>
+				<input name="edd_last_name" id="edd_last_name" class="text edd-input" type="text" value="<?php echo $last_name; ?>" />
+			</p>
+
+			<legend><?php _e( 'Change your Display Name', 'edd' ); ?></legend>
+			<p>
+				<label for="edd_display_name"><?php _e( 'Display Name', 'edd' ); ?></label>
+				<select name="edd_display_name">
+					<?php if ( ! empty( $current_user->first_name ) ): ?>
+					<option <?php if ( $display_name == $current_user->first_name ) { ?>selected="selected"<?php } ?> value="<?php echo $current_user->first_name; ?>"><?php echo $current_user->first_name; ?></option>
+					<?php endif; ?>
+					<option <?php if ( $display_name == $current_user->user_nicename ) { ?>selected="selected"<?php } ?> value="<?php echo $current_user->user_nicename; ?>"><?php echo $current_user->user_nicename; ?></option>
+					<?php if ( ! empty( $current_user->last_name ) ): ?>
+					<option <?php if ( $display_name == $current_user->last_name ) { ?>selected="selected"<?php } ?> value="<?php echo $current_user->last_name; ?>"><?php echo $current_user->last_name; ?></option>
+					<?php endif; ?>
+					<?php if ( ! empty( $current_user->first_name ) && ! empty( $current_user->last_name ) ): ?>
+					<option <?php if ( $display_name == $current_user->first_name . ' ' . $current_user->last_name ) { ?>selected="selected"<?php } ?> value="<?php echo $current_user->first_name . ' ' . $current_user->last_name; ?>"><?php echo $current_user->first_name . ' ' . $current_user->last_name; ?></option>
+					<option <?php if ( $display_name == $current_user->last_name . ' ' . $current_user->first_name ) { ?>selected="selected"<?php } ?> value="<?php echo $current_user->last_name . ' ' . $current_user->first_name; ?>"><?php echo $current_user->last_name . ' ' . $current_user->first_name; ?></option>
+					<?php endif; ?>
+				</select>
+			</p>
+
+			<legend><?php _e( 'Change your Email Address', 'edd' ); ?></legend>
+			<p>
+				<label for="edd_email"><?php _e( 'Email Address', 'edd' ); ?></label>
+				<input name="edd_email" id="edd_email" class="text edd-input required" type="email" value="<?php echo $current_user->user_email; ?>" />
+			</p>
+
+			<legend><?php _e( 'Change your Password', 'edd' ); ?></legend>
+			<p class="edd_password_change_notice"><?php _e( 'Please note after you change your password, you will be logged out automatically and will have to log back in again.', 'edd' ); ?></p>
+			<p>
+				<label for="edd_user_pass"><?php _e( 'New Password', 'edd' ); ?></label>
+				<input name="edd_new_user_pass1" id="edd_new_user_pass1" class="password edd-input" type="password"/>
+				<br />
+				<label for="edd_user_pass"><?php _e( 'Re-enter New Password', 'edd' ); ?></label>
+				<input name="edd_new_user_pass2" id="edd_new_user_pass2" class="password edd-input" type="password"/>
+			</p>
+
+			<p>
+				<input type="hidden" name="edd_profile_editor_nonce" value="<?php echo wp_create_nonce( 'edd-profile-editor-nonce' ); ?>"/>
+				<input type="hidden" name="edd_action" value="edit_user_profile" />
+				<input type="hidden" name="edd_redirect" value="<?php echo esc_url( edd_get_current_page_url() ); ?>" />
+				<input name="edd_profile_editor_submit" id="edd_profile_editor_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
+			</p>
+		</fieldset>
+	</form><!-- #edd_profile_editor_form -->
+	<?php
+		else:
+			echo '<p>' . __( 'You need to login to edit your profile.', 'edd' ) . '</p>';
+			wp_login_form( array(
+				'echo'           => true,
+				'redirect'       => edd_get_current_page_url(),
+				'form_id'        => 'edd_login_form',
+				'label_username' => __( 'Username', 'edd' ),
+				'label_password' => __( 'Password', 'edd' ),
+				'label_remember' => __( 'Remember me?', 'edd' ),
+				'label_log_in'   => __( 'Log In', 'edd' ),
+				'id_username'    => 'edd_user_login',
+				'id_password'    => 'edd_user_pass',
+				'id_remember'    => 'edd_remember_me',
+				'id_submit'      => 'edd_login_form_submit',
+				'remember'       => true
+			) );
+		endif;
+
+	$display = ob_get_clean();
+
+	return $display;
+}
+add_shortcode( 'edd_profile_editor', 'edd_profile_editor_shortcode' );
+
+
+/**
+ * Process Profile Updater Form
+ *
+ * Processes the profile updater form by updating the necessary fields
+ *
+ * @access      private
+ * @since       1.4
+ * @author      Sunny Ratilal
+*/
+
+function edd_process_profile_editor_updates( $data ) {
+	if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset( $data['edd_profile_editor_submit'] ) && wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) && is_user_logged_in() ) {
+		$user_id = get_current_user_id();
+
+		if ( ! empty( $data['edd_first_name'] ) || ! empty( $data['edd_last_name'] ) ) {
+			$first_name = sanitize_text_field( $data['edd_first_name'] );
+			$last_name =  sanitize_text_field( $data['edd_last_name'] );
+		}
+
+		if ( ! empty( $data['edd_display_name'] ) ) {
+			$display_name = sanitize_text_field( $data['edd_display_name'] );
+		}
+
+		if ( ! empty( $data['edd_email'] ) ) {
+			$email = sanitize_email( $data['edd_email'] );
+		}
+
+		if ( ! empty( $data['edd_new_user_pass1'] ) && ! empty( $data['edd_new_user_pass2'] ) ) {
+			if ( $data['edd_new_user_pass1'] !== $data['edd_new_user_pass2'] ) {
+				wp_die( __( 'The passwords you entered do not match. Please try again.', 'edd' ), __( 'Password Mismatch', 'edd' ) );
+			} else {
+				wp_set_password( $data['edd_new_user_pass1'], $user_id );
+				$updated = true;
+			}
+		}
+
+		// Update user
+		wp_update_user( array(
+			'ID'           => $user_id,
+			'first_name'   => $first_name,
+			'last_name'    => $last_name,
+			'display_name' => $display_name,
+			'user_email'   => $email
+		) );
+
+		$updated = true;
+
+		if ( $updated ) {
+			wp_redirect( add_query_arg( 'updated', 'true', $data['edd_redirect'] ) );
+			exit;
+		}
+	} else {
+		wp_die( __( 'Security check failed. Please try again.', 'edd' ), __( 'Security Check Failed', 'edd' ) );
+		exit;
+	}
+}
+add_action( 'edd_edit_user_profile', 'edd_process_profile_editor_updates' );
