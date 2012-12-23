@@ -385,8 +385,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 	function prepare_items() {
 
-		global $edd_logs;
-
 		$per_page              = $this->per_page;
 		$columns               = $this->get_columns();
 		$hidden                = array(); // no hidden columns
