@@ -640,7 +640,7 @@ function edd_change_email_shortcode( $atts, $content = null ) {
 		<fieldset>
 			<legend><?php _e( 'Change your Email Address', 'edd' ); ?></legend>
 			<p>
-				<label for="edd_email"><?php _e( 'Email Address Name', 'edd' ); ?></label>
+				<label for="edd_email"><?php _e( 'Email Address', 'edd' ); ?></label>
 				<input name="edd_email" id="edd_email" class="text required" type="email" value="<?php echo $current_user->user_email; ?>" />
 			</p>
 			<p>
