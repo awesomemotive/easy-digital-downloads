@@ -497,11 +497,13 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 	global $current_user;
 
 	ob_start();
+
 		if ( is_user_logged_in() ):
-		$user_id = get_current_user_id();
-		$first_name = get_user_meta( $user_id, 'first_name', true );
-		$last_name = get_user_meta( $user_id, 'last_name', true );
-		$display_name = $current_user->display_name;
+
+			$user_id = get_current_user_id();
+			$first_name = get_user_meta( $user_id, 'first_name', true );
+			$last_name = get_user_meta( $user_id, 'last_name', true );
+			$display_name = $current_user->display_name;
 	?>
 	<?php if ( isset( $_GET['updated'] ) && $_GET['updated'] == true ): ?>
 	<p class="edd_success"><strong><?php _e( 'Success', 'edd'); ?>:</strong> <?php _e( 'Your profile has been edited successfully.', 'edd' ); ?></p>
@@ -577,7 +579,9 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 				'remember'       => true
 			) );
 		endif;
+
 	$display = ob_get_clean();
+
 	return $display;
 }
 add_shortcode( 'edd_profile_editor', 'edd_profile_editor_shortcode' );
