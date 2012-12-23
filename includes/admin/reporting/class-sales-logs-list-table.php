@@ -112,6 +112,32 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 
 	/**
+	 * Retrieves the user we are filtering logs by, if any
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      mixed Int if user ID, string if email or login
+	 */
+
+	function get_filtered_user() {
+		return isset( $_GET['user'] ) ? absint( $_GET['user'] ) : false;
+	}
+
+
+	/**
+	 * Retrieves the ID of the download we're filtering logs by
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      int
+	 */
+
+	function get_filtered_download() {
+		return ! empty( $_GET['download'] ) ? absint( $_GET['download'] ) : false;
+	}
+
+
+	/**
 	 * Outputs the log filters filter
 	 *
 	 * @access      private
