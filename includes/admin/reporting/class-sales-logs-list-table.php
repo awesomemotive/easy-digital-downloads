@@ -26,6 +26,14 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	var $per_page = 30;
 
 
+	/**
+	 * Get things started
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      void
+	 */
+
 	function __construct(){
 
 		global $status, $page;
@@ -39,6 +47,14 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 	}
 
+
+	/**
+	 * Output column data
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      string
+	 */
 
 	function column_default( $item, $column_name ) {
 		switch( $column_name ){
@@ -56,6 +72,14 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	}
 
 
+	/**
+	 * Setup the column names / IDs
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      array
+	 */
+
 	function get_columns() {
 		$columns = array(
 			'ID'		=> __( 'Log ID', 'edd' ),
@@ -66,12 +90,30 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		return $columns;
 	}
 
+
+	/**
+	 * Outputs the log filters filter
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      void
+	 */
+
 	function bulk_actions() {
 		// these aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
 	}
 
-	function logs_data() {
+
+	/**
+	 * Gets the log entries for the current view
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      array
+	 */
+
+	function get_logs() {
 
 		global $edd_logs;
 
@@ -134,7 +176,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 		$current_page = $this->get_pagenum();
 
-		$this->items = $this->logs_data();
+		$this->items = $this->get_logs();
 
 		$total_items = $edd_logs->get_log_count( null, 'sale' );
 
