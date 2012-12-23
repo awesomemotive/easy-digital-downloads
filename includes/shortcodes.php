@@ -484,15 +484,18 @@ add_shortcode( 'edd_receipt', 'edd_receipt_shortcode' );
 
 
 /**
- * Change Name Shortcode
+ * Profile Editor Shortcode
  *
- * Allows for the user's name to be changed.
+ * Outputs the EDD Profile Editor to allow users to amend their details from the front-end
  *
  * @access      public
  * @since       1.4
  * @author      Sunny Ratilal
  */
-function edd_change_name_shortcode( $atts, $content = null ) {
+
+function edd_profile_editor_shortcode( $atts, $content = null ) {
+	global $current_user;
+
 	ob_start();
 		if( !is_user_logged_in() ) {
 			return;
@@ -500,6 +503,7 @@ function edd_change_name_shortcode( $atts, $content = null ) {
 		$user_id = get_current_user_id();
 		$first_name = get_user_meta( $user_id, 'first_name', true );
 		$last_name = get_user_meta( $user_id, 'last_name', true );
+		$display_name = $current_user->display_name;
 	?>
 	<form id="edd_change_name_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
 		<fieldset>
@@ -517,54 +521,8 @@ function edd_change_name_shortcode( $atts, $content = null ) {
 				<input id="edd_change_name_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
 			</p>
 		</fieldset>
-	</form>
-	<?php
-	$display = ob_get_clean();
-	return $display;
-}
-add_shortcode( 'edd_change_name', 'edd_change_name_shortcode' );
+	</form><!-- #edd_change_name_form -->
 
-
-/**
- * Process Change Password Form
- *
- * @access      private
- * @since       1.4
- * @author      Sunny Ratilal
-*/
-
-function edd_process_name_change( $data ) {
-	if( wp_verify_nonce( $data['edd_change_name_nonce'], 'edd-change-name-nonce' ) ) {
-		$user_id = get_current_user_id();
-
-		update_user_meta( $user_id, 'first_name', trim( sanitize_text_field( $data['edd_first_name'] ) ) );
-		update_user_meta( $user_id, 'last_name', trim( sanitize_text_field( $data['edd_last_name'] ) ) );
-	} else {
-		wp_die( __( 'Security check failed. Please try again.', 'edd' ), __( 'Security Check Failed.', 'edd' ) );
-	}
-}
-add_action( 'edd_change_name', 'edd_process_name_change' );
-
-
-/**
- * Change Display Name Shortcode
- *
- * Allows for the user's display name to be changed.
- *
- * @access      public
- * @since       1.4
- * @return      string
- * @author      Sunny Ratilal
- */
-
-function edd_change_display_name_shortcode( $atts, $content = null ) {
-	global $current_user;
-	ob_start();
-		if( !is_user_logged_in() ) {
-			return;
-		}
-		$display_name = $current_user->display_name;
-	?>
 	<form id="edd_change_display_name_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
 		<fieldset>
 			<legend><?php _e( 'Change your Display Name', 'edd' ); ?></legend>
@@ -590,12 +548,65 @@ function edd_change_display_name_shortcode( $atts, $content = null ) {
 				<input id="edd_change_display_name_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
 			</p>
 		</fieldset>
-	</form>
+	</form><!-- #edd_change_display_name_form -->
+
+	<form id="edd_change_email_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
+		<fieldset>
+			<legend><?php _e( 'Change your Email Address', 'edd' ); ?></legend>
+			<p>
+				<label for="edd_email"><?php _e( 'Email Address', 'edd' ); ?></label>
+				<input name="edd_email" id="edd_email" class="text edd-input required" type="email" value="<?php echo $current_user->user_email; ?>" />
+			</p>
+			<p>
+				<input type="hidden" name="edd_change_email_nonce" value="<?php echo wp_create_nonce( 'edd-change-email-nonce' ); ?>"/>
+				<input type="hidden" name="edd_action" value="change_email" />
+				<input id="edd_change_display_email_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
+			</p>
+		</fieldset>
+	</form><!-- #edd_change_email_form -->
+
+	<form id="edd_change_password_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
+		<fieldset>
+			<legend><?php _e( 'Change your Password', 'edd' ); ?></legend>
+			<p>
+				<label for="edd_user_pass"><?php _e( 'New Password', 'edd' ); ?></label>
+				<input name="edd_new_user_pass1" id="edd_new_user_pass1" class="password edd-input" type="password"/>
+				<br />
+				<label for="edd_user_pass"><?php _e( 'Re-enter New Password', 'edd' ); ?></label>
+				<input name="edd_new_user_pass2" id="edd_new_user_pass2" class="password edd-input" type="password"/>
+			</p>
+			<p>
+				<input type="hidden" name="edd_change_password_nonce" value="<?php echo wp_create_nonce( 'edd-change-password-nonce' ); ?>"/>
+				<input type="hidden" name="edd_action" value="change_password" />
+				<input id="edd_change_password_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
+			</p>
+		</fieldset>
+	</form><!-- #edd_change_password_form -->
 	<?php
 	$display = ob_get_clean();
 	return $display;
 }
-add_shortcode( 'edd_change_display_name', 'edd_change_display_name_shortcode' );
+add_shortcode( 'edd_profile_editor', 'edd_profile_editor_shortcode' );
+
+/**
+ * Process Change Password Form
+ *
+ * @access      private
+ * @since       1.4
+ * @author      Sunny Ratilal
+*/
+
+function edd_process_name_change( $data ) {
+	if( wp_verify_nonce( $data['edd_change_name_nonce'], 'edd-change-name-nonce' ) ) {
+		$user_id = get_current_user_id();
+
+		update_user_meta( $user_id, 'first_name', trim( sanitize_text_field( $data['edd_first_name'] ) ) );
+		update_user_meta( $user_id, 'last_name', trim( sanitize_text_field( $data['edd_last_name'] ) ) );
+	} else {
+		wp_die( __( 'Security check failed. Please try again.', 'edd' ), __( 'Security Check Failed.', 'edd' ) );
+	}
+}
+add_action( 'edd_change_name', 'edd_process_name_change' );
 
 
 /**
@@ -618,43 +629,6 @@ function edd_process_display_name_change( $data ) {
 }
 add_action( 'edd_change_display_name', 'edd_process_display_name_change' );
 
-/**
- * Change Email Shortcode
- *
- * Allows for the user's email address to be changed.
- *
- * @access      public
- * @since       1.4
- * @return      string
- * @author      Sunny Ratilal
- */
-function edd_change_email_shortcode( $atts, $content = null ) {
-	global $current_user;
-	ob_start();
-		if( !is_user_logged_in() ) {
-			return;
-		}
-	?>
-	<form id="edd_change_email_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
-		<fieldset>
-			<legend><?php _e( 'Change your Email Address', 'edd' ); ?></legend>
-			<p>
-				<label for="edd_email"><?php _e( 'Email Address', 'edd' ); ?></label>
-				<input name="edd_email" id="edd_email" class="text edd-input required" type="email" value="<?php echo $current_user->user_email; ?>" />
-			</p>
-			<p>
-				<input type="hidden" name="edd_change_email_nonce" value="<?php echo wp_create_nonce( 'edd-change-email-nonce' ); ?>"/>
-				<input type="hidden" name="edd_action" value="change_email" />
-				<input id="edd_change_display_email_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
-			</p>
-		</fieldset>
-	</form>
-	<?php
-	$display = ob_get_clean();
-	return $display;
-}
-add_shortcode( 'edd_change_email', 'edd_change_email_shortcode' );
-
 
 /**
  * Process Email Address Change Form
@@ -675,45 +649,6 @@ function edd_process_email_change( $data ) {
 	}
 }
 add_action( 'edd_change_email', 'edd_process_email_change' );
-
-
-/**
- * Change Password Shortcode
- *
- * Allows for password to be changed.
- *
- * @access      public
- * @since       1.4
- * @return      string
- */
-function edd_change_password_shortcode( $atts, $content = null ) {
-	ob_start();
-		if( !is_user_logged_in() ) {
-			return;
-		}
-	?>
-	<form id="edd_change_password_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
-		<fieldset>
-			<legend><?php _e( 'Change your Password', 'edd' ); ?></legend>
-			<p>
-				<label for="edd_user_pass"><?php _e( 'New Password', 'edd' ); ?></label>
-				<input name="edd_new_user_pass1" id="edd_new_user_pass1" class="password edd-input" type="password"/>
-				<br />
-				<label for="edd_user_pass"><?php _e( 'Re-enter New Password', 'edd' ); ?></label>
-				<input name="edd_new_user_pass2" id="edd_new_user_pass2" class="password edd-input" type="password"/>
-			</p>
-			<p>
-				<input type="hidden" name="edd_change_password_nonce" value="<?php echo wp_create_nonce( 'edd-change-password-nonce' ); ?>"/>
-				<input type="hidden" name="edd_action" value="change_password" />
-				<input id="edd_change_password_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
-			</p>
-		</fieldset>
-	</form>
-	<?php
-	$display = ob_get_clean();
-	return $display;
-}
-add_shortcode( 'edd_change_password', 'edd_change_password_shortcode' );
 
 
 /**
