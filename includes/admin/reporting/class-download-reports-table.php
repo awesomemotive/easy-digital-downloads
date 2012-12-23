@@ -9,6 +9,15 @@ if( !class_exists( 'WP_List_Table' ) ) {
 
 class EDD_Download_Reports_Table extends WP_List_Table {
 
+	/**
+	 * Number of results to show per page
+	 *
+	 * @since       1.4
+	 */
+
+	var $per_page = 30;
+
+
 	function __construct(){
 		global $status, $page;
 
@@ -57,6 +66,27 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	}
 
 
+	/**
+	 * Retrieve the current page number
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      int
+	 */
+
+	function get_paged() {
+		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+	}
+
+
+	function get_total_downloads() {
+		$counts = wp_count_posts( 'download' );
+		$total  = 0;
+		foreach( $counts as $count )
+			$total += $count;
+		return $total;
+	}
+
 	function bulk_actions() {
 		// these are really bulk actions but this outputs the markup in the right place
 		edd_report_views();
@@ -68,13 +98,14 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		$reports_data = array();
 
 		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'title';
-		$order = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 
 		$report_args = array(
 			'post_type' 	=> 'download',
 			'post_status'	=> 'publish',
-			'posts_per_page'=> -1,
-			'order'			=> $order
+			'order'			=> $order,
+			'posts_per_page'=> $this->per_page,
+			'paged'         => $this->get_paged()
 		);
 
 		switch( $orderby ) :
@@ -123,11 +154,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 
 	function prepare_items() {
 
-		/**
-		 * First, lets decide how many records per page to show
-		 */
-		$per_page = 30;
-
 		$columns = $this->get_columns();
 
 		$hidden = array(); // no hidden columns
@@ -140,16 +166,14 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 
 		$current_page = $this->get_pagenum();
 
-		$total_items = count( $data );
-
-		$data = array_slice( $data, ( ( $current_page - 1 ) * $per_page ), $per_page );
+		$total_items = $this->get_total_downloads();
 
 		$this->items = $data;
 
 		$this->set_pagination_args( array(
-				'total_items' => $total_items,                  	// WE have to calculate the total number of items
-				'per_page'    => $per_page,                     	// WE have to determine how many items to show on a page
-				'total_pages' => ceil( $total_items / $per_page )   // WE have to calculate the total number of pages
+				'total_items' => $total_items,
+				'per_page'    => $this->per_page,
+				'total_pages' => ceil( $total_items / $this->per_page )
 			)
 		);
 	}
