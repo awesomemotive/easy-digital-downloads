@@ -13,7 +13,7 @@
 if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
- * Settings contextual help.
+ * Reports contextual help.
  *
  * @access      private
  * @since       1.4
