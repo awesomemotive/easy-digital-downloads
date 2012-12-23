@@ -138,6 +138,108 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 
 	/**
+	 * Gets the meta query for the log query
+	 *
+	 * This is used to return log entries that match our search query, user query, or download query
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      array
+	 */
+
+	function get_meta_query() {
+
+		$user = $this->get_filtered_user();
+
+		$meta_query = array();
+
+		if( $user ) {
+
+			// show only logs from a specific user
+
+			$meta_query[] = array(
+				'key'   => '_edd_log_user_id',
+				'value' => $user
+			);
+		}
+
+		$search = $this->get_search();
+
+		if( $search ) {
+
+			if( filter_var( $search, FILTER_VALIDATE_IP ) ) {
+
+				// this is an IP address search
+				$key     = '_edd_log_ip';
+				$compare = '=';
+
+			} else if( is_email( $search ) ) {
+
+				// this is an email search. We use this to ensure it works for guest users and logged-in users
+				$key     = '_edd_log_user_info';
+				$compare = 'LIKE';
+
+			} else {
+
+				// look for a user
+				$key = '_edd_log_user_id';
+				$compare = 'LIKE';
+
+				if( ! is_numeric( $search ) ) {
+
+					// searching for user by username
+					$user = get_user_by( 'login', $search );
+
+					if( $user ) {
+
+						// found one, set meta value to user's ID
+						$search = $user->ID;
+
+					} else {
+
+						// no user found so let's do a real search query
+						$users = new WP_User_Query( array(
+							'search'         => $search,
+							'search_columns' => array( 'user_url', 'user_nicename' ),
+							'number'         => 1,
+							'fields'         => 'ids'
+						) );
+
+						$found_user = $users->get_results();
+
+						if( $found_user ) {
+
+							$search = $found_user[0];
+
+						} else {
+
+							// no users were found so let's look for file names instead
+							$this->file_search = true;
+
+						}
+					}
+				}
+			}
+
+			if( ! $this->file_search ) {
+
+				// meta query only works for non file name searche
+
+				$meta_query[] = array(
+					'key'     => $key,
+					'value'   => $search,
+					'compare' => $compare
+				);
+
+			}
+		}
+
+		return $meta_query;
+
+	}
+
+
+	/**
 	 * Outputs the log filters filter
 	 *
 	 * @access      private
