@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Widgets
+ * Dashboard Widgets
  *
  * @package     Easy Digital Downloads
  * @subpackage  Dashboard Widgets
