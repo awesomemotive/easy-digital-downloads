@@ -23,7 +23,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 */
 
-	var $per_page = 30;
+	public $per_page = 30;
 
 
 	/**
