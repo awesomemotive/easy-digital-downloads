@@ -505,7 +505,7 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 		$last_name = get_user_meta( $user_id, 'last_name', true );
 		$display_name = $current_user->display_name;
 	?>
-	<form id="edd_change_name_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
+	<form id="edd_profile_editor_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
 		<fieldset>
 			<legend><?php _e( 'Change your Name', 'edd' ); ?></legend>
 			<p>
@@ -515,16 +515,7 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 				<label for="edd_last_name"><?php _e( 'Last Name', 'edd' ); ?></label>
 				<input name="edd_last_name" id="edd_last_name" class="text edd-input" type="text" value="<?php echo $last_name; ?>" />
 			</p>
-			<p>
-				<input type="hidden" name="edd_change_name_nonce" value="<?php echo wp_create_nonce( 'edd-change-name-nonce' ); ?>"/>
-				<input type="hidden" name="edd_action" value="change_name" />
-				<input id="edd_change_name_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
-			</p>
-		</fieldset>
-	</form><!-- #edd_change_name_form -->
 
-	<form id="edd_change_display_name_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
-		<fieldset>
 			<legend><?php _e( 'Change your Display Name', 'edd' ); ?></legend>
 			<p>
 				<label for="edd_display_name"><?php _e( 'Display Name', 'edd' ); ?></label>
@@ -542,31 +533,13 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 					<?php endif; ?>
 				</select>
 			</p>
-			<p>
-				<input type="hidden" name="edd_change_display_name_nonce" value="<?php echo wp_create_nonce( 'edd-change-display-name-nonce' ); ?>"/>
-				<input type="hidden" name="edd_action" value="change_display_name" />
-				<input id="edd_change_display_name_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
-			</p>
-		</fieldset>
-	</form><!-- #edd_change_display_name_form -->
 
-	<form id="edd_change_email_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
-		<fieldset>
 			<legend><?php _e( 'Change your Email Address', 'edd' ); ?></legend>
 			<p>
 				<label for="edd_email"><?php _e( 'Email Address', 'edd' ); ?></label>
 				<input name="edd_email" id="edd_email" class="text edd-input required" type="email" value="<?php echo $current_user->user_email; ?>" />
 			</p>
-			<p>
-				<input type="hidden" name="edd_change_email_nonce" value="<?php echo wp_create_nonce( 'edd-change-email-nonce' ); ?>"/>
-				<input type="hidden" name="edd_action" value="change_email" />
-				<input id="edd_change_display_email_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
-			</p>
-		</fieldset>
-	</form><!-- #edd_change_email_form -->
 
-	<form id="edd_change_password_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
-		<fieldset>
 			<legend><?php _e( 'Change your Password', 'edd' ); ?></legend>
 			<p>
 				<label for="edd_user_pass"><?php _e( 'New Password', 'edd' ); ?></label>
@@ -575,13 +548,14 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 				<label for="edd_user_pass"><?php _e( 'Re-enter New Password', 'edd' ); ?></label>
 				<input name="edd_new_user_pass2" id="edd_new_user_pass2" class="password edd-input" type="password"/>
 			</p>
+
 			<p>
-				<input type="hidden" name="edd_change_password_nonce" value="<?php echo wp_create_nonce( 'edd-change-password-nonce' ); ?>"/>
-				<input type="hidden" name="edd_action" value="change_password" />
-				<input id="edd_change_password_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
+				<input type="hidden" name="edd_profile_editor_nonce" value="<?php echo wp_create_nonce( 'edd-profile-editor-nonce' ); ?>"/>
+				<input type="hidden" name="edd_action" value="edit_user_profile" />
+				<input id="edd_profile_editor_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
 			</p>
 		</fieldset>
-	</form><!-- #edd_change_password_form -->
+	</form><!-- #edd_profile_editor_form -->
 	<?php
 	$display = ob_get_clean();
 	return $display;
