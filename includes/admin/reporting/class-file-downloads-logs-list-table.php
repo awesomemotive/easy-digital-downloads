@@ -387,29 +387,19 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		global $edd_logs;
 
-		/**
-		 * First, lets decide how many records per page to show
-		 */
-		$per_page = $this->per_page;
-
-		$columns = $this->get_columns();
-
-		$hidden = array(); // no hidden columns
-
-		$sortable = $this->get_sortable_columns();
-
+		$per_page              = $this->per_page;
+		$columns               = $this->get_columns();
+		$hidden                = array(); // no hidden columns
+		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-
-		$current_page = $this->get_pagenum();
-
-		$this->items = $this->get_logs();
-
-		$total_items = count( $this->items );
+		$current_page          = $this->get_pagenum();
+		$this->items           = $this->get_logs();
+		$total_items           = count( $this->items );
 
 		$this->set_pagination_args( array(
-				'total_items' => $total_items,                  	// WE have to calculate the total number of items
-				'per_page'    => $per_page,                     	// WE have to determine how many items to show on a page
-				'total_pages' => ceil( $total_items / $per_page )   // WE have to calculate the total number of pages
+				'total_items'  => $total_items,
+				'per_page'     => $per_page,
+				'total_pages'  => ceil( $total_items / $per_page )
 			)
 		);
 	}
