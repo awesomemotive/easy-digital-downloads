@@ -228,7 +228,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				$file_id 	 = $file_id !== false ? $file_id : 0;
 				$file_name 	 = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
 
-				if( $file_search && strpos( $file_name, $search ) !== false ) {
+				if( ( $file_search && strpos( $file_name, $search ) !== false ) || ! $file_search ) {
 
 					$logs_data[] = array(
 						'ID' 		=> $log->ID,
