@@ -500,17 +500,20 @@ function edd_change_name_shortcode( $atts, $content = null ) {
 		if( !is_user_logged_in() ) {
 			return;
 		}
+		$user_id = get_current_user_id();
+		$first_name = get_user_meta( $user_id, 'first_name', true );
+		$last_name = get_user_meta( $user_id, 'last_name', true );
 	?>
 	<form id="edd_change_name_form"  class="edd_form" action="" method="post">
 		<fieldset>
 			<legend><?php _e( 'Change your Name', 'edd' ); ?></legend>
 			<p>
 				<label for="edd_first_name"><?php _e( 'First Name', 'edd' ); ?></label>
-				<input name="edd_first_name" id="edd_first_name" class="text required" type="text"/>
+				<input name="edd_first_name" id="edd_first_name" class="text required" type="text" value="<?php echo $first_name; ?>" />
 			</p>
 			<p>
 				<label for="edd_last_name"><?php _e( 'Last Name', 'edd' ); ?></label>
-				<input name="edd_last_name" id="edd_last_name" class="text required" type="text"/>
+				<input name="edd_last_name" id="edd_last_name" class="text required" type="text" value="<?php echo $last_name; ?>" />
 			</p>
 			<p>
 				<input type="hidden" name="edd_change_name_nonce" value="<?php echo wp_create_nonce( 'edd-change-name-nonce' ); ?>"/>
