@@ -128,7 +128,8 @@ function edd_process_download() {
 		exit;
 
 	} else {
-		wp_die(__('You do not have permission to download this file', 'edd'), __('Purchase Verification Failed', 'edd'));
+		$error_message = __('You do not have permission to download this file', 'edd');
+		wp_die( apply_filters( 'edd_deny_download_message', $error_message, __('Purchase Verification Failed', 'edd') ) );
 	}
 	exit;
 }
