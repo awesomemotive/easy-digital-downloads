@@ -40,7 +40,7 @@ function edd_process_download() {
 	$payment = edd_verify_download_link( $download, $key, $email, $expire, $file_key );
 
 	// Defaulting this to true for now because the method below doesn't work well
-	$has_access = apply_filters( 'edd_file_download_has_access', true );
+	$has_access = apply_filters( 'edd_file_download_has_access', true, $payment, $args );
 
 	//$has_access = ( edd_logged_in_only() && is_user_logged_in() ) || !edd_logged_in_only() ? true : false;
 	if( $payment && $has_access ) {
