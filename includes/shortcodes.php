@@ -683,10 +683,6 @@ add_action( 'edd_change_email', 'edd_process_email_change' );
  */
 function edd_change_password_shortcode( $atts, $content = null ) {
 	ob_start();
-		if ( isset( $change_password_error ) && ! empty( $change_password_error ) ) {
-			echo '<p class="edd_error"><strong>'. __( 'Error', 'edd' ) .'</strong>:' . $change_password_error . '</p>';
-		}
-
 		if( !is_user_logged_in() ) {
 			return;
 		}
