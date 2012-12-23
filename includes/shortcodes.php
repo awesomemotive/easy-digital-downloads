@@ -506,10 +506,10 @@ function edd_change_name_shortcode( $atts, $content = null ) {
 			<legend><?php _e( 'Change your Name', 'edd' ); ?></legend>
 			<p>
 				<label for="edd_first_name"><?php _e( 'First Name', 'edd' ); ?></label>
-				<input name="edd_first_name" id="edd_first_name" class="text edd-input required" type="text" value="<?php echo $first_name; ?>" />
+				<input name="edd_first_name" id="edd_first_name" class="text edd-input" type="text" value="<?php echo $first_name; ?>" />
 				<br />
 				<label for="edd_last_name"><?php _e( 'Last Name', 'edd' ); ?></label>
-				<input name="edd_last_name" id="edd_last_name" class="text edd-input required" type="text" value="<?php echo $last_name; ?>" />
+				<input name="edd_last_name" id="edd_last_name" class="text edd-input" type="text" value="<?php echo $last_name; ?>" />
 			</p>
 			<p>
 				<input type="hidden" name="edd_change_name_nonce" value="<?php echo wp_create_nonce( 'edd-change-name-nonce' ); ?>"/>
@@ -697,10 +697,10 @@ function edd_change_password_shortcode( $atts, $content = null ) {
 			<legend><?php _e( 'Change your Password', 'edd' ); ?></legend>
 			<p>
 				<label for="edd_user_pass"><?php _e( 'New Password', 'edd' ); ?></label>
-				<input name="edd_new_user_pass1" id="edd_new_user_pass1" class="password edd-input required" type="password"/>
+				<input name="edd_new_user_pass1" id="edd_new_user_pass1" class="password edd-input" type="password"/>
 				<br />
 				<label for="edd_user_pass"><?php _e( 'Re-enter New Password', 'edd' ); ?></label>
-				<input name="edd_new_user_pass2" id="edd_new_user_pass2" class="password edd-input required" type="password"/>
+				<input name="edd_new_user_pass2" id="edd_new_user_pass2" class="password edd-input" type="password"/>
 			</p>
 			<p>
 				<input type="hidden" name="edd_change_password_nonce" value="<?php echo wp_create_nonce( 'edd-change-password-nonce' ); ?>"/>
