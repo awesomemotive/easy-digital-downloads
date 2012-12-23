@@ -501,7 +501,7 @@ function edd_change_name_shortcode( $atts, $content = null ) {
 		$first_name = get_user_meta( $user_id, 'first_name', true );
 		$last_name = get_user_meta( $user_id, 'last_name', true );
 	?>
-	<form id="edd_change_name_form"  class="edd_form" action="" method="post">
+	<form id="edd_change_name_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
 		<fieldset>
 			<legend><?php _e( 'Change your Name', 'edd' ); ?></legend>
 			<p>
@@ -565,7 +565,7 @@ function edd_change_display_name_shortcode( $atts, $content = null ) {
 		}
 		$display_name = $current_user->display_name;
 	?>
-	<form id="edd_change_display_name_form"  class="edd_form" action="" method="post">
+	<form id="edd_change_display_name_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
 		<fieldset>
 			<legend><?php _e( 'Change your Display Name', 'edd' ); ?></legend>
 			<p>
@@ -635,7 +635,7 @@ function edd_change_email_shortcode( $atts, $content = null ) {
 			return;
 		}
 	?>
-	<form id="edd_change_email_form"  class="edd_form" action="" method="post">
+	<form id="edd_change_email_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
 		<fieldset>
 			<legend><?php _e( 'Change your Email Address', 'edd' ); ?></legend>
 			<p>
@@ -692,7 +692,7 @@ function edd_change_password_shortcode( $atts, $content = null ) {
 			return;
 		}
 	?>
-	<form id="edd_change_password_form"  class="edd_form" action="" method="post">
+	<form id="edd_change_password_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
 		<fieldset>
 			<legend><?php _e( 'Change your Password', 'edd' ); ?></legend>
 			<p>
