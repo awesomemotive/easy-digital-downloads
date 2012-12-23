@@ -22,7 +22,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 */
 
-	var $per_page = 30;
+	public $per_page = 30;
 
 
 	/**
@@ -31,7 +31,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 */
 
-	var $file_search = false;
+	public $file_search = false;
 
 
 	/**
@@ -42,7 +42,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @return      void
 	 */
 
-	function __construct(){
+	function __construct() {
+
 		global $status, $page;
 
 		//Set parent defaults
@@ -402,7 +403,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		$current_page          = $this->get_pagenum();
 		$this->items           = $this->get_logs();
 		$total_items           = $edd_logs->get_log_count( $this->get_filtered_download(), 'file_download', $this->get_meta_query() );
-
 		$this->set_pagination_args( array(
 				'total_items'  => $total_items,
 				'per_page'     => $this->per_page,

@@ -6,12 +6,12 @@ if( !class_exists( 'WP_List_Table' ) ) {
 
 class EDD_Payment_History_Table extends WP_List_Table {
 
-	var $per_page = 30;
-	var $total_count;
-	var $complete_count;
-	var $pending_count;
-	var $refunded_count;
-	var $failed_count;
+	public $per_page = 30;
+	public $total_count;
+	public $complete_count;
+	public $pending_count;
+	public $refunded_count;
+	public $failed_count;
 
 	function __construct(){
 		global $status, $page;
