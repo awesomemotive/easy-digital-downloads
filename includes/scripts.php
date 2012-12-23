@@ -115,9 +115,9 @@ add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
 */
 
 function edd_load_admin_scripts( $hook ) {
-	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page, $edd_options, $edd_upgrades_screen;
+	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_options, $edd_upgrades_screen;
 
-	$edd_pages = array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page, $edd_upgrades_screen, 'index.php' );
+	$edd_pages = array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_upgrades_screen, 'index.php' );
 	$edd_cpt   = apply_filters( 'edd_load_scripts_for_these_types', array( 'download', 'edd_payment' ) );
 
 	if ( !in_array( $hook, $edd_pages ) && !is_object( $post ) )
@@ -137,6 +137,11 @@ function edd_load_admin_scripts( $hook ) {
 	if( $hook == $edd_settings_page ) {
 		wp_enqueue_style( 'colorbox', EDD_PLUGIN_URL . 'includes/css/colorbox.css', array(  ), '1.3.20' );
 		wp_enqueue_script( 'colorbox', EDD_PLUGIN_URL . 'includes/js/jquery.colorbox-min.js', array( 'jquery' ), '1.3.20');
+	}
+	if( $hook == $edd_system_info_page ) {
+		wp_enqueue_style( 'systeminfocss', EDD_PLUGIN_URL . 'includes/css/sysinfo.css', array(  ), '1.3.20' );
+		wp_enqueue_script( 'generatefile', EDD_PLUGIN_URL . 'includes/js/jquery.generateFile.js', array( 'jquery' ), '1.3.20');
+		wp_enqueue_script( 'systeminfoscript', EDD_PLUGIN_URL . 'includes/js/system-info-script.js', array( 'jquery' ), '1.3.20');
 	}
 	wp_enqueue_script( 'media-upload' );
 	wp_enqueue_script( 'thickbox' );
