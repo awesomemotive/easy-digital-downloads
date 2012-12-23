@@ -626,9 +626,50 @@ add_action( 'edd_change_display_name', 'edd_process_display_name_change' );
  * @author      Sunny Ratilal
  */
 function edd_change_email_shortcode( $atts, $content = null ) {
-	
+	global $current_user;
+	ob_start();
+		if( !is_user_logged_in() ) {
+			return;
+		}
+	?>
+	<form id="edd_change_email_form"  class="edd_form" action="" method="post">
+		<fieldset>
+			<legend><?php _e( 'Change your Email Address', 'edd' ); ?></legend>
+			<p>
+				<label for="edd_email"><?php _e( 'Email Address Name', 'edd' ); ?></label>
+				<input name="edd_email" id="edd_email" class="text required" type="email" value="<?php echo $current_user->user_email; ?>" />
+			</p>
+			<p>
+				<input type="hidden" name="edd_change_email_nonce" value="<?php echo wp_create_nonce( 'edd-change-email-nonce' ); ?>"/>
+				<input type="hidden" name="edd_action" value="change_email" />
+				<input id="edd_change_display_email_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
+			</p>
+		</fieldset>
+	</form>
+	<?php
+	$display = ob_get_clean();
+	return $display;
 }
 add_shortcode( 'edd_change_email', 'edd_change_email_shortcode' );
+
+
+/**
+ * Process Email Address Change Form
+ *
+ * @access      private
+ * @since       1.4
+ * @return      void
+ * @author      Sunny Ratilal
+*/
+
+function edd_process_email_change( $data ) {
+	if( wp_verify_nonce( $data['edd_change_email_nonce'], 'edd-change-email-nonce' ) ) {
+		$user_id = get_current_user_id();
+
+		wp_update_user( array( 'ID' => $user_id, 'user_email' => sanitize_email( $data['edd_email'] ) ) );
+	}
+}
+add_action( 'edd_change_email', 'edd_process_email_change' );
 
 
 /**
@@ -688,7 +729,7 @@ function edd_process_password_change( $data ) {
 		$user_id = get_current_user_id();
 
 		if ( $data['edd_new_user_pass1'] !== $data['edd_new_user_pass2'] ) {
-			$change_password_error = __( 'The passwords you entered do not match', 'edd' );
+			wp_die( __( 'The passwords you entered do not match. Please try again.', 'edd' ), __( 'Password Mismatch', 'edd' ) );
 		} else {
 			wp_set_password( $data['edd_new_user_pass1'], $user_id );
 		}
