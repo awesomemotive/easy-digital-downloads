@@ -45,6 +45,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 			'ajax'      => false             			// does this table support ajax?
 		) );
 
+		add_action( 'edd_log_view_actions', array( $this, 'downloads_filter' ) );
+
 	}
 
 
@@ -58,10 +60,9 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 	function column_default( $item, $column_name ) {
 		switch( $column_name ){
+
 			case 'download' :
-				return '<a href="' .
-				admin_url( '/post.php?post=' . $item[ $column_name ] . '&action=edit' ) .
-				 '" target="_blank">' . get_the_title( $item[ $column_name ] ) . '</a>';
+				return '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . get_the_title( $item[ $column_name ] ) . '</a>';
 
 			case 'user_id' :
 				return '<a href="' .
@@ -138,6 +139,19 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 
 	/**
+	 * Retrieves the search query string
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      mixed String if search is present, false otherwise
+	 */
+
+	function get_search() {
+		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
+	}
+
+
+	/**
 	 * Gets the meta query for the log query
 	 *
 	 * This is used to return log entries that match our search query, user query, or download query
@@ -167,13 +181,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 		if( $search ) {
 
-			if( filter_var( $search, FILTER_VALIDATE_IP ) ) {
-
-				// this is an IP address search
-				$key     = '_edd_log_ip';
-				$compare = '=';
-
-			} else if( is_email( $search ) ) {
+			if( is_email( $search ) ) {
 
 				// this is an email search. We use this to ensure it works for guest users and logged-in users
 				$key     = '_edd_log_user_info';
@@ -211,11 +219,6 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 							$search = $found_user[0];
 
-						} else {
-
-							// no users were found so let's look for file names instead
-							$this->file_search = true;
-
 						}
 					}
 				}
@@ -250,6 +253,33 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	function bulk_actions() {
 		// these aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
+	}
+
+
+	/**
+	 * Sets up the downloads filter
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      void
+	 */
+
+	function downloads_filter() {
+		$downloads = get_posts( array(
+			'post_type'      => 'download',
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+			'orderby'        => 'title',
+			'order'          => 'ASC'
+		) );
+		if( $downloads ) {
+			echo '<select name="download" id="edd-log-download-filter">';
+				echo '<option value="0">' . __( 'All', 'edd' ) . '</option>';
+				foreach( $downloads as $download ) {
+					echo '<option value="' . $download->ID . '"' . selected( $download->ID, $this->get_filtered_download() ) . '>' . esc_html( $download->post_title ) . '</option>';
+				}
+			echo '</select>';
+		}
 	}
 
 
