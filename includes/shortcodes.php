@@ -609,25 +609,23 @@ function edd_process_profile_editor_updates( $data ) {
 			$email = sanitize_email( $data['edd_email'] );
 		}
 
+		if ( ! empty( $data['edd_new_user_pass1'] ) && ! empty( $data['edd_new_user_pass2'] ) ) {
+			if ( $data['edd_new_user_pass1'] !== $data['edd_new_user_pass2'] ) {
+				wp_die( __( 'The passwords you entered do not match. Please try again.', 'edd' ), __( 'Password Mismatch', 'edd' ) );
+			}
+		}
+
 		// Update user
 		wp_update_user( array(
 			'ID'           => $user_id,
 			'first_name'   => $first_name,
 			'last_name'    => $last_name,
 			'display_name' => $display_name,
-			'user_email'   => $email
+			'user_email'   => $email,
+			'user_pass'    => $data['edd_new_user_pass1']
 		) );
 
 		$updated = true;
-
-		if ( ! empty( $data['edd_new_user_pass1'] ) && ! empty( $data['edd_new_user_pass2'] ) ) {
-			if ( $data['edd_new_user_pass1'] !== $data['edd_new_user_pass2'] ) {
-				wp_die( __( 'The passwords you entered do not match. Please try again.', 'edd' ), __( 'Password Mismatch', 'edd' ) );
-			} else {
-				wp_set_password( $data['edd_new_user_pass1'], $user_id );
-				$updated = true;
-			}
-		}
 
 		if ( $updated ) {
 			wp_redirect( add_query_arg( 'updated', 'true', $data['edd_redirect'] ) );
