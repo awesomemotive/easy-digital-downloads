@@ -87,4 +87,4 @@ function edd_downloads_contextual_help() {
 	do_action( 'edd_downloads_contextual_help', $screen );
 }
 add_action( 'load-post.php', 'edd_downloads_contextual_help' );
-add_action( 'load-post-new.php', 'edd_downloads_contextual_help' );
+add_action( 'load-post-new.php', 'edd_downloads_contextual_help	' );
