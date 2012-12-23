@@ -16,6 +16,16 @@ if( !class_exists( 'WP_List_Table' ) ) {
 
 class EDD_Sales_Log_Table extends WP_List_Table {
 
+
+	/**
+	 * Number of results to show per page
+	 *
+	 * @since       1.4
+	 */
+
+	var $per_page = 30;
+
+
 	function __construct(){
 
 		global $status, $page;
@@ -114,11 +124,6 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 		global $edd_logs;
 
-		/**
-		 * First, lets decide how many records per page to show
-		 */
-		$per_page = 30;
-
 		$columns = $this->get_columns();
 
 		$hidden = array(); // no hidden columns
@@ -135,8 +140,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,                  	// WE have to calculate the total number of items
-				'per_page'    => $per_page,                     	// WE have to determine how many items to show on a page
-				'total_pages' => ceil( $total_items / $per_page )   // WE have to calculate the total number of pages
+				'per_page'    => $this->per_page,                     	// WE have to determine how many items to show on a page
+				'total_pages' => ceil( $total_items / $this->per_page )   // WE have to calculate the total number of pages
 			)
 		);
 	}
