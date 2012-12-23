@@ -57,8 +57,8 @@ add_action( 'edd_logs_view_gateway_errors', 'edd_logs_view_gateway_errors' );
  */
 function edd_log_default_views() {
 	$views = array(
-		'sales' 			=> __( 'Sales', 'edd' ),
 		'file_downloads'	=> __( 'File Downloads', 'edd' ),
+		'sales' 			=> __( 'Sales', 'edd' ),
 		'gateway_errors'	=> __( 'Payment Errors', 'edd' )
 	);
 
@@ -77,7 +77,7 @@ function edd_log_default_views() {
 
 function edd_log_views() {
 	$views        = edd_log_default_views();
-	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'sales';
+	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'file_downloads';
 
 	?>
 	<form id="edd-logs-filter" method="get" action="edit.php">

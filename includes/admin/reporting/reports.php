@@ -6,7 +6,7 @@
  * @subpackage  Admin Reports Page
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -23,11 +23,11 @@ if ( !defined( 'ABSPATH' ) ) exit;
 */
 
 function edd_reports_page() {
-	global $edd_options;	
+	global $edd_options;
 
 	$current_page = admin_url( 'edit.php?post_type=download&page=edd-reports' );
-	
-	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'reports';  
+
+	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'reports';
 
 	?>
 	<div class="wrap">
@@ -44,9 +44,9 @@ function edd_reports_page() {
 			</a>
 			<?php do_action( 'edd_reports_tabs' ); ?>
 		</h2>
-	
+
 		<?php
-	
+
 		do_action( 'edd_reports_page_top' );
 
 		do_action( 'edd_reports_tab_' . $active_tab );
@@ -118,7 +118,7 @@ function edd_report_views() {
 				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo $label; ?></option>
 			<?php endforeach; ?>
 		</select>
-		
+
 		<?php do_action( 'edd_report_view_actions' ); ?>
 		<input type="submit" class="button-secondary" value="<?php _e( 'Show', 'edd' ); ?>"/>
 
@@ -196,13 +196,13 @@ function edd_reports_taxes() {
 		<div class="alignleft actions"><?php edd_report_views(); ?></div>
 	</div>
 
-	<div class="metabox-holder" style="padding-top: 0;">		
+	<div class="metabox-holder" style="padding-top: 0;">
 		<div class="postbox">
 			<h3><span><?php _e('Tax Report', 'edd'); ?></span></h3>
 			<div class="inside">
 
 				<p><?php _e( 'This report shows the total amount collected in sales tax for the given year.', 'edd' ); ?></p>
-				
+
 
 				<form method="get" action="<?php echo admin_url( 'edit.php' ); ?>">
 					<span><?php echo $year; ?></span>: <strong><?php edd_sales_tax_for_year( $year ); ?></strong>&nbsp;&mdash;&nbsp;
@@ -238,7 +238,7 @@ function edd_reports_tab_export() {
 	<div class="metabox-holder">
 		<div id="post-body">
 			<div id="post-body-content">
-				
+
 				<div class="postbox">
 					<h3><span><?php _e( 'Export PDF of Sales and Earnings', 'edd' ); ?></span></h3>
 					<div class="inside">
@@ -305,7 +305,7 @@ add_action( 'edd_reports_tab_export', 'edd_reports_tab_export' );
 function edd_reports_tab_logs() {
 	require( EDD_PLUGIN_DIR . 'includes/admin/reporting/logs.php' );
 
-	$current_view = 'sales';
+	$current_view = 'file_downloads';
 	$log_views    = edd_log_default_views();
 
 	if ( isset( $_GET[ 'view' ] ) && array_key_exists( $_GET[ 'view' ], $log_views ) )
