@@ -416,18 +416,15 @@ add_shortcode( 'downloads', 'edd_downloads_query' );
 */
 
 function edd_download_price_shortcode( $atts, $content = null ) {
-
 	extract( shortcode_atts( array(
 			'id' => NULL,
 		), $atts )
 	);
 
-
 	if( is_null( $id ) )
 		$id = get_the_ID();
 
 	return edd_price( $id, false );
-
 }
 add_shortcode( 'edd_price', 'edd_download_price_shortcode' );
 
@@ -493,7 +490,7 @@ add_shortcode( 'edd_receipt', 'edd_receipt_shortcode' );
  *
  * @access      public
  * @since       1.4
- * @return      string
+ * @author      Sunny Ratilal
  */
 function edd_change_name_shortcode( $atts, $content = null ) {
 	ob_start();
@@ -518,7 +515,7 @@ function edd_change_name_shortcode( $atts, $content = null ) {
 			<p>
 				<input type="hidden" name="edd_change_name_nonce" value="<?php echo wp_create_nonce( 'edd-change-name-nonce' ); ?>"/>
 				<input type="hidden" name="edd_action" value="change_name" />
-				<input id="edd_change_password_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
+				<input id="edd_change_name_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
 			</p>
 		</fieldset>
 	</form>
@@ -534,7 +531,7 @@ add_shortcode( 'edd_change_name', 'edd_change_name_shortcode' );
  *
  * @access      private
  * @since       1.4
- * @return      void
+ * @author      Sunny Ratilal
 */
 
 function edd_process_name_change( $data ) {
@@ -556,12 +553,67 @@ add_action( 'edd_change_name', 'edd_process_name_change' );
  * @access      public
  * @since       1.4
  * @return      string
+ * @author      Sunny Ratilal
  */
+
 function edd_change_display_name_shortcode( $atts, $content = null ) {
-	
+	global $current_user;
+	ob_start();
+		if( !is_user_logged_in() ) {
+			return;
+		}
+		$display_name = $current_user->display_name;
+	?>
+	<form id="edd_change_display_name_form"  class="edd_form" action="" method="post">
+		<fieldset>
+			<legend><?php _e( 'Change your Display Name', 'edd' ); ?></legend>
+			<p>
+				<label for="edd_display_name"><?php _e( 'Display Name', 'edd' ); ?></label>
+				<select name="edd_display_name">
+					<?php if ( ! empty( $current_user->first_name ) ): ?>
+					<option <?php if ( $display_name == $current_user->first_name ) { ?>selected="selected"<?php } ?> value="<?php echo $current_user->first_name; ?>"><?php echo $current_user->first_name; ?></option>
+					<?php endif; ?>
+					<option <?php if ( $display_name == $current_user->user_nicename ) { ?>selected="selected"<?php } ?> value="<?php echo $current_user->user_nicename; ?>"><?php echo $current_user->user_nicename; ?></option>
+					<?php if ( ! empty( $current_user->last_name ) ): ?>
+					<option <?php if ( $display_name == $current_user->last_name ) { ?>selected="selected"<?php } ?> value="<?php echo $current_user->last_name; ?>"><?php echo $current_user->last_name; ?></option>
+					<?php endif; ?>
+					<?php if ( ! empty( $current_user->first_name ) && ! empty( $current_user->last_name ) ): ?>
+					<option <?php if ( $display_name == $current_user->first_name . ' ' . $current_user->last_name ) { ?>selected="selected"<?php } ?> value="<?php echo $current_user->first_name . ' ' . $current_user->last_name; ?>"><?php echo $current_user->first_name . ' ' . $current_user->last_name; ?></option>
+					<option <?php if ( $display_name == $current_user->last_name . ' ' . $current_user->first_name ) { ?>selected="selected"<?php } ?> value="<?php echo $current_user->last_name . ' ' . $current_user->first_name; ?>"><?php echo $current_user->last_name . ' ' . $current_user->first_name; ?></option>
+					<?php endif; ?>
+				</select>
+			</p>
+			<p>
+				<input type="hidden" name="edd_change_display_name_nonce" value="<?php echo wp_create_nonce( 'edd-change-display-name-nonce' ); ?>"/>
+				<input type="hidden" name="edd_action" value="change_display_name" />
+				<input id="edd_change_display_name_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
+			</p>
+		</fieldset>
+	</form>
+	<?php
+	$display = ob_get_clean();
+	return $display;
 }
 add_shortcode( 'edd_change_display_name', 'edd_change_display_name_shortcode' );
 
+
+/**
+ * Process Display Name Change Form
+ *
+ * @access      private
+ * @since       1.4
+ * @return      void
+ * @author      Sunny Ratilal
+*/
+
+function edd_process_display_name_change( $data ) {
+	if( wp_verify_nonce( $data['edd_change_display_name_nonce'], 'edd-change-display-name-nonce' ) ) {
+		$user_id = get_current_user_id();
+
+		wp_update_user( array( 'ID' => $user_id, 'display_name' => sanitize_text_field( $data['edd_display_name'] ) ) );
+	}
+}
+add_action( 'edd_change_display_name', 'edd_process_display_name_change' );
 
 /**
  * Change Email Shortcode
@@ -571,6 +623,7 @@ add_shortcode( 'edd_change_display_name', 'edd_change_display_name_shortcode' );
  * @access      public
  * @since       1.4
  * @return      string
+ * @author      Sunny Ratilal
  */
 function edd_change_email_shortcode( $atts, $content = null ) {
 	
