@@ -10,6 +10,7 @@ if( !class_exists( 'WP_List_Table' ) ) {
 class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 	var $per_page = 30;
+	var $file_search = false;
 
 	function __construct(){
 		global $status, $page;
@@ -86,64 +87,29 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		return !empty( $_GET['download'] ) ? absint( $_GET['download'] ) : false;
 	}
 
-	function get_paged() {
-		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+	function get_search() {
+		return ! empty( $_GET['s'] ) ? urldecode( $_GET['s'] ) : false;
 	}
 
-	function bulk_actions() {
-		// these aren't really bulk actions but this outputs the markup in the right place
-		edd_log_views();
-	}
+	function get_meta_query() {
 
-	function downloads_filter() {
-		$downloads = get_posts( array(
-			'post_type'      => 'download',
-			'post_status'    => 'any',
-			'posts_per_page' => -1,
-			'orderby'        => 'title',
-			'order'          => 'ASC'
-		) );
-		if( $downloads ) {
-			echo '<select name="download" id="edd-log-download-filter">';
-				echo '<option value="0">' . __( 'All', 'edd' ) . '</option>';
-				foreach( $downloads as $download ) {
-					echo '<option value="' . $download->ID . '"' . selected( $download->ID, $this->get_filtered_download() ) . '>' . esc_html( $download->post_title ) . '</option>';
-				}
-			echo '</select>';
-		}
-	}
+		$user = $this->get_filtered_user();
 
-	function logs_data() {
-
-		global $edd_logs;
-
-		$logs_data = array();
-
-		$paged    = $this->get_paged();
-		$user     = $this->get_filtered_user();
-		$download = empty( $_GET['s'] ) ? $this->get_filtered_download() : null;
-
-		$log_query = array(
-			'post_parent' => $download,
-			'log_type'    => 'file_download',
-			'paged'       => $paged,
-			'meta_query'  => array()
-		);
+		$meta_query = array();
 
 		if( $user ) {
 
 			// show only logs from a specific user
 
-			$log_query['meta_query'][] = array(
+			$meta_query[] = array(
 				'key'   => '_edd_log_user_id',
 				'value' => $user
 			);
 		}
 
-		if( ! empty( $_GET['s'] ) ) {
+		$search = $this->get_search();
 
-			$search = urldecode( $_GET['s'] );
-			$file_search = false; // default to searching for a user first
+		if( $search ) {
 
 			if( filter_var( $search, FILTER_VALIDATE_IP ) ) {
 
@@ -192,18 +158,18 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 						} else {
 
 							// no users were found so let's look for file names instead
-							$file_search = true;
+							$this->file_search = true;
 
 						}
 					}
 				}
 			}
 
-			if( ! $file_search ) {
+			if( ! $this->file_search ) {
 
 				// meta query only works for non file name searche
 
-				$log_query['meta_query'][] = array(
+				$meta_query[] = array(
 					'key'     => $key,
 					'value'   => $search,
 					'compare' => $compare
@@ -211,6 +177,53 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 			}
 		}
+
+		return $meta_query;
+
+	}
+
+	function get_paged() {
+		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+	}
+
+	function bulk_actions() {
+		// these aren't really bulk actions but this outputs the markup in the right place
+		edd_log_views();
+	}
+
+	function downloads_filter() {
+		$downloads = get_posts( array(
+			'post_type'      => 'download',
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+			'orderby'        => 'title',
+			'order'          => 'ASC'
+		) );
+		if( $downloads ) {
+			echo '<select name="download" id="edd-log-download-filter">';
+				echo '<option value="0">' . __( 'All', 'edd' ) . '</option>';
+				foreach( $downloads as $download ) {
+					echo '<option value="' . $download->ID . '"' . selected( $download->ID, $this->get_filtered_download() ) . '>' . esc_html( $download->post_title ) . '</option>';
+				}
+			echo '</select>';
+		}
+	}
+
+	function logs_data() {
+
+		global $edd_logs;
+
+		$logs_data = array();
+
+		$paged    = $this->get_paged();
+		$download = empty( $_GET['s'] ) ? $this->get_filtered_download() : null;
+
+		$log_query = array(
+			'post_parent' => $download,
+			'log_type'    => 'file_download',
+			'paged'       => $paged,
+			'meta_query'  => $this->get_meta_query()
+		);
 
 		$logs = $edd_logs->get_connected_logs( $log_query );
 
@@ -228,7 +241,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				$file_id 	 = $file_id !== false ? $file_id : 0;
 				$file_name 	 = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
 
-				if( ( $file_search && strpos( $file_name, $search ) !== false ) || ! $file_search ) {
+				if( ( $this->file_search && strpos( $file_name, $this->get_search() ) !== false ) || ! $this->file_search ) {
 
 					$logs_data[] = array(
 						'ID' 		=> $log->ID,
@@ -279,20 +292,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		$this->items = $this->logs_data();
 
-		$user     = $this->get_filtered_user();
-		$download = $this->get_filtered_download();
-
-		if( $user ) {
-			$meta_query = array(
-				array(
-					'key'   => '_edd_log_user_id',
-					'value' => $user
-				)
-			);
-		} else {
-			$meta_query = false;
-		}
-		$total_items = $edd_logs->get_log_count( $download, 'file_download', $meta_query );
+		$total_items = count( $this->items );
 
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,                  	// WE have to calculate the total number of items
