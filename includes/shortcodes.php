@@ -556,7 +556,7 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 	</form><!-- #edd_profile_editor_form -->
 	<?php
 		else:
-			echo '<p>' . __( 'You need to login to edit your profile. Login using the form below.', 'edd' ) . '</p>';
+			echo '<p>' . __( 'You need to login to edit your profile.', 'edd' ) . '</p>';
 			wp_login_form( array(
 				'echo'           => true,
 				'redirect'       => edd_get_current_page_url(),
