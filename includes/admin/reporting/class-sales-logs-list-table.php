@@ -166,24 +166,18 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 		global $edd_logs;
 
-		$columns = $this->get_columns();
-
-		$hidden = array(); // no hidden columns
-
-		$sortable = $this->get_sortable_columns();
-
+		$columns               = $this->get_columns();
+		$hidden                = array(); // no hidden columns
+		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-
-		$current_page = $this->get_pagenum();
-
-		$this->items = $this->get_logs();
-
-		$total_items = $edd_logs->get_log_count( null, 'sale' );
+		$current_page          = $this->get_pagenum();
+		$this->items           = $this->get_logs();
+		$total_items           = $edd_logs->get_log_count( null, 'sale' );
 
 		$this->set_pagination_args( array(
-				'total_items' => $total_items,                  	// WE have to calculate the total number of items
-				'per_page'    => $this->per_page,                     	// WE have to determine how many items to show on a page
-				'total_pages' => ceil( $total_items / $this->per_page )   // WE have to calculate the total number of pages
+				'total_items'  => $total_items,
+				'per_page'     => $this->per_page,
+				'total_pages'  => ceil( $total_items / $this->per_page )
 			)
 		);
 	}
