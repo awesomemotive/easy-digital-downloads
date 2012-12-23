@@ -182,6 +182,7 @@ final class Easy_Digital_Downloads {
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/payments/contextual-help.php' );
+			include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/contextual-help.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php' );
