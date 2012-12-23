@@ -21,7 +21,7 @@ function edd_logs_view_file_downloads() {
 ?>
 	<div class="wrap">
 		<?php do_action( 'edd_logs_file_downloads_top' ); ?>
-		<form id="edd-payments-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">
+		<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs' ); ?>">
 			<?php
 			$logs_table->search_box( __( 'Search', 'edd' ), 'edd-payments' );
 			$logs_table->display();
