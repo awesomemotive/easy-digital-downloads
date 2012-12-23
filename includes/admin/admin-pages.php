@@ -36,6 +36,7 @@ function edd_add_options_link() {
 
 	add_action( 'load-' . $edd_discounts_page, 'edd_discounts_contextual_help' );
 }
+add_action( 'admin_menu', 'edd_add_options_link', 10 );
 /**
  * System info
  *
@@ -150,4 +151,3 @@ function edd_let_to_num($v) {
     }
     return $ret;
 }
-add_action( 'admin_menu', 'edd_add_options_link', 10 );
