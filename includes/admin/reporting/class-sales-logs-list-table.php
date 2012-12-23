@@ -7,6 +7,7 @@ if( !class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
+
 /**
  * Sets up the WP list table for the Sales Log View
  *
@@ -70,6 +71,11 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 			case 'amount' :
 				return edd_currency_filter( edd_format_amount( $item['amount'] ) );
+
+			default:
+				return $item[ $column_name ];
+		}
+	}
 
 
 	/**
