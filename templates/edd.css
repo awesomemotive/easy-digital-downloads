@@ -28,15 +28,20 @@
 /* checkout fields */
 #edd_purchase_form input.edd-input { display: inline-block; width: 200px; }
 #edd_purchase_form input.edd-input.error { border-color: #c4554e; }
-#edd_purchase_form label { display: inline-block;  width: 200px; }
+#edd_purchase_form label { display: inline-block;  width: 200px; position: relative; }
 #edd_purchase_form #edd_terms_agreement label,
 #edd_purchase_form #edd_tax_opt_in_fields label { display: inline-block;  width: auto; }
-#edd_purchase_form input.card-expiry-month { width: 30px; }
-#edd_purchase_form input.card-expiry-year { width: 60px; }
-#edd_purchase_form span.exp-divider {  }
+#edd_purchase_form input.edd-input.card-number.valid { background-image: url(../assets/images/tick.png); background-repeat: no-repeat; background-position: 98% 50%; }
+#edd_purchase_form span.exp-divider { display: inline; }
+#edd_purchase_form span.card-type { position: absolute; top: -2px; right: 0; width: 32px; height: 32px; }
+#edd_purchase_form span.card-type.off { display:none; }
+#edd_purchase_form span.card-type.visa { background: url( ../assets/images/icons/visa.png ) no-repeat; }
+#edd_purchase_form span.card-type.mastercard { background: url( ../assets/images/icons/mastercard.png ) no-repeat; }
+#edd_purchase_form span.card-type.discover { background: url( ../assets/images/icons/discover.png ) no-repeat; }
+#edd_purchase_form span.card-type.americanexpress { background: url( ../assets/images/icons/americanexpress.png ) no-repeat; }
 #edd_checkout_form_wrap p { margin: 0 0 10px; }
-#edd_checkout_form_wrap input[type="text"], 
-#edd_checkout_form_wrap input[type="email"], 
+#edd_checkout_form_wrap input[type="text"],
+#edd_checkout_form_wrap input[type="email"],
 #edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; width: 200px; }
 #edd_checkout_form_wrap .edd-payment-icons { height: 32px; }
 #edd_checkout_form_wrap .edd-payment-icons img.payment-icon{ margin: 0 3px 0 0; float: left; background: none; padding: none; border: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
@@ -45,8 +50,8 @@
 #edd_checkout_form_wrap fieldset#edd_login_fields { border: 1px solid #f0f0f0; padding: 10px; margin: 0 0 10px; }
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_register_password,
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_login_password { margin: 0; }
-#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="text"], 
-#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="email"], 
+#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="text"],
+#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="email"],
 #edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="password"] { width: 188px; }
 
 
@@ -57,9 +62,15 @@
 #edd_purchase_form input.edd-input.required { color: #000; }
 
 
-/* =Cart Widget
+/* =Purchase Summary Tables
 -------------------------------------------------------------- */
-
+table#edd_purchase_receipt_products,
+table#edd_purchase_receipt { width: 100%; }
+table#edd_purchase_receipt_products td,
+table#edd_purchase_receipt_products th,
+table#edd_purchase_receipt td,
+table#edd_purchase_receipt th { text-align: left; }
+table#edd_purchase_receipt_products li { list-style: none; }
 
 
 /* =Purchase History
@@ -222,7 +233,7 @@ x.edd-submit.button.blue:hover {
 }
 
 .edd-submit.button.dark-gray:active {
-	border-color: #000 #222 #222; 
+	border-color: #000 #222 #222;
 	background: #2b2b2b;
 }
 
@@ -234,7 +245,7 @@ x.edd-submit.button.blue:hover {
 
 /* =Misc styles
 -------------------------------------------------------------- */
-.edd-cart-ajax { margin: 0 8px 0 4px; position: relative; top: 2px; }
+.edd-cart-ajax { margin: 0 8px 0 4px; position: relative; top: 2px; background: none; border: none; padding: 0; }
 
 /* =Error styles
 -------------------------------------------------------------- */

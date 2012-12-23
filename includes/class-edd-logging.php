@@ -29,7 +29,7 @@ class EDD_Logging {
 
 		// create the log post type
 		add_action( 'init', array( $this, 'register_post_type' ), -1 );
-		
+
 		// create types taxonomy and default types
 		add_action( 'init', array( $this, 'register_taxonomy' ), -1 );
 
@@ -48,8 +48,8 @@ class EDD_Logging {
 	*/
 
 	function register_post_type() {
-		
-		/* logs post type */	
+
+		/* logs post type */
 
 		$log_args = array(
 			'labels'			=> array( 'name' => __( 'Logs', 'edd' ) ),
@@ -57,9 +57,9 @@ class EDD_Logging {
 			'query_var'			=> false,
 			'rewrite'			=> false,
 			'capability_type'	=> 'post',
-			'supports'			=> array( 'title' ),
+			'supports'			=> array( 'title', 'editor' ),
 			'can_export'		=> false
-		); 
+		);
 		register_post_type( 'edd_log', $log_args );
 
 	}
@@ -82,7 +82,7 @@ class EDD_Logging {
 
 	function register_taxonomy() {
 
-		register_taxonomy( 'edd_log_type', 'edd_log' );
+		register_taxonomy( 'edd_log_type', 'edd_log', array( 'public' => false ) );
 
 		$types = $this->log_types();
 
@@ -353,6 +353,44 @@ class EDD_Logging {
 		$logs = new WP_Query( $query_args );
 
 		return (int) $logs->post_count;
+
+	}
+
+
+	function delete_logs( $object_id = 0, $type = null, $meta_query = null  ) {
+
+		$query_args = array(
+			'post_parent' 	=> $object_id,
+			'post_type'		=> 'edd_log',
+			'posts_per_page'=> -1,
+			'post_status'	=> 'publish',
+			'fields'        => 'ids'
+		);
+
+		if( ! empty( $type ) && $this->valid_type( $type ) ) {
+
+			$query_args['tax_query'] = array(
+				array(
+					'taxonomy' 	=> 'edd_log_type',
+					'field'		=> 'slug',
+					'terms'		=> $type,
+				)
+			);
+
+		}
+
+		if( ! empty( $meta_query ) ) {
+			$query_args['meta_query'] = $meta_query;
+		}
+
+		$logs = get_posts( $query_args );
+
+		if( $logs ) {
+			foreach( $logs as $log ) {
+				wp_delete_post( $log, true );
+			}
+
+		}
 
 	}
 

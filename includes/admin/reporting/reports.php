@@ -219,6 +219,7 @@ function edd_reports_taxes() {
 
 			</div><!--end inside-->
 		</div><!--end postbox-->
+
 	</div><!--end metabox-holder-->
 	<?php
 }

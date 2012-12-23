@@ -35,18 +35,19 @@ function edd_load_scripts() {
 
 	// Load AJAX scripts, if enabled
 	if( edd_is_ajax_enabled() ) {
-		wp_enqueue_script( 'edd-ajax', EDD_PLUGIN_URL . 'includes/js/edd-ajax.js', array( 'jquery' ), EDD_VERSION );
+		wp_enqueue_script( 'edd-ajax', EDD_PLUGIN_URL . 'assets/js/edd-ajax.js', array( 'jquery' ), EDD_VERSION );
 		wp_localize_script( 'edd-ajax', 'edd_scripts', array(
 				'ajaxurl' 					=> edd_get_ajax_url(),
 				'ajax_nonce' 				=> wp_create_nonce( 'edd_ajax_nonce' ),
 				'no_discount' 				=> __('Please enter a discount code', 'edd'), // blank discount code message
 				'discount_applied' 			=> __('Discount Applied', 'edd'), // discount verified message
 				'no_email' 					=> __('Please enter an email address before applying a discount code', 'edd'),
+				'no_username'				=> __('Please enter a username before applying a discount code', 'edd'),
 				'position_in_cart' 			=> isset( $position ) ? $position : -1,
 				'already_in_cart_message' 	=> __('You have already added this item to your cart', 'edd'), // item already in the cart message
 				'empty_cart_message' 		=> __('Your cart is empty', 'edd'), // item already in the cart message
 				'loading' 					=> __('Loading', 'edd') , // general loading message
-				'ajax_loader' 				=> EDD_PLUGIN_URL . 'includes/images/loading.gif', // ajax loading image
+				'ajax_loader' 				=> EDD_PLUGIN_URL . 'assets/images/loading.gif', // ajax loading image
 				'checkout_page' 			=> edd_get_checkout_uri(),
 				'permalinks' 				=> get_option( 'permalink_structure' ) ? '1' : '0'
 			)
@@ -55,17 +56,23 @@ function edd_load_scripts() {
 
 	// Load jQuery validation
 	if( isset( $edd_options['jquery_validation'] ) && edd_is_checkout() ) {
-		wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'includes/js/jquery.validate.min.js' );
-		wp_enqueue_script( 'edd-validation', EDD_PLUGIN_URL . 'includes/js/form-validation.js', array( 'jquery', 'jquery-validation' ), EDD_VERSION );
+		wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'assets/js/jquery.validate.min.js' );
+		wp_enqueue_script( 'edd-validation', EDD_PLUGIN_URL . 'assets/js/form-validation.js', array( 'jquery', 'jquery-validation' ), EDD_VERSION );
 		$required = array( 'firstname' => true, 'lastname' => true );
-		wp_localize_script( 'edd-validation', 'edd_scripts_validation', apply_filters( 'edd_scripts_validation',$required ) );
+		wp_localize_script( 'edd-validation', 'edd_scripts_validation', apply_filters( 'edd_scripts_validation', $required ) );
 	}
-	wp_enqueue_script( 'edd-checkout-global', EDD_PLUGIN_URL . 'includes/js/edd-checkout-global.js', array( 'jquery' ), EDD_VERSION );
-	wp_localize_script( 'edd-checkout-global', 'edd_global_vars', array(
-        'currency_sign'		=> edd_currency_filter(''),
-        'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
-        'no_gateway'		=> __( 'Please select a payment method', 'edd' )
-    ));
+	if( edd_is_checkout() ) {
+
+		if( edd_is_cc_verify_enabled() ) {
+			wp_enqueue_script( 'creditCardValidator', EDD_PLUGIN_URL . 'assets/js/jquery.creditCardValidator.js', array( 'jquery' ), EDD_VERSION );
+		}
+		wp_enqueue_script( 'edd-checkout-global', EDD_PLUGIN_URL . 'assets/js/edd-checkout-global.js', array( 'jquery' ), EDD_VERSION );
+		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', array(
+	        'currency_sign'		=> edd_currency_filter(''),
+	        'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
+	        'no_gateway'		=> __( 'Please select a payment method', 'edd' )
+	    ));
+	}
 }
 add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
 
@@ -82,7 +89,7 @@ add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
 
 function edd_register_styles() {
 	global $edd_options;
-	
+
 	if( isset( $edd_options['disable_styles'] ) )
 		return;
 
@@ -124,20 +131,20 @@ function edd_load_admin_scripts( $hook ) {
 	    return;
 
 	if( $hook == 'download_page_edd-reports' ) {
-		wp_enqueue_script( 'jquery-flot', EDD_PLUGIN_URL . 'includes/js/jquery.flot.js' );
+		wp_enqueue_script( 'jquery-flot', EDD_PLUGIN_URL . 'assets/js/jquery.flot.js' );
 	}
 	if( $hook == 'download_page_edd-discounts' ) {
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
-		wp_enqueue_style( 'jquery-ui-css', EDD_PLUGIN_URL . 'includes/css/jquery-ui-' . $ui_style . '.css' );
+		wp_enqueue_style( 'jquery-ui-css', EDD_PLUGIN_URL . 'assets/css/jquery-ui-' . $ui_style . '.css' );
 	}
 	if( $hook == $edd_settings_page ) {
-		wp_enqueue_style( 'colorbox', EDD_PLUGIN_URL . 'includes/css/colorbox.css', array(  ), '1.3.20' );
-		wp_enqueue_script( 'colorbox', EDD_PLUGIN_URL . 'includes/js/jquery.colorbox-min.js', array( 'jquery' ), '1.3.20');
+		wp_enqueue_style( 'colorbox', EDD_PLUGIN_URL . 'assets/css/colorbox.css', array(  ), '1.3.20' );
+		wp_enqueue_script( 'colorbox', EDD_PLUGIN_URL . 'assets/js/jquery.colorbox-min.js', array( 'jquery' ), '1.3.20');
 	}
 	wp_enqueue_script( 'media-upload' );
 	wp_enqueue_script( 'thickbox' );
-	wp_enqueue_script( 'edd-admin-scripts', EDD_PLUGIN_URL . 'includes/js/admin-scripts.js', array( 'jquery' ), EDD_VERSION, false );
+	wp_enqueue_script( 'edd-admin-scripts', EDD_PLUGIN_URL . 'assets/js/admin-scripts.js', array( 'jquery' ), EDD_VERSION, false );
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
         'post_id' 			=> isset( $post->ID ) ? $post->ID : null,
         'add_new_download' 	=> __( 'Add New Download', 'edd' ), 									// thickbox title
@@ -152,7 +159,7 @@ function edd_load_admin_scripts( $hook ) {
     ));
 	wp_enqueue_style( 'thickbox' );
 
-	wp_enqueue_style( 'edd-admin', EDD_PLUGIN_URL . 'includes/css/edd-admin.css', EDD_VERSION );
+	wp_enqueue_style( 'edd-admin', EDD_PLUGIN_URL . 'assets/css/edd-admin.css', EDD_VERSION );
 }
 add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
 
@@ -169,15 +176,39 @@ add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
 
 function edd_admin_downloads_icon() {
     global $post_type;
-	$icon_url = EDD_PLUGIN_URL . 'includes/images/edd-icon.png';
+	$icon_url = EDD_PLUGIN_URL . 'assets/images/edd-icon.png';
 	?>
 	<style type="text/css" media="screen">
 		body #adminmenu #menu-posts-download div.wp-menu-image { background:transparent url( "<?php echo $icon_url; ?>" ) no-repeat 7px -32px; }
 		body #adminmenu #menu-posts-download:hover div.wp-menu-image,
 		body #adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image { background:transparent url( "<?php echo $icon_url; ?>" ) no-repeat 7px 0; }
 		<?php if ( ( isset( $_GET['post_type'] ) ) && ( $_GET['post_type'] == 'download' ) || ( $post_type == 'download' ) ) : ?>
-        #icon-edit { background:transparent url("<?php echo EDD_PLUGIN_URL .'includes/images/edd-cpt.png'; ?>") no-repeat; }
+        #icon-edit { background:transparent url("<?php echo EDD_PLUGIN_URL .'assets/images/edd-cpt.png'; ?>") no-repeat; }
         <?php endif; ?>
+        @media
+        only screen and (-webkit-min-device-pixel-ratio: 1.5),
+        only screen and (   min--moz-device-pixel-ratio: 1.5),
+        only screen and (     -o-min-device-pixel-ratio: 3/2),
+        only screen and (        min-device-pixel-ratio: 1.5),
+        only screen and (        		 min-resolution: 1.5dppx) {
+        	/* Admin Menu - 16px @2x */
+        	#menu-posts-download .wp-menu-image {
+        		background: transparent url('<?php echo EDD_PLUGIN_URL; ?>assets/images/edd-icon-2x.png') no-repeat 7px -20px!important;
+        		-webkit-background-size: 16px 48px;
+        		-moz-background-size: 16px 48px;
+        		background-size: 16px 48px;
+        	}
+        	#menu-posts-download:hover .wp-menu-image {
+        		background-position: 7px 4px!important;
+        	}
+        	/* Post Screen - 32px @2x */
+        	.icon32-posts-download {
+        		background-image: url('<?php echo EDD_PLUGIN_URL; ?>assets/images/edd-cpt-2x.png') no-repeat 0 0!important;
+        		-webkit-background-size: 32px 32px;
+        		-moz-background-size: 32px 32px;
+        		background-size: 32px 32px;
+        	}
+        }
 	</style>
     <?php
 }

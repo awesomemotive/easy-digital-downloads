@@ -82,14 +82,16 @@ function edd_price( $download_id, $echo = true ) {
 		$prices = edd_get_variable_prices( $download_id );
 		// return the lowest price
 		$price_float = 0;
-                foreach($prices as $key => $value)
-                        if( ( ( (float)$prices[$key]['amount']) < $price_float) or ($price_float==0) )
-                                $price_float = (float)$prices[$key]['amount'];
-                $price = edd_sanitize_amount($price_float);
+        foreach($prices as $key => $value)
+            if( ( ( (float)$prices[$key]['amount']) < $price_float) or ($price_float==0) )
+                $price_float = (float)$prices[$key]['amount'];
+            $price = edd_sanitize_amount($price_float);
 	} else {
 		$price = edd_get_download_price( $download_id );
 	}
 
+	if( edd_use_taxes() && edd_taxes_on_prices() )
+		$price += edd_calculate_tax( $price );
 
 	$price = apply_filters( 'edd_download_price', $price, $download_id );
 
@@ -129,7 +131,7 @@ function edd_get_download_final_price( $download_id, $user_purchase_info, $amoun
 	} else {
 		$price = $original_price;
 	}
-	return $price;
+	return apply_filters( 'edd_final_price', $price, $download_id, $user_purchase_info );
 }
 
 
@@ -238,76 +240,6 @@ function edd_get_download_sales_stats($download_id) {
 
 
 /**
- * Get Download Sales Log
- *
- * Returns an array of sales and sale info for a download.
- *
- * @param		$download_id INT the ID number of the download to retrieve a log for
- * @param		$paginate bool whether to paginate the results or not
- * @param		$number int the number of results to return
- * @param		$offset int the number of items to skip
- *
- * @access      public
- * @since       1.0
- * @return      array
-*/
-
-function edd_get_download_sales_log( $download_id, $paginate = false, $number = 10, $offset = 0 ) {
-
-	$sales_log = get_post_meta( $download_id, '_edd_sales_log', true );
-
-	if( $sales_log ) {
-		$sales_log = array_reverse( $sales_log );
-		$log = array();
-		$log['number'] = count( $sales_log );
-		$log['sales'] = $sales_log;
-		if( $paginate ) {
-			$log['sales'] = array_slice( $sales_log, $offset, $number );
-		}
-		return $log;
-	}
-
-	return false;
-}
-
-
-/**
- * Get File Download Log
- *
- * Returns an array of file download dates and user info.
- *
- * @access      public
- * @since       1.0
- *
- * @param		$download_id INT the ID number of the download to retrieve a log for
- * @param		$paginate bool whether to paginate the results or not
- * @param		$number int the number of results to return
- * @param		$offset int the number of items to skip
- *
- * @return      array
-*/
-
-function edd_get_file_download_log( $download_id, $paginate = false, $number = 10, $offset = 0 ) {
-	$download_log = get_post_meta( $download_id, '_edd_file_download_log', true );
-
-	if( $download_log ) {
-		$download_log = array_reverse( $download_log );
-		$log = array();
-		$log['number'] = count( $download_log );
-		$log['downloads'] = $download_log;
-
-		if( $paginate ) {
-			$log['downloads'] = array_slice( $download_log, $offset, $number );
-		}
-
-		return $log;
-	}
-
-	return false;
-}
-
-
-/**
  * Record Sale In Log
  *
  * Stores log information for a download sale.
@@ -319,7 +251,7 @@ function edd_get_file_download_log( $download_id, $paginate = false, $number = 1
 
 function edd_record_sale_in_log( $download_id, $payment_id ) {
 
-	$logs = new EDD_Logging();
+	global $edd_logs;
 
 	$log_data = array(
 		'post_parent' 	=> $download_id,
@@ -327,10 +259,10 @@ function edd_record_sale_in_log( $download_id, $payment_id ) {
 	);
 
 	$log_meta = array(
-		'payment_id'=> $payment_id
+		'payment_id'    => $payment_id
 	);
 
-	$log_id = $logs->insert_log( $log_data, $log_meta );
+	$log_id = $edd_logs->insert_log( $log_data, $log_meta );
 
 }
 
@@ -347,8 +279,7 @@ function edd_record_sale_in_log( $download_id, $payment_id ) {
 
 function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip, $payment_id ) {
 
-
-	$logs = new EDD_Logging();
+	global $edd_logs;
 
 	$log_data = array(
 		'post_parent'	=> $download_id,
@@ -363,11 +294,35 @@ function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip, $p
 		'payment_id'=> $payment_id
 	);
 
-	$log_id = $logs->insert_log( $log_data, $log_meta );
+	$log_id = $edd_logs->insert_log( $log_data, $log_meta );
 
 
 }
 
+
+/**
+ * Delete log entries when deleting download product
+ *
+ * Removes all related log entries when a download is completely deleted.
+ *
+ * Does not run when a download is trashed
+ *
+ * @access      public
+ * @since       1.3.4
+ * @return      void
+*/
+function edd_remove_download_logs_on_delete( $download_id = 0 ) {
+
+	if( 'download' != get_post_type( $download_id ) )
+		return;
+
+	global $edd_logs;
+
+	// remove all log entries related to this download
+	$edd_logs->delete_logs( $download_id );
+
+}
+add_action( 'delete_post', 'edd_remove_download_logs_on_delete' );
 
 /**
  * Increase Purchase Count
@@ -781,7 +736,7 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 
 						// check to see if the file download limit has been reached
 						if( edd_is_file_at_download_limit( $id, $payment->ID, $file_key ) )
-							wp_die( __('Sorry but you have hit your download limit for this file.', 'edd'), __('Error', 'edd') );
+							wp_die( apply_filters( 'edd_download_limit_reached_text', __('Sorry but you have hit your download limit for this file.' ), 'edd'), __('Error', 'edd') );
 
 						// make sure the link hasn't expired
 						if( time() < $expire ) {
