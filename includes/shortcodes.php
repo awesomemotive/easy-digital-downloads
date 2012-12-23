@@ -725,7 +725,7 @@ add_shortcode( 'edd_change_password', 'edd_change_password_shortcode' );
 */
 
 function edd_process_password_change( $data ) {
-	if( wp_verify_nonce( $data['edd_change_password_nonce'], 'edd-change-password-nonce' ) ) {
+	if( wp_verify_nonce( $data['edd_change_password_nonce'], 'edd-change-password-nonce' ) && is_user_logged_in() ) {
 		$user_id = get_current_user_id();
 
 		if ( $data['edd_new_user_pass1'] !== $data['edd_new_user_pass2'] ) {
