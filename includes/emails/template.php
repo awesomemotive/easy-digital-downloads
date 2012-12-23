@@ -64,7 +64,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 
 	}
 
-	$url_list      = '';
+	$file_urls      = '';
 	$download_list = '<ul>';
 	$downloads     = edd_get_payment_meta_downloads( $payment_id );
 	if ( $downloads ) {
@@ -92,7 +92,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 
 					$download_list .= '</li>';
 
-					$url_list .= esc_html( $file_url ) . '<br/>';
+					$file_urls .= esc_html( $file_url ) . '<br/>';
 				}
 			}
 			if ( $show_names ) {
@@ -121,7 +121,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 	$message = str_replace( '{fullname}', $fullname, $message );
 	$message = str_replace( '{username}', $username, $message );
 	$message = str_replace( '{download_list}', $download_list, $message );
-	$message = str_replace( '{url_list}', $url_list, $message );
+	$message = str_replace( '{file_urls}', $file_urls, $message );
 	$message = str_replace( '{date}', date_i18n( get_option( 'date_format' ), strtotime( $payment_data['date'] ) ), $message );
 	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
 	$message = str_replace( '{subtotal}', $subtotal, $message );
@@ -155,7 +155,7 @@ function edd_email_preview_templage_tags( $message ) {
 	$download_list .= '</ul></li>';
 	$download_list .= '</ul>';
 
-	$url_list = esc_html( trailingslashit( get_site_url() ) . 'test.zip?test=key&key=123' );
+	$file_urls = esc_html( trailingslashit( get_site_url() ) . 'test.zip?test=key&key=123' );
 
 	$price = edd_currency_filter( edd_format_amount( 9.50 ) );
 
@@ -167,14 +167,14 @@ function edd_email_preview_templage_tags( $message ) {
 
 	$message = str_replace( '{name}', 'John Doe', $message );
 	$message = str_replace( '{download_list}', $download_list, $message );
-	$message = str_replace( '{url_list}', $url_list, $message );
+	$message = str_replace( '{file_urls}', $file_urls, $message );
 	$message = str_replace( '{date}', date( get_option( 'date_format' ), time() ), $message );
 	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
 	$message = str_replace( '{price}', $price, $message );
 	$message = str_replace( '{payment_method}', $gateway, $message );
 	$message = str_replace( '{receipt_id}', $receipt_id, $message );
 	$message = str_replace( '{product_notes}', $notes, $message );
-	
+
 	return wpautop( $message );
 
 }
