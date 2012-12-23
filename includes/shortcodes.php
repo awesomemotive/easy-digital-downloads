@@ -540,6 +540,8 @@ function edd_process_name_change( $data ) {
 
 		update_user_meta( $user_id, 'first_name', trim( sanitize_text_field( $data['edd_first_name'] ) ) );
 		update_user_meta( $user_id, 'last_name', trim( sanitize_text_field( $data['edd_last_name'] ) ) );
+	} else {
+		wp_die( __( 'Security check failed. Please try again.', 'edd' ), __( 'Security Check Failed.', 'edd' ) );
 	}
 }
 add_action( 'edd_change_name', 'edd_process_name_change' );
@@ -611,6 +613,8 @@ function edd_process_display_name_change( $data ) {
 		$user_id = get_current_user_id();
 
 		wp_update_user( array( 'ID' => $user_id, 'display_name' => sanitize_text_field( $data['edd_display_name'] ) ) );
+	} else {
+		wp_die( __( 'Security check failed. Please try again.', 'edd' ), __( 'Security Check Failed.', 'edd' ) );
 	}
 }
 add_action( 'edd_change_display_name', 'edd_process_display_name_change' );
@@ -667,6 +671,8 @@ function edd_process_email_change( $data ) {
 		$user_id = get_current_user_id();
 
 		wp_update_user( array( 'ID' => $user_id, 'user_email' => sanitize_email( $data['edd_email'] ) ) );
+	} else {
+		wp_die( __( 'Security check failed. Please try again.', 'edd' ), __( 'Security Check Failed.', 'edd' ) );
 	}
 }
 add_action( 'edd_change_email', 'edd_process_email_change' );
@@ -729,6 +735,8 @@ function edd_process_password_change( $data ) {
 		} else {
 			wp_set_password( $data['edd_new_user_pass1'], $user_id );
 		}
+	} else {
+		wp_die( __( 'Security check failed. Please try again.', 'edd' ), __( 'Security Check Failed.', 'edd' ) );
 	}
 }
 add_action( 'edd_change_password', 'edd_process_password_change' );
