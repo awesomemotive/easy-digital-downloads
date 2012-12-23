@@ -542,6 +542,7 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 			</p>
 
 			<legend><?php _e( 'Change your Password', 'edd' ); ?></legend>
+			<p class="edd_password_change_notice"><?php _e( 'Please note after you change your password, you will be logged out automatically and will have to log back in again.', 'edd' ); ?></p>
 			<p>
 				<label for="edd_user_pass"><?php _e( 'New Password', 'edd' ); ?></label>
 				<input name="edd_new_user_pass1" id="edd_new_user_pass1" class="password edd-input" type="password"/>
