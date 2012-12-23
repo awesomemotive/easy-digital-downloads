@@ -18,6 +18,14 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	var $per_page = 30;
 
 
+	/**
+	 * Get things started
+	 *
+	 * @access      private
+	 * @since       1.3
+	 * @return      void
+	 */
+
 	function __construct(){
 		global $status, $page;
 
@@ -30,6 +38,14 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 
 	}
 
+
+	/**
+	 * Output column data
+	 *
+	 * @access      private
+	 * @since       1.3
+	 * @return      string
+	 */
 
 	function column_default( $item, $column_name ) {
 		switch( $column_name ){
@@ -45,6 +61,14 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	}
 
 
+	/**
+	 * Get the column IDs and names
+	 *
+	 * @access      private
+	 * @since       1.3
+	 * @return      array
+	 */
+
 	function get_columns() {
 		$columns = array(
 			'title'     		=> edd_get_label_singular(),
@@ -56,6 +80,14 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		return $columns;
 	}
 
+
+	/**
+	 * Define the sortable columns
+	 *
+	 * @access      private
+	 * @since       1.3
+	 * @return      array
+	 */
 
 	function get_sortable_columns() {
 		return array(
@@ -79,6 +111,14 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	}
 
 
+	/**
+	 * Retrieve the totoal number of downloads
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      int
+	 */
+
 	function get_total_downloads() {
 		$counts = wp_count_posts( 'download' );
 		$total  = 0;
@@ -87,11 +127,28 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		return $total;
 	}
 
+
+	/**
+	 * Show reporting views
+	 *
+	 * @access      private
+	 * @since       1.3
+	 * @return      void
+	 */
+
 	function bulk_actions() {
 		// these are really bulk actions but this outputs the markup in the right place
 		edd_report_views();
 	}
 
+
+	/**
+	 * Retrieve all report data for Downloads
+	 *
+	 * @access      private
+	 * @since       1.3
+	 * @return      array
+	 */
 
 	function reports_data() {
 
