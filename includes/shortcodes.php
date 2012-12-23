@@ -496,9 +496,53 @@ add_shortcode( 'edd_receipt', 'edd_receipt_shortcode' );
  * @return      string
  */
 function edd_change_name_shortcode( $atts, $content = null ) {
-	
+	ob_start();
+		if( !is_user_logged_in() ) {
+			return;
+		}
+	?>
+	<form id="edd_change_name_form"  class="edd_form" action="" method="post">
+		<fieldset>
+			<legend><?php _e( 'Change your Name', 'edd' ); ?></legend>
+			<p>
+				<label for="edd_first_name"><?php _e( 'First Name', 'edd' ); ?></label>
+				<input name="edd_first_name" id="edd_first_name" class="text required" type="text"/>
+			</p>
+			<p>
+				<label for="edd_last_name"><?php _e( 'Last Name', 'edd' ); ?></label>
+				<input name="edd_last_name" id="edd_last_name" class="text required" type="text"/>
+			</p>
+			<p>
+				<input type="hidden" name="edd_change_name_nonce" value="<?php echo wp_create_nonce( 'edd-change-name-nonce' ); ?>"/>
+				<input type="hidden" name="edd_action" value="change_name" />
+				<input id="edd_change_password_submit" type="submit" class="edd_submit" value="<?php _e( 'Save Changes', 'edd' ); ?>"/>
+			</p>
+		</fieldset>
+	</form>
+	<?php
+	$display = ob_get_clean();
+	return $display;
 }
 add_shortcode( 'edd_change_name', 'edd_change_name_shortcode' );
+
+
+/**
+ * Process Change Password Form
+ *
+ * @access      private
+ * @since       1.4
+ * @return      void
+*/
+
+function edd_process_name_change( $data ) {
+	if( wp_verify_nonce( $data['edd_change_name_nonce'], 'edd-change-name-nonce' ) ) {
+		$user_id = get_current_user_id();
+
+		update_user_meta( $user_id, 'first_name', trim( sanitize_text_field( $data['edd_first_name'] ) ) );
+		update_user_meta( $user_id, 'last_name', trim( sanitize_text_field( $data['edd_last_name'] ) ) );
+	}
+}
+add_action( 'edd_change_name', 'edd_process_name_change' );
 
 
 /**
