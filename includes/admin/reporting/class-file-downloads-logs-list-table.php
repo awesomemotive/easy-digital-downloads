@@ -393,7 +393,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 	function prepare_items() {
 
-		$per_page              = $this->per_page;
 		$columns               = $this->get_columns();
 		$hidden                = array(); // no hidden columns
 		$sortable              = $this->get_sortable_columns();
@@ -404,8 +403,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		$this->set_pagination_args( array(
 				'total_items'  => $total_items,
-				'per_page'     => $per_page,
-				'total_pages'  => ceil( $total_items / $per_page )
+				'per_page'     => $this->per_page,
+				'total_pages'  => ceil( $total_items / $this->per_page )
 			)
 		);
 	}
