@@ -131,7 +131,7 @@ function edd_get_download_final_price( $download_id, $user_purchase_info, $amoun
 	} else {
 		$price = $original_price;
 	}
-	return $price;
+	return apply_filters( 'edd_final_price', $price, $download_id, $user_purchase_info );
 }
 
 
