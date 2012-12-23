@@ -274,7 +274,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		$log_query = array(
 			'post_parent' => null,
 			'log_type'    => 'sale',
-			'paged'       => $paged
+			'paged'       => $paged,
+			'meta_query'  => $this->get_meta_query()
 		);
 
 		$logs = $edd_logs->get_connected_logs( $log_query );
