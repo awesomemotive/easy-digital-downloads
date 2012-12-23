@@ -9,8 +9,31 @@ if( !class_exists( 'WP_List_Table' ) ) {
 
 class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
+	/**
+	 * Number of results to show per page
+	 *
+	 * @since       1.4
+	 */
+
 	var $per_page = 30;
+
+
+	/**
+	 * Are we searching for files?
+	 *
+	 * @since       1.4
+	 */
+
 	var $file_search = false;
+
+
+	/**
+	 * Get things started
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      void
+	 */
 
 	function __construct(){
 		global $status, $page;
@@ -54,6 +77,14 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	}
 
 
+	/**
+	 * Output column data
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      string
+	 */
+
 	function column_default( $item, $column_name ) {
 		switch( $column_name ){
 			case 'download' :
@@ -65,6 +96,14 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		}
 	}
 
+
+	/**
+	 * Setup the column names / IDs
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      array
+	 */
 
 	function get_columns() {
 		$columns = array(
@@ -79,17 +118,55 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		return $columns;
 	}
 
+
+	/**
+	 * Retrieves the user we are filtering logs by, if any
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      mixed Int if user ID, string if email or login
+	 */
+
 	function get_filtered_user() {
 		return isset( $_GET['user'] ) ? absint( $_GET['user'] ) : false;
 	}
 
+
+	/**
+	 * Retrieves the ID of the download we're filtering logs by
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      int
+	 */
+
 	function get_filtered_download() {
-		return !empty( $_GET['download'] ) ? absint( $_GET['download'] ) : false;
+		return ! empty( $_GET['download'] ) ? absint( $_GET['download'] ) : false;
 	}
 
+
+	/**
+	 * Retrieves the search query string
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      mixed String if search is present, false otherwise
+	 */
+
 	function get_search() {
-		return ! empty( $_GET['s'] ) ? urldecode( $_GET['s'] ) : false;
+		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
 	}
+
+
+	/**
+	 * Gets the meta query for the log query
+	 *
+	 * This is used to return log entries that match our search query, user query, or download query
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      array
+	 */
 
 	function get_meta_query() {
 
@@ -182,14 +259,40 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 	}
 
+
+	/**
+	 * Retrieve the current page number
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      int
+	 */
+
 	function get_paged() {
 		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 	}
 
+
+	/**
+	 * Outputs the log filters filter
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      void
+	 */
 	function bulk_actions() {
 		// these aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
 	}
+
+
+	/**
+	 * Sets up the downloads filter
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      void
+	 */
 
 	function downloads_filter() {
 		$downloads = get_posts( array(
@@ -209,7 +312,16 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		}
 	}
 
-	function logs_data() {
+
+	/**
+	 * Gets the log entries for the current view
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      array
+	 */
+
+	function get_logs() {
 
 		global $edd_logs;
 
@@ -241,7 +353,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				$file_id 	 = $file_id !== false ? $file_id : 0;
 				$file_name 	 = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
 
-				if( ( $this->file_search && strpos( $file_name, $this->get_search() ) !== false ) || ! $this->file_search ) {
+				if( ( $this->file_search && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) || ! $this->file_search ) {
 
 					$logs_data[] = array(
 						'ID' 		=> $log->ID,
@@ -290,7 +402,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		$current_page = $this->get_pagenum();
 
-		$this->items = $this->logs_data();
+		$this->items = $this->get_logs();
 
 		$total_items = count( $this->items );
 
