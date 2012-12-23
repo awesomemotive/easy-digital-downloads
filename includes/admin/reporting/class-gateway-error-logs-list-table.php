@@ -102,7 +102,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 		$logs_data = array();
 		$paged     = $this->get_paged();
 		$log_query = array(
-			'post_parent' => $download,
 			'log_type'    => 'gateway_error',
 			'paged'       => $paged
 		);
@@ -118,13 +117,13 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 				$user_data 	= get_userdata( $user_id );
 
 				$logs_data[] = array(
-					'ID'      => $log->ID,
+					'ID'         => $log->ID,
 					'payment_id' => $log->post_parent,
-					'error'   => 'error',
-					'gateway' => 'gateway',
-					'user_id' => $user_id,
-					'buyer'	  => $user_data ? $user_data->display_name : $user_info['email'],
-					'date'	  => $log->post_date
+					'error'      => 'error',
+					'gateway'    => 'gateway',
+					'user_id'    => $user_id,
+					'buyer'	     => $user_data ? $user_data->display_name : $user_info['email'],
+					'date'	     => $log->post_date
 				);
 			}
 		}
@@ -163,7 +162,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 
 		$this->items = $this->logs_data();
 
-		$total_items = $edd_logs->get_log_count( $download, 'file_download' );
+		$total_items = $edd_logs->get_log_count( 0, 'gateway_error' );
 
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,                  	// WE have to calculate the total number of items
