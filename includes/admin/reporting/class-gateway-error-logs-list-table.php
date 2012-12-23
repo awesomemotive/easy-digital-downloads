@@ -28,7 +28,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 		switch( $column_name ){
 
 			case 'error' :
-				return get_the_title( $item['ID'] );
+				return get_the_title( $item['ID'] ) ? get_the_title( $item['ID'] ) : __( 'Payment Error', 'edd' );
 			case 'gateway' :
 				return edd_get_payment_gateway( $item['payment_id'] );
 			case 'buyer' :
