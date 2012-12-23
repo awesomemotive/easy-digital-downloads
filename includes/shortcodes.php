@@ -612,6 +612,9 @@ function edd_process_profile_editor_updates( $data ) {
 		if ( ! empty( $data['edd_new_user_pass1'] ) && ! empty( $data['edd_new_user_pass2'] ) ) {
 			if ( $data['edd_new_user_pass1'] !== $data['edd_new_user_pass2'] ) {
 				wp_die( __( 'The passwords you entered do not match. Please try again.', 'edd' ), __( 'Password Mismatch', 'edd' ) );
+			} else {
+				wp_set_password( $data['edd_new_user_pass1'], $user_id );
+				$updated = true;
 			}
 		}
 
@@ -621,8 +624,7 @@ function edd_process_profile_editor_updates( $data ) {
 			'first_name'   => $first_name,
 			'last_name'    => $last_name,
 			'display_name' => $display_name,
-			'user_email'   => $email,
-			'user_pass'    => $data['edd_new_user_pass1']
+			'user_email'   => $email
 		) );
 
 		$updated = true;
