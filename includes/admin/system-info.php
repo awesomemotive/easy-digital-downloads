@@ -25,7 +25,7 @@ function edd_system_info() {
 <h2><?php _e('System Information','edd') ?></h2><br/>
 <form action="./" method="post">
 <a href="#" class="button-primary" id="download">Download</a><br/><br/>
-<textarea readonly="readonly" id="system-info-textarea" title="To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).">
+<textarea readonly="readonly" id="system-info-textarea" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
 
 	### Begin System Info ###
 
