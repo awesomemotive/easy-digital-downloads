@@ -6,7 +6,7 @@
  * @subpackage  Dashboard Columns
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -18,7 +18,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Defines the custom columns and their order.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      array
 */
 
@@ -45,7 +45,7 @@ add_filter( 'manage_edit-download_columns', 'edd_download_columns' );
  * Render the custom columns content.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -55,8 +55,8 @@ function edd_render_download_columns( $column_name, $post_id ) {
 		$style 			= isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button';
 		$color 			= isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue';
 		$purchase_text 	= isset( $edd_options['add_to_cart_text'] ) ? $edd_options['add_to_cart_text'] : __( 'Purchase', 'edd' );
-		
-		switch ( $column_name) {			
+
+		switch ( $column_name) {
 			case 'download_category':
 				echo get_the_term_list( $post_id, 'download_category', '', ', ', '');
 				break;
@@ -90,7 +90,7 @@ add_action( 'manage_posts_custom_column', 'edd_render_download_columns', 10, 2 )
  * Set the sortable columns content.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      array
 */
 
@@ -111,12 +111,12 @@ add_filter( 'manage_edit-download_sortable_columns', 'edd_sortable_download_colu
  * Sorts the downloads.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      array
 */
 
 function edd_sort_downloads( $vars ) {
-	
+
 	// check if we're viewing the "download" post type
 	if ( isset( $vars['post_type'] ) && 'download' == $vars['post_type'] ) {
 
@@ -132,7 +132,7 @@ function edd_sort_downloads( $vars ) {
 				)
 			);
 		}
-		
+
 		// check if "orderby" is set to "earnings"
 		if ( isset( $vars['orderby'] ) && 'earnings' == $vars['orderby'] ) {
 			// merge the query vars with our custom variables
@@ -157,7 +157,7 @@ function edd_sort_downloads( $vars ) {
 			);
 		}
 	}
-	
+
 	return $vars;
 }
 
@@ -168,7 +168,7 @@ function edd_sort_downloads( $vars ) {
  * Sorts the downloads.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
@@ -184,38 +184,38 @@ add_action( 'load-edit.php', 'edd_download_load', 9999 );
  * Add taxonomy drop down filters for downloads.
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 
 function edd_add_download_filters() {
 	global $typenow;
-	
+
 	// the current post type
 	if( $typenow == 'download') {
-		
+
 		$terms = get_terms( 'download_category' );
 		if(count( $terms) > 0) {
 			echo "<select name='download_category' id='download_category' class='postform'>";
 				echo "<option value=''>" . __( 'Show all categories', 'edd' ) . "</option>";
-				foreach ( $terms as $term) { 
+				foreach ( $terms as $term) {
 					$selected = isset( $_GET['download_category']) && $_GET['download_category'] == $term->slug ? ' selected="selected"' : '';
-					echo '<option value="' . esc_attr( $term->slug ) . '"' . $selected . '>' . esc_html( $term->name ) .' (' . $term->count .')</option>'; 
+					echo '<option value="' . esc_attr( $term->slug ) . '"' . $selected . '>' . esc_html( $term->name ) .' (' . $term->count .')</option>';
 				}
 			echo "</select>";
 		}
-		
+
 		$terms = get_terms('download_tag');
 		if(count( $terms) > 0) {
 			echo "<select name='download_tag' id='download_tag' class='postform'>";
 				echo "<option value=''>" . __( 'Show all tags', 'edd' ) . "</option>";
-				foreach ( $terms as $term) { 
+				foreach ( $terms as $term) {
 					$selected = isset( $_GET['download_tag']) && $_GET['download_tag'] == $term->slug ? ' selected="selected"' : '';
-					echo '<option value="' . esc_attr( $term->slug ) . '"' . $selected . '>' . esc_html( $term->name ) .' (' . $term->count .')</option>'; 
+					echo '<option value="' . esc_attr( $term->slug ) . '"' . $selected . '>' . esc_html( $term->name ) .' (' . $term->count .')</option>';
 				}
 			echo "</select>";
 		}
-		
+
 	}
 
 }

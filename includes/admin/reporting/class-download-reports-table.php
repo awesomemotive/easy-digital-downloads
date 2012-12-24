@@ -9,9 +9,26 @@ if( !class_exists( 'WP_List_Table' ) ) {
 
 class EDD_Download_Reports_Table extends WP_List_Table {
 
+	/**
+	 * Number of results to show per page
+	 *
+	 * @since       1.4
+	 */
+
+	public $per_page = 30;
+
+
+	/**
+	 * Get things started
+	 *
+	 * @access      private
+	 * @since       1.3
+	 * @return      void
+	 */
+
 	function __construct(){
 		global $status, $page;
-			   
+
 		//Set parent defaults
 		parent::__construct( array(
 			'singular'  => edd_get_label_singular(),    // singular name of the listed records
@@ -21,6 +38,14 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 
 	}
 
+
+	/**
+	 * Output column data
+	 *
+	 * @access      private
+	 * @since       1.3
+	 * @return      string
+	 */
 
 	function column_default( $item, $column_name ) {
 		switch( $column_name ){
@@ -36,6 +61,14 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	}
 
 
+	/**
+	 * Get the column IDs and names
+	 *
+	 * @access      private
+	 * @since       1.3
+	 * @return      array
+	 */
+
 	function get_columns() {
 		$columns = array(
 			'title'     		=> edd_get_label_singular(),
@@ -48,6 +81,14 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	}
 
 
+	/**
+	 * Define the sortable columns
+	 *
+	 * @access      private
+	 * @since       1.3
+	 * @return      array
+	 */
+
 	function get_sortable_columns() {
 		return array(
 			'title' 	=> array( 'title', true ),
@@ -57,44 +98,91 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	}
 
 
+	/**
+	 * Retrieve the current page number
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      int
+	 */
+
+	function get_paged() {
+		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+	}
+
+
+	/**
+	 * Retrieve the totoal number of downloads
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      int
+	 */
+
+	function get_total_downloads() {
+		$counts = wp_count_posts( 'download' );
+		$total  = 0;
+		foreach( $counts as $count )
+			$total += $count;
+		return $total;
+	}
+
+
+	/**
+	 * Show reporting views
+	 *
+	 * @access      private
+	 * @since       1.3
+	 * @return      void
+	 */
+
 	function bulk_actions() {
 		// these are really bulk actions but this outputs the markup in the right place
 		edd_report_views();
 	}
 
 
+	/**
+	 * Retrieve all report data for Downloads
+	 *
+	 * @access      private
+	 * @since       1.3
+	 * @return      array
+	 */
+
 	function reports_data() {
 
 		$reports_data = array();
 
 		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'title';
-		$order = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 
 		$report_args = array(
 			'post_type' 	=> 'download',
 			'post_status'	=> 'publish',
-			'posts_per_page'=> -1,
-			'order'			=> $order
+			'order'			=> $order,
+			'posts_per_page'=> $this->per_page,
+			'paged'         => $this->get_paged()
 		);
-			
+
 		switch( $orderby ) :
 
 			case 'title' :
-				$report_args['orderby'] = 'title'; 
+				$report_args['orderby'] = 'title';
 				break;
 
 			case 'sales' :
-				$report_args['orderby'] = 'meta_value_num'; 
+				$report_args['orderby'] = 'meta_value_num';
 				$report_args['meta_key'] = '_edd_download_sales';
 				break;
 
 			case 'earnings' :
-				$report_args['orderby'] = 'meta_value_num'; 
+				$report_args['orderby'] = 'meta_value_num';
 				$report_args['meta_key'] = '_edd_download_earnings';
 				break;
 
 		endswitch;
-	 
+
 		$downloads = get_posts( $report_args );
 		if( $downloads ) {
 			foreach( $downloads as $download ) {
@@ -111,7 +199,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		return $reports_data;
 	}
 
-   
+
 	/** ************************************************************************
 	 * @uses $this->_column_headers
 	 * @uses $this->items
@@ -122,12 +210,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 **************************************************************************/
 
 	function prepare_items() {
-	   
-		/**
-		 * First, lets decide how many records per page to show
-		 */
-		$per_page = 30;
-	   
+
 		$columns = $this->get_columns();
 
 		$hidden = array(); // no hidden columns
@@ -135,23 +218,21 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		 
+
 		$data = $this->reports_data();
 
 		$current_page = $this->get_pagenum();
-	
-		$total_items = count( $data );
 
-		$data = array_slice( $data, ( ( $current_page - 1 ) * $per_page ), $per_page );
+		$total_items = $this->get_total_downloads();
 
 		$this->items = $data;
 
 		$this->set_pagination_args( array(
-				'total_items' => $total_items,                  	// WE have to calculate the total number of items
-				'per_page'    => $per_page,                     	// WE have to determine how many items to show on a page
-				'total_pages' => ceil( $total_items / $per_page )   // WE have to calculate the total number of pages
+				'total_items' => $total_items,
+				'per_page'    => $this->per_page,
+				'total_pages' => ceil( $total_items / $this->per_page )
 			)
 		);
 	}
-   
+
 }

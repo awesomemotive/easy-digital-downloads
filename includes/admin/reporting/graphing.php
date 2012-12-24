@@ -6,7 +6,7 @@
  * @subpackage  Graphing Functions
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
@@ -27,13 +27,13 @@ function edd_reports_graph() {
 	// determine graph options
 	switch( $dates['range'] ) :
 
-		case 'last_year' : 
-			$time_format 	= '%b'; 
+		case 'last_year' :
+			$time_format 	= '%b';
 			$tick_size		= 'month';
 			$day_by_day		= false;
 			break;
 		case 'this_year' :
-			$time_format 	= '%b'; 
+			$time_format 	= '%b';
 			$tick_size		= 'month';
 			$day_by_day		= false;
 			break;
@@ -63,41 +63,37 @@ function edd_reports_graph() {
 			$tick_size		= 'day'; 	// default graph interval
 			$day_by_day 	= true;
 			break;
-			
+
 	endswitch;
 
 	$time_format 	= apply_filters( 'edd_graph_timeformat', $time_format );
 	$tick_size 		= apply_filters( 'edd_graph_ticksize', $tick_size );
 	$totals 		= (float) 0.00; // total earnings for time period shown
-	echo '<h3>' . __( 'Earnings Over Time', 'edd' ) . '</h3>';
-
-	// show the date controls
-	edd_reports_graph_controls();
 
 	ob_start(); ?>
 	<script type="text/javascript">
 	   jQuery( document ).ready( function($) {
 	   		$.plot(
-	   			$("#edd_monthly_stats"), 
-	   			[{ 
+	   			$("#edd_monthly_stats"),
+	   			[{
    					data: [
 	   					<?php
 	   					$i = $dates['m_start'];
-						while( $i <= $dates['m_end'] ) : 
+						while( $i <= $dates['m_end'] ) :
 							if( $day_by_day ) :
 								$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
 								$d 				= 1;
-								while( $d <= $num_of_days ) : 
+								while( $d <= $num_of_days ) :
 									$date = mktime( 0, 0, 0, $i, $d, $dates['year'] ); ?>
 									[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( $d, $i, $dates['year'] ); ?>],
-								<?php 
-								$d++; 
+								<?php
+								$d++;
 								endwhile;
-							else : 
+							else :
 								$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
 								?>
 								[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( null, $i, $dates['year'] ); ?>],
-							<?php 
+							<?php
 							endif;
 							$i++;
 						endwhile;
@@ -106,28 +102,28 @@ function edd_reports_graph() {
 	   				yaxis: 2,
    					label: "<?php _e( 'Sales', 'edd' ); ?>",
    					id: 'sales'
-   				}, 
-   				{ 
+   				},
+   				{
    					data: [
 	   					<?php
 	   					$i = $dates['m_start'];
-						while( $i <= $dates['m_end'] ) : 
+						while( $i <= $dates['m_end'] ) :
 							if( $day_by_day ) :
 								$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
 								$d 				= 1;
-								while( $d <= $num_of_days ) : 
+								while( $d <= $num_of_days ) :
 									$date = mktime( 0, 0, 0, $i, $d, $dates['year'] );
-									$earnings = edd_get_earnings_by_date( $d, $i, $dates['year'] ); 
+									$earnings = edd_get_earnings_by_date( $d, $i, $dates['year'] );
 									$totals += $earnings; ?>
 									[<?php echo $date * 1000; ?>, <?php echo $earnings ?>],
 								<?php $d++; endwhile;
-							else : 
+							else :
 								$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
 								$earnings = edd_get_earnings_by_date( null, $i, $dates['year'] );
 								$totals += $earnings;
 								?>
 								[<?php echo $date * 1000; ?>, <?php echo $earnings; ?>],
-							<?php 
+							<?php
 							endif;
 							$i++;
 						endwhile;
@@ -160,7 +156,7 @@ function edd_reports_graph() {
    					{ min: 0, tickSize: 1, tickDecimals: 2 },
    					{ min: 0, tickDecimals: 0 }
    				]
-           		
+
             });
 
 	   		function edd_flot_tooltip(x, y, contents) {
@@ -175,7 +171,7 @@ function edd_reports_graph() {
 		            opacity: 0.80
 		        }).appendTo("body").fadeIn(200);
 		    }
-		    
+
 		    var previousPoint = null;
 		    $("#edd_monthly_stats").bind("plothover", function (event, pos, item) {
 		        $("#x").text(pos.x.toFixed(2));
@@ -193,20 +189,28 @@ function edd_reports_graph() {
 								edd_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y + edd_vars.currency_sign );
 	                    	}
 	                    } else {
-		                    edd_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y.replace( '.00', '' ) );                    	
+		                    edd_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y.replace( '.00', '' ) );
 	                    }
 	                }
 	            } else {
 	                $("#edd-flot-tooltip").remove();
-	                previousPoint = null;            
+	                previousPoint = null;
 	            }
 		    });
 	   });
     </script>
-    <div id="edd_monthly_stats" style="height: 300px;"></div>
-    <div id="edd_graph_totals">
-    	<strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $totals ) ); ?></strong>
-    </div>
+
+	<div class="metabox-holder" style="padding-top: 0;">
+		<div class="postbox">
+			<h3><span><?php _e('Earnings Over Time', 'edd'); ?></span></h3>
+			
+			<div class="inside">
+				<?php edd_reports_graph_controls(); ?>
+				<div id="edd_monthly_stats" style="height: 300px;"></div>
+				<p id="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $totals ) ); ?></strong></p>
+			</div>
+		</div>
+	</div>
 	<?php
 	echo ob_get_clean();
 }
@@ -275,7 +279,7 @@ function edd_reports_graph_controls() {
 			       	</select>
 			    </div>
 
-			    <input type="hidden" name="edd_action" value="filter_reports" />  
+			    <input type="hidden" name="edd_action" value="filter_reports" />
 		       	<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'edd' ); ?>"/>
 			</div>
 		</div>
@@ -298,7 +302,7 @@ function edd_get_report_dates() {
 	$dates = array();
 
 	$dates['range']		= isset( $_GET['range'] )	? $_GET['range']	: 'this_month';
-	$dates['day']		= isset( $_GET['day'] ) 	? $_GET['day'] 		: null;	
+	$dates['day']		= isset( $_GET['day'] ) 	? $_GET['day'] 		: null;
 	$dates['m_start'] 	= isset( $_GET['m_start'] ) ? $_GET['m_start'] 	: 1;
 	$dates['m_end']		= isset( $_GET['m_end'] ) 	? $_GET['m_end'] 	: 12;
 	$dates['year'] 		= isset( $_GET['year'] ) 	? $_GET['year'] 	: date( 'Y' );

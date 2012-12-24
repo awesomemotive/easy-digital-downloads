@@ -8,7 +8,17 @@ if( !class_exists( 'WP_List_Table' ) ) {
 }
 
 class EDD_Customer_Reports_Table extends WP_List_Table {
-	
+
+
+	/**
+	 * Number of results to show per page
+	 *
+	 * @since       1.4
+	 */
+
+	public $per_page = 30;
+
+
 	function __construct(){
 		global $status, $page;
 
@@ -23,15 +33,22 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 
 	function column_default( $item, $column_name ) {
-		switch( $column_name ){
+		switch( $column_name ) {
+
 			case 'name' :
-				return '<a href="' . esc_url( 
-						admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] ) ) 
+				return '<a href="' .
+						admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] )
 					) . '">' . esc_html( $item[ $column_name ] ) . '</a>';
+
 			case 'amount_spent' :
 				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
+
+			case 'file_downloads' :
+					return '<a href="' . admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( ! empty( $item['ID'] ) ? $item['ID'] : $item['email'] ) ) . '" target="_blank">' . $item['file_downloads'] . '</a>';
+
 			default:
 				return $item[ $column_name ];
+
 		}
 	}
 
@@ -41,7 +58,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'name'     		=> __( 'Name', 'edd' ),
 			'email'     	=> __( 'Email', 'edd' ),
 			'num_purchases' => __( 'Number of Purchases', 'edd' ),
-			'amount_spent'  => __( 'Total Amount Spent', 'edd' )
+			'amount_spent'  => __( 'Total Amount Spent', 'edd' ),
+			'file_downloads'=> __( 'Files Downloaded', 'edd' )
 		);
 		return $columns;
 	}
@@ -51,20 +69,35 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		edd_report_views();
 	}
 
+	/**
+	 * Retrieve the current page number
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      int
+	 */
+
+	function get_paged() {
+		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+	}
+
+
+	function get_total_customers() {
+		global $wpdb;
+
+		$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
+
+		return $count[0];
+	}
+
 
 	function reports_data() {
 		global $wpdb;
 
 		$reports_data = array();
-
-		// retrieve all customer emails
-		$customers = get_transient( 'edd_customer_list' );
-		if( false === $customers ) {
-
-			$customers = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' ORDER BY meta_id DESC " ) );
-			set_transient( 'edd_customer_list', $customers, 3600 );
-
-		}
+		$paged        = $this->get_paged();
+		$offset       = $this->per_page * ( $paged - 1 );
+		$customers    = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' ORDER BY meta_id DESC LIMIT $this->per_page OFFSET $offset" );
 
 		if( $customers ) {
 			foreach( $customers as $customer_email ) {
@@ -78,7 +111,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 					'name' 			=> $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' ),
 					'email' 		=> $customer_email,
 					'num_purchases'	=> edd_count_purchases_of_customer( $customer_email ),
-					'amount_spent'	=> edd_purchase_total_of_user( $customer_email )
+					'amount_spent'	=> edd_purchase_total_of_user( $customer_email ),
+					'file_downloads'=> edd_count_file_downloads_of_user( ! empty( $user_id ) ? $user_id : $customer_email )
 				);
 			}
 		}
@@ -95,10 +129,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @uses $this->set_pagination_args()
 	 **************************************************************************/
 	function prepare_items() {
-		/**
-		 * First, lets decide how many records per page to show
-		 */
-		$per_page = 30;
 
 		$columns = $this->get_columns();
 
@@ -108,20 +138,18 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
-		$data = $this->reports_data();
-
 		$current_page = $this->get_pagenum();
 
-		$total_items = count( $data );
+		$total_items = $this->get_total_customers();
 
-		$data = array_slice( $data,( ( $current_page - 1 ) * $per_page ), $per_page );
+		//$data = array_slice( $data,( ( $current_page - 1 ) * $per_page ), $per_page );
 
-		$this->items = $data;
+		$this->items = $this->reports_data();
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,                  	// WE have to calculate the total number of items
-			'per_page'    => $per_page,                     	// WE have to determine how many items to show on a page
-			'total_pages' => ceil( $total_items / $per_page )   // WE have to calculate the total number of pages
+			'per_page'    => $this->per_page,                     	// WE have to determine how many items to show on a page
+			'total_pages' => ceil( $total_items / $this->per_page )   // WE have to calculate the total number of pages
 		) );
 	}
 

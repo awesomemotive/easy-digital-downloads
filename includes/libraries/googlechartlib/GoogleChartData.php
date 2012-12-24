@@ -9,7 +9,7 @@
  *
  * For the full copyright and license information, please view the LICENSE file.
  */
- 
+
 /**
  * A data serie.
  *
@@ -54,12 +54,12 @@ class GoogleChartData
 	 * Thickness of the line. Line Chart only. (@c chls)
 	 */
 	protected $thickness = 2;
-	
+
 	/**
 	 * Length of the dash. Line Chart only. (@c chls)
 	 */
 	protected $dash_length = null;
-	
+
 	/**
 	 * Length of the spaces between dashes. Line Chart only. (@c chls)
 	 */
@@ -69,7 +69,7 @@ class GoogleChartData
 	 *  Line fill values (to fill area below a line). (@c chm)
 	 */
 	protected $fill = null;
-	
+
 	protected $fill_slices = array();
 
 	/**
@@ -80,7 +80,7 @@ class GoogleChartData
 	 *  array The scale, as specified by the user with setScale
 	 */
 	protected $scale = null;
-	
+
 	/**
 	 *  int Holds the index of the data serie in the chart. Null if not added.
 	 */
@@ -113,7 +113,7 @@ class GoogleChartData
 	{
 		return $this->values !== null && ! empty($this->values);
 	}
-	
+
 	/**
 	 * @since 0.5
 	 */
@@ -136,8 +136,8 @@ class GoogleChartData
 				throw new InvalidArgumentException('Invalid encoding format');
 		}
 	}
-	
-	
+
+
 /**
  * @name Pie Chart Labels @c chl
  */
@@ -167,7 +167,7 @@ class GoogleChartData
 		$this->labels = $labels;
 		return $this;
 	}
-	
+
 	/**
 	 * Return labels set by setLabels()
 	 * @return array();
@@ -288,7 +288,7 @@ class GoogleChartData
 
 		return $this->scale;
 	}
-	
+
 	/**
 	 * @since 0.5
 	 */
@@ -361,7 +361,7 @@ class GoogleChartData
 	{
 		return $this->color;
 	}
-	
+
 	/**
 	 * Compute the @c cho parameter.
 	 * @internal
@@ -482,7 +482,7 @@ class GoogleChartData
 		$this->thickness = $thickness;
 		return $this;
 	}
-	
+
 	/**
 	 * @since 0.5
 	 */
@@ -502,7 +502,7 @@ class GoogleChartData
 		$this->space_length = $space_length;
 		return $this;
 	}
-	
+
 	/**
 	 * @internal
 	 * @since 0.5
@@ -518,7 +518,7 @@ class GoogleChartData
 		}
 		return $str;
 	}
-	
+
 	/**
 	 * @internal
 	 * @since 0.5
@@ -569,13 +569,13 @@ class GoogleChartData
 
 		$map = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 		$str = '';
-		
+
 		foreach ( $values as $v ) {
 			if ( $v === null ) {
 				$str .= '_';
 				continue;
 			}
-			
+
 			$n = round(61 * (($v - $min) / $max));
 			if ( $n > 61 ) {
 				$str .= '9';
@@ -637,7 +637,7 @@ class GoogleChartData
 
 	/**
 	* linear regression function
-	* 
+	*
 	* @param $data array Points to calculate
 	* @returns array() m=>slope, b=>intercept
 	*/
