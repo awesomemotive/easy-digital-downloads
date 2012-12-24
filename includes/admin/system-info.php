@@ -28,6 +28,8 @@ function edd_system_info() {
 <textarea readonly="readonly" id="system-info-textarea" name="edd-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
 ### Begin System Info ###
 
+## Please include this information when posting support requests ##
+
 Multi-site:               <?php echo is_multisite() ? 'Yes' . "\n" : 'No' . "\n" ?>
 
 SITE_URL:                 <?php echo site_url() . "\n"; ?>
