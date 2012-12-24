@@ -6,6 +6,7 @@
  *
  * @since 		1.4
  * @usedby 		edd_settings()
+ * @author 		Chris Christoff
  */
 function edd_system_info() { ?>
 <div class="wrap">
@@ -98,6 +99,7 @@ foreach ( $plugins as $plugin_path => $plugin ):
  *
  * @since 		1.4
  * @usedby 		edd_settings()
+ * @author 		Chris Christoff
  */
 function edd_let_to_num($v) {
     $l = substr($v, -1);
