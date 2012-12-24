@@ -41,7 +41,7 @@ function edd_download_shortcode( $atts, $content = null ) {
 
 	$download = edd_get_download( $atts['download_id'] );
 
-	if( $download ) {
+	if ( $download ) {
 		return edd_get_purchase_link( $atts );
 	}
 }
@@ -59,14 +59,14 @@ add_shortcode( 'purchase_link', 'edd_download_shortcode' );
 */
 
 function edd_download_history() {
-
-	if(is_user_logged_in()) {
+	if ( is_user_logged_in() ) {
 		ob_start();
 		edd_get_template_part( 'history', 'downloads' );
 		return ob_get_clean();
 	}
 }
 add_shortcode( 'download_history', 'edd_download_history' );
+
 
 /**
  * Purchase History Shortcode
@@ -79,7 +79,7 @@ add_shortcode( 'download_history', 'edd_download_history' );
 */
 
 function edd_purchase_history() {
-	if( is_user_logged_in() ) {
+	if ( is_user_logged_in() ) {
 		ob_start();
 		edd_get_template_part( 'history', 'purchases' );
 		return ob_get_clean();
@@ -131,7 +131,6 @@ add_shortcode( 'download_cart', 'edd_cart_shortcode' );
 */
 
 function edd_login_form_shortcode( $atts, $content = null ) {
-
 	extract( shortcode_atts( array(
 			'redirect' => '',
 		), $atts )
@@ -152,18 +151,15 @@ add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
 */
 
 function edd_discounts_shortcode( $atts, $content = null ) {
-
 	$discounts = edd_get_discounts();
 
-	if( ! $discounts && edd_has_active_discounts() )
+	if ( ! $discounts && edd_has_active_discounts() )
 		return;
 
 	$discounts_list = '<ul id="edd_discounts_list">';
 
-	foreach( $discounts as $discount ) {
-
-		if( edd_is_discount_valid( $discount['code'] ) ) {
-
+	foreach ( $discounts as $discount ) {
+		if ( edd_is_discount_valid( $discount['code'] ) ) {
 			$discounts_list .= '<li class="edd_discount">';
 
 				$discounts_list .= '<span class="edd_discount_name">' . $discount['name'] . '</span>';
@@ -171,18 +167,14 @@ function edd_discounts_shortcode( $atts, $content = null ) {
 				$discounts_list .= '<span class="edd_discount_amount">' . edd_format_discount_rate( $discount['type'], $discount['amount'] ) . '</span>';
 
 			$discounts_list .= '</li>';
-
 		}
-
 	}
 
 	$discounts_list .= '</ul>';
 
 	return $discounts_list;
-
 }
 add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
-
 
 
 /**
@@ -223,8 +215,7 @@ add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
  * @return      string
 */
 
-function edd_downloads_query($atts, $content = null) {
-
+function edd_downloads_query( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'category'         => '',
 			'exclude_category' => '',
@@ -274,13 +265,13 @@ function edd_downloads_query($atts, $content = null) {
 		break;
 	}
 
-	if( $tags || $category || $exclude_category || $exclude_tags ) {
+	if ( $tags || $category || $exclude_category || $exclude_tags ) {
 
 		$query['tax_query'] = array(
 			'relation'     => $relation
 		);
 
-		if( $tags ) {
+		if ( $tags ) {
 			$query['tax_query'][] = array(
 				'taxonomy' => 'download_tag',
 				'terms'    => explode( ',', $tags ),
@@ -288,7 +279,7 @@ function edd_downloads_query($atts, $content = null) {
 			);
 		}
 
-		if( $category ) {
+		if ( $category ) {
 			$query['tax_query'][] = array(
 				'taxonomy' => 'download_category',
 				'terms'    => explode( ',', $category ),
@@ -296,7 +287,7 @@ function edd_downloads_query($atts, $content = null) {
 			);
 		}
 
-		if( $exclude_category ) {
+		if ( $exclude_category ) {
 			$query['tax_query'][] = array(
 				'taxonomy' => 'download_category',
 				'terms'    => explode( ',', $exclude_category ),
@@ -305,7 +296,7 @@ function edd_downloads_query($atts, $content = null) {
 			);
 		}
 
-		if( $exclude_tags ) {
+		if ( $exclude_tags ) {
 			$query['tax_query'][] = array(
 				'taxonomy' => 'download_tag',
 				'terms'    => explode( ',', $exclude_tags ),
@@ -324,7 +315,6 @@ function edd_downloads_query($atts, $content = null) {
 		$query['paged'] = 1;
 
 	switch( intval( $columns ) ) :
-
 		case 1:
 			$column_width = '100%'; break;
 		case 2:
@@ -337,7 +327,6 @@ function edd_downloads_query($atts, $content = null) {
 			$column_width = '20%'; break;
 		case 6:
 			$column_width = '16.6%'; break;
-
 	endswitch;
 
 	// allow the query to be manipulated by other plugins
@@ -355,21 +344,21 @@ function edd_downloads_query($atts, $content = null) {
 
 						do_action( 'edd_download_before' );
 
-						if( 'false' != $thumbnails ) :
+						if ( 'false' != $thumbnails ) :
 							edd_get_template_part( 'shortcode', 'content-image' );
 						endif;
 
 						edd_get_template_part( 'shortcode', 'content-title' );
 
-						if( $excerpt == 'yes' && $full_content != 'yes' )
+						if ( $excerpt == 'yes' && $full_content != 'yes' )
 							edd_get_template_part( 'shortcode', 'content-excerpt' );
-						else if( $full_content == 'yes' )
+						else if ( $full_content == 'yes' )
 							edd_get_template_part( 'shortcode', 'content-full' );
 
-						if( $price == 'yes' )
+						if ( $price == 'yes' )
 							edd_get_template_part( 'shortcode', 'content-price' );
 
-						if( $buy_button == 'yes' )
+						if ( $buy_button == 'yes' )
 							edd_get_template_part( 'shortcode', 'content-cart-button' );
 
 						do_action( 'edd_download_after' );
@@ -377,7 +366,7 @@ function edd_downloads_query($atts, $content = null) {
 						?>
 					</div>
 				</div>
-				<?php if( $i % $columns == 0 ) { ?><div style="clear:both;"></div><?php } ?>
+				<?php if ( $i % $columns == 0 ) { ?><div style="clear:both;"></div><?php } ?>
 			<?php $i++; endwhile; ?>
 
 			<div style="clear:both;"></div>
@@ -398,7 +387,7 @@ function edd_downloads_query($atts, $content = null) {
 		<?php
 		$display = ob_get_clean();
 	else:
-		$display = sprintf( _x('No %s found', 'download post type name', 'edd'), edd_get_label_plural() );
+		$display = sprintf( _x( 'No %s found', 'download post type name', 'edd' ), edd_get_label_plural() );
 	endif;
 	return $display;
 }
@@ -421,7 +410,7 @@ function edd_download_price_shortcode( $atts, $content = null ) {
 		), $atts )
 	);
 
-	if( is_null( $id ) )
+	if ( is_null( $id ) )
 		$id = get_the_ID();
 
 	return edd_price( $id, false );
@@ -499,7 +488,6 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 	ob_start();
 
 		if ( is_user_logged_in() ):
-
 			$user_id = get_current_user_id();
 			$first_name = get_user_meta( $user_id, 'first_name', true );
 			$last_name = get_user_meta( $user_id, 'last_name', true );
