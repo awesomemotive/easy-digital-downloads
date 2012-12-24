@@ -11,6 +11,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @usedby   edd_settings()
  * @author   Chris Christoff
  */
+
 function edd_system_info() {
 
 	global $wpdb;
@@ -23,9 +24,8 @@ function edd_system_info() {
 ?>
 <div class="wrap">
 <h2><?php _e( 'System Information', 'edd' ) ?></h2><br/>
-<form action="./" method="post">
-<a href="#" class="button-primary" id="download"><?php _e( 'Download', 'edd' ); ?></a><br/><br/>
-<textarea readonly="readonly" id="system-info-textarea" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
+<form action="edit.php?post_type=download&page=edd-system-info" method="post">
+<textarea readonly="readonly" id="system-info-textarea" name="edd-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
 
 	### Begin System Info ###
 
@@ -99,8 +99,30 @@ function edd_system_info() {
 
 	### End System Info ###
 </textarea>
+<p class="submit">
+	<input type="hidden" name="edd-action" value="download_sysinfo" />
+	<input class="button-primary" name="edd-download-sysinfo" value="<?php _e( 'Download System Info File', 'edd' ); ?>" type="submit"/>
+</p>
 </form>
 </div>
 </div>
 <?php
 }
+
+/**
+ * Generates the System Info download file
+ *
+ * @since   1.4
+ * @return  void
+ */
+function edd_generate_sysinfo_download() {
+
+	nocache_headers();
+
+	header("Content-type: text/plain");
+	header('Content-Disposition: attachment; filename="edd-system-info.txt"');
+
+	echo $_POST['edd-sysinfo'];
+	exit;
+}
+add_action( 'edd_download_sysinfo', 'edd_generate_sysinfo_download' );
