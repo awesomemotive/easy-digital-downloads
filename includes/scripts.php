@@ -142,12 +142,6 @@ function edd_load_admin_scripts( $hook ) {
 		wp_enqueue_style( 'colorbox', EDD_PLUGIN_URL . 'assets/css/colorbox.css', array(  ), '1.3.20' );
 		wp_enqueue_script( 'colorbox', EDD_PLUGIN_URL . 'assets/js/jquery.colorbox-min.js', array( 'jquery' ), '1.3.20');
 	}
-	if( $hook == $edd_system_info_page ) {
-		wp_enqueue_script( 'generatefile', EDD_PLUGIN_URL . 'includes/js/jquery.generateFile.js', array( 'jquery' ), EDD_VERSION);
-		wp_enqueue_script( 'system_info_scripts', EDD_PLUGIN_URL . 'includes/js/system-info-script.js', array( 'jquery' ), EDD_VERSION);
-		$translation_array = array( 'content_url' => EDD_PLUGIN_URL.'includes/admin/download-system-info.php' );
-		wp_localize_script( 'system_info_scripts', 'edd_system_info_scripts_vars', $translation_array );
-	}
 	wp_enqueue_script( 'media-upload' );
 	wp_enqueue_script( 'thickbox' );
 	wp_enqueue_script( 'edd-admin-scripts', EDD_PLUGIN_URL . 'assets/js/admin-scripts.js', array( 'jquery' ), EDD_VERSION, false );
