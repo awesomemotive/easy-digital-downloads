@@ -312,7 +312,29 @@ function edd_get_discount_max_uses( $code_id = null ) {
 
 	$max_uses = get_post_meta( $code_id, '_edd_discount_max_uses', true );
 
+	if( ! $max_uses )
+		$max_uses = 999999999; // large number that will never be reached
+
 	return (int) apply_filters( 'edd_get_discount_max_uses', $max_uses, $code_id );
+
+}
+
+
+/**
+ * Retrieve number of times a discount has been used
+ *
+ * @param int $code_id
+ *
+ * @access      public
+ * @since       1.4
+ * @return      int
+ */
+
+function edd_get_discount_uses( $code_id = null ) {
+
+	$uses = get_post_meta( $code_id, '_edd_discount_uses', true );
+
+	return (int) apply_filters( 'edd_get_discount_uses', $max_uses, $code_id );
 
 }
 
@@ -394,11 +416,11 @@ function edd_is_discount_maxed_out( $code_id = null ) {
 	$return   = false;
 
 	if ( $discount ) {
-		$uses = isset( $discount['uses'] ) ? $discount['uses'] : 0;
+		$uses = edd_get_discount_uses( $code_id );
 		// large number that will never be reached
-		$max_uses = isset( $discount['max'] ) ? $discount['max'] : 99999999;
+		$max_uses = edd_get_discount_max_uses( $code_id )
 		// should never be greater than, but just in case
-		if ( $uses >= $max_uses && $max_uses != '' && isset( $discount['max'] ) ) {
+		if ( $uses >= $max_uses && $max_uses != '' && ! empty( $max_uses ) ) {
 			// discount is maxed out
 			$return = true;
 		}
