@@ -593,16 +593,9 @@ function edd_is_discount_valid( $code = '', $user = '' ) {
  * @return      int
  */
 function edd_get_discount_id_by_code( $code ) {
-	$discounts = edd_get_discounts();
-	$code_id   = false;
-	if ( is_array( $discounts ) ) {
-		foreach ( $discounts as $key => $discount ) {
-			if ( isset( $discount['code'] ) && trim( $discount['code'] ) === trim( $code ) ) {
-				$code_id = $key;
-			}
-		}
-	}
-	return $code_id;
+
+	return edd_get_discount_by_code( $code )->ID;
+
 }
 
 
