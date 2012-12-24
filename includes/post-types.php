@@ -104,6 +104,22 @@ function edd_setup_edd_post_types() {
 	);
 	register_post_type( 'edd_payment', $payment_args );
 
+
+	/* discounts post type */
+
+	$discount_args = array(
+		'public' 			=> false,
+		'query_var' 		=> false,
+		'rewrite' 			=> false,
+		'show_ui'           => true,
+		'label'             => 'Discounts',
+		'show_in_menu'      => 'edit.php?post_type=download',
+		'capability_type' 	=> 'post',
+		'supports' 			=> array( 'title' ),
+		'can_export'		=> false
+	);
+	register_post_type( 'edd_discount', $discount_args );
+
 }
 add_action( 'init', 'edd_setup_edd_post_types', 100 );
 
@@ -222,6 +238,27 @@ function edd_setup_download_taxonomies() {
 }
 add_action( 'init', 'edd_setup_download_taxonomies', 10 );
 
+
+/**
+ * Registers custom statuses
+ *
+ * @access      public
+ * @since       1.0.9.1
+ * @return      integer
+ */
+function edd_register_post_type_statuses() {
+
+	// payment statuses
+	register_post_status( 'refunded' );
+	register_post_status( 'failed' );
+
+	// discount code statuses
+	register_post_status( 'active' );
+	register_post_status( 'inactive' );
+	register_post_status( 'expired' );
+
+}
+add_action( 'init', 'edd_register_post_type_statuses' );
 
 /**
  * Updated Messages
