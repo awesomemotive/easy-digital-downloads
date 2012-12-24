@@ -495,10 +495,7 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 	?>
 	<?php if ( isset( $_GET['updated'] ) && $_GET['updated'] == true && ! edd_get_errors() ): ?>
 	<p class="edd_success"><strong><?php _e( 'Success', 'edd'); ?>:</strong> <?php _e( 'Your profile has been edited successfully.', 'edd' ); ?></p>
-	<?php endif;
-	if ( edd_get_errors() )
-		edd_print_errors();
-	?>
+	<?php endif; edd_print_errors(); ?>
 	<form id="edd_profile_editor_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
 		<fieldset>
 			<legend><?php _e( 'Change your Name', 'edd' ); ?></legend>
