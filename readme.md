@@ -164,7 +164,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Updated edd_get_user_purchases()
 * Added Receipt shortcode
 * Added Filter on Default Customer User Role
-* Added Live CC Verification 
+* Added Live Credit Card Verification 
 * Added Travis-CI Integration (props @chriscct7)
 * Added New Column to Customers Reports to Show File Download Count
 * Made some UI tweaks, and bug fixes for Logs
