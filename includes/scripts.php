@@ -140,7 +140,9 @@ function edd_load_admin_scripts( $hook ) {
 	}
 	if( $hook == $edd_system_info_page ) {
 		wp_enqueue_script( 'generatefile', EDD_PLUGIN_URL . 'includes/js/jquery.generateFile.js', array( 'jquery' ), EDD_VERSION);
-		wp_enqueue_script( 'systeminfoscript', EDD_PLUGIN_URL . 'includes/js/system-info-script.js', array( 'jquery' ), EDD_VERSION);
+		wp_enqueue_script( 'system_info_scripts', EDD_PLUGIN_URL . 'includes/js/system-info-script.js', array( 'jquery' ), EDD_VERSION);
+		$translation_array = array( 'content_url' => EDD_PLUGIN_URL.'includes/admin/download-system-info.php' );
+		wp_localize_script( 'system_info_scripts', 'edd_system_info_scripts_vars', $translation_array );
 	}
 	wp_enqueue_script( 'media-upload' );
 	wp_enqueue_script( 'thickbox' );
