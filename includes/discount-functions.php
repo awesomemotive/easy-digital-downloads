@@ -681,8 +681,7 @@ function edd_get_discounted_amount( $code, $base_price ) {
  */
 function edd_increase_discount_usage( $code ) {
 	$discount_id = edd_get_discount_id_by_code( $code );
-	$discounts   = edd_get_discounts();
-	$uses        = isset( $discounts[$discount_id]['uses'] ) ? $discounts[$discount_id]['uses'] : false;
+	$uses        = edd_get_discount_uses( $discount_id );
 
 	if ( $uses ) {
 		$uses++;
@@ -690,9 +689,8 @@ function edd_increase_discount_usage( $code ) {
 		$uses = 1;
 	}
 
-	$discounts[$discount_id]['uses'] = $uses;
-
-	return update_option( 'edd_discounts', $discounts );
+	update_post_meta( $discount_id, '_edd_discount_uses', $uses );
+	return $uses;
 }
 
 
