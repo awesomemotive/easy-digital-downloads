@@ -505,9 +505,12 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 			$last_name = get_user_meta( $user_id, 'last_name', true );
 			$display_name = $current_user->display_name;
 	?>
-	<?php if ( isset( $_GET['updated'] ) && $_GET['updated'] == true ): ?>
+	<?php if ( isset( $_GET['updated'] ) && $_GET['updated'] == true && ! edd_get_errors() ): ?>
 	<p class="edd_success"><strong><?php _e( 'Success', 'edd'); ?>:</strong> <?php _e( 'Your profile has been edited successfully.', 'edd' ); ?></p>
-	<?php endif; ?>
+	<?php endif;
+	if ( edd_get_errors() )
+		edd_print_errors();
+	?>
 	<form id="edd_profile_editor_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
 		<fieldset>
 			<legend><?php _e( 'Change your Name', 'edd' ); ?></legend>
@@ -616,7 +619,7 @@ function edd_process_profile_editor_updates( $data ) {
 
 		if ( ! empty( $data['edd_new_user_pass1'] ) && ! empty( $data['edd_new_user_pass2'] ) ) {
 			if ( $data['edd_new_user_pass1'] !== $data['edd_new_user_pass2'] ) {
-				wp_die( __( 'The passwords you entered do not match. Please try again.', 'edd' ), __( 'Password Mismatch', 'edd' ) );
+				edd_set_error( 'password_mismatch', __( 'The passwords you entered do not match. Please try again.', 'edd' ) );
 			} else {
 				wp_set_password( $data['edd_new_user_pass1'], $user_id );
 				$updated = true;
