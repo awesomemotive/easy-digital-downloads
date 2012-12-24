@@ -76,12 +76,13 @@ function edd_has_active_discounts() {
  * @since       1.0
  * @return      array
  */
-function edd_get_discount( $key ) {
-	$discounts = edd_get_discounts();
-	if ( $discounts ) {
-		return isset( $discounts[$key] ) ? $discounts[$key] : false;
-	}
-	return false;
+function edd_get_discount( $discount_id ) {
+	$discount = get_post( $discount_id );
+
+	if( $discount->post_type != 'edd_discount' )
+		return false;
+
+	return $discount;
 }
 
 
