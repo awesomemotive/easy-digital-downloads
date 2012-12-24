@@ -243,6 +243,8 @@ function edd_v14_upgrades() {
 
 	global $edd_options;
 
+	/** Add [edd_receipt] to success page **/
+
 	$success_page = get_post( $edd_options['success_page'] );
 
 	// check for the [edd_receipt] short code and add it if not present
@@ -254,4 +256,39 @@ function edd_v14_upgrades() {
 
 	}
 
+
+	/** Convert Discounts to new Custom Post Type **/
+
+	$discounts = get_option( 'edd_discounts' );
+
+	if( $discounts ) {
+		foreach( $discounts as $key => $discount ) {
+
+			$status = isset( $discount['status'] ) ? $discount['status'] : 'inactive';
+
+			$discount_id = wp_insert_post( array(
+				'post_type'   => 'edd_discount',
+				'post_title'  => isset( $discount['name'] ) ? $discount['name'] : '',
+				'post_status' => 'active'
+			) );
+
+			/*
+			$meta = array(
+				'code'        => $discount['code'],
+				'uses'        => $discount['uses'],
+				'max_uses'    => $discount['max'],
+				'amount'      => $discount['amount'],
+				'start'       => $discount['start'],
+				'expiration'  => $discountp['expiration'],
+				'type'        => $discount['type'],
+				'min_price'   => $discount['min_price']
+			);
+
+			foreach( $meta as $key => $value ) {
+				update_post_meta( $discount_id, '_edd_discount_' . $key, $value );
+			}
+			*/
+		}
+	}
 }
+add_action( 'admin_init', 'edd_v14_upgrades' );
