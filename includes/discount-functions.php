@@ -95,17 +95,18 @@ function edd_get_discount( $discount_id ) {
  *
  * @access      public
  * @since       1.0
- * @return      array
+ * @return      int
  */
 function edd_get_discount_by_code( $code ) {
-	$discounts = edd_get_discounts();
-	if ( is_array( $discounts ) ) {
-		foreach ( $discounts as $id => $discount ) {
-			if ( $discount['code'] == $code ) {
-				return $discounts[$id];
-			}
-		}
-	}
+
+	$discounts = edd_get_discounts( array(
+		'meta_key'       => '_edd_discount_code',
+		'meta_value'     => $code,
+		'posts_per_page' => 1
+	) );
+	if( $discounts )
+		return $discounts[0];
+
 	return false;
 }
 
