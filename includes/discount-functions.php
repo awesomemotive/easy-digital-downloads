@@ -172,17 +172,14 @@ function edd_store_discount( $discount_details, $id = null ) {
  * @since       1.0
  * @return      void
  */
-function edd_remove_discount( $discount_id ) {
-
-	$discounts = edd_get_discounts();
+function edd_remove_discount( $discount_id = 0 ) {
 
 	do_action( 'edd_pre_delete_discount', $discount_id );
 
-	unset( $discounts[$discount_id] );
+	wp_delete_post( $discount_id, true );
 
 	do_action( 'edd_post_delete_discount', $discount_id );
 
-	update_option( 'edd_discounts', $discounts );
 }
 
 
