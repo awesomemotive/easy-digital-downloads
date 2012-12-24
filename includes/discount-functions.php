@@ -261,6 +261,25 @@ function edd_is_discount_active( $code_id = null ) {
 
 
 /**
+ * retrieve discount expiration date
+ *
+ * @param int $code_id
+ *
+ * @access      public
+ * @since       1.4
+ * @return      string
+ */
+
+function edd_get_discount_expiration( $code_id = null ) {
+
+	$expiration = get_post_meta( $code_id, '_edd_discount_expiration', true );
+
+	return apply_filters( 'edd_get_discount_expiration', $expiration, $code_id );
+
+}
+
+
+/**
  * Is Discount Expired
  *
  * Checks whether a discount code is expired.
@@ -276,8 +295,9 @@ function edd_is_discount_expired( $code_id = null ) {
 	$return   = false;
 
 	if ( $discount ) {
-		if ( isset( $discount['expiration'] ) && $discount['expiration'] != '' ) {
-			$expiration = strtotime( $discount['expiration'] );
+		$expiration = edd_get_discount_expiration( $code_id );
+		if ( $expiration ) {
+			$expiration = strtotime( $expiration );
 			if ( $expiration < time() - ( 24 * 60 * 60 ) ) {
 				// discount is expired
 				$return = true;
