@@ -23,34 +23,34 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @since  1.0
  * @param  int|string $user   User ID or email address
  * @param  int $number        Number of purchases to retrieve
- * 
+ *
  * @return array List of all user purchases
  */
 function edd_get_users_purchases( $user = 0, $number = -1 ) {
- 
+
 	if ( empty( $user ) ) {
 		global $user_ID;
- 
+
 		$user = $user_ID;
 	}
- 
+
 	$purchases = get_transient( 'edd_user_' . $user . '_purchases' );
- 
+
 	if ( false === $purchases || edd_is_test_mode() ) {
 		$mode = edd_is_test_mode() ? 'test' : 'live';
- 
+
 		$purchases = edd_get_payments( array(
 			'mode' => $mode,
 			'user' => $user
 		) );
- 
+
 		set_transient( 'edd_user_' . $user . '_purchases', $purchases, 7200 );
 	}
- 
+
 	// no purchases
 	if ( ! $purchases )
 		return false;
- 
+
 	return $purchases;
 }
 
@@ -207,6 +207,23 @@ function edd_purchase_total_of_user( $user = null ) {
 	}
 
 	return $amount;
+}
+
+
+function edd_count_file_downloads_of_user( $user_email ) {
+
+	global $edd_logs;
+
+	$meta_query = array(
+		array(
+			'key'     => '_edd_log_user_info',
+			'value'   => $user_email,
+			'compare' => 'LIKE'
+		)
+	);
+
+	return $edd_logs->get_log_count( null, 'file_download', $meta_query );
+
 }
 
 
