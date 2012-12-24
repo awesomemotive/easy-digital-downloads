@@ -34,7 +34,7 @@ function edd_discounts_page() {
 
 		<?php else: ?>
 			<h2><?php _e( 'Discount Codes', 'edd' ); ?></h2>
-			<?php $discounts = edd_get_discounts(); ?>
+			<?php $discounts = edd_get_discounts(); echo '<pre>'; print_r( $discounts ); echo '</pre>'; ?>
 			<table class="wp-list-table widefat fixed posts edd-discounts">
 				<thead>
 					<tr>
