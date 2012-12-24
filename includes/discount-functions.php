@@ -343,8 +343,9 @@ function edd_is_discount_started( $code_id = null ) {
 	$discount = edd_get_discount( $code_id );
 	$return   = false;
 	if ( $discount ) {
-		if ( isset( $discount['start'] ) && $discount['start'] != '' ) {
-			$start_date = strtotime( $discount['start'] );
+		$start_date = edd_get_discount_start_date( $code_id );
+		if ( $start_date ) {
+			$start_date = strtotime( $start_date );
 			if ( $start_date < time() ) {
 				// discount has pased the start date
 				$return = true;
