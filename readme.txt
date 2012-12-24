@@ -165,6 +165,40 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 1.4 =
+
+* Converted coupons to a custom post type
+* Added Dummy XML File
+* Added System Info (props @chriscct7)
+* Fixed COnflict with Jetpack
+* Fixed issue with exporting lots of customers
+* Added Contextual Help
+* Fixed Download Icon missing
+* Fixed Bulk Delete Payments
+* Updated edd_get_user_purchases()
+* Added Receipt shortcode
+* Added Filter on Default Customer User Role
+* Added Live CC Verification 
+* Added Travis-CI Integration (props @chriscct7)
+* Added New Column to Customers Reports to Show File Download Count
+* Made some UI tweaks, and bug fixes for Logs
+* Added edd_send_back_to_checkout()
+* Major rewrite of the Logs UI
+* Fixes in payments functions
+* Added support for WP 3.5 Button
+* Made updates to edd_process_download()
+* Reordered the inclusion of payment gateways
+* Restructured file organization
+* Improved payment-functions.php file
+* Added Payment Notes
+* Added a more efficient AJAX selector
+* Serious Optomizations
+* Optimized png's losslessly
+* Stripped whitespace + normalize
+* Added edd_send_back_to_checkout()
+* Added New Helper Function for "Transaction ID" 
+* Added "failed" payment status 
+
 = 1.3.4.3 =
 
 * Fixed fatal error in PayPal
