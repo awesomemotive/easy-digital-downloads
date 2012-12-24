@@ -228,5 +228,4 @@ jQuery(document).ready(function ($) {
             tax_opt_in.fadeOut();
         }
     });
-
 });
