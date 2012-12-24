@@ -16,7 +16,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Process Actions
  *
  * @access      private
- * @since       1.0 
+ * @since       1.0
  * @return      void
 */
 

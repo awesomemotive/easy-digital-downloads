@@ -19,49 +19,40 @@ if ( !defined( 'ABSPATH' ) ) exit;
  *
  * Retrieves a list of all purchases by a specific user.
  *
- * @access      public
- * @since       1.0 
- * @return      array
-*/
+ * @access public
+ * @since  1.0
+ * @param  int|string $user   User ID or email address
+ * @param  int $number        Number of purchases to retrieve
+ *
+ * @return array List of all user purchases
+ */
+function edd_get_users_purchases( $user = 0, $number = -1 ) {
 
-function edd_get_users_purchases( $user_id = 0, $number = -1 ) {
-	
-	if( empty( $user_id ) ) {
+	if ( empty( $user ) ) {
 		global $user_ID;
-		$user_id = $user_ID;
+
+		$user = $user_ID;
 	}
 
-	$purchases = get_transient( 'edd_user_' . $user_id . '_purchases' );
-	if( false === $purchases || edd_is_test_mode() ) {
+	$purchases = get_transient( 'edd_user_' . $user . '_purchases' );
+
+	if ( false === $purchases || edd_is_test_mode() ) {
 		$mode = edd_is_test_mode() ? 'test' : 'live';
-		$purchases = get_posts(
-			array(
-				'meta_query'   => array(
-					'relation' => 'AND',
-					array(
-						'key'   => '_edd_payment_mode',
-						'value' => $mode
-					),
-					array(
-						'key'   => '_edd_payment_user_id',
-						'value' => $user_id
-					)
-				),
-				'post_type'      => 'edd_payment', 
-				'posts_per_page' => $number
-			)
-		);
-		set_transient( 'edd_user_' . $user_id . '_purchases', $purchases, 7200 );
-	}
-	if( $purchases ) {
-	    // return the download list
-		return $purchases;
-	}
-	
-	// no downloads	
-	return false;	
-}
 
+		$purchases = edd_get_payments( array(
+			'mode' => $mode,
+			'user' => $user
+		) );
+
+		set_transient( 'edd_user_' . $user . '_purchases', $purchases, 7200 );
+	}
+
+	// no purchases
+	if ( ! $purchases )
+		return false;
+
+	return $purchases;
+}
 
 
 /**
@@ -70,21 +61,25 @@ function edd_get_users_purchases( $user_id = 0, $number = -1 ) {
  * Checks to see if a user has purchased a download.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @param       int $user_id - the ID of the user to check
- * @param       int $download_Id - the ID of the download to check for
+ * @param       array $downloads - Array of IDs to check if purchased. If an int is passed, it will be converted to an array
  * @param       int $variable_price_id - the variable price ID to check for
  * @return      boolean - true if has purchased, false otherwise
 */
 
-function edd_has_user_purchased( $user_id, $download_id, $variable_price_id = null ) {
-	
+function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null ) {
+
 	if( !is_user_logged_in() )
 		return false; // at some point this should support email checking
 
 	$users_purchases = edd_get_users_purchases( $user_id );
 
 	$return = false;
+
+	if( ! is_array( $downloads ) ) {
+		$downloads = array( $downloads );
+	}
 
 	if( $users_purchases ) {
 		foreach( $users_purchases as $purchase ) {
@@ -96,24 +91,24 @@ function edd_has_user_purchased( $user_id, $download_id, $variable_price_id = nu
 
 				foreach( $purchased_files as $download ) {
 
-					if( $download['id'] == $download_id ) {
+					if( in_array( $download['id'], $downloads ) ) {
 
 						if( !is_null( $variable_price_id ) && $variable_price_id !== false ) {
 
 							if( $variable_price_id == $download['options']['price_id'] ) {
-								
+
 								return true;
-							
+
 							} else {
-							
+
 								$return = false;
-							
+
 							}
 
 						} else {
-							
+
 							$return = true;
-						
+
 						}
 
 					}
@@ -133,7 +128,7 @@ function edd_has_user_purchased( $user_id, $download_id, $variable_price_id = nu
  * Checks to see if a user has purchased at least one item.
  *
  * @access      public
- * @since       1.0 
+ * @since       1.0
  * @param       $user_id int - the ID of the user to check
  * @return      bool - true if has purchased, false other wise.
 */
@@ -143,7 +138,7 @@ function edd_has_purchases( $user_id = null ) {
 		global $user_ID;
 		$user_id = $user_ID;
 	}
-	
+
 	if( edd_get_users_purchases( $user_id, 1 ) ) {
 		return true; // user has at least one purchase
 	}
@@ -209,9 +204,26 @@ function edd_purchase_total_of_user( $user = null ) {
 			endforeach;
 		endif;
 		set_transient( md5( 'edd_customer_total_' . $user ), $amount );
-	}	
+	}
 
 	return $amount;
+}
+
+
+function edd_count_file_downloads_of_user( $user_email ) {
+
+	global $edd_logs;
+
+	$meta_query = array(
+		array(
+			'key'     => '_edd_log_user_info',
+			'value'   => $user_email,
+			'compare' => 'LIKE'
+		)
+	);
+
+	return $edd_logs->get_log_count( null, 'file_download', $meta_query );
+
 }
 
 

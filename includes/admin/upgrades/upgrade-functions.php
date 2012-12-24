@@ -15,7 +15,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
  * Display upgrade notices
- * 
+ *
  * @access      private
  * @since       1.3.1
  * @return      void
@@ -53,7 +53,7 @@ function edd_show_upgrade_notices() {
 		);
 	}
 
-	if( version_compare( $edd_version, '1.3.4', '<' ) ) {
+	if( version_compare( $edd_version, '1.3.4', '<' ) || version_compare( $edd_version, '1.4', '<' ) ) {
 		printf(
 			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the plugin pages, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
 			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
@@ -69,7 +69,7 @@ add_action( 'admin_notices', 'edd_show_upgrade_notices' );
  * Triggers all upgrade functions
  *
  * This function is usually triggered via ajax
- * 
+ *
  * @access      private
  * @since       1.3.1
  * @return      void
@@ -93,6 +93,10 @@ function edd_trigger_upgrades() {
 		edd_v134_upgrades();
 	}
 
+	if( version_compare( $edd_version, '1.4', '<' ) ) {
+		edd_v14_upgrades();
+	}
+
 	update_option( 'edd_version', EDD_VERSION );
 
 	if( DOING_AJAX )
@@ -104,7 +108,7 @@ add_action( 'wp_ajax_edd_trigger_upgrades', 'edd_trigger_upgrades' );
 
 /**
  * Converts old sale and file download logs to new logging system
- * 
+ *
  * @access      private
  * @since       1.3.1
  * @return      void
@@ -119,12 +123,14 @@ function edd_v131_upgrades() {
 		return;
 
 	ignore_user_abort(true);
-	set_time_limit(0);
 
-	$args = array( 
-		'post_type' 		=> 'download', 
-		'posts_per_page' 	=> -1, 
-		'post_status' 		=> 'publish' 
+	if ( !edd_is_func_disabled( 'set_time_limit' ) && !ini_get('safe_mode') )
+		set_time_limit(0);
+
+	$args = array(
+		'post_type' 		=> 'download',
+		'posts_per_page' 	=> -1,
+		'post_status' 		=> 'publish'
 	);
 
 	$query = new WP_Query( $args );
@@ -135,7 +141,7 @@ function edd_v131_upgrades() {
 		$edd_log = new EDD_Logging();
 		$i = 0;
 		foreach( $downloads as $download ) {
-			
+
 			// convert sale logs
 			$sale_logs = edd_get_download_sales_log( $download->ID, false );
 
@@ -154,9 +160,9 @@ function edd_v131_upgrades() {
 					);
 
 					$log = $edd_log->insert_log( $log_data, $log_meta );
-				
+
 				}
-			
+
 			}
 
 			// convert file download logs
@@ -164,7 +170,7 @@ function edd_v131_upgrades() {
 
 			if( $file_logs ) {
 				foreach( $file_logs['downloads'] as $log ) {
-					
+
 					$log_data = array(
 						'post_parent'	=> $download->ID,
 						'post_date'		=> $log['date'],
@@ -179,9 +185,9 @@ function edd_v131_upgrades() {
 					);
 
 					$log = $edd_log->insert_log( $log_data, $log_meta );
-				
+
 				}
-			
+
 			}
 
 		}
@@ -190,6 +196,14 @@ function edd_v131_upgrades() {
 
 }
 
+
+/**
+ * Upgrade routine for v1.3.4
+ *
+ * @access      private
+ * @since       1.3.4
+ * @return      void
+*/
 
 function edd_v134_upgrades() {
 
@@ -214,4 +228,30 @@ function edd_v134_upgrades() {
 	$general_options['failure_page'] = $failed;
 
 	update_option( 'edd_settings_general', $general_options );
+}
+
+
+/**
+ * Upgrade routine for v1.4
+ *
+ * @access      private
+ * @since       1.4
+ * @return      void
+*/
+
+function edd_v14_upgrades() {
+
+	global $edd_options;
+
+	$success_page = get_post( $edd_options['success_page'] );
+
+	// check for the [edd_receipt] short code and add it if not present
+	if( strpos( $success_page->post_content, '[edd_receipt' ) === false ) {
+
+		$page_content = $success_page->post_content .= "\n[edd_receipt]";
+
+		wp_update_post( array( 'ID' => $edd_options['success_page'], 'post_content' => $page_content ) );
+
+	}
+
 }

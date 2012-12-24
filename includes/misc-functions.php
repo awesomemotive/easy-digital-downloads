@@ -84,6 +84,40 @@ function edd_no_redownload() {
 	return (bool) apply_filters( 'edd_no_redownload', false );
 }
 
+
+/**
+ * Verify credit card numbers live?
+ *
+ * @access      public
+ * @since       1.4
+ * @return      boolean
+*/
+
+function edd_is_cc_verify_enabled() {
+	global $edd_options;
+
+	$ret = true;
+
+	/*
+	 * enable if use a single gateway other than PayPal or Manual. We have to assume it accepts cerdit cards
+	 * enable if using more than one gateway if they aren't both PayPal and manual, again assuming credit card usage
+	 */
+
+	$gateways = edd_get_enabled_payment_gateways();
+	if( count( $gateways ) == 1 && ! isset( $gateways['paypal'] ) && ! isset( $gateways['manual'] ) )
+		$ret = true;
+	else if( count( $gateways ) == 1 )
+		$ret = false;
+	else if( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) )
+		$ret = false;
+
+	if( isset( $edd_options['edd_is_cc_verify_enabled'] ) )
+		$ret = false; // global override
+
+	return (bool) apply_filters( 'edd_verify_credit_cards', $ret );
+}
+
+
 /**
  * Get Menu Access Level
  *
@@ -606,7 +640,7 @@ function edd_get_provinces_list() {
 function edd_month_num_to_name( $n ) {
 	$timestamp = mktime( 0, 0, 0, $n, 1, 2005 );
 
-	return date( "M", $timestamp );
+	return date_i18n( "M", $timestamp );
 }
 
 
@@ -644,7 +678,7 @@ function edd_get_current_page_url() {
 		else $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 	endif;
 
-	return apply_filters( 'edd_get_current_page_url', $pageURL );
+	return apply_filters( 'edd_get_current_page_url', esc_url( $pageURL ) );
 }
 
 
@@ -678,9 +712,12 @@ function _edd_deprecated_function( $function, $version, $replacement = null ) {
 
 	do_action( 'edd_deprecated_function_run', $function, $replacement, $version );
 
+	$show_errors = current_user_can( 'manage_options' );
+
+
 	// Allow plugin to filter the output error trigger
-	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', true ) ) {
-		if ( ! is_null($replacement) )
+	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', $show_errors ) ) {
+		if ( ! is_null( $replacement ) )
 			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
 		else
 			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'edd'), $function, $version ) );
@@ -761,3 +798,49 @@ function edd_presstrends() {
 	}
 }
 add_action( 'admin_init', 'edd_presstrends' );
+
+/**
+ * Checks whether function is disabled.
+ *
+ * @access public
+ * @since  1.3.5
+ *
+ * @param  string $function Name of the function.
+ * @return bool Whether or not function is disabled.
+ */
+function edd_is_func_disabled( $function ) {
+	$disabled = explode( ',',  ini_get( 'disable_functions' ) );
+
+	return in_array( $function, $disabled );
+}
+
+
+/**
+ * EDD Let To Num
+ *
+ * Does Size Conversions
+ *
+ * @since   1.4
+ * @usedby   edd_settings()
+ * @author   Chris Christoff
+ */
+function edd_let_to_num( $v ) {
+
+	$l   = substr( $v, -1 );
+	$ret = substr( $v, 0, -1 );
+
+	switch ( strtoupper( $l ) ) {
+		case 'P':
+			$ret *= 1024;
+		case 'T':
+			$ret *= 1024;
+		case 'G':
+			$ret *= 1024;
+		case 'M':
+			$ret *= 1024;
+		case 'K':
+			$ret *= 1024;
+			break;
+	}
+	return $ret;
+}

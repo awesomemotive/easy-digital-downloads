@@ -6,13 +6,13 @@
  * @subpackage  Edit Payment
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0 
+ * @since       1.0
 */
 
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
-$payment = get_post( $_GET['purchase_id'] );
+$payment = get_post( absint( $_GET['purchase_id'] ) );
 $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true );
 ?>
 <div class="wrap">
@@ -23,13 +23,13 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 				<tr>
 					<th scope="row" valign="top">
 						<span><?php _e( 'Buyer\'s Email', 'edd' ); ?></span>
-					</th>	
+					</th>
 					<td>
 						<input class="regular-text" type="text" name="edd-buyer-email" id="edd-buyer-email" value="<?php echo $payment_data['email']; ?>"/>
 						<p class="description"><?php _e( 'If needed, you can update the buyer\'s email here.', 'edd' ); ?></p>
 					</td>
 				</tr>
-				<tr>				
+				<tr>
 					<th scope="row" valign="top">
 						<span><?php _e( 'Downloads Purchased', 'edd' ); ?></span>
 					</th>
@@ -48,15 +48,42 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 				</tr>
 				<tr>
 					<th scope="row" valign="top">
+						<span><?php _e( 'Payment Notes', 'edd' ); ?></span>
+					</th>
+					<td>
+						<?php
+							$notes = edd_get_payment_notes( $payment->ID );
+							if( ! empty( $notes ) ) :
+								echo '<ul id="payment-notes">';
+								foreach( $notes as $note ):
+									if( ! empty( $note->user_id ) ) {
+										$user = get_userdata( $note->user_id );
+										$user = $user->display_name;
+									} else {
+										$user = __( 'EDD Bot', 'edd' );
+									}
+									echo '<p><strong>' . $user . '</strong>&nbsp;<em>' . $note->comment_date . '</em>&nbsp;&mdash;' . $note->comment_content . '</p>';
+								endforeach;
+								echo '</ul>';
+							else :
+								echo '<p>' . __( 'No payment notes', 'edd' ) . '</p>';
+							endif;
+						?>
+						<label for="edd-payment-note"><?php _e( 'Add New Note', 'edd' ); ?></label><br/>
+						<textarea name="edd-payment-note" id="edd-payment-note" cols="30" rows="5"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row" valign="top">
 						<span><?php _e( 'Payment Status', 'edd' ); ?></span>
 					</th>
 					<td>
 						<select name="edd-payment-status" id="edd_payment_status">
-							<?php 
+							<?php
 							$status = $payment->post_status; // current status
 							$statuses = edd_get_payment_statuses();
 							foreach( $statuses as $status_id => $label ) {
-								echo '<option value="' . $status_id	. '" ' . selected( $status, $status_id, false ) . '>' . $label . '</option>'; 
+								echo '<option value="' . $status_id	. '" ' . selected( $status, $status_id, false ) . '>' . $label . '</option>';
 							}
 							?>
 						</select>
@@ -73,7 +100,7 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 				</tr>
 			</tbody>
 		</table>
-		
+
 		<input type="hidden" name="edd-action" value="edit_payment"/>
 		<input type="hidden" name="edd-old-status" value="<?php echo $status; ?>"/>
 		<input type="hidden" name="payment-id" value="<?php echo $_GET['purchase_id']; ?>"/>
