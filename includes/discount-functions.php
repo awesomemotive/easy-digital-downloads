@@ -359,6 +359,25 @@ function edd_get_discount_min_price( $code_id = null ) {
 
 
 /**
+ * Retrieve the discount amount
+ *
+ * @param int $code_id
+ *
+ * @access      public
+ * @since       1.4
+ * @return      float
+ */
+
+function edd_get_discount_amount( $code_id = null ) {
+
+	$amount = get_post_meta( $code_id, '_edd_discount_amount', true );
+
+	return (float) apply_filters( 'edd_get_discount_amount', $amount, $code_id );
+
+}
+
+
+/**
  * Retrieve the discount type
  *
  * @param int $code_id
