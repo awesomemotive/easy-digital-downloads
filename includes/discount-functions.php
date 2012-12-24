@@ -651,9 +651,8 @@ function edd_get_discount_id_by_code( $code ) {
 function edd_get_discounted_amount( $code, $base_price ) {
 
 	$discount_id = edd_get_discount_id_by_code( $code );
-	$discounts   = edd_get_discounts();
-	$type        = $discounts[$discount_id]['type'];
-	$rate        = $discounts[$discount_id]['amount'];
+	$type        = edd_get_discount_type( $discount_id );
+	$rate        = edd_get_discount_amount( $discount_id );
 
 	if ( $type == 'flat' ) {
 		// set amount
