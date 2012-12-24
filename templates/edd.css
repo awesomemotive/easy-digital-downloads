@@ -86,6 +86,11 @@ table#edd_purchase_receipt_products li { list-style: none; }
 #edd_registration_form .edd-input { display: inline-block; width: 200px; }
 #edd_registration_form label { display: inline-block; width: 200px; }
 
+/* =Profile Form
+-------------------------------------------------------------- */
+#edd_profile_editor_form p { margin-bottom: 8px; }
+#edd_profile_editor_form label { display: inline-block; width: 200px; }
+
 /* =Alerts
 -------------------------------------------------------------- */
 .edd_added_to_cart_alert { padding: 5px; font-size: 14px;  border: 1px solid #046a9e; background: #9ecce2; color: #333; margin: 8px 0;}
