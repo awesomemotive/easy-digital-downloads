@@ -1,4 +1,7 @@
 <?php
+// Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit;
+
 /**
  * System info
  *
@@ -7,7 +10,7 @@
  * @since 		1.4
  * @usedby 		edd_settings()
  * @author 		Chris Christoff
- */
+ */ 
 function edd_system_info() { ?>
 <div class="wrap">
 <h2><?php _e('System Information','edd') ?></h2><br/>
