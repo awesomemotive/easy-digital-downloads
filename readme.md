@@ -156,7 +156,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Converted coupons to a custom post type
 * Added Dummy XML File
 * Added System Info (props @chriscct7)
-* Fixed COnflict with Jetpack
+* Fixed Conflict with Jetpack
 * Fixed issue with exporting lots of customers
 * Added Contextual Help
 * Fixed Download Icon missing
