@@ -1,4 +1,23 @@
 <?php
+/**
+ * Logs UI
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Logs
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.4
+*/
+
+
+
+/**
+ * Sales Log View
+ *
+ * @access      public
+ * @since       1.4
+ * @return      void
+ */
 
 function edd_logs_view_sales() {
 
@@ -11,6 +30,14 @@ function edd_logs_view_sales() {
 }
 add_action( 'edd_logs_view_sales', 'edd_logs_view_sales' );
 
+
+/**
+ * File Download Logs
+ *
+ * @access      public
+ * @since       1.4
+ * @return      void
+ */
 
 function edd_logs_view_file_downloads() {
 
@@ -37,6 +64,14 @@ function edd_logs_view_file_downloads() {
 add_action( 'edd_logs_view_file_downloads', 'edd_logs_view_file_downloads' );
 
 
+/**
+ * Gateway Error Logs
+ *
+ * @access      public
+ * @since       1.4
+ * @return      void
+ */
+
 function edd_logs_view_gateway_errors() {
 
 	include( dirname( __FILE__ ) . '/class-gateway-error-logs-list-table.php' );
@@ -48,6 +83,7 @@ function edd_logs_view_gateway_errors() {
 }
 add_action( 'edd_logs_view_gateway_errors', 'edd_logs_view_gateway_errors' );
 
+
 /**
  * Default Log Views
  *
@@ -55,6 +91,7 @@ add_action( 'edd_logs_view_gateway_errors', 'edd_logs_view_gateway_errors' );
  * @since       1.4
  * @return      void
  */
+
 function edd_log_default_views() {
 	$views = array(
 		'file_downloads'	=> __( 'File Downloads', 'edd' ),
