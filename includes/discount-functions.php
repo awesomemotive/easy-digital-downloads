@@ -195,13 +195,18 @@ function edd_remove_discount( $discount_id = 0 ) {
  * @since       1.0
  * @return      bool
  */
-function edd_update_discount_status( $code_id, $new_status ) {
-	$discount  = edd_get_discount( $code_id );
-	$discounts = edd_get_discounts();
+function edd_update_discount_status( $code_id = 0, $new_status = 'active' ) {
+
+	$discount = edd_get_discount( $code_id );
 
 	if ( $discount ) {
-		$discounts[$code_id]['status'] = $new_status;
-		update_option( 'edd_discounts', $discounts );
+
+		do_action( 'edd_pre_update_discount_status', $code_id, $new_status, $discount->post_status );
+
+		wp_update_post( array( 'ID' => $code_id, 'post_status' => $new_status ) );
+
+		do_action( 'edd_post_update_discount_status', $code_id, $new_status, $discount->post_status );
+
 		return true;
 	}
 
