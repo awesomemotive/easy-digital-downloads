@@ -510,7 +510,6 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 				<input name="edd_last_name" id="edd_last_name" class="text edd-input" type="text" value="<?php echo $last_name; ?>" />
 			</p>
 
-			<legend><?php _e( 'Change your Display Name', 'edd' ); ?></legend>
 			<p>
 				<label for="edd_display_name"><?php _e( 'Display Name', 'edd' ); ?></label>
 				<select name="edd_display_name">
@@ -528,7 +527,6 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 				</select>
 			</p>
 
-			<legend><?php _e( 'Change your Email Address', 'edd' ); ?></legend>
 			<p>
 				<label for="edd_email"><?php _e( 'Email Address', 'edd' ); ?></label>
 				<input name="edd_email" id="edd_email" class="text edd-input required" type="email" value="<?php echo $current_user->user_email; ?>" />
