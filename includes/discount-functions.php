@@ -466,7 +466,7 @@ function edd_discount_is_min_met( $code_id = null ) {
 	$return   = false;
 
 	if ( $discount ) {
-		$min         = isset( $discount['min_price'] ) ? $discount['min_price'] : 0;
+		$min         = edd_get_discount_min_price( $code_id );
 		$cart_amount = edd_get_cart_amount();
 
 		if ( (float) $cart_amount >= (float) $min ) {
