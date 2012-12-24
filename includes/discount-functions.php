@@ -21,15 +21,22 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @since       1.0
  * @return      boolean
  */
-function edd_get_discounts() {
-	$discounts = get_option( 'edd_discounts' );
+function edd_get_discounts( $args = array() ) {
 
-	if ( false === $discounts ) {
-		add_option( 'edd_discounts' );
-	}
+	$defaults = array(
+		'post_type'      => 'edd_discount',
+		'posts_per_page' => 30,
+		'paged'          => null,
+		'post_status'    => 'any'
+	);
 
-	if ( $discounts )
+	$args = wp_parse_args( $args, $defaults );
+
+	$discounts = get_posts( $args );
+
+	if( $discounts )
 		return $discounts;
+
 	return false;
 }
 
