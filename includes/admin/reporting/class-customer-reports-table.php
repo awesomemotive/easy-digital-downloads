@@ -33,15 +33,22 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 
 	function column_default( $item, $column_name ) {
-		switch( $column_name ){
+		switch( $column_name ) {
+
 			case 'name' :
-				return '<a href="' . esc_url(
-						admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] ) )
+				return '<a href="' .
+						admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] )
 					) . '">' . esc_html( $item[ $column_name ] ) . '</a>';
+
 			case 'amount_spent' :
 				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
+
+			case 'file_downloads' :
+					return '<a href="' . admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( ! empty( $item['ID'] ) ? $item['ID'] : $item['email'] ) ) . '" target="_blank">' . $item['file_downloads'] . '</a>';
+
 			default:
 				return $item[ $column_name ];
+
 		}
 	}
 
@@ -51,7 +58,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'name'     		=> __( 'Name', 'edd' ),
 			'email'     	=> __( 'Email', 'edd' ),
 			'num_purchases' => __( 'Number of Purchases', 'edd' ),
-			'amount_spent'  => __( 'Total Amount Spent', 'edd' )
+			'amount_spent'  => __( 'Total Amount Spent', 'edd' ),
+			'file_downloads'=> __( 'Files Downloaded', 'edd' )
 		);
 		return $columns;
 	}
@@ -103,7 +111,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 					'name' 			=> $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' ),
 					'email' 		=> $customer_email,
 					'num_purchases'	=> edd_count_purchases_of_customer( $customer_email ),
-					'amount_spent'	=> edd_purchase_total_of_user( $customer_email )
+					'amount_spent'	=> edd_purchase_total_of_user( $customer_email ),
+					'file_downloads'=> edd_count_file_downloads_of_user( ! empty( $user_id ) ? $user_id : $customer_email )
 				);
 			}
 		}
