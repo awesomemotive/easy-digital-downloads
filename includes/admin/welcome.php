@@ -92,6 +92,82 @@ class EDD_Welcome {
 					<?php _e( 'Credits', 'edd' ); ?>
 				</a>
 			</h2>
+
+			<div class="changelog">
+				<h3><?php _e( 'In-depth User Profiles', 'edd' ); ?></h3>
+
+				<div class="feature-section">
+					<h4><?php _e( 'User Details', 'edd' ); ?></h4>
+					<p><?php _e( 'Forum profiles include the details of your forum activity, including your topics and replies, subscriptions, and favorites.', 'edd' ); ?></p>
+
+					<h4><?php _e( 'Easy Updating', 'edd' ); ?></h4>
+					<p><?php _e( 'You can easily update your profile without leaving bbPress.', 'edd' ); ?></p>
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Theme Compatability', 'edd' ); ?></h3>
+
+				<div class="feature-section">
+					<h4><?php _e( 'Twenty Twelve', 'edd' ); ?></h4>
+					<p><?php _e( 'Updated default templates are now Twenty Twelve compatible, and we refreshed our CSS to better integrate with other popular themes, too.', 'edd' ); ?></p>
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Improved User Management', 'edd' ); ?></h3>
+
+				<div class="feature-section">
+					<h4><?php _e( 'Dynamic User Roles and Capabilities', 'edd' ); ?></h4>
+					<p><?php _e( 'bbPress now includes some fancy user-roles with smart default capabilities to help you manage your forums. New roles include Key Master (for complete administrative access), Moderator, and Participant for regular forum users.', 'edd' ); ?></p>
+
+					<h4><?php _e( 'Manage Forum Users from WordPress', 'edd' ); ?></h4>
+					<p><?php _e( 'You can assign Forums roles to users individually, or bulk update them from the WordPress Users page. Users automatically start out as forum participants.', 'edd' ); ?></p>
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Better BuddyPress Integration', 'edd' ); ?></h3>
+
+				<div class="feature-section">
+					<h4><?php _e( 'Use bbPress for Your BuddyPress Group Forums', 'edd' ); ?></h4>
+					<p><?php _e( 'You can now use bbPress to manage your BuddyPress Group Forums, allowing for seamless integration and improved plugin performance. Plugins developed for bbPress can now be extended to improve the BuddyPress Group Forums experience.', 'edd' ); ?></p>
+
+					<h4><?php _e( 'Activity Stream Syncing', 'edd' ); ?></h4>
+					<p><?php _e( 'bbPress now keeps track of changes to topics and replies and keeps their corresponding BuddyPress Activity Stream updates synced.', 'edd' ); ?></p>
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Under the Hood', 'edd' ); ?></h3>
+
+				<div class="feature-section col three-col">
+					<div>
+						<h4><?php _e( 'Template Logic', 'edd' ); ?></h4>
+						<p><?php _e( 'New functions and template stacks are in place to help plugin developers extend bbPress further.', 'edd' ); ?></p> 
+
+						<h4><?php _e( 'Plugin Directory Structure', 'edd' ); ?></h4>
+						<p><?php _e( 'We simplified the bbPress plugin directory structure, making it easier for plugin developers to find the relevant code.', 'edd' ); ?></p>
+					</div>
+
+					<div>
+						<h4><?php _e( 'Autocomplete', 'edd' ); ?></h4>
+						<p><?php _e( 'In WordPress Admin, you now select a parent forum or topic via autocomplete rather than a dropdown.', 'edd' ); ?></p>
+
+						<h4><?php _e( 'Fancy Editor Support', 'edd' ); ?></h4>
+						<p><?php _e( 'We improved our support of the Fancy Editor, giving forum users a better experience.', 'edd' ); ?></p>
+					</div>
+
+					<div class="last-feature">
+						<h4><?php _e( 'WordPress 3.5-ready', 'edd' ); ?></h4>
+						<p><?php _e( 'bbPress 2.2 has been thoroughly tested against the ongoing development of WordPress 3.5.', 'edd' ); ?></p>
+					</div>
+				</div>
+			</div>
+
+			<div class="return-to-dashboard">
+				<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'post_type' => 'download', 'page' => 'edd-settings' ), 'edit.php' ) ) ); ?>"><?php _e( 'Go to Easy Digital Downloads Settings', 'edd' ); ?></a>
+			</div>
 		</div>
 
 		<?php
