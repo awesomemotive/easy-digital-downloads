@@ -500,14 +500,14 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 		<form id="edd_profile_editor_form"  class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
 			<fieldset>
 				<legend><?php _e( 'Change your Name', 'edd' ); ?></legend>
-				<p>
+				<p id="edd_profile_name_wrap">
 					<label for="edd_first_name"><?php _e( 'First Name', 'edd' ); ?></label>
 					<input name="edd_first_name" id="edd_first_name" class="text edd-input" type="text" value="<?php echo $first_name; ?>" />
 					<br />
 					<label for="edd_last_name"><?php _e( 'Last Name', 'edd' ); ?></label>
 					<input name="edd_last_name" id="edd_last_name" class="text edd-input" type="text" value="<?php echo $last_name; ?>" />
 				</p>
-				<p>
+				<p id="edd_profile_display_name_wrap">
 					<label for="edd_display_name"><?php _e( 'Display Name', 'edd' ); ?></label>
 					<select name="edd_display_name">
 						<?php if ( ! empty( $current_user->first_name ) ): ?>
@@ -528,15 +528,15 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 					<input name="edd_email" id="edd_email" class="text edd-input required" type="email" value="<?php echo $current_user->user_email; ?>" />
 				</p>
 				<legend><?php _e( 'Change your Password', 'edd' ); ?></legend>
-				<p class="edd_password_change_notice"><?php _e( 'Please note after you change your password, you will be logged out automatically and will have to log back in again.', 'edd' ); ?></p>
-				<p>
+				<p id="edd_profile_password_wrap">
 					<label for="edd_user_pass"><?php _e( 'New Password', 'edd' ); ?></label>
 					<input name="edd_new_user_pass1" id="edd_new_user_pass1" class="password edd-input" type="password"/>
 					<br />
 					<label for="edd_user_pass"><?php _e( 'Re-enter New Password', 'edd' ); ?></label>
 					<input name="edd_new_user_pass2" id="edd_new_user_pass2" class="password edd-input" type="password"/>
 				</p>
-				<p>
+				<p class="edd_password_change_notice"><?php _e( 'Please note after you change your password, you will be logged out automatically and will have to log back in again.', 'edd' ); ?></p>
+				<p id="edd_profile_submit_wrap">
 					<input type="hidden" name="edd_profile_editor_nonce" value="<?php echo wp_create_nonce( 'edd-profile-editor-nonce' ); ?>"/>
 					<input type="hidden" name="edd_action" value="edit_user_profile" />
 					<input type="hidden" name="edd_redirect" value="<?php echo esc_url( edd_get_current_page_url() ); ?>" />
