@@ -61,20 +61,35 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		edd_report_views();
 	}
 
+	/**
+	 * Retrieve the current page number
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      int
+	 */
+
+	function get_paged() {
+		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+	}
+
+
+	function get_total_customers() {
+		global $wpdb;
+
+		$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
+
+		return $count[0];
+	}
+
 
 	function reports_data() {
 		global $wpdb;
 
 		$reports_data = array();
-
-		// retrieve all customer emails
-		$customers = get_transient( 'edd_customer_list' );
-		if( false === $customers ) {
-
-			$customers = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' ORDER BY meta_id DESC " );
-			set_transient( 'edd_customer_list', $customers, 3600 );
-
-		}
+		$paged        = $this->get_paged();
+		$offset       = $this->per_page * ( $paged - 1 );
+		$customers    = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' ORDER BY meta_id DESC LIMIT $this->per_page OFFSET $offset" );
 
 		if( $customers ) {
 			foreach( $customers as $customer_email ) {
@@ -114,15 +129,13 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
-		$data = $this->reports_data();
-
 		$current_page = $this->get_pagenum();
 
-		$total_items = count( $data );
+		$total_items = $this->get_total_customers();
 
-		$data = array_slice( $data,( ( $current_page - 1 ) * $per_page ), $per_page );
+		//$data = array_slice( $data,( ( $current_page - 1 ) * $per_page ), $per_page );
 
-		$this->items = $data;
+		$this->items = $this->reports_data();
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,                  	// WE have to calculate the total number of items
