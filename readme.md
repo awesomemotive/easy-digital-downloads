@@ -184,6 +184,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Added edd_send_back_to_checkout()
 * Added New Helper Function for "Transaction ID" 
 * Added "failed" payment status 
+* Added Profile Editor
 
 ### 1.3.4.3 ###
 
