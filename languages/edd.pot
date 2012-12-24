@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-23 14:50-0000\n"
-"PO-Revision-Date: 2012-12-23 14:51-0000\n"
+"POT-Creation-Date: 2012-12-24 14:54-0000\n"
+"PO-Revision-Date: 2012-12-24 14:54-0000\n"
 "Last-Translator: Sunny Ratilal <ratilal.sunny@gmail.com>\n"
 "Language-Team: Easy Digital Downloads <pippin@pippinsplugins.com>\n"
 "Language: en_US\n"
@@ -88,13 +88,14 @@ msgid "Log into Your Account"
 msgstr ""
 
 #: includes/login-register.php:41 includes/login-register.php:42
-#: includes/checkout/template.php:290 includes/checkout/template.php:291
-#: includes/checkout/template.php:343
+#: includes/shortcodes.php:557 includes/checkout/template.php:290
+#: includes/checkout/template.php:291 includes/checkout/template.php:343
 msgid "Username"
 msgstr ""
 
-#: includes/login-register.php:45 includes/checkout/template.php:294
-#: includes/checkout/template.php:295 includes/checkout/template.php:347
+#: includes/login-register.php:45 includes/shortcodes.php:558
+#: includes/checkout/template.php:294 includes/checkout/template.php:295
+#: includes/checkout/template.php:347
 msgid "Password"
 msgstr ""
 
@@ -1102,84 +1103,95 @@ msgstr ""
 msgid "Purchase"
 msgstr ""
 
-#: includes/shortcodes.php:203
+#: includes/shortcodes.php:195
 msgid "Purchase All Items"
 msgstr ""
 
-#: includes/shortcodes.php:401
+#: includes/shortcodes.php:390
 #, php-format
 msgctxt "download post type name"
 msgid "No %s found"
 msgstr ""
 
-#: includes/shortcodes.php:445
+#: includes/shortcodes.php:434
 msgid "Sorry, trouble retrieving payment receipt."
 msgstr ""
 
-#: includes/shortcodes.php:506
+#: includes/shortcodes.php:497
+msgid "Success"
+msgstr ""
+
+#: includes/shortcodes.php:497
+msgid "Your profile has been edited successfully."
+msgstr ""
+
+#: includes/shortcodes.php:501
 msgid "Change your Name"
 msgstr ""
 
-#: includes/shortcodes.php:508 includes/admin/export-functions.php:44
+#: includes/shortcodes.php:503 includes/admin/export-functions.php:44
 #: includes/checkout/template.php:135 includes/checkout/template.php:136
 #: includes/checkout/template.php:308 includes/checkout/template.php:309
 msgid "First Name"
 msgstr ""
 
-#: includes/shortcodes.php:511 includes/admin/export-functions.php:45
+#: includes/shortcodes.php:506 includes/admin/export-functions.php:45
 #: includes/checkout/template.php:140 includes/checkout/template.php:313
 msgid "Last Name"
 msgstr ""
 
-#: includes/shortcodes.php:517 includes/shortcodes.php:590
-#: includes/shortcodes.php:648 includes/shortcodes.php:708
-msgid "Save Changes"
-msgstr ""
-
-#: includes/shortcodes.php:543 includes/shortcodes.php:616
-#: includes/shortcodes.php:674 includes/shortcodes.php:737
-msgid "Security check failed. Please try again."
-msgstr ""
-
-#: includes/shortcodes.php:543 includes/shortcodes.php:616
-#: includes/shortcodes.php:674 includes/shortcodes.php:737
-msgid "Security Check Failed."
-msgstr ""
-
-#: includes/shortcodes.php:570
-msgid "Change your Display Name"
-msgstr ""
-
-#: includes/shortcodes.php:572
+#: includes/shortcodes.php:511
 msgid "Display Name"
 msgstr ""
 
-#: includes/shortcodes.php:640
-msgid "Change your Email Address"
-msgstr ""
-
-#: includes/shortcodes.php:642 includes/checkout/template.php:131
+#: includes/shortcodes.php:528 includes/checkout/template.php:131
 msgid "Email Address"
 msgstr ""
 
-#: includes/shortcodes.php:697
+#: includes/shortcodes.php:532
 msgid "Change your Password"
 msgstr ""
 
-#: includes/shortcodes.php:699
+#: includes/shortcodes.php:533
+msgid ""
+"Please note after you change your password, you will be logged out "
+"automatically and will have to log back in again."
+msgstr ""
+
+#: includes/shortcodes.php:535
 msgid "New Password"
 msgstr ""
 
-#: includes/shortcodes.php:702
+#: includes/shortcodes.php:538
 msgid "Re-enter New Password"
 msgstr ""
 
-#: includes/shortcodes.php:732
+#: includes/shortcodes.php:546
+msgid "Save Changes"
+msgstr ""
+
+#: includes/shortcodes.php:552
+msgid "You need to login to edit your profile."
+msgstr ""
+
+#: includes/shortcodes.php:559
+msgid "Remember me?"
+msgstr ""
+
+#: includes/shortcodes.php:560
+msgid "Log In"
+msgstr ""
+
+#: includes/shortcodes.php:605
 msgid "The passwords you entered do not match. Please try again."
 msgstr ""
 
-#: includes/shortcodes.php:732
-msgid "Password Mismatch"
+#: includes/shortcodes.php:628
+msgid "Security check failed. Please try again."
+msgstr ""
+
+#: includes/shortcodes.php:628
+msgid "Security Check Failed"
 msgstr ""
 
 #: includes/template-functions.php:49
