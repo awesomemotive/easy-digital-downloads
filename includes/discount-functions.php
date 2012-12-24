@@ -299,6 +299,25 @@ function edd_get_discount_start_date( $code_id = null ) {
 
 
 /**
+ * Retrieve discount max uses
+ *
+ * @param int $code_id
+ *
+ * @access      public
+ * @since       1.4
+ * @return      int
+ */
+
+function edd_get_discount_max_uses( $code_id = null ) {
+
+	$max_uses = get_post_meta( $code_id, '_edd_discount_max_uses', true );
+
+	return (int) apply_filters( 'edd_get_discount_max_uses', $max_uses, $code_id );
+
+}
+
+
+/**
  * Is Discount Expired
  *
  * Checks whether a discount code is expired.
