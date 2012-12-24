@@ -532,7 +532,7 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 					<label for="edd_user_pass"><?php _e( 'New Password', 'edd' ); ?></label>
 					<input name="edd_new_user_pass1" id="edd_new_user_pass1" class="password edd-input" type="password"/>
 					<br />
-					<label for="edd_user_pass"><?php _e( 'Re-enter New Password', 'edd' ); ?></label>
+					<label for="edd_user_pass"><?php _e( 'Re-enter Password', 'edd' ); ?></label>
 					<input name="edd_new_user_pass2" id="edd_new_user_pass2" class="password edd-input" type="password"/>
 				</p>
 				<p class="edd_password_change_notice"><?php _e( 'Please note after you change your password, you will be logged out automatically and will have to log back in again.', 'edd' ); ?></p>
@@ -607,7 +607,7 @@ function edd_process_profile_editor_updates( $data ) {
 		}
 
 		// Update user
-		wp_update_user( array(
+		$updated = wp_update_user( array(
 			'ID'           => $user_id,
 			'first_name'   => $first_name,
 			'last_name'    => $last_name,
@@ -615,9 +615,7 @@ function edd_process_profile_editor_updates( $data ) {
 			'user_email'   => $email
 		) );
 
-		$updated = true;
-
-		if ( $updated ) {
+		if( $updated ) {
 			wp_redirect( add_query_arg( 'updated', 'true', $data['edd_redirect'] ) );
 			exit;
 		}
