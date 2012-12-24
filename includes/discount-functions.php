@@ -246,11 +246,12 @@ function edd_discount_exists( $code_id ) {
  * @return      bool
  */
 function edd_is_discount_active( $code_id = null ) {
+
 	$discount = edd_get_discount( $code_id );
 	$return   = false;
 
 	if ( $discount ) {
-		if ( isset( $discount['status'] ) && $discount['status'] == 'active' && !edd_is_discount_expired( $code_id ) ) {
+		if ( $discount->post_status == 'active' && ! edd_is_discount_expired( $code_id ) ) {
 			$return = true;
 		}
 	}
