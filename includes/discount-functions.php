@@ -334,7 +334,26 @@ function edd_get_discount_uses( $code_id = null ) {
 
 	$uses = get_post_meta( $code_id, '_edd_discount_uses', true );
 
-	return (int) apply_filters( 'edd_get_discount_uses', $max_uses, $code_id );
+	return (int) apply_filters( 'edd_get_discount_uses', $uses, $code_id );
+
+}
+
+
+/**
+ * Retrieve the minimum purchase amount for a discount
+ *
+ * @param int $code_id
+ *
+ * @access      public
+ * @since       1.4
+ * @return      float
+ */
+
+function edd_get_discount_min_price( $code_id = null ) {
+
+	$min_price = get_post_meta( $code_id, '_edd_discount_min_price', true );
+
+	return (float) apply_filters( 'edd_get_discount_min_price', $min_price, $code_id );
 
 }
 
