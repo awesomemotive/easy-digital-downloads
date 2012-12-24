@@ -280,6 +280,25 @@ function edd_get_discount_expiration( $code_id = null ) {
 
 
 /**
+ * retrieve discount start date
+ *
+ * @param int $code_id
+ *
+ * @access      public
+ * @since       1.4
+ * @return      string
+ */
+
+function edd_get_discount_start_date( $code_id = null ) {
+
+	$start_date = get_post_meta( $code_id, '_edd_discount_start', true );
+
+	return apply_filters( 'edd_get_discount_start_date', $start_date, $code_id );
+
+}
+
+
+/**
  * Is Discount Expired
  *
  * Checks whether a discount code is expired.
