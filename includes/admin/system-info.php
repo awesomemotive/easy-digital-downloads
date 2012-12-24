@@ -10,8 +10,17 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @since 		1.4
  * @usedby 		edd_settings()
  * @author 		Chris Christoff
- */ 
-function edd_system_info() { ?>
+ */
+function edd_system_info() {
+
+	global $wpdb;
+
+	if( ! class_exists( 'Browser' ) )
+		require_once( EDD_PLUGIN_DIR . 'includes/libraries/browser.php' );
+
+	$browser =  new Browser();
+
+	?>
 <div class="wrap">
 <h2><?php _e('System Information','edd') ?></h2><br/>
 <form action="./" method="post">
@@ -28,7 +37,7 @@ function edd_system_info() { ?>
 	EDD Version:      		  <?php echo EDD_VERSION . "\n"; ?>
 	WordPress Version:        <?php echo get_bloginfo('version') . "\n"; ?>
 
-	<?php require_once('browser.php'); $browser =  new Browser(); echo $browser ; ?>
+	<?php echo $browser ; ?>
 
 	PHP Version:              <?php echo PHP_VERSION . "\n"; ?>
 	MySQL Version:            <?php echo mysql_get_server_info() . "\n"; ?>
@@ -39,7 +48,7 @@ function edd_system_info() { ?>
 
 	WP_DEBUG:                 <?php echo defined('WP_DEBUG') ? WP_DEBUG ? 'Enabled' . "\n" : 'Disabled' . "\n" : 'Not set' . "\n" ?>
 
-	WP Table Prefix:          <?php global $wpdb; echo "Length: ". strlen($wpdb->prefix); echo " Status:"; if (strlen($wpdb->prefix)>16){echo " ERROR: Too Long";} else {echo " Acceptable";} echo "\n"; ?>
+	WP Table Prefix:          <?php echo "Length: ". strlen($wpdb->prefix); echo " Status:"; if (strlen($wpdb->prefix)>16){echo " ERROR: Too Long";} else {echo " Acceptable";} echo "\n"; ?>
 
 	Show On Front:            <?php echo get_option('show_on_front') . "\n" ?>
 	Page On Front:            <?php echo get_option('page_on_front') . "\n" ?>
