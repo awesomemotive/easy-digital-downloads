@@ -511,15 +511,15 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 					<label for="edd_display_name"><?php _e( 'Display Name', 'edd' ); ?></label>
 					<select name="edd_display_name">
 						<?php if ( ! empty( $current_user->first_name ) ): ?>
-						<option <?php if ( $display_name == $current_user->first_name ) { ?>selected="selected"<?php } ?> value="<?php echo $current_user->first_name; ?>"><?php echo $current_user->first_name; ?></option>
+						<option <?php selected( $display_name, $current_user->first_name ); ?> value="<?php echo $current_user->first_name; ?>"><?php echo $current_user->first_name; ?></option>
 						<?php endif; ?>
-						<option <?php if ( $display_name == $current_user->user_nicename ) { ?>selected="selected"<?php } ?> value="<?php echo $current_user->user_nicename; ?>"><?php echo $current_user->user_nicename; ?></option>
+						<option <?php selected( $display_name, $current_user->user_nicename ); ?> value="<?php echo $current_user->user_nicename; ?>"><?php echo $current_user->user_nicename; ?></option>
 						<?php if ( ! empty( $current_user->last_name ) ): ?>
-						<option <?php if ( $display_name == $current_user->last_name ) { ?>selected="selected"<?php } ?> value="<?php echo $current_user->last_name; ?>"><?php echo $current_user->last_name; ?></option>
+						<option <?php selected( $display_name, $current_user->last_name ); ?> value="<?php echo $current_user->last_name; ?>"><?php echo $current_user->last_name; ?></option>
 						<?php endif; ?>
 						<?php if ( ! empty( $current_user->first_name ) && ! empty( $current_user->last_name ) ): ?>
-						<option <?php if ( $display_name == $current_user->first_name . ' ' . $current_user->last_name ) { ?>selected="selected"<?php } ?> value="<?php echo $current_user->first_name . ' ' . $current_user->last_name; ?>"><?php echo $current_user->first_name . ' ' . $current_user->last_name; ?></option>
-						<option <?php if ( $display_name == $current_user->last_name . ' ' . $current_user->first_name ) { ?>selected="selected"<?php } ?> value="<?php echo $current_user->last_name . ' ' . $current_user->first_name; ?>"><?php echo $current_user->last_name . ' ' . $current_user->first_name; ?></option>
+						<option <?php selected( $display_name, $current_user->first_name . ' ' . $current_user->last_name ); ?> value="<?php echo $current_user->first_name . ' ' . $current_user->last_name; ?>"><?php echo $current_user->first_name . ' ' . $current_user->last_name; ?></option>
+						<option <?php selected( $display_name, $current_user->last_name . ' ' . $current_user->first_name ); ?> value="<?php echo $current_user->last_name . ' ' . $current_user->first_name; ?>"><?php echo $current_user->last_name . ' ' . $current_user->first_name; ?></option>
 						<?php endif; ?>
 					</select>
 				</p>
