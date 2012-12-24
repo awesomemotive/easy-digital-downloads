@@ -535,7 +535,7 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 					<label for="edd_user_pass"><?php _e( 'Re-enter Password', 'edd' ); ?></label>
 					<input name="edd_new_user_pass2" id="edd_new_user_pass2" class="password edd-input" type="password"/>
 				</p>
-				<p class="edd_password_change_notice"><?php _e( 'Please note after you change your password, you will be logged out automatically and will have to log back in again.', 'edd' ); ?></p>
+				<p class="edd_password_change_notice"><?php _e( 'Please note after changing your password, you must log back in.', 'edd' ); ?></p>
 				<p id="edd_profile_submit_wrap">
 					<input type="hidden" name="edd_profile_editor_nonce" value="<?php echo wp_create_nonce( 'edd-profile-editor-nonce' ); ?>"/>
 					<input type="hidden" name="edd_action" value="edit_user_profile" />
