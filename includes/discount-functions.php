@@ -226,16 +226,11 @@ function edd_update_discount_status( $code_id = 0, $new_status = 'active' ) {
  * @return      bool
  */
 function edd_discount_exists( $code_id ) {
-	$discounts = edd_get_discounts();
 
-	// no discounts, so the code does not exist
-	if ( !$discounts ) return false;
-
-	// a discount with this code has been found
-	if ( isset( $discounts[$code_id] ) ) return true;
-
-	// no discount with the specified ID exists
+	if( edd_get_discount( $code_id ) )
+		return true;
 	return false;
+
 }
 
 
