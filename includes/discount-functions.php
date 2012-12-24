@@ -359,6 +359,25 @@ function edd_get_discount_min_price( $code_id = null ) {
 
 
 /**
+ * Retrieve the discount type
+ *
+ * @param int $code_id
+ *
+ * @access      public
+ * @since       1.4
+ * @return      float
+ */
+
+function edd_get_discount_type( $code_id = null ) {
+
+	$type = get_post_meta( $code_id, '_edd_discount_type', true );
+
+	return apply_filters( 'edd_get_discount_type', $type, $code_id );
+
+}
+
+
+/**
  * Is Discount Expired
  *
  * Checks whether a discount code is expired.
