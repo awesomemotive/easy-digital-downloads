@@ -27,7 +27,7 @@ function edd_get_discounts( $args = array() ) {
 		'post_type'      => 'edd_discount',
 		'posts_per_page' => 30,
 		'paged'          => null,
-		'post_status'    => 'any'
+		'post_status'    => array( 'active', 'inactive', 'expired' )
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -51,6 +51,7 @@ function edd_get_discounts( $args = array() ) {
  * @return      boolean
  */
 function edd_has_active_discounts() {
+	return true;
 	$has_active = false;
 	$discounts  = edd_get_discounts();
 	if ( is_array( $discounts ) && !empty( $discounts ) ) {
@@ -331,9 +332,6 @@ function edd_get_discount_max_uses( $code_id = null ) {
 
 	$max_uses = get_post_meta( $code_id, '_edd_discount_max_uses', true );
 
-	if( ! $max_uses )
-		$max_uses = 999999999; // large number that will never be reached
-
 	return (int) apply_filters( 'edd_get_discount_max_uses', $max_uses, $code_id );
 
 }
@@ -494,7 +492,7 @@ function edd_is_discount_maxed_out( $code_id = null ) {
 	if ( $discount ) {
 		$uses = edd_get_discount_uses( $code_id );
 		// large number that will never be reached
-		$max_uses = edd_get_discount_max_uses( $code_id )
+		$max_uses = edd_get_discount_max_uses( $code_id );
 		// should never be greater than, but just in case
 		if ( $uses >= $max_uses && $max_uses != '' && ! empty( $max_uses ) ) {
 			// discount is maxed out
