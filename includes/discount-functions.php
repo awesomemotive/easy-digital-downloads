@@ -51,12 +51,11 @@ function edd_get_discounts( $args = array() ) {
  * @return      boolean
  */
 function edd_has_active_discounts() {
-	return true;
 	$has_active = false;
 	$discounts  = edd_get_discounts();
-	if ( is_array( $discounts ) && !empty( $discounts ) ) {
+	if ( $discounts) {
 		foreach ( $discounts as $discount ) {
-			if ( isset( $discount['status'] ) && $discount['status'] == 'active' && !edd_is_discount_expired( $discount['code'] ) ) {
+			if ( $discount->post_status == 'active' && ! edd_is_discount_expired( edd_get_discount_code( $discount->ID ) ) ) {
 				$has_active = true;
 				break;
 			}
