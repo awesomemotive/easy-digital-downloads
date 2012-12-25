@@ -236,7 +236,7 @@ function edd_price_field_quick_edit( $column_name, $post_type ) {
 	<fieldset class="inline-edit-col-left">
 		<div id="edd-download-data" class="inline-edit-col">
 
-			<h4><?php echo sprintf( __( '%s Data', 'edd' ), edd_get_label_singular() ); ?></h4>
+			<h4><?php echo sprintf( __( '%s Configuration', 'edd' ), edd_get_label_singular() ); ?></h4>
 
 			<label>
 				<span class="title"><?php _e( 'Price', 'edd' ); ?></span>
