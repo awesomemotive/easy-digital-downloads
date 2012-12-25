@@ -1,6 +1,6 @@
 <?php
 /**
- * Discount Codes List Table Class
+ * Discount Codes Table Class
  *
  * @package     Easy Digital Downloads
  * @subpackage  Discount Codes List Table Class
