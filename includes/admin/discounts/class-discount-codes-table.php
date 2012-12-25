@@ -88,7 +88,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 */
 
 	function get_views() {
-        $base           = admin_url('edit.php?post_type=download&page=edd-payment-history');
+        $base           = admin_url('edit.php?post_type=download&page=edd-discounts');
         $current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
         $total_count    = '&nbsp;<span class="count">(' . $this->total_count    . ')</span>';
         $active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
