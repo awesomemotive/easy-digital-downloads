@@ -90,12 +90,12 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 */
 
 	function get_views() {
-        $base           = admin_url('edit.php?post_type=download&page=edd-discounts');
+		$base           = admin_url('edit.php?post_type=download&page=edd-discounts');
 
-        $current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
-        $total_count    = '&nbsp;<span class="count">(' . $this->total_count    . ')</span>';
-        $active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
-        $inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count  . ')</span>';
+		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
+		$total_count    = '&nbsp;<span class="count">(' . $this->total_count    . ')</span>';
+		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
+		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count  . ')</span>';
 
 		$views = array(
 			'all'		=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'edd') . $total_count ),
@@ -184,8 +184,8 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return      string
 	 */
 	function column_name( $item ) {
-     	$discount = get_post( $item['ID'] );
-        $base     = admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' . $item['ID'] );
+		$discount = get_post( $item['ID'] );
+		$base     = admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' . $item['ID'] );
 
 		$row_actions = array();
 
@@ -209,12 +209,12 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 */
 
 	function column_cb( $item ){
-        return sprintf(
-            '<input type="checkbox" name="%1$s[]" value="%2$s" />',
-            /*$1%s*/ $this->_args['singular'],
-            /*$2%s*/ $item['ID']
-        );
-    }
+		return sprintf(
+			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			/*$1%s*/ $this->_args['singular'],
+			/*$2%s*/ $item['ID']
+		);
+	}
 
 
 	/**
@@ -228,13 +228,13 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	function get_bulk_actions() {
 		$actions = array(
 			'delete' => __( 'Delete', 'edd' )
-        );
+		);
 
-        return $actions;
-    }
+		return $actions;
+	}
 
 
-    /**
+	/**
 	 * Process the bulk actions
 	 *
 	 * @access      private
@@ -242,22 +242,22 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return      void
 	 */
 
-    function process_bulk_action() {
-        $ids = isset( $_GET['download'] ) ? $_GET['download'] : false;
+	function process_bulk_action() {
+		$ids = isset( $_GET['download'] ) ? $_GET['download'] : false;
 
-        if ( ! is_array( $ids ) )
-            $ids = array( $ids );
+		if ( ! is_array( $ids ) )
+			$ids = array( $ids );
 
-        foreach ( $ids as $id ) {
-            if ( 'delete' === $this->current_action() ) {
-                edd_remove_discount( $id );
-            }
-        }
+		foreach ( $ids as $id ) {
+			if ( 'delete' === $this->current_action() ) {
+				edd_remove_discount( $id );
+			}
+		}
 
-    }
+	}
 
 
-    /**
+	/**
 	 * Retrieve the discount code counts
 	 *
 	 * @access      private
@@ -338,7 +338,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 				if ( edd_get_discount_expiration( $discount->ID ) ) {
 					$expiration = edd_is_discount_expired( $discount->ID ) ? __( 'Expired', 'edd' ) : date_i18n( get_option( 'date_format' ), strtotime( edd_get_discount_expiration( $discount->ID ) ) );
 				} else {
-				 	$expiration = __( 'No expiration', 'edd' );
+					$expiration = __( 'No expiration', 'edd' );
 				}
 
 				$discount_codes_data[] = array(
