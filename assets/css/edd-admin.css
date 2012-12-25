@@ -81,3 +81,7 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 .edd-person { height: 70px; width: 280px; padding-bottom: 15px; float: left; margin-right: 10px; }
 .edd-person .gravatar { -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4); box-shadow: 0 0 4px rgba(0, 0, 0, 0.4); float: left; margin: 0 10px 10px 0; padding: 2px; width: 60px; height: 60px; }
 .edd-person .web { display: block; margin: 6px 0 2px; font-size: 16px; text-decoration: none; }
+
+/* Button styles 
+-------------------------------------------------------------- */
+#TB_window #edd-add-download:hover, #TB_window #edd-add-download:active, #TB_window #edd-add-download:focus { color: #fff; }
