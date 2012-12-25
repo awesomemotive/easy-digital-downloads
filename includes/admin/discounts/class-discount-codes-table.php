@@ -89,15 +89,18 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 	function get_views() {
         $base           = admin_url('edit.php?post_type=download&page=edd-discounts');
+
         $current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
         $total_count    = '&nbsp;<span class="count">(' . $this->total_count    . ')</span>';
         $active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
         $inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count  . ')</span>';
+
 		$views = array(
 			'all'		=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'edd') . $total_count ),
 			'active'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $base ), $current === 'active' ? ' class="current"' : '', __('Active', 'edd') . $active_count ),
 			'inactive'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $base ), $current === 'inactive' ? ' class="current"' : '', __('Inactive', 'edd') . $inactive_count ),
 		);
+
 		return $views;
 	}
 
@@ -274,7 +277,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	function discount_codes_data() {
 		$discount_codes_data = array();
 
-		if( isset( $_GET['paged'] ) ) $page = $_GET['paged']; else $page = 1;
+		if ( isset( $_GET['paged'] ) ) $page = $_GET['paged']; else $page = 1;
 
 		$per_page = $this->per_page;
 
@@ -307,27 +310,27 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			's'        => $search
 		) );
 
-		if( $discounts ) {
-			foreach( $discounts as $discount ) {
-				if( edd_get_discount_max_uses( $discount->ID ) ) {
+		if ( $discounts ) {
+			foreach ( $discounts as $discount ) {
+				if ( edd_get_discount_max_uses( $discount->ID ) ) {
 					$uses =  edd_get_discount_uses( $discount->ID ) . '/' . edd_get_discount_max_uses( $discount->ID );
 				} else {
 					$uses = edd_get_discount_uses( $discount->ID );
 				}
 
-				if( edd_get_discount_max_uses( $discount->ID ) ) {
+				if ( edd_get_discount_max_uses( $discount->ID ) ) {
 					$max_uses = edd_get_discount_max_uses( $discount->ID ) ? edd_get_discount_max_uses( $discount->ID ) : __( 'unlimited', 'edd' );
 				} else {
 					$max_uses = __( 'Unlimited', 'edd' );
 				}
 
-				if( $start_date = edd_get_discount_start_date( $discount->ID ) ) {
+				if ( $start_date = edd_get_discount_start_date( $discount->ID ) ) {
 					$discount_start_date =  date_i18n( get_option( 'date_format' ), strtotime( $start_date ) );
 				} else {
 					$discount_start_date = __( 'No start date', 'edd' );
 				}
 
-				if( edd_get_discount_expiration( $discount->ID ) ) {
+				if ( edd_get_discount_expiration( $discount->ID ) ) {
 					$expiration = edd_is_discount_expired( $discount->ID ) ? __( 'Expired', 'edd' ) : date_i18n( get_option( 'date_format' ), strtotime( edd_get_discount_expiration( $discount->ID ) ) );
 				} else {
 				 	$expiration = __( 'No expiration', 'edd' );
@@ -358,15 +361,11 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return      array
 	 */
 	function prepare_items() {
-
-		/**
-		 * First, lets decide how many records per page to show
-		 */
 		$per_page = $this->per_page;
 
 		$columns = $this->get_columns();
 
-		$hidden = array(); // no hidden columns
+		$hidden = array();
 
 		$sortable = $this->get_sortable_columns();
 
@@ -401,5 +400,4 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 			)
 		);
 	}
-
 }
