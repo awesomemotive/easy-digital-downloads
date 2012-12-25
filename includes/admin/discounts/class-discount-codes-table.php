@@ -250,7 +250,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 
     /**
-	 * Retrieve the payment counts
+	 * Retrieve the discount code counts
 	 *
 	 * @access      private
 	 * @since       1.4
