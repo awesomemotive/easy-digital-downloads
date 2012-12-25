@@ -61,8 +61,8 @@ add_action( 'load-edit.php', 'edd_remove_post_types_order' );
 */
 
 function edd_disable_jetpack_og_on_checkout() {
-	if( edd_is_checkout() )
-		return false;
-	return true;
+	if ( edd_is_checkout() ) {
+		remove_action( 'wp_head', 'jetpack_og_tags' );
+	}
 }
-add_filter( 'jetpack_enable_open_graph', 'edd_disable_jetpack_og_on_checkout', 999 );
+add_action( 'template_redirect', 'edd_disable_jetpack_og_on_checkout' );
