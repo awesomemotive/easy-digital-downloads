@@ -26,6 +26,8 @@ if ( !defined( 'ABSPATH' ) ) exit;
 function edd_discounts_page() {
 	global $edd_options;
 
+	ob_start();
+
 	if( isset( $_GET['edd-action'] ) && $_GET['edd-action'] == 'edit_discount' ) {
 		include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/edit-discount.php' );
 	} else {
@@ -50,6 +52,6 @@ function edd_discounts_page() {
 		<?php do_action( 'edd_discounts_page_bottom' ); ?>
 	</div>
 <?php
-
 	}
+	echo ob_get_clean();
 }
