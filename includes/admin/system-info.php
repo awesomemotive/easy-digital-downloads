@@ -35,7 +35,7 @@ Multi-site:               <?php echo is_multisite() ? 'Yes' . "\n" : 'No' . "\n"
 SITE_URL:                 <?php echo site_url() . "\n"; ?>
 HOME_URL:                 <?php echo home_url() . "\n"; ?>
 
-EDD Version:      		  <?php echo EDD_VERSION . "\n"; ?>
+EDD Version:              <?php echo EDD_VERSION . "\n"; ?>
 WordPress Version:        <?php echo get_bloginfo( 'version' ) . "\n"; ?>
 
 <?php echo $browser ; ?>
