@@ -255,7 +255,6 @@ function edd_register_post_type_statuses() {
 	// discount code statuses
 	register_post_status( 'active' );
 	register_post_status( 'inactive' );
-	register_post_status( 'expired' );
 
 }
 add_action( 'init', 'edd_register_post_type_statuses' );
