@@ -37,15 +37,15 @@ function edd_discounts_page() {
 		<h2><?php _e( 'Discount Codes', 'edd' ); ?></h2>
 		<?php do_action( 'edd_discounts_page_top' ); ?>
 		<form id="edd-discounts-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>">
-	        <?php $discount_codes_table->search_box( __( 'Search', 'edd' ), 'edd-discounts' ); ?>
+			<?php $discount_codes_table->search_box( __( 'Search', 'edd' ), 'edd-discounts' ); ?>
 
 			<input type="hidden" name="post_type" value="download" />
-	        <input type="hidden" name="page" value="edd-discounts" />
+			<input type="hidden" name="page" value="edd-discounts" />
 
-	        <?php $discount_codes_table->views() ?>
-	        <?php $discount_codes_table->display() ?>
-	    </form>
-	    <?php include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/add-discount.php' ); ?>
+			<?php $discount_codes_table->views() ?>
+			<?php $discount_codes_table->display() ?>
+		</form>
+		<?php include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/add-discount.php' ); ?>
 		<?php do_action( 'edd_discounts_page_bottom' ); ?>
 	</div>
 <?php
