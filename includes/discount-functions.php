@@ -118,43 +118,78 @@ function edd_get_discount_by_code( $code ) {
  * If the code exists, it updates it, otherwise it creates a new one.
  *
  * @param string  $discount_details
- * @param int     $id
+ * @param int     $discount_id
  *
  * @access      public
  * @since       1.0
  * @return      boolean
  */
-function edd_store_discount( $discount_details, $id = null ) {
-	if ( edd_discount_exists( $id ) && !is_null( $id ) ) {
+function edd_store_discount( $discount_details, $discount_id = null ) {
+
+	if ( edd_discount_exists( $discount_id ) && !is_null( $discount_id ) ) {
 
 		// update an existing discount
-		$discounts = edd_get_discounts();
-		if ( !$discounts ) $discounts = array();
 
-		$discounts[$id] = $discount_details;
+		$discount_details = apply_filters( 'edd_update_discount', $discount_details, $discount_id );
 
-		apply_filters( 'edd_update_discount', $discount_details, $id );
+		do_action( 'edd_pre_update_discount', $discount_details, $discount_id );
 
-		update_option( 'edd_discounts', $discounts );
+		wp_update_post( array(
+			'ID'          => $discount_id,
+			'post_title'  => $discount_details['name'],
+			'post_status' => $discount_details['status']
+		) );
 
-		do_action( 'edd_post_update_discount', $discount_details, $id );
+		$meta = array(
+			'code'        => isset( $discount_details['code'] )       ? $discount_details['code']       : '',
+			'uses'        => isset( $discount_details['uses'] )       ? $discount_details['uses']       : '',
+			'max_uses'    => isset( $discount_details['max'] )        ? $discount_details['max']        : '',
+			'amount'      => isset( $discount_details['amount'] )     ? $discount_details['amount']     : '',
+			'start'       => isset( $discount_details['start'] )      ? $discount_details['start']      : '',
+			'expiration'  => isset( $discount_details['expiration'] ) ? $discount_details['expiration'] : '',
+			'type'        => isset( $discount_details['type'] )       ? $discount_details['type']       : '',
+			'min_price'   => isset( $discount_details['min_price'] )  ? $discount_details['min_price']  : '',
+		);
+
+		foreach( $meta as $key => $value ) {
+			update_post_meta( $discount_id, '_edd_discount_' . $key, $value );
+		}
+
+		do_action( 'edd_post_update_discount', $discount_details, $discount_id );
 
 		// discount code updated
 		return true;
 
 	} else {
 		// add the discount
-		$discounts = edd_get_discounts();
 
-		if ( !$discounts ) $discounts = array();
+		$discount_details = apply_filters( 'edd_insert_discount', $discount_details );
 
-		$discounts[] = $discount_details;
+		do_action( 'edd_pre_insert_discount', $discount_details );
 
-		apply_filters( 'edd_insert_discount', $discount_details );
+		$discount_id = wp_insert_post( array(
+			'post_type'   => 'edd_discount',
+			'post_title'  => isset( $discount_details['name'] ) ? $discount_details['name'] : '',
+			'post_status' => 'active'
+		) );
 
-		update_option( 'edd_discounts', $discounts );
 
-		do_action( 'edd_post_insert_discount', $discount_details );
+		$meta = array(
+			'code'        => isset( $discount_details['code'] )       ? $discount_details['code']       : '',
+			'uses'        => isset( $discount_details['uses'] )       ? $discount_details['uses']       : '',
+			'max_uses'    => isset( $discount_details['max'] )        ? $discount_details['max']        : '',
+			'amount'      => isset( $discount_details['amount'] )     ? $discount_details['amount']     : '',
+			'start'       => isset( $discount_details['start'] )      ? $discount_details['start']      : '',
+			'expiration'  => isset( $discount_details['expiration'] ) ? $discount_details['expiration'] : '',
+			'type'        => isset( $discount_details['type'] )       ? $discount_details['type']       : '',
+			'min_price'   => isset( $discount_details['min_price'] )  ? $discount_details['min_price']  : '',
+		);
+
+		foreach( $meta as $key => $value ) {
+			update_post_meta( $discount_id, '_edd_discount_' . $key, $value );
+		}
+
+		do_action( 'edd_post_insert_discount', $discount_details, $discount_id );
 
 		// discount code created
 		return true;
