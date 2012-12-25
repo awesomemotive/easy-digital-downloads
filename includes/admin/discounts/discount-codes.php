@@ -32,8 +32,7 @@ function edd_discounts_page() {
 		include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/class-discount-codes-table.php' );
 		$discount_codes_table = new EDD_Discount_Codes_Table();
 		$discount_codes_table->prepare_items();
-
-?>
+	?>
 	<div class="wrap">
 		<h2><?php _e( 'Discount Codes', 'edd' ); ?></h2>
 		<?php do_action( 'edd_discounts_page_top' ); ?>
