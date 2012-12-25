@@ -243,6 +243,8 @@ function edd_v14_upgrades() {
 
 	global $edd_options;
 
+	/** Add [edd_receipt] to success page **/
+
 	$success_page = get_post( $edd_options['success_page'] );
 
 	// check for the [edd_receipt] short code and add it if not present
@@ -254,4 +256,38 @@ function edd_v14_upgrades() {
 
 	}
 
+
+	/** Convert Discounts to new Custom Post Type **/
+
+	$discounts = get_option( 'edd_discounts' );
+	//print_r( $discounts ); exit;
+	if( $discounts ) {
+		foreach( $discounts as $key => $discount ) {
+
+			$status = isset( $discount['status'] ) ? $discount['status'] : 'inactive';
+
+			$discount_id = wp_insert_post( array(
+				'post_type'   => 'edd_discount',
+				'post_title'  => isset( $discount['name'] ) ? $discount['name'] : '',
+				'post_status' => 'active'
+			) );
+
+
+			$meta = array(
+				'code'        => isset( $discount['code'] ) ? $discount['code'] : '',
+				'uses'        => isset( $discount['uses'] ) ? $discount['uses'] : '',
+				'max_uses'    => isset( $discount['max'] ) ? $discount['max'] : '',
+				'amount'      => isset( $discount['amount'] ) ? $discount['amount'] : '',
+				'start'       => isset( $discount['start'] ) ? $discount['start'] : '',
+				'expiration'  => isset( $discount['expiration'] ) ? $discount['expiration'] : '',
+				'type'        => isset( $discount['type'] ) ? $discount['type'] : '',
+				'min_price'   => isset( $discount['min_price'] ) ? $discount['min_price'] : ''
+			);
+
+			foreach( $meta as $key => $value ) {
+				update_post_meta( $discount_id, '_edd_discount_' . $key, $value );
+			}
+
+		}
+	}
 }
