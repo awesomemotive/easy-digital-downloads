@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_discounts_page() {
 	global $edd_options;
 
-	if( isset( $_GET['edd-action'] ) && $_GET['edd-action'] == 'edit_discount' ) {
+	if ( isset( $_GET['edd-action'] ) && $_GET['edd-action'] == 'edit_discount' ) {
 		include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/edit-discount.php' );
 	} else {
 		include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/class-discount-codes-table.php' );
