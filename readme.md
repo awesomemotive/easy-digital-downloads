@@ -185,6 +185,8 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Added New Helper Function for "Transaction ID" 
 * Added "failed" payment status 
 * Added Profile Editor
+* Added Retina images
+* Converted Discount Admin Page to WP List Table
 
 ### 1.3.4.3 ###
 
