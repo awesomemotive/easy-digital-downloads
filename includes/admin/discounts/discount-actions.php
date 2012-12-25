@@ -57,7 +57,7 @@ function edd_edit_discount( $data ) {
 			$discount[ $key ] = strip_tags( addslashes( $value ) );
 		}
 		$old_discount = edd_get_discount_by_code( $data['code'] );
-		$discount['uses'] = $old_discount['uses'];
+		$discount['uses'] = edd_get_discount_uses( $old_discount->ID );
 		if( edd_store_discount( $discount, $data['discount-id'] ) ) {
 			wp_redirect( add_query_arg( 'edd-message', 'discount_updated', $data['edd-redirect'] ) ); exit;
 		} else {
