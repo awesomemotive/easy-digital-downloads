@@ -31,12 +31,11 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  */
 
 class EDD_Discount_Codes_Table extends WP_List_Table {
+
 	public $per_page = 30;
 	public $total_count;
-	public $complete_count;
-	public $pending_count;
-	public $refunded_count;
-	public $failed_count;
+	public $active_count;
+	public $inactive_count;
 
 	function __construct(){
 		global $status, $page;
@@ -269,10 +268,10 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return      array
 	 */
 	function get_discount_code_counts() {
-		$discount_code_count = wp_count_posts( 'edd_discount' );
-		$this->active_count = $discount_code_count->active;
+		$discount_code_count  = wp_count_posts( 'edd_discount' );
+		$this->active_count   = $discount_code_count->active;
 		$this->inactive_count = $discount_code_count->inactive;
-		$this->total_count = $discount_code_count->active + $discount_code_count->inactive;
+		$this->total_count    = $discount_code_count->active + $discount_code_count->inactive;
 	}
 
 
@@ -370,6 +369,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return      array
 	 */
 	function prepare_items() {
+
 		$per_page = $this->per_page;
 
 		$columns = $this->get_columns();
