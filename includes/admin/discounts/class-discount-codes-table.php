@@ -55,6 +55,8 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * Show the search field
 	 *
 	 * @access      private
+	 * @param       string $text Label for the search box
+	 * @param       string $input_id ID of the search box
 	 * @since       1.4
 	 * @return      void
 	 */
@@ -157,6 +159,8 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * Render most columns
 	 *
 	 * @access      private
+	 * @param       array $item Contains all the data of the discount code
+	 * @param       string $column_name The name of the column
 	 * @since       1.4
 	 * @return      string
 	 */
@@ -175,6 +179,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * Render the Name Column
 	 *
 	 * @access      private
+	 * @param       array $item Contains all the data of the discount code
 	 * @since       1.4
 	 * @return      string
 	 */
@@ -203,7 +208,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return      string
 	 */
 
-	function column_cb($item){
+	function column_cb( $item ){
         return sprintf(
             '<input type="checkbox" name="%1$s[]" value="%2$s" />',
             /*$1%s*/ $this->_args['singular'],
