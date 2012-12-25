@@ -261,6 +261,25 @@ function edd_is_discount_active( $code_id = null ) {
 
 
 /**
+ * Retrieve the discount code
+ *
+ * @param int $code_id
+ *
+ * @access      public
+ * @since       1.4
+ * @return      string
+ */
+
+function edd_get_discount_code( $code_id = null ) {
+
+	$code = get_post_meta( $code_id, '_edd_discount_code', true );
+
+	return apply_filters( 'edd_get_discount_code', $code, $code_id );
+
+}
+
+
+/**
  * retrieve discount expiration date
  *
  * @param int $code_id
