@@ -190,8 +190,12 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$row_actions = array();
 
 		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Edit', 'edd' ) . '</a>';
-		$row_actions['deactivate'] = '<a href="' . add_query_arg( array( 'edd-action' => 'deactivate_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Deactive', 'edd' ) . '</a>';
-		$row_actions['activate'] = '<a href="' . add_query_arg( array( 'edd-action' => 'activate_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Activate', 'edd' ) . '</a>';
+
+		if( strtolower( $item['status'] ) == 'active' )
+			$row_actions['deactivate'] = '<a href="' . add_query_arg( array( 'edd-action' => 'deactivate_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Deactive', 'edd' ) . '</a>';
+		else
+			$row_actions['activate'] = '<a href="' . add_query_arg( array( 'edd-action' => 'activate_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Activate', 'edd' ) . '</a>';
+
 		$row_actions['delete'] = '<a href="' . add_query_arg( array( 'edd-action' => 'delete_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Delete', 'edd' ) . '</a>';
 
 		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $discount );
@@ -268,7 +272,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$discount_code_count = wp_count_posts( 'edd_discount' );
 		$this->active_count = $discount_code_count->active;
 		$this->inactive_count = $discount_code_count->inactive;
-		$this->total_count = $discount_code_count->publish + $discount_code_count->pending + $discount_code_count->active + $discount_code_count->inactive + $discount_code_count->trash;
+		$this->total_count = $discount_code_count->active + $discount_code_count->inactive;
 	}
 
 
