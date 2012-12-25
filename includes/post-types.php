@@ -111,9 +111,7 @@ function edd_setup_edd_post_types() {
 		'public' 			=> false,
 		'query_var' 		=> false,
 		'rewrite' 			=> false,
-		'show_ui'           => true,
-		'label'             => 'Discounts',
-		'show_in_menu'      => 'edit.php?post_type=download',
+		'show_ui'           => false,
 		'capability_type' 	=> 'post',
 		'supports' 			=> array( 'title' ),
 		'can_export'		=> false

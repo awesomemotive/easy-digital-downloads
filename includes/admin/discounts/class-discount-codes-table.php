@@ -1,0 +1,408 @@
+<?php
+/**
+ * Discount Codes Table Class
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Discount Codes List Table Class
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.4
+ */
+
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+
+// Load WP_List_Table if not loaded
+if ( ! class_exists( 'WP_List_Table' ) ) {
+	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+}
+
+
+/**
+ * EDD Discount Codes Table Class
+ *
+ * Renders the Discount Codes table on the Discount Codes page
+ *
+ * @access      private
+ * @since       1.4
+ * @author      Sunny Ratilal
+ */
+
+class EDD_Discount_Codes_Table extends WP_List_Table {
+	public $per_page = 30;
+	public $total_count;
+	public $complete_count;
+	public $pending_count;
+	public $refunded_count;
+	public $failed_count;
+
+	function __construct(){
+		global $status, $page;
+
+		parent::__construct( array(
+			'singular'  => edd_get_label_singular(),
+			'plural'    => edd_get_label_plural(),
+			'ajax'      => false
+		) );
+
+		$this->get_discount_code_counts();
+	}
+
+
+	/**
+	 * Show the search field
+	 *
+	 * @access      private
+	 * @param       string $text Label for the search box
+	 * @param       string $input_id ID of the search box
+	 * @since       1.4
+	 * @return      void
+	 */
+
+	function search_box( $text, $input_id ) {
+		if ( empty( $_REQUEST['s'] ) && !$this->has_items() )
+			return;
+
+		$input_id = $input_id . '-search-input';
+
+		if ( ! empty( $_REQUEST['orderby'] ) )
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+		if ( ! empty( $_REQUEST['order'] ) )
+			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		?>
+		<p class="search-box">
+			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
+			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
+			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
+		</p>
+	<?php
+	}
+
+
+	/**
+	 * Retrieve the view types
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      array
+	 */
+
+	function get_views() {
+		$base           = admin_url('edit.php?post_type=download&page=edd-discounts');
+
+		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
+		$total_count    = '&nbsp;<span class="count">(' . $this->total_count    . ')</span>';
+		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
+		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count  . ')</span>';
+
+		$views = array(
+			'all'		=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'edd') . $total_count ),
+			'active'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $base ), $current === 'active' ? ' class="current"' : '', __('Active', 'edd') . $active_count ),
+			'inactive'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $base ), $current === 'inactive' ? ' class="current"' : '', __('Inactive', 'edd') . $inactive_count ),
+		);
+
+		return $views;
+	}
+
+
+	/**
+	 * Retrieve the table columnds
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      array
+	 */
+
+	function get_columns() {
+		$columns = array(
+			'cb'        => '<input type="checkbox" />',
+			'ID'     	=> __( 'ID', 'edd' ),
+			'name'  	=> __( 'Name', 'edd' ),
+			'code'  	=> __( 'Code', 'edd' ),
+			'amount'  	=> __( 'Amount', 'edd' ),
+			'uses'  	=> __( 'Uses', 'edd' ),
+			'max_uses' 	=> __( 'Max Uses', 'edd' ),
+			'start_date'=> __( 'Start Date', 'edd' ),
+			'expiration'=> __( 'Expiration', 'edd' ),
+			'status'  	=> __( 'Status', 'edd' ),
+		);
+
+		return $columns;
+	}
+
+
+	/**
+	 * Retrieve the table's sortable columns
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      array
+	 */
+
+	function get_sortable_columns() {
+		return array(
+			'ID' 		=> array( 'ID', true ),
+			'name' 	    => array( 'name', false ),
+			'code' 	    => array( 'code', false ),
+			'amount' 	=> array( 'amount', false ),
+			'uses'		=> array( 'uses', false ),
+			'max_uses'  => array( 'max_uses', false ),
+			'start_date'=> array( 'start_date', false ),
+			'expiration'=> array( 'expiration', false ),
+		);
+	}
+
+
+	/**
+	 * Render most columns
+	 *
+	 * @access      private
+	 * @param       array $item Contains all the data of the discount code
+	 * @param       string $column_name The name of the column
+	 * @since       1.4
+	 * @return      string
+	 */
+
+	function column_default( $item, $column_name ) {
+		switch( $column_name ){
+			case 'start_date' :
+				$start_date = strtotime( $item[ $column_name ] );
+				return date_i18n( get_option( 'date_format' ), $start_date );
+			default:
+				return $item[ $column_name ];
+		}
+	}
+
+	/**
+	 * Render the Name Column
+	 *
+	 * @access      private
+	 * @param       array $item Contains all the data of the discount code
+	 * @since       1.4
+	 * @return      string
+	 */
+	function column_name( $item ) {
+		$discount = get_post( $item['ID'] );
+		$base     = admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' . $item['ID'] );
+
+		$row_actions = array();
+
+		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Edit', 'edd' ) . '</a>';
+		$row_actions['deactivate'] = '<a href="' . add_query_arg( array( 'edd-action' => 'deactivate_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Deactive', 'edd' ) . '</a>';
+		$row_actions['activate'] = '<a href="' . add_query_arg( array( 'edd-action' => 'activate_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Activate', 'edd' ) . '</a>';
+		$row_actions['delete'] = '<a href="' . add_query_arg( array( 'edd-action' => 'delete_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Delete', 'edd' ) . '</a>';
+
+		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $discount );
+
+		return $item['name'] . $this->row_actions( $row_actions );
+	}
+
+
+	/**
+	 * Render the checkbox column
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      string
+	 */
+
+	function column_cb( $item ){
+		return sprintf(
+			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			/*$1%s*/ $this->_args['singular'],
+			/*$2%s*/ $item['ID']
+		);
+	}
+
+
+	/**
+	 * Retrieve the bulk actions
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      array
+	 */
+
+	function get_bulk_actions() {
+		$actions = array(
+			'delete' => __( 'Delete', 'edd' )
+		);
+
+		return $actions;
+	}
+
+
+	/**
+	 * Process the bulk actions
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      void
+	 */
+
+	function process_bulk_action() {
+		$ids = isset( $_GET['download'] ) ? $_GET['download'] : false;
+
+		if ( ! is_array( $ids ) )
+			$ids = array( $ids );
+
+		foreach ( $ids as $id ) {
+			if ( 'delete' === $this->current_action() ) {
+				edd_remove_discount( $id );
+			}
+		}
+
+	}
+
+
+	/**
+	 * Retrieve the discount code counts
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      array
+	 */
+	function get_discount_code_counts() {
+		$discount_code_count = wp_count_posts( 'edd_discount' );
+		$this->active_count = $discount_code_count->active;
+		$this->inactive_count = $discount_code_count->inactive;
+		$this->total_count = $discount_code_count->publish + $discount_code_count->pending + $discount_code_count->active + $discount_code_count->inactive + $discount_code_count->trash;
+	}
+
+
+	/**
+	 * Retrieve all the data for all the discount codes
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      array
+	 */
+	function discount_codes_data() {
+		$discount_codes_data = array();
+
+		if ( isset( $_GET['paged'] ) ) $page = $_GET['paged']; else $page = 1;
+
+		$per_page = $this->per_page;
+
+		$mode = edd_is_test_mode() ? 'test' : 'live';
+
+		$orderby 		= isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'ID';
+		$order 			= isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+		$order_inverse 	= $order == 'DESC' ? 'ASC' : 'DESC';
+		$order_class 	= strtolower( $order_inverse );
+		$user 			= isset( $_GET['user'] ) ? $_GET['user'] : null;
+		$status 		= isset( $_GET['status'] ) ? $_GET['status'] : 'any';
+		$meta_key		= isset( $_GET['meta_key'] ) ? $_GET['meta_key'] : null;
+		$year 			= isset( $_GET['year'] ) ? $_GET['year'] : null;
+		$month 			= isset( $_GET['m'] ) ? $_GET['m'] : null;
+		$day 			= isset( $_GET['day'] ) ? $_GET['day'] : null;
+		$search         = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
+
+		$discounts = edd_get_discounts( array(
+			'number'   => $per_page,
+			'page'     => isset( $_GET['paged'] ) ? $_GET['paged'] : null,
+			'mode'     => $mode,
+			'orderby'  => $orderby,
+			'order'    => $order,
+			'user'     => $user,
+			'status'   => $status,
+			'meta_key' => $meta_key,
+			'year'	   => $year,
+			'month'    => $month,
+			'day' 	   => $day,
+			's'        => $search
+		) );
+
+		if ( $discounts ) {
+			foreach ( $discounts as $discount ) {
+				if ( edd_get_discount_max_uses( $discount->ID ) ) {
+					$uses =  edd_get_discount_uses( $discount->ID ) . '/' . edd_get_discount_max_uses( $discount->ID );
+				} else {
+					$uses = edd_get_discount_uses( $discount->ID );
+				}
+
+				if ( edd_get_discount_max_uses( $discount->ID ) ) {
+					$max_uses = edd_get_discount_max_uses( $discount->ID ) ? edd_get_discount_max_uses( $discount->ID ) : __( 'unlimited', 'edd' );
+				} else {
+					$max_uses = __( 'Unlimited', 'edd' );
+				}
+
+				if ( $start_date = edd_get_discount_start_date( $discount->ID ) ) {
+					$discount_start_date =  date_i18n( get_option( 'date_format' ), strtotime( $start_date ) );
+				} else {
+					$discount_start_date = __( 'No start date', 'edd' );
+				}
+
+				if ( edd_get_discount_expiration( $discount->ID ) ) {
+					$expiration = edd_is_discount_expired( $discount->ID ) ? __( 'Expired', 'edd' ) : date_i18n( get_option( 'date_format' ), strtotime( edd_get_discount_expiration( $discount->ID ) ) );
+				} else {
+					$expiration = __( 'No expiration', 'edd' );
+				}
+
+				$discount_codes_data[] = array(
+					'ID' 			=> $discount->ID,
+					'name' 			=> get_the_title( $discount->ID ),
+					'code' 			=> edd_get_discount_code( $discount->ID ),
+					'amount' 		=> edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) ),
+					'uses' 			=> $uses,
+					'max_uses' 		=> $max_uses,
+					'start_date' 	=> $discount_start_date,
+					'expiration'	=> $expiration,
+					'status'		=> ucwords( $discount->post_status ),
+				);
+			}
+		}
+		return $discount_codes_data;
+	}
+
+
+	/**
+	 * Setup the final data for the table
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      array
+	 */
+	function prepare_items() {
+		$per_page = $this->per_page;
+
+		$columns = $this->get_columns();
+
+		$hidden = array();
+
+		$sortable = $this->get_sortable_columns();
+
+		$this->_column_headers = array( $columns, $hidden, $sortable );
+
+		$this->process_bulk_action();
+
+		$data = $this->discount_codes_data();
+
+		$current_page = $this->get_pagenum();
+
+		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
+
+		switch( $status ) {
+			case 'active':
+				$total_items = $this->active_count;
+				break;
+			case 'inactive':
+				$total_items = $this->inactive_count;
+				break;
+			case 'any':
+				$total_items = $this->total_count;
+				break;
+		}
+
+		$this->items = $data;
+
+		$this->set_pagination_args( array(
+				'total_items' => $total_items,
+				'per_page'    => $per_page,
+				'total_pages' => ceil( $total_items / $per_page )
+			)
+		);
+	}
+}
