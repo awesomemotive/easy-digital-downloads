@@ -260,7 +260,7 @@ function edd_v14_upgrades() {
 	/** Convert Discounts to new Custom Post Type **/
 
 	$discounts = get_option( 'edd_discounts' );
-
+	//print_r( $discounts ); exit;
 	if( $discounts ) {
 		foreach( $discounts as $key => $discount ) {
 
@@ -272,23 +272,22 @@ function edd_v14_upgrades() {
 				'post_status' => 'active'
 			) );
 
-			/*
+
 			$meta = array(
-				'code'        => $discount['code'],
-				'uses'        => $discount['uses'],
-				'max_uses'    => $discount['max'],
-				'amount'      => $discount['amount'],
-				'start'       => $discount['start'],
-				'expiration'  => $discountp['expiration'],
-				'type'        => $discount['type'],
-				'min_price'   => $discount['min_price']
+				'code'        => isset( $discount['code'] ) ? $discount['code'] : '',
+				'uses'        => isset( $discount['uses'] ) ? $discount['uses'] : '',
+				'max_uses'    => isset( $discount['max'] ) ? $discount['max'] : '',
+				'amount'      => isset( $discount['amount'] ) ? $discount['amount'] : '',
+				'start'       => isset( $discount['start'] ) ? $discount['start'] : '',
+				'expiration'  => isset( $discount['expiration'] ) ? $discount['expiration'] : '',
+				'type'        => isset( $discount['type'] ) ? $discount['type'] : '',
+				'min_price'   => isset( $discount['min_price'] ) ? $discount['min_price'] : ''
 			);
 
 			foreach( $meta as $key => $value ) {
 				update_post_meta( $discount_id, '_edd_discount_' . $key, $value );
 			}
-			*/
+
 		}
 	}
 }
-add_action( 'admin_init', 'edd_v14_upgrades' );
