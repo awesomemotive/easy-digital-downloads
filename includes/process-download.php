@@ -208,6 +208,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'exe'		: $ctype	= "application/octet-stream"; break;
 		case 'exi'		: $ctype	= "application/exi"; break;
 		case 'ez'		: $ctype	= "application/andrew-inset"; break;
+		case 'f4v'		: $ctype	= "video/x-f4v"; break;
 		case 'gif'		: $ctype	= "image/gif"; break;
 		case 'gml'		: $ctype	= "application/srgs"; break;
 		case 'gpx'		: $ctype	= "application/gml+xml"; break;
