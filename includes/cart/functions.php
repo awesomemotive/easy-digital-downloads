@@ -570,7 +570,7 @@ add_action('edd_after_download_content', 'edd_show_added_to_cart_messages');
 function edd_get_checkout_uri( $extras = false ) {
     global $edd_options;
 
-    $uri = isset( $edd_options['purchase_page'] ) ? trailingslashit( get_permalink( $edd_options['purchase_page'] ) ) : NULL;
+    $uri = isset( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) : NULL;
     if( $extras )
     	$uri .= $extras;
     return apply_filters( 'edd_get_checkout_uri', $uri );
