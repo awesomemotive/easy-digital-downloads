@@ -402,6 +402,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'wmlc'		: $ctype	= "application/vnd.wap.wmlc"; break;
 		case 'wmls'		: $ctype	= "text/vnd.wap.wmlscript"; break;
 		case 'wmlsc'	: $ctype	= "application/vnd.wap.wmlscriptc"; break;
+		case 'wmv'		: $ctype	= "video/x-ms-wmv"; break;
 		case 'wrl'		: $ctype	= "model/vrml"; break;
 		case 'xbm'		: $ctype	= "image/x-xbitmap"; break;
 		case 'xdssc'	: $ctype	= "application/dssc+xml"; break;
