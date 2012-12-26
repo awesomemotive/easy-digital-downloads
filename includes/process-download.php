@@ -158,6 +158,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'bmp'		: $ctype	= "image/bmp"; break;
 		case 'bpk'		: $ctype	= "application/octet-stream"; break;
 		case 'bz'		: $ctype	= "application/x-bzip"; break;
+		case 'bz2'		: $ctype	= "application/x-bzip2"; break;
 		case 'ccxml'	: $ctype	= "application/ccxml+xml"; break;
 		case 'cdmia'	: $ctype	= "application/cdmi-capability"; break;
 		case 'cdmic'	: $ctype	= "application/cdmi-container"; break;
