@@ -337,6 +337,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'rdf'		: $ctype	= "application/rdf+xml"; break;
 		case 'rgb'		: $ctype	= "image/x-rgb"; break;
 		case 'rm'		: $ctype	= "application/vnd.rn-realmedia"; break;
+		case 'rmi'		: $ctype	= "audio/midi"; break;
 		case 'roff'		: $ctype	= "application/x-troff"; break;
 		case 'rss'		: $ctype	= "application/rss+xml"; break;
 		case 'rtf'		: $ctype	= "text/rtf"; break;
