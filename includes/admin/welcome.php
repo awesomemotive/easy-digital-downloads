@@ -3,46 +3,55 @@
  * Weclome Page Class
  *
  * @package     Easy Digital Downloads
- * @subpackage  Dashboard Widgets
+ * @subpackage  Welcome Page
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
 */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 /**
+ * EDD Welcome Page Class
+ *
  * A general class for About and Credits page.
  *
- * @access public
- * @since  1.4
- * @return void
+ * @access      public
+ * @since       1.4
+ * @return      void
  */
-class EDD_Welcome {
 
+class EDD_Welcome {
 	public $minimum_capability = 'manage_options';
 
+
 	/**
-	 * Class loader.
+	 * Get things started
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      void
 	 */
+
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menus') );
 		add_action( 'admin_head', array( $this, 'admin_head' ) );
 	}
 
+
 	/**
 	 * Register dashboard pages.
 	 *
-	 * Later they are removed in 'admin_head'.
+	 * Later they are hidden in 'admin_head'.
 	 *
 	 * @since 1.4
-	 * 
 	 * @return void
 	 */
-	public function admin_menus() {
 
-		// About
+	public function admin_menus() {
+		// About Page
 		add_dashboard_page(
 			__( 'Welcome to Easy Digital Downloads', 'edd' ),
 			__( 'Welcome to Easy Digital Downloads', 'edd' ),
@@ -51,7 +60,7 @@ class EDD_Welcome {
 			array( $this, 'about_screen' )
 		);
 
-		// Credits
+		// Credits Page
 		add_dashboard_page(
 			__( 'Welcome to Easy Digital Downloads', 'edd' ),
 			__( 'Welcome to Easy Digital Downloads', 'edd' ),
@@ -61,11 +70,14 @@ class EDD_Welcome {
 		);
 	}
 
+
 	/**
-	 * Remove individual dashboard menus.
+	 * Hide Individual Dashboard Menus
 	 * 
-	 * @return void
+	 * @since       1.4
+	 * @return      void
 	 */
+
 	public function admin_head() {
 		remove_submenu_page( 'index.php', 'edd-about' );
 		remove_submenu_page( 'index.php', 'edd-credits' );
@@ -73,7 +85,6 @@ class EDD_Welcome {
 		// Badge for welcome page
 		$badge_url = EDD_PLUGIN_URL . 'assets/images/edd-badge.png';
 		?>
-
 		<style type="text/css" media="screen">
 		/*<![CDATA[*/
 		.edd-badge {
@@ -96,19 +107,18 @@ class EDD_Welcome {
 		}
 		/*]]>*/
 		</style>
-
 		<?php
 	}
 
+
 	/**
-	 * Output about screen.
+	 * Render About Screen
 	 * 
-	 * @since 1.4
+	 * @since      1.4
 	 */
+
 	public function about_screen() {
-
 		list( $display_version ) = explode( '-', EDD_VERSION ); ?>
-
 		<div class="wrap about-wrap">
 			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
 			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online shop faster, safer and better!', 'edd' ), $display_version ); ?></div>
@@ -198,19 +208,17 @@ class EDD_Welcome {
 				<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'post_type' => 'download', 'page' => 'edd-settings' ), 'edit.php' ) ) ); ?>"><?php _e( 'Go to Easy Digital Downloads Settings', 'edd' ); ?></a>
 			</div>
 		</div>
-
 		<?php
 	}
 
+
 	/**
-	 * Output credits screen.
+	 * Render Credits Screen
 	 * 
-	 * @since 1.4
+	 * @since      1.4
 	 */
 	public function credits_screen() {
-
 		list( $display_version ) = explode( '-', EDD_VERSION ); ?>
-
 		<div class="wrap about-wrap">
 			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
 			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online shop faster, safer and better!', 'edd' ), $display_version ); ?></div>
@@ -228,17 +236,17 @@ class EDD_Welcome {
 
 			<?php echo $this->contributors(); ?>
 		</div>
-
 		<?php
 	}
 
+
 	/**
-	 * Render contributors list.
+	 * Render Contributors List
 	 *
-	 * @since 1.4
-	 * 
-	 * @return string HTML formatted list of contributors.
+	 * @since      1.4
+	 * @return     string $contributor_list HTML formatted list of contributors.
 	 */
+
 	public function contributors() {
 		$contributors = $this->get_contributors();
 
@@ -265,13 +273,14 @@ class EDD_Welcome {
 		return $contributor_list;
 	}
 
+
 	/**
 	 * Retreive list of contributors from GitHub.
 	 *
-	 * @since 1.4
-	 * 
-	 * @return array List of contributors.
+	 * @since      1.4
+	 * @return     array $contributors List of contributors.
 	 */
+
 	public function get_contributors() {
 		$contributors = get_transient( 'edd_contributors' );
 
