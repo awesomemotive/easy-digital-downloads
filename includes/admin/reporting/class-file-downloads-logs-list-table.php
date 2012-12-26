@@ -24,6 +24,7 @@ if( ! class_exists( 'WP_List_Table' ) ) {
  * Renders the file downloads log view 
  *
  * @access      private
+ * @since       1.4
  */
 
 class EDD_File_Downloads_Log_Table extends WP_List_Table {
