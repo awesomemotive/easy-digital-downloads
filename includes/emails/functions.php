@@ -61,6 +61,9 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	if( $admin_notice ) {
 		/* send an email notification to the admin */
 		$admin_email   = edd_get_admin_notice_emails();
+
+		$admin_subject = apply_filters( 'edd_admin_purchase_notification_subject', __('New download purchase', 'edd') );
+
 		$admin_message = __('Hello', 'edd') . "\n\n" . sprintf( __('A %s purchase has been made', 'edd'), edd_get_label_plural() ) . ".\n\n";
 		$admin_message .= sprintf( __('%s sold:', 'edd'), edd_get_label_plural() ) .  "\n\n";
 
@@ -81,7 +84,11 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 		$admin_message .= __('Thank you', 'edd');
 		$admin_message = apply_filters( 'edd_admin_purchase_notification', $admin_message, $payment_id, $payment_data );
 
-		wp_mail( $admin_email, __('New download purchase', 'edd'), $admin_message );
+		$admin_headers = apply_filters( 'edd_admin_purchase_notification_headers', array() );
+		
+		$admin_attachments = apply_filters( 'edd_admin_purchase_notification_attachments', array() );
+
+		wp_mail( $admin_email, $admin_subject, $admin_message, $admin_headers, $admin_attachments );
 	}
 }
 
