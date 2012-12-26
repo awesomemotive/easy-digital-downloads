@@ -269,6 +269,8 @@ function edd_get_file_ctype( $extension ) {
 		case 'mods'		: $ctype	= "application/mods+xml"; break;	
 		case 'mov'		: $ctype	= "video/quicktime"; break;
 		case 'movie'	: $ctype	= "video/x-sgi-movie"; break;
+		case 'm1v'		: $ctype	= "video/mpeg"; break;
+		case 'm2v'		: $ctype	= "video/mpeg"; break;
 		case 'mp2'		: $ctype	= "audio/mpeg"; break;
 		case 'mp2a'		: $ctype	= "audio/mpeg"; break;
 		case 'mp21'		: $ctype	= "application/mp21"; break;
