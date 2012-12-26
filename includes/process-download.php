@@ -314,6 +314,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'pnm'		: $ctype	= "image/x-portable-anymap"; break;
 		case 'pnt'		: $ctype	= "image/x-macpaint"; break;
 		case 'pntg'		: $ctype	= "image/x-macpaint"; break;
+		case 'pot'		: $ctype	= "application/vnd.ms-powerpoint"; break;
 		case 'potx'		: $ctype	= "application/vnd.openxmlformats-officedocument.presentationml.template"; break;
 		case 'ppm'		: $ctype	= "image/x-portable-pixmap"; break;
 		case 'pps'		: $ctype	= "application/vnd.ms-powerpoint"; break;
