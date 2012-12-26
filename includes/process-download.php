@@ -326,6 +326,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'sgml'		: $ctype	= "text/sgml"; break;
 		case 'sh'		: $ctype	= "application/x-sh"; break;
 		case 'shar'		: $ctype	= "application/x-shar"; break;
+		case 'sig'		: $ctype	= "application/pgp-signature"; break;
 		case 'silo'		: $ctype	= "model/mesh"; break;
 		case 'sit'		: $ctype	= "application/x-stuffit"; break;
 		case 'skd'		: $ctype	= "application/x-koan"; break;
