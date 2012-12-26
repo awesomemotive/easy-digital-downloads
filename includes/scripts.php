@@ -209,6 +209,7 @@ function edd_admin_downloads_icon() {
         		background-size: 32px 32px;
         	}
         }
+        #edd-media-button { -webkit-background-size: 16px; -moz-background-size: 16px; background-size: 16px; background-image: url(<?php echo EDD_PLUGIN_URL; ?>assets/images/edd-cpt-2x.png); margin-top: -1px; }
 	</style>
     <?php
 }
