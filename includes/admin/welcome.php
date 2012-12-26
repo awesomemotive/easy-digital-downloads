@@ -88,8 +88,8 @@ class EDD_Welcome {
 		<style type="text/css" media="screen">
 		/*<![CDATA[*/
 		.edd-badge {
-			padding-top: 142px;
-			height: 55px;
+			padding-top: 150px;
+			height: 52px;
 			width: 185px;
 			color: #666;
 			font-weight: bold;
