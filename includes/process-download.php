@@ -169,6 +169,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'css'		: $ctype	= "text/css"; break;
 		case 'cu'		: $ctype	= "application/cu-seeme"; break;
 		case 'davmount'	: $ctype	= "application/davmount+xml"; break;
+		case 'dbk'		: $ctype	= "application/docbook+xml"; break;
 		case 'dcr'		: $ctype	= "application/x-director"; break;
 		case 'dif'		: $ctype	= "video/x-dv"; break;
 		case 'dir'		: $ctype	= "application/x-director"; break;
