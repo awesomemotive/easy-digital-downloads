@@ -31,20 +31,35 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  */
 
 class EDD_Discount_Codes_Table extends WP_List_Table {
+
+	/**
+	 * Number of results to show per page
+	 *
+	 * @since       1.4
+	 */
 	public $per_page = 30;
+
+
 	public $total_count;
-	public $complete_count;
-	public $pending_count;
-	public $refunded_count;
-	public $failed_count;
+	public $active_count;
+	public $inactive_count;
+
+
+	/**
+	 * Get things started
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      void
+	 */
 
 	function __construct(){
 		global $status, $page;
 
 		parent::__construct( array(
-			'singular'  => edd_get_label_singular(),
-			'plural'    => edd_get_label_plural(),
-			'ajax'      => false
+			'singular'  => edd_get_label_singular(),    // singular name of the listed records
+			'plural'    => edd_get_label_plural(),    	// plural name of the listed records
+			'ajax'      => false             			// does this table support ajax?
 		) );
 
 		$this->get_discount_code_counts();

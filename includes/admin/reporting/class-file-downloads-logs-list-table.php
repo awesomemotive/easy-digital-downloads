@@ -28,9 +28,32 @@ if( ! class_exists( 'WP_List_Table' ) ) {
  */
 
 class EDD_File_Downloads_Log_Table extends WP_List_Table {
+
+	/**
+	 * Number of results to show per page
+	 *
+	 * @since       1.4
+	 */
+
 	public $per_page = 30;
+
+
+	/**
+	 * Are we searching for files?
+	 *
+	 * @since       1.4
+	 */
+
 	public $file_search = false;
 
+
+	/**
+	 * Get things started
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      void
+	 */
 
 	function __construct() {
 		global $status, $page;
