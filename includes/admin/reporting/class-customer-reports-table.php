@@ -150,13 +150,13 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * Setup the final data for the table
 	 *
 	 * @access      private
-	 * @since       1.3.4
-	 * @uses $this->_column_headers
-	 * @uses $this->items
-	 * @uses $this->get_columns()
-	 * @uses $this->get_sortable_columns()
-	 * @uses $this->get_pagenum()
-	 * @uses $this->set_pagination_args()
+	 * @since       1.4
+	 * @uses        $this->_column_headers
+	 * @uses        $this->items
+	 * @uses        $this->get_columns()
+	 * @uses        $this->get_sortable_columns()
+	 * @uses        $this->get_pagenum()
+	 * @uses        $this->set_pagination_args()
 	 * @return      array
 	 */
 
