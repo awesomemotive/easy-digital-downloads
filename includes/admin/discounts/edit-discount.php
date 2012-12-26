@@ -10,16 +10,18 @@
 */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( !isset( $_GET['discount'] ) || !is_numeric( $_GET['discount'] ) ) {
+
+if ( ! isset( $_GET['discount'] ) || ! is_numeric( $_GET['discount'] ) ) {
 	wp_die( __( 'Something went wrong.', 'edd' ), __( 'Error', 'edd' ) );
 }
+
 $discount_id = absint( $_GET['discount'] );
 $discount    = edd_get_discount( $discount_id );
 ?>
 <h2><?php _e( 'Edit Discount', 'edd' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
-<form id="edd-edit-discount" action="" method="POST">
+<form id="edd-edit-discount" action="" method="post">
 	<table class="form-table">
 		<tbody>
 			<tr class="form-field">
