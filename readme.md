@@ -164,7 +164,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Updated edd_get_user_purchases()
 * Added Receipt shortcode
 * Added Filter on Default Customer User Role
-* Added Live Credit Card Verification 
+* Added Live Credit Card Verification
 * Added Travis-CI Integration (props @chriscct7)
 * Added New Column to Customers Reports to Show File Download Count
 * Made some UI tweaks, and bug fixes for Logs
@@ -181,9 +181,8 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Serious Optomizations
 * Optimized png's losslessly
 * Stripped whitespace + normalize
-* Added edd_send_back_to_checkout()
-* Added New Helper Function for "Transaction ID" 
-* Added "failed" payment status 
+* Added New Helper Function for "Transaction ID"
+* Added "failed" payment status
 * Added Profile Editor
 * Added Retina images
 * Converted Discount Admin Page to WP List Table
