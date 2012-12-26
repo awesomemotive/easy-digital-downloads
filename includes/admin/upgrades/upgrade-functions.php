@@ -90,7 +90,7 @@ function edd_trigger_upgrades() {
 	}
 
 	if ( version_compare( $edd_version, '1.4', '<' ) ) {
-		//edd_v14_upgrades();
+		edd_v14_upgrades();
 	}
 
 	update_option( 'edd_version', EDD_VERSION );
