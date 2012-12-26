@@ -253,6 +253,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'mpg'		: $ctype	= "video/mpeg"; break;
 		case 'mpga'		: $ctype	= "audio/mpeg"; break;
 		case 'mrc'		: $ctype	= "application/marc"; break;
+		case 'mrcx'		: $ctype	= "application/marcxml+xml"; break;
 		case 'ms'		: $ctype	= "application/x-troff-ms"; break;
 		case 'msh'		: $ctype	= "model/mesh"; break;
 		case 'mxu'		: $ctype	= "video/vnd.mpegurl"; break;
