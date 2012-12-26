@@ -187,6 +187,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'dvi'		: $ctype	= "application/x-dvi"; break;
 		case 'dxr'		: $ctype	= "application/x-director"; break;
 		case 'ecma'		: $ctype	= "application/ecmascript"; break;
+		case 'emma'		: $ctype	= "application/emma+xml"; break;
 		case 'eps'		: $ctype	= "application/postscript"; break;
 		case 'etx'		: $ctype	= "text/x-setext"; break;
 		case 'exe'		: $ctype	= "application/octet-stream"; break;
