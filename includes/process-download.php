@@ -386,6 +386,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'xer'		: $ctype	= "application/patch-ops-error+xml"; break;
 		case 'xht'		: $ctype	= "application/xhtml+xml"; break;
 		case 'xhtml'	: $ctype	= "application/xhtml+xml"; break;
+		case 'xla'		: $ctype	= "application/vnd.ms-excel"; break;
 		case 'xlam'		: $ctype	= "application/vnd.ms-excel.addin.macroEnabled.12"; break;
 		case 'xlm'		: $ctype	= "application/vnd.ms-excel"; break;
 		case 'xls'		: $ctype	= "application/vnd.ms-excel"; break;
