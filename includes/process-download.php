@@ -167,6 +167,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'cpt'		: $ctype	= "application/mac-compactpro"; break;
 		case 'csh'		: $ctype	= "application/x-csh"; break;
 		case 'css'		: $ctype	= "text/css"; break;
+		case 'cu'		: $ctype	= "application/cu-seeme"; break;
 		case 'dcr'		: $ctype	= "application/x-director"; break;
 		case 'dif'		: $ctype	= "video/x-dv"; break;
 		case 'dir'		: $ctype	= "application/x-director"; break;
