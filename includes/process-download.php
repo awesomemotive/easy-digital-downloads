@@ -192,6 +192,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'epub'		: $ctype	= "application/epub+zip"; break;
 		case 'etx'		: $ctype	= "text/x-setext"; break;
 		case 'exe'		: $ctype	= "application/octet-stream"; break;
+		case 'exi'		: $ctype	= "application/exi"; break;
 		case 'ez'		: $ctype	= "application/andrew-inset"; break;
 		case 'gif'		: $ctype	= "image/gif"; break;
 		case 'gram'		: $ctype	= "application/srgs"; break;
