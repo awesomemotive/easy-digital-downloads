@@ -267,6 +267,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'ms'		: $ctype	= "application/x-troff-ms"; break;
 		case 'mscml'	: $ctype	= "application/mediaservercontrol+xml"; break;
 		case 'msh'		: $ctype	= "model/mesh"; break;
+		case 'mxf'		: $ctype	= "application/mxf"; break;
 		case 'mxu'		: $ctype	= "video/vnd.mpegurl"; break;
 		case 'nc'		: $ctype	= "application/x-netcdf"; break;
 		case 'oda'		: $ctype	= "application/oda"; break;
