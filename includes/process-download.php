@@ -270,7 +270,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'sit'		: $ctype	= "application/x-stuffit"; break;
 		case 'skd'		: $ctype	= "application/x-koan"; break;
 		case 'skm'		: $ctype	= "application/x-koan"; break;
-		case 'skp'		: $ctype	= "application/x-koan"; break;	
+		case 'skp'		: $ctype	= "application/x-koan"; break;
 		case 'skt'		: $ctype	= "application/x-koan"; break;
 		case 'sldx'		: $ctype	= "application/vnd.openxmlformats-officedocument.presentationml.slide"; break;	
 		case 'smi'		: $ctype	= "application/smil"; break;
