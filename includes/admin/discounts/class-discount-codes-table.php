@@ -158,14 +158,8 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 	function get_sortable_columns() {
 		return array(
-			'ID' 		=> array( 'ID', true ),
-			'name' 	    => array( 'name', false ),
-			'code' 	    => array( 'code', false ),
-			'amount' 	=> array( 'amount', false ),
-			'uses'		=> array( 'uses', false ),
-			'max_uses'  => array( 'max_uses', false ),
-			'start_date'=> array( 'start_date', false ),
-			'expiration'=> array( 'expiration', false ),
+			'ID'     => array( 'ID', true ),
+			'name'   => array( 'name', false )
 		);
 	}
 
