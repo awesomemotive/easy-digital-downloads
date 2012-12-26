@@ -180,7 +180,8 @@ function edd_get_file_ctype( $extension ) {
 		case 'dms'		: $ctype	= "application/octet-stream"; break;
 		case 'doc'		: $ctype	= "application/msword"; break;
 		case 'docx'		: $ctype	= "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; break;
-		case 'dotx'		: $ctype	= "application/vnd.openxmlformats-officedocument.wordprocessingml.template"; break;		
+		case 'dotx'		: $ctype	= "application/vnd.openxmlformats-officedocument.wordprocessingml.template"; break;
+		case 'dssc'		: $ctype	= "application/dssc+der"; break;
 		case 'dtd'		: $ctype	= "application/xml-dtd"; break;
 		case 'dv'		: $ctype	= "video/x-dv"; break;
 		case 'dvi'		: $ctype	= "application/x-dvi"; break;
