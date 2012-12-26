@@ -110,8 +110,8 @@ class EDD_Welcome {
 		list( $display_version ) = explode( '-', EDD_VERSION ); ?>
 
 		<div class="wrap about-wrap">
-			<h1><?php printf( __( 'Welcome to EDD %s', 'edd' ), $display_version ); ?></h1>
-			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! EDD %s is ready to make your online shop a safer, faster, and better!', 'edd' ), $display_version ); ?></div>
+			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
+			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online shop a faster, safer and better!', 'edd' ), $display_version ); ?></div>
 			<div class="edd-badge"><?php printf( __( 'Version %s' ), $display_version ); ?></div>
 
 			<h2 class="nav-tab-wrapper">
@@ -212,8 +212,8 @@ class EDD_Welcome {
 		list( $display_version ) = explode( '-', EDD_VERSION ); ?>
 
 		<div class="wrap about-wrap">
-			<h1><?php printf( __( 'Welcome to EDD %s', 'edd' ), $display_version ); ?></h1>
-			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! EDD %s is ready to make your online shop a safer, faster, and better!', 'edd' ), $display_version ); ?></div>
+			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
+			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online shop a faster, safer and better!', 'edd' ), $display_version ); ?></div>
 			<div class="edd-badge"><?php printf( __( 'Version %s' ), $display_version ); ?></div>
 
 			<h2 class="nav-tab-wrapper">
