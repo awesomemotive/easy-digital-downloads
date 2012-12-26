@@ -300,6 +300,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'so'		: $ctype	= "application/octet-stream"; break;
 		case 'spl'		: $ctype	= "application/x-futuresplash"; break;
 		case 'src'		: $ctype	= "application/x-wais-source"; break;
+		case 'stk'		: $ctype	= "application/hyperstudio"; break;
 		case 'sv4cpio'	: $ctype	= "application/x-sv4cpio"; break;
 		case 'sv4crc'	: $ctype	= "application/x-sv4crc"; break;
 		case 'svg'		: $ctype	= "image/svg+xml"; break;
