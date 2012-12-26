@@ -28,8 +28,24 @@ if( ! class_exists( 'WP_List_Table' ) ) {
  */
 
 class EDD_Gateway_Error_Log_Table extends WP_List_Table {
+
+
+	/**
+	 * Number of items per page
+	 *
+	 * @since       1.4
+	 */
+
 	public $per_page = 30;
 
+
+	/**
+	 * Get things started
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      void
+	 */
 
 	function __construct(){
 		global $status, $page;
@@ -139,7 +155,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 
 
 	/**
-	 * Outputs the log filters filter
+	 * Outputs the log views
 	 *
 	 * @access      private
 	 * @since       1.4

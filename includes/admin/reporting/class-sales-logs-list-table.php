@@ -29,8 +29,24 @@ if( ! class_exists( 'WP_List_Table' ) ) {
  */
 
 class EDD_Sales_Log_Table extends WP_List_Table {
+
+
+	/**
+	 * Number of results to show per page
+	 *
+	 * @since       1.4
+	 */
+
 	public $per_page = 30;
 
+
+	/**
+	 * Get things started
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      void
+	 */
 
 	function __construct(){
 		global $status, $page;
@@ -222,7 +238,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 
 	/**
-	 * Outputs the log filters filter
+	 * Outputs the log views
 	 *
 	 * @access      private
 	 * @since       1.4

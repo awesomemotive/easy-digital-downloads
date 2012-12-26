@@ -27,8 +27,23 @@ if( ! class_exists( 'WP_List_Table' ) ) {
  */
 
 class EDD_Customer_Reports_Table extends WP_List_Table {
+
+	/**
+	 * Number of results to show per page
+	 *
+	 * @since       1.4
+	 */
+
 	public $per_page = 30;
 
+
+	/**
+	 * Get things started
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      void
+	 */
 
 	function __construct(){
 		global $status, $page;
@@ -90,6 +105,14 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		return $columns;
 	}
 
+
+	/**
+	 * Show reporting views
+	 *
+	 * @access      private
+	 * @since       1.3
+	 * @return      void
+	 */
 
 	function bulk_actions() {
 		// These aren't really bulk actions but this outputs the markup in the right place

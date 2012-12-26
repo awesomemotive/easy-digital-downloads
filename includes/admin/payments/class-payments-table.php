@@ -28,13 +28,28 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  */
 
 class EDD_Payment_History_Table extends WP_List_Table {
+
+	/**
+	 * Number of results to show per page
+	 *
+	 * @since       1.4
+	 */
 	public $per_page = 30;
+
 	public $total_count;
 	public $complete_count;
 	public $pending_count;
 	public $refunded_count;
 	public $failed_count;
 
+
+	/**
+	 * Get things started
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      void
+	 */
 
 	function __construct(){
 		global $status, $page;
@@ -68,13 +83,13 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
 		if ( ! empty( $_REQUEST['order'] ) )
 			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
-		?>
+?>
 		<p class="search-box">
 			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
 			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
 			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
 		</p>
-	<?php
+<?php
 	}
 
 
@@ -228,7 +243,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$details = "<a href='#TB_inline?width=640&amp;inlineId=purchased-files-" . $item['ID'] . "' class='thickbox' title='" . sprintf( __( 'Purchase Details for Payment #%s', 'edd' ), $item['ID'] ) . "'>" . __( 'View Order Details', 'edd' ) . "</a>";
 
 		ob_start();
-		?>
+?>
 			<div id="purchased-files-<?php echo $item['ID']; ?>" style="display: none;">
 				<?php
 					$payment_meta = edd_get_payment_meta( $item['ID'] );
@@ -273,7 +288,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 							echo '</li>';
 						}
 					}
-				?>
+?>
 				</ul>
 				<?php $payment_date = strtotime( $item['date'] ); ?>
 				<p><?php echo __( 'Date and Time:', 'edd' ) . ' ' . date_i18n( get_option( 'date_format' ), $payment_date ) . ' ' . date_i18n( get_option( 'time_format' ), $payment_date ) ?>
@@ -323,7 +338,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				</div>
 				<p><a id="edd-close-purchase-details" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Close', 'edd' ); ?>"><?php _e( 'Close', 'edd' ); ?></a></p>
 			</div>
-			<?php
+<?php
 			$details .= ob_get_clean();
 		return $details;
 	}
