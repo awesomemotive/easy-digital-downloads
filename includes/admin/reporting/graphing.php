@@ -308,74 +308,104 @@ function edd_get_report_dates() {
 	$dates['year_end']	= date( 'Y' );
 
 	// modify dates based on predefined ranges
-	switch( $dates['range'] ) :
+		switch( $dates['range'] ) :
+
 		case 'this_month' :
+
 			$dates['m_start'] 	= date( 'n' );
 			$dates['m_end']		= date( 'n' );
 			$dates['year']		= date( 'Y' );
+
 			break;
 
 		case 'last_month' :
+
 			$dates['m_start'] 	= date( 'n' ) - 1;
 			$dates['m_end']		= date( 'n' ) - 1;
 			$dates['year']		= date( 'Y' );
+
 			break;
 
 		case 'this_quarter' :
+
 			$month_now = date( 'n' );
 
 			if ( $month_now <= 3 ) {
+
 				$dates['m_start'] 	= 1;
 				$dates['m_end']		= 3;
 				$dates['year']		= date( 'Y' );
+
 			} else if ( $month_now <= 6 ) {
+
 				$dates['m_start'] 	= 4;
 				$dates['m_end']		= 6;
 				$dates['year']		= date( 'Y' );
+
 			} else if ( $month_now <= 9 ) {
+
 				$dates['m_start'] 	= 7;
 				$dates['m_end']		= 9;
 				$dates['year']		= date( 'Y' );
+
 			} else {
+
 				$dates['m_start'] 	= 10;
 				$dates['m_end']		= 12;
 				$dates['year']		= date( 'Y' );
+
 			}
+
 			break;
 
 		case 'last_quarter' :
+
 			$month_now = date( 'n' );
 
 			if ( $month_now <= 3 ) {
+
 				$dates['m_start'] 	= 10;
 				$dates['m_end']		= 12;
 				$dates['year']		= date( 'Y' ) - 1; // previous year
+
 			} else if ( $month_now <= 6 ) {
+
 				$dates['m_start'] 	= 1;
 				$dates['m_end']		= 3;
 				$dates['year']		= date( 'Y' );
+
 			} else if ( $month_now <= 9 ) {
+
 				$dates['m_start'] 	= 4;
 				$dates['m_end']		= 6;
 				$dates['year']		= date( 'Y' );
+
 			} else {
+
 				$dates['m_start'] 	= 7;
 				$dates['m_end']		= 9;
 				$dates['year']		= date( 'Y' );
+
 			}
+
 			break;
 
 		case 'this_year' :
+
 			$dates['m_start'] 	= 1;
 			$dates['m_end']		= 12;
 			$dates['year']		= date( 'Y' );
+
 			break;
 
 		case 'last_year' :
+
 			$dates['m_start'] 	= 1;
 			$dates['m_end']		= 12;
 			$dates['year']		= date( 'Y' ) - 1;
+
 			break;
+
 	endswitch;
 
 	return apply_filters( 'edd_report_dates', $dates );
