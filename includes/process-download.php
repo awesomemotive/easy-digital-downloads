@@ -154,6 +154,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'bcpio'	: $ctype	= "application/x-bcpio"; break;
 		case 'bin'		: $ctype	= "application/octet-stream"; break;
 		case 'bmp'		: $ctype	= "image/bmp"; break;
+		case 'bpk'		: $ctype	= "application/octet-stream"; break;
 		case 'ccxml'	: $ctype	= "application/ccxml+xml"; break;
 		case 'cdmia'	: $ctype	= "application/cdmi-capability"; break;
 		case 'cdmic'	: $ctype	= "application/cdmi-container"; break;
@@ -185,6 +186,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'dotx'		: $ctype	= "application/vnd.openxmlformats-officedocument.wordprocessingml.template"; break;
 		case 'dssc'		: $ctype	= "application/dssc+der"; break;
 		case 'dtd'		: $ctype	= "application/xml-dtd"; break;
+		case 'dump'		: $ctype	= "application/octet-stream"; break;
 		case 'dv'		: $ctype	= "video/x-dv"; break;
 		case 'dvi'		: $ctype	= "application/x-dvi"; break;
 		case 'dxr'		: $ctype	= "application/x-director"; break;
