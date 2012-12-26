@@ -375,6 +375,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'vcd'		: $ctype	= "application/x-cdlink"; break;
 		case 'vrml'		: $ctype	= "model/vrml"; break;
 		case 'vsd'		: $ctype	= "application/vnd.visio"; break;
+		case 'vss'		: $ctype	= "application/vnd.visio"; break;
 		case 'vxml'		: $ctype	= "application/voicexml+xml"; break;
 		case 'wav'		: $ctype	= "audio/x-wav"; break;
 		case 'wbmp'		: $ctype	= "image/vnd.wap.wbmp"; break;
