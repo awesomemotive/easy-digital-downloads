@@ -243,8 +243,11 @@ function edd_get_file_ctype( $extension ) {
 		case 'pnm'		: $ctype	= "image/x-portable-anymap"; break;
 		case 'pnt'		: $ctype	= "image/x-macpaint"; break;
 		case 'pntg'		: $ctype	= "image/x-macpaint"; break;
+		case 'potx'		: $ctype	= "application/vnd.openxmlformats-officedocument.presentationml.template"; break;		
 		case 'ppm'		: $ctype	= "image/x-portable-pixmap"; break;
+		case 'ppsx'		: $ctype	= "application/vnd.openxmlformats-officedocument.presentationml.slideshow"; break;
 		case 'ppt'		: $ctype	= "application/vnd.ms-powerpoint"; break;
+		case 'pptx'		: $ctype	= "application/vnd.openxmlformats-officedocument.presentationml.presentation"; break;		
 		case 'ps'		: $ctype	= "application/postscript"; break;
 		case 'psd'		: $ctype	= "image/photoshop"; break;		
 		case 'qt'		: $ctype	= "video/quicktime"; break;
@@ -267,8 +270,9 @@ function edd_get_file_ctype( $extension ) {
 		case 'sit'		: $ctype	= "application/x-stuffit"; break;
 		case 'skd'		: $ctype	= "application/x-koan"; break;
 		case 'skm'		: $ctype	= "application/x-koan"; break;
-		case 'skp'		: $ctype	= "application/x-koan"; break;
+		case 'skp'		: $ctype	= "application/x-koan"; break;	
 		case 'skt'		: $ctype	= "application/x-koan"; break;
+		case 'sldx'		: $ctype	= "application/vnd.openxmlformats-officedocument.presentationml.slide"; break;	
 		case 'smi'		: $ctype	= "application/smil"; break;
 		case 'smil'		: $ctype	= "application/smil"; break;
 		case 'snd'		: $ctype	= "audio/basic"; break;
@@ -305,7 +309,11 @@ function edd_get_file_ctype( $extension ) {
 		case 'xbm'		: $ctype	= "image/x-xbitmap"; break;
 		case 'xht'		: $ctype	= "application/xhtml+xml"; break;
 		case 'xhtml'	: $ctype	= "application/xhtml+xml"; break;
+		case 'xlam'		: $ctype	= "application/vnd.ms-excel.addin.macroEnabled.12"; break;
 		case 'xls'		: $ctype	= "application/vnd.ms-excel"; break;
+		case 'xlsx'		: $ctype	= "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; break;
+		case 'xlsb'		: $ctype	= "application/vnd.ms-excel.sheet.binary.macroEnabled.12"; break;
+		case 'xltx'		: $ctype	= "application/vnd.openxmlformats-officedocument.spreadsheetml.template"; break;		
 		case 'xml'		: $ctype	= "application/xml"; break;
 		case 'xpm'		: $ctype	= "image/x-xpixmap"; break;
 		case 'xsl'		: $ctype	= "application/xml"; break;
