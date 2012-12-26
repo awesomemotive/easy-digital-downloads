@@ -172,6 +172,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'davmount'	: $ctype	= "application/davmount+xml"; break;
 		case 'dbk'		: $ctype	= "application/docbook+xml"; break;
 		case 'dcr'		: $ctype	= "application/x-director"; break;
+		case 'deploy'	: $ctype	= "application/octet-stream"; break;
 		case 'dif'		: $ctype	= "video/x-dv"; break;
 		case 'dir'		: $ctype	= "application/x-director"; break;
 		case 'dist'		: $ctype	= "application/octet-stream"; break;
@@ -191,6 +192,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'dvi'		: $ctype	= "application/x-dvi"; break;
 		case 'dxr'		: $ctype	= "application/x-director"; break;
 		case 'ecma'		: $ctype	= "application/ecmascript"; break;
+		case 'elc'		: $ctype	= "application/octet-stream"; break;
 		case 'emma'		: $ctype	= "application/emma+xml"; break;
 		case 'eps'		: $ctype	= "application/postscript"; break;
 		case 'epub'		: $ctype	= "application/epub+zip"; break;
