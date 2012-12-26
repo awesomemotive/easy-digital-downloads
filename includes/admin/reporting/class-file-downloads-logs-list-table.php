@@ -218,7 +218,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				}
 			}
 
-			if( ! $this->file_search ) {
+			if ( ! $this->file_search ) {
 				// meta query only works for non file name searche
 				$meta_query[] = array(
 					'key'     => $key,
