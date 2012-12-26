@@ -368,6 +368,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'wrl'		: $ctype	= "model/vrml"; break;
 		case 'xbm'		: $ctype	= "image/x-xbitmap"; break;
 		case 'xdssc'	: $ctype	= "application/dssc+xml"; break;
+		case 'xer'		: $ctype	= "application/patch-ops-error+xml"; break;
 		case 'xht'		: $ctype	= "application/xhtml+xml"; break;
 		case 'xhtml'	: $ctype	= "application/xhtml+xml"; break;
 		case 'xlam'		: $ctype	= "application/vnd.ms-excel.addin.macroEnabled.12"; break;
