@@ -285,6 +285,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'pgn'		: $ctype	= "application/x-chess-pgn"; break;
 		case 'pic'		: $ctype	= "image/pict"; break;
 		case 'pict'		: $ctype	= "image/pict"; break;
+		case 'pkg'		: $ctype	= "application/octet-stream"; break;
 		case 'png'		: $ctype	= "image/png"; break;
 		case 'pnm'		: $ctype	= "image/x-portable-anymap"; break;
 		case 'pnt'		: $ctype	= "image/x-macpaint"; break;
