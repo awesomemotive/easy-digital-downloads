@@ -362,6 +362,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'snd'		: $ctype	= "audio/basic"; break;
 		case 'so'		: $ctype	= "application/octet-stream"; break;
 		case 'spl'		: $ctype	= "application/x-futuresplash"; break;
+		case 'spx'		: $ctype	= "audio/ogg"; break;
 		case 'src'		: $ctype	= "application/x-wais-source"; break;
 		case 'stk'		: $ctype	= "application/hyperstudio"; break;
 		case 'sv4cpio'	: $ctype	= "application/x-sv4cpio"; break;
