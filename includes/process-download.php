@@ -213,7 +213,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'iges'		: $ctype	= "model/iges"; break;
 		case 'igs'		: $ctype	= "model/iges"; break;
 		case 'ink'		: $ctype	= "application/inkml+xml"; break;
-		case 'inkml'	: $ctype	= "model/iges"; break;
+		case 'inkml'	: $ctype	= "application/inkml+xml"; break;
 		case 'jnlp'		: $ctype	= "application/x-java-jnlp-file"; break;
 		case 'jp2'		: $ctype	= "image/jp2"; break;
 		case 'jpe'		: $ctype	= "image/jpeg"; break;
