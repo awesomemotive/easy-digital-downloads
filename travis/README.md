@@ -1,4 +1,6 @@
 [Easy Digital Downloads](http://www.easydigitaldownloads.com) Testing Suite [![Build Status](https://secure.travis-ci.org/pippinsplugins/Easy-Digital-Downloads.png?branch=master)](http://travis-ci.org/pippinsplugins/Easy-Digital-Downloads)
+Version: 0.9.0
+Author: @chriscct7
 =================
 
 This test-suite uses PHPUnit to ensure Easy Digital Downloads's code quality.
