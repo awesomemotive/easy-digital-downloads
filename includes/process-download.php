@@ -291,6 +291,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'p7c'		: $ctype	= "application/pkcs7-mime"; break;
 		case 'p7m'		: $ctype	= "application/pkcs7-mime"; break;
 		case 'p7s'		: $ctype	= "application/pkcs7-signature"; break;
+		case 'p8'		: $ctype	= "application/pkcs8"; break;
 		case 'p10'		: $ctype	= "application/pkcs10"; break;
 		case 'pbm'		: $ctype	= "image/x-portable-bitmap"; break;
 		case 'pct'		: $ctype	= "image/pict"; break;
