@@ -9,7 +9,7 @@
  * @subpackage Session
  * @since   3.6.0
  */
-
+ 
 /**
  * WordPress Session class for managing user session data.
  *
@@ -104,7 +104,6 @@ class WP_Session implements ArrayAccess, Iterator, Countable {
 	private function read_data() {
 		$this->touch_session();
 		$this->container = get_option( "_wp_session_{$this->session_id}", array() );
-
 		return $this->container;
 	}
 
