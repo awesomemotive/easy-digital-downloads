@@ -283,6 +283,9 @@ function edd_get_file_ctype( $extension ) {
 		case 'ogx'		: $ctype	= "application/ogg"; break;
 		case 'omdoc'	: $ctype	= "application/omdoc+xml"; break;
 		case 'onetoc'	: $ctype	= "application/onenote"; break;
+		case 'onetoc2'	: $ctype	= "application/onenote"; break;
+		case 'onetmp'	: $ctype	= "application/onenote"; break;
+		case 'onepkg'	: $ctype	= "application/onenote"; break;
 		case 'opf'		: $ctype	= "application/oebps-package+xml"; break;
 		case 'pbm'		: $ctype	= "image/x-portable-bitmap"; break;
 		case 'pct'		: $ctype	= "image/pict"; break;
