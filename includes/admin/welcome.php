@@ -194,35 +194,72 @@ class EDD_Welcome {
 					<?php _e( 'Credits', 'edd' ); ?>
 				</a>
 			</h2>
+
+			<p class="about-description"><?php _e( 'Easy Digital Downloads is created by a worldwide team of developers who aim to provide the #1 eCommerce platform for WordPress.', 'edd' ); ?></p>
+
+			<?php echo $this->contributors(); ?>
 		</div>
 
 		<?php
 	}
 
 	/**
-	 * Retreive list of contributors.
+	 * Render contributors list.
+	 *
+	 * @since 1.4
+	 * 
+	 * @return string HTML formatted list of contributors.
+	 */
+	public function contributors() {
+		$contributors = $this->get_contributors();
+
+		if ( empty( $contributors ) )
+			return '';
+ 
+		$contributor_list = '<ul class="wp-people-group">';
+ 
+		foreach ( $contributors as $contributor ) {
+			$contributor_list .= '<li class="wp-person">';
+			$contributor_list .= sprintf( '<a href="%s" title="%s">',
+				esc_url( 'https://github.com/' . $contributor->login ),
+				esc_html( sprintf( __( 'View %s', 'edd' ), $contributor->login ) )
+			);
+			$contributor_list .= sprintf( '<img src="%s" width="64" height="64" class="gravatar" alt="%s" />', esc_url( $contributor->avatar_url ), esc_html( $contributor->login ) );
+			$contributor_list .= '</a>';
+			$contributor_list .= sprintf( '<a class="web" href="%s">%s</a>', esc_url( 'https://github.com/' . $contributor->login ), esc_html( $contributor->login ) );
+			$contributor_list .= '</a>';
+			$contributor_list .= '</li>';
+		}
+ 
+		$contributor_list .= '</ul>';
+ 
+		return $contributor_list;
+	}
+
+	/**
+	 * Retreive list of contributors from GitHub.
 	 *
 	 * @since 1.4
 	 * 
 	 * @return array List of contributors.
 	 */
-	public function contributors() {
+	public function get_contributors() {
 		$contributors = get_transient( 'edd_contributors' );
 
 		if ( false !== $contributors )
 			return $contributors;
 
-		$response = wp_remote_get( 'https://api.github.com/repos/pippinsplugins/Easy-Digital-Downloads/contributors' );
+		$response = wp_remote_get( 'https://api.github.com/repos/pippinsplugins/Easy-Digital-Downloads/contributors', array( 'sslverify' => false ) );
 
 		if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) )
 			return array();
 
 		$contributors = json_decode( wp_remote_retrieve_body( $response ) );
 
-		if ( ! is_array( $contributors ) );
+		if ( ! is_array( $contributors ) )
 			return array();
 
-		set_transient( 'edd_contributors', $contributors, DAY_IN_SECONDS );
+		set_transient( 'edd_contributors', $contributors, 3600 );
 
 		return $contributors;
 	}
