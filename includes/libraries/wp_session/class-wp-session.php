@@ -88,7 +88,7 @@ class WP_Session implements ArrayAccess, Iterator, Countable {
 	 * @return string
 	 */
 	private function generate_id() {
-		require_once( ABSPATH . 'wp-includes/class-phpass.php');
+		require_once ABSPATH . 'wp-includes/class-phpass.php';
 		$hasher = new PasswordHash( 8, false );
 
 		return md5( $hasher->get_random_bytes( 32 ) );
