@@ -223,7 +223,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'jpg'		: $ctype	= "image/jpeg"; break;
 		case 'js'		: $ctype	= "application/javascript"; break;
 		case 'json'		: $ctype	= "application/json"; break;
-		case 'js'		: $ctype	= "application/x-javascript"; break;
+		case 'jsonml'	: $ctype	= "application/jsonml+json"; break;
 		case 'kar'		: $ctype	= "audio/midi"; break;
 		case 'latex'	: $ctype	= "application/x-latex"; break;
 		case 'lha'		: $ctype	= "application/octet-stream"; break;
