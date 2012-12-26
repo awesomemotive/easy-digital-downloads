@@ -303,11 +303,12 @@ function edd_get_file_ctype( $extension ) {
 		case 'pnm'		: $ctype	= "image/x-portable-anymap"; break;
 		case 'pnt'		: $ctype	= "image/x-macpaint"; break;
 		case 'pntg'		: $ctype	= "image/x-macpaint"; break;
-		case 'potx'		: $ctype	= "application/vnd.openxmlformats-officedocument.presentationml.template"; break;		
+		case 'potx'		: $ctype	= "application/vnd.openxmlformats-officedocument.presentationml.template"; break;
 		case 'ppm'		: $ctype	= "image/x-portable-pixmap"; break;
 		case 'ppsx'		: $ctype	= "application/vnd.openxmlformats-officedocument.presentationml.slideshow"; break;
 		case 'ppt'		: $ctype	= "application/vnd.ms-powerpoint"; break;
-		case 'pptx'		: $ctype	= "application/vnd.openxmlformats-officedocument.presentationml.presentation"; break;		
+		case 'pptx'		: $ctype	= "application/vnd.openxmlformats-officedocument.presentationml.presentation"; break;
+		case 'prf'		: $ctype	= "application/pics-rules"; break;
 		case 'ps'		: $ctype	= "application/postscript"; break;
 		case 'psd'		: $ctype	= "image/photoshop"; break;		
 		case 'qt'		: $ctype	= "video/quicktime"; break;
