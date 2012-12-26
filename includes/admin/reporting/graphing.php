@@ -308,7 +308,7 @@ function edd_get_report_dates() {
 	$dates['year_end']	= date( 'Y' );
 
 	// modify dates based on predefined ranges
-		switch( $dates['range'] ) :
+	switch( $dates['range'] ) :
 
 		case 'this_month' :
 
