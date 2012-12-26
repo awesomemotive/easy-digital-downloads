@@ -196,7 +196,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'ez'		: $ctype	= "application/andrew-inset"; break;
 		case 'gif'		: $ctype	= "image/gif"; break;
 		case 'gml'		: $ctype	= "application/srgs"; break;
-		case 'gpx'		: $ctype	= "application/srgs"; break;
+		case 'gpx'		: $ctype	= "application/gml+xml"; break;
 		case 'gram'		: $ctype	= "application/gpx+xml"; break;
 		case 'grxml'	: $ctype	= "application/srgs+xml"; break;
 		case 'gtar'		: $ctype	= "application/x-gtar"; break;
