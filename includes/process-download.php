@@ -243,8 +243,8 @@ function edd_get_file_ctype( $extension ) {
 		case 'me'		: $ctype	= "application/x-troff-me"; break;
 		case 'mesh'		: $ctype	= "model/mesh"; break;
 		case 'metalink'	: $ctype	= "application/metalink+xml"; break;
-		case 'mid'		: $ctype	= "audio/midi"; break;
-		case 'mid'		: $ctype	= "audio/midi"; break;
+		case 'meta4'	: $ctype	= "application/metalink4+xml"; break;
+		case 'mets'		: $ctype	= "application/mets+xml"; break;
 		case 'mid'		: $ctype	= "audio/midi"; break;
 		case 'midi'		: $ctype	= "audio/midi"; break;
 		case 'mif'		: $ctype	= "application/vnd.mif"; break;
