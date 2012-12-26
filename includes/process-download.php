@@ -234,6 +234,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'm4p'		: $ctype	= "audio/mp4a-latm"; break;
 		case 'm4u'		: $ctype	= "video/vnd.mpegurl"; break;
 		case 'm4v'		: $ctype	= "video/x-m4v"; break;
+		case 'ma'		: $ctype	= "application/mathematica"; break;
 		case 'mac'		: $ctype	= "image/x-macpaint"; break;
 		case 'mads'		: $ctype	= "application/mads+xml"; break;
 		case 'man'		: $ctype	= "application/x-troff-man"; break;
