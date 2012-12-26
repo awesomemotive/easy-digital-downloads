@@ -140,6 +140,7 @@ add_action( 'init', 'edd_process_download', 100 );
 
 function edd_get_file_ctype( $extension ) {
 	switch( $extension ):
+		case 'ac'		: $ctype	= "application/pkix-attr-cert"; break;
 		case 'ai'		: $ctype	= "application/postscript"; break;
 		case 'aif'		: $ctype	= "audio/x-aiff"; break;
 		case 'aifc'		: $ctype	= "audio/x-aiff"; break;
