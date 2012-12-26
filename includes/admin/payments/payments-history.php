@@ -22,7 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.0
  * @return      void
 */
-
 function edd_payment_history_page() {
 	global $edd_options;
 
