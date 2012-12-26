@@ -281,6 +281,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'oda'		: $ctype	= "application/oda"; break;
 		case 'ogg'		: $ctype	= "application/ogg"; break;
 		case 'ogx'		: $ctype	= "application/ogg"; break;
+		case 'omdoc'	: $ctype	= "application/omdoc+xml"; break;
 		case 'opf'		: $ctype	= "application/oebps-package+xml"; break;
 		case 'pbm'		: $ctype	= "image/x-portable-bitmap"; break;
 		case 'pct'		: $ctype	= "image/pict"; break;
