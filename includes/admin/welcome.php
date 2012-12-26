@@ -69,6 +69,35 @@ class EDD_Welcome {
 	public function admin_head() {
 		remove_submenu_page( 'index.php', 'edd-about' );
 		remove_submenu_page( 'index.php', 'edd-credits' );
+
+		// Badge for welcome page
+		$badge_url = EDD_PLUGIN_URL . 'assets/images/edd-badge.png';
+		?>
+
+		<style type="text/css" media="screen">
+		/*<![CDATA[*/
+		.edd-badge {
+			padding-top: 142px;
+			height: 55px;
+			width: 185px;
+			color: #666;
+			font-weight: bold;
+			font-size: 14px;
+			text-align: center;
+			text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+			margin: 0 -5px;
+			background: url('<?php echo $badge_url; ?>') no-repeat;
+		}
+
+		.about-wrap .edd-badge {
+			position: absolute;
+			top: 0;
+			right: 0;
+		}
+		/*]]>*/
+		</style>
+
+		<?php
 	}
 
 	/**
@@ -83,7 +112,7 @@ class EDD_Welcome {
 		<div class="wrap about-wrap">
 			<h1><?php printf( __( 'Welcome to EDD %s', 'edd' ), $display_version ); ?></h1>
 			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! EDD %s is ready to make your online shop a safer, faster, and better!', 'edd' ), $display_version ); ?></div>
-			<div class="wp-badge"><?php printf( __( 'Version %s' ), $display_version ); ?></div>
+			<div class="edd-badge"><?php printf( __( 'Version %s' ), $display_version ); ?></div>
 
 			<h2 class="nav-tab-wrapper">
 				<a class="nav-tab nav-tab-active" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-about' ), 'index.php' ) ) ); ?>">
@@ -185,7 +214,7 @@ class EDD_Welcome {
 		<div class="wrap about-wrap">
 			<h1><?php printf( __( 'Welcome to EDD %s', 'edd' ), $display_version ); ?></h1>
 			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! EDD %s is ready to make your online shop a safer, faster, and better!', 'edd' ), $display_version ); ?></div>
-			<div class="wp-badge"><?php printf( __( 'Version %s' ), $display_version ); ?></div>
+			<div class="edd-badge"><?php printf( __( 'Version %s' ), $display_version ); ?></div>
 
 			<h2 class="nav-tab-wrapper">
 				<a class="nav-tab" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-about' ), 'index.php' ) ) ); ?>">
