@@ -74,14 +74,6 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 -------------------------------------------------------------- */
 #system-info-textarea { width: 800px; height: 400px; font-family: Menlo, Monaco, monospace; background: none; white-space: pre; overflow: auto; display: block; }
 
-/* Welcome page styles 
--------------------------------------------------------------- */
-.edd-badge { position: absolute; top: 0; right: 0; color: #666; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); padding-top: 150px; height: 55px; width: 185px; font-weight: bold; font-size: 14px; text-align: center; margin-bottom: 0 -5px; background: url(../images/edd-badge.png) no-repeat; }
-.edd-people-group { overflow: hidden; padding: 5px; margin: 0 -15px 0 -5px; }
-.edd-person { height: 70px; width: 280px; padding-bottom: 15px; float: left; margin-right: 10px; }
-.edd-person .gravatar { -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4); box-shadow: 0 0 4px rgba(0, 0, 0, 0.4); float: left; margin: 0 10px 10px 0; padding: 2px; width: 60px; height: 60px; }
-.edd-person .web { display: block; margin: 6px 0 2px; font-size: 16px; text-decoration: none; }
-
 /* Button styles 
 -------------------------------------------------------------- */
 #TB_window #edd-add-download:hover, #TB_window #edd-add-download:active, #TB_window #edd-add-download:focus { color: #fff; }
