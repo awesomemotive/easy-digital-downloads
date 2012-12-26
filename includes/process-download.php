@@ -289,6 +289,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'mxu'		: $ctype	= "video/vnd.mpegurl"; break;
 		case 'nc'		: $ctype	= "application/x-netcdf"; break;
 		case 'oda'		: $ctype	= "application/oda"; break;
+		case 'oga'		: $ctype	= "application/ogg"; break;
 		case 'ogg'		: $ctype	= "application/ogg"; break;
 		case 'ogx'		: $ctype	= "application/ogg"; break;
 		case 'omdoc'	: $ctype	= "application/omdoc+xml"; break;
