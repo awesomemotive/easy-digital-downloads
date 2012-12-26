@@ -28,9 +28,9 @@ function edd_discounts_page() {
 	global $edd_options;
 
 	if ( isset( $_GET['edd-action'] ) && $_GET['edd-action'] == 'edit_discount' ) {
-		include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/edit-discount.php' );
+		require_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/edit-discount.php' );
 	} else {
-		include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/class-discount-codes-table.php' );
+		require_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/class-discount-codes-table.php' );
 		$discount_codes_table = new EDD_Discount_Codes_Table();
 		$discount_codes_table->prepare_items();
 	?>
@@ -46,7 +46,7 @@ function edd_discounts_page() {
 			<?php $discount_codes_table->views() ?>
 			<?php $discount_codes_table->display() ?>
 		</form>
-		<?php include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/add-discount.php' ); ?>
+		<?php require_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/add-discount.php' ); ?>
 		<?php do_action( 'edd_discounts_page_bottom' ); ?>
 	</div>
 <?php
