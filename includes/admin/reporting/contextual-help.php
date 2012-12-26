@@ -10,7 +10,8 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 /**
  * Reports contextual help.
@@ -19,6 +20,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @since       1.4
  * @return      void
  */
+
 function edd_reporting_contextual_help() {
 	$screen = get_current_screen();
 
@@ -40,8 +42,7 @@ function edd_reporting_contextual_help() {
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-reports',
 		'title'	    => __( 'Reports', 'edd' ),
-		'content'	=>
-			'<p>' . __( 'This screen provides you with reports for your earnings, downloads, customers and taxes.', 'edd' ) . '</p>'
+		'content'	=> '<p>' . __( 'This screen provides you with reports for your earnings, downloads, customers and taxes.', 'edd' ) . '</p>'
 	) );
 
 	$screen->add_help_tab( array(

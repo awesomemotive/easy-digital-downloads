@@ -10,7 +10,8 @@
 */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 /**
  * Process Actions
@@ -21,10 +22,11 @@ if ( !defined( 'ABSPATH' ) ) exit;
 */
 
 function edd_process_actions() {
-	if( isset( $_POST['edd-action'] ) ) {
+	if ( isset( $_POST['edd-action'] ) ) {
 		do_action( 'edd_' . $_POST['edd-action'], $_POST );
 	}
-	if( isset( $_GET['edd-action'] ) ) {
+
+	if ( isset( $_GET['edd-action'] ) ) {
 		do_action( 'edd_' . $_GET['edd-action'], $_GET );
 	}
 }

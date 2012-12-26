@@ -10,7 +10,8 @@
 */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 /**
  * Media Button
@@ -27,7 +28,7 @@ function edd_media_button( $context ) {
 	$output = '';
 
 	/** Only run in post/page creation and edit screens */
-	if( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow != 'download' ) {
+	if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow != 'download' ) {
 		/* check current WP version */
 		if ( version_compare( $wp_version, '3.5', '<' ) ) {
 			$img = '<img src="' . EDD_PLUGIN_URL . 'assets/images/edd-media.png" alt="' . sprintf( __( 'Insert %s', 'edd' ), edd_get_label_singular() ) . '"/>';
@@ -57,20 +58,19 @@ function edd_admin_footer_for_thickbox() {
 	global $pagenow, $typenow;
 
 	// Only run in post/page creation and edit screens
-	if( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow != 'download' ) {
+	if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow != 'download' ) {
 		$downloads = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1 ) );
-
 		?>
 		<script type="text/javascript">
             function insertDownload() {
                 var id = jQuery('#select-edd-download').val(),
                     style = jQuery('#select-edd-style').val(),
                     color = jQuery('#select-edd-color').is(':visible') ? jQuery('#select-edd-color').val() : '',
-                    text = jQuery('#edd-text').val() || '<?php _e("Purchase", "edd"); ?>';
+                    text = jQuery('#edd-text').val() || '<?php _e( "Purchase", "edd" ); ?>';
 
                 // Return early if no download is selected
                 if ('' === id) {
-                    alert('<?php _e("You must choose a download", "edd"); ?>');
+                    alert('<?php _e( "You must choose a download", "edd" ); ?>');
                     return;
                 }
 
@@ -91,14 +91,13 @@ function edd_admin_footer_for_thickbox() {
 		<div id="choose-download" style="display: none;">
 			<div class="wrap" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
 			<?php
-			if( $downloads ) {
-			?>
+			if ( $downloads ) { ?>
 				<p><?php echo sprintf( __( 'Use the form below to insert the short code for purchasing a %s', 'edd' ), edd_get_label_singular() ); ?></p>
 				<div>
 					<select id="select-edd-download" style="clear: both; display: block; margin-bottom: 1em;">
 						<option value=""><?php echo sprintf( __( 'Choose a %s', 'edd' ), edd_get_label_singular() ); ?></option>
 						<?php
-							foreach( $downloads as $download )
+							foreach ( $downloads as $download )
 								echo '<option value="' . absint( $download->ID ) . '">' . esc_attr( $download->post_title ) . '</option>';
 						?>
 					</select>
@@ -108,7 +107,7 @@ function edd_admin_footer_for_thickbox() {
 						<option value=""><?php _e( 'Choose a style', 'edd' ); ?></option>
 						<?php
 							$styles = array( 'button', 'text link' );
-							foreach( $styles as $style ) {
+							foreach ( $styles as $style ) {
 								echo '<option value="' . $style . '">' . $style . '</option>';
 							}
 						?>
@@ -119,7 +118,7 @@ function edd_admin_footer_for_thickbox() {
 						<option value=""><?php _e('Choose a button color', 'edd'); ?></option>
 						<?php
 							$colors = edd_get_button_colors();
-							foreach( $colors as $key => $color )
+							foreach ( $colors as $key => $color )
 								echo '<option value="' . str_replace( ' ', '_', $key ) . '">' . $color . '</option>';
 						?>
 					</select>
