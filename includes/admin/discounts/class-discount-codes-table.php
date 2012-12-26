@@ -310,24 +310,20 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$orderby 		= isset( $_GET['orderby'] )  ? $_GET['orderby']                  : 'ID';
 		$order 			= isset( $_GET['order'] )    ? $_GET['order']                    : 'DESC';
 		$order_inverse 	= $order == 'DESC'           ? 'ASC'                             : 'DESC';
-		$status 		= isset( $_GET['status'] )   ? $_GET['status']                   : 'any';
+		$status 		= isset( $_GET['status'] )   ? $_GET['status']                   : array( 'active', 'inactive' );
 		$meta_key		= isset( $_GET['meta_key'] ) ? $_GET['meta_key']                 : null;
 		$search         = isset( $_GET['s'] )        ? sanitize_text_field( $_GET['s'] ) : null;
 		$order_class 	= strtolower( $order_inverse );
 
 		$discounts = edd_get_discounts( array(
-			'posts_per_page'   => $per_page,
-			'page'     => isset( $_GET['paged'] ) ? $_GET['paged'] : null,
-			'mode'     => $mode,
-			'orderby'  => $orderby,
-			'order'    => $order,
-			'user'     => $user,
-			'status'   => $status,
-			'meta_key' => $meta_key,
-			'year'	   => $year,
-			'month'    => $month,
-			'day' 	   => $day,
-			's'        => $search
+			'posts_per_page' => $per_page,
+			'page'           => isset( $_GET['paged'] ) ? $_GET['paged'] : null,
+			'orderby'        => $orderby,
+			'order'          => $order,
+			'user'           => $user,
+			'post_status'    => $status,
+			'meta_key'       => $meta_key,
+			's'              => $search
 		) );
 
 		if ( $discounts ) {
