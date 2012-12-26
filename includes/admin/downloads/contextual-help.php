@@ -10,10 +10,11 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 /**
- * Download contextual help.
+ * Downloads contextual help
  *
  * Adds help for default metaboxes, as well as notes about using the shortcodes.
  * Links to GitHub, themes, and extensions
@@ -22,6 +23,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @since       1.2.3
  * @return      void
  */
+
 function edd_downloads_contextual_help() {
 	$screen = get_current_screen();
 
@@ -56,8 +58,7 @@ function edd_downloads_contextual_help() {
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-product-notes',
 		'title'	    => __( 'Product Notes', 'edd' ),
-		'content'	=>
-			'<p>' . __( 'Special notes or instructions for the product. These notes will be added to the purchase receipt, and additionaly may be used by some extensions or themes on the frontend.', 'edd' ) . '</p>'
+		'content'	=> '<p>' . __( 'Special notes or instructions for the product. These notes will be added to the purchase receipt, and additionaly may be used by some extensions or themes on the frontend.', 'edd' ) . '</p>'
 	) );
 
 	$colors = array(
@@ -69,9 +70,7 @@ function edd_downloads_contextual_help() {
 		'title'	    => __( 'Purchase Shortcode', 'edd' ),
 		'content'	=>
 			'<p>' . __( '<strong>Purchase Shortcode</strong> - If the automatic output of the purchase button has been disabled via the Download Configuration box, a shortcode can be used to output the button or link.', 'edd' ) . '</p>' .
-
 			'<p><code>[purchase_link id="#" price="1" text="Add to Cart" color="blue"]</code></p>' .
-
 			'<ul>
 				<li><strong>id</strong> - ' . __( 'The ID of a specific download to purchase.', 'edd' ) . '</li>
 				<li><strong>price</strong> - ' . __( 'Whether to show the price on the purchase button. 1 to show the price, 0 to disable it.', 'edd' ) . '</li>
@@ -80,7 +79,6 @@ function edd_downloads_contextual_help() {
 				<li><strong>color</strong> - <em>' . implode( '</em> | <em>', $colors ) . '</em></li>
 				<li><strong>class</strong> - ' . __( 'One or more custom CSS classes you want applied to the button.', 'edd' ) . '</li>
 			</ul>' .
-
 			'<p>' . sprintf( __( 'For more information, see <a href="%s">using Shortcodes</a> on the WordPress.org Codex or <a href="%s">Easy Digital Downloads Documentation</a>', 'edd' ), 'http://codex.wordpress.org/Shortcode', 'https://easydigitaldownloads.com/docs/display-purchase-buttons-purchase_link/' ) . '</p>'
 	) );
 

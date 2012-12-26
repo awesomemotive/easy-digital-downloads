@@ -11,7 +11,8 @@
 */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 /**
  * Generate PDF Reports
@@ -25,11 +26,9 @@ if ( !defined( 'ABSPATH' ) ) exit;
 */
 
 function edd_generate_pdf( $data ) {
-
 	$edd_pdf_reports_nonce = $_GET['_wpnonce'];
 
 	if ( wp_verify_nonce( $edd_pdf_reports_nonce, 'edd_generate_pdf' ) ) {
-
 		include_once( EDD_PLUGIN_DIR . '/includes/libraries/fpdf/fpdf.php' );
 		include_once( EDD_PLUGIN_DIR . '/includes/libraries/fpdf/edd_pdf.php' );
 
@@ -71,11 +70,11 @@ function edd_generate_pdf( $data ) {
 
 		$year = date('Y');
 		$downloads = get_posts( array( 'post_type' => 'download', 'year' => $year, 'posts_per_page' => -1 ) );
-		if( $downloads ):
+
+		if ( $downloads ):
 			$pdf->SetWidths( array( 70, 30, 50, 50, 45, 35 ) );
 
-			foreach( $downloads as $download ):
-
+			foreach ( $downloads as $download ):
 				$pdf->SetFillColor( 255, 255, 255 );
 
 				$title = utf8_decode( get_the_title( $download->ID ) );
@@ -132,7 +131,6 @@ function edd_generate_pdf( $data ) {
 		$pdf->Image( $image .'&file=.png' );
 		$pdf->Ln( 7 );
 		$pdf->Output( 'edd-report-' . date_i18n('Y-m-d') . '.pdf', 'D' );
-
 	}
 }
 add_action( 'edd_generate_pdf', 'edd_generate_pdf' );
@@ -159,7 +157,8 @@ function edd_draw_chart_image() {
 	$i = 1;
 	$earnings = "";
 	$sales = "";
-	while( $i <= 12 ) :
+
+	while ( $i <= 12 ) :
 		$earnings .= edd_get_earnings_by_date( null, $i, date('Y') ) . ",";
 		$sales .= edd_get_sales_by_date( null, $i, date('Y') ) . ",";
 		$i++;
@@ -169,8 +168,8 @@ function edd_draw_chart_image() {
 	$sales_array = explode( ",", $sales );
 
 	$i = 0;
-	while( $i <= 11 ) {
-		if( empty( $sales_array[$i] ) )
+	while ( $i <= 11 ) {
+		if ( empty( $sales_array[ $i ] ) )
 			$sales_array[$i] = 0;
 		$i++;
 	}
@@ -210,7 +209,7 @@ function edd_draw_chart_image() {
 	$value_marker->setData( $data );
 	$chart->addMarker( $value_marker );
 
-	$data = new GoogleChartData( array( $sales_array[0],$sales_array[1], $sales_array[2],$sales_array[3], $sales_array[4],$sales_array[5],$sales_array[6],$sales_array[7],$sales_array[8],$sales_array[9],$sales_array[10],$sales_array[11] ) );
+	$data = new GoogleChartData( array( $sales_array[0], $sales_array[1], $sales_array[2], $sales_array[3], $sales_array[4], $sales_array[5], $sales_array[6], $sales_array[7], $sales_array[8], $sales_array[9], $sales_array[10], $sales_array[11] ) );
 	$data->setLegend( __( 'Sales', 'edd' ) );
 	$data->setColor( 'ff6c1c' );
 	$chart->addData( $data );
@@ -220,10 +219,7 @@ function edd_draw_chart_image() {
 	$chart->setScale( 0, $max_earnings );
 
 	$y_axis = new GoogleChartAxis( 'y' );
-	$y_axis->setDrawTickMarks( true )->setLabels( array(
-		0,
-		$max_earnings
-	) );
+	$y_axis->setDrawTickMarks( true )->setLabels( array( 0, $max_earnings ) );
 	$chart->addAxis( $y_axis );
 
 	$x_axis = new GoogleChartAxis( 'x' );

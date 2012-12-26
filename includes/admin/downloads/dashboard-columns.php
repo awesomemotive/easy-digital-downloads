@@ -10,7 +10,8 @@
 */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 /**
  * Donwload Columns
@@ -22,7 +23,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @return      array
 */
 
-function edd_download_columns( $download_columns ){
+function edd_download_columns( $download_columns ) {
 	$download_columns = array(
 		'cb'                => '<input type="checkbox"/>',
 		'title'             => __( 'Name', 'edd' ),
@@ -34,6 +35,7 @@ function edd_download_columns( $download_columns ){
 		'shortcode'         => __( 'Purchase Short Code', 'edd' ),
 		'date'              => __( 'Date', 'edd' )
 	);
+
 	return $download_columns;
 }
 add_filter( 'manage_edit-download_columns', 'edd_download_columns' );
@@ -50,8 +52,9 @@ add_filter( 'manage_edit-download_columns', 'edd_download_columns' );
 */
 
 function edd_render_download_columns( $column_name, $post_id ) {
-	if( get_post_type( $post_id ) == 'download' ) {
+	if ( get_post_type( $post_id ) == 'download' ) {
 		global $edd_options;
+
 		$style 			= isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button';
 		$color 			= isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue';
 		$purchase_text 	= isset( $edd_options['add_to_cart_text'] ) ? $edd_options['add_to_cart_text'] : __( 'Purchase', 'edd' );
@@ -95,7 +98,6 @@ add_action( 'manage_posts_custom_column', 'edd_render_download_columns', 10, 2 )
 */
 
 function edd_sortable_download_columns( $columns ) {
-
 	$columns['price'] = 'price';
 	$columns['sales'] = 'sales';
 	$columns['earnings'] = 'earnings';
@@ -116,26 +118,21 @@ add_filter( 'manage_edit-download_sortable_columns', 'edd_sortable_download_colu
 */
 
 function edd_sort_downloads( $vars ) {
-
 	// check if we're viewing the "download" post type
 	if ( isset( $vars['post_type'] ) && 'download' == $vars['post_type'] ) {
-
 		// check if 'orderby' is set to "sales"
 		if ( isset( $vars['orderby'] ) && 'sales' == $vars['orderby'] ) {
-
-			// merge the query vars with our custom variables
 			$vars = array_merge(
 				$vars,
 				array(
 					'meta_key' => '_edd_download_sales',
-					'orderby' => 'meta_value_num'
+					'orderby'  => 'meta_value_num'
 				)
 			);
 		}
 
 		// check if "orderby" is set to "earnings"
 		if ( isset( $vars['orderby'] ) && 'earnings' == $vars['orderby'] ) {
-			// merge the query vars with our custom variables
 			$vars = array_merge(
 				$vars,
 				array(
@@ -147,7 +144,6 @@ function edd_sort_downloads( $vars ) {
 
 		// check if "orderby" is set to "earnings"
 		if ( isset( $vars['orderby'] ) && 'price' == $vars['orderby'] ) {
-			// merge the query vars with our custom variables
 			$vars = array_merge(
 				$vars,
 				array(
@@ -191,31 +187,29 @@ add_action( 'load-edit.php', 'edd_download_load', 9999 );
 function edd_add_download_filters() {
 	global $typenow;
 
-	// the current post type
-	if( $typenow == 'download') {
-
+	// Checks if the current post type is 'download'
+	if ( $typenow == 'download') {
 		$terms = get_terms( 'download_category' );
-		if(count( $terms) > 0) {
+		if ( count( $terms ) > 0 ) {
 			echo "<select name='download_category' id='download_category' class='postform'>";
 				echo "<option value=''>" . __( 'Show all categories', 'edd' ) . "</option>";
-				foreach ( $terms as $term) {
-					$selected = isset( $_GET['download_category']) && $_GET['download_category'] == $term->slug ? ' selected="selected"' : '';
+				foreach ( $terms as $term ) {
+					$selected = isset( $_GET['download_category'] ) && $_GET['download_category'] == $term->slug ? ' selected="selected"' : '';
 					echo '<option value="' . esc_attr( $term->slug ) . '"' . $selected . '>' . esc_html( $term->name ) .' (' . $term->count .')</option>';
 				}
 			echo "</select>";
 		}
 
 		$terms = get_terms('download_tag');
-		if(count( $terms) > 0) {
+		if ( count( $terms ) > 0) {
 			echo "<select name='download_tag' id='download_tag' class='postform'>";
 				echo "<option value=''>" . __( 'Show all tags', 'edd' ) . "</option>";
-				foreach ( $terms as $term) {
+				foreach ( $terms as $term ) {
 					$selected = isset( $_GET['download_tag']) && $_GET['download_tag'] == $term->slug ? ' selected="selected"' : '';
 					echo '<option value="' . esc_attr( $term->slug ) . '"' . $selected . '>' . esc_html( $term->name ) .' (' . $term->count .')</option>';
 				}
 			echo "</select>";
 		}
-
 	}
 
 }
@@ -235,9 +229,7 @@ function edd_price_field_quick_edit( $column_name, $post_type ) {
 	?>
 	<fieldset class="inline-edit-col-left">
 		<div id="edd-download-data" class="inline-edit-col">
-
 			<h4><?php echo sprintf( __( '%s Configuration', 'edd' ), edd_get_label_singular() ); ?></h4>
-
 			<label>
 				<span class="title"><?php _e( 'Price', 'edd' ); ?></span>
 				<span class="input-text-wrap">
@@ -245,7 +237,6 @@ function edd_price_field_quick_edit( $column_name, $post_type ) {
 				</span>
 			</label>
 			<br class="clear" />
-
 		</div>
 	</fieldset>
 	<?php
