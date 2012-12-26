@@ -190,6 +190,7 @@ final class Easy_Digital_Downloads {
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php' );
+			include_once( EDD_PLUGIN_DIR . 'includes/admin/welcome.php' );
 		} else {
 			include_once( EDD_PLUGIN_DIR . 'includes/process-purchase.php' );
 			include_once( EDD_PLUGIN_DIR . 'includes/process-download.php' );
