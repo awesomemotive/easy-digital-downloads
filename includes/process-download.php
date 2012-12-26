@@ -273,6 +273,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'mp2a'		: $ctype	= "audio/mpeg"; break;
 		case 'mp21'		: $ctype	= "application/mp21"; break;
 		case 'mp3'		: $ctype	= "audio/mpeg"; break;
+		case 'mp3a'		: $ctype	= "audio/mpeg"; break;
 		case 'mp4'		: $ctype	= "video/mp4"; break;
 		case 'mp4s'		: $ctype	= "application/mp4"; break;
 		case 'mpe'		: $ctype	= "video/mpeg"; break;
