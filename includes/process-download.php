@@ -195,9 +195,13 @@ function edd_get_file_ctype( $extension ) {
 		case 'exi'		: $ctype	= "application/exi"; break;
 		case 'ez'		: $ctype	= "application/andrew-inset"; break;
 		case 'gif'		: $ctype	= "image/gif"; break;
+		case 'gml'		: $ctype	= "application/srgs"; break;
+		case 'gpx'		: $ctype	= "application/srgs"; break;
+
 		case 'gram'		: $ctype	= "application/srgs"; break;
 		case 'grxml'	: $ctype	= "application/srgs+xml"; break;
 		case 'gtar'		: $ctype	= "application/x-gtar"; break;
+		case 'gxf'		: $ctype	= "application/gxf"; break;
 		case 'hdf'		: $ctype	= "application/x-hdf"; break;
 		case 'hqx'		: $ctype	= "application/mac-binhex40"; break;
 		case 'htm'		: $ctype	= "text/html"; break;
