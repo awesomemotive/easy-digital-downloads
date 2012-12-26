@@ -173,6 +173,8 @@ function edd_get_file_ctype( $extension ) {
 		case 'dcr'		: $ctype	= "application/x-director"; break;
 		case 'dif'		: $ctype	= "video/x-dv"; break;
 		case 'dir'		: $ctype	= "application/x-director"; break;
+		case 'dist'		: $ctype	= "application/octet-stream"; break;
+		case 'distz'	: $ctype	= "application/octet-stream"; break;
 		case 'djv'		: $ctype	= "image/vnd.djvu"; break;
 		case 'djvu'		: $ctype	= "image/vnd.djvu"; break;
 		case 'dll'		: $ctype	= "application/octet-stream"; break;
