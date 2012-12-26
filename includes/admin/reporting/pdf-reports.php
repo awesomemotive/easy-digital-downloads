@@ -29,8 +29,8 @@ function edd_generate_pdf( $data ) {
 	$edd_pdf_reports_nonce = $_GET['_wpnonce'];
 
 	if ( wp_verify_nonce( $edd_pdf_reports_nonce, 'edd_generate_pdf' ) ) {
-		require_once( EDD_PLUGIN_DIR . '/includes/libraries/fpdf/fpdf.php' );
-		require_once( EDD_PLUGIN_DIR . '/includes/libraries/fpdf/edd_pdf.php' );
+		require_once EDD_PLUGIN_DIR . '/includes/libraries/fpdf/fpdf.php';
+		require_once EDD_PLUGIN_DIR . '/includes/libraries/fpdf/edd_pdf.php';
 
 		$daterange = date_i18n( get_option( 'date_format' ), mktime( 0, 0, 0, 1, 1, date( 'Y' ) ) ) . ' ' . utf8_decode( __( 'to', 'edd' ) ) . ' ' . date_i18n( get_option( 'date_format' ) );
 
@@ -148,9 +148,9 @@ add_action( 'edd_generate_pdf', 'edd_generate_pdf' );
 */
 
 function edd_draw_chart_image() {
-	require_once( EDD_PLUGIN_DIR . '/includes/libraries/googlechartlib/GoogleChart.php' );
-	require_once( EDD_PLUGIN_DIR . '/includes/libraries/googlechartlib/markers/GoogleChartShapeMarker.php' );
-	require_once( EDD_PLUGIN_DIR . '/includes/libraries/googlechartlib/markers/GoogleChartTextMarker.php' );
+	require_once EDD_PLUGIN_DIR . '/includes/libraries/googlechartlib/GoogleChart.php';
+	require_once EDD_PLUGIN_DIR . '/includes/libraries/googlechartlib/markers/GoogleChartShapeMarker.php';
+	require_once EDD_PLUGIN_DIR . '/includes/libraries/googlechartlib/markers/GoogleChartTextMarker.php';
 
 	$chart = new GoogleChart( 'lc', 900, 330 );
 
