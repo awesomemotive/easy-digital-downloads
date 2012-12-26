@@ -23,7 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @author      Sunny Ratilal
  * @return      void
 */
-
 function edd_discounts_page() {
 	global $edd_options;
 
