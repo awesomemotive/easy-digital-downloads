@@ -239,6 +239,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'mads'		: $ctype	= "application/mads+xml"; break;
 		case 'man'		: $ctype	= "application/x-troff-man"; break;
 		case 'mathml'	: $ctype	= "application/mathml+xml"; break;
+		case 'mbox'		: $ctype	= "application/mbox"; break;
 		case 'me'		: $ctype	= "application/x-troff-me"; break;
 		case 'mesh'		: $ctype	= "model/mesh"; break;
 		case 'mid'		: $ctype	= "audio/midi"; break;
