@@ -35,6 +35,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public $refunded_count;
 	public $failed_count;
 
+
 	function __construct(){
 		global $status, $page;
 
