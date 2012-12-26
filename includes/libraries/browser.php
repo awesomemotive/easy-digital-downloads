@@ -352,16 +352,16 @@
 		//                  $text2 to be printed off
 		// but we need to add spaces before each line that is split other than line 1
 		$space = '';
-		for($i = 0; $i < 33; $i++) {
+		for($i = 0; $i < 25; $i++) {
 		$space .= ' ';
 		}
 		// now we split the remaining string of UA ($text2) into lines that are prefixed by spaces for formatting
 		$wordwrapped = chunk_split($towrapUA, 32, "\n $space");
 			return "Platform:                 {$this->getPlatform()} \n".
-				   "	Browser Name:             {$this->getBrowser()}  \n" .
-			       "	Browser Version:          {$this->getVersion()} \n" .
-			       "	User Agent String:        $UAline1 \n                                  " .
-				   "$wordwrapped ";
+				   "Browser Name:             {$this->getBrowser()}  \n" .
+			       "Browser Version:          {$this->getVersion()} \n" .
+			       "User Agent String:        $UAline1 \n\t\t\t  " .
+				   "$wordwrapped";
 		}
 		/**
 		 * Protected routine to calculate and determine what the browser is in use (including platform)
