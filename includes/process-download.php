@@ -163,6 +163,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'cdmio'	: $ctype	= "application/cdmi-object"; break;
 		case 'cdmiq'	: $ctype	= "application/cdmi-queue"; break;
 		case 'cdf'		: $ctype	= "application/x-netcdf"; break;
+		case 'cer'		: $ctype	= "application/pkix-cert"; break;
 		case 'cgm'		: $ctype	= "image/cgm"; break;
 		case 'class'	: $ctype	= "application/octet-stream"; break;
 		case 'cpio'		: $ctype	= "application/x-cpio"; break;
