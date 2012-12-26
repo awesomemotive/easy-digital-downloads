@@ -10,7 +10,7 @@
  * For the full copyright and license information, please view the LICENSE file.
  */
 
-include_once dirname(__FILE__).'/../GoogleChartMarker.php';
+require_once dirname(__FILE__).'/../GoogleChartMarker.php';
 
 /**
  * A Shape Marker.

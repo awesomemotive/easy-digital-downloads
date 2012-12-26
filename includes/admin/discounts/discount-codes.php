@@ -30,7 +30,7 @@ function edd_discounts_page() {
 
 		<?php if( isset( $_GET['edd-action'] ) && $_GET['edd-action'] == 'edit_discount' ): ?>
 
-			<?php include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/edit-discount.php' ); ?>
+			<?php require_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/edit-discount.php' ); ?>
 
 		<?php else: ?>
 			<h2><?php _e( 'Discount Codes', 'edd' ); ?></h2>
@@ -124,7 +124,7 @@ function edd_discounts_page() {
 			</table>
 			<?php do_action( 'edd_discounts_below_table' ); ?>
 
-			<?php include_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/add-discount.php' ); ?>
+			<?php require_once( EDD_PLUGIN_DIR . 'includes/admin/discounts/add-discount.php' ); ?>
 
 		<?php endif; ?>
 
