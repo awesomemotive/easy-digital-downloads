@@ -221,6 +221,8 @@ function edd_get_file_ctype( $extension ) {
 		case 'jpe'		: $ctype	= "image/jpeg"; break;
 		case 'jpeg'		: $ctype	= "image/jpeg"; break;
 		case 'jpg'		: $ctype	= "image/jpeg"; break;
+		case 'js'		: $ctype	= "application/javascript"; break;
+		case 'js'		: $ctype	= "application/x-javascript"; break;
 		case 'js'		: $ctype	= "application/x-javascript"; break;
 		case 'kar'		: $ctype	= "audio/midi"; break;
 		case 'latex'	: $ctype	= "application/x-latex"; break;
