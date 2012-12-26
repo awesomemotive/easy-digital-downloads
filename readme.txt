@@ -195,7 +195,6 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Serious Optomizations
 * Optimized png's losslessly
 * Stripped whitespace + normalize
-* Added edd_send_back_to_checkout()
 * Added New Helper Function for "Transaction ID" 
 * Added "failed" payment status 
 * Added Profile Editor
