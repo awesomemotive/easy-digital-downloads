@@ -1,52 +1,40 @@
 <?php
+/**
+ * File Downloads Log View Class
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  File Downloads Log View Class
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
-if( !class_exists( 'WP_List_Table' ) ) {
+
+// Load WP_List_Table if not loaded
+if( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
-
 /**
- * Sets up the WP list table for the File Downloads Logs View
+ * EDD File Downloads Log View Class
  *
- * @since       1.4
+ * Renders the file downloads log view 
+ *
+ * @access      private
  */
 
 class EDD_File_Downloads_Log_Table extends WP_List_Table {
-
-	/**
-	 * Number of results to show per page
-	 *
-	 * @since       1.4
-	 */
-
 	public $per_page = 30;
-
-
-	/**
-	 * Are we searching for files?
-	 *
-	 * @since       1.4
-	 */
-
 	public $file_search = false;
 
 
-	/**
-	 * Get things started
-	 *
-	 * @access      private
-	 * @since       1.4
-	 * @return      void
-	 */
-
 	function __construct() {
-
 		global $status, $page;
 
-		//Set parent defaults
+		// Set parent defaults
 		parent::__construct( array(
 			'singular'  => edd_get_label_singular(),    // singular name of the listed records
 			'plural'    => edd_get_label_plural(),    	// plural name of the listed records
@@ -54,7 +42,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		) );
 
 		add_action( 'edd_log_view_actions', array( $this, 'downloads_filter' ) );
-
 	}
 
 
@@ -67,21 +54,19 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 */
 
 	function search_box( $text, $input_id ) {
-
 		$input_id = $input_id . '-search-input';
 
 		if ( ! empty( $_REQUEST['orderby'] ) )
 			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
 		if ( ! empty( $_REQUEST['order'] ) )
 			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
-?>
+		?>
 		<p class="search-box">
 			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
 			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
 			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
 		</p>
-<?php
-
+		<?php
 	}
 
 
@@ -177,15 +162,12 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 */
 
 	function get_meta_query() {
-
 		$user = $this->get_filtered_user();
 
 		$meta_query = array();
 
-		if( $user ) {
-
-			// show only logs from a specific user
-
+		if ( $user ) {
+			// Show only logs from a specific user
 			$meta_query[] = array(
 				'key'   => '_edd_log_user_id',
 				'value' => $user
@@ -194,38 +176,28 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		$search = $this->get_search();
 
-		if( $search ) {
-
-			if( filter_var( $search, FILTER_VALIDATE_IP ) ) {
-
+		if ( $search ) {
+			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
 				// this is an IP address search
 				$key     = '_edd_log_ip';
 				$compare = '=';
-
-			} else if( is_email( $search ) ) {
-
+			} else if ( is_email( $search ) ) {
 				// this is an email search. We use this to ensure it works for guest users and logged-in users
 				$key     = '_edd_log_user_info';
 				$compare = 'LIKE';
-
 			} else {
-
 				// look for a user
 				$key = '_edd_log_user_id';
 				$compare = 'LIKE';
 
-				if( ! is_numeric( $search ) ) {
-
+				if ( ! is_numeric( $search ) ) {
 					// searching for user by username
 					$user = get_user_by( 'login', $search );
 
-					if( $user ) {
-
+					if ( $user ) {
 						// found one, set meta value to user's ID
 						$search = $user->ID;
-
 					} else {
-
 						// no user found so let's do a real search query
 						$users = new WP_User_Query( array(
 							'search'         => $search,
@@ -236,35 +208,27 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 						$found_user = $users->get_results();
 
-						if( $found_user ) {
-
+						if ( $found_user ) {
 							$search = $found_user[0];
-
 						} else {
-
 							// no users were found so let's look for file names instead
 							$this->file_search = true;
-
 						}
 					}
 				}
 			}
 
 			if( ! $this->file_search ) {
-
 				// meta query only works for non file name searche
-
 				$meta_query[] = array(
 					'key'     => $key,
 					'value'   => $search,
 					'compare' => $compare
 				);
-
 			}
 		}
 
 		return $meta_query;
-
 	}
 
 
@@ -290,7 +254,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 */
 
 	function bulk_actions() {
-		// these aren't really bulk actions but this outputs the markup in the right place
+		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
 	}
 
@@ -311,7 +275,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			'orderby'        => 'title',
 			'order'          => 'ASC'
 		) );
-		if( $downloads ) {
+		if ( $downloads ) {
 			echo '<select name="download" id="edd-log-download-filter">';
 				echo '<option value="0">' . __( 'All', 'edd' ) . '</option>';
 				foreach( $downloads as $download ) {
@@ -331,7 +295,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 */
 
 	function get_logs() {
-
 		global $edd_logs;
 
 		$logs_data = array();
@@ -348,10 +311,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		$logs = $edd_logs->get_connected_logs( $log_query );
 
-		if( $logs ) {
-
-			foreach( $logs as $log ) {
-
+		if ( $logs ) {
+			foreach ( $logs as $log ) {
 				$user_info 	 = get_post_meta( $log->ID, '_edd_log_user_info', true );
 				$payment_id  = get_post_meta( $log->ID, '_edd_log_payment_id', true );
 				$ip 		 = get_post_meta( $log->ID, '_edd_log_ip', true );
@@ -362,8 +323,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				$file_id 	 = $file_id !== false ? $file_id : 0;
 				$file_name 	 = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
 
-				if( ( $this->file_search && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) || ! $this->file_search ) {
-
+				if ( ( $this->file_search && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) || ! $this->file_search ) {
 					$logs_data[] = array(
 						'ID' 		=> $log->ID,
 						'download'	=> $log->post_parent,
@@ -374,7 +334,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 						'ip'		=> $ip,
 						'date'		=> $log->post_date
 					);
-
 				}
 			}
 		}
@@ -383,17 +342,21 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	}
 
 
-	/** ************************************************************************
-	 * @uses $this->_column_headers
-	 * @uses $this->items
-	 * @uses $this->get_columns()
-	 * @uses $this->get_sortable_columns()
-	 * @uses $this->get_pagenum()
-	 * @uses $this->set_pagination_args()
-	 **************************************************************************/
+	/**
+	 * Setup the final data for the table
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @uses        $this->_column_headers
+	 * @uses        $this->items
+	 * @uses        $this->get_columns()
+	 * @uses        $this->get_sortable_columns()
+	 * @uses        $this->get_pagenum()
+	 * @uses        $this->set_pagination_args()
+	 * @return      array
+	 */
 
 	function prepare_items() {
-
 		global $edd_logs;
 
 		$columns               = $this->get_columns();
@@ -410,5 +373,4 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			)
 		);
 	}
-
 }
