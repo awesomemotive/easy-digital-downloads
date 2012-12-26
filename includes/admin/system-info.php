@@ -1,6 +1,18 @@
 <?php
+/**
+ * System Info
+ *
+ * These are functions are used for exporting data from Easy Digital Downloads.
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  System Info
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+*/
+
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 /**
  * System info
@@ -13,7 +25,6 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 
 function edd_system_info() {
-
 	global $wpdb;
 
 	if ( ! class_exists( 'Browser' ) )
@@ -22,10 +33,10 @@ function edd_system_info() {
 	$browser =  new Browser();
 
 ?>
-<div class="wrap">
-<h2><?php _e( 'System Information', 'edd' ) ?></h2><br/>
-<form action="edit.php?post_type=download&page=edd-system-info" method="post">
-<textarea readonly="readonly" id="system-info-textarea" name="edd-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
+	<div class="wrap">
+		<h2><?php _e( 'System Information', 'edd' ) ?></h2><br/>
+		<form action="edit.php?post_type=download&page=edd-system-info" method="post">
+			<textarea readonly="readonly" id="system-info-textarea" name="edd-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
 ### Begin System Info ###
 
 ## Please include this information when posting support requests ##
@@ -76,14 +87,13 @@ $plugins = get_plugins();
 $active_plugins = get_option( 'active_plugins', array() );
 
 foreach ( $plugins as $plugin_path => $plugin ):
-
-	//If the plugin isn't active, don't show it.
-	if ( !in_array( $plugin_path, $active_plugins ) )
+	// If the plugin isn't active, don't show it.
+	if ( ! in_array( $plugin_path, $active_plugins ) )
 		continue;
-?>
-<?php echo $plugin['Name']; ?>: <?php echo $plugin['Version']; ?>
 
-<?php endforeach; ?>
+echo $plugin['Name']; ?>: <?php echo $plugin['Version'];
+
+endforeach; ?>
 
 CURRENT THEME:
 
@@ -99,29 +109,30 @@ if ( get_bloginfo( 'version' ) < '3.4' ) {
 
 
 ### End System Info ###
-</textarea>
-<p class="submit">
-	<input type="hidden" name="edd-action" value="download_sysinfo" />
-	<input class="button-primary" name="edd-download-sysinfo" value="<?php _e( 'Download System Info File', 'edd' ); ?>" type="submit"/>
-</p>
-</form>
-</div>
-</div>
+			</textarea>
+			<p class="submit">
+				<input type="hidden" name="edd-action" value="download_sysinfo" />
+				<?php submit_button( __( 'Download System Info File', 'edd' ), 'primary', 'edd-download-sysinfo', false ); ?>
+			</p>
+		</form>
+		</div>
+	</div>
 <?php
 }
 
+
 /**
- * Generates the System Info download file
+ * Generates the System Info Download file
  *
  * @since   1.4
  * @return  void
  */
-function edd_generate_sysinfo_download() {
 
+function edd_generate_sysinfo_download() {
 	nocache_headers();
 
-	header("Content-type: text/plain");
-	header('Content-Disposition: attachment; filename="edd-system-info.txt"');
+	header( "Content-type: text/plain" );
+	header( 'Content-Disposition: attachment; filename="edd-system-info.txt"' );
 
 	echo wp_strip_all_tags( $_POST['edd-sysinfo'] );
 	exit;
