@@ -135,6 +135,7 @@ final class Easy_Digital_Downloads {
 		}*/
 
 		require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/template-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/functions.php';
@@ -142,7 +143,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
-		require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/formatting.php';
 		require_once EDD_PLUGIN_DIR . 'includes/widgets.php';
 		require_once EDD_PLUGIN_DIR . 'includes/mime-types.php';
