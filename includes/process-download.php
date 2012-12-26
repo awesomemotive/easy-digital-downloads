@@ -155,7 +155,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'bin'		: $ctype	= "application/octet-stream"; break;
 		case 'bmp'		: $ctype	= "image/bmp"; break;
 		case 'ccxml'	: $ctype	= "application/ccxml+xml"; break;
-		case 'cdmia'	: $ctype	= "application/x-netcdf"; break;
+		case 'cdmia'	: $ctype	= "application/cdmi-capability"; break;
 		case 'cdmic'	: $ctype	= "application/x-netcdf"; break;
 		case 'cdmid'	: $ctype	= "application/x-netcdf"; break;
 		case 'cdmio'	: $ctype	= "application/x-netcdf"; break;
