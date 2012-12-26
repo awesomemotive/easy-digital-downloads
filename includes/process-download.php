@@ -270,6 +270,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'mov'		: $ctype	= "video/quicktime"; break;
 		case 'movie'	: $ctype	= "video/x-sgi-movie"; break;
 		case 'mp2'		: $ctype	= "audio/mpeg"; break;
+		case 'mp2a'		: $ctype	= "audio/mpeg"; break;
 		case 'mp21'		: $ctype	= "application/mp21"; break;
 		case 'mp3'		: $ctype	= "audio/mpeg"; break;
 		case 'mp4'		: $ctype	= "video/mp4"; break;
