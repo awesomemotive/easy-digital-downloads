@@ -10,7 +10,8 @@
 */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 
 /**
  * Options Page
@@ -29,7 +30,6 @@ function edd_options_page() {
 
 	ob_start(); ?>
 	<div class="wrap">
-
 		<h2 class="nav-tab-wrapper">
 			<a href="<?php echo add_query_arg('tab', 'general', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>"><?php _e('General', 'edd'); ?></a>
 			<a href="<?php echo add_query_arg('tab', 'gateways', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'gateways' ? 'nav-tab-active' : ''; ?>"><?php _e('Payment Gateways', 'edd'); ?></a>
@@ -40,41 +40,36 @@ function edd_options_page() {
 		</h2>
 
 		<div id="tab_container">
-
 			<?php //settings_errors( 'edd-notices' ); ?>
 
 			<form method="post" action="options.php">
-
 				<?php
-
-				if($active_tab == 'general') {
-					settings_fields('edd_settings_general');
-					do_settings_sections('edd_settings_general');
-				} elseif($active_tab == 'gateways') {
-					settings_fields('edd_settings_gateways');
-					do_settings_sections('edd_settings_gateways');
-				} elseif($active_tab == 'emails') {
-					settings_fields('edd_settings_emails');
-					do_settings_sections('edd_settings_emails');
-				} elseif($active_tab == 'styles') {
-					settings_fields('edd_settings_styles');
-					do_settings_sections('edd_settings_styles');
-				} elseif($active_tab == 'taxes') {
-					settings_fields('edd_settings_taxes');
-					do_settings_sections('edd_settings_taxes');
+				if ( $active_tab == 'general' ) {
+					settings_fields( 'edd_settings_general' );
+					do_settings_sections( 'edd_settings_general' );
+				} elseif ( $active_tab == 'gateways' ) {
+					settings_fields( 'edd_settings_gateways' );
+					do_settings_sections( 'edd_settings_gateways' );
+				} elseif ( $active_tab == 'emails' ) {
+					settings_fields( 'edd_settings_emails' );
+					do_settings_sections( 'edd_settings_emails' );
+				} elseif ( $active_tab == 'styles' ) {
+					settings_fields('edd_settings_styles' );
+					do_settings_sections('edd_settings_styles' );
+				} elseif ($active_tab == 'taxes' ) {
+					settings_fields('edd_settings_taxes' );
+					do_settings_sections('edd_settings_taxes' );
 				} else {
-					settings_fields('edd_settings_misc');
-					do_settings_sections('edd_settings_misc');
+					settings_fields( 'edd_settings_misc' );
+					do_settings_sections( 'edd_settings_misc' );
 				}
 
 				submit_button();
-
 				?>
 
 			</form>
-		</div><!--end #tab_container-->
-
-	</div>
+		</div><!-- #tab_container-->
+	</div><!-- .wrap -->
 	<?php
 	echo ob_get_clean();
 }
