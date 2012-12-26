@@ -249,6 +249,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'mid'		: $ctype	= "audio/midi"; break;
 		case 'midi'		: $ctype	= "audio/midi"; break;
 		case 'mif'		: $ctype	= "application/vnd.mif"; break;
+		case 'mods'		: $ctype	= "application/mods+xml"; break;	
 		case 'mov'		: $ctype	= "video/quicktime"; break;
 		case 'movie'	: $ctype	= "video/x-sgi-movie"; break;
 		case 'mp2'		: $ctype	= "audio/mpeg"; break;
