@@ -368,6 +368,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'texinfo'	: $ctype	= "application/x-texinfo"; break;
 		case 'tif'		: $ctype	= "image/tiff"; break;
 		case 'tiff'		: $ctype	= "image/tiff"; break;
+		case 'torrent'	: $ctype	= "application/x-bittorrent"; break;
 		case 'tr'		: $ctype	= "application/x-troff"; break;
 		case 'tsv'		: $ctype	= "text/tab-separated-values"; break;
 		case 'txt'		: $ctype	= "text/plain"; break;
