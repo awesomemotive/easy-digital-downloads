@@ -1,14 +1,32 @@
 <?php
+/**
+ * Customer Reports Table Class
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Customer Reports List Table Class
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
-if( !class_exists( 'WP_List_Table' ) ) {
+
+// Load WP_List_Table if not loaded
+if( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
-class EDD_Customer_Reports_Table extends WP_List_Table {
+/**
+ * EDD Customer Reports Table Class
+ *
+ * Renders the Customer Reports table
+ *
+ * @access      private
+ */
 
+class EDD_Customer_Reports_Table extends WP_List_Table {
 
 	/**
 	 * Number of results to show per page
@@ -18,6 +36,14 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 	public $per_page = 30;
 
+
+	/**
+	 * Get things started
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      void
+	 */
 
 	function __construct(){
 		global $status, $page;
@@ -32,9 +58,16 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 
+	/**
+	 * Render most columns
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      string
+	 */
+
 	function column_default( $item, $column_name ) {
 		switch( $column_name ) {
-
 			case 'name' :
 				return '<a href="' .
 						admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] )
@@ -48,10 +81,17 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 			default:
 				return $item[ $column_name ];
-
 		}
 	}
 
+
+	/**
+	 * Retrieve the table columns
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      array
+	 */
 
 	function get_columns(){
 		$columns = array(
@@ -61,13 +101,24 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'amount_spent'  => __( 'Total Amount Spent', 'edd' ),
 			'file_downloads'=> __( 'Files Downloaded', 'edd' )
 		);
+
 		return $columns;
 	}
 
+
+	/**
+	 * Show reporting views
+	 *
+	 * @access      private
+	 * @since       1.3
+	 * @return      void
+	 */
+
 	function bulk_actions() {
-		// these aren't really bulk actions but this outputs the markup in the right place
+		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_report_views();
 	}
+
 
 	/**
 	 * Retrieve the current page number
@@ -84,9 +135,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 	function get_total_customers() {
 		global $wpdb;
-
 		$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
-
 		return $count[0];
 	}
 
@@ -99,9 +148,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$offset       = $this->per_page * ( $paged - 1 );
 		$customers    = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' ORDER BY meta_id DESC LIMIT $this->per_page OFFSET $offset" );
 
-		if( $customers ) {
-			foreach( $customers as $customer_email ) {
-
+		if ( $customers ) {
+			foreach ( $customers as $customer_email ) {
 				$wp_user = get_user_by( 'email', $customer_email );
 
 				$user_id = $wp_user ? $wp_user->ID : 0;
@@ -116,20 +164,26 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				);
 			}
 		}
+
 		return $reports_data;
 	}
 
 
-	/** ************************************************************************
-	 * @uses $this->_column_headers
-	 * @uses $this->items
-	 * @uses $this->get_columns()
-	 * @uses $this->get_sortable_columns()
-	 * @uses $this->get_pagenum()
-	 * @uses $this->set_pagination_args()
-	 **************************************************************************/
-	function prepare_items() {
+	/**
+	 * Setup the final data for the table
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @uses        $this->_column_headers
+	 * @uses        $this->items
+	 * @uses        $this->get_columns()
+	 * @uses        $this->get_sortable_columns()
+	 * @uses        $this->get_pagenum()
+	 * @uses        $this->set_pagination_args()
+	 * @return      array
+	 */
 
+	function prepare_items() {
 		$columns = $this->get_columns();
 
 		$hidden = array(); // no hidden columns
@@ -152,5 +206,4 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'total_pages' => ceil( $total_items / $this->per_page )   // WE have to calculate the total number of pages
 		) );
 	}
-
 }

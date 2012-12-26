@@ -1,16 +1,29 @@
 <?php
+/**
+ * Gateway Error Log View Class
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Gateway Errors List Table Log View Class
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
-if( !class_exists( 'WP_List_Table' ) ) {
+
+// Load WP_List_Table if not loaded
+if( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
-
 /**
- * Sets up the WP list table for the Gateway Error Logs View
+ * EDD Gateway Errors List Table Log View Class
  *
+ * Renders the gateway errors list table
+ *
+ * @access      private
  * @since       1.4
  */
 
@@ -43,7 +56,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 			'plural'    => edd_get_label_plural(),    	// plural name of the listed records
 			'ajax'      => false             			// does this table support ajax?
 		) );
-
 	}
 
 
@@ -57,7 +69,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 
 	function column_default( $item, $column_name ) {
 		switch( $column_name ){
-
 			case 'error' :
 				return get_the_title( $item['ID'] ) ? get_the_title( $item['ID'] ) : __( 'Payment Error', 'edd' );
 			case 'gateway' :
@@ -67,9 +78,9 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' ) . urlencode( $user ) . '">' . $item['buyer'] . '</a>';
 			default:
 				return $item[ $column_name ];
-
 		}
 	}
+
 
 	/**
 	 * Output Error message column
@@ -80,36 +91,32 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 */
 
 	function column_message( $item ) {
-
-?>
+	?>
 		<a href="#TB_inline?width=640&amp;inlineId=log-message-<?php echo $item['ID']; ?>" class="thickbox" title="<?php _e( 'View Log Message', 'edd' ); ?> "><?php _e( 'View Log Message', 'edd' ); ?></a>
 		<div id="log-message-<?php echo $item['ID']; ?>" style="display:none;">
 			<?php
 
 			$log_message = get_post_field( 'post_content', $item['ID'] );
-			$serialized = strpos( $log_message, '{"' );
+			$serialized  = strpos( $log_message, '{"' );
 
-			// check to see if the log message contains serialized information
-			if( $serialized !== false ) {
-
+			// Check to see if the log message contains serialized information
+			if ( $serialized !== false ) {
 				$length  = strlen( $log_message ) - $serialized;
 				$intro   = substr( $log_message, 0, - $length );
 				$data    = substr( $log_message, $serialized, strlen( $log_message ) - 1 );
 
 				echo wpautop( $intro );
-
 				echo wpautop( __( '<strong>Log data:</strong>') );
-
 				echo '<div style="word-wrap: break-word;">' . wpautop( $data ) . '</div>';
-
 			} else {
-				// no serialized data found
+				// No serialized data found
 				echo wpautop( $log_message );
 			}
 			?>
 		</div>
-<?php
+	<?php
 	}
+
 
 	/**
 	 * Setup the column names / IDs
@@ -123,12 +130,13 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 		$columns = array(
 			'ID'         => __( 'Log ID', 'edd' ),
 			'payment_id' => __( 'Payment ID', 'edd' ),
-			'error'   => __( 'Error', 'edd' ),
-			'message' => __( 'Error Message', 'edd' ),
-			'gateway' => __( 'Gateway', 'edd' ),
-			'buyer'   => __( 'Buyer', 'edd' ),
-			'date'    => __( 'Date', 'edd' )
+			'error'      => __( 'Error', 'edd' ),
+			'message'    => __( 'Error Message', 'edd' ),
+			'gateway'    => __( 'Gateway', 'edd' ),
+			'buyer'      => __( 'Buyer', 'edd' ),
+			'date'       => __( 'Date', 'edd' )
 		);
+
 		return $columns;
 	}
 
@@ -147,7 +155,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 
 
 	/**
-	 * Outputs the log filters filter
+	 * Outputs the log views
 	 *
 	 * @access      private
 	 * @since       1.4
@@ -155,7 +163,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 */
 
 	function bulk_actions() {
-		// these aren't really bulk actions but this outputs the markup in the right place
+		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
 	}
 
@@ -169,7 +177,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 */
 
 	function get_logs() {
-
 		global $edd_logs;
 
 		$logs_data = array();
@@ -181,10 +188,8 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 
 		$logs = $edd_logs->get_connected_logs( $log_query );
 
-		if( $logs ) {
-
-			foreach( $logs as $log ) {
-
+		if ( $logs ) {
+			foreach ( $logs as $log ) {
 				$user_info  = edd_get_payment_meta_user_info( $log->post_parent );
 				$user_id 	= isset( $user_info['id']) ? $user_info['id'] : 0;
 				$user_data 	= get_userdata( $user_id );
@@ -205,17 +210,21 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	}
 
 
-	/** ************************************************************************
-	 * @uses $this->_column_headers
-	 * @uses $this->items
-	 * @uses $this->get_columns()
-	 * @uses $this->get_sortable_columns()
-	 * @uses $this->get_pagenum()
-	 * @uses $this->set_pagination_args()
-	 **************************************************************************/
+	/**
+	 * Setup the final data for the table
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @uses        $this->_column_headers
+	 * @uses        $this->items
+	 * @uses        $this->get_columns()
+	 * @uses        $this->get_sortable_columns()
+	 * @uses        $this->get_pagenum()
+	 * @uses        $this->set_pagination_args()
+	 * @return      array
+	 */
 
 	function prepare_items() {
-
 		global $edd_logs;
 
 		$columns               = $this->get_columns();
@@ -233,5 +242,4 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 			)
 		);
 	}
-
 }

@@ -1,35 +1,39 @@
 <?php
+/**
+ * Download Reports Table Class
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Download Reports List Table Class
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
-if( !class_exists( 'WP_List_Table' ) ) {
+
+// Load WP_List_Table if not loaded
+if( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
+/**
+ * EDD Download Reports Table Class
+ *
+ * Renders the Download Reports table
+ *
+ * @access      private
+ */
+
 class EDD_Download_Reports_Table extends WP_List_Table {
-
-	/**
-	 * Number of results to show per page
-	 *
-	 * @since       1.4
-	 */
-
 	public $per_page = 30;
 
 
-	/**
-	 * Get things started
-	 *
-	 * @access      private
-	 * @since       1.3
-	 * @return      void
-	 */
-
-	function __construct(){
+	function __construct() {
 		global $status, $page;
 
-		//Set parent defaults
+		// Set parent defaults
 		parent::__construct( array(
 			'singular'  => edd_get_label_singular(),    // singular name of the listed records
 			'plural'    => edd_get_label_plural(),    	// plural name of the listed records
@@ -122,7 +126,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	function get_total_downloads() {
 		$counts = wp_count_posts( 'download' );
 		$total  = 0;
-		foreach( $counts as $count )
+		foreach ( $counts as $count )
 			$total += $count;
 		return $total;
 	}
@@ -137,7 +141,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 */
 
 	function bulk_actions() {
-		// these are really bulk actions but this outputs the markup in the right place
+		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_report_views();
 	}
 
@@ -151,7 +155,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 */
 
 	function reports_data() {
-
 		$reports_data = array();
 
 		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'title';
@@ -166,7 +169,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		);
 
 		switch( $orderby ) :
-
 			case 'title' :
 				$report_args['orderby'] = 'title';
 				break;
@@ -180,12 +182,11 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 				$report_args['orderby'] = 'meta_value_num';
 				$report_args['meta_key'] = '_edd_download_earnings';
 				break;
-
 		endswitch;
 
 		$downloads = get_posts( $report_args );
-		if( $downloads ) {
-			foreach( $downloads as $download ) {
+		if ( $downloads ) {
+			foreach ( $downloads as $download ) {
 				$reports_data[] = array(
 					'ID' 				=> $download->ID,
 					'title' 			=> get_the_title( $download->ID ),
@@ -196,21 +197,26 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 				);
 			}
 		}
+
 		return $reports_data;
 	}
 
 
-	/** ************************************************************************
-	 * @uses $this->_column_headers
-	 * @uses $this->items
-	 * @uses $this->get_columns()
-	 * @uses $this->get_sortable_columns()
-	 * @uses $this->get_pagenum()
-	 * @uses $this->set_pagination_args()
-	 **************************************************************************/
+	/**
+	 * Setup the final data for the table
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @uses        $this->_column_headers
+	 * @uses        $this->items
+	 * @uses        $this->get_columns()
+	 * @uses        $this->get_sortable_columns()
+	 * @uses        $this->get_pagenum()
+	 * @uses        $this->set_pagination_args()
+	 * @return      array
+	 */
 
 	function prepare_items() {
-
 		$columns = $this->get_columns();
 
 		$hidden = array(); // no hidden columns
@@ -234,5 +240,4 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 			)
 		);
 	}
-
 }
