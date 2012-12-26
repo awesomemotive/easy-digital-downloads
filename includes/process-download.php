@@ -167,6 +167,8 @@ function edd_get_file_ctype( $extension ) {
 		case 'dmg'		: $ctype	= "application/octet-stream"; break;
 		case 'dms'		: $ctype	= "application/octet-stream"; break;
 		case 'doc'		: $ctype	= "application/msword"; break;
+		case 'docx'		: $ctype	= "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; break;
+		case 'dotx'		: $ctype	= "application/vnd.openxmlformats-officedocument.wordprocessingml.template"; break;		
 		case 'dtd'		: $ctype	= "application/xml-dtd"; break;
 		case 'dv'		: $ctype	= "video/x-dv"; break;
 		case 'dvi'		: $ctype	= "application/x-dvi"; break;
@@ -244,6 +246,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'ppm'		: $ctype	= "image/x-portable-pixmap"; break;
 		case 'ppt'		: $ctype	= "application/vnd.ms-powerpoint"; break;
 		case 'ps'		: $ctype	= "application/postscript"; break;
+		case 'psd'		: $ctype	= "image/photoshop"; break;		
 		case 'qt'		: $ctype	= "video/quicktime"; break;
 		case 'qti'		: $ctype	= "image/x-quicktime"; break;
 		case 'qtif'		: $ctype	= "image/x-quicktime"; break;
