@@ -295,6 +295,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'pfr'		: $ctype	= "application/font-tdpfr"; break;
 		case 'pgm'		: $ctype	= "image/x-portable-graymap"; break;
 		case 'pgn'		: $ctype	= "application/x-chess-pgn"; break;
+		case 'pgp'		: $ctype	= "application/pgp-encrypted"; break;
 		case 'pic'		: $ctype	= "image/pict"; break;
 		case 'pict'		: $ctype	= "image/pict"; break;
 		case 'pkg'		: $ctype	= "application/octet-stream"; break;
