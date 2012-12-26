@@ -27,9 +27,9 @@ function edd_payment_history_page() {
 	global $edd_options;
 
 	if ( isset( $_GET['edd-action'] ) && $_GET['edd-action'] == 'edit-payment' ) {
-		require_once( EDD_PLUGIN_DIR . '/includes/admin/payments/edit-payment.php' );
+		require_once EDD_PLUGIN_DIR . '/includes/admin/payments/edit-payment.php';
 	} else {
-		require_once( EDD_PLUGIN_DIR . 'includes/admin/payments/class-payments-table.php' );
+		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-payments-table.php';
 		$payments_table = new EDD_Payment_History_Table();
 		$payments_table->prepare_items();
 	?>
