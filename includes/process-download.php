@@ -149,8 +149,8 @@ function edd_get_file_ctype( $extension ) {
 		case 'air'		: $ctype	= "application/vnd.adobe.air-application-installer-package+zip"; break;
 		case 'asc'		: $ctype	= "application/pgp-signature"; break;
 		case 'atom'		: $ctype	= "application/atom+xml"; break;
-		case 'atomcat'	: $ctype	= "application/atomcat+xml"; break		
-		case 'atomsvc'	: $ctype	= "application/atomsvc+xml"; break		
+		case 'atomcat'	: $ctype	= "application/atomcat+xml"; break;		
+		case 'atomsvc'	: $ctype	= "application/atomsvc+xml"; break;	
 		case 'au'		: $ctype	= "audio/basic"; break;
 		case 'aw'		: $ctype	= "application/applixware"; break;		
 		case 'avi'		: $ctype	= "video/x-msvideo"; break;
