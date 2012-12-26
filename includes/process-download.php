@@ -154,6 +154,12 @@ function edd_get_file_ctype( $extension ) {
 		case 'bcpio'	: $ctype	= "application/x-bcpio"; break;
 		case 'bin'		: $ctype	= "application/octet-stream"; break;
 		case 'bmp'		: $ctype	= "image/bmp"; break;
+		case 'ccxml'		: $ctype	= "application/x-netcdf"; break;
+		case 'cdmia'		: $ctype	= "application/x-netcdf"; break;
+		case 'cdmic'		: $ctype	= "application/x-netcdf"; break;
+		case 'cdmid'		: $ctype	= "application/x-netcdf"; break;
+		case 'cdmio'		: $ctype	= "application/x-netcdf"; break;
+		case 'cdmiq'		: $ctype	= "application/x-netcdf"; break;
 		case 'cdf'		: $ctype	= "application/x-netcdf"; break;
 		case 'cgm'		: $ctype	= "image/cgm"; break;
 		case 'class'	: $ctype	= "application/octet-stream"; break;
