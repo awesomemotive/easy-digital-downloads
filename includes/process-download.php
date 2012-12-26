@@ -300,6 +300,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'pct'		: $ctype	= "image/pict"; break;
 		case 'pdb'		: $ctype	= "chemical/x-pdb"; break;
 		case 'pdf'		: $ctype	= "application/pdf"; break;
+		case 'pkipath'	: $ctype	= "application/pkix-pkipath"; break;
 		case 'pfr'		: $ctype	= "application/font-tdpfr"; break;
 		case 'pgm'		: $ctype	= "image/x-portable-graymap"; break;
 		case 'pgn'		: $ctype	= "application/x-chess-pgn"; break;
