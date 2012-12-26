@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 
 /**
- * Display Ppgrade Notices
+ * Display Upgrade Notices
  *
  * @access      private
  * @since       1.3.1
