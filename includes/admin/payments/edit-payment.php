@@ -10,7 +10,7 @@
 */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 $payment = get_post( absint( $_GET['purchase_id'] ) );
 $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true );
@@ -36,14 +36,14 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 					<td id="purchased-downloads">
 						<?php
 							$downloads = maybe_unserialize( $payment_data['downloads'] );
-							if( $downloads ) :
-								foreach( $downloads as $download ):
+							if ( $downloads ) :
+								foreach ( $downloads as $download ):
 									$id = isset( $payment_data['cart_details'] ) ? $download['id'] : $download;
 									echo '<div class="purchased_download_' . $id . '"><input type="hidden" name="edd-purchased-downloads[]" value="' . $id . '"/><strong>' . get_the_title( $id ) . '</strong> - <a href="#" class="edd-remove-purchased-download" data-action="remove_purchased_download" data-id="' . $id . '">Remove</a></div>';
 								endforeach;
 							endif;
 						?>
-						<p id="edit-downloads"><a href="#TB_inline?width=640&inlineId=available-downloads" class="thickbox" title="<?php printf( __( 'Add download to purchase #%s', 'edd' ), $_GET['purchase_id'] ); ?> "><?php _e( 'Add download to purchase', 'edd' ); ?></p>
+						<p id="edit-downloads"><a href="#TB_inline?width=640&amp;inlineId=available-downloads" class="thickbox" title="<?php printf( __( 'Add download to purchase #%s', 'edd' ), $_GET['purchase_id'] ); ?> "><?php _e( 'Add download to purchase', 'edd' ); ?></p>
 					</td>
 				</tr>
 				<tr>
@@ -53,10 +53,10 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 					<td>
 						<?php
 							$notes = edd_get_payment_notes( $payment->ID );
-							if( ! empty( $notes ) ) :
+							if ( ! empty( $notes ) ) :
 								echo '<ul id="payment-notes">';
-								foreach( $notes as $note ):
-									if( ! empty( $note->user_id ) ) {
+								foreach ( $notes as $note ):
+									if ( ! empty( $note->user_id ) ) {
 										$user = get_userdata( $note->user_id );
 										$user = $user->display_name;
 									} else {
