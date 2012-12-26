@@ -145,6 +145,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'aif'		: $ctype	= "audio/x-aiff"; break;
 		case 'aifc'		: $ctype	= "audio/x-aiff"; break;
 		case 'aiff'		: $ctype	= "audio/x-aiff"; break;
+		case 'air'		: $ctype	= "application/vnd.adobe.air-application-installer-package+zip"; break;
 		case 'asc'		: $ctype	= "application/pgp-signature"; break;
 		case 'atom'		: $ctype	= "application/atom+xml"; break;
 		case 'atomcat'	: $ctype	= "application/atomcat+xml"; break		
@@ -331,6 +332,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'rgb'		: $ctype	= "image/x-rgb"; break;
 		case 'rm'		: $ctype	= "application/vnd.rn-realmedia"; break;
 		case 'roff'		: $ctype	= "application/x-troff"; break;
+		case 'rss'		: $ctype	= "application/rss+xml"; break;
 		case 'rtf'		: $ctype	= "text/rtf"; break;
 		case 'rtx'		: $ctype	= "text/richtext"; break;
 		case 'sgm'		: $ctype	= "text/sgml"; break;
@@ -385,6 +387,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'xht'		: $ctype	= "application/xhtml+xml"; break;
 		case 'xhtml'	: $ctype	= "application/xhtml+xml"; break;
 		case 'xlam'		: $ctype	= "application/vnd.ms-excel.addin.macroEnabled.12"; break;
+		case 'xlm'		: $ctype	= "application/vnd.ms-excel"; break;
 		case 'xls'		: $ctype	= "application/vnd.ms-excel"; break;
 		case 'xlsx'		: $ctype	= "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; break;
 		case 'xlsb'		: $ctype	= "application/vnd.ms-excel.sheet.binary.macroEnabled.12"; break;
