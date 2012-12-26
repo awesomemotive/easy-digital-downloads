@@ -398,6 +398,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'wav'		: $ctype	= "audio/x-wav"; break;
 		case 'wbmp'		: $ctype	= "image/vnd.wap.wbmp"; break;
 		case 'wbmxl'	: $ctype	= "application/vnd.wap.wbxml"; break;
+		case 'wm'		: $ctype	= "video/x-ms-wm"; break;
 		case 'wml'		: $ctype	= "text/vnd.wap.wml"; break;
 		case 'wmlc'		: $ctype	= "application/vnd.wap.wmlc"; break;
 		case 'wmls'		: $ctype	= "text/vnd.wap.wmlscript"; break;
