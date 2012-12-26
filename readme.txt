@@ -201,7 +201,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Added Profile Editor
 * Added Retina images
 * Converted Discount Admin Page to WP List Table
-* Added new MIMETypes allowed for download
+* Added over 100 new MIME-Types allowed for download
 
 = 1.3.4.3 =
 
