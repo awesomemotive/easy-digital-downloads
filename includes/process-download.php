@@ -146,6 +146,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'aiff'		: $ctype	= "audio/x-aiff"; break;
 		case 'asc'		: $ctype	= "text/plain"; break;
 		case 'atom'		: $ctype	= "application/atom+xml"; break;
+		case 'atomcat'	: $ctype	= "application/atomcat+xml"; break		
 		case 'au'		: $ctype	= "audio/basic"; break;
 		case 'aw'		: $ctype	= "application/applixware"; break;		
 		case 'avi'		: $ctype	= "video/x-msvideo"; break;
