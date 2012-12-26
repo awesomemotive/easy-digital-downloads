@@ -393,6 +393,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'xls'		: $ctype	= "application/vnd.ms-excel"; break;
 		case 'xlsx'		: $ctype	= "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; break;
 		case 'xlsb'		: $ctype	= "application/vnd.ms-excel.sheet.binary.macroEnabled.12"; break;
+		case 'xlt'		: $ctype	= "application/vnd.ms-excel"; break;
 		case 'xltx'		: $ctype	= "application/vnd.openxmlformats-officedocument.spreadsheetml.template"; break;		
 		case 'xml'		: $ctype	= "application/xml"; break;
 		case 'xpm'		: $ctype	= "image/x-xpixmap"; break;
