@@ -71,7 +71,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 
 	/**
-	 * Retrieve the table columnds
+	 * Retrieve the table columns
 	 *
 	 * @access      private
 	 * @since       1.4
