@@ -34,7 +34,6 @@ if ( !defined( 'ABSPATH' ) ) exit;
     	__( 'http://easydigitaldownloads.com/', 'edd' ),
     );
 
-
 if ( !class_exists( 'Easy_Digital_Downloads' ) ) :
 
 /**
