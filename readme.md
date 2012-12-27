@@ -153,6 +153,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ### 1.4.0.1 ###
 
+* Fixed an issue with purchase receipts sending
 * Fixed issue with registration / login forms not showing on checkout
 * Fixed an undefined index on the discounts page
 
