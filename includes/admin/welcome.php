@@ -136,7 +136,7 @@ class EDD_Welcome {
 				<h3><?php _e( 'Log Viewing Interface', 'edd' ); ?></h3>
 
 				<div class="feature-section">
-					<h4><?php _e( 'Downloads > Reports > Logs', 'edd' ); ?></h4>
+					<h4><?php printf( __( 'Downloads &rarr; Reports &rarr; <a href="%s">Logs</a>', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs' ) ); ?></h4>
 					<p><?php _e( 'You can now view detailed log entries to see exactly what is going on behind the scenes of your store.', 'edd' ); ?></p>
 
 					<h4><?php _e( 'File Download Logs', 'edd' ); ?></h4>
@@ -157,7 +157,7 @@ class EDD_Welcome {
 
 				<div class="feature-section">
 					<h4><?php _e( 'Receipt Short Code', 'edd' ); ?></h4>
-					<p><?php _e( 'The new <em>[edd_receipt]</em> short code will display a detailed break down of customer\'s purchases after completing a payment.', 'edd' ); ?></p>
+					<p><?php _e( 'The new <code>[edd_receipt]</code> short code will display a detailed break down of customer\'s purchases after completing a payment.', 'edd' ); ?></p>
 				</div>
 			</div>
 
@@ -165,7 +165,7 @@ class EDD_Welcome {
 				<h3><?php _e( 'System Info', 'edd' ); ?></h3>
 
 				<div class="feature-section">
-					<h4><?php _e( 'Downloads > System Info', 'edd' ); ?></h4>
+					<h4><?php printf( __( 'Downloads &rarr; <a href="%s">System Info</a>', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-system-info' ) ); ?></a></h4>
 					<p><?php _e( 'If you are having problems with any aspect, giving the system info download file to support will help us assist you in getting issues resolved.', 'edd' ); ?></p>
 				</div>
 			</div>
@@ -177,7 +177,7 @@ class EDD_Welcome {
 					<h4><?php _e( 'Track Changes to Purchases', 'edd' ); ?></h4>
 					<p><?php _e( 'The new notes feature for payments makes it easy for store managers to leave notes on individual purchases.', 'edd' ); ?></p>
 
-					<p><?php _e( 'Simply go to Downloads > Payment History and click Edit on any payment. From this screen you can now post notes to payments.', 'edd' ); ?></p>
+					<p><?php printf( __( 'Simply go to Downloads &rarr; <a href="%s">Payment History</a> and click <em>Edit</em> on any payment. From this screen you can now post notes to payments.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ); ?></p>
 				</div>
 			</div>
 
@@ -197,7 +197,7 @@ class EDD_Welcome {
 						<h4><?php _e( 'File Optimization', 'edd' ); ?></h4>
 						<p><?php _e( 'Every file in the plugin has been optimized to help slim down the overall size of Easy Digital Downloads.', 'edd' ); ?></p>
 
-						<h4><?php _e( 'Better Ajaxed Functions', 'edd' ); ?></h4>
+						<h4><?php _e( 'Better AJAX Functionality', 'edd' ); ?></h4>
 						<p><?php _e( 'The ajaxed functions, such as payment gateway loading, have been significantly improved to make them faster.', 'edd' ); ?></p>
 					</div>
 
