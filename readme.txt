@@ -183,7 +183,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Added New Column to Customers Reports to Show File Download Count
 * Made some UI tweaks, and bug fixes for Logs
 * Added edd_send_back_to_checkout()
-* Major rewrite of the Logs UI
+* Brand new Logs UI
 * Fixes in payments functions
 * Added support for WP 3.5 Button
 * Made updates to edd_process_download()
