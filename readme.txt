@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.3
 Tested up to: 3.5
-Stable Tag: 1.3.4.3
+Stable Tag: 1.4
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -202,6 +202,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Converted Discount Admin Page to WP List Table
 * Added over 100 new MIME-Types allowed for download
 * Added support for uploading .psd files
+* Rewrote main plugin file to use a singleton OOP approach
 
 = 1.3.4.3 =
 
