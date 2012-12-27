@@ -321,11 +321,19 @@ class EDD_Welcome {
 
 		global $edd_options;
 
-		$pagenow = isset( $_GET['page'] ) ? $_GET['page'] : '';
+		// Bail if no activation redirect
+	    if ( ! get_transient( '_edd_activation_redirect' ) )
+			return;
 
-		if( empty( $edd_options['purchase_page'] ) && 'edd-about' != $pagenow && 'edd-credits' != $pagenow  ) {
-			wp_redirect( admin_url( 'index.php?page=edd-about' ) ); exit;
-		}
+		// Delete the redirect transient
+		delete_transient( '_edd_activation_redirect' );
+
+		// Bail if activating from network, or bulk
+		if ( is_network_admin() || isset( $_GET['activate-multi'] ) )
+			return;
+
+		wp_safe_redirect( admin_url( 'index.php?page=edd-about' ) ); exit;
+		
 	}
 }
 new EDD_Welcome();
