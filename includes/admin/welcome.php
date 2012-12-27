@@ -24,6 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 
 class EDD_Welcome {
+
 	public $minimum_capability = 'manage_options';
 
 
@@ -38,6 +39,7 @@ class EDD_Welcome {
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menus') );
 		add_action( 'admin_head', array( $this, 'admin_head' ) );
+		add_action( 'admin_init', array( $this, 'welcome'    ) );
 	}
 
 
@@ -308,5 +310,25 @@ class EDD_Welcome {
 
 		return $contributors;
 	}
+
+
+	/**
+	 * Sends user to the welcome page on first activation
+	 *
+	 * @since      1.4
+	 * @return     void
+	 */
+
+	public function welcome() {
+
+		global $edd_options;
+
+		$pagenow = isset( $_GET['page'] ) ? $_GET['page'] : '';
+
+		if( empty( $edd_options['purchase_page'] ) && 'edd-about' != $pagenow && 'edd-credits' != $pagenow  ) {
+			wp_redirect( admin_url( 'index.php?page=edd-about' ) ); exit;
+		}
+	}
+
 }
 new EDD_Welcome();
