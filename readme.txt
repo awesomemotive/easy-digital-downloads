@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.3
 Tested up to: 3.5
-Stable Tag: 1.4
+Stable Tag: 1.4.0.1
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -164,6 +164,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.4.0.1 =
+
+* Fixed issue with registration / login forms not showing on checkout
+* Fixed an undefined index on the discounts page
 
 = 1.4 =
 
@@ -877,6 +882,51 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Upgrade Notice ==
+
+= 1.4.0.1 =
+
+* Fixed issue with registration / login forms not showing on checkout
+* Fixed an undefined index on the discounts page
+
+= 1.4 =
+
+* Converted coupons to a custom post type
+* Added Dummy XML File
+* Added System Info (props @chriscct7)
+* Fixed Conflict with Jetpack
+* Fixed issue with exporting lots of customers
+* Added Contextual Help
+* Fixed Download Icon missing
+* Fixed Bulk Delete Payments
+* Updated edd_get_user_purchases()
+* Added Receipt shortcode
+* Added Filter on Default Customer User Role
+* Added Live Credit Card Verification 
+* Added Travis-CI Integration (props @chriscct7)
+* Added New Column to Customers Reports to Show File Download Count
+* Made some UI tweaks, and bug fixes for Logs
+* Added edd_send_back_to_checkout()
+* Brand new Logs UI
+* Fixes in payments functions
+* Added support for WP 3.5 Button
+* Made updates to edd_process_download()
+* Reordered the inclusion of payment gateways
+* Restructured file organization
+* Improved payment-functions.php file
+* Added Payment Notes
+* Added a more efficient AJAX selector
+* Serious Optomizations
+* Optimized png's losslessly
+* Stripped whitespace + normalize
+* Added New Helper Function for "Transaction ID" 
+* Added "failed" payment status 
+* Added Profile Editor
+* Added Retina images
+* Converted Discount Admin Page to WP List Table
+* Added over 100 new MIME-Types allowed for download
+* Added support for uploading .psd files
+* Rewrote main plugin file to use a singleton OOP approach
+
 
 = 1.3.4.3 =
 
