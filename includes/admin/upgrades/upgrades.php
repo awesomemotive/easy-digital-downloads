@@ -38,7 +38,7 @@ function edd_upgrades_screen() {
 		        jQuery.post( ajaxurl, data, function (response) {
 		        	if( response == 'complete' ) {
 			        	jQuery('#edd-upgrade-loader').hide();
-			        	document.location.href = 'index.php'; // redirect back to the dashboard when complete
+			        	document.location.href = 'index.php?page=edd-about'; // redirect to the welcome page
 					}
 		        });
 			});
