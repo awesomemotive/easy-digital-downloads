@@ -3,7 +3,7 @@
 // https://github.com/nb/wordpress-tests
 // The path to wordpress-tests
 
-$path = './vendor/wordpress-tests/bootstrap.php';
+$path = './travis/vendor/wordpress-tests/bootstrap.php';
 if( file_exists( $path ) ) {
     require_once $path;
 } else {
