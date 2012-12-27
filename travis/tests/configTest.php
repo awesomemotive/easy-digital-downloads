@@ -15,4 +15,7 @@ class ConfigTest extends WP_UnitTestCase {
     function test_is_email_should_allow_bg_domain() {
         $this->assertEquals( 'chriscct7@gmail.bg', is_email( 'chriscct7@gmail.bg' ) );
     }
+    function test_addition() {
+        $this->assertSame( 1+1, 2 );
+    }
 }
