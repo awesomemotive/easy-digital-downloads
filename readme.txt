@@ -880,7 +880,6 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 
-
 == Upgrade Notice ==
 
 = 1.4.0.1 =
