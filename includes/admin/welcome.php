@@ -88,8 +88,8 @@ class EDD_Welcome {
 		<style type="text/css" media="screen">
 		/*<![CDATA[*/
 		.edd-badge {
-			padding-top: 142px;
-			height: 55px;
+			padding-top: 150px;
+			height: 52px;
 			width: 185px;
 			color: #666;
 			font-weight: bold;
@@ -121,7 +121,7 @@ class EDD_Welcome {
 		list( $display_version ) = explode( '-', EDD_VERSION ); ?>
 		<div class="wrap about-wrap">
 			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
-			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online shop faster, safer and better!', 'edd' ), $display_version ); ?></div>
+			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
 			<div class="edd-badge"><?php printf( __( 'Version %s' ), $display_version ); ?></div>
 
 			<h2 class="nav-tab-wrapper">
@@ -221,7 +221,7 @@ class EDD_Welcome {
 		list( $display_version ) = explode( '-', EDD_VERSION ); ?>
 		<div class="wrap about-wrap">
 			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
-			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online shop faster, safer and better!', 'edd' ), $display_version ); ?></div>
+			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
 			<div class="edd-badge"><?php printf( __( 'Version %s' ), $display_version ); ?></div>
 
 			<h2 class="nav-tab-wrapper">
