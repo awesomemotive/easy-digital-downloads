@@ -100,7 +100,7 @@ function edd_setup_edd_post_types() {
 		'rewrite' 			=> false,
 		'capability_type' 	=> 'post',
 		'supports' 			=> array( 'title' ),
-		'can_export'		=> false
+		'can_export'		=> true
 	);
 	register_post_type( 'edd_payment', $payment_args );
 
@@ -114,7 +114,7 @@ function edd_setup_edd_post_types() {
 		'show_ui'           => false,
 		'capability_type' 	=> 'post',
 		'supports' 			=> array( 'title' ),
-		'can_export'		=> false
+		'can_export'		=> true
 	);
 	register_post_type( 'edd_discount', $discount_args );
 
