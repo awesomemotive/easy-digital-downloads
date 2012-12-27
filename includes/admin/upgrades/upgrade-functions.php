@@ -237,7 +237,7 @@ function edd_v14_upgrades() {
 
 	/** Convert Discounts to new Custom Post Type **/
 	$discounts = get_option( 'edd_discounts' );
-	//print_r( $discounts ); exit;
+
 	if ( $discounts ) {
 		foreach ( $discounts as $key => $discount ) {
 			$status = isset( $discount['status'] ) ? $discount['status'] : 'inactive';
@@ -263,6 +263,10 @@ function edd_v14_upgrades() {
 				update_post_meta( $discount_id, '_edd_discount_' . $key, $value );
 			}
 		}
+
+		// remove old discounts from database
+		delete_option( 'edd_discounts' );
+
 	}
 	
 }
