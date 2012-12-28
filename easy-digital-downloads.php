@@ -24,8 +24,9 @@ along with Easy Digital Downloads. If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Exit if accessed directly
+echo "test1";
 if ( !defined( 'ABSPATH' ) ) exit;
-
+echo "test";
 /* PHP Hack to Get Plugin Headers in the .POT File */
 	$edd_plugin_header_translate = array(
 		__( 'Easy Digital Downloads', 'edd' ),
