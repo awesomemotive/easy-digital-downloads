@@ -1,11 +1,18 @@
 # Easy Digital Downloads #
 **Author URI:** http://pippinsplugins.com
+
 **Plugin URI:** http://easydigitaldownloads.com
+
 **Contributors:** mordauk, sksmatt, sunnyratilal, SpencerFinnell, Chriscct7
+
 **Donate link:** http://pippinsplugins.com/support-the-site
-**Tags:** download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
+
+**Tags:** download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins, chriscct7
+
 **Requires at least:** 3.3
+
 **Tested up to:** 3.5
+
 **Stable Tag:** 1.3.4.3
 
 
@@ -15,7 +22,7 @@ Sell digital downloads through WordPress with this complete digital downloads ma
 
 Selling digital downloads is something that not a single one of the large WordPress ecommerce plugins has ever gotten really right. This plugin aims to fix that. Instead of focusing on providing every single feature under the sun, Easy Digital Downloads tries to provide only the ones that you really need. It aims to make selling digital downloads through WordPress easy, and complete.
 
-**Follow this plugin on [Git Hub](https://github.com/pippinsplugins/Easy-Digital-Downloads)**
+**Follow this plugin on [GitHub](https://github.com/pippinsplugins/Easy-Digital-Downloads)**
 
 Features of the plugin include:
 
