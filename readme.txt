@@ -169,6 +169,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 * Travis now autoloads all of EDD
 * WP_Sessions removed temporarily
+* Fixed Double Click Required JS issue (props @chriscct7)
 
 = 1.4.0.2 =
 
@@ -896,6 +897,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 * Travis now autoloads all of EDD
 * WP_Sessions removed temporarily
+* Fixed Double Click Required JS issue (props @chriscct7)
 
 = 1.4.0.2 =
 
