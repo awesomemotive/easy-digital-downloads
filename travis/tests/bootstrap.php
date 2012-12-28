@@ -1,7 +1,7 @@
 <?php
 // Load WordPress test environment
 // https://github.com/nb/wordpress-tests
-echo "\n\n Welcome to the EDD PHPUnit Test suite \n";
+echo "\n\nWelcome to the EDD PHPUnit Test suite \n";
 echo "Version: 0.9.0 \n";
 echo "Author: Chris Christoff (@chriscct7) \n\n\n";
 echo "Preparing to load WordPress TU Bootstrap File \n";
@@ -13,7 +13,7 @@ if( file_exists( $path ) ) {
     exit( "Copy of bootstrap file failed in travis.yml \n" );
 }
 echo "WordPress TU Boostrap File Loaded \n\n";
-echo "Preparing to load EDD Plugin from Mainfile \n\n";
+echo "Preparing to load EDD Plugin from Mainfile \n";
 $loader= './easy-digital-downloads.php';
 if( file_exists( $loader ) ) {
     require_once $loader;
