@@ -12,6 +12,7 @@
 **Requires at least:** 3.3
 
 **Tested up to:** 3.5
+
 **Stable Tag:** 1.4.0.2
 
 
