@@ -138,16 +138,23 @@ function edd_remove_from_cart($cart_key) {
 */
 
 function edd_item_in_cart( $download_id ) {
+
 	$cart_items = edd_get_cart_contents();
-	if( !is_array($cart_items ) ) {
-		return false; // empty cart
-	} else {
+
+	$ret = false;
+
+	if( is_array( $cart_items ) ) {
 		foreach( $cart_items as $item ) {
 			if( $item['id'] == $download_id ) {
-				return true;
+				$ret = true;
+				break;
 			}
 		}
 	}
+
+	// TODO allow for price ID checking here
+
+	return (bool) apply_filters( 'edd_item_in_cart', $ret, $download_id );
 }
 
 
