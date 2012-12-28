@@ -58,7 +58,7 @@ function edd_settings_contextual_help() {
 		'id'	    => 'edd-settings-emails',
 		'title'	    => __( 'Emails', 'edd' ),
 		'content'	=>
-			'<p>' . __( 'This screen allows you to customize how emails act throughout your store. You can choose a premade template, set the sender&#39;s name, email address, and subject.', 'edd' ) . '</p>' .
+			'<p>' . __( 'This screen allows you to customize how emails act throughout your store. You can choose a premade template, set the sender\'s name, email address, and subject.', 'edd' ) . '</p>' .
 			'<p>' . __( 'A set of email tags has also been provided to allow the creation of personalized emails. A tag consists of a keyword surrounded by curly braces: <code>{tag}</code>. A description of each of these tags appear below the editor.', 'edd' ) . '</p>'
 	) );
 
