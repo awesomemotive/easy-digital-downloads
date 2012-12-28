@@ -104,10 +104,6 @@ final class Easy_Digital_Downloads {
 		if( !defined( 'EDD_PLUGIN_FILE' ) )
 			define( 'EDD_PLUGIN_FILE', __FILE__ );
 
-		// make sure the cookie is defined
-		if( ! defined( 'WP_SESSION_COOKIE' ) )
-			define( 'WP_SESSION_COOKIE', '_wp_session' );
-
 	}
 
 
@@ -129,12 +125,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
 		require_once EDD_PLUGIN_DIR . 'includes/actions.php';
 
-		// Only include the functionality if it's not pre-defined.
-		/*
-		if ( ! class_exists( 'WP_Session' ) ) {
-			require_once EDD_PLUGIN_DIR . 'includes/libraries/wp_session/class-wp-session.php';
-			require_once EDD_PLUGIN_DIR . 'includes/libraries/wp_session/wp-session.php';
-		}*/
 
 		require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
