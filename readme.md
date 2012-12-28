@@ -158,7 +158,12 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ## Changelog ##
 
-= 1.4.0.2 =
+### 1.4.1 ###
+
+* Travis now autoloads all of EDD
+* WP_Sessions removed temporarily
+
+### 1.4.0.2 ###
 
 * Fixed an issue with the checkout page on sites with HTTPS and PayPal Standard
 
