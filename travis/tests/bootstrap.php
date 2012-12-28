@@ -1,8 +1,7 @@
 <?php
 // Load WordPress test environment
 // https://github.com/nb/wordpress-tests
-// The path to wordpress-tests
-echo "Welcome to the EDD PHPUnit Test suite \n";
+echo "\n\n Welcome to the EDD PHPUnit Test suite \n";
 echo "Version: 0.9.0 \n";
 echo "Author: Chris Christoff (@chriscct7) \n\n\n";
 echo "Preparing to load WordPress TU Bootstrap File \n";
@@ -21,6 +20,7 @@ if( file_exists( $loader ) ) {
 } else {
     exit( "Couldn't load EDD \n" );
 }
-echo "EDD Plugin Loaded from Mainfile \n";
-echo "Preparing to execute PHPUnit Tests \n\n";
+echo "EDD Loaded \n";
+echo "EDD Plugin Loaded from Mainfile \n\n";
+echo "Preparing to execute PHPUnit Tests \n";
 $_SESSION['travis']='true';
