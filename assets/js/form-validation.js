@@ -1,6 +1,5 @@
 var edd_scripts_validation;
 jQuery(document).ready(function($) {
-	$("body").on('submit', '#edd_purchase_form', function() {
 		$('#edd_purchase_form').validate({
 			errorPlacement: function(error, element) {},
 			rules: {
@@ -20,5 +19,4 @@ jQuery(document).ready(function($) {
 			}
 		});
 		return false;
-	});
 });
