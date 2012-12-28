@@ -583,6 +583,15 @@ function edd_get_checkout_uri( $args = array() ) {
 		$uri = add_query_arg( $args, $uri );
 	}
 
+
+	$scheme = defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https' : 'admin';
+
+	$ajax_url = admin_url( 'admin-ajax.php', $scheme );
+
+	if( ! preg_match( '/^https/', $uri ) && preg_match( '/^https/', $ajax_url ) ) {
+		$uri = preg_replace( '/^http/', 'https', $uri );
+	}
+
     return apply_filters( 'edd_get_checkout_uri', $uri );
 }
 
