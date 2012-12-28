@@ -23,7 +23,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 
 function edd_export_payment_history() {
+
 	global $edd_options;
+
+	ignore_user_abort( true );
+
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) )
+		set_time_limit( 0 );
 
 	$mode = edd_is_test_mode() ? 'test' : 'live';
 
@@ -158,6 +164,11 @@ function edd_export_all_customers() {
 	if ( current_user_can( 'administrator' ) ) {
 		global $wpdb;
 
+		ignore_user_abort( true );
+
+		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) )
+			set_time_limit( 0 );
+
 		$emails = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' " );
 
 		if ( ! empty( $emails ) ) {
@@ -201,6 +212,12 @@ add_action( 'edd_email_export', 'edd_export_all_customers' );
 
 function edd_export_all_downloads_history() {
 	if ( current_user_can( 'administrator' ) ) {
+
+		ignore_user_abort( true );
+
+		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) )
+			set_time_limit( 0 );
+
 		$report_args = array(
 			'post_type'  => 'download',
 			'post_status' => 'publish',

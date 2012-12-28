@@ -13,7 +13,7 @@
 
 **Tested up to:** 3.5
 
-**Stable Tag:** 1.3.4.3
+**Stable Tag:** 1.4.0.2
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -158,6 +158,16 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ## Changelog ##
 
+= 1.4.0.2 =
+
+* Fixed an issue with the checkout page on sites with HTTPS and PayPal Standard
+
+### 1.4.0.1 ###
+
+* Fixed an issue with purchase receipts sending
+* Fixed issue with registration / login forms not showing on checkout
+* Fixed an undefined index on the discounts page
+
 ### 1.4 ###
 
 * Converted coupons to a custom post type
@@ -176,7 +186,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Added New Column to Customers Reports to Show File Download Count
 * Made some UI tweaks, and bug fixes for Logs
 * Added edd_send_back_to_checkout()
-* Major rewrite of the Logs UI
+* Brand new Logs UI
 * Fixes in payments functions
 * Added support for WP 3.5 Button
 * Made updates to edd_process_download()
@@ -195,6 +205,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Converted Discount Admin Page to WP List Table
 * Added over 100 new MIME-Types allowed for download
 * Added support for uploading .psd files
+* Rewrote main plugin file to use a singleton OOP approach
 
 ### 1.3.4.3 ###
 

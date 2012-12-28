@@ -1,5 +1,9 @@
 <?php
-	/**
+	/**	 
+	 * Modified to remove var
+	 * Chris Christoff on 12/26/2012
+	 * Changes: Changes vars to publics
+	 *
 	 * Modified to work for EDD by
 	 * Chris Christoff on 12/23/2012
 	 * Changes: Removed the browser string return and added spacing. Also removed return HTML formatting.
@@ -142,76 +146,76 @@
 	 */
 
 	class Browser {
-		var $_agent = '';
-		var $_browser_name = '';
-		var $_version = '';
-		var $_platform = '';
-		var $_os = '';
-		var $_is_aol = false;
-		var $_is_mobile = false;
-		var $_is_robot = false;
-		var $_aol_version = '';
+		public $_agent = '';
+		public $_browser_name = '';
+		public $_version = '';
+		public $_platform = '';
+		public $_os = '';
+		public $_is_aol = false;
+		public $_is_mobile = false;
+		public $_is_robot = false;
+		public $_aol_version = '';
 
-		var $BROWSER_UNKNOWN = 'unknown';
-		var $VERSION_UNKNOWN = 'unknown';
+		public $BROWSER_UNKNOWN = 'unknown';
+		public $VERSION_UNKNOWN = 'unknown';
 
-		var $BROWSER_OPERA = 'Opera';                            // http://www.opera.com/
-		var $BROWSER_OPERA_MINI = 'Opera Mini';                  // http://www.opera.com/mini/
-		var $BROWSER_WEBTV = 'WebTV';                            // http://www.webtv.net/pc/
-		var $BROWSER_IE = 'Internet Explorer';                   // http://www.microsoft.com/ie/
-		var $BROWSER_POCKET_IE = 'Pocket Internet Explorer';     // http://en.wikipedia.org/wiki/Internet_Explorer_Mobile
-		var $BROWSER_KONQUEROR = 'Konqueror';                    // http://www.konqueror.org/
-		var $BROWSER_ICAB = 'iCab';                              // http://www.icab.de/
-		var $BROWSER_OMNIWEB = 'OmniWeb';                        // http://www.omnigroup.com/applications/omniweb/
-		var $BROWSER_FIREBIRD = 'Firebird';                      // http://www.ibphoenix.com/
-		var $BROWSER_FIREFOX = 'Firefox';                        // http://www.mozilla.com/en-US/firefox/firefox.html
-		var $BROWSER_ICEWEASEL = 'Iceweasel';                    // http://www.geticeweasel.org/
-		var $BROWSER_SHIRETOKO = 'Shiretoko';                    // http://wiki.mozilla.org/Projects/shiretoko
-		var $BROWSER_MOZILLA = 'Mozilla';                        // http://www.mozilla.com/en-US/
-		var $BROWSER_AMAYA = 'Amaya';                            // http://www.w3.org/Amaya/
-		var $BROWSER_LYNX = 'Lynx';                              // http://en.wikipedia.org/wiki/Lynx
-		var $BROWSER_SAFARI = 'Safari';                          // http://apple.com
-		var $BROWSER_IPHONE = 'iPhone';                          // http://apple.com
-		var $BROWSER_IPOD = 'iPod';                              // http://apple.com
-		var $BROWSER_IPAD = 'iPad';                              // http://apple.com
-		var $BROWSER_CHROME = 'Chrome';                          // http://www.google.com/chrome
-		var $BROWSER_ANDROID = 'Android';                        // http://www.android.com/
-		var $BROWSER_GOOGLEBOT = 'GoogleBot';                    // http://en.wikipedia.org/wiki/Googlebot
-		var $BROWSER_SLURP = 'Yahoo! Slurp';                     // http://en.wikipedia.org/wiki/Yahoo!_Slurp
-		var $BROWSER_W3CVALIDATOR = 'W3C Validator';             // http://validator.w3.org/
-		var $BROWSER_BLACKBERRY = 'BlackBerry';                  // http://www.blackberry.com/
-		var $BROWSER_ICECAT = 'IceCat';                          // http://en.wikipedia.org/wiki/GNU_IceCat
-		var $BROWSER_NOKIA_S60 = 'Nokia S60 OSS Browser';        // http://en.wikipedia.org/wiki/Web_Browser_for_S60
-		var $BROWSER_NOKIA = 'Nokia Browser';                    // * all other WAP-based browsers on the Nokia Platform
-		var $BROWSER_MSN = 'MSN Browser';                        // http://explorer.msn.com/
-		var $BROWSER_MSNBOT = 'MSN Bot';                         // http://search.msn.com/msnbot.htm
+		public $BROWSER_OPERA = 'Opera';                            // http://www.opera.com/
+		public $BROWSER_OPERA_MINI = 'Opera Mini';                  // http://www.opera.com/mini/
+		public $BROWSER_WEBTV = 'WebTV';                            // http://www.webtv.net/pc/
+		public $BROWSER_IE = 'Internet Explorer';                   // http://www.microsoft.com/ie/
+		public $BROWSER_POCKET_IE = 'Pocket Internet Explorer';     // http://en.wikipedia.org/wiki/Internet_Explorer_Mobile
+		public $BROWSER_KONQUEROR = 'Konqueror';                    // http://www.konqueror.org/
+		public $BROWSER_ICAB = 'iCab';                              // http://www.icab.de/
+		public $BROWSER_OMNIWEB = 'OmniWeb';                        // http://www.omnigroup.com/applications/omniweb/
+		public $BROWSER_FIREBIRD = 'Firebird';                      // http://www.ibphoenix.com/
+		public $BROWSER_FIREFOX = 'Firefox';                        // http://www.mozilla.com/en-US/firefox/firefox.html
+		public $BROWSER_ICEWEASEL = 'Iceweasel';                    // http://www.geticeweasel.org/
+		public $BROWSER_SHIRETOKO = 'Shiretoko';                    // http://wiki.mozilla.org/Projects/shiretoko
+		public $BROWSER_MOZILLA = 'Mozilla';                        // http://www.mozilla.com/en-US/
+		public $BROWSER_AMAYA = 'Amaya';                            // http://www.w3.org/Amaya/
+		public $BROWSER_LYNX = 'Lynx';                              // http://en.wikipedia.org/wiki/Lynx
+		public $BROWSER_SAFARI = 'Safari';                          // http://apple.com
+		public $BROWSER_IPHONE = 'iPhone';                          // http://apple.com
+		public $BROWSER_IPOD = 'iPod';                              // http://apple.com
+		public $BROWSER_IPAD = 'iPad';                              // http://apple.com
+		public $BROWSER_CHROME = 'Chrome';                          // http://www.google.com/chrome
+		public $BROWSER_ANDROID = 'Android';                        // http://www.android.com/
+		public $BROWSER_GOOGLEBOT = 'GoogleBot';                    // http://en.wikipedia.org/wiki/Googlebot
+		public $BROWSER_SLURP = 'Yahoo! Slurp';                     // http://en.wikipedia.org/wiki/Yahoo!_Slurp
+		public $BROWSER_W3CVALIDATOR = 'W3C Validator';             // http://validator.w3.org/
+		public $BROWSER_BLACKBERRY = 'BlackBerry';                  // http://www.blackberry.com/
+		public $BROWSER_ICECAT = 'IceCat';                          // http://en.wikipedia.org/wiki/GNU_IceCat
+		public $BROWSER_NOKIA_S60 = 'Nokia S60 OSS Browser';        // http://en.wikipedia.org/wiki/Web_Browser_for_S60
+		public $BROWSER_NOKIA = 'Nokia Browser';                    // * all other WAP-based browsers on the Nokia Platform
+		public $BROWSER_MSN = 'MSN Browser';                        // http://explorer.msn.com/
+		public $BROWSER_MSNBOT = 'MSN Bot';                         // http://search.msn.com/msnbot.htm
 		                                                          // http://en.wikipedia.org/wiki/Msnbot  (used for Bing as well)
 
-		var $BROWSER_NETSCAPE_NAVIGATOR = 'Netscape Navigator';  // http://browser.netscape.com/ (DEPRECATED)
-		var $BROWSER_GALEON = 'Galeon';                          // http://galeon.sourceforge.net/ (DEPRECATED)
-		var $BROWSER_NETPOSITIVE = 'NetPositive';                // http://en.wikipedia.org/wiki/NetPositive (DEPRECATED)
-		var $BROWSER_PHOENIX = 'Phoenix';                        // http://en.wikipedia.org/wiki/History_of_Mozilla_Firefox (DEPRECATED)
+		public $BROWSER_NETSCAPE_NAVIGATOR = 'Netscape Navigator';  // http://browser.netscape.com/ (DEPRECATED)
+		public $BROWSER_GALEON = 'Galeon';                          // http://galeon.sourceforge.net/ (DEPRECATED)
+		public $BROWSER_NETPOSITIVE = 'NetPositive';                // http://en.wikipedia.org/wiki/NetPositive (DEPRECATED)
+		public $BROWSER_PHOENIX = 'Phoenix';                        // http://en.wikipedia.org/wiki/History_of_Mozilla_Firefox (DEPRECATED)
 
-		var $PLATFORM_UNKNOWN = 'unknown';
-		var $PLATFORM_WINDOWS = 'Windows';
-		var $PLATFORM_WINDOWS_CE = 'Windows CE';
-		var $PLATFORM_APPLE = 'Apple';
-		var $PLATFORM_LINUX = 'Linux';
-		var $PLATFORM_OS2 = 'OS/2';
-		var $PLATFORM_BEOS = 'BeOS';
-		var $PLATFORM_IPHONE = 'iPhone';
-		var $PLATFORM_IPOD = 'iPod';
-		var $PLATFORM_IPAD = 'iPad';
-		var $PLATFORM_BLACKBERRY = 'BlackBerry';
-		var $PLATFORM_NOKIA = 'Nokia';
-		var $PLATFORM_FREEBSD = 'FreeBSD';
-		var $PLATFORM_OPENBSD = 'OpenBSD';
-		var $PLATFORM_NETBSD = 'NetBSD';
-		var $PLATFORM_SUNOS = 'SunOS';
-		var $PLATFORM_OPENSOLARIS = 'OpenSolaris';
-		var $PLATFORM_ANDROID = 'Android';
+		public $PLATFORM_UNKNOWN = 'unknown';
+		public $PLATFORM_WINDOWS = 'Windows';
+		public $PLATFORM_WINDOWS_CE = 'Windows CE';
+		public $PLATFORM_APPLE = 'Apple';
+		public $PLATFORM_LINUX = 'Linux';
+		public $PLATFORM_OS2 = 'OS/2';
+		public $PLATFORM_BEOS = 'BeOS';
+		public $PLATFORM_IPHONE = 'iPhone';
+		public $PLATFORM_IPOD = 'iPod';
+		public $PLATFORM_IPAD = 'iPad';
+		public $PLATFORM_BLACKBERRY = 'BlackBerry';
+		public $PLATFORM_NOKIA = 'Nokia';
+		public $PLATFORM_FREEBSD = 'FreeBSD';
+		public $PLATFORM_OPENBSD = 'OpenBSD';
+		public $PLATFORM_NETBSD = 'NetBSD';
+		public $PLATFORM_SUNOS = 'SunOS';
+		public $PLATFORM_OPENSOLARIS = 'OpenSolaris';
+		public $PLATFORM_ANDROID = 'Android';
 
-		var $OPERATING_SYSTEM_UNKNOWN = 'unknown';
+		public $OPERATING_SYSTEM_UNKNOWN = 'unknown';
 
 		function Browser($useragent="") {
 			$this->reset();
