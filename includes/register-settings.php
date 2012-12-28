@@ -61,7 +61,7 @@ function edd_register_settings() {
 				array(
 					'id' => 'failure_page',
 					'name' => __('Failed Transaction Page', 'edd'),
-					'desc' => __('This is the page buyers are sent to if their transaction is canceled or fails', 'edd'),
+					'desc' => __('This is the page buyers are sent to if their transaction is cancelled or fails', 'edd'),
 					'type' => 'select',
 					'options' => $pages_options
 				),
