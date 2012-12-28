@@ -9,5 +9,5 @@ if( file_exists( $path ) ) {
 } else {
     exit( "Couldn't find wordpress-tests please run\n git submodule init && git submodule update\n" );
 }
-//require_once './easy-digital-downloads.php';
+require_once './easy-digital-downloads.php';
 $_SESSION['travis']='true';
