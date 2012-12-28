@@ -127,7 +127,7 @@ class EDD_Welcome {
 
 			<h2 class="nav-tab-wrapper">
 				<a class="nav-tab nav-tab-active" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-about' ), 'index.php' ) ) ); ?>">
-					<?php _e( 'What&#8217;s New', 'edd' ); ?>
+					<?php _e( "What's New", 'edd' ); ?>
 				</a><a class="nav-tab" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-credits' ), 'index.php' ) ) ); ?>">
 					<?php _e( 'Credits', 'edd' ); ?>
 				</a>
@@ -234,7 +234,7 @@ class EDD_Welcome {
 
 			<h2 class="nav-tab-wrapper">
 				<a class="nav-tab" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-about' ), 'index.php' ) ) ); ?>">
-					<?php _e( 'What&#8217;s New', 'edd' ); ?>
+					<?php _e( "What's New", 'edd' ); ?>
 				</a><a class="nav-tab nav-tab-active" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-credits' ), 'index.php' ) ) ); ?>">
 					<?php _e( 'Credits', 'edd' ); ?>
 				</a>
