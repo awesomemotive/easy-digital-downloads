@@ -564,15 +564,34 @@ add_action('edd_after_download_content', 'edd_show_added_to_cart_messages');
  *
  * @access      public
  * @since       1.0.8
+ * @param       $args Extra query args to add to the URI
  * @return      mixed - the full URL to the checkout page, if present, NULL if it doesn't exist
 */
 
-function edd_get_checkout_uri( $extras = false ) {
+function edd_get_checkout_uri( $args = array() ) {
     global $edd_options;
-
+    
     $uri = isset( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) : NULL;
-    if( $extras )
-    	$uri .= $extras;
+
+    if ( ! empty( $args ) ) {
+		// check for backward compatibility
+		if ( is_string( $args ) )
+			$args = str_replace( '?', '', $args );
+
+		$args = wp_parse_args( $args );
+
+		$uri = add_query_arg( $args, $uri );
+	}
+
+
+	$scheme = defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https' : 'admin';
+
+	$ajax_url = admin_url( 'admin-ajax.php', $scheme );
+
+	if( ! preg_match( '/^https/', $uri ) && preg_match( '/^https/', $ajax_url ) ) {
+		$uri = preg_replace( '/^http/', 'https', $uri );
+	}
+
     return apply_filters( 'edd_get_checkout_uri', $uri );
 }
 

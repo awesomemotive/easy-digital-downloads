@@ -5,7 +5,7 @@ Plugin URI: http://easydigitaldownloads.com
 Description: Serve Digital Downloads Through WordPress
 Author: Pippin Williamson
 Author URI: http://pippinsplugins.com
-Version: 1.3.4.3
+Version: 1.4.0.2
 Text Domain: edd
 Domain Path: languages
 
@@ -90,7 +90,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version
 		if( !defined( 'EDD_VERSION' ) )
-			define( 'EDD_VERSION', '1.3.4.3' );
+			define( 'EDD_VERSION', '1.4.0.2' );
 
 		// Plugin Folder URL
 		if( !defined( 'EDD_PLUGIN_URL' ) )
@@ -105,6 +105,8 @@ final class Easy_Digital_Downloads {
 			define( 'EDD_PLUGIN_FILE', __FILE__ );
 
 	}
+
+
 
 
 	/**
@@ -125,6 +127,7 @@ final class Easy_Digital_Downloads {
 
 
 		require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/template-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/functions.php';
@@ -132,7 +135,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
-		require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/formatting.php';
 		require_once EDD_PLUGIN_DIR . 'includes/widgets.php';
 		require_once EDD_PLUGIN_DIR . 'includes/mime-types.php';
@@ -230,7 +232,6 @@ final class Easy_Digital_Downloads {
 		}
 
 	}
-
 }
 
 endif; // end if class_exists check

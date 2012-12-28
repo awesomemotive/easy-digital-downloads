@@ -450,7 +450,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	}
 
 	// No key found
-	if ( ! $purchase_key )
+	if ( ! isset($purchase_key) )
 		return $edd_receipt_args[ 'error' ];
 
 	$edd_receipt_args[ 'id' ] = edd_get_purchase_id_by_key( $purchase_key );

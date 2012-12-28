@@ -12,6 +12,34 @@
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
+
+/**
+ * Trigger Purchase Receipt
+ *
+ * Causes the purchase receipt to be emailed.
+ *
+ * @access      private
+ * @since       1.0.8.4
+ * @return      void
+*/
+
+function edd_trigger_purchase_receipt( $payment_id, $new_status, $old_status ) {
+
+	// check if the payment was already set to complete
+	if( $old_status == 'publish' || $old_status == 'complete')
+		return;
+
+	// make sure the purchase receipt is only sent if the new status is complete -- No idea why, but this returns even when $new_status is 'publish'
+	//if( $new_status != 'publish' && $new_status != 'complete' );
+		//return;
+
+	// send email with secure download link
+	edd_email_purchase_receipt( $payment_id );
+
+}
+add_action( 'edd_update_payment_status', 'edd_trigger_purchase_receipt', 10, 3 );
+
+
 /**
  * Resend Email Purchase Receipt
  *

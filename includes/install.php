@@ -25,8 +25,17 @@ if ( !defined( 'ABSPATH' ) ) exit;
 function edd_install() {
 	global $wpdb, $edd_options;
 
+	// Setup the Downloads Custom Post Type
+	edd_setup_edd_post_types();
+
+	// Setup the Download Taxonomies
+	edd_setup_download_taxonomies();
+
+	// Clear the permalinks
+	flush_rewrite_rules();
+
 	// Checks if the purchase page option exists
-	if( !isset( $edd_options['purchase_page'] ) ) {
+	if( ! isset( $edd_options['purchase_page'] ) ) {
 	    // Checkout Page
 		$checkout = wp_insert_post(
 			array(
@@ -75,13 +84,13 @@ function edd_install() {
 		);
 	}
 
-	// Setup the Downloads Custom Post Type
-	edd_setup_edd_post_types();
+	
+	// Bail if activating from network, or bulk
+	if ( is_network_admin() || isset( $_GET['activate-multi'] ) )
+		return;
 
-	// Setup the Download Taxonomies
-	edd_setup_download_taxonomies();
-
-	// Clear the permalinks
-	flush_rewrite_rules();
+	// Add the transient to redirect
+    set_transient( '_edd_activation_redirect', true, 30 );
+	
 }
 register_activation_hook(EDD_PLUGIN_FILE, 'edd_install');
