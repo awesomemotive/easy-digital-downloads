@@ -48,9 +48,7 @@ function edd_dashboard_sales_widget() {
 		'meta_compare'           => '>',
 		'meta_value'             => 0,
 		'orderby'                => 'meta_value_num',
-		'cache_results'          => false,
 		'update_post_term_cache' => false,
-		'no_found_rows'          => true,
 		'order'                  => 'DESC'
 	);
 
