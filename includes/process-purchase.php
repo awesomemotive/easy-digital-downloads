@@ -680,6 +680,7 @@ function edd_send_to_success_page( $query_string = null ) {
  * @return Void
  */
 function edd_send_back_to_checkout( $args = array() ) {
+	
 	$redirect = edd_get_checkout_uri();
 
 	if ( ! empty( $args ) ) {
