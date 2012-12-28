@@ -52,7 +52,7 @@ function edd_reporting_contextual_help() {
 			'<p>' . __( 'This screen allows you to export your reports into a PDF or CSV format.', 'edd' ) . '</p>' . 
 			'<p>' . __( '<strong>Sales and Earnings</strong> - This report exports all of the sales and earnings that you have made in the current year. This report includes your sales and earnings for each product as well a graphs of sales and earnings so you can compare them for each month.', 'edd' ) . '</p>' .
 			'<p>' . __( '<strong>Payment History</strong> - This report exports all of payments you have received on your EDD store in a CSV format.  The report includes the contact details of the customer, the products they have purchased as well as any discount codes they have used and the final price they have paid.', 'edd' ) . '</p>' .
-			'<p>' . __( '<strong>Customers</strong> - This report exports all of your customers in a CSV format. It exports the customer&#39;s name and email address and the amount of products they have purchased as well as the final price of their total purchases.', 'edd' ) . '</p>' .
+			'<p>' . __( "<strong>Customers</strong> - This report exports all of your customers in a CSV format. It exports the customer's name and email address and the amount of products they have purchased as well as the final price of their total purchases.", 'edd' ) . '</p>' .
 			'<p>' . __( '<strong>Download History</strong> - This report exports all of the downloads you have received in the current month into a CSV. It exports the date the file was downloaded, the customer it was downloaded by, their IP address, the name of the product and the file they downloaded.', 'edd' ) . '</p>'
 	) );
 
