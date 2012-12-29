@@ -296,6 +296,10 @@ function edd_purchase_form_validate_logged_in_user() {
 			edd_set_error( 'invalid_email', __( 'Please enter a valid email address.', 'edd' ) );
 		}
 
+		if ( empty( $_POST['edd_first'] ) ) {
+			edd_set_error( 'invalid_name', __( 'Please enter your first name.', 'edd' ) );
+		}
+
 		// verify data
 		if ( $user_data ) {
 			// collected logged in user data
@@ -680,7 +684,7 @@ function edd_send_to_success_page( $query_string = null ) {
  * @return Void
  */
 function edd_send_back_to_checkout( $args = array() ) {
-	
+
 	$redirect = edd_get_checkout_uri();
 
 	if ( ! empty( $args ) ) {
