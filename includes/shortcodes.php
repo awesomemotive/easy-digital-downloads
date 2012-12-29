@@ -36,7 +36,7 @@ function edd_download_shortcode( $atts, $content = null ) {
 		$atts )
 	);
 
-	// edd_get_purchase_link() expects the ID to be download_id since v1.3
+	// Edd_get_purchase_link() expects the ID to be download_id since v1.3
 	$atts['download_id'] = $atts['id'];
 
 	$download = edd_get_download( $atts['download_id'] );
@@ -329,7 +329,7 @@ function edd_downloads_query( $atts, $content = null ) {
 			$column_width = '16.6%'; break;
 	endswitch;
 
-	// allow the query to be manipulated by other plugins
+	// Allow the query to be manipulated by other plugins
 	$query = apply_filters( 'edd_downloads_query', $query );
 
 	$downloads = new WP_Query( $query );

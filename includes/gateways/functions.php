@@ -24,7 +24,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
 
 function edd_get_payment_gateways() {
 
-	// default, built-in gateways
+	// Default, built-in gateways
 	$gateways = array(
 		'paypal' => array('admin_label' => 'PayPal', 'checkout_label' => 'PayPal'),
 		'manual' => array('admin_label' => __('Test Payment', 'edd'), 'checkout_label' => __('Test Payment', 'edd')),
@@ -181,7 +181,7 @@ function edd_get_chosen_gateway() {
 		foreach( $gateways as $gateway_id => $gateway ):
 			$enabled_gateway = $gateway_id;
 			if( edd_get_cart_amount() <= 0 ) {
-				$enabled_gateway = 'manual'; // this allows a free download by filling in the info
+				$enabled_gateway = 'manual'; // This allows a free download by filling in the info
 			}
 		endforeach;
 	} else if( edd_get_cart_amount() <= 0 ) {

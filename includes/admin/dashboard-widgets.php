@@ -183,9 +183,9 @@ function edd_dashboard_sales_widget() {
 						</div>
 					</td>
 				</tr>
-				<?php } // end foreach ?>
+				<?php } // End foreach ?>
 			</tbody>
 		</table>
 	</div>
-	<?php } // end if
+	<?php } // End if
 }

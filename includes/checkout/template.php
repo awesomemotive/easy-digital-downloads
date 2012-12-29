@@ -89,7 +89,7 @@ function edd_show_purchase_form() {
 
 			do_action( 'edd_purchase_form_before_cc_form' );
 
-			// load the credit card form and allow gateways to load their own if they wish
+			// Load the credit card form and allow gateways to load their own if they wish
 			if( has_action( 'edd_' . $payment_mode . '_cc_form' ) ) {
 				do_action( 'edd_' . $payment_mode . '_cc_form' );
 			} else {
@@ -99,7 +99,7 @@ function edd_show_purchase_form() {
 			do_action( 'edd_purchase_form_after_cc_form' );
 
 		} else {
-			// can't checkout
+			// Can't checkout
 			do_action( 'edd_purchase_form_no_access' );
 		}
 
@@ -415,7 +415,7 @@ add_action( 'edd_payment_payment_mode_select', 'edd_payment_mode_select' );
 */
 
 function edd_discount_field() {
-	if(edd_has_active_discounts()) { // only show if we have at least one active discount ?>
+	if(edd_has_active_discounts()) { // Only show if we have at least one active discount ?>
 		<fieldset id="edd_discount_code">
 			<p id="edd-discount-code-wrap">
 				<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e('Enter discount', 'edd'); ?>"/>
