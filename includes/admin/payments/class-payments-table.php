@@ -35,6 +35,16 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public $per_page = 30;
 
+
+	/**
+	 * URL of this page
+	 *
+	 * @since       1.4.1
+	 */
+
+	public $base_url;
+
+
 	public $total_count;
 	public $complete_count;
 	public $pending_count;
@@ -61,6 +71,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		) );
 
 		$this->get_payment_counts();
+
+		$this->base_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history' );
 	}
 
 
@@ -101,7 +113,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 
 	function get_views() {
-		$base           = admin_url( 'edit.php?post_type=download&page=edd-payment-history' );
+		
+		$base = $this->base_url;
+
 		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count    . ')</span>';
 		$complete_count = '&nbsp;<span class="count">(' . $this->complete_count . ')</span>';
@@ -195,17 +209,17 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 
 	function column_email( $item ) {
+		
 		$payment     = get_post( $item['ID'] );
-		$base        = admin_url( 'edit.php?post_type=download&page=edd-payment-history&edd-action=edit-payment&purchase_id=' . $item['ID'] );
 
 		$row_actions = array();
 
-		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit-payment', 'purchase_id' => $payment->ID ) ) . '">' . __( 'Edit', 'edd' ) . '</a>';
+		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit-payment', 'purchase_id' => $payment->ID ), $this->base_url ) . '">' . __( 'Edit', 'edd' ) . '</a>';
 
 		if ( edd_is_payment_complete( $payment->ID ) )
-			$row_actions['email_links'] = '<a href="' . add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment->ID ) ) . '">' . __( 'Resend Purchase Receipt', 'edd' ) . '</a>';
+			$row_actions['email_links'] = '<a href="' . add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment->ID ), $this->base_url ) . '">' . __( 'Resend Purchase Receipt', 'edd' ) . '</a>';
 
-		$row_actions['delete'] = '<a href="' . wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_payment', 'purchase_id' => $payment->ID ) ), 'edd_payment_nonce') . '">' . __( 'Delete', 'edd' ) . '</a>';
+		$row_actions['delete'] = '<a href="' . wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_payment', 'purchase_id' => $payment->ID ), $this->base_url ), 'edd_payment_nonce') . '">' . __( 'Delete', 'edd' ) . '</a>';
 
 		$row_actions = apply_filters( 'edd_payment_row_actions', $row_actions, $payment );
 
