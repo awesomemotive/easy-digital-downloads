@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
 
-    // update state/province field on checkout page
+    // Update state/province field on checkout page
     $( 'body').change( 'select[name=billing_country]', function() {
         if( $('select[name=billing_country]').val() == 'US') {
             $('#card_state_other').css('display', 'none');
@@ -17,7 +17,7 @@ jQuery(document).ready(function($) {
         }
     });
 
-    /* credit card verification */
+    /* Credit card verification */
 
     $('body').on('focusout', '.edd-do-validate .card-number', function() {
         var card_field = $(this);
@@ -40,7 +40,7 @@ jQuery(document).ready(function($) {
         });
     });
 
-    // toggle the tax amount shown on checkout
+    // Toggle the tax amount shown on checkout
     $('body').on('click', '#edd_tax_opt_in', function() {
 
         var tax         = parseFloat( $('.edd_cart_tax_amount').data( 'tax' ) );
@@ -74,7 +74,7 @@ jQuery(document).ready(function($) {
         }
     });
 
-    // make sure a gateway is selected
+    // Make sure a gateway is selected
     $('body').on('submit', '#edd_payment_mode', function() {
         var gateway = $('#edd-gateway option:selected').val();
         if( gateway == 0 ) {
