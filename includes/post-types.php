@@ -246,11 +246,11 @@ add_action( 'init', 'edd_setup_download_taxonomies', 10 );
  */
 function edd_register_post_type_statuses() {
 
-	// payment statuses
+	// Payment statuses
 	register_post_status( 'refunded' );
 	register_post_status( 'failed' );
 
-	// discount code statuses
+	// Discount code statuses
 	register_post_status( 'active' );
 	register_post_status( 'inactive' );
 

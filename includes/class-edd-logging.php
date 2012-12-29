@@ -27,10 +27,10 @@ class EDD_Logging {
 
 	function __construct() {
 
-		// create the log post type
+		// Create the log post type
 		add_action( 'init', array( $this, 'register_post_type' ), -1 );
 
-		// create types taxonomy and default types
+		// Create types taxonomy and default types
 		add_action( 'init', array( $this, 'register_taxonomy' ), -1 );
 
 	}
@@ -204,16 +204,16 @@ class EDD_Logging {
 
 		do_action( 'edd_pre_insert_log' );
 
-		// store the log entry
+		// Store the log entry
 		$log_id = wp_insert_post( $args );
 
-		// set the log type, if any
+		// Set the log type, if any
 		if( $log_data['log_type'] && $this->valid_type( $log_data['log_type'] ) ) {
 			wp_set_object_terms( $log_id, $log_data['log_type'], 'edd_log_type', false );
 		}
 
 
-		// set log meta, if any
+		// Set log meta, if any
 		if( $log_id && ! empty( $log_meta ) ) {
 			foreach( (array) $log_meta as $key => $meta ) {
 				update_post_meta( $log_id, '_edd_log_' . sanitize_key( $key ), $meta );
@@ -249,7 +249,7 @@ class EDD_Logging {
 
 		$args = wp_parse_args( $log_data, $defaults );
 
-		// store the log entry
+		// Store the log entry
 		$log_id = wp_update_post( $args );
 
 		if( $log_id && ! empty( $log_meta ) ) {
@@ -308,7 +308,7 @@ class EDD_Logging {
 		if( $logs )
 			return $logs;
 
-		// no logs found
+		// No logs found
 		return false;
 
 	}
@@ -396,7 +396,7 @@ class EDD_Logging {
 
 }
 
-// initiate the logging system
+// Initiate the logging system
 $GLOBALS['edd_logs'] = new EDD_Logging();
 
 

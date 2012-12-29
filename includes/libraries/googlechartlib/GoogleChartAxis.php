@@ -282,11 +282,11 @@ class GoogleChartAxis
 	 */
 	public function computeChxs($axis_index, $chart_type = null)
 	{
-		// parameter not needed for this axis
+		// Parameter not needed for this axis
 		if ( ! $this->chxs )
 			return null;
 
-		// axis index (provided by GoogleChart class at runtime)
+		// Axis index (provided by GoogleChart class at runtime)
 		$str = $axis_index;
 
 		// @todo format string
@@ -310,7 +310,7 @@ class GoogleChartAxis
 						}
 					}
 
-					// not supported in Google-o-meter
+					// Not supported in Google-o-meter
 					if ( $this->chxs > 4 && $chart_type != 'gom') {
 						$str .= ','.$this->tick_color;
 					}
