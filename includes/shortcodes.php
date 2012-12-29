@@ -159,12 +159,12 @@ function edd_discounts_shortcode( $atts, $content = null ) {
 	$discounts_list = '<ul id="edd_discounts_list">';
 
 	foreach ( $discounts as $discount ) {
-		if ( edd_is_discount_valid( $discount['code'] ) ) {
+		if ( edd_is_discount_active( $discount->ID ) ) {
 			$discounts_list .= '<li class="edd_discount">';
 
-				$discounts_list .= '<span class="edd_discount_name">' . $discount['name'] . '</span>';
+				$discounts_list .= '<span class="edd_discount_name">' . edd_get_discount_code( $discount->ID ) . '</span>';
 				$discounts_list .= '<span class="edd_discount_separator"> - </span>';
-				$discounts_list .= '<span class="edd_discount_amount">' . edd_format_discount_rate( $discount['type'], $discount['amount'] ) . '</span>';
+				$discounts_list .= '<span class="edd_discount_amount">' . edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) ) . '</span>';
 
 			$discounts_list .= '</li>';
 		}
