@@ -12,27 +12,6 @@
 if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
- * Change default "enter title here" input
- *
- * @access      public
- * @since       1.4.02
- * @return      $title
-*/
-
-function edd_change_default_title( $title ){
-     $screen = get_current_screen();
- 
-     if  ( 'download' == $screen->post_type ) {
-     	$label = edd_get_label_singular();
-        $title = sprintf( __('Enter download title here', 'edd'), $label);
-     }
- 
-     return $title;
-}
- 
-add_filter( 'enter_title_here', 'edd_change_default_title' );
-
-/**
  * Is Test Mode
  *
  * @access      public
