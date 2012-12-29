@@ -80,7 +80,7 @@ function edd_get_download_price( $download_id ) {
 function edd_price( $download_id, $echo = true ) {
 	if( edd_has_variable_prices( $download_id ) ) {
 		$prices = edd_get_variable_prices( $download_id );
-		// return the lowest price
+		// Return the lowest price
 		$price_float = 0;
         foreach($prices as $key => $value)
             if( ( ( (float)$prices[$key]['amount']) < $price_float) or ($price_float==0) )
@@ -208,7 +208,7 @@ function edd_get_download_earnings_stats( $download_id ) {
 	// This is what enables us to sort it.
 	if ( '' == get_post_meta( $download_id, '_edd_download_earnings', true ) ) {
 		add_post_meta( $download_id, '_edd_download_earnings', 0 );
-	} // end if
+	} // End if
 
 	$earnings = get_post_meta( $download_id, '_edd_download_earnings', true );
 
@@ -231,7 +231,7 @@ function edd_get_download_sales_stats($download_id) {
 	// This is what enables us to sort it.
 	if ( '' == get_post_meta( $download_id, '_edd_download_sales', true ) ) {
 		add_post_meta( $download_id, '_edd_download_sales', 0 );
-	} // end if
+	} // End if
 
 	$sales = get_post_meta( $download_id, '_edd_download_sales', true );
 
@@ -318,7 +318,7 @@ function edd_remove_download_logs_on_delete( $download_id = 0 ) {
 
 	global $edd_logs;
 
-	// remove all log entries related to this download
+	// Remove all log entries related to this download
 	$edd_logs->delete_logs( $download_id );
 
 }
@@ -355,7 +355,7 @@ function edd_increase_purchase_count( $download_id ) {
 
 function edd_decrease_purchase_count( $download_id ) {
 	$sales = edd_get_download_sales_stats( $download_id );
-	if( $sales > 0 ) // only decrease if not already zero
+	if( $sales > 0 ) // Only decrease if not already zero
 		$sales = $sales - 1;
 
 	if( update_post_meta( $download_id, '_edd_download_sales', $sales ) )
@@ -399,7 +399,7 @@ function edd_increase_earnings( $download_id, $amount ) {
 function edd_decrease_earnings( $download_id, $amount ) {
 	$earnings = edd_get_download_earnings_stats( $download_id );
 
-	if( $earnings > 0 ) // only decrease if greater than zero
+	if( $earnings > 0 ) // Only decrease if greater than zero
 		$earnings = $earnings - $amount;
 
 	if( update_post_meta( $download_id, '_edd_download_earnings', $earnings ) )
@@ -426,8 +426,8 @@ function edd_get_average_monthly_download_earnings( $download_id ) {
 
 	$diff 	= abs( time() - strtotime( $release_date ) );
 
-	$years 	= floor( $diff / ( 365*60*60*24 ) );							// number of years since publication
-	$months = floor( ( $diff - $years * 365*60*60*24 ) / ( 30*60*60*24 ) ); // number of months since publication
+	$years 	= floor( $diff / ( 365*60*60*24 ) );							// Number of years since publication
+	$months = floor( ( $diff - $years * 365*60*60*24 ) / ( 30*60*60*24 ) ); // Number of months since publication
 
 	if ( $months > 0 )
 		return ( $earnings / $months );
@@ -453,8 +453,8 @@ function edd_get_average_monthly_download_sales( $download_id ) {
 
 	$diff 	= abs( time() - strtotime( $release_date ) );
 
-	$years 	= floor( $diff / ( 365*60*60*24 ) );							// number of years since publication
-	$months = floor( ( $diff - $years * 365*60*60*24 ) / ( 30*60*60*24 ) ); // number of months since publication
+	$years 	= floor( $diff / ( 365*60*60*24 ) );							// Number of years since publication
+	$months = floor( ( $diff - $years * 365*60*60*24 ) / ( 30*60*60*24 ) ); // Number of months since publication
 
 	if ( $months > 0 )
 		return ( $sales / $months );
@@ -577,7 +577,7 @@ function edd_set_file_download_limit_override( $download_id = 0, $payment_id = 0
 
 function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file_id = 0 ) {
 
-	// checks to see if at limit
+	// Checks to see if at limit
 
 	$logs = new EDD_Logging();
 
@@ -603,8 +603,8 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
 
 			$ret = true;
 
-			// check to make sure the limit isn't overwritten
-			// a limit is overwritten when purchase receipt is resent
+			// Check to make sure the limit isn't overwritten
+			// A limit is overwritten when purchase receipt is resent
 			$limit_override = edd_get_file_download_limit_override( $download_id, $payment_id );
 
 			if( ! empty( $limit_override ) && $download_count < $limit_override ) {
@@ -659,7 +659,7 @@ function edd_get_download_file_url($key, $email, $filekey, $download_id) {
 			? absint($edd_options['download_link_expiration']) : 24;
 
 	if( ! ( $date = strtotime( '+' . $hours . 'hours' ) ) )
-		$date = 2147472000; // highest possible date, January 19, 2038
+		$date = 2147472000; // Highest possible date, January 19, 2038
 
 	$params = array(
 		'download_key' 	=> $key,
@@ -726,7 +726,7 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 
 					$variable_prices_enabled = get_post_meta( $id, '_variable_pricing', true );
 
-					// if this download has variable prices, we have to confirm that this file was included in their purchase
+					// If this download has variable prices, we have to confirm that this file was included in their purchase
 					if( ! empty( $price_options ) && $file_condition != 'all' && $variable_prices_enabled ) {
 						if( $file_condition !== $price_options['price_id'] )
 							return false;
@@ -734,15 +734,15 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 
 					if( $id == $download_id ) {
 
-						// check to see if the file download limit has been reached
+						// Check to see if the file download limit has been reached
 						if( edd_is_file_at_download_limit( $id, $payment->ID, $file_key ) )
 							wp_die( apply_filters( 'edd_download_limit_reached_text', __('Sorry but you have hit your download limit for this file.' ), 'edd'), __('Error', 'edd') );
 
-						// make sure the link hasn't expired
+						// Make sure the link hasn't expired
 						if( time() < $expire ) {
-							return $payment->ID; // payment has been verified and link is still valid
+							return $payment->ID; // Payment has been verified and link is still valid
 						}
-						return false; // payment verified, but link is no longer valid
+						return false; // Payment verified, but link is no longer valid
 					}
 
 				}
@@ -752,7 +752,7 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 		}
 
 	}
-	// payment not verified
+	// Payment not verified
 	return false;
 }
 

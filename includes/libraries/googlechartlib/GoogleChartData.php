@@ -119,8 +119,8 @@ class GoogleChartData
 	 */
 	public function computeChd($encoding = GoogleChart::TEXT, $scale = null)
 	{
-		// if scale is null, it means that there is not "global" scale for the chart
-		// hence we need to determine the scale for this data only
+		// If scale is null, it means that there is not "global" scale for the chart
+		// Hence we need to determine the scale for this data only
 		if ( $scale === null ) {
 			$scale = $this->getScale();
 		}
@@ -540,9 +540,9 @@ class GoogleChartData
 				$v = '_';
 			}
 			else {
-				// we can't rely on PHP's default display for float values, as
-				// float are actually displayed differently depending on the
-				// current locale.
+				// We can't rely on PHP's default display for float values, as
+				// Float are actually displayed differently depending on the
+				// Current locale.
 				$v = number_format($v, 2, '.', '');
 			}
 		}
@@ -557,7 +557,7 @@ class GoogleChartData
 	{
 		if ( $min === null ) {
 			$min = min($values);
-			// by default, we only want a min if there is negative values
+			// By default, we only want a min if there is negative values
 			if ( $min > 0 ) {
 				$min = 0;
 			}
@@ -598,7 +598,7 @@ class GoogleChartData
 	{
 		if ( $min === null ) {
 			$min = min($values);
-			// by default, we only want a min if there is negative values
+			// By default, we only want a min if there is negative values
 			if ( $min > 0 ) {
 				$min = 0;
 			}
@@ -643,13 +643,13 @@ class GoogleChartData
 	*/
 	static public function calculateLinearRegression($data)
 	{
-		// calculate number points
+		// Calculate number points
 		$n = count($data);
 
 		$x = array_keys($data);
 		$y = array_values($data);
 
-		// calculate sums
+		// Calculate sums
 		$x_sum = array_sum($x);
 		$y_sum = array_sum($y);
 
@@ -663,13 +663,13 @@ class GoogleChartData
 
 		}
 
-		// calculate slope
+		// Calculate slope
 		$m = (($n * $xy_sum) - ($x_sum * $y_sum)) / (($n * $xx_sum) - ($x_sum * $x_sum));
 
-		// calculate intercept
+		// Calculate intercept
 		$b = ($y_sum - ($m * $x_sum)) / $n;
 
-		// return result
+		// Return result
 		return array($m, $b);
 	}
 

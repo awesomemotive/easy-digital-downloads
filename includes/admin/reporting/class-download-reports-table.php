@@ -34,9 +34,9 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular'  => edd_get_label_singular(),    // singular name of the listed records
-			'plural'    => edd_get_label_plural(),    	// plural name of the listed records
-			'ajax'      => false             			// does this table support ajax?
+			'singular'  => edd_get_label_singular(),    // Singular name of the listed records
+			'plural'    => edd_get_label_plural(),    	// Plural name of the listed records
+			'ajax'      => false             			// Does this table support ajax?
 		) );
 
 	}
@@ -218,7 +218,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	function prepare_items() {
 		$columns = $this->get_columns();
 
-		$hidden = array(); // no hidden columns
+		$hidden = array(); // No hidden columns
 
 		$sortable = $this->get_sortable_columns();
 

@@ -59,15 +59,15 @@ function edd_reports_graph() {
 			}
 			break;
 		default:
-			$time_format 	= '%d/%b'; 	// show days by default
-			$tick_size		= 'day'; 	// default graph interval
+			$time_format 	= '%d/%b'; 	// Show days by default
+			$tick_size		= 'day'; 	// Default graph interval
 			$day_by_day 	= true;
 			break;
 	endswitch;
 
 	$time_format 	= apply_filters( 'edd_graph_timeformat', $time_format );
 	$tick_size 		= apply_filters( 'edd_graph_ticksize', $tick_size );
-	$totals 		= (float) 0.00; // total earnings for time period shown
+	$totals 		= (float) 0.00; // Total earnings for time period shown
 
 	ob_start(); ?>
 	<script type="text/javascript">
@@ -202,7 +202,7 @@ function edd_reports_graph() {
 	<div class="metabox-holder" style="padding-top: 0;">
 		<div class="postbox">
 			<h3><span><?php _e('Earnings Over Time', 'edd'); ?></span></h3>
-			
+
 			<div class="inside">
 				<?php edd_reports_graph_controls(); ?>
 				<div id="edd_monthly_stats" style="height: 300px;"></div>
@@ -307,7 +307,7 @@ function edd_get_report_dates() {
 	$dates['year'] 		= isset( $_GET['year'] ) 	? $_GET['year'] 	: date( 'Y' );
 	$dates['year_end']	= date( 'Y' );
 
-	// modify dates based on predefined ranges
+	// Modify dates based on predefined ranges
 	switch( $dates['range'] ) :
 
 		case 'this_month' :
@@ -366,7 +366,7 @@ function edd_get_report_dates() {
 
 				$dates['m_start'] 	= 10;
 				$dates['m_end']		= 12;
-				$dates['year']		= date( 'Y' ) - 1; // previous year
+				$dates['year']		= date( 'Y' ) - 1; // Previous year
 
 			} else if ( $month_now <= 6 ) {
 

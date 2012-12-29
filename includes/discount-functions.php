@@ -128,7 +128,7 @@ function edd_store_discount( $discount_details, $discount_id = null ) {
 
 	if ( edd_discount_exists( $discount_id ) && !is_null( $discount_id ) ) {
 
-		// update an existing discount
+		// Update an existing discount
 
 		$discount_details = apply_filters( 'edd_update_discount', $discount_details, $discount_id );
 
@@ -157,11 +157,11 @@ function edd_store_discount( $discount_details, $discount_id = null ) {
 
 		do_action( 'edd_post_update_discount', $discount_details, $discount_id );
 
-		// discount code updated
+		// Discount code updated
 		return true;
 
 	} else {
-		// add the discount
+		// Add the discount
 
 		$discount_details = apply_filters( 'edd_insert_discount', $discount_details );
 
@@ -191,7 +191,7 @@ function edd_store_discount( $discount_details, $discount_id = null ) {
 
 		do_action( 'edd_post_insert_discount', $discount_details, $discount_id );
 
-		// discount code created
+		// Discount code created
 		return true;
 	}
 }
@@ -467,7 +467,7 @@ function edd_is_discount_expired( $code_id = null ) {
 		if ( $expiration ) {
 			$expiration = strtotime( $expiration );
 			if ( $expiration < time() - ( 24 * 60 * 60 ) ) {
-				// discount is expired
+				// Discount is expired
 				$return = true;
 			}
 		}
@@ -496,11 +496,11 @@ function edd_is_discount_started( $code_id = null ) {
 		if ( $start_date ) {
 			$start_date = strtotime( $start_date );
 			if ( $start_date < time() ) {
-				// discount has pased the start date
+				// Discount has pased the start date
 				$return = true;
 			}
 		} else {
-			// no start date for this discount, so has to be true
+			// No start date for this discount, so has to be true
 			$return = true;
 		}
 	}
@@ -525,11 +525,11 @@ function edd_is_discount_maxed_out( $code_id = null ) {
 
 	if ( $discount ) {
 		$uses = edd_get_discount_uses( $code_id );
-		// large number that will never be reached
+		// Large number that will never be reached
 		$max_uses = edd_get_discount_max_uses( $code_id );
-		// should never be greater than, but just in case
+		// Should never be greater than, but just in case
 		if ( $uses >= $max_uses && $max_uses != '' && ! empty( $max_uses ) ) {
-			// discount is maxed out
+			// Discount is maxed out
 			$return = true;
 		}
 	}
@@ -559,7 +559,7 @@ function edd_discount_is_min_met( $code_id = null ) {
 		$cart_amount = edd_get_cart_amount();
 
 		if ( (float) $cart_amount >= (float) $min ) {
-			// minimum has been met
+			// Minimum has been met
 			$return = true;
 		}
 	}
@@ -586,7 +586,7 @@ function edd_is_discount_used( $code = null, $user = '' ) {
 
 	if ( is_email( $user ) ) {
 
-		$user_found = true; // all we need is the email
+		$user_found = true; // All we need is the email
 		$key        = '_edd_payment_user_email';
 		$value      = $user;
 
@@ -601,7 +601,7 @@ function edd_is_discount_used( $code = null, $user = '' ) {
 
 		} else {
 
-			$user_found = false; // bail, no user found
+			$user_found = false; // Bail, no user found
 		}
 	}
 
@@ -706,14 +706,14 @@ function edd_get_discounted_amount( $code, $base_price ) {
 	$rate        = edd_get_discount_amount( $discount_id );
 
 	if ( $type == 'flat' ) {
-		// set amount
+		// Set amount
 		$discounted_price = $base_price - $rate;
 		if ( $discounted_price < 0 ) {
 			$discounted_price = 0;
 		}
 
 	} else {
-		// percentage discount
+		// Percentage discount
 		$discounted_price = $base_price - ( $base_price * ( $rate / 100 ) );
 	}
 	return apply_filters( 'edd_discounted_amount', number_format( $discounted_price, 2 ) );

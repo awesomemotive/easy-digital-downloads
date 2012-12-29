@@ -50,9 +50,9 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular'  => __( 'Customer', 'edd' ),     // singular name of the listed records
-			'plural'    => __( 'Customers', 'edd' ),    // plural name of the listed records
-			'ajax'      => false             			// does this table support ajax?
+			'singular'  => __( 'Customer', 'edd' ),     // Singular name of the listed records
+			'plural'    => __( 'Customers', 'edd' ),    // Plural name of the listed records
+			'ajax'      => false             			// Does this table support ajax?
 		) );
 
 	}
@@ -186,7 +186,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	function prepare_items() {
 		$columns = $this->get_columns();
 
-		$hidden = array(); // no hidden columns
+		$hidden = array(); // No hidden columns
 
 		$sortable = $this->get_sortable_columns();
 

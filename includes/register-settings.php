@@ -24,9 +24,9 @@ if ( !defined( 'ABSPATH' ) ) exit;
 
 function edd_register_settings() {
 
-	// setup some default option sets
+	// Setup some default option sets
 	$pages = get_pages();
-	$pages_options = array( 0 => '' ); // blank option
+	$pages_options = array( 0 => '' ); // Blank option
 	if( $pages ) {
 		foreach( $pages as $page ) {
 			$pages_options[ $page->ID ] = $page->post_title;
@@ -559,7 +559,7 @@ function edd_register_settings() {
 		);
 	}
 
-	// creates our settings in the options table
+	// Creates our settings in the options table
 	register_setting( 'edd_settings_general', 'edd_settings_general', 'edd_settings_sanitize' );
 	register_setting( 'edd_settings_gateways', 'edd_settings_gateways', 'edd_settings_sanitize' );
 	register_setting( 'edd_settings_emails', 'edd_settings_emails', 'edd_settings_sanitize' );

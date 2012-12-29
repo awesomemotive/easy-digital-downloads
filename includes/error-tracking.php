@@ -10,7 +10,7 @@
 */
 
 
-// make sure a session is started
+// Make sure a session is started
 if( !session_id() ) {
 	add_action( 'init', 'session_start', -1 );
 }
