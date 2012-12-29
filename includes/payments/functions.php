@@ -176,6 +176,11 @@ function edd_insert_payment( $payment_data = array() ) {
 		$payment_title = $payment_data['user_email'];
 	}
 
+	// Retrieve the ID of the discount used, if any
+	if( $payment_data['user_info']['discount'] != 'none' ) {
+		$discount = edd_get_discount_by_code( $payment_data['user_info']['discount'] );
+	}
+
 	// Create a blank payment
 	$payment = wp_insert_post(
 		array(
@@ -215,6 +220,8 @@ function edd_insert_payment( $payment_data = array() ) {
 		update_post_meta( $payment, '_edd_payment_total',        $payment_data['price'] );
 		update_post_meta( $payment, '_edd_payment_mode',         $mode );
 		update_post_meta( $payment, '_edd_payment_gateway',      $gateway );
+		if( ! empty( $discount ) )
+			update_post_meta( $payment, '_edd_payment_discount_id',  $discount->ID );
 
 		// Clear the user's purchased cache
 		delete_transient( 'edd_user_' . $payment_data['user_info']['id'] . '_purchases' );
