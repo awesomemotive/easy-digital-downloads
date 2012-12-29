@@ -117,7 +117,7 @@ jQuery(document).ready(function ($) {
 
 	//$('#edit-slug-box').remove();
 
-	// date picker
+	// Date picker
 	if ($('.form-table .edd_datepicker').length > 0) {
 		var dateFormat = 'mm/dd/yy';
 		$('.edd_datepicker').datepicker({
@@ -160,7 +160,7 @@ jQuery(document).ready(function ($) {
 		return false;
 	});
 
-	// show / hide the send purchase receipt check box on the Edit payment screen
+	// Show / hide the send purchase receipt check box on the Edit payment screen
 	$('#edd_payment_status').change(function() {
 		if( $('#edd_payment_status option:selected').val() == 'publish' ) {
 			$('#edd_payment_notification').slideDown();
@@ -195,7 +195,7 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
-	// show the email template previews
+	// Show the email template previews
 	if( $('#email-preview-wrap').length ) {
 		$('#open-email-preview').colorbox({
 			inline: true,
@@ -205,7 +205,7 @@ jQuery(document).ready(function ($) {
 		});
 	}
 
-	// reporting
+	// Reporting
 	$( '#edd-graphs-date-options' ).change( function() {
 		var $this = $(this);
 		if( $this.val() == 'other' ) {
@@ -215,11 +215,11 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
-	// hide local tax opt in
+	// Hide local tax opt in
     if( $('input[name="edd_settings_taxes[tax_condition]"]:checked').val() != 'local' ) {
         $('input[name="edd_settings_taxes[tax_condition]"]').parent().parent().next().hide();
     }
-    // toggle local tax option
+    // Toggle local tax option
     $('input[name="edd_settings_taxes[tax_condition]"]').on('change', function() {
         var tax_opt_in = $(this).parent().parent().next();
         if( $(this).val() == 'local' ) {
