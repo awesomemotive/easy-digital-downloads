@@ -616,7 +616,7 @@ function edd_render_purchase_log_meta_box() {
 						echo '<strong>' . __( 'Purchase ID:', 'edd' ) . '</strong> <a href="' . admin_url('edit.php?post_type=download&page=edd-payment-history&purchase_id=' . $payment_id . '&edd-action=edit-payment') . '">' . $payment_id . '</a>';
 					echo '</td>';
 				echo '</tr>';
-			} // endforeach
+			} // Endforeach
 			do_action( 'edd_purchase_log_meta_box' );
 		} else {
 			echo '<tr>';
@@ -715,7 +715,7 @@ function edd_render_download_log_meta_box() {
 				echo '</tr>';
 
 				do_action( 'edd_download_log__meta_box' );
-			} // endforeach
+			} // Endforeach
 		} else {
 			echo '<tr>';
 				echo '<td colspan=4" class="edd_download_sales_log">';

@@ -284,7 +284,7 @@ function edd_export_all_downloads_history() {
 						echo '"' . html_entity_decode( get_the_title( $report->ID ) ) . '",';
 						echo '"' . $file_name . '"';
 						echo "\r\n";
-					} // endforeach
+					} // Endforeach
 				}
 			}
 

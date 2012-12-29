@@ -234,7 +234,7 @@ final class Easy_Digital_Downloads {
 	}
 }
 
-endif; // end if class_exists check
+endif; // End if class_exists check
 
 
 /**

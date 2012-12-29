@@ -31,7 +31,7 @@ function edd_login_form( $redirect = '' ) {
 
 	if( !is_user_logged_in() ) { ?>
 		<?php
-		// show any error messages after form submission
+		// Show any error messages after form submission
 		edd_print_errors(); ?>
 
 		<form id="edd_login_form"  class="edd_form" action="" method="post">
@@ -88,7 +88,7 @@ function edd_process_login_form( $data ) {
 		} else {
 			edd_set_error( 'username_incorrect', __('The username you entered does not exist', 'edd') );
 		}
-		// check for errors and redirect if none present
+		// Check for errors and redirect if none present
 		$errors = edd_get_errors();
 		if( !$errors ) {
 			$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], $user_ID );

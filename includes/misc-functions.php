@@ -111,7 +111,7 @@ function edd_is_cc_verify_enabled() {
 		$ret = false;
 
 	if( isset( $edd_options['edd_is_cc_verify_enabled'] ) )
-		$ret = false; // global override
+		$ret = false; // Global override
 
 	return (bool) apply_filters( 'edd_verify_credit_cards', $ret );
 }
@@ -756,7 +756,7 @@ function edd_presstrends() {
 		$count_pages    = wp_count_posts( 'page' );
 		$comments_count = wp_count_comments();
 
-		// wp_get_theme was introduced in 3.4, for compatibility with older versions, let's do a workaround for now.
+		// Wp_get_theme was introduced in 3.4, for compatibility with older versions, let's do a workaround for now.
 		if ( function_exists( 'wp_get_theme' ) ) {
 			$theme_data = wp_get_theme();
 			$theme_name = urlencode( $theme_data->Name );

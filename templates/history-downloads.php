@@ -53,15 +53,15 @@ if( $purchases ) :
 
 							echo '</td>';
 
-						} // end if ! edd_no_redownload()
+						} // End if ! edd_no_redownload()
 
 						do_action( 'edd_download_history_row_end', $post->ID, $id );
 
 					echo '</tr>';
 
-				} // end foreach $downloads
+				} // End foreach $downloads
 				wp_reset_postdata();
-			} // end if $downloads
+			} // End if $downloads
 		endforeach;
 		?>
 	</table>
