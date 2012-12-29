@@ -291,9 +291,12 @@ function edd_purchase_form_validate_logged_in_user() {
 		// get the logged in user data
 		$user_data = get_userdata( $user_ID );
 
-		if( !is_email( $_POST['edd_email'] ) ) {
-			// if the user enters an email other than the stored email, we must verify it
+		if( ! is_email( $_POST['edd_email'] ) ) {
 			edd_set_error( 'invalid_email', __( 'Please enter a valid email address.', 'edd' ) );
+		}
+
+		if ( empty( $_POST['edd_first'] ) ) {
+			edd_set_error( 'invalid_name', __( 'Please enter your first name.', 'edd' ) );
 		}
 
 		// verify data
@@ -680,7 +683,7 @@ function edd_send_to_success_page( $query_string = null ) {
  * @return Void
  */
 function edd_send_back_to_checkout( $args = array() ) {
-	
+
 	$redirect = edd_get_checkout_uri();
 
 	if ( ! empty( $args ) ) {
