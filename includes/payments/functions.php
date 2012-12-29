@@ -808,7 +808,13 @@ function edd_get_payment_notes( $payment_id = 0 ) {
 	if ( empty( $payment_id ) )
 		return false;
 
-	return get_comments( array( 'post_id' => $payment_id, 'order' => 'ASC' ) );
+	remove_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
+
+	$notes = get_comments( array( 'post_id' => $payment_id, 'order' => 'ASC' ) );
+
+	add_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
+
+	return $notes;
 
 }
 
@@ -840,7 +846,8 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 		'comment_author'       => '',
 		'comment_author_IP'    => '',
 		'comment_author_url'   => '',
-		'comment_author_email' => ''
+		'comment_author_email' => '',
+		'comment_type'         => 'edd_payment_note'
 
 	) ) );
 
@@ -849,3 +856,26 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 	return $note_id;
 
 }
+
+
+/**
+ * Exclude notes (comments) on edd_payment post type from showing in recent comment widgets.
+ *
+ * @since  1.4.1
+ * @param  array  $clauses
+ * @param  object $wp_comment_query
+ * @return array
+ */
+
+function edd_hide_payment_notes( $clauses, $wp_comment_query ) {
+    global $wpdb;
+
+    if ( ! $clauses['join'] )
+        $clauses['join'] = "JOIN $wpdb->posts ON $wpdb->posts.ID = $wpdb->comments.comment_post_ID";
+
+    if ( ! $wp_comment_query->query_vars['post_type' ] ) // only apply if post_type hasn't already been queried
+        $clauses['where'] .= $wpdb->prepare( " AND {$wpdb->posts}.post_type != %s", 'edd_payment' );
+
+    return $clauses;
+}
+add_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
