@@ -26,7 +26,7 @@ function edd_can_checkout() {
 
 	global $edd_options;
 
-	$can_checkout = true; // always true for now
+	$can_checkout = true; // Always true for now
 
 	return (bool) apply_filters( 'edd_can_checkout', $can_checkout );
 

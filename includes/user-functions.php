@@ -47,7 +47,7 @@ function edd_get_users_purchases( $user = 0, $number = -1 ) {
 		set_transient( 'edd_user_' . $user . '_purchases', $purchases, 7200 );
 	}
 
-	// no purchases
+	// No purchases
 	if ( ! $purchases )
 		return false;
 
@@ -71,7 +71,7 @@ function edd_get_users_purchases( $user = 0, $number = -1 ) {
 function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null ) {
 
 	if( !is_user_logged_in() )
-		return false; // at some point this should support email checking
+		return false; // At some point this should support email checking
 
 	$users_purchases = edd_get_users_purchases( $user_id );
 
@@ -140,9 +140,9 @@ function edd_has_purchases( $user_id = null ) {
 	}
 
 	if( edd_get_users_purchases( $user_id, 1 ) ) {
-		return true; // user has at least one purchase
+		return true; // User has at least one purchase
 	}
-	return false; // user has never purchased anything
+	return false; // User has never purchased anything
 }
 
 

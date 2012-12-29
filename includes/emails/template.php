@@ -308,7 +308,7 @@ function edd_apply_email_template( $body, $payment_id, $payment_data ) {
 		if ( is_admin() )
 			$body = edd_email_preview_templage_tags( $body );
 
-		return $body; // return the plain email with no template
+		return $body; // Return the plain email with no template
 	}
 
 	ob_start();
@@ -342,7 +342,7 @@ function edd_default_email_template() {
 
 	echo '<div style="width: 550px; border: 1px solid #ccc; background: #f0f0f0; padding: 8px 10px; margin: 0 auto;">';
 	echo '<div id="edd-email-content" style="background: #fff; border: 1px solid #ccc; padding: 10px;">';
-	echo '{email}'; // this tag is required in order for the contents of the email to be shown
+	echo '{email}'; // This tag is required in order for the contents of the email to be shown
 	echo '</div>';
 	echo '</div>';
 

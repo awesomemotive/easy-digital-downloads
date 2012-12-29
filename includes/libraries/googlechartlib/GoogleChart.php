@@ -591,7 +591,7 @@ class GoogleChart extends GoogleChartApi
 		// 100% = 255
 		$opacity = str_pad(dechex(round($opacity * 255 / 100)), 8, 0, STR_PAD_LEFT);
 
-		// opacity doesn't work with other backgrounds
+		// Opacity doesn't work with other backgrounds
 		$this->fills[self::BACKGROUND] = 'a,s,'.$opacity;
 
 		return $this;
@@ -644,7 +644,7 @@ class GoogleChart extends GoogleChartApi
 			else {
 				$color = $colors[$i];
 			}
-			// no color centerpoint, try to calculate a good one:
+			// No color centerpoint, try to calculate a good one:
 			if ( ! $centerpoint ) {
 				$centerpoint = $i / ($n-1);
 			}
@@ -687,7 +687,7 @@ class GoogleChart extends GoogleChartApi
 	 */
 	public function setMargin($top, $right = null, $bottom = null, $left = null)
 	{
-		// if only one value, then all have the same values
+		// If only one value, then all have the same values
 		if ( $left === null && $right === null && $bottom === null ) {
 			$this->margin = array(
 				'left' => (float) $top,
@@ -869,10 +869,10 @@ class GoogleChart extends GoogleChartApi
 		}
 
 		foreach ( $this->data as $i => $d ) {
-			// data serie values and scale
+			// Data serie values and scale
 			if ( $d->hasValues() ) {
 				$data[] = $d->computeChd($this->data_format, $this->scale);
-				// compute per-data scale only if autoscale if off
+				// Compute per-data scale only if autoscale if off
 				if ( ! $this->autoscale && ! $this->scale ) {
 					$scales[] = $d->computeChds();
 					if ( $d->hasCustomScale() ) {
@@ -881,13 +881,13 @@ class GoogleChart extends GoogleChartApi
 				}
 			}
 
-			// data serie color (chco)
+			// Data serie color (chco)
 			$colors[] = $d->computeChco();
 			if ( $colors_needed == false && $d->hasChco() ) {
 				$colors_needed = true;
 			}
 
-			// data serie style (chls)
+			// Data serie style (chls)
 			$styles[] = $d->computeChls();
 			if ( $styles_needed == false && $d->hasChls() ) {
 				$styles_needed = true;
@@ -933,7 +933,7 @@ class GoogleChart extends GoogleChartApi
 			$q['chds'] = implode(',', $scales);
 		}
 
-		// legends
+		// Legends
 		if ( $legends_needed ) {
 			$q['chdl'] = implode('|',$legends);
 			if ( $this->hasChdlp() ) {
@@ -968,7 +968,7 @@ class GoogleChart extends GoogleChartApi
 
 			$index = null;
 			if ( $data ) {
-				// get the data serie index
+				// Get the data serie index
 				$index = $data->getIndex();
 				if ( $index === null ) {
 					$additional_data[] = $data->computeChd($this->data_format);
@@ -977,10 +977,10 @@ class GoogleChart extends GoogleChartApi
 				}
 			}
 
-			// now $index contains the correct data serie index
+			// Now $index contains the correct data serie index
 			$tmp = $m->compute($index, $this->type);
 			if ( $tmp === null )
-				continue; // ignore empty markers
+				continue; // Ignore empty markers
 
 			if ( $m instanceof GoogleChartMarker ) {
 				$markers[] = $tmp;
@@ -998,7 +998,7 @@ class GoogleChart extends GoogleChartApi
 			$q['chem'] = implode('|',$dynamic_markers);
 		}
 
-		// append every additional_data to 'chd'
+		// Append every additional_data to 'chd'
 		if ( isset($additional_data[0]) ) {
 			$q['chd'] = $this->data_format.$nb_data_series.substr($q['chd'],1).$this->data_separator[$this->data_format].implode($this->data_separator[$this->data_format],$additional_data);
 		}

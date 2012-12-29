@@ -46,7 +46,7 @@ function edd_process_cart_endpoints() {
 
 	global $wp_query;
 
-	// adds an item to the cart with a /edd-add/# URL
+	// Adds an item to the cart with a /edd-add/# URL
 	if( isset( $wp_query->query_vars['edd-add'] ) ) {
 
 		$download_id = absint( $wp_query->query_vars['edd-add'] );
@@ -55,7 +55,7 @@ function edd_process_cart_endpoints() {
 		wp_redirect( edd_get_checkout_uri() ); exit;
 	}
 
-	// removes an item from the cart with a /edd-remove/# URL
+	// Removes an item from the cart with a /edd-remove/# URL
 	if( isset( $wp_query->query_vars['edd-remove'] ) ) {
 
 		$cart_key = absint( $wp_query->query_vars['edd-remove'] );
