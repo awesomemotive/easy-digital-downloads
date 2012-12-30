@@ -70,7 +70,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		}
 	}
 
-	if( isset( $user_info['discount'] ) ) {
+	if( isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ) {
 		edd_increase_discount_usage( $user_info['discount'] );
 	}
 
@@ -78,7 +78,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	edd_empty_cart();
 
 }
-add_action( 'edd_update_payment_status', 'edd_complete_purchase', 10, 3 );
+add_action( 'edd_update_payment_status', 'edd_complete_purchase', 100, 3 );
 
 
 /**
