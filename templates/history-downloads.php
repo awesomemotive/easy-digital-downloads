@@ -65,6 +65,17 @@ if( $purchases ) :
 		endforeach;
 		?>
 	</table>
+	<div id="edd_download_history_pagination" class="edd_pagination navigation">
+		<?php
+		$big = 999999;
+		echo paginate_links( array(
+			'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+			'format'  => '?paged=%#%',
+			'current' => max( 1, get_query_var( 'paged' ) ),
+			'total'   => edd_count_purchases_of_customer()
+		) );
+		?>
+	</div>
 	<?php
 	do_action( 'edd_after_download_history' );
 else : ?>
