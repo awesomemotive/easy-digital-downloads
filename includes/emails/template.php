@@ -364,7 +364,8 @@ function edd_default_email_styling( $email_body ) {
 
 	$first_p    = strpos( $email_body, '<p>' );
 	$email_body = substr_replace( $email_body, '<p style="margin-top:0;">', $first_p, 3 );
-
+	$email_body = str_replace( '<ul>', '<ul style="margin:0 0 10px 0; padding: 0;">', $email_body );
+	$email_body = str_replace( '<li>', '<li style="display:block;margin:0 0 4px 0;">', $email_body );
 	return $email_body;
 }
 
