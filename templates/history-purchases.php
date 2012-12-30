@@ -2,8 +2,7 @@
 
 // Retrieve all purchases for the current user
 $purchases = edd_get_users_purchases();
-
-if($purchases) : ?>
+if( $purchases ) : ?>
 	<table id="edd_user_history">
 		<thead>
 			<tr class="edd_purchase_row">
@@ -15,7 +14,7 @@ if($purchases) : ?>
 				<?php do_action('edd_purchase_history_header_after'); ?>
 			</tr>
 		</thead>
-		<?php foreach($purchases as $post) : setup_postdata( $post ); ?>
+		<?php foreach( $purchases as $post ) : setup_postdata( $post ); ?>
 			<?php $purchase_data = edd_get_payment_meta( $post->ID ); ?>
 			<tr class="edd_purchase_row">
 				<?php do_action( 'edd_purchase_history_row_start', $post->ID, $purchase_data ); ?>
@@ -59,8 +58,19 @@ if($purchases) : ?>
 				<?php do_action( 'edd_purchase_history_row_end', $post->ID, $purchase_data ); ?>
 			</tr>
 		<?php endforeach; ?>
-		<?php wp_reset_postdata(); ?>
 	</table>
+	<div id="edd_purchase_history_pagination" class="edd_pagination navigation">
+		<?php
+		$big = 999999;
+		echo paginate_links( array(
+			'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+			'format'  => '?paged=%#%',
+			'current' => max( 1, get_query_var( 'paged' ) ),
+			'total'   => edd_count_purchases_of_customer()
+		) );
+		?>
+	</div>
+	<?php wp_reset_postdata(); ?>
 <?php else : ?>
 	<p class="edd-no-purchases"><?php _e('You have not made any purchases', 'edd'); ?></p>
 <?php endif;

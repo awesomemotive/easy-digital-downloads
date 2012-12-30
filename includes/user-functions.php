@@ -26,7 +26,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  *
  * @return array List of all user purchases
  */
-function edd_get_users_purchases( $user = 0, $number = -1 ) {
+function edd_get_users_purchases( $user = 0, $number = 20 ) {
 
 	if ( empty( $user ) ) {
 		global $user_ID;
@@ -34,18 +34,21 @@ function edd_get_users_purchases( $user = 0, $number = -1 ) {
 		$user = $user_ID;
 	}
 
-	$purchases = get_transient( 'edd_user_' . $user . '_purchases' );
+	$mode = edd_is_test_mode() ? 'test' : 'live';
 
-	if ( false === $purchases || edd_is_test_mode() ) {
-		$mode = edd_is_test_mode() ? 'test' : 'live';
+	if ( get_query_var( 'paged' ) )
+		$paged = get_query_var('paged');
+	else if ( get_query_var( 'page' ) )
+		$paged = get_query_var( 'page' );
+	else
+		$paged = 1;
 
-		$purchases = edd_get_payments( array(
-			'mode' => $mode,
-			'user' => $user
-		) );
-
-		set_transient( 'edd_user_' . $user . '_purchases', $purchases, 7200 );
-	}
+	$purchases = edd_get_payments( array(
+		'mode'   => $mode,
+		'user'   => $user,
+		'page'   => $paged,
+		'number' => $number
+	) );
 
 	// No purchases
 	if ( ! $purchases )
@@ -158,6 +161,10 @@ function edd_has_purchases( $user_id = null ) {
 */
 
 function edd_count_purchases_of_customer( $user = null ) {
+
+	if( empty( $user ) )
+		$user = get_current_user_id();
+
 	$args = array(
 		'number'   => -1,
 		'mode'     => 'live',
