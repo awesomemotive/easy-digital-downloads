@@ -337,9 +337,23 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 
 	$amount = edd_get_cart_subtotal();
 
-	if( isset( $_POST['edd-discount'] ) && $_POST['edd-discount'] != '' ) {
-		// Discount is validated before this function runs, so no need to check for it
-		$amount = edd_get_discounted_amount( $_POST['edd-discount'], $amount );
+	if( isset( $_POST['edd-discount'] ) && $_POST['edd-discount'] != '' || edd_get_cart_discount() !== false ) {
+
+		// Retrieve the discount stored in cookies
+		$discount = edd_get_cart_discount();
+
+		if( ! $discount ) {
+
+			// No discount stored in cookies, so use the one posted in the form
+			$amount = edd_get_discounted_amount( $_POST['edd-discount'], $amount );
+
+		} else {
+
+			// Use the discount stored in the cookies
+			$amount = edd_get_discounted_amount( edd_get_discount_code( $discount->ID ), $amount );
+
+		}
+
 	}
 
 	if( edd_use_taxes() && $add_taxes ) {
@@ -650,7 +664,11 @@ function edd_is_checkout() {
 */
 
 function edd_empty_cart() {
+	// Remove cart contents
 	$_SESSION['edd_cart'] = NULL;
+
+	// Remove any active discounts
+	edd_set_cart_discount( NULL );
 }
 
 
