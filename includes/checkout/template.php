@@ -419,12 +419,7 @@ function edd_discount_field() {
 		<fieldset id="edd_discount_code">
 			<p id="edd-discount-code-wrap">
 				<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e('Enter discount', 'edd'); ?>"/>
-				<label class="edd-label" for="edd-discount">
-					<?php _e('Discount', 'edd'); ?>
-					<?php if(edd_is_ajax_enabled()) { ?>
-						- <a href="#" class="edd-apply-discount"><?php _e('Apply Discount', 'edd'); ?></a>
-					<?php } ?>
-				</label>
+				<label class="edd-label" for="edd-discount"><?php _e('Discount', 'edd'); ?></label>
 			</p>
 		</fieldset>
 	<?php
