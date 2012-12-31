@@ -96,7 +96,7 @@ add_action( 'wp_ajax_nopriv_edd_add_to_cart', 'edd_ajax_add_to_cart' );
  * @return      string
 */
 
-function edd_ajax_validate_discount() {
+function edd_ajax_apply_discount() {
 	if( isset( $_POST['code'] ) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
 
 		$user = isset( $_POST['user'] ) ? $_POST['user'] : $_POST['email'];
@@ -123,9 +123,13 @@ function edd_ajax_validate_discount() {
 					'code' => $_POST['code']
 				);
 
+				edd_set_cart_discount( $_POST['code'] );
+
 			} else {
 
 				$return['msg']  = __('The discount you entered is invalid', 'edd');
+
+				edd_set_cart_discount( null );
 
 			}
 		}
@@ -133,8 +137,8 @@ function edd_ajax_validate_discount() {
 	}
 	die();
 }
-add_action( 'wp_ajax_edd_apply_discount', 'edd_ajax_validate_discount' );
-add_action( 'wp_ajax_nopriv_edd_apply_discount', 'edd_ajax_validate_discount' );
+add_action( 'wp_ajax_edd_apply_discount', 'edd_ajax_apply_discount' );
+add_action( 'wp_ajax_nopriv_edd_apply_discount', 'edd_ajax_apply_discount' );
 
 
 /**
