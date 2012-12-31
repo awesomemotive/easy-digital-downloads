@@ -775,6 +775,26 @@ function edd_set_cart_discount( $code = '' ) {
 }
 
 
+/**
+ * Retrieve the currently applied discount
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      object / false The discount code object that has been applied if there is one, false otherwise
+ */
+function edd_get_cart_discount() {
+	return isset( $_COOKIE['edd_cart_discount'] ) ? edd_get_discount_by_code( $_COOKIE['edd_cart_discount'] ) : false;
+}
+
+
+/**
+ * Show the fully formatted cart discount
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      string
+ */
+
 function edd_cart_discount( $echo = false ) {
 
 	$discount = edd_get_cart_discount();
@@ -786,15 +806,4 @@ function edd_cart_discount( $echo = false ) {
 	if( $echo )
 		echo $amount;
 	return $amount;
-}
-
-/**
- * Retrieve the currently applied discount
- *
- * @access      public
- * @since       1.4.1
- * @return      object / false The discount code object that has been applied if there is one, false otherwise
- */
-function edd_get_cart_discount() {
-	return isset( $_COOKIE['edd_cart_discount'] ) ? edd_get_discount_by_code( $_COOKIE['edd_cart_discount'] ) : false;
 }
