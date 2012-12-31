@@ -337,7 +337,7 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 
 	$amount = edd_get_cart_subtotal();
 
-	if( ( isset( $_POST['edd-discount'] ) && $_POST['edd-discount'] != '' ) || edd_get_cart_discount() !== false ) {
+	if( ! empty( $_POST['edd-discount'] ) || edd_get_cart_discount() !== false ) {
 
 		// Retrieve the discount stored in cookies
 		$discount = edd_get_cart_discount();
