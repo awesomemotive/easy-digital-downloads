@@ -128,8 +128,9 @@ jQuery(document).ready(function($) {
             success: function (discount_response) {
                 if( discount_response ) {
                     if (discount_response.msg == 'valid') {
-                        $('.edd_cart_amount').html(discount_response.amount).text();
-                        $this.text(edd_scripts.discount_applied);
+                        $('.edd_cart_amount').html(discount_response.total).text();
+                        $('.edd_cart_discount_amount').html(discount_response.amount).text();
+                        $('.edd_cart_discount_row').show();
                     } else {
                         alert(discount_response.msg);
                     }
@@ -140,6 +141,7 @@ jQuery(document).ready(function($) {
         }).fail(function (data) {
             console.log(data);
         });
+
         return false;
     });
 
