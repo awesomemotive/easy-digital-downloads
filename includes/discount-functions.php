@@ -775,6 +775,19 @@ function edd_set_cart_discount( $code = '' ) {
 }
 
 
+function edd_cart_discount( $echo = false ) {
+
+	$discount = edd_get_cart_discount();
+	if( ! $discount )
+		return false;
+
+	$amount = edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) );
+
+	if( $echo )
+		echo $amount;
+	return $amount;
+}
+
 /**
  * Retrieve the currently applied discount
  *
