@@ -12,6 +12,7 @@
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
+
 /**
  * Get Discounts
  *
@@ -758,4 +759,29 @@ function edd_format_discount_rate( $type, $amount ) {
 	} else {
 		return $amount . '%';
 	}
+}
+
+
+/**
+ * Set the active discount for the shopping cart
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      void
+ */
+
+function edd_set_cart_discount( $code = '' ) {
+	setcookie( 'edd_cart_discount', $code, time()+3600, COOKIEPATH, COOKIE_DOMAIN, false );
+}
+
+
+/**
+ * Retrieve the currently applied discount
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      object / false The discount code object that has been applied if there is one, false otherwise
+ */
+function edd_get_cart_discount() {
+	return isset( $_COOKIE['edd_cart_discount'] ) ? edd_get_discount_by_code( $_COOKIE['edd_cart_discount'] ) : false;
 }
