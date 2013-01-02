@@ -51,7 +51,7 @@ function edd_get_purchase_link( $args = array() ) {
 		return false;
 	}
 
-	$defaults = array(
+	$defaults = apply_filters( 'edd_purchase_link_defaults', array(
 		'download_id' => $post->ID,
 		'price'       => (bool) true,
 		'text'        => isset( $edd_options[ 'add_to_cart_text' ] ) && $edd_options[ 'add_to_cart_text' ]  != '' ? $edd_options[ 'add_to_cart_text' ] 	: __( 'Purchase', 'edd' ),
