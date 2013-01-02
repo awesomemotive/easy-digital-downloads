@@ -594,7 +594,7 @@ function edd_is_discount_used( $code = null, $user = '' ) {
 
 		$user_data = get_user_by( 'login', $user );
 
-		if ( !is_wp_error( $user_data ) ) {
+		if ( $user_data ) {
 
 			$key   = '_edd_payment_user_id';
 			$value = $user_data->ID;
