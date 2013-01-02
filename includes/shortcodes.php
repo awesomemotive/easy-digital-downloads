@@ -513,6 +513,10 @@ function edd_process_profile_editor_updates( $data ) {
 			$first_name = sanitize_text_field( $data['edd_first_name'] );
 			$last_name =  sanitize_text_field( $data['edd_last_name'] );
 		}
+		else {
+			$first_name = '';
+			$last_name = '';
+		}
 
 		if ( ! empty( $data['edd_display_name'] ) ) {
 			$display_name = sanitize_text_field( $data['edd_display_name'] );
