@@ -6,7 +6,7 @@ Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.3
 Tested up to: 3.5
-Stable Tag: 1.4.0.2
+Stable Tag: 1.4.0.3
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin

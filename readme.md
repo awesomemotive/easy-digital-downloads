@@ -13,7 +13,7 @@
 
 **Tested up to:** 3.5
 
-**Stable Tag:** 1.4.0.2
+**Stable Tag:** 1.4.0.3
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
