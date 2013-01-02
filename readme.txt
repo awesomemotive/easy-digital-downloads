@@ -167,6 +167,8 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 = 1.4.0.3 =
 
+* January 1, 2012
+* Fixed an error with the dashboard summary widget for previous month (if current month is Jan)
 * Fixed an issue with guests and discount codes
 * Travis now autoloads all of EDD
 * WP_Sessions removed temporarily
@@ -896,6 +898,8 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 = 1.4.0.3 =
 
+* January 1, 2012
+* Fixed an error with the dashboard summary widget for previous month (if current month is Jan)
 * Fixed an issue with guests and discount codes
 * Travis now autoloads all of EDD
 * WP_Sessions removed temporarily
