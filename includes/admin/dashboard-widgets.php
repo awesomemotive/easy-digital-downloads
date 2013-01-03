@@ -171,6 +171,27 @@ function edd_dashboard_sales_widget() {
 									<?php do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info ); ?>
 								</ul>
 							</div>
+							<div class="payment-notes">
+								<h4><?php _e( 'Payment Notes', 'edd' ); ?></h4>
+								<?php
+								$notes = edd_get_payment_notes( $payment->ID );
+								if ( ! empty( $notes ) ) :
+									echo '<ul id="payment-notes">';
+									foreach ( $notes as $note ):
+										if ( ! empty( $note->user_id ) ) {
+											$user = get_userdata( $note->user_id );
+											$user = $user->display_name;
+										} else {
+											$user = __( 'EDD Bot', 'edd' );
+										}
+										echo '<div class="edd-payment-note"><strong>' . $user . '</strong>&nbsp;<em>' . $note->comment_date . '</em>&nbsp;&mdash;' . $note->comment_content . '</div>';
+									endforeach;
+									echo '</ul>';
+								else :
+									echo '<p>' . __( 'No payment notes', 'edd' ) . '</p>';
+								endif;
+								?>
+							</div>
 							<?php
 							$gateway = edd_get_payment_gateway( $payment->ID );
 							if ( $gateway ) { ?>
