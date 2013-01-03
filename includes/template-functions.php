@@ -58,7 +58,7 @@ function edd_get_purchase_link( $args = array() ) {
 		'style'       => isset( $edd_options[ 'button_style' ] ) 	 ? $edd_options[ 'button_style' ] 		: 'button',
 		'color'       => isset( $edd_options[ 'checkout_color' ] ) 	 ? $edd_options[ 'checkout_color' ] 	: 'blue',
 		'class'       => 'edd-submit'
-	);
+	) );
 
 	$args = wp_parse_args( $args, $defaults );
 
