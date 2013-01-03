@@ -95,9 +95,6 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 						$price_id 		= isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
 						$download_files = edd_get_download_files( $item['id'], $price_id );
 
-						if ( edd_no_redownload() )
-							continue;
-
 						if ( $download_files ) :
 
 							foreach( $download_files as $filekey => $file ) :
