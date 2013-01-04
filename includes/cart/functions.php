@@ -262,6 +262,7 @@ function edd_get_cart_item_price( $item_id, $options = array() ) {
 */
 
 function edd_get_price_name( $item_id, $options = array() ) {
+	$return = false;
 	$variable_pricing = get_post_meta($item_id, '_variable_pricing', true);
 	if( $variable_pricing && !empty( $options ) ) {
 		// If variable prices are enabled, retrieve the options
@@ -269,9 +270,9 @@ function edd_get_price_name( $item_id, $options = array() ) {
 		if( $prices ) {
 			$name = $prices[ $options['price_id'] ]['name'];
 		}
-		return $name;
+		$return = $name;
 	}
-	return false;
+	return apply_filters( 'edd_get_price_name', $return, $item_id, $options );
 }
 
 
