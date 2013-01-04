@@ -76,8 +76,6 @@ function edd_process_download() {
 		@session_write_close();
 		if( function_exists( 'apache_setenv' ) ) @apache_setenv('no-gzip', 1);
 		@ini_set( 'zlib.output_compression', 'Off' );
-		@ob_end_clean();
-		if( ob_get_level() ) @ob_end_clean(); // Zip corruption fix
 
 		nocache_headers();
 		header("Robots: none");
@@ -85,7 +83,6 @@ function edd_process_download() {
 		header("Content-Description: File Transfer");
 		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\";");
 		header("Content-Transfer-Encoding: binary");
-
 
 		if( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false ) {
 
