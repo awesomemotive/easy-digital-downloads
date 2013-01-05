@@ -767,11 +767,22 @@ function edd_format_discount_rate( $type, $amount ) {
  *
  * @access      public
  * @since       1.4.1
- * @return      void
+ * @return      array All currently active discounts
  */
 
 function edd_set_cart_discount( $code = '' ) {
-	setcookie( 'edd_cart_discount', $code, time()+3600, COOKIEPATH, COOKIE_DOMAIN, false );
+	$discounts = edd_get_cart_discount();
+
+	if( $discounts ) {
+		$discounts[] = $code;
+	} else {
+		$discounts = array();
+		$discounts[] = $code;
+	}
+
+	setcookie( 'edd_cart_discount', serialize( $discounts ), time()+3600, COOKIEPATH, COOKIE_DOMAIN, false );
+
+	return $discounts;
 }
 
 
@@ -780,10 +791,10 @@ function edd_set_cart_discount( $code = '' ) {
  *
  * @access      public
  * @since       1.4.1
- * @return      object / false The discount code object that has been applied if there is one, false otherwise
+ * @return      array The active discount codes
  */
-function edd_get_cart_discount() {
-	return isset( $_COOKIE['edd_cart_discount'] ) ? edd_get_discount_by_code( $_COOKIE['edd_cart_discount'] ) : false;
+function edd_get_cart_discounts() {
+	return isset( $_COOKIE['edd_cart_discount'] ) ? maybe_unserialize( $_COOKIE['edd_cart_discount'] ) : array();
 }
 
 
@@ -797,11 +808,12 @@ function edd_get_cart_discount() {
 
 function edd_cart_discount( $echo = false ) {
 
-	$discount = edd_get_cart_discount();
-	if( ! $discount )
+	$discounts = edd_get_cart_discounts();
+	if( empty( $discounts ) )
 		return false;
 
-	$amount = edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) );
+	$discount_id  = edd_get_discount_id_by_code( $discounts[0] );
+	$amount       = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
 
 	if( $echo )
 		echo $amount;
