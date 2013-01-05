@@ -121,7 +121,7 @@ function edd_ajax_apply_discount() {
 
 				$return = array(
 					'msg' => 'valid',
-					'amount' => edd_currency_filter( edd_format_amount( $total ) ),
+					'amount' => $amount,
 					'total' => edd_currency_filter( edd_format_amount( $total ) ),
 					'code' => $_POST['code']
 				);
