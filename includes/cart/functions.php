@@ -342,12 +342,12 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 		// Retrieve the discount stored in cookies
 		$discounts = edd_get_cart_discounts();
 
-		if( empty( $discounts ) ) {
+		if( ! empty( $_POST['edd-discount'] ) ) {
 
 			// No discount stored in cookies, so use the one posted in the form
 			$amount = edd_get_discounted_amount( $_POST['edd-discount'], $amount );
 
-		} else {
+		} elseif( ! empty( $discounts ) ) {
 
 			// Use the discount stored in the cookies
 			$amount = edd_get_discounted_amount( edd_get_discount_id_by_code( $discounts[0] ), $amount );
@@ -669,7 +669,7 @@ function edd_empty_cart() {
 	$_SESSION['edd_cart'] = NULL;
 
 	// Remove any active discounts
-	edd_set_cart_discount( NULL );
+	edd_unset_all_cart_discounts();
 }
 
 
