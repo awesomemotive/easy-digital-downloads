@@ -799,7 +799,7 @@ function edd_unset_cart_discount( $code = '' ) {
 
 	if( $discounts ) {
 		$key = array_search( $code, $discounts );
-		unset( $discounts[ $key ]] );
+		unset( $discounts[ $key ] );
 		// update the active discounts
 		setcookie( 'wordpress_edd_cart_discount', serialize( $discounts ), time()+3600, COOKIEPATH, COOKIE_DOMAIN, false );
 	}
