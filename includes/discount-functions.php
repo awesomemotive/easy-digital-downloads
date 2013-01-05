@@ -771,7 +771,7 @@ function edd_format_discount_rate( $type, $amount ) {
  */
 
 function edd_set_cart_discount( $code = '' ) {
-	$discounts = edd_get_cart_discount();
+	$discounts = edd_get_cart_discounts();
 
 	if( $discounts ) {
 		$discounts[] = $code;
@@ -794,7 +794,7 @@ function edd_set_cart_discount( $code = '' ) {
  * @return      array The active discount codes
  */
 function edd_get_cart_discounts() {
-	return isset( $_COOKIE['edd_cart_discount'] ) ? maybe_unserialize( $_COOKIE['edd_cart_discount'] ) : array();
+	return isset( $_COOKIE['wordpress_edd_cart_discount'] ) ? maybe_unserialize( $_COOKIE['wordpress_edd_cart_discount'] ) : false;
 }
 
 

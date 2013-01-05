@@ -233,16 +233,32 @@ function edd_purchase_form_validate_gateway() {
 */
 
 function edd_purchase_form_validate_discounts() {
+
+	// Retrieve the discount stored in cookies
+	$discounts = edd_get_cart_discounts();
+
 	// Check for valid discount is present
-	if ( isset( $_POST['edd-discount'] ) && trim( $_POST['edd-discount'] ) != '' ) {
-		// Clean discount
-		$discount = sanitize_text_field( $_POST['edd-discount'] );
-		$user     = isset( $_POST['edd_user_login'] ) ? sanitize_text_field( $_POST['edd_user_login'] ) : sanitize_email( $_POST['edd_email'] );
+	if ( ! empty( $_POST['edd-discount'] ) || $discounts !== false  ) {
+
+		if( empty( $discounts ) ) {
+
+			$discount = sanitize_text_field( $_POST['edd-discount'] );
+
+		} else {
+
+			// Use the discount stored in the cookies
+			$discount = $discounts[0];
+
+			// at some point this will support multiple discounts
+
+		}
+
+		$user = isset( $_POST['edd_user_login'] ) ? sanitize_text_field( $_POST['edd_user_login'] ) : sanitize_email( $_POST['edd_email'] );
+
 		// Check if validates
 		if (  edd_is_discount_valid( $discount, $user ) ) {
 			// Return clean discount
 			return $discount;
-		// Invalid discount
 		} else {
 			// Set invalid discount error
 			edd_set_error( 'invalid_discount', __( 'The discount you entered is invalid', 'edd' ) );
