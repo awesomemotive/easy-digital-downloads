@@ -91,7 +91,7 @@ foreach ( $plugins as $plugin_path => $plugin ):
 	if ( ! in_array( $plugin_path, $active_plugins ) )
 		continue;
 
-echo $plugin['Name']; ?>: <?php echo $plugin['Version'];
+echo $plugin['Name']; ?>: <?php echo $plugin['Version'] ."\n";
 
 endforeach; ?>
 
