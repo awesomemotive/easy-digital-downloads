@@ -43,12 +43,15 @@ function edd_get_users_purchases( $user = 0, $number = 20 ) {
 	else
 		$paged = 1;
 
-	$purchases = edd_get_payments( array(
+	$args = apply_filters( 'edd_get_users_purchases_args', array(
 		'mode'   => $mode,
 		'user'   => $user,
 		'page'   => $paged,
-		'number' => $number
+		'number' => $number,
+		'status' => 'publish'
 	) );
+
+	$purchases = edd_get_payments( $args );
 
 	// No purchases
 	if ( ! $purchases )
