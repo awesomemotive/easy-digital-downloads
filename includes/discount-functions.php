@@ -780,7 +780,29 @@ function edd_set_cart_discount( $code = '' ) {
 		$discounts[] = $code;
 	}
 
-	setcookie( 'edd_cart_discount', serialize( $discounts ), time()+3600, COOKIEPATH, COOKIE_DOMAIN, false );
+	setcookie( 'wordpress_edd_cart_discount', serialize( $discounts ), time()+3600, COOKIEPATH, COOKIE_DOMAIN, false );
+
+	return $discounts;
+}
+
+
+/**
+ * Remove an active discount from the shopping cart
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      array All remaining active discounts
+ */
+
+function edd_unset_cart_discount( $code = '' ) {
+	$discounts = edd_get_cart_discounts();
+
+	if( $discounts ) {
+		$key = array_search( $code, $discounts );
+		unset( $discounts[ $key ]] );
+		// update the active discounts
+		setcookie( 'wordpress_edd_cart_discount', serialize( $discounts ), time()+3600, COOKIEPATH, COOKIE_DOMAIN, false );
+	}
 
 	return $discounts;
 }
