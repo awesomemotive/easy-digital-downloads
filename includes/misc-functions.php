@@ -668,16 +668,30 @@ function edd_get_current_page_url() {
 	global $post;
 
 	if( is_singular() ):
-		$pageURL = get_permalink( $post->ID );
+
+		$page_url = get_permalink( $post->ID );
+
+	elseif ( is_front_page() ) :
+
+		$page_url = home_url();
+
 	else :
-		$pageURL = 'http';
-		if( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) $pageURL .= "s";
-		$pageURL .= "://";
-		if( $_SERVER["SERVER_PORT"] != "80" ) $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-		else $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+
+		$page_url = 'http';
+
+		if( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" )
+			$page_url .= "s";
+
+		$page_url .= "://";
+
+		if( $_SERVER["SERVER_PORT"] != "80" )
+			$page_url .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+		else
+			$page_url .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+
 	endif;
 
-	return apply_filters( 'edd_get_current_page_url', esc_url( $pageURL ) );
+	return apply_filters( 'edd_get_current_page_url', esc_url( $page_url ) );
 }
 
 
