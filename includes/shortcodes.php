@@ -502,50 +502,45 @@ add_shortcode( 'edd_profile_editor', 'edd_profile_editor_shortcode' );
  *
  * @access      private
  * @since       1.4
- * @author      Sunny Ratilal
 */
-
 function edd_process_profile_editor_updates( $data ) {
-	if ( $_SERVER['REQUEST_METHOD'] == 'POST' && isset( $data['edd_profile_editor_submit'] ) && wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) && is_user_logged_in() ) {
-		$user_id = get_current_user_id();
+	// Profile field change request
+	if ( empty( $_POST['edd_profile_editor_submit'] ) && !is_user_logged_in() )
+		return false;
 
-		if ( ! empty( $data['edd_first_name'] ) || ! empty( $data['edd_last_name'] ) ) {
-			$first_name = sanitize_text_field( $data['edd_first_name'] );
-			$last_name =  sanitize_text_field( $data['edd_last_name'] );
+	// Nonce security
+	if ( !wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) )
+		return false;
+
+	$user_id = get_current_user_id();
+
+	$display_name = sanitize_text_field( $data['edd_display_name'] );
+	$first_name   = sanitize_text_field( $data['edd_first_name'] );
+	$last_name    = sanitize_text_field( $data['edd_last_name'] );
+	$email        = sanitize_email( $data['edd_email'] );
+
+	$userdata = array(
+		'ID'           => $user_id,
+		'first_name'   => $first_name,
+		'last_name'    => $last_name,
+		'display_name' => $display_name,
+		'user_email'   => $email
+	);
+
+	// New password
+	if ( ! empty( $data['edd_new_user_pass1'] ) ) {
+		if ( $data['edd_new_user_pass1'] !== $data['edd_new_user_pass2'] ) {
+			edd_set_error( 'password_mismatch', __( 'The passwords you entered do not match. Please try again.', 'edd' ) );
+		} else {
+			$userdata['user_pass'] = $data['edd_new_user_pass1'];
 		}
+	}
 
-		if ( ! empty( $data['edd_display_name'] ) ) {
-			$display_name = sanitize_text_field( $data['edd_display_name'] );
-		}
+	// Update the user
+	$updated = wp_update_user( $userdata );
 
-		if ( ! empty( $data['edd_email'] ) ) {
-			$email = sanitize_email( $data['edd_email'] );
-		}
-
-		if ( ! empty( $data['edd_new_user_pass1'] ) && ! empty( $data['edd_new_user_pass2'] ) ) {
-			if ( $data['edd_new_user_pass1'] !== $data['edd_new_user_pass2'] ) {
-				edd_set_error( 'password_mismatch', __( 'The passwords you entered do not match. Please try again.', 'edd' ) );
-			} else {
-				wp_set_password( $data['edd_new_user_pass1'], $user_id );
-				$updated = true;
-			}
-		}
-
-		// Update user
-		$updated = wp_update_user( array(
-			'ID'           => $user_id,
-			'first_name'   => $first_name,
-			'last_name'    => $last_name,
-			'display_name' => $display_name,
-			'user_email'   => $email
-		) );
-
-		if( $updated ) {
-			wp_redirect( add_query_arg( 'updated', 'true', $data['edd_redirect'] ) );
-			exit;
-		}
-	} else {
-		wp_die( __( 'Security check failed. Please try again.', 'edd' ), __( 'Security Check Failed', 'edd' ) );
+	if ( $updated ) {
+		wp_redirect( add_query_arg( 'updated', 'true', $data['edd_redirect'] ) );
 		exit;
 	}
 }
