@@ -155,6 +155,13 @@ function edd_register_settings() {
 					'size' => 'regular'
 				),
 				array(
+					'id' => 'paypal_page_style',
+					'name' => __('PayPal Page Style', 'edd'),
+					'desc' => __('Enter the name of the page style to use, or leave blank for default', 'edd'),
+					'type' => 'text',
+					'size' => 'regular'
+				),
+				array(
 					'id' => 'paypal_alternate_verification',
 					'name' => __('Alternate PayPal Purchase Verification', 'edd'),
 					'desc' => __('If payments are not getting marked as complete, then check this box. Note, this requires that buyers return to your site from PayPal.', 'edd'),
