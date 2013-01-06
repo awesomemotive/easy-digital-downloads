@@ -113,7 +113,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
             'rm'            => '2',
             'return'        => $return_url,
             'cancel_return' => edd_get_failed_transaction_uri(),
-            'notify_url'    => $listener_url
+            'notify_url'    => $listener_url,
+            'page_style'    => edd_get_paypal_page_style()
         );
 
         if( edd_use_taxes() )
@@ -377,4 +378,21 @@ function edd_get_paypal_redirect( $ssl_check = false ) {
 	}
 
 	return $paypal_uri;
+}
+
+
+/**
+ * Set the Page Style for PayPal Purchase page
+ *
+ * @access      private
+ * @since       1.4.1
+ * @return      string
+*/
+
+function edd_get_paypal_page_style() {
+	global $edd_options;
+	$page_style = 'PayPal';
+	if( isset( $edd_options['paypal_page_style'] ) )
+		$page_style = trim( $edd_options['paypal_page_style'] );
+	return apply_filters( 'edd_paypal_page_style', $page_style );
 }
