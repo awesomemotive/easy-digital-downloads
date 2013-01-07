@@ -281,10 +281,9 @@ class EDD_Logging {
 	function get_connected_logs( $args = array() ) {
 
 		$defaults = array(
-			'post_parent' 	=> 0,
 			'post_type'		=> 'edd_log',
-			'posts_per_page'=> 30,
-			'post_status'	=> 'publish',
+			'posts_per_page'	=> 30,
+			'post_status'		=> 'publish',
 			'paged'			=> get_query_var( 'paged' ),
 			'log_type'		=> false
 		);
