@@ -46,7 +46,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 		</tr>
 		<?php endif; ?>
 
-		<?php if ( $edd_receipt_args[ 'discount' ] ) : ?>
+		<?php if ( $edd_receipt_args[ 'discount' ] && $user['discount'] != 'none' ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Discount', 'edd' ); ?>:</strong></td>
 			<td><?php echo $user[ 'discount' ]; ?></td>
