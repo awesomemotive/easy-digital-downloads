@@ -126,8 +126,12 @@ function edd_get_download_final_price( $download_id, $user_purchase_info, $amoun
 	} else {
 		$original_price = $amount_override;
 	}
-	if( isset( $user_purchase_info['discount']) && $user_purchase_info['discount'] != 'none' ) {
-		$price = edd_get_discounted_amount( $user_purchase_info['discount'], $original_price );
+	if( isset( $user_purchase_info['discount'] ) && $user_purchase_info['discount'] != 'none' ) {
+		// if the discount was a %, we modify the amount. Flat rate discounts are ignored
+		if( edd_get_discount_type( edd_get_discount_id_by_code( $user_purchase_info['discount'] ) ) != 'flat' )
+			$price = edd_get_discounted_amount( $user_purchase_info['discount'], $original_price );
+		else
+			$price = $original_price;
 	} else {
 		$price = $original_price;
 	}
