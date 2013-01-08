@@ -175,9 +175,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 	function column_default( $item, $column_name ) {
 		switch( $column_name ){
-			case 'start_date' :
-				$start_date = strtotime( $item[ $column_name ] );
-				return date_i18n( get_option( 'date_format' ), $start_date );
 			default:
 				return $item[ $column_name ];
 		}
@@ -332,7 +329,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 					$max_uses = __( 'Unlimited', 'edd' );
 				}
 
-				if ( $start_date = edd_get_discount_start_date( $discount->ID ) ) {
+				$start_date = edd_get_discount_start_date( $discount->ID );
+
+				if ( ! empty( $start_date ) ) {
 					$discount_start_date =  date_i18n( get_option( 'date_format' ), strtotime( $start_date ) );
 				} else {
 					$discount_start_date = __( 'No start date', 'edd' );
