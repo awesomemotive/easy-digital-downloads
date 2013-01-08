@@ -54,6 +54,8 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false )
 
 	if( $pagination )
 		$args['page'] = $paged;
+	else
+		$args['nopaging'] = true;
 
 	$purchases = edd_get_payments( $args );
 
