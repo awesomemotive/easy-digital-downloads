@@ -26,7 +26,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  *
  * @return array List of all user purchases
  */
-function edd_get_users_purchases( $user = 0, $number = 20 ) {
+function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false ) {
 
 	if ( empty( $user ) ) {
 		global $user_ID;
@@ -36,20 +36,24 @@ function edd_get_users_purchases( $user = 0, $number = 20 ) {
 
 	$mode = edd_is_test_mode() ? 'test' : 'live';
 
-	if ( get_query_var( 'paged' ) )
-		$paged = get_query_var('paged');
-	else if ( get_query_var( 'page' ) )
-		$paged = get_query_var( 'page' );
-	else
-		$paged = 1;
+	if( $pagination ) {
+		if ( get_query_var( 'paged' ) )
+			$paged = get_query_var('paged');
+		else if ( get_query_var( 'page' ) )
+			$paged = get_query_var( 'page' );
+		else
+			$paged = 1;
+	}
 
 	$args = apply_filters( 'edd_get_users_purchases_args', array(
 		'mode'   => $mode,
 		'user'   => $user,
-		'page'   => $paged,
 		'number' => $number,
 		'status' => 'publish'
 	) );
+
+	if( $pagination )
+		$args['page'] = $paged;
 
 	$purchases = edd_get_payments( $args );
 
@@ -76,7 +80,7 @@ function edd_get_users_purchases( $user = 0, $number = 20 ) {
 
 function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null ) {
 
-	if( !is_user_logged_in() )
+	if( ! is_user_logged_in() )
 		return false; // At some point this should support email checking
 
 	$users_purchases = edd_get_users_purchases( $user_id );

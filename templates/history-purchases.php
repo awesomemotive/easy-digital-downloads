@@ -1,7 +1,7 @@
 <?php
 
 // Retrieve all purchases for the current user
-$purchases = edd_get_users_purchases();
+$purchases = edd_get_users_purchases( get_current_user_id(), 20, true );
 if( $purchases ) : ?>
 	<table id="edd_user_history">
 		<thead>
