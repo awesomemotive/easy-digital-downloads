@@ -22,6 +22,7 @@ $discount    = edd_get_discount( $discount_id );
 ?>
 <h2><?php _e( 'Edit Discount', 'edd' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
 <form id="edd-edit-discount" action="" method="post">
+	<?php do_action( 'edd_edit_discount_form_top', $discount_id, $discount ); ?>
 	<table class="form-table">
 		<tbody>
 			<tr class="form-field">
@@ -112,6 +113,7 @@ $discount    = edd_get_discount( $discount_id );
 				</td>
 			</tr>
 		</tbody>
+		<?php do_action( 'edd_edit_discount_form_bottom', $discount_id, $discount ); ?>
 	</table>
 	<p class="submit">
 		<input type="hidden" name="edd-action" value="edit_discount"/>
