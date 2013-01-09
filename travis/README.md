@@ -12,8 +12,6 @@ The dev branch of Easy Digital Downloads is automatically tested on Travis-ci.or
 Click on the image above to see the latest test's output.
 Travis-CI will also automatically test all new pull requests to make sure they will not break our build.
 
-### Note: Below instructions need to be updated. 
-
 
 Quick start (for manual runs)
 -----------------------------
@@ -96,3 +94,6 @@ The PEAR Manual explains how to perform a fresh installation of PEAR.
 
 	pear config-set auto_discover 1
 	pear install --force --alldeps pear.phpunit.de/PHPUnit
+	
+	
+### Note: Due to a bug present in WordPress 3.5 MU, you may see database errors on install.
