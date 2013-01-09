@@ -294,13 +294,13 @@ function edd_updated_messages( $messages ) {
 	$url1 = '<a href="' . get_permalink( $post_ID ) . '">';
 	$url2 = edd_get_label_singular();
 	$url3 = '</a>';
-
+	
 	$messages['download'] = array(
-		1 => sprintf( __('Download updated. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
-		4 => sprintf( __('Download updated. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
-		6 => sprintf( __('Download published. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
-		7 => sprintf( __('Download saved. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
-		8 => sprintf( __('Download submitted. %1$sView %2$s%3$s.', 'edd'), $url1, $url2, $url3 )
+		1 => sprintf( __('%2$s updated. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
+		4 => sprintf( __('%2$s updated. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
+		6 => sprintf( __('%2$s published. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
+		7 => sprintf( __('%2$s saved. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
+		8 => sprintf( __('%2$s submitted. %1$sView %2$s%3$s.', 'edd'), $url1, $url2, $url3 )
 	);
 
 	return $messages;
