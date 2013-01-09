@@ -604,7 +604,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * New: Added a new "class" parameter to the [purchas_link} short code
 * New: Added new edd_is_checkout() conditional function
 * Fix: Bug with the ajax function that adds items to the cart - it did not show the price option name until page was refreshed
-* Fix: Bin the purchase receipt that caused it to include all source file links, not just the ones set to the price option purchase
+* Fix: Bug in the purchase receipt that caused it to include all source file links, not just the ones set to the price option purchase
 * Tweak: Moved the discount code fieldset inside of the user info fieldset on the checkout form
 * Tweak: Improved the markup of the default CC fields
 * Tweak: Updated Spanish language files
@@ -614,75 +614,75 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * New: Added a couple of new filters to the file download processing function
 * New: Added Japanese language files
 * Fix: a couple of undefined index errors
-* Fix: Bwith the "All" filter in the Payment History page
+* Fix: Bug with the "All" filter in the Payment History page
 * Fix: an amount comparision error in the PayPal IPN processer
 
 ### 1.1.0 ###
 
-* Added new French translation files, thanks for Boddhi
-* Updated default language files
-* Fix: the width of the "Email" column in the payment history page
-* Added payment "status" filters to the payment history page
-* Added an option to filter the payment history page by user/buyer
-* Added a "Price" column to the Downloads page
-* Fix: Bwith duplicate "Settings Updated" notices
-* Added a missing text domain to the Settings Updated notice
-* Fix: Bwith the add-ons cache that caused them to never refresh
-* Added new {receipt_id} template tag for purchase receipts
-* Improved CSS for the checkout page
-* Improved CSS for the payment method icons
-* Added a new "upload" callback for settings field types
-* Added a new hook, edd_process_verified_download, to the download processing function
-* Minor improvements to the email templating system
-* Minor improvements to the View Order Details pop up
-* Updated edd_sert_payment() to apply the date of the payment to the post_date field
+* New: Added new French translation files, thanks for Boddhi
+* New: Added a new "upload" callback for settings field types
+* New: Added a new hook, edd_process_verified_download, to the download processing function
+* New: Added new {receipt_id} template tag for purchase receipts
+* New: Added payment "status" filters to the payment history page
+* New: Added an option to filter the payment history page by user/buyer
+* New: Added a "Price" column to the Downloads page
+* New: Added a missing text domain to the Settings Updated notice
+* Fix: Bug with the add-ons cache that caused them to never refresh
+* Fix: Bug with duplicate "Settings Updated" notices
+* Tweak: The width of the "Email" column in the payment history page
+* Tweak: Improved CSS for the checkout page
+* Tweak: Improved CSS for the payment method icons
+* Tweak: Minor improvements to the email templating system
+* Tweak: Minor improvements to the View Order Details pop up
+* Tweak: Updated edd_sert_payment() to apply the date of the payment to the post_date field
+* Tweak: Updated default language files
 
 ### 1.0.9 ###
 
-* Updated the purchase/download history short codes to only show files for the price options the user has purchased
-* Fix: Bwith the file upload meta box fields
-* Added the ability to register custom payment method icons
-* Added unique IDs to P tags on the checkout form
-* Added an option to disable the PayPal IPN verification
-* Added a new feature that allows source files to be restricted to specific price options
-* Updated the "View Purchase Details" modal to include the price option purchased, if any
-* Added labels above the file name and file URL fields to help users using browsers without placeholder support
-* Made improvements to the checkout registration form layout
-* Added an option in Settings > Misc to define the expiration length for download links - default is 24 hours
-* Updated the [purchase_link] short code in the Download Configuration meta box to reflect the chosen button color
-* Updated the "Short Code" column in the list table to include the correct button color option
-* Added a new filter, edd_download_file_url_args,  for changing the arguments passed to the function that generages download URLs
-* Fix: Bwith the EDD_READ_FILE_MODE constant
-* Added a new filter to allow developers to change the redirect URL for the edd_login form
-* Improved some file / function organization
+* New: Added labels above the file name and file URL fields to help users using browsers without placeholder support
+* New: Added the ability to register custom payment method icons
+* New: Added unique IDs to P tags on the checkout form
+* New: Added an option to disable the PayPal IPN verification
+* New: Added a new feature that allows source files to be restricted to specific price options
+* New: Added an option in Settings > Misc to define the expiration length for download links - default is 24 hours
+* New: Added a new filter, edd_download_file_url_args,  for changing the arguments passed to the function that generages download URLs
+* New: Added a new filter to allow developers to change the redirect URL for the edd_login form
+* Fix: Bug with the EDD_READ_FILE_MODE constant
+* Fix: Bug with the file upload meta box fields
+* Tweak: Updated the "View Purchase Details" modal to include the price option purchased, if any
+* Tweak: Updated the purchase/download history short codes to only show files for the price options the user has purchased
+* Tweak: Made improvements to the checkout registration form layout
+* Tweak: Updated the [purchase_link] short code in the Download Configuration meta box to reflect the chosen button color
+* Tweak: Updated the "Short Code" column in the list table to include the correct button color option
+* Tweak: Improved some file / function organization
 
 ### 1.0.8.5 ###
 
-* Added {payment_method} to the list of email template tags for showing the method of payment used for a purchase
-* Removed the menu_position attribute from the "download" post type to help prevent menu conflicts
-* Fix: Bwith the page options in settings
-* Updated the edd_read_file() function to convert local URLs to absolute file paths
-* Fix: Bwith the [downloads] short code
-* Enhanced the function for checking if a user has purchased a download to add support for checking for specific price options
-* Fix: Bwith the function that checks if a user has purchased a specific download
-* Fix: a potential bug with the "settings updated" notice that could have caused duplicate messages to be shown
+* New: Added {payment_method} to the list of email template tags for showing the method of payment used for a purchase
+* Fix: Bug with the page options in settings
+* Fix: Bug with the function that checks if a user has purchased a specific download
+* Fix: Potential bug with the "settings updated" notice that could have caused duplicate messages to be shown
+* Fix: Bug with the [downloads] short code
+* Tweak: Enhanced the function for checking if a user has purchased a download to add support for checking for specific price options
+* Tweak: Removed the menu_position attribute from the "download" post type to help prevent menu conflicts
+* Tweak: Updated the edd_read_file() function to convert local URLs to absolute file paths
 
 ### 1.0.8.4 ###
 
-* Fix: Bwith download sale/earning stats going negative when reversing purchases
-* Removed some blank form action attributes that caused the HTML to invalidate
-* Added "Settings Updated" notification when saving plugin settings
-* Made some improvements to the default purchase receipt email template
-* Renamed the "Manual Payment" gateway to "Test"
-* Added options for linking the download titles in the [downloads] short code
-* Removed the "You have already purchased this" message from the purchase link short code / template
-* Added a "price" parameter to the [downloads] short code
-* Improved the CSS on the variable price option forms
-* Add a parameter to the [downloads] short code for showing the complete content
-* Fix: Bwith free downloads
-* Moved the function that triggers the purchase receipt to its own function/hook so that it can be modified more easily
-* Added a few new action hooks
-* Updated Spanish language files
+* New: Added a few new action hooks
+* New: Added "Settings Updated" notification when saving plugin settings
+* New: Add a parameter to the [downloads] short code for showing the complete content
+* New: Added options for linking the download titles in the [downloads] short code
+* New: Added a "price" parameter to the [downloads] short code
+* Fix: Bug with free downloads
+* Fix: Bug with download sale/earning stats going negative when reversing purchases
+* Tweak: Improved the CSS on the variable price option forms
+* Tweak: Moved the function that triggers the purchase receipt to its own function/hook so that it can be modified more easily
+* Tweak: Made some improvements to the default purchase receipt email template
+* Tweak: Renamed the "Manual Payment" gateway to "Test"
+* Tweak: Updated Spanish language files
+* Tweak: Removed some blank form action attributes that caused the HTML to invalidate
+* Tweak: Removed the "You have already purchased this" message from the purchase link short code / template
 
 ### 1.0.8.3 ###
 
