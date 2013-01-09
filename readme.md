@@ -287,67 +287,68 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ### 1.3.2.1 ###
 
-* Fixed a problem with discount code amount formatting
-* Added basic pagination to the [downloads] short code
-* Fixed a bug with PressTrends integration
-* Improved the checkout template to make it easier to customize
-* Added new edd_ajax_url filter
-* Moved user info (email, first / last name) fields to a function connected via a hook to allow them to be changed
-* Added new edd_cart_total() function for showing fully formatted cart amount
-* Updated French language files
-* Fixed price formats in the admin sales notification
-* Updated login/register ajax actions to use do_action() instead of calling functions directly
-* Updated checkout login/register fields to be attached via actions
-* Upgraded Colorbox to v1.3.20
-* Added new "edd_checkout_form_bottom" hook
-* Added version numbers to scripts and styles to ensure proper display on upgrades
-* Fixed a problem with upgrade routines
-* Fixed a bug with edd_get_sales_by_date()
+* New: Added basic pagination to the [downloads] short code
+* New: Added new "edd_checkout_form_bottom" hook
+* New: Added version numbers to scripts and styles to ensure proper display on upgrades
+* New: Improved the checkout template to make it easier to customize
+* New: Added new edd_ajax_url filter
+* New: Added new edd_cart_total() function for showing fully formatted cart amount
+* Fix: Problem with discount code amount formatting
+* Fix: Bug with PressTrends integration
+* Fix: Price formats in the admin sales notification
+* Fix: Problem with upgrade routines
+* Fix: Bug with edd_get_sales_by_date()
+* Tweak: Moved user info (email, first / last name) fields to a function connected via a hook to allow them to be changed
+* Tweak: Updated French language files
+* Tweak: Updated login/register ajax actions to use do_action() instead of calling functions directly
+* Tweak: Updated checkout login/register fields to be attached via actions
+* Tweak: Upgraded Colorbox to v1.3.20
 
 ### 1.3.2 ###
 
-* Fixed a problem with the Apply Discount link when not logged-in
-* Added Total Earnings For Period Shown to Reports page
-* Improved efficiency of downloads list table
-* Fixed a formatting issue with prices in the email template preview
-* Added option to export file download history
-* Improved the checkout template to be more modular
-* Added new edd_get_purchase_id_by_key() function, props Yoast
-* Added Recent Purchases to the Dashboard widget
-* Fixed a problem with amount formatting in the purchase receipts
-* Added ability to filter payments by username
-* Fixed a problem with the file download limit feature
-* Updated post updated messages with "View Download" link
-* With a problem with the [download_discounts] short code
-* Added new edd_price_field action to the download meta box
-* Fixed a problem with saving prices when they contain a thousands separator
-* Added Lifetime Best Selling into the Dashboard Sales widget
-* Moved all template files and CSS to /templates folder instead of the includes/ folder
-* Added new edd_add_to_cart_item filter for modifying the item info when adding items to the cart
-* Added version numbers to all scripts and stylesheets to help prevent caching issues on updates
-* Updated the checkout form to load the payment forms automatically when selecting a payment method
-* Fixed some UTF8 decoding problems with the PDF reports
-* Integrated Opt-In PressTrends tracking
-* Fixed a problem with the download Tags slug and archive views for the taxonomy
-* Updated French language files
+
+* New: Added Total Earnings For Period Shown to Reports page
+* New: Added ability to filter payments by username
+* New: Added new edd_get_purchase_id_by_key() function, props Yoast
+* New: Added Recent Purchases to the Dashboard widget
+* New: Added new edd_add_to_cart_item filter for modifying the item info when adding items to the cart
+* New: Added version numbers to all scripts and stylesheets to help prevent caching issues on updates
+* New: Added option to export file download history
+* New: Integrated Opt-In PressTrends tracking
+* New: Added new edd_price_field action to the download meta box
+* New: Added Lifetime Best Selling into the Dashboard Sales widget
+* Fix: Problem with the [download_discounts] short code
+* Fix: Problem with the file download limit feature
+* Fix: Problem with amount formatting in the purchase receipts
+* Fix: Problem with the Apply Discount link when not logged-in
+* Fix: Formatting issue with prices in the email template preview
+* Fix: Problem with saving prices when they contain a thousands separator
+* Fix: Some UTF8 decoding problems with the PDF reports
+* Fix: Problem with the download Tags slug and archive views for the taxonomy
+* Tweak: Improved efficiency of downloads list table
+* Tweak: Improved the checkout template to be more modular
+* Tweak: Updated post updated messages with "View Download" link
+* Tweak: Moved all template files and CSS to /templates folder instead of the includes/ folder
+* Tweak: Updated the checkout form to load the payment forms automatically when selecting a payment method
+* Tweak: Updated French language files
 
 ### 1.3.1 ###
 
-* Updated German translation files
-* Added new file download limit option to limit the number of times buyers can download files
-* Fixed some text strings that were missing localization
-* Added new graceful failure for missing callback functions for settings fields
-* Added dozens of new filters for function returns
-* Added a new function for tracking deprecated function calls
-* Added a check to ensure items in the cart are of post_type "download"
-* Fixed a bug with creating the blank index.php in wp-content/uploads/edd/
-* Fixed a bug with an HTML class name in edd_get_purchase_link()
-* Added upgrade routine for converting old file download and purchase logs to the new EDD_Logging class
-* Added new upgrade routine for handling database upgrades
-* Added a new EDD_Logging class for logging events
-* Removed unnecessary parameters for register_post_type()
-* Code formatting improvements
-* Added support for custom reporting views
+* New: Added new file download limit option to limit the number of times buyers can download files
+* New: Added upgrade routine for converting old file download and purchase logs to the new EDD_Logging class
+* New: Added new upgrade routine for handling database upgrades
+* New: Added a new EDD_Logging class for logging events
+* New: Added support for custom reporting views
+* New: Added new graceful failure for missing callback functions for settings fields
+* New: Added dozens of new filters for function returns
+* New: Added a new function for tracking deprecated function calls
+* New: Added a check to ensure items in the cart are of post_type "download"
+* Fix: Bug with creating the blank index.php in wp-content/uploads/edd/
+* Fix: Bug with an HTML class name in edd_get_purchase_link()
+* Fix: Some text strings that were missing localization
+* Tweak: Updated German translation files
+* Tweak: Removed unnecessary parameters for register_post_type()
+* Tweak: Code formatting improvements
 
 ### 1.3 ###
 
