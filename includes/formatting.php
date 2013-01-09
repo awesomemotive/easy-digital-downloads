@@ -60,10 +60,10 @@ function edd_sanitize_amount( $amount ) {
 function edd_format_amount( $amount ) {
 	global $edd_options;
 	// If no price was given for the downlaod
-	if (!isset($amount) || ($amount==null)){
+	if ( !isset( $amount ) || ( $amount == null ) ) {
 	$label = edd_get_label_singular();
-	$string = sprintf( __('%1$s Not Available', 'edd' ), $label )
-	return	apply_filters( 'edd_format_amount_decimals', $string )
+	$string = sprintf( __('%1$s Not Available', 'edd' ), $label );
+	return	apply_filters( 'edd_format_amount_decimals', $string );
 	}
 	$thousands_sep 	= isset( $edd_options['thousands_separator'] ) ? $edd_options['thousands_separator'] : ',';
 	$decimal_sep 	= isset( $edd_options['decimal_separator'] )   ? $edd_options['decimal_separator'] 	 : '.';
