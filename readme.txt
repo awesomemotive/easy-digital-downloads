@@ -165,131 +165,133 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+
 = 1.4.1 =
 
-* Travis now autoloads all of EDD
-* WP_Sessions removed temporarily
-* Fixed Double Click Required JS issue (props @chriscct7)
+* New: Travis now autoloads all of EDD (props @chriscct7)
+* New: Added .apk support (props @chriscct7)
+* Fix: Double Click Required JS issue (props @chriscct7)
+* Tweak: Post save/update messages now can be translated (props @chriscct7)
+* Tweak: WP_Sessions removed temporarily (props @chriscct7)
+* Tweak: Changelogs cleaned up (props @chriscct7)
 
 = 1.4.0.2 =
 
-* Fixed an issue with the checkout page on sites with HTTPS and PayPal Standard
+* Fix: An issue with the checkout page on sites with HTTPS and PayPal Standard
 
 = 1.4.0.1 =
 
-* Fixed an issue with purchase receipts sending
-* Fixed issue with registration / login forms not showing on checkout
-* Fixed an undefined index on the discounts page
+* Fix: An issue with purchase receipts sending
+* Fix: Issue with registration / login forms not showing on checkout
+* Fix: An undefined index on the discounts page
 
 = 1.4 =
 
-* Converted coupons to a custom post type
-* Added Dummy XML File
-* Added System Info (props @chriscct7)
-* Fixed Conflict with Jetpack
-* Fixed issue with exporting lots of customers
-* Added Contextual Help
-* Fixed Download Icon missing
-* Fixed Bulk Delete Payments
-* Updated edd_get_user_purchases()
-* Added Receipt shortcode
-* Added Filter on Default Customer User Role
-* Added Live Credit Card Verification 
-* Added Travis-CI Integration (props @chriscct7)
-* Added New Column to Customers Reports to Show File Download Count
-* Made some UI tweaks, and bug fixes for Logs
-* Added edd_send_back_to_checkout()
-* Brand new Logs UI
-* Fixes in payments functions
-* Added support for WP 3.5 Button
-* Made updates to edd_process_download()
-* Reordered the inclusion of payment gateways
-* Restructured file organization
-* Improved payment-functions.php file
-* Added Payment Notes
-* Added a more efficient AJAX selector
-* Serious Optomizations
-* Optimized png's losslessly
-* Stripped whitespace + normalize
-* Added New Helper Function for "Transaction ID" 
-* Added "failed" payment status 
-* Added Profile Editor
-* Added Retina images
-* Converted Discount Admin Page to WP List Table
-* Added over 100 new MIME-Types allowed for download
-* Added support for uploading .psd files
-* Rewrote main plugin file to use a singleton OOP approach
+* New: Converted coupons to a custom post type
+* New: Dummy XML File
+* New: System Info (props @chriscct7)
+* New: Contextual Help
+* New: Receipt shortcode
+* New: Filter on Default Customer User Role
+* New: Live Credit Card Verification
+* New: Travis-CI Integration (props @chriscct7)
+* New: Column to Customers Reports to Show File Download Count
+* New: edd_send_back_to_checkout()
+* New: Brand new Logs UI
+* New: Support for WP 3.5 Button
+* New: Serious Optomizations
+* New: Optimized png's losslessly
+* New: Payment Notes
+* New: More efficient AJAX selector
+* New: New Helper Function for "Transaction ID"
+* New: "failed" payment status
+* New: Profile Editor
+* New: Over 100 new MIME-Types allowed for download
+* Fix: Conflict with Jetpack
+* Fix: Issue with exporting lots of customers
+* Fix: Download Icon missing
+* Fix: Bulk Delete Payments
+* Fix: Payments functions
+* Fix: Retina images
+* Fix: Added support for uploading .psd files
+* Tweak: Updated edd_get_user_purchases()
+* Tweak: Made some UI tweaks, and bug fixes for Logs
+* Tweak: Made updates to edd_process_download()
+* Tweak: Reordered the inclusion of payment gateways
+* Tweak: Restructured file organization
+* Tweak: mproved payment-functions.php file
+* Tweak: Stripped whitespace + normalize
+* Tweak: Converted Discount Admin Page to WP List Table
+* Tweak: Rewrote main plugin file to use a singleton OOP approach
 
 = 1.3.4.3 =
 
-* Fixed fatal error in PayPal
+* Fix: Fatal error in PayPal
 
 = 1.3.4.2 =
 
-* Added a new {fullname} email template tag
-* Improved CSS for the ajax cart loader
-* Made download taxonomy rewrites hierarchical
-* Updated Italian language files
-* Fixed a potential issue with jQuery validation of the checkout form
-* made a JS file only load on the checkout page instead of all pages
-* Reverted back to $_SESSION based storage as WP_Session isn't quite ready for use yet
+* New: {fullname} email template tag
+* Fix: a potential issue with jQuery validation of the checkout form
+* Tweak: Improved CSS for the ajax cart loader
+* Tweak: download taxonomy rewrites hierarchical
+* Tweak: Updated Italian language files
+* Tweak: Made a JS file only load on the checkout page instead of all pages
+* Tweak: Reverted back to $_SESSION based storage as WP_Session isn't quite ready for use yet
 
 = 1.3.4.1 =
 
-* Fixed major bug in PayPal standard gateway introduced in 1.3.4
-* Updated French langauge files
+* Fix: Major bug in PayPal standard gateway introduced in 1.3.4
+* Tweak: Updated French langauge files
 
 = 1.3.4 =
 
-* Added new option for defining the emails that receive admin sale notifications
-* Improved contextual help tabs
-* Fixed a problem with $0 purchases
-* Added new edd_item_in_cart filter
-* Made the edd_log_type taxonomy private
-* Added prices to the [purchase_link] short code so that the product price is shown on the button
-* Fixed a problem with display the buyer's first name in purchase receipts
-* Updated category/tag slugs to respect EDD_SLUG constant (if defined)
-* Updated Italian language files
-* Added payment history search
-* Rebuilt Payment History page to use better core UI standards
-* Improved PayPal IPN processing with new do_action() hooks for each transaction type
-* Added exclude_category and exclude_tags parameters to the [downloads] short code
-* Fixed a problem with category/tag query parameters in the [downloads] short code
-* Improved username validation and error messages on checkout
-* Updated French language files
-* Improved the way language files are loaded to permit users to place custom language files in wp-content/languages/edd/
-* Improved edd_get_ajax_url() to fix problems with sites that use SSl
-* Fixed a problem with PayPal purchases when item names have HTML entities
-* Improved some internationalization with date functions
-* Fixed a problem with prices over 1,000 on checkout
-* Fixed path to custom edd.css
-* Made the email address in View Details for purchase history clickable
-* Added a tax column to the CSV purchase export
-* Fixed a problem with some payments not having meta data for the total amount recorded
-* Added date parameters to edd_get_payments() to allow payments of specific dates to be queried
-* Removed the "required" class from the local tax opt-in checkbox
-* Improved the function that retrieves the total earnings amount
-* Updated customer CSV export to include the number of purchases and total amount spent
-* Updated purchase details to include tax information
+* New: Option for defining the emails that receive admin sale notifications
+* New: edd_item_in_cart filter
+* New: Added prices to the [purchase_link] short code so that the product price is shown on the button
+* New: Added payment history search
+* New: Added exclude_category and exclude_tags parameters to the [downloads] short code
+* New: Added date parameters to edd_get_payments() to allow payments of specific dates to be queried
+* Fix: A problem with $0 purchases
+* Fix: Problem with display the buyer's first name in purchase receipts
+* Fix: Problem with category/tag query parameters in the [downloads] short code
+* Fix: Problem with PayPal purchases when item names have HTML entities
+* Fix: Problem with prices over 1,000 on checkout
+* Fix: Path to custom edd.css
+* Fix: Problem with some payments not having meta data for the total amount recorded
+* Tweak: Improved contextual help tabs
+* Tweak: Made the edd_log_type taxonomy private
+* Tweak: Updated category/tag slugs to respect EDD_SLUG constant (if defined)
+* Tweak: Updated Italian language files
+* Tweak: Updated French language files
+* Tweak: Removed the "required" class from the local tax opt-in checkbox
+* Tweak: Improved the function that retrieves the total earnings amount 
+* Tweak: Updated customer CSV export to include the number of purchases and total amount spent
+* Tweak: Updated purchase details to include tax information
+* Tweak: Made the email address in View Details for purchase history clickable
+* Tweak: Improved some internationalization with date functions
+* Tweak: Improved edd_get_ajax_url() to fix problems with sites that use SSl
+* Tweak: Improved the way language files are loaded to permit users to place custom language files in wp-content/languages/edd/
+* Tweak: Improved PayPal IPN processing with new do_action() hooks for each transaction type
+* Tweak: Rebuilt Payment History page to use better core UI standards
 
 = 1.3.3 =
 
-* Added new Tax system for calculating simple taxes on purchases
-* Added error / payment failure logging to PayPal standard gateway
-* Improved the error logging system
-* Fixed an issue with payment method select when ajax is disabled
-* Fixed a problem with a stray file upload button in IE and Firefox
-* Improved the Payment History export to CSV option
-* Removed old, out of date PayPal payment gateway
-* Fixed a problem with improperly formatted amounts after applying a flat rate discount
-* Fixed two conflicting filter names
-* Improved markup for the [edd_price] short code
-* Updated Dutch translation files
-* Improved front-end CSS for variable price options
-* Added new edd_file_download_has_access filter
-* Improved logic for determing the lower price on variable priced downloads
-* Improved stylesheet loading
-* Fixed a pagination bug with the [downloads] short code
+* New: Tax system for calculating simple taxes on purchases
+* New: Added error / payment failure logging to PayPal standard gateway
+* New: Added new edd_file_download_has_access filter
+* Fix: Issue with payment method select when ajax is disabled
+* Fix: Problem with a stray file upload button in IE and Firefox
+* Fix: Problem with improperly formatted amounts after applying a flat rate discount
+* Fix: two conflicting filter names
+* Fix: A pagination bug with the [downloads] short code
+* Tweak: Improved the error logging system
+* Tweak: Improved the Payment History export to CSV option
+* Tweak: Removed old, out of date PayPal payment gateway
+* Tweak: Improved markup for the [edd_price] short code
+* Tweak: Updated Dutch translation files
+* Tweak: Improved front-end CSS for variable price options
+* Tweak: Improved logic for determing the lower price on variable priced downloads
+* Tweak: Improved stylesheet loading
 
 = 1.3.2.1 =
 
@@ -357,30 +359,30 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 = 1.3 =
 
-* Completely rewrote the Reports page with new graphs and Downloads / Customers view
-* Introduced new CSS styles for purchase buttons
-* Fixed a problem with the add-ons page
-* Added new EDD_VERSION constant
-* Fixed a problem with thousands separator and price formatting
-* Replaced date() with date_i18n() for improved internationalization
-* Added new edd_before_download_content hook
-* Added new edd_purchase_history_files hook
-* Added new filter for edd_is_checkout
-* Introduced several new functions for calculating average sales / earnings for individual products
-* Introduced several new functions for counting number of purchases and amount spent for customers
-* Added a contextual help menu to the Discounts page
-* Added a contextual help menu to the edit Download page
-* Fixed a jQuery UI conflict
-* Added new jQuery UI styles that better match core WordPress styles
-* Improved data validation throughout the plugin
-* Fixed a problem with adding items to the cart via ajax when admin/front end http/s protocals are miss matched
-* Added a filter to remove product titles in purchase receipts
-* Added new Polish translation files
-* Fixed the upload field settings field callback JS
-* Significant cleanup of code formatting and adherence of WordPress coding standards
-* Fixed missing item description in PayPal checkout
-* Updated French translation files and default language files
-* Fixed a problem with the total earnings widget
+* New: edd_before_download_content hook
+* New: edd_purchase_history_files hook
+* New: filter for edd_is_checkout
+* New: Introduced several new functions for calculating average sales / earnings for individual products
+* New: Introduced several new functions for counting number of purchases and amount spent for customers
+* New: EDD_VERSION constant
+* New: Completely rewrote the Reports page with new graphs and Downloads / Customers view
+* New: Introduced new CSS styles for purchase buttons
+* New: Contextual help menu to the Discounts page
+* New: Contextual help menu to the edit Download page
+* New: jQuery UI styles that better match core WordPress style
+* New: Filter to remove product titles in purchase receipts
+* New: New Polish translation files
+* Fix: Problem with the add-ons page
+* Fix: Problem with thousands separator and price formatting
+* Fix: jQuery UI conflict
+* Fix: Problem with adding items to the cart via ajax when admin/front end http/s protocals are miss matched
+* Fix: The upload field settings field callback JS
+* Fix: Missing item description in PayPal checkout
+* Fix: Problem with the total earnings widget
+* Tweak: Replaced date() with date_i18n() for improved internationalization
+* Tweak: Improved data validation throughout the plugin
+* Tweak: Updated French translation files and default language files
+* Tweak: Significant cleanup of code formatting and adherence of WordPress coding standards
 
 = 1.2.2 =
 
@@ -711,7 +713,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Added auto creation for .htaccess files in the uploads directory for EDD to help protect unauthorized file downloads
 * Added Turkish language files
 * Added detection for php.ini variables important to PayPal payment verification
-* Added a new short code for showing a list of active discounts: [download_discounts]
+*** Added a new short code for showing a list of active discounts:** [download_discounts]
 
 = 1.0.8.2 =
 
@@ -729,298 +731,294 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 = 1.0.8.1 =
 
-* Updated es_ES translation files
-* A lots of code documentation improvements
-* Completely rewrote the purchase processing functions to fix a couple of bugs and make the entire thing easier to debug and improve
-* Fixed a problem with user emails not being recorded for guest purchases
-* Improved the performance of the add-ons page with transients
-* Reorganized some functions into more appropriate files
-* Fixed translation domains on the login forms
-* Added a new option for marking a payment as "refunded". The refund process must be done through the payment gateway still. When payments are marked as "refunded", the sales and earnings stats will be adjusted accordingly.
-* Added an alert message to the "Delete Payment" link
-* Updated French language files
-* Added get_post_class() to the payments history page so that payment rows can be styled based on their status, post type, etc.
-* Updated admin CSS to add custom background color to refunded payments
-* Added new filter called "edd_payment_statuses", which can be used to register custom statuses
+* New: Added a new option for marking a payment as "refunded". The refund process must be done through the payment gateway still. When payments are marked as "refunded", the sales and earnings stats will be adjusted accordingly.
+* New: Added an alert message to the "Delete Payment" link
+* New: Added get_post_class() to the payments history page so that payment rows can be styled based on their status, post type, etc.
+* New: Added new filter called "edd_payment_statuses", which can be used to register custom statuses
+* Fix: Translation domains on the login forms
+* Fix: Problem with user emails not being recorded for guest purchases
+* Tweak: Updated es_ES translation files
+* Tweak: Lots of code documentation improvements
+* Tweak: Completely rewrote the purchase processing functions to fix a couple of bugs and make the entire thing easier to debug and improve
+* Tweak: Improved the performance of the add-ons page with transients
+* Tweak: Reorganized some functions into more appropriate files
+* Tweak: Updated admin CSS to add custom background color to refunded payments
+* Tweak: Updated French language files
 
 = 1.0.8 =
 
-* Added the [purchase_history] shortcode for showing a detailed list of user's purchases
-* Improved the names of the widgets
-* Fixed a CSS bug with the Add Ons page
-* Added the edd_get_checkout_uri() function for use by themes
-* Fixed a couple of bugs with the login/register checkout forms
-* Dramatically improved code documentation
-* Fixed an incorrectly named parameter in the edd_after_download_content hook
+* New: Added the [purchase_history] shortcode for showing a detailed list of user's purchases
+* New: Added the edd_get_checkout_uri() function for use by themes
+* Fix: Incorrectly named parameter in the edd_after_download_content hook
+* Fix: CSS bug with the Add Ons page
+* Fix: Couple of bugs with the login/register checkout forms
+* Tweak: Dramatically improved code documentation
+* Tweak: Improved the names of the widgets
 
 = 1.0.7.2 =
 
-* Added a new EDD Categories / Tags widget
-* Removed duplicated code from payments history page
-* Fixed a major bug that made it impossible to safely update orders
-* Added user's IP address to payment meta
-* Added localization to the default page titles created during install
-* Removed old stripe.js code that is no longer used
-* Added an enhancement to the cart widget that causes the "Purchase" button to reset when removing an item from the cart
+* New: Added a new EDD Categories / Tags widget
+* New: Added an enhancement to the cart widget that causes the "Purchase" button to reset when removing an item from the cart
+* New: Added user's IP address to payment meta
+* New: Added localization to the default page titles created during install
+* Fix: Major bug that made it impossible to safely update orders
+* Tweak: Removed old stripe.js code that is no longer used
+* Tweak: Removed duplicated code from payments history page
 
 = 1.0.7.1 =
 
-* Added a second instance do_action('edd_purchase_form_user_info') to the checkout registration form
-* Updated the edd_purchase_link() function to automatically detect chosen link styles and colors
-* Fixed a bug with the discount code form on checkout. It now only shows if there is at least one active discount. Props to Sksmatt
-* Fixed a bug with the Media Uploader when adding media to the content of a Download. Props to Sksmatt
-* Added a wrapper div.edd-cart-ajax-alert around the message that shows when an item has been added to the cart
-* Fixed a small error notice present in the checkout form short code. Props to Sksmatt
-* Fixed a small bug wit the edd_remove_item_url() present when on a 404 error page. Props to Sksmatt
+* New: Added a second instance do_action('edd_purchase_form_user_info') to the checkout registration form
+* New: Added a wrapper div.edd-cart-ajax-alert around the message that shows when an item has been added to the cart
+* Fix: Bug with the discount code form on checkout. It now only shows if there is at least one active discount. Props to Sksmatt
+* Fix: Bug with the Media Uploader when adding media to the content of a Download. Props to Sksmatt
+* Fix: Small error notice present in the checkout form short code. Props to Sksmatt
+* Fix: Small bug wit the edd_remove_item_url() present when on a 404 error page. Props to Sksmatt
+* Tweak: Updated the edd_purchase_link() function to automatically detect chosen link styles and colors
 
 = 1.0.7 =
 
-* Added new edd_has_variable_prices() function
-* Improved the edd_price() function to take into account products with variable prices
-* Added an $id parameter to the edd_cart_item filter
-* Updated French language files
-* Added missing "required" classes to the checkout login form
-* Added the ability to update the email address associated with payments
-* Added a new [edd_login] short code for showing a basic login form
-* Added new Dutch language translation files
-
+* New: edd_has_variable_prices() function
+* New: Added missing "required" classes to the checkout login form
+* New: Added the ability to update the email address associated with payments
+* New: Added a new [edd_login] short code for showing a basic login form
+* New: Added new Dutch language translation files
+* New: Added an $id parameter to the edd_cart_item filter
+* Tweak: Updated French language files
+* Tweak: Improved the edd_price() function to take into account products with variable prices
 
 = 1.0.6 =
 
-* NOTE: if you have modified the checkout_cart.php template via your theme, please consider updating it with the new version as many things have changed.
-* Fixed a bug with the empty cart message not being displayed on the checkout page
-* When purchasing a product with variable prices, the selected price option name is now shown on the checkout page
-* Fixed a bug with the in-checkout registration /login form
-* Improved the layout of the in-checkout register / login forms
-* Fixed a bug in the "Edit Payment" page caused by the variable price system
-* Fixed a bug with plugin pages being duplicate on reactivation of EDD
-* Variable price descriptions can now contain HTMl
-* Added new a new filter that allows for the jQuery validation rules to be modified for the checkout page
-* Payments in the Payment History page can now be sorted by ID, Status, and Date.
-* Fix a bug that allowed for the same download to be added to the cart twice.
-* Added missing element classes to the cart widget, checkout cart, and more
-* Added the edd_price() function for use in themes
-* Updated the edd_payment_meta filter with a second parameter for $payment_data
-* Updated the "Insert Download" icon in the "Insert Media" section to match the main post type icon
-* Added filters that allow for post type and taxonomy labels to be modified via the theme
-* Added filters that allow for the post type "supports" attributes to be modified
-* Added extra mimetypes to the function that processes file downloads
-* Dramatically improved the CSS of the checkout page.
+*** NOTE:** if you have modified the checkout_cart.php template via your theme, please consider updating it with the new version as many things have changed.
+* New: Added missing element classes to the cart widget, checkout cart, and more
+* New: Added the edd_price() function for use in themes
+* New: Added new a new filter that allows for the jQuery validation rules to be modified for the checkout page
+* New: Added filters that allow for post type and taxonomy labels to be modified via the theme
+* New: Added filters that allow for the post type "supports" attributes to be modified
+* New: Added extra mimetypes to the function that processes file downloads
+* Fix: Bug that allowed for the same download to be added to the cart twice.
+* Fix: Bug with the empty cart message not being displayed on the checkout page
+* Fix: Bug with the in-checkout registration /login form
+* Fix: Bug in the "Edit Payment" page caused by the variable price system
+* Fix: Bug with plugin pages being duplicate on reactivation of EDD
+* Tweak: Variable price descriptions can now contain HTMl
+* Tweak: Payments in the Payment History page can now be sorted by ID, Status, and Date.
+* Tweak: Improved the layout of the in-checkout register / login forms
+* Tweak: Updated the edd_payment_meta filter with a second parameter for $payment_data
+* Tweak: Updated the "Insert Download" icon in the "Insert Media" section to match the main post type icon
+* Tweak: Dramatically improved the CSS of the checkout page.
+* Tweak: When purchasing a product with variable prices, the selected price option name is now shown on the checkout page
 
 = 1.0.5 =
 
-* New variable pricing option for downloads
-* Added new {price} template tag for emails
-* Fixed an improperly named filter for "edd_payment_meta"
-* Updated some advanced query URLs to be more efficient
-* Updated the German language files
-* Updated default.po/mo
-* Added a check for whether the current theme supports post thumbnails
-* Fixed a few undefined index errors
-* Updated Spanish language files
-* Added support for free downloads
-* Fixed some bugs with the email formatting
-* Fixed a small bug with the ajax add to cart system
-* Improved the download metabox layout
-* Updated the French language files
-* Added a new icon to the Downloads post type
-
+* New: Variable pricing option for downloads
+* New: Added new {price} template tag for emails
+* New: Added support for free downloads
+* New: Added a check for whether the current theme supports post thumbnails
+* New: Icon to the Downloads post type
+* Fix: Improperly named filter for "edd_payment_meta"
+* Fix: Some bugs with the email formatting
+* Fix: Small bug with the ajax add to cart system
+* Fix: Few undefined index errors
+* Tweak: Updated Spanish language files
+* Tweak: Updated some advanced query URLs to be more efficient
+* Tweak: Updated the German language files
+* Tweak: Updated default.po/mo
+* Tweak: Improved the download metabox layout
+* Tweak: Updated the French language files
 
 = 1.0.4.1 =
 
-* New download post type icon
-* Fixed missing add-ons.php file
+* New: Download post type icon
+* Fix: Missing add-ons.php file
 
 = 1.0.4 =
 
-* Added a new "Add Ons" page for viewing all available add-ons for the plugin
-* Added two new filters for currencies that allow developers to add their own currencies
-* Improved meta box field loading that allows add-ons to add / remove fields
-* Added language files for Spanish
-* Improvements to the "empty cart" message. It can now be customized via a filter
+* New: "Add Ons" page for viewing all available add-ons for the plugin
+* New: Two new filters for currencies that allow developers to add their own currencies
+* Tweak: Meta box field loading that allows add-ons to add / remove fields
+* Tweak: Added language files for Spanish
+* Tweak: Improvements to the "empty cart" message. It can now be customized via a filter
 
 = 1.0.3 =
 
-* Added first and last name fields to the checkout registration form.
-* Improved country list formatting.
-* Improved the price input field to make it more clear and help prevent improper price formats.
-* Added backwards compatibility for WP versions < 3.3. The rich editors in the settings pages could not be rendered in < 3.3.
-* Added option to include an "Agree to terms" to the checkout.
-* Added an option for the checkout cart template to be customized via the theme.
-* Fixed a potential bug with file downloads.
-* Added .epub files to accepted mime types.
-* Fixed a bug with a missing email field when using add-on gateways.
+* New: Added first and last name fields to the checkout registration form.
+* New: Option to include an "Agree to terms" to the checkout.
+* New: An option for the checkout cart template to be customized via the theme.
+* New: Add .epub files to accepted mime types.
+* Fix: backwards compatibility for WP versions < 3.3. The rich editors in the settings pages could not be rendered in < 3.3.
+* Fix: Potential bug with file downloads.
+* Fix: Bug with a missing email field when using add-on gateways.
+* Tweak: Improved country list formatting.
+* Tweak: Improved the price input field to make it more clear and help prevent improper price formats.
 
 = 1.0.2 =
 
-* Added an option to delete payments
-* Added featured thumbnails to checkout cart
-* Moved payment action links to beneath the payment email to better match WordPress core
-* Improved checkout CSS to help prevent conflicts
-* "Already purchased" message now shows option to checkout when purchasing again.
-* Forced file downloads and hidden file URLs
-* Fixed a bug with duplicate purchase receipts
-* Updated language files
-* Fixed a bug with the discount code system
+* New: An option to delete payments
+* New: Featured thumbnails to checkout cart
+* New: Forced file downloads and hidden file URLs
+* Fix: Bug with duplicate purchase receipts
+* Fix: A bug with the discount code system
+* Tweak: Updated language files
+* Tweak: "Already purchased" message now shows option to checkout when purchasing again.
+* Tweak: Improved checkout CSS to help prevent conflicts
+* Tweak: Moved payment action links to beneath the payment email to better match WordPress core
 
 = 1.0.1.4 =
 
-* Fixed a bug with the "Add New" button for download source files.
-* Added the Italian language files, thanks to Marco.
+* New: The Italian language files, thanks to Marco.
+* Fix: A bug with the "Add New" button for download source files.
 
 = 1.0.1.3 =
 
-* Fixed a bug with the checkout login / register forms
+* Fix: A bug with the checkout login / register forms
 
 = 1.0.1.2 =
 
-* Fixed a bug with the manual payment gateway.
-* Fixed a bug where sales / earnings counts were increased before a purchase was confirmed.
-* Fixed a bug with the checkout registration / login forms.
-* Added a German translation, thanks to David Decker.
-* Added a partial European Portuguese translation, thanks to Takssista.
+* New: German translation, thanks to David Decker.
+* New: Partial European Portuguese translation, thanks to Takssista.
+* Fix: A bug with the manual payment gateway.
+* Fix: A bug where sales / earnings counts were increased before a purchase was confirmed.
+* Fix: A bug with the checkout registration / login forms.
 
 = 1.0.1.1 =
 
-* Minor updates including inclusion of INR as an available currency.
-* Updates to the default.po file for missing strings.
+* New: Inclusion of INR as an available currency.
+* Fix: Updates to the default.po file for missing strings.
 
 = 1.0 =
 
 * First offical release!
 
 
-
 == Upgrade Notice ==
+
 
 = 1.4.1 =
 
-* Travis now autoloads all of EDD
-* WP_Sessions removed temporarily
-* Fixed Double Click Required JS issue (props @chriscct7)
+* New: Travis now autoloads all of EDD (props @chriscct7)
+* New: Added .apk support (props @chriscct7)
+* Fix: Double Click Required JS issue (props @chriscct7)
+* Tweak: Post save/update messages now can be translated (props @chriscct7)
+* Tweak: WP_Sessions removed temporarily (props @chriscct7)
+* Tweak: Changelogs cleaned up (props @chriscct7)
 
 = 1.4.0.2 =
 
-* Fixed an issue with the checkout page on sites with HTTPS and PayPal Standard
+* Fix: An issue with the checkout page on sites with HTTPS and PayPal Standard
 
 = 1.4.0.1 =
 
-* Fixed an issue with purchase receipts sending
-* Fixed issue with registration / login forms not showing on checkout
-* Fixed an undefined index on the discounts page
+* Fix: An issue with purchase receipts sending
+* Fix: Issue with registration / login forms not showing on checkout
+* Fix: An undefined index on the discounts page
 
 = 1.4 =
 
-* Converted coupons to a custom post type
-* Added Dummy XML File
-* Added System Info (props @chriscct7)
-* Fixed Conflict with Jetpack
-* Fixed issue with exporting lots of customers
-* Added Contextual Help
-* Fixed Download Icon missing
-* Fixed Bulk Delete Payments
-* Updated edd_get_user_purchases()
-* Added Receipt shortcode
-* Added Filter on Default Customer User Role
-* Added Live Credit Card Verification 
-* Added Travis-CI Integration (props @chriscct7)
-* Added New Column to Customers Reports to Show File Download Count
-* Made some UI tweaks, and bug fixes for Logs
-* Added edd_send_back_to_checkout()
-* Brand new Logs UI
-* Fixes in payments functions
-* Added support for WP 3.5 Button
-* Made updates to edd_process_download()
-* Reordered the inclusion of payment gateways
-* Restructured file organization
-* Improved payment-functions.php file
-* Added Payment Notes
-* Added a more efficient AJAX selector
-* Serious Optomizations
-* Optimized png's losslessly
-* Stripped whitespace + normalize
-* Added New Helper Function for "Transaction ID" 
-* Added "failed" payment status 
-* Added Profile Editor
-* Added Retina images
-* Converted Discount Admin Page to WP List Table
-* Added over 100 new MIME-Types allowed for download
-* Added support for uploading .psd files
-* Rewrote main plugin file to use a singleton OOP approach
-
+* New: Converted coupons to a custom post type
+* New: Dummy XML File
+* New: System Info (props @chriscct7)
+* New: Contextual Help
+* New: Receipt shortcode
+* New: Filter on Default Customer User Role
+* New: Live Credit Card Verification
+* New: Travis-CI Integration (props @chriscct7)
+* New: Column to Customers Reports to Show File Download Count
+* New: edd_send_back_to_checkout()
+* New: Brand new Logs UI
+* New: Support for WP 3.5 Button
+* New: Serious Optomizations
+* New: Optimized png's losslessly
+* New: Payment Notes
+* New: More efficient AJAX selector
+* New: New Helper Function for "Transaction ID"
+* New: "failed" payment status
+* New: Profile Editor
+* New: Over 100 new MIME-Types allowed for download
+* Fix: Conflict with Jetpack
+* Fix: Issue with exporting lots of customers
+* Fix: Download Icon missing
+* Fix: Bulk Delete Payments
+* Fix: Payments functions
+* Fix: Retina images
+* Fix: Added support for uploading .psd files
+* Tweak: Updated edd_get_user_purchases()
+* Tweak: Made some UI tweaks, and bug fixes for Logs
+* Tweak: Made updates to edd_process_download()
+* Tweak: Reordered the inclusion of payment gateways
+* Tweak: Restructured file organization
+* Tweak: mproved payment-functions.php file
+* Tweak: Stripped whitespace + normalize
+* Tweak: Converted Discount Admin Page to WP List Table
+* Tweak: Rewrote main plugin file to use a singleton OOP approach
 
 = 1.3.4.3 =
 
-* Fixed fatal error in PayPal
+* Fix: Fatal error in PayPal
 
 = 1.3.4.2 =
 
-* Added a new {fullname} email template tag
-* Improved CSS for the ajax cart loader
-* Made download taxonomy rewrites hierarchical
-* Updated Italian language files
-* Fixed a potential issue with jQuery validation of the checkout form
-* made a JS file only load on the checkout page instead of all pages
-* Reverted back to $_SESSION based storage as WP_Session isn't quite ready for use yet
-
+* New: {fullname} email template tag
+* Fix: a potential issue with jQuery validation of the checkout form
+* Tweak: Improved CSS for the ajax cart loader
+* Tweak: download taxonomy rewrites hierarchical
+* Tweak: Updated Italian language files
+* Tweak: Made a JS file only load on the checkout page instead of all pages
+* Tweak: Reverted back to $_SESSION based storage as WP_Session isn't quite ready for use yet
 
 = 1.3.4.1 =
 
-* Fixed major bug in PayPal standard gateway introduced in 1.3.4
-* Updated French langauge files
+* Fix: Major bug in PayPal standard gateway introduced in 1.3.4
+* Tweak: Updated French langauge files
 
 = 1.3.4 =
 
-* Added new option for defining the emails that receive admin sale notifications
-* Improved contextual help tabs
-* Fixed a problem with $0 purchases
-* Added new edd_item_in_cart filter
-* Made the edd_log_type taxonomy private
-* Added prices to the [purchase_link] short code so that the product price is shown on the button
-* Fixed a problem with display the buyer's first name in purchase receipts
-* Updated category/tag slugs to respect EDD_SLUG constant (if defined)
-* Updated Italian language files
-* Added payment history search
-* Rebuilt Payment History page to use better core UI standards
-* Improved PayPal IPN processing with new do_action() hooks for each transaction type
-* Added exclude_category and exclude_tags parameters to the [downloads] short code
-* Fixed a problem with category/tag query parameters in the [downloads] short code
-* Improved username validation and error messages on checkout
-* Updated French language files
-* Improved the way language files are loaded to permit users to place custom language files in wp-content/languages/edd/
-* Improved edd_get_ajax_url() to fix problems with sites that use SSl
-* Fixed a problem with PayPal purchases when item names have HTML entities
-* Improved some internationalization with date functions
-* Fixed a problem with prices over 1,000 on checkout
-* Fixed path to custom edd.css
-* Made the email address in View Details for purchase history clickable
-* Added a tax column to the CSV purchase export
-* Fixed a problem with some payments not having meta data for the total amount recorded
-* Added date parameters to edd_get_payments() to allow payments of specific dates to be queried
-* Removed the "required" class from the local tax opt-in checkbox
-* Improved the function that retrieves the total earnings amount
-* Updated customer CSV export to include the number of purchases and total amount spent
-* Updated purchase details to include tax information
-
+* New: Option for defining the emails that receive admin sale notifications
+* New: edd_item_in_cart filter
+* New: Added prices to the [purchase_link] short code so that the product price is shown on the button
+* New: Added payment history search
+* New: Added exclude_category and exclude_tags parameters to the [downloads] short code
+* New: Added date parameters to edd_get_payments() to allow payments of specific dates to be queried
+* Fix: A problem with $0 purchases
+* Fix: Problem with display the buyer's first name in purchase receipts
+* Fix: Problem with category/tag query parameters in the [downloads] short code
+* Fix: Problem with PayPal purchases when item names have HTML entities
+* Fix: Problem with prices over 1,000 on checkout
+* Fix: Path to custom edd.css
+* Fix: Problem with some payments not having meta data for the total amount recorded
+* Tweak: Improved contextual help tabs
+* Tweak: Made the edd_log_type taxonomy private
+* Tweak: Updated category/tag slugs to respect EDD_SLUG constant (if defined)
+* Tweak: Updated Italian language files
+* Tweak: Updated French language files
+* Tweak: Removed the "required" class from the local tax opt-in checkbox
+* Tweak: Improved the function that retrieves the total earnings amount 
+* Tweak: Updated customer CSV export to include the number of purchases and total amount spent
+* Tweak: Updated purchase details to include tax information
+* Tweak: Made the email address in View Details for purchase history clickable
+* Tweak: Improved some internationalization with date functions
+* Tweak: Improved edd_get_ajax_url() to fix problems with sites that use SSl
+* Tweak: Improved the way language files are loaded to permit users to place custom language files in wp-content/languages/edd/
+* Tweak: Improved PayPal IPN processing with new do_action() hooks for each transaction type
+* Tweak: Rebuilt Payment History page to use better core UI standards
 
 = 1.3.3 =
 
-* Added new Tax system for calculating simple taxes on purchases
-* Added error / payment failure logging to PayPal standard gateway
-* Improved the error logging system
-* Fixed an issue with payment method select when ajax is disabled
-* Fixed a problem with a stray file upload button in IE and Firefox
-* Improved the Payment History export to CSV option
-* Removed old, out of date PayPal payment gateway
-* Fixed a problem with improperly formatted amounts after applying a flat rate discount
-* Fixed two conflicting filter names
-* Improved markup for the [edd_price] short code
-* Updated Dutch translation files
-* Improved front-end CSS for variable price options
-* Added new edd_file_download_has_access filter
-* Improved logic for determing the lower price on variable priced downloads
-* Improved stylesheet loading
-* Fixed a pagination bug with the [downloads] short code
+* New: Tax system for calculating simple taxes on purchases
+* New: Added error / payment failure logging to PayPal standard gateway
+* New: Added new edd_file_download_has_access filter
+* Fix: Issue with payment method select when ajax is disabled
+* Fix: Problem with a stray file upload button in IE and Firefox
+* Fix: Problem with improperly formatted amounts after applying a flat rate discount
+* Fix: two conflicting filter names
+* Fix: A pagination bug with the [downloads] short code
+* Tweak: Improved the error logging system
+* Tweak: Improved the Payment History export to CSV option
+* Tweak: Removed old, out of date PayPal payment gateway
+* Tweak: Improved markup for the [edd_price] short code
+* Tweak: Updated Dutch translation files
+* Tweak: Improved front-end CSS for variable price options
+* Tweak: Improved logic for determing the lower price on variable priced downloads
+* Tweak: Improved stylesheet loading
 
 = 1.3.2.1 =
 
@@ -1088,30 +1086,30 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 = 1.3 =
 
-* Completely rewrote the Reports page with new graphs and Downloads / Customers view
-* Introduced new CSS styles for purchase buttons
-* Fixed a problem with the add-ons page
-* Added new EDD_VERSION constant
-* Fixed a problem with thousands separator and price formatting
-* Replaced date() with date_i18n() for improved internationalization
-* Added new edd_before_download_content hook
-* Added new edd_purchase)history_files hook
-* Added new filter for edd_is_checkout
-* Introduced several new functions for calculating average sales / earnings for individual products
-* Introduced several new functions for counting number of purchases and amount spent for customers
-* Added a contextual help menu to the Discounts page
-* Added a contextual help menu to the edit Download page
-* Fixed a jQuery UI conflict
-* Added new jQuery UI styles that better match core WordPress styles
-* Improved data validation throughout the plugin
-* Fixed a problem with adding items to the cart via ajax when admin/front end http/s protocals are miss matched
-* Added a filter to remove product titles in purchase receipts
-* Added new Polish translation files
-* Fixed the upload field settings field callback JS
-* Significant cleanup of code formatting and adherence of WordPress coding standards
-* Fixed missing item description in PayPal checkout
-* Updated French translation files and default language files
-* Fixed a problem with the total earnings widget
+* New: edd_before_download_content hook
+* New: edd_purchase_history_files hook
+* New: filter for edd_is_checkout
+* New: Introduced several new functions for calculating average sales / earnings for individual products
+* New: Introduced several new functions for counting number of purchases and amount spent for customers
+* New: EDD_VERSION constant
+* New: Completely rewrote the Reports page with new graphs and Downloads / Customers view
+* New: Introduced new CSS styles for purchase buttons
+* New: Contextual help menu to the Discounts page
+* New: Contextual help menu to the edit Download page
+* New: jQuery UI styles that better match core WordPress style
+* New: Filter to remove product titles in purchase receipts
+* New: New Polish translation files
+* Fix: Problem with the add-ons page
+* Fix: Problem with thousands separator and price formatting
+* Fix: jQuery UI conflict
+* Fix: Problem with adding items to the cart via ajax when admin/front end http/s protocals are miss matched
+* Fix: The upload field settings field callback JS
+* Fix: Missing item description in PayPal checkout
+* Fix: Problem with the total earnings widget
+* Tweak: Replaced date() with date_i18n() for improved internationalization
+* Tweak: Improved data validation throughout the plugin
+* Tweak: Updated French translation files and default language files
+* Tweak: Significant cleanup of code formatting and adherence of WordPress coding standards
 
 = 1.2.2 =
 
@@ -1353,10 +1351,9 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fixed an amount comparision error in the PayPal IPN processer
 * Added Japanese language files
 
-
 = 1.1.0 =
 
-* Updated French translation files, thanks for Boddhi
+* Added new French translation files, thanks for Boddhi
 * Updated default language files
 * Fixed the width of the "Email" column in the payment history page
 * Added payment "status" filters to the payment history page
@@ -1443,7 +1440,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Added auto creation for .htaccess files in the uploads directory for EDD to help protect unauthorized file downloads
 * Added Turkish language files
 * Added detection for php.ini variables important to PayPal payment verification
-* Added a new short code for showing a list of active discounts: [download_discounts]
+*** Added a new short code for showing a list of active discounts:** [download_discounts]
 
 = 1.0.8.2 =
 
@@ -1461,159 +1458,159 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 = 1.0.8.1 =
 
-* Updated es_ES translation files
-* A lots of code documentation improvements
-* Completely rewrote the purchase processing functions to fix a couple of bugs and make the entire thing easier to debug and improve
-* Fixed a problem with user emails not being recorded for guest purchases
-* Improved the performance of the add-ons page with transients
-* Reorganized some functions into more appropriate files
-* Fixed translation domains on the login forms
-* Added a new option for marking a payment as "refunded". The refund process must be done through the payment gateway still. When payments are marked as "refunded", the sales and earnings stats will be adjusted accordingly.
-* Added an alert message to the "Delete Payment" link
-* Updated French language files
-* Added get_post_class() to the payments history page so that payment rows can be styled based on their status, post type, etc.
-* Updated admin CSS to add custom background color to refunded payments
-* Added new filter called "edd_payment_statuses", which can be used to register custom statuses
+* New: Added a new option for marking a payment as "refunded". The refund process must be done through the payment gateway still. When payments are marked as "refunded", the sales and earnings stats will be adjusted accordingly.
+* New: Added an alert message to the "Delete Payment" link
+* New: Added get_post_class() to the payments history page so that payment rows can be styled based on their status, post type, etc.
+* New: Added new filter called "edd_payment_statuses", which can be used to register custom statuses
+* Fix: Translation domains on the login forms
+* Fix: Problem with user emails not being recorded for guest purchases
+* Tweak: Updated es_ES translation files
+* Tweak: Lots of code documentation improvements
+* Tweak: Completely rewrote the purchase processing functions to fix a couple of bugs and make the entire thing easier to debug and improve
+* Tweak: Improved the performance of the add-ons page with transients
+* Tweak: Reorganized some functions into more appropriate files
+* Tweak: Updated admin CSS to add custom background color to refunded payments
+* Tweak: Updated French language files
 
 = 1.0.8 =
 
-* Added the [purchase_history] shortcode for showing a detailed list of user's purchases
-* Improved the names of the widgets
-* Fixed a CSS bug with the Add Ons page
-* Added the edd_get_checkout_uri() function for use by themes
-* Fixed a couple of bugs with the login/register checkout forms
-* Dramatically improved code documentation
-* Fixed an incorrectly named parameter in the edd_after_download_content hook
+* New: Added the [purchase_history] shortcode for showing a detailed list of user's purchases
+* New: Added the edd_get_checkout_uri() function for use by themes
+* Fix: Incorrectly named parameter in the edd_after_download_content hook
+* Fix: CSS bug with the Add Ons page
+* Fix: Couple of bugs with the login/register checkout forms
+* Tweak: Dramatically improved code documentation
+* Tweak: Improved the names of the widgets
 
 = 1.0.7.2 =
 
-* Added a new EDD Categories / Tags widget
-* Removed duplicated code from payments history page
-* Fixed a major bug that made it impossible to safely update orders
-* Added user's IP address to payment meta
-* Added localization to the default page titles created during install
-* Removed old stripe.js code that is no longer used
-* Added an enhancement to the cart widget that causes the "Purchase" button to reset when removing an item from the cart
+* New: Added a new EDD Categories / Tags widget
+* New: Added an enhancement to the cart widget that causes the "Purchase" button to reset when removing an item from the cart
+* New: Added user's IP address to payment meta
+* New: Added localization to the default page titles created during install
+* Fix: Major bug that made it impossible to safely update orders
+* Tweak: Removed old stripe.js code that is no longer used
+* Tweak: Removed duplicated code from payments history page
 
 = 1.0.7.1 =
 
-* Added a second instance do_action('edd_purchase_form_user_info') to the checkout registration form
-* Updated the edd_purchase_link() function to automatically detect chosen link styles and colors
-* Fixed a bug with the discount code form on checkout. It now only shows if there is at least one active discount. Props to Sksmatt
-* Fixed a bug with the Media Uploader when adding media to the content of a Download. Props to Sksmatt
-* Added a wrapper div.edd-cart-ajax-alert around the message that shows when an item has been added to the cart
-* Fixed a small error notice present in the checkout form short code. Props to Sksmatt
-* Fixed a small bug wit the edd_remove_item_url() present when on a 404 error page. Props to Sksmatt
+* New: Added a second instance do_action('edd_purchase_form_user_info') to the checkout registration form
+* New: Added a wrapper div.edd-cart-ajax-alert around the message that shows when an item has been added to the cart
+* Fix: Bug with the discount code form on checkout. It now only shows if there is at least one active discount. Props to Sksmatt
+* Fix: Bug with the Media Uploader when adding media to the content of a Download. Props to Sksmatt
+* Fix: Small error notice present in the checkout form short code. Props to Sksmatt
+* Fix: Small bug wit the edd_remove_item_url() present when on a 404 error page. Props to Sksmatt
+* Tweak: Updated the edd_purchase_link() function to automatically detect chosen link styles and colors
 
 = 1.0.7 =
 
-* Added new edd_has_variable_prices() function
-* Improved the edd_price() function to take into account products with variable prices
-* Added an $id parameter to the edd_cart_item filter
-* Updated French language files
-* Added missing "required" classes to the checkout login form
-* Added the ability to update the email address associated with payments
-* Added a new [edd_login] short code for showing a basic login form
-* Added new Dutch language translation files
+* New: edd_has_variable_prices() function
+* New: Added missing "required" classes to the checkout login form
+* New: Added the ability to update the email address associated with payments
+* New: Added a new [edd_login] short code for showing a basic login form
+* New: Added new Dutch language translation files
+* New: Added an $id parameter to the edd_cart_item filter
+* Tweak: Updated French language files
+* Tweak: Improved the edd_price() function to take into account products with variable prices
 
 = 1.0.6 =
 
-* NOTE: if you have modified the checkout_cart.php template via your theme, please consider updating it with the new version as many things have changed.
-* Fixed a bug with the empty cart message not being displayed on the checkout page
-* When purchasing a product with variable prices, the selected price option name is now shown on the checkout page
-* Fixed a bug with the in-checkout registration /login form
-* Improved the layout of the in-checkout register / login forms
-* Fixed a bug in the "Edit Payment" page caused by the variable price system
-* Fixed a bug with plugin pages being duplicate on reactivation of EDD
-* Variable price descriptions can now contain HTMl
-* Added new a new filter that allows for the jQuery validation rules to be modified for the checkout page
-* Payments in the Payment History page can now be sorted by ID, Status, and Date.
-* Fix a bug that allowed for the same download to be added to the cart twice.
-* Added missing element classes to the cart widget, checkout cart, and more
-* Added the edd_price() function for use in themes
-* Updated the edd_payment_meta filter with a second parameter for $payment_data
-* Updated the "Insert Download" icon in the "Insert Media" section to match the main post type icon
-* Added filters that allow for post type and taxonomy labels to be modified via the theme
-* Added filters that allow for the post type "supports" attributes to be modified
-* Added extra mimetypes to the function that processes file downloads
-* Dramatically improved the CSS of the checkout page.
+*** NOTE:** if you have modified the checkout_cart.php template via your theme, please consider updating it with the new version as many things have changed.
+* New: Added missing element classes to the cart widget, checkout cart, and more
+* New: Added the edd_price() function for use in themes
+* New: Added new a new filter that allows for the jQuery validation rules to be modified for the checkout page
+* New: Added filters that allow for post type and taxonomy labels to be modified via the theme
+* New: Added filters that allow for the post type "supports" attributes to be modified
+* New: Added extra mimetypes to the function that processes file downloads
+* Fix: Bug that allowed for the same download to be added to the cart twice.
+* Fix: Bug with the empty cart message not being displayed on the checkout page
+* Fix: Bug with the in-checkout registration /login form
+* Fix: Bug in the "Edit Payment" page caused by the variable price system
+* Fix: Bug with plugin pages being duplicate on reactivation of EDD
+* Tweak: Variable price descriptions can now contain HTMl
+* Tweak: Payments in the Payment History page can now be sorted by ID, Status, and Date.
+* Tweak: Improved the layout of the in-checkout register / login forms
+* Tweak: Updated the edd_payment_meta filter with a second parameter for $payment_data
+* Tweak: Updated the "Insert Download" icon in the "Insert Media" section to match the main post type icon
+* Tweak: Dramatically improved the CSS of the checkout page.
+* Tweak: When purchasing a product with variable prices, the selected price option name is now shown on the checkout page
 
 = 1.0.5 =
 
-* New variable pricing option for downloads
-* Added new {price} template tag for emails
-* Fixed an improperly named filter for "edd_payment_meta"
-* Updated some advanced query URLs to be more efficient
-* Updated the German language files
-* Updated default.po/mo
-* Added a check for whether the current theme supports post thumbnails
-* Fixed a few undefined index errors
-* Updated Spanish language files
-* Added support for free downloads
-* Fixed some bugs with the email formatting
-* Fixed a small bug with the ajax add to cart system
-* Improved the download metabox layout
-* Updated the French language files
-* Added a new icon to the Downloads post type
+* New: Variable pricing option for downloads
+* New: Added new {price} template tag for emails
+* New: Added support for free downloads
+* New: Added a check for whether the current theme supports post thumbnails
+* New: Icon to the Downloads post type
+* Fix: Improperly named filter for "edd_payment_meta"
+* Fix: Some bugs with the email formatting
+* Fix: Small bug with the ajax add to cart system
+* Fix: Few undefined index errors
+* Tweak: Updated Spanish language files
+* Tweak: Updated some advanced query URLs to be more efficient
+* Tweak: Updated the German language files
+* Tweak: Updated default.po/mo
+* Tweak: Improved the download metabox layout
+* Tweak: Updated the French language files
 
 = 1.0.4.1 =
 
-* New download post type icon
-* Fixed missing add-ons.php file
+* New: Download post type icon
+* Fix: Missing add-ons.php file
 
 = 1.0.4 =
 
-* Added a new "Add Ons" page for viewing all available add-ons for the plugin
-* Added two new filters for currencies that allow developers to add their own currencies
-* Improved meta box field loading that allows add-ons to add / remove fields
-* Added language files for Spanish
-* Improvements to the "empty cart" message. It can now be customized via a filter
+* New: "Add Ons" page for viewing all available add-ons for the plugin
+* New: Two new filters for currencies that allow developers to add their own currencies
+* Tweak: Meta box field loading that allows add-ons to add / remove fields
+* Tweak: Added language files for Spanish
+* Tweak: Improvements to the "empty cart" message. It can now be customized via a filter
 
 = 1.0.3 =
 
-* Added first and last name fields to the checkout registration form.
-* Improved country list formatting.
-* Improved the price input field to make it more clear and help prevent improper price formats.
-* Added backwards compatibility for WP versions < 3.3. The rich editors in the settings pages could not be rendered in < 3.3.
-* Added option to include an "Agree to terms" to the checkout.
-* Added an option for the checkout cart template to be customized via the theme.
-* Fixed a potential bug with file downloads.
-* Added .epub files to accepted mime types.
-* Fixed a bug with a missing email field when using add-on gateways.
+* New: Added first and last name fields to the checkout registration form.
+* New: Option to include an "Agree to terms" to the checkout.
+* New: An option for the checkout cart template to be customized via the theme.
+* New: Add .epub files to accepted mime types.
+* Fix: backwards compatibility for WP versions < 3.3. The rich editors in the settings pages could not be rendered in < 3.3.
+* Fix: Potential bug with file downloads.
+* Fix: Bug with a missing email field when using add-on gateways.
+* Tweak: Improved country list formatting.
+* Tweak: Improved the price input field to make it more clear and help prevent improper price formats.
 
 = 1.0.2 =
 
-* Added an option to delete payments
-* Added featured thumbnails to checkout cart
-* Moved payment action links to beneath the payment email to better match WordPress core
-* Improved checkout CSS to help prevent conflicts
-* "Already purchased" message now shows option to checkout when purchasing again.
-* Forced file downloads and hidden file URLs
-* Fixed a bug with duplicate purchase receipts
-* Updated language files
-* Fixed a bug with the discount code system
+* New: An option to delete payments
+* New: Featured thumbnails to checkout cart
+* New: Forced file downloads and hidden file URLs
+* Fix: Bug with duplicate purchase receipts
+* Fix: A bug with the discount code system
+* Tweak: Updated language files
+* Tweak: "Already purchased" message now shows option to checkout when purchasing again.
+* Tweak: Improved checkout CSS to help prevent conflicts
+* Tweak: Moved payment action links to beneath the payment email to better match WordPress core
 
 = 1.0.1.4 =
 
-* Fixed a bug with the "Add New" button for download source files.
-* Added the Italian language files, thanks to Marco.
+* New: The Italian language files, thanks to Marco.
+* Fix: A bug with the "Add New" button for download source files.
 
 = 1.0.1.3 =
 
-* Fixed a bug with the checkout login / register forms
+* Fix: A bug with the checkout login / register forms
 
 = 1.0.1.2 =
 
-Fixed a bug with the manual payment gateway.
-Fixed a bug where sales / earnings counts were increased before a purchase was confirmed.
-Fixed a bug with the checkout registration / login forms.
-Added a German translation, thanks to David Decker.
-Added a partial European Portuguese translation, thanks to Takssista.
+* New: German translation, thanks to David Decker.
+* New: Partial European Portuguese translation, thanks to Takssista.
+* Fix: A bug with the manual payment gateway.
+* Fix: A bug where sales / earnings counts were increased before a purchase was confirmed.
+* Fix: A bug with the checkout registration / login forms.
 
 = 1.0.1.1 =
 
-* Minor updates including inclusion of INR as an available currency.
-* Updates to the default.po file for missing strings.
+* New: Inclusion of INR as an available currency.
+* Fix: Updates to the default.po file for missing strings.
 
 = 1.0 =
 
