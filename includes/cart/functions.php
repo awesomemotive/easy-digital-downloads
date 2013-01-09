@@ -469,13 +469,17 @@ function edd_get_cart_content_details() {
 	$details = array();
 	if( $cart_items ) {
 		foreach( $cart_items as $key => $item ) {
-			$details[$key] = array(
+			$price = edd_get_cart_item_price( $item['id'], $item['options'] );
+			$details[ $key ] = array(
 				'name' => get_the_title($item['id']),
 				'id' => $item['id'],
 				'item_number' => $item,
-				'price' => edd_get_cart_item_price($item['id'], $item['options']),
+				'price' => $price,
 				'quantity' => 1,
 			);
+			if( edd_taxes_on_prices() ) {
+				$details[ $key ]['tax'] = edd_calculate_tax( $price );
+			}
 		}
 	}
 	if( !empty( $details ) ) {
