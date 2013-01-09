@@ -226,6 +226,15 @@ function edd_purchase_total_of_user( $user = null ) {
 }
 
 
+/**
+ * Counts the total number of files a customer has downloaded
+ *
+ * @access      public
+ * @since       1.3
+ * @param       $user mixed - ID or email
+ * @return      int - The total number of files the user has downloaded
+*/
+
 function edd_count_file_downloads_of_user( $user ) {
 
 	global $edd_logs;
