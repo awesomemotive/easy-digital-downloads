@@ -489,35 +489,35 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ### 1.1.6 ###
 
-* Added the name of the buyer to the admin purchase notifications
-* Added a new setting for "Complete Purchase" button text
-* Escaped values of settings field callbacks
-* Fixed a bug with button colors when inserting a short code
-* Fixed a spelling error in Downloads > Settings > Payment Gateways
-* Removed ini_set error display
-* Fixed a major bug with discount codes that caused the "uses" value to get erased when updated a code
-* Fixed a bug with download sales/earnings stats and variable priced downloads
-* Removed an old and unused add_meta_box() call
-* Fixed an incorrect check for missing directory and creation of /uploads/edd
-* Escaped attributes and improved code formating in template-functions.php
-* Added new actions to top and bottom of payment history page
-* Escaped attributes and improved code formating in download-functions.php
-* Updated Dutch language files
-* Added pre_ and post_ actions to the add to cart function
-* Added a new edd_download_price filter to the edd_price() function
-* Fixed a misnamed class on the empty cart element
-* Added class names to all table rows and cells in the checkout template
-* Updated French translation files
-* Removed call by reference in edd_scan_folders()
+* New: Added the name of the buyer to the admin purchase notifications
+* New: Added a new setting for "Complete Purchase" button text
+* New: Added pre_ and post_ actions to the add to cart function
+* New: Added a new edd_download_price filter to the edd_price() function
+* New: Added new actions to top and bottom of payment history page
+* New: Added class names to all table rows and cells in the checkout template
+* Fix: Misnamed class on the empty cart element
+* Fix: Bug with button colors when inserting a short code
+* Fix: Spelling error in Downloads > Settings > Payment Gateways
+* Fix: Major bug with discount codes that caused the "uses" value to get erased when updated a code
+* Fix: Bug with download sales/earnings stats and variable priced downloads
+* Fix: Incorrect check for missing directory and creation of /uploads/edd
+* Tweak: Escaped attributes and improved code formating in template-functions.php
+* Tweak: Removed ini_set error display
+* Tweak: Escaped attributes and improved code formating in download-functions.php
+* Tweak: Updated Dutch language files
+* Tweak: Escaped values of settings field callbacks
+* Tweak: Removed an old and unused add_meta_box() call
+* Tweak: Updated French translation files
+* Tweak: Removed call by reference in edd_scan_folders()
 
 ### 1.1.5.2 ###
 
-* Fixed a call-by-reference error
-* Fixed a problem with zero-byte downloads
+* Fix: Call-by-reference error
+* Fix: Problem with zero-byte downloads
 
 ### 1.1.5.1 ###
 
-* Fixed a bug with file downloads
+* Fix: Bug with file downloads
 
 ### 1.1.5 ###
 
