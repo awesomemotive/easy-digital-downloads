@@ -147,7 +147,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'aifc'		: $ctype	= "audio/x-aiff"; break;
 		case 'aiff'		: $ctype	= "audio/x-aiff"; break;
 		case 'air'		: $ctype	= "application/vnd.adobe.air-application-installer-package+zip"; break;
-		case 'air'		: $ctype	= "application/vnd.android.package-archive"; break;
+		case 'apk'		: $ctype	= "application/vnd.android.package-archive"; break;
 		case 'asc'		: $ctype	= "application/pgp-signature"; break;
 		case 'atom'		: $ctype	= "application/atom+xml"; break;
 		case 'atomcat'	: $ctype	= "application/atomcat+xml"; break;		
