@@ -59,8 +59,9 @@ function edd_sanitize_amount( $amount ) {
 
 function edd_format_amount( $amount ) {
 	global $edd_options;
-	// If no price was given for the downlaod
-	if ( !isset( $amount ) || ( $amount == null ) ) {
+	// If no price was given for the download
+	$amount= "$amount"; // The Anti-Geczy check
+	if ( $amount == '' ) {
 		$label = edd_get_label_singular();
 		$string = sprintf( __('%1$s Not Available', 'edd' ), $label );
 		return	apply_filters( 'edd_price_not_available_text', $string );
