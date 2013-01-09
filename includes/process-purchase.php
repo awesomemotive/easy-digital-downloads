@@ -357,7 +357,11 @@ function edd_purchase_form_validate_new_user() {
 		// Check if it's valid
 		} else if( ! edd_validate_username( $user_login ) ) {
 		   // Invalid username
-			edd_set_error( 'username_invalid', __( 'Invalid username', 'edd' ) );
+			if( is_multisite() )
+				edd_set_error( 'username_invalid', __( 'Invalid username. Only lowercase letters (a-z) and numbers are allowed', 'edd' ) );
+			else
+				edd_set_error( 'username_invalid', __( 'Invalid username', 'edd' ) );
+
 		} else {
 			// All the checks have run and it's good to go
 			$valid_user_data['user_login'] = $user_login;
