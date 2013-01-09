@@ -472,8 +472,8 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ### 1.1.8 ###
 
-* Fixed a major bug with discount codes not being accepted
-* Fixed a bug in the PDF reports
+* Fix: a major bug with discount codes not being accepted
+* Fix: Bin the PDF reports
 * Added a new "Earnings per day" graph on the Reports page
 * Improved URL > path conversion for locally stored download files
 * Improved organization of email templating functions
@@ -521,113 +521,113 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ### 1.1.5 ###
 
-* Updated default language files
-* Changed "Purchase Page" label to "Checkout Page" in settings
-* Fixed a problem with serving download files
-* Fixed a bug that caused images to break when uploaded to download products
-* Made significant security improvements for protecting files against unauthorized downloads
-* Updated discounts so taht users can only use a discount code once
-* Download titles are now decoded for html entities in payment history
-* Updated payment history to fix an error notice when a user isn't found
-* Added a new option for showing download links on the success page after completing a payment
-* Fixed a couple of undefined index errors
-* Added item prices to the cart widget
-* Added support for the Iranian Rial currency. Make sure your gateway supports it before using it
-* Updated the edd_remove_item_url() to use the current page URL instead of the home URL
-* Added new edd_get_current_page_url() function
-* Made the edd_payment post type not public
-* Updated French language files
+* New: Added new edd_get_current_page_url() function
+* New: Added a new option for showing download links on the success page after completing a payment
+* New: Added item prices to the cart widget
+* New: Added support for the Iranian Rial currency. Make sure your gateway supports it before using it
+* Fix: Couple of undefined index errors
+* Fix: Problem with serving download files
+* Fix: Bug that caused images to break when uploaded to download products
+* Tweak: Made significant security improvements for protecting files against unauthorized downloads
+* Tweak: Updated discounts so taht users can only use a discount code once
+* Tweak: Download titles are now decoded for html entities in payment history
+* Tweak: Updated payment history to fix an error notice when a user isn't found
+* Tweak: Updated default language files
+* Tweak: Changed "Purchase Page" label to "Checkout Page" in settings
+* Tweak: Updated the edd_remove_item_url() to use the current page URL instead of the home URL
+* Tweak: Made the edd_payment post type not public
+* Tweak: Updated French language files
 
 ### 1.1.4.1 ###
 
-* Fixed a bug with the source file download processing
-* Added support for .mobi files
-* Removed deprecated get_magic_quotes_runtime()
-* Fixed an error notice warning
-* Added "order" and "orderby" parameters to the [downloads] short code
-* Fixed some errors with aposthrophe encoding
-* Removed a conditional check for the jQuery library as it was causing problems with jQuery not loading
-* Add a "No Download Found" message to the PDF reports for when there are no products
-* Fixed a rendering issue with purchase receipts in Outlook
+* New: Added "order" and "orderby" parameters to the [downloads] short code
+* New: Added support for .mobi files
+* New: Add a "No Download Found" message to the PDF reports for when there are no products
+* Fix: Bug with the source file download processing
+* Fix: Error notice warning
+* Fix: Rendering issue with purchase receipts in Outlook
+* Fix: Some errors with aposthrophe encoding
+* Tweak: Removed a conditional check for the jQuery library as it was causing problems with jQuery not loading
+* Tweak: Removed deprecated get_magic_quotes_runtime()
 
 ### 1.1.4.0 ###
 
-* Fixed a bug with the purchase receipt templates
-* Updated default language files with a lot of new strings
-* Added new edd_cart_contents filter
-* Replaced Thickbox with Colorbox for email template previews
-* Fixed a bug with + signs in email addresses
-* Fixed a bug with prices not saving when set to 0
-* Added a new PDF Report generation feature for Sales and Earnings, thanks to SunnyRatilal
-* Added a new [edd_price] short code
-* Fixed a miss spelled FOR attribute on a checkout label
-* Added Quick Edit ability to the Download Price option
-* Fixed a bug with the discount code field on the checkout page
-* Fixed an encoded bug with the purchase receipts
-* Updated the charset from ISO-8859-1 to utf-8 for the purchase receipts
-* Fixed a bug with the way the currency sign was displayed in the meta box price field
-* Fixed a bug where flat rate discounts could result in negative checkout values
-* Update the date in purchase receipts to reflect the date_format setting in WordPress
-* Added a check to existing jQuery libraries before enqueing
-* Added is_array() check to the price options name function to fix a potential error
-* Improved the formatting of country names
-* Added an php_ini check for safe mode
-* Fixed a missing currency sign in the email {price} template tag
+* New: Added Quick Edit ability to the Download Price option
+* New: Added a new PDF Report generation feature for Sales and Earnings, thanks to SunnyRatilal
+* New: Added a new [edd_price] short code
+* New: Added new edd_cart_contents filter
+* New: Added a check to existing jQuery libraries before enqueing
+* New: Added is_array() check to the price options name function to fix a potential error
+* New: Added an php_ini check for safe mode
+* Fix: Bug with the purchase receipt templates
+* Fix: Bug with the discount code field on the checkout page
+* Fix: Encoded bug with the purchase receipts
+* Fix: Bug with the way the currency sign was displayed in the meta box price field
+* Fix: Bug where flat rate discounts could result in negative checkout values
+* Fix: Missing currency sign in the email {price} template tag
+* Fix: Bug with + signs in email addresses
+* Fix: Bug with prices not saving when set to 0
+* Fix: Miss spelled FOR attribute on a checkout label
+* Tweak: Updated default language files with a lot of new strings
+* Tweak: Replaced Thickbox with Colorbox for email template previews
+* Tweak: Updated the charset from ISO-8859-1 to utf-8 for the purchase receipts
+* Tweak: Update the date in purchase receipts to reflect the date_format setting in WordPress
+* Tweak: Improved the formatting of country names
 
 ### 1.1.3.2 ###
 
-* Fixed a minor bug with the PayPal IPN listener
-* Fixed a minor bug with the function that checks for a valid discount
-* Added two new action hooks to the reports page
+* New: Added two new action hooks to the reports page
+* Fix: Minor bug with the PayPal IPN listener
+* Fix: Minor bug with the function that checks for a valid discount
 
 ### 1.1.3.1 ###
 
-* Fixed a bug that caused complete CC fields to show when only one gateway was enabled
+* Fix: Bug that caused complete CC fields to show when only one gateway was enabled
 
 ### 1.1.3 ###
 
-* Fixed a bug with free downloads that happened when no payment gateway was selected
-* Separated First and Last name fields in the payment's CSV export
-* Fixed a bug that prevented large files from being able to be downloaded
-* Improved the countries drop down field in the default CC form for payment gateways
-* Fixed an error that showed up when purchasing a download without any downloadable files
-* Added a new filter to the PayPal redirect arguments array
-* Fixed a bug with the PayPal Standard gateway that was present when allow_url_fopen wasn't enabled
-* Removed the edd_payment post type from the WP Nav Menus
-* Added a check to the download processing function to ensure the purchase has been marked as complete
-* Fixed a padding bug on the checkout form
+* New: Added a new filter to the PayPal redirect arguments array
+* New: Added a check to the download processing function to ensure the purchase has been marked as complete
+* Fix: Bug with free downloads that happened when no payment gateway was selected
+* Fix: Padding bug on the checkout form
+* Fix: Bug that prevented large files from being able to be downloaded
+* Fix: Error that showed up when purchasing a download without any downloadable files
+* Fix: Bug with the PayPal Standard gateway that was present when allow_url_fopen wasn't enabled
+* Tweak: Removed the edd_payment post type from the WP Nav Menus
+* Tweak: Separated First and Last name fields in the payment's CSV export
+* Tweak: Improved the countries drop down field in the default CC form for payment gateways
 
 ### 1.1.2 ###
 
-* Fixed a bug with the ajax function that adds items to the cart - it did not show the price option name until page was refreshed
-* Fixed a bug in the purchase receipt that caused it to include all source file links, not just the ones set to the price option purchase
-* Added a new "class" parameter to the [purchas_link} short code
-* Moved the discount code fieldset inside of the user info fieldset on the checkout form
-* Added a legend to the user info fieldset
-* Improved the markup of the default CC fields
-* Added new edd_is_checkout() conditional function
-* Updated Spanish language files
-* Added new payment export system, thanks to MadeByMike
+* New: Added new payment export system, thanks to MadeByMike
+* New: Added a legend to the user info fieldset
+* New: Added a new "class" parameter to the [purchas_link} short code
+* New: Added new edd_is_checkout() conditional function
+* Fix: Bug with the ajax function that adds items to the cart - it did not show the price option name until page was refreshed
+* Fix: Bin the purchase receipt that caused it to include all source file links, not just the ones set to the price option purchase
+* Tweak: Moved the discount code fieldset inside of the user info fieldset on the checkout form
+* Tweak: Improved the markup of the default CC fields
+* Tweak: Updated Spanish language files
 
 ### 1.1.1 ###
 
-* Added a couple of new filters to the file download processing function
-* Fixed a couple of undefined index errors
-* Fixed a bug with the "All" filter in the Payment History page
-* Fixed an amount comparision error in the PayPal IPN processer
-* Added Japanese language files
+* New: Added a couple of new filters to the file download processing function
+* New: Added Japanese language files
+* Fix: a couple of undefined index errors
+* Fix: Bwith the "All" filter in the Payment History page
+* Fix: an amount comparision error in the PayPal IPN processer
 
 ### 1.1.0 ###
 
 * Added new French translation files, thanks for Boddhi
 * Updated default language files
-* Fixed the width of the "Email" column in the payment history page
+* Fix: the width of the "Email" column in the payment history page
 * Added payment "status" filters to the payment history page
 * Added an option to filter the payment history page by user/buyer
 * Added a "Price" column to the Downloads page
-* Fixed a bug with duplicate "Settings Updated" notices
+* Fix: Bwith duplicate "Settings Updated" notices
 * Added a missing text domain to the Settings Updated notice
-* Fixed a bug with the add-ons cache that caused them to never refresh
+* Fix: Bwith the add-ons cache that caused them to never refresh
 * Added new {receipt_id} template tag for purchase receipts
 * Improved CSS for the checkout page
 * Improved CSS for the payment method icons
@@ -640,7 +640,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 ### 1.0.9 ###
 
 * Updated the purchase/download history short codes to only show files for the price options the user has purchased
-* Fixed a bug with the file upload meta box fields
+* Fix: Bwith the file upload meta box fields
 * Added the ability to register custom payment method icons
 * Added unique IDs to P tags on the checkout form
 * Added an option to disable the PayPal IPN verification
@@ -652,7 +652,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Updated the [purchase_link] short code in the Download Configuration meta box to reflect the chosen button color
 * Updated the "Short Code" column in the list table to include the correct button color option
 * Added a new filter, edd_download_file_url_args,  for changing the arguments passed to the function that generages download URLs
-* Fixed a bug with the EDD_READ_FILE_MODE constant
+* Fix: Bwith the EDD_READ_FILE_MODE constant
 * Added a new filter to allow developers to change the redirect URL for the edd_login form
 * Improved some file / function organization
 
@@ -660,16 +660,16 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 * Added {payment_method} to the list of email template tags for showing the method of payment used for a purchase
 * Removed the menu_position attribute from the "download" post type to help prevent menu conflicts
-* Fixed a bug with the page options in settings
+* Fix: Bwith the page options in settings
 * Updated the edd_read_file() function to convert local URLs to absolute file paths
-* Fixed a bug with the [downloads] short code
+* Fix: Bwith the [downloads] short code
 * Enhanced the function for checking if a user has purchased a download to add support for checking for specific price options
-* Fixed a bug with the function that checks if a user has purchased a specific download
-* Fixed a potential bug with the "settings updated" notice that could have caused duplicate messages to be shown
+* Fix: Bwith the function that checks if a user has purchased a specific download
+* Fix: a potential bug with the "settings updated" notice that could have caused duplicate messages to be shown
 
 ### 1.0.8.4 ###
 
-* Fixed a bug with download sale/earning stats going negative when reversing purchases
+* Fix: Bwith download sale/earning stats going negative when reversing purchases
 * Removed some blank form action attributes that caused the HTML to invalidate
 * Added "Settings Updated" notification when saving plugin settings
 * Made some improvements to the default purchase receipt email template
@@ -679,7 +679,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Added a "price" parameter to the [downloads] short code
 * Improved the CSS on the variable price option forms
 * Add a parameter to the [downloads] short code for showing the complete content
-* Fixed a bug with free downloads
+* Fix: Bwith free downloads
 * Moved the function that triggers the purchase receipt to its own function/hook so that it can be modified more easily
 * Added a few new action hooks
 * Updated Spanish language files
@@ -687,15 +687,15 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 ### 1.0.8.3 ###
 
 * Added a default purchase receipt email that is used if no custom email has been defined
-* Fixed a bug with the discount codes and their usage counts not getting recorded correctly
-* Fixed a bug with the install script
-* Fixed a problem with apostrophe encoding in the purchase summary sent to PayPal
+* Fix: Bwith the discount codes and their usage counts not getting recorded correctly
+* Fix: Bwith the install script
+* Fix: a problem with apostrophe encoding in the purchase summary sent to PayPal
 * Added pagination to the download/sale log on download Edit screens
 * Added new "edd_default_downloads_name" filter for changing the default singular and plural "download" labels used globally throughout the plugin
 * Adding new span.edd-cart-item-separator to the cart widget and short code
 * Added more support for the [downloads] short code, used to display a list or grid of digital products
 * Moved load_plugin_textdomain to an "init" hook in order to work better with translation plugins
-* Fixed a couple of undefined index errors
+* Fix: a couple of undefined index errors
 * Added option to send purchase receipt when manually marked a payment as complete
 * Added new "edd_success_page_redirect" filter to the function that redirects a buyer to the success page
 * Changed the default charset in the PayPal standard gateway to that of the website
@@ -715,10 +715,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Dramatically improved the default PayPal gateway, which should help prevent payments not getting verified
 * Added edd_get_ip() and updated the user IP detection. It previously failed if the server was running SSL
 * Added missing class name to the download history table
-* Fixed a misnamed class in the purchase history table
+* Fix: a misnamed class in the purchase history table
 * Updated purchase and download history to now show download links if redownload is disabled
 * Added a new conditional called edd_no_redownload() that theme devs can use to check if redownloading of files is permitted
-* Fixed problem with improper encoding of apostrphes in purchase receipt emails
+* Fix: problem with improper encoding of apostrphes in purchase receipt emails
 * Added new edd_hook_callback() function for settings field type callbacks
 * Updated default language files with new strings for translation
 
