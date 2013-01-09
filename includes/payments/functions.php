@@ -819,18 +819,9 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 
 	if ( empty( $payment_id ) )
 		return false;
-	
+
 	do_action( 'edd_pre_insert_payment_note', $payment_id, $note );
 
-	$note_id = do_action('edd_add_payment_comment',$payment_id, $note);
-
-	do_action( 'edd_insert_payment_note', $note_id, $payment_id, $note );
-
-	return $note_id;
-
-}
-
-function edd_add_payment_comment($payment_id = 0, $note = ''){
 	$note_id = wp_insert_comment( wp_filter_comment( array(
 		'comment_post_ID'      => $payment_id,
 		'comment_content'      => $note,
@@ -845,6 +836,9 @@ function edd_add_payment_comment($payment_id = 0, $note = ''){
 		'comment_author_email' => ''
 
 	) ) );
+
+	do_action( 'edd_insert_payment_note', $note_id, $payment_id, $note );
+
 	return $note_id;
+
 }
-add_action( 'edd_insert_payment_note', 'edd_add_payment_comment' );
