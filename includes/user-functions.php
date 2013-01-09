@@ -226,17 +226,30 @@ function edd_purchase_total_of_user( $user = null ) {
 }
 
 
-function edd_count_file_downloads_of_user( $user_email ) {
+function edd_count_file_downloads_of_user( $user ) {
 
 	global $edd_logs;
 
-	$meta_query = array(
-		array(
-			'key'     => '_edd_log_user_info',
-			'value'   => $user_email,
-			'compare' => 'LIKE'
-		)
-	);
+	if( is_email( $user ) ) {
+
+		$meta_query = array(
+			array(
+				'key'     => '_edd_log_user_info',
+				'value'   => $user,
+				'compare' => 'LIKE'
+			)
+		);
+
+	} else {
+
+		$meta_query = array(
+			array(
+				'key'     => '_edd_log_user_id',
+				'value'   => $user
+			)
+		);
+
+	}
 
 	return $edd_logs->get_log_count( null, 'file_download', $meta_query );
 
