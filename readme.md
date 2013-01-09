@@ -686,41 +686,41 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ### 1.0.8.3 ###
 
-* Added a default purchase receipt email that is used if no custom email has been defined
-* Fix: Bwith the discount codes and their usage counts not getting recorded correctly
-* Fix: Bwith the install script
-* Fix: a problem with apostrophe encoding in the purchase summary sent to PayPal
-* Added pagination to the download/sale log on download Edit screens
-* Added new "edd_default_downloads_name" filter for changing the default singular and plural "download" labels used globally throughout the plugin
-* Adding new span.edd-cart-item-separator to the cart widget and short code
-* Added more support for the [downloads] short code, used to display a list or grid of digital products
-* Moved load_plugin_textdomain to an "init" hook in order to work better with translation plugins
-* Fix: a couple of undefined index errors
-* Added option to send purchase receipt when manually marked a payment as complete
-* Added new "edd_success_page_redirect" filter to the function that redirects a buyer to the success page
-* Changed the default charset in the PayPal standard gateway to that of the website
-* Added "Payment Method" to the "View Order Details" popup
-* Made ajax enabled by default
-* Reorganized the edd_complete_purchase() function to be more extensible
-* Added new constant EDD_READ_FILE_MODE for defining how download files are delivered
-* Added auto creation for .htaccess files in the uploads directory for EDD to help protect unauthorized file downloads
-* Added Turkish language files
-* Added detection for php.ini variables important to PayPal payment verification
-*** Added a new short code for showing a list of active discounts:** [download_discounts]
+* New: Added a default purchase receipt email that is used if no custom email has been defined
+* New: Added new constant EDD_READ_FILE_MODE for defining how download files are delivered
+* New: Added auto creation for .htaccess files in the uploads directory for EDD to help protect unauthorized file downloads
+* New: Added Turkish language files
+* New: Added detection for php.ini variables important to PayPal payment verification
+* New: Added a new short code for showing a list of active discounts:** [download_discounts]
+* New: Added pagination to the download/sale log on download Edit screens
+* New: Added new "edd_default_downloads_name" filter for changing the default singular and plural "download" labels used globally throughout the plugin
+* New: Adding new span.edd-cart-item-separator to the cart widget and short code
+* New: Added more support for the [downloads] short code, used to display a list or grid of digital products
+* New: Added option to send purchase receipt when manually marked a payment as complete
+* New: Added new "edd_success_page_redirect" filter to the function that redirects a buyer to the success page
+* New: Added "Payment Method" to the "View Order Details" popup
+* Fix: Bug with the discount codes and their usage counts not getting recorded correctly
+* Fix: Bug with the install script
+* Fix: Problem with apostrophe encoding in the purchase summary sent to PayPal
+* Fix: Couple of undefined index errors
+* Tweak: Moved load_plugin_textdomain to an "init" hook in order to work better with translation plugins
+* Tweak: Changed the default charset in the PayPal standard gateway to that of the website
+* Tweak: Made ajax enabled by default
+* Tweak: Reorganized the edd_complete_purchase() function to be more extensible
 
 ### 1.0.8.2 ###
 
-* Added a number_format() check to the PayPal standard gateway
-* Added the Turkish Lira to supported currencies
-* Dramatically improved the default PayPal gateway, which should help prevent payments not getting verified
-* Added edd_get_ip() and updated the user IP detection. It previously failed if the server was running SSL
-* Added missing class name to the download history table
-* Fix: a misnamed class in the purchase history table
-* Updated purchase and download history to now show download links if redownload is disabled
-* Added a new conditional called edd_no_redownload() that theme devs can use to check if redownloading of files is permitted
-* Fix: problem with improper encoding of apostrphes in purchase receipt emails
-* Added new edd_hook_callback() function for settings field type callbacks
-* Updated default language files with new strings for translation
+* New: Added a number_format() check to the PayPal standard gateway
+* New: Added the Turkish Lira to supported currencies
+* New: Added new edd_hook_callback() function for settings field type callbacks
+* New: Added edd_get_ip() and updated the user IP detection. It previously failed if the server was running SSL
+* New: Added missing class name to the download history table
+* New: Added a new conditional called edd_no_redownload() that theme devs can use to check if redownloading of files is permitted
+* Fix: Problem with improper encoding of apostrphes in purchase receipt emails
+* Fix: A misnamed class in the purchase history table
+* Tweak: Updated purchase and download history to now show download links if redownload is disabled
+* Tweak: Dramatically improved the default PayPal gateway, which should help prevent payments not getting verified
+* Tweak: Updated default language files with new strings for translation
 
 ### 1.0.8.1 ###
 
