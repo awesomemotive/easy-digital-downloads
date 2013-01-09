@@ -165,14 +165,20 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
-= 1.4.1 =
+= 1.4.1: January , 2013 =
 
-* New: Travis now autoloads all of EDD (props @chriscct7)
 * New: Added .apk support (props @chriscct7)
-* Fix: Double Click Required JS issue (props @chriscct7)
 * Tweak: Post save/update messages now can be translated (props @chriscct7)
-* Tweak: WP_Sessions removed temporarily (props @chriscct7)
 * Tweak: Changelogs cleaned up (props @chriscct7)
+* Fix: An issue with the checkout page on sites with HTTPS and PayPal Standard
+
+= 1.4.0.3: January 1, 2013 =
+* New: Travis now autoloads all of EDD (props @chriscct7)
+* Fix: Double Click Required JS issue (props @chriscct7)
+* Fix: Problem with pending purchases showing in user's purchase history
+* Fix: Error with the dashboard summary widget for previous month (if current month is Jan)
+* Fix: Issue with guests and discount codes
+* Tweak: WP_Sessions removed temporarily (props @chriscct7)
 
 = 1.4.0.2 =
 
@@ -893,14 +899,20 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Upgrade Notice ==
 
-= 1.4.1 =
+= 1.4.1: January , 2013 =
 
-* New: Travis now autoloads all of EDD (props @chriscct7)
 * New: Added .apk support (props @chriscct7)
-* Fix: Double Click Required JS issue (props @chriscct7)
 * Tweak: Post save/update messages now can be translated (props @chriscct7)
-* Tweak: WP_Sessions removed temporarily (props @chriscct7)
 * Tweak: Changelogs cleaned up (props @chriscct7)
+* Fix: An issue with the checkout page on sites with HTTPS and PayPal Standard
+
+= 1.4.0.3: January 1, 2013 =
+* New: Travis now autoloads all of EDD (props @chriscct7)
+* Fix: Double Click Required JS issue (props @chriscct7)
+* Fix: Problem with pending purchases showing in user's purchase history
+* Fix: Error with the dashboard summary widget for previous month (if current month is Jan)
+* Fix: Issue with guests and discount codes
+* Tweak: WP_Sessions removed temporarily (props @chriscct7)
 
 = 1.4.0.2 =
 
