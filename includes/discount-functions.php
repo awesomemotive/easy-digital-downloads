@@ -783,7 +783,7 @@ function edd_set_cart_discount( $code = '' ) {
 		$discounts[] = $code;
 	}
 
-	setcookie( 'wordpress_edd_cart_discount', serialize( $discounts ), time()+3600, COOKIEPATH, COOKIE_DOMAIN, false );
+	setcookie( 'wordpress_edd_cart_discount', implode( '|', $discounts ), time()+3600, COOKIEPATH, COOKIE_DOMAIN, false );
 
 	return $discounts;
 }
@@ -803,7 +803,7 @@ function edd_unset_cart_discount( $code = '' ) {
 	if( $discounts ) {
 		$key = array_search( $code, $discounts );
 		unset( $discounts[ $key ] );
-		$discounts = serialize( array_values( $discounts ) );
+		$discounts = implode( '|', array_values( $discounts ) );
 		// update the active discounts
 		setcookie( 'wordpress_edd_cart_discount', $discounts, time()+3600, COOKIEPATH, COOKIE_DOMAIN, false );
 	}
@@ -833,7 +833,7 @@ function edd_unset_all_cart_discounts() {
  * @return      array The active discount codes
  */
 function edd_get_cart_discounts() {
-	$discounts = isset( $_COOKIE['wordpress_edd_cart_discount'] ) ? maybe_unserialize( $_COOKIE['wordpress_edd_cart_discount'] ) : false;
+	$discounts = isset( $_COOKIE['wordpress_edd_cart_discount'] ) ? explode( '|', $_COOKIE['wordpress_edd_cart_discount'] ) : false;
 	return $discounts;
 }
 
