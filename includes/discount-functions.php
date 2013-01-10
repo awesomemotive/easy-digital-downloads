@@ -839,6 +839,22 @@ function edd_get_cart_discounts() {
 
 
 /**
+ * Check if the cart has any active discounts applied to it
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      bool
+ */
+
+function edd_cart_has_discounts() {
+	$ret = false;
+	if( edd_get_cart_discounts() )
+		$ret = true;
+	return apply_filters( 'edd_cart_has_discounts', $ret );
+}
+
+
+/**
  * Show the fully formatted cart discount
  *
  * @access      public
