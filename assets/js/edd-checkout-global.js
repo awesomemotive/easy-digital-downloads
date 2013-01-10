@@ -103,12 +103,12 @@ jQuery(document).ready(function($) {
         }
 
         if (edd_email == '' && edd_email != 'undefined') {
-            alert(edd_scripts.no_email);
+            alert(edd_global_vars.no_email);
             return false;
         }
 
         if(edd_email == 'undefined' && edd_user == '') {
-            alert(edd_scripts.no_username);
+            alert(edd_global_vars.no_username);
             return false;
         }
 
@@ -117,14 +117,14 @@ jQuery(document).ready(function($) {
             code: discount_code,
             email: edd_email,
             user: edd_user,
-            nonce: edd_scripts.ajax_nonce
+            nonce: edd_global_vars.checkout_nonce
         };
 
         $.ajax({
             type: "POST",
             data: postData,
             dataType: "json",
-            url: edd_scripts.ajaxurl,
+            url: edd_global_vars.ajaxurl,
             success: function (discount_response) {
                 if( discount_response ) {
                     if (discount_response.msg == 'valid') {
