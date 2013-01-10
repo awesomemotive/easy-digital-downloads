@@ -679,11 +679,14 @@ function edd_is_discount_valid( $code = '', $user = '' ) {
  *
  * @access      public
  * @since       1.0
- * @param        $code string The discount code to retrieve an ID for
+ * @param       $code string The discount code to retrieve an ID for
  * @return      int
  */
 function edd_get_discount_id_by_code( $code ) {
-	return edd_get_discount_by_code( $code )->ID;
+	$discount = edd_get_discount_by_code( $code );
+	if( $discount )
+		return $discount->ID;
+	return false;
 }
 
 
