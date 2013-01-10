@@ -862,9 +862,11 @@ function edd_cart_has_discounts() {
  * @return      float
  */
 
-function edd_get_cart_discounted_amount() {
+function edd_get_cart_discounted_amount( $discounts = false ) {
 
-	$discounts = edd_get_cart_discounts();
+	if( empty( $discounts ) )
+		$discounts = edd_get_cart_discounts();
+
 	if( empty( $discounts ) )
 		return 0.00;
 
