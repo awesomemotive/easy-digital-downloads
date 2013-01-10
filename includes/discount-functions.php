@@ -871,7 +871,7 @@ function edd_get_cart_discounted_amount() {
 	$subtotal  = edd_get_cart_subtotal();
 	$amounts   = array();
 	foreach( $discounts as $discount ) {
-		$amounts[] = edd_get_discounted_amount( $code, $subtotal );
+		$amounts[] = edd_get_discounted_amount( $discount, $subtotal );
 	}
 
 	$discount_amount = array_sum( $amounts );
