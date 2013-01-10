@@ -119,20 +119,19 @@ function edd_ajax_apply_discount() {
 				$amount   = edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) );
 				$total    = edd_get_discounted_amount( $_POST['code'], $price );
 
-				$return = array(
-					'msg' => 'valid',
-					'amount' => $amount,
-					'total' => edd_currency_filter( edd_format_amount( $total ) ),
-					'code' => $_POST['code']
-				);
+				$discounts = edd_set_cart_discount( $_POST['code'] );
 
-				edd_set_cart_discount( $_POST['code'] );
+				$return = array(
+					'msg'    => 'valid',
+					'amount' => $amount,
+					'total'  => edd_currency_filter( edd_format_amount( $total ) ),
+					'code'   => $_POST['code'],
+					'html'   => edd_get_cart_discounts_html( $discounts )
+				);
 
 			} else {
 
 				$return['msg']  = __('The discount you entered is invalid', 'edd');
-
-				edd_set_cart_discount( null );
 
 			}
 		}
