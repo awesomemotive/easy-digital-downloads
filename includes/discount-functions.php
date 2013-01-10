@@ -959,3 +959,27 @@ function edd_display_cart_discount( $formatted = false, $echo = false ) {
 		echo $amount;
 	return $amount;
 }
+
+
+/**
+ * Processes a remove discount from cart request
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      void
+ */
+
+function edd_remove_cart_discount() {
+	if( ! isset( $_GET['discount_id'] ) || ! isset( $_GET['discount_code'] ) )
+		return;
+
+	do_action( 'edd_pre_remove_cart_discount', absint( $_GET['discount_id'] ) );
+
+	edd_unset_cart_discount( urldecode( $_GET['discount_code'] ) );
+
+	do_action( 'edd_post_remove_cart_discount', absint( $_GET['discount_id'] ) );
+
+	wp_redirect( edd_get_checkout_uri() ); exit;
+
+}
+add_action( 'edd_remove_cart_discount', 'edd_remove_cart_discount' );
