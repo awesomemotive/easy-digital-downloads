@@ -882,6 +882,62 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 	return edd_sanitize_amount( $subtotal );
 }
 
+
+/**
+ * Outputs the HTML for all discounts applied to the car
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      void
+ */
+
+function edd_cart_discounts_html() {
+	echo edd_get_cart_discounts_html();
+}
+
+
+/**
+ * Retrieves the HTML for all discounts applied to the car
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      string
+ */
+
+function edd_get_cart_discounts_html( $discounts = false ) {
+
+	if( ! $discounts )
+		$discounts = edd_get_cart_discounts();
+
+	if( ! $discounts )
+		return;
+
+	$html = '';
+
+	foreach( $discounts as $discount ) {
+
+		$discount_id  = edd_get_discount_id_by_code( $discount );
+		$rate         = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
+
+		$remove_url   = add_query_arg(
+			array(
+				'edd_action'    => 'remove_cart_discount',
+				'discount_id'   => $discount_id,
+				'discount_code' => $discount
+			),
+			edd_get_checkout_uri()
+		);
+
+		$html .= "<span class=\"edd_discount\">\n";
+			$html .= "<span class=\"edd_discount_rate\">$discount&nbsp;&ndash;&nbsp;$rate</span>\n";
+			$html .= "<a href=\"$remove_url\" data-code=\"$discount\" class=\"edd_discount_remove\">x</a>\n";
+		$html .= "</span>\n";
+	}
+
+	return $html;
+}
+
+
 /**
  * Show the fully formatted cart discount
  *
