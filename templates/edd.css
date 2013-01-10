@@ -15,7 +15,8 @@
 #edd_checkout_cart { text-align: left; width: 100%; border-top: 1px solid #f0f0f0; border-bottom: none; margin: 0 0 10px; }
 #edd_checkout_cart th,
 #edd_checkout_cart td { text-align: left; padding: 3px 5px; border-bottom: 1px solid #f0f0f0; border-top: none; color: #666; }
-#edd_checkout_cart .edd_cart_tax_row th { background: #f9f9f9; }
+#edd_checkout_cart .edd_cart_tax_row th,
+#edd_checkout_cart .edd_cart_discount_row th { background: #f9f9f9; }
 #edd_checkout_cart th { font-weight: bold; background: #f5f5f5; }
 #edd_checkout_cart td { line-height: 25px; vertical-align: middle; }
 #edd_checkout_cart th.edd_cart_actions,
