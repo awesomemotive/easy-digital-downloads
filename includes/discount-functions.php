@@ -855,6 +855,32 @@ function edd_cart_has_discounts() {
 
 
 /**
+ * Retrieves the total discounted amount on the cart
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      float
+ */
+
+function edd_get_cart_discounted_amount() {
+
+	$discounts = edd_get_cart_discounts();
+	if( empty( $discounts ) )
+		return 0.00;
+
+	$subtotal  = edd_get_cart_subtotal();
+	$amounts   = array();
+	foreach( $discounts as $discount ) {
+		$amounts[] = edd_get_discounted_amount( $code, $subtotal );
+	}
+
+	$discount_amount = array_sum( $amounts );
+	$subtotal -= $discount_amount;
+
+	return edd_sanitize_amount( $subtotal );
+}
+
+/**
  * Show the fully formatted cart discount
  *
  * @access      public
