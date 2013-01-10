@@ -84,7 +84,6 @@ jQuery(document).ready(function($) {
     });
 
     /* Discounts */
-    // For tricksters
     var before_discount = $('.edd_cart_amount').text();
     $('#edd_checkout_form_wrap').on('change', '#edd-email', function (event) {
         $('.edd_cart_amount').html(before_discount);
