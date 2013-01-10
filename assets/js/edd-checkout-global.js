@@ -97,6 +97,7 @@ jQuery(document).ready(function($) {
             discount_code = $('#edd-discount').val(),
             edd_email = $('#edd-email').val();
             edd_user = $('#edd_user_login').val();
+
         if (discount_code == '') {
             return false;
         }
