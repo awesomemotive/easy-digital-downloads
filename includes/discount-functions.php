@@ -888,7 +888,7 @@ function edd_get_cart_discounted_amount() {
  * @return      string
  */
 
-function edd_cart_discount( $echo = false ) {
+function edd_display_cart_discount( $formatted = false, $echo = false ) {
 
 	$discounts = edd_get_cart_discounts();
 	if( empty( $discounts ) )
