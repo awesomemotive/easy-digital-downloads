@@ -303,9 +303,9 @@ function edd_register_settings() {
 					'type' => 'checkbox'
 				),
 				array(
-					'id' => 'taxes_before_discounts',
-					'name' => __('Calculate Tax Before Discounts?', 'edd'),
-					'desc' => __('Taxes are calculated after discounts are applied. Check this if you\'d like taxes calculated first.', 'edd'),
+					'id' => 'taxes_after_discounts',
+					'name' => __('Calculate Tax After Discounts?', 'edd'),
+					'desc' => __('Check this if you would like taxes calculated after discounts. By default taxes are calculated before discounts are applied.', 'edd'),
 					'type' => 'checkbox'
 				)
 			)
