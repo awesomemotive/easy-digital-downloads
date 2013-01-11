@@ -63,6 +63,20 @@ function edd_taxes_on_prices() {
 
 
 /**
+ * Calculate taxes before or after discounts?
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      bool
+*/
+
+function edd_taxes_after_discounts() {
+	global $edd_options;
+	return apply_filters( 'edd_taxes_after_discounts', isset( $edd_options['taxes_after_discounts'] ) );
+}
+
+
+/**
  * Get taxation rate
  *
  * @access      public
