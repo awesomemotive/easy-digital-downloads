@@ -386,6 +386,29 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 /**
  * Get Total Cart Amount
  *
+ * Returns amount after taxes and discounts
+ *
+ * @access      public
+ * @since       1.4.1
+ * @param       $discounts - Array of discounts to apply (needed during ajax processes)
+ * @return      float - The cart amount
+*/
+
+function edd_get_cart_total( $discounts = false ) {
+
+	$subtotal = edd_get_cart_subtotal();
+	$cart_tax = edd_get_cart_tax( $subtotal );
+	$discount = edd_get_cart_discounted_amount( $discounts );
+	$total    = $subtotal + $cart_tax - $discount;
+
+	return (float) apply_filters( 'edd_get_cart_total', $total );
+
+}
+
+
+/**
+ * Get Total Cart Amount
+ *
  * Gets the fully formatted total price amount in the cart.
  * uses edd_get_cart_amount().
  *
@@ -396,7 +419,7 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 
 function edd_cart_total( $echo = true ) {
 
-	$total = apply_filters( 'edd_cart_total', edd_currency_filter( edd_format_amount( edd_get_cart_amount() ) ) );
+	$total = apply_filters( 'edd_cart_total', edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ) );
 
 	if( $echo )
 		echo $total;
