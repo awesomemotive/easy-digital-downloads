@@ -301,6 +301,12 @@ function edd_register_settings() {
 					'name' => __('Tax in Prices', 'edd'),
 					'desc' => __('Include taxes in individual product prices?', 'edd'),
 					'type' => 'checkbox'
+				),
+				array(
+					'id' => 'taxes_after_discounts',
+					'name' => __('Calculate Tax After Discounts?', 'edd'),
+					'desc' => __('Check this if you would like taxes calculated after discounts. By default taxes are calculated before discounts are applied.', 'edd'),
+					'type' => 'checkbox'
 				)
 			)
 		),

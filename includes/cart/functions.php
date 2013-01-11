@@ -398,7 +398,7 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 function edd_get_cart_total( $discounts = false ) {
 
 	$subtotal = edd_get_cart_subtotal();
-	$cart_tax = edd_get_cart_tax( $subtotal );
+	$cart_tax = edd_get_cart_tax( $discounts );
 	$discount = edd_get_cart_discounted_amount( $discounts );
 	$total    = $subtotal + $cart_tax - $discount;
 
@@ -457,15 +457,22 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
  *
  * @access      public
  * @since       1.2.3
+ * @param       $discounts Array of discounts to take into account (required for ajax processes)
  * @return      string
 */
 
-function edd_get_cart_tax() {
+function edd_get_cart_tax( $discounts = false ) {
 
 	if( ! edd_use_taxes() )
 		return 0;
 
+
 	$cart_sub_total = edd_get_cart_subtotal();
+
+	if( edd_taxes_after_discounts() ) {
+		$cart_sub_total -= edd_get_cart_discounted_amount( $discounts );
+	}
+
 	$cart_tax 		= edd_calculate_tax( $cart_sub_total );
 	$cart_tax 		= number_format( $cart_tax, 2 );
 
