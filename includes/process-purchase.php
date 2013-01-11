@@ -79,10 +79,10 @@ function edd_process_purchase_form() {
 	// Setup purchase information
 	$purchase_data = array(
 		'downloads' 	=> edd_get_cart_contents(),
-		'subtotal'		=> edd_get_cart_amount( false ), 	// Amount before taxes
+		'subtotal'		=> edd_get_cart_subtotal(),		 	// Amount before taxes and discounts
 		'discount'		=> edd_get_cart_discounted_amount(),// Discounted amount
 		'tax'			=> edd_get_cart_tax(), 				// Taxed amount
-		'price' 		=> edd_get_cart_amount(), 			// Amount after taxes
+		'price' 		=> edd_get_cart_total(), 			// Amount after taxes
 		'purchase_key' 	=> strtolower( md5( uniqid() ) ), 	// Random key
 		'user_email' 	=> $user['user_email'],
 		'date' 			=> date( 'Y-m-d H:i:s' ),
