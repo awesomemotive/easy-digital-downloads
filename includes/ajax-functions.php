@@ -114,12 +114,10 @@ function edd_ajax_apply_discount() {
 
 			if( edd_is_discount_valid( $_POST['code'], $user ) ) {
 
-				$price    = edd_get_cart_amount();
-				$discount = edd_get_discount_by_code( $_POST['code'] );
-				$amount   = edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) );
-				$total    = edd_get_discounted_amount( $_POST['code'], $price );
-
+				$discount  = edd_get_discount_by_code( $_POST['code'] );
+				$amount    = edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) );
 				$discounts = edd_set_cart_discount( $_POST['code'] );
+				$total     = edd_get_cart_total( $discounts );
 
 				$return = array(
 					'msg'    => 'valid',
