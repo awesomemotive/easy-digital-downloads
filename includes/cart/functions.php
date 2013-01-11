@@ -465,7 +465,13 @@ function edd_get_cart_tax() {
 	if( ! edd_use_taxes() )
 		return 0;
 
+
 	$cart_sub_total = edd_get_cart_subtotal();
+
+	if( edd_taxes_after_discounts() ) {
+		$cart_sub_total -= edd_get_cart_discounted_amount();
+	}
+
 	$cart_tax 		= edd_calculate_tax( $cart_sub_total );
 	$cart_tax 		= number_format( $cart_tax, 2 );
 
