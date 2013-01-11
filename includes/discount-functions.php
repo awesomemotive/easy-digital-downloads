@@ -933,7 +933,7 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 
 		$html .= "<span class=\"edd_discount\">\n";
 			$html .= "<span class=\"edd_discount_rate\">$discount&nbsp;&ndash;&nbsp;$rate</span>\n";
-			$html .= "<a href=\"$remove_url\" data-code=\"$discount\" class=\"edd_discount_remove\">x</a>\n";
+			$html .= "<a href=\"$remove_url\" data-code=\"$discount\" class=\"edd_discount_remove\"></a>\n";
 		$html .= "</span>\n";
 	}
 
