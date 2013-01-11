@@ -1,12 +1,14 @@
 === Easy Digital Downloads ===
 Author URI: http://pippinsplugins.com
 Plugin URI: http://easydigitaldownloads.com
-Contributors: mordauk, sksmatt, sunnyratilal, SpencerFinnell, Chriscct7
+Contributors: mordauk, sksmatt, sunnyratilal, SpencerFinnell, chriscct7
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.3
 Tested up to: 3.5
-Stable Tag: 1.4.0.3
+
+Stable Tag: 1.4.0.2
+License: GNU Version 2 or Any Later Version
 
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -172,7 +174,12 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Changelogs cleaned up (props @chriscct7)
 * Fix: An issue with the checkout page on sites with HTTPS and PayPal Standard
 
-= 1.4.0.3: January 1, 2013 =
+= 1.4.0.4: January 3, 2013 =
+
+* Fix: File missing that makes the profile editor shortcode work (props @chriscct7)
+
+= 1.4.0.3: January 2, 2013 =
+
 * New: Travis now autoloads all of EDD (props @chriscct7)
 * Fix: Double Click Required JS issue (props @chriscct7)
 * Fix: Problem with pending purchases showing in user's purchase history
@@ -180,17 +187,17 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Issue with guests and discount codes
 * Tweak: WP_Sessions removed temporarily (props @chriscct7)
 
-= 1.4.0.2 =
+= 1.4.0.2: December 28, 2012 =
 
 * Fix: An issue with the checkout page on sites with HTTPS and PayPal Standard
 
-= 1.4.0.1 =
+= 1.4.0.1: December 27, 2012 =
 
 * Fix: An issue with purchase receipts sending
 * Fix: Issue with registration / login forms not showing on checkout
 * Fix: An undefined index on the discounts page
 
-= 1.4 =
+= 1.4: December 27, 2012 =
 
 * New: Converted coupons to a custom post type
 * New: Dummy XML File
@@ -229,11 +236,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Converted Discount Admin Page to WP List Table
 * Tweak: Rewrote main plugin file to use a singleton OOP approach
 
-= 1.3.4.3 =
+= 1.3.4.3: December 06, 2012 =
 
 * Fix: Fatal error in PayPal
 
-= 1.3.4.2 =
+= 1.3.4.2: December 06, 2012 =
 
 * New: {fullname} email template tag
 * Fix: a potential issue with jQuery validation of the checkout form
@@ -243,12 +250,12 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Made a JS file only load on the checkout page instead of all pages
 * Tweak: Reverted back to $_SESSION based storage as WP_Session isn't quite ready for use yet
 
-= 1.3.4.1 =
+= 1.3.4.1: December 1, 2012 =
 
 * Fix: Major bug in PayPal standard gateway introduced in 1.3.4
 * Tweak: Updated French langauge files
 
-= 1.3.4 =
+= 1.3.4: December 1, 2012 =
 
 * New: Option for defining the emails that receive admin sale notifications
 * New: edd_item_in_cart filter
@@ -279,7 +286,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Improved PayPal IPN processing with new do_action() hooks for each transaction type
 * Tweak: Rebuilt Payment History page to use better core UI standards
 
-= 1.3.3 =
+= 1.3.3: November 15, 2012 =
 
 * New: Tax system for calculating simple taxes on purchases
 * New: Added error / payment failure logging to PayPal standard gateway
@@ -298,7 +305,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Improved logic for determing the lower price on variable priced downloads
 * Tweak: Improved stylesheet loading
 
-= 1.3.2.1 =
+= 1.3.2.1: November 06, 2012 =
 
 * New: Added basic pagination to the [downloads] short code
 * New: Added new "edd_checkout_form_bottom" hook
@@ -317,8 +324,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated checkout login/register fields to be attached via actions
 * Tweak: Upgraded Colorbox to v1.3.20
 
-= 1.3.2 =
-
+= 1.3.2: October 31, 2012 =
 
 * New: Added Total Earnings For Period Shown to Reports page
 * New: Added ability to filter payments by username
@@ -345,7 +351,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated the checkout form to load the payment forms automatically when selecting a payment method
 * Tweak: Updated French language files
 
-= 1.3.1 =
+= 1.3.1: October 22, 2012 =
 
 * New: Added new file download limit option to limit the number of times buyers can download files
 * New: Added upgrade routine for converting old file download and purchase logs to the new EDD_Logging class
@@ -363,7 +369,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Removed unnecessary parameters for register_post_type()
 * Tweak: Code formatting improvements
 
-= 1.3 =
+= 1.3: October 11, 2012 =
 
 * New: edd_before_download_content hook
 * New: edd_purchase_history_files hook
@@ -390,7 +396,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated French translation files and default language files
 * Tweak: Significant cleanup of code formatting and adherence of WordPress coding standards
 
-= 1.2.2 =
+= 1.2.2: September 25, 2012 =
 
 * New: Added a check to prevent users from deleting all price/download files in download configuration
 * New: Added WPML config file for more WPML compatibility
@@ -410,7 +416,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated download configuration with brand new UI and simplified options
 * Tweak: Removed button text / style from Download Configuration
 
-= 1.2.1.1 =
+= 1.2.1.1: September 19, 2012 =
 
 * New: Added a new filter for edd_receipt_attachments
 * Fix: Bug with the earnings per day graph
@@ -418,7 +424,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Security exploit that made it possible for malicious users to purchase variable priced items for free
 * Tweak: Improved extendability of payment form
 
-= 1.2.1 =
+= 1.2.1: September 17, 2012 =
 
 * New: Added new filters to the taxonomy args for download categories and tags
 * New: Added a new "Product Notes" meta box to the Edit Download page
@@ -429,7 +435,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Some problems with international number formatting
 * Tweak: Updated German translation
 
-= 1.2 =
+= 1.2: September 15, 2012 =
 
 * New: Added reset styles to default fieldsets to account for themes without fieldset styling
 * New: Added new Date and Time to the View Details purchase popup
@@ -483,7 +489,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated [purchase_collection] to support custom link text
 * Tweak: Improved the edd_delete_purchase() function
 
-= 1.1.8 =
+= 1.1.8: September 13, 2012 =
 
 * Fix: a major bug with discount codes not being accepted
 * Fix: Bin the PDF reports
@@ -491,7 +497,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Improved URL > path conversion for locally stored download files
 * Improved organization of email templating functions
 
-= 1.1.7 =
+= 1.1.7: August 29, 2012 =
 
 * New: Added option to set minimum purchase amount required before discount can be applied
 * New: Added filters to all discount validation functions for developers
@@ -500,7 +506,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Improved data sanitization to discount creation / edit forms
 * Tweak: Removed the "type" column from the discounts page
 
-= 1.1.6 =
+= 1.1.6: August 28, 2012 =
 
 * New: Added the name of the buyer to the admin purchase notifications
 * New: Added a new setting for "Complete Purchase" button text
@@ -523,16 +529,16 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated French translation files
 * Tweak: Removed call by reference in edd_scan_folders()
 
-= 1.1.5.2 =
+= 1.1.5.2: August 22, 2012 =
 
 * Fix: Call-by-reference error
 * Fix: Problem with zero-byte downloads
 
-= 1.1.5.1 =
+= 1.1.5.1: August 20, 2012 =
 
 * Fix: Bug with file downloads
 
-= 1.1.5 =
+= 1.1.5: August 20, 2012 =
 
 * New: Added new edd_get_current_page_url() function
 * New: Added a new option for showing download links on the success page after completing a payment
@@ -551,7 +557,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Made the edd_payment post type not public
 * Tweak: Updated French language files
 
-= 1.1.4.1 =
+= 1.1.4.1: August 07, 2012 =
 
 * New: Added "order" and "orderby" parameters to the [downloads] short code
 * New: Added support for .mobi files
@@ -563,7 +569,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Removed a conditional check for the jQuery library as it was causing problems with jQuery not loading
 * Tweak: Removed deprecated get_magic_quotes_runtime()
 
-= 1.1.4.0 =
+= 1.1.4.0: July 31, 2012 =
 
 * New: Added Quick Edit ability to the Download Price option
 * New: Added a new PDF Report generation feature for Sales and Earnings, thanks to SunnyRatilal
@@ -587,17 +593,17 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Update the date in purchase receipts to reflect the date_format setting in WordPress
 * Tweak: Improved the formatting of country names
 
-= 1.1.3.2 =
+= 1.1.3.2: July 20, 2012 =
 
 * New: Added two new action hooks to the reports page
 * Fix: Minor bug with the PayPal IPN listener
 * Fix: Minor bug with the function that checks for a valid discount
 
-= 1.1.3.1 =
+= 1.1.3.1: July 18, 2012 =
 
 * Fix: Bug that caused complete CC fields to show when only one gateway was enabled
 
-= 1.1.3 =
+= 1.1.3: July 18, 2012 =
 
 * New: Added a new filter to the PayPal redirect arguments array
 * New: Added a check to the download processing function to ensure the purchase has been marked as complete
@@ -610,7 +616,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Separated First and Last name fields in the payment's CSV export
 * Tweak: Improved the countries drop down field in the default CC form for payment gateways
 
-= 1.1.2 =
+= 1.1.2: July 16, 2012 =
 
 * New: Added new payment export system, thanks to MadeByMike
 * New: Added a legend to the user info fieldset
@@ -622,7 +628,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Improved the markup of the default CC fields
 * Tweak: Updated Spanish language files
 
-= 1.1.1 =
+= 1.1.1: July 10, 2012 =
 
 * New: Added a couple of new filters to the file download processing function
 * New: Added Japanese language files
@@ -630,7 +636,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Bug with the "All" filter in the Payment History page
 * Fix: an amount comparision error in the PayPal IPN processer
 
-= 1.1.0 =
+= 1.1.0: July 07, 2012 =
 
 * New: Added new French translation files, thanks for Boddhi
 * New: Added a new "upload" callback for settings field types
@@ -650,7 +656,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated edd_sert_payment() to apply the date of the payment to the post_date field
 * Tweak: Updated default language files
 
-= 1.0.9 =
+= 1.0.9: July 03, 2012 =
 
 * New: Added labels above the file name and file URL fields to help users using browsers without placeholder support
 * New: Added the ability to register custom payment method icons
@@ -669,7 +675,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated the "Short Code" column in the list table to include the correct button color option
 * Tweak: Improved some file / function organization
 
-= 1.0.8.5 =
+= 1.0.8.5: June 28, 2012 =
 
 * New: Added {payment_method} to the list of email template tags for showing the method of payment used for a purchase
 * Fix: Bug with the page options in settings
@@ -680,7 +686,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Removed the menu_position attribute from the "download" post type to help prevent menu conflicts
 * Tweak: Updated the edd_read_file() function to convert local URLs to absolute file paths
 
-= 1.0.8.4 =
+= 1.0.8.4: June 24, 2012 =
 
 * New: Added a few new action hooks
 * New: Added "Settings Updated" notification when saving plugin settings
@@ -697,7 +703,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Removed some blank form action attributes that caused the HTML to invalidate
 * Tweak: Removed the "You have already purchased this" message from the purchase link short code / template
 
-= 1.0.8.3 =
+= 1.0.8.3: June 15, 2012 =
 
 * New: Added a default purchase receipt email that is used if no custom email has been defined
 * New: Added new constant EDD_READ_FILE_MODE for defining how download files are delivered
@@ -721,7 +727,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Made ajax enabled by default
 * Tweak: Reorganized the edd_complete_purchase() function to be more extensible
 
-= 1.0.8.2 =
+= 1.0.8.2: May 31, 2012 =
 
 * New: Added a number_format() check to the PayPal standard gateway
 * New: Added the Turkish Lira to supported currencies
@@ -735,7 +741,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Dramatically improved the default PayPal gateway, which should help prevent payments not getting verified
 * Tweak: Updated default language files with new strings for translation
 
-= 1.0.8.1 =
+= 1.0.8.1: May 28, 2012 =
 
 * New: Added a new option for marking a payment as "refunded". The refund process must be done through the payment gateway still. When payments are marked as "refunded", the sales and earnings stats will be adjusted accordingly.
 * New: Added an alert message to the "Delete Payment" link
@@ -751,7 +757,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated admin CSS to add custom background color to refunded payments
 * Tweak: Updated French language files
 
-= 1.0.8 =
+= 1.0.8: May 22, 2012 =
 
 * New: Added the [purchase_history] shortcode for showing a detailed list of user's purchases
 * New: Added the edd_get_checkout_uri() function for use by themes
@@ -761,7 +767,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Dramatically improved code documentation
 * Tweak: Improved the names of the widgets
 
-= 1.0.7.2 =
+= 1.0.7.2: May 17, 2012 =
 
 * New: Added a new EDD Categories / Tags widget
 * New: Added an enhancement to the cart widget that causes the "Purchase" button to reset when removing an item from the cart
@@ -771,7 +777,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Removed old stripe.js code that is no longer used
 * Tweak: Removed duplicated code from payments history page
 
-= 1.0.7.1 =
+= 1.0.7.1: May 11, 2012 =
 
 * New: Added a second instance do_action('edd_purchase_form_user_info') to the checkout registration form
 * New: Added a wrapper div.edd-cart-ajax-alert around the message that shows when an item has been added to the cart
@@ -781,7 +787,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Small bug wit the edd_remove_item_url() present when on a 404 error page. Props to Sksmatt
 * Tweak: Updated the edd_purchase_link() function to automatically detect chosen link styles and colors
 
-= 1.0.7 =
+= 1.0.7: May 08, 2012 =
 
 * New: edd_has_variable_prices() function
 * New: Added missing "required" classes to the checkout login form
@@ -792,7 +798,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated French language files
 * Tweak: Improved the edd_price() function to take into account products with variable prices
 
-= 1.0.6 =
+= 1.0.6: May 06, 2012 =
 
 *** NOTE:** if you have modified the checkout_cart.php template via your theme, please consider updating it with the new version as many things have changed.
 * New: Added missing element classes to the cart widget, checkout cart, and more
@@ -814,7 +820,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Dramatically improved the CSS of the checkout page.
 * Tweak: When purchasing a product with variable prices, the selected price option name is now shown on the checkout page
 
-= 1.0.5 =
+= 1.0.5: May 01, 2012 =
 
 * New: Variable pricing option for downloads
 * New: Added new {price} template tag for emails
@@ -832,12 +838,12 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Improved the download metabox layout
 * Tweak: Updated the French language files
 
-= 1.0.4.1 =
+= 1.0.4.1: April 27, 2012 =
 
 * New: Download post type icon
 * Fix: Missing add-ons.php file
 
-= 1.0.4 =
+= 1.0.4: April 26, 2012 =
 
 * New: "Add Ons" page for viewing all available add-ons for the plugin
 * New: Two new filters for currencies that allow developers to add their own currencies
@@ -845,7 +851,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Added language files for Spanish
 * Tweak: Improvements to the "empty cart" message. It can now be customized via a filter
 
-= 1.0.3 =
+= 1.0.3: April 21, 2012 =
 
 * New: Added first and last name fields to the checkout registration form.
 * New: Option to include an "Agree to terms" to the checkout.
@@ -857,7 +863,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Improved country list formatting.
 * Tweak: Improved the price input field to make it more clear and help prevent improper price formats.
 
-= 1.0.2 =
+= 1.0.2: April 19, 2012 =
 
 * New: An option to delete payments
 * New: Featured thumbnails to checkout cart
@@ -869,16 +875,16 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Improved checkout CSS to help prevent conflicts
 * Tweak: Moved payment action links to beneath the payment email to better match WordPress core
 
-= 1.0.1.4 =
+= 1.0.1.4: April 17, 2012 =
 
 * New: The Italian language files, thanks to Marco.
 * Fix: A bug with the "Add New" button for download source files.
 
-= 1.0.1.3 =
+= 1.0.1.3: Early April =
 
 * Fix: A bug with the checkout login / register forms
 
-= 1.0.1.2 =
+= 1.0.1.2: Early April =
 
 * New: German translation, thanks to David Decker.
 * New: Partial European Portuguese translation, thanks to Takssista.
@@ -886,15 +892,14 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: A bug where sales / earnings counts were increased before a purchase was confirmed.
 * Fix: A bug with the checkout registration / login forms.
 
-= 1.0.1.1 =
+= 1.0.1.1: Early April =
 
 * New: Inclusion of INR as an available currency.
 * Fix: Updates to the default.po file for missing strings.
 
-= 1.0 =
+= 1.0: Early April =
 
 * First offical release!
-
 
 
 == Upgrade Notice ==
@@ -907,7 +912,12 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Changelogs cleaned up (props @chriscct7)
 * Fix: An issue with the checkout page on sites with HTTPS and PayPal Standard
 
-= 1.4.0.3: January 1, 2013 =
+= 1.4.0.4: January 3, 2013 =
+
+* Fix: File missing that makes the profile editor shortcode work (props @chriscct7)
+
+= 1.4.0.3: January 2, 2013 =
+
 * New: Travis now autoloads all of EDD (props @chriscct7)
 * Fix: Double Click Required JS issue (props @chriscct7)
 * Fix: Problem with pending purchases showing in user's purchase history
@@ -915,17 +925,17 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Issue with guests and discount codes
 * Tweak: WP_Sessions removed temporarily (props @chriscct7)
 
-= 1.4.0.2 =
+= 1.4.0.2: December 28, 2012 =
 
 * Fix: An issue with the checkout page on sites with HTTPS and PayPal Standard
 
-= 1.4.0.1 =
+= 1.4.0.1: December 27, 2012 =
 
 * Fix: An issue with purchase receipts sending
 * Fix: Issue with registration / login forms not showing on checkout
 * Fix: An undefined index on the discounts page
 
-= 1.4 =
+= 1.4: December 27, 2012 =
 
 * New: Converted coupons to a custom post type
 * New: Dummy XML File
@@ -964,11 +974,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Converted Discount Admin Page to WP List Table
 * Tweak: Rewrote main plugin file to use a singleton OOP approach
 
-= 1.3.4.3 =
+= 1.3.4.3: December 06, 2012 =
 
 * Fix: Fatal error in PayPal
 
-= 1.3.4.2 =
+= 1.3.4.2: December 06, 2012 =
 
 * New: {fullname} email template tag
 * Fix: a potential issue with jQuery validation of the checkout form
@@ -978,12 +988,12 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Made a JS file only load on the checkout page instead of all pages
 * Tweak: Reverted back to $_SESSION based storage as WP_Session isn't quite ready for use yet
 
-= 1.3.4.1 =
+= 1.3.4.1: December 1, 2012 =
 
 * Fix: Major bug in PayPal standard gateway introduced in 1.3.4
 * Tweak: Updated French langauge files
 
-= 1.3.4 =
+= 1.3.4: December 1, 2012 =
 
 * New: Option for defining the emails that receive admin sale notifications
 * New: edd_item_in_cart filter
@@ -1014,7 +1024,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Improved PayPal IPN processing with new do_action() hooks for each transaction type
 * Tweak: Rebuilt Payment History page to use better core UI standards
 
-= 1.3.3 =
+= 1.3.3: November 15, 2012 =
 
 * New: Tax system for calculating simple taxes on purchases
 * New: Added error / payment failure logging to PayPal standard gateway
@@ -1033,7 +1043,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Improved logic for determing the lower price on variable priced downloads
 * Tweak: Improved stylesheet loading
 
-= 1.3.2.1 =
+= 1.3.2.1: November 06, 2012 =
 
 * New: Added basic pagination to the [downloads] short code
 * New: Added new "edd_checkout_form_bottom" hook
@@ -1052,8 +1062,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated checkout login/register fields to be attached via actions
 * Tweak: Upgraded Colorbox to v1.3.20
 
-= 1.3.2 =
-
+= 1.3.2: October 31, 2012 =
 
 * New: Added Total Earnings For Period Shown to Reports page
 * New: Added ability to filter payments by username
@@ -1080,7 +1089,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated the checkout form to load the payment forms automatically when selecting a payment method
 * Tweak: Updated French language files
 
-= 1.3.1 =
+= 1.3.1: October 22, 2012 =
 
 * New: Added new file download limit option to limit the number of times buyers can download files
 * New: Added upgrade routine for converting old file download and purchase logs to the new EDD_Logging class
@@ -1098,7 +1107,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Removed unnecessary parameters for register_post_type()
 * Tweak: Code formatting improvements
 
-= 1.3 =
+= 1.3: October 11, 2012 =
 
 * New: edd_before_download_content hook
 * New: edd_purchase_history_files hook
@@ -1125,7 +1134,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated French translation files and default language files
 * Tweak: Significant cleanup of code formatting and adherence of WordPress coding standards
 
-= 1.2.2 =
+= 1.2.2: September 25, 2012 =
 
 * New: Added a check to prevent users from deleting all price/download files in download configuration
 * New: Added WPML config file for more WPML compatibility
@@ -1145,7 +1154,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated download configuration with brand new UI and simplified options
 * Tweak: Removed button text / style from Download Configuration
 
-= 1.2.1.1 =
+= 1.2.1.1: September 19, 2012 =
 
 * New: Added a new filter for edd_receipt_attachments
 * Fix: Bug with the earnings per day graph
@@ -1153,7 +1162,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Security exploit that made it possible for malicious users to purchase variable priced items for free
 * Tweak: Improved extendability of payment form
 
-= 1.2.1 =
+= 1.2.1: September 17, 2012 =
 
 * New: Added new filters to the taxonomy args for download categories and tags
 * New: Added a new "Product Notes" meta box to the Edit Download page
@@ -1164,7 +1173,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Some problems with international number formatting
 * Tweak: Updated German translation
 
-= 1.2 =
+= 1.2: September 15, 2012 =
 
 * New: Added reset styles to default fieldsets to account for themes without fieldset styling
 * New: Added new Date and Time to the View Details purchase popup
@@ -1218,7 +1227,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated [purchase_collection] to support custom link text
 * Tweak: Improved the edd_delete_purchase() function
 
-= 1.1.8 =
+= 1.1.8: September 13, 2012 =
 
 * Fix: a major bug with discount codes not being accepted
 * Fix: Bin the PDF reports
@@ -1226,7 +1235,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Improved URL > path conversion for locally stored download files
 * Improved organization of email templating functions
 
-= 1.1.7 =
+= 1.1.7: August 29, 2012 =
 
 * New: Added option to set minimum purchase amount required before discount can be applied
 * New: Added filters to all discount validation functions for developers
@@ -1235,7 +1244,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Improved data sanitization to discount creation / edit forms
 * Tweak: Removed the "type" column from the discounts page
 
-= 1.1.6 =
+= 1.1.6: August 28, 2012 =
 
 * New: Added the name of the buyer to the admin purchase notifications
 * New: Added a new setting for "Complete Purchase" button text
@@ -1258,16 +1267,16 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated French translation files
 * Tweak: Removed call by reference in edd_scan_folders()
 
-= 1.1.5.2 =
+= 1.1.5.2: August 22, 2012 =
 
 * Fix: Call-by-reference error
 * Fix: Problem with zero-byte downloads
 
-= 1.1.5.1 =
+= 1.1.5.1: August 20, 2012 =
 
 * Fix: Bug with file downloads
 
-= 1.1.5 =
+= 1.1.5: August 20, 2012 =
 
 * New: Added new edd_get_current_page_url() function
 * New: Added a new option for showing download links on the success page after completing a payment
@@ -1286,7 +1295,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Made the edd_payment post type not public
 * Tweak: Updated French language files
 
-= 1.1.4.1 =
+= 1.1.4.1: August 07, 2012 =
 
 * New: Added "order" and "orderby" parameters to the [downloads] short code
 * New: Added support for .mobi files
@@ -1298,7 +1307,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Removed a conditional check for the jQuery library as it was causing problems with jQuery not loading
 * Tweak: Removed deprecated get_magic_quotes_runtime()
 
-= 1.1.4.0 =
+= 1.1.4.0: July 31, 2012 =
 
 * New: Added Quick Edit ability to the Download Price option
 * New: Added a new PDF Report generation feature for Sales and Earnings, thanks to SunnyRatilal
@@ -1322,17 +1331,17 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Update the date in purchase receipts to reflect the date_format setting in WordPress
 * Tweak: Improved the formatting of country names
 
-= 1.1.3.2 =
+= 1.1.3.2: July 20, 2012 =
 
 * New: Added two new action hooks to the reports page
 * Fix: Minor bug with the PayPal IPN listener
 * Fix: Minor bug with the function that checks for a valid discount
 
-= 1.1.3.1 =
+= 1.1.3.1: July 18, 2012 =
 
 * Fix: Bug that caused complete CC fields to show when only one gateway was enabled
 
-= 1.1.3 =
+= 1.1.3: July 18, 2012 =
 
 * New: Added a new filter to the PayPal redirect arguments array
 * New: Added a check to the download processing function to ensure the purchase has been marked as complete
@@ -1345,7 +1354,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Separated First and Last name fields in the payment's CSV export
 * Tweak: Improved the countries drop down field in the default CC form for payment gateways
 
-= 1.1.2 =
+= 1.1.2: July 16, 2012 =
 
 * New: Added new payment export system, thanks to MadeByMike
 * New: Added a legend to the user info fieldset
@@ -1357,7 +1366,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Improved the markup of the default CC fields
 * Tweak: Updated Spanish language files
 
-= 1.1.1 =
+= 1.1.1: July 10, 2012 =
 
 * New: Added a couple of new filters to the file download processing function
 * New: Added Japanese language files
@@ -1365,7 +1374,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Bug with the "All" filter in the Payment History page
 * Fix: an amount comparision error in the PayPal IPN processer
 
-= 1.1.0 =
+= 1.1.0: July 07, 2012 =
 
 * New: Added new French translation files, thanks for Boddhi
 * New: Added a new "upload" callback for settings field types
@@ -1385,7 +1394,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated edd_sert_payment() to apply the date of the payment to the post_date field
 * Tweak: Updated default language files
 
-= 1.0.9 =
+= 1.0.9: July 03, 2012 =
 
 * New: Added labels above the file name and file URL fields to help users using browsers without placeholder support
 * New: Added the ability to register custom payment method icons
@@ -1404,7 +1413,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated the "Short Code" column in the list table to include the correct button color option
 * Tweak: Improved some file / function organization
 
-= 1.0.8.5 =
+= 1.0.8.5: June 28, 2012 =
 
 * New: Added {payment_method} to the list of email template tags for showing the method of payment used for a purchase
 * Fix: Bug with the page options in settings
@@ -1415,7 +1424,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Removed the menu_position attribute from the "download" post type to help prevent menu conflicts
 * Tweak: Updated the edd_read_file() function to convert local URLs to absolute file paths
 
-= 1.0.8.4 =
+= 1.0.8.4: June 24, 2012 =
 
 * New: Added a few new action hooks
 * New: Added "Settings Updated" notification when saving plugin settings
@@ -1432,7 +1441,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Removed some blank form action attributes that caused the HTML to invalidate
 * Tweak: Removed the "You have already purchased this" message from the purchase link short code / template
 
-= 1.0.8.3 =
+= 1.0.8.3: June 15, 2012 =
 
 * New: Added a default purchase receipt email that is used if no custom email has been defined
 * New: Added new constant EDD_READ_FILE_MODE for defining how download files are delivered
@@ -1456,7 +1465,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Made ajax enabled by default
 * Tweak: Reorganized the edd_complete_purchase() function to be more extensible
 
-= 1.0.8.2 =
+= 1.0.8.2: May 31, 2012 =
 
 * New: Added a number_format() check to the PayPal standard gateway
 * New: Added the Turkish Lira to supported currencies
@@ -1470,7 +1479,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Dramatically improved the default PayPal gateway, which should help prevent payments not getting verified
 * Tweak: Updated default language files with new strings for translation
 
-= 1.0.8.1 =
+= 1.0.8.1: May 28, 2012 =
 
 * New: Added a new option for marking a payment as "refunded". The refund process must be done through the payment gateway still. When payments are marked as "refunded", the sales and earnings stats will be adjusted accordingly.
 * New: Added an alert message to the "Delete Payment" link
@@ -1486,7 +1495,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated admin CSS to add custom background color to refunded payments
 * Tweak: Updated French language files
 
-= 1.0.8 =
+= 1.0.8: May 22, 2012 =
 
 * New: Added the [purchase_history] shortcode for showing a detailed list of user's purchases
 * New: Added the edd_get_checkout_uri() function for use by themes
@@ -1496,7 +1505,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Dramatically improved code documentation
 * Tweak: Improved the names of the widgets
 
-= 1.0.7.2 =
+= 1.0.7.2: May 17, 2012 =
 
 * New: Added a new EDD Categories / Tags widget
 * New: Added an enhancement to the cart widget that causes the "Purchase" button to reset when removing an item from the cart
@@ -1506,7 +1515,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Removed old stripe.js code that is no longer used
 * Tweak: Removed duplicated code from payments history page
 
-= 1.0.7.1 =
+= 1.0.7.1: May 11, 2012 =
 
 * New: Added a second instance do_action('edd_purchase_form_user_info') to the checkout registration form
 * New: Added a wrapper div.edd-cart-ajax-alert around the message that shows when an item has been added to the cart
@@ -1516,7 +1525,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Small bug wit the edd_remove_item_url() present when on a 404 error page. Props to Sksmatt
 * Tweak: Updated the edd_purchase_link() function to automatically detect chosen link styles and colors
 
-= 1.0.7 =
+= 1.0.7: May 08, 2012 =
 
 * New: edd_has_variable_prices() function
 * New: Added missing "required" classes to the checkout login form
@@ -1527,7 +1536,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated French language files
 * Tweak: Improved the edd_price() function to take into account products with variable prices
 
-= 1.0.6 =
+= 1.0.6: May 06, 2012 =
 
 *** NOTE:** if you have modified the checkout_cart.php template via your theme, please consider updating it with the new version as many things have changed.
 * New: Added missing element classes to the cart widget, checkout cart, and more
@@ -1549,7 +1558,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Dramatically improved the CSS of the checkout page.
 * Tweak: When purchasing a product with variable prices, the selected price option name is now shown on the checkout page
 
-= 1.0.5 =
+= 1.0.5: May 01, 2012 =
 
 * New: Variable pricing option for downloads
 * New: Added new {price} template tag for emails
@@ -1567,12 +1576,12 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Improved the download metabox layout
 * Tweak: Updated the French language files
 
-= 1.0.4.1 =
+= 1.0.4.1: April 27, 2012 =
 
 * New: Download post type icon
 * Fix: Missing add-ons.php file
 
-= 1.0.4 =
+= 1.0.4: April 26, 2012 =
 
 * New: "Add Ons" page for viewing all available add-ons for the plugin
 * New: Two new filters for currencies that allow developers to add their own currencies
@@ -1580,7 +1589,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Added language files for Spanish
 * Tweak: Improvements to the "empty cart" message. It can now be customized via a filter
 
-= 1.0.3 =
+= 1.0.3: April 21, 2012 =
 
 * New: Added first and last name fields to the checkout registration form.
 * New: Option to include an "Agree to terms" to the checkout.
@@ -1592,7 +1601,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Improved country list formatting.
 * Tweak: Improved the price input field to make it more clear and help prevent improper price formats.
 
-= 1.0.2 =
+= 1.0.2: April 19, 2012 =
 
 * New: An option to delete payments
 * New: Featured thumbnails to checkout cart
@@ -1604,16 +1613,16 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Improved checkout CSS to help prevent conflicts
 * Tweak: Moved payment action links to beneath the payment email to better match WordPress core
 
-= 1.0.1.4 =
+= 1.0.1.4: April 17, 2012 =
 
 * New: The Italian language files, thanks to Marco.
 * Fix: A bug with the "Add New" button for download source files.
 
-= 1.0.1.3 =
+= 1.0.1.3: Early April =
 
 * Fix: A bug with the checkout login / register forms
 
-= 1.0.1.2 =
+= 1.0.1.2: Early April =
 
 * New: German translation, thanks to David Decker.
 * New: Partial European Portuguese translation, thanks to Takssista.
@@ -1621,12 +1630,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: A bug where sales / earnings counts were increased before a purchase was confirmed.
 * Fix: A bug with the checkout registration / login forms.
 
-= 1.0.1.1 =
+= 1.0.1.1: Early April =
 
 * New: Inclusion of INR as an available currency.
 * Fix: Updates to the default.po file for missing strings.
 
-= 1.0 =
+= 1.0: Early April =
 
 * First offical release!
-
