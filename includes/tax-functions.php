@@ -70,9 +70,9 @@ function edd_taxes_on_prices() {
  * @return      bool
 */
 
-function edd_taxes_before_discounts() {
+function edd_taxes_after_discounts() {
 	global $edd_options;
-	return apply_filters( 'edd_taxes_before_discounts', isset( $edd_options['taxes_before_discounts'] ) );
+	return apply_filters( 'edd_taxes_after_discounts', isset( $edd_options['taxes_after_discounts'] ) );
 }
 
 
