@@ -398,7 +398,7 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 function edd_get_cart_total( $discounts = false ) {
 
 	$subtotal = edd_get_cart_subtotal();
-	$cart_tax = edd_get_cart_tax( $subtotal );
+	$cart_tax = edd_get_cart_tax();
 	$discount = edd_get_cart_discounted_amount( $discounts );
 	$total    = $subtotal + $cart_tax - $discount;
 
