@@ -109,66 +109,6 @@ jQuery(document).ready(function ($) {
         return false;
     });
 
-    // For tricksters
-	var before_discount = $('.edd_cart_amount').text();
-	$('#edd_checkout_form_wrap').on('change', '#edd-email', function (event) {
-		$('.edd_cart_amount').html(before_discount);
-		$('#edd-discount').val('');
-	});
-
-	// Validate and apply a discount
-    $('#edd_checkout_form_wrap').on('click', '.edd-apply-discount', function (event) {
-
-		var $this = $(this),
-            discount_code = $('#edd-discount').val(),
-            edd_email = $('#edd-email').val();
-			edd_user = $('#edd_user_login').val();
-        if (discount_code == '') {
-            alert(edd_scripts.no_discount);
-            return false;
-        }
-
-		if (edd_email == '' && edd_email != 'undefined') {
-            alert(edd_scripts.no_email);
-            return false;
-        }
-
-        if(edd_email == 'undefined' && edd_user == '') {
-            alert(edd_scripts.no_username);
-            return false;
-        }
-
-        var postData = {
-            action: 'edd_apply_discount',
-            code: discount_code,
-            email: edd_email,
-            user: edd_user,
-            nonce: edd_scripts.ajax_nonce
-        };
-
-        $.ajax({
-            type: "POST",
-            data: postData,
-            dataType: "json",
-            url: edd_scripts.ajaxurl,
-            success: function (discount_response) {
-                if( discount_response ) {
-                    if (discount_response.msg == 'valid') {
-                        $('.edd_cart_amount').html(discount_response.amount).text();
-                        $this.text(edd_scripts.discount_applied);
-                    } else {
-                        alert(discount_response.msg);
-                    }
-                } else {
-                    console.log( discount_response );
-                }
-            }
-        }).fail(function (data) {
-            console.log(data);
-        });
-        return false;
-    });
-
     // Show the login form on the checkout page
     $('#edd_checkout_form_wrap').on('click', '.edd_checkout_register_login', function () {
         var $this = $(this),
