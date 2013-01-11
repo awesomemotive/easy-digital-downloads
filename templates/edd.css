@@ -25,6 +25,8 @@
 #edd_checkout_cart td:last-child,
 #edd_checkout_cart th.edd_cart_total { text-align: right; }
 #edd_checkout_cart td img { float: left; margin: 0 8px 0 0; background: none; padding: none; border: none; }
+#edd_checkout_cart .edd_discount_remove { display: inline-block; width: 10px; height: 14px; background: url( ../assets/images/xit.gif ) 0 4px no-repeat; }
+#edd_checkout_cart .edd_discount_remove:hover { background-position: -10px 4px; }
 
 /* Checkout Fields */
 #edd_purchase_form input.edd-input { display: inline-block; width: 200px; }
