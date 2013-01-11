@@ -59,6 +59,13 @@
 			<?php do_action( 'edd_checkout_table_tax_last' ); ?>
 		</tr>
 		<?php endif; ?>
+		<tr class="edd_cart_footer_row edd_cart_discount_row" <?php if( ! edd_cart_has_discounts() )  echo ' style="display:none;"'; ?>>
+			<?php do_action( 'edd_checkout_table_discount_first' ); ?>
+			<th colspan="3" class="edd_cart_discount">
+				<?php edd_cart_discounts_html(); ?>
+			</th>
+			<?php do_action( 'edd_checkout_table_discount_last' ); ?>
+		</tr>
 		<tr class="edd_cart_footer_row">
 			<?php do_action( 'edd_checkout_table_footer_first' ); ?>
 			<th colspan="3" class="edd_cart_total"><?php _e( 'Total', 'edd' ); ?>: <span class="edd_cart_amount" data-subtotal="<?php echo edd_get_cart_amount( false ); ?>" data-total="<?php echo edd_get_cart_amount( true, true ); ?>"><?php edd_cart_total(); ?></span></th>

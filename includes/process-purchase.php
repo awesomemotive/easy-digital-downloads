@@ -79,9 +79,10 @@ function edd_process_purchase_form() {
 	// Setup purchase information
 	$purchase_data = array(
 		'downloads' 	=> edd_get_cart_contents(),
-		'subtotal'		=> edd_get_cart_amount( false ), 	// Amount before taxes
+		'subtotal'		=> edd_get_cart_subtotal(),		 	// Amount before taxes and discounts
+		'discount'		=> edd_get_cart_discounted_amount(),// Discounted amount
 		'tax'			=> edd_get_cart_tax(), 				// Taxed amount
-		'price' 		=> edd_get_cart_amount(), 			// Amount after taxes
+		'price' 		=> edd_get_cart_total(), 			// Amount after taxes
 		'purchase_key' 	=> strtolower( md5( uniqid() ) ), 	// Random key
 		'user_email' 	=> $user['user_email'],
 		'date' 			=> date( 'Y-m-d H:i:s' ),
@@ -233,16 +234,32 @@ function edd_purchase_form_validate_gateway() {
 */
 
 function edd_purchase_form_validate_discounts() {
+
+	// Retrieve the discount stored in cookies
+	$discounts = edd_get_cart_discounts();
+
 	// Check for valid discount is present
-	if ( isset( $_POST['edd-discount'] ) && trim( $_POST['edd-discount'] ) != '' ) {
-		// Clean discount
-		$discount = sanitize_text_field( $_POST['edd-discount'] );
-		$user     = isset( $_POST['edd_user_login'] ) ? sanitize_text_field( $_POST['edd_user_login'] ) : sanitize_email( $_POST['edd_email'] );
+	if ( ! empty( $_POST['edd-discount'] ) || $discounts !== false  ) {
+
+		if( empty( $discounts ) ) {
+
+			$discount = sanitize_text_field( $_POST['edd-discount'] );
+
+		} else {
+
+			// Use the discount stored in the cookies
+			$discount = $discounts[0];
+
+			// at some point this will support multiple discounts
+
+		}
+
+		$user = isset( $_POST['edd_user_login'] ) ? sanitize_text_field( $_POST['edd_user_login'] ) : sanitize_email( $_POST['edd_email'] );
+
 		// Check if validates
 		if (  edd_is_discount_valid( $discount, $user ) ) {
 			// Return clean discount
 			return $discount;
-		// Invalid discount
 		} else {
 			// Set invalid discount error
 			edd_set_error( 'invalid_discount', __( 'The discount you entered is invalid', 'edd' ) );

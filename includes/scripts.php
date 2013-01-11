@@ -39,10 +39,6 @@ function edd_load_scripts() {
 		wp_localize_script( 'edd-ajax', 'edd_scripts', array(
 				'ajaxurl' 					=> edd_get_ajax_url(),
 				'ajax_nonce' 				=> wp_create_nonce( 'edd_ajax_nonce' ),
-				'no_discount' 				=> __('Please enter a discount code', 'edd'), // Blank discount code message
-				'discount_applied' 			=> __('Discount Applied', 'edd'), // Discount verified message
-				'no_email' 					=> __('Please enter an email address before applying a discount code', 'edd'),
-				'no_username'				=> __('Please enter a username before applying a discount code', 'edd'),
 				'position_in_cart' 			=> isset( $position ) ? $position : -1,
 				'already_in_cart_message' 	=> __('You have already added this item to your cart', 'edd'), // Item already in the cart message
 				'empty_cart_message' 		=> __('Your cart is empty', 'edd'), // Item already in the cart message
@@ -68,9 +64,15 @@ function edd_load_scripts() {
 		}
 		wp_enqueue_script( 'edd-checkout-global', EDD_PLUGIN_URL . 'assets/js/edd-checkout-global.js', array( 'jquery' ), EDD_VERSION );
 		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', array(
+			'ajaxurl'           => edd_get_ajax_url(),
+			'checkout_nonce'    => wp_create_nonce( 'edd_checkout_nonce' ),
 	        'currency_sign'		=> edd_currency_filter(''),
 	        'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
-	        'no_gateway'		=> __( 'Please select a payment method', 'edd' )
+	        'no_gateway'		=> __( 'Please select a payment method', 'edd' ),
+	        'no_discount'       => __('Please enter a discount code', 'edd'), // Blank discount code message
+			'discount_applied'  => __('Discount Applied', 'edd'), // Discount verified message
+			'no_email'          => __('Please enter an email address before applying a discount code', 'edd'),
+			'no_username'       => __('Please enter a username before applying a discount code', 'edd'),
 	    ));
 	}
 }
