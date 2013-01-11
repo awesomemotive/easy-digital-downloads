@@ -83,4 +83,66 @@ jQuery(document).ready(function($) {
         }
     });
 
+    /* Discounts */
+    var before_discount = $('.edd_cart_amount').text();
+    $('#edd_checkout_form_wrap').on('change', '#edd-email', function (event) {
+        $('.edd_cart_amount').html(before_discount);
+        $('#edd-discount').val('');
+    });
+
+    // Validate and apply a discount
+    $('#edd_checkout_form_wrap').on('focusout', '#edd-discount', function (event) {
+
+        var $this = $(this),
+            discount_code = $('#edd-discount').val(),
+            edd_email = $('#edd-email').val();
+            edd_user = $('#edd_user_login').val();
+
+        if (discount_code == '') {
+            return false;
+        }
+
+        if (edd_email == '' && edd_email != 'undefined') {
+            alert(edd_global_vars.no_email);
+            return false;
+        }
+
+        if(edd_email == 'undefined' && edd_user == '') {
+            alert(edd_global_vars.no_username);
+            return false;
+        }
+
+        var postData = {
+            action: 'edd_apply_discount',
+            code: discount_code,
+            email: edd_email,
+            user: edd_user,
+            nonce: edd_global_vars.checkout_nonce
+        };
+
+        $.ajax({
+            type: "POST",
+            data: postData,
+            dataType: "json",
+            url: edd_global_vars.ajaxurl,
+            success: function (discount_response) {
+                if( discount_response ) {
+                    if (discount_response.msg == 'valid') {
+                        $('.edd_cart_discount').html(discount_response.html);
+                        $('.edd_cart_discount_row').show();
+                        $('.edd_cart_amount').text(discount_response.total);
+                    } else {
+                        alert(discount_response.msg);
+                    }
+                } else {
+                    console.log( discount_response );
+                }
+            }
+        }).fail(function (data) {
+            console.log(data);
+        });
+
+        return false;
+    });
+
 });
