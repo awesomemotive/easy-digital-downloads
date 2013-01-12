@@ -869,6 +869,20 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 	if( empty( $discounts ) )
 		$discounts = edd_get_cart_discounts();
 
+	if( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) ) {
+
+		// check for a posted discount
+		$posted_discount = isset( $_POST['edd-discount'] ) ? trim( $_POST['edd-discount'] ) : false;
+
+		if( $posted_discount ) {
+
+			$discounts = array();
+			$discounts[] = $posted_discount;
+
+		}
+
+	}
+
 	if( empty( $discounts ) )
 		return 0.00;
 
