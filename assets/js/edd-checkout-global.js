@@ -51,26 +51,51 @@ jQuery(document).ready(function($) {
 
         if( $(this).attr('checked') ) {
 
-            $('.edd_cart_tax_row, .edd_cart_subtotal_row').show();
+            var data = {
+                action: 'edd_local_tax_opt_in',
+                nonce: edd_global_vars.checkout_nonce
+            };
 
-            if( pos == 'before' )
-                total = sign + total;
-            else
-                total = total + sign;
+            $.post( edd_global_vars.ajaxurl, data, function (response) {
+                if (response == '1') {
 
-            $('.edd_cart_amount').text( total );
+                    $('.edd_cart_tax_row, .edd_cart_subtotal_row').show();
+
+                    if( pos == 'before' )
+                        total = sign + total;
+                    else
+                        total = total + sign;
+
+                    $('.edd_cart_amount').text( total );
+
+                } else {
+                    console.log( response );
+                }
+            });
 
         } else {
 
-            $('.edd_cart_tax_row, .edd_cart_subtotal_row').hide();
+            var data = {
+                action: 'edd_local_tax_opt_out',
+                nonce: edd_global_vars.checkout_nonce
+            };
 
-            if( pos == 'before' )
-                subtotal = sign + '' + subtotal;
-            else
-                subtotal = subtotal + '' + sign;
+            $.post( edd_global_vars.ajaxurl, data, function (response) {
+                if (response == '1') {
 
-            $('.edd_cart_amount').text( subtotal );
+                    $('.edd_cart_tax_row, .edd_cart_subtotal_row').hide();
 
+                    if( pos == 'before' )
+                        subtotal = sign + '' + subtotal;
+                    else
+                        subtotal = subtotal + '' + sign;
+
+                    $('.edd_cart_amount').text( subtotal );
+
+                } else {
+                    console.log( response );
+                }
+            });
         }
     });
 
