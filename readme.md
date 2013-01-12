@@ -160,9 +160,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ## Changelog ##
 
-### 1.4.1: January , 2013 ###
+### 1.4.1: January 12, 2013 ###
 
 * New: Added .apk support (props @chriscct7)
+* New: Added debug_backtrace to deprecated functions (props @chriscct7)
 * Tweak: Post save/update messages now can be translated (props @chriscct7)
 * Tweak: Changelogs cleaned up (props @chriscct7)
 * Fix: An issue with the checkout page on sites with HTTPS and PayPal Standard
