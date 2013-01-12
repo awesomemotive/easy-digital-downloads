@@ -160,12 +160,52 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ## Changelog ##
 
+### 1.4.1: January 12, 2013 ###
 
-### 1.4.1: January , 2013 ###
-
+* New: Added PayPal Page Style Support
 * New: Added .apk support (props @chriscct7)
+* New: Added debug_backtrace to deprecated functions (props @chriscct7)
+* New: Store Discount ID in Payment Meta
+* New: Upgrade [download_discounts] for new CPT
+* New: Show Payment Notes on View Order Details
+* New: Made Discount Edit & Add screens extensible
+* New: Store Discounted Amount in Cart Details via Ajax
+* New: Ability to set own error class/classes in edd_print_errors() function
+* New: Add support for .apk (props @chriscct7)
+* Tweak: Use AJAX & session with 'local residents only'
+* Tweak: Ajax Local Tax Opt-In
+* Tweak: Refractor edd_process_profile_editor_updates()
+* Tweak: Updated Manual Travis instructions (props @chriscct7)
+* Tweak: Better error reporting for usernames with uppercase letters.
 * Tweak: Post save/update messages now can be translated (props @chriscct7)
 * Tweak: Changelogs cleaned up (props @chriscct7)
+* Tweak: Spaces in Download File Names May Cause 404
+* Tweak: Remove Bullets from Default Email Template
+* Tweak: Paginate Payment / Download History Short Codes
+* Tweak: Convert Discount Admin Page to WP List Table
+* Tweak: Moved the new edit profile form into templates folder
+* Tweak: Removed cache_results query arg from sales widget
+* Tweak: Change "Enter title here" field to "Enter download title here" in add/edit download page
+* Tweak: Don't Show Discount if None was Used on [edd_receipt]
+* Tweak: Remove Subtotal and Taxes if Taxes Disabled  [edd_receipt]
+* Tweak: Payment Notes Showing Up in Comment Streams
+* Fix: Pagination Not Working Fully on File Download Logs
+* Fix: New option to make Supercache compatible with EDD (props @chriscct7)
+* Fix: Flat Rate Discounts Not Working Correctly
+* Fix: Discount Start Dates Defaulting to Current Day
+* Fix: Download System Info button added
+* Fix: Pagination of [purchase_history] and [download_history] (props @chriscct7)
+* Fix: Number format error when no price entered
+* Fix: Last Month Dashboard Widget Incorrect For January
+* Fix: Calculate the tax price in edd_get_cart_content_details() when tax inclusive
+* Fix: Validate Checkout
+* Fix: File Download Count for Customer Reports is Failing
+* Fix: Double Click Required for Purchase
+* Fix: PayPal Post giving wrong URL
+* Fix: Issue with new Payment History
+* Fix: PHP warnings and notices on individual download page
+* Fix: Tax Calculation Doesn't Respect Discounts
+* Fix: Whitescreen after checkout
 * Fix: An issue with the checkout page on sites with HTTPS and PayPal Standard
 
 ### 1.4.0.4: January 3, 2013 ###
@@ -270,7 +310,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated Italian language files
 * Tweak: Updated French language files
 * Tweak: Removed the "required" class from the local tax opt-in checkbox
-* Tweak: Improved the function that retrieves the total earnings amount 
+* Tweak: Improved the function that retrieves the total earnings amount
 * Tweak: Updated customer CSV export to include the number of purchases and total amount spent
 * Tweak: Updated purchase details to include tax information
 * Tweak: Made the email address in View Details for purchase history clickable
