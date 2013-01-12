@@ -66,3 +66,43 @@ function edd_disable_jetpack_og_on_checkout() {
 	}
 }
 add_action( 'template_redirect', 'edd_disable_jetpack_og_on_checkout' );
+
+
+/**
+ * Checks if a caching plugin is active
+ *
+ * @access      private
+ * @since       1.4.1
+ * @return      bool
+*/
+
+function edd_is_caching_plugin_active() {
+	$caching = ( function_exists( 'wpsupercache_site_admin' ) || defined( 'W3TC_IN_MINIFY' ) );
+	return apply_filters( 'edd_is_caching_plugin_active', $caching );
+}
+
+/**
+ * Adds a ?nocache option for the checkout page
+ *
+ * This ensures the checkout page remains uncached when plugins like WP Super Cache are activated
+ *
+ * @access      private
+ * @since       1.4.1
+ * @return      array
+*/
+
+function edd_append_no_cache_param( $settings ) {
+
+	if( ! edd_is_caching_plugin_active() )
+		return $settings;
+
+	$settings[] = array(
+		'id' => 'no_cache_checkout',
+		'name' => __('No Caching on Checkout?', 'edd'),
+		'desc' => __('Check this box in order to append a ?nocache parameter to the checkout URL to prevent caching plugins from caching the page.', 'edd'),
+		'type' => 'checkbox'
+	);
+
+	return $settings;
+}
+add_filter( 'edd_settings_misc', 'edd_append_no_cache_param', -1 );

@@ -651,6 +651,9 @@ function edd_get_checkout_uri( $args = array() ) {
 		$uri = preg_replace( '/^http/', 'https', $uri );
 	}
 
+	if( isset( $edd_options['no_cache_checkout'] ) && edd_is_caching_plugin_active() )
+		$uri = add_query_arg( 'nocache', 'true', $uri );
+
     return apply_filters( 'edd_get_checkout_uri', $uri );
 }
 
