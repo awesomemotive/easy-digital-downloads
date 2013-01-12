@@ -75,6 +75,19 @@ function edd_opt_into_local_taxes() {
 
 
 /**
+ * Sets a customer as opted out of local taxes
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      bool
+*/
+
+function edd_opt_out_local_taxes() {
+	return setcookie( 'wordpress_edd_local_tax_opt_in', null, strtotime( '-1 day' ), COOKIEPATH, COOKIE_DOMAIN, false );
+}
+
+
+/**
  * Show taxes on individual prices?
  *
  * @access      public
