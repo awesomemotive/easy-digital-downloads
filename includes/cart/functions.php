@@ -463,7 +463,7 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
 
 function edd_get_cart_tax( $discounts = false ) {
 
-	if( ! edd_use_taxes() )
+	if( ! edd_use_taxes() || ( edd_local_taxes_only() && ! edd_local_tax_opted_in() ) )
 		return 0;
 
 	$cart_sub_total = edd_get_cart_subtotal();
