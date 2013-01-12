@@ -49,6 +49,18 @@ function edd_local_taxes_only() {
 
 
 /**
+ * Checks if a customer has opted into local taxes
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      bool
+*/
+
+function edd_local_tax_opted_in() {
+	return isset( $_COOKIE['wordpress_edd_local_tax_opt_in'] );
+}
+
+/**
  * Show taxes on individual prices?
  *
  * @access      public
