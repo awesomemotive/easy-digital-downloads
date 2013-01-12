@@ -166,7 +166,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
-= 1.4.1: January , 2013 =
+= 1.4.1: January 12, 2013 =
 
 * New: Added .apk support (props @chriscct7)
 * New: Added debug_backtrace to deprecated functions (props @chriscct7)
@@ -904,7 +904,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Upgrade Notice ==
 
-= 1.4.1: January , 2013 =
+= 1.4.1: January 12, 2013 =
 
 * New: Added .apk support (props @chriscct7)
 * New: Added debug_backtrace to deprecated functions (props @chriscct7)
