@@ -61,11 +61,14 @@ jQuery(document).ready(function($) {
 
                     $('.edd_cart_tax_row, .edd_cart_subtotal_row').show();
 
-                    if( pos == 'before' )
+                    if( pos == 'before' ) {
                         total = sign + total;
-                    else
+                        tax = sign + tax;
+                    } else {
                         total = total + sign;
-
+                        tax = tax + sign;
+                    }
+                    $('.edd_cart_tax_amount').text( tax );
                     $('.edd_cart_amount').text( total );
 
                 } else {

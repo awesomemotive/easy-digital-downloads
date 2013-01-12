@@ -461,9 +461,9 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
  * @return      string
 */
 
-function edd_get_cart_tax( $discounts = false ) {
+function edd_get_cart_tax( $discounts = false, $local_override = false ) {
 
-	if( ! edd_use_taxes() || ( edd_local_taxes_only() && ! edd_local_tax_opted_in() ) )
+	if( ! edd_use_taxes() || ( edd_local_taxes_only() && ! edd_local_tax_opted_in() && ! $local_override ) )
 		return 0;
 
 	$cart_sub_total = edd_get_cart_subtotal();
