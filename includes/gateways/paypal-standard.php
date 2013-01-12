@@ -336,12 +336,6 @@ function edd_process_paypal_web_accept( $data ) {
 	   	edd_update_payment_status( $payment_id, 'failed' );
 	   	return;
 	}
-	if( $purchase_key != $payment_meta['key'] ) {
-		// Purchase keys don't match
-		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid purchase key in IPN response. IPN data: ', 'edd' ), json_encode( $encoded_data_array ) ), $payment_id );
-		edd_update_payment_status( $payment_id, 'failed' );
-		return;
-	}
 
 	$status = strtolower( $payment_status );
 
