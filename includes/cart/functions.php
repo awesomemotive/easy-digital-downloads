@@ -466,7 +466,6 @@ function edd_get_cart_tax( $discounts = false ) {
 	if( ! edd_use_taxes() )
 		return 0;
 
-
 	$cart_sub_total = edd_get_cart_subtotal();
 
 	if( edd_taxes_after_discounts() ) {
