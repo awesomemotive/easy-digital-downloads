@@ -145,6 +145,8 @@ jQuery(document).ready(function($) {
             nonce: edd_global_vars.checkout_nonce
         };
 
+        $('#edd-discount-loader').show();
+
         $.ajax({
             type: "POST",
             data: postData,
@@ -162,6 +164,7 @@ jQuery(document).ready(function($) {
                 } else {
                     console.log( discount_response );
                 }
+                $('#edd-discount-loader').hide();
             }
         }).fail(function (data) {
             console.log(data);
