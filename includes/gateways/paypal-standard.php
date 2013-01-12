@@ -313,6 +313,9 @@ function edd_process_paypal_web_accept( $data ) {
 	$payment_meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
 	$payment_amount = edd_format_amount( $payment_meta['amount'] );
 
+	if( edd_get_payment_gateway( $payment_id ) != 'paypal' )
+		return; // this isn't a PayPal standard IPN
+
 	// Verify details
 	if( $currency_code != strtolower( $edd_options['currency'] ) ) {
 		// The currency code is invalid
