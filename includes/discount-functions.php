@@ -823,7 +823,7 @@ function edd_unset_cart_discount( $code = '' ) {
  */
 
 function edd_unset_all_cart_discounts() {
-	setcookie( 'wordpress_edd_cart_discount', null, strtotime( '-1 day' ), COOKIEPATH, COOKIE_DOMAIN, false );
+	@setcookie( 'wordpress_edd_cart_discount', null, strtotime( '-1 day' ), COOKIEPATH, COOKIE_DOMAIN, false );
 }
 
 
