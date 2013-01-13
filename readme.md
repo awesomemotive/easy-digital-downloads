@@ -160,7 +160,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ## Changelog ##
 
-### 1.4.1: January 12, 2013 ###
+### 1.4.1: January 13, 2013 ###
 
 * New: Added PayPal Page Style Support
 * New: Added .apk support (props @chriscct7)
