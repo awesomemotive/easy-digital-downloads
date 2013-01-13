@@ -476,7 +476,7 @@ add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement' );
 
 function edd_show_local_tax_opt_in() {
 	global $edd_options;
-	if( isset( $edd_options['tax_condition'] ) && $edd_options['tax_condition'] == 'local' ) {
+	if( edd_use_taxes() && isset( $edd_options['tax_condition'] ) && $edd_options['tax_condition'] == 'local' ) {
 ?>
 		<fieldset id="edd_tax_opt_in_fields">
 			<p id="edd-tax-opt-in-wrap">
