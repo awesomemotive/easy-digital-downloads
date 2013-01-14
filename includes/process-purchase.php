@@ -40,12 +40,18 @@ function edd_process_purchase_form() {
 		do_action('edd_checkout_error_checks', $_POST);
 	}
 
+	$is_ajax = !empty($_POST['action']) && ( $_POST['action'] == 'edd_process_checkout' );
+
 	if ( edd_get_errors() || !edd_get_purchase_form_user( $valid_data ) ) {
-		edd_print_errors();
-		exit;
+		if ( $is_ajax ) {
+			edd_print_errors();
+			exit;
+		} else {
+			return false;
+		}
 	}
 
-	if ( !empty($_POST['action']) && $_POST['action'] == 'edd_process_checkout' ) {
+	if ( $is_ajax ) {
 		echo 'success';
 		exit;
 	}
