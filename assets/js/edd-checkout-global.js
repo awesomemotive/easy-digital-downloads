@@ -176,7 +176,7 @@ jQuery(document).ready(function($) {
         return false;
     });
 
-    $('#edd_purchase_form input[type=submit]').live('click', function(e) {
+    $('#edd_purchase_form').on('click', 'input[type=submit]', function(e) {
 
         e.preventDefault();
 
