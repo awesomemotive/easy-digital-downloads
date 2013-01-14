@@ -13,7 +13,7 @@
 
 **Tested up to:** 3.5
 
-**Stable Tag:** 1.4.1
+**Stable Tag:** 1.4.1.1
 
 **License:** GNU Version 2 or Any Later Version
 
@@ -159,6 +159,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 ## Changelog ##
+
+
+### 1.4.1.1: January 14, 2013 ###
+
+* Fix: discounts weren't getting carried over to PayPal
 
 ### 1.4.1: January 13, 2013 ###
 
