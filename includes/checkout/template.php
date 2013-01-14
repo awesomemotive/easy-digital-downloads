@@ -315,7 +315,11 @@ function edd_get_register_fields() {
 			<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e('Last name', 'edd'); ?>" value="<?php echo is_user_logged_in() ? $user_data->user_lastname : ''; ?>"/>
 			<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
 		</p>
-		<input type="hidden" name="edd-purchase-var" value="needs-to-register"/>
+
+		<?php if ( edd_logged_in_only() ) { ?>
+			<input type="hidden" name="edd-purchase-var" value="needs-to-register"/>
+		<?php } ?>
+
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
 	</fieldset>
 	<?php
