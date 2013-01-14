@@ -163,7 +163,8 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ### 1.4.1.1: January 14, 2013 ###
 
-* Fix: discounts weren't getting carried over to PayPal
+* Fix: Discounts weren't getting carried over to PayPal
+* Fix: Added missing {username} tag for purchase receipts
 
 ### 1.4.1: January 13, 2013 ###
 
