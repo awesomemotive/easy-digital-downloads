@@ -184,6 +184,7 @@ jQuery(document).ready(function($) {
             if ( data == 'success' ) {
                 $('#edd_purchase_form').submit();
             } else {
+                $('.edd_errors').remove();
                 $('#edd_purchase_form').before(data);
             }
         });
