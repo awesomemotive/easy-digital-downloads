@@ -42,7 +42,7 @@ function edd_process_purchase_form() {
 
 	$is_ajax = !empty($_POST['action']) && ( $_POST['action'] == 'edd_process_checkout' );
 
-	if ( edd_get_errors() || !edd_get_purchase_form_user( $valid_data ) ) {
+	if ( edd_get_errors() || !$user = edd_get_purchase_form_user( $valid_data ) ) {
 		if ( $is_ajax ) {
 			edd_print_errors();
 			exit;
