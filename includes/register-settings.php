@@ -216,6 +216,7 @@ function edd_register_settings() {
 						'{file_urls} - ' . __('A plain-text list of download URLs for each download purchased', 'edd') . '<br/>' .
 						'{name} - ' . __('The buyer\'s first name', 'edd') . '<br/>' .
 						'{fullname} - ' . __('The buyer\'s full name, first and last', 'edd') . '<br/>' .
+						'{username} - ' . __('The buyer\'s user name on the site, if they registered an account', 'edd') . '<br/>' .
 						'{date} - ' . __('The date of the purchase', 'edd') . '<br/>' .
 						'{subtotal} - ' . __('The price of the purchase before taxes', 'edd') . '<br/>' .
 						'{tax} - ' . __('The taxed amount of the purchase', 'edd') . '<br/>' .
