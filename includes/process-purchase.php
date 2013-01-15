@@ -23,49 +23,38 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @return      void
 */
 function edd_process_purchase_form() {
-	// No need to run on admin
-	if ( is_admin() )
-		return;
-
 	// Verify the nonce for this action
-	if ( ! isset( $_POST['edd-nonce'] ) || ! wp_verify_nonce( $_POST['edd-nonce'], 'edd-purchase-nonce' ) )
-		return;
+	if ( ! isset( $_POST['edd-nonce'] ) || ! wp_verify_nonce( $_POST['edd-nonce'], 'edd-purchase-nonce' ) ) {
+		edd_set_error(__( 'Security check failed. Please refresh the page and try again.', 'edd') );
 
 	// Make sure the cart isn't empty
-	$cart = edd_get_cart_contents();
-	if( empty( $cart ) ) {
+	} else if ( !edd_get_cart_contents() ) {
+		edd_set_error( __( 'Your cart is empty.', 'edd') );
 
-		wp_die(
-			sprintf(
-				__( 'Your cart is empty, please return to the %ssite%s and try again.', 'edd' ),
-				'<a href="' . esc_url( home_url() ) . '" title="' . get_bloginfo( 'name' ) . '">',
-				'</a>'
-			),
-			__( 'Error', 'edd' )
-		);
+	} else {
 
+		// Validate the form $_POST data
+		$valid_data = edd_purchase_form_validate_fields();
+
+		// Allow themes and plugins to hoook to errors
+		do_action('edd_checkout_error_checks', $_POST);
 	}
 
-	// Validate the form $_POST data
-	$valid_data = edd_purchase_form_validate_fields();
+	$is_ajax = !empty($_POST['action']) && ( $_POST['action'] == 'edd_process_checkout' );
 
-	// Allow themes and plugins to hoook to errors
-	do_action('edd_checkout_error_checks', $_POST);
+	if ( edd_get_errors() || !$user = edd_get_purchase_form_user( $valid_data ) ) {
+		if ( $is_ajax ) {
+			edd_print_errors();
+			exit;
+		} else {
+			return false;
+		}
+	}
 
-	// Check errors
-	if ( false !== $errors = edd_get_errors() ) {
-		// We have errors, send back to checkout
-		edd_send_back_to_checkout( '?payment-mode=' . $valid_data['gateway'] );
+	if ( $is_ajax ) {
+		echo 'success';
 		exit;
 	}
-
-	// Check user
-	if ( false === $user = edd_get_purchase_form_user( $valid_data ) ) {
-		// Something went wrong when collecting data, send back to checkout
-		edd_send_back_to_checkout( '?payment-mode=' . $valid_data['gateway'] );
-		exit;
-	}
-
 
 	// Setup user information
 	$user_info = array(
@@ -117,11 +106,11 @@ function edd_process_purchase_form() {
 
 	// Send info to the gateway for payment processing
 	edd_send_to_gateway( $valid_data['gateway'], $purchase_data );
-
 	exit;
 }
 add_action( 'edd_purchase', 'edd_process_purchase_form' );
-
+add_action( 'wp_ajax_edd_process_checkout', 'edd_process_purchase_form' );
+add_action( 'wp_ajax_nopriv_edd_process_checkout', 'edd_process_purchase_form' );
 
 /**
  * Purchase Form Validate Fields
