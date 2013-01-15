@@ -113,8 +113,8 @@ $discount    = edd_get_discount( $discount_id );
 				</td>
 			</tr>
 		</tbody>
-		<?php do_action( 'edd_edit_discount_form_bottom', $discount_id, $discount ); ?>
 	</table>
+	<?php do_action( 'edd_edit_discount_form_bottom', $discount_id, $discount ); ?>
 	<p class="submit">
 		<input type="hidden" name="edd-action" value="edit_discount"/>
 		<input type="hidden" name="discount-id" value="<?php echo absint( $_GET['discount'] ); ?>"/>
