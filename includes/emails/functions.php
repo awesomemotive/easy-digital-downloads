@@ -59,38 +59,65 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	wp_mail( $payment_data['email'], $subject, $message, $headers, $attachments );
 
 	if( $admin_notice ) {
-		/* send an email notification to the admin */
-		$admin_email   = edd_get_admin_notice_emails();
-
-		$admin_subject = apply_filters( 'edd_admin_purchase_notification_subject', __('New download purchase', 'edd'), $payment_id, $payment_data );
-
-		$admin_message = __('Hello', 'edd') . "\n\n" . sprintf( __('A %s purchase has been made', 'edd'), edd_get_label_plural() ) . ".\n\n";
-		$admin_message .= sprintf( __('%s sold:', 'edd'), edd_get_label_plural() ) .  "\n\n";
-
-		$download_list = '';
-		$downloads = maybe_unserialize( $payment_data['downloads'] );
-		if( is_array( $downloads ) ) {
-			foreach( $downloads as $download ) {
-				$id = isset( $payment_data['cart_details'] ) ? $download['id'] : $download;
-				$download_list .= html_entity_decode( get_the_title( $id ), ENT_COMPAT, 'UTF-8' ) . "\n";
-			}
-		}
-		$gateway = edd_get_gateway_admin_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
-
-		$admin_message .= $download_list . "\n";
-		$admin_message .= __('Purchased by: ', 'edd')   . " " . html_entity_decode( $name, ENT_COMPAT, 'UTF-8' ) . "\n";
-		$admin_message .= __('Amount: ', 'edd')         . " " . html_entity_decode( edd_currency_filter( edd_format_amount( $payment_data['amount'] ) ), ENT_COMPAT, 'UTF-8' ) . "\n\n";
-		$admin_message .= __('Payment Method: ', 'edd') . " " . $gateway . "\n\n";
-		$admin_message .= __('Thank you', 'edd');
-		$admin_message = apply_filters( 'edd_admin_purchase_notification', $admin_message, $payment_id, $payment_data );
-
-		$admin_headers = apply_filters( 'edd_admin_purchase_notification_headers', array(), $payment_id, $payment_data );
-
-		$admin_attachments = apply_filters( 'edd_admin_purchase_notification_attachments', array(), $payment_id, $payment_data );
-
-		wp_mail( $admin_email, $admin_subject, $admin_message, $admin_headers, $admin_attachments );
+		do_action( 'edd_admin_sale_notice', $payment_id, $payment_data );
 	}
 }
+
+
+/**
+ * Sends the admin sale notice
+ *
+ * @access      private
+ * @since       1.4.2
+ * @return      void
+*/
+
+function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
+
+	/* send an email notification to the admin */
+	$admin_email   = edd_get_admin_notice_emails();
+
+	$user_info = maybe_unserialize( $payment_data['user_info'] );
+
+	if(isset($user_info['id']) && $user_info['id'] > 0) {
+		$user_data = get_userdata($user_info['id']);
+		$name = $user_data->display_name;
+	} elseif( isset( $user_info['first_name'] ) && isset($user_info['last_name'] ) ) {
+		$name = $user_info['first_name'] . ' ' . $user_info['last_name'];
+	} else {
+		$name = $user_info['email'];
+	}
+
+	$admin_subject = apply_filters( 'edd_admin_purchase_notification_subject', __('New download purchase', 'edd'), $payment_id, $payment_data );
+
+	$admin_message = __('Hello', 'edd') . "\n\n" . sprintf( __('A %s purchase has been made', 'edd'), edd_get_label_plural() ) . ".\n\n";
+	$admin_message .= sprintf( __('%s sold:', 'edd'), edd_get_label_plural() ) .  "\n\n";
+
+	$download_list = '';
+	$downloads = maybe_unserialize( $payment_data['downloads'] );
+	if( is_array( $downloads ) ) {
+		foreach( $downloads as $download ) {
+			$id = isset( $payment_data['cart_details'] ) ? $download['id'] : $download;
+			$download_list .= html_entity_decode( get_the_title( $id ), ENT_COMPAT, 'UTF-8' ) . "\n";
+		}
+	}
+	$gateway = edd_get_gateway_admin_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
+
+	$admin_message .= $download_list . "\n";
+	$admin_message .= __('Purchased by: ', 'edd')   . " " . html_entity_decode( $name, ENT_COMPAT, 'UTF-8' ) . "\n";
+	$admin_message .= __('Amount: ', 'edd')         . " " . html_entity_decode( edd_currency_filter( edd_format_amount( $payment_data['amount'] ) ), ENT_COMPAT, 'UTF-8' ) . "\n\n";
+	$admin_message .= __('Payment Method: ', 'edd') . " " . $gateway . "\n\n";
+	$admin_message .= __('Thank you', 'edd');
+	$admin_message = apply_filters( 'edd_admin_purchase_notification', $admin_message, $payment_id, $payment_data );
+
+	$admin_headers = apply_filters( 'edd_admin_purchase_notification_headers', array(), $payment_id, $payment_data );
+
+	$admin_attachments = apply_filters( 'edd_admin_purchase_notification_attachments', array(), $payment_id, $payment_data );
+
+	wp_mail( $admin_email, $admin_subject, $admin_message, $admin_headers, $admin_attachments );
+
+}
+add_action( 'edd_admin_sale_notice', 'edd_admin_email_notice', 10, 2 );
 
 
 /**
