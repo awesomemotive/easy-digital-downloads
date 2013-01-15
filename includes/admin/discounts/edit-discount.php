@@ -102,7 +102,7 @@ $discount    = edd_get_discount( $discount_id );
 			</tr>
 			<tr class="form-field">
 				<th scope="row" valign="top">
-					<label for="edd-type"><?php _e( 'Status', 'edd' ); ?></label>
+					<label for="edd-status"><?php _e( 'Status', 'edd' ); ?></label>
 				</th>
 				<td>
 					<select name="status" id="edd-status">
