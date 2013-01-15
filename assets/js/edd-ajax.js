@@ -177,4 +177,19 @@ jQuery(document).ready(function ($) {
         return false;
     });
 
+    $('#edd_checkout_form_wrap').on('click', 'input[type=submit]', function(e) {
+
+        e.preventDefault();
+
+        $.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout', function(data) {
+            if ( data == 'success' ) {
+                $('#edd_purchase_form').submit();
+            } else {
+                $('.edd_errors').remove();
+                $('#edd_purchase_form').before(data);
+            }
+        });
+
+    });
+
 });
