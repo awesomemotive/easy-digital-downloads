@@ -37,7 +37,7 @@ function edd_process_purchase_form() {
 		$valid_data = edd_purchase_form_validate_fields();
 
 		// Allow themes and plugins to hoook to errors
-		do_action('edd_checkout_error_checks', $_POST);
+		do_action( 'edd_checkout_error_checks', $_POST );
 	}
 
 	$is_ajax = ! empty( $_POST['action'] ) && ( $_POST['action'] == 'edd_process_checkout' );
