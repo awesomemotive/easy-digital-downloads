@@ -149,7 +149,7 @@ function edd_purchase_form_validate_fields() {
 
 	// Validate agree to terms
 	if ( isset( $edd_options['show_agree_to_terms'] ) )
-	edd_purchase_form_validate_agree_to_terms();
+		edd_purchase_form_validate_agree_to_terms();
 
 	// Check if user is logged in
 	if ( is_user_logged_in() ) {
