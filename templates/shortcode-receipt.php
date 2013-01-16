@@ -56,7 +56,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 		<?php if ( $edd_receipt_args[ 'payment_method' ] ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Payment Method', 'edd' ); ?>:</strong></td>
-			<td><?php echo edd_get_payment_gateway( $payment->ID ); ?></td>
+			<td><?php echo edd_get_gateway_checkout_label( edd_get_payment_gateway( $payment->ID ) ); ?></td>
 		</tr>
 		<?php endif; ?>
 
