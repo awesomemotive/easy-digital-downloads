@@ -25,11 +25,11 @@ if ( !defined( 'ABSPATH' ) ) exit;
 function edd_process_purchase_form() {
 	// Verify the nonce for this action
 	if ( ! isset( $_POST['edd-nonce'] ) || ! wp_verify_nonce( $_POST['edd-nonce'], 'edd-purchase-nonce' ) ) {
-		edd_set_error(__( 'Security check failed. Please refresh the page and try again.', 'edd') );
+		edd_set_error( 'nonce_failed', __( 'Security check failed. Please refresh the page and try again.', 'edd') );
 
 	// Make sure the cart isn't empty
-	} else if ( !edd_get_cart_contents() ) {
-		edd_set_error( __( 'Your cart is empty.', 'edd') );
+	} else if ( ! edd_get_cart_contents() ) {
+		edd_set_error( 'empty_cart', __( 'Your cart is empty.', 'edd') );
 
 	} else {
 
@@ -40,7 +40,7 @@ function edd_process_purchase_form() {
 		do_action('edd_checkout_error_checks', $_POST);
 	}
 
-	$is_ajax = !empty($_POST['action']) && ( $_POST['action'] == 'edd_process_checkout' );
+	$is_ajax = ! empty( $_POST['action'] ) && ( $_POST['action'] == 'edd_process_checkout' );
 
 	if ( edd_get_errors() || !$user = edd_get_purchase_form_user( $valid_data ) ) {
 		if ( $is_ajax ) {
