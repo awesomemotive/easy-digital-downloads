@@ -344,7 +344,7 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 		$discounts       = edd_get_cart_discounts();
 
 		// check for a posted discount
-		$posted_discount = isset( $_POST['edd-discount'] ) ? trim( $_POST['edd-discount'] ) : false;
+		$posted_discount = isset( $_POST['edd-discount'] ) ? trim( $_POST['edd-discount'] ) : '';
 
 		if( $posted_discount && ! in_array( $posted_discount, $discounts ) ) {
 
