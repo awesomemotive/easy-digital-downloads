@@ -97,8 +97,14 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 	$downloads = maybe_unserialize( $payment_data['downloads'] );
 	if( is_array( $downloads ) ) {
 		foreach( $downloads as $download ) {
-			$id = isset( $payment_data['cart_details'] ) ? $download['id'] : $download;
-			$download_list .= html_entity_decode( get_the_title( $id ), ENT_COMPAT, 'UTF-8' ) . "\n";
+			$id    = isset( $payment_data['cart_details'] ) ? $download['id'] : $download;
+			$title = get_the_title( $id );
+			if ( isset( $download['options'] ) ) {
+				if ( isset( $download['options']['price_id'] ) ) {
+					$title .= ' - ' . edd_get_price_option_name( $id, $download['options']['price_id'] );
+				}
+			}
+			$download_list .= html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) . "\n";
 		}
 	}
 	$gateway = edd_get_gateway_admin_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
