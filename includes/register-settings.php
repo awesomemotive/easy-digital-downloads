@@ -320,6 +320,12 @@ function edd_register_settings() {
 					'type' => 'checkbox'
 				),
 				array(
+					'id' => 'redirect_on_add',
+					'name' => __('Redirect to Checkout', 'edd'),
+					'desc' => __('Immediately redirect to checkout after adding an item to the cart?', 'edd'),
+					'type' => 'checkbox'
+				),
+				array(
 					'id' => 'jquery_validation',
 					'name' => __('Enable jQuery Validation', 'edd'),
 					'desc' => __('Check this to enable jQuery validation on the checkout form.', 'edd'),
