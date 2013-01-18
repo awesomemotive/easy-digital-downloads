@@ -78,32 +78,40 @@ jQuery(document).ready(function ($) {
 				return;
 			}
 
-			// Add the new item to the cart widget
-			if ($('.cart_item.empty').length) {
-                $(cart_item_response).insertBefore('.cart_item.edd_checkout');
-                $('.cart_item.edd_checkout').show();
-                $('.cart_item.empty').remove();
+            if( edd_scripts.redirect_to_checkout == '1' ) {
+
+                window.location = edd_scripts.checkout_page;
+
             } else {
 
-                $(cart_item_response).insertBefore('.cart_item.edd_checkout');
+                // Add the new item to the cart widget
+                if ($('.cart_item.empty').length) {
+                    $(cart_item_response).insertBefore('.cart_item.edd_checkout');
+                    $('.cart_item.edd_checkout').show();
+                    $('.cart_item.empty').remove();
+                } else {
+
+                    $(cart_item_response).insertBefore('.cart_item.edd_checkout');
+                }
+
+                // Update the cart quantity
+                var quantity = $('span.edd-cart-quantity').text();
+                quantity = parseInt(quantity, 10) + 1;
+                $('span.edd-cart-quantity').text(quantity);
+
+                // Hide the ajax loader
+                $('.edd-cart-ajax', container).hide();
+
+                // Switch purchase to checkout
+                $('.edd_go_to_checkout, .edd-add-to-cart', container).toggle();
+
+                // Show the added message
+                $('.edd-cart-added-alert', container).fadeIn();
+                setTimeout(function () {
+                    $('.edd-cart-added-alert', container).fadeOut();
+                }, 3000);
+
             }
-
-			// Update the cart quantity
-            var quantity = $('span.edd-cart-quantity').text();
-            quantity = parseInt(quantity, 10) + 1;
-            $('span.edd-cart-quantity').text(quantity);
-
-            // Hide the ajax loader
-            $('.edd-cart-ajax', container).hide();
-
-			// Switch purchase to checkout
-			$('.edd_go_to_checkout, .edd-add-to-cart', container).toggle();
-
-			// Show the added message
-            $('.edd-cart-added-alert', container).fadeIn();
-            setTimeout(function () {
-                $('.edd-cart-added-alert', container).fadeOut();
-            }, 3000);
 
         });
         return false;
