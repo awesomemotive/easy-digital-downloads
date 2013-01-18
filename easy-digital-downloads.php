@@ -26,14 +26,6 @@ along with Easy Digital Downloads. If not, see <http://www.gnu.org/licenses/>.
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
-/* PHP Hack to Get Plugin Headers in the .POT File */
-	$edd_plugin_header_translate = array(
-		__( 'Easy Digital Downloads', 'edd' ),
-    	__( 'Serve Digital Downloads Through WordPress', 'edd' ),
-    	__( 'Pippin Williamson', 'edd' ),
-    	__( 'http://easydigitaldownloads.com/', 'edd' ),
-    );
-
 if ( !class_exists( 'Easy_Digital_Downloads' ) ) :
 
 /**
