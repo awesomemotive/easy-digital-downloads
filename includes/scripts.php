@@ -44,6 +44,7 @@ function edd_load_scripts() {
 				'empty_cart_message' 		=> __('Your cart is empty', 'edd'), // Item already in the cart message
 				'loading' 					=> __('Loading', 'edd') , // General loading message
 				'ajax_loader' 				=> EDD_PLUGIN_URL . 'assets/images/loading.gif', // Ajax loading image
+				'redirect_to_checkout'      => edd_straight_to_checkout() ? '1' : '0',
 				'checkout_page' 			=> edd_get_checkout_uri(),
 				'permalinks' 				=> get_option( 'permalink_structure' ) ? '1' : '0'
 			)
