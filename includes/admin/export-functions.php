@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export.php';
 require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-customers.php';
+require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-payments.php';
 
 
 /**
@@ -27,6 +28,10 @@ require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-customers.p
  */
 
 function edd_export_payment_history() {
+
+	$payments_export = new EDD_Payments_Export();
+
+	$payments_export->export();
 
 	global $edd_options;
 
