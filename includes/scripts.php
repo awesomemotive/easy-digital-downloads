@@ -25,8 +25,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
 function edd_load_scripts() {
 
 	global $edd_options, $post;
-	// Newline on both sides to avoid being in a blob
-	echo "\n<!-- EDD Version: ".EDD_VERSION." --> \n";
+
 	wp_enqueue_script( 'jquery' );
 
 	// Get position in cart of current download
@@ -214,3 +213,19 @@ function edd_admin_downloads_icon() {
     <?php
 }
 add_action( 'admin_head','edd_admin_downloads_icon' );
+
+/**
+ * EDD Version in Header
+ *
+ * Adds Version to header
+ *
+ * @access      private
+ * @since       1.4.2
+ * @return      void
+*/
+
+function edd_version_in_header(){
+	// Newline on both sides to avoid being in a blob
+	echo "\n<!-- EDD Version: ".EDD_VERSION." --> \n";
+}
+add_action('wp_head', 'edd_version_in_header');
