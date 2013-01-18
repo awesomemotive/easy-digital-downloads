@@ -141,3 +141,28 @@ function edd_currency_filter( $price ) {
 		endswitch;
 	endif;
 }
+
+
+/**
+ * Set the number of decimal places per currency
+ *
+ * @access      public
+ * @since       1.4.2
+ * @return      int
+*/
+
+function edd_currency_decimal_filter( $decimals = 2 ) {
+	global $edd_options;
+
+	switch( $edd_options['currency'] ) {
+
+		case 'RIAL' :
+			$decimals = 0;
+			break;
+
+	}
+
+	return $decimals;
+
+}
+add_filter( 'edd_format_amount_decimals', 'edd_currency_decimal_filter' );
