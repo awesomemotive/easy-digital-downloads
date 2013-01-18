@@ -14,6 +14,10 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
+require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export.php';
+require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-customers.php';
+
+
 /**
  * Export all Payment History to CSV
  *
@@ -161,6 +165,14 @@ add_action( 'edd_payment_export', 'edd_export_payment_history' );
  */
 
 function edd_export_all_customers() {
+
+	$customer_export = new EDD_Customers_Export();
+
+	$customer_export->export();
+
+
+	/*
+
 	if ( current_user_can( 'administrator' ) ) {
 		global $wpdb;
 
@@ -198,6 +210,7 @@ function edd_export_all_customers() {
 	} else {
 		wp_die( __( 'Export not allowed for non-administrators.', 'edd' ) );
 	}
+	*/
 }
 add_action( 'edd_email_export', 'edd_export_all_customers' );
 
