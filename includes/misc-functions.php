@@ -69,6 +69,21 @@ function edd_logged_in_only() {
 
 
 /**
+ * Redirect to checkout immediately after adding items to the cart?
+ *
+ * @access      public
+ * @since       1.4.2
+ * @return      boolean
+*/
+
+function edd_straight_to_checkout() {
+	global $edd_options;
+	$ret = isset( $edd_options['redirect_on_add'] );
+	return (bool) apply_filters( 'edd_straight_to_checkout', $ret );
+}
+
+
+/**
  * Disable Redownload
  *
  * @access      public
