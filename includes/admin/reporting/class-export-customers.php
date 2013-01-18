@@ -13,7 +13,24 @@
 
 class EDD_Customers_Export extends EDD_Export {
 
+
+	/**
+	 * Our export type. Used for export-type specific filters / actions
+	 *
+	 * @access      public
+	 * @since       1.4.2
+	 */
+
 	public $export_type = 'customers';
+
+
+	/**
+	 * Set the CSV columns
+	 *
+	 * @access      public
+	 * @since       1.4.2
+	 * @return      array
+	 */
 
 	public function csv_cols() {
 		$cols = array(
@@ -24,6 +41,15 @@ class EDD_Customers_Export extends EDD_Export {
 		);
 		return $cols;
 	}
+
+
+	/**
+	 * Get the data being exported
+	 *
+	 * @access      public
+	 * @since       1.4.2
+	 * @return      array
+	 */
 
 	public function get_data() {
 
