@@ -25,7 +25,8 @@ if ( !defined( 'ABSPATH' ) ) exit;
 function edd_load_scripts() {
 
 	global $edd_options, $post;
-
+	// Newline on both sides to avoid being in a blob
+	echo "\n<!-- EDD Version: ".EDD_VERSION." --> \n";
 	wp_enqueue_script( 'jquery' );
 
 	// Get position in cart of current download
