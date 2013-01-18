@@ -170,47 +170,6 @@ function edd_export_all_customers() {
 
 	$customer_export->export();
 
-
-	/*
-
-	if ( current_user_can( 'administrator' ) ) {
-		global $wpdb;
-
-		ignore_user_abort( true );
-
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) )
-			set_time_limit( 0 );
-
-		$emails = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' " );
-
-		if ( ! empty( $emails ) ) {
-			header( "Content-type: text/csv" );
-			$today = date( "Y-m-d" );
-			header( "Content-Disposition: attachment; filename=customers-$today.csv" );
-			header( "Pragma: no-cache" );
-			header( "Expires: 0" );
-
-			echo '"' . __( 'Email', 'edd' ) 			.  '",';
-			echo '"' . __( 'Name', 'edd' ) 				.  '",';
-			echo '"' . __( 'Total Purchases', 'edd' ) 	.  '",';
-			echo '"' . __( 'Total Purchased', 'edd' ) 	.  '"';
-			echo "\r\n";
-			foreach ( $emails as $email ) {
-				$wp_user = get_user_by( 'email', $email );
-
-				echo $email . ',';
-				echo $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' );
-				echo ',';
-				echo edd_count_purchases_of_customer( $email ) . ',';
-				echo html_entity_decode( edd_currency_filter( edd_format_amount( edd_purchase_total_of_user( $email ) ) ) );
-				echo "\n";
-			}
-			exit;
-		}
-	} else {
-		wp_die( __( 'Export not allowed for non-administrators.', 'edd' ) );
-	}
-	*/
 }
 add_action( 'edd_email_export', 'edd_export_all_customers' );
 
