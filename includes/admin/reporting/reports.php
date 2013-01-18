@@ -28,6 +28,7 @@ function edd_reports_page() {
 
 	$current_page = admin_url( 'edit.php?post_type=download&page=edd-reports' );
 	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'reports';
+
 	?>
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper">
@@ -226,6 +227,7 @@ add_action( 'edd_reports_view_taxes', 'edd_reports_taxes' );
 */
 
 function edd_reports_tab_export() {
+
 	?>
 	<div class="metabox-holder">
 		<div id="post-body">
