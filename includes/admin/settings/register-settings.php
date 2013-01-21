@@ -280,6 +280,16 @@ function edd_register_settings() {
 					'type' => 'text',
 					'size' => 'small'
 				),
+				'prices_include_tax' => array(
+					'id' => 'prices_include_tax',
+					'name' => __('Prices entered with tax', 'edd'),
+					'desc' => __('This option effects how you enter prices.', 'edd'),
+					'type' => 'radio',
+					'options' => array(
+						'yes' => __('Yes, I will enter prices inclusive of tax', 'edd'),
+						'no'  => __('No, I will enter prices exclusive of tax', 'edd')
+					)
+				),
 				'tax_condition' => array(
 					'id' => 'tax_condition',
 					'name' => __('Apply Taxes to:', 'edd'),
@@ -297,11 +307,15 @@ function edd_register_settings() {
 					'type' => 'text',
 					'size' => 'large'
 				),
-				'taxes_on_prices' => array(
-					'id' => 'taxes_on_prices',
-					'name' => __('Tax in Prices', 'edd'),
-					'desc' => __('Include taxes in individual product prices?', 'edd'),
-					'type' => 'checkbox'
+				'checkout_include_tax' => array(
+					'id' => 'cart_display',
+					'name' => __('Display during checkout', 'edd'),
+					'desc' => __('', 'edd'),
+					'type' => 'select',
+					'options' => array(
+						'yes' => __('Including tax', 'edd'),
+						'no'  => __('Excluding tax', 'edd')
+					)
 				),
 				'taxes_after_discounts' => array(
 					'id' => 'taxes_after_discounts',
