@@ -357,9 +357,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 					<h4><?php _e('Purchase Key', 'edd'); ?></h4>
 					<span class="purchase-key"><?php echo $payment_meta['key']; ?></span>
 				</div>
-				<p><a id="edd-close-purchase-details" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Close', 'edd' ); ?>"><?php _e( 'Close', 'edd' ); ?></a></p>
 
 				<?php do_action( 'edd_payment_view_details', $item['ID'] ); ?>
+
+				<p><a id="edd-close-purchase-details" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Close', 'edd' ); ?>"><?php _e( 'Close', 'edd' ); ?></a></p>
+
 
 			</div>
 <?php
