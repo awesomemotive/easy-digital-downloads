@@ -113,7 +113,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 
 	function get_views() {
-		
+
 		$base = $this->base_url;
 
 		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
@@ -209,7 +209,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 
 	function column_email( $item ) {
-		
+
 		$payment     = get_post( $item['ID'] );
 
 		$row_actions = array();
@@ -350,6 +350,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 					<span class="purchase-key"><?php echo $payment_meta['key']; ?></span>
 				</div>
 				<p><a id="edd-close-purchase-details" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Close', 'edd' ); ?>"><?php _e( 'Close', 'edd' ); ?></a></p>
+
+				<?php do_action( 'edd_payment_view_details', $item['ID'] ); ?>
+
 			</div>
 <?php
 			$details .= ob_get_clean();
