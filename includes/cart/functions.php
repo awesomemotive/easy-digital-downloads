@@ -204,8 +204,6 @@ function edd_get_cart_item_quantity( $item ) {
 /**
  * Get Cart Item Price
  *
- * Gets the quanity for an item in the cart.
- *
  * @access      public
  * @since       1.0
  * @param       $item INT the download (cart item) ID number
@@ -220,7 +218,7 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 
 	if ( edd_is_taxes() ) {
 
-		if ( edd_is_include_tax() ) {
+		if ( edd_is_include_tax() || edd_is_exclude_tax() ) {
 			$price = edd_calculate_tax( $price );
 		}
 
@@ -233,6 +231,7 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 		}
 
 	}
+
 
 	$price = edd_currency_filter( edd_format_amount( $price ) );
 
@@ -597,8 +596,8 @@ function edd_get_cart_content_details() {
 				'price'       => $price,
 				'quantity'    => 1,
 			);
-			if( edd_taxes_on_prices() ) {
-				$details[ $key ]['tax'] = edd_calculate_tax( $price );
+			if( edd_is_taxes() ) {
+				$details[ $key ]['tax'] = edd_calculate_tax( $price, false );
 			}
 		}
 	}

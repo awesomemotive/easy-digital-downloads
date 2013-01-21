@@ -68,10 +68,6 @@ function edd_get_purchase_link( $args = array() ) {
 	if( $args['price'] && ! $variable_pricing ) {
 
 		$price = edd_get_download_price( $args['download_id'] );
-
-		if( edd_use_taxes() && edd_taxes_on_prices() )
-			$price += edd_calculate_tax( $price );
-
 		$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . '&nbsp;&ndash;&nbsp;' . $args['text'];
 
 	}
@@ -156,8 +152,6 @@ function edd_purchase_variable_pricing( $download_id ) {
 				if( $prices ):
 					foreach( $prices as $key => $price ) :
 						$amount = $price[ 'amount' ];
-						if( edd_use_taxes() && edd_taxes_on_prices() )
-							$amount += edd_calculate_tax( $price[ 'amount' ] );
 						printf(
 							'<li><label for="%2$s"><input type="radio" %1$s name="edd_options[price_id]" id="%2$s" class="%3$s" value="%4$s"/> %5$s</label></li>',
 							checked( 0, $key, false ),
