@@ -198,6 +198,25 @@ function edd_get_price_option_name( $download_id, $price_id ) {
 
 
 /**
+ * Checks to see if multiple price options can be purchased at once
+ *
+ * @access      public
+ * @since       1.4.2
+ * @return      bool
+*/
+
+function edd_single_price_option_mode( $download_id = 0 ) {
+
+	if( empty( $download_id ) )
+		$download_id = get_the_ID();
+
+	$ret = get_post_meta( $download_id, '_edd_price_options_mode', true );
+
+	return (bool) apply_filters( 'edd_single_price_option_mode', $ret, $download_id );
+}
+
+
+/**
  * Get Download Earnings Stats
  *
  * Returns the total earnings for a download.
