@@ -231,42 +231,55 @@ function edd_sales_tax_for_year( $year = null ) {
 	echo edd_currency_filter( edd_format_amount( edd_get_sales_tax_for_year( $year ) ) );
 }
 
-	/**
-	 * Stores the tax info in the payment meta
-	 *
-	 * @access      public
-	 * @since       1.3.3
-	 * @param 		$year int The year to retrieve taxes for, i.e. 2012
-	 * @uses 		edd_get_payment_tax()
-	 * @return      float
-	*/
+/**
+ * Stores the tax info in the payment meta
+ *
+ * @access      public
+ * @since       1.3.3
+ * @param 		$year int The year to retrieve taxes for, i.e. 2012
+ * @uses 		edd_get_payment_tax()
+ * @return      float
+*/
 
-	function edd_get_sales_tax_for_year( $year = null ) {
+function edd_get_sales_tax_for_year( $year = null ) {
 
-		if( empty( $year ) )
-			return 0;
+	if( empty( $year ) )
+		return 0;
 
-		// Start at zero
-		$tax = 0;
+	// Start at zero
+	$tax = 0;
 
-		$args = array(
-			'post_type' 		=> 'edd_payment',
-			'posts_per_page' 	=> -1,
-			'year' 				=> $year,
-			'meta_key' 			=> '_edd_payment_mode',
-			'meta_value' 		=> edd_is_test_mode() ? 'test' : 'live',
-			'fields'			=> 'ids'
-		);
+	$args = array(
+		'post_type' 		=> 'edd_payment',
+		'posts_per_page' 	=> -1,
+		'year' 				=> $year,
+		'meta_key' 			=> '_edd_payment_mode',
+		'meta_value' 		=> edd_is_test_mode() ? 'test' : 'live',
+		'fields'			=> 'ids'
+	);
 
-		$payments = get_posts( $args );
+	$payments = get_posts( $args );
 
-		if( $payments ) :
+	if( $payments ) :
 
-			foreach( $payments as $payment ) :
-				$tax += edd_get_payment_tax( $payment );
-			endforeach;
+		foreach( $payments as $payment ) :
+			$tax += edd_get_payment_tax( $payment );
+		endforeach;
 
-		endif;
+	endif;
 
-		return apply_filters( 'edd_get_sales_tax_for_year', $tax, $year );
-	}
+	return apply_filters( 'edd_get_sales_tax_for_year', $tax, $year );
+}
+
+function edd_is_include_tax()
+{
+	global $edd_options;
+
+	return ( $edd_options['prices_include_tax'] == 'no' && $edd_options['checkout_include_tax'] == 'yes' );
+}
+function edd_is_exclude_tax()
+{
+	global $edd_options;
+
+	return ( $edd_options['prices_include_tax'] == 'yes' && $edd_options['checkout_include_tax'] == 'no' );
+}

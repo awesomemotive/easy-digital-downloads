@@ -217,17 +217,17 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 
 	$price = edd_get_cart_item_price( $item_id, $options );
 
-	if ( $edd_options['prices_include_tax'] == 'no' && $edd_options['checkout_include_tax'] == 'yes' ) {
+	if ( edd_is_include_tax() ) {
 		$price = edd_calculate_tax( $price );
 	}
 
 	$price = edd_currency_filter( edd_format_amount( $price ) );
 
-	if ( $edd_options['prices_include_tax'] == 'yes' && $edd_options['checkout_include_tax'] == 'no' ) {
+	if ( edd_is_exclude_tax() ) {
 		$price .= ' (ex. tax)';
 	}
 
-	if ( $edd_options['prices_include_tax'] == 'no' && $edd_options['checkout_include_tax'] == 'yes' ) {
+	if ( edd_is_include_tax() ) {
 		$price .= ' (incl. tax)';
 	}
 
@@ -303,16 +303,14 @@ function edd_get_price_name( $item_id, $options = array() ) {
 function edd_cart_subtotal() {
 	global $edd_options;
 
-	$tax_1 = ( $edd_options['prices_include_tax'] == 'yes' && $edd_options['checkout_include_tax'] == 'no' );
-	$tax_2 = ( $edd_options['prices_include_tax'] == 'no' && $edd_options['checkout_include_tax'] == 'yes' );
+	$tax = edd_is_include_tax() || edd_is_exclude_tax();
+	$price = esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal( $tax ) ) ) );
 
-	$price = esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal( $tax_1 || $tax_2 ) ) ) );
-
-	if ( $edd_options['prices_include_tax'] == 'yes' && $edd_options['checkout_include_tax'] == 'no' ) {
+	if ( edd_is_exclude_tax() ) {
 		$price .= '<br/><span style="font-weight:normal;text-transform:none;">(ex. tax)</span>';
 	}
 
-	if ( $edd_options['prices_include_tax'] == 'no' && $edd_options['checkout_include_tax'] == 'yes' ) {
+	if ( edd_is_include_tax() ) {
 		$price .= '<br/><span style="font-weight:normal;text-transform:none;">(incl. tax)</span>';
 	}
 
