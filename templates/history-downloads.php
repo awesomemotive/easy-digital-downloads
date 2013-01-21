@@ -37,7 +37,7 @@ if( $purchases ) :
 
 						do_action( 'edd_download_history_row_start', $post->ID, $id );
 
-						echo '<td class="edd_download_download_name">' . $name . '</td>';
+						echo '<td class="edd_download_download_name">' . esc_html( $name ) . '</td>';
 
 						if( ! edd_no_redownload() ) {
 
