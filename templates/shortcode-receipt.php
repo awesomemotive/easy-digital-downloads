@@ -3,7 +3,7 @@
  * This template is used to display the purchase summary with [edd_receipt]
  */
 
-global $edd_receipt_args;
+global $edd_receipt_args, $edd_options;
 
 $payment   = get_post( $edd_receipt_args[ 'id' ] );
 $meta      = edd_get_payment_meta( $payment->ID );
@@ -33,16 +33,33 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 			<?php if( edd_use_taxes() ) : ?>
 				<tr>
 					<td><strong><?php _e( 'Subtotal', 'edd' ); ?></strong></td>
-					<td><?php echo edd_payment_subtotal( $payment->ID ); ?></td>
+					<td>
+						<?php echo edd_payment_subtotal( $payment->ID );
+
+						if ( $edd_options['checkout_include_tax'] == 'no' ) :
+							echo ' (ex. tax)';
+						endif; ?>
+					</td>
 				</tr>
-				<tr>
-					<td><strong><?php _e( 'Tax', 'edd' ); ?></strong></td>
-					<td><?php echo edd_payment_tax( $payment->ID ); ?></td>
-				</tr>
+
+				<?php if ( $edd_options['checkout_include_tax'] == 'no' ) : ?>
+					<tr>
+						<td><strong><?php _e( 'Tax', 'edd' ); ?></strong></td>
+						<td><?php echo edd_payment_tax( $payment->ID ); ?></td>
+					</tr>
+				<?php endif; ?>
+
 			<?php endif; ?>
 		<tr>
 			<td><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
-			<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
+			<td><?php
+
+				echo edd_payment_amount( $payment->ID );
+
+				if ( $edd_options['checkout_include_tax'] == 'yes' ) :
+					printf( ' (includes %s tax)', edd_payment_tax( $payment->ID ) );
+				endif; ?>
+			</td>
 		</tr>
 		<?php endif; ?>
 
