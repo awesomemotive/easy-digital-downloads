@@ -254,7 +254,7 @@ function edd_render_price_field( $post_id ) {
 				</tbody>
 			</table>
 		</div>
-	</div>
+	</div><!--end #edd_variable_price_fields-->
 <?php
 }
 add_action( 'edd_meta_box_fields', 'edd_render_price_field', 10 );
