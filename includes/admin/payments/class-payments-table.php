@@ -131,7 +131,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'failed'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'failed', $base ), $current === 'failed' ? ' class="current"' : '', __('Failed', 'edd') . $failed_count )
 		);
 
-		return $views;
+		return apply_filters( 'edd_payments_table_views', $views );
 	}
 
 
