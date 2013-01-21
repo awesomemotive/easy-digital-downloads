@@ -437,20 +437,11 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 function edd_get_cart_total( $discounts = false ) {
 	global $edd_options;
 
-	$subtotal = edd_get_cart_subtotal();
+	$subtotal = edd_get_cart_subtotal( false );
 
 	$cart_tax = 0;
-
 	if ( edd_is_taxes() ) {
-
-		if ( $edd_options['checkout_include_tax'] == 'no' && $edd_options['prices_include_tax'] == 'yes' ) {
-			$cart_tax = edd_get_cart_tax( $discounts );
-		}
-
-		if ( $edd_options['checkout_include_tax'] == 'yes' && $edd_options['prices_include_tax'] == 'yes' ) {
-			$cart_tax = edd_get_cart_tax( $discounts );
-		}
-
+		$cart_tax = edd_get_cart_tax( $discounts );
 	}
 
 	$discount = edd_get_cart_discounted_amount( $discounts );
