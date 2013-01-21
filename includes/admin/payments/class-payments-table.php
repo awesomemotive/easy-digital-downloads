@@ -405,7 +405,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'delete' => __( 'Delete', 'edd' )
 		);
 
-		return $actions;
+		return apply_filters( 'edd_payments_table_bulk_actions', $actions );
 	}
 
 
@@ -428,6 +428,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			if ( 'delete' === $this->current_action() ) {
 				edd_delete_purchase( $id );
 			}
+			do_action( 'edd_payments_table_do_bulk_action', $id, $this->current_action );
 		}
 	}
 
