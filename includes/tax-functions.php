@@ -145,12 +145,38 @@ function edd_get_tax_rate() {
  * @return      float
 */
 
-function edd_calculate_tax( $amount ) {
+function edd_calculate_tax( $amount, $sum = true ) {
+	global $edd_options;
 
-	$rate 	= edd_get_tax_rate();
-	$tax 	= number_format( $amount * $rate, 2 ); // The tax amount
+	// Not using taxes
+	if ( !edd_use_taxes() )
+		return false;
 
-	return apply_filters( 'edd_taxed_amount', $tax, $rate );
+	$rate = edd_get_tax_rate();
+	$tax = 0;
+
+	if ( $edd_options['prices_include_tax'] == 'yes' ) {
+		$tax = $amount - ( $amount / ( $rate + 1 ) );
+	}
+
+	if ( $edd_options['prices_include_tax'] == 'no' ) {
+		$tax = $amount * $rate;
+	}
+
+	$tax = number_format( $tax, 2 );
+	$taxed_amount = $tax;
+
+	if ( $sum ) {
+
+		if ( $edd_options['prices_include_tax'] == 'yes' ) {
+			$taxed_amount = $amount - $tax;
+		} else {
+			$taxed_amount = $amount + $tax;
+		}
+
+	}
+
+	return apply_filters( 'edd_taxed_amount', $taxed_amount, $rate );
 }
 
 

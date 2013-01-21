@@ -308,7 +308,7 @@ function edd_register_settings() {
 					'size' => 'large'
 				),
 				'checkout_include_tax' => array(
-					'id' => 'cart_display',
+					'id' => 'checkout_include_tax',
 					'name' => __('Display during checkout', 'edd'),
 					'desc' => __('', 'edd'),
 					'type' => 'select',
