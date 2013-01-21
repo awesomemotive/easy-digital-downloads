@@ -213,9 +213,8 @@ function edd_ajax_opt_into_local_taxes() {
 	if ( !check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) )
 		return false;
 
-	if ( edd_opt_into_local_taxes() ) {
-		echo edd_checkout_cart();
-	}
+	edd_opt_into_local_taxes();
+	echo edd_checkout_cart();
 
 	exit;
 }
@@ -235,9 +234,8 @@ function edd_ajax_opt_out_local_taxes() {
 	if ( !check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) )
 		return false;
 
-	if ( edd_opt_out_local_taxes() ) {
-		echo edd_checkout_cart();
-	}
+	edd_opt_out_local_taxes();
+	echo edd_checkout_cart();
 
 	exit;
 }

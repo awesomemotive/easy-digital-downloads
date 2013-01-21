@@ -57,7 +57,7 @@ function edd_local_taxes_only() {
 */
 
 function edd_local_tax_opted_in() {
-	return isset( $_COOKIE['wordpress_edd_local_tax_opt_in'] );
+	return !empty( $_SESSION['wordpress_edd_local_tax_opt_in'] );
 }
 
 
@@ -70,7 +70,7 @@ function edd_local_tax_opted_in() {
 */
 
 function edd_opt_into_local_taxes() {
-	return setcookie( 'wordpress_edd_local_tax_opt_in', 1, time()+3600, COOKIEPATH, COOKIE_DOMAIN, false );
+	return $_SESSION['wordpress_edd_local_tax_opt_in'] = true;
 }
 
 
@@ -83,7 +83,7 @@ function edd_opt_into_local_taxes() {
 */
 
 function edd_opt_out_local_taxes() {
-	return setcookie( 'wordpress_edd_local_tax_opt_in', null, strtotime( '-1 day' ), COOKIEPATH, COOKIE_DOMAIN, false );
+	return $_SESSION['wordpress_edd_local_tax_opt_in'] = false;
 }
 
 
