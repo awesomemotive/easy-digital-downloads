@@ -146,8 +146,15 @@ function edd_item_in_cart( $download_id = 0, $options = array() ) {
 	if( is_array( $cart_items ) ) {
 		foreach( $cart_items as $item ) {
 			if( $item['id'] == $download_id ) {
-				$ret = true;
-				break;
+				if( isset( $options['price_id'] ) && isset( $item['options']['price_id'] ) ) {
+					if( $options['price_id'] == $item['options']['price_id'] ) {
+						$ret = true;
+						break;
+					}
+				} else {
+					$ret = true;
+					break;
+				}
 			}
 		}
 	}
