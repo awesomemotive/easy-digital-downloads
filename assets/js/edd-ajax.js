@@ -58,11 +58,15 @@ jQuery(document).ready(function ($) {
 		var download = $this.data('download-id');
 		var variable_price = $this.data('variable-price');
 		var item_price_ids = [];
-		if(typeof variable_price !== 'undefined' && variable_price !== false) {
+
+		if( variable_price == 'yes' ) {
 			$('.edd_price_option_' + download + ':checked').each(function( index ) {
                 item_price_ids[ index ] = $(this).val();
             });
-		}
+		} else {
+            item_price_ids[0] = download;
+        }
+
         var action = $this.data('action'),
             data = {
                 action: action,
