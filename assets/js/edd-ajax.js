@@ -97,15 +97,18 @@ jQuery(document).ready(function ($) {
                 // Hide the ajax loader
                 $('.edd-cart-ajax', container).hide();
 
-                // Switch purchase to checkout
-                $('.edd_go_to_checkout, .edd-add-to-cart', container).toggle();
+                if( variable_price == 'no' ) {
+                    // Switch purchase to checkout (only for non variable prices)
+                    $('.edd_go_to_checkout, .edd-add-to-cart', container).toggle();
+                }
 
-                // Show the added message
-                $('.edd-cart-added-alert', container).fadeIn();
-                setTimeout(function () {
-                    $('.edd-cart-added-alert', container).fadeOut();
-                }, 3000);
-
+                if( cart_item_response != 'incart' ) {
+                    // Show the added message
+                    $('.edd-cart-added-alert', container).fadeIn();
+                    setTimeout(function () {
+                        $('.edd-cart-added-alert', container).fadeOut();
+                    }, 3000);
+                }
             }
 
         });
