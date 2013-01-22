@@ -594,9 +594,7 @@ function edd_show_payment_icons() {
 	}
 }
 add_action( 'edd_payment_mode_top', 'edd_show_payment_icons' );
-
-if( ! edd_is_ajax_enabled() )
-	add_action( 'edd_before_purchase_form', 'edd_show_payment_icons' );
+add_action( 'edd_before_purchase_form', 'edd_show_payment_icons' );
 
 
 /**
