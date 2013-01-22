@@ -57,26 +57,21 @@ jQuery(document).ready(function ($) {
 
 		var download = $this.data('download-id');
 		var variable_price = $this.data('variable-price');
-		var item_price_id = false;
+		var item_price_ids = [];
 		if(typeof variable_price !== 'undefined' && variable_price !== false) {
-			item_price_id = $('.edd_price_option_' + download + ':checked').val();
+			$('.edd_price_option_' + download + ':checked').each(function( index ) {
+                item_price_ids[ index ] = $(this).val();
+            });
 		}
-
         var action = $this.data('action'),
             data = {
                 action: action,
                 download_id: download,
-				price_id : item_price_id,
+				price_ids : item_price_ids,
                 nonce: edd_scripts.ajax_nonce
             };
 
         $.post(edd_scripts.ajaxurl, data, function (cart_item_response) {
-            // Item already in the cart
-			if(cart_item_response == 'incart') {
-				alert(edd_scripts.already_in_cart_message);
-				$('.edd-cart-ajax').hide();
-				return;
-			}
 
             if( edd_scripts.redirect_to_checkout == '1' ) {
 
