@@ -340,12 +340,8 @@ function edd_get_cart_subtotal( $tax = true ) {
 	global $edd_options;
 
 	$cart_items = edd_get_cart_contents();
-
-	if ( !( edd_is_taxes() ) ) {
-		$tax = false;
-	}
-
 	$amount = (float) 0;
+
 	if ( $cart_items ) {
 
 		foreach( $cart_items as $item ) {
