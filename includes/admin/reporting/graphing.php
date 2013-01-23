@@ -231,7 +231,7 @@ function edd_reports_graph_controls() {
 		'last_quarter'	=> __( 'Last Quarter', 'edd' ),
 		'this_year'		=> __( 'This Year', 'edd' ),
 		'last_year'		=> __( 'Last Year', 'edd' ),
-		'other'			=> __( 'Other', 'edd' )
+		'other'			=> __( 'Custom', 'edd' )
 	) );
 
 	$dates = edd_get_report_dates();
