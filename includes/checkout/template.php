@@ -593,8 +593,7 @@ function edd_show_payment_icons() {
 		echo '</div>';
 	}
 }
-add_action( 'edd_payment_mode_top', 'edd_show_payment_icons' );
-add_action( 'edd_before_purchase_form', 'edd_show_payment_icons' );
+add_action( 'edd_checkout_form_top', 'edd_show_payment_icons' );
 
 
 /**
