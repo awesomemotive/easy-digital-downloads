@@ -226,7 +226,9 @@ function edd_reports_graph() {
 function edd_reports_graph_controls() {
 	$date_options = apply_filters( 'edd_report_date_options', array(
 		'this_month' 	=> __( 'This Month', 'edd' ),
-		'last_month' 	=> __( 'Last Month', 'edd' ),
+		'today' 	    => __( 'Today', 'edd' ),
+		'this_week' 	=> __( 'This Week', 'edd' ),
+		'last_week' 	=> __( 'Last Week', 'edd' ),
 		'this_quarter'	=> __( 'This Quarter', 'edd' ),
 		'last_quarter'	=> __( 'Last Quarter', 'edd' ),
 		'this_year'		=> __( 'This Year', 'edd' ),
