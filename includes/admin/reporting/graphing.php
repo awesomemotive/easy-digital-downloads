@@ -133,8 +133,10 @@ function edd_reports_graph() {
 	   						$hour  = 1;
 	   						$month = date( 'n' );
 							while ( $hour <= 23 ) :
+								$earnings = edd_get_earnings_by_date( $dates['day'], $month, $dates['year'], $hour );
+								$totals += $earnings;
 								$date = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ); ?>
-								[<?php echo $date * 1000; ?>, <?php echo edd_get_earnings_by_date( $dates['day'], $month, $dates['year'], $hour ); ?>],
+								[<?php echo $date * 1000; ?>, <?php echo $earnings; ?>],
 								<?php
 								$hour++;
 							endwhile;
