@@ -370,6 +370,16 @@ function edd_get_report_dates() {
 
 			break;
 
+		case 'this_week' :
+
+			$dates['day']       = date( 'd', time() - ( date( 'w' ) - 1 ) *60*60*24 );
+			$dates['day_end']   = $dates['day'] + 6;
+			$dates['m_start'] 	= date( 'n' );
+			$dates['m_end']		= date( 'n' );
+			$dates['year']		= date( 'Y' );
+
+			break;
+
 		case 'last_month' :
 
 			$dates['m_start'] 	= date( 'n' ) - 1;
