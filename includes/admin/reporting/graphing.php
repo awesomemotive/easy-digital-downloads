@@ -82,25 +82,42 @@ function edd_reports_graph() {
 	   			[{
    					data: [
 	   					<?php
-	   					$i = $dates['m_start'];
-						while ( $i <= $dates['m_end'] ) :
-							if ( $day_by_day ) :
-								$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
-								$d 				= 1;
-								while ( $d <= $num_of_days ) :
-									$date = mktime( 0, 0, 0, $i, $d, $dates['year'] ); ?>
-									[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( $d, $i, $dates['year'] ); ?>],
+
+	   					if( $dates['range'] == 'today' ) {
+	   						// Hour by hour
+	   						$hour  = 1;
+	   						$month = date( 'n' );
+							while ( $hour <= 23 ) :
+								$date = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ); ?>
+								[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( $dates['day'], $month, $dates['year'], $hour ); ?>],
 								<?php
-								$d++;
-								endwhile;
-							else :
-								$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
-								?>
-								[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( null, $i, $dates['year'] ); ?>],
-							<?php
-							endif;
-							$i++;
-						endwhile;
+								$hour++;
+							endwhile;
+
+	   					} else {
+
+	   						$i = $dates['m_start'];
+							while ( $i <= $dates['m_end'] ) :
+								if ( $day_by_day ) :
+									$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
+									$d 				= 1;
+									while ( $d <= $num_of_days ) :
+										$date = mktime( 0, 0, 0, $i, $d, $dates['year'] ); ?>
+										[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( $d, $i, $dates['year'] ); ?>],
+									<?php
+									$d++;
+									endwhile;
+								else :
+									$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
+									?>
+									[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( null, $i, $dates['year'] ); ?>],
+								<?php
+								endif;
+								$i++;
+							endwhile;
+
+	   					}
+
 	   					?>,
 	   				],
 	   				yaxis: 2,
@@ -110,27 +127,44 @@ function edd_reports_graph() {
    				{
    					data: [
 	   					<?php
-	   					$i = $dates['m_start'];
-						while ( $i <= $dates['m_end'] ) :
-							if ( $day_by_day ) :
-								$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
-								$d 				= 1;
-								while ( $d <= $num_of_days ) :
-									$date = mktime( 0, 0, 0, $i, $d, $dates['year'] );
-									$earnings = edd_get_earnings_by_date( $d, $i, $dates['year'] );
-									$totals += $earnings; ?>
-									[<?php echo $date * 1000; ?>, <?php echo $earnings ?>],
-								<?php $d++; endwhile;
-							else :
-								$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
-								$earnings = edd_get_earnings_by_date( null, $i, $dates['year'] );
-								$totals += $earnings;
-								?>
-								[<?php echo $date * 1000; ?>, <?php echo $earnings; ?>],
-							<?php
-							endif;
-							$i++;
-						endwhile;
+
+	   					if( $dates['range'] == 'today' ) {
+	   						// Hour by hour
+	   						$hour  = 1;
+	   						$month = date( 'n' );
+							while ( $hour <= 23 ) :
+								$date = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ); ?>
+								[<?php echo $date * 1000; ?>, <?php echo edd_get_earnings_by_date( $dates['day'], $month, $dates['year'], $hour ); ?>],
+								<?php
+								$hour++;
+							endwhile;
+
+	   					} else {
+
+		   					$i = $dates['m_start'];
+							while ( $i <= $dates['m_end'] ) :
+								if ( $day_by_day ) :
+									$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
+									$d 				= 1;
+									while ( $d <= $num_of_days ) :
+										$date = mktime( 0, 0, 0, $i, $d, $dates['year'] );
+										$earnings = edd_get_earnings_by_date( $d, $i, $dates['year'] );
+										$totals += $earnings; ?>
+										[<?php echo $date * 1000; ?>, <?php echo $earnings ?>],
+									<?php $d++; endwhile;
+								else :
+									$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
+									$earnings = edd_get_earnings_by_date( null, $i, $dates['year'] );
+									$totals += $earnings;
+									?>
+									[<?php echo $date * 1000; ?>, <?php echo $earnings; ?>],
+								<?php
+								endif;
+								$i++;
+							endwhile;
+
+						}
+
 	   					?>
 	   				],
    					label: "<?php _e( 'Earnings', 'edd' ); ?>",
@@ -319,6 +353,15 @@ function edd_get_report_dates() {
 
 		case 'this_month' :
 
+			$dates['m_start'] 	= date( 'n' );
+			$dates['m_end']		= date( 'n' );
+			$dates['year']		= date( 'Y' );
+
+			break;
+
+		case 'today' :
+
+			$dates['day']		= date( 'd' );
 			$dates['m_start'] 	= date( 'n' );
 			$dates['m_end']		= date( 'n' );
 			$dates['year']		= date( 'Y' );
