@@ -198,7 +198,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				$value   = edd_get_payment_status( $payment, true );
 				break;
 			default:
-				$value   = $item[ $column_name ];
+				$value   = isset( $item[ $column_name ] ) ? $item[ $column_name ] : '';
 				break;
 
 		}
