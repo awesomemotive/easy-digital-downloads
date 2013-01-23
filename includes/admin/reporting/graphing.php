@@ -73,6 +73,7 @@ function edd_reports_graph() {
 	$time_format 	= apply_filters( 'edd_graph_timeformat', $time_format );
 	$tick_size 		= apply_filters( 'edd_graph_ticksize', $tick_size );
 	$totals 		= (float) 0.00; // Total earnings for time period shown
+	$sales_totals   = 0;            // Total sales for time period shown
 
 	ob_start(); ?>
 	<script type="text/javascript">
@@ -88,8 +89,10 @@ function edd_reports_graph() {
 	   						$hour  = 1;
 	   						$month = date( 'n' );
 							while ( $hour <= 23 ) :
+								$sales = edd_get_sales_by_date( $dates['day'], $month, $dates['year'], $hour );
+								$sales_totals += $sales;
 								$date = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ); ?>
-								[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( $dates['day'], $month, $dates['year'], $hour ); ?>],
+								[<?php echo $date * 1000; ?>, <?php echo $sales; ?>],
 								<?php
 								$hour++;
 							endwhile;
@@ -101,8 +104,10 @@ function edd_reports_graph() {
 							$day_end = $dates['day_end'];
 	   						$month   = $dates['m_start'];
 							while ( $day <= $day_end ) :
+								$sales = edd_get_sales_by_date( $day, $month, $dates['year'] );
+								$sales_totals += $sales;
 								$date = mktime( 0, 0, 0, $month, $day, $dates['year'] ); ?>
-								[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( $day, $month, $dates['year'] ); ?>],
+								[<?php echo $date * 1000; ?>, <?php echo $sales; ?>],
 								<?php
 								$day++;
 							endwhile;
@@ -115,8 +120,10 @@ function edd_reports_graph() {
 									$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
 									$d 				= 1;
 									while ( $d <= $num_of_days ) :
+										$sales = edd_get_sales_by_date( $d, $i, $dates['year'] );
+										$sales_totals += $sales;
 										$date = mktime( 0, 0, 0, $i, $d, $dates['year'] ); ?>
-										[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( $d, $i, $dates['year'] ); ?>],
+										[<?php echo $date * 1000; ?>, <?php echo $sales; ?>],
 									<?php
 									$d++;
 									endwhile;
@@ -277,6 +284,7 @@ function edd_reports_graph() {
 				<?php edd_reports_graph_controls(); ?>
 				<div id="edd_monthly_stats" style="height: 300px;"></div>
 				<p id="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $totals ) ); ?></strong></p>
+				<p id="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo $sales_totals; ?></strong></p>
 			</div>
 		</div>
 	</div>
