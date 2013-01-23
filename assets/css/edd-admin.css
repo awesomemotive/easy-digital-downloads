@@ -66,6 +66,7 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 -------------------------------------------------------------- */
 #edd-graphs-date-options,
 #edd-date-range-options { float: left; }
+#edd-date-range-options span { float: left; margin-right: 6px; height: 24px; line-height: 24px; }
 
 /* Upgrades page styles
 -------------------------------------------------------------- */

@@ -330,8 +330,7 @@ function edd_reports_graph_controls() {
 		       	</select>
 
 		       	<div id="edd-date-range-options" <?php echo $display; ?>>
-					&mdash;
-				    <span><?php _e( 'From', 'edd' ); ?>&nbsp;</span>
+					<span><?php _e( 'From', 'edd' ); ?>&nbsp;</span>
 			       	<select id="edd-graphs-month-start" name="m_start">
 			       		<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
 			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_start'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
