@@ -94,7 +94,7 @@ function edd_reports_graph() {
 								$hour++;
 							endwhile;
 
-	   					} elseif( $dates['range'] == 'this_week' ) {
+	   					} elseif( $dates['range'] == 'this_week' || $dates['range'] == 'last_week'  ) {
 
 							//Day by day
 							$day     = $dates['day'];
@@ -155,7 +155,7 @@ function edd_reports_graph() {
 								$hour++;
 							endwhile;
 
-						} elseif( $dates['range'] == 'this_week' ) {
+						} elseif( $dates['range'] == 'this_week' || $dates['range'] == 'last_week' ) {
 
 							//Day by day
 							$day     = $dates['day'];
@@ -402,6 +402,15 @@ function edd_get_report_dates() {
 		case 'this_week' :
 
 			$dates['day']       = date( 'd', time() - ( date( 'w' ) - 1 ) *60*60*24 );
+			$dates['day_end']   = $dates['day'] + 6;
+			$dates['m_start'] 	= date( 'n' );
+			$dates['m_end']		= date( 'n' );
+			$dates['year']		= date( 'Y' );
+			break;
+
+		case 'last_week' :
+
+			$dates['day']       = date( 'd', time() - ( date( 'w' ) - 1 ) *60*60*24 ) - 6;
 			$dates['day_end']   = $dates['day'] + 6;
 			$dates['m_start'] 	= date( 'n' );
 			$dates['m_end']		= date( 'n' );
