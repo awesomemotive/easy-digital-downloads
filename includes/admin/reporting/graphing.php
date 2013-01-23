@@ -27,6 +27,11 @@ function edd_reports_graph() {
 
 	// Determine graph options
 	switch( $dates['range'] ) :
+		case 'today' :
+			$time_format 	= '%d/%b';
+			$tick_size		= 'hour';
+			$day_by_day		= true;
+			break;
 		case 'last_year' :
 			$time_format 	= '%b';
 			$tick_size		= 'month';
