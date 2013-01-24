@@ -51,13 +51,7 @@ function edd_load_scripts() {
 		);
 	}
 
-	// Load jQuery validation
-	if( isset( $edd_options['jquery_validation'] ) && edd_is_checkout() ) {
-		wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'assets/js/jquery.validate.min.js' );
-		wp_enqueue_script( 'edd-validation', EDD_PLUGIN_URL . 'assets/js/form-validation.js', array( 'jquery', 'jquery-validation' ), EDD_VERSION );
-		$required = array( 'firstname' => true, 'lastname' => true );
-		wp_localize_script( 'edd-validation', 'edd_scripts_validation', apply_filters( 'edd_scripts_validation', $required ) );
-	}
+
 	if( edd_is_checkout() ) {
 
 		if( edd_is_cc_verify_enabled() ) {
@@ -75,6 +69,13 @@ function edd_load_scripts() {
 			'no_email'          => __('Please enter an email address before applying a discount code', 'edd'),
 			'no_username'       => __('Please enter a username before applying a discount code', 'edd'),
 	    ));
+
+	    // Load jQuery validation
+		if( isset( $edd_options['jquery_validation'] ) ) {
+			wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'assets/js/jquery.validate.min.js' );
+		    $required = array( 'firstname' => true, 'lastname' => true );
+			wp_localize_script( 'jquery-validation', 'edd_scripts_validation', apply_filters( 'edd_scripts_validation', $required ) );
+		}
 	}
 }
 add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
