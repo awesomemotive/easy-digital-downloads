@@ -62,8 +62,8 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$variable_pricing     = edd_has_variable_prices( $args['download_id'] );
-	$data_variable        = $variable_pricing ? ' data-variable-price=yes' : 'data-variable-price=no';
+	$variable_pricing = edd_has_variable_prices( $args['download_id'] );
+	$data_variable    = $variable_pricing ? ' data-variable-price=yes' : 'data-variable-price=no';
 
 	if( $args['price'] && ! $variable_pricing ) {
 
