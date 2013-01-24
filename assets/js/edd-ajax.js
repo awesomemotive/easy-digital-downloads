@@ -181,11 +181,13 @@ jQuery(document).ready(function ($) {
         $.post(edd_scripts.ajaxurl + '?payment-mode=' + payment_mode, { action: 'edd_load_gateway', edd_payment_mode: payment_mode },
             function(response){
                 jQuery('#edd_purchase_form_wrap').html(response);
+                edd_validate_checkout();
             }
         );
 
         return false;
     });
+
 
     $(document).on('click', '#edd_purchase_form input[type=submit]', function(e) {
 
