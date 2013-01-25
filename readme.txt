@@ -92,6 +92,10 @@ There are three ways you can show the downloads shopping cart:
 
 `echo edd_shopping_cart();`
 
+4. Is there a sample import file I can use to setup a demo store?
+
+Yes! Simply go to Tools > Import and install the WordPress Importer, then navigate to wp-content/plugins/easy-digital-downloads/assets/ and select the sample-products-import.xml file. This will create several sample products and plugin pages for you.
+
 = My Payments Marked as Pending =
 
 There are several reasons this happens. Please follow the suggestions [here](https://easydigitaldownloads.com/documentation/faqs/).
@@ -166,6 +170,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.4.2 =
+
+* New: Added sample product import xml file in easy-digital-downloads/assets/
 
 = 1.4.1.1: January 14, 2013 =
 
