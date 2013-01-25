@@ -304,9 +304,10 @@ function edd_reports_graph() {
 function edd_reports_graph_controls() {
 	$date_options = apply_filters( 'edd_report_date_options', array(
 		'today' 	    => __( 'Today', 'edd' ),
-		'this_month' 	=> __( 'This Month', 'edd' ),
 		'this_week' 	=> __( 'This Week', 'edd' ),
 		'last_week' 	=> __( 'Last Week', 'edd' ),
+		'this_month' 	=> __( 'This Month', 'edd' ),
+		'last_month' 	=> __( 'Last Month', 'edd' ),
 		'this_quarter'	=> __( 'This Quarter', 'edd' ),
 		'last_quarter'	=> __( 'Last Quarter', 'edd' ),
 		'this_year'		=> __( 'This Year', 'edd' ),
@@ -397,6 +398,21 @@ function edd_get_report_dates() {
 
 			break;
 
+		case 'last_month' :
+			if( $dates['m_start'] == 12 ) {
+				$dates['m_start'] = 12;
+				$dates['m_end']	  = 12;
+				$dates['year']    = date( 'Y' ) - 1;
+				$dates['year_end']= date( 'Y' ) - 1;
+			} else {
+				$dates['m_start'] = date( 'n' ) - 1;
+				$dates['m_end']	  = date( 'n' ) - 1;
+				$dates['year']    = date( 'Y' );
+			}
+
+
+			break;
+
 		case 'today' :
 
 			$dates['day']		= date( 'd' );
@@ -422,14 +438,6 @@ function edd_get_report_dates() {
 			$dates['m_start'] 	= date( 'n' );
 			$dates['m_end']		= date( 'n' );
 			$dates['year']		= date( 'Y' );
-			break;
-
-		case 'last_month' :
-
-			$dates['m_start'] 	= date( 'n' ) - 1;
-			$dates['m_end']		= date( 'n' ) - 1;
-			$dates['year']		= date( 'Y' );
-
 			break;
 
 		case 'this_quarter' :
