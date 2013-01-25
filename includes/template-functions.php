@@ -62,9 +62,9 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$variable_pricing     = edd_has_variable_prices( $args['download_id'] );
-	$data_variable        = $variable_pricing ? ' data-variable-price=yes' : 'data-variable-price=no';
-
+	$variable_pricing = edd_has_variable_prices( $args['download_id'] );
+	$data_variable    = $variable_pricing ? ' data-variable-price=yes' : 'data-variable-price=no';
+	$type             = edd_single_price_option_mode( $args['download_id'] ) ? 'data-price-mode=multi' : 'data-price-mode=single';
 	if( $args['price'] && ! $variable_pricing ) {
 
 		$price = edd_get_download_price( $args['download_id'] );
@@ -93,11 +93,12 @@ function edd_get_purchase_link( $args = array() ) {
 		<div class="edd_purchase_submit_wrapper">
 			<?php
 				printf(
-					'<input type="submit" class="edd-add-to-cart %1$s" name="edd_purchase_download" value="%2$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s/>',
+					'<input type="submit" class="edd-add-to-cart %1$s" name="edd_purchase_download" value="%2$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s %6$s/>',
 					implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
 					esc_attr( $args['text'] ),
 					esc_attr( $args['download_id'] ),
 					esc_attr( $data_variable ),
+					esc_attr( $type ),
 					$button_display
 				);
 
