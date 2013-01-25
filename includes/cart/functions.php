@@ -286,7 +286,8 @@ function edd_get_price_name( $item_id, $options = array() ) {
 		// If variable prices are enabled, retrieve the options
 		$prices = get_post_meta( $item_id, 'edd_variable_prices', true );
 		if( $prices ) {
-			$name = $prices[ $options['price_id'] ]['name'];
+			if( isset( $prices[ $options['price_id'] ] ) )
+				$name = $prices[ $options['price_id'] ]['name'];
 		}
 		$return = $name;
 	}
