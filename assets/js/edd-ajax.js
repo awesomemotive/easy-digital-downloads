@@ -29,10 +29,13 @@ jQuery(document).ready(function ($) {
                     $( '#edd_purchase_' + id + ' .edd_go_to_checkout' ).hide();
                     $( '#edd_purchase_' + id + ' .edd-add-to-cart' ).show();
                 }
-                var quantity = $('span.edd-cart-quantity').text();
-                quantity = parseInt(quantity, 10) - 1;
-                $('span.edd-cart-quantity').text(quantity);
-				if(!$('.edd-cart-item').length) {
+
+                $('span.edd-cart-quantity').each(function() {
+                    var quantity = parseInt($(this).text(), 10) - 1;
+                    $(this).text(quantity);
+                });
+
+                if(!$('.edd-cart-item').length) {
                     $('.cart_item.edd_checkout').hide();
 					$('.edd-cart').append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
 				} else {
@@ -94,9 +97,10 @@ jQuery(document).ready(function ($) {
                 }
 
                 // Update the cart quantity
-                var quantity = $('span.edd-cart-quantity').text();
-                quantity = parseInt(quantity, 10) + 1;
-                $('span.edd-cart-quantity').text(quantity);
+                $('span.edd-cart-quantity').each(function() {
+                    var quantity = parseInt($(this).text(), 10) + 1;
+                    $(this).text(quantity);
+                });
 
                 // Hide the ajax loader
                 $('.edd-cart-ajax', container).hide();
