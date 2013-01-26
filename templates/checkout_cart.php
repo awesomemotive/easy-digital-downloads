@@ -44,7 +44,7 @@
 	</tbody>
 	<tfoot>
 		<?php if( edd_use_taxes() ) : ?>
-		<tr class="edd_cart_footer_row edd_cart_subtotal_row"<?php if ( !( edd_is_taxes() ) ) echo ' style="display:none;"'; ?>>
+		<tr class="edd_cart_footer_row edd_cart_subtotal_row"<?php if ( !( edd_is_cart_taxed() ) ) echo ' style="display:none;"'; ?>>
 			<?php do_action( 'edd_checkout_table_subtotal_first' ); ?>
 			<th colspan="3" class="edd_cart_subtotal">
 				<?php _e( 'Subtotal', 'edd' ); ?>:&nbsp;<span class="edd_cart_subtotal"><?php echo edd_cart_subtotal(); ?></span>
