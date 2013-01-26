@@ -37,7 +37,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 						<?php echo edd_payment_subtotal( $payment->ID );
 
 						if ( $edd_options['checkout_include_tax'] == 'no' ) :
-							echo ' (ex. tax)';
+							echo ' ' . __('(ex. tax)', 'edd')
 						endif; ?>
 					</td>
 				</tr>
@@ -57,7 +57,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 				echo edd_payment_amount( $payment->ID );
 
 				if ( $edd_options['checkout_include_tax'] == 'yes' ) :
-					printf( ' (includes %s tax)', edd_payment_tax( $payment->ID ) );
+					printf( ' ' . __('(includes %s tax)', 'edd'), edd_payment_tax( $payment->ID ) );
 				endif; ?>
 			</td>
 		</tr>

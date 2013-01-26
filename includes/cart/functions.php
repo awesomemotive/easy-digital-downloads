@@ -223,11 +223,11 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 		}
 
 		if ( edd_is_exclude_tax() ) {
-			$label .= ' (ex. tax)';
+			$label .= ' ' . __('(ex. tax)', 'edd');
 		}
 
 		if ( edd_is_include_tax() ) {
-			$label .= ' (incl. tax)';
+			$label .= ' ' . __('(incl. tax)', 'edd');
 		}
 
 	}
@@ -313,11 +313,11 @@ function edd_cart_subtotal() {
 	if ( edd_is_taxes() ) {
 
 		if ( edd_is_exclude_tax() ) {
-			$price .= '<br/><span style="font-weight:normal;text-transform:none;">(ex. tax)</span>';
+			$price .= '<br/><span style="font-weight:normal;text-transform:none;">' . __('(ex. tax)', 'edd') . '</span>';
 		}
 
 		if ( edd_is_include_tax() ) {
-			$price .= '<br/><span style="font-weight:normal;text-transform:none;">(incl. tax)</span>';
+			$price .= '<br/><span style="font-weight:normal;text-transform:none;">' . __('(incl. tax)', 'edd') . '</span>';
 		}
 
 	}
@@ -468,7 +468,7 @@ function edd_cart_total( $echo = true ) {
 	if ( edd_is_taxes() ) {
 
 		if ( $edd_options['checkout_include_tax'] == 'yes' ) {
-			$total .= '<br/><span style="font-weight:normal;text-transform:none;">(includes ' . edd_cart_tax() . ' tax)</span>';
+			$total .= '<br/><span style="font-weight:normal;text-transform:none;">'. sprintf( __('(includes %s tax)', 'edd'), edd_cart_tax() ) . '</span>';
 		}
 
 	}
