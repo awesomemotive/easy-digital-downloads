@@ -58,13 +58,14 @@ jQuery(document).ready(function ($) {
        // Show the ajax loader
         $('.edd-cart-ajax', container).show();
 
+        var form           = $this.parents('form').last()
 		var download       = $this.data('download-id');
         var variable_price = $this.data('variable-price');
 		var price_mode     = $this.data('price-mode');
 		var item_price_ids = [];
 
 		if( variable_price == 'yes' ) {
-			$('.edd_price_option_' + download + ':checked').each(function( index ) {
+			$('.edd_price_option_' + download + ':checked', form).each(function( index ) {
                 item_price_ids[ index ] = $(this).val();
             });
 		} else {
