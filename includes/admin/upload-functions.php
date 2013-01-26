@@ -39,7 +39,7 @@ function edd_change_downloads_upload_dir() {
 			}
 			@file_put_contents( $wp_upload_dir['basedir'] . '/edd/.htaccess', $rules );
 
-			// now add blank index.php files to the {year}/{month} directory
+			// Now add blank index.php files to the {year}/{month} directory
 			if ( wp_mkdir_p( $upload_path ) ) {
 				if( ! file_exists( $upload_path . '/index.php' ) ) {
 					@file_put_contents( $upload_path . '/index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
@@ -93,7 +93,7 @@ function edd_create_protection_files() {
 			@file_put_contents( $upload_path . '/index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
 		}
 
-		// top level .htaccess file
+		// Top level .htaccess file
 		$rules = 'Options -Indexes';
 		if ( file_exists( $upload_path . '/.htaccess' ) ) {
 			$contents = @file_get_contents( $upload_path . '/.htaccess' );
@@ -105,12 +105,12 @@ function edd_create_protection_files() {
 		// Now place index.php files in all sub folders
 		$folders = edd_scan_folders( $upload_path );
 		foreach ( $folders as $folder ) {
-			// create index.php, if it doesn't exist
+			// Create index.php, if it doesn't exist
 			if ( ! file_exists( $folder . 'index.php' ) ) {
 				@file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
 			}
 		}
-		// only have this run the first time. This is just to create .htaccess files in existing folders
+		// Only have this run the first time. This is just to create .htaccess files in existing folders
 		set_transient( 'edd_check_protection_files', true, 2678400 );
 	}
 }

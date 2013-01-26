@@ -166,6 +166,27 @@ function edd_get_label_plural( $lowercase = false ) {
 	return ( $lowercase ) ? strtolower( $defaults['plural'] ) : $defaults['plural'];
 }
 
+/**
+ * Change default "enter title here" input
+ *
+ * @access      public
+ * @since       1.4.0.2
+ * @return      string
+*/
+
+function edd_change_default_title( $title ){
+     $screen = get_current_screen();
+ 
+     if  ( 'download' == $screen->post_type ) {
+     	$label = edd_get_label_singular();
+        $title = sprintf( __('Enter %s title here', 'edd'), $label);
+     }
+ 
+     return $title;
+}
+ 
+add_filter( 'enter_title_here', 'edd_change_default_title' );
+
 
 /**
  * Setup Download Taxonomies
@@ -246,11 +267,11 @@ add_action( 'init', 'edd_setup_download_taxonomies', 10 );
  */
 function edd_register_post_type_statuses() {
 
-	// payment statuses
+	// Payment statuses
 	register_post_status( 'refunded' );
 	register_post_status( 'failed' );
 
-	// discount code statuses
+	// Discount code statuses
 	register_post_status( 'active' );
 	register_post_status( 'inactive' );
 

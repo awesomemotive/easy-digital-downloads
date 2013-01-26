@@ -1,9 +1,8 @@
 <?php
 
-// retrieve all purchases for the current user
-$purchases = edd_get_users_purchases();
-
-if($purchases) : ?>
+// Retrieve all purchases for the current user
+$purchases = edd_get_users_purchases( get_current_user_id(), 20, true );
+if( $purchases ) : ?>
 	<table id="edd_user_history">
 		<thead>
 			<tr class="edd_purchase_row">
@@ -15,7 +14,7 @@ if($purchases) : ?>
 				<?php do_action('edd_purchase_history_header_after'); ?>
 			</tr>
 		</thead>
-		<?php foreach($purchases as $post) : setup_postdata( $post ); ?>
+		<?php foreach( $purchases as $post ) : setup_postdata( $post ); ?>
 			<?php $purchase_data = edd_get_payment_meta( $post->ID ); ?>
 			<tr class="edd_purchase_row">
 				<?php do_action( 'edd_purchase_history_row_start', $post->ID, $purchase_data ); ?>
@@ -24,7 +23,7 @@ if($purchases) : ?>
 				<td class="edd_purchase_amount"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $post->ID ) ) ); ?></td>
 				<td class="edd_purchased_files">
 					<?php
-						// show a list of downloadable files
+						// Show a list of downloadable files
 						$downloads = edd_get_payment_meta_downloads( $post->ID );
 						if($downloads) {
 							foreach($downloads as $download) {
@@ -32,8 +31,13 @@ if($purchases) : ?>
 								$id 			= isset($purchase_data['cart_details']) ? $download['id'] : $download;
 								$price_id 		= isset($download['options']['price_id']) ? $download['options']['price_id'] : null;
 								$download_files = edd_get_download_files( $id, $price_id );
+								$name           = get_the_title( $id );
 
-								echo '<div class="edd_purchased_download_name">' . esc_html( get_the_title($id) ) . '</div>';
+								if ( isset( $download['options']['price_id'] ) ) {
+									$name .= ' - ' . edd_get_price_option_name( $id, $download['options']['price_id'] );
+								}
+
+								echo '<div class="edd_purchased_download_name">' . esc_html( $name ) . '</div>';
 
 								if( ! edd_no_redownload() ) {
 
@@ -51,16 +55,27 @@ if($purchases) : ?>
 										_e('No downloadable files found.', 'edd');
 									}
 
-								} // end if ! edd_no_redownload()
-							} // end foreach $downloads
-						} // end if $downloads
+								} // End if ! edd_no_redownload()
+							} // End foreach $downloads
+						} // End if $downloads
 					?>
 				</td>
 				<?php do_action( 'edd_purchase_history_row_end', $post->ID, $purchase_data ); ?>
 			</tr>
 		<?php endforeach; ?>
-		<?php wp_reset_postdata(); ?>
 	</table>
+	<div id="edd_purchase_history_pagination" class="edd_pagination navigation">
+		<?php
+		$big = 999999;
+		echo paginate_links( array(
+			'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+			'format'  => '?paged=%#%',
+			'current' => max( 1, get_query_var( 'paged' ) ),
+			'total'   => ceil( edd_count_purchases_of_customer() / 20 ) // 20 items per page
+		) );
+		?>
+	</div>
+	<?php wp_reset_postdata(); ?>
 <?php else : ?>
 	<p class="edd-no-purchases"><?php _e('You have not made any purchases', 'edd'); ?></p>
 <?php endif;

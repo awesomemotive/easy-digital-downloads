@@ -69,6 +69,21 @@ function edd_logged_in_only() {
 
 
 /**
+ * Redirect to checkout immediately after adding items to the cart?
+ *
+ * @access      public
+ * @since       1.4.2
+ * @return      boolean
+*/
+
+function edd_straight_to_checkout() {
+	global $edd_options;
+	$ret = isset( $edd_options['redirect_on_add'] );
+	return (bool) apply_filters( 'edd_straight_to_checkout', $ret );
+}
+
+
+/**
  * Disable Redownload
  *
  * @access      public
@@ -111,7 +126,7 @@ function edd_is_cc_verify_enabled() {
 		$ret = false;
 
 	if( isset( $edd_options['edd_is_cc_verify_enabled'] ) )
-		$ret = false; // global override
+		$ret = false; // Global override
 
 	return (bool) apply_filters( 'edd_verify_credit_cards', $ret );
 }
@@ -668,16 +683,30 @@ function edd_get_current_page_url() {
 	global $post;
 
 	if( is_singular() ):
-		$pageURL = get_permalink( $post->ID );
+
+		$page_url = get_permalink( $post->ID );
+
+	elseif ( is_front_page() ) :
+
+		$page_url = home_url();
+
 	else :
-		$pageURL = 'http';
-		if( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) $pageURL .= "s";
-		$pageURL .= "://";
-		if( $_SERVER["SERVER_PORT"] != "80" ) $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-		else $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+
+		$page_url = 'http';
+
+		if( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" )
+			$page_url .= "s";
+
+		$page_url .= "://";
+
+		if( $_SERVER["SERVER_PORT"] != "80" )
+			$page_url .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+		else
+			$page_url .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+
 	endif;
 
-	return apply_filters( 'edd_get_current_page_url', esc_url( $pageURL ) );
+	return apply_filters( 'edd_get_current_page_url', esc_url( $page_url ) );
 }
 
 
@@ -763,7 +792,7 @@ function edd_presstrends() {
 		$count_pages    = wp_count_posts( 'page' );
 		$comments_count = wp_count_comments();
 
-		// wp_get_theme was introduced in 3.4, for compatibility with older versions, let's do a workaround for now.
+		// Wp_get_theme was introduced in 3.4, for compatibility with older versions, let's do a workaround for now.
 		if ( function_exists( 'wp_get_theme' ) ) {
 			$theme_data = wp_get_theme();
 			$theme_name = urlencode( $theme_data->Name );

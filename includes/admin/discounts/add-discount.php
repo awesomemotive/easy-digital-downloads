@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
 <h3><?php _e( 'Add New Discount', 'edd' ); ?></h3>
 <form id="edd-add-discount" action="" method="POST">
+	<?php do_action( 'edd_add_discount_form_top' ); ?>
 	<table class="form-table">
 		<tbody>
 			<tr class="form-field">
@@ -94,6 +95,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			</tr>
 		</tbody>
 	</table>
+	<?php do_action( 'edd_add_discount_form_bottom' ); ?>
 	<p class="submit">
 		<input type="hidden" name="edd-action" value="add_discount"/>
 		<input type="hidden" name="edd-discount-nonce" value="<?php echo wp_create_nonce( 'edd_discount_nonce' ); ?>"/>

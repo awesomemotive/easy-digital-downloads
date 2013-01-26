@@ -29,7 +29,7 @@ function edd_sanitize_amount( $amount ) {
 	$thousands_sep = isset( $edd_options['thousands_separator'] ) ? $edd_options['thousands_separator'] : ',';
 	$decimal_sep   = isset( $edd_options['decimal_separator'] )   ? $edd_options['decimal_separator'] 	 : '.';
 
-	// sanitize the amount
+	// Sanitize the amount
 	if( $decimal_sep == ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
 
 		if( $thousands_sep == '.' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
@@ -38,8 +38,6 @@ function edd_sanitize_amount( $amount ) {
 
 		$amount = str_replace( $decimal_sep, '.', $amount );
 
-		// make sure we don't have more than 2 decimals
-		$amount = number_format( $amount, 2 );
 	}
 
 	return apply_filters( 'edd_sanitize_amount', $amount );
@@ -69,11 +67,16 @@ function edd_format_amount( $amount ) {
 	$thousands_sep 	= isset( $edd_options['thousands_separator'] ) ? $edd_options['thousands_separator'] : ',';
 	$decimal_sep 	= isset( $edd_options['decimal_separator'] )   ? $edd_options['decimal_separator'] 	 : '.';
 
-	// format the amount
+	// Format the amount
 	if( $decimal_sep == ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
 		$whole = substr( $amount, 0, $sep_found );
 		$part = substr( $amount, $sep_found + 1, ( strlen( $amount ) - 1 ) );
 		$amount = $whole . '.' . $part;
+	}
+
+	// Strip , from the amount (if set as the thousands separator)
+	if( $thousands_sep == ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+		$amount = str_replace( ',', '', $amount );
 	}
 
 	$decimals = apply_filters( 'edd_format_amount_decimals', 2 );
@@ -135,3 +138,28 @@ function edd_currency_filter( $price ) {
 		endswitch;
 	endif;
 }
+
+
+/**
+ * Set the number of decimal places per currency
+ *
+ * @access      public
+ * @since       1.4.2
+ * @return      int
+*/
+
+function edd_currency_decimal_filter( $decimals = 2 ) {
+	global $edd_options;
+
+	switch( $edd_options['currency'] ) {
+
+		case 'RIAL' :
+			$decimals = 0;
+			break;
+
+	}
+
+	return $decimals;
+
+}
+add_filter( 'edd_format_amount_decimals', 'edd_currency_decimal_filter' );

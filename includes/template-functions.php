@@ -51,20 +51,20 @@ function edd_get_purchase_link( $args = array() ) {
 		return false;
 	}
 
-	$defaults = array(
+	$defaults = apply_filters( 'edd_purchase_link_defaults', array(
 		'download_id' => $post->ID,
 		'price'       => (bool) true,
 		'text'        => isset( $edd_options[ 'add_to_cart_text' ] ) && $edd_options[ 'add_to_cart_text' ]  != '' ? $edd_options[ 'add_to_cart_text' ] 	: __( 'Purchase', 'edd' ),
 		'style'       => isset( $edd_options[ 'button_style' ] ) 	 ? $edd_options[ 'button_style' ] 		: 'button',
 		'color'       => isset( $edd_options[ 'checkout_color' ] ) 	 ? $edd_options[ 'checkout_color' ] 	: 'blue',
 		'class'       => 'edd-submit'
-	);
+	) );
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$variable_pricing     = edd_has_variable_prices( $args['download_id'] );
-	$data_variable        = $variable_pricing ? ' data-variable-price="yes"' : '';
-
+	$variable_pricing = edd_has_variable_prices( $args['download_id'] );
+	$data_variable    = $variable_pricing ? ' data-variable-price=yes' : 'data-variable-price=no';
+	$type             = edd_single_price_option_mode( $args['download_id'] ) ? 'data-price-mode=multi' : 'data-price-mode=single';
 	if( $args['price'] && ! $variable_pricing ) {
 
 		$price = edd_get_download_price( $args['download_id'] );
@@ -76,7 +76,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	}
 
-	if ( edd_item_in_cart( $args['download_id'] ) ) {
+	if ( edd_item_in_cart( $args['download_id'] ) && ! $variable_pricing ) {
 		$button_display   = 'style="display:none;"';
 		$checkout_display = '';
 	} else {
@@ -93,11 +93,12 @@ function edd_get_purchase_link( $args = array() ) {
 		<div class="edd_purchase_submit_wrapper">
 			<?php
 				printf(
-					'<input type="submit" class="edd-add-to-cart %1$s" name="edd_purchase_download" value="%2$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s/>',
+					'<input type="submit" class="edd-add-to-cart %1$s" name="edd_purchase_download" value="%2$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s %6$s/>',
 					implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
 					esc_attr( $args['text'] ),
 					esc_attr( $args['download_id'] ),
 					esc_attr( $data_variable ),
+					esc_attr( $type ),
 					$button_display
 				);
 
@@ -113,7 +114,14 @@ function edd_get_purchase_link( $args = array() ) {
 			<?php if( edd_is_ajax_enabled() ) : ?>
 				<span class="edd-cart-ajax-alert">
 					<img src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/loading.gif' ); ?>" class="edd-cart-ajax" style="display: none;" />
-					<span class="edd-cart-added-alert" style="display: none;">&mdash;<?php _e( 'Item successfully added to your cart.', 'edd' ); ?></span>
+					<span class="edd-cart-added-alert" style="display: none;">&mdash;
+						<?php printf(
+								__( 'Item successfully added to your %scart%s.', 'edd' ),
+								'<a href="' . esc_url( edd_get_checkout_uri() ) . '" title="' . __( 'Go to Checkout', 'edd' ) . '">',
+								'</a>'
+							);
+						?>
+					</span>
 				</span>
 			<?php endif; ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
@@ -149,6 +157,8 @@ function edd_purchase_variable_pricing( $download_id ) {
 
 	$prices = edd_get_variable_prices( $download_id );
 
+	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
+
 	do_action( 'edd_before_price_options', $download_id ); ?>
 	<div class="edd_price_options">
 		<ul>
@@ -159,8 +169,9 @@ function edd_purchase_variable_pricing( $download_id ) {
 						if( edd_use_taxes() && edd_taxes_on_prices() )
 							$amount += edd_calculate_tax( $price[ 'amount' ] );
 						printf(
-							'<li><label for="%2$s"><input type="radio" %1$s name="edd_options[price_id]" id="%2$s" class="%3$s" value="%4$s"/> %5$s</label></li>',
+							'<li><label for="%3$s"><input type="%2$s" %1$s name="edd_options[price_id][]" id="%3$s" class="%4$s" value="%5$s"/> %6$s</label></li>',
 							checked( 0, $key, false ),
+							$type,
 							esc_attr( 'edd_price_option_' . $download_id . '_' . $key ),
 							esc_attr( 'edd_price_option_' . $download_id ),
 							esc_attr( $key ),

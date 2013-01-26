@@ -61,7 +61,7 @@ function edd_discounts_contextual_help() {
 				'<li>' . __( '<strong>Start Date</strong> - this is the date that this code becomes available. If a customer attempts to redeem the code prior to this date, they will be given an error. This is optional.', 'edd' ) . '</li>' .
 				'<li>' . __( '<strong>Expiration Date</strong> - this is the end date for the discount. After this date, the code will no longer be able to be used. This is optional.', 'edd' ) . '</li>' .
 				'<li>' . __( '<strong>Minimum Amount</strong> - this is the minimum purchase amount required to use this code. If a customer has less than this amount in their cart, they will be given an error. This is optional.', 'edd' ) . '</li>' .
-				'<li>' . __( '<strong>Max Uses</strong> - this is the maximum number of times this discount can be redemmed. Once this number is reached, no more customers will be allowed to use it.', 'edd' ) . '</li>' .
+				'<li>' . __( '<strong>Max Uses</strong> - this is the maximum number of times this discount can be redeemed. Once this number is reached, no more customers will be allowed to use it.', 'edd' ) . '</li>' .
 			'</ul>'
 	) );
 

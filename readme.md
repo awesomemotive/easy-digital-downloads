@@ -11,9 +11,9 @@
 
 **Requires at least:** 3.3
 
-**Tested up to:** 3.5
+**Tested up to:** 3.5.1
 
-**Stable Tag:** 1.4.0.2
+**Stable Tag:** 1.4.2
 
 **License:** GNU Version 2 or Any Later Version
 
@@ -160,7 +160,39 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ## Changelog ##
 
-### 1.4.1: January 12, 2013 ###
+
+### 1.4.2 ###
+
+* New: Added sample product import xml file in easy-digital-downloads/assets/
+* New: Variable price purchased now displayed in admin sale notifications
+* New: Checkout submission now done via ajax for improved user experience
+* New: Improved discount code UI during checkout
+* New: Checkout fields now saved (if ajax enabled) when an error is present
+* New: Currency-specific decimal point formatting
+* New: Multiple variations of the same product can now be purchased at one time
+* New: Added option for enabling "multi option purchase mode" for products with variable prices
+* New: Added new sample import file
+* New: Variable price purchased now displayed in purchase history
+* New: Added Today, This Week, and Last Week views to Reports
+* New: Added option to redirect users straight to checkout (works with and without ajax)
+* New: Added new action hooks to discount add/edit pages
+* Fix: Accepted Payment Method icon display issues
+* Fix: Registration during checkout incorrectly required
+* Fix: Admin gateway label was showing on the [edd_receipt] instead of the front end label
+* Fix: Discount codes set to 100% didn't work
+* Fix: PayPal UK VAT problems that caused purchases to not get completed
+* Fix: jQuery validation didn't work with multiple payment methods enabled
+* Fix: Prices over 1000 resulted in a price of 1
+* Fix: Incorrect label attribute
+* Fix: Conflict with cart quantities when using custom cart areas
+* Fix: Settings arrays didn't have keys
+
+### 1.4.1.1: January 14, 2013 ###
+
+* Fix: Discounts weren't getting carried over to PayPal
+* Fix: Added missing {username} tag for purchase receipts
+
+### 1.4.1: January 13, 2013 ###
 
 * New: Added PayPal Page Style Support
 * New: Added .apk support (props @chriscct7)
@@ -196,7 +228,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Download System Info button added
 * Fix: Pagination of [purchase_history] and [download_history] (props @chriscct7)
 * Fix: Number format error when no price entered
-* Fix: Last Month Dashboard Widget Incorrect For January 
+* Fix: Last Month Dashboard Widget Incorrect For January
 * Fix: Calculate the tax price in edd_get_cart_content_details() when tax inclusive
 * Fix: Validate Checkout
 * Fix: File Download Count for Customer Reports is Failing
@@ -310,7 +342,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated Italian language files
 * Tweak: Updated French language files
 * Tweak: Removed the "required" class from the local tax opt-in checkbox
-* Tweak: Improved the function that retrieves the total earnings amount 
+* Tweak: Improved the function that retrieves the total earnings amount
 * Tweak: Updated customer CSV export to include the number of purchases and total amount spent
 * Tweak: Updated purchase details to include tax information
 * Tweak: Made the email address in View Details for purchase history clickable

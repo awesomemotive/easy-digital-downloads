@@ -46,7 +46,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 		</tr>
 		<?php endif; ?>
 
-		<?php if ( $edd_receipt_args[ 'discount' ] ) : ?>
+		<?php if ( $edd_receipt_args[ 'discount' ] && $user['discount'] != 'none' ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Discount', 'edd' ); ?>:</strong></td>
 			<td><?php echo $user[ 'discount' ]; ?></td>
@@ -56,7 +56,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 		<?php if ( $edd_receipt_args[ 'payment_method' ] ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Payment Method', 'edd' ); ?>:</strong></td>
-			<td><?php echo edd_get_payment_gateway( $payment->ID ); ?></td>
+			<td><?php echo edd_get_gateway_checkout_label( edd_get_payment_gateway( $payment->ID ) ); ?></td>
 		</tr>
 		<?php endif; ?>
 
@@ -94,9 +94,6 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 					<?php
 						$price_id 		= isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
 						$download_files = edd_get_download_files( $item['id'], $price_id );
-
-						if ( edd_no_redownload() )
-							continue;
 
 						if ( $download_files ) :
 

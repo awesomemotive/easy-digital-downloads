@@ -76,7 +76,6 @@ Use Only Cookies:         <?php echo ini_get( 'session.use_only_cookies' ) ? 'On
 UPLOAD_MAX_FILESIZE:      <?php if ( function_exists( 'phpversion' ) ) echo ( edd_let_to_num( ini_get( 'upload_max_filesize' ) )/( 1024*1024 ) )."MB"; ?><?php echo "\n"; ?>
 POST_MAX_SIZE:            <?php if ( function_exists( 'phpversion' ) ) echo ( edd_let_to_num( ini_get( 'post_max_size' ) )/( 1024*1024 ) )."MB"; ?><?php echo "\n"; ?>
 WordPress Memory Limit:   <?php echo ( edd_let_to_num( WP_MEMORY_LIMIT )/( 1024*1024 ) )."MB"; ?><?php echo "\n"; ?>
-WP_DEBUG:                 <?php echo ( WP_DEBUG ) ? __( 'On', 'edd' ) : __( 'Off', 'edd' ); ?><?php echo "\n"; ?>
 DISPLAY ERRORS:           <?php echo ( ini_get( 'display_errors' ) ) ? 'On (' . ini_get( 'display_errors' ) . ')' : 'N/A'; ?><?php echo "\n"; ?>
 FSOCKOPEN:                <?php echo ( function_exists( 'fsockopen' ) ) ? __( 'Your server supports fsockopen.', 'edd' ) : __( 'Your server does not support fsockopen.', 'edd' ); ?><?php echo "\n"; ?>
 
@@ -91,7 +90,7 @@ foreach ( $plugins as $plugin_path => $plugin ):
 	if ( ! in_array( $plugin_path, $active_plugins ) )
 		continue;
 
-echo $plugin['Name']; ?>: <?php echo $plugin['Version'];
+echo $plugin['Name']; ?>: <?php echo $plugin['Version'] ."\n";
 
 endforeach; ?>
 

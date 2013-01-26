@@ -51,14 +51,21 @@
 			</th>
 			<?php do_action( 'edd_checkout_table_subtotal_last' ); ?>
 		</tr>
-		<tr class="edd_cart_footer_row edd_cart_tax_row"<?php if( edd_local_taxes_only() ) echo ' style="display:none;"'; ?>>
+		<tr class="edd_cart_footer_row edd_cart_tax_row"<?php if( edd_local_taxes_only() && ! edd_local_tax_opted_in() ) echo ' style="display:none;"'; ?>>
 			<?php do_action( 'edd_checkout_table_tax_first' ); ?>
 			<th colspan="3" class="edd_cart_tax">
-				<?php _e( 'Tax', 'edd' ); ?>:&nbsp;<span class="edd_cart_tax_amount" data-tax="<?php echo edd_get_cart_tax(); ?>"><?php echo esc_html( edd_cart_tax() ); ?></span>
+				<?php _e( 'Tax', 'edd' ); ?>:&nbsp;<span class="edd_cart_tax_amount" data-tax="<?php echo edd_get_cart_tax( false, true ); ?>"><?php echo esc_html( edd_cart_tax() ); ?></span>
 			</th>
 			<?php do_action( 'edd_checkout_table_tax_last' ); ?>
 		</tr>
 		<?php endif; ?>
+		<tr class="edd_cart_footer_row edd_cart_discount_row" <?php if( ! edd_cart_has_discounts() )  echo ' style="display:none;"'; ?>>
+			<?php do_action( 'edd_checkout_table_discount_first' ); ?>
+			<th colspan="3" class="edd_cart_discount">
+				<?php edd_cart_discounts_html(); ?>
+			</th>
+			<?php do_action( 'edd_checkout_table_discount_last' ); ?>
+		</tr>
 		<tr class="edd_cart_footer_row">
 			<?php do_action( 'edd_checkout_table_footer_first' ); ?>
 			<th colspan="3" class="edd_cart_total"><?php _e( 'Total', 'edd' ); ?>: <span class="edd_cart_amount" data-subtotal="<?php echo edd_get_cart_amount( false ); ?>" data-total="<?php echo edd_get_cart_amount( true, true ); ?>"><?php edd_cart_total(); ?></span></th>

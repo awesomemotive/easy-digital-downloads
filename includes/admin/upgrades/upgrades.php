@@ -33,12 +33,12 @@ function edd_upgrades_screen() {
 		</div>
 		<script type="text/javascript">
 			jQuery( document ).ready( function() {
-				// trigger upgrades on page load
+				// Trigger upgrades on page load
 				var data = { action: 'edd_trigger_upgrades' };
 		        jQuery.post( ajaxurl, data, function (response) {
 		        	if( response == 'complete' ) {
 			        	jQuery('#edd-upgrade-loader').hide();
-			        	document.location.href = 'index.php?page=edd-about'; // redirect to the welcome page
+			        	document.location.href = 'index.php?page=edd-about'; // Redirect to the welcome page
 					}
 		        });
 			});

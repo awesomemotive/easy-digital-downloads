@@ -33,34 +33,6 @@ function edd_load_scripts() {
 	    $position = edd_get_item_position_in_cart( $post->ID );
 	}
 
-	// Load AJAX scripts, if enabled
-	if( edd_is_ajax_enabled() ) {
-		wp_enqueue_script( 'edd-ajax', EDD_PLUGIN_URL . 'assets/js/edd-ajax.js', array( 'jquery' ), EDD_VERSION );
-		wp_localize_script( 'edd-ajax', 'edd_scripts', array(
-				'ajaxurl' 					=> edd_get_ajax_url(),
-				'ajax_nonce' 				=> wp_create_nonce( 'edd_ajax_nonce' ),
-				'no_discount' 				=> __('Please enter a discount code', 'edd'), // blank discount code message
-				'discount_applied' 			=> __('Discount Applied', 'edd'), // discount verified message
-				'no_email' 					=> __('Please enter an email address before applying a discount code', 'edd'),
-				'no_username'				=> __('Please enter a username before applying a discount code', 'edd'),
-				'position_in_cart' 			=> isset( $position ) ? $position : -1,
-				'already_in_cart_message' 	=> __('You have already added this item to your cart', 'edd'), // item already in the cart message
-				'empty_cart_message' 		=> __('Your cart is empty', 'edd'), // item already in the cart message
-				'loading' 					=> __('Loading', 'edd') , // general loading message
-				'ajax_loader' 				=> EDD_PLUGIN_URL . 'assets/images/loading.gif', // ajax loading image
-				'checkout_page' 			=> edd_get_checkout_uri(),
-				'permalinks' 				=> get_option( 'permalink_structure' ) ? '1' : '0'
-			)
-		);
-	}
-
-	// Load jQuery validation
-	if( isset( $edd_options['jquery_validation'] ) && edd_is_checkout() ) {
-		wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'assets/js/jquery.validate.min.js' );
-		wp_enqueue_script( 'edd-validation', EDD_PLUGIN_URL . 'assets/js/form-validation.js', array( 'jquery', 'jquery-validation' ), EDD_VERSION );
-		$required = array( 'firstname' => true, 'lastname' => true );
-		wp_localize_script( 'edd-validation', 'edd_scripts_validation', apply_filters( 'edd_scripts_validation', $required ) );
-	}
 	if( edd_is_checkout() ) {
 
 		if( edd_is_cc_verify_enabled() ) {
@@ -68,11 +40,43 @@ function edd_load_scripts() {
 		}
 		wp_enqueue_script( 'edd-checkout-global', EDD_PLUGIN_URL . 'assets/js/edd-checkout-global.js', array( 'jquery' ), EDD_VERSION );
 		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', array(
+			'ajaxurl'           => edd_get_ajax_url(),
+			'checkout_nonce'    => wp_create_nonce( 'edd_checkout_nonce' ),
 	        'currency_sign'		=> edd_currency_filter(''),
 	        'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
-	        'no_gateway'		=> __( 'Please select a payment method', 'edd' )
+	        'no_gateway'		=> __( 'Please select a payment method', 'edd' ),
+	        'no_discount'       => __('Please enter a discount code', 'edd'), // Blank discount code message
+			'discount_applied'  => __('Discount Applied', 'edd'), // Discount verified message
+			'no_email'          => __('Please enter an email address before applying a discount code', 'edd'),
+			'no_username'       => __('Please enter a username before applying a discount code', 'edd'),
 	    ));
+
+	    // Load jQuery validation
+		if( isset( $edd_options['jquery_validation'] ) ) {
+			wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'assets/js/jquery.validate.min.js' );
+		    $required = array( 'firstname' => true, 'lastname' => true );
+			wp_localize_script( 'jquery-validation', 'edd_scripts_validation', apply_filters( 'edd_scripts_validation', $required ) );
+		}
 	}
+
+	// Load AJAX scripts, if enabled
+	if( edd_is_ajax_enabled() ) {
+		wp_enqueue_script( 'edd-ajax', EDD_PLUGIN_URL . 'assets/js/edd-ajax.js', array( 'jquery' ), EDD_VERSION );
+		wp_localize_script( 'edd-ajax', 'edd_scripts', array(
+				'ajaxurl' 					=> edd_get_ajax_url(),
+				'ajax_nonce' 				=> wp_create_nonce( 'edd_ajax_nonce' ),
+				'position_in_cart' 			=> isset( $position ) ? $position : -1,
+				'already_in_cart_message' 	=> __('You have already added this item to your cart', 'edd'), // Item already in the cart message
+				'empty_cart_message' 		=> __('Your cart is empty', 'edd'), // Item already in the cart message
+				'loading' 					=> __('Loading', 'edd') , // General loading message
+				'ajax_loader' 				=> EDD_PLUGIN_URL . 'assets/images/loading.gif', // Ajax loading image
+				'redirect_to_checkout'      => edd_straight_to_checkout() ? '1' : '0',
+				'checkout_page' 			=> edd_get_checkout_uri(),
+				'permalinks' 				=> get_option( 'permalink_structure' ) ? '1' : '0'
+			)
+		);
+	}
+
 }
 add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
 
@@ -147,7 +151,7 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_script( 'edd-admin-scripts', EDD_PLUGIN_URL . 'assets/js/admin-scripts.js', array( 'jquery' ), EDD_VERSION, false );
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
         'post_id' 			=> isset( $post->ID ) ? $post->ID : null,
-        'add_new_download' 	=> __( 'Add New Download', 'edd' ), 									// thickbox title
+        'add_new_download' 	=> __( 'Add New Download', 'edd' ), 									// Thickbox title
         'use_this_file' 	=> __( 'Use This File','edd' ), 										// "use this file" button
         'quick_edit_warning'=> __( 'Sorry, not available for variable priced products.', 'edd' ),
         'delete_payment' 	=> __( 'Are you sure you wish to delete this payment?', 'edd' ),

@@ -12,6 +12,7 @@
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
+
 /**
  * Get Discounts
  *
@@ -128,7 +129,7 @@ function edd_store_discount( $discount_details, $discount_id = null ) {
 
 	if ( edd_discount_exists( $discount_id ) && !is_null( $discount_id ) ) {
 
-		// update an existing discount
+		// Update an existing discount
 
 		$discount_details = apply_filters( 'edd_update_discount', $discount_details, $discount_id );
 
@@ -157,11 +158,11 @@ function edd_store_discount( $discount_details, $discount_id = null ) {
 
 		do_action( 'edd_post_update_discount', $discount_details, $discount_id );
 
-		// discount code updated
+		// Discount code updated
 		return true;
 
 	} else {
-		// add the discount
+		// Add the discount
 
 		$discount_details = apply_filters( 'edd_insert_discount', $discount_details );
 
@@ -191,7 +192,7 @@ function edd_store_discount( $discount_details, $discount_id = null ) {
 
 		do_action( 'edd_post_insert_discount', $discount_details, $discount_id );
 
-		// discount code created
+		// Discount code created
 		return true;
 	}
 }
@@ -467,7 +468,7 @@ function edd_is_discount_expired( $code_id = null ) {
 		if ( $expiration ) {
 			$expiration = strtotime( $expiration );
 			if ( $expiration < time() - ( 24 * 60 * 60 ) ) {
-				// discount is expired
+				// Discount is expired
 				$return = true;
 			}
 		}
@@ -496,11 +497,11 @@ function edd_is_discount_started( $code_id = null ) {
 		if ( $start_date ) {
 			$start_date = strtotime( $start_date );
 			if ( $start_date < time() ) {
-				// discount has pased the start date
+				// Discount has pased the start date
 				$return = true;
 			}
 		} else {
-			// no start date for this discount, so has to be true
+			// No start date for this discount, so has to be true
 			$return = true;
 		}
 	}
@@ -525,11 +526,11 @@ function edd_is_discount_maxed_out( $code_id = null ) {
 
 	if ( $discount ) {
 		$uses = edd_get_discount_uses( $code_id );
-		// large number that will never be reached
+		// Large number that will never be reached
 		$max_uses = edd_get_discount_max_uses( $code_id );
-		// should never be greater than, but just in case
+		// Should never be greater than, but just in case
 		if ( $uses >= $max_uses && $max_uses != '' && ! empty( $max_uses ) ) {
-			// discount is maxed out
+			// Discount is maxed out
 			$return = true;
 		}
 	}
@@ -556,10 +557,9 @@ function edd_discount_is_min_met( $code_id = null ) {
 
 	if ( $discount ) {
 		$min         = edd_get_discount_min_price( $code_id );
-		$cart_amount = edd_get_cart_amount();
-
+		$cart_amount = edd_get_cart_subtotal();
 		if ( (float) $cart_amount >= (float) $min ) {
-			// minimum has been met
+			// Minimum has been met
 			$return = true;
 		}
 	}
@@ -586,7 +586,7 @@ function edd_is_discount_used( $code = null, $user = '' ) {
 
 	if ( is_email( $user ) ) {
 
-		$user_found = true; // all we need is the email
+		$user_found = true; // All we need is the email
 		$key        = '_edd_payment_user_email';
 		$value      = $user;
 
@@ -594,14 +594,14 @@ function edd_is_discount_used( $code = null, $user = '' ) {
 
 		$user_data = get_user_by( 'login', $user );
 
-		if ( !is_wp_error( $user_data ) ) {
+		if ( $user_data ) {
 
 			$key   = '_edd_payment_user_id';
 			$value = $user_data->ID;
 
 		} else {
 
-			$user_found = false; // bail, no user found
+			$user_found = false; // Bail, no user found
 		}
 	}
 
@@ -678,13 +678,14 @@ function edd_is_discount_valid( $code = '', $user = '' ) {
  *
  * @access      public
  * @since       1.0
- * @param        $code string The discount code to retrieve an ID for
+ * @param       $code string The discount code to retrieve an ID for
  * @return      int
  */
 function edd_get_discount_id_by_code( $code ) {
-
-	return edd_get_discount_by_code( $code )->ID;
-
+	$discount = edd_get_discount_by_code( $code );
+	if( $discount )
+		return $discount->ID;
+	return false;
 }
 
 
@@ -706,14 +707,14 @@ function edd_get_discounted_amount( $code, $base_price ) {
 	$rate        = edd_get_discount_amount( $discount_id );
 
 	if ( $type == 'flat' ) {
-		// set amount
+		// Set amount
 		$discounted_price = $base_price - $rate;
 		if ( $discounted_price < 0 ) {
 			$discounted_price = 0;
 		}
 
 	} else {
-		// percentage discount
+		// Percentage discount
 		$discounted_price = $base_price - ( $base_price * ( $rate / 100 ) );
 	}
 	return apply_filters( 'edd_discounted_amount', number_format( $discounted_price, 2 ) );
@@ -761,3 +762,240 @@ function edd_format_discount_rate( $type, $amount ) {
 		return $amount . '%';
 	}
 }
+
+
+/**
+ * Set the active discount for the shopping cart
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      array All currently active discounts
+ */
+
+function edd_set_cart_discount( $code = '' ) {
+
+	//$discounts = edd_get_cart_discounts();
+	// once we fully support multiple discounts, this will retrieve current discounts
+	$discounts = false;
+
+	if( $discounts ) {
+		$discounts[] = $code;
+	} else {
+		$discounts = array();
+		$discounts[] = $code;
+	}
+
+	setcookie( 'wordpress_edd_cart_discount', implode( '|', $discounts ), time()+3600, COOKIEPATH, COOKIE_DOMAIN, false );
+
+	return $discounts;
+}
+
+
+/**
+ * Remove an active discount from the shopping cart
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      array All remaining active discounts
+ */
+
+function edd_unset_cart_discount( $code = '' ) {
+	$discounts = edd_get_cart_discounts();
+
+	if( $discounts ) {
+		$key = array_search( $code, $discounts );
+		unset( $discounts[ $key ] );
+		$discounts = implode( '|', array_values( $discounts ) );
+		// update the active discounts
+		setcookie( 'wordpress_edd_cart_discount', $discounts, time()+3600, COOKIEPATH, COOKIE_DOMAIN, false );
+	}
+
+	return $discounts;
+}
+
+
+/**
+ * Remove all active discounts
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      void
+ */
+
+function edd_unset_all_cart_discounts() {
+	@setcookie( 'wordpress_edd_cart_discount', null, strtotime( '-1 day' ), COOKIEPATH, COOKIE_DOMAIN, false );
+}
+
+
+/**
+ * Retrieve the currently applied discount
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      array The active discount codes
+ */
+function edd_get_cart_discounts() {
+	$discounts = isset( $_COOKIE['wordpress_edd_cart_discount'] ) ? explode( '|', $_COOKIE['wordpress_edd_cart_discount'] ) : false;
+	return $discounts;
+}
+
+
+/**
+ * Check if the cart has any active discounts applied to it
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      bool
+ */
+
+function edd_cart_has_discounts() {
+	$ret = false;
+	if( edd_get_cart_discounts() )
+		$ret = true;
+	return apply_filters( 'edd_cart_has_discounts', $ret );
+}
+
+
+/**
+ * Retrieves the total discounted amount on the cart
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      float
+ */
+
+function edd_get_cart_discounted_amount( $discounts = false ) {
+
+	if( empty( $discounts ) )
+		$discounts = edd_get_cart_discounts();
+
+	if( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) ) {
+
+		// check for a posted discount
+		$posted_discount = isset( $_POST['edd-discount'] ) ? trim( $_POST['edd-discount'] ) : false;
+
+		if( $posted_discount ) {
+
+			$discounts = array();
+			$discounts[] = $posted_discount;
+
+		}
+
+	}
+
+	if( empty( $discounts ) )
+		return 0.00;
+
+	$subtotal  = edd_get_cart_subtotal();
+	$amounts   = array();
+	foreach( $discounts as $discount ) {
+		$amounts[] = edd_get_discounted_amount( $discount, $subtotal );
+	}
+
+	$discount_amount = array_sum( $amounts );
+	$subtotal -= $discount_amount;
+
+	return edd_sanitize_amount( $subtotal );
+}
+
+
+/**
+ * Outputs the HTML for all discounts applied to the car
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      void
+ */
+
+function edd_cart_discounts_html() {
+	echo edd_get_cart_discounts_html();
+}
+
+
+/**
+ * Retrieves the HTML for all discounts applied to the car
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      string
+ */
+
+function edd_get_cart_discounts_html( $discounts = false ) {
+
+	if( ! $discounts )
+		$discounts = edd_get_cart_discounts();
+
+	if( ! $discounts )
+		return;
+
+	$html = '';
+
+	foreach( $discounts as $discount ) {
+
+		$discount_id  = edd_get_discount_id_by_code( $discount );
+		$rate         = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
+
+		$remove_url   = add_query_arg(
+			array(
+				'edd_action'    => 'remove_cart_discount',
+				'discount_id'   => $discount_id,
+				'discount_code' => $discount
+			),
+			edd_get_checkout_uri()
+		);
+
+		$html .= "<span class=\"edd_discount\">\n";
+			$html .= "<span class=\"edd_discount_rate\">$discount&nbsp;&ndash;&nbsp;$rate</span>\n";
+			$html .= "<a href=\"$remove_url\" data-code=\"$discount\" class=\"edd_discount_remove\"></a>\n";
+		$html .= "</span>\n";
+	}
+
+	return $html;
+}
+
+
+/**
+ * Show the fully formatted cart discount
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      string
+ */
+
+function edd_display_cart_discount( $formatted = false, $echo = false ) {
+
+	$discounts = edd_get_cart_discounts();
+	if( empty( $discounts ) )
+		return false;
+
+	$discount_id  = edd_get_discount_id_by_code( $discounts[0] );
+	$amount       = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
+
+	if( $echo )
+		echo $amount;
+	return $amount;
+}
+
+
+/**
+ * Processes a remove discount from cart request
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      void
+ */
+
+function edd_remove_cart_discount() {
+	if( ! isset( $_GET['discount_id'] ) || ! isset( $_GET['discount_code'] ) )
+		return;
+
+	do_action( 'edd_pre_remove_cart_discount', absint( $_GET['discount_id'] ) );
+
+	edd_unset_cart_discount( urldecode( $_GET['discount_code'] ) );
+
+	do_action( 'edd_post_remove_cart_discount', absint( $_GET['discount_id'] ) );
+
+	wp_redirect( edd_get_checkout_uri() ); exit;
+
+}
+add_action( 'edd_remove_cart_discount', 'edd_remove_cart_discount' );

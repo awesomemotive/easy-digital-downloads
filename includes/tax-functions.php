@@ -49,6 +49,45 @@ function edd_local_taxes_only() {
 
 
 /**
+ * Checks if a customer has opted into local taxes
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      bool
+*/
+
+function edd_local_tax_opted_in() {
+	return isset( $_COOKIE['wordpress_edd_local_tax_opt_in'] );
+}
+
+
+/**
+ * Sets a customer as opted into local taxes
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      bool
+*/
+
+function edd_opt_into_local_taxes() {
+	return setcookie( 'wordpress_edd_local_tax_opt_in', 1, time()+3600, COOKIEPATH, COOKIE_DOMAIN, false );
+}
+
+
+/**
+ * Sets a customer as opted out of local taxes
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      bool
+*/
+
+function edd_opt_out_local_taxes() {
+	return setcookie( 'wordpress_edd_local_tax_opt_in', null, strtotime( '-1 day' ), COOKIEPATH, COOKIE_DOMAIN, false );
+}
+
+
+/**
  * Show taxes on individual prices?
  *
  * @access      public
@@ -59,6 +98,20 @@ function edd_local_taxes_only() {
 function edd_taxes_on_prices() {
 	global $edd_options;
 	return apply_filters( 'edd_taxes_on_prices', isset( $edd_options['taxes_on_prices'] ) );
+}
+
+
+/**
+ * Calculate taxes before or after discounts?
+ *
+ * @access      public
+ * @since       1.4.1
+ * @return      bool
+*/
+
+function edd_taxes_after_discounts() {
+	global $edd_options;
+	return apply_filters( 'edd_taxes_after_discounts', isset( $edd_options['taxes_after_discounts'] ) );
 }
 
 
@@ -76,7 +129,7 @@ function edd_get_tax_rate() {
 	$rate = isset( $edd_options['tax_rate'] ) ? (float) $edd_options['tax_rate'] : 0;
 
 	if( $rate > 1 ) {
-		// convert to a number we can use
+		// Convert to a number we can use
 		$rate = $rate / 100;
 	}
 	return apply_filters( 'edd_tax_rate', $rate );
@@ -95,7 +148,7 @@ function edd_get_tax_rate() {
 function edd_calculate_tax( $amount ) {
 
 	$rate 	= edd_get_tax_rate();
-	$tax 	= number_format( $amount * $rate, 2 ); // the tax amount
+	$tax 	= number_format( $amount * $rate, 2 ); // The tax amount
 
 	return apply_filters( 'edd_taxed_amount', $tax, $rate );
 }
@@ -118,13 +171,13 @@ function edd_record_taxed_amount( $payment_meta, $payment_data ) {
 
 	if( edd_local_taxes_only() && isset( $_POST['edd_tax_opt_in'] ) ) {
 
-		// calculate local taxes
+		// Calculate local taxes
 		$payment_meta['subtotal'] 	= edd_get_cart_amount( false );
 		$payment_meta['tax'] 		= edd_get_cart_tax();
 
 	} elseif( ! edd_local_taxes_only() ) {
 
-		// calculate global taxes
+		// Calculate global taxes
 		$payment_meta['subtotal'] 	= edd_get_cart_amount( false );
 		$payment_meta['tax'] 		= edd_get_cart_tax();
 
@@ -167,7 +220,7 @@ function edd_sales_tax_for_year( $year = null ) {
 		if( empty( $year ) )
 			return 0;
 
-		// start at zero
+		// Start at zero
 		$tax = 0;
 
 		$args = array(

@@ -70,6 +70,7 @@ function edd_download_meta_box_save( $post_id) {
 	$fields = apply_filters( 'edd_metabox_fields_save', array(
 			'edd_price',
 			'_variable_pricing',
+			'_edd_price_options_mode',
 			'edd_variable_prices',
 			'edd_download_files',
 			'_edd_purchase_text',
@@ -125,6 +126,24 @@ function edd_sanitize_price_save( $price ) {
 add_filter( 'edd_metabox_save_edd_price', 'edd_sanitize_price_save' );
 
 
+/**
+ * Sanitize the variable prices
+ *
+ * Ensures prices are correctly mapped to an array starting with an index of 0
+ *
+ * @access      private
+ * @since       1.4.2
+ * @return      float
+ */
+
+function edd_sanitize_variable_prices_save( $prices ) {
+	// Make sure all prices are rekeyed starting at 0
+	$prices = array_values( $prices );
+	return $prices;
+}
+add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_sanitize_variable_prices_save' );
+
+
 /** Download Configuration *****************************************************************/
 
 /**
@@ -168,6 +187,7 @@ function edd_render_price_field( $post_id ) {
 	$price 				= edd_get_download_price( $post_id );
 	$variable_pricing 	= edd_has_variable_prices( $post_id );
 	$prices 			= edd_get_variable_prices( $post_id );
+	$single_option_mode = edd_single_price_option_mode( $post_id );
 
 	$price_display    	= $variable_pricing ? ' style="display:none;"' : '';
 	$variable_display 	= $variable_pricing ? '' : ' style="display:none;"';
@@ -196,7 +216,10 @@ function edd_render_price_field( $post_id ) {
 
 	<div id="edd_variable_price_fields" class="edd_pricing_fields" <?php echo $variable_display; ?>>
 		<input type="hidden" id="edd_variable_prices" class="edd_variable_prices_name_field" value=""/>
-
+		<p>
+			<input type="checkbox" name="_edd_price_options_mode" id="edd_price_options_mode"<?php checked( 1, $single_option_mode ); ?> />
+			<label for="edd_price_options_mode"><?php _e( 'Enable multi option purchase mode. Leave unchecked to only permit a single price option to be purchased', 'edd' ); ?></label>
+		</p>
 		<div id="edd_price_fields" class="edd_meta_table_wrap">
 			<table class="widefat" width="100%" cellpadding="0" cellspacing="0">
 				<thead>
@@ -236,7 +259,7 @@ function edd_render_price_field( $post_id ) {
 				</tbody>
 			</table>
 		</div>
-	</div>
+	</div><!--end #edd_variable_price_fields-->
 <?php
 }
 add_action( 'edd_meta_box_fields', 'edd_render_price_field', 10 );
@@ -484,7 +507,7 @@ add_action( 'edd_meta_box_fields', 'edd_render_disable_button', 30 );
 
 function edd_metabox_save_check_blank_rows( $new ) {
 	foreach ( $new as $key => $value ) {
-		if ( $value['name'] == '' )
+		if ( ! isset( $value['name'] ) || $value['name'] == '' )
 			unset( $new[ $key ] );
 	}
 
@@ -616,7 +639,7 @@ function edd_render_purchase_log_meta_box() {
 						echo '<strong>' . __( 'Purchase ID:', 'edd' ) . '</strong> <a href="' . admin_url('edit.php?post_type=download&page=edd-payment-history&purchase_id=' . $payment_id . '&edd-action=edit-payment') . '">' . $payment_id . '</a>';
 					echo '</td>';
 				echo '</tr>';
-			} // endforeach
+			} // Endforeach
 			do_action( 'edd_purchase_log_meta_box' );
 		} else {
 			echo '<tr>';
@@ -715,7 +738,7 @@ function edd_render_download_log_meta_box() {
 				echo '</tr>';
 
 				do_action( 'edd_download_log__meta_box' );
-			} // endforeach
+			} // Endforeach
 		} else {
 			echo '<tr>';
 				echo '<td colspan=4" class="edd_download_sales_log">';

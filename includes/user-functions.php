@@ -26,7 +26,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  *
  * @return array List of all user purchases
  */
-function edd_get_users_purchases( $user = 0, $number = -1 ) {
+function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false ) {
 
 	if ( empty( $user ) ) {
 		global $user_ID;
@@ -34,20 +34,32 @@ function edd_get_users_purchases( $user = 0, $number = -1 ) {
 		$user = $user_ID;
 	}
 
-	$purchases = get_transient( 'edd_user_' . $user . '_purchases' );
+	$mode = edd_is_test_mode() ? 'test' : 'live';
 
-	if ( false === $purchases || edd_is_test_mode() ) {
-		$mode = edd_is_test_mode() ? 'test' : 'live';
-
-		$purchases = edd_get_payments( array(
-			'mode' => $mode,
-			'user' => $user
-		) );
-
-		set_transient( 'edd_user_' . $user . '_purchases', $purchases, 7200 );
+	if( $pagination ) {
+		if ( get_query_var( 'paged' ) )
+			$paged = get_query_var('paged');
+		else if ( get_query_var( 'page' ) )
+			$paged = get_query_var( 'page' );
+		else
+			$paged = 1;
 	}
 
-	// no purchases
+	$args = apply_filters( 'edd_get_users_purchases_args', array(
+		'mode'   => $mode,
+		'user'   => $user,
+		'number' => $number,
+		'status' => 'publish'
+	) );
+
+	if( $pagination )
+		$args['page'] = $paged;
+	else
+		$args['nopaging'] = true;
+
+	$purchases = edd_get_payments( $args );
+
+	// No purchases
 	if ( ! $purchases )
 		return false;
 
@@ -70,8 +82,8 @@ function edd_get_users_purchases( $user = 0, $number = -1 ) {
 
 function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null ) {
 
-	if( !is_user_logged_in() )
-		return false; // at some point this should support email checking
+	if( ! is_user_logged_in() )
+		return false; // At some point this should support email checking
 
 	$users_purchases = edd_get_users_purchases( $user_id );
 
@@ -140,9 +152,9 @@ function edd_has_purchases( $user_id = null ) {
 	}
 
 	if( edd_get_users_purchases( $user_id, 1 ) ) {
-		return true; // user has at least one purchase
+		return true; // User has at least one purchase
 	}
-	return false; // user has never purchased anything
+	return false; // User has never purchased anything
 }
 
 
@@ -158,6 +170,10 @@ function edd_has_purchases( $user_id = null ) {
 */
 
 function edd_count_purchases_of_customer( $user = null ) {
+
+	if( empty( $user ) )
+		$user = get_current_user_id();
+
 	$args = array(
 		'number'   => -1,
 		'mode'     => 'live',
@@ -210,17 +226,39 @@ function edd_purchase_total_of_user( $user = null ) {
 }
 
 
-function edd_count_file_downloads_of_user( $user_email ) {
+/**
+ * Counts the total number of files a customer has downloaded
+ *
+ * @access      public
+ * @since       1.3
+ * @param       $user mixed - ID or email
+ * @return      int - The total number of files the user has downloaded
+*/
+
+function edd_count_file_downloads_of_user( $user ) {
 
 	global $edd_logs;
 
-	$meta_query = array(
-		array(
-			'key'     => '_edd_log_user_info',
-			'value'   => $user_email,
-			'compare' => 'LIKE'
-		)
-	);
+	if( is_email( $user ) ) {
+
+		$meta_query = array(
+			array(
+				'key'     => '_edd_log_user_info',
+				'value'   => $user,
+				'compare' => 'LIKE'
+			)
+		);
+
+	} else {
+
+		$meta_query = array(
+			array(
+				'key'     => '_edd_log_user_id',
+				'value'   => $user
+			)
+		);
+
+	}
 
 	return $edd_logs->get_log_count( null, 'file_download', $meta_query );
 
