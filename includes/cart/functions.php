@@ -72,12 +72,23 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 			$options['price_id'] = 0;
 		}
 
-		$cart_item = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $options ) );
+		$to_add = array();
+
+		if( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
+			// Process multiple price options at once
+			foreach( $options['price_id'] as $price ) {
+				$price_options = array( 'price_id' => $price );
+				$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $price_options ) );
+			}
+		} else {
+			// Add a single item
+			$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $options ) );
+		}
 
 		if( is_array( $cart ) ) {
-			$cart[] = $cart_item;
+			$cart = array_merge( $cart, $to_add );
 		} else {
-			$cart = array( $cart_item );
+			$cart = $to_add;
 		}
 
 		$_SESSION['edd_cart'] = $cart;
@@ -146,8 +157,15 @@ function edd_item_in_cart( $download_id = 0, $options = array() ) {
 	if( is_array( $cart_items ) ) {
 		foreach( $cart_items as $item ) {
 			if( $item['id'] == $download_id ) {
-				$ret = true;
-				break;
+				if( isset( $options['price_id'] ) && isset( $item['options']['price_id'] ) ) {
+					if( $options['price_id'] == $item['options']['price_id'] ) {
+						$ret = true;
+						break;
+					}
+				} else {
+					$ret = true;
+					break;
+				}
 			}
 		}
 	}
@@ -284,7 +302,8 @@ function edd_get_price_name( $item_id, $options = array() ) {
 		// If variable prices are enabled, retrieve the options
 		$prices = get_post_meta( $item_id, 'edd_variable_prices', true );
 		if( $prices ) {
-			$name = $prices[ $options['price_id'] ]['name'];
+			if( isset( $prices[ $options['price_id'] ] ) )
+				$name = $prices[ $options['price_id'] ]['name'];
 		}
 		$return = $name;
 	}

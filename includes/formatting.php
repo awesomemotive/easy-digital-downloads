@@ -40,9 +40,6 @@ function edd_sanitize_amount( $amount ) {
 
 	}
 
-	// Make sure we don't have more than 2 decimals
-	$amount = number_format( $amount, 2 );
-
 	return apply_filters( 'edd_sanitize_amount', $amount );
 }
 

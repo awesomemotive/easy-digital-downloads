@@ -204,6 +204,9 @@ function edd_dashboard_sales_widget() {
 								<h4><?php _e('Purchase Key', 'edd'); ?></h4>
 								<span class="purchase-key"><?php echo $payment_meta['key']; ?></span>
 							</div>
+
+							<?php do_action( 'edd_payment_view_details', $payment->ID ); ?>
+
 							<p><a id="edd-close-purchase-details" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Close', 'edd' ); ?>"><?php _e( 'Close', 'edd' ); ?></a></p>
 						</div>
 					</td>

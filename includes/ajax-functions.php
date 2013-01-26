@@ -67,17 +67,35 @@ add_action( 'wp_ajax_nopriv_edd_remove_from_cart', 'edd_ajax_remove_from_cart' )
 function edd_ajax_add_to_cart() {
 	if( isset( $_POST['download_id'] ) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
 		global $post;
-		if( !edd_item_in_cart( $_POST['download_id'] ) ) {
-			$options = is_numeric( $_POST['price_id'] ) ? array( 'price_id' => $_POST['price_id'] ) : array();
-			$key = edd_add_to_cart( $_POST['download_id'], $options );
-			$item = array(
-				'id' => $_POST['download_id'],
-				'options' => $options
-			);
-			$cart_item = edd_get_cart_item_template( $key, $item, true );
-			echo $cart_item;
-		} else {
-			echo 'incart';
+
+		$to_add = array();
+
+		if( isset( $_POST['price_ids'] ) && is_array( $_POST['price_ids'] ) ) {
+
+			foreach( $_POST['price_ids'] as $price ) {
+				$to_add[] = array( 'price_id' => $price );
+			}
+
+		}
+
+		foreach( $to_add as $options ) {
+
+			if( ! edd_item_in_cart( $_POST['download_id'], $options ) ) {
+
+				$key          = edd_add_to_cart( $_POST['download_id'], $options );
+
+				$item         = array(
+					'id'      => $_POST['download_id'],
+					'options' => $options
+				);
+
+				$cart_item    = edd_get_cart_item_template( $key, $item, true );
+
+				echo $cart_item;
+
+			} else {
+				echo 'incart';
+			}
 		}
 	}
 	die();
