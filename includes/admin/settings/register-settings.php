@@ -271,7 +271,8 @@ function edd_register_settings() {
 					'id' => 'enable_taxes',
 					'name' => __('Enable Taxes', 'edd'),
 					'desc' => __('Check this to enable taxes on purchases.', 'edd'),
-					'type' => 'checkbox'
+					'type' => 'checkbox',
+					'std' => 'no',
 				),
 				'tax_rate' => array(
 					'id' => 'tax_rate',
@@ -285,6 +286,7 @@ function edd_register_settings() {
 					'name' => __('Prices entered with tax', 'edd'),
 					'desc' => __('This option effects how you enter prices.', 'edd'),
 					'type' => 'radio',
+					'std' => 'no',
 					'options' => array(
 						'yes' => __('Yes, I will enter prices inclusive of tax', 'edd'),
 						'no'  => __('No, I will enter prices exclusive of tax', 'edd')
@@ -295,6 +297,7 @@ function edd_register_settings() {
 					'name' => __('Apply Taxes to:', 'edd'),
 					'desc' => __('Who should have tax added to their purchases?', 'edd'),
 					'type' => 'radio',
+					'std' => 'all',
 					'options' => array(
 						'all' 	=> __('Everyone', 'edd'),
 						'local' => __('Local residents only', 'edd')
@@ -312,6 +315,7 @@ function edd_register_settings() {
 					'name' => __('Display during checkout', 'edd'),
 					'desc' => __('', 'edd'),
 					'type' => 'select',
+					'std' => 'no',
 					'options' => array(
 						'yes' => __('Including tax', 'edd'),
 						'no'  => __('Excluding tax', 'edd')
@@ -321,6 +325,7 @@ function edd_register_settings() {
 					'id' => 'taxes_after_discounts',
 					'name' => __('Calculate Tax After Discounts?', 'edd'),
 					'desc' => __('Check this if you would like taxes calculated after discounts. By default taxes are calculated before discounts are applied.', 'edd'),
+					'std' => 'no',
 					'type' => 'checkbox'
 				)
 			)
@@ -458,7 +463,7 @@ function edd_register_settings() {
 				'section' => 'general',
 				'size' => isset($option['size']) ? $option['size'] : null,
 				'options' => isset($option['options']) ? $option['options'] : '',
-				'std' => isset($option['std']) ? $option['std'] : ''
+				'stripslashes_deep( $value )' => isset($option['std']) ? $option['std'] : ''
 			)
 		);
 	}
