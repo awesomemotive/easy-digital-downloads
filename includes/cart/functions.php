@@ -352,6 +352,7 @@ function edd_get_cart_subtotal( $tax = true ) {
 		}
 
 	}
+
 	return apply_filters( 'edd_get_cart_subtotal', $amount );
 }
 
@@ -433,24 +434,15 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 function edd_get_cart_total( $discounts = false ) {
 	global $edd_options;
 
-	$subtotal = edd_get_cart_subtotal();
+	$subtotal = edd_get_cart_subtotal( edd_is_exclude_tax() );
 
 	$cart_tax = 0;
-
 	if ( edd_is_taxes() ) {
-
-		if ( $edd_options['checkout_include_tax'] == 'no' && $edd_options['prices_include_tax'] == 'yes' ) {
-			$cart_tax = edd_get_cart_tax( $discounts );
-		}
-
-		if ( $edd_options['checkout_include_tax'] == 'yes' && $edd_options['prices_include_tax'] == 'yes' ) {
-			$cart_tax = edd_get_cart_tax( $discounts );
-		}
-
+		$cart_tax = edd_get_cart_tax( $discounts );
 	}
 
 	$discount = edd_get_cart_discounted_amount( $discounts );
-	$total    = $subtotal + $cart_tax - $discount;
+	$total = $subtotal + $cart_tax - $discount;
 
 	return (float) apply_filters( 'edd_get_cart_total', $total );
 
@@ -526,6 +518,7 @@ function edd_get_cart_tax( $discounts = false, $local_override = false ) {
 
 	$subtotal = edd_get_cart_subtotal( $tax = false );
 	$cart_tax = 0;
+
 
 	if ( edd_is_taxes() ) {
 
