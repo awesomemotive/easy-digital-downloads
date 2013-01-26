@@ -216,7 +216,7 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 	$price = edd_get_cart_item_price( $item_id, $options );
 	$label = '';
 
-	if ( edd_is_taxes() ) {
+	if ( edd_is_cart_taxed() ) {
 
 		if ( edd_is_include_tax() || edd_is_exclude_tax() ) {
 			$price = edd_calculate_tax( $price );
@@ -310,7 +310,7 @@ function edd_cart_subtotal() {
 	$tax = edd_is_include_tax() || edd_is_exclude_tax();
 	$price = esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal( $tax ) ) ) );
 
-	if ( edd_is_taxes() ) {
+	if ( edd_is_cart_taxed() ) {
 
 		if ( edd_is_exclude_tax() ) {
 			$price .= '<br/><span style="font-weight:normal;text-transform:none;">' . __('(ex. tax)', 'edd') . '</span>';
@@ -437,7 +437,7 @@ function edd_get_cart_total( $discounts = false ) {
 	$subtotal = edd_get_cart_subtotal( edd_is_exclude_tax() );
 
 	$cart_tax = 0;
-	if ( edd_is_taxes() ) {
+	if ( edd_is_cart_taxed() ) {
 		$cart_tax = edd_get_cart_tax( $discounts );
 	}
 
@@ -465,7 +465,7 @@ function edd_cart_total( $echo = true ) {
 
 	$total = apply_filters( 'edd_cart_total', edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ) );
 
-	if ( edd_is_taxes() ) {
+	if ( edd_is_cart_taxed() ) {
 
 		if ( $edd_options['checkout_include_tax'] == 'yes' ) {
 			$total .= '<br/><span style="font-weight:normal;text-transform:none;">'. sprintf( __('(includes %s tax)', 'edd'), edd_cart_tax() ) . '</span>';
@@ -520,7 +520,7 @@ function edd_get_cart_tax( $discounts = false, $local_override = false ) {
 	$cart_tax = 0;
 
 
-	if ( edd_is_taxes() ) {
+	if ( edd_is_cart_taxed() ) {
 
 		if ( edd_taxes_after_discounts() ) {
 			$subtotal -= edd_get_cart_discounted_amount( $discounts );
@@ -547,7 +547,7 @@ function edd_cart_tax( $echo = false ) {
 
 	$cart_tax = 0;
 
-	if ( edd_is_taxes() ) {
+	if ( edd_is_cart_taxed() ) {
 		$cart_tax = edd_get_cart_tax();
 		$cart_tax = edd_currency_filter( edd_format_amount( $cart_tax ) );
 	}
@@ -585,7 +585,7 @@ function edd_get_cart_content_details() {
 				'price'       => $price,
 				'quantity'    => 1,
 			);
-			if( edd_is_taxes() ) {
+			if( edd_is_cart_taxed() ) {
 				$details[ $key ]['tax'] = edd_calculate_tax( $price, false );
 			}
 		}

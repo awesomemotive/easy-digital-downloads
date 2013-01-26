@@ -282,6 +282,6 @@ function edd_is_exclude_tax() {
 	return ( $edd_options['prices_include_tax'] == 'yes' && $edd_options['checkout_include_tax'] == 'no' );
 }
 
-function edd_is_taxes() {
+function edd_is_cart_taxed() {
 	return ( edd_local_tax_opted_in() && edd_local_taxes_only() && edd_use_taxes() ) || ( !edd_local_taxes_only() && edd_use_taxes() );
 }
