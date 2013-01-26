@@ -110,13 +110,19 @@ final class Easy_Digital_Downloads {
 	 */
 	private function includes() {
 
-		global $edd_options;
+		global $edd_options, $edd_settings_framework;
 
+		require_once EDD_PLUGIN_DIR . 'includes/global-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php';
-		$edd_options = edd_get_settings();
+
+		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/classes/sf-class-settings.php';
+		$edd_settings_framework = new SF_Settings_API($id = 'edd', $title = 'EDD Settings', $menu = 'edit.php?post_type=download', __FILE__);
+		$edd_settings_framework->load_options( EDD_PLUGIN_DIR . 'includes/admin/settings/sf-options.php');
+
+		$edd_options = $edd_settings_framework->current_options;
+
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
 		require_once EDD_PLUGIN_DIR . 'includes/actions.php';
-
 
 		require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
