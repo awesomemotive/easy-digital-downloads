@@ -70,6 +70,7 @@ function edd_download_meta_box_save( $post_id) {
 	$fields = apply_filters( 'edd_metabox_fields_save', array(
 			'edd_price',
 			'_variable_pricing',
+			'_edd_price_options_mode',
 			'edd_variable_prices',
 			'edd_download_files',
 			'_edd_purchase_text',
@@ -186,6 +187,7 @@ function edd_render_price_field( $post_id ) {
 	$price 				= edd_get_download_price( $post_id );
 	$variable_pricing 	= edd_has_variable_prices( $post_id );
 	$prices 			= edd_get_variable_prices( $post_id );
+	$single_option_mode = edd_single_price_option_mode( $post_id );
 
 	$price_display    	= $variable_pricing ? ' style="display:none;"' : '';
 	$variable_display 	= $variable_pricing ? '' : ' style="display:none;"';
@@ -214,7 +216,10 @@ function edd_render_price_field( $post_id ) {
 
 	<div id="edd_variable_price_fields" class="edd_pricing_fields" <?php echo $variable_display; ?>>
 		<input type="hidden" id="edd_variable_prices" class="edd_variable_prices_name_field" value=""/>
-
+		<p>
+			<input type="checkbox" name="_edd_price_options_mode" id="edd_price_options_mode"<?php checked( 1, $single_option_mode ); ?> />
+			<label for="edd_price_options_mode"><?php _e( 'Enable multi option purchase mode. Leave unchecked to only permit a single price option to be purchased', 'edd' ); ?></label>
+		</p>
 		<div id="edd_price_fields" class="edd_meta_table_wrap">
 			<table class="widefat" width="100%" cellpadding="0" cellspacing="0">
 				<thead>

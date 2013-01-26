@@ -29,10 +29,8 @@ if( $purchases ) :
 						$download_files = edd_get_download_files( $id, $price_id );
 						$name           = get_the_title( $id );
 
-						if ( isset( $download['options'] ) ) {
-							if ( isset( $download['options']['price_id'] ) ) {
-								$name .= ' - ' . edd_get_price_option_name( $id, $download['options']['price_id'] );
-							}
+						if ( isset( $download['options']['price_id'] ) ) {
+							$name .= ' - ' . edd_get_price_option_name( $id, $download['options']['price_id'] );
 						}
 
 						do_action( 'edd_download_history_row_start', $post->ID, $id );

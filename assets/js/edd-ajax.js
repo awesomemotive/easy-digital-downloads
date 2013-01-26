@@ -29,10 +29,13 @@ jQuery(document).ready(function ($) {
                     $( '#edd_purchase_' + id + ' .edd_go_to_checkout' ).hide();
                     $( '#edd_purchase_' + id + ' .edd-add-to-cart' ).show();
                 }
-                var quantity = $('span.edd-cart-quantity').text();
-                quantity = parseInt(quantity, 10) - 1;
-                $('span.edd-cart-quantity').text(quantity);
-				if(!$('.edd-cart-item').length) {
+
+                $('span.edd-cart-quantity').each(function() {
+                    var quantity = parseInt($(this).text(), 10) - 1;
+                    $(this).text(quantity);
+                });
+
+                if(!$('.edd-cart-item').length) {
                     $('.cart_item.edd_checkout').hide();
 					$('.edd-cart').append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
 				} else {
@@ -55,28 +58,28 @@ jQuery(document).ready(function ($) {
        // Show the ajax loader
         $('.edd-cart-ajax', container).show();
 
-		var download = $this.data('download-id');
-		var variable_price = $this.data('variable-price');
-		var item_price_id = false;
-		if(typeof variable_price !== 'undefined' && variable_price !== false) {
-			item_price_id = $('.edd_price_option_' + download + ':checked').val();
-		}
+		var download       = $this.data('download-id');
+        var variable_price = $this.data('variable-price');
+		var price_mode     = $this.data('price-mode');
+		var item_price_ids = [];
+
+		if( variable_price == 'yes' ) {
+			$('.edd_price_option_' + download + ':checked').each(function( index ) {
+                item_price_ids[ index ] = $(this).val();
+            });
+		} else {
+            item_price_ids[0] = download;
+        }
 
         var action = $this.data('action'),
             data = {
                 action: action,
                 download_id: download,
-				price_id : item_price_id,
+				price_ids : item_price_ids,
                 nonce: edd_scripts.ajax_nonce
             };
 
         $.post(edd_scripts.ajaxurl, data, function (cart_item_response) {
-            // Item already in the cart
-			if(cart_item_response == 'incart') {
-				alert(edd_scripts.already_in_cart_message);
-				$('.edd-cart-ajax').hide();
-				return;
-			}
 
             if( edd_scripts.redirect_to_checkout == '1' ) {
 
@@ -95,22 +98,26 @@ jQuery(document).ready(function ($) {
                 }
 
                 // Update the cart quantity
-                var quantity = $('span.edd-cart-quantity').text();
-                quantity = parseInt(quantity, 10) + 1;
-                $('span.edd-cart-quantity').text(quantity);
+                $('span.edd-cart-quantity').each(function() {
+                    var quantity = parseInt($(this).text(), 10) + 1;
+                    $(this).text(quantity);
+                });
 
                 // Hide the ajax loader
                 $('.edd-cart-ajax', container).hide();
 
-                // Switch purchase to checkout
-                $('.edd_go_to_checkout, .edd-add-to-cart', container).toggle();
+                if( variable_price == 'no' || price_mode != 'multi' ) {
+                    // Switch purchase to checkout if a single price item or variable priced with radio buttons
+                    $('.edd_go_to_checkout, .edd-add-to-cart', container).toggle();
+                }
 
-                // Show the added message
-                $('.edd-cart-added-alert', container).fadeIn();
-                setTimeout(function () {
-                    $('.edd-cart-added-alert', container).fadeOut();
-                }, 3000);
-
+                if( cart_item_response != 'incart' ) {
+                    // Show the added message
+                    $('.edd-cart-added-alert', container).fadeIn();
+                    setTimeout(function () {
+                        $('.edd-cart-added-alert', container).fadeOut();
+                    }, 3000);
+                }
             }
 
         });
@@ -179,11 +186,13 @@ jQuery(document).ready(function ($) {
         $.post(edd_scripts.ajaxurl + '?payment-mode=' + payment_mode, { action: 'edd_load_gateway', edd_payment_mode: payment_mode },
             function(response){
                 jQuery('#edd_purchase_form_wrap').html(response);
+                edd_validate_checkout();
             }
         );
 
         return false;
     });
+
 
     $(document).on('click', '#edd_purchase_form input[type=submit]', function(e) {
 
@@ -191,6 +200,7 @@ jQuery(document).ready(function ($) {
 
         $.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout', function(data) {
             if ( data == 'success' ) {
+                $('.edd_errors').remove();
                 $('#edd_purchase_form').submit();
             } else {
                 $('.edd_errors').remove();
