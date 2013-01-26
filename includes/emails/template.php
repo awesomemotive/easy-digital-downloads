@@ -302,7 +302,7 @@ function edd_apply_email_template( $body, $payment_id, $payment_data ) {
 
 	global $edd_options;
 
-	$template_name = isset( $edd_options['email_template'] ) ? $edd_options['email_template'] : 'default';
+	$template_name = apply_filters( 'edd_email_template', (isset( $edd_options['email_template'] ) ? $edd_options['email_template'] : 'default') );
 
 	if ( $template_name == 'none' ) {
 		if ( is_admin() )
