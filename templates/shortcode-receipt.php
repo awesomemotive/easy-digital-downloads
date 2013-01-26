@@ -12,7 +12,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 ?>
 
 <table id="edd_purchase_receipt">
-	<tbody>
+	<thead>
 		<?php do_action( 'edd_payment_receipt_before', $payment, $edd_receipt_args ); ?>
 
 		<?php if ( $edd_receipt_args[ 'payment_id' ] ) : ?>
@@ -21,7 +21,8 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 			<th>#<?php echo $payment->ID; ?></th>
 		</tr>
 		<?php endif; ?>
-
+	</thead>
+	<tbody>
 		<?php if ( $edd_receipt_args[ 'date' ] ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Date', 'edd' ); ?>:</strong></td>
@@ -76,8 +77,10 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 
 	<table id="edd_purchase_receipt_products">
 		<thead>
+		<tr>
 			<th><?php _e( 'Name', 'edd' ); ?></th>
 			<th><?php _e( 'Price', 'edd' ); ?></th>
+		</tr>
 		</thead>
 		<tfoot>
 			<tr>
