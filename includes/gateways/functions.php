@@ -12,28 +12,6 @@
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
-/**
- * Get Payment Gateways
- *
- * Rreturns a list of all available gateways.
- *
- * @access      public
- * @since       1.0
- * @return      array
-*/
-
-function edd_get_payment_gateways() {
-
-	// Default, built-in gateways
-	$gateways = array(
-		'paypal' => array('admin_label' => 'PayPal', 'checkout_label' => 'PayPal'),
-		'manual' => array('admin_label' => __('Test Payment', 'edd'), 'checkout_label' => __('Test Payment', 'edd')),
-	);
-
-	return apply_filters( 'edd_payment_gateways', $gateways );
-
-}
-
 
 /**
  * Get Enabled Payment Gateways

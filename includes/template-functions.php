@@ -68,10 +68,6 @@ function edd_get_purchase_link( $args = array() ) {
 	if( $args['price'] && ! $variable_pricing ) {
 
 		$price = edd_get_download_price( $args['download_id'] );
-
-		if( edd_use_taxes() && edd_taxes_on_prices() )
-			$price += edd_calculate_tax( $price );
-
 		$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . '&nbsp;&ndash;&nbsp;' . $args['text'];
 
 	}
@@ -166,8 +162,6 @@ function edd_purchase_variable_pricing( $download_id ) {
 				if( $prices ):
 					foreach( $prices as $key => $price ) :
 						$amount = $price[ 'amount' ];
-						if( edd_use_taxes() && edd_taxes_on_prices() )
-							$amount += edd_calculate_tax( $price[ 'amount' ] );
 						printf(
 							'<li><label for="%3$s"><input type="%2$s" %1$s name="edd_options[price_id][]" id="%3$s" class="%4$s" value="%5$s"/> %6$s</label></li>',
 							checked( 0, $key, false ),
@@ -266,46 +260,6 @@ function edd_filter_success_page_content( $content ) {
 add_filter( 'the_content', 'edd_filter_success_page_content' );
 
 
-/**
- * Get Button Colors
- *
- * Returns an array of button colors.
- *
- * @access      public
- * @since       1.0
- * @return      array
- */
-function edd_get_button_colors() {
-	$colors = array(
-		'gray'      => __( 'Gray', 'edd' ),
-		'blue'      => __( 'Blue', 'edd' ),
-		'green'     => __( 'Green', 'edd' ),
-		'yellow'    => __( 'Yellow', 'edd' ),
-		'dark-gray' => __( 'Dark Gray', 'edd' ),
-	);
-
-	return apply_filters( 'edd_button_colors', $colors );
-}
-
-
-/**
- * Get Button Styles
- *
- * Returns an array of button styles.
- *
- * @access      public
- * @since       1.2.2
- * @return      array
-*/
-
-function edd_get_button_styles() {
-	$styles = array(
-		'button'	=> __( 'Button', 'edd' ),
-		'plain'     => __( 'Plain Text', 'edd' )
-	);
-
-	return apply_filters( 'edd_button_styles', $styles );
-}
 
 
 /**

@@ -23,7 +23,6 @@ if ( !defined( 'ABSPATH' ) ) exit;
 */
 
 function edd_register_settings() {
-
 	// Setup some default option sets
 	$pages = get_pages();
 	$pages_options = array( 0 => '' ); // Blank option
@@ -280,6 +279,16 @@ function edd_register_settings() {
 					'type' => 'text',
 					'size' => 'small'
 				),
+				'prices_include_tax' => array(
+					'id' => 'prices_include_tax',
+					'name' => __('Prices entered with tax', 'edd'),
+					'desc' => __('This option effects how you enter prices.', 'edd'),
+					'type' => 'radio',
+					'options' => array(
+						'yes' => __('Yes, I will enter prices inclusive of tax', 'edd'),
+						'no'  => __('No, I will enter prices exclusive of tax', 'edd')
+					)
+				),
 				'tax_condition' => array(
 					'id' => 'tax_condition',
 					'name' => __('Apply Taxes to:', 'edd'),
@@ -297,11 +306,15 @@ function edd_register_settings() {
 					'type' => 'text',
 					'size' => 'large'
 				),
-				'taxes_on_prices' => array(
-					'id' => 'taxes_on_prices',
-					'name' => __('Tax in Prices', 'edd'),
-					'desc' => __('Include taxes in individual product prices?', 'edd'),
-					'type' => 'checkbox'
+				'checkout_include_tax' => array(
+					'id' => 'checkout_include_tax',
+					'name' => __('Display during checkout', 'edd'),
+					'desc' => __('', 'edd'),
+					'type' => 'select',
+					'options' => array(
+						'yes' => __('Including tax', 'edd'),
+						'no'  => __('Excluding tax', 'edd')
+					)
 				),
 				'taxes_after_discounts' => array(
 					'id' => 'taxes_after_discounts',
@@ -893,27 +906,4 @@ function edd_hook_callback( $args ) {
 function edd_settings_sanitize( $input ) {
 	add_settings_error( 'edd-notices', '', __('Settings Updated', 'edd'), 'updated' );
 	return $input;
-}
-
-
-/**
- * Get Settings
- *
- * Retrieves all plugin settings and returns them
- * as a combined array.
- *
- * @access      public
- * @since       1.0
- * @return      array
-*/
-
-function edd_get_settings() {
-	$general_settings 	= is_array(get_option('edd_settings_general')) 	? get_option('edd_settings_general') 	: array();
-	$gateway_settings 	= is_array(get_option('edd_settings_gateways')) ? get_option('edd_settings_gateways') 	: array();
-	$email_settings 	= is_array(get_option('edd_settings_emails')) 	? get_option('edd_settings_emails') 	: array();
-	$style_settings 	= is_array(get_option('edd_settings_styles')) 	? get_option('edd_settings_styles') 	: array();
-	$tax_settings 		= is_array(get_option('edd_settings_taxes')) 	? get_option('edd_settings_taxes') 		: array();
-	$misc_settings 		= is_array(get_option('edd_settings_misc')) 	? get_option('edd_settings_misc') 		: array();
-
-	return array_merge($general_settings, $gateway_settings, $email_settings, $style_settings, $tax_settings, $misc_settings);
 }

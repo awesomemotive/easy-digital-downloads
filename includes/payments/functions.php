@@ -728,10 +728,17 @@ function edd_payment_subtotal( $payment_id = 0, $payment_meta = false ) {
  * @return      float
  */
 function edd_get_payment_subtotal( $payment_id = 0, $payment_meta = false ) {
+	global $edd_options;
+
 	if ( !$payment_meta )
 		$payment_meta = edd_get_payment_meta( $payment_id );
 
 	$subtotal = isset( $payment_meta['subtotal'] ) ? $payment_meta['subtotal'] : $payment_meta['amount'];
+
+	if ( $edd_options['checkout_include_tax'] == 'yes' ) {
+		$tax = edd_get_payment_tax( $payment_id );
+		$subtotal = $edd_options['prices_include_tax'] == 'yes' ? $subtotal + $tax : $subtotal - $tax;
+	}
 
 	return apply_filters( 'edd_get_payment_subtotal', $subtotal, $payment_id );
 
