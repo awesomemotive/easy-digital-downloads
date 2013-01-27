@@ -40,7 +40,7 @@ function edd_get_email_templates() {
  * @return string
  */
 function edd_email_template_tags( $message, $payment_data, $payment_id ) {
-	$has_tags = (strpos($message, '{') !== false);
+	$has_tags = ( strpos($message, '{') !== false );
 	if ( !$has_tags ) return $message;
 
 	$user_info = maybe_unserialize( $payment_data['user_info'] );
