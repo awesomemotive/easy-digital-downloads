@@ -127,31 +127,21 @@ function edd_purchase_form_validate_fields() {
 
 	// Start an array to collect valid data
 	$valid_data = array(
-		'gateway'				=> '',		 // Gateway fallback
-		'discount'				=> 'none',	 // Set default discount
-		'need_new_user'			=> false,	 // New user flag
-		'need_user_login'		=> false,	 // Login user flag
-		'logged_user_data'		=> array(),  // Logged user collected data
-		'new_user_data'			=> array(),	 // New user collected data
-		'login_user_data'		=> array(),	 // Login user collected data
-		'guest_user_data'		=> array(),	 // Guest user collected data
-		'cc_info'				=> array()	 // Credit card info
+		'gateway'          => edd_purchase_form_validate_gateway(), // Gateway fallback
+		'discount'         => edd_purchase_form_validate_discounts(),    // Set default discount
+		'need_new_user'    => false,     // New user flag
+		'need_user_login'  => false,     // Login user flag
+		'logged_user_data' => array(),   // Logged user collected data
+		'new_user_data'    => array(),   // New user collected data
+		'login_user_data'  => array(),   // Login user collected data
+		'guest_user_data'  => array(),   // Guest user collected data
+		'cc_info'          => edd_get_purchase_cc_info()    // Credit card info
 	);
-
-	// Validate the gateway
-	$valid_data['gateway'] = edd_purchase_form_validate_gateway();
-
-	// Validate discounts
-	$valid_data['discount'] = edd_purchase_form_validate_discounts();
-
-	// Collect credit card info
-	$valid_data['cc_info'] = edd_get_purchase_cc_info();
 
 	// Validate agree to terms
 	if ( isset( $edd_options['show_agree_to_terms'] ) )
 		edd_purchase_form_validate_agree_to_terms();
 
-	// Check if user is logged in
 	if ( is_user_logged_in() ) {
 		// Collect logged in user data
 		$valid_data['logged_in_user'] = edd_purchase_form_validate_logged_in_user();
@@ -164,7 +154,7 @@ function edd_purchase_form_validate_fields() {
 	   // Validate new user data
 	  $valid_data['new_user_data'] = edd_purchase_form_validate_new_user();
 
-   // Check if login validation is needed
+	// Check if login validation is needed
 	} else if ( isset( $_POST['edd-purchase-var'] ) && $_POST['edd-purchase-var'] == 'needs-to-login' ) {
 
 		// Set user login as required
