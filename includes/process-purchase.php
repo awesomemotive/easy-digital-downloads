@@ -192,21 +192,19 @@ function edd_purchase_form_validate_fields() {
 */
 function edd_purchase_form_validate_gateway() {
 	// Check if a gateway value is present
-	if ( isset( $_POST['edd-gateway'] ) && trim( $_POST['edd-gateway'] ) != '' ) {
-		// Clean gateway
-		$gateway = strip_tags( $_POST['edd-gateway'] );
-		// Verify if gateway is active
-		if ( edd_is_gateway_active( $gateway ) ) {
-			// Return active gateway
+	if ( !empty( $_POST['edd-gateway'] ) ) {
+
+		$gateway = sanitize_text_field( $_POST['edd-gateway'] );
+
+		if ( edd_is_gateway_active( $gateway ) )
 			return $gateway;
-		} else if ( edd_get_cart_amount() <= 0 ) {
+
+		if ( !edd_get_cart_amount() )
 			return 'manual';
-		} else {
-			// Set invalid gateway error
-			edd_set_error( 'invalid_gateway', __( 'The selected gateway is not active', 'edd' ) );
-		}
+
+		edd_set_error( 'invalid_gateway', __( 'The selected gateway is not active', 'edd' ) );
+
 	} else {
-		// No gateway is present
 		edd_set_error( 'empty_gateway', __( 'No gateway has been selected', 'edd' ) );
 	}
 
@@ -346,9 +344,9 @@ function edd_purchase_form_validate_new_user() {
 	);
 
 	// Check the new user's credentials against existing ones
-	$user_login	  = isset( $_POST["edd_user_login"] ) ? trim( $_POST["edd_user_login"] ) : false;
-	$user_email	  = isset( $_POST['edd_email'] ) ? trim( $_POST['edd_email'] ) : false;
-	$user_pass	  = isset( $_POST["edd_user_pass"] ) ? trim( $_POST["edd_user_pass"] ) : false;
+	$user_login   = isset( $_POST["edd_user_login"] ) ? trim( $_POST["edd_user_login"] ) : false;
+	$user_email   = isset( $_POST['edd_email'] ) ? trim( $_POST['edd_email'] ) : false;
+	$user_pass    = isset( $_POST["edd_user_pass"] ) ? trim( $_POST["edd_user_pass"] ) : false;
 	$pass_confirm = isset( $_POST["edd_user_pass_confirm"] ) ? trim( $_POST["edd_user_pass_confirm"] ) : false;
 
 
