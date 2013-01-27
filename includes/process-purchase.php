@@ -58,28 +58,28 @@ function edd_process_purchase_form() {
 
 	// Setup user information
 	$user_info = array(
-		'id' 		=> $user['user_id'],
-		'email' 	=> $user['user_email'],
-		'first_name'=> $user['user_first'],
-		'last_name' => $user['user_last'],
-		'discount' 	=> $valid_data['discount']
+		'id'         => $user['user_id'],
+		'email'      => $user['user_email'],
+		'first_name' => $user['user_first'],
+		'last_name'  => $user['user_last'],
+		'discount'   => $valid_data['discount']
 	);
 
 	// Setup purchase information
 	$purchase_data = array(
-		'downloads' 	=> edd_get_cart_contents(),
-		'subtotal'		=> edd_get_cart_subtotal(),		 	// Amount before taxes and discounts
-		'discount'		=> edd_get_cart_discounted_amount(),// Discounted amount
-		'tax'			=> edd_get_cart_tax(), 				// Taxed amount
-		'price' 		=> edd_get_cart_total(), 			// Amount after taxes
-		'purchase_key' 	=> strtolower( md5( uniqid() ) ), 	// Random key
-		'user_email' 	=> $user['user_email'],
-		'date' 			=> date( 'Y-m-d H:i:s' ),
-		'user_info' 	=> $user_info,
-		'post_data' 	=> $_POST,
-		'cart_details' 	=> edd_get_cart_content_details(),
-		'gateway' 		=> $valid_data['gateway'],
-		'card_info' 	=> $valid_data['cc_info']
+		'downloads'    => edd_get_cart_contents(),
+		'subtotal'     => edd_get_cart_subtotal(),		 	// Amount before taxes and discounts
+		'discount'     => edd_get_cart_discounted_amount(),// Discounted amount
+		'tax'          => edd_get_cart_tax(), 				// Taxed amount
+		'price'        => edd_get_cart_total(), 			// Amount after taxes
+		'purchase_key' => strtolower( md5( uniqid() ) ), 	// Random key
+		'user_email'   => $user['user_email'],
+		'date'         => date( 'Y-m-d H:i:s' ),
+		'user_info'    => $user_info,
+		'post_data'    => $_POST,
+		'cart_details' => edd_get_cart_content_details(),
+		'gateway'      => $valid_data['gateway'],
+		'card_info'    => $valid_data['cc_info']
 	);
 
 	// Add the user data for hooks
@@ -96,7 +96,7 @@ function edd_process_purchase_form() {
 	);
 
 	// If the total amount in the cart is 0, send to the manaul gateway. This emulates a free download purchase
-	if ( $purchase_data['price'] <= 0 ) {
+	if ( !$purchase_data['price'] ) {
 		// Revert to manual
 		$valid_data['gateway'] = 'manual';
 	}
