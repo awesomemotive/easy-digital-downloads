@@ -26,19 +26,18 @@ if ( !defined( 'ABSPATH' ) ) exit;
 function edd_trigger_purchase_receipt( $payment_id, $new_status, $old_status ) {
 
 	// Check if the payment was already set to complete
-	if( $old_status == 'publish' || $old_status == 'complete')
-		return;
+	if( $old_status == 'publish' || $old_status == 'complete' )
+		return; // Make sure that payments are only completed once
 
-	// Make sure the purchase receipt is only sent if the new status is complete -- No idea why, but this returns even when $new_status is 'publish'
-	//if( $new_status != 'publish' && $new_status != 'complete' );
-		//return;
+	// Make sure the receipt is only sent when new status is complete
+	if( $new_status != 'publish' && $new_status != 'complete' )
+		return;
 
 	// Send email with secure download link
 	edd_email_purchase_receipt( $payment_id );
 
 }
 add_action( 'edd_update_payment_status', 'edd_trigger_purchase_receipt', 10, 3 );
-
 
 /**
  * Resend Email Purchase Receipt
