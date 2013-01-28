@@ -40,8 +40,8 @@ function edd_get_email_templates() {
  * @return string
  */
 function edd_email_template_tags( $message, $payment_data, $payment_id ) {
-	$has_tags = ( strpos($message, '{') !== false );
-	if ( !$has_tags ) return $message;
+	$has_tags = ( strpos($message, '{' ) !== false );
+	if ( ! $has_tags ) return $message;
 
 	$user_info = maybe_unserialize( $payment_data['user_info'] );
 
@@ -66,7 +66,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 
 	}
 
-	$file_urls      = '';
+	$file_urls     = '';
 	$download_list = '<ul>';
 	$downloads     = edd_get_payment_meta_downloads( $payment_id );
 	if ( $downloads ) {
