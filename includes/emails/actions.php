@@ -33,10 +33,6 @@ function edd_trigger_purchase_receipt( $payment_id, $new_status, $old_status ) {
 	if( $new_status != 'publish' && $new_status != 'complete' )
 		return;
 
-	// Make sure the purchase receipt is only sent if the new status is complete -- No idea why, but this returns even when $new_status is 'publish'
-	//if( $new_status != 'publish' && $new_status != 'complete' );
-		//return;
-
 	// Send email with secure download link
 	edd_email_purchase_receipt( $payment_id );
 
