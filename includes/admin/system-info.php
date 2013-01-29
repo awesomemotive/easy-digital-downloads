@@ -57,6 +57,7 @@ Web Server Info:          <?php echo $_SERVER['SERVER_SOFTWARE'] . "\n"; ?>
 
 PHP Memory Limit:         <?php echo ini_get( 'memory_limit' ) . "\n"; ?>
 PHP Post Max Size:        <?php echo ini_get( 'post_max_size' ) . "\n"; ?>
+PHP Time Limit:           <?php echo ini_get( 'max_execution_time' ) . "\n"; ?>
 
 WP_DEBUG:                 <?php echo defined( 'WP_DEBUG' ) ? WP_DEBUG ? 'Enabled' . "\n" : 'Disabled' . "\n" : 'Not set' . "\n" ?>
 
