@@ -107,7 +107,24 @@ function edd_setup_edd_post_types() {
 
 	/* discounts post type */
 
+	$discount_labels = array(
+		'name' 				=> _x( 'Discounts', 'post type general name', 'edd' ),
+		'singular_name' 	=> _x( 'Discount', 'post type singular name', 'edd' ),
+		'add_new' 			=> __( 'Add New', 'edd' ),
+		'add_new_item' 		=> __( 'Add New Discount', 'edd' ),
+		'edit_item' 		=> __( 'Edit Discount', 'edd' ),
+		'new_item' 			=> __( 'New Discount', 'edd' ),
+		'all_items' 		=> __( 'All Discounts', 'edd' ),
+		'view_item' 		=> __( 'View Discount', 'edd' ),
+		'search_items' 		=> __( 'Search Discounts', 'edd' ),
+		'not_found' 		=> __( 'No Discounts found', 'edd' ),
+		'not_found_in_trash'=> __( 'No Discounts found in Trash', 'edd' ),
+		'parent_item_colon' => '',
+		'menu_name' 		=> __( 'Discounts', 'edd' )
+	);
+
 	$discount_args = array(
+		'labels' 			=> apply_filters( 'edd_discount_labels', $discount_labels ),
 		'public' 			=> false,
 		'query_var' 		=> false,
 		'rewrite' 			=> false,
@@ -132,7 +149,7 @@ add_action( 'init', 'edd_setup_edd_post_types', 100 );
 
 function edd_get_default_labels() {
 	$defaults = array(
-	   'singular' => __('Download','edd'),
+	   'singular' => __('Download','edd' ),
 	   'plural' => __('Downloads','edd')
 	);
 	return apply_filters( 'edd_default_downloads_name', $defaults );
@@ -176,15 +193,15 @@ function edd_get_label_plural( $lowercase = false ) {
 
 function edd_change_default_title( $title ){
      $screen = get_current_screen();
- 
+
      if  ( 'download' == $screen->post_type ) {
      	$label = edd_get_label_singular();
         $title = sprintf( __('Enter %s title here', 'edd'), $label);
      }
- 
+
      return $title;
 }
- 
+
 add_filter( 'enter_title_here', 'edd_change_default_title' );
 
 
@@ -294,7 +311,7 @@ function edd_updated_messages( $messages ) {
 	$url1 = '<a href="' . get_permalink( $post_ID ) . '">';
 	$url2 = edd_get_label_singular();
 	$url3 = '</a>';
-	
+
 	$messages['download'] = array(
 		1 => sprintf( __('%2$s updated. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
 		4 => sprintf( __('%2$s updated. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
