@@ -151,7 +151,9 @@ function edd_currency_filter( $price ) {
 function edd_currency_decimal_filter( $decimals = 2 ) {
 	global $edd_options;
 
-	switch( $edd_options['currency'] ) {
+	$currency = isset( $edd_options['currency'] ) ? $edd_options['currency'] : 'USD';
+
+	switch( $currency ) {
 
 		case 'RIAL' :
 			$decimals = 0;
