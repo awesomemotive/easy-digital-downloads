@@ -49,6 +49,10 @@ HOME_URL:                 <?php echo home_url() . "\n"; ?>
 EDD Version:              <?php echo EDD_VERSION . "\n"; ?>
 WordPress Version:        <?php echo get_bloginfo( 'version' ) . "\n"; ?>
 
+Taxes Enabled:            <?php echo edd_use_taxes() ? "Yes\n" : "No\n"; ?>
+Local Taxes Only:         <?php echo edd_local_taxes_only() ? "Yes\n" : "No\n"; ?>
+Taxes After Discounts:    <?php echo edd_taxes_after_discounts() ? "Yes\n" : "No\n"; ?>
+
 <?php echo $browser ; ?>
 
 PHP Version:              <?php echo PHP_VERSION . "\n"; ?>
