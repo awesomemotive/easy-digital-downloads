@@ -189,10 +189,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return      string
 	 */
 	function column_name( $item ) {
-		$discount = get_post( $item['ID'] );
-		$base     = admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' . $item['ID'] );
-
-		$row_actions = array();
+		$discount     = get_post( $item['ID'] );
+		$base         = admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' . $item['ID'] );
+		$row_actions  = array();
 
 		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Edit', 'edd' ) . '</a>';
 
@@ -201,7 +200,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		else
 			$row_actions['activate'] = '<a href="' . add_query_arg( array( 'edd-action' => 'activate_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Activate', 'edd' ) . '</a>';
 
-		$row_actions['delete'] = '<a href="' . add_query_arg( array( 'edd-action' => 'delete_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Delete', 'edd' ) . '</a>';
+		$row_actions['delete'] = '<a href="' . wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_discount', 'discount' => $discount->ID ) ), 'edd_discount_nonce' ) . '">' . __( 'Delete', 'edd' ) . '</a>';
 
 		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $discount );
 
