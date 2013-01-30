@@ -118,7 +118,8 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 	$price      = edd_currency_filter( edd_format_amount( $payment_data['amount'] ) );
 	$gateway    = edd_get_gateway_checkout_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
 	$receipt_id = $payment_data['key'];
-
+	$notes	    = edd_get_product_notes( $id );
+	
 	$message = str_replace( '{name}', $name, $message );
 	$message = str_replace( '{fullname}', $fullname, $message );
 	$message = str_replace( '{username}', $username, $message );
@@ -131,6 +132,9 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 	$message = str_replace( '{price}', $price, $message );
 	$message = str_replace( '{payment_method}', $gateway, $message );
 	$message = str_replace( '{receipt_id}', $receipt_id, $message );
+	$message = str_replace( '{payment_id}', $payment_id, $message );
+	$message = str_replace( '{product_notes}', $notes, $message );
+	
 	$message = apply_filters( 'edd_email_template_tags', $message, $payment_data, $payment_id );
 
 	return $message;
