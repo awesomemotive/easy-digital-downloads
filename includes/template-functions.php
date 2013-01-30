@@ -384,7 +384,7 @@ function edd_get_purchase_download_links( $purchase_data ) {
 			if ( is_array( $files ) ) {
 				foreach( $files as $filekey => $file ) {
 					$links .= '<div class="edd_download_link_file">';
-						$links .= '<a href="' . esc_url( edd_get_download_file_url( $purchase_data['purchase_key'], $purchase_data['user_email'], $filekey, $download['id'] ) ) . '">';
+						$links .= '<a href="' . esc_url( edd_get_download_file_url( $purchase_data['purchase_key'], $purchase_data['user_email'], $filekey, $download['id'], $price_id ) ) . '">';
 							if( isset( $file['name'] ) )
 								$links .= esc_html( $file['name'] );
 							else

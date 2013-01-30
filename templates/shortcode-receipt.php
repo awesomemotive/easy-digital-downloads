@@ -102,7 +102,7 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 
 					foreach ( $download_files as $filekey => $file ) :
 
-						$download_url = edd_get_download_file_url( $meta['key'], $meta['email'], $filekey, $item['id'] );
+						$download_url = edd_get_download_file_url( $meta['key'], $meta['email'], $filekey, $item['id'], $price_id );
 						?>
 						<li class="edd_download_file">
 							<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a>

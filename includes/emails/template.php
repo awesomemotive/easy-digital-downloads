@@ -89,7 +89,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 			if ( $files ) {
 				foreach ( $files as $filekey => $file ) {
 					$download_list .= '<li>';
-					$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $id );
+					$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $id, $price_id );
 					$download_list .= '<a href="' . esc_url( $file_url ) . '">' . $file['name'] . '</a>';
 
 					$download_list .= '</li>';
