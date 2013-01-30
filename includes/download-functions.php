@@ -673,7 +673,7 @@ function edd_get_file_price_condition( $download_id, $file_key ) {
  * @return      string
 */
 
-function edd_get_download_file_url($key, $email, $filekey, $download_id) {
+function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price_id = false ) {
 
 	global $edd_options;
 
@@ -688,6 +688,7 @@ function edd_get_download_file_url($key, $email, $filekey, $download_id) {
 		'download_key' 	=> $key,
 		'email' 		=> rawurlencode( $email ),
 		'file' 			=> $filekey,
+		'price_id'      => (int) $price_id,
 		'download' 		=> $download_id,
 		'expire' 		=> rawurlencode( base64_encode( $date ) )
 	);
