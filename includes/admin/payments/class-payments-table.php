@@ -122,12 +122,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$pending_count  = '&nbsp;<span class="count">(' . $this->pending_count  . ')</span>';
 		$refunded_count = '&nbsp;<span class="count">(' . $this->refunded_count . ')</span>';
 		$failed_count   = '&nbsp;<span class="count">(' . $this->failed_count   . ')</span>';
+		$revoked_count  = '&nbsp;<span class="count">(' . $this->revoked_count   . ')</span>';
 
 		$views = array(
 			'all'		=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'edd') . $total_count ),
 			'publish'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'publish', $base ), $current === 'publish' ? ' class="current"' : '', __('Completed', 'edd') . $complete_count ),
 			'pending'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'pending', $base ), $current === 'pending' ? ' class="current"' : '', __('Pending', 'edd') . $pending_count ),
 			'refunded'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'refunded', $base ), $current === 'refunded' ? ' class="current"' : '', __('Refunded', 'edd') . $refunded_count ),
+			'revoked'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'revoked', $base ), $current === 'revoked' ? ' class="current"' : '', __('Revoked', 'edd') . $revoked_count )
 			'failed'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'failed', $base ), $current === 'failed' ? ' class="current"' : '', __('Failed', 'edd') . $failed_count )
 		);
 

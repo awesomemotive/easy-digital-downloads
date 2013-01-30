@@ -413,7 +413,8 @@ function edd_get_payment_statuses() {
 		'pending'  => __( 'Pending', 'edd' ),
 		'publish'  => __( 'Complete', 'edd' ),
 		'refunded' => __( 'Refunded', 'edd' ),
-		'failed'   => __( 'Failed', 'edd' )
+		'failed'   => __( 'Failed', 'edd' ),
+		'revoked'  => __( 'Revoked', 'edd' )
 	);
 
 	return apply_filters( 'edd_payment_statuses', $payment_statuses );
