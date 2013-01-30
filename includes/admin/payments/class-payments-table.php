@@ -50,6 +50,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public $pending_count;
 	public $refunded_count;
 	public $failed_count;
+	public $revoked_count;
 
 
 	/**
@@ -452,6 +453,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$this->pending_count  = $payment_count->pending;
 		$this->refunded_count = $payment_count->refunded;
 		$this->failed_count   = $payment_count->failed;
+		$this->revoked_count  = $payment_count->revoked;
 		$this->total_count    = $payment_count->publish + $payment_count->pending + $payment_count->refunded + $payment_count->failed + $payment_count->trash;
 	}
 
