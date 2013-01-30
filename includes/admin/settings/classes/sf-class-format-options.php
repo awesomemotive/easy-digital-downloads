@@ -20,9 +20,9 @@ if ( ! class_exists( 'SF_Format_Options' ) ) {
 		 * @param array   $value Single option array.
 		 * @return string HTML.
 		 */
-		public function settings_options_format( $value )
+		public function settings_options_format( $setting )
 		{
-			if ( empty( $value ) ) return false;
+			if ( empty( $setting ) ) return false;
 
 			$defaults = array(
 				'name'        => '',
@@ -35,12 +35,13 @@ if ( ! class_exists( 'SF_Format_Options' ) ) {
 				'type'        => 'text',
 				'std'         => '',
 				'select2'     => false,
+				'multiple'    => false,
 				'options'     => array(),
 				'restrict'    => array(),
 			);
 
 			/* Each to it's own variable for slim-ness' sakes. */
-			extract( shortcode_atts( $defaults, $value ) );
+			extract( shortcode_atts( $defaults, $setting ) );
 
 			$restrict_defaults = array(
 				'min'  => 0,
@@ -51,7 +52,14 @@ if ( ! class_exists( 'SF_Format_Options' ) ) {
 			$restrict = shortcode_atts( $restrict_defaults, $restrict );
 
 			$value   = $this->get_option( $id );
-			$value   = $value !== false ? esc_attr ( $value ) : false;
+			$value   = $value !== false ? maybe_unserialize( $value ) : false;
+
+			// Sanitize the value
+			if ( is_array($value)) {
+				foreach ($value as $key => $output) {
+					$value[$key] = esc_attr($output);
+				}
+			} else { $value = esc_attr($value); }
 
 			$title   = $name;
 			$name    = $this->id . "_options[{$id}]";
@@ -119,26 +127,55 @@ if ( ! class_exists( 'SF_Format_Options' ) ) {
 			<?php echo $description;
 			break;
 
-		case 'checkbox': ?>
+		case 'checkbox':
+
+			$selected = ( $value !== false ) ? $value : $std;
+
+			if ( $multiple ) :
+
+				foreach ($options as $key => $desc) : ?>
+
+					<input name="<?php echo $name; ?><?php echo $multiple ? '[]' : ''; ?>"
+							 id="<?php echo $id . '_' . $key; ?>"
+							 type="checkbox"
+							 class="<?php echo $class; ?>"
+							 style="<?php echo $css; ?>"
+							 value="<?php echo $key; ?>"
+							 <?php self::checked( $value, $key ); ?>
+							 />
+						<label for="<?php echo $id . '_' . $key; ?>">
+							<?php echo $desc; ?>
+						</label>
+						<br/>
+					<?php
+
+				endforeach;
+
+			else : ?>
+
 			<input name="<?php echo $name; ?>"
-					 id="<?php echo $id; ?>"
+					 id="<?php echo $id ?>"
 					 type="checkbox"
 					 class="<?php echo $class; ?>"
 					 style="<?php echo $css; ?>"
-					 <?php if ( $value !== false ) echo checked( $value, 1, false ); else echo checked( $std, 1, false ); ?>
+					 <?php checked( $selected, 1 ); ?>
 					 />
 			<?php echo $description;
+			endif;
 			break;
 
-		case 'radio': ?>
-			<?php foreach ( $options as $key => $val ) : ?>
+		case 'radio':
+
+			$selected = ( $value !== false ) ? $value : $std;
+
+			foreach ( $options as $key => $val ) : ?>
 						<label class="radio">
 						<input type="radio"
 							   name="<?php echo $name; ?>"
 							   id="<?php echo $key; ?>"
 							   value="<?php echo $key; ?>"
 							   class="<?php echo $class; ?>"
-								<?php if ( $value !== false ) echo checked( $value, $key, false ); else echo checked( $std, $key, false ); ?>
+								<?php checked( $selected, $key ); ?>
 						/>
 						<?php echo $val; ?>
 						</label><br />
@@ -173,17 +210,20 @@ if ( ! class_exists( 'SF_Format_Options' ) ) {
 			<select id="<?php echo $id; ?>"
 					  class="<?php echo $class; ?>"
 					  style="<?php echo $css; ?>"
-					  name="<?php echo $name; ?>"
+					  name="<?php echo $name; ?><?php echo $multiple ? '[]' : ''; ?>"
+					  <?php echo $multiple ? 'multiple="multiple"' : ''; ?>
 					  >
 
 			<?php foreach ( $options as $key => $val ) : ?>
-						<option value="<?php echo $key; ?>" <?php selected( $selected, $key, true ); ?>>
+						<option value="<?php echo $key; ?>" <?php self::selected( $selected, $key ); ?>>
 						<?php echo $val; ?>
 						</option>
 			<?php endforeach; ?>
 			</select>
 
-			<?php if ( $select2 ) : ?>
+			<?php echo $description;
+
+			if ( $select2 ) : ?>
 				<script type="text/javascript">jQuery(function() {jQuery("#<?php echo $id; ?>").select2({ width: '350px' });});</script>
 			<?php endif;
 
@@ -205,6 +245,24 @@ if ( ! class_exists( 'SF_Format_Options' ) ) {
 			/* Footer of the option. */
 			if ( $type != 'heading' || $type != 'title' ) echo '</td></tr>';
 
+		}
+
+		private function selected( $haystack, $current ) {
+
+			if ( is_array( $haystack ) && in_array( $current, $haystack ) ) {
+				$current = $haystack = 1;
+			}
+
+			selected($haystack, $current);
+		}
+
+		private function checked( $haystack, $current ) {
+
+			if ( is_array( $haystack ) && !empty( $haystack[$current] ) ) {
+				$current = $haystack = 1;
+			}
+
+			checked($haystack, $current);
 		}
 
 
