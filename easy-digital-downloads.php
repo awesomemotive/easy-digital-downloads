@@ -180,6 +180,7 @@ final class Easy_Digital_Downloads {
 		} else {
 			require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
 			require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
+			require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
 		}
 
 	}
