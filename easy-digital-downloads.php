@@ -149,6 +149,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
 		require_once EDD_PLUGIN_DIR . 'includes/tax-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/process-purchase.php';
+		require_once EDD_PLUGIN_DIR . 'includes/login-register.php';
 
 		if( is_admin() ) {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
@@ -179,7 +180,6 @@ final class Easy_Digital_Downloads {
 		} else {
 			require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
 			require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
-			require_once EDD_PLUGIN_DIR . 'includes/login-register.php';
 		}
 
 	}
