@@ -240,7 +240,7 @@ function edd_register_settings() {
 				'disable_styles' => array(
 					'id' => 'disable_styles',
 					'name' => __('Disable Styles', 'edd'),
-					'desc' => __('Check this to disable all included styling', 'edd'),
+					'desc' => __('Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'edd'),
 					'type' => 'checkbox'
 				),
 				'buton_header' => array(
