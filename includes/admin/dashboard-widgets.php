@@ -56,7 +56,7 @@ function edd_dashboard_sales_widget() {
 
 	?>
 	<div class="edd_dashboard_widget">
-		<div class="table table_current_month">
+		<div class="table table_left table_current_month">
 			<p class="sub"><?php _e( 'Current Month', 'edd' ) ?></p>
 			<table>
 				<tbody>
@@ -84,7 +84,7 @@ function edd_dashboard_sales_widget() {
 				<?php echo _n( 'Sale', 'Sales', $last_month_sales, 'edd' ) . ':&nbsp;' . '<span class="edd_price_label">' . $last_month_sales . '</span>'; ?>
 			</div>
 		</div>
-		<div class="table table_totals">
+		<div class="table table_right table_totals">
 			<p class="sub"><?php _e( 'Totals', 'edd' ) ?></p>
 			<table>
 				<tbody>
