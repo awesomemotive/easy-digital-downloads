@@ -224,6 +224,7 @@ function edd_register_settings() {
 						'{receipt_id} - ' . __('The unique ID number for this purchase receipt', 'edd') . '<br/>' .
 						'{payment_method} - ' . __('The method of payment used for this purchase', 'edd') . '<br/>' .
 						'{sitename} - ' . __('Your site name', 'edd'),
+						'{payment_id} - ' . __('The unique ID number for this purchase', 'edd'),
 					'type' => 'rich_editor'
 				),
 				'admin_notice_emails' => array(
