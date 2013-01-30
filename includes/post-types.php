@@ -287,6 +287,7 @@ function edd_register_post_type_statuses() {
 	// Payment statuses
 	register_post_status( 'refunded' );
 	register_post_status( 'failed' );
+	register_post_status( 'revoked' );
 
 	// Discount code statuses
 	register_post_status( 'active' );
