@@ -565,9 +565,16 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			case 'failed':
 				$total_items = $this->failed_count;
 				break;
+			case 'revoked':
+				$total_items = $this->revoked_count;
+				break;
 			case 'any':
 				$total_items = $this->total_count;
 				break;
+			default:
+				// Retrieve the count of the non-default-EDD status
+				$count       = wp_count_posts( 'edd_payment' );
+				$total_items = $count->{$status};
 		}
 
 		$this->items = $data;
