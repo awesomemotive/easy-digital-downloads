@@ -91,26 +91,20 @@ $options[] = array(
 	'type' => 'checkbox'
 );
 
-
-
-
 $options[] = array( 'name' => __( 'Gateways', 'geczy' ), 'type' => 'heading' );
 $options[] = array( 'name' => __( 'Gateways', 'geczy' ), 'type' => 'title', 'desc' => __( 'There\'s awesome options on this page to configure!', 'geczy' ) );
 
-$gateways = edd_get_payment_gateways();
-
-$i = 0;
-foreach ($gateways as $gateway_id => $gateway ) {
-
-	$options[] = array(
-		'id' => 'gateways[' . $gateway_id . ']',
-		'name' => !$i ? __('Payment gateways', 'edd') : '',
-		'desc' => $gateway['admin_label'],
-		'type' => 'checkbox',
-	);
-
-	$i++;
+foreach (edd_get_payment_gateways() as $gateway_id => $gateway ) {
+	$gateways[$gateway_id] = $gateway['admin_label'];
 }
+
+$options[] = array(
+	'id' => 'gateways',
+	'name' => __('Payment Gateways', 'edd'),
+	'type' => 'checkbox',
+	'multiple' => true,
+	'options' => $gateways,
+);
 
 $icons = apply_filters('edd_accepted_payment_icons', array(
 	'mastercard'      => 'Mastercard',
@@ -120,18 +114,13 @@ $icons = apply_filters('edd_accepted_payment_icons', array(
 	'paypal'          => 'PayPal'
 ) );
 
-$i = 0;
-foreach ($icons as $icon_id => $icon ) {
-
-	$options[] = array(
-		'id' => 'accepted_cards[' . $icon_id . ']',
-		'name' => !$i ? __('Accepted Payment Method Icons', 'edd') : '',
-		'desc' => $icon,
-		'type' => 'checkbox',
-	);
-
-	$i++;
-}
+$options[] = array(
+	'id' => 'accepted_cards',
+	'name' => __('Accepted Payment Method Icons', 'edd'),
+	'type' => 'checkbox',
+	'multiple' => true,
+	'options' => $icons,
+);
 
 $options[] = array(
 	'id' => 'paypal',
