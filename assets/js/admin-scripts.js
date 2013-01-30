@@ -96,7 +96,7 @@ jQuery(document).ready(function ($) {
 		            tb_show(edd_vars.add_new_download, 'media-upload.php?' + post_id +'TB_iframe=true');
 		        });
 
-		        window.original_send_to_editor = window.send_to_editor;
+		        window.edd_send_to_editor = window.send_to_editor;
 		        window.send_to_editor = function (html) {
 		            if (window.formfield) {
 		                imgurl = $('a', '<div>' + html + '</div>').attr('href');
@@ -104,7 +104,7 @@ jQuery(document).ready(function ($) {
 		                window.clearInterval(window.tbframe_interval);
 		                tb_remove();
 		            } else {
-		                window.original_send_to_editor(html);
+		                window.edd_send_to_editor(html);
 		            }
 		            window.formfield = '';
 		            window.imagefield = false;
