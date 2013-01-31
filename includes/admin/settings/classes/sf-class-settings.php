@@ -401,7 +401,9 @@ if ( ! class_exists( 'SF_Settings_API' ) ) {
 			$tabs = $this->get_tabs();
 			$tabname = !empty ( $_GET['tab'] ) ? $_GET['tab'] : $tabs[0]['slug'];
 
-			$options = apply_filters( $this->id . '_options_tab-' . $tabname, $this->tabs[$tabname] ); ?>
+			$options = $this->tabs[$tabname];
+			$options = apply_filters( $this->id . '_settings_' . $tabname, $options );
+			$options = apply_filters( $this->id . '_options_tab-' . $tabname, $options ); ?>
 
 			<form method="post" action="options.php">
 				<?php settings_fields( $this->id . '_options_nonce' ); ?>
