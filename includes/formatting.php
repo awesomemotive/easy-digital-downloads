@@ -103,9 +103,9 @@ function edd_currency_filter( $price ) {
 	if( $position == 'before' ):
 		switch ( $currency ):
 			case "GBP" : return '&pound;' . $price; break;
+			case "BRL" : return 'R&#36;' . $price; break;
 			case "USD" :
 			case "AUD" :
-			case "BRL" :
 			case "CAD" :
 			case "HKD" :
 			case "MXN" :
@@ -121,6 +121,7 @@ function edd_currency_filter( $price ) {
 	else :
 		switch ( $currency ) :
 			case "GBP" : return $price . '&pound;'; break;
+			case "BRL" : return $price . 'R&#36;'; break;
 			case "USD" :
 			case "AUD" :
 			case "BRL" :

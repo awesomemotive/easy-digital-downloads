@@ -241,7 +241,7 @@ function edd_get_currencies() {
 		'EUR' => __('Euros (&euro;)', 'edd'),
 		'GBP' => __('Pounds Sterling (&pound;)', 'edd'),
 		'AUD' => __('Australian Dollars (&#36;)', 'edd'),
-		'BRL' => __('Brazilian Real (&#36;)', 'edd'),
+		'BRL' => __('Brazilian Real (R&#36;)', 'edd'),
 		'CAD' => __('Canadian Dollars (&#36;)', 'edd'),
 		'CZK' => __('Czech Koruna', 'edd'),
 		'DKK' => __('Danish Krone', 'edd'),
