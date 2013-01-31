@@ -118,7 +118,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 	$price      = edd_currency_filter( edd_format_amount( $payment_data['amount'] ) );
 	$gateway    = edd_get_gateway_checkout_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
 	$receipt_id = $payment_data['key'];
-
+	
 	$message = str_replace( '{name}', $name, $message );
 	$message = str_replace( '{fullname}', $fullname, $message );
 	$message = str_replace( '{username}', $username, $message );
@@ -131,6 +131,8 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 	$message = str_replace( '{price}', $price, $message );
 	$message = str_replace( '{payment_method}', $gateway, $message );
 	$message = str_replace( '{receipt_id}', $receipt_id, $message );
+	$message = str_replace( '{payment_id}', $payment_id, $message );
+
 	$message = apply_filters( 'edd_email_template_tags', $message, $payment_data, $payment_id );
 
 	return $message;
@@ -159,23 +161,34 @@ function edd_email_preview_templage_tags( $message ) {
 
 	$file_urls = esc_html( trailingslashit( get_site_url() ) . 'test.zip?test=key&key=123' );
 
-	$price = edd_currency_filter( edd_format_amount( 9.50 ) );
+	$price = edd_currency_filter( edd_format_amount( 10.50 ) );
 
 	$gateway = 'PayPal';
 
 	$receipt_id = strtolower( md5( uniqid() ) );
 
 	$notes = __( 'These are some sample notes added to a product.', 'edd' );
+	
+	$tax = edd_currency_filter( edd_format_amount( 1.00 ) );
+	
+	$sub_total = edd_currency_filter( edd_format_amount( 9.50 ) );
+	
+	$payment_id = rand(1, 100);
 
-	$message = str_replace( '{name}', 'John Doe', $message );
 	$message = str_replace( '{download_list}', $download_list, $message );
 	$message = str_replace( '{file_urls}', $file_urls, $message );
+	$message = str_replace( '{name}', 'John', $message );
+	$message = str_replace( '{fullname}', 'John Doe', $message );
+	$message = str_replace( '{username}', 'john-doe', $message );
 	$message = str_replace( '{date}', date( get_option( 'date_format' ), time() ), $message );
-	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
+	$message = str_replace( '{subtotal}', $sub_total, $message );
+	$message = str_replace( '{tax}', $tax, $message );
 	$message = str_replace( '{price}', $price, $message );
-	$message = str_replace( '{payment_method}', $gateway, $message );
 	$message = str_replace( '{receipt_id}', $receipt_id, $message );
+	$message = str_replace( '{payment_method}', $gateway, $message );	
+	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
 	$message = str_replace( '{product_notes}', $notes, $message );
+	$message = str_replace( '{payment_id}', $payment_id, $message );
 
 	return wpautop( $message );
 
