@@ -86,6 +86,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 	ob_start();
 ?>
+	<!--dynamic-cached-content-->
 	<form id="edd_purchase_<?php echo $args['download_id']; ?>" class="edd_download_purchase_form" method="post">
 
 		<?php do_action( 'edd_purchase_link_top', $args['download_id'] ); ?>
@@ -132,6 +133,7 @@ function edd_get_purchase_link( $args = array() ) {
 		<?php do_action( 'edd_purchase_link_end', $args['download_id'] ); ?>
 
 	</form><!--end #edd_purchase_<?php echo esc_attr( $args['download_id'] ); ?>-->
+	<!--/dynamic-cached-content-->
 <?php
 	$purchase_form = ob_get_clean();
 
