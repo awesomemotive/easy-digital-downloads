@@ -270,7 +270,7 @@ if ( ! class_exists( 'SF_Settings_API' ) ) {
 				$this->options = apply_filters( $this->id . '_options', $options );
 				$this->parse_options();
 
-				$this->current_options = get_option( $this->id . '_options' );
+				$this->current_options = $this->get_current_options();
 
 				/* If the option has no saved data, load the defaults. */
 				/* @TODO: Can prob add this to the activation hook. */
@@ -280,6 +280,16 @@ if ( ! class_exists( 'SF_Settings_API' ) ) {
 			} else {
 				wp_die( __( 'Could not load settings at: ', 'geczy' ) . '<br/><code>' . $option_file . '</code>', __( 'Error - WP Settings Framework', 'geczy' ) );
 			}
+		}
+
+		public function get_current_options() {
+			if ( !empty( $this->current_options ) )
+				return $this->current_options;
+
+			$options = get_option( $this->id . '_options' );
+			$options = array_map( 'maybe_unserialize', $options );
+
+			return $options;
 		}
 
 

@@ -119,7 +119,7 @@ final class Easy_Digital_Downloads {
 		$edd_settings_framework = new SF_Settings_API($id = 'edd', $title = 'EDD Settings', $menu = 'edit.php?post_type=download', __FILE__);
 		$edd_settings_framework->load_options( EDD_PLUGIN_DIR . 'includes/admin/settings/sf-options.php');
 
-		$edd_options = $edd_settings_framework->current_options;
+		$edd_options = $edd_settings_framework->get_current_options();
 
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
 		require_once EDD_PLUGIN_DIR . 'includes/actions.php';

@@ -117,9 +117,10 @@ $icons = apply_filters('edd_accepted_payment_icons', array(
 $options[] = array(
 	'id' => 'accepted_cards',
 	'name' => __('Accepted Payment Method Icons', 'edd'),
-	'type' => 'checkbox',
+	'type' => 'select',
 	'multiple' => true,
 	'options' => $icons,
+	'css' => 'height:100px;'
 );
 
 $options[] = array(
