@@ -106,21 +106,21 @@ $options[] = array(
 	'options' => $gateways,
 );
 
-$icons = apply_filters('edd_accepted_payment_icons', array(
-	'mastercard'      => 'Mastercard',
-	'visa'            => 'Visa',
-	'americanexpress' => 'American Express',
-	'discover'        => 'Discover',
-	'paypal'          => 'PayPal'
-) );
 
 $options[] = array(
 	'id' => 'accepted_cards',
 	'name' => __('Accepted Payment Method Icons', 'edd'),
+	'desc' => __('Display icons for the selected payment methods', 'edd') . '<br/>' . __('You will also need to configure your gateway settings if you are accepting credit cards', 'edd'),
+	'css' => 'height:100px;',
 	'type' => 'select',
 	'multiple' => true,
-	'options' => $icons,
-	'css' => 'height:100px;'
+	'options' => apply_filters('edd_accepted_payment_icons', array(
+		'mastercard'      => 'Mastercard',
+		'visa'            => 'Visa',
+		'americanexpress' => 'American Express',
+		'discover'        => 'Discover',
+		'paypal'          => 'PayPal'
+	) )
 );
 
 $options[] = array(
