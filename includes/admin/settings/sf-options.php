@@ -331,51 +331,53 @@ $options[] = array( 'name' => __( 'Misc', 'geczy' ), 'type' => 'title', 'desc' =
 
 $options[] = array(
 	'id' => 'disable_ajax_cart',
-	'name' => __('Disable Ajax', 'edd'),
-	'desc' => __('Check this to disable AJAX for the shopping cart.', 'edd'),
-	'type' => 'checkbox'
-);
-
-$options[] = array(
-	'id' => 'redirect_on_add',
-	'name' => __('Redirect to Checkout', 'edd'),
-	'desc' => __('Immediately redirect to checkout after adding an item to the cart?', 'edd'),
+	'name' => __('Scripts', 'edd'),
+	'desc' => __('Disable AJAX', 'edd'),
 	'type' => 'checkbox'
 );
 
 $options[] = array(
 	'id' => 'live_cc_validation',
-	'name' => __('Disable Live Credit Card Validation', 'edd'),
-	'desc' => __('Live credit card validation means that that card type and number will be validated as the customer enters the number.', 'edd'),
+	'desc' => __('Disable live credit card validation', 'edd'),
+	'tip' => __('Live credit card validation means that that card type and number will be validated as the customer enters the number.', 'edd'),
+	'type' => 'checkbox'
+);
+
+$options[] = array(
+	'id' => 'redirect_on_add',
+	'name' => __('Checkout', 'edd'),
+	'desc' => __('Redirect to Checkout', 'edd'),
+	'tip' => __('Immediately redirect to checkout after adding an item to the cart?', 'edd'),
 	'type' => 'checkbox'
 );
 
 $options[] = array(
 	'id' => 'logged_in_only',
-	'name' => __('Disable Guest Checkout', 'edd'),
-	'desc' => __('Require that users be logged-in to purchase files.', 'edd'),
+	'desc' => __('Disable Guest Checkout', 'edd'),
+	'tip' => __('Require that users be logged-in to purchase files.', 'edd'),
 	'type' => 'checkbox'
 );
 
 $options[] = array(
 	'id' => 'show_register_form',
-	'name' => __('Show Register / Login Form?', 'edd'),
-	'desc' => __('Display the registration and login forms on the checkout page for non-logged-in users.', 'edd'),
+	'desc' => __('Show Register / Login Form?', 'edd'),
+	'tip' => __('Display the registration and login forms on the checkout page for non-logged-in users.', 'edd'),
 	'type' => 'checkbox',
 );
 
 $options[] = array(
 	'id' => 'download_link_expiration',
-	'name' => __('Download Link Expiration', 'edd'),
-	'desc' => __('How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours.', 'edd'),
+	'name' => __('Downloads', 'edd'),
+	'desc' => __('Download Link Expiration', 'edd'),
+	'tip' => __('How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours.', 'edd'),
 	'type' => 'text',
 	'size' => 'small'
 );
 
 $options[] = array(
 	'id' => 'disable_redownload',
-	'name' => __('Disable Redownload?', 'edd'),
-	'desc' => __('Check this if you do not want to allow users to redownload items from their purchase history.', 'edd'),
+	'desc' => __('Disable Redownload?', 'edd'),
+	'tip' => __('Check this if you do not want to allow users to redownload items from their purchase history.', 'edd'),
 	'type' => 'checkbox',
 );
 
