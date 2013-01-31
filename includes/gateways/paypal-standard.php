@@ -304,6 +304,9 @@ function edd_process_paypal_web_accept( $data ) {
 
 	global $edd_options;
 
+	if( $data['txn_type'] != 'web_accept' )
+		return;
+
 	// Collect payment details
 	$payment_id     = $data['custom'];
 	$purchase_key   = $data['item_number'];
