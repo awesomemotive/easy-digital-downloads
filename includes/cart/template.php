@@ -22,7 +22,9 @@ if ( !defined( 'ABSPATH' ) ) exit;
 
 function edd_checkout_cart() {
 	do_action( 'edd_before_checkout_cart' );
+	echo '<!--dynamic-cached-content-->';
 	edd_get_template_part( 'checkout_cart' );
+	echo '<!--/dynamic-cached-content-->';
 	do_action( 'edd_after_checkout_cart' );
 }
 
@@ -39,9 +41,9 @@ function edd_shopping_cart( $echo = false ) {
 	global $edd_options;
 
 	ob_start(); ?>
-
 	<?php do_action('edd_before_cart'); ?>
 	<ul class="edd-cart">
+	<!--dynamic-cached-content-->
 	<?php
 		$cart_items = edd_get_cart_contents();
 		if($cart_items) :
@@ -54,6 +56,7 @@ function edd_shopping_cart( $echo = false ) {
 			echo '<li class="cart_item edd_checkout" style="display:none;"><a href="' . edd_get_checkout_uri() . '">' . __('Checkout', 'edd') . '</a></li>';
 		endif;
 	?>
+	<!--/dynamic-cached-content-->
 	</ul>
 	<?php
 
