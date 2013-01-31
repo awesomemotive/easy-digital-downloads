@@ -160,6 +160,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ## Changelog ##
 
+### 1.4.3 ###
+
+* New: Removed jQuery Validation option
+
 
 ### 1.4.2 ###
 
