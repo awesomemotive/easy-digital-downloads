@@ -325,12 +325,6 @@ function edd_register_settings() {
 					'desc' => __('Immediately redirect to checkout after adding an item to the cart?', 'edd'),
 					'type' => 'checkbox'
 				),
-				'jquery_validation' => array(
-					'id' => 'jquery_validation',
-					'name' => __('Enable jQuery Validation', 'edd'),
-					'desc' => __('Check this to enable jQuery validation on the checkout form.', 'edd'),
-					'type' => 'checkbox'
-				),
 				'live_cc_validation' => array(
 					'id' => 'live_cc_validation',
 					'name' => __('Disable Live Credit Card Validation', 'edd'),

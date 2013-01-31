@@ -50,13 +50,6 @@ function edd_load_scripts() {
 			'no_email'          => __('Please enter an email address before applying a discount code', 'edd'),
 			'no_username'       => __('Please enter a username before applying a discount code', 'edd'),
 	    ));
-
-	    // Load jQuery validation
-		if( isset( $edd_options['jquery_validation'] ) ) {
-			wp_enqueue_script( 'jquery-validation', EDD_PLUGIN_URL . 'assets/js/jquery.validate.min.js' );
-		    $required = array( 'firstname' => true, 'lastname' => true );
-			wp_localize_script( 'jquery-validation', 'edd_scripts_validation', apply_filters( 'edd_scripts_validation', $required ) );
-		}
 	}
 
 	// Load AJAX scripts, if enabled
