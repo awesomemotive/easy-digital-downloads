@@ -212,6 +212,7 @@ $options[] = array(
 		'{subtotal} - ' . __('The price of the purchase before taxes', 'edd') . '<br/>' .
 		'{tax} - ' . __('The taxed amount of the purchase', 'edd') . '<br/>' .
 		'{price} - ' . __('The total price of the purchase', 'edd') . '<br/>' .
+		'{payment_id} - ' . __('The unique ID number for this purchase', 'edd') . '<br/>' .
 		'{receipt_id} - ' . __('The unique ID number for this purchase receipt', 'edd') . '<br/>' .
 		'{payment_method} - ' . __('The method of payment used for this purchase', 'edd') . '<br/>' .
 		'{sitename} - ' . __('Your site name', 'edd'),
@@ -232,7 +233,7 @@ $options[] = array( 'name' => __( 'Styles', 'geczy' ), 'type' => 'title', 'desc'
 $options[] = array(
 	'id' => 'disable_styles',
 	'name' => __('Disable Styles', 'edd'),
-	'desc' => __('Check this to disable all included styling', 'edd'),
+	'desc' => __('Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'edd'),
 	'type' => 'checkbox'
 );
 
@@ -339,13 +340,6 @@ $options[] = array(
 	'id' => 'redirect_on_add',
 	'name' => __('Redirect to Checkout', 'edd'),
 	'desc' => __('Immediately redirect to checkout after adding an item to the cart?', 'edd'),
-	'type' => 'checkbox'
-);
-
-$options[] = array(
-	'id' => 'jquery_validation',
-	'name' => __('Enable jQuery Validation', 'edd'),
-	'desc' => __('Check this to enable jQuery validation on the checkout form.', 'edd'),
 	'type' => 'checkbox'
 );
 
