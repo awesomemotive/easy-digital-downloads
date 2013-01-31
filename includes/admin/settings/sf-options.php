@@ -64,7 +64,7 @@ $options[] = array(
 	'name' => __('Thousands Separator', 'edd'),
 	'desc' => __('The symbol (usually , or .) to separate thousands', 'edd'),
 	'type' => 'text',
-	'size' => 'small',
+	'css' => 'width:70px;',
 	'std' => ','
 );
 
@@ -73,7 +73,7 @@ $options[] = array(
 	'name' => __('Decimal Separator', 'edd'),
 	'desc' => __('The symbol (usually , or .) to separate decimal points', 'edd'),
 	'type' => 'text',
-	'size' => 'small',
+	'css' => 'width:70px;',
 	'std' => '.'
 );
 
@@ -274,8 +274,8 @@ $options[] = array(
 	'id' => 'tax_rate',
 	'name' => __('Tax Rate', 'edd'),
 	'desc' => __('Enter a percentage, such as 6.5.', 'edd'),
-	'type' => 'text',
-	'size' => 'small'
+	'type' => 'number',
+	'css' => 'width:70px;',
 );
 
 $options[] = array(
@@ -370,8 +370,8 @@ $options[] = array(
 	'name' => __('Downloads', 'edd'),
 	'desc' => __('Download Link Expiration', 'edd'),
 	'tip' => __('How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours.', 'edd'),
-	'type' => 'text',
-	'size' => 'small'
+	'type' => 'number',
+	'css' => 'width:70px;',
 );
 
 $options[] = array(
