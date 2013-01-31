@@ -92,7 +92,10 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 		<?php foreach ( $cart as $key => $item ) : ?>
 	<tr>
 		<td>
-			<em><?php echo esc_html( $item['name'] ); ?></em>
+			<div class="edd_purchase_receipt_product_name"><?php echo esc_html( $item['name'] ); ?></div>
+			<?php if ( $edd_receipt_args['notes'] ) : ?>
+			<div class="edd_purchase_receipt_product_notes"><?php echo edd_get_product_notes( $item['id'] ); ?></div>
+			<?php endif; ?>
 			<ul style="margin: 0">
 				<?php
 				$price_id       = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;

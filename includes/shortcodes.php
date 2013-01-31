@@ -436,6 +436,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 		'discount'        => true,
 		'products'        => true,
 		'date'            => true,
+		'notes'           => true,
 		'payment_key'     => true,
 		'payment_method'  => true,
 		'payment_id'      => true

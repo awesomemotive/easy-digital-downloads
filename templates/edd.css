@@ -74,6 +74,7 @@ table#edd_purchase_receipt_products th,
 table#edd_purchase_receipt td,
 table#edd_purchase_receipt th { text-align: left; }
 table#edd_purchase_receipt_products li { list-style: none; }
+table#edd_purchase_receipt_products .edd_purchase_receipt_product_notes { font-style: italic; }
 
 
 /* =Purchase History
