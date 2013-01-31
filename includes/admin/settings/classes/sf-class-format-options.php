@@ -71,13 +71,17 @@ if ( ! class_exists( 'SF_Format_Options' ) ) {
 				? '<br /><small>' . $desc . '</small>'
 				: '<label for="' . $id . '"> ' .$desc . '</label>';
 
-			$description = ( ( $type == 'title' || $type == 'radio' ) && !empty( $desc ) )
-				? '<p>' . $desc . '</p>'
-				: $description; ?>
+			$header_types = apply_filters( $this->id . '_options_header_types', array( 'heading', 'title' ) );
 
+			$description = ( ( in_array($type, $header_types) || $type == 'radio' ) && !empty( $desc ) )
+				? '<p>' . $desc . '</p>'
+				: $description;
+
+			?>
+
+			<?php if ( !in_array( $type, $header_types ) ) : ?>
 			<!-- Header of the option. -->
 			<tr valign="top">
-			<?php if ( $type != 'heading' && $type != 'title' ) : ?>
 				<th scope="row"<?php echo $grouped; ?>>
 
 					<?php echo $tip; ?>
@@ -87,25 +91,20 @@ if ( ! class_exists( 'SF_Format_Options' ) ) {
 					<?php endif; ?>
 
 				</th>
+				<td <?php echo $grouped; ?> >
 			<?php endif; ?>
-						<td <?php echo $grouped; ?> >
+
+		<?php foreach ($header_types as $header) :
+				if ( $type != $header ) continue; ?>
+					<tr>
+						<th scope="col" colspan="2">
+							<h3 class="title"><?php echo $title; ?></h3>
+							<?php echo $description; ?>
+						</th>
+					</tr>
+		<?php endforeach; ?>
 
 	<?php switch ( $type ) :
-				// Heading for Navigation
-			case 'heading' : ?>
-				<h3><?php echo esc_html( $value['name'] ); ?></h3>
-				<?php break;
-
-		case 'title': ?>
-			<thead>
-				<tr>
-					<th scope="col" colspan="2">
-						<h3 class="title"><?php echo $title; ?></h3>
-						<?php echo $description; ?>
-					</th>
-				</tr>
-			  </thead>
-			<?php break;
 
 		case 'text'   :
 		case 'number' : ?>
@@ -240,10 +239,10 @@ if ( ! class_exists( 'SF_Format_Options' ) ) {
 					<?php echo $description;
 			break;
 
-			endswitch;
+		endswitch;
 
 			/* Footer of the option. */
-			if ( $type != 'heading' || $type != 'title' ) echo '</td></tr>';
+			if ( !in_array( $type, $header_types ) ) echo '</td></tr>';
 
 		}
 
