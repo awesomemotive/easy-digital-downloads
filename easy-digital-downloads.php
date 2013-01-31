@@ -98,7 +98,11 @@ final class Easy_Digital_Downloads {
 
 	}
 
+	public function custom_settings_header( $headers ) {
+		$headers[] = 'header';
 
+		return $headers;
+	}
 
 
 	/**
@@ -114,6 +118,8 @@ final class Easy_Digital_Downloads {
 
 		require_once EDD_PLUGIN_DIR . 'includes/global-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php';
+
+		add_filter( 'edd_options_header_types', array($this, 'custom_settings_header'));
 
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/classes/sf-class-settings.php';
 		$edd_settings_framework = new SF_Settings_API($id = 'edd', $title = 'EDD Settings', $menu = 'edit.php?post_type=download', __FILE__);
