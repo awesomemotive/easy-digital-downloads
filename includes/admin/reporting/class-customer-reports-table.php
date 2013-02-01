@@ -98,8 +98,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$columns = array(
 			'name'     		=> __( 'Name', 'edd' ),
 			'email'     	=> __( 'Email', 'edd' ),
-			'num_purchases' => __( 'Number of Purchases', 'edd' ),
-			'amount_spent'  => __( 'Total Amount Spent', 'edd' ),
+			'num_purchases' => __( 'Purchases', 'edd' ),
+			'amount_spent'  => __( 'Total Spent', 'edd' ),
 			'file_downloads'=> __( 'Files Downloaded', 'edd' )
 		);
 
