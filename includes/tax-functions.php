@@ -274,12 +274,12 @@ function edd_get_sales_tax_for_year( $year = null ) {
 function edd_is_include_tax() {
 	global $edd_options;
 
-	return ( $edd_options['prices_include_tax'] == 'no' && $edd_options['checkout_include_tax'] == 'yes' );
+	return ( $edd_options['checkout_include_tax'] == 'yes' );
 }
 function edd_is_exclude_tax() {
 	global $edd_options;
 
-	return ( $edd_options['prices_include_tax'] == 'yes' && $edd_options['checkout_include_tax'] == 'no' );
+	return ( $edd_options['checkout_include_tax'] == 'no' );
 }
 
 function edd_is_cart_taxed() {
