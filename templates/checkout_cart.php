@@ -51,7 +51,7 @@
 			</th>
 			<?php do_action( 'edd_checkout_table_subtotal_last' ); ?>
 		</tr>
-			<?php global $edd_options; if ( $edd_options['checkout_include_tax'] == 'no' ) : ?>
+			<?php if ( edd_is_exclude_tax() ) : ?>
 
 			<tr class="edd_cart_footer_row edd_cart_tax_row"<?php if( edd_local_taxes_only() && ! edd_local_tax_opted_in() ) echo ' style="display:none;"'; ?>>
 				<?php do_action( 'edd_checkout_table_tax_first' ); ?>
