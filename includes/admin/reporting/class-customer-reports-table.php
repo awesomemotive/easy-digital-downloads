@@ -102,7 +102,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			'file_downloads'=> __( 'Files Downloaded', 'edd' )
 		);
 
-		return apply_filter( 'edd_report_customer_columns', $columns );
+		return apply_filters( 'edd_report_customer_columns', $columns );
 	}
 
 
