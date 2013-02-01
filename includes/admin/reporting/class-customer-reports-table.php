@@ -80,7 +80,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 					return '<a href="' . admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( ! empty( $item['ID'] ) ? $item['ID'] : $item['email'] ) ) . '" target="_blank">' . $item['file_downloads'] . '</a>';
 
 			default:
-				return apply_filters( 'edd_report_column_' . $column_name, $item[ $column_name ] );
+				$value = isset( $item[ $column_name ] ) ? $item[ $column_name ] : null;
+				return apply_filters( 'edd_report_column_' . $column_name, $value, $item['ID'] );
 		}
 	}
 
