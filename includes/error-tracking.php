@@ -44,6 +44,7 @@ function edd_print_errors() {
 add_action( 'edd_payment_mode_bottom', 'edd_print_errors' );
 add_action( 'edd_before_purchase_form', 'edd_print_errors' );
 add_action( 'edd_before_checkout_register_form', 'edd_print_errors' );
+add_action( 'edd_ajax_checkout_errors', 'edd_print_errors' );
 
 
 /**

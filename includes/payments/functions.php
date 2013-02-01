@@ -327,21 +327,21 @@ function edd_delete_purchase( $payment_id = 0 ) {
 function edd_undo_purchase( $download_id, $payment_id ) {
 
 	$payment = get_post( $payment_id );
-	if ( edd_get_payment_status( $payment ) == 'refunded' )
-		return; // Payment has already been reversed
+
+	$status  = $payment->post_status;
+
+	if ( $status != 'publish' )
+		return; // Payment has already been reversed, or was never completed
 
 	edd_decrease_purchase_count( $download_id );
-
-	$purchase_meta = edd_get_payment_meta( $payment_id );
-
+	$purchase_meta      = edd_get_payment_meta( $payment_id );
 	$user_purchase_info = maybe_unserialize( $purchase_meta['user_info'] );
+	$cart_details       = maybe_unserialize( $purchase_meta['cart_details'] );
+	$amount             = null;
 
-	$cart_details = maybe_unserialize( $purchase_meta['cart_details'] );
-
-	$amount = null;
 	if ( is_array( $cart_details ) ) {
-		$cart_item_id = array_search( $download_id, $cart_details );
-		$amount       = isset( $cart_details[$cart_item_id]['price'] ) ? $cart_details[$cart_item_id]['price'] : null;
+		$cart_item_id   = array_search( $download_id, $cart_details );
+		$amount         = isset( $cart_details[$cart_item_id]['price'] ) ? $cart_details[$cart_item_id]['price'] : null;
 	}
 
 	$amount = edd_get_download_final_price( $download_id, $user_purchase_info, $amount );

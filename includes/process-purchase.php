@@ -44,7 +44,7 @@ function edd_process_purchase_form() {
 
 	if ( edd_get_errors() || !$user = edd_get_purchase_form_user( $valid_data ) ) {
 		if ( $is_ajax ) {
-			edd_print_errors();
+			do_action( 'edd_ajax_checkout_errors' );
 			exit;
 		} else {
 			return false;
