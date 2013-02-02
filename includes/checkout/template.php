@@ -83,7 +83,6 @@ function edd_show_purchase_form() {
 			<?php } ?>
 
 			<?php if( ( !isset( $_GET['login'] ) && is_user_logged_in() ) || !isset( $edd_options['show_register_form'] ) ) {
-
 				do_action( 'edd_purchase_form_after_user_info' );
 			}
 
@@ -362,6 +361,24 @@ function edd_get_login_fields() {
 				<?php _e('Register', 'edd'); if(!edd_no_guest_checkout()) { echo ' ' . __('or checkout as a guest.', 'edd'); } ?>
 			</a>
 		</p>
+		<p id="edd-user-email-wrap">
+			<input name="edd_email" id="edd-email" class="required edd-input" type="email" placeholder="<?php _e('Email', 'edd'); ?>" title="<?php _e('Email', 'edd'); ?>"/>
+			<label for="edd-email"><?php _e('Email', 'edd'); ?></label>
+		</p>
+		<p id="edd-user-first-name-wrap">
+			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e('First Name', 'edd'); ?>" id="edd-first" value="<?php echo is_user_logged_in() ? $user_data->user_firstname : ''; ?>"/>
+			<label class="edd-label" for="edd-first"><?php _e('First Name', 'edd'); ?></label>
+		</p>
+		<p id="edd-user-last-name-wrap">
+			<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e('Last name', 'edd'); ?>" value="<?php echo is_user_logged_in() ? $user_data->user_lastname : ''; ?>"/>
+			<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
+		</p>
+
+		<?php if ( edd_logged_in_only() ) { ?>
+			<input type="hidden" name="edd-purchase-var" value="needs-to-register"/>
+		<?php } ?>
+
+		<?php do_action( 'edd_purchase_form_user_info' ); ?>
 	<?php
 
 	$fields = ob_get_clean();
