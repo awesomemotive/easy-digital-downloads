@@ -73,13 +73,12 @@ function edd_generate_pdf( $data ) {
 		$year = date('Y');
 		$downloads = get_posts( array( 'post_type' => 'download', 'year' => $year, 'posts_per_page' => -1 ) );
 
-		if ( $downloads ):
-
+		if ( $downloads ) :
 			$widths = array( 70, 30, 50, 50, 45, 35 );
 
 			$dimensions = $pdf->getPageDimensions();
 
-			foreach ( $downloads as $download ):
+			foreach ( $downloads as $download ) :
 				$pdf->SetFillColor( 255, 255, 255 );
 
 				$title = get_the_title( $download->ID );
