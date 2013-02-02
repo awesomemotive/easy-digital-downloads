@@ -16,6 +16,13 @@
  */
 class EDD_PDF extends TCPDF {
 	/**
+	 * Define empty function to remove top border
+	 *
+	 * @since 1.4.4
+	 */
+	public function Header() { }
+
+	/**
 	 * Outputs the footer on each page
 	 *
 	 * @since 1.4.4
