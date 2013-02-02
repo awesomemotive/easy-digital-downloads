@@ -153,8 +153,7 @@ function edd_generate_pdf( $data ) {
 		$image = html_entity_decode( urldecode( edd_draw_chart_image() ) );
 		$image = str_replace( ' ', '%20', $image );
 
-		$pdf->SetX( 25 );
-		$pdf->Image( $image .'&file=.png' );
+		$pdf->Image( $image .'&file=.png', 5, $pdf->getY(), 0, 0, 'PNG', '', 'C', false, 300 );
 		$pdf->Ln( 7 );
 		$pdf->Output( 'edd-report-' . date_i18n('Y-m-d') . '.pdf', 'I' );
 	}
@@ -178,7 +177,7 @@ function edd_draw_chart_image() {
 	require_once EDD_PLUGIN_DIR . '/includes/libraries/googlechartlib/markers/GoogleChartShapeMarker.php';
 	require_once EDD_PLUGIN_DIR . '/includes/libraries/googlechartlib/markers/GoogleChartTextMarker.php';
 
-	$chart = new GoogleChart( 'lc', 900, 330 );
+	$chart = new GoogleChart( 'lc', 800, 300 );
 
 	$i = 1;
 	$earnings = "";
