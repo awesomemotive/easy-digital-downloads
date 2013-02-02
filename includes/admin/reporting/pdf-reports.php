@@ -31,9 +31,9 @@ function edd_generate_pdf( $data ) {
 		require_once EDD_PLUGIN_DIR . '/includes/libraries/tcpdf/tcpdf.php';
 		require_once EDD_PLUGIN_DIR . '/includes/admin/reporting/class-edd-pdf.php';
 
-		$daterange = date_i18n( get_option( 'date_format' ), mktime( 0, 0, 0, 1, 1, date( 'Y' ) ) ) . ' ' . __( 'to', 'edd' ) . ' ' . date_i18n( get_option( 'date_format' ) );
+		$daterange = date_i18n( get_option( 'date_format' ), mktime( 0, 0, 0, 1, 1, date_i18n( 'Y' ) ) ) . ' ' . __( 'to', 'edd' ) . ' ' . date_i18n( get_option( 'date_format' ) );
 
-		$pdf = new TCPDF( 'P', 'mm', 'A4', true, 'UTF-8', false );
+		$pdf = new EDD_PDF( 'P', 'mm', 'A4', true, 'UTF-8', false );
 		$pdf->SetDisplayMode( 'real' );
 		$pdf->setJPEGQuality( 100 );
 		$pdf->AddPage( 'L', 'A4' );
@@ -69,7 +69,7 @@ function edd_generate_pdf( $data ) {
 		$pdf->Cell( 45, 6, __( 'Number of Sales', 'edd' ), 1, 0, 'L', true );
 		$pdf->Cell( 35, 6, __( 'Earnings to Date', 'edd' ), 1, 1, 'L', true );
 
-		$year = date('Y');
+		$year = date_i18n('Y');
 		$downloads = get_posts( array( 'post_type' => 'download', 'year' => $year, 'posts_per_page' => -1 ) );
 
 		if ( $downloads ) :
@@ -183,8 +183,8 @@ function edd_draw_chart_image() {
 	$sales = "";
 
 	while ( $i <= 12 ) :
-		$earnings .= edd_get_earnings_by_date( null, $i, date('Y') ) . ",";
-		$sales .= edd_get_sales_by_date( null, $i, date('Y') ) . ",";
+		$earnings .= edd_get_earnings_by_date( null, $i, date_i18n('Y') ) . ",";
+		$sales .= edd_get_sales_by_date( null, $i, date_i18n('Y') ) . ",";
 		$i++;
 	endwhile;
 
