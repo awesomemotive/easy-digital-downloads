@@ -18,8 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Generates PDF report on sales and earnings for all downloads for the current year.
  *
- * @access      public
- * @since       1.1.4.0
+ * @access      private
+ * @since       1.4.4
  * @param 		string $data
  * @author 		Sunny Ratilal
 */
