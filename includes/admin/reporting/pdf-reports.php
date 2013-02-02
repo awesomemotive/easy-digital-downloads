@@ -38,7 +38,6 @@ function edd_generate_pdf( $data ) {
 		$pdf->setJPEGQuality( 100 );
 		$pdf->AddPage( 'L', 'A4' );
 
-
 		$pdf->SetTitle( __( 'Sales and earnings reports for the current year for all products', 'edd' ) );
 		$pdf->SetAuthor( __( 'Easy Digital Downloads', 'edd' ) );
 		$pdf->SetCreator( __( 'Easy Digital Downloads', 'edd' ) );
