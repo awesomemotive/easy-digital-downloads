@@ -73,9 +73,6 @@ function edd_generate_pdf( $data ) {
 		$downloads = get_posts( array( 'post_type' => 'download', 'year' => $year, 'posts_per_page' => -1 ) );
 
 		if ( $downloads ) :
-			$widths = array( 70, 30, 50, 50, 45, 35 );
-			$dimensions = $pdf->getPageDimensions();
-
 			foreach ( $downloads as $download ) :
 				$pdf->SetFillColor( 255, 255, 255 );
 
@@ -109,6 +106,9 @@ function edd_generate_pdf( $data ) {
 				$sales = edd_get_download_sales_stats( $download->ID );
 				$link = get_permalink( $download->ID );
 				$earnings = html_entity_decode ( edd_currency_filter( edd_get_download_earnings_stats( $download->ID ) ) );
+
+				$widths = array( 70, 30, 50, 50, 45, 35 );
+				$dimensions = $pdf->getPageDimensions();
 
 				$rowcount = 0;
 				$rowcount = max(
