@@ -139,9 +139,7 @@ function edd_generate_pdf( $data ) {
 				$pdf->Ln();
 			endforeach;
 		else:
-			$pdf->SetWidths( array( 280 ) );
-			$title = sprintf( __( 'No %s found.', 'edd' ), edd_get_label_plural() );
-			$pdf->Row( array( $title ) );
+			$pdf->Cell( 280, 6, sprintf( __( 'No %s found.', 'edd' ), strtolower( edd_get_label_plural() ) ), '1', 'LTR', false, false );
 		endif;
 
 		$pdf->Ln();
