@@ -29,7 +29,7 @@ function edd_generate_pdf( $data ) {
 
 	if ( wp_verify_nonce( $edd_pdf_reports_nonce, 'edd_generate_pdf' ) ) {
 		require_once EDD_PLUGIN_DIR . '/includes/libraries/tcpdf/tcpdf.php';
-		//require_once EDD_PLUGIN_DIR . '/includes/libraries/fpdf/edd_pdf.php';
+		require_once EDD_PLUGIN_DIR . '/includes/admin/reporting/class-edd-pdf.php';
 
 		$daterange = date_i18n( get_option( 'date_format' ), mktime( 0, 0, 0, 1, 1, date( 'Y' ) ) ) . ' ' . utf8_decode( __( 'to', 'edd' ) ) . ' ' . date_i18n( get_option( 'date_format' ) );
 
@@ -74,15 +74,17 @@ function edd_generate_pdf( $data ) {
 		$downloads = get_posts( array( 'post_type' => 'download', 'year' => $year, 'posts_per_page' => -1 ) );
 
 		if ( $downloads ):
-			$pdf->SetWidths( array( 70, 30, 50, 50, 45, 35 ) );
+
+			$widths = array( 70, 30, 50, 50, 45, 35 );
+
+			$dimensions = $pdf->getPageDimensions();
 
 			foreach ( $downloads as $download ):
 				$pdf->SetFillColor( 255, 255, 255 );
 
-				$title = utf8_decode( get_the_title( $download->ID ) );
+				$title = get_the_title( $download->ID );
 
 				if ( edd_has_variable_prices( $download->ID ) ) {
-
 					$prices = edd_get_variable_prices( $download->ID );
 
 					$first = $prices[0]['amount'];
@@ -96,7 +98,6 @@ function edd_generate_pdf( $data ) {
 						$min = $last;
 						$max = $first;
 					}
-
 					$price = html_entity_decode( edd_currency_filter( edd_format_amount( $min ) ) . ' - ' . edd_currency_filter( edd_format_amount( $max ) ) );
 				} else {
 					$price = html_entity_decode( edd_currency_filter( edd_get_download_price( $download->ID ) ) );
@@ -112,7 +113,32 @@ function edd_generate_pdf( $data ) {
 				$link = get_permalink( $download->ID );
 				$earnings = html_entity_decode ( edd_currency_filter( edd_get_download_earnings_stats( $download->ID ) ) );
 
-				$pdf->Row( array( $title, $price, $categories, $tags, $sales, $earnings ) );
+				$rowcount = 0;
+				$rowcount = max(
+					$pdf->getNumLines( $title, 80 ),
+					$pdf->getNumLines( $price, 80 ),
+					$pdf->getNumLines( $categories, 80 ),
+					$pdf->getNumLines( $tags, 80 ),
+					$pdf->getNumLines( $sales, 80 ),
+					$pdf->getNumLines( $earnings, 80 )
+				);
+
+				if ( ( $pdf->GetY() + $rowcount * 6 ) + $dimensions['bm'] > ( $dimensions['hk'] ) ) {
+					$borders = 'LTR';
+				} elseif ( ( ceil( $pdf->GetY() ) + $rowcount * 6 ) + $dimensions['bm'] == floor( $dimensions['hk'] ) ) {
+					$borders = 'LRB';
+				} else {
+					$borders = 'LR';
+				}
+
+				$pdf->MultiCell( $widths[0], $rowcount * 6, $title, '1', $borders, false, false );
+				$pdf->MultiCell( $widths[1], $rowcount * 6, $price, '1', $borders, false, false );
+				$pdf->MultiCell( $widths[2], $rowcount * 6, $categories, '1', $borders, false, false );
+				$pdf->MultiCell( $widths[3], $rowcount * 6, $tags, '1', $borders, false, false );
+				$pdf->MultiCell( $widths[4], $rowcount * 6, $sales, '1', $borders, false, false );
+				$pdf->MultiCell( $widths[5], $rowcount * 6, $earnings, '1', $borders, false, false );
+
+				$pdf->Ln();
 			endforeach;
 		else:
 			$pdf->SetWidths( array( 280 ) );
