@@ -9,10 +9,8 @@
 
 class EDD_PDF extends TCPDF {
 	function Footer() {
-
-		$this->SetY( -15 );
-		$this->SetFont( 'Helvetica', 'I', 8 );
-		$this->Cell( 0, 10, 'Page '. $this->PageNo(), 0, 0, 'C');
-
+		parent::SetY( -15 );
+		parent::SetFont( 'freesans', 'I', 8 );
+		parent::Cell( 0, 10, __( 'Page', 'edd' ) . ' ' . parent::getAliasNumPage() . ' ' . __( 'of', 'edd' ) . ' ' . parent::getAliasNbPages(), 0, 0, 'C');
 	}
 }
