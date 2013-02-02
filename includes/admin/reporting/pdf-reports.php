@@ -142,6 +142,8 @@ function edd_generate_pdf( $data ) {
 			$pdf->Cell( 280, 6, sprintf( __( 'No %s found.', 'edd' ), strtolower( edd_get_label_plural() ) ), '1', 'LTR', false, false );
 		endif;
 
+		wp_reset_postdata();
+
 		$pdf->Ln();
 		$pdf->SetTextColor( 50, 50, 50 );
 		$pdf->SetFont( 'freesans', '', 14 );
