@@ -154,7 +154,11 @@ function edd_generate_pdf( $data ) {
 
 		$pdf->Image( $image . '&file=.png', 5, $pdf->getY(), 0, 0, 'PNG', '', 'C', false, 300 );
 		$pdf->Ln( 7 );
-		$pdf->Output( 'edd-report-' . date_i18n( 'Y-m-d' ) . '.pdf', 'D' );
+		if( wp_is_mobile() ) {
+			$pdf->Output( 'edd-report-' . date_i18n( 'Y-m-d' ) . '.pdf', 'I' );
+		} else {
+			$pdf->Output( 'edd-report-' . date_i18n( 'Y-m-d' ) . '.pdf', 'D' );
+		}
 	}
 }
 add_action( 'edd_generate_pdf', 'edd_generate_pdf' );
