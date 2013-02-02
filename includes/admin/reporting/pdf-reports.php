@@ -74,7 +74,6 @@ function edd_generate_pdf( $data ) {
 
 		if ( $downloads ) :
 			$widths = array( 70, 30, 50, 50, 45, 35 );
-
 			$dimensions = $pdf->getPageDimensions();
 
 			foreach ( $downloads as $download ) :
@@ -147,15 +146,15 @@ function edd_generate_pdf( $data ) {
 		$pdf->Ln();
 		$pdf->SetTextColor( 50, 50, 50 );
 		$pdf->SetFont( 'freesans', '', 14 );
-		$pdf->Cell( 0, 10, __('Graph View', 'edd'), 0, 2, 'L', false );
+		$pdf->Cell( 0, 10, __( 'Graph View', 'edd' ), 0, 2, 'L', false );
 		$pdf->SetFont( 'freesans', '', 12 );
 
 		$image = html_entity_decode( urldecode( edd_draw_chart_image() ) );
 		$image = str_replace( ' ', '%20', $image );
 
-		$pdf->Image( $image .'&file=.png', 5, $pdf->getY(), 0, 0, 'PNG', '', 'C', false, 300 );
+		$pdf->Image( $image . '&file=.png', 5, $pdf->getY(), 0, 0, 'PNG', '', 'C', false, 300 );
 		$pdf->Ln( 7 );
-		$pdf->Output( 'edd-report-' . date_i18n('Y-m-d') . '.pdf', 'I' );
+		$pdf->Output( 'edd-report-' . date_i18n( 'Y-m-d' ) . '.pdf', 'D' );
 	}
 }
 add_action( 'edd_generate_pdf', 'edd_generate_pdf' );
