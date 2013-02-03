@@ -23,12 +23,9 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @return      void
 */
 function edd_process_purchase_form() {
-	// Verify the nonce for this action
-	if ( ! isset( $_POST['edd-nonce'] ) || ! wp_verify_nonce( $_POST['edd-nonce'], 'edd-purchase-nonce' ) ) {
-		edd_set_error( 'nonce_failed', __( 'Security check failed. Please refresh the page and try again.', 'edd') );
 
 	// Make sure the cart isn't empty
-	} else if ( ! edd_get_cart_contents() ) {
+	if ( ! edd_get_cart_contents() ) {
 		edd_set_error( 'empty_cart', __( 'Your cart is empty.', 'edd') );
 
 	} else {
