@@ -554,15 +554,16 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 */
 function edd_get_purchase_form_user( $valid_data = array() ) {
 	// Initialize user
-	$user = false;
+	$user    = false;
+	$is_ajax = ! empty( $_POST['action'] ) && ( $_POST['action'] == 'edd_process_checkout' );
 
-	// Check if user is logged in
-	if( is_user_logged_in() ) {
+	if( $is_ajax ) {
+		// Do not create or login the user during the ajax submission (check for errors only)
+		return true;
+	} else if( is_user_logged_in() ) {
 		// Set the valid user as the logged in collected data
 		$user = $valid_data['logged_in_user'];
-	}
-	// Otherwise check if we have to register or login users
-	else if( $valid_data['need_new_user'] === true || $valid_data['need_user_login'] === true  ) {
+	} else if( $valid_data['need_new_user'] === true || $valid_data['need_user_login'] === true  ) {
 		// New user registration
 		if( $valid_data['need_new_user'] === true ) {
 			// Set user
@@ -570,7 +571,7 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 			// Register and login new user
 			$user['user_id'] = edd_register_and_login_new_user( $user );
 		// User login
-		} else if( $valid_data['need_user_login'] === true ) {
+		} else if( $valid_data['need_user_login'] === true  && ! $is_ajax ) {
 			// Set user
 			$user = $valid_data['login_user_data'];
 			// Login user
