@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  PDF Report Generation
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @author      Sunny Ratilal
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.1.4.0
