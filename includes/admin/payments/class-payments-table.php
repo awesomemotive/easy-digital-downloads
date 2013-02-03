@@ -478,7 +478,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$order_inverse 	= $order == 'DESC'              ? 'ASC'                             : 'DESC';
 		$order_class 	= strtolower( $order_inverse );
 		$user 			= isset( $_GET['user'] )        ? $_GET['user']                     : null;
-		$status 		= isset( $_GET['status'] )      ? $_GET['status']                   : null;
+		$status 		= isset( $_GET['status'] )      ? $_GET['status']                   : 'any';
 		$meta_key		= isset( $_GET['meta_key'] )    ? $_GET['meta_key']                 : null;
 		$year 			= isset( $_GET['year'] )        ? $_GET['year']                     : null;
 		$month 			= isset( $_GET['m'] )           ? $_GET['m']                        : null;
