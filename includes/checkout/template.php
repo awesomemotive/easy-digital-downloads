@@ -640,7 +640,6 @@ function edd_checkout_hidden_fields() {
 	<?php } ?>
 	<input type="hidden" name="edd_action" value="purchase"/>
 	<input type="hidden" name="edd-gateway" value="<?php echo edd_get_chosen_gateway(); ?>" />
-	<input type="hidden" name="edd-nonce" value="<?php echo wp_create_nonce('edd-purchase-nonce'); ?>"/>
 <?php
 
 }
