@@ -39,9 +39,9 @@ function edd_process_purchase_form() {
 
 	$is_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
 
-	$user    = edd_get_purchase_form_user( $valid_data )
+	$user    = edd_get_purchase_form_user( $valid_data );
 
-	if ( edd_get_errors() || ( ! $user ) ) {
+	if ( edd_get_errors() || ! $user ) {
 		if ( $is_ajax ) {
 			do_action( 'edd_ajax_checkout_errors' );
 			exit;
@@ -570,6 +570,7 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 		if( $valid_data['need_new_user'] === true ) {
 			// Set user
 			$user = $valid_data['new_user_data'];
+			echo 'test'; exit;
 			// Register and login new user
 			$user['user_id'] = edd_register_and_login_new_user( $user );
 		// User login
