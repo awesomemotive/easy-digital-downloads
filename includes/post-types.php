@@ -70,7 +70,7 @@ function edd_setup_edd_post_types() {
 		'capability_type' 	=> 'post',
 		'has_archive' 		=> $archives,
 		'hierarchical' 		=> false,
-		'supports' 			=> apply_filters('edd_download_supports', array( 'title', 'editor', 'thumbnail' ) ),
+		'supports' 			=> apply_filters('edd_download_supports', array( 'title', 'editor', 'thumbnail', 'excerpt' ) ),
 	);
 	register_post_type( 'download', apply_filters( 'edd_download_post_type_args', $download_args ) );
 
