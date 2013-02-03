@@ -26,7 +26,6 @@ function edd_process_purchase_form() {
 	// Verify the nonce for this action
 	if ( ! isset( $_POST['edd-nonce'] ) || ! wp_verify_nonce( $_POST['edd-nonce'], 'edd-purchase-nonce' ) ) {
 		edd_set_error( 'nonce_failed', __( 'Security check failed. Please refresh the page and try again.', 'edd') );
-
 	// Make sure the cart isn't empty
 	} else if ( ! edd_get_cart_contents() ) {
 		edd_set_error( 'empty_cart', __( 'Your cart is empty.', 'edd') );
@@ -44,7 +43,7 @@ function edd_process_purchase_form() {
 
 	if ( edd_get_errors() || !$user = edd_get_purchase_form_user( $valid_data ) ) {
 		if ( $is_ajax ) {
-			do_action( 'edd_ajax_checkout_errors' );
+			edd_print_errors();
 			exit;
 		} else {
 			return false;
@@ -52,7 +51,9 @@ function edd_process_purchase_form() {
 	}
 
 	if ( $is_ajax ) {
-		echo 'success';
+		$response['success'] = true;
+		$response['new_nonce'] = wp_create_nonce('edd-purchase-nonce');
+		echo json_encode($response);
 		exit;
 	}
 
