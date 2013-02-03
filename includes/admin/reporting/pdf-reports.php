@@ -138,7 +138,7 @@ function edd_generate_pdf( $data ) {
 				$pdf->Ln();
 			endforeach;
 		else:
-			$pdf->Cell( 280, 6, sprintf( __( 'No %s found.', 'edd' ), strtolower( edd_get_label_plural() ) ), '1', 'LTR', false, false );
+			$pdf->Cell( 280, 6, sprintf( __( 'No %s found.', 'edd' ), edd_get_label_plural( true ) ), '1', 'LTR', false, false );
 		endif;
 
 		wp_reset_postdata();
