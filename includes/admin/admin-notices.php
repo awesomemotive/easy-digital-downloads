@@ -41,11 +41,11 @@ function edd_admin_messages() {
 		add_settings_error( 'edd-notices', 'edd-payment-deleted', __( 'The payment has been deleted.', 'edd' ), 'updated' );
 	}
 
-	if ( isset( $_GET['edd-message']) && $_GET['edd-message'] == 'email_sent' && current_user_can( $edd_access_level ) ) {
+	if ( isset( $_GET['edd-message'] ) && $_GET['edd-message'] == 'email_sent' && current_user_can( $edd_access_level ) ) {
 		add_settings_error( 'edd-notices', 'edd-payment-sent', __( 'The purchase receipt has been resent.', 'edd' ), 'updated' );
 	}
 
-	if ( isset( $_GET['page']) && $_GET['page'] == 'edd-payment-history' && current_user_can( $edd_access_level ) && edd_is_test_mode() ) {
+	if ( isset( $_GET['page'] ) && $_GET['page'] == 'edd-payment-history' && current_user_can( $edd_access_level ) && edd_is_test_mode() ) {
 		add_settings_error( 'edd-notices', 'edd-payment-sent', __( 'Note: Test Mode is enabled, only test payments are shown below. <a href="/wp-admin/edit.php?post_type=download&page=edd-settings">Settings</a>', 'edd' ), 'updated' );
 	}
 
