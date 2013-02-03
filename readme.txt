@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.5.1
 
-Stable Tag: 1.4.3
+Stable Tag: 1.4.3.1
 License: GNU Version 2 or Any Later Version
 
 
@@ -170,6 +170,12 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.4.3.1 =
+
+* Fix: Securtity Check Failed message when logging in during purchase
+* Fix: Added missing alt tag to fix HTML validation
+* New: Added new edd_show_has_purchased_item_message filter
 
 = 1.4.3 =
 
