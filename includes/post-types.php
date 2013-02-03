@@ -285,13 +285,48 @@ add_action( 'init', 'edd_setup_download_taxonomies', 10 );
 function edd_register_post_type_statuses() {
 
 	// Payment statuses
-	register_post_status( 'refunded' );
-	register_post_status( 'failed' );
-	register_post_status( 'revoked' );
+	register_post_status( 'refunded', array(
+		'label'                     => _x( 'Refunded', 'Refunded payment status', 'edd' ),
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'               => _n_noop( 'Refunded <span class="count">(%s)</span>', 'Refunded <span class="count">(%s)</span>', 'edd' )
+	) );
+	register_post_status( 'failed', array(
+		'label'                     => _x( 'Failed', 'Failed payment status', 'edd' ),
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'               => _n_noop( 'Failed <span class="count">(%s)</span>', 'Failed <span class="count">(%s)</span>', 'edd' )
+	)  );
+	register_post_status( 'revoked', array(
+		'label'                     => _x( 'Revoked', 'Revoked payment status', 'edd' ),
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'               => _n_noop( 'Revoked <span class="count">(%s)</span>', 'Revoked <span class="count">(%s)</span>', 'edd' )
+	)  );
 
 	// Discount code statuses
-	register_post_status( 'active' );
-	register_post_status( 'inactive' );
+	register_post_status( 'active', array(
+		'label'                     => _x( 'Active', 'Active discount code status', 'edd' ),
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'               => _n_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'edd' )
+	)  );
+	register_post_status( 'inactive', array(
+		'label'                     => _x( 'Inactive', 'Inactive discount code status', 'edd' ),
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'               => _n_noop( 'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', 'edd' )
+	)  );
 
 }
 add_action( 'init', 'edd_register_post_type_statuses' );
