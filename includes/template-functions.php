@@ -324,7 +324,8 @@ function edd_show_has_purchased_item_message( $download_id ) {
 	global $user_ID;
 
 	if ( edd_has_user_purchased( $user_ID, $download_id ) ) {
-		echo '<p class="edd_has_purchased">' . __( 'You have already purchased this item, but you may purchase it again.', 'edd' ) . '</p>';
+		$alert = '<p class="edd_has_purchased">' . __( 'You have already purchased this item, but you may purchase it again.', 'edd' ) . '</p>';
+		echo apply_filters( 'edd_show_has_purchased_item_message', $alert );
 	}
 }
 add_action( 'edd_after_download_content', 'edd_show_has_purchased_item_message' );
