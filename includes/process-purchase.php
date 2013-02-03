@@ -37,9 +37,11 @@ function edd_process_purchase_form() {
 		do_action( 'edd_checkout_error_checks', $valid_data, $_POST );
 	}
 
-	$is_ajax = ! empty( $_POST['action'] ) && ( $_POST['action'] == 'edd_process_checkout' );
+	$is_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
 
-	if ( edd_get_errors() || !$user = edd_get_purchase_form_user( $valid_data ) ) {
+	$user    = edd_get_purchase_form_user( $valid_data )
+
+	if ( edd_get_errors() || ( ! $user ) ) {
 		if ( $is_ajax ) {
 			do_action( 'edd_ajax_checkout_errors' );
 			exit;
@@ -555,7 +557,7 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 function edd_get_purchase_form_user( $valid_data = array() ) {
 	// Initialize user
 	$user    = false;
-	$is_ajax = ! empty( $_POST['action'] ) && ( $_POST['action'] == 'edd_process_checkout' );
+	$is_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
 
 	if( $is_ajax ) {
 		// Do not create or login the user during the ajax submission (check for errors only)
