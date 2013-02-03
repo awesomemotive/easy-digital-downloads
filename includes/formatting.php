@@ -160,6 +160,10 @@ function edd_currency_decimal_filter( $decimals = 2 ) {
 			$decimals = 0;
 			break;
 
+		case 'JPY' :
+			$decimals = 0;
+			break;
+
 	}
 
 	return $decimals;
