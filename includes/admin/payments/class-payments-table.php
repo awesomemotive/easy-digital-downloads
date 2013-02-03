@@ -471,10 +471,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		if ( isset( $_GET['paged'] ) ) $page = $_GET['paged']; else $page = 1;
 
-		$per_page = $this->per_page;
-
-		$mode = edd_is_test_mode() ? 'test' : 'live';
-
+		$per_page       = $this->per_page;
+		$mode           = edd_is_test_mode()            ? 'test'                            : 'live';
 		$orderby 		= isset( $_GET['orderby'] )     ? $_GET['orderby']                  : 'ID';
 		$order 			= isset( $_GET['order'] )       ? $_GET['order']                    : 'DESC';
 		$order_inverse 	= $order == 'DESC'              ? 'ASC'                             : 'DESC';
