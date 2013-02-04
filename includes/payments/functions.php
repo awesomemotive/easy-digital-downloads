@@ -448,6 +448,8 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 	if ( !empty( $hour ) )
 		$args['hour'] = $hour;
 
+	$args = apply_filters( 'edd_get_earnings_by_date_args', $args );
+
 	$sales = get_posts( $args );
 	$total = 0;
 	if ( $sales ) {
