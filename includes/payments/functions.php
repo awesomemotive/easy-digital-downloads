@@ -519,19 +519,18 @@ function edd_is_payment_complete( $payment_id ) {
  * Get Total Sales
  *
  * @access      public
- * @author      Sunny Ratilal
  * @since       1.2.2
  * @return      int
  */
 function edd_get_total_sales() {
-	$sales = get_posts(
-		array(
-			'post_type'      => 'edd_payment',
-			'posts_per_page' => -1,
-			'meta_key'       => '_edd_payment_mode',
-			'meta_value'     => 'live'
-		)
-	);
+	$args = apply_filters( 'edd_get_total_sales_args', array(
+		'post_type'      => 'edd_payment',
+		'posts_per_page' => -1,
+		'meta_key'       => '_edd_payment_mode',
+		'meta_value'     => 'live',
+		'fields'         => 'ids'
+	) );
+	$sales = get_posts( $args );
 	$total = 0;
 	if ( $sales ) {
 		$total = count( $sales );
