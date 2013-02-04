@@ -499,6 +499,10 @@ function edd_purchase_form_validate_guest_user() {
 		edd_set_error( 'email_empty', __( 'Enter an email', 'edd' ) );
 	}
 
+	if ( empty( $_POST['edd_first'] ) ) {
+		edd_set_error( 'invalid_name', __( 'Please enter your first name.', 'edd' ) );
+	}
+
 	return $valid_user_data;
 }
 
