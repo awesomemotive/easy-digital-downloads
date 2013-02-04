@@ -570,7 +570,6 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 		if( $valid_data['need_new_user'] === true ) {
 			// Set user
 			$user = $valid_data['new_user_data'];
-			echo 'test'; exit;
 			// Register and login new user
 			$user['user_id'] = edd_register_and_login_new_user( $user );
 		// User login

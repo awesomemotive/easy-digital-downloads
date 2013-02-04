@@ -316,9 +316,7 @@ function edd_get_register_fields() {
 			<label class="edd-label" for="edd-last"><?php _e('Last Name', 'edd'); ?></label>
 		</p>
 
-		<?php if ( edd_logged_in_only() ) { ?>
-			<input type="hidden" name="edd-purchase-var" value="needs-to-register"/>
-		<?php } ?>
+		<input type="hidden" name="edd-purchase-var" value="needs-to-register"/>
 
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
 	</fieldset>
