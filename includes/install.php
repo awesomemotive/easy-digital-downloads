@@ -82,15 +82,22 @@ function edd_install() {
 				'comment_status' => 'closed'
 			)
 		);
+
+		// Store our page IDs
+		$options = array(
+			'purchase_page' => $checkout,
+			'success_page'  => $success,
+			'failure_page'  => $failed
+		);
+		update_option( 'edd_settings_general', $options );
 	}
 
-	
+
 	// Bail if activating from network, or bulk
 	if ( is_network_admin() || isset( $_GET['activate-multi'] ) )
-		return;
 
 	// Add the transient to redirect
     set_transient( '_edd_activation_redirect', true, 30 );
-	
+
 }
 register_activation_hook(EDD_PLUGIN_FILE, 'edd_install');
