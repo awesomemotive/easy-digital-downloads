@@ -551,12 +551,15 @@ function edd_get_total_earnings() {
 	$total = (float) 0;
 	//$earnings = get_transient( 'edd_searnings_total' );
 	//if( false === $earnings ) {
-	$payments = edd_get_payments( array(
+
+	$args = apply_filters( 'edd_get_total_earnings_args', array(
 		'offset' => 0,
 		'number' => -1,
 		'mode'   => 'live',
 		'status' => 'publish',
 	) );
+
+	$payments = edd_get_payments( $args );
 	if ( $payments ) {
 		foreach ( $payments as $payment ) {
 			$total += edd_get_payment_amount( $payment->ID );
