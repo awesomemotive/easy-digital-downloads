@@ -120,29 +120,35 @@ jQuery(document).ready(function ($) {
 				window.formfield = '';
 
 				$('body').on('click', '.edd_upload_image_button', function(e) {
+
 					e.preventDefault();
+
+					var button = $(this);
+
 					window.formfield = $(this).closest('.edd_repeatable_upload_wrapper');
 
 					// If the media frame already exists, reopen it.
 					if ( file_frame ) {
 						//file_frame.uploader.uploader.param( 'post_id', set_to_post_id );
 						file_frame.open();
-					  	return;
+					  return;
 					}
 
 					// Create the media frame.
 					file_frame = wp.media.frames.file_frame = wp.media({
-						title: $( this ).data( 'uploader_title' ),
+						frame: 'post',
+						state: 'insert',
+						title: button.data( 'uploader_title' ),
 						button: {
-							text: $( this ).data( 'uploader_button_text' ),
+							text: button.data( 'uploader_button_text' ),
 						},
 						multiple: true  // Set to true to allow multiple files to be selected
 					});
 
 					// When an image is selected, run a callback.
-					file_frame.on( 'select', function() {
+					file_frame.on( 'insert', function() {
 
-					var selection = file_frame.state().get('selection');
+						var selection = file_frame.state().get('selection');
 						selection.each( function( attachment, index ) {
 							attachment = attachment.toJSON();
 							if(index == 0){
