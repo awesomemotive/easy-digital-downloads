@@ -262,7 +262,7 @@ function edd_get_cart_item_price( $item_id, $options = array() ) {
 			$price = $prices[ $options['price_id'] ]['amount'];
 		}
 	}
-	return apply_filters( 'edd_cart_item_price', $price );
+	return apply_filters( 'edd_cart_item_price', $price, $item_id, $options );
 }
 
 
