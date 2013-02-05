@@ -83,7 +83,7 @@ jQuery(document).ready(function ($) {
 		},
 
 		files : function() {
-			if(typeof wp == "undefined"){
+			if(typeof wps == "undefined"){
 				//Old Thickbox uploader
 				if ( $( '.edd_upload_image_button' ).length > 0 ) {
 					window.formfield = '';

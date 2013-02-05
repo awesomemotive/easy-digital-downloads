@@ -160,6 +160,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ## Changelog ##
 
+### 1.4.3.2 ###
+
+* Fix: Restored old media uploader to fix issues with Amazon S3 extension
+
 ### 1.4.3.1 ###
 
 * Fix: Securtity Check Failed message when logging in during purchase
