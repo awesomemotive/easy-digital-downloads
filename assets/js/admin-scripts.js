@@ -127,16 +127,16 @@ jQuery(document).ready(function ($) {
 					if ( file_frame ) {
 						//file_frame.uploader.uploader.param( 'post_id', set_to_post_id );
 						file_frame.open();
-					  return;
+					  	return;
 					}
 
 					// Create the media frame.
 					file_frame = wp.media.frames.file_frame = wp.media({
-					  title: $( this ).data( 'uploader_title' ),
-					  button: {
-						text: $( this ).data( 'uploader_button_text' ),
-					  },
-					  multiple: true  // Set to true to allow multiple files to be selected
+						title: $( this ).data( 'uploader_title' ),
+						button: {
+							text: $( this ).data( 'uploader_button_text' ),
+						},
+						multiple: true  // Set to true to allow multiple files to be selected
 					});
 
 					// When an image is selected, run a callback.
@@ -167,8 +167,8 @@ jQuery(document).ready(function ($) {
 					// Finally, open the modal
 					file_frame.open();
 				});
-				
-				
+
+
 				// WP 3.5+ uploader
 				var file_frame;
 				window.formfield = '';
