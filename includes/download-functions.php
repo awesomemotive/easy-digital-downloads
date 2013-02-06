@@ -188,10 +188,10 @@ function edd_has_variable_prices( $download_id ) {
 
 function edd_get_price_option_name( $download_id, $price_id ) {
 	$prices = edd_get_variable_prices( $download_id );
+	$price_name = '';
 	if( $prices && is_array( $prices ) ) {
-		$price_name = $prices[ $price_id ]['name'];
-	} else {
-		$price_name = '';
+		if( isset( $prices[ $price_id ] ) )
+			$price_name = $prices[ $price_id ]['name'];
 	}
 	return $price_name;
 }
