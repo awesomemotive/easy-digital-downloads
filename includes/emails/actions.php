@@ -24,6 +24,9 @@ if ( !defined( 'ABSPATH' ) ) exit;
 */
 
 function edd_trigger_purchase_receipt( $payment_id, $new_status, $old_status ) {
+	// Make sure we don't send a purchase receipt while editing a payment
+	if ( isset( $_POST['edd-action'] ) && $_POST['edd-action'] == 'edit_payment' )
+		return;
 
 	// Check if the payment was already set to complete
 	if( $old_status == 'publish' || $old_status == 'complete' )
