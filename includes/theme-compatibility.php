@@ -8,19 +8,19 @@
  * @subpackage  Theme Compatibility
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0
+ * @since       1.4.3
 */
 
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
- * Remove Restrict Meta Box
+ * Remove the "download" post class from single Download pages
  *
- * Removes the "Restrict This Content" meta box from Restrict Content Pro.
+ * The Responsive theme applies special styling the .download class resulting in really terrible display.
  *
  * @access      private
- * @since       1.0
+ * @since       1.4.3
  * @return      array
 */
 
