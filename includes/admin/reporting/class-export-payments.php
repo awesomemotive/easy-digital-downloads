@@ -109,6 +109,12 @@ class EDD_Payments_Export extends EDD_Export {
 
 			}
 
+			if( is_numeric( $user_id ) ) {
+				$user = get_userdata( $user_id );
+			} else {
+				$user = false;
+			}
+
 			$data[] = array(
 				'id'       => $payment->ID,
 				'email'    => $payment_meta['email'],
@@ -121,7 +127,7 @@ class EDD_Payments_Export extends EDD_Export {
 				'gateway'  => edd_get_gateway_admin_label( get_post_meta( $payment->ID, '_edd_payment_gateway', true ) ),
 				'key'      => $payment_meta['key'],
 				'date'     => date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) ),
-				'user'     => is_numeric( $user_id ) ? get_user_by( 'id', $user_id )->display_name : __( 'guest', 'edd' ),
+				'user'     => $user ? $user->display_name : __( 'guest', 'edd' ),
 				'status'   => edd_get_payment_status( $payment, true )
 			);
 
