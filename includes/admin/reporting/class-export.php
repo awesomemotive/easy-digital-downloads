@@ -8,7 +8,7 @@
  * @subpackage  Export Class
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.4.2
+ * @since       1.4.4
 */
 
 class EDD_Export {
@@ -18,7 +18,7 @@ class EDD_Export {
 	 * Our export type. Used for export-type specific filters / actions
 	 *
 	 * @access      public
-	 * @since       1.4.2
+	 * @since       1.4.4
 	 */
 
 	public $export_type = 'default';
@@ -27,7 +27,7 @@ class EDD_Export {
 	 * Can we export?
 	 *
 	 * @access      public
-	 * @since       1.4.2
+	 * @since       1.4.4
 	 * @return      bool
 	 */
 
@@ -40,7 +40,7 @@ class EDD_Export {
 	 * Set the export headers
 	 *
 	 * @access      public
-	 * @since       1.4.2
+	 * @since       1.4.4
 	 * @return      void
 	 */
 
@@ -62,7 +62,7 @@ class EDD_Export {
 	 * Set the CSV columns
 	 *
 	 * @access      public
-	 * @since       1.4.2
+	 * @since       1.4.4
 	 * @return      array
 	 */
 
@@ -79,7 +79,7 @@ class EDD_Export {
 	 * Retrieve CSV columns
 	 *
 	 * @access      public
-	 * @since       1.4.2
+	 * @since       1.4.4
 	 * @return      array
 	 */
 
@@ -93,7 +93,7 @@ class EDD_Export {
 	 * Output the CSV columns
 	 *
 	 * @access      public
-	 * @since       1.4.2
+	 * @since       1.4.4
 	 * @return      void
 	 */
 
@@ -113,7 +113,7 @@ class EDD_Export {
 	 * Get the data being exported
 	 *
 	 * @access      public
-	 * @since       1.4.2
+	 * @since       1.4.4
 	 * @return      array
 	 */
 
@@ -141,7 +141,7 @@ class EDD_Export {
 	 * Output the CSV rows
 	 *
 	 * @access      public
-	 * @since       1.4.2
+	 * @since       1.4.4
 	 * @return      void
 	 */
 
@@ -177,7 +177,7 @@ class EDD_Export {
 	 * Perform the export
 	 *
 	 * @access      public
-	 * @since       1.4.2
+	 * @since       1.4.4
 	 * @return      void
 	 */
 
