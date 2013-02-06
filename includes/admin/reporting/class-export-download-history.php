@@ -8,7 +8,7 @@
  * @subpackage  Export Class
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.4.2
+ * @since       1.4.4
 */
 
 class EDD_Download_History_Export extends EDD_Export {
@@ -18,7 +18,7 @@ class EDD_Download_History_Export extends EDD_Export {
 	 * Our export type. Used for export-type specific filters / actions
 	 *
 	 * @access      public
-	 * @since       1.4.2
+	 * @since       1.4.4
 	 */
 
 	public $export_type = 'download_history';
@@ -28,7 +28,7 @@ class EDD_Download_History_Export extends EDD_Export {
 	 * Set the CSV columns
 	 *
 	 * @access      public
-	 * @since       1.4.2
+	 * @since       1.4.4
 	 * @return      array
 	 */
 
@@ -48,7 +48,7 @@ class EDD_Download_History_Export extends EDD_Export {
 	 * Get the data being exported
 	 *
 	 * @access      public
-	 * @since       1.4.2
+	 * @since       1.4.4
 	 * @return      array
 	 */
 
