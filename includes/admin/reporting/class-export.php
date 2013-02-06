@@ -160,7 +160,7 @@ class EDD_Export {
 				if( array_key_exists( $col_id, $cols ) ) {
 
 					echo '"' . $column . '"';
-					echo $i == count( $cols ) ? '' : ',';
+					echo $i == count( $cols ) + 1 ? '' : ',';
 
 				}
 				$i++;
