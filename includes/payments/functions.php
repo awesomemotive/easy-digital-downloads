@@ -184,11 +184,12 @@ function edd_insert_payment( $payment_data = array() ) {
 	// Create a blank payment
 	$payment = wp_insert_post(
 		array(
-			'post_title'  => $payment_title,
-			'post_status' => isset( $payment_data['status'] ) ? $payment_data['status'] : 'pending',
-			'post_type'   => 'edd_payment',
-			'post_date'   => $payment_data['date'],
-			'post_parent' => isset( $payment_data['parent'] ) ? $payment_data['parent'] : null
+			'post_title'    => $payment_title,
+			'post_status'   => isset( $payment_data['status'] ) ? $payment_data['status'] : 'pending',
+			'post_type'     => 'edd_payment',
+			'post_date'     => $payment_data['date'],
+			'post_date_gmt' => $payment_data['date'],
+			'post_parent'   => isset( $payment_data['parent'] ) ? $payment_data['parent'] : null
 		)
 	);
 
@@ -448,6 +449,8 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 	if ( !empty( $hour ) )
 		$args['hour'] = $hour;
 
+	$args = apply_filters( 'edd_get_earnings_by_date_args', $args );
+
 	$sales = get_posts( $args );
 	$total = 0;
 	if ( $sales ) {
@@ -519,19 +522,18 @@ function edd_is_payment_complete( $payment_id ) {
  * Get Total Sales
  *
  * @access      public
- * @author      Sunny Ratilal
  * @since       1.2.2
  * @return      int
  */
 function edd_get_total_sales() {
-	$sales = get_posts(
-		array(
-			'post_type'      => 'edd_payment',
-			'posts_per_page' => -1,
-			'meta_key'       => '_edd_payment_mode',
-			'meta_value'     => 'live'
-		)
-	);
+	$args = apply_filters( 'edd_get_total_sales_args', array(
+		'post_type'      => 'edd_payment',
+		'posts_per_page' => -1,
+		'meta_key'       => '_edd_payment_mode',
+		'meta_value'     => 'live',
+		'fields'         => 'ids'
+	) );
+	$sales = get_posts( $args );
 	$total = 0;
 	if ( $sales ) {
 		$total = count( $sales );
@@ -551,12 +553,15 @@ function edd_get_total_earnings() {
 	$total = (float) 0;
 	//$earnings = get_transient( 'edd_searnings_total' );
 	//if( false === $earnings ) {
-	$payments = edd_get_payments( array(
+
+	$args = apply_filters( 'edd_get_total_earnings_args', array(
 		'offset' => 0,
 		'number' => -1,
 		'mode'   => 'live',
 		'status' => 'publish',
 	) );
+
+	$payments = edd_get_payments( $args );
 	if ( $payments ) {
 		foreach ( $payments as $payment ) {
 			$total += edd_get_payment_amount( $payment->ID );
