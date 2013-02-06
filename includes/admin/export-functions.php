@@ -13,11 +13,7 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-
 require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export.php';
-require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-customers.php';
-require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-payments.php';
-require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-download-history.php';
 
 
 /**
@@ -29,6 +25,8 @@ require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-download-hi
  */
 
 function edd_export_payment_history() {
+
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-payments.php';
 
 	$payments_export = new EDD_Payments_Export();
 
@@ -50,6 +48,8 @@ add_action( 'edd_payment_export', 'edd_export_payment_history' );
 
 function edd_export_all_customers() {
 
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-customers.php';
+
 	$customer_export = new EDD_Customers_Export();
 
 	$customer_export->export();
@@ -67,6 +67,8 @@ add_action( 'edd_email_export', 'edd_export_all_customers' );
  */
 
 function edd_export_all_downloads_history() {
+
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-download-history.php';
 
 	$file_download_export = new EDD_Download_History_Export();
 
