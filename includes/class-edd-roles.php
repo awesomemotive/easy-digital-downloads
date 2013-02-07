@@ -114,7 +114,9 @@ class EDD_Roles {
 
 			$wp_roles->add_cap( 'shop_vendor', 'read' );
 			$wp_roles->add_cap( 'shop_vendor', 'read_product' );
+			$wp_roles->add_cap( 'shop_vendor', 'edit_product' );
 			$wp_roles->add_cap( 'shop_vendor', 'edit_products' );
+			$wp_roles->add_cap( 'shop_vendor', 'delete_product' );
 			$wp_roles->add_cap( 'shop_vendor', 'delete_products' );
 			$wp_roles->add_cap( 'shop_vendor', 'publish_products' );
 			$wp_roles->add_cap( 'shop_vendor', 'edit_published_products' );
