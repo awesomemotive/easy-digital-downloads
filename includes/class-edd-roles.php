@@ -56,7 +56,7 @@ class EDD_Roles {
 		add_role( 'shop_worker', __( 'Shop Worker', 'edd' ), array(
 			'read'                   => true,
 			'edit_posts'             => false,
-			'upload_files'          => true,
+			'upload_files'           => true,
 			'delete_posts'           => false
 		) );
 
