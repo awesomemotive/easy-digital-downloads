@@ -38,12 +38,12 @@ class EDD_Roles {
 	public function add_roles() {
 
 		add_role( 'shop_manager', __( 'Shop Manager', 'edd' ), array(
-	    	'read'                   => true,
-		    'edit_posts'             => false,
-		    'delete_posts'           => false,
-		    'unfiltered_html'        => true,
-		    'upload_files'           => true,
-		   	'export'                 => true,
+			'read'                   => true,
+			'edit_posts'             => false,
+			'delete_posts'           => false,
+			'unfiltered_html'        => true,
+			'upload_files'           => true,
+			'export'                 => true,
 			'import'                 => true
 		) );
 
