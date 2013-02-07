@@ -38,19 +38,13 @@ class EDD_Roles {
 	public function add_roles() {
 
 		add_role( 'shop_manager', __( 'Shop Manager', 'edd' ), array(
-		    'read'                   => true,
-		    'read_private_pages'     => true,
-		    'read_private_posts'     => true,
-		    'edit_users'             => true,
+	    	'read'                   => true,
 		    'edit_posts'             => false,
 		    'delete_posts'           => false,
-		    'manage_categories'      => true,
-		    'manage_links'           => true,
-		    'moderate_comments'      => true,
 		    'unfiltered_html'        => true,
 		    'upload_files'           => true,
-		   	'export'                 => true,
-			'import'                 => true
+		   	'export'                 => false,
+			'import'                 => false
 		) );
 
 		add_role( 'shop_accountant', __( 'Shop Accountant', 'edd' ), array(
@@ -62,12 +56,14 @@ class EDD_Roles {
 		add_role( 'shop_worker', __( 'Shop Worker', 'edd' ), array(
 		    'read'                   => true,
 		    'edit_posts'             => false,
+		     'upload_files'          => true,
 		    'delete_posts'           => false
 		) );
 
 		add_role( 'shop_vendor', __( 'Shop Vendor', 'edd' ), array(
 		    'read'                   => true,
 		    'edit_posts'             => false,
+		    'upload_files'           => true,
 		    'delete_posts'           => false
 		) );
 
