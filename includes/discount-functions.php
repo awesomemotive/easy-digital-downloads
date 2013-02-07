@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Discount Functions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -717,7 +717,7 @@ function edd_get_discounted_amount( $code, $base_price ) {
 		// Percentage discount
 		$discounted_price = $base_price - ( $base_price * ( $rate / 100 ) );
 	}
-	return apply_filters( 'edd_discounted_amount', number_format( $discounted_price, 2 ) );
+	return apply_filters( 'edd_discounted_amount', $discounted_price );
 }
 
 

@@ -3,7 +3,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  CSS
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
 */
 
@@ -74,6 +74,7 @@ table#edd_purchase_receipt_products th,
 table#edd_purchase_receipt td,
 table#edd_purchase_receipt th { text-align: left; }
 table#edd_purchase_receipt_products li { list-style: none; }
+table#edd_purchase_receipt_products .edd_purchase_receipt_product_notes { font-style: italic; }
 
 
 /* =Purchase History
@@ -107,6 +108,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd_download_purchase_form .edd_price_options li { display: block; padding: 0; margin: 0; }
 
 .edd-submit { text-shadow: 1px 1px #FAFAFA; line-height: normal; cursor: pointer; }
+.edd-submit.button { font-size: inherit; }
 .edd-submit.plain { text-shadow: none; margin: 0; padding: 0; background: none; border: 0; }
 .edd-submit.plain:hover { text-decoration: underline; }
 

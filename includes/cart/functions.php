@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Cart Functions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -262,7 +262,7 @@ function edd_get_cart_item_price( $item_id, $options = array() ) {
 			$price = $prices[ $options['price_id'] ]['amount'];
 		}
 	}
-	return apply_filters( 'edd_cart_item_price', $price );
+	return apply_filters( 'edd_cart_item_price', $price, $item_id, $options );
 }
 
 
@@ -627,9 +627,13 @@ function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
 
 function edd_show_added_to_cart_messages($download_id) {
 	if( isset( $_POST['edd_action'] ) && $_POST['edd_action'] == 'add_to_cart' ) {
-		$alert = sprintf( __('You have successfully added %s to your shopping cart.', 'edd'), get_the_title( $download_id ) );
-		$alert .= ' <a href="' . edd_get_checkout_uri() . '" class="edd_alert_checkout_link">' . __('Checkout.', 'edd') . '</a>';
-		echo '<div class="edd_added_to_cart_alert">' . $alert . '</div>';
+
+		$alert = '<div class="edd_added_to_cart_alert">'
+		. sprintf( __('You have successfully added %s to your shopping cart.', 'edd'), get_the_title( $download_id ) )
+		. ' <a href="' . edd_get_checkout_uri() . '" class="edd_alert_checkout_link">' . __('Checkout.', 'edd') . '</a>'
+		. '</div>';
+
+		echo apply_filters( 'edd_show_added_to_cart_messages', $alert );
 	}
 }
 add_action('edd_after_download_content', 'edd_show_added_to_cart_messages');

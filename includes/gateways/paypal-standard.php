@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  PayPal Standard Gateway
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -304,6 +304,9 @@ function edd_process_paypal_web_accept( $data ) {
 
 	global $edd_options;
 
+	if( $data['txn_type'] != 'web_accept' )
+		return;
+
 	// Collect payment details
 	$payment_id     = $data['custom'];
 	$purchase_key   = $data['item_number'];
@@ -327,27 +330,56 @@ function edd_process_paypal_web_accept( $data ) {
 		return;
 	}
 
-	if( number_format((float)$paypal_amount, 2) != $payment_amount ) {
-		// The prices don't match
-		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid payment amount in IPN response. IPN data: ', 'edd' ), json_encode( $encoded_data_array ) ), $payment_id );
-	   //return;
-	}
-	if( $purchase_key != $payment_meta['key'] ) {
-		// Purchase keys don't match
-		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid purchase key in IPN response. IPN data: ', 'edd' ), json_encode( $encoded_data_array ) ), $payment_id );
-	   	edd_update_payment_status( $payment_id, 'failed' );
-	   	return;
-	}
+	if( strtolower( $payment_status ) == 'refunded' ) {
 
-	$status = strtolower( $payment_status );
+		// Process a refund
+		edd_process_paypal_refund( $data );
 
-	if ( $status == 'completed' || edd_is_test_mode() ) {
-		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $data['txn_id'] ) );
-		edd_update_payment_status( $payment_id, 'publish' );
+	} else {
+
+		if( number_format((float)$paypal_amount, 2) != $payment_amount ) {
+			// The prices don't match
+			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid payment amount in IPN response. IPN data: ', 'edd' ), json_encode( $encoded_data_array ) ), $payment_id );
+		   //return;
+		}
+		if( $purchase_key != $payment_meta['key'] ) {
+			// Purchase keys don't match
+			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid purchase key in IPN response. IPN data: ', 'edd' ), json_encode( $encoded_data_array ) ), $payment_id );
+		   	edd_update_payment_status( $payment_id, 'failed' );
+		   	return;
+		}
+
+		$status = strtolower( $payment_status );
+
+		if ( $status == 'completed' || edd_is_test_mode() ) {
+			edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $data['txn_id'] ) );
+			edd_update_payment_status( $payment_id, 'publish' );
+		}
 	}
 
 }
 add_action( 'edd_paypal_web_accept', 'edd_process_paypal_web_accept' );
+
+
+/**
+ * Process IPN Refunds
+ *
+ * @access      private
+ * @since       1.3.4
+ * @return      void
+*/
+
+function edd_process_paypal_refund( $data ) {
+
+	global $edd_options;
+
+	// Collect payment details
+	$payment_id = $data['custom'];
+
+	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Payment #%s Refunded', 'edd' ) , $data['txn_id'] ) );
+	edd_update_payment_status( $payment_id, 'refunded' );
+
+}
 
 
 /**

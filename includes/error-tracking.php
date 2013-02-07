@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Error Tracking
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -44,6 +44,7 @@ function edd_print_errors() {
 add_action( 'edd_payment_mode_bottom', 'edd_print_errors' );
 add_action( 'edd_before_purchase_form', 'edd_print_errors' );
 add_action( 'edd_before_checkout_register_form', 'edd_print_errors' );
+add_action( 'edd_ajax_checkout_errors', 'edd_print_errors' );
 
 
 /**

@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Admin Reports Page
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -28,6 +28,7 @@ function edd_reports_page() {
 
 	$current_page = admin_url( 'edit.php?post_type=download&page=edd-reports' );
 	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'reports';
+
 	?>
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper">
@@ -228,6 +229,7 @@ add_action( 'edd_reports_view_taxes', 'edd_reports_taxes' );
 */
 
 function edd_reports_tab_export() {
+
 	?>
 	<div class="metabox-holder">
 		<div id="post-body">

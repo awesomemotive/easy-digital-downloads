@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Payment Functions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -184,11 +184,12 @@ function edd_insert_payment( $payment_data = array() ) {
 	// Create a blank payment
 	$payment = wp_insert_post(
 		array(
-			'post_title'  => $payment_title,
-			'post_status' => isset( $payment_data['status'] ) ? $payment_data['status'] : 'pending',
-			'post_type'   => 'edd_payment',
-			'post_date'   => $payment_data['date'],
-			'post_parent' => isset( $payment_data['parent'] ) ? $payment_data['parent'] : null
+			'post_title'    => $payment_title,
+			'post_status'   => isset( $payment_data['status'] ) ? $payment_data['status'] : 'pending',
+			'post_type'     => 'edd_payment',
+			'post_date'     => $payment_data['date'],
+			'post_date_gmt' => $payment_data['date'],
+			'post_parent'   => isset( $payment_data['parent'] ) ? $payment_data['parent'] : null
 		)
 	);
 
@@ -327,21 +328,21 @@ function edd_delete_purchase( $payment_id = 0 ) {
 function edd_undo_purchase( $download_id, $payment_id ) {
 
 	$payment = get_post( $payment_id );
-	if ( edd_get_payment_status( $payment ) == 'refunded' )
-		return; // Payment has already been reversed
+
+	$status  = $payment->post_status;
+
+	if ( $status != 'publish' )
+		return; // Payment has already been reversed, or was never completed
 
 	edd_decrease_purchase_count( $download_id );
-
-	$purchase_meta = edd_get_payment_meta( $payment_id );
-
+	$purchase_meta      = edd_get_payment_meta( $payment_id );
 	$user_purchase_info = maybe_unserialize( $purchase_meta['user_info'] );
+	$cart_details       = maybe_unserialize( $purchase_meta['cart_details'] );
+	$amount             = null;
 
-	$cart_details = maybe_unserialize( $purchase_meta['cart_details'] );
-
-	$amount = null;
 	if ( is_array( $cart_details ) ) {
-		$cart_item_id = array_search( $download_id, $cart_details );
-		$amount       = isset( $cart_details[$cart_item_id]['price'] ) ? $cart_details[$cart_item_id]['price'] : null;
+		$cart_item_id   = array_search( $download_id, $cart_details );
+		$amount         = isset( $cart_details[$cart_item_id]['price'] ) ? $cart_details[$cart_item_id]['price'] : null;
 	}
 
 	$amount = edd_get_download_final_price( $download_id, $user_purchase_info, $amount );
@@ -413,7 +414,8 @@ function edd_get_payment_statuses() {
 		'pending'  => __( 'Pending', 'edd' ),
 		'publish'  => __( 'Complete', 'edd' ),
 		'refunded' => __( 'Refunded', 'edd' ),
-		'failed'   => __( 'Failed', 'edd' )
+		'failed'   => __( 'Failed', 'edd' ),
+		'revoked'  => __( 'Revoked', 'edd' )
 	);
 
 	return apply_filters( 'edd_payment_statuses', $payment_statuses );
@@ -446,6 +448,8 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 
 	if ( !empty( $hour ) )
 		$args['hour'] = $hour;
+
+	$args = apply_filters( 'edd_get_earnings_by_date_args', $args );
 
 	$sales = get_posts( $args );
 	$total = 0;
@@ -518,19 +522,18 @@ function edd_is_payment_complete( $payment_id ) {
  * Get Total Sales
  *
  * @access      public
- * @author      Sunny Ratilal
  * @since       1.2.2
  * @return      int
  */
 function edd_get_total_sales() {
-	$sales = get_posts(
-		array(
-			'post_type'      => 'edd_payment',
-			'posts_per_page' => -1,
-			'meta_key'       => '_edd_payment_mode',
-			'meta_value'     => 'live'
-		)
-	);
+	$args = apply_filters( 'edd_get_total_sales_args', array(
+		'post_type'      => 'edd_payment',
+		'posts_per_page' => -1,
+		'meta_key'       => '_edd_payment_mode',
+		'meta_value'     => 'live',
+		'fields'         => 'ids'
+	) );
+	$sales = get_posts( $args );
 	$total = 0;
 	if ( $sales ) {
 		$total = count( $sales );
@@ -550,12 +553,15 @@ function edd_get_total_earnings() {
 	$total = (float) 0;
 	//$earnings = get_transient( 'edd_searnings_total' );
 	//if( false === $earnings ) {
-	$payments = edd_get_payments( array(
+
+	$args = apply_filters( 'edd_get_total_earnings_args', array(
 		'offset' => 0,
 		'number' => -1,
 		'mode'   => 'live',
 		'status' => 'publish',
 	) );
+
+	$payments = edd_get_payments( $args );
 	if ( $payments ) {
 		foreach ( $payments as $payment ) {
 			$total += edd_get_payment_amount( $payment->ID );

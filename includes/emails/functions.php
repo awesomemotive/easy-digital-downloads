@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Email Functions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -39,14 +39,18 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 
 	$message = edd_get_email_body_header();
 
-		$message .= edd_get_email_body_content( $payment_id, $payment_data );
+	$message .= edd_get_email_body_content( $payment_id, $payment_data );
 
 	$message .= edd_get_email_body_footer();
 
 	$from_name = isset( $edd_options['from_name'] ) ? $edd_options['from_name'] : get_bloginfo('name');
 	$from_email = isset( $edd_options['from_email'] ) ? $edd_options['from_email'] : get_option('admin_email');
 
-	$subject = isset( $edd_options['purchase_subject'] ) && strlen( trim( $edd_options['purchase_subject'] ) ) > 0 ? edd_email_template_tags( $edd_options['purchase_subject'], $payment_data, $payment_id ) : __('Purchase Receipt', 'edd');
+	$subject = apply_filters( 'edd_purchase_subject', isset( $edd_options['purchase_subject'] )
+		? trim( $edd_options['purchase_subject'] )
+		: __('Purchase Receipt', 'edd'), $payment_id );
+
+	$subject = edd_email_template_tags( $subject, $payment_data, $payment_id );
 
 	$headers = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
 	$headers .= "Reply-To: ". $from_email . "\r\n";

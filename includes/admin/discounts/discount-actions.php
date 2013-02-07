@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Discount Actions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0.8.1
 */
@@ -80,6 +80,10 @@ add_action( 'edd_edit_discount', 'edd_edit_discount' );
 */
 
 function edd_delete_discount( $data ) {
+
+	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_discount_nonce' ) )
+		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error' ) );
+
 	$discount_id = $data['discount'];
 	edd_remove_discount( $discount_id );
 }
