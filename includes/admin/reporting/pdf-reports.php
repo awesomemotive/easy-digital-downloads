@@ -18,8 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Generates PDF report on sales and earnings for all downloads for the current year.
  *
- * @access      public
- * @since       1.1.4.0
+ * @access      private
+ * @since       1.4.4
  * @param 		string $data
  * @author 		Sunny Ratilal
 */
@@ -28,58 +28,57 @@ function edd_generate_pdf( $data ) {
 	$edd_pdf_reports_nonce = $_GET['_wpnonce'];
 
 	if ( wp_verify_nonce( $edd_pdf_reports_nonce, 'edd_generate_pdf' ) ) {
-		require_once EDD_PLUGIN_DIR . '/includes/libraries/fpdf/fpdf.php';
-		require_once EDD_PLUGIN_DIR . '/includes/libraries/fpdf/edd_pdf.php';
+		require_once EDD_PLUGIN_DIR . '/includes/libraries/tcpdf/tcpdf.php';
+		require_once EDD_PLUGIN_DIR . '/includes/admin/reporting/class-edd-pdf.php';
 
-		$daterange = date_i18n( get_option( 'date_format' ), mktime( 0, 0, 0, 1, 1, date( 'Y' ) ) ) . ' ' . utf8_decode( __( 'to', 'edd' ) ) . ' ' . date_i18n( get_option( 'date_format' ) );
+		$daterange = date_i18n( get_option( 'date_format' ), mktime( 0, 0, 0, 1, 1, date_i18n( 'Y' ) ) ) . ' ' . __( 'to', 'edd' ) . ' ' . date_i18n( get_option( 'date_format' ) );
 
-		$pdf = new edd_pdf();
+		$pdf = new EDD_PDF( 'P', 'mm', 'A4', true, 'UTF-8', false );
+		$pdf->SetDisplayMode( 'real' );
+		$pdf->setJPEGQuality( 100 );
 		$pdf->AddPage( 'L', 'A4' );
 
-		$pdf->SetTitle( utf8_decode( __( 'Sales and earnings reports for the current year for all products', 'edd') ) );
-		$pdf->SetAuthor( utf8_decode( __( 'Easy Digital Downloads', 'edd' ) ) );
-		$pdf->SetCreator( utf8_decode( __( 'Easy Digital Downloads', 'edd' ) ) );
+		$pdf->SetTitle( __( 'Sales and earnings reports for the current year for all products', 'edd' ) );
+		$pdf->SetAuthor( __( 'Easy Digital Downloads', 'edd' ) );
+		$pdf->SetCreator( __( 'Easy Digital Downloads', 'edd' ) );
 
-		$pdf->Image( EDD_PLUGIN_URL . 'assets/images/edd-logo.png', 205, 10 );
+		$pdf->Image( EDD_PLUGIN_URL . 'assets/images/edd-logo.png', 218, 10, 70, 0, 'PNG', '', 'R', false, 300 );
 
 		$pdf->SetMargins( 8, 8, 8 );
 		$pdf->SetX( 8 );
 
-		$pdf->SetFont( 'Helvetica', '', 16 );
+		$pdf->SetFont( 'freesans', '', 16 );
 		$pdf->SetTextColor( 50, 50, 50 );
-		$pdf->Cell( 0, 3, utf8_decode( __( 'Sales and earnings reports for the current year for all products', 'edd' ) ), 0, 2, 'L', false );
+		$pdf->Cell( 0, 3, __( 'Sales and earnings reports for the current year for all products', 'edd' ), 0, 2, 'L', false );
 
-		$pdf->SetFont( 'Helvetica', '', 13 );
+		$pdf->SetFont( 'freesans', '', 13 );
 		$pdf->Ln();
 		$pdf->SetTextColor( 150, 150, 150 );
-		$pdf->Cell( 0, 6, utf8_decode( __( 'Date Range: ', 'edd' ) ) . $daterange, 0, 2, 'L', false );
+		$pdf->Cell( 0, 6, __( 'Date Range: ', 'edd' ) . $daterange, 0, 2, 'L', false );
 		$pdf->Ln();
 		$pdf->SetTextColor( 50, 50, 50 );
-		$pdf->SetFont( 'Helvetica', '', 14 );
-		$pdf->Cell( 0, 10, utf8_decode( __( 'Table View', 'edd' ) ), 0, 2, 'L', false );
-		$pdf->SetFont( 'Helvetica', '', 12 );
+		$pdf->SetFont( 'freesans', '', 14 );
+		$pdf->Cell( 0, 10, __( 'Table View', 'edd' ), 0, 2, 'L', false );
+		$pdf->SetFont( 'freesans', '', 12 );
 
 		$pdf->SetFillColor( 238, 238, 238 );
-		$pdf->Cell( 70, 6, utf8_decode( __( 'Product Name', 'edd' ) ), 1, 0, 'L', true );
-		$pdf->Cell( 30, 6, utf8_decode( __( 'Price', 'edd' ) ), 1, 0, 'L', true );
-		$pdf->Cell( 50, 6, utf8_decode( __( 'Categories', 'edd' ) ), 1, 0, 'L', true );
-		$pdf->Cell( 50, 6, utf8_decode( __( 'Tags', 'edd' ) ), 1, 0, 'L', true );
-		$pdf->Cell( 45, 6, utf8_decode( __( 'Number of Sales', 'edd' ) ), 1, 0, 'L', true );
-		$pdf->Cell( 35, 6, utf8_decode( __( 'Earnings to Date', 'edd' ) ), 1, 1, 'L', true );
+		$pdf->Cell( 70, 6, __( 'Product Name', 'edd' ), 1, 0, 'L', true );
+		$pdf->Cell( 30, 6, __( 'Price', 'edd' ), 1, 0, 'L', true );
+		$pdf->Cell( 50, 6, __( 'Categories', 'edd' ), 1, 0, 'L', true );
+		$pdf->Cell( 50, 6, __( 'Tags', 'edd' ), 1, 0, 'L', true );
+		$pdf->Cell( 45, 6, __( 'Number of Sales', 'edd' ), 1, 0, 'L', true );
+		$pdf->Cell( 35, 6, __( 'Earnings to Date', 'edd' ), 1, 1, 'L', true );
 
-		$year = date('Y');
+		$year = date_i18n('Y');
 		$downloads = get_posts( array( 'post_type' => 'download', 'year' => $year, 'posts_per_page' => -1 ) );
 
-		if ( $downloads ):
-			$pdf->SetWidths( array( 70, 30, 50, 50, 45, 35 ) );
-
-			foreach ( $downloads as $download ):
+		if ( $downloads ) :
+			foreach ( $downloads as $download ) :
 				$pdf->SetFillColor( 255, 255, 255 );
 
-				$title = utf8_decode( get_the_title( $download->ID ) );
+				$title = get_the_title( $download->ID );
 
 				if ( edd_has_variable_prices( $download->ID ) ) {
-
 					$prices = edd_get_variable_prices( $download->ID );
 
 					$first = $prices[0]['amount'];
@@ -93,7 +92,6 @@ function edd_generate_pdf( $data ) {
 						$min = $last;
 						$max = $first;
 					}
-
 					$price = html_entity_decode( edd_currency_filter( edd_format_amount( $min ) ) . ' - ' . edd_currency_filter( edd_format_amount( $max ) ) );
 				} else {
 					$price = html_entity_decode( edd_currency_filter( edd_get_download_price( $download->ID ) ) );
@@ -109,27 +107,58 @@ function edd_generate_pdf( $data ) {
 				$link = get_permalink( $download->ID );
 				$earnings = html_entity_decode ( edd_currency_filter( edd_get_download_earnings_stats( $download->ID ) ) );
 
-				$pdf->Row( array( $title, $price, $categories, $tags, $sales, $earnings ) );
+				$widths = array( 70, 30, 50, 50, 45, 35 );
+				$dimensions = $pdf->getPageDimensions();
+
+				$rowcount = 0;
+				$rowcount = max(
+					$pdf->getNumLines( $title, 80 ),
+					$pdf->getNumLines( $price, 80 ),
+					$pdf->getNumLines( $categories, 80 ),
+					$pdf->getNumLines( $tags, 80 ),
+					$pdf->getNumLines( $sales, 80 ),
+					$pdf->getNumLines( $earnings, 80 )
+				);
+
+				if ( ( $pdf->GetY() + $rowcount * 6 ) + $dimensions['bm'] > ( $dimensions['hk'] ) ) {
+					$borders = 'LTR';
+				} elseif ( ( ceil( $pdf->GetY() ) + $rowcount * 6 ) + $dimensions['bm'] == floor( $dimensions['hk'] ) ) {
+					$borders = 'LRB';
+				} else {
+					$borders = 'LR';
+				}
+
+				$pdf->MultiCell( $widths[0], $rowcount * 6, $title, '1', $borders, false, false );
+				$pdf->MultiCell( $widths[1], $rowcount * 6, $price, '1', $borders, false, false );
+				$pdf->MultiCell( $widths[2], $rowcount * 6, $categories, '1', $borders, false, false );
+				$pdf->MultiCell( $widths[3], $rowcount * 6, $tags, '1', $borders, false, false );
+				$pdf->MultiCell( $widths[4], $rowcount * 6, $sales, '1', $borders, false, false );
+				$pdf->MultiCell( $widths[5], $rowcount * 6, $earnings, '1', $borders, false, false );
+
+				$pdf->Ln();
 			endforeach;
 		else:
-			$pdf->SetWidths( array( 280 ) );
-			$title = utf8_decode( sprintf( __( 'No %s found.', 'edd' ), edd_get_label_plural() ) );
-			$pdf->Row( array( $title ) );
+			$pdf->Cell( 280, 6, sprintf( __( 'No %s found.', 'edd' ), edd_get_label_plural( true ) ), '1', 'LTR', false, false );
 		endif;
+
+		wp_reset_postdata();
 
 		$pdf->Ln();
 		$pdf->SetTextColor( 50, 50, 50 );
-		$pdf->SetFont( 'Helvetica', '', 14 );
-		$pdf->Cell( 0, 10, utf8_decode( __('Graph View', 'edd') ), 0, 2, 'L', false );
-		$pdf->SetFont( 'Helvetica', '', 12 );
+		$pdf->SetFont( 'freesans', '', 14 );
+		$pdf->Cell( 0, 10, __( 'Graph View', 'edd' ), 0, 2, 'L', false );
+		$pdf->SetFont( 'freesans', '', 12 );
 
 		$image = html_entity_decode( urldecode( edd_draw_chart_image() ) );
 		$image = str_replace( ' ', '%20', $image );
 
-		$pdf->SetX( 25 );
-		$pdf->Image( $image .'&file=.png' );
+		$pdf->Image( $image . '&file=.png', 5, $pdf->getY(), 0, 0, 'PNG', '', 'C', false, 300 );
 		$pdf->Ln( 7 );
-		$pdf->Output( 'edd-report-' . date_i18n('Y-m-d') . '.pdf', 'D' );
+		if( wp_is_mobile() ) {
+			$pdf->Output( 'edd-report-' . date_i18n( 'Y-m-d' ) . '.pdf', 'I' );
+		} else {
+			$pdf->Output( 'edd-report-' . date_i18n( 'Y-m-d' ) . '.pdf', 'D' );
+		}
 	}
 }
 add_action( 'edd_generate_pdf', 'edd_generate_pdf' );
@@ -151,15 +180,15 @@ function edd_draw_chart_image() {
 	require_once EDD_PLUGIN_DIR . '/includes/libraries/googlechartlib/markers/GoogleChartShapeMarker.php';
 	require_once EDD_PLUGIN_DIR . '/includes/libraries/googlechartlib/markers/GoogleChartTextMarker.php';
 
-	$chart = new GoogleChart( 'lc', 900, 330 );
+	$chart = new GoogleChart( 'lc', 800, 300 );
 
 	$i = 1;
 	$earnings = "";
 	$sales = "";
 
 	while ( $i <= 12 ) :
-		$earnings .= edd_get_earnings_by_date( null, $i, date('Y') ) . ",";
-		$sales .= edd_get_sales_by_date( null, $i, date('Y') ) . ",";
+		$earnings .= edd_get_earnings_by_date( null, $i, date_i18n('Y') ) . ",";
+		$sales .= edd_get_sales_by_date( null, $i, date_i18n('Y') ) . ",";
 		$i++;
 	endwhile;
 
