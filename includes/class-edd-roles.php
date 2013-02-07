@@ -131,7 +131,7 @@ class EDD_Roles {
 	 * Gets the core post type capabilties
 	 *
 	 * @since  1.4.4
-	 * @return void
+	 * @return array
 	 */
 
 	public function get_core_caps() {
