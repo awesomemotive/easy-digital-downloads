@@ -1,5 +1,25 @@
 <?php
 
+/**
+ * Roles / caps
+ *
+ * @package     Easy Digital Downloads
+ * @subpackage  Roles / Caps
+ * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.4.4
+*/
+
+
+/**
+ * This class handles the role creation and assignment of capabilities for those roles.
+ *
+ * These roles let us have Shop Accountants, Shop Workers, etc, each of whom can do certain things within the EDD store
+ *
+ * @since  1.4.4
+ * @return void
+ */
+
 class EDD_Roles {
 
 	function __construct() {
@@ -7,6 +27,13 @@ class EDD_Roles {
 		$this->add_caps();
 	}
 
+
+	/**
+	 * Add new shop roles
+	 *
+	 * @since  1.4.4
+	 * @return void
+	 */
 
 	public function add_roles() {
 
