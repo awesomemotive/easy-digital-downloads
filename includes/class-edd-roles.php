@@ -43,8 +43,8 @@ class EDD_Roles {
 		    'delete_posts'           => false,
 		    'unfiltered_html'        => true,
 		    'upload_files'           => true,
-		   	'export'                 => false,
-			'import'                 => false
+		   	'export'                 => true,
+			'import'                 => true
 		) );
 
 		add_role( 'shop_accountant', __( 'Shop Accountant', 'edd' ), array(
