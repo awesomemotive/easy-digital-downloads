@@ -99,11 +99,65 @@ class EDD_Roles {
 			$wp_roles->add_cap( 'administrator', 'manage_shop_discounts' );
 			$wp_roles->add_cap( 'administrator', 'manage_shop_settings' );
 
+			// Add the main post type capabilities
+			$capabilities = $this->get_core_caps();
+			foreach( $capabilities as $cap_group ) {
+				foreach( $cap_group as $cap ) {
+					$wp_roles->add_cap( 'shop_manager', $cap );
+					$wp_roles->add_cap( 'administrator', $cap );
+					$wp_roles->add_cap( 'shop_worker', $cap );
+				}
+			}
+
 			$wp_roles->add_cap( 'shop_accountant', 'view_shop_reports' );
 			$wp_roles->add_cap( 'shop_accountant', 'export_shop_reports' );
 
+			$wp_roles->add_cap( 'shop_vendor', 'read' );
+			$wp_roles->add_cap( 'shop_vendor', 'read_product' );
+			$wp_roles->add_cap( 'shop_vendor', 'edit_products' );
+			$wp_roles->add_cap( 'shop_vendor', 'delete_products' );
+			$wp_roles->add_cap( 'shop_vendor', 'publish_products' );
+			$wp_roles->add_cap( 'shop_vendor', 'edit_published_products' );
+			$wp_roles->add_cap( 'shop_vendor', 'upload_files' );
+
 		}
 
+	}
+
+	public function get_core_caps() {
+
+		$capabilities = array();
+
+		$capability_types = array( 'product', 'shop_payment', 'shop_discount' );
+
+		foreach( $capability_types as $capability_type ) {
+
+			$capabilities[ $capability_type ] = array(
+
+				// Post type
+				"edit_{$capability_type}",
+				"read_{$capability_type}",
+				"delete_{$capability_type}",
+				"edit_{$capability_type}s",
+				"edit_others_{$capability_type}s",
+				"publish_{$capability_type}s",
+				"read_private_{$capability_type}s",
+				"delete_{$capability_type}s",
+				"delete_private_{$capability_type}s",
+				"delete_published_{$capability_type}s",
+				"delete_others_{$capability_type}s",
+				"edit_private_{$capability_type}s",
+				"edit_published_{$capability_type}s",
+
+				// Terms
+				"manage_{$capability_type}_terms",
+				"edit_{$capability_type}_terms",
+				"delete_{$capability_type}_terms",
+				"assign_{$capability_type}_terms"
+			);
+		}
+
+		return $capabilities;
 	}
 
 }
