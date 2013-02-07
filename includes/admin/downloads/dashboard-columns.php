@@ -36,6 +36,11 @@ function edd_download_columns( $download_columns ) {
 		'date'              => __( 'Date', 'edd' )
 	);
 
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		unset( $download_columns['sales'] );
+		unset( $download_columns['earnings'] );
+	}
+
 	return $download_columns;
 }
 add_filter( 'manage_edit-download_columns', 'edd_download_columns' );
