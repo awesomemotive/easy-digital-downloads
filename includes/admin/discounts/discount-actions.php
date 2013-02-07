@@ -82,7 +82,7 @@ add_action( 'edd_edit_discount', 'edd_edit_discount' );
 function edd_delete_discount( $data ) {
 
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'edd_discount_nonce' ) )
-		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error' ) );
+		wp_die( __( 'Trying to cheat or something?', 'edd' ), __( 'Error', 'edd' ) );
 
 	$discount_id = $data['discount'];
 	edd_remove_discount( $discount_id );
