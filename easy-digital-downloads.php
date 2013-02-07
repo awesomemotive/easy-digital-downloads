@@ -46,6 +46,13 @@ final class Easy_Digital_Downloads {
 
 
 	/**
+	 * EDD user roles and capabilities object
+	 * @since 1.4.4
+	 */
+	private $roles;
+
+
+	/**
 	 * Main Easy_Digital_Downloads Instance
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
