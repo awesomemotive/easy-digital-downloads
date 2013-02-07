@@ -23,17 +23,14 @@ jQuery(document).ready(function ($) {
 
 			clone.removeClass( 'edd_add_blank' );
 
-
 			clone.find( 'td input, td select' ).val( '' );
 			clone.find( 'input, select' ).each(function() {
-					var name 	= $( this ).attr( 'name' );
+				var name 	= $( this ).attr( 'name' );
 
-					name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
+				name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
 
-					$( this )
-						.attr( 'name', name )
-						.attr( 'id', name );
-				});
+				$( this ).attr( 'name', name ).attr( 'id', name );
+			});
 			return clone;
 		},
 
