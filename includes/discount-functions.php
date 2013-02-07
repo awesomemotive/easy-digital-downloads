@@ -913,7 +913,7 @@ function edd_cart_discounts_html() {
 
 
 /**
- * Retrieves the HTML for all discounts applied to the car
+ * Retrieves the HTML for all discounts applied to the cart
  *
  * @access      public
  * @since       1.4.1
@@ -950,7 +950,7 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 		$html .= "</span>\n";
 	}
 
-	return $html;
+	return apply_filters( 'edd_get_cart_discounts_html', $html, $discounts, $rate, $remove_url );
 }
 
 
