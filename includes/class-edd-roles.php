@@ -86,11 +86,13 @@ class EDD_Roles {
 		if ( is_object( $wp_roles ) ) {
 
 			$wp_roles->add_cap( 'shop_manager', 'view_shop_reports' );
+			$wp_roles->add_cap( 'shop_manager', 'view_shop_sensitive_data' );
 			$wp_roles->add_cap( 'shop_manager', 'export_shop_reports' );
 			$wp_roles->add_cap( 'shop_manager', 'manage_shop_discounts' );
 			$wp_roles->add_cap( 'shop_manager', 'manage_shop_settings' );
 
 			$wp_roles->add_cap( 'administrator', 'view_shop_reports' );
+			$wp_roles->add_cap( 'administrator', 'view_shop_sensitive_data' );
 			$wp_roles->add_cap( 'administrator', 'export_shop_reports' );
 			$wp_roles->add_cap( 'administrator', 'manage_shop_discounts' );
 			$wp_roles->add_cap( 'administrator', 'manage_shop_settings' );
