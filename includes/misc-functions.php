@@ -133,23 +133,6 @@ function edd_is_cc_verify_enabled() {
 
 
 /**
- * Get Menu Access Level
- *
- * Returns the access level required to access
- * the downloads menu. Currently not changeable,
- * but here for a future update.
- *
- * @access      public
- * @since       1.0
- * @return      string
-*/
-
-function edd_get_menu_access_level() {
-	return apply_filters( 'edd_menu_access_level', 'manage_options' );
-}
-
-
-/**
  * Is Odd
  *
  * Checks wether an integer is odd.
