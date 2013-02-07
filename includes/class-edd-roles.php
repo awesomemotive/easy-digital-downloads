@@ -114,8 +114,6 @@ class EDD_Roles {
 			$wp_roles->add_cap( 'shop_accountant', 'view_shop_reports' );
 			$wp_roles->add_cap( 'shop_accountant', 'export_shop_reports' );
 
-			$wp_roles->add_cap( 'shop_vendor', 'read' );
-			$wp_roles->add_cap( 'shop_vendor', 'read_product' );
 			$wp_roles->add_cap( 'shop_vendor', 'edit_product' );
 			$wp_roles->add_cap( 'shop_vendor', 'edit_products' );
 			$wp_roles->add_cap( 'shop_vendor', 'delete_product' );
