@@ -30,16 +30,13 @@ function edd_add_download_meta_box() {
 	add_meta_box( 'edd_product_notes', __( 'Product Notes', 'edd' ), 'edd_render_product_notes_meta_box', 'download', 'normal', 'default' );
 
 	/** Download Stats */
-	if( current_user_can( 'view_shop_reports' ) )
-		add_meta_box( 'edd_download_stats', sprintf( __( '%1$s Stats', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', 'download', 'side', 'high' );
+	add_meta_box( 'edd_download_stats', sprintf( __( '%1$s Stats', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', 'download', 'side', 'high' );
 
 	/** Purchase Logs */
-	if( current_user_can( 'view_shop_reports' ) )
-		add_meta_box( 'edd_purchase_log', __( 'Purchase Log', 'edd' ), 'edd_render_purchase_log_meta_box', 'download', 'normal', 'default');
+	add_meta_box( 'edd_purchase_log', __( 'Purchase Log', 'edd' ), 'edd_render_purchase_log_meta_box', 'download', 'normal', 'default');
 
 	/** Download Logs */
-	if( current_user_can( 'view_shop_reports' ) )
-		add_meta_box( 'edd_file_download_log', __( 'File Download Log', 'edd' ), 'edd_render_download_log_meta_box', 'download', 'normal', 'default' );
+	add_meta_box( 'edd_file_download_log', __( 'File Download Log', 'edd' ), 'edd_render_download_log_meta_box', 'download', 'normal', 'default' );
 }
 add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
 
@@ -65,7 +62,7 @@ function edd_download_meta_box_save( $post_id) {
 	if ( isset( $post->post_type ) && $post->post_type == 'revision' )
 		return $post_id;
 
-	if ( ! current_user_can( 'edit_product', $post_id ) ) {
+	if ( ! current_user_can( 'edit_pages', $post_id ) ) {
 		return $post_id;
 	}
 
@@ -471,29 +468,27 @@ add_action( 'edd_meta_box_fields', 'edd_render_download_limit_row', 20 );
 
 
 /**
- * Render Disable Button
+ * Don't save blank rows.
+ *
+ * When saving, check the price and file table for blank rows.
+ * If the name of the price or file is empty, that row should not
+ * be saved.
  *
  * @access      private
- * @since       1.0
- * @return      void
+ * @since       1.2.2
+ * @return      array $new New meta value with empty keys removed
  */
 
-function edd_render_disable_button( $post_id ) {
-	$hide_button = get_post_meta( $post_id, '_edd_hide_purchase_link', true ) ? true : false;
-?>
-	<p>
-		<strong><?php _e( 'Button Options:', 'edd' ); ?></strong>
-	</p>
+function edd_metabox_save_check_blank_rows( $new ) {
+	foreach ( $new as $key => $value ) {
+		if ( empty( $value['name'] ) && empty( $value['amount'] ) && empty( $value['file'] ) )
+			unset( $new[ $key ] );
+	}
 
-	<p>
-		<label for="_edd_hide_purchase_link">
-			<input type="checkbox" name="_edd_hide_purchase_link" id="_edd_hide_purchase_link" value="1" <?php checked( true, $hide_button ); ?> />
-			<?php _e( 'Disable the automatic output of the purchase button', 'edd' ); ?>
-		</label>
-	</p>
-<?php
+	return $new;
 }
-add_action( 'edd_meta_box_fields', 'edd_render_disable_button', 30 );
+add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_metabox_save_check_blank_rows' );
+add_filter( 'edd_metabox_save_edd_download_files', 'edd_metabox_save_check_blank_rows' );
 
 
 /**
