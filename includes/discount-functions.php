@@ -950,7 +950,7 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 		$html .= "</span>\n";
 	}
 
-	return apply_filters( 'edd_get_cart_discounts_html', $html, $discount, $rate, $remove_url );
+	return apply_filters( 'edd_get_cart_discounts_html', $html, $discounts, $rate, $remove_url );
 }
 
 
