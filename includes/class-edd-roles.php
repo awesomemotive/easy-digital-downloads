@@ -29,7 +29,7 @@ class EDD_Roles {
 
 
 	/**
-	 * Add new shop roles
+	 * Add new shop roles with default WP caps
 	 *
 	 * @since  1.4.4
 	 * @return void
@@ -74,7 +74,7 @@ class EDD_Roles {
 	}
 
 	/**
-	 * Add new capabilities
+	 * Add new shop-specific capabilities
 	 *
 	 * @since  1.4.4
 	 * @return void
