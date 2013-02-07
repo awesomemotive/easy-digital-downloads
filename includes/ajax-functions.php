@@ -140,7 +140,7 @@ function edd_ajax_apply_discount() {
 				$return = array(
 					'msg'    => 'valid',
 					'amount' => $amount,
-					'total'  => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ) ),
+					'total'  => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
 					'code'   => $_POST['code'],
 					'html'   => edd_get_cart_discounts_html( $discounts )
 				);
