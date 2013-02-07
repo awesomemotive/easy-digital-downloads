@@ -4,7 +4,7 @@
  *
  * @package    Easy Digital Downloads
  * @subpackage Email Template
- * @copyright  Copyright (c) 2012, Pippin Williamson
+ * @copyright  Copyright (c) 2013, Pippin Williamson
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since      1.0.8.2
  */
@@ -40,6 +40,8 @@ function edd_get_email_templates() {
  * @return string
  */
 function edd_email_template_tags( $message, $payment_data, $payment_id ) {
+	$has_tags = ( strpos($message, '{' ) !== false );
+	if ( ! $has_tags ) return $message;
 
 	$user_info = maybe_unserialize( $payment_data['user_info'] );
 
@@ -64,7 +66,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 
 	}
 
-	$file_urls      = '';
+	$file_urls     = '';
 	$download_list = '<ul>';
 	$downloads     = edd_get_payment_meta_downloads( $payment_id );
 	if ( $downloads ) {
@@ -87,7 +89,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 			if ( $files ) {
 				foreach ( $files as $filekey => $file ) {
 					$download_list .= '<li>';
-					$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $id );
+					$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $id, $price_id );
 					$download_list .= '<a href="' . esc_url( $file_url ) . '">' . $file['name'] . '</a>';
 
 					$download_list .= '</li>';
@@ -116,7 +118,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 	$price      = edd_currency_filter( edd_format_amount( $payment_data['amount'] ) );
 	$gateway    = edd_get_gateway_checkout_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
 	$receipt_id = $payment_data['key'];
-
+	
 	$message = str_replace( '{name}', $name, $message );
 	$message = str_replace( '{fullname}', $fullname, $message );
 	$message = str_replace( '{username}', $username, $message );
@@ -129,6 +131,8 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 	$message = str_replace( '{price}', $price, $message );
 	$message = str_replace( '{payment_method}', $gateway, $message );
 	$message = str_replace( '{receipt_id}', $receipt_id, $message );
+	$message = str_replace( '{payment_id}', $payment_id, $message );
+
 	$message = apply_filters( 'edd_email_template_tags', $message, $payment_data, $payment_id );
 
 	return $message;
@@ -157,23 +161,34 @@ function edd_email_preview_templage_tags( $message ) {
 
 	$file_urls = esc_html( trailingslashit( get_site_url() ) . 'test.zip?test=key&key=123' );
 
-	$price = edd_currency_filter( edd_format_amount( 9.50 ) );
+	$price = edd_currency_filter( edd_format_amount( 10.50 ) );
 
 	$gateway = 'PayPal';
 
 	$receipt_id = strtolower( md5( uniqid() ) );
 
 	$notes = __( 'These are some sample notes added to a product.', 'edd' );
+	
+	$tax = edd_currency_filter( edd_format_amount( 1.00 ) );
+	
+	$sub_total = edd_currency_filter( edd_format_amount( 9.50 ) );
+	
+	$payment_id = rand(1, 100);
 
-	$message = str_replace( '{name}', 'John Doe', $message );
 	$message = str_replace( '{download_list}', $download_list, $message );
 	$message = str_replace( '{file_urls}', $file_urls, $message );
+	$message = str_replace( '{name}', 'John', $message );
+	$message = str_replace( '{fullname}', 'John Doe', $message );
+	$message = str_replace( '{username}', 'john-doe', $message );
 	$message = str_replace( '{date}', date( get_option( 'date_format' ), time() ), $message );
-	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
+	$message = str_replace( '{subtotal}', $sub_total, $message );
+	$message = str_replace( '{tax}', $tax, $message );
 	$message = str_replace( '{price}', $price, $message );
-	$message = str_replace( '{payment_method}', $gateway, $message );
 	$message = str_replace( '{receipt_id}', $receipt_id, $message );
+	$message = str_replace( '{payment_method}', $gateway, $message );	
+	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
 	$message = str_replace( '{product_notes}', $notes, $message );
+	$message = str_replace( '{payment_id}', $payment_id, $message );
 
 	return wpautop( $message );
 
@@ -303,6 +318,7 @@ function edd_apply_email_template( $body, $payment_id, $payment_data ) {
 	global $edd_options;
 
 	$template_name = isset( $edd_options['email_template'] ) ? $edd_options['email_template'] : 'default';
+	$template_name = apply_filters( 'edd_email_template', $template_name, $payment_id );
 
 	if ( $template_name == 'none' ) {
 		if ( is_admin() )

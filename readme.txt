@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.5.1
 
-Stable Tag: 1.4.2
+Stable Tag: 1.4.3.1
 License: GNU Version 2 or Any Later Version
 
 
@@ -170,6 +170,36 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.4.3.1 =
+
+* Fix: Securtity Check Failed message when logging in during purchase
+* Fix: Added missing alt tag to fix HTML validation
+* New: Added new edd_show_has_purchased_item_message filter
+
+= 1.4.3 =
+
+* New: PayPal refunds are now automatically detected
+* New: Removed jQuery Validation option
+* New: Added {payment_id} tag to email receipt
+* New: Added $price_id parameter to all file download links
+* New: Added new payment status transition notes for recording when a payment changes statuses
+* New: Added the ability to set a payment status to "revoked"
+* New: Improved System Info to better help support technicians
+* New: Added improved compatibility with the popular Responsive theme
+* New: Added dynamic-cached-content tags for WP Super Cache
+* New: Added product notes to the purchase confirmation
+* New: Added an uninstall method
+* Fix: Deleting pending purchase deducts earnings / sale count
+* Fix: Undefined notice for a currency option
+* Fix: Nonce field added to the delete discount links
+* Fix: Fixed an issue with duplicate products getting added when buying variable priced products
+* Fix: Fixed a bug with retrieving the purchase receipt on the confirmation page
+* Fix: Corrected some post type labels
+
+= 1.4.2.1 =
+
+* Fix: Purchase receipts were getting sent when payments were marked as "failed"
 
 = 1.4.2 =
 

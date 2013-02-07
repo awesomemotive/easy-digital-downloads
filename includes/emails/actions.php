@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Email Actions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0.8.2
 */
@@ -24,14 +24,17 @@ if ( !defined( 'ABSPATH' ) ) exit;
 */
 
 function edd_trigger_purchase_receipt( $payment_id, $new_status, $old_status ) {
-
-	// Check if the payment was already set to complete
-	if( $old_status == 'publish' || $old_status == 'complete')
+	// Make sure we don't send a purchase receipt while editing a payment
+	if ( isset( $_POST['edd-action'] ) && $_POST['edd-action'] == 'edit_payment' )
 		return;
 
-	// Make sure the purchase receipt is only sent if the new status is complete -- No idea why, but this returns even when $new_status is 'publish'
-	//if( $new_status != 'publish' && $new_status != 'complete' );
-		//return;
+	// Check if the payment was already set to complete
+	if( $old_status == 'publish' || $old_status == 'complete' )
+		return; // Make sure that payments are only completed once
+
+	// Make sure the receipt is only sent when new status is complete
+	if( $new_status != 'publish' && $new_status != 'complete' )
+		return;
 
 	// Send email with secure download link
 	edd_email_purchase_receipt( $payment_id );

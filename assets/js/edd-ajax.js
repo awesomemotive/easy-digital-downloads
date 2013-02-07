@@ -58,13 +58,14 @@ jQuery(document).ready(function ($) {
        // Show the ajax loader
         $('.edd-cart-ajax', container).show();
 
+        var form           = $this.parents('form').last()
 		var download       = $this.data('download-id');
         var variable_price = $this.data('variable-price');
 		var price_mode     = $this.data('price-mode');
 		var item_price_ids = [];
 
 		if( variable_price == 'yes' ) {
-			$('.edd_price_option_' + download + ':checked').each(function( index ) {
+			$('.edd_price_option_' + download + ':checked', form).each(function( index ) {
                 item_price_ids[ index ] = $(this).val();
             });
 		} else {
@@ -186,7 +187,6 @@ jQuery(document).ready(function ($) {
         $.post(edd_scripts.ajaxurl + '?payment-mode=' + payment_mode, { action: 'edd_load_gateway', edd_payment_mode: payment_mode },
             function(response){
                 jQuery('#edd_purchase_form_wrap').html(response);
-                edd_validate_checkout();
             }
         );
 

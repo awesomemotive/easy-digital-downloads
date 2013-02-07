@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Formatting functions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.2
 */
@@ -103,9 +103,9 @@ function edd_currency_filter( $price ) {
 	if( $position == 'before' ):
 		switch ( $currency ):
 			case "GBP" : return '&pound;' . $price; break;
+			case "BRL" : return 'R&#36;' . $price; break;
 			case "USD" :
 			case "AUD" :
-			case "BRL" :
 			case "CAD" :
 			case "HKD" :
 			case "MXN" :
@@ -121,6 +121,7 @@ function edd_currency_filter( $price ) {
 	else :
 		switch ( $currency ) :
 			case "GBP" : return $price . '&pound;'; break;
+			case "BRL" : return $price . 'R&#36;'; break;
 			case "USD" :
 			case "AUD" :
 			case "BRL" :
@@ -151,9 +152,15 @@ function edd_currency_filter( $price ) {
 function edd_currency_decimal_filter( $decimals = 2 ) {
 	global $edd_options;
 
-	switch( $edd_options['currency'] ) {
+	$currency = isset( $edd_options['currency'] ) ? $edd_options['currency'] : 'USD';
+
+	switch( $currency ) {
 
 		case 'RIAL' :
+			$decimals = 0;
+			break;
+
+		case 'JPY' :
 			$decimals = 0;
 			break;
 

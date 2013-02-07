@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Shortcodes
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -389,7 +389,8 @@ function edd_downloads_query( $atts, $content = null ) {
 	else:
 		$display = sprintf( _x( 'No %s found', 'download post type name', 'edd' ), edd_get_label_plural() );
 	endif;
-	return $display;
+
+	return apply_filters( 'downloads_shortcode', $display, $atts, $buy_button, $columns, $column_width, $downloads, $excerpt, $full_content, $price, $thumbnails, $query );
 }
 add_shortcode( 'downloads', 'edd_downloads_query' );
 
@@ -436,6 +437,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 		'discount'        => true,
 		'products'        => true,
 		'date'            => true,
+		'notes'           => true,
 		'payment_key'     => true,
 		'payment_method'  => true,
 		'payment_id'      => true
@@ -504,6 +506,7 @@ add_shortcode( 'edd_profile_editor', 'edd_profile_editor_shortcode' );
  * @since       1.4
 */
 function edd_process_profile_editor_updates( $data ) {
+
 	// Profile field change request
 	if ( empty( $_POST['edd_profile_editor_submit'] ) && !is_user_logged_in() )
 		return false;
