@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Metabox Functions
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -70,7 +70,6 @@ function edd_download_meta_box_save( $post_id) {
 	$fields = apply_filters( 'edd_metabox_fields_save', array(
 			'edd_price',
 			'_variable_pricing',
-			'_edd_price_options_mode',
 			'edd_variable_prices',
 			'edd_download_files',
 			'_edd_purchase_text',
@@ -126,24 +125,6 @@ function edd_sanitize_price_save( $price ) {
 add_filter( 'edd_metabox_save_edd_price', 'edd_sanitize_price_save' );
 
 
-/**
- * Sanitize the variable prices
- *
- * Ensures prices are correctly mapped to an array starting with an index of 0
- *
- * @access      private
- * @since       1.4.2
- * @return      float
- */
-
-function edd_sanitize_variable_prices_save( $prices ) {
-	// Make sure all prices are rekeyed starting at 0
-	$prices = array_values( $prices );
-	return $prices;
-}
-add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_sanitize_variable_prices_save' );
-
-
 /** Download Configuration *****************************************************************/
 
 /**
@@ -187,7 +168,6 @@ function edd_render_price_field( $post_id ) {
 	$price 				= edd_get_download_price( $post_id );
 	$variable_pricing 	= edd_has_variable_prices( $post_id );
 	$prices 			= edd_get_variable_prices( $post_id );
-	$single_option_mode = edd_single_price_option_mode( $post_id );
 
 	$price_display    	= $variable_pricing ? ' style="display:none;"' : '';
 	$variable_display 	= $variable_pricing ? '' : ' style="display:none;"';
@@ -216,10 +196,7 @@ function edd_render_price_field( $post_id ) {
 
 	<div id="edd_variable_price_fields" class="edd_pricing_fields" <?php echo $variable_display; ?>>
 		<input type="hidden" id="edd_variable_prices" class="edd_variable_prices_name_field" value=""/>
-		<p>
-			<input type="checkbox" name="_edd_price_options_mode" id="edd_price_options_mode"<?php checked( 1, $single_option_mode ); ?> />
-			<label for="edd_price_options_mode"><?php _e( 'Enable multi option purchase mode. Leave unchecked to only permit a single price option to be purchased', 'edd' ); ?></label>
-		</p>
+
 		<div id="edd_price_fields" class="edd_meta_table_wrap">
 			<table class="widefat" width="100%" cellpadding="0" cellspacing="0">
 				<thead>
@@ -259,7 +236,7 @@ function edd_render_price_field( $post_id ) {
 				</tbody>
 			</table>
 		</div>
-	</div><!--end #edd_variable_price_fields-->
+	</div>
 <?php
 }
 add_action( 'edd_meta_box_fields', 'edd_render_price_field', 10 );
@@ -415,7 +392,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 			<input type="text" class="edd_repeatable_upload_field edd_upload_field" name="edd_download_files[<?php echo $key; ?>][file]" id="edd_download_files[<?php echo $key; ?>][file]" value="<?php echo $file; ?>" placeholder="<?php _e( 'http://', 'edd' ); ?>" style="width:100%" />
 
 			<span class="edd_upload_file">
-				<a href="#" data-uploader_title="" data-uploader_button_text="<?php _e( 'Insert', 'edd' ); ?>" class="edd_upload_image_button" onclick="return false;"><?php _e( 'Upload a File', 'edd' ); ?></a>
+				<a href="#" class="edd_upload_image_button" onclick="return false;"><?php _e( 'Upload a File', 'edd' ); ?></a>
 			</span>
 		</div>
 	</td>
@@ -468,27 +445,29 @@ add_action( 'edd_meta_box_fields', 'edd_render_download_limit_row', 20 );
 
 
 /**
- * Don't save blank rows.
- *
- * When saving, check the price and file table for blank rows.
- * If the name of the price or file is empty, that row should not
- * be saved.
+ * Render Disable Button
  *
  * @access      private
- * @since       1.2.2
- * @return      array $new New meta value with empty keys removed
+ * @since       1.0
+ * @return      void
  */
 
-function edd_metabox_save_check_blank_rows( $new ) {
-	foreach ( $new as $key => $value ) {
-		if ( empty( $value['name'] ) && empty( $value['amount'] ) && empty( $value['file'] ) )
-			unset( $new[ $key ] );
-	}
+function edd_render_disable_button( $post_id ) {
+	$hide_button = get_post_meta( $post_id, '_edd_hide_purchase_link', true ) ? true : false;
+?>
+	<p>
+		<strong><?php _e( 'Button Options:', 'edd' ); ?></strong>
+	</p>
 
-	return $new;
+	<p>
+		<label for="_edd_hide_purchase_link">
+			<input type="checkbox" name="_edd_hide_purchase_link" id="_edd_hide_purchase_link" value="1" <?php checked( true, $hide_button ); ?> />
+			<?php _e( 'Disable the automatic output of the purchase button', 'edd' ); ?>
+		</label>
+	</p>
+<?php
 }
-add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_metabox_save_check_blank_rows' );
-add_filter( 'edd_metabox_save_edd_download_files', 'edd_metabox_save_check_blank_rows' );
+add_action( 'edd_meta_box_fields', 'edd_render_disable_button', 30 );
 
 
 /**
@@ -505,7 +484,7 @@ add_filter( 'edd_metabox_save_edd_download_files', 'edd_metabox_save_check_blank
 
 function edd_metabox_save_check_blank_rows( $new ) {
 	foreach ( $new as $key => $value ) {
-		if ( ! isset( $value['name'] ) || $value['name'] == '' )
+		if ( empty( $value['name'] ) && empty( $value['amount'] ) && empty( $value['file'] ) )
 			unset( $new[ $key ] );
 	}
 
