@@ -67,7 +67,8 @@ function edd_setup_edd_post_types() {
 		'show_in_menu' 		=> true,
 		'query_var' 		=> true,
 		'rewrite' 			=> $rewrite,
-		'capability_type' 	=> 'post',
+		'capability_type' 	=> 'product',
+		'map_meta_cap'      => true,
 		'has_archive' 		=> $archives,
 		'hierarchical' 		=> false,
 		'supports' 			=> apply_filters('edd_download_supports', array( 'title', 'editor', 'thumbnail' ) ),
@@ -98,7 +99,8 @@ function edd_setup_edd_post_types() {
 		'public' 			=> false,
 		'query_var' 		=> false,
 		'rewrite' 			=> false,
-		'capability_type' 	=> 'post',
+		'capability_type' 	=> 'shop_payment',
+		'map_meta_cap'      => true,
 		'supports' 			=> array( 'title' ),
 		'can_export'		=> true
 	);
@@ -112,7 +114,8 @@ function edd_setup_edd_post_types() {
 		'query_var' 		=> false,
 		'rewrite' 			=> false,
 		'show_ui'           => false,
-		'capability_type' 	=> 'post',
+		'capability_type' 	=> 'shop_discount',
+		'map_meta_cap'      => true,
 		'supports' 			=> array( 'title' ),
 		'can_export'		=> true
 	);
