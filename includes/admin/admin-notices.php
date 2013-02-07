@@ -27,25 +27,23 @@ function edd_admin_messages() {
 	if ( 'download' != $typenow )
 		return;
 
-	$edd_access_level = edd_get_menu_access_level();
-
-	if ( isset( $_GET['edd-message'] ) && $_GET['edd-message'] == 'discount_updated' && current_user_can( $edd_access_level ) ) {
+	if ( isset( $_GET['edd-message'] ) && $_GET['edd-message'] == 'discount_updated' && current_user_can( 'manage_shop_discounts' ) ) {
 		 add_settings_error( 'edd-notices', 'edd-discount-updated', __( 'Discount code updated.', 'edd' ), 'updated' );
 	}
 
-	if ( isset( $_GET['edd-message'] ) && $_GET['edd-message'] == 'discount_update_failed' && current_user_can( $edd_access_level ) ) {
+	if ( isset( $_GET['edd-message'] ) && $_GET['edd-message'] == 'discount_update_failed' && current_user_can( 'manage_shop_discounts' ) ) {
 		add_settings_error( 'edd-notices', 'edd-discount-updated-fail', __( 'There was a problem updating your discount code, please try again.', 'edd' ), 'error' );
 	}
 
-	if ( isset( $_GET['edd-message'] ) && $_GET['edd-message'] == 'payment_deleted' && current_user_can( $edd_access_level ) ) {
+	if ( isset( $_GET['edd-message'] ) && $_GET['edd-message'] == 'payment_deleted' && current_user_can( 'view_shop_reports' ) ) {
 		add_settings_error( 'edd-notices', 'edd-payment-deleted', __( 'The payment has been deleted.', 'edd' ), 'updated' );
 	}
 
-	if ( isset( $_GET['edd-message'] ) && $_GET['edd-message'] == 'email_sent' && current_user_can( $edd_access_level ) ) {
+	if ( isset( $_GET['edd-message'] ) && $_GET['edd-message'] == 'email_sent' && current_user_can( 'view_shop_reports' ) ) {
 		add_settings_error( 'edd-notices', 'edd-payment-sent', __( 'The purchase receipt has been resent.', 'edd' ), 'updated' );
 	}
 
-	if ( isset( $_GET['page'] ) && $_GET['page'] == 'edd-payment-history' && current_user_can( $edd_access_level ) && edd_is_test_mode() ) {
+	if ( isset( $_GET['page'] ) && $_GET['page'] == 'edd-payment-history' && current_user_can( 'view_shop_reports' ) && edd_is_test_mode() ) {
 		add_settings_error( 'edd-notices', 'edd-payment-sent', sprintf( __( 'Note: Test Mode is enabled, only test payments are shown below. %sSettings%s.', 'edd' ), '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-settings' ) . '">', '</a>' ), 'updated' );
 	}
 
