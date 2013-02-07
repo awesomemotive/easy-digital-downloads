@@ -53,6 +53,7 @@ Ajax Enabled:             <?php echo edd_is_ajax_enabled() ? "Yes\n" : "No\n"; ?
 jQuery Validation:        <?php echo isset( $edd_options['jquery_validation'] ) ? "Yes\n" : "No\n"; ?>
 Guest Checkout Enabled:   <?php echo edd_no_guest_checkout() ? "No\n" : "Yes\n"; ?>
 
+Checkout:                 <?php echo ! empty( $edd_options['purchase_page'] ) ? "Valid\n" : "Invalid\n"; ?>
 
 Taxes Enabled:            <?php echo edd_use_taxes() ? "Yes\n" : "No\n"; ?>
 Local Taxes Only:         <?php echo edd_local_taxes_only() ? "Yes\n" : "No\n"; ?>
