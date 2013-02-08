@@ -72,7 +72,7 @@ jQuery(document).ready(function ($) {
             item_price_ids[0] = download;
         }
 
-        var action = $this.data('action'),
+        var action = $this.data('action');
         var data = $(form).serialize() + '&action=' + action + '&price_ids=' + item_price_ids + '&nonce=' + edd_scripts.ajax_nonce;
 
         $.post(edd_scripts.ajaxurl, data, function (cart_item_response) {
