@@ -72,8 +72,10 @@ function edd_render_download_columns( $column_name, $post_id ) {
 				echo get_the_term_list( $post_id, 'download_tag', '', ', ', '');
 				break;
 			case 'price':
-				echo edd_price( $post_id, false);
-				if ( !edd_has_variable_prices( $post_id) ) {
+				if ( edd_has_variable_prices( $post_id) ) {
+					echo edd_price_range( $post_id );
+				} else {
+					echo edd_price( $post_id, false);
 					echo '<input type="hidden" class="downloadprice-' . $post_id . '" value="' . edd_get_download_price( $post_id) . '" />';
 				}
 				break;
