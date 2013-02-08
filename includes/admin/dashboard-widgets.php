@@ -216,6 +216,6 @@ function edd_dashboard_sales_widget() {
 				</tbody>
 			</table>
 		</div>
+		<?php } // End if ?>
 	</div>
-	<?php } // End if
-}
+<?php }
