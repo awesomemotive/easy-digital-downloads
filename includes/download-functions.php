@@ -280,6 +280,30 @@ function edd_get_highest_price_option( $download_id = 0 ) {
 
 
 /**
+ * Get the price range, low to high
+ *
+ * Retrieves a price from from low to high of a variable priced download
+ *
+ * @access      public
+ * @since       1.4.4
+ * @param       int $download_id - the ID of the download
+ * @return      string - A fully formatted price range
+*/
+
+function edd_price_range( $download_id = 0 ) {
+
+	$low   = edd_get_lowest_price_option( $download_id );
+	$high  = edd_get_highest_price_option( $download_id );
+	$range = '<span class="edd_price_range_low">' . edd_currency_filter( $low ) . '</span>';
+	$range .= '<span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span>';
+	$range .= '<span class="edd_price_range_high">' . edd_currency_filter( $high ) . '</span>';
+
+	return apply_filters( 'edd_price_range', $range, $download_id, $low, $high );
+
+}
+
+
+/**
  * Checks to see if multiple price options can be purchased at once
  *
  * @access      public
