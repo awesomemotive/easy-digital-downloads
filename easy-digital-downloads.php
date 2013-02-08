@@ -53,6 +53,13 @@ final class Easy_Digital_Downloads {
 
 
 	/**
+	 * EDD cart fees object
+	 * @since x.x
+	 */
+	private $fees;
+
+
+	/**
 	 * Main Easy_Digital_Downloads Instance
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
@@ -73,6 +80,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->includes();
 			self::$instance->load_textdomain();
 			self::$instance->roles = new EDD_Roles();
+			self::$instance->cart_fees = new EDD_Fees();
 		}
 		return self::$instance;
 	}
