@@ -239,6 +239,47 @@ function edd_get_lowest_price_option( $download_id = 0 ) {
 
 
 /**
+ * Get highest price option
+ *
+ * Retrieves most expensive price option of a variable priced download
+ *
+ * @access      public
+ * @since       1.4.4
+ * @param       int $download_id - the ID of the download
+ * @return      float - the amount of the highest price
+*/
+
+function edd_get_highest_price_option( $download_id = 0 ) {
+
+	if( empty( $download_id ) )
+		$download_id = get_the_ID();
+
+	if( ! edd_has_variable_prices( $download_id ) )
+		return edd_get_download_price( $download_id );
+
+	$prices = edd_get_variable_prices( $download_id );
+
+	$high = 0.00;
+
+	if( ! empty( $prices ) ) {
+
+		$max = 0;
+
+		foreach( $prices as $key => $price ) {
+
+			if( $prices[ $max ]['amount'] < $price['amount'] )
+				$max = $key;
+
+		}
+
+		$high = $prices[ $max ]['amount'];
+	}
+
+	return $high;
+}
+
+
+/**
  * Checks to see if multiple price options can be purchased at once
  *
  * @access      public
