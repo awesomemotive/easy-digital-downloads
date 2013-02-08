@@ -50,7 +50,8 @@ jQuery(document).ready(function ($) {
 
 				var row   = $(this).parent().parent( 'tr' ),
 					count = row.parent().find( 'tr' ).length - 1,
-					type  = $(this).data('type');
+					type  = $(this).data('type'),
+					repeatable = 'tr.edd_repeatable_' + type + 's';
 
 				if( count > 1 ) {
 					$( 'input, select', row ).val( '' );
@@ -68,6 +69,16 @@ jQuery(document).ready(function ($) {
 							break;
 					}
 				}
+
+				/* re-index after deleting */
+			    $(repeatable).each( function( rowIndex ) {
+			        $(this).find( 'input, select' ).each(function() {
+			        	var name = $( this ).attr( 'name' );
+			        	name = name.replace( /\[(\d+)\]/, '[' + rowIndex+ ']');
+			        	$( this ).attr( 'name', name ).attr( 'id', name );
+			    	});
+			    });
+
 			});
 		},
 
