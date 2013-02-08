@@ -226,6 +226,9 @@ function edd_get_lowest_price_option( $download_id = 0 ) {
 
 		foreach( $prices as $key => $price ) {
 
+			if( empty( $price['amount'] ) )
+				continue;
+
 			if( $prices[ $min ]['amount'] > $price['amount'] )
 				$min = $key;
 
@@ -266,6 +269,9 @@ function edd_get_highest_price_option( $download_id = 0 ) {
 		$max = 0;
 
 		foreach( $prices as $key => $price ) {
+
+			if( empty( $price['amount'] ) )
+				continue;
 
 			if( $prices[ $max ]['amount'] < $price['amount'] )
 				$max = $key;
