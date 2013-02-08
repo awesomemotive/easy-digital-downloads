@@ -336,6 +336,10 @@ function edd_get_cart_subtotal() {
 		}
 
 	}
+
+	// Add any arbitrary fees that have been added to the cart
+	$amount += EDD()->fees->total();
+
 	return apply_filters( 'edd_get_cart_subtotal', $amount );
 }
 
