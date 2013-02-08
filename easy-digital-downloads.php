@@ -56,7 +56,7 @@ final class Easy_Digital_Downloads {
 	 * EDD cart fees object
 	 * @since x.x
 	 */
-	private $fees;
+	public $fees;
 
 
 	/**
@@ -80,7 +80,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->includes();
 			self::$instance->load_textdomain();
 			self::$instance->roles = new EDD_Roles();
-			self::$instance->cart_fees = new EDD_Fees();
+			self::$instance->fees = new EDD_Fees();
 		}
 		return self::$instance;
 	}
@@ -142,6 +142,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-roles.php';
 		require_once EDD_PLUGIN_DIR . 'includes/formatting.php';
