@@ -145,6 +145,20 @@ jQuery(document).ready(function ($) {
 						multiple: true  // Set to true to allow multiple files to be selected
 					});
 
+					file_frame.on( 'menu:render:default', function(view) {
+				        // Store our views in an object.
+				        var views = {};
+
+				        // Unset default menu items
+				        view.unset('library-separator');
+				        view.unset('gallery');
+				        view.unset('featured-image');
+				        view.unset('embed');
+
+				        // Initialize the views in our view object.
+				        view.set(views);
+				    });
+
 					// When an image is selected, run a callback.
 					file_frame.on( 'insert', function() {
 
