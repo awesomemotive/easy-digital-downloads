@@ -153,7 +153,8 @@ function edd_load_admin_scripts( $hook ) {
         'one_file_min' 		=> __( 'You must have at least one file', 'edd' ),
         'one_field_min'		=> __( 'You must have at least one field', 'edd' ),
         'currency_sign'		=> edd_currency_filter(''),
-        'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before'
+        'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
+        'new_media_ui'       => apply_filters( 'edd_use_35_media_ui', 1 )
     ));
 	wp_enqueue_style( 'thickbox' );
 

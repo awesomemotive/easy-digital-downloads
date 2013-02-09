@@ -83,7 +83,7 @@ jQuery(document).ready(function ($) {
 		},
 
 		files : function() {
-			if(typeof wp == "undefined"){
+			if( typeof wp == "undefined" || edd_vars.new_media_ui != '1' ){
 				//Old Thickbox uploader
 				if ( $( '.edd_upload_image_button' ).length > 0 ) {
 					window.formfield = '';
