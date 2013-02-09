@@ -1,4 +1,5 @@
 <?php global $post; ?>
+<?php EDD()->fees->add_fee( '15.75', 'Some Fee amount' ); ?>
 <table id="edd_checkout_cart" <?php if ( edd_is_ajax_enabled() ) { echo 'class="ajaxed"'; } ?>>
 	<thead>
 		<tr class="edd_cart_header_row">
