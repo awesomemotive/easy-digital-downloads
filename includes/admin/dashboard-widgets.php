@@ -149,7 +149,7 @@ function edd_dashboard_sales_widget() {
 												if( isset( $cart_items[ $key ]['item_number'])) {
 													$price_options = $cart_items[ $key ]['item_number']['options'];
 													if( isset( $price_options['price_id'] ) ) {
-														echo edd_get_price_option_name( $id, $price_options['price_id'] );
+														echo edd_get_price_option_name( $id, $price_options['price_id'], $payment->ID);
 														echo ' - ';
 													}
 												}
