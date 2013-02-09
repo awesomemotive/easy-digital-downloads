@@ -142,3 +142,35 @@ class EDD_Fees {
 
 
 }
+
+
+/**
+ * Check if cart has fees applied
+ *
+ * Just a simple wrapper function for EDD_Fees::has_fees()
+ *
+ * @access      public
+ * @since       1.5
+ *
+ * @return      bool
+ */
+
+function edd_cart_has_fees() {
+	return EDD()->fees->has_fees();
+}
+
+
+/**
+ * Get cart fees
+ *
+ * Just a simple wrapper function for EDD_Fees::get_fees()
+ *
+ * @access      public
+ * @since       1.5
+ *
+ * @return      array
+ */
+
+function edd_get_cart_fees() {
+	return EDD()->fees->get_fees();
+}
