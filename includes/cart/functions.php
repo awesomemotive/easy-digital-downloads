@@ -337,18 +337,66 @@ function edd_get_cart_subtotal() {
 
 	}
 
-	// Add any arbitrary fees that have been added to the cart
-	$amount += EDD()->fees->total();
-
 	return apply_filters( 'edd_get_cart_subtotal', $amount );
 }
 
 
 function test_discount() {
-	if( current_user_can( 'manage_options' ) )
-		EDD()->fees->add_fee( '10.5', 'Master User' );
+	if( current_user_can( 'manage_options' ) ) {
+		$amount = edd_get_cart_subtotal() * 0.20;
+		EDD()->fees->add_fee( $amount, 'Master User' );
+	}
 }
-add_action( 'wp', 'test_discount' );
+add_action( 'init', 'test_discount' );
+
+
+/**
+ * Check if cart has fees applied
+ *
+ * Just a simple wrapper function for EDD_Fees::has_fees()
+ *
+ * @access      public
+ * @since       1.5
+ *
+ * @return      bool
+ */
+
+function edd_cart_has_fees() {
+	return EDD()->fees->has_fees();
+}
+
+
+/**
+ * Get cart fees
+ *
+ * Just a simple wrapper function for EDD_Fees::get_fees()
+ *
+ * @access      public
+ * @since       1.5
+ *
+ * @return      array
+ */
+
+function edd_get_cart_fees() {
+	return EDD()->fees->get_fees();
+}
+
+
+/**
+ * Get cart fee total
+ *
+ * Just a simple wrapper function for EDD_Fees::total()
+ *
+ * @access      public
+ * @since       1.5
+ *
+ * @return      float
+ */
+
+function edd_get_cart_fee_total() {
+	return EDD()->fees->total();
+}
+
 
 /**
  * Get Cart Amount
