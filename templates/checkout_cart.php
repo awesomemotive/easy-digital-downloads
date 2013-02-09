@@ -38,6 +38,16 @@
 					<?php do_action( 'edd_checkout_table_body_last', $item ); ?>
 				</tr>
 			<?php endforeach; ?>
+			<!-- Show any cart fees, both positive and negative fees -->
+			<?php if( edd_cart_has_fees() ) : ?>
+				<?php foreach( edd_get_cart_fees() as $fee ) : ?>
+					<tr class="edd_cart_fee">
+						<td class="edd_cart_fee_label"><span><?php esc_html_e( $fee['label'] ); ?></span></td>
+						<td class="edd_cart_fee_amount"><span><?php esc_html_e( edd_currency_filter( edd_format_amount( $fee['amount'] ) ) ); ?></span></td>
+						<td></td>
+					</tr>
+				<?php endforeach; ?>
+			<?php endif; ?>
 			<?php do_action( 'edd_cart_items_after' ); ?>
 		<?php else: ?>
 			<tr class="edd_cart_item">
