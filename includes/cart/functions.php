@@ -344,6 +344,12 @@ function edd_get_cart_subtotal() {
 }
 
 
+function test_discount() {
+	if( current_user_can( 'manage_options' ) )
+		EDD()->fees->add_fee( '10.5', 'Master User' );
+}
+add_action( 'wp', 'test_discount' );
+
 /**
  * Get Cart Amount
  *
