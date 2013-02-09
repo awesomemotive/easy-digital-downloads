@@ -121,8 +121,10 @@ class EDD_Fees {
 
 	public function record_fees( $payment_meta, $payment_data ) {
 
-		if( $this->has_fees() )
+		if( $this->has_fees() ) {
 			$payment_meta['fees'] = $this->get_fees();
+			$_SESSION['edd_cart_fees'] = null;
+		}
 
 		return $payment_meta;
 
