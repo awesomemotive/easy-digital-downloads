@@ -25,17 +25,6 @@ class EDD_Fees {
 
 
 	/**
-	 * Active fees
-	 *
-	 * @access      private
-	 * @since       1.5
-	 *
-	 */
-
-	private $active_fees = array();
-
-
-	/**
 	 * Get us started
 	 *
 	 * @access      private
@@ -44,7 +33,9 @@ class EDD_Fees {
 	 * @return      void
 	 */
 
-	function __construct() { /* Do nothing here (yet) */ }
+	function __construct() {
+		add_filter( 'edd_payment_meta', array( $this, 'record_fees' ), 10, 2 );
+	}
 
 
 	/**
@@ -57,7 +48,13 @@ class EDD_Fees {
 	 */
 
 	public function add_fee( $amount = '', $label = '' ) {
-		$this->active_fees[] = array( 'amount' => $amount, 'label' => $label );
+
+		if( ! $this->has_fees() )
+			$fees = array();
+
+		$fees[] = array( 'amount' => $amount, 'label' => $label );
+
+		$_SESSION['edd_cart_fees'] = $fees;
 	}
 
 
@@ -71,7 +68,7 @@ class EDD_Fees {
 	 */
 
 	public function has_fees() {
-		return ! empty( $this->active_fees );
+		return ! empty( $_SESSION['edd_cart_fees'] ) && is_array( $_SESSION['edd_cart_fees'] );
 	}
 
 
@@ -85,7 +82,7 @@ class EDD_Fees {
 	 */
 
 	public function get_fees() {
-		return $this->active_fees;
+		return $this->has_fees() ? $_SESSION['edd_cart_fees'] : false;
 	}
 
 
@@ -109,6 +106,26 @@ class EDD_Fees {
 			}
 		}
 		return $total;
+	}
+
+
+	/**
+	 * Stores the fees in the payment meta
+	 *
+	 * @access      public
+	 * @since       1.5
+	 * @param 		$payment_meta array The meta data to store with the payment
+	 * @param 		$payment_data array The info sent from process-purchase.php
+	 * @return      array
+	*/
+
+	public function record_fees( $payment_meta, $payment_data ) {
+
+		if( $this->has_fees() )
+			$payment_meta['fees'] = $this->get_fees();
+
+		return $payment_meta;
+
 	}
 
 
