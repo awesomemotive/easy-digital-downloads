@@ -114,33 +114,6 @@ class EDD_Fees {
 	}
 
 
-	/**
-	 * Shows fees on checkout
-	 *
-	 * @access      public
-	 * @since       1.5
-	 *
-	 * @return      void
-	 */
-
-	public function show_fees() {
-
-		$fees = $this->get_fees();
-
-		if( ! $this->has_fees() )
-			return;
-
-		foreach( $fees as $fee ) {
-			echo '<tr class="edd_cart_fee">';
-				echo '<td class="edd_cart_fee_label"><span>' . esc_html( $fee['label'] ) . '</span></td>';
-				echo '<td class="edd_cart_fee_amount"><span>' . esc_html( edd_currency_filter( edd_format_amount( $fee['amount'] ) ) ) . '</span></td>';
-				echo '<td></td>';
-			echo '</tr>';
-		}
-
-	}
-
-
 }
 
 
