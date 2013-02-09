@@ -9,7 +9,7 @@
  * @subpackage  Fees
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       x.x
+ * @since       1.5
 */
 
 
@@ -17,7 +17,7 @@
  * Fees Class
  *
  * @access      public
- * @since       x.x
+ * @since       1.5
  *
  */
 
@@ -28,7 +28,7 @@ class EDD_Fees {
 	 * Active fees
 	 *
 	 * @access      private
-	 * @since       x.x
+	 * @since       1.5
 	 *
 	 */
 
@@ -39,7 +39,7 @@ class EDD_Fees {
 	 * Get us started
 	 *
 	 * @access      private
-	 * @since       x.x
+	 * @since       1.5
 	 *
 	 * @return      void
 	 */
@@ -53,7 +53,7 @@ class EDD_Fees {
 	 * Add a new fee
 	 *
 	 * @access      public
-	 * @since       x.x
+	 * @since       1.5
 	 *
 	 * @return      void
 	 */
@@ -67,7 +67,7 @@ class EDD_Fees {
 	 * Check if any fees are present
 	 *
 	 * @access      public
-	 * @since       x.x
+	 * @since       1.5
 	 *
 	 * @return      void
 	 */
@@ -81,7 +81,7 @@ class EDD_Fees {
 	 * Retrieve all active fees
 	 *
 	 * @access      public
-	 * @since       x.x
+	 * @since       1.5
 	 *
 	 * @return      array
 	 */
@@ -97,7 +97,7 @@ class EDD_Fees {
 	 * Can be negative
 	 *
 	 * @access      public
-	 * @since       x.x
+	 * @since       1.5
 	 *
 	 * @return      float
 	 */
@@ -118,7 +118,7 @@ class EDD_Fees {
 	 * Shows fees on checkout
 	 *
 	 * @access      public
-	 * @since       x.x
+	 * @since       1.5
 	 *
 	 * @return      void
 	 */
