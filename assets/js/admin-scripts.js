@@ -91,7 +91,7 @@ jQuery(document).ready(function ($) {
 		},
 
 		files : function() {
-			if(typeof wp == "undefined"){
+			if( typeof wp == "undefined" || edd_vars.new_media_ui != '1' ){
 				//Old Thickbox uploader
 				if ( $( '.edd_upload_image_button' ).length > 0 ) {
 					window.formfield = '';
@@ -128,29 +128,49 @@ jQuery(document).ready(function ($) {
 				window.formfield = '';
 
 				$('body').on('click', '.edd_upload_image_button', function(e) {
+
 					e.preventDefault();
+
+					var button = $(this);
+
 					window.formfield = $(this).closest('.edd_repeatable_upload_wrapper');
 
 					// If the media frame already exists, reopen it.
 					if ( file_frame ) {
 						//file_frame.uploader.uploader.param( 'post_id', set_to_post_id );
 						file_frame.open();
-					  	return;
+					  return;
 					}
 
 					// Create the media frame.
 					file_frame = wp.media.frames.file_frame = wp.media({
-						title: $( this ).data( 'uploader_title' ),
+						frame: 'post',
+						state: 'insert',
+						title: button.data( 'uploader_title' ),
 						button: {
-							text: $( this ).data( 'uploader_button_text' ),
+							text: button.data( 'uploader_button_text' ),
 						},
 						multiple: true  // Set to true to allow multiple files to be selected
 					});
 
-					// When an image is selected, run a callback.
-					file_frame.on( 'select', function() {
+					file_frame.on( 'menu:render:default', function(view) {
+				        // Store our views in an object.
+				        var views = {};
 
-					var selection = file_frame.state().get('selection');
+				        // Unset default menu items
+				        view.unset('library-separator');
+				        view.unset('gallery');
+				        view.unset('featured-image');
+				        view.unset('embed');
+
+				        // Initialize the views in our view object.
+				        view.set(views);
+				    });
+
+					// When an image is selected, run a callback.
+					file_frame.on( 'insert', function() {
+
+						var selection = file_frame.state().get('selection');
 						selection.each( function( attachment, index ) {
 							attachment = attachment.toJSON();
 							if(index == 0){
