@@ -49,6 +49,7 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 				<?php foreach( $fees as $fee ) : ?>
 					<li>
 						<span class="edd_fee_label"><?php echo esc_html( $fee['label'] ); ?></span>
+						<span class="edd_fee_sep">&nbsp;&ndash;&nbsp;</span>
 						<span class="edd_fee_amount"><?php echo edd_currency_filter( edd_format_amount( $fee['amount'] ) ); ?></span>
 					</li>
 				<?php endforeach; ?>
