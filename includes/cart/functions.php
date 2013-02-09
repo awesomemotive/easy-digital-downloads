@@ -427,9 +427,10 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 function edd_get_cart_total( $discounts = false ) {
 
 	$subtotal = edd_get_cart_subtotal();
+	$fees     = edd_get_cart_fee_total();
 	$cart_tax = edd_get_cart_tax( $discounts );
 	$discount = edd_get_cart_discounted_amount( $discounts );
-	$total    = $subtotal + $cart_tax - $discount;
+	$total    = $subtotal + $fees + $cart_tax - $discount;
 
 	return (float) apply_filters( 'edd_get_cart_total', $total );
 
