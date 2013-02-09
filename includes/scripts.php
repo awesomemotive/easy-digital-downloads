@@ -144,6 +144,7 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_script( 'edd-admin-scripts', EDD_PLUGIN_URL . 'assets/js/admin-scripts.js', array( 'jquery' ), EDD_VERSION, false );
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
         'post_id' 			=> isset( $post->ID ) ? $post->ID : null,
+        'edd_version'       => EDD_VERSION,
         'add_new_download' 	=> __( 'Add New Download', 'edd' ), 									// Thickbox title
         'use_this_file' 	=> __( 'Use This File','edd' ), 										// "use this file" button
         'quick_edit_warning'=> __( 'Sorry, not available for variable priced products.', 'edd' ),
@@ -152,7 +153,8 @@ function edd_load_admin_scripts( $hook ) {
         'one_file_min' 		=> __( 'You must have at least one file', 'edd' ),
         'one_field_min'		=> __( 'You must have at least one field', 'edd' ),
         'currency_sign'		=> edd_currency_filter(''),
-        'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before'
+        'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
+        'new_media_ui'       => apply_filters( 'edd_use_35_media_ui', 1 )
     ));
 	wp_enqueue_style( 'thickbox' );
 
