@@ -196,6 +196,8 @@ function edd_render_price_field( $post_id ) {
 
 		<?php do_action( 'edd_price_field', $post_id ); ?>
 	</div>
+	
+	<?php apply_filters( 'edd_after_price_field', $post_id ); ?>
 
 	<div id="edd_variable_price_fields" class="edd_pricing_fields" <?php echo $variable_display; ?>>
 		<input type="hidden" id="edd_variable_prices" class="edd_variable_prices_name_field" value=""/>
