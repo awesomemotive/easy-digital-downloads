@@ -40,33 +40,33 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 			<td><strong><?php _e( 'Tax', 'edd' ); ?></strong></td>
 			<td><?php echo edd_payment_tax( $payment->ID ); ?></td>
 		</tr>
-			<?php endif; ?>
-	<tr>
-		<td><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
-		<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
-	</tr>
 		<?php endif; ?>
+		<tr>
+			<td><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
+			<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
+		</tr>
+	<?php endif; ?>
 
 	<?php if ( $edd_receipt_args['discount'] && $user['discount'] != 'none' ) : ?>
 	<tr>
 		<td><strong><?php _e( 'Discount', 'edd' ); ?>:</strong></td>
 		<td><?php echo $user['discount']; ?></td>
 	</tr>
-		<?php endif; ?>
+	<?php endif; ?>
 
 	<?php if ( $edd_receipt_args['payment_method'] ) : ?>
 	<tr>
 		<td><strong><?php _e( 'Payment Method', 'edd' ); ?>:</strong></td>
 		<td><?php echo edd_get_gateway_checkout_label( edd_get_payment_gateway( $payment->ID ) ); ?></td>
 	</tr>
-		<?php endif; ?>
+	<?php endif; ?>
 
 	<?php if ( $edd_receipt_args['payment_key'] ) : ?>
 	<tr>
 		<td><strong><?php _e( 'Payment Key', 'edd' ); ?>:</strong></td>
 		<td><?php echo get_post_meta( $payment->ID, '_edd_payment_purchase_key', true ); ?></td>
 	</tr>
-		<?php endif; ?>
+	<?php endif; ?>
 
 	<?php do_action( 'edd_payment_receipt_after', $payment, $edd_receipt_args ); ?>
 	</tbody>
