@@ -181,6 +181,7 @@ function edd_purchase_variable_pricing( $download_id ) {
 						);
 					endforeach;
 				endif;
+			apply_filters( 'edd_after_price_options_list', $download_id, $prices, $type );
 			?>
 		</ul>
 	</div><!--end .edd_price_options-->
