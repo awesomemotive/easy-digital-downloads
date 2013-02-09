@@ -144,6 +144,7 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_script( 'edd-admin-scripts', EDD_PLUGIN_URL . 'assets/js/admin-scripts.js', array( 'jquery' ), EDD_VERSION, false );
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
         'post_id' 			=> isset( $post->ID ) ? $post->ID : null,
+        'edd_version'       => EDD_VERSION,
         'add_new_download' 	=> __( 'Add New Download', 'edd' ), 									// Thickbox title
         'use_this_file' 	=> __( 'Use This File','edd' ), 										// "use this file" button
         'quick_edit_warning'=> __( 'Sorry, not available for variable priced products.', 'edd' ),
