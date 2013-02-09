@@ -164,3 +164,19 @@ function edd_cart_has_fees() {
 function edd_get_cart_fees() {
 	return EDD()->fees->get_fees();
 }
+
+
+/**
+ * Get cart fee total
+ *
+ * Just a simple wrapper function for EDD_Fees::total()
+ *
+ * @access      public
+ * @since       1.5
+ *
+ * @return      float
+ */
+
+function edd_get_cart_fee_total() {
+	return EDD()->fees->total();
+}
