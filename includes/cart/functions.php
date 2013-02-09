@@ -341,15 +341,6 @@ function edd_get_cart_subtotal() {
 }
 
 
-function test_discount() {
-	if( current_user_can( 'manage_options' ) ) {
-		$amount = edd_get_cart_subtotal() * 0.20;
-		EDD()->fees->add_fee( $amount, 'Master User' );
-	}
-}
-add_action( 'init', 'test_discount' );
-
-
 /**
  * Check if cart has fees applied
  *
