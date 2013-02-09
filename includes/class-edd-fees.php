@@ -44,9 +44,7 @@ class EDD_Fees {
 	 * @return      void
 	 */
 
-	function __construct() {
-		add_action( 'edd_cart_items_after', array( $this, 'show_fees' ) );
-	}
+	function __construct() { /* Do nothing here (yet) */ }
 
 
 	/**
