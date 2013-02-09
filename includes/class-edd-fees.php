@@ -105,7 +105,7 @@ class EDD_Fees {
 				$total += $fee['amount'];
 			}
 		}
-		return $total;
+		return edd_format_amount( $total );
 	}
 
 
