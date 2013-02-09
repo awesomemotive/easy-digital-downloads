@@ -52,7 +52,7 @@ class EDD_Fees {
 		if( ! $this->has_fees() )
 			$fees = array();
 
-		$fees[] = array( 'amount' => $amount, 'label' => $label );
+		$fees[ sanitize_key( $label ) ] = array( 'amount' => $amount, 'label' => $label );
 
 		$_SESSION['edd_cart_fees'] = $fees;
 	}
