@@ -255,7 +255,23 @@ function edd_reports_tab_export() {
 					<h3><span><?php _e('Export Customers in CSV', 'edd'); ?></span></h3>
 					<div class="inside">
 						<p><?php _e( 'Download a CSV of all customer emails. This export includes purchase numbers and amounts for each customer.', 'edd' ); ?></p>
-						<p><a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'email_export' ) ), 'edd_email_export' ); ?>"><?php _e( 'Generate CSV', 'edd' ) ; ?></a></p>
+						<p>
+							<form method="post">
+								<select name="edd_export_download">
+									<option value="0"><?php _e( 'All', 'edd' ); ?></option>
+									<?php
+									$downloads = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1 ) );
+									if( $downloads ) {
+										foreach( $downloads as $download ) {
+											echo '<option value="' . $download->ID . '">' . get_the_title( $download->ID ) . '</option>';
+										}
+									}
+									?>
+								</select>
+								<input type="hidden" name="edd-action" value="email_export"/>
+								<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
+							</form>
+						</p>
 					</div><!-- .inside -->
 				</div><!-- .postbox -->
 
