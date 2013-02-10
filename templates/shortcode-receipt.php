@@ -37,7 +37,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 						<?php echo edd_payment_subtotal( $payment->ID );
 
 						if ( $edd_options['checkout_include_tax'] == 'no' ) :
-							echo ' ' . __('(ex. tax)', 'edd')
+							echo ' ' . __('(ex. tax)', 'edd');
 						endif; ?>
 					</td>
 				</tr>
