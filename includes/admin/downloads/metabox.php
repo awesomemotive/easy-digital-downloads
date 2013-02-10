@@ -507,7 +507,7 @@ add_action( 'edd_meta_box_fields', 'edd_render_disable_button', 30 );
 
 function edd_metabox_save_check_blank_rows( $new ) {
 	foreach ( $new as $key => $value ) {
-		if ( ! isset( $value['name'] ) || $value['name'] == '' )
+		if ( empty( $value['name'] ) && empty( $value['amount'] ) && empty( $value['file'] ) )
 			unset( $new[ $key ] );
 	}
 
