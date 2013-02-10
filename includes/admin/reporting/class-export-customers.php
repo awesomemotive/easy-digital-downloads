@@ -25,6 +25,34 @@ class EDD_Customers_Export extends EDD_Export {
 
 
 	/**
+	 * Set the export headers
+	 *
+	 * @access      public
+	 * @since       1.4.4
+	 * @return      void
+	 */
+
+	public function headers() {
+
+		ignore_user_abort( true );
+
+		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) )
+			set_time_limit( 0 );
+
+		$extra = '';
+
+		if( ! empty( $_POST['edd_export_download'] ) ) {
+			$extra = sanitize_title( get_the_title( absint( $_POST['edd_export_download'] ) ) ) . '-';
+		}
+
+		nocache_headers();
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename=edd-export-' . $extra . $this->export_type . '-' . date( 'm-d-Y' ) . '.csv' );
+		header( "Expires: 0" );
+	}
+
+
+	/**
 	 * Set the CSV columns
 	 *
 	 * @access      public
