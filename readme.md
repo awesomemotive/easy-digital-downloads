@@ -13,7 +13,7 @@
 
 **Tested up to:** 3.5.1
 
-**Stable Tag:** 1.4.4
+**Stable Tag:** 1.4.4.1
 
 **License:** GNU Version 2 or Any Later Version
 
