@@ -163,20 +163,17 @@ function edd_calculate_tax( $amount, $sum = true ) {
 		$tax = $amount * $rate;
 	}
 
-	$tax = number_format( $tax, 2 );
-	$taxed_amount = $tax;
-
 	if ( $sum ) {
 
 		if ( $edd_options['prices_include_tax'] == 'yes' ) {
-			$taxed_amount = $amount - $tax;
+			$tax = $amount - $tax;
 		} else {
-			$taxed_amount = $amount + $tax;
+			$tax = $amount + $tax;
 		}
 
 	}
 
-	return apply_filters( 'edd_taxed_amount', $taxed_amount, $rate );
+	return apply_filters( 'edd_taxed_amount', $tax, $rate );
 }
 
 
