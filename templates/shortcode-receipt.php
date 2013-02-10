@@ -36,9 +36,11 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 					<td>
 						<?php echo edd_payment_subtotal( $payment->ID );
 
-						if ( $edd_options['checkout_include_tax'] == 'no' ) :
+						if ( edd_use_taxes() && ( edd_is_exclude_tax() && $edd_options['prices_include_tax'] == 'yes' ) ) {
 							echo ' ' . __('(ex. tax)', 'edd');
-						endif; ?>
+						} else if ( edd_use_taxes() && $edd_options['checkout_include_tax'] == 'yes' ) {
+							echo ' ' . __('(incl. tax)', 'edd');
+						} ?>
 					</td>
 				</tr>
 
@@ -56,7 +58,7 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 
 				echo edd_payment_amount( $payment->ID );
 
-				if ( $edd_options['checkout_include_tax'] == 'yes' ) :
+				if ( edd_use_taxes() && $edd_options['checkout_include_tax'] == 'yes' ) :
 					printf( ' ' . __('(includes %s tax)', 'edd'), edd_payment_tax( $payment->ID ) );
 				endif; ?>
 			</td>
@@ -99,7 +101,14 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 		<tfoot>
 			<tr>
 				<td><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
-				<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
+				<td><?php echo edd_payment_subtotal( $payment->ID );
+
+						if ( edd_use_taxes() && ( edd_is_exclude_tax() && $edd_options['prices_include_tax'] == 'yes' ) ) {
+							echo ' ' . __('(ex. tax)', 'edd');
+						} else if ( edd_use_taxes() && $edd_options['checkout_include_tax'] == 'yes' ) {
+							printf( ' ' . __('(includes %s tax)', 'edd'), edd_payment_tax( $payment->ID ) );
+						} ?>
+					</td>
 			</tr>
 		</tfoot>
 		<tbody>
