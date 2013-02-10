@@ -258,6 +258,7 @@ function edd_reports_tab_export() {
 						<p>
 							<form method="post">
 								<select name="edd_export_download">
+									<option value="0"><?php _e( 'All', 'edd' ); ?></option>
 									<?php
 									$downloads = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1 ) );
 									if( $downloads ) {
