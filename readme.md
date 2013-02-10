@@ -162,6 +162,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 ### 1.4.4.1 ###
 
+* Fix: Fixed an issue with the ajax add to cart introduced in 1.4.4
 * Fix: re-enabled the multi-option purchase mode removed by accident in 1.4.4
 
 ### 1.4.4 ###
