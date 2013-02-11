@@ -98,19 +98,6 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 			<th><?php _e( 'Name', 'edd' ); ?></th>
 			<th><?php _e( 'Price', 'edd' ); ?></th>
 		</thead>
-		<tfoot>
-			<tr>
-				<td><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
-				<td><?php echo edd_payment_subtotal( $payment->ID );
-
-						if ( edd_use_taxes() && ( edd_is_exclude_tax() && $edd_options['prices_include_tax'] == 'yes' ) ) {
-							echo ' ' . __('(ex. tax)', 'edd');
-						} else if ( edd_use_taxes() && $edd_options['checkout_include_tax'] == 'yes' ) {
-							printf( ' ' . __('(includes %s tax)', 'edd'), edd_payment_tax( $payment->ID ) );
-						} ?>
-					</td>
-			</tr>
-		</tfoot>
 		<tbody>
 			<?php foreach ( $cart as $key => $item ) : ?>
 			<tr>
@@ -125,11 +112,9 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 
 							foreach( $download_files as $filekey => $file ) :
 
-								$download_url = edd_get_download_file_url( $meta['key'], $meta['email'], $filekey, $item['id'] );
-					?>
+								$download_url = edd_get_download_file_url( $meta['key'], $meta['email'], $filekey, $item['id'] ); ?>
 								<li class="edd_download_file"><a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a></li>
-					<?php
-								do_action( 'edd_receipt_files', $filekey, $file, $item['id'], $payment->ID, $meta );
+								<?php do_action( 'edd_receipt_files', $filekey, $file, $item['id'], $payment->ID, $meta );
 
 							endforeach;
 
@@ -143,5 +128,18 @@ $user      = edd_get_payment_meta_user_info( $payment->ID );
 			</tr>
 			<?php endforeach; ?>
 		</tbody>
+		<tfoot>
+			<tr>
+				<td><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
+				<td><?php echo edd_payment_subtotal( $payment->ID );
+
+						if ( edd_use_taxes() && ( edd_is_exclude_tax() && $edd_options['prices_include_tax'] == 'yes' ) ) {
+							echo ' ' . __('(ex. tax)', 'edd');
+						} else if ( edd_use_taxes() && $edd_options['checkout_include_tax'] == 'yes' ) {
+							printf( ' ' . __('(includes %s tax)', 'edd'), edd_payment_tax( $payment->ID ) );
+						} ?>
+					</td>
+			</tr>
+		</tfoot>
 	</table>
 <?php endif; ?>
