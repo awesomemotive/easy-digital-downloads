@@ -118,6 +118,7 @@ jQuery(document).ready(function ($) {
 						} else {
 							window.edd_send_to_editor(html);
 						}
+						window.send_to_editor = window.edd_send_to_editor;
 						window.formfield = '';
 						window.imagefield = false;
 					}
