@@ -55,3 +55,10 @@ delete_option( 'edd_settings_emails' );
 delete_option( 'edd_settings_styles' );
 delete_option( 'edd_settings_taxes' );
 delete_option( 'edd_settings_misc' );
+
+
+/** Delete Role and Capabilities */
+$edd_roles = array( 'shop_manager', 'shop_accountant', 'shop_worker', 'shop_vendor' );
+foreach ( $edd_roles as $role ) {
+	remove_role( $role );
+}
