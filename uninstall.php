@@ -13,7 +13,7 @@
 // Exit if accessed directly
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
 
-global $wpdb, $edd_options;
+global $wpdb, $edd_options, $wp_roles;
 
 /** Delete all post type data */
 $edd_post_types = array( 'download', 'edd_payment', 'edd_discount', 'edd_log' );
@@ -58,8 +58,6 @@ delete_option( 'edd_settings_misc' );
 
 
 /** Delete Capabilities */
-global $wp_roles;
-
 if ( class_exists( 'WP_Roles' ) )
 	if ( ! isset( $wp_roles ) )
 		$wp_roles = new WP_Roles();
