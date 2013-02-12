@@ -57,12 +57,6 @@ delete_option( 'edd_settings_taxes' );
 delete_option( 'edd_settings_misc' );
 
 
-/** Delete Roles */
-$edd_roles = array( 'shop_manager', 'shop_accountant', 'shop_worker', 'shop_vendor' );
-foreach ( $edd_roles as $role ) {
-	remove_role( $role );
-}
-
 /** Delete Capabilities */
 global $wp_roles;
 
@@ -109,4 +103,11 @@ if ( is_object( $wp_roles ) ) {
 	$wp_roles->remove_cap( 'shop_vendor', 'publish_products' );
 	$wp_roles->remove_cap( 'shop_vendor', 'edit_published_products' );
 	$wp_roles->remove_cap( 'shop_vendor', 'upload_files' );
+}
+
+
+/** Delete Roles */
+$edd_roles = array( 'shop_manager', 'shop_accountant', 'shop_worker', 'shop_vendor' );
+foreach ( $edd_roles as $role ) {
+	remove_role( $role );
 }
