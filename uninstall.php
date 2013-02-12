@@ -57,8 +57,15 @@ delete_option( 'edd_settings_taxes' );
 delete_option( 'edd_settings_misc' );
 
 
-/** Delete Role and Capabilities */
+/** Delete Roles */
 $edd_roles = array( 'shop_manager', 'shop_accountant', 'shop_worker', 'shop_vendor' );
 foreach ( $edd_roles as $role ) {
 	remove_role( $role );
 }
+
+/** Delete Capabilities */
+global $wp_roles;
+
+if ( class_exists('WP_Roles') )
+	if ( ! isset( $wp_roles ) )
+		$wp_roles = new WP_Roles();
