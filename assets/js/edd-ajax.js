@@ -201,7 +201,7 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
 
         $.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout', function(data) {
-            if ( data == 'success' ) {
+            if ( $.trim(data) == 'success' ) {
                 $('.edd_errors').remove();
                 $('#edd_purchase_form').submit();
             } else {
