@@ -106,39 +106,39 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 	</tfoot>
 	<tbody>
 		<?php foreach ( $cart as $key => $item ) : ?>
-	<tr>
-		<td>
-			<div class="edd_purchase_receipt_product_name"><?php echo esc_html( $item['name'] ); ?></div>
-			<?php if ( $edd_receipt_args['notes'] ) : ?>
-			<div class="edd_purchase_receipt_product_notes"><?php echo edd_get_product_notes( $item['id'] ); ?></div>
-			<?php endif; ?>
-			<ul>
-				<?php
-				$price_id       = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
-				$download_files = edd_get_download_files( $item['id'], $price_id );
+		<tr>
+			<td>
+				<div class="edd_purchase_receipt_product_name"><?php echo esc_html( $item['name'] ); ?></div>
+				<?php if ( $edd_receipt_args['notes'] ) : ?>
+				<div class="edd_purchase_receipt_product_notes"><?php echo edd_get_product_notes( $item['id'] ); ?></div>
+				<?php endif; ?>
+				<ul>
+					<?php
+					$price_id       = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
+					$download_files = edd_get_download_files( $item['id'], $price_id );
 
-				if ( $download_files ) :
+					if ( $download_files && is_array( $download_files ) ) :
 
-					foreach ( $download_files as $filekey => $file ) :
+						foreach ( $download_files as $filekey => $file ) :
 
-						$download_url = edd_get_download_file_url( $meta['key'], $meta['email'], $filekey, $item['id'], $price_id );
-						?>
-						<li class="edd_download_file">
-							<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a>
-						</li>
-						<?php
-						do_action( 'edd_receipt_files', $filekey, $file, $item['id'], $payment->ID, $meta );
+							$download_url = edd_get_download_file_url( $meta['key'], $meta['email'], $filekey, $item['id'], $price_id );
+							?>
+							<li class="edd_download_file">
+								<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a>
+							</li>
+							<?php
+							do_action( 'edd_receipt_files', $filekey, $file, $item['id'], $payment->ID, $meta );
 
-					endforeach;
+						endforeach;
 
-				else :
-					echo '<li>' . __( 'No downloadable files found.', 'edd' ) . '</li>';
-				endif;
-				?>
-			</ul>
-		</td>
-		<td><?php echo edd_currency_filter( edd_format_amount( $item['price'] ) ); ?></td>
-	</tr>
+					else :
+						echo '<li>' . __( 'No downloadable files found.', 'edd' ) . '</li>';
+					endif;
+					?>
+				</ul>
+			</td>
+			<td><?php echo edd_currency_filter( edd_format_amount( $item['price'] ) ); ?></td>
+		</tr>
 		<?php endforeach; ?>
 	</tbody>
 </table>
