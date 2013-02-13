@@ -88,7 +88,7 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 	</tbody>
 </table>
 
-<?php if ( $edd_receipt_args['products'] ) : ?>
+<?php if ( $edd_receipt_args['products'] && $cart ) : ?>
 <h3><?php echo apply_filters( 'edd_payment_receipt_products_title', __( 'Products', 'edd' ) ); ?></h3>
 
 <table id="edd_purchase_receipt_products">
