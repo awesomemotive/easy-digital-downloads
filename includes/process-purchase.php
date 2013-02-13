@@ -285,12 +285,23 @@ function edd_purchase_form_validate_logged_in_user() {
 		// Get the logged in user data
 		$user_data = get_userdata( $user_ID );
 
+		// required form fields
+		$required_fields = array(
+			'user_first'
+		);
+
+		$required_fields = apply_filters( 'edd_purchase_form_required_fields', $required_fields );
+		
 		if( ! is_email( $_POST['edd_email'] ) ) {
 			edd_set_error( 'invalid_email', __( 'Please enter a valid email address.', 'edd' ) );
 		}
 
-		if ( empty( $_POST['edd_first'] ) ) {
-			edd_set_error( 'invalid_name', __( 'Please enter your first name.', 'edd' ) );
+		if( in_array( 'user_first', $required_fields ) && empty( $_POST['edd_first'] ) ) {
+			edd_set_error( 'invalid_first_name', __( 'Please enter your first name.', 'edd' ) );
+		}
+
+		if ( in_array( 'user_last', $required_fields ) && empty( $_POST['edd_last'] ) ) {
+			edd_set_error( 'invalid_last_name', __( 'Please enter your last name.', 'edd' ) );
 		}
 
 		// Verify data
