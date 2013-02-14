@@ -75,12 +75,21 @@ function edd_resend_purchase_receipt( $data ) {
 add_action( 'edd_email_links', 'edd_resend_purchase_receipt' );
 
 
+/**
+ * Trigger the sending of a test email receipt
+ *
+ * @access      private
+ * @since       1.5
+ * @return      void
+*/
+
 function edd_send_test_email( $data ) {
 
 	if( ! wp_verify_nonce( $data['_wpnonce'], 'edd-test-email' ) )
 		return;
 
-	
+	// Send a test email
+	edd_email_test_purchase_receipt();
 
 }
 add_action( 'edd_send_test_email', 'edd_send_test_email' );
