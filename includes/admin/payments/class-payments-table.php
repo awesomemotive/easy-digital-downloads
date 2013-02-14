@@ -303,7 +303,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 									$price_options = $cart_items[ $key ]['item_number']['options'];
 
 									if ( isset( $price_options['price_id'] ) ) {
-										echo edd_get_price_option_name( $id, $price_options['price_id'] );
+										echo edd_get_price_option_name( $id, $price_options['price_id'], $item['ID'] );
 										echo ' - ';
 									}
 								}
