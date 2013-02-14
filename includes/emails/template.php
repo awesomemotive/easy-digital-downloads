@@ -118,7 +118,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 	$price      = edd_currency_filter( edd_format_amount( $payment_data['amount'] ) );
 	$gateway    = edd_get_gateway_checkout_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
 	$receipt_id = $payment_data['key'];
-	
+
 	$message = str_replace( '{name}', $name, $message );
 	$message = str_replace( '{fullname}', $fullname, $message );
 	$message = str_replace( '{username}', $username, $message );
@@ -168,11 +168,11 @@ function edd_email_preview_templage_tags( $message ) {
 	$receipt_id = strtolower( md5( uniqid() ) );
 
 	$notes = __( 'These are some sample notes added to a product.', 'edd' );
-	
+
 	$tax = edd_currency_filter( edd_format_amount( 1.00 ) );
-	
+
 	$sub_total = edd_currency_filter( edd_format_amount( 9.50 ) );
-	
+
 	$payment_id = rand(1, 100);
 
 	$message = str_replace( '{download_list}', $download_list, $message );
@@ -185,7 +185,7 @@ function edd_email_preview_templage_tags( $message ) {
 	$message = str_replace( '{tax}', $tax, $message );
 	$message = str_replace( '{price}', $price, $message );
 	$message = str_replace( '{receipt_id}', $receipt_id, $message );
-	$message = str_replace( '{payment_method}', $gateway, $message );	
+	$message = str_replace( '{payment_method}', $gateway, $message );
 	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
 	$message = str_replace( '{product_notes}', $notes, $message );
 	$message = str_replace( '{payment_id}', $payment_id, $message );
@@ -230,7 +230,7 @@ function edd_email_template_preview() {
 <a href="#email-preview" id="open-email-preview" class="button-secondary" title="<?php _e( 'Purchase Receipt Preview', 'edd' ); ?> ">
 	<?php _e( 'Preview Purchase Receipt', 'edd' ); ?>
 </a>
-<a href="<?php echo wp_nonce_url( add_query_arg( array( 'edd_action' => 'send_test_email' ), admin_url() ), 'edd-test-email' ); ?>" title="<?php _e( 'This will send a demo purchase receipt to the emails listed below.', 'edd' ); ?>" class="button-secondary">
+<a href="<?php echo wp_nonce_url( add_query_arg( array( 'edd_action' => 'send_test_email' ) ), 'edd-test-email' ); ?>" title="<?php _e( 'This will send a demo purchase receipt to the emails listed below.', 'edd' ); ?>" class="button-secondary">
 	<?php _e( 'Send Test Email', 'edd' ); ?>
 </a>
 <div id="email-preview-wrap" style="display:none;">
@@ -275,7 +275,7 @@ function edd_get_email_body_header() {
  * @since 1.0.8.2
  * @return string
  */
-function edd_get_email_body_content( $payment_id, $payment_data ) {
+function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) {
 
 	global $edd_options;
 
