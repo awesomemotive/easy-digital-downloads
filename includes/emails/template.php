@@ -227,9 +227,12 @@ function edd_email_template_preview() {
 
 	$email_body = isset( $edd_options['purchase_receipt'] ) ? $edd_options['purchase_receipt'] : $default_email_body;
 	ob_start(); ?>
-<a href="#email-preview" id="open-email-preview" class="button-secondary"
-   title="<?php _e( 'Purchase Receipt Preview', 'edd' ); ?> "><?php _e( 'Preview Purchase Receipt', 'edd' ); ?></a>
-<a href="<?php echo wp_nonce_url( add_query_arg( array( 'edd_action' => 'send_test_email' ), admin_url() ), 'edd-test-email' ); ?>" class="button-secondary"><?php _e( 'Send Test Email', 'edd' ); ?></a>
+<a href="#email-preview" id="open-email-preview" class="button-secondary" title="<?php _e( 'Purchase Receipt Preview', 'edd' ); ?> ">
+	<?php _e( 'Preview Purchase Receipt', 'edd' ); ?>
+</a>
+<a href="<?php echo wp_nonce_url( add_query_arg( array( 'edd_action' => 'send_test_email' ), admin_url() ), 'edd-test-email' ); ?>" title="<?php _e( 'This will send a demo purchase receipt to the emails listed below.', 'edd' ); ?>" class="button-secondary">
+	<?php _e( 'Send Test Email', 'edd' ); ?>
+</a>
 <div id="email-preview-wrap" style="display:none;">
     <div id="email-preview">
 		<?php echo edd_apply_email_template( $email_body, null, null ); ?>
