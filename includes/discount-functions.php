@@ -451,6 +451,27 @@ function edd_get_discount_type( $code_id = null ) {
 
 
 /**
+ * Retrieve the discount product requirements
+ *
+ * @param int $code_id
+ *
+ * @access      public
+ * @since       1.5
+ * @return      array IDs of the required products
+ */
+
+function edd_get_discount_product_reqs( $code_id = null ) {
+
+	$product_reqs = get_post_meta( $code_id, '_edd_discount_product_reqs', true );
+	if( empty( $product_reqs ) || ! is_array( $product_reqs ) ) {
+		$product_reqs = array();
+	}
+
+	return (array) apply_filters( 'edd_get_discount_product_reqs', $product_reqs, $code_id );
+}
+
+
+/**
  * Is Discount Expired
  *
  * Checks whether a discount code is expired.
