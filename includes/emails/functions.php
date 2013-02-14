@@ -69,6 +69,47 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 
 
 /**
+ * Email Test Download Purchase Receipt
+ *
+ * Email the download link(s) and payment confirmation to the admin accounts for testing.
+ *
+ * @access      private
+ * @since       1.5
+ * @return      void
+*/
+
+function edd_email_test_purchase_receipt() {
+	global $edd_options;
+
+	$default_email_body = __( "Dear", "edd" ) . " {name},\n\n";
+	$default_email_body .= __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "edd" ) . "\n\n";
+	$default_email_body .= "{download_list}\n\n";
+	$default_email_body .= "{sitename}";
+
+	$email = isset( $edd_options['purchase_receipt'] ) ? $edd_options['purchase_receipt'] : $default_email_body;
+
+	$message = edd_get_email_body_header();
+	$message .= apply_filters( 'edd_purchase_receipt', edd_email_preview_templage_tags( $email ), 0, array() );
+	$message .= edd_get_email_body_footer();
+
+	$from_name = isset( $edd_options['from_name'] ) ? $edd_options['from_name'] : get_bloginfo('name');
+	$from_email = isset( $edd_options['from_email'] ) ? $edd_options['from_email'] : get_option('admin_email');
+
+	$subject = apply_filters( 'edd_purchase_subject', isset( $edd_options['purchase_subject'] )
+		? trim( $edd_options['purchase_subject'] )
+		: __('Purchase Receipt', 'edd'), $payment_id );
+
+	$headers = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
+	$headers .= "Reply-To: ". $from_email . "\r\n";
+	$headers .= "MIME-Version: 1.0\r\n";
+	$headers .= "Content-Type: text/html; charset=utf-8\r\n";
+
+	wp_mail( edd_get_admin_notice_emails(), $subject, $message, $headers, $attachments );
+
+}
+
+
+/**
  * Sends the admin sale notice
  *
  * @access      private
