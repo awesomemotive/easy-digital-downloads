@@ -33,7 +33,7 @@ function edd_change_downloads_upload_dir() {
 
 			// We don't want users snooping in the EDD root, so let's add htacess there, first
 			// Creating the directory if it doesn't already exist.
-			$rules = 'Options -Indexes';
+			$rules = apply_filters( 'edd_protected_directory_htaccess_rules', 'Options -Indexes' );
 			if ( !@file_get_contents( $wp_upload_dir['basedir'] . '/edd/.htaccess' ) ) {
 				wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd' );
 			}
@@ -94,7 +94,7 @@ function edd_create_protection_files() {
 		}
 
 		// Top level .htaccess file
-		$rules = 'Options -Indexes';
+		$rules = apply_filters( 'edd_protected_directory_htaccess_rules', 'Options -Indexes' );
 		if ( file_exists( $upload_path . '/.htaccess' ) ) {
 			$contents = @file_get_contents( $upload_path . '/.htaccess' );
 			if ( false === strpos( $contents, 'Options -Indexes' ) || ! $contents ) {
