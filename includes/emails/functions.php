@@ -146,7 +146,7 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 			$title = get_the_title( $id );
 			if ( isset( $download['options'] ) ) {
 				if ( isset( $download['options']['price_id'] ) ) {
-					$title .= ' - ' . edd_get_price_option_name( $id, $download['options']['price_id'] );
+					$title .= ' - ' . edd_get_price_option_name( $id, $download['options']['price_id'], $payment_id );
 				}
 			}
 			$download_list .= html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) . "\n";

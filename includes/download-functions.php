@@ -186,14 +186,14 @@ function edd_has_variable_prices( $download_id ) {
  * @return      string - the name of the price option
 */
 
-function edd_get_price_option_name( $download_id, $price_id ) {
+function edd_get_price_option_name( $download_id, $price_id, $payment_id = 0 ) {
 	$prices = edd_get_variable_prices( $download_id );
 	$price_name = '';
 	if( $prices && is_array( $prices ) ) {
 		if( isset( $prices[ $price_id ] ) )
 			$price_name = $prices[ $price_id ]['name'];
 	}
-	return $price_name;
+	return apply_filters( 'edd_get_price_option_name', $price_name, $download_id, $payment_id );
 }
 
 
