@@ -196,6 +196,8 @@ function edd_insert_payment( $payment_data = array() ) {
 
 		$payment_meta = array(
 			'amount'       => $payment_data['price'],
+			'subtotal'     => edd_get_cart_subtotal( false ),
+			'tax'          => edd_is_cart_taxed() ? edd_get_cart_tax() : 0,
 			'date'         => $payment_data['date'],
 			'email'        => $payment_data['user_email'],
 			'key'          => $payment_data['purchase_key'],
@@ -203,10 +205,8 @@ function edd_insert_payment( $payment_data = array() ) {
 			'downloads'    => serialize( $payment_data['downloads'] ),
 			'user_info'    => serialize( $payment_data['user_info'] ),
 			'cart_details' => serialize( $payment_data['cart_details'] ),
-			'user_id'      => $payment_data['user_info']['id']
+			'user_id'      => $payment_data['user_info']['id'],
 		);
-
-		// NOTE: tax info is added to meta in tax-functions.php with edd_record_taxed_amount()
 
 		$mode    = edd_is_test_mode() ? 'test' : 'live';
 		$gateway = isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : '';

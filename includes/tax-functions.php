@@ -176,29 +176,6 @@ function edd_calculate_tax( $amount, $sum = true ) {
 	return apply_filters( 'edd_taxed_amount', $tax, $rate );
 }
 
-
-/**
- * Stores the tax info in the payment meta
- *
- * @access      public
- * @since       1.3.3
- * @param 		$payment_meta array The meta data to store with the payment
- * @param 		$payment_data array The info sent from process-purchase.php
- * @return      array
-*/
-
-function edd_record_taxed_amount( $payment_meta, $payment_data ) {
-
-	if ( edd_is_cart_taxed() ) {
-		$payment_meta['tax'] = edd_get_cart_tax();
-	}
-
-	return $payment_meta;
-
-}
-add_filter( 'edd_payment_meta', 'edd_record_taxed_amount', 10, 2 );
-
-
 /**
  * Stores the tax info in the payment meta
  *
