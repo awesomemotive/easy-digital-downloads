@@ -452,14 +452,14 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	}
 
 	// No key found
-	if ( ! isset($purchase_key) )
+	if ( ! isset( $purchase_key ) )
 		return $edd_receipt_args[ 'error' ];
 
 	$edd_receipt_args[ 'id' ] = edd_get_purchase_id_by_key( $purchase_key );
 	$user = edd_get_payment_meta_user_info( $edd_receipt_args[ 'id' ] );
 
 	// Not the proper user
-	if ( $user[ 'id' ] != get_current_user_id() ) {
+	if ( is_user_logged_in() && $user[ 'id' ] != get_current_user_id() ) {
 		return $edd_receipt_args[ 'error' ];
 	}
 
