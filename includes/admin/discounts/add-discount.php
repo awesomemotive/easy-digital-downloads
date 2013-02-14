@@ -59,6 +59,24 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			</tr>
 			<tr class="form-field">
 				<th scope="row" valign="top">
+					<label for="edd-products"><?php printf( __( '%s Requirements', 'edd' ), edd_get_label_singular() ); ?></label>
+				</th>
+				<td>
+					<select multiple id="edd-products" name="products[]"/>
+						<?php
+						$downloads = get_posts( array( 'post_type' => 'download', 'no_paging' => 1 ) );
+						if( $downloads ) :
+							foreach( $downloads as $download ) :
+								echo '<option value="' . esc_attr( $download->ID ) . '">' . esc_html( get_the_title( $download->ID ) ) . '</option>';
+							endforeach;
+						endif;
+						?>
+					</select>
+					<p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'edd' ); ?></p>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
 					<label for="edd-start"><?php _e( 'Start date', 'edd' ); ?></label>
 				</th>
 				<td>
