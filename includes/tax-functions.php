@@ -189,21 +189,8 @@ function edd_calculate_tax( $amount, $sum = true ) {
 
 function edd_record_taxed_amount( $payment_meta, $payment_data ) {
 
-	if( ! edd_use_taxes() )
-		return $payment_meta;
-
-	if( edd_local_taxes_only() && isset( $_POST['edd_tax_opt_in'] ) ) {
-
-		// Calculate local taxes
-		$payment_meta['subtotal'] 	= edd_get_cart_amount( false );
-		$payment_meta['tax'] 		= edd_get_cart_tax();
-
-	} elseif( ! edd_local_taxes_only() ) {
-
-		// Calculate global taxes
-		$payment_meta['subtotal'] 	= edd_get_cart_amount( false );
-		$payment_meta['tax'] 		= edd_get_cart_tax();
-
+	if ( edd_is_cart_taxed() ) {
+		$payment_meta['tax'] = edd_get_cart_tax();
 	}
 
 	return $payment_meta;
