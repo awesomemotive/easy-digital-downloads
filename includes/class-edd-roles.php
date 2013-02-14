@@ -127,6 +127,7 @@ class EDD_Roles {
 			$wp_roles->add_cap( 'shop_vendor', 'publish_products' );
 			$wp_roles->add_cap( 'shop_vendor', 'edit_published_products' );
 			$wp_roles->add_cap( 'shop_vendor', 'upload_files' );
+			$wp_roles->add_cap( 'shop_vendor', 'assign_product_terms' );
 
 		}
 
