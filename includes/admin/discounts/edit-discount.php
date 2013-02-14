@@ -17,8 +17,9 @@ if ( ! isset( $_GET['discount'] ) || ! is_numeric( $_GET['discount'] ) ) {
 	wp_die( __( 'Something went wrong.', 'edd' ), __( 'Error', 'edd' ) );
 }
 
-$discount_id = absint( $_GET['discount'] );
-$discount    = edd_get_discount( $discount_id );
+$discount_id  = absint( $_GET['discount'] );
+$discount     = edd_get_discount( $discount_id );
+$product_reqs = edd_get_discount_product_reqs( $discount_id );
 ?>
 <h2><?php _e( 'Edit Discount', 'edd' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
 <form id="edd-edit-discount" action="" method="post">
@@ -62,6 +63,24 @@ $discount    = edd_get_discount( $discount_id );
 				<td>
 					<input type="text" id="edd-amount" name="amount" value="<?php echo esc_attr( edd_get_discount_amount( $discount_id ) ); ?>" style="width: 40px;"/>
 					<p class="description"><?php _e( 'The amount of this discount code.', 'edd' ); ?></p>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<label for="edd-products"><?php printf( __( '%s Requirements', 'edd' ), edd_get_label_singular() ); ?></label>
+				</th>
+				<td>
+					<select multiple id="edd-products" name="products[]"/>
+						<?php
+						$downloads = get_posts( array( 'post_type' => 'download', 'no_paging' => 1 ) );
+						if( $downloads ) :
+							foreach( $downloads as $download ) :
+								echo '<option value="' . esc_attr( $download->ID ) . '"' . selected( true, in_array( $download->ID, $product_reqs ), false ) . '>' . esc_html( get_the_title( $download->ID ) ) . '</option>';
+							endforeach;
+						endif;
+						?>
+					</select>
+					<p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'edd' ); ?></p>
 				</td>
 			</tr>
 			<tr class="form-field">
