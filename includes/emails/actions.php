@@ -73,3 +73,14 @@ function edd_resend_purchase_receipt( $data ) {
 	exit;
 }
 add_action( 'edd_email_links', 'edd_resend_purchase_receipt' );
+
+
+function edd_send_test_email( $data ) {
+
+	if( ! wp_verify_nonce( $data['_wpnonce'], 'edd-test-email' ) )
+		return;
+
+	
+
+}
+add_action( 'edd_send_test_email', 'edd_send_test_email' );
