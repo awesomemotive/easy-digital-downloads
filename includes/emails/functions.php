@@ -104,7 +104,7 @@ function edd_email_test_purchase_receipt() {
 	$headers .= "MIME-Version: 1.0\r\n";
 	$headers .= "Content-Type: text/html; charset=utf-8\r\n";
 
-	wp_mail( edd_get_admin_notice_emails(), $subject, $message, $headers, $attachments );
+	wp_mail( edd_get_admin_notice_emails(), $subject, $message, $headers );
 
 }
 
