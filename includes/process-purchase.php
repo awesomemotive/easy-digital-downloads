@@ -264,6 +264,23 @@ function edd_purchase_form_validate_agree_to_terms() {
 
 
 /**
+ * Purchase Form Required Fields
+ *
+ * @access      private
+ * @since       1.5
+ * @return      array
+*/
+function edd_purchase_form_required_fields() {
+	$required_fields = array(
+		'edd_first' => array(
+			'error_id' => 'invalid_first_name',
+			'error_message' => __( 'Please enter your first name.', 'edd' )
+		)
+	);
+	return apply_filters( 'edd_purchase_form_required_fields', $required_fields );
+}
+
+/**
  * Purchase Form Validate Logged In User
  *
  * @access      private
@@ -289,8 +306,11 @@ function edd_purchase_form_validate_logged_in_user() {
 			edd_set_error( 'invalid_email', __( 'Please enter a valid email address.', 'edd' ) );
 		}
 
-		if ( empty( $_POST['edd_first'] ) ) {
-			edd_set_error( 'invalid_name', __( 'Please enter your first name.', 'edd' ) );
+		// Loop through required fields and show error messages
+		foreach( edd_purchase_form_required_fields() as $field_name => $value ) {		
+			if( in_array( $value, edd_purchase_form_required_fields() ) && empty( $_POST[ $field_name ] ) ) {
+				edd_set_error( $value['error_id'], $value['error_message'] );
+			}
 		}
 
 		// Verify data
@@ -500,8 +520,11 @@ function edd_purchase_form_validate_guest_user() {
 		edd_set_error( 'email_empty', __( 'Enter an email', 'edd' ) );
 	}
 
-	if ( empty( $_POST['edd_first'] ) ) {
-		edd_set_error( 'invalid_name', __( 'Please enter your first name.', 'edd' ) );
+	// Loop through required fields and show error messages
+	foreach( edd_purchase_form_required_fields() as $field_name => $value ) {		
+		if( in_array( $value, edd_purchase_form_required_fields() ) && empty( $_POST[ $field_name ] ) ) {
+			edd_set_error( $value['error_id'], $value['error_message'] );
+		}
 	}
 
 	return $valid_user_data;
