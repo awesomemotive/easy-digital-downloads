@@ -30,7 +30,7 @@ if( $purchases ) :
 						$name           = get_the_title( $id );
 
 						if ( isset( $download['options']['price_id'] ) ) {
-							$name .= ' - ' . edd_get_price_option_name( $id, $download['options']['price_id'] );
+							$name .= ' - ' . edd_get_price_option_name( $id, $download['options']['price_id'], $post->ID );
 						}
 
 						do_action( 'edd_download_history_row_start', $post->ID, $id );
