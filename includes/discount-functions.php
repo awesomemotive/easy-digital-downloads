@@ -150,6 +150,7 @@ function edd_store_discount( $discount_details, $discount_id = null ) {
 			'expiration'  => isset( $discount_details['expiration'] ) ? $discount_details['expiration'] : '',
 			'type'        => isset( $discount_details['type'] )       ? $discount_details['type']       : '',
 			'min_price'   => isset( $discount_details['min_price'] )  ? $discount_details['min_price']  : '',
+			'product_reqs'=> isset( $discount_details['products'] )   ? $discount_details['products']   : array(),
 		);
 
 		foreach( $meta as $key => $value ) {
@@ -184,6 +185,7 @@ function edd_store_discount( $discount_details, $discount_id = null ) {
 			'expiration'  => isset( $discount_details['expiration'] ) ? $discount_details['expiration'] : '',
 			'type'        => isset( $discount_details['type'] )       ? $discount_details['type']       : '',
 			'min_price'   => isset( $discount_details['min_price'] )  ? $discount_details['min_price']  : '',
+			'product_reqs'=> isset( $discount_details['products'] )   ? $discount_details['products']   : array(),
 		);
 
 		foreach( $meta as $key => $value ) {
