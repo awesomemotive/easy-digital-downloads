@@ -592,6 +592,35 @@ function edd_discount_is_min_met( $code_id = null ) {
 
 
 /**
+ * Are product requirements met
+ *
+ * Checks to see if the required products are in the cart
+ *
+ * @param int $code_id
+ *
+ * @access      public
+ * @since       1.5
+ * @return      bool
+ */
+
+function edd_discount_product_reqs_met( $code_id = null ) {
+	$product_reqs = edd_get_discount_product_reqs( $code_id );
+	$cart_items   = edd_get_cart_contents();
+	$ret          = false;
+
+	if( is_array( $cart_items ) ) {
+		foreach( $cart_items as $item ) {
+			if( in_array( $imte['id'], $product_reqs ) ) {
+				$ret = true;
+				break;
+			}
+		}
+	}
+	return apply_filters( 'edd_is_discount_products_req_met', $ret, $code_id );
+}
+
+
+/**
  * Is Discount Used
  *
  * Checks to see if a user has already used a discount.
