@@ -713,7 +713,8 @@ function edd_is_discount_valid( $code = '', $user = '' ) {
 			edd_is_discount_started( $discount_id ) &&
 			!edd_is_discount_maxed_out( $discount_id ) &&
 			!edd_is_discount_used( $code, $user ) &&
-			edd_discount_is_min_met( $discount_id )
+			edd_discount_is_min_met( $discount_id ) &&
+			edd_discount_product_reqs_met( $discount_id )
 		) {
 			$return = true;
 		}
