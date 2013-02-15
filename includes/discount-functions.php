@@ -460,6 +460,21 @@ function edd_get_discount_product_reqs( $code_id = null ) {
 
 
 /**
+ * Retrieve the product condition
+ *
+ * @param int $code_id
+ *
+ * @access      public
+ * @since       1.5
+ * @return      string
+ */
+
+function edd_get_discount_product_condition( $code_id = 0 ) {
+	return get_post_meta( $code_id, '_edd_discount_product_condition', true );
+}
+
+
+/**
  * Is Discount Expired
  *
  * Checks whether a discount code is expired.
