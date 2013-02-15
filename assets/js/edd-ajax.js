@@ -202,7 +202,7 @@ jQuery(document).ready(function ($) {
         
         var complete_purchase_val = $(this).val();   
 		
-	$(this).val('Please Wait...');
+	$(this).val(edd_global_vars.purchase_loading);
 		
 	$(this).after('<img src="' + edd_scripts.ajax_loader + '" class="edd-cart-ajax" />');
 
