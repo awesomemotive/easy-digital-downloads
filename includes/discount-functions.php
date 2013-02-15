@@ -608,13 +608,15 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 	$cart_items   = edd_get_cart_contents();
 	$ret          = false;
 
-	if( is_array( $cart_items ) ) {
+	if( is_array( $cart_items ) && ! empty( $product_reqs ) ) {
 		foreach( $cart_items as $item ) {
-			if( in_array( $imte['id'], $product_reqs ) ) {
+			if( in_array( $item['id'], $product_reqs ) ) {
 				$ret = true;
 				break;
 			}
 		}
+	} else {
+		$ret = true; // No requirements set
 	}
 	return apply_filters( 'edd_is_discount_products_req_met', $ret, $code_id );
 }
