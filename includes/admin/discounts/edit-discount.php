@@ -20,6 +20,7 @@ if ( ! isset( $_GET['discount'] ) || ! is_numeric( $_GET['discount'] ) ) {
 $discount_id  = absint( $_GET['discount'] );
 $discount     = edd_get_discount( $discount_id );
 $product_reqs = edd_get_discount_product_reqs( $discount_id );
+$condition    = edd_get_discount_product_condition( $discount_id );
 ?>
 <h2><?php _e( 'Edit Discount', 'edd' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
 <form id="edd-edit-discount" action="" method="post">
@@ -81,6 +82,11 @@ $product_reqs = edd_get_discount_product_reqs( $discount_id );
 						?>
 					</select>
 					<p class="description"><?php printf( __( '%s this discount applies to.', 'edd' ), edd_get_label_plural() ); ?></p>
+					<label for="edd-product-condition"><?php _e( 'Condition', 'edd' ); ?></label>
+					<select id="edd-product-condition" name="product_condition">
+						<option value="all"<?php selected( 'all', $condition ); ?>><?php _e( 'All Selected Products', 'edd' ); ?></option>
+						<option value="any"<?php selected( 'any', $condition ); ?>><?php _e( 'Any Selected Product', 'edd' ); ?></option>
+					</select>
 				</td>
 			</tr>
 			<tr class="form-field">
