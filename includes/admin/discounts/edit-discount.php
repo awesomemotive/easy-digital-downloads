@@ -80,7 +80,7 @@ $product_reqs = edd_get_discount_product_reqs( $discount_id );
 						endif;
 						?>
 					</select>
-					<p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'edd' ); ?></p>
+					<p class="description"><?php printf( __( '%s this discount applies to.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>
 			</tr>
 			<tr class="form-field">
