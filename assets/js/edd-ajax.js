@@ -204,7 +204,7 @@ jQuery(document).ready(function ($) {
 		
 	$(this).val('Please Wait...');
 		
-	$(this).after('<img src="' + edd_scripts.ajax_loader + '" class="edd-purchase-submit-loader" />');
+	$(this).after('<img src="' + edd_scripts.ajax_loader + '" class="edd-cart-ajax" />');
 
         $.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout', function(data) {
             if ( $.trim(data) == 'success' ) {
