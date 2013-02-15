@@ -546,8 +546,8 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 		return -1;
 
 	$user_args = array(
-		'user_login'      => $user_data['user_login'],
-		'user_pass'       => $user_data['user_pass'],
+		'user_login'      => isset( $user_data['user_login'] ) ? $user_data['user_login'] : null,
+		'user_pass'       => isset( $user_data['user_pass'] ) ? $user_data['user_pass'] : null,
 		'user_email'      => $user_data['user_email'],
 		'first_name'      => $user_data['user_first'],
 		'last_name'       => $user_data['user_last'],
