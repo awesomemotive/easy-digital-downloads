@@ -130,7 +130,7 @@ function edd_process_paypal_purchase( $purchase_data, $is_ajax ) {
 
 		// Take care of those using Ajax
 		if ( $is_ajax ) {
-			echo "<script> window.location.replace(".$paypal_redirect.");</script>";
+			echo "<script> window.location.replace('".$paypal_redirect."');</script>";
 			exit;
 		}		
 
