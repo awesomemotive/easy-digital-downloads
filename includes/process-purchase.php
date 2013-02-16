@@ -50,11 +50,6 @@ function edd_process_purchase_form() {
 		}
 	}
 
-	if ( $is_ajax ) {
-		echo 'success';
-		exit;
-	}
-
 	// Setup user information
 	$user_info = array(
 		'id'         => $user['user_id'],
@@ -105,7 +100,7 @@ function edd_process_purchase_form() {
 	edd_set_purchase_session( $purchase_data );
 
 	// Send info to the gateway for payment processing
-	edd_send_to_gateway( $valid_data['gateway'], $purchase_data );
+	edd_send_to_gateway( $valid_data['gateway'], $purchase_data, $is_ajax );
 	exit;
 }
 add_action( 'edd_purchase', 'edd_process_purchase_form' );
