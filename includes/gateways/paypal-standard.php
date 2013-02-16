@@ -34,7 +34,7 @@ add_action( 'edd_paypal_cc_form', 'edd_paypal_remove_cc_form' );
  * @return      void
 */
 
-function edd_process_paypal_purchase( $purchase_data ) {
+function edd_process_paypal_purchase( $purchase_data, $is_ajax ) {
 
     global $edd_options;
 
@@ -128,13 +128,19 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		// Get rid of cart contents
 		edd_empty_cart();
 
+		// Take care of those using Ajax
+		if ( $is_ajax ) {
+			echo "<script> window.location.replace('".$paypal_redirect."');</script>";
+			exit;
+		}		
+
 		// Redirect to PayPal
 		wp_redirect( $paypal_redirect );
 		exit;
 	}
 
 }
-add_action( 'edd_gateway_paypal', 'edd_process_paypal_purchase' );
+add_action( 'edd_gateway_paypal', 'edd_process_paypal_purchase', 10 , 2 );
 
 
 

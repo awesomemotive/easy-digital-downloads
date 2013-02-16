@@ -128,9 +128,9 @@ function edd_get_gateway_checkout_label( $gateway ) {
  * @return      void
 */
 
-function edd_send_to_gateway( $gateway, $payment_data ) {
+function edd_send_to_gateway( $gateway, $payment_data, $is_ajax ) {
 	// $gateway must match the ID used when registering the gateway
-	do_action( 'edd_gateway_' . $gateway, $payment_data );
+	do_action( 'edd_gateway_' . $gateway, $payment_data, $is_ajax );
 }
 
 
