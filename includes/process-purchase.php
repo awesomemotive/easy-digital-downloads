@@ -895,7 +895,7 @@ function edd_send_to_success_page( $query_string = null ) {
 		$redirect .= $query_string;
 	
 	if( $is_ajax )
-		echo "<script> window.location.replace('".apply_filters('edd_success_page_redirect', $redirect, $_POST['edd-gateway'], $query_string)."');</script>";
+		echo "<script> window.location.replace(" . apply_filters('edd_success_page_redirect', $redirect, $_POST['edd-gateway'], $query_string) . ");</script>";
 		
 		
 	wp_redirect( apply_filters('edd_success_page_redirect', $redirect, $_POST['edd-gateway'], $query_string) );
@@ -929,7 +929,7 @@ function edd_send_back_to_checkout( $args = array() ) {
 	}
 	
 	if( $is_ajax )
-		echo "<script> window.location.replace('".apply_filters( 'edd_send_back_to_checkout', $redirect, $args )."');</script>";
+		echo "<script> window.location.replace(" . apply_filters( 'edd_send_back_to_checkout', $redirect, $args ) . ");</script>";
 
 
 	wp_redirect( apply_filters( 'edd_send_back_to_checkout', $redirect, $args ) );
