@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Login/Register
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -31,7 +31,7 @@ function edd_login_form( $redirect = '' ) {
 
 	if( !is_user_logged_in() ) { ?>
 		<?php
-		// show any error messages after form submission
+		// Show any error messages after form submission
 		edd_print_errors(); ?>
 
 		<form id="edd_login_form"  class="edd_form" action="" method="post">
@@ -88,7 +88,7 @@ function edd_process_login_form( $data ) {
 		} else {
 			edd_set_error( 'username_incorrect', __('The username you entered does not exist', 'edd') );
 		}
-		// check for errors and redirect if none present
+		// Check for errors and redirect if none present
 		$errors = edd_get_errors();
 		if( !$errors ) {
 			$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], $user_ID );
@@ -109,6 +109,10 @@ add_action( 'edd_user_login', 'edd_process_login_form' );
 */
 
 function edd_log_user_in( $user_id, $user_login, $user_pass ) {
+
+	if( $user_id < 1 )
+		return;
+
 	wp_set_auth_cookie( $user_id );
 	wp_set_current_user( $user_id, $user_login );
 	do_action( 'wp_login', $user_login );

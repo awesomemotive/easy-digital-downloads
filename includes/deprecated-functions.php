@@ -6,7 +6,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Deprecated Functions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -27,7 +27,9 @@ if ( !defined( 'ABSPATH' ) ) exit;
 
 function edd_count_payments( $mode, $user = null ) {
 
-	_edd_deprecated_function( __FUNCTION__, '1.2' );
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '1.2', null, $backtrace );
 
 	$payments = edd_get_payments( array(
 		'offset'  => 0,
@@ -64,7 +66,9 @@ function edd_count_payments( $mode, $user = null ) {
 
 function edd_get_download_sales_log( $download_id, $paginate = false, $number = 10, $offset = 0 ) {
 
-	_edd_deprecated_function( __FUNCTION__, '1.3.4' );
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '1.3.4', null, $backtrace );
 
 	$sales_log = get_post_meta( $download_id, '_edd_sales_log', true );
 
@@ -102,7 +106,9 @@ function edd_get_download_sales_log( $download_id, $paginate = false, $number = 
 
 function edd_get_file_download_log( $download_id, $paginate = false, $number = 10, $offset = 0 ) {
 
-	_edd_deprecated_function( __FUNCTION__, '1.3.4' );
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '1.3.4', null, $backtrace );
 
 	$download_log = get_post_meta( $download_id, '_edd_file_download_log', true );
 
@@ -137,7 +143,9 @@ function edd_get_file_download_log( $download_id, $paginate = false, $number = 1
 
 function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
 
-	_edd_deprecated_function( __FUNCTION__, '1.4', 'edd_get_payment_meta_downloads' );
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '1.4', 'edd_get_payment_meta_downloads', $backtrace );
 
 	if(is_null($payment_meta)) {
 		$payment_meta = edd_get_payment_meta( $payment_id );
@@ -146,4 +154,26 @@ function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
 	if($downloads)
 		return $downloads;
 	return false;
+}
+
+
+/**
+ * Get Menu Access Level
+ *
+ * Returns the access level required to access
+ * the downloads menu. Currently not changeable,
+ * but here for a future update.
+ *
+ * @access      public
+ * @since       1.0
+ * @deprecated  1.4.4
+ * @return      string
+*/
+
+function edd_get_menu_access_level() {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '1.4.4', 'current_user_can(\'manage_shop_settings\')', $backtrace );
+
+	return apply_filters( 'edd_menu_access_level', 'manage_options' );
 }

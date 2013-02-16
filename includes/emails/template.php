@@ -4,7 +4,7 @@
  *
  * @package    Easy Digital Downloads
  * @subpackage Email Template
- * @copyright  Copyright (c) 2012, Pippin Williamson
+ * @copyright  Copyright (c) 2013, Pippin Williamson
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since      1.0.8.2
  */
@@ -40,6 +40,8 @@ function edd_get_email_templates() {
  * @return string
  */
 function edd_email_template_tags( $message, $payment_data, $payment_id ) {
+	$has_tags = ( strpos($message, '{' ) !== false );
+	if ( ! $has_tags ) return $message;
 
 	$user_info = maybe_unserialize( $payment_data['user_info'] );
 
@@ -64,7 +66,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 
 	}
 
-	$file_urls      = '';
+	$file_urls     = '';
 	$download_list = '<ul>';
 	$downloads     = edd_get_payment_meta_downloads( $payment_id );
 	if ( $downloads ) {
@@ -87,7 +89,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 			if ( $files ) {
 				foreach ( $files as $filekey => $file ) {
 					$download_list .= '<li>';
-					$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $id );
+					$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $id, $price_id );
 					$download_list .= '<a href="' . esc_url( $file_url ) . '">' . $file['name'] . '</a>';
 
 					$download_list .= '</li>';
@@ -129,6 +131,8 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 	$message = str_replace( '{price}', $price, $message );
 	$message = str_replace( '{payment_method}', $gateway, $message );
 	$message = str_replace( '{receipt_id}', $receipt_id, $message );
+	$message = str_replace( '{payment_id}', $payment_id, $message );
+
 	$message = apply_filters( 'edd_email_template_tags', $message, $payment_data, $payment_id );
 
 	return $message;
@@ -157,7 +161,7 @@ function edd_email_preview_templage_tags( $message ) {
 
 	$file_urls = esc_html( trailingslashit( get_site_url() ) . 'test.zip?test=key&key=123' );
 
-	$price = edd_currency_filter( edd_format_amount( 9.50 ) );
+	$price = edd_currency_filter( edd_format_amount( 10.50 ) );
 
 	$gateway = 'PayPal';
 
@@ -165,15 +169,26 @@ function edd_email_preview_templage_tags( $message ) {
 
 	$notes = __( 'These are some sample notes added to a product.', 'edd' );
 
-	$message = str_replace( '{name}', 'John Doe', $message );
+	$tax = edd_currency_filter( edd_format_amount( 1.00 ) );
+
+	$sub_total = edd_currency_filter( edd_format_amount( 9.50 ) );
+
+	$payment_id = rand(1, 100);
+
 	$message = str_replace( '{download_list}', $download_list, $message );
 	$message = str_replace( '{file_urls}', $file_urls, $message );
+	$message = str_replace( '{name}', 'John', $message );
+	$message = str_replace( '{fullname}', 'John Doe', $message );
+	$message = str_replace( '{username}', 'john-doe', $message );
 	$message = str_replace( '{date}', date( get_option( 'date_format' ), time() ), $message );
-	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
+	$message = str_replace( '{subtotal}', $sub_total, $message );
+	$message = str_replace( '{tax}', $tax, $message );
 	$message = str_replace( '{price}', $price, $message );
-	$message = str_replace( '{payment_method}', $gateway, $message );
 	$message = str_replace( '{receipt_id}', $receipt_id, $message );
+	$message = str_replace( '{payment_method}', $gateway, $message );
+	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
 	$message = str_replace( '{product_notes}', $notes, $message );
+	$message = str_replace( '{payment_id}', $payment_id, $message );
 
 	return wpautop( $message );
 
@@ -212,8 +227,12 @@ function edd_email_template_preview() {
 
 	$email_body = isset( $edd_options['purchase_receipt'] ) ? $edd_options['purchase_receipt'] : $default_email_body;
 	ob_start(); ?>
-<a href="#email-preview" id="open-email-preview" class="button-secondary"
-   title="<?php _e( 'Purchase Receipt Preview', 'edd' ); ?> "><?php _e( 'Preview Purchase Receipt', 'edd' ); ?></a>
+<a href="#email-preview" id="open-email-preview" class="button-secondary" title="<?php _e( 'Purchase Receipt Preview', 'edd' ); ?> ">
+	<?php _e( 'Preview Purchase Receipt', 'edd' ); ?>
+</a>
+<a href="<?php echo wp_nonce_url( add_query_arg( array( 'edd_action' => 'send_test_email' ) ), 'edd-test-email' ); ?>" title="<?php _e( 'This will send a demo purchase receipt to the emails listed below.', 'edd' ); ?>" class="button-secondary">
+	<?php _e( 'Send Test Email', 'edd' ); ?>
+</a>
 <div id="email-preview-wrap" style="display:none;">
     <div id="email-preview">
 		<?php echo edd_apply_email_template( $email_body, null, null ); ?>
@@ -256,7 +275,7 @@ function edd_get_email_body_header() {
  * @since 1.0.8.2
  * @return string
  */
-function edd_get_email_body_content( $payment_id, $payment_data ) {
+function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) {
 
 	global $edd_options;
 
@@ -303,12 +322,13 @@ function edd_apply_email_template( $body, $payment_id, $payment_data ) {
 	global $edd_options;
 
 	$template_name = isset( $edd_options['email_template'] ) ? $edd_options['email_template'] : 'default';
+	$template_name = apply_filters( 'edd_email_template', $template_name, $payment_id );
 
 	if ( $template_name == 'none' ) {
 		if ( is_admin() )
 			$body = edd_email_preview_templage_tags( $body );
 
-		return $body; // return the plain email with no template
+		return $body; // Return the plain email with no template
 	}
 
 	ob_start();
@@ -342,7 +362,7 @@ function edd_default_email_template() {
 
 	echo '<div style="width: 550px; border: 1px solid #ccc; background: #f0f0f0; padding: 8px 10px; margin: 0 auto;">';
 	echo '<div id="edd-email-content" style="background: #fff; border: 1px solid #ccc; padding: 10px;">';
-	echo '{email}'; // this tag is required in order for the contents of the email to be shown
+	echo '{email}'; // This tag is required in order for the contents of the email to be shown
 	echo '</div>';
 	echo '</div>';
 
@@ -364,7 +384,8 @@ function edd_default_email_styling( $email_body ) {
 
 	$first_p    = strpos( $email_body, '<p>' );
 	$email_body = substr_replace( $email_body, '<p style="margin-top:0;">', $first_p, 3 );
-
+	$email_body = str_replace( '<ul>', '<ul style="margin:0 0 10px 0; padding: 0;">', $email_body );
+	$email_body = str_replace( '<li>', '<li style="display:block;margin:0 0 4px 0;">', $email_body );
 	return $email_body;
 }
 

@@ -5,7 +5,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  admin/upgrades
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.1
 */
@@ -33,12 +33,12 @@ function edd_upgrades_screen() {
 		</div>
 		<script type="text/javascript">
 			jQuery( document ).ready( function() {
-				// trigger upgrades on page load
+				// Trigger upgrades on page load
 				var data = { action: 'edd_trigger_upgrades' };
 		        jQuery.post( ajaxurl, data, function (response) {
 		        	if( response == 'complete' ) {
 			        	jQuery('#edd-upgrade-loader').hide();
-			        	document.location.href = 'index.php'; // redirect back to the dashboard when complete
+			        	document.location.href = 'index.php?page=edd-about'; // Redirect to the welcome page
 					}
 		        });
 			});

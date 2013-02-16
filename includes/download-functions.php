@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Download Functions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -80,7 +80,7 @@ function edd_get_download_price( $download_id ) {
 function edd_price( $download_id, $echo = true ) {
 	if( edd_has_variable_prices( $download_id ) ) {
 		$prices = edd_get_variable_prices( $download_id );
-		// return the lowest price
+		// Return the lowest price
 		$price_float = 0;
         foreach($prices as $key => $value)
             if( ( ( (float)$prices[$key]['amount']) < $price_float) or ($price_float==0) )
@@ -126,8 +126,12 @@ function edd_get_download_final_price( $download_id, $user_purchase_info, $amoun
 	} else {
 		$original_price = $amount_override;
 	}
-	if( isset( $user_purchase_info['discount']) && $user_purchase_info['discount'] != 'none' ) {
-		$price = edd_get_discounted_amount( $user_purchase_info['discount'], $original_price );
+	if( isset( $user_purchase_info['discount'] ) && $user_purchase_info['discount'] != 'none' ) {
+		// if the discount was a %, we modify the amount. Flat rate discounts are ignored
+		if( edd_get_discount_type( edd_get_discount_id_by_code( $user_purchase_info['discount'] ) ) != 'flat' )
+			$price = edd_get_discounted_amount( $user_purchase_info['discount'], $original_price );
+		else
+			$price = $original_price;
 	} else {
 		$price = $original_price;
 	}
@@ -182,14 +186,145 @@ function edd_has_variable_prices( $download_id ) {
  * @return      string - the name of the price option
 */
 
-function edd_get_price_option_name( $download_id, $price_id ) {
+function edd_get_price_option_name( $download_id, $price_id, $payment_id = 0 ) {
 	$prices = edd_get_variable_prices( $download_id );
+	$price_name = '';
 	if( $prices && is_array( $prices ) ) {
-		$price_name = $prices[ $price_id ]['name'];
-	} else {
-		$price_name = '';
+		if( isset( $prices[ $price_id ] ) )
+			$price_name = $prices[ $price_id ]['name'];
 	}
-	return $price_name;
+	return apply_filters( 'edd_get_price_option_name', $price_name, $download_id, $payment_id );
+}
+
+
+/**
+ * Get lowest price option
+ *
+ * Retrieves cheapest price option of a variable priced download
+ *
+ * @access      public
+ * @since       1.4.4
+ * @param       int $download_id - the ID of the download
+ * @return      float - the amount of the lowest price
+*/
+
+function edd_get_lowest_price_option( $download_id = 0 ) {
+
+	if( empty( $download_id ) )
+		$download_id = get_the_ID();
+
+	if( ! edd_has_variable_prices( $download_id ) )
+		return edd_get_download_price( $download_id );
+
+	$prices = edd_get_variable_prices( $download_id );
+
+	$low = 0.00;
+
+	if( ! empty( $prices ) ) {
+
+		$min = 0;
+
+		foreach( $prices as $key => $price ) {
+
+			if( empty( $price['amount'] ) )
+				continue;
+
+			if( $prices[ $min ]['amount'] > $price['amount'] )
+				$min = $key;
+
+		}
+
+		$low = $prices[ $min ]['amount'];
+	}
+
+	return $low;
+}
+
+
+/**
+ * Get highest price option
+ *
+ * Retrieves most expensive price option of a variable priced download
+ *
+ * @access      public
+ * @since       1.4.4
+ * @param       int $download_id - the ID of the download
+ * @return      float - the amount of the highest price
+*/
+
+function edd_get_highest_price_option( $download_id = 0 ) {
+
+	if( empty( $download_id ) )
+		$download_id = get_the_ID();
+
+	if( ! edd_has_variable_prices( $download_id ) )
+		return edd_get_download_price( $download_id );
+
+	$prices = edd_get_variable_prices( $download_id );
+
+	$high = 0.00;
+
+	if( ! empty( $prices ) ) {
+
+		$max = 0;
+
+		foreach( $prices as $key => $price ) {
+
+			if( empty( $price['amount'] ) )
+				continue;
+
+			if( $prices[ $max ]['amount'] < $price['amount'] )
+				$max = $key;
+
+		}
+
+		$high = $prices[ $max ]['amount'];
+	}
+
+	return $high;
+}
+
+
+/**
+ * Get the price range, low to high
+ *
+ * Retrieves a price from from low to high of a variable priced download
+ *
+ * @access      public
+ * @since       1.4.4
+ * @param       int $download_id - the ID of the download
+ * @return      string - A fully formatted price range
+*/
+
+function edd_price_range( $download_id = 0 ) {
+
+	$low   = edd_get_lowest_price_option( $download_id );
+	$high  = edd_get_highest_price_option( $download_id );
+	$range = '<span class="edd_price_range_low">' . edd_currency_filter( $low ) . '</span>';
+	$range .= '<span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span>';
+	$range .= '<span class="edd_price_range_high">' . edd_currency_filter( $high ) . '</span>';
+
+	return apply_filters( 'edd_price_range', $range, $download_id, $low, $high );
+
+}
+
+
+/**
+ * Checks to see if multiple price options can be purchased at once
+ *
+ * @access      public
+ * @since       1.4.2
+ * @return      bool
+*/
+
+function edd_single_price_option_mode( $download_id = 0 ) {
+
+	if( empty( $download_id ) )
+		$download_id = get_the_ID();
+
+	$ret = get_post_meta( $download_id, '_edd_price_options_mode', true );
+
+	return (bool) apply_filters( 'edd_single_price_option_mode', $ret, $download_id );
 }
 
 
@@ -208,7 +343,7 @@ function edd_get_download_earnings_stats( $download_id ) {
 	// This is what enables us to sort it.
 	if ( '' == get_post_meta( $download_id, '_edd_download_earnings', true ) ) {
 		add_post_meta( $download_id, '_edd_download_earnings', 0 );
-	} // end if
+	} // End if
 
 	$earnings = get_post_meta( $download_id, '_edd_download_earnings', true );
 
@@ -231,7 +366,7 @@ function edd_get_download_sales_stats($download_id) {
 	// This is what enables us to sort it.
 	if ( '' == get_post_meta( $download_id, '_edd_download_sales', true ) ) {
 		add_post_meta( $download_id, '_edd_download_sales', 0 );
-	} // end if
+	} // End if
 
 	$sales = get_post_meta( $download_id, '_edd_download_sales', true );
 
@@ -318,7 +453,7 @@ function edd_remove_download_logs_on_delete( $download_id = 0 ) {
 
 	global $edd_logs;
 
-	// remove all log entries related to this download
+	// Remove all log entries related to this download
 	$edd_logs->delete_logs( $download_id );
 
 }
@@ -355,7 +490,7 @@ function edd_increase_purchase_count( $download_id ) {
 
 function edd_decrease_purchase_count( $download_id ) {
 	$sales = edd_get_download_sales_stats( $download_id );
-	if( $sales > 0 ) // only decrease if not already zero
+	if( $sales > 0 ) // Only decrease if not already zero
 		$sales = $sales - 1;
 
 	if( update_post_meta( $download_id, '_edd_download_sales', $sales ) )
@@ -399,7 +534,7 @@ function edd_increase_earnings( $download_id, $amount ) {
 function edd_decrease_earnings( $download_id, $amount ) {
 	$earnings = edd_get_download_earnings_stats( $download_id );
 
-	if( $earnings > 0 ) // only decrease if greater than zero
+	if( $earnings > 0 ) // Only decrease if greater than zero
 		$earnings = $earnings - $amount;
 
 	if( update_post_meta( $download_id, '_edd_download_earnings', $earnings ) )
@@ -426,8 +561,8 @@ function edd_get_average_monthly_download_earnings( $download_id ) {
 
 	$diff 	= abs( time() - strtotime( $release_date ) );
 
-	$years 	= floor( $diff / ( 365*60*60*24 ) );							// number of years since publication
-	$months = floor( ( $diff - $years * 365*60*60*24 ) / ( 30*60*60*24 ) ); // number of months since publication
+	$years 	= floor( $diff / ( 365*60*60*24 ) );							// Number of years since publication
+	$months = floor( ( $diff - $years * 365*60*60*24 ) / ( 30*60*60*24 ) ); // Number of months since publication
 
 	if ( $months > 0 )
 		return ( $earnings / $months );
@@ -453,8 +588,8 @@ function edd_get_average_monthly_download_sales( $download_id ) {
 
 	$diff 	= abs( time() - strtotime( $release_date ) );
 
-	$years 	= floor( $diff / ( 365*60*60*24 ) );							// number of years since publication
-	$months = floor( ( $diff - $years * 365*60*60*24 ) / ( 30*60*60*24 ) ); // number of months since publication
+	$years 	= floor( $diff / ( 365*60*60*24 ) );							// Number of years since publication
+	$months = floor( ( $diff - $years * 365*60*60*24 ) / ( 30*60*60*24 ) ); // Number of months since publication
 
 	if ( $months > 0 )
 		return ( $sales / $months );
@@ -577,7 +712,7 @@ function edd_set_file_download_limit_override( $download_id = 0, $payment_id = 0
 
 function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file_id = 0 ) {
 
-	// checks to see if at limit
+	// Checks to see if at limit
 
 	$logs = new EDD_Logging();
 
@@ -603,8 +738,8 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
 
 			$ret = true;
 
-			// check to make sure the limit isn't overwritten
-			// a limit is overwritten when purchase receipt is resent
+			// Check to make sure the limit isn't overwritten
+			// A limit is overwritten when purchase receipt is resent
 			$limit_override = edd_get_file_download_limit_override( $download_id, $payment_id );
 
 			if( ! empty( $limit_override ) && $download_count < $limit_override ) {
@@ -650,7 +785,7 @@ function edd_get_file_price_condition( $download_id, $file_key ) {
  * @return      string
 */
 
-function edd_get_download_file_url($key, $email, $filekey, $download_id) {
+function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price_id = false ) {
 
 	global $edd_options;
 
@@ -659,12 +794,13 @@ function edd_get_download_file_url($key, $email, $filekey, $download_id) {
 			? absint($edd_options['download_link_expiration']) : 24;
 
 	if( ! ( $date = strtotime( '+' . $hours . 'hours' ) ) )
-		$date = 2147472000; // highest possible date, January 19, 2038
+		$date = 2147472000; // Highest possible date, January 19, 2038
 
 	$params = array(
 		'download_key' 	=> $key,
 		'email' 		=> rawurlencode( $email ),
 		'file' 			=> $filekey,
+		'price_id'      => (int) $price_id,
 		'download' 		=> $download_id,
 		'expire' 		=> rawurlencode( base64_encode( $date ) )
 	);
@@ -726,7 +862,7 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 
 					$variable_prices_enabled = get_post_meta( $id, '_variable_pricing', true );
 
-					// if this download has variable prices, we have to confirm that this file was included in their purchase
+					// If this download has variable prices, we have to confirm that this file was included in their purchase
 					if( ! empty( $price_options ) && $file_condition != 'all' && $variable_prices_enabled ) {
 						if( $file_condition !== $price_options['price_id'] )
 							return false;
@@ -734,15 +870,15 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 
 					if( $id == $download_id ) {
 
-						// check to see if the file download limit has been reached
+						// Check to see if the file download limit has been reached
 						if( edd_is_file_at_download_limit( $id, $payment->ID, $file_key ) )
-							wp_die( apply_filters( 'edd_download_limit_reached_text', __('Sorry but you have hit your download limit for this file.' ), 'edd'), __('Error', 'edd') );
+							wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ) );
 
-						// make sure the link hasn't expired
+						// Make sure the link hasn't expired
 						if( time() < $expire ) {
-							return $payment->ID; // payment has been verified and link is still valid
+							return $payment->ID; // Payment has been verified and link is still valid
 						}
-						return false; // payment verified, but link is no longer valid
+						return false; // Payment verified, but link is no longer valid
 					}
 
 				}
@@ -752,7 +888,7 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 		}
 
 	}
-	// payment not verified
+	// Payment not verified
 	return false;
 }
 

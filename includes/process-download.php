@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Process Download
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -29,6 +29,7 @@ function edd_process_download() {
 		'email'    => ( isset( $_GET['email'] ) )        ? rawurldecode( $_GET['email'] )                   : '',
 		'expire'   => ( isset( $_GET['expire'] ) )       ? base64_decode( rawurldecode( $_GET['expire'] ) ) : '',
 		'file_key' => ( isset( $_GET['file'] ) )         ? (int) $_GET['file']                              : '',
+		'price_id' => ( isset( $_GET['price_id'] ) )     ? (int) $_GET['price_id']                          : false,
 		'key'      => ( isset( $_GET['download_key'] ) ) ? $_GET['download_key']                            : ''
 	) );
 
@@ -47,7 +48,7 @@ function edd_process_download() {
 
 		do_action( 'edd_process_verified_download', $download, $email );
 
-		// payment has been verified, setup the download
+		// Payment has been verified, setup the download
 		$download_files = edd_get_download_files( $download );
 
 		$requested_file = apply_filters( 'edd_requested_file', $download_files[ $file_key ]['file'] );
@@ -76,8 +77,6 @@ function edd_process_download() {
 		@session_write_close();
 		if( function_exists( 'apache_setenv' ) ) @apache_setenv('no-gzip', 1);
 		@ini_set( 'zlib.output_compression', 'Off' );
-		@ob_end_clean();
-		if( ob_get_level() ) @ob_end_clean(); // Zip corruption fix
 
 		nocache_headers();
 		header("Robots: none");
@@ -86,10 +85,9 @@ function edd_process_download() {
 		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\";");
 		header("Content-Transfer-Encoding: binary");
 
-
 		if( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false ) {
 
-			// this is an absolute path
+			// This is an absolute path
 
 			$requested_file = realpath( $requested_file );
 			if( file_exists( $requested_file ) ) {
@@ -147,12 +145,13 @@ function edd_get_file_ctype( $extension ) {
 		case 'aifc'		: $ctype	= "audio/x-aiff"; break;
 		case 'aiff'		: $ctype	= "audio/x-aiff"; break;
 		case 'air'		: $ctype	= "application/vnd.adobe.air-application-installer-package+zip"; break;
+		case 'apk'		: $ctype	= "application/vnd.android.package-archive"; break;
 		case 'asc'		: $ctype	= "application/pgp-signature"; break;
 		case 'atom'		: $ctype	= "application/atom+xml"; break;
-		case 'atomcat'	: $ctype	= "application/atomcat+xml"; break;		
-		case 'atomsvc'	: $ctype	= "application/atomsvc+xml"; break;	
+		case 'atomcat'	: $ctype	= "application/atomcat+xml"; break;
+		case 'atomsvc'	: $ctype	= "application/atomsvc+xml"; break;
 		case 'au'		: $ctype	= "audio/basic"; break;
-		case 'aw'		: $ctype	= "application/applixware"; break;		
+		case 'aw'		: $ctype	= "application/applixware"; break;
 		case 'avi'		: $ctype	= "video/x-msvideo"; break;
 		case 'bcpio'	: $ctype	= "application/x-bcpio"; break;
 		case 'bin'		: $ctype	= "application/octet-stream"; break;
@@ -246,7 +245,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'lha'    	: $ctype  = "application/octet-stream"; break;
 		case 'lrf'    	: $ctype  = "application/octet-stream"; break;
 		case 'lzh'    	: $ctype  = "application/octet-stream"; break;
-		case 'lostxml'	: $ctype	= "application/lost+xml"; break;	
+		case 'lostxml'	: $ctype	= "application/lost+xml"; break;
 		case 'm3u'		: $ctype	= "audio/x-mpegurl"; break;
 		case 'm4a'		: $ctype	= "audio/mp4a-latm"; break;
 		case 'm4b'		: $ctype	= "audio/mp4a-latm"; break;
@@ -269,7 +268,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'mid'		: $ctype	= "audio/midi"; break;
 		case 'midi'		: $ctype	= "audio/midi"; break;
 		case 'mif'		: $ctype	= "application/vnd.mif"; break;
-		case 'mods'		: $ctype	= "application/mods+xml"; break;	
+		case 'mods'		: $ctype	= "application/mods+xml"; break;
 		case 'mov'		: $ctype	= "video/quicktime"; break;
 		case 'movie'	: $ctype	= "video/x-sgi-movie"; break;
 		case 'm1v'		: $ctype	= "video/mpeg"; break;
@@ -336,7 +335,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'pptx'		: $ctype	= "application/vnd.openxmlformats-officedocument.presentationml.presentation"; break;
 		case 'prf'		: $ctype	= "application/pics-rules"; break;
 		case 'ps'		: $ctype	= "application/postscript"; break;
-		case 'psd'		: $ctype	= "image/photoshop"; break;		
+		case 'psd'		: $ctype	= "image/photoshop"; break;
 		case 'qt'		: $ctype	= "video/quicktime"; break;
 		case 'qti'		: $ctype	= "image/x-quicktime"; break;
 		case 'qtif'		: $ctype	= "image/x-quicktime"; break;
@@ -362,7 +361,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'skm'		: $ctype	= "application/x-koan"; break;
 		case 'skp'		: $ctype	= "application/x-koan"; break;
 		case 'skt'		: $ctype	= "application/x-koan"; break;
-		case 'sldx'		: $ctype	= "application/vnd.openxmlformats-officedocument.presentationml.slide"; break;	
+		case 'sldx'		: $ctype	= "application/vnd.openxmlformats-officedocument.presentationml.slide"; break;
 		case 'smi'		: $ctype	= "application/smil"; break;
 		case 'smil'		: $ctype	= "application/smil"; break;
 		case 'snd'		: $ctype	= "audio/basic"; break;

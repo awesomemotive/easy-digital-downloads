@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Downloads
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
  */
@@ -41,7 +41,7 @@ function edd_payments_contextual_help() {
 		'id'	    => 'edd-payments-overview',
 		'title'	    => __( 'Overview', 'edd' ),
 		'content'	=>
-			'<p>' . __( 'This screen provides access to all of your store&#39;s transactions. ', 'edd' ) . '</p>' . 
+			'<p>' . __( "This screen provides access to all of your store's transactions.", 'edd' ) . '</p>' . 
 			'<p>' . __( 'Payments can be searched by email address, user name, or filtered by status (completed, pending, etc.)', 'edd' ) . '</p>' .
 			'<p>' . __( 'You also have the option to bulk delete payment should you wish.', 'edd' ) . '</p>'
 	) );
@@ -56,8 +56,8 @@ function edd_payments_contextual_help() {
 				<li><strong>Purchased File</strong> - ' . __( 'The file associated with the purchase.', 'edd' ) . '</li>
 				<li><strong>Purchase Date</strong> - ' . __( 'The exact date and time the payment was completed.', 'edd' ) . '</li>
 				<li><strong>Discount Used</strong> - ' . __( 'If a coupon or discount was used during the checkout process.', 'edd' ) . '</li>
-				<li><strong>Name</strong> - ' . __( 'The buyer&#39;s name.', 'edd' ) . '</li>
-				<li><strong>Email</strong> - ' . __( 'The buyer&#39;s email address.', 'edd' ) . '</li>
+				<li><strong>Name</strong> - ' . __( "The buyer's name.", 'edd' ) . '</li>
+				<li><strong>Email</strong> - ' . __( "The buyer's email address.", 'edd' ) . '</li>
 				<li><strong>Payment Notes</strong> - ' . __( 'Any customer-specific notes related to the payment.', 'edd' ) . '</li>
 				<li><strong>Payment Method</strong> - ' . __( 'The name of the payment gateway used to complete the payment.', 'edd' ) . '</li>
 				<li><strong>Purchase Key</strong> - ' . __( 'A unique key used to identify the payment.', 'edd' ) . '</li>

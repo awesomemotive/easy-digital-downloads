@@ -8,11 +8,11 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="tests/bootstrap.php"
->
+         bootstrap="travis/tests/bootstrap.php"
+		 >
     <testsuites>
         <testsuite name="EDD Test Suite">
-            <directory suffix="Test.php">./tests</directory>
+            <directory suffix="Test.php">./travis/tests</directory>
         </testsuite>
     </testsuites>
 </phpunit>

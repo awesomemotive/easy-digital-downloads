@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  File Downloads Log View Class
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
@@ -20,7 +20,7 @@ if( ! class_exists( 'WP_List_Table' ) ) {
 /**
  * EDD File Downloads Log View Class
  *
- * Renders the file downloads log view 
+ * Renders the file downloads log view
  *
  * @access      private
  * @since       1.4
@@ -59,9 +59,9 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular'  => edd_get_label_singular(),    // singular name of the listed records
-			'plural'    => edd_get_label_plural(),    	// plural name of the listed records
-			'ajax'      => false             			// does this table support ajax?
+			'singular'  => edd_get_label_singular(),    // Singular name of the listed records
+			'plural'    => edd_get_label_plural(),    	// Plural name of the listed records
+			'ajax'      => false             			// Does this table support ajax?
 		) );
 
 		add_action( 'edd_log_view_actions', array( $this, 'downloads_filter' ) );
@@ -201,27 +201,27 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		if ( $search ) {
 			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
-				// this is an IP address search
+				// This is an IP address search
 				$key     = '_edd_log_ip';
 				$compare = '=';
 			} else if ( is_email( $search ) ) {
-				// this is an email search. We use this to ensure it works for guest users and logged-in users
+				// This is an email search. We use this to ensure it works for guest users and logged-in users
 				$key     = '_edd_log_user_info';
 				$compare = 'LIKE';
 			} else {
-				// look for a user
+				// Look for a user
 				$key = '_edd_log_user_id';
 				$compare = 'LIKE';
 
 				if ( ! is_numeric( $search ) ) {
-					// searching for user by username
+					// Searching for user by username
 					$user = get_user_by( 'login', $search );
 
 					if ( $user ) {
-						// found one, set meta value to user's ID
+						// Found one, set meta value to user's ID
 						$search = $user->ID;
 					} else {
-						// no user found so let's do a real search query
+						// No user found so let's do a real search query
 						$users = new WP_User_Query( array(
 							'search'         => $search,
 							'search_columns' => array( 'user_url', 'user_nicename' ),
@@ -234,7 +234,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 						if ( $found_user ) {
 							$search = $found_user[0];
 						} else {
-							// no users were found so let's look for file names instead
+							// No users were found so let's look for file names instead
 							$this->file_search = true;
 						}
 					}
@@ -242,7 +242,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			}
 
 			if ( ! $this->file_search ) {
-				// meta query only works for non file name searche
+				// Meta query only works for non file name searche
 				$meta_query[] = array(
 					'key'     => $key,
 					'value'   => $search,
@@ -383,7 +383,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		global $edd_logs;
 
 		$columns               = $this->get_columns();
-		$hidden                = array(); // no hidden columns
+		$hidden                = array(); // No hidden columns
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		$current_page          = $this->get_pagenum();

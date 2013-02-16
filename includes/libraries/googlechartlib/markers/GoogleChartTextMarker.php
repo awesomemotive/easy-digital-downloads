@@ -231,25 +231,25 @@ class GoogleChartTextMarker extends GoogleChartMarker
 				throw new LogicException('Text marker requires one data serie or requires to have a fixed position.');
 			}
 
-			// fixed position marker (x:y format)
+			// Fixed position marker (x:y format)
 			$str = '@';
 			$points = $this->position['x'].':'.$this->position['y'];
 		}
 		else {
 			$str = '';
-			// default = all (-1 format)
+			// Default = all (-1 format)
 			if ( $this->points === null ) {
 				$points = '-1';
 			}
-			// only one point (n.d format)
+			// Only one point (n.d format)
 			elseif ( ! is_array($this->points) ) {
 				$points = number_format($this->points,1);
 			}
-			// step only (-n format)
+			// Step only (-n format)
 			elseif ( $this->points['start'] === null && $this->points['end'] === null ) {
 				$points = '-'.$this->points['step'];
 			}
-			// serie (start:end:n)
+			// Serie (start:end:n)
 			else {
 				$points = $this->points['start'].':'.$this->points['end'].':'.$this->points['step'];
 			}
@@ -279,7 +279,7 @@ class GoogleChartTextMarker extends GoogleChartMarker
 			$tmp = $this->getPlacement($chart_type !== null && $chart_type[0] === 'b');
 			if ( $tmp ) {
 				if ( $this->z_order === null ) {
-					$str .= ','; // add an empty z-order
+					$str .= ','; // Add an empty z-order
 				}
 
 				$str .= ','.$tmp;

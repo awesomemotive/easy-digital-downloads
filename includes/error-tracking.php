@@ -4,13 +4,13 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Error Tracking
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
 
 
-// make sure a session is started
+// Make sure a session is started
 if( !session_id() ) {
 	add_action( 'init', 'session_start', -1 );
 }
@@ -29,7 +29,10 @@ if( !session_id() ) {
 function edd_print_errors() {
 	$errors = edd_get_errors();
 	if( $errors ) {
-		echo '<div class="edd_errors">';
+		$classes = apply_filters( 'edd_error_class', array(
+			'edd_errors'
+		) );
+		echo '<div class="' . implode( ' ', $classes ) . '">';
 		    // Loop error codes and display errors
 		   foreach( $errors as $error_id => $error ){
 		        echo '<p class="edd_error" id="edd_error_' . $error_id . '"><strong>' . __('Error', 'edd') . '</strong>: ' . $error . '</p>';
@@ -41,6 +44,7 @@ function edd_print_errors() {
 add_action( 'edd_payment_mode_bottom', 'edd_print_errors' );
 add_action( 'edd_before_purchase_form', 'edd_print_errors' );
 add_action( 'edd_before_checkout_register_form', 'edd_print_errors' );
+add_action( 'edd_ajax_checkout_errors', 'edd_print_errors' );
 
 
 /**

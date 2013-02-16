@@ -4,11 +4,10 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Misc Functions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
-
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
@@ -70,6 +69,21 @@ function edd_logged_in_only() {
 
 
 /**
+ * Redirect to checkout immediately after adding items to the cart?
+ *
+ * @access      public
+ * @since       1.4.2
+ * @return      boolean
+*/
+
+function edd_straight_to_checkout() {
+	global $edd_options;
+	$ret = isset( $edd_options['redirect_on_add'] );
+	return (bool) apply_filters( 'edd_straight_to_checkout', $ret );
+}
+
+
+/**
  * Disable Redownload
  *
  * @access      public
@@ -112,26 +126,9 @@ function edd_is_cc_verify_enabled() {
 		$ret = false;
 
 	if( isset( $edd_options['edd_is_cc_verify_enabled'] ) )
-		$ret = false; // global override
+		$ret = false; // Global override
 
 	return (bool) apply_filters( 'edd_verify_credit_cards', $ret );
-}
-
-
-/**
- * Get Menu Access Level
- *
- * Returns the access level required to access
- * the downloads menu. Currently not changeable,
- * but here for a future update.
- *
- * @access      public
- * @since       1.0
- * @return      string
-*/
-
-function edd_get_menu_access_level() {
-	return apply_filters( 'edd_menu_access_level', 'manage_options' );
 }
 
 
@@ -227,7 +224,7 @@ function edd_get_currencies() {
 		'EUR' => __('Euros (&euro;)', 'edd'),
 		'GBP' => __('Pounds Sterling (&pound;)', 'edd'),
 		'AUD' => __('Australian Dollars (&#36;)', 'edd'),
-		'BRL' => __('Brazilian Real (&#36;)', 'edd'),
+		'BRL' => __('Brazilian Real (R&#36;)', 'edd'),
 		'CAD' => __('Canadian Dollars (&#36;)', 'edd'),
 		'CZK' => __('Czech Koruna', 'edd'),
 		'DKK' => __('Danish Krone', 'edd'),
@@ -669,16 +666,30 @@ function edd_get_current_page_url() {
 	global $post;
 
 	if( is_singular() ):
-		$pageURL = get_permalink( $post->ID );
+
+		$page_url = get_permalink( $post->ID );
+
+	elseif ( is_front_page() ) :
+
+		$page_url = home_url();
+
 	else :
-		$pageURL = 'http';
-		if( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) $pageURL .= "s";
-		$pageURL .= "://";
-		if( $_SERVER["SERVER_PORT"] != "80" ) $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-		else $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+
+		$page_url = 'http';
+
+		if( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" )
+			$page_url .= "s";
+
+		$page_url .= "://";
+
+		if( $_SERVER["SERVER_PORT"] != "80" )
+			$page_url .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+		else
+			$page_url .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+
 	endif;
 
-	return apply_filters( 'edd_get_current_page_url', esc_url( $pageURL ) );
+	return apply_filters( 'edd_get_current_page_url', esc_url( $page_url ) );
 }
 
 
@@ -707,8 +718,9 @@ function edd_get_current_page_url() {
  * @param string $function The function that was called
  * @param string $version The version of WordPress that deprecated the function
  * @param string $replacement Optional. The function that should have been called
+ * @param array $backtrace Optional. Contains stack backtrace of deprecated function
  */
-function _edd_deprecated_function( $function, $version, $replacement = null ) {
+function _edd_deprecated_function( $function, $version, $replacement = null, $backtrace = null ) {
 
 	do_action( 'edd_deprecated_function_run', $function, $replacement, $version );
 
@@ -717,10 +729,16 @@ function _edd_deprecated_function( $function, $version, $replacement = null ) {
 
 	// Allow plugin to filter the output error trigger
 	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', $show_errors ) ) {
-		if ( ! is_null( $replacement ) )
-			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
-		else
-			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'edd'), $function, $version ) );
+		if ( ! is_null( $replacement ) ){
+				trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
+				trigger_error(  print_r($backtrace) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			    // Alernatively we could dump this to a file.
+		}
+		else{
+				trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'edd'), $function, $version ) );
+				trigger_error( print_r($backtrace) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			    // Alernatively we could dump this to a file.
+		}
 	}
 }
 
@@ -757,7 +775,7 @@ function edd_presstrends() {
 		$count_pages    = wp_count_posts( 'page' );
 		$comments_count = wp_count_comments();
 
-		// wp_get_theme was introduced in 3.4, for compatibility with older versions, let's do a workaround for now.
+		// Wp_get_theme was introduced in 3.4, for compatibility with older versions, let's do a workaround for now.
 		if ( function_exists( 'wp_get_theme' ) ) {
 			$theme_data = wp_get_theme();
 			$theme_name = urlencode( $theme_data->Name );

@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Gateway Errors List Table Log View Class
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
@@ -51,9 +51,9 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 
 		//Set parent defaults
 		parent::__construct( array(
-			'singular'  => edd_get_label_singular(),    // singular name of the listed records
-			'plural'    => edd_get_label_plural(),    	// plural name of the listed records
-			'ajax'      => false             			// does this table support ajax?
+			'singular'  => edd_get_label_singular(),    // Singular name of the listed records
+			'plural'    => edd_get_label_plural(),    	// Plural name of the listed records
+			'ajax'      => false             			// Does this table support ajax?
 		) );
 	}
 
@@ -105,7 +105,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 				$data    = substr( $log_message, $serialized, strlen( $log_message ) - 1 );
 
 				echo wpautop( $intro );
-				echo wpautop( __( '<strong>Log data:</strong>') );
+				echo wpautop( __( '<strong>Log data:</strong>', 'edd' ) );
 				echo '<div style="word-wrap: break-word;">' . wpautop( $data ) . '</div>';
 			} else {
 				// No serialized data found
@@ -227,7 +227,7 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 		global $edd_logs;
 
 		$columns               = $this->get_columns();
-		$hidden                = array(); // no hidden columns
+		$hidden                = array(); // No hidden columns
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		$current_page          = $this->get_pagenum();

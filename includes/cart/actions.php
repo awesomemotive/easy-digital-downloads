@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Cart Actions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -46,7 +46,7 @@ function edd_process_cart_endpoints() {
 
 	global $wp_query;
 
-	// adds an item to the cart with a /edd-add/# URL
+	// Adds an item to the cart with a /edd-add/# URL
 	if( isset( $wp_query->query_vars['edd-add'] ) ) {
 
 		$download_id = absint( $wp_query->query_vars['edd-add'] );
@@ -55,7 +55,7 @@ function edd_process_cart_endpoints() {
 		wp_redirect( edd_get_checkout_uri() ); exit;
 	}
 
-	// removes an item from the cart with a /edd-remove/# URL
+	// Removes an item from the cart with a /edd-remove/# URL
 	if( isset( $wp_query->query_vars['edd-remove'] ) ) {
 
 		$cart_key = absint( $wp_query->query_vars['edd-remove'] );
@@ -80,8 +80,13 @@ add_action( 'template_redirect', 'edd_process_cart_endpoints', 100 );
 
 function edd_process_add_to_cart( $data ) {
 	$download_id = $data['download_id'];
-	$options = isset( $data['edd_options'] ) ? $data['edd_options'] : array();
-	$cart = edd_add_to_cart( $download_id, $options );
+	$options     = isset( $data['edd_options'] ) ? $data['edd_options'] : array();
+	$cart        = edd_add_to_cart( $download_id, $options );
+
+	if( edd_straight_to_checkout() && ! edd_is_checkout() ) {
+		wp_redirect( edd_get_checkout_uri(), 303 );
+		exit;
+	}
 }
 add_action( 'edd_add_to_cart', 'edd_process_add_to_cart' );
 

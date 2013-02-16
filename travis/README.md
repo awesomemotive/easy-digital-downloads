@@ -1,4 +1,6 @@
 [Easy Digital Downloads](http://www.easydigitaldownloads.com) Testing Suite [![Build Status](https://secure.travis-ci.org/pippinsplugins/Easy-Digital-Downloads.png?branch=master)](http://travis-ci.org/pippinsplugins/Easy-Digital-Downloads)
+Version: 0.9.0
+Author: @chriscct7
 =================
 
 This test-suite uses PHPUnit to ensure Easy Digital Downloads's code quality.
@@ -10,28 +12,31 @@ The dev branch of Easy Digital Downloads is automatically tested on Travis-ci.or
 Click on the image above to see the latest test's output.
 Travis-CI will also automatically test all new pull requests to make sure they will not break our build.
 
-### Note: Below instructions need to be updated. 
-
 
 Quick start (for manual runs)
 -----------------------------
 
 Clone the repo.
 
+	# Get a copy of EDD
     git clone git://github.com/pippinsplugins/Easy-Digital-Downloads.git
     cd Easy-Digital-Downloads
     # init submodules to grab wordpress test helper
     git submodule init && git submodule update
-
+    # Download the WP Testing Suite
+	wget -O testsuite.zip https://github.com/nb/wordpress-tests/archive/460b9c4ad9db7eea4710f151851060ae1921ea7c.zip
+    # Unzip it into vendors
+	unzip testsuite.zip -d travis/vendor
+    cp -r travis/vendor/wordpress-tests-460b9c4ad9db7eea4710f151851060ae1921ea7c travis/vendor/wordpress-tests
 
 Copy & edit wordpress test environment file
 
-    cp vendor/wordpress-tests/unittests-config-sample.php vendor/wordpress-tests/unittests-config.php
+    cp travis/tests/unittests-config.travis.php travis/vendor/wordpress-tests/unittests-config.php
 
 Now edit unittests-config.php in your favorite editor. Make sure to have an empty database ready(all data will die) and
 that your path to wordpress is correct.
 
-EDD does not need to be in the wp/plugins dir. For example in travis-ci().travis.yml we copy wordpress into vendor/wordpress
+EDD does not need to be in the wp/plugins dir. For example in travis-ci's .travis.yml we copy wordpress into vendor/wordpress
 
     <?php
     /* Path to the WordPress codebase you'd like to test. Add a backslash in the end. */
@@ -75,7 +80,7 @@ Then open a new CMD and type in
 
 Should produce output.
 
-###Step 1B: Install PEAR (if your localhost **does** come with it)
+### Step 1B: Install PEAR (if your localhost **does** come with it)
 Depending on your OS distribution and/or your PHP environment, you may need to install 
 PEAR or update your existing PEAR installation before you can proceed with the instructions
 in this section.
@@ -89,3 +94,6 @@ The PEAR Manual explains how to perform a fresh installation of PEAR.
 
 	pear config-set auto_discover 1
 	pear install --force --alldeps pear.phpunit.de/PHPUnit
+	
+	
+### Note: Due to a bug present in WordPress 3.5 MU, you may see database errors on install.

@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Edit Payment
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -80,7 +80,7 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 					<td>
 						<select name="edd-payment-status" id="edd_payment_status">
 							<?php
-							$status = $payment->post_status; // current status
+							$status = $payment->post_status; // Current status
 							$statuses = edd_get_payment_statuses();
 							foreach( $statuses as $status_id => $label ) {
 								echo '<option value="' . $status_id	. '" ' . selected( $status, $status_id, false ) . '>' . $label . '</option>';

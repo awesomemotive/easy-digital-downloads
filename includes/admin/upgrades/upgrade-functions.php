@@ -5,7 +5,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Download Functions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.1
 */
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 function edd_show_upgrade_notices() {
 	if ( isset( $_GET['page'] ) && $_GET['page'] == 'edd-upgrades' )
-		return; // don't show notices on the upgrades page
+		return; // Don't show notices on the upgrades page
 
 	$edd_version = get_option( 'edd_version' );
 
@@ -35,7 +35,7 @@ function edd_show_upgrade_notices() {
 
 	if ( ! get_option( 'edd_payment_totals_upgraded' ) && ! get_option( 'edd_version' ) ) {
 		if ( wp_count_posts( 'edd_payment' )->publish < 1 )
-			return; // no payment exist yet
+			return; // No payment exist yet
 
 		// The payment history needs updated for version 1.2
 		$url = add_query_arg( 'edd-action', 'upgrade_payments' );
@@ -96,7 +96,7 @@ function edd_trigger_upgrades() {
 	update_option( 'edd_version', EDD_VERSION );
 
 	if ( DOING_AJAX )
-		die( 'complete' ); // let ajax know we are done
+		die( 'complete' ); // Let ajax know we are done
 }
 add_action( 'wp_ajax_edd_trigger_upgrades', 'edd_trigger_upgrades' );
 
@@ -237,7 +237,7 @@ function edd_v14_upgrades() {
 
 	/** Convert Discounts to new Custom Post Type **/
 	$discounts = get_option( 'edd_discounts' );
-	//print_r( $discounts ); exit;
+
 	if ( $discounts ) {
 		foreach ( $discounts as $key => $discount ) {
 			$status = isset( $discount['status'] ) ? $discount['status'] : 'inactive';
@@ -263,6 +263,10 @@ function edd_v14_upgrades() {
 				update_post_meta( $discount_id, '_edd_discount_' . $key, $value );
 			}
 		}
+
+		// Remove old discounts from database
+		delete_option( 'edd_discounts' );
+
 	}
-	
+
 }

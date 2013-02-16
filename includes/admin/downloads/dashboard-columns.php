@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Dashboard Columns
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -35,6 +35,11 @@ function edd_download_columns( $download_columns ) {
 		'shortcode'         => __( 'Purchase Short Code', 'edd' ),
 		'date'              => __( 'Date', 'edd' )
 	);
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		unset( $download_columns['sales'] );
+		unset( $download_columns['earnings'] );
+	}
 
 	return $download_columns;
 }
@@ -67,8 +72,10 @@ function edd_render_download_columns( $column_name, $post_id ) {
 				echo get_the_term_list( $post_id, 'download_tag', '', ', ', '');
 				break;
 			case 'price':
-				echo edd_price( $post_id, false);
-				if ( !edd_has_variable_prices( $post_id) ) {
+				if ( edd_has_variable_prices( $post_id) ) {
+					echo edd_price_range( $post_id );
+				} else {
+					echo edd_price( $post_id, false);
 					echo '<input type="hidden" class="downloadprice-' . $post_id . '" value="' . edd_get_download_price( $post_id) . '" />';
 				}
 				break;
@@ -118,9 +125,9 @@ add_filter( 'manage_edit-download_sortable_columns', 'edd_sortable_download_colu
 */
 
 function edd_sort_downloads( $vars ) {
-	// check if we're viewing the "download" post type
+	// Check if we're viewing the "download" post type
 	if ( isset( $vars['post_type'] ) && 'download' == $vars['post_type'] ) {
-		// check if 'orderby' is set to "sales"
+		// Check if 'orderby' is set to "sales"
 		if ( isset( $vars['orderby'] ) && 'sales' == $vars['orderby'] ) {
 			$vars = array_merge(
 				$vars,
@@ -131,7 +138,7 @@ function edd_sort_downloads( $vars ) {
 			);
 		}
 
-		// check if "orderby" is set to "earnings"
+		// Check if "orderby" is set to "earnings"
 		if ( isset( $vars['orderby'] ) && 'earnings' == $vars['orderby'] ) {
 			$vars = array_merge(
 				$vars,
@@ -142,7 +149,7 @@ function edd_sort_downloads( $vars ) {
 			);
 		}
 
-		// check if "orderby" is set to "earnings"
+		// Check if "orderby" is set to "earnings"
 		if ( isset( $vars['orderby'] ) && 'price' == $vars['orderby'] ) {
 			$vars = array_merge(
 				$vars,
@@ -242,6 +249,7 @@ function edd_price_field_quick_edit( $column_name, $post_type ) {
 	<?php
 }
 add_action( 'quick_edit_custom_box', 'edd_price_field_quick_edit', 10, 2 );
+add_action( 'bulk_edit_custom_box', 'edd_price_field_quick_edit', 10, 2 );
 
 
 /**
@@ -258,7 +266,34 @@ function edd_price_save_quick_edit( $post_id ) {
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return $post_id;
 
 	if ( isset( $_REQUEST['_edd_regprice'] ) ) {
-		update_post_meta( $post_id, 'edd_price', esc_html( stripslashes( $_REQUEST['_edd_regprice'] ) ) );
+		update_post_meta( $post_id, 'edd_price', strip_tags( stripslashes( $_REQUEST['_edd_regprice'] ) ) );
 	}
 }
 add_action( 'save_post', 'edd_price_save_quick_edit' );
+
+
+/**
+ * Process bulk edit via ajax
+ *
+ * @access		private
+ * @since		1.4.4
+ * @return		void
+ */
+
+function edd_save_bulk_edit() {
+
+	$post_ids = ( isset( $_POST[ 'post_ids' ] ) && ! empty( $_POST[ 'post_ids' ] ) ) ? $_POST[ 'post_ids' ] : array();
+
+	if ( ! empty( $post_ids ) && is_array( $post_ids ) ) {
+		$price = isset( $_POST['price'] ) ? strip_tags( stripslashes( $_POST['price'] ) ) : 0;
+		foreach ( $post_ids as $post_id ) {
+			if ( ! empty( $price ) ) {
+				update_post_meta( $post_id, 'edd_price', edd_sanitize_amount( $price ) );
+			}
+		}
+	}
+
+	die();
+
+}
+add_action( 'wp_ajax_edd_save_bulk_edit', 'edd_save_bulk_edit' );

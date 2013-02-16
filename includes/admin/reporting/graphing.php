@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Graphing Functions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -27,6 +27,11 @@ function edd_reports_graph() {
 
 	// Determine graph options
 	switch( $dates['range'] ) :
+		case 'today' :
+			$time_format 	= '%d/%b';
+			$tick_size		= 'hour';
+			$day_by_day		= true;
+			break;
 		case 'last_year' :
 			$time_format 	= '%b';
 			$tick_size		= 'month';
@@ -59,15 +64,16 @@ function edd_reports_graph() {
 			}
 			break;
 		default:
-			$time_format 	= '%d/%b'; 	// show days by default
-			$tick_size		= 'day'; 	// default graph interval
+			$time_format 	= '%d/%b'; 	// Show days by default
+			$tick_size		= 'day'; 	// Default graph interval
 			$day_by_day 	= true;
 			break;
 	endswitch;
 
 	$time_format 	= apply_filters( 'edd_graph_timeformat', $time_format );
 	$tick_size 		= apply_filters( 'edd_graph_ticksize', $tick_size );
-	$totals 		= (float) 0.00; // total earnings for time period shown
+	$totals 		= (float) 0.00; // Total earnings for time period shown
+	$sales_totals   = 0;            // Total sales for time period shown
 
 	ob_start(); ?>
 	<script type="text/javascript">
@@ -77,25 +83,61 @@ function edd_reports_graph() {
 	   			[{
    					data: [
 	   					<?php
-	   					$i = $dates['m_start'];
-						while ( $i <= $dates['m_end'] ) :
-							if ( $day_by_day ) :
-								$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
-								$d 				= 1;
-								while ( $d <= $num_of_days ) :
-									$date = mktime( 0, 0, 0, $i, $d, $dates['year'] ); ?>
-									[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( $d, $i, $dates['year'] ); ?>],
+
+	   					if( $dates['range'] == 'today' ) {
+	   						// Hour by hour
+	   						$hour  = 1;
+	   						$month = date( 'n' );
+							while ( $hour <= 23 ) :
+								$sales = edd_get_sales_by_date( $dates['day'], $month, $dates['year'], $hour );
+								$sales_totals += $sales;
+								$date = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ); ?>
+								[<?php echo $date * 1000; ?>, <?php echo $sales; ?>],
 								<?php
-								$d++;
-								endwhile;
-							else :
-								$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
-								?>
-								[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( null, $i, $dates['year'] ); ?>],
-							<?php
-							endif;
-							$i++;
-						endwhile;
+								$hour++;
+							endwhile;
+
+	   					} elseif( $dates['range'] == 'this_week' || $dates['range'] == 'last_week'  ) {
+
+							//Day by day
+							$day     = $dates['day'];
+							$day_end = $dates['day_end'];
+	   						$month   = $dates['m_start'];
+							while ( $day <= $day_end ) :
+								$sales = edd_get_sales_by_date( $day, $month, $dates['year'] );
+								$sales_totals += $sales;
+								$date = mktime( 0, 0, 0, $month, $day, $dates['year'] ); ?>
+								[<?php echo $date * 1000; ?>, <?php echo $sales; ?>],
+								<?php
+								$day++;
+							endwhile;
+
+	   					} else {
+
+	   						$i = $dates['m_start'];
+							while ( $i <= $dates['m_end'] ) :
+								if ( $day_by_day ) :
+									$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
+									$d 				= 1;
+									while ( $d <= $num_of_days ) :
+										$sales = edd_get_sales_by_date( $d, $i, $dates['year'] );
+										$sales_totals += $sales;
+										$date = mktime( 0, 0, 0, $i, $d, $dates['year'] ); ?>
+										[<?php echo $date * 1000; ?>, <?php echo $sales; ?>],
+									<?php
+									$d++;
+									endwhile;
+								else :
+									$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
+									?>
+									[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( null, $i, $dates['year'] ); ?>],
+								<?php
+								endif;
+								$i++;
+							endwhile;
+
+	   					}
+
 	   					?>,
 	   				],
 	   				yaxis: 2,
@@ -105,27 +147,62 @@ function edd_reports_graph() {
    				{
    					data: [
 	   					<?php
-	   					$i = $dates['m_start'];
-						while ( $i <= $dates['m_end'] ) :
-							if ( $day_by_day ) :
-								$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
-								$d 				= 1;
-								while ( $d <= $num_of_days ) :
-									$date = mktime( 0, 0, 0, $i, $d, $dates['year'] );
-									$earnings = edd_get_earnings_by_date( $d, $i, $dates['year'] );
-									$totals += $earnings; ?>
-									[<?php echo $date * 1000; ?>, <?php echo $earnings ?>],
-								<?php $d++; endwhile;
-							else :
-								$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
-								$earnings = edd_get_earnings_by_date( null, $i, $dates['year'] );
+
+	   					if( $dates['range'] == 'today' ) {
+
+	   						// Hour by hour
+	   						$hour  = 1;
+	   						$month = date( 'n' );
+							while ( $hour <= 23 ) :
+								$earnings = edd_get_earnings_by_date( $dates['day'], $month, $dates['year'], $hour );
 								$totals += $earnings;
-								?>
+								$date = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ); ?>
 								[<?php echo $date * 1000; ?>, <?php echo $earnings; ?>],
-							<?php
-							endif;
-							$i++;
-						endwhile;
+								<?php
+								$hour++;
+							endwhile;
+
+						} elseif( $dates['range'] == 'this_week' || $dates['range'] == 'last_week' ) {
+
+							//Day by day
+							$day     = $dates['day'];
+							$day_end = $dates['day_end'];
+	   						$month   = $dates['m_start'];
+							while ( $day <= $day_end ) :
+								$earnings = edd_get_earnings_by_date( $day, $month, $dates['year'] );
+								$totals += $earnings;
+								$date = mktime( 0, 0, 0, $month, $day, $dates['year'] ); ?>
+								[<?php echo $date * 1000; ?>, <?php echo $earnings; ?>],
+								<?php
+								$day++;
+							endwhile;
+
+	   					} else {
+
+		   					$i = $dates['m_start'];
+							while ( $i <= $dates['m_end'] ) :
+								if ( $day_by_day ) :
+									$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
+									$d 				= 1;
+									while ( $d <= $num_of_days ) :
+										$date = mktime( 0, 0, 0, $i, $d, $dates['year'] );
+										$earnings = edd_get_earnings_by_date( $d, $i, $dates['year'] );
+										$totals += $earnings; ?>
+										[<?php echo $date * 1000; ?>, <?php echo $earnings ?>],
+									<?php $d++; endwhile;
+								else :
+									$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
+									$earnings = edd_get_earnings_by_date( null, $i, $dates['year'] );
+									$totals += $earnings;
+									?>
+									[<?php echo $date * 1000; ?>, <?php echo $earnings; ?>],
+								<?php
+								endif;
+								$i++;
+							endwhile;
+
+						}
+
 	   					?>
 	   				],
    					label: "<?php _e( 'Earnings', 'edd' ); ?>",
@@ -202,11 +279,12 @@ function edd_reports_graph() {
 	<div class="metabox-holder" style="padding-top: 0;">
 		<div class="postbox">
 			<h3><span><?php _e('Earnings Over Time', 'edd'); ?></span></h3>
-			
+
 			<div class="inside">
 				<?php edd_reports_graph_controls(); ?>
 				<div id="edd_monthly_stats" style="height: 300px;"></div>
 				<p id="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $totals ) ); ?></strong></p>
+				<p id="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo $sales_totals; ?></strong></p>
 			</div>
 		</div>
 	</div>
@@ -225,13 +303,16 @@ function edd_reports_graph() {
 
 function edd_reports_graph_controls() {
 	$date_options = apply_filters( 'edd_report_date_options', array(
+		'today' 	    => __( 'Today', 'edd' ),
+		'this_week' 	=> __( 'This Week', 'edd' ),
+		'last_week' 	=> __( 'Last Week', 'edd' ),
 		'this_month' 	=> __( 'This Month', 'edd' ),
 		'last_month' 	=> __( 'Last Month', 'edd' ),
 		'this_quarter'	=> __( 'This Quarter', 'edd' ),
 		'last_quarter'	=> __( 'Last Quarter', 'edd' ),
 		'this_year'		=> __( 'This Year', 'edd' ),
 		'last_year'		=> __( 'Last Year', 'edd' ),
-		'other'			=> __( 'Other', 'edd' )
+		'other'			=> __( 'Custom', 'edd' )
 	) );
 
 	$dates = edd_get_report_dates();
@@ -258,8 +339,7 @@ function edd_reports_graph_controls() {
 		       	</select>
 
 		       	<div id="edd-date-range-options" <?php echo $display; ?>>
-					&mdash;
-				    <span><?php _e( 'From', 'edd' ); ?>&nbsp;</span>
+					<span><?php _e( 'From', 'edd' ); ?>&nbsp;</span>
 			       	<select id="edd-graphs-month-start" name="m_start">
 			       		<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
 			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_start'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
@@ -307,7 +387,7 @@ function edd_get_report_dates() {
 	$dates['year'] 		= isset( $_GET['year'] ) 	? $_GET['year'] 	: date( 'Y' );
 	$dates['year_end']	= date( 'Y' );
 
-	// modify dates based on predefined ranges
+	// Modify dates based on predefined ranges
 	switch( $dates['range'] ) :
 
 		case 'this_month' :
@@ -319,11 +399,45 @@ function edd_get_report_dates() {
 			break;
 
 		case 'last_month' :
+			if( $dates['m_start'] == 12 ) {
+				$dates['m_start'] = 12;
+				$dates['m_end']	  = 12;
+				$dates['year']    = date( 'Y' ) - 1;
+				$dates['year_end']= date( 'Y' ) - 1;
+			} else {
+				$dates['m_start'] = date( 'n' ) - 1;
+				$dates['m_end']	  = date( 'n' ) - 1;
+				$dates['year']    = date( 'Y' );
+			}
 
-			$dates['m_start'] 	= date( 'n' ) - 1;
-			$dates['m_end']		= date( 'n' ) - 1;
+
+			break;
+
+		case 'today' :
+
+			$dates['day']		= date( 'd' );
+			$dates['m_start'] 	= date( 'n' );
+			$dates['m_end']		= date( 'n' );
 			$dates['year']		= date( 'Y' );
 
+			break;
+
+		case 'this_week' :
+
+			$dates['day']       = date( 'd', time() - ( date( 'w' ) - 1 ) *60*60*24 );
+			$dates['day_end']   = $dates['day'] + 6;
+			$dates['m_start'] 	= date( 'n' );
+			$dates['m_end']		= date( 'n' );
+			$dates['year']		= date( 'Y' );
+			break;
+
+		case 'last_week' :
+
+			$dates['day']       = date( 'd', time() - ( date( 'w' ) - 1 ) *60*60*24 ) - 6;
+			$dates['day_end']   = $dates['day'] + 6;
+			$dates['m_start'] 	= date( 'n' );
+			$dates['m_end']		= date( 'n' );
+			$dates['year']		= date( 'Y' );
 			break;
 
 		case 'this_quarter' :
@@ -366,7 +480,7 @@ function edd_get_report_dates() {
 
 				$dates['m_start'] 	= 10;
 				$dates['m_end']		= 12;
-				$dates['year']		= date( 'Y' ) - 1; // previous year
+				$dates['year']		= date( 'Y' ) - 1; // Previous year
 
 			} else if ( $month_now <= 6 ) {
 

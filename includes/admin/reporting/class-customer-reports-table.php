@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Customer Reports List Table Class
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
@@ -50,9 +50,9 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		// Set parent defaults
 		parent::__construct( array(
-			'singular'  => __( 'Customer', 'edd' ),     // singular name of the listed records
-			'plural'    => __( 'Customers', 'edd' ),    // plural name of the listed records
-			'ajax'      => false             			// does this table support ajax?
+			'singular'  => __( 'Customer', 'edd' ),     // Singular name of the listed records
+			'plural'    => __( 'Customers', 'edd' ),    // Plural name of the listed records
+			'ajax'      => false             			// Does this table support ajax?
 		) );
 
 	}
@@ -80,7 +80,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 					return '<a href="' . admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( ! empty( $item['ID'] ) ? $item['ID'] : $item['email'] ) ) . '" target="_blank">' . $item['file_downloads'] . '</a>';
 
 			default:
-				return $item[ $column_name ];
+				$value = isset( $item[ $column_name ] ) ? $item[ $column_name ] : null;
+				return apply_filters( 'edd_report_column_' . $column_name, $value, $item['ID'] );
 		}
 	}
 
@@ -97,12 +98,12 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$columns = array(
 			'name'     		=> __( 'Name', 'edd' ),
 			'email'     	=> __( 'Email', 'edd' ),
-			'num_purchases' => __( 'Number of Purchases', 'edd' ),
-			'amount_spent'  => __( 'Total Amount Spent', 'edd' ),
+			'num_purchases' => __( 'Purchases', 'edd' ),
+			'amount_spent'  => __( 'Total Spent', 'edd' ),
 			'file_downloads'=> __( 'Files Downloaded', 'edd' )
 		);
 
-		return $columns;
+		return apply_filters( 'edd_report_customer_columns', $columns );
 	}
 
 
@@ -186,7 +187,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	function prepare_items() {
 		$columns = $this->get_columns();
 
-		$hidden = array(); // no hidden columns
+		$hidden = array(); // No hidden columns
 
 		$sortable = $this->get_sortable_columns();
 
