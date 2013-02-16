@@ -952,6 +952,7 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 	if( empty( $discounts ) )
 		$discounts = edd_get_cart_discounts();
 
+	// Setup the array of discounts
 	if( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) ) {
 
 		// check for a posted discount
@@ -966,19 +967,56 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 
 	}
 
+	// Return 0.00 if no discounts present
 	if( empty( $discounts ) )
 		return 0.00;
 
-	$subtotal  = edd_get_cart_subtotal();
-	$amounts   = array();
+	// Calculate the discounted amount
+	$amounts          = array();
+	$discounted_items = array();
+
+	// Loop through each active discount
 	foreach( $discounts as $discount ) {
-		$amounts[] = edd_get_discounted_amount( $discount, $subtotal );
+
+		$code_id   = edd_get_discount_id_by_code( $discount );
+		$reqs      = edd_get_discount_product_reqs( $code_id );
+
+		if( ! empty( $reqs ) ) {
+
+			// This is a product(s) specific discount
+
+			$condition  = edd_get_discount_product_condition( $code_id );
+			$cart_items = edd_get_cart_contents();
+
+			foreach( $reqs as $download_id ) {
+				if( edd_item_in_cart( $download_id ) ) {
+					$cart_key  = edd_get_item_position_in_cart( $download_id );
+					$price     = edd_get_cart_item_price( $download_id, $cart_items[ $cart_key ]['options'] );
+					$amount    = edd_get_discounted_amount( $discount, $price );
+					$discounted_items[] = $price - $amount;
+				}
+			}
+
+		} else {
+
+			// This is a global cart discount
+
+			$subtotal  = edd_get_cart_subtotal();
+			$amount    = edd_get_discounted_amount( $discount, $subtotal );
+			$amounts[] = $subtotal - $amount;
+
+		}
+
 	}
 
-	$discount_amount = array_sum( $amounts );
-	$subtotal -= $discount_amount;
+	// Add up the total amount
+	$discounted_amount = 0.00;
+	$item_discount     = array_sum( $discounted_items );
+	$global_discount   = array_sum( $amounts );
+	$discounted_amount += $item_discount;
+	$discounted_amount += $global_discount;
 
-	return edd_sanitize_amount( $subtotal );
+	return apply_filters( 'edd_get_cart_discounted_amount', edd_sanitize_amount( $discounted_amount ) );
 }
 
 
