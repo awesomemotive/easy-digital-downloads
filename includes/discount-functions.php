@@ -608,20 +608,45 @@ function edd_discount_is_min_met( $code_id = null ) {
 
 function edd_discount_product_reqs_met( $code_id = null ) {
 	$product_reqs = edd_get_discount_product_reqs( $code_id );
+	$condition    = edd_get_discount_product_condition( $code_id );
 	$cart_items   = edd_get_cart_contents();
 	$ret          = false;
 
-	if( is_array( $cart_items ) && ! empty( $product_reqs ) ) {
-		foreach( $cart_items as $item ) {
-			if( in_array( $item['id'], $product_reqs ) ) {
+	if( empty( $product_reqs ) )
+		$ret = true;
+
+	// Ensure we have requirements before proceeding
+	if( ! $ret ) :
+
+		switch( $condition ) :
+
+			case 'all' :
+				// Default back to true
 				$ret = true;
+				foreach( $product_reqs as $download_id ) {
+					if( ! edd_item_in_cart( $download_id ) ) {
+						$ret = false;
+						break;
+					}
+				}
 				break;
-			}
-		}
-	} else {
-		$ret = true; // No requirements set
-	}
-	return apply_filters( 'edd_is_discount_products_req_met', $ret, $code_id );
+
+			default : // Any
+
+				foreach( $product_reqs as $download_id ) {
+					if( edd_item_in_cart( $download_id ) ) {
+						$ret = true;
+						break;
+					}
+				}
+
+				break;
+
+		endswitch;
+
+	endif;
+
+	return (bool) apply_filters( 'edd_is_discount_products_req_met', $ret, $code_id, $condition );
 }
 
 
