@@ -75,8 +75,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<p class="description"><?php printf( __( '%s required to be purchased for this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
 					<label for="edd-product-condition"><?php _e( 'Condition', 'edd' ); ?></label>
 					<select id="edd-product-condition" name="product_condition">
-						<option value="all"><?php _e( 'All Selected Products', 'edd' ); ?></option>
-						<option value="any"><?php _e( 'Any Selected Product', 'edd' ); ?></option>
+						<option value="all"><?php printf( __( 'All Selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
+						<option value="any"><?php printf( __( 'Any Selected %s', 'edd' ), edd_get_label_singular() ); ?></option>
 					</select>
 				</td>
 			</tr>
