@@ -502,6 +502,11 @@ function edd_purchase_form_validate_guest_user() {
 		'user_id' => 0,
 	);
 
+	// Show error message if user must be logged in
+	if( edd_logged_in_only() ) {
+		edd_set_error( 'logged_in_only', __( 'Only logged in users can purchase files', 'edd' ) );
+	}
+
 	// Get the guest email
 	$guest_email = isset( $_POST['edd_email'] ) ? $_POST['edd_email'] : false;
 
