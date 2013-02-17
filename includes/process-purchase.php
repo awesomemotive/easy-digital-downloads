@@ -504,7 +504,7 @@ function edd_purchase_form_validate_guest_user() {
 
 	// Show error message if user must be logged in
 	if( edd_logged_in_only() ) {
-		edd_set_error( 'logged_in_only', __( 'Only logged in users can purchase files', 'edd' ) );
+		edd_set_error( 'logged_in_only', __( 'You must be logged into an account to purchase.', 'edd' ) );
 	}
 
 	// Get the guest email
