@@ -37,7 +37,7 @@ function edd_process_purchase_form() {
 		do_action( 'edd_checkout_error_checks', $valid_data, $_POST );
 	}
 
-	$is_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
+	$is_ajax = isset( $_POST['edd_ajax'] );
 
 	$user    = edd_get_purchase_form_user( $valid_data );
 
@@ -307,7 +307,7 @@ function edd_purchase_form_validate_logged_in_user() {
 		}
 
 		// Loop through required fields and show error messages
-		foreach( edd_purchase_form_required_fields() as $field_name => $value ) {		
+		foreach( edd_purchase_form_required_fields() as $field_name => $value ) {
 			if( in_array( $value, edd_purchase_form_required_fields() ) && empty( $_POST[ $field_name ] ) ) {
 				edd_set_error( $value['error_id'], $value['error_message'] );
 			}
@@ -521,7 +521,7 @@ function edd_purchase_form_validate_guest_user() {
 	}
 
 	// Loop through required fields and show error messages
-	foreach( edd_purchase_form_required_fields() as $field_name => $value ) {		
+	foreach( edd_purchase_form_required_fields() as $field_name => $value ) {
 		if( in_array( $value, edd_purchase_form_required_fields() ) && empty( $_POST[ $field_name ] ) ) {
 			edd_set_error( $value['error_id'], $value['error_message'] );
 		}

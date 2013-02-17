@@ -206,7 +206,7 @@ jQuery(document).ready(function ($) {
 
         $(this).after('<img src="' + edd_scripts.ajax_loader + '" class="edd-cart-ajax" />');
 
-        $.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout', function(data) {
+        $.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout&edd_ajax=true', function(data) {
             if ( $.trim(data) == 'success' ) {
                 $('.edd_errors').remove();
                 $('#edd_purchase_form').submit();
