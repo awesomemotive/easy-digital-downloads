@@ -84,8 +84,8 @@ $condition    = edd_get_discount_product_condition( $discount_id );
 					<p class="description"><?php printf( __( '%s required to be purchased for this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
 					<label for="edd-product-condition"><?php _e( 'Condition', 'edd' ); ?></label>
 					<select id="edd-product-condition" name="product_condition">
-						<option value="all"<?php selected( 'all', $condition ); ?>><?php _e( 'All Selected Products', 'edd' ); ?></option>
-						<option value="any"<?php selected( 'any', $condition ); ?>><?php _e( 'Any Selected Product', 'edd' ); ?></option>
+						<option value="all"<?php selected( 'all', $condition ); ?>><?php printf( __( 'All Selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
+						<option value="any"<?php selected( 'any', $condition ); ?>><?php printf( __( 'Any Selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
 					</select>
 				</td>
 			</tr>
