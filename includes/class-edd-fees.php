@@ -105,7 +105,7 @@ class EDD_Fees {
 				$total += $fee['amount'];
 			}
 		}
-		return edd_format_amount( $total );
+		return edd_sanitize_amount( $total );
 	}
 
 
