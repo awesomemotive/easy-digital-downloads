@@ -860,10 +860,8 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 
 					$file_condition = edd_get_file_price_condition( $id, $file_key );
 
-					$variable_prices_enabled = get_post_meta( $id, '_variable_pricing', true );
-
 					// If this download has variable prices, we have to confirm that this file was included in their purchase
-					if( ! empty( $price_options ) && $file_condition != 'all' && $variable_prices_enabled ) {
+					if( ! empty( $price_options ) && $file_condition != 'all' && edd_has_variable_prices( $id ) ) {
 						if( $file_condition !== $price_options['price_id'] )
 							return false;
 					}
