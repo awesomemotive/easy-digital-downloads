@@ -187,8 +187,6 @@ function edd_insert_payment( $payment_data = array() ) {
 			'post_title'    => $payment_title,
 			'post_status'   => isset( $payment_data['status'] ) ? $payment_data['status'] : 'pending',
 			'post_type'     => 'edd_payment',
-			'post_date'     => $payment_data['date'],
-			'post_date_gmt' => $payment_data['date'],
 			'post_parent'   => isset( $payment_data['parent'] ) ? $payment_data['parent'] : null
 		)
 	);
