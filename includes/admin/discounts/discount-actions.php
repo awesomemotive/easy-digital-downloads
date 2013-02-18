@@ -29,7 +29,7 @@ function edd_add_discount( $data ) {
 		$posted = array();
 		foreach ( $data as $key => $value ) {
 			if ( $key != 'edd-discount-nonce' && $key != 'edd-action' ) {
-				if( is_string( $value ) )
+				if( is_string( $value ) || is_int( $value ) )
 					$posted[ $key ] = strip_tags( addslashes( $value ) );
 				elseif( is_array( $value ) )
 					$posted[ $key ] = array_map( 'absint', $value );
@@ -59,7 +59,7 @@ function edd_edit_discount( $data ) {
 		$discount = array();
 		foreach ( $data as $key => $value ) {
 			if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'discount-id' && $key != 'edd-redirect' ) {
-				if( is_string( $value ) )
+				if( is_string( $value ) || is_int( $value ) )
 					$discount[ $key ] = strip_tags( addslashes( $value ) );
 				elseif( is_array( $value ) )
 					$discount[ $key ] = array_map( 'absint', $value );
