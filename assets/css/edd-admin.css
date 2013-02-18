@@ -16,6 +16,11 @@
 #edd-add-ons .edd-browse-all { clear:both; width:100%; }
 #edd-add-ons .edd-extension .third-party { display: none; }
 
+/* Discount Code Styles
+-------------------------------------------------------------- */
+#edd-products { height: 100px; min-width: 200px; }
+#edd-add-discount input[type="checkbox"], #edd-edit-discount input[type="checkbox"] { width: 15px; display: inline; }
+
 /* Payment History Styles
 -------------------------------------------------------------- */
 tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
