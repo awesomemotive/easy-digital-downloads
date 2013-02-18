@@ -574,7 +574,7 @@ function edd_is_discount_maxed_out( $code_id = null ) {
 		// Large number that will never be reached
 		$max_uses = edd_get_discount_max_uses( $code_id );
 		// Should never be greater than, but just in case
-		if ( $uses >= $max_uses && $max_uses != '' && ! empty( $max_uses ) ) {
+		if ( $uses >= $max_uses && ! empty( $max_uses ) ) {
 			// Discount is maxed out
 			$return = true;
 		}
