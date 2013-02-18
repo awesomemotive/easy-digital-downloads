@@ -17,8 +17,10 @@ if ( ! isset( $_GET['discount'] ) || ! is_numeric( $_GET['discount'] ) ) {
 	wp_die( __( 'Something went wrong.', 'edd' ), __( 'Error', 'edd' ) );
 }
 
-$discount_id = absint( $_GET['discount'] );
-$discount    = edd_get_discount( $discount_id );
+$discount_id  = absint( $_GET['discount'] );
+$discount     = edd_get_discount( $discount_id );
+$product_reqs = edd_get_discount_product_reqs( $discount_id );
+$condition    = edd_get_discount_product_condition( $discount_id );
 ?>
 <h2><?php _e( 'Edit Discount', 'edd' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
 <form id="edd-edit-discount" action="" method="post">
@@ -62,6 +64,35 @@ $discount    = edd_get_discount( $discount_id );
 				<td>
 					<input type="text" id="edd-amount" name="amount" value="<?php echo esc_attr( edd_get_discount_amount( $discount_id ) ); ?>" style="width: 40px;"/>
 					<p class="description"><?php _e( 'The amount of this discount code.', 'edd' ); ?></p>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<label for="edd-products"><?php printf( __( '%s Requirements', 'edd' ), edd_get_label_singular() ); ?></label>
+				</th>
+				<td>
+					<select multiple id="edd-products" name="products[]"/>
+						<?php
+						$downloads = get_posts( array( 'post_type' => 'download', 'no_paging' => 1 ) );
+						if( $downloads ) :
+							foreach( $downloads as $download ) :
+								echo '<option value="' . esc_attr( $download->ID ) . '"' . selected( true, in_array( $download->ID, $product_reqs ), false ) . '>' . esc_html( get_the_title( $download->ID ) ) . '</option>';
+							endforeach;
+						endif;
+						?>
+					</select>
+					<p class="description"><?php printf( __( '%s required to be purchased for this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
+					<select id="edd-product-condition" name="product_condition">
+						<option value="all"<?php selected( 'all', $condition ); ?>><?php printf( __( 'All Selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
+						<option value="any"<?php selected( 'any', $condition ); ?>><?php printf( __( 'Any Selected %s', 'edd' ), edd_get_label_singular() ); ?></option>
+					</select>
+					<label for="edd-product-condition"><?php _e( 'Condition', 'edd' ); ?></label>
+					<p>
+						<label for="edd-non-global-discount">
+							<input type="checkbox" id="edd-non-global-discount" name="not_global" value="1"<?php checked( true, edd_is_discount_not_global( $discount_id ) ); ?>/>
+							<?php printf( __( 'Apply discount only to selected %s?' ), edd_get_label_plural() ); ?>
+						</label>
+					</p>
 				</td>
 			</tr>
 			<tr class="form-field">
