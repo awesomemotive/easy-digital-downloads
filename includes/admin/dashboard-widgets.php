@@ -14,33 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 
 /**
- * Add Downloads Post Count to Right Now Widget
- *
- * @access      private
- * @author      Sunny Ratilal
- * @since       1.5
- */
-
-function edd_add_download_count_to_dashboard() {
-	$number_of_downloads = wp_count_posts( 'download' );
-	$published_downloads = number_format_i18n( $number_of_downloads->publish );
-
-	$label = sprintf( _n( '%1$s', '%2$s', intval( $number_of_downloads->publish ), 'edd' ), edd_get_label_singular(), edd_get_label_plural() );
-
-	$url = admin_url( 'edit.php?post_type=download' );
-	$pending_url = admin_url( 'edit.php?post_status=pending&post_type=download' );
-
-	if ( current_user_can( 'edit_posts' ) ) {
-		$published_downloads   = "<a href='$url'>$published_downloads</a>";
-		$label = "<a href='$url'>$label</a>";
-	}
-
-	echo '<td class="first b b-portfolio">' . $published_downloads . '</td>' . '<td class="t portfolio">' . $label . '</td>' . '</tr>';
-}
-add_action( 'right_now_content_table_end', 'edd_add_download_count_to_dashboard' );
-
-
-/**
  * Register Dashboard Widgets
  *
  * Registers the dashboard widgets.
