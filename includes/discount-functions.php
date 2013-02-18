@@ -1000,6 +1000,7 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 		$code_id   = edd_get_discount_id_by_code( $discount );
 		$reqs      = edd_get_discount_product_reqs( $code_id );
 
+		// Make sure requirements are set and that this discount shouldn't apply to the whole cart
 		if( ! empty( $reqs ) && edd_is_discount_not_global( $code_id ) ) {
 
 			// This is a product(s) specific discount
