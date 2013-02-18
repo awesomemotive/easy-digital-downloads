@@ -10,11 +10,11 @@ php:
   - 5.2
 env:
 # Officialy Supported WP Versions (w/ and w/o MS)
-  - WP_VERSION=3.5 WP_MULTISITE=0 
-  - WP_VERSION=3.5 WP_MULTISITE=1
+  - WP_VERSION=3.5.1 WP_MULTISITE=0 
+  - WP_VERSION=3.5.1 WP_MULTISITE=1
 # Last WP Version (tested against but not supported by EDD)
-  - WP_VERSION=3.4.2 WP_MULTISITE=0
-  - WP_VERSION=3.4.2 WP_MULTISITE=1
+  - WP_VERSION=3.5 WP_MULTISITE=0
+  - WP_VERSION=3.5 WP_MULTISITE=1
 #  - WP_VERSION=3.5-beta2 WP_MULTISITE=0 
 #  - WP_VERSION=3.5-beta2 WP_MULTISITE=1
 #  - WP_VERSION=3.5-beta-1 WP_MULTISITE=0
@@ -43,8 +43,8 @@ env:
 matrix:
   allow_failures:
 # Legacy Versions
-    - env: WP_VERSION=3.4.2 WP_MULTISITE=0 
-    - env: WP_VERSION=3.4.2 WP_MULTISITE=1
+    - env: WP_VERSION=3.5 WP_MULTISITE=0 
+    - env: WP_VERSION=3.5 WP_MULTISITE=1
 # Old Versions (uncomment lines here and above to test)
 #  - WP_VERSION=3.4.1 WP_MULTISITE=0
 #  - WP_VERSION=3.4.1 WP_MULTISITE=1
