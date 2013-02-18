@@ -138,6 +138,7 @@ function edd_store_discount( $discount_details, $discount_id = null ) {
 		'min_price'         => isset( $discount_details['min_price'] )        ? $discount_details['min_price']         : '',
 		'product_reqs'      => isset( $discount_details['products'] )         ? $discount_details['products']          : array(),
 		'product_condition' => isset( $discount_details['product_condition'] )? $discount_details['product_condition'] : '',
+		'is_not_global'     => isset( $discount_details['not_global'] )       ? $discount_details['not_global']        : false,
 	);
 
 	if ( edd_discount_exists( $discount_id ) && !is_null( $discount_id ) ) {
