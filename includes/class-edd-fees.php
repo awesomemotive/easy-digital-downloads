@@ -64,7 +64,7 @@ class EDD_Fees {
 	 * @access      public
 	 * @since       1.5
 	 *
-	 * @return      void
+	 * @return      bool
 	 */
 
 	public function has_fees() {
@@ -78,7 +78,7 @@ class EDD_Fees {
 	 * @access      public
 	 * @since       1.5
 	 *
-	 * @return      array
+	 * @return      array|bool
 	 */
 
 	public function get_fees() {
