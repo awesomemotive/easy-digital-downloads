@@ -28,8 +28,12 @@ function edd_add_discount( $data ) {
 		// Setup the discount code details
 		$posted = array();
 		foreach ( $data as $key => $value ) {
-			if ( $key != 'edd-discount-nonce' && $key != 'edd-action' )
-			$posted[ $key ] = strip_tags(addslashes( $value ) );
+			if ( $key != 'edd-discount-nonce' && $key != 'edd-action' ) {
+				if( is_string( $value ) || is_int( $value ) )
+					$posted[ $key ] = strip_tags( addslashes( $value ) );
+				elseif( is_array( $value ) )
+					$posted[ $key ] = array_map( 'absint', $value );
+			}
 		}
 		// Set the discount code's default status to active
 		$posted['status'] = 'active';
@@ -54,8 +58,12 @@ function edd_edit_discount( $data ) {
 		// Setup the discount code details
 		$discount = array();
 		foreach ( $data as $key => $value ) {
-			if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'discount-id' && $key != 'edd-redirect' )
-			$discount[ $key ] = strip_tags( addslashes( $value ) );
+			if ( $key != 'edd-discount-nonce' && $key != 'edd-action' && $key != 'discount-id' && $key != 'edd-redirect' ) {
+				if( is_string( $value ) || is_int( $value ) )
+					$discount[ $key ] = strip_tags( addslashes( $value ) );
+				elseif( is_array( $value ) )
+					$discount[ $key ] = array_map( 'absint', $value );
+			}
 		}
 		$old_discount = edd_get_discount_by_code( $data['code'] );
 		$discount['uses'] = edd_get_discount_uses( $old_discount->ID );

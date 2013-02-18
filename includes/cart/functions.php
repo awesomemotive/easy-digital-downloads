@@ -191,9 +191,9 @@ function edd_get_item_position_in_cart( $download_id ) {
 	if( !is_array( $cart_items ) ) {
 		return false; // Empty cart
 	} else {
-		foreach( $cart_items as $postion => $item ) {
+		foreach( $cart_items as $position => $item ) {
 			if( $item['id'] == $download_id ) {
-				return $postion;
+				return $position;
 			}
 		}
 	}
