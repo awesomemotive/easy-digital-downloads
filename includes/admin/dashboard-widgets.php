@@ -25,7 +25,7 @@ function edd_add_download_count_to_dashboard() {
 	$number_of_downloads = wp_count_posts( 'download' );
 	$published_downloads = number_format_i18n( $number_of_downloads->publish );
 
-	$label = _n( 'Download', 'Downloads', intval( $number_of_downloads->publish ), 'edd' );
+	$label = sprintf( _n( '%1$s', '%2$s', intval( $number_of_downloads->publish ), 'edd' ), edd_get_label_singular(), edd_get_label_plural() );
 
 	$url = admin_url( 'edit.php?post_type=download' );
 	$pending_url = admin_url( 'edit.php?post_status=pending&post_type=download' );
