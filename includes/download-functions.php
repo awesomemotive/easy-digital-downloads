@@ -843,7 +843,7 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 
 		foreach( $payments as $payment ) {
 
-			$payment_meta 	= get_post_meta( $payment->ID, '_edd_payment_meta', true );
+			$payment_meta 	= edd_get_payment_meta( $payment->ID );
 			$downloads 		= maybe_unserialize( $payment_meta['downloads'] );
 			$cart_details 	= unserialize( $payment_meta['cart_details'] );
 
@@ -852,11 +852,14 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 
 			if( $downloads ) {
 
-				foreach( $downloads as $key => $download ) {
+				foreach( $downloads as $download_key => $download ) {
 
 					$id = isset( $payment_meta['cart_details'] ) ? $download['id'] : $download;
 
-					$price_options = $cart_details[ $key ]['item_number']['options'];
+					if( $id != $download_id )
+						continue;
+
+					$price_options = $cart_details[ $download_key ]['item_number']['options'];
 
 					$file_condition = edd_get_file_price_condition( $id, $file_key );
 
@@ -866,18 +869,15 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 							return false;
 					}
 
-					if( $id == $download_id ) {
+					// Check to see if the file download limit has been reached
+					if( edd_is_file_at_download_limit( $id, $payment->ID, $file_key ) )
+						wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ) );
 
-						// Check to see if the file download limit has been reached
-						if( edd_is_file_at_download_limit( $id, $payment->ID, $file_key ) )
-							wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ) );
-
-						// Make sure the link hasn't expired
-						if( time() < $expire ) {
-							return $payment->ID; // Payment has been verified and link is still valid
-						}
-						return false; // Payment verified, but link is no longer valid
+					// Make sure the link hasn't expired
+					if( time() < $expire ) {
+						return $payment->ID; // Payment has been verified and link is still valid
 					}
+					return false; // Payment verified, but link is no longer valid
 
 				}
 
