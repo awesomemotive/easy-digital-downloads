@@ -24,47 +24,21 @@ env:
 # To test EDD on them, uncomment the line, by removing the "#"
 #    and then uncomment the allowed failures line for the respective
 #    versions below. 
-#  - WP_VERSION=3.4.1 WP_MULTISITE=0
-#  - WP_VERSION=3.4.1 WP_MULTISITE=1
-#  - WP_VERSION=3.4 WP_MULTISITE=0
-#  - WP_VERSION=3.4 WP_MULTISITE=1 
-#  - WP_VERSION=3.3.3 WP_MULTISITE=0
-#  - WP_VERSION=3.3.3 WP_MULTISITE=1 
-#  - WP_VERSION=3.3.2 WP_MULTISITE=0
-#  - WP_VERSION=3.3.2 WP_MULTISITE=1
-#  - WP_VERSION=3.3.1 WP_MULTISITE=0
-#  - WP_VERSION=3.3 WP_MULTISITE=1
-#  - WP_VERSION=3.3 WP_MULTISITE=0
-#  - WP_VERSION=3.2.1 WP_MULTISITE=1
-#  - WP_VERSION=3.2.1 WP_MULTISITE=0
-#  - WP_VERSION=3.2 WP_MULTISITE=0
-#  - WP_VERSION=3.2 WP_MULTISITE=1
-# Test against (but allow fail) on older WP and PHP versions, as well as beta WP
-# Also test against the current Master (development) Github repo of WordPress
-matrix:
-  allow_failures:
-# Legacy Versions
-    - env: WP_VERSION=3.5 WP_MULTISITE=0 
-    - env: WP_VERSION=3.5 WP_MULTISITE=1
-# Old Versions (uncomment lines here and above to test)
-#    - env: WP_VERSION=3.4.1 WP_MULTISITE=0
-#    - env: WP_VERSION=3.4.1 WP_MULTISITE=1
-#    - env: WP_VERSION=3.4 WP_MULTISITE=0
-#    - env: WP_VERSION=3.4 WP_MULTISITE=1 
-#    - env: WP_VERSION=3.3.3 WP_MULTISITE=0
-#    - env: WP_VERSION=3.3.3 WP_MULTISITE=1 
-#    - env: WP_VERSION=3.3.2 WP_MULTISITE=0
-#    - env: WP_VERSION=3.3.2 WP_MULTISITE=1
-#    - env: WP_VERSION=3.3.1 WP_MULTISITE=0
-#    - env: WP_VERSION=3.3.1 WP_MULTISITE=1
-#    - env: WP_VERSION=3.3 WP_MULTISITE=0
-#    - env: WP_VERSION=3.3 WP_MULTISITE=1
-#    - env: WP_VERSION=3.2.1 WP_MULTISITE=0
-#    - env: WP_VERSION=3.2.1 WP_MULTISITE=1
-#    - env: WP_VERSION=3.2 WP_MULTISITE=0
-#    - env: WP_VERSION=3.2 WP_MULTISITE=1
-    - php: 5.5
-    - php: 5.2
+  - WP_VERSION=3.4.1 WP_MULTISITE=0
+  - WP_VERSION=3.4.1 WP_MULTISITE=1
+  - WP_VERSION=3.4 WP_MULTISITE=0
+  - WP_VERSION=3.4 WP_MULTISITE=1 
+  - WP_VERSION=3.3.3 WP_MULTISITE=0
+  - WP_VERSION=3.3.3 WP_MULTISITE=1 
+  - WP_VERSION=3.3.2 WP_MULTISITE=0
+  - WP_VERSION=3.3.2 WP_MULTISITE=1
+  - WP_VERSION=3.3.1 WP_MULTISITE=0
+  - WP_VERSION=3.3 WP_MULTISITE=1
+  - WP_VERSION=3.3 WP_MULTISITE=0
+  - WP_VERSION=3.2.1 WP_MULTISITE=1
+  - WP_VERSION=3.2.1 WP_MULTISITE=0
+  - WP_VERSION=3.2 WP_MULTISITE=0
+  - WP_VERSION=3.2 WP_MULTISITE=1
   
 before_script:
   - wget -O testsuite.zip https://github.com/nb/wordpress-tests/archive/460b9c4ad9db7eea4710f151851060ae1921ea7c.zip
