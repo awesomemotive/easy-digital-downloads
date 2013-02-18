@@ -88,9 +88,9 @@ $condition    = edd_get_discount_product_condition( $discount_id );
 					</select>
 					<label for="edd-product-condition"><?php _e( 'Condition', 'edd' ); ?></label>
 					<p>
-						<label for="edd-global-discount">
-							<input type="checkbox" id="edd-global-discount" name="global" value="1"<?php checked( true, edd_is_discount_global( $discount_id ) ); ?>/>
-							<?php printf( __( 'Apply discount to the entire cart or only selected %s?' ), edd_get_label_plural() ); ?>
+						<label for="edd-non-global-discount">
+							<input type="checkbox" id="edd-non-global-discount" name="not_global" value="1"<?php checked( true, edd_is_discount_not_global( $discount_id ) ); ?>/>
+							<?php printf( __( 'Apply discount only to selected %s?' ), edd_get_label_plural() ); ?>
 						</label>
 					</p>
 				</td>

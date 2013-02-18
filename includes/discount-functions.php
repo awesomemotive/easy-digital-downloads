@@ -475,6 +475,24 @@ function edd_get_discount_product_condition( $code_id = 0 ) {
 
 
 /**
+ * Check if a discount is not global
+ *
+ * By default discounts are applied to all products in the cart. Non global discounts are
+ * applied only to the products selected as requirements
+ *
+ * @param int $code_id
+ *
+ * @access      public
+ * @since       1.5
+ * @return      bool
+ */
+
+function edd_is_discount_not_global( $code_id = 0 ) {
+	return (bool) get_post_meta( $code_id, '_edd_discount_is_not_global', true );
+}
+
+
+/**
  * Is Discount Expired
  *
  * Checks whether a discount code is expired.
