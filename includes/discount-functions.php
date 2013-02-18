@@ -141,7 +141,7 @@ function edd_store_discount( $discount_details, $discount_id = null ) {
 		'is_not_global'     => isset( $discount_details['not_global'] )       ? $discount_details['not_global']        : false,
 	);
 
-	if ( edd_discount_exists( $discount_id ) && !is_null( $discount_id ) ) {
+	if ( edd_discount_exists( $discount_id ) && ! empty( $discount_id ) ) {
 
 		// Update an existing discount
 
