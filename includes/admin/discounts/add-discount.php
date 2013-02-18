@@ -79,9 +79,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					</select>
 					<label for="edd-product-condition"><?php _e( 'Condition', 'edd' ); ?></label>
 					<p>
-						<label for="edd-global-discount">
-							<input type="checkbox" id="edd-global-discount" name="global" value="1"/>
-							<?php printf( __( 'Apply discount to the entire cart or only selected %s?' ), edd_get_label_plural() ); ?>
+						<label for="edd-non-global-discount">
+							<input type="checkbox" id="edd-non-global-discount" name="not_global" value="1"/>
+							<?php printf( __( 'Apply discount only to selected %s?' ), edd_get_label_plural() ); ?>
 						</label>
 					</p>
 				</td>
