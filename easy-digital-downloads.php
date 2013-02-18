@@ -54,7 +54,7 @@ final class Easy_Digital_Downloads {
 
 	/**
 	 * EDD cart fees object
-	 * @since x.x
+	 * @since 1.5
 	 */
 	public $fees;
 
