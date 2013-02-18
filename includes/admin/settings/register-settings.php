@@ -543,7 +543,10 @@ function edd_register_settings() {
 				'section' => 'taxes',
 				'size' => isset($option['size']) ? $option['size'] : '' ,
 				'options' => isset($option['options']) ? $option['options'] : '',
-				'std' => isset($option['std']) ? $option['std'] : ''
+				'std' => isset($option['std']) ? $option['std'] : '',
+				'min' => isset($option['min']) ? $option['min'] : null,
+				'max' => isset($option['max']) ? $option['max'] : null,
+				'disabled' => isset($option['disabled']) ? $option['disabled'] : null
 	    	)
 		);
 	}
@@ -717,10 +720,14 @@ function edd_gateways_callback($args) {
 
 function edd_text_callback($args) {
 	global $edd_options;
+	
+	$min = isset( $args['min'] ) ? 'min="'. $args['min']  .'" ' : '';
+	$max = isset( $args['max'] ) ? 'max="' . $args['max'] . '" ' : '';
+	$disabled = isset( $args['disabled'] ) ? 'disabled="disabled" ' : '';
 
 	if( isset( $edd_options[ $args['id'] ] ) ) { $value = $edd_options[ $args['id'] ]; } else { $value = isset( $args['std'] ) ? $args['std'] : ''; }
 	$size = isset( $args['size'] ) && !is_null($args['size']) ? $args['size'] : 'regular';
-	$html = '<input type="text" class="' . $args['size'] . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
+	$html = '<input type="text" class="' . $args['size'] . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"' . $min . $max . $disabled .'  />';
 	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
 	echo $html;
