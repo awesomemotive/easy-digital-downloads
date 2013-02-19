@@ -91,12 +91,12 @@ class EDD_API {
 	function key_update( $user_id ) {
 		if ( current_user_can( 'edit_user', $user_id ) && isset( $_POST['edd_set_api_key'] ) ) {
 			$user = get_userdata( $user_id );
-
-			if ( !isset( $user->key ) || ( $user->key == null ) ) {
+			$key  = get_user_meta( $user_id, '_edd_user_api_key', true );
+			if ( empty( $key ) ) {
 				$hash = hash( 'md5', $user->user_email . date( 'U' ) );
 				update_user_meta( $user_id, '_edd_user_api_key', $hash );
 			} else {
-				update_user_meta( $user_id, '_edd_user_api_key', '' );
+				delete_user_meta( $user_id, '_edd_user_api_key' );
 			}
 		}
 	}
