@@ -336,7 +336,56 @@ function edd_get_cart_subtotal() {
 		}
 
 	}
+
 	return apply_filters( 'edd_get_cart_subtotal', $amount );
+}
+
+
+/**
+ * Check if cart has fees applied
+ *
+ * Just a simple wrapper function for EDD_Fees::has_fees()
+ *
+ * @access      public
+ * @since       1.5
+ *
+ * @return      bool
+ */
+
+function edd_cart_has_fees() {
+	return EDD()->fees->has_fees();
+}
+
+
+/**
+ * Get cart fees
+ *
+ * Just a simple wrapper function for EDD_Fees::get_fees()
+ *
+ * @access      public
+ * @since       1.5
+ *
+ * @return      array
+ */
+
+function edd_get_cart_fees() {
+	return EDD()->fees->get_fees();
+}
+
+
+/**
+ * Get cart fee total
+ *
+ * Just a simple wrapper function for EDD_Fees::total()
+ *
+ * @access      public
+ * @since       1.5
+ *
+ * @return      float
+ */
+
+function edd_get_cart_fee_total() {
+	return EDD()->fees->total();
 }
 
 
@@ -417,9 +466,10 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 function edd_get_cart_total( $discounts = false ) {
 
 	$subtotal = edd_get_cart_subtotal();
+	$fees     = edd_get_cart_fee_total();
 	$cart_tax = edd_get_cart_tax( $discounts );
 	$discount = edd_get_cart_discounted_amount( $discounts );
-	$total    = $subtotal + $cart_tax - $discount;
+	$total    = $subtotal + $fees + $cart_tax - $discount;
 
 	return (float) apply_filters( 'edd_get_cart_total', $total );
 

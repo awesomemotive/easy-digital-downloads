@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Metabox Functions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -29,17 +29,14 @@ function edd_add_download_meta_box() {
 	/** Product Notes */
 	add_meta_box( 'edd_product_notes', __( 'Product Notes', 'edd' ), 'edd_render_product_notes_meta_box', 'download', 'normal', 'default' );
 
-	if( current_user_can( 'view_shop_reports' ) ) {
+	/** Download Stats */
+	add_meta_box( 'edd_download_stats', sprintf( __( '%1$s Stats', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', 'download', 'side', 'high' );
 
-		/** Download Stats */
-		add_meta_box( 'edd_download_stats', sprintf( __( '%1$s Stats', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', 'download', 'side', 'high' );
+	/** Purchase Logs */
+	add_meta_box( 'edd_purchase_log', __( 'Purchase Log', 'edd' ), 'edd_render_purchase_log_meta_box', 'download', 'normal', 'default');
 
-		/** Purchase Logs */
-		add_meta_box( 'edd_purchase_log', __( 'Purchase Log', 'edd' ), 'edd_render_purchase_log_meta_box', 'download', 'normal', 'default');
-
-		/** Download Logs */
-		add_meta_box( 'edd_file_download_log', __( 'File Download Log', 'edd' ), 'edd_render_download_log_meta_box', 'download', 'normal', 'default' );
-	}
+	/** Download Logs */
+	add_meta_box( 'edd_file_download_log', __( 'File Download Log', 'edd' ), 'edd_render_download_log_meta_box', 'download', 'normal', 'default' );
 }
 add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
 
@@ -73,6 +70,7 @@ function edd_download_meta_box_save( $post_id) {
 	$fields = apply_filters( 'edd_metabox_fields_save', array(
 			'edd_price',
 			'_variable_pricing',
+			'_edd_price_options_mode',
 			'edd_variable_prices',
 			'edd_download_files',
 			'_edd_purchase_text',
@@ -126,6 +124,24 @@ function edd_sanitize_price_save( $price ) {
 	return $price;
 }
 add_filter( 'edd_metabox_save_edd_price', 'edd_sanitize_price_save' );
+
+
+/**
+ * Sanitize the variable prices
+ *
+ * Ensures prices are correctly mapped to an array starting with an index of 0
+ *
+ * @access      private
+ * @since       1.4.2
+ * @return      float
+ */
+
+function edd_sanitize_variable_prices_save( $prices ) {
+	// Make sure all prices are rekeyed starting at 0
+	$prices = array_values( $prices );
+	return $prices;
+}
+add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_sanitize_variable_prices_save' );
 
 
 /** Download Configuration *****************************************************************/
@@ -248,6 +264,7 @@ function edd_render_price_field( $post_id ) {
 }
 add_action( 'edd_meta_box_fields', 'edd_render_price_field', 10 );
 
+
 /**
  * Individual price row.
  *
@@ -339,14 +356,14 @@ function edd_render_files_field( $post_id ) {
 
 							$args = apply_filters( 'edd_file_row_args', compact( 'name', 'file', 'condition' ) );
 				?>
-						<tr class="edd_repeatable_upload_wrapper edd_repeatable_files">
+						<tr class="edd_repeatable_upload_wrapper">
 							<?php do_action( 'edd_render_file_row', $key, $args, $post_id ); ?>
 						</tr>
 				<?php
 						endforeach;
 					else :
 				?>
-					<tr class="edd_repeatable_upload_wrapper edd_repeatable_files">
+					<tr class="edd_repeatable_upload_wrapper">
 						<?php do_action( 'edd_render_file_row', 0, array(), $post_id ); ?>
 					</tr>
 				<?php endif; ?>
@@ -398,7 +415,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 			<input type="text" class="edd_repeatable_upload_field edd_upload_field" name="edd_download_files[<?php echo $key; ?>][file]" id="edd_download_files[<?php echo $key; ?>][file]" value="<?php echo $file; ?>" placeholder="<?php _e( 'http://', 'edd' ); ?>" style="width:100%" />
 
 			<span class="edd_upload_file">
-				<a href="#" class="edd_upload_image_button" onclick="return false;"><?php _e( 'Upload a File', 'edd' ); ?></a>
+				<a href="#" data-uploader_title="" data-uploader_button_text="<?php _e( 'Insert', 'edd' ); ?>" class="edd_upload_image_button" onclick="return false;"><?php _e( 'Upload a File', 'edd' ); ?></a>
 			</span>
 		</div>
 	</td>
