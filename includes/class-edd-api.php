@@ -90,6 +90,7 @@ class EDD_API {
 	 * @author  Daniel J Griffiths
 	 * @since  1.4.4.3
 	 */
+
 	function key_update( $user_id ) {
 
 		if ( current_user_can( 'edit_user', $user_id ) && isset( $_POST['edd_set_api_key'] ) ) {
@@ -238,6 +239,7 @@ class EDD_API {
 	 * @author  Daniel J Griffiths
 	 * @since  1.4.4.3
 	 */
+
 	function missing_auth() {
 		$error['error'] = __( 'You must specify both user and API key!', 'edd' );
 
@@ -252,6 +254,7 @@ class EDD_API {
 	 * @author  Daniel J Griffiths
 	 * @since  1.4.4.3
 	 */
+
 	function invalid_email() {
 		$error['error'] = __( 'The email address specified is not registered!', 'edd' );
 
@@ -265,6 +268,7 @@ class EDD_API {
 	 * @author  Daniel J Griffiths
 	 * @since  1.4.4.3
 	 */
+
 	function invalid_key( $email ) {
 		$error['error'] = __( 'Invalid API key for ' . $email . '!', 'edd' );
 
@@ -279,6 +283,7 @@ class EDD_API {
 	 * @author  Daniel J Griffiths
 	 * @since  1.4.4.3
 	 */
+
 	function get_customers( $customer ) {
 		if ( $customer == null ) {
 
@@ -358,6 +363,7 @@ class EDD_API {
 	 * @author  Daniel J Griffiths
 	 * @since  1.4.4.3
 	 */
+
 	function get_products( $product ) {
 
 		if ( $product == null ) {
@@ -468,6 +474,7 @@ class EDD_API {
 	 * @author  Daniel J Griffiths
 	 * @since  1.4.4.3
 	 */
+
 	function get_stats( $type, $product = null, $date = null, $startdate = null, $enddate = null ) {
 
 		$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
@@ -678,6 +685,7 @@ class EDD_API {
 	 * @author  Daniel J Griffiths
 	 * @since  1.4.4.3
 	 */
+
 	function output( $array ) {
 		global $wp_query;
 
