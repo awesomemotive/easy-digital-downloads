@@ -7,10 +7,10 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Process Download
@@ -20,10 +20,8 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_process_download() {
-
 	$args = apply_filters( 'edd_process_download_args', array(
 		'download' => ( isset( $_GET['download'] ) )     ? (int) $_GET['download']                          : '',
 		'email'    => ( isset( $_GET['email'] ) )        ? rawurldecode( $_GET['email'] )                   : '',
@@ -44,8 +42,7 @@ function edd_process_download() {
 	$has_access = apply_filters( 'edd_file_download_has_access', true, $payment, $args );
 
 	//$has_access = ( edd_logged_in_only() && is_user_logged_in() ) || !edd_logged_in_only() ? true : false;
-	if( $payment && $has_access ) {
-
+	if ( $payment && $has_access ) {
 		do_action( 'edd_process_verified_download', $download, $email );
 
 		// Payment has been verified, setup the download
@@ -55,7 +52,7 @@ function edd_process_download() {
 
 		$user_info = array();
 		$user_info['email'] = $email;
-		if( is_user_logged_in() ) {
+		if ( is_user_logged_in() ) {
 			global $user_ID;
 			$user_data 			= get_userdata( $user_ID );
 			$user_info['id'] 	= $user_ID;
@@ -67,10 +64,10 @@ function edd_process_download() {
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );
 
-		if( !edd_is_func_disabled( 'set_time_limit' ) && !ini_get('safe_mode') ) {
+		if ( !edd_is_func_disabled( 'set_time_limit' ) && !ini_get('safe_mode') ) {
 			set_time_limit(0);
 		}
-		if( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() ) {
+		if ( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() ) {
 			set_magic_quotes_runtime(0);
 		}
 
@@ -85,10 +82,8 @@ function edd_process_download() {
 		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\";");
 		header("Content-Transfer-Encoding: binary");
 
-		if( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false ) {
-
-			// This is an absolute path
-
+		if ( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false ) {
+			/** This is an absolute path */
 			$requested_file = realpath( $requested_file );
 			if( file_exists( $requested_file ) ) {
 				if( $size = @filesize( $requested_file ) ) header("Content-Length: ".$size);
@@ -96,37 +91,33 @@ function edd_process_download() {
 			} else {
 				wp_die( __('Sorry but this file does not exist.', 'edd'), __('Error', 'edd') );
 			}
-
 		} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false) {
-
-			// This is a local file given by URL
+			/** This is a local file given by URL */
 			$upload_dir = wp_upload_dir();
 
 			$requested_file = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );
 			$requested_file = realpath( $requested_file );
 
-			if( file_exists( $requested_file ) ) {
-				if( $size = @filesize( $requested_file ) ) header("Content-Length: ".$size);
+			if ( file_exists( $requested_file ) ) {
+				if ( $size = @filesize( $requested_file ) ) header("Content-Length: ".$size);
 				@edd_readfile_chunked( $requested_file );
 			} else {
 				wp_die( __('Sorry but this file does not exist.', 'edd'), __('Error', 'edd') );
 			}
-
 		} else {
 			// This is a remote file
 			header("Location: " . $requested_file);
 		}
 
 		exit;
-
 	} else {
 		$error_message = __('You do not have permission to download this file', 'edd');
 		wp_die( apply_filters( 'edd_deny_download_message', $error_message, __('Purchase Verification Failed', 'edd') ) );
 	}
+
 	exit;
 }
 add_action( 'init', 'edd_process_download', 100 );
-
 
 /**
  * Get the file content type
@@ -135,7 +126,6 @@ add_action( 'init', 'edd_process_download', 100 );
  * @param    string    file extension
  * @return   string
  */
-
 function edd_get_file_ctype( $extension ) {
 	switch( $extension ):
 		case 'ac'		: $ctype	= "application/pkix-attr-cert"; break;
@@ -432,31 +422,26 @@ function edd_get_file_ctype( $extension ) {
 	endswitch;
 
 	return apply_filters( 'edd_file_ctype', $ctype );
-
 }
 
-
 /**
- * readfile_chunked
- *
- * Reads file in chunks so big downloads are possible without changing PHP.INI - http://codeigniter.com/wiki/Download_helper_for_large_files/
+ * Reads file in chunks so big downloads are possible without changing PHP.INI
+ * See http://codeigniter.com/wiki/Download_helper_for_large_files/
  *
  * @access   public
- * @param    string    file
- * @param    boolean   return bytes of file
- * @return   void
+ * @param    string  $file      The file
+ * @param    boolean $retbytes  Return the bytes of file
+ * @return   bool|string - If string, $status || $cnt
  */
-
 function edd_readfile_chunked( $file, $retbytes = TRUE ) {
-
 	$chunksize = 1 * (1024 * 1024);
 	$buffer = '';
 	$cnt = 0;
 
 	$handle = fopen( $file, 'r' );
-	if( $handle === FALSE ) return FALSE;
+	if ( $handle === FALSE ) return FALSE;
 
-	while( !feof($handle) ) :
+	while ( ! feof( $handle ) ) :
 	   $buffer = fread( $handle, $chunksize );
 	   echo $buffer;
 	   ob_flush();
@@ -467,7 +452,7 @@ function edd_readfile_chunked( $file, $retbytes = TRUE ) {
 
 	$status = fclose( $handle );
 
-	if( $retbytes AND $status ) return $cnt;
+	if ( $retbytes AND $status ) return $cnt;
 
 	return $status;
 }
