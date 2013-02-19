@@ -7,11 +7,13 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 // Make sure a session is started
-if( !session_id() ) {
+if ( ! session_id() ) {
 	add_action( 'init', 'session_start', -1 );
 }
 
@@ -24,19 +26,18 @@ if( !session_id() ) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_print_errors() {
 	$errors = edd_get_errors();
-	if( $errors ) {
+	if ( $errors ) {
 		$classes = apply_filters( 'edd_error_class', array(
 			'edd_errors'
 		) );
 		echo '<div class="' . implode( ' ', $classes ) . '">';
 		    // Loop error codes and display errors
-		   foreach( $errors as $error_id => $error ){
+		   foreach ( $errors as $error_id => $error ){
 		        echo '<p class="edd_error" id="edd_error_' . $error_id . '"><strong>' . __('Error', 'edd') . '</strong>: ' . $error . '</p>';
-		    }
+		   }
 		echo '</div>';
 		edd_clear_errors();
 	}
@@ -45,7 +46,6 @@ add_action( 'edd_payment_mode_bottom', 'edd_print_errors' );
 add_action( 'edd_before_purchase_form', 'edd_print_errors' );
 add_action( 'edd_before_checkout_register_form', 'edd_print_errors' );
 add_action( 'edd_ajax_checkout_errors', 'edd_print_errors' );
-
 
 /**
  * Get Errors
@@ -56,16 +56,14 @@ add_action( 'edd_ajax_checkout_errors', 'edd_print_errors' );
  * @access      public
  * @since       1.0
  * @return      mixed - array if errors are present, false if none found
-*/
-
+ */
 function edd_get_errors() {
-	if( isset( $_SESSION['edd-errors'] ) ) {
+	if ( isset( $_SESSION['edd-errors'] ) ) {
 		$errors = $_SESSION['edd-errors'];
 		return $errors;
 	}
 	return false;
 }
-
 
 /**
  * Set Error
@@ -78,16 +76,14 @@ function edd_get_errors() {
  * @param       $error_message - the message to store with the error
  * @return      void
 */
-
 function edd_set_error( $error_id, $error_message ) {
 	$errors = edd_get_errors();
-	if( !$errors ) {
+	if ( ! $errors ) {
 		$errors = array();
 	}
 	$errors[ $error_id ] = $error_message;
 	$_SESSION['edd-errors'] = $errors;
 }
-
 
 /**
  * Clear Errors
@@ -97,10 +93,9 @@ function edd_set_error( $error_id, $error_message ) {
  * @access      public
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_clear_errors() {
-	if( isset( $_SESSION['edd-errors'] ) ) $_SESSION['edd-errors'] = null;
+	if ( isset( $_SESSION['edd-errors'] ) ) $_SESSION['edd-errors'] = null;
 }
 
 /**
@@ -112,11 +107,10 @@ function edd_clear_errors() {
  * @since       1.3.4
  * @param       $error_id string - the ID of the error being set
  * @return      void
-*/
-
+ */
 function edd_unset_error( $error_id ) {
 	$errors = edd_get_errors();
-	if( $errors ) {
+	if ( $errors ) {
 		unset( $errors[ $error_id ] );
 	}
 }
