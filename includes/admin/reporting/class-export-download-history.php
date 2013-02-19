@@ -11,6 +11,9 @@
  * @since       1.4.4
  */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class EDD_Download_History_Export extends EDD_Export {
 	/**
 	 * Our export type. Used for export-type specific filters / actions
