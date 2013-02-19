@@ -7,10 +7,10 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Purchase Link Shortcode
@@ -20,8 +20,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @access      public
  * @since       1.0
  * @return      string
-*/
-
+ */
 function edd_download_shortcode( $atts, $content = null ) {
 	global $post, $edd_options;
 
@@ -47,7 +46,6 @@ function edd_download_shortcode( $atts, $content = null ) {
 }
 add_shortcode( 'purchase_link', 'edd_download_shortcode' );
 
-
 /**
  * Download History Shortcode
  *
@@ -56,8 +54,7 @@ add_shortcode( 'purchase_link', 'edd_download_shortcode' );
  * @access      public
  * @since       1.0
  * @return      string
-*/
-
+ */
 function edd_download_history() {
 	if ( is_user_logged_in() ) {
 		ob_start();
@@ -67,7 +64,6 @@ function edd_download_history() {
 }
 add_shortcode( 'download_history', 'edd_download_history' );
 
-
 /**
  * Purchase History Shortcode
  *
@@ -76,8 +72,7 @@ add_shortcode( 'download_history', 'edd_download_history' );
  * @access      public
  * @since       1.0
  * @return      string
-*/
-
+ */
 function edd_purchase_history() {
 	if ( is_user_logged_in() ) {
 		ob_start();
@@ -87,7 +82,6 @@ function edd_purchase_history() {
 }
 add_shortcode( 'purchase_history', 'edd_purchase_history' );
 
-
 /**
  * Checkout Form Shortcode
  *
@@ -96,13 +90,11 @@ add_shortcode( 'purchase_history', 'edd_purchase_history' );
  * @access      public
  * @since       1.0
  * @return      string
-*/
-
+ */
 function edd_checkout_form_shortcode( $atts, $content = null ) {
 	return edd_checkout_form();
 }
 add_shortcode( 'download_checkout', 'edd_checkout_form_shortcode' );
-
 
 /**
  * Download Cart Shortcode
@@ -112,13 +104,11 @@ add_shortcode( 'download_checkout', 'edd_checkout_form_shortcode' );
  * @access      public
  * @since       1.0
  * @return      string
-*/
-
+ */
 function edd_cart_shortcode( $atts, $content = null ) {
 	return edd_shopping_cart();
 }
 add_shortcode( 'download_cart', 'edd_cart_shortcode' );
-
 
 /**
  * Login Shortcode
@@ -128,8 +118,7 @@ add_shortcode( 'download_cart', 'edd_cart_shortcode' );
  * @access      public
  * @since       1.0
  * @return      string
-*/
-
+ */
 function edd_login_form_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'redirect' => '',
@@ -139,7 +128,6 @@ function edd_login_form_shortcode( $atts, $content = null ) {
 }
 add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
 
-
 /**
  * Discounts short code
  *
@@ -148,8 +136,7 @@ add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
  * @access      public
  * @since       1.0.8.2
  * @return      string
-*/
-
+ */
 function edd_discounts_shortcode( $atts, $content = null ) {
 	$discounts = edd_get_discounts();
 
@@ -176,7 +163,6 @@ function edd_discounts_shortcode( $atts, $content = null ) {
 }
 add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
 
-
 /**
  * Purchase Collection Shortcode
  *
@@ -186,8 +172,7 @@ add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
  * @access      public
  * @since       1.0.6
  * @return      string
-*/
-
+ */
 function edd_purchase_collection_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'taxonomy' => '',
@@ -202,7 +187,6 @@ function edd_purchase_collection_shortcode( $atts, $content = null ) {
 }
 add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
 
-
 /**
  * Downloads Shortcode
  *
@@ -213,8 +197,7 @@ add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
  * @access      public
  * @since       1.0.6
  * @return      string
-*/
-
+ */
 function edd_downloads_query( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'category'         => '',
@@ -266,7 +249,6 @@ function edd_downloads_query( $atts, $content = null ) {
 	}
 
 	if ( $tags || $category || $exclude_category || $exclude_tags ) {
-
 		$query['tax_query'] = array(
 			'relation'     => $relation
 		);
@@ -304,7 +286,6 @@ function edd_downloads_query( $atts, $content = null ) {
 				'operator' => 'NOT IN',
 			);
 		}
-
 	}
 
 	if ( get_query_var( 'paged' ) )
@@ -394,7 +375,6 @@ function edd_downloads_query( $atts, $content = null ) {
 }
 add_shortcode( 'downloads', 'edd_downloads_query' );
 
-
 /**
  * Price Shortcode
  *
@@ -403,8 +383,7 @@ add_shortcode( 'downloads', 'edd_downloads_query' );
  * @access      public
  * @since       1.1.3.3
  * @return      string
-*/
-
+ */
 function edd_download_price_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'id' => NULL,
@@ -417,7 +396,6 @@ function edd_download_price_shortcode( $atts, $content = null ) {
 	return edd_price( $id, false );
 }
 add_shortcode( 'edd_price', 'edd_download_price_shortcode' );
-
 
 /**
  * Receipt Shortcode
@@ -473,19 +451,17 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 }
 add_shortcode( 'edd_receipt', 'edd_receipt_shortcode' );
 
-
 /**
  * Profile Editor Shortcode
  *
- * Outputs the EDD Profile Editor to allow users to amend their details from the front-end
+ * Outputs the EDD Profile Editor to allow users to amend their details from the
+ * front-end
  *
  * @access      public
  * @since       1.4
  * @author      Sunny Ratilal
  */
-
 function edd_profile_editor_shortcode( $atts, $content = null ) {
-
 	ob_start();
 
 	edd_get_template_part( 'shortcode', 'profile-editor' );
@@ -496,7 +472,6 @@ function edd_profile_editor_shortcode( $atts, $content = null ) {
 }
 add_shortcode( 'edd_profile_editor', 'edd_profile_editor_shortcode' );
 
-
 /**
  * Process Profile Updater Form
  *
@@ -506,13 +481,12 @@ add_shortcode( 'edd_profile_editor', 'edd_profile_editor_shortcode' );
  * @since       1.4
 */
 function edd_process_profile_editor_updates( $data ) {
-
 	// Profile field change request
 	if ( empty( $_POST['edd_profile_editor_submit'] ) && !is_user_logged_in() )
 		return false;
 
 	// Nonce security
-	if ( !wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) )
+	if ( ! wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) )
 		return false;
 
 	$user_id = get_current_user_id();
