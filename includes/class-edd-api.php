@@ -237,7 +237,7 @@ class EDD_API {
 	 * @since  1.4.4.3
 	 */
 	function missing_auth() {
-		$error['error'] = 'You must specify both user and API key!';
+		$error['error'] = __( 'You must specify both user and API key!', 'edd' );
 
 		$this->output( $error );
 	}
@@ -251,7 +251,7 @@ class EDD_API {
 	 * @since  1.4.4.3
 	 */
 	function invalid_email() {
-		$error['error'] = 'The email address specified is not registered!';
+		$error['error'] = __( 'The email address specified is not registered!', 'edd' );
 
 		$this->output( $error );
 	}
@@ -264,7 +264,7 @@ class EDD_API {
 	 * @since  1.4.4.3
 	 */
 	function invalid_key( $email ) {
-		$error['error'] = 'Invalid API key for ' . $email . '!';
+		$error['error'] = __( 'Invalid API key for ' . $email . '!', 'edd' );
 
 		$this->output( $error );
 	}
@@ -534,13 +534,13 @@ class EDD_API {
 
 					} else {
 
-						$error['error'] = 'Invalid or no date range specified!';
+						$error['error'] = __( 'Invalid or no date range specified!', 'edd' );
 						$this->output( $error );
 
 					}
 				} else {
 
-					$error['error'] = 'Invalid option for argument \'date\'!';
+					$error['error'] = __( 'Invalid option for argument \'date\'!', 'edd' );
 					$this->output( $error );
 
 				}
@@ -567,7 +567,7 @@ class EDD_API {
 
 				} else {
 
-					$error['error'] = 'Product ' . $product . ' not found!';
+					$error['error'] = sprintf( __( 'Product %s not found!', 'edd' ), $product );
 
 					$this->output( $error );
 
@@ -617,7 +617,7 @@ class EDD_API {
 
 					} else {
 
-						$error['error'] = 'Invalid or no date range specified!';
+						$error['error'] = __( 'Invalid or no date range specified!', 'edd' );
 
 						$this->output( $error );
 
@@ -625,7 +625,7 @@ class EDD_API {
 
 				} else {
 
-					$error['error'] = 'Invalid option for argument \'date\'!';
+					$error['error'] = __( 'Invalid option for argument \'date\'!', 'edd' );
 
 					$this->output( $error );
 
@@ -656,7 +656,7 @@ class EDD_API {
 
 				} else {
 
-					$error['error'] = 'Product ' . $product . ' not found!';
+					$error['error'] = sprintf( __( 'Product %s not found!', 'edd' ), $prodcut );
 
 					$this->output( $error );
 
