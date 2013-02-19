@@ -26,7 +26,7 @@ if( ! class_exists( 'WP_List_Table' ) ) {
 class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Number of results to show per page
-	 * @var string
+	 * @var int
 	 * @since  1.4
 	 */
 	public $per_page = 30;
