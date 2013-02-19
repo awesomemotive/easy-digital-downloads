@@ -238,8 +238,8 @@ function edd_get_ajax_url() {
 	$current_url = edd_get_current_page_url();
 	$ajax_url    = admin_url( 'admin-ajax.php', $scheme );
 
-	if ( preg_match( '/^https/', $current_url ) && ! preg_match( '/^https/', $ajax_url ) ) {
-		$ajax_url = preg_replace( '/^http/', 'https', $ajax_url );
+	if( strpos( $current_url, 'https' ) !== false && strpos( $ajax_url, 'https' ) == false ) {
+		$ajax_url = str_replace( 'http', 'https', $ajax_url );
 	}
 
 	return apply_filters( 'edd_ajax_url', $ajax_url );
