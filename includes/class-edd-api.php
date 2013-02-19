@@ -589,4 +589,3 @@ class EDD_API {
 		exit;
 	}
 }
-$edd_api = new EDD_API();
