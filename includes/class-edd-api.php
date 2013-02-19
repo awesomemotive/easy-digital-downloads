@@ -286,7 +286,7 @@ class EDD_API {
 	 */
 
 	function invalid_key( $email ) {
-		$error['error'] = __( 'Invalid API key for ' . $email . '!', 'edd' );
+		$error['error'] = sprintf( __( 'Invalid API key for %s!', 'edd' ), $email );
 
 		$this->output( $error );
 	}
