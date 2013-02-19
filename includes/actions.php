@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0.8.1
-*/
+ */
 
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
@@ -21,14 +21,12 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @since       1.0
  * @return      void
 */
-
 function edd_cart_get_actions() {
-	if( isset( $_GET['edd_action'] ) ) {
+	if ( isset( $_GET['edd_action'] ) ) {
 		do_action( 'edd_' . $_GET['edd_action'], $_GET );
 	}
 }
 add_action('init', 'edd_cart_get_actions');
-
 
 /**
  * Post Actions
@@ -39,9 +37,8 @@ add_action('init', 'edd_cart_get_actions');
  * @since       1.0
  * @return      void
 */
-
 function edd_cart_post_actions() {
-	if( isset( $_POST['edd_action'] ) ) {
+	if ( isset( $_POST['edd_action'] ) ) {
 		do_action( 'edd_' . $_POST['edd_action'], $_POST );
 	}
 }
