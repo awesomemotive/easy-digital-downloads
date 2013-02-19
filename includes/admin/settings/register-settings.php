@@ -21,19 +21,17 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @since       1.0
  * @return      void
 */
-
 function edd_register_settings() {
-
 	// Setup some default option sets
 	$pages = get_pages();
 	$pages_options = array( 0 => '' ); // Blank option
-	if( $pages ) {
-		foreach( $pages as $page ) {
+	if ( $pages ) {
+		foreach ( $pages as $page ) {
 			$pages_options[ $page->ID ] = $page->post_title;
 		}
 	}
 
-	/* white list our settings, each in their respective section
+	/* White list our settings, each in their respective section
 	   filters can be used to add more options to each section */
 	$edd_settings = array(
 		'general' => apply_filters('edd_settings_general',
@@ -584,8 +582,6 @@ function edd_register_settings() {
 }
 add_action('admin_init', 'edd_register_settings');
 
-
-
 /**
  * Settings Taxes Description Callback
  *
@@ -594,12 +590,10 @@ add_action('admin_init', 'edd_register_settings');
  * @access      private
  * @since       1.3.3
  * @return      void
-*/
-
+ */
 function edd_settings_taxes_description_callback() {
 	echo __('These settings will let you configure simple tax rules for purchases.', 'edd');
 }
-
 
 /**
  * Header Callback
@@ -609,12 +603,10 @@ function edd_settings_taxes_description_callback() {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_header_callback($args) {
 	echo '';
 }
-
 
 /**
  * Checkbox Callback
@@ -624,8 +616,7 @@ function edd_header_callback($args) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_checkbox_callback($args) {
 	global $edd_options;
 
@@ -636,7 +627,6 @@ function edd_checkbox_callback($args) {
 	echo $html;
 }
 
-
 /**
  * Multicheck Callback
  *
@@ -645,8 +635,7 @@ function edd_checkbox_callback($args) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_multicheck_callback($args) {
 	global $edd_options;
 
@@ -658,7 +647,6 @@ function edd_multicheck_callback($args) {
 	echo '<p class="description">' . $args['desc'] . '</p>';
 }
 
-
 /**
  * Radio Callback
  *
@@ -667,8 +655,7 @@ function edd_multicheck_callback($args) {
  * @access      private
  * @since       1.3.3
  * @return      void
-*/
-
+ */
 function edd_radio_callback($args) {
 
 	global $edd_options;
@@ -683,7 +670,6 @@ function edd_radio_callback($args) {
 
 }
 
-
 /**
  * Gateways Callback
  *
@@ -692,8 +678,7 @@ function edd_radio_callback($args) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_gateways_callback($args) {
 	global $edd_options;
 
@@ -704,7 +689,6 @@ function edd_gateways_callback($args) {
 	endforeach;
 }
 
-
 /**
  * Text Callback
  *
@@ -713,8 +697,7 @@ function edd_gateways_callback($args) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_text_callback($args) {
 	global $edd_options;
 
@@ -726,7 +709,6 @@ function edd_text_callback($args) {
 	echo $html;
 }
 
-
 /**
  * Textarea Callback
  *
@@ -735,8 +717,7 @@ function edd_text_callback($args) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_textarea_callback($args) {
 	global $edd_options;
 
@@ -748,7 +729,6 @@ function edd_textarea_callback($args) {
 	echo $html;
 }
 
-
 /**
  * Password Callback
  *
@@ -757,8 +737,7 @@ function edd_textarea_callback($args) {
  * @access      private
  * @since       1.3
  * @return      void
-*/
-
+ */
 function edd_password_callback($args) {
 	global $edd_options;
 
@@ -770,7 +749,6 @@ function edd_password_callback($args) {
 	echo $html;
 }
 
-
 /**
  * Missing Callback
  *
@@ -779,8 +757,7 @@ function edd_password_callback($args) {
  * @access      private
  * @since       1.3.1
  * @return      void
-*/
-
+ */
 function edd_missing_callback($args) {
 	printf( __( 'The callback function used for the <strong>%s</strong> setting is missing.', 'edd' ), $args['id'] );
 }
@@ -793,8 +770,7 @@ function edd_missing_callback($args) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_select_callback($args) {
 	global $edd_options;
 
@@ -809,7 +785,6 @@ function edd_select_callback($args) {
 	echo $html;
 }
 
-
 /**
  * Rich Editor Callback
  *
@@ -818,8 +793,7 @@ function edd_select_callback($args) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_rich_editor_callback($args) {
 	global $edd_options, $wp_version;
 
@@ -834,7 +808,6 @@ function edd_rich_editor_callback($args) {
 	echo $html;
 }
 
-
 /**
  * Upload Callback
  *
@@ -843,8 +816,7 @@ function edd_rich_editor_callback($args) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_upload_callback($args) {
 	global $edd_options;
 
@@ -857,16 +829,14 @@ function edd_upload_callback($args) {
 	echo $html;
 }
 
-
 /**
  * Registers the license field callback for Software Licensing
  * *
  * @access      private
  * @since       1.5
  * @return      void
-*/
-
-if( ! function_exists( 'edd_license_key_callback' ) ) {
+ */
+if ( ! function_exists( 'edd_license_key_callback' ) ) {
 	function edd_license_key_callback( $args ) {
 		global $edd_options;
 
@@ -884,7 +854,6 @@ if( ! function_exists( 'edd_license_key_callback' ) ) {
 	}
 }
 
-
 /**
  * Hook Callback
  *
@@ -893,13 +862,10 @@ if( ! function_exists( 'edd_license_key_callback' ) ) {
  * @access      private
  * @since       1.0.8.2
  * @return      void
-*/
-
+ */
 function edd_hook_callback( $args ) {
 	do_action( 'edd_' . $args['id'] );
 }
-
-
 
 /**
  * Settings Sanitization
@@ -910,13 +876,11 @@ function edd_hook_callback( $args ) {
  * @access      private
  * @since       1.0.8.2
  * @return      void
-*/
-
+ */
 function edd_settings_sanitize( $input ) {
 	add_settings_error( 'edd-notices', '', __('Settings Updated', 'edd'), 'updated' );
 	return $input;
 }
-
 
 /**
  * Get Settings
@@ -927,15 +891,14 @@ function edd_settings_sanitize( $input ) {
  * @access      public
  * @since       1.0
  * @return      array
-*/
-
+ */
 function edd_get_settings() {
-	$general_settings 	= is_array(get_option('edd_settings_general')) 	? get_option('edd_settings_general') 	: array();
-	$gateway_settings 	= is_array(get_option('edd_settings_gateways')) ? get_option('edd_settings_gateways') 	: array();
-	$email_settings 	= is_array(get_option('edd_settings_emails')) 	? get_option('edd_settings_emails') 	: array();
-	$style_settings 	= is_array(get_option('edd_settings_styles')) 	? get_option('edd_settings_styles') 	: array();
-	$tax_settings 		= is_array(get_option('edd_settings_taxes')) 	? get_option('edd_settings_taxes') 		: array();
-	$misc_settings 		= is_array(get_option('edd_settings_misc')) 	? get_option('edd_settings_misc') 		: array();
+	$general_settings = is_array( get_option( 'edd_settings_general' ) )  ? get_option( 'edd_settings_general' )  : array();
+	$gateway_settings = is_array( get_option( 'edd_settings_gateways' ) ) ? get_option( 'edd_settings_gateways' ) : array();
+	$email_settings   = is_array( get_option( 'edd_settings_emails' ) )   ? get_option( 'edd_settings_emails' )   : array();
+	$style_settings   = is_array( get_option( 'edd_settings_styles' ) )   ? get_option( 'edd_settings_styles' )   : array();
+	$tax_settings     = is_array( get_option( 'edd_settings_taxes' ) )    ? get_option( 'edd_settings_taxes' )    : array();
+	$misc_settings    = is_array( get_option( 'edd_settings_misc' ) )     ? get_option( 'edd_settings_misc' )     : array();
 
-	return array_merge($general_settings, $gateway_settings, $email_settings, $style_settings, $tax_settings, $misc_settings);
+	return array_merge( $general_settings, $gateway_settings, $email_settings, $style_settings, $tax_settings, $misc_settings );
 }
