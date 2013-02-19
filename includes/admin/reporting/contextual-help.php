@@ -12,7 +12,6 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-
 /**
  * Reports contextual help.
  *
@@ -20,7 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.4
  * @return      void
  */
-
 function edd_reporting_contextual_help() {
 	$screen = get_current_screen();
 

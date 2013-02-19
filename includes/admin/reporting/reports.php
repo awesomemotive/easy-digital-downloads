@@ -7,11 +7,10 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 
 /**
  * Reports Page
@@ -22,13 +21,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.0
  * @return      void
 */
-
 function edd_reports_page() {
 	global $edd_options;
 
 	$current_page = admin_url( 'edit.php?post_type=download&page=edd-reports' );
 	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'reports';
-
 	?>
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper">
@@ -49,7 +46,6 @@ function edd_reports_page() {
 	<?php
 }
 
-
 /**
  * Default Report Views
  *
@@ -57,7 +53,6 @@ function edd_reports_page() {
  * @since       1.4
  * @return      void
  */
-
 function edd_reports_default_views() {
 	$views = array(
 		'earnings'	=> __( 'Earnings', 'edd' ),
@@ -71,15 +66,13 @@ function edd_reports_default_views() {
 	return $views;
 }
 
-
 /**
  * Renders the Reports page
  *
  * @access      public
  * @since       1.3
  * @return      void
-*/
-
+ */
 function edd_reports_tab_reports() {
 	$current_view = 'earnings';
 	$views        = edd_reports_default_views();
@@ -91,15 +84,13 @@ function edd_reports_tab_reports() {
 }
 add_action( 'edd_reports_tab_reports', 'edd_reports_tab_reports' );
 
-
 /**
  * Renders the Reports page views drop down
  *
  * @access      public
  * @since       1.3
  * @return      void
-*/
-
+ */
 function edd_report_views() {
 	$views        = edd_reports_default_views();
 	$current_view = isset( $_GET[ 'view' ] ) ? $_GET[ 'view' ] : 'earnings';
@@ -127,8 +118,7 @@ function edd_report_views() {
  * @access      public
  * @since       1.3
  * @return      void
-*/
-
+ */
 function edd_reports_downloads_table() {
 	include( dirname( __FILE__ ) . '/class-download-reports-table.php' );
 
@@ -138,15 +128,13 @@ function edd_reports_downloads_table() {
 }
 add_action( 'edd_reports_view_downloads', 'edd_reports_downloads_table' );
 
-
 /**
  * Renders the Reports Customers table
  *
  * @access      public
  * @since       1.3
  * @return      void
-*/
-
+ */
 function edd_reports_customers_table() {
 	include( dirname( __FILE__ ) . '/class-customer-reports-table.php' );
 
@@ -156,15 +144,13 @@ function edd_reports_customers_table() {
 }
 add_action( 'edd_reports_view_customers', 'edd_reports_customers_table' );
 
-
 /**
  * Renders the Reports earnings graphs
  *
  * @access      public
  * @since       1.3
  * @return      void
-*/
-
+ */
 function edd_reports_earnings() {
 	?>
 	<div class="tablenav top">
@@ -175,15 +161,13 @@ function edd_reports_earnings() {
 }
 add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
 
-
 /**
  * Renders the tax reports
  *
  * @access      public
  * @since       1.3.3
  * @return      void
-*/
-
+ */
 function edd_reports_taxes() {
 	$year = isset( $_GET['year'] ) ? absint( $_GET['year'] ) : date( 'Y' );
 	?>
@@ -219,17 +203,14 @@ function edd_reports_taxes() {
 }
 add_action( 'edd_reports_view_taxes', 'edd_reports_taxes' );
 
-
 /**
  * Renders the Reports page Export tab
  *
  * @access      public
  * @since       1.3
  * @return      void
-*/
-
+ */
 function edd_reports_tab_export() {
-
 	?>
 	<div class="metabox-holder">
 		<div id="post-body">
@@ -289,7 +270,6 @@ function edd_reports_tab_export() {
 }
 add_action( 'edd_reports_tab_export', 'edd_reports_tab_export' );
 
-
 /**
  * Renders the Reports page
  *
@@ -297,7 +277,6 @@ add_action( 'edd_reports_tab_export', 'edd_reports_tab_export' );
  * @since       1.3
  * @return      void
  */
-
 function edd_reports_tab_logs() {
 	require( EDD_PLUGIN_DIR . 'includes/admin/reporting/logs.php' );
 

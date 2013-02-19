@@ -12,7 +12,6 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-
 /**
  * Downloads contextual help
  *
@@ -23,7 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.2.3
  * @return      void
  */
-
 function edd_downloads_contextual_help() {
 	$screen = get_current_screen();
 
