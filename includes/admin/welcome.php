@@ -7,11 +7,10 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 
 /**
  * EDD Welcome Page Class
@@ -22,10 +21,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.4
  * @return      void
  */
-
 class EDD_Welcome {
+	/**
+	 * @var string
+	 */
 	public $minimum_capability = 'manage_options';
-
 
 	/**
 	 * Get things started
@@ -34,13 +34,11 @@ class EDD_Welcome {
 	 * @since       1.4
 	 * @return      void
 	 */
-
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menus') );
 		add_action( 'admin_head', array( $this, 'admin_head' ) );
 		add_action( 'admin_init', array( $this, 'welcome'    ) );
 	}
-
 
 	/**
 	 * Register dashboard pages.
@@ -50,7 +48,6 @@ class EDD_Welcome {
 	 * @since 1.4
 	 * @return void
 	 */
-
 	public function admin_menus() {
 		// About Page
 		add_dashboard_page(
@@ -71,14 +68,12 @@ class EDD_Welcome {
 		);
 	}
 
-
 	/**
 	 * Hide Individual Dashboard Menus
 	 * 
 	 * @since       1.4
 	 * @return      void
 	 */
-
 	public function admin_head() {
 		remove_submenu_page( 'index.php', 'edd-about' );
 		remove_submenu_page( 'index.php', 'edd-credits' );
@@ -111,15 +106,14 @@ class EDD_Welcome {
 		<?php
 	}
 
-
 	/**
 	 * Render About Screen
 	 * 
 	 * @since      1.4
 	 */
-
 	public function about_screen() {
-		list( $display_version ) = explode( '-', EDD_VERSION ); ?>
+		list( $display_version ) = explode( '-', EDD_VERSION );
+		?>
 		<div class="wrap about-wrap">
 			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
 			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
@@ -219,14 +213,14 @@ class EDD_Welcome {
 		<?php
 	}
 
-
 	/**
 	 * Render Credits Screen
 	 * 
 	 * @since      1.4
 	 */
 	public function credits_screen() {
-		list( $display_version ) = explode( '-', EDD_VERSION ); ?>
+		list( $display_version ) = explode( '-', EDD_VERSION );
+		?>
 		<div class="wrap about-wrap">
 			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
 			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
@@ -281,14 +275,12 @@ class EDD_Welcome {
 		return $contributor_list;
 	}
 
-
 	/**
 	 * Retreive list of contributors from GitHub.
 	 *
 	 * @since      1.4
 	 * @return     array $contributors List of contributors.
 	 */
-
 	public function get_contributors() {
 		$contributors = get_transient( 'edd_contributors' );
 
@@ -316,13 +308,11 @@ class EDD_Welcome {
 	 * @since      1.4
 	 * @return     void
 	 */
-
 	public function welcome() {
-
 		global $edd_options;
 
 		// Bail if no activation redirect
-	    if ( ! get_transient( '_edd_activation_redirect' ) )
+		if ( ! get_transient( '_edd_activation_redirect' ) )
 			return;
 
 		// Delete the redirect transient
