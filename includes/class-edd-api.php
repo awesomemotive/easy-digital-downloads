@@ -51,7 +51,7 @@ class EDD_API {
 		add_action( 'template_redirect', array( $this, 'process_endpoint' ) );
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
 		add_action( 'show_user_profile', array( $this, 'user_key_field' ) );
-		add_action( 'personal_options_update', array( $this, 'key_update' ) );
+		add_action( 'personal_options_update', array( $this, 'update_key' ) );
 
 		// Determine if JSON_PRETTY_PRINT is available
 		$this->pretty_print = version_compare( PHP_VERSION, '5.4', '>=' ) ? JSON_PRETTY_PRINT : define( 'JSON_PRETTY_PRINT', '' );
@@ -105,7 +105,7 @@ class EDD_API {
 	 * @since  1.5
 	 */
 
-	function key_update( $user_id ) {
+	function update_key( $user_id ) {
 
 		if ( current_user_can( 'edit_user', $user_id ) && isset( $_POST['edd_set_api_key'] ) ) {
 
