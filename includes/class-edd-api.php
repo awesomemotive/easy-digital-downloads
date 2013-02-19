@@ -201,7 +201,7 @@ class EDD_API {
 		if ( ! isset( $wp_query->query_vars['query'] ) ) {
 
 			// Fail gracefully
-			$error['error'] = 'Invalid query!';
+			$error['error'] = __( 'Invalid query!', 'edd' );
 			$this->output( $error );
 
 		}
