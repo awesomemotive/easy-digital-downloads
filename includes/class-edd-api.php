@@ -27,6 +27,17 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class EDD_API {
 
+
+	/**
+	 * Pretty Print?
+	 *
+	 * @access  private
+	 * @since  1.4.4.3
+	 */
+
+	private $pretty_print = false;
+
+
 	/**
 	 * Setup the API
 	 *
@@ -41,6 +52,9 @@ class EDD_API {
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
 		add_action( 'show_user_profile', array( $this, 'key_gen' ) );
 		add_action( 'personal_options_update', array( $this, 'key_update' ) );
+
+		// Determine if JSON_PRETTY_PRINT is available
+		$this->pretty_print = version_compare( PHP_VERSION, '5.4', '>=' ) ? JSON_PRETTY_PRINT : define( 'JSON_PRETTY_PRINT', '' );
 	}
 
 
@@ -700,7 +714,7 @@ class EDD_API {
 		} else {
 
 			header( 'Content-Type: application/json' );
-			echo json_encode( $array, JSON_PRETTY_PRINT );
+			echo json_encode( $array, $this->pretty_print );
 
 		}
 
