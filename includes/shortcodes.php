@@ -319,7 +319,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		ob_start(); ?>
 		<div class="edd_downloads_list">
 			<?php while ( $downloads->have_posts() ) : $downloads->the_post(); ?>
-				<div class="edd_download" id="edd_download_<?php echo get_the_ID(); ?>" style="width: <?php echo $column_width; ?>; float: left;">
+				<div itemscope itemtype="http://schema.org/Product" class="edd_download" id="edd_download_<?php echo get_the_ID(); ?>" style="width: <?php echo $column_width; ?>; float: left;">
 					<div class="edd_download_inner">
 						<?php
 
