@@ -89,15 +89,24 @@ class EDD_API {
 	 * @since  1.4.4.3
 	 */
 	function key_update( $user_id ) {
+
 		if ( current_user_can( 'edit_user', $user_id ) && isset( $_POST['edd_set_api_key'] ) ) {
+
 			$user = get_userdata( $user_id );
+
 			if ( empty( $user->edd_user_api_key ) ) {
+
 				$hash = hash( 'md5', $user->user_email . date( 'U' ) );
 				update_user_meta( $user_id, 'edd_user_api_key', $hash );
+
 			} else {
+
 				delete_user_meta( $user_id, 'edd_user_api_key' );
+
 			}
+
 		}
+
 	}
 
 
@@ -172,13 +181,18 @@ class EDD_API {
 
 			// Main query handler
 			if ( isset( $wp_query->query_vars['query'] ) ) {
+
 				if ( $wp_query->query_vars['query'] == 'stats' ) {
 
 					if ( ! isset( $wp_query->query_vars['type'] ) ) {
+
 						$error['error'] = 'Invalid query!';
 						$this->output( $error );
+
 					} else {
+
 						$type = $wp_query->query_vars['type'];
+
 					}
 
 					$product   = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
@@ -274,6 +288,7 @@ class EDD_API {
 			foreach ( $customer_list_query as $customer_id ) {
 
 				if ( edd_has_purchases( $customer_id ) ) {
+
 					$customer_info = get_userdata( $customer_id );
 
 					$customers['customers'][$customer_id]['info']['id'] = $customer_info->ID;
@@ -299,10 +314,13 @@ class EDD_API {
 		} else {
 
 			if ( !is_numeric( $customer ) ) {
+
 				$customer = get_user_by( 'email', $customer )->ID;
+
 			}
 
 			if ( edd_has_purchases( $customer ) ) {
+
 				$customer_info = get_userdata( $customer );
 
 				$customers[$customer]['info']['id'] = $customer_info->ID;
@@ -317,6 +335,7 @@ class EDD_API {
 				$customers[$customer]['stats']['total_purchases'] = edd_count_purchases_of_customer( $customer_id );
 				$customers[$customer]['stats']['total_spent'] = edd_purchase_total_of_user( $customer_id );
 				$customers[$customer]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_id );
+
 			} else {
 
 				$error['error'] = 'Customer ' . $customer . ' not found!';
@@ -363,7 +382,9 @@ class EDD_API {
 				if ( edd_has_variable_prices( $product_info->ID ) ) {
 
 					foreach ( edd_get_variable_prices( $product_info->ID ) as $price ) {
+
 						$products['products'][$product_info->ID]['pricing'][$price['name']] = $price['amount'];
+
 					}
 
 				} else {
@@ -453,11 +474,17 @@ class EDD_API {
 		if ( date( 'j' ) == 1 ) {
 
 			if ( date( 'n' ) == 3 ) {
+
 				$yesterday = 28;
+
 			} elseif ( date( 'n' ) == 5 || date( 'n' ) == 6 || date( 'n' ) == 10 || date( 'n' ) == 12 ) {
+
 				$yesterday = 30;
+
 			} else {
+
 				$yesterday = 31;
+
 			}
 
 		} else {
