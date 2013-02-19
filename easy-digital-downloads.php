@@ -53,7 +53,6 @@ final class Easy_Digital_Downloads {
 
 
 	/**
-<<<<<<< HEAD
 	 * EDD cart fees object
 	 * @since 1.5
 	 */
@@ -61,8 +60,6 @@ final class Easy_Digital_Downloads {
 
 
 	/**
-=======
->>>>>>> b956d48f8ed5d237ccf53c0ccad00e0e63b23a60
 	 * Main Easy_Digital_Downloads Instance
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
