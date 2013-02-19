@@ -12,7 +12,6 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-
 /**
  * Media Button
  *
@@ -22,7 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.0
  * @return      string
 */
-
 function edd_media_button( $context ) {
 	global $pagenow, $typenow, $wp_version;
 	$output = '';
@@ -42,7 +40,6 @@ function edd_media_button( $context ) {
 }
 add_filter( 'media_buttons_context', 'edd_media_button' );
 
-
 /**
  * Admin Footer For Thickbox
  *
@@ -53,7 +50,6 @@ add_filter( 'media_buttons_context', 'edd_media_button' );
  * @since       1.0
  * @return      void
 */
-
 function edd_admin_footer_for_thickbox() {
 	global $pagenow, $typenow;
 
