@@ -159,7 +159,7 @@ class EDD_API {
 		if ( isset( $wp_query->query_vars['edd-api'] ) ) {
 
 			// Make sure we have both user and api key
-			if ( !isset( $wp_query->query_vars['user'] ) || !isset( $wp_query->query_vars['key'] ) || $wp_query->query_vars['user'] == '' || $wp_query->query_vars['key'] == '' )
+			if ( ! isset( $wp_query->query_vars['user'] ) || ! isset( $wp_query->query_vars['key'] ) || $wp_query->query_vars['user'] == '' || $wp_query->query_vars['key'] == '' )
 				$this->missing_auth();
 
 			// Make sure username (email) exists
@@ -174,7 +174,7 @@ class EDD_API {
 			// Main query handler
 			if ( isset( $wp_query->query_vars['query'] ) ) {
 				if ( $wp_query->query_vars['query'] == 'stats' ) {
-					if ( !isset( $wp_query->query_vars['type'] ) ) {
+					if ( ! isset( $wp_query->query_vars['type'] ) ) {
 						$error['error'] = 'Invalid query!';
 						$this->output( $error );
 					} else {
