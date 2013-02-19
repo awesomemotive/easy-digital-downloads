@@ -355,13 +355,13 @@ class EDD_API {
 				$customers[$customer]['info']['url'] = $customer_info->user_url;
 				$customers[$customer]['info']['registered'] = $customer_info->user_registered;
 
-				$customers[$customer]['stats']['total_purchases'] = edd_count_purchases_of_customer( $customer_id );
-				$customers[$customer]['stats']['total_spent'] = edd_purchase_total_of_user( $customer_id );
-				$customers[$customer]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_id );
+				$customers[$customer]['stats']['total_purchases'] = edd_count_purchases_of_customer( $customer );
+				$customers[$customer]['stats']['total_spent'] = edd_purchase_total_of_user( $customer );
+				$customers[$customer]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer );
 
 			} else {
 
-				$error['error'] = 'Customer ' . $customer . ' not found!';
+				$error['error'] = sprintf( __( 'Customer %s not found!', 'edd' ), $customer );
 
 				$this->output( $error );
 
