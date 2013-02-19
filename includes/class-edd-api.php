@@ -10,7 +10,7 @@
  * @subpackage EDD API
  * @copyright Copyright (c) 2013, Pippin Williamson
  * @license  http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since  1.4.4.3
+ * @since  1.5
  */
 
 // Exit if accessed directly
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Renders API returns as a JSON array
  *
  * @access  private
- * @since  1.4.4.3
+ * @since  1.5
  */
 
 class EDD_API {
@@ -32,7 +32,7 @@ class EDD_API {
 	 * Pretty Print?
 	 *
 	 * @access  private
-	 * @since  1.4.4.3
+	 * @since  1.5
 	 */
 
 	private $pretty_print = false;
@@ -43,7 +43,7 @@ class EDD_API {
 	 *
 	 * @access  private
 	 * @author  Daniel J Griffiths
-	 * @since  1.4.4.3
+	 * @since  1.5
 	 */
 
 	function __construct() {
@@ -65,7 +65,7 @@ class EDD_API {
 	 *
 	 * @access  private
 	 * @author  Daniel J Griffiths
-	 * @since  1.4.4.3
+	 * @since  1.5
 	 */
 
 	function key_gen( $user ) {
@@ -102,7 +102,7 @@ class EDD_API {
 	 *
 	 * @access  private
 	 * @author  Daniel J Griffiths
-	 * @since  1.4.4.3
+	 * @since  1.5
 	 */
 
 	function key_update( $user_id ) {
@@ -134,7 +134,7 @@ class EDD_API {
 	 *
 	 * @access  private
 	 * @author  Daniel J Griffiths
-	 * @since  1.4.4.3
+	 * @since  1.5
 	 */
 
 	function add_endpoint( $rewrite_rules ) {
@@ -149,7 +149,7 @@ class EDD_API {
 	 *
 	 * @access  private
 	 * @author  Daniel J Griffiths
-	 * @since  1.4.4.3
+	 * @since  1.5
 	 */
 
 	function query_vars( $vars ) {
@@ -174,7 +174,7 @@ class EDD_API {
 	 *
 	 * @access  private
 	 * @author  Daniel J Griffiths
-	 * @since  1.4.4.3
+	 * @since  1.5
 	 */
 
 	function process_endpoint() {
@@ -254,7 +254,7 @@ class EDD_API {
 	 *
 	 * @access  private
 	 * @author  Daniel J Griffiths
-	 * @since  1.4.4.3
+	 * @since  1.5
 	 */
 
 	function missing_auth() {
@@ -269,7 +269,7 @@ class EDD_API {
 	 *
 	 * @access  private
 	 * @author  Daniel J Griffiths
-	 * @since  1.4.4.3
+	 * @since  1.5
 	 */
 
 	function invalid_email() {
@@ -283,7 +283,7 @@ class EDD_API {
 	 *
 	 * @access  private
 	 * @author  Daniel J Griffiths
-	 * @since  1.4.4.3
+	 * @since  1.5
 	 */
 
 	function invalid_key( $email ) {
@@ -298,7 +298,7 @@ class EDD_API {
 	 *
 	 * @access  private
 	 * @author  Daniel J Griffiths
-	 * @since  1.4.4.3
+	 * @since  1.5
 	 */
 
 	function get_customers( $customer ) {
@@ -378,7 +378,7 @@ class EDD_API {
 	 *
 	 * @access  private
 	 * @author  Daniel J Griffiths
-	 * @since  1.4.4.3
+	 * @since  1.5
 	 */
 
 	function get_products( $product ) {
@@ -489,7 +489,7 @@ class EDD_API {
 	 *
 	 * @access  private
 	 * @author  Daniel J Griffiths
-	 * @since  1.4.4.3
+	 * @since  1.5
 	 */
 
 	function get_stats( $type, $product = null, $date = null, $startdate = null, $enddate = null ) {
@@ -700,7 +700,7 @@ class EDD_API {
 	 *
 	 * @access  private
 	 * @author  Daniel J Griffiths
-	 * @since  1.4.4.3
+	 * @since  1.5
 	 */
 
 	function output( $array ) {
