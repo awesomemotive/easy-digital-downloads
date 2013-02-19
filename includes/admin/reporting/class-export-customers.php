@@ -9,7 +9,7 @@
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
-*/
+ */
 
 class EDD_Customers_Export extends EDD_Export {
 	/**
