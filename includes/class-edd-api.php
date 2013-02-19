@@ -180,70 +180,69 @@ class EDD_API {
 	function process_endpoint() {
 		global $wp_query;
 
-		// Hands off API calls based on ?edd-api URL
-		if ( isset( $wp_query->query_vars['edd-api'] ) ) {
+		// Check for edd-api var
+		if ( ! isset( $wp_query->query_vars['edd-api'] ) )
+			return;
 
-			// Make sure we have both user and api key
-			if ( ! isset( $wp_query->query_vars['user'] ) || ! isset( $wp_query->query_vars['key'] ) || $wp_query->query_vars['user'] == '' || $wp_query->query_vars['key'] == '' )
-				$this->missing_auth();
+		// Make sure we have both user and api key
+		if ( ! isset( $wp_query->query_vars['user'] ) || ! isset( $wp_query->query_vars['key'] ) || $wp_query->query_vars['user'] == '' || $wp_query->query_vars['key'] == '' )
+			$this->missing_auth();
 
-			// Make sure username (email) exists
-			if ( !email_exists( $wp_query->query_vars['user'] ) )
-				$this->invalid_email();
+		// Make sure username (email) exists
+		if ( !email_exists( $wp_query->query_vars['user'] ) )
+			$this->invalid_email();
 
-			// Check email/key combination
-			$user = get_user_by( 'email', $wp_query->query_vars['user'] );
-			if ( $user->edd_user_api_key != $wp_query->query_vars['key'] )
-				$this->invalid_key( $wp_query->query_vars['user'] );
+		// Check email/key combination
+		$user = get_user_by( 'email', $wp_query->query_vars['user'] );
+		if ( $user->edd_user_api_key != $wp_query->query_vars['key'] )
+			$this->invalid_key( $wp_query->query_vars['user'] );
 
-			// Main query handler
-			if ( ! isset( $wp_query->query_vars['query'] ) ) {
+		// Main query handler
+		if ( ! isset( $wp_query->query_vars['query'] ) ) {
 
-				// Fail gracefully
-				$error['error'] = 'Invalid query!';
+			// Fail gracefully
+			$error['error'] = 'Invalid query!';
+			$this->output( $error );
+
+		}
+
+		if ( $wp_query->query_vars['query'] == 'stats' ) {
+
+			if ( ! isset( $wp_query->query_vars['type'] ) ) {
+
+				$error['error'] = __( 'Invalid query!', 'edd' );
 				$this->output( $error );
-
-			}
-
-			if ( $wp_query->query_vars['query'] == 'stats' ) {
-
-				if ( ! isset( $wp_query->query_vars['type'] ) ) {
-
-					$error['error'] = __( 'Invalid query!', 'edd' );
-					$this->output( $error );
-
-				} else {
-
-					$type = $wp_query->query_vars['type'];
-
-				}
-
-				$product   = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
-				$date      = isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null;
-				$startdate = isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null;
-				$enddate   = isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null;
-
-				$this->get_stats( $type, $product, $date, $startdate, $enddate );
-
-			} elseif ( $wp_query->query_vars['query'] == 'products' ) {
-
-				$product   = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
-
-				$this->get_products( $product );
-
-			} elseif ( $wp_query->query_vars['query'] == 'customers' ) {
-
-				$customer  = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
-
-				$this->get_customers( $customer );
 
 			} else {
 
-				$error['error'] = __( 'Invalid query!', 'edd' );
+				$type = $wp_query->query_vars['type'];
 
-				$this->output( $error );
 			}
 
+			$product   = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
+			$date      = isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null;
+			$startdate = isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null;
+			$enddate   = isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null;
+
+			$this->get_stats( $type, $product, $date, $startdate, $enddate );
+
+		} elseif ( $wp_query->query_vars['query'] == 'products' ) {
+
+			$product   = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
+
+			$this->get_products( $product );
+
+		} elseif ( $wp_query->query_vars['query'] == 'customers' ) {
+
+			$customer  = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
+
+			$this->get_customers( $customer );
+
+		} else {
+
+			$error['error'] = __( 'Invalid query!', 'edd' );
+
+			$this->output( $error );
 		}
 
 	}
