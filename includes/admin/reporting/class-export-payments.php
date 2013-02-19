@@ -12,17 +12,14 @@
 */
 
 class EDD_Payments_Export extends EDD_Export {
-
-
 	/**
 	 * Our export type. Used for export-type specific filters / actions
 	 *
 	 * @access      public
+	 * @var         string
 	 * @since       1.4.4
 	 */
-
 	public $export_type = 'payments';
-
 
 	/**
 	 * Set the CSV columns
@@ -31,7 +28,6 @@ class EDD_Payments_Export extends EDD_Export {
 	 * @since       1.4.4
 	 * @return      array
 	 */
-
 	public function csv_cols() {
 		$cols = array(
 			'id'       => __( 'ID',   'edd' ),
@@ -50,7 +46,6 @@ class EDD_Payments_Export extends EDD_Export {
 		return $cols;
 	}
 
-
 	/**
 	 * Get the data being exported
 	 *
@@ -58,9 +53,7 @@ class EDD_Payments_Export extends EDD_Export {
 	 * @since       1.4.4
 	 * @return      array
 	 */
-
 	public function get_data() {
-
 		global $wpdb;
 
 		$data = array();
@@ -72,7 +65,6 @@ class EDD_Payments_Export extends EDD_Export {
 		) );
 
 		foreach ( $payments as $payment ) {
-
 			$payment_meta 	= edd_get_payment_meta( $payment->ID );
 			$user_info 		= edd_get_payment_meta_user_info( $payment->ID );
 			$downloads      = edd_get_payment_meta_cart_details( $payment->ID );
@@ -106,10 +98,9 @@ class EDD_Payments_Export extends EDD_Export {
 						$products .= ' / ';
 					}
 				}
-
 			}
 
-			if( is_numeric( $user_id ) ) {
+			if ( is_numeric( $user_id ) ) {
 				$user = get_userdata( $user_id );
 			} else {
 				$user = false;
@@ -138,5 +129,4 @@ class EDD_Payments_Export extends EDD_Export {
 
 		return $data;
 	}
-
 }
