@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -21,7 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.0
  * @return      void
  */
-
 function edd_add_download_meta_box() {
 	/** Download Configuration */
 	add_meta_box( 'downloadinformation', sprintf( __( '%1$s Configuration', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ),  'edd_render_download_meta_box', 'download', 'normal', 'default' );
@@ -29,7 +28,7 @@ function edd_add_download_meta_box() {
 	/** Product Notes */
 	add_meta_box( 'edd_product_notes', __( 'Product Notes', 'edd' ), 'edd_render_product_notes_meta_box', 'download', 'normal', 'default' );
 
-	if( current_user_can( 'view_shop_reports' ) ) {
+	if ( current_user_can( 'view_shop_reports' ) ) {
 
 		/** Download Stats */
 		add_meta_box( 'edd_download_stats', sprintf( __( '%1$s Stats', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', 'download', 'side', 'high' );
@@ -43,7 +42,6 @@ function edd_add_download_meta_box() {
 }
 add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
 
-
 /**
  * Download Meta Box Save
  *
@@ -53,7 +51,6 @@ add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
  * @since       1.0
  * @return      void
  */
-
 function edd_download_meta_box_save( $post_id) {
 	global $post;
 
@@ -103,7 +100,6 @@ function edd_download_meta_box_save( $post_id) {
 }
 add_action( 'save_post', 'edd_download_meta_box_save' );
 
-
 /**
  * Sanitize the price before it is saved
  *
@@ -113,7 +109,6 @@ add_action( 'save_post', 'edd_download_meta_box_save' );
  * @since       1.3.2
  * @return      float
  */
-
 function edd_sanitize_price_save( $price ) {
 	global $edd_options;
 
@@ -128,7 +123,6 @@ function edd_sanitize_price_save( $price ) {
 }
 add_filter( 'edd_metabox_save_edd_price', 'edd_sanitize_price_save' );
 
-
 /**
  * Sanitize the variable prices
  *
@@ -138,7 +132,6 @@ add_filter( 'edd_metabox_save_edd_price', 'edd_sanitize_price_save' );
  * @since       1.4.2
  * @return      float
  */
-
 function edd_sanitize_variable_prices_save( $prices ) {
 	// Make sure all prices are rekeyed starting at 0
 	$prices = array_values( $prices );
@@ -159,14 +152,12 @@ add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_sanitize_variable_price
  * @since       1.0
  * @return      void
  */
-
 function edd_render_download_meta_box() {
 	global $post, $edd_options;
 
 	do_action( 'edd_meta_box_fields', $post->ID );
 	wp_nonce_field( basename( __FILE__ ), 'edd_download_meta_box_nonce' );
 }
-
 
 /**
  * Price section
@@ -183,7 +174,6 @@ function edd_render_download_meta_box() {
  * @since       1.0
  * @return      void
  */
-
 function edd_render_price_field( $post_id ) {
 	global $edd_options;
 
@@ -269,7 +259,6 @@ function edd_render_price_field( $post_id ) {
 }
 add_action( 'edd_meta_box_fields', 'edd_render_price_field', 10 );
 
-
 /**
  * Individual price row.
  *
@@ -280,7 +269,6 @@ add_action( 'edd_meta_box_fields', 'edd_render_price_field', 10 );
  * @since       1.2.2
  * @return      void
  */
-
 function edd_render_price_row( $key, $args = array(), $post_id ) {
 	global $edd_options;
 
@@ -313,7 +301,6 @@ function edd_render_price_row( $key, $args = array(), $post_id ) {
 }
 add_action( 'edd_render_price_row', 'edd_render_price_row', 10, 3 );
 
-
 /**
  * File Downloads section.
  *
@@ -327,7 +314,6 @@ add_action( 'edd_render_price_row', 'edd_render_price_row', 10, 3 );
  * @since       1.0
  * @return      void
  */
-
 function edd_render_files_field( $post_id ) {
 	$files 				= edd_get_download_files( $post_id );
 	$variable_pricing 	= edd_has_variable_prices( $post_id );
@@ -384,7 +370,6 @@ function edd_render_files_field( $post_id ) {
 <?php
 }
 add_action( 'edd_meta_box_fields', 'edd_render_files_field', 20 );
-
 
 /**
  * Individual file row.
@@ -443,7 +428,6 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 }
 add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
 
-
 /**
  * File download limit row
  *
@@ -454,7 +438,6 @@ add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
  * @since       1.3.1
  * @return      void
  */
-
 function edd_render_download_limit_row( $post_id ) {
 	global $edd_options;
 	$edd_download_limit = edd_get_file_download_limit( $post_id );
@@ -497,7 +480,6 @@ function edd_render_disable_button( $post_id ) {
 }
 add_action( 'edd_meta_box_fields', 'edd_render_disable_button', 30 );
 
-
 /**
  * Don't save blank rows.
  *
@@ -509,7 +491,6 @@ add_action( 'edd_meta_box_fields', 'edd_render_disable_button', 30 );
  * @since       1.2.2
  * @return      array $new New meta value with empty keys removed
  */
-
 function edd_metabox_save_check_blank_rows( $new ) {
 	foreach ( $new as $key => $value ) {
 		if ( empty( $value['name'] ) && empty( $value['amount'] ) && empty( $value['file'] ) )
@@ -533,13 +514,11 @@ add_filter( 'edd_metabox_save_edd_download_files', 'edd_metabox_save_check_blank
  * @since       1.2.1
  * @return      void
  */
-
 function edd_render_product_notes_meta_box() {
 	global $post, $edd_options;
 
 	do_action( 'edd_product_notes_meta_box_fields', $post->ID );
 }
-
 
 /**
  * Render Product Notes Field
@@ -548,7 +527,6 @@ function edd_render_product_notes_meta_box() {
  * @since       1.2.1
  * @return      void
  */
-
 function edd_render_product_notes_field( $post_id ) {
 	global $edd_options;
 
@@ -570,7 +548,6 @@ add_action( 'edd_product_notes_meta_box_fields', 'edd_render_product_notes_field
  * @since       1.0
  * @return      void
  */
-
 function edd_render_stats_meta_box() {
 	global $post;
 
@@ -604,7 +581,6 @@ function edd_render_stats_meta_box() {
  * @since       1.0
  * @return      void
  */
-
 function edd_render_purchase_log_meta_box() {
 	global $post, $edd_logs;
 
@@ -688,7 +664,6 @@ function edd_render_purchase_log_meta_box() {
  * @since       1.0
  * @return      void
  */
-
 function edd_render_download_log_meta_box() {
 	global $post, $edd_logs;
 
