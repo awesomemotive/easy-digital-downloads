@@ -305,7 +305,7 @@ class EDD_API {
 
 			global $wpdb;
 
-			$customer_list_query = $wpdb->get_col( $wpdb->prepare( "SELECT $wpdb->users.ID FROM $wpdb->users" ) );
+			$customer_list_query = $wpdb->get_col( "SELECT $wpdb->users.ID FROM $wpdb->users" );
 			$customer_count = 0;
 
 			foreach ( $customer_list_query as $customer_id ) {
