@@ -129,54 +129,77 @@ class EDD_API {
 		if ( $user->edd_user_api_key != $wp_query->query_vars['key'] )
 			$this->invalid_key( $wp_query->query_vars['user'] );
 
-		// Main query handler
-		if ( ! isset( $wp_query->query_vars['query'] ) ) {
+		// Determine the kind of query
+		$query_mode = $this->get_query_mode();
 
-			// Fail gracefully
-			$error['error'] = __( 'Invalid query!', 'edd' );
-			$this->output( $error );
+		switch( $query_mode ) :
 
-		}
-
-		if ( $wp_query->query_vars['query'] == 'stats' ) {
-
-			if ( ! isset( $wp_query->query_vars['type'] ) ) {
-
-				$error['error'] = __( 'Invalid query!', 'edd' );
-				$this->output( $error );
-
-			} else {
+			case 'stats' :
 
 				$type = $wp_query->query_vars['type'];
 
-			}
+				$product   = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
+				$date      = isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null;
+				$startdate = isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null;
+				$enddate   = isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null;
 
-			$product   = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
-			$date      = isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null;
-			$startdate = isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null;
-			$enddate   = isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null;
+				$this->get_stats( $type, $product, $date, $startdate, $enddate );
 
-			$this->get_stats( $type, $product, $date, $startdate, $enddate );
+				break;
 
-		} elseif ( $wp_query->query_vars['query'] == 'products' ) {
+			case 'products' :
 
-			$product   = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
+				$product   = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
 
-			$this->get_products( $product );
+				$this->get_products( $product );
 
-		} elseif ( $wp_query->query_vars['query'] == 'customers' ) {
+				break;
 
-			$customer  = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
+			case 'customers' :
 
-			$this->get_customers( $customer );
+				$customer  = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
 
-		} else {
+				$this->get_customers( $customer );
+
+				break;
+
+		endswitch;
+
+	}
+
+
+	/**
+	 * Retrieve the query mode
+	 *
+	 * Determines the kind of query requested and also ensure it is a valid query
+	 *
+	 * @access  private
+	 * @since  1.5
+	 */
+
+	private function get_query_mode() {
+
+		global $wp_query;
+
+		// Whitelist our query options
+		$accepted = apply_filters( 'edd_api_valid_query_modes', array(
+			'stats',
+			'products',
+			'customers',
+		) );
+
+		$query = isset( $wp_query->query_vars['query'] ) ? $wp_query->query_vars['query'] : null;
+
+		// Make sure our query is valid
+		if( ! in_array( $query, $accepted ) || ( $query == 'stats' && ! isset( $wp_query->query_vars['type'] )  ) ) {
 
 			$error['error'] = __( 'Invalid query!', 'edd' );
 
 			$this->output( $error );
+
 		}
 
+		return $query;
 	}
 
 
