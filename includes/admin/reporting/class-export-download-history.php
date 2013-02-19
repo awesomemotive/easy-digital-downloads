@@ -9,20 +9,17 @@
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
-*/
+ */
 
 class EDD_Download_History_Export extends EDD_Export {
-
-
 	/**
 	 * Our export type. Used for export-type specific filters / actions
 	 *
 	 * @access      public
+	 * @var         string
 	 * @since       1.4.4
 	 */
-
 	public $export_type = 'download_history';
-
 
 	/**
 	 * Set the CSV columns
@@ -31,7 +28,6 @@ class EDD_Download_History_Export extends EDD_Export {
 	 * @since       1.4.4
 	 * @return      array
 	 */
-
 	public function csv_cols() {
 		$cols = array(
 			'date'     => __( 'Date',   'edd' ),
@@ -43,7 +39,6 @@ class EDD_Download_History_Export extends EDD_Export {
 		return $cols;
 	}
 
-
 	/**
 	 * Get the data being exported
 	 *
@@ -51,9 +46,7 @@ class EDD_Download_History_Export extends EDD_Export {
 	 * @since       1.4.4
 	 * @return      array
 	 */
-
 	public function get_data() {
-
 		global $edd_logs;
 
 		$data = array();
@@ -65,10 +58,8 @@ class EDD_Download_History_Export extends EDD_Export {
 			'year'     => date( 'Y' )
 		) );
 
-		if( $logs ) {
-
-			foreach( $logs as $log ) {
-
+		if ( $logs ) {
+			foreach ( $logs as $log ) {
 				$user_info = get_post_meta( $log->ID, '_edd_log_user_info', true );
 				$files     = edd_get_download_files( $log->post_parent );
 				$file_id   = (int) get_post_meta( $log->ID, '_edd_log_file_id', true );
@@ -84,7 +75,6 @@ class EDD_Download_History_Export extends EDD_Export {
 					'file'     => $file_name
 				);
 			}
-
 		}
 
 		$data = apply_filters( 'edd_export_get_data', $data );
@@ -92,5 +82,4 @@ class EDD_Download_History_Export extends EDD_Export {
 
 		return $data;
 	}
-
 }
