@@ -54,7 +54,7 @@ class EDD_API {
 
 	function key_gen( $user ) {
 		if ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) {
-			$key = get_user_meta( $user->ID, '_edd_user_api_key', true );
+			$user = get_userdata( $user->ID );
 			?>
 			<table class="form-table">
 				<tbody>
@@ -63,11 +63,11 @@ class EDD_API {
 							<label for="edd_set_api_key"><?php _e( 'Easy Digital Downloads API Key', 'edd' ); ?></label>
 						</th>
 						<td>
-							<?php if ( empty( $key ) ) { ?>
+							<?php if ( empty( $user->edd_user_api_key ) ) { ?>
 							<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 							<span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
 							<?php } else { ?>
-								<span id="key"><?php echo $key; ?></span><br/>
+								<span id="key"><?php echo $user->edd_user_api_key; ?></span><br/>
 								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 								<span class="description"><?php _e( 'Revoke API Key', 'edd' ); ?></span>
 							<?php } ?>
@@ -91,12 +91,11 @@ class EDD_API {
 	function key_update( $user_id ) {
 		if ( current_user_can( 'edit_user', $user_id ) && isset( $_POST['edd_set_api_key'] ) ) {
 			$user = get_userdata( $user_id );
-			$key  = get_user_meta( $user_id, '_edd_user_api_key', true );
-			if ( empty( $key ) ) {
+			if ( empty( $user->edd_user_api_key ) ) {
 				$hash = hash( 'md5', $user->user_email . date( 'U' ) );
-				update_user_meta( $user_id, '_edd_user_api_key', $hash );
+				update_user_meta( $user_id, 'edd_user_api_key', $hash );
 			} else {
-				delete_user_meta( $user_id, '_edd_user_api_key' );
+				delete_user_meta( $user_id, 'edd_user_api_key' );
 			}
 		}
 	}
@@ -168,7 +167,7 @@ class EDD_API {
 
 			// Check email/key combination
 			$user = get_user_by( 'email', $wp_query->query_vars['user'] );
-			if ( $user->key != $wp_query->query_vars['key'] )
+			if ( $user->edd_user_api_key != $wp_query->query_vars['key'] )
 				$this->invalid_key( $wp_query->query_vars['user'] );
 
 			// Main query handler
