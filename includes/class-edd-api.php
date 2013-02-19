@@ -64,10 +64,12 @@ class EDD_API {
 						</th>
 						<td>
 							<?php if ( empty( $key ) ) { ?>
-							<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" /> <span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
+							<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
+							<span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
 							<?php } else { ?>
-								<span id="key"><?php echo $key; ?></span>
-								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" /> <span class="description"><?php _e( 'Revoke API Key', 'edd' ); ?></span>
+								<span id="key"><?php echo $key; ?></span><br/>
+								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
+								<span class="description"><?php _e( 'Revoke API Key', 'edd' ); ?></span>
 							<?php } ?>
 						</td>
 					</tr>
