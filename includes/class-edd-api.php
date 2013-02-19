@@ -225,7 +225,7 @@ class EDD_API {
 
 			} else {
 
-				$error['error'] = 'Invalid query!';
+				$error['error'] = __( 'Invalid query!', 'edd' );
 
 				$this->output( $error );
 			}
