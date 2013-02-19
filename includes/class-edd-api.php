@@ -682,7 +682,7 @@ class EDD_API {
 
 				} else {
 
-					$error['error'] = sprintf( __( 'Product %s not found!', 'edd' ), $prodcut );
+					$error['error'] = sprintf( __( 'Product %s not found!', 'edd' ), $product );
 
 					$this->output( $error );
 
