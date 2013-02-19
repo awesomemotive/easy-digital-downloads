@@ -2,6 +2,10 @@
 /**
  * EDD API
  *
+ * This class provides a front-facing JSON/XML API that makes it possible to query data from the shop.
+ *
+ * The primary purpose of this class is for external sales / earnings tracking systems, such as mobile
+ *
  * @package  Easy Digital Downloads
  * @subpackage EDD API
  * @copyright Copyright (c) 2013, Pippin Williamson
