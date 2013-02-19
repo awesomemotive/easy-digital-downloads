@@ -7,11 +7,10 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 
 /**
  * Register Dashboard Widgets
@@ -22,14 +21,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @author      Sunny Ratilal
  * @since       1.2.2
  */
-
 function edd_register_dashboard_widgets() {
 	if ( current_user_can( apply_filters( 'edd_dashboard_stats_cap', 'edit_pages' ) ) ) {
 		wp_add_dashboard_widget( 'edd_dashboard_sales', __('Easy Digital Downloads Sales Summary', 'edd'), 'edd_dashboard_sales_widget' );
 	}
 }
 add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets' );
-
 
 /**
  * Sales Summary Dashboard Widget
@@ -38,7 +35,6 @@ add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets' );
  * @author      Sunny Ratilal
  * @since       1.2.2
  */
-
 function edd_dashboard_sales_widget() {
 	$top_selling_args = array(
 		'post_type'              => 'download',
@@ -53,7 +49,6 @@ function edd_dashboard_sales_widget() {
 	);
 
 	$top_selling = get_posts( $top_selling_args );
-
 	?>
 	<div class="edd_dashboard_widget">
 		<div class="table table_left table_current_month">
@@ -218,4 +213,5 @@ function edd_dashboard_sales_widget() {
 		</div>
 		<?php } // End if ?>
 	</div>
-<?php }
+	<?php
+}

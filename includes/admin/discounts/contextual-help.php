@@ -12,7 +12,6 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-
 /**
  * Discounts contextual help.
  *
@@ -22,7 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.3
  * @return      void
  */
-
 function edd_discounts_contextual_help() {
 	$screen = get_current_screen();
 

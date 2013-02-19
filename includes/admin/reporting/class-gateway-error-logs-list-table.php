@@ -8,7 +8,6 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
-
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -25,18 +24,14 @@ if( ! class_exists( 'WP_List_Table' ) ) {
  * @access      private
  * @since       1.4
  */
-
 class EDD_Gateway_Error_Log_Table extends WP_List_Table {
-
-
 	/**
 	 * Number of items per page
 	 *
 	 * @since       1.4
+	 * @var         int
 	 */
-
 	public $per_page = 30;
-
 
 	/**
 	 * Get things started
@@ -45,7 +40,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      void
 	 */
-
 	function __construct(){
 		global $status, $page;
 
@@ -57,7 +51,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 		) );
 	}
 
-
 	/**
 	 * Output column data
 	 *
@@ -65,9 +58,8 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      string
 	 */
-
 	function column_default( $item, $column_name ) {
-		switch( $column_name ){
+		switch ( $column_name ){
 			case 'error' :
 				return get_the_title( $item['ID'] ) ? get_the_title( $item['ID'] ) : __( 'Payment Error', 'edd' );
 			case 'gateway' :
@@ -80,7 +72,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 		}
 	}
 
-
 	/**
 	 * Output Error message column
 	 *
@@ -88,7 +79,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      void
 	 */
-
 	function column_message( $item ) {
 	?>
 		<a href="#TB_inline?width=640&amp;inlineId=log-message-<?php echo $item['ID']; ?>" class="thickbox" title="<?php _e( 'View Log Message', 'edd' ); ?> "><?php _e( 'View Log Message', 'edd' ); ?></a>
@@ -116,7 +106,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	<?php
 	}
 
-
 	/**
 	 * Setup the column names / IDs
 	 *
@@ -124,7 +113,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      array
 	 */
-
 	function get_columns() {
 		$columns = array(
 			'ID'         => __( 'Log ID', 'edd' ),
@@ -139,7 +127,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 		return $columns;
 	}
 
-
 	/**
 	 * Retrieve the current page number
 	 *
@@ -147,11 +134,9 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      int
 	 */
-
 	function get_paged() {
 		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 	}
-
 
 	/**
 	 * Outputs the log views
@@ -160,12 +145,10 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      void
 	 */
-
 	function bulk_actions() {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
 	}
-
 
 	/**
 	 * Gets the log entries for the current view
@@ -174,7 +157,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      array
 	 */
-
 	function get_logs() {
 		global $edd_logs;
 
@@ -208,7 +190,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 		return $logs_data;
 	}
 
-
 	/**
 	 * Setup the final data for the table
 	 *
@@ -222,7 +203,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	 * @uses        $this->set_pagination_args()
 	 * @return      array
 	 */
-
 	function prepare_items() {
 		global $edd_logs;
 
