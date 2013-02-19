@@ -2,7 +2,6 @@
 /**
  * This template is used to display the purchase summary with [edd_receipt]
  */
-
 global $edd_receipt_args;
 
 $payment = get_post( $edd_receipt_args['id'] );
@@ -10,7 +9,6 @@ $meta    = edd_get_payment_meta( $payment->ID );
 $cart    = edd_get_payment_meta_cart_details( $payment->ID );
 $user    = edd_get_payment_meta_user_info( $payment->ID );
 ?>
-
 <table id="edd_purchase_receipt">
 	<thead>
 	<?php do_action( 'edd_payment_receipt_before', $payment, $edd_receipt_args ); ?>

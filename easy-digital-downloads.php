@@ -35,8 +35,6 @@ if ( !class_exists( 'Easy_Digital_Downloads' ) ) :
  */
 
 final class Easy_Digital_Downloads {
-
-
 	/** Singleton *************************************************************/
 
 	/**
@@ -44,20 +42,19 @@ final class Easy_Digital_Downloads {
 	 */
 	private static $instance;
 
-
 	/**
 	 * EDD user roles and capabilities object
+	 * @var object
 	 * @since 1.4.4.1
 	 */
 	private $roles;
 
-
 	/**
 	 * EDD cart fees object
+	 * @var object
 	 * @since 1.5
 	 */
 	public $fees;
-
 
 	/**
 	 * Main Easy_Digital_Downloads Instance
@@ -65,7 +62,7 @@ final class Easy_Digital_Downloads {
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
 	 * time. Also prevents needing to define globals all over the place.
 	 *
-	 * @since v1.4
+	 * @since 1.4
 	 * @staticvar array $instance
 	 * @uses Easy_Digital_Downloads::setup_globals() Setup the globals needed
 	 * @uses Easy_Digital_Downloads::includes() Include the required files
@@ -85,55 +82,47 @@ final class Easy_Digital_Downloads {
 		return self::$instance;
 	}
 
-
 	/**
 	 * Setup plugin constants
 	 *
-	 * @since v1.4
+	 * @since 1.4
 	 * @access private
 	 * @uses plugin_dir_path() To generate EDD plugin path
 	 * @uses plugin_dir_url() To generate EDD plugin url
 	 */
 	private function setup_constants() {
-
 		// Plugin version
-		if( !defined( 'EDD_VERSION' ) )
+		if( ! defined( 'EDD_VERSION' ) )
 			define( 'EDD_VERSION', '1.4.4' );
 
 		// Plugin Folder URL
-		if( !defined( 'EDD_PLUGIN_URL' ) )
+		if( ! defined( 'EDD_PLUGIN_URL' ) )
 			define( 'EDD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 		// Plugin Folder Path
-		if( !defined( 'EDD_PLUGIN_DIR' ) )
+		if( ! defined( 'EDD_PLUGIN_DIR' ) )
 			define( 'EDD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 		// Plugin Root File
-		if( !defined( 'EDD_PLUGIN_FILE' ) )
+		if( ! defined( 'EDD_PLUGIN_FILE' ) )
 			define( 'EDD_PLUGIN_FILE', __FILE__ );
-
 	}
-
-
-
 
 	/**
 	 * Include required files
 	 *
-	 * @since v1.4
+	 * @since 1.4
 	 * @access private
 	 * @uses is_admin() If in WordPress admin, load additional file
 	 */
 	private function includes() {
-
 		global $edd_options;
 
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php';
 		$edd_options = edd_get_settings();
+
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
 		require_once EDD_PLUGIN_DIR . 'includes/actions.php';
-
-
 		require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/template-functions.php';
@@ -200,14 +189,12 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
 			require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
 		}
-
 	}
-
 
 	/**
 	 * Loads the plugin language files
 	 *
-	 * @since v1.4
+	 * @since 1.4
 	 * @access private
 	 * @uses dirname()
 	 * @uses plugin_basename()
@@ -215,14 +202,11 @@ final class Easy_Digital_Downloads {
 	 * @uses load_textdomain()
 	 * @uses get_locale()
 	 * @uses load_plugin_textdomain()
-	 *
 	 */
 	public function load_textdomain() {
-
 		// Set filter for plugin's languages directory
 		$edd_lang_dir = dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/';
 		$edd_lang_dir = apply_filters( 'edd_languages_directory', $edd_lang_dir );
-
 
 		// Traditional WordPress plugin locale filter
 		$locale        = apply_filters( 'plugin_locale',  get_locale(), 'edd' );
@@ -242,7 +226,6 @@ final class Easy_Digital_Downloads {
 			// Load the default language files
 			load_plugin_textdomain( 'edd', false, $edd_lang_dir );
 		}
-
 	}
 }
 
@@ -250,16 +233,15 @@ endif; // End if class_exists check
 
 
 /**
- * The main function responsible for returning the one true Easy_Digital_Downloads Instance
- * to functions everywhere.
+ * The main function responsible for returning the one true Easy_Digital_Downloads
+ *  Instance to functions everywhere.
  *
  * Use this function like you would a global variable, except without needing
  * to declare the global.
  *
  * Example: <?php $edd = EDD(); ?>
  *
- * @since v1.4
- *
+ * @since 1.4
  * @return The one true Easy_Digital_Downloads Instance
  */
 
