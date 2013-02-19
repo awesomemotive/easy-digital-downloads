@@ -183,52 +183,55 @@ class EDD_API {
 				$this->invalid_key( $wp_query->query_vars['user'] );
 
 			// Main query handler
-			if ( isset( $wp_query->query_vars['query'] ) ) {
+			if ( ! isset( $wp_query->query_vars['query'] ) ) {
 
-				if ( $wp_query->query_vars['query'] == 'stats' ) {
+				// Fail gracefully
+				$error['error'] = 'Invalid query!';
+				$this->output( $error );
 
-					if ( ! isset( $wp_query->query_vars['type'] ) ) {
+			}
 
-						$error['error'] = 'Invalid query!';
-						$this->output( $error );
+			if ( $wp_query->query_vars['query'] == 'stats' ) {
 
-					} else {
+				if ( ! isset( $wp_query->query_vars['type'] ) ) {
 
-						$type = $wp_query->query_vars['type'];
-
-					}
-
-					$product   = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
-					$date      = isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null;
-					$startdate = isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null;
-					$enddate   = isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null;
-
-					$this->get_stats( $type, $product, $date, $startdate, $enddate );
-
-				} elseif ( $wp_query->query_vars['query'] == 'products' ) {
-
-					$product   = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
-
-					$this->get_products( $product );
-
-				} elseif ( $wp_query->query_vars['query'] == 'customers' ) {
-
-					$customer  = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
-
-					$this->get_customers( $customer );
+					$error['error'] = 'Invalid query!';
+					$this->output( $error );
 
 				} else {
 
-					$error['error'] = 'Invalid query!';
+					$type = $wp_query->query_vars['type'];
 
-					$this->output( $error );
 				}
+
+				$product   = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
+				$date      = isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null;
+				$startdate = isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null;
+				$enddate   = isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null;
+
+				$this->get_stats( $type, $product, $date, $startdate, $enddate );
+
+			} elseif ( $wp_query->query_vars['query'] == 'products' ) {
+
+				$product   = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
+
+				$this->get_products( $product );
+
+			} elseif ( $wp_query->query_vars['query'] == 'customers' ) {
+
+				$customer  = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
+
+				$this->get_customers( $customer );
+
+			} else {
+
+				$error['error'] = 'Invalid query!';
+
+				$this->output( $error );
 			}
 
-			// Fail gracefully
-			$error['error'] = 'Invalid query!';
-			$this->output( $error );
 		}
+
 	}
 
 
