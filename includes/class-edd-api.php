@@ -36,8 +36,6 @@ class EDD_API {
 	 */
 
 	function __construct() {
-		global $edd_options;
-
 		add_action( 'init', array( $this, 'add_endpoint' ) );
 		add_action( 'template_redirect', array( $this, 'process_endpoint' ) );
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
