@@ -34,11 +34,11 @@ class EDD_API {
 	function __construct() {
 		global $edd_options;
 
-		add_action( 'init', array( $this, 'edd_add_api_endpoint' ) );
-		add_action( 'template_redirect', array( $this, 'edd_process_api_endpoint' ) );
-		add_filter( 'query_vars', array( $this, 'edd_query_vars' ) );
-		add_action( 'show_user_profile', array( $this, 'edd_api_key_gen' ) );
-		add_action( 'personal_options_update', array( $this, 'edd_api_key_update' ) );
+		add_action( 'init', array( $this, 'add_endpoint' ) );
+		add_action( 'template_redirect', array( $this, 'process_endpoint' ) );
+		add_filter( 'query_vars', array( $this, 'query_vars' ) );
+		add_action( 'show_user_profile', array( $this, 'key_gen' ) );
+		add_action( 'personal_options_update', array( $this, 'key_update' ) );
 	}
 
 
@@ -52,7 +52,7 @@ class EDD_API {
 	 * @since  1.4.4.3
 	 */
 
-	function edd_api_key_gen( $user ) {
+	function key_gen( $user ) {
 		if ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) { ?>
 			<table class="form-table">
 				<tbody>
@@ -61,10 +61,10 @@ class EDD_API {
 							<label for="edd_set_api_key"><?php _e( 'Easy Digital Downloads API Key', 'edd' ); ?></label>
 						</th>
 						<td>
-							<?php if ( !isset( $user->edd_api_key ) || ( $user->edd_api_key == '' ) ) { ?>
+							<?php if ( !isset( $user->key ) || ( $user->key == '' ) ) { ?>
 							<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" /> <span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
 							<?php } else { ?>
-								<span id="edd_api_key"><?php echo $user->edd_api_key; ?></span>
+								<span id="key"><?php echo $user->key; ?></span>
 								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" /> <span class="description"><?php _e( 'Revoke API Key', 'edd' ); ?></span>
 							<?php } ?>
 						</td>
@@ -78,21 +78,21 @@ class EDD_API {
 	/**
 	 * Generate and save API key
 	 *
-	 * Generates the key requested by edd_api_key_gen and stores it to the database
+	 * Generates the key requested by key_gen and stores it to the database
 	 *
 	 * @access  private
 	 * @author  Daniel J Griffiths
 	 * @since  1.4.4.3
 	 */
-	function edd_api_key_update( $user_id ) {
+	function key_update( $user_id ) {
 		if ( current_user_can( 'edit_user', $user_id ) && isset( $_POST['edd_set_api_key'] ) ) {
 			$user = get_userdata( $user_id );
 
-			if ( !isset( $user->edd_api_key ) || ( $user->edd_api_key == null ) ) {
+			if ( !isset( $user->key ) || ( $user->key == null ) ) {
 				$hash = hash( 'md5', $user->user_email . date( 'U' ) );
-				update_user_meta( $user_id, 'edd_api_key', $hash );
+				update_user_meta( $user_id, 'key', $hash );
 			} else {
-				update_user_meta( $user_id, 'edd_api_key', '' );
+				update_user_meta( $user_id, 'key', '' );
 			}
 		}
 	}
@@ -108,7 +108,7 @@ class EDD_API {
 	 * @since  1.4.4.3
 	 */
 
-	function edd_add_api_endpoint( $rewrite_rules ) {
+	function add_endpoint( $rewrite_rules ) {
 		add_rewrite_endpoint( 'edd-api', EP_ALL );
 	}
 
@@ -123,7 +123,7 @@ class EDD_API {
 	 * @since  1.4.4.3
 	 */
 
-	function edd_query_vars( $vars ) {
+	function query_vars( $vars ) {
 		$vars[] = 'user';
 		$vars[] = 'key';
 		$vars[] = 'query';
@@ -148,7 +148,7 @@ class EDD_API {
 	 * @since  1.4.4.3
 	 */
 
-	function edd_process_api_endpoint() {
+	function process_endpoint() {
 		global $wp_query;
 
 		// Hands off API calls based on ?edd-api URL
@@ -156,23 +156,23 @@ class EDD_API {
 
 			// Make sure we have both user and api key
 			if ( !isset( $wp_query->query_vars['user'] ) || !isset( $wp_query->query_vars['key'] ) || $wp_query->query_vars['user'] == '' || $wp_query->query_vars['key'] == '' )
-				$this->edd_api_missing_auth();
+				$this->missing_auth();
 
 			// Make sure username (email) exists
 			if ( !email_exists( $wp_query->query_vars['user'] ) )
-				$this->edd_api_invalid_email();
+				$this->invalid_email();
 
 			// Check email/key combination
 			$user = get_user_by( 'email', $wp_query->query_vars['user'] );
-			if ( $user->edd_api_key != $wp_query->query_vars['key'] )
-				$this->edd_api_invalid_key( $wp_query->query_vars['user'] );
+			if ( $user->key != $wp_query->query_vars['key'] )
+				$this->invalid_key( $wp_query->query_vars['user'] );
 
 			// Main query handler
 			if ( isset( $wp_query->query_vars['query'] ) ) {
 				if ( $wp_query->query_vars['query'] == 'stats' ) {
 					if ( !isset( $wp_query->query_vars['type'] ) ) {
 						$error['error'] = 'Invalid query!';
-						$this->edd_api_output( $error );
+						$this->output( $error );
 					} else {
 						$type = $wp_query->query_vars['type'];
 					}
@@ -201,7 +201,7 @@ class EDD_API {
 						$enddate = null;
 					}
 
-					$this->edd_api_get_stats( $type, $product, $date, $startdate, $enddate );
+					$this->get_stats( $type, $product, $date, $startdate, $enddate );
 				} elseif ( $wp_query->query_vars['query'] == 'products' ) {
 					if ( isset( $wp_query->query_vars['product'] ) ) {
 						$product = $wp_query->query_vars['product'];
@@ -209,7 +209,7 @@ class EDD_API {
 						$product = null;
 					}
 
-					$this->edd_api_get_products( $product );
+					$this->get_products( $product );
 				} elseif ( $wp_query->query_vars['query'] == 'customers' ) {
 					if ( isset( $wp_query->query_vars['customer'] ) ) {
 						$customer = $wp_query->query_vars['customer'];
@@ -217,17 +217,17 @@ class EDD_API {
 						$customer = null;
 					}
 
-					$this->edd_api_get_customers( $customer );
+					$this->get_customers( $customer );
 				} else {
 					$error['error'] = 'Invalid query!';
 
-					$this->edd_api_output( $error );
+					$this->output( $error );
 				}
 			}
 
 			// Fail gracefully
 			$error['error'] = 'Invalid query!';
-			$this->edd_api_output( $error );
+			$this->output( $error );
 		}
 	}
 
@@ -239,10 +239,10 @@ class EDD_API {
 	 * @author  Daniel J Griffiths
 	 * @since  1.4.4.3
 	 */
-	function edd_api_missing_auth() {
+	function missing_auth() {
 		$error['error'] = 'You must specify both user and API key!';
 
-		$this->edd_api_output( $error );
+		$this->output( $error );
 	}
 
 
@@ -253,10 +253,10 @@ class EDD_API {
 	 * @author  Daniel J Griffiths
 	 * @since  1.4.4.3
 	 */
-	function edd_api_invalid_email() {
+	function invalid_email() {
 		$error['error'] = 'The email address specified is not registered!';
 
-		$this->edd_api_output( $error );
+		$this->output( $error );
 	}
 
 	/**
@@ -266,10 +266,10 @@ class EDD_API {
 	 * @author  Daniel J Griffiths
 	 * @since  1.4.4.3
 	 */
-	function edd_api_invalid_key( $email ) {
+	function invalid_key( $email ) {
 		$error['error'] = 'Invalid API key for ' . $email . '!';
 
-		$this->edd_api_output( $error );
+		$this->output( $error );
 	}
 
 
@@ -280,7 +280,7 @@ class EDD_API {
 	 * @author  Daniel J Griffiths
 	 * @since  1.4.4.3
 	 */
-	function edd_api_get_customers( $customer ) {
+	function get_customers( $customer ) {
 		if ( $customer == null ) {
 			global $wpdb;
 
@@ -332,11 +332,11 @@ class EDD_API {
 			} else {
 				$error['error'] = 'Customer ' . $customer . ' not found!';
 
-				$this->edd_api_output( $error );
+				$this->output( $error );
 			}
 		}
 
-		$this->edd_api_output( $customers );
+		$this->output( $customers );
 	}
 
 
@@ -347,7 +347,7 @@ class EDD_API {
 	 * @author  Daniel J Griffiths
 	 * @since  1.4.4.3
 	 */
-	function edd_api_get_products( $product ) {
+	function get_products( $product ) {
 		if ( $product == null ) {
 			$product_list = get_posts( array( 'post_type' => 'download' ) );
 
@@ -416,11 +416,11 @@ class EDD_API {
 			} else {
 				$error['error'] = 'Product ' . $product . ' not found!';
 
-				$this->edd_api_output( $error );
+				$this->output( $error );
 			}
 		}
 
-		$this->edd_api_output( $products );
+		$this->output( $products );
 	}
 
 
@@ -431,7 +431,7 @@ class EDD_API {
 	 * @author  Daniel J Griffiths
 	 * @since  1.4.4.3
 	 */
-	function edd_api_get_stats( $type, $product = null, $date = null, $startdate = null, $enddate = null ) {
+	function get_stats( $type, $product = null, $date = null, $startdate = null, $enddate = null ) {
 		$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
 		$previous_year = $previous_month == 12 ? date( 'Y' ) - 1 : date( 'Y' );
 		if ( date( 'j' ) == 1 ) {
@@ -476,32 +476,32 @@ class EDD_API {
 					} else {
 						$error['error'] = 'Invalid or no date range specified!';
 
-						$this->edd_api_output( $error );
+						$this->output( $error );
 					}
 				} else {
 					$error['error'] = 'Invalid option for argument \'date\'!';
 
-					$this->edd_api_output( $error );
+					$this->output( $error );
 				}
 
-				$this->edd_api_output( $sales );
+				$this->output( $sales );
 			} elseif ( $product == 'all' ) {
 				$products = get_posts( array( 'post_type' => 'download' ) );
 				foreach ( $products as $product_info ) {
 					$sales['sales'][$product_info->ID] = array( $product_info->post_name => edd_get_download_sales_stats( $product_info->ID ) );
 				}
 
-				$this->edd_api_output( $sales );
+				$this->output( $sales );
 			} else {
 				if ( get_post_type( $product ) == 'download' ) {
 					$product_info = get_post( $product );
 					$sales['sales'][$product_info->ID] = array( $product_info->post_name => edd_get_download_sales_stats( $product ) );
 
-					$this->edd_api_output( $sales );
+					$this->output( $sales );
 				} else {
 					$error['error'] = 'Product ' . $product . ' not found!';
 
-					$this->edd_api_output( $error );
+					$this->output( $error );
 				}
 			}
 		} elseif ( $type == 'earnings' ) {
@@ -534,15 +534,15 @@ class EDD_API {
 					} else {
 						$error['error'] = 'Invalid or no date range specified!';
 
-						$this->edd_api_output( $error );
+						$this->output( $error );
 					}
 				} else {
 					$error['error'] = 'Invalid option for argument \'date\'!';
 
-					$this->edd_api_output( $error );
+					$this->output( $error );
 				}
 
-				$this->edd_api_output( $earnings );
+				$this->output( $earnings );
 			} elseif ( $product == 'all' ) {
 				$products = get_posts( array( 'post_type' => 'download' ) );
 
@@ -550,18 +550,18 @@ class EDD_API {
 					$earnings['earnings'][$product_info->ID] = array( $product_info->post_name => edd_get_download_earnings_stats( $product_info->ID ) );
 				}
 
-				$this->edd_api_output( $earnings );
+				$this->output( $earnings );
 
 			} else {
 				if ( get_post_type( $product ) == 'download' ) {
 					$product_info = get_post( $product );
 					$earnings['earnings'][$product_info->ID] = array( $product_info->post_name => edd_get_download_earnings_stats( $product ) );
 
-					$this->edd_api_output( $earnings );
+					$this->output( $earnings );
 				} else {
 					$error['error'] = 'Product ' . $product . ' not found!';
 
-					$this->edd_api_output( $error );
+					$this->output( $error );
 				}
 			}
 		}
@@ -575,7 +575,7 @@ class EDD_API {
 	 * @author  Daniel J Griffiths
 	 * @since  1.4.4.3
 	 */
-	function edd_api_output( $array ) {
+	function output( $array ) {
 		global $wp_query;
 
 		if ( isset( $wp_query->query_vars['format'] ) && $wp_query->query_vars['format'] == 'xml' ) {
