@@ -639,6 +639,8 @@ class EDD_API {
 
 		if ( isset( $wp_query->query_vars['format'] ) && $wp_query->query_vars['format'] == 'xml' ) {
 
+			require_once EDD_PLUGIN_DIR . 'includes/libraries/array2xml.php';
+
 			$xml = Array2XML::createXML( 'edd', $array );
 			echo $xml->saveXML();
 
