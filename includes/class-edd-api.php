@@ -50,7 +50,7 @@ class EDD_API {
 		add_action( 'init', array( $this, 'add_endpoint' ) );
 		add_action( 'template_redirect', array( $this, 'process_endpoint' ) );
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
-		add_action( 'show_user_profile', array( $this, 'key_gen' ) );
+		add_action( 'show_user_profile', array( $this, 'user_key_field' ) );
 		add_action( 'personal_options_update', array( $this, 'key_update' ) );
 
 		// Determine if JSON_PRETTY_PRINT is available
@@ -68,7 +68,7 @@ class EDD_API {
 	 * @since  1.5
 	 */
 
-	function key_gen( $user ) {
+	function user_key_field( $user ) {
 		if ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) {
 			$user = get_userdata( $user->ID );
 			?>
@@ -98,7 +98,7 @@ class EDD_API {
 	/**
 	 * Generate and save API key
 	 *
-	 * Generates the key requested by key_gen and stores it to the database
+	 * Generates the key requested by user_key_field and stores it to the database
 	 *
 	 * @access  private
 	 * @author  Daniel J Griffiths
