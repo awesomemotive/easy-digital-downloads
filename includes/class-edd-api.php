@@ -47,83 +47,19 @@ class EDD_API {
 	 */
 
 	function __construct() {
+		global $wp_version;
+
+     	$api_listener = version_compare( $wp_version, '3.5', '<' ) ? 'template_redirect' : 'parse_request';
+
 		add_action( 'init', array( $this, 'add_endpoint' ) );
-		add_action( 'template_redirect', array( $this, 'process_endpoint' ) );
+      	add_filter( $api_listener, array( $this, 'process_endpoint' ) );
+		//add_action( 'template_redirect', array( $this, 'process_endpoint' ) );
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
 		add_action( 'show_user_profile', array( $this, 'user_key_field' ) );
 		add_action( 'personal_options_update', array( $this, 'update_key' ) );
 
 		// Determine if JSON_PRETTY_PRINT is available
 		$this->pretty_print = version_compare( PHP_VERSION, '5.4', '>=' ) ? JSON_PRETTY_PRINT : define( 'JSON_PRETTY_PRINT', '' );
-	}
-
-
-	/**
-	 * Modify user profile
-	 *
-	 * Modifies the output of profile.php to add key generation/revocation
-	 *
-	 * @access  private
-	 * @author  Daniel J Griffiths
-	 * @since  1.5
-	 */
-
-	function user_key_field( $user ) {
-		if ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) {
-			$user = get_userdata( $user->ID );
-			?>
-			<table class="form-table">
-				<tbody>
-					<tr>
-						<th>
-							<label for="edd_set_api_key"><?php _e( 'Easy Digital Downloads API Key', 'edd' ); ?></label>
-						</th>
-						<td>
-							<?php if ( empty( $user->edd_user_api_key ) ) { ?>
-							<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
-							<span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
-							<?php } else { ?>
-								<span id="key"><?php echo $user->edd_user_api_key; ?></span><br/>
-								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
-								<span class="description"><?php _e( 'Revoke API Key', 'edd' ); ?></span>
-							<?php } ?>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		<?php }
-	}
-
-
-	/**
-	 * Generate and save API key
-	 *
-	 * Generates the key requested by user_key_field and stores it to the database
-	 *
-	 * @access  private
-	 * @author  Daniel J Griffiths
-	 * @since  1.5
-	 */
-
-	function update_key( $user_id ) {
-
-		if ( current_user_can( 'edit_user', $user_id ) && isset( $_POST['edd_set_api_key'] ) ) {
-
-			$user = get_userdata( $user_id );
-
-			if ( empty( $user->edd_user_api_key ) ) {
-
-				$hash = hash( 'md5', $user->user_email . date( 'U' ) );
-				update_user_meta( $user_id, 'edd_user_api_key', $hash );
-
-			} else {
-
-				delete_user_meta( $user_id, 'edd_user_api_key' );
-
-			}
-
-		}
-
 	}
 
 
@@ -718,6 +654,75 @@ class EDD_API {
 		}
 
 		exit;
+	}
+
+
+	/**
+	 * Modify user profile
+	 *
+	 * Modifies the output of profile.php to add key generation/revocation
+	 *
+	 * @access  private
+	 * @author  Daniel J Griffiths
+	 * @since  1.5
+	 */
+
+	function user_key_field( $user ) {
+		if ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) {
+			$user = get_userdata( $user->ID );
+			?>
+			<table class="form-table">
+				<tbody>
+					<tr>
+						<th>
+							<label for="edd_set_api_key"><?php _e( 'Easy Digital Downloads API Key', 'edd' ); ?></label>
+						</th>
+						<td>
+							<?php if ( empty( $user->edd_user_api_key ) ) { ?>
+							<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
+							<span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
+							<?php } else { ?>
+								<span id="key"><?php echo $user->edd_user_api_key; ?></span><br/>
+								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
+								<span class="description"><?php _e( 'Revoke API Key', 'edd' ); ?></span>
+							<?php } ?>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		<?php }
+	}
+
+
+	/**
+	 * Generate and save API key
+	 *
+	 * Generates the key requested by user_key_field and stores it to the database
+	 *
+	 * @access  private
+	 * @author  Daniel J Griffiths
+	 * @since  1.5
+	 */
+
+	function update_key( $user_id ) {
+
+		if ( current_user_can( 'edit_user', $user_id ) && isset( $_POST['edd_set_api_key'] ) ) {
+
+			$user = get_userdata( $user_id );
+
+			if ( empty( $user->edd_user_api_key ) ) {
+
+				$hash = hash( 'md5', $user->user_email . date( 'U' ) );
+				update_user_meta( $user_id, 'edd_user_api_key', $hash );
+
+			} else {
+
+				delete_user_meta( $user_id, 'edd_user_api_key' );
+
+			}
+
+		}
+
 	}
 
 }
