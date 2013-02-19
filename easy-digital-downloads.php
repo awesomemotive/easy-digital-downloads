@@ -5,7 +5,7 @@ Plugin URI: http://easydigitaldownloads.com
 Description: Serve Digital Downloads Through WordPress
 Author: Pippin Williamson
 Author URI: http://pippinsplugins.com
-Version: 1.4.4.1
+Version: 1.4.4.2
 Text Domain: edd
 Domain Path: languages
 
@@ -47,16 +47,9 @@ final class Easy_Digital_Downloads {
 
 	/**
 	 * EDD user roles and capabilities object
-	 * @since 1.4.4.1
+	 * @since 1.4.4
 	 */
 	private $roles;
-
-
-	/**
-	 * EDD cart fees object
-	 * @since x.x
-	 */
-	public $fees;
 
 
 	/**
@@ -80,7 +73,6 @@ final class Easy_Digital_Downloads {
 			self::$instance->includes();
 			self::$instance->load_textdomain();
 			self::$instance->roles = new EDD_Roles();
-			self::$instance->fees = new EDD_Fees();
 		}
 		return self::$instance;
 	}
@@ -98,7 +90,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version
 		if( !defined( 'EDD_VERSION' ) )
-			define( 'EDD_VERSION', '1.4.4' );
+			define( 'EDD_VERSION', '1.4.4.2' );
 
 		// Plugin Folder URL
 		if( !defined( 'EDD_PLUGIN_URL' ) )
@@ -142,7 +134,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-roles.php';
 		require_once EDD_PLUGIN_DIR . 'includes/formatting.php';
@@ -168,6 +159,8 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/tax-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/process-purchase.php';
 		require_once EDD_PLUGIN_DIR . 'includes/login-register.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-api.php';
+		require_once EDD_PLUGIN_DIR . 'includes/libraries/array2xml.php';
 
 		if( is_admin() ) {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
