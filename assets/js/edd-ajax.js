@@ -37,8 +37,8 @@ jQuery(document).ready(function ($) {
 
                 if(!$('.edd-cart-item').length) {
                     $('.cart_item.edd_checkout').hide();
-					$('.edd-cart').append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
-				} else {
+                    $('.edd-cart').append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
+                } else {
 
                 }
             }
@@ -49,26 +49,26 @@ jQuery(document).ready(function ($) {
     // Send Add to Cart request
     $('body').on('click.eddAddToCart', '.edd-add-to-cart', function (e) {
 
-		e.preventDefault();
+        e.preventDefault();
 
-		var $this = $(this);
+        var $this = $(this);
 
-		var container = $this.closest('div');
+        var container = $this.closest('div');
 
        // Show the ajax loader
         $('.edd-cart-ajax', container).show();
 
         var form           = $this.parents('form').last()
-		var download       = $this.data('download-id');
+        var download       = $this.data('download-id');
         var variable_price = $this.data('variable-price');
-		var price_mode     = $this.data('price-mode');
-		var item_price_ids = [];
+        var price_mode     = $this.data('price-mode');
+        var item_price_ids = [];
 
-		if( variable_price == 'yes' ) {
-			$('.edd_price_option_' + download + ':checked', form).each(function( index ) {
+        if( variable_price == 'yes' ) {
+            $('.edd_price_option_' + download + ':checked', form).each(function( index ) {
                 item_price_ids[ index ] = $(this).val();
             });
-		} else {
+        } else {
             item_price_ids[0] = download;
         }
 

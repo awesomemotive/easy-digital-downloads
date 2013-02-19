@@ -785,31 +785,6 @@ function edd_get_payment_tax( $payment_id = 0, $payment_meta = false ) {
 
 }
 
-
-/**
- * Retrieves arbitrary fees for the payment
- *
- * Returns an array of fees
- *
- * @param int  $payment_id
- * @param bool $payment_meta
- *
- * @access      public
- * @since       1.5
- * @return      array|bool
- */
-
-function edd_get_payment_fees( $payment_id = 0, $payment_meta = false ) {
-	if ( !$payment_meta )
-		$payment_meta = edd_get_payment_meta( $payment_id );
-
-	$fees = isset( $payment_meta['fees'] ) ? $payment_meta['fees'] : false;
-
-	return apply_filters( 'edd_get_payment_fees', $fees, $payment_id );
-
-}
-
-
 /**
  * Retrieve the purchase ID based on the purchase key
  *

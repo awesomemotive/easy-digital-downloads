@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.5.1
 
-Stable Tag: 1.4.4.1
+Stable Tag: 1.4.4.2
 License: GNU Version 2 or Any Later Version
 
 
@@ -170,6 +170,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.4.4.2 =
+
+* URGENT: Fixed a crucial security bug. PLEASE UPDATE.
 
 = 1.4.4.1 =
 
@@ -1038,4 +1042,4 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Upgrade Notice ==
 
-Fixed a very important bug with prices over 1000. Added new views the reports page. Improved the purchase confirmation page. Fixed a large number of other small bugs and made a significant number of minor improvements throughout the plugin.
+URGENT: Fixed a very critical security bug. Please update immediately.
