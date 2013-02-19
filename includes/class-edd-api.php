@@ -47,13 +47,9 @@ class EDD_API {
 	 */
 
 	function __construct() {
-		global $wp_version;
-
-     	$api_listener = version_compare( $wp_version, '3.5', '<' ) ? 'template_redirect' : 'parse_request';
 
 		add_action( 'init', array( $this, 'add_endpoint' ) );
-      	add_filter( $api_listener, array( $this, 'process_endpoint' ) );
-		//add_action( 'template_redirect', array( $this, 'process_endpoint' ) );
+      	add_action( 'template_redirect', array( $this, 'process_endpoint' ) );
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
 		add_action( 'show_user_profile', array( $this, 'user_key_field' ) );
 		add_action( 'personal_options_update', array( $this, 'update_key' ) );
