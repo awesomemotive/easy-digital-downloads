@@ -115,18 +115,6 @@ function edd_register_settings() {
 					'name' => __('Enable Tracking', 'edd'),
 					'desc' => __('Check this box to allow Easy Digital Downloads to track how the plugin is used. No personal info is ever collected. This helps us better improve the plugin.', 'edd'),
 					'type' => 'checkbox'
-				),
-				'api_settings' => array(
-					'id' => 'api_settings',
-					'name' => '<strong>' . __('API Settings', 'edd') . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'api_allow_user_keys' => array(
-					'id' => 'api_allow_user_keys',
-					'name' => __('Allow User Keys', 'edd') . '</strong>',
-					'desc' => __('Check this box to allow all users to generate API keys. Users with the \'manage_shop_settings\' capability are always allowed to generate keys.', 'edd'),
-					'type' => 'checkbox'
 				)
 			)
 		),
