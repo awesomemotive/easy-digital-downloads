@@ -12,7 +12,6 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-
 /**
  * Options Page
  *
@@ -22,7 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.0
  * @return      void
 */
-
 function edd_options_page() {
 	global $edd_options;
 
@@ -66,7 +64,6 @@ function edd_options_page() {
 
 				submit_button();
 				?>
-
 			</form>
 		</div><!-- #tab_container-->
 	</div><!-- .wrap -->
