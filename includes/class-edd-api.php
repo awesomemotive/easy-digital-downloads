@@ -136,8 +136,7 @@ class EDD_API {
 
 			case 'stats' :
 
-				$type = $wp_query->query_vars['type'];
-
+				$type      = $wp_query->query_vars['type'];
 				$product   = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
 				$date      = isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null;
 				$startdate = isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null;
