@@ -121,7 +121,7 @@ class EDD_API {
 			$this->missing_auth();
 
 		// Make sure username (email) exists
-		if ( !email_exists( $wp_query->query_vars['user'] ) )
+		if ( ! email_exists( $wp_query->query_vars['user'] ) )
 			$this->invalid_email();
 
 		// Check email/key combination
