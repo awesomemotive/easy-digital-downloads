@@ -60,6 +60,13 @@ final class Easy_Digital_Downloads {
 
 
 	/**
+	 * EDD API object
+	 * @since 1.5
+	 */
+	public $api;
+
+
+	/**
 	 * Main Easy_Digital_Downloads Instance
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
@@ -80,6 +87,8 @@ final class Easy_Digital_Downloads {
 			self::$instance->includes();
 			self::$instance->load_textdomain();
 			self::$instance->roles = new EDD_Roles();
+			self::$instance->fees = new EDD_Fees();
+			self::$instance->api = new EDD_API();
 		}
 		return self::$instance;
 	}
@@ -141,6 +150,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-api.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-roles.php';
 		require_once EDD_PLUGIN_DIR . 'includes/formatting.php';
@@ -166,7 +176,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/tax-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/process-purchase.php';
 		require_once EDD_PLUGIN_DIR . 'includes/login-register.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-api.php';
 		require_once EDD_PLUGIN_DIR . 'includes/libraries/array2xml.php';
 
 		if( is_admin() ) {
