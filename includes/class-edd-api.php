@@ -265,12 +265,14 @@ class EDD_API {
 	 */
 	function get_customers( $customer ) {
 		if ( $customer == null ) {
+
 			global $wpdb;
 
 			$customer_list_query = $wpdb->get_col( $wpdb->prepare( "SELECT $wpdb->users.ID FROM $wpdb->users" ) );
 			$customer_count = 0;
 
 			foreach ( $customer_list_query as $customer_id ) {
+
 				if ( edd_has_purchases( $customer_id ) ) {
 					$customer_info = get_userdata( $customer_id );
 
@@ -289,10 +291,13 @@ class EDD_API {
 
 					$customer_count++;
 				}
+
 			}
 
 			$customers['customers']['stats']['total_customers'] = $customer_count;
+
 		} else {
+
 			if ( !is_numeric( $customer ) ) {
 				$customer = get_user_by( 'email', $customer )->ID;
 			}
@@ -313,9 +318,11 @@ class EDD_API {
 				$customers[$customer]['stats']['total_spent'] = edd_purchase_total_of_user( $customer_id );
 				$customers[$customer]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_id );
 			} else {
+
 				$error['error'] = 'Customer ' . $customer . ' not found!';
 
 				$this->output( $error );
+
 			}
 		}
 
@@ -331,10 +338,13 @@ class EDD_API {
 	 * @since  1.4.4.3
 	 */
 	function get_products( $product ) {
+
 		if ( $product == null ) {
+
 			$product_list = get_posts( array( 'post_type' => 'download' ) );
 
 			foreach ( $product_list as $product_info ) {
+
 				$products['products'][$product_info->ID]['info']['id'] = $product_info->ID;
 				$products['products'][$product_info->ID]['info']['slug'] = $product_info->post_name;
 				$products['products'][$product_info->ID]['info']['title'] = $product_info->post_title;
@@ -351,21 +361,31 @@ class EDD_API {
 				$products['products'][$product_info->ID]['stats']['monthly_average']['earnings'] = edd_get_average_monthly_download_earnings( $product_info->ID );
 
 				if ( edd_has_variable_prices( $product_info->ID ) ) {
+
 					foreach ( edd_get_variable_prices( $product_info->ID ) as $price ) {
 						$products['products'][$product_info->ID]['pricing'][$price['name']] = $price['amount'];
 					}
+
 				} else {
+
 					$products['products'][$product_info->ID]['pricing']['amount'] = edd_get_download_price( $product_info->ID );
+
 				}
 
 				foreach ( edd_get_download_files( $product_info->ID ) as $file ) {
+
 					$products['products'][$product_info->ID]['files'][] = $file;
+
 				}
 
 				$products['products'][$product_info->ID]['notes'] = edd_get_product_notes( $product_info->ID );
+
 			}
+
 		} else {
+
 			if ( get_post_type( $product ) == 'download' ) {
+
 				$product_info = get_post( $product );
 
 				$products[$product_info->ID]['info']['id'] = $product_info->ID;
@@ -384,22 +404,33 @@ class EDD_API {
 				$products[$product_info->ID]['stats']['monthly_average']['earnings'] = edd_get_average_monthly_download_earnings( $product_info->ID );
 
 				if ( edd_has_variable_prices( $product_info->ID ) ) {
+
 					foreach ( edd_get_variable_prices( $product_info->ID ) as $price ) {
+
 						$products[$product_info->ID]['pricing'][$price['name']] = $price['amount'];
+
 					}
+
 				} else {
+
 					$products[$product_info->ID]['pricing']['amount'] = edd_get_download_price( $product_info->ID );
+
 				}
 
 				foreach ( edd_get_download_files( $product_info->ID ) as $file ) {
+
 					$products[$product_info->ID]['files'][] = $file;
+
 				}
 
 				$products[$product_info->ID]['notes'] = edd_get_product_notes( $product_info->ID );
+
 			} else {
+
 				$error['error'] = 'Product ' . $product . ' not found!';
 
 				$this->output( $error );
+
 			}
 		}
 
@@ -415,8 +446,10 @@ class EDD_API {
 	 * @since  1.4.4.3
 	 */
 	function get_stats( $type, $product = null, $date = null, $startdate = null, $enddate = null ) {
+
 		$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
 		$previous_year = $previous_month == 12 ? date( 'Y' ) - 1 : date( 'Y' );
+
 		if ( date( 'j' ) == 1 ) {
 			if ( date( 'n' ) == 3 ) {
 				$yesterday = 28;
