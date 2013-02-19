@@ -680,11 +680,15 @@ class EDD_API {
 		global $wp_query;
 
 		if ( isset( $wp_query->query_vars['format'] ) && $wp_query->query_vars['format'] == 'xml' ) {
+
 			$xml = Array2XML::createXML( 'edd', $array );
 			echo $xml->saveXML();
+
 		} else {
+
 			header( 'Content-Type: application/json' );
 			echo json_encode( $array, JSON_PRETTY_PRINT );
+
 		}
 
 		exit;
