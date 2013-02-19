@@ -703,4 +703,5 @@ class EDD_API {
 
 		exit;
 	}
+
 }
