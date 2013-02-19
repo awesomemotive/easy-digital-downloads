@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
@@ -18,8 +18,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @access      public
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_checkout_cart() {
 	do_action( 'edd_before_checkout_cart' );
 	echo '<!--dynamic-cached-content-->';
@@ -28,7 +27,6 @@ function edd_checkout_cart() {
 	do_action( 'edd_after_checkout_cart' );
 }
 
-
 /**
  * Shopping Cart
  *
@@ -36,7 +34,6 @@ function edd_checkout_cart() {
  * @since       1.0
  * @return      string
 */
-
 function edd_shopping_cart( $echo = false ) {
 	global $edd_options;
 
@@ -62,12 +59,11 @@ function edd_shopping_cart( $echo = false ) {
 
 	do_action( 'edd_after_cart' );
 
-	if( $echo )
+	if ( $echo )
 		echo ob_get_clean();
 	else
 		return ob_get_clean();
 }
-
 
 /**
  * Get Cart Item Template
@@ -76,7 +72,6 @@ function edd_shopping_cart( $echo = false ) {
  * @since       1.0
  * @return      string
 */
-
 function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 	global $post;
 
@@ -86,19 +81,22 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 	$title      = get_the_title( $id );
 	$options    = !empty( $item['options'] ) ? $item['options'] : array();
 	$price      = edd_get_cart_item_price( $id, $options );
-	if( edd_use_taxes() && edd_taxes_on_prices() ) {
+
+	if ( edd_use_taxes() && edd_taxes_on_prices() ) {
 		$price += edd_calculate_tax( $price );
 	}
-	if( !empty( $options ) ) {
+
+	if ( ! empty( $options ) ) {
 		$title .= ' <span class="edd-cart-item-separator">-</span> ' . edd_get_price_name( $id, $item['options'] );
 	}
+
 	$remove = '<a href="' . esc_url( $remove_url ) . '" data-cart-item="' . absint( $cart_key ) . '" data-download-id="' . absint( $id ) . '" data-action="edd_remove_from_cart" class="edd-remove-from-cart">' . __('remove', 'edd') . '</a>';
 	$item = '<li class="edd-cart-item"><span class="edd-cart-item-title">' . $title . '</span>&nbsp;';
 	$item .= '<span class="edd-cart-item-separator">-</span>&nbsp;' . edd_currency_filter( edd_format_amount( $price ) ) . '&nbsp;';
 	$item .= '<span class="edd-cart-item-separator">-</span> ' . $remove . '</li>';
+
 	return apply_filters( 'edd_cart_item', $item, $id );
 }
-
 
 /**
  * Empty Cart Message
@@ -108,12 +106,10 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
  * @access      public
  * @since       1.0
  * @return      string
-*/
-
+ */
 function edd_empty_cart_message() {
 	return apply_filters( 'edd_empty_cart_message', __('Your cart is empty.', 'edd') );
 }
-
 
 /**
  * Empty Checkout Cart
@@ -121,8 +117,7 @@ function edd_empty_cart_message() {
  * @access      private
  * @since       1.0
  * @return      string
-*/
-
+ */
 function edd_empty_checkout_cart() {
 	echo edd_empty_cart_message();
 }
