@@ -53,7 +53,9 @@ class EDD_API {
 	 */
 
 	function key_gen( $user ) {
-		if ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) { ?>
+		if ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) {
+			$key = get_user_meta( $user->ID, '_edd_user_api_key', true );
+			?>
 			<table class="form-table">
 				<tbody>
 					<tr>
@@ -61,10 +63,10 @@ class EDD_API {
 							<label for="edd_set_api_key"><?php _e( 'Easy Digital Downloads API Key', 'edd' ); ?></label>
 						</th>
 						<td>
-							<?php if ( !isset( $user->key ) || ( $user->key == '' ) ) { ?>
+							<?php if ( empty( $key ) ) { ?>
 							<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" /> <span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
 							<?php } else { ?>
-								<span id="key"><?php echo $user->key; ?></span>
+								<span id="key"><?php echo $key; ?></span>
 								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" /> <span class="description"><?php _e( 'Revoke API Key', 'edd' ); ?></span>
 							<?php } ?>
 						</td>
@@ -90,9 +92,9 @@ class EDD_API {
 
 			if ( !isset( $user->key ) || ( $user->key == null ) ) {
 				$hash = hash( 'md5', $user->user_email . date( 'U' ) );
-				update_user_meta( $user_id, 'key', $hash );
+				update_user_meta( $user_id, '_edd_user_api_key', $hash );
 			} else {
-				update_user_meta( $user_id, 'key', '' );
+				update_user_meta( $user_id, '_edd_user_api_key', '' );
 			}
 		}
 	}
