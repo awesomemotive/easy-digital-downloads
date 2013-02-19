@@ -451,6 +451,7 @@ class EDD_API {
 		$previous_year = $previous_month == 12 ? date( 'Y' ) - 1 : date( 'Y' );
 
 		if ( date( 'j' ) == 1 ) {
+
 			if ( date( 'n' ) == 3 ) {
 				$yesterday = 28;
 			} elseif ( date( 'n' ) == 5 || date( 'n' ) == 6 || date( 'n' ) == 10 || date( 'n' ) == 12 ) {
@@ -458,22 +459,35 @@ class EDD_API {
 			} else {
 				$yesterday = 31;
 			}
+
 		} else {
+
 			$yesterday = date( 'j' ) - 1;
+
 		}
 
 		if ( $type == 'sales' ) {
+
 			if ( $product == null ) {
+
 				if ( $date == null ) {
+
 					$sales['sales']['current_month'] = edd_get_sales_by_date( null, date( 'n' ), date( 'Y' ) );
 					$sales['sales']['last_month'] = edd_get_sales_by_date( null, $previous_month, $previous_year );
 					$sales['sales']['totals'] = edd_get_total_sales();
+
 				} elseif ( $date == 'today' ) {
+
 					$sales['sales']['today'] = edd_get_sales_by_date( date( 'j' ), date( 'n' ), date( 'Y' ) );
+
 				} elseif ( $date == 'yesterday' ) {
+
 					$sales['sales']['yesterday'] = edd_get_sales_by_date( $yesterday, date( 'n' ), date( 'Y' ) );
+
 				} elseif ( $date == 'range' ) {
+
 					if ( isset( $startdate ) && isset( $enddate ) ) {
+
 						global $wp_query;
 
 						$startdate = DateTime::createFromFormat( 'Ymd', $startdate )->format( 'Y-m-d' );
@@ -485,53 +499,77 @@ class EDD_API {
 						);
 
 						foreach ( $daterange as $day ) {
+
 							$tag = ( $wp_query->query_vars['format'] == 'xml' ? $day->format( 'MdY' ) : $day->format( 'Ymd' ) );
-
 							$sales['sales'][$tag] = edd_get_sales_by_date( $day->format( 'j' ), $day->format( 'n' ), $day->format( 'Y' ) );
-						}
-					} else {
-						$error['error'] = 'Invalid or no date range specified!';
 
+						}
+
+					} else {
+
+						$error['error'] = 'Invalid or no date range specified!';
 						$this->output( $error );
+
 					}
 				} else {
-					$error['error'] = 'Invalid option for argument \'date\'!';
 
+					$error['error'] = 'Invalid option for argument \'date\'!';
 					$this->output( $error );
+
 				}
 
 				$this->output( $sales );
+
 			} elseif ( $product == 'all' ) {
+
 				$products = get_posts( array( 'post_type' => 'download' ) );
 				foreach ( $products as $product_info ) {
 					$sales['sales'][$product_info->ID] = array( $product_info->post_name => edd_get_download_sales_stats( $product_info->ID ) );
 				}
 
 				$this->output( $sales );
+
 			} else {
+
 				if ( get_post_type( $product ) == 'download' ) {
+
 					$product_info = get_post( $product );
 					$sales['sales'][$product_info->ID] = array( $product_info->post_name => edd_get_download_sales_stats( $product ) );
 
 					$this->output( $sales );
+
 				} else {
+
 					$error['error'] = 'Product ' . $product . ' not found!';
 
 					$this->output( $error );
+
 				}
+
 			}
+
 		} elseif ( $type == 'earnings' ) {
+
 			if ( $product == null ) {
+
 				if ( $date == null ) {
+
 					$earnings['earnings']['current_month'] = edd_get_earnings_by_date( null, date( 'n' ), date( 'Y' ) );
 					$earnings['earnings']['last_month'] = edd_get_earnings_by_date( null, $previous_month, $previous_year );
 					$earnings['earnings']['totals'] = edd_get_total_earnings();
+
 				} elseif ( $date == 'today' ) {
+
 					$earnings['earnings']['today'] = edd_get_earnings_by_date( date( 'j' ), date( 'n' ), date( 'Y' ) );
+
 				} elseif ( $date == 'yesterday' ) {
+
 					$earnings['earnings']['yesterday'] = edd_get_earnings_by_date( $yesterday, date( 'n' ), date( 'Y' ) );
+
 				} elseif ( $date == 'range' ) {
+
 					if ( isset( $startdate ) && isset( $enddate ) ) {
+
 						global $wp_query;
 
 						$startdate = DateTime::createFromFormat( 'Ymd', $startdate )->format( 'Y-m-d' );
@@ -544,43 +582,63 @@ class EDD_API {
 						);
 
 						foreach ( $daterange as $day ) {
+
 							$tag = ( $wp_query->query_vars['format'] == 'xml' ? $day->format( 'MdY' ) : $day->format( 'Ymd' ) );
 							$earnings['earnings'][$tag] = edd_get_earnings_by_date( $day->format( 'j' ), $day->format( 'n' ), $day->format( 'Y' ) );
+
 						}
+
 					} else {
+
 						$error['error'] = 'Invalid or no date range specified!';
 
 						$this->output( $error );
+
 					}
+
 				} else {
+
 					$error['error'] = 'Invalid option for argument \'date\'!';
 
 					$this->output( $error );
+
 				}
 
 				$this->output( $earnings );
+
 			} elseif ( $product == 'all' ) {
+
 				$products = get_posts( array( 'post_type' => 'download' ) );
 
 				foreach ( $products as $product_info ) {
+
 					$earnings['earnings'][$product_info->ID] = array( $product_info->post_name => edd_get_download_earnings_stats( $product_info->ID ) );
+
 				}
 
 				$this->output( $earnings );
 
 			} else {
+
 				if ( get_post_type( $product ) == 'download' ) {
+
 					$product_info = get_post( $product );
 					$earnings['earnings'][$product_info->ID] = array( $product_info->post_name => edd_get_download_earnings_stats( $product ) );
 
 					$this->output( $earnings );
+
 				} else {
+
 					$error['error'] = 'Product ' . $product . ' not found!';
 
 					$this->output( $error );
+
 				}
+
 			}
+
 		}
+
 	}
 
 
