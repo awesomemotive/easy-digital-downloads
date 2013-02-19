@@ -6,21 +6,22 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Export Class
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
-*/
+ */
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 class EDD_Export {
-
-
 	/**
 	 * Our export type. Used for export-type specific filters / actions
 	 *
 	 * @access      public
+	 * @var         string
 	 * @since       1.4.4
 	 */
-
 	public $export_type = 'default';
 
 	/**
@@ -30,11 +31,9 @@ class EDD_Export {
 	 * @since       1.4.4
 	 * @return      bool
 	 */
-
 	public function can_export() {
 		return (bool) apply_filters( 'edd_export_capability', current_user_can( 'manage_options' ) );
 	}
-
 
 	/**
 	 * Set the export headers
@@ -43,9 +42,7 @@ class EDD_Export {
 	 * @since       1.4.4
 	 * @return      void
 	 */
-
 	public function headers() {
-
 		ignore_user_abort( true );
 
 		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) )
@@ -57,7 +54,6 @@ class EDD_Export {
 		header( "Expires: 0" );
 	}
 
-
 	/**
 	 * Set the CSV columns
 	 *
@@ -65,7 +61,6 @@ class EDD_Export {
 	 * @since       1.4.4
 	 * @return      array
 	 */
-
 	public function csv_cols() {
 		$cols = array(
 			'id'   => __( 'ID',   'edd' ),
@@ -74,7 +69,6 @@ class EDD_Export {
 		return $cols;
 	}
 
-
 	/**
 	 * Retrieve CSV columns
 	 *
@@ -82,12 +76,10 @@ class EDD_Export {
 	 * @since       1.4.4
 	 * @return      array
 	 */
-
 	public function get_csv_cols() {
 		$cols = $this->csv_cols();
 		return apply_filters( 'edd_export_csv_cols_' . $this->export_type, $cols );
 	}
-
 
 	/**
 	 * Output the CSV columns
@@ -96,7 +88,6 @@ class EDD_Export {
 	 * @since       1.4.4
 	 * @return      void
 	 */
-
 	public function csv_cols_out() {
 		$cols = $this->csv_cols();
 		$i = 1;
@@ -108,17 +99,14 @@ class EDD_Export {
 		echo "\r\n";
 	}
 
-
 	/**
 	 * Get the data being exported
 	 *
 	 * @access      public
 	 * @since       1.4.4
-	 * @return      array
+	 * @return      array $data
 	 */
-
 	public function get_data() {
-
 		// Just a sample data array
 		$data = array(
 			0 => array(
@@ -133,9 +121,9 @@ class EDD_Export {
 
 		$data = apply_filters( 'edd_export_get_data', $data );
 		$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
+
 		return $data;
 	}
-
 
 	/**
 	 * Output the CSV rows
@@ -144,34 +132,26 @@ class EDD_Export {
 	 * @since       1.4.4
 	 * @return      void
 	 */
-
 	public function csv_rows_out() {
-
 		$data = $this->get_data();
 
 		$cols = $this->get_csv_cols();
 
 		// Output each row
-		foreach(  $data as $row ) {
+		foreach ( $data as $row ) {
 			$i = 1;
-			foreach( $row as $col_id => $column ) {
-
+			foreach ( $row as $col_id => $column ) {
 				// Make sure the column is valid
-				if( array_key_exists( $col_id, $cols ) ) {
-
+				if ( array_key_exists( $col_id, $cols ) ) {
 					echo '"' . $column . '"';
 					echo $i == count( $cols ) + 1 ? '' : ',';
-
 				}
+
 				$i++;
-
 			}
-
 			echo "\r\n";
-
 		}
 	}
-
 
 	/**
 	 * Perform the export
@@ -180,7 +160,6 @@ class EDD_Export {
 	 * @since       1.4.4
 	 * @return      void
 	 */
-
 	public function export() {
 
 		if( ! $this->can_export() )
@@ -196,7 +175,5 @@ class EDD_Export {
 		$this->csv_rows_out();
 
 		exit;
-
 	}
-
 }
