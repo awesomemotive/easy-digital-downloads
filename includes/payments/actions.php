@@ -118,7 +118,7 @@ function edd_update_edited_purchase( $data ) {
 			foreach ( $_POST['edd-purchased-downloads'] as $key => $download ) {
 				if ( isset ( $download['options'] ) ) {
 					$download_list[] = array(
-						'id' => $download,
+						'id' => $key,
 						'options' => array(
 							'price_id' => $download['options']['price_id']
 						)
@@ -130,6 +130,7 @@ function edd_update_edited_purchase( $data ) {
 
 			$payment_data['downloads'] = serialize( $download_list );
 		}
+
 
 		$payment_data['email'] = strip_tags( $_POST['edd-buyer-email'] );
 
