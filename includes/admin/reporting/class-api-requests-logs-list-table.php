@@ -23,7 +23,7 @@ if( ! class_exists( 'WP_List_Table' ) ) {
  * Renders the gateway errors list table
  *
  * @access      private
- * @since       1.4
+ * @since       1.5
  */
 
 class EDD_API_Request_Log_Table extends WP_List_Table {
@@ -32,7 +32,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	/**
 	 * Number of items per page
 	 *
-	 * @since       1.4
+	 * @since       1.5
 	 */
 
 	public $per_page = 30;
@@ -42,7 +42,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 * Get things started
 	 *
 	 * @access      private
-	 * @since       1.4
+	 * @since       1.5
 	 * @return      void
 	 */
 
@@ -59,10 +59,35 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 
 
 	/**
+	 * Show the search field
+	 *
+	 * @access      private
+	 * @since       1.5
+	 * @return      void
+	 */
+
+	function search_box( $text, $input_id ) {
+		$input_id = $input_id . '-search-input';
+
+		if ( ! empty( $_REQUEST['orderby'] ) )
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+		if ( ! empty( $_REQUEST['order'] ) )
+			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		?>
+		<p class="search-box">
+			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
+			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
+			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
+		</p>
+		<?php
+	}
+
+
+	/**
 	 * Output column data
 	 *
 	 * @access      private
-	 * @since       1.4
+	 * @since       1.5
 	 * @return      string
 	 */
 
@@ -78,7 +103,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 * Output Error message column
 	 *
 	 * @access      private
-	 * @since       1.4
+	 * @since       1.5
 	 * @return      void
 	 */
 
@@ -107,7 +132,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 * Setup the column names / IDs
 	 *
 	 * @access      private
-	 * @since       1.4
+	 * @since       1.5
 	 * @return      array
 	 */
 
@@ -124,10 +149,64 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 
 
 	/**
+	 * Retrieves the search query string
+	 *
+	 * @access      private
+	 * @since       1.5
+	 * @return      mixed String if search is present, false otherwise
+	 */
+
+	function get_search() {
+		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
+	}
+
+
+	/**
+	 * Gets the meta query for the log query
+	 *
+	 * This is used to return log entries that match our search query
+	 *
+	 * @access      private
+	 * @since       1.5
+	 * @return      array
+	 */
+
+	function get_meta_query() {
+
+		$meta_query = array();
+
+		$search = $this->get_search();
+
+		if ( $search ) {
+
+			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
+				// This is an IP address search
+				$key = '_edd_log_request_ip';
+			} else if ( is_email( $search ) ) {
+				// This is an email search
+				$key = '_edd_log_user';
+			} else {
+				// Look for an API key
+				$key = '_edd_log_api_key';
+			}
+
+			// Setup the meta query
+			$meta_query[] = array(
+				'key'     => $key,
+				'value'   => $search,
+				'compare' => '='
+			);
+		}
+
+		return $meta_query;
+	}
+
+
+	/**
 	 * Retrieve the current page number
 	 *
 	 * @access      private
-	 * @since       1.4
+	 * @since       1.5
 	 * @return      int
 	 */
 
@@ -140,7 +219,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 * Outputs the log views
 	 *
 	 * @access      private
-	 * @since       1.4
+	 * @since       1.5
 	 * @return      void
 	 */
 
@@ -154,7 +233,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 * Gets the log entries for the current view
 	 *
 	 * @access      private
-	 * @since       1.4
+	 * @since       1.5
 	 * @return      array
 	 */
 
@@ -165,7 +244,8 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		$paged     = $this->get_paged();
 		$log_query = array(
 			'log_type'    => 'api_requests',
-			'paged'       => $paged
+			'paged'       => $paged,
+			'meta_query'  => $this->get_meta_query()
 		);
 
 		$logs = $edd_logs->get_connected_logs( $log_query );
@@ -189,7 +269,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 * Setup the final data for the table
 	 *
 	 * @access      private
-	 * @since       1.4
+	 * @since       1.5
 	 * @uses        $this->_column_headers
 	 * @uses        $this->items
 	 * @uses        $this->get_columns()
