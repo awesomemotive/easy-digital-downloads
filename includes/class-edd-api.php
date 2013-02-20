@@ -282,56 +282,67 @@ class EDD_API {
 			$customer_list_query = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta where meta_key = '_edd_payment_user_email'" );
 			$customer_count = 0;
 
-			foreach ( $customer_list_query as $customer_id ) {
+			foreach ( $customer_list_query as $customer_email ) {
 
-				if ( edd_has_purchases( $customer_id ) ) {
+				$customer_info = get_user_by( 'email', $customer_email );
 
-					$customer_info = get_userdata( $customer_id );
+				if( $customer_info ) {
 
-					$customers['customers'][$customer_id]['info']['id'] = $customer_info->ID;
-					$customers['customers'][$customer_id]['info']['username'] = $customer_info->user_login;
-					$customers['customers'][$customer_id]['info']['display_name'] = $customer_info->display_name;
-					$customers['customers'][$customer_id]['info']['first_name'] = $customer_info->user_firstname;
-					$customers['customers'][$customer_id]['info']['last_name'] = $customer_info->user_lastname;
-					$customers['customers'][$customer_id]['info']['email'] = $customer_info->user_email;
-					$customers['customers'][$customer_id]['info']['url'] = $customer_info->user_url;
-					$customers['customers'][$customer_id]['info']['registered'] = $customer_info->user_registered;
+					// Customer with registered account
 
-					$customers['customers'][$customer_id]['stats']['total_purchases'] = edd_count_purchases_of_customer( $customer_id );
-					$customers['customers'][$customer_id]['stats']['total_spent'] = edd_purchase_total_of_user( $customer_id );
-					$customers['customers'][$customer_id]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_id );
+					$customers['customer'][$customer_count]['info']['id']           = $customer_info->ID;
+					$customers['customer'][$customer_count]['info']['username']     = $customer_info->user_login;
+					$customers['customer'][$customer_count]['info']['display_name'] = $customer_info->display_name;
+					$customers['customer'][$customer_count]['info']['first_name']   = $customer_info->user_firstname;
+					$customers['customer'][$customer_count]['info']['last_name']    = $customer_info->user_lastname;
+					$customers['customer'][$customer_count]['info']['email']        = $customer_info->user_email;
 
-					$customer_count++;
+
+				} else {
+
+					// Guest customer
+					$customers['customer'][$customer_count]['info']['id']           = -1;
+					$customers['customer'][$customer_count]['info']['username']     = __( 'Guest', 'edd' );
+					$customers['customer'][$customer_count]['info']['display_name'] = __( 'Guest', 'edd' );
+					$customers['customer'][$customer_count]['info']['first_name']   = __( 'Guest', 'edd' );
+					$customers['customer'][$customer_count]['info']['last_name']    = __( 'Guest', 'edd' );
+					$customers['customer'][$customer_count]['info']['email']        = $customer_email;
+
 				}
 
+				$customers['customer'][$customer_count]['stats']['total_purchases'] = edd_count_purchases_of_customer( $customer_email );
+				$customers['customer'][$customer_count]['stats']['total_spent']     = edd_purchase_total_of_user( $customer_email );
+				$customers['customer'][$customer_count]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_email );
+
+				$customer_count++;
 			}
 
 			$customers['customers']['stats']['total_customers'] = $customer_count;
 
 		} else {
 
-			if ( !is_numeric( $customer ) ) {
-
-				$customer = get_user_by( 'email', $customer )->ID;
-
-			}
-
-			if ( edd_has_purchases( $customer ) ) {
+			if ( is_numeric( $customer ) ) {
 
 				$customer_info = get_userdata( $customer );
 
-				$customers[$customer]['info']['id'] = $customer_info->ID;
-				$customers[$customer]['info']['username'] = $customer_info->user_login;
-				$customers[$customer]['info']['display_name'] = $customer_info->display_name;
-				$customers[$customer]['info']['first_name'] = $customer_info->user_firstname;
-				$customers[$customer]['info']['last_name'] = $customer_info->user_lastname;
-				$customers[$customer]['info']['email'] = $customer_info->user_email;
-				$customers[$customer]['info']['url'] = $customer_info->user_url;
-				$customers[$customer]['info']['registered'] = $customer_info->user_registered;
+			} else {
 
-				$customers[$customer]['stats']['total_purchases'] = edd_count_purchases_of_customer( $customer );
-				$customers[$customer]['stats']['total_spent'] = edd_purchase_total_of_user( $customer );
-				$customers[$customer]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer );
+				$customer_info = get_user_by( 'email', $customer );
+
+			}
+
+			if ( $customer_info && edd_has_purchases( $customer_info->ID ) ) {
+
+				$customers['customer'][0]['info']['id']               = $customer_info->ID;
+				$customers['customer'][0]['info']['username']         = $customer_info->user_login;
+				$customers['customer'][0]['info']['display_name']     = $customer_info->display_name;
+				$customers['customer'][0]['info']['first_name']       = $customer_info->user_firstname;
+				$customers['customer'][0]['info']['last_name']        = $customer_info->user_lastname;
+				$customers['customer'][0]['info']['email']            = $customer_info->user_email;
+
+				$customers['customer'][0]['stats']['total_purchases'] = edd_count_purchases_of_customer( $customer );
+				$customers['customer'][0]['stats']['total_spent']     = edd_purchase_total_of_user( $customer );
+				$customers['customer'][0]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer );
 
 			} else {
 
