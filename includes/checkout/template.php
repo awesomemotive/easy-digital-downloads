@@ -367,7 +367,7 @@ function edd_payment_mode_select() {
 						endforeach;
 					echo '</select>';
 				?>
-				<label for="edd-gateway"><?php _e( 'Select payment method', 'edd' ); ?><label>
+				<label for="edd-gateway"><?php _e( 'Select Payment Method', 'edd' ); ?><label>
 			</p>
 			<?php do_action('edd_payment_mode_after_gateways'); ?>
 		</fieldset>
