@@ -111,7 +111,7 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 		<form id="edd-add-downloads-to-purchase">
 			<p>
 				<?php
-				$downloads = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1 ) );
+				$downloads = get_posts( apply_filters( 'edd_add_downloads_to_purchase_query', array( 'post_type' => 'download', 'posts_per_page' => -1 ) ) );
 				foreach( $downloads as $download ) {
 					echo '<input type="checkbox" class="edd-download-to-add" name="edd_downloads_to_add[]" value="' . $download->ID . '"/>&nbsp;' . get_the_title( $download->ID ) . '<br/>';
 				}
