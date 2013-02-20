@@ -364,7 +364,7 @@ function edd_payment_mode_select() {
 					echo '<select class="edd-select" name="payment-mode" id="edd-gateway">';
 						echo '<option value="0">' . __( 'Select payment method', 'edd' ) . '</option>';
 						foreach($gateways as $gateway_id => $gateway) :
-							echo '<option value="' . $gateway_id . '">' . $gateway['checkout_label'] . '</option>';
+							echo '<option value="' . esc_attr( $gateway_id ) . '">' . esc_html( $gateway['checkout_label'] ) . '</option>';
 						endforeach;
 					echo '</select>';
 				?>
