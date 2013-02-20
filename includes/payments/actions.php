@@ -113,17 +113,22 @@ function edd_update_edited_purchase( $data ) {
 		$payment_data = edd_get_payment_meta( $payment_id );
 
 		if ( isset( $_POST['edd-purchased-downloads'] ) ) {
-			$updated_downloads = array();
+			$download_list = array();
 
-			foreach ( $_POST['edd-purchased-downloads'] as $download ) {
-				if ( isset( $payment_data['cart_details'] ) ) {
-					$updated_downloads[] = array( 'id' => $download );
+			foreach ( $_POST['edd-purchased-downloads'] as $key => $download ) {
+				if ( isset ( $download['options'] ) ) {
+					$download_list[] = array(
+						'id' => $download,
+						'options' => array(
+							'price_id' => $download['options']['price_id']
+						)
+					);
 				} else {
-					$updated_downloads[] = $download;
+					$download_list[] = array( 'id' => $download );
 				}
 			}
 
-			$payment_data['downloads'] = serialize( $updated_downloads );
+			$payment_data['downloads'] = serialize( $download_list );
 		}
 
 		$payment_data['email'] = strip_tags( $_POST['edd-buyer-email'] );
