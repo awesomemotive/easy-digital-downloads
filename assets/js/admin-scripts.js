@@ -219,27 +219,6 @@ jQuery(document).ready(function ($) {
 		});
 	}
 
-	$('#edd-add-download').on('click', function() {
-		var downloads = [];
-		$('.edd-download-to-add').each(function() {
-			if($(this).is(':checked')) {
-				var id = $(this).val();
-				data = {
-					action: 'edd_get_download_title',
-					download_id: id
-				};
-				$.post(ajaxurl, data, function (response) {
-					if (response != 'fail') {
-						var html = '<div class="purchased_download_' + id + '"><input type="hidden" name="edd-purchased-downloads[]" value="' + id + '"/><strong>' + response + '</strong> - <a href="#" class="edd-remove-purchased-download" data-action="remove_purchased_download" data-id="' + id + '">Remove</a></div>';
-						$(html).insertBefore('#edit-downloads');
-					}
-				});
-			}
-		});
-		tb_remove();
-		return false;
-	});
-
 	$('#purchased-downloads').on('click', '.edd-remove-purchased-download', function() {
 		var $this = $(this);
 		data = {
@@ -293,6 +272,34 @@ jQuery(document).ready(function ($) {
 			$el.next('select').remove();
 			$('.edd_add_download_to_purchase_waiting:last').addClass('hidden');
 		}
+	});
+
+	// When the Add Downloads button is clicked...
+	$('#edd-add-download').on('click', function() {
+		$('#edd-add-downloads-to-purchase select.edd-downloads-list').each(function() {
+			if ($(this).next().hasClass('edd-variable-prices-select')) {
+				var variable_price_id = $('option:selected', $(this).next()).val(),
+					variable_price_title = $('option:selected', $(this).next()).text(),
+				    variable_price_html = '<input type="hidden" name="edd-purchased-downloads[' + variable_price_id + '][options][price_id]" value="' + variable_price_id + '"/> ' + '(' + variable_price_title + ')';
+			} else {
+				var variable_price_id = '',
+				    variable_price_html = '';
+			}
+
+			var id = $('option:selected', this).val();
+			data = {
+				action: 'edd_get_download_title',
+				download_id: id
+			};
+			$.post(ajaxurl, data, function (response) {
+				if (response != 'fail') {
+					var html = '<div class="purchased_download_' + id + '"><input type="hidden" name="edd-purchased-downloads[' + id + ']" value="' + id + '"/><strong>' + response + variable_price_html + '</strong> - <a href="#" class="edd-remove-purchased-download" data-action="remove_purchased_download" data-id="' + id + '">Remove</a></div>';
+					$(html).insertBefore('#edit-downloads');
+				}
+			});
+		});
+		tb_remove();
+		return false;
 	});
 
 	// Show / hide the send purchase receipt check box on the Edit payment screen
