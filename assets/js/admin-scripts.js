@@ -275,7 +275,7 @@ jQuery(document).ready(function ($) {
 			var variable_price_check_ajax_data = {
 				action      : 'edd_check_for_download_price_variations',
 				download_id : download_id,
-				nonce       : $('#edd_create_payment_nonce').val()
+				nonce       : $('#edd_add_downloads_to_purchase_nonce').val()
 			};
 			$('.edd_add_download_to_purchase_waiting:last').removeClass('hidden');
 			$.post(ajaxurl, variable_price_check_ajax_data, function(response) {
