@@ -270,11 +270,13 @@ jQuery(document).ready(function ($) {
 	$('#edd-add-downloads-to-purchase').on('change', 'select.edd-downloads-list', function() {
 		var $el = $(this);
 		var download_id = $('option:selected', $el).val();
+		var array_key   = $('#edd-add-downloads-to-purchase select').length - 1;
 
 		if(parseInt(download_id) != 0) {
 			var variable_price_check_ajax_data = {
 				action      : 'edd_check_for_download_price_variations',
 				download_id : download_id,
+				array_key   : array_key,
 				nonce       : $('#edd_add_downloads_to_purchase_nonce').val()
 			};
 			$('.edd_add_download_to_purchase_waiting:last').removeClass('hidden');
