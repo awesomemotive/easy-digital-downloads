@@ -36,10 +36,20 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 					<td id="purchased-downloads">
 						<?php
 							$downloads = maybe_unserialize( $payment_data['downloads'] );
+							$cart_items = isset( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] ) : false;
 							if ( $downloads ) :
-								foreach ( $downloads as $download ):
+								foreach ( $downloads as $download ) :
 									$id = isset( $payment_data['cart_details'] ) ? $download['id'] : $download;
-									echo '<div class="purchased_download_' . $id . '"><input type="hidden" name="edd-purchased-downloads[]" value="' . $id . '"/><strong>' . get_the_title( $id ) . '</strong> - <a href="#" class="edd-remove-purchased-download" data-action="remove_purchased_download" data-id="' . $id . '">Remove</a></div>';
+
+									if ( isset( $download['options']['price_id'] ) )
+										$variable_prices = '(' . edd_get_price_option_name( $id, $download['options']['price_id'], $_GET['purchase_id'] ) . ')';
+									else
+										$variable_prices = '';
+
+									echo '<div class="purchased_download_' . $id . '">
+											<input type="hidden" name="edd-purchased-downloads[]" value="' . $id . '"/>
+											<strong>' . get_the_title( $id ) . ' ' . $variable_prices . '</strong> - <a href="#" class="edd-remove-purchased-download" data-action="remove_purchased_download" data-id="' . $id . '">Remove</a>
+										  </div>';
 								endforeach;
 							endif;
 						?>
