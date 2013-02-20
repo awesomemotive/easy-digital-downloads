@@ -113,7 +113,7 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 				<select name="downloads[0][id]" class="edd-downloads-list">
 				<?php
 				$downloads = get_posts( apply_filters( 'edd_add_downloads_to_purchase_query', array( 'post_type' => 'download', 'posts_per_page' => -1 ) ) );
-				echo '<option value="0">' . sprintf( __('Select a %s', 'edd'), edd_get_label_singular() ) . '</option>';
+				echo '<option value="0">' . sprintf( __('Select a %s', 'edd'), esc_html( edd_get_label_singular() ) ) . '</option>';
 				foreach( $downloads as $download ) {
 					?>
 					<option value="<?php echo $download->ID; ?>"><?php echo get_the_title( $download->ID ) ?></option>
@@ -124,7 +124,7 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 				&nbsp;<img src="<?php echo admin_url('/images/wpspin_light.gif'); ?>" class="hidden edd_add_download_to_purchase_waiting waiting" />
 			</p>
 			<p>
-				<a href="#" class="button-secondary edd-add-another-download"><?php echo sprintf( __( 'Add Another %s', 'edd' ), edd_get_label_singular() ); ?></a>
+				<a href="#" class="button-secondary edd-add-another-download"><?php echo sprintf( __( 'Add Another %s', 'edd' ), esc_html( edd_get_label_singular() ) ); ?></a>
 			</p>
 			<p>
 				<a id="edd-add-download" class="button-primary" title="<?php _e( 'Add Selected Downloads', 'edd' ); ?>"><?php _e( 'Add Selected Downloads', 'edd' ); ?></a>
