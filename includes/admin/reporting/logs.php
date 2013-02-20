@@ -83,6 +83,24 @@ add_action( 'edd_logs_view_gateway_errors', 'edd_logs_view_gateway_errors' );
 
 
 /**
+ * API Request Logs
+ *
+ * @access      public
+ * @since       1.5
+ * @return      void
+ */
+
+function edd_logs_view_api_requests() {
+	include( dirname( __FILE__ ) . '/class-api-requests-logs-list-table.php' );
+
+	$logs_table = new EDD_API_Request_Log_Table();
+	$logs_table->prepare_items();
+	$logs_table->display();
+}
+add_action( 'edd_logs_view_api_requests', 'edd_logs_view_api_requests' );
+
+
+/**
  * Default Log Views
  *
  * @access      public
@@ -94,7 +112,8 @@ function edd_log_default_views() {
 	$views = array(
 		'file_downloads'  => __( 'File Downloads', 'edd' ),
 		'sales' 		  => __( 'Sales', 'edd' ),
-		'gateway_errors'  => __( 'Payment Errors', 'edd' )
+		'gateway_errors'  => __( 'Payment Errors', 'edd' ),
+		'api_requests'    => __( 'API Requests', 'edd' )
 	);
 
 	$views = apply_filters( 'edd_log_views', $views );

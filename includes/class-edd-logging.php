@@ -108,7 +108,7 @@ class EDD_Logging {
 
 	function log_types() {
 		$terms = array(
-			'sale', 'file_download', 'gateway_error'
+			'sale', 'file_download', 'gateway_error', 'api_request'
 		);
 
 		return apply_filters( 'edd_log_types', $terms );

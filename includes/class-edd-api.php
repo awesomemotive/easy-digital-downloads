@@ -39,6 +39,16 @@ class EDD_API {
 
 
 	/**
+	 * Log API requests?
+	 *
+	 * @access  private
+	 * @since  1.5
+	 */
+
+	private $log_requests = true;
+
+
+	/**
 	 * Setup the API
 	 *
 	 * @access  private
@@ -56,6 +66,9 @@ class EDD_API {
 
 		// Determine if JSON_PRETTY_PRINT is available
 		$this->pretty_print = version_compare( PHP_VERSION, '5.4', '>=' ) ? JSON_PRETTY_PRINT : define( 'JSON_PRETTY_PRINT', '' );
+
+		// Allow API request logging to be turned off
+		$this->log_requests = apply_filters( 'edd_api_log_requests', $this->log_requests );
 	}
 
 
@@ -112,7 +125,7 @@ class EDD_API {
 	function process_endpoint() {
 		global $wp_query;
 
-		// Check for edd-api var
+		// Check for edd-api var. Get out if not present
 		if ( ! isset( $wp_query->query_vars['edd-api'] ) )
 			return;
 
@@ -128,6 +141,13 @@ class EDD_API {
 		$user = get_user_by( 'email', $wp_query->query_vars['user'] );
 		if ( $user->edd_user_api_key != $wp_query->query_vars['key'] )
 			$this->invalid_key( $wp_query->query_vars['user'] );
+
+
+		// If we get here, API request is considered authenticated
+
+
+		// Log this API request, if enabled
+		$this->log_request();
 
 		// Determine the kind of query
 		$query_mode = $this->get_query_mode();
@@ -686,6 +706,50 @@ class EDD_API {
 			}
 
 		}
+
+	}
+
+
+	/**
+	 * Log each API request, if enabled
+	 *
+	 * @access private
+	 * @since  1.5
+	 * @return void
+	 */
+
+	private function log_request() {
+
+		if( ! $this->log_requests )
+			return;
+
+		global $edd_logs, $wp_query;
+
+		$query = array(
+			'user'      => $wp_query->query_vars['user'],
+			'api_key'   => $wp_query->query_vars['key'],
+			'query'     => $wp_query->query_vars['query'],
+			'type'      => isset( $wp_query->query_vars['type'] )      ? $wp_query->query_vars['type']      : null,
+			'product'   => isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null,
+			'customer'  => isset( $wp_query->query_vars['customer'] )  ? $wp_query->query_vars['customer']  : null,
+			'date'      => isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null,
+			'startdate' => isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null,
+			'enddate'   => isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null,
+		);
+
+		$log_data = array(
+			'log_type'     => 'api_request',
+			'post_title'   => $wp_query->query_vars['user'] . ' ' . edd_get_ip(), // Makes logs easier to search by user / IP
+			'post_excerpt' => http_build_query( $query ),
+		);
+
+		$log_meta = array(
+			'request_ip' => edd_get_ip(),
+			'user'       => $wp_query->query_vars['user'],
+			'api_key'    => $wp_query->query_vars['key']
+		);
+
+		$edd_logs->insert_log( $log_data, $log_meta );
 
 	}
 
