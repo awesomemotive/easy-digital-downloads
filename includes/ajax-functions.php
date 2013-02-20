@@ -263,7 +263,7 @@ function edd_check_for_download_price_variations() {
 
 			if ( $variable_prices ) {
 				$ajax_response = '<select name="downloads[' . intval( $_POST['array_key'] ) . '][options][price_id]" class="edd-variable-prices-select">';
-					foreach( $prices as $key => $price ) {
+					foreach( $variable_prices as $key => $price ) {
 						$ajax_response .= '<option value="' . $key . '">' . $price['name']  . '</option>';
 					}
 				$ajax_response .= '</select>';
