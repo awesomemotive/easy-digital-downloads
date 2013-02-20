@@ -169,7 +169,7 @@ jQuery(document).ready(function ($) {
     if( edd_scripts.is_checkout == '1' && $('select#edd-gateway').length ) {
         setTimeout( function() {
             edd_load_gateway( edd_scripts.default_gateway );
-        }, 500);
+        }, 200);
     }
 
     $(document).on('click', '#edd_purchase_form input[type=submit]', function(e) {
