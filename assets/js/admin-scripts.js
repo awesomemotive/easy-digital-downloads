@@ -256,18 +256,19 @@ jQuery(document).ready(function ($) {
 
 	// Add a New Download from the Add Downloads to Purchase Box
 	$('#edd-add-downloads-to-purchase').on('click', '.edd-add-another-download', function() {
-		var downloads_select_elem = $('#edd-add-downloads-to-purchase select:last').clone();
+		var downloads_select_elem = $('#edd-add-downloads-to-purchase select:last').parent().clone();
 		var count = $('#edd-add-downloads-to-purchase select').length;
+		var download_section = $('#edd-add-downloads-to-purchase select:last').parent();
 
-		$(downloads_select_elem).prop('name', 'downloads[' + count + '][id]');
-		downloads_select_elem.insertAfter('#edd-add-downloads-to-purchase select:last');
+		$(downloads_select_elem).children('select').prop('name', 'downloads[' + count + '][id]');
+		downloads_select_elem.insertAfter(download_section);
 
 		return false;
 	});
 
 	// On Download Select, Check if Variable Prices Exist
 	$('#edd-add-downloads-to-purchase').on('change', 'select.edd-downloads-list', function() {
-		
+
 	});
 
 	// Show / hide the send purchase receipt check box on the Edit payment screen
