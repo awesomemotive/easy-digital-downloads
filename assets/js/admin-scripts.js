@@ -289,7 +289,7 @@ jQuery(document).ready(function ($) {
 			if ($(this).next().hasClass('edd-variable-prices-select')) {
 				var variable_price_id = $('option:selected', $(this).next()).val(),
 					variable_price_title = $('option:selected', $(this).next()).text(),
-				    variable_price_html = '<input type="hidden" name="edd-purchased-downloads[' + variable_price_id + '][options][price_id]" value="' + variable_price_id + '"/> ' + '(' + variable_price_title + ')';
+				    variable_price_html = '<input type="hidden" name="edd-purchased-downloads[][options][price_id]" value="' + variable_price_id + '"/> ' + '(' + variable_price_title + ')';
 			} else {
 				var variable_price_id = '',
 				    variable_price_html = '';
@@ -302,7 +302,7 @@ jQuery(document).ready(function ($) {
 			};
 			$.post(ajaxurl, data, function (response) {
 				if (response != 'fail') {
-					var html = '<div class="purchased_download_' + id + '"><input type="hidden" name="edd-purchased-downloads[' + id + ']" value="' + id + '"/><strong>' + response + variable_price_html + '</strong> - <a href="#" class="edd-remove-purchased-download" data-action="remove_purchased_download" data-id="' + id + '">Remove</a></div>';
+					var html = '<div class="purchased_download_' + id + '"><input type="hidden" name="edd-purchased-downloads[]" value="' + id + '"/><strong>' + response + variable_price_html + '</strong> - <a href="#" class="edd-remove-purchased-download" data-action="remove_purchased_download" data-id="' + id + '">Remove</a></div>';
 					$(html).insertBefore('#edit-downloads');
 				}
 			});
