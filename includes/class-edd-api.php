@@ -279,7 +279,7 @@ class EDD_API {
 
 			global $wpdb;
 
-			$customer_list_query = $wpdb->get_col( "SELECT $wpdb->users.ID FROM $wpdb->users" );
+			$customer_list_query = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta where meta_key = '_edd_payment_user_email'" );
 			$customer_count = 0;
 
 			foreach ( $customer_list_query as $customer_id ) {
