@@ -265,6 +265,11 @@ jQuery(document).ready(function ($) {
 		return false;
 	});
 
+	// On Download Select, Check if Variable Prices Exist
+	$('#edd-add-downloads-to-purchase').on('change', 'select.edd-downloads-list', function() {
+		
+	});
+
 	// Show / hide the send purchase receipt check box on the Edit payment screen
 	$('#edd_payment_status').change(function() {
 		if( $('#edd_payment_status option:selected').val() == 'publish' ) {
