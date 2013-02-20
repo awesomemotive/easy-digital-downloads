@@ -142,7 +142,13 @@ class EDD_API {
 				$startdate = isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null;
 				$enddate   = isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null;
 
-				$this->get_stats( $type, $product, $date, $startdate, $enddate );
+				$this->get_stats( array(
+					'type'      => $type,
+					'product'   => $product,
+					'date'      => $date,
+					'startdate' => $startdate,
+					'enddate'   => $enddate
+				) );
 
 				break;
 
@@ -445,7 +451,17 @@ class EDD_API {
 	 * @since  1.5
 	 */
 
-	function get_stats( $type, $product = null, $date = null, $startdate = null, $enddate = null ) {
+	function get_stats( $args = array() ) {
+
+		$defaults = array(
+			'type'      => '',
+			'product'   => null,
+			'date'      => null,
+			'startdate' => null,
+			'enddate'   => null
+		);
+
+		$args = wp_parse_args( $args, $defaults );
 
 		$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
 		$previous_year = $previous_month == 12 ? date( 'Y' ) - 1 : date( 'Y' );
@@ -472,36 +488,36 @@ class EDD_API {
 
 		}
 
-		if ( $type == 'sales' ) {
+		if ( $args['type'] == 'sales' ) {
 
-			if ( $product == null ) {
+			if ( $args['product'] == null ) {
 
-				if ( $date == null ) {
+				if ( $args['date'] == null ) {
 
 					$sales['sales']['current_month'] = edd_get_sales_by_date( null, date( 'n' ), date( 'Y' ) );
 					$sales['sales']['last_month'] = edd_get_sales_by_date( null, $previous_month, $previous_year );
 					$sales['sales']['totals'] = edd_get_total_sales();
 
-				} elseif ( $date == 'today' ) {
+				} elseif ( $args['date'] == 'today' ) {
 
 					$sales['sales']['today'] = edd_get_sales_by_date( date( 'j' ), date( 'n' ), date( 'Y' ) );
 
-				} elseif ( $date == 'yesterday' ) {
+				} elseif ( $args['date'] == 'yesterday' ) {
 
 					$sales['sales']['yesterday'] = edd_get_sales_by_date( $yesterday, date( 'n' ), date( 'Y' ) );
 
-				} elseif ( $date == 'range' ) {
+				} elseif ( $args['date'] == 'range' ) {
 
-					if ( isset( $startdate ) && isset( $enddate ) ) {
+					if ( isset( $args['startdate'] ) && isset( $args['enddate'] ) ) {
 
 						global $wp_query;
 
-						$startdate = DateTime::createFromFormat( 'Ymd', $startdate )->format( 'Y-m-d' );
-						$enddate = DateTime::createFromFormat( 'Ymd', $enddate )->format( 'Y-m-d' );
+						$args['startdate'] = DateTime::createFromFormat( 'Ymd', $args['startdate'] )->format( 'Y-m-d' );
+						$args['enddate'] = DateTime::createFromFormat( 'Ymd', $args['enddate'] )->format( 'Y-m-d' );
 						$daterange = new DatePeriod(
-							new DateTime( $startdate ),
+							new DateTime( $args['startdate'] ),
 							new DateInterval( 'P1D' ),
-							new DateTime( $enddate + 1 )
+							new DateTime( $args['enddate'] + 1 )
 						);
 
 						foreach ( $daterange as $day ) {
@@ -526,7 +542,7 @@ class EDD_API {
 
 				$this->output( $sales );
 
-			} elseif ( $product == 'all' ) {
+			} elseif ( $args['product'] == 'all' ) {
 
 				$products = get_posts( array( 'post_type' => 'download' ) );
 				foreach ( $products as $product_info ) {
@@ -537,16 +553,16 @@ class EDD_API {
 
 			} else {
 
-				if ( get_post_type( $product ) == 'download' ) {
+				if ( get_post_type( $args['product'] ) == 'download' ) {
 
-					$product_info = get_post( $product );
-					$sales['sales'][$product_info->ID] = array( $product_info->post_name => edd_get_download_sales_stats( $product ) );
+					$product_info = get_post( $args['product'] );
+					$sales['sales'][$product_info->ID] = array( $product_info->post_name => edd_get_download_sales_stats( $args['product'] ) );
 
 					$this->output( $sales );
 
 				} else {
 
-					$error['error'] = sprintf( __( 'Product %s not found!', 'edd' ), $product );
+					$error['error'] = sprintf( __( 'Product %s not found!', 'edd' ), $args['product'] );
 
 					$this->output( $error );
 
@@ -554,37 +570,37 @@ class EDD_API {
 
 			}
 
-		} elseif ( $type == 'earnings' ) {
+		} elseif ( $args['type'] == 'earnings' ) {
 
-			if ( $product == null ) {
+			if ( $args['product'] == null ) {
 
-				if ( $date == null ) {
+				if ( $args['date'] == null ) {
 
 					$earnings['earnings']['current_month'] = edd_get_earnings_by_date( null, date( 'n' ), date( 'Y' ) );
 					$earnings['earnings']['last_month'] = edd_get_earnings_by_date( null, $previous_month, $previous_year );
 					$earnings['earnings']['totals'] = edd_get_total_earnings();
 
-				} elseif ( $date == 'today' ) {
+				} elseif ( $args['date'] == 'today' ) {
 
 					$earnings['earnings']['today'] = edd_get_earnings_by_date( date( 'j' ), date( 'n' ), date( 'Y' ) );
 
-				} elseif ( $date == 'yesterday' ) {
+				} elseif ( $args['date'] == 'yesterday' ) {
 
 					$earnings['earnings']['yesterday'] = edd_get_earnings_by_date( $yesterday, date( 'n' ), date( 'Y' ) );
 
-				} elseif ( $date == 'range' ) {
+				} elseif ( $args['date'] == 'range' ) {
 
-					if ( isset( $startdate ) && isset( $enddate ) ) {
+					if ( isset( $args['startdate'] ) && isset( $args['enddate'] ) ) {
 
 						global $wp_query;
 
-						$startdate = DateTime::createFromFormat( 'Ymd', $startdate )->format( 'Y-m-d' );
-						$enddate = DateTime::createFromFormat( 'Ymd', $enddate )->format( 'Y-m-d' );
+						$args['startdate'] = DateTime::createFromFormat( 'Ymd', $args['startdate'] )->format( 'Y-m-d' );
+						$args['enddate'] = DateTime::createFromFormat( 'Ymd', $args['enddate'] )->format( 'Y-m-d' );
 
 						$daterange = new DatePeriod(
-							new DateTime( $startdate ),
+							new DateTime( $args['startdate'] ),
 							new DateInterval( 'P1D' ),
-							new DateTime( $enddate + 1 )
+							new DateTime( $args['enddate'] + 1 )
 						);
 
 						foreach ( $daterange as $day ) {
@@ -612,7 +628,7 @@ class EDD_API {
 
 				$this->output( $earnings );
 
-			} elseif ( $product == 'all' ) {
+			} elseif ( $args['product'] == 'all' ) {
 
 				$products = get_posts( array( 'post_type' => 'download' ) );
 
@@ -626,16 +642,16 @@ class EDD_API {
 
 			} else {
 
-				if ( get_post_type( $product ) == 'download' ) {
+				if ( get_post_type( $args['product'] ) == 'download' ) {
 
-					$product_info = get_post( $product );
-					$earnings['earnings'][$product_info->ID] = array( $product_info->post_name => edd_get_download_earnings_stats( $product ) );
+					$product_info = get_post( $args['product'] );
+					$earnings['earnings'][$product_info->ID] = array( $product_info->post_name => edd_get_download_earnings_stats( $args['product'] ) );
 
 					$this->output( $earnings );
 
 				} else {
 
-					$error['error'] = sprintf( __( 'Product %s not found!', 'edd' ), $product );
+					$error['error'] = sprintf( __( 'Product %s not found!', 'edd' ), $args['product'] );
 
 					$this->output( $error );
 
