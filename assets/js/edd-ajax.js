@@ -147,30 +147,6 @@ jQuery(document).ready(function ($) {
         return false;
     });
 
-    // Load the fields for the selected payment method -- Not used as of 1.3.2 but still here just in case. See $('select#edd-gateway').change() below
-    $('#edd_payment_mode').submit(function (e) {
-        if ($('select#edd-gateway').length) {
-            var payment_mode = $('option:selected', '#edd-gateway').val();
-        } else {
-            var payment_mode = $('#edd-gateway').val();
-        }
-
-        if( payment_mode == '0' )
-            return false;
-
-        var arg_separator = edd_scripts.permalinks == '1' ? '?' : '&';
-
-        var form = $(this),
-            action = form.attr("action") + arg_separator + 'payment-mode=' + payment_mode;
-
-        // Show the ajax loader
-        $('.edd-cart-ajax').show();
-        $('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
-        $('#edd_payment_mode').hide();
-        $('#edd_purchase_form_wrap').load(action + ' #edd_purchase_form');
-        return false;
-    });
-
     // Load the fields for the selected payment method
    $('select#edd-gateway').change( function (e) {
         if ($('select#edd-gateway').length) {
@@ -179,22 +155,22 @@ jQuery(document).ready(function ($) {
             var payment_mode = $('#edd-gateway').val();
         }
 
+        var form = $(this);
+
         if( payment_mode == '0' )
             return false;
 
-        // Show the ajax loader
-        $('.edd-cart-ajax').show();
-        $('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
-
-        $.post(edd_scripts.ajaxurl + '?payment-mode=' + payment_mode, { action: 'edd_load_gateway', edd_payment_mode: payment_mode },
-            function(response){
-                jQuery('#edd_purchase_form_wrap').html(response);
-            }
-        );
+        edd_load_gateway( payment_mode );
 
         return false;
     });
 
+    // Auto load first payment gateway - TODO the gateway loaded needs to be set via options
+    if( edd_scripts.is_checkout == '1' && $('select#edd-gateway').length ) {
+        setTimeout( function() {
+            edd_load_gateway( $('select#edd-gateway option:nth-child(2)').val() );
+        }, 500);
+    }
 
     $(document).on('click', '#edd_purchase_form input[type=submit]', function(e) {
 
@@ -221,3 +197,17 @@ jQuery(document).ready(function ($) {
     });
 
 });
+
+function edd_load_gateway( payment_mode ) {
+
+    // Show the ajax loader
+    jQuery('.edd-cart-ajax').show();
+    jQuery('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
+
+    jQuery.post(edd_scripts.ajaxurl + '?payment-mode=' + payment_mode, { action: 'edd_load_gateway', edd_payment_mode: payment_mode },
+        function(response){
+            jQuery('#edd_purchase_form_wrap').html(response);
+        }
+    );
+
+}
