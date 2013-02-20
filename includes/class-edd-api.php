@@ -687,22 +687,42 @@ class EDD_API {
 	 * @since  1.5
 	 */
 
-	function output( $array ) {
+	function output( $data ) {
 		global $wp_query;
 
-		if ( $this->get_output_format() == 'xml' ) {
+		$format = $this->get_output_format();
 
-			require_once EDD_PLUGIN_DIR . 'includes/libraries/array2xml.php';
+		do_action( 'edd_api_output_before', $data, $this, $format );
 
-			$xml = Array2XML::createXML( 'edd', $array );
-			echo $xml->saveXML();
+		switch( $format ) :
 
-		} else {
+			case 'xml' :
 
-			header( 'Content-Type: application/json' );
-			echo json_encode( $array, $this->pretty_print );
+				require_once EDD_PLUGIN_DIR . 'includes/libraries/array2xml.php';
 
-		}
+				$xml = Array2XML::createXML( 'edd', $data );
+				echo $xml->saveXML();
+
+				break;
+
+			case 'json' :
+
+				header( 'Content-Type: application/json' );
+				echo json_encode( $data, $this->pretty_print );
+
+				break;
+
+
+			default :
+
+				// Allow other formats to be added via extensions
+				do_action( 'edd_api_output_' . $format, $data, $this );
+
+				break;
+
+		endswitch;
+
+		do_action( 'edd_api_output_after', $data, $this, $format );
 
 		exit;
 	}
