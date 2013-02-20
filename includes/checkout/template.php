@@ -362,12 +362,12 @@ function edd_payment_mode_select() {
 			<p id="edd-payment-mode-wrap">
 				<?php
 					echo '<select class="edd-select" name="payment-mode" id="edd-gateway">';
-						echo '<option value="0">' . __( 'Select payment method', 'edd' ) . '</option>';
 						foreach($gateways as $gateway_id => $gateway) :
-							echo '<option value="' . esc_attr( $gateway_id ) . '">' . esc_html( $gateway['checkout_label'] ) . '</option>';
+							echo '<option value="' . esc_attr( $gateway_id ) . '"' . selected( $gateway_id, edd_get_default_gateway(), false ) . '>' . esc_html( $gateway['checkout_label'] ) . '</option>';
 						endforeach;
 					echo '</select>';
 				?>
+				<label for="edd-gateway"><?php _e( 'Select payment method', 'edd' ); ?><label>
 			</p>
 			<?php do_action('edd_payment_mode_after_gateways'); ?>
 		</fieldset>
