@@ -120,6 +120,7 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 				}
 				?>
 				</select>
+				&nbsp;<img src="<?php echo admin_url('/images/wpspin_light.gif'); ?>" class="hidden edd_add_download_to_purchase_waiting waiting" />
 			</p>
 			<p>
 				<a href="#" class="button-secondary edd-add-another-download"><?php echo sprintf( __( 'Add Another %s', 'edd' ), edd_get_label_singular() ); ?></a>
