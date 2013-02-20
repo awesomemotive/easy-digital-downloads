@@ -145,10 +145,6 @@ class EDD_API {
 
 		// If we get here, API request is considered authenticated
 
-
-		// Log this API request, if enabled
-		$this->log_request();
-
 		// Determine the kind of query
 		$query_mode = $this->get_query_mode();
 
@@ -718,7 +714,7 @@ class EDD_API {
 	 * @return void
 	 */
 
-	private function log_request() {
+	private function log_request( $data = array() ) {
 
 		if( ! $this->log_requests )
 			return;
@@ -741,6 +737,7 @@ class EDD_API {
 			'log_type'     => 'api_request',
 			'post_title'   => $wp_query->query_vars['user'] . ' ' . edd_get_ip(), // Makes logs easier to search by user / IP
 			'post_excerpt' => http_build_query( $query ),
+			'post_content' => ! empty( $data['error'] ) ? $data['error'] : '',
 		);
 
 		$log_meta = array(
@@ -764,6 +761,9 @@ class EDD_API {
 
 	function output( $data ) {
 		global $wp_query;
+
+		// Log this API request, if enabled. We log it here because we have access to errors.
+		$this->log_request( $data );
 
 		$format = $this->get_output_format();
 
