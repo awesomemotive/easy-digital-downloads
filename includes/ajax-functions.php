@@ -254,6 +254,12 @@ function edd_get_ajax_url() {
  * @return      string
  */
 function edd_check_for_download_price_variations() {
+	if ( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'edd_add_downloads_to_purchase_nonce' ) ) {
 
+	$download_id = intval( $_POST['download_id'] );
+
+	if ( edd_has_variable_prices( $download_id ) ) {
+		
+	}
 }
 add_action( 'wp_ajax_edd_check_for_download_price_variations', 'edd_check_for_download_price_variations' );
