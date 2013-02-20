@@ -114,8 +114,13 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 			<?php
 
 			$request = get_post_field( 'post_excerpt', $item['ID'] );
+			$error   = get_post_field( 'post_content', $item['ID'] );
 			echo '<p><strong>' . __( 'API Request:', 'edd' ) . '</strong></p>';
 			echo '<div>' . $request . '</div>';
+			if( ! empty( $error ) ) {
+				echo '<p><strong>' . __( 'Error', 'edd' ) . '</strong></p>';
+				echo '<div>' . esc_html( $error ) . '</div>';
+			}
 			echo '<p><strong>' . __( 'API User:', 'edd' ) . '</strong></p>';
 			echo '<div>' . get_post_meta( $item['ID'], '_edd_log_user', true ) . '</div>';
 			echo '<p><strong>' . __( 'API Key:', 'edd' ) . '</strong></p>';
