@@ -168,7 +168,7 @@ jQuery(document).ready(function ($) {
     // Auto load first payment gateway - TODO the gateway loaded needs to be set via options
     if( edd_scripts.is_checkout == '1' && $('select#edd-gateway').length ) {
         setTimeout( function() {
-            edd_load_gateway( $('select#edd-gateway option:nth-child(2)').val() );
+            edd_load_gateway( edd_scripts.default_gateway );
         }, 500);
     }
 
