@@ -187,13 +187,13 @@ function edd_render_price_field( $post_id ) {
 ?>
 
 	<p>
-		<strong><?php _e( 'Pricing Options:', 'edd' ); ?></strong>
+		<strong><?php apply_filters( 'edd_price_options_heading', _e( 'Pricing Options:', 'edd' ) ); ?></strong>
 	</p>
 
 	<p>
 		<label for="edd_variable_pricing">
 			<input type="checkbox" name="_variable_pricing" id="edd_variable_pricing" value="1" <?php checked( 1, $variable_pricing ); ?> />
-			<?php _e( 'Enable variable pricing', 'edd' ); ?>
+			<?php apply_filters( 'edd_variable_pricing_toggle_text', _e( 'Enable variable pricing', 'edd' ) ); ?>
 		</label>
 	</p>
 
@@ -213,7 +213,7 @@ function edd_render_price_field( $post_id ) {
 		<input type="hidden" id="edd_variable_prices" class="edd_variable_prices_name_field" value=""/>
 		<p>
 			<input type="checkbox" name="_edd_price_options_mode" id="edd_price_options_mode"<?php checked( 1, $single_option_mode ); ?> />
-			<label for="edd_price_options_mode"><?php _e( 'Enable multi option purchase mode. Leave unchecked to only permit a single price option to be purchased', 'edd' ); ?></label>
+			<label for="edd_price_options_mode"><?php apply_filters( 'edd_multi_option_purchase_text', _e( 'Enable multi option purchase mode. Leave unchecked to only permit a single price option to be purchased', 'edd' ) ); ?></label>
 		</p>
 		<div id="edd_price_fields" class="edd_meta_table_wrap">
 			<table class="widefat" width="100%" cellpadding="0" cellspacing="0">
