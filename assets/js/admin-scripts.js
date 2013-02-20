@@ -254,6 +254,17 @@ jQuery(document).ready(function ($) {
 		return false;
 	});
 
+	// Add a New Download from the Add Downloads to Purchase Box
+	$('#edd-add-downloads-to-purchase').on('click', '.edd-add-another-download', function() {
+		var downloads_select_elem = $('#edd-add-downloads-to-purchase select:last').clone();
+		var count = $('#edd-add-downloads-to-purchase select').length;
+
+		$(downloads_select_elem).prop('name', 'downloads[' + count + '][id]');
+		downloads_select_elem.insertAfter('#edd-add-downloads-to-purchase select:last');
+
+		return false;
+	});
+
 	// Show / hide the send purchase receipt check box on the Edit payment screen
 	$('#edd_payment_status').change(function() {
 		if( $('#edd_payment_status option:selected').val() == 'publish' ) {
