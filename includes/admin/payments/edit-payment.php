@@ -50,7 +50,7 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 
 									echo '<div class="purchased_download_' . $id . '">
 											<input type="hidden" name="edd-purchased-downloads[' . $id . ']" value="' . $id . '"/>
-											<strong>' . get_the_title( $id ) . ' ' . $variable_prices . '</strong> - <a href="#" class="edd-remove-purchased-download" data-action="remove_purchased_download" data-id="' . $id . '">Remove</a>
+											<strong>' . get_the_title( $id ) . ' ' . $variable_prices . '</strong> - <a href="#" class="edd-remove-purchased-download" data-action="remove_purchased_download" data-id="' . $id . '">'. __( 'Remove', 'edd' ) .'</a>
 										  </div>';
 								endforeach;
 							endif;
