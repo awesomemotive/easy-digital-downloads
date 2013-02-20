@@ -143,42 +143,8 @@ function edd_listen_for_paypal_ipn() {
 	global $edd_options;
 
 	// Regular PayPal IPN
-	if ( ! isset( $edd_options['paypal_alternate_verification'] ) ) {
-		if ( isset( $_GET['edd-listener'] ) && $_GET['edd-listener'] == 'IPN' ) {
-			do_action( 'edd_verify_paypal_ipn' );
-		}
-	// Alternate purchase verification
-	} else {
-		if ( isset( $_GET['tx'] ) && isset( $_GET['st'] ) && isset( $_GET['amt'] ) && isset( $_GET['cc'] ) && isset( $_GET['cm'] ) && isset( $_GET['item_number'] ) ) {
-			/** We are using the alternate method of verifying PayPal purchases */
-
-			// Setup each of the variables from PayPal
-			$payment_status = $_GET['st'];
-			$paypal_amount = $_GET['amt'];
-			$payment_id = $_GET['cm'];
-			$purchase_key = $_GET['item_number'];
-			$currency = $_GET['cc'];
-
-			// Retrieve the meta info for this payment
-			$payment_meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
-			$payment_amount = edd_format_amount( $payment_meta['amount'] );
-
-			if ( $currency != $edd_options['currency'] ) {
-				return; // The currency code is invalid
-			}
-			if ( number_format( (float)$paypal_amount, 2) != $payment_amount ) {
-				return; // The prices don't match
-			}
-			if ( $purchase_key != $payment_meta['key'] ) {
-				return; // Purchase keys don't match
-			}
-			if ( 'completed' != strtolower( $payment_status ) || edd_is_test_mode() ) {
-				return; // Payment wasn't completed
-			}
-
-			// Everything has been verified, update the payment to "complete"
-			edd_update_payment_status( $payment_id, 'publish' );
-		}
+	if ( isset( $_GET['edd-listener'] ) && $_GET['edd-listener'] == 'IPN' ) {
+		do_action( 'edd_verify_paypal_ipn' );
 	}
 }
 add_action( 'init', 'edd_listen_for_paypal_ipn' );
