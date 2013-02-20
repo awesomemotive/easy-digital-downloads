@@ -266,15 +266,21 @@ jQuery(document).ready(function ($) {
 			$.post(ajaxurl, variable_price_check_ajax_data, function(response) {
 				$el.next('select').remove();
 				$el.after(response);
-				$('.edd_add_download_to_purchase_waiting:last').addClass('hidden');
-				if( ! $('.edd-remove-download', $el.parent()).length ) {
+				if( ! $('.edd-remove-download', $el.parent()).length && $('#edd-add-downloads-to-purchase select.edd-downloads-list').length > 1 ) {
 					$el.after('&nbsp;<a href="#" class="edd-remove-download">' + edd_vars.remove_text + '</a>');
 				}
+				$('.edd_add_download_to_purchase_waiting:last').addClass('hidden');
 			});
 		} else {
 			$el.next('select').remove();
 			$('.edd_add_download_to_purchase_waiting:last').addClass('hidden');
 		}
+	});
+
+	// Remove a Download Row
+	$('#edd-add-downloads-to-purchase').on('click', '.edd-remove-download', function() {
+		$(this).parent().remove();
+		return false;
 	});
 
 	// When the Add Downloads button is clicked...
