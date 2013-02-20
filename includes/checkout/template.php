@@ -148,6 +148,12 @@ function edd_get_cc_form() {
 
 	<fieldset id="edd_cc_fields" class="edd-do-validate">
 		<legend><?php _e( 'Credit Card Info', 'edd' ); ?></legend>
+		<?php if( is_ssl() ) : ?>
+			<div id="edd_secure_site_wrapper">
+				<span class="padlock"></span>
+				<span><?php _e( 'This is a secure SSL encrypted payment.', 'edd' ); ?></span>
+			</div>
+		<?php endif; ?>
 		<p id="edd-card-number-wrap">
 			<input type="text" autocomplete="off" name="card_number" class="card-number edd-input required" placeholder="<?php _e( 'Card number', 'edd' ); ?>" />
 			<label class="edd-label"><?php _e( 'Card Number', 'edd' ); ?><span class="card-type"></span></label>
@@ -163,13 +169,13 @@ function edd_get_cc_form() {
 		<?php do_action( 'edd_before_cc_expiration' ); ?>
 		<p class="card-expiration">
 			<select name="card_exp_month" class="card-expiry-month required">
-				<?php for( $i = 1; $i <= 12; $i++ ) { echo '<option value="' . $i . '">' . $i . '&nbsp;' . edd_month_num_to_name( $i ) . '</option>'; } ?>
+				<?php for( $i = 1; $i <= 12; $i++ ) { echo '<option value="' . $i . '">' . sprintf ('%02d', $i ) . '</option>'; } ?>
 			</select>
 			<span class="exp-divider"> / </span>
 			<select name="card_exp_year" class="card-expiry-year required">
-				<?php for( $i = date('Y'); $i <= date('Y') + 10; $i++ ) { echo '<option value="' . $i . '">' . $i . '</option>'; } ?>
+				<?php for( $i = date('Y'); $i <= date('Y') + 10; $i++ ) { echo '<option value="' . $i . '">' . substr( $i, 2 ) . '</option>'; } ?>
 			</select>
-			<label class="edd-label"><?php _e( 'Expiration (MM/YYYY)', 'edd' ); ?></label>
+			<label class="edd-label"><?php _e( 'Expiration (MM/YY)', 'edd' ); ?></label>
 		</p>
 		<?php do_action( 'edd_after_cc_expiration' ); ?>
 
@@ -362,12 +368,12 @@ function edd_payment_mode_select() {
 			<p id="edd-payment-mode-wrap">
 				<?php
 					echo '<select class="edd-select" name="payment-mode" id="edd-gateway">';
-						echo '<option value="0">' . __( 'Select payment method', 'edd' ) . '</option>';
 						foreach($gateways as $gateway_id => $gateway) :
-							echo '<option value="' . $gateway_id . '">' . $gateway['checkout_label'] . '</option>';
+							echo '<option value="' . esc_attr( $gateway_id ) . '"' . selected( $gateway_id, edd_get_default_gateway(), false ) . '>' . esc_html( $gateway['checkout_label'] ) . '</option>';
 						endforeach;
 					echo '</select>';
 				?>
+				<label for="edd-gateway"><?php _e( 'Select Payment Method', 'edd' ); ?><label>
 			</p>
 			<?php do_action('edd_payment_mode_after_gateways'); ?>
 		</fieldset>
