@@ -278,7 +278,9 @@ jQuery(document).ready(function ($) {
 				nonce       : $('#edd_create_payment_nonce').val()
 			};
 			$('.edd_add_download_to_purchase_waiting:last').removeClass('hidden');
-			$.post(ajaxurl, variable_price_check_ajax_data);
+			$.post(ajaxurl, variable_price_check_ajax_data, function(response) {
+				
+			});
 		} else {
 			$el.next('select').remove();
 			$('.edd_add_download_to_purchase_waiting:last').addClass('hidden');
