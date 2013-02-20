@@ -209,6 +209,26 @@ class EDD_API {
 
 
 	/**
+	 * Retrieve the output format
+	 *
+	 * Determines whether results should be displayed in XML or JSON
+	 *
+	 * @access  private
+	 * @since  1.5
+	 */
+
+	private function get_output_format() {
+
+		global $wp_query;
+
+		$format = isset( $wp_query->query_vars['format'] ) ? $wp_query->query_vars['format'] : 'json';
+
+		return apply_filters( 'edd_api_output_format', $format );
+
+	}
+
+
+	/**
 	 * Missing authentication error
 	 *
 	 * @access  private
@@ -522,7 +542,7 @@ class EDD_API {
 
 						foreach ( $daterange as $day ) {
 
-							$tag = ( $wp_query->query_vars['format'] == 'xml' ? $day->format( 'MdY' ) : $day->format( 'Ymd' ) );
+							$tag = ( $this->get_output_format() == 'xml' ? $day->format( 'MdY' ) : $day->format( 'Ymd' ) );
 							$sales['sales'][$tag] = edd_get_sales_by_date( $day->format( 'j' ), $day->format( 'n' ), $day->format( 'Y' ) );
 
 						}
@@ -594,6 +614,7 @@ class EDD_API {
 
 						global $wp_query;
 
+						//echo $args['startdate']; exit;
 						$args['startdate'] = DateTime::createFromFormat( 'Ymd', $args['startdate'] )->format( 'Y-m-d' );
 						$args['enddate'] = DateTime::createFromFormat( 'Ymd', $args['enddate'] )->format( 'Y-m-d' );
 
@@ -605,7 +626,7 @@ class EDD_API {
 
 						foreach ( $daterange as $day ) {
 
-							$tag = ( $wp_query->query_vars['format'] == 'xml' ? $day->format( 'MdY' ) : $day->format( 'Ymd' ) );
+							$tag = $this->get_output_format() == 'xml' ? $day->format( 'MdY' ) : $day->format( 'Ymd' );
 							$earnings['earnings'][$tag] = edd_get_earnings_by_date( $day->format( 'j' ), $day->format( 'n' ), $day->format( 'Y' ) );
 
 						}
@@ -675,7 +696,7 @@ class EDD_API {
 	function output( $array ) {
 		global $wp_query;
 
-		if ( isset( $wp_query->query_vars['format'] ) && $wp_query->query_vars['format'] == 'xml' ) {
+		if ( $this->get_output_format() == 'xml' ) {
 
 			require_once EDD_PLUGIN_DIR . 'includes/libraries/array2xml.php';
 
