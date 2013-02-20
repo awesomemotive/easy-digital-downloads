@@ -282,6 +282,7 @@ jQuery(document).ready(function ($) {
 			$('.edd_add_download_to_purchase_waiting:last').removeClass('hidden');
 			$.post(ajaxurl, variable_price_check_ajax_data, function(response) {
 				$el.after(response);
+				$('.edd_add_download_to_purchase_waiting:last').addClass('hidden');
 			});
 		} else {
 			$el.next('select').remove();
