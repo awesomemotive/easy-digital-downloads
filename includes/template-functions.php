@@ -162,18 +162,21 @@ function edd_purchase_variable_pricing( $download_id ) {
 		<ul>
 			<?php
 			if ( $prices ):
+				$price_option = isset( $_GET['price_option'] ) ? intval( $_GET['price_option'] ) : null;
+				$selected = ( $price_option ) ? 'checked="checked"' : '';
 				foreach ( $prices as $key => $price ) :
 					$amount = $price[ 'amount' ];
 					if ( edd_use_taxes() && edd_taxes_on_prices() )
 						$amount += edd_calculate_tax( $price[ 'amount' ] );
 					printf(
-						'<li><label for="%3$s"><input type="%2$s" %1$s name="edd_options[price_id][]" id="%3$s" class="%4$s" value="%5$s"/> %6$s</label></li>',
+						'<li><label for="%3$s"><input type="%2$s" %1$s name="edd_options[price_id][]" id="%3$s" class="%4$s" value="%5$s" %7$s/> %6$s</label></li>',
 						checked( 0, $key, false ),
 						$type,
 						esc_attr( 'edd_price_option_' . $download_id . '_' . $key ),
 						esc_attr( 'edd_price_option_' . $download_id ),
 						esc_attr( $key ),
-						esc_html( $price['name'] . ' - ' . edd_currency_filter( edd_format_amount( $amount ) ) )
+						esc_html( $price['name'] . ' - ' . edd_currency_filter( edd_format_amount( $amount ) ) ),
+						$selected
 					);
 				endforeach;
 			endif;
