@@ -256,9 +256,9 @@ jQuery(document).ready(function ($) {
 
 	// Add a New Download from the Add Downloads to Purchase Box
 	$('#edd-add-downloads-to-purchase').on('click', '.edd-add-another-download', function() {
-		var downloads_select_elem = $('#edd-add-downloads-to-purchase select.edd-downloads-list:last').parent().clone();
-		var count = $('#edd-add-downloads-to-purchase select.edd-downloads-list').length;
-		var download_section = $('#edd-add-downloads-to-purchase select.edd-downloads-list:last').parent();
+		var downloads_select_elem = $('#edd-add-downloads-to-purchase select.edd-downloads-list:last').parent().clone(),
+		    count = $('#edd-add-downloads-to-purchase select.edd-downloads-list').length,
+		    download_section = $('#edd-add-downloads-to-purchase select.edd-downloads-list:last').parent();
 
 		if (downloads_select_elem.has('select.edd-variable-prices-select')) {
 			$('select.edd-variable-prices-select', downloads_select_elem).remove();
