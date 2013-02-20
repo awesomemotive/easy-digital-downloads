@@ -244,3 +244,15 @@ function edd_get_ajax_url() {
 
 	return apply_filters( 'edd_ajax_url', $ajax_url );
 }
+
+/**
+ * Check for Download Price Variations
+ *
+ * @access      public
+ * @since       1.5
+ * @return      string
+ */
+function edd_check_for_download_price_variations() {
+	
+}
+add_action( 'wp_ajax_edd_local_tax_opt_out', 'edd_ajax_opt_out_local_taxes' );
