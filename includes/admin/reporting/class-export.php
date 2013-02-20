@@ -89,7 +89,7 @@ class EDD_Export {
 	 * @return      void
 	 */
 	public function csv_cols_out() {
-		$cols = $this->csv_cols();
+		$cols = $this->get_csv_cols();
 		$i = 1;
 		foreach( $cols as $col_id => $column ) {
 			echo '"' . $column . '"';
