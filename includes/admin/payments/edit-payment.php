@@ -128,6 +128,7 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 				<a id="edd-add-download" class="button-primary" title="<?php _e( 'Add Selected Downloads', 'edd' ); ?>"><?php _e( 'Add Selected Downloads', 'edd' ); ?></a>
 				<a id="edd-close-add-download" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Close', 'edd' ); ?>"><?php _e( 'Close', 'edd' ); ?></a>
 			</p>
+			<?php wp_nonce_field( 'edd_add_downloads_to_purchase_nonce', 'edd_add_downloads_to_purchase_nonce' ); ?>
 		</form>
 	</div>
 </div>
