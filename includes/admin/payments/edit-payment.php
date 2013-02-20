@@ -41,19 +41,21 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 								foreach ( $downloads as $download ) :
 									$id = isset( $payment_data['cart_details'] ) ? $download['id'] : $download;
 
-									if ( isset( $download['options']['price_id'] ) )
-										$variable_prices = '(' . edd_get_price_option_name( $id, $download['options']['price_id'], $_GET['purchase_id'] ) . ')';
-									else
+									if ( isset( $download['options']['price_id'] ) ) {
+										$variable_prices = '<input type="hidden" name="edd-purchased-downloads[' . $id . '][options][price_id]" value="'. $download['options']['price_id'] .'" />';
+										$variable_prices .= '(' . edd_get_price_option_name( $id, $download['options']['price_id'], $_GET['purchase_id'] ) . ')';
+									} else {
 										$variable_prices = '';
+									}
 
 									echo '<div class="purchased_download_' . $id . '">
-											<input type="hidden" name="edd-purchased-downloads[]" value="' . $id . '"/>
+											<input type="hidden" name="edd-purchased-downloads[' . $id . ']" value="' . $id . '"/>
 											<strong>' . get_the_title( $id ) . ' ' . $variable_prices . '</strong> - <a href="#" class="edd-remove-purchased-download" data-action="remove_purchased_download" data-id="' . $id . '">Remove</a>
 										  </div>';
 								endforeach;
 							endif;
 						?>
-						<p id="edit-downloads"><a href="#TB_inline?width=640&amp;inlineId=available-downloads" class="thickbox" title="<?php printf( __( 'Add download to purchase #%s', 'edd' ), $_GET['purchase_id'] ); ?> "><?php _e( 'Add download to purchase', 'edd' ); ?></p>
+						<p id="edit-downloads"><a href="#TB_inline?width=640&amp;inlineId=available-downloads" class="thickbox" title="<?php printf( __( 'Add %s to purchase #%s', 'edd' ), strtolower( edd_get_label_singular() ), $_GET['purchase_id'] ); ?> "><?php _e( 'Add download to purchase', 'edd' ); ?></p>
 					</td>
 				</tr>
 				<tr>
