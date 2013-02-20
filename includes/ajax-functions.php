@@ -271,6 +271,8 @@ function edd_check_for_download_price_variations() {
 
 			echo $ajax_response;
 		}
+
+		die();
 	}
 }
 add_action( 'wp_ajax_edd_check_for_download_price_variations', 'edd_check_for_download_price_variations' );
