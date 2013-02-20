@@ -249,10 +249,11 @@ function edd_get_ajax_url() {
  * Check for Download Price Variations
  *
  * @access      public
+ * @author      Sunny Ratilal
  * @since       1.5
  * @return      string
  */
 function edd_check_for_download_price_variations() {
-	
+
 }
-add_action( 'wp_ajax_edd_local_tax_opt_out', 'edd_ajax_opt_out_local_taxes' );
+add_action( 'wp_ajax_edd_check_for_download_price_variations', 'edd_check_for_download_price_variations' );
