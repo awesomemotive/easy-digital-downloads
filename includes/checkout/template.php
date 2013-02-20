@@ -163,13 +163,13 @@ function edd_get_cc_form() {
 		<?php do_action( 'edd_before_cc_expiration' ); ?>
 		<p class="card-expiration">
 			<select name="card_exp_month" class="card-expiry-month required">
-				<?php for( $i = 1; $i <= 12; $i++ ) { echo '<option value="' . $i . '">' . $i . '&nbsp;' . edd_month_num_to_name( $i ) . '</option>'; } ?>
+				<?php for( $i = 1; $i <= 12; $i++ ) { echo '<option value="' . $i . '">' . sprintf ('%02d', $i ) . '</option>'; } ?>
 			</select>
 			<span class="exp-divider"> / </span>
 			<select name="card_exp_year" class="card-expiry-year required">
-				<?php for( $i = date('Y'); $i <= date('Y') + 10; $i++ ) { echo '<option value="' . $i . '">' . $i . '</option>'; } ?>
+				<?php for( $i = date('Y'); $i <= date('Y') + 10; $i++ ) { echo '<option value="' . $i . '">' . substr( $i, 2 ) . '</option>'; } ?>
 			</select>
-			<label class="edd-label"><?php _e( 'Expiration (MM/YYYY)', 'edd' ); ?></label>
+			<label class="edd-label"><?php _e( 'Expiration (MM/YY)', 'edd' ); ?></label>
 		</p>
 		<?php do_action( 'edd_after_cc_expiration' ); ?>
 
