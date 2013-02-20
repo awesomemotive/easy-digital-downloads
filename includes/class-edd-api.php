@@ -344,7 +344,7 @@ class EDD_API {
 
 		if ( $product == null ) {
 
-			$product_list = get_posts( array( 'post_type' => 'download' ) );
+			$product_list = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
 
 			foreach ( $product_list as $product_info ) {
 
@@ -544,7 +544,7 @@ class EDD_API {
 
 			} elseif ( $args['product'] == 'all' ) {
 
-				$products = get_posts( array( 'post_type' => 'download' ) );
+				$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
 				foreach ( $products as $product_info ) {
 					$sales['sales'][$product_info->ID] = array( $product_info->post_name => edd_get_download_sales_stats( $product_info->ID ) );
 				}
@@ -630,7 +630,7 @@ class EDD_API {
 
 			} elseif ( $args['product'] == 'all' ) {
 
-				$products = get_posts( array( 'post_type' => 'download' ) );
+				$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
 
 				foreach ( $products as $product_info ) {
 
