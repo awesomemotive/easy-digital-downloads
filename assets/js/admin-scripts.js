@@ -280,8 +280,8 @@ jQuery(document).ready(function ($) {
 			$('.edd_add_download_to_purchase_waiting:last').removeClass('hidden');
 			$.post(ajaxurl, variable_price_check_ajax_data);
 		} else {
-			$this.next('select').remove();
-			$this.parent().find('img').hide();
+			$el.next('select').remove();
+			$('.edd_add_download_to_purchase_waiting:last').addClass('hidden');
 		}
 	});
 
