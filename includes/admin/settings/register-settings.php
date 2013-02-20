@@ -125,6 +125,13 @@ function edd_register_settings() {
 					'type' => 'gateways',
 					'options' => edd_get_payment_gateways()
 				),
+				'default_gateway' => array(
+					'id' => 'default_gateway',
+					'name' => __('Default Gateway', 'edd'),
+					'desc' => __('This gateway will be loaded automatically with the checkout page.', 'edd'),
+					'type' => 'gateway_select',
+					'options' => edd_get_payment_gateways()
+				),
 				'accepted_cards' => array(
 					'id' => 'accepted_cards',
 					'name' => __('Accepted Payment Method Icons', 'edd'),
@@ -688,6 +695,29 @@ function edd_gateways_callback($args) {
 		echo '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']">' . $option['admin_label'] . '</label><br/>';
 	endforeach;
 }
+
+
+/**
+ * Gateways Callback (drop down)
+ *
+ * Renders gateways select menu
+ *
+ * @access      private
+ * @since       1.5
+ * @return      void
+ */
+function edd_gateway_select_callback($args) {
+	global $edd_options;
+
+	echo '<select name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']">';
+	foreach( $args['options'] as $key => $option ):
+		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $key, $edd_options[$args['id']], false ) : '';
+		echo '<option value="' . esc_attr( $key ) . '"' . $selected . '>' . esc_html( $option['admin_label'] ) . '</option>';
+	endforeach;
+	echo '</select>';
+	echo '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+}
+
 
 /**
  * Text Callback
