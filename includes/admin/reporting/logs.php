@@ -95,7 +95,21 @@ function edd_logs_view_api_requests() {
 
 	$logs_table = new EDD_API_Request_Log_Table();
 	$logs_table->prepare_items();
-	$logs_table->display();
+	?>
+	<div class="wrap">
+		<?php do_action( 'edd_logs_api_requests_top' ); ?>
+		<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs' ); ?>">
+			<?php
+			$logs_table->search_box( __( 'Search', 'edd' ), 'edd-api-requests' );
+			$logs_table->display();
+			?>
+			<input type="hidden" name="post_type" value="download" />
+			<input type="hidden" name="page" value="edd-reports" />
+			<input type="hidden" name="tab" value="logs" />
+		</form>
+		<?php do_action( 'edd_logs_api_requests_bottom' ); ?>
+	</div>
+<?php
 }
 add_action( 'edd_logs_view_api_requests', 'edd_logs_view_api_requests' );
 
