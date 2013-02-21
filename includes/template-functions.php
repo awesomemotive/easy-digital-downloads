@@ -502,7 +502,7 @@ function edd_locate_template( $template_names, $load = false, $require_once = tr
  */
 
 function edd_microdata_title( $title, $id ) {
-	if ( is_singular() && 'download' == get_post_type( intval( $id ) ) ) {
+	if ( is_singular( 'download' ) && 'download' == get_post_type( intval( $id ) ) ) {
 		$title = '<span itemprop="name">' . $title . '</span>';
 	}
 
