@@ -80,6 +80,8 @@ function edd_ajax_add_to_cart() {
 					'id'      => $_POST['download_id'],
 					'options' => $options
 				);
+				
+				$item = apply_filters( 'edd_ajax_pre_cart_item_template', $item );
 
 				$cart_item    = edd_get_cart_item_template( $key, $item, true );
 
