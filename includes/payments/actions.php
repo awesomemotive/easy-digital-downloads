@@ -131,7 +131,6 @@ function edd_update_edited_purchase( $data ) {
 			$payment_data['downloads'] = serialize( $download_list );
 		}
 
-
 		$payment_data['email'] = strip_tags( $_POST['edd-buyer-email'] );
 
 		update_post_meta( $payment_id, '_edd_payment_meta', $payment_data );
