@@ -223,7 +223,8 @@ function edd_register_settings() {
 						'{payment_id} - ' . __('The unique ID number for this purchase', 'edd') . '<br/>' .
 						'{receipt_id} - ' . __('The unique ID number for this purchase receipt', 'edd') . '<br/>' .
 						'{payment_method} - ' . __('The method of payment used for this purchase', 'edd') . '<br/>' .
-						'{sitename} - ' . __('Your site name', 'edd'),
+						'{sitename} - ' . __('Your site name', 'edd') . '<br/>' .
+						'{receipt_link} - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'edd' ),
 					'type' => 'rich_editor'
 				),
 				'admin_notice_emails' => array(
