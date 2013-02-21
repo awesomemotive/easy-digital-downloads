@@ -267,7 +267,7 @@ jQuery(document).ready(function ($) {
 				$el.next('select').remove();
 				$el.after(response);
 				if( ! $('.edd-remove-download', $el.parent()).length && $('#edd-add-downloads-to-purchase select.edd-downloads-list').length > 1 ) {
-					$el.after('&nbsp;<a href="#" class="edd-remove-download">' + edd_vars.remove_text + '</a>');
+					$el.parent().append('&nbsp;<a href="#" class="edd-remove-download">' + edd_vars.remove_text + '</a>');
 				}
 				$('.edd_add_download_to_purchase_waiting:last').addClass('hidden');
 			});
