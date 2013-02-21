@@ -85,7 +85,12 @@
 
 /* =Receipt Page
 -------------------------------------------------------------- */
-#edd_receipt_wrapper { width: 660px; margin: 0 auto; padding: 50px 0; }
+body.edd_receipt_page { background-color: #fff; color: ##141412; margin: 0; font-family: Helvetica, sans-serif; font-size: 12px; }
+body.edd_receipt_page #edd_receipt_wrapper { width: 660px; margin: 0 auto; padding: 50px 0; }
+body.edd_receipt_page table { display: table; width: 100%; border-bottom: 1px solid #ededed; border-collapse: collapse; border-spacing: 0; font-size: 14px; line-height: 2; margin: 0 0 20px; }
+body.edd_receipt_page td, th { display: table-cell; text-align: left; border-top: 1px solid #ededed; padding: 6px 10px 6px 0; font-weight: normal; }
+body.edd_receipt_page th { font-weight: bold; text-transform: uppercase; }
+body.edd_receipt_page h3 { font-size: 22px; margin: 40px 0 5px; clear: both; display: block; font-weight: bold; }
 
 /* =Purchase Summary Tables
 -------------------------------------------------------------- */
