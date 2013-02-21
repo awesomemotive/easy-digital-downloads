@@ -162,8 +162,6 @@ function edd_purchase_variable_pricing( $download_id ) {
 		<ul>
 			<?php
 			if ( $prices ):
-				$price_option = isset( $_GET['price_option'] ) ? intval( $_GET['price_option'] ) : null;
-				$selected = ( $price_option ) ? 'checked="checked"' : '';
 				foreach ( $prices as $key => $price ) :
 					$amount = $price[ 'amount' ];
 					if ( edd_use_taxes() && edd_taxes_on_prices() )
@@ -176,7 +174,7 @@ function edd_purchase_variable_pricing( $download_id ) {
 						esc_attr( 'edd_price_option_' . $download_id ),
 						esc_attr( $key ),
 						esc_html( $price['name'] . ' - ' . edd_currency_filter( edd_format_amount( $amount ) ) ),
-						$selected
+						checked( isset( $_GET['price_option'] ) ? $_GET['price_option'] : null, esc_attr( $key ), 0 )
 					);
 				endforeach;
 			endif;
