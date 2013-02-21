@@ -266,6 +266,9 @@ function edd_process_paypal_web_accept( $data ) {
 	$payment_meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
 	$payment_amount = edd_format_amount( $payment_meta['amount'] );
 
+	if( get_post_status( $payment_id ) == 'complete' )
+		return; // Only complete payments once
+
 	if ( edd_get_payment_gateway( $payment_id ) != 'paypal' )
 		return; // this isn't a PayPal standard IPN
 
@@ -278,7 +281,9 @@ function edd_process_paypal_web_accept( $data ) {
 		return;
 	}
 
-	if ( strtolower( $payment_status ) == 'refunded' ) {
+	$status = strtolower( $payment_status );
+
+	if ( strtolower( $status ) == 'refunded' ) {
 		// Process a refund
 		edd_process_paypal_refund( $data );
 	} else {
@@ -293,8 +298,6 @@ function edd_process_paypal_web_accept( $data ) {
 		   	edd_update_payment_status( $payment_id, 'failed' );
 		   	return;
 		}
-
-		$status = strtolower( $payment_status );
 
 		if ( $status == 'completed' || edd_is_test_mode() ) {
 			edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $data['txn_id'] ) );
