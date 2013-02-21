@@ -185,7 +185,7 @@ function edd_email_preview_templage_tags( $message ) {
 	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
 	$message = str_replace( '{product_notes}', $notes, $message );
 	$message = str_replace( '{payment_id}', $payment_id, $message );
-	$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( 'purchase_key', $payment_id, get_permalink( $edd_options['success_page'] ) ) . '">', '</a>' ), $message );
+	$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'purchase_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' ), $message );
 
 	return wpautop( $message );
 }
@@ -369,3 +369,31 @@ function edd_default_email_styling( $email_body ) {
 	return $email_body;
 }
 add_filter( 'edd_purchase_receipt_default', 'edd_default_email_styling' );
+
+/**
+ * Render Receipt in the Browser
+ *
+ * @since 1.5
+ * @author Sunny Ratilal
+ */
+function edd_render_receipt_in_browser() {
+	ob_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+	<title><?php _e( 'Receipt', 'edd' ); ?></title>
+	<meta charset="utf-8" />
+	<?php wp_head(); ?>
+</html>
+<body>
+	<div id="edd_receipt_wrapper">
+		<?php do_action( 'edd_render_receipt_in_browser' ); ?>
+		<?php echo do_shortcode('[edd_receipt purchase_key='. $_GET['purchase_key'] .']'); ?>
+	</div>
+<?php wp_footer(); ?>
+</body>
+<?php
+	echo ob_get_clean();
+	die();
+}
+add_action( 'edd_view_receipt', 'edd_render_receipt_in_browser' );
