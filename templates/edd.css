@@ -83,6 +83,9 @@
 /* Twenty Twelve */
 #edd_purchase_form input.edd-input.required { color: #000; }
 
+/* =Receipt Page
+-------------------------------------------------------------- */
+#edd_receipt_wrapper { width: 660px; margin: 0 auto; padding: 50px 0; }
 
 /* =Purchase Summary Tables
 -------------------------------------------------------------- */
