@@ -36,14 +36,26 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 					<td id="purchased-downloads">
 						<?php
 							$downloads = maybe_unserialize( $payment_data['downloads'] );
+							$cart_items = isset( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] ) : false;
 							if ( $downloads ) :
-								foreach ( $downloads as $download ):
+								foreach ( $downloads as $download ) :
 									$id = isset( $payment_data['cart_details'] ) ? $download['id'] : $download;
-									echo '<div class="purchased_download_' . $id . '"><input type="hidden" name="edd-purchased-downloads[]" value="' . $id . '"/><strong>' . get_the_title( $id ) . '</strong> - <a href="#" class="edd-remove-purchased-download" data-action="remove_purchased_download" data-id="' . $id . '">Remove</a></div>';
+
+									if ( isset( $download['options']['price_id'] ) ) {
+										$variable_prices = '<input type="hidden" name="edd-purchased-downloads[' . $id . '][options][price_id]" value="'. $download['options']['price_id'] .'" />';
+										$variable_prices .= '(' . edd_get_price_option_name( $id, $download['options']['price_id'], $_GET['purchase_id'] ) . ')';
+									} else {
+										$variable_prices = '';
+									}
+
+									echo '<div class="purchased_download_' . $id . '">
+											<input type="hidden" name="edd-purchased-downloads[' . $id . ']" value="' . $id . '"/>
+											<strong>' . get_the_title( $id ) . ' ' . $variable_prices . '</strong> - <a href="#" class="edd-remove-purchased-download" data-action="remove_purchased_download" data-id="' . $id . '">'. __( 'Remove', 'edd' ) .'</a>
+										  </div>';
 								endforeach;
 							endif;
 						?>
-						<p id="edit-downloads"><a href="#TB_inline?width=640&amp;inlineId=available-downloads" class="thickbox" title="<?php printf( __( 'Add download to purchase #%s', 'edd' ), $_GET['purchase_id'] ); ?> "><?php _e( 'Add download to purchase', 'edd' ); ?></p>
+						<p id="edit-downloads"><a href="#TB_inline?width=640&amp;inlineId=available-downloads" class="thickbox" title="<?php printf( __( 'Add %s to purchase', 'edd' ), strtolower( edd_get_label_plural() ) ); ?>"><?php printf( __( 'Add %s to purchase', 'edd' ), strtolower( edd_get_label_plural() ) ); ?></a></p>
 					</td>
 				</tr>
 				<tr>
@@ -110,17 +122,27 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 	<div id="available-downloads" style="display:none;">
 		<form id="edd-add-downloads-to-purchase">
 			<p>
+				<select name="downloads[0][id]" class="edd-downloads-list">
 				<?php
-				$downloads = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1 ) );
+				$downloads = get_posts( apply_filters( 'edd_add_downloads_to_purchase_query', array( 'post_type' => 'download', 'posts_per_page' => -1 ) ) );
+				echo '<option value="0">' . sprintf( __('Select a %s', 'edd'), esc_html( edd_get_label_singular() ) ) . '</option>';
 				foreach( $downloads as $download ) {
-					echo '<input type="checkbox" class="edd-download-to-add" name="edd_downloads_to_add[]" value="' . $download->ID . '"/>&nbsp;' . get_the_title( $download->ID ) . '<br/>';
+					?>
+					<option value="<?php echo $download->ID; ?>"><?php echo get_the_title( $download->ID ) ?></option>
+					<?php
 				}
 				?>
+				</select>
+				&nbsp;<img src="<?php echo admin_url('/images/wpspin_light.gif'); ?>" class="hidden edd_add_download_to_purchase_waiting waiting" />
+			</p>
+			<p>
+				<a href="#" class="button-secondary edd-add-another-download"><?php echo sprintf( __( 'Add Another %s', 'edd' ), esc_html( edd_get_label_singular() ) ); ?></a>
 			</p>
 			<p>
 				<a id="edd-add-download" class="button-primary" title="<?php _e( 'Add Selected Downloads', 'edd' ); ?>"><?php _e( 'Add Selected Downloads', 'edd' ); ?></a>
 				<a id="edd-close-add-download" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Close', 'edd' ); ?>"><?php _e( 'Close', 'edd' ); ?></a>
 			</p>
+			<?php wp_nonce_field( 'edd_add_downloads_to_purchase_nonce', 'edd_add_downloads_to_purchase_nonce' ); ?>
 		</form>
 	</div>
 </div>
