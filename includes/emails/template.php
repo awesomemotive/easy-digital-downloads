@@ -39,6 +39,8 @@ function edd_get_email_templates() {
  * @return      string
  */
 function edd_email_template_tags( $message, $payment_data, $payment_id ) {
+	global $edd_options;
+
 	$has_tags = ( strpos($message, '{' ) !== false );
 	if ( ! $has_tags ) return $message;
 
@@ -125,6 +127,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 	$message = str_replace( '{payment_method}', $gateway, $message );
 	$message = str_replace( '{receipt_id}', $receipt_id, $message );
 	$message = str_replace( '{payment_id}', $payment_id, $message );
+	$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( 'purchase_key', $payment_id, get_permalink( $edd_options['success_page'] ) ) . '">', '</a>' ), $message );
 
 	$message = apply_filters( 'edd_email_template_tags', $message, $payment_data, $payment_id );
 
@@ -141,6 +144,8 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
  * @return      string $message
  */
 function edd_email_preview_templage_tags( $message ) {
+	global $edd_options;
+
 	$download_list = '<ul>';
 	$download_list .= '<li>' . __( 'Sample Product Title', 'edd' ) . '<br />';
 	$download_list .= '<ul>';
@@ -180,6 +185,7 @@ function edd_email_preview_templage_tags( $message ) {
 	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
 	$message = str_replace( '{product_notes}', $notes, $message );
 	$message = str_replace( '{payment_id}', $payment_id, $message );
+	$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( 'purchase_key', $payment_id, get_permalink( $edd_options['success_page'] ) ) . '">', '</a>' ), $message );
 
 	return wpautop( $message );
 }
