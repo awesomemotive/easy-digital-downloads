@@ -116,7 +116,7 @@ function edd_update_edited_purchase( $data ) {
 			$download_list = array();
 
 			foreach ( $_POST['edd-purchased-downloads'] as $key => $download ) {
-				if ( isset ( $download['options'] ) ) {
+				if ( isset ( $download['options']['price_id'] ) ) {
 					$download_list[] = array(
 						'id' => $key,
 						'options' => array(
