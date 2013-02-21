@@ -239,10 +239,10 @@ function edd_render_price_field( $post_id ) {
 					<?php
 						if ( ! empty( $prices ) ) :
 							foreach ( $prices as $key => $value ) :
-								$name   = isset( $prices[ $key ]['name'] ) ? $prices[ $key ]['name'] : '';
-								$amount = isset( $prices[ $key ]['amount'] ) ? $prices[ $key ]['amount'] : '';
+								$name   = isset( $value['name'] ) ? $value['name'] : '';
+								$amount = isset( $value['amount'] ) ? $value['amount'] : '';
 
-								$args = apply_filters( 'edd_price_row_args', compact( 'name', 'amount' ) );
+								$args = apply_filters( 'edd_price_row_args', compact( 'name', 'amount' ), $value );
 					?>
 						<tr class="edd_variable_prices_wrapper">
 							<?php do_action( 'edd_render_price_row', $key, $args, $post_id ); ?>
@@ -329,7 +329,7 @@ add_action( 'edd_render_price_row', 'edd_render_price_row', 10, 3 );
  */
 
 function edd_render_files_field( $post_id ) {
-	$files 				= edd_get_download_files( $post_id );
+	$files 			= edd_get_download_files( $post_id );
 	$variable_pricing 	= edd_has_variable_prices( $post_id );
 	$variable_display 	= $variable_pricing ? '' : 'display:none;';
 ?>
@@ -355,11 +355,11 @@ function edd_render_files_field( $post_id ) {
 				<?php
 					if ( ! empty( $files ) ) :
 						foreach ( $files as $key => $value ) :
-							$name = isset( $files[ $key ]['name'] ) ? $files[ $key ]['name'] : '';
-							$file = isset( $files[ $key ]['file'] ) ? $files[ $key ]['file'] : '';
-							$condition = isset( $files[ $key ]['condition'] ) ? $files[ $key ]['condition'] : false;
+							$name = isset( $value['name'] ) ? $value['name'] : '';
+							$file = isset( $value['file'] ) ? $value['file'] : '';
+							$condition = isset( $value['condition'] ) ? $value['condition'] : false;
 
-							$args = apply_filters( 'edd_file_row_args', compact( 'name', 'file', 'condition' ) );
+							$args = apply_filters( 'edd_file_row_args', compact( 'name', 'file', 'condition' ), $value );
 				?>
 						<tr class="edd_repeatable_upload_wrapper">
 							<?php do_action( 'edd_render_file_row', $key, $args, $post_id ); ?>
