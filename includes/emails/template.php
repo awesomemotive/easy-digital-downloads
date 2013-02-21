@@ -70,7 +70,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 			$id = isset( $payment_data['cart_details'] ) ? $download['id'] : $download;
 
 			if ( $show_names ) {
-				$download_list .= '<li>' . get_the_title( $id ) . '<br/>';
+				$download_list .= '<li>' . apply_filters( 'edd_email_receipt_download_title', get_the_title( $id ) ) . '<br/>';
 				$download_list .= '<ul>';
 			}
 
