@@ -48,7 +48,7 @@ function edd_process_download() {
 		// Payment has been verified, setup the download
 		$download_files = edd_get_download_files( $download );
 
-		$requested_file = apply_filters( 'edd_requested_file', $download_files[ $file_key ]['file'] );
+		$requested_file = apply_filters( 'edd_requested_file', $download_files[ $file_key ]['file'], $download_files, $file_key );
 
 		$user_info = array();
 		$user_info['email'] = $email;
