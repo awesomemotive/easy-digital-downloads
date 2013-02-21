@@ -486,3 +486,23 @@ function edd_locate_template( $template_names, $load = false, $require_once = tr
 
 	return $located;
 }
+
+/**
+ * Add Microdata
+ *
+ * @since 1.5
+ * @author Sunny Ratilal
+ *
+ * @param string $title Post Title
+ * @param int $id Post ID
+ *
+ * @return string $title New title
+ */
+function edd_microdata( $title, $id ) {
+	if ( is_singular() && 'download' == get_post_type( intval( $id ) ) ) {
+		$title = '<span itemprop="name">' . $title . '</span>';
+	}
+
+	return $title;
+}
+add_filter( 'the_title', 'edd_microdata', 10, 2 );
