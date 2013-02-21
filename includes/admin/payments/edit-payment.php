@@ -55,7 +55,7 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 								endforeach;
 							endif;
 						?>
-						<p id="edit-downloads"><a href="#TB_inline?width=640&amp;inlineId=available-downloads" class="thickbox" title="<?php printf( __( 'Add %s to purchase #%s', 'edd' ), strtolower( edd_get_label_singular() ), $_GET['purchase_id'] ); ?> "><?php _e( 'Add download to purchase', 'edd' ); ?></p>
+						<p id="edit-downloads"><a href="#TB_inline?width=640&amp;inlineId=available-downloads" class="thickbox" title="<?php printf( __( 'Add %s to purchase %s', 'edd' ), strtolower( edd_get_label_singular() ), $_GET['purchase_id'] ); ?>"><?php printf( __( 'Add %s to purchase %s', 'edd' ), strtolower( edd_get_label_singular() ), $_GET['purchase_id'] ); ?></p>
 					</td>
 				</tr>
 				<tr>
