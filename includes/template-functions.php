@@ -174,7 +174,7 @@ function edd_purchase_variable_pricing( $download_id ) {
 						esc_attr( 'edd_price_option_' . $download_id ),
 						esc_attr( $key ),
 						esc_html( $price['name'] . ' - ' . edd_currency_filter( edd_format_amount( $amount ) ) ),
-						checked( isset( $_GET['price_option'] ) ? $_GET['price_option'] : null, esc_attr( $key ), 0 )
+						checked( isset( $_GET['price_option'] ), $key, false )
 					);
 				endforeach;
 			endif;
