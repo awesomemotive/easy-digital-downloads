@@ -505,12 +505,13 @@ function edd_microdata_title( $title, $id ) {
 
 	return $title;
 }
-add_filter( 'the_title', 'edd_microdata', 10, 2 );
+add_filter( 'the_title', 'edd_microdata_title', 10, 2 );
 
-function edd_microdata_wrapper( $content, $id ) {
-	if ( is_singular() && 'download' == get_post_type( intval( $id ) ) ) {
-
+function edd_microdata_wrapper( $content ) {
+	global $post;
+	if ( $post->post_type == 'download' && is_singular() && is_main_query() ) {
+		$content = apply_filters( 'edd_microdata_wrapper', '<div itemscope itemtype="http://schema.org/Product" itemprop="description">' . $content . '</div>' );
 	}
 	return $content;
 }
-add_filter( 'the_content', 'edd_microdata_wrapper' );
+add_filter( 'the_content', 'edd_microdata_wrapper', 10 );
