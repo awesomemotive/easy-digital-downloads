@@ -385,7 +385,7 @@ function edd_render_receipt_in_browser() {
 	<meta charset="utf-8" />
 	<?php wp_head(); ?>
 </html>
-<body>
+<body class="<?php echo apply_filters('edd_receipt_page_body_class', 'edd_receipt_page' ); ?>">
 	<div id="edd_receipt_wrapper">
 		<?php do_action( 'edd_render_receipt_in_browser' ); ?>
 		<?php echo do_shortcode('[edd_receipt purchase_key='. $_GET['purchase_key'] .']'); ?>
