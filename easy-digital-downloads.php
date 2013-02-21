@@ -5,7 +5,7 @@ Plugin URI: http://easydigitaldownloads.com
 Description: Serve Digital Downloads Through WordPress
 Author: Pippin Williamson
 Author URI: http://pippinsplugins.com
-Version: 1.4.4.1
+Version: 1.4.4.2
 Text Domain: edd
 Domain Path: languages
 
@@ -93,7 +93,7 @@ final class Easy_Digital_Downloads {
 	private function setup_constants() {
 		// Plugin version
 		if( ! defined( 'EDD_VERSION' ) )
-			define( 'EDD_VERSION', '1.4.4' );
+			define( 'EDD_VERSION', '1.4.4.2' );
 
 		// Plugin Folder URL
 		if( ! defined( 'EDD_PLUGIN_URL' ) )
