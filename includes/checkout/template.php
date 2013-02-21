@@ -493,7 +493,7 @@ function edd_checkout_submit() {
 	</fieldset>
 <?php
 }
-add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_submit', 100 );
+add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_submit', 9999 );
 
 /**
  * The checkout Next button
