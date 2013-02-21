@@ -34,7 +34,7 @@ function edd_admin_messages() {
 		add_settings_error( 'edd-notices', 'edd-payment-deleted', __( 'The payment has been deleted.', 'edd' ), 'updated' );
 	}
 
-	if ( isset( $_GET['edd-message'] ) && 'payment_deleted' == $_GET['edd-message'] && current_user_can( 'view_shop_reports' ) ) {
+	if ( isset( $_GET['edd-message'] ) && 'email_sent' == $_GET['edd-message'] && current_user_can( 'view_shop_reports' ) ) {
 		add_settings_error( 'edd-notices', 'edd-payment-sent', __( 'The purchase receipt has been resent.', 'edd' ), 'updated' );
 	}
 
