@@ -196,7 +196,7 @@ function edd_insert_payment( $payment_data = array() ) {
 
 		$payment_meta = array(
 			'amount'       => $payment_data['price'],
-			'subtotal'     => edd_get_cart_subtotal( false ),
+			'subtotal'     => edd_get_cart_subtotal(),
 			'tax'          => edd_is_cart_taxed() ? edd_get_cart_tax() : 0,
 			'date'         => $payment_data['date'],
 			'email'        => $payment_data['user_email'],
