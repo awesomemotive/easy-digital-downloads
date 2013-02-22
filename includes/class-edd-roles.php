@@ -40,12 +40,35 @@ class EDD_Roles {
 	public function add_roles() {
 		add_role( 'shop_manager', __( 'Shop Manager', 'edd' ), array(
 			'read'                   => true,
-			'edit_posts'             => false,
-			'delete_posts'           => false,
+			'edit_posts'             => true,
+			'delete_posts'           => true,
 			'unfiltered_html'        => true,
 			'upload_files'           => true,
 			'export'                 => true,
-			'import'                 => true
+			'import'                 => true,
+			'delete_others_pages'    => true,
+			'delete_others_posts'    => true,
+			'delete_pages'           => true,
+			'delete_posts'           => true,
+			'delete_private_pages'   => true,
+			'delete_private_posts'   => true,
+			'delete_published_pages' => true,
+			'delete_published_posts' => true,
+			'edit_others_pages'      => true,
+			'edit_others_posts'      => true,
+			'edit_pages'             => true,
+			'edit_posts'             => true,
+			'edit_private_pages'     => true,
+			'edit_private_posts'     => true,
+			'edit_published_pages'   => true,
+			'edit_published_posts'   => true,
+			'manage_categories'      => true,
+			'manage_links'           => true,
+			'moderate_comments'      => true,
+			'publish_pages'          => true,
+			'publish_posts'          => true,
+			'read_private_pages'     => true,
+			'read_private_posts'     => true
 		) );
 
 		add_role( 'shop_accountant', __( 'Shop Accountant', 'edd' ), array(
@@ -86,8 +109,8 @@ class EDD_Roles {
 			$wp_roles->add_cap( 'shop_manager', 'view_shop_reports' );
 			$wp_roles->add_cap( 'shop_manager', 'view_shop_sensitive_data' );
 			$wp_roles->add_cap( 'shop_manager', 'export_shop_reports' );
-			$wp_roles->add_cap( 'shop_manager', 'manage_shop_discounts' );
 			$wp_roles->add_cap( 'shop_manager', 'manage_shop_settings' );
+			$wp_roles->add_cap( 'shop_manager', 'manage_shop_discounts' );
 
 			$wp_roles->add_cap( 'administrator', 'view_shop_reports' );
 			$wp_roles->add_cap( 'administrator', 'view_shop_sensitive_data' );
