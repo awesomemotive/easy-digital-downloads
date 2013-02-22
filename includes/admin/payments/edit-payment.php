@@ -20,6 +20,7 @@ $payment_data = get_post_meta( $payment_id, '_edd_payment_meta', true );
 	<form id="edd-edit-payment" action="" method="post">
 		<table class="form-table">
 			<tbody>
+				<?php do_action( 'edd_edit_payment_top', $payment->ID ); ?>
 				<tr>
 					<th scope="row" valign="top">
 						<span><?php _e( 'Buyer\'s Email', 'edd' ); ?></span>
@@ -110,6 +111,7 @@ $payment_data = get_post_meta( $payment_id, '_edd_payment_meta', true );
 						<span class="description"><?php _e( 'Check this box to send the purchase receipt, including all download links.', 'edd' ); ?></span>
 					</td>
 				</tr>
+				<?php do_action( 'edd_edit_payment_bottom', $payment->ID ); ?>
 			</tbody>
 		</table>
 
