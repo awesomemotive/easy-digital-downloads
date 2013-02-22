@@ -65,7 +65,7 @@ function edd_load_scripts() {
 				'default_gateway'           => edd_get_default_gateway(),
 				'redirect_to_checkout'      => edd_straight_to_checkout() ? '1' : '0',
 				'checkout_page' 			=> edd_get_checkout_uri(),
-				'permalinks' 				=> get_option( 'permalink_structure' ) ? '1' : '0'
+				'permalinks' 				=> get_option( 'permalink_structure' ) ? '1' : '0',
 			)
 		);
 	}
@@ -149,7 +149,8 @@ function edd_load_admin_scripts( $hook ) {
 		'one_field_min'		=> __( 'You must have at least one field', 'edd' ),
 		'currency_sign'		=> edd_currency_filter(''),
 		'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
-		'new_media_ui'       => apply_filters( 'edd_use_35_media_ui', 1 )
+		'new_media_ui'      => apply_filters( 'edd_use_35_media_ui', 1 ),
+		'remove_text'       => __( 'Remove', 'edd' )
 	));
 	wp_enqueue_style( 'thickbox' );
 

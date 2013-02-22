@@ -246,3 +246,36 @@ function edd_get_ajax_url() {
 
 	return apply_filters( 'edd_ajax_url', $ajax_url );
 }
+
+
+/**
+ * Check for Download Price Variations
+ *
+ * @access      public
+ * @author      Sunny Ratilal
+ * @since       1.5
+ * @return      string
+ */
+function edd_check_for_download_price_variations() {
+	if ( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'edd_add_downloads_to_purchase_nonce' ) ) {
+
+		$download_id = intval( $_POST['download_id'] );
+
+		if ( edd_has_variable_prices( $download_id ) ) {
+			$variable_prices = get_post_meta( $download_id, 'edd_variable_prices', true );
+
+			if ( $variable_prices ) {
+				$ajax_response = '<select name="downloads[' . intval( $_POST['array_key'] ) . '][options][price_id]" class="edd-variable-prices-select">';
+					foreach ( $variable_prices as $key => $price ) {
+						$ajax_response .= '<option value="' . $key . '">' . $price['name']  . '</option>';
+					}
+				$ajax_response .= '</select>';
+			}
+
+			echo $ajax_response;
+		}
+
+		die();
+	}
+}
+add_action( 'wp_ajax_edd_check_for_download_price_variations', 'edd_check_for_download_price_variations' );
