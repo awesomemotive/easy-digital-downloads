@@ -269,15 +269,18 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 */
 
 function edd_get_cart_item_price( $item_id, $options = array() ) {
-	$variable_pricing = get_post_meta( $item_id, '_variable_pricing', true) ;
+	global $edd_options;
+
 	$price = edd_get_download_price( $item_id );
-	if( $variable_pricing && !empty( $options ) ) {
-		// If variable prices are enabled, retrieve the options
-		$prices = get_post_meta( $item_id, 'edd_variable_prices', true );
-		if( $prices ) {
+
+	// If variable prices are enabled, retrieve the options
+	$variable_pricing = get_post_meta( $item_id, '_variable_pricing', true) ;
+	if ( $variable_pricing && !empty( $options ) ) {
+		if ( $prices = get_post_meta( $item_id, 'edd_variable_prices', true ) ) {
 			$price = $prices[ $options['price_id'] ]['amount'];
 		}
 	}
+
 	return apply_filters( 'edd_cart_item_price', $price );
 }
 
