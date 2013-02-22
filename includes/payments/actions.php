@@ -150,6 +150,8 @@ function edd_update_edited_purchase( $data ) {
 			// Send the purchase receipt
 			edd_email_purchase_receipt( $payment_id, false );
 		}
+
+		do_action( 'edd_update_edited_purchase', $payment_id );
 	}
 }
 add_action( 'edd_edit_payment', 'edd_update_edited_purchase' );
