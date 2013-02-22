@@ -761,7 +761,7 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 					if ( $id != $download_id )
 						continue;
 
-					$price_options = $cart_details[ $download_key ]['item_number']['options'];
+					$price_options = isset( $cart_details[ $download_key ]['item_number']['options'] ) ? $cart_details[ $download_key ]['item_number']['options'] : false;
 
 					$file_condition = edd_get_file_price_condition( $id, $file_key );
 
