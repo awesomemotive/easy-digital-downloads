@@ -149,8 +149,7 @@ function edd_calculate_tax( $amount, $sum = true ) {
 	global $edd_options;
 
 	// Not using taxes
-	if ( !edd_use_taxes() )
-		return $amount;
+	if ( !edd_use_taxes() ) return $amount;
 
 	$rate = edd_get_tax_rate();
 	$tax = 0;
