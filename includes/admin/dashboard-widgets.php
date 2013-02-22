@@ -157,6 +157,15 @@ function edd_dashboard_sales_widget() {
 								<?php $payment_date = strtotime( $payment->post_date ); ?>
 								<p><?php echo __( 'Date and Time:', 'edd' ) . ' ' . date_i18n( get_option( 'date_format' ), $payment_date ) . ' ' . date_i18n( get_option( 'time_format' ), $payment_date ) ?>
 								<p><?php echo __( 'Discount used:', 'edd' ) . ' '; if( isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ) { echo $user_info['discount']; } else { _e( 'none', 'edd' ); } ?>
+								<?php
+								$fees = edd_get_payment_fees( $payment->ID );
+								if( ! empty( $fees ) ) : ?>
+								<ul class="payment-feeds">
+									<?php foreach( $fees as $fee ) : ?>
+									<li><?php echo $fee['label'] . ':&nbsp;' . edd_currency_filter( $fee['amount'] ); ?></li>
+									<?php endforeach; ?>
+								</ul>
+								<?php endif; ?>
 								<p><?php echo __( 'Total:', 'edd' ) . ' ' . edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment->ID ) ) ); ?></p>
 
 								<div class="purcase-personal-details">
