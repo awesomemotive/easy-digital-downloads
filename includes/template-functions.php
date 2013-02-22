@@ -153,7 +153,7 @@ function edd_purchase_variable_pricing( $download_id ) {
 	if ( ! $variable_pricing )
 		return;
 
-	$prices = edd_get_variable_prices( $download_id );
+	$prices = apply_filters('edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id);
 
 	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
 
