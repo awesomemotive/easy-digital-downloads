@@ -278,16 +278,8 @@ function edd_get_cart_item_price( $item_id, $options = array(), $tax = true ) {
 	}
 
 	// lol this if statement...
-	if ( $tax ) {
-		if ( $edd_options['prices_include_tax'] == 'yes' && !edd_is_cart_taxed() && edd_use_taxes() ) {
-			$price = edd_calculate_tax( $price );
-		}
-		if ( edd_is_cart_taxed() && edd_is_include_tax() && edd_is_cart_taxed() ) {
-			$price = edd_calculate_tax( $price );
-		}
-		if ( edd_is_cart_taxed() && edd_is_exclude_tax() && $edd_options['prices_include_tax'] == 'yes' ) {
-			$price = edd_calculate_tax( $price );
-		}
+	if ( $tax && ( ( $edd_options['prices_include_tax'] == 'yes' && !edd_is_cart_taxed() && edd_use_taxes() ) || ( edd_is_cart_taxed() && edd_is_include_tax() || ( edd_is_exclude_tax() && $edd_options['prices_include_tax'] == 'yes' ) ) ) ) {
+		$price = edd_calculate_tax( $price );
 	}
 
 	return apply_filters( 'edd_cart_item_price', $price );
@@ -593,7 +585,7 @@ function edd_cart_tax( $echo = false ) {
  * @return      array
 */
 
-function edd_get_cart_content_details( $tax ) {
+function edd_get_cart_content_details() {
 	$cart_items = edd_get_cart_contents();
 	if ( empty( $cart_items ) ) return false;
 
@@ -601,7 +593,7 @@ function edd_get_cart_content_details( $tax ) {
 	$is_taxed = edd_is_cart_taxed();
 
 	foreach( $cart_items as $key => $item ) {
-		$price = edd_get_cart_item_price( $item['id'], $item['options'], $tax );
+		$price = edd_get_cart_item_price( $item['id'], $item['options'] );
 
 		$details[ $key ]  = array(
 			'name'        => get_the_title( $item['id'] ),
