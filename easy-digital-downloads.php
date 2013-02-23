@@ -44,8 +44,8 @@ final class Easy_Digital_Downloads {
 
 	/**
 	 * EDD user roles and capabilities object
+	 * @since 1.4.4
 	 * @var object
-	 * @since 1.4.4.1
 	 */
 	private $roles;
 
@@ -55,6 +55,13 @@ final class Easy_Digital_Downloads {
 	 * @since 1.5
 	 */
 	public $fees;
+
+	/**
+	 * EDD API object
+	 * @since 1.5
+	 */
+	public $api;
+
 
 	/**
 	 * Main Easy_Digital_Downloads Instance
@@ -78,6 +85,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->load_textdomain();
 			self::$instance->roles = new EDD_Roles();
 			self::$instance->fees = new EDD_Fees();
+			self::$instance->api = new EDD_API();
 		}
 		return self::$instance;
 	}
@@ -92,6 +100,7 @@ final class Easy_Digital_Downloads {
 	 */
 	private function setup_constants() {
 		// Plugin version
+
 		if( ! defined( 'EDD_VERSION' ) )
 			define( 'EDD_VERSION', '1.4.4.2' );
 
@@ -131,6 +140,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-api.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-roles.php';

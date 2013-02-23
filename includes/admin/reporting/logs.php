@@ -75,6 +75,38 @@ function edd_logs_view_gateway_errors() {
 add_action( 'edd_logs_view_gateway_errors', 'edd_logs_view_gateway_errors' );
 
 /**
+ * API Request Logs
+ *
+ * @access      public
+ * @since       1.5
+ * @return      void
+ */
+
+function edd_logs_view_api_requests() {
+	include( dirname( __FILE__ ) . '/class-api-requests-logs-list-table.php' );
+
+	$logs_table = new EDD_API_Request_Log_Table();
+	$logs_table->prepare_items();
+	?>
+	<div class="wrap">
+		<?php do_action( 'edd_logs_api_requests_top' ); ?>
+		<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs' ); ?>">
+			<?php
+			$logs_table->search_box( __( 'Search', 'edd' ), 'edd-api-requests' );
+			$logs_table->display();
+			?>
+			<input type="hidden" name="post_type" value="download" />
+			<input type="hidden" name="page" value="edd-reports" />
+			<input type="hidden" name="tab" value="logs" />
+		</form>
+		<?php do_action( 'edd_logs_api_requests_bottom' ); ?>
+	</div>
+<?php
+}
+add_action( 'edd_logs_view_api_requests', 'edd_logs_view_api_requests' );
+
+
+/**
  * Default Log Views
  *
  * @access      public
@@ -85,7 +117,8 @@ function edd_log_default_views() {
 	$views = array(
 		'file_downloads'  => __( 'File Downloads', 'edd' ),
 		'sales' 		  => __( 'Sales', 'edd' ),
-		'gateway_errors'  => __( 'Payment Errors', 'edd' )
+		'gateway_errors'  => __( 'Payment Errors', 'edd' ),
+		'api_requests'    => __( 'API Requests', 'edd' )
 	);
 
 	$views = apply_filters( 'edd_log_views', $views );
