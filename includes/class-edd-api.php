@@ -138,17 +138,8 @@ class EDD_API {
 		if ( ! isset( $wp_query->query_vars['edd-api'] ) )
 			return;
 
-		// Make sure we have both user and api key
-		if ( empty( $wp_query->query_vars['user'] ) || empty( $wp_query->query_vars['key'] ) )
-			$this->missing_auth();
-
-		// Make sure username (email) exists
-		if ( ! email_exists( $wp_query->query_vars['user'] ) )
-			$this->invalid_email();
-
-		// Check email/key combination
-		if( ! $this->is_user_valid( $wp_query->query_vars['user'], $wp_query->query_vars['key'] ) )
-			$this->invalid_key( $wp_query->query_vars['user'] );
+		// Check for a valid user and set errors if necessary
+		$this->validate_user();
 
 		// Only proceed if no errors have been noted
 		if( ! $this->is_valid_request )
@@ -246,6 +237,34 @@ class EDD_API {
 		$format = isset( $wp_query->query_vars['format'] ) ? $wp_query->query_vars['format'] : 'json';
 
 		return apply_filters( 'edd_api_output_format', $format );
+
+	}
+
+
+	/**
+	 * Validate the user email and API key
+	 *
+	 * Checks for the user email and API key and validates them
+	 *
+	 * @access  private
+	 * @since  1.5
+	 */
+
+	private function validate_user() {
+
+		global $wp_query;
+
+		// Make sure we have both user and api key
+		if ( empty( $wp_query->query_vars['user'] ) || empty( $wp_query->query_vars['key'] ) )
+			$this->missing_auth();
+
+		// Make sure username (email) exists
+		if ( ! email_exists( $wp_query->query_vars['user'] ) )
+			$this->invalid_email();
+
+		// Check email/key combination
+		if( ! $this->is_user_valid( $wp_query->query_vars['user'], $wp_query->query_vars['key'] ) )
+			$this->invalid_key( $wp_query->query_vars['user'] );
 
 	}
 
