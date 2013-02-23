@@ -7,11 +7,10 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 
 if ( ! isset( $_GET['discount'] ) || ! is_numeric( $_GET['discount'] ) ) {
 	wp_die( __( 'Something went wrong.', 'edd' ), __( 'Error', 'edd' ) );

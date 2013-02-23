@@ -34,7 +34,7 @@
 						?>
 					</td>
 					<td class="edd_cart_item_price"><?php echo edd_cart_item_price( $item['id'], $item['options'] ); ?></td>
-					<td class="edd_cart_actions"><a href="<?php echo esc_url( edd_remove_item_url( $key, $post ) ); ?>"><?php _e( 'remove', 'edd' ); ?></a></td>
+					<td class="edd_cart_actions"><a href="<?php echo esc_url( edd_remove_item_url( $key, $post ) ); ?>"><?php _e( 'Remove', 'edd' ); ?></a></td>
 					<?php do_action( 'edd_checkout_table_body_last', $item ); ?>
 				</tr>
 			<?php endforeach; ?>

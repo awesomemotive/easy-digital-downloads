@@ -8,10 +8,8 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
-
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 
 // Load WP_List_Table if not loaded
 if( ! class_exists( 'WP_List_Table' ) ) {
@@ -25,17 +23,13 @@ if( ! class_exists( 'WP_List_Table' ) ) {
  *
  * @access      private
  */
-
 class EDD_Customer_Reports_Table extends WP_List_Table {
-
 	/**
 	 * Number of results to show per page
-	 *
-	 * @since       1.4
+	 * @var int
+	 * @since  1.4
 	 */
-
 	public $per_page = 30;
-
 
 	/**
 	 * Get things started
@@ -44,8 +38,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      void
 	 */
-
-	function __construct(){
+	function __construct() {
 		global $status, $page;
 
 		// Set parent defaults
@@ -57,7 +50,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 	}
 
-
 	/**
 	 * Render most columns
 	 *
@@ -65,9 +57,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      string
 	 */
-
 	function column_default( $item, $column_name ) {
-		switch( $column_name ) {
+		switch ( $column_name ) {
 			case 'name' :
 				return '<a href="' .
 						admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] )
@@ -85,7 +76,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		}
 	}
 
-
 	/**
 	 * Retrieve the table columns
 	 *
@@ -93,7 +83,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      array
 	 */
-
 	function get_columns(){
 		$columns = array(
 			'name'     		=> __( 'Name', 'edd' ),
@@ -106,7 +95,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		return apply_filters( 'edd_report_customer_columns', $columns );
 	}
 
-
 	/**
 	 * Show reporting views
 	 *
@@ -114,12 +102,10 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @since       1.3
 	 * @return      void
 	 */
-
 	function bulk_actions() {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_report_views();
 	}
-
 
 	/**
 	 * Retrieve the current page number
@@ -128,19 +114,30 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      int
 	 */
-
 	function get_paged() {
 		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 	}
 
-
+	/**
+	 * Retrieve the total customers from the database
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      int
+	 */
 	function get_total_customers() {
 		global $wpdb;
 		$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
 		return $count[0];
 	}
 
-
+	/**
+	 * Build all the reports data
+	 *
+	 * @access      private
+	 * @since       1.4
+	 * @return      array $reports_data
+	 */
 	function reports_data() {
 		global $wpdb;
 
@@ -169,7 +166,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		return $reports_data;
 	}
 
-
 	/**
 	 * Setup the final data for the table
 	 *
@@ -183,7 +179,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @uses        $this->set_pagination_args()
 	 * @return      array
 	 */
-
 	function prepare_items() {
 		$columns = $this->get_columns();
 
