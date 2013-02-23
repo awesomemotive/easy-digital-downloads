@@ -112,6 +112,7 @@ class EDD_API {
 		$vars[] = 'query';
 		$vars[] = 'type';
 		$vars[] = 'product';
+		$vars[] = 'number';
 		$vars[] = 'date';
 		$vars[] = 'startdate';
 		$vars[] = 'enddate';
@@ -152,11 +153,11 @@ class EDD_API {
 	/**
 	 * Check if the user (email + API key) is valid
 	 *
-	 * @access  private
+	 * @access  public
 	 * @since  1.5
 	 */
 
-	private function is_user_valid( $email = '', $key = '' ) {
+	public function is_user_valid( $email = '', $key = '' ) {
 
 		$ret = false;
 
@@ -279,6 +280,14 @@ class EDD_API {
 
 				break;
 
+			case 'sales' :
+
+				$number = isset( $wp_query->query_vars['number'] ) ? $wp_query->query_vars['number'] : 1;
+
+				$data   = $this->get_recent_sales( $number );
+
+				break;
+
 		endswitch;
 
 		// Log this API request, if enabled. We log it here because we have access to errors.
@@ -307,6 +316,7 @@ class EDD_API {
 			'stats',
 			'products',
 			'customers',
+			'sales'
 		) );
 
 		$query = isset( $wp_query->query_vars['query'] ) ? $wp_query->query_vars['query'] : null;
@@ -756,6 +766,68 @@ class EDD_API {
 			return $earnings;
 
 		}
+
+	}
+
+
+	/**
+	 * Retrieves recent sales
+	 *
+	 * @access public
+	 * @since  1.5
+	 * @return array
+	 */
+
+	function get_recent_sales( $number = 10 ) {
+
+		$sales = array();
+
+		$query = edd_get_payments( array( 'number' => $number ) );
+
+		if( $query ) {
+			$i = 0;
+			foreach( $query as $payment ) {
+
+				$payment_meta          = edd_get_payment_meta( $payment->ID );
+				$user_info             = edd_get_payment_meta_user_info( $payment->ID );
+				$cart_items            = edd_get_payment_meta_cart_details( $payment->ID );
+
+				$sales[$i]['ID']       = $payment->ID;
+				$sales[$i]['subtotal'] = edd_get_payment_subtotal( $payment->ID );
+				$sales[$i]['tax']      = edd_get_payment_tax( $payment->ID );
+				$sales[$i]['fees']     = edd_get_payment_fees( $payment->ID );
+				$sales[$i]['total']    = edd_get_payment_amount( $payment->ID );
+				$sales[$i]['gateway']  = edd_get_payment_gateway( $payment->ID );
+				$sales[$i]['email']    = edd_get_payment_user_email( $payment->ID );
+				$sales[$i]['date']     = $payment->post_date;
+				$sales[$i]['products'] = array();
+
+				$c = 0;
+				foreach( $cart_items as $key => $item ) {
+
+					$price_override = isset( $payment_meta['cart_details'] ) ? $item['price'] : null;
+					$price          = edd_get_download_final_price( $item['id'], $user_info, $price_override );
+
+					if ( isset( $cart_items[ $key ]['item_number'])) {
+						$price_options  = $cart_items[ $key ]['item_number']['options'];
+						if ( isset( $price_options['price_id'] ) ) {
+							$price_name = edd_get_price_option_name( $item['id'], $price_options['price_id'], $payment->ID );
+						}
+					}
+
+					$sales[$i]['products'][$c]['name']       = get_the_title( $item['id'] );
+					$sales[$i]['products'][$c]['price']      = $price;
+					$sales[$i]['products'][$c]['price_name'] = $price_name;
+					$c++;
+
+				}
+
+				$i++;
+			}
+
+		}
+
+		return $sales;
 
 	}
 
