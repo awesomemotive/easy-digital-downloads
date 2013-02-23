@@ -426,7 +426,7 @@ class EDD_API {
 
 				$error['error'] = sprintf( __( 'Customer %s not found!', 'edd' ), $customer );
 
-				return $erro
+				return $error;
 
 			}
 		}
@@ -640,7 +640,7 @@ class EDD_API {
 					}
 				} else {
 
-					$error['error'] = __( 'Invalid option for argument \'date\'!', 'edd' )
+					$error['error'] = __( 'Invalid option for argument \'date\'!', 'edd' );
 
 				}
 
