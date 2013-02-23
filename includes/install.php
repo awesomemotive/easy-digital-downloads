@@ -51,7 +51,7 @@ function edd_install() {
 		$success = wp_insert_post(
 			array(
 				'post_title'     => __( 'Purchase Confirmation', 'edd' ),
-				'post_content'   => __( 'Thank you for your purchase!', 'edd' ),
+				'post_content'   => __( 'Thank you for your purchase! [edd_receipt]', 'edd' ),
 				'post_status'    => 'publish',
 				'post_author'    => 1,
 				'post_type'      => 'page',
