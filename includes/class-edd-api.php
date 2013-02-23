@@ -906,7 +906,10 @@ class EDD_API {
 			case 'json' :
 
 				header( 'Content-Type: application/json' );
-				echo json_encode( $data, $this->pretty_print );
+				if( ! empty( $this->pretty_print ) )
+					echo json_encode( $data, $this->pretty_print );
+				else
+					echo json_encode( $data );
 
 				break;
 
