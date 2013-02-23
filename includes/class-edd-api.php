@@ -130,7 +130,7 @@ class EDD_API {
 			return;
 
 		// Make sure we have both user and api key
-		if ( ! isset( $wp_query->query_vars['user'] ) || ! isset( $wp_query->query_vars['key'] ) || $wp_query->query_vars['user'] == '' || $wp_query->query_vars['key'] == '' )
+		if ( empty( $wp_query->query_vars['user'] ) || empty( $wp_query->query_vars['key'] ) )
 			$this->missing_auth();
 
 		// Make sure username (email) exists
