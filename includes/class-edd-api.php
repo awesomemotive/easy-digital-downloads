@@ -68,7 +68,7 @@ class EDD_API {
 	function __construct() {
 
 		add_action( 'init', array( $this, 'add_endpoint' ) );
-      	add_action( 'template_redirect', array( $this, 'process_endpoint' ), -1 );
+      	add_action( 'template_redirect', array( $this, 'process_query' ), -1 );
 		add_filter( 'query_vars', array( $this, 'query_vars' ) );
 		add_action( 'show_user_profile', array( $this, 'user_key_field' ) );
 		add_action( 'personal_options_update', array( $this, 'update_key' ) );
@@ -122,6 +122,107 @@ class EDD_API {
 
 
 	/**
+	 * Validate the user email and API key
+	 *
+	 * Checks for the user email and API key and validates them
+	 *
+	 * @access  private
+	 * @since  1.5
+	 */
+
+	private function validate_user() {
+
+		global $wp_query;
+
+		// Make sure we have both user and api key
+		if ( empty( $wp_query->query_vars['user'] ) || empty( $wp_query->query_vars['key'] ) )
+			$this->missing_auth();
+
+		// Make sure username (email) exists
+		if ( ! email_exists( $wp_query->query_vars['user'] ) )
+			$this->invalid_email();
+
+		// Check email/key combination
+		if( ! $this->is_user_valid( $wp_query->query_vars['user'], $wp_query->query_vars['key'] ) )
+			$this->invalid_key( $wp_query->query_vars['user'] );
+
+	}
+
+
+	/**
+	 * Check if the user (email + API key) is valid
+	 *
+	 * @access  private
+	 * @since  1.5
+	 */
+
+	private function is_user_valid( $email = '', $key = '' ) {
+
+		$ret = false;
+
+		$user = get_user_by( 'email', $email );
+
+		if ( $user && $user->edd_user_api_key == $key )
+			$ret = true;
+
+		if( ! $ret )
+			$this->is_valid_request = false;
+
+		return $ret;
+	}
+
+
+	/**
+	 * Missing authentication error
+	 *
+	 * @access  private
+	 * @author  Daniel J Griffiths
+	 * @since  1.5
+	 */
+
+	function missing_auth() {
+		$error['error'] = __( 'You must specify both user and API key!', 'edd' );
+
+		$this->is_valid_request = false;
+
+		$this->output( $error );
+	}
+
+
+	/**
+	 * Invalid email address error
+	 *
+	 * @access  private
+	 * @author  Daniel J Griffiths
+	 * @since  1.5
+	 */
+
+	function invalid_email() {
+		$error['error'] = __( 'The email address specified is not registered!', 'edd' );
+
+		$this->is_valid_request = false;
+
+		$this->output( $error );
+	}
+
+	/**
+	 * Invalid key error
+	 *
+	 * @access  private
+	 * @author  Daniel J Griffiths
+	 * @since  1.5
+	 */
+
+	function invalid_key( $email ) {
+		$error['error'] = sprintf( __( 'Invalid API key for %s!', 'edd' ), $email );
+
+		$this->is_valid_request = false;
+
+		$this->output( $error );
+	}
+
+
+	/**
 	 * Process API requests
 	 *
 	 * Listens for api calls
@@ -131,7 +232,7 @@ class EDD_API {
 	 * @since  1.5
 	 */
 
-	function process_endpoint() {
+	function process_query() {
 		global $wp_query;
 
 		// Check for edd-api var. Get out if not present
@@ -238,107 +339,6 @@ class EDD_API {
 
 		return apply_filters( 'edd_api_output_format', $format );
 
-	}
-
-
-	/**
-	 * Validate the user email and API key
-	 *
-	 * Checks for the user email and API key and validates them
-	 *
-	 * @access  private
-	 * @since  1.5
-	 */
-
-	private function validate_user() {
-
-		global $wp_query;
-
-		// Make sure we have both user and api key
-		if ( empty( $wp_query->query_vars['user'] ) || empty( $wp_query->query_vars['key'] ) )
-			$this->missing_auth();
-
-		// Make sure username (email) exists
-		if ( ! email_exists( $wp_query->query_vars['user'] ) )
-			$this->invalid_email();
-
-		// Check email/key combination
-		if( ! $this->is_user_valid( $wp_query->query_vars['user'], $wp_query->query_vars['key'] ) )
-			$this->invalid_key( $wp_query->query_vars['user'] );
-
-	}
-
-
-	/**
-	 * Check if the user (email + API key) is valid
-	 *
-	 * @access  private
-	 * @since  1.5
-	 */
-
-	private function is_user_valid( $email = '', $key = '' ) {
-
-		$ret = false;
-
-		$user = get_user_by( 'email', $email );
-
-		if ( $user && $user->edd_user_api_key == $key )
-			$ret = true;
-
-		if( ! $ret )
-			$this->is_valid_request = false;
-
-		return $ret;
-	}
-
-
-	/**
-	 * Missing authentication error
-	 *
-	 * @access  private
-	 * @author  Daniel J Griffiths
-	 * @since  1.5
-	 */
-
-	function missing_auth() {
-		$error['error'] = __( 'You must specify both user and API key!', 'edd' );
-
-		$this->is_valid_request = false;
-
-		$this->output( $error );
-	}
-
-
-	/**
-	 * Invalid email address error
-	 *
-	 * @access  private
-	 * @author  Daniel J Griffiths
-	 * @since  1.5
-	 */
-
-	function invalid_email() {
-		$error['error'] = __( 'The email address specified is not registered!', 'edd' );
-
-		$this->is_valid_request = false;
-
-		$this->output( $error );
-	}
-
-	/**
-	 * Invalid key error
-	 *
-	 * @access  private
-	 * @author  Daniel J Griffiths
-	 * @since  1.5
-	 */
-
-	function invalid_key( $email ) {
-		$error['error'] = sprintf( __( 'Invalid API key for %s!', 'edd' ), $email );
-
-		$this->is_valid_request = false;
-
-		$this->output( $error );
 	}
 
 
