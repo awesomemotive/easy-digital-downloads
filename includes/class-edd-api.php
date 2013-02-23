@@ -138,10 +138,8 @@ class EDD_API {
 			$this->invalid_email();
 
 		// Check email/key combination
-		$user = get_user_by( 'email', $wp_query->query_vars['user'] );
-		if ( $user->edd_user_api_key != $wp_query->query_vars['key'] )
+		if( ! $this->is_user_valid( $wp_query->query_vars['user'], $wp_query->query_vars['key'] ) )
 			$this->invalid_key( $wp_query->query_vars['user'] );
-
 
 		// If we get here, API request is considered authenticated
 
@@ -235,6 +233,25 @@ class EDD_API {
 
 		return apply_filters( 'edd_api_output_format', $format );
 
+	}
+
+
+	/**
+	 * Check if the user (email + API key) is valid
+	 *
+	 * @access  private
+	 * @since  1.5
+	 */
+
+	private function is_user_valid( $email = '', $key = '' ) {
+		$user = get_user_by( 'email', $email );
+		if( ! $user )
+			return false;
+
+		if ( $user->edd_user_api_key == $key )
+			return true;
+
+		return false;
 	}
 
 
