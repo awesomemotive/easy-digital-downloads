@@ -12,7 +12,6 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-
 /**
  * Show report graphs
  *
@@ -20,13 +19,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.3
  * @return      void
 */
-
 function edd_reports_graph() {
 	// Retrieve the queried dates
 	$dates = edd_get_report_dates();
 
 	// Determine graph options
-	switch( $dates['range'] ) :
+	switch ( $dates['range'] ) :
 		case 'today' :
 			$time_format 	= '%d/%b';
 			$tick_size		= 'hour';
@@ -292,7 +290,6 @@ function edd_reports_graph() {
 	echo ob_get_clean();
 }
 
-
 /**
  * Show report graph date filters
  *
@@ -300,7 +297,6 @@ function edd_reports_graph() {
  * @since       1.3
  * @return      void
 */
-
 function edd_reports_graph_controls() {
 	$date_options = apply_filters( 'edd_report_date_options', array(
 		'today' 	    => __( 'Today', 'edd' ),
@@ -366,17 +362,16 @@ function edd_reports_graph_controls() {
 	<?php
 }
 
-
 /**
  * Sets up the dates used to filter graph data
  *
- * Date sent via $_GET is read first and then modified (if needed) to match the selected date-range (if any)
+ * Date sent via $_GET is read first and then modified (if needed) to match the
+ * selected date-range (if any)
  *
  * @access      public
  * @since       1.3
  * @return      void
 */
-
 function edd_get_report_dates() {
 	$dates = array();
 
@@ -388,15 +383,13 @@ function edd_get_report_dates() {
 	$dates['year_end']	= date( 'Y' );
 
 	// Modify dates based on predefined ranges
-	switch( $dates['range'] ) :
+	switch ( $dates['range'] ) :
 
 		case 'this_month' :
-
 			$dates['m_start'] 	= date( 'n' );
 			$dates['m_end']		= date( 'n' );
 			$dates['year']		= date( 'Y' );
-
-			break;
+		break;
 
 		case 'last_month' :
 			if( $dates['m_start'] == 12 ) {
@@ -409,39 +402,32 @@ function edd_get_report_dates() {
 				$dates['m_end']	  = date( 'n' ) - 1;
 				$dates['year']    = date( 'Y' );
 			}
-
-
-			break;
+		break;
 
 		case 'today' :
-
 			$dates['day']		= date( 'd' );
 			$dates['m_start'] 	= date( 'n' );
 			$dates['m_end']		= date( 'n' );
 			$dates['year']		= date( 'Y' );
-
-			break;
+		break;
 
 		case 'this_week' :
-
 			$dates['day']       = date( 'd', time() - ( date( 'w' ) - 1 ) *60*60*24 );
 			$dates['day_end']   = $dates['day'] + 6;
 			$dates['m_start'] 	= date( 'n' );
 			$dates['m_end']		= date( 'n' );
 			$dates['year']		= date( 'Y' );
-			break;
+		break;
 
 		case 'last_week' :
-
 			$dates['day']       = date( 'd', time() - ( date( 'w' ) - 1 ) *60*60*24 ) - 6;
 			$dates['day_end']   = $dates['day'] + 6;
 			$dates['m_start'] 	= date( 'n' );
 			$dates['m_end']		= date( 'n' );
 			$dates['year']		= date( 'Y' );
-			break;
+		break;
 
 		case 'this_quarter' :
-
 			$month_now = date( 'n' );
 
 			if ( $month_now <= 3 ) {
@@ -469,11 +455,9 @@ function edd_get_report_dates() {
 				$dates['year']		= date( 'Y' );
 
 			}
-
-			break;
+		break;
 
 		case 'last_quarter' :
-
 			$month_now = date( 'n' );
 
 			if ( $month_now <= 3 ) {
@@ -501,30 +485,24 @@ function edd_get_report_dates() {
 				$dates['year']		= date( 'Y' );
 
 			}
-
-			break;
+		break;
 
 		case 'this_year' :
-
 			$dates['m_start'] 	= 1;
 			$dates['m_end']		= 12;
 			$dates['year']		= date( 'Y' );
-
-			break;
+		break;
 
 		case 'last_year' :
-
 			$dates['m_start'] 	= 1;
 			$dates['m_end']		= 12;
 			$dates['year']		= date( 'Y' ) - 1;
-
-			break;
+		break;
 
 	endswitch;
 
 	return apply_filters( 'edd_report_dates', $dates );
 }
-
 
 /**
  * Grabs all of the selected date info and then redirects appropriately
@@ -533,7 +511,6 @@ function edd_get_report_dates() {
  * @since       1.3
  * @return      void
 */
-
 function edd_parse_report_dates( $data ) {
 	$dates = edd_get_report_dates();
 

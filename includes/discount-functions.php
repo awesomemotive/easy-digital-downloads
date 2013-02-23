@@ -125,41 +125,44 @@ function edd_get_discount_by_code( $code ) {
  * @since       1.0
  * @return      boolean
  */
-function edd_store_discount( $discount_details, $discount_id = null ) {
+function edd_store_discount( $details, $discount_id = null ) {
 
 	$meta = array(
-		'code'              => isset( $discount_details['code'] )             ? $discount_details['code']              : '',
-		'uses'              => isset( $discount_details['uses'] )             ? $discount_details['uses']              : '',
-		'max_uses'          => isset( $discount_details['max'] )              ? $discount_details['max']               : '',
-		'amount'            => isset( $discount_details['amount'] )           ? $discount_details['amount']            : '',
-		'start'             => isset( $discount_details['start'] )            ? $discount_details['start']             : '',
-		'expiration'        => isset( $discount_details['expiration'] )       ? $discount_details['expiration']        : '',
-		'type'              => isset( $discount_details['type'] )             ? $discount_details['type']              : '',
-		'min_price'         => isset( $discount_details['min_price'] )        ? $discount_details['min_price']         : '',
-		'product_reqs'      => isset( $discount_details['products'] )         ? $discount_details['products']          : array(),
-		'product_condition' => isset( $discount_details['product_condition'] )? $discount_details['product_condition'] : '',
-		'is_not_global'     => isset( $discount_details['not_global'] )       ? $discount_details['not_global']        : false,
+		'code'              => isset( $details['code'] )             ? $details['code']              : '',
+		'uses'              => isset( $details['uses'] )             ? $details['uses']              : '',
+		'max_uses'          => isset( $details['max'] )              ? $details['max']               : '',
+		'amount'            => isset( $details['amount'] )           ? $details['amount']            : '',
+		'start'             => isset( $details['start'] )            ? $details['start']             : '',
+		'expiration'        => isset( $details['expiration'] )       ? $details['expiration']        : '',
+		'type'              => isset( $details['type'] )             ? $details['type']              : '',
+		'min_price'         => isset( $details['min_price'] )        ? $details['min_price']         : '',
+		'product_reqs'      => isset( $details['products'] )         ? $details['products']          : array(),
+		'product_condition' => isset( $details['product_condition'] )? $details['product_condition'] : '',
+		'is_not_global'     => isset( $details['not_global'] )       ? $details['not_global']        : false,
 	);
+
+	$meta['start']      = date( 'm/d/Y H:i:s', strtotime( $meta['start'] ) );
+	$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime( $meta['expiration'] . ' 23:59:59' ) );
 
 	if ( edd_discount_exists( $discount_id ) && ! empty( $discount_id ) ) {
 
 		// Update an existing discount
 
-		$discount_details = apply_filters( 'edd_update_discount', $discount_details, $discount_id );
+		$details = apply_filters( 'edd_update_discount', $details, $discount_id );
 
-		do_action( 'edd_pre_update_discount', $discount_details, $discount_id );
+		do_action( 'edd_pre_update_discount', $details, $discount_id );
 
 		wp_update_post( array(
 			'ID'          => $discount_id,
-			'post_title'  => $discount_details['name'],
-			'post_status' => $discount_details['status']
+			'post_title'  => $details['name'],
+			'post_status' => $details['status']
 		) );
 
 		foreach( $meta as $key => $value ) {
 			update_post_meta( $discount_id, '_edd_discount_' . $key, $value );
 		}
 
-		do_action( 'edd_post_update_discount', $discount_details, $discount_id );
+		do_action( 'edd_post_update_discount', $details, $discount_id );
 
 		// Discount code updated
 		return true;
@@ -167,13 +170,13 @@ function edd_store_discount( $discount_details, $discount_id = null ) {
 	} else {
 		// Add the discount
 
-		$discount_details = apply_filters( 'edd_insert_discount', $discount_details );
+		$details = apply_filters( 'edd_insert_discount', $details );
 
-		do_action( 'edd_pre_insert_discount', $discount_details );
+		do_action( 'edd_pre_insert_discount', $details );
 
 		$discount_id = wp_insert_post( array(
 			'post_type'   => 'edd_discount',
-			'post_title'  => isset( $discount_details['name'] ) ? $discount_details['name'] : '',
+			'post_title'  => isset( $details['name'] ) ? $details['name'] : '',
 			'post_status' => 'active'
 		) );
 
@@ -181,7 +184,7 @@ function edd_store_discount( $discount_details, $discount_id = null ) {
 			update_post_meta( $discount_id, '_edd_discount_' . $key, $value );
 		}
 
-		do_action( 'edd_post_insert_discount', $discount_details, $discount_id );
+		do_action( 'edd_post_insert_discount', $details, $discount_id );
 
 		// Discount code created
 		return true;

@@ -8,11 +8,10 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.1
-*/
+ */
 
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
-
 
 /**
  * A general use class for logging events and errors.
@@ -20,21 +19,15 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @access      private
  * @since       1.3.1
  * @return      void
-*/
-
+ */
 class EDD_Logging {
-
-
-	function __construct() {
-
+	public function __construct() {
 		// Create the log post type
 		add_action( 'init', array( $this, 'register_post_type' ), -1 );
 
 		// Create types taxonomy and default types
 		add_action( 'init', array( $this, 'register_taxonomy' ), -1 );
-
 	}
-
 
 	/**
 	 * Registers the edd_log Post Type
@@ -44,13 +37,11 @@ class EDD_Logging {
 	 *
 	 * @uses 		register_post_type()
 	 *
-	 * @return     void
+	 * @return      void
 	*/
 
 	function register_post_type() {
-
-		/* logs post type */
-
+		/* Logs post type */
 		$log_args = array(
 			'labels'			=> array( 'name' => __( 'Logs', 'edd' ) ),
 			'public'			=> false,
@@ -61,9 +52,7 @@ class EDD_Logging {
 			'can_export'		=> true
 		);
 		register_post_type( 'edd_log', $log_args );
-
 	}
-
 
 	/**
 	 * Registers the Type Taxonomy
@@ -77,11 +66,9 @@ class EDD_Logging {
 	 * @uses 		term_exists()
 	 * @uses 		wp_insert_term()
 	 *
-	 * @return     void
+	 * @return      void
 	*/
-
 	function register_taxonomy() {
-
 		register_taxonomy( 'edd_log_type', 'edd_log', array( 'public' => false ) );
 
 		$types = $this->log_types();
@@ -93,7 +80,6 @@ class EDD_Logging {
 		}
 	}
 
-
 	/**
 	 * Log types
 	 *
@@ -102,10 +88,8 @@ class EDD_Logging {
 	 * @access      private
 	 * @since       1.3.1
 	 *
-	 *
-	 * @return     array
-	*/
-
+	 * @return      array $terms
+	 */
 	function log_types() {
 		$terms = array(
 			'sale', 'file_download', 'gateway_error', 'api_request'
@@ -113,7 +97,6 @@ class EDD_Logging {
 
 		return apply_filters( 'edd_log_types', $terms );
 	}
-
 
 	/**
 	 * Check if a log type is valid
@@ -123,14 +106,11 @@ class EDD_Logging {
 	 * @access      private
 	 * @since       1.3.1
 	 *
-	 *
-	 * @return     array
-	*/
-
+	 * @return      array
+	 */
 	function valid_type( $type ) {
 		return in_array( $type, $this->log_types() );
 	}
-
 
 	/**
 	 * Create new log entry
@@ -145,9 +125,7 @@ class EDD_Logging {
 	 *
 	 * @return      int The ID of the new log entry
 	*/
-
 	function add( $title = '', $message = '', $parent = 0, $type = null ) {
-
 		$log_data = array(
 			'post_title' 	=> $title,
 			'post_content'	=> $message,
@@ -156,9 +134,7 @@ class EDD_Logging {
 		);
 
 		return $this->insert_log( $log_data );
-
 	}
-
 
 	/**
 	 * Easily retrieves log items for a particular object ID
@@ -170,12 +146,9 @@ class EDD_Logging {
 	 *
 	 * @return      array
 	*/
-
 	function get_logs( $object_id = 0, $type = null, $paged = null ) {
 		return $this->get_connected_logs( array( 'post_parent' => $object_id, 'paged' => $paged, 'log_type' => $type ) );
-
 	}
-
 
 	/**
 	 * Stores a log entry
@@ -188,10 +161,8 @@ class EDD_Logging {
 	 * @uses 		update_post_meta()
 	 *
 	 * @return      int The ID of the newly created log item
-	*/
-
+	 */
 	function insert_log( $log_data = array(), $log_meta = array() ) {
-
 		$defaults = array(
 			'post_type' 	=> 'edd_log',
 			'post_status'	=> 'publish',
@@ -208,14 +179,13 @@ class EDD_Logging {
 		$log_id = wp_insert_post( $args );
 
 		// Set the log type, if any
-		if( $log_data['log_type'] && $this->valid_type( $log_data['log_type'] ) ) {
+		if ( $log_data['log_type'] && $this->valid_type( $log_data['log_type'] ) ) {
 			wp_set_object_terms( $log_id, $log_data['log_type'], 'edd_log_type', false );
 		}
 
-
 		// Set log meta, if any
-		if( $log_id && ! empty( $log_meta ) ) {
-			foreach( (array) $log_meta as $key => $meta ) {
+		if ( $log_id && ! empty( $log_meta ) ) {
+			foreach ( (array) $log_meta as $key => $meta ) {
 				update_post_meta( $log_id, '_edd_log_' . sanitize_key( $key ), $meta );
 			}
 		}
@@ -223,9 +193,7 @@ class EDD_Logging {
 		do_action( 'edd_post_insert_log', $log_id );
 
 		return $log_id;
-
 	}
-
 
 	/**
 	 * Update and existing log item
@@ -236,9 +204,8 @@ class EDD_Logging {
 	 * @uses 		wp_update_post()
 	 *
 	 * @return      bool True if successful, false otherwise
-	*/
+	 */
 	function update_log( $log_data = array(), $log_meta = array() ) {
-
 		do_action( 'edd_pre_update_log', $log_id );
 
 		$defaults = array(
@@ -252,17 +219,15 @@ class EDD_Logging {
 		// Store the log entry
 		$log_id = wp_update_post( $args );
 
-		if( $log_id && ! empty( $log_meta ) ) {
-			foreach( (array) $log_meta as $key => $meta ) {
-				if( ! empty( $meta ) )
+		if ( $log_id && ! empty( $log_meta ) ) {
+			foreach ( (array) $log_meta as $key => $meta ) {
+				if ( ! empty( $meta ) )
 					update_post_meta( $log_id, '_edd_log_' . sanitize_key( $key ), $meta );
 			}
 		}
 
 		do_action( 'edd_post_update_log', $log_id );
-
 	}
-
 
 	/**
 	 * Retrieve all connected logs
@@ -276,10 +241,8 @@ class EDD_Logging {
 	 * @uses 	get_posts()
 	 *
 	 * @return  array / false
-	*/
-
+	 */
 	function get_connected_logs( $args = array() ) {
-
 		$defaults = array(
 			'post_type'		=> 'edd_log',
 			'posts_per_page'	=> 30,
@@ -290,8 +253,7 @@ class EDD_Logging {
 
 		$query_args = wp_parse_args( $args, $defaults );
 
-		if( $query_args['log_type'] && $this->valid_type( $query_args['log_type'] ) ) {
-
+		if ( $query_args['log_type'] && $this->valid_type( $query_args['log_type'] ) ) {
 			$query_args['tax_query'] = array(
 				array(
 					'taxonomy' 	=> 'edd_log_type',
@@ -299,19 +261,16 @@ class EDD_Logging {
 					'terms'		=> $query_args['log_type']
 				)
 			);
-
 		}
 
 		$logs = get_posts( $query_args );
 
-		if( $logs )
+		if ( $logs )
 			return $logs;
 
 		// No logs found
 		return false;
-
 	}
-
 
 	/**
 	 * Retrieves number of log entries connected to particular object ID
@@ -323,9 +282,7 @@ class EDD_Logging {
 	 *
 	 * @return  int
 	*/
-
 	function get_log_count( $object_id = 0, $type = null, $meta_query = null ) {
-
 		$query_args = array(
 			'post_parent' 	=> $object_id,
 			'post_type'		=> 'edd_log',
@@ -333,8 +290,7 @@ class EDD_Logging {
 			'post_status'	=> 'publish'
 		);
 
-		if( ! empty( $type ) && $this->valid_type( $type ) ) {
-
+		if ( ! empty( $type ) && $this->valid_type( $type ) ) {
 			$query_args['tax_query'] = array(
 				array(
 					'taxonomy' 	=> 'edd_log_type',
@@ -342,22 +298,18 @@ class EDD_Logging {
 					'terms'		=> $type
 				)
 			);
-
 		}
 
-		if( ! empty( $meta_query ) ) {
+		if ( ! empty( $meta_query ) ) {
 			$query_args['meta_query'] = $meta_query;
 		}
 
 		$logs = new WP_Query( $query_args );
 
 		return (int) $logs->post_count;
-
 	}
 
-
 	function delete_logs( $object_id = 0, $type = null, $meta_query = null  ) {
-
 		$query_args = array(
 			'post_parent' 	=> $object_id,
 			'post_type'		=> 'edd_log',
@@ -366,8 +318,7 @@ class EDD_Logging {
 			'fields'        => 'ids'
 		);
 
-		if( ! empty( $type ) && $this->valid_type( $type ) ) {
-
+		if ( ! empty( $type ) && $this->valid_type( $type ) ) {
 			$query_args['tax_query'] = array(
 				array(
 					'taxonomy' 	=> 'edd_log_type',
@@ -375,29 +326,24 @@ class EDD_Logging {
 					'terms'		=> $type,
 				)
 			);
-
 		}
 
-		if( ! empty( $meta_query ) ) {
+		if ( ! empty( $meta_query ) ) {
 			$query_args['meta_query'] = $meta_query;
 		}
 
 		$logs = get_posts( $query_args );
 
-		if( $logs ) {
-			foreach( $logs as $log ) {
+		if ( $logs ) {
+			foreach ( $logs as $log ) {
 				wp_delete_post( $log, true );
 			}
-
 		}
-
 	}
-
 }
 
 // Initiate the logging system
 $GLOBALS['edd_logs'] = new EDD_Logging();
-
 
 /**
  * Record a log entry
@@ -410,8 +356,7 @@ $GLOBALS['edd_logs'] = new EDD_Logging();
  * @uses 		$this->add()
  *
  * @return      int ID of the new log entry
-*/
-
+ */
 function edd_record_log( $title = '', $message = '', $parent = 0, $type = null ) {
 	global $edd_logs;
 	$log = $edd_logs->add( $title, $message, $parent, $type );

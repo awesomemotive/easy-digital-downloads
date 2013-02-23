@@ -2,12 +2,9 @@
 /**
  * This template is used to display the profile editor with [edd_profile_editor]
  */
-
-
 global $current_user;
 
 if ( is_user_logged_in() ):
-
 	$user_id      = get_current_user_id();
 	$first_name   = get_user_meta( $user_id, 'first_name', true );
 	$last_name    = get_user_meta( $user_id, 'last_name', true );
@@ -64,9 +61,7 @@ if ( is_user_logged_in() ):
 		</fieldset>
 	</form><!-- #edd_profile_editor_form -->
 	<?php
-
 else:
-
 	echo '<p>' . __( 'You need to login to edit your profile.', 'edd' ) . '</p>';
 	wp_login_form( array(
 		'echo'           => true,
@@ -82,5 +77,4 @@ else:
 		'id_submit'      => 'edd_login_form_submit',
 		'remember'       => true
 	) );
-
 endif;
