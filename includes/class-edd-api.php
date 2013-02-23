@@ -65,7 +65,7 @@ class EDD_API {
 		add_action( 'personal_options_update', array( $this, 'update_key' ) );
 
 		// Determine if JSON_PRETTY_PRINT is available
-		$this->pretty_print = version_compare( PHP_VERSION, '5.4', '>=' ) ? JSON_PRETTY_PRINT : define( 'JSON_PRETTY_PRINT', '' );
+		$this->pretty_print = defined( 'JSON_PRETTY_PRINT' ) ? JSON_PRETTY_PRINT : null;
 
 		// Allow API request logging to be turned off
 		$this->log_requests = apply_filters( 'edd_api_log_requests', $this->log_requests );
@@ -724,7 +724,7 @@ class EDD_API {
 		$query = array(
 			'user'      => $wp_query->query_vars['user'],
 			'api_key'   => $wp_query->query_vars['key'],
-			'query'     => $wp_query->query_vars['query'],
+			'query'     => isset( $wp_query->query_vars['query'] )     ? $wp_query->query_vars['query']     : null,
 			'type'      => isset( $wp_query->query_vars['type'] )      ? $wp_query->query_vars['type']      : null,
 			'product'   => isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null,
 			'customer'  => isset( $wp_query->query_vars['customer'] )  ? $wp_query->query_vars['customer']  : null,
