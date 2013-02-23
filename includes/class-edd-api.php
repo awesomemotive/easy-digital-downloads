@@ -49,6 +49,15 @@ class EDD_API {
 
 
 	/**
+	 * Is this a valid request?
+	 *
+	 * @access  private
+	 * @since  1.5
+	 */
+	private $is_valid_request = true;
+
+
+	/**
 	 * Setup the API
 	 *
 	 * @access  private
@@ -141,7 +150,9 @@ class EDD_API {
 		if( ! $this->is_user_valid( $wp_query->query_vars['user'], $wp_query->query_vars['key'] ) )
 			$this->invalid_key( $wp_query->query_vars['user'] );
 
-		// If we get here, API request is considered authenticated
+		// Only proceed if no errors have been noted
+		if( ! $this->is_valid_request )
+			return;
 
 		// Determine the kind of query
 		$query_mode = $this->get_query_mode();
@@ -177,6 +188,9 @@ class EDD_API {
 				break;
 
 		endswitch;
+
+		// Log this API request, if enabled. We log it here because we have access to errors.
+		$this->log_request( $data );
 
 	}
 
@@ -244,14 +258,18 @@ class EDD_API {
 	 */
 
 	private function is_user_valid( $email = '', $key = '' ) {
+
+		$ret = false;
+
 		$user = get_user_by( 'email', $email );
-		if( ! $user )
-			return false;
 
-		if ( $user->edd_user_api_key == $key )
-			return true;
+		if ( $user && $user->edd_user_api_key == $key )
+			$ret = true;
 
-		return false;
+		if( ! $ret )
+			$this->is_valid_request = false;
+
+		return $ret;
 	}
 
 
@@ -265,6 +283,8 @@ class EDD_API {
 
 	function missing_auth() {
 		$error['error'] = __( 'You must specify both user and API key!', 'edd' );
+
+		$this->is_valid_request = false;
 
 		$this->output( $error );
 	}
@@ -281,6 +301,8 @@ class EDD_API {
 	function invalid_email() {
 		$error['error'] = __( 'The email address specified is not registered!', 'edd' );
 
+		$this->is_valid_request = false;
+
 		$this->output( $error );
 	}
 
@@ -294,6 +316,8 @@ class EDD_API {
 
 	function invalid_key( $email ) {
 		$error['error'] = sprintf( __( 'Invalid API key for %s!', 'edd' ), $email );
+
+		$this->is_valid_request = false;
 
 		$this->output( $error );
 	}
@@ -778,9 +802,6 @@ class EDD_API {
 
 	function output( $data ) {
 		global $wp_query;
-
-		// Log this API request, if enabled. We log it here because we have access to errors.
-		$this->log_request( $data );
 
 		$format = $this->get_output_format();
 
