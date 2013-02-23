@@ -253,7 +253,7 @@ class EDD_API {
 
 			case 'stats' :
 
-				$this->get_stats( array(
+				$data = $this->get_stats( array(
 					'type'      => $wp_query->query_vars['type'],
 					'product'   => isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null,
 					'date'      => isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null,
@@ -267,7 +267,7 @@ class EDD_API {
 
 				$product   = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
 
-				$this->get_products( $product );
+				$data = $this->get_products( $product );
 
 				break;
 
@@ -275,7 +275,7 @@ class EDD_API {
 
 				$customer  = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
 
-				$this->get_customers( $customer );
+				$data = $this->get_customers( $customer );
 
 				break;
 
@@ -284,6 +284,8 @@ class EDD_API {
 		// Log this API request, if enabled. We log it here because we have access to errors.
 		$this->log_request( $data );
 
+		// Send out data to the output function
+		$this->output( $data );
 	}
 
 
@@ -424,12 +426,14 @@ class EDD_API {
 
 				$error['error'] = sprintf( __( 'Customer %s not found!', 'edd' ), $customer );
 
-				$this->output( $error );
+				return $erro
 
 			}
 		}
 
-		$this->output( $customers );
+		return $customers;
+
+		//$this->output( $customers );
 	}
 
 
@@ -535,12 +539,13 @@ class EDD_API {
 
 				$error['error'] = sprintf( __( 'Product %s not found!', 'edd' ), $product );
 
-				$this->output( $error );
+				return $error;
 
 			}
 		}
 
-		$this->output( $products );
+		return $products;
+
 	}
 
 
@@ -631,17 +636,13 @@ class EDD_API {
 					} else {
 
 						$error['error'] = __( 'Invalid or no date range specified!', 'edd' );
-						$this->output( $error );
 
 					}
 				} else {
 
-					$error['error'] = __( 'Invalid option for argument \'date\'!', 'edd' );
-					$this->output( $error );
+					$error['error'] = __( 'Invalid option for argument \'date\'!', 'edd' )
 
 				}
-
-				$this->output( $sales );
 
 			} elseif ( $args['product'] == 'all' ) {
 
@@ -650,7 +651,6 @@ class EDD_API {
 					$sales['sales'][$product_info->ID] = array( $product_info->post_name => edd_get_download_sales_stats( $product_info->ID ) );
 				}
 
-				$this->output( $sales );
 
 			} else {
 
@@ -659,17 +659,18 @@ class EDD_API {
 					$product_info = get_post( $args['product'] );
 					$sales['sales'][$product_info->ID] = array( $product_info->post_name => edd_get_download_sales_stats( $args['product'] ) );
 
-					$this->output( $sales );
-
 				} else {
 
 					$error['error'] = sprintf( __( 'Product %s not found!', 'edd' ), $args['product'] );
 
-					$this->output( $error );
-
 				}
 
 			}
+
+			if( ! empty( $error ) )
+				return $error;
+
+			return $sales;
 
 		} elseif ( $args['type'] == 'earnings' ) {
 
@@ -695,7 +696,6 @@ class EDD_API {
 
 						global $wp_query;
 
-						//echo $args['startdate']; exit;
 						$args['startdate'] = DateTime::createFromFormat( 'Ymd', $args['startdate'] )->format( 'Y-m-d' );
 						$args['enddate'] = DateTime::createFromFormat( 'Ymd', $args['enddate'] )->format( 'Y-m-d' );
 
@@ -716,7 +716,6 @@ class EDD_API {
 
 						$error['error'] = __( 'Invalid or no date range specified!', 'edd' );
 
-						$this->output( $error );
 
 					}
 
@@ -724,11 +723,7 @@ class EDD_API {
 
 					$error['error'] = __( 'Invalid option for argument \'date\'!', 'edd' );
 
-					$this->output( $error );
-
 				}
-
-				$this->output( $earnings );
 
 			} elseif ( $args['product'] == 'all' ) {
 
@@ -740,8 +735,6 @@ class EDD_API {
 
 				}
 
-				$this->output( $earnings );
-
 			} else {
 
 				if ( get_post_type( $args['product'] ) == 'download' ) {
@@ -749,17 +742,18 @@ class EDD_API {
 					$product_info = get_post( $args['product'] );
 					$earnings['earnings'][$product_info->ID] = array( $product_info->post_name => edd_get_download_earnings_stats( $args['product'] ) );
 
-					$this->output( $earnings );
-
 				} else {
 
 					$error['error'] = sprintf( __( 'Product %s not found!', 'edd' ), $args['product'] );
 
-					$this->output( $error );
-
 				}
 
 			}
+
+			if( ! empty( $error ) )
+				return $error;
+
+			return $earnings;
 
 		}
 
