@@ -1143,10 +1143,3 @@ function edd_remove_cart_discount() {
 
 }
 add_action( 'edd_remove_cart_discount', 'edd_remove_cart_discount' );
-et_cart_discount( urldecode( $_GET['discount_code'] ) );
-
-	do_action( 'edd_post_remove_cart_discount', absint( $_GET['discount_id'] ) );
-
-	wp_redirect( edd_get_checkout_uri() ); exit;
-}
-add_action( 'edd_remove_cart_discount', 'edd_remove_cart_discount' );
