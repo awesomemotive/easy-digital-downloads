@@ -362,7 +362,7 @@ class EDD_API {
 	 * @since  1.5
 	 */
 
-	function get_customers( $customer ) {
+	function get_customers( $customer = null ) {
 		if ( $customer == null ) {
 
 			global $wpdb;
@@ -455,7 +455,7 @@ class EDD_API {
 	 * @since  1.5
 	 */
 
-	function get_products( $product ) {
+	function get_products( $product = null ) {
 
 		if ( $product == null ) {
 
