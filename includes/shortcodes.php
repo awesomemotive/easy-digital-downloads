@@ -213,7 +213,8 @@ function edd_downloads_query( $atts, $content = null ) {
 			'columns'          => 3,
 			'thumbnails'       => 'true',
 			'orderby'          => 'post_date',
-			'order'            => 'DESC'
+			'order'            => 'DESC',
+			'ids'              => ''
 		), $atts )
 	);
 
@@ -287,6 +288,9 @@ function edd_downloads_query( $atts, $content = null ) {
 			);
 		}
 	}
+
+	if( ! empty( $ids ) )
+		$query['post__in'] = explode( ',', $ids );
 
 	if ( get_query_var( 'paged' ) )
 		$query['paged'] = get_query_var('paged');
