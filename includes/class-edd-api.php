@@ -940,7 +940,7 @@ class EDD_API {
 	 */
 
 	function user_key_field( $user ) {
-		if ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) {
+		if ( ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'view_shop_reports' ) ) {
 			$user = get_userdata( $user->ID );
 			?>
 			<table class="form-table">
