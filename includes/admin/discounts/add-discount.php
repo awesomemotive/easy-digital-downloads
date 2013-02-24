@@ -121,6 +121,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'edd' ); ?></p>
 				</td>
 			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<label for="edd-use-once"><?php _e( 'Use Once Per Customer', 'edd' ); ?></label>
+				</th>
+				<td>
+					<input type="checkbox" id="edd-use-once" name="use_once" value="1"/>
+					<span class="description"><?php _e( 'Limit this discount to a single-user per customer?', 'edd' ); ?></span>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 	<?php do_action( 'edd_add_discount_form_bottom' ); ?>
