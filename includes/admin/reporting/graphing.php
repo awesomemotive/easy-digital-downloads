@@ -280,9 +280,12 @@ function edd_reports_graph() {
 
 			<div class="inside">
 				<?php edd_reports_graph_controls(); ?>
+				<?php $estimated = edd_estimated_monthly_stats(); ?>
 				<div id="edd_monthly_stats" style="height: 300px;"></div>
-				<p id="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $totals ) ); ?></strong></p>
-				<p id="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo $sales_totals; ?></strong></p>
+				<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $totals ) ); ?></strong></p>
+				<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo $sales_totals; ?></strong></p>
+				<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly earnings: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $estimated['earnings'] ) ); ?></strong></p>
+				<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly sales: ', 'edd' ); echo $estimated['sales']; ?></strong></p>
 			</div>
 		</div>
 	</div>

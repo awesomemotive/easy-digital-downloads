@@ -302,3 +302,32 @@ function edd_reports_tab_logs() {
 	do_action( 'edd_logs_view_' . $current_view );
 }
 add_action( 'edd_reports_tab_logs', 'edd_reports_tab_logs' );
+
+
+/**
+ * Retrieves estimated monthly earnings ; sales
+ *
+ * @access      public
+ * @since       1.5
+ * @return      array
+ */
+function edd_estimated_monthly_stats() {
+	$api = EDD()->api;
+
+	$estimated = array(
+		'earnings' => 0,
+		'sales'    => 0
+	);
+
+	$products = $api->get_products();
+	if( $products ) {
+		foreach( $products as $downloads ) {
+			foreach( $downloads as $download ) {
+				$estimated['earnings'] += $download['stats']['monthly_average']['earnings'];
+				$estimated['sales'] += number_format( $download['stats']['monthly_average']['sales'], 0 );
+			}
+		}
+	}
+
+	return $estimated;
+}
