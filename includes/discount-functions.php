@@ -143,7 +143,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 	);
 
 	$meta['start']      = date( 'm/d/Y H:i:s', strtotime( $meta['start'] ) );
-	$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime( $meta['expiration'] . ' 23:59:59' ) );
+	$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime(  date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
 
 	if ( edd_discount_exists( $discount_id ) && ! empty( $discount_id ) ) {
 
@@ -706,7 +706,10 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 	$return     = false;
 	$user_found = true;
 
-	if( ! edd_discount_is_single_use( $code_id ) ) {
+	if( empty( $code_id ) )
+		$code_id = edd_get_discount_id_by_code( $code );
+
+	if( edd_discount_is_single_use( $code_id ) ) {
 
 		if ( is_email( $user ) ) {
 
