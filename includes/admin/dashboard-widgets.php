@@ -160,7 +160,7 @@ function edd_dashboard_sales_widget() {
 								<?php
 								$fees = edd_get_payment_fees( $payment->ID );
 								if( ! empty( $fees ) ) : ?>
-								<ul class="payment-feeds">
+								<ul class="payment-fees">
 									<?php foreach( $fees as $fee ) : ?>
 									<li><?php echo $fee['label'] . ':&nbsp;' . edd_currency_filter( $fee['amount'] ); ?></li>
 									<?php endforeach; ?>

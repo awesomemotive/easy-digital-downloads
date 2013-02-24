@@ -293,7 +293,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				<?php
 				$fees = edd_get_payment_fees( $item['ID'] );
 				if( ! empty( $fees ) ) : ?>
-				<ul class="payment-feeds">
+				<ul class="payment-fees">
 					<?php foreach( $fees as $fee ) : ?>
 					<li><?php echo $fee['label'] . ':&nbsp;' . edd_currency_filter( $fee['amount'] ); ?></li>
 					<?php endforeach; ?>
