@@ -465,42 +465,42 @@ class EDD_API {
 
 			foreach ( $product_list as $product_info ) {
 
-				$products[$product_info->ID]['info']['id']                           = $product_info->ID;
-				$products[$product_info->ID]['info']['slug']                         = $product_info->post_name;
-				$products[$product_info->ID]['info']['title']                        = $product_info->post_title;
-				$products[$product_info->ID]['info']['create_date']                  = $product_info->post_date;
-				$products[$product_info->ID]['info']['modified_date']                = $product_info->post_modified;
-				$products[$product_info->ID]['info']['status']                       = $product_info->post_status;
-				$products[$product_info->ID]['info']['link']                         = html_entity_decode( $product_info->guid );
-				$products[$product_info->ID]['info']['content']                      = $product_info->post_content;
-				$products[$product_info->ID]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
+				$products['products'][$product_info->ID]['info']['id']                           = $product_info->ID;
+				$products['products'][$product_info->ID]['info']['slug']                         = $product_info->post_name;
+				$products['products'][$product_info->ID]['info']['title']                        = $product_info->post_title;
+				$products['products'][$product_info->ID]['info']['create_date']                  = $product_info->post_date;
+				$products['products'][$product_info->ID]['info']['modified_date']                = $product_info->post_modified;
+				$products['products'][$product_info->ID]['info']['status']                       = $product_info->post_status;
+				$products['products'][$product_info->ID]['info']['link']                         = html_entity_decode( $product_info->guid );
+				$products['products'][$product_info->ID]['info']['content']                      = $product_info->post_content;
+				$products['products'][$product_info->ID]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
 
-				$products[$product_info->ID]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
-				$products[$product_info->ID]['stats']['total']['earnings']           = edd_get_download_earnings_stats( $product_info->ID );
-				$products[$product_info->ID]['stats']['monthly_average']['sales']    = edd_get_average_monthly_download_sales( $product_info->ID );
-				$products[$product_info->ID]['stats']['monthly_average']['earnings'] = edd_get_average_monthly_download_earnings( $product_info->ID );
+				$products['products'][$product_info->ID]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
+				$products['products'][$product_info->ID]['stats']['total']['earnings']           = edd_get_download_earnings_stats( $product_info->ID );
+				$products['products'][$product_info->ID]['stats']['monthly_average']['sales']    = edd_get_average_monthly_download_sales( $product_info->ID );
+				$products['products'][$product_info->ID]['stats']['monthly_average']['earnings'] = edd_get_average_monthly_download_earnings( $product_info->ID );
 
 				if ( edd_has_variable_prices( $product_info->ID ) ) {
 
 					foreach ( edd_get_variable_prices( $product_info->ID ) as $price ) {
 
-						$products[$product_info->ID]['pricing'][$price['name']] = $price['amount'];
+						$products['products'][$product_info->ID]['pricing'][$price['name']] = $price['amount'];
 
 					}
 
 				} else {
 
-					$products[$product_info->ID]['pricing']['amount'] = edd_get_download_price( $product_info->ID );
+					$products['products'][$product_info->ID]['pricing']['amount'] = edd_get_download_price( $product_info->ID );
 
 				}
 
 				foreach ( edd_get_download_files( $product_info->ID ) as $file ) {
 
-					$products[$product_info->ID]['files'][] = $file;
+					$products['products'][$product_info->ID]['files'][] = $file;
 
 				}
 
-				$products[$product_info->ID]['notes'] = edd_get_product_notes( $product_info->ID );
+				$products['products'][$product_info->ID]['notes'] = edd_get_product_notes( $product_info->ID );
 
 			}
 
