@@ -321,11 +321,9 @@ function edd_estimated_monthly_stats() {
 
 	$products = $api->get_products();
 	if( $products ) {
-		foreach( $products as $downloads ) {
-			foreach( $downloads as $download ) {
-				$estimated['earnings'] += $download['stats']['monthly_average']['earnings'];
-				$estimated['sales'] += number_format( $download['stats']['monthly_average']['sales'], 0 );
-			}
+		foreach( $products['products'] as $download ) {
+			$estimated['earnings'] += $download['stats']['monthly_average']['earnings'];
+			$estimated['sales'] += number_format( $download['stats']['monthly_average']['sales'], 0 );
 		}
 	}
 
