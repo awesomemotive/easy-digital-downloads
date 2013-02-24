@@ -6,7 +6,7 @@ if ( $purchases ) : ?>
 		<thead>
 			<tr class="edd_purchase_row">
 				<?php do_action('edd_purchase_history_header_before'); ?>
-				<th class="edd_purchase_id"><?php _e('Purchase ID', 'edd'); ?></th>
+				<th class="edd_purchase_id"><?php _e('ID', 'edd'); ?></th>
 				<th class="edd_purchase_date"><?php _e('Date', 'edd'); ?></th>
 				<th class="edd_purchase_amount"><?php _e('Amount', 'edd'); ?></th>
 				<th class="edd_purchased_files"><?php _e('Files', 'edd'); ?></th>
