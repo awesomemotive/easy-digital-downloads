@@ -139,6 +139,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 		'product_reqs'      => isset( $details['products'] )         ? $details['products']          : array(),
 		'product_condition' => isset( $details['product_condition'] )? $details['product_condition'] : '',
 		'is_not_global'     => isset( $details['not_global'] )       ? $details['not_global']        : false,
+		'is_single_use'     => isset( $details['use_once'] )         ? $details['use_once']          : false,
 	);
 
 	$meta['start']      = date( 'm/d/Y H:i:s', strtotime( $meta['start'] ) );
@@ -617,6 +618,22 @@ function edd_discount_is_min_met( $code_id = null ) {
 
 
 /**
+ * Is the discount limited to a single use per customer?
+ *
+ * @param int $code_id
+ *
+ * @access      public
+ * @since       1.5
+ * @return      bool
+ */
+
+function edd_discount_is_single_use( $code_id = 0 ) {
+	$single_use = get_post_meta( $code_id, '_edd_discount_is_single_use', true );
+	return (bool) apply_filters( 'edd_is_discount_single_use', $single_use, $code_id );
+}
+
+
+/**
  * Are product requirements met
  *
  * Checks to see if the required products are in the cart
@@ -679,61 +696,66 @@ function edd_discount_product_reqs_met( $code_id = null ) {
  *
  * @param string $code
  * @param string $user
+ * @param int    $code_id (since 1.5) the ID of the discount code to check
  * @access      public
  * @since       1.1.5
  * @return      bool
  */
-function edd_is_discount_used( $code = null, $user = '' ) {
+function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 
 	$return     = false;
 	$user_found = true;
 
-	if ( is_email( $user ) ) {
+	if( ! edd_discount_is_single_use( $code_id ) ) {
 
-		$user_found = true; // All we need is the email
-		$key        = '_edd_payment_user_email';
-		$value      = $user;
+		if ( is_email( $user ) ) {
 
-	} else {
-
-		$user_data = get_user_by( 'login', $user );
-
-		if ( $user_data ) {
-
-			$key   = '_edd_payment_user_id';
-			$value = $user_data->ID;
+			$user_found = true; // All we need is the email
+			$key        = '_edd_payment_user_email';
+			$value      = $user;
 
 		} else {
 
-			$user_found = false; // Bail, no user found
+			$user_data = get_user_by( 'login', $user );
+
+			if ( $user_data ) {
+
+				$key   = '_edd_payment_user_id';
+				$value = $user_data->ID;
+
+			} else {
+
+				$user_found = false; // Bail, no user found
+			}
 		}
-	}
 
-	if ( $user_found ) {
+		if ( $user_found ) {
 
-		$query_args = array(
-			'post_type'  => 'edd_payment',
-			'meta_query' => array(
-				array(
-					'key'     => $key,
-					'value'   => $value,
-					'compare' => '='
-				)
-			),
-			'fields'     => 'ids'
-		);
+			$query_args = array(
+				'post_type'  => 'edd_payment',
+				'meta_query' => array(
+					array(
+						'key'     => $key,
+						'value'   => $value,
+						'compare' => '='
+					)
+				),
+				'fields'     => 'ids'
+			);
 
-		$payments = get_posts( $query_args ); // Get all payments with matching email
+			$payments = get_posts( $query_args ); // Get all payments with matching email
 
-		if ( $payments ) {
-			foreach ( $payments as $payment ) {
-				// Check all matching payments for discount code.
-				$payment_meta = get_post_meta( $payment, '_edd_payment_meta', true );
-				$user_info    = maybe_unserialize( $payment_meta['user_info'] );
-				if ( $user_info['discount'] == $code ) {
-					$return = true;
+			if ( $payments ) {
+				foreach ( $payments as $payment ) {
+					// Check all matching payments for discount code.
+					$payment_meta = get_post_meta( $payment, '_edd_payment_meta', true );
+					$user_info    = maybe_unserialize( $payment_meta['user_info'] );
+					if ( $user_info['discount'] == $code ) {
+						$return = true;
+					}
 				}
 			}
+
 		}
 
 	}
@@ -764,7 +786,7 @@ function edd_is_discount_valid( $code = '', $user = '' ) {
 			edd_is_discount_active( $discount_id ) &&
 			edd_is_discount_started( $discount_id ) &&
 			!edd_is_discount_maxed_out( $discount_id ) &&
-			!edd_is_discount_used( $code, $user ) &&
+			!edd_is_discount_used( $code, $user, $discount_id ) &&
 			edd_discount_is_min_met( $discount_id ) &&
 			edd_discount_product_reqs_met( $discount_id )
 		) {

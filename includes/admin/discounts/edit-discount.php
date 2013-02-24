@@ -20,6 +20,7 @@ $discount_id  = absint( $_GET['discount'] );
 $discount     = edd_get_discount( $discount_id );
 $product_reqs = edd_get_discount_product_reqs( $discount_id );
 $condition    = edd_get_discount_product_condition( $discount_id );
+$single_use   = edd_discount_is_single_use( $discount_id );
 ?>
 <h2><?php _e( 'Edit Discount', 'edd' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
 <form id="edd-edit-discount" action="" method="post">
@@ -140,6 +141,15 @@ $condition    = edd_get_discount_product_condition( $discount_id );
 						<option value="inactive"<?php selected( $discount->post_status, 'inactive' ); ?>><?php _e( 'Inactive', 'edd' ); ?></option>
 					</select>
 					<p class="description"><?php _e( 'The status of this discount code.', 'edd' ); ?></p>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<label for="edd-use-once"><?php _e( 'Use Once Per Customer', 'edd' ); ?></label>
+				</th>
+				<td>
+					<input type="checkbox" id="edd-use-once" name="use_once" value="1"<?php checked( true, $single_use ); ?>/>
+					<span class="description"><?php _e( 'Limit this discount to a single-user per customer?', 'edd' ); ?></span>
 				</td>
 			</tr>
 		</tbody>
