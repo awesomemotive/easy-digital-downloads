@@ -64,6 +64,13 @@ final class Easy_Digital_Downloads {
 
 
 	/**
+	 * EDD HTML Element helper object
+	 * @since 1.5
+	 */
+	public $html;
+
+
+	/**
 	 * Main Easy_Digital_Downloads Instance
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
@@ -86,6 +93,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->roles = new EDD_Roles();
 			self::$instance->fees = new EDD_Fees();
 			self::$instance->api = new EDD_API();
+			self::$instance->html = new EDD_HTML_Elements();
 		}
 		return self::$instance;
 	}
@@ -142,6 +150,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-api.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-roles.php';
 		require_once EDD_PLUGIN_DIR . 'includes/formatting.php';
