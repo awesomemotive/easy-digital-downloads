@@ -131,11 +131,12 @@ function edd_update_edited_purchase( $data ) {
 			$payment_data['downloads'] = serialize( $download_list );
 		}
 
-		$payment_data['email'] = strip_tags( $_POST['edd-buyer-email'] );
+		$payment_data['email']   = strip_tags( $_POST['edd-buyer-email'] );
+		$payment_data['user_id'] = strip_tags( intval( $_POST['edd-buyer-user-id'] ) );
 
 		update_post_meta( $payment_id, '_edd_payment_meta', $payment_data );
-
 		update_post_meta( $payment_id, '_edd_payment_user_email', $payment_data['email'] );
+		update_post_meta( $payment_id, '_edd_payment_user_id', $payment_data['user_id'] );
 
 		if ( ! empty( $_POST['edd-payment-note'] ) ) {
 			$note    = wp_kses( $_POST['edd-payment-note'], array() );

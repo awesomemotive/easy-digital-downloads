@@ -32,6 +32,15 @@ $payment_data = get_post_meta( $payment_id, '_edd_payment_meta', true );
 				</tr>
 				<tr>
 					<th scope="row" valign="top">
+						<span><?php _e( 'Buyer\'s User ID', 'edd' ); ?></span>
+					</th>
+					<td>
+						<input class="small-text" type="number" min="-1" step="1" name="edd-buyer-user-id" id="edd-buyer-user-id" value="<?php echo $payment_data['user_id']; ?>"/>
+						<p class="description"><?php _e( 'If needed, you can update the buyer\'s WordPress user ID here.', 'edd' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row" valign="top">
 						<span><?php _e( 'Downloads Purchased', 'edd' ); ?></span>
 					</th>
 					<td id="purchased-downloads">
