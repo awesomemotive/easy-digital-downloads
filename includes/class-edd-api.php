@@ -443,7 +443,6 @@ class EDD_API {
 
 		return $customers;
 
-		//$this->output( $customers );
 	}
 
 
