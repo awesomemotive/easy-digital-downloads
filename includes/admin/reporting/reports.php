@@ -227,7 +227,20 @@ function edd_reports_tab_export() {
 					<h3><span><?php _e('Export Payment History', 'edd'); ?></span></h3>
 					<div class="inside">
 						<p><?php _e( 'Download a CSV of all payments recorded.', 'edd' ); ?></p>
-						<p><a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'payment_export' ) ), 'edd_payments_export' ); ?>"><?php _e( 'Generate CSV', 'edd' ) ; ?></a>
+						<p>
+							<form method="post">
+								<select name="edd_export_payment_status">
+									<option value="0"><?php _e( 'All Statuses', 'edd' ); ?></option>
+									<?php
+									$statuses = edd_get_payment_statuses();
+									foreach( $statuses as $status => $label ) {
+										echo '<option value="' . $status . '">' . $label . '</option>';
+									}
+									?>
+								</select>
+								<input type="hidden" name="edd-action" value="payment_export"/>
+								<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
+							</form>
 						</p>
 					</div><!-- .inside -->
 				</div><!-- .postbox -->
