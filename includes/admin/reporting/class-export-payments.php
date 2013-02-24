@@ -64,7 +64,8 @@ class EDD_Payments_Export extends EDD_Export {
 		$payments = edd_get_payments( array(
 			'offset'  => 0,
 			'number'  => -1,
-			'mode'    => edd_is_test_mode() ? 'test' : 'live'
+			'mode'    => edd_is_test_mode() ? 'test' : 'live',
+			'status'  => isset( $_POST['edd_export_payment_status'] ) ? $_POST['edd_export_payment_status'] : 'any'
 		) );
 
 		foreach ( $payments as $payment ) {
