@@ -90,10 +90,17 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 		$title .= ' <span class="edd-cart-item-separator">-</span> ' . edd_get_price_name( $id, $item['options'] );
 	}
 
-	$remove = '<a href="' . esc_url( $remove_url ) . '" data-cart-item="' . absint( $cart_key ) . '" data-download-id="' . absint( $id ) . '" data-action="edd_remove_from_cart" class="edd-remove-from-cart">' . __('remove', 'edd') . '</a>';
-	$item = '<li class="edd-cart-item"><span class="edd-cart-item-title">' . $title . '</span>&nbsp;';
-	$item .= '<span class="edd-cart-item-separator">-</span>&nbsp;' . edd_currency_filter( edd_format_amount( $price ) ) . '&nbsp;';
-	$item .= '<span class="edd-cart-item-separator">-</span> ' . $remove . '</li>';
+	ob_start();
+
+	edd_get_template_part( 'widget', 'cart-item' );
+
+	$item = ob_get_clean();
+
+	$item = str_replace( '{item_title}', $title, $item );
+	$item = str_replace( '{item_amount}', edd_currency_filter( edd_format_amount( $price ) ), $item );
+	$item = str_replace( '{cart_item_id}', absint( $cart_key ), $item );
+	$item = str_replace( '{item_id}', absint( $id ), $item );
+	$item = str_replace( '{remove_url}', $remove_url, $item );
 
 	return apply_filters( 'edd_cart_item', $item, $id );
 }
