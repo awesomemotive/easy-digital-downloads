@@ -185,15 +185,10 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	if ( $payment ) {
 		$payment_meta = array(
-			'amount'       => $payment_data['price'],
-			'date'         => $payment_data['date'],
-			'email'        => $payment_data['user_email'],
-			'key'          => $payment_data['purchase_key'],
 			'currency'     => $payment_data['currency'],
 			'downloads'    => serialize( $payment_data['downloads'] ),
 			'user_info'    => serialize( $payment_data['user_info'] ),
 			'cart_details' => serialize( $payment_data['cart_details'] ),
-			'user_id'      => $payment_data['user_info']['id']
 		);
 
 		// NOTE: tax info is added to meta in tax-functions.php with edd_record_taxed_amount()
@@ -565,6 +560,20 @@ function edd_get_total_earnings() {
 function edd_get_payment_meta( $payment_id ) {
 	$meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
 
+	// Payment meta was simplified in EDD v1.5, so these are here for backwards compatibility
+
+	if( ! isset( $meta['key'] ) )
+		$meta['key'] = edd_get_payment_key( $payment_id );
+
+	if( ! isset( $meta['amount'] ) )
+		$meta['amount'] = edd_get_payment_amount( $payment_id );
+
+	if( ! isset( $meta['email'] ) )
+		$meta['email'] = edd_get_payment_user_email( $payment_id );
+
+	if( ! isset( $meta['date'] ) )
+		$meta['date'] = get_post_field( 'post_date', $payment_id );
+
 	return apply_filters( 'edd_get_payment_meta', $meta );
 }
 
@@ -640,6 +649,21 @@ function edd_get_payment_gateway( $payment_id ) {
 
 	return apply_filters( 'edd_payment_gateway', $gateway );
 }
+
+
+/**
+ * Get the purchase key of a payment
+ *
+ * @param       int $payment_id
+ * @access      public
+ * @since       1.5
+ * @return      string
+ */
+function edd_get_payment_key( $payment_id = 0 ) {
+	$key = get_post_meta( $payment_id, '_edd_payment_purchase_key', true );
+	return apply_filters( 'edd_payment_key', $key, $payment_id );
+}
+
 
 /**
  * Payment amount
