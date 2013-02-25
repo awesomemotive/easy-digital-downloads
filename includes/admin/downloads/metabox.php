@@ -68,12 +68,10 @@ function edd_download_meta_box_save( $post_id) {
 
 	// The default fields that get saved
 	$fields = apply_filters( 'edd_metabox_fields_save', array(
-			'_edd_product_type',
 			'edd_price',
 			'_variable_pricing',
 			'_edd_price_options_mode',
 			'edd_variable_prices',
-			'_edd_bundled_products',
 			'edd_download_files',
 			'_edd_purchase_text',
 			'_edd_purchase_style',
@@ -141,29 +139,6 @@ function edd_sanitize_variable_prices_save( $prices ) {
 add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_sanitize_variable_prices_save' );
 
 
-/**
- * Sanitize bundled products on save
- *
- * Ensures a user doesn't try and include a product's ID in the products bundled with that product
- *
- * @access      private
- * @since       1.5
- * @return      array
- */
-function edd_sanitize_bundled_products_save( $products = array() ) {
-
-	global $post;
-
-	$self = array_search( $post->ID, $products );
-
-	if( $self !== false )
-		unset( $products[ $self ] );
-
-	return array_values( array_unique( $products ) );
-}
-add_filter( 'edd_metabox_save__edd_bundled_products', 'edd_sanitize_bundled_products_save' );
-
-
 /** Download Configuration *****************************************************************/
 
 /**
@@ -182,26 +157,6 @@ function edd_render_download_meta_box() {
 	do_action( 'edd_meta_box_fields', $post->ID );
 	wp_nonce_field( basename( __FILE__ ), 'edd_download_meta_box_nonce' );
 }
-
-
-function edd_render_product_type_field( $post_id = 0 ) {
-
-	$type = edd_get_download_type( $post_id );
-?>
-	<p>
-		<strong><?php apply_filters( 'edd_product_type_options_heading', _e( 'Product Type Options:', 'edd' ) ); ?></strong>
-	</p>
-	<p>
-		<select name="_edd_product_type" id="edd_product_type">
-			<option value="0"><?php _e( 'Default', 'edd' ); ?></option>
-			<option value="bundle"<?php selected( 'bundle', $type ); ?>><?php _e( 'Bundle', 'edd' ); ?></option>
-		</select>
-		<label for="edd_product_type"><?php _e( 'Select a product type', 'edd' ); ?></label>
-	</p>
-<?php
-}
-add_action( 'edd_meta_box_fields', 'edd_render_product_type_field', 10 );
-
 
 /**
  * Price section
@@ -359,13 +314,11 @@ add_action( 'edd_render_price_row', 'edd_render_price_row', 10, 3 );
  * @return      void
  */
 function edd_render_files_field( $post_id ) {
-	$type             = edd_get_download_type( $post_id );
-	$files            = edd_get_download_files( $post_id );
-	$variable_pricing = edd_has_variable_prices( $post_id );
-	$display          = $type == 'bundle' ? ' style="display:none;"' : '';
-	$variable_display = $variable_pricing ? '' : 'display:none;';
+	$files 			= edd_get_download_files( $post_id );
+	$variable_pricing 	= edd_has_variable_prices( $post_id );
+	$variable_display 	= $variable_pricing ? '' : 'display:none;';
 ?>
-	<div id="edd_download_files"<?php echo $display; ?>>
+	<div id="edd_download_files">
 		<p>
 			<strong><?php _e( 'File Downloads:', 'edd' ); ?></strong>
 		</p>
@@ -474,95 +427,6 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 }
 add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
 
-
-/**
- * File Downloads section.
- *
- * Outputs a table of all current files. Extensions can add column heads to the table
- * via the `edd_download_file_table_head` hook, and actual columns via
- * `edd_download_file_table_row`
- *
- * @see         edd_render_file_row()
- *
- * @access      private
- * @since       1.0
- * @return      void
- */
-function edd_render_products_field( $post_id ) {
-	$type     = edd_get_download_type( $post_id );
-	$display  = $type == 'bundle' ? '' : ' style="display:none;"';
-	$products = edd_get_bundled_products( $post_id );
-?>
-	<div id="edd_products"<?php echo $display; ?>>
-		<p>
-			<strong><?php printf( __( 'Bundled %s:', 'edd' ), edd_get_label_plural() ); ?></strong>
-		</p>
-
-		<div id="edd_file_fields" class="edd_meta_table_wrap">
-			<table class="widefat" width="100%" cellpadding="0" cellspacing="0">
-				<thead>
-					<tr>
-						<th style="width: 20%"><?php printf( __( 'Select the %s to bundle with this %s', 'edd' ), edd_get_label_plural(), edd_get_label_singular() ); ?></th>
-						<?php do_action( 'edd_download_file_table_head', $post_id ); ?>
-						<th style="width: 2%"></th>
-					</tr>
-				</thead>
-				<tbody>
-				<?php
-					if ( ! empty( $products ) ) :
-						foreach ( $products as $product ) :
-				?>
-							<tr class="edd_repeatable_product_wrapper">
-								<?php do_action( 'edd_render_product_row', $product, $post_id ); ?>
-							</tr>
-				<?php
-						endforeach;
-					else :
-				?>
-					<tr class="edd_repeatable_product_wrapper">
-						<?php do_action( 'edd_render_product_row', 0, $post_id ); ?>
-					</tr>
-				<?php endif; ?>
-					<tr>
-						<td class="submit" colspan="4" style="float: none; clear:both; background: #fff;">
-							<a class="button-secondary edd_add_repeatable" style="margin: 6px 0;"><?php _e( 'Add New', 'edd' ); ?></a>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
-<?php
-}
-add_action( 'edd_meta_box_fields', 'edd_render_products_field', 20 );
-
-/**
- * Individual file row.
- *
- * Used to output a table row for each file associated with a download.
- * Can be called directly, or attached to an action.
- *
- * @access      private
- * @since       1.2.2
- * @return      void
- */
-function edd_render_product_row( $product_id = 0, $post_id ) {
-
-?>
-	<td>
-		<?php echo EDD()->html->product_dropdown( '_edd_bundled_products[]', $product_id ); ?>
-	</td>
-
-	<?php do_action( 'edd_product_table_row', $product_id, $post_id ); ?>
-
-	<td>
-		<a href="#" class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
-	</td>
-<?php
-}
-add_action( 'edd_render_product_row', 'edd_render_product_row', 10, 2 );
-
-
 /**
  * File download limit row
  *
@@ -575,20 +439,16 @@ add_action( 'edd_render_product_row', 'edd_render_product_row', 10, 2 );
  */
 function edd_render_download_limit_row( $post_id ) {
 	global $edd_options;
-
-	$type     = edd_get_download_type( $post_id );
-	$display  = $type == 'bundle' ? ' style="display:none;"' : '';
 	$edd_download_limit = edd_get_file_download_limit( $post_id );
 ?>
-	<div id="edd_download_limit_wrap"<?php echo $display; ?>>
-		<p>
-			<strong><?php _e( 'File Download Limit:', 'edd' ); ?></strong>
-		</p>
-		<label for="edd_download_limit">
-			<input type="text" name="_edd_download_limit" id="edd_download_limit" value="<?php echo esc_attr( $edd_download_limit ); ?>" size="30" style="width: 80px;" placeholder="0"/>
-			<?php _e( 'The maximum number of times a buyer can download each file. Leave blank or set to 0 for unlimited', 'edd' ); ?>
-		</label>
-	</div>
+	<p>
+		<strong><?php _e( 'File Download Limit:', 'edd' ); ?></strong>
+	</p>
+	<label for="edd_download_limit">
+		<input type="text" name="_edd_download_limit" id="edd_download_limit" value="<?php echo esc_attr( $edd_download_limit ); ?>" size="30" style="width: 80px;" placeholder="0"/>
+		<?php _e( 'The maximum number of times a buyer can download each file. Leave blank or set to 0 for unlimited', 'edd' ); ?>
+	</label>
+
 <?php
 }
 add_action( 'edd_meta_box_fields', 'edd_render_download_limit_row', 20 );
