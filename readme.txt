@@ -171,6 +171,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 1.4.4.3: February 25, 2013 =
+
+* Fixed: error with discount codes and PayPal
+
 = 1.4.4.2: February 15, 2013 =
 
 * URGENT: Fixed a crucial security bug. PLEASE UPDATE.
