@@ -40,10 +40,10 @@
 			<?php endforeach; ?>
 			<!-- Show any cart fees, both positive and negative fees -->
 			<?php if( edd_cart_has_fees() ) : ?>
-				<?php foreach( edd_get_cart_fees() as $fee ) : ?>
-					<tr class="edd_cart_fee">
-						<td class="edd_cart_fee_label"><span><?php esc_html_e( $fee['label'] ); ?></span></td>
-						<td class="edd_cart_fee_amount"><span><?php esc_html_e( edd_currency_filter( edd_format_amount( $fee['amount'] ) ) ); ?></span></td>
+				<?php foreach( edd_get_cart_fees() as $fee_id => $fee ) : ?>
+					<tr class="edd_cart_fee" id="edd_cart_fee_<?php echo $fee_id; ?>">
+						<td class="edd_cart_fee_label"><?php esc_html_e( $fee['label'] ); ?></td>
+						<td class="edd_cart_fee_amount"><?php esc_html_e( edd_currency_filter( edd_format_amount( $fee['amount'] ) ) ); ?></td>
 						<td></td>
 					</tr>
 				<?php endforeach; ?>
