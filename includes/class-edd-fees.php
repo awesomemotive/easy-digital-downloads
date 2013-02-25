@@ -49,6 +49,8 @@ class EDD_Fees {
 		$fees[ $key ] = array( 'amount' => $amount, 'label' => $label );
 
 		$_SESSION['edd_cart_fees'] = $fees;
+
+		return $fees;
 	}
 
 
@@ -68,6 +70,8 @@ class EDD_Fees {
 		}
 
 		$_SESSION['edd_cart_fees'] = $fees;
+
+		return $fees;
 
 	}
 
@@ -93,6 +97,26 @@ class EDD_Fees {
 	public function get_fees() {
 		return $this->has_fees() ? $_SESSION['edd_cart_fees'] : array();
 	}
+
+
+	/**
+	 * Retrieve a specific fee
+	 *
+	 * @access      public
+	 * @since       1.5
+	 * @return      array|bool
+	 */
+	public function get_fee( $id = '' ) {
+
+		$fees = $this->get_fees();
+
+		if( !isset( $fees[ $id ] ) )
+			return false;
+
+		return $fees[ $id ];
+
+	}
+
 
 	/**
 	 * Calculate the total fee amount
