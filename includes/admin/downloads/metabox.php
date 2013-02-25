@@ -159,7 +159,7 @@ function edd_sanitize_bundled_products_save( $products = array() ) {
 	if( $self !== false )
 		unset( $products[ $self ] );
 
-	return array_values( $products );
+	return array_values( array_unique( $products ) );
 }
 add_filter( 'edd_metabox_save__edd_bundled_products', 'edd_sanitize_bundled_products_save' );
 
