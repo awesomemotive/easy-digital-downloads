@@ -13,7 +13,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 $payment_id   = absint( $_GET['purchase_id'] );
 $payment      = get_post( $payment_id );
-$payment_data = get_post_meta( $payment_id, '_edd_payment_meta', true );
+$payment_data = edd_get_payment_meta( $payment_id  );
 ?>
 <div class="wrap">
 	<h2><?php _e( 'Edit Payment', 'edd' ); ?>: <?php echo get_the_title( $payment_id ) . ' - #' . $payment_id; ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
