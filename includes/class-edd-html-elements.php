@@ -29,7 +29,7 @@ class EDD_HTML_Elements {
 	 * @access      public
 	 * @since       1.5
 	 */
-	public function product_dropdown( $name = 'edd_products' ) {
+	public function product_dropdown( $name = 'edd_products', $selected = 0 ) {
 
 		$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
 
@@ -37,7 +37,7 @@ class EDD_HTML_Elements {
 
 		if( $products ) {
 			foreach( $products as $product ) {
-				$output .= '<option value="' . absint( $product->ID ) . '">' . esc_html( get_the_title( $product->ID ) ) . '</option>';
+				$output .= '<option value="' . absint( $product->ID ) . '"' . selected( $selected, $product->ID, false ) . '>' . esc_html( get_the_title( $product->ID ) ) . '</option>';
 			}
 		} else {
 			$output .= '</option value="0">' . __( 'No products found', 'edd' ) . '</option>';

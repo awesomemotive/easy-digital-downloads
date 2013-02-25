@@ -294,6 +294,33 @@ function edd_single_price_option_mode( $download_id = 0 ) {
 	return (bool) apply_filters( 'edd_single_price_option_mode', $ret, $download_id );
 }
 
+
+/**
+ * gets the product type, either default or "bundled"
+ *
+ * @access      public
+ * @since       1.5
+ * @return      string
+ */
+function edd_get_download_type( $download_id ) {
+	$type = get_post_meta( $download_id, '_edd_product_type', true );
+	return apply_filters( 'edd_get_download_type', $type, $download_id );
+}
+
+
+/**
+ * Retrieves the product IDs of bundled products
+ *
+ * @access      public
+ * @since       1.5
+ * @return      array
+ */
+function edd_get_bundled_products( $download_id = 0 ) {
+	$products = get_post_meta( $download_id, '_edd_bundled_products', true );
+	return apply_filters( 'edd_get_bundled_products', $products, $download_id );
+}
+
+
 /**
  * Get Download Earnings Stats
  *

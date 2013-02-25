@@ -7,6 +7,7 @@ jQuery(document).ready(function ($) {
 		init : function() {
 			this.add();
 			this.remove();
+			this.type();
 			this.prices();
 			this.files();
 		},
@@ -80,6 +81,15 @@ jQuery(document).ready(function ($) {
 			    });
 
 			});
+		},
+
+		type : function() {
+
+			$( 'body' ).on( 'change', '#edd_product_type', function(e) {
+				$( '#edd_download_files' ).toggle();
+				$( '#edd_products' ).toggle();
+			});
+
 		},
 
 		prices : function() {
