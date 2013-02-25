@@ -38,7 +38,7 @@ class EDD_Fees {
 	 *
 	 * @access      public
 	 * @since       1.5
-	 * @return      void
+	 * @return      array
 	 */
 	public function add_fee( $amount = '', $label = '', $id = '' ) {
 
@@ -59,7 +59,7 @@ class EDD_Fees {
 	 *
 	 * @access      public
 	 * @since       1.5
-	 * @return      void
+	 * @return      array
 	 */
 	public function remove_fee( $id = '' ) {
 
