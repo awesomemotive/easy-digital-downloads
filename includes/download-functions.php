@@ -783,6 +783,7 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 
 			if ( $downloads ) {
 				foreach ( $downloads as $download_key => $download ) {
+
 					$id = isset( $payment_meta['cart_details'] ) ? $download['id'] : $download;
 
 					if ( $id != $download_id )
@@ -794,8 +795,8 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 
 					// If this download has variable prices, we have to confirm that this file was included in their purchase
 					if ( ! empty( $price_options ) && $file_condition != 'all' && edd_has_variable_prices( $id ) ) {
-						if ( $file_condition !== $price_options['price_id'] )
-							return false;
+						if ( $file_condition == $price_options['price_id'] )
+							return $payment->ID;
 					}
 
 					// Check to see if the file download limit has been reached
