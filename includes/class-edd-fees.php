@@ -63,8 +63,9 @@ class EDD_Fees {
 
 		$fees = $this->get_fees();
 
-		if( isset( $keys[ $id ] ) )
+		if( isset( $fees[ $id ] ) ) {
 			unset( $fees[ $id ] );
+		}
 
 		$_SESSION['edd_cart_fees'] = $fees;
 
