@@ -82,16 +82,17 @@ function edd_process_download() {
 		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\";");
 		header("Content-Transfer-Encoding: binary");
 
-		if ( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false ) {
+		$file_path = realpath( $requested_file );
+
+		if ( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false && file_exists( $file_path ) ) {
+
 			/** This is an absolute path */
-			$requested_file = realpath( $requested_file );
-			if( file_exists( $requested_file ) ) {
-				if( $size = @filesize( $requested_file ) ) header("Content-Length: ".$size);
-				@edd_readfile_chunked( $requested_file );
-			} else {
-				wp_die( __('Sorry but this file does not exist.', 'edd'), __('Error', 'edd') );
-			}
+
+			if( $size = @filesize( $requested_file ) ) header("Content-Length: ".$size);
+			@edd_readfile_chunked( $requested_file );
+
 		} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false) {
+
 			/** This is a local file given by URL */
 			$upload_dir = wp_upload_dir();
 
