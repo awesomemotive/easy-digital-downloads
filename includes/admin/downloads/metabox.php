@@ -575,16 +575,20 @@ add_action( 'edd_render_product_row', 'edd_render_product_row', 10, 2 );
  */
 function edd_render_download_limit_row( $post_id ) {
 	global $edd_options;
+
+	$type     = edd_get_download_type( $post_id );
+	$display  = $type == 'bundle' ? ' style="display:none;"' : '';
 	$edd_download_limit = edd_get_file_download_limit( $post_id );
 ?>
-	<p>
-		<strong><?php _e( 'File Download Limit:', 'edd' ); ?></strong>
-	</p>
-	<label for="edd_download_limit">
-		<input type="text" name="_edd_download_limit" id="edd_download_limit" value="<?php echo esc_attr( $edd_download_limit ); ?>" size="30" style="width: 80px;" placeholder="0"/>
-		<?php _e( 'The maximum number of times a buyer can download each file. Leave blank or set to 0 for unlimited', 'edd' ); ?>
-	</label>
-
+	<div id="edd_download_limit_wrap"<?php echo $display; ?>>
+		<p>
+			<strong><?php _e( 'File Download Limit:', 'edd' ); ?></strong>
+		</p>
+		<label for="edd_download_limit">
+			<input type="text" name="_edd_download_limit" id="edd_download_limit" value="<?php echo esc_attr( $edd_download_limit ); ?>" size="30" style="width: 80px;" placeholder="0"/>
+			<?php _e( 'The maximum number of times a buyer can download each file. Leave blank or set to 0 for unlimited', 'edd' ); ?>
+		</label>
+	</div>
 <?php
 }
 add_action( 'edd_meta_box_fields', 'edd_render_download_limit_row', 20 );

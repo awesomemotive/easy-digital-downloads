@@ -24,7 +24,7 @@ class EDD_HTML_Elements {
 
 
 	/**
-	 * Renders and HTML product drop down
+	 * Renders an HTML product drop down
 	 *
 	 * @access      public
 	 * @since       1.5

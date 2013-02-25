@@ -88,6 +88,7 @@ jQuery(document).ready(function ($) {
 			$( 'body' ).on( 'change', '#edd_product_type', function(e) {
 				$( '#edd_download_files' ).toggle();
 				$( '#edd_products' ).toggle();
+				$( '#edd_download_limit_wrap' ).toggle();
 			});
 
 		},
