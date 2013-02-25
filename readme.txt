@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.5.1
 
-Stable Tag: 1.4.4.2
+Stable Tag: 1.4.4.3
 License: GNU Version 2 or Any Later Version
 
 
@@ -171,16 +171,20 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
-= 1.4.4.2 =
+= 1.4.4.3: February 25, 2013 =
+
+* Fixed: error with discount codes and PayPal
+
+= 1.4.4.2: February 15, 2013 =
 
 * URGENT: Fixed a crucial security bug. PLEASE UPDATE.
 
-= 1.4.4.1 =
+= 1.4.4.1: February 10, 2013 =
 
 * Fix: Fixed an issue with the ajax add to cart introduced in 1.4.4
 * Fix: re-enabled the multi-option purchase mode removed by accident in 1.4.4
 
-= 1.4.4 =
+= 1.4.4: February 9, 2013 =
 
 * New: Added new EDD_Export class to more flexible export system
 * New: Pages are auto created and saved to the EDD options on activation
@@ -203,13 +207,13 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: First name required but not enforced
 * Fix: File URLs didn't save when file name wasn't provided
 
-= 1.4.3.1 =
+= 1.4.3.1: February 3, 2013 =
 
 * Fix: Securtity Check Failed message when logging in during purchase
 * Fix: Added missing alt tag to fix HTML validation
 * New: Added new edd_show_has_purchased_item_message filter
 
-= 1.4.3 =
+= 1.4.3: February 1, 2013 =
 
 * New: PayPal refunds are now automatically detected
 * New: Removed jQuery Validation option
@@ -229,11 +233,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Fixed a bug with retrieving the purchase receipt on the confirmation page
 * Fix: Corrected some post type labels
 
-= 1.4.2.1 =
+= 1.4.2.1: January 28, 2013 =
 
 * Fix: Purchase receipts were getting sent when payments were marked as "failed"
 
-= 1.4.2 =
+= 1.4.2: January 25, 2013 =
 
 * New: Added sample product import xml file in easy-digital-downloads/assets/
 * New: Variable price purchased now displayed in admin sale notifications
