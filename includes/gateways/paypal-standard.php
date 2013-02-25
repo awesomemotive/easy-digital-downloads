@@ -263,7 +263,7 @@ function edd_process_paypal_web_accept( $data ) {
 	$currency_code  = strtolower( $data['mc_currency'] );
 
 	// Retrieve the meta info for this payment
-	$payment_meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
+	$payment_meta = edd_get_payment_meta( $payment_id );
 	$payment_amount = edd_format_amount( $payment_meta['amount'] );
 
 	if( get_post_status( $payment_id ) == 'complete' )

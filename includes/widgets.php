@@ -119,7 +119,7 @@ class edd_categories_tags_widget extends WP_Widget {
 
 		do_action( 'edd_before_taxonomy_widget' );
 		$terms = get_terms( $tax );
-	
+
 		if ( is_wp_error( $terms ) ) {
 			return;
 		} else {
@@ -195,7 +195,7 @@ class edd_purchase_history_widget extends WP_Widget {
 				}
 
 				foreach ( $purchases as $purchase ) {
-					$purchase_data = get_post_meta( $purchase->ID, '_edd_payment_meta', true );
+					$purchase_data = edd_get_payment_meta( $purchase->ID );
 					$downloads = edd_get_payment_meta_downloads( $purchase->ID );
 
 					if ( $downloads ) {

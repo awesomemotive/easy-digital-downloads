@@ -751,7 +751,7 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 			if ( $payments ) {
 				foreach ( $payments as $payment ) {
 					// Check all matching payments for discount code.
-					$payment_meta = get_post_meta( $payment, '_edd_payment_meta', true );
+					$payment_meta = edd_get_payment_meta( $payment );
 					$user_info    = maybe_unserialize( $payment_meta['user_info'] );
 					if ( $user_info['discount'] == $code ) {
 						$return = true;
