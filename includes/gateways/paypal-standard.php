@@ -99,7 +99,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
         // Setup PayPal arguments
         $paypal_args = array(
             'cmd'           => '_xclick',
-            'amount'        => $purchase_data['price'] - $purchase_data['tax'],
+            'amount'        => round( $purchase_data['price'] - $purchase_data['tax'], 2 ),
             'business'      => $edd_options['paypal_email'],
             'item_name'     => stripslashes_deep( html_entity_decode( wp_strip_all_tags( $summary ), ENT_COMPAT, 'UTF-8' ) ),
             'email'         => $purchase_data['user_email'],
