@@ -21,6 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.5
  */
 class EDD_Fees {
+
 	/**
 	 * Get us started
 	 *
@@ -39,14 +40,36 @@ class EDD_Fees {
 	 * @since       1.5
 	 * @return      void
 	 */
-	public function add_fee( $amount = '', $label = '' ) {
-		if( ! $this->has_fees() )
-			$fees = array();
+	public function add_fee( $amount = '', $label = '', $id = '' ) {
 
-		$fees[ sanitize_key( $label ) ] = array( 'amount' => $amount, 'label' => $label );
+		$fees = $this->get_fees();
+
+		$key = empty( $id ) ? sanitize_key( $label ) : sanitize_key( $id );
+
+		$fees[ $key ] = array( 'amount' => $amount, 'label' => $label );
 
 		$_SESSION['edd_cart_fees'] = $fees;
 	}
+
+
+	/**
+	 * Remove an exiting fee
+	 *
+	 * @access      public
+	 * @since       1.5
+	 * @return      void
+	 */
+	public function remove_fee( $id = '' ) {
+
+		$fees = $this->get_fees();
+
+		if( isset( $keys[ $id ] ) )
+			unset( $fees[ $id ] );
+
+		$_SESSION['edd_cart_fees'] = $fees;
+
+	}
+
 
 	/**
 	 * Check if any fees are present
@@ -67,7 +90,7 @@ class EDD_Fees {
 	 * @return      array|bool
 	 */
 	public function get_fees() {
-		return $this->has_fees() ? $_SESSION['edd_cart_fees'] : false;
+		return $this->has_fees() ? $_SESSION['edd_cart_fees'] : array();
 	}
 
 	/**
