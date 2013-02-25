@@ -154,11 +154,12 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return      array
 	 */
 	function get_sortable_columns() {
-		return array(
+		$columns = array(
 			'ID' 		=> array( 'ID', true ),
 			'amount' 	=> array( 'amount', false ),
 			'date' 		=> array( 'date', false )
 		);
+		return apply_filters( 'edd_payments_table_sortable_columns', $columns );
 	}
 
 	/**
