@@ -744,7 +744,7 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 	    "ID" => "\d{5}",
 	    "IE" => "((D|DUBLIN)?([1-9]|6[wW]|1[0-8]|2[024]))?",
 	    "IL" => "\d{5}",
-	    "IN"=> "/^[1-9][0-9][0-9][0-9][0-9][0-9]$/", //india
+	    "IN"=> "^[1-9][0-9][0-9][0-9][0-9][0-9]$", //india
 	    "IO" => "BBND 1ZZ",
 	    "IQ" => "\d{5}",
 	    "IS" => "\d{3}",
