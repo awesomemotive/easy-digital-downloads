@@ -55,7 +55,7 @@ class EDD_Fees {
 
 
 	/**
-	 * Remove an exiting fee
+	 * Remove an existing fee
 	 *
 	 * @access      public
 	 * @since       1.5
