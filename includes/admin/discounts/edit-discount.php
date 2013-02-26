@@ -90,7 +90,7 @@ $single_use   = edd_discount_is_single_use( $discount_id );
 					<p>
 						<label for="edd-non-global-discount">
 							<input type="checkbox" id="edd-non-global-discount" name="not_global" value="1"<?php checked( true, edd_is_discount_not_global( $discount_id ) ); ?>/>
-							<?php printf( __( 'Apply discount only to selected %s?' ), edd_get_label_plural() ); ?>
+							<?php printf( __( 'Apply discount only to selected %s?', 'edd' ), edd_get_label_plural() ); ?>
 						</label>
 					</p>
 				</td>
