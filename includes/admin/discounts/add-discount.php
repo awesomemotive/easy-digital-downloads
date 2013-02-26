@@ -58,7 +58,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			</tr>
 			<tr class="form-field">
 				<th scope="row" valign="top">
-					<label for="edd-products"><?php printf( __( '%s Requirements', 'edd' ), edd_get_label_singular() ); ?></label>
+					<label for="edd-products"><?php printf( __( '%s Requirements', 'edd' ), edd_get_label_plural() ); ?></label>
 				</th>
 				<td>
 					<select multiple id="edd-products" name="products[]"/>
@@ -80,7 +80,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<p>
 						<label for="edd-non-global-discount">
 							<input type="checkbox" id="edd-non-global-discount" name="not_global" value="1"/>
-							<?php printf( __( 'Apply discount only to selected %s?' ), edd_get_label_plural() ); ?>
+							<?php printf( __( 'Apply discount only to selected %s?', 'edd' ), edd_get_label_plural() ); ?>
 						</label>
 					</p>
 				</td>
