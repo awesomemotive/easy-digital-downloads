@@ -33,7 +33,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	if ( $new_status != 'publish' && $new_status != 'complete' )
 		return;
 
-	if ( edd_is_test_mode() )
+	if ( edd_is_test_mode() && ! apply_filters( 'edd_log_test_payment_stats', false ) )
 		return;
 
 	$payment_data 	= edd_get_payment_meta( $payment_id );
