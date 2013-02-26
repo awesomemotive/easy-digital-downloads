@@ -22,7 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return      array | false
  */
 function edd_get_cart_contents() {
-	return isset( $_SESSION['edd_cart'] ) ? apply_filters( 'edd_cart_contents', $_SESSION['edd_cart'] ) : false;
+	$cart = EDD()->session->get('edd_cart');
+	return ! empty( $cart ) ? apply_filters( 'edd_cart_contents', $cart ) : false;
 }
 
 /**
@@ -87,7 +88,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 			$cart = $to_add;
 		}
 
-		$_SESSION['edd_cart'] = $cart;
+		EDD()->session->set( 'edd_cart', $cart );
 
 		do_action( 'edd_post_add_to_cart', $download_id, $options );
 
@@ -119,7 +120,8 @@ function edd_remove_from_cart($cart_key) {
 	} else {
 		unset( $cart[ $cart_key ] );
 	}
-	$_SESSION['edd_cart'] = $cart;
+
+	EDD()->session->set( 'edd_cart', $cart );
 
 	do_action( 'edd_post_remove_from_cart', $cart_key );
 
@@ -706,7 +708,7 @@ function edd_is_checkout() {
  */
 function edd_empty_cart() {
 	// Remove cart contents
-	$_SESSION['edd_cart'] = NULL;
+	EDD()->session->set('edd_cart', NULL );
 
 	// Remove any active discounts
 	edd_unset_all_cart_discounts();
