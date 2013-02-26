@@ -64,6 +64,16 @@ final class Easy_Digital_Downloads {
 
 
 	/**
+	 * EDD HTML session object
+	 *
+	 * This holds cart items, purchase sessions, and anything else stored in the session
+	 *
+	 * @since 1.5
+	 */
+	public $session;
+
+
+	/**
 	 * EDD HTML Element helper object
 	 * @since 1.5
 	 */
@@ -93,6 +103,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->roles = new EDD_Roles();
 			self::$instance->fees = new EDD_Fees();
 			self::$instance->api = new EDD_API();
+			self::$instance->session = new EDD_Session();
 			self::$instance->html = new EDD_HTML_Elements();
 		}
 		return self::$instance;
@@ -152,6 +163,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-session.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-roles.php';
 		require_once EDD_PLUGIN_DIR . 'includes/formatting.php';
 		require_once EDD_PLUGIN_DIR . 'includes/widgets.php';
