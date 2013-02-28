@@ -117,18 +117,18 @@ function edd_user_info_fields() {
 		<?php do_action( 'edd_purchase_form_before_email' ); ?>
 		<p id="edd-email-wrap">
 			<label class="edd-label" for="edd-email"><?php _e( 'Email Address', 'edd' ); ?></label>
-			<div class="edd-description"><?php _e( 'We will send the purchase receipt to this address.', 'edd' ); ?></div>
+			<span class="edd-description"><?php _e( 'We will send the purchase receipt to this address.', 'edd' ); ?></span>
 			<input class="edd-input required" type="email" name="edd_email" placeholder="<?php _e( 'Email address', 'edd' ); ?>" id="edd-email" value="<?php echo is_user_logged_in() ? $user_data->user_email : ''; ?>"/>
 		</p>
 		<?php do_action( 'edd_purchase_form_after_email' ); ?>
 		<p id="edd-first-name-wrap">
 			<label class="edd-label" for="edd-first"><?php _e( 'First Name', 'edd' ); ?></label>
-			<div class="edd-description"><?php _e( 'We will use this to personalize your account experience', 'edd' ); ?></div>
+			<span class="edd-description"><?php _e( 'We will use this to personalize your account experience.', 'edd' ); ?></span>
 			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e( 'First Name', 'edd' ); ?>" id="edd-first" value="<?php echo is_user_logged_in() ? $user_data->first_name : ''; ?>"/>
 		</p>
 		<p id="edd-last-name-wrap">
 			<label class="edd-label" for="edd-last"><?php _e( 'Last Name', 'edd' ); ?></label>
-			<div class="edd-description"><?php _e( 'We will use this as well to personalize your account experience', 'edd' ); ?></div>
+			<span class="edd-description"><?php _e( 'We will use this as well to personalize your account experience.', 'edd' ); ?></span>
 			<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e( 'Last name', 'edd' ); ?>" value="<?php echo is_user_logged_in() ? $user_data->last_name : ''; ?>"/>
 		</p>
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
@@ -159,28 +159,28 @@ function edd_get_cc_form() {
 		<?php endif; ?>
 		<p id="edd-card-number-wrap">
 			<label class="edd-label"><?php _e( 'Card Number', 'edd' ); ?><span class="card-type"></span></label>
-			<div class="edd-description"><?php _e( 'The (typically) 16 digits on the front of your credit card.', 'edd' ); ?></div>
+			<span class="edd-description"><?php _e( 'The (typically) 16 digits on the front of your credit card.', 'edd' ); ?></span>
 			<input type="text" autocomplete="off" name="card_number" class="card-number edd-input required" placeholder="<?php _e( 'Card number', 'edd' ); ?>" />
 		</p>
 		<p id="edd-card-cvc-wrap">
 			<label class="edd-label"><?php _e( 'CVC', 'edd' ); ?></label>
-			<div class="edd-description"><?php _e( 'The 3 digit (back) or 4 digit (front) value on your card.', 'edd' ); ?></div>
+			<span class="edd-description"><?php _e( 'The 3 digit (back) or 4 digit (front) value on your card.', 'edd' ); ?></span>
 			<input type="text" size="4" autocomplete="off" name="card_cvc" class="card-cvc edd-input required" placeholder="<?php _e( 'Security code', 'edd' ); ?>" />
 		</p>
 		<p id="edd-card-name-wrap">
 			<label class="edd-label"><?php _e( 'Name on the Card', 'edd' ); ?></label>
-			<div class="edd-description"><?php _e( 'The name printed on the front of your credit card.', 'edd' ); ?></div>
+			<span class="edd-description"><?php _e( 'The name printed on the front of your credit card.', 'edd' ); ?></span>
 			<input type="text" autocomplete="off" name="card_name" class="card-name edd-input required" placeholder="<?php _e( 'Card name', 'edd' ); ?>" />
 		</p>
 		<?php do_action( 'edd_before_cc_expiration' ); ?>
 		<p class="card-expiration">
 			<label class="edd-label"><?php _e( 'Expiration (MM/YY)', 'edd' ); ?></label>
-			<div class="edd-description"><?php _e( 'The date your credit card expires, typically on the front of the card.', 'edd' ); ?></div>
-			<select name="card_exp_month" class="card-expiry-month required">
+			<span class="edd-description"><?php _e( 'The date your credit card expires, typically on the front of the card.', 'edd' ); ?></span>
+			<select name="card_exp_month" class="card-expiry-month edd-select edd-select-small required">
 				<?php for( $i = 1; $i <= 12; $i++ ) { echo '<option value="' . $i . '">' . sprintf ('%02d', $i ) . '</option>'; } ?>
 			</select>
 			<span class="exp-divider"> / </span>
-			<select name="card_exp_year" class="card-expiry-year required">
+			<select name="card_exp_year" class="card-expiry-year edd-select edd-select-small required">
 				<?php for( $i = date('Y'); $i <= date('Y') + 10; $i++ ) { echo '<option value="' . $i . '">' . substr( $i, 2 ) . '</option>'; } ?>
 			</select>
 		</p>
@@ -209,22 +209,22 @@ function edd_default_cc_address_fields() {
 		<?php do_action( 'edd_cc_billing_top' ); ?>
 		<p id="edd-card-address-wrap">
 			<label class="edd-label"><?php _e( 'Billing Address', 'edd' ); ?></label>
-			<div class="edd-description"><?php _e( 'The primary billing address for your credit card.', 'edd' ); ?></div>
+			<span class="edd-description"><?php _e( 'The primary billing address for your credit card.', 'edd' ); ?></span>
 			<input type="text" name="card_address" class="card-address edd-input required" placeholder="<?php _e( 'Address line 1', 'edd' ); ?>"/>
 		</p>
 		<p id="edd-card-address-2-wrap">
 			<label class="edd-label"><?php _e( 'Billing Address Line 2', 'edd' ); ?></label>
-			<div class="edd-description"><?php _e( 'The suite, apt no, PO box, etc, associated with your billing address.', 'edd' ); ?></div>
+			<span class="edd-description"><?php _e( 'The suite, apt no, PO box, etc, associated with your billing address.', 'edd' ); ?></span>
 			<input type="text" name="card_address_2" class="card-address-2 edd-input" placeholder="<?php _e( 'Address line 2', 'edd' ); ?>"/>
 		</p>
 		<p id="edd-card-city-wrap">
 			<label class="edd-label"><?php _e( 'Billing City', 'edd' ); ?></label>
-			<div class="edd-description"><?php _e( 'The city for your billing address.', 'edd' ); ?></div>
+			<span class="edd-description"><?php _e( 'The city for your billing address.', 'edd' ); ?></span>
 			<input type="text" name="card_city" class="card-city edd-input required" placeholder="<?php _e( 'City', 'edd' ); ?>"/>
 		</p>
 		<p id="edd-card-country-wrap">
 			<label class="edd-label"><?php _e( 'Billing Country', 'edd' ); ?></label>
-			<div class="edd-description"><?php _e( 'The country for your billing address.', 'edd' ); ?></div>
+			<span class="edd-description"><?php _e( 'The country for your billing address.', 'edd' ); ?></span>
 			<select name="billing_country" class="billing-country edd-select required">
 				<?php
 				$countries = edd_get_country_list();
@@ -236,7 +236,7 @@ function edd_default_cc_address_fields() {
 		</p>
 		<p id="edd-card-state-wrap">
 			<label class="edd-label"><?php _e( 'Billing State / Province', 'edd' ); ?></label>
-			<div class="edd-description"><?php _e( 'The state or province for your billing address.', 'edd' ); ?></div>
+			<span class="edd-description"><?php _e( 'The state or province for your billing address.', 'edd' ); ?></span>
 			<input type="text" size="6" name="card_state_other" id="card_state_other" class="card-state edd-input" placeholder="<?php _e( 'State / Province', 'edd' ); ?>" style="display:none;"/>
             <select name="card_state_us" id="card_state_us" class="card-state edd-select required">
                 <?php
@@ -257,7 +257,7 @@ function edd_default_cc_address_fields() {
 		</p>
 		<p id="edd-card-zip-wrap">
 			<label class="edd-label"><?php _e( 'Billing Zip / Postal Code', 'edd' ); ?></label>
-			<div class="edd-description"><?php _e( 'The zip or postal code for your billing address.', 'edd' ); ?></div>
+			<span class="edd-description"><?php _e( 'The zip or postal code for your billing address.', 'edd' ); ?></span>
 			<input type="text" size="4" name="card_zip" class="card-zip edd-input required" placeholder="<?php _e( 'Zip / Postal code', 'edd' ); ?>"/>
 		</p>
 		<?php do_action( 'edd_cc_billing_bottom' ); ?>
@@ -289,28 +289,34 @@ function edd_get_register_fields() {
 			<?php do_action('edd_register_account_fields_before'); ?>
 			<p id="edd-user-login-wrap">
 				<label for="edd_user_login"><?php _e( 'Username', 'edd' ); ?></label>
+				<span class="edd-description"><?php _e( 'The username you will use to log into your account.', 'edd' ); ?></span>
 				<input name="edd_user_login" id="edd_user_login" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" type="text" placeholder="<?php _e( 'Username', 'edd' ); ?>" title="<?php _e( 'Username', 'edd' ); ?>"/>
 			</p>
 			<p id="edd-user-pass-wrap">
 				<label for="password"><?php _e( 'Password', 'edd' ); ?></label>
+				<span class="edd-description"><?php _e( 'The password used to access your account.', 'edd' ); ?></span>
 				<input name="edd_user_pass" id="edd_user_pass" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" placeholder="<?php _e( 'Password', 'edd' ); ?>" type="password"/>
 			</p>
 			<p id="edd-user-pass-confirm-wrap" class="edd_register_password">
 				<label for="password_again"><?php _e( 'Password Again', 'edd' ); ?></label>
+				<span class="edd-description"><?php _e( 'Confirm your password.', 'edd' ); ?></span>
 				<input name="edd_user_pass_confirm" id="edd_user_pass_confirm" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" placeholder="<?php _e( 'Confirm password', 'edd' ); ?>" type="password"/>
 			</p>
 			<?php do_action( 'edd_register_account_fields_after' ); ?>
 		</fieldset>
 		<p id="edd-user-email-wrap">
 			<label for="edd-email"><?php _e( 'Email', 'edd' ); ?></label>
+			<span class="edd-description"><?php _e( 'We will send the purchase receipt to this address.', 'edd' ); ?></span>
 			<input name="edd_email" id="edd-email" class="required edd-input" type="email" placeholder="<?php _e( 'Email', 'edd' ); ?>" title="<?php _e( 'Email', 'edd' ); ?>"/>
 		</p>
 		<p id="edd-user-first-name-wrap">
 			<label class="edd-label" for="edd-first"><?php _e( 'First Name', 'edd' ); ?></label>
+			<span class="edd-description"><?php _e( 'We will use this to personalize your account experience.', 'edd' ); ?></span>
 			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e( 'First Name', 'edd' ); ?>" id="edd-first" value="<?php echo is_user_logged_in() ? $user_data->user_firstname : ''; ?>"/>
 		</p>
 		<p id="edd-user-last-name-wrap">
 			<label class="edd-label" for="edd-last"><?php _e( 'Last Name', 'edd' ); ?></label>
+			<span class="edd-description"><?php _e( 'We will use this as well to personalize your account experience.', 'edd' ); ?></span>
 			<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e( 'Last name', 'edd' ); ?>" value="<?php echo is_user_logged_in() ? $user_data->user_lastname : ''; ?>"/>
 		</p>
 
@@ -416,6 +422,7 @@ function edd_discount_field() {
 					<?php _e( 'Discount', 'edd' ); ?>
 					<img src="<?php echo EDD_PLUGIN_URL; ?>assets/images/loading.gif" id="edd-discount-loader" style="display:none;"/>
 				</label>
+				<span class="edd-description"><?php _e( 'Enter a coupon code if you have one.', 'edd' ); ?></span>
 				<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e( 'Enter discount', 'edd' ); ?>"/>
 			</p>
 		</fieldset>
