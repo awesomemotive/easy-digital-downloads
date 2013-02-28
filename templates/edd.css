@@ -45,26 +45,25 @@
 #edd_checkout_cart .edd_discount_remove:hover { background-position: -10px 0; }
 
 /* Checkout Fields */
+#edd_purchase_form legend { display:block; font-size: 120%; font-weight: bold; margin: 0 0 10px; border-bottom: 1px solid #ccc; width: 100%; }
+#edd_purchase_form label { font-weight: bold; display:block; position: relative; line-height: 100%; font-size: 95%; }
+#edd_purchase_form span.edd-description { color: #666; font-size: 80%; display: block; }
 #edd_purchase_form input.edd-input { display:block; width: 80%; }
+#edd_purchase_form select.edd-select { display:block; width: 60%; }
+#edd_purchase_form select.edd-select.edd-select-small { display:inline; width: auto; }
 #edd_purchase_form input.edd-input.error { border-color: #c4554e; }
-#edd_purchase_form label { display: inline-block;  width: 200px; position: relative; }
 #edd_purchase_form #edd_terms_agreement label,
 #edd_purchase_form #edd_tax_opt_in_fields label { display: inline-block;  width: auto; }
 #edd_checkout_form_wrap p { margin: 0 0 10px; }
-#edd_checkout_form_wrap input[type="text"],
-#edd_checkout_form_wrap input[type="email"],
-#edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; }
+#edd_checkout_form_wrap input[type="text"], #edd_checkout_form_wrap input[type="email"], #edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; }
+#edd_purchase_form input[type="checkbox"] { float: left; }
 #edd_checkout_form_wrap .edd-payment-icons { height: 32px; }
 #edd_checkout_form_wrap .edd-payment-icons img.payment-icon{ margin: 0 3px 0 0; float: left; background: none; padding: none; border: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
 #edd_checkout_form_wrap fieldset { border: none; padding: 0; margin: 0; }
 #edd_checkout_form_wrap fieldset#edd_register_account_fields,
-#edd_checkout_form_wrap fieldset#edd_login_fields { border: 1px solid #f0f0f0; padding: 10px; margin: 0 0 10px; }
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_register_password,
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_login_password { margin: 0; }
-#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="text"],
-#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="email"],
-#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="password"] { width: 188px; }
-#edd_checkout_form_wrap fieldset#edd_cc_fields { padding: 0 8px 8px 8px; border: 1px solid #f0f0f0; margin: 0 0 10px; background: #f9f9f9; }
+#edd_checkout_form_wrap fieldset#edd_cc_fields { padding: 0 8px 8px 8px; border: 1px solid #f0f0f0; margin: 0 0 10px; background: #f9f9f9; position: relative; left: -8px; }
 #edd_secure_site_wrapper { padding: 4px 4px 4px 0; font-weight: bold; }
 #edd_secure_site_wrapper span.padlock:before { font-family: 'padlock'; font-style: normal; font-weight: normal; speak: none; display: inline-block; text-decoration: inherit; width: 1em; margin-right: 0.2em; text-align: center;	line-height: 1em; margin-left: 0.2em; font-size: 120%; text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); content: '🔒'; }
 #edd_checkout_form_wrap input.edd-input.card-number.valid { background-image: url(../assets/images/tick.png); background-repeat: no-repeat; background-position: 98% 50%; }
@@ -75,13 +74,13 @@
 #edd_checkout_form_wrap span.card-type.mastercard { background: url( ../assets/images/icons/mastercard.png ) no-repeat; }
 #edd_checkout_form_wrap span.card-type.discover { background: url( ../assets/images/icons/discover.png ) no-repeat; }
 #edd_checkout_form_wrap span.card-type.americanexpress { background: url( ../assets/images/icons/americanexpress.png ) no-repeat; }
-
+#edd_checkout_form_wrap #edd-discount-loader, #edd_checkeout_form_wrap .edd-cart-ajax { -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
 
 /* =Theme Specific styling
 -------------------------------------------------------------- */
 
 /* Twenty Twelve */
-#edd_purchase_form input.edd-input.required { color: #000; }
+#edd_purchase_form input.edd-input.required,#edd_purchase_form select.edd-select.required { color: #000; }
 
 /* =Receipt Page
 -------------------------------------------------------------- */
