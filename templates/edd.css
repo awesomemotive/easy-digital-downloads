@@ -45,7 +45,7 @@
 #edd_checkout_cart .edd_discount_remove:hover { background-position: -10px 0; }
 
 /* Checkout Fields */
-#edd_purchase_form input.edd-input { display: inline-block; width: 200px; }
+#edd_purchase_form input.edd-input { display:block; width: 80%; }
 #edd_purchase_form input.edd-input.error { border-color: #c4554e; }
 #edd_purchase_form label { display: inline-block;  width: 200px; position: relative; }
 #edd_purchase_form #edd_terms_agreement label,
@@ -53,7 +53,7 @@
 #edd_checkout_form_wrap p { margin: 0 0 10px; }
 #edd_checkout_form_wrap input[type="text"],
 #edd_checkout_form_wrap input[type="email"],
-#edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; width: 200px; }
+#edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; }
 #edd_checkout_form_wrap .edd-payment-icons { height: 32px; }
 #edd_checkout_form_wrap .edd-payment-icons img.payment-icon{ margin: 0 3px 0 0; float: left; background: none; padding: none; border: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
 #edd_checkout_form_wrap fieldset { border: none; padding: 0; margin: 0; }
