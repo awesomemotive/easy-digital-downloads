@@ -391,7 +391,7 @@ function edd_payment_mode_select() {
 					$checked = checked( $gateway_id, edd_get_default_gateway(), false );
 					echo '<span class="edd-gateway-option" id="edd-gateway-option-' . esc_attr( $gateway_id ) . '">';
 						echo '<input type="radio" name="payment-mode" class="edd-gateway" id="edd-gateway-' . esc_attr( $gateway_id ) . '" value="' . esc_attr( $gateway_id ) . '"' . $checked . '>' . esc_html( $gateway['checkout_label'] ) . '</option>';
-					echo '</span>'
+					echo '</span>';
 				endforeach;
 				?>
 			</p>
