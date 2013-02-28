@@ -62,11 +62,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 		switch ( $column_name ){
 			case 'error' :
 				return get_the_title( $item['ID'] ) ? get_the_title( $item['ID'] ) : __( 'Payment Error', 'edd' );
-			case 'gateway' :
-				return edd_get_payment_gateway( $item['payment_id'] );
-			case 'buyer' :
-				$user = ! empty( $item['user_id'] ) ? $item['user_id'] : $item['buyer'];
-				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' ) . urlencode( $user ) . '">' . $item['buyer'] . '</a>';
 			default:
 				return $item[ $column_name ];
 		}
@@ -120,7 +115,6 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 			'error'      => __( 'Error', 'edd' ),
 			'message'    => __( 'Error Message', 'edd' ),
 			'gateway'    => __( 'Gateway', 'edd' ),
-			'buyer'      => __( 'Buyer', 'edd' ),
 			'date'       => __( 'Date', 'edd' )
 		);
 
@@ -171,17 +165,12 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
-				$user_info  = edd_get_payment_meta_user_info( $log->post_parent );
-				$user_id 	= isset( $user_info['id']) ? $user_info['id'] : 0;
-				$user_data 	= get_userdata( $user_id );
 
 				$logs_data[] = array(
 					'ID'         => $log->ID,
 					'payment_id' => $log->post_parent,
 					'error'      => 'error',
-					'gateway'    => 'gateway',
-					'user_id'    => $user_id,
-					'buyer'	     => $user_data ? $user_data->display_name : $user_info['email'],
+					'gateway'    => edd_get_payment_gateway( $log->post_parent ),
 					'date'	     => $log->post_date
 				);
 			}
