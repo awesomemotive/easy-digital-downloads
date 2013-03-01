@@ -46,8 +46,8 @@
 
 /* Checkout Fields */
 #edd_purchase_form legend { display:block; font-size: 120%; font-weight: bold; margin: 0 0 10px; border-bottom: 1px solid #ccc; width: 100%; }
-#edd_purchase_form label { font-weight: bold; display:block; position: relative; line-height: 100%; font-size: 95%; }
-#edd_purchase_form span.edd-description { color: #666; font-size: 80%; display: block; }
+#edd_purchase_form label { font-weight: bold; display:block; position: relative; line-height: 100%; font-size: 95%; margin: 0 0 5px; }
+#edd_purchase_form span.edd-description { color: #666; font-size: 80%; display: block; margin: 0 0 5px; }
 #edd_purchase_form input.edd-input { display:block; width: 80%; }
 #edd_purchase_form select.edd-select { display:block; width: 60%; }
 #edd_purchase_form select.edd-select.edd-select-small { display:inline; width: auto; }
