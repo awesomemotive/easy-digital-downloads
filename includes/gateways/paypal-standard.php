@@ -16,12 +16,8 @@
  *
  * @access      private
  * @since       1.0
- * @return      void
  */
-function edd_paypal_remove_cc_form() {
-	// We only register the action so that the default CC form is not shown
-}
-add_action( 'edd_paypal_cc_form', 'edd_paypal_remove_cc_form' );
+add_action( 'edd_paypal_cc_form', '__return_false' );
 
 /**
  * Process PayPal Purchase
