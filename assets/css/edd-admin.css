@@ -1,9 +1,9 @@
 /**
- * EDD  Admin CSS
+ * EDD Admin CSS
  *
  * @package     Easy Digital Downloads
  * @subpackage  Admin CSS
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
 */
 
@@ -15,6 +15,11 @@
 #edd-add-ons .edd-extension .button-secondary { position: absolute; bottom: 8px; left: 8px; }
 #edd-add-ons .edd-browse-all { clear:both; width:100%; }
 #edd-add-ons .edd-extension .third-party { display: none; }
+
+/* Discount Code Styles
+-------------------------------------------------------------- */
+#edd-products { height: 100px; min-width: 200px; }
+#edd-add-discount input[type="checkbox"], #edd-edit-discount input[type="checkbox"] { width: 15px; display: inline; }
 
 /* Payment History Styles
 -------------------------------------------------------------- */
@@ -46,20 +51,20 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 
 /* Dashboard Widget Styles
 -------------------------------------------------------------- */
-#edd_dashboard_sales .table { margin: 20px 0 0 0; padding: 0; position: relative; }
-#edd_dashboard_sales .table_current_month { float: left; width: 45%; border-top: 1px solid #ececec; }
-#edd_dashboard_sales .table_totals { float: right; width: 45%; border-top: 1px solid #ececec; }
-#edd_dashboard_sales .sub { margin: -7px -14px !important; padding: 5px 0 15px; color: #8f8f8f; font-size: 14px; position: absolute; top: -22px; left: 15px; }
-#edd_dashboard_sales .inside { font-size: 12px; }
-#edd_dashboard_sales td { padding: 3px 0; white-space: nowrap; }
-#edd_dashboard_sales .b { font-size: 14px; font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif; text-align: right; padding-right: 6px; width: auto; }
-#edd_dashboard_sales .t { font-size: 12px; padding-right: 12px; padding-top: 6px; color: #777; }
-#edd_dashboard_sales .lifetime_best_selling_label,
-#edd_dashboard_sales .best_selling_30_days_label { background: rgb(0, 118, 156); padding: 2px 4px; border-radius: 3px; color: white; margin-right: 2px; }
-#edd_dashboard_sales .label_heading { display: block; font-size: 12px; font-family: Helvetica, Arial, sans-serif; color: #8f8f8f; font-weight: normal; padding-top: 10px; border-top: 1px solid #ececec; }
-#edd_dashboard_sales .edd_dashboard_widget_subheading { border-top: 1px solid #ececec; padding-top: 10px; color: #8f8f8f; font-size: 14px; margin: 1em 0 0 0; }
-#edd_dashboard_sales .edd_dashboard_widget_subheading + .table { margin: 8px 0 0 0; }
-#edd_dashboard_sales .edd_price_label { background: rgb(0, 118, 156); padding: 2px 4px; border-radius: 3px; color: white; margin-right: 2px; font-size: 10px; }
+.edd_dashboard_widget .table { margin: 20px 0 0 0; padding: 0; position: relative; border-top: 1px solid #ececec; }
+.edd_dashboard_widget .table_left { float: left; width: 45%;  }
+.edd_dashboard_widget .table_right { float: right; width: 45%;  }
+.edd_dashboard_widget .sub { padding: 5px 0 15px; color: #8f8f8f; font-size: 14px; position: absolute; top: -40px; left: 0; }
+.edd_dashboard_widget .inside { font-size: 12px; }
+.edd_dashboard_widget td { padding: 3px 0; white-space: nowrap; }
+.edd_dashboard_widget .b { font-size: 14px; font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif; text-align: right; padding-right: 6px; width: auto; }
+.edd_dashboard_widget .t { font-size: 12px; padding-right: 12px; padding-top: 6px; color: #777; }
+.edd_dashboard_widget .lifetime_best_selling_label,
+.edd_dashboard_widget .best_selling_30_days_label { background: rgb(0, 118, 156); padding: 2px 4px; border-radius: 3px; color: white; margin-right: 2px; }
+.edd_dashboard_widget .label_heading { display: block; font-size: 12px; font-family: Helvetica, Arial, sans-serif; color: #8f8f8f; font-weight: normal; padding-top: 10px; border-top: 1px solid #ececec; }
+.edd_dashboard_widget .edd_dashboard_widget_subheading { border-top: 1px solid #ececec; padding-top: 10px; color: #8f8f8f; font-size: 14px; margin: 1em 0 0 0; }
+.edd_dashboard_widget .edd_dashboard_widget_subheading + .table { margin: 8px 0 0 0; }
+.edd_dashboard_widget .edd_price_label { background: rgb(0, 118, 156); padding: 2px 4px; border-radius: 3px; color: white; margin-right: 2px; font-size: 10px; }
 
 
 /* Reports Styles

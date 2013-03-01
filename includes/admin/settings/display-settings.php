@@ -4,14 +4,13 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Admin Options Page
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 
 /**
  * Options Page
@@ -22,7 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.0
  * @return      void
 */
-
 function edd_options_page() {
 	global $edd_options;
 
@@ -66,7 +64,6 @@ function edd_options_page() {
 
 				submit_button();
 				?>
-
 			</form>
 		</div><!-- #tab_container-->
 	</div><!-- .wrap -->

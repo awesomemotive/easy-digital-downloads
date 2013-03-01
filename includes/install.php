@@ -4,13 +4,13 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Install Function
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Install
@@ -20,8 +20,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_install() {
 	global $wpdb, $edd_options;
 
@@ -35,11 +34,11 @@ function edd_install() {
 	flush_rewrite_rules();
 
 	// Checks if the purchase page option exists
-	if( ! isset( $edd_options['purchase_page'] ) ) {
+	if ( ! isset( $edd_options['purchase_page'] ) ) {
 	    // Checkout Page
 		$checkout = wp_insert_post(
 			array(
-				'post_title'     => __('Checkout', 'edd'),
+				'post_title'     => __( 'Checkout', 'edd' ),
 				'post_content'   => '[download_checkout]',
 				'post_status'    => 'publish',
 				'post_author'    => 1,
@@ -47,17 +46,19 @@ function edd_install() {
 				'comment_status' => 'closed'
 			)
 		);
+
 		// Purchase Confirmation (Success) Page
 		$success = wp_insert_post(
 			array(
-				'post_title'     => __('Purchase Confirmation', 'edd'),
-				'post_content'   => __('Thank you for your purchase!', 'edd'),
+				'post_title'     => __( 'Purchase Confirmation', 'edd' ),
+				'post_content'   => __( 'Thank you for your purchase! [edd_receipt]', 'edd' ),
 				'post_status'    => 'publish',
 				'post_author'    => 1,
 				'post_type'      => 'page',
 				'comment_status' => 'closed'
 			)
 		);
+
 		// Failed Purchase Page
 		$failed = wp_insert_post(
 			array(
@@ -70,10 +71,11 @@ function edd_install() {
 				'comment_status' => 'closed'
 			)
 		);
+
 		// Purchase History (History) Page
 		$history = wp_insert_post(
 			array(
-				'post_title'     => __('Purchase History', 'edd'),
+				'post_title'     => __( 'Purchase History', 'edd' ),
 				'post_content'   => '[download_history]',
 				'post_status'    => 'publish',
 				'post_author'    => 1,
@@ -82,15 +84,21 @@ function edd_install() {
 				'comment_status' => 'closed'
 			)
 		);
+
+		// Store our page IDs
+		$options = array(
+			'purchase_page' => $checkout,
+			'success_page'  => $success,
+			'failure_page'  => $failed
+		);
+
+		update_option( 'edd_settings_general', $options );
 	}
 
-	
 	// Bail if activating from network, or bulk
 	if ( is_network_admin() || isset( $_GET['activate-multi'] ) )
-		return;
 
 	// Add the transient to redirect
     set_transient( '_edd_activation_redirect', true, 30 );
-	
 }
-register_activation_hook(EDD_PLUGIN_FILE, 'edd_install');
+register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );

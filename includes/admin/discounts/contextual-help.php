@@ -4,14 +4,13 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Downloads
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.2.3
  */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 
 /**
  * Discounts contextual help.
@@ -22,7 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.3
  * @return      void
  */
-
 function edd_discounts_contextual_help() {
 	$screen = get_current_screen();
 
@@ -58,6 +56,9 @@ function edd_discounts_contextual_help() {
 				'<li>' . __( '<strong>Code</strong> - this is the unique code that customers will enter during checkout to redeem the code.', 'edd' ) . '</li>' .
 				'<li>' . __( '<strong>Type</strong> - this is the type of discount this code awards.', 'edd' ) . '</li>' .
 				'<li>' . __( '<strong>Amount</strong> - this discount amount provided by this code. For percentage based discounts, enter a number such as 70 for 70%. Do not enter a percent sign.', 'edd' ) . '</li>' .
+				'<li>' . __( '<strong>Requirements</strong> - This allows you to select the product(s) that are required to be purchased in order for a discount to be applied.', 'edd' ) . '</li>' .
+				'<li>' . __( '- <strong>Condition</strong> - This lets you set whether all selected products must be in the cart, or just a minimum of one.', 'edd' ) . '</li>' .
+				'<li>' . __( '- <strong>Apply discount only to selected Downloads?</strong> - If this box is checked, only the prices of the required products will be discounted. If left unchecked, the discount will apply to all products in the cart.', 'edd' ) . '</li>' .
 				'<li>' . __( '<strong>Start Date</strong> - this is the date that this code becomes available. If a customer attempts to redeem the code prior to this date, they will be given an error. This is optional.', 'edd' ) . '</li>' .
 				'<li>' . __( '<strong>Expiration Date</strong> - this is the end date for the discount. After this date, the code will no longer be able to be used. This is optional.', 'edd' ) . '</li>' .
 				'<li>' . __( '<strong>Minimum Amount</strong> - this is the minimum purchase amount required to use this code. If a customer has less than this amount in their cart, they will be given an error. This is optional.', 'edd' ) . '</li>' .

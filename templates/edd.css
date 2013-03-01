@@ -3,9 +3,25 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  CSS
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
 */
+
+@charset "UTF-8";
+
+/* =Icon fonts
+-------------------------------------------------------------- */
+@font-face {
+  font-family: 'padlock';
+  src: url("../fonts/padlock.eot?64116112");
+  src: url("../fonts/padlock.eot?64116112#iefix") format('embedded-opentype'), url("../fonts/padlock.svg?64116112#padlock") format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'padlock';
+  src: url("data:application/octet-stream;base64,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") format('woff'), url("data:application/octet-stream;base64,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swIgAyAbswImAxpZQkIjIEewBEOwgGJgILAAKyCKimEgsAJDYGQjsANDYWRQWLACQ2EbsANDYFmwAyWwgGJhsAIlRmE4IyA8IzgbISAgRiNHsAArI2E4IVmxJAEUKy2wOyywLisusSQBFCstsDwssC8rISMgIDywBCNCIzixJAEUK7AEQy6wJCstsD0ssAAVIEewACNCsgABARUUEy6wKiotsD4ssAAVIEewACNCsgABARUUEy6wKiotsD8ssQABFBOwKyotsEAssC0qLbBBLLAAFkUjIC4gRoojYTixJAEUKy2wQiywCSNCsEErLbBDLLIAADorLbBELLIAATorLbBFLLIBADorLbBGLLIBATorLbBHLLIAADsrLbBILLIAATsrLbBJLLIBADsrLbBKLLIBATsrLbBLLLIAADcrLbBMLLIAATcrLbBNLLIBADcrLbBOLLIBATcrLbBPLLIAADkrLbBQLLIAATkrLbBRLLIBADkrLbBSLLIBATkrLbBTLLIAADwrLbBULLIAATwrLbBVLLIBADwrLbBWLLIBATwrLbBXLLIAADgrLbBYLLIAATgrLbBZLLIBADgrLbBaLLIBATgrLbBbLLAwKy6xJAEUKy2wXCywMCuwNCstsF0ssDArsDUrLbBeLLAAFrAwK7A2Ky2wXyywMSsusSQBFCstsGAssDErsDQrLbBhLLAxK7A1Ky2wYiywMSuwNistsGMssDIrLrEkARQrLbBkLLAyK7A0Ky2wZSywMiuwNSstsGYssDIrsDYrLbBnLLAzKy6xJAEUKy2waCywMyuwNCstsGkssDMrsDUrLbBqLLAzK7A2Ky2waywrsAhlsAMkUHiwARUwLQAAS7gAyFJYsQEBjlm5CAAIAGMgsAEjRCCwAyNwsgQoCUVSRLMKCwYEK7EGAUSxJAGIUViwQIhYsQYDRLEmAYhRWLgEAIhYsQYBRFlZWVm4Af+FsASNsQUARA==") format('truetype');
+}
 
 /* =Checkout Form
 -------------------------------------------------------------- */
@@ -29,41 +45,51 @@
 #edd_checkout_cart .edd_discount_remove:hover { background-position: -10px 0; }
 
 /* Checkout Fields */
-#edd_purchase_form input.edd-input { display: inline-block; width: 200px; }
+#edd_purchase_form legend { display:block; font-size: 120%; font-weight: bold; margin: 0 0 10px; border-bottom: 1px solid #ccc; width: 100%; }
+#edd_purchase_form label { font-weight: bold; display:block; position: relative; line-height: 100%; font-size: 95%; }
+#edd_purchase_form span.edd-description { color: #666; font-size: 80%; display: block; }
+#edd_purchase_form input.edd-input { display:block; width: 80%; }
+#edd_purchase_form select.edd-select { display:block; width: 60%; }
+#edd_purchase_form select.edd-select.edd-select-small { display:inline; width: auto; }
 #edd_purchase_form input.edd-input.error { border-color: #c4554e; }
-#edd_purchase_form label { display: inline-block;  width: 200px; position: relative; }
 #edd_purchase_form #edd_terms_agreement label,
 #edd_purchase_form #edd_tax_opt_in_fields label { display: inline-block;  width: auto; }
-#edd_purchase_form input.edd-input.card-number.valid { background-image: url(../assets/images/tick.png); background-repeat: no-repeat; background-position: 98% 50%; }
-#edd_purchase_form span.exp-divider { display: inline; }
-#edd_purchase_form span.card-type { position: absolute; top: -2px; right: 0; width: 32px; height: 32px; }
-#edd_purchase_form span.card-type.off { display:none; }
-#edd_purchase_form span.card-type.visa { background: url( ../assets/images/icons/visa.png ) no-repeat; }
-#edd_purchase_form span.card-type.mastercard { background: url( ../assets/images/icons/mastercard.png ) no-repeat; }
-#edd_purchase_form span.card-type.discover { background: url( ../assets/images/icons/discover.png ) no-repeat; }
-#edd_purchase_form span.card-type.americanexpress { background: url( ../assets/images/icons/americanexpress.png ) no-repeat; }
 #edd_checkout_form_wrap p { margin: 0 0 10px; }
-#edd_checkout_form_wrap input[type="text"],
-#edd_checkout_form_wrap input[type="email"],
-#edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; width: 200px; }
+#edd_checkout_form_wrap input[type="text"], #edd_checkout_form_wrap input[type="email"], #edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; }
+#edd_purchase_form input[type="checkbox"] { float: left; }
 #edd_checkout_form_wrap .edd-payment-icons { height: 32px; }
 #edd_checkout_form_wrap .edd-payment-icons img.payment-icon{ margin: 0 3px 0 0; float: left; background: none; padding: none; border: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
 #edd_checkout_form_wrap fieldset { border: none; padding: 0; margin: 0; }
 #edd_checkout_form_wrap fieldset#edd_register_account_fields,
-#edd_checkout_form_wrap fieldset#edd_login_fields { border: 1px solid #f0f0f0; padding: 10px; margin: 0 0 10px; }
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_register_password,
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_login_password { margin: 0; }
-#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="text"],
-#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="email"],
-#edd_checkout_form_wrap fieldset#edd_register_account_fields input[type="password"] { width: 188px; }
-
+#edd_checkout_form_wrap fieldset#edd_cc_fields { padding: 0 8px 8px 8px; border: 1px solid #f0f0f0; margin: 0 0 10px; background: #f9f9f9; position: relative; left: -8px; }
+#edd_secure_site_wrapper { padding: 4px 4px 4px 0; font-weight: bold; }
+#edd_secure_site_wrapper span.padlock:before { font-family: 'padlock'; font-style: normal; font-weight: normal; speak: none; display: inline-block; text-decoration: inherit; width: 1em; margin-right: 0.2em; text-align: center;	line-height: 1em; margin-left: 0.2em; font-size: 120%; text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); content: '🔒'; }
+#edd_checkout_form_wrap input.edd-input.card-number.valid { background-image: url(../assets/images/tick.png); background-repeat: no-repeat; background-position: 98% 50%; }
+#edd_checkout_form_wrap span.exp-divider { display: inline; }
+#edd_checkout_form_wrap span.card-type { position: absolute; top: -2px; right: 0; width: 32px; height: 32px; }
+#edd_checkout_form_wrap span.card-type.off { display:none; }
+#edd_checkout_form_wrap span.card-type.visa { background: url( ../assets/images/icons/visa.png ) no-repeat; }
+#edd_checkout_form_wrap span.card-type.mastercard { background: url( ../assets/images/icons/mastercard.png ) no-repeat; }
+#edd_checkout_form_wrap span.card-type.discover { background: url( ../assets/images/icons/discover.png ) no-repeat; }
+#edd_checkout_form_wrap span.card-type.americanexpress { background: url( ../assets/images/icons/americanexpress.png ) no-repeat; }
+#edd_checkout_form_wrap #edd-discount-loader, #edd_checkeout_form_wrap .edd-cart-ajax { -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
 
 /* =Theme Specific styling
 -------------------------------------------------------------- */
 
 /* Twenty Twelve */
-#edd_purchase_form input.edd-input.required { color: #000; }
+#edd_purchase_form input.edd-input.required,#edd_purchase_form select.edd-select.required { color: #000; }
 
+/* =Receipt Page
+-------------------------------------------------------------- */
+body.edd_receipt_page { background-color: #fff; color: ##141412; margin: 0; font-family: Helvetica, sans-serif; font-size: 12px; }
+body.edd_receipt_page #edd_receipt_wrapper { width: 660px; margin: 0 auto; padding: 50px 0; }
+body.edd_receipt_page table { display: table; width: 100%; border-bottom: 1px solid #ededed; border-collapse: collapse; border-spacing: 0; font-size: 14px; line-height: 2; margin: 0 0 20px; }
+body.edd_receipt_page td, th { display: table-cell; text-align: left; border-top: 1px solid #ededed; padding: 6px 10px 6px 0; font-weight: normal; }
+body.edd_receipt_page th { font-weight: bold; text-transform: uppercase; }
+body.edd_receipt_page h3 { font-size: 22px; margin: 40px 0 5px; clear: both; display: block; font-weight: bold; }
 
 /* =Purchase Summary Tables
 -------------------------------------------------------------- */
@@ -73,7 +99,10 @@ table#edd_purchase_receipt_products td,
 table#edd_purchase_receipt_products th,
 table#edd_purchase_receipt td,
 table#edd_purchase_receipt th { text-align: left; }
-table#edd_purchase_receipt_products li { list-style: none; }
+table#edd_purchase_receipt_products li { list-style: none; margin: 0 0 8px 10px; }
+table#edd_purchase_receipt ul, table#edd_purchase_receipt_products ul { margin: 0; padding: 0; }
+table#edd_purchase_receipt li { list-style: none; margin: 0 0 8px 0; }
+table#edd_purchase_receipt_products .edd_purchase_receipt_product_notes { font-style: italic; }
 
 
 /* =Purchase History
@@ -107,6 +136,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd_download_purchase_form .edd_price_options li { display: block; padding: 0; margin: 0; }
 
 .edd-submit { text-shadow: 1px 1px #FAFAFA; line-height: normal; cursor: pointer; }
+.edd-submit.button { font-size: inherit; }
 .edd-submit.plain { text-shadow: none; margin: 0; padding: 0; background: none; border: 0; }
 .edd-submit.plain:hover { text-decoration: underline; }
 

@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Discount Codes List Table Class
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
  */
@@ -12,7 +12,6 @@
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 
 // Load WP_List_Table if not loaded
 if ( ! class_exists( 'WP_List_Table' ) ) {
@@ -28,21 +27,17 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * @since       1.4
  * @author      Sunny Ratilal
  */
-
 class EDD_Discount_Codes_Table extends WP_List_Table {
-
-
 	/**
 	 * Number of results to show per page
-	 *
-	 * @since       1.4
+	 * @var string
+	 * @since  1.4
 	 */
 	public $per_page = 30;
 
 	public $total_count;
 	public $active_count;
 	public $inactive_count;
-
 
 	/**
 	 * Get things started
@@ -51,7 +46,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      void
 	 */
-
 	function __construct(){
 		global $status, $page;
 
@@ -64,7 +58,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$this->get_discount_code_counts();
 	}
 
-
 	/**
 	 * Show the search field
 	 *
@@ -74,7 +67,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      void
 	 */
-
 	function search_box( $text, $input_id ) {
 		if ( empty( $_REQUEST['s'] ) && !$this->has_items() )
 			return;
@@ -94,7 +86,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	<?php
 	}
 
-
 	/**
 	 * Retrieve the view types
 	 *
@@ -102,7 +93,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      array
 	 */
-
 	function get_views() {
 		$base           = admin_url('edit.php?post_type=download&page=edd-discounts');
 
@@ -120,7 +110,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		return $views;
 	}
 
-
 	/**
 	 * Retrieve the table columnds
 	 *
@@ -128,7 +117,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      array
 	 */
-
 	function get_columns() {
 		$columns = array(
 			'cb'        => '<input type="checkbox" />',
@@ -146,7 +134,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		return $columns;
 	}
 
-
 	/**
 	 * Retrieve the table's sortable columns
 	 *
@@ -154,14 +141,12 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      array
 	 */
-
 	function get_sortable_columns() {
 		return array(
 			'ID'     => array( 'ID', true ),
 			'name'   => array( 'name', false )
 		);
 	}
-
 
 	/**
 	 * Render most columns
@@ -172,7 +157,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      string
 	 */
-
 	function column_default( $item, $column_name ) {
 		switch( $column_name ){
 			default:
@@ -189,10 +173,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return      string
 	 */
 	function column_name( $item ) {
-		$discount = get_post( $item['ID'] );
-		$base     = admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' . $item['ID'] );
-
-		$row_actions = array();
+		$discount     = get_post( $item['ID'] );
+		$base         = admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' . $item['ID'] );
+		$row_actions  = array();
 
 		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Edit', 'edd' ) . '</a>';
 
@@ -201,13 +184,12 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		else
 			$row_actions['activate'] = '<a href="' . add_query_arg( array( 'edd-action' => 'activate_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Activate', 'edd' ) . '</a>';
 
-		$row_actions['delete'] = '<a href="' . add_query_arg( array( 'edd-action' => 'delete_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Delete', 'edd' ) . '</a>';
+		$row_actions['delete'] = '<a href="' . wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_discount', 'discount' => $discount->ID ) ), 'edd_discount_nonce' ) . '">' . __( 'Delete', 'edd' ) . '</a>';
 
 		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $discount );
 
 		return $item['name'] . $this->row_actions( $row_actions );
 	}
-
 
 	/**
 	 * Render the checkbox column
@@ -216,15 +198,13 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      string
 	 */
-
-	function column_cb( $item ){
+	function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
 			/*$1%s*/ $this->_args['singular'],
 			/*$2%s*/ $item['ID']
 		);
 	}
-
 
 	/**
 	 * Retrieve the bulk actions
@@ -233,7 +213,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      array
 	 */
-
 	function get_bulk_actions() {
 		$actions = array(
 			'delete' => __( 'Delete', 'edd' )
@@ -242,7 +221,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		return $actions;
 	}
 
-
 	/**
 	 * Process the bulk actions
 	 *
@@ -250,7 +228,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      void
 	 */
-
 	function process_bulk_action() {
 		$ids = isset( $_GET['download'] ) ? $_GET['download'] : false;
 
@@ -265,7 +242,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 	}
 
-
 	/**
 	 * Retrieve the discount code counts
 	 *
@@ -279,7 +255,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$this->inactive_count = $discount_code_count->inactive;
 		$this->total_count    = $discount_code_count->active + $discount_code_count->inactive;
 	}
-
 
 	/**
 	 * Retrieve all the data for all the discount codes
@@ -358,7 +333,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		}
 		return $discount_codes_data;
 	}
-
 
 	/**
 	 * Setup the final data for the table

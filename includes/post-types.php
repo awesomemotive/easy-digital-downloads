@@ -4,13 +4,13 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Post Type Functions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Setup Download Post Type
@@ -20,39 +20,37 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_setup_edd_post_types() {
-
 	$archives = true;
-	if( defined( 'EDD_DISABLE_ARCHIVE' ) && EDD_DISABLE_ARCHIVE == true ) {
+	if ( defined( 'EDD_DISABLE_ARCHIVE' ) && EDD_DISABLE_ARCHIVE == true ) {
 		$archives = false;
 	}
 
 	$slug = 'downloads';
-	if( defined( 'EDD_SLUG' ) ) {
+	if ( defined( 'EDD_SLUG' ) ) {
 		$slug = EDD_SLUG;
 	}
 
 	$rewrite = array('slug' => $slug, 'with_front' => false);
-	if( defined( 'EDD_DISABLE_REWRITE' ) && EDD_DISABLE_REWRITE == true ) {
+	if ( defined( 'EDD_DISABLE_REWRITE' ) && EDD_DISABLE_REWRITE == true ) {
 		$rewrite = false;
 	}
 
 	$download_labels =  apply_filters( 'edd_download_labels', array(
 		'name' 				=> '%2$s',
 		'singular_name' 	=> '%1$s',
-		'add_new' 			=> __('Add New', 'edd'),
-		'add_new_item' 		=> __('Add New %1$s', 'edd'),
-		'edit_item' 		=> __('Edit %1$s', 'edd'),
-		'new_item' 			=> __('New %1$s', 'edd'),
-		'all_items' 		=> __('All %2$s', 'edd'),
-		'view_item' 		=> __('View %1$s', 'edd'),
-		'search_items' 		=> __('Search %2$s', 'edd'),
-		'not_found' 		=>  __('No %2$s found', 'edd'),
-		'not_found_in_trash'=> __('No %2$s found in Trash', 'edd'),
+		'add_new' 			=> __( 'Add New', 'edd' ),
+		'add_new_item' 		=> __( 'Add New %1$s', 'edd' ),
+		'edit_item' 		=> __( 'Edit %1$s', 'edd' ),
+		'new_item' 			=> __( 'New %1$s', 'edd' ),
+		'all_items' 		=> __( 'All %2$s', 'edd' ),
+		'view_item' 		=> __( 'View %1$s', 'edd' ),
+		'search_items' 		=> __( 'Search %2$s', 'edd' ),
+		'not_found' 		=> __( 'No %2$s found', 'edd' ),
+		'not_found_in_trash'=> __( 'No %2$s found in Trash', 'edd' ),
 		'parent_item_colon' => '',
-		'menu_name' 		=> __('%2$s', 'edd')
+		'menu_name' 		=> __( '%2$s', 'edd' )
 	) );
 
 	foreach ( $download_labels as $key => $value ) {
@@ -67,30 +65,30 @@ function edd_setup_edd_post_types() {
 		'show_in_menu' 		=> true,
 		'query_var' 		=> true,
 		'rewrite' 			=> $rewrite,
-		'capability_type' 	=> 'post',
+		'capability_type' 	=> 'product',
+		'map_meta_cap'      => true,
 		'has_archive' 		=> $archives,
 		'hierarchical' 		=> false,
-		'supports' 			=> apply_filters('edd_download_supports', array( 'title', 'editor', 'thumbnail' ) ),
+		'supports' 			=> apply_filters( 'edd_download_supports', array( 'title', 'editor', 'thumbnail', 'excerpt' ) ),
 	);
 	register_post_type( 'download', apply_filters( 'edd_download_post_type_args', $download_args ) );
 
 
-	/* payment post type */
-
+	/** Payment Post Type */
 	$payment_labels = array(
-		'name' 				=> _x('Payments', 'post type general name', 'edd'),
-		'singular_name' 	=> _x('Payment', 'post type singular name', 'edd'),
-		'add_new' 			=> __('Add New', 'edd'),
-		'add_new_item' 		=> __('Add New Payment', 'edd'),
-		'edit_item' 		=> __('Edit Payment', 'edd'),
-		'new_item' 			=> __('New Payment', 'edd'),
-		'all_items' 		=> __('All Payments', 'edd'),
-		'view_item' 		=> __('View Payment', 'edd'),
-		'search_items' 		=> __('Search Payments', 'edd'),
-		'not_found' 		=>  __('No Payments found', 'edd'),
-		'not_found_in_trash'=> __('No Payments found in Trash', 'edd'),
+		'name' 				=> _x('Payments', 'post type general name', 'edd' ),
+		'singular_name' 	=> _x('Payment', 'post type singular name', 'edd' ),
+		'add_new' 			=> __( 'Add New', 'edd' ),
+		'add_new_item' 		=> __( 'Add New Payment', 'edd' ),
+		'edit_item' 		=> __( 'Edit Payment', 'edd' ),
+		'new_item' 			=> __( 'New Payment', 'edd' ),
+		'all_items' 		=> __( 'All Payments', 'edd' ),
+		'view_item' 		=> __( 'View Payment', 'edd' ),
+		'search_items' 		=> __( 'Search Payments', 'edd' ),
+		'not_found' 		=>  __( 'No Payments found', 'edd' ),
+		'not_found_in_trash'=> __( 'No Payments found in Trash', 'edd' ),
 		'parent_item_colon' => '',
-		'menu_name' 		=> __('Payment History', 'edd')
+		'menu_name' 		=> __( 'Payment History', 'edd' )
 	);
 
 	$payment_args = array(
@@ -98,29 +96,45 @@ function edd_setup_edd_post_types() {
 		'public' 			=> false,
 		'query_var' 		=> false,
 		'rewrite' 			=> false,
-		'capability_type' 	=> 'post',
+		'capability_type' 	=> 'shop_payment',
+		'map_meta_cap'      => true,
 		'supports' 			=> array( 'title' ),
 		'can_export'		=> true
 	);
 	register_post_type( 'edd_payment', $payment_args );
 
 
-	/* discounts post type */
+	/** Discounts Post Type */
+	$discount_labels = array(
+		'name' 				=> _x( 'Discounts', 'post type general name', 'edd' ),
+		'singular_name' 	=> _x( 'Discount', 'post type singular name', 'edd' ),
+		'add_new' 			=> __( 'Add New', 'edd' ),
+		'add_new_item' 		=> __( 'Add New Discount', 'edd' ),
+		'edit_item' 		=> __( 'Edit Discount', 'edd' ),
+		'new_item' 			=> __( 'New Discount', 'edd' ),
+		'all_items' 		=> __( 'All Discounts', 'edd' ),
+		'view_item' 		=> __( 'View Discount', 'edd' ),
+		'search_items' 		=> __( 'Search Discounts', 'edd' ),
+		'not_found' 		=> __( 'No Discounts found', 'edd' ),
+		'not_found_in_trash'=> __( 'No Discounts found in Trash', 'edd' ),
+		'parent_item_colon' => '',
+		'menu_name' 		=> __( 'Discounts', 'edd' )
+	);
 
 	$discount_args = array(
+		'labels' 			=> apply_filters( 'edd_discount_labels', $discount_labels ),
 		'public' 			=> false,
 		'query_var' 		=> false,
 		'rewrite' 			=> false,
 		'show_ui'           => false,
-		'capability_type' 	=> 'post',
+		'capability_type' 	=> 'shop_discount',
+		'map_meta_cap'      => true,
 		'supports' 			=> array( 'title' ),
 		'can_export'		=> true
 	);
 	register_post_type( 'edd_discount', $discount_args );
-
 }
 add_action( 'init', 'edd_setup_edd_post_types', 100 );
-
 
 /**
  * Get Default Label
@@ -128,16 +142,14 @@ add_action( 'init', 'edd_setup_edd_post_types', 100 );
  * @access      public
  * @since       1.0.8.3
  * @return      array
-*/
-
+ */
 function edd_get_default_labels() {
 	$defaults = array(
-	   'singular' => __('Download','edd'),
-	   'plural' => __('Downloads','edd')
+	   'singular' => __( 'Download','edd' ),
+	   'plural' => __( 'Downloads','edd')
 	);
 	return apply_filters( 'edd_default_downloads_name', $defaults );
 }
-
 
 /**
  * Get Label Singular
@@ -152,41 +164,36 @@ function edd_get_label_singular( $lowercase = false ) {
 	return ($lowercase) ? strtolower( $defaults['singular'] ) : $defaults['singular'];
 }
 
-
 /**
  * Get Label Plural
  *
  * @access      public
  * @since       1.0.8.3
  * @return      string
-*/
-
+ */
 function edd_get_label_plural( $lowercase = false ) {
 	$defaults = edd_get_default_labels();
 	return ( $lowercase ) ? strtolower( $defaults['plural'] ) : $defaults['plural'];
 }
 
 /**
- * Change default "enter title here" input
+ * Change default "Enter title here" input
  *
  * @access      public
  * @since       1.4.0.2
  * @return      string
-*/
-
+ */
 function edd_change_default_title( $title ){
      $screen = get_current_screen();
- 
+
      if  ( 'download' == $screen->post_type ) {
      	$label = edd_get_label_singular();
-        $title = sprintf( __('Enter %s title here', 'edd'), $label);
+        $title = sprintf( __( 'Enter %s title here', 'edd' ), $label );
      }
- 
+
      return $title;
 }
- 
 add_filter( 'enter_title_here', 'edd_change_default_title' );
-
 
 /**
  * Setup Download Taxonomies
@@ -197,14 +204,13 @@ add_filter( 'enter_title_here', 'edd_change_default_title' );
  * @since       1.0
  * @return      void
 */
-
 function edd_setup_download_taxonomies() {
-
 	$slug = 'downloads';
-	if( defined( 'EDD_SLUG' ) ) {
+	if ( defined( 'EDD_SLUG' ) ) {
 		$slug = EDD_SLUG;
 	}
 
+	/** Categories */
 	$category_labels = array(
 		'name' 				=> _x( 'Categories', 'taxonomy general name', 'edd' ),
 		'singular_name' 	=> _x( 'Category', 'taxonomy singular name', 'edd' ),
@@ -227,9 +233,9 @@ function edd_setup_download_taxonomies() {
 			'rewrite' 		=> array('slug' => $slug . '/category', 'with_front' => false, 'hierarchical' => true )
 		)
 	);
-
 	register_taxonomy( 'download_category', array('download'), $category_args );
 
+	/** Tags */
 	$tag_labels = array(
 		'name' 				=> _x( 'Tags', 'taxonomy general name', 'edd' ),
 		'singular_name' 	=> _x( 'Tag', 'taxonomy singular name', 'edd' ),
@@ -252,29 +258,61 @@ function edd_setup_download_taxonomies() {
 			'rewrite' 		=> array( 'slug' => $slug . '/tag', 'with_front' => false, 'hierarchical' => true  )
 		)
 	);
-
 	register_taxonomy( 'download_tag', array( 'download' ), $tag_args );
 }
 add_action( 'init', 'edd_setup_download_taxonomies', 10 );
 
-
 /**
- * Registers custom statuses
+ * Registers Custom Post Statuses
  *
  * @access      public
  * @since       1.0.9.1
  * @return      integer
  */
 function edd_register_post_type_statuses() {
+	// Payment Statuses
+	register_post_status( 'refunded', array(
+		'label'                     => _x( 'Refunded', 'Refunded payment status', 'edd' ),
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'               => _n_noop( 'Refunded <span class="count">(%s)</span>', 'Refunded <span class="count">(%s)</span>', 'edd' )
+	) );
+	register_post_status( 'failed', array(
+		'label'                     => _x( 'Failed', 'Failed payment status', 'edd' ),
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'               => _n_noop( 'Failed <span class="count">(%s)</span>', 'Failed <span class="count">(%s)</span>', 'edd' )
+	)  );
+	register_post_status( 'revoked', array(
+		'label'                     => _x( 'Revoked', 'Revoked payment status', 'edd' ),
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'               => _n_noop( 'Revoked <span class="count">(%s)</span>', 'Revoked <span class="count">(%s)</span>', 'edd' )
+	)  );
 
-	// Payment statuses
-	register_post_status( 'refunded' );
-	register_post_status( 'failed' );
-
-	// Discount code statuses
-	register_post_status( 'active' );
-	register_post_status( 'inactive' );
-
+	// Discount Code Statuses
+	register_post_status( 'active', array(
+		'label'                     => _x( 'Active', 'Active discount code status', 'edd' ),
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'               => _n_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'edd' )
+	)  );
+	register_post_status( 'inactive', array(
+		'label'                     => _x( 'Inactive', 'Inactive discount code status', 'edd' ),
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'               => _n_noop( 'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', 'edd' )
+	)  );
 }
 add_action( 'init', 'edd_register_post_type_statuses' );
 
@@ -287,20 +325,19 @@ add_action( 'init', 'edd_register_post_type_statuses' );
  * @since       1.0
  * @return      array
 */
-
 function edd_updated_messages( $messages ) {
 	global $post, $post_ID;
 
 	$url1 = '<a href="' . get_permalink( $post_ID ) . '">';
 	$url2 = edd_get_label_singular();
 	$url3 = '</a>';
-	
+
 	$messages['download'] = array(
-		1 => sprintf( __('%2$s updated. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
-		4 => sprintf( __('%2$s updated. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
-		6 => sprintf( __('%2$s published. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
-		7 => sprintf( __('%2$s saved. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
-		8 => sprintf( __('%2$s submitted. %1$sView %2$s%3$s.', 'edd'), $url1, $url2, $url3 )
+		1 => sprintf( __( '%2$s updated. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
+		4 => sprintf( __( '%2$s updated. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
+		6 => sprintf( __( '%2$s published. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
+		7 => sprintf( __( '%2$s saved. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 ),
+		8 => sprintf( __( '%2$s submitted. %1$sView %2$s%3$s.', 'edd' ), $url1, $url2, $url3 )
 	);
 
 	return $messages;

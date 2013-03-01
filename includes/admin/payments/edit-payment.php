@@ -4,22 +4,23 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Edit Payment
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
-$payment = get_post( absint( $_GET['purchase_id'] ) );
-$payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true );
+$payment_id   = absint( $_GET['purchase_id'] );
+$payment      = get_post( $payment_id );
+$payment_data = edd_get_payment_meta( $payment_id  );
 ?>
 <div class="wrap">
-	<h2><?php _e( 'Edit Payment', 'edd' ); ?>: <?php echo get_the_title( $_GET['purchase_id'] ) . ' - #' . $_GET['purchase_id']; ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
+	<h2><?php _e( 'Edit Payment', 'edd' ); ?>: <?php echo get_the_title( $payment_id ) . ' - #' . $payment_id; ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
 	<form id="edd-edit-payment" action="" method="post">
 		<table class="form-table">
 			<tbody>
+				<?php do_action( 'edd_edit_payment_top', $payment->ID ); ?>
 				<tr>
 					<th scope="row" valign="top">
 						<span><?php _e( 'Buyer\'s Email', 'edd' ); ?></span>
@@ -31,19 +32,40 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 				</tr>
 				<tr>
 					<th scope="row" valign="top">
+						<span><?php _e( 'Buyer\'s User ID', 'edd' ); ?></span>
+					</th>
+					<td>
+						<input class="small-text" type="number" min="-1" step="1" name="edd-buyer-user-id" id="edd-buyer-user-id" value="<?php echo $payment_data['user_id']; ?>"/>
+						<p class="description"><?php _e( 'If needed, you can update the buyer\'s WordPress user ID here.', 'edd' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row" valign="top">
 						<span><?php _e( 'Downloads Purchased', 'edd' ); ?></span>
 					</th>
 					<td id="purchased-downloads">
 						<?php
 							$downloads = maybe_unserialize( $payment_data['downloads'] );
+							$cart_items = isset( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] ) : false;
 							if ( $downloads ) :
-								foreach ( $downloads as $download ):
+								foreach ( $downloads as $download ) :
 									$id = isset( $payment_data['cart_details'] ) ? $download['id'] : $download;
-									echo '<div class="purchased_download_' . $id . '"><input type="hidden" name="edd-purchased-downloads[]" value="' . $id . '"/><strong>' . get_the_title( $id ) . '</strong> - <a href="#" class="edd-remove-purchased-download" data-action="remove_purchased_download" data-id="' . $id . '">Remove</a></div>';
+
+									if ( isset( $download['options']['price_id'] ) ) {
+										$variable_prices = '<input type="hidden" name="edd-purchased-downloads[' . $id . '][options][price_id]" value="'. $download['options']['price_id'] .'" />';
+										$variable_prices .= '(' . edd_get_price_option_name( $id, $download['options']['price_id'], $payment_id ) . ')';
+									} else {
+										$variable_prices = '';
+									}
+
+									echo '<div class="purchased_download_' . $id . '">
+											<input type="hidden" name="edd-purchased-downloads[' . $id . ']" value="' . $id . '"/>
+											<strong>' . get_the_title( $id ) . ' ' . $variable_prices . '</strong> - <a href="#" class="edd-remove-purchased-download" data-action="remove_purchased_download" data-id="' . $id . '">'. __( 'Remove', 'edd' ) .'</a>
+										  </div>';
 								endforeach;
 							endif;
 						?>
-						<p id="edit-downloads"><a href="#TB_inline?width=640&amp;inlineId=available-downloads" class="thickbox" title="<?php printf( __( 'Add download to purchase #%s', 'edd' ), $_GET['purchase_id'] ); ?> "><?php _e( 'Add download to purchase', 'edd' ); ?></p>
+						<p id="edit-downloads"><a href="#TB_inline?width=640&amp;inlineId=available-downloads" class="thickbox" title="<?php printf( __( 'Add %s to purchase', 'edd' ), strtolower( edd_get_label_plural() ) ); ?>"><?php printf( __( 'Add %s to purchase', 'edd' ), strtolower( edd_get_label_plural() ) ); ?></a></p>
 					</td>
 				</tr>
 				<tr>
@@ -98,29 +120,40 @@ $payment_data = get_post_meta( $_GET['purchase_id'], '_edd_payment_meta', true )
 						<span class="description"><?php _e( 'Check this box to send the purchase receipt, including all download links.', 'edd' ); ?></span>
 					</td>
 				</tr>
+				<?php do_action( 'edd_edit_payment_bottom', $payment->ID ); ?>
 			</tbody>
 		</table>
 
 		<input type="hidden" name="edd-action" value="edit_payment"/>
 		<input type="hidden" name="edd-old-status" value="<?php echo $status; ?>"/>
-		<input type="hidden" name="payment-id" value="<?php echo $_GET['purchase_id']; ?>"/>
+		<input type="hidden" name="payment-id" value="<?php echo $payment_id; ?>"/>
 		<?php wp_nonce_field( 'edd_payment_nonce', 'edd-payment-nonce' ); ?>
 		<?php echo submit_button( __( 'Update Payment', 'edd' ) ); ?>
 	</form>
 	<div id="available-downloads" style="display:none;">
 		<form id="edd-add-downloads-to-purchase">
 			<p>
+				<select name="downloads[0][id]" class="edd-downloads-list">
 				<?php
-				$downloads = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1 ) );
+				$downloads = get_posts( apply_filters( 'edd_add_downloads_to_purchase_query', array( 'post_type' => 'download', 'posts_per_page' => -1 ) ) );
+				echo '<option value="0">' . sprintf( __('Select a %s', 'edd'), esc_html( edd_get_label_singular() ) ) . '</option>';
 				foreach( $downloads as $download ) {
-					echo '<input type="checkbox" class="edd-download-to-add" name="edd_downloads_to_add[]" value="' . $download->ID . '"/>&nbsp;' . get_the_title( $download->ID ) . '<br/>';
+					?>
+					<option value="<?php echo $download->ID; ?>"><?php echo get_the_title( $download->ID ) ?></option>
+					<?php
 				}
 				?>
+				</select>
+				&nbsp;<img src="<?php echo admin_url('/images/wpspin_light.gif'); ?>" class="hidden edd_add_download_to_purchase_waiting waiting" />
+			</p>
+			<p>
+				<a href="#" class="button-secondary edd-add-another-download"><?php echo sprintf( __( 'Add Another %s', 'edd' ), esc_html( edd_get_label_singular() ) ); ?></a>
 			</p>
 			<p>
 				<a id="edd-add-download" class="button-primary" title="<?php _e( 'Add Selected Downloads', 'edd' ); ?>"><?php _e( 'Add Selected Downloads', 'edd' ); ?></a>
 				<a id="edd-close-add-download" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Close', 'edd' ); ?>"><?php _e( 'Close', 'edd' ); ?></a>
 			</p>
+			<?php wp_nonce_field( 'edd_add_downloads_to_purchase_nonce', 'edd_add_downloads_to_purchase_nonce' ); ?>
 		</form>
 	</div>
 </div>

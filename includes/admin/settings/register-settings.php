@@ -4,7 +4,7 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Register Settings
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -21,19 +21,17 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @since       1.0
  * @return      void
 */
-
 function edd_register_settings() {
-
 	// Setup some default option sets
 	$pages = get_pages();
 	$pages_options = array( 0 => '' ); // Blank option
-	if( $pages ) {
-		foreach( $pages as $page ) {
+	if ( $pages ) {
+		foreach ( $pages as $page ) {
 			$pages_options[ $page->ID ] = $page->post_title;
 		}
 	}
 
-	/* white list our settings, each in their respective section
+	/* White list our settings, each in their respective section
 	   filters can be used to add more options to each section */
 	$edd_settings = array(
 		'general' => apply_filters('edd_settings_general',
@@ -115,6 +113,18 @@ function edd_register_settings() {
 					'name' => __('Enable Tracking', 'edd'),
 					'desc' => __('Check this box to allow Easy Digital Downloads to track how the plugin is used. No personal info is ever collected. This helps us better improve the plugin.', 'edd'),
 					'type' => 'checkbox'
+				),
+				'api_settings' => array(
+					'id' => 'api_settings',
+					'name' => '<strong>' . __('API Settings', 'edd') . '</strong>',
+					'desc' => '',
+					'type' => 'header'
+				),
+				'api_allow_user_keys' => array(
+					'id' => 'api_allow_user_keys',
+					'name' => __('Allow User Keys', 'edd') . '</strong>',
+					'desc' => __('Check this box to allow all users to generate API keys. Users with the \'manage_shop_settings\' capability are always allowed to generate keys.', 'edd'),
+					'type' => 'checkbox'
 				)
 			)
 		),
@@ -125,6 +135,13 @@ function edd_register_settings() {
 					'name' => __('Payment Gateways', 'edd'),
 					'desc' => __('Choose the payment gateways you want to enable.', 'edd'),
 					'type' => 'gateways',
+					'options' => edd_get_payment_gateways()
+				),
+				'default_gateway' => array(
+					'id' => 'default_gateway',
+					'name' => __('Default Gateway', 'edd'),
+					'desc' => __('This gateway will be loaded automatically with the checkout page.', 'edd'),
+					'type' => 'gateway_select',
 					'options' => edd_get_payment_gateways()
 				),
 				'accepted_cards' => array(
@@ -160,12 +177,6 @@ function edd_register_settings() {
 					'desc' => __('Enter the name of the page style to use, or leave blank for default', 'edd'),
 					'type' => 'text',
 					'size' => 'regular'
-				),
-				'paypal_alternate_verification' => array(
-					'id' => 'paypal_alternate_verification',
-					'name' => __('Alternate PayPal Purchase Verification', 'edd'),
-					'desc' => __('If payments are not getting marked as complete, then check this box. Note, this requires that buyers return to your site from PayPal.', 'edd'),
-					'type' => 'checkbox'
 				),
 				'disable_paypal_verification' => array(
 					'id' => 'disable_paypal_verification',
@@ -221,9 +232,11 @@ function edd_register_settings() {
 						'{subtotal} - ' . __('The price of the purchase before taxes', 'edd') . '<br/>' .
 						'{tax} - ' . __('The taxed amount of the purchase', 'edd') . '<br/>' .
 						'{price} - ' . __('The total price of the purchase', 'edd') . '<br/>' .
+						'{payment_id} - ' . __('The unique ID number for this purchase', 'edd') . '<br/>' .
 						'{receipt_id} - ' . __('The unique ID number for this purchase receipt', 'edd') . '<br/>' .
 						'{payment_method} - ' . __('The method of payment used for this purchase', 'edd') . '<br/>' .
-						'{sitename} - ' . __('Your site name', 'edd'),
+						'{sitename} - ' . __('Your site name', 'edd') . '<br/>' .
+						'{receipt_link} - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'edd' ),
 					'type' => 'rich_editor'
 				),
 				'admin_notice_emails' => array(
@@ -240,7 +253,7 @@ function edd_register_settings() {
 				'disable_styles' => array(
 					'id' => 'disable_styles',
 					'name' => __('Disable Styles', 'edd'),
-					'desc' => __('Check this to disable all included styling', 'edd'),
+					'desc' => __('Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'edd'),
 					'type' => 'checkbox'
 				),
 				'buton_header' => array(
@@ -342,12 +355,6 @@ function edd_register_settings() {
 					'id' => 'redirect_on_add',
 					'name' => __('Redirect to Checkout', 'edd'),
 					'desc' => __('Immediately redirect to checkout after adding an item to the cart?', 'edd'),
-					'type' => 'checkbox'
-				),
-				'jquery_validation' => array(
-					'id' => 'jquery_validation',
-					'name' => __('Enable jQuery Validation', 'edd'),
-					'desc' => __('Check this to enable jQuery validation on the checkout form.', 'edd'),
 					'type' => 'checkbox'
 				),
 				'live_cc_validation' => array(
@@ -608,8 +615,6 @@ function edd_register_settings() {
 }
 add_action('admin_init', 'edd_register_settings');
 
-
-
 /**
  * Settings Taxes Description Callback
  *
@@ -618,12 +623,10 @@ add_action('admin_init', 'edd_register_settings');
  * @access      private
  * @since       1.3.3
  * @return      void
-*/
-
+ */
 function edd_settings_taxes_description_callback() {
 	echo __('These settings will let you configure simple tax rules for purchases.', 'edd');
 }
-
 
 /**
  * Header Callback
@@ -633,12 +636,10 @@ function edd_settings_taxes_description_callback() {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_header_callback($args) {
 	echo '';
 }
-
 
 /**
  * Checkbox Callback
@@ -648,8 +649,7 @@ function edd_header_callback($args) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_checkbox_callback($args) {
 	global $edd_options;
 
@@ -660,7 +660,6 @@ function edd_checkbox_callback($args) {
 	echo $html;
 }
 
-
 /**
  * Multicheck Callback
  *
@@ -669,8 +668,7 @@ function edd_checkbox_callback($args) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_multicheck_callback($args) {
 	global $edd_options;
 
@@ -682,7 +680,6 @@ function edd_multicheck_callback($args) {
 	echo '<p class="description">' . $args['desc'] . '</p>';
 }
 
-
 /**
  * Radio Callback
  *
@@ -691,8 +688,7 @@ function edd_multicheck_callback($args) {
  * @access      private
  * @since       1.3.3
  * @return      void
-*/
-
+ */
 function edd_radio_callback($args) {
 
 	global $edd_options;
@@ -707,7 +703,6 @@ function edd_radio_callback($args) {
 
 }
 
-
 /**
  * Gateways Callback
  *
@@ -716,8 +711,7 @@ function edd_radio_callback($args) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_gateways_callback($args) {
 	global $edd_options;
 
@@ -730,6 +724,28 @@ function edd_gateways_callback($args) {
 
 
 /**
+ * Gateways Callback (drop down)
+ *
+ * Renders gateways select menu
+ *
+ * @access      private
+ * @since       1.5
+ * @return      void
+ */
+function edd_gateway_select_callback($args) {
+	global $edd_options;
+
+	echo '<select name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']">';
+	foreach( $args['options'] as $key => $option ):
+		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $key, $edd_options[$args['id']], false ) : '';
+		echo '<option value="' . esc_attr( $key ) . '"' . $selected . '>' . esc_html( $option['admin_label'] ) . '</option>';
+	endforeach;
+	echo '</select>';
+	echo '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+}
+
+
+/**
  * Text Callback
  *
  * Renders text fields.
@@ -737,8 +753,7 @@ function edd_gateways_callback($args) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_text_callback($args) {
 	global $edd_options;
 
@@ -750,7 +765,6 @@ function edd_text_callback($args) {
 	echo $html;
 }
 
-
 /**
  * Textarea Callback
  *
@@ -759,8 +773,7 @@ function edd_text_callback($args) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_textarea_callback($args) {
 	global $edd_options;
 
@@ -772,7 +785,6 @@ function edd_textarea_callback($args) {
 	echo $html;
 }
 
-
 /**
  * Password Callback
  *
@@ -781,8 +793,7 @@ function edd_textarea_callback($args) {
  * @access      private
  * @since       1.3
  * @return      void
-*/
-
+ */
 function edd_password_callback($args) {
 	global $edd_options;
 
@@ -794,7 +805,6 @@ function edd_password_callback($args) {
 	echo $html;
 }
 
-
 /**
  * Missing Callback
  *
@@ -803,8 +813,7 @@ function edd_password_callback($args) {
  * @access      private
  * @since       1.3.1
  * @return      void
-*/
-
+ */
 function edd_missing_callback($args) {
 	printf( __( 'The callback function used for the <strong>%s</strong> setting is missing.', 'edd' ), $args['id'] );
 }
@@ -817,8 +826,7 @@ function edd_missing_callback($args) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_select_callback($args) {
 	global $edd_options;
 
@@ -833,7 +841,6 @@ function edd_select_callback($args) {
 	echo $html;
 }
 
-
 /**
  * Rich Editor Callback
  *
@@ -842,8 +849,7 @@ function edd_select_callback($args) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_rich_editor_callback($args) {
 	global $edd_options, $wp_version;
 
@@ -858,7 +864,6 @@ function edd_rich_editor_callback($args) {
 	echo $html;
 }
 
-
 /**
  * Upload Callback
  *
@@ -867,8 +872,7 @@ function edd_rich_editor_callback($args) {
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_upload_callback($args) {
 	global $edd_options;
 
@@ -881,6 +885,30 @@ function edd_upload_callback($args) {
 	echo $html;
 }
 
+/**
+ * Registers the license field callback for Software Licensing
+ * *
+ * @access      private
+ * @since       1.5
+ * @return      void
+ */
+if ( ! function_exists( 'edd_license_key_callback' ) ) {
+	function edd_license_key_callback( $args ) {
+		global $edd_options;
+
+		if( isset( $edd_options[ $args['id'] ] ) ) { $value = $edd_options[ $args['id'] ]; } else { $value = isset( $args['std'] ) ? $args['std'] : ''; }
+		$size = isset( $args['size'] ) && !is_null($args['size']) ? $args['size'] : 'regular';
+		$html = '<input type="text" class="' . $args['size'] . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
+
+		if( 'valid' == get_option( $args['options']['is_valid_license_option'] ) ) {
+			$html .= wp_nonce_field( $args['id'] . '_nonce', $args['id'] . '_nonce', false );
+			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License',  'edd-recurring' ) . '"/>';
+		}
+		$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+		echo $html;
+	}
+}
 
 /**
  * Hook Callback
@@ -890,13 +918,10 @@ function edd_upload_callback($args) {
  * @access      private
  * @since       1.0.8.2
  * @return      void
-*/
-
+ */
 function edd_hook_callback( $args ) {
 	do_action( 'edd_' . $args['id'] );
 }
-
-
 
 /**
  * Settings Sanitization
@@ -907,13 +932,11 @@ function edd_hook_callback( $args ) {
  * @access      private
  * @since       1.0.8.2
  * @return      void
-*/
-
+ */
 function edd_settings_sanitize( $input ) {
 	add_settings_error( 'edd-notices', '', __('Settings Updated', 'edd'), 'updated' );
 	return $input;
 }
-
 
 /**
  * Get Settings
@@ -924,15 +947,14 @@ function edd_settings_sanitize( $input ) {
  * @access      public
  * @since       1.0
  * @return      array
-*/
-
+ */
 function edd_get_settings() {
-	$general_settings 	= is_array(get_option('edd_settings_general')) 	? get_option('edd_settings_general') 	: array();
-	$gateway_settings 	= is_array(get_option('edd_settings_gateways')) ? get_option('edd_settings_gateways') 	: array();
-	$email_settings 	= is_array(get_option('edd_settings_emails')) 	? get_option('edd_settings_emails') 	: array();
-	$style_settings 	= is_array(get_option('edd_settings_styles')) 	? get_option('edd_settings_styles') 	: array();
-	$tax_settings 		= is_array(get_option('edd_settings_taxes')) 	? get_option('edd_settings_taxes') 		: array();
-	$misc_settings 		= is_array(get_option('edd_settings_misc')) 	? get_option('edd_settings_misc') 		: array();
+	$general_settings = is_array( get_option( 'edd_settings_general' ) )  ? get_option( 'edd_settings_general' )  : array();
+	$gateway_settings = is_array( get_option( 'edd_settings_gateways' ) ) ? get_option( 'edd_settings_gateways' ) : array();
+	$email_settings   = is_array( get_option( 'edd_settings_emails' ) )   ? get_option( 'edd_settings_emails' )   : array();
+	$style_settings   = is_array( get_option( 'edd_settings_styles' ) )   ? get_option( 'edd_settings_styles' )   : array();
+	$tax_settings     = is_array( get_option( 'edd_settings_taxes' ) )    ? get_option( 'edd_settings_taxes' )    : array();
+	$misc_settings    = is_array( get_option( 'edd_settings_misc' ) )     ? get_option( 'edd_settings_misc' )     : array();
 
-	return array_merge($general_settings, $gateway_settings, $email_settings, $style_settings, $tax_settings, $misc_settings);
+	return array_merge( $general_settings, $gateway_settings, $email_settings, $style_settings, $tax_settings, $misc_settings );
 }

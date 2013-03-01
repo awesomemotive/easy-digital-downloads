@@ -4,14 +4,13 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Upload Functions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 
 /**
  * Change Downloads Upload Dir
@@ -22,7 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.0
  * @return      void
 */
-
 function edd_change_downloads_upload_dir() {
 	global $pagenow;
 
@@ -33,7 +31,7 @@ function edd_change_downloads_upload_dir() {
 
 			// We don't want users snooping in the EDD root, so let's add htacess there, first
 			// Creating the directory if it doesn't already exist.
-			$rules = 'Options -Indexes';
+			$rules = apply_filters( 'edd_protected_directory_htaccess_rules', 'Options -Indexes' );
 			if ( !@file_get_contents( $wp_upload_dir['basedir'] . '/edd/.htaccess' ) ) {
 				wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd' );
 			}
@@ -51,7 +49,6 @@ function edd_change_downloads_upload_dir() {
 }
 add_action( 'admin_init', 'edd_change_downloads_upload_dir', 999 );
 
-
 /**
  * Set Upload Dir
  *
@@ -61,14 +58,12 @@ add_action( 'admin_init', 'edd_change_downloads_upload_dir', 999 );
  * @since       1.0
  * @return      array
 */
-
 function edd_set_upload_dir( $upload ) {
 	$upload['subdir'] = '/edd' . $upload['subdir'];
 	$upload['path'] = $upload['basedir'] . $upload['subdir'];
 	$upload['url']	= $upload['baseurl'] . $upload['subdir'];
 	return $upload;
 }
-
 
 /**
  * Creates blank index.php and .htaccess files
@@ -80,7 +75,6 @@ function edd_set_upload_dir( $upload ) {
  * @since       1.1.5
  * @return      void
 */
-
 function edd_create_protection_files() {
 	if ( false === get_transient( 'edd_check_protection_files' ) ) {
 		$wp_upload_dir = wp_upload_dir();
@@ -89,12 +83,12 @@ function edd_create_protection_files() {
 		wp_mkdir_p( $upload_path );
 
 		// Top level blank index.php
-		if( ! file_exists( $upload_path . '/index.php' ) ) {
+		if ( ! file_exists( $upload_path . '/index.php' ) ) {
 			@file_put_contents( $upload_path . '/index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
 		}
 
 		// Top level .htaccess file
-		$rules = 'Options -Indexes';
+		$rules = apply_filters( 'edd_protected_directory_htaccess_rules', 'Options -Indexes' );
 		if ( file_exists( $upload_path . '/.htaccess' ) ) {
 			$contents = @file_get_contents( $upload_path . '/.htaccess' );
 			if ( false === strpos( $contents, 'Options -Indexes' ) || ! $contents ) {
@@ -116,7 +110,6 @@ function edd_create_protection_files() {
 }
 add_action( 'admin_init', 'edd_create_protection_files' );
 
-
 /**
  * Scans all folders inside of /uploads/edd
  *
@@ -124,7 +117,6 @@ add_action( 'admin_init', 'edd_create_protection_files' );
  * @since       1.1.5
  * @return      array
 */
-
 function edd_scan_folders( $path = '', $return = array() ) {
 	$path = $path == ''? dirname( __FILE__ ) : $path;
 	$lists = @scandir( $path );

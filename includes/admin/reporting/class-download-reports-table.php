@@ -4,10 +4,9 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Download Reports List Table Class
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
-
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -24,11 +23,18 @@ if( ! class_exists( 'WP_List_Table' ) ) {
  *
  * @access      private
  */
-
 class EDD_Download_Reports_Table extends WP_List_Table {
+	/**
+	 * @var int
+	 */
 	public $per_page = 30;
 
-
+	/**
+	 * Get things started
+	 *
+	 * @access      private
+	 * @return      void
+	 */
 	function __construct() {
 		global $status, $page;
 
@@ -38,9 +44,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 			'plural'    => edd_get_label_plural(),    	// Plural name of the listed records
 			'ajax'      => false             			// Does this table support ajax?
 		) );
-
 	}
-
 
 	/**
 	 * Output column data
@@ -49,7 +53,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @since       1.3
 	 * @return      string
 	 */
-
 	function column_default( $item, $column_name ) {
 		switch( $column_name ){
 			case 'earnings' :
@@ -63,7 +66,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		}
 	}
 
-
 	/**
 	 * Get the column IDs and names
 	 *
@@ -71,7 +73,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @since       1.3
 	 * @return      array
 	 */
-
 	function get_columns() {
 		$columns = array(
 			'title'     		=> edd_get_label_singular(),
@@ -83,7 +84,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		return $columns;
 	}
 
-
 	/**
 	 * Define the sortable columns
 	 *
@@ -91,7 +91,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @since       1.3
 	 * @return      array
 	 */
-
 	function get_sortable_columns() {
 		return array(
 			'title' 	=> array( 'title', true ),
@@ -100,7 +99,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		);
 	}
 
-
 	/**
 	 * Retrieve the current page number
 	 *
@@ -108,20 +106,17 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      int
 	 */
-
 	function get_paged() {
 		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 	}
 
-
 	/**
-	 * Retrieve the totoal number of downloads
+	 * Retrieve the total number of downloads
 	 *
 	 * @access      private
 	 * @since       1.4
 	 * @return      int
 	 */
-
 	function get_total_downloads() {
 		$counts = wp_count_posts( 'download' );
 		$total  = 0;
@@ -130,7 +125,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		return $total;
 	}
 
-
 	/**
 	 * Show reporting views
 	 *
@@ -138,21 +132,18 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @since       1.3
 	 * @return      void
 	 */
-
 	function bulk_actions() {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_report_views();
 	}
-
 
 	/**
 	 * Retrieve all report data for Downloads
 	 *
 	 * @access      private
 	 * @since       1.3
-	 * @return      array
+	 * @return      array $reports_data
 	 */
-
 	function reports_data() {
 		$reports_data = array();
 
@@ -167,7 +158,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 			'paged'         => $this->get_paged()
 		);
 
-		switch( $orderby ) :
+		switch ( $orderby ) :
 			case 'title' :
 				$report_args['orderby'] = 'title';
 				break;
@@ -214,7 +205,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @uses        $this->set_pagination_args()
 	 * @return      array
 	 */
-
 	function prepare_items() {
 		$columns = $this->get_columns();
 
