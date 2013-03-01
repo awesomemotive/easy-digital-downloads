@@ -213,7 +213,7 @@ function edd_default_cc_address_fields() {
 			<input type="text" name="card_address" class="card-address edd-input required" placeholder="<?php _e( 'Address line 1', 'edd' ); ?>"/>
 		</p>
 		<p id="edd-card-address-2-wrap">
-			<label class="edd-label"><?php _e( 'Billing Address Line 2', 'edd' ); ?></label>
+			<label class="edd-label"><?php _e( 'Billing Address Line 2 (optional)', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The suite, apt no, PO box, etc, associated with your billing address.', 'edd' ); ?></span>
 			<input type="text" name="card_address_2" class="card-address-2 edd-input" placeholder="<?php _e( 'Address line 2', 'edd' ); ?>"/>
 		</p>
@@ -385,7 +385,7 @@ function edd_payment_mode_select() {
 		<fieldset id="edd_payment_mode_select">
 			<?php do_action('edd_payment_mode_before_gateways'); ?>
 			<p id="edd-payment-mode-wrap">
-				<?php _e( 'Select Payment Method', 'edd' ); ?><br/>
+				<span class="edd-payment-mode-label"><?php _e( 'Select Payment Method', 'edd' ); ?></span><br/>
 				<?php
 				foreach($gateways as $gateway_id => $gateway) :
 					$checked = checked( $gateway_id, edd_get_default_gateway(), false );
