@@ -213,7 +213,7 @@ function edd_default_cc_address_fields() {
 			<input type="text" name="card_address" class="card-address edd-input required" placeholder="<?php _e( 'Address line 1', 'edd' ); ?>"/>
 		</p>
 		<p id="edd-card-address-2-wrap">
-			<label class="edd-label"><?php _e( 'Billing Address Line 2', 'edd' ); ?></label>
+			<label class="edd-label"><?php _e( 'Billing Address Line 2 (optional)', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The suite, apt no, PO box, etc, associated with your billing address.', 'edd' ); ?></span>
 			<input type="text" name="card_address_2" class="card-address-2 edd-input" placeholder="<?php _e( 'Address line 2', 'edd' ); ?>"/>
 		</p>
