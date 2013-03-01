@@ -4,14 +4,13 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Downloads
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.2.3
  */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 
 /**
  * Downloads contextual help
@@ -23,7 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.2.3
  * @return      void
  */
-
 function edd_downloads_contextual_help() {
 	$screen = get_current_screen();
 

@@ -4,12 +4,13 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Misc Functions
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
+
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Is Test Mode
@@ -17,11 +18,11 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @access      public
  * @since       1.0
  * @return      boolean
-*/
-
+ */
 function edd_is_test_mode() {
 	global $edd_options;
-	if( !isset( $edd_options['test_mode'] ) || is_null( $edd_options['test_mode'] ) )
+
+	if ( ! isset( $edd_options['test_mode'] ) || is_null( $edd_options['test_mode'] ) )
 		$ret = false;
 	else
 		$ret = true;
@@ -29,18 +30,17 @@ function edd_is_test_mode() {
 	return (bool) apply_filters( 'edd_is_test_mode', $ret );
 }
 
-
 /**
  * No Guest Checkout
  *
  * @access      public
  * @since       1.0
  * @return      boolean
-*/
-
+ */
 function edd_no_guest_checkout() {
 	global $edd_options;
-	if( isset( $edd_options['logged_in_only'] ) )
+
+	if ( isset( $edd_options['logged_in_only'] ) )
 		$ret = true;
 	else
 		$ret = false;
@@ -48,18 +48,17 @@ function edd_no_guest_checkout() {
 	return (bool) apply_filters( 'edd_no_guest_checkout', $ret );
 }
 
-
 /**
  * Logged in Only
  *
  * @access      public
  * @since       1.0
  * @return      boolean
-*/
-
+ */
 function edd_logged_in_only() {
 	global $edd_options;
-	if( isset( $edd_options['logged_in_only'] ) )
+
+	if ( isset( $edd_options['logged_in_only'] ) )
 		$ret = true;
 	else
 		$ret = false;
@@ -67,21 +66,18 @@ function edd_logged_in_only() {
 	return (bool) apply_filters( 'edd_logged_in_only', $ret );
 }
 
-
 /**
  * Redirect to checkout immediately after adding items to the cart?
  *
  * @access      public
  * @since       1.4.2
  * @return      boolean
-*/
-
+ */
 function edd_straight_to_checkout() {
 	global $edd_options;
 	$ret = isset( $edd_options['redirect_on_add'] );
 	return (bool) apply_filters( 'edd_straight_to_checkout', $ret );
 }
-
 
 /**
  * Disable Redownload
@@ -89,15 +85,15 @@ function edd_straight_to_checkout() {
  * @access      public
  * @since       1.0.8.2
  * @return      boolean
-*/
-
+ */
 function edd_no_redownload() {
 	global $edd_options;
-	if( isset( $edd_options['disable_redownload'] ) )
+
+	if ( isset( $edd_options['disable_redownload'] ) )
 		return true;
+
 	return (bool) apply_filters( 'edd_no_redownload', false );
 }
-
 
 /**
  * Verify credit card numbers live?
@@ -105,49 +101,31 @@ function edd_no_redownload() {
  * @access      public
  * @since       1.4
  * @return      boolean
-*/
-
+ */
 function edd_is_cc_verify_enabled() {
 	global $edd_options;
 
 	$ret = true;
 
 	/*
-	 * enable if use a single gateway other than PayPal or Manual. We have to assume it accepts cerdit cards
-	 * enable if using more than one gateway if they aren't both PayPal and manual, again assuming credit card usage
+	 * Enable if use a single gateway other than PayPal or Manual. We have to assume it accepts cerdit cards
+	 * Enable if using more than one gateway if they aren't both PayPal and manual, again assuming credit card usage
 	 */
 
 	$gateways = edd_get_enabled_payment_gateways();
-	if( count( $gateways ) == 1 && ! isset( $gateways['paypal'] ) && ! isset( $gateways['manual'] ) )
+
+	if ( count( $gateways ) == 1 && ! isset( $gateways['paypal'] ) && ! isset( $gateways['manual'] ) )
 		$ret = true;
-	else if( count( $gateways ) == 1 )
+	else if ( count( $gateways ) == 1 )
 		$ret = false;
-	else if( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) )
+	else if ( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) )
 		$ret = false;
 
-	if( isset( $edd_options['edd_is_cc_verify_enabled'] ) )
+	if ( isset( $edd_options['edd_is_cc_verify_enabled'] ) )
 		$ret = false; // Global override
 
 	return (bool) apply_filters( 'edd_verify_credit_cards', $ret );
 }
-
-
-/**
- * Get Menu Access Level
- *
- * Returns the access level required to access
- * the downloads menu. Currently not changeable,
- * but here for a future update.
- *
- * @access      public
- * @since       1.0
- * @return      string
-*/
-
-function edd_get_menu_access_level() {
-	return apply_filters( 'edd_menu_access_level', 'manage_options' );
-}
-
 
 /**
  * Is Odd
@@ -157,12 +135,10 @@ function edd_get_menu_access_level() {
  * @access      public
  * @since       1.0
  * @return      boolean
-*/
-
+ */
 function edd_is_odd( $int ) {
 	return (bool) ( $int & 1 );
 }
-
 
 /**
  * Get File Extension
@@ -172,13 +148,11 @@ function edd_is_odd( $int ) {
  * @access      public
  * @since       1.0
  * @return      string
-*/
-
+ */
 function edd_get_file_extension( $str ) {
    $parts = explode( '.', $str );
    return end( $parts );
 }
-
 
 function edd_string_is_image_url( $str ) {
 	$ext = edd_get_file_extension( $str );
@@ -201,8 +175,6 @@ function edd_string_is_image_url( $str ) {
 	return (bool) apply_filters( 'edd_string_is_image', $return, $str );
 }
 
-
-
 /**
  * Get User IP
  *
@@ -212,9 +184,8 @@ function edd_string_is_image_url( $str ) {
  * @since       1.0.8.2
  * @return      string
 */
-
 function edd_get_ip() {
-	if( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+	if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 		//check ip from share internet
 	  $ip = $_SERVER['HTTP_CLIENT_IP'];
 	} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
@@ -226,22 +197,20 @@ function edd_get_ip() {
 	return apply_filters( 'edd_get_ip', $ip );
 }
 
-
 /**
  * Get Currencies
  *
  * @access      public
  * @since       1.0
  * @return      array
-*/
-
+ */
 function edd_get_currencies() {
 	$currencies = array(
 		'USD' => __('US Dollars (&#36;)', 'edd'),
 		'EUR' => __('Euros (&euro;)', 'edd'),
 		'GBP' => __('Pounds Sterling (&pound;)', 'edd'),
 		'AUD' => __('Australian Dollars (&#36;)', 'edd'),
-		'BRL' => __('Brazilian Real (&#36;)', 'edd'),
+		'BRL' => __('Brazilian Real (R&#36;)', 'edd'),
 		'CAD' => __('Canadian Dollars (&#36;)', 'edd'),
 		'CZK' => __('Czech Koruna', 'edd'),
 		'DKK' => __('Danish Krone', 'edd'),
@@ -268,17 +237,15 @@ function edd_get_currencies() {
 	return apply_filters( 'edd_currencies', $currencies );
 }
 
-
 /**
  * Get Country List
  *
  * @access      public
  * @since       1.0
  * @return      array
-*/
-
+ */
 function edd_get_country_list() {
-	$countries =array(
+	$countries = array(
 		'US' => 'United States',
 		'CA' => 'Canada',
 		'GB' => 'United Kingdom',
@@ -528,17 +495,15 @@ function edd_get_country_list() {
 	return apply_filters( 'edd_countries', $countries );
 }
 
-
 /**
  * Get States List
  *
  * @access      public
  * @since       1.2
  * @return      array
-*/
-
+ */
 function edd_get_states_list() {
-	$states =array(
+	$states = array(
 		'AL' => 'Alabama',
 		'AK' => 'Alaska',
 		'AZ' => 'Arizona',
@@ -610,15 +575,13 @@ function edd_get_states_list() {
 	return apply_filters( 'edd_us_states', $states );
 }
 
-
 /**
  * Get Provinces List
  *
  * @access      public
  * @since       1.2
  * @return      array
-*/
-
+ */
 function edd_get_provinces_list() {
 	$provinces = array(
 		'AB' => 'Alberta',
@@ -639,7 +602,6 @@ function edd_get_provinces_list() {
 	return apply_filters( 'edd_canada_provinces', $provinces );
 }
 
-
 /**
  * Month Num To Name
  *
@@ -649,14 +611,12 @@ function edd_get_provinces_list() {
  * @access      public
  * @since       1.0
  * @return      string
-*/
-
+ */
 function edd_month_num_to_name( $n ) {
 	$timestamp = mktime( 0, 0, 0, $n, 1, 2005 );
 
 	return date_i18n( "M", $timestamp );
 }
-
 
 /**
  * Get PHP Arg Seaparator Ouput
@@ -665,11 +625,9 @@ function edd_month_num_to_name( $n ) {
  * @since       1.0.8.3
  * @return      string
 */
-
 function edd_get_php_arg_separator_output() {
 	return ini_get('arg_separator.output');
 }
-
 
 /**
  * Get the current page URL
@@ -677,39 +635,30 @@ function edd_get_php_arg_separator_output() {
  * @access      public
  * @since       1.3
  * @return      string
-*/
-
+ */
 function edd_get_current_page_url() {
 	global $post;
 
-	if( is_singular() ):
-
+	if ( is_singular() ):
 		$page_url = get_permalink( $post->ID );
-
 	elseif ( is_front_page() ) :
-
 		$page_url = home_url();
-
 	else :
-
 		$page_url = 'http';
 
-		if( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" )
+		if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" )
 			$page_url .= "s";
 
 		$page_url .= "://";
 
-		if( $_SERVER["SERVER_PORT"] != "80" )
+		if ( $_SERVER["SERVER_PORT"] != "80" )
 			$page_url .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
 		else
 			$page_url .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-
 	endif;
 
 	return apply_filters( 'edd_get_current_page_url', esc_url( $page_url ) );
 }
-
-
 
 /**
  * Marks a function as deprecated and informs when it has been used.
@@ -738,29 +687,24 @@ function edd_get_current_page_url() {
  * @param array $backtrace Optional. Contains stack backtrace of deprecated function
  */
 function _edd_deprecated_function( $function, $version, $replacement = null, $backtrace = null ) {
-
 	do_action( 'edd_deprecated_function_run', $function, $replacement, $version );
 
 	$show_errors = current_user_can( 'manage_options' );
 
-
 	// Allow plugin to filter the output error trigger
 	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', $show_errors ) ) {
-		if ( ! is_null( $replacement ) ){
-				trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
-				trigger_error(  print_r($backtrace) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
-			    // Alernatively we could dump this to a file.
+		if ( ! is_null( $replacement ) ) {
+			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
+			trigger_error(  print_r( $backtrace ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			// Alernatively we could dump this to a file.
 		}
-		else{
-				trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'edd'), $function, $version ) );
-				trigger_error( print_r($backtrace) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
-			    // Alernatively we could dump this to a file.
+		else {
+			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'edd'), $function, $version ) );
+			trigger_error( print_r($backtrace) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			// Alernatively we could dump this to a file.
 		}
 	}
 }
-
-
-
 
 /**
  * PressTrends plugin API
@@ -768,13 +712,11 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
  * @access      public
  * @since       1.3.2
  * @return      void
-*/
-
+ */
 function edd_presstrends() {
-
 	global $edd_options;
 
-	if( ! isset( $edd_options['presstrends'] ) )
+	if ( ! isset( $edd_options['presstrends'] ) )
 		return;
 
 	// PressTrends Account API Key
@@ -783,8 +725,10 @@ function edd_presstrends() {
 
 	// Start of Metrics
 	global $wpdb;
+
 	$data = get_transient( 'presstrends_cache_data' );
-	if ( !$data || $data == '' ) {
+
+	if ( ! $data || $data == '' ) {
 		$api_base = 'http://api.presstrends.io/index.php/api/pluginsites/update/auth/';
 		$url      = $api_base . $auth . '/api/' . $api_key . '/';
 
@@ -849,7 +793,6 @@ function edd_is_func_disabled( $function ) {
 	return in_array( $function, $disabled );
 }
 
-
 /**
  * EDD Let To Num
  *
@@ -860,7 +803,6 @@ function edd_is_func_disabled( $function ) {
  * @author   Chris Christoff
  */
 function edd_let_to_num( $v ) {
-
 	$l   = substr( $v, -1 );
 	$ret = substr( $v, 0, -1 );
 
@@ -877,5 +819,6 @@ function edd_let_to_num( $v ) {
 			$ret *= 1024;
 			break;
 	}
+
 	return $ret;
 }

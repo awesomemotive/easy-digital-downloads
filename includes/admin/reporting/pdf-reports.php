@@ -4,11 +4,11 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  PDF Report Generation
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @author      Sunny Ratilal
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.1.4.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -22,8 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.1.4.0
  * @param 		string $data
  * @author 		Sunny Ratilal
-*/
-
+ */
 function edd_generate_pdf( $data ) {
 	$edd_pdf_reports_nonce = $_GET['_wpnonce'];
 
@@ -134,7 +133,6 @@ function edd_generate_pdf( $data ) {
 }
 add_action( 'edd_generate_pdf', 'edd_generate_pdf' );
 
-
 /**
  * Draws Chart for PDF Report
  *
@@ -144,8 +142,7 @@ add_action( 'edd_generate_pdf', 'edd_generate_pdf' );
  * @since       1.1.4.0
  * @author      Sunny Ratilal
  * @return      string
-*/
-
+ */
 function edd_draw_chart_image() {
 	require_once EDD_PLUGIN_DIR . '/includes/libraries/googlechartlib/GoogleChart.php';
 	require_once EDD_PLUGIN_DIR . '/includes/libraries/googlechartlib/markers/GoogleChartShapeMarker.php';

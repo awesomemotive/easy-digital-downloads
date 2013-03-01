@@ -4,11 +4,10 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Manual Gateway
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
-
+ */
 
 /**
  * Manual Remove CC Form
@@ -18,13 +17,11 @@
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_manual_remove_cc_form() {
 	// We only register the action so that the default CC form is not shown
 }
 add_action( 'edd_manual_cc_form', 'edd_manual_remove_cc_form' );
-
 
 /**
  * Manual Payment
@@ -33,12 +30,11 @@ add_action( 'edd_manual_cc_form', 'edd_manual_remove_cc_form' );
  * @since       1.0
  * @return      void
 */
-
 function edd_manual_payment( $purchase_data ) {
 	global $edd_options;
 
 	/*
-	* purchase data comes in like this
+	* Purchase data comes in like this
 	*
 	$purchase_data = array(
 		'downloads' => array of download IDs,
@@ -68,7 +64,7 @@ function edd_manual_payment( $purchase_data ) {
 	// Record the pending payment
 	$payment = edd_insert_payment( $payment_data );
 
-	if($payment) {
+	if ( $payment ) {
 		edd_update_payment_status( $payment, 'publish' );
 		// Empty the shopping cart
 		edd_empty_cart();

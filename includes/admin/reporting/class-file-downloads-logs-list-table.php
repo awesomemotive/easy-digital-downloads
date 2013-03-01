@@ -4,10 +4,9 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  File Downloads Log View Class
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
-
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -25,26 +24,22 @@ if( ! class_exists( 'WP_List_Table' ) ) {
  * @access      private
  * @since       1.4
  */
-
 class EDD_File_Downloads_Log_Table extends WP_List_Table {
-
 	/**
 	 * Number of results to show per page
 	 *
 	 * @since       1.4
+	 * @var         int
 	 */
-
 	public $per_page = 30;
-
 
 	/**
 	 * Are we searching for files?
 	 *
 	 * @since       1.4
+	 * @var         bool
 	 */
-
 	public $file_search = false;
-
 
 	/**
 	 * Get things started
@@ -53,7 +48,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      void
 	 */
-
 	function __construct() {
 		global $status, $page;
 
@@ -67,7 +61,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		add_action( 'edd_log_view_actions', array( $this, 'downloads_filter' ) );
 	}
 
-
 	/**
 	 * Show the search field
 	 *
@@ -75,7 +68,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      void
 	 */
-
 	function search_box( $text, $input_id ) {
 		$input_id = $input_id . '-search-input';
 
@@ -92,7 +84,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		<?php
 	}
 
-
 	/**
 	 * Output column data
 	 *
@@ -100,9 +91,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      string
 	 */
-
 	function column_default( $item, $column_name ) {
-		switch( $column_name ){
+		switch ( $column_name ){
 			case 'download' :
 				return '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . get_the_title( $item[ $column_name ] ) . '</a>';
 			case 'user_id' :
@@ -112,15 +102,13 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		}
 	}
 
-
 	/**
 	 * Setup the column names / IDs
 	 *
 	 * @access      private
 	 * @since       1.4
-	 * @return      array
+	 * @return      array $columns
 	 */
-
 	function get_columns() {
 		$columns = array(
 			'ID'		=> __( 'Log ID', 'edd' ),
@@ -134,7 +122,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		return $columns;
 	}
 
-
 	/**
 	 * Retrieves the user we are filtering logs by, if any
 	 *
@@ -142,11 +129,9 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      mixed Int if user ID, string if email or login
 	 */
-
 	function get_filtered_user() {
 		return isset( $_GET['user'] ) ? absint( $_GET['user'] ) : false;
 	}
-
 
 	/**
 	 * Retrieves the ID of the download we're filtering logs by
@@ -155,11 +140,9 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      int
 	 */
-
 	function get_filtered_download() {
 		return ! empty( $_GET['download'] ) ? absint( $_GET['download'] ) : false;
 	}
-
 
 	/**
 	 * Retrieves the search query string
@@ -168,11 +151,9 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      mixed String if search is present, false otherwise
 	 */
-
 	function get_search() {
 		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
 	}
-
 
 	/**
 	 * Gets the meta query for the log query
@@ -183,7 +164,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      array
 	 */
-
 	function get_meta_query() {
 		$user = $this->get_filtered_user();
 
@@ -254,7 +234,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		return $meta_query;
 	}
 
-
 	/**
 	 * Retrieve the current page number
 	 *
@@ -262,11 +241,9 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      int
 	 */
-
 	function get_paged() {
 		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 	}
-
 
 	/**
 	 * Outputs the log filters filter
@@ -275,12 +252,10 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      void
 	 */
-
 	function bulk_actions() {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
 	}
-
 
 	/**
 	 * Sets up the downloads filter
@@ -289,7 +264,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      void
 	 */
-
 	function downloads_filter() {
 		$downloads = get_posts( array(
 			'post_type'      => 'download',
@@ -308,7 +282,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		}
 	}
 
-
 	/**
 	 * Gets the log entries for the current view
 	 *
@@ -316,7 +289,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      array
 	 */
-
 	function get_logs() {
 		global $edd_logs;
 
@@ -364,7 +336,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 		return $logs_data;
 	}
 
-
 	/**
 	 * Setup the final data for the table
 	 *
@@ -378,7 +349,6 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @uses        $this->set_pagination_args()
 	 * @return      array
 	 */
-
 	function prepare_items() {
 		global $edd_logs;
 

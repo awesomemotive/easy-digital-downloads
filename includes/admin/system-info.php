@@ -6,37 +6,35 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  System Info
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
 */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-
 /**
  * System info
  *
  * Shows the system info panel which contains version data and debug info
  *
- * @since   1.4
- * @usedby   edd_settings()
- * @author   Chris Christoff
+ * @access      private
+ * @since       1.4
+ * @usedby      edd_settings()
+ * @author      Chris Christoff
  */
-
 function edd_system_info() {
-	global $wpdb;
+	global $wpdb, $edd_options;
 
 	if ( ! class_exists( 'Browser' ) )
 		require_once EDD_PLUGIN_DIR . 'includes/libraries/browser.php';
 
 	$browser =  new Browser();
-
 ?>
 	<div class="wrap">
 		<h2><?php _e( 'System Information', 'edd' ) ?></h2><br/>
-		<form action="edit.php?post_type=download&page=edd-system-info" method="post">
-			<textarea readonly="readonly" id="system-info-textarea" name="edd-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
+		<form action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-system-info' ) ); ?>" method="post">
+			<textarea readonly="readonly" onclick="this.focus();this.select()" id="system-info-textarea" name="edd-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
 ### Begin System Info ###
 
 ## Please include this information when posting support requests ##
@@ -49,6 +47,17 @@ HOME_URL:                 <?php echo home_url() . "\n"; ?>
 EDD Version:              <?php echo EDD_VERSION . "\n"; ?>
 WordPress Version:        <?php echo get_bloginfo( 'version' ) . "\n"; ?>
 
+Test Mode Enabled:        <?php echo edd_is_test_mode() ? "Yes\n" : "No\n"; ?>
+Ajax Enabled:             <?php echo edd_is_ajax_enabled() ? "Yes\n" : "No\n"; ?>
+jQuery Validation:        <?php echo isset( $edd_options['jquery_validation'] ) ? "Yes\n" : "No\n"; ?>
+Guest Checkout Enabled:   <?php echo edd_no_guest_checkout() ? "No\n" : "Yes\n"; ?>
+
+Checkout:                 <?php echo ! empty( $edd_options['purchase_page'] ) ? "Valid\n" : "Invalid\n"; ?>
+
+Taxes Enabled:            <?php echo edd_use_taxes() ? "Yes\n" : "No\n"; ?>
+Local Taxes Only:         <?php echo edd_local_taxes_only() ? "Yes\n" : "No\n"; ?>
+Taxes After Discounts:    <?php echo edd_taxes_after_discounts() ? "Yes\n" : "No\n"; ?>
+
 <?php echo $browser ; ?>
 
 PHP Version:              <?php echo PHP_VERSION . "\n"; ?>
@@ -57,6 +66,7 @@ Web Server Info:          <?php echo $_SERVER['SERVER_SOFTWARE'] . "\n"; ?>
 
 PHP Memory Limit:         <?php echo ini_get( 'memory_limit' ) . "\n"; ?>
 PHP Post Max Size:        <?php echo ini_get( 'post_max_size' ) . "\n"; ?>
+PHP Time Limit:           <?php echo ini_get( 'max_execution_time' ) . "\n"; ?>
 
 WP_DEBUG:                 <?php echo defined( 'WP_DEBUG' ) ? WP_DEBUG ? 'Enabled' . "\n" : 'Disabled' . "\n" : 'Not set' . "\n" ?>
 
@@ -76,7 +86,6 @@ Use Only Cookies:         <?php echo ini_get( 'session.use_only_cookies' ) ? 'On
 UPLOAD_MAX_FILESIZE:      <?php if ( function_exists( 'phpversion' ) ) echo ( edd_let_to_num( ini_get( 'upload_max_filesize' ) )/( 1024*1024 ) )."MB"; ?><?php echo "\n"; ?>
 POST_MAX_SIZE:            <?php if ( function_exists( 'phpversion' ) ) echo ( edd_let_to_num( ini_get( 'post_max_size' ) )/( 1024*1024 ) )."MB"; ?><?php echo "\n"; ?>
 WordPress Memory Limit:   <?php echo ( edd_let_to_num( WP_MEMORY_LIMIT )/( 1024*1024 ) )."MB"; ?><?php echo "\n"; ?>
-WP_DEBUG:                 <?php echo ( WP_DEBUG ) ? __( 'On', 'edd' ) : __( 'Off', 'edd' ); ?><?php echo "\n"; ?>
 DISPLAY ERRORS:           <?php echo ( ini_get( 'display_errors' ) ) ? 'On (' . ini_get( 'display_errors' ) . ')' : 'N/A'; ?><?php echo "\n"; ?>
 FSOCKOPEN:                <?php echo ( function_exists( 'fsockopen' ) ) ? __( 'Your server supports fsockopen.', 'edd' ) : __( 'Your server does not support fsockopen.', 'edd' ); ?><?php echo "\n"; ?>
 
@@ -120,14 +129,12 @@ if ( get_bloginfo( 'version' ) < '3.4' ) {
 <?php
 }
 
-
 /**
  * Generates the System Info Download file
  *
  * @since   1.4
  * @return  void
  */
-
 function edd_generate_sysinfo_download() {
 	nocache_headers();
 

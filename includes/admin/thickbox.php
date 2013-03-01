@@ -4,14 +4,13 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Thickbox
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 
 /**
  * Media Button
@@ -22,7 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.0
  * @return      string
 */
-
 function edd_media_button( $context ) {
 	global $pagenow, $typenow, $wp_version;
 	$output = '';
@@ -42,7 +40,6 @@ function edd_media_button( $context ) {
 }
 add_filter( 'media_buttons_context', 'edd_media_button' );
 
-
 /**
  * Admin Footer For Thickbox
  *
@@ -53,7 +50,6 @@ add_filter( 'media_buttons_context', 'edd_media_button' );
  * @since       1.0
  * @return      void
 */
-
 function edd_admin_footer_for_thickbox() {
 	global $pagenow, $typenow;
 
@@ -130,10 +126,10 @@ function edd_admin_footer_for_thickbox() {
 					<input type="button" id="edd-insert-download" class="button-primary" value="<?php echo sprintf( __( 'Insert %s', 'edd' ), edd_get_label_singular() ); ?>" onclick="insertDownload();" />
 					<a id="edd-cancel-download-insert" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Cancel', 'edd' ); ?>"><?php _e( 'Cancel', 'edd' ); ?></a>
 				</p>
-			</div>
+			<?php } ?>
 		</div>
-		<?php
-		}
+	</div>
+	<?php
 	}
 }
 add_action( 'admin_footer', 'edd_admin_footer_for_thickbox' );

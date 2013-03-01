@@ -4,14 +4,13 @@
  *
  * @package     Easy Digital Downloads
  * @subpackage  Contextual Help
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
  */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 
 /**
  * Reports contextual help.
@@ -20,7 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.4
  * @return      void
  */
-
 function edd_reporting_contextual_help() {
 	$screen = get_current_screen();
 
