@@ -53,6 +53,7 @@ final class WP_Session extends Recursive_ArrayAccess implements Iterator, Counta
 	 * @return bool|WP_Session
 	 */
 	public static function get_instance() {
+
 		if ( ! self::$instance ) {
 			self::$instance = new self();
 		}
@@ -89,7 +90,8 @@ final class WP_Session extends Recursive_ArrayAccess implements Iterator, Counta
 
 		$this->read_data();
 
-		setcookie( WP_SESSION_COOKIE, $this->session_id . '||' . $this->expires . '||' . $this->exp_variant , $this->expires, COOKIEPATH, COOKIE_DOMAIN );
+		$this->set_cookie();
+
 	}
 
 	/**
@@ -195,7 +197,15 @@ final class WP_Session extends Recursive_ArrayAccess implements Iterator, Counta
 
 		$this->session_id = $this->generate_id();
 
-		setcookie( WP_SESSION_COOKIE, $this->session_id . '||' . $this->expires . '||' . $this->exp_variant , $this->expires, COOKIEPATH, COOKIE_DOMAIN );
+		$this->set_cookie();
+	}
+
+	/**
+	 * Set the session cookie
+	 */
+	public function set_cookie() {
+
+		setcookie( WP_SESSION_COOKIE, $this->session_id . '||' . $this->expires . '||' . $this->exp_variant , $this->expires, COOKIEPATH, COOKIE_DOMAIN, false );
 	}
 
 	/**
