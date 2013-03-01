@@ -200,15 +200,21 @@ function edd_process_paypal_ipn() {
 	// Get the PayPal redirect uri
 	$paypal_redirect = edd_get_paypal_redirect(true);
 
-	$remote_post_vars = array(
-		'method' => 'POST',
-		'timeout' => 45,
-		'redirection' => 5,
-		'httpversion' => '1.0',
-		'blocking' => true,
-		'headers' => array(),
-		'sslverify' => false,
-		'body' => $encoded_data_array
+	$remote_post_vars      = array(
+		'method'           => 'POST',
+		'timeout'          => 45,
+		'redirection'      => 5,
+		'httpversion'      => '1.0',
+		'blocking'         => true,
+		'headers'          => array(
+			'host'         => 'www.paypal.com',
+			'connection'   => 'close',
+			'content-type' => 'application/x-www-form-urlencoded',
+			'post'         => '/cgi-bin/webscr HTTP/1.1',
+
+		),
+		'sslverify'        => false,
+		'body'             => $encoded_data_array
 	);
 
 	// Get response
