@@ -385,13 +385,13 @@ function edd_payment_mode_select() {
 		<fieldset id="edd_payment_mode_select">
 			<?php do_action('edd_payment_mode_before_gateways'); ?>
 			<p id="edd-payment-mode-wrap">
-				<label for="edd-gateway"><?php _e( 'Select Payment Method', 'edd' ); ?><label><br/>
+				<?php _e( 'Select Payment Method', 'edd' ); ?><br/>
 				<?php
 				foreach($gateways as $gateway_id => $gateway) :
 					$checked = checked( $gateway_id, edd_get_default_gateway(), false );
-					echo '<span class="edd-gateway-option" id="edd-gateway-option-' . esc_attr( $gateway_id ) . '">';
+					echo '<label for="edd-gateway-' . esc_attr( $gateway_id ) . '" class="edd-gateway-option" id="edd-gateway-option-' . esc_attr( $gateway_id ) . '">';
 						echo '<input type="radio" name="payment-mode" class="edd-gateway" id="edd-gateway-' . esc_attr( $gateway_id ) . '" value="' . esc_attr( $gateway_id ) . '"' . $checked . '>' . esc_html( $gateway['checkout_label'] ) . '</option>';
-					echo '</span>';
+					echo '</label>';
 				endforeach;
 				?>
 			</p>
