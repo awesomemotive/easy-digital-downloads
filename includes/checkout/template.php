@@ -385,7 +385,7 @@ function edd_payment_mode_select() {
 		<fieldset id="edd_payment_mode_select">
 			<?php do_action('edd_payment_mode_before_gateways'); ?>
 			<p id="edd-payment-mode-wrap">
-				<?php _e( 'Select Payment Method', 'edd' ); ?><br/>
+				<span class="edd-payment-mode-label"><?php _e( 'Select Payment Method', 'edd' ); ?></span><br/>
 				<?php
 				foreach($gateways as $gateway_id => $gateway) :
 					$checked = checked( $gateway_id, edd_get_default_gateway(), false );
