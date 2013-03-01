@@ -150,7 +150,9 @@ jQuery(document).ready(function ($) {
     // Load the fields for the selected payment method
    $('select#edd-gateway, input.edd-gateway').change( function (e) {
 
-        var payment_mode = $(this).val();
+        var payment_mode = $('#edd-gateway, input.edd-gateway').val();
+
+        var form = $(this);
 
         if( payment_mode == '0' )
             return false;
@@ -160,7 +162,7 @@ jQuery(document).ready(function ($) {
         return false;
     });
 
-    // Auto load the default gateways
+    // Auto load first payment gateway
     if( edd_scripts.is_checkout == '1' && $('select#edd-gateway, input.edd-gateway').length ) {
         setTimeout( function() {
             edd_load_gateway( edd_scripts.default_gateway );
