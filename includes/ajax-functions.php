@@ -203,10 +203,13 @@ add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_titl
  * @return      string
  */
 function edd_ajax_opt_into_local_taxes() {
-	if ( check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) )
-		if ( edd_opt_into_local_taxes() )
-			die( '1' );
-	die( '-1' );
+	if ( !check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) )
+		return false;
+
+	edd_opt_into_local_taxes();
+	echo edd_checkout_cart();
+
+	exit;
 }
 add_action( 'wp_ajax_edd_local_tax_opt_in', 'edd_ajax_opt_into_local_taxes' );
 add_action( 'wp_ajax_nopriv_edd_local_tax_opt_in', 'edd_ajax_opt_into_local_taxes' );
@@ -219,10 +222,13 @@ add_action( 'wp_ajax_nopriv_edd_local_tax_opt_in', 'edd_ajax_opt_into_local_taxe
  * @return      string
  */
 function edd_ajax_opt_out_local_taxes() {
-	if ( check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) )
-		if ( edd_opt_out_local_taxes() )
-			die( '1' );
-	die( '-1' );
+	if ( !check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) )
+		return false;
+
+	edd_opt_out_local_taxes();
+	echo edd_checkout_cart();
+
+	exit;
 }
 add_action( 'wp_ajax_edd_local_tax_opt_out', 'edd_ajax_opt_out_local_taxes' );
 add_action( 'wp_ajax_nopriv_edd_local_tax_opt_out', 'edd_ajax_opt_out_local_taxes' );
