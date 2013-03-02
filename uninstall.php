@@ -32,8 +32,10 @@ $edd_taxonomies = array( 'download_tag', 'download_category', 'edd_log_type' );
 foreach ( $edd_taxonomies as $taxonomy ) {
 	global $wp_taxonomies;
 	$terms = get_terms( $taxonomy );
-	foreach ( $terms as $term ) {
-		wp_delete_term( $term->term_id, $taxonomy );
+	if ( $terms ) {
+		foreach ( $terms as $term ) {
+			wp_delete_term( $term->term_id, $taxonomy );
+		}
 	}
 	unset( $wp_taxonomies[ $taxonomy ] );
 }
@@ -75,7 +77,7 @@ if ( is_object( $wp_roles ) ) {
 	$wp_roles->remove_cap( 'administrator', 'manage_shop_settings' );
 
 	/** Remove the Main Post Type Capabilities */
-	$capabilities = $this->get_core_caps();
+	$capabilities = EDD()->roles->get_core_caps();
 	foreach ( $capabilities as $cap_group ) {
 		foreach ( $cap_group as $cap ) {
 			$wp_roles->remove_cap( 'shop_manager', $cap );
