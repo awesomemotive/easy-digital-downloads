@@ -150,9 +150,7 @@ jQuery(document).ready(function ($) {
     // Load the fields for the selected payment method
    $('select#edd-gateway, input.edd-gateway').change( function (e) {
 
-        var payment_mode = $('#edd-gateway, input.edd-gateway').val();
-
-        var form = $(this);
+        var payment_mode = $('#edd-gateway option:selected, input.edd-gateway:checked').val();
 
         if( payment_mode == '0' )
             return false;
