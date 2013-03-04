@@ -476,7 +476,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		if ( $payments ) {
 			foreach ( $payments as $payment ) {
-				$payment_meta 	= edd_get_payment_meta( $payment->ID );
 				$user_info 		= edd_get_payment_meta_user_info( $payment->ID );
 				$cart_details	= edd_get_payment_meta_cart_details( $payment->ID );
 
@@ -484,7 +483,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 				$payments_data[] = array(
 					'ID' 		=> $payment->ID,
-					'email' 	=> $payment_meta['email'],
+					'email' 	=> edd_get_payment_user_email( $payment->ID ),
 					'products' 	=> $cart_details,
 					'amount' 	=> edd_get_payment_amount( $payment->ID ),
 					'date' 		=> $payment->post_date,
