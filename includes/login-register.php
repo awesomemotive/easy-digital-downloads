@@ -35,6 +35,7 @@ function edd_login_form( $redirect = '' ) {
 		<form id="edd_login_form"  class="edd_form" action="" method="post">
 			<fieldset>
 				<legend><?php _e( 'Log into Your Account', 'edd' ); ?></legend>
+				<?php do_action('edd_login_hook');?>
 				<p>
 					<label for="edd_user_Login"><?php _e( 'Username', 'edd' ); ?></label>
 					<input name="edd_user_login" id="edd_user_login" class="required" type="text" title="<?php _e( 'Username', 'edd' ); ?>"/>
