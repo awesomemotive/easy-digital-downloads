@@ -49,7 +49,6 @@ class EDD_Fees {
 		$fees[ $key ] = array( 'amount' => $amount, 'label' => $label );
 
 		EDD()->session->set( 'edd_cart_fees', $fees );
-		//$_SESSION['edd_cart_fees'] = $fees;
 
 		return $fees;
 	}
@@ -70,7 +69,6 @@ class EDD_Fees {
 			unset( $fees[ $id ] );
 		}
 
-		//$_SESSION['edd_cart_fees'] = $fees;
 		EDD()->session->set( 'edd_cart_fees', $fees );
 
 		return $fees;

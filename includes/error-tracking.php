@@ -54,7 +54,6 @@ add_action( 'edd_ajax_checkout_errors', 'edd_print_errors' );
  * @return      mixed - array if errors are present, false if none found
  */
 function edd_get_errors() {
-	//$errors = $_SESSION['edd-errors'];
 	return EDD()->session->get( 'edd_errors' );
 }
 
@@ -76,7 +75,6 @@ function edd_set_error( $error_id, $error_message ) {
 	}
 	$errors[ $error_id ] = $error_message;
 	EDD()->session->set( 'edd_errors', $errors );
-	//$_SESSION['edd-errors'] = $errors;
 }
 
 /**
@@ -89,7 +87,6 @@ function edd_set_error( $error_id, $error_message ) {
  * @return      void
  */
 function edd_clear_errors() {
-	//if ( isset( $_SESSION['edd-errors'] ) ) $_SESSION['edd-errors'] = null;
 	EDD()->session->set( 'edd_errors', null );
 }
 
