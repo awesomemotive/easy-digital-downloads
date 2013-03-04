@@ -60,7 +60,7 @@ public function setUp()
 $this->object = new Easy_Digital_Downloads;
 }
 // lets try it this way
-public static testAaaaaaInit()
+private function testAaaaaaInit()
 {
 $this->object->setup_constants();
 $this->object->includes();
