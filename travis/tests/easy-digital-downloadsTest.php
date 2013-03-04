@@ -58,9 +58,10 @@ public $html;
 public function setUp()
 {
 $this->object = new Easy_Digital_Downloads;
+testAaaaaaInit();
 }
 // lets try it this way
-private function testAaaaaaInit()
+protected function testAaaaaaInit()
 {
 $this->object->setup_constants();
 $this->object->includes();
@@ -93,7 +94,8 @@ $this->assertSame(EDD_VERSION, '1.5' );
 $this->assertSame(EDD_PLUGIN_URL, plugin_dir_url( __FILE__ ) );
 
 // Plugin Folder Path
-$this->assertSame(EDD_PLUGIN_DIR, plugin_dir_path( __FILE__ ) );
+$path = str_replace('travis/tests/','',plugin_dir_path( __FILE__ ) );
+$this->assertSame(EDD_PLUGIN_DIR, $path );
 
 // Plugin Root File
 $this->assertSame(EDD_PLUGIN_FILE, __FILE__ );
