@@ -35,7 +35,7 @@ class Easy_Digital_DownloadsTest extends WP_UnitTestCase {
 	 {
 		// At this point, since plugin is loaded these should be defined
 		// Plugin version
-		$this->assertSame(EDD_VERSION, '1.4.2' );
+		$this->assertSame(EDD_VERSION, '1.5' );
 
 		// Plugin Folder URL
 		$this->assertSame(EDD_PLUGIN_URL, plugin_dir_url( __FILE__ ) );
