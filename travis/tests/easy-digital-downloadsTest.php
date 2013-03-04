@@ -55,13 +55,16 @@ class Easy_Digital_DownloadsTest extends WP_UnitTestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      * For some reason, setUp must be public (to think through later)
+     * @todo: Get the init working
      */
     public function setUp()
     {
         $this->object = new Easy_Digital_Downloads;
         //$this->AaaaaaInit();
     }
-    // lets try it this way
+    /**
+     * Init other classes. Not in use due to implementation issues.
+     */
     protected function AaaaaaInit()
     {
         $this->object->setup_constants();
