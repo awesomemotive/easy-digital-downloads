@@ -3,7 +3,7 @@
  * ConfigTest Tests
  * Some basic tests
  */
-class Easy-Digital-DownloadsTest extends WP_UnitTestCase {
+class Easy_Digital_DownloadsTest extends WP_UnitTestCase {
     /**
      * @var EDD_Roles
      */
