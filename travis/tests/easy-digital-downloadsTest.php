@@ -29,7 +29,7 @@ class Easy_Digital_DownloadsTest extends WP_UnitTestCase {
     /**
      * @covers EDD_Digital_Downloads::setup_constants
      */
-	 protected function setup_constants()
+	 public function setup_constants()
 	 {
 		// At this point, since plugin is loaded these should be defined
 		// Plugin version
