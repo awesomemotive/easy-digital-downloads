@@ -91,8 +91,8 @@ public function testSetup_Constants()
 $this->assertSame(EDD_VERSION, '1.5' );
 
 // Plugin Folder URL
-$path = str_replace('travis/tests/','',plugin_dir_url_path( __FILE__ ) );
-$this->assertSame(EDD_PLUGIN_URL, plugin_dir_url( __FILE__ ) );
+$path = str_replace('travis/tests/','',plugin_dir_url( __FILE__ ) );
+$this->assertSame(EDD_PLUGIN_URL, $path );
 
 // Plugin Folder Path
 $path = str_replace('travis/tests/','',plugin_dir_path( __FILE__ ) );
