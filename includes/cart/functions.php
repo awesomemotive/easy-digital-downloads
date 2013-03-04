@@ -731,7 +731,7 @@ function edd_empty_cart() {
  * @return      void
  */
 function edd_set_purchase_session( $purchase_data ) {
-	$_SESSION['edd_purchase_info'] = $purchase_data;
+	EDD()->session->set('edd_purchase', $purchase_data );
 }
 
 /**
@@ -745,7 +745,7 @@ function edd_set_purchase_session( $purchase_data ) {
  * @return      array / false
  */
 function edd_get_purchase_session() {
-	return isset( $_SESSION['edd_purchase_info'] ) ? $_SESSION['edd_purchase_info'] : false;
+	return EDD()->session->get('edd_purchase');
 }
 
 // Make sure a session is started
