@@ -58,7 +58,7 @@ public $html;
 public function setUp()
 {
 $this->object = new Easy_Digital_Downloads;
-testAaaaaaInit();
+$this->testAaaaaaInit();
 }
 // lets try it this way
 protected function testAaaaaaInit()
