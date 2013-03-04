@@ -100,7 +100,8 @@ class Easy_Digital_DownloadsTest extends WP_UnitTestCase
         $this->assertSame( EDD_PLUGIN_DIR, $path );
         
         // Plugin Root File
-        $this->assertSame( EDD_PLUGIN_FILE, '/home/travis/build/chriscct7/Easy-Digital-Downloads/easy-digital-downloads.php' );
+		$path = str_replace( 'travis/tests/', '', plugin_dir_path( __FILE__ ) );
+        $this->assertSame( EDD_PLUGIN_FILE, $path.'easy-digital-downloads.php' );
     }
     
     /**
