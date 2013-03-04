@@ -22,8 +22,9 @@ class Easy_Digital_DownloadsTest extends WP_UnitTestCase {
     /**
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
+	 * For some reason, tearDown must be public (to think through later)
      */
-    protected function tearDown()
+    public function tearDown()
     {
     }
 
