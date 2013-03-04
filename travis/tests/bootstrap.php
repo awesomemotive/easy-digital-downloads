@@ -1,8 +1,8 @@
 <?php
 // Load WordPress test environment
 // https://github.com/nb/wordpress-tests
-echo "\n\nWelcome to the EDD PHPUnit Test suite \n";
-echo "Version: 0.9.0 \n";
+echo "\n\nWelcome to the EDD PHPUnit Test Suite \n";
+echo "Version: 0.9.5 \n";
 echo "Author: Chris Christoff (@chriscct7) \n\n\n";
 echo "Preparing to load WordPress TU Bootstrap File \n";
 
