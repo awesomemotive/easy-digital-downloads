@@ -58,9 +58,9 @@ class Easy_Digital_DownloadsTest extends WP_UnitTestCase {
     public function setUp()
     {
         $this->object = new Easy_Digital_Downloads;
-		$this->objectsetup_constants();
-		$this->objectincludes();
-		$this->objectload_textdomain();
+		$this->object->setup_constants();
+		$this->object->includes();
+		$this->object->load_textdomain();
 		$this->object->roles = new EDD_Roles();
 		$this->object->fees = new EDD_Fees();
 		$this->object->api = new EDD_API();
