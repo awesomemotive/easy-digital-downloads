@@ -73,7 +73,7 @@ class Easy_Digital_DownloadsTest extends WP_UnitTestCase {
      * This method is called after a test is executed.
 	 * For some reason, tearDown must be public (to think through later)
      */
-    protected function tearDown()
+    public function tearDown()
     {
     }
 
