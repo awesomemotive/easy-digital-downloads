@@ -58,10 +58,10 @@ public $html;
 public function setUp()
 {
 $this->object = new Easy_Digital_Downloads;
-$this->testAaaaaaInit();
+//$this->AaaaaaInit();
 }
 // lets try it this way
-protected function testAaaaaaInit()
+protected function AaaaaaInit()
 {
 $this->object->setup_constants();
 $this->object->includes();
