@@ -58,10 +58,9 @@ public $html;
 public function setUp()
 {
 $this->object = new Easy_Digital_Downloads;
-$this->testInit();
 }
 // lets try it this way
-public static testInit()
+public static testAaaaaaInit()
 {
 $this->object->setup_constants();
 $this->object->includes();
