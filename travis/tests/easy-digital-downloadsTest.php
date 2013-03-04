@@ -55,7 +55,7 @@ class Easy_Digital_DownloadsTest extends WP_UnitTestCase {
      * This method is called before a test is executed.
 	 * For some reason, setUp must be public (to think through later)
      */
-    public static function setUp()
+    public function setUp()
     {
         $this->object = new Easy_Digital_Downloads;
 		$this->object->setup_constants();
