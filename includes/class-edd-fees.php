@@ -48,7 +48,8 @@ class EDD_Fees {
 
 		$fees[ $key ] = array( 'amount' => $amount, 'label' => $label );
 
-		$_SESSION['edd_cart_fees'] = $fees;
+		EDD()->session->set( 'edd_cart_fees', $fees );
+		//$_SESSION['edd_cart_fees'] = $fees;
 
 		return $fees;
 	}
@@ -69,7 +70,8 @@ class EDD_Fees {
 			unset( $fees[ $id ] );
 		}
 
-		$_SESSION['edd_cart_fees'] = $fees;
+		//$_SESSION['edd_cart_fees'] = $fees;
+		EDD()->session->set( 'edd_cart_fees', $fees );
 
 		return $fees;
 
@@ -84,7 +86,8 @@ class EDD_Fees {
 	 * @return      bool
 	 */
 	public function has_fees() {
-		return ! empty( $_SESSION['edd_cart_fees'] ) && is_array( $_SESSION['edd_cart_fees'] );
+		$fees = $this->get_fees();
+		return ! empty( $fees ) && is_array( $fees );
 	}
 
 	/**
@@ -95,7 +98,8 @@ class EDD_Fees {
 	 * @return      array|bool
 	 */
 	public function get_fees() {
-		return $this->has_fees() ? $_SESSION['edd_cart_fees'] : array();
+		$fees = EDD()->session->get( 'edd_cart_fees' );
+		return ! empty( $fees ) ? $fees : array();
 	}
 
 
@@ -150,7 +154,7 @@ class EDD_Fees {
 	public function record_fees( $payment_meta, $payment_data ) {
 		if ( $this->has_fees() ) {
 			$payment_meta['fees'] = $this->get_fees();
-			$_SESSION['edd_cart_fees'] = null;
+			EDD()->session->set( 'edd_cart_fees', null );
 		}
 
 		return $payment_meta;
