@@ -91,6 +91,7 @@ public function testSetup_Constants()
 $this->assertSame(EDD_VERSION, '1.5' );
 
 // Plugin Folder URL
+$path = str_replace('travis/tests/','',plugin_dir_url_path( __FILE__ ) );
 $this->assertSame(EDD_PLUGIN_URL, plugin_dir_url( __FILE__ ) );
 
 // Plugin Folder Path
@@ -98,7 +99,7 @@ $path = str_replace('travis/tests/','',plugin_dir_path( __FILE__ ) );
 $this->assertSame(EDD_PLUGIN_DIR, $path );
 
 // Plugin Root File
-$this->assertSame(EDD_PLUGIN_FILE, __FILE__ );
+$this->assertSame(EDD_PLUGIN_FILE, 'easy-digital-downloads.php' );
 }
 
 /**
