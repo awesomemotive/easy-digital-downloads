@@ -747,8 +747,3 @@ function edd_set_purchase_session( $purchase_data ) {
 function edd_get_purchase_session() {
 	return EDD()->session->get('edd_purchase');
 }
-
-// Make sure a session is started
-if( ! session_id() ) {
-	add_action( 'init', 'session_start', -1 );
-}
