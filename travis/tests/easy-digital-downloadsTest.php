@@ -58,6 +58,11 @@ class Easy_Digital_DownloadsTest extends WP_UnitTestCase {
     public function setUp()
     {
         $this->object = new Easy_Digital_Downloads;
+		$this->init();
+    }
+	// lets try it this way
+    public static init()
+	{
 		$this->object->setup_constants();
 		$this->object->includes();
 		$this->object->load_textdomain();
@@ -66,8 +71,7 @@ class Easy_Digital_DownloadsTest extends WP_UnitTestCase {
 		$this->object->api = new EDD_API();
 		$this->object->session = new EDD_Session();
 		$this->object->html = new EDD_HTML_Elements();
-    }
-
+	}
     /**
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
