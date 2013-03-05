@@ -742,9 +742,7 @@ function edd_get_payment_subtotal( $payment_id = 0, $payment_meta = false ) {
 	$subtotal = isset( $payment_meta['subtotal'] ) ? $payment_meta['subtotal'] : $payment_meta['amount'];
 
 	$tax = edd_use_taxes() ? edd_get_payment_tax( $payment_id ) : 0;
-	if ( $edd_options['prices_include_tax'] == 'no' && edd_is_include_tax() ) {
-		$subtotal += $tax;
-	} else if ( edd_is_exclude_tax() && $edd_options['prices_include_tax'] == 'yes' ) {
+	if ( ( $edd_options['prices_include_tax'] == 'no' && edd_is_exclude_tax() ) || ( edd_is_exclude_tax() && $edd_options['prices_include_tax'] == 'yes' ) ) {
 		$subtotal -= $tax;
 	}
 
