@@ -244,11 +244,11 @@ class EDD_Logging {
 	 */
 	function get_connected_logs( $args = array() ) {
 		$defaults = array(
-			'post_type'		=> 'edd_log',
-			'posts_per_page'	=> 20,
-			'post_status'		=> 'publish',
-			'paged'			=> get_query_var( 'paged' ),
-			'log_type'		=> false
+			'post_type'      => 'edd_log',
+			'posts_per_page' => 20,
+			'post_status'    => 'publish',
+			'paged'          => get_query_var( 'paged' ),
+			'log_type'       => false
 		);
 
 		$query_args = wp_parse_args( $args, $defaults );

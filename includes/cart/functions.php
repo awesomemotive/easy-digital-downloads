@@ -290,6 +290,7 @@ function edd_get_price_name( $item_id, $options = array() ) {
 	if( $variable_pricing && !empty( $options ) ) {
 		// If variable prices are enabled, retrieve the options
 		$prices = get_post_meta( $item_id, 'edd_variable_prices', true );
+		$name = false;
 		if( $prices ) {
 			if( isset( $prices[ $options['price_id'] ] ) )
 				$name = $prices[ $options['price_id'] ]['name'];
@@ -654,10 +655,16 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
 function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
 	global $post;
 
-	$current_page = edd_get_current_page_url();
-	$remove_url = add_query_arg( array('cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page);
+	if( is_page() ) {
+		$current_page = add_query_arg( 'page_id', $post->ID, home_url('/') );
+	} else if( is_singular() ) {
+		$current_page = add_query_arg( 'p', $post->ID, home_url('/') );
+	} else {
+		$current_page = edd_get_current_page_url();
+	}
+	$remove_url = add_query_arg( array('cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page );
 
-	return apply_filters('edd_remove_item_url', $remove_url);
+	return apply_filters( 'edd_remove_item_url', $remove_url );
 }
 
 /**
@@ -781,7 +788,7 @@ function edd_empty_cart() {
  * @return      void
  */
 function edd_set_purchase_session( $purchase_data ) {
-	$_SESSION['edd_purchase_info'] = $purchase_data;
+	EDD()->session->set('edd_purchase', $purchase_data );
 }
 
 /**
@@ -795,10 +802,5 @@ function edd_set_purchase_session( $purchase_data ) {
  * @return      array / false
  */
 function edd_get_purchase_session() {
-	return isset( $_SESSION['edd_purchase_info'] ) ? $_SESSION['edd_purchase_info'] : false;
-}
-
-// Make sure a session is started
-if( ! session_id() ) {
-	add_action( 'init', 'session_start', -1 );
+	return EDD()->session->get('edd_purchase');
 }

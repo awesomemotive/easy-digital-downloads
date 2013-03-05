@@ -47,6 +47,7 @@ function edd_load_scripts() {
 			'no_email'          => __('Please enter an email address before applying a discount code', 'edd'),
 			'no_username'       => __('Please enter a username before applying a discount code', 'edd'),
 			'purchase_loading'  => __('Please Wait...', 'edd'),
+			'complete_purchasse' => __('Purchase', 'edd')
 		));
 	}
 
