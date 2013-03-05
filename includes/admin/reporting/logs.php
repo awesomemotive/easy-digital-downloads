@@ -25,6 +25,7 @@ function edd_logs_view_sales() {
 	$logs_table = new EDD_Sales_Log_Table();
 	$logs_table->prepare_items();
 	$logs_table->display();
+
 }
 add_action( 'edd_logs_view_sales', 'edd_logs_view_sales' );
 
