@@ -45,8 +45,7 @@ class EDD_Session {
 
 	function __construct() {
 
-		if( ! defined( 'WP_SESSION_COOKIE' ) )
-			define( 'WP_SESSION_COOKIE', '_wp_session' );
+		define( 'WP_SESSION_COOKIE', 'wordpress_wp_session' );
 
 		if ( ! class_exists( 'Recursive_ArrayAccess' ) )
 			require_once EDD_PLUGIN_DIR . 'includes/libraries/class-recursive-arrayaccess.php';
@@ -93,6 +92,8 @@ class EDD_Session {
 			$this->session[ $key ] = serialize( $value );
 		else
 			$this->session[ $key ] = $value;
+
+		return $this->session[ $key ];
 	}
 
 }

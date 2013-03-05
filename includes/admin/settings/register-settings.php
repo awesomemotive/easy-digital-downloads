@@ -45,14 +45,14 @@ function edd_register_settings() {
 				'purchase_page' => array(
 					'id' => 'purchase_page',
 					'name' => __('Checkout Page', 'edd'),
-					'desc' => __('This is the checkout page where buyers will complete their purchases', 'edd'),
+					'desc' => __('This is the checkout page where buyers will complete their purchases. The [download_checkout] short code must be on this page.', 'edd'),
 					'type' => 'select',
 					'options' => $pages_options
 				),
 				'success_page' => array(
 					'id' => 'success_page',
 					'name' => __('Success Page', 'edd'),
-					'desc' => __('This is the page buyers are sent to after completing their purchases', 'edd'),
+					'desc' => __('This is the page buyers are sent to after completing their purchases. The [edd_receipt] short code should be on this page.', 'edd'),
 					'type' => 'select',
 					'options' => $pages_options
 				),
