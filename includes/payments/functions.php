@@ -577,7 +577,7 @@ function edd_get_payment_meta( $payment_id ) {
 	if( ! isset( $meta['date'] ) )
 		$meta['date'] = get_post_field( 'post_date', $payment_id );
 
-	return apply_filters( 'edd_get_payment_meta', $meta );
+	return apply_filters( 'edd_get_payment_meta', $meta, $payment_id );
 }
 
 /**
