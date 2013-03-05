@@ -191,9 +191,8 @@ function edd_insert_payment( $payment_data = array() ) {
 			'downloads'    => serialize( $payment_data['downloads'] ),
 			'user_info'    => serialize( $payment_data['user_info'] ),
 			'cart_details' => serialize( $payment_data['cart_details'] ),
+			'tax'          => edd_is_cart_taxed() ? edd_get_cart_tax() : 0,
 		);
-
-		// NOTE: tax info is added to meta in tax-functions.php with edd_record_taxed_amount()
 
 		$mode    = edd_is_test_mode() ? 'test' : 'live';
 		$gateway = isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : '';
@@ -735,10 +734,17 @@ function edd_payment_subtotal( $payment_id = 0, $payment_meta = false ) {
  * @return      float
  */
 function edd_get_payment_subtotal( $payment_id = 0, $payment_meta = false ) {
-	if ( ! $payment_meta )
+	global $edd_options;
+
+	if ( !$payment_meta )
 		$payment_meta = edd_get_payment_meta( $payment_id );
 
 	$subtotal = isset( $payment_meta['subtotal'] ) ? $payment_meta['subtotal'] : $payment_meta['amount'];
+
+	$tax = edd_use_taxes() ? edd_get_payment_tax( $payment_id ) : 0;
+	if ( ( $edd_options['prices_include_tax'] == 'no' && edd_is_exclude_tax() ) || ( edd_is_exclude_tax() && $edd_options['prices_include_tax'] == 'yes' ) ) {
+		$subtotal -= $tax;
+	}
 
 	return apply_filters( 'edd_get_payment_subtotal', $subtotal, $payment_id );
 }
