@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return      array | false
  */
 function edd_get_cart_contents() {
-	$cart = EDD()->session->get('edd_cart');
+	$cart = EDD()->session->get( 'edd_cart' );
 	return ! empty( $cart ) ? apply_filters( 'edd_cart_contents', $cart ) : false;
 }
 
@@ -110,7 +110,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
  * @param       $cart_key INT the cart key to remove
  * @return      array - of updated cart items
  */
-function edd_remove_from_cart($cart_key) {
+function edd_remove_from_cart( $cart_key ) {
 	$cart = edd_get_cart_contents();
 
 	do_action( 'edd_pre_remove_from_cart', $cart_key );

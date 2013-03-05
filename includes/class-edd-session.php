@@ -55,7 +55,10 @@ class EDD_Session {
 			require_once EDD_PLUGIN_DIR . 'includes/libraries/wp-session.php';
 		}
 
-		add_action( 'init', array( $this, 'init' ) );
+		if( empty( $this->session ) )
+			add_action( 'plugins_loaded', array( $this, 'init' ) );
+		else
+			add_action( 'init', array( $this, 'init' ) );
 
 	}
 
