@@ -55,17 +55,28 @@ class EDD_Session {
 			require_once EDD_PLUGIN_DIR . 'includes/libraries/wp-session.php';
 		}
 
+		add_action( 'init', array( $this, 'init' ) );
+
+	}
+
+
+	/**
+	 * Setup the WP_Session instance
+	 *
+	 * @access  public
+	 * @since  1.5
+	 */
+
+	public function init() {
 		$this->session = WP_Session::get_instance();
-
 		return $this->session;
-
 	}
 
 
 	/**
 	 * Retrieve a session variable
 	 *
-	 * @access  private
+	 * @access  public
 	 * @since  1.5
 	 */
 
@@ -73,14 +84,14 @@ class EDD_Session {
 
 		$key = sanitize_key( $key );
 
-		return maybe_unserialize( $this->session[ $key ] );
+		return isset( $this->session[ $key ] ) ? maybe_unserialize( $this->session[ $key ] ) : false;
 	}
 
 
 	/**
 	 * Set a session variable
 	 *
-	 * @access  private
+	 * @access  public
 	 * @since  1.5
 	 */
 
