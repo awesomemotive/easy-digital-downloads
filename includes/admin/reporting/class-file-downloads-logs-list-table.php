@@ -270,13 +270,17 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			'post_status'    => 'any',
 			'posts_per_page' => -1,
 			'orderby'        => 'title',
-			'order'          => 'ASC'
+			'order'          => 'ASC',
+			'fields'         => 'ids',
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false
 		) );
+
 		if ( $downloads ) {
 			echo '<select name="download" id="edd-log-download-filter">';
 				echo '<option value="0">' . __( 'All', 'edd' ) . '</option>';
-				foreach( $downloads as $download ) {
-					echo '<option value="' . $download->ID . '"' . selected( $download->ID, $this->get_filtered_download() ) . '>' . esc_html( $download->post_title ) . '</option>';
+				foreach ( $downloads as $download ) {
+					echo '<option value="' . $download . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
 				}
 			echo '</select>';
 		}
