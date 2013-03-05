@@ -88,7 +88,6 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 			<td><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
 			<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
 		</tr>
-	<?php endif; ?>
 
 	<?php if ( $edd_receipt_args['discount'] && $user['discount'] != 'none' ) : ?>
 	<tr>
