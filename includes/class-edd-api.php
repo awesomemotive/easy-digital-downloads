@@ -362,7 +362,7 @@ class EDD_API {
 
 		global $wp_query;
 
-		return isset( $wp_query->query_vars['number'] ) ? $wp_query->query_vars['number'] : 10;
+		$per_page = isset( $wp_query->query_vars['number'] ) ? $wp_query->query_vars['number'] : 10;
 
 		return apply_filters( 'edd_api_results_per_page', $per_page );
 	}
