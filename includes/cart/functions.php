@@ -246,7 +246,7 @@ function edd_get_cart_item_price( $item_id, $options = array() ) {
 		// If variable prices are enabled, retrieve the options
 		$prices = get_post_meta( $item_id, 'edd_variable_prices', true );
 		if ( $prices ) {
-			$price = $prices[ $options['price_id'] ]['amount'];
+			$price = isset( $prices[ $options['price_id'] ] ) ? $prices[ $options['price_id'] ]['amount'] : $price;
 		}
 	}
 
