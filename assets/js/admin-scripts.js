@@ -419,4 +419,6 @@ jQuery(document).ready(function ($) {
 
 	});
 
+    $('.edd-select-chosen').chosen();
+
 });
