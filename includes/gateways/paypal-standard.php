@@ -261,7 +261,7 @@ function edd_process_paypal_web_accept( $data ) {
 	$payment_id     = $data['custom'];
 	$purchase_key   = $data['item_number'];
 	$paypal_amount  = $data['mc_gross'];
-	$payment_status = $data['payment_status'];
+	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
 
 	// Retrieve the meta info for this payment
@@ -282,12 +282,13 @@ function edd_process_paypal_web_accept( $data ) {
 		return;
 	}
 
-	$status = strtolower( $payment_status );
+	if ( $payment_status == 'refunded' ) {
 
-	if ( strtolower( $status ) == 'refunded' ) {
 		// Process a refund
 		edd_process_paypal_refund( $data );
+
 	} else {
+
 		if ( number_format( (float)$paypal_amount, 2) != $payment_amount ) {
 			// The prices don't match
 			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid payment amount in IPN response. IPN data: ', 'edd' ), json_encode( $data ) ), $payment_id );
@@ -300,10 +301,11 @@ function edd_process_paypal_web_accept( $data ) {
 		   	return;
 		}
 
-		if ( $status == 'completed' || edd_is_test_mode() ) {
+		if ( $payment_status == 'completed' || edd_is_test_mode() ) {
 			edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $data['txn_id'] ) );
 			edd_update_payment_status( $payment_id, 'publish' );
 		}
+
 	}
 }
 add_action( 'edd_paypal_web_accept', 'edd_process_paypal_web_accept' );
@@ -319,9 +321,10 @@ function edd_process_paypal_refund( $data ) {
 	global $edd_options;
 
 	// Collect payment details
-	$payment_id = $data['custom'];
+	$payment_id = intval( $data['custom'] );
 
-	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Payment #%s Refunded', 'edd' ) , $data['txn_id'] ) );
+	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Payment #%s Refunded', 'edd' ) , $data['parent_txn_id'] ) );
+	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Refund Transaction ID: %s', 'edd' ) , $data['txn_id'] ) );
 	edd_update_payment_status( $payment_id, 'refunded' );
 }
 
