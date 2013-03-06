@@ -265,8 +265,7 @@ function edd_process_paypal_web_accept( $data ) {
 	$currency_code  = strtolower( $data['mc_currency'] );
 
 	// Retrieve the meta info for this payment
-	$payment_meta = edd_get_payment_meta( $payment_id );
-	$payment_amount = edd_format_amount( $payment_meta['amount'] );
+	$payment_amount = edd_format_amount( edd_get_payment_amount( $payment_id ) );
 
 	if( get_post_status( $payment_id ) == 'complete' )
 		return; // Only complete payments once
@@ -294,7 +293,7 @@ function edd_process_paypal_web_accept( $data ) {
 			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid payment amount in IPN response. IPN data: ', 'edd' ), json_encode( $data ) ), $payment_id );
 		   //return;
 		}
-		if ( $purchase_key != $payment_meta['key'] ) {
+		if ( $purchase_key != edd_get_payment_key( $payment_id ) ) {
 			// Purchase keys don't match
 			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid purchase key in IPN response. IPN data: ', 'edd' ), json_encode( $data ) ), $payment_id );
 		   	edd_update_payment_status( $payment_id, 'failed' );
