@@ -71,6 +71,7 @@ $single_use   = edd_discount_is_single_use( $discount_id );
 					<label for="edd-products"><?php printf( __( '%s Requirements', 'edd' ), edd_get_label_singular() ); ?></label>
 				</th>
 				<td>
+					<p class="description"><?php printf( __( '%s required to be purchased for this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
 					<select multiple id="edd-products" name="products[]"/>
 						<?php
 						$downloads = get_posts( array( 'post_type' => 'download', 'no_paging' => 1 ) );
@@ -80,8 +81,7 @@ $single_use   = edd_discount_is_single_use( $discount_id );
 							endforeach;
 						endif;
 						?>
-					</select>
-					<p class="description"><?php printf( __( '%s required to be purchased for this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
+					</select><br/>
 					<select id="edd-product-condition" name="product_condition">
 						<option value="all"<?php selected( 'all', $condition ); ?>><?php printf( __( 'All Selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
 						<option value="any"<?php selected( 'any', $condition ); ?>><?php printf( __( 'Any Selected %s', 'edd' ), edd_get_label_singular() ); ?></option>
