@@ -510,14 +510,14 @@ add_action( 'edd_purchase_form_before_submit', 'edd_checkout_final_total', 999 )
 function edd_checkout_submit() {
 ?>
 	<fieldset id="edd_purchase_submit">
-		
-			<?php do_action( 'edd_purchase_form_before_submit' ); ?>
 
-			<?php edd_checkout_hidden_fields(); ?>
+		<?php do_action( 'edd_purchase_form_before_submit' ); ?>
 
-			<?php echo edd_checkout_button_purchase(); ?>
+		<?php edd_checkout_hidden_fields(); ?>
 
-			<?php do_action( 'edd_purchase_form_after_submit' ); ?>
+		<?php echo edd_checkout_button_purchase(); ?>
+
+		<?php do_action( 'edd_purchase_form_after_submit' ); ?>
 
 		<?php if ( ! edd_is_ajax_enabled() ) { ?>
 			<p class="edd-cancel"><a href="javascript:history.go(-1)"><?php _e( 'Go back', 'edd' ); ?></a></p>
