@@ -81,10 +81,6 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 	$options    = !empty( $item['options'] ) ? $item['options'] : array();
 	$price      = edd_get_cart_item_price( $id, $options );
 
-	if( edd_is_cart_taxed() ) {
-		$price = edd_calculate_tax( $price );
-	}
-
 	if ( ! empty( $options ) ) {
 		$title .= ' <span class="edd-cart-item-separator">-</span> ' . edd_get_price_name( $id, $item['options'] );
 	}
