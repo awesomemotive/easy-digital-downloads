@@ -303,7 +303,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				<?php endif; ?>
 				<p><?php echo __( 'Total:', 'edd' ) . ' ' . edd_currency_filter( edd_format_amount( edd_get_payment_amount( $item['ID'] ) ) ); ?></p>
 
-				<div class="purcase-personal-details">
+				<div class="purchase-personal-details">
 					<h4><?php _e( 'Buyer\'s Personal Details:', 'edd' ); ?></h4>
 					<ul>
 						<li><?php echo __( 'Name:', 'edd' ) . ' ' . $user_info['first_name'] . ' ' . $user_info['last_name']; ?></li>
