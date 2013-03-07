@@ -232,17 +232,32 @@ function edd_get_sales_tax_for_year( $year = null ) {
 	return apply_filters( 'edd_get_sales_tax_for_year', $tax, $year );
 }
 
-function edd_is_include_tax() {
+
+/**
+ * Stores the tax info in the payment meta
+ *
+ * @access      public
+ * @since       1.5
+ * @return      bool
+*/
+
+function edd_prices_show_tax_on_checkout() {
 	global $edd_options;
 
-	return ( $edd_options['checkout_include_tax'] == 'yes' );
-}
-function edd_is_exclude_tax() {
-	global $edd_options;
+	$include_tax = isset( $edd_options['checkout_include_tax'] ) ? $edd_options['checkout_include_tax'] : 'no';
 
-	return ( $edd_options['checkout_include_tax'] == 'no' );
+	return ( $include_tax == 'yes' );
 }
+
+
+/**
+ * Is the cart taxed?
+ *
+ * @access      public
+ * @since       1.5
+ * @return      bool
+*/
 
 function edd_is_cart_taxed() {
-	return edd_use_taxes() && ( ( edd_local_tax_opted_in() && edd_local_taxes_only() ) || !edd_local_taxes_only() );
+	return edd_use_taxes() && ( ( edd_local_tax_opted_in() && edd_local_taxes_only() ) || ! edd_local_taxes_only() );
 }
