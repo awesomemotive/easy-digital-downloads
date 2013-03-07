@@ -1020,7 +1020,7 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 
 	$subtotal = edd_get_cart_subtotal( $tax = false );
 	$amounts  = array();
-
+	$discounted_items = array();
 	foreach( $discounts as $discount ) {
 
 		$code_id   = edd_get_discount_id_by_code( $discount );
