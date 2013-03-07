@@ -65,7 +65,7 @@ class edd_cart_widget extends WP_Widget {
 	function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 		$instance['title'] = strip_tags( $new_instance['title'] );
-		$instance['quantity'] = strip_tags( $new_instance['quantity'] );
+		$instance['quantity'] = isset( $new_instance['quantity'] ) ? strip_tags( $new_instance['quantity'] ) : '';
 		return $instance;
 	}
 
