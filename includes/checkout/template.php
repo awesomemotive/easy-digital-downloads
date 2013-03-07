@@ -324,11 +324,7 @@ function edd_get_register_fields() {
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
 	</fieldset>
 	<?php
-
-	$fields = ob_get_clean();
-
-	echo $fields;
-
+	echo ob_get_clean();
 }
 add_action( 'edd_purchase_form_register_fields', 'edd_get_register_fields' );
 
@@ -362,10 +358,7 @@ function edd_get_login_fields() {
 			</a>
 		</p>
 	<?php
-
-	$fields = ob_get_clean();
-
-	echo $fields;
+	echo ob_get_clean();
 }
 add_action( 'edd_purchase_form_login_fields', 'edd_get_login_fields' );
 
