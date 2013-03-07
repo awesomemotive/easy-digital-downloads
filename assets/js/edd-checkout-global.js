@@ -43,15 +43,22 @@ jQuery(document).ready(function($) {
     // Toggle the tax amount shown on checkout
     $('body').on('click', '#edd_tax_opt_in', function() {
 
-        var data = {
-            action: '',
+        var postData = {
+            action: $(this).attr('checked') ? 'edd_local_tax_opt_in' : 'edd_local_tax_opt_out',
             nonce: edd_global_vars.checkout_nonce
         };
 
-        data.action = $(this).attr('checked') ? 'edd_local_tax_opt_in' : 'edd_local_tax_opt_out';
-
-        $.post( edd_global_vars.ajaxurl, data, function (response) {
-            $('#edd_checkout_cart').replaceWith(response);
+        $.ajax({
+            type: "POST",
+            data: postData,
+            dataType: "json",
+            url: edd_global_vars.ajaxurl,
+            success: function (tax_response) {
+                $('#edd_checkout_cart').replaceWith(tax_response.html);
+                $('.edd_cart_amount').text(tax_response.total);
+            }
+        }).fail(function (data) {
+            console.log(data);
         });
     });
 
