@@ -267,13 +267,11 @@ function edd_get_cart_item_price( $item_id, $options = array(), $tax = true ) {
 		}
 	}
 
-	// lol this if statement...
+	// Determine if we need to add tax toe the price
 	if ( $tax &&
 		(
 			( edd_prices_include_tax() && ! edd_is_cart_taxed() && edd_use_taxes() ) ||
-			( edd_is_cart_taxed() && edd_prices_show_tax_on_checkout() ||
-				( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() )
-			)
+			( edd_is_cart_taxed() && edd_prices_show_tax_on_checkout() || ( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) )
 		)
 	) {
 		$price = edd_calculate_tax( $price );
