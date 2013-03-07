@@ -1018,11 +1018,9 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 	if( empty( $discounts ) )
 		return 0.00;
 
-	// Calculate the discounted amount
-	$amounts          = array();
+	$subtotal = edd_get_cart_subtotal( $tax = false );
+	$amounts  = array();
 	$discounted_items = array();
-
-	// Loop through each active discount
 	foreach( $discounts as $discount ) {
 
 		$code_id   = edd_get_discount_id_by_code( $discount );

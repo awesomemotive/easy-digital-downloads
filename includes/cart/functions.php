@@ -210,8 +210,6 @@ function edd_get_cart_item_quantity( $item ) {
 /**
  * Get Cart Item Price
  *
- * Gets the quanity for an item in the cart.
- *
  * @access      public
  * @since       1.0
  * @param       $item INT the download (cart item) ID number
@@ -219,12 +217,26 @@ function edd_get_cart_item_quantity( $item ) {
  * @return      string - the fully formatted price
  */
 function edd_cart_item_price( $item_id = 0, $options = array() ) {
+	global $edd_options;
+
 	$price = edd_get_cart_item_price( $item_id, $options );
+	$label = '';
 
-	if ( edd_use_taxes() && edd_taxes_on_prices() )
-		$price += edd_calculate_tax( $price );
+	if ( edd_is_cart_taxed() ) {
 
-	return esc_html( edd_currency_filter( edd_format_amount( $price ) ) );
+		if ( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
+			$label .= ' ' . __('(ex. tax)', 'edd');
+		}
+
+		if ( edd_prices_show_tax_on_checkout() && $edd_options['prices_include_tax'] == 'no' ) {
+			$label .= ' ' . __('(incl. tax)', 'edd');
+		}
+
+	}
+
+	$price = edd_currency_filter( edd_format_amount( $price ) );
+
+	return esc_html( $price . $label );
 }
 
 /**
@@ -237,10 +249,15 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  * @param       $item INT the download ID number
  * @param       $options array optional parameters, used for defining variable prices
  * @return      string - price for this item
- */
-function edd_get_cart_item_price( $item_id, $options = array() ) {
-	$variable_pricing = get_post_meta( $item_id, '_variable_pricing', true) ;
+*/
+
+function edd_get_cart_item_price( $item_id, $options = array(), $tax = true ) {
+	global $edd_options;
+
 	$price = edd_get_download_price( $item_id );
+
+	// If variable prices are enabled, retrieve the options
+	$variable_pricing = get_post_meta( $item_id, '_variable_pricing', true) ;
 
 	if ( $variable_pricing && ! empty( $options ) ) {
 		// If variable prices are enabled, retrieve the options
@@ -248,6 +265,18 @@ function edd_get_cart_item_price( $item_id, $options = array() ) {
 		if ( $prices ) {
 			$price = isset( $prices[ $options['price_id'] ] ) ? $prices[ $options['price_id'] ]['amount'] : $price;
 		}
+	}
+
+	// lol this if statement...
+	if ( $tax &&
+		(
+			( edd_prices_include_tax() && ! edd_is_cart_taxed() && edd_use_taxes() ) ||
+			( edd_is_cart_taxed() && edd_prices_show_tax_on_checkout() ||
+				( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() )
+			)
+		)
+	) {
+		$price = edd_calculate_tax( $price );
 	}
 
 	return apply_filters( 'edd_cart_item_price', $price, $item_id, $options );
@@ -292,7 +321,24 @@ function edd_get_price_name( $item_id, $options = array() ) {
  * @return      float - the total amount before taxes fully formatted
  */
 function edd_cart_subtotal() {
-	return esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) );
+	global $edd_options;
+
+	$tax = ( ( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) || ( $edd_options['prices_include_tax'] == 'no' && edd_prices_show_tax_on_checkout() ) );
+	$price = esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) );
+
+	if ( edd_is_cart_taxed() ) {
+
+		if ( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
+			$price .= '<br/><span style="font-weight:normal;text-transform:none;">' . __('(ex. tax)', 'edd') . '</span>';
+		}
+
+		if ( edd_prices_show_tax_on_checkout() && $edd_options['prices_include_tax'] == 'no' ) {
+			$price .= '<br/><span style="font-weight:normal;text-transform:none;">' . __('(incl. tax)', 'edd') . '</span>';
+		}
+
+	}
+
+	return $price;
 }
 
 /**
@@ -304,16 +350,18 @@ function edd_cart_subtotal() {
  * @access      public
  * @since       1.3.3
  * @return      float - the total amount before taxes
- */
-function edd_get_cart_subtotal() {
-	$cart_items = edd_get_cart_contents();
+*/
 
-	$amount = (float) 0;
+function edd_get_cart_subtotal( $tax = true ) {
+	global $edd_options;
+
+	$cart_items = edd_get_cart_contents();
+	$amount = 0;
 
 	if ( $cart_items ) {
-		foreach ( $cart_items as $item ) {
-			$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
-			$amount += $item_price;
+		foreach( $cart_items as $item ) {
+			$amount += edd_get_cart_item_price( $item['id'], $item['options'], $tax );
+
 		}
 	}
 
@@ -372,7 +420,8 @@ function edd_get_cart_fee_total() {
  * @return      float the total amount
 */
 function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
-	$amount = edd_get_cart_subtotal();
+
+	$amount = edd_get_cart_subtotal( false );
 
 	if ( ! empty( $_POST['edd-discount'] ) || edd_get_cart_discounts() !== false ) {
 		// Retrieve the discount stored in cookies
@@ -418,10 +467,13 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
  * @return      float - The cart amount
  */
 function edd_get_cart_total( $discounts = false ) {
-	$subtotal = edd_get_cart_subtotal();
+	global $edd_options;
+
+	$subtotal = edd_get_cart_subtotal( edd_prices_include_tax() );
 	$fees     = edd_get_cart_fee_total();
-	$cart_tax = edd_get_cart_tax( $discounts );
+	$cart_tax = edd_is_cart_taxed() ? edd_get_cart_tax( $discounts ) : 0;
 	$discount = edd_get_cart_discounted_amount( $discounts );
+
 	$total    = $subtotal + $fees + $cart_tax - $discount;
 
 	return (float) apply_filters( 'edd_get_cart_total', $total );
@@ -438,11 +490,23 @@ function edd_get_cart_total( $discounts = false ) {
  * @return      string - the cart amount
  */
 function edd_cart_total( $echo = true ) {
+	global $edd_options;
+
 	$total = apply_filters( 'edd_cart_total', edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ) );
 
-	if ( $echo )
-		echo $total;
-	return $total;
+	if ( edd_is_cart_taxed() ) {
+
+		if ( $edd_options['checkout_include_tax'] == 'yes' ) {
+			$total .= '<br/><span style="font-weight:normal;text-transform:none;">'. sprintf( __('(includes %s tax)', 'edd'), edd_cart_tax() ) . '</span>';
+		}
+
+	}
+
+	if ( !$echo ) {
+		return $total;
+	}
+
+	echo $total;
 }
 
 /**
@@ -477,21 +541,24 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
  * @since       1.2.3
  * @param       $discounts Array of discounts to take into account (required for ajax processes)
  * @return      string
- */
-function edd_get_cart_tax( $discounts = false, $local_override = false ) {
-	if ( ! edd_use_taxes() || ( edd_local_taxes_only() && ! edd_local_tax_opted_in() && ! $local_override ) )
-		return 0;
+*/
 
-	$cart_sub_total = edd_get_cart_subtotal();
+function edd_get_cart_tax( $discounts = false ) {
 
-	if ( edd_taxes_after_discounts() ) {
-		$cart_sub_total -= edd_get_cart_discounted_amount( $discounts );
+	$subtotal = edd_get_cart_subtotal( false );
+	$cart_tax = 0;
+
+	if ( edd_is_cart_taxed() ) {
+
+		if ( edd_taxes_after_discounts() ) {
+			$subtotal -= edd_get_cart_discounted_amount( $discounts );
+		}
+
+		$cart_tax = edd_calculate_tax( $subtotal, false );
+
 	}
 
-	$cart_tax 		= edd_calculate_tax( $cart_sub_total );
-	$cart_tax 		= number_format( $cart_tax, 2 );
-
-	return apply_filters( 'edd_get_cart_tax', $cart_tax, $cart_sub_total );
+	return apply_filters( 'edd_get_cart_tax', $cart_tax, $subtotal );
 }
 
 /**
@@ -504,15 +571,20 @@ function edd_get_cart_tax( $discounts = false, $local_override = false ) {
  * @return      string
  */
 function edd_cart_tax( $echo = false ) {
-	$cart_tax = edd_get_cart_tax();
-	$cart_tax = edd_currency_filter( edd_format_amount( $cart_tax ) );
+	$cart_tax = 0;
+
+	if ( edd_is_cart_taxed() ) {
+		$cart_tax = edd_get_cart_tax();
+		$cart_tax = edd_currency_filter( edd_format_amount( $cart_tax ) );
+	}
 
 	$tax = apply_filters( 'edd_cart_tax', $cart_tax );
 
-	if ( $echo )
-		echo $tax;
+	if ( !$echo ) {
+		return $tax;
+	}
 
-	return $tax;
+	echo $tax;
 }
 
 /**
@@ -526,30 +598,25 @@ function edd_cart_tax( $echo = false ) {
  */
 function edd_get_cart_content_details() {
 	$cart_items = edd_get_cart_contents();
-	$details    = array();
+	if ( empty( $cart_items ) ) return false;
 
-	if ( $cart_items ) {
-		foreach ( $cart_items as $key => $item ) {
-			$price = edd_get_cart_item_price( $item['id'], $item['options'] );
-			$details[ $key ]  = array(
-				'name'        => get_the_title($item['id']),
-				'id'          => $item['id'],
-				'item_number' => $item,
-				'price'       => $price,
-				'quantity'    => 1,
-			);
+	$details  = array();
+	$is_taxed = edd_is_cart_taxed();
 
-			if( edd_taxes_on_prices() ) {
-				$details[ $key ]['tax'] = edd_calculate_tax( $price );
-			}
-		}
+	foreach( $cart_items as $key => $item ) {
+		$price = edd_get_cart_item_price( $item['id'], $item['options'] );
+
+		$details[ $key ]  = array(
+			'name'        => get_the_title( $item['id'] ),
+			'id'          => $item['id'],
+			'item_number' => $item,
+			'price'       => $price,
+			'quantity'    => 1,
+			'tax'         => $is_taxed ? edd_calculate_tax( $price, false ) : 0,
+		);
 	}
 
-	if ( ! empty( $details ) ) {
-		return $details;
-	}
-
-	return false;
+	return $details;
 }
 
 /**
