@@ -224,11 +224,11 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 
 	if ( edd_is_cart_taxed() ) {
 
-		if ( edd_is_exclude_tax() && $edd_options['prices_include_tax'] == 'yes' ) {
+		if ( ! edd_prices_show_tax_on_checkout() && $edd_options['prices_include_tax'] == 'yes' ) {
 			$label .= ' ' . __('(ex. tax)', 'edd');
 		}
 
-		if ( edd_is_include_tax() && $edd_options['prices_include_tax'] == 'no' ) {
+		if ( edd_prices_show_tax_on_checkout() && $edd_options['prices_include_tax'] == 'no' ) {
 			$label .= ' ' . __('(incl. tax)', 'edd');
 		}
 
@@ -265,7 +265,7 @@ function edd_get_cart_item_price( $item_id, $options = array(), $tax = true ) {
 	}
 
 	// lol this if statement...
-	if ( $tax && ( ( $edd_options['prices_include_tax'] == 'yes' && !edd_is_cart_taxed() && edd_use_taxes() ) || ( edd_is_cart_taxed() && edd_is_include_tax() || ( edd_is_exclude_tax() && $edd_options['prices_include_tax'] == 'yes' ) ) ) ) {
+	if ( $tax && ( ( $edd_options['prices_include_tax'] == 'yes' && !edd_is_cart_taxed() && edd_use_taxes() ) || ( edd_is_cart_taxed() && edd_prices_show_tax_on_checkout() || ( ! edd_prices_show_tax_on_checkout() && $edd_options['prices_include_tax'] == 'yes' ) ) ) ) {
 		$price = edd_calculate_tax( $price );
 	}
 
@@ -290,6 +290,7 @@ function edd_get_price_name( $item_id, $options = array() ) {
 	if( $variable_pricing && !empty( $options ) ) {
 		// If variable prices are enabled, retrieve the options
 		$prices = get_post_meta( $item_id, 'edd_variable_prices', true );
+		$name = false;
 		if( $prices ) {
 			if( isset( $prices[ $options['price_id'] ] ) )
 				$name = $prices[ $options['price_id'] ]['name'];
@@ -312,16 +313,16 @@ function edd_get_price_name( $item_id, $options = array() ) {
 function edd_cart_subtotal() {
 	global $edd_options;
 
-	$tax = ( ( edd_is_exclude_tax() && $edd_options['prices_include_tax'] == 'yes' ) || ( $edd_options['prices_include_tax'] == 'no' && edd_is_include_tax() ) );
+	$tax = ( ( ! edd_prices_show_tax_on_checkout() && $edd_options['prices_include_tax'] == 'yes' ) || ( $edd_options['prices_include_tax'] == 'no' && edd_prices_show_tax_on_checkout() ) );
 	$price = esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) );
 
 	if ( edd_is_cart_taxed() ) {
 
-		if ( edd_is_exclude_tax() && $edd_options['prices_include_tax'] == 'yes' ) {
+		if ( ! edd_prices_show_tax_on_checkout() && $edd_options['prices_include_tax'] == 'yes' ) {
 			$price .= '<br/><span style="font-weight:normal;text-transform:none;">' . __('(ex. tax)', 'edd') . '</span>';
 		}
 
-		if ( edd_is_include_tax() && $edd_options['prices_include_tax'] == 'no' ) {
+		if ( edd_prices_show_tax_on_checkout() && $edd_options['prices_include_tax'] == 'no' ) {
 			$price .= '<br/><span style="font-weight:normal;text-transform:none;">' . __('(incl. tax)', 'edd') . '</span>';
 		}
 
@@ -654,10 +655,16 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
 function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
 	global $post;
 
-	$current_page = edd_get_current_page_url();
-	$remove_url = add_query_arg( array('cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page);
+	if( is_page() ) {
+		$current_page = add_query_arg( 'page_id', $post->ID, home_url('/') );
+	} else if( is_singular() ) {
+		$current_page = add_query_arg( 'p', $post->ID, home_url('/') );
+	} else {
+		$current_page = edd_get_current_page_url();
+	}
+	$remove_url = add_query_arg( array('cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page );
 
-	return apply_filters('edd_remove_item_url', $remove_url);
+	return apply_filters( 'edd_remove_item_url', $remove_url );
 }
 
 /**
@@ -781,7 +788,7 @@ function edd_empty_cart() {
  * @return      void
  */
 function edd_set_purchase_session( $purchase_data ) {
-	$_SESSION['edd_purchase_info'] = $purchase_data;
+	EDD()->session->set('edd_purchase', $purchase_data );
 }
 
 /**
@@ -795,10 +802,5 @@ function edd_set_purchase_session( $purchase_data ) {
  * @return      array / false
  */
 function edd_get_purchase_session() {
-	return isset( $_SESSION['edd_purchase_info'] ) ? $_SESSION['edd_purchase_info'] : false;
-}
-
-// Make sure a session is started
-if( ! session_id() ) {
-	add_action( 'init', 'session_start', -1 );
+	return EDD()->session->get('edd_purchase');
 }

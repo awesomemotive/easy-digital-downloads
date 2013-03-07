@@ -15,8 +15,8 @@ env:
   - WP_VERSION=3.5.1 WP_MULTISITE=0 
   - WP_VERSION=3.5.1 WP_MULTISITE=1
 # Last WP Version (tested against but not supported by EDD)
-  - WP_VERSION=3.5 WP_MULTISITE=0
-  - WP_VERSION=3.5 WP_MULTISITE=1
+#  - WP_VERSION=3.5 WP_MULTISITE=0
+#  - WP_VERSION=3.5 WP_MULTISITE=1
 # These versions of WordPress we do not officially support
 # Last Major WP Version not in current 3.x branch
   - WP_VERSION=3.4.2 WP_MULTISITE=0
@@ -44,8 +44,8 @@ env:
 matrix:
   allow_failures:
 # Legacy Versions
-    - env: WP_VERSION=3.5 WP_MULTISITE=0 
-    - env: WP_VERSION=3.5 WP_MULTISITE=1
+#    - env: WP_VERSION=3.5 WP_MULTISITE=0 
+#    - env: WP_VERSION=3.5 WP_MULTISITE=1
 # Old Versions (uncomment lines here and above to test)
 #    - env: WP_VERSION=3.4.1 WP_MULTISITE=0
 #    - env: WP_VERSION=3.4.1 WP_MULTISITE=1

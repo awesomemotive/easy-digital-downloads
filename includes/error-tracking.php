@@ -12,10 +12,6 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-// Make sure a session is started
-if ( ! session_id() ) {
-	add_action( 'init', 'session_start', -1 );
-}
 
 /**
  * Print Errors
@@ -58,11 +54,7 @@ add_action( 'edd_ajax_checkout_errors', 'edd_print_errors' );
  * @return      mixed - array if errors are present, false if none found
  */
 function edd_get_errors() {
-	if ( isset( $_SESSION['edd-errors'] ) ) {
-		$errors = $_SESSION['edd-errors'];
-		return $errors;
-	}
-	return false;
+	return EDD()->session->get( 'edd_errors' );
 }
 
 /**
@@ -82,7 +74,7 @@ function edd_set_error( $error_id, $error_message ) {
 		$errors = array();
 	}
 	$errors[ $error_id ] = $error_message;
-	$_SESSION['edd-errors'] = $errors;
+	EDD()->session->set( 'edd_errors', $errors );
 }
 
 /**
@@ -95,7 +87,7 @@ function edd_set_error( $error_id, $error_message ) {
  * @return      void
  */
 function edd_clear_errors() {
-	if ( isset( $_SESSION['edd-errors'] ) ) $_SESSION['edd-errors'] = null;
+	EDD()->session->set( 'edd_errors', null );
 }
 
 /**
@@ -112,5 +104,6 @@ function edd_unset_error( $error_id ) {
 	$errors = edd_get_errors();
 	if ( $errors ) {
 		unset( $errors[ $error_id ] );
+		EDD()->session->set( 'edd_errors', $errors );
 	}
 }
