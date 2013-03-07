@@ -61,7 +61,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-products"><?php printf( __( '%s Requirements', 'edd' ), edd_get_label_plural() ); ?></label>
 				</th>
 				<td>
-					<select multiple id="edd-products" name="products[]"/>
+					<p>
+						<select id="edd-product-condition" name="product_condition">
+							<option value="all"><?php printf( __( 'All Selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
+							<option value="any"><?php printf( __( 'Any Selected %s', 'edd' ), edd_get_label_singular() ); ?></option>
+						</select>
+						<label for="edd-product-condition"><?php _e( 'Condition', 'edd' ); ?></label>
+					</p>
+					<select multiple id="edd-products" name="products[]" class="edd-select-chosen" data-placeholder="<?php printf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ); ?>">
 						<?php
 						$downloads = get_posts( array( 'post_type' => 'download', 'no_paging' => 1 ) );
 						if( $downloads ) :
@@ -72,11 +79,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 						?>
 					</select>
 					<p class="description"><?php printf( __( '%s required to be purchased for this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
-					<select id="edd-product-condition" name="product_condition">
-						<option value="all"><?php printf( __( 'All Selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
-						<option value="any"><?php printf( __( 'Any Selected %s', 'edd' ), edd_get_label_singular() ); ?></option>
-					</select>
-					<label for="edd-product-condition"><?php _e( 'Condition', 'edd' ); ?></label>
+
 					<p>
 						<label for="edd-non-global-discount">
 							<input type="checkbox" id="edd-non-global-discount" name="not_global" value="1"/>
