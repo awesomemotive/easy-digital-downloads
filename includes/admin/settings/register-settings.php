@@ -326,7 +326,7 @@ function edd_register_settings() {
 				'checkout_include_tax' => array(
 					'id' => 'checkout_include_tax',
 					'name' => __('Display during checkout', 'edd'),
-					'desc' => __('', 'edd'),
+					'desc' => __('Should prices on the checkout page be shown with or without tax?', 'edd'),
 					'type' => 'select',
 					'std' => 'no',
 					'options' => array(

@@ -41,7 +41,8 @@ function edd_get_payments( $args = array() ) {
 		'month'    => null,
 		'day'      => null,
 		's'        => null,
-		'children' => false
+		'children' => false,
+		'fields'   => null
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -55,7 +56,8 @@ function edd_get_payments( $args = array() ) {
 		'post_status'    => $args['status'],
 		'year'           => $args['year'],
 		'monthnum'       => $args['month'],
-		'day'            => $args['day']
+		'day'            => $args['day'],
+		'fields'         => $args['fields']
 	);
 
 	switch ( $args['orderby'] ) :
@@ -535,12 +537,13 @@ function edd_get_total_earnings() {
 		'number' => -1,
 		'mode'   => 'live',
 		'status' => 'publish',
+		'fields' => 'ids'
 	) );
 
 	$payments = edd_get_payments( $args );
 	if ( $payments ) {
 		foreach ( $payments as $payment ) {
-			$total += edd_get_payment_amount( $payment->ID );
+			$total += edd_get_payment_amount( $payment );
 		}
 	}
 	//set_transient( 'edd_earnings_total', $payments, 1800 );
@@ -739,9 +742,11 @@ function edd_get_payment_subtotal( $payment_id = 0, $payment_meta = false ) {
 	$subtotal = isset( $payment_meta['subtotal'] ) ? $payment_meta['subtotal'] : $payment_meta['amount'];
 
 	$tax = edd_use_taxes() ? edd_get_payment_tax( $payment_id ) : 0;
-	if ( $edd_options['prices_include_tax'] == 'no' && edd_is_include_tax() ) {
-		$subtotal += $tax;
-	} else if ( edd_is_exclude_tax() && $edd_options['prices_include_tax'] == 'yes' ) {
+
+	if (
+		( isset( $edd_options['prices_include_tax'] ) && $edd_options['prices_include_tax'] == 'no' && ! edd_prices_show_tax_on_checkout() ) ||
+		( isset( $edd_options['prices_include_tax'] ) && ! edd_prices_show_tax_on_checkout() && $edd_options['prices_include_tax'] == 'yes' )
+	) {
 		$subtotal -= $tax;
 	}
 

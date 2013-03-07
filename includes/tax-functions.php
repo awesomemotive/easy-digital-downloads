@@ -153,18 +153,19 @@ function edd_calculate_tax( $amount, $sum = true ) {
 
 	$rate = edd_get_tax_rate();
 	$tax = 0;
+	$prices_include_tax = isset( $edd_options['prices_include_tax'] ) ? $edd_options['prices_include_tax'] : 'no';
 
-	if ( $edd_options['prices_include_tax'] == 'yes' ) {
+	if ( $prices_include_tax == 'yes' ) {
 		$tax = $amount - ( $amount / ( $rate + 1 ) );
 	}
 
-	if ( $edd_options['prices_include_tax'] == 'no' ) {
+	if ( $prices_include_tax == 'no' ) {
 		$tax = $amount * $rate;
 	}
 
 	if ( $sum ) {
 
-		if ( $edd_options['prices_include_tax'] == 'yes' ) {
+		if ( $prices_include_tax == 'yes' ) {
 			$tax = $amount - $tax;
 		} else {
 			$tax = $amount + $tax;
