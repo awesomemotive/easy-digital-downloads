@@ -225,11 +225,11 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 	if ( edd_is_cart_taxed() ) {
 
 		if ( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
-			$label .= ' ' . __('(ex. tax)', 'edd');
+			$label .= ' ' . __( '(ex. tax)', 'edd' );
 		}
 
-		if ( edd_prices_show_tax_on_checkout() && $edd_options['prices_include_tax'] == 'no' ) {
-			$label .= ' ' . __('(incl. tax)', 'edd');
+		if ( edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax() ) {
+			$label .= ' ' . __( '(incl. tax)', 'edd' );
 		}
 
 	}
