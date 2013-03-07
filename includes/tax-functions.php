@@ -57,7 +57,7 @@ function edd_local_taxes_only() {
 */
 
 function edd_local_tax_opted_in() {
-	return isset( $_COOKIE['wordpress_edd_local_tax_opt_in'] );
+	return !empty( $_SESSION['wordpress_edd_local_tax_opt_in'] );
 }
 
 
@@ -70,7 +70,7 @@ function edd_local_tax_opted_in() {
 */
 
 function edd_opt_into_local_taxes() {
-	return setcookie( 'wordpress_edd_local_tax_opt_in', 1, time()+3600, COOKIEPATH, COOKIE_DOMAIN, false );
+	return $_SESSION['wordpress_edd_local_tax_opt_in'] = true;
 }
 
 
@@ -83,7 +83,7 @@ function edd_opt_into_local_taxes() {
 */
 
 function edd_opt_out_local_taxes() {
-	return setcookie( 'wordpress_edd_local_tax_opt_in', null, strtotime( '-1 day' ), COOKIEPATH, COOKIE_DOMAIN, false );
+	return $_SESSION['wordpress_edd_local_tax_opt_in'] = false;
 }
 
 
@@ -145,49 +145,36 @@ function edd_get_tax_rate() {
  * @return      float
 */
 
-function edd_calculate_tax( $amount ) {
+function edd_calculate_tax( $amount, $sum = true ) {
+	global $edd_options;
 
-	$rate 	= edd_get_tax_rate();
-	$tax 	= number_format( $amount * $rate, 2 ); // The tax amount
+	// Not using taxes
+	if ( !edd_use_taxes() ) return $amount;
 
-	return apply_filters( 'edd_taxed_amount', $tax, $rate );
-}
+	$rate = edd_get_tax_rate();
+	$tax = 0;
+	$prices_include_tax = isset( $edd_options['prices_include_tax'] ) ? $edd_options['prices_include_tax'] : 'no';
 
+	if ( $prices_include_tax == 'yes' ) {
+		$tax = $amount - ( $amount / ( $rate + 1 ) );
+	}
 
-/**
- * Stores the tax info in the payment meta
- *
- * @access      public
- * @since       1.3.3
- * @param 		$payment_meta array The meta data to store with the payment
- * @param 		$payment_data array The info sent from process-purchase.php
- * @return      array
-*/
+	if ( $prices_include_tax == 'no' ) {
+		$tax = $amount * $rate;
+	}
 
-function edd_record_taxed_amount( $payment_meta, $payment_data ) {
+	if ( $sum ) {
 
-	if( ! edd_use_taxes() )
-		return $payment_meta;
-
-	if( edd_local_taxes_only() && isset( $_POST['edd_tax_opt_in'] ) ) {
-
-		// Calculate local taxes
-		$payment_meta['subtotal'] 	= edd_get_cart_amount( false );
-		$payment_meta['tax'] 		= edd_get_cart_tax();
-
-	} elseif( ! edd_local_taxes_only() ) {
-
-		// Calculate global taxes
-		$payment_meta['subtotal'] 	= edd_get_cart_amount( false );
-		$payment_meta['tax'] 		= edd_get_cart_tax();
+		if ( $prices_include_tax == 'yes' ) {
+			$tax = $amount - $tax;
+		} else {
+			$tax = $amount + $tax;
+		}
 
 	}
 
-	return $payment_meta;
-
+	return apply_filters( 'edd_taxed_amount', $tax, $rate );
 }
-add_filter( 'edd_payment_meta', 'edd_record_taxed_amount', 10, 2 );
-
 
 /**
  * Stores the tax info in the payment meta
@@ -205,42 +192,89 @@ function edd_sales_tax_for_year( $year = null ) {
 	echo edd_currency_filter( edd_format_amount( edd_get_sales_tax_for_year( $year ) ) );
 }
 
-	/**
-	 * Stores the tax info in the payment meta
-	 *
-	 * @access      public
-	 * @since       1.3.3
-	 * @param 		$year int The year to retrieve taxes for, i.e. 2012
-	 * @uses 		edd_get_payment_tax()
-	 * @return      float
-	*/
+/**
+ * Stores the tax info in the payment meta
+ *
+ * @access      public
+ * @since       1.3.3
+ * @param 		$year int The year to retrieve taxes for, i.e. 2012
+ * @uses 		edd_get_payment_tax()
+ * @return      float
+*/
 
-	function edd_get_sales_tax_for_year( $year = null ) {
+function edd_get_sales_tax_for_year( $year = null ) {
 
-		if( empty( $year ) )
-			return 0;
+	if( empty( $year ) )
+		return 0;
 
-		// Start at zero
-		$tax = 0;
+	// Start at zero
+	$tax = 0;
 
-		$args = array(
-			'post_type' 		=> 'edd_payment',
-			'posts_per_page' 	=> -1,
-			'year' 				=> $year,
-			'meta_key' 			=> '_edd_payment_mode',
-			'meta_value' 		=> edd_is_test_mode() ? 'test' : 'live',
-			'fields'			=> 'ids'
-		);
+	$args = array(
+		'post_type' 		=> 'edd_payment',
+		'posts_per_page' 	=> -1,
+		'year' 				=> $year,
+		'meta_key' 			=> '_edd_payment_mode',
+		'meta_value' 		=> edd_is_test_mode() ? 'test' : 'live',
+		'fields'			=> 'ids'
+	);
 
-		$payments = get_posts( $args );
+	$payments = get_posts( $args );
 
-		if( $payments ) :
+	if( $payments ) :
 
-			foreach( $payments as $payment ) :
-				$tax += edd_get_payment_tax( $payment );
-			endforeach;
+		foreach( $payments as $payment ) :
+			$tax += edd_get_payment_tax( $payment );
+		endforeach;
 
-		endif;
+	endif;
 
-		return apply_filters( 'edd_get_sales_tax_for_year', $tax, $year );
-	}
+	return apply_filters( 'edd_get_sales_tax_for_year', $tax, $year );
+}
+
+
+/**
+ * Should prices on checkout show taxes?
+ *
+ * @access      public
+ * @since       1.5
+ * @return      bool
+*/
+
+function edd_prices_show_tax_on_checkout() {
+	global $edd_options;
+
+	$include_tax = isset( $edd_options['checkout_include_tax'] ) ? $edd_options['checkout_include_tax'] : 'no';
+
+	return ( $include_tax == 'yes' );
+}
+
+
+/**
+ * Do individual product prices include tax?
+ *
+ * @access      public
+ * @since       1.5
+ * @return      bool
+*/
+
+function edd_prices_include_tax() {
+	global $edd_options;
+
+	$include_tax = isset( $edd_options['prices_include_tax'] ) ? $edd_options['prices_include_tax'] : 'no';
+
+	return ( $include_tax == 'yes' );
+}
+
+
+/**
+ * Is the cart taxed?
+ *
+ * @access      public
+ * @since       1.5
+ * @return      bool
+*/
+
+function edd_is_cart_taxed() {
+	return edd_use_taxes() && ( ( edd_local_tax_opted_in() && edd_local_taxes_only() ) || ! edd_local_taxes_only() );
+}
