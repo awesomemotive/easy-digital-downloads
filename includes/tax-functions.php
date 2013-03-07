@@ -57,7 +57,8 @@ function edd_local_taxes_only() {
 */
 
 function edd_local_tax_opted_in() {
-	return !empty( $_SESSION['wordpress_edd_local_tax_opt_in'] );
+	$opted_in = EDD()->session->get( 'edd_local_tax_opt_in' );
+	return ! empty( $opted_in );
 }
 
 
@@ -70,7 +71,7 @@ function edd_local_tax_opted_in() {
 */
 
 function edd_opt_into_local_taxes() {
-	return $_SESSION['wordpress_edd_local_tax_opt_in'] = true;
+	EDD()->session->set( 'edd_local_tax_opt_in', '1' );
 }
 
 
@@ -83,7 +84,7 @@ function edd_opt_into_local_taxes() {
 */
 
 function edd_opt_out_local_taxes() {
-	return $_SESSION['wordpress_edd_local_tax_opt_in'] = false;
+	EDD()->session->set( 'edd_local_tax_opt_in', null);
 }
 
 
