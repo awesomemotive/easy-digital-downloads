@@ -639,9 +639,7 @@ function edd_get_php_arg_separator_output() {
 function edd_get_current_page_url() {
 	global $post;
 
-	if ( is_singular() ):
-		$page_url = get_permalink( $post->ID );
-	elseif ( is_front_page() ) :
+	if ( is_front_page() ) :
 		$page_url = home_url();
 	else :
 		$page_url = 'http';
