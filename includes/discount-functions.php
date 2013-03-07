@@ -132,8 +132,8 @@ function edd_store_discount( $details, $discount_id = null ) {
 		'uses'              => isset( $details['uses'] )             ? $details['uses']              : '',
 		'max_uses'          => isset( $details['max'] )              ? $details['max']               : '',
 		'amount'            => isset( $details['amount'] )           ? $details['amount']            : '',
-		'start'             => isset( $details['start'] )            ? $details['start']             : '',
-		'expiration'        => isset( $details['expiration'] )       ? $details['expiration']        : '',
+		'start'             => isset( $details['start'] )            ? $details['start']             : false,
+		'expiration'        => isset( $details['expiration'] )       ? $details['expiration']        : false,
 		'type'              => isset( $details['type'] )             ? $details['type']              : '',
 		'min_price'         => isset( $details['min_price'] )        ? $details['min_price']         : '',
 		'product_reqs'      => isset( $details['products'] )         ? $details['products']          : array(),
@@ -142,8 +142,11 @@ function edd_store_discount( $details, $discount_id = null ) {
 		'is_single_use'     => isset( $details['use_once'] )         ? $details['use_once']          : false,
 	);
 
-	$meta['start']      = date( 'm/d/Y H:i:s', strtotime( $meta['start'] ) );
-	$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime(  date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
+	if( $meta['start'] )
+		$meta['start']      = date( 'm/d/Y H:i:s', strtotime( $meta['start'] ) );
+
+	if( $meta['expiration'] )
+		$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime(  date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
 
 	if ( edd_discount_exists( $discount_id ) && ! empty( $discount_id ) ) {
 
