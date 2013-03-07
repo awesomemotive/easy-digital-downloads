@@ -110,6 +110,7 @@ function edd_email_test_purchase_receipt() {
  * @return      void
  */
 function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
+
 	/* Send an email notification to the admin */
 	$admin_email   = edd_get_admin_notice_emails();
 

@@ -43,63 +43,23 @@ jQuery(document).ready(function($) {
     // Toggle the tax amount shown on checkout
     $('body').on('click', '#edd_tax_opt_in', function() {
 
-        var tax         = parseFloat( $('.edd_cart_tax_amount').data( 'tax' ) );
-        var subtotal    = parseFloat( $('.edd_cart_amount').data( 'subtotal' ) );
-        var total       = parseFloat( $('.edd_cart_amount').data( 'total' ) );
-        var sign        = edd_global_vars.currency_sign;
-        var pos         = edd_global_vars.currency_pos;
+        var postData = {
+            action: $(this).attr('checked') ? 'edd_local_tax_opt_in' : 'edd_local_tax_opt_out',
+            nonce: edd_global_vars.checkout_nonce
+        };
 
-        if( $(this).attr('checked') ) {
-
-            var data = {
-                action: 'edd_local_tax_opt_in',
-                nonce: edd_global_vars.checkout_nonce
-            };
-
-            $.post( edd_global_vars.ajaxurl, data, function (response) {
-                if (response == '1') {
-
-                    $('.edd_cart_tax_row, .edd_cart_subtotal_row').show();
-
-                    if( pos == 'before' ) {
-                        total = sign + total;
-                        tax = sign + tax;
-                    } else {
-                        total = total + sign;
-                        tax = tax + sign;
-                    }
-                    $('.edd_cart_tax_amount').text( tax );
-                    $('.edd_cart_amount').text( total );
-
-                } else {
-                    console.log( response );
-                }
-            });
-
-        } else {
-
-            var data = {
-                action: 'edd_local_tax_opt_out',
-                nonce: edd_global_vars.checkout_nonce
-            };
-
-            $.post( edd_global_vars.ajaxurl, data, function (response) {
-                if (response == '1') {
-
-                    $('.edd_cart_tax_row, .edd_cart_subtotal_row').hide();
-
-                    if( pos == 'before' )
-                        subtotal = sign + '' + subtotal;
-                    else
-                        subtotal = subtotal + '' + sign;
-
-                    $('.edd_cart_amount').text( subtotal );
-
-                } else {
-                    console.log( response );
-                }
-            });
-        }
+        $.ajax({
+            type: "POST",
+            data: postData,
+            dataType: "json",
+            url: edd_global_vars.ajaxurl,
+            success: function (tax_response) {
+                $('#edd_checkout_cart').replaceWith(tax_response.html);
+                $('.edd_cart_amount').text(tax_response.total);
+            }
+        }).fail(function (data) {
+            console.log(data);
+        });
     });
 
     // Make sure a gateway is selected
