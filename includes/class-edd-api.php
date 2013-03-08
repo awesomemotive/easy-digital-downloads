@@ -837,6 +837,7 @@ class EDD_API {
 				$cart_items            = edd_get_payment_meta_cart_details( $payment->ID );
 
 				$sales['sales'][$i]['ID']       = $payment->ID;
+				$sales['sales'][$i]['key']      = edd_get_payment_key( $payment->ID );
 				$sales['sales'][$i]['subtotal'] = edd_get_payment_subtotal( $payment->ID );
 				$sales['sales'][$i]['tax']      = edd_get_payment_tax( $payment->ID );
 				$sales['sales'][$i]['fees']     = edd_get_payment_fees( $payment->ID );
