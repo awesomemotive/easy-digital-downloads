@@ -320,7 +320,7 @@ class EDD_API {
 			'sales'
 		) );
 
-		$query = isset( $wp_query->query_vars['query'] ) ? $wp_query->query_vars['query'] : null;
+		$query = isset( $wp_query->query_vars['edd-api'] ) ? $wp_query->query_vars['edd-api'] : null;
 
 		// Make sure our query is valid
 		if( ! in_array( $query, $accepted ) || ( $query == 'stats' && ! isset( $wp_query->query_vars['type'] )  ) ) {
