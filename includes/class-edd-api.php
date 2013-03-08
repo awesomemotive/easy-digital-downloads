@@ -669,21 +669,28 @@ class EDD_API {
 
 					if ( isset( $args['startdate'] ) && isset( $args['enddate'] ) ) {
 
-						global $wp_query;
+						if( $args['enddate'] < $args['startdate'] ) {
 
-						$args['startdate'] = DateTime::createFromFormat( 'Ymd', $args['startdate'] )->format( 'Y-m-d' );
-						$args['enddate'] = DateTime::createFromFormat( 'Ymd', $args['enddate'] )->format( 'Y-m-d' );
-						$daterange = new DatePeriod(
-							new DateTime( $args['startdate'] ),
-							new DateInterval( 'P1D' ),
-							new DateTime( $args['enddate'] + 1 )
-						);
+							$error['error'] = __( 'The end date must be later than the date date!', 'edd' );
 
-						foreach ( $daterange as $day ) {
+						} else {
 
-							$tag = ( $this->get_output_format() == 'xml' ? $day->format( 'MdY' ) : $day->format( 'Ymd' ) );
-							$sales['sales'][$tag] = edd_get_sales_by_date( $day->format( 'j' ), $day->format( 'n' ), $day->format( 'Y' ) );
+							global $wp_query;
 
+							$args['startdate'] = DateTime::createFromFormat( 'Ymd', $args['startdate'] )->format( 'Y-m-d' );
+							$args['enddate'] = DateTime::createFromFormat( 'Ymd', $args['enddate'] )->format( 'Y-m-d' );
+							$daterange = new DatePeriod(
+								new DateTime( $args['startdate'] ),
+								new DateInterval( 'P1D' ),
+								new DateTime( $args['enddate'] + 1 )
+							);
+
+							foreach ( $daterange as $day ) {
+
+								$tag = ( $this->get_output_format() == 'xml' ? $day->format( 'MdY' ) : $day->format( 'Ymd' ) );
+								$sales['sales'][$tag] = edd_get_sales_by_date( $day->format( 'j' ), $day->format( 'n' ), $day->format( 'Y' ) );
+
+							}
 						}
 
 					} else {
@@ -751,21 +758,29 @@ class EDD_API {
 
 					if ( isset( $args['startdate'] ) && isset( $args['enddate'] ) ) {
 
-						global $wp_query;
+						if( $args['enddate'] < $args['startdate'] ) {
 
-						$args['startdate'] = DateTime::createFromFormat( 'Ymd', $args['startdate'] )->format( 'Y-m-d' );
-						$args['enddate'] = DateTime::createFromFormat( 'Ymd', $args['enddate'] )->format( 'Y-m-d' );
+							$error['error'] = __( 'The end date must be later than the date date!', 'edd' );
 
-						$daterange = new DatePeriod(
-							new DateTime( $args['startdate'] ),
-							new DateInterval( 'P1D' ),
-							new DateTime( $args['enddate'] + 1 )
-						);
+						} else {
 
-						foreach ( $daterange as $day ) {
+							global $wp_query;
 
-							$tag = $this->get_output_format() == 'xml' ? $day->format( 'MdY' ) : $day->format( 'Ymd' );
-							$earnings['earnings'][$tag] = edd_get_earnings_by_date( $day->format( 'j' ), $day->format( 'n' ), $day->format( 'Y' ) );
+							$args['startdate'] = DateTime::createFromFormat( 'Ymd', $args['startdate'] )->format( 'Y-m-d' );
+							$args['enddate'] = DateTime::createFromFormat( 'Ymd', $args['enddate'] )->format( 'Y-m-d' );
+
+							$daterange = new DatePeriod(
+								new DateTime( $args['startdate'] ),
+								new DateInterval( 'P1D' ),
+								new DateTime( $args['enddate'] + 1 )
+							);
+
+							foreach ( $daterange as $day ) {
+
+								$tag = $this->get_output_format() == 'xml' ? $day->format( 'MdY' ) : $day->format( 'Ymd' );
+								$earnings['earnings'][$tag] = edd_get_earnings_by_date( $day->format( 'j' ), $day->format( 'n' ), $day->format( 'Y' ) );
+
+							}
 
 						}
 
