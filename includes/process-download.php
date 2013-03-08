@@ -91,19 +91,19 @@ function edd_process_download() {
 			if( $size = @filesize( $requested_file ) ) header("Content-Length: ".$size);
 			@edd_readfile_chunked( $requested_file );
 
-		} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false) {
+		} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false ) {
 
 			/** This is a local file given by URL */
 			$upload_dir = wp_upload_dir();
 
-			$requested_file = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );
-			$requested_file = realpath( $requested_file );
-
-			if ( file_exists( $requested_file ) ) {
-				if ( $size = @filesize( $requested_file ) ) header("Content-Length: ".$size);
-				@edd_readfile_chunked( $requested_file );
+			$file_path = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );
+			$file_path = realpath( $file_path );
+			if ( file_exists( $file_path ) ) {
+				if ( $size = @filesize( $file_path ) ) header("Content-Length: " . $size );
+				@edd_readfile_chunked( $file_path );
 			} else {
-				wp_die( __('Sorry but this file does not exist.', 'edd'), __('Error', 'edd') );
+				// Absolute path couldn't be discovered so send straight to the file URL
+				header("Location: " . $requested_file);
 			}
 		} else {
 			// This is a remote file
@@ -112,8 +112,8 @@ function edd_process_download() {
 
 		exit;
 	} else {
-		$error_message = __('You do not have permission to download this file', 'edd');
-		wp_die( apply_filters( 'edd_deny_download_message', $error_message, __('Purchase Verification Failed', 'edd') ) );
+		$error_message = __( 'You do not have permission to download this file', 'edd' );
+		wp_die( apply_filters( ' edd_deny_download_message', $error_message, __( 'Purchase Verification Failed', 'edd' ) ) );
 	}
 
 	exit;
