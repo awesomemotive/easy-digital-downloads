@@ -438,7 +438,7 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 			$total     = $total + $amount;
 		}
 	}
-	return $total;
+	return round( $total, 2 );
 }
 
 /**
