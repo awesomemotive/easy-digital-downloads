@@ -836,15 +836,15 @@ class EDD_API {
 				$user_info             = edd_get_payment_meta_user_info( $payment->ID );
 				$cart_items            = edd_get_payment_meta_cart_details( $payment->ID );
 
-				$sales[$i]['ID']       = $payment->ID;
-				$sales[$i]['subtotal'] = edd_get_payment_subtotal( $payment->ID );
-				$sales[$i]['tax']      = edd_get_payment_tax( $payment->ID );
-				$sales[$i]['fees']     = edd_get_payment_fees( $payment->ID );
-				$sales[$i]['total']    = edd_get_payment_amount( $payment->ID );
-				$sales[$i]['gateway']  = edd_get_payment_gateway( $payment->ID );
-				$sales[$i]['email']    = edd_get_payment_user_email( $payment->ID );
-				$sales[$i]['date']     = $payment->post_date;
-				$sales[$i]['products'] = array();
+				$sales['sales'][$i]['ID']       = $payment->ID;
+				$sales['sales'][$i]['subtotal'] = edd_get_payment_subtotal( $payment->ID );
+				$sales['sales'][$i]['tax']      = edd_get_payment_tax( $payment->ID );
+				$sales['sales'][$i]['fees']     = edd_get_payment_fees( $payment->ID );
+				$sales['sales'][$i]['total']    = edd_get_payment_amount( $payment->ID );
+				$sales['sales'][$i]['gateway']  = edd_get_payment_gateway( $payment->ID );
+				$sales['sales'][$i]['email']    = edd_get_payment_user_email( $payment->ID );
+				$sales['sales'][$i]['date']     = $payment->post_date;
+				$sales['sales'][$i]['products'] = array();
 
 				$c = 0;
 				foreach( $cart_items as $key => $item ) {
@@ -859,9 +859,9 @@ class EDD_API {
 						}
 					}
 
-					$sales[$i]['products'][$c]['name']       = get_the_title( $item['id'] );
-					$sales[$i]['products'][$c]['price']      = $price;
-					$sales[$i]['products'][$c]['price_name'] = $price_name;
+					$sales['sales'][$i]['products'][$c]['name']       = get_the_title( $item['id'] );
+					$sales['sales'][$i]['products'][$c]['price']      = $price;
+					$sales['sales'][$i]['products'][$c]['price_name'] = $price_name;
 					$c++;
 
 				}
