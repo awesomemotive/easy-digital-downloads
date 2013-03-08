@@ -415,29 +415,29 @@ class EDD_API {
 
 					// Customer with registered account
 
-					$customers['customer'][$customer_count]['info']['id']           = $customer_info->ID;
-					$customers['customer'][$customer_count]['info']['username']     = $customer_info->user_login;
-					$customers['customer'][$customer_count]['info']['display_name'] = $customer_info->display_name;
-					$customers['customer'][$customer_count]['info']['first_name']   = $customer_info->user_firstname;
-					$customers['customer'][$customer_count]['info']['last_name']    = $customer_info->user_lastname;
-					$customers['customer'][$customer_count]['info']['email']        = $customer_info->user_email;
+					$customers['customers'][$customer_count]['info']['id']           = $customer_info->ID;
+					$customers['customers'][$customer_count]['info']['username']     = $customer_info->user_login;
+					$customers['customers'][$customer_count]['info']['display_name'] = $customer_info->display_name;
+					$customers['customers'][$customer_count]['info']['first_name']   = $customer_info->user_firstname;
+					$customers['customers'][$customer_count]['info']['last_name']    = $customer_info->user_lastname;
+					$customers['customers'][$customer_count]['info']['email']        = $customer_info->user_email;
 
 
 				} else {
 
 					// Guest customer
-					$customers['customer'][$customer_count]['info']['id']           = -1;
-					$customers['customer'][$customer_count]['info']['username']     = __( 'Guest', 'edd' );
-					$customers['customer'][$customer_count]['info']['display_name'] = __( 'Guest', 'edd' );
-					$customers['customer'][$customer_count]['info']['first_name']   = __( 'Guest', 'edd' );
-					$customers['customer'][$customer_count]['info']['last_name']    = __( 'Guest', 'edd' );
-					$customers['customer'][$customer_count]['info']['email']        = $customer_email;
+					$customers['customers'][$customer_count]['info']['id']           = -1;
+					$customers['customers'][$customer_count]['info']['username']     = __( 'Guest', 'edd' );
+					$customers['customers'][$customer_count]['info']['display_name'] = __( 'Guest', 'edd' );
+					$customers['customers'][$customer_count]['info']['first_name']   = __( 'Guest', 'edd' );
+					$customers['customers'][$customer_count]['info']['last_name']    = __( 'Guest', 'edd' );
+					$customers['customers'][$customer_count]['info']['email']        = $customer_email;
 
 				}
 
-				$customers['customer'][$customer_count]['stats']['total_purchases'] = edd_count_purchases_of_customer( $customer_email );
-				$customers['customer'][$customer_count]['stats']['total_spent']     = edd_purchase_total_of_user( $customer_email );
-				$customers['customer'][$customer_count]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_email );
+				$customers['customers'][$customer_count]['stats']['total_purchases'] = edd_count_purchases_of_customer( $customer_email );
+				$customers['customers'][$customer_count]['stats']['total_spent']     = edd_purchase_total_of_user( $customer_email );
+				$customers['customers'][$customer_count]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_email );
 
 				$customer_count++;
 
@@ -460,16 +460,16 @@ class EDD_API {
 
 			if ( $customer_info && edd_has_purchases( $customer_info->ID ) ) {
 
-				$customers['customer'][0]['info']['id']               = $customer_info->ID;
-				$customers['customer'][0]['info']['username']         = $customer_info->user_login;
-				$customers['customer'][0]['info']['display_name']     = $customer_info->display_name;
-				$customers['customer'][0]['info']['first_name']       = $customer_info->user_firstname;
-				$customers['customer'][0]['info']['last_name']        = $customer_info->user_lastname;
-				$customers['customer'][0]['info']['email']            = $customer_info->user_email;
+				$customers['customers'][0]['info']['id']               = $customer_info->ID;
+				$customers['customers'][0]['info']['username']         = $customer_info->user_login;
+				$customers['customers'][0]['info']['display_name']     = $customer_info->display_name;
+				$customers['customers'][0]['info']['first_name']       = $customer_info->user_firstname;
+				$customers['customers'][0]['info']['last_name']        = $customer_info->user_lastname;
+				$customers['customers'][0]['info']['email']            = $customer_info->user_email;
 
-				$customers['customer'][0]['stats']['total_purchases'] = edd_count_purchases_of_customer( $customer );
-				$customers['customer'][0]['stats']['total_spent']     = edd_purchase_total_of_user( $customer );
-				$customers['customer'][0]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer );
+				$customers['customers'][0]['stats']['total_purchases'] = edd_count_purchases_of_customer( $customer );
+				$customers['customers'][0]['stats']['total_spent']     = edd_purchase_total_of_user( $customer );
+				$customers['customers'][0]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer );
 
 			} else {
 
