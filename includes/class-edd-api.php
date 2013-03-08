@@ -685,12 +685,17 @@ class EDD_API {
 								new DateTime( $args['enddate'] )
 							);
 
+							$sales['total'] = 0;
+
 							foreach ( $daterange as $day ) {
 
-								$tag = ( $this->get_output_format() == 'xml' ? $day->format( 'MdY' ) : $day->format( 'Ymd' ) );
-								$sales['sales'][$tag] = edd_get_sales_by_date( $day->format( 'j' ), $day->format( 'n' ), $day->format( 'Y' ) );
+								$tag                  = ( $this->get_output_format() == 'xml' ? $day->format( 'MdY' ) : $day->format( 'Ymd' ) );
+								$sale_count           = edd_get_sales_by_date( $day->format( 'j' ), $day->format( 'n' ), $day->format( 'Y' ) );
+								$sales['sales'][$tag] = $sale_count;
+								$sales['total']       += $sale_count;
 
 							}
+
 						}
 
 					} else {
@@ -775,11 +780,14 @@ class EDD_API {
 								new DateTime( $args['enddate'] )
 							);
 
+							$earnings['total'] = '0.00';
+
 							foreach ( $daterange as $day ) {
 
-								$tag = $this->get_output_format() == 'xml' ? $day->format( 'MdY' ) : $day->format( 'Ymd' );
-								$earnings['earnings'][$tag] = edd_get_earnings_by_date( $day->format( 'j' ), $day->format( 'n' ), $day->format( 'Y' ) );
-
+								$tag                        = $this->get_output_format() == 'xml' ? $day->format( 'MdY' ) : $day->format( 'Ymd' );
+								$earnings_count             = edd_get_earnings_by_date( $day->format( 'j' ), $day->format( 'n' ), $day->format( 'Y' ) );
+								$earnings['earnings'][$tag] = $earnings_count;
+								$earnings['total']          += $earnings_count;
 							}
 
 						}
