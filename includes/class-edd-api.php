@@ -497,7 +497,7 @@ class EDD_API {
 
 		if ( $product == null ) {
 
-		$products['products'] = array();
+			$products['products'] = array();
 
 			$product_list = get_posts( array( 'post_type' => 'download', 'posts_per_page' => $this->per_page(), 'paged' => $this->get_paged() ) );
 
