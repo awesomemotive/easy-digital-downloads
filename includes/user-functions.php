@@ -194,7 +194,7 @@ function edd_purchase_total_of_user( $user = null ) {
 		set_transient( md5( 'edd_customer_total_' . $user ), $amount );
 	}
 
-	return $amount;
+	return round( $amount, 2 );
 }
 
 /**
