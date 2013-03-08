@@ -283,9 +283,7 @@ class EDD_API {
 
 			case 'sales' :
 
-				$number = isset( $wp_query->query_vars['number'] ) ? $wp_query->query_vars['number'] : 1;
-
-				$data   = $this->get_recent_sales( $number );
+				$data   = $this->get_recent_sales();
 
 				break;
 
@@ -822,11 +820,11 @@ class EDD_API {
 	 * @return array
 	 */
 
-	function get_recent_sales( $number = 10 ) {
+	function get_recent_sales() {
 
 		$sales = array();
 
-		$query = edd_get_payments( array( 'number' => $number ) );
+		$query = edd_get_payments( array( 'number' => $this->per_page(), 'page' => $this->get_paged() ) );
 
 		if( $query ) {
 			$i = 0;
