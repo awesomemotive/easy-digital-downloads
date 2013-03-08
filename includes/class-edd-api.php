@@ -854,6 +854,7 @@ class EDD_API {
 					$price          = edd_get_download_final_price( $item['id'], $user_info, $price_override );
 
 					if ( isset( $cart_items[ $key ]['item_number'])) {
+						$price_name     = '';
 						$price_options  = $cart_items[ $key ]['item_number']['options'];
 						if ( isset( $price_options['price_id'] ) ) {
 							$price_name = edd_get_price_option_name( $item['id'], $price_options['price_id'], $payment->ID );
@@ -942,7 +943,6 @@ class EDD_API {
 			case 'xml' :
 
 				require_once EDD_PLUGIN_DIR . 'includes/libraries/array2xml.php';
-
 				$xml = Array2XML::createXML( 'edd', $data );
 				echo $xml->saveXML();
 
