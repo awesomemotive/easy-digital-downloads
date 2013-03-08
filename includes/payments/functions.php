@@ -808,7 +808,7 @@ function edd_get_payment_fees( $payment_id = 0, $payment_meta = false ) {
 	if ( ! $payment_meta )
 		$payment_meta = edd_get_payment_meta( $payment_id );
 
-	$fees = isset( $payment_meta['fees'] ) ? $payment_meta['fees'] : false;
+	$fees = isset( $payment_meta['fees'] ) ? $payment_meta['fees'] : null;
 
 	return apply_filters( 'edd_get_payment_fees', $fees, $payment_id );
 }
