@@ -297,7 +297,7 @@ function edd_register_settings() {
 				'prices_include_tax' => array(
 					'id' => 'prices_include_tax',
 					'name' => __('Prices entered with tax', 'edd'),
-					'desc' => __('This option effects how you enter prices.', 'edd'),
+					'desc' => __('This option affects how you enter prices.', 'edd'),
 					'type' => 'radio',
 					'std' => 'no',
 					'options' => array(
