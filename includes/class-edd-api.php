@@ -502,45 +502,46 @@ class EDD_API {
 			$product_list = get_posts( array( 'post_type' => 'download', 'posts_per_page' => $this->per_page(), 'paged' => $this->get_paged() ) );
 
 			if( $product_list ) {
+				$i = 0;
 				foreach ( $product_list as $product_info ) {
 
-					$products['products'][$product_info->ID]['info']['id']                           = $product_info->ID;
-					$products['products'][$product_info->ID]['info']['slug']                         = $product_info->post_name;
-					$products['products'][$product_info->ID]['info']['title']                        = $product_info->post_title;
-					$products['products'][$product_info->ID]['info']['create_date']                  = $product_info->post_date;
-					$products['products'][$product_info->ID]['info']['modified_date']                = $product_info->post_modified;
-					$products['products'][$product_info->ID]['info']['status']                       = $product_info->post_status;
-					$products['products'][$product_info->ID]['info']['link']                         = html_entity_decode( $product_info->guid );
-					$products['products'][$product_info->ID]['info']['content']                      = $product_info->post_content;
-					$products['products'][$product_info->ID]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
+					$products['products'][$i]['info']['id']                           = $product_info->ID;
+					$products['products'][$i]['info']['slug']                         = $product_info->post_name;
+					$products['products'][$i]['info']['title']                        = $product_info->post_title;
+					$products['products'][$i]['info']['create_date']                  = $product_info->post_date;
+					$products['products'][$i]['info']['modified_date']                = $product_info->post_modified;
+					$products['products'][$i]['info']['status']                       = $product_info->post_status;
+					$products['products'][$i]['info']['link']                         = html_entity_decode( $product_info->guid );
+					$products['products'][$i]['info']['content']                      = $product_info->post_content;
+					$products['products'][$i]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
 
-					$products['products'][$product_info->ID]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
-					$products['products'][$product_info->ID]['stats']['total']['earnings']           = edd_get_download_earnings_stats( $product_info->ID );
-					$products['products'][$product_info->ID]['stats']['monthly_average']['sales']    = edd_get_average_monthly_download_sales( $product_info->ID );
-					$products['products'][$product_info->ID]['stats']['monthly_average']['earnings'] = edd_get_average_monthly_download_earnings( $product_info->ID );
+					$products['products'][$i]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
+					$products['products'][$i]['stats']['total']['earnings']           = edd_get_download_earnings_stats( $product_info->ID );
+					$products['products'][$i]['stats']['monthly_average']['sales']    = edd_get_average_monthly_download_sales( $product_info->ID );
+					$products['products'][$i]['stats']['monthly_average']['earnings'] = edd_get_average_monthly_download_earnings( $product_info->ID );
 
 					if ( edd_has_variable_prices( $product_info->ID ) ) {
 
 						foreach ( edd_get_variable_prices( $product_info->ID ) as $price ) {
 
-							$products['products'][$product_info->ID]['pricing'][$price['name']] = $price['amount'];
+							$products['products'][$i]['pricing'][ sanitize_key( $price['name'] ) ] = $price['amount'];
 
 						}
 
 					} else {
 
-						$products['products'][$product_info->ID]['pricing']['amount'] = edd_get_download_price( $product_info->ID );
+						$products['products'][$i]['pricing']['amount'] = edd_get_download_price( $product_info->ID );
 
 					}
 
 					foreach ( edd_get_download_files( $product_info->ID ) as $file ) {
 
-						$products['products'][$product_info->ID]['files'][] = $file;
+						$products['products'][$i]['files'][] = $file;
 
 					}
 
-					$products['products'][$product_info->ID]['notes'] = edd_get_product_notes( $product_info->ID );
-
+					$products['products'][$i]['notes'] = edd_get_product_notes( $product_info->ID );
+					$i++;
 				}
 			}
 
@@ -550,42 +551,42 @@ class EDD_API {
 
 				$product_info = get_post( $product );
 
-				$products[$product_info->ID]['info']['id']                           = $product_info->ID;
-				$products[$product_info->ID]['info']['slug']                         = $product_info->post_name;
-				$products[$product_info->ID]['info']['title']                        = $product_info->post_title;
-				$products[$product_info->ID]['info']['create_date']                  = $product_info->post_date;
-				$products[$product_info->ID]['info']['modified_date']                = $product_info->post_modified;
-				$products[$product_info->ID]['info']['status']                       = $product_info->post_status;
-				$products[$product_info->ID]['info']['link']                         = html_entity_decode( $product_info->guid );
-				$products[$product_info->ID]['info']['content']                      = $product_info->post_content;
-				$products[$product_info->ID]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
+				$products['products'][0]['info']['id']                           = $product_info->ID;
+				$products['products'][0]['info']['slug']                         = $product_info->post_name;
+				$products['products'][0]['info']['title']                        = $product_info->post_title;
+				$products['products'][0]['info']['create_date']                  = $product_info->post_date;
+				$products['products'][0]['info']['modified_date']                = $product_info->post_modified;
+				$products['products'][0]['info']['status']                       = $product_info->post_status;
+				$products['products'][0]['info']['link']                         = html_entity_decode( $product_info->guid );
+				$products['products'][0]['info']['content']                      = $product_info->post_content;
+				$products['products'][0]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
 
-				$products[$product_info->ID]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
-				$products[$product_info->ID]['stats']['total']['earnings']           = edd_get_download_earnings_stats( $product_info->ID );
-				$products[$product_info->ID]['stats']['monthly_average']['sales']    = edd_get_average_monthly_download_sales( $product_info->ID );
-				$products[$product_info->ID]['stats']['monthly_average']['earnings'] = edd_get_average_monthly_download_earnings( $product_info->ID );
+				$products['products'][0]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
+				$products['products'][0]['stats']['total']['earnings']           = edd_get_download_earnings_stats( $product_info->ID );
+				$products['products'][0]['stats']['monthly_average']['sales']    = edd_get_average_monthly_download_sales( $product_info->ID );
+				$products['products'][0]['stats']['monthly_average']['earnings'] = edd_get_average_monthly_download_earnings( $product_info->ID );
 
 				if ( edd_has_variable_prices( $product_info->ID ) ) {
 
 					foreach ( edd_get_variable_prices( $product_info->ID ) as $price ) {
 
-						$products[$product_info->ID]['pricing'][$price['name']] = $price['amount'];
+						$products['products'][0]['pricing'][ sanitize_key( $price['name'] ) ] = $price['amount'];
 
 					}
 
 				} else {
 
-					$products[$product_info->ID]['pricing']['amount'] = edd_get_download_price( $product_info->ID );
+					$products['products'][0]['pricing']['amount'] = edd_get_download_price( $product_info->ID );
 
 				}
 
 				foreach ( edd_get_download_files( $product_info->ID ) as $file ) {
 
-					$products[$product_info->ID]['files'][] = $file;
+					$products['products'][0]['files'][] = $file;
 
 				}
 
-				$products[$product_info->ID]['notes'] = edd_get_product_notes( $product_info->ID );
+				$products['products'][0]['notes'] = edd_get_product_notes( $product_info->ID );
 
 			} else {
 
@@ -595,7 +596,7 @@ class EDD_API {
 
 			}
 		}
-
+		//echo '<pre>'; print_r( $products ); echo '</pre>'; exit;
 		return $products;
 
 	}
@@ -700,7 +701,7 @@ class EDD_API {
 
 				$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
 				foreach ( $products as $product_info ) {
-					$sales['sales'][$product_info->ID] = array( $product_info->post_name => edd_get_download_sales_stats( $product_info->ID ) );
+					$sales['sales'][0] = array( $product_info->post_name => edd_get_download_sales_stats( $product_info->ID ) );
 				}
 
 
@@ -709,7 +710,7 @@ class EDD_API {
 				if ( get_post_type( $args['product'] ) == 'download' ) {
 
 					$product_info = get_post( $args['product'] );
-					$sales['sales'][$product_info->ID] = array( $product_info->post_name => edd_get_download_sales_stats( $args['product'] ) );
+					$sales['sales'][0] = array( $product_info->post_name => edd_get_download_sales_stats( $args['product'] ) );
 
 				} else {
 
@@ -783,7 +784,7 @@ class EDD_API {
 
 				foreach ( $products as $product_info ) {
 
-					$earnings['earnings'][$product_info->ID] = array( $product_info->post_name => edd_get_download_earnings_stats( $product_info->ID ) );
+					$earnings['earnings'][0] = array( $product_info->post_name => edd_get_download_earnings_stats( $product_info->ID ) );
 
 				}
 
@@ -792,7 +793,7 @@ class EDD_API {
 				if ( get_post_type( $args['product'] ) == 'download' ) {
 
 					$product_info = get_post( $args['product'] );
-					$earnings['earnings'][$product_info->ID] = array( $product_info->post_name => edd_get_download_earnings_stats( $args['product'] ) );
+					$earnings['earnings'][0] = array( $product_info->post_name => edd_get_download_earnings_stats( $args['product'] ) );
 
 				} else {
 
