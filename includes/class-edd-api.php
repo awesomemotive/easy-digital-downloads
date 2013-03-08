@@ -678,11 +678,11 @@ class EDD_API {
 							global $wp_query;
 
 							$args['startdate'] = DateTime::createFromFormat( 'Ymd', $args['startdate'] )->format( 'Y-m-d' );
-							$args['enddate'] = DateTime::createFromFormat( 'Ymd', $args['enddate'] )->format( 'Y-m-d' );
+							$args['enddate'] = DateTime::createFromFormat( 'Ymd', $args['enddate'] + 1 )->format( 'Y-m-d' );
 							$daterange = new DatePeriod(
 								new DateTime( $args['startdate'] ),
 								new DateInterval( 'P1D' ),
-								new DateTime( $args['enddate'] + 1 )
+								new DateTime( $args['enddate'] )
 							);
 
 							foreach ( $daterange as $day ) {
@@ -767,12 +767,12 @@ class EDD_API {
 							global $wp_query;
 
 							$args['startdate'] = DateTime::createFromFormat( 'Ymd', $args['startdate'] )->format( 'Y-m-d' );
-							$args['enddate'] = DateTime::createFromFormat( 'Ymd', $args['enddate'] )->format( 'Y-m-d' );
+							$args['enddate'] = DateTime::createFromFormat( 'Ymd', $args['enddate'] + 1 )->format( 'Y-m-d' );
 
 							$daterange = new DatePeriod(
 								new DateTime( $args['startdate'] ),
 								new DateInterval( 'P1D' ),
-								new DateTime( $args['enddate'] + 1 )
+								new DateTime( $args['enddate'] )
 							);
 
 							foreach ( $daterange as $day ) {
