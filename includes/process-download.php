@@ -153,7 +153,7 @@ function edd_deliver_download( $file = '' ) {
 		$url       = edd_get_symlink_url() . '/' . $file_name;
 
 		// Set a transient to ensure this symlink is not deleted before it can be used
-		set_transient( 'edd_file_download_' . $name . '.' . $ext, '1', 30 );
+		set_transient( md5( 'edd_file_download_' . $name . '.' . $ext ), '1', 30 );
 
 		// Schedule deletion of the symlink
 		if ( ! wp_next_scheduled( 'edd_cleanup_file_symlinks' ) )
@@ -161,10 +161,14 @@ function edd_deliver_download( $file = '' ) {
 
 		// Make sure the symlink doesn't already exist before we create it
 		if( ! file_exists( $path ) )
-			symlink( $file, $path );
+			$link = symlink( $file, $path );
 
-		// Send the browser to the file
-		header( 'Location: ' . $url );
+		if( $link ) {
+			// Send the browser to the file
+			header( 'Location: ' . $url );
+		} else {
+			@edd_readfile_chunked( $file );
+		}
 
 	} else {
 
