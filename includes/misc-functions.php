@@ -876,7 +876,7 @@ function edd_cleanup_file_symlinks() {
 
 	foreach ( $dir as $file ) {
 		if( is_link( $file->getFilename() ) ) {
-			$transient = get_transient( 'edd_file_download_' . $file->getFilename() );
+			$transient = get_transient( md5( 'edd_file_download_' . $file->getFilename() ) );
 			if( $transient === false )
 				@unlink( edd_get_symlink_dir() . '/' . $file->getFilename() );
 		}
