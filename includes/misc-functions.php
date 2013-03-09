@@ -820,3 +820,68 @@ function edd_let_to_num( $v ) {
 
 	return $ret;
 }
+
+
+
+/**
+ * Retrieve the URL to the symlink directory
+ *
+ * @access public
+ * @since  1.5
+ *
+ * @return string
+ */
+function edd_get_symlink_url() {
+
+	$wp_upload_dir = wp_upload_dir();
+	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd/symlinks' );
+	$url = $wp_upload_dir['baseurl'] . '/edd/symlinks';
+
+	return apply_filters( 'edd_get_symlink_url', $url );
+
+}
+
+
+/**
+ * Retrieve the absolute path to the symlink directory
+ *
+ * @access public
+ * @since  1.5
+ *
+ * @return string
+ */
+function edd_get_symlink_dir() {
+
+	$wp_upload_dir = wp_upload_dir();
+	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd/symlinks' );
+	$path = $wp_upload_dir['basedir'] . '/edd/symlinks';
+
+	return apply_filters( 'edd_get_symlink_dir', $path );
+
+}
+
+
+/**
+ * Delete symbolic links afer they have been used
+ *
+ * @access public
+ * @since  1.5
+ *
+ * @return string
+ */
+function edd_cleanup_file_symlinks() {
+
+	$path = edd_get_symlink_dir();
+	$dir = new DirectoryIterator( $path );
+
+	foreach ( $dir as $file ) {
+		if( is_link( $file->getFilename() ) ) {
+			$transient = get_transient( 'edd_file_download_' . $file->getFilename() );
+			if( $transient === false )
+				@unlink( edd_get_symlink_dir() . '/' . $file->getFilename() );
+		}
+
+	}
+
+}
+add_action( 'edd_cleanup_file_symlinks', 'edd_cleanup_file_symlinks' );
