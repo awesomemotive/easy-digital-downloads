@@ -88,8 +88,7 @@ function edd_process_download() {
 
 			/** This is an absolute path */
 
-			if( $size = @filesize( $requested_file ) ) header("Content-Length: ".$size);
-			@edd_readfile_chunked( $requested_file );
+			edd_deliver_download( $file_path );
 
 		} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false ) {
 
@@ -98,16 +97,18 @@ function edd_process_download() {
 
 			$file_path = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );
 			$file_path = realpath( $file_path );
+
 			if ( file_exists( $file_path ) ) {
-				if ( $size = @filesize( $file_path ) ) header("Content-Length: " . $size );
-				@edd_readfile_chunked( $file_path );
+
+				edd_deliver_download( $file_path );
+
 			} else {
 				// Absolute path couldn't be discovered so send straight to the file URL
-				header("Location: " . $requested_file);
+				header( "Location: " . $requested_file );
 			}
 		} else {
 			// This is a remote file
-			header("Location: " . $requested_file);
+			header( "Location: " . $requested_file );
 		}
 
 		exit;
@@ -119,6 +120,65 @@ function edd_process_download() {
 	exit;
 }
 add_action( 'init', 'edd_process_download', 100 );
+
+
+/**
+ * Deliver the download file
+ *
+ * If enabled, the file is symlinked to better support large file downloads
+ *
+ * @access   public
+ * @param    string    file
+ * @return   void
+ */
+function edd_deliver_download( $file = '' ) {
+
+	$symlink = apply_filters( 'edd_symlink_file_downloads', true );
+
+	/*
+	 * If symlinks are enabled, a link to the file will be created
+	 * This symlink is used to hide the true location of the file, even when the file URL is revealed
+	 * The symlink is deleted after it is used
+	 */
+
+	if( $symlink ) {
+
+		// Generate a symbolic link
+		$ext       = edd_get_file_extension( $file );
+		$parts     = explode( '.', $file );
+		$name      = basename( $parts[0] );
+		$md5       = md5( $file );
+		$file_name = $name . '_' . substr( $md5, 0, -15 ) . '.' . $ext;
+		$path      = edd_get_symlink_dir() . '/' . $file_name;
+		$url       = edd_get_symlink_url() . '/' . $file_name;
+
+		// Set a transient to ensure this symlink is not deleted before it can be used
+		set_transient( md5( 'edd_file_download_' . $name . '.' . $ext ), '1', 30 );
+
+		// Schedule deletion of the symlink
+		if ( ! wp_next_scheduled( 'edd_cleanup_file_symlinks' ) )
+			wp_schedule_single_event( time()+60, 'edd_cleanup_file_symlinks' );
+
+		// Make sure the symlink doesn't already exist before we create it
+		if( ! file_exists( $path ) )
+			$link = symlink( $file, $path );
+
+		if( $link ) {
+			// Send the browser to the file
+			header( 'Location: ' . $url );
+		} else {
+			@edd_readfile_chunked( $file );
+		}
+
+	} else {
+
+		// Read the file and deliver it in chunks
+		@edd_readfile_chunked( $file );
+
+	}
+
+}
+
 
 /**
  * Get the file content type
@@ -435,11 +495,14 @@ function edd_get_file_ctype( $extension ) {
  * @return   bool|string - If string, $status || $cnt
  */
 function edd_readfile_chunked( $file, $retbytes = TRUE ) {
-	$chunksize = 1 * (1024 * 1024);
-	$buffer = '';
-	$cnt = 0;
 
-	$handle = fopen( $file, 'r' );
+	$chunksize = 1 * (1024 * 1024);
+	$buffer    = '';
+	$cnt       = 0;
+	$handle    = fopen( $file, 'r' );
+
+	if( $size = @filesize( $requested_file ) ) header("Content-Length: " . $size );
+
 	if ( $handle === FALSE ) return FALSE;
 
 	while ( ! feof( $handle ) ) :
