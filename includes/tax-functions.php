@@ -174,6 +174,7 @@ function edd_calculate_tax( $amount, $sum = true ) {
 
 	}
 
+	$tax = round( $tax, 2 );
 	return apply_filters( 'edd_taxed_amount', $tax, $rate );
 }
 
