@@ -312,18 +312,17 @@ add_action( 'edd_reports_tab_logs', 'edd_reports_tab_logs' );
  * @return      array
  */
 function edd_estimated_monthly_stats() {
-	$api = EDD()->api;
 
 	$estimated = array(
 		'earnings' => 0,
 		'sales'    => 0
 	);
 
-	$products = $api->get_products();
+	$products = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1, 'fields' => 'ids' ) );
 	if( $products ) {
-		foreach( $products['products'] as $download ) {
-			$estimated['earnings'] += $download['stats']['monthly_average']['earnings'];
-			$estimated['sales'] += number_format( $download['stats']['monthly_average']['sales'], 0 );
+		foreach( $products as $download ) {
+			$estimated['earnings'] += edd_get_average_monthly_download_earnings( $download );
+			$estimated['sales'] += number_format( edd_get_average_monthly_download_sales( $download ), 0 );
 		}
 	}
 
