@@ -163,6 +163,20 @@ class EDD_Welcome {
 			</div>
 
 			<div class="changelog">
+				<h3><?php _e( 'Improved Tax Options', 'edd' ); ?></h3>
+
+				<div class="feature-section">
+
+					<h4><?php _e( 'Checkout Display Options', 'edd' ); ?></h4>
+					<p><?php _e( 'New options to better control how taxes are displayed on checkout have been added.', 'edd' );  ?></p>
+
+					<h4><?php _e( 'Better Tax Calculation', 'edd' ); ?></h4>
+					<p><?php _e( 'Taxes are now more accurately calculated and there is an option to set product prices as inclusive or exclusive of tax.', 'edd' );  ?></p>
+
+				</div>
+			</div>
+
+			<div class="changelog">
 				<h3><?php _e( 'Improved Reports and Data Export', 'edd' ); ?></h3>
 
 				<div class="feature-section">
