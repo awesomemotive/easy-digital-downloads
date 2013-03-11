@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-08 09:59+0100\n"
-"PO-Revision-Date: 2013-03-08 10:34+0100\n"
+"POT-Creation-Date: 2013-03-11 23:55+0100\n"
+"PO-Revision-Date: 2013-03-12 00:54+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
 "Language-Team: FxB <fx@fxbenard.com>\n"
 "Language: fr_FR\n"
@@ -43,13 +43,13 @@ msgid "Invalid API key for %s!"
 msgstr "Clé API pour %s incorrecte !"
 
 # @ edd
-#: includes/class-edd-api.php:328
+#: includes/class-edd-api.php:326
 msgid "Invalid query!"
 msgstr "Requête incorrecte !"
 
 # @ edd
+#: includes/class-edd-api.php:428 includes/class-edd-api.php:429
 #: includes/class-edd-api.php:430 includes/class-edd-api.php:431
-#: includes/class-edd-api.php:432 includes/class-edd-api.php:433
 #: includes/admin/reporting/class-customer-reports-table.php:157
 #: includes/admin/reporting/class-export-customers.php:110
 #: includes/admin/reporting/class-export-customers.php:124
@@ -57,37 +57,41 @@ msgid "Guest"
 msgstr "Invité"
 
 # @ edd
-#: includes/class-edd-api.php:476
+#: includes/class-edd-api.php:471
 #, php-format
 msgid "Customer %s not found!"
 msgstr "Client %s introuvable !"
 
 # @ edd
-#: includes/class-edd-api.php:594 includes/class-edd-api.php:718
-#: includes/class-edd-api.php:801
+#: includes/class-edd-api.php:590 includes/class-edd-api.php:730
+#: includes/class-edd-api.php:826
 #, php-format
 msgid "Product %s not found!"
 msgstr "Le produit %s est introuvable !"
 
-#: includes/class-edd-api.php:692 includes/class-edd-api.php:771
+#: includes/class-edd-api.php:671 includes/class-edd-api.php:765
+msgid "The end date must be later than the date date!"
+msgstr "La date de fin doit être postérieure à la date de ce jour !"
+
+#: includes/class-edd-api.php:700 includes/class-edd-api.php:794
 msgid "Invalid or no date range specified!"
 msgstr "Plage de dates non valide ou non spécifié !"
 
-#: includes/class-edd-api.php:697 includes/class-edd-api.php:778
+#: includes/class-edd-api.php:705 includes/class-edd-api.php:801
 msgid "Invalid option for argument 'date'!"
 msgstr "Option non valide pour l'argument 'date' !"
 
 # @ edd
-#: includes/class-edd-api.php:994
+#: includes/class-edd-api.php:1031
 msgid "Easy Digital Downloads API Key"
 msgstr "Clé API d'Easy Digital Downloads"
 
 # @ edd
-#: includes/class-edd-api.php:999
+#: includes/class-edd-api.php:1036
 msgid "Generate API Key"
 msgstr "Générer la clé API"
 
-#: includes/class-edd-api.php:1003
+#: includes/class-edd-api.php:1040
 msgid "Revoke API Key"
 msgstr "Révoquer la clé API"
 
@@ -125,7 +129,7 @@ msgstr ""
 
 # @ edd
 #: includes/download-functions.php:801 includes/error-tracking.php:35
-#: includes/process-download.php:106 includes/query-filters.php:39
+#: includes/query-filters.php:39
 #: includes/admin/discounts/discount-actions.php:91
 #: includes/admin/discounts/edit-discount.php:16
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:121
@@ -157,11 +161,11 @@ msgid "Thank you for your purchase! [edd_receipt]"
 msgstr "Merci pour votre achat ! [edd_receipt]"
 
 # @ edd
-#: includes/install.php:65 includes/admin/upgrades/upgrade-functions.php:192
+#: includes/install.php:65 includes/admin/upgrades/upgrade-functions.php:204
 msgid "Transaction Failed"
 msgstr "La transaction a échoué"
 
-#: includes/install.php:66 includes/admin/upgrades/upgrade-functions.php:193
+#: includes/install.php:66 includes/admin/upgrades/upgrade-functions.php:205
 msgid "Your transaction failed, please try again or contact site support."
 msgstr ""
 "Votre transaction a échoué, s'il vous plaît réessayez ou contacter le "
@@ -736,17 +740,13 @@ msgstr "%2$s sauvegardé. %1$sVoir le %2$s%3$s."
 msgid "%2$s submitted. %1$sView %2$s%3$s."
 msgstr "%2$s soumis. %1$sVoir le %2$s%3$s."
 
-#: includes/process-download.php:106
-msgid "Sorry but this file does not exist."
-msgstr "Désolé mais ce fichier n'existe pas."
-
 # @ edd
-#: includes/process-download.php:115
+#: includes/process-download.php:116
 msgid "You do not have permission to download this file"
 msgstr "Vous n'avez pas la permission de télécharger ce fichier"
 
 # @ edd
-#: includes/process-download.php:116
+#: includes/process-download.php:117
 msgid "Purchase Verification Failed"
 msgstr "Erreur lors de la vérification de l'achat"
 
@@ -1135,7 +1135,7 @@ msgstr ""
 "nouveau dans quelques minutes."
 
 # @ edd
-#: includes/admin/admin-pages.php:30 includes/admin/welcome.php:184
+#: includes/admin/admin-pages.php:30
 #: includes/admin/discounts/discount-codes.php:36
 msgid "Discount Codes"
 msgstr "Codes de remise"
@@ -1167,7 +1167,7 @@ msgstr "Réglages"
 msgid "Easy Digital Download System Info"
 msgstr "Infos Système d'Easy Digital Downloads"
 
-#: includes/admin/admin-pages.php:33 includes/admin/welcome.php:160
+#: includes/admin/admin-pages.php:33
 msgid "System Info"
 msgstr "Infos syst&egrave;me"
 
@@ -1311,7 +1311,7 @@ msgid "Email:"
 msgstr "E-mail :"
 
 # @ edd
-#: includes/admin/dashboard-widgets.php:181 includes/admin/welcome.php:169
+#: includes/admin/dashboard-widgets.php:181
 #: includes/admin/payments/class-payments-table.php:315
 #: includes/admin/payments/edit-payment.php:73
 msgid "Payment Notes"
@@ -1430,12 +1430,12 @@ msgid "Welcome to Easy Digital Downloads"
 msgstr "Bienvenue sur Easy Digital Downloads"
 
 # @ edd
-#: includes/admin/welcome.php:118 includes/admin/welcome.php:225
+#: includes/admin/welcome.php:118 includes/admin/welcome.php:253
 #, php-format
 msgid "Welcome to Easy Digital Downloads %s"
 msgstr "Bienvenue sur Easy Digital Downloads %s"
 
-#: includes/admin/welcome.php:119 includes/admin/welcome.php:226
+#: includes/admin/welcome.php:119 includes/admin/welcome.php:254
 #, php-format
 msgid ""
 "Thank you for updating to the latest version! Easy Digital Downloads %s is "
@@ -1445,175 +1445,262 @@ msgstr ""
 "Digital Downloads %s est prêt à rendre votre boutique en ligne plus rapide, "
 "plus sécurisée et encore meilleure !"
 
-#: includes/admin/welcome.php:120 includes/admin/welcome.php:227
+#: includes/admin/welcome.php:120 includes/admin/welcome.php:255
 #, php-format
 msgid "Version %s"
 msgstr "Version %s"
 
-#: includes/admin/welcome.php:124 includes/admin/welcome.php:231
+#: includes/admin/welcome.php:124 includes/admin/welcome.php:259
 msgid "What's New"
 msgstr "Quoi de neuf ?"
 
-#: includes/admin/welcome.php:126 includes/admin/welcome.php:233
+#: includes/admin/welcome.php:126 includes/admin/welcome.php:261
 msgid "Credits"
 msgstr "Crédits"
 
 #: includes/admin/welcome.php:131
-msgid "Log Viewing Interface"
-msgstr "Interface d'affichage des journaux"
+msgid "Improved Checkout User Experience"
+msgstr "Amélioration de l'expérience utilisateur au moment de la commande"
 
-#: includes/admin/welcome.php:134
-#, php-format
-msgid "Downloads &rarr; Reports &rarr; <a href=\"%s\">Logs</a>"
-msgstr ""
-"Téléchargements &rarr; Rapports &rarr; <a href=\"%s\">Fichiers journaux</a>"
-
+# @ edd
 #: includes/admin/welcome.php:135
+msgid "Preload Default Payment Method"
+msgstr "La méthode de paiement pré-chargée"
+
+#: includes/admin/welcome.php:136
 msgid ""
-"You can now view detailed log entries to see exactly what is going on behind "
-"the scenes of your store."
+"You can now define the default payment method for customers that will be "
+"loaded immediately when accessing the checkout page. This saves the customer "
+"a click and results in more conversions for you."
 msgstr ""
-"Vous pouvez maintenant afficher le journal détaillé des entrées afin de voir "
-"exactement ce qui se passe dans les coulisses de votre boutique."
+"Vous pouvez maintenant définir le mode de paiement par défaut pour les "
+"clients qui sera chargé immédiatement en accédant à la page de paiement. "
+"Cela permet d'économiser au client un clic et se traduit par davantage de "
+"conversions pour vous."
 
 # @ edd
-#: includes/admin/welcome.php:137
-msgid "File Download Logs"
-msgstr "Journal des fichiers téléchargés"
-
 #: includes/admin/welcome.php:138
-msgid ""
-"See the exact files that are getting downloaded, who is downloading them, "
-"and even the IP address they are getting downloaded from."
-msgstr ""
-"Voyez précisement les fichiers qui sont téléchargés, qui les télécharge, et "
-"même l'adresse IP utilisée pour le faire."
+msgid "Better Payment Method Select"
+msgstr "Une meilleure selection des méthodes de paiement"
 
-# @ edd
-#: includes/admin/welcome.php:140
-msgid "Download Sale Logs"
-msgstr "Journal des ventes"
+#: includes/admin/welcome.php:139
+msgid ""
+"Payment methods are now displayed as radio buttons, making the options more "
+"accessible and easier to see / understand for customers."
+msgstr ""
+"Les modes de paiement sont désormais affichées sous forme de boutons radio, "
+"rendant les options plus accessibles et plus faciles à voir /  à comprendre "
+"pour les clients."
 
 #: includes/admin/welcome.php:141
-msgid ""
-"You can see exactly which products have been purchased, when they were "
-"purchased, and who purchased them."
-msgstr ""
-"Vous pouvez voir exactement quels produits ont été achetés, quand ils ont "
-"été achetés, et qui les a achetés."
+msgid "Field Descriptions"
+msgstr "Les descriptions des champs"
 
-# @ edd
-#: includes/admin/welcome.php:143
-msgid "Payment Gateway Error Logs"
-msgstr "Journal des erreurs de paiement"
+#: includes/admin/welcome.php:142
+msgid ""
+"It has been proven by countless studies that descriptive text by every field "
+"helps customers complete the purchase process, so we have added description "
+"text for each field."
+msgstr ""
+"Il a été prouvé par de nombreuses études qu'un texte descriptif de chaque "
+"champ permet aux clients de terminer son processus d'achat, nous avons donc "
+"ajouté cette option."
 
 #: includes/admin/welcome.php:144
-msgid ""
-"Track declined credit cards and other payment failures to help keep an eye "
-"on shop activity."
-msgstr ""
-"Le suivi des cartes de crédit refusées et des échecs de paiement vous aide à "
-"garder un oeil sur l'activité de votre boutique."
+msgid "Reworked Field Order"
+msgstr "L'ordre des champs retravaillé"
 
+#: includes/admin/welcome.php:145
+msgid ""
+"The order that the fields are displayed on the checkout has been updated to "
+"reflect the findings of many UX studies to help ensure customers have a "
+"simple, enjoyable experiencing purchasing through your store."
+msgstr ""
+"L'ordre dans lequel les champs sont affichés à la commande a été mis à jour "
+"pour refléter les résultats de nombreuses études UX pour aider à s'assurer "
+"que les clients ont une expérience simple, agréable d'achat dans votre "
+"magasin."
+
+# @ edd
 #: includes/admin/welcome.php:151
-msgid "Improved Purchase Summaries"
-msgstr "Amélioration du résumé des achats"
+msgid "Greatly Improved Discount Codes"
+msgstr "Les codes de remises grandement améliorés"
 
 # @ edd
-#: includes/admin/welcome.php:154
-msgid "Receipt Short Code"
-msgstr "Raccourci pour les reçues"
-
 #: includes/admin/welcome.php:155
+msgid "Per-Product Discounts"
+msgstr "Les remises par produit"
+
+#: includes/admin/welcome.php:156
 msgid ""
-"The new <code>[edd_receipt]</code> short code will display a detailed break "
-"down of customer's purchases after completing a payment."
+"Discount codes can now be restricted to individual (or several) products, "
+"giving you greater control over your marketing."
 msgstr ""
-"Le nouveau raccourci <code>[edd_receipt]</code> affiche une ventilation "
-"détaillée des achats de vos clients à la fin des paiements."
+"Les codes promotionnels peuvent désormais se limiter à un (ou plusieurs) "
+"produits, vous donnant un meilleur contrôle sur votre marketing."
 
-#: includes/admin/welcome.php:163
-#, php-format
-msgid "Downloads &rarr; <a href=\"%s\">System Info</a>"
-msgstr "Téléchargements &rarr; <a href=\"%s\">Informations Système</a>"
+#: includes/admin/welcome.php:158
+msgid "Once-Per-Customer Discounts"
+msgstr "Les remises une fois par client"
 
-#: includes/admin/welcome.php:164
+#: includes/admin/welcome.php:159
 msgid ""
-"If you are having problems with any aspect, giving the system info download "
-"file to support will help us assist you in getting issues resolved."
+"You can now specify on a per-discount basis whether customers should be able "
+"to use a discount more than once."
 msgstr ""
-"Si vous rencontrez des problèmes avec n'importe quel aspect, nous faire "
-"parvenir le fichier d'informations du système nous permettra de vous aider à "
-"résoudre vos problèmes."
+"Vous pouvez maintenant spécifier sur une base par-promo si les clients "
+"peuvent être en mesure d'utiliser une remise plus d'une fois."
 
-# @ edd
-#: includes/admin/welcome.php:172
-msgid "Track Changes to Purchases"
-msgstr "Suivi des modifications d'achats"
+#: includes/admin/welcome.php:166
+msgid "Improved Tax Options"
+msgstr "L'amélioration des options de taxation"
+
+#: includes/admin/welcome.php:170
+msgid "Checkout Display Options"
+msgstr "Les options d'affichage des commandes"
+
+#: includes/admin/welcome.php:171
+msgid ""
+"New options to better control how taxes are displayed on checkout have been "
+"added."
+msgstr ""
+"De nouvelles options ont été ajoutées pour mieux contrôler la façon dont les "
+"taxes sont affichées à la commande."
 
 #: includes/admin/welcome.php:173
-msgid ""
-"The new notes feature for payments makes it easy for store managers to leave "
-"notes on individual purchases."
-msgstr ""
-"La nouvelle fonctionnalité des notes de paiements vous permet facilement à "
-"vous et aux gestionnaires de votre boutique de laisser des notes "
-"individuelles sur chaque achat."
+msgid "Better Tax Calculation"
+msgstr "L'amélioration du calcul des taxes"
 
-#: includes/admin/welcome.php:175
-#, php-format
+#: includes/admin/welcome.php:174
 msgid ""
-"Simply go to Downloads &rarr; <a href=\"%s\">Payment History</a> and click "
-"<em>Edit</em> on any payment. From this screen you can now post notes to "
-"payments."
+"Taxes are now more accurately calculated and there is an option to set "
+"product prices as inclusive or exclusive of tax."
 msgstr ""
-"Rendez-vous sur Téléchargements &rarr; <a href=\"%s\">Historique des "
-"paiements</a> et cliquez sur <em>Modifier</em> sur n'importe quel paiement. "
-"Depuis cet écran, vous pouvez maintenant ajouter des notes au paiement."
+"Les calculs des taxes sont désormais plus rigoureux et il y a une option "
+"pour fixer les prix de produits H.T. ou T.T.C."
 
 #: includes/admin/welcome.php:180
-msgid "Under the Hood"
-msgstr "Sous le capot"
+msgid "Improved Reports and Data Export"
+msgstr "L'amélioration des rapports et de l'exportation des données"
+
+#: includes/admin/welcome.php:184
+msgid "Per-Product Customer Export"
+msgstr "L'exportation par-produit des clients"
 
 #: includes/admin/welcome.php:185
+#, php-format
 msgid ""
-"Discount codes are now stored as a custom post type and will allow for "
-"dramatically more powerful coupons in coming versions."
+"You can now export all customers that have purchased a particular product "
+"from the %sExport%s screen."
 msgstr ""
-"Les codes de remise sont désormais stockés en tant que type d'article "
-"personnalisé ce qui permettra de les rendre considérablement plus puissants "
-"dans les versions à venir."
+"Vous pouvez désormais exporter tous les clients qui ont acheté un produit en "
+"particulier à partir de l'écran de l'%sExportation%s."
 
+# @ edd
 #: includes/admin/welcome.php:187
-msgid "Plugin Directory Structure"
-msgstr "Structure de l'extension"
+msgid "Export Payment History By Status"
+msgstr "L'exportation de l'historique des paiements en fonction de l'état"
 
 #: includes/admin/welcome.php:188
 msgid ""
-"We have significantly improved the file / folder organized of the plugin, "
-"making it easier for developers to get involved in development."
+"The Payment History export now includes an option to only export payments of "
+"a particular status. Want to export all of your failed payments? Now you can."
 msgstr ""
-"Nous avons considérablement amélioré l'organisation des fichiers / dossiers "
-"de l'extension, ce qui facilite l'implication des futures développeurs dans "
-"le projet."
+"L'exportation de l'historique des paiements comprend maintenant une option "
+"pour exporter uniquement les paiements en fonction d'un état particulier. "
+"Vous voulez exporter uniquement les paiements qui ont échoué ? Maintenant "
+"vous le pouvez."
 
-#: includes/admin/welcome.php:192
-msgid "File Optimization"
-msgstr "Optimisation des fichiers"
+#: includes/admin/welcome.php:190
+msgid "Estimated Monthly Stats"
+msgstr "Les statistiques des estimations mensuelles"
 
-#: includes/admin/welcome.php:193
+#: includes/admin/welcome.php:191
 msgid ""
-"Every file in the plugin has been optimized to help slim down the overall "
-"size of Easy Digital Downloads."
+"Monthly estimates for sales and earnings are now displayed below the graphs "
+"in the Reports page."
 msgstr ""
-"Chaque fichier de l'extension a été optimisé afin de diminuer la taille "
-"globale d'Easy Digital Downloads."
+"Les estimations mensuelles pour les ventes et les bénéfices sont maintenant "
+"affichés sous les graphiques de la page des rapports."
 
-#: includes/admin/welcome.php:195
+#: includes/admin/welcome.php:197
+msgid "RESTful API"
+msgstr "L'API RESTful"
+
+#: includes/admin/welcome.php:200
+msgid "Creation of Third Party Stat Tracking Apps Now Possible"
+msgstr ""
+"La création d'applications tiers de suivi statistique est maintenant possible"
+
+#: includes/admin/welcome.php:201
+msgid ""
+"The new RESTful API available in Easy Digital Downloads makes it possible to "
+"create 3rd party apps (iOS, Android, etc) for tracking your store sales and "
+"earnings."
+msgstr ""
+"La nouvelle API RESTful disponible dans Easy Digital Downloads permet de "
+"créer des applications tiers (iOS, Android, etc) pour le suivi de vos ventes "
+"et de vos revenus de votre magasin."
+
+#: includes/admin/welcome.php:203
+#, php-format
+msgid ""
+"The API is %sfully documented%s and ready for developers to have fun with."
+msgstr ""
+"L'API est %sentièrement documentée%s et prête pour les développeurs puisse "
+"s'amuser avec."
+
+#: includes/admin/welcome.php:208
+msgid "Under the Hood"
+msgstr "Sous le capot"
+
+#: includes/admin/welcome.php:212
+msgid "EDD_Fees Class"
+msgstr "La classe EDD_Fees"
+
+#: includes/admin/welcome.php:213
+#, php-format
+msgid ""
+"The new %sEDD_Fees class%s makes it possible to create arbitrary fees (or "
+"discounts) that are applied to the shopping cart contents."
+msgstr ""
+"La nouvelle %sclasse EDD_Fees%s permet de créer des frais arbitraires (ou "
+"remises) qui seront appliqués au contenu du panier."
+
+#: includes/admin/welcome.php:215
+msgid "Better Session Management"
+msgstr "Une gestion de session améliorée"
+
+#: includes/admin/welcome.php:216
+#, php-format
+msgid ""
+"We have replaced usage of the standard PHP $_SESSION with the phenomenal "
+"%sWP_Session%s system developed by Eric Mann. This will provide a more "
+"stable experience and greater support for more hosts."
+msgstr ""
+"Nous avons remplacé l'utilisation de la norme PHP $ _SESSION avec le système "
+"phénoménale de %sWP_Session%s développée par Eric Mann. Ce fournira une "
+"expérience plus stable et un meilleur soutien pour de nombreux hôtes."
+
+#: includes/admin/welcome.php:220
+msgid "More Template Files"
+msgstr "Plus de fichiers de modèle"
+
+#: includes/admin/welcome.php:221
+#, php-format
+msgid ""
+"Additional %stemplate files%s that can be modified via your theme have been "
+"added for the cart widget and shopping cart short code."
+msgstr ""
+"Des %sfichiers de modèle%s suplémentaires qui peuvent être modifiés via "
+"votre thème ont été ajoutées pour le widget et le code de raccourci du "
+"panier."
+
+#: includes/admin/welcome.php:223
 msgid "Better AJAX Functionality"
 msgstr "Des fonctionnalités AJAX améliorées"
 
-#: includes/admin/welcome.php:196
+#: includes/admin/welcome.php:224
 msgid ""
 "The ajaxed functions, such as payment gateway loading, have been "
 "significantly improved to make them faster."
@@ -1621,32 +1708,38 @@ msgstr ""
 "Les fonctions ajax, tels que le chargement des passerelles de paiement, ont "
 "été considérablement améliorées pour les rendre plus rapides."
 
-#: includes/admin/welcome.php:200
-msgid "WordPress 3.5-ready"
-msgstr "Prêt pour WordPress 3.5"
+#: includes/admin/welcome.php:228
+msgid "New Product Microdata"
+msgstr "Microdata des nouveaux produits"
 
-#: includes/admin/welcome.php:201
+#: includes/admin/welcome.php:229
 msgid ""
-"Every aspect of the plugin has been fully tested with WordPress 3.5 to "
-"ensure absolute compatibility."
+"Microdata defined by Schema.org/Product has been added to all download "
+"products to improve product appearance in search engines."
 msgstr ""
-"Chaque aspect de l'extension a été testé avec WordPress 3.5 afin d'assurer "
-"une compatibilité absolue."
+"Les microdonnées définies par Schema.org/Produit ont été ajoutées à tous les "
+"produits de téléchargement pour améliorer l'apparence du produit dans les "
+"moteurs de recherche."
 
-#: includes/admin/welcome.php:203
-msgid "Retina Ready"
-msgstr "Prêt pour le Retina"
+#: includes/admin/welcome.php:231
+msgid "Improved Performance"
+msgstr "L'amélioration des performances"
 
-#: includes/admin/welcome.php:204
-msgid "All graphics have been optimized and tested with retina displays."
-msgstr "Tous les graphismes ont été optimisé et testé avec des écrans rétina."
+#: includes/admin/welcome.php:232
+msgid ""
+"Memory usage and general performance of the plugin was investigated and "
+"dramatically improved in several key areas of the admin interfaces."
+msgstr ""
+"L'utilisation de la mémoire et les performances générales de l'extension ont "
+"été étudiés et améliorés considérablement dans plusieurs domaines clés de "
+"l'interface d'administration."
 
 # @ edd
-#: includes/admin/welcome.php:210
+#: includes/admin/welcome.php:238
 msgid "Go to Easy Digital Downloads Settings"
 msgstr "Allez sur les réglages d'Easy Digital Downloads"
 
-#: includes/admin/welcome.php:237
+#: includes/admin/welcome.php:265
 msgid ""
 "Easy Digital Downloads is created by a worldwide team of developers who aim "
 "to provide the #1 eCommerce platform for selling digital goods through "
@@ -1656,7 +1749,7 @@ msgstr ""
 "développeurs qui vise à fournir la plate-forme de commerce électronique n°1 "
 "pour vendre des produits numériques avec WordPress."
 
-#: includes/admin/welcome.php:264
+#: includes/admin/welcome.php:292
 #, php-format
 msgid "View %s"
 msgstr "Afficher %s"
@@ -3858,7 +3951,7 @@ msgid "Prices entered with tax"
 msgstr "Tarifs entrés avec taxe"
 
 #: includes/admin/settings/register-settings.php:300
-msgid "This option effects how you enter prices."
+msgid "This option affects how you enter prices."
 msgstr "Cette option affecte la façon dont vous entrez les prix."
 
 #: includes/admin/settings/register-settings.php:304
@@ -4154,6 +4247,15 @@ msgstr ""
 "Easy Digital Downloads a besoin de mettre à jour les pages de l'extension, "
 "cliquez %sici%s pour lancer la mise à jour."
 
+#: includes/admin/upgrades/upgrade-functions.php:61
+#, php-format
+msgid ""
+"Easy Digital Downloads needs to upgrade the database, click %shere%s to "
+"start the upgrade."
+msgstr ""
+"Easy Digital Downloads a besoin de mettre à jour la base de données, cliquez "
+"%sici%s pour lancer la mise à jour."
+
 # @ edd
 #: includes/admin/upgrades/upgrades.php:25
 msgid "Easy Digital Downloads - Upgrades"
@@ -4184,13 +4286,13 @@ msgid "(includes %s tax)"
 msgstr "(inclus %s de taxe)"
 
 # @ edd
-#: includes/cart/functions.php:690
+#: includes/cart/functions.php:692
 #, php-format
 msgid "You have successfully added %s to your shopping cart."
 msgstr "Vous venez d'ajouter avec succès %s à votre panier."
 
 # @ edd
-#: includes/cart/functions.php:691
+#: includes/cart/functions.php:693
 msgid "Checkout."
 msgstr "Commander."
 
@@ -4812,3 +4914,21 @@ msgstr "Clé de Paiement"
 #: templates/widget-cart-item.php:4
 msgid "remove"
 msgstr "retirer"
+
+#~ msgid "Sorry but this file does not exist."
+#~ msgstr "Désolé mais ce fichier n'existe pas."
+
+#~ msgid "Log Viewing Interface"
+#~ msgstr "Interface d'affichage des journaux"
+
+#~ msgid "Downloads &rarr; Reports &rarr; <a href=\"%s\">Logs</a>"
+#~ msgstr ""
+#~ "Téléchargements &rarr; Rapports &rarr; <a href=\"%s\">Fichiers journaux</"
+#~ "a>"
+
+#~ msgid ""
+#~ "You can now view detailed log entries to see exactly what is going on "
+#~ "behind the scenes of your store."
+#~ msgstr ""
+#~ "Vous pouvez maintenant afficher le journal détaillé des entrées afin de "
+#~ "voir exactement ce qui se passe dans les coulisses de votre boutique."
