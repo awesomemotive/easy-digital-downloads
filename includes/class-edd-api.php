@@ -841,7 +841,7 @@ class EDD_API {
 			$stats = array();
 
 			$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
-			$stats['customers'] = $count[0];
+			$stats['customers']['total_customers'] = $count[0];
 
 			return $stats;
 
