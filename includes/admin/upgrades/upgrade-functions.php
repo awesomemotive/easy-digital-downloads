@@ -55,6 +55,14 @@ function edd_show_upgrade_notices() {
 			'</a>'
 		);
 	}
+
+	if ( version_compare( $edd_version, '1.5', '<' ) ) {
+		printf(
+			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the database, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
+			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
+			'</a>'
+		);
+	}
 }
 add_action( 'admin_notices', 'edd_show_upgrade_notices' );
 
@@ -86,6 +94,10 @@ function edd_trigger_upgrades() {
 
 	if ( version_compare( $edd_version, '1.4', '<' ) ) {
 		edd_v14_upgrades();
+	}
+
+	if ( version_compare( $edd_version, '1.5', '<' ) ) {
+		edd_v15_upgrades();
 	}
 
 	update_option( 'edd_version', EDD_VERSION );
@@ -255,4 +267,34 @@ function edd_v14_upgrades() {
 		// Remove old discounts from database
 		delete_option( 'edd_discounts' );
 	}
+}
+
+
+/**
+ * Upgrade routine for v1.5
+ *
+ * @access      private
+ * @since       1.5
+ * @return      void
+ */
+function edd_v15_upgrades() {
+
+	// Update options for missing tax settings
+	$tax_options = get_options( 'edd_settings_taxes' );
+
+	// Set include tax on checkout to off
+	$tax_options['checkout_include_tax'] = 'no';
+
+	// Check if prices are displayed with taxes
+	if( isset( $tax_options['taxes_on_prices'] ) ) {
+		$tax_options['prices_include_tax'] = 'yes';
+	} else {
+		$tax_options['prices_include_tax'] = 'no';
+	}
+
+	update_option( 'edd_settings_taxes', $tax_options );
+
+	// Flush the rewrite rules for the new /edd-api/ end point
+	flush_rewrite_rules();
+
 }
