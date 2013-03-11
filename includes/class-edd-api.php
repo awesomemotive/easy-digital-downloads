@@ -834,6 +834,17 @@ class EDD_API {
 
 			return $earnings;
 
+		} elseif ( $args['type'] == 'customers' ) {
+
+			global $wpdb;
+
+			$stats = array();
+
+			$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
+			$stats['customers'] = $count[0];
+
+			return $stats;
+
 		}
 
 	}
