@@ -280,7 +280,7 @@ function edd_v14_upgrades() {
 function edd_v15_upgrades() {
 
 	// Update options for missing tax settings
-	$tax_options = get_options( 'edd_settings_taxes' );
+	$tax_options = get_option( 'edd_settings_taxes' );
 
 	// Set include tax on checkout to off
 	$tax_options['checkout_include_tax'] = 'no';

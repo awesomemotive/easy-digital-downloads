@@ -70,7 +70,7 @@ class EDD_Welcome {
 
 	/**
 	 * Hide Individual Dashboard Menus
-	 * 
+	 *
 	 * @since       1.4
 	 * @return      void
 	 */
@@ -108,7 +108,7 @@ class EDD_Welcome {
 
 	/**
 	 * Render About Screen
-	 * 
+	 *
 	 * @since      1.4
 	 */
 	public function about_screen() {
@@ -136,7 +136,7 @@ class EDD_Welcome {
 
 					<h4><?php _e( 'File Download Logs', 'edd' ); ?></h4>
 					<p><?php _e( 'See the exact files that are getting downloaded, who is downloading them, and even the IP address they are getting downloaded from.', 'edd' ); ?></p>
-					
+
 					<h4><?php _e( 'Download Sale Logs', 'edd' ); ?></h4>
 					<p><?php _e( 'You can see exactly which products have been purchased, when they were purchased, and who purchased them.', 'edd' ); ?></p>
 
@@ -182,7 +182,7 @@ class EDD_Welcome {
 				<div class="feature-section col three-col">
 					<div>
 						<h4><?php _e( 'Discount Codes', 'edd' ); ?></h4>
-						<p><?php _e( 'Discount codes are now stored as a custom post type and will allow for dramatically more powerful coupons in coming versions.', 'edd' ); ?></p> 
+						<p><?php _e( 'Discount codes are now stored as a custom post type and will allow for dramatically more powerful coupons in coming versions.', 'edd' ); ?></p>
 
 						<h4><?php _e( 'Plugin Directory Structure', 'edd' ); ?></h4>
 						<p><?php _e( 'We have significantly improved the file / folder organized of the plugin, making it easier for developers to get involved in development.', 'edd' ); ?></p>
@@ -215,7 +215,7 @@ class EDD_Welcome {
 
 	/**
 	 * Render Credits Screen
-	 * 
+	 *
 	 * @since      1.4
 	 */
 	public function credits_screen() {
@@ -254,9 +254,9 @@ class EDD_Welcome {
 
 		if ( empty( $contributors ) )
 			return '';
- 
+
 		$contributor_list = '<ul class="wp-people-group">';
- 
+
 		foreach ( $contributors as $contributor ) {
 			$contributor_list .= '<li class="wp-person">';
 			$contributor_list .= sprintf( '<a href="%s" title="%s">',
@@ -269,9 +269,9 @@ class EDD_Welcome {
 			$contributor_list .= '</a>';
 			$contributor_list .= '</li>';
 		}
- 
+
 		$contributor_list .= '</ul>';
- 
+
 		return $contributor_list;
 	}
 
@@ -323,7 +323,7 @@ class EDD_Welcome {
 			return;
 
 		wp_safe_redirect( admin_url( 'index.php?page=edd-about' ) ); exit;
-		
+
 	}
 }
 new EDD_Welcome();
