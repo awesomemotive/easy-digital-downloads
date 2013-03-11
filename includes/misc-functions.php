@@ -872,14 +872,16 @@ function edd_get_symlink_dir() {
 function edd_cleanup_file_symlinks() {
 
 	$path = edd_get_symlink_dir();
-	$dir = new DirectoryIterator( $path );
+	$dir = opendir( $path );
 
-	foreach ( $dir as $file ) {
-		if( is_link( $file->getFilename() ) ) {
-			$transient = get_transient( md5( 'edd_file_download_' . $file->getFilename() ) );
-			if( $transient === false )
-				@unlink( edd_get_symlink_dir() . '/' . $file->getFilename() );
-		}
+	while ( ( $file = readdir( $dir ) ) !== false ) {
+
+		if( $file == '.' || $file == '..' )
+			continue;
+
+		$transient = get_transient( md5( $file ) );
+		if( $transient === false )
+			@unlink( $path . '/' . $file );
 
 	}
 

@@ -93,6 +93,7 @@ function edd_install() {
 		);
 
 		update_option( 'edd_settings_general', $options );
+		update_option( 'edd_version', EDD_VERSION );
 	}
 
 	// Bail if activating from network, or bulk
