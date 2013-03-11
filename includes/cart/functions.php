@@ -602,7 +602,9 @@ function edd_get_cart_content_details() {
 	$is_taxed = edd_is_cart_taxed();
 
 	foreach( $cart_items as $key => $item ) {
+
 		$price = edd_get_cart_item_price( $item['id'], $item['options'] );
+		$non_taxed_price = edd_get_cart_item_price( $item['id'], $item['options'], false );
 
 		$details[ $key ]  = array(
 			'name'        => get_the_title( $item['id'] ),
@@ -610,7 +612,7 @@ function edd_get_cart_content_details() {
 			'item_number' => $item,
 			'price'       => $price,
 			'quantity'    => 1,
-			'tax'         => $is_taxed ? edd_calculate_tax( $price, false ) : 0,
+			'tax'         => $is_taxed ? edd_calculate_tax( $non_taxed_price, false ) : 0,
 		);
 	}
 
