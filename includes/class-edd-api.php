@@ -441,9 +441,6 @@ class EDD_API {
 
 			}
 
-			$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
-			$customers['customers']['stats']['total_customers'] = $count[0];
-
 		} else {
 
 			if ( is_numeric( $customer ) ) {
