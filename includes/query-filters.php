@@ -28,12 +28,14 @@ function edd_block_attachments() {
 	if ( !is_attachment() )
 		return;
 
-	$parent = get_post_field( 'post_parent', get_the_ID() );
+	$parent   = get_post_field( 'post_parent', get_the_ID() );
+	$uri      = wp_get_attachment_url( get_the_ID() );
+	$edd_file = strpos( $uri, '/edd/' );
 
-	if ( ! $parent )
+	if ( ! $parent && false === $edd_file )
 		return;
 
-	if ( 'download' != get_post_type( $parent ) )
+	if ( 'download' != get_post_type( $parent ) && false === $edd_file )
 		return;
 
 	wp_die( __( 'You do not have permission to view this file.', 'edd' ), __( 'Error', 'edd' ) );
