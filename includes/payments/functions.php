@@ -511,14 +511,15 @@ function edd_get_total_sales() {
 		'posts_per_page' => -1,
 		'meta_key'       => '_edd_payment_mode',
 		'meta_value'     => 'live',
-		'fields'         => 'ids'
+		'fields'         => 'ids',
+		'post_status'    => 'publish',
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false
 	) );
 	$sales = get_posts( $args );
-	$total = 0;
-	if ( $sales ) {
-		$total = count( $sales );
-	}
-	return $total;
+	$sales = new WP_Query( $args );
+
+	return (int) $sales->post_count;
 }
 
 /**
