@@ -434,8 +434,7 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 	$total = 0;
 	if ( $sales ) {
 		foreach ( $sales as $sale ) {
-			$sale_meta = edd_get_payment_meta( $sale );
-			$amount    = $sale_meta['amount'];
+			$amount    = edd_get_payment_amount( $sale );
 			$total     = $total + $amount;
 		}
 	}
