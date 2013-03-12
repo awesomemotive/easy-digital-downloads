@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-03-11 23:55+0100\n"
-"PO-Revision-Date: 2013-03-12 00:54+0100\n"
+"PO-Revision-Date: 2013-03-12 10:08+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
 "Language-Team: FxB <fx@fxbenard.com>\n"
 "Language: fr_FR\n"
@@ -393,7 +393,7 @@ msgstr "Ajouter Nouveau"
 #: includes/post-types.php:44
 #, php-format
 msgid "Add New %1$s"
-msgstr "Ajouter Nouveau %1$s"
+msgstr "Ajouter un nouveau %1$s"
 
 # @ edd
 #: includes/post-types.php:45
@@ -1577,7 +1577,7 @@ msgid ""
 "product prices as inclusive or exclusive of tax."
 msgstr ""
 "Les calculs des taxes sont désormais plus rigoureux et il y a une option "
-"pour fixer les prix de produits H.T. ou T.T.C."
+"pour fixer les prix de produits HT ou TTC."
 
 #: includes/admin/welcome.php:180
 msgid "Improved Reports and Data Export"
@@ -2085,7 +2085,7 @@ msgid ""
 "\"%s\">extensions</a> or <a href=\"%s\">themes</a>."
 msgstr ""
 "<a href=\"%s\">Poster un problème</a> sur <a href=\"%s\">Github</a>. Voir "
-"les <a href=\"%s\">extensions</a> ou les <a href=\"%s\">themes</a>."
+"les <a href=\"%s\">extensions</a> ou les <a href=\"%s\">thèmes</a>."
 
 # @ edd
 #: includes/admin/discounts/contextual-help.php:41
@@ -2417,12 +2417,12 @@ msgstr "Date"
 # @ edd
 #: includes/admin/downloads/dashboard-columns.php:190
 msgid "Show all categories"
-msgstr "Montrer toutes les catégories"
+msgstr "Afficher toutes les catégories"
 
 # @ edd
 #: includes/admin/downloads/dashboard-columns.php:201
 msgid "Show all tags"
-msgstr "Montrer tous les tags"
+msgstr "Afficher tous les mots-clefs"
 
 # @ edd
 #: includes/admin/downloads/dashboard-columns.php:225
@@ -3560,7 +3560,7 @@ msgstr ""
 # @ edd
 #: includes/admin/settings/register-settings.php:68
 msgid "Currency Settings"
-msgstr "Réglages de monnaie"
+msgstr "Réglages de la monnaie"
 
 # @ edd
 #: includes/admin/settings/register-settings.php:69
@@ -3734,7 +3734,7 @@ msgid ""
 "forces the site to use a slightly less secure method of verifying purchases."
 msgstr ""
 "Si les paiements ne sont pas marqués comme terminés, cocher cette case. Cela "
-"force le site a utiliser une méthode un peu moins sécurisée pour vérifier "
+"force le site à utiliser une méthode un peu moins sécurisée pour vérifier "
 "les achats."
 
 #: includes/admin/settings/register-settings.php:193
@@ -3899,7 +3899,7 @@ msgid ""
 "all other elements."
 msgstr ""
 "Cocher cette case pour désactiver tous les style inclus des boutons, champs "
-"à cocher, et tous les autres éléments."
+"à cocher, et de tous les autres éléments."
 
 # @ edd
 #: includes/admin/settings/register-settings.php:261
@@ -4071,7 +4071,7 @@ msgstr ""
 # @ edd
 #: includes/admin/settings/register-settings.php:374
 msgid "Show Register / Login Form?"
-msgstr "Montrer le fomualire de connection / inscription ?"
+msgstr "Montrer le fomulaire de connection / inscription ?"
 
 # @ edd
 #: includes/admin/settings/register-settings.php:375
