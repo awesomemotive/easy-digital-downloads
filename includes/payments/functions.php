@@ -461,7 +461,9 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 		'meta_key'       => '_edd_payment_mode',
 		'meta_value'     => 'live',
 		'fields'         => 'ids',
-		'post_status'    => 'publish'
+		'post_status'    => 'publish',
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false
 	);
 
 	if ( ! empty( $month_num ) )
