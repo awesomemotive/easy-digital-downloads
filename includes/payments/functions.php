@@ -460,7 +460,8 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 		'year'           => $year,
 		'meta_key'       => '_edd_payment_mode',
 		'meta_value'     => 'live',
-		'fields'         => 'ids'
+		'fields'         => 'ids',
+		'post_status'    => 'publish'
 	);
 
 	if ( ! empty( $month_num ) )
@@ -472,12 +473,9 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 	if ( ! empty( $hour ) )
 		$args['hour'] = $hour;
 
-	$sales = get_posts( $args );
-	$total = 0;
-	if ( $sales ) {
-		$total = count( $sales );
-	}
-	return $total;
+	$sales = new WP_Query( $args );
+
+	return (int) $sales->post_count;
 }
 
 /**
