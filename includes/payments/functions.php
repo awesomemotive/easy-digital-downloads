@@ -419,7 +419,8 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		'monthnum'       => $month_num,
 		'meta_key'       => '_edd_payment_mode',
 		'meta_value'     => 'live',
-		'post_status'    => 'publish'
+		'post_status'    => 'publish',
+		'fields'         => 'ids'
 	);
 	if ( ! empty( $day ) )
 		$args['day'] = $day;
@@ -433,7 +434,7 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 	$total = 0;
 	if ( $sales ) {
 		foreach ( $sales as $sale ) {
-			$sale_meta = edd_get_payment_meta( $sale->ID );
+			$sale_meta = edd_get_payment_meta( $sale );
 			$amount    = $sale_meta['amount'];
 			$total     = $total + $amount;
 		}
@@ -459,7 +460,8 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 		'posts_per_page' => -1,
 		'year'           => $year,
 		'meta_key'       => '_edd_payment_mode',
-		'meta_value'     => 'live'
+		'meta_value'     => 'live',
+		'fields'         => 'ids'
 	);
 
 	if ( ! empty( $month_num ) )
