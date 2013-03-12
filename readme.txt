@@ -5,9 +5,9 @@ Contributors: mordauk, sksmatt, sunnyratilal, SpencerFinnell, chriscct7
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.3
-Tested up to: 3.5.1
+Tested up to: 3.6
 
-Stable Tag: 1.4.4.2
+Stable Tag: 1.5
 License: GNU Version 2 or Any Later Version
 
 
@@ -170,6 +170,49 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.5: March 13, 2013 =
+
+* New: Added [EDD_API class](https://github.com/pippinsplugins/Easy-Digital-Downloads/issues/857) to provide a fully RESTful API to retrieve sales and earnings stats
+* New: Dramatically improved layout, design, and UX for the checkout page
+* New: Changed payment method select to radio buttons
+* New: Added option to define a default payment method
+* New: Added option to export all payments of a specific status
+* New: Added an option to export all buyers of specific products
+* New: Added per-product discount codes
+* New: Added option to enable/disable one-use-per cusomter discount codes
+* New: Added estimated monthly earnings / sales to Reports
+* New: Added product microdata for Schema.org
+* New: Added ability to edit a payment's user ID
+* New: Added option to send a test purchase receipt
+* New: Added new template files for the shopping cart and shopping cart widget
+* New: Added improved file download delivery to better support large files
+* New: Added improved session management with WP_Session and removed reliance on PHP $_SESSION
+* New: Added [arbitrary cart fees class](https://github.com/pippinsplugins/Easy-Digital-Downloads/issues/418)
+* New: Added option to edit purchased price options in the edit payment screen
+* New: Added option to view purchase receipts in the browser
+* New: Dramatically improved tax options
+
+* Fixed: Prices lose decimal points when saving if thousands / decimal separators are left blank
+* Fixed: Payment History layout bug when viewing from small (mobile) screens
+* Fixed: Updating payment record removes buyer's email address
+* Fixed: Non-object notice during uninstall
+* Fixed: Problem with downloading files after purchasing multipe price options for the same product
+* Fixed: Issue with India and zip code validation
+* Fixed: PayPal purchases marked as complete more than once
+* Fixed: csv_cols_out() didn't correctly apply_filters()
+* Fixed: Bug with SSL and ajax
+* Fixed: Report times were out of sync
+* Fixed: No Permission to Download error when purchasing products with multiple files
+* Fixed: Gateway redirect sometimes fails with ajax
+* Fixed: Multiple price options mode doesn't save
+* Fixed: Missing parameter in edd_log_user_in()
+* Fixed: Undefined index error on checkout
+* Fixed: shop_vendor role can't assign categories
+* Fixed: Products can't be removed from edit payment screen
+* Fixed: Sorry, Trouble retrieving payment receipt error
+* Fixed: Issue with Show Price with Taxes bug
+
 
 = 1.4.4.3: February 25, 2013 =
 
