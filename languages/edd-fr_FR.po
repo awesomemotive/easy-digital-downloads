@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-11 23:55+0100\n"
-"PO-Revision-Date: 2013-03-12 10:08+0100\n"
+"POT-Creation-Date: 2013-03-12 19:10+0100\n"
+"PO-Revision-Date: 2013-03-12 19:10+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
 "Language-Team: FxB <fx@fxbenard.com>\n"
 "Language: fr_FR\n"
@@ -1474,7 +1474,7 @@ msgid ""
 "a click and results in more conversions for you."
 msgstr ""
 "Vous pouvez maintenant définir le mode de paiement par défaut pour les "
-"clients qui sera chargé immédiatement en accédant à la page de paiement. "
+"clients qui sera immédiatement chargé en accédant à la page de paiement. "
 "Cela permet d'économiser au client un clic et se traduit par davantage de "
 "conversions pour vous."
 
@@ -1503,8 +1503,8 @@ msgid ""
 "text for each field."
 msgstr ""
 "Il a été prouvé par de nombreuses études qu'un texte descriptif de chaque "
-"champ permet aux clients de terminer son processus d'achat, nous avons donc "
-"ajouté cette option."
+"champ permet aux clients de terminer plus facilement son processus d'achat, "
+"nous avons donc ajouté cette option."
 
 #: includes/admin/welcome.php:144
 msgid "Reworked Field Order"
@@ -1594,7 +1594,7 @@ msgid ""
 "from the %sExport%s screen."
 msgstr ""
 "Vous pouvez désormais exporter tous les clients qui ont acheté un produit en "
-"particulier à partir de l'écran de l'%sExportation%s."
+"particulier à partir de l'écran d'%sExportation%s."
 
 # @ edd
 #: includes/admin/welcome.php:187
@@ -1639,8 +1639,8 @@ msgid ""
 "earnings."
 msgstr ""
 "La nouvelle API RESTful disponible dans Easy Digital Downloads permet de "
-"créer des applications tiers (iOS, Android, etc) pour le suivi de vos ventes "
-"et de vos revenus de votre magasin."
+"créer des applications tiers (iOS, Android, etc) pour le suivi des ventes et "
+"des revenus de votre magasin."
 
 #: includes/admin/welcome.php:203
 #, php-format
@@ -1710,7 +1710,7 @@ msgstr ""
 
 #: includes/admin/welcome.php:228
 msgid "New Product Microdata"
-msgstr "Microdata des nouveaux produits"
+msgstr "Microdonnées des nouveaux produits"
 
 #: includes/admin/welcome.php:229
 msgid ""
@@ -1737,7 +1737,7 @@ msgstr ""
 # @ edd
 #: includes/admin/welcome.php:238
 msgid "Go to Easy Digital Downloads Settings"
-msgstr "Allez sur les réglages d'Easy Digital Downloads"
+msgstr "Emmenez-moi aux réglages d'Easy Digital Downloads"
 
 #: includes/admin/welcome.php:265
 msgid ""
