@@ -193,6 +193,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * New: Added option to view purchase receipts in the browser
 * New: Dramatically improved tax options
 
+* Fixed: A critical bug that made it possible to find download files via Google
 * Fixed: Prices lose decimal points when saving if thousands / decimal separators are left blank
 * Fixed: Payment History layout bug when viewing from small (mobile) screens
 * Fixed: Updating payment record removes buyer's email address
