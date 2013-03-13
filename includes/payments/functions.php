@@ -555,26 +555,31 @@ function edd_get_total_sales() {
  * @return      float
  */
 function edd_get_total_earnings() {
-	$total = (float) 0;
-	//$earnings = get_transient( 'edd_searnings_total' );
-	//if( false === $earnings ) {
 
-	$args = apply_filters( 'edd_get_total_earnings_args', array(
-		'offset' => 0,
-		'number' => -1,
-		'mode'   => 'live',
-		'status' => 'publish',
-		'fields' => 'ids'
-	) );
+	$total = get_transient( 'edd_earnings_total' );
 
-	$payments = edd_get_payments( $args );
-	if ( $payments ) {
-		foreach ( $payments as $payment ) {
-			$total += edd_get_payment_amount( $payment );
+	if( false === $total ) {
+
+		$total = (float) 0;
+
+		$args = apply_filters( 'edd_get_total_earnings_args', array(
+			'offset' => 0,
+			'number' => -1,
+			'mode'   => 'live',
+			'status' => 'publish',
+			'fields' => 'ids'
+		) );
+
+		$payments = edd_get_payments( $args );
+		if ( $payments ) {
+			foreach ( $payments as $payment ) {
+				$total += edd_get_payment_amount( $payment );
+			}
 		}
+
+		// Cache results for 1 day. This cache is cleared automatically when a payment is made
+		set_transient( 'edd_earnings_total', $total, 86400 );
 	}
-	//set_transient( 'edd_earnings_total', $payments, 1800 );
-	//}
 	return apply_filters( 'edd_total_earnings', $total );
 }
 

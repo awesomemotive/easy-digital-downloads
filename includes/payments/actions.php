@@ -61,6 +61,9 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 			$amount = edd_get_download_final_price( $download['id'], $user_info, $amount );
 			edd_increase_earnings( $download['id'], $amount );
 		}
+
+		// Clear the total earnings cache
+		delete_transient( 'edd_earnings_total' );
 	}
 
 	if ( isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ) {
