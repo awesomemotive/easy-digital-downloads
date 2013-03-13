@@ -721,9 +721,9 @@ function edd_payment_amount( $payment_id = 0 ) {
  * @return      string $amount
  */
 function edd_get_payment_amount( $payment_id ) {
-	$amount = (int) get_post_meta( $payment_id, '_edd_payment_total', true );
+	$amount = get_post_meta( $payment_id, '_edd_payment_total', true );
 
-	if ( false !== $amount ) {
+	if ( empty( $amount ) && $amount != 0 ) {
 		$payment_meta = edd_get_payment_meta( $payment_id );
 		$amount       = $payment_meta['amount'];
 	}
