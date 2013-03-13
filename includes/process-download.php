@@ -141,7 +141,7 @@ function edd_deliver_download( $file = '' ) {
 	 * The symlink is deleted after it is used
 	 */
 
-	if( $symlink ) {
+	if( $symlink && function_exists( 'symlink' ) ) {
 
 		// Generate a symbolic link
 		$ext       = edd_get_file_extension( $file );
