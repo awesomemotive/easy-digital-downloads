@@ -313,18 +313,27 @@ add_action( 'edd_reports_tab_logs', 'edd_reports_tab_logs' );
  */
 function edd_estimated_monthly_stats() {
 
-	$estimated = array(
-		'earnings' => 0,
-		'sales'    => 0
-	);
+	$estimated = get_transient( 'edd_estimated_monthly_stats' );
 
-	$products = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1, 'fields' => 'ids' ) );
-	if( $products ) {
-		foreach( $products as $download ) {
-			$estimated['earnings'] += edd_get_average_monthly_download_earnings( $download );
-			$estimated['sales'] += number_format( edd_get_average_monthly_download_sales( $download ), 0 );
+	if( false === $estimated ) {
+
+		$estimated = array(
+			'earnings' => 0,
+			'sales'    => 0
+		);
+
+		$products = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1, 'fields' => 'ids' ) );
+		if( $products ) {
+			foreach( $products as $download ) {
+				$estimated['earnings'] += edd_get_average_monthly_download_earnings( $download );
+				$estimated['sales'] += number_format( edd_get_average_monthly_download_sales( $download ), 0 );
+			}
 		}
+
+		// Cache for one day
+		set_transient( 'edd_estimated_monthly_stats', serialize( $estimated ), 86400 );
+
 	}
 
-	return $estimated;
+	return maybe_unserialize( $estimated );
 }
