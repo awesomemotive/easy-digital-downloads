@@ -429,17 +429,24 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 	if ( ! empty( $hour ) )
 		$args['hour'] = $hour;
 
-	$args = apply_filters( 'edd_get_earnings_by_date_args', $args );
+	$args     = apply_filters( 'edd_get_earnings_by_date_args', $args );
+	$key      = md5( serialize( $args ) );
+	$earnings = get_transient( $key );
 
-	$sales = get_posts( $args );
-	$total = 0;
-	if ( $sales ) {
-		foreach ( $sales as $sale ) {
-			$amount    = edd_get_payment_amount( $sale );
-			$total     = $total + $amount;
+	if( false === $earnings ) {
+		$sales = get_posts( $args );
+		$earnings = 0;
+		if ( $sales ) {
+			foreach ( $sales as $sale ) {
+				$amount    = edd_get_payment_amount( $sale );
+				$earnings  = $earnings + $amount;
+			}
 		}
+		// Cache the results for one hour
+		set_transient( $key, $earnings, 60*60 );
 	}
-	return round( $total, 2 );
+
+	return round( $earnings, 2 );
 }
 
 /**
@@ -476,9 +483,17 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 	if ( ! empty( $hour ) )
 		$args['hour'] = $hour;
 
-	$sales = new WP_Query( $args );
+	$key   = md5( serialize( $args ) );
+	$count = get_transient( $key, 'edd' );
 
-	return (int) $sales->post_count;
+	if( false === $count ) {
+		$sales = new WP_Query( $args );
+		$count = (int) $sales->post_count;
+		// Cache the results for one hour
+		set_transient( $key, $count, 60*60 );
+	}
+
+	return $count;
 }
 
 /**
