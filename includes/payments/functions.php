@@ -532,10 +532,19 @@ function edd_get_total_sales() {
 		'update_post_meta_cache' => false,
 		'update_post_term_cache' => false
 	) );
-	$sales = get_posts( $args );
-	$sales = new WP_Query( $args );
 
-	return (int) $sales->post_count;
+	$key   = md5( serialize( $args ) );
+	$count = get_transient( $key );
+
+	if( false === $count ) {
+
+		$sales = new WP_Query( $args );
+		$count = (int) $sales->post_count;
+		set_transient( $key, $count, 60*60 );
+
+	}
+
+	return $count;
 }
 
 /**
