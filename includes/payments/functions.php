@@ -414,13 +414,14 @@ function edd_get_payment_statuses() {
 function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour = null ) {
 	$args = array(
 		'post_type'      => 'edd_payment',
-		'posts_per_page' => -1,
+		'nopaging'       => true,
 		'year'           => $year,
 		'monthnum'       => $month_num,
 		'meta_key'       => '_edd_payment_mode',
 		'meta_value'     => 'live',
 		'post_status'    => 'publish',
-		'fields'         => 'ids'
+		'fields'         => 'ids',
+		'update_post_term_cache' => false
 	);
 	if ( ! empty( $day ) )
 		$args['day'] = $day;
@@ -456,7 +457,7 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $hour = null ) {
 	$args = array(
 		'post_type'      => 'edd_payment',
-		'posts_per_page' => -1,
+		'nopaging'       => true,
 		'year'           => $year,
 		'meta_key'       => '_edd_payment_mode',
 		'meta_value'     => 'live',
