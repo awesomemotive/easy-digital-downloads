@@ -721,7 +721,12 @@ function edd_payment_amount( $payment_id = 0 ) {
  * @return      string $amount
  */
 function edd_get_payment_amount( $payment_id ) {
-	$amount = get_post_meta( $payment_id, '_edd_payment_total', true );
+	$amount = (int) get_post_meta( $payment_id, '_edd_payment_total', true );
+
+	if ( false !== $amount ) {
+		$payment_meta = edd_get_payment_meta( $payment_id );
+		$amount       = $payment_meta['amount'];
+	}
 
 	return apply_filters( 'edd_payment_amount', $amount );
 }
