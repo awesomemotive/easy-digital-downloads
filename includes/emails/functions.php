@@ -92,7 +92,7 @@ function edd_email_test_purchase_receipt() {
 
 	$subject = apply_filters( 'edd_purchase_subject', isset( $edd_options['purchase_subject'] )
 		? trim( $edd_options['purchase_subject'] )
-		: __( 'Purchase Receipt', 'edd' ), $payment_id );
+		: __( 'Purchase Receipt', 'edd' ), 0 );
 
 	$headers = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
 	$headers .= "Reply-To: ". $from_email . "\r\n";
