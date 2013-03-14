@@ -57,10 +57,12 @@
 #edd_purchase_form #edd_tax_opt_in_fields label { display: inline-block;  width: auto; }
 #edd_checkout_form_wrap p { margin: 0 0 10px; }
 #edd_checkout_form_wrap input[type="text"], #edd_checkout_form_wrap input[type="email"], #edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; }
+#edd_checkout_form_wrap input[type="radio"] { border: none; margin-right: 5px; }
 #edd_purchase_form input[type="checkbox"] { float: left; margin: 0 8px 0 0; }
 #edd_checkout_form_wrap .edd-payment-icons { height: 32px; }
 #edd_checkout_form_wrap .edd-payment-icons img.payment-icon{ margin: 0 3px 0 0; float: left; background: none; padding: none; border: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
-#edd_checkout_form_wrap #edd-payment-mode-wrap label { display: inline-block; margin: 0 8px 0 0; }
+#edd_checkout_form_wrap #edd-payment-mode-wrap label { display: inline-block; margin: 0 20px 0 0; }
+#edd_checkout_form_wrap #edd-payment-mode-wrap .edd-payment-mode-label { font-weight: bold; display: inline-block; position: relative; margin-bottom: 5px; }
 #edd_checkout_form_wrap fieldset { border: none; padding: 10px 0 0 0; margin: 0 0 10px; }
 #edd_checkout_form_wrap fieldset fieldset { margin: 0; }
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_register_password,
