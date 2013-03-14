@@ -57,6 +57,7 @@
 #edd_purchase_form #edd_tax_opt_in_fields label { display: inline-block;  width: auto; }
 #edd_checkout_form_wrap p { margin: 0 0 10px; }
 #edd_checkout_form_wrap input[type="text"], #edd_checkout_form_wrap input[type="email"], #edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; }
+#edd_checkout_form_wrap input[type="radio"] { border: none; }
 #edd_purchase_form input[type="checkbox"] { float: left; margin: 0 8px 0 0; }
 #edd_checkout_form_wrap .edd-payment-icons { height: 32px; }
 #edd_checkout_form_wrap .edd-payment-icons img.payment-icon{ margin: 0 3px 0 0; float: left; background: none; padding: none; border: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
