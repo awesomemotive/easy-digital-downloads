@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-12 19:10+0100\n"
-"PO-Revision-Date: 2013-03-12 19:10+0100\n"
+"POT-Creation-Date: 2013-03-14 15:29+0100\n"
+"PO-Revision-Date: 2013-03-14 15:31+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
 "Language-Team: FxB <fx@fxbenard.com>\n"
 "Language: fr_FR\n"
@@ -129,7 +129,7 @@ msgstr ""
 
 # @ edd
 #: includes/download-functions.php:801 includes/error-tracking.php:35
-#: includes/query-filters.php:39
+#: includes/query-filters.php:41
 #: includes/admin/discounts/discount-actions.php:91
 #: includes/admin/discounts/edit-discount.php:16
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:121
@@ -849,7 +849,7 @@ msgstr ""
 "Le code postal que vous avez entré pour votre carte de crédit est invalide"
 
 # @ edd
-#: includes/query-filters.php:39
+#: includes/query-filters.php:41
 msgid "You do not have permission to view this file."
 msgstr "Vous n'avez pas la permission de voir ce fichier."
 
@@ -1630,7 +1630,8 @@ msgstr "L'API RESTful"
 #: includes/admin/welcome.php:200
 msgid "Creation of Third Party Stat Tracking Apps Now Possible"
 msgstr ""
-"La création d'applications tiers de suivi statistique est maintenant possible"
+"La création d'applications tierces de suivi statistique est maintenant "
+"possible"
 
 #: includes/admin/welcome.php:201
 msgid ""
@@ -1639,8 +1640,8 @@ msgid ""
 "earnings."
 msgstr ""
 "La nouvelle API RESTful disponible dans Easy Digital Downloads permet de "
-"créer des applications tiers (iOS, Android, etc) pour le suivi des ventes et "
-"des revenus de votre magasin."
+"créer des applications tierces (iOS, Android, etc.) pour le suivi des ventes "
+"et des revenus de votre magasin."
 
 #: includes/admin/welcome.php:203
 #, php-format
@@ -4770,7 +4771,7 @@ msgstr "Paiement PayPal #%s remboursé"
 msgid "PayPal Refund Transaction ID: %s"
 msgstr "ID de la transaction de remboursement Paypal : %s"
 
-#: includes/payments/actions.php:93
+#: includes/payments/actions.php:96
 #, php-format
 msgid "Status changed from %s to %s"
 msgstr "État de la commande modifié de %s à %s"
