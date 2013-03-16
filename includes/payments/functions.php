@@ -241,11 +241,10 @@ function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
 	if ( is_wp_error( $payment ) || !is_object( $payment ) )
 		return;
 
-	if ( $payment->post_status == 'publish' ) {
-		//return;
-	}
-
 	$old_status = $payment->post_status;
+
+	if( $old_Status === $new_status )
+		return; // Don't permit status changes that aren't changes
 
 	do_action( 'edd_before_payment_status_change', $payment_id, $new_status, $old_status );
 
