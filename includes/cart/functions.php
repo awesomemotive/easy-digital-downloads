@@ -494,8 +494,8 @@ function edd_cart_total( $echo = true ) {
 
 	if ( edd_is_cart_taxed() ) {
 
-		if ( $edd_options['checkout_include_tax'] == 'yes' ) {
-			$total .= '<br/><span style="font-weight:normal;text-transform:none;">'. sprintf( __('(includes %s tax)', 'edd'), edd_cart_tax() ) . '</span>';
+		if ( edd_prices_show_tax_on_checkout() ) {
+			$total .= '<br/><span>'. sprintf( __('(includes %s tax)', 'edd'), edd_cart_tax() ) . '</span>';
 		}
 
 	}
