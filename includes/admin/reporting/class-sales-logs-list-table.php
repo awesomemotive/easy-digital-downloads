@@ -8,16 +8,13 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
-
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 
 // Load WP_List_Table if not loaded
 if( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
-
 
 /**
  * EDD Sales Log View Class
@@ -27,18 +24,14 @@ if( ! class_exists( 'WP_List_Table' ) ) {
  * @access      private
  * @since       1.4
  */
-
 class EDD_Sales_Log_Table extends WP_List_Table {
-
-
 	/**
 	 * Number of results to show per page
 	 *
 	 * @since       1.4
+	 * @var         int
 	 */
-
 	public $per_page = 30;
-
 
 	/**
 	 * Get things started
@@ -47,11 +40,10 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      void
 	 */
-
-	function __construct(){
+	function __construct() {
 		global $status, $page;
 
-		//Set parent defaults
+		// Set parent defaults
 		parent::__construct( array(
 			'singular'  => edd_get_label_singular(),    // Singular name of the listed records
 			'plural'    => edd_get_label_plural(),    	// Plural name of the listed records
@@ -61,7 +53,6 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		add_action( 'edd_log_view_actions', array( $this, 'downloads_filter' ) );
 	}
 
-
 	/**
 	 * Output column data
 	 *
@@ -69,9 +60,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      string
 	 */
-
 	function column_default( $item, $column_name ) {
-		switch( $column_name ){
+		switch ( $column_name ){
 			case 'download' :
 				return '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . get_the_title( $item[ $column_name ] ) . '</a>';
 
@@ -88,7 +78,6 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		}
 	}
 
-
 	/**
 	 * Setup the column names / IDs
 	 *
@@ -96,7 +85,6 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      array
 	 */
-
 	function get_columns() {
 		$columns = array(
 			'ID'		=> __( 'Log ID', 'edd' ),
@@ -110,7 +98,6 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		return $columns;
 	}
 
-
 	/**
 	 * Retrieve the current page number
 	 *
@@ -118,11 +105,9 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      int
 	 */
-
 	function get_paged() {
 		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 	}
-
 
 	/**
 	 * Retrieves the user we are filtering logs by, if any
@@ -131,11 +116,9 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      mixed Int if user ID, string if email or login
 	 */
-
 	function get_filtered_user() {
 		return isset( $_GET['user'] ) ? absint( $_GET['user'] ) : false;
 	}
-
 
 	/**
 	 * Retrieves the ID of the download we're filtering logs by
@@ -144,11 +127,9 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      int
 	 */
-
 	function get_filtered_download() {
 		return ! empty( $_GET['download'] ) ? absint( $_GET['download'] ) : false;
 	}
-
 
 	/**
 	 * Retrieves the search query string
@@ -157,11 +138,9 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      mixed String if search is present, false otherwise
 	 */
-
 	function get_search() {
 		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
 	}
-
 
 	/**
 	 * Gets the meta query for the log query
@@ -172,7 +151,6 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      array
 	 */
-
 	function get_meta_query() {
 		$user = $this->get_filtered_user();
 
@@ -236,7 +214,6 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		return $meta_query;
 	}
 
-
 	/**
 	 * Outputs the log views
 	 *
@@ -244,12 +221,10 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      void
 	 */
-
 	function bulk_actions() {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
 	}
-
 
 	/**
 	 * Sets up the downloads filter
@@ -258,26 +233,27 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      void
 	 */
-
 	function downloads_filter() {
 		$downloads = get_posts( array(
 			'post_type'      => 'download',
 			'post_status'    => 'any',
 			'posts_per_page' => -1,
 			'orderby'        => 'title',
-			'order'          => 'ASC'
+			'order'          => 'ASC',
+			'fields'         => 'ids',
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false
 		) );
 
 		if ( $downloads ) {
 			echo '<select name="download" id="edd-log-download-filter">';
 				echo '<option value="0">' . __( 'All', 'edd' ) . '</option>';
 				foreach ( $downloads as $download ) {
-					echo '<option value="' . $download->ID . '"' . selected( $download->ID, $this->get_filtered_download() ) . '>' . esc_html( $download->post_title ) . '</option>';
+					echo '<option value="' . $download . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
 				}
 			echo '</select>';
 		}
 	}
-
 
 	/**
 	 * Gets the log entries for the current view
@@ -286,7 +262,6 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @since       1.4
 	 * @return      array
 	 */
-
 	function get_logs() {
 		global $edd_logs;
 
@@ -339,7 +314,6 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		return $logs_data;
 	}
 
-
 	/**
 	 * Setup the final data for the table
 	 *
@@ -353,7 +327,6 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	 * @uses        $this->set_pagination_args()
 	 * @return      array
 	 */
-
 	function prepare_items() {
 		global $edd_logs;
 

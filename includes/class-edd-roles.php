@@ -10,31 +10,26 @@
  * @since       1.4.4
 */
 
-
 /**
  * This class handles the role creation and assignment of capabilities for those roles.
  *
- * These roles let us have Shop Accountants, Shop Workers, etc, each of whom can do certain things within the EDD store
+ * These roles let us have Shop Accountants, Shop Workers, etc, each of whom can do
+ * certain things within the EDD store
  *
  * @since  1.4.4
  * @return void
  */
-
 class EDD_Roles {
-
-
 	/**
 	 * Get things going
 	 *
 	 * @since  1.4.4
 	 * @return void
 	 */
-
 	function __construct() {
 		$this->add_roles();
 		$this->add_caps();
 	}
-
 
 	/**
 	 * Add new shop roles with default WP caps
@@ -42,17 +37,38 @@ class EDD_Roles {
 	 * @since  1.4.4
 	 * @return void
 	 */
-
 	public function add_roles() {
-
 		add_role( 'shop_manager', __( 'Shop Manager', 'edd' ), array(
 			'read'                   => true,
-			'edit_posts'             => false,
-			'delete_posts'           => false,
+			'edit_posts'             => true,
+			'delete_posts'           => true,
 			'unfiltered_html'        => true,
 			'upload_files'           => true,
 			'export'                 => true,
-			'import'                 => true
+			'import'                 => true,
+			'delete_others_pages'    => true,
+			'delete_others_posts'    => true,
+			'delete_pages'           => true,
+			'delete_posts'           => true,
+			'delete_private_pages'   => true,
+			'delete_private_posts'   => true,
+			'delete_published_pages' => true,
+			'delete_published_posts' => true,
+			'edit_others_pages'      => true,
+			'edit_others_posts'      => true,
+			'edit_pages'             => true,
+			'edit_posts'             => true,
+			'edit_private_pages'     => true,
+			'edit_private_posts'     => true,
+			'edit_published_pages'   => true,
+			'edit_published_posts'   => true,
+			'manage_categories'      => true,
+			'manage_links'           => true,
+			'moderate_comments'      => true,
+			'publish_pages'          => true,
+			'publish_posts'          => true,
+			'read_private_pages'     => true,
+			'read_private_posts'     => true
 		) );
 
 		add_role( 'shop_accountant', __( 'Shop Accountant', 'edd' ), array(
@@ -74,7 +90,6 @@ class EDD_Roles {
 			'upload_files'           => true,
 			'delete_posts'           => false
 		) );
-
 	}
 
 	/**
@@ -83,7 +98,6 @@ class EDD_Roles {
 	 * @since  1.4.4
 	 * @return void
 	 */
-
 	public function add_caps() {
 		global $wp_roles;
 
@@ -92,12 +106,11 @@ class EDD_Roles {
 				$wp_roles = new WP_Roles();
 
 		if ( is_object( $wp_roles ) ) {
-
 			$wp_roles->add_cap( 'shop_manager', 'view_shop_reports' );
 			$wp_roles->add_cap( 'shop_manager', 'view_shop_sensitive_data' );
 			$wp_roles->add_cap( 'shop_manager', 'export_shop_reports' );
-			$wp_roles->add_cap( 'shop_manager', 'manage_shop_discounts' );
 			$wp_roles->add_cap( 'shop_manager', 'manage_shop_settings' );
+			$wp_roles->add_cap( 'shop_manager', 'manage_shop_discounts' );
 
 			$wp_roles->add_cap( 'administrator', 'view_shop_reports' );
 			$wp_roles->add_cap( 'administrator', 'view_shop_sensitive_data' );
@@ -107,8 +120,8 @@ class EDD_Roles {
 
 			// Add the main post type capabilities
 			$capabilities = $this->get_core_caps();
-			foreach( $capabilities as $cap_group ) {
-				foreach( $cap_group as $cap ) {
+			foreach ( $capabilities as $cap_group ) {
+				foreach ( $cap_group as $cap ) {
 					$wp_roles->add_cap( 'shop_manager', $cap );
 					$wp_roles->add_cap( 'administrator', $cap );
 					$wp_roles->add_cap( 'shop_worker', $cap );
@@ -119,6 +132,7 @@ class EDD_Roles {
 			$wp_roles->add_cap( 'shop_accountant', 'read_private_prodcuts' );
 			$wp_roles->add_cap( 'shop_accountant', 'view_shop_reports' );
 			$wp_roles->add_cap( 'shop_accountant', 'export_shop_reports' );
+			$wp_roles->add_cap( 'shop_accountant', 'edit_shop_payments' );
 
 			$wp_roles->add_cap( 'shop_vendor', 'edit_product' );
 			$wp_roles->add_cap( 'shop_vendor', 'edit_products' );
@@ -127,11 +141,9 @@ class EDD_Roles {
 			$wp_roles->add_cap( 'shop_vendor', 'publish_products' );
 			$wp_roles->add_cap( 'shop_vendor', 'edit_published_products' );
 			$wp_roles->add_cap( 'shop_vendor', 'upload_files' );
-
+			$wp_roles->add_cap( 'shop_vendor', 'assign_product_terms' );
 		}
-
 	}
-
 
 	/**
 	 * Gets the core post type capabilties
@@ -139,17 +151,13 @@ class EDD_Roles {
 	 * @since  1.4.4
 	 * @return array
 	 */
-
 	public function get_core_caps() {
-
 		$capabilities = array();
 
 		$capability_types = array( 'product', 'shop_payment', 'shop_discount' );
 
-		foreach( $capability_types as $capability_type ) {
-
+		foreach ( $capability_types as $capability_type ) {
 			$capabilities[ $capability_type ] = array(
-
 				// Post type
 				"edit_{$capability_type}",
 				"read_{$capability_type}",
@@ -175,5 +183,4 @@ class EDD_Roles {
 
 		return $capabilities;
 	}
-
 }

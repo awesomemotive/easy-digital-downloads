@@ -7,18 +7,20 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 
 if ( ! isset( $_GET['discount'] ) || ! is_numeric( $_GET['discount'] ) ) {
 	wp_die( __( 'Something went wrong.', 'edd' ), __( 'Error', 'edd' ) );
 }
 
-$discount_id = absint( $_GET['discount'] );
-$discount    = edd_get_discount( $discount_id );
+$discount_id  = absint( $_GET['discount'] );
+$discount     = edd_get_discount( $discount_id );
+$product_reqs = edd_get_discount_product_reqs( $discount_id );
+$condition    = edd_get_discount_product_condition( $discount_id );
+$single_use   = edd_discount_is_single_use( $discount_id );
 ?>
 <h2><?php _e( 'Edit Discount', 'edd' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
 <form id="edd-edit-discount" action="" method="post">
@@ -62,6 +64,37 @@ $discount    = edd_get_discount( $discount_id );
 				<td>
 					<input type="text" id="edd-amount" name="amount" value="<?php echo esc_attr( edd_get_discount_amount( $discount_id ) ); ?>" style="width: 40px;"/>
 					<p class="description"><?php _e( 'The amount of this discount code.', 'edd' ); ?></p>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<label for="edd-products"><?php printf( __( '%s Requirements', 'edd' ), edd_get_label_singular() ); ?></label>
+				</th>
+				<td>
+					<p>
+						<select id="edd-product-condition" name="product_condition">
+							<option value="all"<?php selected( 'all', $condition ); ?>><?php printf( __( 'All Selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
+							<option value="any"<?php selected( 'any', $condition ); ?>><?php printf( __( 'Any Selected %s', 'edd' ), edd_get_label_singular() ); ?></option>
+						</select>
+						<label for="edd-product-condition"><?php _e( 'Condition', 'edd' ); ?></label>
+					</p>
+					<select multiple id="edd-products" name="products[]" class="edd-select-chosen" data-placeholder="<?php printf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ); ?>">
+						<?php
+						$downloads = get_posts( array( 'post_type' => 'download', 'no_paging' => 1 ) );
+						if( $downloads ) :
+							foreach( $downloads as $download ) :
+								echo '<option value="' . esc_attr( $download->ID ) . '"' . selected( true, in_array( $download->ID, $product_reqs ), false ) . '>' . esc_html( get_the_title( $download->ID ) ) . '</option>';
+							endforeach;
+						endif;
+						?>
+					</select><br/>
+					<p class="description"><?php printf( __( '%s required to be purchased for this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
+					<p>
+						<label for="edd-non-global-discount">
+							<input type="checkbox" id="edd-non-global-discount" name="not_global" value="1"<?php checked( true, edd_is_discount_not_global( $discount_id ) ); ?>/>
+							<?php printf( __( 'Apply discount only to selected %s?', 'edd' ), edd_get_label_plural() ); ?>
+						</label>
+					</p>
 				</td>
 			</tr>
 			<tr class="form-field">
@@ -110,6 +143,15 @@ $discount    = edd_get_discount( $discount_id );
 						<option value="inactive"<?php selected( $discount->post_status, 'inactive' ); ?>><?php _e( 'Inactive', 'edd' ); ?></option>
 					</select>
 					<p class="description"><?php _e( 'The status of this discount code.', 'edd' ); ?></p>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<label for="edd-use-once"><?php _e( 'Use Once Per Customer', 'edd' ); ?></label>
+				</th>
+				<td>
+					<input type="checkbox" id="edd-use-once" name="use_once" value="1"<?php checked( true, $single_use ); ?>/>
+					<span class="description"><?php _e( 'Limit this discount to a single-user per customer?', 'edd' ); ?></span>
 				</td>
 			</tr>
 		</tbody>

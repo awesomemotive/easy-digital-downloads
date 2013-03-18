@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Uninstall Easy Digital Downloads
  *
@@ -15,7 +14,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
 
 global $wpdb, $edd_options, $wp_roles;
 
-/** Delete all post type data */
+/** Delete All the Custom Post Types */
 $edd_post_types = array( 'download', 'edd_payment', 'edd_discount', 'edd_log' );
 foreach ( $edd_post_types as $post_type ) {
 
@@ -28,18 +27,20 @@ foreach ( $edd_post_types as $post_type ) {
 	}
 }
 
-/** Delete all taxonomy data */
+/** Delete All the Taxonomies */
 $edd_taxonomies = array( 'download_tag', 'download_category', 'edd_log_type' );
 foreach ( $edd_taxonomies as $taxonomy ) {
 	global $wp_taxonomies;
 	$terms = get_terms( $taxonomy );
-	foreach ( $terms as $term ) {
-		wp_delete_term( $term->term_id, $taxonomy );
+	if ( $terms ) {
+		foreach ( $terms as $term ) {
+			wp_delete_term( $term->term_id, $taxonomy );
+		}
 	}
 	unset( $wp_taxonomies[ $taxonomy ] );
 }
 
-/** Delete plugin pages */
+/** Delete the Plugin Pages */
 if ( isset( $edd_options['purchase_page'] ) )
 	wp_delete_post( $edd_options['purchase_page'], true );
 if ( isset( $edd_options['success_page'] ) )
@@ -47,15 +48,13 @@ if ( isset( $edd_options['success_page'] ) )
 if ( isset( $edd_options['failure_page'] ) )
 	wp_delete_post( $edd_options['failure_page'], true );
 
-
-/** Delete all plugin options */
+/** Delete all the Plugin Options */
 delete_option( 'edd_settings_general' );
 delete_option( 'edd_settings_gateways' );
 delete_option( 'edd_settings_emails' );
 delete_option( 'edd_settings_styles' );
 delete_option( 'edd_settings_taxes' );
 delete_option( 'edd_settings_misc' );
-
 
 /** Delete Capabilities */
 if ( class_exists( 'WP_Roles' ) )
@@ -77,8 +76,8 @@ if ( is_object( $wp_roles ) ) {
 	$wp_roles->remove_cap( 'administrator', 'manage_shop_discounts' );
 	$wp_roles->remove_cap( 'administrator', 'manage_shop_settings' );
 
-	/** Remove the main post type capabilities */
-	$capabilities = $this->get_core_caps();
+	/** Remove the Main Post Type Capabilities */
+	$capabilities = EDD()->roles->get_core_caps();
 	foreach ( $capabilities as $cap_group ) {
 		foreach ( $cap_group as $cap ) {
 			$wp_roles->remove_cap( 'shop_manager', $cap );
@@ -87,7 +86,7 @@ if ( is_object( $wp_roles ) ) {
 		}
 	}
 
-	/** Shop Accountatnt Capabilities */
+	/** Shop Accountant Capabilities */
 	$wp_roles->remove_cap( 'shop_accountant', 'edit_products' );
 	$wp_roles->remove_cap( 'shop_accountant', 'read_private_prodcuts' );
 	$wp_roles->remove_cap( 'shop_accountant', 'view_shop_reports' );
@@ -103,8 +102,7 @@ if ( is_object( $wp_roles ) ) {
 	$wp_roles->remove_cap( 'shop_vendor', 'upload_files' );
 }
 
-
-/** Delete Roles */
+/** Delete the Roles */
 $edd_roles = array( 'shop_manager', 'shop_accountant', 'shop_worker', 'shop_vendor' );
 foreach ( $edd_roles as $role ) {
 	remove_role( $role );

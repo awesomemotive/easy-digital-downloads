@@ -9,10 +9,10 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.3
-*/
+ */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Remove the "download" post class from single Download pages
@@ -22,14 +22,12 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @access      private
  * @since       1.4.3
  * @return      array
-*/
-
+ */
 function edd_responsive_download_post_class( $classes, $class, $post_id ) {
-
-	if( ! is_singular( 'download' ) )
+	if ( ! is_singular( 'download' ) )
 		return $classes;
 
-	if( ( $key = array_search( 'download', $classes ) ) )
+	if ( ( $key = array_search( 'download', $classes ) ) )
 		unset( $classes[ $key ] );
 
 	return $classes;

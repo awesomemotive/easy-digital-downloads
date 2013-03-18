@@ -13,17 +13,16 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-
 /**
  * System info
  *
  * Shows the system info panel which contains version data and debug info
  *
- * @since   1.4
- * @usedby   edd_settings()
- * @author   Chris Christoff
+ * @access      private
+ * @since       1.4
+ * @usedby      edd_settings()
+ * @author      Chris Christoff
  */
-
 function edd_system_info() {
 	global $wpdb, $edd_options;
 
@@ -31,12 +30,11 @@ function edd_system_info() {
 		require_once EDD_PLUGIN_DIR . 'includes/libraries/browser.php';
 
 	$browser =  new Browser();
-
 ?>
 	<div class="wrap">
 		<h2><?php _e( 'System Information', 'edd' ) ?></h2><br/>
-		<form action="edit.php?post_type=download&page=edd-system-info" method="post">
-			<textarea readonly="readonly" id="system-info-textarea" name="edd-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
+		<form action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-system-info' ) ); ?>" method="post">
+			<textarea readonly="readonly" onclick="this.focus();this.select()" id="system-info-textarea" name="edd-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
 ### Begin System Info ###
 
 ## Please include this information when posting support requests ##
@@ -49,6 +47,7 @@ HOME_URL:                 <?php echo home_url() . "\n"; ?>
 EDD Version:              <?php echo EDD_VERSION . "\n"; ?>
 WordPress Version:        <?php echo get_bloginfo( 'version' ) . "\n"; ?>
 
+Test Mode Enabled:        <?php echo edd_is_test_mode() ? "Yes\n" : "No\n"; ?>
 Ajax Enabled:             <?php echo edd_is_ajax_enabled() ? "Yes\n" : "No\n"; ?>
 jQuery Validation:        <?php echo isset( $edd_options['jquery_validation'] ) ? "Yes\n" : "No\n"; ?>
 Guest Checkout Enabled:   <?php echo edd_no_guest_checkout() ? "No\n" : "Yes\n"; ?>
@@ -130,14 +129,12 @@ if ( get_bloginfo( 'version' ) < '3.4' ) {
 <?php
 }
 
-
 /**
  * Generates the System Info Download file
  *
  * @since   1.4
  * @return  void
  */
-
 function edd_generate_sysinfo_download() {
 	nocache_headers();
 

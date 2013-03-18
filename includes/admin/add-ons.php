@@ -7,11 +7,10 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 
 /**
  * Add-ons Page Init
@@ -21,14 +20,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_add_ons_init() {
 	global $edd_add_ons_page;
 	add_action( 'load-' . $edd_add_ons_page, 'edd_add_ons_check_feed' );
 }
 add_action( 'admin_menu', 'edd_add_ons_init');
-
 
 /**
  * Add-ons Page
@@ -38,8 +35,7 @@ add_action( 'admin_menu', 'edd_add_ons_init');
  * @access      private
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_add_ons_page() {
 	ob_start(); ?>
 	<div class="wrap" id="edd-add-ons">
@@ -54,7 +50,6 @@ function edd_add_ons_page() {
 	echo ob_get_clean();
 }
 
-
 /**
  * Add-ons Get Feed
  *
@@ -63,8 +58,7 @@ function edd_add_ons_page() {
  * @access      public
  * @since       1.0
  * @return      void
-*/
-
+ */
 function edd_add_ons_get_feed() {
 	if ( false === ( $cache = get_transient( 'easydigitaldownloads_add_ons_feed' ) ) ) {
 		$feed = wp_remote_get( 'https://easydigitaldownloads.com/?feed=extensions', array( 'sslverify' => false ) );
