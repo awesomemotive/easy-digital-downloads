@@ -57,7 +57,7 @@ With add-ons for [Mail Chimp](http://easydigitaldownloads.com/extension/mail-chi
 
 Easy Digital Downloads as been translated into the following languages:
 
-1. English
+1. English (and British English)
 2. German
 3. Spanish
 4. French
@@ -67,6 +67,9 @@ Easy Digital Downloads as been translated into the following languages:
 8. Turkish
 9. Arabic
 10. Polish
+11. Russian
+12. Czech
+13. Japanese
 
 Would you like to help translate the plugin into more languages? [Contact Pippin](http://easydigitaldownloads.com/contact-developer/).
 
