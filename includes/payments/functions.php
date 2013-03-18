@@ -955,3 +955,24 @@ function edd_hide_payment_notes( $clauses, $wp_comment_query ) {
     return $clauses;
 }
 add_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
+
+
+/**
+ * Exclude notes (comments) on edd_payment post type from showing in comment feeds
+ *
+ * @param       array  $clauses
+ * @param       object $wp_comment_query
+ *
+ * @access      private
+ * @since       1.4.1
+ * @return      array $clauses
+ */
+function edd_hide_payment_notes_from_feeds( $where, $wp_comment_query ) {
+    global $wpdb;
+
+    if ( ! $wp_comment_query->query_vars['post_type' ] ) // only apply if post_type hasn't already been queried
+        $where .= $wpdb->prepare( " AND post_type != %s", 'edd_payment' );
+
+    return $where;
+}
+add_filter( 'comment_feed_where', 'edd_hide_payment_notes_from_feeds', 10, 2 );
