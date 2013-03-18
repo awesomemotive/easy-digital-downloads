@@ -960,12 +960,12 @@ add_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
 /**
  * Exclude notes (comments) on edd_payment post type from showing in comment feeds
  *
- * @param       array  $clauses
+ * @param       array  $where
  * @param       object $wp_comment_query
  *
  * @access      private
- * @since       1.4.1
- * @return      array $clauses
+ * @since       1.5.1
+ * @return      array $where
  */
 function edd_hide_payment_notes_from_feeds( $where, $wp_comment_query ) {
     global $wpdb;
