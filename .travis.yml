@@ -3,23 +3,24 @@
 # and follow the instructions
 language: php
 php:
+# PHP Versions WP Does Not Officially Support Yet
+  - 5.5
 # PHP Versions EDD Officially Supports
-  - 5.3
   - 5.4
+  - 5.3
 # Ones that support for legacy reasons
   - 5.2
 env:
 # Officialy Supported WP Versions (w/ and w/o MS)
-  - WP_VERSION=3.5 WP_MULTISITE=0 
-  - WP_VERSION=3.5 WP_MULTISITE=1
+  - WP_VERSION=3.5.1 WP_MULTISITE=0 
+  - WP_VERSION=3.5.1 WP_MULTISITE=1
 # Last WP Version (tested against but not supported by EDD)
+#  - WP_VERSION=3.5 WP_MULTISITE=0
+#  - WP_VERSION=3.5 WP_MULTISITE=1
+# These versions of WordPress we do not officially support
+# Last Major WP Version not in current 3.x branch
   - WP_VERSION=3.4.2 WP_MULTISITE=0
   - WP_VERSION=3.4.2 WP_MULTISITE=1
-#  - WP_VERSION=3.5-beta2 WP_MULTISITE=0 
-#  - WP_VERSION=3.5-beta2 WP_MULTISITE=1
-#  - WP_VERSION=3.5-beta-1 WP_MULTISITE=0
-#  - WP_VERSION=3.5-beta-1 WP_MULTISITE=1
-# These versions of WordPress we do not officially support
 # To test EDD on them, uncomment the line, by removing the "#"
 #    and then uncomment the allowed failures line for the respective
 #    versions below. 
@@ -43,13 +44,13 @@ env:
 matrix:
   allow_failures:
 # Legacy Versions
-    - env: WP_VERSION=3.4.2 WP_MULTISITE=0 
-    - env: WP_VERSION=3.4.2 WP_MULTISITE=1
+#    - env: WP_VERSION=3.5 WP_MULTISITE=0 
+#    - env: WP_VERSION=3.5 WP_MULTISITE=1
 # Old Versions (uncomment lines here and above to test)
-#  - WP_VERSION=3.4.1 WP_MULTISITE=0
-#  - WP_VERSION=3.4.1 WP_MULTISITE=1
-#  - WP_VERSION=3.4 WP_MULTISITE=0
-#  - WP_VERSION=3.4 WP_MULTISITE=1 
+#    - env: WP_VERSION=3.4.1 WP_MULTISITE=0
+#    - env: WP_VERSION=3.4.1 WP_MULTISITE=1
+#    - env: WP_VERSION=3.4 WP_MULTISITE=0
+#    - env: WP_VERSION=3.4 WP_MULTISITE=1 
 #    - env: WP_VERSION=3.3.3 WP_MULTISITE=0
 #    - env: WP_VERSION=3.3.3 WP_MULTISITE=1 
 #    - env: WP_VERSION=3.3.2 WP_MULTISITE=0
@@ -62,8 +63,9 @@ matrix:
 #    - env: WP_VERSION=3.2.1 WP_MULTISITE=1
 #    - env: WP_VERSION=3.2 WP_MULTISITE=0
 #    - env: WP_VERSION=3.2 WP_MULTISITE=1
+    - php: 5.5
     - php: 5.2
-
+  
 before_script:
   - wget -O testsuite.zip https://github.com/nb/wordpress-tests/archive/460b9c4ad9db7eea4710f151851060ae1921ea7c.zip
   - unzip testsuite.zip -d travis/vendor

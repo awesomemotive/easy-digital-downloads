@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -21,7 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       1.0
  * @return      void
  */
-
 function edd_add_download_meta_box() {
 	/** Download Configuration */
 	add_meta_box( 'downloadinformation', sprintf( __( '%1$s Configuration', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ),  'edd_render_download_meta_box', 'download', 'normal', 'default' );
@@ -29,20 +28,16 @@ function edd_add_download_meta_box() {
 	/** Product Notes */
 	add_meta_box( 'edd_product_notes', __( 'Product Notes', 'edd' ), 'edd_render_product_notes_meta_box', 'download', 'normal', 'default' );
 
-	if( current_user_can( 'view_shop_reports' ) ) {
+	if ( current_user_can( 'view_shop_reports' ) ) {
 
 		/** Download Stats */
 		add_meta_box( 'edd_download_stats', sprintf( __( '%1$s Stats', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', 'download', 'side', 'high' );
-
-		/** Purchase Logs */
-		add_meta_box( 'edd_purchase_log', __( 'Purchase Log', 'edd' ), 'edd_render_purchase_log_meta_box', 'download', 'normal', 'default');
 
 		/** Download Logs */
 		add_meta_box( 'edd_file_download_log', __( 'File Download Log', 'edd' ), 'edd_render_download_log_meta_box', 'download', 'normal', 'default' );
 	}
 }
 add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
-
 
 /**
  * Download Meta Box Save
@@ -53,7 +48,6 @@ add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
  * @since       1.0
  * @return      void
  */
-
 function edd_download_meta_box_save( $post_id) {
 	global $post;
 
@@ -103,7 +97,6 @@ function edd_download_meta_box_save( $post_id) {
 }
 add_action( 'save_post', 'edd_download_meta_box_save' );
 
-
 /**
  * Sanitize the price before it is saved
  *
@@ -113,12 +106,11 @@ add_action( 'save_post', 'edd_download_meta_box_save' );
  * @since       1.3.2
  * @return      float
  */
-
 function edd_sanitize_price_save( $price ) {
 	global $edd_options;
 
-	$thousands_sep = isset( $edd_options['thousands_separator'] ) ? $edd_options['thousands_separator'] : ',';
-	$decimal_sep   = isset( $edd_options['decimal_separator'] )   ? $edd_options['decimal_separator'] 	: '.';
+	$thousands_sep = ! empty( $edd_options['thousands_separator'] ) ? $edd_options['thousands_separator'] : ',';
+	$decimal_sep   = ! empty( $edd_options['decimal_separator'] )   ? $edd_options['decimal_separator'] 	: '.';
 
 	if ( $thousands_sep == ',' ) {
 		$price = str_replace( ',', '', $price );
@@ -127,7 +119,6 @@ function edd_sanitize_price_save( $price ) {
 	return $price;
 }
 add_filter( 'edd_metabox_save_edd_price', 'edd_sanitize_price_save' );
-
 
 /**
  * Sanitize the variable prices
@@ -138,11 +129,9 @@ add_filter( 'edd_metabox_save_edd_price', 'edd_sanitize_price_save' );
  * @since       1.4.2
  * @return      float
  */
-
 function edd_sanitize_variable_prices_save( $prices ) {
 	// Make sure all prices are rekeyed starting at 0
-	$prices = array_values( $prices );
-	return $prices;
+	return array_values( $prices );
 }
 add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_sanitize_variable_prices_save' );
 
@@ -159,14 +148,12 @@ add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_sanitize_variable_price
  * @since       1.0
  * @return      void
  */
-
 function edd_render_download_meta_box() {
 	global $post, $edd_options;
 
 	do_action( 'edd_meta_box_fields', $post->ID );
 	wp_nonce_field( basename( __FILE__ ), 'edd_download_meta_box_nonce' );
 }
-
 
 /**
  * Price section
@@ -183,7 +170,6 @@ function edd_render_download_meta_box() {
  * @since       1.0
  * @return      void
  */
-
 function edd_render_price_field( $post_id ) {
 	global $edd_options;
 
@@ -197,13 +183,13 @@ function edd_render_price_field( $post_id ) {
 ?>
 
 	<p>
-		<strong><?php _e( 'Pricing Options:', 'edd' ); ?></strong>
+		<strong><?php apply_filters( 'edd_price_options_heading', _e( 'Pricing Options:', 'edd' ) ); ?></strong>
 	</p>
 
 	<p>
 		<label for="edd_variable_pricing">
 			<input type="checkbox" name="_variable_pricing" id="edd_variable_pricing" value="1" <?php checked( 1, $variable_pricing ); ?> />
-			<?php _e( 'Enable variable pricing', 'edd' ); ?>
+			<?php apply_filters( 'edd_variable_pricing_toggle_text', _e( 'Enable variable pricing', 'edd' ) ); ?>
 		</label>
 	</p>
 
@@ -223,7 +209,7 @@ function edd_render_price_field( $post_id ) {
 		<input type="hidden" id="edd_variable_prices" class="edd_variable_prices_name_field" value=""/>
 		<p>
 			<input type="checkbox" name="_edd_price_options_mode" id="edd_price_options_mode"<?php checked( 1, $single_option_mode ); ?> />
-			<label for="edd_price_options_mode"><?php _e( 'Enable multi option purchase mode. Leave unchecked to only permit a single price option to be purchased', 'edd' ); ?></label>
+			<label for="edd_price_options_mode"><?php apply_filters( 'edd_multi_option_purchase_text', _e( 'Enable multi option purchase mode. Leave unchecked to only permit a single price option to be purchased', 'edd' ) ); ?></label>
 		</p>
 		<div id="edd_price_fields" class="edd_meta_table_wrap">
 			<table class="widefat" width="100%" cellpadding="0" cellspacing="0">
@@ -239,10 +225,10 @@ function edd_render_price_field( $post_id ) {
 					<?php
 						if ( ! empty( $prices ) ) :
 							foreach ( $prices as $key => $value ) :
-								$name   = isset( $prices[ $key ]['name'] ) ? $prices[ $key ]['name'] : '';
-								$amount = isset( $prices[ $key ]['amount'] ) ? $prices[ $key ]['amount'] : '';
+								$name   = isset( $value['name'] ) ? $value['name'] : '';
+								$amount = isset( $value['amount'] ) ? $value['amount'] : '';
 
-								$args = apply_filters( 'edd_price_row_args', compact( 'name', 'amount' ) );
+								$args = apply_filters( 'edd_price_row_args', compact( 'name', 'amount' ), $value );
 					?>
 						<tr class="edd_variable_prices_wrapper">
 							<?php do_action( 'edd_render_price_row', $key, $args, $post_id ); ?>
@@ -269,7 +255,6 @@ function edd_render_price_field( $post_id ) {
 }
 add_action( 'edd_meta_box_fields', 'edd_render_price_field', 10 );
 
-
 /**
  * Individual price row.
  *
@@ -280,7 +265,6 @@ add_action( 'edd_meta_box_fields', 'edd_render_price_field', 10 );
  * @since       1.2.2
  * @return      void
  */
-
 function edd_render_price_row( $key, $args = array(), $post_id ) {
 	global $edd_options;
 
@@ -313,7 +297,6 @@ function edd_render_price_row( $key, $args = array(), $post_id ) {
 }
 add_action( 'edd_render_price_row', 'edd_render_price_row', 10, 3 );
 
-
 /**
  * File Downloads section.
  *
@@ -327,9 +310,8 @@ add_action( 'edd_render_price_row', 'edd_render_price_row', 10, 3 );
  * @since       1.0
  * @return      void
  */
-
 function edd_render_files_field( $post_id ) {
-	$files 				= edd_get_download_files( $post_id );
+	$files 			= edd_get_download_files( $post_id );
 	$variable_pricing 	= edd_has_variable_prices( $post_id );
 	$variable_display 	= $variable_pricing ? '' : 'display:none;';
 ?>
@@ -355,11 +337,11 @@ function edd_render_files_field( $post_id ) {
 				<?php
 					if ( ! empty( $files ) ) :
 						foreach ( $files as $key => $value ) :
-							$name = isset( $files[ $key ]['name'] ) ? $files[ $key ]['name'] : '';
-							$file = isset( $files[ $key ]['file'] ) ? $files[ $key ]['file'] : '';
-							$condition = isset( $files[ $key ]['condition'] ) ? $files[ $key ]['condition'] : false;
+							$name = isset( $value['name'] ) ? $value['name'] : '';
+							$file = isset( $value['file'] ) ? $value['file'] : '';
+							$condition = isset( $value['condition'] ) ? $value['condition'] : false;
 
-							$args = apply_filters( 'edd_file_row_args', compact( 'name', 'file', 'condition' ) );
+							$args = apply_filters( 'edd_file_row_args', compact( 'name', 'file', 'condition' ), $value );
 				?>
 						<tr class="edd_repeatable_upload_wrapper">
 							<?php do_action( 'edd_render_file_row', $key, $args, $post_id ); ?>
@@ -384,7 +366,6 @@ function edd_render_files_field( $post_id ) {
 <?php
 }
 add_action( 'edd_meta_box_fields', 'edd_render_files_field', 20 );
-
 
 /**
  * Individual file row.
@@ -443,7 +424,6 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 }
 add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
 
-
 /**
  * File download limit row
  *
@@ -454,7 +434,6 @@ add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
  * @since       1.3.1
  * @return      void
  */
-
 function edd_render_download_limit_row( $post_id ) {
 	global $edd_options;
 	$edd_download_limit = edd_get_file_download_limit( $post_id );
@@ -497,7 +476,6 @@ function edd_render_disable_button( $post_id ) {
 }
 add_action( 'edd_meta_box_fields', 'edd_render_disable_button', 30 );
 
-
 /**
  * Don't save blank rows.
  *
@@ -509,7 +487,6 @@ add_action( 'edd_meta_box_fields', 'edd_render_disable_button', 30 );
  * @since       1.2.2
  * @return      array $new New meta value with empty keys removed
  */
-
 function edd_metabox_save_check_blank_rows( $new ) {
 	foreach ( $new as $key => $value ) {
 		if ( empty( $value['name'] ) && empty( $value['amount'] ) && empty( $value['file'] ) )
@@ -533,13 +510,11 @@ add_filter( 'edd_metabox_save_edd_download_files', 'edd_metabox_save_check_blank
  * @since       1.2.1
  * @return      void
  */
-
 function edd_render_product_notes_meta_box() {
 	global $post, $edd_options;
 
 	do_action( 'edd_product_notes_meta_box_fields', $post->ID );
 }
-
 
 /**
  * Render Product Notes Field
@@ -548,7 +523,6 @@ function edd_render_product_notes_meta_box() {
  * @since       1.2.1
  * @return      void
  */
-
 function edd_render_product_notes_field( $post_id ) {
 	global $edd_options;
 
@@ -570,7 +544,6 @@ add_action( 'edd_product_notes_meta_box_fields', 'edd_render_product_notes_field
  * @since       1.0
  * @return      void
  */
-
 function edd_render_stats_meta_box() {
 	global $post;
 
@@ -581,101 +554,17 @@ function edd_render_stats_meta_box() {
 		echo '<tr>';
 			echo '<th style="width: 20%">' . __( 'Sales:', 'edd' ) . '</th>';
 			echo '<td class="edd_download_stats">';
-				echo $sales;
+				echo $sales . '&nbsp;&ndash;&nbsp;<a href="' . admin_url( '/edit.php?page=edd-reports&view=sales&post_type=download&tab=logs&download=' . $post->ID ) . '">' . __( 'View Sales Log', 'edd' ) . '</a>';
 			echo '</td>';
 		echo '</tr>';
 		echo '<tr>';
 			echo '<th style="width: 20%">' . __( 'Earnings:', 'edd' ) . '</th>';
 			echo '<td class="edd_download_stats">';
-				echo edd_currency_filter( $earnings );
+				echo edd_currency_filter( edd_format_amount( $earnings ) );
 			echo '</td>';
 		echo '</tr>';
 		do_action('edd_stats_meta_box');
 	echo '</table>';
-}
-
-
-/** Purchase Log *****************************************************************/
-
-/**
- * Render Purchase Log Meta Box
- *
- * @access      private
- * @since       1.0
- * @return      void
- */
-
-function edd_render_purchase_log_meta_box() {
-	global $post, $edd_logs;
-
-	$page = isset( $_GET['paged'] ) ? intval( $_GET['paged'] ) : 1;
-
-	$sales = $edd_logs->get_logs( $post->ID, 'sale', $page );
-
-	echo '<table class="form-table">';
-		echo '<tr>';
-			echo '<th style="width: 20%"><strong>' . __( 'Sales Log', 'edd' ) . '</strong></th>';
-			echo '<td colspan="4" class="edd_download_stats">';
-				_e('Each sale for this download is listed below.', 'edd' );
-			echo '</td>';
-		echo '</tr>';
-
-		if (  $sales ) {
-			foreach ( $sales as $log ) {
-				$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
-				$user_info = edd_get_payment_meta_user_info( $payment_id );
-
-				if ( $user_info['id'] != 0) {
-					$user_data = get_userdata( $user_info['id'] );
-					$name = $user_data->display_name;
-				} else {
-					$name = $user_info['first_name'] . ' ' . $user_info['last_name'];
-				}
-				echo '<tr>';
-					echo '<td class="edd_download_sales_log">';
-						echo '<strong>' . __( 'Date:', 'edd' ) . '</strong> ' . get_post_field( 'post_date', $log->ID );
-					echo '</td>';
-
-					echo '<td class="edd_download_sales_log">';
-						echo '<strong>' . __( 'Buyer:', 'edd' ) . '</strong> ' . $name;
-					echo '</td>';
-
-					echo '<td colspan="3" class="edd_download_sales_log">';
-						echo '<strong>' . __( 'Purchase ID:', 'edd' ) . '</strong> <a href="' . admin_url('edit.php?post_type=download&page=edd-payment-history&purchase_id=' . $payment_id . '&edd-action=edit-payment') . '">' . $payment_id . '</a>';
-					echo '</td>';
-				echo '</tr>';
-			} // Endforeach
-			do_action( 'edd_purchase_log_meta_box' );
-		} else {
-			echo '<tr>';
-				echo '<td colspan=2" class="edd_download_sales_log">';
-					echo __( 'No sales yet', 'edd' );
-				echo '</td>';
-			echo '</tr>';
-		}
-	echo '</table>';
-
-	$total_log_entries = $edd_logs->get_log_count( $post->ID, 'sale' );
-	$total_pages = ceil( $total_log_entries / 10 );
-
-	if ( $total_pages > 1 ) :
-		echo '<div class="tablenav">';
-			echo '<div class="tablenav-pages alignright">';
-				$base = 'post.php?post=' . $post->ID . '&action=edit%_%';
-				echo paginate_links( array(
-					'base'         => $base,
-					'format'       => '&paged=%#%',
-					'prev_text'    => '&laquo; ' . __( 'Previous', 'edd' ),
-					'next_text'    => __( 'Next', 'edd' ) . ' &raquo;',
-					'total'        => $total_pages,
-					'current'      => $page,
-					'end_size'     => 1,
-					'mid_size'     => 5,
-					'add_fragment' => '#edd_purchase_log'
-				));
-			echo '</div>';
-		echo '</div><!--end .tablenav-->';
-	endif;
 }
 
 
@@ -688,7 +577,6 @@ function edd_render_purchase_log_meta_box() {
  * @since       1.0
  * @return      void
  */
-
 function edd_render_download_log_meta_box() {
 	global $post, $edd_logs;
 

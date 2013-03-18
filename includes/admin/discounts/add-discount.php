@@ -7,11 +7,10 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
-
 ?>
 <h3><?php _e( 'Add New Discount', 'edd' ); ?></h3>
 <form id="edd-add-discount" action="" method="POST">
@@ -59,6 +58,38 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			</tr>
 			<tr class="form-field">
 				<th scope="row" valign="top">
+					<label for="edd-products"><?php printf( __( '%s Requirements', 'edd' ), edd_get_label_plural() ); ?></label>
+				</th>
+				<td>
+					<p>
+						<select id="edd-product-condition" name="product_condition">
+							<option value="all"><?php printf( __( 'All Selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
+							<option value="any"><?php printf( __( 'Any Selected %s', 'edd' ), edd_get_label_singular() ); ?></option>
+						</select>
+						<label for="edd-product-condition"><?php _e( 'Condition', 'edd' ); ?></label>
+					</p>
+					<select multiple id="edd-products" name="products[]" class="edd-select-chosen" data-placeholder="<?php printf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ); ?>">
+						<?php
+						$downloads = get_posts( array( 'post_type' => 'download', 'no_paging' => 1 ) );
+						if( $downloads ) :
+							foreach( $downloads as $download ) :
+								echo '<option value="' . esc_attr( $download->ID ) . '">' . esc_html( get_the_title( $download->ID ) ) . '</option>';
+							endforeach;
+						endif;
+						?>
+					</select>
+					<p class="description"><?php printf( __( '%s required to be purchased for this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
+
+					<p>
+						<label for="edd-non-global-discount">
+							<input type="checkbox" id="edd-non-global-discount" name="not_global" value="1"/>
+							<?php printf( __( 'Apply discount only to selected %s?', 'edd' ), edd_get_label_plural() ); ?>
+						</label>
+					</p>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
 					<label for="edd-start"><?php _e( 'Start date', 'edd' ); ?></label>
 				</th>
 				<td>
@@ -91,6 +122,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				<td>
 					<input type="text" id="edd-max-uses" name="max" value="" style="width: 40px;"/>
 					<p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'edd' ); ?></p>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<label for="edd-use-once"><?php _e( 'Use Once Per Customer', 'edd' ); ?></label>
+				</th>
+				<td>
+					<input type="checkbox" id="edd-use-once" name="use_once" value="1"/>
+					<span class="description"><?php _e( 'Limit this discount to a single-user per customer?', 'edd' ); ?></span>
 				</td>
 			</tr>
 		</tbody>

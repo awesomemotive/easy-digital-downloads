@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Fees
  *
@@ -10,51 +9,70 @@
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
-*/
+ */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Fees Class
  *
  * @access      public
  * @since       1.5
- *
  */
-
 class EDD_Fees {
-
 
 	/**
 	 * Get us started
 	 *
 	 * @access      private
 	 * @since       1.5
-	 *
 	 * @return      void
 	 */
-
-	function __construct() {
+	public function __construct() {
 		add_filter( 'edd_payment_meta', array( $this, 'record_fees' ), 10, 2 );
 	}
-
 
 	/**
 	 * Add a new fee
 	 *
 	 * @access      public
 	 * @since       1.5
-	 *
-	 * @return      void
+	 * @return      array
 	 */
+	public function add_fee( $amount = '', $label = '', $id = '' ) {
 
-	public function add_fee( $amount = '', $label = '' ) {
+		$fees = $this->get_fees();
 
-		if( ! $this->has_fees() )
-			$fees = array();
+		$key = empty( $id ) ? sanitize_key( $label ) : sanitize_key( $id );
 
-		$fees[ sanitize_key( $label ) ] = array( 'amount' => $amount, 'label' => $label );
+		$fees[ $key ] = array( 'amount' => $amount, 'label' => $label );
 
-		$_SESSION['edd_cart_fees'] = $fees;
+		EDD()->session->set( 'edd_cart_fees', $fees );
+
+		return $fees;
+	}
+
+
+	/**
+	 * Remove an existing fee
+	 *
+	 * @access      public
+	 * @since       1.5
+	 * @return      array
+	 */
+	public function remove_fee( $id = '' ) {
+
+		$fees = $this->get_fees();
+
+		if( isset( $fees[ $id ] ) ) {
+			unset( $fees[ $id ] );
+		}
+
+		EDD()->session->set( 'edd_cart_fees', $fees );
+
+		return $fees;
+
 	}
 
 
@@ -63,26 +81,42 @@ class EDD_Fees {
 	 *
 	 * @access      public
 	 * @since       1.5
-	 *
-	 * @return      void
+	 * @return      bool
 	 */
-
 	public function has_fees() {
-		return ! empty( $_SESSION['edd_cart_fees'] ) && is_array( $_SESSION['edd_cart_fees'] );
+		$fees = $this->get_fees();
+		return ! empty( $fees ) && is_array( $fees );
 	}
-
 
 	/**
 	 * Retrieve all active fees
 	 *
 	 * @access      public
 	 * @since       1.5
-	 *
-	 * @return      array
+	 * @return      array|bool
 	 */
-
 	public function get_fees() {
-		return $this->has_fees() ? $_SESSION['edd_cart_fees'] : false;
+		$fees = EDD()->session->get( 'edd_cart_fees' );
+		return ! empty( $fees ) ? $fees : array();
+	}
+
+
+	/**
+	 * Retrieve a specific fee
+	 *
+	 * @access      public
+	 * @since       1.5
+	 * @return      array|bool
+	 */
+	public function get_fee( $id = '' ) {
+
+		$fees = $this->get_fees();
+
+		if( !isset( $fees[ $id ] ) )
+			return false;
+
+		return $fees[ $id ];
+
 	}
 
 
@@ -93,21 +127,18 @@ class EDD_Fees {
 	 *
 	 * @access      public
 	 * @since       1.5
-	 *
 	 * @return      float
 	 */
-
 	public function total() {
 		$fees  = $this->get_fees();
 		$total = (float) 0.00;
-		if( $this->has_fees() ) {
-			foreach( $fees as $fee ) {
+		if ( $this->has_fees() ) {
+			foreach ( $fees as $fee ) {
 				$total += $fee['amount'];
 			}
 		}
-		return edd_format_amount( $total );
+		return edd_sanitize_amount( $total );
 	}
-
 
 	/**
 	 * Stores the fees in the payment meta
@@ -118,17 +149,12 @@ class EDD_Fees {
 	 * @param 		$payment_data array The info sent from process-purchase.php
 	 * @return      array
 	*/
-
 	public function record_fees( $payment_meta, $payment_data ) {
-
-		if( $this->has_fees() ) {
+		if ( $this->has_fees() ) {
 			$payment_meta['fees'] = $this->get_fees();
-			$_SESSION['edd_cart_fees'] = null;
+			EDD()->session->set( 'edd_cart_fees', null );
 		}
 
 		return $payment_meta;
-
 	}
-
-
 }
