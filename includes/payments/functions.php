@@ -175,15 +175,16 @@ function edd_insert_payment( $payment_data = array() ) {
 		$discount = edd_get_discount_by_code( $payment_data['user_info']['discount'] );
 	}
 
+	$args = apply_filters( 'edd_insert_payment_args', array(
+		'post_title'    => $payment_title,
+		'post_status'   => isset( $payment_data['status'] ) ? $payment_data['status'] : 'pending',
+		'post_type'     => 'edd_payment',
+		'post_parent'   => isset( $payment_data['parent'] ) ? $payment_data['parent'] : null,
+		'post_date'     => isset( $payment_data['post_date'] ) ? $payment_data['post_date'] : null
+	), $payment_data );
+
 	// Create a blank payment
-	$payment = wp_insert_post(
-		array(
-			'post_title'    => $payment_title,
-			'post_status'   => isset( $payment_data['status'] ) ? $payment_data['status'] : 'pending',
-			'post_type'     => 'edd_payment',
-			'post_parent'   => isset( $payment_data['parent'] ) ? $payment_data['parent'] : null
-		)
-	);
+	$payment = wp_insert_post( $args );
 
 	if ( $payment ) {
 		$payment_meta = array(
