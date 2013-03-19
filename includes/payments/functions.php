@@ -243,7 +243,7 @@ function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
 
 	$old_status = $payment->post_status;
 
-	if( $old_Status === $new_status )
+	if( $old_status === $new_status )
 		return; // Don't permit status changes that aren't changes
 
 	do_action( 'edd_before_payment_status_change', $payment_id, $new_status, $old_status );
