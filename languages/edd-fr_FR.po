@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-14 15:29+0100\n"
-"PO-Revision-Date: 2013-03-14 15:31+0100\n"
-"Last-Translator: FxB <fx@fxbenard.com>\n"
+"POT-Creation-Date: 2013-03-19 19:55+0100\n"
+"PO-Revision-Date: 2013-03-19 19:56+0100\n"
+"Last-Translator: FxB <traductions@fxbenard.com>\n"
 "Language-Team: FxB <fx@fxbenard.com>\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -63,35 +63,35 @@ msgid "Customer %s not found!"
 msgstr "Client %s introuvable !"
 
 # @ edd
-#: includes/class-edd-api.php:590 includes/class-edd-api.php:730
-#: includes/class-edd-api.php:826
+#: includes/class-edd-api.php:590 includes/class-edd-api.php:746
+#: includes/class-edd-api.php:858
 #, php-format
 msgid "Product %s not found!"
 msgstr "Le produit %s est introuvable !"
 
-#: includes/class-edd-api.php:671 includes/class-edd-api.php:765
+#: includes/class-edd-api.php:687 includes/class-edd-api.php:797
 msgid "The end date must be later than the date date!"
 msgstr "La date de fin doit être postérieure à la date de ce jour !"
 
-#: includes/class-edd-api.php:700 includes/class-edd-api.php:794
+#: includes/class-edd-api.php:716 includes/class-edd-api.php:826
 msgid "Invalid or no date range specified!"
 msgstr "Plage de dates non valide ou non spécifié !"
 
-#: includes/class-edd-api.php:705 includes/class-edd-api.php:801
+#: includes/class-edd-api.php:721 includes/class-edd-api.php:833
 msgid "Invalid option for argument 'date'!"
 msgstr "Option non valide pour l'argument 'date' !"
 
 # @ edd
-#: includes/class-edd-api.php:1031
+#: includes/class-edd-api.php:1063
 msgid "Easy Digital Downloads API Key"
 msgstr "Clé API d'Easy Digital Downloads"
 
 # @ edd
-#: includes/class-edd-api.php:1036
+#: includes/class-edd-api.php:1068
 msgid "Generate API Key"
 msgstr "Générer la clé API"
 
-#: includes/class-edd-api.php:1040
+#: includes/class-edd-api.php:1072
 msgid "Revoke API Key"
 msgstr "Révoquer la clé API"
 
@@ -108,15 +108,15 @@ msgstr "Fichiers journaux"
 msgid "Shop Manager"
 msgstr "Gestionnaire de la boutique"
 
-#: includes/class-edd-roles.php:74
+#: includes/class-edd-roles.php:73
 msgid "Shop Accountant"
 msgstr "Comptable de la boutique"
 
-#: includes/class-edd-roles.php:80
+#: includes/class-edd-roles.php:79
 msgid "Shop Worker"
 msgstr "Travailleur de la boutique"
 
-#: includes/class-edd-roles.php:87
+#: includes/class-edd-roles.php:86
 msgid "Shop Vendor"
 msgstr "Vendeur de la boutique"
 
@@ -460,7 +460,7 @@ msgstr "Ajouter un paiement"
 # @ edd
 #: includes/post-types.php:83 includes/admin/payments/edit-payment.php:19
 msgid "Edit Payment"
-msgstr "Modifier paiement"
+msgstr "Modifier le paiement "
 
 # @ edd
 #: includes/post-types.php:84
@@ -475,12 +475,12 @@ msgstr "Tous les paiements"
 # @ edd
 #: includes/post-types.php:86
 msgid "View Payment"
-msgstr "Afficher paiement"
+msgstr "Afficher le paiement"
 
 # @ edd
 #: includes/post-types.php:87
 msgid "Search Payments"
-msgstr "Rechercher paiements"
+msgstr "Rechercher des paiements"
 
 # @ edd
 #: includes/post-types.php:88
@@ -1374,13 +1374,14 @@ msgstr "Votre serveur ne supporte pas fsockopen."
 msgid "Download System Info File"
 msgstr "Télécharger le fichier d'infos système"
 
-#: includes/admin/thickbox.php:32 includes/admin/thickbox.php:126
+#: includes/admin/thickbox.php:32 includes/admin/thickbox.php:36
+#: includes/admin/thickbox.php:126
 #, php-format
 msgid "Insert %s"
-msgstr "Insérer %s"
+msgstr "Insérer un %s"
 
 # @ edd
-#: includes/admin/thickbox.php:33 includes/admin/thickbox.php:36
+#: includes/admin/thickbox.php:33
 msgid "Insert Download"
 msgstr "Insérer téléchargement"
 
@@ -1951,13 +1952,13 @@ msgstr "Limiter cette réduction à un seul utilisateur par client ?"
 # @ edd
 #: includes/admin/discounts/add-discount.php:142
 msgid "Add Discount Code"
-msgstr "Ajouter Code de remise"
+msgstr "Ajouter un code de remise"
 
 #: includes/admin/discounts/class-discount-codes-table.php:105
 #: includes/admin/payments/class-payments-table.php:116
 #: includes/admin/reporting/class-file-downloads-logs-list-table.php:281
 #: includes/admin/reporting/class-sales-logs-list-table.php:250
-#: includes/admin/reporting/reports.php:255
+#: includes/admin/reporting/reports.php:258
 msgid "All"
 msgstr "Tous"
 
@@ -2313,7 +2314,7 @@ msgstr ""
 
 # @ edd
 #: includes/admin/downloads/contextual-help.php:58
-#: includes/admin/downloads/metabox.php:29
+#: includes/admin/downloads/metabox.php:30
 msgid "Product Notes"
 msgstr "Notes du produit"
 
@@ -2381,7 +2382,7 @@ msgstr ""
 # @ edd
 #: includes/admin/downloads/dashboard-columns.php:30
 #: includes/admin/downloads/dashboard-columns.php:227
-#: includes/admin/downloads/metabox.php:219
+#: includes/admin/downloads/metabox.php:220
 #: includes/admin/reporting/pdf-reports.php:63
 #: templates/shortcode-receipt.php:124
 msgid "Price"
@@ -2432,33 +2433,33 @@ msgid "%s Configuration"
 msgstr "Configuration %s "
 
 # @ edd
-#: includes/admin/downloads/metabox.php:26
+#: includes/admin/downloads/metabox.php:27
 #, php-format
 msgid "%1$s Configuration"
 msgstr "Configuration %1$s "
 
 # @ edd
-#: includes/admin/downloads/metabox.php:34
+#: includes/admin/downloads/metabox.php:35
 #, php-format
 msgid "%1$s Stats"
 msgstr "Statistiques du %1$s "
 
 # @ edd
-#: includes/admin/downloads/metabox.php:37
+#: includes/admin/downloads/metabox.php:38
 msgid "File Download Log"
 msgstr "Compte-rendu de téléchargement de fichiers"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:186
+#: includes/admin/downloads/metabox.php:187
 msgid "Pricing Options:"
 msgstr "Options de prix :"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:192
+#: includes/admin/downloads/metabox.php:193
 msgid "Enable variable pricing"
 msgstr "Permettre la tarification variable"
 
-#: includes/admin/downloads/metabox.php:212
+#: includes/admin/downloads/metabox.php:213
 msgid ""
 "Enable multi option purchase mode. Leave unchecked to only permit a single "
 "price option to be purchased"
@@ -2466,66 +2467,66 @@ msgstr ""
 "Activer le multi-mode d'option d'achat. Laissez cette case décochée pour "
 "permettre uniquement à une option de prix unique d'être acheté"
 
-#: includes/admin/downloads/metabox.php:218
-#: includes/admin/downloads/metabox.php:280
+#: includes/admin/downloads/metabox.php:219
+#: includes/admin/downloads/metabox.php:281
 msgid "Option Name"
 msgstr "Nom de l'option"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:247
+#: includes/admin/downloads/metabox.php:248
 msgid "Add New Price"
 msgstr "Ajouter un nouveau prix"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:320
+#: includes/admin/downloads/metabox.php:321
 msgid "File Downloads:"
 msgstr "Téléchargements de fichiers :"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:329
-#: includes/admin/downloads/metabox.php:396
+#: includes/admin/downloads/metabox.php:330
+#: includes/admin/downloads/metabox.php:397
 msgid "File Name"
 msgstr "Nom du fichier"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:330
+#: includes/admin/downloads/metabox.php:331
 msgid "File URL"
 msgstr "Adresse url du fichier"
 
-#: includes/admin/downloads/metabox.php:331
+#: includes/admin/downloads/metabox.php:332
 msgid "Price Assignment"
 msgstr "Affectation  de prix"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:359
+#: includes/admin/downloads/metabox.php:360
 msgid "Add New File"
 msgstr "Ajouter un nouveau fichier"
 
-#: includes/admin/downloads/metabox.php:401
+#: includes/admin/downloads/metabox.php:402
 msgid "http://"
 msgstr "http://"
 
-#: includes/admin/downloads/metabox.php:404
+#: includes/admin/downloads/metabox.php:405
 msgid "Insert"
 msgstr "Insérer"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:404
+#: includes/admin/downloads/metabox.php:405
 msgid "Upload a File"
 msgstr "Télécharger un fichier"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:411
+#: includes/admin/downloads/metabox.php:412
 msgid "All Prices"
 msgstr "Prix catalogue"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:442
+#: includes/admin/downloads/metabox.php:443
 msgid "File Download Limit:"
 msgstr "Limite de téléchargement :"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:446
+#: includes/admin/downloads/metabox.php:447
 msgid ""
 "The maximum number of times a buyer can download each file. Leave blank or "
 "set to 0 for unlimited"
@@ -2534,16 +2535,16 @@ msgstr ""
 "Laissez vide ou reglé sur 0 pour illimité"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:466
+#: includes/admin/downloads/metabox.php:467
 msgid "Button Options:"
 msgstr "Options du bouton :"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:472
+#: includes/admin/downloads/metabox.php:473
 msgid "Disable the automatic output of the purchase button"
 msgstr "Désactiver le formatage automatique du bouton d'achat"
 
-#: includes/admin/downloads/metabox.php:532
+#: includes/admin/downloads/metabox.php:533
 msgid ""
 "Special notes or instructions for this product. These notes will be added to "
 "the purchase receipt."
@@ -2552,64 +2553,64 @@ msgstr ""
 "seront ajoutées à la facture d'achat."
 
 # @ edd
-#: includes/admin/downloads/metabox.php:555
+#: includes/admin/downloads/metabox.php:556
 msgid "Sales:"
 msgstr "Ventes :"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:557
+#: includes/admin/downloads/metabox.php:558
 msgid "View Sales Log"
 msgstr "Voir le fichier journal"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:561
+#: includes/admin/downloads/metabox.php:562
 msgid "Earnings:"
 msgstr "Revenus :"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:589
+#: includes/admin/downloads/metabox.php:590
 msgid "Download Log"
 msgstr "Compte-rendu de téléchargement"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:591
+#: includes/admin/downloads/metabox.php:592
 msgid "Each time a file is downloaded, it is recorded below."
 msgstr ""
 "Chaque fois qu'un fichier est téléchargé, l'opération est enregistrée ci-"
 "dessous."
 
 # @ edd
-#: includes/admin/downloads/metabox.php:617
+#: includes/admin/downloads/metabox.php:618
 msgid "Date:"
 msgstr "Date:"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:621
+#: includes/admin/downloads/metabox.php:622
 msgid "Downloaded by:"
 msgstr "Téléchargé par :"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:625
+#: includes/admin/downloads/metabox.php:626
 msgid "IP Address:"
 msgstr "Adresse IP :"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:629
+#: includes/admin/downloads/metabox.php:630
 msgid "File: "
 msgstr "Fichier :"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:638
+#: includes/admin/downloads/metabox.php:639
 msgid "No file downloads yet"
 msgstr "Aucun fichier encore téléchargé"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:654
+#: includes/admin/downloads/metabox.php:655
 msgid "Previous"
 msgstr "Précédent"
 
 # @ edd
-#: includes/admin/downloads/metabox.php:655 includes/checkout/template.php:546
+#: includes/admin/downloads/metabox.php:656 includes/checkout/template.php:546
 msgid "Next"
 msgstr "Suivant"
 
@@ -2776,12 +2777,12 @@ msgstr "Téléchargements achetés"
 #: includes/admin/payments/edit-payment.php:68
 #, php-format
 msgid "Add %s to purchase"
-msgstr "Ajouter %s à l'achat"
+msgstr "Ajouter des %s à l'achat"
 
 # @ edd
 #: includes/admin/payments/edit-payment.php:94
 msgid "Add New Note"
-msgstr "Ajouter nouvelle Note"
+msgstr "Ajouter une nouvelle note"
 
 # @ edd
 #: includes/admin/payments/edit-payment.php:100
@@ -2803,7 +2804,7 @@ msgstr ""
 # @ edd
 #: includes/admin/payments/edit-payment.php:131
 msgid "Update Payment"
-msgstr "Mettre à jour paiement"
+msgstr "Mettre à jour le paiement"
 
 #: includes/admin/payments/edit-payment.php:139
 #, php-format
@@ -3306,11 +3307,11 @@ msgstr ""
 msgid "Submit"
 msgstr "Envoyer"
 
-#: includes/admin/reporting/reports.php:219
+#: includes/admin/reporting/reports.php:222
 msgid "Export PDF of Sales and Earnings"
 msgstr "Exporter le PDF des ventes et des bénéfices"
 
-#: includes/admin/reporting/reports.php:221
+#: includes/admin/reporting/reports.php:224
 msgid ""
 "Download a PDF of Sales and Earnings reports for all products for the "
 "current year."
@@ -3318,41 +3319,41 @@ msgstr ""
 "Télécharger le PDF du rapport de vos ventes et de vos bénéfices de tous vos "
 "produits pour l'année en cours."
 
-#: includes/admin/reporting/reports.php:221
+#: includes/admin/reporting/reports.php:224
 msgid "Date range reports will be coming soon."
 msgstr "Les rapports sur les plages de dates seront bientôt disponibles."
 
 # @ edd
-#: includes/admin/reporting/reports.php:222
+#: includes/admin/reporting/reports.php:225
 msgid "Generate PDF"
 msgstr "Générer le PDF"
 
 # @ edd
-#: includes/admin/reporting/reports.php:227
+#: includes/admin/reporting/reports.php:230
 msgid "Export Payment History"
 msgstr "Exporter l'historique des paiements"
 
-#: includes/admin/reporting/reports.php:229
+#: includes/admin/reporting/reports.php:232
 msgid "Download a CSV of all payments recorded."
 msgstr "Télécharger un fichier CSV de tous les paiements enregistrés."
 
 # @ edd
-#: includes/admin/reporting/reports.php:233
+#: includes/admin/reporting/reports.php:236
 msgid "All Statuses"
 msgstr "Tous les états"
 
 # @ edd
-#: includes/admin/reporting/reports.php:242
-#: includes/admin/reporting/reports.php:266
-#: includes/admin/reporting/reports.php:276
+#: includes/admin/reporting/reports.php:245
+#: includes/admin/reporting/reports.php:269
+#: includes/admin/reporting/reports.php:279
 msgid "Generate CSV"
 msgstr "Générer le CSV"
 
-#: includes/admin/reporting/reports.php:249
+#: includes/admin/reporting/reports.php:252
 msgid "Export Customers in CSV"
 msgstr "Exporter une liste CSV de clients"
 
-#: includes/admin/reporting/reports.php:251
+#: includes/admin/reporting/reports.php:254
 msgid ""
 "Download a CSV of all customer emails. Optionally export only customers that "
 "have purchased a particular product."
@@ -3360,11 +3361,11 @@ msgstr ""
 "Télécharger un fichier CSV de tous les e-mails de vos clients. En option "
 "exporter uniquement les clients qui ont acheté un produit en particulier."
 
-#: includes/admin/reporting/reports.php:273
+#: includes/admin/reporting/reports.php:276
 msgid "Export Download History in CSV"
 msgstr "Exporter l'historique des téléchargements au format CSV"
 
-#: includes/admin/reporting/reports.php:275
+#: includes/admin/reporting/reports.php:278
 msgid "Download a CSV of all file downloads for the current month."
 msgstr ""
 "Télécharger un fichier CSV de tous les téléchargements de fichiers pour le "
