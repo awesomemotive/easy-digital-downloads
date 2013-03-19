@@ -33,7 +33,7 @@ function edd_media_button( $context ) {
 			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox" title="' . __( 'Insert Download', 'edd' ) . '">' . $img . '</a>';
 		} else {
 			$img = '<span class="wp-media-buttons-icon" id="edd-media-button"></span>';
-			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button" title="' . __( 'Insert Download', 'edd' ) . '" style="padding-left: .4em;">' . $img . 'Insert Download'. '</a>';
+			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button" title="' . sprintf( __( 'Insert %s', 'edd' ), strtolower ( edd_get_label_singular() ) ) . '" style="padding-left: .4em;">' . $img . sprintf( __( 'Insert %s', 'edd' ), strtolower( edd_get_label_singular() ) ) . '</a>';
 		}
 	}
 	return $context . $output;
