@@ -121,7 +121,7 @@ class EDD_Payments_Export extends EDD_Export {
 				'discount' => isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? $user_info['discount'] : __( 'none', 'edd' ),
 				'gateway'  => edd_get_gateway_admin_label( get_post_meta( $payment->ID, '_edd_payment_gateway', true ) ),
 				'key'      => $payment_meta['key'],
-				'date'     => date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) ),
+				'date'     => $payment->post_date,
 				'user'     => $user ? $user->display_name : __( 'guest', 'edd' ),
 				'status'   => edd_get_payment_status( $payment, true )
 			);
