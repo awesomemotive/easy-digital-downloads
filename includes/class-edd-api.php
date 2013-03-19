@@ -662,6 +662,22 @@ class EDD_API {
 
 					$sales['sales']['yesterday'] = edd_get_sales_by_date( $yesterday, date( 'n' ), date( 'Y' ) );
 
+				} elseif ( $args['date'] == 'this_month' ) {
+
+					$sales['sales']['this_month'] = edd_get_sales_by_date( null, date( 'n' ), date( 'Y' ) );
+
+				} elseif ( $args['date'] == 'last_month' ) {
+
+					$sales['sales']['last_month'] = edd_get_sales_by_date( null, $previous_month, date( 'Y' ) );
+
+				} elseif ( $args['date'] == 'this_year' ) {
+
+					$sales['sales']['this_year'] = edd_get_sales_by_date( null, null, date( 'Y' ) );
+
+				} elseif ( $args['date'] == 'last_year' ) {
+
+					$sales['sales']['last_year'] = edd_get_sales_by_date( null, null, date( 'Y' ) - 1 );
+
 				} elseif ( $args['date'] == 'range' ) {
 
 					if ( isset( $args['startdate'] ) && isset( $args['enddate'] ) ) {
@@ -755,6 +771,22 @@ class EDD_API {
 				} elseif ( $args['date'] == 'yesterday' ) {
 
 					$earnings['earnings']['yesterday'] = edd_get_earnings_by_date( $yesterday, date( 'n' ), date( 'Y' ) );
+
+				} elseif ( $args['date'] == 'this_month' ) {
+
+					$earnings['earnings']['this_month'] = edd_get_earnings_by_date( null, date( 'n' ), date( 'Y' ) );
+
+				} elseif ( $args['date'] == 'last_month' ) {
+
+					$earnings['earnings']['last_month'] = edd_get_earnings_by_date( null, $previous_month, date( 'Y' ) );
+
+				} elseif ( $args['date'] == 'this_year' ) {
+
+					$earnings['earnings']['this_year'] = edd_get_earnings_by_date( null, null, date( 'Y' ) );
+
+				} elseif ( $args['date'] == 'last_year' ) {
+
+					$earnings['earnings']['last_year'] = edd_get_earnings_by_date( null, null, date( 'Y' ) - 1 );
 
 				} elseif ( $args['date'] == 'range' ) {
 
