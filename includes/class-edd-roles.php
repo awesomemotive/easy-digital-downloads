@@ -49,7 +49,6 @@ class EDD_Roles {
 			'delete_others_pages'    => true,
 			'delete_others_posts'    => true,
 			'delete_pages'           => true,
-			'delete_posts'           => true,
 			'delete_private_pages'   => true,
 			'delete_private_posts'   => true,
 			'delete_published_pages' => true,
