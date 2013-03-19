@@ -215,6 +215,9 @@ function edd_reports_tab_export() {
 	<div class="metabox-holder">
 		<div id="post-body">
 			<div id="post-body-content">
+
+				<?php do_action( 'edd_reports_tab_export_content_top' ); ?>
+
 				<div class="postbox">
 					<h3><span><?php _e( 'Export PDF of Sales and Earnings', 'edd' ); ?></span></h3>
 					<div class="inside">
@@ -276,6 +279,9 @@ function edd_reports_tab_export() {
 						<p><a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'downloads_history_export' ) ), 'edd_export_all_downloads_history' ); ?>"><?php _e( 'Generate CSV', 'edd' ) ; ?></a></p>
 					</div><!-- .inside -->
 				</div><!-- .postbox -->
+
+				<?php do_action( 'edd_reports_tab_export_content_bottom' ); ?>
+
 			</div><!-- .post-body-content -->
 		</div><!-- .post-body -->
 	</div><!-- .metabox-holder -->
