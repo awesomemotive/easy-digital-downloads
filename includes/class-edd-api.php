@@ -775,31 +775,6 @@ class EDD_API {
 
 		$dates = $this->get_dates( $args );
 
-		$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
-		$previous_year = $previous_month == 12 ? date( 'Y' ) - 1 : date( 'Y' );
-
-		if ( date( 'j' ) == 1 ) {
-
-			if ( date( 'n' ) == 3 ) {
-
-				$yesterday = 28;
-
-			} elseif ( date( 'n' ) == 5 || date( 'n' ) == 6 || date( 'n' ) == 10 || date( 'n' ) == 12 ) {
-
-				$yesterday = 30;
-
-			} else {
-
-				$yesterday = 31;
-
-			}
-
-		} else {
-
-			$yesterday = date( 'j' ) - 1;
-
-		}
-
 		if ( $args['type'] == 'sales' ) {
 
 			if ( $args['product'] == null ) {
@@ -807,6 +782,9 @@ class EDD_API {
 				if ( $args['date'] == null ) {
 
 					// Default sales return
+
+					$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
+					$previous_year  = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
 
 					$sales['sales']['current_month'] = edd_get_sales_by_date( null, date( 'n' ), date( 'Y' ) );
 					$sales['sales']['last_month']    = edd_get_sales_by_date( null, $previous_month, $previous_year );
@@ -921,6 +899,11 @@ class EDD_API {
 			if ( $args['product'] == null ) {
 
 				if ( $args['date'] == null ) {
+
+					// Default earnings return
+
+					$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
+					$previous_year  = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
 
 					$earnings['earnings']['current_month'] = edd_get_earnings_by_date( null, date( 'n' ), date( 'Y' ) );
 					$earnings['earnings']['last_month'] = edd_get_earnings_by_date( null, $previous_month, $previous_year );
