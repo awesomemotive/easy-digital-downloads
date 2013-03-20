@@ -136,6 +136,21 @@ function edd_sanitize_variable_prices_save( $prices ) {
 }
 add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_sanitize_variable_prices_save' );
 
+/**
+ * Sanitize the variable prices
+ *
+ * Ensures prices are correctly mapped to an array starting with an index of 0
+ *
+ * @access      private
+ * @since       1.4.2
+ * @return      float
+ */
+function edd_sanitize_variable_prices_save( $prices ) {
+	// Make sure all prices are rekeyed starting at 0
+	return array_values( $prices );
+}
+add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_sanitize_variable_prices_save' );
+
 
 /** Download Configuration *****************************************************************/
 
