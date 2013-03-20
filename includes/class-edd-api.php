@@ -449,6 +449,16 @@ class EDD_API {
 					$dates['year']		= date( 'Y' );
 				break;
 
+				case 'yesterday' :
+					$month              = date( 'n' ) == 1 ? 12 : date( 'n' );
+					$days_in_month      = cal_days_in_month( CAL_GREGORIAN, $month, date( 'Y' ) );
+					$yesterday          = date( 'd' ) == 1 ? $days_in_month : date( 'd' ) - 1;
+					$dates['day']		= $yesterday;
+					$dates['m_start'] 	= $month;
+					$dates['m_end'] 	= $month;
+					$dates['year']		= $month == 1 && date( 'd' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
+				break;
+
 				case 'this_quarter' :
 					$month_now = date( 'n' );
 
@@ -851,15 +861,7 @@ class EDD_API {
 
 				} else {
 
-					if( $args['date'] == 'today' ) {
-
-						$sales['sales']['today'] = edd_get_sales_by_date( $dates['day'], $dates['m_start'], $dates['year'] );
-
-   					} elseif( $args['date'] == 'yesterday' ) {
-
-						$sales['sales']['today'] = edd_get_sales_by_date( $dates['day'], $dates['m_start'], $dates['year'] );
-
-   					} elseif( $args['date'] == 'this_week' || $args['date'] == 'last_week'  ) {
+					if( $args['date'] == 'this_week' || $args['date'] == 'last_week'  ) {
 
 						//Day by day
 						$day     = $dates['day_start'];
@@ -872,11 +874,15 @@ class EDD_API {
 
    					} else {
 
+   						/*
    						$i = $dates['m_start'];
 						while ( $i <= $dates['m_end'] ) :
 							$sales['sales'][ $args['date'] ] = edd_get_sales_by_date( null, $i, $dates['year'] );
 							$i++;
 						endwhile;
+
+						*/
+						$sales['sales'][ $args['date'] ] = edd_get_sales_by_date( $dates['day'], $dates['m_start'], $dates['year'] );
 
    					}
 
