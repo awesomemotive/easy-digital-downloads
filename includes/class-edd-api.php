@@ -955,7 +955,7 @@ class EDD_API {
 
 						$year++;
 					endwhile;
-					$sales['totals'] = $total;
+					$earnings['totals'] = $total;
 
 				} else {
 
