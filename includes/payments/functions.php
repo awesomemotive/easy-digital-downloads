@@ -434,7 +434,7 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 	$key      = md5( serialize( $args ) );
 	$earnings = get_transient( $key );
 
-	//if( false === $earnings ) {
+	if( false === $earnings ) {
 		$sales = get_posts( $args );
 		$earnings = 0;
 		if ( $sales ) {
@@ -444,8 +444,8 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 			}
 		}
 		// Cache the results for one hour
-	//	set_transient( $key, $earnings, 60*60 );
-//	}
+		set_transient( $key, $earnings, 60*60 );
+	}
 
 	return round( $earnings, 2 );
 }
@@ -487,12 +487,12 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 	$key   = md5( serialize( $args ) );
 	$count = get_transient( $key, 'edd' );
 
-	//if( false === $count ) {
+	if( false === $count ) {
 		$sales = new WP_Query( $args );
 		$count = (int) $sales->post_count;
 		// Cache the results for one hour
-	//	set_transient( $key, $count, 60*60 );
-	//}
+		set_transient( $key, $count, 60*60 );
+	}
 
 	return $count;
 }
