@@ -515,14 +515,16 @@ class EDD_API {
 				break;
 
 				case 'this_year' :
-					$dates['m_start'] 	= 1;
-					$dates['m_end']		= 12;
+					$dates['day'] 	    = null;
+					$dates['m_start'] 	= null;
+					$dates['m_end']		= null;
 					$dates['year']		= date( 'Y' );
 				break;
 
 				case 'last_year' :
-					$dates['m_start'] 	= 1;
-					$dates['m_end']		= 12;
+					$dates['day'] 	    = null;
+					$dates['m_start'] 	= null;
+					$dates['m_end']		= null;
 					$dates['year']		= date( 'Y' ) - 1;
 				break;
 
