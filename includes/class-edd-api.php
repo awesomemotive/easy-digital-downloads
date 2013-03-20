@@ -387,6 +387,149 @@ class EDD_API {
 
 
 	/**
+	 * Sets up the dates used to retrieve earnings/sales
+	 *
+	 * @access      public
+	 * @since       1.5.1
+	 * @return      array
+	*/
+	private function get_dates( $args = array() ) {
+
+		$dates = array();
+
+		$defaults = array(
+			'type'      => '',
+			'product'   => null,
+			'date'      => null,
+			'startdate' => null,
+			'enddate'   => null
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		if( 'range' === $args['date'] ) {
+
+			$startdate          = strtotime( $args['startdate'] );
+			$enddate            = strtotime( $args['enddate'] );
+			$dates['day_start'] = date( 'd', $startdate );
+			$dates['day_end'] 	= date( 'd', $enddate );
+			$dates['m_start'] 	= date( 'n', $startdate );
+			$dates['m_end'] 	= date( 'n', $enddate );
+			$dates['year'] 		= date( 'Y', $startdate );
+			$dates['year_end'] 	= date( 'Y', $enddate );
+
+		} else {
+
+			// Modify dates based on predefined ranges
+			switch ( $args['date'] ) :
+
+				case 'this_month' :
+					$dates['m_start'] 	= date( 'n' );
+					$dates['m_end']		= date( 'n' );
+					$dates['year']		= date( 'Y' );
+				break;
+
+				case 'last_month' :
+					if( $dates['m_start'] == 12 ) {
+						$dates['m_start'] = 12;
+						$dates['m_end']	  = 12;
+						$dates['year']    = date( 'Y' ) - 1;
+						$dates['year_end']= date( 'Y' ) - 1;
+					} else {
+						$dates['m_start'] = date( 'n' ) - 1;
+						$dates['m_end']	  = date( 'n' ) - 1;
+						$dates['year']    = date( 'Y' );
+					}
+				break;
+
+				case 'today' :
+					$dates['day']		= date( 'd' );
+					$dates['m_start'] 	= date( 'n' );
+					$dates['m_end']		= date( 'n' );
+					$dates['year']		= date( 'Y' );
+				break;
+
+				case 'this_quarter' :
+					$month_now = date( 'n' );
+
+					if ( $month_now <= 3 ) {
+
+						$dates['m_start'] 	= 1;
+						$dates['m_end']		= 3;
+						$dates['year']		= date( 'Y' );
+
+					} else if ( $month_now <= 6 ) {
+
+						$dates['m_start'] 	= 4;
+						$dates['m_end']		= 6;
+						$dates['year']		= date( 'Y' );
+
+					} else if ( $month_now <= 9 ) {
+
+						$dates['m_start'] 	= 7;
+						$dates['m_end']		= 9;
+						$dates['year']		= date( 'Y' );
+
+					} else {
+
+						$dates['m_start'] 	= 10;
+						$dates['m_end']		= 12;
+						$dates['year']		= date( 'Y' );
+
+					}
+				break;
+
+				case 'last_quarter' :
+					$month_now = date( 'n' );
+
+					if ( $month_now <= 3 ) {
+
+						$dates['m_start'] 	= 10;
+						$dates['m_end']		= 12;
+						$dates['year']		= date( 'Y' ) - 1; // Previous year
+
+					} else if ( $month_now <= 6 ) {
+
+						$dates['m_start'] 	= 1;
+						$dates['m_end']		= 3;
+						$dates['year']		= date( 'Y' );
+
+					} else if ( $month_now <= 9 ) {
+
+						$dates['m_start'] 	= 4;
+						$dates['m_end']		= 6;
+						$dates['year']		= date( 'Y' );
+
+					} else {
+
+						$dates['m_start'] 	= 7;
+						$dates['m_end']		= 9;
+						$dates['year']		= date( 'Y' );
+
+					}
+				break;
+
+				case 'this_year' :
+					$dates['m_start'] 	= 1;
+					$dates['m_end']		= 12;
+					$dates['year']		= date( 'Y' );
+				break;
+
+				case 'last_year' :
+					$dates['m_start'] 	= 1;
+					$dates['m_end']		= 12;
+					$dates['year']		= date( 'Y' ) - 1;
+				break;
+
+			endswitch;
+
+		}
+
+		return apply_filters( 'edd_api_stat_dates', $dates );
+	}
+
+
+	/**
 	 * Get customers
 	 *
 	 * @access  private
@@ -619,6 +762,8 @@ class EDD_API {
 
 		$args = wp_parse_args( $args, $defaults );
 
+		$dates = $this->get_dates( $args );
+
 		$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
 		$previous_year = $previous_month == 12 ? date( 'Y' ) - 1 : date( 'Y' );
 
@@ -651,74 +796,51 @@ class EDD_API {
 				if ( $args['date'] == null ) {
 
 					$sales['sales']['current_month'] = edd_get_sales_by_date( null, date( 'n' ), date( 'Y' ) );
-					$sales['sales']['last_month'] = edd_get_sales_by_date( null, $previous_month, $previous_year );
-					$sales['sales']['totals'] = edd_get_total_sales();
+					$sales['sales']['last_month']    = edd_get_sales_by_date( null, $previous_month, $previous_year );
+					$sales['sales']['totals']        = edd_get_total_sales();
 
-				} elseif ( $args['date'] == 'today' ) {
+				} else {
 
-					$sales['sales']['today'] = edd_get_sales_by_date( date( 'j' ), date( 'n' ), date( 'Y' ) );
+					if( ( ( empty( $args['enddate'] ) || empty( $args['startdate'] ) ) || $args['enddate'] < $args['startdate'] ) && 'range' === $args['date'] ) {
 
-				} elseif ( $args['date'] == 'yesterday' ) {
+						$error['error'] = __( 'The end date must be later than the start date!', 'edd' );
 
-					$sales['sales']['yesterday'] = edd_get_sales_by_date( $yesterday, date( 'n' ), date( 'Y' ) );
+					}
 
-				} elseif ( $args['date'] == 'this_month' ) {
-
-					$sales['sales']['this_month'] = edd_get_sales_by_date( null, date( 'n' ), date( 'Y' ) );
-
-				} elseif ( $args['date'] == 'last_month' ) {
-
-					$sales['sales']['last_month'] = edd_get_sales_by_date( null, $previous_month, date( 'Y' ) );
-
-				} elseif ( $args['date'] == 'this_year' ) {
-
-					$sales['sales']['this_year'] = edd_get_sales_by_date( null, null, date( 'Y' ) );
-
-				} elseif ( $args['date'] == 'last_year' ) {
-
-					$sales['sales']['last_year'] = edd_get_sales_by_date( null, null, date( 'Y' ) - 1 );
-
-				} elseif ( $args['date'] == 'range' ) {
-
-					if ( isset( $args['startdate'] ) && isset( $args['enddate'] ) ) {
-
-						if( $args['enddate'] < $args['startdate'] ) {
-
-							$error['error'] = __( 'The end date must be later than the date date!', 'edd' );
-
-						} else {
-
-							global $wp_query;
-
-							$args['startdate'] = DateTime::createFromFormat( 'Ymd', $args['startdate'] )->format( 'Y-m-d' );
-							$args['enddate'] = DateTime::createFromFormat( 'Ymd', $args['enddate'] + 1 )->format( 'Y-m-d' );
-							$daterange = new DatePeriod(
-								new DateTime( $args['startdate'] ),
-								new DateInterval( 'P1D' ),
-								new DateTime( $args['enddate'] )
-							);
-
-							$sales['totals'] = 0;
-
-							foreach ( $daterange as $day ) {
-
-								$tag                  = ( $this->get_output_format() == 'xml' ? $day->format( 'MdY' ) : $day->format( 'Ymd' ) );
-								$sale_count           = edd_get_sales_by_date( $day->format( 'j' ), $day->format( 'n' ), $day->format( 'Y' ) );
-								$sales['sales'][$tag] = $sale_count;
-								$sales['totals']      += $sale_count;
-
-							}
-
-						}
-
-					} else {
+					if ( ( ! isset( $args['startdate'] ) || ! isset( $args['enddate'] ) ) && 'range' === $args['date'] ) {
 
 						$error['error'] = __( 'Invalid or no date range specified!', 'edd' );
 
 					}
-				} else {
 
-					$error['error'] = __( 'Invalid option for argument \'date\'!', 'edd' );
+					if( $args['date'] == 'today' ) {
+
+						$sales['sales']['today'] = edd_get_sales_by_date( $dates['day'], $dates['m_start'], $dates['year'] );
+
+   					} elseif( $args['date'] == 'yesterday' ) {
+
+						$sales['sales']['today'] = edd_get_sales_by_date( $dates['day'], $dates['m_start'], $dates['year'] );
+
+   					} elseif( $args['date'] == 'this_week' || $args['date'] == 'last_week'  ) {
+
+						//Day by day
+						$day     = $dates['day_start'];
+						$day_end = $dates['day_end'];
+   						$month   = $dates['m_start'];
+						while ( $day <= $day_end ) :
+							$sales['sales'][ $args['date'] ] = edd_get_sales_by_date( $day, $month, $dates['year'] );
+							$day++;
+						endwhile;
+
+   					} else {
+
+   						$i = $dates['m_start'];
+						while ( $i <= $dates['m_end'] ) :
+							$sales['sales'][ $args['date'] ] = edd_get_sales_by_date( null, $i, $dates['year'] );
+							$i++;
+						endwhile;
+
+   					}
 
 				}
 
@@ -1053,6 +1175,7 @@ class EDD_API {
 	 */
 
 	function user_key_field( $user ) {
+		global $edd_options;
 		if ( ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'view_shop_reports' ) ) {
 			$user = get_userdata( $user->ID );
 			?>
