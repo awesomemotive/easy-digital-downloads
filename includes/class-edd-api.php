@@ -424,22 +424,17 @@ class EDD_API {
 			switch ( $args['date'] ) :
 
 				case 'this_month' :
+					$dates['day'] 	    = null;
 					$dates['m_start'] 	= date( 'n' );
 					$dates['m_end']		= date( 'n' );
 					$dates['year']		= date( 'Y' );
 				break;
 
 				case 'last_month' :
-					if( $dates['m_start'] == 12 ) {
-						$dates['m_start'] = 12;
-						$dates['m_end']	  = 12;
-						$dates['year']    = date( 'Y' ) - 1;
-						$dates['year_end']= date( 'Y' ) - 1;
-					} else {
-						$dates['m_start'] = date( 'n' ) - 1;
-						$dates['m_end']	  = date( 'n' ) - 1;
-						$dates['year']    = date( 'Y' );
-					}
+					$dates['day'] 	  = null;
+					$dates['m_start'] = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
+					$dates['m_end']	  = $dates['m_start'];
+					$dates['year']    = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
 				break;
 
 				case 'today' :
