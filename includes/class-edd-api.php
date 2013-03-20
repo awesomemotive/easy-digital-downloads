@@ -457,6 +457,8 @@ class EDD_API {
 				case 'this_quarter' :
 					$month_now = date( 'n' );
 
+					$dates['day'] 	        = null;
+
 					if ( $month_now <= 3 ) {
 
 						$dates['m_start'] 	= 1;
@@ -486,6 +488,8 @@ class EDD_API {
 
 				case 'last_quarter' :
 					$month_now = date( 'n' );
+
+					$dates['day'] 	        = null;
 
 					if ( $month_now <= 3 ) {
 
@@ -868,6 +872,21 @@ class EDD_API {
 							$sales['sales'][ $args['date'] ] = edd_get_sales_by_date( $day, $month, $dates['year'] );
 							$day++;
 						endwhile;
+
+   					} elseif( $args['date'] == 'this_quarter' || $args['date'] == 'last_quarter'  ) {
+
+   						$sales_count = 0;
+
+						// Loop through the months
+						$month = $dates['m_start'];
+						while( $month <= $dates['m_end'] ) :
+
+							$sales_count += edd_get_sales_by_date( null, $month, $dates['year'] );
+
+							$month++;
+						endwhile;
+
+						$sales['sales'][ $args['date'] ] = $sales_count;
 
    					} else {
 
