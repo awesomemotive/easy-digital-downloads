@@ -795,23 +795,61 @@ class EDD_API {
 
 				if ( $args['date'] == null ) {
 
+					// Default sales return
+
 					$sales['sales']['current_month'] = edd_get_sales_by_date( null, date( 'n' ), date( 'Y' ) );
 					$sales['sales']['last_month']    = edd_get_sales_by_date( null, $previous_month, $previous_year );
 					$sales['sales']['totals']        = edd_get_total_sales();
 
-				} else {
+				} elseif( $args['date'] === 'range' ) {
 
-					if( ( ( empty( $args['enddate'] ) || empty( $args['startdate'] ) ) || $args['enddate'] < $args['startdate'] ) && 'range' === $args['date'] ) {
+					// Return sales for a date range
+
+					// Ensure the end date is later than the start date
+					if( $args['enddate'] < $args['startdate'] ) {
 
 						$error['error'] = __( 'The end date must be later than the start date!', 'edd' );
 
 					}
 
-					if ( ( ! isset( $args['startdate'] ) || ! isset( $args['enddate'] ) ) && 'range' === $args['date'] ) {
+					// Ensure both the start and end date are specified
+					if ( empty( $args['startdate'] ) || empty( $args['enddate'] ) ) {
 
 						$error['error'] = __( 'Invalid or no date range specified!', 'edd' );
 
 					}
+
+					$total = 0;
+
+					// Loop through the years
+					$year = $dates['year'];
+					while( $year <= $dates['year_end' ] ) :
+
+						// Loop through the months
+						$month = $dates['m_start'];
+						while( $month <= $dates['m_end'] ) :
+
+							// Loop through the days
+							$day           = $month > $dates['m_start'] ? 1 : $dates['day_start'];
+							$days_in_month = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							while( $day <= $days_in_month ) :
+
+								$sale_count = edd_get_sales_by_date( $day, $month, $year );
+								$sales['sales'][ date( 'Ymd', strtotime( $year . '/' . $month . '/' . $day ) ) ] = $sale_count;
+								$total += $sale_count;
+
+								$day++;
+
+							endwhile;
+
+							$month++;
+						endwhile;
+
+						$year++;
+					endwhile;
+					$sales['totals'] = $total;
+
+				} else {
 
 					if( $args['date'] == 'today' ) {
 
