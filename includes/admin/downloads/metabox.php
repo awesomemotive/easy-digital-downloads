@@ -34,8 +34,6 @@ function edd_add_download_meta_box() {
 		/** Download Stats */
 		add_meta_box( 'edd_download_stats', sprintf( __( '%1$s Stats', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', 'download', 'side', 'high' );
 
-		/** Download Logs */
-		add_meta_box( 'edd_file_download_log', __( 'File Download Log', 'edd' ), 'edd_render_download_log_meta_box', 'download', 'normal', 'default' );
 	}
 }
 add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
@@ -564,103 +562,12 @@ function edd_render_stats_meta_box() {
 				echo edd_currency_filter( edd_format_amount( $earnings ) );
 			echo '</td>';
 		echo '</tr>';
+		echo '<tr>';
+			echo '<td colspan="2" class="edd_download_stats">';
+				echo '<a href="' . admin_url( '/edit.php?page=edd-reports&view=file_downloads&post_type=download&tab=logs&download=' . $post->ID ) . '">' . __( 'View File Download Log', 'edd' ) . '</a>';
+			echo '</td>';
+		echo '</tr>';
 		do_action('edd_stats_meta_box');
 	echo '</table>';
 }
 
-
-/** Download Log *****************************************************************/
-
-/**
- * Render Download Log Meta Box
- *
- * @access      private
- * @since       1.0
- * @return      void
- */
-function edd_render_download_log_meta_box() {
-	global $post, $edd_logs;
-
-	$page = isset( $_GET['paged'] ) ? intval( $_GET['paged'] ) : 1;
-
-	$file_downloads = $edd_logs->get_logs( $post->ID, 'file_download', $page );
-
-	echo '<table class="form-table">';
-		echo '<tr>';
-			echo '<th style="width: 20%"><strong>' . __( 'Download Log', 'edd' ) . '</strong></th>';
-			echo '<td colspan="4" class="edd_download_stats">';
-				_e('Each time a file is downloaded, it is recorded below.', 'edd' );
-			echo '</td>';
-		echo '</tr>';
-
-		if ( $file_downloads) {
-			$files = edd_get_download_files( $post->ID );
-
-			foreach ( $file_downloads as $log ) {
-				$user_info 	= get_post_meta( $log->ID, '_edd_log_user_info', true );
-				$file_id 	= (int) get_post_meta( $log->ID, '_edd_log_file_id', true );
-				$ip 		= get_post_meta( $log->ID, '_edd_log_ip', true );
-
-				$user_id = isset( $user_info['id']) ? $user_info['id'] : 0;
-
-				$user_data = get_userdata( $user_id );
-				if ( $user_data ) {
-					$name = $user_data->display_name;
-				} else {
-					$name = $user_info['email'];
-				}
-
-				$file_id = $file_id !== false ? $file_id : 0;
-				$file_name = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
-
-				echo '<tr>';
-					echo '<td class="edd_download_sales_log">';
-						echo '<strong>' . __( 'Date:', 'edd' ) . '</strong> ' . $log->post_date;
-					echo '</td>';
-
-					echo '<td class="edd_download_sales_log">';
-						echo '<strong>' . __( 'Downloaded by:', 'edd' ) . '</strong> ' . $name;
-					echo '</td>';
-
-					echo '<td class="edd_download_sales_log">';
-						echo '<strong>' . __( 'IP Address:', 'edd' ) . '</strong> ' . $ip;
-					echo '</td>';
-
-					echo '<td colspan="2" class="edd_download_sales_log">';
-						echo '<strong>' . __( 'File: ', 'edd' ) . '</strong> ' . $file_name;
-					echo '</td>';
-				echo '</tr>';
-
-				do_action( 'edd_download_log__meta_box' );
-			} // Endforeach
-		} else {
-			echo '<tr>';
-				echo '<td colspan=4" class="edd_download_sales_log">';
-					echo __( 'No file downloads yet', 'edd' );
-				echo '</td>';
-			echo '</tr>';
-		}
-	echo '</table>';
-
-	$total_log_entries = $edd_logs->get_log_count( $post->ID, 'file_download' );
-	$total_pages = ceil( $total_log_entries / 10 );
-
-	if ( $total_pages > 1 ) :
-		echo '<div class="tablenav">';
-			echo '<div class="tablenav-pages alignright">';
-				$base = 'post.php?post=' . $post->ID . '&action=edit%_%';
-				echo paginate_links( array(
-					'base'         => $base,
-					'format'       => '&paged=%#%',
-					'prev_text'    => '&laquo; ' . __( 'Previous', 'edd' ),
-					'next_text'    => __( 'Next', 'edd' ) . ' &raquo;',
-					'total'        => $total_pages,
-					'current'      => $page,
-					'end_size'     => 1,
-					'mid_size'     => 5,
-					'add_fragment' => '#edd_file_download_log'
-				));
-			echo '</div>';
-		echo '</div><!--end .tablenav-->';
-	endif;
-}
