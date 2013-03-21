@@ -91,14 +91,15 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
 
 	if ( $users_purchases ) {
 		foreach ( $users_purchases as $purchase ) {
-			$purchase_meta = edd_get_payment_meta( $purchase->ID );
-			$purchased_files = maybe_unserialize( $purchase_meta['downloads'] );
+
+			$purchased_files = edd_get_payment_meta_downloads( $purchase->ID );
 
 			if ( is_array( $purchased_files ) ) {
 				foreach ( $purchased_files as $download ) {
 					if ( in_array( $download['id'], $downloads ) ) {
-						if ( !is_null( $variable_price_id ) && $variable_price_id !== false ) {
-							if ( $variable_price_id == $download['options']['price_id'] ) {
+						$variable_prices = edd_has_variable_prices( $download['id'] );
+						if ( $variable_prices && ! is_null( $variable_price_id ) && $variable_price_id !== false ) {
+							if ( isset( $download['options']['price_id'] ) && $variable_price_id == $download['options']['price_id'] ) {
 								return true;
 							} else {
 								$return = false;
