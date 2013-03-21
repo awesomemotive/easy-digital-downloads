@@ -663,7 +663,7 @@ function edd_get_payment_meta_cart_details( $payment_id ) {
  * @param       int $payment_id
  * @access      public
  * @since       1.2
- * @return      array
+ * @return      string
  */
 function edd_get_payment_user_email( $payment_id ) {
 	$email = get_post_meta( $payment_id, '_edd_payment_user_email', true );
