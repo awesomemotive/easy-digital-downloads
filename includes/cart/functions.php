@@ -321,7 +321,7 @@ function edd_get_price_name( $item_id, $options = array() ) {
 function edd_cart_subtotal() {
 	global $edd_options;
 
-	$tax = ( ( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) || ( $edd_options['prices_include_tax'] == 'no' && edd_prices_show_tax_on_checkout() ) );
+	$tax = ( ( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) || ( ! edd_prices_include_tax() && edd_prices_show_tax_on_checkout() ) );
 	$price = esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) );
 
 	if ( edd_is_cart_taxed() ) {
