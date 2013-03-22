@@ -175,6 +175,22 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 1.5.1: March 21, 2013
+
+* Fix: Tags / Categories couldn't be assigned by anyone except shop_manager and admins
+* Fix: Improved memory usage by removing file download log meta box
+* Fix: Couldn't change the email associated with purchases
+* Fix: Comment feeds showed payment notes
+* Fix: Corrected some filters for text outputs
+* Fix: Raw HTML displayed on checkout after opting into taxes
+* Fix: Total shown twice on the checkout page
+* New: Added link to File Download Log from Edit download screen
+* New: Made file download symlinks disabled by default
+* New: Added hour::minute::second to payment history export
+* New: Improved CSS for payment method select
+* New: Allowed store vendors to see sales / earnings for their own products
+* New: Added new hooks to the export page
+
 = 1.5: March 13, 2013 =
 
 * New: Added [EDD_API class](https://github.com/pippinsplugins/Easy-Digital-Downloads/issues/857) to provide a fully RESTful API to retrieve sales and earnings stats
