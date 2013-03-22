@@ -1214,16 +1214,18 @@ class EDD_API {
 				<tbody>
 					<tr>
 						<th>
-							<label for="edd_set_api_key"><?php _e( 'Easy Digital Downloads API Key', 'edd' ); ?></label>
+							<label for="edd_set_api_key"><?php _e( 'Easy Digital Downloads API Keys', 'edd' ); ?></label>
 						</th>
 						<td>
-							<?php if ( empty( $user->edd_user_api_key ) ) { ?>
+							<?php if ( empty( $user->edd_user_public_key ) ) { ?>
 							<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 							<span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
 							<?php } else { ?>
-								<span id="key"><?php echo $user->edd_user_api_key; ?></span><br/>
+								<strong><?php _e( 'Public key:' ); ?>&nbsp;</strong><span id="publickey"><?php echo $user->edd_user_public_key; ?></span><br/>
+								<strong><?php _e( 'Secret key:' ); ?>&nbsp;</strong><span id="privatekey"><?php echo $user->edd_user_secret_key; ?></span><br/>
+								<strong><?php _e( 'Toeken:' ); ?>&nbsp;</strong><span id="token"><?php echo hash( 'md5', $user->edd_user_secret_key . $user->edd_user_public_key ); ?></span><br/>
 								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
-								<span class="description"><?php _e( 'Revoke API Key', 'edd' ); ?></span>
+								<span class="description"><?php _e( 'Revoke API Keys', 'edd' ); ?></span>
 							<?php } ?>
 						</td>
 					</tr>
@@ -1249,14 +1251,25 @@ class EDD_API {
 
 			$user = get_userdata( $user_id );
 
-			if ( empty( $user->edd_user_api_key ) ) {
+			if ( empty( $user->edd_user_public_key ) ) {
 
-				$hash = hash( 'md5', $user->user_email . date( 'U' ) );
-				update_user_meta( $user_id, 'edd_user_api_key', $hash );
+				$public = hash( 'md5', $user->user_email . date( 'U' ) );
+				update_user_meta( $user_id, 'edd_user_public_key', $public );
 
 			} else {
 
-				delete_user_meta( $user_id, 'edd_user_api_key' );
+				delete_user_meta( $user_id, 'edd_user_public_key' );
+
+			}
+
+			if ( empty( $user->edd_user_secret_key ) ) {
+
+				$secret = hash( 'md5', $user->ID . date( 'U' ) );
+				update_user_meta( $user_id, 'edd_user_secret_key', $secret );
+
+			} else {
+
+				delete_user_meta( $user_id, 'edd_user_secret_key' );
 
 			}
 
