@@ -171,7 +171,7 @@ class EDD_API {
 	 * Retrieve the user ID based on the public key provided
 	 *
 	 * @access  public
-	 * @since  1.5
+	 * @since  1.5.1
 	 */
 
 	public function get_user( $key = '' ) {
@@ -183,6 +183,26 @@ class EDD_API {
 		if ( $user != NULL ) {
 			$this->user_id = $user;
 			return $user;
+		}
+		return false;
+	}
+
+
+	/**
+	 * Retrieve the user email based on the user ID
+	 *
+	 * @access  public
+	 * @since  1.5.1
+	 */
+
+	public function get_user_email( $email = '' ) {
+
+		global $wpdb;
+
+		$email = $wpdb->get_var( $wpdb->prepare( "SELECT user_email FROM $wpdb->users WHERE ID = %d LIMIT 1", $email ) );
+
+		if ( $email != NULL ) {
+			return $email;
 		}
 		return false;
 	}
