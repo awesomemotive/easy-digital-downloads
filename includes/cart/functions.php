@@ -544,6 +544,7 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
 function edd_get_cart_tax( $discounts = false ) {
 
 	$subtotal = edd_get_cart_subtotal( false );
+	$subtotal += edd_get_cart_fee_total();
 	$cart_tax = 0;
 
 	if ( edd_is_cart_taxed() ) {
