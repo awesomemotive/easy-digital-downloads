@@ -54,7 +54,16 @@ class EDD_API {
 	 * @access  private
 	 * @since  1.5
 	 */
-	private $is_valid_request = true;
+	private $is_valid_request = false;
+
+
+	/**
+	 * User ID performing the request
+	 *
+	 * @access  private
+	 * @since  1.5
+	 */
+	private $user_id = 0;
 
 
 	/**
