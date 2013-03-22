@@ -61,7 +61,7 @@ class EDD_API {
 	 * User ID performing the request
 	 *
 	 * @access  private
-	 * @since  1.5
+	 * @since  1.5.1
 	 */
 	private $user_id = 0;
 
@@ -171,7 +171,7 @@ class EDD_API {
 	 * Retrieve the user ID based on the public key provided
 	 *
 	 * @access  public
-	 * @since  1.5
+	 * @since  1.5.1
 	 */
 
 	public function get_user( $key = '' ) {
