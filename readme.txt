@@ -175,7 +175,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
-= 1.5.1: March 21, 2013
+= 1.5.1: March 21, 2013 =
 
 * Fix: Tags / Categories couldn't be assigned by anyone except shop_manager and admins
 * Fix: Improved memory usage by removing file download log meta box
