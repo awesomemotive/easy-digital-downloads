@@ -196,9 +196,7 @@ class EDD_API {
 	 */
 
 	function missing_auth() {
-		$error['error'] = __( 'You must specify both user and API key!', 'edd' );
-
-		$this->is_valid_request = false;
+		$error['error'] = __( 'You must specify both toaken and API key!', 'edd' );
 
 		$this->output( $error );
 	}
@@ -215,8 +213,6 @@ class EDD_API {
 	function invalid_email() {
 		$error['error'] = __( 'The email address specified is not registered!', 'edd' );
 
-		$this->is_valid_request = false;
-
 		$this->output( $error );
 	}
 
@@ -230,8 +226,6 @@ class EDD_API {
 
 	function invalid_key( $email ) {
 		$error['error'] = sprintf( __( 'Invalid API key for %s!', 'edd' ), $email );
-
-		$this->is_valid_request = false;
 
 		$this->output( $error );
 	}
