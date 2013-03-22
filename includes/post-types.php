@@ -230,7 +230,8 @@ function edd_setup_download_taxonomies() {
 			'labels' 		=> apply_filters('edd_download_category_labels', $category_labels),
 			'show_ui' 		=> true,
 			'query_var' 	=> 'download_category',
-			'rewrite' 		=> array('slug' => $slug . '/category', 'with_front' => false, 'hierarchical' => true )
+			'rewrite' 		=> array('slug' => $slug . '/category', 'with_front' => false, 'hierarchical' => true ),
+			'capabilities'  => array( 'manage_terms' => 'manage_product_terms','edit_terms' => 'edit_product_terms','assign_terms' => 'assign_product_terms','delete_terms' => 'delete_product_terms' )
 		)
 	);
 	register_taxonomy( 'download_category', array('download'), $category_args );
@@ -255,7 +256,9 @@ function edd_setup_download_taxonomies() {
 			'labels' 		=> apply_filters( 'edd_download_tag_labels', $tag_labels ),
 			'show_ui' 		=> true,
 			'query_var' 	=> 'download_tag',
-			'rewrite' 		=> array( 'slug' => $slug . '/tag', 'with_front' => false, 'hierarchical' => true  )
+			'rewrite' 		=> array( 'slug' => $slug . '/tag', 'with_front' => false, 'hierarchical' => true  ),
+			'capabilities'  => array( 'manage_terms' => 'manage_product_terms','edit_terms' => 'edit_product_terms','assign_terms' => 'assign_product_terms','delete_terms' => 'delete_product_terms' )
+
 		)
 	);
 	register_taxonomy( 'download_tag', array( 'download' ), $tag_args );
