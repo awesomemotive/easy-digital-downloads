@@ -160,7 +160,8 @@ class EDD_API {
 
 			if( hash( 'md5', $secret . $public ) === $token )
 				$this->is_valid_request = true;
-
+			else
+				$this->invalid_auth();
 		endif;
 
 	}
@@ -203,15 +204,14 @@ class EDD_API {
 
 
 	/**
-	 * Invalid email address error
+	 * Authentication failed
 	 *
 	 * @access  private
-	 * @author  Daniel J Griffiths
 	 * @since  1.5
 	 */
 
-	function invalid_email() {
-		$error['error'] = __( 'The email address specified is not registered!', 'edd' );
+	function invalid_auth() {
+		$error['error'] = __( 'Your request could not be authenticated!', 'edd' );
 
 		$this->output( $error );
 	}
