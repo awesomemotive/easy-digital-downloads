@@ -133,53 +133,57 @@ class EDD_API {
 
 
 	/**
-	 * Validate the user email and API key
+	 * Validate the API request
 	 *
-	 * Checks for the user email and API key and validates them
+	 * Checks for the user's public key and token against the secret key
 	 *
 	 * @access  private
 	 * @since  1.5
 	 */
 
-	private function validate_user() {
+	private function validate_request() {
 
 		global $wp_query;
 
 		// Make sure we have both user and api key
-		if ( empty( $wp_query->query_vars['user'] ) || empty( $wp_query->query_vars['key'] ) )
+		if ( empty( $wp_query->query_vars['token'] ) || empty( $wp_query->query_vars['key'] ) )
 			$this->missing_auth();
 
-		// Make sure username (email) exists
-		if ( ! email_exists( $wp_query->query_vars['user'] ) )
-			$this->invalid_email();
+		// Retrieve the user by public API key and ensure they exist
+		if( ! ( $user = $this->get_user( $wp_query->query_vars['key'] ) ) ) :
+			$this->invalid_key( $wp_query->query_vars['key'] );
+		else :
 
-		// Check email/key combination
-		if( ! $this->is_user_valid( $wp_query->query_vars['user'], $wp_query->query_vars['key'] ) )
-			$this->invalid_key( $wp_query->query_vars['user'] );
+			$token  = urldecode( $wp_query->query_vars['token'] );
+			$secret = get_user_meta( $user, 'edd_user_secret_key', true );
+			$public = urldecode( $wp_query->query_vars['key'] );
+
+			if( hash( 'md5', $secret . $public ) === $token )
+				$this->is_valid_request = true;
+
+		endif;
 
 	}
 
 
 	/**
-	 * Check if the user (email + API key) is valid
+	 * Retrieve the user ID based on the public key provided
 	 *
 	 * @access  public
 	 * @since  1.5
 	 */
 
-	public function is_user_valid( $email = '', $key = '' ) {
+	public function get_user( $key = '' ) {
 
-		$ret = false;
+		global $wpdb;
 
-		$user = get_user_by( 'email', $email );
+		$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' AND meta_value = %s LIMIT 1", $key ) );
 
-		if ( $user && $user->edd_user_api_key == $key )
-			$ret = true;
-
-		if( ! $ret )
-			$this->is_valid_request = false;
-
-		return $ret;
+		if ( $user != NULL ) {
+			$this->user_id = $user;
+			return $user;
+		}
+		return false;
 	}
 
 
