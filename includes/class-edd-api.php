@@ -1117,8 +1117,7 @@ class EDD_API {
 		global $edd_logs, $wp_query;
 
 		$query = array(
-			'user'      => $wp_query->query_vars['user'],
-			'api_key'   => $wp_query->query_vars['key'],
+			'key'       => $wp_query->query_vars['key'],
 			'query'     => isset( $wp_query->query_vars['query'] )     ? $wp_query->query_vars['query']     : null,
 			'type'      => isset( $wp_query->query_vars['type'] )      ? $wp_query->query_vars['type']      : null,
 			'product'   => isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null,
@@ -1130,15 +1129,14 @@ class EDD_API {
 
 		$log_data = array(
 			'log_type'     => 'api_request',
-			'post_title'   => $wp_query->query_vars['user'] . ' ' . edd_get_ip(), // Makes logs easier to search by user / IP
 			'post_excerpt' => http_build_query( $query ),
 			'post_content' => ! empty( $data['error'] ) ? $data['error'] : '',
 		);
 
 		$log_meta = array(
 			'request_ip' => edd_get_ip(),
-			'user'       => $wp_query->query_vars['user'],
-			'api_key'    => $wp_query->query_vars['key']
+			'user'       => $this->user_id,
+			'key'        => $wp_query->query_vars['key']
 		);
 
 		$edd_logs->insert_log( $log_data, $log_meta );
