@@ -663,13 +663,29 @@ function edd_get_payment_meta_cart_details( $payment_id ) {
  * @param       int $payment_id
  * @access      public
  * @since       1.2
- * @return      array
+ * @return      string
  */
 function edd_get_payment_user_email( $payment_id ) {
 	$email = get_post_meta( $payment_id, '_edd_payment_user_email', true );
 
 	return apply_filters( 'edd_payment_user_email', $email );
 }
+
+
+/**
+ * Get the user ID associated with a payment
+ *
+ * @param       int $payment_id
+ * @access      public
+ * @since       1.5.1
+ * @return      INT
+ */
+function edd_get_payment_user_id( $payment_id ) {
+	$user_id = get_post_meta( $payment_id, '_edd_payment_user_id', true );
+
+	return apply_filters( 'edd_payment_user_id', $user_id );
+}
+
 
 /**
  * Get the gateway associated with a payment

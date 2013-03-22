@@ -388,6 +388,12 @@ function edd_register_settings() {
 					'desc' => __('Check this if you do not want to allow users to redownload items from their purchase history.', 'edd'),
 					'type' => 'checkbox',
 				),
+				'symlink_file_downloads' => array(
+					'id' => 'symlink_file_downloads',
+					'name' => __('Symlink File Downloads?', 'edd'),
+					'desc' => __('Check this if you are delivering really large files or having problems with file downloads completing.', 'edd'),
+					'type' => 'checkbox',
+				),
 				'terms' => array(
 					'id' => 'terms',
 					'name' => '<strong>' . __('Terms of Agreement', 'edd') . '</strong>',
