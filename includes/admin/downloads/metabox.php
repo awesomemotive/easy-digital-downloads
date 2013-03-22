@@ -135,19 +135,19 @@ function edd_sanitize_variable_prices_save( $prices ) {
 add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_sanitize_variable_prices_save' );
 
 /**
- * Sanitize the variable prices
+ * Sanitize the file downloads
  *
- * Ensures prices are correctly mapped to an array starting with an index of 0
+ * Ensures files are correctly mapped to an array starting with an index of 0
  *
  * @access      private
- * @since       1.4.2
- * @return      float
+ * @since       1.5.1
+ * @return      array
  */
-function edd_sanitize_variable_prices_save( $prices ) {
-	// Make sure all prices are rekeyed starting at 0
-	return array_values( $prices );
+function edd_sanitize_files_save( $files ) {
+	// Make sure all files are rekeyed starting at 0
+	return array_values( $files );
 }
-add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_sanitize_variable_prices_save' );
+add_filter( 'edd_metabox_save_edd_download_files', 'edd_sanitize_files_save' );
 
 
 /** Download Configuration *****************************************************************/
