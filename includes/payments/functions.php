@@ -49,7 +49,6 @@ function edd_get_payments( $args = array() ) {
 
 	$payment_args = array(
 		'post_type'      => 'edd_payment',
-		'posts_per_page' => $args['number'],
 		'paged'          => $args['page'],
 		'order'          => $args['order'],
 		'orderby'        => $args['orderby'],
@@ -60,9 +59,14 @@ function edd_get_payments( $args = array() ) {
 		'fields'         => $args['fields']
 	);
 
+	if( $args['number'] == -1 )
+		$payment_args['nopaging'] = true;
+	else
+		$payment_args['posts_per_page'] = $args['number'];
+
 	switch ( $args['orderby'] ) :
 		case 'amount' :
-			$payent_args['orderby']  = 'meta_value_num';
+			$payment_args['orderby']  = 'meta_value_num';
 			$payment_args['meta_key'] = '_edd_payment_total';
 			break;
 		default :
@@ -525,7 +529,7 @@ function edd_is_payment_complete( $payment_id ) {
 function edd_get_total_sales() {
 	$args = apply_filters( 'edd_get_total_sales_args', array(
 		'post_type'      => 'edd_payment',
-		'posts_per_page' => -1,
+		'nopaging'       => true,
 		'meta_key'       => '_edd_payment_mode',
 		'meta_value'     => 'live',
 		'fields'         => 'ids',
@@ -536,7 +540,6 @@ function edd_get_total_sales() {
 
 	$key   = md5( serialize( $args ) );
 	$count = get_transient( $key );
-
 	if( false === $count ) {
 
 		$sales = new WP_Query( $args );
