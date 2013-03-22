@@ -249,7 +249,7 @@ class EDD_API {
 			return;
 
 		// Check for a valid user and set errors if necessary
-		$this->validate_user();
+		$this->validate_request();
 
 		// Only proceed if no errors have been noted
 		if( ! $this->is_valid_request )
