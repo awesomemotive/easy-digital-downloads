@@ -197,13 +197,13 @@ function edd_render_price_field( $post_id ) {
 ?>
 
 	<p>
-		<strong><?php apply_filters( 'edd_price_options_heading', _e( 'Pricing Options:', 'edd' ) ); ?></strong>
+		<strong><?php echo apply_filters( 'edd_price_options_heading', __( 'Pricing Options:', 'edd' ) ); ?></strong>
 	</p>
 
 	<p>
 		<label for="edd_variable_pricing">
 			<input type="checkbox" name="_variable_pricing" id="edd_variable_pricing" value="1" <?php checked( 1, $variable_pricing ); ?> />
-			<?php apply_filters( 'edd_variable_pricing_toggle_text', _e( 'Enable variable pricing', 'edd' ) ); ?>
+			<?php echo apply_filters( 'edd_variable_pricing_toggle_text', __( 'Enable variable pricing', 'edd' ) ); ?>
 		</label>
 	</p>
 
