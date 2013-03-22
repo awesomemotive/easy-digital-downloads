@@ -22,7 +22,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return      void
  */
 function edd_install() {
-	global $wpdb, $edd_options;
+	global $wpdb, $edd_options, $wp_version;
+
+	if ( (float) $wp_version < 3.3 ) {
+		deactivate_plugins( plugin_basename( __FILE__ ) );
+		wp_die( __( 'Looks like you\'re running an older version of WordPress, you need to be running at least WordPress 3.3 to use Easy Digital Downloads.', 'edd' ), __( 'Easy Digital Downloads is not compatible with this version of WordPress.', 'edd' ), array( 'back_link' => true ) );
+	}
 
 	// Setup the Downloads Custom Post Type
 	edd_setup_edd_post_types();
