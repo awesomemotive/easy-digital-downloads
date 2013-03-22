@@ -117,7 +117,7 @@ class EDD_API {
 	 */
 
 	function query_vars( $vars ) {
-		$vars[] = 'user';
+		$vars[] = 'token';
 		$vars[] = 'key';
 		$vars[] = 'query';
 		$vars[] = 'type';
