@@ -197,7 +197,7 @@ class EDD_API {
 	 */
 
 	function missing_auth() {
-		$error['error'] = __( 'You must specify both toaken and API key!', 'edd' );
+		$error['error'] = __( 'You must specify both a token and API key!', 'edd' );
 
 		$this->output( $error );
 	}
