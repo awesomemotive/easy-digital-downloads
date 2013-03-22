@@ -153,12 +153,12 @@ class EDD_API {
 		if( ! ( $user = $this->get_user( $wp_query->query_vars['key'] ) ) ) :
 			$this->invalid_key( $wp_query->query_vars['key'] );
 		else :
-
 			$token  = urldecode( $wp_query->query_vars['token'] );
 			$secret = get_user_meta( $user, 'edd_user_secret_key', true );
 			$public = urldecode( $wp_query->query_vars['key'] );
+			$email  = $this->get_user_email( $user );
 
-			if( hash( 'md5', $secret . $public ) === $token )
+			if( hash( 'md5', $email . $public ) === $token )
 				$this->is_valid_request = true;
 			else
 				$this->invalid_auth();
@@ -1243,7 +1243,7 @@ class EDD_API {
 							<?php } else { ?>
 								<strong><?php _e( 'Public key:' ); ?>&nbsp;</strong><span id="publickey"><?php echo $user->edd_user_public_key; ?></span><br/>
 								<strong><?php _e( 'Secret key:' ); ?>&nbsp;</strong><span id="privatekey"><?php echo $user->edd_user_secret_key; ?></span><br/>
-								<strong><?php _e( 'Toeken:' ); ?>&nbsp;</strong><span id="token"><?php echo hash( 'md5', $user->edd_user_secret_key . $user->edd_user_public_key ); ?></span><br/>
+								<strong><?php _e( 'Token:' ); ?>&nbsp;</strong><span id="token"><?php echo hash( 'md5', $user->user_email . $user->edd_user_public_key ); ?></span><br/>
 								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 								<span class="description"><?php _e( 'Revoke API Keys', 'edd' ); ?></span>
 							<?php } ?>
