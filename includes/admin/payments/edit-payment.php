@@ -26,7 +26,7 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 						<span><?php _e( 'Buyer\'s Email', 'edd' ); ?></span>
 					</th>
 					<td>
-						<input class="regular-text" type="text" name="edd-buyer-email" id="edd-buyer-email" value="<?php echo $payment_data['email']; ?>"/>
+						<input class="regular-text" type="text" name="edd-buyer-email" id="edd-buyer-email" value="<?php echo edd_get_payment_user_email( $payment_id ); ?>"/>
 						<p class="description"><?php _e( 'If needed, you can update the buyer\'s email here.', 'edd' ); ?></p>
 					</td>
 				</tr>
@@ -35,7 +35,7 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 						<span><?php _e( 'Buyer\'s User ID', 'edd' ); ?></span>
 					</th>
 					<td>
-						<input class="small-text" type="number" min="-1" step="1" name="edd-buyer-user-id" id="edd-buyer-user-id" value="<?php echo $payment_data['user_id']; ?>"/>
+						<input class="small-text" type="number" min="-1" step="1" name="edd-buyer-user-id" id="edd-buyer-user-id" value="<?php echo edd_get_payment_user_id( $payment_id ); ?>"/>
 						<p class="description"><?php _e( 'If needed, you can update the buyer\'s WordPress user ID here.', 'edd' ); ?></p>
 					</td>
 				</tr>
