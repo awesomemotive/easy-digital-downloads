@@ -82,7 +82,7 @@ function edd_get_purchase_link( $args = array() ) {
 	<!--dynamic-cached-content-->
 	<form id="edd_purchase_<?php echo $args['download_id']; ?>" class="edd_download_purchase_form" method="post">
 
-		<?php do_action( 'edd_purchase_link_top', $args['download_id'] ); ?>
+		<?php do_action( 'edd_purchase_link_top', $args['download_id'], $args['price'] ); ?>
 
 		<div class="edd_purchase_submit_wrapper">
 			<?php
@@ -143,10 +143,10 @@ function edd_get_purchase_link( $args = array() ) {
  * @since       1.2.3
  * @return      void
  */
-function edd_purchase_variable_pricing( $download_id ) {
+function edd_purchase_variable_pricing( $download_id, $prices ) {
 	$variable_pricing = edd_has_variable_prices( $download_id );
 
-	if ( ! $variable_pricing )
+	if ( ! $variable_pricing || empty( $price ) )
 		return;
 
 	$prices = apply_filters('edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id);
@@ -179,7 +179,7 @@ function edd_purchase_variable_pricing( $download_id ) {
 <?php
 	add_action( 'edd_after_price_options', $download_id );
 }
-add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing' );
+add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10, 2 );
 
 /**
  * Before Download Content
