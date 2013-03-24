@@ -179,7 +179,7 @@ function edd_purchase_variable_pricing( $download_id, $price ) {
 <?php
 	add_action( 'edd_after_price_options', $download_id );
 }
-add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing' );
+add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10, 2 );
 
 /**
  * Before Download Content
