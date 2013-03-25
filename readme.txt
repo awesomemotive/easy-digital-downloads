@@ -37,7 +37,7 @@ Features of the plugin include:
 
 More information at [Easy Digital Downloads.com](http://easydigitaldownloads.com/).
 
-[youtube http://www.youtube.com/watch?v=SjOeSZ08_IA]
+[youtube http://www.youtube.com/watch?v=japHPcIFs4I]
 
 **Sell and Track Software License Keys**
 
