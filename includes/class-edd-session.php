@@ -45,7 +45,8 @@ class EDD_Session {
 
 	function __construct() {
 
-		define( 'WP_SESSION_COOKIE', 'wordpress_wp_session' );
+		if ( ! defined( 'WP_SESSION_COOKIE' ) )
+			define( 'WP_SESSION_COOKIE', 'wordpress_wp_session' );
 
 		if ( ! class_exists( 'Recursive_ArrayAccess' ) )
 			require_once EDD_PLUGIN_DIR . 'includes/libraries/class-recursive-arrayaccess.php';
