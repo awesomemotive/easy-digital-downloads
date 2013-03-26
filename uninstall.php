@@ -77,7 +77,34 @@ if ( is_object( $wp_roles ) ) {
 	$wp_roles->remove_cap( 'administrator', 'manage_shop_settings' );
 
 	/** Remove the Main Post Type Capabilities */
-	$capabilities = EDD()->roles->get_core_caps();
+	$capabilities = array();
+	$capability_types = array( 'product', 'shop_payment', 'shop_discount' );
+
+	foreach ( $capability_types as $capability_type ) {
+		$capabilities[ $capability_type ] = array(
+			// Post type
+			"edit_{$capability_type}",
+			"read_{$capability_type}",
+			"delete_{$capability_type}",
+			"edit_{$capability_type}s",
+			"edit_others_{$capability_type}s",
+			"publish_{$capability_type}s",
+			"read_private_{$capability_type}s",
+			"delete_{$capability_type}s",
+			"delete_private_{$capability_type}s",
+			"delete_published_{$capability_type}s",
+			"delete_others_{$capability_type}s",
+			"edit_private_{$capability_type}s",
+			"edit_published_{$capability_type}s",
+
+			// Terms
+			"manage_{$capability_type}_terms",
+			"edit_{$capability_type}_terms",
+			"delete_{$capability_type}_terms",
+			"assign_{$capability_type}_terms"
+		);
+	}
+
 	foreach ( $capabilities as $cap_group ) {
 		foreach ( $cap_group as $cap ) {
 			$wp_roles->remove_cap( 'shop_manager', $cap );
