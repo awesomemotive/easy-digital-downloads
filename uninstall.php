@@ -12,6 +12,9 @@
 // Exit if accessed directly
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
 
+// Load EDD file
+include_once( 'easy-digital-downloads.php' );
+
 global $wpdb, $edd_options, $wp_roles;
 
 /** Delete All the Custom Post Types */
@@ -77,33 +80,7 @@ if ( is_object( $wp_roles ) ) {
 	$wp_roles->remove_cap( 'administrator', 'manage_shop_settings' );
 
 	/** Remove the Main Post Type Capabilities */
-	$capabilities = array();
-	$capability_types = array( 'product', 'shop_payment', 'shop_discount' );
-
-	foreach ( $capability_types as $capability_type ) {
-		$capabilities[ $capability_type ] = array(
-			// Post type
-			"edit_{$capability_type}",
-			"read_{$capability_type}",
-			"delete_{$capability_type}",
-			"edit_{$capability_type}s",
-			"edit_others_{$capability_type}s",
-			"publish_{$capability_type}s",
-			"read_private_{$capability_type}s",
-			"delete_{$capability_type}s",
-			"delete_private_{$capability_type}s",
-			"delete_published_{$capability_type}s",
-			"delete_others_{$capability_type}s",
-			"edit_private_{$capability_type}s",
-			"edit_published_{$capability_type}s",
-
-			// Terms
-			"manage_{$capability_type}_terms",
-			"edit_{$capability_type}_terms",
-			"delete_{$capability_type}_terms",
-			"assign_{$capability_type}_terms"
-		);
-	}
+	$capabilities = EDD()->roles->get_core_caps();
 
 	foreach ( $capabilities as $cap_group ) {
 		foreach ( $cap_group as $cap ) {
