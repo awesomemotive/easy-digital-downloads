@@ -143,10 +143,10 @@ function edd_get_purchase_link( $args = array() ) {
  * @since       1.2.3
  * @return      void
  */
-function edd_purchase_variable_pricing( $download_id, $prices ) {
+function edd_purchase_variable_pricing( $download_id, $show_price ) {
 	$variable_pricing = edd_has_variable_prices( $download_id );
 
-	if ( ! $variable_pricing || empty( $price ) )
+	if ( ! $variable_pricing || empty( $show_price ) )
 		return;
 
 	$prices = apply_filters('edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id);
