@@ -2,10 +2,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-23 20:29+0100\n"
-"PO-Revision-Date: 2013-03-23 20:34+0100\n"
+"POT-Creation-Date: 2013-03-27 22:40+0100\n"
+"PO-Revision-Date: 2013-03-27 22:49+0100\n"
 "Last-Translator: FxB <traductions@fxbenard.com>\n"
-"Language-Team: FxB <fx@fxbenard.com>\n"
+"Language-Team: FxB <traductions@fxbenard.com>\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,13 +42,13 @@ msgid "Invalid API key!"
 msgstr "Clé API incorrecte !"
 
 # @ edd
-#: includes/class-edd-api.php:333
+#: includes/class-edd-api.php:338
 msgid "Invalid query!"
 msgstr "Requête incorrecte !"
 
 # @ edd
-#: includes/class-edd-api.php:589 includes/class-edd-api.php:590
-#: includes/class-edd-api.php:591 includes/class-edd-api.php:592
+#: includes/class-edd-api.php:594 includes/class-edd-api.php:595
+#: includes/class-edd-api.php:596 includes/class-edd-api.php:597
 #: includes/admin/reporting/class-customer-reports-table.php:157
 #: includes/admin/reporting/class-export-customers.php:110
 #: includes/admin/reporting/class-export-customers.php:124
@@ -56,51 +56,49 @@ msgid "Guest"
 msgstr "Invité"
 
 # @ edd
-#: includes/class-edd-api.php:632
+#: includes/class-edd-api.php:637
 #, php-format
 msgid "Customer %s not found!"
 msgstr "Client %s introuvable !"
 
 # @ edd
-#: includes/class-edd-api.php:751 includes/class-edd-api.php:893
-#: includes/class-edd-api.php:1013
+#: includes/class-edd-api.php:756 includes/class-edd-api.php:898
+#: includes/class-edd-api.php:1018
 #, php-format
 msgid "Product %s not found!"
 msgstr "Le produit %s est introuvable !"
 
-#: includes/class-edd-api.php:807 includes/class-edd-api.php:926
+#: includes/class-edd-api.php:812 includes/class-edd-api.php:931
 msgid "The end date must be later than the start date!"
 msgstr "La date de fin doit être postérieure à la date de début !"
 
-#: includes/class-edd-api.php:814 includes/class-edd-api.php:933
+#: includes/class-edd-api.php:819 includes/class-edd-api.php:938
 msgid "Invalid or no date range specified!"
 msgstr "Plage de dates non valide ou non spécifié !"
 
 # @ edd
-#: includes/class-edd-api.php:1217
+#: includes/class-edd-api.php:1222
 msgid "Easy Digital Downloads API Keys"
 msgstr "Clé API d'Easy Digital Downloads"
 
 # @ edd
-#: includes/class-edd-api.php:1222
+#: includes/class-edd-api.php:1227
 msgid "Generate API Key"
 msgstr "Générer la clé API"
 
-#: includes/class-edd-api.php:1224
-#, fuzzy
+#: includes/class-edd-api.php:1229
 msgid "Public key:"
 msgstr "Clef publique&nbsp;:"
 
-#: includes/class-edd-api.php:1225
+#: includes/class-edd-api.php:1230
 msgid "Secret key:"
 msgstr "Clé secrète :"
 
-#: includes/class-edd-api.php:1226
-#, fuzzy
+#: includes/class-edd-api.php:1231
 msgid "Token:"
-msgstr "%i marqueur incorrect"
+msgstr "Token :"
 
-#: includes/class-edd-api.php:1228
+#: includes/class-edd-api.php:1233
 msgid "Revoke API Keys"
 msgstr "Révoquer la clé API"
 
@@ -158,11 +156,15 @@ msgid ""
 "Looks like you're running an older version of WordPress, you need to be "
 "running at least WordPress 3.3 to use Easy Digital Downloads."
 msgstr ""
+"Il semblerait que vous utilisez une ancienne version de WordPress, vous "
+"devez être au moins en WordPress 3.3 pour pouvoir utiliser Easy Digital "
+"Downloads."
 
 #: includes/install.php:29
 msgid ""
 "Easy Digital Downloads is not compatible with this version of WordPress."
 msgstr ""
+"Easy Digital Downloads n'est pas compatible avec cette version de WordPress."
 
 # @ edd
 #: includes/install.php:46 includes/template-functions.php:100
@@ -205,14 +207,12 @@ msgstr "Se connecter à votre compte"
 #: includes/login-register.php:40 includes/login-register.php:41
 #: includes/checkout/template.php:306 includes/checkout/template.php:308
 #: includes/checkout/template.php:344
-#: templates/shortcode-profile-editor.php:70
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
 # @ edd
 #: includes/login-register.php:44 includes/checkout/template.php:311
 #: includes/checkout/template.php:313 includes/checkout/template.php:348
-#: templates/shortcode-profile-editor.php:71
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -4087,15 +4087,16 @@ msgstr ""
 
 # @ edd
 #: includes/admin/settings/register-settings.php:393
-#, fuzzy
 msgid "Symlink File Downloads?"
-msgstr "Aucun fichier encore téléchargé"
+msgstr "Téléchargements de fichiers par liens symboliques ?"
 
 #: includes/admin/settings/register-settings.php:394
 msgid ""
 "Check this if you are delivering really large files or having problems with "
 "file downloads completing."
 msgstr ""
+"Cochez cette case si vous envoyez des fichiers très volumineux ou que vous "
+"avez des problèmes de téléchargements de fichiers bloqués en attente."
 
 #: includes/admin/settings/register-settings.php:399
 msgid "Terms of Agreement"
@@ -4875,14 +4876,6 @@ msgstr "Enregistrer les modifications"
 msgid "You need to login to edit your profile."
 msgstr "Vous devez être connecté pour modifier votre profil."
 
-#: templates/shortcode-profile-editor.php:72
-msgid "Remember me?"
-msgstr "Se souvenir de moi ?"
-
-#: templates/shortcode-profile-editor.php:73
-msgid "Log In"
-msgstr "Se connecter"
-
 # @ edd
 #: templates/shortcode-receipt.php:18
 msgid "Payment"
@@ -4906,6 +4899,12 @@ msgstr "Clé de Paiement"
 #: templates/widget-cart-item.php:4
 msgid "remove"
 msgstr "retirer"
+
+#~ msgid "Remember me?"
+#~ msgstr "Se souvenir de moi ?"
+
+#~ msgid "Log In"
+#~ msgstr "Se connecter"
 
 #~ msgid "The email address specified is not registered!"
 #~ msgstr "L'adresse e-mail spécifiée n'est pas enregistrée !"
