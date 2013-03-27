@@ -258,6 +258,8 @@ class EDD_API {
 		// Determine the kind of query
 		$query_mode = $this->get_query_mode();
 
+		$data = array();
+
 		switch( $query_mode ) :
 
 			case 'stats' :
@@ -274,7 +276,7 @@ class EDD_API {
 
 			case 'products' :
 
-				$product   = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
+				$product = isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null;
 
 				$data = $this->get_products( $product );
 
@@ -282,7 +284,7 @@ class EDD_API {
 
 			case 'customers' :
 
-				$customer  = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
+				$customer = isset( $wp_query->query_vars['customer'] ) ? $wp_query->query_vars['customer']  : null;
 
 				$data = $this->get_customers( $customer );
 
@@ -290,11 +292,14 @@ class EDD_API {
 
 			case 'sales' :
 
-				$data   = $this->get_recent_sales();
+				$data = $this->get_recent_sales();
 
 				break;
 
 		endswitch;
+
+		// Allow extensions to setup their own return data
+		$data = apply_filters( 'edd_api_output_data', $data, $query_mode, $this );
 
 		// Log this API request, if enabled. We log it here because we have access to errors.
 		$this->log_request( $data );
