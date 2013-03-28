@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-03-27 22:40+0100\n"
-"PO-Revision-Date: 2013-03-27 22:49+0100\n"
+"PO-Revision-Date: 2013-03-28 09:23+0100\n"
 "Last-Translator: FxB <traductions@fxbenard.com>\n"
 "Language-Team: FxB <traductions@fxbenard.com>\n"
 "Language: fr_FR\n"
@@ -2585,7 +2585,7 @@ msgstr "Revenus :"
 # @ edd
 #: includes/admin/downloads/metabox.php:582
 msgid "View File Download Log"
-msgstr "Afficher le fichier journal des téléchargements"
+msgstr "Voir le fichier journal des téléchargements"
 
 # @ edd
 #: includes/admin/payments/class-payments-table.php:117
