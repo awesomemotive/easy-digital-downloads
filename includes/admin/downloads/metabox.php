@@ -572,7 +572,7 @@ function edd_render_stats_meta_box() {
 			echo '</td>';
 		echo '</tr>';
 		echo '<tr>';
-			echo '<th style="width: 20%">' . __( 'Earnings:', 'edd' ) . '</th>';
+			echo '<th style="width: 30%">' . __( 'Earnings:', 'edd' ) . '</th>';
 			echo '<td class="edd_download_stats">';
 				echo edd_currency_filter( edd_format_amount( $earnings ) );
 			echo '</td>';
