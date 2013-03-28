@@ -109,16 +109,19 @@ function edd_admin_footer_for_thickbox() {
 						?>
 					</select>
 				</div>
+				<?php 
+				$colors = edd_get_button_colors();
+				if( $colors ) { ?>
 				<div id="edd-color-choice" style="display: none;">
 					<select id="select-edd-color" style="clear: both; display: block; margin-bottom: 1em;">
 						<option value=""><?php _e('Choose a button color', 'edd'); ?></option>
 						<?php
-							$colors = edd_get_button_colors();
 							foreach ( $colors as $key => $color )
 								echo '<option value="' . str_replace( ' ', '_', $key ) . '">' . $color . '</option>';
 						?>
 					</select>
 				</div>
+				<?php } ?>
 				<div>
 					<input type="text" class="regular-text" id="edd-text" value="" placeholder="<?php _e( 'Link text . . .', 'edd' ); ?>"/>
 				</div>
