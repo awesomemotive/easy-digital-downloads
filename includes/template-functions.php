@@ -159,8 +159,7 @@ function edd_purchase_variable_pricing( $download_id, $show_price ) {
 			<?php
 			if ( $prices ):
 				foreach ( $prices as $key => $price ) :
-					$amount = $price[ 'amount' ];
-					echo '<li>';
+					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '">';
 					printf(
 						'<label for="%3$s"><input type="%2$s" %1$s name="edd_options[price_id][]" id="%3$s" class="%4$s" value="%5$s" %7$s/> %6$s</label>',
 						checked( 0, $key, false ),
@@ -168,7 +167,7 @@ function edd_purchase_variable_pricing( $download_id, $show_price ) {
 						esc_attr( 'edd_price_option_' . $download_id . '_' . $key ),
 						esc_attr( 'edd_price_option_' . $download_id ),
 						esc_attr( $key ),
-						esc_html( $price['name'] . ' - ' . edd_currency_filter( edd_format_amount( $amount ) ) ),
+						esc_html( $price['name'] . ' - ' . edd_currency_filter( edd_format_amount( $price[ 'amount' ] ) ) ),
 						checked( isset( $_GET['price_option'] ), $key, false )
 					);
 					do_action( 'edd_after_price_option', $key, $price, $download_id );
