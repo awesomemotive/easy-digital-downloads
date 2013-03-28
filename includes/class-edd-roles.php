@@ -182,4 +182,57 @@ class EDD_Roles {
 
 		return $capabilities;
 	}
+
+	/**
+	 * Remove core post type capabilities (called on uninstall)
+	 *
+	 * @since 1.5.2
+	 */
+	public function remove_caps() {
+		if ( class_exists( 'WP_Roles' ) )
+			if ( ! isset( $wp_roles ) )
+				$wp_roles = new WP_Roles();
+
+		if ( is_object( $wp_roles ) ) {
+			/** Shop Manager Capabilities */
+			$wp_roles->remove_cap( 'shop_manager', 'view_shop_reports' );
+			$wp_roles->remove_cap( 'shop_manager', 'view_shop_sensitive_data' );
+			$wp_roles->remove_cap( 'shop_manager', 'export_shop_reports' );
+			$wp_roles->remove_cap( 'shop_manager', 'manage_shop_discounts' );
+			$wp_roles->remove_cap( 'shop_manager', 'manage_shop_settings' );
+
+			/** Site Administrator Capabilities */
+			$wp_roles->remove_cap( 'administrator', 'view_shop_reports' );
+			$wp_roles->remove_cap( 'administrator', 'view_shop_sensitive_data' );
+			$wp_roles->remove_cap( 'administrator', 'export_shop_reports' );
+			$wp_roles->remove_cap( 'administrator', 'manage_shop_discounts' );
+			$wp_roles->remove_cap( 'administrator', 'manage_shop_settings' );
+
+			/** Remove the Main Post Type Capabilities */
+			$capabilities = $this->get_core_caps();
+
+			foreach ( $capabilities as $cap_group ) {
+				foreach ( $cap_group as $cap ) {
+					$wp_roles->remove_cap( 'shop_manager', $cap );
+					$wp_roles->remove_cap( 'administrator', $cap );
+					$wp_roles->remove_cap( 'shop_worker', $cap );
+				}
+			}
+
+			/** Shop Accountant Capabilities */
+			$wp_roles->remove_cap( 'shop_accountant', 'edit_products' );
+			$wp_roles->remove_cap( 'shop_accountant', 'read_private_prodcuts' );
+			$wp_roles->remove_cap( 'shop_accountant', 'view_shop_reports' );
+			$wp_roles->remove_cap( 'shop_accountant', 'export_shop_reports' );
+
+			/** Shop Vendor Capabilities */
+			$wp_roles->remove_cap( 'shop_vendor', 'edit_product' );
+			$wp_roles->remove_cap( 'shop_vendor', 'edit_products' );
+			$wp_roles->remove_cap( 'shop_vendor', 'delete_product' );
+			$wp_roles->remove_cap( 'shop_vendor', 'delete_products' );
+			$wp_roles->remove_cap( 'shop_vendor', 'publish_products' );
+			$wp_roles->remove_cap( 'shop_vendor', 'edit_published_products' );
+			$wp_roles->remove_cap( 'shop_vendor', 'upload_files' );
+		}
+	}
 }
