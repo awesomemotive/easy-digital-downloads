@@ -29,25 +29,25 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * @var string Number of results to show per page
-	 * @since  1.4
+	 * @since 1.4
 	 */
 	public $per_page = 30;
 
 	/**
 	 * @var string Total number of discounts
-	 * @since 1.0
+	 * @since 1.4
 	 */
 	public $total_count;
 
 	/**
 	 * @var string Active number of discounts
-	 * @since 1.0
+	 * @since 1.4
 	 */
 	public $active_count;
 
 	/**
 	 * @var string Inactive number of discounts
-	 * @since 1.0
+	 * @since 1.4
 	 */
 	public $inactive_count;
 
