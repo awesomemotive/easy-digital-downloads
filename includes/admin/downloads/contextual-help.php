@@ -13,14 +13,10 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Downloads contextual help
+ * Adds the Contextual Help for the main Downloads page
  *
- * Adds help for default metaboxes, as well as notes about using the shortcodes.
- * Links to GitHub, themes, and extensions
- *
- * @access      private
- * @since       1.2.3
- * @return      void
+ * @since 1.2.3
+ * @return void
  */
 function edd_downloads_contextual_help() {
 	$screen = get_current_screen();
