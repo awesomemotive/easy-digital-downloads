@@ -101,7 +101,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Outputs the log views
+	 * Outputs the reporting views
 	 *
 	 * @access public
 	 * @since 1.5
@@ -128,7 +128,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.5
-	  * @global object $wpdb Used to query the database using the WordPress
+	 * @global object $wpdb Used to query the database using the WordPress
 	 *   Database API
 	 * @return int $count The number of customers from the database
 	 */
