@@ -1,6 +1,6 @@
 <?php
 /**
- * Edit Discount Template
+ * Edit Discount Page
  *
  * @package     Easy Digital Downloads
  * @subpackage  Discounts
