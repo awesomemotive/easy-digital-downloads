@@ -15,12 +15,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Admin Messages
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @global $edd_options Array of all the EDD Options
+ * @return void
  */
 function edd_admin_messages() {
-	global $typenow, $edd_options;
+	global $edd_options;
 
 	if ( isset( $_GET['edd-message'] ) && 'discount_updated' == $_GET['edd-message'] && current_user_can( 'manage_shop_discounts' ) ) {
 		 add_settings_error( 'edd-notices', 'edd-discount-updated', __( 'Discount code updated.', 'edd' ), 'updated' );
@@ -53,9 +53,8 @@ add_action( 'admin_notices', 'edd_admin_messages' );
 /**
  * Admin Add-ons Notices
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @return void
 */
 function edd_admin_addons_notices() {
 	add_settings_error( 'edd-notices', 'edd-addons-feed-error', __( 'There seems to be an issue with the server. Please try again in a few minutes.', 'edd' ), 'error' );
