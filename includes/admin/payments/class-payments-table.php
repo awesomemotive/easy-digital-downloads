@@ -102,6 +102,10 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 *
 	 * @since 1.4
 	 * @access public
+	 *
+	 * @param string $text Label for the search box
+	 * @param string $input_id ID of the search box
+	 *
 	 * @return void
 	 */
 	public function search_box( $text, $input_id ) {
