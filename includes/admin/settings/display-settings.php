@@ -17,16 +17,16 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Renders the options page contents.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @return void
 */
 function edd_options_page() {
 	global $edd_options;
 
 	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'general';
 
-	ob_start(); ?>
+	ob_start();
+	?>
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper">
 			<a href="<?php echo add_query_arg('tab', 'general', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>"><?php _e('General', 'edd'); ?></a>
