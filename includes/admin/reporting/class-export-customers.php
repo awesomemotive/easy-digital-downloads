@@ -21,9 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class EDD_Customers_Export extends EDD_Export {
 	/**
-	 * Our export type. Used for export-type specific filters / actions
-	 *
-	 * @var string Export type
+	 * @var string Our export type. Used for export-type specific filters/actions
 	 * @since 1.4.4
 	 */
 	public $export_type = 'customers';
