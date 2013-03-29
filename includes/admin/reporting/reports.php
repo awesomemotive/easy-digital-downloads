@@ -17,9 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Renders the reports page contents.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @global $edd_options Array of all the EDD Options
+ * @return void
 */
 function edd_reports_page() {
 	global $edd_options;
@@ -30,7 +30,7 @@ function edd_reports_page() {
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper">
 			<a href="<?php echo add_query_arg( array( 'tab' => 'reports', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'reports' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Reports', 'edd' ); ?></a>
-			<?php if( current_user_can( 'export_shop_reports' ) ) { ?>
+			<?php if ( current_user_can( 'export_shop_reports' ) ) { ?>
 				<a href="<?php echo add_query_arg( array( 'tab' => 'export', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'export' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Export', 'edd' ); ?></a>
 			<?php } ?>
 			<a href="<?php echo add_query_arg( array( 'tab' => 'logs', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'logs' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Logs', 'edd' ); ?></a>
@@ -49,9 +49,8 @@ function edd_reports_page() {
 /**
  * Default Report Views
  *
- * @access      public
- * @since       1.4
- * @return      void
+ * @since 1.4
+ * @return array $views Report Views
  */
 function edd_reports_default_views() {
 	$views = array(
@@ -69,9 +68,8 @@ function edd_reports_default_views() {
 /**
  * Renders the Reports page
  *
- * @access      public
- * @since       1.3
- * @return      void
+ * @since 1.3
+ * @return void
  */
 function edd_reports_tab_reports() {
 	$current_view = 'earnings';
@@ -85,11 +83,10 @@ function edd_reports_tab_reports() {
 add_action( 'edd_reports_tab_reports', 'edd_reports_tab_reports' );
 
 /**
- * Renders the Reports page views drop down
+ * Renders the Reports Page Views Drop Downs
  *
- * @access      public
- * @since       1.3
- * @return      void
+ * @since 1.3
+ * @return void
  */
 function edd_report_views() {
 	$views        = edd_reports_default_views();
@@ -113,11 +110,12 @@ function edd_report_views() {
 }
 
 /**
- * Renders the Reports Downloads table
+ * Renders the Reports Downloads Table
  *
- * @access      public
- * @since       1.3
- * @return      void
+ * @since 1.3
+ * @uses EDD_Download_Reports_Table::prepare_items()
+ * @uses EDD_Download_Reports_Table::display() 
+ * @return void
  */
 function edd_reports_downloads_table() {
 	include( dirname( __FILE__ ) . '/class-download-reports-table.php' );
@@ -129,11 +127,12 @@ function edd_reports_downloads_table() {
 add_action( 'edd_reports_view_downloads', 'edd_reports_downloads_table' );
 
 /**
- * Renders the Reports Customers table
+ * Renders the Reports Customers Table
  *
- * @access      public
- * @since       1.3
- * @return      void
+ * @since 1.3
+ * @uses EDD_Customer_Reports_Table::prepare_items()
+ * @uses EDD_Customer_Reports_Table::display()
+ * @return void
  */
 function edd_reports_customers_table() {
 	include( dirname( __FILE__ ) . '/class-customer-reports-table.php' );
@@ -145,11 +144,10 @@ function edd_reports_customers_table() {
 add_action( 'edd_reports_view_customers', 'edd_reports_customers_table' );
 
 /**
- * Renders the Reports earnings graphs
+ * Renders the Reports Earnings Graphs
  *
- * @access      public
- * @since       1.3
- * @return      void
+ * @since 1.3
+ * @return void
  */
 function edd_reports_earnings() {
 	?>
@@ -162,11 +160,10 @@ function edd_reports_earnings() {
 add_action( 'edd_reports_view_earnings', 'edd_reports_earnings' );
 
 /**
- * Renders the tax reports
+ * Renders the Tax Reports
  *
- * @access      public
- * @since       1.3.3
- * @return      void
+ * @since 1.3.3
+ * @return void
  */
 function edd_reports_taxes() {
 	$year = isset( $_GET['year'] ) ? absint( $_GET['year'] ) : date( 'Y' );
@@ -179,9 +176,7 @@ function edd_reports_taxes() {
 		<div class="postbox">
 			<h3><span><?php _e('Tax Report', 'edd'); ?></span></h3>
 			<div class="inside">
-
 				<p><?php _e( 'This report shows the total amount collected in sales tax for the given year.', 'edd' ); ?></p>
-
 				<form method="get" action="<?php echo admin_url( 'edit.php' ); ?>">
 					<span><?php echo $year; ?></span>: <strong><?php edd_sales_tax_for_year( $year ); ?></strong>&nbsp;&mdash;&nbsp;
 					<select name="year">
@@ -194,21 +189,18 @@ function edd_reports_taxes() {
 					<input type="hidden" name="page" value="edd-reports" />
 					<?php submit_button( __( 'Submit', 'edd' ), 'secondary', 'submit', false ); ?>
 				</form>
-
 			</div><!-- .inside -->
 		</div><!-- .postbox -->
-
 	</div><!-- .metabox-holder -->
 	<?php
 }
 add_action( 'edd_reports_view_taxes', 'edd_reports_taxes' );
 
 /**
- * Renders the Reports page Export tab
+ * Renders the 'Export' tab on the Reports Page
  *
- * @access      public
- * @since       1.3
- * @return      void
+ * @since 1.3
+ * @return void
  */
 function edd_reports_tab_export() {
 	?>
@@ -292,9 +284,8 @@ add_action( 'edd_reports_tab_export', 'edd_reports_tab_export' );
 /**
  * Renders the Reports page
  *
- * @access      public
- * @since       1.3
- * @return      void
+ * @since 1.3
+ * @return void
  */
 function edd_reports_tab_logs() {
 	require( EDD_PLUGIN_DIR . 'includes/admin/reporting/logs.php' );
@@ -309,36 +300,31 @@ function edd_reports_tab_logs() {
 }
 add_action( 'edd_reports_tab_logs', 'edd_reports_tab_logs' );
 
-
 /**
- * Retrieves estimated monthly earnings ; sales
+ * Retrieves estimated monthly earnings and sales
  *
- * @access      public
- * @since       1.5
- * @return      array
+ * @since 1.5
+ * @return array
  */
 function edd_estimated_monthly_stats() {
-
 	$estimated = get_transient( 'edd_estimated_monthly_stats' );
 
-	if( false === $estimated ) {
-
+	if ( false === $estimated ) {
 		$estimated = array(
 			'earnings' => 0,
 			'sales'    => 0
 		);
 
 		$products = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1, 'fields' => 'ids' ) );
-		if( $products ) {
-			foreach( $products as $download ) {
+		if ( $products ) {
+			foreach ( $products as $download ) {
 				$estimated['earnings'] += edd_get_average_monthly_download_earnings( $download );
-				$estimated['sales'] += number_format( edd_get_average_monthly_download_sales( $download ), 0 );
+				$estimated['sales']    += number_format( edd_get_average_monthly_download_sales( $download ), 0 );
 			}
 		}
 
 		// Cache for one day
 		set_transient( 'edd_estimated_monthly_stats', serialize( $estimated ), 86400 );
-
 	}
 
 	return maybe_unserialize( $estimated );
