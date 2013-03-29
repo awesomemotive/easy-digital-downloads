@@ -22,18 +22,18 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  *
  * Renders the file downloads log view
  *
- * @since 1.4.4
+ * @since 1.4
  */
 class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * @var int Number of items per page
-	 * @since 1.4.4
+	 * @since 1.4
 	 */
 	public $per_page = 30;
 
 	/**
 	 * @var bool Are we searching for files?
-	 * @since 1.4.4
+	 * @since 1.4
 	 */
 	public $file_search = false;
 
@@ -41,7 +41,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * Get things started
 	 *
 	 * @access public
-	 * @since 1.4.4
+	 * @since 1.4
 	 * @see WP_List_Table::__construct()
 	 * @return void
 	 */
@@ -61,7 +61,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
 	 * Show the search field
 	 *
-	 * @since 1.4.4
+	 * @since 1.4
 	 * @access public
 	 *
 	 * @param string $text Label for the search box
@@ -89,7 +89,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * This function renders most of the columns in the list table.
 	 *
 	 * @access public
-	 * @since 1.4.4
+	 * @since 1.4
 	 *
 	 * @param array $item Contains all the data of the discount code
 	 * @param string $column_name The name of the column
@@ -111,7 +111,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * Retrieve the table columns
 	 *
 	 * @access public
-	 * @since 1.4.4
+	 * @since 1.4
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
@@ -131,7 +131,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * Retrieves the user we are filtering logs by, if any
 	 *
 	 * @access public
-	 * @since 1.4.4
+	 * @since 1.4
 	 * @return mixed int If User ID, string If Email/Login
 	 */
 	public function get_filtered_user() {
@@ -142,7 +142,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * Retrieves the ID of the download we're filtering logs by
 	 *
 	 * @access public
-	 * @since 1.4.4
+	 * @since 1.4
 	 * @return int Download ID
 	 */
 	public function get_filtered_download() {
@@ -153,7 +153,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * Retrieves the search query string
 	 *
 	 * @access public
-	 * @since 1.4.4
+	 * @since 1.4
 	 * @return mixed string If search is present, false otherwise
 	 */
 	public function get_search() {
@@ -166,7 +166,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * This is used to return log entries that match our search query, user query, or download query
 	 *
 	 * @access public
-	 * @since 1.4.4
+	 * @since 1.4
 	 * @return array $meta_query
 	 */
 	public function get_meta_query() {
@@ -243,7 +243,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * Retrieve the current page number
 	 *
 	 * @access public
-	 * @since 1.4.4
+	 * @since 1.4
 	 * @return int Current page number
 	 */
 	function get_paged() {
@@ -254,7 +254,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * Outputs the log views
 	 *
 	 * @access public
-	 * @since 1.4.4
+	 * @since 1.4
 	 * @return void
 	 */
 	public function bulk_actions() {
@@ -266,7 +266,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * Sets up the downloads filter
 	 *
 	 * @access public
-	 * @since 1.4.4
+	 * @since 1.4
 	 * @return void
 	 */
 	public function downloads_filter() {
@@ -295,7 +295,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * Gets the log entries for the current view
 	 *
 	 * @access public
-	 * @since 1.4.4
+	 * @since 1.4
 	 * @global object $edd_logs EDD Logs Object
 	 * @return array $logs_data Array of all the Log entires
 	 */
