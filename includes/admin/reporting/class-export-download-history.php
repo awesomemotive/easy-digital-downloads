@@ -14,22 +14,24 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * EDD_Download_History_Export Class
+ *
+ * @since 1.4.4
+ */
 class EDD_Download_History_Export extends EDD_Export {
 	/**
-	 * Our export type. Used for export-type specific filters / actions
-	 *
-	 * @access      public
-	 * @var         string
-	 * @since       1.4.4
+	 * @var string Our export type. Used for export-type specific filters/actions
+	 * @since 1.4.4
 	 */
 	public $export_type = 'download_history';
 
 	/**
 	 * Set the CSV columns
 	 *
-	 * @access      public
-	 * @since       1.4.4
-	 * @return      array
+	 * @access public
+	 * @since 1.4.4
+	 * @return array $cols All the columns
 	 */
 	public function csv_cols() {
 		$cols = array(
@@ -43,11 +45,12 @@ class EDD_Download_History_Export extends EDD_Export {
 	}
 
 	/**
-	 * Get the data being exported
+	 * Get the Export Data
 	 *
-	 * @access      public
-	 * @since       1.4.4
-	 * @return      array
+	 * @access public
+	 * @since 1.4.4
+ 	 * @global object $edd_logs EDD Logs Object
+	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
 		global $edd_logs;
