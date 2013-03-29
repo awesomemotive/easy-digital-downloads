@@ -205,7 +205,6 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 	}
 
-
 	/**
 	 * Outputs the log views
 	 *
