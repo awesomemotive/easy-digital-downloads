@@ -3,7 +3,7 @@
  * Contextual Help
  *
  * @package     Easy Digital Downloads
- * @subpackage  Downloads
+ * @subpackage  Documentation
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.2.3
