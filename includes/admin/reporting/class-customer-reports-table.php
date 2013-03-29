@@ -22,7 +22,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  *
  * Renders the Customer Reports table
  *
- * @access      private
+ * @since 1.5
  */
 class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
