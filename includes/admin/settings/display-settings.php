@@ -18,8 +18,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Renders the options page contents.
  *
  * @since 1.0
+ * @global $edd_options Array of all the EDD Options
  * @return void
-*/
+ */
 function edd_options_page() {
 	global $edd_options;
 
