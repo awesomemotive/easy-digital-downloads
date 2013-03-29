@@ -22,8 +22,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  *
  * Renders the gateway errors list table
  *
- * @access      private
- * @since       1.5
+ * @since 1.5
  */
 class EDD_API_Request_Log_Table extends WP_List_Table {
 	/**
