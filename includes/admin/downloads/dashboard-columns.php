@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @param array $download_columns Array of download columns
  * @return array $download_columns Updated array of download columns for Downloads
  *  Post Type List Table
-*/
+ */
 function edd_download_columns( $download_columns ) {
 	$download_columns = array(
 		'cb'                => '<input type="checkbox"/>',
@@ -51,7 +51,7 @@ add_filter( 'manage_edit-download_columns', 'edd_download_columns' );
  * @param string $column_name Column name
  * @param int $post_id Download (Post) ID
  * @return void
-*/
+ */
 function edd_render_download_columns( $column_name, $post_id ) {
 	if ( get_post_type( $post_id ) == 'download' ) {
 		global $edd_options;
@@ -95,7 +95,7 @@ add_action( 'manage_posts_custom_column', 'edd_render_download_columns', 10, 2 )
  * @since 1.0
  * @param array $columns Array of the columns
  * @return array $columns Array of sortable columns
-*/
+ */
 function edd_sortable_download_columns( $columns ) {
 	$columns['price'] = 'price';
 	$columns['sales'] = 'sales';
@@ -159,7 +159,7 @@ function edd_sort_downloads( $vars ) {
  *
  * @since 1.0
  * @return void
-*/
+ */
 function edd_download_load() {
 	add_filter( 'request', 'edd_sort_downloads' );
 }
@@ -172,7 +172,7 @@ add_action( 'load-edit.php', 'edd_download_load', 9999 );
  *
  * @since 1.0
  * @return void
-*/
+ */
 function edd_add_download_filters() {
 	global $typenow;
 
@@ -211,7 +211,7 @@ add_action( 'restrict_manage_posts', 'edd_add_download_filters', 100 );
  * @param string $column_name Name of the column
  * @param string $post_type Current Post Type (i.e. download)
  * @return void
-*/
+ */
 function edd_price_field_quick_edit( $column_name, $post_type ) {
 	if ( $column_name != 'price' || $post_type != 'download' ) return;
 	?>
