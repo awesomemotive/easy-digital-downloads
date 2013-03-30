@@ -13,13 +13,11 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Register Dashboard Widgets
+ * Registers the dashboard widgets
  *
- * Registers the dashboard widgets.
- *
- * @access      private
- * @author      Sunny Ratilal
- * @since       1.2.2
+ * @author Sunny Ratilal
+ * @since 1.2.2
+ * @return void
  */
 function edd_register_dashboard_widgets() {
 	if ( current_user_can( apply_filters( 'edd_dashboard_stats_cap', 'edit_pages' ) ) ) {
@@ -31,9 +29,13 @@ add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets' );
 /**
  * Sales Summary Dashboard Widget
  *
- * @access      private
- * @author      Sunny Ratilal
- * @since       1.2.2
+ * Builds and renders the Sales Summary dashboard widget. This widget displays
+ * the current month's sales and earnings, total sales and earnings best selling
+ * downloads as well as recent purchases made on your EDD Store.
+ *
+ * @author Sunny Ratilal
+ * @since 1.2.2
+ * @return void
  */
 function edd_dashboard_sales_widget() {
 	$top_selling_args = array(
