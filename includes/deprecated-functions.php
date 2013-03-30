@@ -34,11 +34,12 @@ function edd_is_ajax_enabled() {
  *
  * Returns the total number of payments recorded.
  *
- * @access      public
- * @since       1.0
- * @deprecated 	1.2
- * @return      integer
-*/
+ * @since 1.0
+ * @deprecated 1.2
+ * @param string $mode Payment mode (i.e. publish)
+ * @param string $user Customer ID (default: null)
+ * @return int $count Number of payments
+ */
 function edd_count_payments( $mode, $user = null ) {
 	$backtrace = debug_backtrace();
 
@@ -53,9 +54,11 @@ function edd_count_payments( $mode, $user = null ) {
 		'user'    => $user
 	) );
 	$count = 0;
+
 	if ( $payments ) {
 		$count = count( $payments );
 	}
+
 	return $count;
 }
 
@@ -64,15 +67,15 @@ function edd_count_payments( $mode, $user = null ) {
  *
  * Returns an array of sales and sale info for a download.
  *
- * @param		$download_id INT the ID number of the download to retrieve a log for
- * @param		$paginate bool whether to paginate the results or not
- * @param		$number int the number of results to return
- * @param		$offset int the number of items to skip
- *
- * @access      public
- * @deprecated  1.3.4
  * @since       1.0
- * @return      array
+ * @deprecated  1.3.4
+ *
+ * @param int $download_id ID number of the download to retrieve a log for
+ * @param bool $paginate Whether to paginate the results or not
+ * @param int $number Number of results to return
+ * @param int $offset Number of items to skip
+ *
+ * @return mixed array|bool
 */
 function edd_get_download_sales_log( $download_id, $paginate = false, $number = 10, $offset = 0 ) {
 	$backtrace = debug_backtrace();
@@ -81,14 +84,16 @@ function edd_get_download_sales_log( $download_id, $paginate = false, $number = 
 
 	$sales_log = get_post_meta( $download_id, '_edd_sales_log', true );
 
-	if( $sales_log ) {
+	if ( $sales_log ) {
 		$sales_log = array_reverse( $sales_log );
 		$log = array();
 		$log['number'] = count( $sales_log );
 		$log['sales'] = $sales_log;
-		if( $paginate ) {
+
+		if ( $paginate ) {
 			$log['sales'] = array_slice( $sales_log, $offset, $number );
 		}
+
 		return $log;
 	}
 
@@ -100,16 +105,15 @@ function edd_get_download_sales_log( $download_id, $paginate = false, $number = 
  *
  * Returns an array of file download dates and user info.
  *
- * @access      public
- * @deprecated  1.3.4
- * @since       1.0
+ * @deprecated 1.3.4
+ * @since 1.0
  *
- * @param		$download_id INT the ID number of the download to retrieve a log for
- * @param		$paginate bool whether to paginate the results or not
- * @param		$number int the number of results to return
- * @param		$offset int the number of items to skip
+ * @param int $download_id the ID number of the download to retrieve a log for
+ * @param bool $paginate whether to paginate the results or not
+ * @param int $number the number of results to return
+ * @param int $offset the number of items to skip
  *
- * @return      array
+ * @return mixed array|bool
 */
 function edd_get_file_download_log( $download_id, $paginate = false, $number = 10, $offset = 0 ) {
 	$backtrace = debug_backtrace();
@@ -139,13 +143,12 @@ function edd_get_file_download_log( $download_id, $paginate = false, $number = 1
  *
  * Retrieves an array of all files purchased.
  *
- * @access      public
- * @since       1.0
- * @deprecated  1.4
- * @param       int $payment_id - the ID number of the purchase
- * @return      mixed - array if purchase exists, false otherwise
+ * @since 1.0
+ * @deprecated 1.4
+ * @param int $payment_id ID number of the purchase
+ * @return mixed array if purchase exists, false otherwise
  */
-function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
+function edd_get_downloads_of_purchase( $payment_id, $payment_meta = null ) {
 	$backtrace = debug_backtrace();
 
 	_edd_deprecated_function( __FUNCTION__, '1.4', 'edd_get_payment_meta_downloads', $backtrace );
@@ -153,23 +156,24 @@ function edd_get_downloads_of_purchase($payment_id, $payment_meta = null){
 	if ( is_null( $payment_meta ) ) {
 		$payment_meta = edd_get_payment_meta( $payment_id );
 	}
+
 	$downloads = maybe_unserialize( $payment_meta['downloads'] );
+
 	if ( $downloads )
 		return $downloads;
+
 	return false;
 }
 
 /**
  * Get Menu Access Level
  *
- * Returns the access level required to access
- * the downloads menu. Currently not changeable,
- * but here for a future update.
+ * Returns the access level required to access the downloads menu. Currently not
+ * changeable, but here for a future update.
  *
- * @access      public
- * @since       1.0
- * @deprecated  1.4.4
- * @return      string
+ * @since 1.0
+ * @deprecated 1.4.4
+ * @return string
 */
 function edd_get_menu_access_level() {
 	$backtrace = debug_backtrace();
