@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class for logging events and errors
  *
