@@ -15,36 +15,29 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * EDD Session Class
+ * EDD_Session Class
  *
- * @access  private
- * @since  1.5
+ * @since 1.5
  */
-
 class EDD_Session {
-
-
 	/**
-	 * Holds our session data
-	 *
-	 * @access  private
-	 * @since  1.5
+	 * @var array Holds our session data
+	 * @access private
+	 * @since 1.5
 	 */
-
 	private $session = array();
-
 
 	/**
 	 * Get things started
 	 *
-	 * Defines our WP_Session constants, includes the necessary libraries and retrieves the WP Session instance
+	 * Defines our WP_Session constants, includes the necessary libraries and
+	 * retrieves the WP Session instance
 	 *
-	 * @access  private
-	 * @since  1.5
+	 * @access public
+	 * @since 1.5
+	 * @return void
 	 */
-
-	function __construct() {
-
+	public function __construct() {
 		if ( ! defined( 'WP_SESSION_COOKIE' ) )
 			define( 'WP_SESSION_COOKIE', 'wordpress_wp_session' );
 
@@ -56,59 +49,54 @@ class EDD_Session {
 			require_once EDD_PLUGIN_DIR . 'includes/libraries/wp-session.php';
 		}
 
-		if( empty( $this->session ) )
+		if ( empty( $this->session ) )
 			add_action( 'plugins_loaded', array( $this, 'init' ) );
 		else
 			add_action( 'init', array( $this, 'init' ) );
-
 	}
-
 
 	/**
 	 * Setup the WP_Session instance
 	 *
-	 * @access  public
-	 * @since  1.5
+	 * @access public
+	 * @since 1.5
+	 * @return void
 	 */
-
 	public function init() {
 		$this->session = WP_Session::get_instance();
 		return $this->session;
 	}
 
-
 	/**
 	 * Retrieve a session variable
 	 *
-	 * @access  public
-	 * @since  1.5
+	 * @access public
+	 * @since 1.5
+	 * @param string $key Session key
+	 * @return string Session variable
 	 */
-
 	public function get( $key ) {
-
 		$key = sanitize_key( $key );
-
 		return isset( $this->session[ $key ] ) ? maybe_unserialize( $this->session[ $key ] ) : false;
 	}
-
 
 	/**
 	 * Set a session variable
 	 *
-	 * @access  public
-	 * @since  1.5
+	 * @access public
+	 * @since 1.5
+	 * @param string $key Session key
+	 * @param string $variable Session variable
+	 * @return array Session variable
 	 */
-
 	public function set( $key, $value ) {
-
 		$key = sanitize_key( $key );
 
-		if( is_array( $value ) )
+		if ( is_array( $value ) )
 			$this->session[ $key ] = serialize( $value );
 		else
 			$this->session[ $key ] = $value;
 
 		return $this->session[ $key ];
 	}
-
 }
