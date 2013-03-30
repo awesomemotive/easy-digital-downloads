@@ -10,7 +10,7 @@
 */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Get Checkout Form
@@ -22,7 +22,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
 function edd_checkout_form() {
 	global $edd_options, $user_ID, $post;
 	ob_start();
-		if( edd_get_cart_contents() ) :
+		if ( edd_get_cart_contents() ) :
 			edd_checkout_cart();
 		?>
 			<div id="edd_checkout_form_wrap" class="edd_clearfix">
