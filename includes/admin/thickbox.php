@@ -7,20 +7,17 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Media Button
+ * Adds an "Insert Download" button above the TinyMCE Editor on add/edit screens.
  *
- * Returns the Insert Download TinyMCE button.
- *
- * @access      private
- * @since       1.0
- * @return      string
-*/
+ * @since 1.0
+ * @return string "Insert Download" Button
+ */
 function edd_media_button( $context ) {
 	global $pagenow, $typenow, $wp_version;
 	$output = '';
@@ -46,10 +43,11 @@ add_filter( 'media_buttons_context', 'edd_media_button' );
  * Prints the footer code needed for the Insert Download
  * TinyMCE button.
  *
- * @access      private
- * @since       1.0
- * @return      void
-*/
+ * @since 1.0
+ * @global $pagenow
+ * @global $typenow
+ * @return void
+ */
 function edd_admin_footer_for_thickbox() {
 	global $pagenow, $typenow;
 
