@@ -15,6 +15,21 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
+ * Checks whether AJAX is enabled.
+ *
+ * @since 1.0
+ * @deprecated 1.0.8.3
+ * @return bool
+ */
+function edd_is_ajax_enabled() {
+	global $edd_options;
+	if ( ! isset( $edd_options['disable_ajax_cart'] ) ) {
+		return true;
+	}
+	return false;
+}
+
+/**
  * Count Payments
  *
  * Returns the total number of payments recorded.
