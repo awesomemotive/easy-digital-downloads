@@ -13,13 +13,13 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Email Download Purchase Receipt
+ * Email the download link(s) and payment confirmation to the buyer in a
+ * customizable Purchase Receipt
  *
- * Email the download link(s) and payment confirmation to the buyer.
- *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @param int $payment_id Payment ID
+ * @param bool $admin_notice Whether to send the admin email notification or not (default: true)
+ * @return void
  */
 function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	global $edd_options;
@@ -65,13 +65,11 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 }
 
 /**
- * Email Test Download Purchase Receipt
- *
  * Email the download link(s) and payment confirmation to the admin accounts for testing.
  *
- * @access      private
- * @since       1.5
- * @return      void
+ * @since 1.5
+ * @global $edd_options Array of all the EDD Options
+ * @return void
  */
 function edd_email_test_purchase_receipt() {
 	global $edd_options;
@@ -103,14 +101,14 @@ function edd_email_test_purchase_receipt() {
 }
 
 /**
- * Sends the admin sale notice
+ * Sends the Admin Sale Notification Email
  *
- * @access      private
- * @since       1.4.2
- * @return      void
+ * @since 1.4.2
+ * @param int $payment_id Payment ID (default: 0)
+ * @param array $payment_data Payment Meta and Data
+ * @return void
  */
 function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
-
 	/* Send an email notification to the admin */
 	$admin_email   = edd_get_admin_notice_emails();
 
@@ -164,13 +162,12 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 add_action( 'edd_admin_sale_notice', 'edd_admin_email_notice', 10, 2 );
 
 /**
- * Retrieves the admin notice emails
+ * Retrieves the emails for which admin notifications are sent to (these can be
+ * changed in the EDD Settings)
  *
- * If not emails are set, the WordPress admin email is used instead
- *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @global $edd_options Array of all the EDD Options
+ * @return void
  */
 function edd_get_admin_notice_emails() {
 	global $edd_options;
