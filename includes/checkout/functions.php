@@ -10,15 +10,15 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Determines if a user can checkout or not
  *
- * @access      private
- * @since       1.3.3
- * @return      bool
-*/
+ * @since 1.3.3
+ * @global $edd_options Array of all the EDD Options
+ * @return bool Can user checkout?
+ */
 function edd_can_checkout() {
 	global $edd_options;
 
