@@ -13,32 +13,26 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Get Payment Gateways
+ * Returns a list of all available gateways.
  *
- * Rreturns a list of all available gateways.
- *
- * @access      public
- * @since       1.0
- * @return      array $gateways
-*/
+ * @since 1.0
+ * @return array $gateways All the available gateways
+ */
 function edd_get_payment_gateways() {
 	// Default, built-in gateways
 	$gateways = array(
-		'paypal' => array('admin_label' => 'PayPal', 'checkout_label' => 'PayPal'),
-		'manual' => array('admin_label' => __('Test Payment', 'edd'), 'checkout_label' => __('Test Payment', 'edd')),
+		'paypal' => array( 'admin_label' => 'PayPal', 'checkout_label' => 'PayPal' ),
+		'manual' => array( 'admin_label' => __( 'Test Payment', 'edd' ), 'checkout_label' => __( 'Test Payment', 'edd' ) ),
 	);
 
 	return apply_filters( 'edd_payment_gateways', $gateways );
 }
 
 /**
- * Get Enabled Payment Gateways
- *
  * Returns a list of all enabled gateways.
  *
- * @access      public
- * @since       1.0
- * @return      array $gateway_list
+ * @since 1.0
+ * @return array $gateway_list All the available gateways
 */
 function edd_get_enabled_payment_gateways() {
 	global $edd_options;
@@ -58,14 +52,11 @@ function edd_get_enabled_payment_gateways() {
 }
 
 /**
- * Is Gateway Active
- *
  * Checks whether a specified gateway is activated.
  *
- * @access      public
- * @since       1.0
- * @param       string - The ID name of the gateway to check for
- * @return      boolean - True if enabled, false otherwise
+ * @since 1.0
+ * @param string $gateway Name of the gateway to check for
+ * @return boolean true if enabled, false otherwise
 */
 function edd_is_gateway_active( $gateway ) {
 	$gateways = edd_get_enabled_payment_gateways();
@@ -77,29 +68,24 @@ function edd_is_gateway_active( $gateway ) {
 	return false;
 }
 
-
 /**
- * Get default payment gateway
+ * Gets the default payment gateway selected from the EDD Settings
  *
- * @access      public
- * @since       1.5
- * @return      string - Gateway ID
-*/
+ * @since 1.5
+ * @global $edd_options Array of all the EDD Options
+ * @return string Gateway ID
+ */
 function edd_get_default_gateway() {
 	global $edd_options;
 	return isset( $edd_options['default_gateway'] ) && edd_is_gateway_active( $edd_options['default_gateway'] ) ? $edd_options['default_gateway'] : 'paypal';
 }
 
-
 /**
- * Get Gateway Admin Label
+ * Returns the admin label for the specified gateway
  *
- * Returns the admin label for the specified gateway.
- *
- * @access      public
- * @since       1.0.8.3
- * @param       string - The ID name of the gateway to retrieve a label for
- * @return      string
+ * @since 1.0.8.3
+ * @param string $gateway Name of the gateway to retrieve a label for
+ * @return string Gateway admin label
  */
 function edd_get_gateway_admin_label( $gateway ) {
 	$gateways = edd_get_enabled_payment_gateways();
@@ -107,29 +93,24 @@ function edd_get_gateway_admin_label( $gateway ) {
 }
 
 /**
- * Get Gateway Checkout Label
+ * Returns the checkout label for the specified gateway
  *
- * Returns the checkout label for the specified gateway.
- *
- * @access      public
- * @since       1.0.8.5
- * @param       string - The ID name of the gateway to retrieve a label for
- * @return      string
-*/
-
+ * @since 1.0.8.5
+ * @param string $gateway Name of the gateway to retrieve a label for
+ * @return string Checkout label for the gateway
+ */
 function edd_get_gateway_checkout_label( $gateway ) {
 	$gateways = edd_get_enabled_payment_gateways();
 	return isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['checkout_label'] : $gateway;
 }
 
 /**
- * Send to Gateway
+ * Sends all the payment data to the specified gateway
  *
- * Sends the registration data to the specified gateway.
- *
- * @access      public
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @param string $gateway Name of the gateway
+ * @param array $payment_data All the payment data to be sent to the gateway
+ * @return void
 */
 function edd_send_to_gateway( $gateway, $payment_data ) {
 	// $gateway must match the ID used when registering the gateway
@@ -142,9 +123,8 @@ function edd_send_to_gateway( $gateway, $payment_data ) {
  * If the cart amount is zero, no option is shown and the cart uses the manual gateway
  * to emulate a no-gateway-setup for a free download
  *
- * @access      public
- * @since       1.3.2
- * @return      bool
+ * @since 1.3.2
+ * @return bool $show_gateways Whether or not to show the gateways
  */
 function edd_show_gateways() {
 	$gateways = edd_get_enabled_payment_gateways();
@@ -166,9 +146,9 @@ function edd_show_gateways() {
  * If the cart amount is zero, no option is shown and the cart uses the manual
  * gateway to emulate a no-gateway-setup for a free download
  *
- * @access      public
- * @since       1.3.2
- * @return      string The slug of the gateway
+ * @access public
+ * @since 1.3.2
+ * @return string $enabled_gateway The slug of the gateway
  */
 function edd_get_chosen_gateway() {
 	$gateways = edd_get_enabled_payment_gateways();
@@ -196,9 +176,12 @@ function edd_get_chosen_gateway() {
  *
  * A simple wrapper function for edd_record_log()
  *
- * @access      public
- * @since       1.3.3
- * @return      int The ID of the new log entry
+ * @access public
+ * @since 1.3.3
+ * @param string $title Title of the log entry (default: empty)
+ * @param string $message  Message to store in the log entry (default: empty)
+ * @param int $parent Parent log entry (default: 0)
+ * @return int ID of the new log entry
  */
 function edd_record_gateway_error( $title = '', $message = '', $parent = 0 ) {
 	return edd_record_log( $title, $message, $parent, 'gateway_error' );
@@ -207,9 +190,8 @@ function edd_record_gateway_error( $title = '', $message = '', $parent = 0 ) {
 /**
  * Sets an error on checkout if no gateways are enabled
  *
- * @access      public
- * @since       1.3.4
- * @return      void
+ * @since 1.3.4
+ * @return void
  */
 function edd_no_gateway_error() {
 	$gateways = edd_get_enabled_payment_gateways();
@@ -224,9 +206,8 @@ add_action( 'init', 'edd_no_gateway_error' );
 /**
  * Loads a payment gateway via AJAX
  *
- * @access      public
- * @since       1.3.4
- * @return      void
+ * @since 1.3.4
+ * @return void
  */
 function edd_load_ajax_gateway() {
 	if ( isset( $_POST['edd_payment_mode'] ) ) {
