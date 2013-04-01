@@ -12,16 +12,14 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Remove Restrict Meta Box
- *
  * Removes the "Restrict This Content" meta box from Restrict Content Pro.
  *
- * @access      private
- * @since       1.0
- * @return      array
+ * @since 1.0
+ * @param array $post_types Post Types
+ * @return array $post_types Array with 'download' post type added
  */
 function edd_remove_restrict_meta_box( $post_types ) {
 	$post_types[] = 'download';
@@ -36,9 +34,8 @@ add_filter( 'rcp_metabox_excluded_post_types', 'edd_remove_restrict_meta_box', 9
  * When sorting downloads by price, earnings, sales, date, or name,
  * we need to remove the posts_orderby that Post Types Order imposes
  *
- * @access      private
- * @since       1.2.2
- * @return      void
+ * @since 1.2.2
+ * @return void
  */
 function edd_remove_post_types_order() {
 	remove_filter( 'posts_orderby', 'CPTOrderPosts' );
@@ -51,9 +48,8 @@ add_action( 'load-edit.php', 'edd_remove_post_types_order' );
  * There is a bizarre conflict that makes the checkout errors not get displayed
  * when the Jetpack opengraph tags are displayed
  *
- * @access      private
- * @since       1.3.3.1
- * @return      bool
+ * @since 1.3.3.1
+ * @return bool
  */
 function edd_disable_jetpack_og_on_checkout() {
 	if ( edd_is_checkout() ) {
@@ -65,9 +61,8 @@ add_action( 'template_redirect', 'edd_disable_jetpack_og_on_checkout' );
 /**
  * Checks if a caching plugin is active
  *
- * @access      private
- * @since       1.4.1
- * @return      bool
+ * @since 1.4.1
+ * @return bool $caching True if caching plugin is enabled, false otherwise
  */
 function edd_is_caching_plugin_active() {
 	$caching = ( function_exists( 'wpsupercache_site_admin' ) || defined( 'W3TC' ) );
@@ -79,9 +74,9 @@ function edd_is_caching_plugin_active() {
  *
  * This ensures the checkout page remains uncached when plugins like WP Super Cache are activated
  *
- * @access      private
- * @since       1.4.1
- * @return      array
+ * @since 1.4.1
+ * @param array $settings Misc Settings
+ * @return array $settings Updated Misc Settings
  */
 function edd_append_no_cache_param( $settings ) {
 	if ( ! edd_is_caching_plugin_active() )
