@@ -17,10 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Returns a sanitized amount by stripping out thousands separators.
  *
- * @access      public
- * @since       1.0
- * @param       $amount string the price amount to format
- * @return      string - the newly sanitize amount
+ * @since 1.0
+ * @param string $amount Price amount to format
+ * @return string $amount Newly sanitized amount
  */
 function edd_sanitize_amount( $amount ) {
 	global $edd_options;
@@ -41,14 +40,11 @@ function edd_sanitize_amount( $amount ) {
 }
 
 /**
- * Format Amount
- *
  * Returns a nicely formatted amount.
  *
- * @access      public
- * @since       1.0
- * @param       $amount string the price amount to format
- * @return      string - the newly formatted amount or Price Not Available
+ * @since 1.0
+ * @param string $amount Price amount to format
+ * @return string $amount Newly formatted amount or Price Not Available
  */
 function edd_format_amount( $amount ) {
 	global $edd_options;
@@ -85,9 +81,9 @@ function edd_format_amount( $amount ) {
 /**
  * Formats the currency display
  *
- * @access      public
- * @since       1.0
- * @return      array
+ * @since 1.0
+ * @param string $price Price
+ * @return array $currency Currencies displayed correctly
  */
 function edd_currency_filter( $price ) {
 	global $edd_options;
@@ -138,9 +134,9 @@ function edd_currency_filter( $price ) {
 /**
  * Set the number of decimal places per currency
  *
- * @access      public
- * @since       1.4.2
- * @return      int
+ * @since 1.4.2
+ * @param int $decimals Number of decimal places
+ * @return int $decimals
 */
 function edd_currency_decimal_filter( $decimals = 2 ) {
 	global $edd_options;
