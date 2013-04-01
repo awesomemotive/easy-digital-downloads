@@ -27,28 +27,36 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class EDD_API {
 	/**
-	 * @var bool Pretty Print?
+	 * Pretty Print?
+	 *
+	 * @var bool
 	 * @access private
 	 * @since 1.5
 	 */
 	private $pretty_print = false;
 
 	/**
-	 * @var bool Log API requests?
+	 * Log API requests?
+	 *
+	 * @var bool
 	 * @access private
 	 * @since 1.5
 	 */
 	private $log_requests = true;
 
 	/**
-	 * @var bool Is this a valid request?
+	 * Is this a valid request?
+	 *
+	 * @var bool 
 	 * @access private
 	 * @since 1.5
 	 */
 	private $is_valid_request = false;
 
 	/**
-	 * @var int User ID Performing the API Request
+	 * User ID Performing the API Request
+	 *
+	 * @var int
 	 * @access private
 	 * @since 1.5.1
 	 */
