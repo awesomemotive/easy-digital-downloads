@@ -21,7 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class EDD_Session {
 	/**
-	 * @var array Holds our session data
+	 * Holds our session data
+	 *
+	 * @var array
 	 * @access private
 	 * @since 1.5
 	 */
