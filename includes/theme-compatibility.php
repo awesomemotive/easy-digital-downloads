@@ -19,9 +19,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * The Responsive theme applies special styling the .download class resulting in really terrible display.
  *
- * @access      private
- * @since       1.4.3
- * @return      array
+ * @since 1.4.3
+ * @param array $classes Post classes
+ * @param string $class
+ * @param int $post_id Post ID
+ * @return array
  */
 function edd_responsive_download_post_class( $classes, $class, $post_id ) {
 	if ( ! is_singular( 'download' ) )
