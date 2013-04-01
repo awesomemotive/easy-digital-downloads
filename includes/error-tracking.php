@@ -19,9 +19,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Prints all stored errors. For use during checkout.
  * If errors exist, they are returned.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @uses edd_get_errors()
+ * @uses edd_clear_errors()
+ * @return void
  */
 function edd_print_errors() {
 	$errors = edd_get_errors();
@@ -49,9 +50,9 @@ add_action( 'edd_ajax_checkout_errors', 'edd_print_errors' );
  * Retrieves all error messages stored during the checkout process.
  * If errors exist, they are returned.
  *
- * @access      public
- * @since       1.0
- * @return      mixed - array if errors are present, false if none found
+ * @since 1.0
+ * @uses EDD_Session::get()
+ * @return mixed array if errors are present, false if none found
  */
 function edd_get_errors() {
 	return EDD()->session->get( 'edd_errors' );
@@ -62,12 +63,12 @@ function edd_get_errors() {
  *
  * Stores an error in a session var.
  *
- * @access      public
- * @since       1.0
- * @param       $error_id string - the ID of the error being set
- * @param       $error_message - the message to store with the error
- * @return      void
-*/
+ * @since 1.0
+ * @uses EDD_Session::get()
+ * @param int $error_id ID of the error being set
+ * @param string $error_message Message to store with the error
+ * @return void
+ */
 function edd_set_error( $error_id, $error_message ) {
 	$errors = edd_get_errors();
 	if ( ! $errors ) {
@@ -78,27 +79,23 @@ function edd_set_error( $error_id, $error_message ) {
 }
 
 /**
- * Clear Errors
- *
  * Clears all stored errors.
  *
- * @access      public
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @uses EDD_Session::set()
+ * @return void
  */
 function edd_clear_errors() {
 	EDD()->session->set( 'edd_errors', null );
 }
 
 /**
- * Unset an Error
+ * Removes (unsets) a stored error
  *
- * Removes a stored error
- *
- * @access      public
- * @since       1.3.4
- * @param       $error_id string - the ID of the error being set
- * @return      void
+ * @since 1.3.4
+ * @uses EDD_Session::set()
+ * @param int $error_id ID of the error being set
+ * @return void
  */
 function edd_unset_error( $error_id ) {
 	$errors = edd_get_errors();
