@@ -10,6 +10,13 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * Register EDD Query Vars
+ *
+ * @since 1.0
+ * @param array $vars Query vars
+ * @return array $vars Query vars
+ */
 function edd_query_vars( $vars ) {
 	$vars[] = 'edd_action';
 	$vars[] = 'cart_item';
@@ -20,12 +27,11 @@ add_filter( 'query_vars', 'edd_query_vars' );
 /**
  * Blocks access to Download attachments
   *
- * @access      public
- * @since       1.2.2
- * @return      void
+ * @since 1.2.2
+ * @return void
  */
 function edd_block_attachments() {
-	if ( !is_attachment() )
+	if ( ! is_attachment() )
 		return;
 
 	$parent   = get_post_field( 'post_parent', get_the_ID() );
