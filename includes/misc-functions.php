@@ -15,9 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Is Test Mode
  *
- * @access      public
- * @since       1.0
- * @return      boolean
+ * @since 1.0
+ * @global $edd_options
+ * @return bool $ret True if return mode is enabled, false otherwise
  */
 function edd_is_test_mode() {
 	global $edd_options;
@@ -31,11 +31,11 @@ function edd_is_test_mode() {
 }
 
 /**
- * No Guest Checkout
+ * Checks if Guest checkout is enabled
  *
- * @access      public
- * @since       1.0
- * @return      boolean
+ * @since 1.0
+ * @global $edd_options
+ * @return bool $ret True if guest checkout is enabled, false otherwise
  */
 function edd_no_guest_checkout() {
 	global $edd_options;
@@ -49,11 +49,11 @@ function edd_no_guest_checkout() {
 }
 
 /**
- * Logged in Only
+ * Checks if users can only purchase downloads when logged in
  *
- * @access      public
- * @since       1.0
- * @return      boolean
+ * @since 1.0
+ * @global $edd_options
+ * @return bool $ret Wheter or not the logged_in_only setting is set
  */
 function edd_logged_in_only() {
 	global $edd_options;
@@ -69,9 +69,8 @@ function edd_logged_in_only() {
 /**
  * Redirect to checkout immediately after adding items to the cart?
  *
- * @access      public
- * @since       1.4.2
- * @return      boolean
+ * @since 1.4.2
+ * @return bool $ret True is redirect is enabled, false otherwise
  */
 function edd_straight_to_checkout() {
 	global $edd_options;
@@ -82,9 +81,10 @@ function edd_straight_to_checkout() {
 /**
  * Disable Redownload
  *
- * @access      public
- * @since       1.0.8.2
- * @return      boolean
+ * @access public
+ * @since 1.0.8.2
+ * @global $edd_options
+ * @return bool True if redownloading of files is disabled, false otherwise
  */
 function edd_no_redownload() {
 	global $edd_options;
@@ -98,9 +98,9 @@ function edd_no_redownload() {
 /**
  * Verify credit card numbers live?
  *
- * @access      public
- * @since       1.4
- * @return      boolean
+ * @since 1.4
+ * @global $edd_options
+ * @return bool $ret True is verify credit cards is live
  */
 function edd_is_cc_verify_enabled() {
 	global $edd_options;
@@ -132,9 +132,9 @@ function edd_is_cc_verify_enabled() {
  *
  * Checks wether an integer is odd.
  *
- * @access      public
- * @since       1.0
- * @return      boolean
+ * @since 1.0
+ * @param int $int The integer to check
+ * @return bool Is the integer odd?
  */
 function edd_is_odd( $int ) {
 	return (bool) ( $int & 1 );
@@ -145,15 +145,22 @@ function edd_is_odd( $int ) {
  *
  * Returns the file extension of a filename.
  *
- * @access      public
- * @since       1.0
- * @return      string
+ * @since 1.0
+ * @param string $string Filename
+ * @return string $parts File extension
  */
 function edd_get_file_extension( $str ) {
    $parts = explode( '.', $str );
    return end( $parts );
 }
 
+/**
+ * Checks if the string (filename) provided is an image URL
+ *
+ * @since 1.0
+ * @param string $str Filename
+ * @return bool Whether or not the filename is an image
+ */
 function edd_string_is_image_url( $str ) {
 	$ext = edd_get_file_extension( $str );
 
@@ -180,9 +187,8 @@ function edd_string_is_image_url( $str ) {
  *
  * Returns the IP address of the current visitor
  *
- * @access      public
- * @since       1.0.8.2
- * @return      string
+ * @since 1.0.8.2
+ * @return string $ip User's IP address
 */
 function edd_get_ip() {
 	if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
@@ -200,9 +206,8 @@ function edd_get_ip() {
 /**
  * Get Currencies
  *
- * @access      public
- * @since       1.0
- * @return      array
+ * @since 1.0
+ * @return array $currencies A list of the available currencies
  */
 function edd_get_currencies() {
 	$currencies = array(
@@ -240,9 +245,8 @@ function edd_get_currencies() {
 /**
  * Get Country List
  *
- * @access      public
- * @since       1.0
- * @return      array
+ * @since 1.0
+ * @return array $countries A list of the available countries
  */
 function edd_get_country_list() {
 	$countries = array(
@@ -605,12 +609,10 @@ function edd_get_provinces_list() {
 /**
  * Month Num To Name
  *
- * Takes a month number and returns the
- * name three letter name of it.
+ * Takes a month number and returns the name three letter name of it.
  *
- * @access      public
- * @since       1.0
- * @return      string
+ * @since 1.0
+ * @return string Short month name
  */
 function edd_month_num_to_name( $n ) {
 	$timestamp = mktime( 0, 0, 0, $n, 1, 2005 );
@@ -619,11 +621,10 @@ function edd_month_num_to_name( $n ) {
 }
 
 /**
- * Get PHP Arg Seaparator Ouput
+ * Get PHP Arg Separator Ouput
  *
- * @access      public
- * @since       1.0.8.3
- * @return      string
+ * @since 1.0.8.3
+ * @return string Arg separator output
 */
 function edd_get_php_arg_separator_output() {
 	return ini_get('arg_separator.output');
@@ -632,9 +633,9 @@ function edd_get_php_arg_separator_output() {
 /**
  * Get the current page URL
  *
- * @access      public
- * @since       1.3
- * @return      string
+ * @since 1.3
+ * @global $post
+ * @return string $page_url Current page URL
  */
 function edd_get_current_page_url() {
 	global $post;
@@ -669,11 +670,6 @@ function edd_get_current_page_url() {
  *
  * This function is to be used in every function that is deprecated.
  *
- * @package Easy Digital Downloads
- * @subpackage  Misc Functions
- * @since 1.3.1
- * @access private
- *
  * @uses do_action() Calls 'edd_deprecated_function_run' and passes the function name, what to use instead,
  *   and the version the function was deprecated in.
  * @uses apply_filters() Calls 'edd_deprecated_function_trigger_error' and expects boolean value of true to do
@@ -705,11 +701,11 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
 }
 
 /**
- * PressTrends plugin API
+ * PressTrends Plugin API
  *
- * @access      public
- * @since       1.3.2
- * @return      void
+ * @since 1.3.2
+ * @global $edd_options
+ * @return void
  */
 function edd_presstrends() {
 	global $edd_options;
@@ -779,10 +775,9 @@ add_action( 'admin_init', 'edd_presstrends' );
 /**
  * Checks whether function is disabled.
  *
- * @access public
- * @since  1.3.5
+ * @since 1.3.5
  *
- * @param  string $function Name of the function.
+ * @param string $function Name of the function.
  * @return bool Whether or not function is disabled.
  */
 function edd_is_func_disabled( $function ) {
@@ -796,9 +791,10 @@ function edd_is_func_disabled( $function ) {
  *
  * Does Size Conversions
  *
- * @since   1.4
- * @usedby   edd_settings()
- * @author   Chris Christoff
+ * @since 1.4
+ * @usedby edd_settings()
+ * @author Chris Christoff
+ * @return $ret
  */
 function edd_let_to_num( $v ) {
 	$l   = substr( $v, -1 );
@@ -821,69 +817,52 @@ function edd_let_to_num( $v ) {
 	return $ret;
 }
 
-
-
 /**
- * Retrieve the URL to the symlink directory
+ * Retrieve the URL of the symlink directory
  *
- * @access public
- * @since  1.5
- *
- * @return string
+ * @since 1.5
+ * @return string $url URL of the symlink directory
  */
 function edd_get_symlink_url() {
-
 	$wp_upload_dir = wp_upload_dir();
 	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd/symlinks' );
 	$url = $wp_upload_dir['baseurl'] . '/edd/symlinks';
 
 	return apply_filters( 'edd_get_symlink_url', $url );
-
 }
-
 
 /**
  * Retrieve the absolute path to the symlink directory
  *
- * @access public
  * @since  1.5
- *
- * @return string
+ * @return string $path Absolute path to the symlink directory
  */
 function edd_get_symlink_dir() {
-
 	$wp_upload_dir = wp_upload_dir();
 	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd/symlinks' );
 	$path = $wp_upload_dir['basedir'] . '/edd/symlinks';
 
 	return apply_filters( 'edd_get_symlink_dir', $path );
-
 }
-
 
 /**
  * Delete symbolic links afer they have been used
  *
  * @access public
  * @since  1.5
- *
- * @return string
+ * @return void
  */
 function edd_cleanup_file_symlinks() {
-
 	$path = edd_get_symlink_dir();
 	$dir = opendir( $path );
 
 	while ( ( $file = readdir( $dir ) ) !== false ) {
-
-		if( $file == '.' || $file == '..' )
+		if ( $file == '.' || $file == '..' )
 			continue;
 
 		$transient = get_transient( md5( $file ) );
-		if( $transient === false )
+		if ( $transient === false )
 			@unlink( $path . '/' . $file );
-
 	}
-
 }
 add_action( 'edd_cleanup_file_symlinks', 'edd_cleanup_file_symlinks' );
