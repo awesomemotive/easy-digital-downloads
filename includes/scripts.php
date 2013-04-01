@@ -17,9 +17,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Enqueues the required scripts.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @global $edd_options
+ * @global $post
+ * @return void
  */
 function edd_load_scripts() {
 	global $edd_options, $post;
@@ -78,9 +79,9 @@ add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
  *
  * Checks the styles option and hooks the required filter.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @global $edd_options
+ * @return void
  */
 function edd_register_styles() {
 	global $edd_options;
@@ -107,9 +108,19 @@ add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
  *
  * Enqueues the required admin scripts.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @global $post
+ * @global $pagenow
+ * @global $edd_discounts_page
+ * @global $edd_payments_page
+ * @global $edd_settings_page
+ * @global $edd_reports_page
+ * @global $edd_system_info_page
+ * @global $edd_add_ons_page
+ * @global $edd_options
+ * @global $edd_upgrades_screen
+ * @param string $hook Page hook
+ * @return void
  */
 function edd_load_admin_scripts( $hook ) {
 	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_options, $edd_upgrades_screen;
@@ -166,9 +177,9 @@ add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
  *
  * Echoes the CSS for the downloads post type icon.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @global $post_type
+ * @return void
 */
 function edd_admin_downloads_icon() {
 	global $post_type;
@@ -211,13 +222,10 @@ function edd_admin_downloads_icon() {
 add_action( 'admin_head','edd_admin_downloads_icon' );
 
 /**
- * EDD Version in Header
+ * Adds EDD Version to the <head> tag
  *
- * Adds Version to header
- *
- * @access      private
- * @since       1.4.2
- * @return      void
+ * @since 1.4.2
+ * @return void
 */
 function edd_version_in_header(){
 	// Newline on both sides to avoid being in a blob
