@@ -28,6 +28,8 @@ tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 .wp-list-table.downloads th#details { width: 130px; }
 .wp-list-table.downloads th#date { width: 140px; }
 .wp-list-table.downloads th#user { width: 130px; }
+.edd-mobile-link { line-height: 32px; vertical-align: middle; }
+.edd-mobile-link img { max-width: 80%; height: auto; float: left; }
 @media handheld, only screen and (max-width: 640px) {
 	.wp-list-table.downloads th { width: auto!important;}
 }
