@@ -151,7 +151,7 @@ $single_use   = edd_discount_is_single_use( $discount_id );
 				</th>
 				<td>
 					<input type="checkbox" id="edd-use-once" name="use_once" value="1"<?php checked( true, $single_use ); ?>/>
-					<span class="description"><?php _e( 'Limit this discount to a single-user per customer?', 'edd' ); ?></span>
+					<span class="description"><?php _e( 'Limit this discount to a single-use per customer?', 'edd' ); ?></span>
 				</td>
 			</tr>
 		</tbody>
