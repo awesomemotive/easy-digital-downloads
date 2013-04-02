@@ -126,9 +126,11 @@ function edd_reports_graph() {
 									$d++;
 									endwhile;
 								else :
+									$sales = edd_get_sales_by_date( null, $i, $dates['year'] );
+									$sales_totals += $sales;
 									$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
 									?>
-									[<?php echo $date * 1000; ?>, <?php echo edd_get_sales_by_date( null, $i, $dates['year'] ); ?>],
+									[<?php echo $date * 1000; ?>, <?php echo $sales; ?>],
 								<?php
 								endif;
 								$i++;
