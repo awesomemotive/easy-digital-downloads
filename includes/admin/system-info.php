@@ -49,7 +49,6 @@ WordPress Version:        <?php echo get_bloginfo( 'version' ) . "\n"; ?>
 
 Test Mode Enabled:        <?php echo edd_is_test_mode() ? "Yes\n" : "No\n"; ?>
 Ajax Enabled:             <?php echo edd_is_ajax_enabled() ? "Yes\n" : "No\n"; ?>
-jQuery Validation:        <?php echo isset( $edd_options['jquery_validation'] ) ? "Yes\n" : "No\n"; ?>
 Guest Checkout Enabled:   <?php echo edd_no_guest_checkout() ? "No\n" : "Yes\n"; ?>
 
 Checkout:                 <?php echo ! empty( $edd_options['purchase_page'] ) ? "Valid\n" : "Invalid\n"; ?>
