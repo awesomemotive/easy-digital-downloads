@@ -53,15 +53,6 @@ function edd_sanitize_amount( $amount ) {
 function edd_format_amount( $amount ) {
 	global $edd_options;
 
-	// If no price was given for the download
-	$amount= "$amount"; // The Anti-Geczy check
-
-	if ( '' == $amount ) {
-		$label = edd_get_label_singular();
-		$string = sprintf( __('%1$s Not Available', 'edd' ), $label );
-		return	apply_filters( 'edd_price_not_available_text', $string );
-	}
-
 	$thousands_sep 	= ! empty( $edd_options['thousands_separator'] ) ? $edd_options['thousands_separator'] : ',';
 	$decimal_sep 	= ! empty( $edd_options['decimal_separator'] )   ? $edd_options['decimal_separator'] 	 : '.';
 
