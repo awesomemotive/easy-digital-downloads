@@ -26,13 +26,17 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  */
 class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	/**
-	 * @var int Number of items per page
+	 * Number of items per page
+	 *
+	 * @var int
 	 * @since 1.4
 	 */
 	public $per_page = 30;
 
 	/**
-	 * @var bool Are we searching for files?
+	 * Are we searching for files?
+	 *
+	 * @var bool
 	 * @since 1.4
 	 */
 	public $file_search = false;

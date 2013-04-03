@@ -26,49 +26,65 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  */
 class EDD_Payment_History_Table extends WP_List_Table {
 	/**
-	 * @var string Number of results to show per page
+	 * Number of results to show per page
+	 *
+	 * @var string 
 	 * @since 1.4
 	 */
 	public $per_page = 30;
 
 	/**
-	 * @var string URL of this page
+	 * URL of this page
+	 *
+	 * @var string 
 	 * @since 1.4.1
 	 */
 	public $base_url;
 
 	/**
-	 * @var int Total number of payments
+	 * Total number of payments
+	 *
+	 * @var int 
 	 * @since 1.4
 	 */
 	public $total_count;
 
 	/**
-	 * @var int Total number of complete payments
+	 * Total number of complete payments
+	 *
+	 * @var int 
 	 * @since 1.4
 	 */
 	public $complete_count;
 
 	/**
-	 * @var int Total number of pending payments
+	 * Total number of pending payments
+	 *
+	 * @var int 
 	 * @since 1.4
 	 */
 	public $pending_count;
 
 	/**
-	 * @var int Total number of refunded payments
+	 * Total number of refunded payments
+	 *
+	 * @var int
 	 * @since 1.4
 	 */
 	public $refunded_count;
 
 	/**
-	 * @var int Total number of failed payments
+	 * Total number of failed payments
+	 *
+	 * @var int
 	 * @since 1.4
 	 */
 	public $failed_count;
 
 	/**
-	 * @var int Total number of revoked payments
+	 * Total number of revoked payments
+	 *
+	 * @var int 
 	 * @since 1.4
 	 */
 	public $revoked_count;

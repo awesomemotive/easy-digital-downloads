@@ -27,8 +27,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	/**
 	 * Number of results to show per page
 	 *
-	 * @since       1.4
-	 * @var         int
+	 * @since 1.4
+	 * @var int
 	 */
 	public $per_page = 30;
 
