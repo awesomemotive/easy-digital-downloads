@@ -26,7 +26,9 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  */
 class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
-	 * @var int Number of items per page
+	 * Number of items per page
+	 *
+	 * @var int
 	 * @since 1.5
 	 */
 	public $per_page = 30;

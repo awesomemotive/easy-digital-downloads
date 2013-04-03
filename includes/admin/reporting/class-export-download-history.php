@@ -21,7 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class EDD_Download_History_Export extends EDD_Export {
 	/**
-	 * @var string Our export type. Used for export-type specific filters/actions
+	 * Our export type. Used for export-type specific filters/actions
+	 *
+	 * @var string
 	 * @since 1.4.4
 	 */
 	public $export_type = 'download_history';
