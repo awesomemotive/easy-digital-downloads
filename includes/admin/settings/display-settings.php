@@ -2,8 +2,8 @@
 /**
  * Admin Options Page
  *
- * @package     Easy Digital Downloads
- * @subpackage  Admin Options Page
+ * @package     EDD
+ * @subpackage  Admin/Settings
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -17,16 +17,17 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Renders the options page contents.
  *
- * @access      private
- * @since       1.0
- * @return      void
-*/
+ * @since 1.0
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
 function edd_options_page() {
 	global $edd_options;
 
 	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'general';
 
-	ob_start(); ?>
+	ob_start();
+	?>
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper">
 			<a href="<?php echo add_query_arg('tab', 'general', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>"><?php _e('General', 'edd'); ?></a>
