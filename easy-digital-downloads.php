@@ -22,7 +22,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Easy Digital Downloads. If not, see <http://www.gnu.org/licenses/>.
  *
- * @package Easy Digital Downloads
+ * @package EDD
  * @category Core
  * @author Pippin Williamson
  * @version 1.5.1
@@ -48,33 +48,44 @@ final class Easy_Digital_Downloads {
 	private static $instance;
 
 	/**
-	 * @var object EDD User Roles and Capabilities Object
+	 *  EDD User Roles and Capabilities Object
+	 *
+	 * @var object
 	 * @since 1.4.4
 	 */
 	private $roles;
 
 	/**
-	 * @var object EDD Cart Fees Object
+	 * EDD Cart Fees Object
+	 *
+	 * @var object
 	 * @since 1.5
 	 */
 	public $fees;
 
 	/**
-	 * @var object EDD API Object
+	 * EDD API Object
+	 *
+	 * @var object
 	 * @since 1.5
 	 */
 	public $api;
 
 	/**
+	 * EDD HTML Session Object
+	 *
 	 * This holds cart items, purchase sessions, and anything else stored in the session
 	 *
-	 * @var object EDD HTML Session Object
+	 *
+	 * @var object
 	 * @since 1.5
 	 */
 	public $session;
 
 	/**
-	 * @var object EDD HTML Element Helper Object
+	 * EDD HTML Element Helper Object
+	 *
+	 * @var object
 	 * @since 1.5
 	 */
 	public $html;
