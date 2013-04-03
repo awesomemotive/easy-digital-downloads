@@ -2,27 +2,29 @@
 /**
  * Checkout Template
  *
- * @package     Easy Digital Downloads
- * @subpackage  Checkout Template
+ * @package     EDD
+ * @subpackage  Checkout
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Get Checkout Form
  *
- * @access      private
- * @since       1.0
- * @return      string
-*/
+ * @since 1.0
+ * @global $edd_options Array of all the EDD options
+ * @global $user_ID ID of current logged in user
+ * @global $post Current Post Object
+ * @return string
+ */
 function edd_checkout_form() {
 	global $edd_options, $user_ID, $post;
 	ob_start();
-		if( edd_get_cart_contents() ) :
+		if ( edd_get_cart_contents() ) :
 			edd_checkout_cart();
 		?>
 			<div id="edd_checkout_form_wrap" class="edd_clearfix">
@@ -46,11 +48,14 @@ function edd_checkout_form() {
 }
 
 /**
- * Get the purchase form
+ * Renders the Purchase Form, hooks are provided to add to the purchase form.
+ * The default Purchase Form rendered deisplays a list of the enabled payment
+ * gateways, a user registration form (if enable) and a credit card info form
+ * if credit cards are enabled
  *
- * @access      private
- * @since       1.4
- * @return      string
+ * @since 1.4
+ * @global $edd_options Array of all the EDD options
+ * @return string
  */
 function edd_show_purchase_form() {
 	global $edd_options;
@@ -98,14 +103,12 @@ function edd_show_purchase_form() {
 }
 add_action( 'edd_purchase_form', 'edd_show_purchase_form' );
 
-
-
 /**
- * Shows the User Info Fields
+ * Shows the User Info fields in the Personal Info box, more fields can be added
+ * via the hooks provided.
  *
- * @access      private
- * @since       1.3.3
- * @return      void
+ * @since 1.3.3
+ * @return void
  */
 function edd_user_info_fields() {
 	if ( is_user_logged_in() ) :
@@ -138,11 +141,10 @@ function edd_user_info_fields() {
 add_action( 'edd_purchase_form_after_user_info', 'edd_user_info_fields' );
 
 /**
- * Get CC Form
+ * Renders the credit card info form.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @return void
  */
 function edd_get_cc_form() {
 	ob_start(); ?>
@@ -195,13 +197,10 @@ function edd_get_cc_form() {
 add_action( 'edd_cc_form', 'edd_get_cc_form' );
 
 /**
- * Default CC Address fields
- *
  * Outputs the default credit card address fields
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @return void
  */
 function edd_default_cc_address_fields() {
 	ob_start(); ?>
@@ -268,11 +267,12 @@ function edd_default_cc_address_fields() {
 add_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
 
 /**
- * Get Register Fields
+ * Renders the user registration fields. If the user is logged in, a login
+ * form is displayed other a registration form is provided for the user to
+ * create an account.
  *
- * @access      private
- * @since       1.0
- * @return      string
+ * @since 1.0
+ * @return string
  */
 function edd_get_register_fields() {
 	global $edd_options;
@@ -329,11 +329,12 @@ function edd_get_register_fields() {
 add_action( 'edd_purchase_form_register_fields', 'edd_get_register_fields' );
 
 /**
- * Get Login Fields
+ * Gets the login fields for the login form on the checkout. This function hooks
+ * on the edd_purchase_form_login_fields to display the login form if a user already
+ * had an account. 
  *
- * @access      private
- * @since       1.0
- * @return      string
+ * @since 1.0
+ * @return string
  */
 function edd_get_login_fields() {
 	ob_start(); ?>
@@ -363,11 +364,13 @@ function edd_get_login_fields() {
 add_action( 'edd_purchase_form_login_fields', 'edd_get_login_fields' );
 
 /**
- * The payment mode select form
+ * Renders the payment mode form by getting all the enabled payment gateways and
+ * outputting them as radio buttons for the user to choose the payment gateway. If
+ * a default payment gateway has been chosen from the EDD Settings, it will be
+ * automatically selected.
  *
- * @access      public
- * @since       1.2.2
- * @return      void
+ * @since 1.2.2
+ * @return void
  */
 function edd_payment_mode_select() {
 	$gateways = edd_get_enabled_payment_gateways();
@@ -376,10 +379,11 @@ function edd_payment_mode_select() {
 	<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
 		<fieldset id="edd_payment_mode_select">
 			<?php do_action('edd_payment_mode_before_gateways'); ?>
+
 			<p id="edd-payment-mode-wrap">
 				<span class="edd-payment-mode-label"><?php _e( 'Select Payment Method', 'edd' ); ?></span><br/>
 				<?php
-				foreach($gateways as $gateway_id => $gateway) :
+				foreach ( $gateways as $gateway_id => $gateway ) :
 					$checked = checked( $gateway_id, edd_get_default_gateway(), false );
 					echo '<label for="edd-gateway-' . esc_attr( $gateway_id ) . '" class="edd-gateway-option" id="edd-gateway-option-' . esc_attr( $gateway_id ) . '">';
 						echo '<input type="radio" name="payment-mode" class="edd-gateway" id="edd-gateway-' . esc_attr( $gateway_id ) . '" value="' . esc_attr( $gateway_id ) . '"' . $checked . '>' . esc_html( $gateway['checkout_label'] ) . '</option>';
@@ -387,6 +391,7 @@ function edd_payment_mode_select() {
 				endforeach;
 				?>
 			</p>
+
 			<?php do_action('edd_payment_mode_after_gateways'); ?>
 		</fieldset>
 		<fieldset id="edd_payment_mode_submit" class="edd-no-js">
@@ -401,39 +406,43 @@ function edd_payment_mode_select() {
 add_action( 'edd_payment_payment_mode_select', 'edd_payment_mode_select' );
 
 /**
- * The discount field
+ * Renders the Discount Code field which allows users to enter a discount code.
+ * This field is only displayed if there are any active discounts on the site else
+ * it's not displayed.
  *
- * @access      public
- * @since       1.2.2
- * @return      void
+ * @since 1.2.2
+ * @return void
 */
 function edd_discount_field() {
-	if ( edd_has_active_discounts() && ! edd_cart_has_discounts() ) { ?>
-		<fieldset id="edd_discount_code">
-			<p id="edd-discount-code-wrap">
-				<label class="edd-label" for="edd-discount">
-					<?php _e( 'Discount', 'edd' ); ?>
-					<img src="<?php echo EDD_PLUGIN_URL; ?>assets/images/loading.gif" id="edd-discount-loader" style="display:none;"/>
-				</label>
-				<span class="edd-description"><?php _e( 'Enter a coupon code if you have one.', 'edd' ); ?></span>
-				<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e( 'Enter discount', 'edd' ); ?>"/>
-			</p>
-		</fieldset>
+	if ( edd_has_active_discounts() && ! edd_cart_has_discounts() ) {
+	?>
+	<fieldset id="edd_discount_code">
+		<p id="edd-discount-code-wrap">
+			<label class="edd-label" for="edd-discount">
+				<?php _e( 'Discount', 'edd' ); ?>
+				<img src="<?php echo EDD_PLUGIN_URL; ?>assets/images/loading.gif" id="edd-discount-loader" style="display:none;"/>
+			</label>
+			<span class="edd-description"><?php _e( 'Enter a coupon code if you have one.', 'edd' ); ?></span>
+			<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e( 'Enter discount', 'edd' ); ?>"/>
+		</p>
+	</fieldset>
 	<?php
 	}
 }
 add_action( 'edd_purchase_form_before_cc_form', 'edd_discount_field' );
 
 /**
- * The checkout Agree to Terms section
+ * Renders the Checkout Agree to Terms, this displays a checkbox for users to
+ * agree the T&Cs set in the EDD Settings. This is only displayed if T&Cs are
+ * set in the EDD Settigs.
  *
- * @access      public
- * @since       1.3.2
- * @return      void
+ * @since 1.3.2
+ * @global $edd_options Array of all the EDD Options
+ * @return void
  */
 function edd_terms_agreement() {
 	global $edd_options;
-	if( isset( $edd_options['show_agree_to_terms'] ) ) {
+	if ( isset( $edd_options['show_agree_to_terms'] ) ) {
 ?>
 		<fieldset id="edd_terms_agreement">
 			<p id="edd-terms-wrap">
@@ -460,9 +469,9 @@ add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement' );
 /**
  * Shows the tax opt-in checkbox
  *
- * @access      public
- * @since       1.3.3
- * @return      void
+ * @since 1.3.3
+ * @global $edd_options Array of all the EDD Options
+ * @return void
  */
 function edd_show_local_tax_opt_in() {
 	global $edd_options;
@@ -479,13 +488,11 @@ function edd_show_local_tax_opt_in() {
 }
 add_action( 'edd_purchase_form_before_submit', 'edd_show_local_tax_opt_in' );
 
-
 /**
- * Shows the final purchase total at the bottom of the screen
+ * Shows the final purchase total at the bottom of the checkout page
  *
- * @access      public
- * @since       1.5
- * @return      void
+ * @since 1.5
+ * @return void
  */
 function edd_checkout_final_total() {
 ?>
@@ -501,16 +508,14 @@ add_action( 'edd_purchase_form_before_submit', 'edd_checkout_final_total', 999 )
 
 
 /**
- * The checkout submit section
+ * Renders the Checkout Submit section
  *
- * @access      public
- * @since       1.3.3
- * @return      void
+ * @since 1.3.3
+ * @return void
  */
 function edd_checkout_submit() {
 ?>
 	<fieldset id="edd_purchase_submit">
-
 		<?php do_action( 'edd_purchase_form_before_submit' ); ?>
 
 		<?php edd_checkout_hidden_fields(); ?>
@@ -522,18 +527,17 @@ function edd_checkout_submit() {
 		<?php if ( ! edd_is_ajax_enabled() ) { ?>
 			<p class="edd-cancel"><a href="javascript:history.go(-1)"><?php _e( 'Go back', 'edd' ); ?></a></p>
 		<?php } ?>
-
 	</fieldset>
 <?php
 }
 add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_submit', 9999 );
 
 /**
- * The checkout Next button
+ * Renders the Next button on the Checkout
  *
- * @access      public
- * @since       1.2
- * @return      string
+ * @since 1.2
+ * @global $edd_options Array of all the EDD Options
+ * @return string
  */
 function edd_checkout_button_next() {
 	global $edd_options;
@@ -549,11 +553,11 @@ function edd_checkout_button_next() {
 }
 
 /**
- * The checkout Purchase button
+ * Renders the Purchase button on the Checkout
  *
- * @access      public
- * @since       1.2
- * @return      string
+ * @since 1.2
+ * @global $edd_options Array of all the EDD Options
+ * @return string
  */
 function edd_checkout_button_purchase() {
 	global $edd_options;
@@ -570,11 +574,12 @@ function edd_checkout_button_purchase() {
 }
 
 /**
- * Show Payment Icons
+ * Show Payment Icons by getting all the accepted icons from the EDD Settings
+ * then ouputting the icons.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @global $edd_options Array of all the EDD Options
+ * @return void
 */
 function edd_show_payment_icons() {
 	global $edd_options;
@@ -594,37 +599,38 @@ function edd_show_payment_icons() {
 add_action( 'edd_checkout_form_top', 'edd_show_payment_icons' );
 
 /**
- * Agree To Terms JS
+ * Outputs the JavaScript code for the Agree to Terms section to toggle
+ * the T&Cs text
  *
- * @access      private
- * @since       1.0
- * @return      void
-*/
+ * @since 1.0
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
 function edd_agree_to_terms_js() {
 	global $edd_options;
 
-	if ( isset( $edd_options['show_agree_to_terms'] ) ) { ?>
-		<script type="text/javascript">
-			jQuery(document).ready(function($){
-				$('body').on('click', '.edd_terms_links', function(e) {
-					//e.preventDefault();
-					$('#edd_terms').slideToggle();
-					$('.edd_terms_links').toggle();
-					return false;
-				});
+	if ( isset( $edd_options['show_agree_to_terms'] ) ) {
+?>
+	<script type="text/javascript">
+		jQuery(document).ready(function($){
+			$('body').on('click', '.edd_terms_links', function(e) {
+				//e.preventDefault();
+				$('#edd_terms').slideToggle();
+				$('.edd_terms_links').toggle();
+				return false;
 			});
-		</script>
-	<?php
+		});
+	</script>
+<?php
 	}
 }
 add_action( 'edd_checkout_form_top', 'edd_agree_to_terms_js' );
 
 /**
- * Hidden checkout fields
+ * Renders the hidden Checkout fields
  *
- * @access      private
- * @since       1.3.2
- * @return      void
+ * @since 1.3.2
+ * @return void
  */
 function edd_checkout_hidden_fields() {
 ?>
