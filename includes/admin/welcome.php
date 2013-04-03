@@ -2,8 +2,8 @@
 /**
  * Weclome Page Class
  *
- * @package     Easy Digital Downloads
- * @subpackage  Welcome Page
+ * @package     EDD
+ * @subpackage  Admin/Welcome
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
@@ -13,26 +13,24 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * EDD Welcome Page Class
+ * EDD_Welcome Class
  *
  * A general class for About and Credits page.
  *
- * @access      public
- * @since       1.4
- * @return      void
+ * @since 1.4
  */
 class EDD_Welcome {
 	/**
-	 * @var string
+	 * @var string The capability users should have to view the page
 	 */
 	public $minimum_capability = 'manage_options';
 
 	/**
 	 * Get things started
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @return      void
+	 * @access  public
+	 * @since 1.4
+	 * @return void
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menus') );
@@ -41,10 +39,10 @@ class EDD_Welcome {
 	}
 
 	/**
-	 * Register dashboard pages.
+	 * Register the Dashboard Pages which are later hidden but these pages
+	 * are used to render the Welcome and Credits pages.
 	 *
-	 * Later they are hidden in 'admin_head'.
-	 *
+	 * @access public
 	 * @since 1.4
 	 * @return void
 	 */
@@ -69,10 +67,11 @@ class EDD_Welcome {
 	}
 
 	/**
-	 * Hide Individual Dashboard Menus
+	 * Hide Individual Dashboard Pages
 	 *
-	 * @since       1.4
-	 * @return      void
+	 * @access public
+	 * @since 1.4
+	 * @return void
 	 */
 	public function admin_head() {
 		remove_submenu_page( 'index.php', 'edd-about' );
@@ -109,7 +108,9 @@ class EDD_Welcome {
 	/**
 	 * Render About Screen
 	 *
-	 * @since      1.4
+	 * @access public
+	 * @since 1.4
+	 * @return void
 	 */
 	public function about_screen() {
 		list( $display_version ) = explode( '-', EDD_VERSION );
@@ -244,7 +245,9 @@ class EDD_Welcome {
 	/**
 	 * Render Credits Screen
 	 *
-	 * @since      1.4
+	 * @access public
+	 * @since 1.4
+	 * @return void
 	 */
 	public function credits_screen() {
 		list( $display_version ) = explode( '-', EDD_VERSION );
@@ -273,10 +276,10 @@ class EDD_Welcome {
 	/**
 	 * Render Contributors List
 	 *
-	 * @since      1.4
-	 * @return     string $contributor_list HTML formatted list of contributors.
+	 * @since 1.4
+	 * @uses EDD_Welcome::get_contributors()
+	 * @return string $contributor_list HTML formatted list of all the contributors for EDD
 	 */
-
 	public function contributors() {
 		$contributors = $this->get_contributors();
 
@@ -306,8 +309,9 @@ class EDD_Welcome {
 	/**
 	 * Retreive list of contributors from GitHub.
 	 *
-	 * @since      1.4
-	 * @return     array $contributors List of contributors.
+	 * @access public
+	 * @since 1.4
+	 * @return array $contributors List of contributors
 	 */
 	public function get_contributors() {
 		$contributors = get_transient( 'edd_contributors' );
@@ -331,10 +335,13 @@ class EDD_Welcome {
 	}
 
 	/**
-	 * Sends user to the welcome page on first activation
+	 * Sends user to the Welcome page on first activation of EDD as well as each
+	 * time EDD is upgraded to a new version
 	 *
-	 * @since      1.4
-	 * @return     void
+	 * @access public
+	 * @since 1.4
+	 * @global $edd_options Array of all the EDD Options
+	 * @return void
 	 */
 	public function welcome() {
 		global $edd_options;
@@ -351,7 +358,6 @@ class EDD_Welcome {
 			return;
 
 		wp_safe_redirect( admin_url( 'index.php?page=edd-about' ) ); exit;
-
 	}
 }
 new EDD_Welcome();

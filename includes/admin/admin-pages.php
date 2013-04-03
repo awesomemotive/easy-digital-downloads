@@ -2,8 +2,8 @@
 /**
  * Admin Pages
  *
- * @package     Easy Digital Downloads
- * @subpackage  Admin Pages
+ * @package     EDD
+ * @subpackage  Admin/Pages
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -13,13 +13,18 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Add Options Link
+ * Creates the admin submenu pages under the Downloads menu and assigns their
+ * links to global variables
  *
- * Creates the admin submenu pages.
- *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @global $edd_discounts_page
+ * @global @edd_payments_page
+ * @global $edd_settings_page
+ * @global $edd_reports_page
+ * @global $edd_system_info_page
+ * @global $edd_add_ons_page
+ * @global $edd_upgrades_screen
+ * @return void
  */
 function edd_add_options_link() {
 	global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_upgrades_screen;

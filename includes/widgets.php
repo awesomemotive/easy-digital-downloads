@@ -2,7 +2,7 @@
 /**
  * Widgets
  *
- * @package     Easy Digital Downloads
+ * @package     EDD
  * @subpackage  Widgets
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
@@ -28,9 +28,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Downloads cart widget class.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @return void
 */
 class edd_cart_widget extends WP_Widget {
 	/** Constructor */
@@ -94,9 +93,8 @@ class edd_cart_widget extends WP_Widget {
  *
  * Downloads categories / tags widget class.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @return void
 */
 class edd_categories_tags_widget extends WP_Widget {
 	/** Constructor */
@@ -168,9 +166,8 @@ class edd_categories_tags_widget extends WP_Widget {
  *
  * Displays a user's purchase history.
  *
- * @access        private
- * @since        1.2
- * @return        void
+ * @since 1.2
+ * @return void
  */
 class edd_purchase_history_widget extends WP_Widget {
 	/** Constructor */
@@ -253,9 +250,8 @@ class edd_purchase_history_widget extends WP_Widget {
  *
  * Registers the EDD Widgets.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @return void
  */
 function edd_register_widgets() {
 	register_widget( 'edd_cart_widget' );

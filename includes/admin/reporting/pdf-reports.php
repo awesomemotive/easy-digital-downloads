@@ -2,8 +2,8 @@
 /**
  * PDF Report Generation Functions
  *
- * @package     Easy Digital Downloads
- * @subpackage  PDF Report Generation
+ * @package     EDD
+ * @subpackage  Admin/Reports
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @author      Sunny Ratilal
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
@@ -18,10 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Generates PDF report on sales and earnings for all downloads for the current year.
  *
- * @access      public
- * @since       1.1.4.0
- * @param 		string $data
- * @author 		Sunny Ratilal
+ * @since 1.1.4.0
+ * @param string $data
+ * @uses edd_pdf
+ * @author Sunny Ratilal
  */
 function edd_generate_pdf( $data ) {
 	$edd_pdf_reports_nonce = $_GET['_wpnonce'];
@@ -136,12 +136,17 @@ add_action( 'edd_generate_pdf', 'edd_generate_pdf' );
 /**
  * Draws Chart for PDF Report
  *
- * Draws the sales and earnings chart for the PDF report.
+ * Draws the sales and earnings chart for the PDF report and then retrieves the
+ * URL of that chart to display on the PDF Report
  *
- * @access      public
- * @since       1.1.4.0
- * @author      Sunny Ratilal
- * @return      string
+ * @since 1.1.4.0
+ * @uses GoogleChart
+ * @uses GoogleChartData
+ * @uses GoogleChartShapeMarker
+ * @uses GoogleChartTextMarker
+ * @uses GoogleChartAxis
+ * @author Sunny Ratilal
+ * @return string $chart->getUrl() URL for the Google Chart
  */
 function edd_draw_chart_image() {
 	require_once EDD_PLUGIN_DIR . '/includes/libraries/googlechartlib/GoogleChart.php';

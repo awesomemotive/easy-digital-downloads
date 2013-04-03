@@ -2,8 +2,8 @@
 /**
  * PayPal Standard Gateway
  *
- * @package     Easy Digital Downloads
- * @subpackage  PayPal Standard Gateway
+ * @package     EDD
+ * @subpackage  Gateways
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -14,17 +14,18 @@
  *
  * PayPal Standard does not need a CC form, so remove it.
  *
- * @access      private
- * @since       1.0
+ * @access private
+ * @since 1.0
  */
 add_action( 'edd_paypal_cc_form', '__return_false' );
 
 /**
  * Process PayPal Purchase
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @global $edd_options Array of all the EDD Options
+ * @param array $purchase_data Purchase Data
+ * @return void
  */
 function edd_process_paypal_purchase( $purchase_data ) {
     global $edd_options;
@@ -127,14 +128,12 @@ function edd_process_paypal_purchase( $purchase_data ) {
 add_action( 'edd_gateway_paypal', 'edd_process_paypal_purchase' );
 
 /**
- * Listen For PayPal IPN
+ * Listens for a PayPal IPN requests and then sends to the processing function
  *
- * Listens for a PayPal IPN requests and then sends to the processing function.
- *
- * @access      private
- * @since       1.0
- * @return      void
-*/
+ * @since 1.0
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
 function edd_listen_for_paypal_ipn() {
 	global $edd_options;
 
@@ -148,10 +147,10 @@ add_action( 'init', 'edd_listen_for_paypal_ipn' );
 /**
  * Process PayPal IPN
  *
- * @access      private
- * @since       1.0
- * @return      void
-*/
+ * @since 1.0
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
 function edd_process_paypal_ipn() {
 	global $edd_options;
 
@@ -247,9 +246,10 @@ add_action( 'edd_verify_paypal_ipn', 'edd_process_paypal_ipn' );
 /**
  * Process web accept (one time) payment IPNs
  *
- * @access      private
- * @since       1.3.4
- * @return      void
+ * @since 1.3.4
+ * @global $edd_options Array of all the EDD Options
+ * @param array $data IPN Data
+ * @return void
  */
 function edd_process_paypal_web_accept( $data ) {
 	global $edd_options;
@@ -283,12 +283,9 @@ function edd_process_paypal_web_accept( $data ) {
 	}
 
 	if ( $payment_status == 'refunded' ) {
-
 		// Process a refund
 		edd_process_paypal_refund( $data );
-
 	} else {
-
 		if ( number_format( (float)$paypal_amount, 2) != $payment_amount ) {
 			// The prices don't match
 			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid payment amount in IPN response. IPN data: ', 'edd' ), json_encode( $data ) ), $payment_id );
@@ -305,18 +302,18 @@ function edd_process_paypal_web_accept( $data ) {
 			edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'edd' ) , $data['txn_id'] ) );
 			edd_update_payment_status( $payment_id, 'publish' );
 		}
-
 	}
 }
 add_action( 'edd_paypal_web_accept', 'edd_process_paypal_web_accept' );
 
 /**
- * Process IPN Refunds
+ * Process PayPal IPN Refunds
  *
- * @access      private
- * @since       1.3.4
- * @return      void
-*/
+ * @since 1.3.4
+ * @global $edd_options Array of all the EDD Options
+ * @param array $data IPN Data
+ * @return void
+ */
 function edd_process_paypal_refund( $data ) {
 	global $edd_options;
 
@@ -329,11 +326,12 @@ function edd_process_paypal_refund( $data ) {
 }
 
 /**
- * Get Paypal Redirect
+ * Get PayPal Redirect
  *
- * @access      private
- * @since       1.0.8.2
- * @return      string
+ * @since 1.0.8.2
+ * @global $edd_options Array of all the EDD Options
+ * @param bool $ssl_check Is SSL?
+ * @return string
  */
 function edd_get_paypal_redirect( $ssl_check = false ) {
 	global $edd_options;
@@ -359,14 +357,17 @@ function edd_get_paypal_redirect( $ssl_check = false ) {
 /**
  * Set the Page Style for PayPal Purchase page
  *
- * @access      private
- * @since       1.4.1
- * @return      string
-*/
+ * @since 1.4.1
+ * @global $edd_options Array of all the EDD Options
+ * @return string
+ */
 function edd_get_paypal_page_style() {
 	global $edd_options;
+
 	$page_style = 'PayPal';
+
 	if ( isset( $edd_options['paypal_page_style'] ) )
 		$page_style = trim( $edd_options['paypal_page_style'] );
+
 	return apply_filters( 'edd_paypal_page_style', $page_style );
 }

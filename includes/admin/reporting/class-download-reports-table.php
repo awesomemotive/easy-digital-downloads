@@ -2,40 +2,44 @@
 /**
  * Download Reports Table Class
  *
- * @package     Easy Digital Downloads
- * @subpackage  Download Reports List Table Class
+ * @package     EDD
+ * @subpackage  Admin/Reports
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.5
  */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 // Load WP_List_Table if not loaded
-if( ! class_exists( 'WP_List_Table' ) ) {
+if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 /**
- * EDD Download Reports Table Class
+ * EDD_Download_Reports_Table Class
  *
  * Renders the Download Reports table
  *
- * @access      private
+ * @since 1.5
  */
 class EDD_Download_Reports_Table extends WP_List_Table {
 	/**
-	 * @var int
+	 * @var int Number of items per page
+	 * @since 1.5
 	 */
 	public $per_page = 30;
 
 	/**
 	 * Get things started
 	 *
-	 * @access      private
-	 * @return      void
+	 * @access public
+	 * @since 1.5
+	 * @see WP_List_Table::__construct()
+	 * @return void
 	 */
-	function __construct() {
+	public function __construct() {
 		global $status, $page;
 
 		// Set parent defaults
@@ -47,13 +51,17 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Output column data
+	 * This function renders most of the columns in the list table.
 	 *
-	 * @access      private
-	 * @since       1.3
-	 * @return      string
+	 * @access public
+	 * @since 1.5
+	 *
+	 * @param array $item Contains all the data of the downloads
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Column Name
 	 */
-	function column_default( $item, $column_name ) {
+	public function column_default( $item, $column_name ) {
 		switch( $column_name ){
 			case 'earnings' :
 				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
@@ -67,13 +75,13 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Get the column IDs and names
+	 * Retrieve the table columns
 	 *
-	 * @access      private
-	 * @since       1.3
-	 * @return      array
+	 * @access public
+	 * @since 1.5
+	 * @return array $columns Array of all the list table columns
 	 */
-	function get_columns() {
+	public function get_columns() {
 		$columns = array(
 			'title'     		=> edd_get_label_singular(),
 			'sales'  			=> __( 'Sales', 'edd' ),
@@ -81,17 +89,18 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 			'average_sales'  	=> __( 'Monthly Average Sales', 'edd' ),
 			'average_earnings'  => __( 'Monthly Average Earnings', 'edd' )
 		);
+
 		return $columns;
 	}
 
 	/**
-	 * Define the sortable columns
+	 * Retrieve the table's sortable columns
 	 *
-	 * @access      private
-	 * @since       1.3
-	 * @return      array
+	 * @access public
+	 * @since 1.4
+	 * @return array Array of all the sortable columns
 	 */
-	function get_sortable_columns() {
+	public function get_sortable_columns() {
 		return array(
 			'title' 	=> array( 'title', true ),
 			'sales' 	=> array( 'sales', false ),
@@ -102,22 +111,22 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	/**
 	 * Retrieve the current page number
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @return      int
+	 * @access public
+	 * @since 1.5
+	 * @return int Current page number
 	 */
-	function get_paged() {
+	public function get_paged() {
 		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 	}
 
 	/**
 	 * Retrieve the total number of downloads
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @return      int
+	 * @access public
+	 * @since 1.5
+	 * @return int $total Total number of downloads
 	 */
-	function get_total_downloads() {
+	public function get_total_downloads() {
 		$counts = wp_count_posts( 'download' );
 		$total  = 0;
 		foreach ( $counts as $count )
@@ -126,11 +135,11 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Show reporting views
+	 * Outputs the reporting views
 	 *
-	 * @access      private
-	 * @since       1.3
-	 * @return      void
+	 * @access public
+	 * @since 1.5
+	 * @return void
 	 */
 	function bulk_actions() {
 		// These aren't really bulk actions but this outputs the markup in the right place
@@ -138,11 +147,11 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Retrieve all report data for Downloads
+	 * Build all the reports data
 	 *
-	 * @access      private
-	 * @since       1.3
-	 * @return      array $reports_data
+	 * @access public
+	 * @since 1.5
+	 * @return array $reports_data All the data for customer reports
 	 */
 	function reports_data() {
 		$reports_data = array();
@@ -195,15 +204,14 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @uses        $this->_column_headers
-	 * @uses        $this->items
-	 * @uses        $this->get_columns()
-	 * @uses        $this->get_sortable_columns()
-	 * @uses        $this->get_pagenum()
-	 * @uses        $this->set_pagination_args()
-	 * @return      array
+	 * @access public
+	 * @since 1.5
+	 * @uses EDD_Download_Reports_Table::get_columns()
+	 * @uses EDD_Download_Reports_Table::get_sortable_columns()
+	 * @uses EDD_Download_Reports_Table::reports_data()
+	 * @uses EDD_Download_Reports_Table::get_pagenum()
+	 * @uses EDD_Download_Reports_Table::get_total_downloads()
+	 * @return void
 	 */
 	function prepare_items() {
 		$columns = $this->get_columns();

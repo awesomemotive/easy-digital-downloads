@@ -4,8 +4,8 @@
  *
  * These are functions are used for exporting data from Easy Digital Downloads.
  *
- * @package     Easy Digital Downloads
- * @subpackage  Export Functions
+ * @package     EDD
+ * @subpackage  Admin/Export
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
@@ -16,11 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export.php';
 
 /**
- * Export all Payment History to CSV
+ * Exports all the payments stored in Payment History to a CSV file using the
+ * EDD_Export class.
  *
- * @access      private
- * @since       1.2
- * @return      void
+ * @since 1.4.4
+ * @return void
  */
 function edd_export_payment_history() {
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-payments.php';
@@ -32,13 +32,13 @@ function edd_export_payment_history() {
 add_action( 'edd_payment_export', 'edd_export_payment_history' );
 
 /**
- * Export all customers to CSV
+ * Export all the customers to a CSV file.
  *
- * Using wpdb directly for performance reasons (workaround of calling all posts and fetch data respectively)
+ * Note: The WordPress Database API is being used directly for performance
+ * reasons (workaround of calling all posts and fetch data respectively)
  *
- * @access      private
- * @since       1.2
- * @return      void
+ * @since 1.4.4
+ * @return void
  */
 function edd_export_all_customers() {
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-customers.php';
@@ -50,11 +50,10 @@ function edd_export_all_customers() {
 add_action( 'edd_email_export', 'edd_export_all_customers' );
 
 /**
- * Export all downloads to CSV
+ * Exports all the downloads to a CSV file using the EDD_Export class.
  *
- * @access      private
- * @since       1.2
- * @return      void
+ * @since 1.4.4
+ * @return void
  */
 function edd_export_all_downloads_history() {
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-download-history.php';

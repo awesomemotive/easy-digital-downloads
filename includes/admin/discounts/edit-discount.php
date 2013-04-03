@@ -1,9 +1,9 @@
 <?php
 /**
- * Edit Discount Template
+ * Edit Discount Page
  *
- * @package     Easy Digital Downloads
- * @subpackage  Discounts
+ * @package     EDD
+ * @subpackage  Admin/Discounts
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
