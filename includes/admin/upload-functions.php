@@ -2,8 +2,8 @@
 /**
  * Upload Functions
  *
- * @package     Easy Digital Downloads
- * @subpackage  Upload Functions
+ * @package     EDD
+ * @subpackage  Admin/Upload
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0

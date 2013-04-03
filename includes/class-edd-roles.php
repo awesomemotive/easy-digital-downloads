@@ -2,8 +2,8 @@
 /**
  * Roles and Capabilities
  *
- * @package     Easy Digital Downloads
- * @subpackage  Roles / Caps
+ * @package     EDD
+ * @subpackage  Classes/Roles
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4

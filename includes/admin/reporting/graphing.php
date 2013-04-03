@@ -2,8 +2,8 @@
 /**
  * Graphing Functions
  *
- * @package     Easy Digital Downloads
- * @subpackage  Graphing Functions
+ * @package     EDD
+ * @subpackage  Admin/Reports
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0

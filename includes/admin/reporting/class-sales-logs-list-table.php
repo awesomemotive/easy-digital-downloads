@@ -2,8 +2,8 @@
 /**
  * Sales Log View Class
  *
- * @package     Easy Digital Downloads
- * @subpackage  Sales Log View Class
+ * @package     EDD
+ * @subpackage  Admin/Reports
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
