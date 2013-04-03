@@ -2,33 +2,33 @@
 /**
  * Manual Gateway
  *
- * @package     Easy Digital Downloads
- * @subpackage  Manual Gateway
+ * @package     EDD
+ * @subpackage  Gateways
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 /**
- * Manual Remove CC Form
+ * Manual Gateway does not need a CC form, so remove it. This function is only
+ * defined so that the credit card form isn't shown.
  *
- * Manual does not need a CC form, so remove it.
- *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @return void
  */
 function edd_manual_remove_cc_form() {
-	// We only register the action so that the default CC form is not shown
+	/** We only register the action so that the default CC form is not shown */
 }
 add_action( 'edd_manual_cc_form', 'edd_manual_remove_cc_form' );
 
 /**
- * Manual Payment
+ * Processes the purchase data and uses the Manual Payment gateway to record
+ * the transaction in the Purchase History
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @global $edd_options Array of all the EDD Options
+ * @param array $purchase_data Purchase Data
+ * @return void
 */
 function edd_manual_payment( $purchase_data ) {
 	global $edd_options;

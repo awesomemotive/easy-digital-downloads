@@ -2,8 +2,8 @@
 /**
  * Install Function
  *
- * @package     Easy Digital Downloads
- * @subpackage  Install Function
+ * @package     EDD
+ * @subpackage  Functions/Install
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -15,11 +15,17 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Install
  *
- * Runs on plugin install.
+ * Runs on plugin install by setting up the post types, custom taxonomies,
+ * flushing rewrite rules to initiate the new 'downloads' slug and also
+ * creates the plugin and populates the settings fields for those plugin
+ * pages. After successfull install, the user is redirected to the EDD Welcome
+ * screen.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @global $wpdb
+ * @global $edd_options
+ * @global $wp_version
+ * @return void
  */
 function edd_install() {
 	global $wpdb, $edd_options, $wp_version;

@@ -2,8 +2,8 @@
 /**
  * Cart Template
  *
- * @package     Easy Digital Downloads
- * @subpackage  Cart Template
+ * @package     EDD
+ * @subpackage  Cart
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -13,11 +13,10 @@
 if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
- * Get Checkout Cart
+ * Builds the Cart by providing hooks and calling all the hooks for the Cart
  *
- * @access      public
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @return void
  */
 function edd_checkout_cart() {
 	do_action( 'edd_before_checkout_cart' );
@@ -28,11 +27,10 @@ function edd_checkout_cart() {
 }
 
 /**
- * Shopping Cart
+ * Renders the Shopping Cart
  *
- * @access      public
- * @since       1.0
- * @return      string
+ * @since 1.0
+ * @return string Fully formatted cart
 */
 function edd_shopping_cart( $echo = false ) {
 	global $edd_options;
@@ -67,9 +65,11 @@ function edd_shopping_cart( $echo = false ) {
 /**
  * Get Cart Item Template
  *
- * @access      public
- * @since       1.0
- * @return      string
+ * @since 1.0
+ * @param int $cart_key Cart key
+ * @param array $item Cart item
+ * @param bool $ajax AJAX?
+ * @return string Cart item
 */
 function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 	global $post;
@@ -101,24 +101,20 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 }
 
 /**
- * Empty Cart Message
+ * Returns the Empty Cart Message
  *
- * Gets the message for an empty cart.
- *
- * @access      public
- * @since       1.0
- * @return      string
+ * @since 1.0
+ * @return string Cart is empty message
  */
 function edd_empty_cart_message() {
 	return apply_filters( 'edd_empty_cart_message', __('Your cart is empty.', 'edd') );
 }
 
 /**
- * Empty Checkout Cart
+ * Echoes the Empty Cart Message
  *
- * @access      private
- * @since       1.0
- * @return      string
+ * @since 1.0
+ * @return void
  */
 function edd_empty_checkout_cart() {
 	echo edd_empty_cart_message();

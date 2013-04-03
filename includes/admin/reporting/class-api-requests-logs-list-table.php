@@ -2,54 +2,49 @@
 /**
  * API Requests Log View Class
  *
- * @package     Easy Digital Downloads
- * @subpackage  API Requests List Table Log View Class
+ * @package     EDD
+ * @subpackage  Admin/Reports
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.5
  */
-
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 // Load WP_List_Table if not loaded
-if( ! class_exists( 'WP_List_Table' ) ) {
+if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 /**
- * EDD API Requests List Table Log View Class
+ * EDD_API_Request_Log_Table List Table Class
  *
  * Renders the gateway errors list table
  *
- * @access      private
- * @since       1.5
+ * @since 1.5
  */
-
 class EDD_API_Request_Log_Table extends WP_List_Table {
-
-
 	/**
 	 * Number of items per page
 	 *
-	 * @since       1.5
+	 * @var int
+	 * @since 1.5
 	 */
-
 	public $per_page = 30;
-
 
 	/**
 	 * Get things started
 	 *
-	 * @access      private
-	 * @since       1.5
-	 * @return      void
+	 * @access public
+	 * @since 1.5
+	 * @see WP_List_Table::__construct()
+	 * @return void
 	 */
-
-	function __construct(){
+	public function __construct() {
 		global $status, $page;
 
-		//Set parent defaults
+		// Set parent defaults
 		parent::__construct( array(
 			'singular'  => edd_get_label_singular(),    // Singular name of the listed records
 			'plural'    => edd_get_label_plural(),    	// Plural name of the listed records
@@ -57,16 +52,18 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		) );
 	}
 
-
 	/**
 	 * Show the search field
 	 *
-	 * @access      private
-	 * @since       1.5
-	 * @return      void
+	 * @since 1.5
+	 * @access public
+	 *
+	 * @param string $text Label for the search box
+	 * @param string $input_id ID of the search box
+	 *
+	 * @return void
 	 */
-
-	function search_box( $text, $input_id ) {
+	public function search_box( $text, $input_id ) {
 		$input_id = $input_id . '-search-input';
 
 		if ( ! empty( $_REQUEST['orderby'] ) )
@@ -82,32 +79,51 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		<?php
 	}
 
+	/**
+	 * Retrieve the table columns
+	 *
+	 * @access public
+	 * @since 1.5
+	 * @return array $columns Array of all the list table columns
+	 */
+	public function get_columns() {
+		$columns = array(
+			'ID'         => __( 'Log ID', 'edd' ),
+			'details'    => __( 'Request Details', 'edd' ),
+			'ip'         => __( 'Request IP', 'edd' ),
+			'date'       => __( 'Date', 'edd' )
+		);
+
+		return $columns;
+	}
 
 	/**
-	 * Output column data
+	 * This function renders most of the columns in the list table.
 	 *
-	 * @access      private
-	 * @since       1.5
-	 * @return      string
+	 * @access public
+	 * @since 1.5
+	 *
+	 * @param array $item Contains all the data of the discount code
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Column Name
 	 */
-
-	function column_default( $item, $column_name ) {
+	public function column_default( $item, $column_name ) {
 		switch( $column_name ){
 			default:
 				return $item[ $column_name ];
 		}
 	}
 
-
 	/**
-	 * Output Error message column
+	 * Output Error Message column
 	 *
-	 * @access      private
-	 * @since       1.5
-	 * @return      void
+	 * @access public
+	 * @since 1.5
+	 * @param array $item Contains all the data of the log
+	 * @return void
 	 */
-
-	function column_details( $item ) {
+	public function column_details( $item ) {
 	?>
 		<a href="#TB_inline?width=640&amp;inlineId=log-details-<?php echo $item['ID']; ?>" class="thickbox" title="<?php _e( 'View Request Details', 'edd' ); ?> "><?php _e( 'View Request', 'edd' ); ?></a>
 		<div id="log-details-<?php echo $item['ID']; ?>" style="display:none;">
@@ -132,58 +148,32 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	<?php
 	}
 
-
-	/**
-	 * Setup the column names / IDs
-	 *
-	 * @access      private
-	 * @since       1.5
-	 * @return      array
-	 */
-
-	function get_columns() {
-		$columns = array(
-			'ID'         => __( 'Log ID', 'edd' ),
-			'details'    => __( 'Request Details', 'edd' ),
-			'ip'         => __( 'Request IP', 'edd' ),
-			'date'       => __( 'Date', 'edd' )
-		);
-
-		return $columns;
-	}
-
-
 	/**
 	 * Retrieves the search query string
 	 *
-	 * @access      private
-	 * @since       1.5
-	 * @return      mixed String if search is present, false otherwise
+	 * @access public
+	 * @since 1.5
+	 * @return mixed String if search is present, false otherwise
 	 */
-
-	function get_search() {
+	public function get_search() {
 		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
 	}
-
 
 	/**
 	 * Gets the meta query for the log query
 	 *
 	 * This is used to return log entries that match our search query
 	 *
-	 * @access      private
-	 * @since       1.5
-	 * @return      array
+	 * @access public
+	 * @since 1.5
+	 * @return array $meta_query
 	 */
-
 	function get_meta_query() {
-
 		$meta_query = array();
 
 		$search = $this->get_search();
 
 		if ( $search ) {
-
 			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
 				// This is an IP address search
 				$key = '_edd_log_request_ip';
@@ -206,43 +196,38 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		return $meta_query;
 	}
 
-
 	/**
 	 * Retrieve the current page number
 	 *
-	 * @access      private
-	 * @since       1.5
-	 * @return      int
+	 * @access public
+	 * @since 1.5
+	 * @return int Current page number
 	 */
-
-	function get_paged() {
+	public function get_paged() {
 		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 	}
-
 
 	/**
 	 * Outputs the log views
 	 *
-	 * @access      private
-	 * @since       1.5
-	 * @return      void
+	 * @access public
+	 * @since 1.5
+	 * @return void
 	 */
-
 	function bulk_actions() {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_log_views();
 	}
 
-
 	/**
 	 * Gets the log entries for the current view
 	 *
-	 * @access      private
-	 * @since       1.5
-	 * @return      array
+	 * @access public
+	 * @since 1.5
+	 * @global object $edd_logs EDD Logs Object
+	 * @return array $logs_data Array of all the Log entires
 	 */
-
-	function get_logs() {
+	public function get_logs() {
 		global $edd_logs;
 
 		$logs_data = array();
@@ -269,22 +254,20 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 		return $logs_data;
 	}
 
-
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access      private
-	 * @since       1.5
-	 * @uses        $this->_column_headers
-	 * @uses        $this->items
-	 * @uses        $this->get_columns()
-	 * @uses        $this->get_sortable_columns()
-	 * @uses        $this->get_pagenum()
-	 * @uses        $this->set_pagination_args()
-	 * @return      array
+	 * @access public
+	 * @since 1.5
+	 * @global object $edd_logs EDD Logs Object
+	 * @uses EDD_API_Request_Log_Table::get_columns()
+	 * @uses WP_List_Table::get_sortable_columns()
+	 * @uses EDD_API_Request_Log_Table::get_pagenum()
+	 * @uses EDD_API_Request_Log_Table::get_logs()
+	 * @uses EDD_API_Request_Log_Table::get_log_count()
+	 * @return void
 	 */
-
-	function prepare_items() {
+	public function prepare_items() {
 		global $edd_logs;
 
 		$columns               = $this->get_columns();

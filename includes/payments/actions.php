@@ -2,8 +2,8 @@
 /**
  * Payment Actions
  *
- * @package     Easy Digital Downloads
- * @subpackage  Payment Actions
+ * @package     EDD
+ * @subpackage  Payments
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -18,12 +18,11 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Performs all necessary actions to complete a purchase.
  * Triggered by the edd_update_payment_status() function.
  *
- * @param		int $payment_id the ID number of the payment
- * @param		string $new_status the status of the payment, probably "publish"
- * @param		string $old_status the status of the payment prior to being marked as "complete", probably "pending"
- * @access      private
- * @since       1.0.8.3
- * @return      void
+ * @since 1.0.8.3
+ * @param int $payment_id the ID number of the payment
+ * @param string $new_status the status of the payment, probably "publish"
+ * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
+ * @return void
 */
 function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	if ( $old_status == 'publish' || $old_status == 'complete' )
@@ -78,13 +77,11 @@ add_action( 'edd_update_payment_status', 'edd_complete_purchase', 100, 3 );
 /**
  * Record payment status change
  *
- *
- * @param		int $payment_id the ID number of the payment
- * @param		string $new_status the status of the payment, probably "publish"
- * @param		string $old_status the status of the payment prior to being marked as "complete", probably "pending"
- * @access      private
- * @since       1.4.3
- * @return      void
+ * @since 1.4.3
+ * @param int $payment_id the ID number of the payment
+ * @param string $new_status the status of the payment, probably "publish"
+ * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
+ * @return void
  */
 function edd_record_status_change( $payment_id, $new_status, $old_status ) {
 	if ( $new_status == 'publish' )
@@ -105,9 +102,9 @@ add_action( 'edd_update_payment_status', 'edd_record_status_change', 100, 3 );
  * Updates the purchase data for a payment.
  * Used primarily for adding new downloads to a purchase.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @param $data Arguments passed
+ * @return void
  */
 function edd_update_edited_purchase( $data ) {
 	if ( wp_verify_nonce( $data['edd-payment-nonce'], 'edd_payment_nonce' ) ) {
@@ -163,11 +160,11 @@ function edd_update_edited_purchase( $data ) {
 add_action( 'edd_edit_payment', 'edd_update_edited_purchase' );
 
 /**
- * Trigger a Purchase deletion
+ * Trigger a Purchase Deletion
  *
- * @access      private
- * @since       1.3.4
- * @return      void
+ * @since 1.3.4
+ * @param $data Arguments passed
+ * @return void
  */
 function edd_trigger_purchase_delete( $data ) {
 	if ( wp_verify_nonce( $data['_wpnonce'], 'edd_payment_nonce' ) ) {
@@ -180,11 +177,12 @@ function edd_trigger_purchase_delete( $data ) {
 add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
 
 /**
- * Flushes the Total Earnings Cache when a payment is created
+ * Flushes the total earning cache when a new payment is created
  *
- * @access      private
- * @since       1.2
- * @return      void
+ * @since 1.2
+ * @param int $payment Payment ID
+ * @param array $payment_data Payment Data
+ * @return void
  */
 function edd_clear_earnings_cache( $payment, $payment_data ) {
 	delete_transient( 'edd_total_earnings' );
@@ -192,12 +190,15 @@ function edd_clear_earnings_cache( $payment, $payment_data ) {
 add_action( 'edd_insert_payment', 'edd_clear_earnings_cache', 10, 2 );
 
 /**
- * Flushes the Current user's purchase history transient
+ * Flushes the current user's purchase history transient when a payment status
+ * is updated
  *
- * @access      private
- * @since       1.2.2
- * @return      void
-*/
+ * @since 1.2.2
+ * @param int $payment Payment ID
+ * @param string $new_status the status of the payment, probably "publish"
+ * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
+ * @return void
+ */
 function edd_clear_user_history_cache( $payment_id, $new_status, $old_status ) {
 	$user_info = edd_get_payment_meta_user_info( $payment_id );
 
@@ -212,9 +213,9 @@ add_action( 'edd_update_payment_status', 'edd_clear_user_history_cache', 10, 3 )
  *
  * This is so that payments can be queried by their totals
  *
- * @access      private
- * @since       1.2
- * @return      void
+ * @since 1.2
+ * @param array $data Arguments passed
+ * @return void
 */
 function edd_update_old_payments_with_totals( $data ) {
 	if ( ! wp_verify_nonce( $data['_wpnonce'], 'edd_upgrade_payments_nonce' ) )
