@@ -17,9 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Automatically appends the purchase link to download content, if enabled.
  *
- * @access      private
- * @since       1.0
- * @return      string
+ * @since 1.0
+ * @param int $download_id Download ID
+ * @return void
  */
 
 function edd_append_purchase_link( $download_id ) {
@@ -33,13 +33,18 @@ add_action( 'edd_after_download_content', 'edd_append_purchase_link' );
 /**
  * Get Purchase Link
  *
- * Returns the purchase link.
+ * Builds a Purchase link for a specified download based on arguments passed.
+ * This function is used all over EDD to generate the Purchase or Add to Cart
+ * buttons. If no arguments are passed, the function uses the defaults that have
+ * been set by the plugin. The Purchase link is built for simple and variable
+ * pricing and filters are available throughout the function to override
+ * certain elements of the function.
  *
  * $download_id = null, $link_text = null, $style = null, $color = null, $class = null
  *
- * @access      public
- * @since       1.0
- * @return      string
+ * @since 1.0
+ * @param array $args Arguments for display
+ * @return string $purchase_form
  */
 function edd_get_purchase_link( $args = array() ) {
 	global $edd_options, $post;
@@ -136,12 +141,14 @@ function edd_get_purchase_link( $args = array() ) {
 /**
  * Variable price output
  *
- * To override this output, remove this action, then add
- * your own via a theme, child theme, or plugin.
+ * Outputs variable pricing options for each download or a specified downloads in a list.
+ * The output generated can be overriden by the filters provided or by removing
+ * the action and adding your own custom action.
  *
- * @access      public
- * @since       1.2.3
- * @return      void
+ * @since 1.2.3
+ * @param int $download_id Download ID
+ * @param bool $show_price
+ * @return void
  */
 function edd_purchase_variable_pricing( $download_id, $show_price ) {
 	$variable_pricing = edd_has_variable_prices( $download_id );
@@ -149,7 +156,7 @@ function edd_purchase_variable_pricing( $download_id, $show_price ) {
 	if ( ! $variable_pricing || empty( $show_price ) )
 		return;
 
-	$prices = apply_filters('edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id);
+	$prices = apply_filters( 'edd_purchase_variable_prices', edd_get_variable_prices( $download_id ), $download_id );
 
 	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
 
@@ -157,7 +164,7 @@ function edd_purchase_variable_pricing( $download_id, $show_price ) {
 	<div class="edd_price_options">
 		<ul>
 			<?php
-			if ( $prices ):
+			if ( $prices ) :
 				foreach ( $prices as $key => $price ) :
 					$amount = $price[ 'amount' ];
 					printf(
@@ -184,13 +191,13 @@ add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10, 2 );
 /**
  * Before Download Content
  *
- * Adds an action to the begining of download post content
- * that can be hooked to by other functions
+ * Adds an action to the begining of download post content that can be hooked to
+ * by other functions.
  *
- * @access      private
- * @since       1.0.8
- * @param       $content string the the_content field of the download object
- * @return      $content string the content with any additional data attached
+ * @since 1.0.8
+ * @global $post
+ * @param $content string The the_content field of the download object
+ * @return $content string the content with any additional data attached
  */
 function edd_before_download_content( $content ) {
 	global $post;
@@ -208,13 +215,13 @@ add_filter( 'the_content', 'edd_before_download_content' );
 /**
  * After Download Content
  *
- * Adds an action to the end of download post content
- * that can be hooked to by other functions
+ * Adds an action to the end of download post content that can be hooked to by
+ * other functions.
  *
- * @access      private
- * @since       1.0.8
- * @param       $content string the the_content field of the download object
- * @return      $content string the content with any additional data attached
+ * @since 1.0.8
+ * @global $post
+ * @param $content string The the_content field of the download object
+ * @return $content string the content with any additional data attached
  */
 function edd_after_download_content( $content ) {
 	global $post;
@@ -234,9 +241,9 @@ add_filter( 'the_content', 'edd_after_download_content' );
  *
  * Applies filters to the success page content.
  *
- * @access      private
- * @since       1.0
- * @return      string
+ * @since 1.0
+ * @param string $content Content before filters
+ * @return string $content Filtered content
  */
 function edd_filter_success_page_content( $content ) {
 	global $edd_options;
@@ -256,9 +263,8 @@ add_filter( 'the_content', 'edd_filter_success_page_content' );
  *
  * Returns an array of button colors.
  *
- * @access      public
- * @since       1.0
- * @return      array
+ * @since 1.0
+ * @return array $colors Button colors
  */
 function edd_get_button_colors() {
 	$colors = array(
@@ -277,9 +283,8 @@ function edd_get_button_colors() {
  *
  * Returns an array of button styles.
  *
- * @access      public
- * @since       1.2.2
- * @return      array
+ * @since 1.2.2
+ * @return array $styles Button styles
  */
 function edd_get_button_styles() {
 	$styles = array(
@@ -295,9 +300,10 @@ function edd_get_button_styles() {
  *
  * Prints a notice when user has already purchased the item.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @global $user_ID
+ * @param int $download_id Download ID
+ * @return void
  */
 function edd_show_has_purchased_item_message( $download_id ) {
 	global $user_ID;
@@ -314,9 +320,10 @@ add_action( 'edd_after_download_content', 'edd_show_has_purchased_item_message' 
  *
  * This excerpt is primarily used in the [downloads] short code
  *
- * @access      private
- * @since       1.0.8.4
- * @return      string
+ * @since 1.0.8.4
+ * @param string $excerpt Content before filterting
+ * @return string $excerpt Content after filterting
+ * @return string
  */
 function edd_downloads_default_excerpt( $excerpt ) {
 	return do_shortcode( wpautop( $excerpt ) );
@@ -328,9 +335,9 @@ add_filter( 'edd_downloads_excerpt', 'edd_downloads_default_excerpt' );
  *
  * This is primarily used in the [downloads] short code
  *
- * @access      private
- * @since       1.0.8.4
- * @return      string
+ * @since 1.0.8.4
+ * @param string $content Content before filterting
+ * @return string $content Content after filterting 
  */
 function edd_downloads_default_content( $content ) {
 	return do_shortcode( wpautop( $content ) );
@@ -340,9 +347,9 @@ add_filter( 'edd_downloads_content', 'edd_downloads_default_content' );
 /**
  * Gets the download links for each item purchased
  *
- * @access      private
- * @since       1.1.5
- * @return      string
+ * @since 1.1.5
+ * @param array $purchase_data Purchase data
+ * @return string
  */
 function edd_get_purchase_download_links( $purchase_data ) {
 	if ( ! is_array( $purchase_data['downloads'] ) )
@@ -378,9 +385,8 @@ function edd_get_purchase_download_links( $purchase_data ) {
 /**
  * Returns the path to the EDD templates directory
  *
- * @access      private
- * @since       1.2
- * @return      string
+ * @since 1.2
+ * @return string
  */
 function edd_get_templates_dir() {
 	return EDD_PLUGIN_DIR . 'templates';
@@ -389,9 +395,8 @@ function edd_get_templates_dir() {
 /**
  * Returns the URL to the EDD templates directory
  *
- * @access      private
- * @since       1.3.2.1
- * @return      string
+ * @since 1.3.2.1
+ * @return string
  */
 function edd_get_templates_url() {
 	return EDD_PLUGIN_URL . 'templates';
@@ -407,9 +412,9 @@ function edd_get_templates_url() {
  * @param string $slug
  * @param string $name Optional. Default null
  *
- * @uses  edd_locate_template()
- * @uses  load_template()
- * @uses  get_template_part()
+ * @uses edd_locate_template()
+ * @uses load_template()
+ * @uses get_template_part()
  */
 function edd_get_template_part( $slug, $name = null, $load = true ) {
 	// Execute code for this part
@@ -437,12 +442,12 @@ function edd_get_template_part( $slug, $name = null, $load = true ) {
  *
  * Taken from bbPress
  *
- * @since v1.2
+ * @since 1.2
  *
  * @param string|array $template_names Template file(s) to search for, in order.
  * @param bool $load If true the template file will be loaded if it is found.
  * @param bool $require_once Whether to require_once or require. Default true.
- *                            Has no effect if $load is false.
+ *   Has no effect if $load is false.
  * @return string The template filename if one is located.
  */
 function edd_locate_template( $template_names, $load = false, $require_once = true ) {
@@ -482,19 +487,15 @@ function edd_locate_template( $template_names, $load = false, $require_once = tr
 	return $located;
 }
 
-
 /**
  * Add Microdata to download titles
  *
  * @since 1.5
  * @author Sunny Ratilal
- *
  * @param string $title Post Title
  * @param int $id Post ID
- *
  * @return string $title New title
  */
-
 function edd_microdata_title( $title, $id = 0 ) {
 	if ( is_singular( 'download' ) && 'download' == get_post_type( intval( $id ) ) ) {
 		$title = '<span itemprop="name">' . $title . '</span>';
@@ -504,19 +505,15 @@ function edd_microdata_title( $title, $id = 0 ) {
 }
 add_filter( 'the_title', 'edd_microdata_title', 10, 2 );
 
-
 /**
  * Add Microdata to download description
  *
  * @since 1.5
  * @author Sunny Ratilal
- *
  * @param string $title Post Title
  * @param int $id Post ID
- *
  * @return string $title New title
  */
-
 function edd_microdata_wrapper( $content ) {
 	global $post;
 	if ( $post->post_type == 'download' && is_singular() && is_main_query() ) {
