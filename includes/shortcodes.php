@@ -2,7 +2,7 @@
 /**
  * Shortcodes
  *
- * @package     Easy Digital Downloads
+ * @package     EDD
  * @subpackage  Shortcodes
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License

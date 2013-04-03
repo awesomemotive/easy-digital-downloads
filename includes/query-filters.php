@@ -1,10 +1,14 @@
 <?php
 /**
- * Registers front end query vars
+ * Query Filters
  *
- * @access      public
- * @since       1.2.2
- * @return      array
+ * These functions register the front-end query vars
+ *
+ * @package     EDD
+ * @subpackage  Functions
+ * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0
  */
 
 // Exit if accessed directly

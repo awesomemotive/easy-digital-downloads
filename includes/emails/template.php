@@ -3,7 +3,7 @@
  * Email Template
  *
  * @package    Easy Digital Downloads
- * @subpackage Email Template
+ * @subpackage Emails
  * @copyright  Copyright (c) 2013, Pippin Williamson
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since      1.0.8.2

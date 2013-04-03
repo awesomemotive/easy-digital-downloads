@@ -4,11 +4,11 @@
  *
  * This is a wrapper calss for WP_Session and handles the storage of cart items, purchase sessions, etc
  *
- * @package  Easy Digital Downloads
- * @subpackage EDD Session
- * @copyright Copyright (c) 2013, Pippin Williamson
- * @license  http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since  1.5
+ * @package     EDD
+ * @subpackage  Classes/Session
+ * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.5
  */
 
 // Exit if accessed directly

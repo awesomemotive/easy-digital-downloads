@@ -2,8 +2,8 @@
 /**
  * Payment Actions
  *
- * @package     Easy Digital Downloads
- * @subpackage  Payment Actions
+ * @package     EDD
+ * @subpackage  Payments
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0

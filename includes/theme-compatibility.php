@@ -4,8 +4,8 @@
  *
  * Functions for compatibility with specific themes.
  *
- * @package     Easy Digital Downloads
- * @subpackage  Theme Compatibility
+ * @package     EDD
+ * @subpackage  Functions/Compatibility
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.3

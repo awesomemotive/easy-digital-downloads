@@ -4,8 +4,8 @@
  *
  * A helper class for outputting common HTML elements, such as product drop downs
  *
- * @package     Easy Digital Downloads
- * @subpackage  HTML Elements
+ * @package     EDD
+ * @subpackage  Classes/HTML
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5

@@ -4,8 +4,8 @@
  *
  * This is the base class for all export methods. Each data export type (customers, payments, etc) extend this class
  *
- * @package     Easy Digital Downloads
- * @subpackage  Export Class
+ * @package     EDD
+ * @subpackage  Admin/Reports
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4

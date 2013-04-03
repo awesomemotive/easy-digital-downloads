@@ -4,8 +4,8 @@
  *
  * These are functions are used for exporting data from Easy Digital Downloads.
  *
- * @package     Easy Digital Downloads
- * @subpackage  System Info
+ * @package     EDD
+ * @subpackage  Admin/System
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
 */

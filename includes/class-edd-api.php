@@ -8,11 +8,11 @@
  * The primary purpose of this class is for external sales / earnings tracking
  * systems, such as mobile. This class is also used in the EDD iOS App.
  *
- * @package  Easy Digital Downloads
- * @subpackage EDD API
- * @copyright Copyright (c) 2013, Pippin Williamson
- * @license  http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since  1.5
+ * @package     EDD
+ * @subpackage  Classes/API
+ * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.5
  */
 
 // Exit if accessed directly

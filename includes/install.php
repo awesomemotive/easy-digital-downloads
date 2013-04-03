@@ -2,8 +2,8 @@
 /**
  * Install Function
  *
- * @package     Easy Digital Downloads
- * @subpackage  Install Function
+ * @package     EDD
+ * @subpackage  Functions/Install
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0

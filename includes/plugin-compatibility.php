@@ -4,8 +4,8 @@
  *
  * Functions for compatibility with other plugins.
  *
- * @package     Easy Digital Downloads
- * @subpackage  Gateway Functions
+ * @package     EDD
+ * @subpackage  Functions/Compatibility
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0

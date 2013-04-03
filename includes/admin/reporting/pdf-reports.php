@@ -2,8 +2,8 @@
 /**
  * PDF Report Generation Functions
  *
- * @package     Easy Digital Downloads
- * @subpackage  PDF Report Generation
+ * @package     EDD
+ * @subpackage  Admin/Reports
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @author      Sunny Ratilal
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License

@@ -2,8 +2,8 @@
 /**
  * Front-end Actions
  *
- * @package     Easy Digital Downloads
- * @subpackage  Front-end Actions
+ * @package     EDD
+ * @subpackage  Functions
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0.8.1

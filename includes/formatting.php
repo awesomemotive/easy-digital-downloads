@@ -2,8 +2,8 @@
 /**
  * Formatting functions for taking care of proper number formats and such
  *
- * @package     Easy Digital Downloads
- * @subpackage  Formatting functions
+ * @package     EDD
+ * @subpackage  Functions/Formatting
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.2

@@ -2,8 +2,8 @@
 /**
  * PayPal Standard Gateway
  *
- * @package     Easy Digital Downloads
- * @subpackage  PayPal Standard Gateway
+ * @package     EDD
+ * @subpackage  Gateways
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0

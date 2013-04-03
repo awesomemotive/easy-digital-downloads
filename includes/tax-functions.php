@@ -6,8 +6,8 @@
  * Functions for retrieving tax amounts and such for individual payments are in
  * includes/payment-functions.php and includes/cart-functions.php
  *
- * @package     Easy Digital Downloads
- * @subpackage  Payment Functions
+ * @package     EDD
+ * @subpackage  Functions/Taxes
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.3
