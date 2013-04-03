@@ -6,8 +6,8 @@
  * Functions for retrieving tax amounts and such for individual payments are in
  * includes/payment-functions.php and includes/cart-functions.php
  *
- * @package     Easy Digital Downloads
- * @subpackage  Payment Functions
+ * @package     EDD
+ * @subpackage  Functions/Taxes
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.3
@@ -17,28 +17,27 @@
 if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
- * Checks if taxes are enabled
+ * Checks if taxes are enabled by using the option set from the EDD Settings.
+ * The value returned can be filtered.
  *
- * @access      public
- * @since       1.3.3
- * @return      bool
-*/
-
+ * @since 1.3.3
+ * @global $edd_options
+ * @return bool Whether or not taxes are enabled
+ */
 function edd_use_taxes() {
 	global $edd_options;
 
 	return apply_filters( 'edd_use_taxes', isset( $edd_options['enable_taxes'] ) );
 }
 
-
 /**
- * Local taxes only meaning users must opt in
+ * Check if only local taxes are enabled meaning users must opt in by using the
+ * option set from the EDD Settings.
  *
- * @access      public
- * @since       1.3.3
- * @return      bool
-*/
-
+ * @since 1.3.3
+ * @global $edd_options
+ * @return bool $local_only
+ */
 function edd_local_taxes_only() {
 	global $edd_options;
 
@@ -47,83 +46,72 @@ function edd_local_taxes_only() {
 	return apply_filters( 'edd_local_taxes_only', $local_only );
 }
 
-
 /**
  * Checks if a customer has opted into local taxes
  *
- * @access      public
- * @since       1.4.1
- * @return      bool
-*/
-
+ * @since 1.4.1
+ * @uses EDD_Session::get()
+ * @return bool
+ */
 function edd_local_tax_opted_in() {
 	$opted_in = EDD()->session->get( 'edd_local_tax_opt_in' );
 	return ! empty( $opted_in );
 }
 
-
 /**
  * Sets a customer as opted into local taxes
  *
- * @access      public
- * @since       1.4.1
- * @return      bool
+ * @since 1.4.1
+ * @uses EDD_Session::get()
+ * @return bool
 */
-
 function edd_opt_into_local_taxes() {
 	EDD()->session->set( 'edd_local_tax_opt_in', '1' );
 }
 
-
 /**
  * Sets a customer as opted out of local taxes
  *
- * @access      public
- * @since       1.4.1
- * @return      bool
-*/
-
+ * @since 1.4.1
+ * @uses EDD_Session::get()
+ * @return bool
+ */
 function edd_opt_out_local_taxes() {
 	EDD()->session->set( 'edd_local_tax_opt_in', null);
 }
 
-
 /**
  * Show taxes on individual prices?
  *
- * @access      public
- * @since       1.4
- * @return      bool
-*/
-
+ * @since 1.4
+ * @global $edd_options
+ * @return bool Whether or not to show taxes on prices
+ */
 function edd_taxes_on_prices() {
 	global $edd_options;
 	return apply_filters( 'edd_taxes_on_prices', isset( $edd_options['taxes_on_prices'] ) );
 }
 
-
 /**
- * Calculate taxes before or after discounts?
+ * Checks if the user has enabled the option to calculate taxes after discounts
+ * have been entered
  *
- * @access      public
- * @since       1.4.1
- * @return      bool
-*/
-
+ * @since 1.4.1
+ * @global $edd_options
+ * @return bool Whether or not taxes are calculated after discount
+ */
 function edd_taxes_after_discounts() {
 	global $edd_options;
 	return apply_filters( 'edd_taxes_after_discounts', isset( $edd_options['taxes_after_discounts'] ) );
 }
 
-
 /**
  * Get taxation rate
  *
- * @access      public
- * @since       1.3.3
- * @return      float
-*/
-
+ * @since 1.3.3
+ * @global $edd_options
+ * @return float $trate Taxation rate
+ */
 function edd_get_tax_rate() {
 	global $edd_options;
 
@@ -136,16 +124,13 @@ function edd_get_tax_rate() {
 	return apply_filters( 'edd_tax_rate', $rate );
 }
 
-
 /**
- * Calculate taxed amount
+ * Calculate the taxed amount
  *
- * @access      public
- * @since       1.3.3
- * @param 		$amount float The original amount to calculate a tax cost
- * @return      float
-*/
-
+ * @since 1.3.3
+ * @param $amount float The original amount to calculate a tax cost
+ * @return float $tax Taxed amount
+ */
 function edd_calculate_tax( $amount, $sum = true ) {
 	global $edd_options;
 
@@ -181,32 +166,25 @@ function edd_calculate_tax( $amount, $sum = true ) {
 /**
  * Stores the tax info in the payment meta
  *
- * @access      public
- * @since       1.3.3
- * @param 		$year int The year to retrieve taxes for, i.e. 2012
- * @uses 		edd_currency_filter()
- * @uses 		edd_format_amount()
- * @uses 		edd_get_sales_tax_for_year()
- * @return      void
+ * @since 1.3.3
+ * @param $year int The year to retrieve taxes for, i.e. 2012
+ * @uses edd_get_sales_tax_for_year()
+ * @return void
 */
-
 function edd_sales_tax_for_year( $year = null ) {
 	echo edd_currency_filter( edd_format_amount( edd_get_sales_tax_for_year( $year ) ) );
 }
 
 /**
- * Stores the tax info in the payment meta
+ * Gets the sales tax for the current year
  *
- * @access      public
- * @since       1.3.3
- * @param 		$year int The year to retrieve taxes for, i.e. 2012
- * @uses 		edd_get_payment_tax()
- * @return      float
-*/
-
+ * @since 1.3.3
+ * @param $year int The year to retrieve taxes for, i.e. 2012
+ * @uses edd_get_payment_tax()
+ * @return float $tax Sales tax
+ */
 function edd_get_sales_tax_for_year( $year = null ) {
-
-	if( empty( $year ) )
+	if ( empty( $year ) )
 		return 0;
 
 	// Start at zero
@@ -236,13 +214,12 @@ function edd_get_sales_tax_for_year( $year = null ) {
 
 
 /**
- * Should prices on checkout show taxes?
+ * Checks whether the user has enabled display of taxes on the checkout
  *
- * @access      public
- * @since       1.5
- * @return      bool
-*/
-
+ * @since 1.5
+ * @global $edd_options
+ * @return bool $include_tax
+ */
 function edd_prices_show_tax_on_checkout() {
 	global $edd_options;
 
@@ -251,15 +228,13 @@ function edd_prices_show_tax_on_checkout() {
 	return ( $include_tax == 'yes' );
 }
 
-
 /**
- * Do individual product prices include tax?
+ * Check if the individual product prices include tax
  *
- * @access      public
- * @since       1.5
- * @return      bool
+ * @since 1.5
+ * @global $edd_options
+ * @return bool $include_tax
 */
-
 function edd_prices_include_tax() {
 	global $edd_options;
 
@@ -268,15 +243,12 @@ function edd_prices_include_tax() {
 	return ( $include_tax == 'yes' );
 }
 
-
 /**
  * Is the cart taxed?
  *
- * @access      public
- * @since       1.5
- * @return      bool
-*/
-
+ * @since 1.5
+ * @return bool
+ */
 function edd_is_cart_taxed() {
 	return edd_use_taxes() && ( ( edd_local_tax_opted_in() && edd_local_taxes_only() ) || ! edd_local_taxes_only() );
 }

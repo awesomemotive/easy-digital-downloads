@@ -2,8 +2,8 @@
 /**
  * Graphing Functions
  *
- * @package     Easy Digital Downloads
- * @subpackage  Graphing Functions
+ * @package     EDD
+ * @subpackage  Admin/Reports
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -15,9 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Show report graphs
  *
- * @access      public
- * @since       1.3
- * @return      void
+ * @since 1.3
+ * @return void
 */
 function edd_reports_graph() {
 	// Retrieve the queried dates
@@ -298,9 +297,8 @@ function edd_reports_graph() {
 /**
  * Show report graph date filters
  *
- * @access      public
- * @since       1.3
- * @return      void
+ * @since 1.3
+ * @return void
 */
 function edd_reports_graph_controls() {
 	$date_options = apply_filters( 'edd_report_date_options', array(
@@ -373,9 +371,8 @@ function edd_reports_graph_controls() {
  * Date sent via $_GET is read first and then modified (if needed) to match the
  * selected date-range (if any)
  *
- * @access      public
- * @since       1.3
- * @return      void
+ * @since 1.3
+ * @return void
 */
 function edd_get_report_dates() {
 	$dates = array();
@@ -512,9 +509,8 @@ function edd_get_report_dates() {
 /**
  * Grabs all of the selected date info and then redirects appropriately
  *
- * @access      public
- * @since       1.3
- * @return      void
+ * @since 1.3
+ * @return void
 */
 function edd_parse_report_dates( $data ) {
 	$dates = edd_get_report_dates();
