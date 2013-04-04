@@ -46,10 +46,7 @@ function edd_install() {
 
 	// Add Upgraded From Option
 	$current_version = get_option( 'edd_version' );
-	if ( ! $current_version )
-		update_option( 'edd_version_upgraded_from', 'New' );
-	else
-		update_option( 'edd_version_upgraded_from', $current_version );
+	update_option( 'edd_version_upgraded_from', $current_version );
 
 	// Checks if the purchase page option exists
 	if ( ! isset( $edd_options['purchase_page'] ) ) {
