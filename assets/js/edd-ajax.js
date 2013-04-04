@@ -185,7 +185,7 @@ jQuery(document).ready(function ($) {
                 $('#edd_purchase_form input[type=submit]').val(complete_purchase_val);
                 $('.edd-cart-ajax').remove();
                 $('.edd_errors').remove();
-                $('#edd_purchase_form').before(data);
+                $('#edd_purchase_submit').before(data);
             }
         });
 

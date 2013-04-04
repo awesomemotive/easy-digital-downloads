@@ -1,32 +1,35 @@
 <?php
-
 /**
- * Roles / caps
+ * Roles and Capabilities
  *
- * @package     Easy Digital Downloads
- * @subpackage  Roles / Caps
+ * @package     EDD
+ * @subpackage  Classes/Roles
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
 */
 
 /**
+ * EDD_Roles Class
+ *
  * This class handles the role creation and assignment of capabilities for those roles.
  *
  * These roles let us have Shop Accountants, Shop Workers, etc, each of whom can do
  * certain things within the EDD store
  *
- * @since  1.4.4
- * @return void
+ * @since 1.4.4
  */
 class EDD_Roles {
 	/**
 	 * Get things going
 	 *
-	 * @since  1.4.4
+	 * @access public
+	 * @since 1.4.4
+	 * @see EDD_Roles::add_roles()
+	 * @see EDD_Roles::add_caps()
 	 * @return void
 	 */
-	function __construct() {
+	public function __construct() {
 		$this->add_roles();
 		$this->add_caps();
 	}
@@ -34,7 +37,8 @@ class EDD_Roles {
 	/**
 	 * Add new shop roles with default WP caps
 	 *
-	 * @since  1.4.4
+	 * @access public
+	 * @since 1.4.4
 	 * @return void
 	 */
 	public function add_roles() {
@@ -94,7 +98,9 @@ class EDD_Roles {
 	/**
 	 * Add new shop-specific capabilities
 	 *
+	 * @access public
 	 * @since  1.4.4
+	 * @global obj $wp_roles
 	 * @return void
 	 */
 	public function add_caps() {
@@ -147,8 +153,9 @@ class EDD_Roles {
 	/**
 	 * Gets the core post type capabilties
 	 *
+	 * @access public
 	 * @since  1.4.4
-	 * @return array
+	 * @return array $capabilities Core post type capabilties
 	 */
 	public function get_core_caps() {
 		$capabilities = array();
@@ -186,7 +193,9 @@ class EDD_Roles {
 	/**
 	 * Remove core post type capabilities (called on uninstall)
 	 *
+	 * @access public
 	 * @since 1.5.2
+	 * @return void
 	 */
 	public function remove_caps() {
 		if ( class_exists( 'WP_Roles' ) )

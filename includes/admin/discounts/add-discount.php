@@ -2,8 +2,8 @@
 /**
  * Add Discount Template
  *
- * @package     Easy Digital Downloads
- * @subpackage  Discounts
+ * @package     EDD
+ * @subpackage  Admin/Discounts
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -130,7 +130,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				</th>
 				<td>
 					<input type="checkbox" id="edd-use-once" name="use_once" value="1"/>
-					<span class="description"><?php _e( 'Limit this discount to a single-user per customer?', 'edd' ); ?></span>
+					<span class="description"><?php _e( 'Limit this discount to a single-use per customer?', 'edd' ); ?></span>
 				</td>
 			</tr>
 		</tbody>

@@ -2,8 +2,8 @@
 /**
  * Cart Functions
  *
- * @package     Easy Digital Downloads
- * @subpackage  Cart Functions
+ * @package     EDD
+ * @subpackage  Cart
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -13,13 +13,10 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Get Cart Contents
+ * Get the contents of the cart
  *
- * Retrieve contents from the cart.
- *
- * @access      public
- * @since       1.0
- * @return      array | false
+ * @since 1.0
+ * @return mixed array if cart isn't empty | false otherwise
  */
 function edd_get_cart_contents() {
 	$cart = EDD()->session->get( 'edd_cart' );
@@ -29,11 +26,8 @@ function edd_get_cart_contents() {
 /**
  * Get Cart Quantity
  *
- * Gets the total quanity of items cart.
- *
- * @access      public
- * @since       1.0
- * @return      INT - number of this item in the cart
+ * @since 1.0
+ * @return int $quantity Quantity of one item in the cart
  */
 function edd_get_cart_quantity() {
 	$cart = edd_get_cart_contents();
@@ -48,13 +42,13 @@ function edd_get_cart_quantity() {
  * Add To Cart
  *
  * Adds a download ID to the shopping cart.
- * Uses edd_get_cart_contents().
  *
- * @access      public
- * @since       1.0
- * @param       $download_id - INT the ID number of the download to add to the cart
- * @param       $options - array an array of options, such as variable price
- * @return      string - cart key of the new item
+ * @since 1.0
+ *
+ * @param int $download_id Download IDs to be added to the cart
+ * @param array $options Array of options, such as variable price
+ *
+ * @return string Cart key of the new item
  */
 function edd_add_to_cart( $download_id, $options = array() ) {
 	$cart = edd_get_cart_contents();
@@ -100,15 +94,11 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 }
 
 /**
- * Remove From Cart
+ * Removes a Download from the Cart
  *
- * Removes a download from the shopping cart.
- * Uses edd_get_cart_contents().
- *
- * @access      public
- * @since       1.0
- * @param       $cart_key INT the cart key to remove
- * @return      array - of updated cart items
+ * @since 1.0
+ * @param int $cart_key the cart key to remove
+ * @return array Updated cart items
  */
 function edd_remove_from_cart( $cart_key ) {
 	$cart = edd_get_cart_contents();
@@ -132,15 +122,11 @@ function edd_remove_from_cart( $cart_key ) {
 }
 
 /**
- * Item in Cart
+ * Checks the see if an item is already in the cart and returns a boolean
  *
- * Checks to see if an item is already in the cart.
- * Uses edd_get_cart_contents().
- *
- * @access      public
- * @since       1.0
- * @param       $download_id - INT the ID number of the download to remove
- * @return      boolean
+ * @since 1.0
+ * @param int $download_id ID of the download to remove
+ * @return bool Item in the cart or not?
  */
 function edd_item_in_cart( $download_id = 0, $options = array() ) {
 	$cart_items = edd_get_cart_contents();
@@ -167,15 +153,11 @@ function edd_item_in_cart( $download_id = 0, $options = array() ) {
 }
 
 /**
- * Get Item Position in Cart
+ * Get the Item Position in Cart
  *
- * Gets the position of an item in the cart.
- * Uses edd_get_cart_contents().
- *
- * @access      public
- * @since       1.0.7.2
- * @param       $download_id - INT the ID number of the download to remove
- * @return      $position - INT position of the item in the cart
+ * @since 1.0.7.2
+ * @param int $download_id ID of the download to get position of
+ * @return mixed false if empty cart | int $position position of the item in the cart
  */
 function edd_get_item_position_in_cart( $download_id ) {
 	$cart_items = edd_get_cart_contents();
@@ -193,12 +175,9 @@ function edd_get_item_position_in_cart( $download_id ) {
 /**
  * Get Cart Item Quantity
  *
- * Gets the quanity for an item in the cart.
- *
- * @access      public
- * @since       1.0
- * @param       $item INT the download (cart item) ID number
- * @return      $position - INT position of the item in the cart
+ * @since 1.0
+ * @param int $item Download (cart item) ID number
+ * @return int $quantity Cart item quantity
  */
 function edd_get_cart_item_quantity( $item ) {
 	$cart = edd_get_cart_contents();
@@ -210,11 +189,10 @@ function edd_get_cart_item_quantity( $item ) {
 /**
  * Get Cart Item Price
  *
- * @access      public
- * @since       1.0
- * @param       $item INT the download (cart item) ID number
- * @param       $options - array optional parameters, used for defining variable prices
- * @return      string - the fully formatted price
+ * @since 1.0
+ * @param int $item Download (cart item) ID number
+ * @param array $options Optional parameters, used for defining variable prices
+ * @return string Fully formatted price
  */
 function edd_cart_item_price( $item_id = 0, $options = array() ) {
 	global $edd_options;
@@ -244,13 +222,11 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  *
  * Gets the price of the cart item.
  *
- * @access      public
- * @since       1.0
- * @param       $item INT the download ID number
- * @param       $options array optional parameters, used for defining variable prices
- * @return      string - price for this item
-*/
-
+ * @since 1.0
+ * @param int $item Download ID number
+ * @param array $options Optional parameters, used for defining variable prices
+ * @return string Price for this item
+ */
 function edd_get_cart_item_price( $item_id, $options = array(), $tax = true ) {
 	global $edd_options;
 
@@ -286,11 +262,10 @@ function edd_get_cart_item_price( $item_id, $options = array(), $tax = true ) {
  * Gets the name of the specified price option,
  * for variable pricing only.
  *
- * @access      public
- * @since       1.0
- * @param       $item INT the download ID number
- * @param       $options array optional parameters, used for defining variable prices
- * @return      string - the name of the price option
+ * @since 1.0
+ * @param int $item Download ID number
+ * @param array $options Optional parameters, used for defining variable prices
+ * @return string Name of the price option
  */
 function edd_get_price_name( $item_id, $options = array() ) {
 	$return = false;
@@ -308,15 +283,27 @@ function edd_get_price_name( $item_id, $options = array() ) {
 	return apply_filters( 'edd_get_price_name', $return, $item_id, $options );
 }
 
+
+/**
+ * Get cart item price id
+ *
+ * @since 1.0
+ * @param int $item Cart item array
+ * @return int Price id
+ */
+function edd_get_cart_item_price_id( $item = array() ) {
+	return isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
+}
+
+
 /**
  * Cart Subtotal
  *
  * Shows the subtotal for the shopping cart (no taxes)
  *
- * @access      public
- * @since       1.4
- * @uses        edd_get_cart_subtotal()
- * @return      float - the total amount before taxes fully formatted
+ * @since 1.4
+ * @global $edd_options Array of all the EDD Options
+ * @return float Total amount before taxes fully formatted
  */
 function edd_cart_subtotal() {
 	global $edd_options;
@@ -325,15 +312,13 @@ function edd_cart_subtotal() {
 	$price = esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) );
 
 	if ( edd_is_cart_taxed() ) {
-
 		if ( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
-			$price .= '<br/><span style="font-weight:normal;text-transform:none;">' . __('(ex. tax)', 'edd') . '</span>';
+			$price .= '<br/><span style="font-weight:normal;text-transform:none;">' . __( '(ex. tax)', 'edd' ) . '</span>';
 		}
 
 		if ( edd_prices_show_tax_on_checkout() && $edd_options['prices_include_tax'] == 'no' ) {
-			$price .= '<br/><span style="font-weight:normal;text-transform:none;">' . __('(incl. tax)', 'edd') . '</span>';
+			$price .= '<br/><span style="font-weight:normal;text-transform:none;">' . __( '(incl. tax)', 'edd' ) . '</span>';
 		}
-
 	}
 
 	return $price;
@@ -345,11 +330,11 @@ function edd_cart_subtotal() {
  * Gets the total price amount in the cart before taxes and before any discounts
  * uses edd_get_cart_contents().
  *
- * @access      public
- * @since       1.3.3
- * @return      float - the total amount before taxes
-*/
-
+ * @since 1.3.3
+ * @global $edd_options Array of all the EDD Options
+ * @param bool $tax Whether tax is enabled or not (default: true)
+ * @return float Total amount before taxes
+ */
 function edd_get_cart_subtotal( $tax = true ) {
 	global $edd_options;
 
@@ -357,7 +342,7 @@ function edd_get_cart_subtotal( $tax = true ) {
 	$amount = 0;
 
 	if ( $cart_items ) {
-		foreach( $cart_items as $item ) {
+		foreach ( $cart_items as $item ) {
 			$amount += edd_get_cart_item_price( $item['id'], $item['options'], $tax );
 
 		}
@@ -371,35 +356,35 @@ function edd_get_cart_subtotal( $tax = true ) {
  *
  * Just a simple wrapper function for EDD_Fees::has_fees()
  *
- * @access      public
- * @since       1.5
- * @return      bool
+ * @since 1.5
+ * @uses EDD()->fees->has_fees()
+ * @return bool Whether the cart has fees applied or not
  */
 function edd_cart_has_fees() {
 	return EDD()->fees->has_fees();
 }
 
 /**
- * Get cart fees
+ * Get Cart Fees
  *
  * Just a simple wrapper function for EDD_Fees::get_fees()
  *
- * @access      public
- * @since       1.5
- * @return      array
+ * @since 1.5
+ * @uses EDD()->fees->get_fees()
+ * @return array All the cart fees that have been applied
  */
 function edd_get_cart_fees() {
 	return EDD()->fees->get_fees();
 }
 
 /**
- * Get cart fee total
+ * Get Cart Fee Total
  *
  * Just a simple wrapper function for EDD_Fees::total()
  *
- * @access      public
- * @since       1.5
- * @return      float
+ * @since 1.5
+ * @uses EDD()->fees->total()
+ * @return float Total Cart Fees
  */
 function edd_get_cart_fee_total() {
 	return EDD()->fees->total();
@@ -408,17 +393,12 @@ function edd_get_cart_fee_total() {
 /**
  * Get Cart Amount
  *
- * Gets the total price amount in the cart.
- * uses edd_get_cart_contents().
- *
- * @access      public
- * @since       1.0
- * @param 		$add_taxes bool Whether to apply taxes (if enabled)
- * @param 		$local_override bool Force the local opt-in param - used for when not reading $_POST
- * @return      float the total amount
+ * @since 1.0
+ * @param bool $add_taxes Whether to apply taxes (if enabled) (default: true)
+ * @param bool $local_override Force the local opt-in param - used for when not reading $_POST (default: false)
+ * @return float Total amount
 */
 function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
-
 	$amount = edd_get_cart_subtotal( false );
 
 	if ( ! empty( $_POST['edd-discount'] ) || edd_get_cart_discounts() !== false ) {
@@ -459,10 +439,10 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
  *
  * Returns amount after taxes and discounts
  *
- * @access      public
- * @since       1.4.1
- * @param       $discounts - Array of discounts to apply (needed during ajax processes)
- * @return      float - The cart amount
+ * @since 1.4.1
+ * @global $edd_options Array of all the EDD Options
+ * @param  array $discounts Array of discounts to apply (needed during AJAX calls)
+ * @return float Cart amount
  */
 function edd_get_cart_total( $discounts = false ) {
 	global $edd_options;
@@ -483,9 +463,10 @@ function edd_get_cart_total( $discounts = false ) {
  * Gets the fully formatted total price amount in the cart.
  * uses edd_get_cart_amount().
  *
- * @access      public
- * @since       1.3.3
- * @return      string - the cart amount
+ * @access public
+ * @global $edd_options Array of all the EDD Options
+ * @since 1.3.3
+ * @return string - the cart amount
  */
 function edd_cart_total( $echo = true ) {
 	global $edd_options;
@@ -493,14 +474,12 @@ function edd_cart_total( $echo = true ) {
 	$total = apply_filters( 'edd_cart_total', edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ) );
 
 	if ( edd_is_cart_taxed() ) {
-
 		if ( edd_prices_show_tax_on_checkout() ) {
 			$total .= '<br/><span>'. sprintf( __('(includes %s tax)', 'edd'), edd_cart_tax() ) . '</span>';
 		}
-
 	}
 
-	if ( !$echo ) {
+	if ( ! $echo ) {
 		return $total;
 	}
 
@@ -535,14 +514,11 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
 /**
  * Gets the total tax amount for the cart contents
  *
- * @access      public
- * @since       1.2.3
- * @param       $discounts Array of discounts to take into account (required for ajax processes)
- * @return      string
-*/
-
+ * @since 1.2.3
+ * @param array $discounts Array of discounts to take into account (required for AJAX calls)
+ * @return string Total tax amount
+ */
 function edd_get_cart_tax( $discounts = false ) {
-
 	$subtotal = edd_get_cart_subtotal( false );
 	$subtotal += edd_get_cart_fee_total();
 	$cart_tax = 0;
@@ -561,13 +537,11 @@ function edd_get_cart_tax( $discounts = false ) {
 }
 
 /**
- * Gets the total tax amount for the cart contents
+ * Gets the total tax amount for the cart contents in a fully formatted way
  *
- * Returns a fully formatted amount
- *
- * @access      public
- * @since       1.2.3
- * @return      string
+ * @since 1.2.3
+ * @param bool $echo Whether to echo the tax amount or not (default: false)
+ * @return string Total tax amount (if $echo is set to true)
  */
 function edd_cart_tax( $echo = false ) {
 	$cart_tax = 0;
@@ -579,7 +553,7 @@ function edd_cart_tax( $echo = false ) {
 
 	$tax = apply_filters( 'edd_cart_tax', $cart_tax );
 
-	if ( !$echo ) {
+	if ( ! $echo ) {
 		return $tax;
 	}
 
@@ -587,13 +561,10 @@ function edd_cart_tax( $echo = false ) {
 }
 
 /**
- * Get Cart Content Details
+ * Retrieve the Cart Content Details
  *
- * Retrieves the cart contnet details.
- *
- * @access      public
- * @since       1.0
- * @return      array
+ * @since 1.0
+ * @return array $defailt Cart content details
  */
 function edd_get_cart_content_details() {
 	$cart_items = edd_get_cart_contents();
@@ -625,11 +596,10 @@ function edd_get_cart_content_details() {
  *
  * Adds all downloads within a taxonomy term to the cart.
  *
- * @access      public
- * @since       1.0.6
- * @param       $taxonomy string - the name of the taxonomy
- * @param       $terms mixed - the slug or id of the term from which to add ites, or an array of terms
- * @return      array of IDs for each item added to the cart
+ * @since 1.0.6
+ * @param string $taxonomy Name of the taxonomy
+ * @param mixed $terms Slug or ID of the term from which to add ites | An array of terms
+ * @return array Array of IDs for each item added to the cart
  */
 function edd_add_collection_to_cart( $taxonomy, $terms ) {
 	if ( ! is_string( $taxonomy ) ) return false;
@@ -655,13 +625,14 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
 }
 
 /**
- * Remove Item URL
+ * Returns the URL to remove an item from the cart
  *
- * Returns the URL to remove an item.
- *
- * @access      public
- * @since       1.0
- * @return      string
+ * @since 1.0
+ * @global $post
+ * @param int $cart_key Cart item key
+ * @param object $post Download (post) object
+ * @param bool $ajax AJAX?
+ * @return string $remove_url URL to remove the cart item
  */
 function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
 	global $post;
@@ -681,12 +652,10 @@ function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
 /**
  * Show Added To Cart Messages
  *
- * Renders the added to cart messages.
- *
- * @access      private
- * @since       1.0
- * @return      void
-*/
+ * @since 1.0
+ * @param int $download_id Download (Post) ID
+ * @return void
+ */
 function edd_show_added_to_cart_messages( $download_id ) {
 	if ( isset( $_POST['edd_action'] ) && $_POST['edd_action'] == 'add_to_cart' ) {
 		$alert = '<div class="edd_added_to_cart_alert">'
@@ -700,14 +669,12 @@ function edd_show_added_to_cart_messages( $download_id ) {
 add_action('edd_after_download_content', 'edd_show_added_to_cart_messages');
 
 /**
- * Get Checkout URI
+ * Get the URL of the Checkout page
  *
- * Retrieves the URL of the checkout page.
- *
- * @access      public
- * @since       1.0.8
- * @param       $args Extra query args to add to the URI
- * @return      mixed - the full URL to the checkout page, if present, NULL if it doesn't exist
+ * @since 1.0.8
+ * @global $edd_options Array of all the EDD Options
+ * @param array $args Extra query args to add to the URI
+ * @return mixed Full URL to the checkout page, if present | null if it doesn't exist
  */
 function edd_get_checkout_uri( $args = array() ) {
 	global $edd_options;
@@ -739,14 +706,13 @@ function edd_get_checkout_uri( $args = array() ) {
 }
 
 /**
- * Get Failed URI
+ * Get the URL of the Transaction Failed page
  *
- * Retrieves the URL of the failed transaction page
- *
- * @access      public
- * @since       1.3.4
- * @return      string - the full URL to the failed transactions page, if present, home page if it doesn't exist
-*/
+ * @since 1.3.4
+ * @global $edd_options Array of all the EDD Options
+ * @param string $extras Extras to append to the URL
+ * @return string Full URL to the Transaction Failed page, if present, home page if it doesn't exist
+ */
 function edd_get_failed_transaction_uri( $extras = false ) {
 	global $edd_options;
 
@@ -758,13 +724,10 @@ function edd_get_failed_transaction_uri( $extras = false ) {
 }
 
 /**
- * Checks if on checkout page
+ * Determines if we're currently on the Checkout page
  *
- * Determines if the current page is the checkout page
- *
- * @access      public
- * @since       1.1.2
- * @return      bool - true if on the page, false otherwise
+ * @since 1.1.2
+ * @return bool True if on the Checkout page, false otherwise
  */
 function edd_is_checkout() {
 	global $edd_options;
@@ -773,13 +736,11 @@ function edd_is_checkout() {
 }
 
 /**
- * Empty Cart
+ * Empties the Cart
  *
- * Empties the cart.
- *
- * @access      public
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @uses EDD()->session->set()
+ * @return void
  */
 function edd_empty_cart() {
 	// Remove cart contents
@@ -794,9 +755,9 @@ function edd_empty_cart() {
  *
  * Used for storing info about purchase
  *
- * @access      public
- * @since       1.1.5
- * @return      void
+ * @since 1.1.5
+ * @uses EDD()->session->set()
+ * @return void
  */
 function edd_set_purchase_session( $purchase_data ) {
 	EDD()->session->set('edd_purchase', $purchase_data );
@@ -808,9 +769,9 @@ function edd_set_purchase_session( $purchase_data ) {
  * Used for retrieving info about purchase
  * after completing a purchase
  *
- * @access      public
- * @since       1.1.5
- * @return      array / false
+ * @since 1.1.5
+ * @uses EDD()->session->get()
+ * @return mixed array | false
  */
 function edd_get_purchase_session() {
 	return EDD()->session->get('edd_purchase');

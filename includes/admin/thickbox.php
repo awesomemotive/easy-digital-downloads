@@ -2,25 +2,22 @@
 /**
  * Thickbox
  *
- * @package     Easy Digital Downloads
- * @subpackage  Thickbox
+ * @package     EDD
+ * @subpackage  Admin
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Media Button
+ * Adds an "Insert Download" button above the TinyMCE Editor on add/edit screens.
  *
- * Returns the Insert Download TinyMCE button.
- *
- * @access      private
- * @since       1.0
- * @return      string
-*/
+ * @since 1.0
+ * @return string "Insert Download" Button
+ */
 function edd_media_button( $context ) {
 	global $pagenow, $typenow, $wp_version;
 	$output = '';
@@ -46,10 +43,11 @@ add_filter( 'media_buttons_context', 'edd_media_button' );
  * Prints the footer code needed for the Insert Download
  * TinyMCE button.
  *
- * @access      private
- * @since       1.0
- * @return      void
-*/
+ * @since 1.0
+ * @global $pagenow
+ * @global $typenow
+ * @return void
+ */
 function edd_admin_footer_for_thickbox() {
 	global $pagenow, $typenow;
 
@@ -109,16 +107,19 @@ function edd_admin_footer_for_thickbox() {
 						?>
 					</select>
 				</div>
+				<?php 
+				$colors = edd_get_button_colors();
+				if( $colors ) { ?>
 				<div id="edd-color-choice" style="display: none;">
 					<select id="select-edd-color" style="clear: both; display: block; margin-bottom: 1em;">
 						<option value=""><?php _e('Choose a button color', 'edd'); ?></option>
 						<?php
-							$colors = edd_get_button_colors();
 							foreach ( $colors as $key => $color )
 								echo '<option value="' . str_replace( ' ', '_', $key ) . '">' . $color . '</option>';
 						?>
 					</select>
 				</div>
+				<?php } ?>
 				<div>
 					<input type="text" class="regular-text" id="edd-text" value="" placeholder="<?php _e( 'Link text . . .', 'edd' ); ?>"/>
 				</div>
