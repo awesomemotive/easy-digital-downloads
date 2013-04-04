@@ -2,8 +2,8 @@
 /**
  * Admin Payment History
  *
- * @package     Easy Digital Downloads
- * @subpackage  Admin Payment History
+ * @package     EDD
+ * @subpackage  Admin/Payments
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -45,6 +45,14 @@ function edd_payment_history_page() {
 			<?php $payments_table->display() ?>
 		</form>
 		<?php do_action( 'edd_payments_page_bottom' ); ?>
+
+		<p class="edd-mobile-link">
+			<a href="https://easydigitaldownloads.com/extension/ios-sales-earnings-tracker/" target="_blank">
+				<img src="<?php echo EDD_PLUGIN_URL . '/assets/images/icons/iphone.png'; ?>"/>
+				<?php _e( 'Get the EDD Sales / Earnings tracker for iOS', 'edd' ); ?>
+			</a>
+		</p>
+
 	</div>
 <?php
 	}

@@ -2,43 +2,46 @@
 /**
  * Customer Reports Table Class
  *
- * @package     Easy Digital Downloads
- * @subpackage  Customer Reports List Table Class
+ * @package     EDD
+ * @subpackage  Admin/Reports
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.5
  */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 // Load WP_List_Table if not loaded
-if( ! class_exists( 'WP_List_Table' ) ) {
+if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 /**
- * EDD Customer Reports Table Class
+ * EDD_Customer_Reports_Table Class
  *
  * Renders the Customer Reports table
  *
- * @access      private
+ * @since 1.5
  */
 class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
-	 * Number of results to show per page
+	 * Number of items per page
+	 *
 	 * @var int
-	 * @since  1.4
+	 * @since 1.5
 	 */
 	public $per_page = 30;
 
 	/**
 	 * Get things started
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @return      void
+	 * @access public
+	 * @since 1.5
+	 * @see WP_List_Table::__construct()
+	 * @return void
 	 */
-	function __construct() {
+	public function __construct() {
 		global $status, $page;
 
 		// Set parent defaults
@@ -51,13 +54,17 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Render most columns
+	 * This function renders most of the columns in the list table.
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @return      string
+	 * @access public
+	 * @since 1.5
+	 *
+	 * @param array $item Contains all the data of the customers
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Column Name
 	 */
-	function column_default( $item, $column_name ) {
+	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'name' :
 				return '<a href="' .
@@ -79,11 +86,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table columns
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @return      array
+	 * @access public
+	 * @since 1.5
+	 * @return array $columns Array of all the list table columns
 	 */
-	function get_columns(){
+	public function get_columns() {
 		$columns = array(
 			'name'     		=> __( 'Name', 'edd' ),
 			'email'     	=> __( 'Email', 'edd' ),
@@ -96,13 +103,13 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Show reporting views
+	 * Outputs the reporting views
 	 *
-	 * @access      private
-	 * @since       1.3
-	 * @return      void
+	 * @access public
+	 * @since 1.5
+	 * @return void
 	 */
-	function bulk_actions() {
+	public function bulk_actions() {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_report_views();
 	}
@@ -110,22 +117,24 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Retrieve the current page number
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @return      int
+	 * @access public
+	 * @since 1.5
+	 * @return int Current page number
 	 */
-	function get_paged() {
+	public function get_paged() {
 		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 	}
 
 	/**
 	 * Retrieve the total customers from the database
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @return      int
+	 * @access public
+	 * @since 1.5
+	 * @global object $wpdb Used to query the database using the WordPress
+	 *   Database API
+	 * @return int $count The number of customers from the database
 	 */
-	function get_total_customers() {
+	public function get_total_customers() {
 		global $wpdb;
 		$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
 		return $count[0];
@@ -134,11 +143,13 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Build all the reports data
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @return      array $reports_data
+	 * @access public
+	 * @since 1.5
+	  * @global object $wpdb Used to query the database using the WordPress
+	 *   Database API
+	 * @return array $reports_data All the data for customer reports
 	 */
-	function reports_data() {
+	public function reports_data() {
 		global $wpdb;
 
 		$reports_data = array();
@@ -169,17 +180,15 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @uses        $this->_column_headers
-	 * @uses        $this->items
-	 * @uses        $this->get_columns()
-	 * @uses        $this->get_sortable_columns()
-	 * @uses        $this->get_pagenum()
-	 * @uses        $this->set_pagination_args()
-	 * @return      array
+	 * @access public
+	 * @since 1.5
+	 * @uses EDD_Customer_Reports_Table::get_columns()
+	 * @uses WP_List_Table::get_sortable_columns()
+	 * @uses EDD_Customer_Reports_Table::get_pagenum()
+	 * @uses EDD_Customer_Reports_Table::get_total_customers()
+	 * @return void
 	 */
-	function prepare_items() {
+	public function prepare_items() {
 		$columns = $this->get_columns();
 
 		$hidden = array(); // No hidden columns

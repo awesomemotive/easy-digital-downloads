@@ -128,7 +128,18 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 		<?php foreach ( $cart as $key => $item ) : ?>
 			<tr>
 				<td>
-					<div class="edd_purchase_receipt_product_name"><?php echo esc_html( $item['name'] ); ?></div>
+
+					<?php
+					$price_id       = edd_get_cart_item_price_id( $item );
+					$download_files = edd_get_download_files( $item['id'], $price_id );
+					?>
+
+					<div class="edd_purchase_receipt_product_name">
+						<?php echo esc_html( $item['name'] ); ?>
+						<?php if( $price_id !== false ) : ?>
+						<span class="edd_purchase_receipt_price_name">&nbsp;&ndash;&nbsp;<?php echo edd_get_price_option_name( $item['id'], $price_id ); ?></span>
+						<?php endif; ?>
+					</div>
 
 					<?php if ( $edd_receipt_args['notes'] ) : ?>
 						<div class="edd_purchase_receipt_product_notes"><?php echo edd_get_product_notes( $item['id'] ); ?></div>
@@ -137,9 +148,6 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 					<ul>
 
 						<?php
-						$price_id       = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
-						$download_files = edd_get_download_files( $item['id'], $price_id );
-
 						if ( $download_files && is_array( $download_files ) ) :
 
 							foreach ( $download_files as $filekey => $file ) :

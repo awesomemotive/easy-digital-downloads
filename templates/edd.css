@@ -1,7 +1,7 @@
 /**
  * Easy Digital Downloads Styles
  *
- * @package     Easy Digital Downloads
+ * @package     EDD
  * @subpackage  CSS
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
@@ -184,7 +184,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 
 /* =Error styles
 -------------------------------------------------------------- */
-.edd_errors { -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; border: 1px solid #E6DB55; margin: 20px 0; background: #FFFFE0; color: #333; }
+.edd_errors { -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; border: 1px solid #E6DB55; margin: 0; background: #FFFFE0; color: #333; }
 .edd_error { padding:10px; }
 p.edd_error { margin: 0 !important; }
 

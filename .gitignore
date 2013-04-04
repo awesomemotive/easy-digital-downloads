@@ -168,3 +168,6 @@ pip-log.txt
 #############
 
 .idea
+
+# Ignore API Documentation
+api-docs/*

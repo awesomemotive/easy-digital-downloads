@@ -2,8 +2,8 @@
 /**
  * Contextual Help
  *
- * @package     Easy Digital Downloads
- * @subpackage  Downloads
+ * @package     EDD
+ * @subpackage  Admin/Discounts
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.2.3
@@ -13,13 +13,10 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Discounts contextual help.
+ * Adds the Contextual Help for the Discount Codes Page
  *
- * Adds help for discount settings
- *
- * @access      private
- * @since       1.3
- * @return      void
+ * @since 1.3
+ * @return void
  */
 function edd_discounts_contextual_help() {
 	$screen = get_current_screen();
