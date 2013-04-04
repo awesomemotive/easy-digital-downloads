@@ -64,28 +64,33 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 
 	$file_urls     = '';
 	$download_list = '<ul>';
-	$downloads     = edd_get_payment_meta_downloads( $payment_id );
+	$cart_items     = edd_get_payment_meta_cart_details( $payment_id );
 
-	if ( $downloads ) {
+	if ( $cart_items ) {
 		$show_names = apply_filters( 'edd_email_show_names', true );
 
-		foreach ( $downloads as $download ) {
-			$id = isset( $payment_data['cart_details'] ) ? $download['id'] : $download;
+		foreach ( $cart_items as $item ) {
 
-			$price_id = isset( $download['options']['price_id'] ) ? $download['options']['price_id'] : null;
+			$price_id = edd_get_cart_item_price_id( $item );
 
 			if ( $show_names ) {
-				$download_list .= '<li>' . apply_filters( 'edd_email_receipt_download_title', get_the_title( $id ), $id, $price_id ) . '<br/>';
+
+				$title = get_the_title( $item['id'] );
+
+				if( $price_id !== false )
+					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id );
+
+				$download_list .= '<li>' . apply_filters( 'edd_email_receipt_download_title', $title, $item['id'], $price_id ) . '<br/>';
 				$download_list .= '<ul>';
 			}
 
 
-			$files = edd_get_download_files( $id, $price_id );
+			$files = edd_get_download_files( $item['id'], $price_id );
 
 			if ( $files ) {
 				foreach ( $files as $filekey => $file ) {
 					$download_list .= '<li>';
-					$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $id, $price_id );
+					$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $item['id'], $price_id );
 					$download_list .= '<a href="' . esc_url( $file_url ) . '">' . $file['name'] . '</a>';
 
 					$download_list .= '</li>';
@@ -98,8 +103,8 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 				$download_list .= '</ul>';
 			}
 
-			if ( '' != edd_get_product_notes( $id ) )
-				$download_list .= ' &mdash; <small>' . edd_get_product_notes( $id ) . '</small>';
+			if ( '' != edd_get_product_notes( $item['id'] ) )
+				$download_list .= ' &mdash; <small>' . edd_get_product_notes( $item['id'] ) . '</small>';
 
 			if ( $show_names ) {
 				$download_list .= '</li>';
@@ -132,7 +137,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 	$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'purchase_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' ), $message );
 
 	$message = apply_filters( 'edd_email_template_tags', $message, $payment_data, $payment_id );
-
+	echo $message; exit;
 	return $message;
 }
 
@@ -368,7 +373,7 @@ add_filter( 'edd_purchase_receipt_default', 'edd_default_email_styling' );
  * Render Receipt in the Browser
  *
  * A link is added to the Purchase Receipt to view the email in the browser and
- * this function renders the Purchase Receipt in the browser. It overrides the 
+ * this function renders the Purchase Receipt in the browser. It overrides the
  * Purchase Receipt template and provides its only styling.
  *
  * @since 1.5
