@@ -26,7 +26,7 @@ __Please Note:__ GitHub is for bug reports and contributions only - if you have 
 * We ensure that every EDD function is documented well and follows the standards set by phpDoc
 * An example function can be found [here](https://gist.github.com/sunnyratilal/5308969)
 * Please make sure that every function is documented so that when we update our API Documentation things don't go awry!
-	* If you're add/editing a function in a class, make sure to add `@access {private|public|protected}`
+	* If you're adding/editing a function in a class, make sure to add `@access {private|public|protected}`
 * Finally, please use tabs and not spaces. The tab indent size should be 4 for all EDD code.
 
 At this point you're waiting on us to merge your pull request. We'll review all pull requests, and make suggestions and changes if necessary.
