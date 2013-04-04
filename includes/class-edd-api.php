@@ -47,7 +47,7 @@ class EDD_API {
 	/**
 	 * Is this a valid request?
 	 *
-	 * @var bool 
+	 * @var bool
 	 * @access private
 	 * @since 1.5
 	 */
@@ -359,6 +359,9 @@ class EDD_API {
 		global $wp_query;
 
 		$per_page = isset( $wp_query->query_vars['number'] ) ? $wp_query->query_vars['number'] : 10;
+
+		if( $per_page < 0 && $this->get_query_mode() == 'customers' )
+			$per_page = 99999999; // Customers query doesn't support -1
 
 		return apply_filters( 'edd_api_results_per_page', $per_page );
 	}
