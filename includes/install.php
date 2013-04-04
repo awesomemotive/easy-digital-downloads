@@ -44,6 +44,13 @@ function edd_install() {
 	// Clear the permalinks
 	flush_rewrite_rules();
 
+	// Add Upgraded From Option
+	$current_version = get_option( 'edd_version' );
+	if ( ! $current_version )
+		update_option( 'edd_version_upgraded_from', 'new' );
+	else
+		update_option( 'edd_version_upgraded_from', $current_version );
+
 	// Checks if the purchase page option exists
 	if ( ! isset( $edd_options['purchase_page'] ) ) {
 	    // Checkout Page
@@ -105,7 +112,6 @@ function edd_install() {
 
 		update_option( 'edd_settings_general', $options );
 		update_option( 'edd_version', EDD_VERSION );
-		update_option( 'edd_version_upgraded_from', 'new' );
 	}
 
 	// Bail if activating from network, or bulk
