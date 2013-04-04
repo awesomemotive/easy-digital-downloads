@@ -58,9 +58,9 @@ function edd_get_purchase_link( $args = array() ) {
 	$defaults = apply_filters( 'edd_purchase_link_defaults', array(
 		'download_id' => $post->ID,
 		'price'       => (bool) true,
-		'text'        => isset( $edd_options[ 'add_to_cart_text' ] ) && $edd_options[ 'add_to_cart_text' ]  != '' ? $edd_options[ 'add_to_cart_text' ] 	: __( 'Purchase', 'edd' ),
-		'style'       => isset( $edd_options[ 'button_style' ] ) 	 ? $edd_options[ 'button_style' ] 		: 'button',
-		'color'       => isset( $edd_options[ 'checkout_color' ] ) 	 ? $edd_options[ 'checkout_color' ] 	: 'blue',
+		'text'        => ! empty( $edd_options[ 'add_to_cart_text' ] ) ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
+		'style'       => isset( $edd_options[ 'button_style' ] ) 	   ? $edd_options[ 'button_style' ]     : 'button',
+		'color'       => isset( $edd_options[ 'checkout_color' ] ) 	   ? $edd_options[ 'checkout_color' ] 	: 'blue',
 		'class'       => 'edd-submit'
 	) );
 
@@ -69,7 +69,7 @@ function edd_get_purchase_link( $args = array() ) {
 	$variable_pricing = edd_has_variable_prices( $args['download_id'] );
 	$data_variable    = $variable_pricing ? ' data-variable-price=yes' : 'data-variable-price=no';
 	$type             = edd_single_price_option_mode( $args['download_id'] ) ? 'data-price-mode=multi' : 'data-price-mode=single';
-	if ( $args['price'] && ! $variable_pricing ) {
+	if ( $args['price'] && $args['price'] != 'no' && ! $variable_pricing ) {
 		$price = edd_get_download_price( $args['download_id'] );
 		$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . '&nbsp;&ndash;&nbsp;' . $args['text'];
 	}
@@ -339,7 +339,7 @@ add_filter( 'edd_downloads_excerpt', 'edd_downloads_default_excerpt' );
  *
  * @since 1.0.8.4
  * @param string $content Content before filterting
- * @return string $content Content after filterting 
+ * @return string $content Content after filterting
  */
 function edd_downloads_default_content( $content ) {
 	return do_shortcode( wpautop( $content ) );
