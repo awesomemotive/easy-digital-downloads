@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Plugin Name: Easy Digital Downloads
  * Plugin URI: http://easydigitaldownloads.com
