@@ -273,7 +273,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @uses EDD_Download_Reports_Table::get_total_downloads()
 	 * @return void
 	 */
-	function prepare_items() {
+	public function prepare_items() {
 		$columns = $this->get_columns();
 
 		$hidden = array(); // No hidden columns
