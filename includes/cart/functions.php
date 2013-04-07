@@ -30,12 +30,7 @@ function edd_get_cart_contents() {
  * @return int $quantity Quantity of one item in the cart
  */
 function edd_get_cart_quantity() {
-	$cart = edd_get_cart_contents();
-	if ( $cart )
-		$quantity = count( $cart );
-	else
-		$quantity = 0;
-	return $quantity;
+	return ( $cart = edd_get_cart_contents() ) ? count( $cart ) : 0;
 }
 
 /**
