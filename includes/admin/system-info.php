@@ -49,6 +49,7 @@ SITE_URL:                 <?php echo site_url() . "\n"; ?>
 HOME_URL:                 <?php echo home_url() . "\n"; ?>
 
 EDD Version:              <?php echo EDD_VERSION . "\n"; ?>
+Upgraded From:            <?php echo get_option( 'edd_version_upgraded_from' ); ?>
 WordPress Version:        <?php echo get_bloginfo( 'version' ) . "\n"; ?>
 
 Test Mode Enabled:        <?php echo edd_is_test_mode() ? "Yes\n" : "No\n"; ?>
