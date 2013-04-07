@@ -185,11 +185,8 @@ add_filter( 'enter_title_here', 'edd_change_default_title' );
  * @return void
 */
 function edd_setup_download_taxonomies() {
-	$slug = 'downloads';
 
-	if ( defined( 'EDD_SLUG' ) ) {
-		$slug = EDD_SLUG;
-	}
+	$slug     = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
 
 	/** Categories */
 	$category_labels = array(
