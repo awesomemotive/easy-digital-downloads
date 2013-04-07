@@ -175,10 +175,9 @@ function edd_get_item_position_in_cart( $download_id ) {
  * @return int $quantity Cart item quantity
  */
 function edd_get_cart_item_quantity( $item ) {
-	$cart = edd_get_cart_contents();
+	$cart        = edd_get_cart_contents();
 	$item_counts = array_count_values( $cart );
-	$quantity = $item_counts[ $item ];
-	return $quantity;
+	return $item_counts[ $item ];
 }
 
 /**
