@@ -126,6 +126,19 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 	}
 
+
+	/**
+	 * Retrieve the category being viewed
+	 *
+	 * @access public
+	 * @since 1.5.2
+	 * @return int Category ID
+	 */
+	public function get_category() {
+		return isset( $_GET['category'] ) ? absint( $_GET['category'] ) : 0;
+	}
+
+
 	/**
 	 * Retrieve the total number of downloads
 	 *
