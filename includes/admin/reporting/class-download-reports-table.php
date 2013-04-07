@@ -55,6 +55,11 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 			'plural'    => edd_get_label_plural(),    	// Plural name of the listed records
 			'ajax'      => false             			// Does this table support ajax?
 		) );
+
+		add_action( 'edd_report_view_actions', array( $this, 'category_filter' ) );
+
+		$this->query();
+
 	}
 
 	/**
