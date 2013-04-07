@@ -229,6 +229,6 @@ add_action( 'admin_head','edd_admin_downloads_icon' );
 */
 function edd_version_in_header(){
 	// Newline on both sides to avoid being in a blob
-	echo '<meta name="generator" content="Easy Digital Downloads v'.EDD_VERSION.'" />'."\n";
+	echo "<meta name='generator' content='Easy Digital Downloads v" . EDD_VERSION . "' />\n";
 }
 add_action( 'wp_head', 'edd_version_in_header' );
