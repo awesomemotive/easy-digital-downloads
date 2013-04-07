@@ -19,20 +19,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_setup_edd_post_types() {
-	$archives = true;
-	if ( defined( 'EDD_DISABLE_ARCHIVE' ) && EDD_DISABLE_ARCHIVE == true ) {
-		$archives = false;
-	}
 
-	$slug = 'downloads';
-	if ( defined( 'EDD_SLUG' ) ) {
-		$slug = EDD_SLUG;
-	}
-
-	$rewrite = array('slug' => $slug, 'with_front' => false);
-	if ( defined( 'EDD_DISABLE_REWRITE' ) && EDD_DISABLE_REWRITE == true ) {
-		$rewrite = false;
-	}
+	$archives = defined( 'EDD_DISABLE_ARCHIVE' ) && EDD_DISABLE_ARCHIVE ? false : true;
+	$slug     = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
+	$rewrite  = defined( 'EDD_DISABLE_REWRITE' ) && EDD_DISABLE_REWRITE ? false : array('slug' => $slug, 'with_front' => false);
 
 	$download_labels =  apply_filters( 'edd_download_labels', array(
 		'name' 				=> '%2$s',
@@ -152,7 +142,7 @@ function edd_get_default_labels() {
  *
  * @since 1.0.8.3
  * @return string $defaults['singular'] Singular label
- */ 
+ */
 function edd_get_label_singular( $lowercase = false ) {
 	$defaults = edd_get_default_labels();
 	return ($lowercase) ? strtolower( $defaults['singular'] ) : $defaults['singular'];
