@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.5
  */
 class EDD_HTML_Elements {
+
 	/**
 	 * Renders an HTML Dropdown of all the Products (Downloads)
 	 *
@@ -39,11 +40,130 @@ class EDD_HTML_Elements {
 				$output .= '<option value="' . absint( $product->ID ) . '"' . selected( $selected, $product->ID, false ) . '>' . esc_html( get_the_title( $product->ID ) ) . '</option>';
 			}
 		} else {
-			$output .= '</option value="0">' . __( 'No products found', 'edd' ) . '</option>';
+			$output .= '<option value="0">' . __( 'No products found', 'edd' ) . '</option>';
 		}
 
 		$output .= '</select>';
 
 		return $output;
 	}
+
+
+	/**
+	 * Renders an HTML Dropdown of all the Discounts
+	 *
+	 * @access public
+	 * @since 1.5.2
+	 * @param string $name Name attribute of the dropdown
+	 * @param int    $selected Discount to select automatically
+	 * @param string $status Discount post_status to retrieve
+	 * @return string $output Discount dropdown
+	 */
+	public function dicount_dropdown( $name = 'edd_discounts', $selected = 0, $status = '' ) {
+
+		$args = array( 'nopaging' => true );
+
+		if( ! empty( $status ) )
+			$args['post_status'] = $status;
+
+		$discounts = edd_get_discounts( $args );
+
+		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
+
+		if ( $discounts ) {
+			foreach ( $discounts as $discount ) {
+				$output .= '<option value="' . absint( $discount->ID ) . '"' . selected( $selected, $discount->ID, false ) . '>' . esc_html( get_the_title( $discount->ID ) ) . '</option>';
+			}
+		} else {
+			$output .= '<option value="0">' . __( 'No discounts found', 'edd' ) . '</option>';
+		}
+
+		$output .= '</select>';
+
+		return $output;
+	}
+
+
+	/**
+	 * Renders an HTML Dropdown of all the Categories
+	 *
+	 * @access public
+	 * @since 1.5.2
+	 * @param string $name Name attribute of the dropdown
+	 * @param int    $selected Category to select automatically
+	 * @return string $output Category dropdown
+	 */
+	public function category_dropdown( $name = 'edd_discounts', $selected = 0 ) {
+
+		$categories = get_terms( 'download_category' );
+
+		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
+
+		$output .= '<option value="0">' . __( 'All Categories', 'edd' ) . '</option>';
+		if ( $categories ) {
+			foreach ( $categories as $category ) {
+				$output .= '<option value="' . absint( $category->term_id ) . '"' . selected( $selected, $category->term_id, false ) . '>' . esc_html( $category->name ) . '</option>';
+			}
+		} else {
+			$output .= '<option value="0">' . __( 'No categories found', 'edd' ) . '</option>';
+		}
+
+		$output .= '</select>';
+
+		return $output;
+	}
+
+
+	/**
+	 * Renders an HTML Dropdown of years
+	 *
+	 * @access public
+	 * @since 1.5.2
+	 * @param string $name Name attribute of the dropdown
+	 * @param int    $selected Year to select automatically
+	 * @return string $output Year dropdown
+	 */
+	public function year_dropdown( $name = 'year', $selected = 0 ) {
+
+		$current  = date( 'Y' );
+		$year     = $current - 5;
+		$selected = empty( $selected ) ? date( 'Y' ) : $selected;
+
+		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
+
+		while ( $year <= $current ) {
+			$output .= '<option value="' . absint( $year ) . '"' . selected( $selected, $year, false ) . '>' . $year . '</option>';
+			$year++;
+		}
+
+		$output .= '</select>';
+
+		return $output;
+	}
+
+
+	/**
+	 * Renders an HTML Dropdown of months
+	 *
+	 * @access public
+	 * @since 1.5.2
+	 * @param string $name Name attribute of the dropdown
+	 * @param int    $selected Month to select automatically
+	 * @return string $output Month dropdown
+	 */
+	public function month_dropdown( $name = 'month', $selected = 0 ) {
+
+		$month   = 1;
+		$output  = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
+
+		while ( $month <= 12 ) {
+			$output .= '<option value="' . absint( $month ) . '"' . selected( $selected, $month, false ) . '>' . edd_month_num_to_name( $month ) . '</option>';
+			$month++;
+		}
+
+		$output .= '</select>';
+
+		return $output;
+	}
+
 }
