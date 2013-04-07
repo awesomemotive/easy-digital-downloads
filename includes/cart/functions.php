@@ -757,7 +757,7 @@ function edd_empty_cart() {
  * @return void
  */
 function edd_set_purchase_session( $purchase_data ) {
-	EDD()->session->set('edd_purchase', $purchase_data );
+	EDD()->session->set( 'edd_purchase', $purchase_data );
 }
 
 /**
@@ -771,5 +771,5 @@ function edd_set_purchase_session( $purchase_data ) {
  * @return mixed array | false
  */
 function edd_get_purchase_session() {
-	return EDD()->session->get('edd_purchase');
+	return EDD()->session->get( 'edd_purchase' );
 }
