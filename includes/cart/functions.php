@@ -738,7 +738,10 @@ function edd_is_checkout() {
  */
 function edd_empty_cart() {
 	// Remove cart contents
-	EDD()->session->set('edd_cart', NULL );
+	EDD()->session->set( 'edd_cart', NULL );
+
+	// Remove all cart fees
+	EDD()->session->set( 'edd_cart_fees', NULL );
 
 	// Remove any active discounts
 	edd_unset_all_cart_discounts();
