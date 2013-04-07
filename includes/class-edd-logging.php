@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * EDD_Logging Class
- * 
+ *
  * A general use class for logging events and errors.
  *
  * @since 1.3.1
