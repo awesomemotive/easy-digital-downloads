@@ -147,11 +147,7 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @return int $total Total number of downloads
 	 */
 	public function get_total_downloads() {
-		$counts = wp_count_posts( 'download' );
-		$total  = 0;
-		foreach ( $counts as $count )
-			$total += $count;
-		return $total;
+		return $this->products->post_count;
 	}
 
 	/**
