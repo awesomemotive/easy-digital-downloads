@@ -38,12 +38,12 @@ function edd_get_enabled_payment_gateways() {
 	global $edd_options;
 
 	$gateways = edd_get_payment_gateways();
-	$enabled_gateways = isset( $edd_options['gateways'] ) ? $edd_options['gateways'] : false;
+	$enabled  = isset( $edd_options['gateways'] ) ? $edd_options['gateways'] : false;
 
 	$gateway_list = array();
 
 	foreach ( $gateways as $key => $gateway ) :
-		if ( isset( $enabled_gateways[ $key ] ) && $enabled_gateways[ $key ] == 1) :
+		if ( isset( $enabled[ $key ] ) && $enabled[ $key ] == 1 ) :
 			$gateway_list[ $key ] = $gateway;
 		endif;
 	endforeach;
