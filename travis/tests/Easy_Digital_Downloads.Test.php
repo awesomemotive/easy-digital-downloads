@@ -1,23 +1,21 @@
 <?php
+/**
+ * Test that EDD is loaded, test the constants are setup
+ * and that all the EDD file exists
+ *
+ * @author Sunny Ratilal
+ */
+
 class Easy_Digital_Downloads_Test extends WP_UnitTestCase {
+	/**
+	 * Store EDD in this object
+	 */
 	protected $object;
-	
-	private static $instance;
-	
-	private $roles;
-	
-	public $fees;
-	
-	public $api;
-
-	public $session;
-
-	public $html;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
-	 * For some reason, setUp must be public (to think through later)
+	 * It calls the EDD() function and loads it in the object var.
 	 */
 	public function setUp() {
 		$this->object = EDD();
@@ -33,7 +31,7 @@ class Easy_Digital_Downloads_Test extends WP_UnitTestCase {
 	/**
 	 * @covers Easy_Digital_Downloads::setup_constants
 	 */
-	public function testSetup_Constants() {
+	public function testSetupConstants() {
 		// At this point, since plugin is loaded these should be defined
 		// Plugin version
 		$this->assertSame( EDD_VERSION, '1.5.1' );
@@ -54,7 +52,7 @@ class Easy_Digital_Downloads_Test extends WP_UnitTestCase {
 	/**
 	 * @covers Easy_Digital_Downloads::includes
 	 */
-	public function testIncludes() {
+	public function testFileIncludes() {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/install.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/actions.php' );
