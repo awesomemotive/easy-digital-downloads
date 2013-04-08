@@ -168,4 +168,8 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 	public function testGetFileDownloadLimitOverride() {
 		$this->assertEquals(1, edd_get_file_download_limit_override($this->_post->ID, 1));
 	}
+
+	public function testIsAtFileDownloadLimit() {
+		$this->assertFalse(edd_is_file_at_download_limit($this->_post->ID, 1, 1));
+	}
 }
