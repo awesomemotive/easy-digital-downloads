@@ -29,6 +29,4 @@ echo "EDD Loaded \n";
 echo "EDD Plugin Loaded from Mainfile\n\n";
 echo "Preparing to execute PHPUnit Tests...\n";
 
-edd_install();
-
 $_SESSION['travis'] = 'true';
