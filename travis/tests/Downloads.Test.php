@@ -92,4 +92,12 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 		$this->assertEquals('Simple', edd_get_price_option_name($this->_post->ID, 0));
 		$this->assertEquals('Advanced', edd_get_price_option_name($this->_post->ID, 1));
 	}
+
+	public function testLowestPriceOption() {
+		$this->assertEquals(20, edd_get_lowest_price_option($this->_post->ID));
+	}
+
+	public function testHighestPriceOption() {
+		$this->assertEquals(100, edd_get_highest_price_option($this->_post->ID));
+	}
 }
