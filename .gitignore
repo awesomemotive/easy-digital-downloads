@@ -171,3 +171,8 @@ pip-log.txt
 
 # Ignore API Documentation
 api-docs/*
+
+# Ignore Travis CI
+travis/vendor/wordpress/*
+travis/vendor/wordpress-tests/*
+travis/vendor/wordpress/wordpress-tests-460b9c4ad9db7eea4710f151851060ae1921ea7c/*
