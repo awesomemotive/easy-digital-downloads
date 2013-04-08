@@ -13,12 +13,18 @@ class Test_Easy_Digital_Downloads_Discounts extends WP_UnitTestCase {
 		$post_id = $wp_factory->post->create( array( 'post_type' => 'edd_discount', 'post_status' => 'draft' ) );
 
 		$meta = array(
-			'type' => 'percentage',
+			'type' => 'percent',
 			'amount' => '20',
 			'code' => '20OFF',
 			'product_condition' => 'all',
 			'start' => '12/12/2050 00:00:00',
-			'expiration' => '12/31/2050 00:00:00'
+			'expiration' => '12/31/2050 23:59:59',
+			'max_uses' => 10,
+			'uses' => 54,
+			'min_price' => 128,
+			'is_not_global' => true,
+			'product_condition' => 'any',
+			'is_single_use' => true
 		);
 
 		foreach( $meta as $key => $value ) {
@@ -75,7 +81,39 @@ class Test_Easy_Digital_Downloads_Discounts extends WP_UnitTestCase {
 	}
 
 	public function testDiscountExpirationDate() {
-		$this->assertSame('12/31/2050 00:00:00', edd_get_discount_expiration($this->_post->ID));
+		$this->assertSame('12/31/2050 23:59:59', edd_get_discount_expiration($this->_post->ID));
+	}
+
+	public function testDiscountMaxUses() {
+		$this->assertSame(10, edd_get_discount_max_uses($this->_post->ID));
+	}
+
+	public function testDiscountUses() {
+		$this->assertSame(54, edd_get_discount_uses($this->_post->ID));
+	}
+
+	public function testDiscountMinPrice() {
+		$this->assertSame(128.0, edd_get_discount_min_price($this->_post->ID));
+	}
+
+	public function testDiscountAmount() {
+		$this->assertSame(20.0, edd_get_discount_amount($this->_post->ID));
+	}
+
+	public function testDiscountType() {
+		$this->assertSame('percent', edd_get_discount_type($this->_post->ID));
+	}
+
+	public function testDiscountProductCondition() {
+		$this->assertSame('any', edd_get_discount_product_condition($this->_post->ID));
+	}
+
+	public function testDiscountIsNotGlobal() {
+		$this->assertTrue(edd_is_discount_not_global($this->_post->ID));
+	}
+
+	public function testDiscountIsSingleUse() {
+		$this->assertTrue(edd_discount_is_single_use($this->_post->ID));
 	}
 
 	public function testDeletionOfDiscount() {
