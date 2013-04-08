@@ -658,8 +658,8 @@ function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
  */
 function edd_show_added_to_cart_messages( $download_id ) {
 	if ( isset( $_POST['edd_action'] ) && $_POST['edd_action'] == 'add_to_cart' ) {
-		if ( $download_id != $_POST['download_id'] )
-			$download_id = $_POST['download_id'];
+		if ( $download_id != absint( $_POST['download_id'] ) )
+			$download_id = absint( $_POST['download_id'] );
 
 		$alert = '<div class="edd_added_to_cart_alert">'
 		. sprintf( __('You have successfully added %s to your shopping cart.', 'edd'), get_the_title( $download_id ) )
