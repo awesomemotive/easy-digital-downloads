@@ -76,7 +76,7 @@ before_script:
   - mysql -e "create database IF NOT EXISTS edd_test;" -uroot
 
 script: 
-  - phpunit
+  - phpunit --coverage-text
   - php travis/clover.php travis/clover.xml 75
   
 notifications:
