@@ -12,7 +12,9 @@ class Test_Easy_Digital_Downloads_Discounts extends WP_UnitTestCase {
 		$wp_factory = new WP_UnitTest_Factory;
 		//$post_id = $wp_factory->post->create( array( 'post_type' => 'edd_discount', 'post_status' => 'draft' ) );
 		$post_id = wp_insert_post( array( 'post_type' => 'edd_discount', 'post_status' => 'draft' ), true );
-		var_dump($post_id);
+		//var_dump($post_id);
+
+		print_r(get_blog_details());
 
 		$meta = array(
 			'type' => 'percent',
