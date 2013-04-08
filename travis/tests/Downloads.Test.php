@@ -44,7 +44,8 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 			'edd_download_files' => array_values( $_download_files ),
 			'_edd_download_limit' => 20,
 			'_edd_hide_purchase_link' => 1,
-			'edd_product_notes' => 'Purchase Notes'
+			'edd_product_notes' => 'Purchase Notes',
+			'_edd_product_type' => 'default'
 		);
 		foreach( $meta as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
@@ -107,5 +108,9 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 
 	public function testSinglePriceOptionMode() {
 		$this->assertEquals(true, edd_single_price_option_mode($this->_post->ID));
+	}
+
+	public function testDownloadType() {
+		$this->assertEquals('default', edd_get_download_type($this->_post->ID));
 	}
 }
