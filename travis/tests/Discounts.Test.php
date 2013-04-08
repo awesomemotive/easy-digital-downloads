@@ -30,6 +30,19 @@ class Test_Easy_Digital_Downloads_Discounts extends WP_UnitTestCase {
 		$this->assertTrue(edd_store_discount($post));
 	}
 
+	public function testDiscountStatusUpdate() {
+		$this->assertTrue(edd_update_discount_status($this->_post->ID));
+	}
+
+	public function testDiscountsExist() {
+		edd_update_discount_status($this->_post->ID);
+		$this->assertTrue(edd_has_active_discounts());
+	}
+
+	public function testDiscountExists() {
+		$this->assertTrue(edd_discount_exists($this->_post->ID));
+	}
+
 	public function testDeletionOfDiscount() {
 		edd_remove_discount( $this->_post->ID );
 		$this->assertFalse( wp_cache_get( $this->_post->ID, 'posts' ) );
