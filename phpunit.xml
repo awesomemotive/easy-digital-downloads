@@ -22,15 +22,15 @@
 		</testsuite>
 	</testsuites>
 	 <filter>
-        	<blacklist>
-         		<directory suffix=".php">./travis</directory>
-        	</blacklist>
         	<whitelist addUncoveredFilesFromWhitelist="true">
-           	 	<directory suffix=".php">./*</directory>
-       		 </whitelist>
+           	 	<directory suffix=".php">./assets</directory>
+           	 	<directory suffix=".php">./includes</directory>
+           	 	<directory suffix=".php">./templates</directory>
+           	 	<include>easy-digital-downloads.php</include>
+           	 	<include>uninstall.php</include>
+		</whitelist>
    	 </filter>
    	 <logging>
-     	 	  <!-- and this is where your report will be written -->
         	<log type="coverage-clover" target="./travis/clover.xml"/>
    	 </logging>
 </phpunit>
