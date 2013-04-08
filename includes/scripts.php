@@ -56,18 +56,18 @@ function edd_load_scripts() {
 	if ( edd_is_ajax_enabled() ) {
 		wp_enqueue_script( 'edd-ajax', EDD_PLUGIN_URL . 'assets/js/edd-ajax.js', array( 'jquery' ), EDD_VERSION );
 		wp_localize_script( 'edd-ajax', 'edd_scripts', array(
-				'ajaxurl'                 => edd_get_ajax_url(),
-				'ajax_nonce'              => wp_create_nonce( 'edd_ajax_nonce' ),
-				'position_in_cart'        => isset( $position ) ? $position : -1,
-				'already_in_cart_message' => __( 'You have already added this item to your cart', 'edd') , // Item already in the cart message
-				'empty_cart_message'      => __( 'Your cart is empty', 'edd' ), // Item already in the cart message
-				'loading'                 => __( 'Loading', 'edd' ) , // General loading message
-				'ajax_loader'             => EDD_PLUGIN_URL . 'assets/images/loading.gif', // Ajax loading image
-				'is_checkout'             => edd_is_checkout() ? '1' : '0',
-				'default_gateway'         => edd_get_default_gateway(),
-				'redirect_to_checkout'    => edd_straight_to_checkout() ? '1' : '0',
-				'checkout_page'           => edd_get_checkout_uri(),
-				'permalinks'              => get_option( 'permalink_structure' ) ? '1' : '0',
+				'ajaxurl' 					=> edd_get_ajax_url(),
+				'ajax_nonce' 				=> wp_create_nonce( 'edd_ajax_nonce' ),
+				'position_in_cart' 			=> isset( $position ) ? $position : -1,
+				'already_in_cart_message' 	=> __('You have already added this item to your cart', 'edd'), // Item already in the cart message
+				'empty_cart_message' 		=> __('Your cart is empty', 'edd'), // Item already in the cart message
+				'loading' 					=> __('Loading', 'edd') , // General loading message
+				'ajax_loader' 				=> EDD_PLUGIN_URL . 'assets/images/loading.gif', // Ajax loading image
+				'is_checkout'               => edd_is_checkout() ? '1' : '0',
+				'default_gateway'           => edd_get_default_gateway(),
+				'redirect_to_checkout'      => ( edd_straight_to_checkout() || edd_is_checkout() ) ? '1' : '0',
+				'checkout_page' 			=> edd_get_checkout_uri(),
+				'permalinks' 				=> get_option( 'permalink_structure' ) ? '1' : '0',
 			)
 		);
 	}
