@@ -87,4 +87,8 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 			}
 		}
 	}
+
+	public function testDownloadHasVariablePrices() {
+		$this->assertTrue(edd_has_variable_prices($this->_post->ID));
+	}
 }
