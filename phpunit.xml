@@ -23,10 +23,10 @@
 	</testsuites>
 	 <filter>
         	<blacklist>
-         		<directory suffix=".php">./travis/</directory>
+         		<directory suffix=".php">./travis</directory>
         	</blacklist>
         	<whitelist addUncoveredFilesFromWhitelist="true">
-           	 	<directory suffix=".php">./</directory>
+           	 	<directory suffix=".php">./*</directory>
        		 </whitelist>
    	 </filter>
    	 <logging>
