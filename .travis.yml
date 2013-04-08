@@ -77,7 +77,7 @@ before_script:
 
 script: 
   - phpunit --coverage-text
-  - php coverage-checker.php clover.xml 75
+  - php trais/clover.php clover.xml 75
   
 notifications:
   email:
