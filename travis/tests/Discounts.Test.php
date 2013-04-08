@@ -52,8 +52,8 @@ class Test_Easy_Digital_Downloads_Discounts extends WP_UnitTestCase {
 	/**
      * @depends testAdditionOfDiscount
      */
-	public function testDeletionofDiscount( $discount_id ) {
+	public function testDeletionofDiscount($discount_id) {
 		wp_delete_post( $discount_id, true );
-		$this->assertFalse( wp_cache_get( $discount_id, 'posts' ) );
+		$this->assertFalse(wp_cache_get($discount_id, 'posts'));
 	}
 }
