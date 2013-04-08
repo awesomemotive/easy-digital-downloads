@@ -11,8 +11,8 @@
          bootstrap="travis/tests/bootstrap.php"
 		 >
     <testsuites>
-        <testsuite name="EDD Test Suite">
-            <directory suffix="Test.php">./travis/tests</directory>
+        <testsuite name="Easy Digital Downloads Test Suite">
+            <directory suffix=".Test.php">./travis/tests</directory>
         </testsuite>
     </testsuites>
 </phpunit>
