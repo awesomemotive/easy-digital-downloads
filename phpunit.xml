@@ -21,4 +21,14 @@
 			<exclude>travis/tests/AJAX.Test.php</exclude>
 		</testsuite>
 	</testsuites>
+	 <filter>
+        	<whitelist addUncoveredFilesFromWhitelist="true">
+           	 <!-- this is the path of the files included in your clover report -->
+           	 <directory suffix=".php">./</directory>
+       		 </whitelist>
+   	 </filter>
+   	 <logging>
+     	 	  <!-- and this is where your report will be written -->
+        	<log type="coverage-clover" target="./travis/clover.xml"/>
+   	 </logging>
 </phpunit>
