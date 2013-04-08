@@ -13,28 +13,26 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 		$post_id = $wp_factory->post->create( array( 'title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'draft' ) );
 
 		$_variable_pricing = array(
-				array(
-					'name' => 'Simple',
-					'amount' => 20
-				),
-				array(
-					'name' => 'Advanced',
-					'amount' => 100
-				)
+			array(
+				'name' => 'Simple',
+				'amount' => 20
+			),
+			array(
+				'name' => 'Advanced',
+				'amount' => 100
+			)
 		);
 
 		$_download_files = array(
-			'edd_download_files' => array(
-				array(
-					'name' => 'File 1',
-					'file' => 'http://localhost/file1.jpg',
-					'condition' => 0
-				),
-				array(
-					'name' => 'File 2',
-					'file' => 'http://localhost/file2.jpg',
-					'condition' => 'all'
-				)
+			array(
+				'name' => 'File 1',
+				'file' => 'http://localhost/file1.jpg',
+				'condition' => 0
+			),
+			array(
+				'name' => 'File 2',
+				'file' => 'http://localhost/file2.jpg',
+				'condition' => 'all'
 			)
 		);
 
