@@ -102,6 +102,10 @@ function edd_install() {
 		update_option( 'edd_version', EDD_VERSION );
 	}
 
+	// Bail if activating from network, or bulk
+	if ( is_network_admin() || isset( $_GET['activate-multi'] ) )
+		return;
+
 	// Add the transient to redirect
     set_transient( '_edd_activation_redirect', true, 30 );
 }
