@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Test Downloads
+ */
 class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 	protected $_post = null;
 
