@@ -1,86 +1,26 @@
 <?php
-/**
- * ConfigTest Tests
- * Some basic tests
- */
 class Easy_Digital_DownloadsTest extends WP_UnitTestCase {
-	/**
-	 * Easy_Digital_Downloads Object
-	 *
-	 * @var object
-	 */
 	protected $object;
 	
-	/**
-	 * Easy_Digital_Downloads The one true Easy_Digital_Downloads
-	 *
-	 * @var object
-	 */
 	private static $instance;
 	
-	/**
-	 * EDD user roles and capabilities object
-	 *
-	 * @since 1.4.4
-	 * @var object
-	 */
 	private $roles;
 	
-	/**
-	 * EDD cart fees object
-	 *
-	 * @var object
-	 * @since 1.5
-	 */
 	public $fees;
 	
-	/**
-	 * EDD API object
-	 *
-	 * @var object
-	 * @since 1.5
-	 */
 	public $api;
 
-	/**
-	 * EDD HTML session object
-	 *
-	 * This holds cart items, purchase sessions, and anything else stored in the session
-	 *
-	 * @since 1.5
-	 */
 	public $session;
 
-	/**
-	 * EDD HTML Element helper object
-	 * @since 1.5
-	 * @var object
-	 */
 	public $html;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 * For some reason, setUp must be public (to think through later)
-	 * @todo: Get the init working
 	 */
 	public function setUp() {
-		$this->object = new Easy_Digital_Downloads;
-		//$this->AaaaaaInit();
-	}
-
-	/**
-	 * Init other classes. Not in use due to implementation issues.
-	 */
-	protected function AaaaaaInit() {
-		$this->object->setup_constants();
-		$this->object->includes();
-		$this->object->load_textdomain();
-		$this->object->roles   = new EDD_Roles();
-		$this->object->fees    = new EDD_Fees();
-		$this->object->api     = new EDD_API();
-		$this->object->session = new EDD_Session();
-		$this->object->html    = new EDD_HTML_Elements();
+		$this->object = EDD();
 	}
 
 	/**
