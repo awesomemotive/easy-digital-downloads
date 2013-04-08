@@ -65,7 +65,6 @@ matrix:
 #    - env: WP_VERSION=3.2 WP_MULTISITE=1
     - php: 5.5
     - php: 5.2
-  
 before_script:
   - wget -O testsuite.zip https://github.com/nb/wordpress-tests/archive/460b9c4ad9db7eea4710f151851060ae1921ea7c.zip
   - unzip testsuite.zip -d travis/vendor
@@ -74,7 +73,6 @@ before_script:
   - wget -O wordpress.tar.gz http://wordpress.org/wordpress-$WP_VERSION.tar.gz
   - tar -xzf wordpress.tar.gz -C travis/vendor
   - mysql -e "create database IF NOT EXISTS edd_test;" -uroot
-    
 script: phpunit --coverage-text 
 notifications:
   email: false
