@@ -100,4 +100,12 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 	public function testHighestPriceOption() {
 		$this->assertEquals(100, edd_get_highest_price_option($this->_post->ID));
 	}
+
+	public function testPriceRange() {
+		$this->assertEquals('<span class="edd_price_range_low">&#36;20</span><span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_range_high">&#36;100</span>', edd_price_range($this->_post->ID));
+	}
+
+	public function testSinglePriceOptionMode() {
+		$this->assertEquals(true, edd_single_price_option_mode($this->_post->ID));
+	}
 }
