@@ -11,6 +11,20 @@ class Test_Easy_Digital_Downloads_Discounts extends WP_UnitTestCase {
 		parent::setUp();
 		$wp_factory = new WP_UnitTest_Factory;
 		$post_id = $wp_factory->post->create( array( 'post_type' => 'edd_discount', 'post_status' => 'draft' ) );
+
+		$meta = array(
+			'type' => 'percentage',
+			'amount' => '20',
+			'code' => '20OFF',
+			'product_condition' => 'all',
+			'start' => '12/12/2050 00:00:00',
+			'expiration' => '12/31/2050 00:00:00'
+		);
+
+		foreach( $meta as $key => $value ) {
+			update_post_meta( $post_id, '_edd_discount_' . $key, $value );
+		}
+
 		$this->_post = get_post( $post_id );
 	}
 
@@ -24,7 +38,9 @@ class Test_Easy_Digital_Downloads_Discounts extends WP_UnitTestCase {
 			'type' => 'percentage',
 			'amount' => '20',
 			'code' => '20OFF',
-			'product_condition' => 'all'
+			'product_condition' => 'all',
+			'start' => '12/12/2050 00:00:00',
+			'expiration' => '12/31/2050 00:00:00'
 		);
 
 		$this->assertTrue(edd_store_discount($post));
@@ -45,9 +61,21 @@ class Test_Easy_Digital_Downloads_Discounts extends WP_UnitTestCase {
 
 	public function testDiscountRetrievedFromDB() {
 		$this->assertObjectHasAttribute('ID', edd_get_discount($this->_post->ID));
-		$this->assertObjectHasAttribute('title', edd_get_discount($this->_post->ID));
-		$this->assertObjectHasAttribute('status', edd_get_discount($this->_post->ID));
+		$this->assertObjectHasAttribute('post_title', edd_get_discount($this->_post->ID));
+		$this->assertObjectHasAttribute('post_status', edd_get_discount($this->_post->ID));
 		$this->assertObjectHasAttribute('post_type', edd_get_discount($this->_post->ID));
+	}
+
+	public function testGetDiscountCode() {
+		$this->assertSame('20OFF', edd_get_discount_code($this->_post->ID));
+	}
+
+	public function testDiscountStartDate() {
+		$this->assertSame('12/12/2050 00:00:00', edd_get_discount_start_date($this->_post->ID));
+	}
+
+	public function testDiscountExpirationDate() {
+		$this->assertSame('12/31/2050 00:00:00', edd_get_discount_expiration($this->_post->ID));
 	}
 
 	public function testDeletionOfDiscount() {
