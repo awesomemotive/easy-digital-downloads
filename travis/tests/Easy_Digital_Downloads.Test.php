@@ -121,5 +121,32 @@ class Easy_Digital_Downloads_Test extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/process-download.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/shortcodes.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/theme-compatibility.php' );
+
+		/** Check Assets Exist */
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/chosen.css' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/colorbox.css' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/edd-admin.css' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-classic.css' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-fresh.css' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/fonts/padlock.eot' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/fonts/padlock.svg' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/fonts/padlock.ttf' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/fonts/padlock.woff' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/chosen-sprite.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-badge.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-cpt-2x.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-cpt.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-icon-2x.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-icon.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-logo.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-media.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/loading.gif' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/media-button.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/tick.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/ui-icons_21759b_256x240.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/ui-icons_333333_256x240.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/ui-icons_999999_256x240.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/ui-icons_cc0000_256x240.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/xit.gif' );
 	}	
 }
