@@ -139,4 +139,24 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 	public function testEarningsDecrease() {
 		$this->assertEquals(109.43, edd_decrease_earnings($this->_post->ID, 20));
 	}
+
+	public function testDownloadFiles() {
+		$out = edd_get_download_files($this->_post->ID);
+		
+		foreach ($out as $file) {
+			$this->assertArrayHasKey('name', $file);
+			$this->assertArrayHasKey('file', $file);
+			$this->assertArrayHasKey('condition', $file);
+
+			if ($file['name'] == 'File 1') {
+				$this->assertEquals('http://localhost/file1.jpg', $file['file']);
+				$this->assertEquals(0, $file['condition']);
+			}
+
+			if ($file['name'] == 'File 2') {
+				$this->assertEquals('http://localhost/file2.jpg', $file['file']);
+				$this->assertEquals('all', $file['condition']);
+			}
+		}
+	}
 }
