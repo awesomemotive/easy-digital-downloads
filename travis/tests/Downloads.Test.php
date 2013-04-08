@@ -172,4 +172,9 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 	public function testIsAtFileDownloadLimit() {
 		$this->assertFalse(edd_is_file_at_download_limit($this->_post->ID, 1, 1));
 	}
+
+	public function testFileDownloadCondition() {
+		$this->assertEquals(0, edd_get_file_price_condition($this->_post->ID, 0));
+		$this->assertEquals('all', edd_get_file_price_condition($this->_post->ID, 1));
+	}
 }
