@@ -31,7 +31,7 @@ class Test_Easy_Digital_Downloads_Discounts extends WP_UnitTestCase {
 		$this->assertTrue(is_numeric($id));
 		$this->assertTrue($id > 0);
 
-		foreach($meta as $key => $value) {
+		foreach ($meta as $key => $value) {
 			update_post_meta($id, '_edd_discount_' . $key, $value);
 		}
 
