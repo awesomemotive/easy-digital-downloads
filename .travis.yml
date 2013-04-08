@@ -4,23 +4,23 @@
 language: php
 php:
 # PHP Versions WP Does Not Officially Support Yet
-  - 5.5
+#  - 5.5
 # PHP Versions EDD Officially Supports
-  - 5.4
+#  - 5.4
   - 5.3
 # Ones that support for legacy reasons
-  - 5.2
+#  - 5.2
 env:
 # Officialy Supported WP Versions (w/ and w/o MS)
-  - WP_VERSION=3.5.1 WP_MULTISITE=0 
+#  - WP_VERSION=3.5.1 WP_MULTISITE=0 
   - WP_VERSION=3.5.1 WP_MULTISITE=1
 # Last WP Version (tested against but not supported by EDD)
 #  - WP_VERSION=3.5 WP_MULTISITE=0
 #  - WP_VERSION=3.5 WP_MULTISITE=1
 # These versions of WordPress we do not officially support
 # Last Major WP Version not in current 3.x branch
-  - WP_VERSION=3.4.2 WP_MULTISITE=0
-  - WP_VERSION=3.4.2 WP_MULTISITE=1
+#  - WP_VERSION=3.4.2 WP_MULTISITE=0
+#  - WP_VERSION=3.4.2 WP_MULTISITE=1
 # To test EDD on them, uncomment the line, by removing the "#"
 #    and then uncomment the allowed failures line for the respective
 #    versions below. 
@@ -41,8 +41,8 @@ env:
 #  - WP_VERSION=3.2 WP_MULTISITE=1
 # Test against (but allow fail) on older WP and PHP versions, as well as beta WP
 # Also test against the current Master (development) Github repo of WordPress
-matrix:
-  allow_failures:
+#matrix:
+#  allow_failures:
 # Legacy Versions
 #    - env: WP_VERSION=3.5 WP_MULTISITE=0 
 #    - env: WP_VERSION=3.5 WP_MULTISITE=1
@@ -63,8 +63,8 @@ matrix:
 #    - env: WP_VERSION=3.2.1 WP_MULTISITE=1
 #    - env: WP_VERSION=3.2 WP_MULTISITE=0
 #    - env: WP_VERSION=3.2 WP_MULTISITE=1
-    - php: 5.5
-    - php: 5.2
+#    - php: 5.5
+#    - php: 5.2
 
 before_script:
   - wget -O testsuite.zip https://github.com/nb/wordpress-tests/archive/460b9c4ad9db7eea4710f151851060ae1921ea7c.zip
