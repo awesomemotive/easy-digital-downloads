@@ -14,6 +14,7 @@
     <testsuites>
         <testsuite name="Easy Digital Downloads Test Suite">
             <directory suffix="Test.php">./travis/tests</directory>
+            <exclude>travis/tests/AJAX.Test.php</exclude>
         </testsuite>
     </testsuites>
 </phpunit>
