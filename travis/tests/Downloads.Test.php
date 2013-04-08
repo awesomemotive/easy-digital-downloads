@@ -131,4 +131,12 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 	public function testPurchaseCountDecrease() {
 		$this->assertEquals(58, edd_decrease_purchase_count($this->_post->ID));
 	}
+
+	public function testEarningsIncrease() {
+		$this->assertEquals(149.43, edd_increase_earnings($this->_post->ID, 20));
+	}
+
+	public function testEarningsDecrease() {
+		$this->assertEquals(109.43, edd_decrease_earnings($this->_post->ID, 20));
+	}
 }
