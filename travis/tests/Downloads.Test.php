@@ -41,7 +41,7 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 		);
 
 		$meta = array(
-			'edd_price' => 0.00,
+			'edd_price' => '0.00',
 			'_variable_pricing' => 1,
 			'_edd_price_options_mode' => 'on',
 			'edd_variable_prices' => array_values( $_variable_pricing ), 
@@ -65,5 +65,26 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 		$this->assertObjectHasAttribute('post_type', $out);
 
 		$this->assertEquals($out->post_type, $this->_post->post_type);
+	}
+
+	public function testDownloadPrice() {
+		$this->assertEquals(0.00, edd_get_download_price($this->_post->ID));
+	}
+
+	public function testDownloadVariablePrices() {
+		$out = edd_get_variable_prices($this->_post->ID);
+		$this->assertNotEmpty($out);
+		foreach ($out[0] as $var) {
+			$this->assertArrayHasKey('name', $var);
+			$this->assertArrayHasKey('amount', $var);
+
+			if ($var['name'] == 'Simple') {
+				$this->assertEquals(20, $var['amount']);
+			}
+
+			if ($var['name'] == 'Advanced') {
+				$this->assertEquals(100, $var['amount']);
+			}
+		}
 	}
 }
