@@ -90,5 +90,6 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 
 	public function testVariablePriceOptionName() {
 		$this->assertEquals('Simple', edd_get_price_option_name($this->_post->ID, 0));
+		$this->assertEquals('Advanced', edd_get_price_option_name($this->_post->ID, 1));
 	}
 }
