@@ -67,11 +67,11 @@ matrix:
     - php: 5.2
 before_script:
   - wget -O testsuite.zip https://github.com/nb/wordpress-tests/archive/460b9c4ad9db7eea4710f151851060ae1921ea7c.zip
-  - unzip testsuite.zip -d travis/vendor
-  - cp -r travis/vendor/wordpress-tests-460b9c4ad9db7eea4710f151851060ae1921ea7c travis/vendor/wordpress-tests
-  - cp travis/tests/unittests-config.travis.php travis/vendor/wordpress-tests/unittests-config.php
+  - unzip testsuite.zip -d phpunit/vendor
+  - cp -r phpunit/vendor/wordpress-tests-460b9c4ad9db7eea4710f151851060ae1921ea7c phpunit/vendor/wordpress-tests
+  - cp phpunit/tests/unittests-config.phpunit.php phpunit/vendor/wordpress-tests/unittests-config.php
   - wget -O wordpress.tar.gz http://wordpress.org/wordpress-$WP_VERSION.tar.gz
-  - tar -xzf wordpress.tar.gz -C travis/vendor
+  - tar -xzf wordpress.tar.gz -C phpunit/vendor
   - mysql -e "create database IF NOT EXISTS edd_test;" -uroot
 script: phpunit --coverage-text 
 notifications:
