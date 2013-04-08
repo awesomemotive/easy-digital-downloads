@@ -22,9 +22,11 @@
 		</testsuite>
 	</testsuites>
 	 <filter>
+        	<blacklist>
+         		<directory suffix=".php">./travis/</directory>
+        	</blacklist>
         	<whitelist addUncoveredFilesFromWhitelist="true">
-           	 <!-- this is the path of the files included in your clover report -->
-           	 <directory suffix=".php">./</directory>
+           	 	<directory suffix=".php">./</directory>
        		 </whitelist>
    	 </filter>
    	 <logging>
