@@ -168,5 +168,13 @@ class Easy_Digital_Downloads_Test extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/ui-icons_999999_256x240.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/ui-icons_cc0000_256x240.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/xit.gif' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/admin-scripts.js' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/chosen.jquery.min.js' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/edd-ajax.js' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/edd-checkout-global.js' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.colorbox-min.js' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.creditCardValidator.js' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.flot.js' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.validate.min.js' );
 	}	
 }
