@@ -83,9 +83,10 @@ class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 
 		// Build the request
 		$_POST['action'] = $action;
+		$_REQUEST = $_POST;
 
 		// Call the hooks
-		do_action( 'wp_ajax_' . $_POST['action'] );
+		do_action( 'wp_ajax_' . $_REQUEST['action'] );
 
 		// Save the output
 		$buffer = ob_get_clean();
