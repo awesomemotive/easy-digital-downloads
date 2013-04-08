@@ -177,4 +177,8 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 		$this->assertEquals(0, edd_get_file_price_condition($this->_post->ID, 0));
 		$this->assertEquals('all', edd_get_file_price_condition($this->_post->ID, 1));
 	}
+
+	public function testProductNotes() {
+		$this->assertEquals('Purchase Notes', edd_get_product_notes($this->_post->ID));
+	}
 }
