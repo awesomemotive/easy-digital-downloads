@@ -47,7 +47,8 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 			'edd_product_notes' => 'Purchase Notes',
 			'_edd_product_type' => 'default',
 			'_edd_download_earnings' => 129.43,
-			'_edd_download_sales' => 59
+			'_edd_download_sales' => 59,
+			'_edd_download_limit_override_1' => 1
 		);
 		foreach( $meta as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
@@ -162,5 +163,9 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 
 	public function testFileDownloadLimit() {
 		$this->assertEquals(20, edd_get_file_download_limit($this->_post->ID));
+	}
+
+	public function testGetFileDownloadLimitOverride() {
+		$this->assertEquals(1, edd_get_file_download_limit_override($this->_post->ID, 1));
 	}
 }
