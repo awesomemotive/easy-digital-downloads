@@ -45,7 +45,9 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 			'_edd_download_limit' => 20,
 			'_edd_hide_purchase_link' => 1,
 			'edd_product_notes' => 'Purchase Notes',
-			'_edd_product_type' => 'default'
+			'_edd_product_type' => 'default',
+			'_edd_download_earnings' => 129.43,
+			'_edd_download_sales' => 59
 		);
 		foreach( $meta as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
@@ -112,5 +114,13 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 
 	public function testDownloadType() {
 		$this->assertEquals('default', edd_get_download_type($this->_post->ID));
+	}
+
+	public function testDownloadEarnings() {
+		$this->assertEquals(129.43, edd_get_download_earnings_stats($this->_post->ID));
+	}
+
+	public function testDownloadSales() {
+		$this->assertEquals(59, edd_get_download_sales_stats($this->_post->ID));
 	}
 }
