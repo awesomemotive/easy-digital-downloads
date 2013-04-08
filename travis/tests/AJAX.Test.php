@@ -22,17 +22,19 @@ class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 		foreach ($_actions as $action) {
 			if ( function_exists( 'wp_ajax_' . $action ) )
 				add_action( 'wp_ajax_' . $action, $action, 1 );
-
-			add_filter( 'wp_die_ajax_handler', array( $this, 'getDieHandler' ), 1, 1 );
-
-			if (!defined('DOING_AJAX'))
-				define('DOING_AJAX', true);
-			set_current_screen( 'ajax' );
-
-			add_action( 'clear_auth_cookie', array( $this, 'logout' ) );
-
-			$wp_factory->post->create_many( 5 );
 		}
+
+		add_filter( 'wp_die_ajax_handler', array( $this, 'getDieHandler' ), 1, 1 );
+
+		if (!defined('DOING_AJAX'))
+			define('DOING_AJAX', true);
+		set_current_screen( 'ajax' );
+
+		add_action( 'clear_auth_cookie', array( $this, 'logout' ) );
+
+		$wp_factory->post->create_many( 5 );
+
+		error_reporting( 0 & ~E_WARNING );
 	}
 
 	public function tearDown() {
@@ -57,15 +59,6 @@ class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 	public function dieHandler( $message ) {
 		$this->_last_response .= ob_get_clean();
 		ob_end_clean();
-		if ( '' === $this->_last_response ) {
-			if ( is_scalar( $message) ) {
-					throw new Exception( (string) $message );
-			} else {
-					throw new Exception( '0' );
-			}
-		} else {
-				throw new Exception( $message );
-		}
 	}
 
 	protected function _setRole( $role ) {
