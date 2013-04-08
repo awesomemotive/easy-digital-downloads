@@ -29,6 +29,13 @@ class Easy_Digital_Downloads_Test extends WP_UnitTestCase {
 	public function tearDown() { }
 
 	/**
+	 * Check static attribute has been set
+	 */
+	public function testHasStaticAttribute() {
+		$this->assertClassHasStaticAttribute( 'instance', 'Easy_Digital_Downloads' );
+	}
+
+	/**
 	 * @covers Easy_Digital_Downloads::setup_constants
 	 */
 	public function testSetupConstants() {
