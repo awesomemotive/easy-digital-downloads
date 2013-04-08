@@ -26,8 +26,8 @@
            	 	<directory suffix=".php">./assets</directory>
            	 	<directory suffix=".php">./includes</directory>
            	 	<directory suffix=".php">./templates</directory>
-           	 	<include>easy-digital-downloads.php</include>
-           	 	<include>uninstall.php</include>
+           	 	<file>easy-digital-downloads.php</file>
+           	 	<file>uninstall.php</file>
 		</whitelist>
    	 </filter>
    	 <logging>
