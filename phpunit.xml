@@ -21,4 +21,7 @@
 			<exclude>travis/tests/AJAX.Test.php</exclude>
 		</testsuite>
 	</testsuites>
+   	 <logging>
+        	<log type="coverage-clover" target="./travis/clover.xml"/>
+   	 </logging>
 </phpunit>
