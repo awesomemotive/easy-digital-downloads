@@ -159,4 +159,8 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 			}
 		}
 	}
+
+	public function testFileDownloadLimit() {
+		$this->assertEquals(20, edd_get_file_download_limit($this->_post->ID));
+	}
 }
