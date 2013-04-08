@@ -6,7 +6,7 @@ echo "Version: 1.0 \n";
 echo "Author: Chris Christoff and Sunny Ratilal \n\n\n";
 echo "Preparing to load WordPress TU Bootstrap File...\n";
 
-$path = './travis/vendor/wordpress-tests/bootstrap.php';
+$path = './phpunit/vendor/wordpress-tests/bootstrap.php';
 
 if ( file_exists( $path ) ) {
 	require_once $path;
@@ -26,7 +26,7 @@ if ( file_exists( $loader ) ) {
 }
 
 echo "EDD Loaded \n";
-echo "EDD Plugin Loaded from Mainfile \n\n";
-echo "Preparing to execute PHPUnit Tests \n";
+echo "EDD Plugin Loaded from Mainfile\n\n";
+echo "Preparing to execute PHPUnit Tests...\n";
 
 $_SESSION['travis'] = 'true';

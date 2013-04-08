@@ -1,9 +1,13 @@
 <?php
 /*
- * This file is used in Travis-CI testing and copied into vendor/wordpress-tests
- */
+This file is used in Travis-CI testing and copied into vendor/wordpress-tests
 
-define( 'ABSPATH', realpath( dirname( __FILE__ ) ) .'/../wordpress/' );
+
+Path to the WordPress codebase could alose be detected dynami, as wordpress is copied into vendor/wordpress
+also see .travis.yml
+*/
+define( 'ABSPATH', realpath(dirname(__FILE__)).'/../wordpress/' );
+
 
 define( 'DB_NAME', 'edd_test' );
 define( 'DB_USER', 'root' );
@@ -27,12 +31,10 @@ define( 'WP_MEMORY_LIMIT', '64M' );
 define( 'DISABLE_WP_CRON', true );
 
 define( 'WP_ALLOW_MULTISITE', (bool) getenv( 'WP_MULTISITE' ) );
-
 if ( WP_ALLOW_MULTISITE ) {
 	define( 'WP_TESTS_BLOGS', 'first,second,third,fourth' );
 }
-
-if ( WP_ALLOW_MULTISITE && ! defined('WP_INSTALLING') ) {
+if ( WP_ALLOW_MULTISITE && !defined('WP_INSTALLING') ) {
 	define( 'SUBDOMAIN_INSTALL', WP_TESTS_SUBDOMAIN_INSTALL );
 	define( 'MULTISITE', true );
 	define( 'DOMAIN_CURRENT_SITE', WP_TESTS_DOMAIN );
