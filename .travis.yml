@@ -75,4 +75,5 @@ before_script:
   - mysql -e "create database IF NOT EXISTS edd_test;" -uroot
 script: phpunit --coverage-text 
 notifications:
-  email: false
+  email:
+    - edd.unit.tests@gmail.com
