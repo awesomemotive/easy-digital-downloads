@@ -1,4 +1,12 @@
 <?php
+/**
+ * EDD AJAX Test Cases
+ *
+ * Taken from WordPress Unit Tests and adapted for Easy Digital
+ * Downloads by Sunny Ratilal.
+ *
+ * Edit: Sunny Ratilal, April 2013
+ */
 require_once('./travis/vendor/wordpress/wp-admin/includes/screen.php');
 require_once('./travis/vendor/wordpress/wp-includes/plugin.php');
 require_once('./travis/vendor/wordpress-tests/lib/factory.php');
