@@ -18,6 +18,7 @@ class Easy_Digital_Downloads_Test extends WP_UnitTestCase {
 	 * It calls the EDD() function and loads it in the object var.
 	 */
 	public function setUp() {
+		parent::setUp();
 		$this->object = EDD();
 	}
 
@@ -44,15 +45,15 @@ class Easy_Digital_Downloads_Test extends WP_UnitTestCase {
 		$this->assertSame( EDD_VERSION, '1.5.1' );
 
 		// Plugin Folder URL
-		$path = str_replace( 'travis/tests/', '', plugin_dir_url( __FILE__ ) );
+		$path = str_replace( 'phpunit/tests/', '', plugin_dir_url( __FILE__ ) );
 		$this->assertSame( EDD_PLUGIN_URL, $path );
 
 		// Plugin Folder Path
-		$path = str_replace( 'travis/tests/', '', plugin_dir_path( __FILE__ ) );
+		$path = str_replace( 'phpunit/tests/', '', plugin_dir_path( __FILE__ ) );
 		$this->assertSame( EDD_PLUGIN_DIR, $path );
 
 		// Plugin Root File
-		$path = str_replace( 'travis/tests/', '', plugin_dir_path( __FILE__ ) );
+		$path = str_replace( 'phpunit/tests/', '', plugin_dir_path( __FILE__ ) );
 		$this->assertSame( EDD_PLUGIN_FILE, $path.'easy-digital-downloads.php' );
 	}
 	
@@ -183,5 +184,5 @@ class Easy_Digital_Downloads_Test extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.creditCardValidator.js' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.flot.js' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.validate.min.js' );
-	}	
+	}
 }
