@@ -21,6 +21,15 @@
 			<exclude>travis/tests/AJAX.Test.php</exclude>
 		</testsuite>
 	</testsuites>
+	 <filter>
+        	<whitelist addUncoveredFilesFromWhitelist="true">
+           	 	<directory suffix=".php">./assets</directory>
+           	 	<directory suffix=".php">./includes</directory>
+           	 	<directory suffix=".php">./templates</directory>
+           	 	<file>easy-digital-downloads.php</file>
+           	 	<file>uninstall.php</file>
+		</whitelist>
+   	 </filter>
    	 <logging>
         	<log type="coverage-clover" target="./travis/clover.xml"/>
    	 </logging>
