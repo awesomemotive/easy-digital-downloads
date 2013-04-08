@@ -7,22 +7,24 @@
  *
  * Edit: Sunny Ratilal, April 2013
  */
+require_once('./travis/vendor/wordpress/wp-admin/includes/screen.php');
+require_once('./travis/vendor/wordpress-tests/lib/factory.php');
 
 abstract class EDD_AJAX_TestCase extends WP_UnitTestCase {
 	protected $_last_ajax_response;
 
-	protected $_actions = array(
-		'edd_remove_from_cart', 'edd_add_to_cart', 'edd_apply_discount', 'checkout_login',
-		'checkout_register', 'get_download_title', 'edd_local_tax_opt_in', 'edd_local_tax_opt_out',
-		'edd_check_for_download_price_variations'
-	);
-
-	protected $_error_level = 0;
-
 	public function setUp() {
 		parent::setUp();
 
-		foreach ($_action as $actions) {
+		$wp_factory = new WP_UnitTest_Factory;
+
+		$_actions = array(
+			'edd_remove_from_cart', 'edd_add_to_cart', 'edd_apply_discount', 'checkout_login',
+			'checkout_register', 'get_download_title', 'edd_local_tax_opt_in', 'edd_local_tax_opt_out',
+			'edd_check_for_download_price_variations'
+		);
+
+		foreach ($_actions as $action) {
 			if ( function_exists( 'wp_ajax_' . str_replace( '-', '_', $action ) ) )
 				add_action( 'wp_ajax_' . $action, 'wp_ajax_' . str_replace( '-', '_', $action ), 1 );
 
@@ -34,11 +36,7 @@ abstract class EDD_AJAX_TestCase extends WP_UnitTestCase {
 
 			add_action( 'clear_auth_cookie', array( $this, 'logout' ) );
 
-			$this->_error_level = error_reporting();
-
-			error_reporting( $this->_error_level & ~E_WARNING );
-
-			$this->factory->post->create_many( 5 );
+			$wp_factory->post->create_many( 5 );
 		}
 	}
 
@@ -103,6 +101,6 @@ abstract class EDD_AJAX_TestCase extends WP_UnitTestCase {
 		// Save the output
 		$buffer = ob_get_clean();
 		if ( !empty( $buffer ) )
-				$this->_last_response = $buffer;
+			$this->_last_response = $buffer;
 	}
 }
