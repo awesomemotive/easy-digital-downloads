@@ -5,7 +5,6 @@
  *
  * @author Sunny Ratilal
  */
-
 class Easy_Digital_Downloads_Test extends WP_UnitTestCase {
 	/**
 	 * Store EDD in this object
