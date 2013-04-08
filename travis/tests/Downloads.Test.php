@@ -13,7 +13,6 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 		$post_id = $wp_factory->post->create( array( 'title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'draft' ) );
 
 		$_variable_pricing = array(
-			'edd_variable_prices' => array(
 				array(
 					'name' => 'Simple',
 					'amount' => 20
@@ -22,7 +21,6 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 					'name' => 'Advanced',
 					'amount' => 100
 				)
-			)
 		);
 
 		$_download_files = array(
@@ -74,7 +72,7 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 	public function testDownloadVariablePrices() {
 		$out = edd_get_variable_prices($this->_post->ID);
 		$this->assertNotEmpty($out);
-		foreach ($out[0] as $var) {
+		foreach ($out as $var) {
 			$this->assertArrayHasKey('name', $var);
 			$this->assertArrayHasKey('amount', $var);
 
@@ -90,5 +88,9 @@ class Test_Easy_Digital_Downloads_Post_Type extends WP_UnitTestCase {
 
 	public function testDownloadHasVariablePrices() {
 		$this->assertTrue(edd_has_variable_prices($this->_post->ID));
+	}
+
+	public function testVariablePriceOptionName() {
+		$this->assertEquals('Simple', edd_get_price_option_name($this->_post->ID, 0));
 	}
 }
