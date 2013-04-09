@@ -15,4 +15,8 @@ class Test_Easy_Digital_Downloads_Formatting extends WP_UnitTestCase {
 	public function testFormatAmount() {
 		$this->assertEquals('20,000.20', edd_format_amount('20,000.20'));
 	}
+
+	public function testCurrencyFilter() {
+		$this->assertEquals('&#36;20,000.20', edd_currency_filter('20,000.20'));
+	}
 }
