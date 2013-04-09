@@ -10,6 +10,8 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 
 	protected $_post = null;
 
+	protected $_api_output = null;
+
 	public function setUp() {
 		parent::setUp();
 
@@ -69,6 +71,8 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		}
 
 		$this->_post = get_post( $post_id );
+
+		$this->_api_output = EDD()->api->get_products();
 	}
 
 	public function testEndpoints() {
@@ -76,7 +80,7 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 	}
 
 	public function testGetProducts() {
-		$out = EDD()->api->get_products();
+		$out = $this->_api_output;
 		$this->assertArrayHasKey('id', $out['products'][0]['info']);
 		$this->assertArrayHasKey('slug', $out['products'][0]['info']);
 		$this->assertArrayHasKey('title', $out['products'][0]['info']);
@@ -94,6 +98,35 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$this->assertEquals('http://example.org/downloads/test-download/', $out['products'][0]['info']['link']);
 		$this->assertEquals('Post content 1', $out['products'][0]['info']['content']);
 		$this->assertEquals('', $out['products'][0]['info']['thumbnail']);
-		//print_r(EDD()->api->get_products());
+
+		$this->assertArrayHasKey('stats', $out['products'][0]);
+		$this->assertArrayHasKey('total', $out['products'][0]['stats']);
+		$this->assertArrayHasKey('sales', $out['products'][0]['stats']['total']);
+		$this->assertArrayHasKey('earnings', $out['products'][0]['stats']['total']);
+		$this->assertArrayHasKey('monthly_average', $out['products'][0]['stats']);
+		$this->assertArrayHasKey('sales', $out['products'][0]['stats']['monthly_average']);
+		$this->assertArrayHasKey('earnings', $out['products'][0]['stats']['monthly_average']);
+
+		$this->assertEquals('59', $out['products'][0]['stats']['total']['sales']);
+		$this->assertEquals('129.43', $out['products'][0]['stats']['total']['earnings']);
+		$this->assertEquals('59', $out['products'][0]['stats']['monthly_average']['sales']);
+		$this->assertEquals('129.43', $out['products'][0]['stats']['monthly_average']['earnings']);
+
+		$this->assertArrayHasKey('pricing', $out['products'][0]);
+		$this->assertArrayHasKey('simple', $out['products'][0]['pricing']);
+		$this->assertArrayHasKey('advanced', $out['products'][0]['pricing']);
+
+		$this->assertEquals('20', $out['products'][0]['pricing']['simple']);
+		$this->assertEquals('100', $out['products'][0]['pricing']['advanced']);
+
+		$this->assertArrayHasKey('files', $out['products'][0]);
+
+		foreach ($out['products'][0]['files'] as $file) {
+			$this->assertArrayHasKey('name', $file);
+			$this->assertArrayHasKey('file', $file);
+			$this->assertArrayHasKey('condition', $file);
+		}
+		
+		//print_r($out);
 	}
 }
