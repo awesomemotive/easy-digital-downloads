@@ -229,7 +229,10 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('edd_manual_remove_cc_form', $wp_filter['edd_manual_cc_form'][10]);
 	}
 
-	public function testGatewayManualFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testGatewayManualFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_manual_payment', $wp_filter['edd_gateway_manual'][10]);
+	}
 
 	public function testRemoveCartDiscountFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
