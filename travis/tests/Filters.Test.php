@@ -179,7 +179,10 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('edd_agree_to_terms_js', $wp_filter['edd_checkout_form_top'][10]);
 	}
 
-	public function testEmptyCartFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testEmptyCartFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_empty_checkout_cart', $wp_filter['edd_empty_cart'][10]);
+	}
 
 	public function testAddToCartFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
