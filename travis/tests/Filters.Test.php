@@ -313,7 +313,10 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('edd_append_no_cache_param', $wp_filter['edd_settings_misc'][-1]);
 	}
 
-	public function testAdminSaleNoticeFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testAdminSaleNoticeFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_admin_email_notice', $wp_filter['edd_admin_sale_notice'][10]);
+	}
 
 	public function testPurchaseReceiptFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
