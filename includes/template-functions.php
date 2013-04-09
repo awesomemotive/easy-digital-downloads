@@ -204,7 +204,7 @@ add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10, 2 );
 function edd_before_download_content( $content ) {
 	global $post;
 
-	if ( $post->post_type == 'download' && is_singular() && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
 		ob_start();
 		$content .= ob_get_clean();
 		do_action( 'edd_before_download_content', $post->ID );
@@ -518,7 +518,7 @@ add_filter( 'the_title', 'edd_microdata_title', 10, 2 );
  */
 function edd_microdata_wrapper( $content ) {
 	global $post;
-	if ( $post->post_type == 'download' && is_singular() && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
 		$content = apply_filters( 'edd_microdata_wrapper', '<div itemscope itemtype="http://schema.org/Product" itemprop="description">' . $content . '</div>' );
 	}
 	return $content;
