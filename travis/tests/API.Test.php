@@ -133,6 +133,9 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$this->assertEquals('File 2', $out['products'][0]['files'][1]['name']);
 		$this->assertEquals('http://localhost/file2.jpg', $out['products'][0]['files'][1]['file']);
 		$this->assertEquals('all', $out['products'][0]['files'][1]['condition']);
+
+		$this->assertArrayHasKey('notes', $out['products'][0]);
+		$this->assertEquals('Purchase Notes', $out['products'][0]['notes']);
 		
 		//print_r($out);
 	}
