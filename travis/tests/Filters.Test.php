@@ -131,7 +131,8 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 	}
 
 	public function testCCFormFilters() {
-		
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_get_cc_form', $wp_filter['edd_cc_form'][10]);
 	}
 
 	public function testAfterCCFieldsFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
