@@ -366,7 +366,7 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 
 	public function testUserLoginFilters() {
 		global $wp_filter;
-		$this->assertArrayHasKey('edd_user_login', $wp_filter['edd_process_login_form'][10]);
+		$this->assertArrayHasKey('edd_user_login', $wp_filter['edd_user_login'][10]);
 	}
 
 	public function testEditUserProfileFilters() {
@@ -376,6 +376,6 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 
 	public function testPostClassFilters() {
 		global $wp_filter;
-		$this->assertArrayHasKey('edd_responsive_download_post_class', $wp_filter['edd_edit_user_profile'][999]);
+		$this->assertArrayHasKey('edd_responsive_download_post_class', $wp_filter['post_class'][999]);
 	}
 }
