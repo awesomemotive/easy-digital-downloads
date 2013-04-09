@@ -67,13 +67,18 @@ env:
 #    - php: 5.2
 
 before_script:
-  - Install Test
+  - echo -e "Get Copy of Sunny's Version of WordPress Tests";
   - wget -O testsuite.zip https://github.com/sunnyratilal/WordPress-Tests/zipball/master
+  - echo -e "Unzip Copy of Sunny's Version of WordPress Tests";
   - unzip testsuite.zip -d travis/vendor
+  - echo -e "Move Copy of Sunny's Version of WordPress Tests";
   - cp -r travis/vendor/sunnyratilal-WordPress-Tests-* travis/vendor/wordpress-tests
   - cp travis/tests/unittests-config.travis.php travis/vendor/wordpress-tests/unittests-config.php
+  - echo -e "Get WordPress";
   - wget -O wordpress.tar.gz http://wordpress.org/wordpress-$WP_VERSION.tar.gz
+  - echo -e "Unzip WordPress";
   - tar -xzf wordpress.tar.gz -C travis/vendor
+  - echo -e "Create Database";
   - mysql -e "create database IF NOT EXISTS edd_test;" -uroot
 
 script: 
