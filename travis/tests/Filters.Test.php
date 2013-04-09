@@ -155,7 +155,10 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('edd_payment_mode_select', $wp_filter['edd_payment_payment_mode_select'][10]);
 	}
 
-	public function testPurchaseFormBeforeCCFormFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testPurchaseFormBeforeCCFormFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_discount_field', $wp_filter['edd_purchase_form_before_cc_form'][10]);
+	}
 
 	public function testPurchaseFormAfterCCFormFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
