@@ -257,9 +257,15 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('edd_trigger_purchase_receipt', $wp_filter['edd_update_payment_status'][10]);
 	}
 
-	public function testEditPaymentFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testEditPaymentFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_update_edited_purchase', $wp_filter['edd_edit_payment'][10]);
+	}
 
-	public function testDeletePaymentFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testDeletePaymentFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_trigger_purchase_delete', $wp_filter['edd_delete_payment'][10]);
+	}
 
 	public function testInsertPaymentFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
