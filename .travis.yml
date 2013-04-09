@@ -67,9 +67,9 @@ env:
 #    - php: 5.2
 
 before_script:
-  - wget -O testsuite.zip https://github.com/nb/wordpress-tests/archive/460b9c4ad9db7eea4710f151851060ae1921ea7c.zip
+  - wget -O testsuite.zip https://github.com/sunnyratilal/WordPress-Tests/archive/96cffad8d5fbdf7c6d220ec8694908df0645c300.zip
   - unzip testsuite.zip -d travis/vendor
-  - cp -r travis/vendor/wordpress-tests-460b9c4ad9db7eea4710f151851060ae1921ea7c travis/vendor/wordpress-tests
+  - cp -r travis/vendor/WordPress-Tests-96cffad8d5fbdf7c6d220ec8694908df0645c300 travis/vendor/wordpress-tests
   - cp travis/tests/unittests-config.travis.php travis/vendor/wordpress-tests/unittests-config.php
   - wget -O wordpress.tar.gz http://wordpress.org/wordpress-$WP_VERSION.tar.gz
   - tar -xzf wordpress.tar.gz -C travis/vendor
