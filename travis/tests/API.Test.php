@@ -130,13 +130,9 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 			'status' => 'pending'
 		);
 
-		$_SERVER = array(
-			'REMOTE_ADDR' => '10.0.0.0'
-		);
+		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
 
 		$payment_id = edd_insert_payment( $purchase_data );
-
-		unset($_SERVER);
 
 		$this->_api_output = EDD()->api->get_products();
 		$this->_api_output_sales = EDD()->api->get_recent_sales();
