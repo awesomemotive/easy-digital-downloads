@@ -98,117 +98,117 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('edd_process_purchase_form', $wp_filter['wp_ajax_nopriv_edd_process_checkout'][10]);
 	}
 
-	public function testAfterDownloadContentFilters() {  }
+	public function testAfterDownloadContentFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPurchaseLinkTopFilters() {  }
+	public function testPurchaseLinkTopFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testDownloadsExcerptFilters() {  }
+	public function testDownloadsExcerptFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testDownloadsContentFilters() {  }
+	public function testDownloadsContentFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPurchaseFormFilters() {  }
+	public function testPurchaseFormFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPurchaseFormAfterUserInfoFilters() {  }
+	public function testPurchaseFormAfterUserInfoFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testCCFormFilters() {  }
+	public function testCCFormFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testAfterCCFieldsFilters() {  }
+	public function testAfterCCFieldsFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPurchaseFormRegisterFieldsFilters() {  }
+	public function testPurchaseFormRegisterFieldsFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPurchaseFormLoginFieldsFilters() {  }
+	public function testPurchaseFormLoginFieldsFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPaymentModeSelectFilters() {  }
+	public function testPaymentModeSelectFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPurchaseFormBeforeCCFormFilters() {  }
+	public function testPurchaseFormBeforeCCFormFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPurchaseFormAfterCCFormFilters() {  }
+	public function testPurchaseFormAfterCCFormFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPurchaseFormBeforeSubmitFilters() {  }
+	public function testPurchaseFormBeforeSubmitFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testCheckoutFormTopFilters() {  }
+	public function testCheckoutFormTopFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testEmptyCartFilters() {  }
+	public function testEmptyCartFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testAddToCartFilters() {  }
+	public function testAddToCartFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testRemoveFilters() {  }
+	public function testRemoveFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPurchaseCollectionFilters() {  }
+	public function testPurchaseCollectionFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testFormatAmountDecimalsFilters() {  }
+	public function testFormatAmountDecimalsFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPayPalCCFormFilters() {  }
+	public function testPayPalCCFormFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testGatewayPayPalFilters() {  }
+	public function testGatewayPayPalFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testVerifyPayPalIPNFilters() {  }
+	public function testVerifyPayPalIPNFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPayPalWebAcceptFilters() {  }
+	public function testPayPalWebAcceptFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testManualCCFormFilters() {  }
+	public function testManualCCFormFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testGatewayManualFilters() {  }
+	public function testGatewayManualFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testRemoveCartDiscountFilters() {  }
+	public function testRemoveCartDiscountFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testCommentsClausesFilters() {  }
+	public function testCommentsClausesFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testCommentFeedWhereFilters() {  }
+	public function testCommentFeedWhereFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testUpdatePaymentStatusFilters() {  }
+	public function testUpdatePaymentStatusFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testEditPaymentFilters() {  }
+	public function testEditPaymentFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testDeletePaymentFilters() {  }
+	public function testDeletePaymentFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testInsertPaymentFilters() {  }
+	public function testInsertPaymentFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testUpgradePaymentsFilters() {  }
+	public function testUpgradePaymentsFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testCleanupFileSymlinksFilters() {  }
+	public function testCleanupFileSymlinksFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testDownloadPriceFilters() {  }
+	public function testDownloadPriceFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testAdminHeadFilters() {  }
+	public function testAdminHeadFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testEnterTitleHereFilters() {  }
+	public function testEnterTitleHereFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPostUpdatedMessagesFilters() {  }
+	public function testPostUpdatedMessagesFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testLoadEditPHPFilters() {  }
+	public function testLoadEditPHPFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testSettingsMiscFilters() {  }
+	public function testSettingsMiscFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testAdminSaleNoticeFilters() {  }
+	public function testAdminSaleNoticeFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPurchaseReceiptFilters() {  }
+	public function testPurchaseReceiptFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testEmailSettingsFilters() {  }
+	public function testEmailSettingsFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testEmailTemplateDefaultFilters() {  }
+	public function testEmailTemplateDefaultFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPurchaseReceiptDefaultFilters() {  }
+	public function testPurchaseReceiptDefaultFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testViewReceiptFilters() {  }
+	public function testViewReceiptFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testEmailLinksFilters() {  }
+	public function testEmailLinksFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testSendEmailFilters() {  }
+	public function testSendEmailFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testQueryVarsFilters() {  }
+	public function testQueryVarsFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPurchaseFilters() {  }
+	public function testPurchaseFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testUserLoginFilters() {  }
+	public function testUserLoginFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testEditUserProfileFilters() {  }
+	public function testEditUserProfileFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPostClassFilters() {  }
+	public function testPostClassFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPaymentMetaFilters() {  }
+	public function testPaymentMetaFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testShowUserProfileFilters() {  }
+	public function testShowUserProfileFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
-	public function testPersonalOptionsUpdateFilters() {  }
+	public function testPersonalOptionsUpdateFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 }
