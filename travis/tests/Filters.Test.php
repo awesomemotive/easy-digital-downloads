@@ -308,7 +308,10 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('edd_remove_post_types_order', $wp_filter['load-edit.php'][10]);
 	}
 
-	public function testSettingsMiscFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testSettingsMiscFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_append_no_cache_param', $wp_filter['edd_settings_misc'][-1]);
+	}
 
 	public function testAdminSaleNoticeFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
