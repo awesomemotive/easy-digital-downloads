@@ -282,9 +282,15 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('edd_cleanup_file_symlinks', $wp_filter['edd_cleanup_file_symlinks'][10]);
 	}
 
-	public function testDownloadPriceFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testDownloadPriceFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_format_amount', $wp_filter['edd_download_price'][10]);
+		$this->assertArrayHasKey('edd_currency_filter', $wp_filter['edd_download_price'][20]);
+	}
 
-	public function testAdminHeadFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testAdminHeadFilters() {
+		
+	}
 
 	public function testEnterTitleHereFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
