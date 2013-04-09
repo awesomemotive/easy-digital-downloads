@@ -366,7 +366,7 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 
 	public function testUserLoginFilters() {
 		global $wp_filter;
-		$this->assertArrayHasKey('edd_user_login', $wp_filter['edd_user_login'][10]);
+		$this->assertArrayHasKey('edd_process_login_form', $wp_filter['edd_user_login'][10]);
 	}
 
 	public function testEditUserProfileFilters() {
