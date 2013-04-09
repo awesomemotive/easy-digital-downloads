@@ -91,5 +91,124 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('edd_ajax_opt_out_local_taxes', $wp_filter['wp_ajax_edd_local_tax_opt_out'][10]);
 		$this->assertArrayHasKey('edd_ajax_opt_out_local_taxes', $wp_filter['wp_ajax_nopriv_edd_local_tax_opt_out'][10]);
 		$this->assertArrayHasKey('edd_check_for_download_price_variations', $wp_filter['wp_ajax_edd_check_for_download_price_variations'][10]);
+		$this->assertArrayHasKey('edd_load_ajax_gateway', $wp_filter['wp_ajax_edd_load_gateway'][10]);
+		$this->assertArrayHasKey('edd_load_ajax_gateway', $wp_filter['wp_ajax_nopriv_edd_load_gateway'][10]);
+		$this->assertArrayHasKey('edd_print_errors', $wp_filter['edd_ajax_checkout_errors'][10]);
+		$this->assertArrayHasKey('edd_process_purchase_form', $wp_filter['wp_ajax_edd_process_checkout'][10]);
+		$this->assertArrayHasKey('edd_process_purchase_form', $wp_filter['wp_ajax_nopriv_edd_process_checkout'][10]);
 	}
+
+	public function testAfterDownloadContentFilters() {  }
+
+	public function testPurchaseLinkTopFilters() {  }
+
+	public function testDownloadsExcerptFilters() {  }
+
+	public function testDownloadsContentFilters() {  }
+
+	public function testPurchaseFormFilters() {  }
+
+	public function testPurchaseFormAfterUserInfoFilters() {  }
+
+	public function testCCFormFilters() {  }
+
+	public function testAfterCCFieldsFilters() {  }
+
+	public function testPurchaseFormRegisterFieldsFilters() {  }
+
+	public function testPurchaseFormLoginFieldsFilters() {  }
+
+	public function testPaymentModeSelectFilters() {  }
+
+	public function testPurchaseFormBeforeCCFormFilters() {  }
+
+	public function testPurchaseFormAfterCCFormFilters() {  }
+
+	public function testPurchaseFormBeforeSubmitFilters() {  }
+
+	public function testCheckoutFormTopFilters() {  }
+
+	public function testEmptyCartFilters() {  }
+
+	public function testAddToCartFilters() {  }
+
+	public function testRemoveFilters() {  }
+
+	public function testPurchaseCollectionFilters() {  }
+
+	public function testFormatAmountDecimalsFilters() {  }
+
+	public function testPayPalCCFormFilters() {  }
+
+	public function testGatewayPayPalFilters() {  }
+
+	public function testVerifyPayPalIPNFilters() {  }
+
+	public function testPayPalWebAcceptFilters() {  }
+
+	public function testManualCCFormFilters() {  }
+
+	public function testGatewayManualFilters() {  }
+
+	public function testRemoveCartDiscountFilters() {  }
+
+	public function testCommentsClausesFilters() {  }
+
+	public function testCommentFeedWhereFilters() {  }
+
+	public function testUpdatePaymentStatusFilters() {  }
+
+	public function testEditPaymentFilters() {  }
+
+	public function testDeletePaymentFilters() {  }
+
+	public function testInsertPaymentFilters() {  }
+
+	public function testUpgradePaymentsFilters() {  }
+
+	public function testCleanupFileSymlinksFilters() {  }
+
+	public function testDownloadPriceFilters() {  }
+
+	public function testAdminHeadFilters() {  }
+
+	public function testEnterTitleHereFilters() {  }
+
+	public function testPostUpdatedMessagesFilters() {  }
+
+	public function testLoadEditPHPFilters() {  }
+
+	public function testSettingsMiscFilters() {  }
+
+	public function testAdminSaleNoticeFilters() {  }
+
+	public function testPurchaseReceiptFilters() {  }
+
+	public function testEmailSettingsFilters() {  }
+
+	public function testEmailTemplateDefaultFilters() {  }
+
+	public function testPurchaseReceiptDefaultFilters() {  }
+
+	public function testViewReceiptFilters() {  }
+
+	public function testEmailLinksFilters() {  }
+
+	public function testSendEmailFilters() {  }
+
+	public function testQueryVarsFilters() {  }
+
+	public function testPurchaseFilters() {  }
+
+	public function testUserLoginFilters() {  }
+
+	public function testEditUserProfileFilters() {  }
+
+	public function testPostClassFilters() {  }
+
+	public function testPaymentMetaFilters() {  }
+
+	public function testShowUserProfileFilters() {  }
+
+	public function testPersonalOptionsUpdateFilters() {  }
 }
