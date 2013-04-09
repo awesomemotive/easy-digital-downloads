@@ -1,3 +1,0 @@
-[submodule "travis/vendor/wordpress-tests"]
-	path = travis/vendor/wordpress-tests
-	url = https://sunnyratilal@github.com/sunnyratilal/WordPress-Tests.git
