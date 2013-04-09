@@ -78,7 +78,7 @@ before_script:
 script: 
   - phpunit --coverage-text
   - php travis/clover.php travis/clover.xml 90
-  
+
 notifications:
   email:
     - edd.unit.tests@gmail.com
