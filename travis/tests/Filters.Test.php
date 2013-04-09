@@ -378,10 +378,4 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		global $wp_filter;
 		$this->assertArrayHasKey('edd_responsive_download_post_class', $wp_filter['edd_edit_user_profile'][999]);
 	}
-
-	public function testPaymentMetaFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
-
-	public function testShowUserProfileFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
-
-	public function testPersonalOptionsUpdateFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 }
