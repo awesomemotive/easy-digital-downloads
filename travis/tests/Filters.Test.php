@@ -277,7 +277,10 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('edd_update_old_payments_with_totals', $wp_filter['edd_upgrade_payments'][10]);
 	}
 
-	public function testCleanupFileSymlinksFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testCleanupFileSymlinksFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_cleanup_file_symlinks', $wp_filter['edd_cleanup_file_symlinks'][10]);
+	}
 
 	public function testDownloadPriceFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
