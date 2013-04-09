@@ -70,7 +70,7 @@ before_script:
   - echo -e "Create Database";
   - mysql -e "create database IF NOT EXISTS edd_test;" -uroot
   - echo -e "Get Copy of Sunny's Version of WordPress Tests";
-  - wget -O testsuite.zip https://github.com/sunnyratilal/WordPress-Tests/zipball/master
+  - wget -O testsuite.zip https://github.com/sunnyratilal/WordPress-Tests/archive/master.zip
   - echo -e "Unzip Copy of Sunny's Version of WordPress Tests";
   - unzip testsuite.zip -d travis/vendor
   - echo -e "Move Copy of Sunny's Version of WordPress Tests";
