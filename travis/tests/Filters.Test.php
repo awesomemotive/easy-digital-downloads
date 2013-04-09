@@ -74,5 +74,22 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('edd_register_styles', $wp_filter['wp_enqueue_scripts'][10]);
 	}
 
-	
+	public function testAjaxFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_ajax_remove_from_cart', $wp_filter['wp_ajax_edd_remove_from_cart'][10]);
+		$this->assertArrayHasKey('edd_ajax_remove_from_cart', $wp_filter['wp_ajax_nopriv_edd_remove_from_cart'][10]);
+		$this->assertArrayHasKey('edd_ajax_add_to_cart', $wp_filter['wp_ajax_edd_add_to_cart'][10]);
+		$this->assertArrayHasKey('edd_ajax_add_to_cart', $wp_filter['wp_ajax_nopriv_edd_add_to_cart'][10]);
+		$this->assertArrayHasKey('edd_ajax_apply_discount', $wp_filter['wp_ajax_edd_apply_discount'][10]);
+		$this->assertArrayHasKey('edd_ajax_apply_discount', $wp_filter['wp_ajax_nopriv_edd_apply_discount'][10]);
+		$this->assertArrayHasKey('edd_load_checkout_login_fields', $wp_filter['wp_ajax_nopriv_checkout_login'][10]);
+		$this->assertArrayHasKey('edd_load_checkout_register_fields', $wp_filter['wp_ajax_nopriv_checkout_register'][10]);
+		$this->assertArrayHasKey('edd_ajax_get_download_title', $wp_filter['wp_ajax_edd_get_download_title'][10]);
+		$this->assertArrayHasKey('edd_ajax_get_download_title', $wp_filter['wp_ajax_nopriv_edd_get_download_title'][10]);
+		$this->assertArrayHasKey('edd_ajax_opt_into_local_taxes', $wp_filter['wp_ajax_edd_local_tax_opt_in'][10]);
+		$this->assertArrayHasKey('edd_ajax_opt_into_local_taxes', $wp_filter['wp_ajax_nopriv_edd_local_tax_opt_in'][10]);
+		$this->assertArrayHasKey('edd_ajax_opt_out_local_taxes', $wp_filter['wp_ajax_edd_local_tax_opt_out'][10]);
+		$this->assertArrayHasKey('edd_ajax_opt_out_local_taxes', $wp_filter['wp_ajax_nopriv_edd_local_tax_opt_out'][10]);
+		$this->assertArrayHasKey('edd_check_for_download_price_variations', $wp_filter['wp_ajax_edd_check_for_download_price_variations'][10]);
+	}
 }
