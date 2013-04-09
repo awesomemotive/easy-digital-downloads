@@ -293,7 +293,10 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('edd_admin_downloads_icon', $wp_filter['admin_head'][10]);
 	}
 
-	public function testEnterTitleHereFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testEnterTitleHereFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_change_default_title', $wp_filter['enter_title_here'][10]);
+	}
 
 	public function testPostUpdatedMessagesFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
