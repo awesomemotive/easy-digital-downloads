@@ -67,6 +67,7 @@ env:
 #    - php: 5.2
 
 before_script:
+  - echo -e "Install Test";
   - wget -O testsuite.zip https://github.com/sunnyratilal/WordPress-Tests/zipball/master
   - unzip testsuite.zip -d travis/vendor
   - cp -r travis/vendor/sunnyratilal-WordPress-Tests-* travis/vendor/wordpress-tests
