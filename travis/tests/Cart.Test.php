@@ -20,7 +20,7 @@ class Test_Easy_Digital_Downloads_Cart extends WP_UnitTestCase {
 		$this->_rewrite = $wp_rewrite;
 
 		$wp_factory = new WP_UnitTest_Factory;
-		$post_id = $wp_factory->post->create( array( 'title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'draft' ) );
+		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'draft' ) );
 
 		$_variable_pricing = array(
 			array(
