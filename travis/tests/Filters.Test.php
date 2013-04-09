@@ -324,7 +324,10 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('edd_apply_email_template', $wp_filter['edd_purchase_receipt'][20]);
 	}
 
-	public function testEmailSettingsFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testEmailSettingsFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_email_template_preview', $wp_filter['edd_email_settings'][10]);
+	}
 
 	public function testEmailTemplateDefaultFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
