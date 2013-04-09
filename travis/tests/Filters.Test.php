@@ -289,7 +289,8 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 	}
 
 	public function testAdminHeadFilters() {
-		
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_admin_downloads_icon', $wp_filter['admin_head'][10]);
 	}
 
 	public function testEnterTitleHereFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
