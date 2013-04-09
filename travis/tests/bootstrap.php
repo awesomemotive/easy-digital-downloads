@@ -1,34 +1,38 @@
 <?php
-// Load WordPress test environment
-// https://github.com/nb/wordpress-tests
+/**
+ * Install WordPress and Easy Digital Downloads
+ */
+
+error_reporting( E_ALL & ~E_DEPRECATED & ~E_STRICT );
+
 echo "\n\nWelcome to the Easy Digital Downloads PHPUnit Test Suite \n";
 echo "Version: 1.0 \n";
 echo "Author: Chris Christoff and Sunny Ratilal \n\n\n";
-echo "Preparing to load WordPress TU Bootstrap File...\n";
+echo "Preparing to load WordPress Bootstrap File...\n";
 
 $path = './travis/vendor/wordpress-tests/bootstrap.php';
 
 if ( file_exists( $path ) ) {
 	require_once $path;
 } else {
-	exit( "Copy of bootstrap file failed in travis.yml \n" );
+	exit( "The WordPress bootstrap file couldn't be loaded.\n" );
 }
 
-echo "WordPress TU Boostrap File Loaded \n\n";
-echo "Preparing to load EDD Plugin from Mainfile \n";
+echo "WordPress Boostrap File Loaded \n\n";
+echo "Preparing to load Easy Digital Downloads... \n";
 
 $loader = './easy-digital-downloads.php';
 
 if ( file_exists( $loader ) ) {
 	require_once $loader;
 } else {
-	exit( "Couldn't load EDD \n" );
+	exit( "Couldn't load Easy Digital Downloads \n" );
 }
 
-echo "EDD Loaded \n";
-echo "EDD Plugin Loaded from Mainfile\n\n";
-echo "Preparing to execute PHPUnit Tests...\n";
-
+echo "Easy Digital Downloads Loaded \n";
+echo "Installing Easy Digital Downloads... \n";
 edd_install();
+echo "Easy Digital Downloads Installed \n";
+echo "Preparing to execute PHPUnit Tests...\n";
 
 $_SESSION['travis'] = 'true';
