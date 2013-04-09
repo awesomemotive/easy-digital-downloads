@@ -1,6 +1,6 @@
 <?php
 /*
-This file is used in Travis-CI testing and copied into vendor/wordpress-tests
+This file is used in travis-ci testing and copied into vendor/wordpress-tests
 
 
 Path to the WordPress codebase could alose be detected dynami, as wordpress is copied into vendor/wordpress
@@ -26,14 +26,12 @@ define( 'WP_TESTS_TITLE', 'Test Blog' );
 define( 'WP_TESTS_NETWORK_TITLE', 'Test Network' );
 define( 'WP_TESTS_SUBDOMAIN_INSTALL', true );
 $base = '/';
-define( 'WP_MEMORY_LIMIT', '64M' );
+define( 'WP_MEMORY_LIMIT', -1 );
+define( 'WP_MAX_MEMORY_LIMIT', -1 );
 /* Cron tries to make an HTTP request to the blog, which always fails, because tests are run in CLI mode only */
 define( 'DISABLE_WP_CRON', true );
 
-define( 'WP_ALLOW_MULTISITE', (bool) getenv( 'WP_MULTISITE' ) );
-if ( WP_ALLOW_MULTISITE ) {
-	define( 'WP_TESTS_BLOGS', 'first,second,third,fourth' );
-}
+define( 'WP_ALLOW_MULTISITE', 1 );
 if ( WP_ALLOW_MULTISITE && !defined('WP_INSTALLING') ) {
 	define( 'SUBDOMAIN_INSTALL', WP_TESTS_SUBDOMAIN_INSTALL );
 	define( 'MULTISITE', true );
