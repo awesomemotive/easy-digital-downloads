@@ -4,6 +4,8 @@
  */
 
 class Test_Easy_Digital_Downloads_Payments extends WP_UnitTestCase {
+	protected $_payment_id;
+
 	public function setUp() {
 		parent::setUp();
 
@@ -113,6 +115,7 @@ class Test_Easy_Digital_Downloads_Payments extends WP_UnitTestCase {
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
 
 		$payment_id = edd_insert_payment( $purchase_data );
+		$payment_id = $this->_payment_id;
 	}
 
 	public function testGetPayments() {
@@ -121,5 +124,10 @@ class Test_Easy_Digital_Downloads_Payments extends WP_UnitTestCase {
 		$this->assertArrayHasKey('ID', (array) $out[0]);
 		$this->assertArrayHasKey('post_type', (array) $out[0]);
 		$this->assertEquals('edd_payment', $out[0]->post_type);
+	}
+
+	public function TestUpdatePaymentStatus() {
+		edd_update_payment_status($this->_payment_id);
+		$this->assertEquals('publish', get_post_status($this->_payment_id));
 	}
 }
