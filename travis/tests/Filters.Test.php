@@ -209,7 +209,10 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('__return_false', $wp_filter['edd_paypal_cc_form'][10]);
 	}
 
-	public function testGatewayPayPalFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testGatewayPayPalFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_process_paypal_purchase', $wp_filter['edd_gateway_paypal'][10]);
+	}
 
 	public function testVerifyPayPalIPNFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
