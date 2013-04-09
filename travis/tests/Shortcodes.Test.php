@@ -9,6 +9,7 @@ class Test_Easy_Digital_Downloads_Shortcodes extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
+		$wp_factory = new WP_UnitTest_Factory;
 		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'draft' ) );
 
 		$_variable_pricing = array(
