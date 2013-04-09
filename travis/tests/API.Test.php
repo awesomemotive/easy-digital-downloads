@@ -232,5 +232,14 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$this->assertArrayHasKey('name', $out['sales'][0]['products'][0]);
 		$this->assertArrayHasKey('price', $out['sales'][0]['products'][0]);
 		$this->assertArrayHasKey('price_name', $out['sales'][0]['products'][0]);
+
+		$this->assertEquals(100.00, $out['sales'][0]['subtotal']);
+		$this->assertEquals(0, $out['sales'][0]['tax']);
+		$this->assertEquals(100.00, $out['sales'][0]['total']);
+		$this->assertEquals('', $out['sales'][0]['gateway']);
+		$this->assertEquals('admin@example.org', $out['sales'][0]['email']);
+		$this->assertEquals('Test Download', $out['sales'][0]['products'][0]['name']);
+		$this->assertEquals(100, $out['sales'][0]['products'][0]['price']);
+		$this->assertEquals('Advanced', $out['sales'][0]['products'][0]['price_name']);
 	}
 }
