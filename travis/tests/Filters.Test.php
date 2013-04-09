@@ -359,7 +359,10 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('edd_query_vars', $wp_filter['query_vars'][10]);
 	}
 
-	public function testPurchaseFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testPurchaseFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_process_purchase_form', $wp_filter['edd_purchase'][10]);
+	}
 
 	public function testUserLoginFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
