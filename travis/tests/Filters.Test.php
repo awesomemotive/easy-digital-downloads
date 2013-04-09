@@ -346,10 +346,13 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 
 	public function testEmailLinksFilters() {
 		global $wp_filter;
-		$this->assertArrayHasKey('edd_send_test_email', $wp_filter['edd_send_test_email'][10]);
+		$this->assertArrayHasKey('edd_resend_purchase_receipt', $wp_filter['edd_email_links'][10]);
 	}
 
-	public function testSendEmailFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testSendEmailFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_send_test_email', $wp_filter['edd_send_test_email'][10]);
+	}
 
 	public function testQueryVarsFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
