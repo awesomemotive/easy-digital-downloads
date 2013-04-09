@@ -75,7 +75,10 @@ before_script:
   - tar -xzf wordpress.tar.gz -C travis/vendor
   - mysql -e "create database IF NOT EXISTS edd_test;" -uroot
 
-script: phpunit --coverage-text 
+script: 
+  - phpunit --coverage-text
+  - php travis/clover.php travis/clover.xml 90
+  
 notifications:
   email:
     - edd.unit.tests@gmail.com
