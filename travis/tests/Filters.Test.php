@@ -298,9 +298,15 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('edd_change_default_title', $wp_filter['enter_title_here'][10]);
 	}
 
-	public function testPostUpdatedMessagesFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testPostUpdatedMessagesFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_updated_messages', $wp_filter['post_updated_messages'][10]);
+	}
 
-	public function testLoadEditPHPFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testLoadEditPHPFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('edd_remove_post_types_order', $wp_filter['load-edit.php'][10]);
+	}
 
 	public function testSettingsMiscFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
