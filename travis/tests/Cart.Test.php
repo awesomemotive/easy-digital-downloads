@@ -76,6 +76,19 @@ class Test_Easy_Digital_Downloads_Cart extends WP_UnitTestCase {
 		$this->assertEquals(0, edd_add_to_cart($this->_post->ID));
 	}
 
+	public function testGetCartContents() {
+		$expected = array(
+			'0' => array(
+				'id' => $this->_post->ID - 1,
+				'options' => array(
+					'price_id' => 0
+				)
+			)
+		);
+
+		$this->assertEquals($expected, edd_get_cart_contents());
+	}
+
 	public function testRemoveFromCart() {
 		$expected = array();
 		$this->assertEquals($expected, edd_remove_from_cart(0) );
