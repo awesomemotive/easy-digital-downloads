@@ -204,7 +204,10 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 		$this->assertArrayHasKey('edd_currency_decimal_filter', $wp_filter['edd_format_amount_decimals'][10]);
 	}
 
-	public function testPayPalCCFormFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
+	public function testPayPalCCFormFilters() {
+		global $wp_filter;
+		$this->assertArrayHasKey('__return_false', $wp_filter['edd_paypal_cc_form'][10]);
+	}
 
 	public function testGatewayPayPalFilters() { $this->markTestIncomplete('This test has not been implemented yet.'); }
 
