@@ -28,6 +28,7 @@
 		<blacklist>
 			<directory suffix=".php">./tests/vendor/wordpress/</directory>
 			<directory suffix=".php">./tests/vendor/wordpress-tests/</directory>
+			<file>./easy-digital-downloads.php</file>
 		</blacklist>
 	</filter>
 </phpunit>
