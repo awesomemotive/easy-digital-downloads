@@ -47,7 +47,11 @@ class Test_Easy_Digital_Downloads_Roles extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'publish_pages', (array) $wp_roles->role_objects['shop_manager']->capabilities );
 		$this->assertArrayHasKey( 'publish_posts', (array) $wp_roles->role_objects['shop_manager']->capabilities );
 		$this->assertArrayHasKey( 'read_private_pages', (array) $wp_roles->role_objects['shop_manager']->capabilities );
-		$this->assertArrayHasKey( 'read_private_posts', (array) $wp_roles->role_objects['shop_manager']->capabilities );
+		$this->assertArrayHasKey( 'view_shop_reports', (array) $wp_roles->role_objects['shop_manager']->capabilities );
+		$this->assertArrayHasKey( 'view_shop_sensitive_data', (array) $wp_roles->role_objects['shop_manager']->capabilities );
+		$this->assertArrayHasKey( 'export_shop_reports', (array) $wp_roles->role_objects['shop_manager']->capabilities );
+		$this->assertArrayHasKey( 'manage_shop_settings', (array) $wp_roles->role_objects['shop_manager']->capabilities );
+		$this->assertArrayHasKey( 'manage_shop_discounts', (array) $wp_roles->role_objects['shop_manager']->capabilities );
 	}
 
 	public function test_shop_accountant_caps() {
