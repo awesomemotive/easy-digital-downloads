@@ -1001,3 +1001,27 @@ function edd_remove_cart_discount() {
 	wp_redirect( edd_get_checkout_uri() ); exit;
 }
 add_action( 'edd_remove_cart_discount', 'edd_remove_cart_discount' );
+
+
+/**
+ * Checks whether discounts are still valid when removing items from the cart
+ *
+ * If a discount requires a certain product, and that product is no longer in the cart, the discount is removed
+ *
+ * @since 1.5.2
+ * @return void
+ */
+function edd_maybe_remove_cart_discount( $cart_key = 0 ) {
+
+	$discounts = edd_get_cart_discounts();
+
+	if ( ! $discounts )
+		return;
+
+	foreach ( $discounts as $discount ) {
+		if( ! edd_is_discount_valid( $discount ) )
+			edd_unset_cart_discount( $discount );
+
+	}
+}
+add_action( 'edd_post_remove_from_cart', 'edd_maybe_remove_cart_discount' );
