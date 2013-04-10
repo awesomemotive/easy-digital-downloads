@@ -161,4 +161,32 @@ DATA;
 		$this->assertContains( '&#36;100.00', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
 		$this->assertContains( '&edd_action=view_receipt">View it in your browser.</a>', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
 	}
+
+	public function test_email_preview_template_tags() {
+		$message = <<<DATA
+Hey {fullname},
+
+{download_list}
+
+{file_urls}
+
+{date}
+
+{sitename}
+
+{price}
+
+{receipt_id}
+
+{receipt_link}
+DATA;
+
+		$this->assertContains( '<p>Hey John Doe,</p>', edd_email_preview_templage_tags( $message ) );
+		$this->assertContains( '<li>Sample Product Title', edd_email_preview_templage_tags( $message ) );
+		$this->assertContains( '<li><a href="#">Sample Download File Name</a> - <small>Optional notes about this download.</small></li>', edd_email_preview_templage_tags( $message ) );
+		$this->assertContains( '<p>http://example.org/test.zip?test=key&amp;key=123</p>', edd_email_preview_templage_tags( $message ) );
+		$this->assertContains( '<p>Test Blog</p>', edd_email_preview_templage_tags( $message ) );
+		$this->assertContains( '<p>&#36;10.50</p>', edd_email_preview_templage_tags( $message ) );
+		$this->assertContains( '&edd_action=view_receipt">View it in your browser.</a></p>', edd_email_preview_templage_tags( $message ) );
+	}
 }
