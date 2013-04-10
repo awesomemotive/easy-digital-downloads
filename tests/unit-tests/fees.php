@@ -39,4 +39,11 @@ class Tests_EDD_Fees extends WP_UnitTestCase {
 
 		$this->assertEquals( $expected, EDD()->fees->add_fee( 10, 'Shipping Fee', 'shipping_fee' ) );
 	}
+
+	/**
+	 * Has Fees
+	 */
+	public function test_has_fees() {
+		$this->assertTrue( EDD()->fees->has_fees() );
+	}
 }
