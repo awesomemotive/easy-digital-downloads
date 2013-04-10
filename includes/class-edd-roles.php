@@ -230,7 +230,7 @@ class EDD_Roles {
 
 			/** Shop Accountant Capabilities */
 			$wp_roles->remove_cap( 'shop_accountant', 'edit_products' );
-			$wp_roles->remove_cap( 'shop_accountant', 'read_private_prodcuts' );
+			$wp_roles->remove_cap( 'shop_accountant', 'read_private_products' );
 			$wp_roles->remove_cap( 'shop_accountant', 'view_shop_reports' );
 			$wp_roles->remove_cap( 'shop_accountant', 'export_shop_reports' );
 
