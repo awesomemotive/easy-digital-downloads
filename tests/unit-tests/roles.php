@@ -8,21 +8,16 @@ class Test_Easy_Digital_Downloads_Roles extends WP_UnitTestCase {
 		parent::setUp();
 	}
 
-	public function output_roles() {
+	public function test_roles() {
+		$roles = new EDD_Roles();
+
 		global $wp_roles;
-		print_r($wp_roles);
+
+		$this->assertArrayHasKey('shop_manager', (array) $wp_roles->role_names);
+		$this->assertArrayHasKey('shop_accountant', (array) $wp_roles->role_names);
+		$this->assertArrayHasKey('shop_worker', (array) $wp_roles->role_names);
+		$this->assertArrayHasKey('shop_vendor', (array) $wp_roles->role_names);
 	}
-
-	// public function test_roles() {
-	// 	$roles = new EDD_Roles();
-
-	// 	global $wp_roles;
-
-	// 	$this->assertArrayHasKey('shop_manager', (array) $wp_roles->role_names);
-	// 	$this->assertArrayHasKey('shop_accountant', (array) $wp_roles->role_names);
-	// 	$this->assertArrayHasKey('shop_worker', (array) $wp_roles->role_names);
-	// 	$this->assertArrayHasKey('shop_vendor', (array) $wp_roles->role_names);
-	// }
 
 	// public function test_shop_manager_caps() {
 	// 	global $wp_roles;
