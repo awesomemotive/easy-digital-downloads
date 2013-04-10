@@ -9,6 +9,8 @@ class Test_Easy_Digital_Downloads_Roles extends WP_UnitTestCase {
 	}
 
 	public function test_roles() {
+		$roles = new EDD_Roles();
+
 		global $wp_roles;
 
 		$this->assertArrayHasKey('shop_manager', (array) $wp_roles->role_names);
