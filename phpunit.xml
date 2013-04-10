@@ -24,4 +24,11 @@
 	<logging>
 		<log type="coverage-clover" target="./travis/clover.xml"/>
 	</logging>
+	<filter>
+		<blacklist>
+			<exclude>
+				<directory suffix=".php">tests/vendor</directory>
+			</exclude>
+		</blacklist>
+	</filter>
 </phpunit>
