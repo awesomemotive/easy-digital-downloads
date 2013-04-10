@@ -17,8 +17,8 @@
 		 bootstrap="tests/includes/bootstrap.php">
 	<testsuites>
 		<testsuite name="Easy Digital Downloads Test Suite">
-			<directory suffix="Test.php">./tests/unit-tests</directory>
-			<exclude>tests/unit-tests/AJAX.Test.php</exclude>
+			<directory suffix=".php">tests/unit-tests</directory>
+			<exclude>tests/unit-tests/ajax.php</exclude>
 		</testsuite>
 	</testsuites>
 	<logging>
