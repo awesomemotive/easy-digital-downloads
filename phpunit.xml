@@ -24,4 +24,10 @@
 	<logging>
 		<log type="coverage-clover" target="./travis/clover.xml"/>
 	</logging>
+	<filter>
+		<blacklist>
+			<directory suffix=".php">/tests/vendor/wordpress/</directory>
+			<directory suffix=".php">/tests/vendor/wordpress-tests/</directory>
+		</blacklist>
+	</filter>
 </phpunit>
