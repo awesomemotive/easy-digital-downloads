@@ -52,13 +52,25 @@ class Test_Easy_Digital_Downloads_Roles extends WP_UnitTestCase {
 
 	public function test_shop_accountant_caps() {
 		global $wp_roles;
-		$this->assertArrayHasKey( 'read', (array) $wp_roles->role_objects['shop_manager']->capabilities );
-		$this->assertArrayHasKey( 'edit_posts', (array) $wp_roles->role_objects['shop_manager']->capabilities );
-		$this->assertArrayHasKey( 'delete_posts', (array) $wp_roles->role_objects['shop_manager']->capabilities );
-		$this->assertArrayHasKey( 'edit_products', (array) $wp_roles->role_objects['shop_manager']->capabilities );
-		$this->assertArrayHasKey( 'read_private_products', (array) $wp_roles->role_objects['shop_manager']->capabilities );
-		$this->assertArrayHasKey( 'view_shop_reports', (array) $wp_roles->role_objects['shop_manager']->capabilities );
-		$this->assertArrayHasKey( 'export_shop_reports', (array) $wp_roles->role_objects['shop_manager']->capabilities );
-		$this->assertArrayHasKey( 'edit_shop_payments', (array) $wp_roles->role_objects['shop_manager']->capabilities );
+		$this->assertArrayHasKey( 'read', (array) $wp_roles->role_objects['shop_accountant']->capabilities );
+		$this->assertArrayHasKey( 'edit_posts', (array) $wp_roles->role_objects['shop_accountant']->capabilities );
+		$this->assertArrayHasKey( 'delete_posts', (array) $wp_roles->role_objects['shop_accountant']->capabilities );
+		$this->assertArrayHasKey( 'edit_products', (array) $wp_roles->role_objects['shop_accountant']->capabilities );
+		$this->assertArrayHasKey( 'read_private_products', (array) $wp_roles->role_objects['shop_accountant']->capabilities );
+		$this->assertArrayHasKey( 'view_shop_reports', (array) $wp_roles->role_objects['shop_accountant']->capabilities );
+		$this->assertArrayHasKey( 'export_shop_reports', (array) $wp_roles->role_objects['shop_accountant']->capabilities );
+		$this->assertArrayHasKey( 'edit_shop_payments', (array) $wp_roles->role_objects['shop_accountant']->capabilities );
+	}
+
+	public function test_shop_vendor_caps() {
+		global $wp_roles;
+		$this->assertArrayHasKey( 'edit_product', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
+		$this->assertArrayHasKey( 'edit_products', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
+		$this->assertArrayHasKey( 'delete_product', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
+		$this->assertArrayHasKey( 'delete_products', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
+		$this->assertArrayHasKey( 'publish_products', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
+		$this->assertArrayHasKey( 'edit_published_products', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
+		$this->assertArrayHasKey( 'upload_files', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
+		$this->assertArrayHasKey( 'assign_product_terms', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
 	}
 }
