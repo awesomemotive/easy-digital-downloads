@@ -12,13 +12,13 @@
 		 stopOnIncomplete="false"
 		 stopOnSkipped="false"
 		 syntaxCheck="false"
-		 verbose="true"
+		 verbose="false"
 		 strict="true"
-		 bootstrap="travis/tests/bootstrap.php">
+		 bootstrap="tests/includes/bootstrap.php">
 	<testsuites>
 		<testsuite name="Easy Digital Downloads Test Suite">
-			<directory suffix="Test.php">./travis/tests</directory>
-			<exclude>travis/tests/AJAX.Test.php</exclude>
+			<directory suffix=".php">tests/unit-tests</directory>
+			<exclude>tests/unit-tests/ajax.php</exclude>
 		</testsuite>
 	</testsuites>
 	<logging>

@@ -4,7 +4,9 @@
  */
 
 class Test_Easy_Digital_Downloads_Payments extends WP_UnitTestCase {
-	protected $_payment_id;
+	protected $_payment_id = null;
+
+	protected $_post = null;
 
 	public function setUp() {
 		parent::setUp();
@@ -119,11 +121,55 @@ class Test_Easy_Digital_Downloads_Payments extends WP_UnitTestCase {
 		$this->_payment_id = $payment_id;
 	}
 
-	public function testGetPayments() {
+	public function test_get_payments() {
 		$out = edd_get_payments();
-		$this->assertTrue(is_array((array)$out[0]));
-		$this->assertArrayHasKey('ID', (array) $out[0]);
-		$this->assertArrayHasKey('post_type', (array) $out[0]);
-		$this->assertEquals('edd_payment', $out[0]->post_type);
+		$this->assertTrue( is_array( (array) $out[0] ) );
+		$this->assertArrayHasKey( 'ID', (array) $out[0] );
+		$this->assertArrayHasKey( 'post_type', (array) $out[0] );
+		$this->assertEquals( 'edd_payment', $out[0]->post_type );
+	}
+
+	public function test_fake_insert_payment() {
+		$this->assertFalse( edd_insert_payment() );
+	}
+
+	public function test_update_payment_status() {
+		edd_update_payment_status( $this->_payment_id );
+
+		$out = edd_get_payments();
+		$this->assertEquals( 'publish', $out[0]->post_status );
+	}
+
+	public function test_check_for_existing_payment() {
+		$this->assertTrue( edd_check_for_existing_payment( $this->_post->ID ) );
+	}
+
+	public function test_get_payment_statuses() {
+		$out = edd_get_payment_statuses();
+
+		$expected = array(
+			'pending' => 'Pending',
+			'publish' => 'Complete',
+			'refunded' => 'Refunded',
+			'failed' => 'Failed',
+			'revoked' => 'Revoked'
+		);
+
+		$this->assertEquals( $expected, $out );
+	}
+
+	public function test_get_earnings_by_date() {
+		$wp_factory = new WP_UnitTest_Factory;
+		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Paymeny', 'post_type' => 'edd_payment', 'post_status' => 'publish' ) );
+	}
+
+	public function test_undo_purchase() {
+		edd_undo_purchase( $this->_post->ID, $this->_payment_id );
+		$this->assertEquals( 0, edd_get_total_earnings() );
+	}
+
+	public function test_delete_purchase() {
+		edd_delete_purchase( $this->_payment_id );
+		$this->assertFalse( edd_get_payments() );
 	}
 }

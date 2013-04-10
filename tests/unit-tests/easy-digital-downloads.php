@@ -44,15 +44,15 @@ class Easy_Digital_Downloads_Test extends WP_UnitTestCase {
 		$this->assertSame( EDD_VERSION, '1.5.1' );
 
 		// Plugin Folder URL
-		$path = str_replace( 'travis/tests/', '', plugin_dir_url( __FILE__ ) );
+		$path = str_replace( 'tests/unit-tests/', '', plugin_dir_url( __FILE__ ) );
 		$this->assertSame( EDD_PLUGIN_URL, $path );
 
 		// Plugin Folder Path
-		$path = str_replace( 'travis/tests/', '', plugin_dir_path( __FILE__ ) );
+		$path = str_replace( 'tests/unit-tests/', '', plugin_dir_path( __FILE__ ) );
 		$this->assertSame( EDD_PLUGIN_DIR, $path );
 
 		// Plugin Root File
-		$path = str_replace( 'travis/tests/', '', plugin_dir_path( __FILE__ ) );
+		$path = str_replace( 'tests/unit-tests/', '', plugin_dir_path( __FILE__ ) );
 		$this->assertSame( EDD_PLUGIN_FILE, $path.'easy-digital-downloads.php' );
 	}
 	
