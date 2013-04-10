@@ -189,4 +189,38 @@ DATA;
 		$this->assertContains( '<p>&#36;10.50</p>', edd_email_preview_templage_tags( $message ) );
 		$this->assertContains( '&edd_action=view_receipt">View it in your browser.</a></p>', edd_email_preview_templage_tags( $message ) );
 	}
+
+	public function test_email_default_formatting() {
+		$message = <<<DATA
+Hey {fullname},
+
+{download_list}
+
+{file_urls}
+
+{date}
+
+{sitename}
+
+{price}
+
+{receipt_id}
+
+{receipt_link}
+DATA;
+
+	$expected = <<<DATA
+<p>Hey {fullname},</p>
+<p>{download_list}</p>
+<p>{file_urls}</p>
+<p>{date}</p>
+<p>{sitename}</p>
+<p>{price}</p>
+<p>{receipt_id}</p>
+<p>{receipt_link}</p>
+
+DATA;
+
+		$this->assertEquals( $expected, edd_email_default_formatting($message) );
+	}
 }
