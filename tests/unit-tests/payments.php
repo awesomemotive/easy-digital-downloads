@@ -119,11 +119,11 @@ class Test_Easy_Digital_Downloads_Payments extends WP_UnitTestCase {
 		$this->_payment_id = $payment_id;
 	}
 
-	public function testGetPayments() {
+	public function test_get_payments() {
 		$out = edd_get_payments();
-		$this->assertTrue(is_array((array)$out[0]));
-		$this->assertArrayHasKey('ID', (array) $out[0]);
-		$this->assertArrayHasKey('post_type', (array) $out[0]);
-		$this->assertEquals('edd_payment', $out[0]->post_type);
+		$this->assertTrue( is_array( (array) $out[0] ) );
+		$this->assertArrayHasKey( 'ID', (array) $out[0] );
+		$this->assertArrayHasKey( 'post_type', (array) $out[0] );
+		$this->assertEquals( 'edd_payment', $out[0]->post_type );
 	}
 }
