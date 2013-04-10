@@ -4,7 +4,9 @@
  */
 
 class Test_Easy_Digital_Downloads_Payments extends WP_UnitTestCase {
-	protected $_payment_id;
+	protected $_payment_id = null;
+
+	protected $_post = null;
 
 	public function setUp() {
 		parent::setUp();
@@ -125,5 +127,26 @@ class Test_Easy_Digital_Downloads_Payments extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'ID', (array) $out[0] );
 		$this->assertArrayHasKey( 'post_type', (array) $out[0] );
 		$this->assertEquals( 'edd_payment', $out[0]->post_type );
+	}
+
+	public function test_fake_insert_payment() {
+		$this->assertFalse( edd_insert_payment() );
+	}
+
+	public function test_update_payment_status() {
+		//edd_update_payment_status( $this->_payment_id );
+
+		$out = edd_get_payments();
+		//$this->assertEquals( 'publish', $out[0]->post_status );
+	}
+
+	public function test_undo_purchase() {
+		edd_undo_purchase( $this->_post->ID, $this->_payment_id );
+		$this->assertEquals( 0, edd_get_total_earnings() );
+	}
+
+	public function test_delete_purchase() {
+		edd_delete_purchase( $this->_payment_id );
+		$this->assertFalse( edd_get_payments() );
 	}
 }
