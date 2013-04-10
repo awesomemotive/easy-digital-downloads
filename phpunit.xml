@@ -26,7 +26,8 @@
 	</logging>
 	<filter>
 		<blacklist>
-			<directory suffix=".php">/tests/vendor/</directory>
+			<directory suffix=".php">/tests/vendor/wordpress/</directory>
+			<directory suffix=".php">/tests/vendor/wordpress-tests/</directory>
 		</blacklist>
 	</filter>
 </phpunit>
