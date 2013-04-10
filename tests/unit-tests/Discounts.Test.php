@@ -1,5 +1,5 @@
 <?php
-require_once('./travis/vendor/wordpress-tests/lib/factory.php');
+require_once('./tests/vendor/wordpress-tests/lib/factory.php');
 
 /**
  * Test Discounts
