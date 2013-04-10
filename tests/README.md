@@ -1,4 +1,4 @@
-# [Easy Digital Downloads](http://www.easydigitaldownloads.com) Testing Suite [![Build Status](https://secure.travis-ci.org/pippinsplugins/Easy-Digital-Downloads.png?branch=master)](http://travis-ci.org/pippinsplugins/Easy-Digital-Downloads)
+# Easy Digital Downloads Test Suite [![Build Status](https://secure.travis-ci.org/pippinsplugins/Easy-Digital-Downloads.png?branch=master)](http://travis-ci.org/pippinsplugins/Easy-Digital-Downloads)
 
 Version: 1.0
 
@@ -11,31 +11,29 @@ The Easy Digital Downloads Test Suite uses PHPUnit to maintain Easy Digital Down
 Travis-CI Automated Testing
 -----------
 
-The master branch of Easy Digital Downloads is automatically tested on [travis-ci.org](http://travis-ci.org). 
-The image above will show you the latest test's output.
-Travis-CI will also automatically test all new pull requests to make sure they will not break our build.
+The master branch of Easy Digital Downloads is automatically tested on [travis-ci.org](http://travis-ci.org). The image above will show you the latest test's output. Travis-CI will also automatically test all new Pull Requests to make sure they will not break our build.
 
 Quick Start (For Manual Runs)
 -----------------------------
 
-Clone the repository.
-
-	# Get a copy of EDD
+	# Clone the repository
     git clone git://github.com/pippinsplugins/Easy-Digital-Downloads.git
     cd Easy-Digital-Downloads
-    # Download the WP Testing Suite
-	wget -O testsuite.zip https://github.com/nb/wordpress-tests/archive/460b9c4ad9db7eea4710f151851060ae1921ea7c.zip
+
+    # Download Sunny Ratilal's Adapted WordPress Testing Suite
+	wget -O testsuite.zip https://github.com/sunnyratilal/wordpress-tests/zipball/master
+
     # Unzip it into vendors
 	unzip testsuite.zip -d travis/vendor
-    cp -r travis/vendor/wordpress-tests-460b9c4ad9db7eea4710f151851060ae1921ea7c travis/vendor/wordpress-tests
+    cp -r tests/vendor/sunnyratilal-WordPress-Tests-* tests/vendor/wordpress-tests
 
 Copy and edit the WordPress Unit Tests Configuration
 
-    cp travis/tests/unittests-config.travis.php travis/vendor/wordpress-tests/unittests-config.php
+    cp tests/includes/unittests-config.travis.php tests/vendor/wordpress-tests/unittests-config.php
 
 Now edit `unittests-config.php` in a code editor. Make sure to have an empty database ready (all data will die) and that your path to WordPress is correct.
 
-Easy Digital Downloads does not need to be in the `wp-content/plugins` directory. For example in travis-ci's `.travis.yml` we copy WordPress into `vendor/wordpress`
+Easy Digital Downloads does not need to be in the `wp-content/plugins` directory. For example in Travis-CI's `.travis.yml` we copy WordPress into `vendor/wordpress`
 
     <?php
     /* Path to the WordPress codebase you'd like to test. Add a backslash in the end. */
