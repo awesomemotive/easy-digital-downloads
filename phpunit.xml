@@ -14,7 +14,7 @@
 		 syntaxCheck="false"
 		 verbose="false"
 		 strict="true"
-		 bootstrap="travis/includes/bootstrap.php">
+		 bootstrap="tests/includes/bootstrap.php">
 	<testsuites>
 		<testsuite name="Easy Digital Downloads Test Suite">
 			<directory suffix="Test.php">./tests/unit-tests</directory>
