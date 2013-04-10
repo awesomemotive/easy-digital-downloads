@@ -103,6 +103,6 @@ class Test_Easy_Digital_Downloads_Roles extends WP_UnitTestCase {
 		// $this->assertArrayHasKey( 'edit_published_products', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
 		// $this->assertArrayHasKey( 'upload_files', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
 		// $this->assertArrayHasKey( 'assign_product_terms', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
-		$this->assertTrue( $wp_roles->role_objects['shop_manager']->capabilities['view_shop_sensitive_data'] );
+		var_dump( $wp_roles->role_objects['shop_manager']->capabilities );
 	}
 }
