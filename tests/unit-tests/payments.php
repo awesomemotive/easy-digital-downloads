@@ -134,10 +134,33 @@ class Test_Easy_Digital_Downloads_Payments extends WP_UnitTestCase {
 	}
 
 	public function test_update_payment_status() {
-		//edd_update_payment_status( $this->_payment_id );
+		edd_update_payment_status( $this->_payment_id );
 
 		$out = edd_get_payments();
-		//$this->assertEquals( 'publish', $out[0]->post_status );
+		$this->assertEquals( 'publish', $out[0]->post_status );
+	}
+
+	public function test_check_for_existing_payment() {
+		$this->assertTrue( edd_check_for_existing_payment( $this->_post->ID ) );
+	}
+
+	public function test_get_payment_statuses() {
+		$out = edd_get_payment_statuses();
+
+		$expected = array(
+			'pending' => 'Pending',
+			'publish' => 'Complete',
+			'refunded' => 'Refunded',
+			'failed' => 'Failed',
+			'revoked' => 'Revoked'
+		);
+
+		$this->assertEquals( $expected, $out );
+	}
+
+	public function test_get_earnings_by_date() {
+		$wp_factory = new WP_UnitTest_Factory;
+		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Paymeny', 'post_type' => 'edd_payment', 'post_status' => 'publish' ) );
 	}
 
 	public function test_undo_purchase() {
