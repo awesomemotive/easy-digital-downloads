@@ -10,7 +10,7 @@ echo "Version: 1.0 \n";
 echo "Authors: Chris Christoff and Sunny Ratilal \n\n\n";
 echo "Preparing to load WordPress Bootstrap File...\n";
 
-$path = './travis/vendor/wordpress-tests/bootstrap.php';
+$path = './tests/vendor/wordpress-tests/bootstrap.php';
 
 if ( file_exists( $path ) ) {
 	require_once $path;
