@@ -133,12 +133,12 @@ class Test_Easy_Digital_Downloads_Payments extends WP_UnitTestCase {
 		$this->assertFalse( edd_insert_payment() );
 	}
 
-	public function test_update_payment_status() {
-		edd_update_payment_status( $this->_payment_id );
+	// public function test_update_payment_status() {
+	// 	edd_update_payment_status( $this->_payment_id );
 
-		$out = edd_get_payments();
-		$this->assertEquals( 'publish', $out[0]->post_status );
-	}
+	// 	$out = edd_get_payments();
+	// 	$this->assertEquals( 'publish', $out[0]->post_status );
+	// }
 
 	public function test_check_for_existing_payment() {
 		$this->assertTrue( edd_check_for_existing_payment( $this->_post->ID ) );
