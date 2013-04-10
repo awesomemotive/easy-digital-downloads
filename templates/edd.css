@@ -14,7 +14,7 @@
 @font-face {
   font-family: 'padlock';
   src: url("../fonts/padlock.eot?64116112");
-  src: url("../fonts/padlock.eot?64116112#iefix") format('embedded-opentype'), url("../fonts/padlock.svg?64116112#padlock") format('svg');
+  src: url("../fonts/padlock.eot?64116112#iefix") format('embedded-opentype'), url("../assets/fonts/padlock.svg?64116112#padlock") format('svg');
   font-weight: normal;
   font-style: normal;
 }
