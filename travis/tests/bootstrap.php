@@ -7,7 +7,7 @@ error_reporting( E_ALL & ~E_DEPRECATED & ~E_STRICT );
 
 echo "\n\nWelcome to the Easy Digital Downloads PHPUnit Test Suite \n";
 echo "Version: 1.0 \n";
-echo "Author: Chris Christoff and Sunny Ratilal \n\n\n";
+echo "Authors: Chris Christoff and Sunny Ratilal \n\n\n";
 echo "Preparing to load WordPress Bootstrap File...\n";
 
 $path = './travis/vendor/wordpress-tests/bootstrap.php';
