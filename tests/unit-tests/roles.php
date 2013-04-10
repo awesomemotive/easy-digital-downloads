@@ -89,19 +89,19 @@ class Test_Easy_Digital_Downloads_Roles extends WP_UnitTestCase {
 	// 	$this->assertArrayHasKey( 'edit_shop_payments', (array) $wp_roles->role_objects['shop_accountant']->capabilities );
 	// }
 
-	// public function test_shop_vendor_caps() {
-	// 	global $wp_roles;
+	public function test_shop_vendor_caps() {
+		global $wp_roles;
 
-	// 	if ( class_exists('WP_Roles') )
-	// 		if ( ! isset( $wp_roles ) )
-	// 			$wp_roles = new WP_Roles();
+		if ( class_exists('WP_Roles') )
+			if ( ! isset( $wp_roles ) )
+				$wp_roles = new WP_Roles();
 
-	// 	$this->assertArrayHasKey( 'edit_product', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
-	// 	$this->assertArrayHasKey( 'delete_product', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
-	// 	$this->assertArrayHasKey( 'delete_products', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
-	// 	$this->assertArrayHasKey( 'publish_products', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
-	// 	$this->assertArrayHasKey( 'edit_published_products', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
-	// 	$this->assertArrayHasKey( 'upload_files', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
-	// 	$this->assertArrayHasKey( 'assign_product_terms', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
-	// }
+		$this->assertArrayHasKey( 'edit_product', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
+		$this->assertArrayHasKey( 'delete_product', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
+		$this->assertArrayHasKey( 'delete_products', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
+		$this->assertArrayHasKey( 'publish_products', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
+		$this->assertArrayHasKey( 'edit_published_products', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
+		$this->assertArrayHasKey( 'upload_files', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
+		$this->assertArrayHasKey( 'assign_product_terms', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
+	}
 }
