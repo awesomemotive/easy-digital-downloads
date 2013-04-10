@@ -73,7 +73,7 @@ before_script:
   - unzip testsuite.zip -d travis/vendor
   - echo -e "Move Copy of Sunny's Version of WordPress Tests";
   - cp -r travis/vendor/sunnyratilal-WordPress-Tests-* travis/vendor/wordpress-tests
-  - cp travis/tests/unittests-config.travis.php travis/vendor/wordpress-tests/unittests-config.php
+  - cp travis/includes/unittests-config.travis.php travis/vendor/wordpress-tests/unittests-config.php
   - echo -e "Get WordPress";
   - wget -O wordpress.tar.gz http://wordpress.org/wordpress-$WP_VERSION.tar.gz
   - echo -e "Unzip WordPress";
@@ -83,7 +83,7 @@ before_script:
 
 script: 
   - phpunit --coverage-text
-  - php travis/clover.php travis/clover.xml 90
+  - php travis/includes/clover.php travis/clover.xml 90
 
 notifications:
   email:
