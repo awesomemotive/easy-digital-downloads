@@ -26,8 +26,8 @@
 	</logging>
 	<filter>
 		<blacklist>
-			<directory suffix=".php">./tests/vendor/wordpress/</directory>
-			<directory suffix=".php">./tests/vendor/wordpress-tests/</directory>
+			<directory suffix=".php">./tests/</directory>
+			<!-- Need to exclude the main plugin file because the assertions are already made in tests/unit-tests/easy-digital-downloads.php -->
 			<file>./easy-digital-downloads.php</file>
 		</blacklist>
 	</filter>
