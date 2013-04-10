@@ -55,7 +55,6 @@ class Test_Easy_Digital_Downloads_Roles extends WP_UnitTestCase {
 
 	public function test_administrator_caps() {
 		global $wp_roles;
-		$this->assertArrayHasKey( 'view_shop_sensitive_data', (array) $wp_roles->role_objects['administrator']->capabilities );
 		$this->assertArrayHasKey( 'export_shop_reports', (array) $wp_roles->role_objects['administrator']->capabilities );
 		$this->assertArrayHasKey( 'manage_shop_settings', (array) $wp_roles->role_objects['administrator']->capabilities );
 		$this->assertArrayHasKey( 'manage_shop_discounts', (array) $wp_roles->role_objects['administrator']->capabilities );
@@ -66,7 +65,6 @@ class Test_Easy_Digital_Downloads_Roles extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'read', (array) $wp_roles->role_objects['shop_accountant']->capabilities );
 		$this->assertArrayHasKey( 'edit_posts', (array) $wp_roles->role_objects['shop_accountant']->capabilities );
 		$this->assertArrayHasKey( 'delete_posts', (array) $wp_roles->role_objects['shop_accountant']->capabilities );
-		$this->assertArrayHasKey( 'read_private_products', (array) $wp_roles->role_objects['shop_accountant']->capabilities );
 		$this->assertArrayHasKey( 'view_shop_reports', (array) $wp_roles->role_objects['shop_accountant']->capabilities );
 		$this->assertArrayHasKey( 'export_shop_reports', (array) $wp_roles->role_objects['shop_accountant']->capabilities );
 		$this->assertArrayHasKey( 'edit_shop_payments', (array) $wp_roles->role_objects['shop_accountant']->capabilities );
@@ -74,7 +72,6 @@ class Test_Easy_Digital_Downloads_Roles extends WP_UnitTestCase {
 
 	public function test_shop_vendor_caps() {
 		global $wp_roles;
-		$this->assertArrayHasKey( 'edit_product', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
 		$this->assertArrayHasKey( 'delete_product', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
 		$this->assertArrayHasKey( 'delete_products', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
 		$this->assertArrayHasKey( 'publish_products', (array) $wp_roles->role_objects['shop_vendor']->capabilities );
