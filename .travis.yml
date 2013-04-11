@@ -70,15 +70,7 @@ env:
 #  - ./tests/travis-setup.sh
 
 before_script:
-  - echo -e "Installing PHPUnit Test Helpers..."
-  - pear channel-discover pear.phpunit.de
-  - pecl install phpunit/test_helpers
-  - export JPHP_INI=`php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
-  - export JXDB=`php --ini | grep "xdebug" | sed -e "s/.*:\s*//" -e "s/,.*//"`
-#  - if [ $JXDB -a -f $JXDB ]; then sed -i='' -e "s/^/;/g" $JXDB; fi
-#  - echo "zend_extension=`php -r "echo ini_get('extension_dir');"`/test_helpers.so" >> $JPHP_INI
-  - echo "zend_extension=`php -r "echo ini_get('extension_dir');"`/test_helpers.so" >> `php --ini | grep "Scan for additional .ini files in:" | sed -e "s|.*:\s*||"`
-  - phpenv config-add test/config.ini
+  - ./tests/travis-setup.sh
   - echo -e "Installed PHPUnit Test Helpers"
   - echo -e "Get Copy of Sunny's Version of WordPress Tests";
   - wget -O testsuite.zip https://github.com/sunnyratilal/WordPress-Tests/zipball/master
