@@ -53,4 +53,12 @@ class Test_Logging extends WP_UnitTestCase {
 			$this->assertArrayHasKey( 'term_taxonomy_id', term_exists( $type, 'edd_log_type' ) );
 		}
 	}
+
+	public function test_log_types() {
+		$types = $this->_object->log_types();
+		$this->assertEquals( 'sale', $types[0] );
+		$this->assertEquals( 'file_download', $types[1] );
+		$this->assertEquals( 'gateway_error', $types[2] );
+		$this->assertEquals( 'api_request', $types[3] );
+	}
 }
