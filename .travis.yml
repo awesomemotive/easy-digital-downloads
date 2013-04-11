@@ -69,7 +69,7 @@ env:
 before_install:
   - git clone https://github.com/sebastianbergmann/php-test-helpers.git
   - cd php-test-helpers
-  - phpize && ./configure && make && make install
+  - phpize && sudo ./configure && sudo make && sudo make install
   - cd ../
   - export JPHP_INI=`php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
   - export JXDB=`php --ini | grep "xdebug" | sed -e "s/.*:\s*//" -e "s/,.*//"`
