@@ -85,7 +85,7 @@ before_script:
 script: 
   - phpunit --coverage-text
 
-after_success:
+after_script:
   - php tests/includes/clover.php travis/clover.xml 90
 
 notifications:
