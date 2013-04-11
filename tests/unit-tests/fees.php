@@ -65,4 +65,26 @@ class Tests_EDD_Fees extends WP_UnitTestCase {
 		EDD()->fees->add_fee( 20, 'Tax', 'Tax' );
 		$this->assertEquals( 30, EDD()->fees->total() );
 	}
+
+	/**
+	 * Record fee in payment meta
+	 */
+	public function test_record_fee() {
+		$out = EDD()->fees->record_fees( $payment_meta = array(), $payment_data = array() );
+
+		$expected = array(
+			'fees' => array(
+				'shipping_fee' => array(
+					'amount' => 10,
+					'label' => 'Shipping Fee'
+				),
+				'tax' => array(
+					'amount' => 20,
+					'label' => 'Tax'
+				)
+			)
+		);
+
+		$this->assertEquals( $expected, $out );
+	}
 }
