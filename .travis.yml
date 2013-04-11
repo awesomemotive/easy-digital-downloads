@@ -66,7 +66,7 @@ env:
 #    - php: 5.5
 #    - php: 5.2
 
-install:
+before_install:
   - ./tests/travis-setup.sh
 
 before_script:
@@ -85,8 +85,8 @@ before_script:
   - mysql -e "create database IF NOT EXISTS edd_test;" -uroot
 
 script: 
-  - phpunit --coverage-text --coverage-clover travis/clover.xml
-  - php tests/includes/clover.php travis/clover.xml 90
+  - phpunit --coverage-text --coverage-clover clover.xml
+  - php tests/includes/clover.php clover.xml 90
 
 notifications:
   email:
