@@ -30,12 +30,7 @@ function edd_get_cart_contents() {
  * @return int $quantity Quantity of one item in the cart
  */
 function edd_get_cart_quantity() {
-	$cart = edd_get_cart_contents();
-	if ( $cart )
-		$quantity = count( $cart );
-	else
-		$quantity = 0;
-	return $quantity;
+	return ( $cart = edd_get_cart_contents() ) ? count( $cart ) : 0;
 }
 
 /**
@@ -180,10 +175,9 @@ function edd_get_item_position_in_cart( $download_id ) {
  * @return int $quantity Cart item quantity
  */
 function edd_get_cart_item_quantity( $item ) {
-	$cart = edd_get_cart_contents();
+	$cart        = edd_get_cart_contents();
 	$item_counts = array_count_values( $cart );
-	$quantity = $item_counts[ $item ];
-	return $quantity;
+	return $item_counts[ $item ];
 }
 
 /**
@@ -658,6 +652,9 @@ function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
  */
 function edd_show_added_to_cart_messages( $download_id ) {
 	if ( isset( $_POST['edd_action'] ) && $_POST['edd_action'] == 'add_to_cart' ) {
+		if ( $download_id != absint( $_POST['download_id'] ) )
+			$download_id = absint( $_POST['download_id'] );
+
 		$alert = '<div class="edd_added_to_cart_alert">'
 		. sprintf( __('You have successfully added %s to your shopping cart.', 'edd'), get_the_title( $download_id ) )
 		. ' <a href="' . edd_get_checkout_uri() . '" class="edd_alert_checkout_link">' . __('Checkout.', 'edd') . '</a>'
@@ -744,7 +741,10 @@ function edd_is_checkout() {
  */
 function edd_empty_cart() {
 	// Remove cart contents
-	EDD()->session->set('edd_cart', NULL );
+	EDD()->session->set( 'edd_cart', NULL );
+
+	// Remove all cart fees
+	EDD()->session->set( 'edd_cart_fees', NULL );
 
 	// Remove any active discounts
 	edd_unset_all_cart_discounts();
@@ -760,7 +760,7 @@ function edd_empty_cart() {
  * @return void
  */
 function edd_set_purchase_session( $purchase_data ) {
-	EDD()->session->set('edd_purchase', $purchase_data );
+	EDD()->session->set( 'edd_purchase', $purchase_data );
 }
 
 /**
@@ -774,5 +774,5 @@ function edd_set_purchase_session( $purchase_data ) {
  * @return mixed array | false
  */
 function edd_get_purchase_session() {
-	return EDD()->session->get('edd_purchase');
+	return EDD()->session->get( 'edd_purchase' );
 }

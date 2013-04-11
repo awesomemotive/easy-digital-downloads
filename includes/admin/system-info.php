@@ -49,6 +49,7 @@ SITE_URL:                 <?php echo site_url() . "\n"; ?>
 HOME_URL:                 <?php echo home_url() . "\n"; ?>
 
 EDD Version:              <?php echo EDD_VERSION . "\n"; ?>
+Upgraded From:            <?php echo get_option( 'edd_version_upgraded_from', 'None' ) . "\n"; ?>
 WordPress Version:        <?php echo get_bloginfo( 'version' ) . "\n"; ?>
 
 Test Mode Enabled:        <?php echo edd_is_test_mode() ? "Yes\n" : "No\n"; ?>
@@ -68,6 +69,7 @@ PHP Version:              <?php echo PHP_VERSION . "\n"; ?>
 MySQL Version:            <?php echo mysql_get_server_info() . "\n"; ?>
 Web Server Info:          <?php echo $_SERVER['SERVER_SOFTWARE'] . "\n"; ?>
 
+PHP Safe Mode:            <?php echo ini_get( 'safe_mode' ) ? "Yes" : "No\n"; ?>
 PHP Memory Limit:         <?php echo ini_get( 'memory_limit' ) . "\n"; ?>
 PHP Post Max Size:        <?php echo ini_get( 'post_max_size' ) . "\n"; ?>
 PHP Time Limit:           <?php echo ini_get( 'max_execution_time' ) . "\n"; ?>
