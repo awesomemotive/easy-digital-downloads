@@ -253,10 +253,17 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$this->assertEquals( 'Advanced', $out['sales'][0]['products'][0]['price_name'] );
 	}
 
+	public function override_api_xml_format( $data, $object ) {
+		require_once EDD_PLUGIN_DIR . 'includes/libraries/array2xml.php';
+		$xml = Array2XML::createXML( 'edd', $data );
+		return $xml->saveXML();
+	}
+
 	public function test_missing_auth() {
 		global $wp_query;
-		set_exit_overload(function($param = NULL) { echo ($param ?: "No value given"), "\n"; return FALSE; });
-		$wp_query->query_vars['format'] = 'xml';
+		set_exit_overload(function( $param = null) { return false; });
+		$wp_query->query_vars['format'] = 'override_xml';
+		add_action( 'edd_api_output_override_xml', array( $this, 'override_api_xml_format' ), 10, 2 );
 		EDD()->api->invalid_auth();
 	}
 }
