@@ -67,7 +67,7 @@ env:
 #    - php: 5.2
 
 before_script:
-  - ./tests/travis-setup.sh
+#  - ./tests/travis-setup.sh
   - echo -e "Get Copy of Sunny's Version of WordPress Tests";
   - wget -O testsuite.zip https://github.com/sunnyratilal/WordPress-Tests/zipball/master
   - echo -e "Unzip Copy of Sunny's Version of WordPress Tests";
