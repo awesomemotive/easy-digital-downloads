@@ -1,0 +1,23 @@
+<?php
+/**
+ * Test URLs
+ */
+
+class Test_EDD_URL extends WP_UnitTestCase {
+	public function setUp() {
+		parent::setUp();
+	}
+
+	public function test_ajax_url() {
+		$_SERVER['SERVER_PORT'] = 80;
+		$this->assertEquals( edd_get_ajax_url(), get_site_url( null, '/wp-admin/admin-ajax.php', 'http' ) );
+	}
+
+	public function test_current_page_url() {
+		$_SERVER['SERVER_PORT'] = 80;
+		$_SERVER["SERVER_NAME"] = 'example.org';
+		$this->assertEquals( 'http://example.org', edd_get_current_page_url() );
+		$this->go_to( get_permalink( 1 ) );
+		$this->assertEquals( get_permalink( 1 ), edd_get_current_page_url() );
+	}
+}
