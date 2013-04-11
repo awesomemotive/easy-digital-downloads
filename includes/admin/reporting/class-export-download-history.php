@@ -28,6 +28,30 @@ class EDD_Download_History_Export extends EDD_Export {
 	 */
 	public $export_type = 'download_history';
 
+
+	/**
+	 * Set the export headers
+	 *
+	 * @access public
+	 * @since 1.4.4
+	 * @return void
+	 */
+	public function headers() {
+		ignore_user_abort( true );
+
+		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) )
+			set_time_limit( 0 );
+
+		$month = isset( $_POST['month'] ) ? absint( $_POST['month'] ) : date( 'n' );
+		$year  = isset( $_POST['year']  ) ? absint( $_POST['year']  ) : date( 'Y' );
+
+		nocache_headers();
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename=edd-export-' . $this->export_type . '-' . $month . '-' . $year . '.csv' );
+		header( "Expires: 0" );
+	}
+
+
 	/**
 	 * Set the CSV columns
 	 *
@@ -59,12 +83,14 @@ class EDD_Download_History_Export extends EDD_Export {
 
 		$data = array();
 
-		$logs = $edd_logs->get_connected_logs( array(
+		$args = array(
 			'nopaging' => true,
 			'log_type' => 'file_download',
-			'month'    => date( 'n' ),
-			'year'     => date( 'Y' )
-		) );
+			'monthnum' => isset( $_POST['month'] ) ? absint( $_POST['month'] ) : date( 'n' ),
+			'year'     => isset( $_POST['year'] ) ? absint( $_POST['year'] ) : date( 'Y' )
+		);
+
+		$logs = $edd_logs->get_connected_logs( $args );
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {

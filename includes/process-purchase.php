@@ -298,8 +298,8 @@ function edd_purchase_form_validate_logged_in_user() {
 			$valid_user_data = array(
 				'user_id' 		=> $user_ID,
 				'user_email' 	=> sanitize_email( $_POST['edd_email'] ),
-				'user_first' 	=> sanitize_text_field( $_POST['edd_first'] ),
-				'user_last' 	=> sanitize_text_field( $_POST['edd_last'] ),
+				'user_first' 	=> ! empty( $_POST['edd_first'] ) ? sanitize_text_field( $_POST['edd_first'] ) : '',
+				'user_last' 	=> ! empty( $_POST['edd_last']  ) ? sanitize_text_field( $_POST['edd_last']  ) : '',
 			);
 		} else {
 			// Set invalid user error

@@ -28,9 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false ) {
 	if ( empty( $user ) ) {
-		global $user_ID;
-
-		$user = $user_ID;
+		$user = get_current_user_id();
 	}
 
 	$mode = edd_is_test_mode() ? 'test' : 'live';
@@ -127,9 +125,8 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
  * @return      bool - true if has purchased, false other wise.
  */
 function edd_has_purchases( $user_id = null ) {
-	if ( is_null( $user_id ) ) {
-		global $user_ID;
-		$user_id = $user_ID;
+	if ( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
 	}
 
 	if ( edd_get_users_purchases( $user_id, 1 ) ) {

@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @param int $post_id Post ID
  * @return array
  */
-function edd_responsive_download_post_class( $classes, $class, $post_id ) {
+function edd_responsive_download_post_class( $classes = array(), $class = '', $post_id = 0 ) {
 	if ( ! is_singular( 'download' ) )
 		return $classes;
 

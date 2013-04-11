@@ -82,7 +82,7 @@ add_action( 'edd_add_to_cart', 'edd_process_add_to_cart' );
  */
 function edd_process_remove_from_cart( $data ) {
 	$cart_key = $_GET['cart_item'];
-	$cart = edd_remove_from_cart( $cart_key );
+	edd_remove_from_cart( $cart_key );
 }
 add_action( 'edd_remove', 'edd_process_remove_from_cart' );
 
@@ -93,8 +93,8 @@ add_action( 'edd_remove', 'edd_process_remove_from_cart' );
  * @return void
  */
 function edd_process_collection_purchase( $data ) {
-	$taxonomy = urldecode( $data['taxonomy'] );
-	$terms = urldecode( $data['terms'] );
+	$taxonomy   = urldecode( $data['taxonomy'] );
+	$terms      = urldecode( $data['terms'] );
 	$cart_items = edd_add_collection_to_cart( $taxonomy, $terms );
 	wp_redirect( add_query_arg( 'added', '1', remove_query_arg( array( 'edd_action', 'taxonomy', 'terms' ) ) ) );
 	exit;
