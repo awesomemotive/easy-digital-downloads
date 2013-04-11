@@ -59,6 +59,20 @@ class Tests_EDD_Fees extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Get Fees
+	 */
+	public function test_get_fees() {
+		$expected = array(
+			'shipping_fee' => array(
+				'amount' => 10,
+				'label' => 'Shipping Fee'
+			)
+		);
+
+		$this->assertEquals( $expected, EDD()->fees->get_fees() );
+	}
+
+	/**
 	 * Total Fees
 	 */
 	public function test_total_fees() {
