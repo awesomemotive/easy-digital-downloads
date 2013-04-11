@@ -22,7 +22,7 @@
 		</testsuite>
 	</testsuites>
 	<logging>
-		<log type="coverage-clover" target="./travis/clover.xml"/>
+		<log type="coverage-clover" target="./clover.xml"/>
 	</logging>
 	<filter>
 		<blacklist>
