@@ -252,4 +252,11 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$this->assertEquals( 100, $out['sales'][0]['products'][0]['price'] );
 		$this->assertEquals( 'Advanced', $out['sales'][0]['products'][0]['price_name'] );
 	}
+
+	// public function test_missing_auth() {
+	// 	global $wp_query;
+	// 	set_exit_overload(function() { return FALSE; });
+	// 	$wp_query->query_vars['format'] = 'xml';
+	// 	EDD()->api->invalid_auth();
+	// }
 }
