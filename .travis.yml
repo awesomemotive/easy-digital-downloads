@@ -69,7 +69,8 @@ env:
 before_script:
   - pear channel-discover pear.phpunit.de
   - pecl install phpunit/test_helpers
-  - echo "zend_extension=test_helpers.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "zend_extension=test_helpers.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+  - phpenv rehash
   - echo -e "Get Copy of Sunny's Version of WordPress Tests";
   - wget -O testsuite.zip https://github.com/sunnyratilal/WordPress-Tests/zipball/master
   - echo -e "Unzip Copy of Sunny's Version of WordPress Tests";
