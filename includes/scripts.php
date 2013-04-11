@@ -38,17 +38,17 @@ function edd_load_scripts() {
 		}
 		wp_enqueue_script( 'edd-checkout-global', EDD_PLUGIN_URL . 'assets/js/edd-checkout-global.js', array( 'jquery' ), EDD_VERSION );
 		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', array(
-			'ajaxurl'           => edd_get_ajax_url(),
-			'checkout_nonce'    => wp_create_nonce( 'edd_checkout_nonce' ),
-			'currency_sign'		=> edd_currency_filter(''),
-			'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
-			'no_gateway'		=> __( 'Please select a payment method', 'edd' ),
-			'no_discount'       => __('Please enter a discount code', 'edd'), // Blank discount code message
-			'discount_applied'  => __('Discount Applied', 'edd'), // Discount verified message
-			'no_email'          => __('Please enter an email address before applying a discount code', 'edd'),
-			'no_username'       => __('Please enter a username before applying a discount code', 'edd'),
-			'purchase_loading'  => __('Please Wait...', 'edd'),
-			'complete_purchasse' => __('Purchase', 'edd')
+			'ajaxurl'            => edd_get_ajax_url(),
+			'checkout_nonce'     => wp_create_nonce( 'edd_checkout_nonce' ),
+			'currency_sign'      => edd_currency_filter(''),
+			'currency_pos'       => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
+			'no_gateway'         => __( 'Please select a payment method', 'edd' ),
+			'no_discount'        => __( 'Please enter a discount code', 'edd' ), // Blank discount code message
+			'discount_applied'   => __( 'Discount Applied', 'edd' ), // Discount verified message
+			'no_email'           => __( 'Please enter an email address before applying a discount code', 'edd' ),
+			'no_username'        => __( 'Please enter a username before applying a discount code', 'edd' ),
+			'purchase_loading'   => __( 'Please Wait...', 'edd' ),
+			'complete_purchasse' => __( 'Purchase', 'edd' )
 		));
 	}
 
@@ -65,7 +65,7 @@ function edd_load_scripts() {
 				'ajax_loader' 				=> EDD_PLUGIN_URL . 'assets/images/loading.gif', // Ajax loading image
 				'is_checkout'               => edd_is_checkout() ? '1' : '0',
 				'default_gateway'           => edd_get_default_gateway(),
-				'redirect_to_checkout'      => edd_straight_to_checkout() ? '1' : '0',
+				'redirect_to_checkout'      => ( edd_straight_to_checkout() || edd_is_checkout() ) ? '1' : '0',
 				'checkout_page' 			=> edd_get_checkout_uri(),
 				'permalinks' 				=> get_option( 'permalink_structure' ) ? '1' : '0',
 			)
@@ -229,6 +229,6 @@ add_action( 'admin_head','edd_admin_downloads_icon' );
 */
 function edd_version_in_header(){
 	// Newline on both sides to avoid being in a blob
-	echo '<meta name="generator" content="Easy Digital Downloads v'.EDD_VERSION.'" />'."\n";
+	echo "<meta name='generator' content='Easy Digital Downloads v" . EDD_VERSION . "' />\n";
 }
 add_action( 'wp_head', 'edd_version_in_header' );

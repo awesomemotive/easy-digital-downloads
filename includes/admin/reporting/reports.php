@@ -107,6 +107,7 @@ function edd_report_views() {
 		<?php submit_button( __( 'Show', 'edd' ), 'secondary', 'submit', false ); ?>
 	</form>
 	<?php
+	do_action( 'edd_report_view_actions_after' );
 }
 
 /**
@@ -114,7 +115,7 @@ function edd_report_views() {
  *
  * @since 1.3
  * @uses EDD_Download_Reports_Table::prepare_items()
- * @uses EDD_Download_Reports_Table::display() 
+ * @uses EDD_Download_Reports_Table::display()
  * @return void
  */
 function edd_reports_downloads_table() {
@@ -267,8 +268,15 @@ function edd_reports_tab_export() {
 				<div class="postbox">
 					<h3><span><?php _e('Export Download History in CSV', 'edd'); ?></span></h3>
 					<div class="inside">
-						<p><?php _e( 'Download a CSV of all file downloads for the current month.', 'edd' ); ?></p>
-						<p><a class="button" href="<?php echo wp_nonce_url( add_query_arg( array( 'edd-action' => 'downloads_history_export' ) ), 'edd_export_all_downloads_history' ); ?>"><?php _e( 'Generate CSV', 'edd' ) ; ?></a></p>
+						<p><?php _e( 'Download a CSV of all file downloads for a specific month and year.', 'edd' ); ?></p>
+						<p>
+							<form method="post">
+								<?php echo EDD()->html->year_dropdown(); ?>
+								<?php echo EDD()->html->month_dropdown(); ?>
+								<input type="hidden" name="edd-action" value="downloads_history_export"/>
+								<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
+							</form>
+						</p>
 					</div><!-- .inside -->
 				</div><!-- .postbox -->
 
