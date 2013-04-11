@@ -66,7 +66,7 @@ env:
 #    - php: 5.5
 #    - php: 5.2
 
-before_install:
+install:
   - ./tests/travis-setup.sh
 
 before_script:
@@ -86,8 +86,6 @@ before_script:
 
 script: 
   - phpunit --coverage-text --coverage-clover travis/clover.xml
-
-after_script:
   - php tests/includes/clover.php travis/clover.xml 90
 
 notifications:
