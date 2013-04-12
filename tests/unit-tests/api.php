@@ -275,6 +275,6 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 
 		$expected = '<edd><error>Your request could not be authenticated!</error></edd>';
 
-		$this->assertXmlStringEqualsXmlString( $expected, $out, );
+		$this->assertXmlStringEqualsXmlString( $expected, $out );
 	}
 }
