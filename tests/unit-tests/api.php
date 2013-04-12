@@ -274,4 +274,30 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		EDD()->api->update_key( $this->_user_id );
 		$this->assertEquals( $this->_user_id, EDD()->api->get_user( get_user_meta( $this->_user_id, 'edd_user_public_key', true ) ) );
 	}
+
+	public function test_get_customers() {
+		$out = EDD()->api->get_customers();
+
+		$this->assertArrayHasKey( 'customers', $out );
+		$this->assertArrayHasKey( 'info', $out['customers'][0] );
+		$this->assertArrayHasKey( 'id', $out['customers'][0]['info'] );
+		$this->assertArrayHasKey( 'username', $out['customers'][0]['info'] );
+		$this->assertArrayHasKey( 'display_name', $out['customers'][0]['info'] );
+		$this->assertArrayHasKey( 'first_name', $out['customers'][0]['info'] );
+		$this->assertArrayHasKey( 'last_name', $out['customers'][0]['info'] );
+		$this->assertArrayHasKey( 'email', $out['customers'][0]['info'] );
+		$this->assertArrayHasKey( 'stats', $out['customers'][0] );
+		$this->assertArrayHasKey( 'total_purchases', $out['customers'][0]['stats'] );
+		$this->assertArrayHasKey( 'total_spent', $out['customers'][0]['stats'] );
+		$this->assertArrayHasKey( 'total_downloads', $out['customers'][0]['stats'] );
+
+		$this->assertEquals( 1, $out['customers'][0]['info']['id'] );
+		$this->assertEquals( 'admin', $out['customers'][0]['info']['username'] );
+		$this->assertEquals( '', $out['customers'][0]['info']['first_name'] );
+		$this->assertEquals( '', $out['customers'][0]['info']['last_name'] );
+		$this->assertEquals( 'admin@example.org', $out['customers'][0]['info']['email'] );
+		$this->assertEquals( 0, $out['customers'][0]['stats']['total_purchases'] );
+		$this->assertEquals( 0, $out['customers'][0]['stats']['total_spent'] );
+		$this->assertEquals( 0, $out['customers'][0]['stats']['total_downloads'] );
+	}
 }
