@@ -302,8 +302,4 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$this->assertEquals( 0, $out['customers'][0]['stats']['total_spent'] );
 		$this->assertEquals( 0, $out['customers'][0]['stats']['total_downloads'] );
 	}
-
-	public function test_output() {
-		global $wp_query;
-	}
 }
