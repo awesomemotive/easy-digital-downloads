@@ -270,6 +270,8 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 	}
 
 	public function test_get_user() {
-
+		$_POST['edd_set_api_key'] = 1;
+		EDD()->api->update_key( $this->_user_id );
+		$this->assertEquals( $this->_user_id, EDD()->api->get_user( get_user_meta( $this->_user_id, 'edd_user_public_key', true ) ) );
 	}
 }
