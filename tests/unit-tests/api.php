@@ -138,6 +138,10 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$this->_api_output_sales = EDD()->api->get_recent_sales();
 	}
 
+	public function tearDown() {
+		remove_action( 'edd_api_output_override_xml', array( $this, 'override_api_xml_format' ) );
+	}
+
 	public function testEndpoints() {
 		$this->assertEquals('edd-api', $this->_rewrite->endpoints[0][1]);
 	}
@@ -261,9 +265,14 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 
 	public function test_missing_auth() {
 		global $wp_query;
+
 		set_exit_overload(function( $param = null) { return false; });
+
 		$wp_query->query_vars['format'] = 'override_xml';
+
 		add_action( 'edd_api_output_override_xml', array( $this, 'override_api_xml_format' ), 10, 2 );
-		EDD()->api->invalid_auth();
+		$out = EDD()->api->invalid_auth();
+
+
 	}
 }
