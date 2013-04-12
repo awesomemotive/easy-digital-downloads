@@ -66,8 +66,12 @@ env:
 #    - php: 5.5
 #    - php: 5.2
 
+#before_install:
+#  - ./tests/travis-setup.sh
+
 before_script:
   - ./tests/travis-setup.sh
+  - echo -e "Installed PHPUnit Test Helpers"
   - echo -e "Get Copy of Sunny's Version of WordPress Tests";
   - wget -O testsuite.zip https://github.com/sunnyratilal/WordPress-Tests/zipball/master
   - echo -e "Unzip Copy of Sunny's Version of WordPress Tests";
@@ -81,10 +85,11 @@ before_script:
   - tar -xzf wordpress.tar.gz -C tests/vendor
   - echo -e "Create Database";
   - mysql -e "create database IF NOT EXISTS edd_test;" -uroot
+  - cat ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
 
 script: 
   - phpunit --coverage-text
-  - php tests/includes/clover.php travis/clover.xml 90
+  - php tests/includes/clover.php clover.xml 90
 
 notifications:
   email:

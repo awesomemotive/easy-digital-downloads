@@ -138,6 +138,10 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$this->_api_output_sales = EDD()->api->get_recent_sales();
 	}
 
+	public function tearDown() {
+		remove_action( 'edd_api_output_override_xml', array( $this, 'override_api_xml_format' ) );
+	}
+
 	public function testEndpoints() {
 		$this->assertEquals('edd-api', $this->_rewrite->endpoints[0][1]);
 	}
@@ -253,11 +257,19 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$this->assertEquals( 'Advanced', $out['sales'][0]['products'][0]['price_name'] );
 	}
 
-	public function test_missing_auth() {
-		global $wp_query;
-		set_exit_overload(function() { return FALSE; });
-		$wp_query->query_vars['format'] = 'xml';
-		EDD()->api->invalid_auth();
-		unset_exit_overload();
-	}
+	// public function override_api_format( $data, $object ) {
+	// 	return json_encode( $data );
+	// }
+
+	// public function test_missing_auth() {
+	// 	global $wp_query;
+
+	// 	set_exit_overload(function() { return FALSE; });
+
+	// 	$wp_query->query_vars['format'] = 'json';
+	// 	add_action( 'edd_api_output_override', array( $this, 'override_api_format' ), 10, 2 );
+		
+	// 	$json = EDD()->api->invalid_auth();
+		
+	// }
 }
