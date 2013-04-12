@@ -181,6 +181,6 @@ class EDD_Export {
 		// Output CSV rows
 		$this->csv_rows_out();
 
-		exit;
+		edd_die();
 	}
 }
