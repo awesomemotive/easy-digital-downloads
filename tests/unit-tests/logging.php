@@ -69,4 +69,9 @@ class Test_Logging extends WP_UnitTestCase {
 	public function test_fake_log() {
 		$this->assertFalse( $this->_object->valid_type( 'foo' ) );
 	}
+
+	public function test_add() {
+		$this->assertNotNull( $this->_object->add() );
+		$this->assertInternalType( 'integer', $this->_object->add() );
+	}
 }
