@@ -43,7 +43,7 @@ function edd_process_cart_endpoints() {
 		$download_id = absint( $wp_query->query_vars['edd-add'] );
 		$cart        = edd_add_to_cart( $download_id, array() );
 
-		wp_redirect( edd_get_checkout_uri() ); exit;
+		wp_redirect( edd_get_checkout_uri() ); edd_die();
 	}
 
 	// Removes an item from the cart with a /edd-remove/# URL
@@ -51,7 +51,7 @@ function edd_process_cart_endpoints() {
 		$cart_key = absint( $wp_query->query_vars['edd-remove'] );
 		$cart     = edd_remove_from_cart( $cart_key );
 
-		wp_redirect( edd_get_checkout_uri() ); exit;
+		wp_redirect( edd_get_checkout_uri() ); edd_die();
 	}
 }
 add_action( 'template_redirect', 'edd_process_cart_endpoints', 100 );
@@ -69,7 +69,7 @@ function edd_process_add_to_cart( $data ) {
 
 	if ( edd_straight_to_checkout() && ! edd_is_checkout() ) {
 		wp_redirect( edd_get_checkout_uri(), 303 );
-		exit;
+		edd_die();
 	}
 }
 add_action( 'edd_add_to_cart', 'edd_process_add_to_cart' );
@@ -97,6 +97,6 @@ function edd_process_collection_purchase( $data ) {
 	$terms      = urldecode( $data['terms'] );
 	$cart_items = edd_add_collection_to_cart( $taxonomy, $terms );
 	wp_redirect( add_query_arg( 'added', '1', remove_query_arg( array( 'edd_action', 'taxonomy', 'terms' ) ) ) );
-	exit;
+	edd_die();
 }
 add_action( 'edd_purchase_collection', 'edd_process_collection_purchase' );
