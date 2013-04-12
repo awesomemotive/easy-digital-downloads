@@ -79,4 +79,72 @@ class Test_Logging extends WP_UnitTestCase {
 		$this->assertNotNull( $this->_object->insert_log( array( 'log_type' => 'sale' ) ) );
 		$this->assertInternalType( 'integer', $this->_object->insert_log( array( 'log_type' => 'sale' ) ) );
 	}
+
+	public function test_get_logs() {
+		$log_id = $this->_object->insert_log( array( 'log_type' => 'sale', 'post_parent' => 1, 'post_title' => 'Test Log', 'post_content' => 'This is a test log inserted from PHPUnit' ) );
+		$out = $this->_object->get_logs( 1, 'sale' );
+
+		$this->assertObjectHasAttribute( 'ID', $out[0] );
+		$this->assertObjectHasAttribute( 'post_author', $out[0] );
+		$this->assertObjectHasAttribute( 'post_date', $out[0] );
+		$this->assertObjectHasAttribute( 'post_date_gmt', $out[0] );
+		$this->assertObjectHasAttribute( 'post_content', $out[0] );
+		$this->assertObjectHasAttribute( 'post_title', $out[0] );
+		$this->assertObjectHasAttribute( 'post_excerpt', $out[0] );
+		$this->assertObjectHasAttribute( 'post_status', $out[0] );
+		$this->assertObjectHasAttribute( 'comment_status', $out[0] );
+		$this->assertObjectHasAttribute( 'ping_status', $out[0] );
+		$this->assertObjectHasAttribute( 'post_password', $out[0] );
+		$this->assertObjectHasAttribute( 'post_name', $out[0] );
+		$this->assertObjectHasAttribute( 'to_ping', $out[0] );
+		$this->assertObjectHasAttribute( 'pinged', $out[0] );
+		$this->assertObjectHasAttribute( 'post_modified', $out[0] );
+		$this->assertObjectHasAttribute( 'post_modified_gmt', $out[0] );
+		$this->assertObjectHasAttribute( 'post_content_filtered', $out[0] );
+		$this->assertObjectHasAttribute( 'post_parent', $out[0] );
+		$this->assertObjectHasAttribute( 'guid', $out[0] );
+		$this->assertObjectHasAttribute( 'menu_order', $out[0] );
+		$this->assertObjectHasAttribute( 'post_type', $out[0] );
+		$this->assertObjectHasAttribute( 'post_mime_type', $out[0] );
+		$this->assertObjectHasAttribute( 'comment_count', $out[0] );
+		$this->assertObjectHasAttribute( 'filter', $out[0] );
+
+		$this->assertEquals( 'This is a test log inserted from PHPUnit', $out[0]->post_content );
+		$this->assertEquals( 'Test Log', $out[0]->post_title );
+		$this->assertEquals( 'edd_log', $out[0]->post_type );
+	}
+
+	public function test_get_connected_logs() {
+		$log_id = $this->_object->insert_log( array( 'log_type' => 'sale', 'post_parent' => 1, 'post_title' => 'Test Log', 'post_content' => 'This is a test log inserted from PHPUnit' ) );
+		$out = $this->_object->get_connected_logs( array( 'post_parent' => 1, 'log_type' => 'sale' ) );
+
+		$this->assertObjectHasAttribute( 'ID', $out[0] );
+		$this->assertObjectHasAttribute( 'post_author', $out[0] );
+		$this->assertObjectHasAttribute( 'post_date', $out[0] );
+		$this->assertObjectHasAttribute( 'post_date_gmt', $out[0] );
+		$this->assertObjectHasAttribute( 'post_content', $out[0] );
+		$this->assertObjectHasAttribute( 'post_title', $out[0] );
+		$this->assertObjectHasAttribute( 'post_excerpt', $out[0] );
+		$this->assertObjectHasAttribute( 'post_status', $out[0] );
+		$this->assertObjectHasAttribute( 'comment_status', $out[0] );
+		$this->assertObjectHasAttribute( 'ping_status', $out[0] );
+		$this->assertObjectHasAttribute( 'post_password', $out[0] );
+		$this->assertObjectHasAttribute( 'post_name', $out[0] );
+		$this->assertObjectHasAttribute( 'to_ping', $out[0] );
+		$this->assertObjectHasAttribute( 'pinged', $out[0] );
+		$this->assertObjectHasAttribute( 'post_modified', $out[0] );
+		$this->assertObjectHasAttribute( 'post_modified_gmt', $out[0] );
+		$this->assertObjectHasAttribute( 'post_content_filtered', $out[0] );
+		$this->assertObjectHasAttribute( 'post_parent', $out[0] );
+		$this->assertObjectHasAttribute( 'guid', $out[0] );
+		$this->assertObjectHasAttribute( 'menu_order', $out[0] );
+		$this->assertObjectHasAttribute( 'post_type', $out[0] );
+		$this->assertObjectHasAttribute( 'post_mime_type', $out[0] );
+		$this->assertObjectHasAttribute( 'comment_count', $out[0] );
+		$this->assertObjectHasAttribute( 'filter', $out[0] );
+
+		$this->assertEquals( 'This is a test log inserted from PHPUnit', $out[0]->post_content );
+		$this->assertEquals( 'Test Log', $out[0]->post_title );
+		$this->assertEquals( 'edd_log', $out[0]->post_type );
+	}
 }
