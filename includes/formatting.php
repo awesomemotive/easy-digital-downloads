@@ -79,7 +79,7 @@ function edd_format_amount( $amount ) {
 function edd_currency_filter( $price ) {
 	global $edd_options;
 
-	$currency = isset( $edd_options['currency'] ) ? $edd_options['currency'] : 'USD';
+	$currency = edd_get_currency();
 	$position = isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before';
 
 	if ( $position == 'before' ):
@@ -132,7 +132,7 @@ function edd_currency_filter( $price ) {
 function edd_currency_decimal_filter( $decimals = 2 ) {
 	global $edd_options;
 
-	$currency = isset( $edd_options['currency'] ) ? $edd_options['currency'] : 'USD';
+	$currency = edd_get_currency();
 
 	switch ( $currency ) {
 		case 'RIAL' :

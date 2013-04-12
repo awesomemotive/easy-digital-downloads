@@ -58,7 +58,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
         'date'          => $purchase_data['date'],
         'user_email'    => $purchase_data['user_email'],
         'purchase_key'  => $purchase_data['purchase_key'],
-        'currency'      => $edd_options['currency'],
+        'currency'      => edd_get_currency(),
         'downloads'     => $purchase_data['downloads'],
         'user_info'     => $purchase_data['user_info'],
         'cart_details'  => $purchase_data['cart_details'],
@@ -97,7 +97,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
             'no_shipping'   => '1',
             'shipping'      => '0',
             'no_note'       => '1',
-            'currency_code' => $edd_options['currency'],
+            'currency_code' => edd_get_currency(),
             'item_number'   => $purchase_data['purchase_key'],
             'charset'       => get_bloginfo( 'charset' ),
             'custom'        => $payment,
@@ -274,7 +274,7 @@ function edd_process_paypal_web_accept( $data ) {
 		return; // this isn't a PayPal standard IPN
 
 	// Verify details
-	if ( $currency_code != strtolower( $edd_options['currency'] ) ) {
+	if ( $currency_code != strtolower( edd_get_currency() ) ) {
 		// The currency code is invalid
 
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid currency in IPN response. IPN data: ', 'edd' ), json_encode( $data ) ), $payment_id );
