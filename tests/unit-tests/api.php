@@ -265,5 +265,6 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$wp_query->query_vars['format'] = 'override_xml';
 		add_action( 'edd_api_output_override_xml', array( $this, 'override_api_xml_format' ), 10, 2 );
 		EDD()->api->invalid_auth();
+		remove_action( 'edd_api_output_override_xml' );
 	}
 }
