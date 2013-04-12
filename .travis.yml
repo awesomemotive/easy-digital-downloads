@@ -88,7 +88,7 @@ before_script:
   - cat ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
 
 script: 
-  - phpunit --coverage-text --coverage-clover clover.xml
+  - phpunit --coverage-text
   - php tests/includes/clover.php clover.xml 90
 
 notifications:
