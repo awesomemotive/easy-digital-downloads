@@ -14,7 +14,10 @@ class EDD_Die_Handler {
 	public $die = false;
 
 	public function __construct() {
-		add_filter( 'wp_die_handler', array( $this, 'die_handler' ) );
+		remove_filter( 'wp_die_handler', '_edd_die_handler', 10 );
+		remove_filter( 'wp_die_ajax_handler', '_edd_die_handler', 10 );
+		add_filter( 'wp_die_handler', array( $this, 'die_handler' ), -1 );
+		add_filter( 'wp_die_ajax_handler', array( $this, 'die_handler' ), -1 );
 	}
 
 	public function die_handler() {
