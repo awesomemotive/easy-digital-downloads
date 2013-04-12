@@ -65,17 +65,7 @@ class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 	}
 
 	public function dieHandler( $message ) {
-		$this->_last_response .= ob_get_clean();
-		ob_end_clean();
-		if ( '' === $this->_last_response ) {
-			if ( is_scalar( $message) ) {
-					throw new Exception( (string) $message );
-			} else {
-					throw new Exception( '0' );
-			}
-		} else {
-				throw new Exception( $message );
-		}
+		
 	}
 
 	protected function _setRole( $role ) {

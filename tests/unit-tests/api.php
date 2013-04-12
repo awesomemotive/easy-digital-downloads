@@ -14,6 +14,8 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 
 	protected $_api_output_sales = null;
 
+	protected $_user_id = null;
+
 	public function setUp() {
 		parent::setUp();
 
@@ -29,6 +31,9 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		/** Create some downloads/sales for the API Tests */
 		$wp_factory = new WP_UnitTest_Factory;
 		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
+
+		$this->_user_id = $wp_factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $this->_user_id );
 
 		$_variable_pricing = array(
 			array(
@@ -257,19 +262,14 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$this->assertEquals( 'Advanced', $out['sales'][0]['products'][0]['price_name'] );
 	}
 
-	// public function override_api_format( $data, $object ) {
-	// 	return json_encode( $data );
-	// }
+	public function test_update_key() {
+		$_POST['edd_set_api_key'] = 1;
+		EDD()->api->update_key( $this->_user_id );
+		$this->assertNotEmpty( get_user_meta( $this->_user_id, 'edd_user_public_key', true ) );
+		$this->assertNotEmpty( get_user_meta( $this->_user_id, 'edd_user_secret_key', true ) );
+	}
 
-	// public function test_missing_auth() {
-	// 	global $wp_query;
+	public function test_get_user() {
 
-	// 	set_exit_overload(function() { return FALSE; });
-
-	// 	$wp_query->query_vars['format'] = 'json';
-	// 	add_action( 'edd_api_output_override', array( $this, 'override_api_format' ), 10, 2 );
-		
-	// 	$json = EDD()->api->invalid_auth();
-		
-	// }
+	}
 }
