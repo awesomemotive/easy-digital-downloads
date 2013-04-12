@@ -147,4 +147,15 @@ class Test_Logging extends WP_UnitTestCase {
 		$this->assertEquals( 'Test Log', $out[0]->post_title );
 		$this->assertEquals( 'edd_log', $out[0]->post_type );
 	}
+
+	public function test_get_log_count() {
+		$this->_object->insert_log( array( 'log_type' => 'sale', 'post_parent' => 1, 'post_title' => 'Test Log', 'post_content' => 'This is a test log inserted from PHPUnit' ) );
+		$this->_object->insert_log( array( 'log_type' => 'sale', 'post_parent' => 1, 'post_title' => 'Test Log', 'post_content' => 'This is a test log inserted from PHPUnit' ) );
+		$this->_object->insert_log( array( 'log_type' => 'sale', 'post_parent' => 1, 'post_title' => 'Test Log', 'post_content' => 'This is a test log inserted from PHPUnit' ) );
+		$this->_object->insert_log( array( 'log_type' => 'sale', 'post_parent' => 1, 'post_title' => 'Test Log', 'post_content' => 'This is a test log inserted from PHPUnit' ) );
+		$this->_object->insert_log( array( 'log_type' => 'sale', 'post_parent' => 1, 'post_title' => 'Test Log', 'post_content' => 'This is a test log inserted from PHPUnit' ) );
+
+		$this->assertInternalType( 'integer', $this->_object->get_log_count( 1, 'sale' ) );
+		$this->assertEquals( 5, $this->_object->get_log_count( 1, 'sale' ) );
+	}
 }
