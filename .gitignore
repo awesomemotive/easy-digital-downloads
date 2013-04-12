@@ -172,4 +172,11 @@ pip-log.txt
 # Ignore API Documentation
 api-docs/*
 
+<<<<<<< HEAD
 tests/*
+=======
+# Ignore Travis CI
+tests/vendor/wordpress/*
+tests/vendor/wordpress-tests/*
+tests/vendor/wordpress-tests-460b9c4ad9db7eea4710f151851060ae1921ea7c/*
+>>>>>>> unit-tests
