@@ -258,23 +258,20 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 	}
 
 	public function override_api_xml_format( $data, $object ) {
-		require_once EDD_PLUGIN_DIR . 'includes/libraries/array2xml.php';
-		$xml = Array2XML::createXML( 'edd', $data );
-		return $xml->saveXML();
+		return json_encode( $data, true );
 	}
 
 	public function test_missing_auth() {
 		global $wp_query;
 
-		set_exit_overload(function( $param = null) { return false; });
+		set_exit_overload(function() { return FALSE; });
 
-		$wp_query->query_vars['format'] = 'override_xml';
+		$wp_query->query_vars['format'] = 'override';
+		add_action( 'edd_api_output_override', array( $this, 'override_api_xml_format' ), 10, 2 );
+		$json = EDD()->api->invalid_auth();
 
-		add_action( 'edd_api_output_override_xml', array( $this, 'override_api_xml_format' ), 10, 2 );
-		$out = EDD()->api->invalid_auth();
+		$expected = '{"error":"Your request could not be authenticated!"}';
 
-		$expected = '<edd><error>Your request could not be authenticated!</error></edd>';
-
-		$this->assertXmlStringEqualsXmlString( $expected, $out );
+		$this->assertEquals( $expected, $json );
 	}
 }
