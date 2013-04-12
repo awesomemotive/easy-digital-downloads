@@ -74,4 +74,9 @@ class Test_Logging extends WP_UnitTestCase {
 		$this->assertNotNull( $this->_object->add() );
 		$this->assertInternalType( 'integer', $this->_object->add() );
 	}
+
+	public function test_insert_log() {
+		$this->assertNotNull( $this->_object->insert_log( array( 'log_type' => 'sale' ) ) );
+		$this->assertInternalType( 'integer', $this->_object->insert_log( array( 'log_type' => 'sale' ) ) );
+	}
 }
