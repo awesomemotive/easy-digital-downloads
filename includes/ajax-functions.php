@@ -12,7 +12,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) die();
 
 /**
  * Get AJAX URL
@@ -44,7 +44,7 @@ function edd_ajax_remove_from_cart() {
 		edd_remove_from_cart( $_POST['cart_item'] );
 		echo 'removed';
 	}
-	die();
+	edd_die();
 }
 add_action( 'wp_ajax_edd_remove_from_cart', 'edd_ajax_remove_from_cart' );
 add_action( 'wp_ajax_nopriv_edd_remove_from_cart', 'edd_ajax_remove_from_cart' );
@@ -86,7 +86,7 @@ function edd_ajax_add_to_cart() {
 			}
 		}
 	}
-	die();
+	edd_die();
 }
 add_action( 'wp_ajax_edd_add_to_cart', 'edd_ajax_add_to_cart' );
 add_action( 'wp_ajax_nopriv_edd_add_to_cart', 'edd_ajax_add_to_cart' );
@@ -128,7 +128,7 @@ function edd_ajax_apply_discount() {
 		}
 		echo json_encode($return);
 	}
-	die();
+	edd_die();
 }
 add_action( 'wp_ajax_edd_apply_discount', 'edd_ajax_apply_discount' );
 add_action( 'wp_ajax_nopriv_edd_apply_discount', 'edd_ajax_apply_discount' );
@@ -141,7 +141,7 @@ add_action( 'wp_ajax_nopriv_edd_apply_discount', 'edd_ajax_apply_discount' );
  */
 function edd_load_checkout_login_fields() {
 	do_action( 'edd_purchase_form_login_fields' );
-	die();
+	edd_die();
 }
 add_action('wp_ajax_nopriv_checkout_login', 'edd_load_checkout_login_fields');
 
@@ -153,7 +153,7 @@ add_action('wp_ajax_nopriv_checkout_login', 'edd_load_checkout_login_fields');
 */
 function edd_load_checkout_register_fields() {
 	do_action( 'edd_purchase_form_register_fields' );
-	die();
+	edd_die();
 }
 add_action('wp_ajax_nopriv_checkout_register', 'edd_load_checkout_register_fields');
 
@@ -172,7 +172,7 @@ function edd_ajax_get_download_title() {
 			echo 'fail';
 		}
 	}
-	die();
+	edd_die();
 }
 add_action( 'wp_ajax_edd_get_download_title', 'edd_ajax_get_download_title' );
 add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_title' );
@@ -201,7 +201,7 @@ function edd_ajax_opt_into_local_taxes() {
 
 	echo json_encode( $response );
 
-	exit;
+	edd_die();
 }
 add_action( 'wp_ajax_edd_local_tax_opt_in', 'edd_ajax_opt_into_local_taxes' );
 add_action( 'wp_ajax_nopriv_edd_local_tax_opt_in', 'edd_ajax_opt_into_local_taxes' );
@@ -230,7 +230,7 @@ function edd_ajax_opt_out_local_taxes() {
 
 	echo json_encode( $response );
 
-	exit;
+	edd_die();
 }
 add_action( 'wp_ajax_edd_local_tax_opt_out', 'edd_ajax_opt_out_local_taxes' );
 add_action( 'wp_ajax_nopriv_edd_local_tax_opt_out', 'edd_ajax_opt_out_local_taxes' );
@@ -266,7 +266,7 @@ function edd_check_for_download_price_variations() {
 			echo $ajax_response;
 		}
 
-		die();
+		edd_die();
 	}
 }
 add_action( 'wp_ajax_edd_check_for_download_price_variations', 'edd_check_for_download_price_variations' );

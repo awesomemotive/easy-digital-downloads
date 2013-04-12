@@ -148,6 +148,6 @@ function edd_generate_sysinfo_download() {
 	header( 'Content-Disposition: attachment; filename="edd-system-info.txt"' );
 
 	echo wp_strip_all_tags( $_POST['edd-sysinfo'] );
-	exit;
+	edd_die();
 }
 add_action( 'edd_download_sysinfo', 'edd_generate_sysinfo_download' );

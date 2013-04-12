@@ -545,7 +545,7 @@ function edd_process_profile_editor_updates( $data ) {
 	if ( $updated ) {
 		do_action( 'edd_user_profile_updated', $user_id, $userdata );
 		wp_redirect( add_query_arg( 'updated', 'true', $data['edd_redirect'] ) );
-		exit;
+		edd_die();
 	}
 }
 add_action( 'edd_edit_user_profile', 'edd_process_profile_editor_updates' );

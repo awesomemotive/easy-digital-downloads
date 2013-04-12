@@ -1,86 +1,24 @@
 <?php
 /**
- * ConfigTest Tests
- * Some basic tests
+ * Test that EDD is loaded, test the constants are setup
+ * and that all the EDD file exists
+ *
+ * @author Sunny Ratilal
  */
-class Easy_Digital_DownloadsTest extends WP_UnitTestCase {
+class Easy_Digital_Downloads_Test extends WP_UnitTestCase {
 	/**
-	 * Easy_Digital_Downloads Object
-	 *
-	 * @var object
+	 * Store EDD in this object
 	 */
 	protected $object;
-	
-	/**
-	 * Easy_Digital_Downloads The one true Easy_Digital_Downloads
-	 *
-	 * @var object
-	 */
-	private static $instance;
-	
-	/**
-	 * EDD user roles and capabilities object
-	 *
-	 * @since 1.4.4
-	 * @var object
-	 */
-	private $roles;
-	
-	/**
-	 * EDD cart fees object
-	 *
-	 * @var object
-	 * @since 1.5
-	 */
-	public $fees;
-	
-	/**
-	 * EDD API object
-	 *
-	 * @var object
-	 * @since 1.5
-	 */
-	public $api;
-
-	/**
-	 * EDD HTML session object
-	 *
-	 * This holds cart items, purchase sessions, and anything else stored in the session
-	 *
-	 * @since 1.5
-	 */
-	public $session;
-
-	/**
-	 * EDD HTML Element helper object
-	 * @since 1.5
-	 * @var object
-	 */
-	public $html;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
-	 * For some reason, setUp must be public (to think through later)
-	 * @todo: Get the init working
+	 * It calls the EDD() function and loads it in the object var.
 	 */
 	public function setUp() {
-		$this->object = new Easy_Digital_Downloads;
-		//$this->AaaaaaInit();
-	}
-
-	/**
-	 * Init other classes. Not in use due to implementation issues.
-	 */
-	protected function AaaaaaInit() {
-		$this->object->setup_constants();
-		$this->object->includes();
-		$this->object->load_textdomain();
-		$this->object->roles   = new EDD_Roles();
-		$this->object->fees    = new EDD_Fees();
-		$this->object->api     = new EDD_API();
-		$this->object->session = new EDD_Session();
-		$this->object->html    = new EDD_HTML_Elements();
+		parent::setUp();
+		$this->object = EDD();
 	}
 
 	/**
@@ -91,30 +29,37 @@ class Easy_Digital_DownloadsTest extends WP_UnitTestCase {
 	public function tearDown() { }
 
 	/**
+	 * Check static attribute has been set
+	 */
+	public function testHasStaticAttribute() {
+		$this->assertClassHasStaticAttribute( 'instance', 'Easy_Digital_Downloads' );
+	}
+
+	/**
 	 * @covers Easy_Digital_Downloads::setup_constants
 	 */
-	public function testSetup_Constants() {
+	public function testSetupConstants() {
 		// At this point, since plugin is loaded these should be defined
 		// Plugin version
 		$this->assertSame( EDD_VERSION, '1.5.1' );
 
 		// Plugin Folder URL
-		$path = str_replace( 'travis/tests/', '', plugin_dir_url( __FILE__ ) );
+		$path = str_replace( 'tests/unit-tests/', '', plugin_dir_url( __FILE__ ) );
 		$this->assertSame( EDD_PLUGIN_URL, $path );
 
 		// Plugin Folder Path
-		$path = str_replace( 'travis/tests/', '', plugin_dir_path( __FILE__ ) );
+		$path = str_replace( 'tests/unit-tests/', '', plugin_dir_path( __FILE__ ) );
 		$this->assertSame( EDD_PLUGIN_DIR, $path );
 
 		// Plugin Root File
-		$path = str_replace( 'travis/tests/', '', plugin_dir_path( __FILE__ ) );
+		$path = str_replace( 'tests/unit-tests/', '', plugin_dir_path( __FILE__ ) );
 		$this->assertSame( EDD_PLUGIN_FILE, $path.'easy-digital-downloads.php' );
 	}
 	
 	/**
 	 * @covers Easy_Digital_Downloads::includes
 	 */
-	public function testIncludes() {
+	public function testFileIncludes() {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/install.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/actions.php' );
@@ -183,5 +128,60 @@ class Easy_Digital_DownloadsTest extends WP_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/process-download.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/shortcodes.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/theme-compatibility.php' );
-	}	
+
+		/** Check Assets Exist */
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/chosen.css' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/colorbox.css' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/edd-admin.css' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-classic.css' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-fresh.css' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/fonts/padlock.eot' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/fonts/padlock.svg' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/fonts/padlock.ttf' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/fonts/padlock.woff' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderBottomCenter.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderBottomLeft.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderBottomRight.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderMiddleLeft.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderMiddleRight.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderTopCenter.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderTopLeft.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderTopRight.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/border.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/controls.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/loading.gif' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/loading_background.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/overlay.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/icons/americanexpress.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/icons/discover.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/icons/googlecheckout.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/icons/iphone.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/icons/mastercard.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/icons/paypal.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/icons/visa.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/chosen-sprite.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-badge.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-cpt-2x.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-cpt.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-icon-2x.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-icon.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-logo.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-media.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/loading.gif' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/media-button.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/tick.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/ui-icons_21759b_256x240.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/ui-icons_333333_256x240.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/ui-icons_999999_256x240.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/ui-icons_cc0000_256x240.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/xit.gif' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/admin-scripts.js' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/chosen.jquery.min.js' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/edd-ajax.js' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/edd-checkout-global.js' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.colorbox-min.js' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.creditCardValidator.js' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.flot.js' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.validate.min.js' );
+	}
 }

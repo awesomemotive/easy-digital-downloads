@@ -4,23 +4,23 @@
 language: php
 php:
 # PHP Versions WP Does Not Officially Support Yet
-  - 5.5
+#  - 5.5
 # PHP Versions EDD Officially Supports
-  - 5.4
+#  - 5.4
   - 5.3
 # Ones that support for legacy reasons
-  - 5.2
+#  - 5.2
 env:
 # Officialy Supported WP Versions (w/ and w/o MS)
-  - WP_VERSION=3.5.1 WP_MULTISITE=0 
+#  - WP_VERSION=3.5.1 WP_MULTISITE=0 
   - WP_VERSION=3.5.1 WP_MULTISITE=1
 # Last WP Version (tested against but not supported by EDD)
 #  - WP_VERSION=3.5 WP_MULTISITE=0
 #  - WP_VERSION=3.5 WP_MULTISITE=1
 # These versions of WordPress we do not officially support
 # Last Major WP Version not in current 3.x branch
-  - WP_VERSION=3.4.2 WP_MULTISITE=0
-  - WP_VERSION=3.4.2 WP_MULTISITE=1
+#  - WP_VERSION=3.4.2 WP_MULTISITE=0
+#  - WP_VERSION=3.4.2 WP_MULTISITE=1
 # To test EDD on them, uncomment the line, by removing the "#"
 #    and then uncomment the allowed failures line for the respective
 #    versions below. 
@@ -41,8 +41,8 @@ env:
 #  - WP_VERSION=3.2 WP_MULTISITE=1
 # Test against (but allow fail) on older WP and PHP versions, as well as beta WP
 # Also test against the current Master (development) Github repo of WordPress
-matrix:
-  allow_failures:
+#matrix:
+#  allow_failures:
 # Legacy Versions
 #    - env: WP_VERSION=3.5 WP_MULTISITE=0 
 #    - env: WP_VERSION=3.5 WP_MULTISITE=1
@@ -63,18 +63,34 @@ matrix:
 #    - env: WP_VERSION=3.2.1 WP_MULTISITE=1
 #    - env: WP_VERSION=3.2 WP_MULTISITE=0
 #    - env: WP_VERSION=3.2 WP_MULTISITE=1
-    - php: 5.5
-    - php: 5.2
-  
+#    - php: 5.5
+#    - php: 5.2
+
+#before_install:
+#  - ./tests/travis-setup.sh
+
 before_script:
-  - wget -O testsuite.zip https://github.com/nb/wordpress-tests/archive/460b9c4ad9db7eea4710f151851060ae1921ea7c.zip
-  - unzip testsuite.zip -d travis/vendor
-  - cp -r travis/vendor/wordpress-tests-460b9c4ad9db7eea4710f151851060ae1921ea7c travis/vendor/wordpress-tests
-  - cp travis/tests/unittests-config.travis.php travis/vendor/wordpress-tests/unittests-config.php
+  - ./tests/travis-setup.sh
+  - echo -e "Installed PHPUnit Test Helpers"
+  - echo -e "Get Copy of Sunny's Version of WordPress Tests";
+  - wget -O testsuite.zip https://github.com/sunnyratilal/WordPress-Tests/zipball/master
+  - echo -e "Unzip Copy of Sunny's Version of WordPress Tests";
+  - unzip testsuite.zip -d tests/vendor
+  - echo -e "Move Copy of Sunny's Version of WordPress Tests";
+  - cp -r tests/vendor/sunnyratilal-WordPress-Tests-* tests/vendor/wordpress-tests
+  - cp tests/includes/unittests-config.travis.php tests/vendor/wordpress-tests/unittests-config.php
+  - echo -e "Get WordPress";
   - wget -O wordpress.tar.gz http://wordpress.org/wordpress-$WP_VERSION.tar.gz
-  - tar -xzf wordpress.tar.gz -C travis/vendor
+  - echo -e "Unzip WordPress";
+  - tar -xzf wordpress.tar.gz -C tests/vendor
+  - echo -e "Create Database";
   - mysql -e "create database IF NOT EXISTS edd_test;" -uroot
-    
-script: phpunit --coverage-text 
+  - cat ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
+
+script: 
+  - phpunit --coverage-text
+  - php tests/includes/clover.php clover.xml 90
+
 notifications:
-  email: false
+  email:
+    - edd.unit.tests@gmail.com
