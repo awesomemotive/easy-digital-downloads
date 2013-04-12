@@ -171,3 +171,5 @@ pip-log.txt
 
 # Ignore API Documentation
 api-docs/*
+
+tests/*
