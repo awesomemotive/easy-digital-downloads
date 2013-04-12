@@ -257,21 +257,19 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$this->assertEquals( 'Advanced', $out['sales'][0]['products'][0]['price_name'] );
 	}
 
-	public function override_api_xml_format( $data, $object ) {
-		return json_encode( $data, true );
-	}
+	// public function override_api_format( $data, $object ) {
+	// 	return json_encode( $data );
+	// }
 
-	public function test_missing_auth() {
-		global $wp_query;
+	// public function test_missing_auth() {
+	// 	global $wp_query;
 
-		set_exit_overload(function() { return FALSE; });
+	// 	set_exit_overload(function() { return FALSE; });
 
-		$wp_query->query_vars['format'] = 'override';
-		add_action( 'edd_api_output_override', array( $this, 'override_api_xml_format' ), 10, 2 );
-		$json = EDD()->api->invalid_auth();
-
-		$expected = '{"error":"Your request could not be authenticated!"}';
-
-		$this->assertEquals( $expected, $json );
-	}
+	// 	$wp_query->query_vars['format'] = 'json';
+	// 	add_action( 'edd_api_output_override', array( $this, 'override_api_format' ), 10, 2 );
+		
+	// 	$json = EDD()->api->invalid_auth();
+		
+	// }
 }
