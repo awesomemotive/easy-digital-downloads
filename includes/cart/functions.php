@@ -306,11 +306,11 @@ function edd_cart_subtotal() {
 	$price = esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) );
 
 	if ( edd_is_cart_taxed() ) {
-		if ( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
+		if ( ! edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax() ) {
 			$price .= '<br/><span style="font-weight:normal;text-transform:none;">' . __( '(ex. tax)', 'edd' ) . '</span>';
 		}
 
-		if ( edd_prices_show_tax_on_checkout() && $edd_options['prices_include_tax'] == 'no' ) {
+		if ( edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
 			$price .= '<br/><span style="font-weight:normal;text-transform:none;">' . __( '(incl. tax)', 'edd' ) . '</span>';
 		}
 	}
@@ -341,7 +341,6 @@ function edd_get_cart_subtotal( $tax = true ) {
 
 		}
 	}
-
 	return apply_filters( 'edd_get_cart_subtotal', $amount );
 }
 
@@ -394,7 +393,6 @@ function edd_get_cart_fee_total() {
 */
 function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 	$amount = edd_get_cart_subtotal( false );
-
 	if ( ! empty( $_POST['edd-discount'] ) || edd_get_cart_discounts() !== false ) {
 		// Retrieve the discount stored in cookies
 		$discounts = edd_get_cart_discounts();

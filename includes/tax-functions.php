@@ -135,16 +135,16 @@ function edd_calculate_tax( $amount, $sum = true ) {
 	global $edd_options;
 
 	// Not using taxes
-	if ( !edd_use_taxes() ) return $amount;
+	if ( ! edd_use_taxes() ) return $amount;
 
 	$rate = edd_get_tax_rate();
-	$tax = 0;
+	$tax = 0.00;
 	$prices_include_tax = edd_prices_include_tax();
 
 	if ( $prices_include_tax ) {
-		$tax = $amount - ( $amount / ( $rate + 1 ) );
-	} else if ( $prices_include_tax ) {
 		$tax = $amount * $rate;
+	} else {
+		$tax = $amount - ( $amount / ( $rate + 1 ) );
 	}
 
 	if ( $sum ) {
@@ -156,7 +156,6 @@ function edd_calculate_tax( $amount, $sum = true ) {
 		}
 
 	}
-
 	return apply_filters( 'edd_taxed_amount', round( $tax, 2 ), $rate );
 }
 
@@ -220,9 +219,7 @@ function edd_get_sales_tax_for_year( $year = null ) {
 function edd_prices_show_tax_on_checkout() {
 	global $edd_options;
 
-	$include_tax = isset( $edd_options['checkout_include_tax'] ) ? $edd_options['checkout_include_tax'] : 'no';
-
-	return ( $include_tax == 'yes' );
+	return isset( $edd_options['checkout_include_tax'] ) && $edd_options['checkout_include_tax'] == 'yes';
 }
 
 /**
@@ -235,9 +232,7 @@ function edd_prices_show_tax_on_checkout() {
 function edd_prices_include_tax() {
 	global $edd_options;
 
-	$include_tax = isset( $edd_options['prices_include_tax'] ) ? $edd_options['prices_include_tax'] : 'no';
-
-	return ( $include_tax == 'yes' );
+	return isset( $edd_options['prices_include_tax'] ) && $edd_options['prices_include_tax'] == 'yes';
 }
 
 /**
