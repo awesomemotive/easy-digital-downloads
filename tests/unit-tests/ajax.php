@@ -32,8 +32,6 @@ class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 				add_action( 'wp_ajax_' . $action, $action, 1 );
 		}
 
-		add_filter( 'wp_die_ajax_handler', array( $this, 'getDieHandler' ), 1, 1 );
-
 		if (!defined('DOING_AJAX'))
 			define('DOING_AJAX', true);
 		set_current_screen( 'ajax' );
@@ -51,6 +49,7 @@ class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 		remove_filter( 'wp_die_ajax_handler', array( $this, 'getDieHandler' ), 1, 1 );
 		remove_action( 'clear_auth_cookie', array( $this, 'logout' ) );
 		set_current_screen( 'front' );
+		EDD()->session->set( 'edd_cart', null );
 	}
 
 	public function logout() {
@@ -58,14 +57,6 @@ class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 		$cookies = array(AUTH_COOKIE, SECURE_AUTH_COOKIE, LOGGED_IN_COOKIE, USER_COOKIE, PASS_COOKIE);
 		foreach ( $cookies as $c )
 			unset( $_COOKIE[$c] );
-	}
-
-	public function getDieHandler() {
-		return array( $this, 'dieHandler' );
-	}
-
-	public function dieHandler( $message ) {
-		
 	}
 
 	protected function _setRole( $role ) {
@@ -93,17 +84,8 @@ class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 
 		if ( !empty( $buffer ) )
 			$this->_last_response = $buffer;
-	}
 
-	public function test_remove_item_from_cart() {
-		$this->_setRole( 'administrator' );
-
-		$_POST = array(
-			'cart_item' => 0,
-			'nonce' => wp_create_nonce( 'edd_ajax_nonce' ),
-		);
-
-		//$this->assertEquals( $this->_last_response, $this->_handleAjax( 'edd_remove_from_cart' ) );
+		return $buffer;
 	}
 
 	public function test_add_item_to_cart() {
@@ -164,8 +146,21 @@ class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 			'nonce' => wp_create_nonce( 'edd_ajax_nonce' ),
 		);
 
-		$this->assertContains( '<li class="edd-cart-item">', $this->_handleAjax( 'edd_add_to_cart' ) );
-		$this->assertContains( '<span class="edd-cart-item-title">Test Download <span class="edd-cart-item-separator">-</span> Advanced</span>', $this->_handleAjax( 'edd_add_to_cart' ) );
-		$this->assertContains( '<span class="edd-cart-item-separator">-</span>&nbsp;&#36;100.00&nbsp;<span class="edd-cart-item-separator">-</span>', $this->_handleAjax( 'edd_add_to_cart' ) );
+		$out = $this->_handleAjax( 'edd_add_to_cart' );
+
+		$this->assertContains( '<li class="edd-cart-item">', $out );
+		$this->assertContains( '<span class="edd-cart-item-title">Test Download <span class="edd-cart-item-separator">-</span> Advanced</span>', $out );
+		$this->assertContains( '<span class="edd-cart-item-separator">-</span>&nbsp;&#36;100.00&nbsp;<span class="edd-cart-item-separator">-</span>', $out );
+	}
+
+	public function test_remove_item_from_cart() {
+		$this->_setRole( 'administrator' );
+
+		$_POST = array(
+			'cart_item' => 0,
+			'nonce' => wp_create_nonce( 'edd_ajax_nonce' ),
+		);
+
+		$this->assertEquals( 'removed', $this->_handleAjax( 'edd_remove_from_cart' ) );
 	}
 }

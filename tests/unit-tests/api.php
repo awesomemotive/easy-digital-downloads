@@ -3,8 +3,6 @@
  * Test API
  */
 
-new EDD_Die_Handler;
-
 class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 	protected $_rewrite = null;
 

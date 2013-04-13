@@ -129,15 +129,11 @@ class Test_Easy_Digital_Downloads_Discounts extends WP_UnitTestCase {
 	}
 
 	public function testDiscountIsMinMet() {
-		$this->markTestIncomplete(
-		  'This test has not been implemented yet. The cart object needs to link with this test.'
-		);
+		$this->assertFalse( edd_discount_is_min_met( $this->_post->ID ) );
 	}
 
 	public function testDiscountIsUsed() {
-		$this->markTestIncomplete(
-		  'This test has not been implemented yet. The user object needs to link with this test.'
-		);
+		$this->assertFalse( edd_is_discount_used( $this->_post->ID ) );
 	}
 
 	public function testDiscountIsValidWhenPurchasing() {
@@ -162,15 +158,11 @@ class Test_Easy_Digital_Downloads_Discounts extends WP_UnitTestCase {
 	}
 
 	public function testSetCartDiscount() {
-		$this->markTestIncomplete(
-			'setcookie generates an error about not being able to modify header information'
-		);
+		$this->markTestSkipped();
 	}
 
 	public function testUnsetCartDiscount() {
-		$this->markTestIncomplete(
-			'setcookie generates an error about not being able to modify header information'
-		);
+		$this->markTestSkipped();
 	}
 
 	public function testDeletionOfDiscount() {

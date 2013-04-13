@@ -44,6 +44,8 @@ if ( file_exists( $die_handler ) ) {
 	exit( "Couldn't load custom die handler \n" );
 }
 
+new EDD_Die_Handler;
+
 echo "Loaded Custom Die Handler\n";
 
 echo "Preparing to execute PHPUnit Tests...\n";
