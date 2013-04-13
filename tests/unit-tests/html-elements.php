@@ -12,38 +12,6 @@ class Test_HTML_Elements extends WP_UnitTestCase {
 		$wp_factory = new WP_UnitTest_Factory;
 		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 		$this->_post_id = $post_id;
-
-		$slug     = defined( 'EDD_SLUG' ) ? EDD_SLUG : 'downloads';
-
-		$category_labels = array(
-			'name' 				=> _x( 'Download Categories', 'taxonomy general name', 'edd' ),
-			'singular_name' 	=> _x( 'Category', 'taxonomy singular name', 'edd' ),
-			'search_items' 		=> __( 'Search Categories', 'edd'  ),
-			'all_items' 		=> __( 'All Categories', 'edd'  ),
-			'parent_item' 		=> __( 'Parent Category', 'edd'  ),
-			'parent_item_colon' => __( 'Parent Category:', 'edd'  ),
-			'edit_item' 		=> __( 'Edit Category', 'edd'  ),
-			'update_item' 		=> __( 'Update Category', 'edd'  ),
-			'add_new_item' 		=> __( 'Add New Category', 'edd'  ),
-			'new_item_name' 	=> __( 'New Category Name', 'edd'  ),
-			'menu_name' 		=> __( 'Categories', 'edd'  ),
-		);
-
-		$category_args = apply_filters( 'edd_download_category_args', array(
-				'hierarchical' 	=> true,
-				'labels' 		=> apply_filters('edd_download_category_labels', $category_labels),
-				'show_ui' 		=> true,
-				'query_var' 	=> 'download_category',
-				'rewrite' 		=> array('slug' => $slug . '/category', 'with_front' => false, 'hierarchical' => true ),
-				'capabilities'  => array( 'manage_terms' => 'manage_product_terms','edit_terms' => 'edit_product_terms','assign_terms' => 'assign_product_terms','delete_terms' => 'delete_product_terms' )
-			)
-		);
-		register_taxonomy( 'download_category', array('download'), $category_args );
-
-		foreach ( get_object_taxonomies('download') as $tax ) :
-			wp_insert_term( 'eBooks', $tax );
-			wp_insert_term( 'Plugins', $tax );
-		endforeach;
 	}
 
 	public function test_product_dropdown() {
@@ -77,6 +45,11 @@ class Test_HTML_Elements extends WP_UnitTestCase {
 		$expected = '<select name="edd_discounts" id="edd_discounts"><option value="'. $post_id .'">Post title 1</option></select>';
 
 		$this->assertEquals( $expected, EDD()->html->dicount_dropdown() );
+	}
+
+	public function test_category_dropdown() {
+		$expected = '<select name="edd_categories" id="edd_categories"><option value="0">All Categories</option><option value="0">No categories found</option></select>';
+		$this->assertEquals( $expected, EDD()->html->category_dropdown() );
 	}
 
 	public function test_year_dropdown() {
