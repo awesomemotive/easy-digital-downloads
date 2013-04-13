@@ -63,6 +63,15 @@ class EDD_API {
 	private $user_id = 0;
 
 	/**
+	 * Response data to return
+	 *
+	 * @var array
+	 * @access private
+	 * @since 1.5.2
+	 */
+	private $data = array();
+
+	/**
 	 * Setup the EDD API
 	 *
 	 * @access public
@@ -190,7 +199,8 @@ class EDD_API {
 	public function missing_auth() {
 		$error['error'] = __( 'You must specify both a token and API key!', 'edd' );
 
-		$this->output( $error );
+		$this->data = $error;
+		$this->output();
 	}
 
 	/**
@@ -205,7 +215,8 @@ class EDD_API {
 	function invalid_auth() {
 		$error['error'] = __( 'Your request could not be authenticated!', 'edd' );
 
-		$this->output( $error );
+		$this->data = $error;
+		$this->output();
 	}
 
 	/**
@@ -221,7 +232,8 @@ class EDD_API {
 	function invalid_key() {
 		$error['error'] = __( 'Invalid API key!', 'edd' );
 
-		$this->output( $error );
+		$this->data = $error;
+		$this->output();
 	}
 
 
@@ -292,13 +304,13 @@ class EDD_API {
 		endswitch;
 
 		// Allow extensions to setup their own return data
-		$data = apply_filters( 'edd_api_output_data', $data, $query_mode, $this );
+		$this->data = apply_filters( 'edd_api_output_data', $data, $query_mode, $this );
 
 		// Log this API request, if enabled. We log it here because we have access to errors.
-		$this->log_request( $data );
+		$this->log_request( $this->data );
 
 		// Send out data to the output function
-		$this->output( $data );
+		$this->output();
 	}
 
 	/**
@@ -326,7 +338,8 @@ class EDD_API {
 		if ( ! in_array( $query, $accepted ) || ( $query == 'stats' && ! isset( $wp_query->query_vars['type'] ) ) ) {
 			$error['error'] = __( 'Invalid query!', 'edd' );
 
-			$this->output( $error );
+			$this->data = $error;
+			$this->output();
 		}
 
 		return $query;
@@ -923,7 +936,7 @@ class EDD_API {
 	public function get_recent_sales() {
 		$sales = array();
 
-		$query = edd_get_payments( array( 'number' => $this->per_page(), 'page' => $this->get_paged() ) );
+		$query = edd_get_payments( array( 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
 
 		if ( $query ) {
 			$i = 0;
@@ -1011,6 +1024,19 @@ class EDD_API {
 		$edd_logs->insert_log( $log_data, $log_meta );
 	}
 
+
+	/**
+	 * Retrieve the output data
+	 *
+	 * @access public
+	 * @since 1.5.2
+	 * @return array
+	 */
+	public function get_output() {
+		return $this->data;
+	}
+
+
 	/**
 	 * Output Query in either JSON/XML. The query data is outputted as JSON
 	 * by default
@@ -1022,8 +1048,10 @@ class EDD_API {
 	 * @param array $data
 	 * @return void
 	 */
-	public function output( $data ) {
+	public function output() {
 		global $wp_query;
+
+		$data = $this->data;
 
 		$format = $this->get_output_format();
 
