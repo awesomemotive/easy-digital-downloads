@@ -27,6 +27,7 @@
 	<filter>
 		<blacklist>
 			<directory suffix=".php">./tests/</directory>
+			<directory suffix=".php">./includes/admin/</directory>
 			<directory suffix=".php">./includes/libraries/</directory>
 			<directory suffix=".php">./templates/</directory>
 			<directory suffix=".php">./languages/</directory>
