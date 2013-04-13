@@ -93,7 +93,7 @@ class EDD_HTML_Elements {
 	 * @param int    $selected Category to select automatically
 	 * @return string $output Category dropdown
 	 */
-	public function category_dropdown( $name = 'edd_discounts', $selected = 0 ) {
+	public function category_dropdown( $name = 'edd_categories', $selected = 0 ) {
 
 		$categories = get_terms( 'download_category' );
 

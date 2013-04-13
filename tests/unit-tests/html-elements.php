@@ -47,8 +47,30 @@ class Test_HTML_Elements extends WP_UnitTestCase {
 		$this->assertEquals( $expected, EDD()->html->dicount_dropdown() );
 	}
 
+	public function test_category_dropdown() {
+		$expected = '<select name="edd_categories" id="edd_categories"><option value="0">All Categories</option><option value="0">No categories found</option></select>';
+		$this->assertEquals( $expected, EDD()->html->category_dropdown() );
+	}
+
 	public function test_year_dropdown() {
 		$expected = '<select name="year" id="year"><option value="2008">2008</option><option value="2009">2009</option><option value="2010">2010</option><option value="2011">2011</option><option value="2012">2012</option><option value="2013" selected=\'selected\'>2013</option></select>';
 		$this->assertEquals( $expected, EDD()->html->year_dropdown() );
+	}
+
+	public function test_month_dropdown() {
+		$out = EDD()->html->month_dropdown();
+		$this->assertContains( '<select name="month" id="month">', $out );
+		$this->assertContains( '<option value="1">', $out );
+		$this->assertContains( '<option value="2">', $out );
+		$this->assertContains( '<option value="3">', $out );
+		$this->assertContains( '<option value="4">', $out );
+		$this->assertContains( '<option value="5">', $out );
+		$this->assertContains( '<option value="6">', $out );
+		$this->assertContains( '<option value="7">', $out );
+		$this->assertContains( '<option value="8">', $out );
+		$this->assertContains( '<option value="9">', $out );
+		$this->assertContains( '<option value="10">', $out );
+		$this->assertContains( '<option value="11">', $out );
+		$this->assertContains( '<option value="12">', $out );
 	}
 }
