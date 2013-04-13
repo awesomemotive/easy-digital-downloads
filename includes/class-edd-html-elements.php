@@ -176,13 +176,13 @@ class EDD_HTML_Elements {
 	 * @param string $value The value to prepopulate the field with
 	 * @return string $output Text field
 	 */
-	public function text( $name = 'edd_text', $value = '', $label = '', $desc = '' ) {
+	public function text( $name = 'text', $value = '', $label = '', $desc = '' ) {
 
 		$output = '<p id="edd-' . sanitize_key( $name ) . '-wrap">';
 			$output .= '<label class="edd-label" for="edd-' . sanitize_key( $name ) . '">' . esc_html( $label ) . '</label>';
 			if( ! empty( $desc ) )
 				$output .= '<span class="edd-description">' . esc_html( $desc ) . '</span>';
-			$output = '<input type="text" name="' . esc_attr( sanitize_key( $name ) ) . '" id="' . esc_attr( sanitize_key( $name ) )  . '" value="' . esc_attr( $value ) . '"/>';
+			$output = '<input type="text" name="edd_' . esc_attr( sanitize_key( $name ) ) . '" id="edd-' . esc_attr( sanitize_key( $name ) )  . '" value="' . esc_attr( $value ) . '"/>';
 		$output .= '</p>';
 
 		return $output;
