@@ -160,7 +160,7 @@ class Test_Easy_Digital_Downloads_Payments extends WP_UnitTestCase {
 
 	public function test_get_earnings_by_date() {
 		$wp_factory = new WP_UnitTest_Factory;
-		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Paymeny', 'post_type' => 'edd_payment', 'post_status' => 'publish' ) );
+		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Payment', 'post_type' => 'edd_payment', 'post_status' => 'publish' ) );
 	}
 
 	public function test_undo_purchase() {
