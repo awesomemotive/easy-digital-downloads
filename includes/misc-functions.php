@@ -242,6 +242,20 @@ function edd_get_currencies() {
 	return apply_filters( 'edd_currencies', $currencies );
 }
 
+
+/**
+ * Get the store's set currency
+ *
+ * @since 1.5.2
+ * @return string The currency code
+ */
+function edd_get_currency() {
+	global $edd_options;
+	$currency = isset( $edd_options['currency'] ) ? $edd_options['currency'] : 'USD';
+	return apply_filters( 'edd_currency', $currency );
+}
+
+
 /**
  * Get Country List
  *
