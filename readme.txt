@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.6
 
-Stable Tag: 1.5.1
+Stable Tag: 1.5.2
 License: GNU Version 2 or Any Later Version
 
 
@@ -174,6 +174,32 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.5.2: April 13, 2013 =
+
+* New: Discount codes now automatically removed from cart when the required cart items are removed
+* New: Added PHP safe_mode indicator to System Info
+* New: The price option purchased is now shown in [edd_receipt]
+* New: Added get_output() method to the EDD_API
+* New: Added new "upgraded from" option to better help with support issues
+* New: Added symlinks on/off to System Info
+* New: Added a link to the EDD iOS sales / earnings tracker
+* New: Added ability to export file download history by date
+* New: Added category filtering to Downloads > Reports > Downloads
+* New: Added option to disable admin sales notices
+* Tweaked: Better options to disable the price in the [purchase_link] short code
+* Tweaked: Improved the checkout error fields
+* Fix: Issue with purchase receipt CSS
+* Fix: SQL error with comments_clauses
+* Fix: EDD_API retrieved pending sales when it shouldn't
+* Fix: Default currency now set
+* Fix: Issue with edd_show_added_to_cart_messages() showing on incorrect pages
+* Fix: Force redirect when adding items to the cart from the checkout page
+* Fix: EDD_API &number=-1 returned null
+* Fix: Product price formatting screws up when saving products without a thousands separator set
+* Fix: Not all products shown in the drop down for Discount Code Requirements
+* Fix: "Total sales for period shown" displayed as $0.00
+* Fix: Issue with cart fees not being taxed
 
 = 1.5.1: March 21, 2013 =
 
