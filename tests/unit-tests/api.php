@@ -132,7 +132,7 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 			'currency' => 'USD',
 			'downloads' => $download_details,
 			'cart_details' => $cart_details,
-			'status' => 'pending'
+			'status' => 'publish'
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
@@ -296,19 +296,20 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$this->assertEquals( '', $out['customers'][0]['info']['first_name'] );
 		$this->assertEquals( '', $out['customers'][0]['info']['last_name'] );
 		$this->assertEquals( 'admin@example.org', $out['customers'][0]['info']['email'] );
-		$this->assertEquals( 0, $out['customers'][0]['stats']['total_purchases'] );
-		$this->assertEquals( 0, $out['customers'][0]['stats']['total_spent'] );
+		$this->assertEquals( 1, $out['customers'][0]['stats']['total_purchases'] );
+		$this->assertEquals( 100.0, $out['customers'][0]['stats']['total_spent'] );
 		$this->assertEquals( 0, $out['customers'][0]['stats']['total_downloads'] );
 	}
 
 	public function api_override( $data, $object ) {
 		return $data;
 	}
-	
+
 	public function test_output() {
 		global $wp_query;
 		$wp_query->query_vars['format'] = 'o';
 		add_action( 'edd_api_output_o', 10, 2 );
-		$this->assertNotNull( EDD()->api->invalid_auth() );
+		EDD()->api->invalid_auth();
+		$this->assertNotNull( EDD()->api->get_output() );
 	}
 }
