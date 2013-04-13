@@ -304,7 +304,7 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 	public function api_override( $data, $object ) {
 		return $data;
 	}
-
+	
 	public function test_output() {
 		global $wp_query;
 		$wp_query->query_vars['format'] = 'o';
