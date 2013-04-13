@@ -337,4 +337,70 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'error', $out );
 		$this->assertEquals( 'Invalid API key!', $out['error'] );
 	}
+
+	public function test_process_query() {
+		global $wp_query;
+
+		$_POST['edd_set_api_key'] = 1;
+
+		EDD()->api->update_key( $this->_user_id );
+
+		$wp_query->query_vars['edd-api'] = 'products';
+		$wp_query->query_vars['key'] = get_user_meta( $this->_user_id, 'edd_user_public_key', true );
+		$wp_query->query_vars['token'] = hash( 'md5', get_user_meta( $this->_user_id, 'edd_user_secret_key', true ) . get_user_meta( $this->_user_id, 'edd_user_public_key', true ) );
+
+		EDD()->api->process_query();
+
+		$out = EDD()->api->get_output();
+
+		$this->assertArrayHasKey( 'info', $out['products'][0] );
+		$this->assertArrayHasKey( 'id', $out['products'][0]['info'] );
+		$this->assertArrayHasKey( 'slug', $out['products'][0]['info'] );
+		$this->assertEquals( 'test-download', $out['products'][0]['info']['slug'] );
+		$this->assertArrayHasKey( 'title', $out['products'][0]['info'] );
+		$this->assertEquals( 'Test Download', $out['products'][0]['info']['title'] );
+		$this->assertArrayHasKey( 'create_date', $out['products'][0]['info'] );
+		$this->assertArrayHasKey( 'modified_date', $out['products'][0]['info'] );
+		$this->assertArrayHasKey( 'status', $out['products'][0]['info'] );
+		$this->assertEquals( 'publish', $out['products'][0]['info']['status'] );
+		$this->assertArrayHasKey( 'link', $out['products'][0]['info'] );
+		$this->assertArrayHasKey( 'content', $out['products'][0]['info'] );
+		$this->assertEquals( 'Post content 1', $out['products'][0]['info']['content'] );
+		$this->assertArrayHasKey( 'thumbnail', $out['products'][0]['info'] );
+
+		$this->assertArrayHasKey( 'stats', $out['products'][0] );
+		$this->assertArrayHasKey( 'total', $out['products'][0]['stats'] );
+		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['total'] );
+		$this->assertEquals( 59, $out['products'][0]['stats']['total']['sales'] );
+		$this->assertArrayHasKey( 'earnings', $out['products'][0]['stats']['total'] );
+		$this->assertEquals( 129.43, $out['products'][0]['stats']['total']['earnings'] );
+		$this->assertArrayHasKey( 'monthly_average', $out['products'][0]['stats'] );
+		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['monthly_average'] );
+		$this->assertEquals( 59, $out['products'][0]['stats']['monthly_average']['sales'] );
+		$this->assertArrayHasKey( 'earnings', $out['products'][0]['stats']['monthly_average'] );
+		$this->assertEquals( 129.43, $out['products'][0]['stats']['monthly_average']['earnings'] );
+
+		$this->assertArrayHasKey( 'pricing', $out['products'][0] );
+		$this->assertArrayHasKey( 'simple', $out['products'][0]['pricing'] );
+		$this->assertEquals( 20, $out['products'][0]['pricing']['simple'] );
+		$this->assertArrayHasKey( 'advanced', $out['products'][0]['pricing'] );
+		$this->assertEquals( 100, $out['products'][0]['pricing']['advanced'] );
+
+		$this->assertArrayHasKey( 'files', $out['products'][0] );
+		$this->assertArrayHasKey( 'name', $out['products'][0]['files'][0] );
+		$this->assertArrayHasKey( 'file', $out['products'][0]['files'][0] );
+		$this->assertArrayHasKey( 'condition', $out['products'][0]['files'][0] );
+		$this->assertArrayHasKey( 'name', $out['products'][0]['files'][1] );
+		$this->assertArrayHasKey( 'file', $out['products'][0]['files'][1] );
+		$this->assertArrayHasKey( 'condition', $out['products'][0]['files'][1] );
+		$this->assertEquals( 'File 1', $out['products'][0]['files'][0]['name'] );
+		$this->assertEquals( 'http://localhost/file1.jpg', $out['products'][0]['files'][0]['file'] );
+		$this->assertEquals( 0, $out['products'][0]['files'][0]['condition'] );
+		$this->assertEquals( 'File 2', $out['products'][0]['files'][1]['name'] );
+		$this->assertEquals( 'http://localhost/file2.jpg', $out['products'][0]['files'][1]['file'] );
+		$this->assertEquals( 'all', $out['products'][0]['files'][1]['condition'] );
+
+		$this->assertArrayHasKey( 'notes', $out['products'][0] );
+		$this->assertEquals( 'Purchase Notes', $out['products'][0]['notes'] );
+	}
 }
