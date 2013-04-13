@@ -34,6 +34,8 @@
 			<!-- Need to exclude the main plugin file because the assertions are already made in tests/unit-tests/easy-digital-downloads.php -->
 			<file>./easy-digital-downloads.php</file>
 			<file>./includes/deprecated-functions.php</file>
+			<file>./includes/plugin-compatibility.php</file>
+			<file>./includes/process-download.php</file>
 			<file>./includes/widgets.php</file>
 		</blacklist>
 	</filter>
