@@ -101,16 +101,7 @@ add_action( 'save_post', 'edd_download_meta_box_save' );
  * @return float $price Sanitized price
  */
 function edd_sanitize_price_save( $price ) {
-	global $edd_options;
-
-	$thousands_sep = ! empty( $edd_options['thousands_separator'] ) ? $edd_options['thousands_separator'] : ',';
-	$decimal_sep   = ! empty( $edd_options['decimal_separator'] )   ? $edd_options['decimal_separator'] 	: '.';
-
-	if ( $thousands_sep == ',' ) {
-		$price = str_replace( ',', '', $price );
-	}
-
-	return $price;
+	return edd_sanitize_amount( $price );
 }
 add_filter( 'edd_metabox_save_edd_price', 'edd_sanitize_price_save' );
 

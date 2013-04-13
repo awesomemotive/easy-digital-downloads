@@ -24,16 +24,20 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_sanitize_amount( $amount ) {
 	global $edd_options;
 
-	$thousands_sep = ! empty( $edd_options['thousands_separator'] ) ? $edd_options['thousands_separator'] : ',';
+	$thousands_sep = ! empty( $edd_options['thousands_separator'] ) ? $edd_options['thousands_separator'] : '';
 	$decimal_sep   = ! empty( $edd_options['decimal_separator'] )   ? $edd_options['decimal_separator'] 	 : '.';
 
 	// Sanitize the amount
 	if ( $decimal_sep == ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
 		if ( $thousands_sep == '.' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
 			$amount = str_replace( $thousands_sep, '', $amount );
+		} elseif( empty( $thousands_sep ) && false !== ( $found = strpos( $amount, '.' ) ) ) {
+			$amount = str_replace( '.', '', $amount );
 		}
 
 		$amount = str_replace( $decimal_sep, '.', $amount );
+	} elseif( $thousands_sep == ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+		$amount = str_replace( $thousands_sep, '', $amount );
 	}
 
 	return apply_filters( 'edd_sanitize_amount', $amount );
@@ -49,7 +53,7 @@ function edd_sanitize_amount( $amount ) {
 function edd_format_amount( $amount ) {
 	global $edd_options;
 
-	$thousands_sep 	= ! empty( $edd_options['thousands_separator'] ) ? $edd_options['thousands_separator'] : ',';
+	$thousands_sep 	= ! empty( $edd_options['thousands_separator'] ) ? $edd_options['thousands_separator'] : '';
 	$decimal_sep 	= ! empty( $edd_options['decimal_separator'] )   ? $edd_options['decimal_separator'] 	 : '.';
 
 	// Format the amount
