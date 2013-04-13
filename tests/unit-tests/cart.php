@@ -20,7 +20,7 @@ class Test_Easy_Digital_Downloads_Cart extends WP_UnitTestCase {
 		$this->_rewrite = $wp_rewrite;
 
 		$wp_factory = new WP_UnitTest_Factory;
-		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'draft' ) );
+		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
 		$_variable_pricing = array(
 			array(
@@ -73,7 +73,12 @@ class Test_Easy_Digital_Downloads_Cart extends WP_UnitTestCase {
 	}
 
 	public function testAddToCart() {
-		$this->assertEquals(0, edd_add_to_cart($this->_post->ID));
+		$options = array(
+			'price_id' => 0,
+			'name' => 'Simple',
+			'amount' => 20
+		);
+		$this->assertEquals( 0, edd_add_to_cart( $this->_post->ID, $options ) );
 	}
 
 	public function testGetCartContents() {
@@ -81,7 +86,9 @@ class Test_Easy_Digital_Downloads_Cart extends WP_UnitTestCase {
 			'0' => array(
 				'id' => $this->_post->ID - 1,
 				'options' => array(
-					'price_id' => 0
+					'price_id' => 0,
+					'name' => 'Simple',
+					'amount' => 20
 				)
 			)
 		);
@@ -95,6 +102,10 @@ class Test_Easy_Digital_Downloads_Cart extends WP_UnitTestCase {
 
 	public function testItemInCart() {
 		$this->assertFalse(edd_item_in_cart($this->_post->ID));
+	}
+
+	public function test_cart_item_price() {
+		$this->assertEquals( '&#036;0.00' , edd_cart_item_price( 0 ) );
 	}
 
 	public function testRemoveFromCart() {
