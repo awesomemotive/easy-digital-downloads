@@ -248,25 +248,25 @@ add_action( 'wp_ajax_nopriv_edd_local_tax_opt_out', 'edd_ajax_opt_out_local_taxe
  * @return void
  */
 function edd_check_for_download_price_variations() {
-	if ( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'edd_add_downloads_to_purchase_nonce' ) ) {
+	if ( ! check_ajax_referer( 'edd_add_downloads_to_purchase_nonce', 'nonce' ) )
+		return false;
 
-		$download_id = intval( $_POST['download_id'] );
+	$download_id = intval( $_POST['download_id'] );
 
-		if ( edd_has_variable_prices( $download_id ) ) {
-			$variable_prices = get_post_meta( $download_id, 'edd_variable_prices', true );
+	if ( edd_has_variable_prices( $download_id ) ) {
+		$variable_prices = get_post_meta( $download_id, 'edd_variable_prices', true );
 
-			if ( $variable_prices ) {
-				$ajax_response = '<select name="downloads[' . intval( $_POST['array_key'] ) . '][options][price_id]" class="edd-variable-prices-select">';
-					foreach ( $variable_prices as $key => $price ) {
-						$ajax_response .= '<option value="' . $key . '">' . $price['name']  . '</option>';
-					}
-				$ajax_response .= '</select>';
-			}
-
-			echo $ajax_response;
+		if ( $variable_prices ) {
+			$ajax_response = '<select name="downloads[' . intval( $_POST['array_key'] ) . '][options][price_id]" class="edd-variable-prices-select">';
+				foreach ( $variable_prices as $key => $price ) {
+					$ajax_response .= '<option value="' . $key . '">' . $price['name']  . '</option>';
+				}
+			$ajax_response .= '</select>';
 		}
 
-		edd_die();
+		echo $ajax_response;
 	}
+
+	edd_die();
 }
 add_action( 'wp_ajax_edd_check_for_download_price_variations', 'edd_check_for_download_price_variations' );

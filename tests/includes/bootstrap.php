@@ -33,6 +33,21 @@ echo "Easy Digital Downloads Loaded \n";
 echo "Installing Easy Digital Downloads... \n";
 edd_install();
 echo "Easy Digital Downloads Installed \n";
+
+echo "Loading Custom Die Handler...\n";
+
+$die_handler = './tests/includes/die-handler.php';
+
+if ( file_exists( $die_handler ) ) {
+	require_once $die_handler;
+} else {
+	exit( "Couldn't load custom die handler \n" );
+}
+
+new EDD_Die_Handler;
+
+echo "Loaded Custom Die Handler\n";
+
 echo "Preparing to execute PHPUnit Tests...\n";
 
 $_SESSION['travis'] = 'true';

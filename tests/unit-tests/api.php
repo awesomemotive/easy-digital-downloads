@@ -14,6 +14,8 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 
 	protected $_api_output_sales = null;
 
+	protected $_user_id = null;
+
 	public function setUp() {
 		parent::setUp();
 
@@ -29,6 +31,9 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		/** Create some downloads/sales for the API Tests */
 		$wp_factory = new WP_UnitTest_Factory;
 		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
+
+		$this->_user_id = $wp_factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $this->_user_id );
 
 		$_variable_pricing = array(
 			array(
@@ -257,19 +262,42 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$this->assertEquals( 'Advanced', $out['sales'][0]['products'][0]['price_name'] );
 	}
 
-	// public function override_api_format( $data, $object ) {
-	// 	return json_encode( $data );
-	// }
+	public function test_update_key() {
+		$_POST['edd_set_api_key'] = 1;
+		EDD()->api->update_key( $this->_user_id );
+		$this->assertNotEmpty( get_user_meta( $this->_user_id, 'edd_user_public_key', true ) );
+		$this->assertNotEmpty( get_user_meta( $this->_user_id, 'edd_user_secret_key', true ) );
+	}
 
-	// public function test_missing_auth() {
-	// 	global $wp_query;
+	public function test_get_user() {
+		$_POST['edd_set_api_key'] = 1;
+		EDD()->api->update_key( $this->_user_id );
+		$this->assertEquals( $this->_user_id, EDD()->api->get_user( get_user_meta( $this->_user_id, 'edd_user_public_key', true ) ) );
+	}
 
-	// 	set_exit_overload(function() { return FALSE; });
+	public function test_get_customers() {
+		$out = EDD()->api->get_customers();
 
-	// 	$wp_query->query_vars['format'] = 'json';
-	// 	add_action( 'edd_api_output_override', array( $this, 'override_api_format' ), 10, 2 );
-		
-	// 	$json = EDD()->api->invalid_auth();
-		
-	// }
+		$this->assertArrayHasKey( 'customers', $out );
+		$this->assertArrayHasKey( 'info', $out['customers'][0] );
+		$this->assertArrayHasKey( 'id', $out['customers'][0]['info'] );
+		$this->assertArrayHasKey( 'username', $out['customers'][0]['info'] );
+		$this->assertArrayHasKey( 'display_name', $out['customers'][0]['info'] );
+		$this->assertArrayHasKey( 'first_name', $out['customers'][0]['info'] );
+		$this->assertArrayHasKey( 'last_name', $out['customers'][0]['info'] );
+		$this->assertArrayHasKey( 'email', $out['customers'][0]['info'] );
+		$this->assertArrayHasKey( 'stats', $out['customers'][0] );
+		$this->assertArrayHasKey( 'total_purchases', $out['customers'][0]['stats'] );
+		$this->assertArrayHasKey( 'total_spent', $out['customers'][0]['stats'] );
+		$this->assertArrayHasKey( 'total_downloads', $out['customers'][0]['stats'] );
+
+		$this->assertEquals( 1, $out['customers'][0]['info']['id'] );
+		$this->assertEquals( 'admin', $out['customers'][0]['info']['username'] );
+		$this->assertEquals( '', $out['customers'][0]['info']['first_name'] );
+		$this->assertEquals( '', $out['customers'][0]['info']['last_name'] );
+		$this->assertEquals( 'admin@example.org', $out['customers'][0]['info']['email'] );
+		$this->assertEquals( 0, $out['customers'][0]['stats']['total_purchases'] );
+		$this->assertEquals( 0, $out['customers'][0]['stats']['total_spent'] );
+		$this->assertEquals( 0, $out['customers'][0]['stats']['total_downloads'] );
+	}
 }

@@ -19,6 +19,9 @@ foreach ( $metrics as $metric ) {
     $totalElements   += (int) $metric['elements'];
     $checkedElements += (int) $metric['coveredelements'];
 }
+
+echo $totalElements . "\n\n";
+echo $checkedElements . "\n\n";
  
 $coverage = ( $checkedElements / $totalElements ) * 100;
  

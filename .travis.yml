@@ -81,7 +81,6 @@ before_script:
   - tar -xzf wordpress.tar.gz -C tests/vendor
   - echo -e "Create Database";
   - mysql -e "create database IF NOT EXISTS edd_test;" -uroot
-  - cat ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
 
 script: 
   - phpunit --coverage-text

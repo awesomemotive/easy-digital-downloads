@@ -1061,7 +1061,7 @@ class EDD_API {
 
 		do_action( 'edd_api_output_after', $data, $this, $format );
 
-		exit;
+		edd_die();
 	}
 
 	/**
