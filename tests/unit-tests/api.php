@@ -164,6 +164,19 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 			}
 
 		endforeach;
+
+		$out = EDD()->api->query_vars();
+		$this->assertEquals( 'token', $out[0] );
+		$this->assertEquals( 'key', $out[1] );
+		$this->assertEquals( 'query', $out[2] );
+		$this->assertEquals( 'type', $out[3] );
+		$this->assertEquals( 'product', $out[4] );
+		$this->assertEquals( 'number', $out[5] );
+		$this->assertEquals( 'date', $out[6] );
+		$this->assertEquals( 'startdate', $out[7] );
+		$this->assertEquals( 'enddate', $out[8] );
+		$this->assertEquals( 'customer', $out[9] );
+		$this->assertEquals( 'format', $out[10] );
 	}
 
 	public function testGetProducts() {
@@ -304,10 +317,24 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$this->assertEquals( 0, $out['customers'][0]['stats']['total_downloads'] );
 	}
 
+	public function test_missing_auth() {
+		EDD()->api->missing_auth();
+		$out = EDD()->api->get_output();
+		$this->assertArrayHasKey( 'error', $out );
+		$this->assertEquals( 'You must specify both a token and API key!', $out['error'] );
+	}
+
 	public function test_invalid_auth() {
 		EDD()->api->invalid_auth();
 		$out = EDD()->api->get_output();
 		$this->assertArrayHasKey( 'error', $out );
 		$this->assertEquals( 'Your request could not be authenticated!', $out['error'] );
+	}
+
+	public function test_invalid_key() {
+		EDD()->api->invalid_key();
+		$out = EDD()->api->get_output();
+		$this->assertArrayHasKey( 'error', $out );
+		$this->assertEquals( 'Invalid API key!', $out['error'] );
 	}
 }
