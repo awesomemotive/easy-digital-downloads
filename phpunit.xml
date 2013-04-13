@@ -27,6 +27,9 @@
 	<filter>
 		<blacklist>
 			<directory suffix=".php">./tests/</directory>
+			<directory suffix=".php">./includes/libraries/</directory>
+			<directory suffix=".php">./templates/</directory>
+			<directory suffix=".php">./languages/</directory>
 			<!-- Need to exclude the main plugin file because the assertions are already made in tests/unit-tests/easy-digital-downloads.php -->
 			<file>./easy-digital-downloads.php</file>
 		</blacklist>
