@@ -923,7 +923,7 @@ class EDD_API {
 	public function get_recent_sales() {
 		$sales = array();
 
-		$query = edd_get_payments( array( 'number' => $this->per_page(), 'page' => $this->get_paged() ) );
+		$query = edd_get_payments( array( 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
 
 		if ( $query ) {
 			$i = 0;
