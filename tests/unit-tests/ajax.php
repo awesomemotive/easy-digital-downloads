@@ -163,4 +163,71 @@ class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 
 		$this->assertEquals( 'removed', $this->_handleAjax( 'edd_remove_from_cart' ) );
 	}
+
+	public function test_checkout_login_fields() {
+		$this->_handleAjax( 'nopriv_checkout_login' );
+		
+		$this->assertContains( '<fieldset id="edd_login_fields">', $this->_last_response );
+		$this->assertContains( '<legend>Login to your account</legend>', $this->_last_response );
+		$this->assertContains( '<p id="edd-user-login-wrap">', $this->_last_response );
+		$this->assertContains( '<label class="edd-label" for="edd-username">Username</label>', $this->_last_response );
+		$this->assertContains( '<input class="edd-input" type="text" name="edd_user_login" id="edd_user_login" value="" placeholder="Your username"/>', $this->_last_response );
+		$this->assertContains( '<p id="edd-user-pass-wrap" class="edd_login_password">', $this->_last_response );
+		$this->assertContains( '<label class="edd-label" for="edd-password">Password</label>', $this->_last_response );
+		$this->assertContains( '<input class="edd-input" type="password" name="edd_user_pass" id="edd_user_pass" placeholder="Your password"/>', $this->_last_response );
+		$this->assertContains( '<input type="hidden" name="edd-purchase-var" value="needs-to-login"/>', $this->_last_response );
+		$this->assertContains( '</fieldset><!--end #edd_login_fields-->', $this->_last_response );
+		$this->assertContains( '<p id="edd-new-account-wrap">', $this->_last_response );
+		$this->assertContains( 'Need to create an account?', $this->_last_response );
+		$this->assertContains( '<a href="" class="edd_checkout_register_login" data-action="checkout_register">', $this->_last_response );
+		$this->assertContains( 'Register or checkout as a guest', $this->_last_response );
+		$this->assertContains( '</a>', $this->_last_response );
+		$this->assertContains( '</p>', $this->_last_response );
+	}
+
+	public function test_checkout_register_fields() {
+		$expected = <<<DATA
+	<fieldset id="edd_register_fields">
+		<p id="edd-login-account-wrap">Already have an account? <a href="?login=1" class="edd_checkout_register_login" data-action="checkout_login">Login</a></p>
+		<p id="edd-user-email-wrap">
+			<label for="edd-email">Email</label>
+			<span class="edd-description">We will send the purchase receipt to this address.</span>
+			<input name="edd_email" id="edd-email" class="required edd-input" type="email" placeholder="Email" title="Email"/>
+		</p>
+		<p id="edd-user-first-name-wrap">
+			<label class="edd-label" for="edd-first">First Name</label>
+			<span class="edd-description">We will use this to personalize your account experience.</span>
+			<input class="edd-input required" type="text" name="edd_first" placeholder="First Name" id="edd-first" value=""/>
+		</p>
+		<p id="edd-user-last-name-wrap">
+			<label class="edd-label" for="edd-last">Last Name</label>
+			<span class="edd-description">We will use this as well to personalize your account experience.</span>
+			<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="Last name" value=""/>
+		</p>
+		<fieldset id="edd_register_account_fields">
+			<legend>Create an account (optional)</legend>
+						<p id="edd-user-login-wrap">
+				<label for="edd_user_login">Username</label>
+				<span class="edd-description">The username you will use to log into your account.</span>
+				<input name="edd_user_login" id="edd_user_login" class="edd-input" type="text" placeholder="Username" title="Username"/>
+			</p>
+			<p id="edd-user-pass-wrap">
+				<label for="password">Password</label>
+				<span class="edd-description">The password used to access your account.</span>
+				<input name="edd_user_pass" id="edd_user_pass" class="edd-input" placeholder="Password" type="password"/>
+			</p>
+			<p id="edd-user-pass-confirm-wrap" class="edd_register_password">
+				<label for="password_again">Password Again</label>
+				<span class="edd-description">Confirm your password.</span>
+				<input name="edd_user_pass_confirm" id="edd_user_pass_confirm" class="edd-input" placeholder="Confirm password" type="password"/>
+			</p>
+					</fieldset>
+		<input type="hidden" name="edd-purchase-var" value="needs-to-register"/>
+
+			</fieldset>
+	
+DATA;
+		$this->_handleAjax( 'nopriv_checkout_register' );
+		$this->assertEquals( $expected, $this->_last_response );
+	}
 }
