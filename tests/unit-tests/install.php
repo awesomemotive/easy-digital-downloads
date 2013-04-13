@@ -18,10 +18,6 @@ class Test_Activation extends WP_UnitTestCase {
 		$this->assertEquals( $expected, get_option( 'edd_settings_general' ) );
 	}
 
-	public function test_edd_version() {
-		$this->assertEquals( EDD_VERSION, get_option( 'edd_version' ) );
-	}
-
 	public function test_transient() {
 		$transient = get_transient( '_edd_activation_redirect' );
 
