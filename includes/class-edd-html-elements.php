@@ -166,4 +166,26 @@ class EDD_HTML_Elements {
 		return $output;
 	}
 
+
+	/**
+	 * Renders an HTML Text field
+	 *
+	 * @access public
+	 * @since 1.5.2
+	 * @param string $name Name attribute of the text field
+	 * @param string $value The value to prepopulate the field with
+	 * @return string $output Text field
+	 */
+	public function text( $name = 'edd_text', $value = '', $label = '', $desc = '' ) {
+
+		$output = '<p id="edd-' . sanitize_key( $name ) . '-wrap">';
+			$output .= '<label class="edd-label" for="edd-' . sanitize_key( $name ) . '">' . esc_html( $label ) . '</label>';
+			if( ! empty( $desc ) )
+				$output .= '<span class="edd-description">' . esc_html( $desc ) . '</span>';
+			$output = '<input type="text" name="' . esc_attr( sanitize_key( $name ) ) . '" id="' . esc_attr( sanitize_key( $name ) )  . '" value="' . esc_attr( $value ) . '"/>';
+		$output .= '</p>';
+
+		return $output;
+	}
+
 }

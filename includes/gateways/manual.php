@@ -54,7 +54,7 @@ function edd_manual_payment( $purchase_data ) {
 		'date' 			=> $purchase_data['date'],
 		'user_email' 	=> $purchase_data['user_email'],
 		'purchase_key' 	=> $purchase_data['purchase_key'],
-		'currency' 		=> $edd_options['currency'],
+		'currency' 		=> edd_get_currency(),
 		'downloads' 	=> $purchase_data['downloads'],
 		'user_info' 	=> $purchase_data['user_info'],
 		'cart_details' 	=> $purchase_data['cart_details'],
