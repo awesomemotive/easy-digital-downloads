@@ -916,15 +916,11 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 function edd_hide_payment_notes( $clauses, $wp_comment_query ) {
     global $wpdb;
 
-    if ( ! $clauses['join'] )
-        $clauses['join'] = "JOIN $wpdb->posts ON $wpdb->posts.ID = $wpdb->comments.comment_post_ID";
-
-    if ( ! $wp_comment_query->query_vars['post_type' ] ) // only apply if post_type hasn't already been queried
-        $clauses['where'] .= $wpdb->prepare( " AND {$wpdb->posts}.post_type != %s", 'edd_payment' );
-
+	$clauses['where'] .= ' AND comment_type != "edd_payment_note"';
     return $clauses;
 }
 add_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
+
 
 /**
  * Exclude notes (comments) on edd_payment post type from showing in comment feeds
