@@ -195,7 +195,7 @@ class Test_Easy_Digital_Downloads_API extends WP_UnitTestCase {
 		$this->assertEquals( 'test-download', $out['products'][0]['info']['slug'] );
 		$this->assertEquals( 'Test Download', $out['products'][0]['info']['title'] );
 		$this->assertEquals( 'publish', $out['products'][0]['info']['status'] );
-		$this->assertEquals( 'http://example.org/downloads/test-download/', $out['products'][0]['info']['link'] );
+		$this->assertEquals( 'http://example.org/?download=test-download', $out['products'][0]['info']['link'] );
 		$this->assertEquals( 'Post content 1', $out['products'][0]['info']['content'] );
 		$this->assertEquals( '', $out['products'][0]['info']['thumbnail'] );
 	}
