@@ -97,7 +97,7 @@ class Tests_Shortcode extends \WP_UnitTestCase {
 		$this->assertContains( '<div itemscope itemtype="http://schema.org/Product" class="edd_download" id="edd_download_'. $post_id .'" style="width: 33%; float: left;">', edd_downloads_query() );
 		$this->assertContains( '<div class="edd_download_inner">', edd_downloads_query() );
 		$this->assertContains( '<h3 itemprop="name" class="edd_download_title">', edd_downloads_query() );
-		$this->assertContains( '<a itemprop="url" href="http://example.org/?download=post-title-1">Post title 1</a>', edd_downloads_query() );
+		$this->assertContains( '<a itemprop="url"', edd_downloads_query() );
 		$this->assertContains( '</h3>', edd_downloads_query() );
 		$this->assertContains( '<div itemprop="description" class="edd_download_excerpt">', edd_downloads_query() );
 		$this->assertContains( '<p>Post excerpt 1</p>', edd_downloads_query() );
