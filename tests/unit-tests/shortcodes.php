@@ -102,7 +102,6 @@ class Tests_Shortcode extends \WP_UnitTestCase {
 		$this->assertContains( '<div itemprop="description" class="edd_download_excerpt">', edd_downloads_query() );
 		$this->assertContains( '<p>Post excerpt 1</p>', edd_downloads_query() );
 		$this->assertContains( '<div class="edd_download_buy_button">', edd_downloads_query() );
-		$this->assertContains( '<!--dynamic-cached-content-->', edd_downloads_query() );
 		$this->assertContains( '<form id="edd_purchase_'. $post_id .'" class="edd_download_purchase_form" method="post">', edd_downloads_query() );
 		$this->assertContains( '<div class="edd_purchase_submit_wrapper">', edd_downloads_query() );
 		$this->assertContains( '<input type="submit" class="edd-add-to-cart button blue edd-submit" name="edd_purchase_download" value="Purchase" data-action="edd_add_to_cart" data-download-id="'. $post_id .'" data-variable-price=no data-price-mode=single />', edd_downloads_query() );
@@ -116,7 +115,6 @@ class Tests_Shortcode extends \WP_UnitTestCase {
 		$this->assertContains( '<input type="hidden" name="download_id" value="'. $post_id .'">', edd_downloads_query() );
 		$this->assertContains( '<input type="hidden" name="edd_action" value="add_to_cart">', edd_downloads_query() );
 		$this->assertContains( '</form><!--end #edd_purchase_'. $post_id .'-->', edd_downloads_query() );
-		$this->assertContains( '<!--/dynamic-cached-content-->', edd_downloads_query() );
 		$this->assertContains( '<div style="clear:both;"></div>', edd_downloads_query() );
 		$this->assertContains( '<div id="edd_download_pagination" class="navigation">', edd_downloads_query() );
 	}
