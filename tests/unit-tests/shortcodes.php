@@ -1,63 +1,29 @@
 <?php
-/**
- * Test Shortcodes
- */
+namespace EDD_Unit_Tests;
 
-class Test_Easy_Digital_Downloads_Shortcodes extends WP_UnitTestCase {
-	protected $_post;
+/**
+ * @group edd_shortcode
+ */
+class Tests_Shortcode extends \WP_UnitTestCase {
+	protected $_shortcodes = array( 'purchase_link', 'download_history', 'purchase_history', 'download_checkout', 'download_cart', 'edd_login', 'download_discounts', 'purchase_collection', 'downloads', 'edd_price', 'edd_receipt', 'edd_profile_editor' );
 
 	public function setUp() {
 		parent::setUp();
 
-		$wp_factory = new WP_UnitTest_Factory;
-		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'draft' ) );
-
-		$_variable_pricing = array(
-			array(
-				'name' => 'Simple',
-				'amount' => 20
-			),
-			array(
-				'name' => 'Advanced',
-				'amount' => 100
-			)
-		);
-
-		$_download_files = array(
-			array(
-				'name' => 'File 1',
-				'file' => 'http://localhost/file1.jpg',
-				'condition' => 0
-			),
-			array(
-				'name' => 'File 2',
-				'file' => 'http://localhost/file2.jpg',
-				'condition' => 'all'
-			)
-		);
-
-		$meta = array(
-			'edd_price' => '0.00',
-			'_variable_pricing' => 1,
-			'_edd_price_options_mode' => 'on',
-			'edd_variable_prices' => array_values( $_variable_pricing ), 
-			'edd_download_files' => array_values( $_download_files ),
-			'_edd_download_limit' => 20,
-			'_edd_hide_purchase_link' => 1,
-			'edd_product_notes' => 'Purchase Notes',
-			'_edd_product_type' => 'default',
-			'_edd_download_earnings' => 129.43,
-			'_edd_download_sales' => 59,
-			'_edd_download_limit_override_1' => 1
-		);
-		foreach( $meta as $key => $value ) {
-			update_post_meta( $post_id, $key, $value );
-		}
-
-		$this->_post = get_post( $post_id );
+		foreach ( $this->_shortcodes as $shortcode )
+			add_shortcode( $shortcode, array( $this, '_shortcode_' . str_replace( '-', '_', $shortcode ) ) );
 	}
 
-	public function testShortcodesAreRegistered() {
+	public function tearDown() {
+		global $shortcode_tags;
+
+		parent::tearDown();
+
+		foreach ( $this->shortcodes as $shortcode )
+			unset( $shortcode_tags[ $shortcode ] );
+	}
+
+	public function test_shortcodes_are_registered() {
 		global $shortcode_tags;
 		$this->assertArrayHasKey('purchase_link', $shortcode_tags);
 		$this->assertArrayHasKey('download_history', $shortcode_tags);
