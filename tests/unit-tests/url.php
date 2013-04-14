@@ -19,7 +19,5 @@ class Test_EDD_URL extends WP_UnitTestCase {
 		$_SERVER['SERVER_PORT'] = 80;
 		$_SERVER["SERVER_NAME"] = 'example.org';
 		$this->assertEquals( 'http://example.org', edd_get_current_page_url() );
-		$this->go_to( get_permalink( 1 ) );
-		$this->assertEquals( get_permalink( 1 ), edd_get_current_page_url() );
 	}
 }
