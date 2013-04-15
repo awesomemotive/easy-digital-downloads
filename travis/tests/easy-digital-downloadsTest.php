@@ -96,7 +96,7 @@ class Easy_Digital_DownloadsTest extends WP_UnitTestCase {
 	public function testSetup_Constants() {
 		// At this point, since plugin is loaded these should be defined
 		// Plugin version
-		$this->assertSame( EDD_VERSION, '1.5.1' );
+		$this->assertSame( EDD_VERSION, '1.5.2' );
 
 		// Plugin Folder URL
 		$path = str_replace( 'travis/tests/', '', plugin_dir_url( __FILE__ ) );
