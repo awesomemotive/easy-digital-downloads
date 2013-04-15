@@ -911,7 +911,7 @@ class EDD_API {
 			$stats['customers']['total_customers'] = $count[0];
 
 			return $stats;
-		} elseif ( $args['type'] === null ) {
+		} elseif ( empty( $args['type'] ) ) {
 			$stats = array();
 			$stats = array_merge( $stats, $this->get_default_sales_stats() );
 			$stats = array_merge ( $stats, $this->get_default_earnings_stats() );
