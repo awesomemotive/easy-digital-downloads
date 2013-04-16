@@ -782,10 +782,10 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 						wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ) );
 
 					// Make sure the link hasn't expired
-					if ( time() < $expire ) {
-						return $payment->ID; // Payment has been verified and link is still valid
+					if ( time() > $expire ) {
+						wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'edd' ) ), __( 'Error', 'edd' ) );
 					}
-					return false; // Payment verified, but link is no longer valid
+					return $payment->ID; // Payment has been verified and link is still valid
 				}
 
 			}
