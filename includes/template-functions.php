@@ -69,7 +69,8 @@ function edd_get_purchase_link( $args = array() ) {
 	$variable_pricing = edd_has_variable_prices( $args['download_id'] );
 	$data_variable    = $variable_pricing ? ' data-variable-price=yes' : 'data-variable-price=no';
 	$type             = edd_single_price_option_mode( $args['download_id'] ) ? 'data-price-mode=multi' : 'data-price-mode=single';
-	if ( $args['price'] && $args['price'] != 'no' && ! $variable_pricing ) {
+
+	if ( $args['price'] && $args['price'] !== 'no' && ! $variable_pricing ) {
 		$price = edd_get_download_price( $args['download_id'] );
 		$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . '&nbsp;&ndash;&nbsp;' . $args['text'];
 	}
