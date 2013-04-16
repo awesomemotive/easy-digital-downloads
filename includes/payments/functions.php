@@ -566,7 +566,7 @@ function edd_get_total_earnings() {
 		// Cache results for 1 day. This cache is cleared automatically when a payment is made
 		set_transient( 'edd_earnings_total', $total, 86400 );
 	}
-	return apply_filters( 'edd_total_earnings', $total );
+	return apply_filters( 'edd_total_earnings', round( $total, 2 ) );
 }
 
 /**
