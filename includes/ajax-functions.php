@@ -22,10 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_is_ajax_enabled() {
 	global $edd_options;
-	if ( ! isset( $edd_options['disable_ajax_cart'] ) ) {
-		return true;
-	}
-	return false;
+	$retval = ! isset( $edd_options['disable_ajax_cart'] );
+	return apply_filters( 'edd_is_ajax_enabled', $retval );
 }
 
 
