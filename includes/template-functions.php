@@ -150,7 +150,7 @@ function edd_get_purchase_link( $args = array() ) {
  * @param bool $show_price
  * @return void
  */
-function edd_purchase_variable_pricing( $download_id, $show_price ) {
+function edd_purchase_variable_pricing( $download_id = 0, $show_price = true ) {
 	$variable_pricing = edd_has_variable_prices( $download_id );
 
 	if ( ! $variable_pricing || empty( $show_price ) )
