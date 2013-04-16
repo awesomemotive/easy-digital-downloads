@@ -270,7 +270,7 @@ class EDD_API {
 			case 'stats' :
 
 				$data = $this->get_stats( array(
-					'type'      => $wp_query->query_vars['type'],
+					'type'      => isset( $wp_query->query_vars['type'] )      ? $wp_query->query_vars['type']      : null,
 					'product'   => isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null,
 					'date'      => isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null,
 					'startdate' => isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null,
@@ -335,7 +335,7 @@ class EDD_API {
 		$query = isset( $wp_query->query_vars['edd-api'] ) ? $wp_query->query_vars['edd-api'] : null;
 
 		// Make sure our query is valid
-		if ( ! in_array( $query, $accepted ) || ( $query == 'stats' && ! isset( $wp_query->query_vars['type'] ) ) ) {
+		if ( ! in_array( $query, $accepted ) ) {
 			$error['error'] = __( 'Invalid query!', 'edd' );
 
 			$this->data = $error;
@@ -725,7 +725,7 @@ class EDD_API {
 	 */
 	public function get_stats( $args = array() ) {
 		$defaults = array(
-			'type'      => '',
+			'type'      => null,
 			'product'   => null,
 			'date'      => null,
 			'startdate' => null,
@@ -739,13 +739,7 @@ class EDD_API {
 		if ( $args['type'] == 'sales' ) {
 			if ( $args['product'] == null ) {
 				if ( $args['date'] == null ) {
-					// Default sales return
-					$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
-					$previous_year  = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
-
-					$sales['sales']['current_month'] = edd_get_sales_by_date( null, date( 'n' ), date( 'Y' ) );
-					$sales['sales']['last_month']    = edd_get_sales_by_date( null, $previous_month, $previous_year );
-					$sales['sales']['totals']        = edd_get_total_sales();
+					$sales = $this->get_default_sales_stats();
 				} elseif( $args['date'] === 'range' ) {
 					// Return sales for a date range
 
@@ -827,13 +821,7 @@ class EDD_API {
 		} elseif ( $args['type'] == 'earnings' ) {
 			if ( $args['product'] == null ) {
 				if ( $args['date'] == null ) {
-					// Default earnings return
-					$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
-					$previous_year  = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
-
-					$earnings['earnings']['current_month'] = edd_get_earnings_by_date( null, date( 'n' ), date( 'Y' ) );
-					$earnings['earnings']['last_month'] = edd_get_earnings_by_date( null, $previous_month, $previous_year );
-					$earnings['earnings']['totals'] = edd_get_total_earnings();
+					$earnings = $this->get_default_earnings_stats();
 				} elseif ( $args['date'] === 'range' ) {
 					// Return sales for a date range
 
@@ -923,6 +911,12 @@ class EDD_API {
 			$stats['customers']['total_customers'] = $count[0];
 
 			return $stats;
+		} elseif ( empty( $args['type'] ) ) {
+			$stats = array();
+			$stats = array_merge( $stats, $this->get_default_sales_stats() );
+			$stats = array_merge ( $stats, $this->get_default_earnings_stats() );
+
+			return array( 'stats' => $stats );
 		}
 	}
 
@@ -1163,5 +1157,43 @@ class EDD_API {
 				delete_user_meta( $user_id, 'edd_user_secret_key' );
 			}
 		}
+	}
+
+	/**
+	 * Generate the default sales stats returned by the 'stats' endpoint
+	 *
+	 * @access private
+	 * @since 1.5.3
+	 * @return array default sales statistics
+	 */
+	private function get_default_sales_stats() {
+		// Default sales return
+		$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
+		$previous_year  = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
+
+		$sales['sales']['current_month'] = edd_get_sales_by_date( null, date( 'n' ), date( 'Y' ) );
+		$sales['sales']['last_month']    = edd_get_sales_by_date( null, $previous_month, $previous_year );
+		$sales['sales']['totals']        = edd_get_total_sales();
+
+		return $sales;
+	}
+
+	/**
+	 * Generate the default earnings stats returned by the 'stats' endpoint 
+	 *
+	 * @access private
+	 * @since 1.5.3
+	 * @return array default eranings statistics
+	 */
+	private function get_default_earnings_stats() {
+		// Default earnings return
+		$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
+		$previous_year  = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
+
+		$earnings['earnings']['current_month'] = edd_get_earnings_by_date( null, date( 'n' ), date( 'Y' ) );
+		$earnings['earnings']['last_month'] = edd_get_earnings_by_date( null, $previous_month, $previous_year );
+		$earnings['earnings']['totals'] = edd_get_total_earnings();
+
+		return $earnings;
 	}
 }
