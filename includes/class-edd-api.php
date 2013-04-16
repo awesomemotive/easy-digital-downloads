@@ -1191,8 +1191,8 @@ class EDD_API {
 		$previous_year  = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
 
 		$earnings['earnings']['current_month'] = edd_get_earnings_by_date( null, date( 'n' ), date( 'Y' ) );
-		$earnings['earnings']['last_month'] = edd_get_earnings_by_date( null, $previous_month, $previous_year );
-		$earnings['earnings']['totals'] = edd_get_total_earnings();
+		$earnings['earnings']['last_month']    = edd_get_earnings_by_date( null, $previous_month, $previous_year );
+		$earnings['earnings']['totals']        = edd_get_total_earnings();
 
 		return $earnings;
 	}
