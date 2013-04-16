@@ -15,6 +15,21 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
+ * Checks whether AJAX is enabled.
+ *
+ * @since 1.0
+ * @return bool
+ */
+function edd_is_ajax_enabled() {
+	global $edd_options;
+	if ( ! isset( $edd_options['disable_ajax_cart'] ) ) {
+		return true;
+	}
+	return false;
+}
+
+
+/**
  * Get AJAX URL
  *
  * @since 1.3
