@@ -33,10 +33,9 @@
       - sed -i "s/yourusernamehere/root/" wp-tests-config.php
       - sed -i "s/yourpasswordhere//" wp-tests-config.php
       - mysql -e 'CREATE DATABASE wordpress_test;' -uroot
-      - cd tests
 
   script:
-      - phpunit --coverage-text
+      - phpunit -c tests/phpunit.xml --coverage-text
       - php tests/includes/clover.php tests/clover.xml 90
 
   notifications:
