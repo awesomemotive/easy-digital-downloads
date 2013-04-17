@@ -34,6 +34,7 @@
       - sed -i "s/yourpasswordhere//" wp-tests-config.php
       - mysql -e 'CREATE DATABASE wordpress_test;' -uroot
       - cd ../../
+      - ls -l
 
   script:
       - phpunit -c tests/phpunit.xml --coverage-text
