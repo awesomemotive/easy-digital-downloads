@@ -9,13 +9,9 @@ class Test_Activation extends WP_UnitTestCase {
 	}
 
 	public function test_settings_general() {
-		$expected = array(
-			'purchase_page' => 3,
-			'success_page' => 4,
-			'failure_page' => 5
-		);
-
-		$this->assertEquals( $expected, get_option( 'edd_settings_general' ) );
+		$this->assertArrayHasKey( 'purchase_page', get_option( 'edd_settings_general' ) );
+		$this->assertArrayHasKey( 'success_page', get_option( 'edd_settings_general' ) );
+		$this->assertArrayHasKey( 'failure_page', get_option( 'edd_settings_general' ) );
 	}
 
 	public function test_transient() {
