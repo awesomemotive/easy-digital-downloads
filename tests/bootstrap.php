@@ -1,7 +1,5 @@
 <?php
 
-putenv('WP_TESTS_DIR=../tmp/wordpress-tests/');
-
 define( 'EDD_PLUGIN_DIR', dirname( dirname( __FILE__ ) ) . '/' );
 
 require_once getenv( 'WP_TESTS_DIR' ) . '/includes/functions.php';
