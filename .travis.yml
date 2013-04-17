@@ -24,7 +24,6 @@
       - plugin_slug=$(basename $(pwd))
       - plugin_dir=$WP_CORE_DIR/wp-content/plugins/$plugin_slug
       - cd ..
-      - mv $plugin_slug $plugin_dir
       - export WP_TESTS_DIR=tmp/wordpress-tests/
       - svn co --ignore-externals http://unit-tests.svn.wordpress.org/trunk/ $WP_TESTS_DIR
       - cd $WP_TESTS_DIR
