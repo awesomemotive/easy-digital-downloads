@@ -14,11 +14,10 @@
 		 syntaxCheck="false"
 		 verbose="false"
 		 strict="true"
-		 bootstrap="tests/includes/bootstrap.php">
+		 bootstrap="bootstrap.php">
 	<testsuites>
 		<testsuite name="Easy Digital Downloads Test Suite">
-			<directory suffix=".php">tests/unit-tests</directory>
-			<!-- <exclude>tests/unit-tests/ajax.php</exclude> -->
+			<directory suffix=".php">./unit-tests</directory>
 		</testsuite>
 	</testsuites>
 	<logging>
