@@ -24,16 +24,13 @@
       - plugin_slug=$(basename $(pwd))
       - plugin_dir=$WP_CORE_DIR/wp-content/plugins/$plugin_slug
       - cd ..
-      - export WP_TESTS_DIR=tmp/wordpress-tests/
-      - svn co --ignore-externals http://unit-tests.svn.wordpress.org/trunk/ $WP_TESTS_DIR
-      - cd $WP_TESTS_DIR
-      - cp wp-tests-config-sample.php wp-tests-config.php
-      - sed -i "s:dirname( __FILE__ ) . '/wordpress/':'$WP_CORE_DIR':" wp-tests-config.php
-      - sed -i "s/yourdbnamehere/wordpress_test/" wp-tests-config.php
-      - sed -i "s/yourusernamehere/root/" wp-tests-config.php
-      - sed -i "s/yourpasswordhere//" wp-tests-config.php
+      - svn co --ignore-externals http://unit-tests.svn.wordpress.org/trunk/ tmp/wordpress-tests/
+      - cp tmp/wordpress-tests/wp-tests-config-sample.php tmp/wordpress-tests/wp-tests-config.php
+      - sed -i "s:dirname( __FILE__ ) . '/wordpress/':'$WP_CORE_DIR':" tmp/wordpress-tests/wp-tests-config.php
+      - sed -i "s/yourdbnamehere/wordpress_test/" tmp/wordpress-tests/wp-tests-config.php
+      - sed -i "s/yourusernamehere/root/" tmp/wordpress-tests/wp-tests-config.php
+      - sed -i "s/yourpasswordhere//" tmp/wordpress-tests/wp-tests-config.php
       - mysql -e 'CREATE DATABASE wordpress_test;' -uroot
-      - cd $plugin_slug
 
   script:
       - phpunit -c tests/phpunit.xml --coverage-text
