@@ -25,6 +25,7 @@
 	</logging>
 	<filter>
 		<blacklist>
+			<directory suffix=".php">./../tmp/</directory>
 			<directory suffix=".php">./tests/</directory>
 			<directory suffix=".php">./includes/admin/</directory>
 			<directory suffix=".php">./includes/gateways/</directory>
