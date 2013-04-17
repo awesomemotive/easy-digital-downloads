@@ -1,5 +1,4 @@
 <?php
-require_once('./tests/vendor/wordpress-tests/lib/factory.php');
 
 /**
  * Test Discounts
@@ -9,29 +8,21 @@ class Test_Easy_Digital_Downloads_Discounts extends WP_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$wp_factory = new WP_UnitTest_Factory;
-		$post_id = $wp_factory->post->create( array( 'post_type' => 'edd_discount', 'post_status' => 'publish' ) );
 
 		$meta = array(
+			'name' => '20 Percent Off',
 			'type' => 'percent',
 			'amount' => '20',
 			'code' => '20OFF',
 			'product_condition' => 'all',
-			'start' => '12/12/2000 00:00:00',
-			'expiration' => '12/31/2050 23:59:59',
-			'max_uses' => 10,
+			'max' => 10,
 			'uses' => 54,
-			'min_price' => 128,
-			'is_not_global' => true,
-			'product_condition' => 'any',
-			'is_single_use' => true
+			'min_price' => 128
 		);
 
-		foreach( $meta as $key => $value ) {
-			update_post_meta( $post_id, '_edd_discount_' . $key, $value );
-		}
+		edd_store_discount( $meta );
 
-		$this->_post = get_post( $post_id );
+		$this->_post->ID = edd_get_discount_id_by_code( '20OFF' );
 	}
 
 	public function tearDown() {
@@ -41,7 +32,7 @@ class Test_Easy_Digital_Downloads_Discounts extends WP_UnitTestCase {
 	public function testAdditionOfDiscount() {
 		$post = array(
 			'name' => 'Test Discount',
-			'type' => 'percentage',
+			'type' => 'percent',
 			'amount' => '20',
 			'code' => '20OFF',
 			'product_condition' => 'all',
@@ -77,11 +68,11 @@ class Test_Easy_Digital_Downloads_Discounts extends WP_UnitTestCase {
 	}
 
 	public function testDiscountStartDate() {
-		$this->assertSame('12/12/2000 00:00:00', edd_get_discount_start_date($this->_post->ID));
+		$this->assertSame('', edd_get_discount_start_date($this->_post->ID));
 	}
 
 	public function testDiscountExpirationDate() {
-		$this->assertSame('12/31/2050 23:59:59', edd_get_discount_expiration($this->_post->ID));
+		$this->assertSame('', edd_get_discount_expiration($this->_post->ID));
 	}
 
 	public function testDiscountMaxUses() {
@@ -105,15 +96,15 @@ class Test_Easy_Digital_Downloads_Discounts extends WP_UnitTestCase {
 	}
 
 	public function testDiscountProductCondition() {
-		$this->assertSame('any', edd_get_discount_product_condition($this->_post->ID));
+		$this->assertSame('all', edd_get_discount_product_condition($this->_post->ID));
 	}
 
 	public function testDiscountIsNotGlobal() {
-		$this->assertTrue(edd_is_discount_not_global($this->_post->ID));
+		$this->assertFalse(edd_is_discount_not_global($this->_post->ID));
 	}
 
 	public function testDiscountIsSingleUse() {
-		$this->assertTrue(edd_discount_is_single_use($this->_post->ID));
+		$this->assertFalse(edd_discount_is_single_use($this->_post->ID));
 	}
 
 	public function testDiscountIsStarted() {
@@ -144,8 +135,9 @@ class Test_Easy_Digital_Downloads_Discounts extends WP_UnitTestCase {
 		$this->assertSame($this->_post->ID, edd_get_discount_id_by_code('20OFF'));
 	}
 
+
 	public function testGetDiscountedAmount() {
-		$this->assertSame(432.0, edd_get_discounted_amount('20OFF', '540'));
+		$this->assertEquals(432.0, edd_get_discounted_amount('20OFF', '540'));
 	}
 
 	public function testDiscountIncreaseUsage() {

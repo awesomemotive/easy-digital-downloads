@@ -42,6 +42,27 @@ if ( $purchases ) : ?>
 										foreach ( $download_files as $filekey => $file ) {
 											$download_url = edd_get_download_file_url( $purchase_data['key'], $purchase_data['email'], $filekey, $id, $price_id );
 											echo '<div class="edd_download_file"><a href="' . esc_url( $download_url ) . '" class="edd_download_file_link">' . esc_html( $file['name'] ) . '</a></div>';
+											$logs = new EDD_Logging();
+											$meta_query = array(
+												'relation'	=> 'AND',
+												array(
+													'key' 	=> '_edd_log_file_id',
+													'value' => (int) $fileky
+												),
+												array(
+													'key' 	=> '_edd_log_payment_id',
+													'value' => (int) $purchase_data['key']
+												)
+											);
+
+											$download_count = $logs->get_log_count( $id, 'file_download', $meta_query );
+											$download_limit = edd_get_file_download_limit( $id );
+
+											if ( ! empty( $download_limit ) ) {
+												echo 'You have download this file ' . $download_count . ' out of '. $download_limit . ' times';
+											}
+
+
 											do_action( 'edd_purchase_history_files', $filekey, $file, $id, $post->ID, $purchase_data );
 										}
 									} else {
