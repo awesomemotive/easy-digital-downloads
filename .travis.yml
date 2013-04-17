@@ -16,6 +16,7 @@
 
   # Grab the setup script and execute
   before_script:
+      - mkdir -p tmp
       - WP_CORE_DIR=tmp/wordpress/
       - wget -nv -O tmp/wordpress.tar.gz https://github.com/WordPress/WordPress/tarball/$WP_VERSION
       - mkdir -p $WP_CORE_DIR
