@@ -33,7 +33,7 @@
       - sed -i "s/yourusernamehere/root/" wp-tests-config.php
       - sed -i "s/yourpasswordhere//" wp-tests-config.php
       - mysql -e 'CREATE DATABASE wordpress_test;' -uroot
-      - cd $plugin_dir/tests
+      - cd tests
 
   script:
       - phpunit --coverage-text
