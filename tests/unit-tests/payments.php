@@ -161,6 +161,14 @@ class Test_Easy_Digital_Downloads_Payments extends WP_UnitTestCase {
 	public function test_get_earnings_by_date() {
 		$wp_factory = new WP_UnitTest_Factory;
 		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Payment', 'post_type' => 'edd_payment', 'post_status' => 'publish' ) );
+		$meta = array(
+			'_edd_payment_total' => '120.00',
+			'_edd_payment_mode' => 'live'
+		);
+		foreach( $meta as $key => $value ) {
+			update_post_meta( $post_id, $key, $value );
+		}
+		$this->assertEquals( 120, edd_get_earnings_by_date( null, date( 'n' ), date( 'Y' ) ) );
 	}
 
 	public function test_undo_purchase() {

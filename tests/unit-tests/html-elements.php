@@ -20,29 +20,17 @@ class Test_HTML_Elements extends WP_UnitTestCase {
 	}
 
 	public function test_discount_dropdown() {
-		$wp_factory = new WP_UnitTest_Factory;
-		$post_id = $wp_factory->post->create( array( 'post_type' => 'edd_discount', 'post_status' => 'publish' ) );
-
 		$meta = array(
+			'name' => '50 Percent Off',
 			'type' => 'percent',
-			'amount' => '20',
-			'code' => '20OFF',
-			'product_condition' => 'all',
-			'start' => '12/12/2000 00:00:00',
-			'expiration' => '12/31/2050 23:59:59',
-			'max_uses' => 10,
-			'uses' => 54,
-			'min_price' => 128,
-			'is_not_global' => true,
-			'product_condition' => 'any',
-			'is_single_use' => true
+			'amount' => '50',
+			'code' => '50PERCENTOFF',
+			'product_condition' => 'all'
 		);
 
-		foreach( $meta as $key => $value ) {
-			update_post_meta( $post_id, '_edd_discount_' . $key, $value );
-		}
+		edd_store_discount( $meta );
 
-		$expected = '<select name="edd_discounts" id="edd_discounts"><option value="'. $post_id .'">Post title 1</option></select>';
+		$expected = '<select name="edd_discounts" id="edd_discounts"><option value="'. edd_get_discount_id_by_code( '50PERCENTOFF' ) .'">50 Percent Off</option></select>';
 
 		$this->assertEquals( $expected, EDD()->html->dicount_dropdown() );
 	}

@@ -25,7 +25,8 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	global $edd_options;
 
 	$payment_data = edd_get_payment_meta( $payment_id );
-	$user_info = maybe_unserialize( $payment_data['user_info'] );
+	$user_info    = maybe_unserialize( $payment_data['user_info'] );
+	$email        = edd_get_payment_user_email( $payment_id );
 
 	if ( isset( $user_info['id'] ) && $user_info['id'] > 0 ) {
 		$user_data = get_userdata($user_info['id']);
@@ -33,7 +34,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	} elseif ( isset( $user_info['first_name'] ) && isset( $user_info['last_name'] ) ) {
 		$name = $user_info['first_name'] . ' ' . $user_info['last_name'];
 	} else {
-		$name = $user_info['email'];
+		$name = $email;
 	}
 
 	$message = edd_get_email_body_header();
@@ -57,7 +58,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	// Allow add-ons to add file attachments
 	$attachments = apply_filters( 'edd_receipt_attachments', array(), $payment_id, $payment_data );
 
-	wp_mail( $payment_data['email'], $subject, $message, $headers, $attachments );
+	wp_mail( $email, $subject, $message, $headers, $attachments );
 
 	if ( $admin_notice && ! edd_admin_notices_disabled() ) {
 		do_action( 'edd_admin_sale_notice', $payment_id, $payment_data );
