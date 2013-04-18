@@ -1,11 +1,12 @@
 <?php
 /**
- * Installs BuddyPress for the purpose of the unit-tests
- *
- * @todo Reuse the init/load code in init.php
- * @todo Support MULTIBLOG
+ * Installs Easy Digital Downloads for the purpose of the unit-tests
  */
 error_reporting( E_ALL & ~E_DEPRECATED & ~E_STRICT );
+
+echo "Welcome to the Easy Digital Downloads Test Suite" . PHP_EOL;
+echo "Version: 1.0" . PHP_EOL;
+echo "Authors: Chris Christoff and Sunny Ratilal" . PHP_EOL;
 
 $config_file_path = $argv[1];
 $multisite = ! empty( $argv[2] );
