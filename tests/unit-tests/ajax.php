@@ -7,9 +7,6 @@
  *
  * Edit: Sunny Ratilal, April 2013
  */
-require_once('./tests/vendor/wordpress/wp-admin/includes/screen.php');
-require_once('./tests/vendor/wordpress/wp-includes/plugin.php');
-require_once('./tests/vendor/wordpress-tests/lib/factory.php');
 
 class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 	protected $_post = null;
