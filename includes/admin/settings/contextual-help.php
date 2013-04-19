@@ -73,6 +73,12 @@ function edd_settings_contextual_help() {
 	) );
 
 	$screen->add_help_tab( array(
+		'id'		=> 'edd-settings-extensions',
+		'title'		=> __( 'Extensions', 'edd' ),
+		'content'	=> '<p>' . __( 'This screen provides access to settings added by most Easy Digital Downloads extensions.', 'edd' ) . '</p>'
+	) );
+
+	$screen->add_help_tab( array(
 		'id'	    => 'edd-settings-misc',
 		'title'	    => __( 'Miscellaneous', 'edd' ),
 		'content'	=>
