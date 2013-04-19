@@ -104,7 +104,7 @@ class Tests_Shortcode extends \WP_UnitTestCase {
 		$this->assertContains( '<div class="edd_download_buy_button">', edd_downloads_query() );
 		$this->assertContains( '<form id="edd_purchase_'. $post_id .'" class="edd_download_purchase_form" method="post">', edd_downloads_query() );
 		$this->assertContains( '<div class="edd_purchase_submit_wrapper">', edd_downloads_query() );
-		$this->assertContains( '<input type="submit" class="edd-add-to-cart button blue edd-submit" name="edd_purchase_download" value="Purchase" data-action="edd_add_to_cart" data-download-id="'. $post_id .'" data-variable-price=no data-price-mode=single />', edd_downloads_query() );
+		$this->assertContains( '<input type="submit" class="edd-add-to-cart button blue edd-submit" name="edd_purchase_download" value="&#036;0.00&nbsp;&ndash;&nbsp;Purchase" data-action="edd_add_to_cart" data-download-id="'. $post_id .'" data-variable-price=no data-price-mode=single />', edd_downloads_query() );
 		$this->assertContains( '<a href="" class="edd_go_to_checkout button blue edd-submit" style="display:none;">Checkout</a>', edd_downloads_query() );
 		$this->assertContains( '<span class="edd-cart-ajax-alert">', edd_downloads_query() );
 		$this->assertContains( '<img alt="Loading"', edd_downloads_query() );
