@@ -439,11 +439,10 @@ class Test_Misc extends WP_UnitTestCase {
 		$this->assertEquals( 0, edd_let_to_num( WP_MEMORY_LIMIT ) / ( 1024*1024 ) );
 	}
 
+	/**
+	 * @covers ::edd_get_symlink_dir
+	 */
 	public function test_get_symlink_url() {
 		$this->assertEquals( 'http://example.org/wp-content/uploads/edd/symlinks', edd_get_symlink_url() );
-	}
-
-	public function test_get_symlink_dir() {
-		$this->markTestSkipped();
 	}
 }
