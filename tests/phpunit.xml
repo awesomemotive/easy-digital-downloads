@@ -39,6 +39,8 @@
 			<file>./../includes/emails/actions.php</file>
 			<file>./../includes/plugin-compatibility.php</file>
 			<file>./../includes/process-download.php</file>
+			<file>./../includes/scripts.php</file>
+			<file>./../includes/theme-compatibility.php</file>
 			<file>./../includes/widgets.php</file>
 		</blacklist>
 	</filter>
