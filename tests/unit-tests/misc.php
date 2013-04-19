@@ -440,7 +440,7 @@ class Test_Misc extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers edd_get_symlink_dir
+	 * @covers ::edd_get_symlink_dir
 	 */
 	public function test_get_symlink_url() {
 		$this->assertEquals( 'http://example.org/wp-content/uploads/edd/symlinks', edd_get_symlink_url() );
