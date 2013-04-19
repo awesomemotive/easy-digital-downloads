@@ -101,7 +101,7 @@ class EDD_Customers_Export extends EDD_Export {
 			$args = array(
 				'post_parent'  => absint( $_POST['edd_export_download'] ),
 				'log_type'     => 'sale',
-				'no_paging'    => true
+				'nopaging'    => true
 			);
 
 			$logs = $edd_logs->get_connected_logs( $args );
