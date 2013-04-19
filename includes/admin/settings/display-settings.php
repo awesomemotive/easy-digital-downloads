@@ -35,6 +35,7 @@ function edd_options_page() {
 			<a href="<?php echo add_query_arg('tab', 'emails', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'emails' ? 'nav-tab-active' : ''; ?>"><?php _e('Emails', 'edd'); ?></a>
 			<a href="<?php echo add_query_arg('tab', 'styles', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'styles' ? 'nav-tab-active' : ''; ?>"><?php _e('Styles', 'edd'); ?></a>
 			<a href="<?php echo add_query_arg('tab', 'taxes', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'taxes' ? 'nav-tab-active' : ''; ?>"><?php _e('Taxes', 'edd'); ?></a>
+			<a href="<?php echo add_query_arg('tab', 'extensions', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'extensions' ? 'nav-tab-active' : ''; ?>"><?php _e('Extensions', 'edd'); ?></a>
 			<a href="<?php echo add_query_arg('tab', 'misc', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'misc' ? 'nav-tab-active' : ''; ?>"><?php _e('Misc', 'edd'); ?></a>
 		</h2>
 
@@ -58,6 +59,10 @@ function edd_options_page() {
 				} elseif ($active_tab == 'taxes' ) {
 					settings_fields('edd_settings_taxes' );
 					do_settings_sections('edd_settings_taxes' );
+				} elseif ($active_tab == 'extensions' ) {
+					settings_fields( 'edd_settings_extensions' );
+					do_settings_sections( 'edd_settings_extensions' );
+					echo __( '<h3>Need Easy Digital Downloads to do more? Check out our <a href="https://easydigitaldownloads.com/extensions/">extensions directory</a>!</h3>', 'edd' );
 				} else {
 					settings_fields( 'edd_settings_misc' );
 					do_settings_sections( 'edd_settings_misc' );
