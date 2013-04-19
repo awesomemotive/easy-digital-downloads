@@ -2,12 +2,17 @@
 namespace EDD_Unit_Tests;
 
 class Tests_User extends \WP_UnitTestCase {
+	protected $_post_id = null;
+
+	protected $_user_id = null;
+
 	public function setUp() {
 		parent::setUp();
 	}
 
-	public function test_get_users_purchases() {
+	public function test_users_purchases() {
 		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		$this->_post_id = $post_id;
 
 		$_variable_pricing = array(
 			array(
@@ -53,6 +58,7 @@ class Tests_User extends \WP_UnitTestCase {
 
 		/** Generate some sales */
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		$this->_user_id = $user_id;
 		$user = get_userdata( $user_id );
 
 		$user_info = array(
@@ -117,5 +123,12 @@ class Tests_User extends \WP_UnitTestCase {
 
 		$this->assertInternalType( 'object', $out[0] );
 		$this->assertEquals( 'edd_payment', $out[0]->post_type );
+		$this->assertTrue( edd_has_purchases( $user_id ) );
+		$this->assertEquals( 1, edd_count_purchases_of_customer( $user_id ) );		
+	}
+
+	public function test_validate_username() {
+		$this->assertTrue( edd_validate_username( 'easydigitaldownloads' ) );
+		$this->assertFalse( edd_validate_username( 'edd12345$%&+-!@£%^&()(*&^%$£@!' ) );
 	}
 }
