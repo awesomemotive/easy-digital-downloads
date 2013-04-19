@@ -142,9 +142,9 @@ function edd_calculate_tax( $amount, $sum = true ) {
 	$prices_include_tax = edd_prices_include_tax();
 
 	if ( $prices_include_tax ) {
-		$tax = $amount * $rate;
-	} else {
 		$tax = $amount - ( $amount / ( $rate + 1 ) );
+	} else {
+		$tax = $amount * $rate;
 	}
 
 	if ( $sum ) {
