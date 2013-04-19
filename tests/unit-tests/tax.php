@@ -42,4 +42,32 @@ class Tests_Taxes extends \WP_UnitTestCase {
 		$this->assertInternalType( 'integer', edd_get_tax_rate() );
 		$this->assertEquals( 0, edd_get_tax_rate() );
 	}
+
+	public function test_calculate_tax() {
+		$this->assertEquals( 54, edd_calculate_tax( 54 ) );
+	}
+
+	public function test_sales_tax_for_year() {
+		$o = ob_start();
+		edd_sales_tax_for_year( 2013 );
+		$o = ob_get_clean();
+
+		$this->assertEquals( '&#36;0.00', $o );
+	}
+
+	public function test_get_sales_tax_for_year() {
+		$this->assertEquals( 0, edd_get_sales_tax_for_year( 2013 ) );
+	}
+
+	public function test_prices_show_tax_on_checkout() {
+		$this->assertFalse( edd_prices_show_tax_on_checkout() );
+	}
+
+	public function test_prices_include_tax() {
+		$this->assertFalse( edd_prices_include_tax() );
+	}
+
+	public function test_is_cart_taxed() {
+		$this->assertFalse( edd_is_cart_taxed() );
+	}
 }
