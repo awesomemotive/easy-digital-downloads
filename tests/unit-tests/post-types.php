@@ -8,6 +8,9 @@ class Test_Easy_Digital_Downloads_Post_Types extends WP_UnitTestCase {
 		parent::setUp();
 	}
 
+	/**
+	 * @covers ::edd_setup_edd_post_types
+	 */
 	public function test_downloads_post_type() {
 		global $wp_post_types;
 		$this->assertArrayHasKey( 'download', $wp_post_types );
@@ -86,5 +89,16 @@ class Test_Easy_Digital_Downloads_Post_Types extends WP_UnitTestCase {
 		$this->assertEquals( 1, $wp_post_types['edd_discount']->exclude_from_search );
 		$this->assertEquals( 1, $wp_post_types['edd_discount']->map_meta_cap );
 		$this->assertEquals( 'Discounts', $wp_post_types['edd_discount']->label );
+	}
+
+	public function test_register_post_statuses() {
+		edd_register_post_type_statuses();
+
+		global $wp_post_statuses;
+
+		$this->assertInternalType( 'object', $wp_post_statuses['refunded'] );
+		$this->assertInternalType( 'object', $wp_post_statuses['revoked'] );
+		$this->assertInternalType( 'object', $wp_post_statuses['active'] );
+		$this->assertInternalType( 'object', $wp_post_statuses['inactive'] );
 	}
 }
