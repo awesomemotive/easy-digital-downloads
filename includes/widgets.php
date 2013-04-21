@@ -48,7 +48,8 @@ class edd_cart_widget extends WP_Widget {
 		echo $before_widget;
 		if ( $title ) {
 			if ( $quantity == 1 ) {
-				$quantity = ' - <span class="edd-cart-quantity">' . edd_get_cart_quantity() . '</span>';
+				$quantity = edd_get_cart_quantity();
+				$quantity = ' - <span class="edd-cart-quantity">' . ( $quantity == '1' ? $quantity . __( ' item', 'edd' ) : $quantity . __( ' items', 'edd' ) ) .  '</span>';
 			} else {
 				$quantity = '';
 			}
