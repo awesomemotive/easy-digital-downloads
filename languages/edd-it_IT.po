@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-03-12 00:55+0100\n"
-"PO-Revision-Date: 2013-04-16 15:12+0100\n"
+"PO-Revision-Date: 2013-04-19 07:41+0100\n"
 "Last-Translator: \n"
 "Language-Team: Max Guglielmino <info@maxguglielmino.com>\n"
 "MIME-Version: 1.0\n"
@@ -1962,7 +1962,7 @@ msgstr "Attiva Variabile prezzo"
 
 #: includes/admin/downloads/metabox.php:212
 msgid "Enable multi option purchase mode. Leave unchecked to only permit a single price option to be purchased"
-msgstr "Attiva modalità di acquisto più opzione. Lasciare deselezionata per consentire solo una singola opzione prezzo da acquistare"
+msgstr "Attiva modalità di acquisto multipla. Lasciare deselezionata per consentire solo l'acquisto di una singola opzione"
 
 #: includes/admin/downloads/metabox.php:218
 #: includes/admin/downloads/metabox.php:280
@@ -3088,7 +3088,7 @@ msgstr "Aliquota Iva"
 
 #: includes/admin/settings/register-settings.php:293
 msgid "Enter a percentage, such as 6.5."
-msgstr "Inserire una percentuale,ad es. 21"
+msgstr "Inserire una percentuale, ad es. 21"
 
 #: includes/admin/settings/register-settings.php:299
 msgid "Prices entered with tax"
@@ -3104,7 +3104,7 @@ msgstr "Si, inserirò i prezzi inclusivi di IVA"
 
 #: includes/admin/settings/register-settings.php:305
 msgid "No, I will enter prices exclusive of tax"
-msgstr "Si, inserirò i prezzi esclusivi di IVA"
+msgstr "No, inserirò i prezzi esclusivi di IVA"
 
 #: includes/admin/settings/register-settings.php:310
 msgid "Apply Taxes to:"
