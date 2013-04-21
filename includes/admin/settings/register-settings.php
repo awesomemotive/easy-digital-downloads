@@ -611,13 +611,6 @@ function edd_register_settings() {
 	}
 
 	add_settings_section(
-		'edd_settings_misc',
-		__( 'Misc Settings', 'edd' ),
-		'__return_false',
-		'edd_settings_misc'
-	);
-
-	add_settings_section(
 		'edd_settings_extensions',
 		__( 'Extension Settings', 'edd' ),
 		'__return_false',
@@ -642,6 +635,13 @@ function edd_register_settings() {
 			)
 		);
 	}
+
+	add_settings_section(
+		'edd_settings_misc',
+		__( 'Misc Settings', 'edd' ),
+		'__return_false',
+		'edd_settings_misc'
+	);
 
 	foreach ( $edd_settings['misc'] as $option ) {
 		add_settings_field(
