@@ -95,7 +95,7 @@ function edd_register_styles() {
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-	$file = 'edd' . $sufix . '.css';
+	$file = 'edd' . $suffix . '.css';
 
 	if ( file_exists( trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $file ) ) {
 		$url = trailingslashit( get_stylesheet_directory_uri() ) . 'edd_templates/' . $file;
