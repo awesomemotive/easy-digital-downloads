@@ -95,12 +95,19 @@ function edd_register_styles() {
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-	$file = 'edd' . $suffix . '.css';
+	$file = 'edd.css';
+	$file_min = 'edd' . $suffix . '.css';
 
-	if ( file_exists( trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $file ) ) {
+	if ( !empty( $suffix ) && file_exists( trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $file_min ) ) {
+		$url = trailingslashit( get_stylesheet_directory_uri() ) . 'edd_templates/' . $file_min;
+	} elseif ( file_exists( trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $file ) ) {
 		$url = trailingslashit( get_stylesheet_directory_uri() ) . 'edd_templates/' . $file;
+	} elseif ( !empty( $suffix ) && file_exists( trailingslashit( get_template_directory() ) . 'edd_templates/' . $file_min ) ) {
+		$url = trailingslashit( get_template_directory_uri() ) . 'edd_templates/' . $file_min;
 	} elseif ( file_exists( trailingslashit( get_template_directory() ) . 'edd_templates/' . $file ) ) {
 		$url = trailingslashit( get_template_directory_uri() ) . 'edd_templates/' . $file;
+	} elseif ( !empty( $suffix ) && file_exists( trailingslashit( edd_get_templates_dir() ) . $file_min ) ) {
+		$url = trailingslashit( edd_get_templates_url() ) . $file_min;
 	} elseif ( file_exists( trailingslashit( edd_get_templates_dir() ) . $file ) ) {
 		$url = trailingslashit( edd_get_templates_url() ) . $file;
 	}
