@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.6
 
-Stable Tag: 1.5.2
+Stable Tag: 1.5.2.1
 License: GNU Version 2 or Any Later Version
 
 
@@ -174,6 +174,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.5.2.1: April 23, 2013 =
+
+* Fix: A bug that caused taxes to be calculated incorrectly
+* FIx: A bug that caused purchase receipts to not respect an edited email addresss
 
 = 1.5.2: April 13, 2013 =
 
