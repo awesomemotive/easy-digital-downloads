@@ -30,8 +30,8 @@ function edd_settings_contextual_help() {
 		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'edd' ), esc_url( 'https://easydigitaldownloads.com/documentation/' ) ) ) . '</p>' .
 		'<p>' . sprintf(
 					__( '<a href="%s">Post an issue</a> on <a href="%s">GitHub</a>. View <a href="%s">extensions</a> or <a href="%s">themes</a>.', 'edd' ),
-					esc_url( 'https://github.com/pippinsplugins/Easy-Digital-Downloads/issues' ),
-					esc_url( 'https://github.com/pippinsplugins/Easy-Digital-Downloads' ),
+					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues' ),
+					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads' ),
 					esc_url( 'https://easydigitaldownloads.com/extensions/' ),
 					esc_url( 'https://easydigitaldownloads.com/themes/' )
 				) . '</p>'
