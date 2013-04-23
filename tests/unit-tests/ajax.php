@@ -283,7 +283,7 @@ DATA;
 	</thead>
 	<tbody>
 							<tr class="edd_cart_item">
-				<td colspan="3"  class="edd_cart_item_empty"><span class="edd_empty_cart"><span class="edd_empty_cart">Your cart is empty.</span></span></td>
+				<td colspan="3"  class="edd_cart_item_empty"><span class="edd_empty_cart">Your cart is empty.</span></td>
 			</tr>
 			</tbody>
 	<tfoot>
