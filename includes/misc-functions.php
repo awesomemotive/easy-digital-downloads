@@ -211,32 +211,32 @@ function edd_get_ip() {
  */
 function edd_get_currencies() {
 	$currencies = array(
-		'USD' => __('US Dollars (&#36;)', 'edd'),
-		'EUR' => __('Euros (&euro;)', 'edd'),
-		'GBP' => __('Pounds Sterling (&pound;)', 'edd'),
-		'AUD' => __('Australian Dollars (&#36;)', 'edd'),
-		'BRL' => __('Brazilian Real (R&#36;)', 'edd'),
-		'CAD' => __('Canadian Dollars (&#36;)', 'edd'),
-		'CZK' => __('Czech Koruna', 'edd'),
-		'DKK' => __('Danish Krone', 'edd'),
-		'HKD' => __('Hong Kong Dollar (&#36;)', 'edd'),
-		'HUF' => __('Hungarian Forint', 'edd'),
-		'ILS' => __('Israeli Shekel', 'edd'),
-		'JPY' => __('Japanese Yen (&yen;)', 'edd'),
-		'MYR' => __('Malaysian Ringgits', 'edd'),
-		'MXN' => __('Mexican Peso (&#36;)', 'edd'),
-		'NZD' => __('New Zealand Dollar (&#36;)', 'edd'),
-		'NOK' => __('Norwegian Krone', 'edd'),
-		'PHP' => __('Philippine Pesos', 'edd'),
-		'PLN' => __('Polish Zloty', 'edd'),
-		'SGD' => __('Singapore Dollar (&#36;)', 'edd'),
-		'SEK' => __('Swedish Krona', 'edd'),
-		'CHF' => __('Swiss Franc', 'edd'),
-		'TWD' => __('Taiwan New Dollars', 'edd'),
-		'THB' => __('Thai Baht', 'edd'),
-		'INR' => __('Indian Rupee', 'edd'),
-		'TRY' => __('Turkish Lira', 'edd'),
-		'RIAL' => __('Iranian Rial', 'edd')
+		'USD'  => __( 'US Dollars (&#36;)', 'edd' ),
+		'EUR'  => __( 'Euros (&euro;)', 'edd' ),
+		'GBP'  => __( 'Pounds Sterling (&pound;)', 'edd' ),
+		'AUD'  => __( 'Australian Dollars (&#36;)', 'edd' ),
+		'BRL'  => __( 'Brazilian Real (R&#36;)', 'edd' ),
+		'CAD'  => __( 'Canadian Dollars (&#36;)', 'edd' ),
+		'CZK'  => __( 'Czech Koruna', 'edd' ),
+		'DKK'  => __( 'Danish Krone', 'edd' ),
+		'HKD'  => __( 'Hong Kong Dollar (&#36;)', 'edd' ),
+		'HUF'  => __( 'Hungarian Forint', 'edd' ),
+		'ILS'  => __( 'Israeli Shekel', 'edd' ),
+		'JPY'  => __( 'Japanese Yen (&yen;)', 'edd' ),
+		'MYR'  => __( 'Malaysian Ringgits', 'edd' ),
+		'MXN'  => __( 'Mexican Peso (&#36;)', 'edd' ),
+		'NZD'  => __( 'New Zealand Dollar (&#36;)', 'edd' ),
+		'NOK'  => __( 'Norwegian Krone', 'edd' ),
+		'PHP'  => __( 'Philippine Pesos', 'edd' ),
+		'PLN'  => __( 'Polish Zloty', 'edd' ),
+		'SGD'  => __( 'Singapore Dollar (&#36;)', 'edd' ),
+		'SEK'  => __( 'Swedish Krona', 'edd' ),
+		'CHF'  => __( 'Swiss Franc', 'edd' ),
+		'TWD'  => __( 'Taiwan New Dollars', 'edd' ),
+		'THB'  => __( 'Thai Baht', 'edd' ),
+		'INR'  => __( 'Indian Rupee', 'edd' ),
+		'TRY'  => __( 'Turkish Lira', 'edd' ),
+		'RIAL' => __( 'Iranian Rial', 'edd' )
 	);
 
 	return apply_filters( 'edd_currencies', $currencies );
@@ -714,77 +714,6 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
 	}
 }
 
-/**
- * PressTrends Plugin API
- *
- * @since 1.3.2
- * @global $edd_options
- * @return void
- */
-function edd_presstrends() {
-	global $edd_options;
-
-	if ( ! isset( $edd_options['presstrends'] ) )
-		return;
-
-	// PressTrends Account API Key
-	$api_key = '[REDACTED]';
-	$auth    = '[REDACTED]';
-
-	// Start of Metrics
-	global $wpdb;
-
-	$data = get_transient( 'presstrends_cache_data' );
-
-	if ( ! $data || $data == '' ) {
-		$api_base = 'http://api.presstrends.io/index.php/api/pluginsites/update/auth/';
-		$url      = $api_base . $auth . '/api/' . $api_key . '/';
-
-		$count_posts    = wp_count_posts();
-		$count_pages    = wp_count_posts( 'page' );
-		$comments_count = wp_count_comments();
-
-		// Wp_get_theme was introduced in 3.4, for compatibility with older versions, let's do a workaround for now.
-		if ( function_exists( 'wp_get_theme' ) ) {
-			$theme_data = wp_get_theme();
-			$theme_name = urlencode( $theme_data->Name );
-		} else {
-			$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
-			$theme_name = $theme_data['Name'];
-		}
-
-		$plugin_name = '&';
-		foreach ( get_plugins() as $plugin_info ) {
-			$plugin_name .= $plugin_info['Name'] . '&';
-		}
-		// CHANGE __FILE__ PATH IF LOCATED OUTSIDE MAIN PLUGIN FILE
-		$plugin_data         = get_plugin_data( EDD_PLUGIN_FILE );
-		$posts_with_comments = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts WHERE post_type='post' AND comment_count > 0" );
-		$data                = array(
-			'url'             => stripslashes( str_replace( array( 'http://', '/', ':' ), '', site_url() ) ),
-			'posts'           => $count_posts->publish,
-			'pages'           => $count_pages->publish,
-			'comments'        => $comments_count->total_comments,
-			'approved'        => $comments_count->approved,
-			'spam'            => $comments_count->spam,
-			'pingbacks'       => $wpdb->get_var( "SELECT COUNT(comment_ID) FROM $wpdb->comments WHERE comment_type = 'pingback'" ),
-			'post_conversion' => ( $count_posts->publish > 0 && $posts_with_comments > 0 ) ? number_format( ( $posts_with_comments / $count_posts->publish ) * 100, 0, '.', '' ) : 0,
-			'theme_version'   => $plugin_data['Version'],
-			'theme_name'      => $theme_name,
-			'site_name'       => str_replace( ' ', '', get_bloginfo( 'name' ) ),
-			'plugins'         => count( get_option( 'active_plugins' ) ),
-			'plugin'          => urlencode( $plugin_name ),
-			'wpversion'       => get_bloginfo( 'version' ),
-		);
-
-		foreach ( $data as $k => $v ) {
-			$url .= $k . '/' . $v . '/';
-		}
-		wp_remote_get( $url );
-		set_transient( 'presstrends_cache_data', $data, 60 * 60 * 24 );
-	}
-}
-add_action( 'admin_init', 'edd_presstrends' );
 
 /**
  * Checks whether function is disabled.

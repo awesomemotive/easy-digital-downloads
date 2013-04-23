@@ -104,18 +104,6 @@ function edd_register_settings() {
 					'size' => 'small',
 					'std' => '.'
 				),
-				'tracking_settings' => array(
-					'id' => 'tracking_settings',
-					'name' => '<strong>' . __('Usage Tracking', 'edd') . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'presstrends' => array(
-					'id' => 'presstrends',
-					'name' => __('Enable Tracking', 'edd'),
-					'desc' => __('Check this box to allow Easy Digital Downloads to track how the plugin is used. No personal info is ever collected. This helps us better improve the plugin.', 'edd'),
-					'type' => 'checkbox'
-				),
 				'api_settings' => array(
 					'id' => 'api_settings',
 					'name' => '<strong>' . __('API Settings', 'edd') . '</strong>',

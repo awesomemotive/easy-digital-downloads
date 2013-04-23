@@ -72,7 +72,7 @@ class EDD_Customers_Export extends EDD_Export {
 				'name'      => __( 'Name',   'edd' ),
 				'email'     => __( 'Email', 'edd' ),
 				'purchases' => __( 'Total Purchases', 'edd' ),
-				'amount'    => __( 'Total Purchased', 'edd' )
+				'amount'    => __( 'Total Purchased', 'edd' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')'
 			);
 		}
 
@@ -131,7 +131,7 @@ class EDD_Customers_Export extends EDD_Export {
 					'name'      => $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' ),
 					'email'     => $email,
 					'purchases' => edd_count_purchases_of_customer( $email ),
-					'amount'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_purchase_total_of_user( $email ) ) ) )
+					'amount'    => edd_format_amount( edd_purchase_total_of_user( $email ) )
 				);
 			}
 		}

@@ -65,9 +65,18 @@ jQuery(document).ready(function ($) {
         var item_price_ids = [];
 
         if( variable_price == 'yes' ) {
+
+            if( ! $('.edd_price_option_' + download + ':checked', form).length ) {
+                alert( edd_scripts.select_option );
+                // Hide the ajax loader
+                $('.edd-cart-ajax', container).hide();
+                return;
+            }
+
             $('.edd_price_option_' + download + ':checked', form).each(function( index ) {
                 item_price_ids[ index ] = $(this).val();
             });
+
         } else {
             item_price_ids[0] = download;
         }

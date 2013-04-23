@@ -12,7 +12,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) die();
 
 /**
  * Checks whether AJAX is enabled.
@@ -57,7 +57,7 @@ function edd_ajax_remove_from_cart() {
 		edd_remove_from_cart( $_POST['cart_item'] );
 		echo 'removed';
 	}
-	die();
+	edd_die();
 }
 add_action( 'wp_ajax_edd_remove_from_cart', 'edd_ajax_remove_from_cart' );
 add_action( 'wp_ajax_nopriv_edd_remove_from_cart', 'edd_ajax_remove_from_cart' );
@@ -103,7 +103,7 @@ function edd_ajax_add_to_cart() {
 			}
 		}
 	}
-	die();
+	edd_die();
 }
 add_action( 'wp_ajax_edd_add_to_cart', 'edd_ajax_add_to_cart' );
 add_action( 'wp_ajax_nopriv_edd_add_to_cart', 'edd_ajax_add_to_cart' );
@@ -145,7 +145,7 @@ function edd_ajax_apply_discount() {
 		}
 		echo json_encode($return);
 	}
-	die();
+	edd_die();
 }
 add_action( 'wp_ajax_edd_apply_discount', 'edd_ajax_apply_discount' );
 add_action( 'wp_ajax_nopriv_edd_apply_discount', 'edd_ajax_apply_discount' );
@@ -158,7 +158,7 @@ add_action( 'wp_ajax_nopriv_edd_apply_discount', 'edd_ajax_apply_discount' );
  */
 function edd_load_checkout_login_fields() {
 	do_action( 'edd_purchase_form_login_fields' );
-	die();
+	edd_die();
 }
 add_action('wp_ajax_nopriv_checkout_login', 'edd_load_checkout_login_fields');
 
@@ -170,7 +170,7 @@ add_action('wp_ajax_nopriv_checkout_login', 'edd_load_checkout_login_fields');
 */
 function edd_load_checkout_register_fields() {
 	do_action( 'edd_purchase_form_register_fields' );
-	die();
+	edd_die();
 }
 add_action('wp_ajax_nopriv_checkout_register', 'edd_load_checkout_register_fields');
 
@@ -189,7 +189,7 @@ function edd_ajax_get_download_title() {
 			echo 'fail';
 		}
 	}
-	die();
+	edd_die();
 }
 add_action( 'wp_ajax_edd_get_download_title', 'edd_ajax_get_download_title' );
 add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_title' );
@@ -218,7 +218,7 @@ function edd_ajax_opt_into_local_taxes() {
 
 	echo json_encode( $response );
 
-	exit;
+	edd_die();
 }
 add_action( 'wp_ajax_edd_local_tax_opt_in', 'edd_ajax_opt_into_local_taxes' );
 add_action( 'wp_ajax_nopriv_edd_local_tax_opt_in', 'edd_ajax_opt_into_local_taxes' );
@@ -247,7 +247,7 @@ function edd_ajax_opt_out_local_taxes() {
 
 	echo json_encode( $response );
 
-	exit;
+	edd_die();
 }
 add_action( 'wp_ajax_edd_local_tax_opt_out', 'edd_ajax_opt_out_local_taxes' );
 add_action( 'wp_ajax_nopriv_edd_local_tax_opt_out', 'edd_ajax_opt_out_local_taxes' );
@@ -265,25 +265,25 @@ add_action( 'wp_ajax_nopriv_edd_local_tax_opt_out', 'edd_ajax_opt_out_local_taxe
  * @return void
  */
 function edd_check_for_download_price_variations() {
-	if ( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'edd_add_downloads_to_purchase_nonce' ) ) {
+	if ( ! check_ajax_referer( 'edd_add_downloads_to_purchase_nonce', 'nonce' ) )
+		return false;
 
-		$download_id = intval( $_POST['download_id'] );
+	$download_id = intval( $_POST['download_id'] );
 
-		if ( edd_has_variable_prices( $download_id ) ) {
-			$variable_prices = get_post_meta( $download_id, 'edd_variable_prices', true );
+	if ( edd_has_variable_prices( $download_id ) ) {
+		$variable_prices = get_post_meta( $download_id, 'edd_variable_prices', true );
 
-			if ( $variable_prices ) {
-				$ajax_response = '<select name="downloads[' . intval( $_POST['array_key'] ) . '][options][price_id]" class="edd-variable-prices-select">';
-					foreach ( $variable_prices as $key => $price ) {
-						$ajax_response .= '<option value="' . $key . '">' . $price['name']  . '</option>';
-					}
-				$ajax_response .= '</select>';
-			}
-
-			echo $ajax_response;
+		if ( $variable_prices ) {
+			$ajax_response = '<select name="downloads[' . intval( $_POST['array_key'] ) . '][options][price_id]" class="edd-variable-prices-select">';
+				foreach ( $variable_prices as $key => $price ) {
+					$ajax_response .= '<option value="' . $key . '">' . $price['name']  . '</option>';
+				}
+			$ajax_response .= '</select>';
 		}
 
-		die();
+		echo $ajax_response;
 	}
+
+	edd_die();
 }
 add_action( 'wp_ajax_edd_check_for_download_price_variations', 'edd_check_for_download_price_variations' );

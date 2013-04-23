@@ -998,7 +998,7 @@ function edd_remove_cart_discount() {
 
 	do_action( 'edd_post_remove_cart_discount', absint( $_GET['discount_id'] ) );
 
-	wp_redirect( edd_get_checkout_uri() ); exit;
+	wp_redirect( edd_get_checkout_uri() ); edd_die();
 }
 add_action( 'edd_remove_cart_discount', 'edd_remove_cart_discount' );
 
