@@ -211,7 +211,7 @@ class EDD_Welcome {
 				<div class="feature-section col three-col">
 					<div>
 						<h4><?php _e( 'EDD_Fees Class', 'edd' ); ?></h4>
-						<p><?php printf( __( 'The new %sEDD_Fees class%s makes it possible to create arbitrary fees (or discounts) that are applied to the shopping cart contents.', 'edd' ), '<a href="https://github.com/pippinsplugins/Easy-Digital-Downloads/issues/418" target="_blank">', '</a>' ); ?></p>
+						<p><?php printf( __( 'The new %sEDD_Fees class%s makes it possible to create arbitrary fees (or discounts) that are applied to the shopping cart contents.', 'edd' ), '<a href="https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/418" target="_blank">', '</a>' ); ?></p>
 
 						<h4><?php _e( 'Better Session Management', 'edd' ); ?></h4>
 						<p><?php printf( __( 'We have replaced usage of the standard PHP $_SESSION with the phenomenal %sWP_Session%s system developed by Eric Mann. This will provide a more stable experience and greater support for more hosts.', 'edd' ), '<a href="http://eamann.com/tech/introducing-wp_session/" target="_blank">', '</a>' ); ?></p>

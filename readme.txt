@@ -17,7 +17,7 @@ Sell digital downloads through WordPress with this complete digital downloads ma
 
 Selling digital downloads is something that not a single one of the large WordPress ecommerce plugins has ever gotten really right. This plugin aims to fix that. Instead of focusing on providing every single feature under the sun, Easy Digital Downloads tries to provide only the ones that you really need. It aims to make selling digital downloads through WordPress easy, and complete.
 
-**Follow this plugin on [Git Hub](https://github.com/pippinsplugins/Easy-Digital-Downloads)**
+**Follow this plugin on [Git Hub](https://github.com/easydigitaldownloads/Easy-Digital-Downloads)**
 
 Features of the plugin include:
 
@@ -224,7 +224,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 = 1.5: March 13, 2013 =
 
-* New: Added [EDD_API class](https://github.com/pippinsplugins/Easy-Digital-Downloads/issues/857) to provide a fully RESTful API to retrieve sales and earnings stats
+* New: Added [EDD_API class](https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/857) to provide a fully RESTful API to retrieve sales and earnings stats
 * New: Dramatically improved layout, design, and UX for the checkout page
 * New: Changed payment method select to radio buttons
 * New: Added option to define a default payment method
@@ -239,7 +239,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * New: Added new template files for the shopping cart and shopping cart widget
 * New: Added improved file download delivery to better support large files
 * New: Added improved session management with WP_Session and removed reliance on PHP $_SESSION
-* New: Added [arbitrary cart fees class](https://github.com/pippinsplugins/Easy-Digital-Downloads/issues/418)
+* New: Added [arbitrary cart fees class](https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/418)
 * New: Added option to edit purchased price options in the edit payment screen
 * New: Added option to view purchase receipts in the browser
 * New: Dramatically improved tax options
