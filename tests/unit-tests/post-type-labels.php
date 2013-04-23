@@ -1,11 +1,16 @@
 <?php
+namespace EDD_Unit_Tests;
 
 /**
- * Test Downloads Post Type Labels
+ * @group edd_cpt
  */
-class Test_Easy_Digital_Downloads_Post_Type_Labels extends WP_UnitTestCase {
+class Tests_Post_Type_Labels extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
+	}
+
+	public function tearDown() {
+		parent::tearDown();
 	}
 
 	public function test_get_default_labels() {

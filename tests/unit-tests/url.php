@@ -1,11 +1,16 @@
 <?php
-/**
- * Test URLs
- */
+namespace EDD_Unit_Tests;
 
-class Test_EDD_URL extends WP_UnitTestCase {
+/**
+ * @group edd_url
+ */
+class Tests_URL extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
+	}
+
+	public function tearDown() {
+		parent::tearDown();
 	}
 
 	public function test_ajax_url() {

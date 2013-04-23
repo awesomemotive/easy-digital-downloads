@@ -4,7 +4,7 @@ namespace EDD_Unit_Tests;
 /**
  * @group edd_shortcode
  */
-class Tests_Shortcode extends \WP_UnitTestCase {
+class Tests_Shortcode extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 	}
