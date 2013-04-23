@@ -41,7 +41,7 @@ function edd_process_purchase_form() {
 	if ( edd_get_errors() || ! $user ) {
 		if ( $is_ajax ) {
 			do_action( 'edd_ajax_checkout_errors' );
-			exit;
+			edd_die();
 		} else {
 			return false;
 		}
@@ -49,7 +49,7 @@ function edd_process_purchase_form() {
 
 	if ( $is_ajax ) {
 		echo 'success';
-		exit;
+		edd_die();
 	}
 
 	// Setup user information
@@ -103,7 +103,7 @@ function edd_process_purchase_form() {
 
 	// Send info to the gateway for payment processing
 	edd_send_to_gateway( $valid_data['gateway'], $purchase_data );
-	exit;
+	edd_die();
 }
 add_action( 'edd_purchase', 'edd_process_purchase_form' );
 add_action( 'wp_ajax_edd_process_checkout', 'edd_process_purchase_form' );
@@ -864,7 +864,7 @@ function edd_send_to_success_page( $query_string = null ) {
 		$redirect .= $query_string;
 
 	wp_redirect( apply_filters('edd_success_page_redirect', $redirect, $_POST['edd-gateway'], $query_string) );
-	exit;
+	edd_die();
 }
 
 /**
@@ -892,7 +892,7 @@ function edd_send_back_to_checkout( $args = array() ) {
 	}
 
 	wp_redirect( apply_filters( 'edd_send_back_to_checkout', $redirect, $args ) );
-	exit;
+	edd_die();
 }
 
 /**

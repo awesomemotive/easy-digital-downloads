@@ -102,3 +102,32 @@ function edd_unset_error( $error_id ) {
 		EDD()->session->set( 'edd_errors', $errors );
 	}
 }
+
+/**
+ * Register die handler for edd_die()
+ *
+ * @author Sunny Ratilal
+ * @since 1.6
+ * @return void
+ */
+function _edd_die_handler() {
+	if ( defined( 'EDD_UNIT_TESTS' ) )
+		return '_edd_die_handler';
+	else
+		die();
+}
+
+/**
+ * Wrapper function for wp_die(). This function adds filters for wp_die() which
+ * kills execution of the script using wp_die(). This allows us to then to work
+ * with functions using edd_die() in the unit tests.
+ *
+ * @author Sunny Ratilal
+ * @since 1.6
+ * @return void
+ */
+function edd_die() {
+	add_filter( 'wp_die_ajax_handler', '_edd_die_handler', 10, 3 );
+	add_filter( 'wp_die_handler', '_edd_die_handler', 10, 3 );
+	wp_die();
+}

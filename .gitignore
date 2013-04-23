@@ -171,3 +171,6 @@ pip-log.txt
 
 # Ignore API Documentation
 api-docs/*
+
+tests/vendor/wordpress/*
+tests/vendor/wordpress-tests/*
