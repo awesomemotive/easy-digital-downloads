@@ -68,6 +68,8 @@ jQuery(document).ready(function ($) {
 
             if( ! $('.edd_price_option_' + download + ':checked', form).length ) {
                 alert( edd_scripts.select_option );
+                // Hide the ajax loader
+                $('.edd-cart-ajax', container).hide();
                 return;
             }
 
