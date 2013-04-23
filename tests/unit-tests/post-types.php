@@ -1,11 +1,16 @@
 <?php
+namespace EDD_Unit_Tests;
 
 /**
- * Test Post Types Registered
+ * @group edd_cpt
  */
-class Test_Easy_Digital_Downloads_Post_Types extends WP_UnitTestCase {
+class Tests_Post_Types extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
+	}
+
+	public function tearDown() {
+		parent::tearDown();
 	}
 
 	/**

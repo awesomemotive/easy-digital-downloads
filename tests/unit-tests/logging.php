@@ -1,17 +1,22 @@
 <?php
+namespace EDD_Unit_Tests;
 
 /**
- * Test Logging
+ * @group edd_logging
  */
-class Test_Logging extends WP_UnitTestCase {
+class Tests_Logging extends EDD_UnitTestCase {
 	protected $_object = null;
 
 	public function setUp() {
 		parent::setUp();
 
-		$this->_object = new EDD_Logging;
+		$this->_object = new \EDD_Logging;
 		$this->_object->register_post_type();
 		$this->_object->register_taxonomy();
+	}
+
+	public function tearDown() {
+		parent::tearDown();
 	}
 
 	public function test_post_type() {

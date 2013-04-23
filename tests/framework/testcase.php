@@ -1,7 +1,9 @@
 <?php
+namespace EDD_Unit_Tests;
+
 require dirname( __FILE__ ) . '/factory.php';
 
-class EDD_UnitTestCase extends WP_UnitTestCase {
+class EDD_UnitTestCase extends \WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 		$this->factory = new EDD_UnitTest_Factory;

@@ -104,18 +104,6 @@ function edd_register_settings() {
 					'size' => 'small',
 					'std' => '.'
 				),
-				'tracking_settings' => array(
-					'id' => 'tracking_settings',
-					'name' => '<strong>' . __('Usage Tracking', 'edd') . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'presstrends' => array(
-					'id' => 'presstrends',
-					'name' => __('Enable Tracking', 'edd'),
-					'desc' => __('Check this box to allow Easy Digital Downloads to track how the plugin is used. No personal info is ever collected. This helps us better improve the plugin.', 'edd'),
-					'type' => 'checkbox'
-				),
 				'api_settings' => array(
 					'id' => 'api_settings',
 					'name' => '<strong>' . __('API Settings', 'edd') . '</strong>',
@@ -355,6 +343,10 @@ function edd_register_settings() {
 				)
 			)
 		),
+		/** Extension Settings */
+		'extensions' => apply_filters('edd_settings_extensions',
+			array()
+		),
 		/** Misc Settings */
 		'misc' => apply_filters('edd_settings_misc',
 			array(
@@ -467,6 +459,10 @@ function edd_register_settings() {
 	if ( false == get_option( 'edd_settings_taxes' ) ) {
         add_option( 'edd_settings_taxes' );
    	}
+
+	if ( false == get_option( 'edd_settings_extensions' ) ) {
+		add_option( 'edd_settings_extensions' );
+	}
 
 	if ( false == get_option( 'edd_settings_misc' ) ) {
 		add_option( 'edd_settings_misc' );
@@ -603,6 +599,32 @@ function edd_register_settings() {
 	}
 
 	add_settings_section(
+		'edd_settings_extensions',
+		__( 'Extension Settings', 'edd' ),
+		'__return_false',
+		'edd_settings_extensions'
+	);
+
+	foreach ( $edd_settings['extensions'] as $option ) {
+		add_settings_field(
+			'edd_settings_extensions[' . $option['id'] . ']',
+			$option['name'],
+			function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
+			'edd_settings_extensions',
+			'edd_settings_extensions',
+			array(
+				'id' => $option['id'],
+				'desc' => $option['desc'],
+				'name' => $options['name'],
+				'section' => 'extensions',
+				'size' => isset( $option['size'] ) ? $option['size'] : '',
+				'options' => isset( $option['options'] ) ? $option['options'] : '',
+				'std' => isset( $option['std'] ) ? $option['std'] : ''
+			)
+		);
+	}
+
+	add_settings_section(
 		'edd_settings_misc',
 		__( 'Misc Settings', 'edd' ),
 		'__return_false',
@@ -629,12 +651,13 @@ function edd_register_settings() {
 	}
 
 	// Creates our settings in the options table
-	register_setting( 'edd_settings_general',  'edd_settings_general',  'edd_settings_sanitize' );
-	register_setting( 'edd_settings_gateways', 'edd_settings_gateways', 'edd_settings_sanitize' );
-	register_setting( 'edd_settings_emails',   'edd_settings_emails',   'edd_settings_sanitize' );
-	register_setting( 'edd_settings_styles',   'edd_settings_styles',   'edd_settings_sanitize' );
-	register_setting( 'edd_settings_taxes',    'edd_settings_taxes',    'edd_settings_sanitize' );
-	register_setting( 'edd_settings_misc',     'edd_settings_misc',     'edd_settings_sanitize' );
+	register_setting( 'edd_settings_general',    'edd_settings_general',    'edd_settings_sanitize' );
+	register_setting( 'edd_settings_gateways',   'edd_settings_gateways',   'edd_settings_sanitize' );
+	register_setting( 'edd_settings_emails',     'edd_settings_emails',     'edd_settings_sanitize' );
+	register_setting( 'edd_settings_styles',     'edd_settings_styles',     'edd_settings_sanitize' );
+	register_setting( 'edd_settings_taxes',      'edd_settings_taxes',      'edd_settings_sanitize' );
+	register_setting( 'edd_settings_extensions', 'edd_settings_extensions', 'edd_settings_sanitize' );
+	register_setting( 'edd_settings_misc',       'edd_settings_misc',       'edd_settings_sanitize' );
 }
 add_action('admin_init', 'edd_register_settings');
 

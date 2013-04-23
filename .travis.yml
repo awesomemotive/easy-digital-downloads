@@ -1,54 +1,44 @@
-  # Main Travis CI configuration file for wordpress-plugin tests
-  # https://github.com/benbalter/wordpress-plugin-tests
+language: php
 
-  # Tell Travis CI we're using PHP
-  language: php
-
-  # Versions of PHP to test against
-  php:
- #   - 5.2
- #   - 5.3
- #   - 5.4
+php:
+    - 5.3
+    - 5.4
     - 5.5
-    
-  # Specify versions of WordPress to test against
-  # WP_VERSION = WordPress version number (use "master" for SVN trunk)
-  # WP_MULTISITE = whether to test multisite (use either "0" or "1")
-  env:
-      - WP_VERSION=master WP_MULTISITE=1
-   #   - WP_VERSION=3.5.1 WP_MULTISITE=0
-   #   - WP_VERSION=master WP_MULTISITE=1
-   #   - WP_VERSION=3.5.1 WP_MULTISITE=1
 
-  # Grab the setup script and execute
-  before_script:
-      - mkdir -p tmp
-      - WP_CORE_DIR=tmp/wordpress/
-      - WP_TESTS_DIR=tmp/wordpress-tests/
-      - wget -nv -O tmp/wordpress.tar.gz https://github.com/WordPress/WordPress/tarball/$WP_VERSION
-      - mkdir -p $WP_CORE_DIR
-      - tar --strip-components=1 -zxmf tmp/wordpress.tar.gz -C $WP_CORE_DIR
-      - svn co --ignore-externals http://unit-tests.svn.wordpress.org/trunk/ tmp/wordpress-tests/
-      - cp tmp/wordpress-tests/wp-tests-config-sample.php tmp/wordpress-tests/wp-tests-config.php
-      - sed -i "s:dirname( __FILE__ ) . '/wordpress/':'$WP_CORE_DIR':" tmp/wordpress-tests/wp-tests-config.php
-      - sed -i "s/yourdbnamehere/wordpress_test/" tmp/wordpress-tests/wp-tests-config.php
-      - sed -i "s/yourusernamehere/root/" tmp/wordpress-tests/wp-tests-config.php
-      - sed -i "s/yourpasswordhere//" tmp/wordpress-tests/wp-tests-config.php
-      - mysql -e 'CREATE DATABASE wordpress_test;' -uroot
+env:
+    - WP_VERSION=master WP_MULTISITE=0
+    - WP_VERSION=3.5.1 WP_MULTISITE=0
+    - WP_VERSION=master WP_MULTISITE=1
+    - WP_VERSION=3.5.1 WP_MULTISITE=1
 
-  script:
-      - phpunit -c tests/phpunit.xml --coverage-text
-      - php tests/includes/clover.php tests/clover.xml 90
+before_script:
+    - mkdir -p tmp
+    - WP_CORE_DIR=tmp/wordpress/
+    - WP_TESTS_DIR=tmp/wordpress-tests/
+    - wget -nv -O tmp/wordpress.tar.gz https://github.com/WordPress/WordPress/tarball/$WP_VERSION
+    - mkdir -p $WP_CORE_DIR
+    - tar --strip-components=1 -zxmf tmp/wordpress.tar.gz -C $WP_CORE_DIR
+    - svn co --ignore-externals http://unit-tests.svn.wordpress.org/trunk/ tmp/wordpress-tests/
+    - cp tmp/wordpress-tests/wp-tests-config-sample.php tmp/wordpress-tests/wp-tests-config.php
+    - sed -i "s:dirname( __FILE__ ) . '/wordpress/':'$WP_CORE_DIR':" tmp/wordpress-tests/wp-tests-config.php
+    - sed -i "s/yourdbnamehere/wordpress_test/" tmp/wordpress-tests/wp-tests-config.php
+    - sed -i "s/yourusernamehere/root/" tmp/wordpress-tests/wp-tests-config.php
+    - sed -i "s/yourpasswordhere//" tmp/wordpress-tests/wp-tests-config.php
+    - mysql -e 'CREATE DATABASE wordpress_test;' -uroot
 
-  notifications:
+script:
+    - phpunit -c tests/phpunit.xml --coverage-text
+    - php tests/includes/clover.php tests/clover.xml 90
+
+notifications:
     email:
         recipients:
-          - edd.unit.tests@gmail.com
+          - edd.unit.tests@gmai.com
         on_success: change
         on_failure: always
 
-#    irc:
-#        channels:
-#            - "irc.freenode.net#eddwp"
-#        template:
-#            - "Build %{build_number} (%{branch} - %{commit}): %{message} %{build_url}"
+    irc:
+        channels:
+            - "irc.freenode.net#eddwp"
+        template:
+            - "Build %{build_number} (%{branch} - %{commit}): %{message} %{build_url}"

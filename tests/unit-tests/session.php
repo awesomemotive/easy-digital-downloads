@@ -1,13 +1,17 @@
 <?php
+namespace EDD_Unit_Tests;
 
 /**
- * Test Sesion
+ * @group edd_session
  */
-
-class Tests_Session extends WP_UnitTestCase {
+class Tests_Session extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
-		new EDD_Session;
+		new \EDD_Session;
+	}
+
+	public function tearDown() {
+		parent::tearDown();
 	}
 
 	public function test_set() {

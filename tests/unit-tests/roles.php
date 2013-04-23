@@ -1,15 +1,16 @@
 <?php
-/**
- * Test Roles
- */
+namespace EDD_Unit_Tests;
 
-class Test_Easy_Digital_Downloads_Roles extends WP_UnitTestCase {
+/**
+ * @group edd_roles
+ */
+class Tests_Roles extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 	}
 
 	public function test_roles() {
-		$roles = new EDD_Roles();
+		$roles = new \EDD_Roles();
 
 		global $wp_roles;
 
@@ -22,9 +23,9 @@ class Test_Easy_Digital_Downloads_Roles extends WP_UnitTestCase {
 	public function test_shop_manager_caps() {
 		global $wp_roles;
 
-		if ( class_exists('WP_Roles') )
+		if ( class_exists( 'WP_Roles' ) )
 			if ( ! isset( $wp_roles ) )
-				$wp_roles = new WP_Roles();
+				$wp_roles = new \WP_Roles();
 
 		$this->assertArrayHasKey( 'read', (array) $wp_roles->roles['shop_manager']['capabilities'] );
 		$this->assertArrayHasKey( 'edit_posts', (array) $wp_roles->roles['shop_manager']['capabilities'] );
@@ -63,9 +64,9 @@ class Test_Easy_Digital_Downloads_Roles extends WP_UnitTestCase {
 	public function test_administrator_caps() {
 		global $wp_roles;
 
-		if ( class_exists('WP_Roles') )
+		if ( class_exists( 'WP_Roles' ) )
 			if ( ! isset( $wp_roles ) )
-				$wp_roles = new WP_Roles();
+				$wp_roles = new \WP_Roles();
 
 		$this->assertArrayHasKey( 'view_shop_sensitive_data', (array) $wp_roles->roles['administrator']['capabilities'] );
 		$this->assertArrayHasKey( 'export_shop_reports', (array) $wp_roles->roles['administrator']['capabilities'] );
@@ -76,9 +77,9 @@ class Test_Easy_Digital_Downloads_Roles extends WP_UnitTestCase {
 	public function test_shop_accountant_caps() {
 		global $wp_roles;
 
-		if ( class_exists('WP_Roles') )
+		if ( class_exists( 'WP_Roles' ) )
 			if ( ! isset( $wp_roles ) )
-				$wp_roles = new WP_Roles();
+				$wp_roles = new \WP_Roles();
 
 		$this->assertArrayHasKey( 'read', (array) $wp_roles->roles['shop_accountant']['capabilities'] );
 		$this->assertArrayHasKey( 'edit_posts', (array) $wp_roles->roles['shop_accountant']['capabilities'] );
@@ -92,9 +93,9 @@ class Test_Easy_Digital_Downloads_Roles extends WP_UnitTestCase {
 	public function test_shop_vendor_caps() {
 		global $wp_roles;
 
-		if ( class_exists('WP_Roles') )
+		if ( class_exists( 'WP_Roles' ) )
 			if ( ! isset( $wp_roles ) )
-				$wp_roles = new WP_Roles();
+				$wp_roles = new \WP_Roles();
 
 		$this->assertArrayHasKey( 'edit_product', (array) $wp_roles->roles['shop_manager']['capabilities'] );
 		$this->assertArrayHasKey( 'delete_product', (array) $wp_roles->roles['shop_manager']['capabilities'] );

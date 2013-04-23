@@ -1,16 +1,16 @@
 <?php
+namespace EDD_Unit_Tests;
 
 /**
- * Test HTML Elements
+ * @group edd_html
  */
-class Test_HTML_Elements extends WP_UnitTestCase {
+class Test_HTML_Elements extends EDD_UnitTestCase {
 	protected $_post_id = null;
 
 	public function setUp() {
 		parent::setUp();
 
-		$wp_factory = new WP_UnitTest_Factory;
-		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 		$this->_post_id = $post_id;
 	}
 

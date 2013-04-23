@@ -1,14 +1,10 @@
 <?php
-/**
- * EDD AJAX Test Cases
- *
- * Taken from WordPress Unit Tests and adapted for Easy Digital
- * Downloads by Sunny Ratilal.
- *
- * Edit: Sunny Ratilal, April 2013
- */
+namespace EDD_Unit_Tests;
 
-class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
+/**
+ * @group edd_ajax
+ */
+class Tests_AJAX extends EDD_UnitTestCase {
 	protected $_post = null;
 
 	protected $_last_response;
@@ -16,26 +12,24 @@ class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$wp_factory = new WP_UnitTest_Factory;
-
 		$_actions = array(
 			'edd_remove_from_cart', 'edd_add_to_cart', 'edd_apply_discount', 'checkout_login',
 			'checkout_register', 'get_download_title', 'edd_local_tax_opt_in', 'edd_local_tax_opt_out',
 			'edd_check_for_download_price_variations'
 		);
 
-		foreach ($_actions as $action) {
+		foreach ( $_actions as $action ) {
 			if ( function_exists( 'wp_ajax_' . $action ) )
 				add_action( 'wp_ajax_' . $action, $action, 1 );
 		}
 
-		if (!defined('DOING_AJAX'))
-			define('DOING_AJAX', true);
+		if ( ! defined( 'DOING_AJAX' ) )
+			define( 'DOING_AJAX', true );
 		set_current_screen( 'ajax' );
 
 		add_action( 'clear_auth_cookie', array( $this, 'logout' ) );
 
-		$wp_factory->post->create_many( 5 );
+		$this->factory->post->create_many( 5 );
 
 		error_reporting( 0 & ~E_WARNING );
 	}
@@ -53,15 +47,14 @@ class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 		unset( $GLOBALS['current_user'] );
 		$cookies = array(AUTH_COOKIE, SECURE_AUTH_COOKIE, LOGGED_IN_COOKIE, USER_COOKIE, PASS_COOKIE);
 		foreach ( $cookies as $c )
-			unset( $_COOKIE[$c] );
+			unset( $_COOKIE[ $c ] );
 	}
 
 	protected function _setRole( $role ) {
-		$wp_factory = new WP_UnitTest_Factory;
 		$post = $_POST;
-		$user_id = $wp_factory->user->create( array( 'role' => $role ) );
+		$user_id = $this->factory->user->create( array( 'role' => $role ) );
 		wp_set_current_user( $user_id );
-		$_POST = array_merge($_POST, $post);
+		$_POST = array_merge( $_POST, $post );
 	}
 
 	protected function _handleAjax($action) {
@@ -79,15 +72,14 @@ class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 		// Save the output
 		$buffer = ob_get_clean();
 
-		if ( !empty( $buffer ) )
+		if ( ! empty( $buffer ) )
 			$this->_last_response = $buffer;
 
 		return $buffer;
 	}
 
 	public function test_add_item_to_cart() {
-		$wp_factory = new WP_UnitTest_Factory;
-		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
 		$_variable_pricing = array(
 			array(
@@ -218,8 +210,7 @@ class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 	}
 
 	public function test_get_download_title() {
-		$wp_factory = new WP_UnitTest_Factory;
-		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 		$_POST = array(
 			'download_id' => $post_id
 		);
@@ -244,7 +235,7 @@ class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 	</thead>
 	<tbody>
 							<tr class="edd_cart_item">
-				<td colspan="3"  class="edd_cart_item_empty">Your cart is empty.</td>
+				<td colspan="3"  class="edd_cart_item_empty"><span class="edd_empty_cart">Your cart is empty.</span></td>
 			</tr>
 			</tbody>
 	<tfoot>
@@ -283,7 +274,7 @@ DATA;
 	</thead>
 	<tbody>
 							<tr class="edd_cart_item">
-				<td colspan="3"  class="edd_cart_item_empty">Your cart is empty.</td>
+				<td colspan="3"  class="edd_cart_item_empty"><span class="edd_empty_cart">Your cart is empty.</span></td>
 			</tr>
 			</tbody>
 	<tfoot>
@@ -306,9 +297,7 @@ DATA;
 	}
 
 	public function test_check_for_download_price_variations() {
-		$wp_factory = new WP_UnitTest_Factory;
-		$wp_factory = new WP_UnitTest_Factory;
-		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'draft' ) );
+		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'draft' ) );
 
 		$_variable_pricing = array(
 			array(

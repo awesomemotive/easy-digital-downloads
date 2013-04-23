@@ -1,9 +1,10 @@
 <?php
+namespace EDD_Unit_Tests;
 
 /**
- * Test Activation Hook
+ * @group edd_activation
  */
-class Test_Activation extends WP_UnitTestCase {
+class Tests_Activation extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 	}

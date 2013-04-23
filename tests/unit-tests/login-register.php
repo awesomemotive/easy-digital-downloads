@@ -1,8 +1,10 @@
 <?php
+namespace EDD_Unit_Tests;
+
 /**
- * Tests Login/Register Functions
+ * @group edd_login_register
  */
-class Test_Login_Register extends WP_UnitTestCase {
+class Tests_Login_Register extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 	}

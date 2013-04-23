@@ -31,9 +31,9 @@ class EDD_UnitTest_Factory_For_Download extends \WP_UnitTest_Factory_For_Thing {
 		parent::__construct( $factory );
 		$this->default_generation_definitions = array(
 			'post_status' => 'publish',
-			'post_title' => new WP_UnitTest_Generator_Sequence( 'Download title %s' ),
-			'post_content' => new WP_UnitTest_Generator_Sequence( 'Download content %s' ),
-			'post_excerpt' => new WP_UnitTest_Generator_Sequence( 'Download excerpt %s' ),
+			'post_title' => new \WP_UnitTest_Generator_Sequence( 'Download title %s' ),
+			'post_content' => new \WP_UnitTest_Generator_Sequence( 'Download content %s' ),
+			'post_excerpt' => new \WP_UnitTest_Generator_Sequence( 'Download excerpt %s' ),
 			'post_type' => 'download'
 		);
 	}

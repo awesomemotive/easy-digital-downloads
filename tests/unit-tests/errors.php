@@ -1,10 +1,10 @@
 <?php
+namespace EDD_Unit_Tests;
 
 /**
- * Test Errors
+ * @group edd_errors
  */
-
-class Test_Errors extends WP_UnitTestCase {
+class Tests_Errors extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
@@ -12,6 +12,10 @@ class Test_Errors extends WP_UnitTestCase {
 		edd_set_error( 'invalid_user', 'The user information is invalid.' );
 		edd_set_error( 'username_incorrect', 'The username you entered does not exist' );
 		edd_set_error( 'password_incorrect', 'The password you entered is incorrect' );
+	}
+
+	public function tearDown() {
+		parent::tearDown();
 	}
 
 	public function test_set_errors() {
