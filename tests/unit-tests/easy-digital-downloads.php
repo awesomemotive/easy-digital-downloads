@@ -1,44 +1,26 @@
 <?php
-/**
- * Test that EDD is loaded, test the constants are setup
- * and that all the EDD file exists
- *
- * @author Sunny Ratilal
- */
-class Easy_Digital_Downloads_Test extends WP_UnitTestCase {
-	/**
-	 * Store EDD in this object
-	 */
+namespace EDD_Unit_Tests;
+
+class Tests_EDD extends EDD_UnitTestCase {
 	protected $object;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 * It calls the EDD() function and loads it in the object var.
-	 */
 	public function setUp() {
 		parent::setUp();
 		$this->object = EDD();
 	}
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 * For some reason, tearDown must be public (to think through later)
-	 */
-	public function tearDown() { }
+	public function tearDown() {
+		parent::tearDown();
+	}
 
-	/**
-	 * Check static attribute has been set
-	 */
-	public function testHasStaticAttribute() {
+	public function test_edd_instance() {
 		$this->assertClassHasStaticAttribute( 'instance', 'Easy_Digital_Downloads' );
 	}
 
 	/**
 	 * @covers Easy_Digital_Downloads::setup_constants
 	 */
-	public function testSetupConstants() {
+	public function test_constants() {
 		// Plugin Folder URL
 		$path = str_replace( 'tests/unit-tests/', '', plugin_dir_url( __FILE__ ) );
 		$this->assertSame( EDD_PLUGIN_URL, $path );
@@ -55,7 +37,7 @@ class Easy_Digital_Downloads_Test extends WP_UnitTestCase {
 	/**
 	 * @covers Easy_Digital_Downloads::includes
 	 */
-	public function testFileIncludes() {
+	public function test_includes() {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/install.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/actions.php' );

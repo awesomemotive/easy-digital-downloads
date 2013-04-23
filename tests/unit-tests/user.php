@@ -1,7 +1,10 @@
 <?php
 namespace EDD_Unit_Tests;
 
-class Tests_User extends \WP_UnitTestCase {
+/**
+ * @group edd_user
+ */
+class Tests_User extends EDD_UnitTestCase {
 	protected $_post_id = null;
 
 	protected $_user_id = null;

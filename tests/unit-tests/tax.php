@@ -4,7 +4,7 @@ namespace EDD_Unit_Tests;
 /**
  * @group edd_tax
  */
-class Tests_Taxes extends \WP_UnitTestCase {
+class Tests_Taxes extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 	}

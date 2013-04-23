@@ -4,7 +4,7 @@ namespace EDD_Unit_Tests;
 /**
  * @group edd_html
  */
-class Test_HTML_Elements extends \WP_UnitTestCase {
+class Test_HTML_Elements extends EDD_UnitTestCase {
 	protected $_post_id = null;
 
 	public function setUp() {
@@ -60,9 +60,5 @@ class Test_HTML_Elements extends \WP_UnitTestCase {
 		$this->assertContains( '<option value="10">', $out );
 		$this->assertContains( '<option value="11">', $out );
 		$this->assertContains( '<option value="12">', $out );
-	}
-
-	public function test_text() {
-		$this->markTestIncomplete();
 	}
 }

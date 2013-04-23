@@ -1,9 +1,10 @@
 <?php
-/**
- * Test Payments
- */
+namespace EDD_Unit_Tests;
 
-class Test_Easy_Digital_Downloads_Payments extends WP_UnitTestCase {
+/**
+ * @group edd_payments
+ */
+class Tests_Payments extends EDD_UnitTestCase {
 	protected $_payment_id = null;
 
 	protected $_post = null;
@@ -11,8 +12,7 @@ class Test_Easy_Digital_Downloads_Payments extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$wp_factory = new WP_UnitTest_Factory;
-		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
 		$_variable_pricing = array(
 			array(
@@ -159,8 +159,7 @@ class Test_Easy_Digital_Downloads_Payments extends WP_UnitTestCase {
 	}
 
 	public function test_get_earnings_by_date() {
-		$wp_factory = new WP_UnitTest_Factory;
-		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Payment', 'post_type' => 'edd_payment', 'post_status' => 'publish' ) );
+		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Payment', 'post_type' => 'edd_payment', 'post_status' => 'publish' ) );
 		$meta = array(
 			'_edd_payment_total' => '120.00',
 			'_edd_payment_mode' => 'live'

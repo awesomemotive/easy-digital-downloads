@@ -4,7 +4,7 @@ namespace EDD_Unit_Tests;
 /**
  * @group edd_cart
  */
-class Test_Cart extends \WP_UnitTestCase {
+class Test_Cart extends EDD_UnitTestCase {
 	protected $_rewrite = null;
 
 	protected $_post = null;
@@ -67,12 +67,12 @@ class Test_Cart extends \WP_UnitTestCase {
 		$this->_post = get_post( $post_id );
 	}
 
-	public function testEndpoints() {
+	public function test_endpoints() {
 		$this->assertEquals('edd-add', $this->_rewrite->endpoints[0][1]);
 		$this->assertEquals('edd-remove', $this->_rewrite->endpoints[1][1]);
 	}
 
-	public function testAddToCart() {
+	public function test_add_to_cart() {
 		$options = array(
 			'price_id' => 0,
 			'name' => 'Simple',
@@ -81,7 +81,7 @@ class Test_Cart extends \WP_UnitTestCase {
 		$this->assertEquals( 0, edd_add_to_cart( $this->_post->ID, $options ) );
 	}
 
-	public function testGetCartContents() {
+	public function test_get_cart_contents() {
 		$expected = array(
 			'0' => array(
 				'id' => $this->_post->ID - 1,
@@ -96,11 +96,11 @@ class Test_Cart extends \WP_UnitTestCase {
 		$this->assertEquals($expected, edd_get_cart_contents());
 	}
 
-	public function testCartQuantity() {
+	public function test_cart_quantity() {
 		$this->assertEquals(1, edd_get_cart_quantity());
 	}
 
-	public function testItemInCart() {
+	public function test_item_in_cart() {
 		$this->assertFalse(edd_item_in_cart($this->_post->ID));
 	}
 
@@ -108,9 +108,9 @@ class Test_Cart extends \WP_UnitTestCase {
 		$this->assertEquals( '&#036;0.00' , edd_cart_item_price( 0 ) );
 	}
 
-	public function testRemoveFromCart() {
+	public function test_remove_from_cart() {
 		$expected = array();
-		$this->assertEquals($expected, edd_remove_from_cart(0) );
+		$this->assertEquals( $expected, edd_remove_from_cart( 0 ) );
 	}
 
 	public function test_set_purchase_session() {

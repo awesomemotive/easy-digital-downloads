@@ -1,11 +1,16 @@
 <?php
+namespace EDD_Unit_Tests;
 
 /**
- * Test Emails
+ * @group edd_emails
  */
-class Tests_Emails extends WP_UnitTestCase {
+class Tests_Emails extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
+	}
+
+	public function tearDown() {
+		parent::tearDown();
 	}
 
 	public function test_admin_notice_emails() {
@@ -23,8 +28,7 @@ class Tests_Emails extends WP_UnitTestCase {
 	}
 
 	public function test_template_tags() {
-		$wp_factory = new WP_UnitTest_Factory;
-		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
 		$_variable_pricing = array(
 			array(
@@ -94,7 +98,7 @@ class Tests_Emails extends WP_UnitTestCase {
 
 		$total = 0;
 
-		$prices = get_post_meta($download_details[0]['id'], 'edd_variable_prices', true);
+		$prices = get_post_meta( $download_details[0]['id'], 'edd_variable_prices', true );
 		$item_price = $prices[1]['amount'];
 
 		$total += $item_price;
