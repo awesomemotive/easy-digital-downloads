@@ -45,7 +45,6 @@ class Test_Easy_Digital_Downloads_Filters extends WP_UnitTestCase {
 	public function testAdminInitFilters() {
 		global $wp_filter;
 		$this->assertArrayHasKey('edd_register_settings', $wp_filter['admin_init'][10]);
-		$this->assertArrayHasKey('edd_presstrends', $wp_filter['admin_init'][10]);
 	}
 
 	public function testDeletePostFilters() {
