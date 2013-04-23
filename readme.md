@@ -10,23 +10,23 @@ More information can be found at [easydigitaldownloads.com](http://easydigitaldo
 
 For detailed setup instructions, visit the official [Documentation](http://easydigitaldownloads.com/documentation/) page.
 
-1. You can clone the GitHub repository: `https://github.com/pippinsplugins/Easy-Digital-Downloads.git`
-2. Or download it directly as a ZIP file: `https://github.com/pippinsplugins/Easy-Digital-Downloads/zipball/master`
+1. You can clone the GitHub repository: `https://github.com/easydigitaldownloads/Easy-Digital-Downloads.git`
+2. Or download it directly as a ZIP file: `https://github.com/easydigitaldownloads/Easy-Digital-Downloads/zipball/master`
 
 This will download the latest developer copy of Easy Digital Downloads.
 
 ## Bugs ##
-If you find an issue, let us know [here](https://github.com/pippinsplugins/Easy-Digital-Downloads/issues?state=open)!
+If you find an issue, let us know [here](https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues?state=open)!
 
 ## Support ##
 This is a developer's portal for Easy Digital Downloads and should _not_ be used for support. Please visit the [support forums](https://easydigitaldownloads.com/support).
 
 ## Contributions ##
-Anyone is welcome to contribute to Easy Digital Downloads. Please read the [guidelines for contributing](https://github.com/pippinsplugins/Easy-Digital-Downloads/blob/master/CONTRIBUTING.md) to this repository.
+Anyone is welcome to contribute to Easy Digital Downloads. Please read the [guidelines for contributing](https://github.com/easydigitaldownloads/Easy-Digital-Downloads/blob/master/CONTRIBUTING.md) to this repository.
 
 There are various ways you can contribute:
 
-1. Raise an [Issue](https://github.com/pippinsplugins/Easy-Digital-Downloads/issues) on GitHub
+1. Raise an [Issue](https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues) on GitHub
 2. Send us a Pull Request with your bug fixes and/or new features
 3. Translate Easy Digital Downloads into different languages
 4. Provide feedback and suggestions on enhancements
