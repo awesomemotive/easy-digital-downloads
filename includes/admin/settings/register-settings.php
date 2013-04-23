@@ -104,12 +104,6 @@ function edd_register_settings() {
 					'size' => 'small',
 					'std' => '.'
 				),
-				'tracking_settings' => array(
-					'id' => 'tracking_settings',
-					'name' => '<strong>' . __('Usage Tracking', 'edd') . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
 				'api_settings' => array(
 					'id' => 'api_settings',
 					'name' => '<strong>' . __('API Settings', 'edd') . '</strong>',
