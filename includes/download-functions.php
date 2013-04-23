@@ -49,11 +49,14 @@ function edd_get_download( $download ) {
  * @param int $download_id ID number of the download to retrieve a price for
  * @return mixed string|int Price of the download
  */
-function edd_get_download_price( $download_id ) {
+function edd_get_download_price( $download_id = 0 ) {
 	$price = get_post_meta( $download_id, 'edd_price', true );
 	if ( $price )
-		return edd_sanitize_amount( $price );
-	return  0;
+		$price = edd_sanitize_amount( $price );
+	else
+		$price = 0;
+
+	return apply_filters( 'edd_get_download_price', $price, $download_id );
 }
 
 /**

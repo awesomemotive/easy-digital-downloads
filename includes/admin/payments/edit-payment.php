@@ -135,7 +135,7 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 			<p>
 				<select name="downloads[0][id]" class="edd-downloads-list">
 				<?php
-				$downloads = get_posts( apply_filters( 'edd_add_downloads_to_purchase_query', array( 'post_type' => 'download', 'posts_per_page' => -1 ) ) );
+				$downloads = get_posts( apply_filters( 'edd_add_downloads_to_purchase_query', array( 'post_type' => 'download', 'posts_per_page' => -1, 'orderby' => 'title', 'order' => 'ASC' ) ) );
 				echo '<option value="0">' . sprintf( __('Select a %s', 'edd'), esc_html( edd_get_label_singular() ) ) . '</option>';
 				foreach( $downloads as $download ) {
 					?>

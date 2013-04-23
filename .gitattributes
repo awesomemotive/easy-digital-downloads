@@ -20,3 +20,7 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
+
+tests/ export-ignore
+.travis.yml export-ignore
+phpunit.xml export-ignore
