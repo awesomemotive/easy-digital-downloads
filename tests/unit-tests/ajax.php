@@ -244,7 +244,7 @@ class Test_Easy_Digital_Downloads_AJAX extends WP_UnitTestCase {
 	</thead>
 	<tbody>
 							<tr class="edd_cart_item">
-				<td colspan="3"  class="edd_cart_item_empty">Your cart is empty.</td>
+				<td colspan="3"  class="edd_cart_item_empty"><span class="edd_empty_cart">Your cart is empty.</span></td>
 			</tr>
 			</tbody>
 	<tfoot>
@@ -283,7 +283,7 @@ DATA;
 	</thead>
 	<tbody>
 							<tr class="edd_cart_item">
-				<td colspan="3"  class="edd_cart_item_empty">Your cart is empty.</td>
+				<td colspan="3"  class="edd_cart_item_empty"><span class="edd_empty_cart"><span class="edd_empty_cart">Your cart is empty.</span></span></td>
 			</tr>
 			</tbody>
 	<tfoot>
