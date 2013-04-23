@@ -1,10 +1,10 @@
 <?php
 namespace EDD_Unit_Tests;
-/**
- * Test API
- */
 
-class Tests_API extends \WP_UnitTestCase {
+/**
+ * @group edd_api
+ */
+class Tests_API extends EDD_UnitTestCase {
 	protected $_rewrite = null;
 
 	protected $query = null;

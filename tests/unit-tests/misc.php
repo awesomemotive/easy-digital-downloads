@@ -1,8 +1,10 @@
 <?php
+namespace EDD_Unit_Tests;
+
 /**
- * Test Misc Functions
+ * @group edd_misc
  */
-class Test_Misc extends WP_UnitTestCase {
+class Test_Misc extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 	}

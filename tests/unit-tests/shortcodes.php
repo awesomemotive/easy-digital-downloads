@@ -4,7 +4,7 @@ namespace EDD_Unit_Tests;
 /**
  * @group edd_shortcode
  */
-class Tests_Shortcode extends \WP_UnitTestCase {
+class Tests_Shortcode extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 	}
@@ -42,14 +42,14 @@ class Tests_Shortcode extends \WP_UnitTestCase {
 
 	public function test_checkout_form_shortcode() {
 		$this->assertInternalType( 'string', edd_checkout_form_shortcode() );
-		$this->assertEquals( 'Your cart is empty.', edd_checkout_form_shortcode() );
+		$this->assertEquals( '<span class="edd_empty_cart">Your cart is empty.</span>', edd_checkout_form_shortcode() );
 	}
 
 	public function test_cart_shortcode() {
 		$this->assertInternalType( 'string', edd_cart_shortcode( array() ) );
 		$this->assertContains( '<ul class="edd-cart">', edd_cart_shortcode( array() ) );
 		$this->assertContains( '<!--dynamic-cached-content-->', edd_cart_shortcode() );
-		$this->assertContains( '<li class="cart_item empty">Your cart is empty.</li>', edd_cart_shortcode( array() ) );
+		$this->assertContains( '<li class="cart_item empty"><span class="edd_empty_cart">Your cart is empty.</span></li>', edd_cart_shortcode( array() ) );
 		$this->assertContains( '<li class="cart_item edd_checkout" style="display:none;"><a href="">Checkout</a></li>', edd_cart_shortcode( array() ) );
 		$this->assertContains( '<!--/dynamic-cached-content-->', edd_cart_shortcode( array() ) );
 	}

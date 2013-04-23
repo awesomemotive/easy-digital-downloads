@@ -12,7 +12,7 @@
 		 stopOnIncomplete="false"
 		 stopOnSkipped="false"
 		 syntaxCheck="false"
-		 verbose="false"
+		 verbose="true"
 		 strict="true"
 		 bootstrap="bootstrap.php">
 	<testsuites>
