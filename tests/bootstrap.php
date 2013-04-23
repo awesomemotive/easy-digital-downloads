@@ -10,3 +10,5 @@ function _install_and_load_edd() {
 tests_add_filter( 'muplugins_loaded', '_install_and_load_edd' );
 
 require dirname( __FILE__ ) . '/../tmp/wordpress-tests/includes/bootstrap.php';
+
+require dirname( __FILE__ ) . '/framework/testcase.php';
