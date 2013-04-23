@@ -1,4 +1,4 @@
-# [Easy Digital Downloads](http://easydigitaldownloads.com) [![Build Status](https://secure.travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads.png?branch=master)](http://travis-ci.org/pippinsplugins/Easy-Digital-Downloads) #
+# [Easy Digital Downloads](http://easydigitaldownloads.com) [![Build Status](https://secure.travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads.png?branch=master)](http://travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads) #
 
 **Welcome to our GitHub Repository**
 
