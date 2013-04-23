@@ -171,7 +171,7 @@ function edd_trigger_purchase_delete( $data ) {
 		$payment_id = absint( $data['purchase_id'] );
 		edd_delete_purchase( $payment_id );
 		wp_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
-		exit;
+		edd_die();
 	}
 }
 add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
