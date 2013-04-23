@@ -517,6 +517,6 @@ function edd_parse_report_dates( $data ) {
 
 	$view = isset( $_GET['view'] ) ? $_GET['view'] : 'earnings';
 
-	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=' . $view ) ) ); exit;
+	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=' . $view ) ) ); edd_die();
 }
 add_action( 'edd_filter_reports', 'edd_parse_report_dates' );

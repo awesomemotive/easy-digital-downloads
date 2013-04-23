@@ -93,7 +93,7 @@ function edd_process_login_form( $data ) {
 		if ( ! $errors ) {
 			$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], $user_ID );
 			wp_redirect( $redirect );
-			exit;
+			edd_die();
 		}
 	}
 }
