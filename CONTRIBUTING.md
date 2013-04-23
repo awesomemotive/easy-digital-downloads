@@ -19,6 +19,7 @@ __Please Note:__ GitHub is for bug reports and contributions only - if you have 
 * Make the changes to your forked repository
   * Ensure you stick to the [WordPress Coding Standards](http://codex.wordpress.org/WordPress_Coding_Standards)
 * When committing, reference your issue (if present) and include a note about the fix
+* If possible, and if applicable, please also add/update unit tests for your changes
 * Push the changes to your fork and submit a pull request to the 'master' branch of the EDD repository
 
 ## Code Documentation
@@ -35,3 +36,4 @@ At this point you're waiting on us to merge your pull request. We'll review all 
 * [EDD Developer's API](https://easydigitaldownloads.com/docs/developers-intro-to-easy-digital-downloads/)
 * [General GitHub Documentation](http://help.github.com/)
 * [GitHub Pull Request documentation](http://help.github.com/send-pull-requests/)
+* [PHPUnit Tests Guide](http://www.phpunit.de/manual/3.6/en/writing-tests-for-phpunit.html)
