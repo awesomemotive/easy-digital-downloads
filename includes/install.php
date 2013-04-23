@@ -92,7 +92,7 @@ function edd_install() {
 		$history = wp_insert_post(
 			array(
 				'post_title'     => __( 'Purchase History', 'edd' ),
-				'post_content'   => '[download_history]',
+				'post_content'   => '[purchase_history]',
 				'post_status'    => 'publish',
 				'post_author'    => 1,
 				'post_type'      => 'page',
