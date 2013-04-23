@@ -1,9 +1,10 @@
 <?php
-/**
- * Test Cart
- */
+namespace EDD_Unit_Tests;
 
-class Test_Easy_Digital_Downloads_Cart extends WP_UnitTestCase {
+/**
+ * @group edd_cart
+ */
+class Test_Cart extends \WP_UnitTestCase {
 	protected $_rewrite = null;
 
 	protected $_post = null;
@@ -19,8 +20,7 @@ class Test_Easy_Digital_Downloads_Cart extends WP_UnitTestCase {
 
 		$this->_rewrite = $wp_rewrite;
 
-		$wp_factory = new WP_UnitTest_Factory;
-		$post_id = $wp_factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
 		$_variable_pricing = array(
 			array(
@@ -111,5 +111,13 @@ class Test_Easy_Digital_Downloads_Cart extends WP_UnitTestCase {
 	public function testRemoveFromCart() {
 		$expected = array();
 		$this->assertEquals($expected, edd_remove_from_cart(0) );
+	}
+
+	public function test_set_purchase_session() {
+		$this->assertNull( edd_set_purchase_session() );
+	}
+
+	public function test_get_purchase_session() {
+		$this->assertEmpty( edd_get_purchase_session() );
 	}
 }
