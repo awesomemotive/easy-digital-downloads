@@ -21,3 +21,10 @@ $RECYCLE.BIN/
 # Unit Tests
 tests/*
 tmp/*
+
+# Eclipse
+*.pydevproject
+.project
+.metadata
+bin/
+tmp/
