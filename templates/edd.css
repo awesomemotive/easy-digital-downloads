@@ -181,6 +181,8 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 /* =Misc styles
 -------------------------------------------------------------- */
 .edd-cart-ajax { margin: 0 8px 0 4px; position: relative; top: 2px; background: none; border: none; padding: 0; }
+.edd-cart-number-of-items { font-style: italic; color:grey;}
+.edd_subtotal { font-weight: bold; margin: 8px 0 8px 0; font-style: italic;}
 
 /* =Error styles
 -------------------------------------------------------------- */
