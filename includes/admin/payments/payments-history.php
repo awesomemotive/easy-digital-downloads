@@ -25,7 +25,7 @@ function edd_payment_history_page() {
 	global $edd_options;
 
 	if ( isset( $_GET['edd-action'] ) && 'edit-payment' == $_GET['edd-action'] ) {
-		require_once EDD_PLUGIN_DIR . '/includes/admin/payments/edit-payment.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/edit-payment.php';
 	} else {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-payments-table.php';
 		$payments_table = new EDD_Payment_History_Table();
@@ -48,7 +48,7 @@ function edd_payment_history_page() {
 
 		<p class="edd-mobile-link">
 			<a href="https://easydigitaldownloads.com/extension/ios-sales-earnings-tracker/" target="_blank">
-				<img src="<?php echo EDD_PLUGIN_URL . '/assets/images/icons/iphone.png'; ?>"/>
+				<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/icons/iphone.png'; ?>"/>
 				<?php _e( 'Get the EDD Sales / Earnings tracker for iOS', 'edd' ); ?>
 			</a>
 		</p>
