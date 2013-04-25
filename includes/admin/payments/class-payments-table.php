@@ -282,7 +282,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			$this->_args['singular'],
+			'payment',
 			$item['ID']
 		);
 	}
@@ -459,7 +459,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function process_bulk_action() {
-		$ids = isset( $_GET['download'] ) ? $_GET['download'] : false;
+		$ids = isset( $_GET['payment'] ) ? $_GET['payment'] : false;
 
 		if ( ! is_array( $ids ) )
 			$ids = array( $ids );
