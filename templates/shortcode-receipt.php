@@ -29,6 +29,10 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 			<td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $meta['date'] ) ); ?></td>
 		</tr>
 		<?php endif; ?>
+		<tr>
+			<td><strong><?php _e( 'Payment Status', 'edd' ); ?>:</strong></td>
+			<td><?php echo edd_get_payment_status( $payment, true ); ?></td>
+		</tr>
 		<?php if ( ( $fees = edd_get_payment_fees( $payment->ID, $meta ) ) ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Fees', 'edd' ); ?>:</strong></td>
