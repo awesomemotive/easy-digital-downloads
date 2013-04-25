@@ -8,6 +8,7 @@ $payment = get_post( $edd_receipt_args['id'] );
 $meta    = edd_get_payment_meta( $payment->ID );
 $cart    = edd_get_payment_meta_cart_details( $payment->ID );
 $user    = edd_get_payment_meta_user_info( $payment->ID );
+$status  = edd_get_payment_status( $payment, true );
 ?>
 <table id="edd_purchase_receipt">
 	<thead>
@@ -30,8 +31,8 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 		</tr>
 		<?php endif; ?>
 		<tr>
-			<td><strong><?php _e( 'Payment Status', 'edd' ); ?>:</strong></td>
-			<td><?php echo edd_get_payment_status( $payment, true ); ?></td>
+			<td class="edd_receipt_payment_status"><strong><?php _e( 'Payment Status', 'edd' ); ?>:</strong></td>
+			<td class="edd_receipt_payment_status <?php echo strtolower( $status ); ?>"><?php echo $status; ?></td>
 		</tr>
 		<?php if ( ( $fees = edd_get_payment_fees( $payment->ID, $meta ) ) ) : ?>
 		<tr>

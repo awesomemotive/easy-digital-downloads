@@ -105,6 +105,9 @@ table#edd_purchase_receipt_products td,
 table#edd_purchase_receipt_products th,
 table#edd_purchase_receipt td,
 table#edd_purchase_receipt th { text-align: left; }
+table#edd_purchase_receipt .edd_receipt_payment_status.pending,
+table#edd_purchase_receipt .edd_receipt_payment_status.revoked,
+table#edd_purchase_receipt .edd_receipt_payment_status.failed { color: #f73f2e; }
 table#edd_purchase_receipt_products li { list-style: none; margin: 0 0 8px 10px; }
 table#edd_purchase_receipt ul, table#edd_purchase_receipt_products ul { margin: 0; padding: 0; }
 table#edd_purchase_receipt li { list-style: none; margin: 0 0 8px 0; }
