@@ -47,7 +47,7 @@ if ( $purchases ) : ?>
 												'relation'	=> 'AND',
 												array(
 													'key' 	=> '_edd_log_file_id',
-													'value' => (int) $fileky
+													'value' => (int) $filekey
 												),
 												array(
 													'key' 	=> '_edd_log_payment_id',
