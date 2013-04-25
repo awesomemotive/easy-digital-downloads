@@ -122,6 +122,10 @@ table#edd_purchase_receipt_products .edd_purchase_receipt_product_notes { font-s
 #edd_user_history td { text-align: left; padding: 3px 5px; border-bottom: 1px solid #f0f0f0; border-top: none; }
 #edd_user_history th { font-weight: bold; background: #f5f5f5;}
 #edd_user_history td { line-height: 25px; vertical-align: middle; }
+#edd_user_history .edd_purchase_status.revoked,
+#edd_user_history .edd_purchase_status.failed,
+#edd_user_history .edd_purchase_status.cancelled,
+#edd_user_history .edd_purchase_status.pending { color: #f73f2e; }
 
 /* =Registration Form
 -------------------------------------------------------------- */
