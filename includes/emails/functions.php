@@ -54,6 +54,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$headers .= "Reply-To: ". $from_email . "\r\n";
 	$headers .= "MIME-Version: 1.0\r\n";
 	$headers .= "Content-Type: text/html; charset=utf-8\r\n";
+	$headers = apply_filters( 'edd_receipt_headers', $headers );
 
 	// Allow add-ons to add file attachments
 	$attachments = apply_filters( 'edd_receipt_attachments', array(), $payment_id, $payment_data );
@@ -97,6 +98,7 @@ function edd_email_test_purchase_receipt() {
 	$headers .= "Reply-To: ". $from_email . "\r\n";
 	$headers .= "MIME-Version: 1.0\r\n";
 	$headers .= "Content-Type: text/html; charset=utf-8\r\n";
+	$headers = apply_filters( 'edd_test_purchase_headers', $headers );
 
 	wp_mail( edd_get_admin_notice_emails(), $subject, $message, $headers );
 }
