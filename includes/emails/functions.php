@@ -54,7 +54,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$headers .= "Reply-To: ". $from_email . "\r\n";
 	$headers .= "MIME-Version: 1.0\r\n";
 	$headers .= "Content-Type: text/html; charset=utf-8\r\n";
-	$headers = apply_filters( 'edd_receipt_headers', $headers );
+	$headers = apply_filters( 'edd_receipt_headers', $headers, $payment_id, $payment_data );
 
 	// Allow add-ons to add file attachments
 	$attachments = apply_filters( 'edd_receipt_attachments', array(), $payment_id, $payment_data );
