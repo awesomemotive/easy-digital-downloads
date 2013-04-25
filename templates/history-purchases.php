@@ -51,7 +51,7 @@ if ( $purchases ) : ?>
 												),
 												array(
 													'key' 	=> '_edd_log_payment_id',
-													'value' => (int) $purchase_data['key']
+													'value' => (int) $post->ID
 												)
 											);
 
