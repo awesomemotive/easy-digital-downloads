@@ -140,7 +140,7 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 
 					<div class="edd_purchase_receipt_product_name">
 						<?php echo esc_html( $item['name'] ); ?>
-						<?php if( $price_id !== false ) : ?>
+						<?php if( $price_id !== false && edd_is_payment_complete( $payment->ID ) ) : ?>
 						<span class="edd_purchase_receipt_price_name">&nbsp;&ndash;&nbsp;<?php echo edd_get_price_option_name( $item['id'], $price_id ); ?></span>
 						<?php endif; ?>
 					</div>
@@ -149,6 +149,7 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 						<div class="edd_purchase_receipt_product_notes"><?php echo edd_get_product_notes( $item['id'] ); ?></div>
 					<?php endif; ?>
 
+					<?php if( edd_is_payment_complete( $payment->ID ) ) : ?>
 					<ul>
 
 						<?php
@@ -169,6 +170,8 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 							echo '<li>' . __( 'No downloadable files found.', 'edd' ) . '</li>';
 						endif; ?>
 					</ul>
+					<?php endif; ?>
+
 				</td>
 				<td><?php echo edd_currency_filter( edd_format_amount( $item[ 'price' ] ) ); ?></td>
 			</tr>
