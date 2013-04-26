@@ -18,10 +18,6 @@ $RECYCLE.BIN/
 # PhpStorm
 .idea
 
-# Unit Tests
-tests/*
-tmp/*
-
 # Eclipse
 *.pydevproject
 .project
