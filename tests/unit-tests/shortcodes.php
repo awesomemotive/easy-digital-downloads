@@ -266,7 +266,7 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 		$this->assertContains( '<th>Price</th>', edd_receipt_shortcode() );
 		$this->assertContains( '<div class="edd_purchase_receipt_product_name">', edd_receipt_shortcode() );
 		$this->assertContains( 'Test Download', edd_receipt_shortcode() );
-		$this->assertContains( '<span class="edd_purchase_receipt_price_name">&nbsp;&ndash;&nbsp;Advanced</span>', edd_receipt_shortcode() );
+//		$this->assertContains( '<span class="edd_purchase_receipt_price_name">&nbsp;&ndash;&nbsp;Advanced</span>', edd_receipt_shortcode() );
 		$this->assertContains( '<div class="edd_purchase_receipt_product_notes">Purchase Notes</div>', edd_receipt_shortcode() );
 		$this->assertContains( '<td><strong>Total Price:</strong></td>', edd_receipt_shortcode() );
 		$this->assertContains( '<tfoot>', edd_receipt_shortcode() );
