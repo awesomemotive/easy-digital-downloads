@@ -1,6 +1,6 @@
 <?php
 // Retrieve all purchases for the current user
-$purchases = edd_get_users_purchases( get_current_user_id(), 20, true );
+$purchases = edd_get_users_purchases( get_current_user_id(), 20, true, 'any' );
 if ( $purchases ) : ?>
 	<table id="edd_user_history">
 		<thead>
@@ -19,7 +19,13 @@ if ( $purchases ) : ?>
 				<?php do_action( 'edd_purchase_history_row_start', $post->ID, $purchase_data ); ?>
 				<td class="edd_purchase_id">#<?php echo absint( $post->ID ); ?></td>
 				<td class="edd_purchase_date"><?php echo date_i18n( get_option('date_format'), strtotime( get_post_field( 'post_date', $post->ID ) ) ); ?></td>
-				<td class="edd_purchase_amount"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $post->ID ) ) ); ?></td>
+				<td class="edd_purchase_amount">
+					<span class="edd_purchase_amount"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $post->ID ) ) ); ?></span>
+					<?php if( $post->post_status != 'publish' ) : ?>
+					<span class="edd_purchase_sep">&nbsp;&ndash;&nbsp;</span>
+					<span class="edd_purchase_status <?php echo $post->post_status; ?>"><?php echo edd_get_payment_status( $post, true ); ?></span>
+					<?php endif; ?>
+				</td>
 				<td class="edd_purchased_files">
 					<?php
 						// Show a list of downloadable files
@@ -42,26 +48,6 @@ if ( $purchases ) : ?>
 										foreach ( $download_files as $filekey => $file ) {
 											$download_url = edd_get_download_file_url( $purchase_data['key'], $purchase_data['email'], $filekey, $id, $price_id );
 											echo '<div class="edd_download_file"><a href="' . esc_url( $download_url ) . '" class="edd_download_file_link">' . esc_html( $file['name'] ) . '</a></div>';
-											$logs = new EDD_Logging();
-											$meta_query = array(
-												'relation'	=> 'AND',
-												array(
-													'key' 	=> '_edd_log_file_id',
-													'value' => (int) $fileky
-												),
-												array(
-													'key' 	=> '_edd_log_payment_id',
-													'value' => (int) $purchase_data['key']
-												)
-											);
-
-											$download_count = $logs->get_log_count( $id, 'file_download', $meta_query );
-											$download_limit = edd_get_file_download_limit( $id );
-
-											if ( ! empty( $download_limit ) ) {
-												echo 'You have download this file ' . $download_count . ' out of '. $download_limit . ' times';
-											}
-
 
 											do_action( 'edd_purchase_history_files', $filekey, $file, $id, $post->ID, $purchase_data );
 										}
