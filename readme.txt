@@ -33,7 +33,7 @@ Features of the plugin include:
 * Detailed purchase and file download logs
 * Data export options for CSV and PDF
 * Extensible with many [add-ons](http://easydigitaldownloads.com/extensions/)
-* Developer friendly with dozens of actions and filters
+* Developer friendly with dozens of actions and filters. [View Codex](https://easydigitaldownloads.com/codex/index.html)
 
 More information at [Easy Digital Downloads.com](http://easydigitaldownloads.com/).
 

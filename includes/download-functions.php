@@ -560,6 +560,35 @@ function edd_get_download_files( $download_id, $variable_price_id = null ) {
 	return $files;
 }
 
+
+/**
+ * Gets the number of times a file has been downloaded for a specific purchase
+ *
+ * @since 1.6
+ * @param int $download_id Download ID
+ * @param int $file_key File key
+ * @param int $payment_id The ID number of the associated payment
+ * @return int Number of times the file has been downloaded for the purchase
+ */
+function edd_get_file_downloaded_count( $download_id = 0, $file_key = 0, $payment_id = 0 ) {
+	global $edd_logs;
+
+	$meta_query = array(
+		'relation'	=> 'AND',
+		array(
+			'key' 	=> '_edd_log_file_id',
+			'value' => (int) $file_key
+		),
+		array(
+			'key' 	=> '_edd_log_payment_id',
+			'value' => (int) $payment_id
+		)
+	);
+
+	return $edd_logs->get_log_count( $download_id, 'file_download', $meta_query );
+}
+
+
 /**
  * Gets the file download file limit for a particular download
  *
