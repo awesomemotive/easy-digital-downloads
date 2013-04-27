@@ -29,10 +29,10 @@ class EDD_Logging {
 	 */
 	public function __construct() {
 		// Create the log post type
-		add_action( 'init', array( $this, 'register_post_type' ), 100 );
+		add_action( 'init', array( $this, 'register_post_type' ), -1 );
 
 		// Create types taxonomy and default types
-		add_action( 'init', array( $this, 'register_taxonomy' ), 100 );
+		add_action( 'init', array( $this, 'register_taxonomy' ), -1 );
 
 	}
 
