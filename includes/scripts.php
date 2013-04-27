@@ -27,6 +27,9 @@ function edd_load_scripts() {
 
 	wp_enqueue_script( 'jquery' );
 
+	// Use minified libraries if SCRIPT_DEBUG is turned off
+	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+
 	// Get position in cart of current download
 	if ( isset( $post->ID ) ) {
 		$position = edd_get_item_position_in_cart( $post->ID );
@@ -34,9 +37,9 @@ function edd_load_scripts() {
 
 	if ( edd_is_checkout() ) {
 		if ( edd_is_cc_verify_enabled() ) {
-			wp_enqueue_script( 'creditCardValidator', EDD_PLUGIN_URL . 'assets/js/jquery.creditCardValidator.js', array( 'jquery' ), EDD_VERSION );
+			wp_enqueue_script( 'creditCardValidator', EDD_PLUGIN_URL . 'assets/js/jquery.creditCardValidator' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 		}
-		wp_enqueue_script( 'edd-checkout-global', EDD_PLUGIN_URL . 'assets/js/edd-checkout-global.js', array( 'jquery' ), EDD_VERSION );
+		wp_enqueue_script( 'edd-checkout-global', EDD_PLUGIN_URL . 'assets/js/edd-checkout-global' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', array(
 			'ajaxurl'            => edd_get_ajax_url(),
 			'checkout_nonce'     => wp_create_nonce( 'edd_checkout_nonce' ),
@@ -54,7 +57,7 @@ function edd_load_scripts() {
 
 	// Load AJAX scripts, if enabled
 	if ( edd_is_ajax_enabled() ) {
-		wp_enqueue_script( 'edd-ajax', EDD_PLUGIN_URL . 'assets/js/edd-ajax.js', array( 'jquery' ), EDD_VERSION );
+		wp_enqueue_script( 'edd-ajax', EDD_PLUGIN_URL . 'assets/js/edd-ajax' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 		wp_localize_script( 'edd-ajax', 'edd_scripts', array(
 				'ajaxurl' 					=> edd_get_ajax_url(),
 				'ajax_nonce' 				=> wp_create_nonce( 'edd_ajax_nonce' ),
@@ -90,12 +93,22 @@ function edd_register_styles() {
 	if ( isset( $edd_options['disable_styles'] ) )
 		return;
 
-	$file = 'edd.css';
+	// Use minified libraries if SCRIPT_DEBUG is turned off
+	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-	if ( file_exists( trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $file ) ) {
+	$file = 'edd.css';
+	$file_min = 'edd' . $suffix . '.css';
+
+	if ( !empty( $suffix ) && file_exists( trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $file_min ) ) {
+		$url = trailingslashit( get_stylesheet_directory_uri() ) . 'edd_templates/' . $file_min;
+	} elseif ( file_exists( trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $file ) ) {
 		$url = trailingslashit( get_stylesheet_directory_uri() ) . 'edd_templates/' . $file;
+	} elseif ( !empty( $suffix ) && file_exists( trailingslashit( get_template_directory() ) . 'edd_templates/' . $file_min ) ) {
+		$url = trailingslashit( get_template_directory_uri() ) . 'edd_templates/' . $file_min;
 	} elseif ( file_exists( trailingslashit( get_template_directory() ) . 'edd_templates/' . $file ) ) {
 		$url = trailingslashit( get_template_directory_uri() ) . 'edd_templates/' . $file;
+	} elseif ( !empty( $suffix ) && file_exists( trailingslashit( edd_get_templates_dir() ) . $file_min ) ) {
+		$url = trailingslashit( edd_get_templates_url() ) . $file_min;
 	} elseif ( file_exists( trailingslashit( edd_get_templates_dir() ) . $file ) ) {
 		$url = trailingslashit( edd_get_templates_url() ) . $file;
 	}
@@ -126,6 +139,9 @@ add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
 function edd_load_admin_scripts( $hook ) {
 	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_options, $edd_upgrades_screen;
 
+	// Use minified libraries if SCRIPT_DEBUG is turned off
+	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+
 	$edd_pages = array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_upgrades_screen, 'index.php' );
 	$edd_cpt   = apply_filters( 'edd_load_scripts_for_these_types', array( 'download', 'edd_payment' ) );
 
@@ -136,22 +152,22 @@ function edd_load_admin_scripts( $hook ) {
 		return;
 
 	if ( $hook == 'download_page_edd-reports' ) {
-		wp_enqueue_script( 'jquery-flot', EDD_PLUGIN_URL . 'assets/js/jquery.flot.js' );
+		wp_enqueue_script( 'jquery-flot', EDD_PLUGIN_URL . 'assets/js/jquery.flot' . $suffix . '.js' );
 	}
 	if ( $hook == 'download_page_edd-discounts' ) {
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
-		wp_enqueue_style( 'jquery-ui-css', EDD_PLUGIN_URL . 'assets/css/jquery-ui-' . $ui_style . '.css' );
+		wp_enqueue_style( 'jquery-ui-css', EDD_PLUGIN_URL . 'assets/css/jquery-ui-' . $ui_style . $suffix . '.css' );
 	}
 	if ( $hook == $edd_settings_page ) {
-		wp_enqueue_style( 'colorbox', EDD_PLUGIN_URL . 'assets/css/colorbox.css', array(  ), '1.3.20' );
+		wp_enqueue_style( 'colorbox', EDD_PLUGIN_URL . 'assets/css/colorbox' . $suffix . '.css', array(  ), '1.3.20' );
 		wp_enqueue_script( 'colorbox', EDD_PLUGIN_URL . 'assets/js/jquery.colorbox-min.js', array( 'jquery' ), '1.3.20' );
 	}
-	wp_enqueue_style( 'jquery-chosen', EDD_PLUGIN_URL . 'assets/css/chosen.css', array(  ), EDD_VERSION );
+	wp_enqueue_style( 'jquery-chosen', EDD_PLUGIN_URL . 'assets/css/chosen' . $suffix . '.css', array(  ), EDD_VERSION );
 	wp_enqueue_script( 'jquery-chosen', EDD_PLUGIN_URL . 'assets/js/chosen.jquery.min.js', array( 'jquery' ), EDD_VERSION );
 	wp_enqueue_script( 'media-upload' );
 	wp_enqueue_script( 'thickbox' );
-	wp_enqueue_script( 'edd-admin-scripts', EDD_PLUGIN_URL . 'assets/js/admin-scripts.js', array( 'jquery' ), EDD_VERSION, false );
+	wp_enqueue_script( 'edd-admin-scripts', EDD_PLUGIN_URL . 'assets/js/admin-scripts' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, false );
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
 		'post_id' 			=> isset( $post->ID ) ? $post->ID : null,
 		'edd_version'       => EDD_VERSION,
@@ -169,7 +185,7 @@ function edd_load_admin_scripts( $hook ) {
 	));
 	wp_enqueue_style( 'thickbox' );
 
-	wp_enqueue_style( 'edd-admin', EDD_PLUGIN_URL . 'assets/css/edd-admin.css', EDD_VERSION );
+	wp_enqueue_style( 'edd-admin', EDD_PLUGIN_URL . 'assets/css/edd-admin' . $suffix . '.css', EDD_VERSION );
 }
 add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
 
