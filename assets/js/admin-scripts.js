@@ -49,8 +49,15 @@ jQuery(document).ready(function ($) {
 		move : function() {
 			$(".edd_repeatable_table tbody").sortable({
 				handle: '.edd_draghandle', items: '.edd_repeatable_row', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
-					//var order = $(this).sortable("serialize") + '&action=ecpt_update_field_listing';
-					//$.post(ajaxurl, order, function(theResponse){
+					var count  = 0;
+					$(this).find( 'tr' ).each(function() {
+						$(this).find( 'input, select' ).each(function() {
+							var name   = $( this ).attr( 'name' );
+							name       = name.replace( /\[(\d+)\]/, '[' + count + ']');
+							$( this ).attr( 'name', name ).attr( 'id', name );
+						});
+						count++;
+					});
 				}
 			});
 		},
