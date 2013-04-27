@@ -92,32 +92,31 @@ add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
 function edd_register_styles() {
 	global $edd_options;
 
-	if ( isset( $edd_options['disable_styles'] ) )
+	if ( isset( $edd_options['disable_styles'] ) ) {
 		return;
+	}
 
-	$templates_dir = 'edd_templates/';
-	
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-	$file     = 'edd.css';
-	$file_min = 'edd' . $suffix . '.css';
+	$file          = 'edd' . $suffix . '.css';
+	$templates_dir = 'edd_templates/';
 
-	if ( !empty( $suffix ) && file_exists( trailingslashit( get_stylesheet_directory() ) . $templates_dir . $file_min ) ) {
-		$url = trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . $file_min;
-	} elseif ( file_exists( trailingslashit( get_stylesheet_directory() ) . $templates_dir . $file ) ) {
-		$url = trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . $file;
-	} elseif ( !empty( $suffix ) && file_exists( trailingslashit( get_template_directory() ) . $templates_dir . $file_min ) ) {
-		$url = trailingslashit( get_template_directory_uri() ) . $templates_dir . $file_min;
-	} elseif ( file_exists( trailingslashit( get_template_directory() ) . $templates_dir . $file ) ) {
-		$url = trailingslashit( get_template_directory_uri() ) . $templates_dir . $file;
-	} elseif ( !empty( $suffix ) && file_exists( trailingslashit( edd_get_templates_dir() ) . $file_min ) ) {
-		$url = trailingslashit( edd_get_templates_url() ) . $file_min;
-	} elseif ( file_exists( trailingslashit( edd_get_templates_dir() ) . $file ) ) {
-		$url = trailingslashit( edd_get_templates_url() ) . $file;
+	$child_theme_style_sheet  = trailingslashit( get_stylesheet_directory() ) . $templates_dir . $file;
+	$parent_theme_style_sheet = trailingslashit( get_template_directory() ) . $templates_dir . $file;
+	$edd_plugin_style_sheet   = trailingslashit( edd_get_templates_dir() ) . $file;
+
+	// If not debugging and .min.css exists in preferred directory, use it. Otherwise, if .css exists in the preferred directory, use it.
+	// If still nothing found, try the next directory.
+	if ( $suffix && file_exists( $child_theme_style_sheet ) || file_exists( $child_theme_style_sheet ) ) {
+		$url = $child_theme_style_sheet;
+	} elseif ( $suffix && file_exists( $parent_theme_style_sheet ) || file_exists( $parent_theme_style_sheet ) ) {
+		$url = $parent_theme_style_sheet;
+	} elseif ( $suffix && file_exists( $edd_plugin_style_sheet ) || file_exists( $edd_plugin_style_sheet ) ) {
+		$url = $edd_plugin_style_sheet;
 	}
 
-	wp_enqueue_style( 'edd-styles', $url, EDD_VERSION );
+	wp_enqueue_style( 'edd-styles', $url, array(), EDD_VERSION );
 }
 add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
 
