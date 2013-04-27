@@ -51,7 +51,7 @@ function edd_load_scripts() {
 			'no_email'           => __( 'Please enter an email address before applying a discount code', 'edd' ),
 			'no_username'        => __( 'Please enter a username before applying a discount code', 'edd' ),
 			'purchase_loading'   => __( 'Please Wait...', 'edd' ),
-			'complete_purchasse' => __( 'Purchase', 'edd' )
+			'complete_purchasse' => __( 'Purchase', 'edd' ),
 		));
 	}
 
@@ -142,8 +142,8 @@ function edd_load_admin_scripts( $hook ) {
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-	$edd_pages = array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_upgrades_screen, 'index.php' );
-	$edd_cpt   = apply_filters( 'edd_load_scripts_for_these_types', array( 'download', 'edd_payment' ) );
+	$edd_pages = array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_upgrades_screen, 'index.php', );
+	$edd_cpt   = apply_filters( 'edd_load_scripts_for_these_types', array( 'download', 'edd_payment', ) );
 
 	if ( ! in_array( $hook, $edd_pages ) && ! is_object( $post ) )
 		return;
@@ -160,10 +160,10 @@ function edd_load_admin_scripts( $hook ) {
 		wp_enqueue_style( 'jquery-ui-css', EDD_PLUGIN_URL . 'assets/css/jquery-ui-' . $ui_style . $suffix . '.css' );
 	}
 	if ( $hook == $edd_settings_page ) {
-		wp_enqueue_style( 'colorbox', EDD_PLUGIN_URL . 'assets/css/colorbox' . $suffix . '.css', array(  ), '1.3.20' );
+		wp_enqueue_style( 'colorbox', EDD_PLUGIN_URL . 'assets/css/colorbox' . $suffix . '.css', array(), '1.3.20' );
 		wp_enqueue_script( 'colorbox', EDD_PLUGIN_URL . 'assets/js/jquery.colorbox-min.js', array( 'jquery' ), '1.3.20' );
 	}
-	wp_enqueue_style( 'jquery-chosen', EDD_PLUGIN_URL . 'assets/css/chosen' . $suffix . '.css', array(  ), EDD_VERSION );
+	wp_enqueue_style( 'jquery-chosen', EDD_PLUGIN_URL . 'assets/css/chosen' . $suffix . '.css', array(), EDD_VERSION );
 	wp_enqueue_script( 'jquery-chosen', EDD_PLUGIN_URL . 'assets/js/chosen.jquery.min.js', array( 'jquery' ), EDD_VERSION );
 	wp_enqueue_script( 'media-upload' );
 	wp_enqueue_script( 'thickbox' );
@@ -181,7 +181,7 @@ function edd_load_admin_scripts( $hook ) {
 		'currency_sign'      => edd_currency_filter(''),
 		'currency_pos'       => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
 		'new_media_ui'       => apply_filters( 'edd_use_35_media_ui', 1 ),
-		'remove_text'        => __( 'Remove', 'edd' )
+		'remove_text'        => __( 'Remove', 'edd' ),
 	));
 	wp_enqueue_style( 'thickbox' );
 
