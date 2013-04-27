@@ -151,10 +151,10 @@ function edd_load_admin_scripts( $hook ) {
 	if ( is_object( $post ) && ! in_array( $post->post_type, $edd_cpt ) )
 		return;
 
-	if ( $hook == 'download_page_edd-reports' ) {
+	if ( 'download_page_edd-reports' == $hook ) {
 		wp_enqueue_script( 'jquery-flot', EDD_PLUGIN_URL . 'assets/js/jquery.flot' . $suffix . '.js' );
 	}
-	if ( $hook == 'download_page_edd-discounts' ) {
+	if ( 'download_page_edd-discounts' == $hook ) {
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
 		wp_enqueue_style( 'jquery-ui-css', EDD_PLUGIN_URL . 'assets/css/jquery-ui-' . $ui_style . $suffix . '.css' );
@@ -206,7 +206,7 @@ function edd_admin_downloads_icon() {
 		body #adminmenu #menu-posts-download div.wp-menu-image { background:transparent url(<?php echo $icon_url; ?>) no-repeat 7px -32px; }
 		body #adminmenu #menu-posts-download:hover div.wp-menu-image,
 		body #adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image { background:transparent url(<?php echo $icon_url; ?>) no-repeat 7px 0; }
-		<?php if ( ( isset( $_GET['post_type'] ) ) && ( $_GET['post_type'] == 'download' ) || ( $post_type == 'download' ) ) : ?>
+		<?php if ( ( isset( $_GET['post_type'] ) ) && ( 'download' == $_GET['post_type'] ) || ( 'download' == $post_type ) ) : ?>
 		#icon-edit { background:transparent url(<?php echo EDD_PLUGIN_URL .'assets/images/edd-cpt.png'; ?>) no-repeat; }
 		<?php endif; ?>
 		@media
@@ -214,7 +214,7 @@ function edd_admin_downloads_icon() {
 		only screen and (   min--moz-device-pixel-ratio: 1.5),
 		only screen and (     -o-min-device-pixel-ratio: 3/2),
 		only screen and (        min-device-pixel-ratio: 1.5),
-		only screen and (                min-resolution: 1.5dppx) {
+		only screen and (        		 min-resolution: 1.5dppx) {
 			/* Admin Menu - 16px @2x */
 			body #adminmenu #menu-posts-download div.wp-menu-image {
 				background: transparent url(<?php echo EDD_PLUGIN_URL; ?>assets/images/edd-icon-2x.png) no-repeat 7px -20px !important;
