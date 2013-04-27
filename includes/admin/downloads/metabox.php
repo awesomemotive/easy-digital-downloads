@@ -208,9 +208,10 @@ function edd_render_price_field( $post_id ) {
 			<label for="edd_price_options_mode"><?php apply_filters( 'edd_multi_option_purchase_text', _e( 'Enable multi option purchase mode. Leave unchecked to only permit a single price option to be purchased', 'edd' ) ); ?></label>
 		</p>
 		<div id="edd_price_fields" class="edd_meta_table_wrap">
-			<table class="widefat" width="100%" cellpadding="0" cellspacing="0">
+			<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
+						<th style="width: 20px;"></th>
 						<th><?php _e( 'Option Name', 'edd' ); ?></th>
 						<th style="width: 90px"><?php _e( 'Price', 'edd' ); ?></th>
 						<?php do_action( 'edd_download_price_table_head', $post_id ); ?>
@@ -226,14 +227,14 @@ function edd_render_price_field( $post_id ) {
 
 								$args = apply_filters( 'edd_price_row_args', compact( 'name', 'amount' ), $value );
 					?>
-						<tr class="edd_variable_prices_wrapper">
+						<tr class="edd_variable_prices_wrapper edd_repeatable_row">
 							<?php do_action( 'edd_render_price_row', $key, $args, $post_id ); ?>
 						</tr>
 					<?php
 							endforeach;
 						else :
 					?>
-						<tr class="edd_variable_prices_wrapper">
+						<tr class="edd_variable_prices_wrapper edd_repeatable_row">
 							<?php do_action( 'edd_render_price_row', 0, array(), $post_id ); ?>
 						</tr>
 					<?php endif; ?>
@@ -271,6 +272,10 @@ function edd_render_price_row( $key, $args = array(), $post_id ) {
 	$args = wp_parse_args( $args, $defaults );
 	extract( $args, EXTR_SKIP );
 ?>
+	<td>
+		<span class="edd_draghandle"></span>
+	</td>
+
 	<td>
 		<input type="text" class="edd_variable_prices_name" placeholder="<?php _e( 'Option Name', 'edd' ); ?>" name="edd_variable_prices[<?php echo $key; ?>][name]" id="edd_variable_prices[<?php echo $key; ?>][name]" value="<?php echo esc_attr( $name ); ?>" size="20" style="width:100%" />
 	</td>
@@ -317,9 +322,10 @@ function edd_render_files_field( $post_id ) {
 		<input type="hidden" id="edd_download_files" class="edd_repeatable_upload_name_field" value=""/>
 
 		<div id="edd_file_fields" class="edd_meta_table_wrap">
-			<table class="widefat" width="100%" cellpadding="0" cellspacing="0">
+			<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
+						<th style="width: 20px"></th>
 						<th style="width: 20%"><?php _e( 'File Name', 'edd' ); ?></th>
 						<th><?php _e( 'File URL', 'edd' ); ?></th>
 						<th class="pricing" style="width: 20%; <?php echo $variable_display; ?>"><?php _e( 'Price Assignment', 'edd' ); ?></th>
@@ -337,14 +343,14 @@ function edd_render_files_field( $post_id ) {
 
 							$args = apply_filters( 'edd_file_row_args', compact( 'name', 'file', 'condition' ), $value );
 				?>
-						<tr class="edd_repeatable_upload_wrapper">
+						<tr class="edd_repeatable_upload_wrapper edd_repeatable_row">
 							<?php do_action( 'edd_render_file_row', $key, $args, $post_id ); ?>
 						</tr>
 				<?php
 						endforeach;
 					else :
 				?>
-					<tr class="edd_repeatable_upload_wrapper">
+					<tr class="edd_repeatable_upload_wrapper edd_repeatable_row">
 						<?php do_action( 'edd_render_file_row', 0, array(), $post_id ); ?>
 					</tr>
 				<?php endif; ?>
@@ -388,6 +394,11 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 	$variable_pricing = edd_has_variable_prices( $post_id );
 	$variable_display = $variable_pricing ? '' : ' style="display:none;"';
 ?>
+
+	<td>
+		<span class="edd_draghandle"></span>
+	</td>
+
 	<td>
 		<input type="text" class="edd_repeatable_name_field" name="edd_download_files[<?php echo $key; ?>][name]" id="edd_download_files[<?php echo $key; ?>][name]" value="<?php echo $name; ?>" placeholder="<?php _e( 'File Name', 'edd' ); ?>" style="width:100%" />
 	</td>
