@@ -59,19 +59,19 @@ function edd_load_scripts() {
 	if ( edd_is_ajax_enabled() ) {
 		wp_enqueue_script( 'edd-ajax', EDD_PLUGIN_URL . 'assets/js/edd-ajax' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 		wp_localize_script( 'edd-ajax', 'edd_scripts', array(
-				'ajaxurl' 					=> edd_get_ajax_url(),
-				'ajax_nonce' 				=> wp_create_nonce( 'edd_ajax_nonce' ),
-				'position_in_cart' 			=> isset( $position ) ? $position : -1,
-				'already_in_cart_message' 	=> __('You have already added this item to your cart', 'edd'), // Item already in the cart message
-				'empty_cart_message' 		=> __('Your cart is empty', 'edd'), // Item already in the cart message
-				'loading' 					=> __('Loading', 'edd') , // General loading message
-				'select_option' 			=> __('Please select an option', 'edd') , // Variable pricing error with multi-purchase option enabled
-				'ajax_loader' 				=> EDD_PLUGIN_URL . 'assets/images/loading.gif', // Ajax loading image
-				'is_checkout'               => edd_is_checkout() ? '1' : '0',
-				'default_gateway'           => edd_get_default_gateway(),
-				'redirect_to_checkout'      => ( edd_straight_to_checkout() || edd_is_checkout() ) ? '1' : '0',
-				'checkout_page' 			=> edd_get_checkout_uri(),
-				'permalinks' 				=> get_option( 'permalink_structure' ) ? '1' : '0',
+				'ajaxurl'                 => edd_get_ajax_url(),
+				'ajax_nonce'              => wp_create_nonce( 'edd_ajax_nonce' ),
+				'position_in_cart'        => isset( $position ) ? $position : -1,
+				'already_in_cart_message' => __('You have already added this item to your cart', 'edd'), // Item already in the cart message
+				'empty_cart_message'      => __('Your cart is empty', 'edd'), // Item already in the cart message
+				'loading'                 => __('Loading', 'edd') , // General loading message
+				'select_option'           => __('Please select an option', 'edd') , // Variable pricing error with multi-purchase option enabled
+				'ajax_loader'             => EDD_PLUGIN_URL . 'assets/images/loading.gif', // Ajax loading image
+				'is_checkout'             => edd_is_checkout() ? '1' : '0',
+				'default_gateway'         => edd_get_default_gateway(),
+				'redirect_to_checkout'    => ( edd_straight_to_checkout() || edd_is_checkout() ) ? '1' : '0',
+				'checkout_page'           => edd_get_checkout_uri(),
+				'permalinks'              => get_option( 'permalink_structure' ) ? '1' : '0',
 			)
 		);
 	}
@@ -96,7 +96,7 @@ function edd_register_styles() {
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-	$file = 'edd.css';
+	$file     = 'edd.css';
 	$file_min = 'edd' . $suffix . '.css';
 
 	if ( !empty( $suffix ) && file_exists( trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $file_min ) ) {
@@ -169,19 +169,19 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_script( 'thickbox' );
 	wp_enqueue_script( 'edd-admin-scripts', EDD_PLUGIN_URL . 'assets/js/admin-scripts' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, false );
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
-		'post_id' 			=> isset( $post->ID ) ? $post->ID : null,
-		'edd_version'       => EDD_VERSION,
-		'add_new_download' 	=> __( 'Add New Download', 'edd' ), 									// Thickbox title
-		'use_this_file' 	=> __( 'Use This File','edd' ), 										// "use this file" button
-		'quick_edit_warning'=> __( 'Sorry, not available for variable priced products.', 'edd' ),
-		'delete_payment' 	=> __( 'Are you sure you wish to delete this payment?', 'edd' ),
-		'one_price_min' 	=> __( 'You must have at least one price', 'edd' ),
-		'one_file_min' 		=> __( 'You must have at least one file', 'edd' ),
-		'one_field_min'		=> __( 'You must have at least one field', 'edd' ),
-		'currency_sign'		=> edd_currency_filter(''),
-		'currency_pos'		=> isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
-		'new_media_ui'      => apply_filters( 'edd_use_35_media_ui', 1 ),
-		'remove_text'       => __( 'Remove', 'edd' )
+		'post_id'            => isset( $post->ID ) ? $post->ID : null,
+		'edd_version'        => EDD_VERSION,
+		'add_new_download'   => __( 'Add New Download', 'edd' ), 									// Thickbox title
+		'use_this_file'      => __( 'Use This File','edd' ), 										// "use this file" button
+		'quick_edit_warning' => __( 'Sorry, not available for variable priced products.', 'edd' ),
+		'delete_payment'     => __( 'Are you sure you wish to delete this payment?', 'edd' ),
+		'one_price_min'      => __( 'You must have at least one price', 'edd' ),
+		'one_file_min'       => __( 'You must have at least one file', 'edd' ),
+		'one_field_min'      => __( 'You must have at least one field', 'edd' ),
+		'currency_sign'      => edd_currency_filter(''),
+		'currency_pos'       => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
+		'new_media_ui'       => apply_filters( 'edd_use_35_media_ui', 1 ),
+		'remove_text'        => __( 'Remove', 'edd' )
 	));
 	wp_enqueue_style( 'thickbox' );
 
@@ -214,7 +214,7 @@ function edd_admin_downloads_icon() {
 		only screen and (   min--moz-device-pixel-ratio: 1.5),
 		only screen and (     -o-min-device-pixel-ratio: 3/2),
 		only screen and (        min-device-pixel-ratio: 1.5),
-		only screen and (        		 min-resolution: 1.5dppx) {
+		only screen and (                min-resolution: 1.5dppx) {
 			/* Admin Menu - 16px @2x */
 			body #adminmenu #menu-posts-download div.wp-menu-image {
 				background: transparent url(<?php echo EDD_PLUGIN_URL; ?>assets/images/edd-icon-2x.png) no-repeat 7px -20px !important;
