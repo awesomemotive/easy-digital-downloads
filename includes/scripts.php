@@ -109,11 +109,11 @@ function edd_register_styles() {
 	// If not debugging and .min.css exists in preferred directory, use it. Otherwise, if .css exists in the preferred directory, use it.
 	// If still nothing found, try the next directory.
 	if ( $suffix && file_exists( $child_theme_style_sheet ) || file_exists( $child_theme_style_sheet ) ) {
-		$url = $child_theme_style_sheet;
+		$url = trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . $file;
 	} elseif ( $suffix && file_exists( $parent_theme_style_sheet ) || file_exists( $parent_theme_style_sheet ) ) {
-		$url = $parent_theme_style_sheet;
+		$url = trailingslashit( get_template_directory_uri() ) . $templates_dir . $file;
 	} elseif ( $suffix && file_exists( $edd_plugin_style_sheet ) || file_exists( $edd_plugin_style_sheet ) ) {
-		$url = $edd_plugin_style_sheet;
+		$url = trailingslashit( edd_get_templates_url() ) . $file;
 	}
 
 	wp_enqueue_style( 'edd-styles', $url, array(), EDD_VERSION );
