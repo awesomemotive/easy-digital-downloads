@@ -121,7 +121,7 @@ function edd_setup_edd_post_types() {
 	);
 	register_post_type( 'edd_discount', $discount_args );
 }
-add_action( 'init', 'edd_setup_edd_post_types', 100 );
+add_action( 'init', 'edd_setup_edd_post_types', -1 );
 
 /**
  * Get Default Labels
