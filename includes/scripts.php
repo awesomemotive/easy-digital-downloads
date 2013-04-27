@@ -203,11 +203,11 @@ function edd_admin_downloads_icon() {
 	$icon_url = EDD_PLUGIN_URL . 'assets/images/edd-icon.png';
 	?>
 	<style type="text/css" media="screen">
-		body #adminmenu #menu-posts-download div.wp-menu-image { background:transparent url( "<?php echo $icon_url; ?>" ) no-repeat 7px -32px; }
+		body #adminmenu #menu-posts-download div.wp-menu-image { background:transparent url(<?php echo $icon_url; ?>) no-repeat 7px -32px; }
 		body #adminmenu #menu-posts-download:hover div.wp-menu-image,
-		body #adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image { background:transparent url( "<?php echo $icon_url; ?>" ) no-repeat 7px 0; }
+		body #adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image { background:transparent url(<?php echo $icon_url; ?>) no-repeat 7px 0; }
 		<?php if ( ( isset( $_GET['post_type'] ) ) && ( $_GET['post_type'] == 'download' ) || ( $post_type == 'download' ) ) : ?>
-		#icon-edit { background:transparent url("<?php echo EDD_PLUGIN_URL .'assets/images/edd-cpt.png'; ?>") no-repeat; }
+		#icon-edit { background:transparent url(<?php echo EDD_PLUGIN_URL .'assets/images/edd-cpt.png'; ?>) no-repeat; }
 		<?php endif; ?>
 		@media
 		only screen and (-webkit-min-device-pixel-ratio: 1.5),
@@ -217,7 +217,7 @@ function edd_admin_downloads_icon() {
 		only screen and (        		 min-resolution: 1.5dppx) {
 			/* Admin Menu - 16px @2x */
 			body #adminmenu #menu-posts-download div.wp-menu-image {
-				background: transparent url('<?php echo EDD_PLUGIN_URL; ?>assets/images/edd-icon-2x.png') no-repeat 7px -20px !important;
+				background: transparent url(<?php echo EDD_PLUGIN_URL; ?>assets/images/edd-icon-2x.png) no-repeat 7px -20px !important;
 				background-size: 16px 48px !important;
 			}
 
@@ -228,7 +228,7 @@ function edd_admin_downloads_icon() {
 
 			/* Post Screen - 32px @2x */
 			.icon32-posts-download {
-				background: url('<?php echo EDD_PLUGIN_URL; ?>assets/images/edd-cpt-2x.png') no-repeat 0 0 !important;
+				background: url(<?php echo EDD_PLUGIN_URL; ?>assets/images/edd-cpt-2x.png) no-repeat 0 0 !important;
 				background-size: 32px 32px !important;
 			}
 		}
@@ -246,6 +246,6 @@ add_action( 'admin_head','edd_admin_downloads_icon' );
 */
 function edd_version_in_header(){
 	// Newline on both sides to avoid being in a blob
-	echo "<meta name='generator' content='Easy Digital Downloads v" . EDD_VERSION . "' />\n";
+	echo '<meta name="generator" content="Easy Digital Downloads v' . EDD_VERSION . '" />' . "\n";
 }
 add_action( 'wp_head', 'edd_version_in_header' );
