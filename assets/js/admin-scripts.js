@@ -6,6 +6,7 @@ jQuery(document).ready(function ($) {
 	var EDD_Download_Configuration = {
 		init : function() {
 			this.add();
+			this.move();
 			this.remove();
 			this.type();
 			this.prices();
@@ -42,6 +43,15 @@ jQuery(document).ready(function ($) {
 				row = button.parent().parent().prev( 'tr' ),
 				clone = EDD_Download_Configuration.clone_repeatable(row);
 				clone.insertAfter( row );
+			});
+		},
+
+		move : function() {
+			$(".edd_repeatable_table tbody").sortable({
+				handle: '.edd_draghandle', items: '.edd_repeatable_row', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
+					//var order = $(this).sortable("serialize") + '&action=ecpt_update_field_listing';
+					//$.post(ajaxurl, order, function(theResponse){
+				}
 			});
 		},
 
