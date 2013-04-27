@@ -211,7 +211,7 @@ function edd_render_price_field( $post_id ) {
 			<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
-						<th style="width: 4%">|</th>
+						<th style="width: 20px;"></th>
 						<th><?php _e( 'Option Name', 'edd' ); ?></th>
 						<th style="width: 90px"><?php _e( 'Price', 'edd' ); ?></th>
 						<?php do_action( 'edd_download_price_table_head', $post_id ); ?>
@@ -325,7 +325,7 @@ function edd_render_files_field( $post_id ) {
 			<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
-						<th style="width: 4%">|</th>
+						<th style="width: 20px"></th>
 						<th style="width: 20%"><?php _e( 'File Name', 'edd' ); ?></th>
 						<th><?php _e( 'File URL', 'edd' ); ?></th>
 						<th class="pricing" style="width: 20%; <?php echo $variable_display; ?>"><?php _e( 'Price Assignment', 'edd' ); ?></th>
