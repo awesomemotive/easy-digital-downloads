@@ -209,6 +209,7 @@ function edd_admin_downloads_icon() {
 
 	$images_url  = EDD_PLUGIN_URL . 'assets/images/';
 	$icon_url    = $images_url . 'edd-icon.png';
+	$icon_cpt_url = $images_url . 'edd-cpt.png';
 	$icon_2x_url = $images_url . 'edd-icon-2x.png';
 	?>
 	<style type="text/css" media="screen">
@@ -216,7 +217,7 @@ function edd_admin_downloads_icon() {
 		body #adminmenu #menu-posts-download:hover div.wp-menu-image,
 		body #adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image { background: transparent url(<?php echo $icon_url; ?>) no-repeat 7px 0; }
 		<?php if ( ( isset( $_GET['post_type'] ) ) && ( 'download' == $_GET['post_type'] ) || ( 'download' == $post_type ) ) : ?>
-		#icon-edit { background: transparent url(<?php echo $icon_url; ?>) no-repeat; }
+		#icon-edit { background: transparent url(<?php echo $icon_cpt_url; ?>) no-repeat; }
 		<?php endif; ?>
 		@media
 		only screen and (-webkit-min-device-pixel-ratio: 1.5),
