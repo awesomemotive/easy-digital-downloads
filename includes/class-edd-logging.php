@@ -47,7 +47,7 @@ class EDD_Logging {
 		/* Logs post type */
 		$log_args = array(
 			'labels'			  => array( 'name' => __( 'Logs', 'edd' ) ),
-			'public'			  => true,
+			'public'			  => false,
 			'exclude_from_search' => true,
 			'publicly_queryable'  => false,
 			'show_ui'             => false,
