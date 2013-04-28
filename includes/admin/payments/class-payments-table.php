@@ -296,7 +296,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return string Data shown in the Details column
 	 */
 	public function column_details( $item ) {
-		$details = "<a href='#TB_inline?width=640&amp;inlineId=purchased-files-" . $item['ID'] . "' class='thickbox' title='" . sprintf( __( 'Purchase Details for Payment #%s', 'edd' ), $item['ID'] ) . "'>" . __( 'View Order Details', 'edd' ) . "</a>";
+		//$details = '<a href="" $item['ID'] . "' class='thickbox' title='" . sprintf( __( 'Purchase Details for Payment #%s', 'edd' ), $item['ID'] ) . "'>" . __( 'View Order Details', 'edd' ) . "</a>";
+		$details = '<a href="' . add_query_arg( 'id', $item['ID'], admin_url( 'edit.php?post_type=download&page=edd-view-order-details' ) ) . '">' . __( 'View Order Details', 'edd' ) . '</a>';
 
 		ob_start();
 ?>
