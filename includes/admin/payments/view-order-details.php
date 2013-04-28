@@ -42,7 +42,7 @@ function edd_view_order_details_screen() {
 	$payment_date = strtotime( $item->post_date );
 	?>
 	<div class="wrap">
-		<h2><?php _e( 'View Order Details', 'edd' ); ?></h2>
+		<h2><?php _e( 'View Order Details', 'edd' ); ?> <a class="add-new-h2" href="<?php echo admin_url( 'edit.php?post_type=download&amp;page=edd-payment-history&amp;edd-action=edit-payment&amp;purchase_id=' . $_GET['id'] ); ?>"><?php _e( 'Edit Order', 'edd' ); ?></a></h2>
 		<div id="poststuff">
 			<div id="post-body" class="metabox-holder columns-2">
 				<div id="postbox-container-1" class="postbox-container">
