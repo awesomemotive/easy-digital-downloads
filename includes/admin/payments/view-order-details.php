@@ -32,12 +32,14 @@ function edd_view_order_details_screen() {
 	}
 
 	// Setup the variables
+	$item = get_post( $_GET['id'] );
 	$payment_meta = edd_get_payment_meta( $_GET['id'] );
 	$cart_items   = isset( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] ) : false;
 	if ( empty( $cart_items ) || ! $cart_items ) {
 		$cart_items = maybe_unserialize( $payment_meta['downloads'] );
 	}
 	$user_info = edd_get_payment_meta_user_info( $_GET['id'] );
+	$payment_date = strtotime( $item->post_date );
 	?>
 	<div class="wrap">
 		<h2><?php _e( 'View Order Details', 'edd' ); ?></h2>
@@ -65,11 +67,6 @@ function edd_view_order_details_screen() {
 									</div>
 									<?php endif; ?>
 									<div class="edd-order-payment edd-admin-box-inside">
-										<?php
-										$gateway = edd_get_payment_gateway( $_GET['id'] );
-										if ( $gateway ) { ?>
-										<p><span class="label"><?php _e( 'Payment Method:', 'edd' ); ?></span> <span class="right"><?php echo edd_get_gateway_admin_label( $gateway ); ?></span></p>
-										<?php } ?>
 										<p><span class="label"><?php _e( 'Total Price', 'edd' ); ?></span> <span class="right"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $_GET['id'] ) ) ); ?></span></p>
 									</div>
 								</div>
@@ -110,7 +107,32 @@ function edd_view_order_details_screen() {
 						<div id="edd-order-data" class="postbox">
 							<h3 class="hndle"><?php _e( 'Order Details', 'edd' ); ?></h3>
 							<div class="inside">
+								<p class="order-id"><?php _e( 'Payment', 'edd' ); ?> <?php echo '#' . $_GET['id']; ?></p>
+								<div class="column-container">
+									<div class="order-data-column">
+										<h4><?php _e( 'General Details' ); ?></h4>
+										<p class="data"><span><?php _e( 'Status:', 'edd' ); ?></span> <?php echo edd_get_payment_status( get_post( $_GET['id'] ), true ) ?></p>
+										<p class="data"><span><?php _e( 'Date:', 'edd' ); ?></span> <?php echo date_i18n( get_option( 'date_format' ), $payment_date ) ?></p>
+										<p class="data"><span><?php _e( 'Time:', 'edd' ); ?></span> <?php echo date_i18n( get_option( 'time_format' ), $payment_date ); ?></p>
+									</div>
 
+									<div class="order-data-column">
+										<h4><?php _e( 'Buyer\'s Personal Details', 'edd' ); ?></h4>
+										<p class="data"><span><?php _e( 'Name:', 'edd' ); ?></span> <?php echo $user_info['first_name'] . ' ' . $user_info['last_name']; ?></p>
+										<p class="data"><span><?php _e( 'Email:', 'edd' ); ?></span> <a href="mailto:<?php echo $payment_meta['email']; ?>"><?php echo $payment_meta['email']; ?></a></p>
+									</div>
+
+									<div class="order-data-column">
+										<h4><?php _e( 'Payment Details', 'edd' ); ?></h4>
+										<?php 
+										$gateway = edd_get_payment_gateway( $_GET['id'] );
+										if ( $gateway ) {
+										?>
+										<p class="data"><span><?php _e( 'Gateway:', 'edd' ); ?></span> <?php echo edd_get_gateway_admin_label( $gateway ); ?></p>
+										<?php } ?>
+										<p class="data"><span><?php _e( 'Key:', 'edd' ); ?></span> <?php echo $payment_meta['key']; ?></p>
+									</div>
+								</div>
 							</div>
 						</div>
 
