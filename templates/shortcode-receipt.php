@@ -77,23 +77,6 @@ $status  = edd_get_payment_status( $payment, true );
 			</tr>
 		<?php endif; ?>
 
-		<?php if ( ( $fees = edd_get_payment_fees( $payment->ID, $meta ) ) ) : ?>
-			<tr>
-				<td><strong><?php _e( 'Fees', 'edd' ); ?>:</strong></td>
-				<td>
-					<ul class="edd_receipt_fees">
-					<?php foreach( $fees as $fee ) : ?>
-						<li>
-							<span class="edd_fee_label"><?php echo esc_html( $fee['label'] ); ?></span>
-							<span class="edd_fee_sep">&nbsp;&ndash;&nbsp;</span>
-							<span class="edd_fee_amount"><?php echo edd_currency_filter( edd_format_amount( $fee['amount'] ) ); ?></span>
-						</li>
-					<?php endforeach; ?>
-					</ul>
-				</td>
-			</tr>
-		<?php endif; ?>
-
 		<?php if ( $edd_receipt_args['discount'] && $user['discount'] != 'none' ) : ?>
 			<tr>
 				<td><strong><?php _e( 'Discount', 'edd' ); ?>:</strong></td>
