@@ -15,7 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * View Order Details Page
  *
- * @access public
  * @since 1.6
  * @return void
 */
@@ -188,3 +187,17 @@ function edd_view_order_details_screen() {
 	</div><!-- /.wrap -->
 	<?php	
 }
+
+/**
+ * View Order Details Page Title
+ *
+ * @since 1.6
+ * @return void
+ */
+function edd_view_order_details_title( $admin_title, $title ) {
+	if ( 'download_page_edd-view-order-details' == get_current_screen()->base )
+		return __( 'View Order Details', 'edd' ) . ' ' . $admin_title;
+
+	return $admin_title;
+}
+add_filter( 'admin_title', 'edd_view_order_details_title', 10, 2 );
