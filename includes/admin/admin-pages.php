@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_add_options_link() {
-	global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_upgrades_screen;
+	global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_upgrades_screen, $edd_order_details_page;
 
 	require_once 'system-info.php';
 
@@ -38,5 +38,6 @@ function edd_add_options_link() {
 	$edd_system_info_page 	= add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download System Info', 'edd' ), __( 'System Info', 'edd' ), 'manage_shop_settings', 'edd-system-info', 'edd_system_info' );
 	$edd_add_ons_page 	    = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download Add Ons', 'edd' ), __( 'Add Ons', 'edd' ), 'manage_shop_settings', 'edd-addons', 'edd_add_ons_page' );
 	$edd_upgrades_screen    = add_submenu_page( null, __( 'EDD Upgrades', 'edd' ), __( 'EDD Upgrades', 'edd' ), 'manage_shop_settings', 'edd-upgrades', 'edd_upgrades_screen' );
+	$edd_order_details_page = add_submenu_page( null, __( 'View Order Details', 'edd' ), __( 'View Order Details', 'edd' ), 'edit_shop_payments', 'edd-view-order-details', 'edd_view_order_details_screen' );
 }
 add_action( 'admin_menu', 'edd_add_options_link', 10 );
