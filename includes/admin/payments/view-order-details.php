@@ -12,13 +12,6 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-
-function pw_add_handling_fee() {
-	// Add a $10 handling fee
-	EDD()->fees->add_fee( '10', 'Handling Fee', 'handling_fee' );
-}
-add_action( 'init', 'pw_add_handling_fee' );
-
 /**
  * View Order Details Page
  *
