@@ -35,10 +35,12 @@ function edd_view_order_details_screen() {
 	?>
 	<div class="wrap">
 		<h2><?php _e( 'View Order Details', 'edd' ); ?> <a class="add-new-h2" href="<?php echo admin_url( 'edit.php?post_type=download&amp;page=edd-payment-history&amp;edd-action=edit-payment&amp;purchase_id=' . $_GET['id'] ); ?>"><?php _e( 'Edit Order', 'edd' ); ?></a></h2>
+		<?php do_action( 'edd_view_order_details_before' ); ?>
 		<div id="poststuff">
 			<div id="post-body" class="metabox-holder columns-2">
 				<div id="postbox-container-1" class="postbox-container">
 					<div id="side-sortables" class="meta-box-sortables ui-sortable">
+						<?php do_action( 'edd_view_order_details_sidebar_before' ); ?>
 						<div id="edd-order-totals" class="postbox">
 							<h3 class="hndle"><span>Order Totals</span></h3>
 							<div class="inside">
@@ -91,11 +93,13 @@ function edd_view_order_details_screen() {
 								?>
 							</div><!-- /.inside -->
 						</div><!-- /#edd-payment-notes -->
+						<?php do_action( 'edd_view_order_details_sidebar_after' ); ?>
 					</div><!-- /#side-sortables -->
 				</div><!-- /#postbox-container-1 -->
 
 				<div id="postbox-container-2" class="postbox-container">
 					<div id="normal-sortables" class="meta-box-sortables ui-sortable">
+						<?php do_action( 'edd_view_order_details_main_before' ); ?>
 						<div id="edd-order-data" class="postbox">
 							<h3 class="hndle"><?php _e( 'Order Details', 'edd' ); ?></h3>
 							<div class="inside">
@@ -180,10 +184,12 @@ function edd_view_order_details_screen() {
 								</table>
 							</div><!-- /.inside -->
 						</div><!-- /#edd-purchased-files -->
+						<?php do_action( 'edd_view_order_details_main_after' ); ?>
 					</div><!-- /#normal-sortables -->
 				</div><!-- #postbox-container-2 -->
 			</div><!-- /#post-body -->
 		</div><!-- /#post-stuff -->
+		<?php do_action( 'edd_view_order_details_after' ); ?>
 	</div><!-- /.wrap -->
 	<?php	
 }
