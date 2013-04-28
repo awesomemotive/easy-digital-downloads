@@ -40,7 +40,7 @@ function edd_view_order_details_screen() {
 			<div id="post-body" class="metabox-holder columns-2">
 				<div id="postbox-container-1" class="postbox-container">
 					<div id="side-sortables" class="meta-box-sortables ui-sortable">
-						<div id="edd_order_totals" class="postbox">
+						<div id="edd-order-totals" class="postbox">
 							<h3 class="hndle"><span>Order Totals</span></h3>
 							<div class="inside">
 								<div class="edd-order-totals-box edd-admin-box">
@@ -62,11 +62,11 @@ function edd_view_order_details_screen() {
 									<div class="edd-order-payment edd-admin-box-inside">
 										<p><span class="label"><?php _e( 'Total Price', 'edd' ); ?></span> <span class="right"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $_GET['id'] ) ) ); ?></span></p>
 									</div>
-								</div>
-							</div>
-						</div>
+								</div><!-- /.edd-order-totals-box -->
+							</div><!-- /.inside -->
+						</div><!-- /#edd-order-totals -->
 
-						<div id="edd_payment_notes" class="postbox">
+						<div id="edd-payment-notes" class="postbox">
 							<h3 class="hndle"><span>Payment Notes</span></h3>
 							<div class="inside">
 								<?php
@@ -90,10 +90,10 @@ function edd_view_order_details_screen() {
 									echo '<p>'. __( 'No payment notes', 'edd' ) . '</p>';
 								endif;
 								?>
-							</div>
-						</div>
-					</div>
-				</div>
+							</div><!-- /.inside -->
+						</div><!-- /#edd-payment-notes -->
+					</div><!-- /#side-sortables -->
+				</div><!-- /#postbox-container-1 -->
 
 				<div id="postbox-container-2" class="postbox-container">
 					<div id="normal-sortables" class="meta-box-sortables ui-sortable">
@@ -125,9 +125,9 @@ function edd_view_order_details_screen() {
 										<?php } ?>
 										<p class="data"><span><?php _e( 'Key:', 'edd' ); ?></span> <?php echo $payment_meta['key']; ?></p>
 									</div>
-								</div>
-							</div>
-						</div>
+								</div><!-- /.column-container -->
+							</div><!-- /.inside -->
+						</div><!-- /#edd-order-data -->
 
 						<div id="edd-purchased-files" class="postbox">
 							<h3 class="hndle"><?php _e( 'Purchased Files', 'edd' ); ?></h3>
@@ -179,12 +179,12 @@ function edd_view_order_details_screen() {
 										?>
 									</tbody>
 								</table>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+							</div><!-- /.inside -->
+						</div><!-- /#edd-purchased-files -->
+					</div><!-- /#normal-sortables -->
+				</div><!-- #postbox-container-2 -->
+			</div><!-- /#post-body -->
+		</div><!-- /#post-stuff -->
+	</div><!-- /.wrap -->
 	<?php	
 }
