@@ -104,7 +104,24 @@ function edd_view_order_details_screen() {
 						</div>
 					</div>
 				</div>
-				<div id="postbox-container-2" class="postbox-container"></div>
+
+				<div id="postbox-container-2" class="postbox-container">
+					<div id="normal-sortables" class="meta-box-sortables ui-sortable">
+						<div id="edd-order-data" class="postbox">
+							<h3 class="hndle"><?php _e( 'Order Details', 'edd' ); ?></h3>
+							<div class="inside">
+
+							</div>
+						</div>
+
+						<div id="edd-purchased-files" class="postbox">
+							<h3 class="hndle"><?php _e( 'Purchased Files', 'edd' ); ?></h3>
+							<div class="inside">
+								
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
