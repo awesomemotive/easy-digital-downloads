@@ -139,7 +139,53 @@ function edd_view_order_details_screen() {
 						<div id="edd-purchased-files" class="postbox">
 							<h3 class="hndle"><?php _e( 'Purchased Files', 'edd' ); ?></h3>
 							<div class="inside">
-								
+								<table class="wp-list-table widefat fixed" cellspacing="0">
+									<thead>
+										<tr>
+											<th scope="col" id="name" class="manage-column column-name"><?php _e( 'Download Name', 'edd' ); ?></th>
+											<th scope="col" id="price" class="manage-column column-price"><?php _e( 'Price', 'edd' ); ?></th>
+										</tr>
+									</thead>
+									<tfoot>
+										<tr>
+											<th scope="col" id="name" class="manage-column column-name"><?php _e( 'Download Name', 'edd' ); ?></th>
+											<th scope="col" id="price" class="manage-column column-price"><?php _e( 'Price', 'edd' ); ?></th>
+										</tr>
+									</tfoot>
+									<tbody id="the-list">
+										<?php
+										if ( $cart_items ) :
+											$i = 0;
+											foreach ( $cart_items as $key => $cart_item ) :
+												$id = isset( $payment_meta['cart_details'] ) ? $cart_item['id'] : $cart_item;
+												$price_override = isset( $payment_meta['cart_details'] ) ? $cart_item['price'] : null;
+												$price = edd_get_download_final_price( $id, $user_info, $price_override );
+												?>
+												<tr class="<?php if ( $i % 2 == 0 ) { echo 'alternate'; } ?>">
+													<td class="name column-name">
+														<?php
+														echo '<a href="' . admin_url( 'post.php?post=' . $id . '&action=edit' ) . '">' . get_the_title( $id ) . '</a>';
+
+														if ( isset( $cart_items[ $key ]['item_number'] ) ) {
+															$price_options = $cart_items[ $key ]['item_number']['options'];
+
+															if ( isset( $price_options['price_id'] ) ) {
+																echo ' - ' . edd_get_price_option_name( $id, $price_options['price_id'], $_GET['id'] );
+															}
+														}
+														?>
+													</td>
+													<td class="price column-price">
+														<?php echo edd_currency_filter( edd_format_amount( $price ) ); ?>
+													</td>
+												</tr>
+												<?php
+												$i++;
+											endforeach;
+										endif;
+										?>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>
