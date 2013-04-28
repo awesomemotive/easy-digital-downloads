@@ -49,8 +49,15 @@ function edd_view_order_details_screen() {
 										<p><span class="label"><?php _e( 'Discount Code', 'edd' ); ?></span> <span class="right"><?php if ( isset( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) { echo '<code>' . $user_info['discount'] . '</code>'; } else { _e( 'None', 'edd' ); } ?></span></p>
 									</div>
 									<?php
+									$taxes = edd_use_taxes();
+									if ( $taxes ) : ?>
+									<div class="edd-order-taxes edd-admin-box-inside">
+										<p><span class="label"><?php _e( 'Tax', 'edd' ); ?></span> <span class="right"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_tax( $_GET['id'] ) ) ); ?></span></p>
+									</div>
+									<?php endif; ?>
+									<?php
 									$fees = edd_get_payment_fees( $_GET['id'] );
-									if( ! empty( $fees ) ) : ?>
+									if ( ! empty( $fees ) ) : ?>
 									<div class="edd-order-fees edd-admin-box-inside">
 										<p class="strong"><?php _e( 'Fees', 'edd' ); ?></p>
 										<ul class="edd-payment-fees">
