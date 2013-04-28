@@ -136,18 +136,6 @@ function edd_view_order_details_screen() {
 							<h3 class="hndle"><?php _e( 'Purchased Files', 'edd' ); ?></h3>
 							<div class="inside">
 								<table class="wp-list-table widefat fixed" cellspacing="0">
-									<thead>
-										<tr>
-											<th scope="col" id="name" class="manage-column column-name"><?php _e( 'Download Name', 'edd' ); ?></th>
-											<th scope="col" id="price" class="manage-column column-price"><?php _e( 'Price', 'edd' ); ?></th>
-										</tr>
-									</thead>
-									<tfoot>
-										<tr>
-											<th scope="col" id="name" class="manage-column column-name"><?php _e( 'Download Name', 'edd' ); ?></th>
-											<th scope="col" id="price" class="manage-column column-price"><?php _e( 'Price', 'edd' ); ?></th>
-										</tr>
-									</tfoot>
 									<tbody id="the-list">
 										<?php
 										if ( $cart_items ) :
