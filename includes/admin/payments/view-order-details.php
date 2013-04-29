@@ -169,9 +169,6 @@ function edd_view_order_details_screen() {
 													<td class="price column-price">
 														<?php echo edd_currency_filter( edd_format_amount( $price ) ); ?>
 													</td>
-													<td class="logs column-log">
-														<a class="button-secondary" href="<?php echo admin_url( 'edit.php?page=edd-reports&view=file_downloads&post_type=download&tab=logs&download=' . $id ) ?>"><?php _e( 'View File Download Log', 'edd' ); ?></a>
-													</td>
 												</tr>
 												<?php
 												$i++;
