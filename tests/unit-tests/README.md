@@ -1,4 +1,4 @@
-#Easy Digital Downloads Unit Tests [![Build Status](https://secure.travis-ci.org/pippinsplugins/Easy-Digital-Downloads.png?branch=master)](http://travis-ci.org/pippinsplugins/Easy-Digital-Downloads)
+#Easy Digital Downloads Unit Tests [![Build Status](https://secure.travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads.png?branch=master)](http://travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads)
 
 =================
 
