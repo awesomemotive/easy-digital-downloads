@@ -136,6 +136,9 @@ function edd_view_order_details_screen() {
 										<?php } ?>
 										<p class="data"><span><?php _e( 'Key:', 'edd' ); ?></span> <?php echo $payment_meta['key']; ?></p>
 									</div>
+
+									<?php do_action( 'edd_payment_view_details', $payment_id ); ?>
+
 								</div><!-- /.column-container -->
 							</div><!-- /.inside -->
 						</div><!-- /#edd-order-data -->
