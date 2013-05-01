@@ -187,7 +187,7 @@ $payment_date = strtotime( $item->post_date );
 							</table>
 						</div><!-- /.inside -->
 					</div><!-- /#edd-purchased-files -->
-					<?php do_action( 'edd_view_order_details_main_after' ); ?>
+					<?php do_action( 'edd_view_order_details_main_after', $payment_id ); ?>
 				</div><!-- /#normal-sortables -->
 			</div><!-- #postbox-container-2 -->
 		</div><!-- /#post-body -->
