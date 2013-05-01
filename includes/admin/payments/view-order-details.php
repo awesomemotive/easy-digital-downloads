@@ -45,6 +45,7 @@ $payment_date = strtotime( $item->post_date );
 						<h3 class="hndle"><span><?php _e( 'Order Totals', 'edd' ); ?></span></h3>
 						<div class="inside">
 							<div class="edd-order-totals-box edd-admin-box">
+								<?php do_action( 'edd_view_order_details_totals_before', $payment_id ); ?>
 								<div class="edd-order-discounts edd-admin-box-inside">
 									<p><span class="label"><?php _e( 'Discount Code', 'edd' ); ?></span> <span class="right"><?php if ( isset( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) { echo '<code>' . $user_info['discount'] . '</code>'; } else { _e( 'None', 'edd' ); } ?></span></p>
 								</div>
@@ -70,6 +71,7 @@ $payment_date = strtotime( $item->post_date );
 								<div class="edd-order-payment edd-admin-box-inside">
 									<p><span class="label"><?php _e( 'Total Price', 'edd' ); ?></span> <span class="right"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ); ?></span></p>
 								</div>
+								<?php do_action( 'edd_view_order_details_totals_after', $payment_id ); ?>
 							</div><!-- /.edd-order-totals-box -->
 						</div><!-- /.inside -->
 					</div><!-- /#edd-order-totals -->
