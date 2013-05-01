@@ -140,7 +140,7 @@ add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
  * @return void
  */
 function edd_load_admin_scripts( $hook ) {
-	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_options, $edd_upgrades_screen;
+	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_options, $edd_upgrades_screen;;
 
 	$js_dir = EDD_PLUGIN_URL . 'assets/js/';
 	$css_dir = EDD_PLUGIN_URL . 'assets/css/';
