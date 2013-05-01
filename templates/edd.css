@@ -90,7 +90,7 @@
 
 /* =Receipt Page
 -------------------------------------------------------------- */
-body.edd_receipt_page { background-color: #fff; color: ##141412; margin: 0; font-family: Helvetica, sans-serif; font-size: 12px; }
+body.edd_receipt_page { background-color: #fff; color: #141412; margin: 0; font-family: Helvetica, sans-serif; font-size: 12px; }
 body.edd_receipt_page #edd_receipt_wrapper { width: 660px; margin: 0 auto; padding: 50px 0; }
 body.edd_receipt_page table { display: table; width: 100%; border-bottom: 1px solid #ededed; border-collapse: collapse; border-spacing: 0; font-size: 14px; line-height: 2; margin: 0 0 20px; }
 body.edd_receipt_page td, body.edd_receipt_page th { display: table-cell; text-align: left; border-top: 1px solid #ededed; padding: 6px 10px 6px 0; font-weight: normal; }
@@ -105,6 +105,10 @@ table#edd_purchase_receipt_products td,
 table#edd_purchase_receipt_products th,
 table#edd_purchase_receipt td,
 table#edd_purchase_receipt th { text-align: left; }
+table#edd_purchase_receipt .edd_receipt_payment_status.pending,
+table#edd_purchase_receipt .edd_receipt_payment_status.cancelled,
+table#edd_purchase_receipt .edd_receipt_payment_status.revoked,
+table#edd_purchase_receipt .edd_receipt_payment_status.failed { color: #f73f2e; }
 table#edd_purchase_receipt_products li { list-style: none; margin: 0 0 8px 10px; }
 table#edd_purchase_receipt ul, table#edd_purchase_receipt_products ul { margin: 0; padding: 0; }
 table#edd_purchase_receipt li { list-style: none; margin: 0 0 8px 0; }
@@ -118,6 +122,10 @@ table#edd_purchase_receipt_products .edd_purchase_receipt_product_notes { font-s
 #edd_user_history td { text-align: left; padding: 3px 5px; border-bottom: 1px solid #f0f0f0; border-top: none; }
 #edd_user_history th { font-weight: bold; background: #f5f5f5;}
 #edd_user_history td { line-height: 25px; vertical-align: middle; }
+#edd_user_history .edd_purchase_status.revoked,
+#edd_user_history .edd_purchase_status.failed,
+#edd_user_history .edd_purchase_status.cancelled,
+#edd_user_history .edd_purchase_status.pending { color: #f73f2e; }
 
 /* =Registration Form
 -------------------------------------------------------------- */

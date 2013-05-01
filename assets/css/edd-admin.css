@@ -50,9 +50,19 @@ tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 .edd_upload_file { position: absolute; top: 5px; right: 3px; padding: 2px 8px 2px; display: block; background: #fff; }
 .edd_remove_repeatable { margin: 11px 0 0 0; cursor: pointer; width: 10px; height: 10px; display: inline-block; text-indent: -9999px; overflow: hidden; }
 .edd_remove_repeatable:active, .edd_remove_repeatable:hover { background-position: -10px 0!important }
-
+.edd_draghandle { display: block; width: 20px; height: 20px; background: url(../images/edd-cross-hair.png); cursor: move; margin: 4px 0 0 0; }
 textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
-
+#edd-order-totals .inside { margin: 0; padding: 0; }
+.edd-admin-box .label { font-weight: 600; }
+.edd-admin-box-inside { margin: 0; padding: 5px 0 5px 10px; clear: both; border-bottom: 1px solid #ddd; }
+.edd-admin-box-inside .strong { font-weight: 600; }
+.edd-payment-fees .fee-label { font-weight: normal; color: #666; }
+.edd-admin-box .right { float: right; margin-right: 10px; }
+#edd-order-data .order-id { color: #666; font-size: 14px; }
+#edd-order-data .column-container { clear: both; overflow: hidden; }
+#edd-order-data .order-data-column { float: left; width: 31%; padding: 0 2% 0 0; }
+#edd-order-data .data span { color: #666; font-weight: 600; }
+#edd-purchased-files .inside { margin: 0; padding: 0; }
 
 /* Dashboard Widget Styles
 -------------------------------------------------------------- */

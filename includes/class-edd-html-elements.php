@@ -20,7 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.5
  */
 class EDD_HTML_Elements {
-
 	/**
 	 * Renders an HTML Dropdown of all the Products (Downloads)
 	 *
@@ -59,11 +58,10 @@ class EDD_HTML_Elements {
 	 * @param string $status Discount post_status to retrieve
 	 * @return string $output Discount dropdown
 	 */
-	public function dicount_dropdown( $name = 'edd_discounts', $selected = 0, $status = '' ) {
-
+	public function discount_dropdown( $name = 'edd_discounts', $selected = 0, $status = '' ) {
 		$args = array( 'nopaging' => true );
 
-		if( ! empty( $status ) )
+		if ( ! empty( $status ) )
 			$args['post_status'] = $status;
 
 		$discounts = edd_get_discounts( $args );
@@ -94,7 +92,6 @@ class EDD_HTML_Elements {
 	 * @return string $output Category dropdown
 	 */
 	public function category_dropdown( $name = 'edd_categories', $selected = 0 ) {
-
 		$categories = get_terms( 'download_category' );
 
 		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
@@ -124,7 +121,6 @@ class EDD_HTML_Elements {
 	 * @return string $output Year dropdown
 	 */
 	public function year_dropdown( $name = 'year', $selected = 0 ) {
-
 		$current  = date( 'Y' );
 		$year     = $current - 5;
 		$selected = empty( $selected ) ? date( 'Y' ) : $selected;
@@ -152,7 +148,6 @@ class EDD_HTML_Elements {
 	 * @return string $output Month dropdown
 	 */
 	public function month_dropdown( $name = 'month', $selected = 0 ) {
-
 		$month   = 1;
 		$output  = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
 
@@ -177,10 +172,9 @@ class EDD_HTML_Elements {
 	 * @return string $output Text field
 	 */
 	public function text( $name = 'text', $value = '', $label = '', $desc = '' ) {
-
 		$output = '<p id="edd-' . sanitize_key( $name ) . '-wrap">';
 			$output .= '<label class="edd-label" for="edd-' . sanitize_key( $name ) . '">' . esc_html( $label ) . '</label>';
-			if( ! empty( $desc ) )
+			if ( ! empty( $desc ) )
 				$output .= '<span class="edd-description">' . esc_html( $desc ) . '</span>';
 			$output = '<input type="text" name="edd_' . esc_attr( sanitize_key( $name ) ) . '" id="edd-' . esc_attr( sanitize_key( $name ) )  . '" value="' . esc_attr( $value ) . '"/>';
 		$output .= '</p>';

@@ -32,7 +32,7 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 
 		$expected = '<select name="edd_discounts" id="edd_discounts"><option value="'. edd_get_discount_id_by_code( '50PERCENTOFF' ) .'">50 Percent Off</option></select>';
 
-		$this->assertEquals( $expected, EDD()->html->dicount_dropdown() );
+		$this->assertEquals( $expected, EDD()->html->discount_dropdown() );
 	}
 
 	public function test_category_dropdown() {

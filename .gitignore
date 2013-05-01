@@ -18,9 +18,9 @@ $RECYCLE.BIN/
 # PhpStorm
 .idea
 
-# Ignore API Documentation
-api-docs/*
-
-# Unit Tests
-tests/vendor/wordpress/*
-tests/vendor/wordpress-tests/*
+# Eclipse
+*.pydevproject
+.project
+.metadata
+bin/
+tmp/

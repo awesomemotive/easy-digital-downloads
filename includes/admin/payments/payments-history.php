@@ -25,7 +25,9 @@ function edd_payment_history_page() {
 	global $edd_options;
 
 	if ( isset( $_GET['edd-action'] ) && 'edit-payment' == $_GET['edd-action'] ) {
-		require_once EDD_PLUGIN_DIR . '/includes/admin/payments/edit-payment.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/edit-payment.php';
+	} elseif ( isset( $_GET['edd-action'] ) && 'view-order-details' == $_GET['edd-action'] ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-order-details.php';
 	} else {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-payments-table.php';
 		$payments_table = new EDD_Payment_History_Table();
@@ -48,7 +50,7 @@ function edd_payment_history_page() {
 
 		<p class="edd-mobile-link">
 			<a href="https://easydigitaldownloads.com/extension/ios-sales-earnings-tracker/" target="_blank">
-				<img src="<?php echo EDD_PLUGIN_URL . '/assets/images/icons/iphone.png'; ?>"/>
+				<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/icons/iphone.png'; ?>"/>
 				<?php _e( 'Get the EDD Sales / Earnings tracker for iOS', 'edd' ); ?>
 			</a>
 		</p>
@@ -57,3 +59,33 @@ function edd_payment_history_page() {
 <?php
 	}
 }
+
+/**
+ * Payment History admin titles
+ *
+ * @since 1.6
+ * @return string
+ */
+function edd_view_order_details_title( $admin_title, $title ) {
+	if ( 'download_page_edd-payment-history' != get_current_screen()->base )
+		return $admin_title;
+
+	if( ! isset( $_GET['edd-action'] ) )
+		return $admin_title;
+
+	switch( $_GET['edd-action'] ) :
+
+		case 'view-order-details' :
+			$title = __( 'View Order Details', 'edd' ) . ' - ' . $admin_title;
+			break;
+		case 'edit-payment' :
+			$title = __( 'Edit Payment', 'edd' ) . ' - ' . $admin_title;
+			break;
+		default:
+			$title = $admin_title;
+			break;
+	endswitch;
+
+	return $title;
+}
+add_filter( 'admin_title', 'edd_view_order_details_title', 10, 2 );
