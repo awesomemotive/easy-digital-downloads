@@ -29,10 +29,10 @@ class EDD_Logging {
 	 */
 	public function __construct() {
 		// Create the log post type
-		add_action( 'init', array( $this, 'register_post_type' ), -1 );
+		add_action( 'init', array( $this, 'register_post_type' ), 1 );
 
 		// Create types taxonomy and default types
-		add_action( 'init', array( $this, 'register_taxonomy' ), -1 );
+		add_action( 'init', array( $this, 'register_taxonomy' ), 1 );
 
 	}
 
@@ -46,13 +46,16 @@ class EDD_Logging {
 	public function register_post_type() {
 		/* Logs post type */
 		$log_args = array(
-			'labels'			=> array( 'name' => __( 'Logs', 'edd' ) ),
-			'public'			=> false,
-			'query_var'			=> false,
-			'rewrite'			=> false,
-			'capability_type'	=> 'post',
-			'supports'			=> array( 'title', 'editor' ),
-			'can_export'		=> true
+			'labels'			  => array( 'name' => __( 'Logs', 'edd' ) ),
+			'public'			  => false,
+			'exclude_from_search' => true,
+			'publicly_queryable'  => false,
+			'show_ui'             => false,
+			'query_var'			  => false,
+			'rewrite'			  => false,
+			'capability_type'	  => 'post',
+			'supports'			  => array( 'title', 'editor' ),
+			'can_export'		  => true
 		);
 
 		register_post_type( 'edd_log', $log_args );

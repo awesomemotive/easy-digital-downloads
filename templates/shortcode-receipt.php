@@ -8,6 +8,7 @@ $payment = get_post( $edd_receipt_args['id'] );
 $meta    = edd_get_payment_meta( $payment->ID );
 $cart    = edd_get_payment_meta_cart_details( $payment->ID );
 $user    = edd_get_payment_meta_user_info( $payment->ID );
+$status  = edd_get_payment_status( $payment, true );
 ?>
 <table id="edd_purchase_receipt">
 	<thead>
@@ -29,6 +30,10 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 			<td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $meta['date'] ) ); ?></td>
 		</tr>
 		<?php endif; ?>
+		<tr>
+			<td class="edd_receipt_payment_status"><strong><?php _e( 'Payment Status', 'edd' ); ?>:</strong></td>
+			<td class="edd_receipt_payment_status <?php echo strtolower( $status ); ?>"><?php echo $status; ?></td>
+		</tr>
 		<?php if ( ( $fees = edd_get_payment_fees( $payment->ID, $meta ) ) ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Fees', 'edd' ); ?>:</strong></td>
@@ -68,23 +73,6 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 					if ( edd_use_taxes() && $edd_options['checkout_include_tax'] == 'yes' ) :
 						printf( ' ' . __('(includes %s tax)', 'edd'), edd_payment_tax( $payment->ID ) );
 					endif; ?>
-				</td>
-			</tr>
-		<?php endif; ?>
-
-		<?php if ( ( $fees = edd_get_payment_fees( $payment->ID, $meta ) ) ) : ?>
-			<tr>
-				<td><strong><?php _e( 'Fees', 'edd' ); ?>:</strong></td>
-				<td>
-					<ul class="edd_receipt_fees">
-					<?php foreach( $fees as $fee ) : ?>
-						<li>
-							<span class="edd_fee_label"><?php echo esc_html( $fee['label'] ); ?></span>
-							<span class="edd_fee_sep">&nbsp;&ndash;&nbsp;</span>
-							<span class="edd_fee_amount"><?php echo edd_currency_filter( edd_format_amount( $fee['amount'] ) ); ?></span>
-						</li>
-					<?php endforeach; ?>
-					</ul>
 				</td>
 			</tr>
 		<?php endif; ?>
@@ -136,7 +124,7 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 
 					<div class="edd_purchase_receipt_product_name">
 						<?php echo esc_html( $item['name'] ); ?>
-						<?php if( $price_id !== false ) : ?>
+						<?php if( $price_id !== false && edd_is_payment_complete( $payment->ID ) ) : ?>
 						<span class="edd_purchase_receipt_price_name">&nbsp;&ndash;&nbsp;<?php echo edd_get_price_option_name( $item['id'], $price_id ); ?></span>
 						<?php endif; ?>
 					</div>
@@ -145,6 +133,7 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 						<div class="edd_purchase_receipt_product_notes"><?php echo edd_get_product_notes( $item['id'] ); ?></div>
 					<?php endif; ?>
 
+					<?php if( edd_is_payment_complete( $payment->ID ) ) : ?>
 					<ul>
 
 						<?php
@@ -165,6 +154,8 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 							echo '<li>' . __( 'No downloadable files found.', 'edd' ) . '</li>';
 						endif; ?>
 					</ul>
+					<?php endif; ?>
+
 				</td>
 				<td><?php echo edd_currency_filter( edd_format_amount( $item[ 'price' ] ) ); ?></td>
 			</tr>

@@ -26,10 +26,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @return array List of all user purchases
  */
-function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false ) {
+function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, $status = 'complete' ) {
 	if ( empty( $user ) ) {
 		$user = get_current_user_id();
 	}
+
+	$status = $status === 'complete' ? 'publish' : $status;
 
 	$mode = edd_is_test_mode() ? 'test' : 'live';
 
@@ -46,7 +48,7 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false )
 		'mode'   => $mode,
 		'user'   => $user,
 		'number' => $number,
-		'status' => 'publish'
+		'status' => $status
 	) );
 
 	if ( $pagination )

@@ -39,7 +39,7 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_listen_for_paypal_ipn', $wp_filter['init'][10] );
 		$this->assertarrayHasKey( 'edd_setup_download_taxonomies', $wp_filter['init'][10] );
 		$this->assertarrayHasKey( 'edd_register_post_type_statuses', $wp_filter['init'][10] );
-		$this->assertarrayHasKey( 'edd_setup_edd_post_types', $wp_filter['init'][100] );
+		$this->assertarrayHasKey( 'edd_setup_edd_post_types', $wp_filter['init'][1] );
 		$this->assertarrayHasKey( 'edd_process_download', $wp_filter['init'][100] );
 	}
 
