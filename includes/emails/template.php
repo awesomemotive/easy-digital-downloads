@@ -71,11 +71,17 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 
 		foreach ( $cart_items as $item ) {
 
+			if ( isset ( $edd_options['enable_sku'] ) )
+				$sku = edd_get_download_sku( $item['id'] );
+
 			$price_id = edd_get_cart_item_price_id( $item );
 
 			if ( $show_names ) {
 
 				$title = get_the_title( $item['id'] );
+
+				if( $sku !== null )
+					$title .= "&nbsp;&ndash;&nbsp;" . $edd_options['sku_name'] . ': ' . $sku;
 
 				if( $price_id !== false )
 					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id );
@@ -92,7 +98,6 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 					$download_list .= '<li>';
 					$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $item['id'], $price_id );
 					$download_list .= '<a href="' . esc_url( $file_url ) . '">' . $file['name'] . '</a>';
-
 					$download_list .= '</li>';
 
 					$file_urls .= esc_html( $file_url ) . '<br/>';
