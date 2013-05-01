@@ -35,7 +35,7 @@ function edd_view_order_details_screen() {
 	$payment_date = strtotime( $item->post_date );
 	?>
 	<div class="wrap">
-		<h2><?php _e( 'View Order Details', 'edd' ); ?> <a class="add-new-h2" href="<?php echo admin_url( 'edit.php?post_type=download&amp;page=edd-payment-history&amp;edd-action=edit-payment&amp;purchase_id=' . $payment_id ); ?>"><?php _e( 'Edit Order', 'edd' ); ?></a></h2>
+		<h2><?php printf( __( 'Payment #%d', 'edd' ), $payment_id ); ?> <a class="add-new-h2" href="<?php echo admin_url( 'edit.php?post_type=download&amp;page=edd-payment-history&amp;edd-action=edit-payment&amp;purchase_id=' . $payment_id ); ?>"><?php _e( 'Edit Order', 'edd' ); ?></a></h2>
 		<?php do_action( 'edd_view_order_details_before' ); ?>
 		<div id="poststuff">
 			<div id="post-body" class="metabox-holder columns-2">
@@ -109,7 +109,7 @@ function edd_view_order_details_screen() {
 					<div id="normal-sortables" class="meta-box-sortables ui-sortable">
 						<?php do_action( 'edd_view_order_details_main_before' ); ?>
 						<div id="edd-order-data" class="postbox">
-							<h3 class="hndle"><?php printf( __( 'Order Details - Payment #%d', 'edd' ), $payment_id ); ?></h3>
+							<h3 class="hndle"><?php _e( 'Order Details', 'edd'); ?></h3>
 							<div class="inside">
 								<div class="column-container">
 									<div class="order-data-column">
