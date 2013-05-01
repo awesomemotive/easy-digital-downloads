@@ -236,6 +236,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				$payment = get_post( $item['ID'] );
 				$value   = edd_get_payment_status( $payment, true );
 				break;
+			case 'details' :
+				$value = '<a href="' . add_query_arg( 'id', $item['ID'], admin_url( 'edit.php?post_type=download&page=edd-payment-history&edd-action=view-order-details' ) ) . '">' . __( 'View Order Details', 'edd' ) . '</a>';
+				break;
 			default:
 				$value   = isset( $item[ $column_name ] ) ? $item[ $column_name ] : '';
 				break;
@@ -285,132 +288,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'payment',
 			$item['ID']
 		);
-	}
-
-	/**
-	 * Render the Details Column
-	 *
-	 * @access public
-	 * @since 1.4
-	 * @param array $item Contains all the data of the payment
-	 * @return string Data shown in the Details column
-	 */
-	public function column_details( $item ) {
-		$details = "<a href='#TB_inline?width=640&amp;inlineId=purchased-files-" . $item['ID'] . "' class='thickbox' title='" . sprintf( __( 'Purchase Details for Payment #%s', 'edd' ), $item['ID'] ) . "'>" . __( 'View Order Details', 'edd' ) . "</a>";
-
-		ob_start();
-?>
-			<div id="purchased-files-<?php echo $item['ID']; ?>" style="display: none;">
-				<?php
-					$payment_meta = edd_get_payment_meta( $item['ID'] );
-					$cart_items   = isset( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] ) : false;
-					if ( empty( $cart_items ) || ! $cart_items ) {
-						$cart_items = maybe_unserialize( $payment_meta['downloads'] );
-					}
-				?>
-				<h4><?php echo _n( __( 'Purchased File', 'edd' ), __( 'Purchased Files', 'edd' ), count( $cart_items ) ); ?></h4>
-				<ul class="purchased-files-list">
-				<?php
-					if ( $cart_items ) {
-						foreach ( $cart_items as $key => $cart_item ) {
-							echo '<li>';
-								// Retrieve the ID of the download
-								$id = isset( $payment_meta['cart_details'] ) ? $cart_item['id'] : $cart_item;
-
-								// If download has variable prices, override the default price
-								$price_override = isset( $payment_meta['cart_details'] ) ? $cart_item['price'] : null;
-
-								// Get the user information
-								$user_info = edd_get_payment_meta_user_info( $item['ID'] );
-
-								// Calculate the final item price
-								$price = edd_get_download_final_price( $id, $user_info, $price_override );
-
-								// Show name of download
-								echo '<a href="' . admin_url( 'post.php?post=' . $id . '&action=edit' ) . '" target="_blank">' . get_the_title( $id ) . '</a>';
-
-								echo  ' - ';
-
-								if ( isset( $cart_items[ $key ]['item_number'])) {
-									$price_options = $cart_items[ $key ]['item_number']['options'];
-
-									if ( isset( $price_options['price_id'] ) ) {
-										echo edd_get_price_option_name( $id, $price_options['price_id'], $item['ID'] );
-										echo ' - ';
-									}
-								}
-								// Show the price
-								echo edd_currency_filter( edd_format_amount( $price ) );
-							echo '</li>';
-						}
-					}
-?>
-				</ul>
-				<?php $payment_date = strtotime( $item['date'] ); ?>
-				<p><?php echo __( 'Date and Time:', 'edd' ) . ' ' . date_i18n( get_option( 'date_format' ), $payment_date ) . ' ' . date_i18n( get_option( 'time_format' ), $payment_date ) ?>
-				<p><?php echo __( 'Discount used:', 'edd' ) . ' '; if ( isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ) { echo $user_info['discount']; } else { _e( 'none', 'edd' ); } ?>
-				<?php
-				$fees = edd_get_payment_fees( $item['ID'] );
-				if( ! empty( $fees ) ) : ?>
-				<ul class="payment-fees">
-					<?php foreach( $fees as $fee ) : ?>
-					<li><?php echo $fee['label'] . ':&nbsp;' . edd_currency_filter( $fee['amount'] ); ?></li>
-					<?php endforeach; ?>
-				</ul>
-				<?php endif; ?>
-				<p><?php echo __( 'Total:', 'edd' ) . ' ' . edd_currency_filter( edd_format_amount( edd_get_payment_amount( $item['ID'] ) ) ); ?></p>
-
-				<div class="purchase-personal-details">
-					<h4><?php _e( 'Buyer\'s Personal Details:', 'edd' ); ?></h4>
-					<ul>
-						<li><?php echo __( 'Name:', 'edd' ) . ' ' . $user_info['first_name'] . ' ' . $user_info['last_name']; ?></li>
-						<li><?php echo __( 'Email:', 'edd' ) . ' ' . $payment_meta['email']; ?></li>
-						<?php do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info ); ?>
-					</ul>
-				</div>
-				<div class="payment-notes">
-					<h4><?php _e( 'Payment Notes', 'edd' ); ?></h4>
-					<?php
-					$notes = edd_get_payment_notes( $item['ID'] );
-					if ( ! empty( $notes ) ) :
-						echo '<ul id="payment-notes">';
-						foreach ( $notes as $note ):
-							if ( ! empty( $note->user_id ) ) {
-								$user = get_userdata( $note->user_id );
-								$user = $user->display_name;
-							} else {
-								$user = __( 'EDD Bot', 'edd' );
-							}
-							echo '<div class="edd-payment-note"><strong>' . $user . '</strong>&nbsp;<em>' . $note->comment_date . '</em>&nbsp;&mdash;' . $note->comment_content . '</div>';
-						endforeach;
-						echo '</ul>';
-					else :
-						echo '<p>' . __( 'No payment notes', 'edd' ) . '</p>';
-					endif;
-					?>
-				</div>
-				<?php
-				$gateway = edd_get_payment_gateway( $item['ID'] );
-				if ( $gateway ) { ?>
-				<div class="payment-method">
-					<h4><?php _e('Payment Method:', 'edd'); ?></h4>
-					<span class="payment-method-name"><?php echo edd_get_gateway_admin_label( $gateway ); ?></span>
-				</div>
-				<?php } ?>
-				<div class="purchase-key-wrap">
-					<h4><?php _e('Purchase Key', 'edd'); ?></h4>
-					<span class="purchase-key"><?php echo $payment_meta['key']; ?></span>
-				</div>
-
-				<?php do_action( 'edd_payment_view_details', $item['ID'] ); ?>
-
-				<p><a id="edd-close-purchase-details" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Close', 'edd' ); ?>"><?php _e( 'Close', 'edd' ); ?></a></p>
-
-
-			</div>
-<?php
-			$details .= ob_get_clean();
-		return $details;
 	}
 
 	/**
