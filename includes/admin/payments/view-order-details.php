@@ -90,8 +90,9 @@ function edd_view_order_details_screen() {
 										}
 										?>
 										<div class="edd-payment-note">
-											<p><?php echo $note->comment_content; ?></p>
-											<p><strong><?php echo $user; ?></strong> <em><?php echo $note->comment_date; ?></em></p>
+											<p>
+												<strong><?php echo $user; ?></strong> <em><?php echo $note->comment_date; ?></em><br/>
+												<?php echo $note->comment_content; ?></p>
 										</div>
 										<?php
 									endforeach;
