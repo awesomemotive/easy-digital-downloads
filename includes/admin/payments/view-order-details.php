@@ -101,7 +101,7 @@ $payment_date = strtotime( $item->post_date );
 							?>
 						</div><!-- /.inside -->
 					</div><!-- /#edd-payment-notes -->
-					<?php do_action( 'edd_view_order_details_sidebar_after' ); ?>
+					<?php do_action( 'edd_view_order_details_sidebar_after', $payment_id ); ?>
 				</div><!-- /#side-sortables -->
 			</div><!-- /#postbox-container-1 -->
 
