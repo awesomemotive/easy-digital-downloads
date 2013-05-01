@@ -107,6 +107,18 @@ class EDD_Session {
 
 
 	/**
+	 * Retrieve session ID
+	 *
+	 * @access public
+	 * @since 1.6
+	 * @return string Session ID
+	 */
+	public function get_id() {
+		return $this->session->session_id;
+	}
+
+
+	/**
 	 * Retrieve a session variable
 	 *
 	 * @access public
