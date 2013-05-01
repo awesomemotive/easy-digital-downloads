@@ -43,7 +43,7 @@ function edd_view_order_details_screen() {
 					<div id="side-sortables" class="meta-box-sortables ui-sortable">
 						<?php do_action( 'edd_view_order_details_sidebar_before' ); ?>
 						<div id="edd-order-totals" class="postbox">
-							<h3 class="hndle"><span>Order Totals</span></h3>
+							<h3 class="hndle"><span><?php _e( 'Order Totals', 'edd' ); ?></span></h3>
 							<div class="inside">
 								<div class="edd-order-totals-box edd-admin-box">
 									<div class="edd-order-discounts edd-admin-box-inside">
@@ -76,7 +76,7 @@ function edd_view_order_details_screen() {
 						</div><!-- /#edd-order-totals -->
 
 						<div id="edd-payment-notes" class="postbox">
-							<h3 class="hndle"><span>Payment Notes</span></h3>
+							<h3 class="hndle"><span><?php _e( 'Payment Notes', 'edd' ); ?></span></h3>
 							<div class="inside">
 								<?php
 								$notes = edd_get_payment_notes( $payment_id );
