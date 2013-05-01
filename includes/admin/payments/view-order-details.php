@@ -93,7 +93,8 @@ $payment_date = strtotime( $item->post_date );
 									<div class="edd-payment-note">
 										<p>
 											<strong><?php echo $user; ?></strong> <em><?php echo $note->comment_date; ?></em><br/>
-											<?php echo $note->comment_content; ?></p>
+											<?php echo $note->comment_content; ?>
+										</p>
 									</div>
 									<?php
 								endforeach;
