@@ -127,7 +127,7 @@ function edd_view_order_details_screen() {
 
 									<div class="order-data-column">
 										<h4><?php _e( 'Payment Details', 'edd' ); ?></h4>
-										<?php 
+										<?php
 										$gateway = edd_get_payment_gateway( $payment_id );
 										if ( $gateway ) {
 										?>
@@ -186,7 +186,7 @@ function edd_view_order_details_screen() {
 		</div><!-- /#post-stuff -->
 		<?php do_action( 'edd_view_order_details_after' ); ?>
 	</div><!-- /.wrap -->
-	<?php	
+	<?php
 }
 
 /**
