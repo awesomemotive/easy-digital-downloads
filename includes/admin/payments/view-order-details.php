@@ -123,6 +123,7 @@ function edd_view_order_details_screen() {
 										<h4><?php _e( 'Buyer\'s Personal Details', 'edd' ); ?></h4>
 										<p class="data"><span><?php _e( 'Name:', 'edd' ); ?></span> <?php echo $user_info['first_name'] . ' ' . $user_info['last_name']; ?></p>
 										<p class="data"><span><?php _e( 'Email:', 'edd' ); ?></span> <a href="mailto:<?php echo $payment_meta['email']; ?>"><?php echo $payment_meta['email']; ?></a></p>
+										<ul><?php do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info ); ?></ul>
 									</div>
 
 									<div class="order-data-column">
