@@ -138,7 +138,7 @@ function edd_register_settings() {
 				),
 				'api_allow_user_keys' => array(
 					'id' => 'api_allow_user_keys',
-					'name' => __('Allow User Keys', 'edd') . '</strong>',
+					'name' => __('Allow User Keys', 'edd'),
 					'desc' => __('Check this box to allow all users to generate API keys. Users with the \'manage_shop_settings\' capability are always allowed to generate keys.', 'edd'),
 					'type' => 'checkbox'
 				)
