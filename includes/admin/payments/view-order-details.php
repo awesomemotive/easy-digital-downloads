@@ -117,7 +117,7 @@ $payment_date = strtotime( $item->post_date );
 							<div class="column-container">
 								<div class="order-data-column">
 									<h4><?php _e( 'General Details' ); ?></h4>
-									<p class="data"><span><?php _e( 'Status:', 'edd' ); ?></span> <?php echo edd_get_payment_status( get_post( $payment_id ), true ) ?></p>
+									<p class="data"><span><?php _e( 'Status:', 'edd' ); ?></span> <?php echo edd_get_payment_status( $item, true ) ?></p>
 									<p class="data"><span><?php _e( 'Date:', 'edd' ); ?></span> <?php echo date_i18n( get_option( 'date_format' ), $payment_date ) ?></p>
 									<p class="data"><span><?php _e( 'Time:', 'edd' ); ?></span> <?php echo date_i18n( get_option( 'time_format' ), $payment_date ); ?></p>
 								</div>
