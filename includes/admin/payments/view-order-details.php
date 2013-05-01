@@ -23,14 +23,14 @@ if ( ! isset( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
 }
 
 // Setup the variables
-$payment_id = absint( $_GET['id'] );
-$item = get_post( $payment_id );
+$payment_id   = absint( $_GET['id'] );
+$item         = get_post( $payment_id );
 $payment_meta = edd_get_payment_meta( $payment_id );
 $cart_items   = isset( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] ) : false;
 if ( empty( $cart_items ) || ! $cart_items ) {
 	$cart_items = maybe_unserialize( $payment_meta['downloads'] );
 }
-$user_info = edd_get_payment_meta_user_info( $payment_id );
+$user_info    = edd_get_payment_meta_user_info( $payment_id );
 $payment_date = strtotime( $item->post_date );
 ?>
 <div class="wrap">
