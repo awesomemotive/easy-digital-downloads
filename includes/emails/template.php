@@ -80,7 +80,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 
 				$title = get_the_title( $item['id'] );
 
-				if( $sku !== null )
+				if( ! empty( $sku ) )
 					$title .= "&nbsp;&ndash;&nbsp;" . $edd_options['sku_name'] . ': ' . $sku;
 
 				if( $price_id !== false )

@@ -101,7 +101,7 @@ class EDD_Payments_Export extends EDD_Export {
 					if ( isset( $edd_options['enable_sku'] ) ) {
 						$sku = edd_get_download_sku( $id );
 
-						if ( $sku !== null )
+						if ( ! empty( $sku ) )
 							$skus .= $sku;
 					}
 
