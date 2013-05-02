@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_get_payment_gateways() {
 	// Default, built-in gateways
 	$gateways = array(
-		'paypal' => array( 'admin_label' => 'PayPal', 'checkout_label' => 'PayPal' ),
+		'paypal' => array( 'admin_label' => __( 'PayPal Standard', 'edd' ), 'checkout_label' => __( 'PayPal', 'edd' ) ),
 		'manual' => array( 'admin_label' => __( 'Test Payment', 'edd' ), 'checkout_label' => __( 'Test Payment', 'edd' ) ),
 	);
 
