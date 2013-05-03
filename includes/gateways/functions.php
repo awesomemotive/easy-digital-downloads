@@ -47,8 +47,8 @@ function edd_get_enabled_payment_gateways() {
 			$gateway_list[ $key ] = $gateway;
 		endif;
 	endforeach;
-
-	return $gateway_list;
+	
+	return apply_filters( 'edd_enabled_payment_gateways', $gateway_list );
 }
 
 /**
