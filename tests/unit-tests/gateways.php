@@ -18,7 +18,7 @@ class Test_Gateways extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'paypal', $out );
 		$this->assertArrayHasKey( 'manual', $out );
 
-		$this->assertEquals( 'PayPal', $out['paypal']['admin_label'] );
+		$this->assertEquals( 'PayPal Standard', $out['paypal']['admin_label'] );
 		$this->assertEquals( 'PayPal', $out['paypal']['checkout_label'] );
 
 		$this->assertEquals( 'Test Payment', $out['manual']['admin_label'] );
