@@ -319,7 +319,7 @@ class EDD_Welcome {
 		if ( false !== $contributors )
 			return $contributors;
 
-		$response = wp_remote_get( 'https://api.github.com/repos/pippinsplugins/Easy-Digital-Downloads/contributors', array( 'sslverify' => false ) );
+		$response = wp_remote_get( 'https://api.github.com/repos/easydigitaldownloads/Easy-Digital-Downloads/contributors', array( 'sslverify' => false ) );
 
 		if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) )
 			return array();
