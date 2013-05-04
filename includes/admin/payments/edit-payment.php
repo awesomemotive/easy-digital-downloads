@@ -84,7 +84,7 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 									} else {
 										$user = __( 'EDD Bot', 'edd' );
 									}
-									echo '<p><strong>' . $user . '</strong>&nbsp;<em>' . $note->comment_date . '</em>&nbsp;&mdash;' . $note->comment_content . '</p>';
+									echo '<li><strong>' . $user . '</strong>&nbsp;<em>' . $note->comment_date . '</em>&nbsp;&mdash;&nbsp;' . $note->comment_content . '</li>';
 								endforeach;
 								echo '</ul>';
 							else :
