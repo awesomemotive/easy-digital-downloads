@@ -40,7 +40,7 @@ function edd_download_columns( $download_columns ) {
 		unset( $download_columns['earnings'] );
 	}
 
-	return $download_columns;
+	return apply_filters( 'edd_download_columns', $download_columns );
 }
 add_filter( 'manage_edit-download_columns', 'edd_download_columns' );
 
