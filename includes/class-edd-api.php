@@ -125,6 +125,7 @@ class EDD_API {
 		$vars[] = 'startdate';
 		$vars[] = 'enddate';
 		$vars[] = 'customer';
+		$vars[] = 'discount';
 		$vars[] = 'format';
 
 		return $vars;
@@ -301,6 +302,14 @@ class EDD_API {
 
 				break;
 
+			case 'discounts' :
+
+				$discount = isset( $wp_query->query_vars['discount'] ) ? $wp_query->query_vars['discount']  : null;
+
+				$data = $this->get_discounts( $discount );
+
+				break;
+
 		endswitch;
 
 		// Allow extensions to setup their own return data
@@ -329,7 +338,8 @@ class EDD_API {
 			'stats',
 			'products',
 			'customers',
-			'sales'
+			'sales',
+			'discounts'
 		) );
 
 		$query = isset( $wp_query->query_vars['edd-api'] ) ? $wp_query->query_vars['edd-api'] : null;
