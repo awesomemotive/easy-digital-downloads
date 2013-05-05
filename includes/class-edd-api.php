@@ -987,6 +987,81 @@ class EDD_API {
 	}
 
 	/**
+	 * Process Get Discounts API Request
+	 *
+	 * @access public
+	 * @since 1.6
+	 * @global object $wpdb Used to query the database using the WordPress
+	 *   Database API
+	 * @param int $discount Discount ID
+	 * @return array $discounts Multidimensional array of the discounts
+	 */
+	public function get_discounts( $discount = null ) {
+
+		if ( empty( $discount ) ) {
+
+			global $wpdb;
+
+			$paged     = $this->get_paged();
+			$per_page  = $this->per_page();
+			$discounts = edd_get_discounts( array( 'posts_per_page' => $per_page, 'paged' => $paged ) );
+			$count     = 0;
+
+			foreach ( $discounts as $discount ) {
+
+				$discount_list['discounts'][$count]['ID']                    = $discount->ID;
+				$discount_list['discounts'][$count]['name']                  = $discount->post_title;
+				$discount_list['discounts'][$count]['code']                  = edd_get_discount_code( $discount->ID );
+				$discount_list['discounts'][$count]['amount']                = edd_get_discount_amount( $discount->ID );
+				$discount_list['discounts'][$count]['min_price']             = edd_get_discount_min_price( $discount->ID );
+				$discount_list['discounts'][$count]['type']                  = edd_get_discount_type( $discount->ID );
+				$discount_list['discounts'][$count]['uses']                  = edd_get_discount_uses( $discount->ID );
+				$discount_list['discounts'][$count]['max_uses']              = edd_get_discount_max_uses( $discount->ID );
+				$discount_list['discounts'][$count]['start_date']            = edd_get_discount_start_date( $discount->ID );
+				$discount_list['discounts'][$count]['exp_date']              = edd_get_discount_expiration( $discount->ID );
+				$discount_list['discounts'][$count]['status']                = $discount->post_status;
+				$discount_list['discounts'][$count]['product_requirements']  = edd_get_discount_product_reqs( $discount->ID );
+				$discount_list['discounts'][$count]['requirement_condition'] = edd_get_discount_product_condition( $discount->ID );
+				$discount_list['discounts'][$count]['global_discount']       = edd_is_discount_not_global( $discount->ID );
+				$discount_list['discounts'][$count]['single_use']            = edd_discount_is_single_use( $discount->ID );
+
+				$count++;
+			}
+
+		} else {
+
+			if ( is_numeric( $discount ) && get_post( $discount ) ) {
+
+				$discount_list['discounts'][0]['ID']                         = $discount;
+				$discount_list['discounts'][0]['name']                       = get_post_field( 'post_title', $discount );
+				$discount_list['discounts'][0]['code']                       = edd_get_discount_code( $discount );
+				$discount_list['discounts'][0]['amount']                     = edd_get_discount_amount( $discount );
+				$discount_list['discounts'][0]['min_price']                  = edd_get_discount_min_price( $discount );
+				$discount_list['discounts'][0]['type']                       = edd_get_discount_type( $discount );
+				$discount_list['discounts'][0]['uses']                       = edd_get_discount_uses( $discount );
+				$discount_list['discounts'][0]['max_uses']                   = edd_get_discount_max_uses( $discount );
+				$discount_list['discounts'][0]['start_date']                 = edd_get_discount_start_date( $discount );
+				$discount_list['discounts'][0]['exp_date']                   = edd_get_discount_expiration( $discount );
+				$discount_list['discounts'][0]['status']                     = get_post_field( 'post_status', $discount );
+				$discount_list['discounts'][0]['product_requirements']       = edd_get_discount_product_reqs( $discount );
+				$discount_list['discounts'][0]['requirement_condition']      = edd_get_discount_product_condition( $discount );
+				$discount_list['discounts'][0]['global_discount']            = edd_is_discount_not_global( $discount );
+				$discount_list['discounts'][0]['single_use']                 = edd_discount_is_single_use( $discount );
+
+			} else {
+
+				$error['error'] = sprintf( __( 'Discount %s not found!', 'edd' ), $discount );
+				return $error;
+
+			}
+
+		}
+
+		return $discount_list;
+	}
+
+
+	/**
 	 * Log each API request, if enabled
 	 *
 	 * @access private
@@ -1189,7 +1264,7 @@ class EDD_API {
 	}
 
 	/**
-	 * Generate the default earnings stats returned by the 'stats' endpoint 
+	 * Generate the default earnings stats returned by the 'stats' endpoint
 	 *
 	 * @access private
 	 * @since 1.5.3
