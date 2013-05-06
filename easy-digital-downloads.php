@@ -256,6 +256,9 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
 			require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
 		}
+
+		if( isset( $edd_options['enable_sku'] ) )
+			require_once EDD_PLUGIN_DIR . 'includes/accounting-functions.php';
 	}
 
 	/**
