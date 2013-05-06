@@ -359,6 +359,13 @@ jQuery(document).ready(function ($) {
 		return false;
 	});
 
+	$('.edd-delete-payment-note').on('click', function() {
+		if( confirm( edd_vars.delete_payment_note) ) {
+			return true;
+		}
+		return false;
+	});
+
 	$('#the-list').on('click', '.editinline', function() {
 		inlineEditPost.revert();
 

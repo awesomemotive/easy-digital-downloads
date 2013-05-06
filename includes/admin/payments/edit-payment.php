@@ -99,7 +99,7 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 									) ), 'edd_delete_payment_note' );
 									echo '<li>';
 										echo '<strong>' . $user . '</strong>&nbsp;<em>' . $note->comment_date . '</em>&nbsp;&mdash;&nbsp;' . $note->comment_content;
-										echo '&nbsp;&ndash;&nbsp;<a href="' . $delete_note_url . '" title="' . __( 'Delete this payment note', 'edd' ) . '">' . __( 'Delete', 'edd' ) . '</a>';
+										echo '&nbsp;&ndash;&nbsp;<a href="' . $delete_note_url . '" class="edd-delete-payment-note" title="' . __( 'Delete this payment note', 'edd' ) . '">' . __( 'Delete', 'edd' ) . '</a>';
 										echo '</li>';
 								endforeach;
 								echo '</ul>';
