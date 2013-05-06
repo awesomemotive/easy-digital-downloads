@@ -111,13 +111,22 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 						</select>
 					</td>
 				</tr>
+				<tr>
+					<th scope="row" valign="top">
+						<span><?php _e( 'Unlimited Downloads', 'edd' ); ?></span>
+					</th>
+					<td>
+						<input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" value="1"<?php checked( true, get_post_meta( $payment_id, '_unlimited_file_downloads', true ) ); ?>/>
+						<label class="description" for="edd_unlimited_downloads"><?php _e( 'Check this box to enable unlimited file downloads for this purchase.', 'edd' ); ?></label>
+					</td>
+				</tr>
 				<tr id="edd_payment_notification" style="display:none;">
 					<th scope="row" valign="top">
 						<span><?php _e( 'Send Purchase Receipt', 'edd' ); ?></span>
 					</th>
 					<td>
 						<input type="checkbox" name="edd-payment-send-email" id="edd_send_email" value="yes"/>
-						<span class="description"><?php _e( 'Check this box to send the purchase receipt, including all download links.', 'edd' ); ?></span>
+						<label class="description" for="edd_send_email"><?php _e( 'Check this box to send the purchase receipt, including all download links.', 'edd' ); ?></label>
 					</td>
 				</tr>
 				<?php do_action( 'edd_edit_payment_bottom', $payment->ID ); ?>
