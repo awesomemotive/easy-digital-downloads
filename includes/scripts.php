@@ -181,6 +181,7 @@ function edd_load_admin_scripts( $hook ) {
 		'use_this_file'      => __( 'Use This File','edd' ), 										// "use this file" button
 		'quick_edit_warning' => __( 'Sorry, not available for variable priced products.', 'edd' ),
 		'delete_payment'     => __( 'Are you sure you wish to delete this payment?', 'edd' ),
+		'delete_payment_note'=> __( 'Are you sure you wish to delete this note?', 'edd' ),
 		'one_price_min'      => __( 'You must have at least one price', 'edd' ),
 		'one_file_min'       => __( 'You must have at least one file', 'edd' ),
 		'one_field_min'      => __( 'You must have at least one field', 'edd' ),
