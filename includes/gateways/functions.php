@@ -233,7 +233,8 @@ function edd_count_sales_by_gateway( $gateway_id = 'paypal', $status = 'publish'
 		'meta_value'  => $gateway_id,
 		'nopaging'    => true,
 		'post_type'   => 'edd_payment',
-		'post_status' => $status
+		'post_status' => $status,
+		'fields'      => 'ids'
 	);
 
 	$payments = new WP_Query( $args );
