@@ -177,7 +177,8 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( 'startdate', $out[7] );
 		$this->assertEquals( 'enddate', $out[8] );
 		$this->assertEquals( 'customer', $out[9] );
-		$this->assertEquals( 'format', $out[10] );
+		$this->assertEquals( 'discount', $out[10] );
+		$this->assertEquals( 'format', $out[11] );
 	}
 
 	public function test_get_products() {
