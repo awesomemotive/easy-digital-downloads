@@ -57,6 +57,7 @@ function edd_reports_default_views() {
 		'earnings'	=> __( 'Earnings', 'edd' ),
 		'downloads' => edd_get_label_plural(),
 		'customers'	=> __( 'Customers', 'edd' ),
+		'gateways'  => __( 'Payment Methods', 'edd' ),
 		'taxes'		=> __( 'Taxes', 'edd' )
 	);
 
@@ -143,6 +144,25 @@ function edd_reports_customers_table() {
 	$downloads_table->display();
 }
 add_action( 'edd_reports_view_customers', 'edd_reports_customers_table' );
+
+
+/**
+ * Renders the Gateways Table
+ *
+ * @since 1.3
+ * @uses EDD_Gateawy_Reports_Table::prepare_items()
+ * @uses EDD_Gateawy_Reports_Table::display()
+ * @return void
+ */
+function edd_reports_gateways_table() {
+	include( dirname( __FILE__ ) . '/class-gateways-reports-table.php' );
+
+	$downloads_table = new EDD_Gateawy_Reports_Table();
+	$downloads_table->prepare_items();
+	$downloads_table->display();
+}
+add_action( 'edd_reports_view_gateways', 'edd_reports_gateways_table' );
+
 
 /**
  * Renders the Reports Earnings Graphs
