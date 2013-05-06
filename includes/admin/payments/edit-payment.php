@@ -93,7 +93,14 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 									} else {
 										$user = __( 'EDD Bot', 'edd' );
 									}
-									echo '<li><strong>' . $user . '</strong>&nbsp;<em>' . $note->comment_date . '</em>&nbsp;&mdash;&nbsp;' . $note->comment_content . '</li>';
+									$delete_note_url = wp_nonce_url( add_query_arg( array(
+										'edd-action' => 'delete_payment_note',
+										'note_id'    => $note->comment_ID
+									) ), 'edd_delete_payment_note' );
+									echo '<li>';
+										echo '<strong>' . $user . '</strong>&nbsp;<em>' . $note->comment_date . '</em>&nbsp;&mdash;&nbsp;' . $note->comment_content;
+										echo '&nbsp;&ndash;&nbsp;<a href="' . $delete_note_url . '" title="' . __( 'Delete this payment note', 'edd' ) . '">' . __( 'Delete', 'edd' ) . '</a>';
+										echo '</li>';
 								endforeach;
 								echo '</ul>';
 							else :
