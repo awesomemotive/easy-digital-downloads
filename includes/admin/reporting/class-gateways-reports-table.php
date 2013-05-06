@@ -82,7 +82,8 @@ class EDD_Gateawy_Reports_Table extends WP_List_Table {
 		$columns = array(
 			'label'          => __( 'Gateway', 'edd' ),
 			'complete_sales' => __( 'Complete Sales', 'edd' ),
-			'pending_sales'  => __( 'Pending / Failed Sales', 'edd' )
+			'pending_sales'  => __( 'Pending / Failed Sales', 'edd' ),
+			'total_sales'    => __( 'Total Sales', 'edd' )
 		);
 
 		return $columns;
@@ -127,11 +128,16 @@ class EDD_Gateawy_Reports_Table extends WP_List_Table {
 		$gateways     = edd_get_payment_gateways();
 
 		foreach ( $gateways as $gateway_id => $gateway ) {
+
+			$complete_count = edd_count_sales_by_gateway( $gateway_id, 'publish' );
+			$pending_count  = edd_count_sales_by_gateway( $gateway_id, array( 'pending', 'failed' ) );
+
 			$reports_data[] = array(
 				'ID'             => $gateway_id,
 				'label'          => $gateway['admin_label'],
-				'complete_sales' => edd_count_sales_by_gateway( $gateway_id, 'publish' ),
-				'pending_sales' => edd_count_sales_by_gateway( $gateway_id, array( 'pending', 'failed' ) )
+				'complete_sales' => $complete_count,
+				'pending_sales'  => $pending_count,
+				'total_sales'    => $complete_count + $pending_count
 			);
 		}
 
