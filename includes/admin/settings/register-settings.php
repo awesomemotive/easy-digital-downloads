@@ -380,6 +380,19 @@ function edd_register_settings() {
 					'desc' => __('Display the registration and login forms on the checkout page for non-logged-in users.', 'edd'),
 					'type' => 'checkbox',
 				),
+				'field_downloads' => array(
+					'id' => 'field_downloads',
+					'name' => '<strong>' . __('File Downloads', 'edd') . '</strong>',
+					'desc' => '',
+					'type' => 'header',
+				),
+				'file_download_limit' => array(
+					'id' => 'file_download_limit',
+					'name' => __('File Download Limit', 'edd'),
+					'desc' => sprintf( __('The maximum number of times files can be downloaded for purchases. Can be overwritten for each %s.', 'edd'), edd_get_label_singular() ),
+					'type' => 'text',
+					'size' => 'small'
+				),
 				'download_link_expiration' => array(
 					'id' => 'download_link_expiration',
 					'name' => __('Download Link Expiration', 'edd'),
