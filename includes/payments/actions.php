@@ -145,6 +145,10 @@ function edd_update_edited_purchase( $data ) {
 			$note_id = edd_insert_payment_note( $payment_id, $note );
 		}
 
+		if ( ! empty( $_POST['edd-payment-amount'] ) ) {
+			update_post_meta( $payment_id, '_edd_payment_total', sanitize_text_field( edd_sanitize_amount( $_POST['edd-payment-amount'] ) ) );
+		}
+
 		if ( ! empty( $_POST['edd-unlimited-downloads'] ) ) {
 			add_post_meta( $payment_id, '_unlimited_file_downloads', '1' );
 		} else {
