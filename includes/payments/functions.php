@@ -904,6 +904,26 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 	return $note_id;
 }
 
+
+/**
+ * Deletes a payment note
+ *
+ * @since 1.6
+ * @param int $comment_id The comment ID to delete
+ * @param int $payment_id The payment ID the note is connected to
+ * @return bool True on success, false otherwise
+ */
+function edd_delete_payment_note( $comment_id = 0, $payment_id = 0 ) {
+	if( empty( $comment_id ) )
+		return false;
+
+	do_action( 'edd_pre_delete_payment_note', $comment_id, $payment_id );
+	$ret = wp_delete_comment( $comment_id, true );
+	do_action( 'edd_post_delete_payment_note', $comment_id, $payment_id );
+
+	return $ret;
+}
+
 /**
  * Exclude notes (comments) on edd_payment post type from showing in Recent
  * Comments widgets
