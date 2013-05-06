@@ -47,7 +47,7 @@ function edd_get_enabled_payment_gateways() {
 			$gateway_list[ $key ] = $gateway;
 		endif;
 	endforeach;
-	
+
 	return apply_filters( 'edd_enabled_payment_gateways', $gateway_list );
 }
 
@@ -217,3 +217,28 @@ function edd_load_ajax_gateway() {
 }
 add_action( 'wp_ajax_edd_load_gateway', 'edd_load_ajax_gateway' );
 add_action( 'wp_ajax_nopriv_edd_load_gateway', 'edd_load_ajax_gateway' );
+
+
+/**
+ * Counts the number of purchases made with a gateway
+ *
+ * @since 1.6
+ * @return int
+ */
+function edd_count_sales_by_gateway( $gateway_id = 'paypal', $status = 'publish' ) {
+
+	$ret  = 0;
+	$args = array(
+		'meta_key'    => '_edd_payment_gateway',
+		'meta_value'  => $gateway_id,
+		'nopaging'    => true,
+		'post_type'   => 'edd_payment',
+		'post_status' => $status
+	);
+
+	$payments = new WP_Query( $args );
+
+	if( $payments )
+		$ret = $payments->post_count;
+	return $ret;
+}
