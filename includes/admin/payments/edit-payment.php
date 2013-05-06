@@ -41,6 +41,15 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 				</tr>
 				<tr>
 					<th scope="row" valign="top">
+						<span><?php printf( __( 'Payment Amount in %s', 'edd' ), edd_get_currency() ); ?></span>
+					</th>
+					<td>
+						<input class="small-text" type="number" min="0" step="0.01" name="edd-payment-amount" id="edd-payment-amount" value="<?php echo edd_get_payment_amount( $payment_id ); ?>"/>
+						<p class="description"><?php _e( 'If needed, you can update the purchase total here.', 'edd' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row" valign="top">
 						<span><?php _e( 'Downloads Purchased', 'edd' ); ?></span>
 					</th>
 					<td id="purchased-downloads">
