@@ -399,6 +399,18 @@ function edd_register_settings() {
 					'desc' => __('Check this if you are delivering really large files or having problems with file downloads completing.', 'edd'),
 					'type' => 'checkbox',
 				),
+				'accounting_settings' => array(
+					'id' => 'accounting_settings',
+					'name' => '<strong>' . __('Accounting Settings', 'edd') . '</strong>',
+					'desc' => '',
+					'type' => 'header'
+				),
+				'enable_sku' => array(
+					'id' => 'enable_sku',
+					'name' => __('Enable SKU Entry', 'edd'),
+					'desc' => __('Check this box to allow entry of product SKUs. SKUs will be shown on purchase receipt and exported purchase histories.', 'edd'),
+					'type' => 'checkbox'
+				),
 				'terms' => array(
 					'id' => 'terms',
 					'name' => '<strong>' . __('Terms of Agreement', 'edd') . '</strong>',
@@ -435,18 +447,6 @@ function edd_register_settings() {
 					'name' => __('Add to Cart Text', 'edd'),
 					'desc' => __('Text shown on the Add to Cart Buttons', 'edd'),
 					'type' => 'text'
-				),
-				'accounting_settings' => array(
-					'id' => 'accounting_settings',
-					'name' => '<strong>' . __('Accounting Settings', 'edd') . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'enable_sku' => array(
-					'id' => 'enable_sku',
-					'name' => __('Enable SKU Entry', 'edd'),
-					'desc' => __('Check this box to allow entry of product SKUs. SKUs will be shown on purchase receipt and exported purchase histories.', 'edd'),
-					'type' => 'checkbox'
 				)
 			)
 		)
