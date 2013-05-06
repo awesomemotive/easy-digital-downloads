@@ -43,7 +43,7 @@ add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
  * @return void
  */
 function edd_download_meta_box_save( $post_id) {
-	global $post;
+	global $post, $edd_options;
 
 	if ( ! isset( $_POST['edd_download_meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['edd_download_meta_box_nonce'], basename( __FILE__ ) ) )
 		return $post_id;
@@ -72,6 +72,10 @@ function edd_download_meta_box_save( $post_id) {
 			'edd_product_notes'
 		)
 	);
+
+	if ( isset( $edd_options['enable_sku'] ) ) {
+		$fields[] = 'edd_sku';
+	}
 
 	foreach ( $fields as $field ) {
 		if ( isset( $_POST[ $field ] ) ) {
@@ -456,6 +460,33 @@ add_action( 'edd_meta_box_fields', 'edd_render_download_limit_row', 20 );
 
 
 /**
+ * Render Accounting Options
+ *
+ * @since 1.6
+ * @param int $post_id Download (Post) ID
+ * @return void
+ */
+function edd_render_accounting_options( $post_id ) {
+	global $edd_options;
+
+	if( ! isset( $edd_options['enable_sku'] ) )
+		return;
+
+	$edd_sku = get_post_meta( $post_id, 'edd_sku', true );
+?>
+	<p><strong><?php _e( 'Accounting Options:', 'edd' ); ?></strong></p>
+	<p>
+		<label for="edd_sku">
+			<input type="text" name="edd_sku" id="edd_sku" value="<?php echo esc_attr( $edd_sku ); ?>" size="30" style="width: 80px;"/>
+			<?php echo sprintf( __('The %s for this download.', 'edd'), $edd_options['sku_name'] ); ?>
+		</label>
+	</p>
+<?php
+}
+add_action( 'edd_meta_box_fields', 'edd_render_accounting_options', 25 );
+
+
+/**
  * Render Disable Button
  *
  * @since 1.0
@@ -475,6 +506,7 @@ function edd_render_disable_button( $post_id ) {
 <?php
 }
 add_action( 'edd_meta_box_fields', 'edd_render_disable_button', 30 );
+
 
 /**
  * Don't save blank rows.

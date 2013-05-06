@@ -35,12 +35,15 @@ class EDD_Payments_Export extends EDD_Export {
 	 * @return array $cols All the columns
 	 */
 	public function csv_cols() {
+		global $edd_options;
+
 		$cols = array(
 			'id'       => __( 'ID',   'edd' ),
 			'email'    => __( 'Email', 'edd' ),
 			'first'    => __( 'First Name', 'edd' ),
 			'last'     => __( 'Last Name', 'edd' ),
 			'products' => __( 'Products', 'edd' ),
+			'skus'     => $edd_options['sku_name_plural'],
 			'amount'   => __( 'Amount', 'edd' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
 			'tax'      => __( 'Tax', 'edd' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
 			'gateway'  => __( 'Payment Method', 'edd' ),
@@ -62,7 +65,7 @@ class EDD_Payments_Export extends EDD_Export {
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
-		global $wpdb;
+		global $wpdb, $edd_options;
 
 		$data = array();
 
@@ -80,6 +83,7 @@ class EDD_Payments_Export extends EDD_Export {
 			$total          = isset( $payment_meta['amount'] ) ? $payment_meta['amount'] : 0.00;
 			$user_id        = isset( $user_info['id'] ) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email'];
 			$products       = '';
+			$skus			= '';
 
 			if ( $downloads ) {
 				foreach ( $downloads as $key => $download ) {
@@ -94,6 +98,13 @@ class EDD_Payments_Export extends EDD_Export {
 					// Display the Downoad Name
 					$products .= get_the_title( $id ) . ' - ';
 
+					if ( isset( $edd_options['enable_sku'] ) ) {
+						$sku = edd_get_download_sku( $id );
+
+						if ( ! empty( $sku ) )
+							$skus .= $sku;
+					}
+
 					if ( isset( $downloads[ $key ]['item_number'] ) ) {
 						$price_options = $downloads[ $key ]['item_number']['options'];
 
@@ -105,6 +116,7 @@ class EDD_Payments_Export extends EDD_Export {
 
 					if ( $key != ( count( $downloads ) -1 ) ) {
 						$products .= ' / ';
+						$skus .= ' / ';
 					}
 				}
 			}
@@ -121,6 +133,7 @@ class EDD_Payments_Export extends EDD_Export {
 				'first'    => $user_info['first_name'],
 				'last'     => $user_info['last_name'],
 				'products' => $products,
+				'skus'     => $skus,
 				'amount'   => html_entity_decode( edd_format_amount( $total ) ),
 				'tax'      => html_entity_decode( edd_get_payment_tax( $payment->ID, $payment_meta ) ),
 				'discount' => isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? $user_info['discount'] : __( 'none', 'edd' ),
