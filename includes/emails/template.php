@@ -71,7 +71,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 
 		foreach ( $cart_items as $item ) {
 
-			if ( isset ( $edd_options['enable_sku'] ) )
+			if ( isset( $edd_options['enable_sku'] ) )
 				$sku = edd_get_download_sku( $item['id'] );
 
 			$price_id = edd_get_cart_item_price_id( $item );
@@ -81,7 +81,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 				$title = get_the_title( $item['id'] );
 
 				if( ! empty( $sku ) )
-					$title .= "&nbsp;&ndash;&nbsp;" . $edd_options['sku_name'] . ': ' . $sku;
+					$title .= "&nbsp;&ndash;&nbsp;" . __( 'SKU', 'edd' ) . ': ' . $sku;
 
 				if( $price_id !== false )
 					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id );

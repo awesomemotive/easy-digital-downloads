@@ -469,18 +469,19 @@ add_action( 'edd_meta_box_fields', 'edd_render_download_limit_row', 20 );
 function edd_render_accounting_options( $post_id ) {
 	global $edd_options;
 
-	if( ! isset( $edd_options['enable_sku'] ) )
+	if( ! isset( $edd_options['enable_sku'] ) ) {
 		return;
+	}
 
-	$edd_sku = get_post_meta( $post_id, 'edd_sku', true );
+		$edd_sku = get_post_meta( $post_id, 'edd_sku', true );
 ?>
-	<p><strong><?php _e( 'Accounting Options:', 'edd' ); ?></strong></p>
-	<p>
-		<label for="edd_sku">
-			<input type="text" name="edd_sku" id="edd_sku" value="<?php echo esc_attr( $edd_sku ); ?>" size="30" style="width: 80px;"/>
-			<?php echo sprintf( __('The %s for this download.', 'edd'), $edd_options['sku_name'] ); ?>
-		</label>
-	</p>
+		<p><strong><?php _e( 'Accounting Options:', 'edd' ); ?></strong></p>
+		<p>
+			<label for="edd_sku">
+				<input type="text" name="edd_sku" id="edd_sku" value="<?php echo esc_attr( $edd_sku ); ?>" size="30" style="width: 80px;"/>
+				<?php _e( 'The SKU for this download.', 'edd' ); ?>
+			</label>
+		</p>
 <?php
 }
 add_action( 'edd_meta_box_fields', 'edd_render_accounting_options', 25 );
