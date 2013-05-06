@@ -175,7 +175,7 @@ function edd_purchase_variable_pricing( $download_id = 0, $show_price = true ) {
 						esc_attr( 'edd_price_option_' . $download_id . '_' . $key ),
 						esc_attr( 'edd_price_option_' . $download_id ),
 						esc_attr( $key ),
-						esc_html( $price['name'] . ' - ' . edd_currency_filter( edd_format_amount( $price[ 'amount' ] ) ) ),
+						'<span class="edd_price_option_name">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price[ 'amount' ] ) ) . '</span>',
 						checked( isset( $_GET['price_option'] ), $key, false )
 					);
 					do_action( 'edd_after_price_option', $key, $price, $download_id );

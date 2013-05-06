@@ -148,6 +148,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd_download_purchase_form .edd_price_options { margin: 0 0 15px; }
 .edd_download_purchase_form .edd_price_options ul { margin: 0; padding: 0; list-style: none; }
 .edd_download_purchase_form .edd_price_options li { display: block; padding: 0; margin: 0; }
+.edd_download_purchase_form .edd_price_options span { display: inline; padding: 0; margin: 0; }
 
 .edd-submit { text-shadow: 1px 1px #FAFAFA; line-height: normal; cursor: pointer; }
 .edd-submit.button { font-size: inherit; }
