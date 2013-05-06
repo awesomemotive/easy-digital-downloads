@@ -671,6 +671,7 @@ function edd_set_file_download_limit_override( $download_id = 0, $payment_id = 0
  * @return bool True if at limit, false otherwise
  */
 function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file_id = 0 ) {
+
 	// Checks to see if at limit
 	$logs = new EDD_Logging();
 
@@ -686,11 +687,12 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
 		)
 	);
 
-	$ret = false;
-	$download_count = $logs->get_log_count( $download_id, 'file_download', $meta_query );
-	$download_limit = edd_get_file_download_limit( $download_id );
+	$ret                = false;
+	$download_count     = $logs->get_log_count( $download_id, 'file_download', $meta_query );
+	$download_limit     = edd_get_file_download_limit( $download_id );
+	$unlimited_purchase = get_post_meta( $payment_id, '_unlimited_file_downloads', true );
 
-	if ( ! empty( $download_limit ) ) {
+	if ( ! empty( $download_limit ) && empty( $unlimited_purchase ) ) {
 		if ( $download_count >= $download_limit ) {
 			$ret = true;
 

@@ -145,6 +145,12 @@ function edd_update_edited_purchase( $data ) {
 			$note_id = edd_insert_payment_note( $payment_id, $note );
 		}
 
+		if ( ! empty( $_POST['edd-unlimited-downloads'] ) ) {
+			add_post_meta( $payment_id, '_unlimited_file_downloads', '1' );
+		} else {
+			delete_post_meta( $payment_id, '_unlimited_file_downloads' );
+		}
+
 		if ( $_POST['edd-old-status'] != $_POST['edd-payment-status'] ) {
 			edd_update_payment_status( $payment_id, $_POST['edd-payment-status'] );
 		}
