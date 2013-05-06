@@ -104,32 +104,6 @@ function edd_register_settings() {
 					'size' => 'small',
 					'std' => '.'
 				),
-				'accounting_settings' => array(
-					'id' => 'accounting_settings',
-					'name' => '<strong>' . __('Accounting Settings', 'edd') . '</strong>',
-					'desc' => '',
-					'type' => 'header'
-				),
-				'enable_sku' => array(
-					'id' => 'enable_sku',
-					'name' => __('Enable SKU Entry', 'edd'),
-					'desc' => __('Check this box to allow entry of product SKUs. SKUs will be shown on purchase receipt and exported purchase histories.', 'edd'),
-					'type' => 'checkbox'
-				),
-				'sku_name' => array(
-					'id' => 'sku_name',
-					'name' => __('Alternate SKU Text', 'edd'),
-					'desc' => '',
-					'type' => 'text',
-					'std' => 'SKU'
-				),
-				'sku_name_plural' => array(
-					'id' => 'sku_name_plural',
-					'name' => __('Alternate SKU Text - Plural', 'edd'),
-					'desc' => __('Plural form of the above field used for column headers', 'edd'),
-					'type' => 'text',
-					'std' => 'SKUs'
-				),
 				'api_settings' => array(
 					'id' => 'api_settings',
 					'name' => '<strong>' . __('API Settings', 'edd') . '</strong>',
@@ -474,6 +448,18 @@ function edd_register_settings() {
 					'name' => __('Add to Cart Text', 'edd'),
 					'desc' => __('Text shown on the Add to Cart Buttons', 'edd'),
 					'type' => 'text'
+				),
+				'accounting_settings' => array(
+					'id' => 'accounting_settings',
+					'name' => '<strong>' . __('Accounting Settings', 'edd') . '</strong>',
+					'desc' => '',
+					'type' => 'header'
+				),
+				'enable_sku' => array(
+					'id' => 'enable_sku',
+					'name' => __('Enable SKU Entry', 'edd'),
+					'desc' => __('Check this box to allow entry of product SKUs. SKUs will be shown on purchase receipt and exported purchase histories.', 'edd'),
+					'type' => 'checkbox'
 				)
 			)
 		)
