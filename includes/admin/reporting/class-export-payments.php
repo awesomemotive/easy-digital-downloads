@@ -43,7 +43,7 @@ class EDD_Payments_Export extends EDD_Export {
 			'first'    => __( 'First Name', 'edd' ),
 			'last'     => __( 'Last Name', 'edd' ),
 			'products' => __( 'Products', 'edd' ),
-			'skus'     => $edd_options['sku_name_plural'],
+			'skus'     => __( 'SKUs', 'edd' ),
 			'amount'   => __( 'Amount', 'edd' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
 			'tax'      => __( 'Tax', 'edd' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
 			'gateway'  => __( 'Payment Method', 'edd' ),
