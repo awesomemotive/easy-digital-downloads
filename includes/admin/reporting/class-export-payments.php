@@ -94,7 +94,7 @@ class EDD_Payments_Export extends EDD_Export {
 					// Display the Downoad Name
 					$products .= get_the_title( $id ) . ' - ';
 
-					if ( isset( $downloads[ $key ]['item_number'] ) ) {
+					if ( isset( $downloads[ $key ]['item_number'] ) && isset( $downloads[ $key ]['item_number']['options'] ) ) {
 						$price_options = $downloads[ $key ]['item_number']['options'];
 
 						if ( isset( $price_options['price_id'] ) ) {
