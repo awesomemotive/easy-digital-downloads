@@ -87,7 +87,6 @@ class EDD_Payments_Export extends EDD_Export {
 			$total          = isset( $payment_meta['amount'] ) ? $payment_meta['amount'] : 0.00;
 			$user_id        = isset( $user_info['id'] ) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email'];
 			$products       = '';
-
 			$skus			= '';
 
 			if ( $downloads ) {
