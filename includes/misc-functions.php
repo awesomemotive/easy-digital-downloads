@@ -821,10 +821,7 @@ add_action( 'edd_cleanup_file_symlinks', 'edd_cleanup_file_symlinks' );
 function edd_use_skus() {
 	global $edd_options;
 
-	if ( isset( $edd_options['enable_skus'] ) )
-		$ret = true;
-	else
-		$ret = false;
+	$ret = isset( $edd_options['enable_skus'] );
 
 	return (bool) apply_filters( 'edd_use_skus', $ret );
 }
