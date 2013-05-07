@@ -853,11 +853,10 @@ function edd_get_product_notes( $download_id ) {
  * @param int $download Download ID
  * @return string|int $sku Download SKU
  */
-function edd_get_download_sku( $download = 0 ) {
-	$sku = get_post_meta( $download, 'edd_sku', true );
-	if ( $sku ) {
-		return $sku;
-	} else {
-		return '-';
-	}
+function edd_get_download_sku( $download_id = 0 ) {
+	$sku = get_post_meta( $download_id, 'edd_sku', true );
+	if ( ! $sku )
+		$sku = '-';
+
+	return apply_filters( 'edd_get_download_sku', $sku, $download_id );
 }
