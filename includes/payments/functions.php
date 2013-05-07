@@ -973,6 +973,8 @@ add_filter( 'comment_feed_where', 'edd_hide_payment_notes_from_feeds', 10, 2 );
 function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 	global $wpdb;
 
+	$post_id = (int) $post_id;
+
 	if ( apply_filters( 'edd_count_payment_notes_in_comments', false ) )
 		return array();
 
@@ -984,7 +986,7 @@ function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 	$where = 'WHERE comment_type != "edd_payment_note"';
 
 	if ( $post_id > 0 )
-		$where .= " AND WHERE post_id = {$post_id}";
+		$where .= $wpdb->prepare( " AND comment_post_ID = %d", $post_id );
 
 	$count = $wpdb->get_results( "SELECT comment_approved, COUNT( * ) AS num_comments FROM {$wpdb->comments} {$where} GROUP BY comment_approved", ARRAY_A );
 
@@ -1009,4 +1011,4 @@ function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 
 	return $stats;
 }
-add_action( 'wp_count_comments', 'edd_remove_payment_notes_in_comment_counts', 10, 2 );
+add_filter( 'wp_count_comments', 'edd_remove_payment_notes_in_comment_counts', 10, 2 );
