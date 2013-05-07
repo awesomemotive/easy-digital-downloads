@@ -88,8 +88,7 @@ class EDD_Payments_Export extends EDD_Export {
 			$user_id        = isset( $user_info['id'] ) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email'];
 			$products       = '';
 
-			if( edd_use_skus() )
-				$skus			= '';
+			$skus			= '';
 
 			if ( $downloads ) {
 				foreach ( $downloads as $key => $download ) {
