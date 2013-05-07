@@ -855,3 +855,19 @@ function edd_get_product_notes( $download_id ) {
 
 	return '';
 }
+
+/**
+ * Retrieves a download SKU by ID.
+ *
+ * @since 1.6
+ * @author Daniel J Griffiths
+ * @param int $download Download ID
+ * @return string|int $sku Download SKU
+ */
+function edd_get_download_sku( $download_id = 0 ) {
+	$sku = get_post_meta( $download_id, 'edd_sku', true );
+	if ( empty( $sku ) )
+		$sku = '-';
+
+	return apply_filters( 'edd_get_download_sku', $sku, $download_id );
+}
