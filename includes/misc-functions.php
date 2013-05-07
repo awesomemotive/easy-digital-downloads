@@ -549,7 +549,7 @@ function edd_get_states_list() {
 		'MS' => 'Mississippi',
 		'MO' => 'Missouri',
 		'MT' => 'Montana',
-		'NE' => 'Nebraksa',
+		'NE' => 'Nebraska',
 		'NV' => 'Nevada',
 		'NH' => 'New Hampshire',
 		'NJ' => 'New Jersey',
