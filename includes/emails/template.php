@@ -71,7 +71,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 
 		foreach ( $cart_items as $item ) {
 
-			if ( isset( $edd_options['enable_sku'] ) )
+			if ( edd_use_skus() )
 				$sku = edd_get_download_sku( $item['id'] );
 
 			$price_id = edd_get_cart_item_price_id( $item );

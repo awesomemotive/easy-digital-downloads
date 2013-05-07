@@ -98,7 +98,7 @@ class EDD_Payments_Export extends EDD_Export {
 					// Display the Downoad Name
 					$products .= get_the_title( $id ) . ' - ';
 
-					if ( isset( $edd_options['enable_sku'] ) ) {
+					if ( edd_use_skus() ) {
 						$sku = edd_get_download_sku( $id );
 
 						if ( ! empty( $sku ) )

@@ -73,7 +73,7 @@ function edd_download_meta_box_save( $post_id) {
 		)
 	);
 
-	if ( isset( $edd_options['enable_sku'] ) ) {
+	if ( edd_use_skus() ) {
 		$fields[] = 'edd_sku';
 	}
 
@@ -469,7 +469,7 @@ add_action( 'edd_meta_box_fields', 'edd_render_download_limit_row', 20 );
 function edd_render_accounting_options( $post_id ) {
 	global $edd_options;
 
-	if( ! isset( $edd_options['enable_sku'] ) ) {
+	if( ! edd_use_skus() ) {
 		return;
 	}
 
