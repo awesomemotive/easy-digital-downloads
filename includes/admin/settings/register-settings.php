@@ -405,8 +405,8 @@ function edd_register_settings() {
 					'desc' => '',
 					'type' => 'header'
 				),
-				'enable_sku' => array(
-					'id' => 'enable_sku',
+				'enable_skus' => array(
+					'id' => 'enable_skus',
 					'name' => __('Enable SKU Entry', 'edd'),
 					'desc' => __('Check this box to allow entry of product SKUs. SKUs will be shown on purchase receipt and exported purchase histories.', 'edd'),
 					'type' => 'checkbox'
