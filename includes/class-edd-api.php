@@ -1200,9 +1200,9 @@ class EDD_API {
 							<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 							<span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
 							<?php } else { ?>
-								<strong><?php _e( 'Public key:' ); ?>&nbsp;</strong><span id="publickey"><?php echo $user->edd_user_public_key; ?></span><br/>
-								<strong><?php _e( 'Secret key:' ); ?>&nbsp;</strong><span id="privatekey"><?php echo $user->edd_user_secret_key; ?></span><br/>
-								<strong><?php _e( 'Token:' ); ?>&nbsp;</strong><span id="token"><?php echo hash( 'md5', $user->edd_user_secret_key . $user->edd_user_public_key ); ?></span><br/>
+								<strong><?php _e( 'Public key:', 'edd' ); ?>&nbsp;</strong><span id="publickey"><?php echo $user->edd_user_public_key; ?></span><br/>
+								<strong><?php _e( 'Secret key:', 'edd' ); ?>&nbsp;</strong><span id="privatekey"><?php echo $user->edd_user_secret_key; ?></span><br/>
+								<strong><?php _e( 'Token:', 'edd' ); ?>&nbsp;</strong><span id="token"><?php echo hash( 'md5', $user->edd_user_secret_key . $user->edd_user_public_key ); ?></span><br/>
 								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 								<span class="description"><?php _e( 'Revoke API Keys', 'edd' ); ?></span>
 							<?php } ?>
