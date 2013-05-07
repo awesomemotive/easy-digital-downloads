@@ -109,6 +109,9 @@ $status  = edd_get_payment_status( $payment, true );
 	<table id="edd_purchase_receipt_products">
 		<thead>
 			<th><?php _e( 'Name', 'edd' ); ?></th>
+			<?php if ( edd_use_skus() ) { ?>
+				<th><?php _e( 'SKU', 'edd' ); ?></th>
+			<?php } ?>
 			<th><?php _e( 'Price', 'edd' ); ?></th>
 		</thead>
 
@@ -124,6 +127,7 @@ $status  = edd_get_payment_status( $payment, true );
 
 					<div class="edd_purchase_receipt_product_name">
 						<?php echo esc_html( $item['name'] ); ?>
+						<?php if( ! empty( $sku ) ) : echo '&nbsp;&ndash;&nbsp;' . __( 'SKU', 'edd' ) . ' ' . $sku; endif; ?>
 						<?php if( $price_id !== false && edd_is_payment_complete( $payment->ID ) ) : ?>
 						<span class="edd_purchase_receipt_price_name">&nbsp;&ndash;&nbsp;<?php echo edd_get_price_option_name( $item['id'], $price_id ); ?></span>
 						<?php endif; ?>
@@ -157,6 +161,8 @@ $status  = edd_get_payment_status( $payment, true );
 					<?php endif; ?>
 
 				</td>
+				<?php if ( edd_use_skus() ) ?>
+				<td><?php echo edd_get_download_sku( $item['id'] ); ?></td>
 				<td><?php echo edd_currency_filter( edd_format_amount( $item[ 'price' ] ) ); ?></td>
 			</tr>
 		<?php endforeach; ?>
@@ -164,7 +170,7 @@ $status  = edd_get_payment_status( $payment, true );
 
 		<tfoot>
 			<tr>
-				<td><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
+				<td<?php echo ( edd_use_skus() ? ' colspan="2"' : '' ); ?>><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
 
 				<td>
 					<?php
