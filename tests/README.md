@@ -17,7 +17,7 @@ Quick Start (For Manual Runs)
 -----------------------------
 
 	# Clone the repository
-    git clone git://github.com/pippinsplugins/Easy-Digital-Downloads.git
+    git clone git://github.com/easydigitaldownloads/Easy-Digital-Downloads.git
     cd Easy-Digital-Downloads
 
     # Download Sunny Ratilal's Adapted WordPress Testing Suite

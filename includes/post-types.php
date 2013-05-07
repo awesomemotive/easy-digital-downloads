@@ -213,6 +213,7 @@ function edd_setup_download_taxonomies() {
 		)
 	);
 	register_taxonomy( 'download_category', array('download'), $category_args );
+	register_taxonomy_for_object_type( 'download_category', 'download' );
 
 	/** Tags */
 	$tag_labels = array(
@@ -240,8 +241,9 @@ function edd_setup_download_taxonomies() {
 		)
 	);
 	register_taxonomy( 'download_tag', array( 'download' ), $tag_args );
+	register_taxonomy_for_object_type( 'download_tag', 'download' );
 }
-add_action( 'init', 'edd_setup_download_taxonomies', 10 );
+add_action( 'init', 'edd_setup_download_taxonomies', 0 );
 
 /**
  * Registers Custom Post Statuses which are used by the Payments and Discount
