@@ -110,7 +110,7 @@ $status  = edd_get_payment_status( $payment, true );
 		<thead>
 			<th><?php _e( 'Name', 'edd' ); ?></th>
 			<?php if ( edd_use_skus() ) { ?>
-				<th><?php _e( 'SKUs', 'edd' ); ?></th>
+				<th><?php _e( 'SKU', 'edd' ); ?></th>
 			<?php } ?>
 			<th><?php _e( 'Price', 'edd' ); ?></th>
 		</thead>
