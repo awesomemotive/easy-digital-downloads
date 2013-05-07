@@ -809,3 +809,19 @@ function edd_cleanup_file_symlinks() {
 	}
 }
 add_action( 'edd_cleanup_file_symlinks', 'edd_cleanup_file_symlinks' );
+
+/**
+ * Checks if SKUs are enabled
+ *
+ * @since 1.6
+ * @global $edd_options
+ * @author Daniel J Griffiths
+ * @return bool $ret True if SKUs are enabled, false otherwise
+ */
+function edd_use_skus() {
+	global $edd_options;
+
+	$ret = isset( $edd_options['enable_skus'] );
+
+	return (bool) apply_filters( 'edd_use_skus', $ret );
+}
