@@ -52,6 +52,10 @@ class EDD_Payments_Export extends EDD_Export {
 			'user'     => __( 'User', 'edd' ),
 			'status'   => __( 'Status', 'edd' )
 		);
+
+		if( ! edd_use_skus() )
+			unset( $cols['skus'] );
+
 		return $cols;
 	}
 
@@ -83,7 +87,9 @@ class EDD_Payments_Export extends EDD_Export {
 			$total          = isset( $payment_meta['amount'] ) ? $payment_meta['amount'] : 0.00;
 			$user_id        = isset( $user_info['id'] ) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email'];
 			$products       = '';
-			$skus			= '';
+
+			if( edd_use_skus() )
+				$skus			= '';
 
 			if ( $downloads ) {
 				foreach ( $downloads as $key => $download ) {
@@ -116,7 +122,9 @@ class EDD_Payments_Export extends EDD_Export {
 
 					if ( $key != ( count( $downloads ) -1 ) ) {
 						$products .= ' / ';
-						$skus .= ' / ';
+
+						if( edd_use_skus() )
+							$skus .= ' / ';
 					}
 				}
 			}
@@ -143,6 +151,9 @@ class EDD_Payments_Export extends EDD_Export {
 				'user'     => $user ? $user->display_name : __( 'guest', 'edd' ),
 				'status'   => edd_get_payment_status( $payment, true )
 			);
+
+			if( !edd_use_skus() )
+				unset( $data['skus'] );
 
 		}
 
