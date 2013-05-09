@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.6
 
-Stable Tag: 1.5.2.1
+Stable Tag: 1.5.2.2
 License: GNU Version 2 or Any Later Version
 
 
@@ -174,6 +174,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 
 == Changelog ==
+
+= 1.5.2.2: May 9, 2013 =
+
+* Fix: A bug that caused prices to not show on purchase buttons
 
 = 1.5.2.1: April 23, 2013 =
 
