@@ -278,6 +278,8 @@ function edd_single_price_option_mode( $download_id = 0 ) {
  */
 function edd_get_download_type( $download_id ) {
 	$type = get_post_meta( $download_id, '_edd_product_type', true );
+	if( empty( $type ) )
+		$type = 'default';
 	return apply_filters( 'edd_get_download_type', $type, $download_id );
 }
 
