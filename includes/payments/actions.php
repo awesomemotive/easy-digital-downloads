@@ -43,6 +43,9 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	if ( is_array( $downloads ) ) {
 		// Increase purchase count and earnings
 		foreach ( $downloads as $download ) {
+
+			$download_type = edd_get_download_type( $download['id'] );
+
 			edd_record_sale_in_log( $download['id'], $payment_id, $user_info );
 			edd_increase_purchase_count( $download['id'] );
 			$amount = null;
@@ -59,6 +62,9 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 			$amount = edd_get_download_final_price( $download['id'], $user_info, $amount );
 			edd_increase_earnings( $download['id'], $amount );
+
+			do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $type );
+
 		}
 
 		// Clear the total earnings cache
@@ -68,6 +74,8 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	if ( isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ) {
 		edd_increase_discount_usage( $user_info['discount'] );
 	}
+
+	do_action( 'edd_complete_purchase', $payment_id );
 
 	// Empty the shopping cart
 	edd_empty_cart();
