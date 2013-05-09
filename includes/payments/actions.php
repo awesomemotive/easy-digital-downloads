@@ -66,7 +66,6 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 			edd_increase_earnings( $download['id'], $amount );
 
 			do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type );
-
 		}
 
 		// Clear the total earnings cache
@@ -83,6 +82,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	edd_empty_cart();
 }
 add_action( 'edd_update_payment_status', 'edd_complete_purchase', 100, 3 );
+
 
 /**
  * Record payment status change
