@@ -272,7 +272,7 @@ function edd_single_price_option_mode( $download_id = 0 ) {
 /**
  * Gets the Download type, either default or "bundled"
  *
- * @since 1.5
+ * @since 1.6
  * @param int $download_id Download ID
  * @return string $type Download type
  */
@@ -284,7 +284,7 @@ function edd_get_download_type( $download_id ) {
 /**
  * Retrieves the product IDs of bundled products
  *
- * @since 1.5
+ * @since 1.6
  * @param int $download_id Download ID
  * @return array $products Products in the bundle
  */
