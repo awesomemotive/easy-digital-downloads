@@ -69,7 +69,8 @@ function edd_get_purchase_link( $args = array() ) {
 	$variable_pricing = edd_has_variable_prices( $args['download_id'] );
 	$data_variable    = $variable_pricing ? ' data-variable-price=yes' : 'data-variable-price=no';
 	$type             = edd_single_price_option_mode( $args['download_id'] ) ? 'data-price-mode=multi' : 'data-price-mode=single';
-	if ( $args['price'] && $args['price'] != 'no' && ! $variable_pricing ) {
+
+	if ( $args['price'] && $args['price'] !== 'no' && ! $variable_pricing ) {
 		$price = edd_get_download_price( $args['download_id'] );
 		$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . '&nbsp;&ndash;&nbsp;' . $args['text'];
 	}
@@ -150,7 +151,7 @@ function edd_get_purchase_link( $args = array() ) {
  * @param bool $show_price
  * @return void
  */
-function edd_purchase_variable_pricing( $download_id, $show_price ) {
+function edd_purchase_variable_pricing( $download_id = 0, $show_price = true ) {
 	$variable_pricing = edd_has_variable_prices( $download_id );
 
 	if ( ! $variable_pricing || empty( $show_price ) )
@@ -174,7 +175,7 @@ function edd_purchase_variable_pricing( $download_id, $show_price ) {
 						esc_attr( 'edd_price_option_' . $download_id . '_' . $key ),
 						esc_attr( 'edd_price_option_' . $download_id ),
 						esc_attr( $key ),
-						esc_html( $price['name'] . ' - ' . edd_currency_filter( edd_format_amount( $price[ 'amount' ] ) ) ),
+						'<span class="edd_price_option_name">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price[ 'amount' ] ) ) . '</span>',
 						checked( isset( $_GET['price_option'] ), $key, false )
 					);
 					do_action( 'edd_after_price_option', $key, $price, $download_id );
