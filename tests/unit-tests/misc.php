@@ -365,7 +365,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'MS' => 'Mississippi',
 			'MO' => 'Missouri',
 			'MT' => 'Montana',
-			'NE' => 'Nebraksa',
+			'NE' => 'Nebraska',
 			'NV' => 'Nevada',
 			'NH' => 'New Hampshire',
 			'NJ' => 'New Jersey',
