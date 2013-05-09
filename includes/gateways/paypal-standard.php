@@ -351,7 +351,7 @@ function edd_get_paypal_redirect( $ssl_check = false ) {
 		$paypal_uri = $protocal . 'www.paypal.com/cgi-bin/webscr';
 	}
 
-	return $paypal_uri;
+	return apply_filters( 'edd_paypal_uri', $paypal_uri );
 }
 
 /**
