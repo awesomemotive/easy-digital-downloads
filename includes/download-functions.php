@@ -871,3 +871,15 @@ function edd_get_download_sku( $download_id = 0 ) {
 
 	return apply_filters( 'edd_get_download_sku', $sku, $download_id );
 }
+
+/**
+ * Get the file Download method
+ *
+ * @since 1.6
+ * @return string The method to use for file downloads
+ */
+function edd_get_file_download_method() {
+	global $edd_options;
+	$method = isset( $edd_options['download_method'] ) ? $edd_options['download_method'] : 'direct';
+	return apply_filters( 'edd_file_download_method', $method );
+}
