@@ -12,6 +12,24 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+
+/**
+ * Set Upload Directory
+ *
+ * Sets the upload dir to edd. This function is called from
+ * edd_change_downloads_upload_dir()
+ *
+ * @since 1.0
+ * @return array Upload directory information
+*/
+function edd_set_upload_dir( $upload ) {
+	$upload['subdir'] = '/edd' . $upload['subdir'];
+	$upload['path'] = $upload['basedir'] . $upload['subdir'];
+	$upload['url']	= $upload['baseurl'] . $upload['subdir'];
+	return $upload;
+}
+
+
 /**
  * Change Downloads Upload Directory
  *
@@ -30,44 +48,13 @@ function edd_change_downloads_upload_dir() {
 
 	if ( ! empty( $_REQUEST['post_id'] ) && ( 'async-upload.php' == $pagenow || 'media-upload.php' == $pagenow ) ) {
 		if ( 'download' == get_post_type( $_REQUEST['post_id'] ) ) {
-			$wp_upload_dir = wp_upload_dir();
-			$upload_path = $wp_upload_dir['basedir'] . '/edd' . $wp_upload_dir['subdir'];
-
-			// We don't want users snooping in the EDD root, so let's add htacess there, first
-			// Creating the directory if it doesn't already exist.
-			$rules = apply_filters( 'edd_protected_directory_htaccess_rules', 'Options -Indexes' );
-			if ( !@file_get_contents( $wp_upload_dir['basedir'] . '/edd/.htaccess' ) ) {
-				wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd' );
-			}
-			@file_put_contents( $wp_upload_dir['basedir'] . '/edd/.htaccess', $rules );
-
-			// Now add blank index.php files to the {year}/{month} directory
-			if ( wp_mkdir_p( $upload_path ) ) {
-				if( ! file_exists( $upload_path . '/index.php' ) ) {
-					@file_put_contents( $upload_path . '/index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
-				}
-			}
+			edd_create_protection_files( true );
 			add_filter( 'upload_dir', 'edd_set_upload_dir' );
 		}
 	}
 }
 add_action( 'admin_init', 'edd_change_downloads_upload_dir', 999 );
 
-/**
- * Set Upload Directory
- *
- * Sets the upload dir to edd. This function is called from
- * edd_change_downloads_upload_dir()
- *
- * @since 1.0
- * @return array Upload directory information
-*/
-function edd_set_upload_dir( $upload ) {
-	$upload['subdir'] = '/edd' . $upload['subdir'];
-	$upload['path'] = $upload['basedir'] . $upload['subdir'];
-	$upload['url']	= $upload['baseurl'] . $upload['subdir'];
-	return $upload;
-}
 
 /**
  * Creates blank index.php and .htaccess files
@@ -78,8 +65,8 @@ function edd_set_upload_dir( $upload ) {
  * @since 1.1.5
  * @return void
  */
-function edd_create_protection_files() {
-	if ( false === get_transient( 'edd_check_protection_files' ) ) {
+function edd_create_protection_files( $force = false) {
+	if ( false === get_transient( 'edd_check_protection_files' ) || $force ) {
 		$wp_upload_dir = wp_upload_dir();
 		$upload_path = $wp_upload_dir['basedir'] . '/edd';
 
@@ -91,10 +78,10 @@ function edd_create_protection_files() {
 		}
 
 		// Top level .htaccess file
-		$rules = apply_filters( 'edd_protected_directory_htaccess_rules', 'Options -Indexes' );
+		$rules = edd_get_htaccess_rules();;
 		if ( file_exists( $upload_path . '/.htaccess' ) ) {
 			$contents = @file_get_contents( $upload_path . '/.htaccess' );
-			if ( false === strpos( $contents, 'Options -Indexes' ) || ! $contents ) {
+			if ( false === strpos( $contents, $rules ) || ! $contents ) {
 				@file_put_contents( $upload_path . '/.htaccess', $rules );
 			}
 		}
@@ -107,8 +94,8 @@ function edd_create_protection_files() {
 				@file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
 			}
 		}
-		// Only have this run the first time. This is just to create .htaccess files in existing folders
-		set_transient( 'edd_check_protection_files', true, 2678400 );
+		// Check for the files once per day
+		set_transient( 'edd_check_protection_files', true, 3600 * 24 );
 	}
 }
 add_action( 'admin_init', 'edd_create_protection_files' );
@@ -135,4 +122,33 @@ function edd_scan_folders( $path = '', $return = array() ) {
 	}
 
 	return $return;
+}
+
+/**
+ * Retrieve the .htaccess rules to wp-content/uploads/edd/
+ *
+ * @since 1.6
+ * @return string The htaccess rules
+ */
+function edd_get_htaccess_rules() {
+
+	$method = edd_get_file_download_method();
+
+	switch( $method ) :
+
+		case 'redirect' :
+			// Prevent directory browsing
+			$rules = "Options -Indexes";
+			break;
+
+		case 'direct' :
+		default :
+			// Prevent directory browsing and direct access
+			$rules = "Options -Indexes\n";
+			$rules .= "deny from all\n";
+			break;
+
+	endswitch;
+	$rules = apply_filters( 'edd_protected_directory_htaccess_rules', $rules );
+	return $rules;
 }
