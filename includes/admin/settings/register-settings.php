@@ -804,7 +804,7 @@ function edd_gateways_callback( $args ) {
 	foreach ( $args['options'] as $key => $option ) :
 		if ( isset( $edd_options['gateways'][ $key ] ) )
 			$enabled = '1';
-		else 
+		else
 			$enabled = null;
 
 		echo '<input name="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
