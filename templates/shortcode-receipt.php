@@ -4,11 +4,11 @@
  */
 global $edd_receipt_args, $edd_options;
 
-$payment = get_post( $edd_receipt_args['id'] );
-$meta    = edd_get_payment_meta( $payment->ID );
-$cart    = edd_get_payment_meta_cart_details( $payment->ID );
-$user    = edd_get_payment_meta_user_info( $payment->ID );
-$status  = edd_get_payment_status( $payment, true );
+$payment   = get_post( $edd_receipt_args['id'] );
+$meta      = edd_get_payment_meta( $payment->ID );
+$cart      = edd_get_payment_meta_cart_details( $payment->ID, true );
+$user      = edd_get_payment_meta_user_info( $payment->ID );
+$status    = edd_get_payment_status( $payment, true );
 ?>
 <table id="edd_purchase_receipt">
 	<thead>
