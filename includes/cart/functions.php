@@ -48,13 +48,10 @@ function edd_get_cart_quantity() {
 function edd_add_to_cart( $download_id, $options = array() ) {
 	$cart = edd_get_cart_contents();
 	if ( ! edd_item_in_cart( $download_id, $options ) ) {
-		$download = get_post($download_id);
+		$download = get_post( $download_id );
 
 		if( 'download' != $download->post_type )
 			return; // Not a download product
-			
-		
-		global $current_user;
 		
 		if ( ( !current_user_can( 'edit_post', $download->ID ) && ( $download->post_status == 'draft' || $download->post_status == 'pending' ) )
 			return; // Do not allow draft/pending to be purchased if can't edit. Fixes #1056
