@@ -35,8 +35,18 @@ function edd_checkout_cart() {
 function edd_shopping_cart( $echo = false ) {
 	global $edd_options;
 
-	ob_start(); ?>
-	<?php do_action('edd_before_cart'); ?>
+	ob_start(); 
+	do_action('edd_before_cart'); 
+	$display = 'style="display:none;"';
+  	$cart_quantity = edd_get_cart_quantity();
+
+  	if ( $cart_quantity > 0 ){
+  	  $display = "";
+  	}
+  	
+  	echo "<p class='edd-cart-number-of-items' {$display}>" . __( 'Number of items in cart', 'edd' ) . ': <span class="edd-cart-quantity">' . $cart_quantity . '<span></p>';
+ 	?>
+ 	
 	<ul class="edd-cart">
 	<!--dynamic-cached-content-->
 	<?php
@@ -96,7 +106,13 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 	$item = str_replace( '{cart_item_id}', absint( $cart_key ), $item );
 	$item = str_replace( '{item_id}', absint( $id ), $item );
 	$item = str_replace( '{remove_url}', $remove_url, $item );
-
+  	$subtotal= '';
+  	if ( $ajax ){
+   	 $subtotal = edd_currency_filter( edd_get_cart_amount( false ) ) ;
+  	}
+  	
+ 	$item = str_replace( '{subtotal}', $subtotal, $item );
+ 	 
 	return apply_filters( 'edd_cart_item', $item, $id );
 }
 
