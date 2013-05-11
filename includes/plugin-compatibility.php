@@ -15,20 +15,6 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Removes the "Restrict This Content" meta box from Restrict Content Pro.
- *
- * @since 1.0
- * @param array $post_types Post Types
- * @return array $post_types Array with 'download' post type added
- */
-function edd_remove_restrict_meta_box( $post_types ) {
-	$post_types[] = 'download';
-
-	return $post_types;
-}
-add_filter( 'rcp_metabox_excluded_post_types', 'edd_remove_restrict_meta_box', 999 );
-
-/**
  * Disables admin sorting of Post Types Order
  *
  * When sorting downloads by price, earnings, sales, date, or name,
