@@ -283,6 +283,19 @@ function edd_get_download_type( $download_id ) {
 	return apply_filters( 'edd_get_download_type', $type, $download_id );
 }
 
+
+/**
+ * Deterimes if a product is a bundle
+ *
+ * @since 1.6
+ * @param int $download_id Download ID
+ * @return bool
+ */
+function edd_is_bundled_product( $download_id = 0 ) {
+	return 'bundle' == edd_get_download_type( $download_id );
+}
+
+
 /**
  * Retrieves the product IDs of bundled products
  *
