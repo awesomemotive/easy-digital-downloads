@@ -50,7 +50,12 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	if ( ! edd_item_in_cart( $download_id, $options ) ) {
 		if( 'download' != get_post_type( $download_id ) )
 			return; // Not a download product
-
+			
+		$download = get_post($download_id);
+		
+		if (($download->post_status == 'draft' || $download->post_status == 'pending') && current_user_can('edit_post', $download->ID))
+			return; // Do not allow draft/pending to be purchased if can't edit. Fixes #1056
+			
 		do_action( 'edd_pre_add_to_cart', $download_id, $options );
 
 		if ( edd_has_variable_prices( $download_id )  && ! isset( $options['price_id'] ) ) {
