@@ -48,9 +48,14 @@ function edd_get_cart_quantity() {
 function edd_add_to_cart( $download_id, $options = array() ) {
 	$cart = edd_get_cart_contents();
 	if ( ! edd_item_in_cart( $download_id, $options ) ) {
-		if( 'download' != get_post_type( $download_id ) )
-			return; // Not a download product
+		$download = get_post( $download_id );
 
+		if( 'download' != $download->post_type )
+			return; // Not a download product
+		
+		if ( ( !current_user_can( 'edit_post', $download->ID ) && ( $download->post_status == 'draft' || $download->post_status == 'pending' ) )
+			return; // Do not allow draft/pending to be purchased if can't edit. Fixes #1056
+			
 		do_action( 'edd_pre_add_to_cart', $download_id, $options );
 
 		if ( edd_has_variable_prices( $download_id )  && ! isset( $options['price_id'] ) ) {
