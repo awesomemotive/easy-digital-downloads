@@ -53,7 +53,9 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 			
 		$download = get_post($download_id);
 		
-		if (($download->post_status == 'draft' || $download->post_status == 'pending') && current_user_can('edit_post', $download->ID))
+		global $current_user;
+		
+		if ( ( !current_user_can('edit_post', $download->ID ) && ( $download->post_status == 'draft' || $download->post_status == 'pending' ) )
 			return; // Do not allow draft/pending to be purchased if can't edit. Fixes #1056
 			
 		do_action( 'edd_pre_add_to_cart', $download_id, $options );
