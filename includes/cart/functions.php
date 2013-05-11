@@ -48,10 +48,11 @@ function edd_get_cart_quantity() {
 function edd_add_to_cart( $download_id, $options = array() ) {
 	$cart = edd_get_cart_contents();
 	if ( ! edd_item_in_cart( $download_id, $options ) ) {
-		if( 'download' != get_post_type( $download_id ) )
+		$download = get_post($download_id);
+
+		if( 'download' != $download->post_type )
 			return; // Not a download product
 			
-		$download = get_post($download_id);
 		
 		global $current_user;
 		
