@@ -656,7 +656,8 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 					),
 					'price'       => 0,
 					'quantity'    => 1,
-					'tax'         => 0
+					'tax'         => 0,
+					'in_bundle'   => 1
 				);
 			}
 		}
