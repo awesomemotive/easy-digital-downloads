@@ -127,8 +127,7 @@ $status    = edd_get_payment_status( $payment, true );
 
 					<div class="edd_purchase_receipt_product_name">
 						<?php echo esc_html( $item['name'] ); ?>
-						<?php if( ! empty( $sku ) ) : echo '&nbsp;&ndash;&nbsp;' . __( 'SKU', 'edd' ) . ' ' . $sku; endif; ?>
-						<?php if( $price_id !== false && edd_is_payment_complete( $payment->ID ) ) : ?>
+						<?php if( ! empty( $price_id ) && edd_is_payment_complete( $payment->ID ) ) : ?>
 						<span class="edd_purchase_receipt_price_name">&nbsp;&ndash;&nbsp;<?php echo edd_get_price_option_name( $item['id'], $price_id ); ?></span>
 						<?php endif; ?>
 					</div>
@@ -154,15 +153,16 @@ $status    = edd_get_payment_status( $payment, true );
 								do_action( 'edd_receipt_files', $filekey, $file, $item['id'], $payment->ID, $meta );
 							endforeach;
 
-						else :
+						elseif( ! edd_is_bundled_product( $item['id'] ) ) :
 							echo '<li>' . __( 'No downloadable files found.', 'edd' ) . '</li>';
 						endif; ?>
 					</ul>
 					<?php endif; ?>
 
 				</td>
-				<?php if ( edd_use_skus() ) ?>
-				<td><?php echo edd_get_download_sku( $item['id'] ); ?></td>
+				<?php if ( edd_use_skus() ) : ?>
+					<td><?php echo edd_get_download_sku( $item['id'] ); ?></td>
+				<?php endif; ?>
 				<td><?php echo edd_currency_filter( edd_format_amount( $item[ 'price' ] ) ); ?></td>
 			</tr>
 		<?php endforeach; ?>
