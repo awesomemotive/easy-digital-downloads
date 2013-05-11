@@ -163,7 +163,11 @@ $status    = edd_get_payment_status( $payment, true );
 				<?php if ( edd_use_skus() ) : ?>
 					<td><?php echo edd_get_download_sku( $item['id'] ); ?></td>
 				<?php endif; ?>
-				<td><?php echo edd_currency_filter( edd_format_amount( $item[ 'price' ] ) ); ?></td>
+				<td>
+					<?php if( empty( $item['in_bundle'] ) ) : // Only show price when product is not part of a bundle ?>
+						<?php echo edd_currency_filter( edd_format_amount( $item[ 'price' ] ) ); ?>
+					<?php endif; ?>
+				</td>
 			</tr>
 		<?php endforeach; ?>
 		</tbody>
