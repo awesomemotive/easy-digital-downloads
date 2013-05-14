@@ -386,6 +386,22 @@ function edd_register_settings() {
 					'desc' => '',
 					'type' => 'header',
 				),
+				'download_method' => array(
+					'id' => 'download_method',
+					'name' => __('Download Method', 'edd'),
+					'desc' => sprintf( __('Select the file downloadf method. Note, not all methods work on all servers.', 'edd'), edd_get_label_singular() ),
+					'type' => 'select',
+					'options' => array(
+						'direct' => __( 'Direct', 'edd' ),
+						'redirect' => __( 'Redirect', 'edd' )
+					)
+				),
+				'symlink_file_downloads' => array(
+					'id' => 'symlink_file_downloads',
+					'name' => __('Symlink File Downloads?', 'edd'),
+					'desc' => __('Check this if you are delivering really large files or having problems with file downloads completing.', 'edd'),
+					'type' => 'checkbox',
+				),
 				'file_download_limit' => array(
 					'id' => 'file_download_limit',
 					'name' => __('File Download Limit', 'edd'),
@@ -404,12 +420,6 @@ function edd_register_settings() {
 					'id' => 'disable_redownload',
 					'name' => __('Disable Redownload?', 'edd'),
 					'desc' => __('Check this if you do not want to allow users to redownload items from their purchase history.', 'edd'),
-					'type' => 'checkbox',
-				),
-				'symlink_file_downloads' => array(
-					'id' => 'symlink_file_downloads',
-					'name' => __('Symlink File Downloads?', 'edd'),
-					'desc' => __('Check this if you are delivering really large files or having problems with file downloads completing.', 'edd'),
 					'type' => 'checkbox',
 				),
 				'accounting_settings' => array(
@@ -794,7 +804,7 @@ function edd_gateways_callback( $args ) {
 	foreach ( $args['options'] as $key => $option ) :
 		if ( isset( $edd_options['gateways'][ $key ] ) )
 			$enabled = '1';
-		else 
+		else
 			$enabled = null;
 
 		echo '<input name="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
