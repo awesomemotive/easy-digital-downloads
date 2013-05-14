@@ -58,7 +58,7 @@ jQuery(document).ready(function ($) {
        // Show the ajax loader
         $('.edd-cart-ajax', container).show();
 
-        var form           = $this.parents('form').last()
+        var form           = $this.parents('form').last();
         var download       = $this.data('download-id');
         var variable_price = $this.data('variable-price');
         var price_mode     = $this.data('price-mode');
