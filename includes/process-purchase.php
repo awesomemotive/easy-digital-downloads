@@ -337,7 +337,13 @@ function edd_purchase_form_validate_new_user() {
 	$user_pass    = isset( $_POST["edd_user_pass"] ) ? trim( $_POST["edd_user_pass"] ) : false;
 	$pass_confirm = isset( $_POST["edd_user_pass_confirm"] ) ? trim( $_POST["edd_user_pass_confirm"] ) : false;
 
-
+	// Loop through required fields and show error messages
+	foreach ( edd_purchase_form_required_fields() as $field_name => $value ) {
+		if ( in_array( $value, edd_purchase_form_required_fields() ) && empty( $_POST[ $field_name ] ) ) {
+			edd_set_error( $value['error_id'], $value['error_message'] );
+		}
+	}
+	
 	// Check if we have an username to register
 	if ( $user_login && strlen( $user_login ) > 0 ) {
 		$registering_new_user = true;
