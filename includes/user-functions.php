@@ -241,3 +241,38 @@ function edd_validate_username( $username ) {
 	$valid = ( $sanitized == $username );
 	return (bool) apply_filters( 'edd_validate_username', $valid, $username );
 }
+
+
+/**
+ * Looks up purchases by email that match the registering user
+ *
+ * This is for users that purchased as a guest and then came
+ * back and created an account.
+ *
+ * @access      public
+ * @since       1.6
+ * @param       $user_id INT - the new user's ID
+ * @return      void
+ */
+function edd_add_past_purchases_to_new_user( $user_id ) {
+
+	$email    = get_user_meta( $user_id, 'user_email', true );
+	$mode     = edd_is_test_mode() ? 'test' : 'live';
+	$payments = edd_get_payments( array( 's' => $email, 'mode' => $mode ) );
+	if( $payments ) {
+		foreach( $payments as $payment ) {
+			if( intval( edd_get_payment_user_id( $payment->ID ) ) > 0 )
+				continue; // This payment already associated with an account
+
+			$meta                    = edd_get_payment_meta( $payment->ID );
+			$meta['user_info']       = maybe_unserialize( $meta['user_info'] );
+			$meta['user_info']['id'] = $user_id;
+			$meta['user_info']       = serialize( $meta['user_info'] );
+
+			// Store the updated user ID in the payment meta
+			update_post_meta( $payment->ID, '_edd_payment_meta', $meta );
+		}
+	}
+
+}
+add_action( 'user_register', 'edd_add_past_purchases_to_new_user' );
