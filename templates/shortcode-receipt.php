@@ -117,6 +117,7 @@ $status    = edd_get_payment_status( $payment, true );
 
 		<tbody>
 		<?php foreach ( $cart as $key => $item ) : ?>
+			<?php if( empty( $item['in_bundle'] ) ) : ?>
 			<tr>
 				<td>
 
@@ -138,7 +139,6 @@ $status    = edd_get_payment_status( $payment, true );
 
 					<?php if( edd_is_payment_complete( $payment->ID ) ) : ?>
 					<ul>
-
 						<?php
 						if ( $download_files && is_array( $download_files ) ) :
 
@@ -153,7 +153,34 @@ $status    = edd_get_payment_status( $payment, true );
 								do_action( 'edd_receipt_files', $filekey, $file, $item['id'], $payment->ID, $meta );
 							endforeach;
 
-						elseif( ! edd_is_bundled_product( $item['id'] ) ) :
+						elseif( edd_is_bundled_product( $item['id'] ) ) :
+
+							$bundled_products = edd_get_bundled_products( $item['id'] );
+
+							foreach( $bundled_products as $bundle_item ) : ?>
+								<li class="edd_bundled_product"><strong><?php echo get_the_title( $bundle_item ); ?></strong></li>
+								<?php
+								$download_files = edd_get_download_files( $bundle_item );
+
+								if( $download_files && is_array( $download_files ) ) :
+
+									foreach ( $download_files as $filekey => $file ) :
+
+										$download_url = edd_get_download_file_url( $meta['key'], $meta['email'], $filekey, $bundle_item ); ?>
+										<li class="edd_download_file">
+											<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a>
+										</li>
+										<?php
+										do_action( 'edd_receipt_files', $filekey, $file, $item['id'], $payment->ID, $meta );
+
+									endforeach;
+								else :
+									echo '<li>' . __( 'No downloadable files found for this bundled item.', 'edd' ) . '</li>';
+								endif;
+
+							endforeach;
+
+						else :
 							echo '<li>' . __( 'No downloadable files found.', 'edd' ) . '</li>';
 						endif; ?>
 					</ul>
@@ -169,6 +196,7 @@ $status    = edd_get_payment_status( $payment, true );
 					<?php endif; ?>
 				</td>
 			</tr>
+			<?php endif; ?>
 		<?php endforeach; ?>
 		</tbody>
 
