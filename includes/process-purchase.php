@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_process_purchase_form() {
 	// Make sure the cart isn't empty
 	if ( ! edd_get_cart_contents() ) {
-		edd_set_error( 'empty_cart', __( 'Your cart is empty.', 'edd') );
+		edd_set_error( 'empty_cart', __( 'Your cart is empty', 'edd') );
 	} else {
 		// Validate the form $_POST data
 		$valid_data = edd_purchase_form_validate_fields();
@@ -254,7 +254,7 @@ function edd_purchase_form_required_fields() {
 	$required_fields = array(
 		'edd_first' => array(
 			'error_id' => 'invalid_first_name',
-			'error_message' => __( 'Please enter your first name.', 'edd' )
+			'error_message' => __( 'Please enter your first name', 'edd' )
 		)
 	);
 	return apply_filters( 'edd_purchase_form_required_fields', $required_fields );
@@ -282,7 +282,7 @@ function edd_purchase_form_validate_logged_in_user() {
 		$user_data = get_userdata( $user_ID );
 
 		if ( ! is_email( $_POST['edd_email'] ) ) {
-			edd_set_error( 'invalid_email', __( 'Please enter a valid email address.', 'edd' ) );
+			edd_set_error( 'invalid_email', __( 'Please enter a valid email address', 'edd' ) );
 		}
 
 		// Loop through required fields and show error messages
@@ -303,7 +303,7 @@ function edd_purchase_form_validate_logged_in_user() {
 			);
 		} else {
 			// Set invalid user error
-			edd_set_error( 'invalid_user', __( 'The user information is invalid.', 'edd' ) );
+			edd_set_error( 'invalid_user', __( 'The user information is invalid', 'edd' ) );
 		}
 	}
 
@@ -343,7 +343,7 @@ function edd_purchase_form_validate_new_user() {
 			edd_set_error( $value['error_id'], $value['error_message'] );
 		}
 	}
-	
+
 	// Check if we have an username to register
 	if ( $user_login && strlen( $user_login ) > 0 ) {
 		$registering_new_user = true;
@@ -397,7 +397,7 @@ function edd_purchase_form_validate_new_user() {
 			$valid_user_data['user_pass'] = $user_pass;
 		}
 	} else {
-		// Password or confrimation missing
+		// Password or confirmation missing
 		if ( ! $user_pass && $registering_new_user ) {
 			// The password is invalid
 			edd_set_error( 'password_empty', __( 'Enter a password', 'edd' ) );
@@ -484,7 +484,7 @@ function edd_purchase_form_validate_guest_user() {
 
 	// Show error message if user must be logged in
 	if ( edd_logged_in_only() ) {
-		edd_set_error( 'logged_in_only', __( 'You must be logged into an account to purchase.', 'edd' ) );
+		edd_set_error( 'logged_in_only', __( 'You must be logged into an account to purchase', 'edd' ) );
 	}
 
 	// Get the guest email
