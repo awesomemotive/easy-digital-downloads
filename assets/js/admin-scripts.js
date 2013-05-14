@@ -419,6 +419,22 @@ jQuery(document).ready(function ($) {
         }
     });
 
+    // Hide Symlink option if Download Method is set to Direct
+    if( $('select[name="edd_settings_misc[download_method]"]:selected').val() != 'direct' ) {
+        $('select[name="edd_settings_misc[download_method]"]').parent().parent().next().hide();
+        $('select[name="edd_settings_misc[download_method]"]').parent().parent().next().find('input').attr('checked', false);
+    }
+    // Toggle local tax option
+    $('select[name="edd_settings_misc[download_method]"]').on('change', function() {
+        var symlink = $(this).parent().parent().next();
+        if( $(this).val() == 'direct' ) {
+            symlink.hide();
+        } else {
+            symlink.show();
+            symlink.find('input').attr('checked', false);
+        }
+    });
+
     // Bulk edit save
     $( 'body' ).on( 'click', '#bulk_edit', function() {
 
