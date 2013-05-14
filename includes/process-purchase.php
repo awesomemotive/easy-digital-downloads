@@ -326,9 +326,9 @@ function edd_purchase_form_validate_new_user() {
 		// Assume there will be errors
 		'user_id' => -1,
 		// Get first name
-		'user_first' => isset( $_POST["edd_first"] ) ? strip_tags( trim( $_POST["edd_first"] ) ) : '',
+		'user_first' => isset( $_POST["edd_first"] ) ? sanitize_text_field( $_POST["edd_first"] ) : '',
 		// Get last name
-		'user_last' => isset( $_POST["edd_last"] ) ? strip_tags( trim( $_POST["edd_last"] ) ) : '',
+		'user_last' => isset( $_POST["edd_last"] ) ? sanitize_text_field( $_POST["edd_last"] ) : '',
 	);
 
 	// Check the new user's credentials against existing ones
