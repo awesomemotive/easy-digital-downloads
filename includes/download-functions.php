@@ -556,6 +556,11 @@ function edd_get_average_monthly_download_sales( $download_id ) {
  */
 function edd_get_download_files( $download_id, $variable_price_id = null ) {
 	$files = array();
+
+	// Bundled products are not allowed to have files
+	if( edd_is_bundled_product( $download_id ) )
+		return $files;
+
 	$download_files = get_post_meta( $download_id, 'edd_download_files', true );
 
 	if ( $download_files ) {
