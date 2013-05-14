@@ -102,6 +102,25 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 
 					$file_urls .= esc_html( $file_url ) . '<br/>';
 				}
+			} elseif( edd_is_bundled_product( $item['id'] ) ) {
+
+				$bundled_products = edd_get_bundled_products( $item['id'] );
+
+				foreach( $bundled_products as $bundle_item ) {
+
+					$download_list .= '<li class="edd_bundled_product"><strong>' . get_the_title( $bundle_item ) . '</strong></li>';
+
+					$files = edd_get_download_files( $bundle_item );
+
+					foreach ( $files as $filekey => $file ) {
+						$download_list .= '<li>';
+						$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $bundle_item, $price_id );
+						$download_list .= '<a href="' . esc_url( $file_url ) . '">' . $file['name'] . '</a>';
+						$download_list .= '</li>';
+
+						$file_urls .= esc_html( $file_url ) . '<br/>';
+					}
+				}
 			}
 
 			if ( $show_names ) {
