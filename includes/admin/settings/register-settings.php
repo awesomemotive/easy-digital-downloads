@@ -389,7 +389,7 @@ function edd_register_settings() {
 				'download_method' => array(
 					'id' => 'download_method',
 					'name' => __('Download Method', 'edd'),
-					'desc' => sprintf( __('Select the file downloadf method. Note, not all methods work on all servers.', 'edd'), edd_get_label_singular() ),
+					'desc' => sprintf( __('Select the file download method. Note, not all methods work on all servers.', 'edd'), edd_get_label_singular() ),
 					'type' => 'select',
 					'options' => array(
 						'direct' => __( 'Direct', 'edd' ),
