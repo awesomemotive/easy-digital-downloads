@@ -171,7 +171,7 @@ $status    = edd_get_payment_status( $payment, true );
 											<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a>
 										</li>
 										<?php
-										do_action( 'edd_receipt_files', $filekey, $file, $item['id'], $payment->ID, $meta );
+										do_action( 'edd_receipt_bundle_files', $filekey, $file, $item['id'], $bundle_item, $payment->ID, $meta );
 
 									endforeach;
 								else :
