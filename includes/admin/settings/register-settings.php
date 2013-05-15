@@ -650,7 +650,7 @@ function edd_register_settings() {
 			array(
 				'id' => $option['id'],
 				'desc' => $option['desc'],
-				'name' => $options['name'],
+				'name' => $option['name'],
 				'section' => 'extensions',
 				'size' => isset( $option['size'] ) ? $option['size'] : '',
 				'options' => isset( $option['options'] ) ? $option['options'] : '',
