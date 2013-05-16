@@ -93,7 +93,7 @@ class EDD_Customers_Export extends EDD_Export {
 		global $wpdb;
 
 		$data = array();
-		$startMemory = memory_get_usage(); 
+
 		if ( ! empty( $_POST['edd_export_download'] ) ) {
 			// Export customers of a specific product
 			global $edd_logs;
@@ -126,19 +126,19 @@ class EDD_Customers_Export extends EDD_Export {
 
 			foreach ( $emails as $email ) {
 				$wp_user = get_user_by( 'email', $email );
-
-				$data[] = array(
+				$stats   = edd_get_purchase_stats_by_user( $email );
+				$data[]  = array(
 					'name'      => $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' ),
 					'email'     => $email,
-					'purchases' => edd_count_purchases_of_customer( $email ),
-					'amount'    => edd_format_amount( edd_purchase_total_of_user( $email ) )
+					'purchases' => $stats['purchases'],
+					'amount'    => edd_format_amount( $stats['total_spent'] )
 				);
 			}
 		}
 
 		$data = apply_filters( 'edd_export_get_data', $data );
 		$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
-		echo memory_get_usage() - $startMemory; exit;
+
 		return $data;
 	}
 }

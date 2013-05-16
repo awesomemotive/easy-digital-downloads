@@ -137,6 +137,64 @@ function edd_has_purchases( $user_id = null ) {
 	return false; // User has never purchased anything
 }
 
+
+/**
+ * Get Purchase Status for User
+ *
+ * CRetrieves the purchase count and the total amount spent for a specific user
+ *
+ * @access      public
+ * @since       1.6
+ * @param       $user int|string - the ID or email of the customer to retrieve stats for
+ * @param       $mode string - "test" or "live"
+ * @return      array
+ */
+function edd_get_purchase_stats_by_user( $user = '', $mode = 'live' ) {
+
+	global $wpdb;
+
+	if( is_email( $user ) )
+		$field = 'email';
+	elseif( is_numeric( $user ) )
+		$field = 'id';
+	else
+		return false;
+
+	$stats = array(
+		'purchases'   => 0,
+		'total_spent' => 0
+	);
+
+	$purchases = $wpdb->get_col( $wpdb->prepare(
+		"SELECT wpmb.meta_value AS payment_total
+		FROM wp_postmeta wpm
+		LEFT JOIN wp_postmeta wpma
+			ON wpma.post_id = wpm.post_id
+			AND wpma.meta_key = '_edd_payment_user_email'
+			AND wpma.meta_value = '%s'
+		LEFT JOIN wp_postmeta wpmb
+			ON wpmb.post_id = wpma.post_id
+			AND wpmb.meta_key = '_edd_payment_total'
+		INNER JOIN wp_posts wp
+			ON wp.id = wpm.post_id
+			AND wp.post_status = 'publish'
+		WHERE wpm.meta_key = '_edd_payment_mode'
+		AND wpm.meta_value = '%s'",
+		$user,
+		$mode
+	) );
+
+	$purchases = array_filter( $purchases );
+
+	if( $purchases ) {
+		$stats['purchases']   = count( $purchases );
+		$stats['total_spent'] = round( array_sum( $purchases ), 2 );
+	}
+
+	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user, $mode );
+}
+
+
 /**
  * Count number of purchases of a customer
  *
@@ -151,18 +209,11 @@ function edd_count_purchases_of_customer( $user = null ) {
 	if ( empty( $user ) )
 		$user = get_current_user_id();
 
-	$args = array(
-		'number'   => -1,
-		'mode'     => 'live',
-		'user'     => $user,
-		'status'   => 'publish',
-		'fields'   => 'ids'
-	);
+	$mode  = edd_is_test_mode() ? 'test' : 'live';
 
-	$customer_purchases = edd_get_payments( $args );
-	if ( $customer_purchases )
-		return count( $customer_purchases );
-	return 0;
+	$stats = edd_get_purchase_stats_by_user( $user, $mode );
+
+	return $stats['purchases'];
 }
 
 /**
@@ -174,28 +225,14 @@ function edd_count_purchases_of_customer( $user = null ) {
  * @return      float - the total amount the user has spent
  */
 function edd_purchase_total_of_user( $user = null ) {
-	$args = array(
-		'number'   => -1,
-		'mode'     => 'live',
-		'user'     => $user,
-		'status'   => 'publish'
-	);
 
-	$customer_purchases = edd_get_payments( $args );
+	global $wpdb;
 
-	$amount = get_transient( md5( 'edd_customer_total_' . $user ) );
-	if ( false === $amount ) {
-		$amount = 0;
+	$mode  = edd_is_test_mode() ? 'test' : 'live';
 
-		if ( $customer_purchases ) :
-			foreach ( $customer_purchases as $purchase ) :
-				$amount += edd_get_payment_amount( $purchase->ID );
-			endforeach;
-		endif;
-		set_transient( md5( 'edd_customer_total_' . $user ), $amount );
-	}
+	$stats = edd_get_purchase_stats_by_user( $user, $mode );
 
-	return round( $amount, 2 );
+	return $stats['total_spent'];
 }
 
 /**
