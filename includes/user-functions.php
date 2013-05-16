@@ -155,7 +155,8 @@ function edd_count_purchases_of_customer( $user = null ) {
 		'number'   => -1,
 		'mode'     => 'live',
 		'user'     => $user,
-		'status'   => 'publish'
+		'status'   => 'publish',
+		'fields'   => 'ids'
 	);
 
 	$customer_purchases = edd_get_payments( $args );
