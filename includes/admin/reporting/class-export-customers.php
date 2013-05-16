@@ -135,16 +135,16 @@ class EDD_Customers_Export extends EDD_Export {
 			$i = 0;
 
 			foreach ( $emails as $email ) {
-				$wp_user = get_user_by( 'email', $email );
-				$stats   = edd_get_purchase_stats_by_user( $email );
 
 				if( 'emails' != $_POST['edd_export_option'] ) {
+					$wp_user = get_user_by( 'email', $email );
 					$data[$i]['name'] = $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' );
 				}
 
 				$data[$i]['email'] = $email;
 
 				if( 'full' == $_POST['edd_export_option'] ) {
+					$stats = edd_get_purchase_stats_by_user( $email );
 					$data[$i]['purchases'] = $stats['purchases'];
 					$data[$i]['amount']    = edd_format_amount( $stats['total_spent'] );
 				}
