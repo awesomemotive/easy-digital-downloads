@@ -405,6 +405,16 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
+	// Customer Export
+	$( '#edd_customer_export_download' ).change( function() {
+		var $this = $(this);
+		if( $this.val() == '0' ) {
+			$( '#edd_customer_export_option' ).show();
+		} else {
+			$( '#edd_customer_export_option' ).hide();
+		}
+	});
+
 	// Hide local tax opt in
     if( $('input[name="edd_settings_taxes[tax_condition]"]:checked').val() != 'local' ) {
         $('input[name="edd_settings_taxes[tax_condition]"]').parent().parent().next().hide();

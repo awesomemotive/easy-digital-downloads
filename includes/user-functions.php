@@ -169,7 +169,7 @@ function edd_get_purchase_stats_by_user( $user = '', $mode = 'live' ) {
 		FROM {$wpdb->prefix}postmeta {$wpdb->prefix}m
 		LEFT JOIN {$wpdb->prefix}postmeta {$wpdb->prefix}ma
 			ON {$wpdb->prefix}ma.post_id = {$wpdb->prefix}m.post_id
-			AND {$wpdb->prefix}ma.meta_key = '_edd_payment_user_email'
+			AND {$wpdb->prefix}ma.meta_key = '_edd_payment_user_" . $field . "'
 			AND {$wpdb->prefix}ma.meta_value = '%s'
 		LEFT JOIN {$wpdb->prefix}postmeta {$wpdb->prefix}mb
 			ON {$wpdb->prefix}mb.post_id = {$wpdb->prefix}ma.post_id
