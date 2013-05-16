@@ -140,7 +140,17 @@ add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
  * @return void
  */
 function edd_load_admin_scripts( $hook ) {
-	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_options, $edd_upgrades_screen;;
+	global $post,
+	$pagenow,
+	$edd_discounts_page,
+	$edd_payments_page,
+	$edd_settings_page,
+	$edd_reports_page,
+	$edd_system_info_page,
+	$edd_add_ons_page,
+	$edd_options,
+	$edd_upgrades_screen,
+	$wp_version;
 
 	$js_dir = EDD_PLUGIN_URL . 'assets/js/';
 	$css_dir = EDD_PLUGIN_URL . 'assets/css/';
@@ -168,6 +178,10 @@ function edd_load_admin_scripts( $hook ) {
 	if ( $hook == $edd_settings_page ) {
 		wp_enqueue_style( 'colorbox', $css_dir . 'colorbox' . $suffix . '.css', array(), '1.3.20' );
 		wp_enqueue_script( 'colorbox', $js_dir . 'jquery.colorbox-min.js', array( 'jquery' ), '1.3.20' );
+		if( function_exists( 'wp_enqueue_media' ) && version_compare( $wp_version, '3.5', '>=' ) ) {
+        	 //call for new media manager
+         	wp_enqueue_media();
+      }
 	}
 	wp_enqueue_style( 'jquery-chosen', $css_dir . 'chosen' . $suffix . '.css', array(), EDD_VERSION );
 	wp_enqueue_script( 'jquery-chosen', $js_dir . 'chosen.jquery.min.js', array( 'jquery' ), EDD_VERSION );
