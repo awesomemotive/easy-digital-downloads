@@ -190,7 +190,7 @@ function edd_setup_download_taxonomies() {
 
 	/** Categories */
 	$category_labels = array(
-		'name' 				=> _x( 'Download Categories', 'taxonomy general name', 'edd' ),
+		'name' 				=> sprintf( _x( '%s Categories', 'taxonomy general name', 'edd' ), edd_get_label_singular() ),
 		'singular_name' 	=> _x( 'Category', 'taxonomy singular name', 'edd' ),
 		'search_items' 		=> __( 'Search Categories', 'edd'  ),
 		'all_items' 		=> __( 'All Categories', 'edd'  ),
@@ -217,7 +217,7 @@ function edd_setup_download_taxonomies() {
 
 	/** Tags */
 	$tag_labels = array(
-		'name' 				=> _x( 'Download Tags', 'taxonomy general name', 'edd' ),
+		'name' 				=> sprintf( _x( '%s Tags', 'taxonomy general name', 'edd' ), edd_get_label_singular() ),
 		'singular_name' 	=> _x( 'Tag', 'taxonomy singular name', 'edd' ),
 		'search_items' 		=> __( 'Search Tags', 'edd'  ),
 		'all_items' 		=> __( 'All Tags', 'edd'  ),
