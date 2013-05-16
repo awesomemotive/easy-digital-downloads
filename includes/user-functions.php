@@ -165,24 +165,22 @@ function edd_get_purchase_stats_by_user( $user = '', $mode = 'live' ) {
 		'total_spent' => 0
 	);
 
-	$purchases = $wpdb->get_col( $wpdb->prepare(
-		"SELECT wpmb.meta_value AS payment_total
-		FROM wp_postmeta wpm
-		LEFT JOIN wp_postmeta wpma
-			ON wpma.post_id = wpm.post_id
-			AND wpma.meta_key = '_edd_payment_user_email'
-			AND wpma.meta_value = '%s'
-		LEFT JOIN wp_postmeta wpmb
-			ON wpmb.post_id = wpma.post_id
-			AND wpmb.meta_key = '_edd_payment_total'
-		INNER JOIN wp_posts wp
-			ON wp.id = wpm.post_id
-			AND wp.post_status = 'publish'
-		WHERE wpm.meta_key = '_edd_payment_mode'
-		AND wpm.meta_value = '%s'",
-		$user,
-		$mode
-	) );
+	$query = "SELECT {$wpdb->prefix}mb.meta_value AS payment_total
+		FROM {$wpdb->prefix}postmeta {$wpdb->prefix}m
+		LEFT JOIN {$wpdb->prefix}postmeta {$wpdb->prefix}ma
+			ON {$wpdb->prefix}ma.post_id = {$wpdb->prefix}m.post_id
+			AND {$wpdb->prefix}ma.meta_key = '_edd_payment_user_email'
+			AND {$wpdb->prefix}ma.meta_value = '%s'
+		LEFT JOIN {$wpdb->prefix}postmeta {$wpdb->prefix}mb
+			ON {$wpdb->prefix}mb.post_id = {$wpdb->prefix}ma.post_id
+			AND {$wpdb->prefix}mb.meta_key = '_edd_payment_total'
+		INNER JOIN {$wpdb->prefix}posts {$wpdb->prefix}
+			ON {$wpdb->prefix}.id = {$wpdb->prefix}m.post_id
+			AND {$wpdb->prefix}.post_status = 'publish'
+		WHERE {$wpdb->prefix}m.meta_key = '_edd_payment_mode'
+		AND {$wpdb->prefix}m.meta_value = '%s'";
+
+	$purchases = $wpdb->get_col( $wpdb->prepare( $query, $user, $mode ) );
 
 	$purchases = array_filter( $purchases );
 
