@@ -34,7 +34,7 @@ jQuery(document).ready(function ($) {
                     var quantity = parseInt($(this).text(), 10) - 1;
                     $(this).text(quantity);
                 });
-                
+
                 data = {
     				action: 'edd_get_subtotal',
 					nonce: edd_scripts.ajax_nonce
@@ -44,14 +44,14 @@ jQuery(document).ready(function ($) {
 					$('.cart_item.edd_subtotal span').html( response );
 
 				});
-                
+
                 if(!$('.edd-cart-item').length) {
                     $('.cart_item.edd_subtotal').hide();
                     $('.edd-cart-number-of-items').hide();
                     $('.cart_item.edd_checkout').hide();
                     $('.edd-cart').append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
                 } else {
-                    
+
                 }
             }
         });
@@ -121,7 +121,7 @@ jQuery(document).ready(function ($) {
 
                     $(cart_item_response).insertBefore('.cart_item.edd_subtotal');
                 }
-                
+
                  $('.cart_item.edd_subtotal span').html( $('.temp-subtotal').text() );
                  $('.temp-subtotal').remove();
 
