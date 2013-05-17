@@ -138,7 +138,7 @@ $status    = edd_get_payment_status( $payment, true );
 					<?php endif; ?>
 
 					<?php if( edd_is_payment_complete( $payment->ID ) ) : ?>
-					<ul>
+					<ul class="edd_purchase_receipt_files">
 						<?php
 						if ( $download_files && is_array( $download_files ) ) :
 
@@ -158,26 +158,31 @@ $status    = edd_get_payment_status( $payment, true );
 							$bundled_products = edd_get_bundled_products( $item['id'] );
 
 							foreach( $bundled_products as $bundle_item ) : ?>
-								<li class="edd_bundled_product_name"><?php echo get_the_title( $bundle_item ); ?></li>
-								<?php
-								$download_files = edd_get_download_files( $bundle_item );
-
-								if( $download_files && is_array( $download_files ) ) :
-
-									foreach ( $download_files as $filekey => $file ) :
-
-										$download_url = edd_get_download_file_url( $meta['key'], $meta['email'], $filekey, $bundle_item ); ?>
-										<li class="edd_download_file">
-											<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a>
-										</li>
+								<li class="edd_bundled_product">
+									<span class="edd_bundled_product_name"><?php echo get_the_title( $bundle_item ); ?></span>
+									<ul class="edd_bundled_product_files">
 										<?php
-										do_action( 'edd_receipt_bundle_files', $filekey, $file, $item['id'], $bundle_item, $payment->ID, $meta );
+										$download_files = edd_get_download_files( $bundle_item );
 
-									endforeach;
-								else :
-									echo '<li>' . __( 'No downloadable files found for this bundled item.', 'edd' ) . '</li>';
-								endif;
+										if( $download_files && is_array( $download_files ) ) :
 
+											foreach ( $download_files as $filekey => $file ) :
+
+												$download_url = edd_get_download_file_url( $meta['key'], $meta['email'], $filekey, $bundle_item ); ?>
+												<li class="edd_download_file">
+													<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a>
+												</li>
+												<?php
+												do_action( 'edd_receipt_bundle_files', $filekey, $file, $item['id'], $bundle_item, $payment->ID, $meta );
+
+											endforeach;
+										else :
+											echo '<li>' . __( 'No downloadable files found for this bundled item.', 'edd' ) . '</li>';
+										endif;
+										?>
+									</ul>
+								</li>
+								<?php
 							endforeach;
 
 						else :
