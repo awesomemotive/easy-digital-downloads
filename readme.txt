@@ -10,7 +10,6 @@ Tested up to: 3.6
 Stable Tag: 1.5.2.2
 License: GNU Version 2 or Any Later Version
 
-
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
 == Description ==
@@ -180,7 +179,6 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 7. Earnings and sales reports
 8. Add to cart / purchase button
 9. Checkout screen
-
 
 == Changelog ==
 
