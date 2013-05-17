@@ -108,6 +108,24 @@ function edd_ajax_add_to_cart() {
 add_action( 'wp_ajax_edd_add_to_cart', 'edd_ajax_add_to_cart' );
 add_action( 'wp_ajax_nopriv_edd_add_to_cart', 'edd_ajax_add_to_cart' );
 
+
+
+/**
+ * Adds item to the cart via AJAX.
+ *
+ * @since 1.0
+ * @return void
+ */
+function edd_ajax_get_subtotal() {
+  if (  check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
+    echo edd_currency_filter( edd_get_cart_amount( false ) );
+  }
+  edd_die();
+}
+
+add_action( 'wp_ajax_edd_get_subtotal', 'edd_ajax_get_subtotal' );
+add_action( 'wp_ajax_nopriv_edd_get_subtotal', 'edd_ajax_get_subtotal' );
+
 /**
  * Validates the supplied discount sent via AJAX.
  *
