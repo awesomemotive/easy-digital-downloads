@@ -158,7 +158,7 @@ $status    = edd_get_payment_status( $payment, true );
 							$bundled_products = edd_get_bundled_products( $item['id'] );
 
 							foreach( $bundled_products as $bundle_item ) : ?>
-								<li class="edd_bundled_product"><strong><?php echo get_the_title( $bundle_item ); ?></strong></li>
+								<li class="edd_bundled_product"><?php echo get_the_title( $bundle_item ); ?></li>
 								<?php
 								$download_files = edd_get_download_files( $bundle_item );
 
