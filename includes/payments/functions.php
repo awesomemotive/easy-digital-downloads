@@ -713,7 +713,7 @@ function edd_payment_amount( $payment_id = 0 ) {
 function edd_get_payment_amount( $payment_id ) {
 	$amount = get_post_meta( $payment_id, '_edd_payment_total', true );
 
-	if ( empty( $amount ) && $amount != 0 ) {
+	if ( ! is_numeric( $amount ) ) {
 		$payment_meta = edd_get_payment_meta( $payment_id );
 		$amount       = $payment_meta['amount'];
 	}
