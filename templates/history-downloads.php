@@ -41,7 +41,7 @@ if ( $purchases ) :
 								foreach ( $download_files as $filekey => $file ) {
 									$download_url = edd_get_download_file_url( $purchase_data['key'], $purchase_data['email'], $filekey, $id, $price_id );
 
-									echo '<div class="edd_download_file"><a href="' . esc_url( $download_url ) . '" class="edd_download_file_link">' . esc_html( $file['name'] ) . '</a></div>';
+									echo '<div class="edd_download_file"><a href="' . esc_url( $download_url ) . '" class="edd_download_file_link">' . edd_get_file_name( $file ) . '</a></div>';
 
 									do_action( 'edd_download_history_files', $filekey, $file, $id, $post->ID, $purchase_data );
 								}
