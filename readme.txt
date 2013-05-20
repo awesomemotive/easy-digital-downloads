@@ -63,13 +63,14 @@ Easy Digital Downloads as been translated into the following languages:
 5. Italian
 6. Dutch
 7. European Portuguese
-8. Turkish
-9. Arabic
-10. Polish
-11. Russian
-12. Czech
-13. Japanese
-14. Farsi
+8. Brazilian Portuguese
+9. Turkish
+10. Arabic
+11. Polish
+12. Russian
+13. Czech
+14. Japanese
+15. Farsi
 
 Would you like to help translate the plugin into more languages? [Contact Pippin](http://easydigitaldownloads.com/contact-developer/).
 
