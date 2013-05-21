@@ -200,7 +200,7 @@ class EDD_HTML_Elements {
 			$output .= '<label class="edd-label" for="edd-' . sanitize_key( $name ) . '">' . esc_html( $label ) . '</label>';
 			if ( ! empty( $desc ) )
 				$output .= '<span class="edd-description">' . esc_html( $desc ) . '</span>';
-			$output = '<input type="text" name="edd_' . esc_attr( $name ) . '" id="edd-' . esc_attr( sanitize_key( $name ) )  . '" value="' . esc_attr( $value ) . '"/>';
+			$output = '<input type="text" name="edd_' . esc_attr( $name ) . '" id="edd-' . esc_attr( $name )  . '" value="' . esc_attr( $value ) . '"/>';
 		$output .= '</p>';
 
 		return $output;
