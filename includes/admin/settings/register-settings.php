@@ -289,10 +289,23 @@ function edd_register_settings() {
 				),
 				'tax_rate' => array(
 					'id' => 'tax_rate',
-					'name' => __('Tax Rate', 'edd'),
-					'desc' => __('Enter a percentage, such as 6.5.', 'edd'),
+					'name' => __('Default Tax Rate', 'edd'),
+					'desc' => __('Enter a percentage, such as 6.5. Customers in your base region will be charged this rate.', 'edd'),
 					'type' => 'text',
 					'size' => 'small'
+				),
+				'base_country' => array(
+					'id' => 'base_country',
+					'name' => __('Base Country', 'edd'),
+					'desc' => __('Where does your store operate from?', 'edd'),
+					'type' => 'select',
+					'options' => edd_get_country_list()
+				),
+				'base_state' => array(
+					'id' => 'base_state',
+					'name' => __('Base State / Province', 'edd'),
+					'desc' => __('What state / provice does your store operate from?', 'edd'),
+					'type' => 'shop_states'
 				),
 				'prices_include_tax' => array(
 					'id' => 'prices_include_tax',
