@@ -509,9 +509,10 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
  * @return string Total tax amount
  */
 function edd_get_cart_tax( $discounts = false ) {
-	$subtotal = edd_get_cart_subtotal( false );
-	$subtotal += edd_get_cart_fee_total();
-	$cart_tax = 0;
+	$subtotal     = edd_get_cart_subtotal( false );
+	$subtotal    += edd_get_cart_fee_total();
+	$cart_tax     = 0;
+	$billing_info = edd_get_purchase_cc_info();
 
 	if ( edd_is_cart_taxed() ) {
 
@@ -519,7 +520,7 @@ function edd_get_cart_tax( $discounts = false ) {
 			$subtotal -= edd_get_cart_discounted_amount( $discounts );
 		}
 
-		$cart_tax = edd_calculate_tax( $subtotal, false );
+		$cart_tax = edd_calculate_tax( $subtotal, false, $billing_info['card_country'], $billing_info['card_state'] );
 
 	}
 
