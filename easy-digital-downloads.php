@@ -90,6 +90,7 @@ final class Easy_Digital_Downloads {
 	 */
 	public $html;
 
+
 	/**
 	 * Main Easy_Digital_Downloads Instance
 	 *
