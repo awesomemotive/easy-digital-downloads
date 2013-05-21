@@ -168,3 +168,27 @@ function edd_get_menu_access_level() {
 
 	return apply_filters( 'edd_menu_access_level', 'manage_options' );
 }
+
+
+
+/**
+ * Check if only local taxes are enabled meaning users must opt in by using the
+ * option set from the EDD Settings.
+ *
+ * @since 1.3.3
+ * @deprecated 1.6
+ * @global $edd_options
+ * @return bool $local_only
+ */
+function edd_local_taxes_only() {
+
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '1.6', 'no alternatives', $backtrace );
+
+	global $edd_options;
+
+	$local_only = isset( $edd_options['tax_condition'] ) && $edd_options['tax_condition'] == 'local';
+
+	return apply_filters( 'edd_local_taxes_only', $local_only );
+}
