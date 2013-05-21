@@ -3,19 +3,28 @@ jQuery(document).ready(function($) {
         $edd_cart_amount = $('.edd_cart_amount');
 
     // Update state/province field on checkout page
-    $body.on('change', '#edd_cc_address select,#edd_cc_address input', function() {
-        var $billing_country = $('select[name=billing_country]');
+    $body.on('change', '#edd_cc_address select[name=billing_country]', function() {
+        var $this = $(this);
+        data = {
+            action: 'edd_get_shop_states',
+            country: $this.val(),
+            field_name: 'card_state'
+        };
+        $.post(edd_global_vars.ajaxurl, data, function (response) {
+            if( 'nostates' == response ) {
+                var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
+                $this.parent().next().find('input,select').remove();
+                $this.parent().next().append( text_field );
+            } else {
+                $this.parent().next().find('input,select').remove();
+                $this.parent().next().append( response );
+            }
+        });
+        return false;
+        recalculate_taxes();
+    });
 
-        if( $billing_country.val() == 'US') {
-            $('#card_state_other, #card_state_ca').css('display', 'none');
-            $('#card_state_us').css('display', '');
-        } else if( $billing_country.val() == 'CA') {
-            $('#card_state_other, #card_state_us').css('display', 'none');
-            $('#card_state_ca').css('display', '');
-        } else {
-            $('#card_state_us, #card_state_ca').css('display', 'none');
-            $('#card_state_other').css('display', '');
-        }
+    $body.on('change', '#edd_cc_address input, #edd_cc_address select', function() {
         recalculate_taxes();
     });
 
@@ -53,8 +62,8 @@ jQuery(document).ready(function($) {
         var postData = {
             action: 'edd_recalculate_taxes',
             nonce: edd_global_vars.checkout_nonce,
-            country: $edd_cc_address.find('.billing-country').val(),
-            state: $edd_cc_address.find('.card-state:visible').val()
+            country: $edd_cc_address.find('#billing_country').val(),
+            state: $edd_cc_address.find('#card_state').val()
         };
 
         $.ajax({
