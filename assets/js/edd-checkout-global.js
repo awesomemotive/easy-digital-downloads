@@ -64,7 +64,7 @@ jQuery(document).ready(function($) {
             url: edd_global_vars.ajaxurl,
             success: function (tax_response) {
                 $('#edd_checkout_cart').replaceWith(tax_response.html);
-                $edd_cart_amount.html(tax_response.total);
+                $('.edd_cart_amount').html(tax_response.total);
             }
         }).fail(function (data) {
             console.log(data);
