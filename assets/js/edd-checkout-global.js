@@ -3,7 +3,7 @@ jQuery(document).ready(function($) {
         $edd_cart_amount = $('.edd_cart_amount');
 
     // Update state/province field on checkout page
-    $body.on('change', '#edd_cc_address select', function() {
+    $body.on('change', '#edd_cc_address select,#edd_cc_address input', function() {
         var $billing_country = $('select[name=billing_country]');
 
         if( $billing_country.val() == 'US') {
