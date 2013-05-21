@@ -265,6 +265,7 @@ function edd_ajax_get_states_field() {
 	edd_die();
 }
 add_action( 'wp_ajax_edd_get_shop_states', 'edd_ajax_get_states_field' );
+add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
 
 /**
  * Check for Download Price Variations via AJAX (this function can only be used
