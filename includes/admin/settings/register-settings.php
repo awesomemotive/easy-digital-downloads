@@ -318,24 +318,6 @@ function edd_register_settings() {
 						'no'  => __('No, I will enter prices exclusive of tax', 'edd')
 					)
 				),
-				'tax_condition' => array(
-					'id' => 'tax_condition',
-					'name' => __('Apply Taxes to:', 'edd'),
-					'desc' => __('Who should have tax added to their purchases?', 'edd'),
-					'type' => 'radio',
-					'std' => 'all',
-					'options' => array(
-						'all' 	=> __('Everyone', 'edd'),
-						'local' => __('Local residents only', 'edd')
-					)
-				),
-				'tax_location' => array(
-					'id' => 'tax_location',
-					'name' => __('Tax Opt-In', 'edd'),
-					'desc' => __('Customers will be given a checkbox to click if they reside in your local area. Please enter directions for them here. Customers <strong>must</strong> opt into this.', 'edd'),
-					'type' => 'text',
-					'size' => 'large'
-				),
 				'checkout_include_tax' => array(
 					'id' => 'checkout_include_tax',
 					'name' => __('Display during checkout', 'edd'),
