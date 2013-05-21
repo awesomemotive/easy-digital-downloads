@@ -102,17 +102,26 @@ function edd_register_styles() {
 	$file          = 'edd' . $suffix . '.css';
 	$templates_dir = 'edd_templates/';
 
-	$child_theme_style_sheet  = trailingslashit( get_stylesheet_directory() ) . $templates_dir . $file;
-	$parent_theme_style_sheet = trailingslashit( get_template_directory() ) . $templates_dir . $file;
-	$edd_plugin_style_sheet   = trailingslashit( edd_get_templates_dir() ) . $file;
+	$child_theme_style_sheet    = trailingslashit( get_stylesheet_directory() ) . $templates_dir . $file;
+	$child_theme_style_sheet_2  = trailingslashit( get_stylesheet_directory() ) . $templates_dir . 'edd.css';
+	$parent_theme_style_sheet   = trailingslashit( get_template_directory()   ) . $templates_dir . $file;
+	$parent_theme_style_sheet_2 = trailingslashit( get_template_directory()   ) . $templates_dir . 'edd.css';
+	$edd_plugin_style_sheet     = trailingslashit( edd_get_templates_dir()    ) . $file;
 
-	// If not debugging and .min.css exists in preferred directory, use it. Otherwise, if .css exists in the preferred directory, use it.
-	// If still nothing found, try the next directory.
-	if ( $suffix && file_exists( $child_theme_style_sheet ) || file_exists( $child_theme_style_sheet ) ) {
-		$url = trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . $file;
-	} elseif ( $suffix && file_exists( $parent_theme_style_sheet ) || file_exists( $parent_theme_style_sheet ) ) {
-		$url = trailingslashit( get_template_directory_uri() ) . $templates_dir . $file;
-	} elseif ( $suffix && file_exists( $edd_plugin_style_sheet ) || file_exists( $edd_plugin_style_sheet ) ) {
+	// Look in the child theme directory first, followed by the parent theme, followed by the EDD core templates directory
+	// Also look for the min version first, followed by non minified version, even if SCRIPT_DEBUG is not enabled.
+	// This allows users to copy just edd.css to their theme
+	if ( file_exists( $child_theme_style_sheet ) || ( ! empty( $suffix ) && ( $nonmin = file_exists( $child_theme_style_sheet_2 ) ) ) ) {
+		if( ! empty( $nonmin ) )
+			$url = trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . 'edd.css';
+		else
+			$url = trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . $file;
+	} elseif ( file_exists( $parent_theme_style_sheet ) || ( ! empty( $suffix ) && ( $nonmin = file_exists( $parent_theme_style_sheet_2 ) ) ) ) {
+		if( ! empty( $nonmin ) )
+			$url = trailingslashit( get_template_directory_uri() ) . $templates_dir . 'edd.css';
+		else
+			$url = trailingslashit( get_template_directory_uri() ) . $templates_dir . $file;
+	} elseif ( file_exists( $edd_plugin_style_sheet ) || file_exists( $edd_plugin_style_sheet ) ) {
 		$url = trailingslashit( edd_get_templates_url() ) . $file;
 	}
 

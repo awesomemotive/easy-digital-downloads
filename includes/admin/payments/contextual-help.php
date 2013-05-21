@@ -47,6 +47,18 @@ function edd_payments_contextual_help() {
 	) );
 
 	$screen->add_help_tab( array(
+		'id'	    => 'edd-payments-search',
+		'title'	    => __( 'Search Payments', 'edd' ),
+		'content'	=>
+			'<p>' . __( 'The payment history can be searched in several different ways:', 'edd' ) . '</p>' .
+			'<ul>
+				<li>' . __( 'You can enter the customer\'s email address', 'edd' ) . '</li>
+				<li>' . __( 'You can enter the customer\'s name', 'edd' ) . '</li>
+				<li>' . __( 'You can enter the 32-character purchase key', 'edd' ) . '</li>
+			</ul>'
+	) );
+
+	$screen->add_help_tab( array(
 		'id'	    => 'edd-payments-details',
 		'title'	    => __( 'Order Details', 'edd' ),
 		'content'	=>

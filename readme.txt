@@ -10,7 +10,6 @@ Tested up to: 3.6
 Stable Tag: 1.5.2.2
 License: GNU Version 2 or Any Later Version
 
-
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
 == Description ==
@@ -64,13 +63,14 @@ Easy Digital Downloads as been translated into the following languages:
 5. Italian
 6. Dutch
 7. European Portuguese
-8. Turkish
-9. Arabic
-10. Polish
-11. Russian
-12. Czech
-13. Japanese
-14. Farsi
+8. Brazilian Portuguese
+9. Turkish
+10. Arabic
+11. Polish
+12. Russian
+13. Czech
+14. Japanese
+15. Farsi
 
 Would you like to help translate the plugin into more languages? [Contact Pippin](http://easydigitaldownloads.com/contact-developer/).
 
@@ -180,7 +180,6 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 7. Earnings and sales reports
 8. Add to cart / purchase button
 9. Checkout screen
-
 
 == Changelog ==
 
