@@ -56,6 +56,13 @@ function edd_taxes_after_discounts() {
 	return apply_filters( 'edd_taxes_after_discounts', isset( $edd_options['taxes_after_discounts'] ) );
 }
 
+function edd_get_tax_rates() {
+
+	$rates = get_option( 'edd_tax_rates', array() );
+	return apply_filters( 'edd_get_tax_rates', $rates );
+}
+
+
 /**
  * Get taxation rate
  *
