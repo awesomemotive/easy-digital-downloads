@@ -117,13 +117,13 @@ function edd_get_tax_rate( $country = false, $state = false ) {
  * @param $amount float The original amount to calculate a tax cost
  * @return float $tax Taxed amount
  */
-function edd_calculate_tax( $amount, $sum = true ) {
+function edd_calculate_tax( $amount, $sum = true, $country = false, $state = false ) {
 	global $edd_options;
 
 	// Not using taxes
 	if ( ! edd_use_taxes() ) return $amount;
 
-	$rate = edd_get_tax_rate();
+	$rate = edd_get_tax_rate( $country, $state );
 	$tax = 0.00;
 	$prices_include_tax = edd_prices_include_tax();
 
@@ -224,12 +224,13 @@ function edd_prices_include_tax() {
 /**
  * Is the cart taxed?
  *
+ * This used to include a check for local tax opt-in, but that was ripped out in v1.6, so this is just a wrapper now
+ *
  * @since 1.5
  * @return bool
  */
 function edd_is_cart_taxed() {
-	$in_region = true; // TODO: make this work
-	return edd_use_taxes() && $in_region;
+	return edd_use_taxes();
 }
 
 
