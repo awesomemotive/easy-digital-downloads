@@ -266,6 +266,20 @@ function edd_default_cc_address_fields() {
 }
 add_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
 
+
+/**
+ * Renders the billing address fields for cart taxation
+ *
+ * @since 1.6
+ * @return void
+ */
+function edd_checkout_tax_fields() {
+	if( edd_cart_needs_tax_address_fields() )
+		edd_default_cc_address_fields();
+}
+add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_tax_fields', 999 );
+
+
 /**
  * Renders the user registration fields. If the user is logged in, a login
  * form is displayed other a registration form is provided for the user to
