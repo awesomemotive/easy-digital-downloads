@@ -270,6 +270,34 @@ function edd_ajax_opt_out_local_taxes() {
 add_action( 'wp_ajax_edd_local_tax_opt_out', 'edd_ajax_opt_out_local_taxes' );
 add_action( 'wp_ajax_nopriv_edd_local_tax_opt_out', 'edd_ajax_opt_out_local_taxes' );
 
+
+/**
+ * Retrieve a states drop down
+ *
+ * @since 1.6
+ * @return void
+ */
+function edd_ajax_get_states_field() {
+	if( empty( $_POST['country'] ) )
+		$_POST['country'] = edd_get_shop_country();
+
+	$states = edd_get_shop_states( $_POST['country'] );
+
+	if( ! empty( $states ) ) {
+
+		$response = EDD()->html->select( edd_get_shop_states( $_POST['country'] ), $_POST['field_name'] );
+
+	} else {
+
+		$response = 'nostates';
+	}
+
+	echo $response;
+
+	edd_die();
+}
+add_action( 'wp_ajax_edd_get_shop_states', 'edd_ajax_get_states_field' );
+
 /**
  * Check for Download Price Variations via AJAX (this function can only be used
  * in WordPress Admin). This function isused for the Edit Payment screen when downloads
