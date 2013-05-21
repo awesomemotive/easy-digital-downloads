@@ -224,5 +224,22 @@ function edd_prices_include_tax() {
  * @return bool
  */
 function edd_is_cart_taxed() {
-	return edd_use_taxes() && ( ( edd_local_tax_opted_in() && edd_local_taxes_only() ) || ! edd_local_taxes_only() );
+	$in_region = true; // TODO: make this work
+	return edd_use_taxes() && $in_region;
+}
+
+
+/**
+ * Should we show address fields for taxation purposes?
+ *
+ * @since 1.y
+ * @return bool
+ */
+function edd_cart_needs_tax_address_fields() {
+
+	if( ! edd_is_cart_taxed() )
+		return false;
+
+	return ! did_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
+
 }
