@@ -163,6 +163,30 @@ class EDD_HTML_Elements {
 
 
 	/**
+	 * Renders an HTML Dropdown
+	 *
+	 * @access public
+	 * @since 1.6
+	 * @param string $options Options of the dropdown
+	 * @param string $name Name attribute of the dropdown
+	 * @param int    $selected Option key to select by default
+	 * @return string $output The dropdown
+	 */
+	public function select( $options = array(), $name = 'year', $selected = 0 ) {
+
+		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
+
+		foreach( $options as $key => $option ) {
+			$output .= '<option value="' . esc_attr( $key ) . '"' . selected( $selected, $key, false ) . '>' . esc_html( $option ) . '</option>';
+		}
+
+		$output .= '</select>';
+
+		return $output;
+	}
+
+
+	/**
 	 * Renders an HTML Text field
 	 *
 	 * @access public
