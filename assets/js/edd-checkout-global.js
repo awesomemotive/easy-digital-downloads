@@ -1,7 +1,7 @@
 jQuery(document).ready(function($) {
 
     // Update state/province field on checkout page
-    $( 'body').change( 'select[name=billing_country]', function() {
+    $('body').on('change', '#edd_cc_address select', function() {
         if( $('select[name=billing_country]').val() == 'US') {
             $('#card_state_other').css('display', 'none');
             $('#card_state_us').css('display', '');
@@ -15,6 +15,7 @@ jQuery(document).ready(function($) {
             $('#card_state_us').css('display', 'none');
             $('#card_state_ca').css('display', 'none');
         }
+        recalculate_taxes();
     });
 
     /* Credit card verification */
@@ -40,9 +41,7 @@ jQuery(document).ready(function($) {
         });
     });
 
-    // Toggle the tax amount shown on checkout
-    $('body').on('change', '#edd_cc_address select', function() {
-
+    function recalculate_taxes() {
         if( '1' != edd_global_vars.taxes_enabled )
             return; // Taxes not enabled
 
@@ -65,7 +64,7 @@ jQuery(document).ready(function($) {
         }).fail(function (data) {
             console.log(data);
         });
-    });
+    }
 
     // Make sure a gateway is selected
     $('body').on('submit', '#edd_payment_mode', function() {
