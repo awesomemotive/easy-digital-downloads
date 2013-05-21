@@ -33,7 +33,7 @@ function edd_get_shop_country() {
  */
 function edd_get_shop_state() {
 	global $edd_options;
-	$country = isset( $edd_options['base_state'] ) ? $edd_options['base_state'] : false;
+	$state = isset( $edd_options['base_state'] ) ? $edd_options['base_state'] : false;
 	return apply_filters( 'edd_shop_state', $state );
 }
 
