@@ -1068,7 +1068,6 @@ function edd_tax_rates_callback($args) {
 				<td>
 					<?php
 					$states = edd_get_shop_states( $rate['country'] );
-					print_r( $rate );
 					if( ! empty( $states ) ) {
 						echo EDD()->html->select( $states, 'tax_rates[' . $key . '][state]', $rate['state'] );
 					} else {
