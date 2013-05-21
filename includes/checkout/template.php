@@ -224,11 +224,11 @@ function edd_default_cc_address_fields() {
 		<p id="edd-card-country-wrap">
 			<label class="edd-label"><?php _e( 'Billing Country', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The country for your billing address.', 'edd' ); ?></span>
-			<select name="billing_country" class="billing-country edd-select required">
+			<select name="billing_country" id="billing_country" class="billing_country edd-select required">
 				<?php
 				$countries = edd_get_country_list();
 				foreach( $countries as $country_code => $country ) {
-				  echo '<option value="' . $country_code . '">' . $country . '</option>';
+				  echo '<option value="' . $country_code . '"' . selected( $country_code, edd_get_shop_country(), false ) . '>' . $country . '</option>';
 				}
 				?>
 			</select>
@@ -236,24 +236,21 @@ function edd_default_cc_address_fields() {
 		<p id="edd-card-state-wrap">
 			<label class="edd-label"><?php _e( 'Billing State / Province', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The state or province for your billing address.', 'edd' ); ?></span>
-			<input type="text" size="6" name="card_state_other" id="card_state_other" class="card-state edd-input" placeholder="<?php _e( 'State / Province', 'edd' ); ?>" style="display:none;"/>
-            <?php $default_state = edd_get_shop_state(); ?>
-            <select name="card_state_us" id="card_state_us" class="card-state edd-select required">
+            <?php
+            $default_state = edd_get_shop_state();
+            $states        = edd_get_shop_states();
+
+            if( ! empty( $states ) ) : ?>
+            <select name="card_state" id="card_state" class="card_state edd-select required">
                 <?php
-                    $states = edd_get_states_list();
                     foreach( $states as $state_code => $state ) {
                         echo '<option value="' . $state_code . '"' . selected( $state_code, $default_state, false ) . '>' . $state . '</option>';
                     }
                 ?>
             </select>
-            <select name="card_state_ca" id="card_state_ca" class="card-state edd-select required" style="display: none;">
-                <?php
-                    $provinces = edd_get_provinces_list();
-                    foreach( $provinces as $province_code => $province ) {
-                        echo '<option value="' . $province_code . '"' . selected( $state_code, $default_state, false ) . '>' . $province . '</option>';
-                    }
-                ?>
-            </select>
+        	<?php else : ?>
+			<input type="text" size="6" name="card_state" id="card_state" class="card_state edd-input" placeholder="<?php _e( 'State / Province', 'edd' ); ?>"/>
+			<?php endif; ?>
 		</p>
 		<p id="edd-card-zip-wrap">
 			<label class="edd-label"><?php _e( 'Billing Zip / Postal Code', 'edd' ); ?></label>
