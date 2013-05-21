@@ -415,26 +415,75 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
-	// Hide local tax opt in
-    if( $('input[name="edd_settings_taxes[tax_condition]"]:checked').val() != 'local' ) {
-        $('input[name="edd_settings_taxes[tax_condition]"]').parent().parent().next().hide();
-    }
-    // Toggle local tax option
-    $('input[name="edd_settings_taxes[tax_condition]"]').on('change', function() {
-        var tax_opt_in = $(this).parent().parent().next();
-        if( $(this).val() == 'local' ) {
-            tax_opt_in.fadeIn();
-        } else {
-            tax_opt_in.fadeOut();
-        }
-    });
+	// Update base state field based on selected base country
+	$('select[name="edd_settings_taxes[base_country]"]').change(function() {
+		var $this = $(this), $tr = $this.closest('tr');
+		data = {
+			action: 'edd_get_shop_states',
+			country: $(this).val(),
+			field_name: 'edd_settings_taxes[base_state]'
+		};
+		$.post(ajaxurl, data, function (response) {
+			if( 'nostates' == response ) {
+				$tr.next().hide();
+			} else {
+				$tr.next().show();
+				$tr.next().find('select').replaceWith( response );
+			}
+		});
+
+		return false;
+	});
+
+	// Update tax rate state field based on selected rate country
+	$('body').on('change', '#edd_tax_rates select', function() {
+		var $this = $(this);
+		data = {
+			action: 'edd_get_shop_states',
+			country: $(this).val(),
+			field_name: $this.attr('name').replace('country', 'state')
+		};
+		$.post(ajaxurl, data, function (response) {
+			if( 'nostates' == response ) {
+				var text_field = '<input type="text" name="' + data.field_name + '" value=""/>';
+				$this.parent().next().find('select').replaceWith( text_field );
+			} else {
+				$this.parent().next().find('input,select').show();
+				$this.parent().next().find('input,select').replaceWith( response );
+			}
+		});
+
+		return false;
+	});
+
+	// Insert new tax rate row
+	$('#edd_add_tax_rate').on('click', function() {
+		var row = $('#edd_tax_rates tr:last');
+		var clone = row.clone();
+		var count = row.parent().find( 'tr' ).length;
+		clone.find( 'td input' ).val( '' );
+		clone.find( 'input, select' ).each(function() {
+			var name = $( this ).attr( 'name' );
+			name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
+			$( this ).attr( 'name', name ).attr( 'id', name );
+		});
+		clone.insertAfter( row );
+		return false;
+	});
+
+	// Remove tax row
+	$('body').on('click', '#edd_tax_rates .edd_remove_tax_rate', function() {
+		if( confirm( edd_vars.delete_tax_rate ) )
+			$(this).closest('tr').remove();
+		return false;
+	});
 
     // Hide Symlink option if Download Method is set to Direct
     if( $('select[name="edd_settings_misc[download_method]"]:selected').val() != 'direct' ) {
         $('select[name="edd_settings_misc[download_method]"]').parent().parent().next().hide();
         $('select[name="edd_settings_misc[download_method]"]').parent().parent().next().find('input').attr('checked', false);
     }
-    // Toggle local tax option
+    // Toggle download method option
     $('select[name="edd_settings_misc[download_method]"]').on('change', function() {
         var symlink = $(this).parent().parent().next();
         if( $(this).val() == 'direct' ) {
