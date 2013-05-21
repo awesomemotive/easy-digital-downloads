@@ -235,8 +235,8 @@ function edd_ajax_recalculate_taxes() {
 
 	edd_die();
 }
-add_action( 'wp_ajax_edd_local_tax_opt_in', 'edd_ajax_opt_into_local_taxes' );
-add_action( 'wp_ajax_nopriv_edd_local_tax_opt_in', 'edd_ajax_opt_into_local_taxes' );
+add_action( 'wp_ajax_edd_recalculate_taxes', 'edd_ajax_recalculate_taxes' );
+add_action( 'wp_ajax_nopriv_edd_recalculate_taxes', 'edd_ajax_recalculate_taxes' );
 
 /**
  * Opt out of local taxes via AJAX

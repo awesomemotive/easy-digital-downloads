@@ -416,16 +416,9 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 		}
 	}
 
-	if ( edd_use_taxes() && $add_taxes ) {
-		if ( edd_local_taxes_only() && ( isset( $_POST['edd_tax_opt_in'] ) || $local_override ) ) {
-			// Add the tax amount for a local resident
-			$tax = edd_get_cart_tax();
-			$amount += $tax;
-		} elseif ( ! edd_local_taxes_only() ) {
-			// Add the global tax amount
-			$tax = edd_get_cart_tax();
-			$amount += $tax;
-		}
+	if ( edd_use_taxes() && edd_is_cart_taxed() && $add_taxes ) {
+		$tax = edd_get_cart_tax();
+		$amount += $tax;
 	}
 
 	return apply_filters( 'edd_get_cart_amount', $amount, $add_taxes, $local_override );
