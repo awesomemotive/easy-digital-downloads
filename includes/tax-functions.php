@@ -70,16 +70,40 @@ function edd_get_tax_rates() {
  * @global $edd_options
  * @return float $trate Taxation rate
  */
-function edd_get_tax_rate() {
+function edd_get_tax_rate( $country = false, $state = false ) {
 	global $edd_options;
 
 	$rate = isset( $edd_options['tax_rate'] ) ? (float) $edd_options['tax_rate'] : 0;
+
+	if( empty( $country ) )
+		$country = isset( $_POST['country'] ) ? $_POST['country'] : false;
+
+	if( empty( $state ) )
+		$state = isset( $_POST['state'] ) ? $_POST['state'] : false;
+
+	if( ! empty( $country ) && ! empty( $state ) ) {
+		$tax_rates   = edd_get_tax_rates();
+
+		// Locate the tax rate for this country / state, if it exists
+		foreach( $tax_rates as $key => $tax_rate ) {
+
+			if( $country != $tax_rate['country'] )
+				continue;
+			if( $state   != $tax_rate['state'] )
+				continue;
+
+			$state_rate = $tax_rate['rate'];
+			if( ! empty( $state_rate ) ) {
+				$rate = number_format( $state_rate, 2 );
+			}
+		}
+	}
 
 	if( $rate > 1 ) {
 		// Convert to a number we can use
 		$rate = $rate / 100;
 	}
-	return apply_filters( 'edd_tax_rate', $rate );
+	return apply_filters( 'edd_tax_rate', $rate, $country, $state );
 }
 
 /**
