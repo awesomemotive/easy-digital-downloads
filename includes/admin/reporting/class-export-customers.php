@@ -68,12 +68,20 @@ class EDD_Customers_Export extends EDD_Export {
 				'date'      => __( 'Date Purchased', 'edd' )
 			);
 		} else {
-			$cols = array(
-				'name'      => __( 'Name',   'edd' ),
-				'email'     => __( 'Email', 'edd' ),
-				'purchases' => __( 'Total Purchases', 'edd' ),
-				'amount'    => __( 'Total Purchased', 'edd' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')'
-			);
+
+			$cols = array();
+
+			if( 'emails' != $_POST['edd_export_option'] ) {
+				$cols['name'] = __( 'Name',   'edd' );
+			}
+
+			$cols['email'] = __( 'Email',   'edd' );
+
+			if( 'full' == $_POST['edd_export_option'] ) {
+				$cols['purchases'] = __( 'Total Purchases',   'edd' );
+				$cols['amount']    = __( 'Total Purchased', 'edd' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')';
+			}
+
 		}
 
 		return $cols;
@@ -124,15 +132,23 @@ class EDD_Customers_Export extends EDD_Export {
 			// Export all customers
 			$emails = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' " );
 
-			foreach ( $emails as $email ) {
-				$wp_user = get_user_by( 'email', $email );
+			$i = 0;
 
-				$data[] = array(
-					'name'      => $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' ),
-					'email'     => $email,
-					'purchases' => edd_count_purchases_of_customer( $email ),
-					'amount'    => edd_format_amount( edd_purchase_total_of_user( $email ) )
-				);
+			foreach ( $emails as $email ) {
+
+				if( 'emails' != $_POST['edd_export_option'] ) {
+					$wp_user = get_user_by( 'email', $email );
+					$data[$i]['name'] = $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' );
+				}
+
+				$data[$i]['email'] = $email;
+
+				if( 'full' == $_POST['edd_export_option'] ) {
+					$stats = edd_get_purchase_stats_by_user( $email );
+					$data[$i]['purchases'] = $stats['purchases'];
+					$data[$i]['amount']    = edd_format_amount( $stats['total_spent'] );
+				}
+				$i++;
 			}
 		}
 

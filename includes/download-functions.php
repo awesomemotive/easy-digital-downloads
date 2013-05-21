@@ -560,6 +560,22 @@ function edd_get_download_files( $download_id, $variable_price_id = null ) {
 	return $files;
 }
 
+/**
+ * Retrieves a file name for a product's downlaod file
+ *
+ * Defaults to the file's actual name if no 'name' key is present
+ *
+ * @since 1.6
+ * @param array $file File array
+ * @return string The file name
+ */
+function edd_get_file_name( $file = array() ) {
+	if( empty( $file ) || ! is_array( $file ) )
+		return false;
+	$name = ! empty( $file['name'] ) ? esc_html( $file['name'] ) : basename( $file['file'] );
+
+	return $name;
+}
 
 /**
  * Gets the number of times a file has been downloaded for a specific purchase

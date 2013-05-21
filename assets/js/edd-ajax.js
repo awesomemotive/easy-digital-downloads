@@ -35,7 +35,19 @@ jQuery(document).ready(function ($) {
                     $(this).text(quantity);
                 });
 
+                data = {
+    				action: 'edd_get_subtotal',
+					nonce: edd_scripts.ajax_nonce
+				};
+				//Update subtotal
+				$.post(edd_scripts.ajaxurl, data, function (response) {
+					$('.cart_item.edd_subtotal span').html( response );
+
+				});
+
                 if(!$('.edd-cart-item').length) {
+                    $('.cart_item.edd_subtotal').hide();
+                    $('.edd-cart-number-of-items').hide();
                     $('.cart_item.edd_checkout').hide();
                     $('.edd-cart').append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
                 } else {
@@ -101,19 +113,28 @@ jQuery(document).ready(function ($) {
 
                 // Add the new item to the cart widget
                 if ($('.cart_item.empty').length) {
-                    $(cart_item_response).insertBefore('.cart_item.edd_checkout');
+                    $(cart_item_response).insertBefore('.cart_item.edd_subtotal');
                     $('.cart_item.edd_checkout').show();
+                    $('.cart_item.edd_subtotal').show();
                     $('.cart_item.empty').remove();
                 } else {
 
-                    $(cart_item_response).insertBefore('.cart_item.edd_checkout');
+                    $(cart_item_response).insertBefore('.cart_item.edd_subtotal');
                 }
+
+                 $('.cart_item.edd_subtotal span').html( $('.temp-subtotal').text() );
+                 $('.temp-subtotal').remove();
 
                 // Update the cart quantity
                 $('span.edd-cart-quantity').each(function() {
                     var quantity = parseInt($(this).text(), 10) + 1;
                     $(this).text(quantity);
                 });
+
+                // Show the "number of items in cart" message
+                if ( $('.edd-cart-number-of-items').css('display') == 'none'){
+                    $('.edd-cart-number-of-items').show('slow');
+                }
 
                 // Hide the ajax loader
                 $('.edd-cart-ajax', container).hide();

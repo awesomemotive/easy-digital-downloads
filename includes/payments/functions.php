@@ -713,7 +713,7 @@ function edd_payment_amount( $payment_id = 0 ) {
 function edd_get_payment_amount( $payment_id ) {
 	$amount = get_post_meta( $payment_id, '_edd_payment_total', true );
 
-	if ( empty( $amount ) && $amount != 0 ) {
+	if ( ! is_numeric( $amount ) ) {
 		$payment_meta = edd_get_payment_meta( $payment_id );
 		$amount       = $payment_meta['amount'];
 	}
@@ -953,10 +953,8 @@ add_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
 function edd_hide_payment_notes_from_feeds( $where, $wp_comment_query ) {
     global $wpdb;
 
-    if ( ! $wp_comment_query->query_vars['post_type' ] ) // only apply if post_type hasn't already been queried
-        $where .= $wpdb->prepare( " AND post_type != %s", 'edd_payment' );
-
-    return $where;
+	$where .= $wpdb->prepare( " AND comment_type != %s", 'edd_payment_note' );
+	return $where;
 }
 add_filter( 'comment_feed_where', 'edd_hide_payment_notes_from_feeds', 10, 2 );
 
