@@ -237,11 +237,12 @@ function edd_default_cc_address_fields() {
 			<label class="edd-label"><?php _e( 'Billing State / Province', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The state or province for your billing address.', 'edd' ); ?></span>
 			<input type="text" size="6" name="card_state_other" id="card_state_other" class="card-state edd-input" placeholder="<?php _e( 'State / Province', 'edd' ); ?>" style="display:none;"/>
+            <?php $default_state = edd_get_shop_state(); ?>
             <select name="card_state_us" id="card_state_us" class="card-state edd-select required">
                 <?php
                     $states = edd_get_states_list();
                     foreach( $states as $state_code => $state ) {
-                        echo '<option value="' . $state_code . '">' . $state . '</option>';
+                        echo '<option value="' . $state_code . '"' . selected( $state_code, $default_state, false ) . '>' . $state . '</option>';
                     }
                 ?>
             </select>
@@ -249,7 +250,7 @@ function edd_default_cc_address_fields() {
                 <?php
                     $provinces = edd_get_provinces_list();
                     foreach( $provinces as $province_code => $province ) {
-                        echo '<option value="' . $province_code . '">' . $province . '</option>';
+                        echo '<option value="' . $province_code . '"' . selected( $state_code, $default_state, false ) . '>' . $province . '</option>';
                     }
                 ?>
             </select>
