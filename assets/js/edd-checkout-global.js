@@ -1,7 +1,7 @@
 jQuery(document).ready(function($) {
 
     // Update state/province field on checkout page
-    $('body').on('change', '#edd_cc_address select', function() {
+    $('body').on('change', '#edd_cc_address select, #edd_cc_address input', function() {
         if( $('select[name=billing_country]').val() == 'US') {
             $('#card_state_other').css('display', 'none');
             $('#card_state_us').css('display', '');
@@ -41,6 +41,7 @@ jQuery(document).ready(function($) {
         });
     });
 
+    // Send an ajax call to recalculate the cart taxes
     function recalculate_taxes() {
         if( '1' != edd_global_vars.taxes_enabled )
             return; // Taxes not enabled
