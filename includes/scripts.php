@@ -54,6 +54,7 @@ function edd_load_scripts() {
 			'no_username'        => __( 'Please enter a username before applying a discount code', 'edd' ),
 			'purchase_loading'   => __( 'Please Wait...', 'edd' ),
 			'complete_purchasse' => __( 'Purchase', 'edd' ),
+			'taxes_enabled'      => edd_use_taxes() ? '1' : '0',
 		));
 	}
 
@@ -205,6 +206,7 @@ function edd_load_admin_scripts( $hook ) {
 		'quick_edit_warning' => __( 'Sorry, not available for variable priced products.', 'edd' ),
 		'delete_payment'     => __( 'Are you sure you wish to delete this payment?', 'edd' ),
 		'delete_payment_note'=> __( 'Are you sure you wish to delete this note?', 'edd' ),
+		'delete_tax_rate'    => __( 'Are you sure you wish to delete this tax rate?', 'edd' ),
 		'one_price_min'      => __( 'You must have at least one price', 'edd' ),
 		'one_file_min'       => __( 'You must have at least one file', 'edd' ),
 		'one_field_min'      => __( 'You must have at least one field', 'edd' ),
