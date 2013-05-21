@@ -60,7 +60,6 @@ Symlinks Enabled:         <?php echo apply_filters( 'edd_symlink_file_downloads'
 Checkout:                 <?php echo ! empty( $edd_options['purchase_page'] ) ? "Valid\n" : "Invalid\n"; ?>
 
 Taxes Enabled:            <?php echo edd_use_taxes() ? "Yes\n" : "No\n"; ?>
-Local Taxes Only:         <?php echo edd_local_taxes_only() ? "Yes\n" : "No\n"; ?>
 Taxes After Discounts:    <?php echo edd_taxes_after_discounts() ? "Yes\n" : "No\n"; ?>
 
 <?php echo $browser ; ?>
