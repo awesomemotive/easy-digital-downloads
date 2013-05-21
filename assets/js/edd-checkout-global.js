@@ -41,11 +41,16 @@ jQuery(document).ready(function($) {
     });
 
     // Toggle the tax amount shown on checkout
-    $('body').on('click', '#edd_tax_opt_in', function() {
+    $('body').on('change', '#edd_cc_address select', function() {
+
+        if( '1' != edd_global_vars.taxes_enabled )
+            return; // Taxes not enabled
 
         var postData = {
-            action: $(this).attr('checked') ? 'edd_local_tax_opt_in' : 'edd_local_tax_opt_out',
-            nonce: edd_global_vars.checkout_nonce
+            action: 'edd_recalculate_taxes',
+            nonce: edd_global_vars.checkout_nonce,
+            country: $('#edd_cc_address .billing-country').val(),
+            state: $('#edd_cc_address .card-state:visible').val()
         };
 
         $.ajax({
