@@ -1076,7 +1076,7 @@ function edd_tax_rates_callback($args) {
 					?>
 				</td>
 				<td><input type="number" class="small-text" step="0.01" max="0.99" name="tax_rates[<?php echo $key; ?>][rate]" value="<?php echo $rate['rate']; ?>"/></td>
-				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Delete Rate', 'edd' ); ?></span></td>
+				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'edd' ); ?></span></td>
 			</tr>
 			<?php endforeach; ?>
 		<?php else : ?>
