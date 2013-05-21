@@ -13,7 +13,7 @@
 if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
- * Registers all off the required EDD settings and provides hooks for extensions
+ * Registers all of the required EDD settings and provides hooks for extensions
  * to add their own settings to either the General, Gateways, Emails, Styles
  * or Misc Settings Pages
  *
