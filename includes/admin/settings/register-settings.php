@@ -335,6 +335,12 @@ function edd_register_settings() {
 					'desc' => __('Check this if you would like taxes calculated after discounts. By default taxes are calculated before discounts are applied.', 'edd'),
 					'std' => 'no',
 					'type' => 'checkbox'
+				),
+				'tax_rates' => array(
+					'id' => 'tax_rates',
+					'name' => '<strong>' . __('Additional Tax Rates', 'edd') . '</strong>',
+					'desc' => __( 'Specify additional tax rates for other regions.', 'edd' ),
+					'type' => 'tax_rates'
 				)
 			)
 		),
@@ -685,7 +691,7 @@ function edd_register_settings() {
 	register_setting( 'edd_settings_gateways',   'edd_settings_gateways',   'edd_settings_sanitize' );
 	register_setting( 'edd_settings_emails',     'edd_settings_emails',     'edd_settings_sanitize' );
 	register_setting( 'edd_settings_styles',     'edd_settings_styles',     'edd_settings_sanitize' );
-	register_setting( 'edd_settings_taxes',      'edd_settings_taxes',      'edd_settings_sanitize' );
+	register_setting( 'edd_settings_taxes',      'edd_settings_taxes',      'edd_settings_sanitize_taxes' );
 	register_setting( 'edd_settings_extensions', 'edd_settings_extensions', 'edd_settings_sanitize' );
 	register_setting( 'edd_settings_misc',       'edd_settings_misc',       'edd_settings_sanitize' );
 }
