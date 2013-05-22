@@ -278,6 +278,14 @@ function edd_register_post_type_statuses() {
 		'show_in_admin_status_list' => true,
 		'label_count'               => _n_noop( 'Revoked <span class="count">(%s)</span>', 'Revoked <span class="count">(%s)</span>', 'edd' )
 	)  );
+	register_post_status( 'abandoned', array(
+		'label'                     => _x( 'Abandoned', 'Abandoned payment status', 'edd' ),
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'               => _n_noop( 'Abandoned <span class="count">(%s)</span>', 'Abandoned <span class="count">(%s)</span>', 'edd' )
+	)  );
 
 	// Discount Code Statuses
 	register_post_status( 'active', array(
