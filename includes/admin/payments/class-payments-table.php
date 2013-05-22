@@ -90,6 +90,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public $revoked_count;
 
 	/**
+	 * Total number of abandoned payments
+	 *
+	 * @var int
+	 * @since 1.6
+	 */
+	public $abandoned_count;
+
+	/**
 	 * Get things started
 	 *
 	 * @access public
