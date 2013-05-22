@@ -28,7 +28,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Number of results to show per page
 	 *
-	 * @var string 
+	 * @var string
 	 * @since 1.4
 	 */
 	public $per_page = 30;
@@ -36,7 +36,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * URL of this page
 	 *
-	 * @var string 
+	 * @var string
 	 * @since 1.4.1
 	 */
 	public $base_url;
@@ -44,7 +44,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Total number of payments
 	 *
-	 * @var int 
+	 * @var int
 	 * @since 1.4
 	 */
 	public $total_count;
@@ -52,7 +52,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Total number of complete payments
 	 *
-	 * @var int 
+	 * @var int
 	 * @since 1.4
 	 */
 	public $complete_count;
@@ -60,7 +60,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Total number of pending payments
 	 *
-	 * @var int 
+	 * @var int
 	 * @since 1.4
 	 */
 	public $pending_count;
@@ -84,7 +84,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Total number of revoked payments
 	 *
-	 * @var int 
+	 * @var int
 	 * @since 1.4
 	 */
 	public $revoked_count;
@@ -160,6 +160,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$pending_count  = '&nbsp;<span class="count">(' . $this->pending_count  . ')</span>';
 		$refunded_count = '&nbsp;<span class="count">(' . $this->refunded_count . ')</span>';
 		$failed_count   = '&nbsp;<span class="count">(' . $this->failed_count   . ')</span>';
+		$abandoned_count= '&nbsp;<span class="count">(' . $this->abandoned_count . ')</span>';
 		$revoked_count  = '&nbsp;<span class="count">(' . $this->revoked_count   . ')</span>';
 
 		$views = array(
@@ -168,7 +169,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'pending'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'pending', $base ), $current === 'pending' ? ' class="current"' : '', __('Pending', 'edd') . $pending_count ),
 			'refunded'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'refunded', $base ), $current === 'refunded' ? ' class="current"' : '', __('Refunded', 'edd') . $refunded_count ),
 			'revoked'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'revoked', $base ), $current === 'revoked' ? ' class="current"' : '', __('Revoked', 'edd') . $revoked_count ),
-			'failed'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'failed', $base ), $current === 'failed' ? ' class="current"' : '', __('Failed', 'edd') . $failed_count )
+			'failed'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'failed', $base ), $current === 'failed' ? ' class="current"' : '', __('Failed', 'edd') . $failed_count ),
+			'abandoned'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'abandoned', $base ), $current === 'abandoned' ? ' class="current"' : '', __('Abadoned', 'edd') . $abandoned_count )
 		);
 
 		return apply_filters( 'edd_payments_table_views', $views );
@@ -365,7 +367,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$this->refunded_count = $payment_count->refunded;
 		$this->failed_count   = $payment_count->failed;
 		$this->revoked_count  = $payment_count->revoked;
-		$this->total_count    = $payment_count->publish + $payment_count->pending + $payment_count->refunded + $payment_count->failed + $payment_count->trash;
+		$this->abandoned_count= $payment_count->abandoned;
+		$this->total_count    = $payment_count->publish + $payment_count->pending + $payment_count->refunded + $payment_count->failed + $payment_count->abandoned + $payment_count->trash;
 	}
 
 	/**
@@ -477,6 +480,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				break;
 			case 'revoked':
 				$total_items = $this->revoked_count;
+			case 'abandoned':
+				$total_items = $this->abandoned_count;
 				break;
 			case 'any':
 				$total_items = $this->total_count;
