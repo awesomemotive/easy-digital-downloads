@@ -270,3 +270,31 @@ function edd_trigger_payment_note_deletion( $data ) {
 	wp_redirect( $edit_order_url );
 }
 add_action( 'edd_delete_payment_note', 'edd_trigger_payment_note_deletion' );
+
+
+/**
+ * Updates week-old+ 'pending' orders to 'abandoned'
+ *
+ * @since 1.6
+ * @return void
+*/
+function edd_mark_abandoned_orders() {
+	$args = array(
+		'status' => 'pending',
+		'number' => -1,
+		'fields' => 'ids'
+	);
+
+	add_filter( 'posts_where', 'edd_filter_where_older_than_week' );
+
+	$payments = edd_get_payments( $args );
+
+	remove_filter( 'posts_where', 'edd_filter_where_older_than_week' );
+
+	if( $payments ) {
+		foreach( $payments as $payment ) {
+			edd_update_payment_status( $payment, 'abandoned' );
+		}
+	}
+}
+add_action( 'edd_mark_abandoned_orders', 'edd_mark_abandoned_orders' );

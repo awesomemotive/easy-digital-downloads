@@ -1011,3 +1011,19 @@ function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 	return $stats;
 }
 add_filter( 'wp_count_comments', 'edd_remove_payment_notes_in_comment_counts', 10, 2 );
+
+
+/**
+ * Filter where older than one week
+ *
+ * @access public
+ * @since 1.6
+ * @param string $where Where clause
+ * @return string $where Modified where clause
+*/
+function edd_filter_where_older_than_week( $where = '' ) {
+	// Payments older than one week
+	$start = date( 'Y-m-d', strtotime( '-7 days' ) );
+	$where .= " AND post_date <= '{$start}'";
+	return $where;
+}
