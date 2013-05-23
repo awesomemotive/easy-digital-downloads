@@ -234,7 +234,7 @@ function edd_get_currencies() {
 		'CHF'  => __( 'Swiss Franc', 'edd' ),
 		'TWD'  => __( 'Taiwan New Dollars', 'edd' ),
 		'THB'  => __( 'Thai Baht (&#3647;)', 'edd' ),
-		'INR'  => __( 'Indian Rupee', 'edd' ),
+		'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
 		'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
 		'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' )
 	);
