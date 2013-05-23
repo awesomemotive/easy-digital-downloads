@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_get_download( $download ) {
 	if ( is_numeric( $download ) ) {
 		$download = get_post( $download );
-		if ( $download->post_type != 'download' )
+		if ( !$download || $download->post_type != 'download' )
 			return null;
 		return $download;
 	}
