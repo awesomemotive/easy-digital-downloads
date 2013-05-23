@@ -53,7 +53,7 @@ final class Easy_Digital_Downloads {
 	 * @var object
 	 * @since 1.4.4
 	 */
-	private $roles;
+	public $roles;
 
 	/**
 	 * EDD Cart Fees Object
