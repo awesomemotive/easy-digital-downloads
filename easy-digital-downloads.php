@@ -31,8 +31,6 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
-
 /**
  * Main Easy_Digital_Downloads Class
  *
@@ -290,8 +288,6 @@ final class Easy_Digital_Downloads {
 		}
 	}
 }
-
-endif; // End if class_exists check
 
 
 /**
