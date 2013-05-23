@@ -1,4 +1,5 @@
 <?php
+! defined( 'ABSPATH' ) AND exit;
 /**
  * Plugin Name: Easy Digital Downloads
  * Plugin URI: http://easydigitaldownloads.com
@@ -28,9 +29,7 @@
  * @version 1.5.2.2
  */
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+add_action( 'plugins_loaded', array( 'Easy_Digital_Downloads', 'instance' ) );
 /**
  * Main Easy_Digital_Downloads Class
  *
@@ -305,6 +304,3 @@ final class Easy_Digital_Downloads {
 function EDD() {
 	return Easy_Digital_Downloads::instance();
 }
-
-// Get EDD Running
-EDD();
