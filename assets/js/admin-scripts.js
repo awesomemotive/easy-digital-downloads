@@ -568,6 +568,7 @@ jQuery(document).ready(function ($) {
 	});
 
     $('.edd-select-chosen').chosen();
-    $('.edd-color-picker').wpColorPicker();
-
+    if( $('.edd-color-picker').length ) {
+	    $('.edd-color-picker').wpColorPicker();
+	}
 });
