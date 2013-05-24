@@ -420,7 +420,7 @@ function edd_render_receipt_in_browser() {
 <body class="<?php echo apply_filters('edd_receipt_page_body_class', 'edd_receipt_page' ); ?>">
 	<div id="edd_receipt_wrapper">
 		<?php do_action( 'edd_render_receipt_in_browser_before' ); ?>
-		<?php echo do_shortcode('[edd_receipt purchase_key='. $key .']'); ?>
+		<?php echo do_shortcode('[edd_receipt payment_key='. $key .']'); ?>
 		<?php do_action( 'edd_render_receipt_in_browser_after' ); ?>
 	</div>
 <?php wp_footer(); ?>
