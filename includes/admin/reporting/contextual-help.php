@@ -54,6 +54,20 @@ function edd_reporting_contextual_help() {
 			'<p>' . __( '<strong>Download History</strong> - This report exports all of the downloads you have received in the current month into a CSV. It exports the date the file was downloaded, the customer it was downloaded by, their IP address, the name of the product and the file they downloaded.', 'edd' ) . '</p>'
 	) );
 
+	if( ! empty( $_GET['tab'] ) && 'logs' == $_GET['tab'] ) {
+		$screen->add_help_tab( array(
+			'id'	    => 'edd-reports-log-search',
+			'title'	    => __( 'Search File Downloads', 'edd' ),
+			'content'	=>
+				'<p>' . __( 'The file download log can be searched in several different ways:', 'edd' ) . '</p>' .
+				'<ul>
+					<li>' . __( 'You can enter the customer\'s email address', 'edd' ) . '</li>
+					<li>' . __( 'You can enter the customer\'s IP address', 'edd' ) . '</li>
+					<li>' . __( 'You can enter the download file\'s name', 'edd' ) . '</li>
+				</ul>'
+		) );
+	}
+
 	do_action( 'edd_reports_contextual_help', $screen );
 }
 add_action( 'load-download_page_edd-reports', 'edd_reporting_contextual_help' );

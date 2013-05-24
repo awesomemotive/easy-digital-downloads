@@ -137,6 +137,62 @@ function edd_has_purchases( $user_id = null ) {
 	return false; // User has never purchased anything
 }
 
+
+/**
+ * Get Purchase Status for User
+ *
+ * CRetrieves the purchase count and the total amount spent for a specific user
+ *
+ * @access      public
+ * @since       1.6
+ * @param       $user int|string - the ID or email of the customer to retrieve stats for
+ * @param       $mode string - "test" or "live"
+ * @return      array
+ */
+function edd_get_purchase_stats_by_user( $user = '', $mode = 'live' ) {
+
+	global $wpdb;
+
+	if( is_email( $user ) )
+		$field = 'email';
+	elseif( is_numeric( $user ) )
+		$field = 'id';
+	else
+		return false;
+
+	$stats = array(
+		'purchases'   => 0,
+		'total_spent' => 0
+	);
+
+	$query = "SELECT {$wpdb->prefix}mb.meta_value AS payment_total
+		FROM {$wpdb->prefix}postmeta {$wpdb->prefix}m
+		LEFT JOIN {$wpdb->prefix}postmeta {$wpdb->prefix}ma
+			ON {$wpdb->prefix}ma.post_id = {$wpdb->prefix}m.post_id
+			AND {$wpdb->prefix}ma.meta_key = '_edd_payment_user_{$field}'
+			AND {$wpdb->prefix}ma.meta_value = '%s'
+		LEFT JOIN {$wpdb->prefix}postmeta {$wpdb->prefix}mb
+			ON {$wpdb->prefix}mb.post_id = {$wpdb->prefix}ma.post_id
+			AND {$wpdb->prefix}mb.meta_key = '_edd_payment_total'
+		INNER JOIN {$wpdb->prefix}posts {$wpdb->prefix}
+			ON {$wpdb->prefix}.id = {$wpdb->prefix}m.post_id
+			AND {$wpdb->prefix}.post_status = 'publish'
+		WHERE {$wpdb->prefix}m.meta_key = '_edd_payment_mode'
+		AND {$wpdb->prefix}m.meta_value = '%s'";
+
+	$purchases = $wpdb->get_col( $wpdb->prepare( $query, $user, $mode ) );
+
+	$purchases = array_filter( $purchases );
+
+	if( $purchases ) {
+		$stats['purchases']   = count( $purchases );
+		$stats['total_spent'] = round( array_sum( $purchases ), 2 );
+	}
+
+	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user, $mode );
+}
+
+
 /**
  * Count number of purchases of a customer
  *
@@ -151,17 +207,11 @@ function edd_count_purchases_of_customer( $user = null ) {
 	if ( empty( $user ) )
 		$user = get_current_user_id();
 
-	$args = array(
-		'number'   => -1,
-		'mode'     => 'live',
-		'user'     => $user,
-		'status'   => 'publish'
-	);
+	$mode  = edd_is_test_mode() ? 'test' : 'live';
 
-	$customer_purchases = edd_get_payments( $args );
-	if ( $customer_purchases )
-		return count( $customer_purchases );
-	return 0;
+	$stats = edd_get_purchase_stats_by_user( $user, $mode );
+
+	return $stats['purchases'];
 }
 
 /**
@@ -173,28 +223,14 @@ function edd_count_purchases_of_customer( $user = null ) {
  * @return      float - the total amount the user has spent
  */
 function edd_purchase_total_of_user( $user = null ) {
-	$args = array(
-		'number'   => -1,
-		'mode'     => 'live',
-		'user'     => $user,
-		'status'   => 'publish'
-	);
 
-	$customer_purchases = edd_get_payments( $args );
+	global $wpdb;
 
-	$amount = get_transient( md5( 'edd_customer_total_' . $user ) );
-	if ( false === $amount ) {
-		$amount = 0;
+	$mode  = edd_is_test_mode() ? 'test' : 'live';
 
-		if ( $customer_purchases ) :
-			foreach ( $customer_purchases as $purchase ) :
-				$amount += edd_get_payment_amount( $purchase->ID );
-			endforeach;
-		endif;
-		set_transient( md5( 'edd_customer_total_' . $user ), $amount );
-	}
+	$stats = edd_get_purchase_stats_by_user( $user, $mode );
 
-	return round( $amount, 2 );
+	return $stats['total_spent'];
 }
 
 /**
@@ -241,3 +277,38 @@ function edd_validate_username( $username ) {
 	$valid = ( $sanitized == $username );
 	return (bool) apply_filters( 'edd_validate_username', $valid, $username );
 }
+
+
+/**
+ * Looks up purchases by email that match the registering user
+ *
+ * This is for users that purchased as a guest and then came
+ * back and created an account.
+ *
+ * @access      public
+ * @since       1.6
+ * @param       $user_id INT - the new user's ID
+ * @return      void
+ */
+function edd_add_past_purchases_to_new_user( $user_id ) {
+
+	$email    = get_user_meta( $user_id, 'user_email', true );
+	$mode     = edd_is_test_mode() ? 'test' : 'live';
+	$payments = edd_get_payments( array( 's' => $email, 'mode' => $mode ) );
+	if( $payments ) {
+		foreach( $payments as $payment ) {
+			if( intval( edd_get_payment_user_id( $payment->ID ) ) > 0 )
+				continue; // This payment already associated with an account
+
+			$meta                    = edd_get_payment_meta( $payment->ID );
+			$meta['user_info']       = maybe_unserialize( $meta['user_info'] );
+			$meta['user_info']['id'] = $user_id;
+			$meta['user_info']       = serialize( $meta['user_info'] );
+
+			// Store the updated user ID in the payment meta
+			update_post_meta( $payment->ID, '_edd_payment_meta', $meta );
+		}
+	}
+
+}
+add_action( 'user_register', 'edd_add_past_purchases_to_new_user' );

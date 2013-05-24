@@ -266,11 +266,11 @@ function edd_reports_tab_export() {
 				<div class="postbox">
 					<h3><span><?php _e('Export Customers in CSV', 'edd'); ?></span></h3>
 					<div class="inside">
-						<p><?php _e( 'Download a CSV of all customer emails. Optionally export only customers that have purchased a particular product.', 'edd' ); ?></p>
+						<p><?php _e( 'Download a CSV of all customer emails. Optionally export only customers that have purchased a particular product. Note, if you have a large number of customers, exporting the purchase stats may fail.', 'edd' ); ?></p>
 						<p>
-							<form method="post">
-								<select name="edd_export_download">
-									<option value="0"><?php _e( 'All', 'edd' ); ?></option>
+							<form method="post" id="edd_customer_export">
+								<select name="edd_export_download" id="edd_customer_export_download">
+									<option value="0"><?php printf( __( 'All %s', 'edd' ), edd_get_label_plural() ); ?></option>
 									<?php
 									$downloads = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1 ) );
 									if( $downloads ) {
@@ -279,6 +279,11 @@ function edd_reports_tab_export() {
 										}
 									}
 									?>
+								</select>
+								<select name="edd_export_option" id="edd_customer_export_option">
+									<option value="emails"><?php _e( 'Emails', 'edd' ); ?></option>
+									<option value="emails_and_names"><?php _e( 'Emails and Names', 'edd' ); ?></option>
+									<option value="full"><?php _e( 'Emails, Names, and Purchase Stats', 'edd' ); ?></option>
 								</select>
 								<input type="hidden" name="edd-action" value="email_export"/>
 								<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>

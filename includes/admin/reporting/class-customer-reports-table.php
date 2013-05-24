@@ -163,12 +163,16 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 				$user_id = $wp_user ? $wp_user->ID : 0;
 
+				$mode    = edd_is_test_mode() ? 'test' : 'live';
+
+				$stats   = edd_get_purchase_stats_by_user( $customer_email, $mode );
+
 				$reports_data[] = array(
 					'ID' 			=> $user_id,
 					'name' 			=> $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' ),
 					'email' 		=> $customer_email,
-					'num_purchases'	=> edd_count_purchases_of_customer( $customer_email ),
-					'amount_spent'	=> edd_purchase_total_of_user( $customer_email ),
+					'num_purchases'	=> $stats['purchases'],
+					'amount_spent'	=> $stats['total_spent'],
 					'file_downloads'=> edd_count_file_downloads_of_user( ! empty( $user_id ) ? $user_id : $customer_email )
 				);
 			}

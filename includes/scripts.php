@@ -102,17 +102,26 @@ function edd_register_styles() {
 	$file          = 'edd' . $suffix . '.css';
 	$templates_dir = 'edd_templates/';
 
-	$child_theme_style_sheet  = trailingslashit( get_stylesheet_directory() ) . $templates_dir . $file;
-	$parent_theme_style_sheet = trailingslashit( get_template_directory() ) . $templates_dir . $file;
-	$edd_plugin_style_sheet   = trailingslashit( edd_get_templates_dir() ) . $file;
+	$child_theme_style_sheet    = trailingslashit( get_stylesheet_directory() ) . $templates_dir . $file;
+	$child_theme_style_sheet_2  = trailingslashit( get_stylesheet_directory() ) . $templates_dir . 'edd.css';
+	$parent_theme_style_sheet   = trailingslashit( get_template_directory()   ) . $templates_dir . $file;
+	$parent_theme_style_sheet_2 = trailingslashit( get_template_directory()   ) . $templates_dir . 'edd.css';
+	$edd_plugin_style_sheet     = trailingslashit( edd_get_templates_dir()    ) . $file;
 
-	// If not debugging and .min.css exists in preferred directory, use it. Otherwise, if .css exists in the preferred directory, use it.
-	// If still nothing found, try the next directory.
-	if ( $suffix && file_exists( $child_theme_style_sheet ) || file_exists( $child_theme_style_sheet ) ) {
-		$url = trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . $file;
-	} elseif ( $suffix && file_exists( $parent_theme_style_sheet ) || file_exists( $parent_theme_style_sheet ) ) {
-		$url = trailingslashit( get_template_directory_uri() ) . $templates_dir . $file;
-	} elseif ( $suffix && file_exists( $edd_plugin_style_sheet ) || file_exists( $edd_plugin_style_sheet ) ) {
+	// Look in the child theme directory first, followed by the parent theme, followed by the EDD core templates directory
+	// Also look for the min version first, followed by non minified version, even if SCRIPT_DEBUG is not enabled.
+	// This allows users to copy just edd.css to their theme
+	if ( file_exists( $child_theme_style_sheet ) || ( ! empty( $suffix ) && ( $nonmin = file_exists( $child_theme_style_sheet_2 ) ) ) ) {
+		if( ! empty( $nonmin ) )
+			$url = trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . 'edd.css';
+		else
+			$url = trailingslashit( get_stylesheet_directory_uri() ) . $templates_dir . $file;
+	} elseif ( file_exists( $parent_theme_style_sheet ) || ( ! empty( $suffix ) && ( $nonmin = file_exists( $parent_theme_style_sheet_2 ) ) ) ) {
+		if( ! empty( $nonmin ) )
+			$url = trailingslashit( get_template_directory_uri() ) . $templates_dir . 'edd.css';
+		else
+			$url = trailingslashit( get_template_directory_uri() ) . $templates_dir . $file;
+	} elseif ( file_exists( $edd_plugin_style_sheet ) || file_exists( $edd_plugin_style_sheet ) ) {
 		$url = trailingslashit( edd_get_templates_url() ) . $file;
 	}
 
@@ -140,7 +149,17 @@ add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
  * @return void
  */
 function edd_load_admin_scripts( $hook ) {
-	global $post, $pagenow, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_options, $edd_upgrades_screen;;
+	global $post,
+	$pagenow,
+	$edd_discounts_page,
+	$edd_payments_page,
+	$edd_settings_page,
+	$edd_reports_page,
+	$edd_system_info_page,
+	$edd_add_ons_page,
+	$edd_options,
+	$edd_upgrades_screen,
+	$wp_version;
 
 	$js_dir = EDD_PLUGIN_URL . 'assets/js/';
 	$css_dir = EDD_PLUGIN_URL . 'assets/css/';
@@ -166,8 +185,14 @@ function edd_load_admin_scripts( $hook ) {
 		wp_enqueue_style( 'jquery-ui-css', $css_dir . 'jquery-ui-' . $ui_style . $suffix . '.css' );
 	}
 	if ( $hook == $edd_settings_page ) {
+		wp_enqueue_style( 'wp-color-picker' );
+		wp_enqueue_script( 'wp-color-picker' );
 		wp_enqueue_style( 'colorbox', $css_dir . 'colorbox' . $suffix . '.css', array(), '1.3.20' );
 		wp_enqueue_script( 'colorbox', $js_dir . 'jquery.colorbox-min.js', array( 'jquery' ), '1.3.20' );
+		if( function_exists( 'wp_enqueue_media' ) && version_compare( $wp_version, '3.5', '>=' ) ) {
+        	 //call for new media manager
+         	wp_enqueue_media();
+      }
 	}
 	wp_enqueue_style( 'jquery-chosen', $css_dir . 'chosen' . $suffix . '.css', array(), EDD_VERSION );
 	wp_enqueue_script( 'jquery-chosen', $js_dir . 'chosen.jquery.min.js', array( 'jquery' ), EDD_VERSION );
