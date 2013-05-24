@@ -440,11 +440,10 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	), $atts );
 
 	$session = edd_get_purchase_session();
-
 	if ( isset( $_GET[ 'payment_key' ] ) ) {
 		$payment_key = urldecode( $_GET[ 'payment_key' ] );
 	} else if ( $session ) {
-		$payment_key = $session[ 'payment_key' ];
+		$payment_key = $session[ 'purchase_key' ];
 	}
 
 	// No key found
