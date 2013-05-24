@@ -24,6 +24,8 @@ function edd_allowed_mime_types( $existing_mimes ) {
 	$existing_mimes['epub'] = 'application/epub+zip';
 	$existing_mimes['mobi'] = 'application/x-mobipocket-ebook';
 	$existing_mimes['m4r']  = 'audio/aac';
+	$existing_mimes['aif']  = 'audio/x-aiff';
+	$existing_mimes['aiff'] = 'audio/aiff';
 	$existing_mimes['psd']  = 'image/photoshop';
 	$existing_mimes['exe']  = 'application/octet-stream';
 	$existing_mimes['apk']  = 'application/vnd.android.package-archive';

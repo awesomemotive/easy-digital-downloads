@@ -7,9 +7,8 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.6
 
-Stable Tag: 1.5.2.2
+Stable Tag: 1.5.2.3
 License: GNU Version 2 or Any Later Version
-
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
@@ -17,7 +16,7 @@ Sell digital downloads through WordPress with this complete digital downloads ma
 
 Selling digital downloads is something that not a single one of the large WordPress ecommerce plugins has ever gotten really right. This plugin aims to fix that. Instead of focusing on providing every single feature under the sun, Easy Digital Downloads tries to provide only the ones that you really need. It aims to make selling digital downloads through WordPress easy, and complete.
 
-**Follow this plugin on [Git Hub](https://github.com/easydigitaldownloads/Easy-Digital-Downloads)**
+**Follow this plugin on [GitHub](https://github.com/easydigitaldownloads/Easy-Digital-Downloads)**
 
 Features of the plugin include:
 
@@ -64,13 +63,14 @@ Easy Digital Downloads as been translated into the following languages:
 5. Italian
 6. Dutch
 7. European Portuguese
-8. Turkish
-9. Arabic
-10. Polish
-11. Russian
-12. Czech
-13. Japanese
-14. Farsi
+8. Brazilian Portuguese
+9. Turkish
+10. Arabic
+11. Polish
+12. Russian
+13. Czech
+14. Japanese
+15. Farsi
 
 Would you like to help translate the plugin into more languages? [Contact Pippin](http://easydigitaldownloads.com/contact-developer/).
 
@@ -135,7 +135,8 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * [Google Wallet](https://easydigitaldownloads.com/extension/google-checkout/)
 * [Moneybookers / Skrill](http://easydigitaldownloads.com/extension/moneybookers-skrill-payment-gateway/)
 * [2Checkout](http://easydigitaldownloads.com/extension/2checkout-gateway/)
-* [PayPal Pro / Express](http://easydigitaldownloads.com/extension/paypal-pro-express/)
+* [PayPal Pro/Express](http://easydigitaldownloads.com/extension/paypal-pro-express/)
+* [PayPal Adaptive Payments](https://easydigitaldownloads.com/extension/paypal-adaptive-payments/)
 * [GoCardless](https://easydigitaldownloads.com/extension/gocardless-payment-gateway/)
 * [Amazon FPS](https://easydigitaldownloads.com/extension/amazon-fps-payment-gateway/)
 * [Payza](https://easydigitaldownloads.com/extension/payza-payment-gateway/)
@@ -159,6 +160,14 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * [PayFast](https://easydigitaldownloads.com/extension/payfast-payment-gateway/())
 * [WorldPay](https://easydigitaldownloads.com/extension/worldpay-gateway/)
 * [Payment Express](https://easydigitaldownloads.com/extension/payment-express-gateway/)
+* [BitPay](https://easydigitaldownloads.com/extension/bitpay-payment-gateway/)
+* [ClickBank](https://easydigitaldownloads.com/extension/clickbank-gateway/)
+* [Braintree](https://easydigitaldownloads.com/extension/braintree-gateway/)
+* [Dwolla](https://easydigitaldownloads.com/extension/dwolla/)
+* [Realex](https://easydigitaldownloads.com/extension/realex-gateway/)
+* [PayTrace](https://easydigitaldownloads.com/extension/paytrace/)
+* [iPay88](https://easydigitaldownloads.com/extension/ipay88-gateway/)
+* [First Data](https://easydigitaldownloads.com/extension/first-data-payment-gateway/)
 
 == Screenshots ==
 
@@ -172,8 +181,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 8. Add to cart / purchase button
 9. Checkout screen
 
-
 == Changelog ==
+
+= 1.5.2.3: May 23, 2013 =
+
+* Fix: An uninstall error
 
 = 1.5.2.2: May 9, 2013 =
 

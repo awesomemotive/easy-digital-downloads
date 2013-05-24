@@ -1060,7 +1060,7 @@ You can easily setup price options to purchase individual songs or the entire al
 		<dc:creator>pippin</dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/purchase-history/</guid>
 		<description></description>
-		<content:encoded><![CDATA[[download_history]]]></content:encoded>
+		<content:encoded><![CDATA[[purchase_history]]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
 		<wp:post_id>6</wp:post_id>
 		<wp:post_date>2012-05-21 15:59:39</wp:post_date>

@@ -82,34 +82,45 @@ function edd_process_download() {
 		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\";");
 		header("Content-Transfer-Encoding: binary");
 
-		$file_path = realpath( $requested_file );
+		$method = edd_get_file_download_method();
 
-		if ( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false && file_exists( $file_path ) ) {
+		switch( $method ) :
 
-			/** This is an absolute path */
+			case 'redirect' :
 
-			edd_deliver_download( $file_path );
-
-		} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false ) {
-
-			/** This is a local file given by URL */
-			$upload_dir = wp_upload_dir();
-
-			$file_path = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );
-			$file_path = realpath( $file_path );
-
-			if ( file_exists( $file_path ) ) {
-
-				edd_deliver_download( $file_path );
-
-			} else {
-				// Absolute path couldn't be discovered so send straight to the file URL
+				// Redirect straight to the file
 				header( "Location: " . $requested_file );
-			}
-		} else {
-			// This is a remote file
-			header( "Location: " . $requested_file );
-		}
+
+				break;
+
+			case 'direct' :
+			default:
+
+				$file_path = realpath( $requested_file );
+
+				if ( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false && file_exists( $file_path ) ) {
+
+					/** This is an absolute path */
+
+					edd_deliver_download( $file_path );
+
+				} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false ) {
+
+					/** This is a local file given by URL so we need to figure out the path */
+					$upload_dir = wp_upload_dir();
+
+					$file_path = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );
+					$file_path = realpath( $file_path );
+
+					edd_deliver_download( $file_path );
+
+				} else {
+					// This is a remote file, but since we are using the Direct method, we have to simply redirect to it
+					header( "Location: " . $requested_file );
+				}
+				break;
+
+		endswitch;
 
 		edd_die();
 	} else {

@@ -223,7 +223,6 @@ function edd_clear_user_history_cache( $payment_id, $new_status, $old_status ) {
 	$user_info = edd_get_payment_meta_user_info( $payment_id );
 
 	delete_transient( 'edd_user_' . $user_info['id'] . '_purchases' );
-	delete_transient( md5( 'edd_customer_total_' . $user_info['email'] ) );
 }
 add_action( 'edd_update_payment_status', 'edd_clear_user_history_cache', 10, 3 );
 
