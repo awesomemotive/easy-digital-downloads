@@ -454,7 +454,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	$user = edd_get_payment_meta_user_info( $edd_receipt_args[ 'id' ] );
 
 	// Not the proper user
-	if ( ( is_user_logged_in() && $user[ 'id' ] != get_current_user_id() ) || ( $user[ mysql_insert_id()'id' ] > 0 && ! is_user_logged_in() ) ) {
+	if ( ( is_user_logged_in() && $user[ 'id' ] != get_current_user_id() ) || ( $user[ 'id' ] > 0 && ! is_user_logged_in() ) ) {
 		return $edd_receipt_args[ 'error' ];
 	}
 
