@@ -242,7 +242,9 @@ function edd_render_price_field( $post_id ) {
 			<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
-						<th style="width: 20px;"></th>
+						<!--drag handle column. Disabled until we can work out a way to solve the issues raised here: https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/1066
+						<th style="width: 20px"></th>
+						-->
 						<th><?php _e( 'Option Name', 'edd' ); ?></th>
 						<th style="width: 90px"><?php _e( 'Price', 'edd' ); ?></th>
 						<?php do_action( 'edd_download_price_table_head', $post_id ); ?>
@@ -303,9 +305,12 @@ function edd_render_price_row( $key, $args = array(), $post_id ) {
 	$args = wp_parse_args( $args, $defaults );
 	extract( $args, EXTR_SKIP );
 ?>
+	<!--
+	Disabled until we can work out a way to solve the issues raised here: https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/1066
 	<td>
 		<span class="edd_draghandle"></span>
 	</td>
+	-->
 
 	<td>
 		<input type="text" class="edd_variable_prices_name" placeholder="<?php _e( 'Option Name', 'edd' ); ?>" name="edd_variable_prices[<?php echo $key; ?>][name]" id="edd_variable_prices[<?php echo $key; ?>][name]" value="<?php echo esc_attr( $name ); ?>" size="20" style="width:100%" />
@@ -456,7 +461,9 @@ function edd_render_files_field( $post_id = 0 ) {
 			<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
+						<!--drag handle column. Disabled until we can work out a way to solve the issues raised here: https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/1066
 						<th style="width: 20px"></th>
+						-->
 						<th style="width: 20%"><?php _e( 'File Name', 'edd' ); ?></th>
 						<th><?php _e( 'File URL', 'edd' ); ?></th>
 						<th class="pricing" style="width: 20%; <?php echo $variable_display; ?>"><?php _e( 'Price Assignment', 'edd' ); ?></th>
@@ -527,10 +534,12 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 	$variable_display = $variable_pricing ? '' : ' style="display:none;"';
 ?>
 
+	<!--
+	Disabled until we can work out a way to solve the issues raised here: https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/1066
 	<td>
 		<span class="edd_draghandle"></span>
 	</td>
-
+	-->
 	<td>
 		<input type="text" class="edd_repeatable_name_field" name="edd_download_files[<?php echo $key; ?>][name]" id="edd_download_files[<?php echo $key; ?>][name]" value="<?php echo $name; ?>" placeholder="<?php _e( 'File Name', 'edd' ); ?>" style="width:100%" />
 	</td>
