@@ -47,6 +47,8 @@ jQuery(document).ready(function ($) {
 		},
 
 		move : function() {
+			/*
+			* Disabled until we can work out a way to solve the issues raised here: https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/1066
 			if( ! $('.edd_repeatable_table').length )
 				return;
 
@@ -63,6 +65,7 @@ jQuery(document).ready(function ($) {
 					});
 				}
 			});
+			*/
 		},
 
 		remove : function() {
