@@ -124,21 +124,30 @@ function edd_update_edited_purchase( $data ) {
 
 		if ( isset( $_POST['edd-purchased-downloads'] ) ) {
 			$download_list = array();
+			$cart_items    = array();
 
 			foreach ( $_POST['edd-purchased-downloads'] as $key => $download ) {
-				if ( isset ( $download['options']['price_id'] ) ) {
-					$download_list[] = array(
-						'id' => $key,
-						'options' => array(
-							'price_id' => $download['options']['price_id']
-						)
-					);
-				} else {
-					$download_list[] = array( 'id' => $download );
-				}
+
+				$download_list[] = array(
+					'id'         => $key,
+					'options'    => isset( $download['options']['price_id'] ) ? array( 'price_id' => $download['options']['price_id'] ) : array()
+				);
+
+				$cart_items[]    = array(
+					'id'          => $key,
+					'name'        => get_the_title( $key ),
+					'item_number' => array(
+						'id'      => $key,
+						'options' => isset( $download['options']['price_id'] ) ? array( 'price_id' => $download['options']['price_id'] ) : array(),
+					),
+					'price'       => 0,
+					'quantity'    => 1,
+					'tax'         => 0
+				);
 			}
 
-			$payment_data['downloads'] = serialize( $download_list );
+			$payment_data['downloads']    = serialize( $download_list );
+			$payment_data['cart_details'] = serialize( $cart_items );
 		}
 
 		$user_info                 = maybe_unserialize( $payment_data['user_info'] );
