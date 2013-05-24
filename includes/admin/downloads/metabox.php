@@ -349,7 +349,6 @@ add_action( 'edd_meta_box_fields', 'edd_render_product_type_field', 10 );
 
 
 /**
-
  *
  * @access      private
  * @since       1.6
