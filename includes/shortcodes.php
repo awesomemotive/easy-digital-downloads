@@ -440,21 +440,21 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 
 	$session = edd_get_purchase_session();
 
-	if ( isset( $_GET[ 'purchase_key' ] ) ) {
-		$purchase_key = urldecode( $_GET[ 'purchase_key' ] );
+	if ( isset( $_GET[ 'payment_key' ] ) ) {
+		$payment_key = urldecode( $_GET[ 'payment_key' ] );
 	} else if ( $session ) {
-		$purchase_key = $session[ 'purchase_key' ];
+		$payment_key = $session[ 'payment_key' ];
 	}
 
 	// No key found
-	if ( ! isset( $purchase_key ) )
+	if ( ! isset( $payment_key ) )
 		return $edd_receipt_args[ 'error' ];
 
-	$edd_receipt_args[ 'id' ] = edd_get_purchase_id_by_key( $purchase_key );
+	$edd_receipt_args[ 'id' ] = edd_get_purchase_id_by_key( $payment_key );
 	$user = edd_get_payment_meta_user_info( $edd_receipt_args[ 'id' ] );
 
 	// Not the proper user
-	if ( is_user_logged_in() && $user[ 'id' ] != get_current_user_id() ) {
+	if ( ( is_user_logged_in() && $user[ 'id' ] != get_current_user_id() ) || ( $user[ mysql_insert_id()'id' ] > 0 && ! is_user_logged_in() ) ) {
 		return $edd_receipt_args[ 'error' ];
 	}
 
