@@ -58,7 +58,8 @@ add_shortcode( 'purchase_link', 'edd_download_shortcode' );
 function edd_download_history() {
 	if ( is_user_logged_in() ) {
 		ob_start();
-		edd_get_template_part( 'history', 'downloads' );
+		// Download history short code was removed with EDD v1.6. It now shows same thing as [purchase_history]
+		edd_get_template_part( 'history', 'purchases' );
 		return ob_get_clean();
 	}
 }
