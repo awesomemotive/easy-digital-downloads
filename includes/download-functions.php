@@ -513,8 +513,7 @@ function edd_get_average_monthly_download_earnings( $download_id ) {
 
 	$diff 	= abs( time() - strtotime( $release_date ) );
 
-	$years 	= floor( $diff / ( 365*60*60*24 ) );							// Number of years since publication
-	$months = floor( ( $diff - $years * 365*60*60*24 ) / ( 30*60*60*24 ) ); // Number of months since publication
+    $months = floor( $diff / ( 30*60*60*24 ) ); // Number of months since publication
 
 	if ( $months > 0 )
 		return ( $earnings / $months );
@@ -530,18 +529,17 @@ function edd_get_average_monthly_download_earnings( $download_id ) {
  * @return float $sales Average monthly sales
  */
 function edd_get_average_monthly_download_sales( $download_id ) {
-	$sales			= edd_get_download_sales_stats( $download_id );
-	$release_date 	= get_post_field( 'post_date', $download_id );
+    $sales          = edd_get_download_sales_stats( $download_id );
+    $release_date   = get_post_field( 'post_date', $download_id );
 
-	$diff 	= abs( time() - strtotime( $release_date ) );
+    $diff   = abs( time() - strtotime( $release_date ) );
 
-	$years 	= floor( $diff / ( 365*60*60*24 ) );							// Number of years since publication
-	$months = floor( ( $diff - $years * 365*60*60*24 ) / ( 30*60*60*24 ) ); // Number of months since publication
+    $months = floor( $diff / ( 30*60*60*24 ) ); // Number of months since publication
 
-	if ( $months > 0 )
-		return ( $sales / $months );
+    if ( $months > 0 )
+        return ( $sales / $months );
 
-	return $sales;
+    return $sales;
 }
 
 /**
