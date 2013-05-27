@@ -4,11 +4,11 @@
  */
 global $edd_receipt_args, $edd_options;
 
-$payment = get_post( $edd_receipt_args['id'] );
-$meta    = edd_get_payment_meta( $payment->ID );
-$cart    = edd_get_payment_meta_cart_details( $payment->ID );
-$user    = edd_get_payment_meta_user_info( $payment->ID );
-$status  = edd_get_payment_status( $payment, true );
+$payment   = get_post( $edd_receipt_args['id'] );
+$meta      = edd_get_payment_meta( $payment->ID );
+$cart      = edd_get_payment_meta_cart_details( $payment->ID, true );
+$user      = edd_get_payment_meta_user_info( $payment->ID );
+$status    = edd_get_payment_status( $payment, true );
 ?>
 <table id="edd_purchase_receipt">
 	<thead>
@@ -117,6 +117,7 @@ $status  = edd_get_payment_status( $payment, true );
 
 		<tbody>
 		<?php foreach ( $cart as $key => $item ) : ?>
+			<?php if( empty( $item['in_bundle'] ) ) : ?>
 			<tr>
 				<td>
 
@@ -127,8 +128,7 @@ $status  = edd_get_payment_status( $payment, true );
 
 					<div class="edd_purchase_receipt_product_name">
 						<?php echo esc_html( $item['name'] ); ?>
-						<?php if( ! empty( $sku ) ) : echo '&nbsp;&ndash;&nbsp;' . __( 'SKU', 'edd' ) . ' ' . $sku; endif; ?>
-						<?php if( $price_id !== false && edd_is_payment_complete( $payment->ID ) ) : ?>
+						<?php if( ! empty( $price_id ) && edd_is_payment_complete( $payment->ID ) ) : ?>
 						<span class="edd_purchase_receipt_price_name">&nbsp;&ndash;&nbsp;<?php echo edd_get_price_option_name( $item['id'], $price_id ); ?></span>
 						<?php endif; ?>
 					</div>
@@ -138,8 +138,7 @@ $status  = edd_get_payment_status( $payment, true );
 					<?php endif; ?>
 
 					<?php if( edd_is_payment_complete( $payment->ID ) ) : ?>
-					<ul>
-
+					<ul class="edd_purchase_receipt_files">
 						<?php
 						if ( $download_files && is_array( $download_files ) ) :
 
@@ -154,6 +153,38 @@ $status  = edd_get_payment_status( $payment, true );
 								do_action( 'edd_receipt_files', $filekey, $file, $item['id'], $payment->ID, $meta );
 							endforeach;
 
+						elseif( edd_is_bundled_product( $item['id'] ) ) :
+
+							$bundled_products = edd_get_bundled_products( $item['id'] );
+
+							foreach( $bundled_products as $bundle_item ) : ?>
+								<li class="edd_bundled_product">
+									<span class="edd_bundled_product_name"><?php echo get_the_title( $bundle_item ); ?></span>
+									<ul class="edd_bundled_product_files">
+										<?php
+										$download_files = edd_get_download_files( $bundle_item );
+
+										if( $download_files && is_array( $download_files ) ) :
+
+											foreach ( $download_files as $filekey => $file ) :
+
+												$download_url = edd_get_download_file_url( $meta['key'], $meta['email'], $filekey, $bundle_item ); ?>
+												<li class="edd_download_file">
+													<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a>
+												</li>
+												<?php
+												do_action( 'edd_receipt_bundle_files', $filekey, $file, $item['id'], $bundle_item, $payment->ID, $meta );
+
+											endforeach;
+										else :
+											echo '<li>' . __( 'No downloadable files found for this bundled item.', 'edd' ) . '</li>';
+										endif;
+										?>
+									</ul>
+								</li>
+								<?php
+							endforeach;
+
 						else :
 							echo '<li>' . __( 'No downloadable files found.', 'edd' ) . '</li>';
 						endif; ?>
@@ -161,10 +192,16 @@ $status  = edd_get_payment_status( $payment, true );
 					<?php endif; ?>
 
 				</td>
-				<?php if ( edd_use_skus() ) ?>
-				<td><?php echo edd_get_download_sku( $item['id'] ); ?></td>
-				<td><?php echo edd_currency_filter( edd_format_amount( $item[ 'price' ] ) ); ?></td>
+				<?php if ( edd_use_skus() ) : ?>
+					<td><?php echo edd_get_download_sku( $item['id'] ); ?></td>
+				<?php endif; ?>
+				<td>
+					<?php if( empty( $item['in_bundle'] ) ) : // Only show price when product is not part of a bundle ?>
+						<?php echo edd_currency_filter( edd_format_amount( $item[ 'price' ] ) ); ?>
+					<?php endif; ?>
+				</td>
 			</tr>
+			<?php endif; ?>
 		<?php endforeach; ?>
 		</tbody>
 

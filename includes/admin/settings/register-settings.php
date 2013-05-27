@@ -392,7 +392,7 @@ function edd_register_settings() {
 					'desc' => sprintf( __('Select the file download method. Note, not all methods work on all servers.', 'edd'), edd_get_label_singular() ),
 					'type' => 'select',
 					'options' => array(
-						'direct' => __( 'Direct', 'edd' ),
+						'direct' => __( 'Forced', 'edd' ),
 						'redirect' => __( 'Redirect', 'edd' )
 					)
 				),
@@ -780,6 +780,8 @@ function edd_radio_callback( $args ) {
 
 		if ( isset( $edd_options[ $args['id'] ] ) && $edd_options[ $args['id'] ] == $key )
 			$checked = true;
+		elseif( isset( $args['std'] ) && $args['std'] == $key && ! isset( $edd_options[ $args['id'] ] ) )
+			$checked = true;
 
 		echo '<input name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" type="radio" value="' . $key . '" ' . checked(true, $checked, false) . '/>&nbsp;';
 		echo '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
@@ -1005,6 +1007,35 @@ function edd_upload_callback($args) {
 
 	echo $html;
 }
+
+
+/**
+ * Color picker Callback
+ *
+ * Renders color picker fields.
+ *
+ * @since 1.6
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_color_callback( $args ) {
+	global $edd_options;
+
+	if ( isset( $edd_options[ $args['id'] ] ) )
+		$value = $edd_options[ $args['id'] ];
+	else
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+
+	$default = isset( $args['std'] ) ? $args['std'] : '';
+
+	$size = isset( $args['size'] ) && !is_null($args['size']) ? $args['size'] : 'regular';
+	$html = '<input type="text" class="edd-color-picker" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( $value ) . '" data-default-color="' . esc_attr( $default ) . '" />';
+	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+	echo $html;
+}
+
 
 /**
  * Registers the license field callback for Software Licensing
