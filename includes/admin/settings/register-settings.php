@@ -392,7 +392,8 @@ function edd_register_settings() {
 					'desc' => sprintf( __('Select the file download method. Note, not all methods work on all servers.', 'edd'), edd_get_label_singular() ),
 					'type' => 'select',
 					'options' => array(
-						'direct' => __( 'Direct', 'edd' ),
+						'direct' => __( 'Forced', 'edd' ),
+						'x_sendfile' => __( 'X-Sendfile', 'edd' ),
 						'redirect' => __( 'Redirect', 'edd' )
 					)
 				),
