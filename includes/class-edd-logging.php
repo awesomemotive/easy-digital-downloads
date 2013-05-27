@@ -176,7 +176,7 @@ class EDD_Logging {
 
 		$args = wp_parse_args( $log_data, $defaults );
 
-		do_action( 'edd_pre_insert_log' );
+		do_action( 'edd_pre_insert_log', $log_data, $log_meta );
 
 		// Store the log entry
 		$log_id = wp_insert_post( $args );
