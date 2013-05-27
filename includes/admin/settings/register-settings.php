@@ -393,7 +393,6 @@ function edd_register_settings() {
 					'type' => 'select',
 					'options' => array(
 						'direct' => __( 'Forced', 'edd' ),
-						'x_sendfile' => __( 'X-Sendfile', 'edd' ),
 						'redirect' => __( 'Redirect', 'edd' )
 					)
 				),
