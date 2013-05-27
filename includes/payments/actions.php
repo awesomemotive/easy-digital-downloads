@@ -35,14 +35,19 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	if ( edd_is_test_mode() && ! apply_filters( 'edd_log_test_payment_stats', false ) )
 		return;
 
-	$payment_data 	= edd_get_payment_meta( $payment_id );
-	$downloads 		= maybe_unserialize( $payment_data['downloads'] );
-	$user_info 		= maybe_unserialize( $payment_data['user_info'] );
-	$cart_details 	= maybe_unserialize( $payment_data['cart_details'] );
+	$payment_data = edd_get_payment_meta( $payment_id );
+	$downloads    = maybe_unserialize( $payment_data['downloads'] );
+	$user_info    = maybe_unserialize( $payment_data['user_info'] );
+	$cart_details = maybe_unserialize( $payment_data['cart_details'] );
 
 	if ( is_array( $downloads ) ) {
+
 		// Increase purchase count and earnings
 		foreach ( $downloads as $download ) {
+
+			// "bundle" or "default"
+			$download_type = edd_get_download_type( $download['id'] );
+
 			edd_record_sale_in_log( $download['id'], $payment_id, $user_info );
 			edd_increase_purchase_count( $download['id'] );
 			$amount = null;
@@ -59,6 +64,8 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 			$amount = edd_get_download_final_price( $download['id'], $user_info, $amount );
 			edd_increase_earnings( $download['id'], $amount );
+
+			do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type );
 		}
 
 		// Clear the total earnings cache
@@ -69,10 +76,13 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		edd_increase_discount_usage( $user_info['discount'] );
 	}
 
+	do_action( 'edd_complete_purchase', $payment_id );
+
 	// Empty the shopping cart
 	edd_empty_cart();
 }
 add_action( 'edd_update_payment_status', 'edd_complete_purchase', 100, 3 );
+
 
 /**
  * Record payment status change
@@ -114,21 +124,30 @@ function edd_update_edited_purchase( $data ) {
 
 		if ( isset( $_POST['edd-purchased-downloads'] ) ) {
 			$download_list = array();
+			$cart_items    = array();
 
 			foreach ( $_POST['edd-purchased-downloads'] as $key => $download ) {
-				if ( isset ( $download['options']['price_id'] ) ) {
-					$download_list[] = array(
-						'id' => $key,
-						'options' => array(
-							'price_id' => $download['options']['price_id']
-						)
-					);
-				} else {
-					$download_list[] = array( 'id' => $download );
-				}
+
+				$download_list[] = array(
+					'id'         => $key,
+					'options'    => isset( $download['options']['price_id'] ) ? array( 'price_id' => $download['options']['price_id'] ) : array()
+				);
+
+				$cart_items[]    = array(
+					'id'          => $key,
+					'name'        => get_the_title( $key ),
+					'item_number' => array(
+						'id'      => $key,
+						'options' => isset( $download['options']['price_id'] ) ? array( 'price_id' => $download['options']['price_id'] ) : array(),
+					),
+					'price'       => 0,
+					'quantity'    => 1,
+					'tax'         => 0
+				);
 			}
 
-			$payment_data['downloads'] = serialize( $download_list );
+			$payment_data['downloads']    = serialize( $download_list );
+			$payment_data['cart_details'] = serialize( $cart_items );
 		}
 
 		$user_info                 = maybe_unserialize( $payment_data['user_info'] );
