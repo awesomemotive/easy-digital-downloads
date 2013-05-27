@@ -193,7 +193,7 @@ class EDD_Logging {
 			}
 		}
 
-		do_action( 'edd_post_insert_log', $log_id );
+		do_action( 'edd_post_insert_log', $log_id, $log_data, $log_meta );
 
 		return $log_id;
 	}
@@ -208,7 +208,7 @@ class EDD_Logging {
 	 * @return bool True if successful, false otherwise
 	 */
 	public function update_log( $log_data = array(), $log_meta = array() ) {
-		do_action( 'edd_pre_update_log', $log_id );
+		do_action( 'edd_pre_update_log', $log_id, $log_data, $log_meta );
 
 		$defaults = array(
 			'post_type' 	=> 'edd_log',
@@ -228,7 +228,7 @@ class EDD_Logging {
 			}
 		}
 
-		do_action( 'edd_post_update_log', $log_id );
+		do_action( 'edd_post_update_log', $log_id, $log_data, $log_meta );
 	}
 
 	/**
