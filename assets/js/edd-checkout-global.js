@@ -13,19 +13,16 @@ jQuery(document).ready(function($) {
         $.post(edd_global_vars.ajaxurl, data, function (response) {
             if( 'nostates' == response ) {
                 var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
-                $this.parent().next().find('input,select').remove();
-                $this.parent().next().append( text_field );
+                $this.parent().next().find('input,select').replaceWith( text_field );
             } else {
-                $this.parent().next().find('input,select').remove();
-                $this.parent().next().append( response );
+                $this.parent().next().find('input,select').replaceWith( response );
             }
         });
         return false;
-        recalculate_taxes();
     });
 
     $body.on('change', '#edd_cc_address input, #edd_cc_address select', function() {
-        recalculate_taxes();
+       recalculate_taxes();
     });
 
     /* Credit card verification */
@@ -76,6 +73,8 @@ jQuery(document).ready(function($) {
                 $('.edd_cart_amount').html(tax_response.total);
             }
         }).fail(function (data) {
+            console.log(data);
+        }).done(function (data) {
             console.log(data);
         });
     }
