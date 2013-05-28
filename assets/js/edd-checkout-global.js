@@ -3,7 +3,7 @@ jQuery(document).ready(function($) {
         $edd_cart_amount = $('.edd_cart_amount');
 
     // Update state/province field on checkout page
-    $body.on('change', '#edd_cc_address input, #edd_cc_address select', function() {
+    $body.on('change', '#edd_cc_address input.card_state, #edd_cc_address select', function() {
         var $this = $(this);
 
         if( 'card_state' != $this.attr('id') ) {
