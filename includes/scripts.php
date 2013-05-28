@@ -54,6 +54,7 @@ function edd_load_scripts() {
 			'no_username'        => __( 'Please enter a username before applying a discount code', 'edd' ),
 			'purchase_loading'   => __( 'Please Wait...', 'edd' ),
 			'complete_purchasse' => __( 'Purchase', 'edd' ),
+			'edd_version'        => EDD_VERSION
 		));
 	}
 

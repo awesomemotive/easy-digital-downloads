@@ -272,19 +272,34 @@ function edd_single_price_option_mode( $download_id = 0 ) {
 /**
  * Gets the Download type, either default or "bundled"
  *
- * @since 1.5
+ * @since 1.6
  * @param int $download_id Download ID
  * @return string $type Download type
  */
 function edd_get_download_type( $download_id ) {
 	$type = get_post_meta( $download_id, '_edd_product_type', true );
+	if( empty( $type ) )
+		$type = 'default';
 	return apply_filters( 'edd_get_download_type', $type, $download_id );
 }
+
+
+/**
+ * Deterimes if a product is a bundle
+ *
+ * @since 1.6
+ * @param int $download_id Download ID
+ * @return bool
+ */
+function edd_is_bundled_product( $download_id = 0 ) {
+	return 'bundle' == edd_get_download_type( $download_id );
+}
+
 
 /**
  * Retrieves the product IDs of bundled products
  *
- * @since 1.5
+ * @since 1.6
  * @param int $download_id Download ID
  * @return array $products Products in the bundle
  */
@@ -498,8 +513,7 @@ function edd_get_average_monthly_download_earnings( $download_id ) {
 
 	$diff 	= abs( time() - strtotime( $release_date ) );
 
-	$years 	= floor( $diff / ( 365*60*60*24 ) );							// Number of years since publication
-	$months = floor( ( $diff - $years * 365*60*60*24 ) / ( 30*60*60*24 ) ); // Number of months since publication
+    $months = floor( $diff / ( 30*60*60*24 ) ); // Number of months since publication
 
 	if ( $months > 0 )
 		return ( $earnings / $months );
@@ -515,18 +529,17 @@ function edd_get_average_monthly_download_earnings( $download_id ) {
  * @return float $sales Average monthly sales
  */
 function edd_get_average_monthly_download_sales( $download_id ) {
-	$sales			= edd_get_download_sales_stats( $download_id );
-	$release_date 	= get_post_field( 'post_date', $download_id );
+    $sales          = edd_get_download_sales_stats( $download_id );
+    $release_date   = get_post_field( 'post_date', $download_id );
 
-	$diff 	= abs( time() - strtotime( $release_date ) );
+    $diff   = abs( time() - strtotime( $release_date ) );
 
-	$years 	= floor( $diff / ( 365*60*60*24 ) );							// Number of years since publication
-	$months = floor( ( $diff - $years * 365*60*60*24 ) / ( 30*60*60*24 ) ); // Number of months since publication
+    $months = floor( $diff / ( 30*60*60*24 ) ); // Number of months since publication
 
-	if ( $months > 0 )
-		return ( $sales / $months );
+    if ( $months > 0 )
+        return ( $sales / $months );
 
-	return $sales;
+    return $sales;
 }
 
 /**
@@ -541,6 +554,11 @@ function edd_get_average_monthly_download_sales( $download_id ) {
  */
 function edd_get_download_files( $download_id, $variable_price_id = null ) {
 	$files = array();
+
+	// Bundled products are not allowed to have files
+	if( edd_is_bundled_product( $download_id ) )
+		return $files;
+
 	$download_files = get_post_meta( $download_id, 'edd_download_files', true );
 
 	if ( $download_files ) {
@@ -794,7 +812,7 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price
  * @param string $file_key
  * @return bool True if payment and link was verified, false otherwise
  */
-function edd_verify_download_link( $download_id, $key, $email, $expire, $file_key ) {
+function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $expire = '', $file_key = 0 ) {
 	$meta_query = array(
 		'relation'  => 'AND',
 		array(
@@ -811,33 +829,30 @@ function edd_verify_download_link( $download_id, $key, $email, $expire, $file_ke
 
 	if ( $payments ) {
 		foreach ( $payments as $payment ) {
-			$payment_meta 	= edd_get_payment_meta( $payment->ID );
-			$downloads 		= maybe_unserialize( $payment_meta['downloads'] );
-			$cart_details 	= unserialize( $payment_meta['cart_details'] );
+
+			$cart_details = edd_get_payment_meta_cart_details( $payment->ID, true );
 
 			if ( $payment->post_status != 'publish' && $payment->post_status != 'complete' )
 				return false;
 
-			if ( $downloads ) {
-				foreach ( $downloads as $download_key => $download ) {
+			if ( ! empty( $cart_details ) ) {
+				foreach ( $cart_details as $cart_key => $cart_item ) {
 
-					$id = isset( $payment_meta['cart_details'] ) ? $download['id'] : $download;
-
-					if ( $id != $download_id )
+					if ( $cart_item['id'] != $download_id )
 						continue;
 
-					$price_options = isset( $cart_details[ $download_key ]['item_number']['options'] ) ? $cart_details[ $download_key ]['item_number']['options'] : false;
+					$price_options = isset( $cart_item['item_number']['options'] ) ? $cart_item['item_number']['options'] : false;
 
-					$file_condition = edd_get_file_price_condition( $id, $file_key );
+					$file_condition = edd_get_file_price_condition( $cart_item['id'], $file_key );
 
 					// If this download has variable prices, we have to confirm that this file was included in their purchase
-					if ( ! empty( $price_options ) && $file_condition != 'all' && edd_has_variable_prices( $id ) ) {
+					if ( ! empty( $price_options ) && $file_condition != 'all' && edd_has_variable_prices( $cart_item['id'] ) ) {
 						if ( $file_condition == $price_options['price_id'] )
 							return $payment->ID;
 					}
 
 					// Check to see if the file download limit has been reached
-					if ( edd_is_file_at_download_limit( $id, $payment->ID, $file_key ) )
+					if ( edd_is_file_at_download_limit( $cart_item['id'], $payment->ID, $file_key ) )
 						wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ) );
 
 					// Make sure the link hasn't expired
