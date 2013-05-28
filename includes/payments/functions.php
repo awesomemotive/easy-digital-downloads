@@ -167,6 +167,9 @@ function edd_insert_payment( $payment_data = array() ) {
 	if ( empty( $payment_data ) )
 		return false;
 
+	// Make sure the payment is inserted with the correct timezone
+	date_default_timezone_set( edd_get_timezone_id() );
+
 	// Construct the payment title
 	if ( isset( $payment_data['user_info']['first_name'] ) || isset( $payment_data['user_info']['last_name'] ) ) {
 		$payment_title = $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'];
@@ -412,7 +415,7 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		'monthnum'       => $month_num,
 		'meta_key'       => '_edd_payment_mode',
 		'meta_value'     => 'live',
-		'post_status'    => 'publish',
+		'post_status'    => array( 'publish', 'revoked' ),
 		'fields'         => 'ids',
 		'update_post_term_cache' => false
 	);
@@ -462,7 +465,7 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 		'meta_key'       => '_edd_payment_mode',
 		'meta_value'     => 'live',
 		'fields'         => 'ids',
-		'post_status'    => 'publish',
+		'post_status'    => array( 'publish', 'revoked' ),
 		'update_post_meta_cache' => false,
 		'update_post_term_cache' => false
 	);
@@ -517,7 +520,7 @@ function edd_get_total_sales() {
 		'meta_key'               => '_edd_payment_mode',
 		'meta_value'             => 'live',
 		'fields'                 => 'ids',
-		'post_status'            => 'publish',
+		'post_status'            => array( 'publish', 'revoked' ),
 		'update_post_meta_cache' => false,
 		'update_post_term_cache' => false
 	) );
@@ -552,7 +555,7 @@ function edd_get_total_earnings() {
 			'offset' => 0,
 			'number' => -1,
 			'mode'   => 'live',
-			'status' => 'publish',
+			'status' => array( 'publish', 'revoked' ),
 			'fields' => 'ids'
 		) );
 
@@ -628,11 +631,40 @@ function edd_get_payment_meta_downloads( $payment_id ) {
  *
  * @since 1.2
  * @param int $payment_id Payment ID
+ * @param bool $include_bundle_files Whether to retrieve product IDs associated with a bundled product and return them in the array
  * @return array $cart_details Cart Details Meta Values
  */
-function edd_get_payment_meta_cart_details( $payment_id ) {
+function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files = false ) {
 	$payment_meta = edd_get_payment_meta( $payment_id );
 	$cart_details = maybe_unserialize( $payment_meta['cart_details'] );
+
+	if( $include_bundle_files ) {
+
+		foreach( $cart_details as $cart_item ) {
+
+			if( 'bundle' != edd_get_download_type( $cart_item['id'] ) )
+				continue;
+
+			$products = edd_get_bundled_products( $cart_item['id'] );
+			if( empty( $products ) )
+				continue;
+
+			foreach( $products as $product_id ) {
+				$cart_details[]   = array(
+					'id'          => $product_id,
+					'name'        => get_the_title( $product_id ),
+					'item_number' => array(
+						'id'      => $product_id,
+						'options' => array(),
+					),
+					'price'       => 0,
+					'quantity'    => 1,
+					'tax'         => 0,
+					'in_bundle'   => 1
+				);
+			}
+		}
+	}
 
 	return apply_filters( 'edd_payment_meta_cart_details', $cart_details );
 }

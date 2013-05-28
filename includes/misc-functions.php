@@ -221,9 +221,9 @@ function edd_get_currencies() {
 		'DKK'  => __( 'Danish Krone', 'edd' ),
 		'HKD'  => __( 'Hong Kong Dollar (&#36;)', 'edd' ),
 		'HUF'  => __( 'Hungarian Forint', 'edd' ),
-		'ILS'  => __( 'Israeli Shekel', 'edd' ),
+		'ILS'  => __( 'Israeli Shekel (&#8362;)', 'edd' ),
 		'JPY'  => __( 'Japanese Yen (&yen;)', 'edd' ),
-		'MYR'  => __( 'Malaysian Ringgits', 'edd' ),
+		'RM'   => __( 'Malaysian Ringgits', 'edd' ),
 		'MXN'  => __( 'Mexican Peso (&#36;)', 'edd' ),
 		'NZD'  => __( 'New Zealand Dollar (&#36;)', 'edd' ),
 		'NOK'  => __( 'Norwegian Krone', 'edd' ),
@@ -233,10 +233,10 @@ function edd_get_currencies() {
 		'SEK'  => __( 'Swedish Krona', 'edd' ),
 		'CHF'  => __( 'Swiss Franc', 'edd' ),
 		'TWD'  => __( 'Taiwan New Dollars', 'edd' ),
-		'THB'  => __( 'Thai Baht', 'edd' ),
-		'INR'  => __( 'Indian Rupee', 'edd' ),
-		'TRY'  => __( 'Turkish Lira', 'edd' ),
-		'RIAL' => __( 'Iranian Rial', 'edd' )
+		'THB'  => __( 'Thai Baht (&#3647;)', 'edd' ),
+		'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
+		'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
+		'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' )
 	);
 
 	return apply_filters( 'edd_currencies', $currencies );
@@ -824,4 +824,42 @@ function edd_use_skus() {
 	$ret = isset( $edd_options['enable_skus'] );
 
 	return (bool) apply_filters( 'edd_use_skus', $ret );
+}
+
+
+
+/**
+ * Retrieve timezone
+ *
+ * @since 1.6
+ * @return string $timezone The timezone ID
+ */
+function edd_get_timezone_id() {
+
+    // if site timezone string exists, return it
+    if ( $timezone = get_option( 'timezone_string' ) )
+        return $timezone;
+
+    // get UTC offset, if it isn't set return UTC
+    if ( ! ( $utc_offset = 3600 * get_option( 'gmt_offset', 0 ) ) )
+        return 'UTC';
+
+    // attempt to guess the timezone string from the UTC offset
+    $timezone = timezone_name_from_abbr( '', $utc_offset );
+
+    // last try, guess timezone string manually
+    if ( $timezone === false ) {
+
+        $is_dst = date('I');
+
+        foreach ( timezone_abbreviations_list() as $abbr ) {
+            foreach ( $abbr as $city ) {
+                if ( $city['dst'] == $is_dst &&  $city['offset'] == $utc_offset )
+                    return $city['timezone_id'];
+            }
+        }
+    }
+
+    // fallback
+    return 'UTC';
 }

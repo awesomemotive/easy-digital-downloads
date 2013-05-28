@@ -113,6 +113,8 @@ table#edd_purchase_receipt_products li { list-style: none; margin: 0 0 8px 10px;
 table#edd_purchase_receipt ul, table#edd_purchase_receipt_products ul { margin: 0; padding: 0; }
 table#edd_purchase_receipt li { list-style: none; margin: 0 0 8px 0; }
 table#edd_purchase_receipt_products .edd_purchase_receipt_product_notes { font-style: italic; }
+table#edd_purchase_receipt_products .edd_purchase_receipt_product_name { font-weight: bold; }
+table#edd_purchase_receipt_products .edd_bundled_product_name { font-style: italic; font-weight: bold; }
 
 
 /* =Purchase History
