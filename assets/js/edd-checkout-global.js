@@ -3,27 +3,65 @@ jQuery(document).ready(function($) {
         $edd_cart_amount = $('.edd_cart_amount');
 
     // Update state/province field on checkout page
-    $body.on('change', '#edd_cc_address select[name=billing_country]', function() {
+    $body.on('change', '#edd_cc_address input, #edd_cc_address select', function() {
         var $this = $(this);
-        data = {
-            action: 'edd_get_shop_states',
-            country: $this.val(),
-            field_name: 'card_state'
-        };
-        $.post(edd_global_vars.ajaxurl, data, function (response) {
-            if( 'nostates' == response ) {
-                var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
-                $this.parent().next().find('input,select').replaceWith( text_field );
-            } else {
-                $this.parent().next().find('input,select').replaceWith( response );
-            }
-        });
+
+        if( 'card_state' != $this.attr('id') ) {
+
+            // If the country field has changed, we need to update the state/provice field
+            data = {
+                action: 'edd_get_shop_states',
+                country: $this.val(),
+                field_name: 'card_state'
+            };
+            $.post(edd_global_vars.ajaxurl, data, function (response) {
+                if( 'nostates' == response ) {
+                    var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
+                    $this.parent().next().find('input,select').replaceWith( text_field );
+                } else {
+                    $this.parent().next().find('input,select').replaceWith( response );
+                }
+            });
+
+        }
+
+        recalculate_taxes();
+
         return false;
     });
 
-    $body.on('change', '#edd_cc_address input, #edd_cc_address select', function() {
-       recalculate_taxes();
-    });
+    function recalculate_taxes( state ) {
+        if( '1' != edd_global_vars.taxes_enabled )
+            return; // Taxes not enabled
+
+        var $edd_cc_address = $('#edd_cc_address');
+
+        if( ! state ) {
+            state = $edd_cc_address.find('#card_state').val();
+        }
+
+        var postData = {
+            action: 'edd_recalculate_taxes',
+            nonce: edd_global_vars.checkout_nonce,
+            country: $edd_cc_address.find('#billing_country').val(),
+            state: state
+        };
+
+        $.ajax({
+            type: "POST",
+            data: postData,
+            dataType: "json",
+            url: edd_global_vars.ajaxurl,
+            success: function (tax_response) {
+                $('#edd_checkout_cart').replaceWith(tax_response.html);
+                $('.edd_cart_amount').html(tax_response.total);
+            }
+        }).fail(function (data) {
+            console.log(data);
+        }).done(function (data) {
+            console.log(data);
+        });
+    }
 
     /* Credit card verification */
 
@@ -49,35 +87,6 @@ jQuery(document).ready(function($) {
             }
         });
     });
-
-    function recalculate_taxes() {
-        if( '1' != edd_global_vars.taxes_enabled )
-            return; // Taxes not enabled
-
-        var $edd_cc_address = $('#edd_cc_address');
-
-        var postData = {
-            action: 'edd_recalculate_taxes',
-            nonce: edd_global_vars.checkout_nonce,
-            country: $edd_cc_address.find('#billing_country').val(),
-            state: $edd_cc_address.find('#card_state').val()
-        };
-
-        $.ajax({
-            type: "POST",
-            data: postData,
-            dataType: "json",
-            url: edd_global_vars.ajaxurl,
-            success: function (tax_response) {
-                $('#edd_checkout_cart').replaceWith(tax_response.html);
-                $('.edd_cart_amount').html(tax_response.total);
-            }
-        }).fail(function (data) {
-            console.log(data);
-        }).done(function (data) {
-            console.log(data);
-        });
-    }
 
     // Make sure a gateway is selected
     $body.on('submit', '#edd_payment_mode', function() {
