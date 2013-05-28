@@ -167,6 +167,9 @@ function edd_insert_payment( $payment_data = array() ) {
 	if ( empty( $payment_data ) )
 		return false;
 
+	// Make sure the payment is inserted with the correct timezone
+	date_default_timezone_set( edd_get_timezone_id() );
+
 	// Construct the payment title
 	if ( isset( $payment_data['user_info']['first_name'] ) || isset( $payment_data['user_info']['last_name'] ) ) {
 		$payment_title = $payment_data['user_info']['first_name'] . ' ' . $payment_data['user_info']['last_name'];
