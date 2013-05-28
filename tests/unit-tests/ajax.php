@@ -139,7 +139,7 @@ class Tests_AJAX extends EDD_UnitTestCase {
 
 		$this->assertContains( '<li class="edd-cart-item">', $out );
 		$this->assertContains( '<span class="edd-cart-item-title">Test Download <span class="edd-cart-item-separator">-</span> Advanced</span>', $out );
-		$this->assertContains( '<span class="edd-cart-item-separator">-</span>&nbsp;&#36;100.00&nbsp;<span class="edd-cart-item-separator">-</span>', $out );
+		$this->assertContains( '<span class="edd-cart-item-separator">-</span><span class="edd-cart-item-price">&nbsp;&#36;100.00&nbsp;</span><span class="edd-cart-item-separator">-</span>', $out );
 	}
 
 	public function test_remove_item_from_cart() {
