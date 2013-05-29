@@ -57,7 +57,10 @@ Ajax Enabled:             <?php echo edd_is_ajax_enabled() ? "Yes\n" : "No\n"; ?
 Guest Checkout Enabled:   <?php echo edd_no_guest_checkout() ? "No\n" : "Yes\n"; ?>
 Symlinks Enabled:         <?php echo apply_filters( 'edd_symlink_file_downloads', isset( $edd_options['symlink_file_downloads'] ) ) && function_exists( 'symlink' ) ? "Yes\n" : "No\n"; ?>
 
-Checkout:                 <?php echo ! empty( $edd_options['purchase_page'] ) ? "Valid\n" : "Invalid\n"; ?>
+Checkout is:              <?php echo ! empty( $edd_options['purchase_page'] ) ? "Valid\n" : "Invalid\n"; ?>
+Checkout Page:            <?php echo ! empty( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) . "\n" : "\n" ?>
+Success Page:             <?php echo ! empty( $edd_options['success_page'] ) ? get_permalink( $edd_options['success_page'] ) . "\n" : "\n" ?>
+Failure Page:             <?php echo ! empty( $edd_options['failure_page'] ) ? get_permalink( $edd_options['failure_page'] ) . "\n" : "\n" ?>
 
 Taxes Enabled:            <?php echo edd_use_taxes() ? "Yes\n" : "No\n"; ?>
 Local Taxes Only:         <?php echo edd_local_taxes_only() ? "Yes\n" : "No\n"; ?>
