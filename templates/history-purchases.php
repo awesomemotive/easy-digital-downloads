@@ -27,7 +27,7 @@ if ( $purchases ) : ?>
 					<?php endif; ?>
 				</td>
 				<td class="edd_purchase_details">
-					<a href="<?php echo add_query_arg( 'payment_key', edd_get_payment_key( $post->ID ), edd_get_success_page_uri() ); ?>"><?php _e( 'View Details', 'edd' ); ?></a>
+					<a href="<?php echo add_query_arg( 'payment_key', edd_get_payment_key( $post->ID ), edd_get_success_page_uri() ); ?>"><?php _e( 'View Details and Downloads', 'edd' ); ?></a>
 				</td>
 				<?php do_action( 'edd_purchase_history_row_end', $post->ID, $purchase_data ); ?>
 			</tr>
