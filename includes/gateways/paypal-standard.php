@@ -89,27 +89,63 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
         // Setup PayPal arguments
         $paypal_args = array(
-            'cmd'           => '_xclick',
-            'amount'        => round( $purchase_data['price'] - $purchase_data['tax'], 2 ),
+            'cmd'           => '_cart',
             'business'      => $edd_options['paypal_email'],
-            'item_name'     => stripslashes_deep( html_entity_decode( wp_strip_all_tags( $summary ), ENT_COMPAT, 'UTF-8' ) ),
             'email'         => $purchase_data['user_email'],
             'no_shipping'   => '1',
             'shipping'      => '0',
             'no_note'       => '1',
             'currency_code' => edd_get_currency(),
-            'item_number'   => $purchase_data['purchase_key'],
+            'invoice'       => $purchase_data['purchase_key'],
             'charset'       => get_bloginfo( 'charset' ),
             'custom'        => $payment,
             'rm'            => '2',
+            'upload'        => '1',
             'return'        => $return_url,
             'cancel_return' => edd_get_failed_transaction_uri(),
             'notify_url'    => $listener_url,
             'page_style'    => edd_get_paypal_page_style()
         );
 
+        // Add cart items
+        $i = 1;
+        foreach( $purchase_data['cart_details'] as $item ) {
+        	$paypal_args['item_name_' . $i ]       = stripslashes_deep( html_entity_decode( wp_strip_all_tags( $item['name'] ), ENT_COMPAT, 'UTF-8' ) );
+        	if( edd_use_skus() ) {
+	        	$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
+    		}
+        	$paypal_args['quantity_' . $i ]        = '1';
+        	$paypal_args['amount_' . $i ]          = $item['price'];
+        	$i++;
+        }
+
+
+        // Calculate discount
+        $discounted_amount = $purchase_data['discount'];
+        if( ! empty( $purchase_data['fees'] ) ) {
+	        $i = 1;
+	        foreach( $purchase_data['fees'] as $fee ) {
+	        	if( floatval( $fee['amount'] ) > '0' ) {
+		        	// this is a positive fee
+		        	$paypal_args['item_name_' . $i ] = stripslashes_deep( html_entity_decode( wp_strip_all_tags( $fee['label'] ), ENT_COMPAT, 'UTF-8' ) );
+		        	$paypal_args['quantity_' . $i ]  = '1';
+		        	$paypal_args['amount_' . $i ]    = $fee['amount'];
+		        	$i++;
+				} else {
+					// This is a negative fee (discount)
+					$discounted_amount += abs( $fee['amount'] );
+				}
+	        }
+	    }
+
+	    if( $discounted_amount > '0' )
+			$paypal_args['discount_amount_cart'] = $discounted_amount;
+
+		// Add taxes to the cart
         if ( edd_use_taxes() )
-        	$paypal_args['tax'] = $purchase_data['tax'];
+        	$paypal_args['tax_cart'] = $purchase_data['tax'];
+
+      // echo '<pre>'; print_r( $purchase_data['fees'] ); echo '</pre>'; exit;
 
         $paypal_args = apply_filters('edd_paypal_redirect_args', $paypal_args, $purchase_data );
 
@@ -259,7 +295,7 @@ function edd_process_paypal_web_accept( $data ) {
 
 	// Collect payment details
 	$payment_id     = $data['custom'];
-	$purchase_key   = $data['item_number'];
+	$purchase_key   = $data['invoice'];
 	$paypal_amount  = $data['mc_gross'];
 	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
