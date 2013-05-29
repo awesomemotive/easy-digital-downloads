@@ -110,12 +110,19 @@ function edd_process_paypal_purchase( $purchase_data ) {
         // Add cart items
         $i = 1;
         foreach( $purchase_data['cart_details'] as $item ) {
+
+        	if( edd_prices_show_tax_on_checkout() && edd_use_taxes() ) {
+        		$price =  $item['price'] - $item['tax'];
+        	} else {
+        		$price = $item['price'];
+        	}
+
         	$paypal_args['item_name_' . $i ]       = stripslashes_deep( html_entity_decode( wp_strip_all_tags( $item['name'] ), ENT_COMPAT, 'UTF-8' ) );
         	if( edd_use_skus() ) {
 	        	$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
     		}
         	$paypal_args['quantity_' . $i ]        = '1';
-        	$paypal_args['amount_' . $i ]          = $item['price'];
+        	$paypal_args['amount_' . $i ]          = $price;
         	$i++;
         }
 
