@@ -61,6 +61,7 @@ Checkout is:              <?php echo ! empty( $edd_options['purchase_page'] ) ? 
 Checkout Page:            <?php echo ! empty( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) . "\n" : "\n" ?>
 Success Page:             <?php echo ! empty( $edd_options['success_page'] ) ? get_permalink( $edd_options['success_page'] ) . "\n" : "\n" ?>
 Failure Page:             <?php echo ! empty( $edd_options['failure_page'] ) ? get_permalink( $edd_options['failure_page'] ) . "\n" : "\n" ?>
+Downloads slug:           <?php echo defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG . "\n" : "/downloads\n"; ?>
 
 Taxes Enabled:            <?php echo edd_use_taxes() ? "Yes\n" : "No\n"; ?>
 Local Taxes Only:         <?php echo edd_local_taxes_only() ? "Yes\n" : "No\n"; ?>
