@@ -85,7 +85,7 @@ jQuery(document).ready(function($) {
             edd_email = $('#edd-email').val();
             edd_user = $('#edd_user_login').val();
 
-        if (discount_code == '') {
+        if (discount_code == '' || discount_code == edd_global_vars.enter_discount ) {
             return false;
         }
 
