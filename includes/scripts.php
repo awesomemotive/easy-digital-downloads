@@ -49,6 +49,7 @@ function edd_load_scripts() {
 			'currency_pos'       => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
 			'no_gateway'         => __( 'Please select a payment method', 'edd' ),
 			'no_discount'        => __( 'Please enter a discount code', 'edd' ), // Blank discount code message
+			'enter_discount'     => __( 'Enter discount', 'edd' ),
 			'discount_applied'   => __( 'Discount Applied', 'edd' ), // Discount verified message
 			'no_email'           => __( 'Please enter an email address before applying a discount code', 'edd' ),
 			'no_username'        => __( 'Please enter a username before applying a discount code', 'edd' ),
