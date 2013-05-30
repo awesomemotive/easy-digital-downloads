@@ -111,7 +111,9 @@ function edd_process_paypal_purchase( $purchase_data ) {
         $i = 1;
         foreach( $purchase_data['cart_details'] as $item ) {
 
-        	if( edd_prices_show_tax_on_checkout() && edd_use_taxes() ) {
+        	$deduct_tax = ( edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax() );
+
+        	if( $deduct_tax && edd_use_taxes() ) {
         		$price =  $item['price'] - $item['tax'];
         	} else {
         		$price = $item['price'];
