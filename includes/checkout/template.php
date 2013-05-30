@@ -343,7 +343,7 @@ add_action( 'edd_purchase_form_register_fields', 'edd_get_register_fields' );
 /**
  * Gets the login fields for the login form on the checkout. This function hooks
  * on the edd_purchase_form_login_fields to display the login form if a user already
- * had an account. 
+ * had an account.
  *
  * @since 1.0
  * @return string
@@ -477,28 +477,6 @@ function edd_terms_agreement() {
 	}
 }
 add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement' );
-
-/**
- * Shows the tax opt-in checkbox
- *
- * @since 1.3.3
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-function edd_show_local_tax_opt_in() {
-	global $edd_options;
-	if ( edd_use_taxes() && isset( $edd_options['tax_condition'] ) && $edd_options['tax_condition'] == 'local' ) {
-?>
-		<fieldset id="edd_tax_opt_in_fields">
-			<p id="edd-tax-opt-in-wrap">
-				<label for="edd_tax_opt_in"><?php echo isset( $edd_options['tax_location'] ) ? $edd_options['tax_location'] : __( 'Opt Into Taxes?', 'edd' ); ?></label>
-				<input name="edd_tax_opt_in" type="checkbox" id="edd_tax_opt_in" value="1"<?php checked( true, edd_local_tax_opted_in() ); ?>/>
-			</p>
-		</fieldset>
-<?php
-	}
-}
-add_action( 'edd_purchase_form_before_submit', 'edd_show_local_tax_opt_in' );
 
 /**
  * Shows the final purchase total at the bottom of the checkout page
