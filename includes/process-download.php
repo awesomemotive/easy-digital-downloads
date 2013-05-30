@@ -83,6 +83,10 @@ function edd_process_download() {
 		header("Content-Transfer-Encoding: binary");
 
 		$method = edd_get_file_download_method();
+		if( 'x_sendfile' == $method && ( ! function_exists( 'apache_get_modules' ) || ! in_array( 'mod_xsendfile', apache_get_modules() ) ) ) {
+			// If X-Sendfile is selected but is not supported, fallback to Direct
+			$method = 'direct';
+		}
 
 		switch( $method ) :
 
@@ -90,34 +94,49 @@ function edd_process_download() {
 
 				// Redirect straight to the file
 				header( "Location: " . $requested_file );
-
 				break;
 
 			case 'direct' :
 			default:
 
+				$direct    = false;
 				$file_path = realpath( $requested_file );
 
 				if ( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false && file_exists( $file_path ) ) {
 
 					/** This is an absolute path */
-
-					edd_deliver_download( $file_path );
+					$direct = true;
 
 				} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false ) {
 
 					/** This is a local file given by URL so we need to figure out the path */
 					$upload_dir = wp_upload_dir();
+					$file_path  = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );
+					$file_path  = realpath( $file_path );
+					$direct     = true;
 
-					$file_path = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );
-					$file_path = realpath( $file_path );
+				}
 
+				// Now deliver the file based on the kind of software the server is running / has enabled
+				if ( function_exists( 'apache_get_modules' ) && in_array( 'mod_xsendfile', apache_get_modules() ) ) {
+
+					header("X-Sendfile: $file_path");
+
+				} elseif ( stristr( getenv( 'SERVER_SOFTWARE' ), 'lighttpd' ) ) {
+
+					header( "X-Lighttpd-Sendfile: $file_path" );
+
+				} elseif ( stristr( getenv( 'SERVER_SOFTWARE' ), 'nginx' ) || stristr( getenv( 'SERVER_SOFTWARE' ), 'cherokee' ) ) {
+
+					header( "X-Accel-Redirect: /$file_path" );
+
+				} elseif( $direct ) {
 					edd_deliver_download( $file_path );
-
 				} else {
-					// This is a remote file, but since we are using the Direct method, we have to simply redirect to it
+					// The file supplied does not have a discoverable absolute path
 					header( "Location: " . $requested_file );
 				}
+
 				break;
 
 		endswitch;

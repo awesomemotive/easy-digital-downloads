@@ -11,7 +11,7 @@ More information can be found at [easydigitaldownloads.com](http://easydigitaldo
 For detailed setup instructions, visit the official [Documentation](http://easydigitaldownloads.com/documentation/) page.
 
 1. You can clone the GitHub repository: `https://github.com/easydigitaldownloads/Easy-Digital-Downloads.git`
-2. Or download it directly as a ZIP file: `https://github.com/easydigitaldownloads/Easy-Digital-Downloads/zipball/master`
+2. Or download it directly as a ZIP file: `https://github.com/easydigitaldownloads/Easy-Digital-Downloads/archive/master.zip`
 
 This will download the latest developer copy of Easy Digital Downloads.
 

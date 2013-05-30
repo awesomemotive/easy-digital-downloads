@@ -49,12 +49,14 @@ function edd_load_scripts() {
 			'currency_pos'       => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
 			'no_gateway'         => __( 'Please select a payment method', 'edd' ),
 			'no_discount'        => __( 'Please enter a discount code', 'edd' ), // Blank discount code message
+			'enter_discount'     => __( 'Enter discount', 'edd' ),
 			'discount_applied'   => __( 'Discount Applied', 'edd' ), // Discount verified message
 			'no_email'           => __( 'Please enter an email address before applying a discount code', 'edd' ),
 			'no_username'        => __( 'Please enter a username before applying a discount code', 'edd' ),
 			'purchase_loading'   => __( 'Please Wait...', 'edd' ),
 			'complete_purchasse' => __( 'Purchase', 'edd' ),
 			'taxes_enabled'      => edd_use_taxes() ? '1' : '0',
+			'edd_version'        => EDD_VERSION
 		));
 	}
 
@@ -186,6 +188,8 @@ function edd_load_admin_scripts( $hook ) {
 		wp_enqueue_style( 'jquery-ui-css', $css_dir . 'jquery-ui-' . $ui_style . $suffix . '.css' );
 	}
 	if ( $hook == $edd_settings_page ) {
+		wp_enqueue_style( 'wp-color-picker' );
+		wp_enqueue_script( 'wp-color-picker' );
 		wp_enqueue_style( 'colorbox', $css_dir . 'colorbox' . $suffix . '.css', array(), '1.3.20' );
 		wp_enqueue_script( 'colorbox', $js_dir . 'jquery.colorbox-min.js', array( 'jquery' ), '1.3.20' );
 		if( function_exists( 'wp_enqueue_media' ) && version_compare( $wp_version, '3.5', '>=' ) ) {

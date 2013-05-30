@@ -30,7 +30,7 @@ class EDD_HTML_Elements {
 	 * @return string $output Product dropdown
 	 */
 	public function product_dropdown( $name = 'edd_products', $selected = 0 ) {
-		$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
+		$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true, 'orderby' => 'title', 'order' => 'ASC' ) );
 
 		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
 

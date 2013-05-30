@@ -457,7 +457,6 @@ function edd_terms_agreement() {
 	if ( isset( $edd_options['show_agree_to_terms'] ) ) {
 ?>
 		<fieldset id="edd_terms_agreement">
-			<p id="edd-terms-wrap">
 				<div id="edd_terms" style="display:none;">
 					<?php
 						do_action( 'edd_before_terms' );
@@ -471,7 +470,6 @@ function edd_terms_agreement() {
 				</div>
 				<label for="edd_agree_to_terms"><?php echo isset( $edd_options['agree_label'] ) ? $edd_options['agree_label'] : __( 'Agree to Terms?', 'edd' ); ?></label>
 				<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
-			</p>
 		</fieldset>
 <?php
 	}
