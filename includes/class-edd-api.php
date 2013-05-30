@@ -428,6 +428,8 @@ class EDD_API {
 
 		$args = wp_parse_args( $args, $defaults );
 
+		date_default_timezone_set( edd_get_timezone_id() );
+
 		if ( 'range' === $args['date'] ) {
 			$startdate          = strtotime( $args['startdate'] );
 			$enddate            = strtotime( $args['enddate'] );

@@ -377,6 +377,9 @@ function edd_reports_graph_controls() {
 function edd_get_report_dates() {
 	$dates = array();
 
+	// Make sure the reports are based off of the correct timezone
+	date_default_timezone_set( edd_get_timezone_id() );
+
 	$dates['range']		= isset( $_GET['range'] )	? $_GET['range']	: 'this_month';
 	$dates['day']		= isset( $_GET['day'] ) 	? $_GET['day'] 		: null;
 	$dates['m_start'] 	= isset( $_GET['m_start'] ) ? $_GET['m_start'] 	: 1;

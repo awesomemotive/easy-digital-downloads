@@ -114,7 +114,7 @@ jQuery(document).ready(function($) {
             edd_user = $('#edd_user_login').val(),
             edd_discount_loader = $('#edd-discount-loader');
 
-        if (discount_code == '') {
+        if (discount_code == '' || discount_code == edd_global_vars.enter_discount ) {
             return false;
         }
 
