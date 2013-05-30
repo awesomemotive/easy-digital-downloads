@@ -66,8 +66,6 @@ jQuery(document).ready(function($) {
             }
         }).fail(function (data) {
             console.log(data);
-        }).done(function (data) {
-            console.log(data);
         });
     }
 
