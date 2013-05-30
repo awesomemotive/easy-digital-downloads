@@ -91,6 +91,12 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 /* Upgrades page styles
 -------------------------------------------------------------- */
 
+/* Settings page styles
+-------------------------------------------------------------- */
+#edd_tax_rates .edd_tax_country { width: 250px; }
+#edd_tax_rates .edd_tax_state { width: 315px; }
+#edd_tax_rates .edd_tax_rate { width: 80px; }
+
 /* System Info page styles
 -------------------------------------------------------------- */
 #system-info-textarea { width: 800px; height: 400px; font-family: Menlo, Monaco, monospace; background: none; white-space: pre; overflow: auto; display: block; }
