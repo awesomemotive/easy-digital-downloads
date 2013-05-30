@@ -1083,9 +1083,9 @@ function edd_tax_rates_callback($args) {
 	<table id="edd_tax_rates" class="wp-list-table widefat fixed posts">
 		<thead>
 			<tr>
-				<th scope="col"><?php _e( 'Country', 'edd' ); ?></th>
-				<th scope="col"><?php _e( 'State / Province', 'edd' ); ?></th>
-				<th scope="col"><?php _e( 'Rate', 'edd' ); ?></th>
+				<th scope="col" class="edd_tax_country"><?php _e( 'Country', 'edd' ); ?></th>
+				<th scope="col" class="edd_tax_state"><?php _e( 'State / Province', 'edd' ); ?></th>
+				<th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'edd' ); ?></th>
 				<th scope="col"><?php _e( 'Remove', 'edd' ); ?></th>
 			</tr>
 		</thead>
@@ -1103,7 +1103,7 @@ function edd_tax_rates_callback($args) {
 					}
 					?>
 				</td>
-				<td><input type="number" class="small-text" step="0.01" min="0.00" max="0.99" name="tax_rates[<?php echo $key; ?>][rate]" value="<?php echo $rate['rate']; ?>"/></td>
+				<td><input type="number" class="small-text" step="0.1" min="0.0" max="99" name="tax_rates[<?php echo $key; ?>][rate]" value="<?php echo $rate['rate']; ?>"/></td>
 				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'edd' ); ?></span></td>
 			</tr>
 			<?php endforeach; ?>
@@ -1119,7 +1119,7 @@ function edd_tax_rates_callback($args) {
 					}
 					?>
 				</td>
-				<td><input type="number" class="small-text" step="0.01" min="0.00" name="tax_rates[0][rate]" value=""/></td>
+				<td><input type="number" class="small-text" step="0.1" min="0.0" name="tax_rates[0][rate]" value=""/></td>
 				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'edd' ); ?></span></td>
 			</tr>
 		<?php endif; ?>
