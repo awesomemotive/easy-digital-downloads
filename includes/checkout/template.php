@@ -476,7 +476,7 @@ function edd_terms_agreement() {
 <?php
 	}
 }
-add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement' );
+add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement', 999 );
 
 /**
  * Shows the final purchase total at the bottom of the checkout page
