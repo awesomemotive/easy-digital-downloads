@@ -1055,9 +1055,9 @@ function edd_tax_rates_callback($args) {
 	<table id="edd_tax_rates" class="wp-list-table widefat fixed posts">
 		<thead>
 			<tr>
-				<th scope="col"><?php _e( 'Country', 'edd' ); ?></th>
-				<th scope="col"><?php _e( 'State / Province', 'edd' ); ?></th>
-				<th scope="col"><?php _e( 'Rate', 'edd' ); ?></th>
+				<th scope="col" class="edd_tax_country"><?php _e( 'Country', 'edd' ); ?></th>
+				<th scope="col" class="edd_tax_state"><?php _e( 'State / Province', 'edd' ); ?></th>
+				<th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'edd' ); ?></th>
 				<th scope="col"><?php _e( 'Remove', 'edd' ); ?></th>
 			</tr>
 		</thead>
