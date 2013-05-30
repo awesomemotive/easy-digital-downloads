@@ -94,6 +94,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
         $paypal_args = array(
             'business'      => $edd_options['paypal_email'],
             'email'         => $purchase_data['user_email'],
+            'invoice'		=> $purchase_data['purchase_key'],
             'no_shipping'   => '1',
             'shipping'      => '0',
             'no_note'       => '1',
@@ -111,15 +112,13 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		if( $itemize ) {
 			$paypal_extra_args = array(
 				'cmd'			=> '_cart',
-				'invoice'		=> $purchase_data['purchase_key'],
 				'upload'		=> '1'
 			);
 		} else {
 			$paypal_extra_args = array(
 				'cmd'			=> '_xclick',
 				'amount'		=> round( $purchase_data['price'] - $purchase_data['tax'], 2 ),
-				'item_name'		=> stripslashes( html_entity_decode( wp_strip_all_tags( $summary ), ENT_COMPAT, 'UTF-8' ) ),
-				'item_number'	=> $purchase_data['purchase_key']
+				'item_name'		=> stripslashes( html_entity_decode( wp_strip_all_tags( $summary ), ENT_COMPAT, 'UTF-8' ) )
 			);
 		}
 		$paypal_args = array_merge( $paypal_extra_args, $paypal_args );
