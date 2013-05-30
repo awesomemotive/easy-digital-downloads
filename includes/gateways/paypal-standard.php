@@ -108,23 +108,23 @@ function edd_process_paypal_purchase( $purchase_data ) {
         );
 
 		// Add required content depending on number of items
-		if( $itemize == false ) {
+		if( $itemize ) {
+			$paypal_extra_args = array(
+				'cmd'			=> '_cart',
+				'invoice'		=> $purchase_data['purchase_key'],
+				'upload'		=> '1'
+			);
+		} else {
 			$paypal_extra_args = array(
 				'cmd'			=> '_xclick',
 				'amount'		=> round( $purchase_data['price'] - $purchase_data['tax'], 2 ),
 				'item_name'		=> stripslashes( html_entity_decode( wp_strip_all_tags( $summary ), ENT_COMPAT, 'UTF-8' ) ),
 				'item_number'	=> $purchase_data['purchase_key']
 			);
-		} else {
-			$paypal_extra_args = array(
-				'cmd'			=> '_cart',
-				'invoice'		=> $purchase_data['purchase_key'],
-				'upload'		=> '1'
-			);
 		}
 		$paypal_args = array_merge( $paypal_extra_args, $paypal_args );
 
-		if( $itemize == true ) {
+		if( $itemize ) {
 	        // Add cart items
     	    $i = 1;
         	foreach( $purchase_data['cart_details'] as $item ) {
@@ -169,9 +169,9 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			$paypal_args['discount_amount_cart'] = $discounted_amount;
 
 		// Add taxes to the cart
-        if ( edd_use_taxes() && $itemize == true )
+        if ( edd_use_taxes() && $itemize )
 			$paypal_args['tax_cart'] = $purchase_data['tax'];
-		elseif ( edd_use_taxes() && $itemize == false )
+		elseif ( edd_use_taxes() && ! $itemize )
 			$paypal_args['tax'] = $purchase_data['tax'];
 
       // echo '<pre>'; print_r( $purchase_data['fees'] ); echo '</pre>'; exit;
