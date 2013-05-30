@@ -5,27 +5,35 @@ jQuery(document).ready(function($) {
     // Update state/province field on checkout page
     $body.on('change', '#edd_cc_address input.card_state, #edd_cc_address select', function() {
         var $this = $(this);
-
         if( 'card_state' != $this.attr('id') ) {
 
             // If the country field has changed, we need to update the state/provice field
-            data = {
+            var postData = {
                 action: 'edd_get_shop_states',
                 country: $this.val(),
                 field_name: 'card_state'
             };
-            $.post(edd_global_vars.ajaxurl, data, function (response) {
-                if( 'nostates' == response ) {
-                    var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
-                    $this.parent().next().find('input,select').replaceWith( text_field );
-                } else {
-                    $this.parent().next().find('input,select').replaceWith( response );
+
+            $.ajax({
+                type: "POST",
+                data: postData,
+                url: edd_global_vars.ajaxurl,
+                success: function (response) {
+                    if( 'nostates' == response ) {
+                        var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
+                        $this.parent().next().find('input,select').replaceWith( text_field );
+                    } else {
+                        $this.parent().next().find('input,select').replaceWith( response );
+                    }
                 }
+            }).fail(function (data) {
+                console.log(data);
+            }).done(function (data) {
+                recalculate_taxes();
             });
-
+        } else {
+            recalculate_taxes();
         }
-
-        recalculate_taxes();
 
         return false;
     });
@@ -57,8 +65,6 @@ jQuery(document).ready(function($) {
                 $('.edd_cart_amount').html(tax_response.total);
             }
         }).fail(function (data) {
-            console.log(data);
-        }).done(function (data) {
             console.log(data);
         });
     }
