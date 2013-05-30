@@ -81,9 +81,6 @@ function edd_process_paypal_purchase( $purchase_data ) {
          // Get the success url
         $return_url = add_query_arg( 'payment-confirmation', 'paypal', get_permalink( $edd_options['success_page'] ) );
 
-        // Get the complete cart cart_summary
-        $summary = edd_get_purchase_summary( $purchase_data, false );
-
         // Get the PayPal redirect uri
         $paypal_redirect = trailingslashit( edd_get_paypal_redirect() ) . '?';
 
@@ -115,6 +112,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
 				'upload'		=> '1'
 			);
 		} else {
+			// Get the complete cart cart_summary
+			$summary = edd_get_purchase_summary( $purchase_data, false );
 			$paypal_extra_args = array(
 				'cmd'			=> '_xclick',
 				'amount'		=> round( $purchase_data['price'] - $purchase_data['tax'], 2 ),
