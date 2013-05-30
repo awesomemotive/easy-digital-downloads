@@ -272,7 +272,7 @@ function edd_admin_downloads_icon() {
 				background-size: 32px 32px !important;
 			}
 		}
-		#edd-media-button { -webkit-background-size: 16px; -moz-background-size: 16px; background-size: 16px; background-image: url(<?php echo $icon_2x_url; ?>); margin-top: -1px; }
+		#edd-media-button { -webkit-background-size: 16px; -moz-background-size: 16px; background-size: 16px; background-image: url(<?php echo $icon_cpt_url; ?>); margin-top: -1px; }
 	</style>
 	<?php
 }
