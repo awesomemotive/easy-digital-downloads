@@ -297,4 +297,4 @@ function edd_mark_abandoned_orders() {
 		}
 	}
 }
-add_action( 'edd_mark_abandoned_orders', 'edd_mark_abandoned_orders' );
+add_action( 'edd_weekly_scheduled_events', 'edd_mark_abandoned_orders' );
