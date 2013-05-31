@@ -231,7 +231,7 @@ function edd_insert_payment( $payment_data = array() ) {
 }
 
 /**
- * Updates a payment status, and performs all necessary functions to mark it as complete, and to finish a purchase.
+ * Updates a payment status.
  *
  * @since 1.0
  * @param int $payment_id Payment ID
