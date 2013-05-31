@@ -183,6 +183,64 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 1.6: May 31, 2013 =
+
+* New: Bundled products
+* New: Download limits per-purchase
+* New: Pending orders over 1-week old are automatically marked as Abandoned
+* New: Added support for X-Sendfile, X-Lighttpd-Sendfile, and X-Accel-Redirect download methods
+* New: Added Download Method option: Redirect or Forced
+* New: Discounts API endpoint
+* New: Global file download limit
+* New: Added possible search methods to help tabs
+* New: Payments amounts can be edited
+* New: Introduced .min versions of all scripts / styles
+* New: Ability to delete payment notes
+* New: Improved Order Details screen
+* New: SKU fields for Downloads
+* New: Itemized purchase details for PayPal Standard
+* New: Introduced state / provice fields for 12 additional countries
+* NewL Introduced EDD_Cron class for scheduling routine events
+
+* Tweak: File Name field not set by default
+* Tweak: Improved file protection via better .htaccess rules
+* Tweak: Export payment history by date
+* Tweak: Show payment status in [purchase_history]
+* Tweak: Show payment status in [edd_receipt]
+* Tweak: Removed PressedTrends tracking
+* Tweak: Improved cart widget
+* Tweak: Added a class to the Empty Cart message
+* Tweak: Allow opt-in use of PHP $_SESSION for data storage
+* Tweak: Better error messages for File Download failures
+* Tweak: Better default stats response in EDD_API
+* Tweak: Better HTML helper functions
+
+* Fix: Draft products could be added to the cart
+* Fix: Insert Download icon screwed up
+* Fix: Estimated stats incorrect
+* Fix: "upload" field type in settings doesn't use WP 3.5 uploader
+* Fix: Sample import data uses wrong short code
+* Fix: Max product limit in PayPal Standard
+* Fix: Incorrect parameter in shortcode-content-cart-button.php
+* Fix: System Info: Page On Front and Page for Posts have same value
+* Fix: Firt Name field not required for free downloads
+* Fix: Download categories 404 on front end
+* Fix: Blank credits page
+* Fix: WP Super Cache 1.3.1 compatibility
+* Fix: Incorrect URL to iPhone image in Payment History
+* Fix: Editing Downloads in payment doesn't work fully
+* Fix: Purchase History page used wrong short code
+* Fix: Error bulk-deleting payments with some languages
+* Fix: Prices not showing on purchase button
+* Fix: Incorect path and URL constants when wp-content/plugins is symlinked
+* Fix: SQL error with comments_clauses
+* Fix: Non-object error
+* Fix: Estimated earnings are sometimes incorrect
+* Fix: Payment History and Reports not based on site's timezone
+* Fix: Week Reports start day doesn't respect start day in general WordPress settings
+* Fix: Multi-Option purchase mode: can add downloads to cart without checking a box
+* Fix: White screen after checkout when on multi-site
+
 = 1.5.2.3: May 23, 2013 =
 
 * Fix: An uninstall error

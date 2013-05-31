@@ -214,7 +214,7 @@ class EDD_Welcome {
 						<p><?php printf( __( 'The new %EDD_Cron class%s provides a simple way to hook into routinely scheduled events in Easy Digital Downloads.', 'edd' ), '<a href="https://github.com/easydigitaldownloads/Easy-Digital-Downloads/blob/master/includes/class-edd-cron.php" target="_blank">', '</a>' ); ?></p>
 
 						<h4><?php _e( 'Improved Country and State / Province Fields ', 'edd' ); ?></h4>
-						<p><?php _e( 'We have added drop down fields for the states / provinces of 13 additional countries, providing customers in those countries a much better checkout experience.', 'edd' ); ?></p>
+						<p><?php _e( 'We have added drop down fields for the states / provinces of 12 additional countries, providing customers in those countries a much better checkout experience.', 'edd' ); ?></p>
 					</div>
 
 					<div>
