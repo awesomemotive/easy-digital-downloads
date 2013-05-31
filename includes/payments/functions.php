@@ -148,9 +148,10 @@ function edd_get_payments( $args = array() ) {
 		}
 	}
 
-	$payments = get_posts( apply_filters( 'edd_get_payments_args', $payment_args ) );
+	$payment_args = apply_filters( 'edd_get_payments_args', $payment_args );
+	$payments     = new WP_Query;
 	if ( $payments ) {
-		return $payments;
+		return $payments->query( $payment_args );
 	}
 
 	return false;
