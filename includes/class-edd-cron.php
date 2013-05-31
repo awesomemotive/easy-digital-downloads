@@ -98,3 +98,6 @@ class EDD_Cron {
 			do_action( 'edd_schedule_weekly_events' );
 		}
 	}
+
+}
+$edd_cron = new EDD_Cron;
