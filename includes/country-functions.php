@@ -65,8 +65,6 @@ function edd_get_shop_states( $country = null ) {
 			break;
 		case 'CN' :
 			$states = edd_get_chinese_states_list();
-		case 'DE' :
-			$states = edd_get_german_states_list();
 			break;
 		case 'HK' :
 			$states = edd_get_hong_kong_states_list();
@@ -619,34 +617,6 @@ function edd_get_chinese_states_list() {
 	);
 
 	return apply_filters( 'edd_chinese_states', $states );
-}
-
-/**
- * Get German States
- *
- * @since 1.6
- * @return array $states A list of states
- */
-function edd_get_german_states_list() {
-	$states = array(
-	    'BW'  => 'Baden-Württemberg',
-	    'BY'  => 'Bavaria',
-	    'BE'  => 'Berlin',
-	    'BB'  => 'Brandenburg',
-	    'HB'  => 'Bremen',
-	    'HH'  => 'Hamburg',
-	    'HE'  => 'Hesse',
-	    'NI'  => 'Lower Saxony',
-	    'MV'  => 'Mecklenburg-Vorpommern',
-	    'NW'  => 'North Rhine-Westphalia',
-	    'RP'  => 'Rhineland-Palatinate',
-	    'SL'  => 'Saarland',
-	    'SN'  => 'Saxony',
-	    'ST'  => 'Saxony-Anhalt',
-	    'TH'  => 'Thuringia',
-	);
-
-	return apply_filters( 'edd_german_states', $states );
 }
 
 /**
