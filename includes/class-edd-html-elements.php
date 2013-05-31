@@ -30,7 +30,7 @@ class EDD_HTML_Elements {
 	 * @return string $output Product dropdown
 	 */
 	public function product_dropdown( $name = 'edd_products', $selected = 0 ) {
-		$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
+		$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true, 'orderby' => 'title', 'order' => 'ASC' ) );
 
 		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
 
@@ -163,6 +163,30 @@ class EDD_HTML_Elements {
 
 
 	/**
+	 * Renders an HTML Dropdown
+	 *
+	 * @access public
+	 * @since 1.6
+	 * @param string $options Options of the dropdown
+	 * @param string $name Name attribute of the dropdown
+	 * @param int    $selected Option key to select by default
+	 * @return string $output The dropdown
+	 */
+	public function select( $options = array(), $name = 'year', $selected = 0 ) {
+
+		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '" class="edd-select ' . esc_attr( $name ) . '">';
+
+		foreach( $options as $key => $option ) {
+			$output .= '<option value="' . esc_attr( $key ) . '"' . selected( $selected, $key, false ) . '>' . esc_html( $option ) . '</option>';
+		}
+
+		$output .= '</select>';
+
+		return $output;
+	}
+
+
+	/**
 	 * Renders an HTML Text field
 	 *
 	 * @access public
@@ -176,7 +200,7 @@ class EDD_HTML_Elements {
 			$output .= '<label class="edd-label" for="edd-' . sanitize_key( $name ) . '">' . esc_html( $label ) . '</label>';
 			if ( ! empty( $desc ) )
 				$output .= '<span class="edd-description">' . esc_html( $desc ) . '</span>';
-			$output = '<input type="text" name="edd_' . esc_attr( sanitize_key( $name ) ) . '" id="edd-' . esc_attr( sanitize_key( $name ) )  . '" value="' . esc_attr( $value ) . '"/>';
+			$output = '<input type="text" name="' . esc_attr( $name ) . '" id="' . esc_attr( $name )  . '" value="' . esc_attr( $value ) . '"/>';
 		$output .= '</p>';
 
 		return $output;

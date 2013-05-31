@@ -213,22 +213,19 @@ add_action( 'wp_ajax_edd_get_download_title', 'edd_ajax_get_download_title' );
 add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_title' );
 
 /**
- * Opt into local taxes via AJAX
+ * Recalculate cart taxes
  *
- * @since 1.4.1
+ * @since 1.6
  * @return void
  */
-function edd_ajax_opt_into_local_taxes() {
+function edd_ajax_recalculate_taxes() {
 	if ( ! check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) )
 		return false;
-
-	edd_opt_into_local_taxes();
 
 	ob_start();
 	edd_checkout_cart();
 	$cart = ob_get_contents();
 	ob_end_clean();
-
 	$response = array(
 		'html'  => $cart,
 		'total' => html_entity_decode( edd_cart_total( false ), ENT_COMPAT, 'UTF-8' ),
@@ -238,37 +235,37 @@ function edd_ajax_opt_into_local_taxes() {
 
 	edd_die();
 }
-add_action( 'wp_ajax_edd_local_tax_opt_in', 'edd_ajax_opt_into_local_taxes' );
-add_action( 'wp_ajax_nopriv_edd_local_tax_opt_in', 'edd_ajax_opt_into_local_taxes' );
+add_action( 'wp_ajax_edd_recalculate_taxes', 'edd_ajax_recalculate_taxes' );
+add_action( 'wp_ajax_nopriv_edd_recalculate_taxes', 'edd_ajax_recalculate_taxes' );
+
 
 /**
- * Opt out of local taxes via AJAX
+ * Retrieve a states drop down
  *
- * @since 1.4.1
+ * @since 1.6
  * @return void
  */
-function edd_ajax_opt_out_local_taxes() {
-	if ( ! check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) )
-		return false;
+function edd_ajax_get_states_field() {
+	if( empty( $_POST['country'] ) )
+		$_POST['country'] = edd_get_shop_country();
 
-	edd_opt_out_local_taxes();
+	$states = edd_get_shop_states( $_POST['country'] );
 
-	ob_start();
-	edd_checkout_cart();
-	$cart = ob_get_contents();
-	ob_end_clean();
+	if( ! empty( $states ) ) {
 
-	$response = array(
-		'html'  => $cart,
-		'total' => html_entity_decode( edd_cart_total( false ), ENT_COMPAT, 'UTF-8' ),
-	);
+		$response = EDD()->html->select( edd_get_shop_states( $_POST['country'] ), $_POST['field_name'] );
 
-	echo json_encode( $response );
+	} else {
+
+		$response = 'nostates';
+	}
+
+	echo $response;
 
 	edd_die();
 }
-add_action( 'wp_ajax_edd_local_tax_opt_out', 'edd_ajax_opt_out_local_taxes' );
-add_action( 'wp_ajax_nopriv_edd_local_tax_opt_out', 'edd_ajax_opt_out_local_taxes' );
+add_action( 'wp_ajax_edd_get_shop_states', 'edd_ajax_get_states_field' );
+add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
 
 /**
  * Check for Download Price Variations via AJAX (this function can only be used

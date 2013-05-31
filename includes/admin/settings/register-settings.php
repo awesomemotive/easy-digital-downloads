@@ -289,10 +289,23 @@ function edd_register_settings() {
 				),
 				'tax_rate' => array(
 					'id' => 'tax_rate',
-					'name' => __('Tax Rate', 'edd'),
-					'desc' => __('Enter a percentage, such as 6.5.', 'edd'),
+					'name' => __('Default Tax Rate', 'edd'),
+					'desc' => __('Enter a percentage, such as 6.5. Customers not in a specific rate below will be charged this rate.', 'edd'),
 					'type' => 'text',
 					'size' => 'small'
+				),
+				'base_country' => array(
+					'id' => 'base_country',
+					'name' => __('Base Country', 'edd'),
+					'desc' => __('Where does your store operate from?', 'edd'),
+					'type' => 'select',
+					'options' => edd_get_country_list()
+				),
+				'base_state' => array(
+					'id' => 'base_state',
+					'name' => __('Base State / Province', 'edd'),
+					'desc' => __('What state / provice does your store operate from?', 'edd'),
+					'type' => 'shop_states'
 				),
 				'prices_include_tax' => array(
 					'id' => 'prices_include_tax',
@@ -304,24 +317,6 @@ function edd_register_settings() {
 						'yes' => __('Yes, I will enter prices inclusive of tax', 'edd'),
 						'no'  => __('No, I will enter prices exclusive of tax', 'edd')
 					)
-				),
-				'tax_condition' => array(
-					'id' => 'tax_condition',
-					'name' => __('Apply Taxes to:', 'edd'),
-					'desc' => __('Who should have tax added to their purchases?', 'edd'),
-					'type' => 'radio',
-					'std' => 'all',
-					'options' => array(
-						'all' 	=> __('Everyone', 'edd'),
-						'local' => __('Local residents only', 'edd')
-					)
-				),
-				'tax_location' => array(
-					'id' => 'tax_location',
-					'name' => __('Tax Opt-In', 'edd'),
-					'desc' => __('Customers will be given a checkbox to click if they reside in your local area. Please enter directions for them here. Customers <strong>must</strong> opt into this.', 'edd'),
-					'type' => 'text',
-					'size' => 'large'
 				),
 				'checkout_include_tax' => array(
 					'id' => 'checkout_include_tax',
@@ -340,6 +335,12 @@ function edd_register_settings() {
 					'desc' => __('Check this if you would like taxes calculated after discounts. By default taxes are calculated before discounts are applied.', 'edd'),
 					'std' => 'no',
 					'type' => 'checkbox'
+				),
+				'tax_rates' => array(
+					'id' => 'tax_rates',
+					'name' => '<strong>' . __('Additional Tax Rates', 'edd') . '</strong>',
+					'desc' => __( 'Specify additional tax rates for other regions.', 'edd' ),
+					'type' => 'tax_rates'
 				)
 			)
 		),
@@ -392,7 +393,7 @@ function edd_register_settings() {
 					'desc' => sprintf( __('Select the file download method. Note, not all methods work on all servers.', 'edd'), edd_get_label_singular() ),
 					'type' => 'select',
 					'options' => array(
-						'direct' => __( 'Direct', 'edd' ),
+						'direct' => __( 'Forced', 'edd' ),
 						'redirect' => __( 'Redirect', 'edd' )
 					)
 				),
@@ -690,7 +691,7 @@ function edd_register_settings() {
 	register_setting( 'edd_settings_gateways',   'edd_settings_gateways',   'edd_settings_sanitize' );
 	register_setting( 'edd_settings_emails',     'edd_settings_emails',     'edd_settings_sanitize' );
 	register_setting( 'edd_settings_styles',     'edd_settings_styles',     'edd_settings_sanitize' );
-	register_setting( 'edd_settings_taxes',      'edd_settings_taxes',      'edd_settings_sanitize' );
+	register_setting( 'edd_settings_taxes',      'edd_settings_taxes',      'edd_settings_sanitize_taxes' );
 	register_setting( 'edd_settings_extensions', 'edd_settings_extensions', 'edd_settings_sanitize' );
 	register_setting( 'edd_settings_misc',       'edd_settings_misc',       'edd_settings_sanitize' );
 }
@@ -779,6 +780,8 @@ function edd_radio_callback( $args ) {
 		$checked = false;
 
 		if ( isset( $edd_options[ $args['id'] ] ) && $edd_options[ $args['id'] ] == $key )
+			$checked = true;
+		elseif( isset( $args['std'] ) && $args['std'] == $key && ! isset( $edd_options[ $args['id'] ] ) )
 			$checked = true;
 
 		echo '<input name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" type="radio" value="' . $key . '" ' . checked(true, $checked, false) . '/>&nbsp;';
@@ -1034,6 +1037,100 @@ function edd_color_callback( $args ) {
 	echo $html;
 }
 
+/**
+ * Shop States Callback
+ *
+ * Renders states drop down based on the currently selected country
+ *
+ * @since 1.6
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_shop_states_callback($args) {
+	global $edd_options;
+
+	$html = '<select id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"/>';
+
+	$states = edd_get_shop_states();
+
+	foreach ( $states as $option => $name ) :
+		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $option, $edd_options[$args['id']], false ) : '';
+		$html .= '<option value="' . $option . '" ' . $selected . '>' . $name . '</option>';
+	endforeach;
+
+	$html .= '</select>';
+	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+	echo $html;
+}
+
+/**
+ * Tax Rates Callback
+ *
+ * Renders tax rates table
+ *
+ * @since 1.6
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_tax_rates_callback($args) {
+	global $edd_options;
+	$rates = edd_get_tax_rates();
+	ob_start(); ?>
+	<p><?php echo $args['desc']; ?></p>
+	<table id="edd_tax_rates" class="wp-list-table widefat fixed posts">
+		<thead>
+			<tr>
+				<th scope="col" class="edd_tax_country"><?php _e( 'Country', 'edd' ); ?></th>
+				<th scope="col" class="edd_tax_state"><?php _e( 'State / Province', 'edd' ); ?></th>
+				<th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'edd' ); ?></th>
+				<th scope="col"><?php _e( 'Remove', 'edd' ); ?></th>
+			</tr>
+		</thead>
+		<?php if( ! empty( $rates ) ) : ?>
+			<?php foreach( $rates as $key => $rate ) : ?>
+			<tr>
+				<td><?php echo EDD()->html->select( edd_get_country_list(), 'tax_rates[' . $key . '][country]', $rate['country'] ); ?></td>
+				<td>
+					<?php
+					$states = edd_get_shop_states( $rate['country'] );
+					if( ! empty( $states ) ) {
+						echo EDD()->html->select( $states, 'tax_rates[' . $key . '][state]', $rate['state'] );
+					} else {
+						echo EDD()->html->text( 'tax_rates[' . $key . '][state]', $rate['state'] );
+					}
+					?>
+				</td>
+				<td><input type="number" class="small-text" step="0.1" min="0.0" max="99" name="tax_rates[<?php echo $key; ?>][rate]" value="<?php echo $rate['rate']; ?>"/></td>
+				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'edd' ); ?></span></td>
+			</tr>
+			<?php endforeach; ?>
+		<?php else : ?>
+			<tr>
+				<td><?php echo EDD()->html->select( edd_get_country_list(), 'tax_rates[0][country]', edd_get_shop_country() ); ?></td>
+				<td>
+					<?php
+					if( edd_get_shop_states() ) {
+						echo EDD()->html->select( edd_get_shop_states(), 'tax_rates[0][state]' );
+					} else {
+						echo EDD()->html->text( 'tax_rates[0][state]' );
+					}
+					?>
+				</td>
+				<td><input type="number" class="small-text" step="0.1" min="0.0" name="tax_rates[0][rate]" value=""/></td>
+				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'edd' ); ?></span></td>
+			</tr>
+		<?php endif; ?>
+	</table>
+	<p>
+		<span class="button-secondary" id="edd_add_tax_rate"><?php _e( 'Add Tax Rate', 'edd' ); ?></span>
+	</p>
+	<?php
+	echo ob_get_clean();
+}
+
 
 /**
  * Registers the license field callback for Software Licensing
@@ -1091,6 +1188,29 @@ function edd_hook_callback( $args ) {
  * @return string $input Sanitizied value
  */
 function edd_settings_sanitize( $input ) {
+	add_settings_error( 'edd-notices', '', __('Settings Updated', 'edd'), 'updated' );
+	return $input;
+}
+
+/**
+ * Taxes Settings Sanitization
+ *
+ * Adds a settings error (for the updated message)
+ * This also saves the tax rates table
+ *
+ * @since 1.6
+ * @param array $input The value inputted in the field
+ * @return string $input Sanitizied value
+ */
+function edd_settings_sanitize_taxes( $input ) {
+
+	$new_rates = array_values( $_POST['tax_rates'] );
+
+	if( ! empty( $new_rates ) ) {
+
+		update_option( 'edd_tax_rates', $new_rates );
+	}
+
 	add_settings_error( 'edd-notices', '', __('Settings Updated', 'edd'), 'updated' );
 	return $input;
 }

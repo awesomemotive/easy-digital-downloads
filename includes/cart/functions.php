@@ -52,10 +52,10 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 
 		if( 'download' != $download->post_type )
 			return; // Not a download product
-		
+
 		if ( !current_user_can( 'edit_post', $download->ID ) && ( $download->post_status == 'draft' || $download->post_status == 'pending' ) )
 			return; // Do not allow draft/pending to be purchased if can't edit. Fixes #1056
-			
+
 		do_action( 'edd_pre_add_to_cart', $download_id, $options );
 
 		if ( edd_has_variable_prices( $download_id )  && ! isset( $options['price_id'] ) ) {
@@ -416,16 +416,9 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 		}
 	}
 
-	if ( edd_use_taxes() && $add_taxes ) {
-		if ( edd_local_taxes_only() && ( isset( $_POST['edd_tax_opt_in'] ) || $local_override ) ) {
-			// Add the tax amount for a local resident
-			$tax = edd_get_cart_tax();
-			$amount += $tax;
-		} elseif ( ! edd_local_taxes_only() ) {
-			// Add the global tax amount
-			$tax = edd_get_cart_tax();
-			$amount += $tax;
-		}
+	if ( edd_use_taxes() && edd_is_cart_taxed() && $add_taxes ) {
+		$tax = edd_get_cart_tax();
+		$amount += $tax;
 	}
 
 	return apply_filters( 'edd_get_cart_amount', $amount, $add_taxes, $local_override );
@@ -516,9 +509,10 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
  * @return string Total tax amount
  */
 function edd_get_cart_tax( $discounts = false ) {
-	$subtotal = edd_get_cart_subtotal( false );
-	$subtotal += edd_get_cart_fee_total();
-	$cart_tax = 0;
+	$subtotal     = edd_get_cart_subtotal( false );
+	$subtotal    += edd_get_cart_fee_total();
+	$cart_tax     = 0;
+	$billing_info = edd_get_purchase_cc_info();
 
 	if ( edd_is_cart_taxed() ) {
 
@@ -526,7 +520,7 @@ function edd_get_cart_tax( $discounts = false ) {
 			$subtotal -= edd_get_cart_discounted_amount( $discounts );
 		}
 
-		$cart_tax = edd_calculate_tax( $subtotal, false );
+		$cart_tax = edd_calculate_tax( $subtotal, false, $billing_info['card_country'], $billing_info['card_state'] );
 
 	}
 
