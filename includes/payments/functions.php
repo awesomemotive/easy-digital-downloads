@@ -255,7 +255,7 @@ function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
 
 	do_action( 'edd_before_payment_status_change', $payment_id, $new_status, $old_status );
 
-	$update_fields = array( 'ID' => $payment_id, 'post_status' => $new_status );
+	$update_fields = array( 'ID' => $payment_id, 'post_status' => $new_status, 'edit_date' => current_time( 'mysql' ) );
 
 	wp_update_post( apply_filters( 'edd_update_payment_status_fields', $update_fields ) );
 
