@@ -283,12 +283,12 @@ function edd_process_paypal_ipn() {
 	$api_response = wp_remote_post( edd_get_paypal_redirect(), $remote_post_vars );
 
 	if ( is_wp_error( $api_response ) ) {
-		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid IPN verification response. IPN data: ', 'edd' ), json_encode( $api_response ) ) );
+		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'edd' ), json_encode( $api_response ) ) );
 		return; // Something went wrong
 	}
 
 	if ( $api_response['body'] !== 'VERIFIED' && !isset( $edd_options['disable_paypal_verification'] ) ) {
-		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid IPN verification response. IPN data: ', 'edd' ), json_encode( $api_response ) ) );
+		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'edd' ), json_encode( $api_response ) ) );
 		return; // Response not okay
 	}
 
@@ -303,6 +303,7 @@ function edd_process_paypal_ipn() {
 		// Fallback to web accept just in case the txn_type isn't present
 		do_action( 'edd_paypal_web_accept', $encoded_data_array );
 	}
+	exit;
 }
 add_action( 'edd_verify_paypal_ipn', 'edd_process_paypal_ipn' );
 
@@ -314,15 +315,15 @@ add_action( 'edd_verify_paypal_ipn', 'edd_process_paypal_ipn' );
  * @param array $data IPN Data
  * @return void
  */
-function edd_process_paypal_web_accept( $data ) {
+function edd_process_paypal_web_accept_and_cart( $data ) {
 	global $edd_options;
 
-	if ( $data['txn_type'] != 'web_accept' )
+	if ( $data['txn_type'] != 'web_accept' && $data['txn_type'] != 'cart' )
 		return;
 
 	// Collect payment details
 	$payment_id     = $data['custom'];
-	$purchase_key   = ( array_key_exists( 'invoice', $data ) ? $data['invoice'] : $data['item_number'] );
+	$purchase_key   = $data['invoice'];
 	$paypal_amount  = $data['mc_gross'];
 	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
@@ -340,7 +341,7 @@ function edd_process_paypal_web_accept( $data ) {
 	if ( $currency_code != strtolower( edd_get_currency() ) ) {
 		// The currency code is invalid
 
-		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid currency in IPN response. IPN data: ', 'edd' ), json_encode( $data ) ), $payment_id );
+		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid currency in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 		edd_update_payment_status( $payment_id, 'failed' );
 		return;
 	}
@@ -351,12 +352,12 @@ function edd_process_paypal_web_accept( $data ) {
 	} else {
 		if ( number_format( (float)$paypal_amount, 2) != $payment_amount ) {
 			// The prices don't match
-			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid payment amount in IPN response. IPN data: ', 'edd' ), json_encode( $data ) ), $payment_id );
+			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid payment amount in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 		   //return;
 		}
 		if ( $purchase_key != edd_get_payment_key( $payment_id ) ) {
 			// Purchase keys don't match
-			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid purchase key in IPN response. IPN data: ', 'edd' ), json_encode( $data ) ), $payment_id );
+			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid purchase key in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 		   	edd_update_payment_status( $payment_id, 'failed' );
 		   	return;
 		}
@@ -367,7 +368,7 @@ function edd_process_paypal_web_accept( $data ) {
 		}
 	}
 }
-add_action( 'edd_paypal_web_accept', 'edd_process_paypal_web_accept' );
+add_action( 'edd_paypal_web_accept', 'edd_process_paypal_web_accept_and_cart' );
 
 /**
  * Process PayPal IPN Refunds
