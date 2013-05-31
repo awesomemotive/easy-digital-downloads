@@ -27,6 +27,7 @@ Features of the plugin include:
 * User purchase history and ability to redownload files
 * Multiple files per downloadable product
 * Variable prices for multiple price options per product
+* Bundled products
 * Customizable purchase receipts
 * Earnings and sales charts
 * Detailed purchase and file download logs
