@@ -200,7 +200,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * New: SKU fields for Downloads
 * New: Itemized purchase details for PayPal Standard
 * New: Introduced state / provice fields for 12 additional countries
-* NewL Introduced EDD_Cron class for scheduling routine events
+* New: Introduced EDD_Cron class for scheduling routine events
 
 * Tweak: File Name field not set by default
 * Tweak: Improved file protection via better .htaccess rules
