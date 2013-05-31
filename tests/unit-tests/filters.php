@@ -221,7 +221,7 @@ class Tests_Filters extends EDD_UnitTestCase {
 
 	public function test_edd_paypal_web_accept() {
 		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_process_paypal_web_accept', $wp_filter['edd_paypal_web_accept'][10] );
+		$this->assertarrayHasKey( 'edd_process_paypal_web_accept_and_cart', $wp_filter['edd_paypal_web_accept'][10] );
 	}
 
 	public function test_edd_manual_cc_form() {
