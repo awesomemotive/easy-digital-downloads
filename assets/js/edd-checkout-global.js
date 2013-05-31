@@ -142,7 +142,7 @@ jQuery(document).ready(function($) {
             nonce: edd_global_vars.checkout_nonce
         };
 
-        $edd_discount_loader.show();
+        edd_discount_loader.show();
 
         $.ajax({
             type: "POST",
@@ -161,7 +161,7 @@ jQuery(document).ready(function($) {
                 } else {
                     console.log( discount_response );
                 }
-                $edd_discount_loader.hide();
+                edd_discount_loader.hide();
             }
         }).fail(function (data) {
             console.log(data);
