@@ -7,7 +7,7 @@
  *
  * @package WordPress
  * @subpackage Session
- * @since   3.6.0
+ * @since   3.7.0
  */
 
 /**
@@ -132,15 +132,24 @@ function wp_session_cleanup() {
 	if ( ! defined( 'WP_INSTALLING' ) ) {
 		$expiration_keys = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE '_wp_session_expires_%'" );
 
+		$now = time();
+		$expired_sessions = array();
+
 		foreach( $expiration_keys as $expiration ) {
 			// If the session has expired
-			if ( time() > intval( $expiration->option_value ) ) {
-				// Get the session ID
+			if ( $now > intval( $expiration->option_value ) ) {
+				// Get the session ID by parsing the option_name
 				$session_id = substr( $expiration->option_name, 20 );
 
-				delete_option( $expiration->option_name );
-				delete_option( "_wp_session_{$session_id}" );
+				$expired_sessions[] = $expiration->option_name;
+				$expired_sessions[] = "_wp_session_$session_id";
 			}
+		}
+
+		// Delete all expired sessions in a single query
+		if ( ! empty( $expired_sessions ) ) {
+			$option_names = implode( "','", $expired_sessions );
+			$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name IN ('$option_names')" );
 		}
 	}
 

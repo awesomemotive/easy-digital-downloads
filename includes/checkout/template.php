@@ -224,11 +224,11 @@ function edd_default_cc_address_fields() {
 		<p id="edd-card-country-wrap">
 			<label class="edd-label"><?php _e( 'Billing Country', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The country for your billing address.', 'edd' ); ?></span>
-			<select name="billing_country" class="billing-country edd-select required">
+			<select name="billing_country" id="billing_country" class="billing_country edd-select required">
 				<?php
 				$countries = edd_get_country_list();
 				foreach( $countries as $country_code => $country ) {
-				  echo '<option value="' . $country_code . '">' . $country . '</option>';
+				  echo '<option value="' . $country_code . '"' . selected( $country_code, edd_get_shop_country(), false ) . '>' . $country . '</option>';
 				}
 				?>
 			</select>
@@ -236,23 +236,21 @@ function edd_default_cc_address_fields() {
 		<p id="edd-card-state-wrap">
 			<label class="edd-label"><?php _e( 'Billing State / Province', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The state or province for your billing address.', 'edd' ); ?></span>
-			<input type="text" size="6" name="card_state_other" id="card_state_other" class="card-state edd-input" placeholder="<?php _e( 'State / Province', 'edd' ); ?>" style="display:none;"/>
-            <select name="card_state_us" id="card_state_us" class="card-state edd-select required">
+            <?php
+            $default_state = edd_get_shop_state();
+            $states        = edd_get_shop_states();
+
+            if( ! empty( $states ) ) : ?>
+            <select name="card_state" id="card_state" class="card_state edd-select required">
                 <?php
-                    $states = edd_get_states_list();
                     foreach( $states as $state_code => $state ) {
-                        echo '<option value="' . $state_code . '">' . $state . '</option>';
+                        echo '<option value="' . $state_code . '"' . selected( $state_code, $default_state, false ) . '>' . $state . '</option>';
                     }
                 ?>
             </select>
-            <select name="card_state_ca" id="card_state_ca" class="card-state edd-select required" style="display: none;">
-                <?php
-                    $provinces = edd_get_provinces_list();
-                    foreach( $provinces as $province_code => $province ) {
-                        echo '<option value="' . $province_code . '">' . $province . '</option>';
-                    }
-                ?>
-            </select>
+        	<?php else : ?>
+			<input type="text" size="6" name="card_state" id="card_state" class="card_state edd-input" placeholder="<?php _e( 'State / Province', 'edd' ); ?>"/>
+			<?php endif; ?>
 		</p>
 		<p id="edd-card-zip-wrap">
 			<label class="edd-label"><?php _e( 'Billing Zip / Postal Code', 'edd' ); ?></label>
@@ -265,6 +263,20 @@ function edd_default_cc_address_fields() {
 	echo ob_get_clean();
 }
 add_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
+
+
+/**
+ * Renders the billing address fields for cart taxation
+ *
+ * @since 1.6
+ * @return void
+ */
+function edd_checkout_tax_fields() {
+	if( edd_cart_needs_tax_address_fields() )
+		edd_default_cc_address_fields();
+}
+add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_tax_fields', 999 );
+
 
 /**
  * Renders the user registration fields. If the user is logged in, a login
@@ -331,7 +343,7 @@ add_action( 'edd_purchase_form_register_fields', 'edd_get_register_fields' );
 /**
  * Gets the login fields for the login form on the checkout. This function hooks
  * on the edd_purchase_form_login_fields to display the login form if a user already
- * had an account. 
+ * had an account.
  *
  * @since 1.0
  * @return string
@@ -445,7 +457,6 @@ function edd_terms_agreement() {
 	if ( isset( $edd_options['show_agree_to_terms'] ) ) {
 ?>
 		<fieldset id="edd_terms_agreement">
-			<p id="edd-terms-wrap">
 				<div id="edd_terms" style="display:none;">
 					<?php
 						do_action( 'edd_before_terms' );
@@ -459,34 +470,11 @@ function edd_terms_agreement() {
 				</div>
 				<label for="edd_agree_to_terms"><?php echo isset( $edd_options['agree_label'] ) ? $edd_options['agree_label'] : __( 'Agree to Terms?', 'edd' ); ?></label>
 				<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
-			</p>
 		</fieldset>
 <?php
 	}
 }
-add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement' );
-
-/**
- * Shows the tax opt-in checkbox
- *
- * @since 1.3.3
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-function edd_show_local_tax_opt_in() {
-	global $edd_options;
-	if ( edd_use_taxes() && isset( $edd_options['tax_condition'] ) && $edd_options['tax_condition'] == 'local' ) {
-?>
-		<fieldset id="edd_tax_opt_in_fields">
-			<p id="edd-tax-opt-in-wrap">
-				<label for="edd_tax_opt_in"><?php echo isset( $edd_options['tax_location'] ) ? $edd_options['tax_location'] : __( 'Opt Into Taxes?', 'edd' ); ?></label>
-				<input name="edd_tax_opt_in" type="checkbox" id="edd_tax_opt_in" value="1"<?php checked( true, edd_local_tax_opted_in() ); ?>/>
-			</p>
-		</fieldset>
-<?php
-	}
-}
-add_action( 'edd_purchase_form_before_submit', 'edd_show_local_tax_opt_in' );
+add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement', 999 );
 
 /**
  * Shows the final purchase total at the bottom of the checkout page

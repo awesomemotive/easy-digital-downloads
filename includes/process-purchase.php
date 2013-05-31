@@ -60,14 +60,13 @@ function edd_process_purchase_form() {
 		'last_name'  => $user['user_last'],
 		'discount'   => $valid_data['discount']
 	);
-
 	// Setup purchase information
 	$purchase_data = array(
 		'downloads'    => edd_get_cart_contents(),
 		'fees'         => edd_get_cart_fees(),		 	    // Any arbitrary fees that have been added to the cart
 		'subtotal'     => edd_get_cart_subtotal(),		 	// Amount before taxes and discounts
 		'discount'     => edd_get_cart_discounted_amount(), // Discounted amount
-		'tax'          => edd_get_cart_tax(), 				// Taxed amount
+		'tax'          => edd_get_cart_tax(),               // Taxed amount
 		'price'        => edd_get_cart_total(), 			// Amount after taxes
 		'purchase_key' => strtolower( md5( uniqid() ) ), 	// Random key
 		'user_email'   => $user['user_email'],
@@ -655,20 +654,9 @@ function edd_get_purchase_cc_info() {
 	$cc_info['card_address'] 	= isset( $_POST['card_address'] ) 	? sanitize_text_field( $_POST['card_address'] ) 	: '';
 	$cc_info['card_address_2'] 	= isset( $_POST['card_address_2'] ) ? sanitize_text_field( $_POST['card_address_2'] ) 	: '';
 	$cc_info['card_city'] 		= isset( $_POST['card_city'] ) 		? sanitize_text_field( $_POST['card_city'] ) 		: '';
+	$cc_info['card_state'] 	    = isset( $_POST['card_state'] )     ? sanitize_text_field( $_POST['card_state'] ) 	    : '';
 	$cc_info['card_country'] 	= isset( $_POST['billing_country'] )? sanitize_text_field( $_POST['billing_country'] ) 	: '';
 	$cc_info['card_zip'] 		= isset( $_POST['card_zip'] )		? sanitize_text_field( $_POST['card_zip'] ) 		: '';
-
-	switch ( $cc_info['card_country'] ) :
-		case 'US' :
-			$cc_info['card_state'] = isset( $_POST['card_state_us'] )	? sanitize_text_field( $_POST['card_state_us'] ) 	: '';
-			break;
-		case 'CA' :
-			$cc_info['card_state'] = isset( $_POST['card_state_ca'] )	? sanitize_text_field( $_POST['card_state_ca'] ) 	: '';
-			break;
-		default :
-			$cc_info['card_state'] = isset( $_POST['card_state_other'] )? sanitize_text_field( $_POST['card_state_other'] ) : '';
-			break;
-	endswitch;
 
 	// Return cc info
 	return $cc_info;
@@ -849,74 +837,4 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 		$ret = true;
 
 	return apply_filters( 'edd_is_zip_valid', $ret, $zip, $country_code );
-}
-
-/**
- * Send To Success Page
- *
- * Sends the user to the succes page.
- *
- * @param string $query_string
- * @access      public
- * @since       1.0
- * @return      void
-*/
-function edd_send_to_success_page( $query_string = null ) {
-	global $edd_options;
-
-	$redirect = get_permalink($edd_options['success_page']);
-
-	if ( $query_string )
-		$redirect .= $query_string;
-
-	wp_redirect( apply_filters('edd_success_page_redirect', $redirect, $_POST['edd-gateway'], $query_string) );
-	edd_die();
-}
-
-/**
- * Send back to checkout.
- *
- * Used to redirect a user back to the purchase
- * page if there are errors present.
- *
- * @param array $args
- * @access public
- * @since  1.0
- * @return Void
- */
-function edd_send_back_to_checkout( $args = array() ) {
-	$redirect = edd_get_checkout_uri();
-
-	if ( ! empty( $args ) ) {
-		// Check for backward compatibility
-		if ( is_string( $args ) )
-			$args = str_replace( '?', '', $args );
-
-		$args = wp_parse_args( $args );
-
-		$redirect = add_query_arg( $args, $redirect );
-	}
-
-	wp_redirect( apply_filters( 'edd_send_back_to_checkout', $redirect, $args ) );
-	edd_die();
-}
-
-/**
- * Get Success Page URL
- *
- * Gets the success page URL.
- *
- * @param string $query_string
- * @access      public
- * @since       1.0
- * @return      string
-*/
-function edd_get_success_page_url( $query_string = null ) {
-	global $edd_options;
-
-	$success_page = get_permalink($edd_options['success_page']);
-	if ( $query_string )
-		$success_page .= $query_string;
-
-	return apply_filters( 'edd_success_page_url', $success_page );
 }
