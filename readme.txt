@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.6
 
-Stable Tag: 1.6
+Stable Tag: 1.6.1
 License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -183,6 +183,12 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 1.6.1: June 1, 2013 =
+
+* Fix: Fatal error for users that had modified the checkout_cart.php template files
+* Fix: Fatal memory error for some users when viewing the File Downloads logs
+* Fix: Warning about urldecode() on some pages, including Dashboard Sales Summary widget
 
 = 1.6: May 31, 2013 =
 
