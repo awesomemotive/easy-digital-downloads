@@ -192,3 +192,21 @@ function edd_local_taxes_only() {
 
 	return apply_filters( 'edd_local_taxes_only', $local_only );
 }
+
+/**
+ * Checks if a customer has opted into local taxes
+ *
+ * @since 1.4.1
+ * @deprecated 1.6
+ * @uses EDD_Session::get()
+ * @return bool
+ */
+function edd_local_tax_opted_in() {
+
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '1.6', 'no alternatives', $backtrace );
+
+	$opted_in = EDD()->session->get( 'edd_local_tax_opt_in' );
+	return ! empty( $opted_in );
+}
