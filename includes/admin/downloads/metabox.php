@@ -53,7 +53,7 @@ function edd_download_meta_box_save( $post_id) {
 	if ( isset( $post->post_type ) && $post->post_type == 'revision' )
 		return $post_id;
 
-	if ( ! current_user_can( 'edit_pages', $post_id ) ) {
+	if ( ! current_user_can( 'edit_product', $post_id ) ) {
 		return $post_id;
 	}
 
