@@ -161,6 +161,9 @@ class EDD_Gateway_Error_Log_Table extends WP_List_Table {
 	public function get_logs() {
 		global $edd_logs;
 
+		// Prevent the queries from getting cached. Without this there are occasional memory issues for some installs
+		wp_suspend_cache_addition( true );
+
 		$logs_data = array();
 		$paged     = $this->get_paged();
 		$log_query = array(

@@ -270,11 +270,13 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	public function get_logs() {
 		global $edd_logs;
 
-		$logs_data = array();
+		// Prevent the queries from getting cached. Without this there are occasional memory issues for some installs
+		wp_suspend_cache_addition( true );
 
-		$paged    = $this->get_paged();
-		$download = empty( $_GET['s'] ) ? $this->get_filtered_download() : null;
-		$user     = $this-> get_filtered_user();
+		$logs_data = array();
+		$paged     = $this->get_paged();
+		$download  = empty( $_GET['s'] ) ? $this->get_filtered_download() : null;
+		$user      = $this-> get_filtered_user();
 
 		$log_query = array(
 			'post_parent' => $download,
