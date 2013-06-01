@@ -71,7 +71,7 @@ function edd_get_payments( $args = array() ) {
 			$payment_args['meta_key'] = '_edd_payment_total';
 			break;
 		default :
-			$payment_args['orderby'] = $args['status'];
+			$payment_args['orderby'] = $args['orderby'];
 			break;
 	endswitch;
 
