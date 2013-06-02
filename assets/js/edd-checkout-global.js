@@ -154,7 +154,9 @@ jQuery(document).ready(function($) {
                     if (discount_response.msg == 'valid') {
                         $('.edd_cart_discount').html(discount_response.html);
                         $('.edd_cart_discount_row').show();
-                        $edd_cart_amount.text(discount_response.total);
+                        $('.edd_cart_amount').each(function() {
+                            $(this).text(discount_response.total);
+                        });
                     } else {
                         alert(discount_response.msg);
                     }
