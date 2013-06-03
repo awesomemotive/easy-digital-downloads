@@ -209,8 +209,8 @@ class edd_purchase_history_widget extends WP_Widget {
 					}
 
 				}
+				echo $after_widget;
 			}
-			echo $after_widget;
 		}
 	}
 
