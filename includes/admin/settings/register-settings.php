@@ -241,7 +241,7 @@ function edd_register_settings() {
 				'disable_admin_notices' => array(
 					'id' => 'disable_admin_notices',
 					'name' => __( 'Disable Admin Notifications', 'edd' ),
-					'desc' => __( 'Check this box if you do not want to receive emails when no sales are made.', 'edd' ),
+					'desc' => __( 'Check this box if you do not want to receive emails when new sales are made.', 'edd' ),
 					'type' => 'checkbox'
 				)
 			)
