@@ -745,6 +745,8 @@ function edd_empty_cart() {
 
 	// Remove any active discounts
 	edd_unset_all_cart_discounts();
+
+	do_action( 'edd_empty_cart' );
 }
 
 /**
