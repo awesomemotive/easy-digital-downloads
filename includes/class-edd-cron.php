@@ -93,7 +93,7 @@ class EDD_Cron {
 	 * @return void
 	 */
 	private function daily_events() {
-		if ( ! wp_next_scheduled( 'edd_weekly_cron' ) ) {
+		if ( ! wp_next_scheduled( 'edd_daily_cron' ) ) {
 			wp_schedule_event( time(), 'daily', 'edd_daily_cron');
 			do_action( 'edd_daily_scheduled_events' );
 		}
