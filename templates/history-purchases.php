@@ -3,8 +3,7 @@ defined( 'ABSPATH' ) OR exit;
 
 // Retrieve all purchases for the current user
 $purchases = edd_get_users_purchases( get_current_user_id(), 20, true );
-if ( $purchases )
-{
+if ( $purchases ) {
 	?>
 	<table id="edd_user_history">
 		<thead>
@@ -26,8 +25,7 @@ if ( $purchases )
 			</tr>
 		</thead>
 		<?php
-		foreach ( $purchases as $post )
-		{
+		foreach ( $purchases as $post ) {
 			setup_postdata( $post );
 			$purchase_data = edd_get_payment_meta( $post->ID );
 			?>
@@ -50,20 +48,20 @@ if ( $purchases )
 				<td class="edd_purchased_files">
 					<?php
 					// Show a list of downloadable files
-					if ( $downloads = edd_get_payment_meta_downloads( $post->ID ) )
-					{
+					if ( $downloads = edd_get_payment_meta_downloads( $post->ID ) ) {
 						foreach ( $downloads as $download ) {
 							$id             = isset($purchase_data['cart_details'])
 								? $download['id']
-								: $download;
+								: $download
+							;
 							$price_id       = isset($download['options']['price_id'])
 								? $download['options']['price_id']
-								: null;
+								: null
+							;
 							$download_files = edd_get_download_files( $id, $price_id );
 							$name           = get_the_title( $id );
 
-							if ( isset( $download['options']['price_id'] ) )
-							{
+							if ( isset( $download['options']['price_id'] ) ) {
 								$name .= sprintf(
 									" - %s",
 									edd_get_price_option_name(
@@ -79,15 +77,12 @@ if ( $purchases )
 								esc_html( $name )
 							);
 
-							if ( ! edd_no_redownload() )
-							{
-								if ( empty( $download_files ) )
-								{
+							if ( ! edd_no_redownload() ) {
+								if ( empty( $download_files ) ) {
 									_e( 'No downloadable files found.', 'edd' );
 									break;
 								}
-								foreach ( $download_files as $filekey => $file )
-								{
+								foreach ( $download_files as $filekey => $file ) {
 									$download_url = edd_get_download_file_url(
 										$purchase_data['key'],
 										$purchase_data['email'],
@@ -136,9 +131,7 @@ if ( $purchases )
 	</div>
 	<?php
 	wp_reset_postdata();
-}
-else
-{
+} else {
 	?>
 	<p class="edd-no-purchases">
 		<?php _e( 'You have not made any purchases', 'edd' ); ?>

@@ -17,8 +17,7 @@ if ( is_user_logged_in() )
 		isset( $_GET['updated'] )
 		AND $_GET['updated'] == true
 		AND ! edd_get_errors()
-		)
-	{
+	) {
 		?>
 		<p class="edd_success">
 			<strong>
@@ -51,7 +50,8 @@ if ( is_user_logged_in() )
 					<?php _e( 'Display Name', 'edd' ); ?>
 				</label>
 				<select id="edd_display_name" name="edd_display_name">
-					<?php if ( ! empty( $current_user->first_name ) ): ?>
+					<?php
+					if ( ! empty( $current_user->first_name ) ) : ?>
 						<option <?php selected( $display_name, $current_user->first_name ); ?> value="<?php echo $current_user->first_name; ?>">
 							<?php echo $current_user->first_name; ?>
 						</option>
@@ -61,13 +61,13 @@ if ( is_user_logged_in() )
 						<?php echo $current_user->user_nicename; ?>
 					</option>
 
-					<?php if ( ! empty( $current_user->last_name ) ): ?>
+					<?php if ( ! empty( $current_user->last_name ) ) : ?>
 						<option <?php selected( $display_name, $current_user->last_name ); ?> value="<?php echo $current_user->last_name; ?>">
 							<?php echo $current_user->last_name; ?>
 						</option>
 					<?php endif; ?>
 
-					<?php if ( ! empty( $current_user->first_name ) && ! empty( $current_user->last_name ) ): ?>
+					<?php if ( ! empty( $current_user->first_name ) && ! empty( $current_user->last_name ) ) : ?>
 						<option <?php selected( $display_name, $current_user->first_name . ' ' . $current_user->last_name ); ?> value="<?php echo $current_user->first_name . ' ' . $current_user->last_name; ?>">
 							<?php echo $current_user->first_name . ' ' . $current_user->last_name; ?>
 						</option>
@@ -109,9 +109,7 @@ if ( is_user_logged_in() )
 		</fieldset>
 	</form><!-- #edd_profile_editor_form -->
 	<?php
-}
-else
-{
+} else {
 	?>
 	<p><?php _e( 'You need to login to edit your profile.', 'edd' ); ?></p>
 	<?php

@@ -1,7 +1,6 @@
 <?php
 defined( 'ABSPATH' ) OR exit;
 
-var_dump( __FILE__ );
 global $post;
 ?>
 <table id="edd_checkout_cart" <?php edd_is_ajax_enabled() AND print 'class="ajaxed"'; ?>>
@@ -16,11 +15,9 @@ global $post;
 	</thead>
 	<tbody>
 	<?php
-	if ( edd_get_cart_contents() )
-	{
+	if ( edd_get_cart_contents() ) {
 		do_action( 'edd_cart_items_before' );
-		foreach ( $cart_items as $key => $item )
-		{
+		foreach ( $cart_items as $key => $item ) {
 			?>
 			<tr class="edd_cart_item" id="edd_cart_item_<?php echo esc_attr( $item['id'] ); ?>">
 				<?php do_action( 'edd_checkout_table_body_first', $item['id'] ); ?>
@@ -29,8 +26,7 @@ global $post;
 					if (
 						current_theme_supports( 'post-thumbnails' )
 						AND has_post_thumbnail( $item['id'] )
-						)
-					{
+					) {
 						printf(
 							'<div class="edd_cart_item_image">%s</div>',
 							get_the_post_thumbnail(
@@ -66,10 +62,8 @@ global $post;
 		} // endforeach;
 
 		// Show any cart fees, both positive and negative fees
-		if ( edd_cart_has_fees() )
-		{
-			foreach( edd_get_cart_fees() as $fee_id => $fee )
-			{
+		if ( edd_cart_has_fees() ) {
+			foreach( edd_get_cart_fees() as $fee_id => $fee ) {
 				?>
 				<tr class="edd_cart_fee" id="edd_cart_fee_<?php echo $fee_id; ?>">
 					<td class="edd_cart_fee_label">
@@ -84,9 +78,7 @@ global $post;
 			} // endforeach
 		} // endif
 		do_action( 'edd_cart_items_after' );
-	}
-	else
-	{
+	} else {
 		?>
 		<tr class="edd_cart_item">
 			<td colspan="3"  class="edd_cart_item_empty">
@@ -99,10 +91,9 @@ global $post;
 	</tbody>
 	<tfoot>
 	<?php
-	if ( edd_use_taxes() )
-	{
+	if ( edd_use_taxes() ) {
 		?>
-		<tr class="edd_cart_footer_row edd_cart_subtotal_row"<?php if ( !( edd_is_cart_taxed() ) ) echo ' style="display:none;"'; ?>>
+		<tr class="edd_cart_footer_row edd_cart_subtotal_row"<?php ! edd_is_cart_taxed() AND print ' style="display:none;"'; ?>>
 			<?php do_action( 'edd_checkout_table_subtotal_first' ); ?>
 			<th colspan="3" class="edd_cart_subtotal">
 				<?php
@@ -116,10 +107,9 @@ global $post;
 			<?php do_action( 'edd_checkout_table_subtotal_last' ); ?>
 		</tr>
 		<?php
-		if ( ! edd_prices_show_tax_on_checkout() )
-		{
+		if ( ! edd_prices_show_tax_on_checkout() ) {
 			?>
-			<tr class="edd_cart_footer_row edd_cart_tax_row"<?php if( edd_local_taxes_only() && ! edd_local_tax_opted_in() ) echo ' style="display:none;"'; ?>>
+			<tr class="edd_cart_footer_row edd_cart_tax_row"<?php edd_local_taxes_only() && ! edd_local_tax_opted_in() AND print ' style="display:none;"'; ?>>
 				<?php do_action( 'edd_checkout_table_tax_first' ); ?>
 				<th colspan="3" class="edd_cart_tax">
 					<?php

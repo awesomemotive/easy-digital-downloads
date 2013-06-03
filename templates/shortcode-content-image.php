@@ -1,10 +1,9 @@
 <?php
 defined( 'ABSPATH' ) OR exit;
 
-if ( has_post_thumbnail() )
-{
+if ( has_post_thumbnail() ) {
 	$title = sprintf(
-		_x( 'Permalink to: %s', '%s is the title', 'wpr_lang' ),
+		_x( 'Permalink to: %s', '%s is the title', 'edd' ),
 		get_the_title()
 	);
 	?>

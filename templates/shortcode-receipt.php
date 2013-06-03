@@ -17,60 +17,63 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 		<?php do_action( 'edd_payment_receipt_before', $payment, $edd_receipt_args ); ?>
 
 		<?php if ( $edd_receipt_args['payment_id'] ) : ?>
-		<tr>
-			<th><strong><?php _e( 'Payment', 'edd' ); ?>:</strong></th>
-			<th>#<?php echo $payment->ID; ?></th>
-		</tr>
+			<tr>
+				<th><strong><?php _e( 'Payment', 'edd' ); ?>:</strong></th>
+				<th>#<?php echo $payment->ID; ?></th>
+			</tr>
 		<?php endif; ?>
 	</thead>
 
 	<tbody>
 
 		<?php if ( $edd_receipt_args['date'] ) : ?>
-		<tr>
-			<td><strong><?php _e( 'Date', 'edd' ); ?>:</strong></td>
-			<td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $meta['date'] ) ); ?></td>
-		</tr>
+			<tr>
+				<td><strong><?php _e( 'Date', 'edd' ); ?>:</strong></td>
+				<td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $meta['date'] ) ); ?></td>
+			</tr>
 		<?php endif; ?>
 		<?php if ( ( $fees = edd_get_payment_fees( $payment->ID, $meta ) ) ) : ?>
-		<tr>
-			<td><strong><?php _e( 'Fees', 'edd' ); ?>:</strong></td>
-			<td>
-				<ul class="edd_receipt_fees">
-				<?php foreach( $fees as $fee ) : ?>
-					<li>
-						<span class="edd_fee_label"><?php echo esc_html( $fee['label'] ); ?></span>
-						<span class="edd_fee_sep">&nbsp;&ndash;&nbsp;</span>
-						<span class="edd_fee_amount"><?php echo edd_currency_filter( edd_format_amount( $fee['amount'] ) ); ?></span>
-					</li>
-				<?php endforeach; ?>
-				</ul>
-			</td>
-		</tr>
+			<tr>
+				<td><strong><?php _e( 'Fees', 'edd' ); ?>:</strong></td>
+				<td>
+					<ul class="edd_receipt_fees">
+					<?php foreach( $fees as $fee ) : ?>
+						<li>
+							<span class="edd_fee_label"><?php echo esc_html( $fee['label'] ); ?></span>
+							<span class="edd_fee_sep">&nbsp;&ndash;&nbsp;</span>
+							<span class="edd_fee_amount"><?php echo edd_currency_filter( edd_format_amount( $fee['amount'] ) ); ?></span>
+						</li>
+					<?php endforeach; ?>
+					</ul>
+				</td>
+			</tr>
 		<?php endif; ?>
 		<?php if ( $edd_receipt_args[ 'price' ] ) : ?>
-
 			<tr>
 				<td><strong><?php _e( 'Subtotal', 'edd' ); ?></strong></td>
 				<td>
 					<?php echo edd_payment_subtotal( $payment->ID ); ?>
 				</td>
 			</tr>
-			<?php if( edd_use_taxes() ) : ?>
-			<tr>
-				<td><strong><?php _e( 'Tax', 'edd' ); ?></strong></td>
-				<td><?php echo edd_payment_tax( $payment->ID ); ?></td>
-			</tr>
+			<?php if ( edd_use_taxes() ) : ?>
+				<tr>
+					<td><strong><?php _e( 'Tax', 'edd' ); ?></strong></td>
+					<td><?php echo edd_payment_tax( $payment->ID ); ?></td>
+				</tr>
 			<?php endif; ?>
 			<tr>
 				<td><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
-				<td><?php
-
+				<td>
+					<?php
 					echo edd_payment_amount( $payment->ID );
 
-					if ( edd_use_taxes() && $edd_options['checkout_include_tax'] == 'yes' ) :
+					if (
+						edd_use_taxes()
+						&& 'yes' === $edd_options['checkout_include_tax']
+					) {
 						printf( ' ' . __('(includes %s tax)', 'edd'), edd_payment_tax( $payment->ID ) );
-					endif; ?>
+					}
+					?>
 				</td>
 			</tr>
 		<?php endif; ?>
@@ -90,30 +93,37 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 					</ul>
 				</td>
 			</tr>
-		<?php endif; ?>
+		<?php
+		endif;
 
-		<?php if ( $edd_receipt_args['discount'] && $user['discount'] != 'none' ) : ?>
+		if ( $edd_receipt_args['discount'] && $user['discount'] != 'none' ) : ?>
 			<tr>
 				<td><strong><?php _e( 'Discount', 'edd' ); ?>:</strong></td>
 				<td><?php echo $user['discount']; ?></td>
 			</tr>
-		<?php endif; ?>
+			<?php
+		endif;
 
-		<?php if ( $edd_receipt_args['payment_method'] ) : ?>
+		if ( $edd_receipt_args['payment_method'] ) :
+			?>
 			<tr>
 				<td><strong><?php _e( 'Payment Method', 'edd' ); ?>:</strong></td>
 				<td><?php echo edd_get_gateway_checkout_label( edd_get_payment_gateway( $payment->ID ) ); ?></td>
 			</tr>
-		<?php endif; ?>
+			<?php
+		endif;
 
-		<?php if ( $edd_receipt_args['payment_key'] ) : ?>
+		if ( $edd_receipt_args['payment_key'] ) :
+			?>
 			<tr>
 				<td><strong><?php _e( 'Payment Key', 'edd' ); ?>:</strong></td>
 				<td><?php echo get_post_meta( $payment->ID, '_edd_payment_purchase_key', true ); ?></td>
 			</tr>
-		<?php endif; ?>
+			<?php
+		endif;
 
-		<?php do_action( 'edd_payment_receipt_after', $payment, $edd_receipt_args ); ?>
+		do_action( 'edd_payment_receipt_after', $payment, $edd_receipt_args );
+		?>
 	</tbody>
 </table>
 
@@ -131,7 +141,6 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 		<?php foreach ( $cart as $key => $item ) : ?>
 			<tr>
 				<td>
-
 					<?php
 					$price_id       = edd_get_cart_item_price_id( $item );
 					$download_files = edd_get_download_files( $item['id'], $price_id );
@@ -149,12 +158,9 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 					<?php endif; ?>
 
 					<ul>
-
 						<?php
-						if ( $download_files && is_array( $download_files ) ) :
-
-							foreach ( $download_files as $filekey => $file ) :
-
+						if ( $download_files && is_array( $download_files ) ) {
+							foreach ( $download_files as $filekey => $file ) {
 								$download_url = edd_get_download_file_url( $meta['key'], $meta['email'], $filekey, $item['id'], $price_id );
 								?>
 								<li class="edd_download_file">
@@ -162,11 +168,11 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 								</li>
 								<?php
 								do_action( 'edd_receipt_files', $filekey, $file, $item['id'], $payment->ID, $meta );
-							endforeach;
-
-						else :
+							}
+						} else {
 							echo '<li>' . __( 'No downloadable files found.', 'edd' ) . '</li>';
-						endif; ?>
+						}
+						?>
 					</ul>
 				</td>
 				<td><?php echo edd_currency_filter( edd_format_amount( $item[ 'price' ] ) ); ?></td>
@@ -177,18 +183,28 @@ $user    = edd_get_payment_meta_user_info( $payment->ID );
 		<tfoot>
 			<tr>
 				<td><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
-
 				<td>
 					<?php
 					echo edd_payment_amount( $payment->ID );
-					if ( edd_use_taxes() && ( ! edd_prices_show_tax_on_checkout() && $edd_options['prices_include_tax'] == 'yes' ) ) {
+					if (
+						edd_use_taxes()
+						&& (
+							! edd_prices_show_tax_on_checkout()
+							&& 'yes' === $edd_options['prices_include_tax']
+						)
+					) {
 						echo ' ' . __( '(ex. tax)', 'edd' );
-					} else if ( edd_use_taxes() && $edd_options['checkout_include_tax'] == 'yes' ) {
+					} elseif (
+						edd_use_taxes()
+						&& 'yes' === $edd_options['checkout_include_tax']
+					) {
 						printf( ' ' . __( '(includes %s tax)', 'edd' ), edd_payment_tax( $payment->ID ) );
-					} ?>
+					}
+					?>
 				</td>
 			</tr>
 		</tfoot>
 
 	</table>
-<?php endif; ?>
+	<?php
+endif;
