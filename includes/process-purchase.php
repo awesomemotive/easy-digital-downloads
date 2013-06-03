@@ -84,18 +84,18 @@ function edd_process_purchase_form() {
 	// Allow themes and plugins to hook before the gateway
 	do_action( 'edd_checkout_before_gateway', $_POST, $user_info, $valid_data );
 
+	// If the total amount in the cart is 0, send to the manaul gateway. This emulates a free download purchase
+	if ( !$purchase_data['price'] ) {
+		// Revert to manual
+		$valid_data['gateway'] = 'manual';
+	}
+
 	// Allow the purchase data to be modified before it is sent to the gateway
 	$purchase_data = apply_filters(
 		'edd_purchase_data_before_gateway',
 		$purchase_data,
 		$valid_data
 	);
-
-	// If the total amount in the cart is 0, send to the manaul gateway. This emulates a free download purchase
-	if ( !$purchase_data['price'] ) {
-		// Revert to manual
-		$valid_data['gateway'] = 'manual';
-	}
 
 	// Used for showing download links to non logged-in users after purchase, and for other plugins needing purchase data.
 	edd_set_purchase_session( $purchase_data );
