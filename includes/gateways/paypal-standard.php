@@ -102,7 +102,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
             'return'        => $return_url,
             'cancel_return' => edd_get_failed_transaction_uri(),
             'notify_url'    => $listener_url,
-            'page_style'    => edd_get_paypal_page_style()
+            'page_style'    => edd_get_paypal_page_style(),
+            'cbt'			=> get_bloginfo( 'name' )
         );
 
 		// Add required content depending on number of items
