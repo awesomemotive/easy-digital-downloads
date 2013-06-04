@@ -309,9 +309,12 @@ function edd_get_button_styles() {
  * @return void
  */
 function edd_show_has_purchased_item_message() {
-	global $user_ID;
+	global $user_ID, $post;
 
-	if ( edd_has_user_purchased( $user_ID, get_the_ID() ) ) {
+	if( !isset( $post->ID ) )
+		return;
+
+	if ( edd_has_user_purchased( $user_ID, $post->ID ) ) {
 		$alert = '<p class="edd_has_purchased">' . __( 'You have already purchased this item, but you may purchase it again.', 'edd' ) . '</p>';
 		echo apply_filters( 'edd_show_has_purchased_item_message', $alert );
 	}
