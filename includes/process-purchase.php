@@ -101,7 +101,7 @@ function edd_process_purchase_form() {
 	edd_set_purchase_session( $purchase_data );
 
 	// Send info to the gateway for payment processing
-	edd_send_to_gateway( $valid_data['gateway'], $purchase_data );
+	edd_send_to_gateway( $purchase_data['gateway'], $purchase_data );
 	edd_die();
 }
 add_action( 'edd_purchase', 'edd_process_purchase_form' );
