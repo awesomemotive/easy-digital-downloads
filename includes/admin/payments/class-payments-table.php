@@ -310,16 +310,16 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function column_user( $item ) {
 		$user_info = edd_get_payment_meta_user_info( $item['ID'] );
-		$user_id = isset( $user_info['id'] ) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email'];
+		$user_id   = edd_get_payment_user_id( $item['ID'] );
 
-		if ( is_numeric( $user_id ) ) {
+		if ( $user_id > 0 ) {
 			$user = get_userdata( $user_id ) ;
 			$display_name = is_object( $user ) ? $user->display_name : __( 'guest', 'edd' );
 		} else {
 			$display_name = __( 'guest', 'edd' );
 		}
 
-		$value = '<a href="' . remove_query_arg( 'paged', add_query_arg( 'user', $user_id ) ) . '">' . $display_name . '</a>';
+		$value = '<a href="' . remove_query_arg( 'paged', add_query_arg( 'user', $user_info['email'] ) ) . '">' . $display_name . '</a>';
 		return apply_filters( 'edd_payments_table_column', $value, $item['ID'], 'user' );
 	}
 
