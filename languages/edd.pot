@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-04 21:49+0100\n"
-"PO-Revision-Date: 2013-06-04 21:49+0100\n"
+"POT-Creation-Date: 2013-06-05 14:18+0100\n"
+"PO-Revision-Date: 2013-06-05 14:19+0100\n"
 "Last-Translator: FxB <traductions@fxbenard.com>\n"
 "Language-Team: Easy Digital Downloads <pippin@pippinsplugins.com>\n"
 "Language: en_US\n"
@@ -1315,8 +1315,9 @@ msgid "EDD_Cron Class"
 msgstr ""
 
 #: includes/admin/welcome.php:214
+#, php-format
 msgid ""
-"The new %EDD_Cron class%s provides a simple way to hook into routinely "
+"The new %sEDD_Cron class%s provides a simple way to hook into routinely "
 "scheduled events in Easy Digital Downloads."
 msgstr ""
 
@@ -2107,7 +2108,8 @@ msgid "Failed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:181
-msgid "Abadoned"
+#: includes/payments/functions.php:395
+msgid "Abandoned"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:198
@@ -4132,46 +4134,46 @@ msgid ""
 "Payment creation failed before sending buyer to PayPal. Payment data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:286
-#: includes/gateways/paypal-standard.php:291
-#: includes/gateways/paypal-standard.php:344
-#: includes/gateways/paypal-standard.php:355
-#: includes/gateways/paypal-standard.php:360
+#: includes/gateways/paypal-standard.php:287
+#: includes/gateways/paypal-standard.php:292
+#: includes/gateways/paypal-standard.php:345
+#: includes/gateways/paypal-standard.php:356
+#: includes/gateways/paypal-standard.php:361
 msgid "IPN Error"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:286
-#: includes/gateways/paypal-standard.php:291
+#: includes/gateways/paypal-standard.php:287
+#: includes/gateways/paypal-standard.php:292
 #, php-format
 msgid "Invalid IPN verification response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:344
+#: includes/gateways/paypal-standard.php:345
 #, php-format
 msgid "Invalid currency in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:355
+#: includes/gateways/paypal-standard.php:356
 #, php-format
 msgid "Invalid payment amount in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:360
+#: includes/gateways/paypal-standard.php:361
 #, php-format
 msgid "Invalid purchase key in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:366
+#: includes/gateways/paypal-standard.php:367
 #, php-format
 msgid "PayPal Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:387
+#: includes/gateways/paypal-standard.php:388
 #, php-format
 msgid "PayPal Payment #%s Refunded"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:388
+#: includes/gateways/paypal-standard.php:389
 #, php-format
 msgid "PayPal Refund Transaction ID: %s"
 msgstr ""
@@ -4183,10 +4185,6 @@ msgstr ""
 
 #: includes/payments/functions.php:392
 msgid "Complete"
-msgstr ""
-
-#: includes/payments/functions.php:395
-msgid "Abandoned"
 msgstr ""
 
 #: languages/strings.php:16
