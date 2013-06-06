@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.0
  * @return string "Insert Download" Button
  */
-function edd_media_button( $context ) {
+function edd_media_button() {
 	global $pagenow, $typenow, $wp_version;
 	$output = '';
 
@@ -33,9 +33,9 @@ function edd_media_button( $context ) {
 			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button" title="' . sprintf( __( 'Insert %s', 'edd' ), strtolower ( edd_get_label_singular() ) ) . '" style="padding-left: .4em;">' . $img . sprintf( __( 'Insert %s', 'edd' ), strtolower( edd_get_label_singular() ) ) . '</a>';
 		}
 	}
-	return $context . $output;
+	echo $output;
 }
-add_filter( 'media_buttons_context', 'edd_media_button' );
+add_action( 'media_buttons', 'edd_media_button', 11 );
 
 /**
  * Admin Footer For Thickbox
