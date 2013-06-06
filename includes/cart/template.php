@@ -134,4 +134,4 @@ function edd_empty_cart_message() {
 function edd_empty_checkout_cart() {
 	echo edd_empty_cart_message();
 }
-add_action( 'edd_empty_cart', 'edd_empty_checkout_cart' );
+add_action( 'edd_cart_empty', 'edd_empty_checkout_cart' );
