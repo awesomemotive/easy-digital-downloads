@@ -178,7 +178,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'refunded'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'refunded', $base ), $current === 'refunded' ? ' class="current"' : '', __('Refunded', 'edd') . $refunded_count ),
 			'revoked'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'revoked', $base ), $current === 'revoked' ? ' class="current"' : '', __('Revoked', 'edd') . $revoked_count ),
 			'failed'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'failed', $base ), $current === 'failed' ? ' class="current"' : '', __('Failed', 'edd') . $failed_count ),
-			'abandoned'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'abandoned', $base ), $current === 'abandoned' ? ' class="current"' : '', __('Abadoned', 'edd') . $abandoned_count )
+			'abandoned'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'abandoned', $base ), $current === 'abandoned' ? ' class="current"' : '', __('Abandoned', 'edd') . $abandoned_count )
 		);
 
 		return apply_filters( 'edd_payments_table_views', $views );
@@ -358,7 +358,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			}
 			do_action( 'edd_payments_table_do_bulk_action', $id, $this->current_action() );
 		}
-
 	}
 
 	/**
