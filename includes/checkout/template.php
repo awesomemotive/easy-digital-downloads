@@ -42,7 +42,7 @@ function edd_checkout_form() {
 			</div><!--end #edd_checkout_form_wrap-->
 		<?php
 		else:
-			do_action( 'edd_empty_cart' );
+			do_action( 'edd_cart_empty' );
 		endif;
 	return ob_get_clean();
 }

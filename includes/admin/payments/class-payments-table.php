@@ -358,6 +358,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			}
 			do_action( 'edd_payments_table_do_bulk_action', $id, $this->current_action() );
 		}
+
 	}
 
 	/**
