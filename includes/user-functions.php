@@ -31,7 +31,7 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		$user = get_current_user_id();
 	}
 
-	$status = $status === 'complete' || 'preapproved' ? 'publish' : $status;
+	$status = $status === 'complete' ? 'publish' : $status;
 
 	$mode = edd_is_test_mode() ? 'test' : 'live';
 
