@@ -67,7 +67,7 @@ class EDD_HTML_Elements {
 	 * @param string $status Discount post_status to retrieve
 	 * @return string $output Discount dropdown
 	 */
-	public function discount_dropdown( $selected = 0, $status = '' ) {
+	public function discount_dropdown( $name = 'edd_discounts', $selected = 0, $status = '' ) {
 		$args = array( 'nopaging' => true );
 
 		if ( ! empty( $status ) )
@@ -85,7 +85,7 @@ class EDD_HTML_Elements {
 		}
 
 		$output = $this->select( array(
-			'name'             => 'edd_discounts',
+			'name'             => $name,
 			'selected'         => $selected,
 			'options'          => $options,
 			'show_option_all'  => false,
@@ -105,7 +105,7 @@ class EDD_HTML_Elements {
 	 * @param int    $selected Category to select automatically
 	 * @return string $output Category dropdown
 	 */
-	public function category_dropdown( $selected = 0 ) {
+	public function category_dropdown( $name = 'edd_categories', $selected = 0 ) {
 		$categories = get_terms( 'download_category', apply_filters( 'edd_category_dropdown', array() ) );
 		$options    = array();
 
@@ -114,7 +114,7 @@ class EDD_HTML_Elements {
 		}
 
 		$output = $this->select( array(
-			'name'             => 'edd_categories',
+			'name'             => $name,
 			'selected'         => $selected,
 			'options'          => $options,
 			'show_option_all'  => __( 'All Categories', 'edd' ),
@@ -134,7 +134,7 @@ class EDD_HTML_Elements {
 	 * @param int    $selected Year to select automatically
 	 * @return string $output Year dropdown
 	 */
-	public function year_dropdown( $selected = 0 ) {
+	public function year_dropdown( $name = 'year', $selected = 0 ) {
 		$current  = date( 'Y' );
 		$year     = $current - 5;
 		$selected = empty( $selected ) ? date( 'Y' ) : $selected;
@@ -144,7 +144,7 @@ class EDD_HTML_Elements {
 		}
 
 		$output = $this->select( array(
-			'name'             => 'year',
+			'name'             => $name,
 			'selected'         => $selected,
 			'options'          => $options,
 			'show_option_all'  => false,
@@ -164,7 +164,7 @@ class EDD_HTML_Elements {
 	 * @param int    $selected Month to select automatically
 	 * @return string $output Month dropdown
 	 */
-	public function month_dropdown( $selected = 0 ) {
+	public function month_dropdown( $name = 'month', $selected = 0 ) {
 		$month   = 1;
 		$options = array();
 
@@ -173,7 +173,7 @@ class EDD_HTML_Elements {
 		}
 
 		$output = $this->select( array(
-			'name'             => 'month',
+			'name'             => $name,
 			'selected'         => $selected,
 			'options'          => $options,
 			'show_option_all'  => false,
