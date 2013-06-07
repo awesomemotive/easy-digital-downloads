@@ -30,19 +30,28 @@ class EDD_HTML_Elements {
 	 * @return string $output Product dropdown
 	 */
 	public function product_dropdown( $name = 'edd_products', $selected = 0 ) {
-		$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true, 'orderby' => 'title', 'order' => 'ASC' ) );
-
-		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
+		$products = get_posts( array( 
+			'post_type' => 'download', 
+			'nopaging'  => true, 
+			'orderby'   => 'title', 
+			'order'     => 'ASC' 
+		) );
 
 		if ( $products ) {
 			foreach ( $products as $product ) {
-				$output .= '<option value="' . absint( $product->ID ) . '"' . selected( $selected, $product->ID, false ) . '>' . esc_html( get_the_title( $product->ID ) ) . '</option>';
+				$options[ absint( $product->ID ) ] = esc_html( get_the_title( $product->ID ) );
 			}
 		} else {
-			$output .= '<option value="0">' . __( 'No products found', 'edd' ) . '</option>';
+			$options[0] = __( 'No products found', 'edd' );
 		}
 
-		$output .= '</select>';
+		$output = $this->select( array(
+			'name'             => $name,
+			'selected'         => $selected,
+			'options'          => $options,
+			'show_option_all'  => false,
+			'show_option_none' => false
+		) );
 
 		return $output;
 	}
@@ -58,25 +67,30 @@ class EDD_HTML_Elements {
 	 * @param string $status Discount post_status to retrieve
 	 * @return string $output Discount dropdown
 	 */
-	public function discount_dropdown( $name = 'edd_discounts', $selected = 0, $status = '' ) {
+	public function discount_dropdown( $selected = 0, $status = '' ) {
 		$args = array( 'nopaging' => true );
 
 		if ( ! empty( $status ) )
-			$args['post_status'] = $status;
+			$args[ 'post_status' ] = $status;
 
 		$discounts = edd_get_discounts( $args );
-
-		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
+		$options   = array();
 
 		if ( $discounts ) {
 			foreach ( $discounts as $discount ) {
-				$output .= '<option value="' . absint( $discount->ID ) . '"' . selected( $selected, $discount->ID, false ) . '>' . esc_html( get_the_title( $discount->ID ) ) . '</option>';
+				$options[ absint( $discount->ID ) ] = esc_html( get_the_title( $discount->ID ) );
 			}
 		} else {
-			$output .= '<option value="0">' . __( 'No discounts found', 'edd' ) . '</option>';
+			$options[0] = __( 'No discounts found', 'edd' );
 		}
 
-		$output .= '</select>';
+		$output = $this->select( array(
+			'name'             => 'edd_discounts',
+			'selected'         => $selected,
+			'options'          => $options,
+			'show_option_all'  => false,
+			'show_option_none' => false
+		) );
 
 		return $output;
 	}
@@ -91,21 +105,21 @@ class EDD_HTML_Elements {
 	 * @param int    $selected Category to select automatically
 	 * @return string $output Category dropdown
 	 */
-	public function category_dropdown( $name = 'edd_categories', $selected = 0 ) {
-		$categories = get_terms( 'download_category' );
+	public function category_dropdown( $selected = 0 ) {
+		$categories = get_terms( 'download_category', apply_filters( 'edd_category_dropdown', array() ) );
+		$options    = array();
 
-		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
-
-		$output .= '<option value="0">' . __( 'All Categories', 'edd' ) . '</option>';
-		if ( $categories ) {
-			foreach ( $categories as $category ) {
-				$output .= '<option value="' . absint( $category->term_id ) . '"' . selected( $selected, $category->term_id, false ) . '>' . esc_html( $category->name ) . '</option>';
-			}
-		} else {
-			$output .= '<option value="0">' . __( 'No categories found', 'edd' ) . '</option>';
+		foreach ( $categories as $category ) {
+			$options[ absint( $category->term_id ) ] = esc_html( $category->name );
 		}
 
-		$output .= '</select>';
+		$output = $this->select( array(
+			'name'             => 'edd_categories',
+			'selected'         => $selected,
+			'options'          => $options,
+			'show_option_all'  => __( 'All Categories', 'edd' ),
+			'show_option_none' => __( 'No categories found', 'edd' )
+		) );
 
 		return $output;
 	}
@@ -120,19 +134,22 @@ class EDD_HTML_Elements {
 	 * @param int    $selected Year to select automatically
 	 * @return string $output Year dropdown
 	 */
-	public function year_dropdown( $name = 'year', $selected = 0 ) {
+	public function year_dropdown( $selected = 0 ) {
 		$current  = date( 'Y' );
 		$year     = $current - 5;
 		$selected = empty( $selected ) ? date( 'Y' ) : $selected;
 
-		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
-
 		while ( $year <= $current ) {
-			$output .= '<option value="' . absint( $year ) . '"' . selected( $selected, $year, false ) . '>' . $year . '</option>';
-			$year++;
+			$options[ absint( $year ) ] = $year;
 		}
 
-		$output .= '</select>';
+		$output = $this->select( array(
+			'name'             => 'year',
+			'selected'         => $selected,
+			'options'          => $options,
+			'show_option_all'  => false,
+			'show_option_none' => false
+		) );
 
 		return $output;
 	}
@@ -147,16 +164,21 @@ class EDD_HTML_Elements {
 	 * @param int    $selected Month to select automatically
 	 * @return string $output Month dropdown
 	 */
-	public function month_dropdown( $name = 'month', $selected = 0 ) {
+	public function month_dropdown( $selected = 0 ) {
 		$month   = 1;
-		$output  = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
+		$options = array();
 
 		while ( $month <= 12 ) {
-			$output .= '<option value="' . absint( $month ) . '"' . selected( $selected, $month, false ) . '>' . edd_month_num_to_name( $month ) . '</option>';
-			$month++;
+			$options[ absint( $month ) ] = edd_month_num_to_name( $month );
 		}
 
-		$output .= '</select>';
+		$output = $this->select( array(
+			'name'             => 'month',
+			'selected'         => $selected,
+			'options'          => $options,
+			'show_option_all'  => false,
+			'show_option_none' => false
+		) );
 
 		return $output;
 	}
@@ -172,12 +194,29 @@ class EDD_HTML_Elements {
 	 * @param int    $selected Option key to select by default
 	 * @return string $output The dropdown
 	 */
-	public function select( $options = array(), $name = 'year', $selected = 0 ) {
+	public function select( $args = array()) {
+		$defaults = array(
+			'options'          => array(),
+			'name'             => nulll,
+			'selected'         => 0,
+			'show_option_all'  => _x( 'All', 'all dropdown items', 'edd' ),
+			'show_option_name' => _x( 'None', 'no dropdown items', 'edd' )
+		);
 
-		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '" class="edd-select ' . esc_attr( $name ) . '">';
+		$args = wp_parse_args( $args, $defaults );
 
-		foreach( $options as $key => $option ) {
-			$output .= '<option value="' . esc_attr( $key ) . '"' . selected( $selected, $key, false ) . '>' . esc_html( $option ) . '</option>';
+		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="edd-select ' . esc_attr( $args[ 'name'] ) . '">';
+
+		if ( ! empty( $args[ 'options' ] ) ) {
+			if ( $args[ 'show_option_all' ] )
+				$output .= '<option value="0"' . selected( $selected, 0, false ) . '>' . esc_html( $args[ 'show_option_all' ] ) . '</option>';	
+
+			if ( $args[ 'show_option_none' ] )
+				$output .= '<option value="-1"' . selected( $selected, -1, false ) . '>' . esc_html( $args[ 'show_option_none' ] ) . '</option>';
+
+			foreach( $args[ 'options' ] as $key => $option ) {
+				$output .= '<option value="' . esc_attr( $key ) . '"' . selected( $selected, $key, false ) . '>' . esc_html( $option ) . '</option>';
+			}
 		}
 
 		$output .= '</select>';
