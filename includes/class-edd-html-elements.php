@@ -197,7 +197,7 @@ class EDD_HTML_Elements {
 	public function select( $args = array()) {
 		$defaults = array(
 			'options'          => array(),
-			'name'             => nulll,
+			'name'             => null,
 			'selected'         => 0,
 			'show_option_all'  => _x( 'All', 'all dropdown items', 'edd' ),
 			'show_option_name' => _x( 'None', 'no dropdown items', 'edd' )
