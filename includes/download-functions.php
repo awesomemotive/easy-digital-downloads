@@ -565,7 +565,7 @@ function edd_get_download_files( $download_id, $variable_price_id = null ) {
 		if ( ! is_null( $variable_price_id ) ) {
 			foreach ( $download_files as $key => $file_info ) {
 				if ( isset( $file_info['condition'] ) ) {
-					if ( $file_info['condition'] == $variable_price_id || $file_info['condition'] == 'all' ) {
+					if ( $file_info['condition'] == $variable_price_id || $file_info['condition'] === 'all' ) {
 						$files[ $key ] = $file_info;
 					}
 				}
