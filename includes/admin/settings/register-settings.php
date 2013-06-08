@@ -1095,15 +1095,9 @@ function edd_tax_rates_callback($args) {
 			<?php endforeach; ?>
 		<?php else : ?>
 			<tr>
-				<td><?php echo EDD()->html->select( edd_get_country_list(), 'tax_rates[0][country]', edd_get_shop_country() ); ?></td>
+				<td><?php echo EDD()->html->select( edd_get_country_list(), 'tax_rates[0][country]', 0 ); ?></td>
 				<td>
-					<?php
-					if( edd_get_shop_states() ) {
-						echo EDD()->html->select( edd_get_shop_states(), 'tax_rates[0][state]' );
-					} else {
-						echo EDD()->html->text( 'tax_rates[0][state]' );
-					}
-					?>
+					<?php echo EDD()->html->text( 'tax_rates[0][state]' ); ?>
 				</td>
 				<td><input type="number" class="small-text" step="0.1" min="0.0" name="tax_rates[0][rate]" value=""/></td>
 				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'edd' ); ?></span></td>
