@@ -214,21 +214,7 @@ function edd_register_settings() {
 				'purchase_receipt' => array(
 					'id' => 'purchase_receipt',
 					'name' => __('Purchase Receipt', 'edd'),
-					'desc' => __('Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:', 'edd') . '<br/>' .
-						'{download_list} - ' . __('A list of download links for each download purchased', 'edd') . '<br/>' .
-						'{file_urls} - ' . __('A plain-text list of download URLs for each download purchased', 'edd') . '<br/>' .
-						'{name} - ' . __('The buyer\'s first name', 'edd') . '<br/>' .
-						'{fullname} - ' . __('The buyer\'s full name, first and last', 'edd') . '<br/>' .
-						'{username} - ' . __('The buyer\'s user name on the site, if they registered an account', 'edd') . '<br/>' .
-						'{date} - ' . __('The date of the purchase', 'edd') . '<br/>' .
-						'{subtotal} - ' . __('The price of the purchase before taxes', 'edd') . '<br/>' .
-						'{tax} - ' . __('The taxed amount of the purchase', 'edd') . '<br/>' .
-						'{price} - ' . __('The total price of the purchase', 'edd') . '<br/>' .
-						'{payment_id} - ' . __('The unique ID number for this purchase', 'edd') . '<br/>' .
-						'{receipt_id} - ' . __('The unique ID number for this purchase receipt', 'edd') . '<br/>' .
-						'{payment_method} - ' . __('The method of payment used for this purchase', 'edd') . '<br/>' .
-						'{sitename} - ' . __('Your site name', 'edd') . '<br/>' .
-						'{receipt_link} - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'edd' ),
+					'desc' => edd_get_purchase_receipt_template_tags(),
 					'type' => 'rich_editor'
 				),
 				'admin_notice_emails' => array(
@@ -1233,4 +1219,34 @@ function edd_get_settings() {
 	$misc_settings    = is_array( get_option( 'edd_settings_misc' ) )       ? get_option( 'edd_settings_misc' )     : array();
 
 	return array_merge( $general_settings, $gateway_settings, $email_settings, $style_settings, $tax_settings, $ext_settings, $misc_settings );
+}
+
+
+/**
+ * Get Purchase Receipt Template Tags
+ *
+ * Displays all available template tags for the purchase receipt.
+ *
+ * @since 1.6
+ * @author Daniel J Griffiths
+ * @return string $tags
+ */
+function edd_get_purchase_receipt_template_tags() {
+	$tags = __('Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:', 'edd') . '<br/>' .
+			'{download_list} - ' . __('A list of download links for each download purchased', 'edd') . '<br/>' .
+			'{file_urls} - ' . __('A plain-text list of download URLs for each download purchased', 'edd') . '<br/>' .
+			'{name} - ' . __('The buyer\'s first name', 'edd') . '<br/>' .
+			'{fullname} - ' . __('The buyer\'s full name, first and last', 'edd') . '<br/>' .
+			'{username} - ' . __('The buyer\'s user name on the site, if they registered an account', 'edd') . '<br/>' .
+			'{date} - ' . __('The date of the purchase', 'edd') . '<br/>' .
+			'{subtotal} - ' . __('The price of the purchase before taxes', 'edd') . '<br/>' .
+			'{tax} - ' . __('The taxed amount of the purchase', 'edd') . '<br/>' .
+			'{price} - ' . __('The total price of the purchase', 'edd') . '<br/>' .
+			'{payment_id} - ' . __('The unique ID number for this purchase', 'edd') . '<br/>' .
+			'{receipt_id} - ' . __('The unique ID number for this purchase receipt', 'edd') . '<br/>' .
+			'{payment_method} - ' . __('The method of payment used for this purchase', 'edd') . '<br/>' .
+			'{sitename} - ' . __('Your site name', 'edd') . '<br/>' .
+			'{receipt_link} - ' . __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'edd' );
+
+	return apply_filters( 'edd_template_tags_description', $tags );
 }
