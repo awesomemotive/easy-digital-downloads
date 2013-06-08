@@ -1190,12 +1190,9 @@ function edd_settings_sanitize( $input ) {
  */
 function edd_settings_sanitize_taxes( $input ) {
 
-	$new_rates = array_values( $_POST['tax_rates'] );
+	$new_rates = ! empty( $_POST['tax_rates'] ) ? array_values( $_POST['tax_rates'] ) : array();
 
-	if( ! empty( $new_rates ) ) {
-
-		update_option( 'edd_tax_rates', $new_rates );
-	}
+	update_option( 'edd_tax_rates', $new_rates );
 
 	add_settings_error( 'edd-notices', '', __('Settings Updated', 'edd'), 'updated' );
 	return $input;
