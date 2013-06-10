@@ -553,7 +553,12 @@ function edd_checkout_button_purchase() {
 	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
 	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
 
-	$complete_purchase = ! empty( $edd_options['checkout_label'] ) ? $edd_options['checkout_label'] : ( edd_get_cart_total() ? __( 'Purchase', 'edd' ) : __( 'Download', 'edd' ) );
+	if ( edd_get_cart_total() ) {
+		$complete_purchase = ! empty( $edd_options['checkout_label'] ) ? $edd_options['checkout_label'] : __( 'Purchase', 'edd' );
+	} else {
+		$complete_purchase = ! empty( $edd_options['checkout_label'] ) ? $edd_options['checkout_label'] : __( 'Download', 'edd' );
+	}
+
 	ob_start();
 ?>
 	<input type="submit" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-purchase-button" name="edd-purchase" value="<?php echo $complete_purchase; ?>"/>
