@@ -324,7 +324,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 
 	// Collect payment details
 	$payment_id     = $data['custom'];
-	$purchase_key   = $data['invoice'];
+	$purchase_key   = isset( $data['invoice'] ) ? $data['invoice'] : $data['item_number'];
 	$paypal_amount  = $data['mc_gross'];
 	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
