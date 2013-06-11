@@ -273,7 +273,7 @@ add_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
  * @return void
  */
 function edd_checkout_tax_fields() {
-	if( edd_cart_needs_tax_address_fields() )
+	if( edd_cart_needs_tax_address_fields() && edd_get_cart_total() )
 		edd_default_cc_address_fields();
 }
 add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_tax_fields', 999 );
