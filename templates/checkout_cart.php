@@ -66,7 +66,7 @@
 		</tr>
 			<?php if ( ! edd_prices_show_tax_on_checkout() ) : ?>
 
-			<tr class="edd_cart_footer_row edd_cart_tax_row"<?php if( edd_is_cart_taxed() ) echo ' style="display:none;"'; ?>>
+			<tr class="edd_cart_footer_row edd_cart_tax_row"<?php if( ! edd_is_cart_taxed() ) echo ' style="display:none;"'; ?>>
 				<?php do_action( 'edd_checkout_table_tax_first' ); ?>
 				<th colspan="3" class="edd_cart_tax">
 					<?php _e( 'Tax', 'edd' ); ?>:&nbsp;<span class="edd_cart_tax_amount" data-tax="<?php echo edd_get_cart_tax( false ); ?>"><?php echo esc_html( edd_cart_tax() ); ?></span>
