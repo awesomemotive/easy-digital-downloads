@@ -289,15 +289,3 @@ function edd_version_in_header(){
 	echo '<meta name="generator" content="Easy Digital Downloads v' . EDD_VERSION . '" />' . "\n";
 }
 add_action( 'wp_head', 'edd_version_in_header' );
-
-/**
- * Returns the template directory name. 
- * 
- * Themes can filter this by using the edd_templates_dir filter.
- * 
- * @since 1.6.1
- * @return string
-*/
-function edd_get_theme_template_dir_name() {
-      return trailingslashit( apply_filters( 'edd_templates_dir', 'edd_templates' ) );
-}
