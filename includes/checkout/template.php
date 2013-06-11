@@ -205,6 +205,7 @@ add_action( 'edd_cc_form', 'edd_get_cc_form' );
 function edd_default_cc_address_fields() {
 	ob_start(); ?>
 	<fieldset id="edd_cc_address" class="cc-address">
+		<legend><?php _e( 'Billing Details', 'edd' ); ?></legend>
 		<?php do_action( 'edd_cc_billing_top' ); ?>
 		<p id="edd-card-address-wrap">
 			<label class="edd-label"><?php _e( 'Billing Address', 'edd' ); ?></label>
