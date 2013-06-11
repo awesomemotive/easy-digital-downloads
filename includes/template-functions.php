@@ -530,13 +530,13 @@ function edd_microdata_wrapper( $content ) {
 add_filter( 'the_content', 'edd_microdata_wrapper', 10 );
 
 /**
- * Returns the template directory name. 
- * 
+ * Returns the template directory name.
+ *
  * Themes can filter this by using the edd_templates_dir filter.
- * 
- * @since 1.6.1
+ *
+ * @since 1.6.2
  * @return string
 */
 function edd_get_theme_template_dir_name() {
-      return trailingslashit( apply_filters( 'edd_templates_dir', 'edd_templates' ) );
+	return trailingslashit( apply_filters( 'edd_templates_dir', 'edd_templates' ) );
 }
