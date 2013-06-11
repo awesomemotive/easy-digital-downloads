@@ -149,7 +149,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
    	    // Calculate discount
        	$discounted_amount = $purchase_data['discount'];
         if( ! empty( $purchase_data['fees'] ) ) {
-        $i = 1;
+       	 	$i = empty( $i ) ? 1 : $i;
 	        foreach( $purchase_data['fees'] as $fee ) {
 	        	if( floatval( $fee['amount'] ) > '0' ) {
 		        	// this is a positive fee
@@ -172,8 +172,6 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			$paypal_args['tax_cart'] = $purchase_data['tax'];
 		elseif ( edd_use_taxes() && ! $itemize )
 			$paypal_args['tax'] = $purchase_data['tax'];
-
-      // echo '<pre>'; print_r( $purchase_data['fees'] ); echo '</pre>'; exit;
 
         $paypal_args = apply_filters('edd_paypal_redirect_args', $paypal_args, $purchase_data );
 
