@@ -184,7 +184,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
-= 1.6.2: June 1, 2013 =
+= 1.6.2: June 11, 2013 =
 
 * Fix: Positive cart fees overwrote PayPal items after sending purchase to PayPal
 * Fix: Hide tax billing fields if checkout amount is 0.00
