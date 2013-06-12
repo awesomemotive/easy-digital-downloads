@@ -141,7 +141,7 @@ function edd_has_purchases( $user_id = null ) {
 /**
  * Get Purchase Status for User
  *
- * CRetrieves the purchase count and the total amount spent for a specific user
+ * Retrieves the purchase count and the total amount spent for a specific user
  *
  * @access      public
  * @since       1.6

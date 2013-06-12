@@ -85,7 +85,7 @@ function edd_process_purchase_form() {
 	// Allow themes and plugins to hook before the gateway
 	do_action( 'edd_checkout_before_gateway', $_POST, $user_info, $valid_data );
 
-	// If the total amount in the cart is 0, send to the manaul gateway. This emulates a free download purchase
+	// If the total amount in the cart is 0, send to the manual gateway. This emulates a free download purchase
 	if ( !$purchase_data['price'] ) {
 		// Revert to manual
 		$valid_data['gateway'] = 'manual';
