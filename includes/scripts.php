@@ -103,7 +103,7 @@ function edd_register_styles() {
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
 	$file          = 'edd' . $suffix . '.css';
-	$templates_dir = 'edd_templates/';
+	$templates_dir = edd_get_theme_template_dir_name();
 
 	$child_theme_style_sheet    = trailingslashit( get_stylesheet_directory() ) . $templates_dir . $file;
 	$child_theme_style_sheet_2  = trailingslashit( get_stylesheet_directory() ) . $templates_dir . 'edd.css';

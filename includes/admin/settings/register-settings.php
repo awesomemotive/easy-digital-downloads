@@ -1071,6 +1071,7 @@ function edd_tax_rates_callback($args) {
 			<tr>
 				<th scope="col" class="edd_tax_country"><?php _e( 'Country', 'edd' ); ?></th>
 				<th scope="col" class="edd_tax_state"><?php _e( 'State / Province', 'edd' ); ?></th>
+				<th scope="col" class="edd_tax_global" title="<?php _e( 'Apply rate to whole country, regardless of state / province', 'edd' ); ?>"><?php _e( 'Country Wide', 'edd' ); ?></th>
 				<th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'edd' ); ?></th>
 				<th scope="col"><?php _e( 'Remove', 'edd' ); ?></th>
 			</tr>
@@ -1089,6 +1090,10 @@ function edd_tax_rates_callback($args) {
 					}
 					?>
 				</td>
+				<td>
+					<input type="checkbox" name="tax_rates[<?php echo $key; ?>][global]" id="tax_rates[<?php echo $key; ?>][global]" value="1"<?php checked( true, ! empty( $rate['global'] ) ); ?>/>
+					<label for="tax_rates[<?php echo $key; ?>][global]"><?php _e( 'Apply to whole country', 'edd' ); ?></a>
+				</td>
 				<td><input type="number" class="small-text" step="0.1" min="0.0" max="99" name="tax_rates[<?php echo $key; ?>][rate]" value="<?php echo $rate['rate']; ?>"/></td>
 				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'edd' ); ?></span></td>
 			</tr>
@@ -1100,6 +1105,10 @@ function edd_tax_rates_callback($args) {
 					<?php echo EDD()->html->text( 'tax_rates[0][state]' ); ?>
 				</td>
 				<td><input type="number" class="small-text" step="0.1" min="0.0" name="tax_rates[0][rate]" value=""/></td>
+				<td>
+					<input type="checkbox" name="tax_rates[0][global]" value="1"/>
+					<label for="tax_rates[0][global]"><?php _e( 'Apply to whole country', 'edd' ); ?></a>
+				</td>
 				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'edd' ); ?></span></td>
 			</tr>
 		<?php endif; ?>

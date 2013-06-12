@@ -205,7 +205,7 @@ add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10, 2 );
 function edd_before_download_content( $content ) {
 	global $post;
 
-	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
 		ob_start();
 		$content .= ob_get_clean();
 		do_action( 'edd_before_download_content', $post->ID );
@@ -229,7 +229,7 @@ add_filter( 'the_content', 'edd_before_download_content' );
 function edd_after_download_content( $content ) {
 	global $post;
 
-	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
 		ob_start();
 		do_action( 'edd_after_download_content', $post->ID );
 		$content .= ob_get_clean();
@@ -528,3 +528,15 @@ function edd_microdata_wrapper( $content ) {
 	return $content;
 }
 add_filter( 'the_content', 'edd_microdata_wrapper', 10 );
+
+/**
+ * Returns the template directory name.
+ *
+ * Themes can filter this by using the edd_templates_dir filter.
+ *
+ * @since 1.6.2
+ * @return string
+*/
+function edd_get_theme_template_dir_name() {
+	return trailingslashit( apply_filters( 'edd_templates_dir', 'edd_templates' ) );
+}

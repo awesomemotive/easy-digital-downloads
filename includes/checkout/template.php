@@ -205,6 +205,7 @@ add_action( 'edd_cc_form', 'edd_get_cc_form' );
 function edd_default_cc_address_fields() {
 	ob_start(); ?>
 	<fieldset id="edd_cc_address" class="cc-address">
+		<legend><?php _e( 'Billing Details', 'edd' ); ?></legend>
 		<?php do_action( 'edd_cc_billing_top' ); ?>
 		<p id="edd-card-address-wrap">
 			<label class="edd-label"><?php _e( 'Billing Address', 'edd' ); ?></label>
@@ -272,7 +273,7 @@ add_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
  * @return void
  */
 function edd_checkout_tax_fields() {
-	if( edd_cart_needs_tax_address_fields() )
+	if( edd_cart_needs_tax_address_fields() && edd_get_cart_total() )
 		edd_default_cc_address_fields();
 }
 add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_tax_fields', 999 );
@@ -296,6 +297,7 @@ function edd_get_register_fields() {
 	ob_start(); ?>
 	<fieldset id="edd_register_fields">
 		<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'edd' ); ?> <a href="<?php echo add_query_arg('login', 1); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e( 'Login', 'edd' ); ?></a></p>
+		<?php do_action('edd_register_fields_before'); ?>
 		<p id="edd-user-email-wrap">
 			<label for="edd-email"><?php _e( 'Email', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'We will send the purchase receipt to this address.', 'edd' ); ?></span>
@@ -311,6 +313,7 @@ function edd_get_register_fields() {
 			<span class="edd-description"><?php _e( 'We will use this as well to personalize your account experience.', 'edd' ); ?></span>
 			<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e( 'Last name', 'edd' ); ?>" value="<?php echo is_user_logged_in() ? $user_data->user_lastname : ''; ?>"/>
 		</p>
+		<?php do_action('edd_register_fields_after'); ?>
 		<fieldset id="edd_register_account_fields">
 			<legend><?php _e( 'Create an account', 'edd' ); if( !edd_no_guest_checkout() ) { echo ' ' . __( '(optional)', 'edd' ); } ?></legend>
 			<?php do_action('edd_register_account_fields_before'); ?>
@@ -553,7 +556,12 @@ function edd_checkout_button_purchase() {
 	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
 	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
 
-	$complete_purchase = isset( $edd_options['checkout_label'] ) && strlen( trim( $edd_options['checkout_label'] ) ) > 0 ? $edd_options['checkout_label'] : __( 'Purchase', 'edd' );
+	if ( edd_get_cart_total() ) {
+		$complete_purchase = ! empty( $edd_options['checkout_label'] ) ? $edd_options['checkout_label'] : __( 'Purchase', 'edd' );
+	} else {
+		$complete_purchase = ! empty( $edd_options['checkout_label'] ) ? $edd_options['checkout_label'] : __( 'Download', 'edd' );
+	}
+
 	ob_start();
 ?>
 	<input type="submit" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-purchase-button" name="edd-purchase" value="<?php echo $complete_purchase; ?>"/>
