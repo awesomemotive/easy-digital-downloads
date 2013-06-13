@@ -48,7 +48,7 @@ class EDD_Cron {
 		// Adds once weekly to the existing schedules.
 		$schedules['weekly'] = array(
 			'interval' => 604800,
-			'display'  => __( 'Once Weekly' )
+			'display'  => __( 'Once Weekly', 'edd' )
 		);
 
 		return $schedules;
