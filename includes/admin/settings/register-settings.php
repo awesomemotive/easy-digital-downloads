@@ -1104,7 +1104,7 @@ function edd_tax_rates_callback($args) {
 				<td>
 					<?php echo EDD()->html->text( 'tax_rates[0][state]' ); ?>
 				</td>
-				<td><input type="number" class="small-text" step="0.1" min="0.0" name="tax_rates[0][rate]" value=""/></td>
+				<td><input type="number" class="small-text" step="0.01" min="0.0" name="tax_rates[0][rate]" value=""/></td>
 				<td>
 					<input type="checkbox" name="tax_rates[0][global]" value="1"/>
 					<label for="tax_rates[0][global]"><?php _e( 'Apply to whole country', 'edd' ); ?></a>
