@@ -97,8 +97,6 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 			// Locate the tax rate for this country / state, if it exists
 			foreach( $tax_rates as $key => $tax_rate ) {
 
-				$whole_country = false;
-
 				if( $country != $tax_rate['country'] )
 					continue;
 
