@@ -47,7 +47,6 @@ class EDD_HTML_Elements {
 		return $output;
 	}
 
-
 	/**
 	 * Renders an HTML Dropdown of all the Discounts
 	 *
@@ -81,7 +80,6 @@ class EDD_HTML_Elements {
 		return $output;
 	}
 
-
 	/**
 	 * Renders an HTML Dropdown of all the Categories
 	 *
@@ -110,7 +108,6 @@ class EDD_HTML_Elements {
 		return $output;
 	}
 
-
 	/**
 	 * Renders an HTML Dropdown of years
 	 *
@@ -137,7 +134,6 @@ class EDD_HTML_Elements {
 		return $output;
 	}
 
-
 	/**
 	 * Renders an HTML Dropdown of months
 	 *
@@ -161,7 +157,6 @@ class EDD_HTML_Elements {
 		return $output;
 	}
 
-
 	/**
 	 * Renders an HTML Dropdown
 	 *
@@ -173,10 +168,9 @@ class EDD_HTML_Elements {
 	 * @return string $output The dropdown
 	 */
 	public function select( $options = array(), $name = 'year', $selected = 0 ) {
-
 		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '" class="edd-select ' . esc_attr( $name ) . '">';
 
-		foreach( $options as $key => $option ) {
+		foreach ( $options as $key => $option ) {
 			$output .= '<option value="' . esc_attr( $key ) . '"' . selected( $selected, $key, false ) . '>' . esc_html( $option ) . '</option>';
 		}
 
@@ -184,7 +178,6 @@ class EDD_HTML_Elements {
 
 		return $output;
 	}
-
 
 	/**
 	 * Renders an HTML Text field
@@ -205,5 +198,4 @@ class EDD_HTML_Elements {
 
 		return $output;
 	}
-
 }
