@@ -61,7 +61,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 
 	wp_mail( $email, $subject, $message, $headers, $attachments );
 
-	if ( $admin_notice && ! edd_admin_notices_disabled() ) {
+	if ( $admin_notice && ! edd_admin_notices_disabled( $payment_id ) ) {
 		do_action( 'edd_admin_sale_notice', $payment_id, $payment_data );
 	}
 }
@@ -189,10 +189,10 @@ function edd_get_admin_notice_emails() {
  * @since 1.5.2
  * @return bool
  */
-function edd_admin_notices_disabled() {
+function edd_admin_notices_disabled( $payment_id = 0 ) {
 	global $edd_options;
 	$retval = isset( $edd_options['disable_admin_notices'] );
-	return apply_filters( 'edd_admin_notices_disabled', $retval );
+	return apply_filters( 'edd_admin_notices_disabled', $retval, $payment_id );
 }
 
 
