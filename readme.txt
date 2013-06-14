@@ -184,6 +184,13 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 1.6.1: June 13, 2013 =
+
+* Fix: Invalid parameter warning for [download_discounts]
+* Fix: Problem with 100% discount codes going to PayPal
+* Tweak: Updated German translation files
+* Tweak: Improved the order of countries in the drop down menu
+
 = 1.6.2: June 11, 2013 =
 
 * Fix: Positive cart fees overwrote PayPal items after sending purchase to PayPal
@@ -198,7 +205,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Added minor tax rate option to make tax rate country wide
 * Tweak: Change "Purchase to "Download" on checkout if cart total is 0.00
 
-= 1.6.1: June 1, 2013 =
+= 1.6.1: June 11, 2013 =
 
 * Fix: Fatal error for users that had modified the checkout_cart.php template files
 * Fix: Fatal memory error for some users when viewing the File Downloads logs
