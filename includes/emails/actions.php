@@ -21,13 +21,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_trigger_purchase_receipt( $payment_id ) {
 	// Make sure we don't send a purchase receipt while editing a payment
-	if ( isset( $_POST['edd-action'] ) && $_POST['edd-action'] == 'edit_payment' )
+	if ( isset( $_POST['edd-action'] ) && 'edit_payment' == $_POST['edd-action'] )
 		return;
 
 	// Send email with secure download link
 	edd_email_purchase_receipt( $payment_id );
 }
-add_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999, 3 );
+add_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999, 1 );
 
 /**
  * Resend the Email Purchase Receipt. (This can be done from the Payment History page)
