@@ -88,7 +88,7 @@ function edd_process_purchase_form() {
 	// If the total amount in the cart is 0, send to the manual gateway. This emulates a free download purchase
 	if ( !$purchase_data['price'] ) {
 		// Revert to manual
-		$valid_data['gateway'] = 'manual';
+		$purchase_data['gateway'] = 'manual';
 	}
 
 	// Allow the purchase data to be modified before it is sent to the gateway
