@@ -760,8 +760,8 @@ function edd_get_payment_amount( $payment_id ) {
  * @param bool $payment_meta Payment Meta provided? (default: false)
  * @return string $subtotal Fully formatted payment subtotal
  */
-function edd_payment_subtotal( $payment_id = 0, $payment_meta = false ) {
-	$subtotal = edd_get_payment_subtotal( $payment_id, $payment_meta );
+function edd_payment_subtotal( $payment_id = 0 ) {
+	$subtotal = edd_get_payment_subtotal( $payment_id );
 
 	return edd_currency_filter( edd_format_amount( $subtotal ) );
 }
@@ -773,25 +773,15 @@ function edd_payment_subtotal( $payment_id = 0, $payment_meta = false ) {
  * @since 1.3.3
  * @global $edd_options Array of all the EDD Options
  * @param int $payment_id Payment ID
- * @param bool $payment_meta Get payment meta?
  * @return float $subtotal Subtotal for payment (non formatted)
  */
-function edd_get_payment_subtotal( $payment_id = 0, $payment_meta = false ) {
+function edd_get_payment_subtotal( $payment_id = 0) {
 	global $edd_options;
 
-	if ( ! $payment_meta )
-		$payment_meta = edd_get_payment_meta( $payment_id );
-
-	$subtotal = isset( $payment_meta['subtotal'] ) ? $payment_meta['subtotal'] : $payment_meta['amount'];
+	$subtotal = edd_get_payment_amount( $payment_id );
 
 	$tax = edd_use_taxes() ? edd_get_payment_tax( $payment_id ) : 0;
-
-	if (
-		( isset( $edd_options['prices_include_tax'] ) && $edd_options['prices_include_tax'] == 'no' && ! edd_prices_show_tax_on_checkout() ) ||
-		( isset( $edd_options['prices_include_tax'] ) && ! edd_prices_show_tax_on_checkout() && $edd_options['prices_include_tax'] == 'yes' )
-	) {
-		$subtotal -= $tax;
-	}
+	$subtotal -= $tax;
 
 	return apply_filters( 'edd_get_payment_subtotal', $subtotal, $payment_id );
 }
