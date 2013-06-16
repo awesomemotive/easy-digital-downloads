@@ -427,7 +427,7 @@ function edd_is_discount_expired( $code_id = null ) {
 		$expiration = edd_get_discount_expiration( $code_id );
 		if ( $expiration ) {
 			$expiration = strtotime( $expiration );
-			if ( $expiration < time() - ( 24 * 60 * 60 ) ) {
+			if ( $expiration < current_time( 'timestamp' ) - ( 24 * 60 * 60 ) ) {
 				// Discount is expired
 				$return = true;
 			}
@@ -456,7 +456,7 @@ function edd_is_discount_started( $code_id = null ) {
 		if ( $start_date ) {
 			$start_date = strtotime( $start_date );
 
-			if ( $start_date < time() ) {
+			if ( $start_date < current_time( 'timestamp' ) ) {
 				// Discount has pased the start date
 				$return = true;
 			}
@@ -784,7 +784,7 @@ function edd_set_cart_discount( $code = '' ) {
 		$discounts[] = $code;
 	}
 
-	setcookie( 'wordpress_edd_cart_discount', implode( '|', $discounts ), time() + 3600, COOKIEPATH, COOKIE_DOMAIN, false );
+	setcookie( 'wordpress_edd_cart_discount', implode( '|', $discounts ), current_time( 'timestamp' ) + 3600, COOKIEPATH, COOKIE_DOMAIN, false );
 
 	return $discounts;
 }
@@ -804,7 +804,7 @@ function edd_unset_cart_discount( $code = '' ) {
 		unset( $discounts[ $key ] );
 		$discounts = implode( '|', array_values( $discounts ) );
 		// update the active discounts
-		setcookie( 'wordpress_edd_cart_discount', $discounts, time()+3600, COOKIEPATH, COOKIE_DOMAIN, false );
+		setcookie( 'wordpress_edd_cart_discount', $discounts, current_time( 'timestamp' )+3600, COOKIEPATH, COOKIE_DOMAIN, false );
 	}
 
 	return $discounts;

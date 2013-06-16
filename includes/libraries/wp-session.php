@@ -132,7 +132,7 @@ function wp_session_cleanup() {
 	if ( ! defined( 'WP_INSTALLING' ) ) {
 		$expiration_keys = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE '_wp_session_expires_%'" );
 
-		$now = time();
+		$now = current_time( 'timestamp' );
 		$expired_sessions = array();
 
 		foreach( $expiration_keys as $expiration ) {
@@ -163,7 +163,7 @@ add_action( 'wp_session_garbage_collection', 'wp_session_cleanup' );
  */
 function wp_session_register_garbage_collection() {
 	if ( ! wp_next_scheduled( 'wp_session_garbage_collection' ) ) {
-		wp_schedule_event( time(), 'twicedaily', 'wp_session_garbage_collection' );
+		wp_schedule_event( current_time( 'timestamp' ), 'twicedaily', 'wp_session_garbage_collection' );
 	}
 }
 add_action( 'wp', 'wp_session_register_garbage_collection' );
