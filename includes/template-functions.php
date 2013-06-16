@@ -66,6 +66,9 @@ function edd_get_purchase_link( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
+	// Override color if color == inherit
+	$args['color'] = ( $args['color'] == 'inherit' ) ? '' : $args['color'];
+
 	$variable_pricing = edd_has_variable_prices( $args['download_id'] );
 	$data_variable    = $variable_pricing ? ' data-variable-price=yes' : 'data-variable-price=no';
 	$type             = edd_single_price_option_mode( $args['download_id'] ) ? 'data-price-mode=multi' : 'data-price-mode=single';
@@ -276,6 +279,7 @@ function edd_get_button_colors() {
 		'green'     => __( 'Green', 'edd' ),
 		'yellow'    => __( 'Yellow', 'edd' ),
 		'dark-gray' => __( 'Dark Gray', 'edd' ),
+		'inherit'	=> __( 'Inherit', 'edd' ),
 	);
 
 	return apply_filters( 'edd_button_colors', $colors );
