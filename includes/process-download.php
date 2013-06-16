@@ -190,7 +190,7 @@ function edd_deliver_download( $file = '' ) {
 
 		// Schedule deletion of the symlink
 		if ( ! wp_next_scheduled( 'edd_cleanup_file_symlinks' ) )
-			wp_schedule_single_event( time()+60, 'edd_cleanup_file_symlinks' );
+			wp_schedule_single_event( current_time( 'timestamp' )+60, 'edd_cleanup_file_symlinks' );
 
 		// Make sure the symlink doesn't already exist before we create it
 		if( ! file_exists( $path ) )
