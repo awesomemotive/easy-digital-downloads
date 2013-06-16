@@ -417,7 +417,7 @@ function edd_get_report_dates() {
 		break;
 
 		case 'this_week' :
-			$dates['day']       = date( 'd', time() - ( date( 'w' ) - 1 ) *60*60*24 ) - 1;
+			$dates['day']       = date( 'd', current_time( 'timestamp' ) - ( date( 'w' ) - 1 ) *60*60*24 ) - 1;
 			$dates['day']      += get_option( 'start_of_week' );
 			$dates['day_end']   = $dates['day'] + 6;
 			$dates['m_start'] 	= date( 'n' );
@@ -426,7 +426,7 @@ function edd_get_report_dates() {
 		break;
 
 		case 'last_week' :
-			$dates['day']       = date( 'd', time() - ( date( 'w' ) - 1 ) *60*60*24 ) - 8;
+			$dates['day']       = date( 'd', current_time( 'timestamp' ) - ( date( 'w' ) - 1 ) *60*60*24 ) - 8;
 			$dates['day']      += get_option( 'start_of_week' );
 			$dates['day_end']   = $dates['day'] + 6;
 			$dates['m_start'] 	= date( 'n' );

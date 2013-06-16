@@ -206,7 +206,7 @@ function edd_email_preview_templage_tags( $message ) {
 	$message = str_replace( '{name}', 'John', $message );
 	$message = str_replace( '{fullname}', 'John Doe', $message );
 	$message = str_replace( '{username}', 'john-doe', $message );
-	$message = str_replace( '{date}', date( get_option( 'date_format' ), time() ), $message );
+	$message = str_replace( '{date}', date( get_option( 'date_format' ), current_time( 'timestamp' ) ), $message );
 	$message = str_replace( '{subtotal}', $sub_total, $message );
 	$message = str_replace( '{tax}', $tax, $message );
 	$message = str_replace( '{price}', $price, $message );

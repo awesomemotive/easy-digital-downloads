@@ -68,7 +68,7 @@ class EDD_Cron {
 	 */
 	private function weekly_events() {
 		if ( ! wp_next_scheduled( 'edd_weekly_cron' ) ) {
-			wp_schedule_event( time(), 'weekly', 'edd_weekly_cron' );
+			wp_schedule_event( current_time( 'timestamp' ), 'weekly', 'edd_weekly_cron' );
 			do_action( 'edd_weekly_scheduled_events' );
 		}
 	}
@@ -82,7 +82,7 @@ class EDD_Cron {
 	 */
 	private function daily_events() {
 		if ( ! wp_next_scheduled( 'edd_daily_cron' ) ) {
-			wp_schedule_event( time(), 'daily', 'edd_daily_cron' );
+			wp_schedule_event( current_time( 'timestamp' ), 'daily', 'edd_daily_cron' );
 			do_action( 'edd_daily_scheduled_events' );
 		}
 	}
