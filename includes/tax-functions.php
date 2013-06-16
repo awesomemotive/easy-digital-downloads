@@ -102,7 +102,7 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 
 				if( ! empty( $tax_rate['global'] ) ) {
 					if( ! empty( $tax_rate['rate'] ) ) {
-						$rate = number_format( $tax_rate['rate'], 2 );
+						$rate = number_format( $tax_rate['rate'], 4 );
 					}
 				} else {
 
@@ -111,7 +111,7 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 
 					$state_rate = $tax_rate['rate'];
 					if( ! empty( $state_rate ) ) {
-						$rate = number_format( $state_rate, 2 );
+						$rate = number_format( $state_rate, 4 );
 					}
 				}
 			}
