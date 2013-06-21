@@ -105,6 +105,10 @@ function edd_install() {
 
 		update_option( 'edd_settings_general', $options );
 		update_option( 'edd_version', EDD_VERSION );
+
+		// Add a temporary option to note that EDD pages have been created
+		$activation_pages = array_merge( $options, array( 'history_page' => $history ) );
+		add_option( '_edd_activation_pages', $activation_pages );
 	}
 
 	// Bail if activating from network, or bulk
@@ -115,3 +119,25 @@ function edd_install() {
 	set_transient( '_edd_activation_redirect', true, 30 );
 }
 register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
+
+/**
+ * Post-installation
+ *
+ * Runs just after plugin installation and exposes the 
+ * edd_after_install hook. 
+ *
+ * @since 1.6.4
+ * @return void
+ */
+function edd_after_install() {
+	// If not in admin, and not  
+	if ( ! is_admin() || get_option( '_edd_activation_pages', false ) === false )
+		return;
+
+	$activation_pages = get_option( '_edd_activation_pages' );
+
+	delete_option( '_edd_activation_pages' );
+	
+	do_action( 'edd_after_install', $activation_pages );
+}
+add_action( 'admin_init', 'edd_after_install' );
