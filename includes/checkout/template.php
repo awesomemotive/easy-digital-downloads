@@ -429,7 +429,7 @@ add_action( 'edd_payment_payment_mode_select', 'edd_payment_mode_select' );
  * @return void
 */
 function edd_discount_field() {
-	if ( edd_has_active_discounts() && ! edd_cart_has_discounts() ) {
+	if ( edd_has_active_discounts() && ! edd_cart_has_discounts() && edd_get_cart_total() ) {
 	?>
 	<fieldset id="edd_discount_code">
 		<p id="edd-discount-code-wrap">
