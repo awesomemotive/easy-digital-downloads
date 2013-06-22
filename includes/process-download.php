@@ -101,7 +101,7 @@ function edd_process_download() {
 
 				$direct    = false;
 
-				if ( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false && file_exists( $file_path ) ) {
+				if ( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false && file_exists( $requested_file ) ) {
 
 					/** This is an absolute path */
 					$direct = true;
