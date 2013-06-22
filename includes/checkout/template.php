@@ -559,7 +559,7 @@ function edd_checkout_button_purchase() {
 	if ( edd_get_cart_total() ) {
 		$complete_purchase = ! empty( $edd_options['checkout_label'] ) ? $edd_options['checkout_label'] : __( 'Purchase', 'edd' );
 	} else {
-		$complete_purchase = ! empty( $edd_options['checkout_label'] ) ? $edd_options['checkout_label'] : __( 'Download', 'edd' );
+		$complete_purchase = ! empty( $edd_options['checkout_label'] ) ? $edd_options['checkout_label'] : __( 'Free Download', 'edd' );
 	}
 
 	ob_start();
