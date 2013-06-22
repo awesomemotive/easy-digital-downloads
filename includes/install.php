@@ -126,7 +126,7 @@ register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
  * Runs just after plugin installation and exposes the 
  * edd_after_install hook. 
  *
- * @since 1.6.4
+ * @since 1.7
  * @return void
  */
 function edd_after_install() {
