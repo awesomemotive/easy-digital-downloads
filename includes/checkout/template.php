@@ -538,6 +538,7 @@ function edd_checkout_button_next() {
 
 	ob_start();
 ?>
+	<input type="hidden" name="page_id" value="<?php echo absint( $edd_options['purchase_page'] ); ?>"/>
 	<input type="submit" id="edd_next_button" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" value="<?php _e( 'Next', 'edd' ); ?>"/>
 <?php
 	return apply_filters( 'edd_checkout_button_next', ob_get_clean() );
