@@ -108,7 +108,7 @@ function edd_install() {
 
 		// Add a temporary option to note that EDD pages have been created
 		$activation_pages = array_merge( $options, array( 'history_page' => $history ) );
-		add_option( '_edd_activation_pages', $activation_pages );
+		set_transient( '_edd_activation_pages', $activation_pages, 30 );
 	}
 
 	// Bail if activating from network, or bulk
@@ -130,13 +130,15 @@ register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
  * @return void
  */
 function edd_after_install() {
-	// If not in admin, and not  
-	if ( ! is_admin() || get_option( '_edd_activation_pages', false ) === false )
+	// Exit if not in admin or the transient doesn't exist
+	if ( ! is_admin() || ! get_transient( '_edd_activation_pages' ) )
 		return;
 
-	$activation_pages = get_option( '_edd_activation_pages' );
+	// Get the pages created
+	$activation_pages = get_transient( '_edd_activation_pages' );
 
-	delete_option( '_edd_activation_pages' );
+	// Delete the transient
+	delete_transient( '_edd_activation_pages' );
 	
 	do_action( 'edd_after_install', $activation_pages );
 }
