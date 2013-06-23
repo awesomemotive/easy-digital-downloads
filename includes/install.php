@@ -123,23 +123,26 @@ register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
 /**
  * Post-installation
  *
- * Runs just after plugin installation and exposes the 
- * edd_after_install hook. 
+ * Runs just after plugin installation and exposes the
+ * edd_after_install hook.
  *
  * @since 1.7
  * @return void
  */
 function edd_after_install() {
-	// Exit if not in admin or the transient doesn't exist
-	if ( ! is_admin() || ! get_transient( '_edd_activation_pages' ) )
+
+	if( ! is_admin() )
 		return;
 
-	// Get the pages created
 	$activation_pages = get_transient( '_edd_activation_pages' );
+
+	// Exit if not in admin or the transient doesn't exist
+	if ( false === $activation_pages )
+		return;
 
 	// Delete the transient
 	delete_transient( '_edd_activation_pages' );
-	
+
 	do_action( 'edd_after_install', $activation_pages );
 }
 add_action( 'admin_init', 'edd_after_install' );
