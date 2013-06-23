@@ -328,9 +328,9 @@ function edd_get_file_ctype( $extension ) {
 		case 'jsonml'   : $ctype = "application/jsonml+json"; break;
 		case 'kar'      : $ctype = "audio/midi"; break;
 		case 'latex'    : $ctype = "application/x-latex"; break;
-		case 'lha'      : $ctype    = "application/octet-stream"; break;
-		case 'lrf'      : $ctype    = "application/octet-stream"; break;
-		case 'lzh'      : $ctype    = "application/octet-stream"; break;
+		case 'lha'      : $ctype = "application/octet-stream"; break;
+		case 'lrf'      : $ctype = "application/octet-stream"; break;
+		case 'lzh'      : $ctype = "application/octet-stream"; break;
 		case 'lostxml'  : $ctype = "application/lost+xml"; break;
 		case 'm3u'      : $ctype = "audio/x-mpegurl"; break;
 		case 'm4a'      : $ctype = "audio/mp4a-latm"; break;
@@ -514,7 +514,7 @@ function edd_get_file_ctype( $extension ) {
 		case 'xwd'      : $ctype = "image/x-xwindowdump"; break;
 		case 'xyz'      : $ctype = "chemical/x-xyz"; break;
 		case 'zip'      : $ctype = "application/zip"; break;
-		default		    : $ctype = "application/force-download";
+		default         : $ctype = "application/force-download";
 	endswitch;
 
 	return apply_filters( 'edd_file_ctype', $ctype );
