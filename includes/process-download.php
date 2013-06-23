@@ -110,7 +110,6 @@ function edd_process_download() {
 				} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false ) {
 
 					/** This is a local file given by URL so we need to figure out the path */
-					$upload_dir = wp_upload_dir();
 					$file_path  = str_replace( WP_CONTENT_URL, WP_CONTENT_DIR, $requested_file );
 					$file_path  = realpath( $file_path );
 					$direct     = true;
