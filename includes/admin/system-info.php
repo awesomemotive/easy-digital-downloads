@@ -109,9 +109,34 @@ foreach ( $plugins as $plugin_path => $plugin ):
 	if ( ! in_array( $plugin_path, $active_plugins ) )
 		continue;
 
-echo $plugin['Name']; ?>: <?php echo $plugin['Version'] ."\n";
+	echo $plugin['Name']; ?>: <?php echo $plugin['Version'] ."\n";
 
 endforeach; ?>
+
+<?php
+if( is_multisite() ): ?>
+
+NETWORK ACTIVE PLUGINS:
+
+<?php
+$plugins = wp_get_active_network_plugins();
+$active_plugins = get_site_option( 'active_sitewide_plugins', array() );
+
+foreach( $plugins as $plugin_path ):
+	$plugin_base = plugin_basename( $plugin_path );
+
+	// If the plugin isn't active, don't show it.
+	if ( ! array_key_exists( $plugin_base, $active_plugins ) )
+		continue;
+
+	$plugin = get_plugin_data( $plugin_path );
+
+	echo  $plugin['Name']; ?>: <?php echo $plugin['Version'] ."\n";
+
+endforeach; ?>
+
+<?php
+endif; ?>
 
 CURRENT THEME:
 

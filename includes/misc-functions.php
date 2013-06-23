@@ -223,7 +223,7 @@ function edd_get_currencies() {
 		'HUF'  => __( 'Hungarian Forint', 'edd' ),
 		'ILS'  => __( 'Israeli Shekel (&#8362;)', 'edd' ),
 		'JPY'  => __( 'Japanese Yen (&yen;)', 'edd' ),
-		'RM'   => __( 'Malaysian Ringgits', 'edd' ),
+		'MYR'  => __( 'Malaysian Ringgits', 'edd' ),
 		'MXN'  => __( 'Mexican Peso (&#36;)', 'edd' ),
 		'NZD'  => __( 'New Zealand Dollar (&#36;)', 'edd' ),
 		'NOK'  => __( 'Norwegian Krone', 'edd' ),
