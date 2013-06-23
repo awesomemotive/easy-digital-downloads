@@ -247,7 +247,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				$value   = edd_get_payment_status( $payment, true );
 				break;
 			case 'details' :
-				$value = '<a href="' . add_query_arg( 'id', $item['ID'], admin_url( 'edit.php?post_type=download&page=edd-payment-history&edd-action=view-order-details' ) ) . '">' . __( 'View Order Details', 'edd' ) . '</a>';
+				$value = '<a href="' . add_query_arg( 'id', $item['ID'], admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ) . '">' . __( 'View Order Details', 'edd' ) . '</a>';
 				break;
 			default:
 				$value   = isset( $item[ $column_name ] ) ? $item[ $column_name ] : '';
@@ -270,7 +270,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		$row_actions = array();
 
-		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit-payment', 'purchase_id' => $payment->ID ), $this->base_url ) . '">' . __( 'Edit', 'edd' ) . '</a>';
+		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'view' => 'edit-payment', 'purchase_id' => $payment->ID ), $this->base_url ) . '">' . __( 'Edit', 'edd' ) . '</a>';
 
 		if ( edd_is_payment_complete( $payment->ID ) )
 			$row_actions['email_links'] = '<a href="' . add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment->ID ), $this->base_url ) . '">' . __( 'Resend Purchase Receipt', 'edd' ) . '</a>';
