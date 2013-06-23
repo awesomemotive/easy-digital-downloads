@@ -71,6 +71,9 @@ $payment_date = strtotime( $item->post_date );
 								<div class="edd-order-payment edd-admin-box-inside">
 									<p><span class="label"><?php _e( 'Total Price', 'edd' ); ?></span> <span class="right"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ); ?></span></p>
 								</div>
+								<div class="edd-order-resend-email edd-admin-box-inside">
+									<p><span class="label"><?php _e( 'Payment Receipt', 'edd' ); ?></span> <a href="<?php echo add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment_id ) ); ?>" class="right button-secondary"><?php _e( 'Resend', 'edd' ); ?></a></p>
+								</div>
 								<?php do_action( 'edd_view_order_details_totals_after', $payment_id ); ?>
 							</div><!-- /.edd-order-totals-box -->
 						</div><!-- /.inside -->
