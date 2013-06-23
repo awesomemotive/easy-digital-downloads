@@ -104,7 +104,8 @@ function edd_process_download() {
 				if ( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false && file_exists( $requested_file ) ) {
 
 					/** This is an absolute path */
-					$direct = true;
+					$direct    = true;
+					$file_path = $requested_file;
 
 				} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false ) {
 
