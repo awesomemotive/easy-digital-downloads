@@ -141,7 +141,8 @@ function edd_get_default_labels() {
  * Get Singular Label
  *
  * @since 1.0.8.3
- * @return string $defaults['singular'] Singular label
+ * @param bool $lowercase
+ * @return string Singular label
  */
 function edd_get_label_singular( $lowercase = false ) {
 	$defaults = edd_get_default_labels();
@@ -152,7 +153,8 @@ function edd_get_label_singular( $lowercase = false ) {
  * Get Plural Label
  *
  * @since 1.0.8.3
- * @return string $defaults['plural'] Plural label
+ * @param bool $lowercase
+ * @return string Plural label
  */
 function edd_get_label_plural( $lowercase = false ) {
 	$defaults = edd_get_default_labels();
