@@ -237,7 +237,7 @@ function edd_v14_upgrades() {
 	$discounts = get_option( 'edd_discounts' );
 
 	if ( $discounts ) {
-		foreach ( $discounts as $key => $discount ) {
+		foreach ( $discounts as $discount_key => $discount ) {
 			$status = isset( $discount['status'] ) ? $discount['status'] : 'inactive';
 
 			$discount_id = wp_insert_post( array(
@@ -257,8 +257,8 @@ function edd_v14_upgrades() {
 				'min_price'   => isset( $discount['min_price'] ) ? $discount['min_price'] : ''
 			);
 
-			foreach ( $meta as $key => $value ) {
-				update_post_meta( $discount_id, '_edd_discount_' . $key, $value );
+			foreach ( $meta as $meta_key => $value ) {
+				update_post_meta( $discount_id, '_edd_discount_' . $meta_key, $value );
 			}
 		}
 
