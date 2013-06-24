@@ -429,7 +429,7 @@ add_action( 'edd_payment_payment_mode_select', 'edd_payment_mode_select' );
  * @return void
 */
 function edd_discount_field() {
-	if ( edd_has_active_discounts() && ! edd_cart_has_discounts() ) {
+	if ( edd_has_active_discounts() && ! edd_cart_has_discounts() && edd_get_cart_total() ) {
 	?>
 	<fieldset id="edd_discount_code">
 		<p id="edd-discount-code-wrap">
@@ -538,6 +538,7 @@ function edd_checkout_button_next() {
 
 	ob_start();
 ?>
+	<input type="hidden" name="page_id" value="<?php echo absint( $edd_options['purchase_page'] ); ?>"/>
 	<input type="submit" id="edd_next_button" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" value="<?php _e( 'Next', 'edd' ); ?>"/>
 <?php
 	return apply_filters( 'edd_checkout_button_next', ob_get_clean() );
@@ -559,7 +560,7 @@ function edd_checkout_button_purchase() {
 	if ( edd_get_cart_total() ) {
 		$complete_purchase = ! empty( $edd_options['checkout_label'] ) ? $edd_options['checkout_label'] : __( 'Purchase', 'edd' );
 	} else {
-		$complete_purchase = ! empty( $edd_options['checkout_label'] ) ? $edd_options['checkout_label'] : __( 'Download', 'edd' );
+		$complete_purchase = ! empty( $edd_options['checkout_label'] ) ? $edd_options['checkout_label'] : __( 'Free Download', 'edd' );
 	}
 
 	ob_start();
