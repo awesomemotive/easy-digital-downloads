@@ -60,7 +60,6 @@ class EDD_Roles {
 			'edit_others_pages'      => true,
 			'edit_others_posts'      => true,
 			'edit_pages'             => true,
-			'edit_posts'             => true,
 			'edit_private_pages'     => true,
 			'edit_private_posts'     => true,
 			'edit_published_pages'   => true,
