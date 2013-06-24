@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.6
 
-Stable Tag: 1.6.3
+Stable Tag: 1.6.4
 License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -183,6 +183,32 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 1.6.4: June 24, 2013 =
+
+* Fix: Semicolon instead of comma
+* Fix: Duplicate foreach keys
+* Fix: Default fallthrough on switch statement
+* Fix: Undefined variable $requested_file during file downloads
+* Fix: Incorrect redirect when clicking Next during checkout with permalinks set to default
+* Fix: Incorrect currency code for Malaysian Ringgits
+* Fix: Non-unique element IDs on checkout
+* Fix: Incorrect status check in edd_process_paypal_web_accept_and_cart
+* Fix: Use current_time( 'timstamp' ) when checking for discount validity
+* Fix: Tax settings display issue
+* Fix: Email receipts not sending in Test Mode
+* Fix: .htaccess rules not updated when changing download methods
+* Fix: Downloads failing with Forced download method
+* Fix: System Info not picking up network activated plugins
+* Fix: Taxes rounded up incorrectly
+
+* Tweak: Added $tax to the edd_cart_item_price filter
+* Tweak: Hide discount code on 0.00 purchases
+* Tweak: Sanitize subjects for email receipts
+* Tweak: Allow 3 and 4 decimal tax rates
+* Tweak: Changed "Download" to "Free Download" for 0.00 purchases
+
+
 
 = 1.6.3: June 13, 2013 =
 
