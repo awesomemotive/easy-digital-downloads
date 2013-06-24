@@ -887,6 +887,7 @@ function edd_get_payment_notes( $payment_id = 0 ) {
 	return $notes;
 }
 
+
 /**
  * Add a note to a payment
  *
