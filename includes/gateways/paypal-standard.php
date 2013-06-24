@@ -330,7 +330,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	// Retrieve the meta info for this payment
 	$payment_amount = edd_format_amount( edd_get_payment_amount( $payment_id ) );
 
-	if( get_post_status( $payment_id ) == 'complete' )
+	if( get_post_status( $payment_id ) == 'publish' )
 		return; // Only complete payments once
 
 	if ( edd_get_payment_gateway( $payment_id ) != 'paypal' )

@@ -193,15 +193,16 @@ function edd_string_is_image_url( $str ) {
 function edd_get_ip() {
 	if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 		//check ip from share internet
-	  $ip = $_SERVER['HTTP_CLIENT_IP'];
+		$ip = $_SERVER['HTTP_CLIENT_IP'];
 	} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
 		//to check ip is pass from proxy
-	  $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
 	} else {
-	  $ip = $_SERVER['REMOTE_ADDR'];
+		$ip = $_SERVER['REMOTE_ADDR'];
 	}
 	return apply_filters( 'edd_get_ip', $ip );
 }
+
 
 /**
  * Get Currencies
@@ -380,16 +381,14 @@ function edd_let_to_num( $v ) {
 	$ret = substr( $v, 0, -1 );
 
 	switch ( strtoupper( $l ) ) {
-		case 'P':
+		case 'P': // fall-through
+		case 'T': // fall-through
+		case 'G': // fall-through
+		case 'M': // fall-through
+		case 'K': // fall-through
 			$ret *= 1024;
-		case 'T':
-			$ret *= 1024;
-		case 'G':
-			$ret *= 1024;
-		case 'M':
-			$ret *= 1024;
-		case 'K':
-			$ret *= 1024;
+			break;
+		default:
 			break;
 	}
 

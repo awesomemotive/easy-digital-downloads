@@ -226,7 +226,7 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  * @param array $options Optional parameters, used for defining variable prices
  * @return string Price for this item
  */
-function edd_get_cart_item_price( $item_id, $options = array(), $tax = true ) {
+function edd_get_cart_item_price( $item_id, $options = array(), $taxed = true ) {
 	global $edd_options;
 
 	$price = edd_get_download_price( $item_id );
@@ -242,8 +242,8 @@ function edd_get_cart_item_price( $item_id, $options = array(), $tax = true ) {
 		}
 	}
 
-	// Determine if we need to add tax toe the price
-	if ( $tax &&
+	// Determine if we need to add tax to the price
+	if ( $taxed &&
 		(
 			( edd_prices_include_tax() && ! edd_is_cart_taxed() && edd_use_taxes() ) ||
 			( edd_is_cart_taxed() && edd_prices_show_tax_on_checkout() || ( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) )
@@ -252,7 +252,7 @@ function edd_get_cart_item_price( $item_id, $options = array(), $tax = true ) {
 		$price = edd_calculate_tax( $price );
 	}
 
-	return apply_filters( 'edd_cart_item_price', $price, $item_id, $options );
+	return apply_filters( 'edd_cart_item_price', $price, $item_id, $options, $taxed );
 }
 
 /**
