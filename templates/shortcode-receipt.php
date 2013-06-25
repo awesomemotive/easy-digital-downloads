@@ -213,7 +213,7 @@ $status    = edd_get_payment_status( $payment, true );
 					<?php
 					echo edd_payment_amount( $payment->ID );
 					if ( edd_use_taxes() && ( ! edd_prices_show_tax_on_checkout() && $edd_options['prices_include_tax'] == 'yes' ) ) {
-						echo ' ' . __( '(ex. tax)', 'edd' );
+						echo ' ' . __( '(incl. tax)', 'edd' );
 					} else if ( edd_use_taxes() && $edd_options['checkout_include_tax'] == 'yes' ) {
 						printf( ' ' . __( '(includes %s tax)', 'edd' ), edd_payment_tax( $payment->ID ) );
 					} ?>
