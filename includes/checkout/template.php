@@ -534,6 +534,7 @@ function edd_checkout_button_next() {
 	global $edd_options;
 
 	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
+	$color = ( $color == 'inherit' ) ? '' : $color;
 	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
 
 	ob_start();
@@ -555,6 +556,7 @@ function edd_checkout_button_purchase() {
 	global $edd_options;
 
 	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
+	$color = ( $color == 'inherit' ) ? '' : $color;
 	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
 
 	if ( edd_get_cart_total() ) {
