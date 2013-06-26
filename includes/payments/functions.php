@@ -359,19 +359,46 @@ function edd_count_payments( $args = array() ) {
 
 	$cache_key = md5( implode( '|', $args ) );
 
-	if( is_email( $args['user'] ) )
-		$field = 'email';
-	elseif( is_numeric( $args['user'] ) )
-		$field = 'id';
 
 	$join = '';
 	$where = "WHERE p.post_type = 'edd_payment'";
 
 	if( ! empty( $args['user'] ) ) {
+
+		if( is_email( $args['user'] ) )
+			$field = 'email';
+		elseif( is_numeric( $args['user'] ) )
+			$field = 'id';
+
 		$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
 		$where .= "
 			AND m.meta_key = '_edd_payment_user_{$field}'
 			AND m.meta_value = '{$args['user']}'";
+
+	} elseif( ! empty( $args['s'] ) ) {
+
+		if ( is_email( $args['s'] ) || strlen( $args['s'] ) == 32 ) {
+
+			if( is_email( $args['s'] ) )
+				$field = '_edd_payment_user_email';
+			else
+				$field = '_edd_payment_purchase_key';
+
+
+			$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
+			$where .= "
+				AND m.meta_key = '{$field}'
+				AND m.meta_value = '{$args['s']}'";
+
+		} elseif ( is_numeric( $args['s'] ) ) {
+
+			$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
+			$where .= "
+				AND m.meta_key = '_edd_payment_user_id'
+				AND m.meta_value = '{$args['s']}'";
+
+		}
+
 	}
 
 	$query = "SELECT p.post_status,count( * ) AS num_posts

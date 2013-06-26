@@ -373,9 +373,13 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		global $wp_query;
 
 		$args = array();
+
 		if( isset( $_GET['user'] ) ) {
 			$args['user'] = urldecode( $_GET['user'] );
+		} elseif( isset( $_GET['s'] ) ) {
+			$args['s'] = urldecode( $_GET['s'] );
 		}
+
 		$payment_count        = edd_count_payments( $args );
 		$this->complete_count = $payment_count->publish;
 		$this->pending_count  = $payment_count->pending;
