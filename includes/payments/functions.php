@@ -344,7 +344,7 @@ function edd_undo_purchase( $download_id, $payment_id ) {
  *
  * @since 1.0
  * @param array $args
- * @return int $count Number of payments
+ * @return array $count Number of payments sorted by payment status
  */
 function edd_count_payments( $args = array() ) {
 
@@ -386,7 +386,6 @@ function edd_count_payments( $args = array() ) {
 		return $count;
 
 	$count = $wpdb->get_results( $query, ARRAY_A );
-	//echo '<pre>'; print_r( $count ); echo '</pre>'; exit;
 
 	$stats = array();
 	foreach ( get_post_stati() as $state )
