@@ -24,6 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_checkout_form() {
 	global $edd_options, $user_ID, $post;
 	ob_start();
+		echo '<div id="edd_checkout_wrap">';
 		if ( edd_get_cart_contents() ) :
 			edd_checkout_cart();
 		?>
@@ -44,6 +45,7 @@ function edd_checkout_form() {
 		else:
 			do_action( 'edd_cart_empty' );
 		endif;
+		echo '</div><!--end #edd_checkout_wrap-->';
 	return ob_get_clean();
 }
 
