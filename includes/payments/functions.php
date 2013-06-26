@@ -363,6 +363,7 @@ function edd_count_payments( $args = array() ) {
 	$join = '';
 	$where = "WHERE p.post_type = 'edd_payment'";
 
+	// Count payments for a specific user
 	if( ! empty( $args['user'] ) ) {
 
 		if( is_email( $args['user'] ) )
@@ -375,6 +376,7 @@ function edd_count_payments( $args = array() ) {
 			AND m.meta_key = '_edd_payment_user_{$field}'
 			AND m.meta_value = '{$args['user']}'";
 
+	// Count payments for a search
 	} elseif( ! empty( $args['s'] ) ) {
 
 		if ( is_email( $args['s'] ) || strlen( $args['s'] ) == 32 ) {
