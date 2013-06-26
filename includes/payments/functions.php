@@ -336,6 +336,72 @@ function edd_undo_purchase( $download_id, $payment_id ) {
 	edd_decrease_earnings( $download_id, $amount );
 }
 
+
+/**
+ * Count Payments
+ *
+ * Returns the total number of payments recorded.
+ *
+ * @since 1.0
+ * @param array $args
+ * @return int $count Number of payments
+ */
+function edd_count_payments( $args = array() ) {
+
+	global $wpdb;
+
+	$defaults = array(
+		'user' => null,
+		's'    => null
+	);
+
+	$args = wp_parse_args( $args, $defaults );
+
+	$cache_key = md5( implode( '|', $args ) );
+
+	if( is_email( $args['user'] ) )
+		$field = 'email';
+	elseif( is_numeric( $args['user'] ) )
+		$field = 'id';
+
+	$join = '';
+	$where = "WHERE p.post_type = 'edd_payment'";
+
+	if( ! empty( $args['user'] ) ) {
+		$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
+		$where .= "
+			AND m.meta_key = '_edd_payment_user_{$field}'
+			AND m.meta_value = '{$args['user']}'";
+	}
+
+	$query = "SELECT p.post_status,count( * ) AS num_posts
+		FROM $wpdb->posts p
+		$join
+		$where
+		GROUP BY p.post_status
+	";
+
+	$count = wp_cache_get( $cache_key, 'counts');
+	if ( false !== $count )
+		return $count;
+
+	$count = $wpdb->get_results( $query, ARRAY_A );
+	//echo '<pre>'; print_r( $count ); echo '</pre>'; exit;
+
+	$stats = array();
+	foreach ( get_post_stati() as $state )
+		$stats[$state] = 0;
+
+	foreach ( (array) $count as $row )
+		$stats[$row['post_status']] = $row['num_posts'];
+
+	$stats = (object) $stats;
+	wp_cache_set( $cache_key, $stats, 'counts' );
+
+	return $stats;
+}
+
+
 /**
  * Check For Existing Payment
  *
