@@ -369,8 +369,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function get_payment_counts() {
-		$payment_count 	= wp_count_posts( 'edd_payment' );
 
+		global $wp_query;
+
+		$args = array();
+		if( isset( $_GET['user'] ) ) {
+			$args['user'] = urldecode( $_GET['user'] );
+		}
+		$payment_count        = edd_count_payments( $args );
 		$this->complete_count = $payment_count->publish;
 		$this->pending_count  = $payment_count->pending;
 		$this->refunded_count = $payment_count->refunded;
