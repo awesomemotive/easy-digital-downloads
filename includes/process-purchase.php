@@ -834,9 +834,8 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 	    "ZM" => "\d{5}"
     );
     
-	if ( ! isset ( $zip_regex[ $country_code ] ) || preg_match( "/" . $zip_regex[ $country_code ] . "/i", $zip ) ) {
+	if ( ! isset ( $zip_regex[ $country_code ] ) || preg_match( "/" . $zip_regex[ $country_code ] . "/i", $zip ) )
 		$ret = true;
-	}
 
 	return apply_filters( 'edd_is_zip_valid', $ret, $zip, $country_code );
 }
