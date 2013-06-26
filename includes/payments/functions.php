@@ -397,6 +397,8 @@ function edd_count_payments( $args = array() ) {
 				AND m.meta_key = '_edd_payment_user_id'
 				AND m.meta_value = '{$args['s']}'";
 
+		} else {
+			$where .= "AND ((p.post_title LIKE '%{$args['s']}%') OR (p.post_content LIKE '%{$args['s']}%'))";
 		}
 
 	}
