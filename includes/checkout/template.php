@@ -395,21 +395,25 @@ function edd_payment_mode_select() {
 	do_action('edd_payment_mode_top'); ?>
 	<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
 		<fieldset id="edd_payment_mode_select">
-			<?php do_action('edd_payment_mode_before_gateways'); ?>
-
+			<?php do_action( 'edd_payment_mode_before_gateways_wrap' ); ?>
 			<p id="edd-payment-mode-wrap">
 				<span class="edd-payment-mode-label"><?php _e( 'Select Payment Method', 'edd' ); ?></span><br/>
 				<?php
+
+				do_action( 'edd_payment_mode_before_gateways' );
+
 				foreach ( $gateways as $gateway_id => $gateway ) :
 					$checked = checked( $gateway_id, edd_get_default_gateway(), false );
 					echo '<label for="edd-gateway-' . esc_attr( $gateway_id ) . '" class="edd-gateway-option" id="edd-gateway-option-' . esc_attr( $gateway_id ) . '">';
 						echo '<input type="radio" name="payment-mode" class="edd-gateway" id="edd-gateway-' . esc_attr( $gateway_id ) . '" value="' . esc_attr( $gateway_id ) . '"' . $checked . '>' . esc_html( $gateway['checkout_label'] ) . '</option>';
 					echo '</label>';
 				endforeach;
+
+				do_action( 'edd_payment_mode_after_gateways' );
+
 				?>
 			</p>
-
-			<?php do_action('edd_payment_mode_after_gateways'); ?>
+			<?php do_action( 'edd_payment_mode_after_gateways_wrap' ); ?>
 		</fieldset>
 		<fieldset id="edd_payment_mode_submit" class="edd-no-js">
 			<p id="edd-next-submit-wrap">
@@ -421,6 +425,33 @@ function edd_payment_mode_select() {
 	<?php do_action('edd_payment_mode_bottom');
 }
 add_action( 'edd_payment_payment_mode_select', 'edd_payment_mode_select' );
+
+
+/**
+ * Show Payment Icons by getting all the accepted icons from the EDD Settings
+ * then ouputting the icons.
+ *
+ * @since 1.0
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+*/
+function edd_show_payment_icons() {
+	global $edd_options;
+
+	if ( isset( $edd_options['accepted_cards'] ) ) {
+		echo '<span class="edd-payment-icons">';
+		foreach( $edd_options['accepted_cards'] as $key => $card ) {
+			if( edd_string_is_image_url( $key ) ) {
+				echo '<img class="payment-icon" src="' . $key . '"/>';
+			} else {
+				echo '<img class="payment-icon" src="' . EDD_PLUGIN_URL . 'assets/images/icons/' . strtolower( str_replace( ' ', '', $card ) ) . '.png"/>';
+			}
+		}
+		echo '</span>';
+	}
+}
+add_action( 'edd_payment_mode_before_gateways', 'edd_show_payment_icons' );
+
 
 /**
  * Renders the Discount Code field which allows users to enter a discount code.
@@ -573,31 +604,6 @@ function edd_checkout_button_purchase() {
 <?php
 	return apply_filters( 'edd_checkout_button_purchase', ob_get_clean() );
 }
-
-/**
- * Show Payment Icons by getting all the accepted icons from the EDD Settings
- * then ouputting the icons.
- *
- * @since 1.0
- * @global $edd_options Array of all the EDD Options
- * @return void
-*/
-function edd_show_payment_icons() {
-	global $edd_options;
-
-	if ( isset( $edd_options['accepted_cards'] ) ) {
-		echo '<div class="edd-payment-icons">';
-		foreach( $edd_options['accepted_cards'] as $key => $card ) {
-			if( edd_string_is_image_url( $key ) ) {
-				echo '<img class="payment-icon" src="' . $key . '"/>';
-			} else {
-				echo '<img class="payment-icon" src="' . EDD_PLUGIN_URL . 'assets/images/icons/' . strtolower( str_replace( ' ', '', $card ) ) . '.png"/>';
-			}
-		}
-		echo '</div>';
-	}
-}
-add_action( 'edd_checkout_form_top', 'edd_show_payment_icons' );
 
 /**
  * Outputs the JavaScript code for the Agree to Terms section to toggle
