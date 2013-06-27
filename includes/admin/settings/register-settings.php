@@ -679,7 +679,7 @@ function edd_register_settings() {
 	register_setting( 'edd_settings_styles',     'edd_settings_styles',     'edd_settings_sanitize' );
 	register_setting( 'edd_settings_taxes',      'edd_settings_taxes',      'edd_settings_sanitize_taxes' );
 	register_setting( 'edd_settings_extensions', 'edd_settings_extensions', 'edd_settings_sanitize' );
-	register_setting( 'edd_settings_misc',       'edd_settings_misc',       'edd_settings_sanitize' );
+	register_setting( 'edd_settings_misc',       'edd_settings_misc',       'edd_settings_sanitize_misc' );
 }
 add_action('admin_init', 'edd_register_settings');
 
@@ -1180,6 +1180,26 @@ function edd_settings_sanitize( $input ) {
 	add_settings_error( 'edd-notices', '', __('Settings Updated', 'edd'), 'updated' );
 	return $input;
 }
+
+/**
+ * Misc Settings Sanitization
+ *
+ * @since 1.6
+ * @param array $input The value inputted in the field
+ * @return string $input Sanitizied value
+ */
+function edd_settings_sanitize_misc( $input ) {
+
+	global $edd_options;
+
+	if( edd_get_file_download_method() != $input['download_method'] ) {
+		// Force the .htaccess files to be updated if the Download method was changed.
+		edd_create_protection_files( true, $input['download_method'] );
+	}
+	add_settings_error( 'edd-notices', '', __('Settings Updated', 'edd'), 'updated' );
+	return $input;
+}
+
 
 /**
  * Taxes Settings Sanitization

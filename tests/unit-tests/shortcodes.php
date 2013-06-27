@@ -73,7 +73,6 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 			'uses' => 54,
 			'min_price' => 128,
 			'is_not_global' => true,
-			'product_condition' => 'any',
 			'is_single_use' => true
 		);
 
