@@ -71,12 +71,19 @@ function edd_show_purchase_form() {
 		<?php
 		do_action( 'edd_purchase_form_top' );
 
-		if ( edd_can_checkout() ) { ?>
-			<?php if( isset( $edd_options['show_register_form'] ) && !is_user_logged_in() && !isset( $_GET['login'] ) ) { ?>
-				<div id="edd_checkout_login_register"><?php do_action( 'edd_purchase_form_register_fields' ); ?></div>
-			<?php } elseif( isset( $edd_options['show_register_form'] ) && !is_user_logged_in() && isset( $_GET['login'] ) ) { ?>
-				<div id="edd_checkout_login_register"><?php do_action( 'edd_purchase_form_login_fields' ); ?></div>
-			<?php } ?>
+		if ( edd_can_checkout() ) {
+
+			do_action( 'edd_purchase_form_before_register_login' );
+
+			if( isset( $edd_options['show_register_form'] ) && ! is_user_logged_in() && ! isset( $_GET['login'] ) ) : ?>
+				<div id="edd_checkout_login_register">
+					<?php do_action( 'edd_purchase_form_register_fields' ); ?>
+				</div>
+			<?php elseif( isset( $edd_options['show_register_form'] ) && ! is_user_logged_in() && isset( $_GET['login'] ) ) : ?>
+				<div id="edd_checkout_login_register">
+					<?php do_action( 'edd_purchase_form_login_fields' ); ?>
+				</div>
+			<?php endif; ?>
 
 			<?php if( ( !isset( $_GET['login'] ) && is_user_logged_in() ) || !isset( $edd_options['show_register_form'] ) ) {
 				do_action( 'edd_purchase_form_after_user_info' );
@@ -477,7 +484,7 @@ function edd_discount_field() {
 	<?php
 	}
 }
-add_action( 'edd_purchase_form_before_cc_form', 'edd_discount_field' );
+add_action( 'edd_purchase_form_before_register_login', 'edd_discount_field' );
 
 /**
  * Renders the Checkout Agree to Terms, this displays a checkbox for users to
