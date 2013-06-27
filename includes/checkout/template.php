@@ -396,7 +396,7 @@ function edd_payment_mode_select() {
 	<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
 		<fieldset id="edd_payment_mode_select">
 			<?php do_action( 'edd_payment_mode_before_gateways_wrap' ); ?>
-			<p id="edd-payment-mode-wrap">
+			<div id="edd-payment-mode-wrap">
 				<span class="edd-payment-mode-label"><?php _e( 'Select Payment Method', 'edd' ); ?></span><br/>
 				<?php
 
@@ -412,7 +412,7 @@ function edd_payment_mode_select() {
 				do_action( 'edd_payment_mode_after_gateways' );
 
 				?>
-			</p>
+			</div>
 			<?php do_action( 'edd_payment_mode_after_gateways_wrap' ); ?>
 		</fieldset>
 		<fieldset id="edd_payment_mode_submit" class="edd-no-js">
@@ -439,7 +439,7 @@ function edd_show_payment_icons() {
 	global $edd_options;
 
 	if ( isset( $edd_options['accepted_cards'] ) ) {
-		echo '<span class="edd-payment-icons">';
+		echo '<div class="edd-payment-icons">';
 		foreach( $edd_options['accepted_cards'] as $key => $card ) {
 			if( edd_string_is_image_url( $key ) ) {
 				echo '<img class="payment-icon" src="' . $key . '"/>';
@@ -447,7 +447,7 @@ function edd_show_payment_icons() {
 				echo '<img class="payment-icon" src="' . EDD_PLUGIN_URL . 'assets/images/icons/' . strtolower( str_replace( ' ', '', $card ) ) . '.png"/>';
 			}
 		}
-		echo '</span>';
+		echo '</div>';
 	}
 }
 add_action( 'edd_payment_mode_before_gateways', 'edd_show_payment_icons' );
