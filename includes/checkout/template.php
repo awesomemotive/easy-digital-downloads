@@ -472,7 +472,11 @@ function edd_discount_field() {
 	if ( edd_has_active_discounts() && ! edd_cart_has_discounts() && edd_get_cart_total() ) {
 	?>
 	<fieldset id="edd_discount_code">
-		<p id="edd-discount-code-wrap">
+		<p id="edd_show_discount">
+			<a href="#" class="edd_discount_link"><?php _e( 'Have a discount code?', 'edd' ); ?></a>
+			<a href="#" class="edd_discount_link" style="display:none;"><?php _e( 'Nevermind', 'edd' ); ?></a>
+		</p>
+		<p id="edd-discount-code-wrap" style="display:none">
 			<label class="edd-label" for="edd-discount">
 				<?php _e( 'Discount', 'edd' ); ?>
 				<img src="<?php echo EDD_PLUGIN_URL; ?>assets/images/loading.gif" id="edd-discount-loader" style="display:none;"/>
@@ -500,19 +504,19 @@ function edd_terms_agreement() {
 	if ( isset( $edd_options['show_agree_to_terms'] ) ) {
 ?>
 		<fieldset id="edd_terms_agreement">
-				<div id="edd_terms" style="display:none;">
-					<?php
-						do_action( 'edd_before_terms' );
-						echo wpautop( $edd_options['agree_text'] );
-						do_action( 'edd_after_terms' );
-					?>
-				</div>
-				<div id="edd_show_terms">
-					<a href="#" class="edd_terms_links"><?php _e( 'Show Terms', 'edd' ); ?></a>
-					<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Terms', 'edd' ); ?></a>
-				</div>
-				<label for="edd_agree_to_terms"><?php echo isset( $edd_options['agree_label'] ) ? $edd_options['agree_label'] : __( 'Agree to Terms?', 'edd' ); ?></label>
-				<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
+			<div id="edd_terms" style="display:none;">
+				<?php
+					do_action( 'edd_before_terms' );
+					echo wpautop( $edd_options['agree_text'] );
+					do_action( 'edd_after_terms' );
+				?>
+			</div>
+			<div id="edd_show_terms">
+				<a href="#" class="edd_terms_links"><?php _e( 'Show Terms', 'edd' ); ?></a>
+				<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Terms', 'edd' ); ?></a>
+			</div>
+			<label for="edd_agree_to_terms"><?php echo isset( $edd_options['agree_label'] ) ? $edd_options['agree_label'] : __( 'Agree to Terms?', 'edd' ); ?></label>
+			<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
 		</fieldset>
 <?php
 	}

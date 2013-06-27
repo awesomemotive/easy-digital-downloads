@@ -172,4 +172,10 @@ jQuery(document).ready(function($) {
         return false;
     });
 
+    $body.on('click', '.edd_discount_link', function(e) {
+        e.preventDefault();
+        $('#edd-discount-code-wrap').slideToggle();
+        $('.edd_discount_link').toggle();
+    });
+
 });
