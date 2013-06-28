@@ -68,7 +68,9 @@
 #edd_checkout_form_wrap fieldset { border: none; padding: 10px 0 0 0; margin: 0 0 5px; }
 #edd_checkout_form_wrap fieldset fieldset { margin: 0; }
 #edd_checkout_form_wrap #edd-login-account-wrap,
-#edd_checkout_form_wrap #edd-new-account-wrap { background: #fafafa; border: 1px solid #eee; color: #666; padding: 0.5em 1.387em; }
+#edd_checkout_form_wrap #edd-new-account-wrap,
+#edd_checkout_form_wrap #edd_show_discount { background: #fafafa; border: 1px solid #eee; color: #666; padding: 0.5em 1.387em; }
+#edd_checkout_form_wrap #edd_show_discount { margin-bottom: 0; }
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_register_password,
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_login_password { margin: 0; }
 #edd_checkout_form_wrap fieldset#edd_cc_fields { padding: 0 8px 8px 8px; border: 1px solid #f0f0f0; margin: 0 0 10px; background: #f9f9f9; position: relative; left: -8px; }
