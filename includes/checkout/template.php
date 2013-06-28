@@ -169,23 +169,36 @@ function edd_get_cc_form() {
 			</div>
 		<?php endif; ?>
 		<p id="edd-card-number-wrap">
-			<label class="edd-label"><?php _e( 'Card Number', 'edd' ); ?><span class="card-type"></span></label>
+			<label class="edd-label">
+				<?php _e( 'Card Number', 'edd' ); ?>
+				<span class="edd-required-indicator">*</span>
+				<span class="card-type"></span>
+			</label>
 			<span class="edd-description"><?php _e( 'The (typically) 16 digits on the front of your credit card.', 'edd' ); ?></span>
 			<input type="text" autocomplete="off" name="card_number" class="card-number edd-input required" placeholder="<?php _e( 'Card number', 'edd' ); ?>" />
 		</p>
 		<p id="edd-card-cvc-wrap">
-			<label class="edd-label"><?php _e( 'CVC', 'edd' ); ?></label>
+			<label class="edd-label">
+				<?php _e( 'CVC', 'edd' ); ?>
+				<span class="edd-required-indicator">*</span>
+			</label>
 			<span class="edd-description"><?php _e( 'The 3 digit (back) or 4 digit (front) value on your card.', 'edd' ); ?></span>
 			<input type="text" size="4" autocomplete="off" name="card_cvc" class="card-cvc edd-input required" placeholder="<?php _e( 'Security code', 'edd' ); ?>" />
 		</p>
 		<p id="edd-card-name-wrap">
-			<label class="edd-label"><?php _e( 'Name on the Card', 'edd' ); ?></label>
+			<label class="edd-label">
+				<?php _e( 'Name on the Card', 'edd' ); ?>
+				<span class="edd-required-indicator">*</span>
+			</label>
 			<span class="edd-description"><?php _e( 'The name printed on the front of your credit card.', 'edd' ); ?></span>
 			<input type="text" autocomplete="off" name="card_name" class="card-name edd-input required" placeholder="<?php _e( 'Card name', 'edd' ); ?>" />
 		</p>
 		<?php do_action( 'edd_before_cc_expiration' ); ?>
 		<p class="card-expiration">
-			<label class="edd-label"><?php _e( 'Expiration (MM/YY)', 'edd' ); ?></label>
+			<label class="edd-label">
+				<?php _e( 'Expiration (MM/YY)', 'edd' ); ?>
+				<span class="edd-required-indicator">*</span>
+			</label>
 			<span class="edd-description"><?php _e( 'The date your credit card expires, typically on the front of the card.', 'edd' ); ?></span>
 			<select name="card_exp_month" class="card-expiry-month edd-select edd-select-small required">
 				<?php for( $i = 1; $i <= 12; $i++ ) { echo '<option value="' . $i . '">' . sprintf ('%02d', $i ) . '</option>'; } ?>
@@ -308,17 +321,32 @@ function edd_get_register_fields() {
 		<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'edd' ); ?> <a href="<?php echo add_query_arg('login', 1); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e( 'Login', 'edd' ); ?></a></p>
 		<?php do_action('edd_register_fields_before'); ?>
 		<p id="edd-user-email-wrap">
-			<label for="edd-email"><?php _e( 'Email', 'edd' ); ?></label>
+			<label for="edd-email">
+				<?php _e( 'Email', 'edd' ); ?>
+				<?php if( edd_field_is_required( 'edd_email' ) ) { ?>
+					<span class="edd-required-indicator">*</span>
+				<?php } ?>
+			</label>
 			<span class="edd-description"><?php _e( 'We will send the purchase receipt to this address.', 'edd' ); ?></span>
 			<input name="edd_email" id="edd-email" class="required edd-input" type="email" placeholder="<?php _e( 'Email', 'edd' ); ?>" title="<?php _e( 'Email', 'edd' ); ?>"/>
 		</p>
 		<p id="edd-user-first-name-wrap">
-			<label class="edd-label" for="edd-first"><?php _e( 'First Name', 'edd' ); ?></label>
+			<label class="edd-label" for="edd-first">
+				<?php _e( 'First Name', 'edd' ); ?>
+				<?php if( edd_field_is_required( 'edd_first' ) ) { ?>
+					<span class="edd-required-indicator">*</span>
+				<?php } ?>
+			</label>
 			<span class="edd-description"><?php _e( 'We will use this to personalize your account experience.', 'edd' ); ?></span>
 			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e( 'First Name', 'edd' ); ?>" id="edd-first" value="<?php echo is_user_logged_in() ? $user_data->user_firstname : ''; ?>"/>
 		</p>
 		<p id="edd-user-last-name-wrap">
-			<label class="edd-label" for="edd-last"><?php _e( 'Last Name', 'edd' ); ?></label>
+			<label class="edd-label" for="edd-last">
+				<?php _e( 'Last Name', 'edd' ); ?>
+				<?php if( edd_field_is_required( 'edd_last' ) ) { ?>
+				<span class="edd-required-indicator">*</span>
+				<?php } ?>
+			</label>
 			<span class="edd-description"><?php _e( 'We will use this as well to personalize your account experience.', 'edd' ); ?></span>
 			<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e( 'Last name', 'edd' ); ?>" value="<?php echo is_user_logged_in() ? $user_data->user_lastname : ''; ?>"/>
 		</p>
@@ -327,17 +355,32 @@ function edd_get_register_fields() {
 			<legend><?php _e( 'Create an account', 'edd' ); if( !edd_no_guest_checkout() ) { echo ' ' . __( '(optional)', 'edd' ); } ?></legend>
 			<?php do_action('edd_register_account_fields_before'); ?>
 			<p id="edd-user-login-wrap">
-				<label for="edd_user_login"><?php _e( 'Username', 'edd' ); ?></label>
+				<label for="edd_user_login">
+					<?php _e( 'Username', 'edd' ); ?>
+					<?php if( edd_no_guest_checkout() ) { ?>
+					<span class="edd-required-indicator">*</span>
+					<?php } ?>
+				</label>
 				<span class="edd-description"><?php _e( 'The username you will use to log into your account.', 'edd' ); ?></span>
 				<input name="edd_user_login" id="edd_user_login" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" type="text" placeholder="<?php _e( 'Username', 'edd' ); ?>" title="<?php _e( 'Username', 'edd' ); ?>"/>
 			</p>
 			<p id="edd-user-pass-wrap">
-				<label for="password"><?php _e( 'Password', 'edd' ); ?></label>
+				<label for="password">
+					<?php _e( 'Password', 'edd' ); ?>
+					<?php if( edd_no_guest_checkout() ) { ?>
+					<span class="edd-required-indicator">*</span>
+					<?php } ?>
+				</label>
 				<span class="edd-description"><?php _e( 'The password used to access your account.', 'edd' ); ?></span>
 				<input name="edd_user_pass" id="edd_user_pass" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" placeholder="<?php _e( 'Password', 'edd' ); ?>" type="password"/>
 			</p>
 			<p id="edd-user-pass-confirm-wrap" class="edd_register_password">
-				<label for="password_again"><?php _e( 'Password Again', 'edd' ); ?></label>
+				<label for="password_again">
+					<?php _e( 'Password Again', 'edd' ); ?>
+					<?php if( edd_no_guest_checkout() ) { ?>
+					<span class="edd-required-indicator">*</span>
+					<?php } ?>
+				</label>
 				<span class="edd-description"><?php _e( 'Confirm your password.', 'edd' ); ?></span>
 				<input name="edd_user_pass_confirm" id="edd_user_pass_confirm" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" placeholder="<?php _e( 'Confirm password', 'edd' ); ?>" type="password"/>
 			</p>
@@ -363,7 +406,12 @@ add_action( 'edd_purchase_form_register_fields', 'edd_get_register_fields' );
 function edd_get_login_fields() {
 	ob_start(); ?>
 		<fieldset id="edd_login_fields">
-			<legend><?php _e( 'Login to your account', 'edd' ); ?></legend>
+			<p id="edd-new-account-wrap">
+				<?php _e( 'Need to create an account?', 'edd' ); ?>
+				<a href="<?php echo remove_query_arg('login'); ?>" class="edd_checkout_register_login" data-action="checkout_register">
+					<?php _e( 'Register', 'edd' ); if(!edd_no_guest_checkout()) { echo ' ' . __( 'or checkout as a guest.', 'edd' ); } ?>
+				</a>
+			</p>
 			<?php do_action('edd_checkout_login_fields_before'); ?>
 			<p id="edd-user-login-wrap">
 				<label class="edd-label" for="edd-username"><?php _e( 'Username', 'edd' ); ?></label>
@@ -376,12 +424,6 @@ function edd_get_login_fields() {
 			</p>
 			<?php do_action('edd_checkout_login_fields_after'); ?>
 		</fieldset><!--end #edd_login_fields-->
-		<p id="edd-new-account-wrap">
-			<?php _e( 'Need to create an account?', 'edd' ); ?>
-			<a href="<?php echo remove_query_arg('login'); ?>" class="edd_checkout_register_login" data-action="checkout_register">
-				<?php _e( 'Register', 'edd' ); if(!edd_no_guest_checkout()) { echo ' ' . __( 'or checkout as a guest.', 'edd' ); } ?>
-			</a>
-		</p>
 	<?php
 	echo ob_get_clean();
 }
