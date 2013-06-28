@@ -1079,12 +1079,28 @@ function edd_tax_rates_callback($args) {
 		<?php if( ! empty( $rates ) ) : ?>
 			<?php foreach( $rates as $key => $rate ) : ?>
 			<tr>
-				<td class="edd_tax_country"><?php echo EDD()->html->select( edd_get_country_list(), 'tax_rates[' . $key . '][country]', $rate['country'] ); ?></td>
+				<td class="edd_tax_country">
+					<?php
+					echo EDD()->html->select( array(
+						'options'          => edd_get_country_list(),
+						'name'             => 'tax_rates[' . $key . '][country]',
+						'selected'         => $rate['country'],
+						'show_option_all'  => false,
+						'show_option_none' => false
+					) );
+					?>
+				</td>
 				<td class="edd_tax_state">
 					<?php
 					$states = edd_get_shop_states( $rate['country'] );
 					if( ! empty( $states ) ) {
-						echo EDD()->html->select( $states, 'tax_rates[' . $key . '][state]', $rate['state'] );
+						echo EDD()->html->select( array(
+							'options'          => $states,
+							'name'             => 'tax_rates[' . $key . '][state]',
+							'selected'         => $rate['state'],
+							'show_option_all'  => false,
+							'show_option_none' => false
+						) );
 					} else {
 						echo EDD()->html->text( 'tax_rates[' . $key . '][state]', $rate['state'] );
 					}
@@ -1100,7 +1116,15 @@ function edd_tax_rates_callback($args) {
 			<?php endforeach; ?>
 		<?php else : ?>
 			<tr>
-				<td class="edd_tax_country"><?php echo EDD()->html->select( edd_get_country_list(), 'tax_rates[0][country]', 0 ); ?></td>
+				<td class="edd_tax_country">
+					<?php
+					echo EDD()->html->select( array(
+						'options'          => edd_get_country_list(),
+						'name'             => 'tax_rates[0][country]',
+						'show_option_all'  => false,
+						'show_option_none' => false
+					) ); ?>
+				</td>
 				<td class="edd_tax_state">
 					<?php echo EDD()->html->text( 'tax_rates[0][state]' ); ?>
 				</td>
