@@ -57,6 +57,7 @@
 #edd_checkout_form_wrap #edd_terms_agreement label,
 #edd_checkout_form_wrap #edd_tax_opt_in_fields label { display: inline-block;  width: auto; }
 #edd_checkout_form_wrap p { margin: 0 0 10px; }
+#edd_checkout_form_wrap span.edd-required-indicator { color: #b94a48; display: inline; }
 #edd_checkout_form_wrap input[type="text"], #edd_checkout_form_wrap input[type="email"], #edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; }
 #edd_checkout_form_wrap input[type="radio"] { border: none; margin-right: 5px; }
 #edd_checkout_form_wrap input[type="checkbox"] { float: left; margin: 0 8px 0 0; }
@@ -66,6 +67,8 @@
 #edd_checkout_form_wrap #edd-payment-mode-wrap .edd-payment-mode-label { font-weight: bold; display: inline-block; position: relative; margin-bottom: 5px; }
 #edd_checkout_form_wrap fieldset { border: none; padding: 10px 0 0 0; margin: 0 0 5px; }
 #edd_checkout_form_wrap fieldset fieldset { margin: 0; }
+#edd_checkout_form_wrap #edd-login-account-wrap,
+#edd_checkout_form_wrap #edd-new-account-wrap { background: #fafafa; border: 1px solid #eee; color: #666; padding: 0.5em 1.387em; }
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_register_password,
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_login_password { margin: 0; }
 #edd_checkout_form_wrap fieldset#edd_cc_fields { padding: 0 8px 8px 8px; border: 1px solid #f0f0f0; margin: 0 0 10px; background: #f9f9f9; position: relative; left: -8px; }
