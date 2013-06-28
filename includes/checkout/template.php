@@ -530,7 +530,7 @@ function edd_discount_field() {
 	?>
 	<fieldset id="edd_discount_code">
 		<p id="edd_show_discount">
-			<a href="#" class="edd_discount_link"><?php _e( 'Have a discount code?', 'edd' ); ?></a>
+			<?php _e( 'Have a discount code?', 'edd' ); ?> <a href="#" class="edd_discount_link">Click to enter it</a>
 		</p>
 		<p id="edd-discount-code-wrap" style="display:none">
 			<label class="edd-label" for="edd-discount">
