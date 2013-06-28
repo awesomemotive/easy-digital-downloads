@@ -252,6 +252,10 @@ function edd_purchase_form_validate_agree_to_terms() {
 */
 function edd_purchase_form_required_fields() {
 	$required_fields = array(
+		'edd_email' => array(
+			'error_id' => 'invalid_email',
+			'error_message' => __( 'Please enter a valid email address', 'edd' )
+		),
 		'edd_first' => array(
 			'error_id' => 'invalid_first_name',
 			'error_message' => __( 'Please enter your first name', 'edd' )
@@ -280,10 +284,6 @@ function edd_purchase_form_validate_logged_in_user() {
 	if ( $user_ID > 0 ) {
 		// Get the logged in user data
 		$user_data = get_userdata( $user_ID );
-
-		if ( ! is_email( $_POST['edd_email'] ) ) {
-			edd_set_error( 'invalid_email', __( 'Please enter a valid email address', 'edd' ) );
-		}
 
 		// Loop through required fields and show error messages
 		foreach ( edd_purchase_form_required_fields() as $field_name => $value ) {
