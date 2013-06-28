@@ -174,8 +174,8 @@ jQuery(document).ready(function($) {
 
     $body.on('click', '.edd_discount_link', function(e) {
         e.preventDefault();
-        $('#edd-discount-code-wrap').slideToggle();
-        $('.edd_discount_link').toggle();
+        $('.edd_discount_link').hide();
+        $('#edd-discount-code-wrap').slideDown('fast');
     });
 
 });
