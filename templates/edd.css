@@ -56,7 +56,7 @@
 #edd_checkout_form_wrap input.edd-input.error { border-color: #c4554e; }
 #edd_checkout_form_wrap #edd_terms_agreement label,
 #edd_checkout_form_wrap #edd_tax_opt_in_fields label { display: inline-block;  width: auto; }
-#edd_checkout_form_wrap p { margin: 0 0 10px; }
+#edd_checkout_form_wrap p { margin: 0 0 14px; }
 #edd_checkout_form_wrap span.edd-required-indicator { color: #b94a48; display: inline; }
 #edd_checkout_form_wrap input[type="text"], #edd_checkout_form_wrap input[type="email"], #edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; }
 #edd_checkout_form_wrap input[type="radio"] { border: none; margin-right: 5px; }
