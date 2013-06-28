@@ -205,13 +205,13 @@ class EDD_HTML_Elements {
 
 		if ( ! empty( $args[ 'options' ] ) ) {
 			if ( $args[ 'show_option_all' ] )
-				$output .= '<option value="0"' . selected( $selected, 0, false ) . '>' . esc_html( $args[ 'show_option_all' ] ) . '</option>';
+				$output .= '<option value="0"' . selected( $args['selected'], 0, false ) . '>' . esc_html( $args[ 'show_option_all' ] ) . '</option>';
 
 			if ( $args[ 'show_option_none' ] )
-				$output .= '<option value="-1"' . selected( $selected, -1, false ) . '>' . esc_html( $args[ 'show_option_none' ] ) . '</option>';
+				$output .= '<option value="-1"' . selected( $args['selected'], -1, false ) . '>' . esc_html( $args[ 'show_option_none' ] ) . '</option>';
 
 			foreach( $args[ 'options' ] as $key => $option ) {
-				$output .= '<option value="' . esc_attr( $key ) . '"' . selected( $selected, $key, false ) . '>' . esc_html( $option ) . '</option>';
+				$output .= '<option value="' . esc_attr( $key ) . '"' . selected( $args['selected'], $key, false ) . '>' . esc_html( $option ) . '</option>';
 			}
 		}
 
