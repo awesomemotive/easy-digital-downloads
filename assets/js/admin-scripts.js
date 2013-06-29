@@ -408,6 +408,26 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
+	// On Download Select, Check if Variable Prices Exist
+	$('#edd_customer_export').on('change', 'select#edd_customer_export_download', function() {
+
+		var $el = $(this),
+		    download_id = $('option:selected', $el).val();
+
+		if ( parseInt( download_id ) != 0 ) {
+			var data = {
+				action : 'edd_get_customer_export_price_options',
+				download_id: download_id
+			};
+			$.post(ajaxurl, data, function(response) {
+				$('.edd-variable-prices-select').remove();
+				$el.after( response );
+			});
+		} else {
+			$('.edd-variable-prices-select').remove();
+		}
+	});
+
 	// Customer Export
 	$( '#edd_customer_export_download' ).change( function() {
 		var $this = $(this);
