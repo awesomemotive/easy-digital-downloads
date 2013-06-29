@@ -115,16 +115,16 @@ ACTIVE PLUGINS:
 $plugins = get_plugins();
 $active_plugins = get_option( 'active_plugins', array() );
 
-foreach ( $plugins as $plugin_path => $plugin ):
+foreach ( $plugins as $plugin_path => $plugin ) {
 	// If the plugin isn't active, don't show it.
 	if ( ! in_array( $plugin_path, $active_plugins ) )
 		continue;
 
-	echo $plugin['Name']; ?>: <?php echo $plugin['Version'] ."\n";
+	echo $plugin['Name'] . ': ' . $plugin['Version'] ."\n";
+}
 
-endforeach; ?>
-
-<?php if ( is_multisite() ) : ?>
+if ( is_multisite() ) :
+?>
 
 NETWORK ACTIVE PLUGINS:
 
@@ -141,7 +141,7 @@ foreach ( $plugins as $plugin_path ) {
 
 	$plugin = get_plugin_data( $plugin_path );
 
-	echo $plugin['Name']; ?>: <?php echo $plugin['Version'] ."\n";
+	echo $plugin['Name']; . ' :' . $plugin['Version'] ."\n";
 }
 
 endif;
