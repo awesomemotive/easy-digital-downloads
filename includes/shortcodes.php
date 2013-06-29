@@ -153,7 +153,7 @@ function edd_discounts_shortcode( $atts, $content = null ) {
 
 	$discounts_list = '<ul id="edd_discounts_list">';
 
-	if ( $discounts && edd_has_active_discounts() ) {
+	if ( ! empty( $discounts ) && edd_has_active_discounts() ) {
 
 		foreach ( $discounts as $discount ) {
 
@@ -171,6 +171,8 @@ function edd_discounts_shortcode( $atts, $content = null ) {
 
 		}
 
+	} else {
+		$discounts_list .= '<li class="edd_discount">' . __( 'No discounts found', 'edd' ) . '</li>';
 	}
 
 	$discounts_list .= '</ul>';
