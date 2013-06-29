@@ -42,8 +42,8 @@
 			<?php if( edd_cart_has_fees() ) : ?>
 				<?php foreach( edd_get_cart_fees() as $fee_id => $fee ) : ?>
 					<tr class="edd_cart_fee" id="edd_cart_fee_<?php echo $fee_id; ?>">
-						<td class="edd_cart_fee_label"><?php esc_html_e( $fee['label'] ); ?></td>
-						<td class="edd_cart_fee_amount"><?php esc_html_e( edd_currency_filter( edd_format_amount( $fee['amount'] ) ) ); ?></td>
+						<td class="edd_cart_fee_label"><?php echo esc_html( $fee['label'] ); ?></td>
+						<td class="edd_cart_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee['amount'] ) ) ); ?></td>
 						<td></td>
 					</tr>
 				<?php endforeach; ?>
