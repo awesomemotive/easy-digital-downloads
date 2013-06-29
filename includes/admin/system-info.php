@@ -141,7 +141,7 @@ foreach ( $plugins as $plugin_path ) {
 
 	$plugin = get_plugin_data( $plugin_path );
 
-	echo $plugin['Name']; . ' :' . $plugin['Version'] ."\n";
+	echo $plugin['Name'] . ' :' . $plugin['Version'] ."\n";
 }
 
 endif;
