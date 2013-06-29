@@ -138,6 +138,7 @@ class EDD_HTML_Elements {
 
 		while ( $year <= $current ) {
 			$options[ absint( $year ) ] = $year;
+			$year++;
 		}
 
 		$output = $this->select( array(
@@ -166,6 +167,7 @@ class EDD_HTML_Elements {
 
 		while ( $month <= 12 ) {
 			$options[ absint( $month ) ] = edd_month_num_to_name( $month );
+			$month++;
 		}
 
 		$output = $this->select( array(
