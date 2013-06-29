@@ -43,22 +43,34 @@ if ( $purchases ) :
 						<?php if ( ! edd_no_redownload() ) : ?>
 							<td class="edd_download_download_files">
 								<?php
-								if ( $download_files ) :
-									foreach ( $download_files as $filekey => $file ) :
 
-										$download_url = edd_get_download_file_url( $purchase_data['key'], $purchase_data['email'], $filekey, $download['id'], $price_id );
-										?>
+								if( edd_is_payment_complete( $payment->ID ) ) :
 
-										<div class="edd_download_file">
-											<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link">
-												<?php echo esc_html( $file['name'] ); ?>
-											</a>
-										</div>
+									if ( $download_files ) :
 
-										<?php do_action( 'edd_download_history_files', $filekey, $file, $id, $payment->ID, $purchase_data );
-									endforeach;
-								else :
-									_e( 'No downloadable files found.', 'edd' );
+										foreach ( $download_files as $filekey => $file ) :
+
+											$download_url = edd_get_download_file_url( $purchase_data['key'], $purchase_data['email'], $filekey, $download['id'], $price_id );
+											?>
+
+											<div class="edd_download_file">
+												<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link">
+													<?php echo esc_html( $file['name'] ); ?>
+												</a>
+											</div>
+
+											<?php do_action( 'edd_download_history_files', $filekey, $file, $id, $payment->ID, $purchase_data );
+										endforeach;
+
+									else :
+										_e( 'No downloadable files found.', 'edd' );
+									endif; // End if payment complete
+
+								else : ?>
+									<span class="edd_download_payment_status">
+										<?php printf( __( 'Payment status is %s', 'edd' ), edd_get_payment_status( $payment, true) ); ?>
+									</span>
+									<?php
 								endif; // End if $download_files
 								?>
 							</td>
