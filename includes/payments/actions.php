@@ -44,10 +44,11 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 			// "bundle" or "default"
 			$download_type = edd_get_download_type( $download['id'] );
+			$price_id      = isset( $download['options']['price_id'] ) ? (int) $download['options']['price_id'] : false;
 
 			if ( ! edd_is_test_mode() || apply_filters( 'edd_log_test_payment_stats', false ) ) {
 
-				edd_record_sale_in_log( $download['id'], $payment_id, $user_info );
+				edd_record_sale_in_log( $download['id'], $payment_id, $price_id );
 				edd_increase_purchase_count( $download['id'] );
 				$amount = null;
 
