@@ -34,6 +34,13 @@ function edd_system_info() {
 		require_once EDD_PLUGIN_DIR . 'includes/libraries/browser.php';
 
 	$browser =  new Browser();
+	if ( get_bloginfo( 'version' ) < '3.4' ) {
+		$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
+		$theme = $theme_data['Name'] . ': ' . $theme_data['Version'];
+	} else {
+		$theme_data = wp_get_theme();
+		$theme = $theme_data->Name . ': ' . $theme_data->Version;
+	}
 ?>
 	<div class="wrap">
 		<h2><?php _e( 'System Information', 'edd' ) ?></h2><br/>
@@ -52,6 +59,7 @@ EDD Version:              <?php echo EDD_VERSION . "\n"; ?>
 Upgraded From:            <?php echo get_option( 'edd_version_upgraded_from', 'None' ) . "\n"; ?>
 WordPress Version:        <?php echo get_bloginfo( 'version' ) . "\n"; ?>
 Permalink Structure:      <?php echo get_option( 'permalink_structure' ) . "\n"; ?>
+Active Theme:             <?php echo $theme; ?>
 
 Test Mode Enabled:        <?php echo edd_is_test_mode() ? "Yes\n" : "No\n"; ?>
 Ajax Enabled:             <?php echo edd_is_ajax_enabled() ? "Yes\n" : "No\n"; ?>
@@ -138,19 +146,6 @@ endforeach; ?>
 
 <?php
 endif; ?>
-
-CURRENT THEME:
-
-<?php
-if ( get_bloginfo( 'version' ) < '3.4' ) {
-	$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
-	echo $theme_data['Name'] . ': ' . $theme_data['Version'];
-} else {
-	$theme_data = wp_get_theme();
-	echo $theme_data->Name . ': ' . $theme_data->Version;
-}
-?>
-
 
 ### End System Info ###
 			</textarea>
