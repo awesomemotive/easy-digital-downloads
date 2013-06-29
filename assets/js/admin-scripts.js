@@ -401,34 +401,6 @@ jQuery(document).ready(function ($) {
 	EDD_Edit_Payment.init();
 
 
-	$('.download_page_edd-payment-history .row-actions .delete a').on('click', function() {
-		if( confirm( edd_vars.delete_payment ) ) {
-			return true;
-		}
-		return false;
-	});
-
-
-	$('#the-list').on('click', '.editinline', function() {
-		inlineEditPost.revert();
-
-		var post_id = $(this).closest('tr').attr('id');
-
-		post_id = post_id.replace("post-", "");
-
-		var $edd_inline_data = $('#post-' + post_id);
-
-		var regprice = $edd_inline_data.find('.column-price .downloadprice-' + post_id).val();
-
-		// If variable priced product disable editing, otherwise allow price changes
-		if ( regprice != $('#post-' + post_id + '.column-price .downloadprice-' + post_id).val() ) {
-			$('.regprice', '#edd-download-data').val(regprice).attr('disabled', false);
-		} else {
-			$('.regprice', '#edd-download-data').val( edd_vars.quick_edit_warning ).attr('disabled', 'disabled');
-		}
-	});
-
-
 	/**
 	 * Reports / Exports screen JS
 	 */
@@ -690,6 +662,34 @@ jQuery(document).ready(function ($) {
 
 	}
 	EDD_Settings.init();
+
+
+	$('.download_page_edd-payment-history .row-actions .delete a').on('click', function() {
+		if( confirm( edd_vars.delete_payment ) ) {
+			return true;
+		}
+		return false;
+	});
+
+
+	$('#the-list').on('click', '.editinline', function() {
+		inlineEditPost.revert();
+
+		var post_id = $(this).closest('tr').attr('id');
+
+		post_id = post_id.replace("post-", "");
+
+		var $edd_inline_data = $('#post-' + post_id);
+
+		var regprice = $edd_inline_data.find('.column-price .downloadprice-' + post_id).val();
+
+		// If variable priced product disable editing, otherwise allow price changes
+		if ( regprice != $('#post-' + post_id + '.column-price .downloadprice-' + post_id).val() ) {
+			$('.regprice', '#edd-download-data').val(regprice).attr('disabled', false);
+		} else {
+			$('.regprice', '#edd-download-data').val( edd_vars.quick_edit_warning ).attr('disabled', 'disabled');
+		}
+	});
 
 
     // Bulk edit save
