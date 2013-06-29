@@ -148,8 +148,7 @@ endif;
 
 do_action( 'edd_system_info_after' );
 ?>
-### End System Info ###
-			</textarea>
+### End System Info ###</textarea>
 			<p class="submit">
 				<input type="hidden" name="edd-action" value="download_sysinfo" />
 				<?php submit_button( __( 'Download System Info File', 'edd' ), 'primary', 'edd-download-sysinfo', false ); ?>
