@@ -476,180 +476,210 @@ jQuery(document).ready(function ($) {
 	EDD_Reports.init();
 
 
+	/**
+	 * Settings screen JS
+	 */
+	var EDD_Settings = {
 
-	// Update base state field based on selected base country
-	$('select[name="edd_settings_taxes[base_country]"]').change(function() {
-		var $this = $(this), $tr = $this.closest('tr');
-		data = {
-			action: 'edd_get_shop_states',
-			country: $(this).val(),
-			field_name: 'edd_settings_taxes[base_state]'
-		};
-		$.post(ajaxurl, data, function (response) {
-			if( 'nostates' == response ) {
-				$tr.next().hide();
-			} else {
-				$tr.next().show();
-				$tr.next().find('select').replaceWith( response );
+		init : function() {
+			this.general();
+			this.taxes();
+			this.misc();
+		},
+
+		general : function() {
+
+			if( $('.edd-color-picker').length ) {
+				$('.edd-color-picker').wpColorPicker();
 			}
-		});
 
-		return false;
-	});
+		    // Settings Upload field JS
+		    if( typeof wp == "undefined" || edd_vars.new_media_ui != '1' ){
+				//Old Thickbox uploader
+				if ( $( '.edd_settings_upload_button' ).length > 0 ) {
+					window.formfield = '';
 
-	// Update tax rate state field based on selected rate country
-	$('body').on('change', '#edd_tax_rates select', function() {
-		var $this = $(this);
-		data = {
-			action: 'edd_get_shop_states',
-			country: $(this).val(),
-			field_name: $this.attr('name').replace('country', 'state')
-		};
-		$.post(ajaxurl, data, function (response) {
-			if( 'nostates' == response ) {
-				var text_field = '<input type="text" name="' + data.field_name + '" value=""/>';
-				$this.parent().next().find('select').replaceWith( text_field );
-			} else {
-				$this.parent().next().find('input,select').show();
-				$this.parent().next().find('input,select').replaceWith( response );
-			}
-		});
+					$('body').on('click', '.edd_settings_upload_button', function(e) {
+						e.preventDefault();
+						window.formfield = $(this).parent().prev();
+						window.tbframe_interval = setInterval(function() {
+							jQuery('#TB_iframeContent').contents().find('.savesend .button').val(edd_vars.use_this_file).end().find('#insert-gallery, .wp-post-thumbnail').hide();
+						}, 2000);
+						tb_show(edd_vars.add_new_download, 'media-upload.php?TB_iframe=true');
+					});
 
-		return false;
-	});
-
-	// Insert new tax rate row
-	$('#edd_add_tax_rate').on('click', function() {
-		var row = $('#edd_tax_rates tr:last');
-		var clone = row.clone();
-		var count = row.parent().find( 'tr' ).length;
-		clone.find( 'td input' ).val( '' );
-		clone.find( 'input, select' ).each(function() {
-			var name = $( this ).attr( 'name' );
-			name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
-			$( this ).attr( 'name', name ).attr( 'id', name );
-		});
-		clone.insertAfter( row );
-		return false;
-	});
-
-	// Remove tax row
-	$('body').on('click', '#edd_tax_rates .edd_remove_tax_rate', function() {
-		if( confirm( edd_vars.delete_tax_rate ) )
-			$(this).closest('tr').remove();
-		return false;
-	});
-
-    // Hide Symlink option if Download Method is set to Direct
-    if( $('select[name="edd_settings_misc[download_method]"]:selected').val() != 'direct' ) {
-        $('select[name="edd_settings_misc[download_method]"]').parent().parent().next().hide();
-        $('select[name="edd_settings_misc[download_method]"]').parent().parent().next().find('input').attr('checked', false);
-    }
-    // Toggle download method option
-    $('select[name="edd_settings_misc[download_method]"]').on('change', function() {
-        var symlink = $(this).parent().parent().next();
-        if( $(this).val() == 'direct' ) {
-            symlink.hide();
-        } else {
-            symlink.show();
-            symlink.find('input').attr('checked', false);
-        }
-    });
-
-    // Settings Upload field JS
-    if( typeof wp == "undefined" || edd_vars.new_media_ui != '1' ){
-		//Old Thickbox uploader
-		if ( $( '.edd_settings_upload_button' ).length > 0 ) {
-			window.formfield = '';
-
-			$('body').on('click', '.edd_settings_upload_button', function(e) {
-				e.preventDefault();
-				window.formfield = $(this).parent().prev();
-				window.tbframe_interval = setInterval(function() {
-					jQuery('#TB_iframeContent').contents().find('.savesend .button').val(edd_vars.use_this_file).end().find('#insert-gallery, .wp-post-thumbnail').hide();
-				}, 2000);
-				tb_show(edd_vars.add_new_download, 'media-upload.php?TB_iframe=true');
-			});
-
-			window.edd_send_to_editor = window.send_to_editor;
-			window.send_to_editor = function (html) {
-				if (window.formfield) {
-					imgurl = $('a', '<div>' + html + '</div>').attr('href');
-					window.formfield.val(imgurl);
-					window.clearInterval(window.tbframe_interval);
-					tb_remove();
-				} else {
-					window.edd_send_to_editor(html);
+					window.edd_send_to_editor = window.send_to_editor;
+					window.send_to_editor = function (html) {
+						if (window.formfield) {
+							imgurl = $('a', '<div>' + html + '</div>').attr('href');
+							window.formfield.val(imgurl);
+							window.clearInterval(window.tbframe_interval);
+							tb_remove();
+						} else {
+							window.edd_send_to_editor(html);
+						}
+						window.send_to_editor = window.edd_send_to_editor;
+						window.formfield = '';
+						window.imagefield = false;
+					}
 				}
-				window.send_to_editor = window.edd_send_to_editor;
+			} else {
+				// WP 3.5+ uploader
+				var file_frame;
 				window.formfield = '';
-				window.imagefield = false;
-			}
-		}
-	} else {
-		// WP 3.5+ uploader
-		var file_frame;
-		window.formfield = '';
 
-		$('body').on('click', '.edd_settings_upload_button', function(e) {
+				$('body').on('click', '.edd_settings_upload_button', function(e) {
 
-			e.preventDefault();
+					e.preventDefault();
 
-			var button = $(this);
+					var button = $(this);
 
-			window.formfield = $(this).parent().prev();
+					window.formfield = $(this).parent().prev();
 
-			// If the media frame already exists, reopen it.
-			if ( file_frame ) {
-				//file_frame.uploader.uploader.param( 'post_id', set_to_post_id );
-				file_frame.open();
-			  return;
-			}
+					// If the media frame already exists, reopen it.
+					if ( file_frame ) {
+						//file_frame.uploader.uploader.param( 'post_id', set_to_post_id );
+						file_frame.open();
+					  return;
+					}
 
-			// Create the media frame.
-			file_frame = wp.media.frames.file_frame = wp.media({
-				frame: 'post',
-				state: 'insert',
-				title: button.data( 'uploader_title' ),
-				button: {
-					text: button.data( 'uploader_button_text' ),
-				},
-				multiple: false
-			});
+					// Create the media frame.
+					file_frame = wp.media.frames.file_frame = wp.media({
+						frame: 'post',
+						state: 'insert',
+						title: button.data( 'uploader_title' ),
+						button: {
+							text: button.data( 'uploader_button_text' ),
+						},
+						multiple: false
+					});
 
-			file_frame.on( 'menu:render:default', function(view) {
-		        // Store our views in an object.
-		        var views = {};
+					file_frame.on( 'menu:render:default', function(view) {
+				        // Store our views in an object.
+				        var views = {};
 
-		        // Unset default menu items
-		        view.unset('library-separator');
-		        view.unset('gallery');
-		        view.unset('featured-image');
-		        view.unset('embed');
+				        // Unset default menu items
+				        view.unset('library-separator');
+				        view.unset('gallery');
+				        view.unset('featured-image');
+				        view.unset('embed');
 
-		        // Initialize the views in our view object.
-		        view.set(views);
-		    });
+				        // Initialize the views in our view object.
+				        view.set(views);
+				    });
 
-			// When an image is selected, run a callback.
-			file_frame.on( 'insert', function() {
+					// When an image is selected, run a callback.
+					file_frame.on( 'insert', function() {
 
-				var selection = file_frame.state().get('selection');
-				selection.each( function( attachment, index ) {
-					attachment = attachment.toJSON();
-					window.formfield.val(attachment.url);
+						var selection = file_frame.state().get('selection');
+						selection.each( function( attachment, index ) {
+							attachment = attachment.toJSON();
+							window.formfield.val(attachment.url);
+						});
+					});
+
+					// Finally, open the modal
+					file_frame.open();
 				});
+
+
+				// WP 3.5+ uploader
+				var file_frame;
+				window.formfield = '';
+			}
+
+		},
+
+		taxes : function() {
+
+			// Update base state field based on selected base country
+			$('select[name="edd_settings_taxes[base_country]"]').change(function() {
+				var $this = $(this), $tr = $this.closest('tr');
+				data = {
+					action: 'edd_get_shop_states',
+					country: $(this).val(),
+					field_name: 'edd_settings_taxes[base_state]'
+				};
+				$.post(ajaxurl, data, function (response) {
+					if( 'nostates' == response ) {
+						$tr.next().hide();
+					} else {
+						$tr.next().show();
+						$tr.next().find('select').replaceWith( response );
+					}
+				});
+
+				return false;
 			});
 
-			// Finally, open the modal
-			file_frame.open();
-		});
+			// Update tax rate state field based on selected rate country
+			$('body').on('change', '#edd_tax_rates select', function() {
+				var $this = $(this);
+				data = {
+					action: 'edd_get_shop_states',
+					country: $(this).val(),
+					field_name: $this.attr('name').replace('country', 'state')
+				};
+				$.post(ajaxurl, data, function (response) {
+					if( 'nostates' == response ) {
+						var text_field = '<input type="text" name="' + data.field_name + '" value=""/>';
+						$this.parent().next().find('select').replaceWith( text_field );
+					} else {
+						$this.parent().next().find('input,select').show();
+						$this.parent().next().find('input,select').replaceWith( response );
+					}
+				});
 
+				return false;
+			});
 
-		// WP 3.5+ uploader
-		var file_frame;
-		window.formfield = '';
+			// Insert new tax rate row
+			$('#edd_add_tax_rate').on('click', function() {
+				var row = $('#edd_tax_rates tr:last');
+				var clone = row.clone();
+				var count = row.parent().find( 'tr' ).length;
+				clone.find( 'td input' ).val( '' );
+				clone.find( 'input, select' ).each(function() {
+					var name = $( this ).attr( 'name' );
+					name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
+					$( this ).attr( 'name', name ).attr( 'id', name );
+				});
+				clone.insertAfter( row );
+				return false;
+			});
+
+			// Remove tax row
+			$('body').on('click', '#edd_tax_rates .edd_remove_tax_rate', function() {
+				if( confirm( edd_vars.delete_tax_rate ) )
+					$(this).closest('tr').remove();
+				return false;
+			});
+
+		},
+
+		misc : function() {
+
+			// Hide Symlink option if Download Method is set to Direct
+			if( $('select[name="edd_settings_misc[download_method]"]:selected').val() != 'direct' ) {
+				$('select[name="edd_settings_misc[download_method]"]').parent().parent().next().hide();
+				$('select[name="edd_settings_misc[download_method]"]').parent().parent().next().find('input').attr('checked', false);
+			}
+			// Toggle download method option
+			$('select[name="edd_settings_misc[download_method]"]').on('change', function() {
+				var symlink = $(this).parent().parent().next();
+				if( $(this).val() == 'direct' ) {
+					symlink.hide();
+				} else {
+					symlink.show();
+					symlink.find('input').attr('checked', false);
+				}
+			});
+
+		}
+
 	}
+	EDD_Settings.init();
+
 
     // Bulk edit save
     $( 'body' ).on( 'click', '#bulk_edit', function() {
@@ -679,7 +709,5 @@ jQuery(document).ready(function ($) {
 	});
 
     $('.edd-select-chosen').chosen();
-    if( $('.edd-color-picker').length ) {
-	    $('.edd-color-picker').wpColorPicker();
-	}
+
 });
