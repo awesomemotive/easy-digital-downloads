@@ -259,13 +259,14 @@ jQuery(document).ready(function ($) {
 	var EDD_Edit_Payment = {
 
 		init : function() {
-			this.remove();
-			this.add();
+			this.remove_download();
+			this.add_download();
 			this.variable_prices_check();
-			this.status_chamge();
+			this.status_change();
+			this.notes();
 		},
 
-		remove : function() {
+		remove_download : function() {
 
 			// Remove a download from a purchase
 
@@ -291,7 +292,7 @@ jQuery(document).ready(function ($) {
 
 		},
 
-		add : function() {
+		add_download : function() {
 
 			// Add a New Download from the Add Downloads to Purchase Box
 			$('#edd-add-downloads-to-purchase').on('click', '.edd-add-another-download', function() {
@@ -372,7 +373,7 @@ jQuery(document).ready(function ($) {
 
 		},
 
-		status_chamge : function() {
+		status_change : function() {
 
 			// Show / hide the send purchase receipt check box on the Edit payment screen
 			$('#edd_payment_status').change(function() {
@@ -381,6 +382,17 @@ jQuery(document).ready(function ($) {
 				} else {
 					$('#edd_payment_notification').slideUp();
 				}
+			});
+
+		},
+
+		notes : function() {
+
+			$('.edd-delete-payment-note').on('click', function() {
+				if( confirm( edd_vars.delete_payment_note) ) {
+					return true;
+				}
+				return false;
 			});
 
 		}
@@ -396,12 +408,6 @@ jQuery(document).ready(function ($) {
 		return false;
 	});
 
-	$('.edd-delete-payment-note').on('click', function() {
-		if( confirm( edd_vars.delete_payment_note) ) {
-			return true;
-		}
-		return false;
-	});
 
 	$('#the-list').on('click', '.editinline', function() {
 		inlineEditPost.revert();
