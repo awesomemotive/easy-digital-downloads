@@ -43,7 +43,7 @@ function edd_system_info() {
 
 ## Please include this information when posting support requests ##
 
-Multi-site:               <?php echo is_multisite() ? 'Yes' . "\n" : 'No' . "\n" ?>
+Multisite:                <?php echo is_multisite() ? 'Yes' . "\n" : 'No' . "\n" ?>
 
 SITE_URL:                 <?php echo site_url() . "\n"; ?>
 HOME_URL:                 <?php echo home_url() . "\n"; ?>
@@ -51,6 +51,7 @@ HOME_URL:                 <?php echo home_url() . "\n"; ?>
 EDD Version:              <?php echo EDD_VERSION . "\n"; ?>
 Upgraded From:            <?php echo get_option( 'edd_version_upgraded_from', 'None' ) . "\n"; ?>
 WordPress Version:        <?php echo get_bloginfo( 'version' ) . "\n"; ?>
+Permalink Structure:      <?php echo get_option( 'permalink_structure' ); ?>
 
 Test Mode Enabled:        <?php echo edd_is_test_mode() ? "Yes\n" : "No\n"; ?>
 Ajax Enabled:             <?php echo edd_is_ajax_enabled() ? "Yes\n" : "No\n"; ?>
