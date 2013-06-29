@@ -428,16 +428,6 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
-	// Show the email template previews
-	if( $('#email-preview-wrap').length ) {
-		$('#open-email-preview').colorbox({
-			inline: true,
-			href: '#email-preview',
-			width: '80%',
-			height: 'auto'
-		});
-	}
-
 
 	/**
 	 * Reports / Exports screen JS
@@ -490,6 +480,7 @@ jQuery(document).ready(function ($) {
 		init : function() {
 			this.general();
 			this.taxes();
+			this.emails();
 			this.misc();
 		},
 
@@ -660,6 +651,20 @@ jQuery(document).ready(function ($) {
 					$(this).closest('tr').remove();
 				return false;
 			});
+
+		},
+
+		emails : function() {
+
+			// Show the email template previews
+			if( $('#email-preview-wrap').length ) {
+				$('#open-email-preview').colorbox({
+					inline: true,
+					href: '#email-preview',
+					width: '80%',
+					height: 'auto'
+				});
+			}
 
 		},
 
