@@ -124,8 +124,7 @@ foreach ( $plugins as $plugin_path => $plugin ):
 
 endforeach; ?>
 
-<?php
-if( is_multisite() ): ?>
+<?php if ( is_multisite() ) : ?>
 
 NETWORK ACTIVE PLUGINS:
 
@@ -133,7 +132,7 @@ NETWORK ACTIVE PLUGINS:
 $plugins = wp_get_active_network_plugins();
 $active_plugins = get_site_option( 'active_sitewide_plugins', array() );
 
-foreach( $plugins as $plugin_path ):
+foreach ( $plugins as $plugin_path ) {
 	$plugin_base = plugin_basename( $plugin_path );
 
 	// If the plugin isn't active, don't show it.
@@ -142,9 +141,8 @@ foreach( $plugins as $plugin_path ):
 
 	$plugin = get_plugin_data( $plugin_path );
 
-	echo  $plugin['Name']; ?>: <?php echo $plugin['Version'] ."\n";
-
-endforeach;
+	echo $plugin['Name']; ?>: <?php echo $plugin['Version'] ."\n";
+}
 
 endif;
 
