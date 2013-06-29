@@ -355,9 +355,10 @@ function edd_get_download_sales_stats( $download_id ) {
  * @global $edd_logs
  * @param int $download_id Download ID
  * @param int $payment_id Payment ID
+ * @param int $price_id The price ID purchased, if any
  * @return void
 */
-function edd_record_sale_in_log( $download_id, $payment_id ) {
+function edd_record_sale_in_log( $download_id, $payment_id, $price_id = false ) {
 	global $edd_logs;
 
 	$log_data = array(
@@ -366,7 +367,8 @@ function edd_record_sale_in_log( $download_id, $payment_id ) {
 	);
 
 	$log_meta = array(
-		'payment_id'    => $payment_id
+		'payment_id'    => $payment_id,
+		'price_id'      => (int) $price_id
 	);
 
 	$log_id = $edd_logs->insert_log( $log_data, $log_meta );
