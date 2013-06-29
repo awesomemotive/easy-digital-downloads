@@ -15,7 +15,10 @@ require_once $config_file_path;
 require_once dirname( $config_file_path ) . '/includes/functions.php';
 
 // Load EDD
-require dirname( dirname( dirname( __FILE__ ) ) ) . '/easy-digital-downloads.php';
+function _load_edd() {
+	require dirname( dirname( dirname( __FILE__ ) ) ) . '/easy-digital-downloads.php';
+}
+tests_add_filter( 'muplugins_loaded', '_load_edd' );
 
 // Always load admin bar
 tests_add_filter( 'show_admin_bar', '__return_true' );
