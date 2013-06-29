@@ -432,25 +432,50 @@ jQuery(document).ready(function ($) {
 		});
 	}
 
-	// Reporting
-	$( '#edd-graphs-date-options' ).change( function() {
-		var $this = $(this);
-		if( $this.val() == 'other' ) {
-			$( '#edd-date-range-options' ).show();
-		} else {
-			$( '#edd-date-range-options' ).hide();
-		}
-	});
 
-	// Customer Export
-	$( '#edd_customer_export_download' ).change( function() {
-		var $this = $(this);
-		if( $this.val() == '0' ) {
-			$( '#edd_customer_export_option' ).show();
-		} else {
-			$( '#edd_customer_export_option' ).hide();
+	/**
+	 * Reports / Exports screen JS
+	 */
+	var EDD_Reports = {
+
+		init : function() {
+			this.date_options();
+			this.customers_export();
+		},
+
+		date_options : function() {
+
+			// Show hide extended date options
+			$( '#edd-graphs-date-options' ).change( function() {
+				var $this = $(this);
+				if( $this.val() == 'other' ) {
+					$( '#edd-date-range-options' ).show();
+				} else {
+					$( '#edd-date-range-options' ).hide();
+				}
+			});
+
+		},
+
+		customers_export : function() {
+
+			// Show / hide Download option when exporting customers
+
+			$( '#edd_customer_export_download' ).change( function() {
+				var $this = $(this);
+				if( $this.val() == '0' ) {
+					$( '#edd_customer_export_option' ).show();
+				} else {
+					$( '#edd_customer_export_option' ).hide();
+				}
+			});
+
 		}
-	});
+
+	}
+	EDD_Reports.init();
+
+
 
 	// Update base state field based on selected base country
 	$('select[name="edd_settings_taxes[base_country]"]').change(function() {
