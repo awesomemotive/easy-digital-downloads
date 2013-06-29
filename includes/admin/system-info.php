@@ -50,6 +50,8 @@ function edd_system_info() {
 
 ## Please include this information when posting support requests ##
 
+<?php do_action( 'edd_system_info_before' ); ?>
+
 Multisite:                <?php echo is_multisite() ? 'Yes' . "\n" : 'No' . "\n" ?>
 
 SITE_URL:                 <?php echo site_url() . "\n"; ?>
@@ -142,11 +144,12 @@ foreach( $plugins as $plugin_path ):
 
 	echo  $plugin['Name']; ?>: <?php echo $plugin['Version'] ."\n";
 
-endforeach; ?>
+endforeach;
 
-<?php
-endif; ?>
+endif;
 
+do_action( 'edd_system_info_after' );
+?>
 ### End System Info ###
 			</textarea>
 			<p class="submit">
