@@ -15,9 +15,6 @@ if ( !defined( 'ABSPATH' ) ) exit;
 
 
 function edd_settings_export_import() {
-
-	$current_page = admin_url( 'edit.php?post_type=download&page=edd-reports' );
-	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'reports';
 	?>
 	<div class="wrap">
 		<h2><?php _e( 'Export / Import Settings', 'edd' ); ?></h2>
