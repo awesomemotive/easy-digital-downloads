@@ -40,7 +40,7 @@ function edd_settings_export_import() {
 			<div class="postbox">
 				<h3><span><?php _e( 'Import Settings', 'edd' ); ?></span></h3>
 				<div class="inside">
-					<p><?php _e( 'Import the Easy Digital Downloads settings from .json file. This file can be obtained by exporting the settings on another user using the form above.', 'edd' ); ?></p>
+					<p><?php _e( 'Import the Easy Digital Downloads settings from a .json file. This file can be obtained by exporting the settings on another site using the form above.', 'edd' ); ?></p>
 					<form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'tools.php?page=edd-settings-export-import' ); ?>">
 						<p>
 							<input type="file" name="import_file"/>
