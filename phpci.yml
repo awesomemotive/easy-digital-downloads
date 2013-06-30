@@ -1,0 +1,25 @@
+build_settings:
+    mysql:
+        host: "localhost"
+        user: "root"
+        pass: "root"
+
+setup:
+    mysql:
+        - "DROP DATABASE IF EXISTS edd_tests;"
+        - "CREATE DATABASE edd_tests;"
+        - "GRANT ALL PRIVILEGES ON edd_tests.* TO edd_tests@'localhost' IDENTIFIED BY 'edd_tests';"
+
+test:
+    php_unit:
+        config:
+            - "phpunit.xml"
+        directory:
+            - "tests/"
+        run_from: "unit-tests/"
+    php_mess_detector:
+        allow_failures: true
+
+complete:
+    mysql:
+        - "DROP DATABASE IF EXISTS edd_tests;"
