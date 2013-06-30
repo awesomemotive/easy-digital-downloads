@@ -54,6 +54,10 @@ function edd_admin_messages() {
 		add_settings_error( 'edd-notices', 'set-checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) );
 	}
 
+	if ( isset( $_GET['edd-message'] ) && 'settings-imported' == $_GET['edd-message'] && current_user_can( 'manage_shop_settings' ) ) {
+		add_settings_error( 'edd-notices', 'edd-settings-imported', __( 'The settings have been imported.', 'edd' ), 'updated' );
+	}
+
 	settings_errors( 'edd-notices' );
 }
 add_action( 'admin_notices', 'edd_admin_messages' );
