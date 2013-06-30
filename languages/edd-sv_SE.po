@@ -1,0 +1,5166 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Easy Digital Downloads v1.6.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2013-06-30 21:49:43+0000\n"
+"Last-Translator: keha76 <keha1976@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: CSL v1.x\n"
+"X-Poedit-Language: Swedish\n"
+"X-Poedit-Country: SWEDEN\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-Bookmarks: \n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Textdomain-Support: yes"
+
+#. translators: plugin header field 'Name'
+#: easy-digital-downloads.php:0
+#: includes/admin/reporting/pdf-reports.php:39
+#: includes/admin/reporting/pdf-reports.php:40
+#: languages/strings.php:15
+#@ edd
+msgid "Easy Digital Downloads"
+msgstr "Easy Digital Downloads"
+
+#. translators: plugin header field 'PluginURI'
+#: easy-digital-downloads.php:0
+#@ edd
+msgid "http://easydigitaldownloads.com"
+msgstr "http://easydigitaldownloads.com"
+
+#. translators: plugin header field 'Description'
+#: easy-digital-downloads.php:0
+#: languages/strings.php:16
+#@ edd
+msgid "Serve Digital Downloads Through WordPress"
+msgstr "Leverera Digitala Nedladdningar Genom WordPress"
+
+#. translators: plugin header field 'Author'
+#: easy-digital-downloads.php:0
+#: languages/strings.php:17
+#@ edd
+msgid "Pippin Williamson"
+msgstr "Pippin Williamson"
+
+#. translators: plugin header field 'AuthorURI'
+#: easy-digital-downloads.php:0
+#@ edd
+msgid "http://pippinsplugins.com"
+msgstr "http://pippinsplugins.com"
+
+#. translators: plugin header field 'Version'
+#: easy-digital-downloads.php:0
+#@ edd
+msgid "1.6.4"
+msgstr "1.6.4"
+
+#: easy-digital-downloads.php:136
+#: easy-digital-downloads.php:148
+#@ edd
+msgid "Cheatin&#8217; huh?"
+msgstr "Fusk&#8217; eller?"
+
+#: includes/admin/add-ons.php:42
+#@ edd
+msgid "Add Ons for Easy Digital Downloads"
+msgstr "Tillägg för Easy Digital Downloads"
+
+#: includes/admin/add-ons.php:43
+#@ edd
+msgid "Browse All Extensions"
+msgstr "Bläddra Bland Alla Tillägg"
+
+#: includes/admin/add-ons.php:45
+#@ edd
+msgid "These add-ons extend the functionality of Easy Digital Downloads."
+msgstr "Dessa tillägg utökar funktionaliteten i Easy Digital Downloads"
+
+#: includes/admin/add-ons.php:69
+#@ edd
+msgid "There was an error retrieving the extensions list from the server. Please try again later."
+msgstr "Ett problem uppstod då listan med tillägg skulle hämtas från servern. Försök igen senare."
+
+#: includes/admin/admin-notices.php:26
+#@ edd
+msgid "Discount code updated."
+msgstr "Rabattkod uppdaterad."
+
+#: includes/admin/admin-notices.php:30
+#@ edd
+msgid "There was a problem updating your discount code, please try again."
+msgstr "Ett problem uppstod då din rabattkod uppdaterades, försök igen."
+
+#: includes/admin/admin-notices.php:34
+#@ edd
+msgid "The payment has been deleted."
+msgstr "Köpet har raderats."
+
+#: includes/admin/admin-notices.php:38
+#@ edd
+msgid "The purchase receipt has been resent."
+msgstr "Kvittot för köp har skickats igen."
+
+#: includes/admin/admin-notices.php:42
+#, php-format
+#@ edd
+msgid "Note: Test Mode is enabled, only test payments are shown below. %sSettings%s."
+msgstr "Notera: Testläge är aktiverat, endast testköp visas nedan. %sInställningar%s."
+
+#: includes/admin/admin-notices.php:46
+#: includes/template-functions.php:53
+#, php-format
+#@ edd
+msgid "No checkout page has been configured. Visit <a href=\"%s\">Settings</a> to set one."
+msgstr "Ingen sida för kassan har konfigurerats. Gå till <a href=\"%s\">Inställningar</a> för att ange en."
+
+#: includes/admin/admin-notices.php:60
+#@ edd
+msgid "There seems to be an issue with the server. Please try again in a few minutes."
+msgstr "Det verkar vara något problem med servern. Försök igen om en stund."
+
+#: includes/admin/admin-pages.php:34
+#: includes/admin/payments/payments-history.php:37
+#: includes/post-types.php:78
+#@ edd
+msgid "Payment History"
+msgstr "Köphistorik"
+
+#: includes/admin/admin-pages.php:35
+#: includes/admin/discounts/discount-codes.php:33
+#@ edd
+msgid "Discount Codes"
+msgstr "Rabattkoder"
+
+#: includes/admin/admin-pages.php:36
+#@ edd
+msgid "Earnings and Sales Reports"
+msgstr "Omsättning- och Resultat-rapporter"
+
+#: includes/admin/admin-pages.php:36
+#: includes/admin/reporting/contextual-help.php:42
+#: includes/admin/reporting/reports.php:32
+#@ edd
+msgid "Reports"
+msgstr "Rapporter"
+
+#: includes/admin/admin-pages.php:37
+#@ edd
+msgid "Easy Digital Download Settings"
+msgstr "Easy Digital Downloads Inställningar"
+
+#: includes/admin/admin-pages.php:37
+#@ edd
+msgid "Settings"
+msgstr "Inställningar"
+
+#: includes/admin/admin-pages.php:38
+#@ edd
+msgid "Easy Digital Download System Info"
+msgstr "Easy Digital Downloads Systeminformation"
+
+#: includes/admin/admin-pages.php:38
+#@ edd
+msgid "System Info"
+msgstr "Systeminformation"
+
+#: includes/admin/admin-pages.php:39
+#@ edd
+msgid "Easy Digital Download Add Ons"
+msgstr "Easy Digital Downloads Tillägg"
+
+#: includes/admin/admin-pages.php:39
+#@ edd
+msgid "Add Ons"
+msgstr "Tillägg"
+
+#: includes/admin/admin-pages.php:40
+#@ edd
+msgid "EDD Upgrades"
+msgstr "EDD Uppgraderingar"
+
+#: includes/admin/dashboard-widgets.php:24
+#@ edd
+msgid "Easy Digital Downloads Sales Summary"
+msgstr "Easy Digital Downloads Översikt Försäljning"
+
+#: includes/admin/dashboard-widgets.php:57
+#@ edd
+msgid "Current Month"
+msgstr "Denna Månad"
+
+#: includes/admin/dashboard-widgets.php:62
+#: includes/admin/dashboard-widgets.php:77
+#: includes/admin/downloads/dashboard-columns.php:33
+#: includes/admin/reporting/class-download-reports-table.php:100
+#: includes/admin/reporting/graphing.php:207
+#: includes/admin/reporting/pdf-reports.php:197
+#: includes/admin/reporting/reports.php:57
+#@ edd
+msgid "Earnings"
+msgstr "Omsättning"
+
+#: includes/admin/dashboard-widgets.php:67
+#: includes/admin/dashboard-widgets.php:81
+#@ edd
+msgid "Sale"
+msgid_plural "Sales"
+msgstr[0] "Såld"
+msgstr[1] "Sålda"
+
+#: includes/admin/dashboard-widgets.php:71
+#: includes/admin/reporting/graphing.php:309
+#@ edd
+msgid "Last Month"
+msgstr "Föregående Månad"
+
+#: includes/admin/dashboard-widgets.php:85
+#@ edd
+msgid "Totals"
+msgstr "Totalt"
+
+#: includes/admin/dashboard-widgets.php:90
+#@ edd
+msgid "Total Earnings"
+msgstr "Total Omsättning"
+
+#: includes/admin/dashboard-widgets.php:94
+#: includes/admin/reporting/class-gateways-reports-table.php:86
+#@ edd
+msgid "Total Sales"
+msgstr "Sålda Totalt"
+
+#: includes/admin/dashboard-widgets.php:100
+#@ edd
+msgid "Lifetime Best Selling"
+msgstr "Livstids Bästsäljande"
+
+#: includes/admin/dashboard-widgets.php:118
+#@ edd
+msgid "Recent Purchases"
+msgstr "Nyligen Gjorda Köp"
+
+#: includes/admin/dashboard-widgets.php:128
+#, php-format
+#@ edd
+msgid "Purchase Details for Payment #%s"
+msgstr "Detaljer för Köp #%s"
+
+#: includes/admin/dashboard-widgets.php:128
+#: includes/admin/payments/class-payments-table.php:251
+#: includes/admin/payments/payments-history.php:79
+#@ edd
+msgid "View Order Details"
+msgstr "Visa Orderdetaljer"
+
+#: includes/admin/discounts/add-discount.php:15
+#: includes/post-types.php:99
+#@ edd
+msgid "Add New Discount"
+msgstr "Skapa Ny Rabatt"
+
+#: includes/admin/discounts/add-discount.php:22
+#: includes/admin/discounts/class-discount-codes-table.php:148
+#: includes/admin/discounts/edit-discount.php:32
+#: includes/admin/downloads/dashboard-columns.php:28
+#: includes/admin/reporting/class-customer-reports-table.php:95
+#: includes/admin/reporting/class-export-customers.php:66
+#: includes/admin/reporting/class-export-customers.php:75
+#: templates/shortcode-receipt.php:111
+#@ edd
+msgid "Name"
+msgstr "Namn"
+
+#: includes/admin/discounts/add-discount.php:26
+#: includes/admin/discounts/edit-discount.php:36
+#@ edd
+msgid "The name of this discount"
+msgstr "Namnet på denna rabatt"
+
+#: includes/admin/discounts/add-discount.php:31
+#: includes/admin/discounts/class-discount-codes-table.php:149
+#: includes/admin/discounts/edit-discount.php:41
+#@ edd
+msgid "Code"
+msgstr "Kod"
+
+#: includes/admin/discounts/add-discount.php:35
+#: includes/admin/discounts/edit-discount.php:45
+#@ edd
+msgid "Enter a code for this discount, such as 10PERCENT"
+msgstr "Ange en kod för denna rabatt, såsom 10PROCENT"
+
+#: includes/admin/discounts/add-discount.php:40
+#: includes/admin/discounts/edit-discount.php:50
+#@ edd
+msgid "Type"
+msgstr "Typ"
+
+#: includes/admin/discounts/add-discount.php:44
+#: includes/admin/discounts/edit-discount.php:54
+#@ edd
+msgid "Percentage"
+msgstr "Procent"
+
+#: includes/admin/discounts/add-discount.php:45
+#: includes/admin/discounts/edit-discount.php:55
+#@ edd
+msgid "Flat amount"
+msgstr "Bestämd Summa"
+
+#: includes/admin/discounts/add-discount.php:47
+#: includes/admin/discounts/edit-discount.php:57
+#@ edd
+msgid "The kind of discount to apply for this discount."
+msgstr "Typ av rabatt  som gäller för denna rabatt."
+
+#: includes/admin/discounts/add-discount.php:52
+#: includes/admin/discounts/class-discount-codes-table.php:150
+#: includes/admin/discounts/edit-discount.php:62
+#: includes/admin/payments/class-payments-table.php:200
+#: includes/admin/reporting/class-export-payments.php:69
+#: templates/history-purchases.php:11
+#@ edd
+msgid "Amount"
+msgstr "Summa"
+
+#: includes/admin/discounts/add-discount.php:56
+#: includes/admin/discounts/edit-discount.php:66
+#@ edd
+msgid "The amount of this discount code."
+msgstr "Summan av denna rabatt."
+
+#: includes/admin/discounts/add-discount.php:61
+#: includes/admin/discounts/edit-discount.php:71
+#, php-format
+#@ edd
+msgid "%s Requirements"
+msgstr "%s Krävs"
+
+#: includes/admin/discounts/add-discount.php:66
+#: includes/admin/discounts/edit-discount.php:76
+#, php-format
+#@ edd
+msgid "All Selected %s"
+msgstr "Alla Valda %s"
+
+#: includes/admin/discounts/add-discount.php:67
+#: includes/admin/discounts/edit-discount.php:77
+#, php-format
+#@ edd
+msgid "Any Selected %s"
+msgstr "De Valda %s"
+
+#: includes/admin/discounts/add-discount.php:69
+#: includes/admin/discounts/edit-discount.php:79
+#@ edd
+msgid "Condition"
+msgstr "Villkor"
+
+#: includes/admin/discounts/add-discount.php:71
+#: includes/admin/discounts/edit-discount.php:81
+#, php-format
+#@ edd
+msgid "Choose one or more %s"
+msgstr "Välj en eller fler %s"
+
+#: includes/admin/discounts/add-discount.php:81
+#: includes/admin/discounts/edit-discount.php:91
+#, php-format
+#@ edd
+msgid "%s required to be purchased for this discount."
+msgstr "%s-köp krävs för att denna rabatt ska gälla."
+
+#: includes/admin/discounts/add-discount.php:86
+#: includes/admin/discounts/edit-discount.php:95
+#, php-format
+#@ edd
+msgid "Apply discount only to selected %s?"
+msgstr "Applicera rabatt endast på valda% s?"
+
+#: includes/admin/discounts/add-discount.php:93
+#: includes/admin/discounts/edit-discount.php:102
+#@ edd
+msgid "Start date"
+msgstr "Startdatum"
+
+#: includes/admin/discounts/add-discount.php:97
+#: includes/admin/discounts/edit-discount.php:106
+#@ edd
+msgid "Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date."
+msgstr "Ange startdatum för denna rabattkod i formatet mm/dd/åååå. För inget startdatum, lämna tomt. Om angett, kan rabatten endast användas efter eller på detta datum."
+
+#: includes/admin/discounts/add-discount.php:102
+#: includes/admin/discounts/edit-discount.php:111
+#@ edd
+msgid "Expiration date"
+msgstr "Utgångsdatum"
+
+#: includes/admin/discounts/add-discount.php:106
+#: includes/admin/discounts/edit-discount.php:115
+#@ edd
+msgid "Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank"
+msgstr "Ange utgångsdatum för denna rabattkod i formatet mm/dd/åååå. För inget utgångsdatum, lämna tomt"
+
+#: includes/admin/discounts/add-discount.php:111
+#: includes/admin/discounts/edit-discount.php:129
+#@ edd
+msgid "Minimum Amount"
+msgstr "Minsta Summa"
+
+#: includes/admin/discounts/add-discount.php:115
+#: includes/admin/discounts/edit-discount.php:133
+#@ edd
+msgid "The minimum amount that must be purchased before this discount can be used. Leave blank for no minimum."
+msgstr "Minsta möjliga belopp för köp som måste uppnås innan denna rabatt kan användas. Lämna tomt för inget minsta."
+
+#: includes/admin/discounts/add-discount.php:120
+#: includes/admin/discounts/class-discount-codes-table.php:152
+#: includes/admin/discounts/edit-discount.php:120
+#@ edd
+msgid "Max Uses"
+msgstr "Max Användningar"
+
+#: includes/admin/discounts/add-discount.php:124
+#: includes/admin/discounts/edit-discount.php:124
+#@ edd
+msgid "The maximum number of times this discount can be used. Leave blank for unlimited."
+msgstr "Det maximala antalet gånger denna rabatt kan användas. Lämna tomt för obegränsad."
+
+#: includes/admin/discounts/add-discount.php:129
+#: includes/admin/discounts/edit-discount.php:150
+#@ edd
+msgid "Use Once Per Customer"
+msgstr "Använd en gång per kund"
+
+#: includes/admin/discounts/add-discount.php:133
+#: includes/admin/discounts/edit-discount.php:154
+#@ edd
+msgid "Limit this discount to a single-use per customer?"
+msgstr "Begränsa denna rabatt till en enda användning per kund?"
+
+#: includes/admin/discounts/add-discount.php:142
+#@ edd
+msgid "Add Discount Code"
+msgstr "Skapa Rabattkod"
+
+#: includes/admin/discounts/class-discount-codes-table.php:129
+#: includes/admin/payments/class-payments-table.php:175
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:290
+#: includes/admin/reporting/class-sales-logs-list-table.php:254
+#@ edd
+msgid "All"
+msgstr "Alla"
+
+#: includes/admin/discounts/class-discount-codes-table.php:130
+#: includes/admin/discounts/edit-discount.php:142
+#@ edd
+msgid "Active"
+msgstr "Aktiv"
+
+#: includes/admin/discounts/class-discount-codes-table.php:131
+#: includes/admin/discounts/edit-discount.php:143
+#@ edd
+msgid "Inactive"
+msgstr "Inaktiv"
+
+#: includes/admin/discounts/class-discount-codes-table.php:147
+#: includes/admin/payments/class-payments-table.php:197
+#: includes/admin/reporting/class-export-payments.php:63
+#: includes/admin/reporting/class-export.php:69
+#: templates/history-purchases.php:9
+#@ edd
+msgid "ID"
+msgstr "ID"
+
+#: includes/admin/discounts/class-discount-codes-table.php:151
+#@ edd
+msgid "Uses"
+msgstr "Användningar"
+
+#: includes/admin/discounts/class-discount-codes-table.php:153
+#@ edd
+msgid "Start Date"
+msgstr "Startdatum"
+
+#: includes/admin/discounts/class-discount-codes-table.php:154
+#@ edd
+msgid "Expiration"
+msgstr "Slutdag"
+
+#: includes/admin/discounts/class-discount-codes-table.php:155
+#: includes/admin/discounts/edit-discount.php:138
+#: includes/admin/payments/class-payments-table.php:203
+#: includes/admin/reporting/class-export-payments.php:75
+#@ edd
+msgid "Status"
+msgstr "Status"
+
+#: includes/admin/discounts/class-discount-codes-table.php:206
+#: includes/admin/payments/class-payments-table.php:274
+#@ edd
+msgid "Edit"
+msgstr "Redigera"
+
+#: includes/admin/discounts/class-discount-codes-table.php:209
+#@ edd
+msgid "Deactive"
+msgstr "Avaktivera"
+
+#: includes/admin/discounts/class-discount-codes-table.php:211
+#@ edd
+msgid "Activate"
+msgstr "Aktivera"
+
+#: includes/admin/discounts/class-discount-codes-table.php:213
+#: includes/admin/discounts/class-discount-codes-table.php:245
+#: includes/admin/payments/class-payments-table.php:279
+#: includes/admin/payments/class-payments-table.php:336
+#: includes/admin/payments/edit-payment.php:102
+#@ edd
+msgid "Delete"
+msgstr "Radera"
+
+#: includes/admin/discounts/class-discount-codes-table.php:329
+#@ edd
+msgid "unlimited"
+msgstr "obegränsat"
+
+#: includes/admin/discounts/class-discount-codes-table.php:331
+#@ edd
+msgid "Unlimited"
+msgstr "Obegränsat"
+
+#: includes/admin/discounts/class-discount-codes-table.php:339
+#@ edd
+msgid "No start date"
+msgstr "Inget startdatum"
+
+#: includes/admin/discounts/class-discount-codes-table.php:343
+#@ edd
+msgid "Expired"
+msgstr "Löpt ut"
+
+#: includes/admin/discounts/class-discount-codes-table.php:345
+#@ edd
+msgid "No expiration"
+msgstr "Inget utgångsdatum"
+
+#: includes/admin/discounts/contextual-help.php:25
+#: includes/admin/downloads/contextual-help.php:28
+#: includes/admin/payments/contextual-help.php:29
+#: includes/admin/reporting/contextual-help.php:29
+#: includes/admin/settings/contextual-help.php:29
+#@ edd
+msgid "For more information:"
+msgstr "För mer information:"
+
+#: includes/admin/discounts/contextual-help.php:26
+#: includes/admin/downloads/contextual-help.php:29
+#: includes/admin/payments/contextual-help.php:30
+#: includes/admin/reporting/contextual-help.php:30
+#: includes/admin/settings/contextual-help.php:30
+#, php-format
+#@ edd
+msgid "Visit the <a href=\"%s\">documentation</a> on the Easy Digital Downloads website."
+msgstr "Besök <a href=\"%s\">dokumentationen</a> på Easy Digital Downloads hemsida."
+
+#: includes/admin/discounts/contextual-help.php:28
+#: includes/admin/downloads/contextual-help.php:31
+#: includes/admin/payments/contextual-help.php:32
+#: includes/admin/reporting/contextual-help.php:32
+#: includes/admin/settings/contextual-help.php:32
+#, php-format
+#@ edd
+msgid "<a href=\"%s\">Post an issue</a> on <a href=\"%s\">GitHub</a>. View <a href=\"%s\">extensions</a> or <a href=\"%s\">themes</a>."
+msgstr "<a href=\"%s\">Skicka en fråga</a> på <a href=\"%s\">GitHub</a>. Visa <a href=\"%s\">tillägg</a> eller <a href=\"%s\">teman</a>."
+
+#: includes/admin/discounts/contextual-help.php:38
+#: includes/admin/settings/contextual-help.php:42
+#: includes/admin/settings/display-settings.php:33
+#: includes/admin/settings/settings.php:34
+#@ edd
+msgid "General"
+msgstr "Allmänt"
+
+#: includes/admin/discounts/contextual-help.php:40
+#@ edd
+msgid "Discount codes allow you to offer buyers special discounts by having them enter predefined codes during checkout."
+msgstr "Rabattkoder du kan erbjuda till kunder för särskilda rabatter, genom att låta dem ange fördefinierade koder i kassan."
+
+#: includes/admin/discounts/contextual-help.php:41
+#@ edd
+msgid "Discount codes that are set to \"inactive\" cannot be redeemed."
+msgstr "Inaktiva rabattkoder kan inte lösas in."
+
+#: includes/admin/discounts/contextual-help.php:42
+#@ edd
+msgid "Discount codes are setup to only be used only one time by each customer. If a customer attempts to use a code a second time, they will be given an error."
+msgstr "Rabattkoder är inställda för att bara användas en enda gång för varje kund. Om en kund försöker använda en kod en andra gång, kommer de att få ett felmeddelande."
+
+#: includes/admin/discounts/contextual-help.php:47
+#@ edd
+msgid "Adding Discounts"
+msgstr "Skapar Rabatter"
+
+#: includes/admin/discounts/contextual-help.php:49
+#@ edd
+msgid "You can create any number of discount codes easily from this page."
+msgstr "Du kan enkelt skapa ett obegränsat antal rabattkoder från denna sida. "
+
+#: includes/admin/discounts/contextual-help.php:50
+#@ edd
+msgid "Discount codes have several options:"
+msgstr "Rabattkoder har flera alternativ:"
+
+#: includes/admin/discounts/contextual-help.php:52
+#@ edd
+msgid "<strong>Name</strong> - this is the name given to the discount. Used primarily for administrative purposes."
+msgstr "<strong>Namn</strong> - det här är namnet du gett rabatten. Används primärt i administrativa syften. "
+
+#: includes/admin/discounts/contextual-help.php:53
+#@ edd
+msgid "<strong>Code</strong> - this is the unique code that customers will enter during checkout to redeem the code."
+msgstr "<strong>Kod</strong> - det här är en unik kod som dina kunder kan ange i kassan för att lösa in rabatten."
+
+#: includes/admin/discounts/contextual-help.php:54
+#@ edd
+msgid "<strong>Type</strong> - this is the type of discount this code awards."
+msgstr "<strong>Typ</strong> - typen av rabatt."
+
+#: includes/admin/discounts/contextual-help.php:55
+#@ edd
+msgid "<strong>Amount</strong> - this discount amount provided by this code. For percentage based discounts, enter a number such as 70 for 70%. Do not enter a percent sign."
+msgstr "<strong>Summa</strong> - rabatt-beloppet för denna kod. För procentbaserade rabatter, ange ett nummer som 70 för 70%. Ange inte ett procenttecken."
+
+#: includes/admin/discounts/contextual-help.php:56
+#@ edd
+msgid "<strong>Requirements</strong> - This allows you to select the product(s) that are required to be purchased in order for a discount to be applied."
+msgstr "<strong>Krav</strong> - Detta låter dig välja produkt(er) som krävs i köp för att en rabatt skall tillämpas."
+
+#: includes/admin/discounts/contextual-help.php:57
+#@ edd
+msgid "- <strong>Condition</strong> - This lets you set whether all selected products must be in the cart, or just a minimum of one."
+msgstr "- <strong>Villkor</strong> - Detta låter dig ställa in om alla valda produkter måste vara i kundvagnen, eller bara minst en."
+
+#: includes/admin/discounts/contextual-help.php:58
+#@ edd
+msgid "- <strong>Apply discount only to selected Downloads?</strong> - If this box is checked, only the prices of the required products will be discounted. If left unchecked, the discount will apply to all products in the cart."
+msgstr "- <strong>Applicera rabatt endast till utvalda nedladdningar</strong> -? Om denna ruta är markerad, kommer endast priserna på de krävda produkterna diskonteras. Om de lämnas därhän, kommer rabatten gäller alla produkter i kundvagnen."
+
+#: includes/admin/discounts/contextual-help.php:59
+#@ edd
+msgid "<strong>Start Date</strong> - this is the date that this code becomes available. If a customer attempts to redeem the code prior to this date, they will be given an error. This is optional."
+msgstr "<strong>Startdatum</strong> - Detta är det datum då denna kod blir tillgänglig. Om en kund försöker lösa in koden före detta datum, kommer de att få ett felmeddelande. Detta är valfritt."
+
+#: includes/admin/discounts/contextual-help.php:60
+#@ edd
+msgid "<strong>Expiration Date</strong> - this is the end date for the discount. After this date, the code will no longer be able to be used. This is optional."
+msgstr "<strong>Förfallodatum</strong> - detta är slutdatumet för rabatten. Efter detta datum kommer koden inte längre kunna användas. Detta är valfritt."
+
+#: includes/admin/discounts/contextual-help.php:61
+#@ edd
+msgid "<strong>Minimum Amount</strong> - this is the minimum purchase amount required to use this code. If a customer has less than this amount in their cart, they will be given an error. This is optional."
+msgstr "<strong>Minsta belopp</strong> - detta är det lägsta belopp som krävs för att använda den här koden. Om en kund har mindre än detta belopp i sin vagn, kommer de inte att att få rabatten och ett meddelande visas. Detta är valfritt."
+
+#: includes/admin/discounts/contextual-help.php:62
+#@ edd
+msgid "<strong>Max Uses</strong> - this is the maximum number of times this discount can be redeemed. Once this number is reached, no more customers will be allowed to use it."
+msgstr "<strong>Max Användningar</strong> - detta är det maximala antalet gånger denna rabatt kan lösas in. När detta antal är uppnått, kommer inga fler kunder att få använda den."
+
+#: includes/admin/discounts/discount-actions.php:88
+#@ edd
+msgid "Trying to cheat or something?"
+msgstr "Försöker du fuska eller något?"
+
+#: includes/admin/discounts/discount-actions.php:88
+#: includes/admin/discounts/edit-discount.php:16
+#: includes/admin/payments/view-order-details.php:22
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:137
+#: includes/admin/reporting/class-export.php:173
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:121
+#: includes/download-functions.php:856
+#: includes/download-functions.php:860
+#: includes/emails/template.php:408
+#: includes/error-tracking.php:36
+#: includes/query-filters.php:52
+#@ edd
+msgid "Error"
+msgstr "Fel"
+
+#: includes/admin/discounts/discount-codes.php:36
+#: includes/admin/payments/payments-history.php:40
+#: includes/admin/reporting/logs.php:52
+#: includes/admin/reporting/logs.php:102
+#@ edd
+msgid "Search"
+msgstr "Sök"
+
+#: includes/admin/discounts/edit-discount.php:16
+#@ edd
+msgid "Something went wrong."
+msgstr "Något gick fel."
+
+#: includes/admin/discounts/edit-discount.php:25
+#: includes/post-types.php:100
+#@ edd
+msgid "Edit Discount"
+msgstr "Redigera Rabatt"
+
+#: includes/admin/discounts/edit-discount.php:25
+#: includes/admin/payments/edit-payment.php:19
+#@ edd
+msgid "Go Back"
+msgstr "Gå Tillbaka"
+
+#: includes/admin/discounts/edit-discount.php:145
+#@ edd
+msgid "The status of this discount code."
+msgstr "Statusen på denna rabattkod."
+
+#: includes/admin/discounts/edit-discount.php:165
+#@ edd
+msgid "Update Discount Code"
+msgstr "Uppdatera Rabattkod"
+
+#: includes/admin/downloads/contextual-help.php:41
+#@ edd
+msgid "Download Configuration"
+msgstr "Nedladdningskonfiguration"
+
+#: includes/admin/downloads/contextual-help.php:43
+#@ edd
+msgid "<strong>Pricing Options</strong> - Either define a single fixed price, or enable variable pricing. By enabling variable pricing, multiple download options and prices can be configured."
+msgstr "<strong>Prissättningsalternativ</strong> - definiera ett fast pris, eller aktivera en rörlig prissättning. Genom att möjliggöra rörlig prissättning, kan multipla nedladdningsalternativ och priser konfigureras."
+
+#: includes/admin/downloads/contextual-help.php:45
+#@ edd
+msgid "<strong>File Downloads</strong> - Define download file names and their respsective file URL. Multiple files can be assigned to a single price, or variable prices."
+msgstr "<strong>Filhämtningar</strong> - Definiera nedladdningens filnamn och dess URL. Flera filer kan tilldelas ett enda pris, eller rörliga priser."
+
+#: includes/admin/downloads/contextual-help.php:47
+#@ edd
+msgid "<strong>File Download Limit</strong> - Define how many times customers are allowed to download their purchased files. Leave at 0 for unlimited. Resending the purchase receipt will permit the customer one additional download if their limit has already been reached."
+msgstr "<strong>Begränsa Filhämtningar</strong> - Ange hur många gånger kunder får hämta sina köpta filer. Sätt till 0 för obegränsat. Återsändning av kvitto kommer att tillåta kunden en extra hämtning om deras gräns redan har nåtts."
+
+#: includes/admin/downloads/contextual-help.php:49
+#@ edd
+msgid "<strong>Accounting Options</strong> - If enabled, define an individual SKU or product number for this download."
+msgstr "<strong>Redovisning Alternativ</strong> - Om aktiverad, definiera ett enskilt artikelnummer eller produktnummer för denna hämtning."
+
+#: includes/admin/downloads/contextual-help.php:51
+#@ edd
+msgid "<strong>Button Options</strong> - Disable the automatic output the purchase button. If disabled, no button will be added to the download page unless the <code>[purchase_link]</code> shortcode is used."
+msgstr "<strong>Knapp Alternativ</strong> - inaktivera automatisk köp-knapp. Om inaktiverad, kommer ingen knapp att läggas till nedladdningssidan såvida <code>[purchase_link]</code> kortkod används."
+
+#: includes/admin/downloads/contextual-help.php:56
+#: includes/admin/downloads/metabox.php:28
+#@ edd
+msgid "Product Notes"
+msgstr "Anteckningar för Produkt"
+
+#: includes/admin/downloads/contextual-help.php:57
+#@ edd
+msgid "Special notes or instructions for the product. These notes will be added to the purchase receipt, and additionaly may be used by some extensions or themes on the frontend."
+msgstr "Särskilda anmärkningar eller instruktioner för produkten. Dessa anteckningar kommer att läggas till på kvittot, och kan användas av vissa tillägg eller teman på frontend."
+
+#: includes/admin/downloads/contextual-help.php:66
+#@ edd
+msgid "Purchase Shortcode"
+msgstr "Köp Shortcode"
+
+#: includes/admin/downloads/contextual-help.php:68
+#@ edd
+msgid "<strong>Purchase Shortcode</strong> - If the automatic output of the purchase button has been disabled via the Download Configuration box, a shortcode can be used to output the button or link."
+msgstr "<strong>Köp Shortcode</strong> - Om den automatiska produktionen av köp-knappen har avaktiverats via Nedladdningskonfigurations-rutan, kan en shortcode användas för att visa knappen eller länken."
+
+#: includes/admin/downloads/contextual-help.php:71
+#@ edd
+msgid "The ID of a specific download to purchase."
+msgstr "ID för ett en specifik nedladdning att köpa."
+
+#: includes/admin/downloads/contextual-help.php:72
+#@ edd
+msgid "Whether to show the price on the purchase button. 1 to show the price, 0 to disable it."
+msgstr "Om priset på köp-knappen ska visas eller inte. 1 för att visa priset, 0 för att inte använda det."
+
+#: includes/admin/downloads/contextual-help.php:73
+#@ edd
+msgid "The text to be displayed on the button or link."
+msgstr "Den text som ska visas på knappen eller länken."
+
+#: includes/admin/downloads/contextual-help.php:74
+#@ edd
+msgid "<em>button</em> | <em>text</em> - The style of the purchase link."
+msgstr "<em>button</em> | <em>text</em> - Stilen på länken för köp."
+
+#: includes/admin/downloads/contextual-help.php:76
+#@ edd
+msgid "One or more custom CSS classes you want applied to the button."
+msgstr "En eller flera CSS-klasser som du vill använda på knappen."
+
+#: includes/admin/downloads/contextual-help.php:78
+#, php-format
+#@ edd
+msgid "For more information, see <a href=\"%s\">using Shortcodes</a> on the WordPress.org Codex or <a href=\"%s\">Easy Digital Downloads Documentation</a>"
+msgstr "För mer information, se <a href=\"%s\">använda Shortcodes</a> på WordPress.org Codex eller <a href=\"%s\">Easy Digital Downloads Documentation</a>"
+
+#: includes/admin/downloads/dashboard-columns.php:29
+#: includes/admin/reporting/pdf-reports.php:64
+#: includes/post-types.php:203
+#: includes/widgets.php:144
+#@ edd
+msgid "Categories"
+msgstr "Kategorier"
+
+#: includes/admin/downloads/dashboard-columns.php:30
+#: includes/admin/reporting/pdf-reports.php:65
+#: includes/post-types.php:230
+#: includes/widgets.php:145
+#@ edd
+msgid "Tags"
+msgstr "Etiketter"
+
+#: includes/admin/downloads/dashboard-columns.php:31
+#: includes/admin/downloads/dashboard-columns.php:222
+#: includes/admin/downloads/metabox.php:249
+#: includes/admin/reporting/pdf-reports.php:63
+#: templates/shortcode-receipt.php:115
+#@ edd
+msgid "Price"
+msgstr "Pris"
+
+#: includes/admin/downloads/dashboard-columns.php:32
+#: includes/admin/reporting/class-download-reports-table.php:99
+#: includes/admin/reporting/graphing.php:143
+#: includes/admin/reporting/logs.php:125
+#: includes/admin/reporting/pdf-reports.php:214
+#@ edd
+msgid "Sales"
+msgstr "Sålda"
+
+#: includes/admin/downloads/dashboard-columns.php:34
+#@ edd
+msgid "Purchase Short Code"
+msgstr "Köp"
+
+#: includes/admin/downloads/dashboard-columns.php:35
+#: includes/admin/payments/class-payments-table.php:201
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:94
+#: includes/admin/reporting/class-export-download-history.php:64
+#: includes/admin/reporting/class-export-payments.php:73
+#: includes/admin/reporting/class-export.php:70
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:129
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:124
+#: includes/admin/reporting/class-sales-logs-list-table.php:99
+#: templates/history-purchases.php:10
+#: templates/shortcode-receipt.php:29
+#@ edd
+msgid "Date"
+msgstr "Datum"
+
+#: includes/admin/downloads/dashboard-columns.php:61
+#: includes/admin/thickbox.php:63
+#: includes/checkout/template.php:561
+#: includes/scripts.php:57
+#: includes/shortcodes.php:31
+#: includes/template-functions.php:61
+#@ edd
+msgid "Purchase"
+msgstr "Köp"
+
+#: includes/admin/downloads/dashboard-columns.php:184
+#@ edd
+msgid "Show all categories"
+msgstr "Visa alla kategorier"
+
+#: includes/admin/downloads/dashboard-columns.php:195
+#@ edd
+msgid "Show all tags"
+msgstr "Visa alla etiketter"
+
+#: includes/admin/downloads/dashboard-columns.php:220
+#, php-format
+#@ edd
+msgid "%s Configuration"
+msgstr "%s Konfiguration"
+
+#: includes/admin/downloads/metabox.php:25
+#, php-format
+#@ edd
+msgid "%1$s Configuration"
+msgstr "%1$s Konfiguration"
+
+#: includes/admin/downloads/metabox.php:32
+#, php-format
+#@ edd
+msgid "%1$s Stats"
+msgstr "%1$s Statistik"
+
+#: includes/admin/downloads/metabox.php:213
+#@ edd
+msgid "Pricing Options:"
+msgstr "Prisalternativ:"
+
+#: includes/admin/downloads/metabox.php:219
+#@ edd
+msgid "Enable variable pricing"
+msgstr "Aktivera variabelt pris"
+
+#: includes/admin/downloads/metabox.php:239
+#@ edd
+msgid "Enable multi option purchase mode. Leave unchecked to only permit a single price option to be purchased"
+msgstr "Aktivera köpalternativ för multi-läge. Lämna kryssrutan tom för att endast tillåta ett enda köpalternativ."
+
+#: includes/admin/downloads/metabox.php:248
+#: includes/admin/downloads/metabox.php:316
+#@ edd
+msgid "Option Name"
+msgstr "Alternativets Namn"
+
+#: includes/admin/downloads/metabox.php:277
+#@ edd
+msgid "Add New Price"
+msgstr "Skapa Nytt Pris"
+
+#: includes/admin/downloads/metabox.php:342
+#@ edd
+msgid "Product Type Options:"
+msgstr "Alternativ för Produkttyper:"
+
+#: includes/admin/downloads/metabox.php:346
+#@ edd
+msgid "Default"
+msgstr "Standard"
+
+#: includes/admin/downloads/metabox.php:347
+#@ edd
+msgid "Bundle"
+msgstr "Paket"
+
+#: includes/admin/downloads/metabox.php:349
+#@ edd
+msgid "Select a product type"
+msgstr "Välj en produkttyp"
+
+#: includes/admin/downloads/metabox.php:369
+#, php-format
+#@ edd
+msgid "Bundled %s:"
+msgstr "Paket %s:"
+
+#: includes/admin/downloads/metabox.php:376
+#, php-format
+#@ edd
+msgid "Select the %s to bundle with this %s"
+msgstr "Välj %s att paketera med %s"
+
+#: includes/admin/downloads/metabox.php:399
+#: includes/post-types.php:30
+#: includes/post-types.php:68
+#: includes/post-types.php:98
+#@ edd
+msgid "Add New"
+msgstr "Skapa Ny"
+
+#: includes/admin/downloads/metabox.php:455
+#@ edd
+msgid "File Downloads:"
+msgstr "Nedladdningsbara Filer:"
+
+#: includes/admin/downloads/metabox.php:467
+#: includes/admin/downloads/metabox.php:544
+#@ edd
+msgid "File Name"
+msgstr "Filens Namn:"
+
+#: includes/admin/downloads/metabox.php:468
+#@ edd
+msgid "File URL"
+msgstr "Filens URL"
+
+#: includes/admin/downloads/metabox.php:469
+#@ edd
+msgid "Price Assignment"
+msgstr "Prisanvisning:"
+
+#: includes/admin/downloads/metabox.php:497
+#@ edd
+msgid "Add New File"
+msgstr "Skapa Ny Fil"
+
+#: includes/admin/downloads/metabox.php:549
+#@ edd
+msgid "http://"
+msgstr "http://"
+
+#: includes/admin/downloads/metabox.php:552
+#@ edd
+msgid "Insert"
+msgstr "Infoga"
+
+#: includes/admin/downloads/metabox.php:552
+#@ edd
+msgid "Upload a File"
+msgstr "Ladda upp en fil"
+
+#: includes/admin/downloads/metabox.php:559
+#@ edd
+msgid "All Prices"
+msgstr "Alla Priser"
+
+#: includes/admin/downloads/metabox.php:590
+#@ edd
+msgid "File Download Limit:"
+msgstr "Begränsning Nedladdningsbar Fil:"
+
+#: includes/admin/downloads/metabox.php:593
+#@ edd
+msgid "The maximum number of times a buyer can download each file. Leave blank or set to 0 for unlimited"
+msgstr "Det maximala antalet gånger en kund kan köpa varje enskild fil. Lämna blankt eller sätt till 0 för obegränsat."
+
+#: includes/admin/downloads/metabox.php:616
+#@ edd
+msgid "Accounting Options:"
+msgstr "Alternativ för Redovisning:"
+
+#: includes/admin/downloads/metabox.php:620
+#, php-format
+#@ edd
+msgid "Enter an SKU for this %s."
+msgstr "Ange ett artikelnummer för denna %s."
+
+#: includes/admin/downloads/metabox.php:638
+#@ edd
+msgid "Button Options:"
+msgstr "Alternativ för Knapp:"
+
+#: includes/admin/downloads/metabox.php:642
+#@ edd
+msgid "Disable the automatic output of the purchase button"
+msgstr "Inaktivera automatisk visning av knapp för köp"
+
+#: includes/admin/downloads/metabox.php:704
+#@ edd
+msgid "Special notes or instructions for this product. These notes will be added to the purchase receipt."
+msgstr "Särskilda instruktioner för denna produkt. Dessa instruktioner kommer att visas på kvittot."
+
+#: includes/admin/downloads/metabox.php:727
+#@ edd
+msgid "Sales:"
+msgstr "Sålda:"
+
+#: includes/admin/downloads/metabox.php:729
+#@ edd
+msgid "View Sales Log"
+msgstr "Visa Säljlogg"
+
+#: includes/admin/downloads/metabox.php:733
+#@ edd
+msgid "Earnings:"
+msgstr "Omsättning:"
+
+#: includes/admin/downloads/metabox.php:740
+#@ edd
+msgid "View File Download Log"
+msgstr "Visa Logg För Nedladdningsbar Fil"
+
+#: includes/admin/payments/class-payments-table.php:176
+#@ edd
+msgid "Completed"
+msgstr "Slutförd"
+
+#: includes/admin/payments/class-payments-table.php:177
+#: includes/payments/functions.php:391
+#@ edd
+msgid "Pending"
+msgstr "Väntar"
+
+#: includes/admin/payments/class-payments-table.php:178
+#: includes/payments/functions.php:393
+#@ edd
+msgid "Refunded"
+msgstr "Återbetald"
+
+#: includes/admin/payments/class-payments-table.php:179
+#: includes/payments/functions.php:396
+#@ edd
+msgid "Revoked"
+msgstr "Återkallad"
+
+#: includes/admin/payments/class-payments-table.php:180
+#: includes/payments/functions.php:394
+#@ edd
+msgid "Failed"
+msgstr "Misslyckades"
+
+#: includes/admin/payments/class-payments-table.php:181
+#: includes/payments/functions.php:395
+#@ edd
+msgid "Abandoned"
+msgstr "Övergivna"
+
+#: includes/admin/payments/class-payments-table.php:198
+#: includes/admin/reporting/class-customer-reports-table.php:96
+#: includes/admin/reporting/class-export-customers.php:67
+#: includes/admin/reporting/class-export-customers.php:78
+#: includes/admin/reporting/class-export-payments.php:64
+#: includes/checkout/template.php:302
+#: includes/checkout/template.php:304
+#@ edd
+msgid "Email"
+msgstr "E-post"
+
+#: includes/admin/payments/class-payments-table.php:199
+#: templates/history-purchases.php:12
+#@ edd
+msgid "Details"
+msgstr "Detaljer"
+
+#: includes/admin/payments/class-payments-table.php:202
+#: includes/admin/reporting/class-export-payments.php:74
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:125
+#: includes/admin/reporting/class-sales-logs-list-table.php:95
+#@ edd
+msgid "User"
+msgstr "Användare"
+
+#: includes/admin/payments/class-payments-table.php:277
+#@ edd
+msgid "Resend Purchase Receipt"
+msgstr "Återsänd Kvitto för Köp"
+
+#: includes/admin/payments/class-payments-table.php:318
+#: includes/admin/payments/class-payments-table.php:320
+#: includes/admin/reporting/class-export-payments.php:173
+#@ edd
+msgid "guest"
+msgstr "gäst"
+
+#: includes/admin/payments/contextual-help.php:42
+#@ edd
+msgid "Overview"
+msgstr "Översikt"
+
+#: includes/admin/payments/contextual-help.php:44
+#@ edd
+msgid "This screen provides access to all of your store's transactions."
+msgstr "Denna ruta ger dig tillgång till alla transaktioner i din butik."
+
+#: includes/admin/payments/contextual-help.php:45
+#@ edd
+msgid "Payments can be searched by email address, user name, or filtered by status (completed, pending, etc.)"
+msgstr "Du kan söka bland köp genom e-post, användarnamn eller filtrera efter status (slutförda, väntande, etc.)"
+
+#: includes/admin/payments/contextual-help.php:46
+#@ edd
+msgid "You also have the option to bulk delete payment should you wish."
+msgstr "Du kan också välja att radera flera köp i ett enda svep om du önskar."
+
+#: includes/admin/payments/contextual-help.php:51
+#: includes/post-types.php:74
+#@ edd
+msgid "Search Payments"
+msgstr "Sök Köp"
+
+#: includes/admin/payments/contextual-help.php:53
+#@ edd
+msgid "The payment history can be searched in several different ways:"
+msgstr "Du kan söka i köphistoriken på flera olika vis:"
+
+#: includes/admin/payments/contextual-help.php:55
+#: includes/admin/reporting/contextual-help.php:64
+#@ edd
+msgid "You can enter the customer's email address"
+msgstr "Du kan ange kundens e-post"
+
+#: includes/admin/payments/contextual-help.php:56
+#@ edd
+msgid "You can enter the customer's name"
+msgstr "Du kan ange kundens namn"
+
+#: includes/admin/payments/contextual-help.php:57
+#@ edd
+msgid "You can enter the 32-character purchase key"
+msgstr "Du kan ange det 32 tecken långa referensnumret"
+
+#: includes/admin/payments/contextual-help.php:63
+#: includes/admin/payments/view-order-details.php:115
+#@ edd
+msgid "Order Details"
+msgstr "Order Detaljer"
+
+#: includes/admin/payments/contextual-help.php:65
+#@ edd
+msgid "Each payment can be further inspected by clicking the corresponding <em>View Order Details</em> link. This will provide more information including:"
+msgstr "Varje enskilt köp kan inspekteras ytterligare genom att klicka på länken <em>Visa Order Detaljer</em>. Det här ger dig mer information såsom:"
+
+#: includes/admin/payments/contextual-help.php:68
+#@ edd
+msgid "The file associated with the purchase."
+msgstr "Filen associerad med ditt köp."
+
+#: includes/admin/payments/contextual-help.php:69
+#@ edd
+msgid "The exact date and time the payment was completed."
+msgstr "Exakt datum då köpet ägde rum och slutfördes."
+
+#: includes/admin/payments/contextual-help.php:70
+#@ edd
+msgid "If a coupon or discount was used during the checkout process."
+msgstr "Om en rabatt användes i kassan."
+
+#: includes/admin/payments/contextual-help.php:71
+#@ edd
+msgid "The buyer's name."
+msgstr "Köparens namn."
+
+#: includes/admin/payments/contextual-help.php:72
+#@ edd
+msgid "The buyer's email address."
+msgstr "Köparens e-post."
+
+#: includes/admin/payments/contextual-help.php:73
+#@ edd
+msgid "Any customer-specific notes related to the payment."
+msgstr "Eventuella kundspecifika noteringar som rör betalningen."
+
+#: includes/admin/payments/contextual-help.php:74
+#@ edd
+msgid "The name of the payment gateway used to complete the payment."
+msgstr "Namnet på det betalningssystem som användes för att slutföra köpet."
+
+#: includes/admin/payments/contextual-help.php:75
+#@ edd
+msgid "A unique key used to identify the payment."
+msgstr "Ett unikt nummer för att identifiera ett köp."
+
+#: includes/admin/payments/edit-payment.php:19
+#: includes/admin/payments/payments-history.php:82
+#: includes/post-types.php:70
+#@ edd
+msgid "Edit Payment"
+msgstr "Redigera Köp"
+
+#: includes/admin/payments/edit-payment.php:26
+#@ edd
+msgid "Buyer's Email"
+msgstr "Köparens E-post"
+
+#: includes/admin/payments/edit-payment.php:30
+#@ edd
+msgid "If needed, you can update the buyer's email here."
+msgstr "Om det behövs så kan du uppdatera köparens e-post här."
+
+#: includes/admin/payments/edit-payment.php:35
+#@ edd
+msgid "Buyer's User ID"
+msgstr "Köparens Användar-ID"
+
+#: includes/admin/payments/edit-payment.php:39
+#@ edd
+msgid "If needed, you can update the buyer's WordPress user ID here."
+msgstr "Om det behövs så kan du uppdatera köparens användar-ID i WordPress här."
+
+#: includes/admin/payments/edit-payment.php:44
+#, php-format
+#@ edd
+msgid "Payment Amount in %s"
+msgstr "Summa av Köp i %s"
+
+#: includes/admin/payments/edit-payment.php:48
+#@ edd
+msgid "If needed, you can update the purchase total here."
+msgstr "Om det behövs så kan du uppdatera köpets summa här."
+
+#: includes/admin/payments/edit-payment.php:53
+#@ edd
+msgid "Downloads Purchased"
+msgstr "Nedladdningar Köpta"
+
+#: includes/admin/payments/edit-payment.php:72
+#: includes/admin/settings/register-settings.php:1076
+#: includes/scripts.php:220
+#: templates/checkout_cart.php:37
+#@ edd
+msgid "Remove"
+msgstr "Radera"
+
+#: includes/admin/payments/edit-payment.php:77
+#, php-format
+#@ edd
+msgid "Add %s to purchase"
+msgstr "Lägg till %s till köp"
+
+#: includes/admin/payments/edit-payment.php:82
+#: includes/admin/payments/view-order-details.php:80
+#@ edd
+msgid "Payment Notes"
+msgstr "Anteckningar för Köp"
+
+#: includes/admin/payments/edit-payment.php:94
+#: includes/admin/payments/view-order-details.php:90
+#@ edd
+msgid "EDD Bot"
+msgstr "EDD Bot"
+
+#: includes/admin/payments/edit-payment.php:102
+#@ edd
+msgid "Delete this payment note"
+msgstr "Radera denna anteckning för köp"
+
+#: includes/admin/payments/edit-payment.php:107
+#: includes/admin/payments/view-order-details.php:102
+#@ edd
+msgid "No payment notes"
+msgstr "Inga anteckningar för köp"
+
+#: includes/admin/payments/edit-payment.php:110
+#@ edd
+msgid "Add New Note"
+msgstr "Skapa Ny Anteckning"
+
+#: includes/admin/payments/edit-payment.php:116
+#: templates/shortcode-receipt.php:34
+#@ edd
+msgid "Payment Status"
+msgstr "Köpets Status"
+
+#: includes/admin/payments/edit-payment.php:132
+#@ edd
+msgid "Unlimited Downloads"
+msgstr "Obegränsade Nedladdnnigar"
+
+#: includes/admin/payments/edit-payment.php:136
+#@ edd
+msgid "Check this box to enable unlimited file downloads for this purchase."
+msgstr "Markera denna ruta för obegränsat antal nedladdningar av filen för detta köp."
+
+#: includes/admin/payments/edit-payment.php:141
+#@ edd
+msgid "Send Purchase Receipt"
+msgstr "Skicka Kvitto för Köp"
+
+#: includes/admin/payments/edit-payment.php:145
+#@ edd
+msgid "Check this box to send the purchase receipt, including all download links."
+msgstr "Markera denna ruta för att skicka kvitto och alla länkar för nedladdning."
+
+#: includes/admin/payments/edit-payment.php:156
+#@ edd
+msgid "Update Payment"
+msgstr "Uppdatera Köp"
+
+#: includes/admin/payments/edit-payment.php:164
+#, php-format
+#@ edd
+msgid "Select a %s"
+msgstr "Välj en %s"
+
+#: includes/admin/payments/edit-payment.php:175
+#, php-format
+#@ edd
+msgid "Add Another %s"
+msgstr "Lägg till en annan %s"
+
+#: includes/admin/payments/edit-payment.php:178
+#@ edd
+msgid "Add Selected Downloads"
+msgstr "Lägg till valda nedladdningar"
+
+#: includes/admin/payments/edit-payment.php:179
+#@ edd
+msgid "Close"
+msgstr "Stäng"
+
+#: includes/admin/payments/payments-history.php:54
+#@ edd
+msgid "Get the EDD Sales / Earnings tracker for iOS"
+msgstr "Hämta EDD Sales / Earnings Tracker för iOS"
+
+#: includes/admin/payments/view-order-details.php:22
+#@ edd
+msgid "Payment ID not supplied. Please try again"
+msgstr "Ordernummer ej angett. Försök igen"
+
+#: includes/admin/payments/view-order-details.php:37
+#, php-format
+#@ edd
+msgid "Payment #%d"
+msgstr "Köp #%d"
+
+#: includes/admin/payments/view-order-details.php:37
+#@ edd
+msgid "Edit Order"
+msgstr "Redigera Order"
+
+#: includes/admin/payments/view-order-details.php:45
+#@ edd
+msgid "Order Totals"
+msgstr "Ordertotal"
+
+#: includes/admin/payments/view-order-details.php:50
+#@ edd
+msgid "Discount Code"
+msgstr "Rabattkod"
+
+#: includes/admin/payments/view-order-details.php:50
+#@ edd
+msgid "None"
+msgstr "Ingen"
+
+#: includes/admin/payments/view-order-details.php:56
+#: includes/admin/reporting/class-export-payments.php:70
+#: templates/checkout_cart.php:72
+#: templates/shortcode-receipt.php:63
+#@ edd
+msgid "Tax"
+msgstr "Moms"
+
+#: includes/admin/payments/view-order-details.php:63
+#: templates/shortcode-receipt.php:39
+#@ edd
+msgid "Fees"
+msgstr "Avgifter"
+
+#: includes/admin/payments/view-order-details.php:72
+#: templates/shortcode-receipt.php:68
+#: templates/shortcode-receipt.php:210
+#@ edd
+msgid "Total Price"
+msgstr "Totalt Pris"
+
+#: includes/admin/payments/view-order-details.php:119
+#@ edd
+msgid "General Details"
+msgstr "Allmänna Detaljer"
+
+#: includes/admin/payments/view-order-details.php:120
+#@ edd
+msgid "Status:"
+msgstr "Status:"
+
+#: includes/admin/payments/view-order-details.php:121
+#@ edd
+msgid "Date:"
+msgstr "Datum:"
+
+#: includes/admin/payments/view-order-details.php:122
+#@ edd
+msgid "Time:"
+msgstr "Tid:"
+
+#: includes/admin/payments/view-order-details.php:126
+#@ edd
+msgid "Buyer's Personal Details"
+msgstr "Köparens Personliga Detaljer"
+
+#: includes/admin/payments/view-order-details.php:127
+#@ edd
+msgid "Name:"
+msgstr "Namn:"
+
+#: includes/admin/payments/view-order-details.php:128
+#@ edd
+msgid "User Status:"
+msgstr "Användarens Status:"
+
+#: includes/admin/payments/view-order-details.php:128
+#@ edd
+msgid "Registered User"
+msgstr "Registrerad Användare"
+
+#: includes/admin/payments/view-order-details.php:128
+#: includes/admin/reporting/class-customer-reports-table.php:172
+#: includes/admin/reporting/class-export-customers.php:125
+#: includes/admin/reporting/class-export-customers.php:141
+#: includes/class-edd-api.php:596
+#: includes/class-edd-api.php:597
+#: includes/class-edd-api.php:598
+#: includes/class-edd-api.php:599
+#@ edd
+msgid "Guest"
+msgstr "Gäst"
+
+#: includes/admin/payments/view-order-details.php:130
+#@ edd
+msgid "User ID:"
+msgstr "Användarens ID:"
+
+#: includes/admin/payments/view-order-details.php:132
+#@ edd
+msgid "Email:"
+msgstr "E-post:"
+
+#: includes/admin/payments/view-order-details.php:137
+#@ edd
+msgid "Payment Details"
+msgstr "Detaljer om Köp"
+
+#: includes/admin/payments/view-order-details.php:142
+#@ edd
+msgid "Gateway:"
+msgstr "Betalningsmetod:"
+
+#: includes/admin/payments/view-order-details.php:144
+#@ edd
+msgid "Key:"
+msgstr "Nyckel:"
+
+#: includes/admin/payments/view-order-details.php:154
+#@ edd
+msgid "Purchased Files"
+msgstr "Köpta Filer"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:91
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:123
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:119
+#: includes/admin/reporting/class-sales-logs-list-table.php:94
+#@ edd
+msgid "Log ID"
+msgstr "Logg ID"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:92
+#@ edd
+msgid "Request Details"
+msgstr "Detaljer om Förfrågan"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:93
+#@ edd
+msgid "Request IP"
+msgstr "Begär IP"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:128
+#@ edd
+msgid "View Request Details"
+msgstr "Visa Detaljer Om Förfrågan"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:128
+#@ edd
+msgid "View Request"
+msgstr "Visa Förfrågan"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:134
+#@ edd
+msgid "API Request:"
+msgstr "API Förfrågan:"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:140
+#@ edd
+msgid "API User:"
+msgstr "API Användare:"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:142
+#@ edd
+msgid "API Key:"
+msgstr "API Nyckel:"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:144
+#@ edd
+msgid "Request Date:"
+msgstr "Datum för Förfrågan:"
+
+#: includes/admin/reporting/class-customer-reports-table.php:49
+#@ edd
+msgid "Customer"
+msgstr "Kund"
+
+#: includes/admin/reporting/class-customer-reports-table.php:50
+#: includes/admin/reporting/reports.php:59
+#@ edd
+msgid "Customers"
+msgstr "Kunder"
+
+#: includes/admin/reporting/class-customer-reports-table.php:97
+#@ edd
+msgid "Purchases"
+msgstr "Köp"
+
+#: includes/admin/reporting/class-customer-reports-table.php:98
+#@ edd
+msgid "Total Spent"
+msgstr "Spenderat Totalt"
+
+#: includes/admin/reporting/class-customer-reports-table.php:99
+#@ edd
+msgid "Files Downloaded"
+msgstr "Filer Nedladdade"
+
+#: includes/admin/reporting/class-download-reports-table.php:101
+#@ edd
+msgid "Monthly Average Sales"
+msgstr "Månadsvis Genomsnitt Försäljning"
+
+#: includes/admin/reporting/class-download-reports-table.php:102
+#@ edd
+msgid "Monthly Average Earnings"
+msgstr "Månadsvis Genomsnitt Omsättning"
+
+#: includes/admin/reporting/class-export-customers.php:68
+#@ edd
+msgid "Date Purchased"
+msgstr "Datum för Köp"
+
+#: includes/admin/reporting/class-export-customers.php:81
+#@ edd
+msgid "Total Purchases"
+msgstr "Totalt antal Köp"
+
+#: includes/admin/reporting/class-export-customers.php:82
+#@ edd
+msgid "Total Purchased"
+msgstr "Totala Köp"
+
+#: includes/admin/reporting/class-export-download-history.php:65
+#@ edd
+msgid "Downloaded by"
+msgstr "Nedladdad av"
+
+#: includes/admin/reporting/class-export-download-history.php:66
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:128
+#@ edd
+msgid "IP Address"
+msgstr "IP Adress"
+
+#: includes/admin/reporting/class-export-download-history.php:67
+#@ edd
+msgid "Product"
+msgstr "Produkt"
+
+#: includes/admin/reporting/class-export-download-history.php:68
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:127
+#@ edd
+msgid "File"
+msgstr "Fil"
+
+#: includes/admin/reporting/class-export-payments.php:65
+#: includes/checkout/template.php:128
+#: includes/checkout/template.php:130
+#: includes/checkout/template.php:307
+#: includes/checkout/template.php:309
+#: templates/shortcode-profile-editor.php:20
+#@ edd
+msgid "First Name"
+msgstr "Förnamn"
+
+#: includes/admin/reporting/class-export-payments.php:66
+#: includes/checkout/template.php:133
+#: includes/checkout/template.php:312
+#: templates/shortcode-profile-editor.php:23
+#@ edd
+msgid "Last Name"
+msgstr "Efternamn"
+
+#: includes/admin/reporting/class-export-payments.php:67
+#: templates/shortcode-receipt.php:107
+#@ edd
+msgid "Products"
+msgstr "Produkter"
+
+#: includes/admin/reporting/class-export-payments.php:68
+#@ edd
+msgid "SKUs"
+msgstr "Artikelnummer"
+
+#: includes/admin/reporting/class-export-payments.php:71
+#: templates/shortcode-receipt.php:89
+#@ edd
+msgid "Payment Method"
+msgstr "Betalningsmetod"
+
+#: includes/admin/reporting/class-export-payments.php:72
+#@ edd
+msgid "Purchase Key"
+msgstr "Nyckel för Köp"
+
+#: includes/admin/reporting/class-export-payments.php:169
+#@ edd
+msgid "none"
+msgstr "ingen"
+
+#: includes/admin/reporting/class-export.php:173
+#@ edd
+msgid "You do not have permission to export data."
+msgstr "Du har inte tillräcklig behörighet för att exportera data."
+
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:126
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:120
+#: includes/admin/reporting/class-sales-logs-list-table.php:98
+#@ edd
+msgid "Payment ID"
+msgstr "Köp ID"
+
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:69
+#: includes/gateways/manual.php:73
+#: includes/gateways/paypal-standard.php:74
+#@ edd
+msgid "Payment Error"
+msgstr "Fel vid Köp"
+
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:85
+#@ edd
+msgid "View Log Message"
+msgstr "Visa Meddelande i Logg"
+
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:99
+#@ edd
+msgid "<strong>Log data:</strong>"
+msgstr "<strong>Loggdata:</strong>"
+
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:122
+#@ edd
+msgid "Error Message"
+msgstr "Felmeddelande"
+
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:123
+#: includes/admin/reporting/class-gateways-reports-table.php:83
+#@ edd
+msgid "Gateway"
+msgstr "Betalningssystem"
+
+#: includes/admin/reporting/class-gateways-reports-table.php:84
+#@ edd
+msgid "Complete Sales"
+msgstr "Avslutade Köp"
+
+#: includes/admin/reporting/class-gateways-reports-table.php:85
+#@ edd
+msgid "Pending / Failed Sales"
+msgstr "Väntande / Misslyckade Köp"
+
+#: includes/admin/reporting/class-sales-logs-list-table.php:96
+#: includes/post-types.php:134
+#@ edd
+msgid "Download"
+msgstr "Nedladdning"
+
+#: includes/admin/reporting/class-sales-logs-list-table.php:97
+#@ edd
+msgid "Item Amount"
+msgstr "Artikelpris"
+
+#: includes/admin/reporting/contextual-help.php:43
+#@ edd
+msgid "This screen provides you with reports for your earnings, downloads, customers and taxes."
+msgstr "Denna ruta ger dig tillgång till rapporter för omsättning, nedladdningar, kunder och moms."
+
+#: includes/admin/reporting/contextual-help.php:48
+#: includes/admin/reporting/reports.php:34
+#@ edd
+msgid "Export"
+msgstr "Exportera"
+
+#: includes/admin/reporting/contextual-help.php:50
+#@ edd
+msgid "This screen allows you to export your reports into a PDF or CSV format."
+msgstr "Denna ruta låter dig exportera dina rapporter till PDF eller CSV format."
+
+#: includes/admin/reporting/contextual-help.php:51
+#@ edd
+msgid "<strong>Sales and Earnings</strong> - This report exports all of the sales and earnings that you have made in the current year. This report includes your sales and earnings for each product as well a graphs of sales and earnings so you can compare them for each month."
+msgstr "<strong>Försäljning och Omsättning</strong> - Denna rapport visar all försäljning och omsättning som skett under det nuvarande året. Denna rapport inkluderar din försäljning och omsättning för alla produkter såväl som grafer med försäljning och omsättning så att du kan jämföra dem månadsvis."
+
+#: includes/admin/reporting/contextual-help.php:52
+#@ edd
+msgid "<strong>Payment History</strong> - This report exports all of payments you have received on your EDD store in a CSV format.  The report includes the contact details of the customer, the products they have purchased as well as any discount codes they have used and the final price they have paid."
+msgstr "<strong>Köphistorik</strong> - Denna rapport exporterar alla köp gjorda i din EDD-butik i CSV format. Denna rapport inkluderar kunders kontaktuppgifter, produkter de har köpt såväl som rabatter som använts och slutligen priset de har betalat."
+
+#: includes/admin/reporting/contextual-help.php:53
+#@ edd
+msgid "<strong>Customers</strong> - This report exports all of your customers in a CSV format. It exports the customer's name and email address and the amount of products they have purchased as well as the final price of their total purchases."
+msgstr "<strong>Kunder</strong> - Denna rapport exporterar alla dina kunder till CSV format. Den exporterar kundernas namn, e-post, adress och summan av alla produkter de har köpt såväl som det totala beloppet av deras köp."
+
+#: includes/admin/reporting/contextual-help.php:54
+#@ edd
+msgid "<strong>Download History</strong> - This report exports all of the downloads you have received in the current month into a CSV. It exports the date the file was downloaded, the customer it was downloaded by, their IP address, the name of the product and the file they downloaded."
+msgstr "<strong>Nedladdningshistorik</strong> - Denna rapport exporterar alla nedladdningar gjorda den nuvarande månaden till CSV. Den exporterar datumet då nedladdningen gjordes, vilken kund den laddades ner av, deras IP-adress, deras namn, namnet på produkten och filen de laddade ner."
+
+#: includes/admin/reporting/contextual-help.php:60
+#@ edd
+msgid "Search File Downloads"
+msgstr "Sök Nedladdningsbara Filer"
+
+#: includes/admin/reporting/contextual-help.php:62
+#@ edd
+msgid "The file download log can be searched in several different ways:"
+msgstr "Loggfilen för nedladdningar kan genomsökas på flera olika vis:"
+
+#: includes/admin/reporting/contextual-help.php:65
+#@ edd
+msgid "You can enter the customer's IP address"
+msgstr "Du kan ange kundens IP adress"
+
+#: includes/admin/reporting/contextual-help.php:66
+#@ edd
+msgid "You can enter the download file's name"
+msgstr "Du kan ange en nedladdnings filnamn"
+
+#: includes/admin/reporting/graphing.php:280
+#@ edd
+msgid "Earnings Over Time"
+msgstr "Omsättning med Tiden"
+
+#: includes/admin/reporting/graphing.php:286
+#@ edd
+msgid "Total earnings for period shown: "
+msgstr "Total omsättning för perioden visas nedan:  "
+
+#: includes/admin/reporting/graphing.php:287
+#@ edd
+msgid "Total sales for period shown: "
+msgstr "Total omsättning för perioden visas nedan: "
+
+#: includes/admin/reporting/graphing.php:288
+#@ edd
+msgid "Estimated monthly earnings: "
+msgstr "Månadsvis uppskattning av omsättning: "
+
+#: includes/admin/reporting/graphing.php:289
+#@ edd
+msgid "Estimated monthly sales: "
+msgstr "Månadsvis uppskattning av försäljning: "
+
+#: includes/admin/reporting/graphing.php:305
+#@ edd
+msgid "Today"
+msgstr "Idag"
+
+#: includes/admin/reporting/graphing.php:306
+#@ edd
+msgid "This Week"
+msgstr "Denna Vecka"
+
+#: includes/admin/reporting/graphing.php:307
+#@ edd
+msgid "Last Week"
+msgstr "Föregående Vecka"
+
+#: includes/admin/reporting/graphing.php:308
+#@ edd
+msgid "This Month"
+msgstr "Denna Månad"
+
+#: includes/admin/reporting/graphing.php:310
+#@ edd
+msgid "This Quarter"
+msgstr "Detta Kvartal"
+
+#: includes/admin/reporting/graphing.php:311
+#@ edd
+msgid "Last Quarter"
+msgstr "Föregående Kvartal"
+
+#: includes/admin/reporting/graphing.php:312
+#@ edd
+msgid "This Year"
+msgstr "Detta År"
+
+#: includes/admin/reporting/graphing.php:313
+#@ edd
+msgid "Last Year"
+msgstr "Föregående År"
+
+#: includes/admin/reporting/graphing.php:314
+#@ edd
+msgid "Custom"
+msgstr "Anpassat"
+
+#: includes/admin/reporting/graphing.php:341
+#@ edd
+msgid "From"
+msgstr "Från"
+
+#: includes/admin/reporting/graphing.php:347
+#@ edd
+msgid "To"
+msgstr "Till"
+
+#: includes/admin/reporting/graphing.php:361
+#@ edd
+msgid "Filter"
+msgstr "Filter"
+
+#: includes/admin/reporting/logs.php:124
+#: includes/admin/settings/register-settings.php:372
+#@ edd
+msgid "File Downloads"
+msgstr "Filnedladdningar"
+
+#: includes/admin/reporting/logs.php:126
+#@ edd
+msgid "Payment Errors"
+msgstr "Fel vid Köp"
+
+#: includes/admin/reporting/logs.php:127
+#@ edd
+msgid "API Requests"
+msgstr "API-förfrågningar"
+
+#: includes/admin/reporting/logs.php:147
+#@ edd
+msgid "Log Type"
+msgstr "Loggtyp"
+
+#: includes/admin/reporting/logs.php:159
+#@ edd
+msgid "Apply"
+msgstr "Applicera"
+
+#: includes/admin/reporting/pdf-reports.php:33
+#@ edd
+msgid "to"
+msgstr "till"
+
+#: includes/admin/reporting/pdf-reports.php:38
+#: includes/admin/reporting/pdf-reports.php:49
+#@ edd
+msgid "Sales and earnings reports for the current year for all products"
+msgstr "Rapporter med försäljning och omsättning det nuvarande året för alla produkter "
+
+#: includes/admin/reporting/pdf-reports.php:54
+#@ edd
+msgid "Date Range: "
+msgstr "Datumintervall: "
+
+#: includes/admin/reporting/pdf-reports.php:58
+#@ edd
+msgid "Table View"
+msgstr "Tabellvy"
+
+#: includes/admin/reporting/pdf-reports.php:62
+#@ edd
+msgid "Product Name"
+msgstr "Produktens Namn"
+
+#: includes/admin/reporting/pdf-reports.php:66
+#@ edd
+msgid "Number of Sales"
+msgstr "Antal Sålda"
+
+#: includes/admin/reporting/pdf-reports.php:67
+#@ edd
+msgid "Earnings to Date"
+msgstr "Omsättning Datumvis"
+
+#: includes/admin/reporting/pdf-reports.php:115
+#, php-format
+#@ edd
+msgid "No %s found."
+msgstr "Inga %s hittades."
+
+#: includes/admin/reporting/pdf-reports.php:122
+#@ edd
+msgid "Graph View"
+msgstr "Diagramvy"
+
+#: includes/admin/reporting/pdf-reports.php:218
+#@ edd
+msgid "Sales and Earnings by Month for all Products"
+msgstr "Försäljning och Omsättning per Månad för alla Produkter"
+
+#: includes/admin/reporting/pdf-reports.php:229
+#@ edd
+msgid "Jan"
+msgstr "Jan"
+
+#: includes/admin/reporting/pdf-reports.php:230
+#@ edd
+msgid "Feb"
+msgstr "Feb"
+
+#: includes/admin/reporting/pdf-reports.php:231
+#@ edd
+msgid "Mar"
+msgstr "Mar"
+
+#: includes/admin/reporting/pdf-reports.php:232
+#@ edd
+msgid "Apr"
+msgstr "Apr"
+
+#: includes/admin/reporting/pdf-reports.php:233
+#@ edd
+msgid "May"
+msgstr "Maj"
+
+#: includes/admin/reporting/pdf-reports.php:234
+#@ edd
+msgid "June"
+msgstr "Jun"
+
+#: includes/admin/reporting/pdf-reports.php:235
+#@ edd
+msgid "July"
+msgstr "Jul"
+
+#: includes/admin/reporting/pdf-reports.php:236
+#@ edd
+msgid "Aug"
+msgstr "Aug"
+
+#: includes/admin/reporting/pdf-reports.php:237
+#@ edd
+msgid "Sept"
+msgstr "Sep"
+
+#: includes/admin/reporting/pdf-reports.php:238
+#@ edd
+msgid "Oct"
+msgstr "Okt"
+
+#: includes/admin/reporting/pdf-reports.php:239
+#@ edd
+msgid "Nov"
+msgstr "Nov"
+
+#: includes/admin/reporting/pdf-reports.php:240
+#@ edd
+msgid "Dec"
+msgstr "Dec"
+
+#: includes/admin/reporting/reports.php:36
+#: includes/class-edd-logging.php:49
+#@ edd
+msgid "Logs"
+msgstr "Loggar"
+
+#: includes/admin/reporting/reports.php:60
+#@ edd
+msgid "Payment Methods"
+msgstr "Betalningsmetoder"
+
+#: includes/admin/reporting/reports.php:61
+#: includes/admin/settings/contextual-help.php:71
+#: includes/admin/settings/display-settings.php:37
+#: includes/admin/settings/settings.php:38
+#@ edd
+msgid "Taxes"
+msgstr "Moms"
+
+#: includes/admin/reporting/reports.php:98
+#@ edd
+msgid "Report Type"
+msgstr "Typ av Rapport"
+
+#: includes/admin/reporting/reports.php:108
+#@ edd
+msgid "Show"
+msgstr "Visa"
+
+#: includes/admin/reporting/reports.php:198
+#@ edd
+msgid "Tax Report"
+msgstr "Momsrapprt"
+
+#: includes/admin/reporting/reports.php:200
+#@ edd
+msgid "This report shows the total amount collected in sales tax for the given year."
+msgstr "Denna rapport visar den totala summan av moms för försäljning det angivna året."
+
+#: includes/admin/reporting/reports.php:211
+#@ edd
+msgid "Submit"
+msgstr "Skicka"
+
+#: includes/admin/reporting/reports.php:235
+#@ edd
+msgid "Export PDF of Sales and Earnings"
+msgstr "Exportera PDF med Omsättning och Resultat"
+
+#: includes/admin/reporting/reports.php:237
+#@ edd
+msgid "Download a PDF of Sales and Earnings reports for all products for the current year."
+msgstr "Ladda ner en PDF-rapport innehållande Försäljning och Omsättning för alla produkter för det nuvarande året."
+
+#: includes/admin/reporting/reports.php:237
+#@ edd
+msgid "Date range reports will be coming soon."
+msgstr "Datumintervall för rapprter kommer snart."
+
+#: includes/admin/reporting/reports.php:238
+#@ edd
+msgid "Generate PDF"
+msgstr "Generera PDF"
+
+#: includes/admin/reporting/reports.php:243
+#@ edd
+msgid "Export Payment History"
+msgstr "Exportera Köphistorik"
+
+#: includes/admin/reporting/reports.php:245
+#@ edd
+msgid "Download a CSV of all payments recorded."
+msgstr "Ladda ner en CSV med alla köp som finns lagrade."
+
+#: includes/admin/reporting/reports.php:251
+#@ edd
+msgid "All Statuses"
+msgstr "Alla Statusar"
+
+#: includes/admin/reporting/reports.php:260
+#: includes/admin/reporting/reports.php:289
+#: includes/admin/reporting/reports.php:304
+#@ edd
+msgid "Generate CSV"
+msgstr "Generera CSV"
+
+#: includes/admin/reporting/reports.php:267
+#@ edd
+msgid "Export Customers in CSV"
+msgstr "Exportera Kunder till CSV"
+
+#: includes/admin/reporting/reports.php:269
+#@ edd
+msgid "Download a CSV of all customer emails. Optionally export only customers that have purchased a particular product. Note, if you have a large number of customers, exporting the purchase stats may fail."
+msgstr "Ladda ner CSV med alla kunders e-post. Alternativt kan du exportera de kunder som köpt en särskild produkt. Notera att om du har ett stort antal kunder kan exporten misslyckas."
+
+#: includes/admin/reporting/reports.php:273
+#, php-format
+#@ edd
+msgid "All %s"
+msgstr "Alla %s"
+
+#: includes/admin/reporting/reports.php:284
+#: includes/admin/settings/contextual-help.php:57
+#: includes/admin/settings/display-settings.php:35
+#: includes/admin/settings/settings.php:36
+#@ edd
+msgid "Emails"
+msgstr "E-post"
+
+#: includes/admin/reporting/reports.php:285
+#@ edd
+msgid "Emails and Names"
+msgstr "E-post och Namn"
+
+#: includes/admin/reporting/reports.php:286
+#@ edd
+msgid "Emails, Names, and Purchase Stats"
+msgstr "E-post, Namn och Köp"
+
+#: includes/admin/reporting/reports.php:296
+#@ edd
+msgid "Export Download History in CSV"
+msgstr "Exportera Nedladdningshistorik till CSV"
+
+#: includes/admin/reporting/reports.php:298
+#@ edd
+msgid "Download a CSV of all file downloads for a specific month and year."
+msgstr "Ladda ner CSV med alla filer som laddats ner en specifik månad eller år."
+
+#: includes/admin/settings/contextual-help.php:43
+#@ edd
+msgid "This screen provides the most basic settings for configuring your store. You can set the currency, page templates, and turn <em>Test Mode</em> on and off."
+msgstr "Denna ruta ger dig de mest grundläggande inställningarna för din butik. Du kan ställa in valuta, mallar för sidor, och slå på eller av <em>testläge</em>."
+
+#: includes/admin/settings/contextual-help.php:48
+#: includes/admin/settings/display-settings.php:34
+#: includes/admin/settings/register-settings.php:126
+#: includes/admin/settings/settings.php:35
+#@ edd
+msgid "Payment Gateways"
+msgstr "Betalningssystem"
+
+#: includes/admin/settings/contextual-help.php:50
+#@ edd
+msgid "This screen provides ways to toggle payment gateways on or off, as well as configure gateway-specific settings. Any extra payment gateway extensions you have installed will appear on this page, and can be configured to suit your needs."
+msgstr "Denna skärm ger dig möjlighet att stänga av eller på betalningsmetoder, samt konfigurera inställningar för specifika betalningsmetoder. Alla extra tillägg för betalningssytem du installerat kommer att visas på den här sidan och kan konfigureras för att passa dina behov."
+
+#: includes/admin/settings/contextual-help.php:51
+#@ edd
+msgid "<strong>Test Payment</strong> - This included gateway is great for testing your store, as it requires no payment, and leads straight to product downloads. However, please remember to turn it off once your site is live!"
+msgstr "<strong>Testköp</strong> - Den här betalningsmetoden är ett bra sätt att testa din butik, eftersom den kräver betalning och leder direkt till nedladdning av produkter. Hur som helst, kom ihåg att stänga av funktionen så snart din butik är live! "
+
+#: includes/admin/settings/contextual-help.php:52
+#@ edd
+msgid "<strong>PayPal</strong> - A PayPal payment gateway is included as standard with Easy Digital Downloads. To test the PayPal gateway, you need a Sandbox account for PayPal and the site must be placed in Test Mode from the General settings tab. Please remember to enter your PayPal account email address in order for payments to get processed."
+msgstr "<strong> PayPal </strong> - En PayPal betalnings-gateway ingår som standard med Easy Digital Downloads. För att testa PayPal, behöver du ett Sandbox-konto för PayPal och platsen måste sättas i testläge från fliken Allmänna inställningar. Kom ihåg att ange ditt PayPal-kontots e-postadress för att betalningarna till får behandlas."
+
+#: includes/admin/settings/contextual-help.php:59
+#@ edd
+msgid "This screen allows you to customize how emails act throughout your store. You can choose a premade template, set the sender's name, email address, and subject."
+msgstr "Denna ruta låter dig anpassa hur e-post fungerar i din butik. Du kan välja färdiga mallar, ställa in avsändarens namn, e-post adress och ämnesraden."
+
+#: includes/admin/settings/contextual-help.php:60
+#@ edd
+msgid "A set of email tags has also been provided to allow the creation of personalized emails. A tag consists of a keyword surrounded by curly braces: <code>{tag}</code>. A description of each of these tags appear below the editor."
+msgstr "En uppsättning av taggar finns också för att möjliggöra skapandet av personliga e-postmeddelanden. En tagg består av ett sökord som omges av klammerparenteser: <code> {tag}</code>. En beskrivning av var och en av dessa taggar visas nedanför redigeraren."
+
+#: includes/admin/settings/contextual-help.php:65
+#: includes/admin/settings/display-settings.php:36
+#: includes/admin/settings/settings.php:37
+#@ edd
+msgid "Styles"
+msgstr "Stilar"
+
+#: includes/admin/settings/contextual-help.php:66
+#@ edd
+msgid "This screen allows customization of your store's styles. For complete control, you can completely disable all styles generated by the plugin."
+msgstr "Denna ruta låter dig anpassa utseendet i din butik. För en mer komplett kontroll kan du inaktivera alla stilar som genereras av tillägget."
+
+#: includes/admin/settings/contextual-help.php:72
+#@ edd
+msgid "This screen provides basic settings for adjusting how tax rules work for purchases."
+msgstr "Denna ruta ger dig tillgång till allmänna inställningar för att justera hur skattesatser fungerar vid köp."
+
+#: includes/admin/settings/contextual-help.php:77
+#: includes/admin/settings/display-settings.php:39
+#@ edd
+msgid "Extensions"
+msgstr "Tillägg"
+
+#: includes/admin/settings/contextual-help.php:78
+#@ edd
+msgid "This screen provides access to settings added by most Easy Digital Downloads extensions."
+msgstr "Denna ruta ger dig tillgång till de flesta inställningar inlagda av Easy Digital Downloads tillägg."
+
+#: includes/admin/settings/contextual-help.php:83
+#@ edd
+msgid "Miscellaneous"
+msgstr "Diverse"
+
+#: includes/admin/settings/contextual-help.php:85
+#@ edd
+msgid "This screen provides other miscellaneous options such as disabling jQuery, allowing guest checkout, and configuring your terms of service."
+msgstr "Denna ruta innehåller diverse alternativ, såsom att inaktivera jQuery, tillåta gäster i kassan, konfiguration av dina villkor och avtal."
+
+#: includes/admin/settings/contextual-help.php:86
+#@ edd
+msgid "A description of all the options are provided beside their input boxes."
+msgstr "En beskrivning av alla alternativen finns tillgängligt bredvid textrutorna."
+
+#: includes/admin/settings/display-settings.php:41
+#: includes/admin/settings/settings.php:39
+#@ edd
+msgid "Misc"
+msgstr "Diverse"
+
+#: includes/admin/settings/register-settings.php:43
+#@ edd
+msgid "Test Mode"
+msgstr "Testläge"
+
+#: includes/admin/settings/register-settings.php:44
+#@ edd
+msgid "While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing."
+msgstr "Medan textläget är aktiverat så görs inga transaktioner. För att kunna använda testläget fullt ut behöver du ett sandlåde-konto för betalninsgssystemet du testar."
+
+#: includes/admin/settings/register-settings.php:49
+#@ edd
+msgid "Checkout Page"
+msgstr "Sida för Kassa"
+
+#: includes/admin/settings/register-settings.php:50
+#@ edd
+msgid "This is the checkout page where buyers will complete their purchases. The [download_checkout] short code must be on this page."
+msgstr "Det här är sidan som används som kassa där köpare kan avsluta sina köp. Kortkoden [edd_checkout] måste användas på denna sida. "
+
+#: includes/admin/settings/register-settings.php:56
+#@ edd
+msgid "Success Page"
+msgstr "Sida för Slutfört"
+
+#: includes/admin/settings/register-settings.php:57
+#@ edd
+msgid "This is the page buyers are sent to after completing their purchases. The [edd_receipt] short code should be on this page."
+msgstr "Det här är den sida som köpare skickas till efter ett avslutat köp. Kortkoden [edd_receipt] bör användas på denna sida."
+
+#: includes/admin/settings/register-settings.php:63
+#@ edd
+msgid "Failed Transaction Page"
+msgstr "Sida för Misslyckade Transaktioner"
+
+#: includes/admin/settings/register-settings.php:64
+#@ edd
+msgid "This is the page buyers are sent to if their transaction is cancelled or fails"
+msgstr "Den sida som kunder skickas till om transaktionen avbryts eller misslyckas"
+
+#: includes/admin/settings/register-settings.php:70
+#@ edd
+msgid "Currency Settings"
+msgstr "Inställningar för Valuta"
+
+#: includes/admin/settings/register-settings.php:71
+#@ edd
+msgid "Configure the currency options"
+msgstr "Konfigurera inställningar för valuta"
+
+#: includes/admin/settings/register-settings.php:76
+#@ edd
+msgid "Currency"
+msgstr "Valuta"
+
+#: includes/admin/settings/register-settings.php:77
+#@ edd
+msgid "Choose your currency. Note that some payment gateways have currency restrictions."
+msgstr "Välj din valuta. Notera att vissa betalningssystem har begränsningar för valuta."
+
+#: includes/admin/settings/register-settings.php:83
+#@ edd
+msgid "Currency Position"
+msgstr "Valuta Position"
+
+#: includes/admin/settings/register-settings.php:84
+#@ edd
+msgid "Choose the location of the currency sign."
+msgstr "Välj placering av tecken för valuta."
+
+#: includes/admin/settings/register-settings.php:87
+#@ edd
+msgid "Before - $10"
+msgstr "Före - $10"
+
+#: includes/admin/settings/register-settings.php:88
+#@ edd
+msgid "After - 10$"
+msgstr "Efter - 10$"
+
+#: includes/admin/settings/register-settings.php:93
+#@ edd
+msgid "Thousands Separator"
+msgstr "Avdelare för Tusental"
+
+#: includes/admin/settings/register-settings.php:94
+#@ edd
+msgid "The symbol (usually , or .) to separate thousands"
+msgstr "Symbolen (vanligtvis , eller .) som används för att separera tusen"
+
+#: includes/admin/settings/register-settings.php:101
+#@ edd
+msgid "Decimal Separator"
+msgstr "Avdelare för Decimaler"
+
+#: includes/admin/settings/register-settings.php:102
+#@ edd
+msgid "The symbol (usually , or .) to separate decimal points"
+msgstr "Symbol för att avdela decimaler (vanligtvis , eller .)"
+
+#: includes/admin/settings/register-settings.php:109
+#@ edd
+msgid "API Settings"
+msgstr "Inställningar API"
+
+#: includes/admin/settings/register-settings.php:115
+#@ edd
+msgid "Allow User Keys"
+msgstr "Tillåt Nycklar för Användare"
+
+#: includes/admin/settings/register-settings.php:116
+#@ edd
+msgid "Check this box to allow all users to generate API keys. Users with the 'manage_shop_settings' capability are always allowed to generate keys."
+msgstr "Kryssa i denna ruta för att låta alla användare generera API-nycklar. Användare med behörigheten 'manage_shop_settings' har alltid tillåtelse att generera nycklar."
+
+#: includes/admin/settings/register-settings.php:127
+#@ edd
+msgid "Choose the payment gateways you want to enable."
+msgstr "Välj det betalningssystem du vill aktivera."
+
+#: includes/admin/settings/register-settings.php:133
+#@ edd
+msgid "Default Gateway"
+msgstr "Standard Betalningssystem"
+
+#: includes/admin/settings/register-settings.php:134
+#@ edd
+msgid "This gateway will be loaded automatically with the checkout page."
+msgstr "Denna betalningsmetod kommer att laddas automatiskt i kassan."
+
+#: includes/admin/settings/register-settings.php:140
+#@ edd
+msgid "Accepted Payment Method Icons"
+msgstr "Ikoner för Accepterade Metoder För Köp"
+
+#: includes/admin/settings/register-settings.php:141
+#@ edd
+msgid "Display icons for the selected payment methods"
+msgstr "Visa ikoner för de aktiva betalningsmetoderna"
+
+#: includes/admin/settings/register-settings.php:141
+#@ edd
+msgid "You will also need to configure your gateway settings if you are accepting credit cards"
+msgstr "Du kommer också att behöva konfigurera inställningar för ditt betalningssystem om du accepterar kreditkort"
+
+#: includes/admin/settings/register-settings.php:154
+#@ edd
+msgid "PayPal Settings"
+msgstr "PayPal Inställningar"
+
+#: includes/admin/settings/register-settings.php:155
+#@ edd
+msgid "Configure the PayPal settings"
+msgstr "Konfigurera Inställningar för PayPal"
+
+#: includes/admin/settings/register-settings.php:160
+#@ edd
+msgid "PayPal Email"
+msgstr "PayPal E-post"
+
+#: includes/admin/settings/register-settings.php:161
+#@ edd
+msgid "Enter your PayPal account's email"
+msgstr "Ange din e-post för ditt PayPal-konto"
+
+#: includes/admin/settings/register-settings.php:167
+#@ edd
+msgid "PayPal Page Style"
+msgstr "PayPal Sidans Stil"
+
+#: includes/admin/settings/register-settings.php:168
+#@ edd
+msgid "Enter the name of the page style to use, or leave blank for default"
+msgstr "Ange ett namn på sidan utseende, eller lämna blankt för standard"
+
+#: includes/admin/settings/register-settings.php:174
+#@ edd
+msgid "Disable PayPal IPN Verification"
+msgstr "Inaktivera Verifikation av PayPal IPN"
+
+#: includes/admin/settings/register-settings.php:175
+#@ edd
+msgid "If payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases."
+msgstr "Om köp ej markeras som slutförda, markera denna ruta. Det här tvingar sidan att använda en mindre säker metod för att verifiera köp."
+
+#: includes/admin/settings/register-settings.php:185
+#@ edd
+msgid "Email Template"
+msgstr "Mallar för E-post"
+
+#: includes/admin/settings/register-settings.php:186
+#@ edd
+msgid "Choose a template. Click \"Save Changes\" then \"Preview Purchase Receipt\" to see the new template."
+msgstr "Välj en mall. Klicka på \"Spara Ändringar\" och sedan på \"Förhandsvisa Kvitto\" för att se den nya mallen."
+
+#: includes/admin/settings/register-settings.php:198
+#@ edd
+msgid "From Name"
+msgstr "Från Namn"
+
+#: includes/admin/settings/register-settings.php:199
+#@ edd
+msgid "The name purchase receipts are said to come from. This should probably be your site or shop name."
+msgstr "Namnet som kvitton sägs komma från. Bör rimligen vara namnet på din butik eller din hemsidas namn."
+
+#: includes/admin/settings/register-settings.php:204
+#@ edd
+msgid "From Email"
+msgstr "Från E-post"
+
+#: includes/admin/settings/register-settings.php:205
+#@ edd
+msgid "Email to send purchase receipts from. This will act as the \"from\" and \"reply-to\" address."
+msgstr "Den e-post som kvitton skickas från. Kommer att agera som \"från\" och \"svara-till\"-adress."
+
+#: includes/admin/settings/register-settings.php:210
+#@ edd
+msgid "Purchase Email Subject"
+msgstr "E-post Ämne för Köp"
+
+#: includes/admin/settings/register-settings.php:211
+#@ edd
+msgid "Enter the subject line for the purchase receipt email"
+msgstr "Ange ämnesradens textrad för e-post-kvitto"
+
+#: includes/admin/settings/register-settings.php:216
+#: includes/emails/functions.php:49
+#: includes/emails/functions.php:95
+#@ edd
+msgid "Purchase Receipt"
+msgstr "Kvitto för Köp"
+
+#: includes/admin/settings/register-settings.php:222
+#@ edd
+msgid "Sale Notification Emails"
+msgstr "E-post för Notiser vid Köp"
+
+#: includes/admin/settings/register-settings.php:223
+#@ edd
+msgid "Enter the email address(es) that should receive a notification anytime a sale is made, one per line"
+msgstr "Ange e-post adress(er) som ska ta emot notiser varje gång det sker en försäljning, en per rad."
+
+#: includes/admin/settings/register-settings.php:229
+#@ edd
+msgid "Disable Admin Notifications"
+msgstr "Inaktivera Administrativa Notiser"
+
+#: includes/admin/settings/register-settings.php:230
+#@ edd
+msgid "Check this box if you do not want to receive emails when new sales are made."
+msgstr "Markera den här rutan om du inte vill ta emot e-post när nya försäljningar sker."
+
+#: includes/admin/settings/register-settings.php:240
+#@ edd
+msgid "Disable Styles"
+msgstr "Inaktivera Stilar"
+
+#: includes/admin/settings/register-settings.php:241
+#@ edd
+msgid "Check this to disable all included styling of buttons, checkout fields, and all other elements."
+msgstr "Markera det här för att inaktivera alla stilmallar för knappar, fält i kassa och andra element."
+
+#: includes/admin/settings/register-settings.php:246
+#@ edd
+msgid "Buttons"
+msgstr "Knappar"
+
+#: includes/admin/settings/register-settings.php:247
+#@ edd
+msgid "Options for add to cart and purchase buttons"
+msgstr "Alternativ för lägg i kundvagn och knappar för köp"
+
+#: includes/admin/settings/register-settings.php:252
+#@ edd
+msgid "Default Button Style"
+msgstr "Standardstil för Knapp"
+
+#: includes/admin/settings/register-settings.php:253
+#@ edd
+msgid "Choose the style you want to use for the buttons."
+msgstr "Välj den stil du vill använda för knappar."
+
+#: includes/admin/settings/register-settings.php:259
+#@ edd
+msgid "Default Button Color"
+msgstr "Standard Knappfärg"
+
+#: includes/admin/settings/register-settings.php:260
+#@ edd
+msgid "Choose the color you want to use for the buttons."
+msgstr "Välj den färg du vill använda för knappar."
+
+#: includes/admin/settings/register-settings.php:271
+#@ edd
+msgid "Enable Taxes"
+msgstr "Aktivera Moms"
+
+#: includes/admin/settings/register-settings.php:272
+#@ edd
+msgid "Check this to enable taxes on purchases."
+msgstr "Markera detta alternativ för att aktivera moms i köp."
+
+#: includes/admin/settings/register-settings.php:278
+#@ edd
+msgid "Default Tax Rate"
+msgstr "Standard Skattesats"
+
+#: includes/admin/settings/register-settings.php:279
+#@ edd
+msgid "Enter a percentage, such as 6.5. Customers not in a specific rate below will be charged this rate."
+msgstr "Ange procent, såsom 6.5. Kunder som inte finns i någon specifik skattesats nedan kommer att debiteras denna skattesats."
+
+#: includes/admin/settings/register-settings.php:285
+#@ edd
+msgid "Base Country"
+msgstr "Land"
+
+#: includes/admin/settings/register-settings.php:286
+#@ edd
+msgid "Where does your store operate from?"
+msgstr "Varifrån drivs din butik?"
+
+#: includes/admin/settings/register-settings.php:292
+#@ edd
+msgid "Base State / Province"
+msgstr "Kommun/Län"
+
+#: includes/admin/settings/register-settings.php:293
+#@ edd
+msgid "What state / provice does your store operate from?"
+msgstr "Från vilken kommun/län drivs butiken ifrån?"
+
+#: includes/admin/settings/register-settings.php:298
+#@ edd
+msgid "Prices entered with tax"
+msgstr "Priser angivna inklusive moms"
+
+#: includes/admin/settings/register-settings.php:299
+#@ edd
+msgid "This option affects how you enter prices."
+msgstr "Det här alternativet påverkar hur du anger priser."
+
+#: includes/admin/settings/register-settings.php:303
+#@ edd
+msgid "Yes, I will enter prices inclusive of tax"
+msgstr "Ja, jag anger priser inklusive moms"
+
+#: includes/admin/settings/register-settings.php:304
+#@ edd
+msgid "No, I will enter prices exclusive of tax"
+msgstr "Nej, jag anger priser exklusive moms"
+
+#: includes/admin/settings/register-settings.php:309
+#@ edd
+msgid "Display during checkout"
+msgstr "Visa i kassan"
+
+#: includes/admin/settings/register-settings.php:310
+#@ edd
+msgid "Should prices on the checkout page be shown with or without tax?"
+msgstr "Ska priset i kassan visas med eller utan moms?"
+
+#: includes/admin/settings/register-settings.php:314
+#@ edd
+msgid "Including tax"
+msgstr "Inklusive moms"
+
+#: includes/admin/settings/register-settings.php:315
+#@ edd
+msgid "Excluding tax"
+msgstr "Exklusive moms"
+
+#: includes/admin/settings/register-settings.php:320
+#@ edd
+msgid "Calculate Tax After Discounts?"
+msgstr "Beräkna moms efter rabatt?"
+
+#: includes/admin/settings/register-settings.php:321
+#@ edd
+msgid "Check this if you would like taxes calculated after discounts. By default taxes are calculated before discounts are applied."
+msgstr "Markera detta alternativ om du vill att moms ska beräknas efter rabatter. Standard är att momsen beräknas innan någon rabatt appliceras."
+
+#: includes/admin/settings/register-settings.php:327
+#@ edd
+msgid "Additional Tax Rates"
+msgstr "Ytterligare Skattesatser"
+
+#: includes/admin/settings/register-settings.php:328
+#@ edd
+msgid "Specify additional tax rates for other regions."
+msgstr "Ange ytterligare skattesatser för andra regioner."
+
+#: includes/admin/settings/register-settings.php:342
+#@ edd
+msgid "Disable Ajax"
+msgstr "Inaktivera AJAX"
+
+#: includes/admin/settings/register-settings.php:343
+#@ edd
+msgid "Check this to disable AJAX for the shopping cart."
+msgstr "Markera det här för att inaktivera AJAX i kundvagnen."
+
+#: includes/admin/settings/register-settings.php:348
+#@ edd
+msgid "Redirect to Checkout"
+msgstr "Omdirigering till Kassa"
+
+#: includes/admin/settings/register-settings.php:349
+#@ edd
+msgid "Immediately redirect to checkout after adding an item to the cart?"
+msgstr "Omdirigera direkt till kassan efter att en artikel lagts i kundvagnen?"
+
+#: includes/admin/settings/register-settings.php:354
+#@ edd
+msgid "Disable Live Credit Card Validation"
+msgstr "Inaktivera Live Verifikation av Kreditkort "
+
+#: includes/admin/settings/register-settings.php:355
+#@ edd
+msgid "Live credit card validation means that that card type and number will be validated as the customer enters the number."
+msgstr "Live verifikation av kreditkort betyder att typen av kort och kortnumret kommer att verifieras direkt då kunden anger numret."
+
+#: includes/admin/settings/register-settings.php:360
+#@ edd
+msgid "Disable Guest Checkout"
+msgstr "Inaktivera Gästkassa"
+
+#: includes/admin/settings/register-settings.php:361
+#@ edd
+msgid "Require that users be logged-in to purchase files."
+msgstr "Kräv att användare loggar in innan köp av filer."
+
+#: includes/admin/settings/register-settings.php:366
+#@ edd
+msgid "Show Register / Login Form?"
+msgstr "Visa Formulär för Inloggning / Registrering?"
+
+#: includes/admin/settings/register-settings.php:367
+#@ edd
+msgid "Display the registration and login forms on the checkout page for non-logged-in users."
+msgstr "Visa registrering och inloggning i kassan för icke inloggade användare."
+
+#: includes/admin/settings/register-settings.php:378
+#@ edd
+msgid "Download Method"
+msgstr "Metod för Nedladdning"
+
+#: includes/admin/settings/register-settings.php:379
+#@ edd
+msgid "Select the file download method. Note, not all methods work on all servers."
+msgstr "Välj metod för nedladdning. Notera att alla metoder inte fungerar på alla servrar."
+
+#: includes/admin/settings/register-settings.php:382
+#@ edd
+msgid "Forced"
+msgstr "Tvingad"
+
+#: includes/admin/settings/register-settings.php:383
+#@ edd
+msgid "Redirect"
+msgstr "Omdirigera"
+
+#: includes/admin/settings/register-settings.php:388
+#@ edd
+msgid "Symlink File Downloads?"
+msgstr "Symlänka Nedladdningsbara Filer?"
+
+#: includes/admin/settings/register-settings.php:389
+#@ edd
+msgid "Check this if you are delivering really large files or having problems with file downloads completing."
+msgstr "Markera detta om du levererar riktigt stora filer och har problem med att nedladdningar inte avslutas."
+
+#: includes/admin/settings/register-settings.php:394
+#@ edd
+msgid "File Download Limit"
+msgstr "Begränsning Nedladdningsbar Fil"
+
+#: includes/admin/settings/register-settings.php:395
+#, php-format
+#@ edd
+msgid "The maximum number of times files can be downloaded for purchases. Can be overwritten for each %s."
+msgstr "Det maximala antalet gånger en fil kan laddas ner per köp. Kan skrivas över för varje %s."
+
+#: includes/admin/settings/register-settings.php:401
+#@ edd
+msgid "Download Link Expiration"
+msgstr "Utgångsdatum Nedladdningslänk"
+
+#: includes/admin/settings/register-settings.php:402
+#@ edd
+msgid "How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours."
+msgstr "Hur länge ska en länk vara giltig? Standard är 24 timmar från det att de genereras. Ange en tid i timmar."
+
+#: includes/admin/settings/register-settings.php:408
+#@ edd
+msgid "Disable Redownload?"
+msgstr "Neka Åter-nedladdning?"
+
+#: includes/admin/settings/register-settings.php:409
+#@ edd
+msgid "Check this if you do not want to allow users to redownload items from their purchase history."
+msgstr "Markera det här om du inte vill tillåta användare att ladda ner filer igen från deras köphistorik."
+
+#: includes/admin/settings/register-settings.php:414
+#@ edd
+msgid "Accounting Settings"
+msgstr "Inställningar för Redovisning"
+
+#: includes/admin/settings/register-settings.php:420
+#@ edd
+msgid "Enable SKU Entry"
+msgstr "Aktivera Artikelnummer"
+
+#: includes/admin/settings/register-settings.php:421
+#@ edd
+msgid "Check this box to allow entry of product SKUs. SKUs will be shown on purchase receipt and exported purchase histories."
+msgstr "Markera denna ruta för att tillåta artikelnummer för produkter. Artikelnummer visas på kvitton för köp och följer med vid export av historik."
+
+#: includes/admin/settings/register-settings.php:426
+#@ edd
+msgid "Terms of Agreement"
+msgstr "Allmänna Villkor"
+
+#: includes/admin/settings/register-settings.php:432
+#@ edd
+msgid "Agree to Terms"
+msgstr "Acceptera Villkor"
+
+#: includes/admin/settings/register-settings.php:433
+#@ edd
+msgid "Check this to show an agree to terms on the checkout that users must agree to before purchasing."
+msgstr "Markera detta för att visa en \\\"jag godkänner villkoren\\\" i kassan som användare måste godkänna innan de handlar."
+
+#: includes/admin/settings/register-settings.php:438
+#@ edd
+msgid "Agree to Terms Label"
+msgstr "Acceptera Villkor Etikett"
+
+#: includes/admin/settings/register-settings.php:439
+#@ edd
+msgid "Label shown next to the agree to terms check box."
+msgstr "Text som visas bredvid rutan för att acceptera villkoren."
+
+#: includes/admin/settings/register-settings.php:445
+#@ edd
+msgid "Agreement Text"
+msgstr "Avtalstext"
+
+#: includes/admin/settings/register-settings.php:446
+#@ edd
+msgid "If Agree to Terms is checked, enter the agreement terms here."
+msgstr "Om acceptera villkoren är markerad, skriv villkoren här."
+
+#: includes/admin/settings/register-settings.php:451
+#@ edd
+msgid "Complete Purchase Text"
+msgstr "Text för Slutför Köp"
+
+#: includes/admin/settings/register-settings.php:452
+#@ edd
+msgid "The button label for completing a purchase."
+msgstr "Texten på knappen för att slutföra ett köp."
+
+#: includes/admin/settings/register-settings.php:457
+#@ edd
+msgid "Add to Cart Text"
+msgstr "Text för Lägg till i Kundvagn"
+
+#: includes/admin/settings/register-settings.php:458
+#@ edd
+msgid "Text shown on the Add to Cart Buttons"
+msgstr "Texten som visas på knappen Lägg till i Kundvagn"
+
+#: includes/admin/settings/register-settings.php:495
+#@ edd
+msgid "General Settings"
+msgstr "Allmänna Inställningar"
+
+#: includes/admin/settings/register-settings.php:521
+#@ edd
+msgid "Payment Gateway Settings"
+msgstr "Betalningssystem Inställningar"
+
+#: includes/admin/settings/register-settings.php:547
+#@ edd
+msgid "Email Settings"
+msgstr "E-post Inställningar"
+
+#: includes/admin/settings/register-settings.php:573
+#@ edd
+msgid "Style Settings"
+msgstr "Utseende Inställningar"
+
+#: includes/admin/settings/register-settings.php:599
+#@ edd
+msgid "Tax Settings"
+msgstr "Moms Inställningar"
+
+#: includes/admin/settings/register-settings.php:625
+#@ edd
+msgid "Extension Settings"
+msgstr "Tillägg Inställningar"
+
+#: includes/admin/settings/register-settings.php:651
+#@ edd
+msgid "Misc Settings"
+msgstr "Diverse Inställningar"
+
+#: includes/admin/settings/register-settings.php:695
+#@ edd
+msgid "These settings will let you configure simple tax rules for purchases."
+msgstr "Dessa inställningar låter dig enkelt ställa in regler för moms vid köp."
+
+#: includes/admin/settings/register-settings.php:913
+#, php-format
+#@ edd
+msgid "The callback function used for the <strong>%s</strong> setting is missing."
+msgstr "Funktionen som används när inställningen <strong>%s</strong> saknas."
+
+#: includes/admin/settings/register-settings.php:992
+#@ edd
+msgid "Upload File"
+msgstr "Ladda Upp Fil"
+
+#: includes/admin/settings/register-settings.php:1072
+#@ edd
+msgid "Country"
+msgstr "Land"
+
+#: includes/admin/settings/register-settings.php:1073
+#: includes/checkout/template.php:253
+#@ edd
+msgid "State / Province"
+msgstr "Län"
+
+#: includes/admin/settings/register-settings.php:1074
+#@ edd
+msgid "Apply rate to whole country, regardless of state / province"
+msgstr "Applicera taxa på hela landet, oavsett län"
+
+#: includes/admin/settings/register-settings.php:1074
+#@ edd
+msgid "Country Wide"
+msgstr "Hela Landet"
+
+#: includes/admin/settings/register-settings.php:1075
+#@ edd
+msgid "Rate"
+msgstr "Taxa"
+
+#: includes/admin/settings/register-settings.php:1095
+#: includes/admin/settings/register-settings.php:1109
+#@ edd
+msgid "Apply to whole country"
+msgstr "Applicera på hela landet"
+
+#: includes/admin/settings/register-settings.php:1098
+#: includes/admin/settings/register-settings.php:1112
+#@ edd
+msgid "Remove Rate"
+msgstr "Radera Taxa"
+
+#: includes/admin/settings/register-settings.php:1117
+#@ edd
+msgid "Add Tax Rate"
+msgstr "Skapa Taxa för Moms"
+
+#: includes/admin/settings/register-settings.php:1147
+#@ edd
+msgid "Deactivate License"
+msgstr "Inaktivera Licens"
+
+#: includes/admin/settings/register-settings.php:1180
+#: includes/admin/settings/register-settings.php:1199
+#: includes/admin/settings/register-settings.php:1220
+#@ edd
+msgid "Settings Updated"
+msgstr "Inställningar Uppdaterade"
+
+#: includes/admin/system-info.php:39
+#@ edd
+msgid "System Information"
+msgstr "Systeminformation"
+
+#: includes/admin/system-info.php:41
+#@ edd
+msgid "To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac)."
+msgstr "För att kopiera systeminformation, klicka nedan och tryck sedan på CTRL+C (PC) eller CMD+C (Mac)."
+
+#: includes/admin/system-info.php:99
+#@ edd
+msgid "Your server supports fsockopen."
+msgstr "Din server har stöd för fsockopen."
+
+#: includes/admin/system-info.php:99
+#@ edd
+msgid "Your server does not support fsockopen."
+msgstr "Din server saknar stöd för fsockopen."
+
+#: includes/admin/system-info.php:158
+#@ edd
+msgid "Download System Info File"
+msgstr "Ladda Ner Fil med Systeminformation"
+
+#: includes/admin/thickbox.php:29
+#: includes/admin/thickbox.php:33
+#: includes/admin/thickbox.php:127
+#, php-format
+#@ edd
+msgid "Insert %s"
+msgstr "Infoga %s"
+
+#: includes/admin/thickbox.php:30
+#@ edd
+msgid "Insert Download"
+msgstr "Infoga Nedladdning"
+
+#: includes/admin/thickbox.php:67
+#@ edd
+msgid "You must choose a download"
+msgstr "Du måste välja en nedladdning"
+
+#: includes/admin/thickbox.php:89
+#, php-format
+#@ edd
+msgid "Use the form below to insert the short code for purchasing a %s"
+msgstr "Använd formuläret nedan för att infoga en shortcode för köp av %s"
+
+#: includes/admin/thickbox.php:92
+#, php-format
+#@ edd
+msgid "Choose a %s"
+msgstr "Välj en %s"
+
+#: includes/admin/thickbox.php:101
+#@ edd
+msgid "Choose a style"
+msgstr "Välj en stil"
+
+#: includes/admin/thickbox.php:115
+#@ edd
+msgid "Choose a button color"
+msgstr "Välj en färg på knappen"
+
+#: includes/admin/thickbox.php:124
+#@ edd
+msgid "Link text . . ."
+msgstr "Länktext . . ."
+
+#: includes/admin/thickbox.php:128
+#@ edd
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: includes/admin/upgrades/upgrade-functions.php:38
+#, php-format
+#@ edd
+msgid "The Payment History needs to be updated. %s"
+msgstr "Köphistoriken behöver uppdateras. %s"
+
+#: includes/admin/upgrades/upgrade-functions.php:38
+#@ edd
+msgid "Click to Upgrade"
+msgstr "Klicka för att Uppgradera"
+
+#: includes/admin/upgrades/upgrade-functions.php:44
+#, php-format
+#@ edd
+msgid "The Purchase and File Download History in Easy Digital Downloads needs to be upgraded, click %shere%s to start the upgrade."
+msgstr "Historik för Köp och Nedladdning i Easy Digital Downloads behöver uppdateras, klicka %shär%s för att börja uppgradera."
+
+#: includes/admin/upgrades/upgrade-functions.php:52
+#, php-format
+#@ edd
+msgid "Easy Digital Downloads needs to upgrade the plugin pages, click %shere%s to start the upgrade."
+msgstr "Easy Digital Downloads behöver uppgradera sidan för tillägg, klicka %shär% för att starta uppgraderingen."
+
+#: includes/admin/upgrades/upgrade-functions.php:60
+#, php-format
+#@ edd
+msgid "Easy Digital Downloads needs to upgrade the database, click %shere%s to start the upgrade."
+msgstr "Easy Digital Downloads behöver uppgradera databasen, klicka %shär%s för att starta uppgraderingen."
+
+#: includes/admin/upgrades/upgrade-functions.php:202
+#: includes/install.php:76
+#@ edd
+msgid "Transaction Failed"
+msgstr "Misslyckade Transaktioner"
+
+#: includes/admin/upgrades/upgrade-functions.php:203
+#: includes/install.php:77
+#@ edd
+msgid "Your transaction failed, please try again or contact site support."
+msgstr "Transaktionen misslyckades, försök igen eller kontakta vår support."
+
+#: includes/admin/upgrades/upgrades.php:24
+#@ edd
+msgid "Easy Digital Downloads - Upgrades"
+msgstr "Easy Digital Downloads - Uppgraderingar"
+
+#: includes/admin/upgrades/upgrades.php:27
+#@ edd
+msgid "The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished."
+msgstr "Uppgraderingsprocessen har startat, ha tålamod. Detta kan ta flera minuter. Du kommer automatiskt att omdirigeras när uppgraderingen är klar."
+
+#: includes/admin/welcome.php:52
+#: includes/admin/welcome.php:53
+#: includes/admin/welcome.php:61
+#: includes/admin/welcome.php:62
+#@ edd
+msgid "Welcome to Easy Digital Downloads"
+msgstr "Välkommen till Easy Digital Downloads"
+
+#: includes/admin/welcome.php:124
+#: includes/admin/welcome.php:256
+#, php-format
+#@ edd
+msgid "Welcome to Easy Digital Downloads %s"
+msgstr "Välkommen till Easy Digital Downloads %s"
+
+#: includes/admin/welcome.php:125
+#: includes/admin/welcome.php:257
+#, php-format
+#@ edd
+msgid "Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!"
+msgstr "Tack för att du uppdaterar till den senaste versionen! Easy Digital Downloads %s är nu redo att göra din butik snabbare, säkrare och bättre."
+
+#: includes/admin/welcome.php:126
+#: includes/admin/welcome.php:258
+#, php-format
+#@ edd
+msgid "Version %s"
+msgstr "Version %s"
+
+#: includes/admin/welcome.php:130
+#: includes/admin/welcome.php:262
+#@ edd
+msgid "What's New"
+msgstr "Vad är Nytt"
+
+#: includes/admin/welcome.php:132
+#: includes/admin/welcome.php:264
+#@ edd
+msgid "Credits"
+msgstr "Medverkande"
+
+#: includes/admin/welcome.php:137
+#@ edd
+msgid "Bundled Products"
+msgstr "Produktpaket"
+
+#: includes/admin/welcome.php:143
+#@ edd
+msgid "Combine Multiple Products into Bundles"
+msgstr "Kombinera Flera Produkter i Paket"
+
+#: includes/admin/welcome.php:144
+#@ edd
+msgid "A bundled product is a group of other Downloads in your store that are purchased as a single item, usually at a discount."
+msgstr "Ett paket är en grupp av nedladdningar som kan köpas som ett ensamt köp, ofta till rabatterat pris,"
+
+#: includes/admin/welcome.php:146
+#@ edd
+msgid "Simplify Your Admin Tasks"
+msgstr "Förenkla Dina Administrativa Uppgifter"
+
+#: includes/admin/welcome.php:147
+#@ edd
+msgid "Prior to Bundles, you were forced to create a new product and then manually add all of the necessary files from the other Downloads to it. No longer! Bundled products automatically grab the file downloads from products included in the bundle."
+msgstr "Före paketen, tvingades vi att skapa en ny produkt för att sen manuellt lägga till alla nödvändiga filer från andra nedladdningar. Inte längre! Paketprodukter hämtar automatiskt de filer som är inkluderade i paketet."
+
+#: includes/admin/welcome.php:153
+#@ edd
+msgid "Improved Order Details Interface"
+msgstr "Förbättrat Gränssnitt för Order Detaljer"
+
+#: includes/admin/welcome.php:159
+#@ edd
+msgid "Better Order Detail Display"
+msgstr "Bättre Visning Order Detaljer"
+
+#: includes/admin/welcome.php:160
+#@ edd
+msgid "By doing away with the View Order Details pop up, we've made it possible to present the order details in a much more clear manner."
+msgstr "Genom att göra oss av med popup-rutan Visa Orderdetaljer har vi gjort det möjligt att presentera orderdetaljer på ett mycket bättre sätt."
+
+#: includes/admin/welcome.php:162
+#@ edd
+msgid "More Developer Friendly"
+msgstr "Mer Utvecklarvänligt"
+
+#: includes/admin/welcome.php:163
+#@ edd
+msgid "The new Order Details display is much more developer friendly with several hooks that make it possible to easily add additional data about the order via extensions."
+msgstr "Den nya visningen Orderdetaljer är mycket mer utvecklarvänlig med flera hooks som gör det möjligt att enkelt lägga till data om en order via tillägg."
+
+#: includes/admin/welcome.php:170
+#@ edd
+msgid "Multiple Tax Rates"
+msgstr "Flera Skattesatser"
+
+#: includes/admin/welcome.php:176
+#@ edd
+msgid "Define Rates for Specific Countries and States / Provinces"
+msgstr "Definiera skattesatser för specifika länder, stater / provinser"
+
+#: includes/admin/welcome.php:177
+#@ edd
+msgid "You can now setup tax rates for specific countries and states / provinces in those countries."
+msgstr "Du kan nu ställa in olika skattesatser beroende på land och län / provinser i dessa länder."
+
+#: includes/admin/welcome.php:179
+#@ edd
+msgid "No More Local-Tax Opt-In"
+msgstr "Ingen Lokal Alternativ Moms"
+
+#: includes/admin/welcome.php:180
+#@ edd
+msgid "Taxes are now automatically calculated based on the customer's billing address. If you have taxes enabled, billing detail fields will be automatically added to the checkout form."
+msgstr "Skatter nu beräknas automatiskt baserat på kundens faktureringsadress. Om du har skatt aktiverat, kommer fakturering detalj fält automatiskt att läggas till kassan formuläret."
+
+#: includes/admin/welcome.php:186
+#@ edd
+msgid "Improved Developer Documentation"
+msgstr "Förbättrad Dokumentation Utveckling"
+
+#: includes/admin/welcome.php:190
+#@ edd
+msgid "Code Reference"
+msgstr "Kodreferens"
+
+#: includes/admin/welcome.php:191
+#@ edd
+msgid "A complete code reference has been made available for developers at <a href=\"https://easydigitaldownloads.com/codex/index.html\">/codex</a> on the Easy Digital Downloads website."
+msgstr "En komplett kod-referens finns tillgänglig för utvecklare i <a href=\"https://easydigitaldownloads.com/codex/index.html\">/codex</a> på Easy DIgital Downloads hemsida."
+
+#: includes/admin/welcome.php:193
+#@ edd
+msgid "Action Hooks"
+msgstr "Action Hooks"
+
+#: includes/admin/welcome.php:194
+#@ edd
+msgid "Along with the complete code reference, we have been working to bring the <a href=\"https://easydigitaldownloads.com/docs/section/actions/\">Actions reference</a> up to date with all of the action hooks available in Easy Digital Downloads."
+msgstr "Tillsammans med den nya kod-referensen, har vi också arbetat för att tillhandahålla en uppdaterad <a href=\"https://easydigitaldownloads.com/docs/section/actions/\">Actions reference</a> med samtliga hooks tillgängliga i Easy Digital Downloads."
+
+#: includes/admin/welcome.php:200
+#@ edd
+msgid "Discounts API Endpoint"
+msgstr "Rabatter API Endpoint"
+
+#: includes/admin/welcome.php:203
+#@ edd
+msgid "Retrieve Available Discounts"
+msgstr "Hämta Tillgängliga Rabatter"
+
+#: includes/admin/welcome.php:204
+#@ edd
+msgid "The EDD RESTful API now includes a /discounts endpoint that can be used for retrieving details about the available discounts in your store. Want to create a feed on another website of the discounts available? You can now do that."
+msgstr "EDD RESTful API inkluderar nu även en endpoint för rabatter som kan användas för att hämta detaljer om tillgängliga rabatter i din butik. Vill du skapa en feed på en annan hemsida med alla rabatter tillgängliga? Nu kan du göra det."
+
+#: includes/admin/welcome.php:209
+#@ edd
+msgid "Additional Updates"
+msgstr "Ytterligare Uppdateringar"
+
+#: includes/admin/welcome.php:213
+#@ edd
+msgid "EDD_Cron Class"
+msgstr "EDD_Cron Class"
+
+#: includes/admin/welcome.php:214
+#, php-format
+#@ edd
+msgid "The new %sEDD_Cron class%s provides a simple way to hook into routinely scheduled events in Easy Digital Downloads."
+msgstr "Den nya %sEDD_Cron class%s ger dig ett enkelt sätt att kroka i rutiner för att schemalägga event i Easy Digital Downloads."
+
+#: includes/admin/welcome.php:216
+#@ edd
+msgid "Improved Country and State / Province Fields "
+msgstr "Förbättrade fält för land och stad / fält för län"
+
+#: includes/admin/welcome.php:217
+#@ edd
+msgid "We have added drop down fields for the states / provinces of 12 additional countries, providing customers in those countries a much better checkout experience."
+msgstr "Vi har lagt till en dropplista med fält för stater / län och ytterligare 12 länder, vilket ger kunder i dessa länder en mycket bättre upplevelse i kassan."
+
+#: includes/admin/welcome.php:221
+#@ edd
+msgid "More Reliable File Download Methods"
+msgstr "Mer Pålitliga Metoder För Nedladdning"
+
+#: includes/admin/welcome.php:222
+#@ edd
+msgid "EDD now supports delivering file downloads via X-Sendfile, X-Lighttpd-Sendfile, and X-Accel-Redirect depending on your server config."
+msgstr "EDD har nu stöd för att leverera filer med X-Sendfile, X-Lighttpd-Sendfile, och X-Accel-Redirect beroende på inställningarna i din server."
+
+#: includes/admin/welcome.php:224
+#@ edd
+msgid "Lookup Previous Guest Purchases on User Registration"
+msgstr "Slå Upp Föregående Köp Gäst på Användarregistrering"
+
+#: includes/admin/welcome.php:225
+#@ edd
+msgid "Anytime a new user is added, EDD will look up any purchases the user may have made as a guest and attribute them to the newly created account."
+msgstr "Så snart en ny användare läggs till, så kommer EDD att kolla upp om användaren gjort några köp som gäst tidigare och i så fall koppla samman dess med det nya kontot."
+
+#: includes/admin/welcome.php:229
+#@ edd
+msgid "Itemized PayPal Purchases"
+msgstr "Artiklar i Köp PayPal"
+
+#: includes/admin/welcome.php:230
+#@ edd
+msgid "Purchases made through PayPal will now show itemized details in the PayPal order summary box."
+msgstr "Köp gjorda genom PayPal visar nu detaljer om artiklar direkt i sammanfattningsrutan i orderrutan hos PayPal."
+
+#: includes/admin/welcome.php:232
+#@ edd
+msgid "SKU Support"
+msgstr "Stöd för artikelnummer"
+
+#: includes/admin/welcome.php:233
+#@ edd
+msgid "Adding product SKUs to Downloads is now supported and can be enabled in Downloads > Settings > Misc."
+msgstr "Skapa artikelnummer för produkter stöds nu och kan aktiveras i Nedladdningar -> Inställningar -> Allmänt."
+
+#: includes/admin/welcome.php:239
+#@ edd
+msgid "Go to Easy Digital Downloads Settings"
+msgstr "Gå till inställningar för Easy DIgital Downloads"
+
+#: includes/admin/welcome.php:268
+#@ edd
+msgid "Easy Digital Downloads is created by a worldwide team of developers who aim to provide the #1 eCommerce platform for selling digital goods through WordPress."
+msgstr "Easy Digital Downloads är skapad av ett team från hela världen som siktar på att göra det till nummer 1 för e-handel med digitala filer genom WordPress."
+
+#: includes/admin/welcome.php:295
+#, php-format
+#@ edd
+msgid "View %s"
+msgstr "Visa %s"
+
+#: includes/ajax-functions.php:145
+#@ edd
+msgid "This discount code has been used already"
+msgstr "Rabattkoden du angett har redan använts"
+
+#: includes/ajax-functions.php:161
+#: includes/process-purchase.php:224
+#@ edd
+msgid "The discount you entered is invalid"
+msgstr "Rabatten du angett är ogiltig"
+
+#: includes/cart/functions.php:205
+#: includes/cart/functions.php:315
+#: templates/shortcode-receipt.php:216
+#@ edd
+msgid "(ex. tax)"
+msgstr "(exkl. moms)"
+
+#: includes/cart/functions.php:209
+#: includes/cart/functions.php:319
+#@ edd
+msgid "(incl. tax)"
+msgstr "(inkl. moms)"
+
+#: includes/cart/functions.php:468
+#: templates/shortcode-receipt.php:74
+#: templates/shortcode-receipt.php:218
+#, php-format
+#@ edd
+msgid "(includes %s tax)"
+msgstr "(%s moms inkluderat)"
+
+#: includes/cart/functions.php:656
+#, php-format
+#@ edd
+msgid "You have successfully added %s to your shopping cart."
+msgstr "Du har lagt till %s i din kundvagn."
+
+#: includes/cart/functions.php:657
+#@ edd
+msgid "Checkout."
+msgstr "Kassa."
+
+#: includes/cart/template.php:47
+#@ edd
+msgid "Number of items in cart"
+msgstr "Antal artiklar i kundvagnen"
+
+#: includes/cart/template.php:125
+#@ edd
+msgid "Your cart is empty."
+msgstr "Din kundvagn är tom."
+
+#: includes/checkout/template.php:119
+#@ edd
+msgid "Personal Info"
+msgstr "Personlig Information"
+
+#: includes/checkout/template.php:122
+#: templates/shortcode-profile-editor.php:43
+#@ edd
+msgid "Email Address"
+msgstr "E-post"
+
+#: includes/checkout/template.php:123
+#: includes/checkout/template.php:303
+#@ edd
+msgid "We will send the purchase receipt to this address."
+msgstr "Vi kommer att skicka kvitton till denna adress."
+
+#: includes/checkout/template.php:124
+#@ edd
+msgid "Email address"
+msgstr "E-post"
+
+#: includes/checkout/template.php:129
+#: includes/checkout/template.php:308
+#@ edd
+msgid "We will use this to personalize your account experience."
+msgstr "Vi kommer att använda det här för att ge dig en bättre upplevelse."
+
+#: includes/checkout/template.php:134
+#: includes/checkout/template.php:313
+#@ edd
+msgid "We will use this as well to personalize your account experience."
+msgstr "Vi kommer att använda detta för att ge dig en mer personlig upplevelse."
+
+#: includes/checkout/template.php:135
+#: includes/checkout/template.php:314
+#@ edd
+msgid "Last name"
+msgstr "Efternamn"
+
+#: includes/checkout/template.php:155
+#@ edd
+msgid "Credit Card Info"
+msgstr "Kreditkortsinformation"
+
+#: includes/checkout/template.php:159
+#@ edd
+msgid "This is a secure SSL encrypted payment."
+msgstr "Detta är ett säkert SSL-krypterat köp."
+
+#: includes/checkout/template.php:163
+#@ edd
+msgid "Card Number"
+msgstr "Kortnummer"
+
+#: includes/checkout/template.php:164
+#@ edd
+msgid "The (typically) 16 digits on the front of your credit card."
+msgstr "De första (vanligen) 16 siffrorna på framsidan av ditt kreditkort."
+
+#: includes/checkout/template.php:165
+#@ edd
+msgid "Card number"
+msgstr "Kortnummer"
+
+#: includes/checkout/template.php:168
+#@ edd
+msgid "CVC"
+msgstr "CVC"
+
+#: includes/checkout/template.php:169
+#@ edd
+msgid "The 3 digit (back) or 4 digit (front) value on your card."
+msgstr "De 3 siffrorna (baksidan) eller 4 siffror (framsidan) på ditt kreditkort."
+
+#: includes/checkout/template.php:170
+#@ edd
+msgid "Security code"
+msgstr "Säkerhetskod"
+
+#: includes/checkout/template.php:173
+#@ edd
+msgid "Name on the Card"
+msgstr "Namn på kortet"
+
+#: includes/checkout/template.php:174
+#@ edd
+msgid "The name printed on the front of your credit card."
+msgstr "Namnet som är angivet på framsidan av ditt kreditkort."
+
+#: includes/checkout/template.php:175
+#@ edd
+msgid "Card name"
+msgstr "Kortnamn"
+
+#: includes/checkout/template.php:179
+#@ edd
+msgid "Expiration (MM/YY)"
+msgstr "Utgångsdatum (MM/ÅÅ)"
+
+#: includes/checkout/template.php:180
+#@ edd
+msgid "The date your credit card expires, typically on the front of the card."
+msgstr "Datumet då ditt kreditkort löper ut, oftast hittar du detta på framsidan av ditt kort."
+
+#: includes/checkout/template.php:208
+#@ edd
+msgid "Billing Details"
+msgstr "Faktureringsadress Detaljer"
+
+#: includes/checkout/template.php:211
+#@ edd
+msgid "Billing Address"
+msgstr "Faktureringsadress"
+
+#: includes/checkout/template.php:212
+#@ edd
+msgid "The primary billing address for your credit card."
+msgstr "Den primära faktureringsadressen för ditt kreditkort."
+
+#: includes/checkout/template.php:213
+#@ edd
+msgid "Address line 1"
+msgstr "Adressrad 1"
+
+#: includes/checkout/template.php:216
+#@ edd
+msgid "Billing Address Line 2 (optional)"
+msgstr "Faktureringsadress Rad 2 (valfritt)"
+
+#: includes/checkout/template.php:217
+#@ edd
+msgid "The suite, apt no, PO box, etc, associated with your billing address."
+msgstr "Lägenhetsnummer eller boxnummer etc, associerad med din faktureringsadress."
+
+#: includes/checkout/template.php:218
+#@ edd
+msgid "Address line 2"
+msgstr "Adressrad 2"
+
+#: includes/checkout/template.php:221
+#@ edd
+msgid "Billing City"
+msgstr "Ort Faktureringsadress"
+
+#: includes/checkout/template.php:222
+#@ edd
+msgid "The city for your billing address."
+msgstr "Orten för din faktureringsadress."
+
+#: includes/checkout/template.php:223
+#@ edd
+msgid "City"
+msgstr "Ort"
+
+#: includes/checkout/template.php:226
+#@ edd
+msgid "Billing Country"
+msgstr "Ort för Faktureringsadress"
+
+#: includes/checkout/template.php:227
+#@ edd
+msgid "The country for your billing address."
+msgstr "Land för Faktureringsadress."
+
+#: includes/checkout/template.php:238
+#@ edd
+msgid "Billing State / Province"
+msgstr "Billing State / Province"
+
+#: includes/checkout/template.php:239
+#@ edd
+msgid "The state or province for your billing address."
+msgstr "Län Faktureringsadress."
+
+#: includes/checkout/template.php:257
+#@ edd
+msgid "Billing Zip / Postal Code"
+msgstr "Postnummer Faktureringsadress"
+
+#: includes/checkout/template.php:258
+#@ edd
+msgid "The zip or postal code for your billing address."
+msgstr "Postnummer för faktureringsadress."
+
+#: includes/checkout/template.php:259
+#@ edd
+msgid "Zip / Postal code"
+msgstr "Postnummer"
+
+#: includes/checkout/template.php:299
+#@ edd
+msgid "Already have an account?"
+msgstr "Har du redan ett konto?"
+
+#: includes/checkout/template.php:299
+#: includes/login-register.php:53
+#@ edd
+msgid "Login"
+msgstr "Logga in"
+
+#: includes/checkout/template.php:318
+#@ edd
+msgid "Create an account"
+msgstr "Skapa ett konto"
+
+#: includes/checkout/template.php:318
+#@ edd
+msgid "(optional)"
+msgstr "(valfritt)"
+
+#: includes/checkout/template.php:321
+#: includes/checkout/template.php:323
+#: includes/checkout/template.php:360
+#: includes/login-register.php:42
+#: includes/login-register.php:43
+#@ edd
+msgid "Username"
+msgstr "Användarnamn"
+
+#: includes/checkout/template.php:322
+#@ edd
+msgid "The username you will use to log into your account."
+msgstr "Användarnamnet du använder för att komma åt ditt konto."
+
+#: includes/checkout/template.php:326
+#: includes/checkout/template.php:328
+#: includes/checkout/template.php:364
+#: includes/login-register.php:46
+#@ edd
+msgid "Password"
+msgstr "Lösenord"
+
+#: includes/checkout/template.php:327
+#@ edd
+msgid "The password used to access your account."
+msgstr "Lösenordet du använder för att komma åt ditt konto."
+
+#: includes/checkout/template.php:331
+#@ edd
+msgid "Password Again"
+msgstr "Lösenord Igen"
+
+#: includes/checkout/template.php:332
+#@ edd
+msgid "Confirm your password."
+msgstr "Bekräfta ditt lösenord."
+
+#: includes/checkout/template.php:333
+#@ edd
+msgid "Confirm password"
+msgstr "Bekräfta lösenord"
+
+#: includes/checkout/template.php:357
+#@ edd
+msgid "Login to your account"
+msgstr "Logga in på ditt konto"
+
+#: includes/checkout/template.php:361
+#@ edd
+msgid "Your username"
+msgstr "Ditt användarnamn"
+
+#: includes/checkout/template.php:365
+#@ edd
+msgid "Your password"
+msgstr "Ditt lösenord"
+
+#: includes/checkout/template.php:371
+#@ edd
+msgid "Need to create an account?"
+msgstr "Behöver du skapa ett konto?"
+
+#: includes/checkout/template.php:373
+#@ edd
+msgid "Register"
+msgstr "Registrera"
+
+#: includes/checkout/template.php:373
+#@ edd
+msgid "or checkout as a guest."
+msgstr "eller gå till kassan som gäst."
+
+#: includes/checkout/template.php:399
+#@ edd
+msgid "Select Payment Method"
+msgstr "Välj Betalningsmetod"
+
+#: includes/checkout/template.php:437
+#: templates/shortcode-receipt.php:82
+#@ edd
+msgid "Discount"
+msgstr "Rabatt"
+
+#: includes/checkout/template.php:440
+#@ edd
+msgid "Enter a coupon code if you have one."
+msgstr "Ange rabattkod om du har en."
+
+#: includes/checkout/template.php:441
+#: includes/scripts.php:52
+#@ edd
+msgid "Enter discount"
+msgstr "Ange rabatt"
+
+#: includes/checkout/template.php:471
+#@ edd
+msgid "Show Terms"
+msgstr "Visa Villkor"
+
+#: includes/checkout/template.php:472
+#@ edd
+msgid "Hide Terms"
+msgstr "Dölj Villkor"
+
+#: includes/checkout/template.php:474
+#@ edd
+msgid "Agree to Terms?"
+msgstr "Acceptera Villkoren?"
+
+#: includes/checkout/template.php:492
+#@ edd
+msgid "Purchase Total:"
+msgstr "Köp Totalt:"
+
+#: includes/checkout/template.php:519
+#@ edd
+msgid "Go back"
+msgstr "Gå tillbaka"
+
+#: includes/checkout/template.php:542
+#@ edd
+msgid "Next"
+msgstr "Nästa"
+
+#: includes/checkout/template.php:563
+#@ edd
+msgid "Free Download"
+msgstr "Gratis Nedladdning"
+
+#: includes/class-edd-api.php:201
+#@ edd
+msgid "You must specify both a token and API key!"
+msgstr "Du måste ange både ett kodbevis (token) och en API-nyckel!"
+
+#: includes/class-edd-api.php:217
+#@ edd
+msgid "Your request could not be authenticated!"
+msgstr "Din förfrågan kunde inte autentiseras!"
+
+#: includes/class-edd-api.php:234
+#@ edd
+msgid "Invalid API key!"
+msgstr "Ogiltig API-nyckel"
+
+#: includes/class-edd-api.php:349
+#@ edd
+msgid "Invalid query!"
+msgstr "Ogiltig förfrågan!"
+
+#: includes/class-edd-api.php:628
+#, php-format
+#@ edd
+msgid "Customer %s not found!"
+msgstr "Kund %s hittades inte!"
+
+#: includes/class-edd-api.php:720
+#: includes/class-edd-api.php:825
+#: includes/class-edd-api.php:908
+#, php-format
+#@ edd
+msgid "Product %s not found!"
+msgstr "Produkt %s hittades inte!"
+
+#: includes/class-edd-api.php:760
+#: includes/class-edd-api.php:842
+#@ edd
+msgid "The end date must be later than the start date!"
+msgstr "Slutdatum måste vara senare än startdatum!"
+
+#: includes/class-edd-api.php:765
+#: includes/class-edd-api.php:847
+#@ edd
+msgid "Invalid or no date range specified!"
+msgstr "Ogiltigt datum eller intervall angivet!"
+
+#: includes/class-edd-api.php:1055
+#, php-format
+#@ edd
+msgid "Discount %s not found!"
+msgstr "Rabatt %s hittades inte!"
+
+#: includes/class-edd-api.php:1198
+#@ edd
+msgid "Easy Digital Downloads API Keys"
+msgstr "Easy Digital Downloads API-nycklar"
+
+#: includes/class-edd-api.php:1203
+#@ edd
+msgid "Generate API Key"
+msgstr "Generera API-nyckel"
+
+#: includes/class-edd-api.php:1205
+#@ edd
+msgid "Public key:"
+msgstr "Publik nyckel:"
+
+#: includes/class-edd-api.php:1206
+#@ edd
+msgid "Secret key:"
+msgstr "Hemlig Nyckel:"
+
+#: includes/class-edd-api.php:1207
+#@ edd
+msgid "Token:"
+msgstr "Bevis:"
+
+#: includes/class-edd-api.php:1209
+#@ edd
+msgid "Revoke API Keys"
+msgstr "Annullera API-nycklar"
+
+#: includes/class-edd-cron.php:44
+#@ edd
+msgid "Once Weekly"
+msgstr "Veckovis"
+
+#: includes/class-edd-html-elements.php:42
+#@ edd
+msgid "No products found"
+msgstr "Inga produkter hittades"
+
+#: includes/class-edd-html-elements.php:75
+#@ edd
+msgid "No discounts found"
+msgstr "Inga rabatter hittades"
+
+#: includes/class-edd-html-elements.php:97
+#: includes/post-types.php:196
+#@ edd
+msgid "All Categories"
+msgstr "Alla Kategorier"
+
+#: includes/class-edd-html-elements.php:103
+#@ edd
+msgid "No categories found"
+msgstr "Inga kategorier hittades."
+
+#: includes/class-edd-roles.php:45
+#@ edd
+msgid "Shop Manager"
+msgstr "Butik Chef"
+
+#: includes/class-edd-roles.php:76
+#@ edd
+msgid "Shop Accountant"
+msgstr "Butik Revisor"
+
+#: includes/class-edd-roles.php:82
+#@ edd
+msgid "Shop Worker"
+msgstr "Butik Arbetare"
+
+#: includes/class-edd-roles.php:89
+#@ edd
+msgid "Shop Vendor"
+msgstr "Butik Försäljare"
+
+#: includes/country-functions.php:111
+#@ edd
+msgid "Choose"
+msgstr "Välj"
+
+#: includes/download-functions.php:856
+#@ edd
+msgid "Sorry but you have hit your download limit for this file."
+msgstr "Tyvärr så har maxgränsen för antalet nedladdningar nåtts för denna fil."
+
+#: includes/download-functions.php:860
+#@ edd
+msgid "Sorry but your download link has expired."
+msgstr "Tyvärr men länken för nedladdning har upphört att gälla."
+
+#: includes/emails/functions.php:79
+#: includes/emails/template.php:245
+#: includes/emails/template.php:297
+#@ edd
+msgid "Dear"
+msgstr "Bäste"
+
+#: includes/emails/functions.php:80
+#: includes/emails/template.php:246
+#: includes/emails/template.php:298
+#@ edd
+msgid "Thank you for your purchase. Please click on the link(s) below to download your files."
+msgstr "Tack för ditt köp. Klicka på länken (länkarna) nedan för att ladda ner dina filer."
+
+#: includes/emails/functions.php:130
+#@ edd
+msgid "New download purchase"
+msgstr "Nytt nedladdningsköp"
+
+#: includes/emails/functions.php:132
+#@ edd
+msgid "Hello"
+msgstr "Hej"
+
+#: includes/emails/functions.php:132
+#, php-format
+#@ edd
+msgid "A %s purchase has been made"
+msgstr "Ett %s köp har gjorts"
+
+#: includes/emails/functions.php:133
+#, php-format
+#@ edd
+msgid "%s sold:"
+msgstr "%s sålt:"
+
+#: includes/emails/functions.php:154
+#@ edd
+msgid "Purchased by: "
+msgstr "Köpt av:"
+
+#: includes/emails/functions.php:155
+#@ edd
+msgid "Amount: "
+msgstr "Summa: "
+
+#: includes/emails/functions.php:156
+#@ edd
+msgid "Payment Method: "
+msgstr "Betalningsmetod:"
+
+#: includes/emails/functions.php:157
+#@ edd
+msgid "Thank you"
+msgstr "Tack"
+
+#: includes/emails/functions.php:209
+#@ edd
+msgid "Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:"
+msgstr "Ange e-post som skickas till användaren efter ett avslutat och lyckat köp. HTML accepteras. Tillgängliga malltaggar:"
+
+#: includes/emails/functions.php:210
+#@ edd
+msgid "A list of download links for each download purchased"
+msgstr "En lista med nedladdningslänkar för varje nedladdning i köp"
+
+#: includes/emails/functions.php:211
+#@ edd
+msgid "A plain-text list of download URLs for each download purchased"
+msgstr "En ren textlista med nedladdningsadresser för varje nedladdning i köp"
+
+#: includes/emails/functions.php:212
+#@ edd
+msgid "The buyer's first name"
+msgstr "Köparens förnamn"
+
+#: includes/emails/functions.php:213
+#@ edd
+msgid "The buyer's full name, first and last"
+msgstr "Köparens fulla namn, förnamn och efternamn"
+
+#: includes/emails/functions.php:214
+#@ edd
+msgid "The buyer's user name on the site, if they registered an account"
+msgstr "Köparens namn på denna sida, om ett konto finns registrerat"
+
+#: includes/emails/functions.php:215
+#@ edd
+msgid "The date of the purchase"
+msgstr "Datum då köpet gjordes"
+
+#: includes/emails/functions.php:216
+#@ edd
+msgid "The price of the purchase before taxes"
+msgstr "Priset på köp utan moms"
+
+#: includes/emails/functions.php:217
+#@ edd
+msgid "The taxed amount of the purchase"
+msgstr "Varav moms"
+
+#: includes/emails/functions.php:218
+#@ edd
+msgid "The total price of the purchase"
+msgstr "Den totala summan av köp"
+
+#: includes/emails/functions.php:219
+#@ edd
+msgid "The unique ID number for this purchase"
+msgstr "Unikt ID för detta köp"
+
+#: includes/emails/functions.php:220
+#@ edd
+msgid "The unique ID number for this purchase receipt"
+msgstr "Unikt ID för kvitto för detta köp"
+
+#: includes/emails/functions.php:221
+#@ edd
+msgid "The method of payment used for this purchase"
+msgstr "Betalningsmetod som användes för detta köp"
+
+#: includes/emails/functions.php:222
+#@ edd
+msgid "Your site name"
+msgstr "Din sidas namn"
+
+#: includes/emails/functions.php:223
+#@ edd
+msgid "Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly."
+msgstr "Lägger till en direktlänk till kvitto för köpet direkt på din hemsida om kvittot inte visas i webbläsaren korrekt."
+
+#: includes/emails/template.php:24
+#@ edd
+msgid "Default Template"
+msgstr "Standardmall"
+
+#: includes/emails/template.php:25
+#@ edd
+msgid "No template, plain text only"
+msgstr "Ingen mall, endast ren text"
+
+#: includes/emails/template.php:84
+#: templates/shortcode-receipt.php:113
+#@ edd
+msgid "SKU"
+msgstr "Artikelnummer"
+
+#: includes/emails/template.php:161
+#: includes/emails/template.php:218
+#, php-format
+#@ edd
+msgid "%1$sView it in your browser.%2$s"
+msgstr "%1$sVisa i din webbläsare.%2$s"
+
+#: includes/emails/template.php:180
+#@ edd
+msgid "Sample Product Title"
+msgstr "Produktprov Titel"
+
+#: includes/emails/template.php:183
+#@ edd
+msgid "Sample Download File Name"
+msgstr "Produktprov Nedladdning Filnamn"
+
+#: includes/emails/template.php:183
+#@ edd
+msgid "Optional notes about this download."
+msgstr "Valfria anteckningar om denna hämtning."
+
+#: includes/emails/template.php:196
+#@ edd
+msgid "These are some sample notes added to a product."
+msgstr "Detta är några exempel på anteckningar som läggs till en produkt."
+
+#: includes/emails/template.php:253
+#@ edd
+msgid "Purchase Receipt Preview"
+msgstr "Förhandsvisning Kvitto"
+
+#: includes/emails/template.php:253
+#@ edd
+msgid "Preview Purchase Receipt"
+msgstr "Förhandsvisa Kvitto"
+
+#: includes/emails/template.php:254
+#@ edd
+msgid "This will send a demo purchase receipt to the emails listed below."
+msgstr "Detta kommer att skicka ett demonstrationskvitto för köp till e-post angiven nedan."
+
+#: includes/emails/template.php:254
+#@ edd
+msgid "Send Test Email"
+msgstr "Skicka Testmail"
+
+#: includes/emails/template.php:408
+#@ edd
+msgid "Missing purchase key."
+msgstr "Referensnummer för Köp Saknas"
+
+#: includes/emails/template.php:416
+#@ edd
+msgid "Receipt"
+msgstr "Kvitto"
+
+#: includes/gateways/functions.php:24
+#@ edd
+msgid "PayPal Standard"
+msgstr "PayPal Standard"
+
+#: includes/gateways/functions.php:24
+#@ edd
+msgid "PayPal"
+msgstr "PayPal"
+
+#: includes/gateways/functions.php:25
+#@ edd
+msgid "Test Payment"
+msgstr "Testköp"
+
+#: includes/gateways/functions.php:200
+#@ edd
+msgid "You must enable a payment gateway to use Easy Digital Downloads"
+msgstr "Du måste aktivera en betalningsmetod för att använda Easy Digital Downloads"
+
+#: includes/gateways/manual.php:73
+#, php-format
+#@ edd
+msgid "Payment creation failed while processing a manual (free or test) purchase. Payment data: %s"
+msgstr "Misslyckades med att skapa köp vid  ett manuellt (gratis eller test) köp. Data för köp:% s"
+
+#: includes/gateways/paypal-standard.php:74
+#, php-format
+#@ edd
+msgid "Payment creation failed before sending buyer to PayPal. Payment data: %s"
+msgstr "Misslyckades att skapa köp innan köparen skickades till PayPal. Data för köp: %s"
+
+#: includes/gateways/paypal-standard.php:285
+#: includes/gateways/paypal-standard.php:290
+#: includes/gateways/paypal-standard.php:343
+#: includes/gateways/paypal-standard.php:354
+#: includes/gateways/paypal-standard.php:359
+#@ edd
+msgid "IPN Error"
+msgstr "IPN Fel"
+
+#: includes/gateways/paypal-standard.php:285
+#: includes/gateways/paypal-standard.php:290
+#, php-format
+#@ edd
+msgid "Invalid IPN verification response. IPN data: %s"
+msgstr "Ogiltigt svar från IPN. IPN data: %s"
+
+#: includes/gateways/paypal-standard.php:343
+#, php-format
+#@ edd
+msgid "Invalid currency in IPN response. IPN data: %s"
+msgstr "Ogiltig valuta i svar från IPN. IPN data: %s"
+
+#: includes/gateways/paypal-standard.php:354
+#, php-format
+#@ edd
+msgid "Invalid payment amount in IPN response. IPN data: %s"
+msgstr "Ogiltig summa i svar från IPN. IPN data: %s"
+
+#: includes/gateways/paypal-standard.php:359
+#, php-format
+#@ edd
+msgid "Invalid purchase key in IPN response. IPN data: %s"
+msgstr "Ogiltigt referensnummer för köp i svar från IPN. IPN data: %s"
+
+#: includes/gateways/paypal-standard.php:365
+#, php-format
+#@ edd
+msgid "PayPal Transaction ID: %s"
+msgstr "PayPal Transaktions-ID: %s"
+
+#: includes/gateways/paypal-standard.php:386
+#, php-format
+#@ edd
+msgid "PayPal Payment #%s Refunded"
+msgstr "PayPal Köp #%s Återbetalat"
+
+#: includes/gateways/paypal-standard.php:387
+#, php-format
+#@ edd
+msgid "PayPal Refund Transaction ID: %s"
+msgstr "PayPal Återbetalning Transaktions-ID: %s"
+
+#: includes/gateways/paypal.php:267
+#@ edd
+msgid "Invalid IPN"
+msgstr "Ogiltig IPN"
+
+#: includes/install.php:52
+#: includes/template-functions.php:106
+#: templates/widget-cart-checkout.php:2
+#: templates/widget-cart-empty.php:3
+#@ edd
+msgid "Checkout"
+msgstr "Kassa"
+
+#: includes/install.php:64
+#@ edd
+msgid "Purchase Confirmation"
+msgstr "Bekräfta Köp"
+
+#: includes/install.php:65
+#@ edd
+msgid "Thank you for your purchase! [edd_receipt]"
+msgstr "Tack för ditt köp! [edd_receipt]"
+
+#: includes/install.php:89
+#: includes/widgets.php:163
+#@ edd
+msgid "Purchase History"
+msgstr "Köphistorik"
+
+#: includes/login-register.php:39
+#@ edd
+msgid "Log into Your Account"
+msgstr "Logga in på ditt konto"
+
+#: includes/login-register.php:56
+#@ edd
+msgid "Lost Password"
+msgstr "Glömt lösenordet"
+
+#: includes/login-register.php:57
+#@ edd
+msgid "Lost Password?"
+msgstr "Glömt lösenordet?"
+
+#: includes/login-register.php:65
+#@ edd
+msgid "You are already logged in"
+msgstr "Du är redan inloggad"
+
+#: includes/login-register.php:86
+#: includes/process-purchase.php:446
+#@ edd
+msgid "The password you entered is incorrect"
+msgstr "Lösenordet du angett är felaktigt"
+
+#: includes/login-register.php:89
+#: includes/process-purchase.php:465
+#@ edd
+msgid "The username you entered does not exist"
+msgstr "Användarnamnet du angett existerar inte"
+
+#: includes/misc-functions.php:215
+#@ edd
+msgid "US Dollars (&#36;)"
+msgstr "Amerikanska Dollar (&#36;)"
+
+#: includes/misc-functions.php:216
+#@ edd
+msgid "Euros (&euro;)"
+msgstr "Euro (&euro;)"
+
+#: includes/misc-functions.php:217
+#@ edd
+msgid "Pounds Sterling (&pound;)"
+msgstr "Pounds Sterling (&pound;)"
+
+#: includes/misc-functions.php:218
+#@ edd
+msgid "Australian Dollars (&#36;)"
+msgstr "Australiska Dollar (&#36;)"
+
+#: includes/misc-functions.php:219
+#@ edd
+msgid "Brazilian Real (R&#36;)"
+msgstr "Brasilianska Real (R $)"
+
+#: includes/misc-functions.php:220
+#@ edd
+msgid "Canadian Dollars (&#36;)"
+msgstr "Kanadensiska Dollar (&#36;)"
+
+#: includes/misc-functions.php:221
+#@ edd
+msgid "Czech Koruna"
+msgstr "Tjeckisk Koruna"
+
+#: includes/misc-functions.php:222
+#@ edd
+msgid "Danish Krone"
+msgstr "Dansk Krona"
+
+#: includes/misc-functions.php:223
+#@ edd
+msgid "Hong Kong Dollar (&#36;)"
+msgstr "Hong Kong Dollar (&#36;)"
+
+#: includes/misc-functions.php:224
+#@ edd
+msgid "Hungarian Forint"
+msgstr "Ungersk Forint"
+
+#: includes/misc-functions.php:225
+#@ edd
+msgid "Israeli Shekel (&#8362;)"
+msgstr "Israeliska Shekel (&#8362;)"
+
+#: includes/misc-functions.php:226
+#@ edd
+msgid "Japanese Yen (&yen;)"
+msgstr "Japansk Yen (&yen;)"
+
+#: includes/misc-functions.php:227
+#@ edd
+msgid "Malaysian Ringgits"
+msgstr "Malaysiska Ringgits"
+
+#: includes/misc-functions.php:228
+#@ edd
+msgid "Mexican Peso (&#36;)"
+msgstr "Mexikansk Peso (&#36;)"
+
+#: includes/misc-functions.php:229
+#@ edd
+msgid "New Zealand Dollar (&#36;)"
+msgstr "Nya Zeeland Dollar (&#36;)"
+
+#: includes/misc-functions.php:230
+#@ edd
+msgid "Norwegian Krone"
+msgstr "Norsk Krona"
+
+#: includes/misc-functions.php:231
+#@ edd
+msgid "Philippine Pesos"
+msgstr "Filippinska Pesos"
+
+#: includes/misc-functions.php:232
+#@ edd
+msgid "Polish Zloty"
+msgstr "Polsk Zloty"
+
+#: includes/misc-functions.php:233
+#@ edd
+msgid "Singapore Dollar (&#36;)"
+msgstr "Singapore Dollar (&#36;)"
+
+#: includes/misc-functions.php:234
+#@ edd
+msgid "Swedish Krona"
+msgstr "Svensk Krona"
+
+#: includes/misc-functions.php:235
+#@ edd
+msgid "Swiss Franc"
+msgstr "Schweiziska Franc"
+
+#: includes/misc-functions.php:236
+#@ edd
+msgid "Taiwan New Dollars"
+msgstr "Taiwanesisk Dollar"
+
+#: includes/misc-functions.php:237
+#@ edd
+msgid "Thai Baht (&#3647;)"
+msgstr "Thailändska Baht (&#3647;)"
+
+#: includes/misc-functions.php:238
+#@ edd
+msgid "Indian Rupee (&#8377;)"
+msgstr "Indiska Rupier (&#8377;)"
+
+#: includes/misc-functions.php:239
+#@ edd
+msgid "Turkish Lira (&#8378;)"
+msgstr "Turkisk Lira (&#8378;)"
+
+#: includes/misc-functions.php:240
+#@ edd
+msgid "Iranian Rial (&#65020;)"
+msgstr "Iransk Rial (&#65020;)"
+
+#: includes/misc-functions.php:342
+#, php-format
+#@ edd
+msgid "%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead."
+msgstr "%1$s är <strong>föråldrat</strong> sedan Easy Digital Downloads version %2$s! Använd %3$s istället."
+
+#: includes/misc-functions.php:347
+#, php-format
+#@ edd
+msgid "%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available."
+msgstr "%1$s är <strong>föråldrat</strong> sedan Easy Digital Downloads version% 2$s inga alternativ tillgängliga."
+
+#: includes/payments/actions.php:104
+#, php-format
+#@ edd
+msgid "Status changed from %s to %s"
+msgstr "Status ändrad från %s till %s"
+
+#: includes/payments/functions.php:392
+#@ edd
+msgid "Complete"
+msgstr "Komplett"
+
+#: includes/plugin-compatibility.php:73
+#@ edd
+msgid "No Caching on Checkout?"
+msgstr "Ingen cachning i Kassan?"
+
+#: includes/plugin-compatibility.php:74
+#@ edd
+msgid "Check this box in order to append a ?nocache parameter to the checkout URL to prevent caching plugins from caching the page."
+msgstr "Markera rutan för att lägga till en? Nocache parameter till kassan URL för att förhindra cachning plugins från caching sidan."
+
+#: includes/post-types.php:31
+#, php-format
+#@ edd
+msgid "Add New %1$s"
+msgstr "Skapa Ny %1$s"
+
+#: includes/post-types.php:32
+#, php-format
+#@ edd
+msgid "Edit %1$s"
+msgstr "Redigera %1$s"
+
+#: includes/post-types.php:33
+#, php-format
+#@ edd
+msgid "New %1$s"
+msgstr "Ny %1$s"
+
+#: includes/post-types.php:34
+#, php-format
+#@ edd
+msgid "All %2$s"
+msgstr "Alla %2$s"
+
+#: includes/post-types.php:35
+#, php-format
+#@ edd
+msgid "View %1$s"
+msgstr "Visa %1$s"
+
+#: includes/post-types.php:36
+#, php-format
+#@ edd
+msgid "Search %2$s"
+msgstr "Sök %2$s"
+
+#: includes/post-types.php:37
+#, php-format
+#@ edd
+msgid "No %2$s found"
+msgstr "Inga %2$s hittades"
+
+#: includes/post-types.php:38
+#, php-format
+#@ edd
+msgid "No %2$s found in Trash"
+msgstr "Inga %2$s hittades i Papperskorgen"
+
+#: includes/post-types.php:40
+#, php-format
+#@ edd
+msgid "%2$s"
+msgstr "%2$s"
+
+#: includes/post-types.php:66
+#@ edd
+msgctxt "post type general name"
+msgid "Payments"
+msgstr "Köp"
+
+#: includes/post-types.php:67
+#@ edd
+msgctxt "post type singular name"
+msgid "Payment"
+msgstr "Köp"
+
+#: includes/post-types.php:69
+#@ edd
+msgid "Add New Payment"
+msgstr "Skapa Nytt Köp"
+
+#: includes/post-types.php:71
+#@ edd
+msgid "New Payment"
+msgstr "Nytt Köp"
+
+#: includes/post-types.php:72
+#@ edd
+msgid "All Payments"
+msgstr "Alla Köp"
+
+#: includes/post-types.php:73
+#@ edd
+msgid "View Payment"
+msgstr "Visa Köp"
+
+#: includes/post-types.php:75
+#@ edd
+msgid "No Payments found"
+msgstr "Inga köp hittades"
+
+#: includes/post-types.php:76
+#@ edd
+msgid "No Payments found in Trash"
+msgstr "Inga köp hittades i Papperskorgen"
+
+#: includes/post-types.php:96
+#@ edd
+msgctxt "post type general name"
+msgid "Discounts"
+msgstr "Rabatter"
+
+#: includes/post-types.php:97
+#@ edd
+msgctxt "post type singular name"
+msgid "Discount"
+msgstr "Rabatt"
+
+#: includes/post-types.php:101
+#@ edd
+msgid "New Discount"
+msgstr "Ny Rabatt"
+
+#: includes/post-types.php:102
+#@ edd
+msgid "All Discounts"
+msgstr "Alla Rabatter"
+
+#: includes/post-types.php:103
+#@ edd
+msgid "View Discount"
+msgstr "Visa Rabatt"
+
+#: includes/post-types.php:104
+#@ edd
+msgid "Search Discounts"
+msgstr "Sök Rabatter"
+
+#: includes/post-types.php:105
+#@ edd
+msgid "No Discounts found"
+msgstr "Inga Rabatter hittades"
+
+#: includes/post-types.php:106
+#@ edd
+msgid "No Discounts found in Trash"
+msgstr "Inga rabatter hittades i Papperskorgen"
+
+#: includes/post-types.php:108
+#@ edd
+msgid "Discounts"
+msgstr "Rabatter"
+
+#: includes/post-types.php:135
+#@ edd
+msgid "Downloads"
+msgstr "Nedladdningar"
+
+#: includes/post-types.php:174
+#, php-format
+#@ edd
+msgid "Enter %s title here"
+msgstr "Ange %s titel här"
+
+#: includes/post-types.php:193
+#, php-format
+#@ edd
+msgctxt "taxonomy general name"
+msgid "%s Categories"
+msgstr "%s Kategorier"
+
+#: includes/post-types.php:194
+#@ edd
+msgctxt "taxonomy singular name"
+msgid "Category"
+msgstr "Kategori"
+
+#: includes/post-types.php:195
+#@ edd
+msgid "Search Categories"
+msgstr "Sök Kategorier"
+
+#: includes/post-types.php:197
+#@ edd
+msgid "Parent Category"
+msgstr "Huvudkategori"
+
+#: includes/post-types.php:198
+#@ edd
+msgid "Parent Category:"
+msgstr "Huvudkategori:"
+
+#: includes/post-types.php:199
+#@ edd
+msgid "Edit Category"
+msgstr "Redigera Kategori"
+
+#: includes/post-types.php:200
+#@ edd
+msgid "Update Category"
+msgstr "Uppdatera Kategori"
+
+#: includes/post-types.php:201
+#@ edd
+msgid "Add New Category"
+msgstr "Skapa Ny Kategori"
+
+#: includes/post-types.php:202
+#@ edd
+msgid "New Category Name"
+msgstr "Skapa Nytt Kategorinamn"
+
+#: includes/post-types.php:220
+#, php-format
+#@ edd
+msgctxt "taxonomy general name"
+msgid "%s Tags"
+msgstr "%s Etiketter"
+
+#: includes/post-types.php:221
+#@ edd
+msgctxt "taxonomy singular name"
+msgid "Tag"
+msgstr "Etikett"
+
+#: includes/post-types.php:222
+#@ edd
+msgid "Search Tags"
+msgstr "Sök Etiketter"
+
+#: includes/post-types.php:223
+#@ edd
+msgid "All Tags"
+msgstr "Alla Etiketter"
+
+#: includes/post-types.php:224
+#@ edd
+msgid "Parent Tag"
+msgstr "Huvudetikett"
+
+#: includes/post-types.php:225
+#@ edd
+msgid "Parent Tag:"
+msgstr "Huvudetikett:"
+
+#: includes/post-types.php:226
+#@ edd
+msgid "Edit Tag"
+msgstr "Redigera Etikett"
+
+#: includes/post-types.php:227
+#@ edd
+msgid "Update Tag"
+msgstr "Uppdatera Etikett"
+
+#: includes/post-types.php:228
+#@ edd
+msgid "Add New Tag"
+msgstr "Skapa Ny Etikett"
+
+#: includes/post-types.php:229
+#@ edd
+msgid "New Tag Name"
+msgstr "Skapa Nytt Etikettnamn"
+
+#: includes/post-types.php:258
+#@ edd
+msgctxt "Refunded payment status"
+msgid "Refunded"
+msgstr "Återbetalat"
+
+#: includes/post-types.php:263
+#, php-format
+#@ edd
+msgid "Refunded <span class=\"count\">(%s)</span>"
+msgid_plural "Refunded <span class=\"count\">(%s)</span>"
+msgstr[0] "Återbetalat <span class=\"count\">(%s)</span>"
+msgstr[1] "Återbetalat <span class=\"count\">(%s)</span>"
+
+#: includes/post-types.php:266
+#@ edd
+msgctxt "Failed payment status"
+msgid "Failed"
+msgstr "Misslyckades"
+
+#: includes/post-types.php:271
+#, php-format
+#@ edd
+msgid "Failed <span class=\"count\">(%s)</span>"
+msgid_plural "Failed <span class=\"count\">(%s)</span>"
+msgstr[0] "Misslyckad <span class=\"count\">(%s)</span>"
+msgstr[1] "Misslyckade <span class=\"count\">(%s)</span>"
+
+#: includes/post-types.php:274
+#@ edd
+msgctxt "Revoked payment status"
+msgid "Revoked"
+msgstr "Återkallad"
+
+#: includes/post-types.php:279
+#, php-format
+#@ edd
+msgid "Revoked <span class=\"count\">(%s)</span>"
+msgid_plural "Revoked <span class=\"count\">(%s)</span>"
+msgstr[0] "Återkallad <span class=\"count\">(%s)</span>"
+msgstr[1] "Återkallade <span class=\"count\">(%s)</span>"
+
+#: includes/post-types.php:282
+#@ edd
+msgctxt "Abandoned payment status"
+msgid "Abandoned"
+msgstr "Övergiven"
+
+#: includes/post-types.php:287
+#, php-format
+#@ edd
+msgid "Abandoned <span class=\"count\">(%s)</span>"
+msgid_plural "Abandoned <span class=\"count\">(%s)</span>"
+msgstr[0] "Övergiven <span class=\"count\">(%s)</span>"
+msgstr[1] "Övergiven <span class=\"count\">(%s)</span>"
+
+#: includes/post-types.php:292
+#@ edd
+msgctxt "Active discount code status"
+msgid "Active"
+msgstr "Aktiv"
+
+#: includes/post-types.php:297
+#, php-format
+#@ edd
+msgid "Active <span class=\"count\">(%s)</span>"
+msgid_plural "Active <span class=\"count\">(%s)</span>"
+msgstr[0] "Aktiv <span class=\"count\">(%s)</span>"
+msgstr[1] "Aktiva <span class=\"count\">(%s)</span>"
+
+#: includes/post-types.php:300
+#@ edd
+msgctxt "Inactive discount code status"
+msgid "Inactive"
+msgstr "Inaktiv"
+
+#: includes/post-types.php:305
+#, php-format
+#@ edd
+msgid "Inactive <span class=\"count\">(%s)</span>"
+msgid_plural "Inactive <span class=\"count\">(%s)</span>"
+msgstr[0] "Inaktiv <span class=\"count\">(%s)</span>"
+msgstr[1] "Inaktiva <span class=\"count\">(%s)</span>"
+
+#: includes/post-types.php:327
+#: includes/post-types.php:328
+#, php-format
+#@ edd
+msgid "%2$s updated. %1$sView %2$s%3$s."
+msgstr "%2$s uppdaterad. %1$sVisa %2$s%3$s."
+
+#: includes/post-types.php:329
+#, php-format
+#@ edd
+msgid "%2$s published. %1$sView %2$s%3$s."
+msgstr "%2$s publicerad. %1$sVisa %2$s%3$s."
+
+#: includes/post-types.php:330
+#, php-format
+#@ edd
+msgid "%2$s saved. %1$sView %2$s%3$s."
+msgstr "%2$s sparad. %1$sVisa %2$s%3$s."
+
+#: includes/post-types.php:331
+#, php-format
+#@ edd
+msgid "%2$s submitted. %1$sView %2$s%3$s."
+msgstr "%2$s skickad. %1$sVisa %2$s%3$s."
+
+#: includes/process-download.php:147
+#@ edd
+msgid "You do not have permission to download this file"
+msgstr "Du har inte behörighet att ladda ner denna fil"
+
+#: includes/process-download.php:148
+#@ edd
+msgid "Purchase Verification Failed"
+msgstr "Verifikation av Köp Misslyckades"
+
+#: includes/process-purchase.php:29
+#: includes/scripts.php:71
+#@ edd
+msgid "Your cart is empty"
+msgstr "Din kundvagn är tom"
+
+#: includes/process-purchase.php:185
+#@ edd
+msgid "The selected gateway is not active"
+msgstr "Den valda betallösningen är inte aktiv"
+
+#: includes/process-purchase.php:187
+#@ edd
+msgid "No gateway has been selected"
+msgstr "Ingen betallösning har valts"
+
+#: includes/process-purchase.php:242
+#@ edd
+msgid "You must agree to the terms of use"
+msgstr "Du måste godkänna villkoren"
+
+#: includes/process-purchase.php:257
+#@ edd
+msgid "Please enter your first name"
+msgstr "Ange ditt namn först"
+
+#: includes/process-purchase.php:285
+#@ edd
+msgid "Please enter a valid email address"
+msgstr "Ange en giltig e-post adress"
+
+#: includes/process-purchase.php:306
+#@ edd
+msgid "The user information is invalid"
+msgstr "Användarinformationen är ogiltig"
+
+#: includes/process-purchase.php:354
+#@ edd
+msgid "Username already taken"
+msgstr "Användarnamnet är upptaget"
+
+#: includes/process-purchase.php:359
+#@ edd
+msgid "Invalid username. Only lowercase letters (a-z) and numbers are allowed"
+msgstr "Ogiltigt användarnamn. Endast små bokstäver (a-z) och siffror är tillåtna"
+
+#: includes/process-purchase.php:361
+#@ edd
+msgid "Invalid username"
+msgstr "Ogiltigt användarnamn"
+
+#: includes/process-purchase.php:368
+#@ edd
+msgid "You must register or login to complete your purchase"
+msgstr "Du måste registrera dig eller logga in för att slutföra ditt köp"
+
+#: includes/process-purchase.php:376
+#: includes/process-purchase.php:498
+#@ edd
+msgid "Invalid email"
+msgstr "Ogiltig e-post"
+
+#: includes/process-purchase.php:379
+#@ edd
+msgid "Email already used"
+msgstr "E-post används redan"
+
+#: includes/process-purchase.php:386
+#: includes/process-purchase.php:505
+#@ edd
+msgid "Enter an email"
+msgstr "Ange e-post"
+
+#: includes/process-purchase.php:394
+#@ edd
+msgid "Passwords don't match"
+msgstr "Lösenorden matchar inte"
+
+#: includes/process-purchase.php:403
+#: includes/process-purchase.php:461
+#@ edd
+msgid "Enter a password"
+msgstr "Ange ett lösenord"
+
+#: includes/process-purchase.php:406
+#@ edd
+msgid "Enter the password confirmation"
+msgstr "Ange lösenord för bekräftelse"
+
+#: includes/process-purchase.php:429
+#@ edd
+msgid "You must login or register to complete your purchase"
+msgstr "Du måste logga in för att slutföra ditt köp"
+
+#: includes/process-purchase.php:487
+#@ edd
+msgid "You must be logged into an account to purchase"
+msgstr "Du måste vara inloggad för att kunna handla"
+
+#: includes/process-purchase.php:634
+#@ edd
+msgid "The zip code you entered for your credit card is invalid"
+msgstr "Koden du angett är ogiltig för detta kreditkort"
+
+#: includes/query-filters.php:52
+#@ edd
+msgid "You do not have permission to view this file."
+msgstr "Du har inte behörighet att se denna fil."
+
+#: includes/scripts.php:50
+#@ edd
+msgid "Please select a payment method"
+msgstr "Välj en betalningsmetod"
+
+#: includes/scripts.php:51
+#@ edd
+msgid "Please enter a discount code"
+msgstr "Ange en rabattkod"
+
+#: includes/scripts.php:53
+#@ edd
+msgid "Discount Applied"
+msgstr "Rabatt Tillämpad"
+
+#: includes/scripts.php:54
+#@ edd
+msgid "Please enter an email address before applying a discount code"
+msgstr "Ange en e-postadress innan en rabattkod"
+
+#: includes/scripts.php:55
+#@ edd
+msgid "Please enter a username before applying a discount code"
+msgstr "Ange ett användarnamn innan en rabattkod"
+
+#: includes/scripts.php:56
+#@ edd
+msgid "Please Wait..."
+msgstr "Var god vänta..."
+
+#: includes/scripts.php:70
+#@ edd
+msgid "You have already added this item to your cart"
+msgstr "Du har redan lagt den här artikeln i din kundvagn"
+
+#: includes/scripts.php:72
+#: includes/template-functions.php:116
+#@ edd
+msgid "Loading"
+msgstr "Laddar"
+
+#: includes/scripts.php:73
+#@ edd
+msgid "Please select an option"
+msgstr "Välj ett alternativ"
+
+#: includes/scripts.php:208
+#@ edd
+msgid "Add New Download"
+msgstr "Skapa Ny Nedladdning"
+
+#: includes/scripts.php:209
+#@ edd
+msgid "Use This File"
+msgstr "Använd Denna Fil"
+
+#: includes/scripts.php:210
+#@ edd
+msgid "Sorry, not available for variable priced products."
+msgstr "Tyvärr, inte tillgängligt för variabelt prissatta produkter."
+
+#: includes/scripts.php:211
+#@ edd
+msgid "Are you sure you wish to delete this payment?"
+msgstr "Är du säker på att du vill radera detta köp?"
+
+#: includes/scripts.php:212
+#@ edd
+msgid "Are you sure you wish to delete this note?"
+msgstr "Är du säker på att du vill radera denna anteckning?"
+
+#: includes/scripts.php:213
+#@ edd
+msgid "Are you sure you wish to delete this tax rate?"
+msgstr "Är du säker på att du vill radera denna regel för moms?"
+
+#: includes/scripts.php:214
+#@ edd
+msgid "You must have at least one price"
+msgstr "Du måste ha minst ett pris"
+
+#: includes/scripts.php:215
+#@ edd
+msgid "You must have at least one file"
+msgstr "Du måste ha minst en fil"
+
+#: includes/scripts.php:216
+#@ edd
+msgid "You must have at least one field"
+msgstr "Du måste ha minst ett fält"
+
+#: includes/shortcodes.php:194
+#@ edd
+msgid "Purchase All Items"
+msgstr "Köp Alla Artiklar"
+
+#: includes/shortcodes.php:392
+#, php-format
+#@ edd
+msgctxt "download post type name"
+msgid "No %s found"
+msgstr "Inga %s hittade"
+
+#: includes/shortcodes.php:436
+#@ edd
+msgid "Sorry, trouble retrieving payment receipt."
+msgstr "Tyvärr, problem att hämta kvitto."
+
+#: includes/shortcodes.php:541
+#@ edd
+msgid "The passwords you entered do not match. Please try again."
+msgstr "Lösenorden du angav matchar inte. Vänligen försök igen."
+
+#: includes/template-functions.php:119
+#, php-format
+#@ edd
+msgid "Item successfully added to your %scart%s."
+msgstr "Artikeln har lagts till i din %skundvagn%s."
+
+#: includes/template-functions.php:120
+#@ edd
+msgid "Go to Checkout"
+msgstr "Gå till Kassan"
+
+#: includes/template-functions.php:274
+#@ edd
+msgid "Gray"
+msgstr "Grå"
+
+#: includes/template-functions.php:275
+#@ edd
+msgid "Blue"
+msgstr "Blå"
+
+#: includes/template-functions.php:276
+#@ edd
+msgid "Green"
+msgstr "Grön"
+
+#: includes/template-functions.php:277
+#@ edd
+msgid "Yellow"
+msgstr "Gul"
+
+#: includes/template-functions.php:278
+#@ edd
+msgid "Dark Gray"
+msgstr "Mörkgrå"
+
+#: includes/template-functions.php:294
+#@ edd
+msgid "Button"
+msgstr "Knapp"
+
+#: includes/template-functions.php:295
+#@ edd
+msgid "Plain Text"
+msgstr "Ren Text"
+
+#: includes/template-functions.php:318
+#@ edd
+msgid "You have already purchased this item, but you may purchase it again."
+msgstr "Du har redan köpt denna produkt, men du kan köpa den igen."
+
+#: includes/template-functions.php:362
+#@ edd
+msgid "No downloads found"
+msgstr "Inga nedladdningar hittades"
+
+#: includes/widgets.php:37
+#@ edd
+msgid "Downloads Cart"
+msgstr "Nedladdningar Kundvagn"
+
+#: includes/widgets.php:37
+#@ edd
+msgid "Display the downloads shopping cart"
+msgstr "Visa kundvagnen för nedladdningar"
+
+#: includes/widgets.php:70
+#: includes/widgets.php:137
+#@ edd
+msgid "Title:"
+msgstr "Titel:"
+
+#: includes/widgets.php:90
+#@ edd
+msgid "Downloads Categories / Tags"
+msgstr "Kategorier / Etiketter  Nedladdningar "
+
+#: includes/widgets.php:90
+#@ edd
+msgid "Display the downloads categories or tags"
+msgstr "Visa kategorier eller taggar för nedladdningar"
+
+#: includes/widgets.php:142
+#@ edd
+msgid "Taxonomy:"
+msgstr "Taxonomi:"
+
+#: includes/widgets.php:163
+#@ edd
+msgid "Display a user's purchase history"
+msgstr "Visa användarens köphistorik"
+
+#: includes/widgets.php:202
+#: templates/history-downloads.php:49
+#: templates/shortcode-receipt.php:189
+#@ edd
+msgid "No downloadable files found."
+msgstr "Inga nedladdningsbara filer hittades."
+
+#: includes/widgets.php:229
+#@ edd
+msgid "Title"
+msgstr "Titel"
+
+#: templates/checkout_cart.php:6
+#@ edd
+msgid "Item Name"
+msgstr "Artikelns Namn"
+
+#: templates/checkout_cart.php:7
+#@ edd
+msgid "Item Price"
+msgstr "Artikelns Pris"
+
+#: templates/checkout_cart.php:8
+#@ edd
+msgid "Actions"
+msgstr "Åtgärd"
+
+#: templates/checkout_cart.php:45
+#@ default
+msgid "label"
+msgstr ""
+
+#: templates/checkout_cart.php:63
+#: templates/shortcode-receipt.php:56
+#@ edd
+msgid "Subtotal"
+msgstr "Delsumma"
+
+#: templates/checkout_cart.php:90
+#@ edd
+msgid "Total"
+msgstr "Totalt"
+
+#: templates/history-downloads.php:9
+#@ edd
+msgid "Download Name"
+msgstr "Nedladdningens Namn"
+
+#: templates/history-downloads.php:11
+#@ edd
+msgid "Files"
+msgstr "Filer"
+
+#: templates/history-downloads.php:78
+#@ edd
+msgid "You have not purchased any downloads"
+msgstr "Du har inte köpt några nedladdningar"
+
+#: templates/history-purchases.php:30
+#@ edd
+msgid "View Details and Downloads"
+msgstr "Visa detaljer och nedladdningar"
+
+#: templates/history-purchases.php:49
+#@ edd
+msgid "You have not made any purchases"
+msgstr "Du har inte gjort några köp"
+
+#: templates/shortcode-profile-editor.php:14
+#@ edd
+msgid "Success"
+msgstr "Lyckades"
+
+#: templates/shortcode-profile-editor.php:14
+#@ edd
+msgid "Your profile has been edited successfully."
+msgstr "Din profil har redigerats."
+
+#: templates/shortcode-profile-editor.php:18
+#@ edd
+msgid "Change your Name"
+msgstr "Ändra ditt Namn"
+
+#: templates/shortcode-profile-editor.php:27
+#@ edd
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#: templates/shortcode-profile-editor.php:46
+#@ edd
+msgid "Change your Password"
+msgstr "Ändra ditt Lösenord"
+
+#: templates/shortcode-profile-editor.php:48
+#@ edd
+msgid "New Password"
+msgstr "Nytt Lösenord"
+
+#: templates/shortcode-profile-editor.php:51
+#@ edd
+msgid "Re-enter Password"
+msgstr "Ange lösenord på nytt"
+
+#: templates/shortcode-profile-editor.php:54
+#@ edd
+msgid "Please note after changing your password, you must log back in."
+msgstr "Observera att efter du ändrat ditt lösenord måste du logga in på nytt."
+
+#: templates/shortcode-profile-editor.php:59
+#@ edd
+msgid "Save Changes"
+msgstr "Spara Ändringar"
+
+#: templates/shortcode-profile-editor.php:65
+#@ edd
+msgid "You need to login to edit your profile."
+msgstr "Du måste logga in för att redigera din profil."
+
+#: templates/shortcode-receipt.php:19
+#@ edd
+msgid "Payment"
+msgstr "Köp"
+
+#: templates/shortcode-receipt.php:96
+#@ edd
+msgid "Payment Key"
+msgstr "Referensnummer"
+
+#: templates/shortcode-receipt.php:180
+#@ edd
+msgid "No downloadable files found for this bundled item."
+msgstr "Inga nedladdningsbara filer hittades för detta paket."
+
+#: templates/widget-cart-checkout.php:1
+#: templates/widget-cart-empty.php:2
+#@ edd
+msgid "Subtotal:"
+msgstr "Delsumma:"
+
+#: templates/widget-cart-item.php:4
+#@ edd
+msgid "remove"
+msgstr "radera"
+
