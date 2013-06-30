@@ -19,6 +19,7 @@ function edd_settings_export_import() {
 	<div class="wrap">
 		<h2><?php _e( 'Export / Import Settings', 'edd' ); ?></h2>
 		<div class="metabox-holder">
+			<?php do_action( 'edd_settings_export_import_top' ); ?>
 			<div class="postbox">
 				<h3><span><?php _e( 'Export Settings', 'edd' ); ?></span></h3>
 				<div class="inside">
@@ -50,6 +51,7 @@ function edd_settings_export_import() {
 					</form>
 				</div><!-- .inside -->
 			</div><!-- .postbox -->
+			<?php do_action( 'edd_settings_export_import_bottom' ); ?>
 		</div><!-- .metabox-holder -->
 	</div><!-- .wrap -->
 	<?php
