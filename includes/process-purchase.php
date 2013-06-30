@@ -89,6 +89,7 @@ function edd_process_purchase_form() {
 	if ( !$purchase_data['price'] ) {
 		// Revert to manual
 		$purchase_data['gateway'] = 'manual';
+		$_POST['edd-gateway'] = 'manual';
 	}
 
 	// Allow the purchase data to be modified before it is sent to the gateway
