@@ -34,7 +34,7 @@ $user_info    = edd_get_payment_meta_user_info( $payment_id );
 $payment_date = strtotime( $item->post_date );
 ?>
 <div class="wrap">
-	<h2><?php printf( __( 'Payment #%d', 'edd' ), $payment_id ); ?> <a class="add-new-h2" href="<?php echo admin_url( 'edit.php?post_type=download&amp;page=edd-payment-history&amp;edd-action=edit-payment&amp;purchase_id=' . $payment_id ); ?>"><?php _e( 'Edit Order', 'edd' ); ?></a></h2>
+	<h2><?php printf( __( 'Payment #%d', 'edd' ), $payment_id ); ?> <a class="add-new-h2" href="<?php echo admin_url( 'edit.php?post_type=download&amp;page=edd-payment-history&amp;view=edit-payment&amp;purchase_id=' . $payment_id ); ?>"><?php _e( 'Edit Order', 'edd' ); ?></a></h2>
 	<?php do_action( 'edd_view_order_details_before' ); ?>
 	<div id="poststuff">
 		<div id="post-body" class="metabox-holder columns-2">
