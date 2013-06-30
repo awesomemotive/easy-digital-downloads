@@ -24,6 +24,7 @@ function edd_settings_export_import() {
 				<h3><span><?php _e( 'Export Settings', 'edd' ); ?></span></h3>
 				<div class="inside">
 					<p><?php _e( 'Export the Easy Digital Downloads settings for this site as a .json file. This allows you to easily import the configuration into another site.', 'edd' ); ?></p>
+					<p><?php printf( __( 'To export shop data (purchases, customers, etc), visit the <a href="%s">Reports</a> page.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-reports&tab=export' ) ); ?>
 					<form method="post" action="<?php echo admin_url( 'tools.php?page=edd-settings-export-import' ); ?>">
 						<p>
 							<input type="hidden" name="edd_action" value="export_settings" />
