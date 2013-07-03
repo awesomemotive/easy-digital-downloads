@@ -59,7 +59,8 @@ function edd_process_purchase_form() {
 		'email'      => $user['user_email'],
 		'first_name' => $user['user_first'],
 		'last_name'  => $user['user_last'],
-		'discount'   => $valid_data['discount']
+		'discount'   => $valid_data['discount'],
+		'address'    => $user['address']
 	);
 	// Setup purchase information
 	$purchase_data = array(
@@ -619,6 +620,20 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 	// Get user last name
 	if ( ! isset( $user['user_last'] ) || strlen( trim( $user['user_last'] ) ) < 1 ) {
 		$user['user_last'] = isset( $_POST["edd_last"] ) ? strip_tags( trim( $_POST["edd_last"] ) ) : '';
+	}
+
+	// Get the user's billing address details
+	$user['address'] = array();
+	$user['address']['line1']   = isset( $_POST['card_address']    ) ? sanitize_text_field( $_POST['card_address']    ) : '';
+	$user['address']['line1']   = isset( $_POST['card_address_2']  ) ? sanitize_text_field( $_POST['card_address_2']  ) : '';
+	$user['address']['city']    = isset( $_POST['card_city']       ) ? sanitize_text_field( $_POST['card_city']       ) : '';
+	$user['address']['state']   = isset( $_POST['card_state']      ) ? sanitize_text_field( $_POST['card_state']      ) : '';
+	$user['address']['country'] = isset( $_POST['billing_country'] ) ? sanitize_text_field( $_POST['billing_country'] ) : '';
+	$user['address']['zip']     = isset( $_POST['card_zip']        ) ? sanitize_text_field( $_POST['card_zip']        ) : '';
+
+	if( ! empty( $user['user_id'] ) && $user['user_id'] > 0 ) {
+		// Store the address in the user's meta so the cart can be pre-populated with it on return purchases
+		update_user_meta( $user['user_id'], '_edd_user_address', $user['address'] );
 	}
 
 	// Return valid user
