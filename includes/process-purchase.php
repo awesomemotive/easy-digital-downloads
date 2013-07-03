@@ -624,14 +624,17 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 
 	// Get the user's billing address details
 	$user['address'] = array();
-	$user['address']['line1']   = isset( $_POST['card_address']    ) ? sanitize_text_field( $_POST['card_address']    ) : '';
-	$user['address']['line1']   = isset( $_POST['card_address_2']  ) ? sanitize_text_field( $_POST['card_address_2']  ) : '';
-	$user['address']['city']    = isset( $_POST['card_city']       ) ? sanitize_text_field( $_POST['card_city']       ) : '';
-	$user['address']['state']   = isset( $_POST['card_state']      ) ? sanitize_text_field( $_POST['card_state']      ) : '';
-	$user['address']['country'] = isset( $_POST['billing_country'] ) ? sanitize_text_field( $_POST['billing_country'] ) : '';
-	$user['address']['zip']     = isset( $_POST['card_zip']        ) ? sanitize_text_field( $_POST['card_zip']        ) : '';
+	$user['address']['line1']   = ! empty( $_POST['card_address']    ) ? sanitize_text_field( $_POST['card_address']    ) : false;
+	$user['address']['line2']   = ! empty( $_POST['card_address_2']  ) ? sanitize_text_field( $_POST['card_address_2']  ) : false;
+	$user['address']['city']    = ! empty( $_POST['card_city']       ) ? sanitize_text_field( $_POST['card_city']       ) : false;
+	$user['address']['state']   = ! empty( $_POST['card_state']      ) ? sanitize_text_field( $_POST['card_state']      ) : false;
+	$user['address']['country'] = ! empty( $_POST['billing_country'] ) ? sanitize_text_field( $_POST['billing_country'] ) : false;
+	$user['address']['zip']     = ! empty( $_POST['card_zip']        ) ? sanitize_text_field( $_POST['card_zip']        ) : false;
 
-	if( ! empty( $user['user_id'] ) && $user['user_id'] > 0 ) {
+	if( empty( $user['address']['country'] ) )
+		$user['address'] = false; // Country will always be set if address fields are present
+
+	if( ! empty( $user['user_id'] ) && $user['user_id'] > 0 && ! empty( $user['country'] ) ) {
 		// Store the address in the user's meta so the cart can be pre-populated with it on return purchases
 		update_user_meta( $user['user_id'], '_edd_user_address', $user['address'] );
 	}
