@@ -98,8 +98,14 @@ function edd_process_purchase_form() {
 		$valid_data
 	);
 
+	// Setup the data we're storing in the purchase session
+	$session_data = $purchase_data;
+
+	// Make sure credit card numbers are never stored in sessions
+	unset( $session_data['card_info']['card_number'] );
+
 	// Used for showing download links to non logged-in users after purchase, and for other plugins needing purchase data.
-	edd_set_purchase_session( $purchase_data );
+	edd_set_purchase_session( $session_data );
 
 	// Send info to the gateway for payment processing
 	edd_send_to_gateway( $purchase_data['gateway'], $purchase_data );
