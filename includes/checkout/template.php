@@ -61,11 +61,12 @@ function edd_show_purchase_form() {
 	global $edd_options;
 
 	$payment_mode = edd_get_chosen_gateway();
-	$form_action = esc_url( edd_get_checkout_uri('payment-mode=' . $payment_mode) );
+	$form_action  = esc_url( edd_get_checkout_uri('payment-mode=' . $payment_mode) );
+	$enctype      = apply_filters( 'edd_purchase_form_enctype', '' );
 
 	do_action( 'edd_before_purchase_form' ); ?>
 
-	<form id="edd_purchase_form" action="<?php echo $form_action; ?>" method="POST">
+	<form id="edd_purchase_form" action="<?php echo $form_action; ?>" method="POST" enctype="<?php echo $enctype; ?>">
 		<?php
 		do_action( 'edd_purchase_form_top' );
 
