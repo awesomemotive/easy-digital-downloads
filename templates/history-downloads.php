@@ -22,7 +22,7 @@ if ( $purchases ) :
 				foreach ( $downloads as $download ) :
 
 					// Skip over Bundles. Products included with a bundle will be displayed individually
-					if( edd_is_bundled_product( $download['id'] ) )
+					if ( edd_is_bundled_product( $download['id'] ) )
 						continue; ?>
 
 					<tr class="edd_download_history_row">
@@ -44,7 +44,7 @@ if ( $purchases ) :
 							<td class="edd_download_download_files">
 								<?php
 
-								if( edd_is_payment_complete( $payment->ID ) ) :
+								if ( edd_is_payment_complete( $payment->ID ) ) :
 
 									if ( $download_files ) :
 
