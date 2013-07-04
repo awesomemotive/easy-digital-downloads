@@ -1136,9 +1136,11 @@ class EDD_API {
 
 		$format = $this->get_output_format();
 
+		status_header( 200 );
+
 		do_action( 'edd_api_output_before', $data, $this, $format );
 
-		switch( $format ) :
+		switch ( $format ) :
 
 			case 'xml' :
 
