@@ -153,7 +153,7 @@ class EDD_API {
 
 		// Retrieve the user by public API key and ensure they exist
 		if ( ! ( $user = $this->get_user( $wp_query->query_vars['key'] ) ) ) :
-			$this->invalid_key( $wp_query->query_vars['key'] );
+			$this->invalid_key();
 		else :
 			$token  = urldecode( $wp_query->query_vars['token'] );
 			$secret = get_user_meta( $user, 'edd_user_secret_key', true );
@@ -201,7 +201,7 @@ class EDD_API {
 		$error['error'] = __( 'You must specify both a token and API key!', 'edd' );
 
 		$this->data = $error;
-		$this->output();
+		$this->output( 401 );
 	}
 
 	/**
@@ -217,7 +217,7 @@ class EDD_API {
 		$error['error'] = __( 'Your request could not be authenticated!', 'edd' );
 
 		$this->data = $error;
-		$this->output();
+		$this->output( 401 );
 	}
 
 	/**
@@ -234,7 +234,7 @@ class EDD_API {
 		$error['error'] = __( 'Invalid API key!', 'edd' );
 
 		$this->data = $error;
-		$this->output();
+		$this->output( 401 );
 	}
 
 
@@ -1129,23 +1129,21 @@ class EDD_API {
 	 * @param array $data
 	 * @return void
 	 */
-	public function output() {
+	public function output( $status_code = 200 ) {
 		global $wp_query;
-
-		$data = $this->data;
 
 		$format = $this->get_output_format();
 
-		status_header( 200 );
+		status_header( $status_code );
 
-		do_action( 'edd_api_output_before', $data, $this, $format );
+		do_action( 'edd_api_output_before', $this->data, $this, $format );
 
 		switch ( $format ) :
 
 			case 'xml' :
 
 				require_once EDD_PLUGIN_DIR . 'includes/libraries/array2xml.php';
-				$xml = Array2XML::createXML( 'edd', $data );
+				$xml = Array2XML::createXML( 'edd', $this->data );
 				echo $xml->saveXML();
 
 				break;
@@ -1154,9 +1152,9 @@ class EDD_API {
 
 				header( 'Content-Type: application/json' );
 				if ( ! empty( $this->pretty_print ) )
-					echo json_encode( $data, $this->pretty_print );
+					echo json_encode( $this->data, $this->pretty_print );
 				else
-					echo json_encode( $data );
+					echo json_encode( $this->data );
 
 				break;
 
@@ -1164,13 +1162,13 @@ class EDD_API {
 			default :
 
 				// Allow other formats to be added via extensions
-				do_action( 'edd_api_output_' . $format, $data, $this );
+				do_action( 'edd_api_output_' . $format, $this->data, $this );
 
 				break;
 
 		endswitch;
 
-		do_action( 'edd_api_output_after', $data, $this, $format );
+		do_action( 'edd_api_output_after', $this->data, $this, $format );
 
 		edd_die();
 	}
