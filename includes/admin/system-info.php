@@ -33,13 +33,13 @@ function edd_system_info() {
 	if ( ! class_exists( 'Browser' ) )
 		require_once EDD_PLUGIN_DIR . 'includes/libraries/browser.php';
 
-	$browser =  new Browser();
+	$browser = new Browser();
 	if ( get_bloginfo( 'version' ) < '3.4' ) {
 		$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
-		$theme = $theme_data['Name'] . ' ' . $theme_data['Version'];
+		$theme      = $theme_data['Name'] . ' ' . $theme_data['Version'];
 	} else {
 		$theme_data = wp_get_theme();
-		$theme = $theme_data->Name . ' ' . $theme_data->Version;
+		$theme      = $theme_data->Name . ' ' . $theme_data->Version;
 	}
 ?>
 	<div class="wrap">
@@ -76,6 +76,8 @@ Downloads slug:           <?php echo defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG . "\
 
 Taxes Enabled:            <?php echo edd_use_taxes() ? "Yes\n" : "No\n"; ?>
 Taxes After Discounts:    <?php echo edd_taxes_after_discounts() ? "Yes\n" : "No\n"; ?>
+
+Registered Post Stati:    <?php echo implode( ', ', get_post_stati() ) . "\n\n"; ?>
 
 <?php echo $browser ; ?>
 
