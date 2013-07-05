@@ -14,7 +14,7 @@
 		<?php if ( $cart_items ) : ?>
 			<?php do_action( 'edd_cart_items_before' ); ?>
 			<?php foreach ( $cart_items as $key => $item ) : ?>
-				<tr class="edd_cart_item" id="edd_cart_item_<?php echo esc_attr( $item['id'] ); ?>">
+				<tr class="edd_cart_item" id="edd_cart_item_<?php echo esc_attr( $key ) . '_' . esc_attr( $item['id'] ); ?>" data-download-id="<?php echo esc_attr( $item['id'] ); ?>">
 					<?php do_action( 'edd_checkout_table_body_first', $item['id'] ); ?>
 					<td class="edd_cart_item_name">
 						<?php

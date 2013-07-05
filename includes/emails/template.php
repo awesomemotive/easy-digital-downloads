@@ -368,11 +368,13 @@ add_filter( 'edd_purchase_receipt', 'edd_apply_email_template', 20, 3 );
  * @since 1.0.8.2
  */
 function edd_default_email_template() {
-	echo '<div style="width: 550px; border: 1px solid #ccc; background: #f0f0f0; padding: 8px 10px; margin: 0 auto;">';
-	echo '<div id="edd-email-content" style="background: #fff; border: 1px solid #ccc; padding: 10px;">';
-	echo '{email}'; // This tag is required in order for the contents of the email to be shown
-	echo '</div>';
-	echo '</div>';
+	echo '<div style="margin: 0; background-color: #fafafa; width: auto; padding: 30px;"><center>';
+		echo '<div style="border: 1px solid #ddd; width: 550px; background: #f0f0f0; padding: 8px; margin: 0;">';
+			echo '<div id="edd-email-content" style="background: #fff; border: 1px solid #ddd; padding: 15px; text-align: left !important;">';
+				echo '{email}'; // This tag is required in order for the contents of the email to be shown
+			echo '</div>';
+		echo '</div>';
+	echo '</center></div>';
 }
 add_action( 'edd_email_template_default', 'edd_default_email_template' );
 
@@ -384,10 +386,11 @@ add_action( 'edd_email_template_default', 'edd_default_email_template' );
  * @return string $email_body Email template with styling
  */
 function edd_default_email_styling( $email_body ) {
-	$first_p    = strpos( $email_body, '<p>' );
-	$email_body = substr_replace( $email_body, '<p style="margin-top:0;">', $first_p, 3 );
-	$email_body = str_replace( '<ul>', '<ul style="margin:0 0 10px 0; padding: 0;">', $email_body );
-	$email_body = str_replace( '<li>', '<li style="display:block;margin:0 0 4px 0;">', $email_body );
+	$first_p    = strpos( $email_body, '<p style="font-size: 14px;">' );
+	$email_body = substr_replace( $email_body, '<p style="font-size: 14px; margin-top:0;">', $first_p, 3 );
+	$email_body = str_replace( '<p>', '<p style="font-size: 14px; line-height: 150%">', $email_body );
+	$email_body = str_replace( '<ul>', '<ul style="margin: 0 0 10px 0; padding: 0;">', $email_body );
+	$email_body = str_replace( '<li>', '<li style="font-size: 14px; line-height: 150%; display:block; margin: 0 0 4px 0;">', $email_body );
 
 	return $email_body;
 }
