@@ -112,7 +112,6 @@ function edd_currency_filter( $price ) {
 			case "BRL" : return $price . 'R&#36;'; break;
 			case "USD" :
 			case "AUD" :
-			case "BRL" :
 			case "CAD" :
 			case "HKD" :
 			case "MXN" :

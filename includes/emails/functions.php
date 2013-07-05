@@ -44,8 +44,8 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$from_name = isset( $edd_options['from_name'] ) ? $edd_options['from_name'] : get_bloginfo('name');
 	$from_email = isset( $edd_options['from_email'] ) ? $edd_options['from_email'] : get_option('admin_email');
 
-	$subject = apply_filters( 'edd_purchase_subject', isset( $edd_options['purchase_subject'] )
-		? trim( $edd_options['purchase_subject'] )
+	$subject = apply_filters( 'edd_purchase_subject', ! empty( $edd_options['purchase_subject'] )
+		? wp_strip_all_tags( $edd_options['purchase_subject'], true )
 		: __( 'Purchase Receipt', 'edd' ), $payment_id );
 
 	$subject = edd_email_template_tags( $subject, $payment_data, $payment_id );
@@ -127,7 +127,7 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 		$name = $user_info['email'];
 	}
 
-	$admin_subject = apply_filters( 'edd_admin_purchase_notification_subject', __( 'New download purchase', 'edd' ), $payment_id, $payment_data );
+	$admin_subject = apply_filters( 'edd_admin_purchase_notification_subject', sprintf( __( 'New download purchase - Order #%1$s', 'edd' ), $payment_id ), $payment_id, $payment_data );
 
 	$admin_message = __( 'Hello', 'edd' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'edd' ), edd_get_label_plural() ) . ".\n\n";
 	$admin_message .= sprintf( __( '%s sold:', 'edd' ), edd_get_label_plural() ) .  "\n\n";

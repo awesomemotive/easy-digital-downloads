@@ -61,11 +61,12 @@ function edd_show_purchase_form() {
 	global $edd_options;
 
 	$payment_mode = edd_get_chosen_gateway();
-	$form_action = esc_url( edd_get_checkout_uri('payment-mode=' . $payment_mode) );
+	$form_action  = esc_url( edd_get_checkout_uri('payment-mode=' . $payment_mode) );
+	$enctype      = apply_filters( 'edd_purchase_form_enctype', '' );
 
 	do_action( 'edd_before_purchase_form' ); ?>
 
-	<form id="edd_purchase_form" action="<?php echo $form_action; ?>" method="POST">
+	<form id="edd_purchase_form" action="<?php echo $form_action; ?>" method="POST" enctype="<?php echo $enctype; ?>">
 		<?php
 		do_action( 'edd_purchase_form_top' );
 
@@ -203,6 +204,16 @@ add_action( 'edd_cc_form', 'edd_get_cc_form' );
  * @return void
  */
 function edd_default_cc_address_fields() {
+
+	$logged_in = is_user_logged_in();
+
+	if( $logged_in ) {
+		$user_address = get_user_meta( get_current_user_id(), '_edd_user_address', true );
+	}
+	$line1 = $logged_in && ! empty( $user_address['line1'] ) ? $user_address['line1'] : '';
+	$line2 = $logged_in && ! empty( $user_address['line2'] ) ? $user_address['line2'] : '';
+	$city  = $logged_in && ! empty( $user_address['city']  ) ? $user_address['city']  : '';
+	$zip   = $logged_in && ! empty( $user_address['zip']   ) ? $user_address['zip']   : '';
 	ob_start(); ?>
 	<fieldset id="edd_cc_address" class="cc-address">
 		<legend><?php _e( 'Billing Details', 'edd' ); ?></legend>
@@ -210,26 +221,33 @@ function edd_default_cc_address_fields() {
 		<p id="edd-card-address-wrap">
 			<label class="edd-label"><?php _e( 'Billing Address', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The primary billing address for your credit card.', 'edd' ); ?></span>
-			<input type="text" name="card_address" class="card-address edd-input required" placeholder="<?php _e( 'Address line 1', 'edd' ); ?>"/>
+			<input type="text" name="card_address" class="card-address edd-input required" placeholder="<?php _e( 'Address line 1', 'edd' ); ?>" value="<?php echo $line1; ?>"/>
 		</p>
 		<p id="edd-card-address-2-wrap">
 			<label class="edd-label"><?php _e( 'Billing Address Line 2 (optional)', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The suite, apt no, PO box, etc, associated with your billing address.', 'edd' ); ?></span>
-			<input type="text" name="card_address_2" class="card-address-2 edd-input" placeholder="<?php _e( 'Address line 2', 'edd' ); ?>"/>
+			<input type="text" name="card_address_2" class="card-address-2 edd-input" placeholder="<?php _e( 'Address line 2', 'edd' ); ?>" value="<?php echo $line2; ?>"/>
 		</p>
 		<p id="edd-card-city-wrap">
 			<label class="edd-label"><?php _e( 'Billing City', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The city for your billing address.', 'edd' ); ?></span>
-			<input type="text" name="card_city" class="card-city edd-input required" placeholder="<?php _e( 'City', 'edd' ); ?>"/>
+			<input type="text" name="card_city" class="card-city edd-input required" placeholder="<?php _e( 'City', 'edd' ); ?>" value="<?php echo $city; ?>"/>
 		</p>
 		<p id="edd-card-country-wrap">
 			<label class="edd-label"><?php _e( 'Billing Country', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The country for your billing address.', 'edd' ); ?></span>
 			<select name="billing_country" id="billing_country" class="billing_country edd-select required">
 				<?php
+
+				$selected_country = edd_get_shop_country();
+
+				if( $logged_in && ! empty( $user_address['country'] ) ) {
+					$selected_country = $user_address['country'];
+				}
+
 				$countries = edd_get_country_list();
 				foreach( $countries as $country_code => $country ) {
-				  echo '<option value="' . $country_code . '"' . selected( $country_code, edd_get_shop_country(), false ) . '>' . $country . '</option>';
+				  echo '<option value="' . $country_code . '"' . selected( $country_code, $selected_country, false ) . '>' . $country . '</option>';
 				}
 				?>
 			</select>
@@ -238,14 +256,18 @@ function edd_default_cc_address_fields() {
 			<label class="edd-label"><?php _e( 'Billing State / Province', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The state or province for your billing address.', 'edd' ); ?></span>
             <?php
-            $default_state = edd_get_shop_state();
-            $states        = edd_get_shop_states();
+            $selected_state = edd_get_shop_state();
+            $states         = edd_get_shop_states();
+
+            if( $logged_in && ! empty( $user_address['state'] ) ) {
+				$selected_state = $user_address['state'];
+			}
 
             if( ! empty( $states ) ) : ?>
             <select name="card_state" id="card_state" class="card_state edd-select required">
                 <?php
                     foreach( $states as $state_code => $state ) {
-                        echo '<option value="' . $state_code . '"' . selected( $state_code, $default_state, false ) . '>' . $state . '</option>';
+                        echo '<option value="' . $state_code . '"' . selected( $state_code, $selected_state, false ) . '>' . $state . '</option>';
                     }
                 ?>
             </select>
@@ -256,7 +278,7 @@ function edd_default_cc_address_fields() {
 		<p id="edd-card-zip-wrap">
 			<label class="edd-label"><?php _e( 'Billing Zip / Postal Code', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The zip or postal code for your billing address.', 'edd' ); ?></span>
-			<input type="text" size="4" name="card_zip" class="card-zip edd-input required" placeholder="<?php _e( 'Zip / Postal code', 'edd' ); ?>"/>
+			<input type="text" size="4" name="card_zip" class="card-zip edd-input required" placeholder="<?php _e( 'Zip / Postal code', 'edd' ); ?>" value="<?php echo $zip; ?>"/>
 		</p>
 		<?php do_action( 'edd_cc_billing_bottom' ); ?>
 	</fieldset>
@@ -429,7 +451,7 @@ add_action( 'edd_payment_payment_mode_select', 'edd_payment_mode_select' );
  * @return void
 */
 function edd_discount_field() {
-	if ( edd_has_active_discounts() && ! edd_cart_has_discounts() ) {
+	if ( edd_has_active_discounts() && ! edd_cart_has_discounts() && edd_get_cart_total() ) {
 	?>
 	<fieldset id="edd_discount_code">
 		<p id="edd-discount-code-wrap">
@@ -538,6 +560,7 @@ function edd_checkout_button_next() {
 
 	ob_start();
 ?>
+	<input type="hidden" name="page_id" value="<?php echo absint( $edd_options['purchase_page'] ); ?>"/>
 	<input type="submit" id="edd_next_button" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" value="<?php _e( 'Next', 'edd' ); ?>"/>
 <?php
 	return apply_filters( 'edd_checkout_button_next', ob_get_clean() );
@@ -559,7 +582,7 @@ function edd_checkout_button_purchase() {
 	if ( edd_get_cart_total() ) {
 		$complete_purchase = ! empty( $edd_options['checkout_label'] ) ? $edd_options['checkout_label'] : __( 'Purchase', 'edd' );
 	} else {
-		$complete_purchase = ! empty( $edd_options['checkout_label'] ) ? $edd_options['checkout_label'] : __( 'Download', 'edd' );
+		$complete_purchase = ! empty( $edd_options['checkout_label'] ) ? $edd_options['checkout_label'] : __( 'Free Download', 'edd' );
 	}
 
 	ob_start();

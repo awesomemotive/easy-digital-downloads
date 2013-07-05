@@ -34,16 +34,25 @@ function edd_system_info() {
 		require_once EDD_PLUGIN_DIR . 'includes/libraries/browser.php';
 
 	$browser =  new Browser();
+	if ( get_bloginfo( 'version' ) < '3.4' ) {
+		$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
+		$theme = $theme_data['Name'] . ' ' . $theme_data['Version'];
+	} else {
+		$theme_data = wp_get_theme();
+		$theme = $theme_data->Name . ' ' . $theme_data->Version;
+	}
 ?>
 	<div class="wrap">
 		<h2><?php _e( 'System Information', 'edd' ) ?></h2><br/>
-		<form action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-system-info' ) ); ?>" method="post">
+		<form action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-system-info' ) ); ?>" method="post" dir="ltr">
 			<textarea readonly="readonly" onclick="this.focus();this.select()" id="system-info-textarea" name="edd-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
 ### Begin System Info ###
 
 ## Please include this information when posting support requests ##
 
-Multi-site:               <?php echo is_multisite() ? 'Yes' . "\n" : 'No' . "\n" ?>
+<?php do_action( 'edd_system_info_before' ); ?>
+
+Multisite:                <?php echo is_multisite() ? 'Yes' . "\n" : 'No' . "\n" ?>
 
 SITE_URL:                 <?php echo site_url() . "\n"; ?>
 HOME_URL:                 <?php echo home_url() . "\n"; ?>
@@ -51,6 +60,8 @@ HOME_URL:                 <?php echo home_url() . "\n"; ?>
 EDD Version:              <?php echo EDD_VERSION . "\n"; ?>
 Upgraded From:            <?php echo get_option( 'edd_version_upgraded_from', 'None' ) . "\n"; ?>
 WordPress Version:        <?php echo get_bloginfo( 'version' ) . "\n"; ?>
+Permalink Structure:      <?php echo get_option( 'permalink_structure' ) . "\n"; ?>
+Active Theme:             <?php echo $theme . "\n"; ?>
 
 Test Mode Enabled:        <?php echo edd_is_test_mode() ? "Yes\n" : "No\n"; ?>
 Ajax Enabled:             <?php echo edd_is_ajax_enabled() ? "Yes\n" : "No\n"; ?>
@@ -82,8 +93,8 @@ WP_DEBUG:                 <?php echo defined( 'WP_DEBUG' ) ? WP_DEBUG ? 'Enabled
 WP Table Prefix:          <?php echo "Length: ". strlen( $wpdb->prefix ); echo " Status:"; if ( strlen( $wpdb->prefix )>16 ) {echo " ERROR: Too Long";} else {echo " Acceptable";} echo "\n"; ?>
 
 Show On Front:            <?php echo get_option( 'show_on_front' ) . "\n" ?>
-Page On Front:            <?php $id = get_option( 'page_on_front' ); echo get_the_title( $id ) . ' #' . $id . "\n" ?>
-Page For Posts:           <?php $id = get_option( 'page_for_posts' ); echo get_the_title( $id ) . ' #' . $id . "\n" ?>
+Page On Front:            <?php $id = get_option( 'page_on_front' ); echo get_the_title( $id ) . ' (#' . $id . ')' . "\n" ?>
+Page For Posts:           <?php $id = get_option( 'page_for_posts' ); echo get_the_title( $id ) . ' (#' . $id . ')' . "\n" ?>
 
 Session:                  <?php echo isset( $_SESSION ) ? 'Enabled' : 'Disabled'; ?><?php echo "\n"; ?>
 Session Name:             <?php echo esc_html( ini_get( 'session.name' ) ); ?><?php echo "\n"; ?>
@@ -104,17 +115,16 @@ ACTIVE PLUGINS:
 $plugins = get_plugins();
 $active_plugins = get_option( 'active_plugins', array() );
 
-foreach ( $plugins as $plugin_path => $plugin ):
+foreach ( $plugins as $plugin_path => $plugin ) {
 	// If the plugin isn't active, don't show it.
 	if ( ! in_array( $plugin_path, $active_plugins ) )
 		continue;
 
-	echo $plugin['Name']; ?>: <?php echo $plugin['Version'] ."\n";
+	echo $plugin['Name'] . ': ' . $plugin['Version'] ."\n";
+}
 
-endforeach; ?>
-
-<?php
-if( is_multisite() ): ?>
+if ( is_multisite() ) :
+?>
 
 NETWORK ACTIVE PLUGINS:
 
@@ -122,7 +132,7 @@ NETWORK ACTIVE PLUGINS:
 $plugins = wp_get_active_network_plugins();
 $active_plugins = get_site_option( 'active_sitewide_plugins', array() );
 
-foreach( $plugins as $plugin_path ):
+foreach ( $plugins as $plugin_path ) {
 	$plugin_base = plugin_basename( $plugin_path );
 
 	// If the plugin isn't active, don't show it.
@@ -131,28 +141,14 @@ foreach( $plugins as $plugin_path ):
 
 	$plugin = get_plugin_data( $plugin_path );
 
-	echo  $plugin['Name']; ?>: <?php echo $plugin['Version'] ."\n";
-
-endforeach; ?>
-
-<?php
-endif; ?>
-
-CURRENT THEME:
-
-<?php
-if ( get_bloginfo( 'version' ) < '3.4' ) {
-	$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
-	echo $theme_data['Name'] . ': ' . $theme_data['Version'];
-} else {
-	$theme_data = wp_get_theme();
-	echo $theme_data->Name . ': ' . $theme_data->Version;
+	echo $plugin['Name'] . ' :' . $plugin['Version'] ."\n";
 }
+
+endif;
+
+do_action( 'edd_system_info_after' );
 ?>
-
-
-### End System Info ###
-			</textarea>
+### End System Info ###</textarea>
 			<p class="submit">
 				<input type="hidden" name="edd-action" value="download_sysinfo" />
 				<?php submit_button( __( 'Download System Info File', 'edd' ), 'primary', 'edd-download-sysinfo', false ); ?>

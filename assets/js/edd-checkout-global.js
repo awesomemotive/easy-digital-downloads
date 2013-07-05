@@ -116,7 +116,7 @@ jQuery(document).ready(function($) {
 
         var $this = $(this),
             discount_code = $this.val(),
-            edd_email = $('#edd-email').val();
+            edd_email = $('#edd-email').val(),
             edd_user = $('#edd_user_login').val(),
             edd_discount_loader = $('#edd-discount-loader');
 
