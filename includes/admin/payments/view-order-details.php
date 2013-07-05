@@ -107,6 +107,26 @@ $payment_date = strtotime( $item->post_date );
 							?>
 						</div><!-- /.inside -->
 					</div><!-- /#edd-payment-notes -->
+
+					<?php if( ! empty( $user_info['address'] ) ) { ?>
+
+						<div id="edd-order-address" class="postbox">
+							<h3 class="hndle"><span><?php _e( 'Billing Address', 'edd' ); ?></span></h3>
+							<div class="inside">
+								<div class="order-data-address">
+									<p class="data">
+										<span class="order-data-address-line"><?php echo _x( 'Line 1:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['line1']; ?><br/>
+										<span class="order-data-address-line"><?php echo _x( 'Line 2:', 'Second address line', 'edd' ) . '</span> ' . $user_info['address']['line2']; ?><br/>
+										<span class="order-data-address-line"><?php echo _x( 'City:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['city']; ?><br/>
+										<span class="order-data-address-line"><?php echo _x( 'State / Province:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['state']; ?><br/>
+										<span class="order-data-address-line"><?php echo _x( 'Zip / Postal Code:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['zip']; ?><br/>
+										<span class="order-data-address-line"><?php echo _x( 'Country:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['country']; ?><br/>
+									</p>
+								</div>
+							</div><!-- /.inside -->
+						</div><!-- /#edd-order-address -->
+					<?php } ?>
+
 					<?php do_action( 'edd_view_order_details_sidebar_after', $payment_id ); ?>
 				</div><!-- /#side-sortables -->
 			</div><!-- /#postbox-container-1 -->

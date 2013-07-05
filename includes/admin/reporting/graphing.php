@@ -109,30 +109,47 @@ function edd_reports_graph() {
 								$day++;
 							endwhile;
 
-	   					} else {
+						} else {
 
-	   						$i = $dates['m_start'];
-							while ( $i <= $dates['m_end'] ) :
-								if ( $day_by_day ) :
-									$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
-									$d 				= 1;
-									while ( $d <= $num_of_days ) :
-										$sales = edd_get_sales_by_date( $d, $i, $dates['year'] );
+							$y = $dates['year'];
+							while( $y <= $dates['year_end'] ) :
+
+								if( $dates['year'] == $dates['year_end'] ) {
+									$month_start = $dates['m_start'];
+									$month_end   = $dates['m_end'];
+								} elseif( $y == $dates['year'] ) {
+									$month_start = $dates['m_start'];
+									$month_end   = 12;
+								} else {
+									$month_start = 1;
+									$month_end   = 12;
+								}
+
+								$i = $month_start;
+								while ( $i <= $month_end ) :
+									if ( $day_by_day ) :
+										$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
+										$d 				= 1;
+										while ( $d <= $num_of_days ) :
+											$sales = edd_get_sales_by_date( $d, $i, $y );
+											$sales_totals += $sales;
+											$date = mktime( 0, 0, 0, $i, $d, $y ); ?>
+											[<?php echo $date * 1000; ?>, <?php echo $sales; ?>],
+										<?php
+										$d++;
+										endwhile;
+									else :
+										$sales = edd_get_sales_by_date( null, $i, $y );
 										$sales_totals += $sales;
-										$date = mktime( 0, 0, 0, $i, $d, $dates['year'] ); ?>
+										$date = mktime( 0, 0, 0, $i, 1, $y );
+										?>
 										[<?php echo $date * 1000; ?>, <?php echo $sales; ?>],
 									<?php
-									$d++;
-									endwhile;
-								else :
-									$sales = edd_get_sales_by_date( null, $i, $dates['year'] );
-									$sales_totals += $sales;
-									$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
-									?>
-									[<?php echo $date * 1000; ?>, <?php echo $sales; ?>],
-								<?php
-								endif;
-								$i++;
+									endif;
+									$i++;
+								endwhile;
+
+								$y++;
 							endwhile;
 
 	   					}
@@ -178,26 +195,45 @@ function edd_reports_graph() {
 
 	   					} else {
 
-		   					$i = $dates['m_start'];
-							while ( $i <= $dates['m_end'] ) :
-								if ( $day_by_day ) :
-									$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $dates['year'] );
-									$d 				= 1;
-									while ( $d <= $num_of_days ) :
-										$date = mktime( 0, 0, 0, $i, $d, $dates['year'] );
-										$earnings = edd_get_earnings_by_date( $d, $i, $dates['year'] );
-										$totals += $earnings; ?>
-										[<?php echo $date * 1000; ?>, <?php echo $earnings ?>],
-									<?php $d++; endwhile;
-								else :
-									$date = mktime( 0, 0, 0, $i, 1, $dates['year'] );
-									$earnings = edd_get_earnings_by_date( null, $i, $dates['year'] );
-									$totals += $earnings;
-									?>
-									[<?php echo $date * 1000; ?>, <?php echo $earnings; ?>],
-								<?php
-								endif;
-								$i++;
+	   						$y = $dates['year'];
+							while( $y <= $dates['year_end'] ) :
+
+								if( $dates['year'] == $dates['year_end'] ) {
+									$month_start = $dates['m_start'];
+									$month_end   = $dates['m_end'];
+								} elseif( $y == $dates['year'] ) {
+									$month_start = $dates['m_start'];
+									$month_end   = 12;
+								} else {
+									$month_start = 1;
+									$month_end   = 12;
+								}
+
+								$i = $month_start;
+								while ( $i <= $month_end ) :
+									if ( $day_by_day ) :
+										$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
+										$d 				= 1;
+										while ( $d <= $num_of_days ) :
+											$earnings = edd_get_earnings_by_date( $d, $i, $y );
+											$totals += $earnings;
+											$date = mktime( 0, 0, 0, $i, $d, $y ); ?>
+											[<?php echo $date * 1000; ?>, <?php echo $earnings; ?>],
+										<?php
+										$d++;
+										endwhile;
+									else :
+										$earnings = edd_get_earnings_by_date( null, $i, $y );
+										$totals += $earnings;
+										$date = mktime( 0, 0, 0, $i, 1, $y );
+										?>
+										[<?php echo $date * 1000; ?>, <?php echo $earnings; ?>],
+									<?php
+									endif;
+									$i++;
+								endwhile;
+
+								$y++;
 							endwhile;
 
 						}
@@ -344,15 +380,20 @@ function edd_reports_graph_controls() {
 			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_start'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
 				       	<?php endfor; ?>
 			       	</select>
+			       	<select id="edd-graphs-year" name="year">
+			       		<?php for ( $i = 2007; $i <= $dates['year_end']; $i++ ) : ?>
+			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year'] ); ?>><?php echo $i; ?></option>
+				       	<?php endfor; ?>
+			       	</select>
 			       	<span><?php _e( 'To', 'edd' ); ?>&nbsp;</span>
 			       	<select id="edd-graphs-month-start" name="m_end">
 			       		<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
 			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_end'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
 				       	<?php endfor; ?>
 			       	</select>
-			       	<select id="edd-graphs-year" name="year">
+			       	<select id="edd-graphs-year" name="year_end">
 			       		<?php for ( $i = 2007; $i <= $dates['year_end']; $i++ ) : ?>
-			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year'] ); ?>><?php echo $i; ?></option>
+			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year_end'] ); ?>><?php echo $i; ?></option>
 				       	<?php endfor; ?>
 			       	</select>
 			    </div>
@@ -380,12 +421,12 @@ function edd_get_report_dates() {
 	// Make sure the reports are based off of the correct timezone
 	date_default_timezone_set( edd_get_timezone_id() );
 
-	$dates['range']		= isset( $_GET['range'] )	? $_GET['range']	: 'this_month';
-	$dates['day']		= isset( $_GET['day'] ) 	? $_GET['day'] 		: null;
-	$dates['m_start'] 	= isset( $_GET['m_start'] ) ? $_GET['m_start'] 	: 1;
-	$dates['m_end']		= isset( $_GET['m_end'] ) 	? $_GET['m_end'] 	: 12;
-	$dates['year'] 		= isset( $_GET['year'] ) 	? $_GET['year'] 	: date( 'Y' );
-	$dates['year_end']	= date( 'Y' );
+	$dates['range']      = isset( $_GET['range'] )   ? $_GET['range']   : 'this_month';
+	$dates['day']        = isset( $_GET['day'] )     ? $_GET['day']     : null;
+	$dates['m_start']    = isset( $_GET['m_start'] ) ? $_GET['m_start'] : 1;
+	$dates['m_end']      = isset( $_GET['m_end'] )   ? $_GET['m_end']   : 12;
+	$dates['year']       = isset( $_GET['year'] )    ? $_GET['year']    : date( 'Y' );
+	$dates['year_end']   = isset( $_GET['y_end'] )   ? $_GET['y_end']   : date( 'Y' );
 
 	// Modify dates based on predefined ranges
 	switch ( $dates['range'] ) :
