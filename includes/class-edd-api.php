@@ -777,9 +777,12 @@ class EDD_API {
 						if( $dates['year'] == $dates['year_end'] ) {
 							$month_start = $dates['m_start'];
 							$month_end   = $dates['m_end'];
-						} elseif( $y == $dates['year'] ) {
+						} elseif( $y == $dates['year'] && $dates['year_end'] > $dates['year'] ) {
 							$month_start = $dates['m_start'];
 							$month_end   = 12;
+						} elseif( $y == $dates['year_end'] ) {
+							$month_start = 1;
+							$month_end   = $dates['m_end'];
 						} else {
 							$month_start = 1;
 							$month_end   = 12;
@@ -874,9 +877,12 @@ class EDD_API {
 						if( $dates['year'] == $dates['year_end'] ) {
 							$month_start = $dates['m_start'];
 							$month_end   = $dates['m_end'];
-						} elseif( $y == $dates['year'] ) {
+						} elseif( $y == $dates['year'] && $dates['year_end'] > $dates['year'] ) {
 							$month_start = $dates['m_start'];
 							$month_end   = 12;
+						} elseif( $y == $dates['year_end'] ) {
+							$month_start = 1;
+							$month_end   = $dates['m_end'];
 						} else {
 							$month_start = 1;
 							$month_end   = 12;
@@ -893,7 +899,7 @@ class EDD_API {
 							if( $i == $dates['m_end'] )
 								$num_of_days = $dates['day_end'];
 							else
-								$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
+								$num_of_days = cal_days_in_month( CAL_GREGORIAN, $i, $y );
 
 							while ( $d <= $num_of_days ) :
 								$earnings_stat = edd_get_earnings_by_date( $d, $i, $y );
@@ -901,6 +907,7 @@ class EDD_API {
 								$total += $earnings_stat;
 								$d++;
 							endwhile;
+
 							$i++;
 						endwhile;
 
