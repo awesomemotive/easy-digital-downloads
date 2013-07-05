@@ -866,6 +866,8 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 
 		}
 
+	} else {
+		wp_die( __( 'No payments matching your request were found.', 'edd' ), __( 'Error', 'edd' ) );
 	}
 	// Payment not verified
 	return false;
