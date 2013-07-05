@@ -134,6 +134,16 @@ cURL:                     <?php echo ( function_exists( 'curl_init' ) ) ? __( 'Y
 SOAP Client:              <?php echo ( class_exists( 'SoapClient' ) ) ? __( 'Your server has the SOAP Client enabled.', 'edd' ) : __( 'Your server does not have the SOAP Client enabled.', 'edd' ); ?><?php echo "\n"; ?>
 SUHOSIN:                  <?php echo ( extension_loaded( 'suhosin' ) ) ? __( 'Your server has SUHOSIN installed.', 'edd' ) : __( 'Your server does not have SUHOSIN installed.', 'edd' ); ?><?php echo "\n"; ?>
 
+TEMPLATES:
+
+<?php
+// Show templates that have been copied to the theme's edd_templates dir
+$dir = get_stylesheet_directory() . '/edd_templates/*';
+foreach ( glob( $dir ) as $file ) {
+	echo "Filename: " . basename( $file ) . "\n";
+}
+?>
+
 ACTIVE PLUGINS:
 
 <?php
