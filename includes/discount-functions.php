@@ -784,7 +784,7 @@ function edd_set_cart_discount( $code = '' ) {
 		$discounts[] = $code;
 	}
 
-	setcookie( 'wordpress_edd_cart_discount', implode( '|', $discounts ), current_time( 'timestamp' ) + 3600, COOKIEPATH, COOKIE_DOMAIN, false );
+	EDD()->session->set( 'cart_discounts', implode( '|', $discounts ) );
 
 	return $discounts;
 }
@@ -804,7 +804,7 @@ function edd_unset_cart_discount( $code = '' ) {
 		unset( $discounts[ $key ] );
 		$discounts = implode( '|', array_values( $discounts ) );
 		// update the active discounts
-		setcookie( 'wordpress_edd_cart_discount', $discounts, current_time( 'timestamp' )+3600, COOKIEPATH, COOKIE_DOMAIN, false );
+		EDD()->session->set( 'cart_discounts', implode( '|', $discounts ) );
 	}
 
 	return $discounts;
@@ -817,7 +817,7 @@ function edd_unset_cart_discount( $code = '' ) {
  * @return void
  */
 function edd_unset_all_cart_discounts() {
-	@setcookie( 'wordpress_edd_cart_discount', null, strtotime( '-1 day' ), COOKIEPATH, COOKIE_DOMAIN, false );
+	EDD()->session->set( 'cart_discounts', null );
 }
 
 /**
@@ -827,7 +827,8 @@ function edd_unset_all_cart_discounts() {
  * @return array $discounts The active discount codes
  */
 function edd_get_cart_discounts() {
-	$discounts = isset( $_COOKIE['wordpress_edd_cart_discount'] ) ? explode( '|', $_COOKIE['wordpress_edd_cart_discount'] ) : false;
+	$discounts = EDD()->session->get( 'cart_discounts' );
+	$discounts = ! empty( $discounts ) ? explode( '|', $discounts ) : false;
 	return $discounts;
 }
 
