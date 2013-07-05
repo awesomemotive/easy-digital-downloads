@@ -748,6 +748,9 @@ class EDD_API {
 
 		$dates = $this->get_dates( $args );
 
+		$earnings = array();
+		$sales    = array();
+
 		if ( $args['type'] == 'sales' ) {
 			if ( $args['product'] == null ) {
 				if ( $args['date'] == null ) {
@@ -768,28 +771,43 @@ class EDD_API {
 					$total = 0;
 
 					// Loop through the years
-					$year = $dates['year'];
-					while( $year <= $dates['year_end' ] ) :
-						// Loop through the months
-						$month = $dates['m_start'];
+					$y = $dates['year'];
+					while( $y <= $dates['year_end'] ) :
 
-						while( $month <= $dates['m_end'] ) :
-							// Loop through the days
-							$day           = $month > $dates['m_start'] ? 1 : $dates['day_start'];
-							$days_in_month = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+						if( $dates['year'] == $dates['year_end'] ) {
+							$month_start = $dates['m_start'];
+							$month_end   = $dates['m_end'];
+						} elseif( $y == $dates['year'] ) {
+							$month_start = $dates['m_start'];
+							$month_end   = 12;
+						} else {
+							$month_start = 1;
+							$month_end   = 12;
+						}
 
-							while( $day <= $days_in_month ) :
-								$sale_count = edd_get_sales_by_date( $day, $month, $year );
-								$sales['sales'][ date( 'Ymd', strtotime( $year . '/' . $month . '/' . $day ) ) ] = $sale_count;
+						$i = $month_start;
+						while ( $i <= $month_end ) :
+
+							if( $i == $dates['m_start'] )
+								$d = $dates['day_start'];
+							else
+								$d = 1;
+
+							if( $i == $dates['m_end'] )
+								$num_of_days = $dates['day_end'];
+							else
+								$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
+
+							while ( $d <= $num_of_days ) :
+								$sale_count = edd_get_sales_by_date( $d, $i, $y );
+								$sales['sales'][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] += $sale_count;
 								$total += $sale_count;
-
-								$day++;
+								$d++;
 							endwhile;
-
-							$month++;
+							$i++;
 						endwhile;
 
-						$year++;
+						$y++;
 					endwhile;
 
 					$sales['totals'] = $total;
@@ -850,28 +868,43 @@ class EDD_API {
 					$total = (float) 0.00;
 
 					// Loop through the years
-					$year = $dates['year'];
-					while ( $year <= $dates['year_end' ] ) :
-						// Loop through the months
-						$month = $dates['m_start'];
+					$y = $dates['year'];
+					while( $y <= $dates['year_end'] ) :
 
-						while( $month <= $dates['m_end'] ) :
-							// Loop through the days
-							$day           = $month > $dates['m_start'] ? 1 : $dates['day_start'];
-							$days_in_month = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+						if( $dates['year'] == $dates['year_end'] ) {
+							$month_start = $dates['m_start'];
+							$month_end   = $dates['m_end'];
+						} elseif( $y == $dates['year'] ) {
+							$month_start = $dates['m_start'];
+							$month_end   = 12;
+						} else {
+							$month_start = 1;
+							$month_end   = 12;
+						}
 
-							while( $day <= $days_in_month ) :
-								$sale_count = edd_get_earnings_by_date( $day, $month, $year );
-								$earnings['earnings'][ date( 'Ymd', strtotime( $year . '/' . $month . '/' . $day ) ) ] = $sale_count;
-								$total += $sale_count;
+						$i = $month_start;
+						while ( $i <= $month_end ) :
 
-								$day++;
+							if( $i == $dates['m_start'] )
+								$d = $dates['day_start'];
+							else
+								$d = 1;
+
+							if( $i == $dates['m_end'] )
+								$num_of_days = $dates['day_end'];
+							else
+								$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
+
+							while ( $d <= $num_of_days ) :
+								$earnings_stat = edd_get_earnings_by_date( $d, $i, $y );
+								$earnings['earnings'][ date( 'Ymd', strtotime( $y . '/' . $i . '/' . $d ) ) ] += $earnings_stat;
+								$total += $earnings_stat;
+								$d++;
 							endwhile;
-
-							$month++;
+							$i++;
 						endwhile;
 
-						$year++;
+						$y++;
 					endwhile;
 
 					$earnings['totals'] = $total;
