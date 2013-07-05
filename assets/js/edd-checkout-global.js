@@ -107,38 +107,20 @@ jQuery(document).ready(function($) {
     var before_discount = $edd_cart_amount.text(),
         $checkout_form_wrap = $('#edd_checkout_form_wrap');
 
-    $checkout_form_wrap.on('change', '#edd-email', function (event) {
-        $('#edd-discount').val('');
-    });
-
     // Validate and apply a discount
     $checkout_form_wrap.on('focusout', '#edd-discount', function (event) {
 
         var $this = $(this),
             discount_code = $this.val(),
-            edd_email = $('#edd-email').val(),
-            edd_user = $('#edd_user_login').val(),
             edd_discount_loader = $('#edd-discount-loader');
 
         if (discount_code == '' || discount_code == edd_global_vars.enter_discount ) {
             return false;
         }
 
-        if (edd_email == '' && edd_email != 'undefined') {
-            alert(edd_global_vars.no_email);
-            return false;
-        }
-
-        if(edd_email == 'undefined' && edd_user == '') {
-            alert(edd_global_vars.no_username);
-            return false;
-        }
-
         var postData = {
             action: 'edd_apply_discount',
             code: discount_code,
-            email: edd_email,
-            user: edd_user,
             nonce: edd_global_vars.checkout_nonce
         };
 
