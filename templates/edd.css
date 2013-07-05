@@ -161,7 +161,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd-submit.button { text-shadow: 0 -1px 0 rgba(0, 0, 0, .25); line-height: normal; cursor: pointer; padding: 5px 15px 6px; outline: none; position: relative; border: 1px solid; -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 1px 3px rgba(0, 0, 0, .10); -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 1px 3px rgba(0, 0, 0, .10); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 1px 3px rgba(0, 0, 0, .10); border-radius:  3px; color: #555; border-color: #BBB; background: #E8E8E8; background: -moz-linear-gradient(top, #eeeeee, #e2e2e2); background: -webkit-linear-gradient(top, #eeeeee, #e2e2e2); background: linear-gradient(top, #eeeeee, #e2e2e2); }
 .edd-submit.button.gray { text-shadow: 0 -1px 0 rgba(255, 255, 255, .25); }
 .edd-submit.button:hover { text-decoration: none; background: #E8E8E8; }
-.edd-submit.button:active { text-decoration: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; border-top: 1px solid #959595; background: #E3E3E3; }
+.edd-submit.button:active { text-decoration: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; border: 1px solid #BBB; background: #E3E3E3; }
 
 /** Blue */
 .edd-submit.button.blue { color: #fff; border-color: #04C #04C #002A80; background: #006DCC; background: -moz-linear-gradient(top, #08C, #04C); background: -webkit-linear-gradient(top, #08C, #04C); background: linear-gradient(top, #08C, #04C); }
