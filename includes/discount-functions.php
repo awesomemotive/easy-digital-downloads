@@ -804,7 +804,7 @@ function edd_unset_cart_discount( $code = '' ) {
 		unset( $discounts[ $key ] );
 		$discounts = implode( '|', array_values( $discounts ) );
 		// update the active discounts
-		EDD()->session->set( 'cart_discounts', implode( '|', $discounts ) );
+		EDD()->session->set( 'cart_discounts', $discounts );
 	}
 
 	return $discounts;
