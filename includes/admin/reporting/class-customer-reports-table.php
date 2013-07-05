@@ -135,9 +135,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return int $count The number of customers from the database
 	 */
 	public function get_total_customers() {
-		global $wpdb;
-		$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
-		return $count[0];
+		return edd_count_total_customers();
 	}
 
 	/**
@@ -203,7 +201,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		$current_page = $this->get_pagenum();
 
-		$total_items = $this->get_total_customers();
+		$total_items = edd_count_total_customers();
 
 		//$data = array_slice( $data,( ( $current_page - 1 ) * $per_page ), $per_page );
 
