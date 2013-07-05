@@ -780,9 +780,9 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price
 
 	$hours = isset( $edd_options['download_link_expiration'] )
 			&& is_numeric( $edd_options['download_link_expiration'] )
-			? absint($edd_options['download_link_expiration']) : 24;
+			? absint( $edd_options['download_link_expiration'] ) : 24;
 
-	if ( ! ( $date = strtotime( '+' . $hours . 'hours' ) ) )
+	if ( ! ( $date = strtotime( '+' . $hours . 'hours', current_time( 'timestamp') ) ) )
 		$date = 2147472000; // Highest possible date, January 19, 2038
 
 	$params = array(
@@ -813,6 +813,7 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price
  * @return bool True if payment and link was verified, false otherwise
  */
 function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $expire = '', $file_key = 0 ) {
+
 	$meta_query = array(
 		'relation'  => 'AND',
 		array(
