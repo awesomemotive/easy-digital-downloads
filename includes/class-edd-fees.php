@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.5
  */
 class EDD_Fees {
+
 	/**
 	 * Setup the EDD Fees
 	 *
