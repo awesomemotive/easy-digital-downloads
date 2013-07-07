@@ -155,6 +155,40 @@ jQuery(document).ready(function($) {
         return false;
     });
 
+    // Remove a discount
+    $body.on('click', '.edd_discount_remove', function (event) {
+
+        var $this = $(this),
+            discount_code = $this.data('code'),
+            edd_discount_loader = $('#edd-discount-loader');
+
+        var postData = {
+            action: 'edd_remove_discount',
+            code: discount_code
+        };
+
+        $.ajax({
+            type: "POST",
+            data: postData,
+            dataType: "json",
+            url: edd_global_vars.ajaxurl,
+            success: function (discount_response) {
+                console.log(discount_response);
+                $('.edd_cart_discount').html(discount_response.html);
+                if( ! discount_response.discounts ) {
+                   $('.edd_cart_discount_row').hide();
+                }
+                $('.edd_cart_amount').each(function() {
+                    $(this).text(discount_response.total);
+                });
+            }
+        }).fail(function (data) {
+            console.log(data);
+        });
+
+        return false;
+    });
+
     $body.on('click', '.edd_discount_link', function(e) {
         e.preventDefault();
         $('.edd_discount_link').parent().hide();
