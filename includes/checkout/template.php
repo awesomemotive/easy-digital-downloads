@@ -529,7 +529,7 @@ function edd_discount_field() {
 	if( ! isset( $_GET['payment-mode'] ) && ! edd_is_ajax_enabled() )
 		return; // Only show once a payment method has been selected if ajax is disabled
 
-	if ( edd_has_active_discounts() && ! edd_cart_has_discounts() && edd_get_cart_total() ) {
+	if ( edd_has_active_discounts() && edd_get_cart_total() ) {
 	?>
 	<fieldset id="edd_discount_code">
 		<p id="edd_show_discount">
