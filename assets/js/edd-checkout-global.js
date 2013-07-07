@@ -139,6 +139,7 @@ jQuery(document).ready(function($) {
                         $('.edd_cart_amount').each(function() {
                             $(this).text(discount_response.total);
                         });
+                        $('#edd-discount', $checkout_form_wrap ).val('');
                     } else {
                         alert(discount_response.msg);
                     }
