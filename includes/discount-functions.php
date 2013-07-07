@@ -779,6 +779,10 @@ function edd_set_cart_discount( $code = '' ) {
 	$discounts = edd_get_cart_discounts();
 
 	if ( $discounts ) {
+		$key = array_search( $code, $discounts );
+		if( false !== $key ) {
+			unset( $discounts[ $key ] ); // Can't set the same discount more than once
+		}
 		$discounts[] = $code;
 	} else {
 		$discounts = array();
