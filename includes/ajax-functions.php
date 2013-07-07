@@ -164,6 +164,33 @@ add_action( 'wp_ajax_edd_apply_discount', 'edd_ajax_apply_discount' );
 add_action( 'wp_ajax_nopriv_edd_apply_discount', 'edd_ajax_apply_discount' );
 
 /**
+ * Removes a discount code from the cart via ajax
+ *
+ * @since 1.7
+ * @return void
+ */
+function edd_ajax_remove_discount() {
+	if ( isset( $_POST['code'] ) ) {
+
+		edd_unset_cart_discount( urldecode( $_POST['code'] ) );
+
+		$total = edd_get_cart_total();
+
+		$return = array(
+			'total'     => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
+			'code'      => $_POST['code'],
+			'discounts' => edd_get_cart_discounts(),
+			'html'      => edd_get_cart_discounts_html()
+		);
+
+		echo json_encode( $return );
+	}
+	edd_die();
+}
+add_action( 'wp_ajax_edd_remove_discount', 'edd_ajax_remove_discount' );
+add_action( 'wp_ajax_nopriv_edd_remove_discount', 'edd_ajax_remove_discount' );
+
+/**
  * Loads Checkout Login Fields the via AJAX
  *
  * @since 1.0
