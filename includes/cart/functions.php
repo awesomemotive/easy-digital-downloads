@@ -346,6 +346,10 @@ function edd_get_cart_subtotal( $tax = true ) {
 
 		}
 	}
+
+	if( $amount < 0 )
+		$amount = 0.00;
+
 	return apply_filters( 'edd_get_cart_subtotal', $amount );
 }
 
@@ -421,6 +425,9 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 		$amount += $tax;
 	}
 
+	if( $amount < 0 )
+		$amount = 0.00;
+
 	return apply_filters( 'edd_get_cart_amount', $amount, $add_taxes, $local_override );
 }
 
@@ -443,6 +450,9 @@ function edd_get_cart_total( $discounts = false ) {
 	$discount = edd_get_cart_discounted_amount( $discounts );
 
 	$total    = $subtotal + $fees + $cart_tax - $discount;
+
+	if( $total < 0 )
+		$total = 0.00;
 
 	return (float) apply_filters( 'edd_get_cart_total', $total );
 }
