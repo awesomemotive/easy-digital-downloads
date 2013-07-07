@@ -367,6 +367,12 @@ function edd_register_settings() {
 					'desc' => __('Display the registration and login forms on the checkout page for non-logged-in users.', 'edd'),
 					'type' => 'checkbox',
 				),
+				'allow_multiple_discounts' => array(
+					'id' => 'allow_multiple_discounts',
+					'name' => __('Multiple Discounts', 'edd'),
+					'desc' => __('Allow customers to use multiple discounts on the same purchase?', 'edd'),
+					'type' => 'checkbox'
+				),
 				'field_downloads' => array(
 					'id' => 'field_downloads',
 					'name' => '<strong>' . __('File Downloads', 'edd') . '</strong>',
