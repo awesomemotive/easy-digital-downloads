@@ -241,6 +241,7 @@ function edd_admin_downloads_icon() {
 	$icon_url    = $images_url . 'edd-icon.png';
 	$icon_cpt_url = $images_url . 'edd-cpt.png';
 	$icon_2x_url = $images_url . 'edd-icon-2x.png';
+	$icon_cpt_2x_url = $images_url . 'edd-cpt-2x.png';
 	?>
 	<style type="text/css" media="screen">
 		body #adminmenu #menu-posts-download div.wp-menu-image { background: transparent url(<?php echo $icon_url; ?>) no-repeat 7px -32px; }
@@ -257,19 +258,19 @@ function edd_admin_downloads_icon() {
 		only screen and (        		 min-resolution: 1.5dppx) {
 			/* Admin Menu - 16px @2x */
 			body #adminmenu #menu-posts-download div.wp-menu-image {
-				background: transparent url(<?php echo $icon_2x_url; ?>) no-repeat 7px -20px !important;
-				background-size: 16px 48px !important;
+				background: transparent url(<?php echo $icon_2x_url; ?>) no-repeat 7px -18px !important;
+				background-size: 16px 40px !important;
 			}
 
 			body #adminmenu #menu-posts-download:hover div.wp-menu-image,
 			body #adminmenu #menu-posts-download.wp-menu-open div.wp-menu-image {
-				background-position: 7px 4px !important;
+				background-position: 7px 6px !important;
 			}
 
 			/* Post Screen - 32px @2x */
 			.icon32-posts-download {
-				background: url(<?php echo $icon_2x_url; ?>) no-repeat 0 0 !important;
-				background-size: 32px 32px !important;
+				background: url(<?php echo $icon_cpt_2x_url; ?>) no-repeat -7px -5px !important;
+				background-size: 55px 45px !important;
 			}
 		}
 		#edd-media-button { -webkit-background-size: 16px; -moz-background-size: 16px; background-size: 16px; background-image: url(<?php echo $icon_cpt_url; ?>); margin-top: -1px; }
