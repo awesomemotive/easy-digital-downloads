@@ -775,8 +775,12 @@ function edd_format_discount_rate( $type, $amount ) {
  */
 function edd_set_cart_discount( $code = '' ) {
 
-	// Get all active cart discounts
-	$discounts = edd_get_cart_discounts();
+	if( edd_multiple_discounts_allowed() ) {
+		// Get all active cart discounts
+		$discounts = edd_get_cart_discounts();
+	} else {
+		$discounts = false; // Only one discount allowed per purchase, so override any existing
+	}
 
 	if ( $discounts ) {
 		$key = array_search( $code, $discounts );
