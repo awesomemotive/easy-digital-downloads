@@ -774,8 +774,9 @@ function edd_format_discount_rate( $type, $amount ) {
  * @return array All currently active discounts
  */
 function edd_set_cart_discount( $code = '' ) {
-	// Once we fully support multiple discounts, this will retrieve current discounts
-	$discounts = false;
+
+	// Get all active cart discounts
+	$discounts = edd_get_cart_discounts();
 
 	if ( $discounts ) {
 		$discounts[] = $code;
