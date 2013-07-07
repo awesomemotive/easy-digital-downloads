@@ -1032,3 +1032,16 @@ function edd_maybe_remove_cart_discount( $cart_key = 0 ) {
 	}
 }
 add_action( 'edd_post_remove_from_cart', 'edd_maybe_remove_cart_discount' );
+
+
+/**
+ * Checks whether multiple discounts can be applied to the same purchase
+ *
+ * @since 1.7
+ * @return bool
+ */
+function edd_multiple_discounts_allowed() {
+	global $edd_options;
+	$ret = isset( $edd_options['allow_multiple_discounts'] );
+	return apply_filters( 'edd_multiple_discounts_allowed', $ret );
+}
