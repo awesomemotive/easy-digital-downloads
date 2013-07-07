@@ -158,13 +158,9 @@ jQuery(document).ready(function($) {
     // Remove a discount
     $body.on('click', '.edd_discount_remove', function (event) {
 
-        var $this = $(this),
-            discount_code = $this.data('code'),
-            edd_discount_loader = $('#edd-discount-loader');
-
-        var postData = {
+        var $this = $(this), postData = {
             action: 'edd_remove_discount',
-            code: discount_code
+            code: $this.data('code')
         };
 
         $.ajax({
@@ -173,7 +169,6 @@ jQuery(document).ready(function($) {
             dataType: "json",
             url: edd_global_vars.ajaxurl,
             success: function (discount_response) {
-                console.log(discount_response);
                 $('.edd_cart_discount').html(discount_response.html);
                 if( ! discount_response.discounts ) {
                    $('.edd_cart_discount_row').hide();
