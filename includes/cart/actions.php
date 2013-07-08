@@ -100,3 +100,9 @@ function edd_process_collection_purchase( $data ) {
 	edd_die();
 }
 add_action( 'edd_purchase_collection', 'edd_process_collection_purchase' );
+
+
+function edd_process_cart_update( $data ) {
+
+}
+add_action( 'edd_update_cart', 'edd_process_cart_update' );
