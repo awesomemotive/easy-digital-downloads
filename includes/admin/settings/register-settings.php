@@ -217,13 +217,6 @@ function edd_register_settings() {
 					'desc' => edd_get_purchase_receipt_template_tags(),
 					'type' => 'rich_editor'
 				),
-				'sale_notification_template' => array(
-					'id' => 'sale_notification_template',
-					'name' => __('Sale Notification Template', 'edd'),
-					'desc' => __('Choose a template. Click "Save Changes" then "Preview Purchase Receipt" to see the new template.', 'edd'),
-					'type' => 'select',
-					'options' => edd_get_email_templates()
-				),
 				'sale_notification_subject' => array(
 					'id' => 'sale_notification_subject',
 					'name' => __( 'Sale Notification Subject', 'edd' ),

@@ -38,7 +38,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	}
 
 	$message = edd_get_email_body_header();
-	$message .= edd_get_email_body_content( $payment_id, $payment_data );
+	$message .= edd_get_email_body_content( $payment_id, $payment_data, $admin_notice );
 	$message .= edd_get_email_body_footer();
 
 	$from_name = isset( $edd_options['from_name'] ) ? $edd_options['from_name'] : get_bloginfo('name');
@@ -136,7 +136,7 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 		? wp_strip_all_tags( $edd_options['sale_notification_subject'], true )
 		: sprintf( __( 'New download purchase - Order #%1$s', 'edd' ), $payment_id ), $payment_id, $payment_data );
 
-	$admin_subject = edd_sale_notification_template_tags( $admin_subject, $payment_data, $payment_id );
+	$admin_subject = edd_email_template_tags( $admin_subject, $payment_data, $payment_id, true );
 
 	$admin_headers = "MIME-Version: 1.0\r\n";
 	$admin_headers .= "Content-Type: text/html; charset=utf-8\r\n";

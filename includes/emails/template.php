@@ -36,10 +36,11 @@ function edd_get_email_templates() {
  * @param string $message Message with the template tags
  * @param array $payment_data Payment Data
  * @param int $payment_id Payment ID
+ * @param bool $admin_notice Whether or not this is a notification email
  *
  * @return string $message Fully formatted message
  */
-function edd_email_template_tags( $message, $payment_data, $payment_id ) {
+function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_notice = false ) {
 	global $edd_options;
 
 	$has_tags = ( strpos($message, '{' ) !== false );
@@ -166,7 +167,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 		$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'purchase_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' ), $message );
 	}
 
-	$message = apply_filters( 'edd_email_template_tags', $message, $payment_data, $payment_id );
+	$message = apply_filters( 'edd_email_template_tags', $message, $payment_data, $payment_id, $admin_notice );
 
 	return $message;
 }
@@ -364,7 +365,7 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 
 	$email = isset( $edd_options['sale_notification'] ) ? $edd_options['sale_notification'] : $default_email_body;
 
-	$email_body = edd_sale_notification_template_tags( $email, $payment_data, $payment_id );
+	$email_body = edd_email_template_tags( $email, $payment_data, $payment_id, true );
 
 	return apply_filters( 'edd_sale_notification', $email_body, $payment_id, $payment_data );
 }
