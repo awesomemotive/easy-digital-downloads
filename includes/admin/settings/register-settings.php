@@ -217,6 +217,26 @@ function edd_register_settings() {
 					'desc' => edd_get_purchase_receipt_template_tags(),
 					'type' => 'rich_editor'
 				),
+				'sale_notification_header' => array(
+					'id' => 'sale_notification_header',
+					'name' => '<strong>' . __('New Sale Notifications', 'edd') . '</strong>',
+					'desc' => __('Configure new sale notification emails', 'edd'),
+					'type' => 'header'
+				),
+				'sale_notification_subject' => array(
+					'id' => 'sale_notification_subject',
+					'name' => __( 'Sale Notification Subject', 'edd' ),
+					'desc' => __( 'Enter the subject line for the sale notification email', 'edd' ),
+					'type' => 'text',
+					'std' => 'New download purchase - Order #{payment_id}'
+				),
+				'sale_notification' => array(
+					'id' => 'sale_notification',
+					'name' => __( 'Sale Notification', 'edd' ),
+					'desc' => edd_get_sale_notification_template_tags(),
+					'type' => 'rich_editor',
+					'std' => edd_get_default_sale_notification_email()
+				),
 				'admin_notice_emails' => array(
 					'id' => 'admin_notice_emails',
 					'name' => __( 'Sale Notification Emails', 'edd' ),
