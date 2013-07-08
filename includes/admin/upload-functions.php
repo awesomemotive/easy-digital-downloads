@@ -23,9 +23,19 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return array Upload directory information
 */
 function edd_set_upload_dir( $upload ) {
+
+	// Override the year / month being based on the post publication date, if year/month organization is enabled
+	if ( get_option( 'uploads_use_yearmonth_folders' ) ) {
+		// Generate the yearly and monthly dirs
+		$time = current_time( 'mysql' );
+		$y = substr( $time, 0, 4 );
+		$m = substr( $time, 5, 2 );
+		$upload['subdir'] = "/$y/$m";
+	}
+
 	$upload['subdir'] = '/edd' . $upload['subdir'];
-	$upload['path'] = $upload['basedir'] . $upload['subdir'];
-	$upload['url']	= $upload['baseurl'] . $upload['subdir'];
+	$upload['path']   = $upload['basedir'] . $upload['subdir'];
+	$upload['url']	  = $upload['baseurl'] . $upload['subdir'];
 	return $upload;
 }
 
@@ -65,7 +75,7 @@ add_action( 'admin_init', 'edd_change_downloads_upload_dir', 999 );
  * @since 1.1.5
  * @return void
  */
-function edd_create_protection_files( $force = false) {
+function edd_create_protection_files( $force = false, $method = false ) {
 	if ( false === get_transient( 'edd_check_protection_files' ) || $force ) {
 		$wp_upload_dir = wp_upload_dir();
 		$upload_path = $wp_upload_dir['basedir'] . '/edd';
@@ -78,10 +88,10 @@ function edd_create_protection_files( $force = false) {
 		}
 
 		// Top level .htaccess file
-		$rules = edd_get_htaccess_rules();;
+		$rules = edd_get_htaccess_rules( $method );
 		if ( file_exists( $upload_path . '/.htaccess' ) ) {
 			$contents = @file_get_contents( $upload_path . '/.htaccess' );
-			if ( false === strpos( $contents, $rules ) || ! $contents ) {
+			if ( $contents !== $rules || ! $contents ) {
 				@file_put_contents( $upload_path . '/.htaccess', $rules );
 			}
 		}
@@ -130,9 +140,10 @@ function edd_scan_folders( $path = '', $return = array() ) {
  * @since 1.6
  * @return string The htaccess rules
  */
-function edd_get_htaccess_rules() {
+function edd_get_htaccess_rules( $method = false ) {
 
-	$method = edd_get_file_download_method();
+	if( empty( $method ) )
+		$method = edd_get_file_download_method();
 
 	switch( $method ) :
 

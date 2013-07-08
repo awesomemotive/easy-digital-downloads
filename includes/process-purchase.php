@@ -59,7 +59,8 @@ function edd_process_purchase_form() {
 		'email'      => $user['user_email'],
 		'first_name' => $user['user_first'],
 		'last_name'  => $user['user_last'],
-		'discount'   => $valid_data['discount']
+		'discount'   => $valid_data['discount'],
+		'address'    => $user['address']
 	);
 	// Setup purchase information
 	$purchase_data = array(
@@ -88,7 +89,8 @@ function edd_process_purchase_form() {
 	// If the total amount in the cart is 0, send to the manual gateway. This emulates a free download purchase
 	if ( !$purchase_data['price'] ) {
 		// Revert to manual
-		$valid_data['gateway'] = 'manual';
+		$purchase_data['gateway'] = 'manual';
+		$_POST['edd-gateway'] = 'manual';
 	}
 
 	// Allow the purchase data to be modified before it is sent to the gateway
@@ -98,8 +100,14 @@ function edd_process_purchase_form() {
 		$valid_data
 	);
 
+	// Setup the data we're storing in the purchase session
+	$session_data = $purchase_data;
+
+	// Make sure credit card numbers are never stored in sessions
+	unset( $session_data['card_info']['card_number'] );
+
 	// Used for showing download links to non logged-in users after purchase, and for other plugins needing purchase data.
-	edd_set_purchase_session( $purchase_data );
+	edd_set_purchase_session( $session_data );
 
 	// Send info to the gateway for payment processing
 	edd_send_to_gateway( $purchase_data['gateway'], $purchase_data );
@@ -612,6 +620,23 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 	// Get user last name
 	if ( ! isset( $user['user_last'] ) || strlen( trim( $user['user_last'] ) ) < 1 ) {
 		$user['user_last'] = isset( $_POST["edd_last"] ) ? strip_tags( trim( $_POST["edd_last"] ) ) : '';
+	}
+
+	// Get the user's billing address details
+	$user['address'] = array();
+	$user['address']['line1']   = ! empty( $_POST['card_address']    ) ? sanitize_text_field( $_POST['card_address']    ) : false;
+	$user['address']['line2']   = ! empty( $_POST['card_address_2']  ) ? sanitize_text_field( $_POST['card_address_2']  ) : false;
+	$user['address']['city']    = ! empty( $_POST['card_city']       ) ? sanitize_text_field( $_POST['card_city']       ) : false;
+	$user['address']['state']   = ! empty( $_POST['card_state']      ) ? sanitize_text_field( $_POST['card_state']      ) : false;
+	$user['address']['country'] = ! empty( $_POST['billing_country'] ) ? sanitize_text_field( $_POST['billing_country'] ) : false;
+	$user['address']['zip']     = ! empty( $_POST['card_zip']        ) ? sanitize_text_field( $_POST['card_zip']        ) : false;
+
+	if( empty( $user['address']['country'] ) )
+		$user['address'] = false; // Country will always be set if address fields are present
+
+	if( ! empty( $user['user_id'] ) && $user['user_id'] > 0 && ! empty( $user['address'] ) ) {
+		// Store the address in the user's meta so the cart can be pre-populated with it on return purchases
+		update_user_meta( $user['user_id'], '_edd_user_address', $user['address'] );
 	}
 
 	// Return valid user

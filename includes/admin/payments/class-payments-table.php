@@ -236,7 +236,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'amount' :
-				$value   = edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
+				$amount  = ! empty( $item[ $column_name ] ) ? $item['amount'] : 0;
+				$value   = edd_currency_filter( edd_format_amount( $amount ) );
 				break;
 			case 'date' :
 				$date    = strtotime( $item[ $column_name ] );

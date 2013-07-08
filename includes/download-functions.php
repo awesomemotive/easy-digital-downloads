@@ -511,7 +511,7 @@ function edd_get_average_monthly_download_earnings( $download_id ) {
 	$earnings 	  = edd_get_download_earnings_stats( $download_id );
 	$release_date = get_post_field( 'post_date', $download_id );
 
-	$diff 	= abs( time() - strtotime( $release_date ) );
+	$diff 	= abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
 
     $months = floor( $diff / ( 30*60*60*24 ) ); // Number of months since publication
 
@@ -532,7 +532,7 @@ function edd_get_average_monthly_download_sales( $download_id ) {
     $sales          = edd_get_download_sales_stats( $download_id );
     $release_date   = get_post_field( 'post_date', $download_id );
 
-    $diff   = abs( time() - strtotime( $release_date ) );
+    $diff   = abs( current_time( 'timestamp' ) - strtotime( $release_date ) );
 
     $months = floor( $diff / ( 30*60*60*24 ) ); // Number of months since publication
 
@@ -780,9 +780,9 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price
 
 	$hours = isset( $edd_options['download_link_expiration'] )
 			&& is_numeric( $edd_options['download_link_expiration'] )
-			? absint($edd_options['download_link_expiration']) : 24;
+			? absint( $edd_options['download_link_expiration'] ) : 24;
 
-	if ( ! ( $date = strtotime( '+' . $hours . 'hours' ) ) )
+	if ( ! ( $date = strtotime( '+' . $hours . 'hours', current_time( 'timestamp') ) ) )
 		$date = 2147472000; // Highest possible date, January 19, 2038
 
 	$params = array(
@@ -813,6 +813,7 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price
  * @return bool True if payment and link was verified, false otherwise
  */
 function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $expire = '', $file_key = 0 ) {
+
 	$meta_query = array(
 		'relation'  => 'AND',
 		array(
@@ -856,7 +857,7 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 						wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ) );
 
 					// Make sure the link hasn't expired
-					if ( time() > $expire ) {
+					if ( current_time( 'timestamp' ) > $expire ) {
 						wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'edd' ) ), __( 'Error', 'edd' ) );
 					}
 					return $payment->ID; // Payment has been verified and link is still valid
@@ -866,6 +867,8 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 
 		}
 
+	} else {
+		wp_die( __( 'No payments matching your request were found.', 'edd' ), __( 'Error', 'edd' ) );
 	}
 	// Payment not verified
 	return false;
