@@ -170,6 +170,11 @@ function edd_get_item_position_in_cart( $download_id ) {
 	}
 }
 
+
+function edd_item_quanities_enabled() {
+	return true;
+}
+
 /**
  * Get Cart Item Quantity
  *
