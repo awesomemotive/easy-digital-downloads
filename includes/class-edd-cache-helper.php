@@ -20,6 +20,7 @@ class EDD_Cache_Helper {
 	 * @return void
 	 */
 	public function __construct() {
+
 		add_action( 'init', array( $this, 'init' ) );
 		add_action( 'admin_notices', array( $this, 'notices' ) );
 	}
@@ -31,6 +32,7 @@ class EDD_Cache_Helper {
 	 * @return void
 	 */
 	public function init() {
+
 		if ( false === ( $page_uris = get_transient( 'edd_cache_excluded_uris' ) ) ) {
 
 			global $edd_options;
@@ -86,19 +88,36 @@ class EDD_Cache_Helper {
 	 * @return void
 	 */
 	public function notices() {
-		if ( ! function_exists( 'w3tc_pgcache_flush' ) || ! function_exists( 'w3_instance' ) )
-			return;
 
-		$config   = w3_instance('W3_Config');
-		$enabled  = $config->get_integer( 'dbcache.enabled' );
-		$settings = $config->get_array( 'dbcache.reject.sql' );
+		// W3 Total Cache
+		if ( function_exists( 'w3tc_pgcache_flush' ) && function_exists( 'w3_instance' ) ) {
 
-		if ( $enabled && ! in_array( '_wp_session_', $settings ) ) {
-			?>
-			<div class="error">
-				<p><?php printf( __( 'In order for <strong>database caching</strong> to work with Easy DIgital Downloads you must add <code>_wp_session_</code> to the "Ignored query stems" option in W3 Total Cache settings <a href="%s">here</a>.', 'edd' ), admin_url( 'admin.php?page=w3tc_dbcache' ) ); ?></p>
-			</div>
-			<?php
+			$config   = w3_instance('W3_Config');
+			$enabled  = $config->get_integer( 'dbcache.enabled' );
+			$settings = $config->get_array( 'dbcache.reject.sql' );
+
+			if ( $enabled && ! in_array( '_wp_session_', $settings ) ) {
+				?>
+				<div class="error">
+					<p><?php printf( __( 'In order for <strong>database caching</strong> to work with Easy Digital Downloads you must add <code>_wp_session_</code> to the "Ignored query stems" option in W3 Total Cache settings <a href="%s">here</a>.', 'edd' ), admin_url( 'admin.php?page=w3tc_dbcache' ) ); ?></p>
+				</div>
+				<?php
+			}
+		}
+
+		// WP Super Cache
+		if( function_exists( 'wpsupercache_site_admin' ) ) {
+
+			global $wp_cache_mfunc_enabled;
+
+			if( empty( $wp_cache_mfunc_enabled ) ) {
+				?>
+				<div class="error">
+					<p><?php printf( __( 'In order for <strong>WP Super Cache</strong> to work with Easy Digital Downloads you must enable dynamic caching in WP Super Cache settings <a href="%s">here</a>.', 'edd' ), admin_url( 'options-general.php?page=wpsupercache&tab=settings' ) ); ?></p>
+				</div>
+				<?php
+			}
+
 		}
 	}
 }
