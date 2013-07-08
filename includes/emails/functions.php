@@ -249,7 +249,7 @@ function edd_get_sale_notification_template_tags() {
  * @author Daniel J Griffiths
  * @return string $message
  */
-function edd_get_current_sale_notification_email() {
+function edd_get_default_sale_notification_email() {
 	global $edd_options;
 
 	$default_email_body = __( 'Hello', 'edd' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'edd' ), edd_get_label_plural() ) . ".\n\n";
