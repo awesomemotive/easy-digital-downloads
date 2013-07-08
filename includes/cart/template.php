@@ -21,7 +21,9 @@ if ( !defined( 'ABSPATH' ) ) exit;
 function edd_checkout_cart() {
 	do_action( 'edd_before_checkout_cart' );
 	echo '<!--dynamic-cached-content-->';
+	echo '<form id="edd_checkout_cart_form" method="post">';
 	edd_get_template_part( 'checkout_cart' );
+	echo '</form>';
 	echo '<!--/dynamic-cached-content-->';
 	do_action( 'edd_after_checkout_cart' );
 }
