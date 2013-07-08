@@ -128,7 +128,7 @@ function edd_get_purchase_link( $args = array() ) {
 		</div><!--end .edd_purchase_submit_wrapper-->
 
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $args['download_id'] ); ?>">
-		<?php if( ! empty( $args['direct'] ) { ?>
+		<?php if( ! empty( $args['direct'] ) ) { ?>
 			<input type="hidden" name="edd_action" value="straight_to_gateway">
 		<?php } else { ?>
 			<input type="hidden" name="edd_action" value="add_to_cart">
