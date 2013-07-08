@@ -56,13 +56,13 @@ function edd_get_purchase_link( $args = array() ) {
 	}
 
 	$defaults = apply_filters( 'edd_purchase_link_defaults', array(
-		'download_id'   => $post->ID,
-		'price'         => (bool) true,
-		'paypal_direct' => false,
-		'text'          => ! empty( $edd_options[ 'add_to_cart_text' ] ) ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
-		'style'         => isset( $edd_options[ 'button_style' ] ) 	   ? $edd_options[ 'button_style' ]     : 'button',
-		'color'         => isset( $edd_options[ 'checkout_color' ] ) 	   ? $edd_options[ 'checkout_color' ] 	: 'blue',
-		'class'         => 'edd-submit'
+		'download_id' => $post->ID,
+		'price'       => (bool) true,
+		'direct'      => false,
+		'text'        => ! empty( $edd_options[ 'add_to_cart_text' ] ) ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
+		'style'       => isset( $edd_options[ 'button_style' ] ) 	   ? $edd_options[ 'button_style' ]     : 'button',
+		'color'       => isset( $edd_options[ 'checkout_color' ] ) 	   ? $edd_options[ 'checkout_color' ] 	: 'blue',
+		'class'       => 'edd-submit'
 	) );
 
 	$args = wp_parse_args( $args, $defaults );
@@ -84,66 +84,63 @@ function edd_get_purchase_link( $args = array() ) {
 		$checkout_display = 'style="display:none;"';
 	}
 
-	if( ! empty( $args['paypal_direct'] ) {
-
-		// Put paypal form here
-
-	} else {
-
-		ob_start();
+	ob_start();
 ?>
-		<!--dynamic-cached-content-->
-		<form id="edd_purchase_<?php echo $args['download_id']; ?>" class="edd_download_purchase_form" method="post">
+	<!--dynamic-cached-content-->
+	<form id="edd_purchase_<?php echo $args['download_id']; ?>" class="edd_download_purchase_form" method="post">
 
-			<?php do_action( 'edd_purchase_link_top', $args['download_id'], $args['price'] ); ?>
+		<?php do_action( 'edd_purchase_link_top', $args['download_id'], $args['price'] ); ?>
 
-			<div class="edd_purchase_submit_wrapper">
-				<?php
-					printf(
-						'<input type="submit" class="edd-add-to-cart %1$s" name="edd_purchase_download" value="%2$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s %6$s/>',
-						implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
-						esc_attr( $args['text'] ),
-						esc_attr( $args['download_id'] ),
-						esc_attr( $data_variable ),
-						esc_attr( $type ),
-						$button_display
-					);
+		<div class="edd_purchase_submit_wrapper">
+			<?php
+				printf(
+					'<input type="submit" class="edd-add-to-cart %1$s" name="edd_purchase_download" value="%2$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s %6$s/>',
+					implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
+					esc_attr( $args['text'] ),
+					esc_attr( $args['download_id'] ),
+					esc_attr( $data_variable ),
+					esc_attr( $type ),
+					$button_display
+				);
 
-					printf(
-						'<a href="%1$s" class="%2$s %3$s" %4$s>' . __( 'Checkout', 'edd' ) . '</a>',
-						esc_url( edd_get_checkout_uri() ),
-						esc_attr( 'edd_go_to_checkout' ),
-						implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
-						$checkout_display
-					);
-				?>
+				printf(
+					'<a href="%1$s" class="%2$s %3$s" %4$s>' . __( 'Checkout', 'edd' ) . '</a>',
+					esc_url( edd_get_checkout_uri() ),
+					esc_attr( 'edd_go_to_checkout' ),
+					implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
+					$checkout_display
+				);
+			?>
 
-				<?php if ( edd_is_ajax_enabled() ) : ?>
-					<span class="edd-cart-ajax-alert">
-						<img alt="<?php _e( 'Loading', 'edd' ); ?>" src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/loading.gif' ); ?>" class="edd-cart-ajax" style="display: none;" />
-						<span class="edd-cart-added-alert" style="display: none;">&mdash;
-							<?php printf(
-									__( 'Item successfully added to your %scart%s.', 'edd' ),
-									'<a href="' . esc_url( edd_get_checkout_uri() ) . '" title="' . __( 'Go to Checkout', 'edd' ) . '">',
-									'</a>'
-								);
-							?>
-						</span>
+			<?php if ( edd_is_ajax_enabled() ) : ?>
+				<span class="edd-cart-ajax-alert">
+					<img alt="<?php _e( 'Loading', 'edd' ); ?>" src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/loading.gif' ); ?>" class="edd-cart-ajax" style="display: none;" />
+					<span class="edd-cart-added-alert" style="display: none;">&mdash;
+						<?php printf(
+								__( 'Item successfully added to your %scart%s.', 'edd' ),
+								'<a href="' . esc_url( edd_get_checkout_uri() ) . '" title="' . __( 'Go to Checkout', 'edd' ) . '">',
+								'</a>'
+							);
+						?>
 					</span>
-				<?php endif; ?>
-			</div><!--end .edd_purchase_submit_wrapper-->
+				</span>
+			<?php endif; ?>
+		</div><!--end .edd_purchase_submit_wrapper-->
 
-			<input type="hidden" name="download_id" value="<?php echo esc_attr( $args['download_id'] ); ?>">
+		<input type="hidden" name="download_id" value="<?php echo esc_attr( $args['download_id'] ); ?>">
+		<?php if( ! empty( $args['direct'] ) { ?>
+			<input type="hidden" name="edd_action" value="straight_to_gateway">
+		<?php } else { ?>
 			<input type="hidden" name="edd_action" value="add_to_cart">
+		<?php } ?>
 
-			<?php do_action( 'edd_purchase_link_end', $args['download_id'] ); ?>
+		<?php do_action( 'edd_purchase_link_end', $args['download_id'] ); ?>
 
-		</form><!--end #edd_purchase_<?php echo esc_attr( $args['download_id'] ); ?>-->
-		<!--/dynamic-cached-content-->
+	</form><!--end #edd_purchase_<?php echo esc_attr( $args['download_id'] ); ?>-->
+	<!--/dynamic-cached-content-->
 <?php
-		$purchase_form = ob_get_clean();
+	$purchase_form = ob_get_clean();
 
-	}
 
 	return apply_filters( 'edd_purchase_download_form', $purchase_form, $args );
 }
