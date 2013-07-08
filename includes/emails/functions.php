@@ -195,6 +195,7 @@ function edd_get_purchase_receipt_template_tags() {
 		'{name} - ' . __('The buyer\'s first name', 'edd') . '<br/>' .
 		'{fullname} - ' . __('The buyer\'s full name, first and last', 'edd') . '<br/>' .
 		'{username} - ' . __('The buyer\'s user name on the site, if they registered an account', 'edd') . '<br/>' .
+		'{user_email} - ' . __('The buyer\'s email address', 'edd') . '<br/>' .
 		'{date} - ' . __('The date of the purchase', 'edd') . '<br/>' .
 		'{subtotal} - ' . __('The price of the purchase before taxes', 'edd') . '<br/>' .
 		'{tax} - ' . __('The taxed amount of the purchase', 'edd') . '<br/>' .
@@ -236,4 +237,30 @@ function edd_get_sale_notification_template_tags() {
 		'{sitename} - ' . __('Your site name', 'edd');
 
 	return apply_filters( 'edd_sale_notification_template_tags_description', $tags );
+}
+
+
+/**
+ * Get sale notification email text
+ *
+ * Returns the stored email text if available, the standard email text if not
+ *
+ * @since 1.7
+ * @author Daniel J Griffiths
+ * @return string $message
+ */
+function edd_get_current_sale_notification_email() {
+	global $edd_options;
+
+	$default_email_body = __( 'Hello', 'edd' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'edd' ), edd_get_label_plural() ) . ".\n\n";
+	$default_email_body .= sprintf( __( '%s sold:', 'edd' ), edd_get_label_plural() ) . "\n\n";
+	$default_email_body .= '{download_list}' . "\n\n";
+	$default_email_body .= __( 'Purchased by: ', 'edd' ) . ' {name}' . "\n";
+	$default_email_body .= __( 'Amount: ', 'edd' ) . ' {price}' . "\n";
+	$default_email_body .= __( 'Payment Method: ', 'edd' ) . ' {payment_method}' . "\n\n";
+	$default_email_body .= __( 'Thank you', 'edd' );
+
+	$message = ( isset( $edd_options['sale_notification'] ) && !empty( $edd_options['sale_notification'] ) ) ? $edd_options['sale_notification'] : $default_email_body;
+
+	return $message;
 }

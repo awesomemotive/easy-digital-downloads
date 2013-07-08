@@ -160,10 +160,9 @@ function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_n
 	$message = str_replace( '{payment_method}', $gateway, $message );
 	$message = str_replace( '{receipt_id}', $receipt_id, $message );
 	$message = str_replace( '{payment_id}', $payment_id, $message );
+	$message = str_replace( '{user_email}', $email, $message );
 
-	if( $admin_notice ) {
-		$message = str_replace( '{user_email}', $email, $message );
-	} else {
+	if( ! $admin_notice ) {
 		$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'purchase_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' ), $message );
 	}
 
