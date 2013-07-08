@@ -55,9 +55,11 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 #edd-order-totals .inside { margin: 0; padding: 0; }
 .edd-admin-box .label { font-weight: 600; }
 .edd-admin-box-inside { margin: 0; padding: 5px 0 5px 10px; clear: both; border-bottom: 1px solid #ddd; }
+.rtl .edd-admin-box-inside { padding: 5px 10px 5px 0; }
 .edd-admin-box-inside .strong { font-weight: 600; }
 .edd-payment-fees .fee-label { font-weight: normal; color: #666; }
 .edd-admin-box .right { float: right; margin-right: 10px; }
+.rtl .edd-admin-box .right { float: left; margin-left: 10px; }
 #edd-order-data .order-id { color: #666; font-size: 14px; }
 #edd-order-data .column-container { clear: both; overflow: hidden; }
 #edd-order-data .order-data-column { float: left; width: 31%; padding: 0 2% 0 0; }
@@ -93,9 +95,11 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 
 /* Settings page styles
 -------------------------------------------------------------- */
-#edd_tax_rates .edd_tax_country { width: 250px; }
-#edd_tax_rates .edd_tax_state { width: 315px; }
+#edd_tax_rates .edd_tax_country { width: 180px; }
+#edd_tax_rates .edd_tax_state { width: 180px; }
 #edd_tax_rates .edd_tax_rate { width: 80px; }
+#edd_tax_rates .edd_tax_country *,
+#edd_tax_rates .edd_tax_state * { max-width: 100%; }
 
 /* System Info page styles
 -------------------------------------------------------------- */

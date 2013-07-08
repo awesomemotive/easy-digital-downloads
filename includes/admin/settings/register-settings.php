@@ -679,7 +679,7 @@ function edd_register_settings() {
 	register_setting( 'edd_settings_styles',     'edd_settings_styles',     'edd_settings_sanitize' );
 	register_setting( 'edd_settings_taxes',      'edd_settings_taxes',      'edd_settings_sanitize_taxes' );
 	register_setting( 'edd_settings_extensions', 'edd_settings_extensions', 'edd_settings_sanitize' );
-	register_setting( 'edd_settings_misc',       'edd_settings_misc',       'edd_settings_sanitize' );
+	register_setting( 'edd_settings_misc',       'edd_settings_misc',       'edd_settings_sanitize_misc' );
 }
 add_action('admin_init', 'edd_register_settings');
 
@@ -1079,8 +1079,8 @@ function edd_tax_rates_callback($args) {
 		<?php if( ! empty( $rates ) ) : ?>
 			<?php foreach( $rates as $key => $rate ) : ?>
 			<tr>
-				<td><?php echo EDD()->html->select( edd_get_country_list(), 'tax_rates[' . $key . '][country]', $rate['country'] ); ?></td>
-				<td>
+				<td class="edd_tax_country"><?php echo EDD()->html->select( edd_get_country_list(), 'tax_rates[' . $key . '][country]', $rate['country'] ); ?></td>
+				<td class="edd_tax_state">
 					<?php
 					$states = edd_get_shop_states( $rate['country'] );
 					if( ! empty( $states ) ) {
@@ -1090,25 +1090,25 @@ function edd_tax_rates_callback($args) {
 					}
 					?>
 				</td>
-				<td>
+				<td class="edd_tax_global">
 					<input type="checkbox" name="tax_rates[<?php echo $key; ?>][global]" id="tax_rates[<?php echo $key; ?>][global]" value="1"<?php checked( true, ! empty( $rate['global'] ) ); ?>/>
 					<label for="tax_rates[<?php echo $key; ?>][global]"><?php _e( 'Apply to whole country', 'edd' ); ?></a>
 				</td>
-				<td><input type="number" class="small-text" step="0.1" min="0.0" max="99" name="tax_rates[<?php echo $key; ?>][rate]" value="<?php echo $rate['rate']; ?>"/></td>
+				<td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[<?php echo $key; ?>][rate]" value="<?php echo $rate['rate']; ?>"/></td>
 				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'edd' ); ?></span></td>
 			</tr>
 			<?php endforeach; ?>
 		<?php else : ?>
 			<tr>
-				<td><?php echo EDD()->html->select( edd_get_country_list(), 'tax_rates[0][country]', 0 ); ?></td>
-				<td>
+				<td class="edd_tax_country"><?php echo EDD()->html->select( edd_get_country_list(), 'tax_rates[0][country]', 0 ); ?></td>
+				<td class="edd_tax_state">
 					<?php echo EDD()->html->text( 'tax_rates[0][state]' ); ?>
 				</td>
-				<td><input type="number" class="small-text" step="0.1" min="0.0" name="tax_rates[0][rate]" value=""/></td>
-				<td>
+				<td class="edd_tax_global">
 					<input type="checkbox" name="tax_rates[0][global]" value="1"/>
 					<label for="tax_rates[0][global]"><?php _e( 'Apply to whole country', 'edd' ); ?></a>
 				</td>
+				<td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0" name="tax_rates[0][rate]" value=""/></td>
 				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'edd' ); ?></span></td>
 			</tr>
 		<?php endif; ?>
@@ -1180,6 +1180,26 @@ function edd_settings_sanitize( $input ) {
 	add_settings_error( 'edd-notices', '', __('Settings Updated', 'edd'), 'updated' );
 	return $input;
 }
+
+/**
+ * Misc Settings Sanitization
+ *
+ * @since 1.6
+ * @param array $input The value inputted in the field
+ * @return string $input Sanitizied value
+ */
+function edd_settings_sanitize_misc( $input ) {
+
+	global $edd_options;
+
+	if( edd_get_file_download_method() != $input['download_method'] ) {
+		// Force the .htaccess files to be updated if the Download method was changed.
+		edd_create_protection_files( true, $input['download_method'] );
+	}
+	add_settings_error( 'edd-notices', '', __('Settings Updated', 'edd'), 'updated' );
+	return $input;
+}
+
 
 /**
  * Taxes Settings Sanitization
