@@ -182,10 +182,14 @@ function edd_item_quanities_enabled() {
  * @param int $item Download (cart item) ID number
  * @return int $quantity Cart item quantity
  */
-function edd_get_cart_item_quantity( $item ) {
-	$cart        = edd_get_cart_contents();
-	$item_counts = array_count_values( $cart );
-	return $item_counts[ $item ];
+function edd_get_cart_item_quantity( $download_id = 0 ) {
+	$cart   = edd_get_cart_contents();
+	$counts = array();
+	foreach ( $cart as $key => $cart_item ) {
+		// Add to the current quantity count if it exists
+		$counts[ $cart_item['id'] ] = isset( $counts[ $cart_item['id'] ] ) ? $counts[ $cart_item['id'] ]++ : 1;
+	}
+	return isset( $counts[ $download_id ] ) ? absint( $counts[ $download_id ] ) : 1;
 }
 
 /**
