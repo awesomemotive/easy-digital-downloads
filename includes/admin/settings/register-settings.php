@@ -235,7 +235,7 @@ function edd_register_settings() {
 					'name' => __( 'Sale Notification', 'edd' ),
 					'desc' => edd_get_sale_notification_template_tags(),
 					'type' => 'rich_editor',
-					'std' => edd_get_current_sale_notification_email()
+					'std' => edd_get_default_sale_notification_email()
 				),
 				'admin_notice_emails' => array(
 					'id' => 'admin_notice_emails',
