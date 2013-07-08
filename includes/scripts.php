@@ -244,11 +244,11 @@ function edd_admin_downloads_icon() {
 	$icon_cpt_2x_url = $images_url . 'edd-cpt-2x.png';
 	?>
 	<style type="text/css" media="screen">
-		body #adminmenu #menu-posts-download div.wp-menu-image { background: transparent url(<?php echo $icon_url; ?>) no-repeat 7px -32px; }
+		body #adminmenu #menu-posts-download div.wp-menu-image { background: transparent url(<?php echo $icon_url; ?>) no-repeat 7px -17px; }
 		body #adminmenu #menu-posts-download:hover div.wp-menu-image,
-		body #adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image { background: transparent url(<?php echo $icon_url; ?>) no-repeat 7px 0; }
+		body #adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image { background: transparent url(<?php echo $icon_url; ?>) no-repeat 7px 6px; }
 		<?php if ( ( isset( $_GET['post_type'] ) ) && ( 'download' == $_GET['post_type'] ) || ( 'download' == $post_type ) ) : ?>
-		#icon-edit { background: transparent url(<?php echo $icon_cpt_url; ?>) no-repeat; }
+		#icon-edit { background: transparent url(<?php echo $icon_cpt_url; ?>) -7px -5px no-repeat; }
 		<?php endif; ?>
 		@media
 		only screen and (-webkit-min-device-pixel-ratio: 1.5),
