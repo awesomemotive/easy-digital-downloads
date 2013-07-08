@@ -47,50 +47,48 @@ function edd_get_cart_quantity() {
  */
 function edd_add_to_cart( $download_id, $options = array() ) {
 	$cart = edd_get_cart_contents();
-	if ( ! edd_item_in_cart( $download_id, $options ) ) {
-		$download = get_post( $download_id );
+	$download = get_post( $download_id );
 
-		if( 'download' != $download->post_type )
-			return; // Not a download product
+	if( 'download' != $download->post_type )
+		return; // Not a download product
 
-		if ( !current_user_can( 'edit_post', $download->ID ) && ( $download->post_status == 'draft' || $download->post_status == 'pending' ) )
-			return; // Do not allow draft/pending to be purchased if can't edit. Fixes #1056
+	if ( ! current_user_can( 'edit_post', $download->ID ) && ( $download->post_status == 'draft' || $download->post_status == 'pending' ) )
+		return; // Do not allow draft/pending to be purchased if can't edit. Fixes #1056
 
-		do_action( 'edd_pre_add_to_cart', $download_id, $options );
+	do_action( 'edd_pre_add_to_cart', $download_id, $options );
 
-		if ( edd_has_variable_prices( $download_id )  && ! isset( $options['price_id'] ) ) {
-			// Forces to the first price ID if none is specified and download has variable prices
-			$options['price_id'] = 0;
-		}
-
-		$to_add = array();
-
-		if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
-			// Process multiple price options at once
-			foreach ( $options['price_id'] as $price ) {
-				$price_options = array( 'price_id' => $price );
-				$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $price_options ) );
-			}
-		} else {
-			// Add a single item
-			$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $options ) );
-		}
-
-		if ( is_array( $cart ) ) {
-			$cart = array_merge( $cart, $to_add );
-		} else {
-			$cart = $to_add;
-		}
-
-		EDD()->session->set( 'edd_cart', $cart );
-
-		do_action( 'edd_post_add_to_cart', $download_id, $options );
-
-		// Clear all the checkout errors, if any
-		edd_clear_errors();
-
-		return count( $cart ) - 1;
+	if ( edd_has_variable_prices( $download_id )  && ! isset( $options['price_id'] ) ) {
+		// Forces to the first price ID if none is specified and download has variable prices
+		$options['price_id'] = 0;
 	}
+
+	$to_add = array();
+
+	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
+		// Process multiple price options at once
+		foreach ( $options['price_id'] as $price ) {
+			$price_options = array( 'price_id' => $price );
+			$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $price_options ) );
+		}
+	} else {
+		// Add a single item
+		$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $options ) );
+	}
+
+	if ( is_array( $cart ) ) {
+		$cart = array_merge( $cart, $to_add );
+	} else {
+		$cart = $to_add;
+	}
+
+	EDD()->session->set( 'edd_cart', $cart );
+
+	do_action( 'edd_post_add_to_cart', $download_id, $options );
+
+	// Clear all the checkout errors, if any
+	edd_clear_errors();
+
+	return count( $cart ) - 1;
 }
 
 /**
