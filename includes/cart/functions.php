@@ -186,7 +186,8 @@ function edd_get_item_position_in_cart( $download_id = 0, $options = array() ) {
  * @return bool
  */
 function edd_item_quanities_enabled() {
-	$ret = true;
+	global $edd_options;
+	$ret = isset( $edd_options['item_quantities'] );
 	return apply_filters( 'edd_item_quantities_enabled', $ret );
 }
 
@@ -221,7 +222,7 @@ function edd_set_cart_item_quantity( $download_id = 0, $quantity = 1, $options =
 function edd_get_cart_item_quantity( $download_id = 0, $options = array() ) {
 	$cart = edd_get_cart_contents();
 	$key  = edd_get_item_position_in_cart( $download_id, $options );
-	return isset( $cart[ $key ]['quantity'] ) ? $cart[ $key ]['quantity'] : 1;
+	return isset( $cart[ $key ]['quantity'] ) && edd_item_quanities_enabled() ? $cart[ $key ]['quantity'] : 1;
 }
 
 /**

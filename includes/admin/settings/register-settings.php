@@ -367,6 +367,12 @@ function edd_register_settings() {
 					'desc' => __('Display the registration and login forms on the checkout page for non-logged-in users.', 'edd'),
 					'type' => 'checkbox',
 				),
+				'item_quantities' => array(
+					'id' => 'item_quantities',
+					'name' => __('Item Quantities', 'edd'),
+					'desc' => __('Allow item quantities to be changed at checkout.', 'edd'),
+					'type' => 'checkbox',
+				),
 				'field_downloads' => array(
 					'id' => 'field_downloads',
 					'name' => '<strong>' . __('File Downloads', 'edd') . '</strong>',
