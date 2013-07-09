@@ -26,14 +26,15 @@
 /* =Checkout Form
 -------------------------------------------------------------- */
 .edd_clearfix:after { display: block; visibility: hidden; float: none; clear: both; text-indent: -9999px; content: "."; }
-
 /* Cart Contents */
-#edd_checkout_cart { text-align: left; width: 100%; border-top: 1px solid #f0f0f0; border-bottom: none; margin: 0 0 10px; }
+#edd_checkout_cart_wrap {  }
+#edd_checkout_cart { text-align: left; width: 100%; border: none; margin: 0 0 10px; }
 #edd_checkout_cart th,
-#edd_checkout_cart td { text-align: left; padding: 3px 5px; border-bottom: 1px solid #f0f0f0; border-top: none; color: #666; }
+#edd_checkout_cart td { text-align: left; border: 1px solid #eee; color: #666; padding: 0.5em 1.387em; }
+#edd_checkout_cart .edd_cart_header_row th { background: #fafafa; padding: 1.387em; }
 #edd_checkout_cart .edd_cart_tax_row th,
-#edd_checkout_cart .edd_cart_discount_row th { background: #f9f9f9; }
-#edd_checkout_cart th { font-weight: bold; background: #f5f5f5; }
+#edd_checkout_cart .edd_cart_discount_row th { background: none; }
+#edd_checkout_cart th { font-weight: bold; }
 #edd_checkout_cart td { line-height: 25px; vertical-align: middle; }
 #edd_checkout_cart th.edd_cart_actions,
 #edd_checkout_cart td.edd_cart_actions,
@@ -42,6 +43,7 @@
 #edd_checkout_cart th.edd_cart_total { text-align: right; }
 #edd_checkout_cart td img { float: left; margin: 0 8px 0 0; background: none; padding: none; border: none; }
 #edd_checkout_cart input.edd-item-quantity { width: 3em; max-height: 90%; padding: 2px; }
+#edd_checkout_cart .edd_discount { display: inline-block; margin-left: 5px; }
 #edd_checkout_cart .edd_discount_remove { display: inline-block; width: 10px; height: 11px; background: url( ../assets/images/xit.gif ) 0 0 no-repeat; position: relative; top: 3px; }
 #edd_checkout_cart .edd_discount_remove:hover { background-position: -10px 0; }
 
@@ -56,16 +58,21 @@
 #edd_checkout_form_wrap input.edd-input.error { border-color: #c4554e; }
 #edd_checkout_form_wrap #edd_terms_agreement label,
 #edd_checkout_form_wrap #edd_tax_opt_in_fields label { display: inline-block;  width: auto; }
-#edd_checkout_form_wrap p { margin: 0 0 10px; }
+#edd_checkout_form_wrap p { margin: 0 0 14px; }
+#edd_checkout_form_wrap span.edd-required-indicator { color: #b94a48; display: inline; }
 #edd_checkout_form_wrap input[type="text"], #edd_checkout_form_wrap input[type="email"], #edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; }
 #edd_checkout_form_wrap input[type="radio"] { border: none; margin-right: 5px; }
 #edd_checkout_form_wrap input[type="checkbox"] { float: left; margin: 0 8px 0 0; }
-#edd_checkout_form_wrap .edd-payment-icons { height: 32px; }
+#edd_checkout_form_wrap .edd-payment-icons { height: 32px; display: block; margin: 0 0 8px; }
 #edd_checkout_form_wrap .edd-payment-icons img.payment-icon{ margin: 0 3px 0 0; float: left; background: none; padding: none; border: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
 #edd_checkout_form_wrap #edd-payment-mode-wrap label { display: inline-block; margin: 0 20px 0 0; }
 #edd_checkout_form_wrap #edd-payment-mode-wrap .edd-payment-mode-label { font-weight: bold; display: inline-block; position: relative; margin-bottom: 5px; }
-#edd_checkout_form_wrap fieldset { border: none; padding: 10px 0 0 0; margin: 0 0 10px; }
+#edd_checkout_form_wrap fieldset { border: none; padding: 10px 0 0 0; margin: 0 0 5px; }
 #edd_checkout_form_wrap fieldset fieldset { margin: 0; }
+#edd_checkout_form_wrap #edd-login-account-wrap,
+#edd_checkout_form_wrap #edd-new-account-wrap,
+#edd_checkout_form_wrap #edd_show_discount { background: #fafafa; border: 1px solid #eee; color: #666; padding: 0.5em 1.387em; }
+#edd_checkout_form_wrap #edd_show_discount { margin-bottom: 0; }
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_register_password,
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_login_password { margin: 0; }
 #edd_checkout_form_wrap fieldset#edd_cc_fields { padding: 0 8px 8px 8px; border: 1px solid #f0f0f0; margin: 0 0 10px; background: #f9f9f9; position: relative; left: -8px; }
