@@ -36,10 +36,9 @@
 					<td class="edd_cart_item_price"><?php echo edd_cart_item_price( $item['id'], $item['options'] ); ?></td>
 					<td class="edd_cart_actions">
 						<?php if( edd_item_quanities_enabled() ) : ?>
-							<input type="number" min="1" step="1" name="edd-cart-download-<?php echo $item['id']; ?>-quantity" class="edd-input edd-item-quantity" value="<?php echo edd_get_cart_item_quantity( $item['id'] ); ?>"/>
+							<input type="number" min="1" step="1" name="edd-cart-download-<?php echo $key; ?>-quantity" class="edd-input edd-item-quantity" value="<?php echo edd_get_cart_item_quantity( $item['id'], $item['options'] ); ?>"/>
 							<input type="hidden" name="edd-cart-downloads[]" value="<?php echo $item['id']; ?>"/>
-							<input type="hidden" name="edd-cart-download-<?php echo $item['id']; ?>-key" value="<?php echo $key; ?>"/>
-							<input type="hidden" name="edd-cart-download-<?php echo $item['id']; ?>-options" value="<?php esc_attr_e( serialize( $item['options'] ) ); ?>"/>
+							<input type="hidden" name="edd-cart-download-<?php echo $key; ?>-options" value="<?php esc_attr_e( serialize( $item['options'] ) ); ?>"/>
 						<?php endif; ?>
 						<a href="<?php echo esc_url( edd_remove_item_url( $key, $post ) ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
 					</td>
