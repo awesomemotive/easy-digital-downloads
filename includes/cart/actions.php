@@ -102,6 +102,12 @@ function edd_process_collection_purchase( $data ) {
 add_action( 'edd_purchase_collection', 'edd_process_collection_purchase' );
 
 
+/**
+ * Process cart updates, primarily for quantities
+ *
+ * @since 1.7
+ * @return void
+ */
 function edd_process_cart_update( $data ) {
 
 	foreach( $data['edd-cart-downloads'] as $key => $cart_download_id ) {
