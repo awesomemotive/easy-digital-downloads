@@ -75,6 +75,7 @@ function edd_process_download() {
 		if( function_exists( 'apache_setenv' ) ) @apache_setenv('no-gzip', 1);
 		@ini_set( 'zlib.output_compression', 'Off' );
 
+
 		nocache_headers();
 		header("Robots: none");
 		header("Content-Type: " . $ctype . "");
@@ -99,9 +100,10 @@ function edd_process_download() {
 			case 'direct' :
 			default:
 
-				$direct    = false;
+				$direct       = false;
+				$file_details = parse_url( $requested_file );
 
-				if ( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false && file_exists( $requested_file ) ) {
+				if ( ! isset( $file_details['scheme'] ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
 
 					/** This is an absolute path */
 					$direct    = true;

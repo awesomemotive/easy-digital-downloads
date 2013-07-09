@@ -233,6 +233,11 @@ function edd_default_cc_address_fields() {
 			<span class="edd-description"><?php _e( 'The city for your billing address.', 'edd' ); ?></span>
 			<input type="text" name="card_city" class="card-city edd-input required" placeholder="<?php _e( 'City', 'edd' ); ?>" value="<?php echo $city; ?>"/>
 		</p>
+		<p id="edd-card-zip-wrap">
+			<label class="edd-label"><?php _e( 'Billing Zip / Postal Code', 'edd' ); ?></label>
+			<span class="edd-description"><?php _e( 'The zip or postal code for your billing address.', 'edd' ); ?></span>
+			<input type="text" size="4" name="card_zip" class="card-zip edd-input required" placeholder="<?php _e( 'Zip / Postal code', 'edd' ); ?>"/>
+		</p>
 		<p id="edd-card-country-wrap">
 			<label class="edd-label"><?php _e( 'Billing Country', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The country for your billing address.', 'edd' ); ?></span>
@@ -274,11 +279,6 @@ function edd_default_cc_address_fields() {
         	<?php else : ?>
 			<input type="text" size="6" name="card_state" id="card_state" class="card_state edd-input" placeholder="<?php _e( 'State / Province', 'edd' ); ?>"/>
 			<?php endif; ?>
-		</p>
-		<p id="edd-card-zip-wrap">
-			<label class="edd-label"><?php _e( 'Billing Zip / Postal Code', 'edd' ); ?></label>
-			<span class="edd-description"><?php _e( 'The zip or postal code for your billing address.', 'edd' ); ?></span>
-			<input type="text" size="4" name="card_zip" class="card-zip edd-input required" placeholder="<?php _e( 'Zip / Postal code', 'edd' ); ?>" value="<?php echo $zip; ?>"/>
 		</p>
 		<?php do_action( 'edd_cc_billing_bottom' ); ?>
 	</fieldset>
@@ -556,6 +556,7 @@ function edd_checkout_button_next() {
 	global $edd_options;
 
 	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
+	$color = ( $color == 'inherit' ) ? '' : $color;
 	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
 
 	ob_start();
@@ -577,6 +578,7 @@ function edd_checkout_button_purchase() {
 	global $edd_options;
 
 	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
+	$color = ( $color == 'inherit' ) ? '' : $color;
 	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
 
 	if ( edd_get_cart_total() ) {

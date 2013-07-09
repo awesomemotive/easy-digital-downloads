@@ -153,7 +153,7 @@ function edd_update_edited_purchase( $data ) {
 
 		$user_info                 = maybe_unserialize( $payment_data['user_info'] );
 		$user_info['email']        = strip_tags( $_POST['edd-buyer-email'] );
-		$user_info['user_id']      = strip_tags( intval( $_POST['edd-buyer-user-id'] ) );
+		$user_info['id']           = strip_tags( intval( $_POST['edd-buyer-user-id'] ) );
 		$payment_data['user_info'] = serialize( $user_info );
 		$payment_data['email']     = strip_tags( $_POST['edd-buyer-email'] );
 

@@ -34,7 +34,7 @@ $user_info    = edd_get_payment_meta_user_info( $payment_id );
 $payment_date = strtotime( $item->post_date );
 ?>
 <div class="wrap">
-	<h2><?php printf( __( 'Payment #%d', 'edd' ), $payment_id ); ?> <a class="add-new-h2" href="<?php echo admin_url( 'edit.php?post_type=download&amp;page=edd-payment-history&amp;edd-action=edit-payment&amp;purchase_id=' . $payment_id ); ?>"><?php _e( 'Edit Order', 'edd' ); ?></a></h2>
+	<h2><?php printf( __( 'Payment #%d', 'edd' ), $payment_id ); ?> <a class="add-new-h2" href="<?php echo admin_url( 'edit.php?post_type=download&amp;page=edd-payment-history&amp;view=edit-payment&amp;purchase_id=' . $payment_id ); ?>"><?php _e( 'Edit Order', 'edd' ); ?></a></h2>
 	<?php do_action( 'edd_view_order_details_before' ); ?>
 	<div id="poststuff">
 		<div id="post-body" class="metabox-holder columns-2">
@@ -70,6 +70,9 @@ $payment_date = strtotime( $item->post_date );
 								<?php endif; ?>
 								<div class="edd-order-payment edd-admin-box-inside">
 									<p><span class="label"><?php _e( 'Total Price', 'edd' ); ?></span> <span class="right"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ); ?></span></p>
+								</div>
+								<div class="edd-order-resend-email edd-admin-box-inside">
+									<p><span class="label"><?php _e( 'Payment Receipt', 'edd' ); ?></span> <a href="<?php echo add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment_id ) ); ?>" class="right button-secondary"><?php _e( 'Resend', 'edd' ); ?></a></p>
 								</div>
 								<?php do_action( 'edd_view_order_details_totals_after', $payment_id ); ?>
 							</div><!-- /.edd-order-totals-box -->
