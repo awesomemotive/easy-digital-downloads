@@ -25,11 +25,12 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	global $edd_options;
 
 	$payment_data = edd_get_payment_meta( $payment_id );
+	$user_id      = edd_get_payment_user_id( $payment_id );
 	$user_info    = maybe_unserialize( $payment_data['user_info'] );
 	$email        = edd_get_payment_user_email( $payment_id );
 
-	if ( isset( $user_info['id'] ) && $user_info['id'] > 0 ) {
-		$user_data = get_userdata($user_info['id']);
+	if ( isset( $user_id ) && $user_id > 0 ) {
+		$user_data = get_userdata($user_id);
 		$name = $user_data->display_name;
 	} elseif ( isset( $user_info['first_name'] ) && isset( $user_info['last_name'] ) ) {
 		$name = $user_info['first_name'] . ' ' . $user_info['last_name'];
@@ -52,7 +53,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 
 	$headers = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
 	$headers .= "Reply-To: ". $from_email . "\r\n";
-	$headers .= "MIME-Version: 1.0\r\n";
+	//$headers .= "MIME-Version: 1.0\r\n";
 	$headers .= "Content-Type: text/html; charset=utf-8\r\n";
 	$headers = apply_filters( 'edd_receipt_headers', $headers, $payment_id, $payment_data );
 
@@ -115,12 +116,12 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 	global $edd_options;
 
 	/* Send an email notification to the admin */
-	$admin_email   = edd_get_admin_notice_emails();
+	$admin_email = edd_get_admin_notice_emails();
+	$user_id      = edd_get_payment_user_id( $payment_id );
+	$user_info   = maybe_unserialize( $payment_data['user_info'] );
 
-	$user_info = maybe_unserialize( $payment_data['user_info'] );
-
-	if ( isset( $user_info['id'] ) && $user_info['id'] > 0 ) {
-		$user_data = get_userdata($user_info['id']);
+	if ( isset( $user_id ) && $user_id > 0 ) {
+		$user_data = get_userdata($user_id);
 		$name = $user_data->display_name;
 	} elseif ( isset( $user_info['first_name'] ) && isset($user_info['last_name'] ) ) {
 		$name = $user_info['first_name'] . ' ' . $user_info['last_name'];
