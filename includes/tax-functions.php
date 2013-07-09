@@ -246,6 +246,23 @@ function edd_is_cart_taxed() {
 
 
 /**
+ * Check to see if we should show included taxes
+ *
+ * Some countries (notably in the EU) require included taxes to be displayed.
+ *
+ * @since 1.7
+ * @author Daniel J Griffiths
+ * @return bool
+ */
+function edd_display_tax_rate() {
+	global $edd_options;
+
+	if( edd_use_taxes() )
+		return isset( $edd_options['display_tax_rate'] ) && $edd_options['display_tax_rate'] == true;
+}
+
+
+/**
  * Should we show address fields for taxation purposes?
  *
  * @since 1.y
