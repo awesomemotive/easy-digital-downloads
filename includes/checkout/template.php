@@ -477,7 +477,9 @@ function edd_payment_mode_select() {
 	$gateways = edd_get_enabled_payment_gateways();
 	$page_URL = edd_get_current_page_url();
 	do_action('edd_payment_mode_top'); ?>
+	<?php if( ! edd_is_ajax_enabled() ) { ?>
 	<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
+	<?php } ?>
 		<fieldset id="edd_payment_mode_select">
 			<?php do_action( 'edd_payment_mode_before_gateways_wrap' ); ?>
 			<div id="edd-payment-mode-wrap">
@@ -504,7 +506,9 @@ function edd_payment_mode_select() {
 				<?php echo edd_checkout_button_next(); ?>
 			</p>
 		</fieldset>
+	<?php if( ! edd_is_ajax_enabled() ) { ?>
 	</form>
+	<?php } ?>
 	<div id="edd_purchase_form_wrap"></div><!-- the checkout fields are loaded into this-->
 	<?php do_action('edd_payment_mode_bottom');
 }
