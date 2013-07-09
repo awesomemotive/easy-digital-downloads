@@ -104,5 +104,11 @@ add_action( 'edd_purchase_collection', 'edd_process_collection_purchase' );
 
 function edd_process_cart_update( $data ) {
 
+	foreach( $data['edd-cart-downloads'] as $cart_download_id ) {
+		$options  = maybe_unserialize( $data['edd-cart-download-' . $cart_download_id . '-options'] );
+		$quantity = absint( $data['edd-cart-download-' . $cart_download_id . '-quantity'] );
+		edd_set_cart_item_quantity( $cart_download_id, $quantity, $options );
+	}
+
 }
 add_action( 'edd_update_cart', 'edd_process_cart_update' );
