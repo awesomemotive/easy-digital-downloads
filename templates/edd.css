@@ -194,6 +194,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd-cart-ajax { margin: 0 8px 0 4px; position: relative; top: 2px; background: none; border: none; padding: 0; }
 .edd-cart-number-of-items { font-style: italic; color:grey;}
 .edd_subtotal { font-weight: bold; margin: 8px 0 8px 0; font-style: italic;}
+.edd_purchase_tax_rate { font-size: .75em; font-style: italic; }
 
 /* =Error styles
 -------------------------------------------------------------- */
