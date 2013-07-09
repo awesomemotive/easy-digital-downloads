@@ -310,3 +310,19 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 
 }
 add_action( 'user_register', 'edd_add_past_purchases_to_new_user' );
+
+
+/**
+ * Counts the total number of customers.
+ *
+ * @access 		public
+ * @since 		1.7
+ * @global object $wpdb Used to query the database using the WordPress
+ *   Database API
+ * @return 		int - The total number of customers.
+ */
+function edd_count_total_customers() {
+	global $wpdb;
+	$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
+	return $count[0];
+}

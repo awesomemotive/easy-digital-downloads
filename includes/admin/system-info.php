@@ -33,13 +33,13 @@ function edd_system_info() {
 	if ( ! class_exists( 'Browser' ) )
 		require_once EDD_PLUGIN_DIR . 'includes/libraries/browser.php';
 
-	$browser =  new Browser();
+	$browser = new Browser();
 	if ( get_bloginfo( 'version' ) < '3.4' ) {
 		$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
-		$theme = $theme_data['Name'] . ' ' . $theme_data['Version'];
+		$theme      = $theme_data['Name'] . ' ' . $theme_data['Version'];
 	} else {
 		$theme_data = wp_get_theme();
-		$theme = $theme_data->Name . ' ' . $theme_data->Version;
+		$theme      = $theme_data->Name . ' ' . $theme_data->Version;
 	}
 ?>
 	<div class="wrap">
@@ -76,6 +76,8 @@ Downloads slug:           <?php echo defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG . "\
 
 Taxes Enabled:            <?php echo edd_use_taxes() ? "Yes\n" : "No\n"; ?>
 Taxes After Discounts:    <?php echo edd_taxes_after_discounts() ? "Yes\n" : "No\n"; ?>
+
+Registered Post Stati:    <?php echo implode( ', ', get_post_stati() ) . "\n\n"; ?>
 
 <?php echo $browser ; ?>
 
@@ -131,6 +133,16 @@ FSOCKOPEN:                <?php echo ( function_exists( 'fsockopen' ) ) ? __( 'Y
 cURL:                     <?php echo ( function_exists( 'curl_init' ) ) ? __( 'Your server supports cURL.', 'edd' ) : __( 'Your server does not support cURL.', 'edd' ); ?><?php echo "\n"; ?>
 SOAP Client:              <?php echo ( class_exists( 'SoapClient' ) ) ? __( 'Your server has the SOAP Client enabled.', 'edd' ) : __( 'Your server does not have the SOAP Client enabled.', 'edd' ); ?><?php echo "\n"; ?>
 SUHOSIN:                  <?php echo ( extension_loaded( 'suhosin' ) ) ? __( 'Your server has SUHOSIN installed.', 'edd' ) : __( 'Your server does not have SUHOSIN installed.', 'edd' ); ?><?php echo "\n"; ?>
+
+TEMPLATES:
+
+<?php
+// Show templates that have been copied to the theme's edd_templates dir
+$dir = get_stylesheet_directory() . '/edd_templates/*';
+foreach ( glob( $dir ) as $file ) {
+	echo "Filename: " . basename( $file ) . "\n";
+}
+?>
 
 ACTIVE PLUGINS:
 
