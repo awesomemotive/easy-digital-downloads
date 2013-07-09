@@ -188,15 +188,18 @@ add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
  */
 function edd_purchase_collection_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
-			'taxonomy' => '',
-			'terms' => '',
-			'link' => __('Purchase All Items', 'edd')
+			'taxonomy'	=> '',
+			'terms'		=> '',
+			'text'		=> __('Purchase All Items', 'edd'),
+			'style'		=> 'button',
+			'color'		=> 'blue',
+			'class'		=> 'edd-submit'
 		), $atts )
 	);
 
-	$link = is_null( $content ) ? $link : $content;
+	$button_display = implode( ' ', array( $style, $color, $class ) );
 
-	return '<a href="' . add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms ) ) . '">' . $link . '</a>';
+	return '<a href="' . add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms ) ) . '" class="' . $button_display . '">' . $text . '</a>';
 }
 add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
 

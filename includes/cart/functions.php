@@ -595,7 +595,10 @@ function edd_get_cart_content_details() {
 function edd_add_collection_to_cart( $taxonomy, $terms ) {
 	if ( ! is_string( $taxonomy ) ) return false;
 
-	$field = is_int( $terms ) ? 'id' : 'slug';
+	if( is_numeric( $terms ) ) {
+		$terms = get_term( $terms, $taxonomy );
+		$terms = $terms->slug;
+	}
 
 	$cart_item_ids = array();
 
