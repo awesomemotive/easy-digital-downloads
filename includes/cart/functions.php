@@ -68,11 +68,11 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		// Process multiple price options at once
 		foreach ( $options['price_id'] as $price ) {
 			$price_options = array( 'price_id' => $price );
-			$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $price_options ) );
+			$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $price_options, 'quantity' => 1 ) );
 		}
 	} else {
 		// Add a single item
-		$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $options ) );
+		$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $options, 'quantity' => 1 ) );
 	}
 
 	if ( is_array( $cart ) ) {
@@ -155,41 +155,73 @@ function edd_item_in_cart( $download_id = 0, $options = array() ) {
  *
  * @since 1.0.7.2
  * @param int $download_id ID of the download to get position of
+ * @param int $options array of price options
  * @return mixed false if empty cart | int $position position of the item in the cart
  */
-function edd_get_item_position_in_cart( $download_id ) {
+function edd_get_item_position_in_cart( $download_id = 0, $options = array() ) {
 	$cart_items = edd_get_cart_contents();
 	if ( ! is_array( $cart_items ) ) {
 		return false; // Empty cart
 	} else {
 		foreach ( $cart_items as $position => $item ) {
 			if ( $item['id'] == $download_id ) {
-				return $position;
+				if ( isset( $options['price_id'] ) && isset( $item['options']['price_id'] ) ) {
+					if ( $options['price_id'] == $item['options']['price_id'] ) {
+						return $position;
+					}
+				} else {
+					return $position;
+				}
 			}
 		}
 	}
+	return false; // Not found
 }
 
 
+/**
+ * Check if quantities are enabled
+ *
+ * @since 1.7
+ * @return bool
+ */
 function edd_item_quanities_enabled() {
-	return true;
+	$ret = true;
+	return apply_filters( 'edd_item_quantities_enabled', $ret );
 }
+
+
+/**
+ * Set Cart Item Quantity
+ *
+ * @since 1.7
+ * @param int $download_id Download (cart item) ID number
+ * @param int $download_id Download (cart item) ID number
+ * @param array $options Download options, such as price ID
+ * @return array New Cart array
+ */
+function edd_set_cart_item_quantity( $download_id = 0, $quantity = 1, $options = array() ) {
+	$cart = edd_get_cart_contents();
+	$key  = edd_get_item_position_in_cart( $download_id, $options );
+	$cart[ $key ]['quantity'] = $quantity;
+	EDD()->session->set( 'edd_cart', $cart );
+	return $cart;
+
+}
+
 
 /**
  * Get Cart Item Quantity
  *
  * @since 1.0
- * @param int $item Download (cart item) ID number
+ * @param int $download_id Download (cart item) ID number
+ * @param array $options Download options, such as price ID
  * @return int $quantity Cart item quantity
  */
-function edd_get_cart_item_quantity( $download_id = 0 ) {
-	$cart   = edd_get_cart_contents();
-	$counts = array();
-	foreach ( $cart as $key => $cart_item ) {
-		// Add to the current quantity count if it exists
-		$counts[ $cart_item['id'] ] = isset( $counts[ $cart_item['id'] ] ) ? $counts[ $cart_item['id'] ]++ : 1;
-	}
-	return isset( $counts[ $download_id ] ) ? absint( $counts[ $download_id ] ) : 1;
+function edd_get_cart_item_quantity( $download_id = 0, $options = array() ) {
+	$cart = edd_get_cart_contents();
+	$key  = edd_get_item_position_in_cart( $download_id, $options );
+	return isset( $cart[ $key ]['quantity'] ) ? $cart[ $key ]['quantity'] : 1;
 }
 
 /**
