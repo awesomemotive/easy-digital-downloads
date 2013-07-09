@@ -166,7 +166,7 @@ function edd_get_item_position_in_cart( $download_id = 0, $options = array() ) {
 		foreach ( $cart_items as $position => $item ) {
 			if ( $item['id'] == $download_id ) {
 				if ( isset( $options['price_id'] ) && isset( $item['options']['price_id'] ) ) {
-					if ( $options['price_id'] == $item['options']['price_id'] ) {
+					if ( (int) $options['price_id'] == (int) $item['options']['price_id'] ) {
 						return $position;
 					}
 				} else {
