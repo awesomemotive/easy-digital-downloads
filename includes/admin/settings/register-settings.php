@@ -304,6 +304,13 @@ function edd_register_settings() {
 						'no'  => __('No, I will enter prices exclusive of tax', 'edd')
 					)
 				),
+				'display_tax_rate' => array(
+					'id' => 'display_tax_rate',
+					'name' => __( 'Display Tax Rate', 'edd' ),
+					'desc' => __( 'Some contries require a notice when product prices include tax.', 'edd' ),
+					'type' => 'checkbox',
+					'std' => 'no'
+				),
 				'checkout_include_tax' => array(
 					'id' => 'checkout_include_tax',
 					'name' => __('Display during checkout', 'edd'),
