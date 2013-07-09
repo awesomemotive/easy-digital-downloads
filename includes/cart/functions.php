@@ -381,7 +381,7 @@ function edd_get_cart_subtotal( $tax = true ) {
 
 	if ( $cart_items ) {
 		foreach ( $cart_items as $item ) {
-			$amount += edd_get_cart_item_price( $item['id'], $item['options'], $tax );
+			$amount += ( edd_get_cart_item_price( $item['id'], $item['options'], $tax ) * edd_get_cart_item_quantity( $item['id'], $item['options']) );
 
 		}
 	}
