@@ -257,8 +257,9 @@ function edd_is_cart_taxed() {
 function edd_display_tax_rate() {
 	global $edd_options;
 
-	if( edd_use_taxes() )
-		return isset( $edd_options['display_tax_rate'] ) && $edd_options['display_tax_rate'] == true;
+	$ret = edd_use_taxes() && isset( $edd_options['display_tax_rate'] );
+
+	return apply_filters( 'edd_display_tax_rate', $ret );
 }
 
 
