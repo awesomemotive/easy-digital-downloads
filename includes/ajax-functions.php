@@ -253,7 +253,14 @@ function edd_ajax_get_states_field() {
 
 	if( ! empty( $states ) ) {
 
-		$response = EDD()->html->select( edd_get_shop_states( $_POST['country'] ), $_POST['field_name'] );
+		$args = array(
+			'name'    => $_POST['field_name'],
+			'options' => edd_get_shop_states( $_POST['country'] ),
+			'show_option_all'  => false,
+			'show_option_none' => false
+		);
+
+		$response = EDD()->html->select( $args );
 
 	} else {
 

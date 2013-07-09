@@ -263,6 +263,10 @@ function edd_purchase_form_required_fields() {
 		'edd_first' => array(
 			'error_id' => 'invalid_first_name',
 			'error_message' => __( 'Please enter your first name', 'edd' )
+		),
+		'edd_email' => array(
+			'error_id' => 'invalid_email',
+			'error_message' => __( 'Please enter a valid email address', 'edd' )
 		)
 	);
 	return apply_filters( 'edd_purchase_form_required_fields', $required_fields );
@@ -288,10 +292,6 @@ function edd_purchase_form_validate_logged_in_user() {
 	if ( $user_ID > 0 ) {
 		// Get the logged in user data
 		$user_data = get_userdata( $user_ID );
-
-		if ( ! is_email( $_POST['edd_email'] ) ) {
-			edd_set_error( 'invalid_email', __( 'Please enter a valid email address', 'edd' ) );
-		}
 
 		// Loop through required fields and show error messages
 		foreach ( edd_purchase_form_required_fields() as $field_name => $value ) {
@@ -859,7 +859,7 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 	    "ZM" => "\d{5}"
     );
 
-	if ( preg_match( "/" . $zip_regex[ $country_code ] . "/i", $zip ) )
+	if ( ! isset ( $zip_regex[ $country_code ] ) || preg_match( "/" . $zip_regex[ $country_code ] . "/i", $zip ) )
 		$ret = true;
 
 	return apply_filters( 'edd_is_zip_valid', $ret, $zip, $country_code );

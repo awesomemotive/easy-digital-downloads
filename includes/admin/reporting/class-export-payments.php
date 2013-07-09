@@ -68,6 +68,7 @@ class EDD_Payments_Export extends EDD_Export {
 			'skus'     => __( 'SKUs', 'edd' ),
 			'amount'   => __( 'Amount', 'edd' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
 			'tax'      => __( 'Tax', 'edd' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
+			'discount' => __( 'Discount Code', 'edd' ),
 			'gateway'  => __( 'Payment Method', 'edd' ),
 			'key'      => __( 'Purchase Key', 'edd' ),
 			'date'     => __( 'Date', 'edd' ),
