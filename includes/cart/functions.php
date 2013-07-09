@@ -613,7 +613,7 @@ function edd_get_cart_content_details() {
 			'id'          => $item['id'],
 			'item_number' => $item,
 			'price'       => $price,
-			'quantity'    => 1,
+			'quantity'    => edd_get_cart_item_quantity( $item['id'], $item['options'] ),
 			'tax'         => $is_taxed ? edd_calculate_tax( $non_taxed_price, false ) : 0,
 		);
 	}
