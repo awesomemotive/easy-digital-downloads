@@ -290,7 +290,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 
 /* =Error styles
 -------------------------------------------------------------- */
-.edd_errors { -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; border: 1px solid #E6DB55; margin: 0; background: #FFFFE0; color: #333; }
+.edd_errors { -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; border: 1px solid #E6DB55; margin: 0 0 21px 0; background: #FFFFE0; color: #333; }
 .edd_error { padding:10px; }
 p.edd_error { margin: 0 !important; }
 
