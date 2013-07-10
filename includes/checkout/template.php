@@ -124,7 +124,7 @@ function edd_user_info_fields() {
 	endif;
 	?>
 	<fieldset id="edd_checkout_user_info">
-		<legend><?php echo apply_filters( 'edd_checkout_personal_info_text', __( 'Personal Info', 'edd' ) ); ?></legend>
+		<span><legend><?php echo apply_filters( 'edd_checkout_personal_info_text', __( 'Personal Info', 'edd' ) ); ?></legend></span>
 		<?php do_action( 'edd_purchase_form_before_email' ); ?>
 		<p id="edd-email-wrap">
 			<label class="edd-label" for="edd-email">
@@ -251,7 +251,7 @@ function edd_default_cc_address_fields() {
 	$zip   = $logged_in && ! empty( $user_address['zip']   ) ? $user_address['zip']   : '';
 	ob_start(); ?>
 	<fieldset id="edd_cc_address" class="cc-address">
-		<legend><?php _e( 'Billing Details', 'edd' ); ?></legend>
+		<span><legend><?php _e( 'Billing Details', 'edd' ); ?></legend></span>
 		<?php do_action( 'edd_cc_billing_top' ); ?>
 		<p id="edd-card-address-wrap">
 			<label class="edd-label"><?php _e( 'Billing Address', 'edd' ); ?></label>
@@ -387,7 +387,7 @@ function edd_get_register_fields() {
 		</p>
 		<?php do_action('edd_register_fields_after'); ?>
 		<fieldset id="edd_register_account_fields">
-			<legend><?php _e( 'Create an account', 'edd' ); if( !edd_no_guest_checkout() ) { echo ' ' . __( '(optional)', 'edd' ); } ?></legend>
+			<span><legend><?php _e( 'Create an account', 'edd' ); if( !edd_no_guest_checkout() ) { echo ' ' . __( '(optional)', 'edd' ); } ?></legend></span>
 			<?php do_action('edd_register_account_fields_before'); ?>
 			<p id="edd-user-login-wrap">
 				<label for="edd_user_login">
