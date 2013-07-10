@@ -3,6 +3,7 @@ jQuery(document).ready(function ($) {
 
     // Hide unneeded elements. These are things that are required in case JS breaks or isn't present
     $('.edd-no-js').hide();
+    $('a.edd-add-to-cart').addClass('edd-has-js');
 
     // Send Remove from Cart requests
     $('body').on('click.eddRemoveFromCart', '.edd-remove-from-cart', function (event) {
@@ -27,7 +28,7 @@ jQuery(document).ready(function ($) {
                 // Check to see if the purchase form for this download is present on this page
                 if( $( '#edd_purchase_' + id ).length ) {
                     $( '#edd_purchase_' + id + ' .edd_go_to_checkout' ).hide();
-                    $( '#edd_purchase_' + id + ' .edd-add-to-cart' ).show();
+                    $( '#edd_purchase_' + id + ' a.edd-add-to-cart' ).show();
                 }
 
                 $('span.edd-cart-quantity').each(function() {
@@ -65,10 +66,21 @@ jQuery(document).ready(function ($) {
 
         var $this = $(this);
 
+        var $spinner = $this.find('.edd-loading');
         var container = $this.closest('div');
 
-       // Show the ajax loader
-        $('.edd-cart-ajax', container).show();
+        var spinnerWidth  = $spinner.width();
+            spinnerHeight = $spinner.height();
+
+        // Show the spinner
+        $this.attr('data-edd-loading', '');
+
+        $spinner.css({
+            'margin-left': spinnerWidth / -2,
+            'margin-top' : spinnerHeight / -2
+        });
+
+        console.log(spinnerHeight);
 
         var form           = $this.parents('form').last();
         var download       = $this.data('download-id');
@@ -79,9 +91,9 @@ jQuery(document).ready(function ($) {
         if( variable_price == 'yes' ) {
 
             if( ! $('.edd_price_option_' + download + ':checked', form).length ) {
+                 // hide the spinner
+                $this.removeAttr( 'data-edd-loading' );
                 alert( edd_scripts.select_option );
-                // Hide the ajax loader
-                $('.edd-cart-ajax', container).hide();
                 return;
             }
 
@@ -136,12 +148,14 @@ jQuery(document).ready(function ($) {
                     $('.edd-cart-number-of-items').show('slow');
                 }
 
-                // Hide the ajax loader
-                $('.edd-cart-ajax', container).hide();
-
                 if( variable_price == 'no' || price_mode != 'multi' ) {
                     // Switch purchase to checkout if a single price item or variable priced with radio buttons
-                    $('.edd_go_to_checkout, .edd-add-to-cart', container).toggle();
+                    $('.edd_go_to_checkout, a.edd-add-to-cart', container).toggle();
+                }
+
+                if ( price_mode == 'multi' ) {
+                    // remove spinner for multi
+                    $this.removeAttr( 'data-edd-loading' );
                 }
 
                 if( cart_item_response != 'incart' ) {
