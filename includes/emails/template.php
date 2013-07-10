@@ -331,7 +331,7 @@ function edd_get_email_body_footer() {
  * @param array $payment_data An array of meta information for the payment
  * @return string $email Formatted email with the template applied
  */
-function edd_apply_email_template( $body, $payment_id, $payment_data ) {
+function edd_apply_email_template( $body, $payment_id, $payment_data=array() ) {
 	global $edd_options;
 
 	$template_name = isset( $edd_options['email_template'] ) ? $edd_options['email_template'] : 'default';
