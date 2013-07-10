@@ -615,12 +615,10 @@ add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement', 999 );
  */
 function edd_checkout_final_total() {
 ?>
-	<fieldset id="edd_purchase_final_total">
-		<p id="edd_final_total_wrap">
-			<strong><?php _e( 'Purchase Total:', 'edd' ); ?></strong>
-			<span class="edd_cart_amount" data-subtotal="<?php echo edd_get_cart_amount( false ); ?>" data-total="<?php echo edd_get_cart_amount( true, true ); ?>"><?php edd_cart_total(); ?></span>
-		</p>
-	</fieldset>
+<p id="edd_final_total_wrap">
+	<strong><?php _e( 'Purchase Total:', 'edd' ); ?></strong>
+	<span class="edd_cart_amount" data-subtotal="<?php echo edd_get_cart_amount( false ); ?>" data-total="<?php echo edd_get_cart_amount( true, true ); ?>"><?php edd_cart_total(); ?></span>
+</p>
 <?php
 }
 add_action( 'edd_purchase_form_before_submit', 'edd_checkout_final_total', 999 );
