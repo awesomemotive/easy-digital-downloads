@@ -56,10 +56,6 @@
 				<?php endforeach; ?>
 			<?php endif; ?>
 			<?php do_action( 'edd_cart_items_after' ); ?>
-		<?php else: ?>
-			<tr class="edd_cart_item">
-				<td colspan="3"  class="edd_cart_item_empty"><?php do_action( 'edd_empty_cart' ); ?></td>
-			</tr>
 		<?php endif; ?>
 	</tbody>
 	<tfoot>
