@@ -97,6 +97,7 @@
 #edd_checkout_cart .edd_discount { display: inline-block; margin-left: 5px; }
 #edd_checkout_cart .edd_discount_remove { display: inline-block; width: 10px; height: 11px; background: url( ../assets/images/xit.gif ) 0 0 no-repeat; position: relative; top: 3px; }
 #edd_checkout_cart .edd_discount_remove:hover { background-position: -10px 0; }
+#edd_checkout_cart br { display: none; }
 
 /* Checkout Fields */
 #edd_checkout_form_wrap legend { display:block; font-size: 120%; line-height: 1; font-weight: bold; width: 100%; margin: 0 0 21px 0; padding: 0; }
