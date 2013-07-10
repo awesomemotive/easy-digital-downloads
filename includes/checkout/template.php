@@ -175,7 +175,7 @@ function edd_get_cc_form() {
 	<?php do_action( 'edd_before_cc_fields' ); ?>
 
 	<fieldset id="edd_cc_fields" class="edd-do-validate">
-		<legend><?php _e( 'Credit Card Info', 'edd' ); ?></legend>
+		<span><legend><?php _e( 'Credit Card Info', 'edd' ); ?></legend></span>
 		<?php if( is_ssl() ) : ?>
 			<div id="edd_secure_site_wrapper">
 				<span class="padlock"></span>
