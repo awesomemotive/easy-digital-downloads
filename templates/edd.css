@@ -54,22 +54,22 @@
 }
 .edd-icon-spin { display: inline-block; -moz-animation: edd-icon-spin 2s infinite linear; -o-animation: edd-icon-spin 2s infinite linear; -webkit-animation: edd-icon-spin 2s infinite linear; animation: edd-icon- spin 2s infinite linear;	}
 
-@-moz-keyframes edd-icon-spin { 
+@-moz-keyframes edd-icon-spin {
     0% { -moz-transform: rotate(0deg) }
     100% { -moz-transform: rotate(359deg) } }
-@-webkit-keyframes edd-icon-spin { 
+@-webkit-keyframes edd-icon-spin {
     0% { -webkit-transform: rotate(0deg) }
     100% { -webkit-transform: rotate(359deg) }
 }
-@-o-keyframes edd-icon-spin { 
+@-o-keyframes edd-icon-spin {
     0% { -o-transform: rotate(0deg) }
     100% { -o-transform: rotate(359deg) }
 }
-@-ms-keyframes edd-icon-spin { 
+@-ms-keyframes edd-icon-spin {
     0% { -ms-transform: rotate(0deg) }
     100% { -ms-transform: rotate(359deg) }
 }
-@keyframes edd-icon-spin { 
+@keyframes edd-icon-spin {
     0% { transform: rotate(0deg) }
     100% { transform: rotate(359deg) }
 }
@@ -127,8 +127,10 @@
 #edd_checkout_form_wrap #edd-login-account-wrap,
 #edd_checkout_form_wrap #edd-new-account-wrap,
 #edd_checkout_form_wrap #edd_show_discount,
+#edd_checkout_form_wrap #edd-discount-code-wrap,
 #edd_checkout_form_wrap #edd_final_total_wrap { background: #fafafa; border: 1px solid #eee; color: #666; padding: 0.5em 1.387em; }
 #edd_checkout_form_wrap #edd-login-account-wrap,
+#edd_checkout_form_wrap #edd-discount-code-wrap { padding: 1.387em; }
 #edd_checkout_form_wrap #edd-new-account-wrap { margin: -1.387em -1.387em 21px -1.387em; border-left: none; border-right: none; border-top: none; }
 #edd_checkout_form_wrap #edd_payment_mode_select { margin-bottom: 21px; }
 #edd_checkout_form_wrap fieldset#edd_register_account_fields legend { padding-top: 11px; }
@@ -161,7 +163,7 @@
 .edd-submit.button.edd-ajax-loading { padding-right: 30px; }
 .edd-add-to-cart .edd-add-to-cart-label { opacity: 1; filter: alpha(opacity=100); }
 a.edd-add-to-cart .edd-loading { position: absolute; right: 50%; top: 50%; opacity: 0; filter: alpha(opacity=0); }
-a.edd-add-to-cart .edd-add-to-cart-label, a.edd-add-to-cart .edd-loading { 
+a.edd-add-to-cart .edd-add-to-cart-label, a.edd-add-to-cart .edd-loading {
 	-webkit-transition:.1s  opacity !important;
 	-moz-transition:.1s  opacity !important;
 	-ms-transition:.1s  opacity !important;
