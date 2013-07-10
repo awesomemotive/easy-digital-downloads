@@ -79,7 +79,7 @@
 .edd_clearfix:after { display: block; visibility: hidden; float: none; clear: both; text-indent: -9999px; content: "."; }
 /* Cart Contents */
 #edd_checkout_cart_wrap {  }
-#edd_checkout_cart { text-align: left; width: 100%; border: none; margin: 0 0 10px; }
+#edd_checkout_cart { text-align: left; width: 100%; border: none; margin: 0 0 21px; }
 #edd_checkout_cart th,
 #edd_checkout_cart td { text-align: left; border: 1px solid #eee; color: #666; padding: 0.5em 1.387em; }
 #edd_checkout_cart .edd_cart_header_row th { background: #fafafa; padding: 1.387em; }
@@ -157,6 +157,7 @@
 
 /* =Ajax Add To Cart Button
 -------------------------------------------------------------- */
+.edd_purchase_submit_wrapper { position: relative; }
 .edd_purchase_submit_wrapper a.edd-add-to-cart { text-decoration: none; display: none; position: relative; overflow: hidden; }
 .edd_purchase_submit_wrapper a.edd-add-to-cart.edd-has-js { display: inline-block; }
 .edd_purchase_submit_wrapper .edd-cart-ajax { display: none; position: relative; left: -35px; }
@@ -172,7 +173,7 @@ a.edd-add-to-cart .edd-add-to-cart-label, a.edd-add-to-cart .edd-loading {
  }
 .edd-add-to-cart[data-edd-loading] .edd-add-to-cart-label { opacity: 0; filter: alpha(opacity=0); }
 .edd-add-to-cart[data-edd-loading] .edd-loading { opacity: 1; filter: alpha(opacity=100); }
-.edd-cart-added-alert { color: #567622; display: block; margin: 10px 0 0; }
+.edd-cart-added-alert { color: #567622; display: block; position: absolute;  }
 
 
 /* =Theme Specific styling
