@@ -86,7 +86,7 @@
 #edd_checkout_cart .edd_cart_tax_row th,
 #edd_checkout_cart .edd_cart_discount_row th { background: none; }
 #edd_checkout_cart th { font-weight: bold; }
-#edd_checkout_cart td { line-height: 25px; vertical-align: middle; }
+#edd_checkout_cart td { line-height: 25px; vertical-align: middle; background: #fff; }
 #edd_checkout_cart th.edd_cart_actions,
 #edd_checkout_cart td.edd_cart_actions,
 #edd_checkout_cart th:last-child,
@@ -99,7 +99,7 @@
 #edd_checkout_cart .edd_discount_remove:hover { background-position: -10px 0; }
 
 /* Checkout Fields */
-#edd_checkout_form_wrap legend { display:block; font-size: 120%; line-height: 1; font-weight: bold; border-bottom: 1px solid #ccc; width: 100%; margin: 0 0 21px 0; padding: 0 0 10px 0; }
+#edd_checkout_form_wrap legend { display:block; font-size: 120%; line-height: 1; font-weight: bold; width: 100%; margin: 0 0 21px 0; padding: 0; }
 #edd_checkout_form_wrap label { font-weight: bold; display:block; position: relative; line-height: 100%; font-size: 95%; margin: 0 0 5px; }
 #edd_checkout_form_wrap label:after { display: block; visibility: hidden; float: none; clear: both; height: 0; text-indent: -9999px; content: "."; }
 #edd_checkout_form_wrap span.edd-description { color: #666; font-size: 80%; display: block; margin: 0 0 5px; }
@@ -118,18 +118,25 @@
 #edd_checkout_form_wrap .edd-payment-icons img.payment-icon{ margin: 0 3px 0 0; float: left; background: none; padding: none; border: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
 #edd_checkout_form_wrap #edd-payment-mode-wrap label { display: inline-block; margin: 0 20px 0 0; }
 #edd_checkout_form_wrap #edd-payment-mode-wrap .edd-payment-mode-label { font-weight: bold; display: inline-block; position: relative; margin-bottom: 5px; }
-#edd_checkout_form_wrap fieldset { border: none; padding: 0; margin: 0; }
+#edd_checkout_form_wrap fieldset { border: 1px solid #eee; padding: 1.387em; margin: 0 0 21px 0; }
+#edd_checkout_form_wrap #edd_purchase_submit,
+#edd_checkout_form_wrap #edd_discount_code,
+#edd_checkout_form_wrap #edd_register_account_fields { padding: 0; border: none; }
+
 #edd_checkout_form_wrap fieldset fieldset { margin: 0; }
 #edd_checkout_form_wrap #edd-login-account-wrap,
 #edd_checkout_form_wrap #edd-new-account-wrap,
 #edd_checkout_form_wrap #edd_show_discount,
-#edd_checkout_form_wrap #edd_purchase_final_total { background: #fafafa; border: 1px solid #eee; color: #666; padding: 0.5em 1.387em; }
+#edd_checkout_form_wrap #edd_final_total_wrap { background: #fafafa; border: 1px solid #eee; color: #666; padding: 0.5em 1.387em; }
+#edd_checkout_form_wrap #edd-login-account-wrap,
+#edd_checkout_form_wrap #edd-new-account-wrap { margin: -1.387em -1.387em 21px -1.387em; border-left: none; border-right: none; border-top: none; }
 #edd_checkout_form_wrap #edd_payment_mode_select { margin-bottom: 21px; }
+#edd_checkout_form_wrap fieldset#edd_register_account_fields legend { padding-top: 11px; }
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_register_password,
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_login_password { margin: 0; }
-#edd_checkout_form_wrap fieldset#edd_cc_fields { padding: 0 8px 8px 8px; border: 1px solid #f0f0f0; margin: 0 0 21px -8px; background: #f9f9f9; position: relative; }
-#edd_checkout_form_wrap fieldset#edd_cc_fields legend { border: none; padding: 16px 0 0; }
-#edd_checkout_form_wrap fieldset#edd_cc_fields p:last-child { margin-bottom: 16px; }
+#edd_checkout_form_wrap fieldset#edd_cc_fields { border: 1px solid #f0f0f0; background: #f9f9f9; position: relative; }
+#edd_checkout_form_wrap fieldset#edd_cc_fields legend { border: none; padding: 0; }
+#edd_checkout_form_wrap fieldset p:last-child { margin-bottom: 0; }
 #edd_checkout_form_wrap fieldset#edd_cc_fields #edd-card-number-wrap { margin-top: 5px; }
 #edd_checkout_form_wrap #edd_purchase_final_total { margin:21px 0; }
 #edd_checkout_form_wrap #edd_purchase_final_total p { margin: 0; }
