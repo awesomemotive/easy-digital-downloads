@@ -100,3 +100,21 @@ function edd_process_collection_purchase( $data ) {
 	edd_die();
 }
 add_action( 'edd_purchase_collection', 'edd_process_collection_purchase' );
+
+
+/**
+ * Process cart updates, primarily for quantities
+ *
+ * @since 1.7
+ * @return void
+ */
+function edd_process_cart_update( $data ) {
+
+	foreach( $data['edd-cart-downloads'] as $key => $cart_download_id ) {
+		$options  = maybe_unserialize( stripslashes( $data['edd-cart-download-' . $key . '-options'] ) );
+		$quantity = absint( $data['edd-cart-download-' . $key . '-quantity'] );
+		edd_set_cart_item_quantity( $cart_download_id, $quantity, $options );
+	}
+
+}
+add_action( 'edd_update_cart', 'edd_process_cart_update' );

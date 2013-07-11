@@ -124,7 +124,7 @@ function edd_user_info_fields() {
 	endif;
 	?>
 	<fieldset id="edd_checkout_user_info">
-		<legend><?php echo apply_filters( 'edd_checkout_personal_info_text', __( 'Personal Info', 'edd' ) ); ?></legend>
+		<span><legend><?php echo apply_filters( 'edd_checkout_personal_info_text', __( 'Personal Info', 'edd' ) ); ?></legend></span>
 		<?php do_action( 'edd_purchase_form_before_email' ); ?>
 		<p id="edd-email-wrap">
 			<label class="edd-label" for="edd-email">
@@ -175,7 +175,7 @@ function edd_get_cc_form() {
 	<?php do_action( 'edd_before_cc_fields' ); ?>
 
 	<fieldset id="edd_cc_fields" class="edd-do-validate">
-		<legend><?php _e( 'Credit Card Info', 'edd' ); ?></legend>
+		<span><legend><?php _e( 'Credit Card Info', 'edd' ); ?></legend></span>
 		<?php if( is_ssl() ) : ?>
 			<div id="edd_secure_site_wrapper">
 				<span class="padlock"></span>
@@ -251,7 +251,7 @@ function edd_default_cc_address_fields() {
 	$zip   = $logged_in && ! empty( $user_address['zip']   ) ? $user_address['zip']   : '';
 	ob_start(); ?>
 	<fieldset id="edd_cc_address" class="cc-address">
-		<legend><?php _e( 'Billing Details', 'edd' ); ?></legend>
+		<span><legend><?php _e( 'Billing Details', 'edd' ); ?></legend></span>
 		<?php do_action( 'edd_cc_billing_top' ); ?>
 		<p id="edd-card-address-wrap">
 			<label class="edd-label"><?php _e( 'Billing Address', 'edd' ); ?></label>
@@ -387,7 +387,7 @@ function edd_get_register_fields() {
 		</p>
 		<?php do_action('edd_register_fields_after'); ?>
 		<fieldset id="edd_register_account_fields">
-			<legend><?php _e( 'Create an account', 'edd' ); if( !edd_no_guest_checkout() ) { echo ' ' . __( '(optional)', 'edd' ); } ?></legend>
+			<span><legend><?php _e( 'Create an account', 'edd' ); if( !edd_no_guest_checkout() ) { echo ' ' . __( '(optional)', 'edd' ); } ?></legend></span>
 			<?php do_action('edd_register_account_fields_before'); ?>
 			<p id="edd-user-login-wrap">
 				<label for="edd_user_login">
@@ -477,7 +477,9 @@ function edd_payment_mode_select() {
 	$gateways = edd_get_enabled_payment_gateways();
 	$page_URL = edd_get_current_page_url();
 	do_action('edd_payment_mode_top'); ?>
+	<?php if( ! edd_is_ajax_enabled() ) { ?>
 	<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
+	<?php } ?>
 		<fieldset id="edd_payment_mode_select">
 			<?php do_action( 'edd_payment_mode_before_gateways_wrap' ); ?>
 			<div id="edd-payment-mode-wrap">
@@ -504,7 +506,9 @@ function edd_payment_mode_select() {
 				<?php echo edd_checkout_button_next(); ?>
 			</p>
 		</fieldset>
+	<?php if( ! edd_is_ajax_enabled() ) { ?>
 	</form>
+	<?php } ?>
 	<div id="edd_purchase_form_wrap"></div><!-- the checkout fields are loaded into this-->
 	<?php do_action('edd_payment_mode_bottom');
 }
@@ -611,12 +615,10 @@ add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement', 999 );
  */
 function edd_checkout_final_total() {
 ?>
-	<fieldset id="edd_purchase_final_total">
-		<p id="edd_final_total_wrap">
-			<strong><?php _e( 'Purchase Total:', 'edd' ); ?></strong>
-			<span class="edd_cart_amount" data-subtotal="<?php echo edd_get_cart_amount( false ); ?>" data-total="<?php echo edd_get_cart_amount( true, true ); ?>"><?php edd_cart_total(); ?></span>
-		</p>
-	</fieldset>
+<p id="edd_final_total_wrap">
+	<strong><?php _e( 'Purchase Total:', 'edd' ); ?></strong>
+	<span class="edd_cart_amount" data-subtotal="<?php echo edd_get_cart_amount( false ); ?>" data-total="<?php echo edd_get_cart_amount( true, true ); ?>"><?php edd_cart_total(); ?></span>
+</p>
 <?php
 }
 add_action( 'edd_purchase_form_before_submit', 'edd_checkout_final_total', 999 );

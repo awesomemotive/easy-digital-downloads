@@ -26,10 +26,7 @@ if ( ! isset( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
 $payment_id   = absint( $_GET['id'] );
 $item         = get_post( $payment_id );
 $payment_meta = edd_get_payment_meta( $payment_id );
-$cart_items   = isset( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] ) : false;
-if ( empty( $cart_items ) || ! $cart_items ) {
-	$cart_items = maybe_unserialize( $payment_meta['downloads'] );
-}
+$cart_items   = edd_get_payment_meta_cart_details( $payment_id );
 $user_info    = edd_get_payment_meta_user_info( $payment_id );
 $user_id      = edd_get_payment_user_id( $payment_id );
 $payment_date = strtotime( $item->post_date );
@@ -50,9 +47,7 @@ $payment_date = strtotime( $item->post_date );
 								<div class="edd-order-discounts edd-admin-box-inside">
 									<p><span class="label"><?php _e( 'Discount Code', 'edd' ); ?></span> <span class="right"><?php if ( isset( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) { echo '<code>' . $user_info['discount'] . '</code>'; } else { _e( 'None', 'edd' ); } ?></span></p>
 								</div>
-								<?php
-								$taxes = edd_use_taxes();
-								if ( $taxes ) : ?>
+								<?php if ( edd_use_taxes() ) : ?>
 								<div class="edd-order-taxes edd-admin-box-inside">
 									<p><span class="label"><?php _e( 'Tax', 'edd' ); ?></span> <span class="right"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) ); ?></span></p>
 								</div>
@@ -201,6 +196,11 @@ $payment_date = strtotime( $item->post_date );
 													}
 													?>
 												</td>
+												<?php if( edd_item_quanities_enabled() ) : ?>
+												<td class="quantity column-quantity">
+													<?php echo __( 'Quantity:', 'edd' ) . '&nbsp;' . $cart_item['quantity']; ?>
+												</td>
+												<?php endif; ?>
 												<td class="price column-price">
 													<?php echo edd_currency_filter( edd_format_amount( $price ) ); ?>
 												</td>
