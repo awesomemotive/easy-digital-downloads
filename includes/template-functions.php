@@ -98,6 +98,10 @@ function edd_get_purchase_link( $args = array() ) {
 
 		<?php do_action( 'edd_purchase_link_top', $args['download_id'], $args['price'] ); ?>
 
+		<?php if( edd_display_tax_rate() ) {
+			echo '<div class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), $edd_options['tax_rate'] ) . '</div>';
+		} ?>
+
 		<div class="edd_purchase_submit_wrapper">
 			<?php
 				printf(
@@ -160,6 +164,8 @@ function edd_get_purchase_link( $args = array() ) {
  * @return void
  */
 function edd_purchase_variable_pricing( $download_id = 0, $show_price = true ) {
+	global $edd_options;
+
 	$variable_pricing = edd_has_variable_prices( $download_id );
 
 	if ( ! $variable_pricing || empty( $show_price ) )
