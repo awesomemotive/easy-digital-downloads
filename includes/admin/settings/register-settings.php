@@ -326,7 +326,7 @@ function edd_register_settings() {
 				),
 				'display_tax_rate' => array(
 					'id' => 'display_tax_rate',
-					'name' => __( 'Display Tax Rate', 'edd' ),
+					'name' => __( 'Display Tax Rate on Prices', 'edd' ),
 					'desc' => __( 'Some contries require a notice when product prices include tax.', 'edd' ),
 					'type' => 'checkbox',
 					'std' => 'no'
@@ -393,6 +393,12 @@ function edd_register_settings() {
 					'name' => __('Show Register / Login Form?', 'edd'),
 					'desc' => __('Display the registration and login forms on the checkout page for non-logged-in users.', 'edd'),
 					'type' => 'checkbox',
+				),
+				'item_quantities' => array(
+					'id' => 'item_quantities',
+					'name' => __('Item Quantities', 'edd'),
+					'desc' => __('Allow item quantities to be changed at checkout.', 'edd'),
+					'type' => 'checkbox'
 				),
 				'allow_multiple_discounts' => array(
 					'id' => 'allow_multiple_discounts',
