@@ -341,6 +341,9 @@ function edd_register_settings() {
 		'extensions' => apply_filters('edd_settings_extensions',
 			array()
 		),
+		'licenses' => apply_filters('edd_settings_licenses',
+			array()
+		),
 		/** Misc Settings */
 		'misc' => apply_filters('edd_settings_misc',
 			array(
@@ -491,6 +494,10 @@ function edd_register_settings() {
 
 	if ( false == get_option( 'edd_settings_extensions' ) ) {
 		add_option( 'edd_settings_extensions' );
+	}
+
+	if ( false == get_option( 'edd_settings_licenses' ) ) {
+		add_option( 'edd_settings_licenses' );
 	}
 
 	if ( false == get_option( 'edd_settings_misc' ) ) {
@@ -654,6 +661,32 @@ function edd_register_settings() {
 	}
 
 	add_settings_section(
+		'edd_settings_licenses',
+		__( 'Licenses', 'edd' ),
+		'__return_false',
+		'edd_settings_licenses'
+	);
+
+	foreach ( $edd_settings['licenses'] as $option ) {
+		add_settings_field(
+			'edd_settings_licenses[' . $option['id'] . ']',
+			$option['name'],
+			function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
+			'edd_settings_licenses',
+			'edd_settings_licenses',
+			array(
+				'id' => $option['id'],
+				'desc' => $option['desc'],
+				'name' => $option['name'],
+				'section' => 'licenses',
+				'size' => isset( $option['size'] ) ? $option['size'] : '',
+				'options' => isset( $option['options'] ) ? $option['options'] : '',
+				'std' => isset( $option['std'] ) ? $option['std'] : ''
+			)
+		);
+	}
+
+	add_settings_section(
 		'edd_settings_misc',
 		__( 'Misc Settings', 'edd' ),
 		'__return_false',
@@ -686,6 +719,7 @@ function edd_register_settings() {
 	register_setting( 'edd_settings_styles',     'edd_settings_styles',     'edd_settings_sanitize' );
 	register_setting( 'edd_settings_taxes',      'edd_settings_taxes',      'edd_settings_sanitize_taxes' );
 	register_setting( 'edd_settings_extensions', 'edd_settings_extensions', 'edd_settings_sanitize' );
+	register_setting( 'edd_settings_licenses',   'edd_settings_licenses',   'edd_settings_sanitize' );
 	register_setting( 'edd_settings_misc',       'edd_settings_misc',       'edd_settings_sanitize_misc' );
 }
 add_action('admin_init', 'edd_register_settings');
@@ -1243,7 +1277,8 @@ function edd_get_settings() {
 	$style_settings   = is_array( get_option( 'edd_settings_styles' ) )     ? get_option( 'edd_settings_styles' )   : array();
 	$tax_settings     = is_array( get_option( 'edd_settings_taxes' ) )      ? get_option( 'edd_settings_taxes' )    : array();
 	$ext_settings     = is_array( get_option( 'edd_settings_extensions' ) ) ? get_option( 'edd_settings_extensions' )     : array();
+	$license_settings = is_array( get_option( 'edd_settings_licenses' ) )   ? get_option( 'edd_settings_licenses' ) : array();
 	$misc_settings    = is_array( get_option( 'edd_settings_misc' ) )       ? get_option( 'edd_settings_misc' )     : array();
 
-	return array_merge( $general_settings, $gateway_settings, $email_settings, $style_settings, $tax_settings, $ext_settings, $misc_settings );
+	return array_merge( $general_settings, $gateway_settings, $email_settings, $style_settings, $tax_settings, $ext_settings, $license_settings, $misc_settings );
 }
