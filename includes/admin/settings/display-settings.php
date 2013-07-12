@@ -38,6 +38,9 @@ function edd_options_page() {
 			<?php if( has_filter( 'edd_settings_extensions' ) ) { ?>
 				<a href="<?php echo add_query_arg('tab', 'extensions', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'extensions' ? 'nav-tab-active' : ''; ?>"><?php _e('Extensions', 'edd'); ?></a>
 			<?php } ?>
+			<?php if( has_filter( 'edd_settings_licenses' ) ) { ?>
+				<a href="<?php echo add_query_arg('tab', 'licenses', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'licenses' ? 'nav-tab-active' : ''; ?>"><?php _e('Licenses', 'edd'); ?></a>
+			<?php } ?>
 			<a href="<?php echo add_query_arg('tab', 'misc', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'misc' ? 'nav-tab-active' : ''; ?>"><?php _e('Misc', 'edd'); ?></a>
 		</h2>
 
@@ -64,6 +67,9 @@ function edd_options_page() {
 				} elseif ($active_tab == 'extensions' ) {
 					settings_fields( 'edd_settings_extensions' );
 					do_settings_sections( 'edd_settings_extensions' );
+				} elseif ($active_tab == 'licenses' ) {
+					settings_fields( 'edd_settings_licenses' );
+					do_settings_sections( 'edd_settings_licenses' );
 				} else {
 					settings_fields( 'edd_settings_misc' );
 					do_settings_sections( 'edd_settings_misc' );
