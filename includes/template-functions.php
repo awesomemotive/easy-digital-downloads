@@ -114,25 +114,25 @@ function edd_get_purchase_link( $args = array() ) {
 					esc_attr( $type ),
 					$button_display
 				);
-			}				
+			}
 
-				printf(
-					'<input type="submit" class="edd-add-to-cart edd-no-js %1$s" name="edd_purchase_download" value="%2$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s %6$s/>',
-					implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
-					esc_attr( $args['text'] ),
-					esc_attr( $args['download_id'] ),
-					esc_attr( $data_variable ),
-					esc_attr( $type ),
-					$button_display
-				);
+			printf(
+				'<input type="submit" class="edd-add-to-cart edd-no-js %1$s" name="edd_purchase_download" value="%2$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s %6$s/>',
+				implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
+				esc_attr( $args['text'] ),
+				esc_attr( $args['download_id'] ),
+				esc_attr( $data_variable ),
+				esc_attr( $type ),
+				$button_display
+			);
 
-				printf(
-					'<a href="%1$s" class="%2$s %3$s" %4$s>' . __( 'Checkout', 'edd' ) . '</a>',
-					esc_url( edd_get_checkout_uri() ),
-					esc_attr( 'edd_go_to_checkout' ),
-					implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
-					$checkout_display
-				);
+			printf(
+				'<a href="%1$s" class="%2$s %3$s" %4$s>' . __( 'Checkout', 'edd' ) . '</a>',
+				esc_url( edd_get_checkout_uri() ),
+				esc_attr( 'edd_go_to_checkout' ),
+				implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
+				$checkout_display
+			);
 			?>
 
 			<?php if ( edd_is_ajax_enabled() ) : ?>
