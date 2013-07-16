@@ -864,3 +864,19 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 
 	return apply_filters( 'edd_is_zip_valid', $ret, $zip, $country_code );
 }
+
+/**
+ * Process a straight-to-gateway purchase
+ *
+ * @since 1.7
+ * @return void
+ */
+function edd_process_straight_to_gateway( $data ) {
+	$download_id   = $data['download_id'];
+	$options       = isset( $data['edd_options'] ) ? $data['edd_options'] : array();
+	$gateway       = 'paypal';
+	$purchase_data = edd_build_straight_to_gateway_data( $download_id, $options, $gateway );
+
+	edd_send_to_gateway( $gateway, $purchase_data );
+}
+add_action( 'edd_straight_to_gateway', 'edd_process_straight_to_gateway' );
