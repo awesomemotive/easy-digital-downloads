@@ -110,7 +110,7 @@ function edd_get_gateway_checkout_label( $gateway ) {
  * @since 1.7
  * @return array
  */
-function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(), $gateway = 'paypal' ) {
+function edd_build_straight_to_gateway_data( $download_id = 0, $options = array() ) {
 
 	if( empty( $options ) && ! edd_has_variable_prices( $download_id ) ) {
 		$price = edd_get_download_price( $download_id );
@@ -171,7 +171,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'user_info'    => $user_info,
 		'post_data'    => array(),
 		'cart_details' => $cart_details,
-		'gateway'      => $gateway,
+		'gateway'      => 'paypal',
 		'card_info'    => array()
 	);
 
