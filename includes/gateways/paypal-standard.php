@@ -332,6 +332,33 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	if ( edd_get_payment_gateway( $payment_id ) != 'paypal' )
 		return; // this isn't a PayPal standard IPN
 
+	if( ! edd_get_payment_user_email( $payment_id ) ) {
+
+		// No email associated with purchase, so store from PayPal
+		update_post_meta( $payment_id, '_edd_payment_user_email', $data['payer_email'] );
+
+		// Setup and store the customers's details
+		$address = array();
+		$address['line1']   = ! empty( $data['address_street']       ) ? $data['address_street']       : false;
+		$address['city']    = ! empty( $data['address_city']         ) ? $data['address_city']         : false;
+		$address['state']   = ! empty( $data['address_state']        ) ? $data['address_state']        : false;
+		$address['country'] = ! empty( $data['address_country_code'] ) ? $data['address_country_code'] : false;
+		$address['zip']     = ! empty( $data['address_zip']          ) ? $data['address_zip']          : false;
+
+		$user_info = array(
+			'id'         => '-1',
+			'email'      => $data['payer_email'],
+			'first_name' => $data['first_name'],
+			'last_name'  => $data['last_name'],
+			'discount'   => '',
+			'address'    => $address
+		);
+
+		$payment_meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
+		$payment_meta['user_info'] = serialize( $user_info );
+		update_post_meta( $payment_id, '_edd_payment_meta', $payment_meta );
+	}
+
 	// Verify details
 	if ( $currency_code != strtolower( edd_get_currency() ) ) {
 		// The currency code is invalid
