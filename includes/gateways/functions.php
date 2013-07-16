@@ -105,6 +105,81 @@ function edd_get_gateway_checkout_label( $gateway ) {
 }
 
 /**
+ * Build the purchase data for a straight-to-gateway purchase button
+ *
+ * @since 1.7
+ * @return array
+ */
+function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(), $gateway = 'paypal' ) {
+
+	if( empty( $options ) && ! edd_has_variable_prices( $download_id ) ) {
+		$price = edd_get_download_price( $download_id );
+	} else {
+		$prices = edd_get_variable_prices( $download_id );
+		$price  = $prices[ $options['price_id'] ]['amount'];
+	}
+
+	// Set up Downloads array
+	$downloads = array(
+		array(
+			'id'      => $download_id,
+			'options' => $options
+		)
+	);
+
+	// Set up Cart Details array
+	$cart_details = array(
+		array(
+			'name'        => get_the_title( $download_id ),
+			'id'          => $download_id,
+			'item_number' => array(
+				'id'      => $download_id,
+				'options' => $options
+			),
+			'price'       => $price,
+			'quantity'    => 1,
+		)
+	);
+
+	if( is_user_logged_in() ) {
+		global $current_user;
+		get_currentuserinfo();
+	}
+
+
+	// Setup user information
+	$user_info = array(
+		'id'         => is_user_logged_in() ? get_current_user_id()         : -1,
+		'email'      => is_user_logged_in() ? $current_user->user_email     : '',
+		'first_name' => is_user_logged_in() ? $current_user->user_firstname : '',
+		'last_name'  => is_user_logged_in() ? $current_user->user_lastname  : '',
+		'discount'   => '',
+		'address'    => array()
+	);
+
+	// Setup purchase information
+	$purchase_data = array(
+		'downloads'    => $downloads,
+		'fees'         => edd_get_cart_fees(),
+		'subtotal'     => $price,
+		'discount'     => 0,
+		'tax'          => 0,
+		'price'        => $price,
+		'purchase_key' => strtolower( md5( uniqid() ) ),
+		'user_email'   => $user_info['email'],
+		'date'         => date( 'Y-m-d H:i:s' ),
+		'user_info'    => $user_info,
+		'post_data'    => array(),
+		'cart_details' => $cart_details,
+		'gateway'      => $gateway,
+		'card_info'    => array()
+	);
+
+	return $purchase_data;
+
+}
+
+/**
  * Sends all the payment data to the specified gateway
  *
  * @since 1.0
