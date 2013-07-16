@@ -30,10 +30,6 @@ add_action( 'edd_paypal_cc_form', '__return_false' );
 function edd_process_paypal_purchase( $purchase_data ) {
     global $edd_options;
 
-    // Check there is a gateway name
-    if ( ! isset( $purchase_data['post_data']['edd-gateway'] ) )
-    	return;
-
     /*
     Purchase data comes in like this:
 
