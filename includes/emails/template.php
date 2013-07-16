@@ -163,7 +163,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_n
 	$message = str_replace( '{user_email}', $email, $message );
 
 	if( ! $admin_notice ) {
-		$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'purchase_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' ), $message );
+		$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'payment_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' ), $message );
 	}
 
 	$message = apply_filters( 'edd_email_template_tags', $message, $payment_data, $payment_id, $admin_notice );
@@ -221,7 +221,7 @@ function edd_email_preview_templage_tags( $message ) {
 	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
 	$message = str_replace( '{product_notes}', $notes, $message );
 	$message = str_replace( '{payment_id}', $payment_id, $message );
-	$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'purchase_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' ), $message );
+	$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'payment_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' ), $message );
 
 	return wpautop( $message );
 }
@@ -470,10 +470,10 @@ add_filter( 'edd_purchase_receipt_default', 'edd_default_email_styling' );
  * @author Sunny Ratilal
  */
 function edd_render_receipt_in_browser() {
-	if ( ! isset( $_GET['purchase_key'] ) )
+	if ( ! isset( $_GET['payment_key'] ) )
 		wp_die( __( 'Missing purchase key.', 'edd' ), __( 'Error', 'edd' ) );
 
-	$key = urlencode( $_GET['purchase_key'] );
+	$key = urlencode( $_GET['payment_key'] );
 
 	ob_start();
 ?>
