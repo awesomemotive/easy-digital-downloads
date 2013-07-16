@@ -874,8 +874,7 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 function edd_process_straight_to_gateway( $data ) {
 	$download_id   = $data['download_id'];
 	$options       = isset( $data['edd_options'] ) ? $data['edd_options'] : array();
-	$gateway       = 'paypal';
-	$purchase_data = edd_build_straight_to_gateway_data( $download_id, $options, $gateway );
+	$purchase_data = edd_build_straight_to_gateway_data( $download_id, $options );
 
 	edd_send_to_gateway( $gateway, $purchase_data );
 }
