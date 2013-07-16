@@ -532,7 +532,7 @@ function edd_show_payment_icons() {
 			if( edd_string_is_image_url( $key ) ) {
 				echo '<img class="payment-icon" src="' . $key . '"/>';
 			} else {
-				echo '<img class="payment-icon" src="' . EDD_PLUGIN_URL . 'assets/images/icons/' . strtolower( str_replace( ' ', '', $card ) ) . '.png"/>';
+				echo '<img class="payment-icon" src="' . EDD_PLUGIN_URL . 'assets/images/icons/' . strtolower( str_replace( ' ', '', $card ) ) . '.gif"/>';
 			}
 		}
 		echo '</div>';
