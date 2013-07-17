@@ -241,8 +241,8 @@ function edd_register_settings() {
 					'desc' => __('Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'edd'),
 					'type' => 'checkbox'
 				),
-				'buton_header' => array(
-					'id' => 'buton_header',
+				'button_header' => array(
+					'id' => 'button_header',
 					'name' => '<strong>' . __('Buttons', 'edd') . '</strong>',
 					'desc' => __('Options for add to cart and purchase buttons', 'edd'),
 					'type' => 'header'
