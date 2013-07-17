@@ -114,25 +114,25 @@ function edd_get_purchase_link( $args = array() ) {
 					esc_attr( $type ),
 					$button_display
 				);
-			}				
+			}
 
-				printf(
-					'<input type="submit" class="edd-add-to-cart edd-no-js %1$s" name="edd_purchase_download" value="%2$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s %6$s/>',
-					implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
-					esc_attr( $args['text'] ),
-					esc_attr( $args['download_id'] ),
-					esc_attr( $data_variable ),
-					esc_attr( $type ),
-					$button_display
-				);
+			printf(
+				'<input type="submit" class="edd-add-to-cart edd-no-js %1$s" name="edd_purchase_download" value="%2$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s %6$s/>',
+				implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
+				esc_attr( $args['text'] ),
+				esc_attr( $args['download_id'] ),
+				esc_attr( $data_variable ),
+				esc_attr( $type ),
+				$button_display
+			);
 
-				printf(
-					'<a href="%1$s" class="%2$s %3$s" %4$s>' . __( 'Checkout', 'edd' ) . '</a>',
-					esc_url( edd_get_checkout_uri() ),
-					esc_attr( 'edd_go_to_checkout' ),
-					implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
-					$checkout_display
-				);
+			printf(
+				'<a href="%1$s" class="%2$s %3$s" %4$s>' . __( 'Checkout', 'edd' ) . '</a>',
+				esc_url( edd_get_checkout_uri() ),
+				esc_attr( 'edd_go_to_checkout' ),
+				implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
+				$checkout_display
+			);
 			?>
 
 			<?php if ( edd_is_ajax_enabled() ) : ?>
@@ -520,6 +520,28 @@ function edd_locate_template( $template_names, $load = false, $require_once = tr
 }
 
 /**
+ * Returns the template directory name.
+ *
+ * Themes can filter this by using the edd_templates_dir filter.
+ *
+ * @since 1.6.2
+ * @return string
+*/
+function edd_get_theme_template_dir_name() {
+	return trailingslashit( apply_filters( 'edd_templates_dir', 'edd_templates' ) );
+}
+
+/**
+ * Should we add schema.org mcirodata?
+ *
+ * @since 1.7
+ * @return bool
+ */
+function edd_add_schema_microdata() {
+	return apply_filters( 'edd_add_schema_microdata', true );
+}
+
+/**
  * Add Microdata to download titles
  *
  * @since 1.5
@@ -529,6 +551,11 @@ function edd_locate_template( $template_names, $load = false, $require_once = tr
  * @return string $title New title
  */
 function edd_microdata_title( $title, $id = 0 ) {
+
+	if( ! edd_add_schema_microdata() ) {
+		return $title;
+	}
+
 	if ( is_singular( 'download' ) && 'download' == get_post_type( intval( $id ) ) ) {
 		$title = '<span itemprop="name">' . $title . '</span>';
 	}
@@ -548,21 +575,14 @@ add_filter( 'the_title', 'edd_microdata_title', 10, 2 );
  */
 function edd_microdata_wrapper( $content ) {
 	global $post;
+
+	if( ! edd_add_schema_microdata() ) {
+		return $content;
+	}
+
 	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
 		$content = apply_filters( 'edd_microdata_wrapper', '<div itemscope itemtype="http://schema.org/Product" itemprop="description">' . $content . '</div>' );
 	}
 	return $content;
 }
 add_filter( 'the_content', 'edd_microdata_wrapper', 10 );
-
-/**
- * Returns the template directory name.
- *
- * Themes can filter this by using the edd_templates_dir filter.
- *
- * @since 1.6.2
- * @return string
-*/
-function edd_get_theme_template_dir_name() {
-	return trailingslashit( apply_filters( 'edd_templates_dir', 'edd_templates' ) );
-}
