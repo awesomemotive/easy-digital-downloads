@@ -81,10 +81,11 @@ class EDD_Session {
 
 		}
 
-		if ( empty( $this->session ) && ! $this->use_php_sessions )
-			add_action( 'plugins_loaded', array( $this, 'init' ) );
-		else
-			add_action( 'init', array( $this, 'init' ) );
+		if ( empty( $this->session ) && ! $this->use_php_sessions ) {
+			add_action( 'plugins_loaded', array( $this, 'init' ), -1 );
+		} else {
+			add_action( 'init', array( $this, 'init' ), -1 );
+		}
 	}
 
 
