@@ -14,7 +14,7 @@
 		<?php if ( $cart_items ) : ?>
 			<?php do_action( 'edd_cart_items_before' ); ?>
 			<?php foreach ( $cart_items as $key => $item ) : ?>
-				<tr class="edd_cart_item" id="edd_cart_item_<?php echo esc_attr( $item['id'] ); ?>">
+				<tr class="edd_cart_item" id="edd_cart_item_<?php echo esc_attr( $key ) . '_' . esc_attr( $item['id'] ); ?>" data-download-id="<?php echo esc_attr( $item['id'] ); ?>">
 					<?php do_action( 'edd_checkout_table_body_first', $item['id'] ); ?>
 					<td class="edd_cart_item_name">
 						<?php
@@ -66,7 +66,7 @@
 		</tr>
 			<?php if ( ! edd_prices_show_tax_on_checkout() ) : ?>
 
-			<tr class="edd_cart_footer_row edd_cart_tax_row"<?php if( edd_is_cart_taxed() ) echo ' style="display:none;"'; ?>>
+			<tr class="edd_cart_footer_row edd_cart_tax_row"<?php if( ! edd_is_cart_taxed() ) echo ' style="display:none;"'; ?>>
 				<?php do_action( 'edd_checkout_table_tax_first' ); ?>
 				<th colspan="3" class="edd_cart_tax">
 					<?php _e( 'Tax', 'edd' ); ?>:&nbsp;<span class="edd_cart_tax_amount" data-tax="<?php echo edd_get_cart_tax( false ); ?>"><?php echo esc_html( edd_cart_tax() ); ?></span>

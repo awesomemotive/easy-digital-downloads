@@ -178,7 +178,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'refunded'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'refunded', $base ), $current === 'refunded' ? ' class="current"' : '', __('Refunded', 'edd') . $refunded_count ),
 			'revoked'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'revoked', $base ), $current === 'revoked' ? ' class="current"' : '', __('Revoked', 'edd') . $revoked_count ),
 			'failed'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'failed', $base ), $current === 'failed' ? ' class="current"' : '', __('Failed', 'edd') . $failed_count ),
-			'abandoned'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'abandoned', $base ), $current === 'abandoned' ? ' class="current"' : '', __('Abadoned', 'edd') . $abandoned_count )
+			'abandoned'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'abandoned', $base ), $current === 'abandoned' ? ' class="current"' : '', __('Abandoned', 'edd') . $abandoned_count )
 		);
 
 		return apply_filters( 'edd_payments_table_views', $views );
@@ -236,7 +236,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'amount' :
-				$value   = edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
+				$amount  = ! empty( $item[ $column_name ] ) ? $item['amount'] : 0;
+				$value   = edd_currency_filter( edd_format_amount( $amount ) );
 				break;
 			case 'date' :
 				$date    = strtotime( $item[ $column_name ] );
@@ -310,16 +311,16 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function column_user( $item ) {
 		$user_info = edd_get_payment_meta_user_info( $item['ID'] );
-		$user_id = isset( $user_info['id'] ) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email'];
+		$user_id   = edd_get_payment_user_id( $item['ID'] );
 
-		if ( is_numeric( $user_id ) ) {
+		if ( $user_id > 0 ) {
 			$user = get_userdata( $user_id ) ;
 			$display_name = is_object( $user ) ? $user->display_name : __( 'guest', 'edd' );
 		} else {
 			$display_name = __( 'guest', 'edd' );
 		}
 
-		$value = '<a href="' . remove_query_arg( 'paged', add_query_arg( 'user', $user_id ) ) . '">' . $display_name . '</a>';
+		$value = '<a href="' . remove_query_arg( 'paged', add_query_arg( 'user', $user_info['email'] ) ) . '">' . $display_name . '</a>';
 		return apply_filters( 'edd_payments_table_column', $value, $item['ID'], 'user' );
 	}
 

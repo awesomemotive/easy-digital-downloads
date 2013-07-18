@@ -57,12 +57,12 @@ function edd_login_form( $redirect = '' ) {
 						<?php _e( 'Lost Password?', 'edd' ); ?>
 					</a>
 				</p>
-				<?php do_action('edd_checkout_login_fields_after');?>
+				<?php do_action( 'edd_checkout_login_fields_after' );?>
 			</fieldset>
 		</form>
 	<?php
 	} else {
-		echo '<p class="edd-logged-in">' . __('You are already logged in', 'edd' ) . '</p>';
+		echo '<p class="edd-logged-in">' . __( 'You are already logged in', 'edd' ) . '</p>';
 	}
 	return ob_get_clean();
 }

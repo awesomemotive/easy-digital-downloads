@@ -14,6 +14,7 @@ $multisite = ! empty( $argv[2] );
 require_once $config_file_path;
 require_once dirname( $config_file_path ) . '/includes/functions.php';
 
+// Load EDD
 function _load_edd() {
 	require dirname( dirname( dirname( __FILE__ ) ) ) . '/easy-digital-downloads.php';
 }

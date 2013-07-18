@@ -17,27 +17,17 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 1.0.8.4
  * @param int $payment_id Payment ID
- * @param string $new_status New Payment Status (e.g. Complete)
- * @param string $old_status Old Payment Status (e.g. Pending)
  * @return void
  */
-function edd_trigger_purchase_receipt( $payment_id, $new_status, $old_status ) {
+function edd_trigger_purchase_receipt( $payment_id ) {
 	// Make sure we don't send a purchase receipt while editing a payment
-	if ( isset( $_POST['edd-action'] ) && $_POST['edd-action'] == 'edit_payment' )
-		return;
-
-	// Check if the payment was already set to complete
-	if ( $old_status == 'publish' || $old_status == 'complete' )
-		return; // Make sure that payments are only completed once
-
-	// Make sure the receipt is only sent when new status is complete
-	if ( $new_status != 'publish' && $new_status != 'complete' )
+	if ( isset( $_POST['edd-action'] ) && 'edit_payment' == $_POST['edd-action'] )
 		return;
 
 	// Send email with secure download link
 	edd_email_purchase_receipt( $payment_id );
 }
-add_action( 'edd_update_payment_status', 'edd_trigger_purchase_receipt', 10, 3 );
+add_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999, 1 );
 
 /**
  * Resend the Email Purchase Receipt. (This can be done from the Payment History page)

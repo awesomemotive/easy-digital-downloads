@@ -31,6 +31,7 @@ if ( empty( $cart_items ) || ! $cart_items ) {
 	$cart_items = maybe_unserialize( $payment_meta['downloads'] );
 }
 $user_info    = edd_get_payment_meta_user_info( $payment_id );
+$user_id      = edd_get_payment_user_id( $payment_id );
 $payment_date = strtotime( $item->post_date );
 ?>
 <div class="wrap">
@@ -104,6 +105,26 @@ $payment_date = strtotime( $item->post_date );
 							?>
 						</div><!-- /.inside -->
 					</div><!-- /#edd-payment-notes -->
+
+					<?php if( ! empty( $user_info['address'] ) ) { ?>
+
+						<div id="edd-order-address" class="postbox">
+							<h3 class="hndle"><span><?php _e( 'Billing Address', 'edd' ); ?></span></h3>
+							<div class="inside">
+								<div class="order-data-address">
+									<p class="data">
+										<span class="order-data-address-line"><?php echo _x( 'Line 1:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['line1']; ?><br/>
+										<span class="order-data-address-line"><?php echo _x( 'Line 2:', 'Second address line', 'edd' ) . '</span> ' . $user_info['address']['line2']; ?><br/>
+										<span class="order-data-address-line"><?php echo _x( 'City:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['city']; ?><br/>
+										<span class="order-data-address-line"><?php echo _x( 'State / Province:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['state']; ?><br/>
+										<span class="order-data-address-line"><?php echo _x( 'Zip / Postal Code:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['zip']; ?><br/>
+										<span class="order-data-address-line"><?php echo _x( 'Country:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['country']; ?><br/>
+									</p>
+								</div>
+							</div><!-- /.inside -->
+						</div><!-- /#edd-order-address -->
+					<?php } ?>
+
 					<?php do_action( 'edd_view_order_details_sidebar_after', $payment_id ); ?>
 				</div><!-- /#side-sortables -->
 			</div><!-- /#postbox-container-1 -->
@@ -125,9 +146,9 @@ $payment_date = strtotime( $item->post_date );
 								<div class="order-data-column">
 									<h4><?php _e( 'Buyer\'s Personal Details', 'edd' ); ?></h4>
 									<p class="data"><span><?php _e( 'Name:', 'edd' ); ?></span> <?php echo $user_info['first_name'] . ' ' . $user_info['last_name']; ?></p>
-									<p class="data"><span><?php _e( 'User Status:', 'edd' ); ?></span> <?php echo $user_info['id'] > 0 ? __( 'Registered User', 'edd' ) : __( 'Guest', 'edd' ); ?></p>
-									<?php if( $user_info['id'] > 0 ) : ?>
-										<p class="data"><span><?php _e( 'User ID:', 'edd' ); ?></span> <?php echo $user_info['id']; ?></p>
+									<p class="data"><span><?php _e( 'User Status:', 'edd' ); ?></span> <?php echo $user_id > 0 ? __( 'Registered User', 'edd' ) : __( 'Guest', 'edd' ); ?></p>
+									<?php if( $user_id > 0 ) : ?>
+										<p class="data"><span><?php _e( 'User ID:', 'edd' ); ?></span> <?php echo $user_id; ?></p>
 									<?php endif; ?>
 									<p class="data"><span><?php _e( 'Email:', 'edd' ); ?></span> <a href="mailto:<?php echo $payment_meta['email']; ?>"><?php echo $payment_meta['email']; ?></a></p>
 									<ul><?php do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info ); ?></ul>

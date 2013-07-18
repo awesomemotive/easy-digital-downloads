@@ -103,7 +103,7 @@ function edd_register_styles() {
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
 	$file          = 'edd' . $suffix . '.css';
-	$templates_dir = 'edd_templates/';
+	$templates_dir = edd_get_theme_template_dir_name();
 
 	$child_theme_style_sheet    = trailingslashit( get_stylesheet_directory() ) . $templates_dir . $file;
 	$child_theme_style_sheet_2  = trailingslashit( get_stylesheet_directory() ) . $templates_dir . 'edd.css';
@@ -241,38 +241,47 @@ function edd_admin_downloads_icon() {
 	$icon_url    = $images_url . 'edd-icon.png';
 	$icon_cpt_url = $images_url . 'edd-cpt.png';
 	$icon_2x_url = $images_url . 'edd-icon-2x.png';
+	$icon_cpt_2x_url = $images_url . 'edd-cpt-2x.png';
 	?>
 	<style type="text/css" media="screen">
-		body #adminmenu #menu-posts-download div.wp-menu-image { background: transparent url(<?php echo $icon_url; ?>) no-repeat 7px -32px; }
-		body #adminmenu #menu-posts-download:hover div.wp-menu-image,
-		body #adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image { background: transparent url(<?php echo $icon_url; ?>) no-repeat 7px 0; }
-		<?php if ( ( isset( $_GET['post_type'] ) ) && ( 'download' == $_GET['post_type'] ) || ( 'download' == $post_type ) ) : ?>
-		#icon-edit { background: transparent url(<?php echo $icon_cpt_url; ?>) no-repeat; }
-		<?php endif; ?>
+		#adminmenu #menu-posts-download div.wp-menu-image {
+			background: url(<?php echo $icon_url; ?>) no-repeat 7px -17px;
+		}
+		#adminmenu #menu-posts-download:hover div.wp-menu-image,
+		#adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image {
+			background-position: 7px 6px;
+		}
+		#icon-edit.icon32-posts-download {
+			background: url(<?php echo $icon_cpt_url; ?>) -7px -5px no-repeat;
+		}
+		#edd-media-button {
+			background: url(<?php echo $icon_url; ?>) 0 -16px no-repeat;
+			background-size: 12px 30px;
+		}
 		@media
 		only screen and (-webkit-min-device-pixel-ratio: 1.5),
 		only screen and (   min--moz-device-pixel-ratio: 1.5),
 		only screen and (     -o-min-device-pixel-ratio: 3/2),
 		only screen and (        min-device-pixel-ratio: 1.5),
 		only screen and (        		 min-resolution: 1.5dppx) {
-			/* Admin Menu - 16px @2x */
-			body #adminmenu #menu-posts-download div.wp-menu-image {
-				background: transparent url(<?php echo $icon_2x_url; ?>) no-repeat 7px -20px !important;
-				background-size: 16px 48px !important;
+			#adminmenu #menu-posts-download div.wp-menu-image {
+				background-image: url(<?php echo $icon_2x_url; ?>);
+				background-position: 7px -18px;
+				background-size: 16px 40px;
 			}
-
-			body #adminmenu #menu-posts-download:hover div.wp-menu-image,
-			body #adminmenu #menu-posts-download.wp-menu-open div.wp-menu-image {
-				background-position: 7px 4px !important;
+			#adminmenu #menu-posts-download:hover div.wp-menu-image,
+			#adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image {
+				background-position: 7px 6px;
 			}
-
-			/* Post Screen - 32px @2x */
-			.icon32-posts-download {
-				background: url(<?php echo $icon_2x_url; ?>) no-repeat 0 0 !important;
-				background-size: 32px 32px !important;
+			#icon-edit.icon32-posts-download {
+				background: url(<?php echo $icon_cpt_2x_url; ?>) no-repeat -7px -5px !important;
+				background-size: 55px 45px !important;
+			}
+			#edd-media-button {
+				background-image: url(<?php echo $icon_2x_url; ?>);
+				background-position: 0 -17px;
 			}
 		}
-		#edd-media-button { -webkit-background-size: 16px; -moz-background-size: 16px; background-size: 16px; background-image: url(<?php echo $icon_cpt_url; ?>); margin-top: -1px; }
 	</style>
 	<?php
 }

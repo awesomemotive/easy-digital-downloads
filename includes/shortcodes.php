@@ -58,8 +58,7 @@ add_shortcode( 'purchase_link', 'edd_download_shortcode' );
 function edd_download_history() {
 	if ( is_user_logged_in() ) {
 		ob_start();
-		// Download history short code was removed with EDD v1.6. It now shows same thing as [purchase_history]
-		edd_get_template_part( 'history', 'purchases' );
+		edd_get_template_part( 'history', 'downloads' );
 		return ob_get_clean();
 	}
 }
@@ -148,21 +147,26 @@ add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
 function edd_discounts_shortcode( $atts, $content = null ) {
 	$discounts = edd_get_discounts();
 
-	if ( ! $discounts && edd_has_active_discounts() )
-		return;
-
 	$discounts_list = '<ul id="edd_discounts_list">';
 
-	foreach ( $discounts as $discount ) {
-		if ( edd_is_discount_active( $discount->ID ) ) {
-			$discounts_list .= '<li class="edd_discount">';
+	if ( $discounts && edd_has_active_discounts() ) {
 
-				$discounts_list .= '<span class="edd_discount_name">' . edd_get_discount_code( $discount->ID ) . '</span>';
-				$discounts_list .= '<span class="edd_discount_separator"> - </span>';
-				$discounts_list .= '<span class="edd_discount_amount">' . edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) ) . '</span>';
+		foreach ( $discounts as $discount ) {
 
-			$discounts_list .= '</li>';
+			if ( edd_is_discount_active( $discount->ID ) ) {
+
+				$discounts_list .= '<li class="edd_discount">';
+
+					$discounts_list .= '<span class="edd_discount_name">' . edd_get_discount_code( $discount->ID ) . '</span>';
+					$discounts_list .= '<span class="edd_discount_separator"> - </span>';
+					$discounts_list .= '<span class="edd_discount_amount">' . edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) ) . '</span>';
+
+				$discounts_list .= '</li>';
+
+			}
+
 		}
+
 	}
 
 	$discounts_list .= '</ul>';
@@ -183,16 +187,21 @@ add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
  * @return string
  */
 function edd_purchase_collection_shortcode( $atts, $content = null ) {
+	global $edd_options;
+
 	extract( shortcode_atts( array(
-			'taxonomy' => '',
-			'terms' => '',
-			'link' => __('Purchase All Items', 'edd')
+			'taxonomy'	=> '',
+			'terms'		=> '',
+			'text'		=> __('Purchase All Items', 'edd'),
+			'style'		=> isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button',
+			'color'		=> isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue',
+			'class'		=> 'edd-submit'
 		), $atts )
 	);
 
-	$link = is_null( $content ) ? $link : $content;
+	$button_display = implode( ' ', array( $style, $color, $class ) );
 
-	return '<a href="' . add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms ) ) . '">' . $link . '</a>';
+	return '<a href="' . add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms ) ) . '" class="' . $button_display . '">' . $text . '</a>';
 }
 add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
 
@@ -451,10 +460,10 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 		return $edd_receipt_args[ 'error' ];
 
 	$edd_receipt_args[ 'id' ] = edd_get_purchase_id_by_key( $payment_key );
-	$user = edd_get_payment_meta_user_info( $edd_receipt_args[ 'id' ] );
+	$user_id = edd_get_payment_user_id( $edd_receipt_args[ 'id' ] );
 
 	// Not the proper user
-	if ( ( is_user_logged_in() && $user[ 'id' ] != get_current_user_id() ) || ( $user[ 'id' ] > 0 && ! is_user_logged_in() ) ) {
+	if ( ( is_user_logged_in() && $user_id != get_current_user_id() ) || ( $user_id > 0 && ! is_user_logged_in() ) ) {
 		return $edd_receipt_args[ 'error' ];
 	}
 
