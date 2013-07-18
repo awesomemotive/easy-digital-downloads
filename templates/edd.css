@@ -164,7 +164,7 @@
 .edd_purchase_submit_wrapper .edd-cart-ajax { display: none; position: relative; left: -35px; }
 .edd-submit.button.edd-ajax-loading { padding-right: 30px; }
 .edd-add-to-cart .edd-add-to-cart-label { opacity: 1; filter: alpha(opacity=100); }
-a.edd-add-to-cart .edd-loading { position: absolute; right: 50%; top: 50%; opacity: 0; filter: alpha(opacity=0); }
+a.edd-add-to-cart .edd-loading { position: absolute; left: 50%; top: 50%; opacity: 0; filter: alpha(opacity=0); }
 a.edd-add-to-cart .edd-add-to-cart-label, a.edd-add-to-cart .edd-loading {
 	-webkit-transition:.1s  opacity !important;
 	-moz-transition:.1s  opacity !important;
