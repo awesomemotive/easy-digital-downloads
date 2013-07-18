@@ -246,9 +246,9 @@ add_action( 'wp_ajax_nopriv_edd_recalculate_taxes', 'edd_ajax_recalculate_taxes'
  * @return void
  */
 function edd_ajax_get_states_field() {
-	if( empty( $_POST['country'] ) )
+	if( empty( $_POST['country'] ) ) {
 		$_POST['country'] = edd_get_shop_country();
-
+	}
 	$states = edd_get_shop_states( $_POST['country'] );
 
 	if( ! empty( $states ) ) {

@@ -102,7 +102,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
             'return'        => $return_url,
             'cancel_return' => edd_get_failed_transaction_uri(),
             'notify_url'    => $listener_url,
-            'page_style'    => edd_get_paypal_page_style()
+            'page_style'    => edd_get_paypal_page_style(),
+            'cbt'			=> get_bloginfo( 'name' )
         );
 
 		// Add required content depending on number of items
@@ -148,7 +149,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
    	    // Calculate discount
        	$discounted_amount = $purchase_data['discount'];
         if( ! empty( $purchase_data['fees'] ) ) {
-        $i = 1;
+       	 	$i = empty( $i ) ? 1 : $i;
 	        foreach( $purchase_data['fees'] as $fee ) {
 	        	if( floatval( $fee['amount'] ) > '0' ) {
 		        	// this is a positive fee
@@ -171,8 +172,6 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			$paypal_args['tax_cart'] = $purchase_data['tax'];
 		elseif ( edd_use_taxes() && ! $itemize )
 			$paypal_args['tax'] = $purchase_data['tax'];
-
-      // echo '<pre>'; print_r( $purchase_data['fees'] ); echo '</pre>'; exit;
 
         $paypal_args = apply_filters('edd_paypal_redirect_args', $paypal_args, $purchase_data );
 
@@ -323,7 +322,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 
 	// Collect payment details
 	$payment_id     = $data['custom'];
-	$purchase_key   = $data['invoice'];
+	$purchase_key   = isset( $data['invoice'] ) ? $data['invoice'] : $data['item_number'];
 	$paypal_amount  = $data['mc_gross'];
 	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
@@ -331,7 +330,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	// Retrieve the meta info for this payment
 	$payment_amount = edd_format_amount( edd_get_payment_amount( $payment_id ) );
 
-	if( get_post_status( $payment_id ) == 'complete' )
+	if( get_post_status( $payment_id ) == 'publish' )
 		return; // Only complete payments once
 
 	if ( edd_get_payment_gateway( $payment_id ) != 'paypal' )

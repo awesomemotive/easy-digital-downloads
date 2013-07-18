@@ -72,7 +72,12 @@ function edd_get_purchase_link( $args = array() ) {
 
 	if ( $args['price'] && $args['price'] !== 'no' && ! $variable_pricing ) {
 		$price = edd_get_download_price( $args['download_id'] );
-		$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . '&nbsp;&ndash;&nbsp;' . $args['text'];
+
+		if ( 0 == $price ) {
+			$args['text'] = __( 'Free', 'edd' ) . '&nbsp;&ndash;&nbsp;' . $args['text'];
+		} else {
+			$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . '&nbsp;&ndash;&nbsp;' . $args['text'];
+		}
 	}
 
 	if ( edd_item_in_cart( $args['download_id'] ) && ! $variable_pricing ) {
@@ -89,6 +94,10 @@ function edd_get_purchase_link( $args = array() ) {
 	<form id="edd_purchase_<?php echo $args['download_id']; ?>" class="edd_download_purchase_form" method="post">
 
 		<?php do_action( 'edd_purchase_link_top', $args['download_id'], $args['price'] ); ?>
+
+		<?php if( edd_display_tax_rate() ) {
+			echo '<div class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), $edd_options['tax_rate'] ) . '</div>';
+		} ?>
 
 		<div class="edd_purchase_submit_wrapper">
 			<?php
@@ -152,6 +161,8 @@ function edd_get_purchase_link( $args = array() ) {
  * @return void
  */
 function edd_purchase_variable_pricing( $download_id = 0, $show_price = true ) {
+	global $edd_options;
+
 	$variable_pricing = edd_has_variable_prices( $download_id );
 
 	if ( ! $variable_pricing || empty( $show_price ) )
@@ -205,7 +216,7 @@ add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10, 2 );
 function edd_before_download_content( $content ) {
 	global $post;
 
-	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
 		ob_start();
 		$content .= ob_get_clean();
 		do_action( 'edd_before_download_content', $post->ID );
@@ -229,7 +240,7 @@ add_filter( 'the_content', 'edd_before_download_content' );
 function edd_after_download_content( $content ) {
 	global $post;
 
-	if ( $post && $post->post_type == 'download' && is_singular() && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
 		ob_start();
 		do_action( 'edd_after_download_content', $post->ID );
 		$content .= ob_get_clean();
@@ -308,10 +319,13 @@ function edd_get_button_styles() {
  * @param int $download_id Download ID
  * @return void
  */
-function edd_show_has_purchased_item_message( $download_id ) {
-	global $user_ID;
+function edd_show_has_purchased_item_message() {
+	global $user_ID, $post;
 
-	if ( edd_has_user_purchased( $user_ID, $download_id ) ) {
+	if( !isset( $post->ID ) )
+		return;
+
+	if ( edd_has_user_purchased( $user_ID, $post->ID ) ) {
 		$alert = '<p class="edd_has_purchased">' . __( 'You have already purchased this item, but you may purchase it again.', 'edd' ) . '</p>';
 		echo apply_filters( 'edd_show_has_purchased_item_message', $alert );
 	}
@@ -525,3 +539,15 @@ function edd_microdata_wrapper( $content ) {
 	return $content;
 }
 add_filter( 'the_content', 'edd_microdata_wrapper', 10 );
+
+/**
+ * Returns the template directory name.
+ *
+ * Themes can filter this by using the edd_templates_dir filter.
+ *
+ * @since 1.6.2
+ * @return string
+*/
+function edd_get_theme_template_dir_name() {
+	return trailingslashit( apply_filters( 'edd_templates_dir', 'edd_templates' ) );
+}

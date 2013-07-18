@@ -1,13 +1,13 @@
 === Easy Digital Downloads ===
 Author URI: http://pippinsplugins.com
 Plugin URI: http://easydigitaldownloads.com
-Contributors: mordauk, sunnyratilal, chriscct7, SpencerFinnell, sksmatt
+Contributors: mordauk, sunnyratilal, chriscct7, SpencerFinnell, sksmatt, ghost1227
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.3
 Tested up to: 3.6
 
-Stable Tag: 1.6.1
+Stable Tag: 1.6.4
 License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -22,7 +22,7 @@ Features of the plugin include:
 
 * Cart system for purchasing multiple downloads at once
 * Complete promotional code system
-* Many payment gateways. PayPal and Manual are included by default with Stripe, PayPal Pro, PayPal Express, and others available as [add-ons](http://easydigitaldownloads.com/extensions/)
+* Many payment gateways. PayPal and Manual are included by default with Stripe, PayPal Pro, PayPal Express, and others available as [add-ons](https://easydigitaldownloads.com/extensions/?utm_source=readme&utm_medium=description_tab&utm_content=extensions_link&utm_campaign=edd_extensions)
 * Complete payment history
 * User purchase history and ability to redownload files
 * Multiple files per downloadable product
@@ -32,10 +32,10 @@ Features of the plugin include:
 * Earnings and sales charts
 * Detailed purchase and file download logs
 * Data export options for CSV and PDF
-* Extensible with many [add-ons](http://easydigitaldownloads.com/extensions/)
+* Extensible with many [add-ons](https://easydigitaldownloads.com/extensions/?utm_source=readme&utm_medium=description_tab&utm_content=extensions_link&utm_campaign=edd_extensions)
 * Developer friendly with dozens of actions and filters. [View Codex](https://easydigitaldownloads.com/codex/index.html)
 
-More information at [Easy Digital Downloads.com](http://easydigitaldownloads.com/).
+More information at [Easy Digital Downloads.com](https://easydigitaldownloads.com/extensions/?utm_source=readme&utm_medium=description_tab&utm_content=home_link&utm_campaign=edd_home).
 
 [youtube http://www.youtube.com/watch?v=japHPcIFs4I]
 
@@ -184,7 +184,54 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
-= 1.6.1: June 1, 2013 =
+= 1.6.4: June 24, 2013 =
+
+* Fix: Semicolon instead of comma
+* Fix: Duplicate foreach keys
+* Fix: Default fallthrough on switch statement
+* Fix: Undefined variable $requested_file during file downloads
+* Fix: Incorrect redirect when clicking Next during checkout with permalinks set to default
+* Fix: Incorrect currency code for Malaysian Ringgits
+* Fix: Non-unique element IDs on checkout
+* Fix: Incorrect status check in edd_process_paypal_web_accept_and_cart
+* Fix: Use current_time( 'timstamp' ) when checking for discount validity
+* Fix: Tax settings display issue
+* Fix: Email receipts not sending in Test Mode
+* Fix: .htaccess rules not updated when changing download methods
+* Fix: Downloads failing with Forced download method
+* Fix: System Info not picking up network activated plugins
+* Fix: Taxes rounded up incorrectly
+
+* Tweak: Added $tax to the edd_cart_item_price filter
+* Tweak: Hide discount code on 0.00 purchases
+* Tweak: Sanitize subjects for email receipts
+* Tweak: Allow 3 and 4 decimal tax rates
+* Tweak: Changed "Download" to "Free Download" for 0.00 purchases
+
+
+
+= 1.6.3: June 13, 2013 =
+
+* Fix: Invalid parameter warning for [download_discounts]
+* Fix: Problem with 100% discount codes going to PayPal
+* Tweak: Updated German translation files
+* Tweak: Improved the order of countries in the drop down menu
+
+= 1.6.2: June 11, 2013 =
+
+* Fix: Positive cart fees overwrote PayPal items after sending purchase to PayPal
+* Fix: Hide tax billing fields if checkout amount is 0.00
+* Fix: Fix equality operator in edd_get_download_files()
+* Fix: X-Accel-Redirect needs relative path but gets absolute
+* Fix: Wrong description for taxes on checkout
+* Fix: Cannot delete all tax rates
+* Fix: Spelling error on option to disable admin notifications
+* Fix: Issue with edd_before/after_download_content hooks being added on pages that are not Downloads
+
+* Tweak: Added minor tax rate option to make tax rate country wide
+* Tweak: Change "Purchase to "Download" on checkout if cart total is 0.00
+
+= 1.6.1: June 11, 2013 =
 
 * Fix: Fatal error for users that had modified the checkout_cart.php template files
 * Fix: Fatal memory error for some users when viewing the File Downloads logs

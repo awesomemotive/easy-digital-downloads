@@ -129,5 +129,5 @@ function _edd_die_handler() {
 function edd_die() {
 	add_filter( 'wp_die_ajax_handler', '_edd_die_handler', 10, 3 );
 	add_filter( 'wp_die_handler', '_edd_die_handler', 10, 3 );
-	wp_die();
+	wp_die('');
 }
