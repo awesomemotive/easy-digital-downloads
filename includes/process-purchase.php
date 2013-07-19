@@ -207,33 +207,43 @@ function edd_purchase_form_validate_gateway() {
  * @return      string
  */
 function edd_purchase_form_validate_discounts() {
+
 	// Retrieve the discount stored in cookies
 	$discounts = edd_get_cart_discounts();
+	$user      = isset( $_POST['edd_user_login'] ) ? sanitize_text_field( $_POST['edd_user_login'] ) : sanitize_email( $_POST['edd_email'] );
+	$error     = false;
 
-	// Check for valid discount is present
-	if ( ! empty( $_POST['edd-discount'] ) || $discounts !== false  ) {
-		if( empty( $discounts ) ) {
-			$discount = sanitize_text_field( $_POST['edd-discount'] );
-		} else {
-			// Use the discount stored in the cookies
-			$discount = $discounts[0];
+	// Check for valid discount(s) is present
+	if ( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) ) {
+		// Check for a posted discount
+		$posted_discount = isset( $_POST['edd-discount'] ) ? trim( $_POST['edd-discount'] ) : false;
 
-			// Note: At some point this will support multiple discounts
-		}
-
-		$user = isset( $_POST['edd_user_login'] ) ? sanitize_text_field( $_POST['edd_user_login'] ) : sanitize_email( $_POST['edd_email'] );
-
-		// Check if validates
-		if (  edd_is_discount_valid( $discount, $user ) ) {
-			// Return clean discount
-			return $discount;
-		} else {
-			// Set invalid discount error
-			edd_set_error( 'invalid_discount', __( 'The discount you entered is invalid', 'edd' ) );
+		if ( $posted_discount ) {
+			$discounts   = array();
+			$discounts[] = $posted_discount;
 		}
 	}
-	// Return default value
-	return 'none';
+
+	// If we have discounts, loop through them
+	if( ! empty( $discounts ) ) {
+
+		foreach ( $discounts as $discount ) {
+			// Check if valid
+			if (  ! edd_is_discount_valid( $discount, $user ) ) {
+				// Discount is not valid
+				$error = true;
+			}
+		}
+	} else {
+		// No discounts
+		return 'none';
+	}
+
+	if( $error ) {
+		edd_set_error( 'invalid_discount', __( 'One or more of the discounts you entered is invalid', 'edd' ) );
+	}
+
+	return implode( ', ', $discounts );
 }
 
 /**
