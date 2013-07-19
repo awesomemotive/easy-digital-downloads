@@ -149,7 +149,7 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 			</tbody>
 		</table>
 
-		<input type="hidden" name="edd-action" value="edit_payment"/>
+		<input type="hidden" name="edd_action" value="edit_payment"/>
 		<input type="hidden" name="edd-old-status" value="<?php echo $status; ?>"/>
 		<input type="hidden" name="payment-id" value="<?php echo $payment_id; ?>"/>
 		<?php wp_nonce_field( 'edd_payment_nonce', 'edd-payment-nonce' ); ?>

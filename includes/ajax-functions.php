@@ -134,32 +134,27 @@ add_action( 'wp_ajax_nopriv_edd_get_subtotal', 'edd_ajax_get_subtotal' );
  */
 function edd_ajax_apply_discount() {
 	if ( isset( $_POST['code'] ) && check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) ) {
-		$user = isset( $_POST['user'] ) ? $_POST['user'] : $_POST['email'];
 
 		$return = array(
 			'msg'  => '',
 			'code' => $_POST['code']
 		);
 
-		if ( edd_is_discount_used( $_POST['code'], $user ) ) {  // Called twice if discount is not used (again by edd_is_discount_valid) but allows for beter usr msg and less execution if discount is used.
-			$return['msg']  = __('This discount code has been used already', 'edd');
-		} else {
-			if ( edd_is_discount_valid( $_POST['code'], $user ) ) {
-				$discount  = edd_get_discount_by_code( $_POST['code'] );
-				$amount    = edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) );
-				$discounts = edd_set_cart_discount( $_POST['code'] );
-				$total     = edd_get_cart_total( $discounts );
+		if ( edd_is_discount_valid( $_POST['code'] ) ) {
+			$discount  = edd_get_discount_by_code( $_POST['code'] );
+			$amount    = edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) );
+			$discounts = edd_set_cart_discount( $_POST['code'] );
+			$total     = edd_get_cart_total( $discounts );
 
-				$return = array(
-					'msg'    => 'valid',
-					'amount' => $amount,
-					'total'  => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
-					'code'   => $_POST['code'],
-					'html'   => edd_get_cart_discounts_html( $discounts )
-				);
-			} else {
-				$return['msg']  = __('The discount you entered is invalid', 'edd');
-			}
+			$return = array(
+				'msg'    => 'valid',
+				'amount' => $amount,
+				'total'  => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
+				'code'   => $_POST['code'],
+				'html'   => edd_get_cart_discounts_html( $discounts )
+			);
+		} else {
+			$return['msg']  = __('The discount you entered is invalid', 'edd');
 		}
 		echo json_encode($return);
 	}
@@ -167,6 +162,33 @@ function edd_ajax_apply_discount() {
 }
 add_action( 'wp_ajax_edd_apply_discount', 'edd_ajax_apply_discount' );
 add_action( 'wp_ajax_nopriv_edd_apply_discount', 'edd_ajax_apply_discount' );
+
+/**
+ * Removes a discount code from the cart via ajax
+ *
+ * @since 1.7
+ * @return void
+ */
+function edd_ajax_remove_discount() {
+	if ( isset( $_POST['code'] ) ) {
+
+		edd_unset_cart_discount( urldecode( $_POST['code'] ) );
+
+		$total = edd_get_cart_total();
+
+		$return = array(
+			'total'     => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
+			'code'      => $_POST['code'],
+			'discounts' => edd_get_cart_discounts(),
+			'html'      => edd_get_cart_discounts_html()
+		);
+
+		echo json_encode( $return );
+	}
+	edd_die();
+}
+add_action( 'wp_ajax_edd_remove_discount', 'edd_ajax_remove_discount' );
+add_action( 'wp_ajax_nopriv_edd_remove_discount', 'edd_ajax_remove_discount' );
 
 /**
  * Loads Checkout Login Fields the via AJAX
@@ -253,7 +275,14 @@ function edd_ajax_get_states_field() {
 
 	if( ! empty( $states ) ) {
 
-		$response = EDD()->html->select( edd_get_shop_states( $_POST['country'] ), $_POST['field_name'] );
+		$args = array(
+			'name'    => $_POST['field_name'],
+			'options' => edd_get_shop_states( $_POST['country'] ),
+			'show_option_all'  => false,
+			'show_option_none' => false
+		);
+
+		$response = EDD()->html->select( $args );
 
 	} else {
 

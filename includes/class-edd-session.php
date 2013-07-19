@@ -62,7 +62,7 @@ class EDD_Session {
 			// Use PHP SESSION (must be enabled via the EDD_USE_PHP_SESSIONS constant)
 
 			if( ! session_id() )
-				add_action( 'init', 'session_start', -1 );
+				add_action( 'init', 'session_start', -2 );
 
 		} else {
 
@@ -81,10 +81,11 @@ class EDD_Session {
 
 		}
 
-		if ( $this->use_php_sessions )
-			add_action( 'init', array( $this, 'init' ) );
-		else
-			$this->init();
+		if ( empty( $this->session ) && ! $this->use_php_sessions ) {
+			add_action( 'plugins_loaded', array( $this, 'init' ), -1 );
+		} else {
+			add_action( 'init', array( $this, 'init' ), -1 );
+		}
 	}
 
 
