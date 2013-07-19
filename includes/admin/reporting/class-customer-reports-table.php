@@ -25,6 +25,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * @since 1.5
  */
 class EDD_Customer_Reports_Table extends WP_List_Table {
+
 	/**
 	 * Number of items per page
 	 *
@@ -32,6 +33,14 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @since 1.5
 	 */
 	public $per_page = 30;
+
+	/**
+	 * Number of customers found
+	 *
+	 * @var int
+	 * @since 1.7
+	 */
+	public $count = 0;
 
 	/**
 	 * Get things started
@@ -162,7 +171,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return int $count The number of customers from the database
 	 */
 	public function get_total_customers() {
-		return edd_count_total_customers();
+		return $this->count;
 	}
 
 	/**
@@ -201,6 +210,9 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$customers = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta $where ORDER BY meta_id DESC LIMIT $this->per_page OFFSET $offset" );
 
 		if ( $customers ) {
+
+			$this->count = count( $customers );
+
 			foreach ( $customers as $customer_email ) {
 				$wp_user = get_user_by( 'email', $customer_email );
 
@@ -246,16 +258,12 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		$current_page = $this->get_pagenum();
 
-		$total_items = edd_count_total_customers();
-
-		//$data = array_slice( $data,( ( $current_page - 1 ) * $per_page ), $per_page );
-
 		$this->items = $this->reports_data();
 
 		$this->set_pagination_args( array(
-			'total_items' => $total_items,                  	// WE have to calculate the total number of items
+			'total_items' => $this->count,                  	// WE have to calculate the total number of items
 			'per_page'    => $this->per_page,                     	// WE have to determine how many items to show on a page
-			'total_pages' => ceil( $total_items / $this->per_page )   // WE have to calculate the total number of pages
+			'total_pages' => ceil( $this->count / $this->per_page )   // WE have to calculate the total number of pages
 		) );
 	}
 }
