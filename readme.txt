@@ -186,19 +186,20 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 = 1.7: July 20, 2013 =
 
+* New: Brand new styling for the checkout form
+* New: Added options to configure the admin purchase notification email
 * New: Added search to customer reports
+* New: Added item quantity support on checkout
+* New: Brought back the [downloads_history] short code
+* New: Added the ability to use multiple discounts per-purchase
 * New: Added filter to disable schema.org microdata
 * New: Better payment method icons, including full retina support
 * New: Better icons throughout admin, including full retina support
 * New: Added complete Swedish translation
-* New: Added options to configure the admin purchase notification email
 * New: Include any discounts used in Payment History export
-* New: Brand new styling for the checkout form
 * New: Added new post installation hook: edd_after_install
 * New: Introduced function for retrieving random Download ID numbers (for themes)
-* New: Brought back the [downloads_history] short code
 * New: Added option to resend purchase receipts from the View Order Details page
-* New: Added the ability to use multiple discounts per-purchase
 * New: Added option under Tools menu to import / export store settings
 * New: Introduced "Buy Now" option for (PayPal) purchase buttons
 
