@@ -64,7 +64,12 @@ jQuery(document).ready(function ($) {
 
         e.preventDefault();
 
-        var $this = $(this);
+        var $this = $(this), form = $this.closest('form');
+
+        if( 'straight_to_gateway' == form.find('.edd_action_input').val() ) {
+            form.submit();
+            return true; // Submit the form
+        }
 
         var $spinner = $this.find('.edd-loading');
         var container = $this.closest('div');
