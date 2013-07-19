@@ -121,6 +121,10 @@ function edd_process_settings_import() {
 
 	$import_file = $_FILES['import_file']['tmp_name'];
 
+	if( empty( $import_file ) ) {
+		wp_die( __( 'Please upload a file to import', 'edd' ) );
+	}
+
 	// Retrieve the settings from the file and convert the json object to an array
 	$settings = edd_object_to_array( json_decode( file_get_contents( $import_file ) ) );
 
