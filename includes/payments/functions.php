@@ -205,7 +205,8 @@ function edd_insert_payment( $payment_data = array() ) {
 		);
 
 		$mode    = edd_is_test_mode() ? 'test' : 'live';
-		$gateway = isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : '';
+		$gateway = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
+		$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
 
 		// Record the payment details
 		update_post_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
