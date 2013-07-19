@@ -79,7 +79,7 @@ $status    = edd_get_payment_status( $payment, true );
 
 		<?php if ( $edd_receipt_args['discount'] && $user['discount'] != 'none' ) : ?>
 			<tr>
-				<td><strong><?php _e( 'Discount', 'edd' ); ?>:</strong></td>
+				<td><strong><?php _e( 'Discount(s)', 'edd' ); ?>:</strong></td>
 				<td><?php echo $user['discount']; ?></td>
 			</tr>
 		<?php endif; ?>
