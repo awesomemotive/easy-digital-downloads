@@ -733,7 +733,7 @@ function edd_get_discounted_amount( $code, $base_price ) {
  * Increases the use count of a discount code.
  *
  * @since 1.0
- * @param string $codes Discount codes to be incremented
+ * @param string $codes Discount codes to be incremented, separated by a comma
  * @return void
  */
 function edd_increase_discount_usage( $codes ) {
