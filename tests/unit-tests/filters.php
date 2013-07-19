@@ -86,10 +86,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_load_checkout_register_fields', $wp_filter['wp_ajax_nopriv_checkout_register'][10] );
 		$this->assertarrayHasKey( 'edd_ajax_get_download_title', $wp_filter['wp_ajax_edd_get_download_title'][10] );
 		$this->assertarrayHasKey( 'edd_ajax_get_download_title', $wp_filter['wp_ajax_nopriv_edd_get_download_title'][10] );
-		$this->assertarrayHasKey( 'edd_ajax_opt_into_local_taxes', $wp_filter['wp_ajax_edd_local_tax_opt_in'][10] );
-		$this->assertarrayHasKey( 'edd_ajax_opt_into_local_taxes', $wp_filter['wp_ajax_nopriv_edd_local_tax_opt_in'][10] );
-		$this->assertarrayHasKey( 'edd_ajax_opt_out_local_taxes', $wp_filter['wp_ajax_edd_local_tax_opt_out'][10] );
-		$this->assertarrayHasKey( 'edd_ajax_opt_out_local_taxes', $wp_filter['wp_ajax_nopriv_edd_local_tax_opt_out'][10] );
 		$this->assertarrayHasKey( 'edd_check_for_download_price_variations', $wp_filter['wp_ajax_edd_check_for_download_price_variations'][10] );
 		$this->assertarrayHasKey( 'edd_load_ajax_gateway', $wp_filter['wp_ajax_edd_load_gateway'][10] );
 		$this->assertarrayHasKey( 'edd_load_ajax_gateway', $wp_filter['wp_ajax_nopriv_edd_load_gateway'][10] );
@@ -162,8 +158,7 @@ class Tests_Filters extends EDD_UnitTestCase {
 
 	public function test_edd_purchase_form_after_cc_form() {
 		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_terms_agreement', $wp_filter['edd_purchase_form_after_cc_form'][10] );
-		$this->assertarrayHasKey( 'edd_checkout_submit', $wp_filter['edd_purchase_form_after_cc_form'][9999] );
+		$this->assertarrayHasKey( 'edd_checkout_submit', $wp_filter['edd_purchase_form_after_cc_form'][999] );
 	}
 
 	public function test_edd_purchase_form_before_submit() {
