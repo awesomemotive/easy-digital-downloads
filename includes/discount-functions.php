@@ -503,7 +503,7 @@ function edd_is_discount_maxed_out( $code_id = null ) {
  *
  * @since 1.1.7
  * @param int $code_id Discount ID
- * @return bool $return 
+ * @return bool $return
  */
 function edd_discount_is_min_met( $code_id = null ) {
 	$discount = edd_get_discount( $code_id );
@@ -733,21 +733,32 @@ function edd_get_discounted_amount( $code, $base_price ) {
  * Increases the use count of a discount code.
  *
  * @since 1.0
- * @param string $code Discount code to be incremented
- * @return int $uses New use count
+ * @param string $codes Discount codes to be incremented
+ * @return void
  */
-function edd_increase_discount_usage( $code ) {
-	$discount_id = edd_get_discount_id_by_code( $code );
-	$uses        = edd_get_discount_uses( $discount_id );
+function edd_increase_discount_usage( $codes ) {
 
-	if ( $uses ) {
-		$uses++;
-	} else {
-		$uses = 1;
+	$discounts = array_map( 'trim', explode( ',', $codes ) );
+
+	if( ! empty( $discounts ) ) {
+
+		foreach( $discounts as $code ) {
+
+			$id   = edd_get_discount_id_by_code( $code );
+			$uses = edd_get_discount_uses( $id );
+
+			if ( $uses ) {
+				$uses++;
+			} else {
+				$uses = 1;
+			}
+
+			update_post_meta( $id, '_edd_discount_uses', $uses );
+
+		}
+
 	}
 
-	update_post_meta( $discount_id, '_edd_discount_uses', $uses );
-	return $uses;
 }
 
 /**
