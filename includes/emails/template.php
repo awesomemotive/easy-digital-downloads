@@ -138,14 +138,12 @@ function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_n
 	}
 	$download_list .= '</ul>';
 
-	$subtotal   = isset( $payment_data['subtotal'] ) ? $payment_data['subtotal'] : $payment_data['amount'];
-	$subtotal   = edd_currency_filter( edd_format_amount( $subtotal ) );
-	$tax        = isset( $payment_data['tax'] ) ? $payment_data['tax'] : 0;
-	$tax        = edd_currency_filter( edd_format_amount( $tax ) );
-	$price      = edd_currency_filter( edd_format_amount( $payment_data['amount'] ) );
+	$subtotal   = edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
+	$tax        = edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) );
+	$price      = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) );
 	$gateway    = edd_get_gateway_checkout_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
 	$receipt_id = $payment_data['key'];
-	$email		= $user_info['email'];
+	$email		= edd_get_payment_user_email( $payment_id );
 
 	$message = str_replace( '{name}', $name, $message );
 	$message = str_replace( '{fullname}', $fullname, $message );
@@ -358,7 +356,7 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 	$default_email_body .= sprintf( __( '%s sold:', 'edd' ), edd_get_label_plural() ) . "\n\n";
 	$default_email_body .= $download_list . "\n\n";
 	$default_email_body .= __( 'Purchased by: ', 'edd' ) . " " . html_entity_decode( $name, ENT_COMPAT, 'UTF-8' ) . "\n";
-	$default_email_body .= __( 'Amount: ', 'edd' ) . " " . html_entity_decode( edd_currency_filter( edd_format_amount( $payment_data['amount'] ) ), ENT_COMPAT, 'UTF-8' ) . "\n";
+	$default_email_body .= __( 'Amount: ', 'edd' ) . " " . html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ), ENT_COMPAT, 'UTF-8' ) . "\n";
 	$default_email_body .= __( 'Payment Method: ', 'edd' ) . " " . $gateway . "\n\n";
 	$default_email_body .= __( 'Thank you', 'edd' );
 
