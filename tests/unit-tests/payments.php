@@ -152,7 +152,8 @@ class Tests_Payments extends EDD_UnitTestCase {
 			'publish' => 'Complete',
 			'refunded' => 'Refunded',
 			'failed' => 'Failed',
-			'revoked' => 'Revoked'
+			'revoked' => 'Revoked',
+			'abandoned' => 'Abandoned'
 		);
 
 		$this->assertEquals( $expected, $out );
