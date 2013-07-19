@@ -1,6 +1,6 @@
 <?php
 
-define( 'EDD_PLUGIN_DIR', strtolower( dirname( dirname( __FILE__ ) ) . '/' ) );
+define( 'EDD_PLUGIN_DIR', dirname( dirname( __FILE__ ) ) . '/'  );
 
 require_once dirname( __FILE__ ) . '/../tmp/wordpress-tests/includes/functions.php';
 
