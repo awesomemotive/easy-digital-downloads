@@ -205,7 +205,8 @@ function edd_insert_payment( $payment_data = array() ) {
 		);
 
 		$mode    = edd_is_test_mode() ? 'test' : 'live';
-		$gateway = isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : '';
+		$gateway = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
+		$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
 
 		// Record the payment details
 		update_post_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
@@ -684,9 +685,6 @@ function edd_get_payment_meta( $payment_id ) {
 	if ( ! isset( $meta['key'] ) )
 		$meta['key'] = edd_get_payment_key( $payment_id );
 
-	if ( ! isset( $meta['amount'] ) )
-		$meta['amount'] = edd_get_payment_amount( $payment_id );
-
 	if ( ! isset( $meta['email'] ) )
 		$meta['email'] = edd_get_payment_user_email( $payment_id );
 
@@ -842,6 +840,12 @@ function edd_payment_amount( $payment_id = 0 ) {
  */
 function edd_get_payment_amount( $payment_id ) {
 	$amount = get_post_meta( $payment_id, '_edd_payment_total', true );
+	if( empty( $amount ) && '0.00' != $amount ) {
+		$meta   = get_post_meta( $payment_id, '_edd_payment_meta', true );
+		$meta   = maybe_unserialize( $meta );
+		if( isset( $meta['amount'] ) )
+			$amount = $meta['amount'];
+	}
 	return apply_filters( 'edd_payment_amount', $amount );
 }
 
