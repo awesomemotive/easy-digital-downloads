@@ -498,3 +498,23 @@ function edd_get_timezone_id() {
     // fallback
     return 'UTC';
 }
+
+
+/**
+ * Convert an object to an associative array.
+ *
+ * Can handle multidimensional arrays
+ *
+ * @since 1.7
+ * @return array $data The converted array
+ */
+function edd_object_to_array( $data ) {
+	if ( is_array( $data ) || is_object( $data ) ) {
+		$result = array();
+		foreach ( $data as $key => $value ) {
+			$result[ $key ] = edd_object_to_array( $value );
+		}
+		return $result;
+	}
+	return $data;
+}

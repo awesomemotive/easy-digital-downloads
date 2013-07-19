@@ -217,6 +217,26 @@ function edd_register_settings() {
 					'desc' => edd_get_purchase_receipt_template_tags(),
 					'type' => 'rich_editor'
 				),
+				'sale_notification_header' => array(
+					'id' => 'sale_notification_header',
+					'name' => '<strong>' . __('New Sale Notifications', 'edd') . '</strong>',
+					'desc' => __('Configure new sale notification emails', 'edd'),
+					'type' => 'header'
+				),
+				'sale_notification_subject' => array(
+					'id' => 'sale_notification_subject',
+					'name' => __( 'Sale Notification Subject', 'edd' ),
+					'desc' => __( 'Enter the subject line for the sale notification email', 'edd' ),
+					'type' => 'text',
+					'std' => 'New download purchase - Order #{payment_id}'
+				),
+				'sale_notification' => array(
+					'id' => 'sale_notification',
+					'name' => __( 'Sale Notification', 'edd' ),
+					'desc' => edd_get_sale_notification_template_tags(),
+					'type' => 'rich_editor',
+					'std' => edd_get_default_sale_notification_email()
+				),
 				'admin_notice_emails' => array(
 					'id' => 'admin_notice_emails',
 					'name' => __( 'Sale Notification Emails', 'edd' ),
@@ -304,6 +324,13 @@ function edd_register_settings() {
 						'no'  => __('No, I will enter prices exclusive of tax', 'edd')
 					)
 				),
+				'display_tax_rate' => array(
+					'id' => 'display_tax_rate',
+					'name' => __( 'Display Tax Rate on Prices', 'edd' ),
+					'desc' => __( 'Some contries require a notice when product prices include tax.', 'edd' ),
+					'type' => 'checkbox',
+					'std' => 'no'
+				),
 				'checkout_include_tax' => array(
 					'id' => 'checkout_include_tax',
 					'name' => __('Display during checkout', 'edd'),
@@ -332,6 +359,9 @@ function edd_register_settings() {
 		),
 		/** Extension Settings */
 		'extensions' => apply_filters('edd_settings_extensions',
+			array()
+		),
+		'licenses' => apply_filters('edd_settings_licenses',
 			array()
 		),
 		/** Misc Settings */
@@ -366,6 +396,18 @@ function edd_register_settings() {
 					'name' => __('Show Register / Login Form?', 'edd'),
 					'desc' => __('Display the registration and login forms on the checkout page for non-logged-in users.', 'edd'),
 					'type' => 'checkbox',
+				),
+				'item_quantities' => array(
+					'id' => 'item_quantities',
+					'name' => __('Item Quantities', 'edd'),
+					'desc' => __('Allow item quantities to be changed at checkout.', 'edd'),
+					'type' => 'checkbox'
+				),
+				'allow_multiple_discounts' => array(
+					'id' => 'allow_multiple_discounts',
+					'name' => __('Multiple Discounts', 'edd'),
+					'desc' => __('Allow customers to use multiple discounts on the same purchase?', 'edd'),
+					'type' => 'checkbox'
 				),
 				'field_downloads' => array(
 					'id' => 'field_downloads',
@@ -484,6 +526,10 @@ function edd_register_settings() {
 
 	if ( false == get_option( 'edd_settings_extensions' ) ) {
 		add_option( 'edd_settings_extensions' );
+	}
+
+	if ( false == get_option( 'edd_settings_licenses' ) ) {
+		add_option( 'edd_settings_licenses' );
 	}
 
 	if ( false == get_option( 'edd_settings_misc' ) ) {
@@ -647,6 +693,32 @@ function edd_register_settings() {
 	}
 
 	add_settings_section(
+		'edd_settings_licenses',
+		__( 'Licenses', 'edd' ),
+		'__return_false',
+		'edd_settings_licenses'
+	);
+
+	foreach ( $edd_settings['licenses'] as $option ) {
+		add_settings_field(
+			'edd_settings_licenses[' . $option['id'] . ']',
+			$option['name'],
+			function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
+			'edd_settings_licenses',
+			'edd_settings_licenses',
+			array(
+				'id' => $option['id'],
+				'desc' => $option['desc'],
+				'name' => $option['name'],
+				'section' => 'licenses',
+				'size' => isset( $option['size'] ) ? $option['size'] : '',
+				'options' => isset( $option['options'] ) ? $option['options'] : '',
+				'std' => isset( $option['std'] ) ? $option['std'] : ''
+			)
+		);
+	}
+
+	add_settings_section(
 		'edd_settings_misc',
 		__( 'Misc Settings', 'edd' ),
 		'__return_false',
@@ -679,6 +751,7 @@ function edd_register_settings() {
 	register_setting( 'edd_settings_styles',     'edd_settings_styles',     'edd_settings_sanitize' );
 	register_setting( 'edd_settings_taxes',      'edd_settings_taxes',      'edd_settings_sanitize_taxes' );
 	register_setting( 'edd_settings_extensions', 'edd_settings_extensions', 'edd_settings_sanitize' );
+	register_setting( 'edd_settings_licenses',   'edd_settings_licenses',   'edd_settings_sanitize' );
 	register_setting( 'edd_settings_misc',       'edd_settings_misc',       'edd_settings_sanitize_misc' );
 }
 add_action('admin_init', 'edd_register_settings');
@@ -1079,12 +1152,28 @@ function edd_tax_rates_callback($args) {
 		<?php if( ! empty( $rates ) ) : ?>
 			<?php foreach( $rates as $key => $rate ) : ?>
 			<tr>
-				<td class="edd_tax_country"><?php echo EDD()->html->select( edd_get_country_list(), 'tax_rates[' . $key . '][country]', $rate['country'] ); ?></td>
+				<td class="edd_tax_country">
+					<?php
+					echo EDD()->html->select( array(
+						'options'          => edd_get_country_list(),
+						'name'             => 'tax_rates[' . $key . '][country]',
+						'selected'         => $rate['country'],
+						'show_option_all'  => false,
+						'show_option_none' => false
+					) );
+					?>
+				</td>
 				<td class="edd_tax_state">
 					<?php
 					$states = edd_get_shop_states( $rate['country'] );
 					if( ! empty( $states ) ) {
-						echo EDD()->html->select( $states, 'tax_rates[' . $key . '][state]', $rate['state'] );
+						echo EDD()->html->select( array(
+							'options'          => $states,
+							'name'             => 'tax_rates[' . $key . '][state]',
+							'selected'         => $rate['state'],
+							'show_option_all'  => false,
+							'show_option_none' => false
+						) );
 					} else {
 						echo EDD()->html->text( 'tax_rates[' . $key . '][state]', $rate['state'] );
 					}
@@ -1100,7 +1189,15 @@ function edd_tax_rates_callback($args) {
 			<?php endforeach; ?>
 		<?php else : ?>
 			<tr>
-				<td class="edd_tax_country"><?php echo EDD()->html->select( edd_get_country_list(), 'tax_rates[0][country]', 0 ); ?></td>
+				<td class="edd_tax_country">
+					<?php
+					echo EDD()->html->select( array(
+						'options'          => edd_get_country_list(),
+						'name'             => 'tax_rates[0][country]',
+						'show_option_all'  => false,
+						'show_option_none' => false
+					) ); ?>
+				</td>
 				<td class="edd_tax_state">
 					<?php echo EDD()->html->text( 'tax_rates[0][state]' ); ?>
 				</td>
@@ -1236,7 +1333,8 @@ function edd_get_settings() {
 	$style_settings   = is_array( get_option( 'edd_settings_styles' ) )     ? get_option( 'edd_settings_styles' )   : array();
 	$tax_settings     = is_array( get_option( 'edd_settings_taxes' ) )      ? get_option( 'edd_settings_taxes' )    : array();
 	$ext_settings     = is_array( get_option( 'edd_settings_extensions' ) ) ? get_option( 'edd_settings_extensions' )     : array();
+	$license_settings = is_array( get_option( 'edd_settings_licenses' ) )   ? get_option( 'edd_settings_licenses' ) : array();
 	$misc_settings    = is_array( get_option( 'edd_settings_misc' ) )       ? get_option( 'edd_settings_misc' )     : array();
 
-	return array_merge( $general_settings, $gateway_settings, $email_settings, $style_settings, $tax_settings, $ext_settings, $misc_settings );
+	return array_merge( $general_settings, $gateway_settings, $email_settings, $style_settings, $tax_settings, $ext_settings, $license_settings, $misc_settings );
 }
