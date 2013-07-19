@@ -58,6 +58,7 @@ function edd_get_purchase_link( $args = array() ) {
 	$defaults = apply_filters( 'edd_purchase_link_defaults', array(
 		'download_id' => $post->ID,
 		'price'       => (bool) true,
+		'direct'      => edd_get_download_button_behavior( $post->ID ) == 'direct' ? true : false,
 		'text'        => ! empty( $edd_options[ 'add_to_cart_text' ] ) ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
 		'style'       => isset( $edd_options[ 'button_style' ] ) 	   ? $edd_options[ 'button_style' ]     : 'button',
 		'color'       => isset( $edd_options[ 'checkout_color' ] ) 	   ? $edd_options[ 'checkout_color' ] 	: 'blue',
@@ -150,7 +151,11 @@ function edd_get_purchase_link( $args = array() ) {
 		</div><!--end .edd_purchase_submit_wrapper-->
 
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $args['download_id'] ); ?>">
-		<input type="hidden" name="edd_action" value="add_to_cart">
+		<?php if( ! empty( $args['direct'] ) ) { ?>
+			<input type="hidden" name="edd_action" class="edd_action_input" value="straight_to_gateway">
+		<?php } else { ?>
+			<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">
+		<?php } ?>
 
 		<?php do_action( 'edd_purchase_link_end', $args['download_id'] ); ?>
 
@@ -158,6 +163,7 @@ function edd_get_purchase_link( $args = array() ) {
 	<!--/dynamic-cached-content-->
 <?php
 	$purchase_form = ob_get_clean();
+
 
 	return apply_filters( 'edd_purchase_download_form', $purchase_form, $args );
 }
