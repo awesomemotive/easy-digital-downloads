@@ -1,5 +1,6 @@
 <?php
-
+ini_set('display_errors','on');
+error_reporting(E_ALL);
 define( 'EDD_PLUGIN_DIR', dirname( dirname( __FILE__ ) ) . '/'  );
 
 require_once dirname( __FILE__ ) . '/../tmp/wordpress-tests/includes/functions.php';
