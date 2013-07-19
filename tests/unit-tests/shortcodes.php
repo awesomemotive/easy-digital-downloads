@@ -32,7 +32,7 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 
 	public function test_download_history() {
 		$this->assertInternalType( 'string', edd_download_history( array() ) );
-		$this->assertContains( '<p class="edd-no-purchases">You have not made any purchases</p>', edd_download_history( array() ) );
+		$this->assertContains( '<p class="edd-no-downloads">You have not purchased any downloads</p>', edd_download_history( array() ) );
 	}
 
 	public function test_purchase_history() {
@@ -42,7 +42,7 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 
 	public function test_checkout_form_shortcode() {
 		$this->assertInternalType( 'string', edd_checkout_form_shortcode() );
-		$this->assertEquals( '<span class="edd_empty_cart">Your cart is empty.</span>', edd_checkout_form_shortcode() );
+		$this->markTestIncomplete( 'This test needs to be rewritten per #600.');
 	}
 
 	public function test_cart_shortcode() {
@@ -81,7 +81,7 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 
 	public function test_purchase_collection_shortcode() {
 		$this->assertInternalType( 'string', edd_purchase_collection_shortcode() );
-		$this->assertEquals( '<a href="?edd_action=purchase_collection&taxonomy&terms">Purchase All Items</a>', edd_purchase_collection_shortcode() );
+		$this->assertEquals( '<a href="?edd_action=purchase_collection&taxonomy&terms" class="button blue edd-submit">Purchase All Items</a>', edd_purchase_collection_shortcode() );
 	}
 
 	public function test_downloads_query() {
