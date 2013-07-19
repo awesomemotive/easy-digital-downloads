@@ -65,7 +65,6 @@ class Test_Misc extends EDD_UnitTestCase {
 			'HUF'  => __( 'Hungarian Forint', 'edd' ),
 			'ILS'  => __( 'Israeli Shekel (&#8362;)', 'edd' ),
 			'JPY'  => __( 'Japanese Yen (&yen;)', 'edd' ),
-			'RM'   => __( 'Malaysian Ringgits', 'edd' ),
 			'MXN'  => __( 'Mexican Peso (&#36;)', 'edd' ),
 			'NZD'  => __( 'New Zealand Dollar (&#36;)', 'edd' ),
 			'NOK'  => __( 'Norwegian Krone', 'edd' ),
@@ -138,7 +137,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'CO' => 'Colombia',
 			'CR' => 'Costa Rica',
 			'CU' => 'Cuba',
-			'CV' => 'Cap Verde',
+			'CV' => 'Cape Verde',
 			'CX' => 'Christmas Island',
 			'CY' => 'Cyprus Island',
 			'CZ' => 'Czech Republic',
@@ -239,7 +238,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'MT' => 'Malta',
 			'MU' => 'Mauritius',
 			'Mv' => 'Maldives',
-			'MW' => 'malawi',
+			'MW' => 'Malawi',
 			'MX' => 'Mexico',
 			'MY' => 'Malaysia',
 			'MZ' => 'Mozambique',
@@ -259,11 +258,11 @@ class Test_Misc extends EDD_UnitTestCase {
 			'PA' => 'Panama',
 			'PE' => 'Peru',
 			'PF' => 'French Polynesia',
-			'PG' => 'papua New Guinea',
+			'PG' => 'Papua New Guinea',
 			'PH' => 'Phillipines',
 			'PK' => 'Pakistan',
 			'PL' => 'Poland',
-			'PM' => 'St. Pierre and Miquelon',
+			'PM' => 'Saint Pierre and Miquelon',
 			'PN' => 'Pitcairn Island',
 			'PR' => 'Puerto Rico',
 			'PS' => 'Palestinian Territories',
@@ -282,7 +281,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'SD' => 'Sudan',
 			'SE' => 'Sweden',
 			'SG' => 'Singapore',
-			'SH' => 'St. Helena',
+			'SH' => 'Saint Helena',
 			'SI' => 'Slovenia',
 			'SJ' => 'Svalbard and Jan Mayen Islands',
 			'SK' => 'Slovak Republic',
@@ -330,7 +329,8 @@ class Test_Misc extends EDD_UnitTestCase {
 			'YU' => 'Yugoslavia',
 			'ZA' => 'South Africa',
 			'ZM' => 'Zambia',
-			'ZW' => 'Zimbabwe'
+			'ZW' => 'Zimbabwe',
+			'*'  => 'Choose'
 		);
 
 		$this->assertEquals( $expected, edd_get_country_list() );
