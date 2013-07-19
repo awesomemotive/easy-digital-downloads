@@ -68,9 +68,9 @@ class Recursive_ArrayAccess implements ArrayAccess {
 		return $data;
 	}
 
-	/*****************************************************************/
-	/*                   ArrayAccess Implementation                  */
-	/*****************************************************************/
+	/**
+	* ArrayAccess Implementation                  
+	**/
 
 	/**
 	 * Whether a offset exists
