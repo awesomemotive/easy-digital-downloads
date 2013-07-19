@@ -134,4 +134,3 @@ class Recursive_ArrayAccess implements ArrayAccess {
 		unset( $this->container[ $offset ] );
 	}
 }
-?>
