@@ -175,7 +175,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'card_info'    => array()
 	);
 
-	return apply_filters( 'edd_straight_to_gateway_purchase_data', $purchase_data, $gateway );
+	return apply_filters( 'edd_straight_to_gateway_purchase_data', $purchase_data );
 
 }
 
