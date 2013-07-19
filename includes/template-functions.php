@@ -586,3 +586,39 @@ function edd_microdata_wrapper( $content ) {
 	return $content;
 }
 add_filter( 'the_content', 'edd_microdata_wrapper', 10 );
+
+/**
+ * Returns random donwloads
+ *
+ * @since 1.7
+ * @author Chris Christoff
+ * @param bool $posts True if want array of post objects, else array of id's
+ */
+function edd_get_random_download( $posts = true ) {
+	 edd_get_random_downloads( 1, $posts );
+}
+
+/**
+ * Returns random donwloads
+ *
+ * @since 1.7
+ * @author Chris Christoff
+ * @param int $num The number of posts to return
+ * @param bool $posts True if want array of post objects, else array of id's
+ * @return mixed $query Returns an array of posts or ids based on $posts
+ */
+function edd_get_random_downloads( $num = 3, $posts = true ) {
+	 if ( $posts ) {
+	 	$args = array(	'post_type' => 'download', 'orderby' => 'rand','post_count' => $num );
+	 	$args = apply_filters( 'edd_get_random_downloads', $args );
+	 	$query = new WP_Query( $args );
+	 	return $query;
+	 }
+	 else {
+	 	$args = array(	'post_type' => 'download', 'orderby' => 'rand','post_count' => $num, 'fields' => 'ids');
+	 	$args = apply_filters( 'edd_get_random_downloads', $args );
+	 	$query = new WP_Query( $args );
+	 	return $query;	
+	 }
+}
+
