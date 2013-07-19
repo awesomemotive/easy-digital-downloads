@@ -188,11 +188,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public function reports_data() {
 		global $wpdb;
 
-		$reports_data = array();
-		$paged        = $this->get_paged();
-		$offset       = $this->per_page * ( $paged - 1 );
-		$search       = $this->get_search();
-		$where        = "WHERE meta_key = '_edd_payment_user_email'";
+		$data   = array();
+		$paged  = $this->get_paged();
+		$offset = $this->per_page * ( $paged - 1 );
+		$search = $this->get_search();
+		$where  = "WHERE meta_key = '_edd_payment_user_email'";
 
 		if ( $search ) {
 			$where .= " AND meta_value LIKE '%$search%'";
@@ -210,7 +210,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 				$stats   = edd_get_purchase_stats_by_user( $customer_email, $mode );
 
-				$reports_data[] = array(
+				$data[] = array(
 					'ID' 			=> $user_id,
 					'name' 			=> $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' ),
 					'email' 		=> $customer_email,
@@ -221,7 +221,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			}
 		}
 
-		return $reports_data;
+		return $data;
 	}
 
 	/**
