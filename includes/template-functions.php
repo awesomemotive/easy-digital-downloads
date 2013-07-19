@@ -152,9 +152,9 @@ function edd_get_purchase_link( $args = array() ) {
 
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $args['download_id'] ); ?>">
 		<?php if( ! empty( $args['direct'] ) ) { ?>
-			<input type="hidden" name="edd_action" value="straight_to_gateway">
+			<input type="hidden" name="edd_action" class="edd_action_input" value="straight_to_gateway">
 		<?php } else { ?>
-			<input type="hidden" name="edd_action" value="add_to_cart">
+			<input type="hidden" name="edd_action" class="edd_action_input" value="add_to_cart">
 		<?php } ?>
 
 		<?php do_action( 'edd_purchase_link_end', $args['download_id'] ); ?>
