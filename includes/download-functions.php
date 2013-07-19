@@ -917,3 +917,40 @@ function edd_get_file_download_method() {
 	$method = isset( $edd_options['download_method'] ) ? $edd_options['download_method'] : 'direct';
 	return apply_filters( 'edd_file_download_method', $method );
 }
+
+
+
+/**
+ * Returns random donwloads
+ *
+ * @since 1.7
+ * @author Chris Christoff
+ * @param bool $post_ids True if want array of post ids, false if array of posts
+ */
+function edd_get_random_download( $post_ids = true ) {
+	 edd_get_random_downloads( 1, $posts );
+}
+
+/**
+ * Returns random donwloads
+ *
+ * @since 1.7
+ * @author Chris Christoff
+ * @param int $num The number of posts to return
+ * @param bool $post_ids True if want array of post objects, else array of ids
+ * @return mixed $query Returns an array of id's or an array of post objects
+ */
+function edd_get_random_downloads( $num = 3, $post_ids = true ) {
+	 if ( $post_ids ) {
+	 	$args = array(	'post_type' => 'download', 'orderby' => 'rand','post_count' => $num, 'fields' => 'ids');
+	 	$args = apply_filters( 'edd_get_random_downloads', $args );
+	 	$query = new WP_Query( $args );
+	 	return $query;	
+	 }
+	 else {
+	 	$args = array(	'post_type' => 'download', 'orderby' => 'rand','post_count' => $num );
+	 	$args = apply_filters( 'edd_get_random_downloads', $args );
+	 	$query = new WP_Query( $args );
+	 	return $query;	 
+	 }
+}
