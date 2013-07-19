@@ -54,6 +54,33 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Show the search field
+	 *
+	 * @since 1.7
+	 * @access public
+	 *
+	 * @param string $text Label for the search box
+	 * @param string $input_id ID of the search box
+	 *
+	 * @return void
+	 */
+	public function search_box( $text, $input_id ) {
+		$input_id = $input_id . '-search-input';
+
+		if ( ! empty( $_REQUEST['orderby'] ) )
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+		if ( ! empty( $_REQUEST['order'] ) )
+			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		?>
+		<p class="search-box">
+			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
+			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
+			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
+		</p>
+		<?php
+	}
+
+	/**
 	 * This function renders most of the columns in the list table.
 	 *
 	 * @access public
@@ -139,6 +166,17 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Retrieves the search query string
+	 *
+	 * @access public
+	 * @since 1.7
+	 * @return mixed string If search is present, false otherwise
+	 */
+	public function get_search() {
+		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
+	}
+
+	/**
 	 * Build all the reports data
 	 *
 	 * @access public
@@ -153,7 +191,14 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$reports_data = array();
 		$paged        = $this->get_paged();
 		$offset       = $this->per_page * ( $paged - 1 );
-		$customers    = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' ORDER BY meta_id DESC LIMIT $this->per_page OFFSET $offset" );
+		$search       = $this->get_search();
+		$where        = "WHERE meta_key = '_edd_payment_user_email'";
+
+		if ( $search ) {
+			$where .= " AND meta_value LIKE '%$search%'";
+		}
+
+		$customers = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta $where ORDER BY meta_id DESC LIMIT $this->per_page OFFSET $offset" );
 
 		if ( $customers ) {
 			foreach ( $customers as $customer_email ) {
