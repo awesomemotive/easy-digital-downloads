@@ -879,7 +879,7 @@ function edd_process_straight_to_gateway( $data ) {
 	$download_id   = $data['download_id'];
 	$options       = isset( $data['edd_options'] ) ? $data['edd_options'] : array();
 	$purchase_data = edd_build_straight_to_gateway_data( $download_id, $options );
-
+	edd_set_purchase_session( $purchase_data );
 	edd_send_to_gateway( $purchase_data['gateway'], $purchase_data );
 }
 add_action( 'edd_straight_to_gateway', 'edd_process_straight_to_gateway' );
