@@ -135,94 +135,91 @@ class EDD_Welcome {
 			</h2>
 
 			<div class="changelog">
-				<h3><?php _e( 'Simple, Beautiful Checkout', 'edd' ); ?></h3>
+				<h3>Simple, Beautiful Checkout</h3>
 
 				<div class="feature-section">
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/17checkout.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Prettier, More Versatile Styles', 'edd' ); ?></h4>
-					<p><?php _e( 'We have completely rewritten the checkout CSS to make it more attractive, more flexible, and more compatible with a wider variety of themes.', 'edd' ); ?></p>
+					<h4>Prettier, More Versatile Styles</h4>
+					<p>We have completely rewritten the checkout CSS to make it more attractive, more flexible, and more compatible with a wider variety of themes.</p>
 
-					<h4><?php _e( 'Better Checkout Layout', 'edd' ); ?></h4>
-					<p><?php _e( 'The position of each field on the checkout has been carefully reconsidered to ensure it is in the proper location so as to best create high conversion rates..', 'edd' ); ?></p>
+					<h4>Better Checkout Layout</h4>
+					<p>The position of each field on the checkout has been carefully reconsidered to ensure it is in the proper location so as to best create high conversion rates..</p>
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Item Quantities', 'edd' ); ?></h3>
+				<h3>Item Quantities</h3>
 
 				<div class="feature-section">
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/order-details.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Better Order Detail Display', 'edd' ); ?></h4>
-					<p><?php _e( 'By doing away with the View Order Details pop up, we\'ve made it possible to present the order details in a much more clear manner.', 'edd' ); ?></p>
+					<h4>Selling Licenses or Multiple Copies at Once?</h4>
+					<p>With the new item quantities feature, your customers can choose how many of an item they wish to purchase at one time.</p>
 
-					<h4><?php _e( 'More Developer Friendly', 'edd' ); ?></h4>
-					<p><?php _e( 'The new Order Details display is much more developer friendly with several hooks that make it possible to easily add additional data about the order via extensions.', 'edd' ); ?></p>
+					<h4>Makes Bulk Purchases Simple</h4>
+					<p>No longer is purchasing many copies of the same item difficult or tedious. Simply enter the quantity and complete the purchase.</p>
 
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Direct to PayPal Purchase Buttons', 'edd' ); ?></h3>
+				<h3>Direct to PayPal Purchase Buttons</h3>
 
 				<div class="feature-section">
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/tax-rates.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Define Rates for Specific Countries and States / Provinces', 'edd' ); ?></h4>
-					<p><?php _e( 'You can now setup tax rates for specific countries and states / provinces in those countries.', 'edd' );  ?></p>
+					<h4>Buy Now</h4>
+					<p>The Direct purchase option allows you to create Buy Now buttons that take your customers straight to PayPal, completely bypassing the checkout screen.</p>
 
-					<h4><?php _e( 'No More Local-Tax Opt-In', 'edd' ); ?></h4>
-					<p><?php _e( 'Taxes are now automatically calculated based on the customer\'s billing address. If you have taxes enabled, billing detail fields will be automatically added to the checkout form.', 'edd' );  ?></p>
+					<h4>Higher Turnover Rates</h4>
+					<p>By sending your customers straight to PayPal, you can dramatically increase your conversion rates by reducing the amount of friction in the purchase process.</p>
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Multiple Discount Codes Per Purchase', 'edd' ); ?></h3>
+				<h3>Multiple Discount Codes Per Purchase</h3>
 
 				<div class="feature-section">
 
-					<h4><?php _e( 'Code Reference', 'edd' ); ?></h4>
-					<p><?php _e( 'A complete code reference has been made available for developers at <a href="https://easydigitaldownloads.com/codex/index.html">/codex</a> on the Easy Digital Downloads website.', 'edd' );  ?></p>
-
-					<h4><?php _e( 'Action Hooks', 'edd' ); ?></h4>
-					<p><?php _e( 'Along with the complete code reference, we have been working to bring the <a href="https://easydigitaldownloads.com/docs/section/actions/">Actions reference</a> up to date with all of the action hooks available in Easy Digital Downloads.', 'edd' );  ?></p>
+					<h4>Offer Bigger, Better Promotions </h4>
+					<p>With the Ability to redeem multiple discount codes per purchase, you can give your customers even more incentives to purchase your products.</p>
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Additional Updates', 'edd' ); ?></h3>
+				<h3>Additional Updates</h3>
 
 				<div class="feature-section col three-col">
 					<div>
-						<h4><?php _e( 'Brought Back [download_history]', 'edd' ); ?></h4>
-						<p><?php printf( __( 'The new %sEDD_Cron class%s provides a simple way to hook into routinely scheduled events in Easy Digital Downloads.', 'edd' ), '<a href="https://github.com/easydigitaldownloads/Easy-Digital-Downloads/blob/master/includes/class-edd-cron.php" target="_blank">', '</a>' ); ?></p>
+						<h4>Brought Back [download_history]</h4>
+						<p>The return of the [downloads_history] short code was one of our most common user requests since it was removed. We listened and it is back!</p>
 
-						<h4><?php _e( 'Full Retina Support', 'edd' ); ?></h4>
-						<p><?php _e( 'We have added drop down fields for the states / provinces of 12 additional countries, providing customers in those countries a much better checkout experience.', 'edd' ); ?></p>
+						<h4>Full Retina Support</h4>
+						<p>Every image and icon used in Easy Digital Downloads has been remade with complete support for high resolution / retina displays.</p>
 					</div>
 
 					<div>
-						<h4><?php _e( 'Customer Reports Search', 'edd' ); ?></h4>
-						<p><?php _e( 'EDD now delivering supports file downloads via X-Sendfile, X-Lighttpd-Sendfile, and X-Accel-Redirect depending on your server config.', 'edd' ); ?></p>
+						<h4>Customer Reports Search</h4>
+						<p>Want to find out how much a customer has spent, or how many customers you have with a specific domain\'s email address? Now you can.</p>
 
-						<h4><?php _e( 'Better Admin Notifications', 'edd' ); ?></h4>
-						<p><?php _e( 'Anytime a new user is added, EDD will look up any purchases the user may have made as a guest and attribute them to the newly created account.', 'edd' ); ?></p>
+						<h4>Better Admin Notifications</h4>
+						<p>The admin sale notification emails can now be completely customized in the same way as purchase receipts. Want to know all details of the customer? Now you can.</p>
 					</div>
 
 					<div class="last-feature">
-						<h4><?php _e( 'Settings Import / Export', 'edd' ); ?></h4>
-						<p><?php _e( 'Purchases made through PayPal will now show itemized details in the PayPal order summary box.', 'edd' ); ?></p>
+						<h4>Settings Import / Export</h4>
+						<p>The ability to export and import all store settings makes the process of moving sites from development to live a lot easier.</p>
 
-						<h4><?php _e( 'Improved Performance', 'edd' ); ?></h4>
-						<p><?php _e( 'Adding product SKUs to Downloads is now supported and can be enabled in Downloads > Settings > Misc.', 'edd' ); ?></p>
+						<h4>Improved Performance</h4>
+						<p>Several key areas (such as Payment History) of Easy Digital Downloads have been dramatically improved in terms of performance to make your site run better and faster.</p>
 					</div>
 				</div>
 			</div>
