@@ -145,7 +145,7 @@ class EDD_Welcome {
 					<p>We have completely rewritten the checkout CSS to make it more attractive, more flexible, and more compatible with a wider variety of themes.</p>
 
 					<h4>Better Checkout Layout</h4>
-					<p>The position of each field on the checkout has been carefully reconsidered to ensure it is in the proper location so as to best create high conversion rates..</p>
+					<p>The position of each field on the checkout has been carefully reconsidered to ensure it is in the proper location so as to best create high conversion rates.</p>
 
 				</div>
 			</div>
