@@ -177,7 +177,10 @@ class EDD_API {
 	 * @return mixed string if user ID is found, false otherwise
 	 */
 	public function get_user( $key = '' ) {
-		global $wpdb;
+		global $wpdb, $wp_query;
+
+		if( empty( $key ) )
+			$key = urldecode( $wp_query->query_vars['key'] );
 
 		$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' AND meta_value = %s LIMIT 1", $key ) );
 
