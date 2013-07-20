@@ -573,6 +573,13 @@ class EDD_API {
 	 * @return array $customers Multidimensional array of the customers
 	 */
 	public function get_customers( $customer = null ) {
+
+		$customers = array();
+
+		if( ! user_can( $this->user_id, 'view_shop_sensitive_data' ) ) {
+			return $customers;
+		}
+
 		if ( $customer == null ) {
 			global $wpdb;
 
@@ -646,6 +653,7 @@ class EDD_API {
 	 * @return array $customers Multidimensional array of the products
 	 */
 	public function get_products( $product = null ) {
+
 		$products = array();
 
 		if ( $product == null ) {
@@ -666,10 +674,12 @@ class EDD_API {
 					$products['products'][$i]['info']['content']                      = $product_info->post_content;
 					$products['products'][$i]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
 
-					$products['products'][$i]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
-					$products['products'][$i]['stats']['total']['earnings']           = edd_get_download_earnings_stats( $product_info->ID );
-					$products['products'][$i]['stats']['monthly_average']['sales']    = edd_get_average_monthly_download_sales( $product_info->ID );
-					$products['products'][$i]['stats']['monthly_average']['earnings'] = edd_get_average_monthly_download_earnings( $product_info->ID );
+					if( user_can( $this->user_id, 'view_shop_reports' ) ) {
+						$products['products'][$i]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
+						$products['products'][$i]['stats']['total']['earnings']           = edd_get_download_earnings_stats( $product_info->ID );
+						$products['products'][$i]['stats']['monthly_average']['sales']    = edd_get_average_monthly_download_sales( $product_info->ID );
+						$products['products'][$i]['stats']['monthly_average']['earnings'] = edd_get_average_monthly_download_earnings( $product_info->ID );
+					}
 
 					if ( edd_has_variable_prices( $product_info->ID ) ) {
 						foreach ( edd_get_variable_prices( $product_info->ID ) as $price ) {
@@ -679,11 +689,13 @@ class EDD_API {
 						$products['products'][$i]['pricing']['amount'] = edd_get_download_price( $product_info->ID );
 					}
 
-					foreach ( edd_get_download_files( $product_info->ID ) as $file ) {
-						$products['products'][$i]['files'][] = $file;
+					if( user_can( $this->user_id, 'view_shop_sensitive_data' ) ) {
+						foreach ( edd_get_download_files( $product_info->ID ) as $file ) {
+							$products['products'][$i]['files'][] = $file;
+						}
+						$products['products'][$i]['notes'] = edd_get_product_notes( $product_info->ID );
 					}
 
-					$products['products'][$i]['notes'] = edd_get_product_notes( $product_info->ID );
 					$i++;
 				}
 			}
@@ -701,10 +713,12 @@ class EDD_API {
 				$products['products'][0]['info']['content']                      = $product_info->post_content;
 				$products['products'][0]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
 
-				$products['products'][0]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
-				$products['products'][0]['stats']['total']['earnings']           = edd_get_download_earnings_stats( $product_info->ID );
-				$products['products'][0]['stats']['monthly_average']['sales']    = edd_get_average_monthly_download_sales( $product_info->ID );
-				$products['products'][0]['stats']['monthly_average']['earnings'] = edd_get_average_monthly_download_earnings( $product_info->ID );
+				if( user_can( $this->user_id, 'view_shop_reports' ) ) {
+					$products['products'][0]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
+					$products['products'][0]['stats']['total']['earnings']           = edd_get_download_earnings_stats( $product_info->ID );
+					$products['products'][0]['stats']['monthly_average']['sales']    = edd_get_average_monthly_download_sales( $product_info->ID );
+					$products['products'][0]['stats']['monthly_average']['earnings'] = edd_get_average_monthly_download_earnings( $product_info->ID );
+				}
 
 				if ( edd_has_variable_prices( $product_info->ID ) ) {
 					foreach ( edd_get_variable_prices( $product_info->ID ) as $price ) {
@@ -714,11 +728,13 @@ class EDD_API {
 					$products['products'][0]['pricing']['amount'] = edd_get_download_price( $product_info->ID );
 				}
 
-				foreach ( edd_get_download_files( $product_info->ID ) as $file ) {
-					$products['products'][0]['files'][] = $file;
+				if( user_can( $this->user_id, 'view_shop_sensitive_data' ) ) {
+					foreach ( edd_get_download_files( $product_info->ID ) as $file ) {
+						$products['products'][0]['files'][] = $file;
+					}
+					$products['products'][0]['notes'] = edd_get_product_notes( $product_info->ID );
 				}
 
-				$products['products'][0]['notes'] = edd_get_product_notes( $product_info->ID );
 			} else {
 				$error['error'] = sprintf( __( 'Product %s not found!', 'edd' ), $product );
 				return $error;
@@ -751,8 +767,13 @@ class EDD_API {
 
 		$dates = $this->get_dates( $args );
 
+		$stats    = array();
 		$earnings = array();
 		$sales    = array();
+
+		if( ! user_can( $this->user_id, 'view_shop_reports' ) ) {
+			return $stats;
+		}
 
 		if ( $args['type'] == 'sales' ) {
 			if ( $args['product'] == null ) {
@@ -967,7 +988,6 @@ class EDD_API {
 
 			return $stats;
 		} elseif ( empty( $args['type'] ) ) {
-			$stats = array();
 			$stats = array_merge( $stats, $this->get_default_sales_stats() );
 			$stats = array_merge ( $stats, $this->get_default_earnings_stats() );
 
@@ -984,6 +1004,10 @@ class EDD_API {
 	 */
 	public function get_recent_sales() {
 		$sales = array();
+
+		if( ! user_can( $this->user_id, 'view_shop_reports' ) ) {
+			return $sales;
+		}
 
 		$query = edd_get_payments( array( 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
 
@@ -1042,6 +1066,12 @@ class EDD_API {
 	 * @return array $discounts Multidimensional array of the discounts
 	 */
 	public function get_discounts( $discount = null ) {
+
+		$discount_list = array();
+
+		if( ! user_can( $this->user_id, 'manage_shop_discounts' ) ) {
+			return $discount_list;
+		}
 
 		if ( empty( $discount ) ) {
 
