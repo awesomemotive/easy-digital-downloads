@@ -733,31 +733,23 @@ function edd_get_discounted_amount( $code, $base_price ) {
  * Increases the use count of a discount code.
  *
  * @since 1.0
- * @param string $codes Discount codes to be incremented, separated by a comma
- * @return void
+ * @param string $code Discount code to be incremented
+ * @return int
  */
-function edd_increase_discount_usage( $codes ) {
+function edd_increase_discount_usage( $code ) {
 
-	$discounts = array_map( 'trim', explode( ',', $codes ) );
+	$id   = edd_get_discount_id_by_code( $code );
+	$uses = edd_get_discount_uses( $id );
 
-	if( ! empty( $discounts ) ) {
-
-		foreach( $discounts as $code ) {
-
-			$id   = edd_get_discount_id_by_code( $code );
-			$uses = edd_get_discount_uses( $id );
-
-			if ( $uses ) {
-				$uses++;
-			} else {
-				$uses = 1;
-			}
-
-			update_post_meta( $id, '_edd_discount_uses', $uses );
-
-		}
-
+	if ( $uses ) {
+		$uses++;
+	} else {
+		$uses = 1;
 	}
+
+	update_post_meta( $id, '_edd_discount_uses', $uses );
+
+	return $uses;
 
 }
 

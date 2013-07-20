@@ -77,8 +77,20 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		delete_transient( 'edd_earnings_total' );
 	}
 
+	// Check for discount codes and increment their use counts
 	if ( isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ) {
-		edd_increase_discount_usage( $user_info['discount'] );
+
+		$discounts = array_map( 'trim', explode( ',', $user_info['discount'] ) );
+
+		if( ! empty( $discounts ) ) {
+
+			foreach( $discounts as $code ) {
+
+				edd_increase_discount_usage( $code );
+
+			}
+
+		}
 	}
 
 	do_action( 'edd_complete_purchase', $payment_id );
