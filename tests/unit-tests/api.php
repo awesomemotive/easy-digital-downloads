@@ -285,13 +285,13 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertNotEmpty( get_user_meta( $this->_user_id, 'edd_user_public_key', true ) );
 		$this->assertNotEmpty( get_user_meta( $this->_user_id, 'edd_user_secret_key', true ) );
 	}
-	/*
+	
 	public function test_get_user() {
 		$_POST['edd_set_api_key'] = 1;
 		EDD()->api->update_key( $this->_user_id );
 		$this->assertEquals( $this->_user_id, EDD()->api->get_user( get_user_meta( $this->_user_id, 'edd_user_public_key', true ) ) );
 	}
-
+/*
 	public function test_get_customers() {
 		$out = EDD()->api->get_customers();
 
