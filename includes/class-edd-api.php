@@ -72,6 +72,14 @@ class EDD_API {
 	private $data = array();
 
 	/**
+	 *
+	 * @var bool
+	 * @access private
+	 * @since 1.7
+	 */
+	private $override = true;
+
+	/**
 	 * Setup the EDD API
 	 *
 	 * @access public
@@ -146,6 +154,8 @@ class EDD_API {
 	 */
 	private function validate_request() {
 		global $wp_query;
+
+		$this->override = false;
 
 		// Make sure we have both user and api key
 		if ( empty( $wp_query->query_vars['token'] ) || empty( $wp_query->query_vars['key'] ) )
@@ -576,7 +586,7 @@ class EDD_API {
 
 		$customers = array();
 
-		if( ! user_can( $this->user_id, 'view_shop_sensitive_data' ) ) {
+		if( ! user_can( $this->user_id, 'view_shop_sensitive_data' ) && ! $this->override ) {
 			return $customers;
 		}
 
@@ -674,7 +684,7 @@ class EDD_API {
 					$products['products'][$i]['info']['content']                      = $product_info->post_content;
 					$products['products'][$i]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
 
-					if( user_can( $this->user_id, 'view_shop_reports' ) ) {
+					if( user_can( $this->user_id, 'view_shop_reports' ) || $this->override) {
 						$products['products'][$i]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
 						$products['products'][$i]['stats']['total']['earnings']           = edd_get_download_earnings_stats( $product_info->ID );
 						$products['products'][$i]['stats']['monthly_average']['sales']    = edd_get_average_monthly_download_sales( $product_info->ID );
@@ -689,7 +699,7 @@ class EDD_API {
 						$products['products'][$i]['pricing']['amount'] = edd_get_download_price( $product_info->ID );
 					}
 
-					if( user_can( $this->user_id, 'view_shop_sensitive_data' ) ) {
+					if( user_can( $this->user_id, 'view_shop_sensitive_data' ) || $this->override ) {
 						foreach ( edd_get_download_files( $product_info->ID ) as $file ) {
 							$products['products'][$i]['files'][] = $file;
 						}
@@ -713,7 +723,7 @@ class EDD_API {
 				$products['products'][0]['info']['content']                      = $product_info->post_content;
 				$products['products'][0]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
 
-				if( user_can( $this->user_id, 'view_shop_reports' ) ) {
+				if( user_can( $this->user_id, 'view_shop_reports' ) || $this->override ) {
 					$products['products'][0]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
 					$products['products'][0]['stats']['total']['earnings']           = edd_get_download_earnings_stats( $product_info->ID );
 					$products['products'][0]['stats']['monthly_average']['sales']    = edd_get_average_monthly_download_sales( $product_info->ID );
@@ -728,7 +738,7 @@ class EDD_API {
 					$products['products'][0]['pricing']['amount'] = edd_get_download_price( $product_info->ID );
 				}
 
-				if( user_can( $this->user_id, 'view_shop_sensitive_data' ) ) {
+				if( user_can( $this->user_id, 'view_shop_sensitive_data' ) || $this->override ) {
 					foreach ( edd_get_download_files( $product_info->ID ) as $file ) {
 						$products['products'][0]['files'][] = $file;
 					}
@@ -771,7 +781,7 @@ class EDD_API {
 		$earnings = array();
 		$sales    = array();
 
-		if( ! user_can( $this->user_id, 'view_shop_reports' ) ) {
+		if( ! user_can( $this->user_id, 'view_shop_reports' ) && ! $this->override ) {
 			return $stats;
 		}
 
@@ -1005,7 +1015,7 @@ class EDD_API {
 	public function get_recent_sales() {
 		$sales = array();
 
-		if( ! user_can( $this->user_id, 'view_shop_reports' ) ) {
+		if( ! user_can( $this->user_id, 'view_shop_reports' ) && ! $this->override ) {
 			return $sales;
 		}
 
@@ -1069,7 +1079,7 @@ class EDD_API {
 
 		$discount_list = array();
 
-		if( ! user_can( $this->user_id, 'manage_shop_discounts' ) ) {
+		if( ! user_can( $this->user_id, 'manage_shop_discounts' ) && ! $this->override ) {
 			return $discount_list;
 		}
 
