@@ -89,7 +89,7 @@ class EDD_API {
 	 */
 	public function __construct() {
 		add_action( 'init',                    array( $this, 'add_endpoint'   ) );
-      	add_action( 'template_redirect',       array( $this, 'process_query'  ), -1 );
+		add_action( 'template_redirect',       array( $this, 'process_query'  ), -1 );
 		add_filter( 'query_vars',              array( $this, 'query_vars'     ) );
 		add_action( 'show_user_profile',       array( $this, 'user_key_field' ) );
 		add_action( 'personal_options_update', array( $this, 'update_key'     ) );
