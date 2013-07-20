@@ -195,12 +195,12 @@ class EDD_API {
 	 * Displays a missing authentication error if all the parameters aren't
 	 * provided
 	 *
-	 * @access public
+	 * @access private
 	 * @author Daniel J Griffiths
 	 * @uses EDD_API::output()
 	 * @since 1.5
 	 */
-	public function missing_auth() {
+	private function missing_auth() {
 		$error['error'] = __( 'You must specify both a token and API key!', 'edd' );
 
 		$this->data = $error;
@@ -211,12 +211,12 @@ class EDD_API {
 	 * Displays an authentication failed error if the user failed to provide valid
 	 * credentials
 	 *
-	 * @access public
+	 * @access private
 	 * @since  1.5
 	 * @uses EDD_API::output()
 	 * @return void
 	 */
-	function invalid_auth() {
+	private function invalid_auth() {
 		$error['error'] = __( 'Your request could not be authenticated!', 'edd' );
 
 		$this->data = $error;
@@ -227,13 +227,13 @@ class EDD_API {
 	 * Displays an invalid API key error if the API key provided couldn't be
 	 * validated
 	 *
-	 * @access public
+	 * @access private
 	 * @author Daniel J Griffiths
 	 * @since 1.5
 	 * @uses EDD_API::output()
 	 * @return void
 	 */
-	function invalid_key() {
+	private function invalid_key() {
 		$error['error'] = __( 'Invalid API key!', 'edd' );
 
 		$this->data = $error;
@@ -333,7 +333,7 @@ class EDD_API {
 	 * @global $wp_query
 	 * @return string $query Query mode
 	 */
-	private function get_query_mode() {
+	public function get_query_mode() {
 		global $wp_query;
 
 		// Whitelist our query options
@@ -366,7 +366,7 @@ class EDD_API {
 	 * @global $wp_query
 	 * @return int $wp_query->query_vars['page'] if page number returned (default: 1)
 	 */
-	private function get_paged() {
+	public function get_paged() {
 		global $wp_query;
 
 		return isset( $wp_query->query_vars['page'] ) ? $wp_query->query_vars['page'] : 1;
@@ -381,7 +381,7 @@ class EDD_API {
 	 * @global $wp_query
 	 * @return int $per_page Results to display per page (default: 10)
 	 */
-	private function per_page() {
+	public function per_page() {
 		global $wp_query;
 
 		$per_page = isset( $wp_query->query_vars['number'] ) ? $wp_query->query_vars['number'] : 10;
@@ -402,7 +402,7 @@ class EDD_API {
 	 * @global $wp_query
 	 * @return $format Output format
 	 */
-	private function get_output_format() {
+	public function get_output_format() {
 		global $wp_query;
 
 		$format = isset( $wp_query->query_vars['format'] ) ? $wp_query->query_vars['format'] : 'json';
@@ -418,7 +418,7 @@ class EDD_API {
 	 * @param array $args Arguments to override defaults
 	 * @return array $dates
 	*/
-	private function get_dates( $args = array() ) {
+	public function get_dates( $args = array() ) {
 		$dates = array();
 
 		$defaults = array(
