@@ -257,7 +257,7 @@ class EDD_Welcome {
 				</a>
 			</h2>
 
-			<p class="about-description"><?php _e( 'Easy Digital Downloads is created by a worldwide team of developers(lke chriscct7) who aim to provide the #1 eCommerce platform for selling digital goods through WordPress.', 'edd' ); ?></p>
+			<p class="about-description"><?php _e( 'Easy Digital Downloads is created by a worldwide team of developers who aim to provide the #1 eCommerce platform for selling digital goods through WordPress.', 'edd' ); ?></p>
 
 			<?php echo $this->contributors(); ?>
 		</div>
