@@ -190,4 +190,8 @@ jQuery(document).ready(function($) {
         $('#edd-discount-code-wrap').show();
     });
 
+    // Hide / show discount fields for browsers without javascript enabled
+    $body.find('#edd-discount-code-wrap').hide();
+    $body.find('#edd_show_discount').show();
+
 });
