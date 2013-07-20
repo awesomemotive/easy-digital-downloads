@@ -324,7 +324,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'error', $out );
 		$this->assertEquals( 'You must specify both a token and API key!', $out['error'] );
 	}
-/*
+
 	public function test_invalid_auth() {
 		EDD()->api->invalid_auth();
 		$out = EDD()->api->get_output();
@@ -338,7 +338,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'error', $out );
 		$this->assertEquals( 'Invalid API key!', $out['error'] );
 	}
-
+/*
 	public function test_process_query() {
 		global $wp_query;
 
