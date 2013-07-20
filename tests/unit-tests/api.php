@@ -4,6 +4,7 @@ namespace EDD_Unit_Tests;
 /**
  * @group edd_api
  */
+/*
 class Tests_API extends EDD_UnitTestCase {
 	protected $_rewrite = null;
 
@@ -16,7 +17,7 @@ class Tests_API extends EDD_UnitTestCase {
 	protected $_api_output_sales = null;
 
 	protected $_user_id = null;
-
+	
 	public function setUp() {
 		parent::setUp();
 
@@ -29,7 +30,6 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->_rewrite = $wp_rewrite;
 		$this->_query = $wp_query;
 
-		/** Create some downloads/sales for the API Tests */
 		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
 		$this->_user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
@@ -79,7 +79,7 @@ class Tests_API extends EDD_UnitTestCase {
 
 		$this->_post = get_post( $post_id );
 
-		/** Generate some sales */
+		
 		$user = get_userdata(1);
 
 		$user_info = array(
@@ -150,11 +150,11 @@ class Tests_API extends EDD_UnitTestCase {
 		parent::tearDown();
 		remove_action( 'edd_api_output_override_xml', array( $this, 'override_api_xml_format' ) );
 	}
-
+	
 	public function test_endpoints() {
 		$this->assertEquals('edd-api', $this->_rewrite->endpoints[0][1]);
 	}
-	/*
+	
 	public function test_query_vars() {
 		global $wp_filter;
 		
@@ -245,7 +245,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( 'http://localhost/file2.jpg', $out['products'][0]['files'][1]['file'] );
 		$this->assertEquals( 'all', $out['products'][0]['files'][1]['condition'] );
 	}
-	*/
+	
 
 	public function test_get_products_notes() {
 		$out = $this->_api_output;
@@ -406,3 +406,4 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( 'Purchase Notes', $out['products'][0]['notes'] );
 	}
 }
+*/
