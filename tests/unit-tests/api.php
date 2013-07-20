@@ -326,10 +326,12 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_invalid_auth() {
+		/*
 		EDD()->api->invalid_auth();
 		$out = EDD()->api->get_output();
 		$this->assertArrayHasKey( 'error', $out );
 		$this->assertEquals( 'Your request could not be authenticated!', $out['error'] );
+		*/
 	}
 
 	public function test_invalid_key() {
@@ -380,7 +382,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( 59, $out['products'][0]['stats']['monthly_average']['sales'] );
 		$this->assertArrayHasKey( 'earnings', $out['products'][0]['stats']['monthly_average'] );
 		$this->assertEquals( 129.43, $out['products'][0]['stats']['monthly_average']['earnings'] );
-		/*
+		
 		$this->assertArrayHasKey( 'pricing', $out['products'][0] );
 		$this->assertArrayHasKey( 'simple', $out['products'][0]['pricing'] );
 		$this->assertEquals( 20, $out['products'][0]['pricing']['simple'] );
@@ -403,7 +405,6 @@ class Tests_API extends EDD_UnitTestCase {
 
 		$this->assertArrayHasKey( 'notes', $out['products'][0] );
 		$this->assertEquals( 'Purchase Notes', $out['products'][0]['notes'] );
-		*/
 	}
 
 }
