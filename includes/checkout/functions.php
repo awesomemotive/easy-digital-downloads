@@ -113,3 +113,17 @@ function edd_get_success_page_url( $query_string = null ) {
 
 	return apply_filters( 'edd_success_page_url', $success_page );
 }
+
+
+/**
+ * Check if a field is required
+ *
+ * @param string $field
+ * @access      public
+ * @since       1.7
+ * @return      bool
+*/
+function edd_field_is_required( $field = '' ) {
+	$required_fields = edd_purchase_form_required_fields();
+	return array_key_exists( $field, $required_fields );
+}

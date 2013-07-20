@@ -71,6 +71,7 @@ function edd_download_meta_box_save( $post_id) {
 			'_edd_download_limit',
 			'_edd_bundled_products',
 			'_edd_hide_purchase_link',
+			'_edd_button_behavior',
 			'edd_product_notes'
 		)
 	);
@@ -634,12 +635,22 @@ add_action( 'edd_meta_box_fields', 'edd_render_accounting_options', 25 );
  */
 function edd_render_disable_button( $post_id ) {
 	$hide_button = get_post_meta( $post_id, '_edd_hide_purchase_link', true ) ? true : false;
+	$behavior    = get_post_meta( $post_id, '_edd_button_behavior', true );
 ?>
 	<p><strong><?php _e( 'Button Options:', 'edd' ); ?></strong></p>
 	<p>
 		<label for="_edd_hide_purchase_link">
 			<input type="checkbox" name="_edd_hide_purchase_link" id="_edd_hide_purchase_link" value="1" <?php checked( true, $hide_button ); ?> />
 			<?php _e( 'Disable the automatic output of the purchase button', 'edd' ); ?>
+		</label>
+	</p>
+	<p>
+		<label for="_edd_button_behavior">
+			<select name="_edd_button_behavior" id="_edd_button_behavior" >
+				<option value="add_to_cart"<?php selected( $behavior, 'add_to_cart' ); ?>>Add to Cart</option>
+				<option value="direct"<?php selected( $behavior, 'direct' ); ?>>Buy Now</option>
+			</select>
+			<?php _e( 'Select the purchase button behavior', 'edd' ); ?>
 		</label>
 	</p>
 <?php
