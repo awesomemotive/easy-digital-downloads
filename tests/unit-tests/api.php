@@ -4,7 +4,7 @@ namespace EDD_Unit_Tests;
 /**
  * @group edd_api
  */
-/*
+
 class Tests_API extends EDD_UnitTestCase {
 	protected $_rewrite = null;
 
@@ -150,7 +150,7 @@ class Tests_API extends EDD_UnitTestCase {
 		parent::tearDown();
 		remove_action( 'edd_api_output_override_xml', array( $this, 'override_api_xml_format' ) );
 	}
-	
+	/*
 	public function test_endpoints() {
 		$this->assertEquals('edd-api', $this->_rewrite->endpoints[0][1]);
 	}
