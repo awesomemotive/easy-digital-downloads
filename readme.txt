@@ -220,6 +220,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Show 0.00 prices as "Free"
 * Tweak: Allow Reports and REST API to cross year boundaries
 * Tweak: Better date selection options in Reports
+* Tweak: Better permission checks in the REST API
 
 * Fix: RTL compatibility issues
 * Fix: qTranslate plugin compatibility
