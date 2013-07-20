@@ -179,8 +179,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( 'customer', $out[9] );
 		$this->assertEquals( 'discount', $out[10] );
 		$this->assertEquals( 'format', $out[11] );
-	}
-	/*	
+	}	
 
 	public function test_get_products() {
 		$out = $this->_api_output;
@@ -201,7 +200,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( 'Post content 1', $out['products'][0]['info']['content'] );
 		$this->assertEquals( '', $out['products'][0]['info']['thumbnail'] );
 	}
-
+	/*
 	public function test_get_product_stats() {
 		$out = $this->_api_output;		
 		$this->assertArrayHasKey( 'stats', $out['products'][0] );
