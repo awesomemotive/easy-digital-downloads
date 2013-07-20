@@ -23,7 +23,7 @@ before_script:
 #    - mkdir -p $WP_CORE_DIR
 #    - tar --strip-components=1 -zxmf tmp/wordpress.tar.gz -C $WP_CORE_DIR
     - svn co --ignore-externals http://unit-tests.svn.wordpress.org/trunk/ tmp/wordpress-tests/
-    - ls -l
+#    - ls -l
     - cp tmp/wordpress-tests/wp-tests-config-sample.php tmp/wordpress-tests/wp-tests-config.php
     - sed -i "s:dirname( __FILE__ ) . '/wordpress/':'$WP_CORE_DIR':" tmp/wordpress-tests/wp-tests-config.php
     - sed -i "s/yourdbnamehere/wordpress_test/" tmp/wordpress-tests/wp-tests-config.php
