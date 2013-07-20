@@ -179,6 +179,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 	public function test_delete_purchase() {
 		edd_delete_purchase( $this->_payment_id );
 		// This returns an empty array(), so empty makes it false
-		$this->assertTrue( empty(edd_get_payments()) );
+		$cart = edd_get_payments();
+		$this->assertTrue( empty( $cart ) );
 	}
 }
