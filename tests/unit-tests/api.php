@@ -291,7 +291,7 @@ class Tests_API extends EDD_UnitTestCase {
 		EDD()->api->update_key( $this->_user_id );
 		$this->assertEquals( $this->_user_id, EDD()->api->get_user( get_user_meta( $this->_user_id, 'edd_user_public_key', true ) ) );
 	}
-/*
+
 	public function test_get_customers() {
 		$out = EDD()->api->get_customers();
 
@@ -317,7 +317,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( 100.0, $out['customers'][0]['stats']['total_spent'] );
 		$this->assertEquals( 0, $out['customers'][0]['stats']['total_downloads'] );
 	}
-
+/*
 	public function test_missing_auth() {
 		EDD()->api->missing_auth();
 		$out = EDD()->api->get_output();
