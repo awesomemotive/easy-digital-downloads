@@ -77,7 +77,8 @@ class Test_Misc extends EDD_UnitTestCase {
 			'THB'  => __( 'Thai Baht (&#3647;)', 'edd' ),
 			'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
 			'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
-			'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' )
+			'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
+			'MYR' => 'Malaysian Ringgits'
 		);
 
 		$this->assertEquals( $expected, edd_get_currencies() );
