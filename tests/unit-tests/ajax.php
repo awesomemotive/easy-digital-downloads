@@ -164,15 +164,6 @@ class Tests_AJAX extends EDD_UnitTestCase {
 		$this->assertEquals( 'Test Download', $this->_last_response );
 	}
 
-	public function test_opt_into_local_taxes() {
-		$_POST = array(
-			'nonce' => wp_create_nonce( 'edd_checkout_nonce' ),
-		);
-	 	$this->assertEquals( '$0.00', $decoded['total'] );
-	 	$this->markTestIncomplete( 'This test needs to be rewritten per #600.');
-	}
-
-
 	public function test_check_for_download_price_variations() {
 		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'draft' ) );
 
