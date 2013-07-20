@@ -155,7 +155,7 @@ class EDD_Welcome {
 
 				<div class="feature-section">
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/order-details.png'; ?>" class="edd-welcome-screenshots"/>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/17quantities.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4>Selling Licenses or Multiple Copies at Once?</h4>
 					<p>With the new item quantities feature, your customers can choose how many of an item they wish to purchase at one time.</p>
@@ -172,7 +172,7 @@ class EDD_Welcome {
 
 				<div class="feature-section">
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/tax-rates.png'; ?>" class="edd-welcome-screenshots"/>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/17direct.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4>Buy Now</h4>
 					<p>The Direct purchase option allows you to create Buy Now buttons that take your customers straight to PayPal, completely bypassing the checkout screen.</p>
