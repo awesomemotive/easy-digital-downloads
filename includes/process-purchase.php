@@ -19,10 +19,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @access      private
  * @since       1.0
- * @version     1.0.8.1
  * @return      void
  */
 function edd_process_purchase_form() {
+
 	// Make sure the cart isn't empty
 	if ( ! edd_get_cart_contents() ) {
 		$valid_data = array();

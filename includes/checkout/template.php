@@ -25,7 +25,7 @@ function edd_checkout_form() {
 	global $edd_options, $user_ID, $post;
 
 	$payment_mode = edd_get_chosen_gateway();
-	$form_action  = esc_url( edd_get_checkout_uri('payment-mode=' . $payment_mode) );
+	$form_action  = esc_url( edd_get_checkout_uri( 'payment-mode=' . $payment_mode ) );
 
 	ob_start();
 		echo '<div id="edd_checkout_wrap">';
@@ -39,7 +39,7 @@ function edd_checkout_form() {
 					do_action( 'edd_checkout_form_top' );
 
 					if ( edd_show_gateways() ) {
-						do_action( 'edd_payment_payment_mode_select'  );
+						do_action( 'edd_payment_mode_select'  );
 					} else {
 						do_action( 'edd_purchase_form' );
 					}
@@ -512,7 +512,7 @@ function edd_payment_mode_select() {
 	<div id="edd_purchase_form_wrap"></div><!-- the checkout fields are loaded into this-->
 	<?php do_action('edd_payment_mode_bottom');
 }
-add_action( 'edd_payment_payment_mode_select', 'edd_payment_mode_select' );
+add_action( 'edd_payment_mode_select', 'edd_payment_mode_select' );
 
 
 /**
@@ -665,8 +665,9 @@ function edd_checkout_button_next() {
 
 	ob_start();
 ?>
+	<input type="hidden" name="edd_action" value="gateway_select" />
 	<input type="hidden" name="page_id" value="<?php echo absint( $edd_options['purchase_page'] ); ?>"/>
-	<input type="submit" id="edd_next_button" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" value="<?php _e( 'Next', 'edd' ); ?>"/>
+	<input type="submit" name="gateway_submit" id="edd_next_button" class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" value="<?php _e( 'Next', 'edd' ); ?>"/>
 <?php
 	return apply_filters( 'edd_checkout_button_next', ob_get_clean() );
 }
