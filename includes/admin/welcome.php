@@ -141,11 +141,11 @@ class EDD_Welcome {
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/17checkout.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Combine Multiple Products into Bundles', 'edd' ); ?></h4>
-					<p><?php _e( 'A bundled product is a group of other Downloads in your store that are purchased as a single item, usually at a discount.', 'edd' ); ?></p>
+					<h4><?php _e( 'Prettier, More Versatile Styles', 'edd' ); ?></h4>
+					<p><?php _e( 'We have completely rewritten the checkout CSS to make it more attractive, more flexible, and more compatible with a wider variety of themes.', 'edd' ); ?></p>
 
-					<h4><?php _e( 'Simplify Your Admin Tasks', 'edd' ); ?></h4>
-					<p><?php _e( 'Prior to Bundles, you were forced to create a new product and then manually add all of the necessary files from the other Downloads to it. No longer! Bundled products automatically grab the file downloads from products included in the bundle.', 'edd' ); ?></p>
+					<h4><?php _e( 'Better Checkout Layout', 'edd' ); ?></h4>
+					<p><?php _e( 'The position of each field on the checkout has been carefully reconsidered to ensure it is in the proper location so as to best create high conversion rates..', 'edd' ); ?></p>
 
 				</div>
 			</div>
@@ -257,7 +257,7 @@ class EDD_Welcome {
 				</a>
 			</h2>
 
-			<p class="about-description"><?php _e( 'Easy Digital Downloads is created by a worldwide team of developers who aim to provide the #1 eCommerce platform for selling digital goods through WordPress.', 'edd' ); ?></p>
+			<p class="about-description"><?php _e( 'Easy Digital Downloads is created by a worldwide team of developers(lke chriscct7) who aim to provide the #1 eCommerce platform for selling digital goods through WordPress.', 'edd' ); ?></p>
 
 			<?php echo $this->contributors(); ?>
 		</div>
