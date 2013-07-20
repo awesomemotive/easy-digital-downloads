@@ -226,7 +226,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( '20', $out['products'][0]['pricing']['simple'] );
 		$this->assertEquals( '100', $out['products'][0]['pricing']['advanced'] );
 	}
-	/*
+	
 	public function test_get_products_files() {
 		$out = $this->_api_output;
 		$this->assertArrayHasKey( 'files', $out['products'][0]) ;
@@ -245,7 +245,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( 'all', $out['products'][0]['files'][1]['condition'] );
 	}
 	
-
+	/*
 	public function test_get_products_notes() {
 		$out = $this->_api_output;
 		$this->assertArrayHasKey( 'notes', $out['products'][0] );
