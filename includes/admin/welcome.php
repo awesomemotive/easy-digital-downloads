@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.4
  */
 class EDD_Welcome {
+
 	/**
 	 * @var string The capability users should have to view the page
 	 */
@@ -134,11 +135,11 @@ class EDD_Welcome {
 			</h2>
 
 			<div class="changelog">
-				<h3><?php _e( 'Bundled Products', 'edd' ); ?></h3>
+				<h3><?php _e( 'Simple, Beautiful Checkout', 'edd' ); ?></h3>
 
 				<div class="feature-section">
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/bundles.png'; ?>" class="edd-welcome-screenshots"/>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/17checkout.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4><?php _e( 'Combine Multiple Products into Bundles', 'edd' ); ?></h4>
 					<p><?php _e( 'A bundled product is a group of other Downloads in your store that are purchased as a single item, usually at a discount.', 'edd' ); ?></p>
@@ -150,7 +151,7 @@ class EDD_Welcome {
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Improved Order Details Interface', 'edd' ); ?></h3>
+				<h3><?php _e( 'Item Quantities', 'edd' ); ?></h3>
 
 				<div class="feature-section">
 
@@ -167,7 +168,7 @@ class EDD_Welcome {
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Multiple Tax Rates', 'edd' ); ?></h3>
+				<h3><?php _e( 'Direct to PayPal Purchase Buttons', 'edd' ); ?></h3>
 
 				<div class="feature-section">
 
@@ -183,7 +184,7 @@ class EDD_Welcome {
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Improved Developer Documentation', 'edd' ); ?></h3>
+				<h3><?php _e( 'Multiple Discount Codes Per Purchase', 'edd' ); ?></h3>
 
 				<div class="feature-section">
 
@@ -197,39 +198,30 @@ class EDD_Welcome {
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Discounts API Endpoint', 'edd' ); ?></h3>
-
-				<div class="feature-section">
-					<h4><?php _e( 'Retrieve Available Discounts', 'edd' ); ?></h4>
-					<p><?php _e( 'The EDD RESTful API now includes a /discounts endpoint that can be used for retrieving details about the available discounts in your store. Want to create a feed on another website of the discounts available? You can now do that.', 'edd' );  ?></p>
-				</div>
-			</div>
-
-			<div class="changelog">
 				<h3><?php _e( 'Additional Updates', 'edd' ); ?></h3>
 
 				<div class="feature-section col three-col">
 					<div>
-						<h4><?php _e( 'EDD_Cron Class', 'edd' ); ?></h4>
+						<h4><?php _e( 'Brought Back [download_history]', 'edd' ); ?></h4>
 						<p><?php printf( __( 'The new %sEDD_Cron class%s provides a simple way to hook into routinely scheduled events in Easy Digital Downloads.', 'edd' ), '<a href="https://github.com/easydigitaldownloads/Easy-Digital-Downloads/blob/master/includes/class-edd-cron.php" target="_blank">', '</a>' ); ?></p>
 
-						<h4><?php _e( 'Improved Country and State / Province Fields ', 'edd' ); ?></h4>
+						<h4><?php _e( 'Full Retina Support', 'edd' ); ?></h4>
 						<p><?php _e( 'We have added drop down fields for the states / provinces of 12 additional countries, providing customers in those countries a much better checkout experience.', 'edd' ); ?></p>
 					</div>
 
 					<div>
-						<h4><?php _e( 'More Reliable File Download Methods', 'edd' ); ?></h4>
-						<p><?php _e( 'EDD now supports delivering file downloads via X-Sendfile, X-Lighttpd-Sendfile, and X-Accel-Redirect depending on your server config.', 'edd' ); ?></p>
+						<h4><?php _e( 'Customer Reports Search', 'edd' ); ?></h4>
+						<p><?php _e( 'EDD now delivering supports file downloads via X-Sendfile, X-Lighttpd-Sendfile, and X-Accel-Redirect depending on your server config.', 'edd' ); ?></p>
 
-						<h4><?php _e( 'Lookup Previous Guest Purchases on User Registration', 'edd' ); ?></h4>
+						<h4><?php _e( 'Better Admin Notifications', 'edd' ); ?></h4>
 						<p><?php _e( 'Anytime a new user is added, EDD will look up any purchases the user may have made as a guest and attribute them to the newly created account.', 'edd' ); ?></p>
 					</div>
 
 					<div class="last-feature">
-						<h4><?php _e( 'Itemized PayPal Purchases', 'edd' ); ?></h4>
+						<h4><?php _e( 'Settings Import / Export', 'edd' ); ?></h4>
 						<p><?php _e( 'Purchases made through PayPal will now show itemized details in the PayPal order summary box.', 'edd' ); ?></p>
 
-						<h4><?php _e( 'SKU Support', 'edd' ); ?></h4>
+						<h4><?php _e( 'Improved Performance', 'edd' ); ?></h4>
 						<p><?php _e( 'Adding product SKUs to Downloads is now supported and can be enabled in Downloads > Settings > Misc.', 'edd' ); ?></p>
 					</div>
 				</div>
