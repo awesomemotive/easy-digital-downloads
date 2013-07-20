@@ -30,7 +30,7 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 
 		edd_store_discount( $meta );
 
-		$expected = '<select name="edd_discounts" id="edd_discounts" class="edd-select edd_discounts"><option value="'. edd_get_discount_id_by_code( '50PERCENTOFF' ) .'">50 Percent Off</option></select><select name="edd_discounts" id="edd_discounts" class="edd-select edd_discounts"><option value="'. edd_get_discount_id_by_code( '50PERCENTOFF' ) .'">50 Percent Off</option></select>';
+		$expected = '<select name="edd_discounts" id="edd_discounts" class="edd-select edd_discounts"><option value="'. edd_get_discount_id_by_code( '50PERCENTOFF' ) .'">50 Percent Off</option></select>';
 		$this->assertEquals( $expected, EDD()->html->discount_dropdown() );
 	}
 
