@@ -1,8 +1,6 @@
 <?php
 ini_set('display_errors','on');
 error_reporting(E_ALL);
-global $current_user;
-$current_user = new WP_User(1);
 define( 'EDD_PLUGIN_DIR', dirname( dirname( __FILE__ ) ) . '/'  );
 
 require_once dirname( __FILE__ ) . '/../tmp/wordpress-tests/includes/functions.php';
