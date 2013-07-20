@@ -557,10 +557,10 @@ function edd_discount_field() {
 	if ( edd_has_active_discounts() && edd_get_cart_total() ) {
 	?>
 	<fieldset id="edd_discount_code">
-		<p id="edd_show_discount">
+		<p id="edd_show_discount" style="display:none;">
 			<?php _e( 'Have a discount code?', 'edd' ); ?> <a href="#" class="edd_discount_link"><?php echo _x( 'Click to enter it', 'Entering a discount code', 'edd' ); ?></a>
 		</p>
-		<p id="edd-discount-code-wrap" style="display:none">
+		<p id="edd-discount-code-wrap">
 			<label class="edd-label" for="edd-discount">
 				<?php _e( 'Discount', 'edd' ); ?>
 				<img src="<?php echo EDD_PLUGIN_URL; ?>assets/images/loading.gif" id="edd-discount-loader" style="display:none;"/>
