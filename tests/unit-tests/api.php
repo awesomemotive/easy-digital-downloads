@@ -278,14 +278,14 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( 100, $out['sales'][0]['products'][0]['price'] );
 		$this->assertEquals( 'Advanced', $out['sales'][0]['products'][0]['price_name'] );
 	}
-	/*
+	
 	public function test_update_key() {
 		$_POST['edd_set_api_key'] = 1;
 		EDD()->api->update_key( $this->_user_id );
 		$this->assertNotEmpty( get_user_meta( $this->_user_id, 'edd_user_public_key', true ) );
 		$this->assertNotEmpty( get_user_meta( $this->_user_id, 'edd_user_secret_key', true ) );
 	}
-
+	/*
 	public function test_get_user() {
 		$_POST['edd_set_api_key'] = 1;
 		EDD()->api->update_key( $this->_user_id );
