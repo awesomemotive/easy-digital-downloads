@@ -146,9 +146,9 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_get_login_fields', $wp_filter['edd_purchase_form_login_fields'][10] );
 	}
 
-	public function test_edd_payment_payment_mode_select() {
+	public function test_edd_payment_mode_select() {
 		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_payment_mode_select', $wp_filter['edd_payment_payment_mode_select'][10] );
+		$this->assertarrayHasKey( 'edd_payment_mode_select', $wp_filter['edd_payment_mode_select'][10] );
 	}
 
 	public function test_edd_purchase_form_before_cc_form() {

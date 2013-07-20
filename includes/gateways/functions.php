@@ -229,10 +229,11 @@ function edd_show_gateways() {
  */
 function edd_get_chosen_gateway() {
 	$gateways = edd_get_enabled_payment_gateways();
+	$chosen   = isset( $_REQUEST['payment-mode'] ) ? $_REQUEST['payment-mode'] : false;
 
-	if ( isset( $_GET['payment-mode'] ) ) {
-		$enabled_gateway = urldecode( $_GET['payment-mode'] );
-	} else if( count( $gateways ) >= 1 && ! isset( $_GET['payment-mode'] ) ) {
+	if ( $chosen ) {
+		$enabled_gateway = urldecode( $chosen );
+	} else if( count( $gateways ) >= 1 && ! $chosen ) {
 		foreach ( $gateways as $gateway_id => $gateway ):
 			$enabled_gateway = $gateway_id;
 			if ( edd_get_cart_amount() <= 0 ) {
@@ -263,37 +264,6 @@ function edd_get_chosen_gateway() {
 function edd_record_gateway_error( $title = '', $message = '', $parent = 0 ) {
 	return edd_record_log( $title, $message, $parent, 'gateway_error' );
 }
-
-/**
- * Sets an error on checkout if no gateways are enabled
- *
- * @since 1.3.4
- * @return void
- */
-function edd_no_gateway_error() {
-	$gateways = edd_get_enabled_payment_gateways();
-
-	if ( empty( $gateways ) )
-		edd_set_error( 'no_gateways', __( 'You must enable a payment gateway to use Easy Digital Downloads', 'edd' ) );
-	else
-		edd_unset_error( 'no_gateways' );
-}
-add_action( 'init', 'edd_no_gateway_error' );
-
-/**
- * Loads a payment gateway via AJAX
- *
- * @since 1.3.4
- * @return void
- */
-function edd_load_ajax_gateway() {
-	if ( isset( $_POST['edd_payment_mode'] ) ) {
-		do_action( 'edd_purchase_form' );
-		exit();
-	}
-}
-add_action( 'wp_ajax_edd_load_gateway', 'edd_load_ajax_gateway' );
-add_action( 'wp_ajax_nopriv_edd_load_gateway', 'edd_load_ajax_gateway' );
 
 
 /**
