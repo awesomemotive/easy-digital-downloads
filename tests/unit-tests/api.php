@@ -180,7 +180,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( 'discount', $out[10] );
 		$this->assertEquals( 'format', $out[11] );
 	}
-	*/
+	
 
 	public function test_get_products() {
 		$out = $this->_api_output;
@@ -245,6 +245,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( 'http://localhost/file2.jpg', $out['products'][0]['files'][1]['file'] );
 		$this->assertEquals( 'all', $out['products'][0]['files'][1]['condition'] );
 	}
+	*/
 
 	public function test_get_products_notes() {
 		$out = $this->_api_output;
