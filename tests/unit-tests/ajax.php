@@ -168,7 +168,6 @@ class Tests_AJAX extends EDD_UnitTestCase {
 		$_POST = array(
 			'nonce' => wp_create_nonce( 'edd_checkout_nonce' ),
 		);
-	 	$this->_handleAjax( 'edd_local_tax_opt_in' );
 	 	$this->assertEquals( '$0.00', $decoded['total'] );
 	 	$this->markTestIncomplete( 'This test needs to be rewritten per #600.');
 	}
