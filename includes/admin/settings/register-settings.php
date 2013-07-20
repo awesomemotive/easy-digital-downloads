@@ -217,6 +217,26 @@ function edd_register_settings() {
 					'desc' => edd_get_purchase_receipt_template_tags(),
 					'type' => 'rich_editor'
 				),
+				'sale_notification_header' => array(
+					'id' => 'sale_notification_header',
+					'name' => '<strong>' . __('New Sale Notifications', 'edd') . '</strong>',
+					'desc' => __('Configure new sale notification emails', 'edd'),
+					'type' => 'header'
+				),
+				'sale_notification_subject' => array(
+					'id' => 'sale_notification_subject',
+					'name' => __( 'Sale Notification Subject', 'edd' ),
+					'desc' => __( 'Enter the subject line for the sale notification email', 'edd' ),
+					'type' => 'text',
+					'std' => 'New download purchase - Order #{payment_id}'
+				),
+				'sale_notification' => array(
+					'id' => 'sale_notification',
+					'name' => __( 'Sale Notification', 'edd' ),
+					'desc' => edd_get_sale_notification_template_tags(),
+					'type' => 'rich_editor',
+					'std' => edd_get_default_sale_notification_email()
+				),
 				'admin_notice_emails' => array(
 					'id' => 'admin_notice_emails',
 					'name' => __( 'Sale Notification Emails', 'edd' ),
@@ -306,7 +326,7 @@ function edd_register_settings() {
 				),
 				'display_tax_rate' => array(
 					'id' => 'display_tax_rate',
-					'name' => __( 'Display Tax Rate', 'edd' ),
+					'name' => __( 'Display Tax Rate on Prices', 'edd' ),
 					'desc' => __( 'Some contries require a notice when product prices include tax.', 'edd' ),
 					'type' => 'checkbox',
 					'std' => 'no'
@@ -376,6 +396,18 @@ function edd_register_settings() {
 					'name' => __( 'Show Register / Login Form?', 'edd' ),
 					'desc' => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'edd' ),
 					'type' => 'checkbox',
+				),
+				'item_quantities' => array(
+					'id' => 'item_quantities',
+					'name' => __('Item Quantities', 'edd'),
+					'desc' => __('Allow item quantities to be changed at checkout.', 'edd'),
+					'type' => 'checkbox'
+				),
+				'allow_multiple_discounts' => array(
+					'id' => 'allow_multiple_discounts',
+					'name' => __('Multiple Discounts', 'edd'),
+					'desc' => __('Allow customers to use multiple discounts on the same purchase?', 'edd'),
+					'type' => 'checkbox'
 				),
 				'field_downloads' => array(
 					'id' => 'field_downloads',
@@ -1120,12 +1152,28 @@ function edd_tax_rates_callback($args) {
 		<?php if( ! empty( $rates ) ) : ?>
 			<?php foreach( $rates as $key => $rate ) : ?>
 			<tr>
-				<td class="edd_tax_country"><?php echo EDD()->html->select( edd_get_country_list(), 'tax_rates[' . $key . '][country]', $rate['country'] ); ?></td>
+				<td class="edd_tax_country">
+					<?php
+					echo EDD()->html->select( array(
+						'options'          => edd_get_country_list(),
+						'name'             => 'tax_rates[' . $key . '][country]',
+						'selected'         => $rate['country'],
+						'show_option_all'  => false,
+						'show_option_none' => false
+					) );
+					?>
+				</td>
 				<td class="edd_tax_state">
 					<?php
 					$states = edd_get_shop_states( $rate['country'] );
 					if( ! empty( $states ) ) {
-						echo EDD()->html->select( $states, 'tax_rates[' . $key . '][state]', $rate['state'] );
+						echo EDD()->html->select( array(
+							'options'          => $states,
+							'name'             => 'tax_rates[' . $key . '][state]',
+							'selected'         => $rate['state'],
+							'show_option_all'  => false,
+							'show_option_none' => false
+						) );
 					} else {
 						echo EDD()->html->text( 'tax_rates[' . $key . '][state]', $rate['state'] );
 					}
@@ -1141,7 +1189,15 @@ function edd_tax_rates_callback($args) {
 			<?php endforeach; ?>
 		<?php else : ?>
 			<tr>
-				<td class="edd_tax_country"><?php echo EDD()->html->select( edd_get_country_list(), 'tax_rates[0][country]', 0 ); ?></td>
+				<td class="edd_tax_country">
+					<?php
+					echo EDD()->html->select( array(
+						'options'          => edd_get_country_list(),
+						'name'             => 'tax_rates[0][country]',
+						'show_option_all'  => false,
+						'show_option_none' => false
+					) ); ?>
+				</td>
 				<td class="edd_tax_state">
 					<?php echo EDD()->html->text( 'tax_rates[0][state]' ); ?>
 				</td>

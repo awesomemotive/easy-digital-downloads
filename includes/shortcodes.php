@@ -26,15 +26,19 @@ function edd_download_shortcode( $atts, $content = null ) {
 	global $post, $edd_options;
 
 	extract( shortcode_atts( array(
-			'id' 	=> $post->ID,
-			'price' => '1',
-			'text'	=> isset( $edd_options[ 'add_to_cart_text' ] )  && $edd_options[ 'add_to_cart_text' ]    != '' ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
-			'style' => isset( $edd_options[ 'button_style' ] ) 	 	? $edd_options[ 'button_style' ] 		: 'button',
-			'color' => isset( $edd_options[ 'checkout_color' ] ) 	? $edd_options[ 'checkout_color' ] 		: 'blue',
-			'class' => 'edd-submit'
+			'id' 	        => $post->ID,
+			'price'         => '1',
+			'paypal_direct' => '0',
+			'text'	        => isset( $edd_options[ 'add_to_cart_text' ] )  && $edd_options[ 'add_to_cart_text' ]    != '' ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
+			'style'         => isset( $edd_options[ 'button_style' ] ) 	 	? $edd_options[ 'button_style' ] 		: 'button',
+			'color'         => isset( $edd_options[ 'checkout_color' ] ) 	? $edd_options[ 'checkout_color' ] 		: 'blue',
+			'class'         => 'edd-submit'
 		),
 		$atts )
 	);
+
+	// Override color if color == inherit
+	$atts['color'] = ( $atts['color'] == 'inherit' ) ? '' : $atts['color'];
 
 	// Edd_get_purchase_link() expects the ID to be download_id since v1.3
 	$atts['download_id'] = $atts['id'];
@@ -149,7 +153,7 @@ function edd_discounts_shortcode( $atts, $content = null ) {
 
 	$discounts_list = '<ul id="edd_discounts_list">';
 
-	if ( $discounts && edd_has_active_discounts() ) {
+	if ( ! empty( $discounts ) && edd_has_active_discounts() ) {
 
 		foreach ( $discounts as $discount ) {
 
@@ -167,6 +171,8 @@ function edd_discounts_shortcode( $atts, $content = null ) {
 
 		}
 
+	} else {
+		$discounts_list .= '<li class="edd_discount">' . __( 'No discounts found', 'edd' ) . '</li>';
 	}
 
 	$discounts_list .= '</ul>';

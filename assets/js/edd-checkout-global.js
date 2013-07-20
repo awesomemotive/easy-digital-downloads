@@ -107,38 +107,20 @@ jQuery(document).ready(function($) {
     var before_discount = $edd_cart_amount.text(),
         $checkout_form_wrap = $('#edd_checkout_form_wrap');
 
-    $checkout_form_wrap.on('change', '#edd-email', function (event) {
-        $('#edd-discount').val('');
-    });
-
     // Validate and apply a discount
     $checkout_form_wrap.on('focusout', '#edd-discount', function (event) {
 
         var $this = $(this),
             discount_code = $this.val(),
-            edd_email = $('#edd-email').val(),
-            edd_user = $('#edd_user_login').val(),
             edd_discount_loader = $('#edd-discount-loader');
 
         if (discount_code == '' || discount_code == edd_global_vars.enter_discount ) {
             return false;
         }
 
-        if (edd_email == '' && edd_email != 'undefined') {
-            alert(edd_global_vars.no_email);
-            return false;
-        }
-
-        if(edd_email == 'undefined' && edd_user == '') {
-            alert(edd_global_vars.no_username);
-            return false;
-        }
-
         var postData = {
             action: 'edd_apply_discount',
             code: discount_code,
-            email: edd_email,
-            user: edd_user,
             nonce: edd_global_vars.checkout_nonce
         };
 
@@ -157,6 +139,7 @@ jQuery(document).ready(function($) {
                         $('.edd_cart_amount').each(function() {
                             $(this).text(discount_response.total);
                         });
+                        $('#edd-discount', $checkout_form_wrap ).val('');
                     } else {
                         alert(discount_response.msg);
                     }
@@ -171,5 +154,44 @@ jQuery(document).ready(function($) {
 
         return false;
     });
+
+    // Remove a discount
+    $body.on('click', '.edd_discount_remove', function (event) {
+
+        var $this = $(this), postData = {
+            action: 'edd_remove_discount',
+            code: $this.data('code')
+        };
+
+        $.ajax({
+            type: "POST",
+            data: postData,
+            dataType: "json",
+            url: edd_global_vars.ajaxurl,
+            success: function (discount_response) {
+                $('.edd_cart_discount').html(discount_response.html);
+                if( ! discount_response.discounts ) {
+                   $('.edd_cart_discount_row').hide();
+                }
+                $('.edd_cart_amount').each(function() {
+                    $(this).text(discount_response.total);
+                });
+            }
+        }).fail(function (data) {
+            console.log(data);
+        });
+
+        return false;
+    });
+
+    $body.on('click', '.edd_discount_link', function(e) {
+        e.preventDefault();
+        $('.edd_discount_link').parent().hide();
+        $('#edd-discount-code-wrap').show();
+    });
+
+    // Hide / show discount fields for browsers without javascript enabled
+    $body.find('#edd-discount-code-wrap').hide();
+    $body.find('#edd_show_discount').show();
 
 });

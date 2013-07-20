@@ -125,7 +125,7 @@ function edd_dashboard_sales_widget() {
 					?>
 					<tr>
 						<td>
-							<?php echo get_the_title( $payment ) ?> - (<?php echo $payment_meta['email'] ?>) - <span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment ) ) ); ?></span> - <a href="<?php echo add_query_arg( 'id', $payment, admin_url( 'edit.php?post_type=download&page=edd-payment-history&edd-action=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment ); ?> "><?php _e( 'View Order Details', 'edd' ); ?></a>
+							<?php echo get_the_title( $payment ) ?> - (<?php echo $payment_meta['email'] ?>) - <span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment ) ) ); ?></span> - <a href="<?php echo add_query_arg( 'id', $payment, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment ); ?> "><?php _e( 'View Order Details', 'edd' ); ?></a>
 						</td>
 					</tr>
 					<?php } // End foreach ?>

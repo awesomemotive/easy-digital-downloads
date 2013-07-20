@@ -36,10 +36,11 @@ function edd_get_email_templates() {
  * @param string $message Message with the template tags
  * @param array $payment_data Payment Data
  * @param int $payment_id Payment ID
+ * @param bool $admin_notice Whether or not this is a notification email
  *
  * @return string $message Fully formatted message
  */
-function edd_email_template_tags( $message, $payment_data, $payment_id ) {
+function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_notice = false ) {
 	global $edd_options;
 
 	$has_tags = ( strpos($message, '{' ) !== false );
@@ -137,13 +138,12 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 	}
 	$download_list .= '</ul>';
 
-	$subtotal   = isset( $payment_data['subtotal'] ) ? $payment_data['subtotal'] : $payment_data['amount'];
-	$subtotal   = edd_currency_filter( edd_format_amount( $subtotal ) );
-	$tax        = isset( $payment_data['tax'] ) ? $payment_data['tax'] : 0;
-	$tax        = edd_currency_filter( edd_format_amount( $tax ) );
-	$price      = edd_currency_filter( edd_format_amount( $payment_data['amount'] ) );
+	$subtotal   = edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
+	$tax        = edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) );
+	$price      = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) );
 	$gateway    = edd_get_gateway_checkout_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
 	$receipt_id = $payment_data['key'];
+	$email		= edd_get_payment_user_email( $payment_id );
 
 	$message = str_replace( '{name}', $name, $message );
 	$message = str_replace( '{fullname}', $fullname, $message );
@@ -158,9 +158,13 @@ function edd_email_template_tags( $message, $payment_data, $payment_id ) {
 	$message = str_replace( '{payment_method}', $gateway, $message );
 	$message = str_replace( '{receipt_id}', $receipt_id, $message );
 	$message = str_replace( '{payment_id}', $payment_id, $message );
-	$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'purchase_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' ), $message );
+	$message = str_replace( '{user_email}', $email, $message );
 
-	$message = apply_filters( 'edd_email_template_tags', $message, $payment_data, $payment_id );
+	if( ! $admin_notice ) {
+		$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'payment_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' ), $message );
+	}
+
+	$message = apply_filters( 'edd_email_template_tags', $message, $payment_data, $payment_id, $admin_notice );
 
 	return $message;
 }
@@ -215,7 +219,7 @@ function edd_email_preview_templage_tags( $message ) {
 	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
 	$message = str_replace( '{product_notes}', $notes, $message );
 	$message = str_replace( '{payment_id}', $payment_id, $message );
-	$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'purchase_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' ), $message );
+	$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'payment_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' ), $message );
 
 	return wpautop( $message );
 }
@@ -304,6 +308,63 @@ function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) 
 	$email_body = edd_email_template_tags( $email, $payment_data, $payment_id );
 
 	return apply_filters( 'edd_purchase_receipt', $email_body, $payment_id, $payment_data );
+}
+
+/**
+ * Sale Notification Template Body
+ *
+ * @since 1.7
+ * @author Daniel J Griffiths
+ * @param int $payment_id Payment ID
+ * @param array $payment_data Payment Data
+ * @return string $email_body Body of the email
+ */
+function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data = array() ) {
+	global $edd_options;
+
+	$user_info = maybe_unserialize( $payment_data['user_info'] );
+	$email = edd_get_payment_user_email( $payment_id );
+
+	if( isset( $user_info['id'] ) && $user_info['id'] > 0 ) {
+		$user_data = get_userdata( $user_info['id'] );
+		$name = $user_data->display_name;
+	} elseif( isset( $user_info['first_name'] ) && isset( $user_info['last_name'] ) ) {
+		$name = $user_info['first_name'] . ' ' . $user_info['last_name'];
+	} else {
+		$name = $email;
+	}
+
+	$download_list = '';
+	$downloads = maybe_unserialize( $payment_data['downloads'] );
+
+	if( is_array( $downloads ) ) {
+		foreach( $downloads as $download ) {
+			$id = isset( $payment_data['cart_details'] ) ? $download['id'] : $download;
+			$title = get_the_title( $id );
+			if( isset( $download['options'] ) ) {
+				if( isset( $download['options']['price_id'] ) ) {
+					$title .= ' - ' . edd_get_price_option_name( $id, $download['options']['price_id'], $payment_id );
+				}
+			}
+			$download_list .= html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) . "\n";
+		}
+	}
+
+	$gateway = edd_get_gateway_admin_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
+
+	$default_email_body = __( 'Hello', 'edd' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'edd' ), edd_get_label_plural() ) . ".\n\n";
+	$default_email_body .= sprintf( __( '%s sold:', 'edd' ), edd_get_label_plural() ) . "\n\n";
+	$default_email_body .= $download_list . "\n\n";
+	$default_email_body .= __( 'Purchased by: ', 'edd' ) . " " . html_entity_decode( $name, ENT_COMPAT, 'UTF-8' ) . "\n";
+	$default_email_body .= __( 'Amount: ', 'edd' ) . " " . html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ), ENT_COMPAT, 'UTF-8' ) . "\n";
+	$default_email_body .= __( 'Payment Method: ', 'edd' ) . " " . $gateway . "\n\n";
+	$default_email_body .= __( 'Thank you', 'edd' );
+
+	$email = isset( $edd_options['sale_notification'] ) ? $edd_options['sale_notification'] : $default_email_body;
+
+	$email_body = edd_email_template_tags( $email, $payment_data, $payment_id, true );
+
+	return apply_filters( 'edd_sale_notification', $email_body, $payment_id, $payment_data );
 }
 
 /**
@@ -407,10 +468,10 @@ add_filter( 'edd_purchase_receipt_default', 'edd_default_email_styling' );
  * @author Sunny Ratilal
  */
 function edd_render_receipt_in_browser() {
-	if ( ! isset( $_GET['purchase_key'] ) )
+	if ( ! isset( $_GET['payment_key'] ) )
 		wp_die( __( 'Missing purchase key.', 'edd' ), __( 'Error', 'edd' ) );
 
-	$key = urlencode( $_GET['purchase_key'] );
+	$key = urlencode( $_GET['payment_key'] );
 
 	ob_start();
 ?>

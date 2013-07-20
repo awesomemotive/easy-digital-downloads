@@ -141,7 +141,21 @@ function edd_reports_customers_table() {
 
 	$downloads_table = new EDD_Customer_Reports_Table();
 	$downloads_table->prepare_items();
-	$downloads_table->display();
+	?>
+	<div class="wrap">
+		<?php do_action( 'edd_logs_file_downloads_top' ); ?>
+		<form id="edd-customers-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&view=customers' ); ?>">
+			<?php
+			$downloads_table->search_box( __( 'Search', 'edd' ), 'edd-customers' );
+			$downloads_table->display();
+			?>
+			<input type="hidden" name="post_type" value="download" />
+			<input type="hidden" name="page" value="edd-reports" />
+			<input type="hidden" name="view" value="customers" />
+		</form>
+		<?php do_action( 'edd_logs_file_downloads_bottom' ); ?>
+	</div>
+<?php
 }
 add_action( 'edd_reports_view_customers', 'edd_reports_customers_table' );
 

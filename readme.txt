@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.6
 
-Stable Tag: 1.6.4
+Stable Tag: 1.7
 License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -184,6 +184,62 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 1.7: July 20, 2013 =
+
+* New: Brand new styling for the checkout form
+* New: Added options to configure the admin purchase notification email
+* New: Added search to customer reports
+* New: Added item quantity support on checkout
+* New: Brought back the [downloads_history] short code
+* New: Added the ability to use multiple discounts per-purchase
+* New: Added filter to disable schema.org microdata
+* New: Better payment method icons, including full retina support
+* New: Better icons throughout admin, including full retina support
+* New: Added complete Swedish translation
+* New: Include any discounts used in Payment History export
+* New: Added new post installation hook: edd_after_install
+* New: Introduced function for retrieving random Download ID numbers (for themes)
+* New: Added option to resend purchase receipts from the View Order Details page
+* New: Added option under Tools menu to import / export store settings
+* New: Introduced "Buy Now" option for (PayPal) purchase buttons
+
+* Tweak: Improved add to cart ajax indicator
+* Tweak: Better caching plugin support
+* Tweak: Added HTTP status headers to the EDD_API class
+* Tweak: Improved purchase notification emails
+* Tweak: Allow the enctype of the purchase form to be changed
+* Tweak: Modified the tax display on the purchase receipt
+* Tweak: Added the Order ID # to the admin sales notice subject
+* Tweak: Changed the capability of the EDD Add Ons page
+* Tweak: Moved the Zip / Postal Code field just after the Billing City field
+* Tweak: Added "inherit" to the button color options
+* Tweak: Added additional server / environment details to System Info
+* Tweak: Improved variable price option display for products with duplicate price amounts
+* Tweak: Greatly refactored admin-side javascript
+* Tweak: Better required fields handling for checkout
+* Tweak: Show 0.00 prices as "Free"
+* Tweak: Allow Reports and REST API to cross year boundaries
+* Tweak: Better date selection options in Reports
+* Tweak: Better permission checks in the REST API
+
+* Fix: RTL compatibility issues
+* Fix: qTranslate plugin compatibility
+* Fix: System Info bug with display server Memory incorrect
+* Fix: User ID not stored correctly in purchase meta
+* Fix: Cart amount should never be allowed to go negative
+* Fix: Payment email not properly updated when editing a payment
+* Fix: 100% discount code purchases getting set as PayPal purchases
+* Fix: Bugs with "Sorry, trouble retrieving payment receipt."
+* Fix: File uploads going into incorrect year directory
+* Fix: Subtotal in cart widget only showing one decimal place
+* Fix: Incorrect usage of edd_log_test_payment_stats filter
+* Fix: Check for existence of country code in zip/postal code regex
+* Fix: Variable pricing didn't follow currency position
+* Fix: Invalid foreach error with [downloads_discounts] short code
+* Fix: [purchase_collection] short code broken
+* Fix: Customers not always receiving purchase receipt
+
+
 = 1.6.4: June 24, 2013 =
 
 * Fix: Semicolon instead of comma
@@ -207,8 +263,6 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Sanitize subjects for email receipts
 * Tweak: Allow 3 and 4 decimal tax rates
 * Tweak: Changed "Download" to "Free Download" for 0.00 purchases
-
-
 
 = 1.6.3: June 13, 2013 =
 
