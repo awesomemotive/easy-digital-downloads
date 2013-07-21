@@ -38,7 +38,8 @@ function edd_download_shortcode( $atts, $content = null ) {
 	);
 
 	// Override color if color == inherit
-	$atts['color'] = ( $atts['color'] == 'inherit' ) ? '' : $atts['color'];
+	if( isset( $atts['color'] )	)
+		$atts['color'] = ( $atts['color'] == 'inherit' ) ? '' : $atts['color'];
 
 	// Edd_get_purchase_link() expects the ID to be download_id since v1.3
 	$atts['download_id'] = $atts['id'];
