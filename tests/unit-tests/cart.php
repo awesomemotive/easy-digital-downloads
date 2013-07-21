@@ -76,7 +76,8 @@ class Test_Cart extends EDD_UnitTestCase {
 		$options = array(
 			'price_id' => 0,
 			'name' => 'Simple',
-			'amount' => 20
+			'amount' => 20,
+			'quantity' => 1
 		);
 		$this->assertEquals( 0, edd_add_to_cart( $this->_post->ID, $options ) );
 	}
@@ -88,8 +89,10 @@ class Test_Cart extends EDD_UnitTestCase {
 				'options' => array(
 					'price_id' => 0,
 					'name' => 'Simple',
-					'amount' => 20
-				)
+					'amount' => 20,
+					'quantity' => 1
+				),
+				'quantity' => 1
 			)
 		);
 

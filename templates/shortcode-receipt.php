@@ -79,7 +79,7 @@ $status    = edd_get_payment_status( $payment, true );
 
 		<?php if ( $edd_receipt_args['discount'] && $user['discount'] != 'none' ) : ?>
 			<tr>
-				<td><strong><?php _e( 'Discount', 'edd' ); ?>:</strong></td>
+				<td><strong><?php _e( 'Discount(s)', 'edd' ); ?>:</strong></td>
 				<td><?php echo $user['discount']; ?></td>
 			</tr>
 		<?php endif; ?>
@@ -111,6 +111,9 @@ $status    = edd_get_payment_status( $payment, true );
 			<th><?php _e( 'Name', 'edd' ); ?></th>
 			<?php if ( edd_use_skus() ) { ?>
 				<th><?php _e( 'SKU', 'edd' ); ?></th>
+			<?php } ?>
+			<?php if ( edd_item_quanities_enabled() ) { ?>
+				<th><?php _e( 'Quantity', 'edd' ); ?></th>
 			<?php } ?>
 			<th><?php _e( 'Price', 'edd' ); ?></th>
 		</thead>
@@ -195,6 +198,9 @@ $status    = edd_get_payment_status( $payment, true );
 				<?php if ( edd_use_skus() ) : ?>
 					<td><?php echo edd_get_download_sku( $item['id'] ); ?></td>
 				<?php endif; ?>
+				<?php if ( edd_item_quanities_enabled() ) { ?>
+					<td><?php echo $item['quantity']; ?></td>
+				<?php } ?>
 				<td>
 					<?php if( empty( $item['in_bundle'] ) ) : // Only show price when product is not part of a bundle ?>
 						<?php echo edd_currency_filter( edd_format_amount( $item[ 'price' ] ) ); ?>
@@ -207,7 +213,15 @@ $status    = edd_get_payment_status( $payment, true );
 
 		<tfoot>
 			<tr>
-				<td<?php echo ( edd_use_skus() ? ' colspan="2"' : '' ); ?>><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
+				<?php
+				$colspan = '';
+				if( edd_use_skus() && edd_item_quanities_enabled() ) {
+					$colspan = ' colspan="3"';
+				} elseif( edd_use_skus() || edd_item_quanities_enabled() ) {
+					$colspan = ' colspan="2"';
+				}
+				?>
+				<td<?php echo $colspan; ?>><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
 
 				<td>
 					<?php

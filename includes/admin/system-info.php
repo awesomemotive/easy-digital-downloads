@@ -33,13 +33,13 @@ function edd_system_info() {
 	if ( ! class_exists( 'Browser' ) )
 		require_once EDD_PLUGIN_DIR . 'includes/libraries/browser.php';
 
-	$browser =  new Browser();
+	$browser = new Browser();
 	if ( get_bloginfo( 'version' ) < '3.4' ) {
 		$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
-		$theme = $theme_data['Name'] . ' ' . $theme_data['Version'];
+		$theme      = $theme_data['Name'] . ' ' . $theme_data['Version'];
 	} else {
 		$theme_data = wp_get_theme();
-		$theme = $theme_data->Name . ' ' . $theme_data->Version;
+		$theme      = $theme_data->Name . ' ' . $theme_data->Version;
 	}
 ?>
 	<div class="wrap">
@@ -77,6 +77,8 @@ Downloads slug:           <?php echo defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG . "\
 Taxes Enabled:            <?php echo edd_use_taxes() ? "Yes\n" : "No\n"; ?>
 Taxes After Discounts:    <?php echo edd_taxes_after_discounts() ? "Yes\n" : "No\n"; ?>
 
+Registered Post Stati:    <?php echo implode( ', ', get_post_stati() ) . "\n\n"; ?>
+
 <?php echo $browser ; ?>
 
 PHP Version:              <?php echo PHP_VERSION . "\n"; ?>
@@ -85,9 +87,11 @@ Web Server Info:          <?php echo $_SERVER['SERVER_SOFTWARE'] . "\n"; ?>
 
 PHP Safe Mode:            <?php echo ini_get( 'safe_mode' ) ? "Yes" : "No\n"; ?>
 PHP Memory Limit:         <?php echo ini_get( 'memory_limit' ) . "\n"; ?>
+PHP Upload Max Size:      <?php echo ini_get( 'upload_max_filesize' ) . "\n"; ?>
 PHP Post Max Size:        <?php echo ini_get( 'post_max_size' ) . "\n"; ?>
 PHP Upload Max Filesize:  <?php echo ini_get( 'upload_max_filesize' ) . "\n"; ?>
 PHP Time Limit:           <?php echo ini_get( 'max_execution_time' ) . "\n"; ?>
+PHP Max Input Vars:       <?php echo ini_get( 'max_input_vars' ) . "\n"; ?>
 
 WP_DEBUG:                 <?php echo defined( 'WP_DEBUG' ) ? WP_DEBUG ? 'Enabled' . "\n" : 'Disabled' . "\n" : 'Not set' . "\n" ?>
 
@@ -96,6 +100,26 @@ WP Table Prefix:          <?php echo "Length: ". strlen( $wpdb->prefix ); echo "
 Show On Front:            <?php echo get_option( 'show_on_front' ) . "\n" ?>
 Page On Front:            <?php $id = get_option( 'page_on_front' ); echo get_the_title( $id ) . ' (#' . $id . ')' . "\n" ?>
 Page For Posts:           <?php $id = get_option( 'page_for_posts' ); echo get_the_title( $id ) . ' (#' . $id . ')' . "\n" ?>
+
+<?php
+$request['cmd'] = '_notify-validate';
+
+$params = array(
+	'sslverify'		=> false,
+	'timeout'		=> 60,
+	'user-agent'	=> 'EDD/' . EDD_VERSION,
+	'body'			=> $request
+);
+
+$response = wp_remote_post( 'https://www.paypal.com/cgi-bin/webscr', $params );
+
+if ( ! is_wp_error( $response ) && $response['response']['code'] >= 200 && $response['response']['code'] < 300 ) {
+	$WP_REMOTE_POST =  __( 'wp_remote_post() works', 'edd' ) . "\n";
+} else {
+	$WP_REMOTE_POST =  __( 'wp_remote_post() does not work', 'edd' ) . "\n";
+}
+?>
+WP Remote Post:           <?php echo $WP_REMOTE_POST; ?>
 
 Session:                  <?php echo isset( $_SESSION ) ? 'Enabled' : 'Disabled'; ?><?php echo "\n"; ?>
 Session Name:             <?php echo esc_html( ini_get( 'session.name' ) ); ?><?php echo "\n"; ?>
@@ -107,6 +131,19 @@ Use Only Cookies:         <?php echo ini_get( 'session.use_only_cookies' ) ? 'On
 WordPress Memory Limit:   <?php echo ( edd_let_to_num( WP_MEMORY_LIMIT )/( 1024 ) )."MB"; ?><?php echo "\n"; ?>
 DISPLAY ERRORS:           <?php echo ( ini_get( 'display_errors' ) ) ? 'On (' . ini_get( 'display_errors' ) . ')' : 'N/A'; ?><?php echo "\n"; ?>
 FSOCKOPEN:                <?php echo ( function_exists( 'fsockopen' ) ) ? __( 'Your server supports fsockopen.', 'edd' ) : __( 'Your server does not support fsockopen.', 'edd' ); ?><?php echo "\n"; ?>
+cURL:                     <?php echo ( function_exists( 'curl_init' ) ) ? __( 'Your server supports cURL.', 'edd' ) : __( 'Your server does not support cURL.', 'edd' ); ?><?php echo "\n"; ?>
+SOAP Client:              <?php echo ( class_exists( 'SoapClient' ) ) ? __( 'Your server has the SOAP Client enabled.', 'edd' ) : __( 'Your server does not have the SOAP Client enabled.', 'edd' ); ?><?php echo "\n"; ?>
+SUHOSIN:                  <?php echo ( extension_loaded( 'suhosin' ) ) ? __( 'Your server has SUHOSIN installed.', 'edd' ) : __( 'Your server does not have SUHOSIN installed.', 'edd' ); ?><?php echo "\n"; ?>
+
+TEMPLATES:
+
+<?php
+// Show templates that have been copied to the theme's edd_templates dir
+$dir = get_stylesheet_directory() . '/edd_templates/*';
+foreach ( glob( $dir ) as $file ) {
+	echo "Filename: " . basename( $file ) . "\n";
+}
+?>
 
 ACTIVE PLUGINS:
 
