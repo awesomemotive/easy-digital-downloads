@@ -32,49 +32,65 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	if ( $new_status != 'publish' && $new_status != 'complete' )
 		return;
 
-	$payment_data = edd_get_payment_meta( $payment_id );
-	$downloads    = maybe_unserialize( $payment_data['downloads'] );
-	$user_info    = maybe_unserialize( $payment_data['user_info'] );
-	$cart_details = maybe_unserialize( $payment_data['cart_details'] );
+	$user_info    = edd_get_payment_meta_user_info( $payment_id );
+	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
 
-	if ( is_array( $downloads ) ) {
+	if ( is_array( $cart_details ) ) {
 
 		// Increase purchase count and earnings
-		foreach ( $downloads as $download ) {
+		foreach ( $cart_details as $download ) {
 
 			// "bundle" or "default"
 			$download_type = edd_get_download_type( $download['id'] );
 
-			if ( ! edd_is_test_mode() || apply_filters( 'edd_log_test_payment_stats', false ) ) {
+			// Increase earnings and fire actions once per quantity number
+			for( $i = 0; $i < $download['quantity']; $i++ ) {
 
-				edd_record_sale_in_log( $download['id'], $payment_id, $user_info );
-				edd_increase_purchase_count( $download['id'] );
-				$amount = null;
+				if ( ! edd_is_test_mode() || apply_filters( 'edd_log_test_payment_stats', false ) ) {
 
-				if ( is_array( $cart_details ) ) {
-					foreach ( $cart_details as $key => $item ) {
-						if ( array_search( $download['id'], $item ) ) {
-							$cart_item_id = $key;
+					edd_record_sale_in_log( $download['id'], $payment_id, $user_info );
+					edd_increase_purchase_count( $download['id'] );
+					$amount = null;
+
+					if ( is_array( $cart_details ) ) {
+						foreach ( $cart_details as $key => $item ) {
+							if ( array_search( $download['id'], $item ) ) {
+								$cart_item_id = $key;
+							}
 						}
+
+						$amount = isset( $downlod['price'] ) ? $downlod['price'] : null;
 					}
 
-					$amount = isset( $cart_details[$cart_item_id]['price'] ) ? $cart_details[$cart_item_id]['price'] : null;
+					$amount = edd_get_download_final_price( $download['id'], $user_info, $amount );
+					edd_increase_earnings( $download['id'], $amount );
+
 				}
 
-				$amount = edd_get_download_final_price( $download['id'], $user_info, $amount );
-				edd_increase_earnings( $download['id'], $amount );
+				do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type );
 
 			}
 
-			do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type );
 		}
 
 		// Clear the total earnings cache
 		delete_transient( 'edd_earnings_total' );
 	}
 
+	// Check for discount codes and increment their use counts
 	if ( isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ) {
-		edd_increase_discount_usage( $user_info['discount'] );
+
+		$discounts = array_map( 'trim', explode( ',', $user_info['discount'] ) );
+
+		if( ! empty( $discounts ) ) {
+
+			foreach( $discounts as $code ) {
+
+				edd_increase_discount_usage( $code );
+
+			}
+
+		}
 	}
 
 	do_action( 'edd_complete_purchase', $payment_id );
@@ -153,7 +169,7 @@ function edd_update_edited_purchase( $data ) {
 
 		$user_info                 = maybe_unserialize( $payment_data['user_info'] );
 		$user_info['email']        = strip_tags( $_POST['edd-buyer-email'] );
-		$user_info['user_id']      = strip_tags( intval( $_POST['edd-buyer-user-id'] ) );
+		$user_info['id']           = strip_tags( intval( $_POST['edd-buyer-user-id'] ) );
 		$payment_data['user_info'] = serialize( $user_info );
 		$payment_data['email']     = strip_tags( $_POST['edd-buyer-email'] );
 

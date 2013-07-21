@@ -545,6 +545,7 @@ function edd_get_report_dates() {
 			$dates['m_start'] 	= 1;
 			$dates['m_end']		= 12;
 			$dates['year']		= date( 'Y' ) - 1;
+			$dates['year_end']  = date( 'Y' ) - 1;
 		break;
 
 	endswitch;
