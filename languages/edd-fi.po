@@ -1,16 +1,9 @@
-# This German Language File: Copyright (C) 2012-2013 by David Decker of deckerweb.de & genesisthemes.de
-# This file is distributed under the same license as the Easy Digital Downloads Plugin package.
-#
-# Weitere deutsche Sprachdateien fuer Easy Digital Downloads und Erweiterungen
-# sowie WordPress-Plugins und -Themes sind hier zu finden:
-# --> http://deckerweb.de/sprachdateien/
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/svn\n"
 "POT-Creation-Date: 2013-07-20 18:18:30+00:00\n"
-"PO-Revision-Date: 2013-07-21 21:32+0200\n"
+"PO-Revision-Date: 2013-07-21 21:42+0200\n"
 "Last-Translator: Sami Keijonen <sami.keijonen@foxnet.fi>\n"
 "Language-Team: Foxnet <sami.keijonen@foxnet.fi>\n"
 "Language: fi\n"
