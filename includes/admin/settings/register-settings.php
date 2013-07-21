@@ -999,10 +999,15 @@ function edd_missing_callback($args) {
 function edd_select_callback($args) {
 	global $edd_options;
 
+	if ( isset( $edd_options[ $args['id'] ] ) )
+		$value = $edd_options[ $args['id'] ];
+	else
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+
 	$html = '<select id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"/>';
 
 	foreach ( $args['options'] as $option => $name ) :
-		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $option, $edd_options[$args['id']], false ) : '';
+		$selected = selected( $option, $value, false );
 		$html .= '<option value="' . $option . '" ' . $selected . '>' . $name . '</option>';
 	endforeach;
 
