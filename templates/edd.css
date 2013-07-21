@@ -117,12 +117,6 @@
 #edd_checkout_form_wrap input[type="checkbox"] { float: left; margin: 0 8px 0 0; }
 #edd_checkout_form_wrap .edd-payment-icons { height: 32px; display: block; margin: 0 0 8px; }
 #edd_checkout_form_wrap .edd-payment-icons img.payment-icon{ max-height: 32px; width: auto; margin: 0 3px 0 0; float: left; background: none; padding: none; border: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
-@media
-(-webkit-min-device-pixel-ratio: 2),
-(min-resolution: 192dpi) {
-  /* Admin Menu - 16px @2x */
-  #edd_checkout_form_wrap .edd-payment-icons img.payment-icon { max-height: 64px; }
-}
 #edd_checkout_form_wrap #edd-payment-mode-wrap label { display: inline-block; margin: 0 20px 0 0; }
 #edd_checkout_form_wrap #edd-payment-mode-wrap .edd-payment-mode-label { font-weight: bold; display: inline-block; position: relative; margin-bottom: 5px; }
 #edd_checkout_form_wrap fieldset { border: 1px solid #eee; padding: 1.387em; margin: 0 0 21px 0; }
