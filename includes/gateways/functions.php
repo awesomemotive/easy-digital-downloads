@@ -115,8 +115,13 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 	if( empty( $options ) && ! edd_has_variable_prices( $download_id ) ) {
 		$price = edd_get_download_price( $download_id );
 	} else {
+		$price_options = array();
 		foreach ( $options['price_id'] as $price_id ) {
 			$prices = edd_get_variable_prices( $download_id );
+			$price_options[] = array(
+				'price_id' => $price_id,
+				'amount'   => $prices[ $price_id ]['amount']
+			);
 			$price  = $prices[ $price_id ]['amount'];
 		}
 	}
@@ -125,7 +130,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 	$downloads = array(
 		array(
 			'id'      => $download_id,
-			'options' => $options
+			'options' => $price_options
 		)
 	);
 
@@ -136,7 +141,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 			'id'          => $download_id,
 			'item_number' => array(
 				'id'      => $download_id,
-				'options' => $options
+				'options' => $price_options
 			),
 			'price'       => $price,
 			'quantity'    => 1,

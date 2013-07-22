@@ -109,6 +109,8 @@ function edd_process_download() {
 					$direct    = true;
 					$file_path = $requested_file;
 
+
+
 				} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false ) {
 
 					/** This is a local file given by URL so we need to figure out the path */
