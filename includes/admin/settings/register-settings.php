@@ -327,7 +327,7 @@ function edd_register_settings() {
 				'display_tax_rate' => array(
 					'id' => 'display_tax_rate',
 					'name' => __( 'Display Tax Rate on Prices', 'edd' ),
-					'desc' => __( 'Some contries require a notice when product prices include tax.', 'edd' ),
+					'desc' => __( 'Some countries require a notice when product prices include tax.', 'edd' ),
 					'type' => 'checkbox',
 					'std' => 'no'
 				),
