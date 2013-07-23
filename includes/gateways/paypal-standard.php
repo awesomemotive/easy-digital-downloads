@@ -373,7 +373,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 		// Process a refund
 		edd_process_paypal_refund( $data );
 	} else {
-		if ( number_format( (float) $paypal_amount, 2 ) < number_format( (float) $payment_amount ) ) {
+		if ( number_format( (float) $paypal_amount, 2 ) < number_format( (float) $payment_amount, 2 ) ) {
 			// The prices don't match
 			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid payment amount in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 		   return;
