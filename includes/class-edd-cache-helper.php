@@ -105,20 +105,6 @@ class EDD_Cache_Helper {
 			}
 		}
 
-		// WP Super Cache
-		if( function_exists( 'wpsupercache_site_admin' ) ) {
-
-			global $wp_cache_mfunc_enabled;
-
-			if( empty( $wp_cache_mfunc_enabled ) ) {
-				?>
-				<div class="error">
-					<p><?php printf( __( 'In order for <strong>WP Super Cache</strong> to work with Easy Digital Downloads you must enable dynamic caching in WP Super Cache settings <a href="%s">here</a>.', 'edd' ), admin_url( 'options-general.php?page=wpsupercache&tab=settings' ) ); ?></p>
-				</div>
-				<?php
-			}
-
-		}
 	}
 }
 
