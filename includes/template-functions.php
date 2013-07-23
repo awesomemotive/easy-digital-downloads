@@ -543,7 +543,9 @@ function edd_get_theme_template_dir_name() {
  * @return bool
  */
 function edd_add_schema_microdata() {
-	return apply_filters( 'edd_add_schema_microdata', true );
+	// Don't modify anything until after wp_head() is callsed
+	$ret = did_action( 'wp_head' );
+	return apply_filters( 'edd_add_schema_microdata', $ret );
 }
 
 /**
