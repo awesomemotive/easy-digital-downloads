@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/tag/svn\n"
-"POT-Creation-Date: 2013-07-20 18:18:30+00:00\n"
-"PO-Revision-Date: 2013-07-21 21:42+0200\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/easy-digital-downloads\n"
+"POT-Creation-Date: 2013-07-25 13:46:18+00:00\n"
+"PO-Revision-Date: 2013-07-25 18:04+0200\n"
 "Last-Translator: Sami Keijonen <sami.keijonen@foxnet.fi>\n"
 "Language-Team: Foxnet <sami.keijonen@foxnet.fi>\n"
 "Language: fi\n"
@@ -512,7 +512,6 @@ msgstr ""
 #: includes/admin/discounts/contextual-help.php:38
 #: includes/admin/settings/contextual-help.php:42
 #: includes/admin/settings/display-settings.php:33
-#: includes/admin/settings/settings.php:34
 msgid "General"
 msgstr "Yleinen"
 
@@ -1238,7 +1237,7 @@ msgid "Downloads Purchased"
 msgstr "Ostetut lataukset"
 
 #: includes/admin/payments/edit-payment.php:72
-#: includes/admin/settings/register-settings.php:1149 includes/scripts.php:220
+#: includes/admin/settings/register-settings.php:1154 includes/scripts.php:220
 #: templates/checkout_cart.php:43
 msgid "Remove"
 msgstr "Poista"
@@ -1826,6 +1825,8 @@ msgstr "mihin"
 msgid "Sales and earnings reports for the current year for all products"
 msgstr "Myynnin ja tulojen raportti kuluneelta vuodelta kaikille tuotteille"
 
+#. #-#-#-#-#  easy-digital-downloads.pot (Easy Digital Downloads 1.7.1)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
 #: includes/admin/reporting/pdf-reports.php:39
 #: includes/admin/reporting/pdf-reports.php:40 languages/strings.php:15
 msgid "Easy Digital Downloads"
@@ -1922,7 +1923,6 @@ msgstr "Maksutavat"
 #: includes/admin/reporting/reports.php:61
 #: includes/admin/settings/contextual-help.php:71
 #: includes/admin/settings/display-settings.php:37
-#: includes/admin/settings/settings.php:38
 msgid "Taxes"
 msgstr "Verot"
 
@@ -2006,7 +2006,6 @@ msgstr "Kaikki %s"
 #: includes/admin/reporting/reports.php:298
 #: includes/admin/settings/contextual-help.php:57
 #: includes/admin/settings/display-settings.php:35
-#: includes/admin/settings/settings.php:36
 msgid "Emails"
 msgstr "Sähköpostit"
 
@@ -2037,7 +2036,6 @@ msgstr ""
 #: includes/admin/settings/contextual-help.php:48
 #: includes/admin/settings/display-settings.php:34
 #: includes/admin/settings/register-settings.php:126
-#: includes/admin/settings/settings.php:35
 msgid "Payment Gateways"
 msgstr "Maksutavat"
 
@@ -2094,7 +2092,6 @@ msgstr ""
 
 #: includes/admin/settings/contextual-help.php:65
 #: includes/admin/settings/display-settings.php:36
-#: includes/admin/settings/settings.php:37
 msgid "Styles"
 msgstr "Tyylit"
 
@@ -2146,7 +2143,6 @@ msgid "Licenses"
 msgstr "Lisenssit"
 
 #: includes/admin/settings/display-settings.php:44
-#: includes/admin/settings/settings.php:39
 msgid "Misc"
 msgstr "Sekalaiset"
 
@@ -2518,7 +2514,7 @@ msgid "Display Tax Rate on Prices"
 msgstr "Näytä veroprosentti hinnoissa"
 
 #: includes/admin/settings/register-settings.php:330
-msgid "Some contries require a notice when product prices include tax."
+msgid "Some countries require a notice when product prices include tax."
 msgstr "Jotkin maat vaativat huomautuksen, jos tuote pitää sisällään veron."
 
 #: includes/admin/settings/register-settings.php:336
@@ -2607,6 +2603,7 @@ msgstr ""
 "eivät ole kirjautuneet sisään."
 
 #: includes/admin/settings/register-settings.php:402
+#: includes/admin/welcome.php:154
 msgid "Item Quantities"
 msgstr "Tuotteiden lukumäärä"
 
@@ -2789,52 +2786,52 @@ msgid ""
 "The callback function used for the <strong>%s</strong> setting is missing."
 msgstr "\"callback\"- funktio, jota käytetään <strong>%s</strong> puuttuu."
 
-#: includes/admin/settings/register-settings.php:1065
+#: includes/admin/settings/register-settings.php:1070
 msgid "Upload File"
 msgstr "Lataa tiedosto"
 
-#: includes/admin/settings/register-settings.php:1145
+#: includes/admin/settings/register-settings.php:1150
 msgid "Country"
 msgstr "Maa"
 
-#: includes/admin/settings/register-settings.php:1146
+#: includes/admin/settings/register-settings.php:1151
 #: includes/checkout/template.php:315
 msgid "State / Province"
 msgstr "Osavaltio / Maakunta"
 
-#: includes/admin/settings/register-settings.php:1147
+#: includes/admin/settings/register-settings.php:1152
 msgid "Apply rate to whole country, regardless of state / province"
 msgstr "Käytä veroprosenttia koko maassa, riippumatta paikkakunnasta"
 
-#: includes/admin/settings/register-settings.php:1147
+#: includes/admin/settings/register-settings.php:1152
 msgid "Country Wide"
 msgstr "Koko maa"
 
-#: includes/admin/settings/register-settings.php:1148
+#: includes/admin/settings/register-settings.php:1153
 msgid "Rate"
 msgstr "Veroprosentti"
 
-#: includes/admin/settings/register-settings.php:1184
-#: includes/admin/settings/register-settings.php:1206
+#: includes/admin/settings/register-settings.php:1189
+#: includes/admin/settings/register-settings.php:1211
 msgid "Apply to whole country"
 msgstr "Käytä koko maassa"
 
-#: includes/admin/settings/register-settings.php:1187
-#: includes/admin/settings/register-settings.php:1209
+#: includes/admin/settings/register-settings.php:1192
+#: includes/admin/settings/register-settings.php:1214
 msgid "Remove Rate"
 msgstr "Poista veroprosentti"
 
-#: includes/admin/settings/register-settings.php:1214
+#: includes/admin/settings/register-settings.php:1219
 msgid "Add Tax Rate"
 msgstr "Lisää veroprosentti"
 
-#: includes/admin/settings/register-settings.php:1244
+#: includes/admin/settings/register-settings.php:1249
 msgid "Deactivate License"
 msgstr "Ota lisenssi pois käytöstä"
 
-#: includes/admin/settings/register-settings.php:1277
-#: includes/admin/settings/register-settings.php:1296
-#: includes/admin/settings/register-settings.php:1317
+#: includes/admin/settings/register-settings.php:1282
+#: includes/admin/settings/register-settings.php:1301
+#: includes/admin/settings/register-settings.php:1322
 msgid "Settings Updated"
 msgstr "Asetukset talletettu"
 
@@ -3027,6 +3024,178 @@ msgstr "Mitä uutta"
 #: includes/admin/welcome.php:133 includes/admin/welcome.php:253
 msgid "Credits"
 msgstr "Tekijät"
+
+#: includes/admin/welcome.php:138
+msgid "Simple, Beautiful Checkout"
+msgstr "Tyylikäs ja yksinkertainen kassa-sivu"
+
+#: includes/admin/welcome.php:144
+msgid "Prettier, More Versatile Styles"
+msgstr "Kauniimmat ja monipuolisemmat tyylit"
+
+#: includes/admin/welcome.php:145
+msgid ""
+"We have completely rewritten the checkout CSS to make it more attractive, "
+"more flexible, and more compatible with a wider variety of themes."
+msgstr ""
+"Kassasivun tyylejä ja asettelua on muutettu siten, että se on entistä "
+"parempi ja yhteensopivampi monien teemojen kanssa."
+
+#: includes/admin/welcome.php:147
+msgid "Better Checkout Layout"
+msgstr "Parempi kassasivun ulkoasu"
+
+#: includes/admin/welcome.php:148
+msgid ""
+"The position of each field on the checkout has been carefully reconsidered "
+"to ensure it is in the proper location so as to best create high conversion "
+"rates."
+msgstr ""
+"Jokainen kassasivun kenttä on mietitty tarkoin uudelleen parhaan mahdollisen "
+"ostoelämyksen saavuttamiseksi."
+
+#: includes/admin/welcome.php:160
+msgid "Selling Licenses or Multiple Copies at Once?"
+msgstr "Myytkö lisenssejä tai useita kopioita kerralla?"
+
+#: includes/admin/welcome.php:161
+msgid ""
+"With the new item quantities feature, your customers can choose how many of "
+"an item they wish to purchase at one time."
+msgstr ""
+"Asiakas voi nyt ostaa samaa tuotetta useamman kappaleen saman oston "
+"yhteydessä."
+
+#: includes/admin/welcome.php:163
+msgid "Makes Bulk Purchases Simple"
+msgstr "Monen tuotteen ostaminen kerralla on yksinkertaista"
+
+#: includes/admin/welcome.php:164
+msgid ""
+"No longer is purchasing many copies of the same item difficult or tedious. "
+"Simply enter the quantity and complete the purchase."
+msgstr ""
+"Nyt monen kopion ostaminen samasta tuotteesta on helppoa. Asiakkaan "
+"tarvitsee vain asettaa määrä ja ostaa tuote."
+
+#: includes/admin/welcome.php:171
+msgid "Direct to PayPal Purchase Buttons"
+msgstr "Suora ostolinkki PayPal:iin"
+
+#: includes/admin/welcome.php:177
+msgid "Buy Now"
+msgstr "Osta nyt"
+
+#: includes/admin/welcome.php:178
+msgid ""
+"The Direct purchase option allows you to create Buy Now buttons that take "
+"your customers straight to PayPal, completely bypassing the checkout screen."
+msgstr ""
+"Osta nyt -painikkeen avulla ostajat voidaan ohjata suoraan PayPal:iin ilman "
+"kassasivun välivaihetta."
+
+#: includes/admin/welcome.php:180
+msgid "Higher Turnover Rates"
+msgstr "Parempi ostoelämys"
+
+#: includes/admin/welcome.php:181
+msgid ""
+"By sending your customers straight to PayPal, you can dramatically increase "
+"your conversion rates by reducing the amount of friction in the purchase "
+"process."
+msgstr ""
+"Kun asiakas lähetetään suoraan PayPal:iin, niin sitä varmemmin hän ostaa "
+"tuotteen."
+
+#: includes/admin/welcome.php:187
+msgid "Multiple Discount Codes Per Purchase"
+msgstr "Monta alennusta samasta tuotteesta"
+
+#: includes/admin/welcome.php:191
+msgid "Offer Bigger, Better Promotions"
+msgstr "Paremmat ja isommat alennukset"
+
+#: includes/admin/welcome.php:192
+msgid ""
+"With the Ability to redeem multiple discount codes per purchase, you can "
+"give your customers even more incentives to purchase your products."
+msgstr "Asiakas voi käyttää useita alennuskoodeja samaan tuotteeseen."
+
+#: includes/admin/welcome.php:198
+msgid "Additional Updates"
+msgstr "Lisäpäivitykset"
+
+#: includes/admin/welcome.php:202
+msgid "Brought Back [download_history]"
+msgstr "[download_history] lyhytkoodi on takaisin käytettävissä"
+
+#: includes/admin/welcome.php:203
+msgid ""
+"The return of the [downloads_history] short code was one of our most common "
+"user requests since it was removed. We listened and it is back!"
+msgstr ""
+"[downloads_history] lyhytkoodi tuotiin takaisin, koska monet käyttäjät niin "
+"toivoivat. Me kuuntelimme ja nyt se on takaisin!"
+
+#: includes/admin/welcome.php:205
+msgid "Full Retina Support"
+msgstr "Retina-tuki"
+
+#: includes/admin/welcome.php:206
+msgid ""
+"Every image and icon used in Easy Digital Downloads has been remade with "
+"complete support for high resolution / retina displays."
+msgstr "Jokainen kuva ja ikoni toimii myös retina-näytöillä."
+
+#: includes/admin/welcome.php:210
+msgid "Customer Reports Search"
+msgstr "Asiakasraporttien etsintä"
+
+#: includes/admin/welcome.php:211
+msgid ""
+"Want to find out how much a customer has spent, or how many customers you "
+"have with a specific domain's email address? Now you can."
+msgstr ""
+"Haluatko tietää kuinka paljona asiakas on käyttänyt rahaa? Nyt se on "
+"mahdollista."
+
+#: includes/admin/welcome.php:213
+msgid "Better Admin Notifications"
+msgstr "Paremmat ylläpitäjän ilmoitukset"
+
+#: includes/admin/welcome.php:214
+msgid ""
+"The admin sale notification emails can now be completely customized in the "
+"same way as purchase receipts. Want to know all details of the customer? Now "
+"you can."
+msgstr ""
+"Ylläpitäjän sähköposti-ilmoitukset voi nyt muokata samalla tavalla kuin "
+"ostokuitteja."
+
+#: includes/admin/welcome.php:218
+msgid "Settings Import / Export"
+msgstr "Tuo / Vie asetukset"
+
+#: includes/admin/welcome.php:219
+msgid ""
+"The ability to export and import all store settings makes the process of "
+"moving sites from development to live a lot easier."
+msgstr ""
+"Voit viedä ja tuoda kaikki kaupan asetukset sivulta toiselle ja usean "
+"samanlaisen sivun ylläpitäminen on entistä helpompaa."
+
+#: includes/admin/welcome.php:221
+msgid "Improved Performance"
+msgstr "Parempi suorituskyky"
+
+#: includes/admin/welcome.php:222
+msgid ""
+"Several key areas (such as Payment History) of Easy Digital Downloads have "
+"been dramatically improved in terms of performance to make your site run "
+"better and faster."
+msgstr ""
+"Monet tärkeät osa-alueiden parantaminen, kuten maksuhistorian takia Easy "
+"Digital Downloads -lisäosa on entistä parempi ja nopeampi."
 
 # @ edd
 #: includes/admin/welcome.php:228
@@ -3422,16 +3591,6 @@ msgstr ""
 "stems\" valikkoon W3 Total Cache -lisäosan asetuksissa<a href=\"%s\">täällä</"
 "a>."
 
-#: includes/class-edd-cache-helper.php:116
-msgid ""
-"In order for <strong>WP Super Cache</strong> to work with Easy Digital "
-"Downloads you must enable dynamic caching in WP Super Cache settings <a href="
-"\"%s\">here</a>."
-msgstr ""
-"Jos haluat <strong>WP Super Cache</strong> -lisäosan toimivan Easy Digital "
-"Downloads -lisäosan kanssa, ota käyttöön \"dynamic caching\" WP Super Cache -"
-"lisäosan asetuksista <a href=\"%s\">täällä</a>."
-
 #: includes/class-edd-cron.php:44
 msgid "Once Weekly"
 msgstr "Kerran viikossa"
@@ -3440,7 +3599,7 @@ msgstr "Kerran viikossa"
 msgid "No products found"
 msgstr "Tuotetta ei löytynyt"
 
-#: includes/class-edd-html-elements.php:83 includes/shortcodes.php:175
+#: includes/class-edd-html-elements.php:83 includes/shortcodes.php:176
 msgid "No discounts found"
 msgstr "Alennuskoodeja ei löytynyt"
 
@@ -3711,8 +3870,9 @@ msgstr ""
 #: includes/gateways/paypal-standard.php:282
 #: includes/gateways/paypal-standard.php:287
 #: includes/gateways/paypal-standard.php:367
-#: includes/gateways/paypal-standard.php:378
-#: includes/gateways/paypal-standard.php:383
+#: includes/gateways/paypal-standard.php:375
+#: includes/gateways/paypal-standard.php:386
+#: includes/gateways/paypal-standard.php:391
 msgid "IPN Error"
 msgstr "IPN virhe"
 
@@ -3722,32 +3882,32 @@ msgid "Invalid IPN verification response. IPN data: %s"
 msgstr "Virheellinen IPN vahvistus. IPN tiedot: %s"
 
 #: includes/gateways/paypal-standard.php:367
+msgid "Invalid business email in IPN response. IPN data: %s"
+msgstr "Virheellinen sähköposti  IPN vahvistuksessa. IPN tiedot: %s"
+
+#: includes/gateways/paypal-standard.php:375
 msgid "Invalid currency in IPN response. IPN data: %s"
 msgstr "Virheellinen valuutta IPN vahvistuksessa. IPN tiedot: %s"
 
-#: includes/gateways/paypal-standard.php:378
+#: includes/gateways/paypal-standard.php:386
 msgid "Invalid payment amount in IPN response. IPN data: %s"
 msgstr "Virheellinen oston hinta IPN vahvistuksessa. IPN tiedot: %s"
 
-#: includes/gateways/paypal-standard.php:383
+#: includes/gateways/paypal-standard.php:391
 msgid "Invalid purchase key in IPN response. IPN data: %s"
 msgstr "Virheellinen ostoavain IPN vahvistuksessa. IPN tiedot: %s"
 
-#: includes/gateways/paypal-standard.php:389
+#: includes/gateways/paypal-standard.php:397
 msgid "PayPal Transaction ID: %s"
 msgstr "PayPal tapahtuman ID: %s"
 
-#: includes/gateways/paypal-standard.php:410
+#: includes/gateways/paypal-standard.php:418
 msgid "PayPal Payment #%s Refunded"
 msgstr "PayPal maksu #%s palautettu"
 
-#: includes/gateways/paypal-standard.php:411
+#: includes/gateways/paypal-standard.php:419
 msgid "PayPal Refund Transaction ID: %s"
 msgstr "PayPal takaisinmaksun ID: %s"
-
-#: includes/gateways/paypal.php:267
-msgid "Invalid IPN"
-msgstr "Virheellinen IPN"
 
 #: includes/install.php:52 includes/template-functions.php:131
 #: templates/widget-cart-checkout.php:2 templates/widget-cart-empty.php:3
@@ -4208,11 +4368,11 @@ msgstr "%2$s tallennettu. %1$sNäytä %2$s%3$s."
 msgid "%2$s submitted. %1$sView %2$s%3$s."
 msgstr "%2$s toimitettu. %1$sNäytä %2$s%3$s."
 
-#: includes/process-download.php:149
+#: includes/process-download.php:151
 msgid "You do not have permission to download this file"
 msgstr "Sinulla ei ole oikeuksia ladata tätä tiedostoa"
 
-#: includes/process-download.php:150
+#: includes/process-download.php:152
 msgid "Purchase Verification Failed"
 msgstr "Ostoksen vahvistus epäonnistui"
 
@@ -4379,30 +4539,26 @@ msgstr "Ainakin yksi tiedosto"
 msgid "You must have at least one field"
 msgstr "Ainakin yksi kenttä"
 
-#: includes/shortcodes.php:201
+#: includes/shortcodes.php:202
 msgid "Purchase All Items"
 msgstr "Osta kaikki tuotteet"
 
-#: includes/shortcodes.php:402
+#: includes/shortcodes.php:403
 msgctxt "download post type name"
 msgid "No %s found"
 msgstr "%s ei löytynyt"
 
-#: includes/shortcodes.php:446
+#: includes/shortcodes.php:447
 msgid "Sorry, trouble retrieving payment receipt."
 msgstr "Pahoittelut, mutta ostoksen kuittia ei onnistuttu saamaan."
 
-#: includes/shortcodes.php:551
+#: includes/shortcodes.php:552
 msgid "The passwords you entered do not match. Please try again."
 msgstr "Kirjoittamasi salasanat eivät ole samat. Kokeile uudelleen."
 
-#: includes/template-functions.php:81
+#: includes/template-functions.php:85
 msgid "Free"
 msgstr "Ilmainen"
-
-#: includes/template-functions.php:103
-msgid "Includes %1$s&#37; tax"
-msgstr "Sisältää %1$s&#37; veron"
 
 #: includes/template-functions.php:143
 msgid "<i class=\"edd-icon-ok\"></i> Added to cart"
@@ -4412,43 +4568,47 @@ msgstr "<i class=\"edd-icon-ok\"></i> Lisätty ostoskoriin"
 msgid "Go to Checkout"
 msgstr "Siirry kassalle"
 
-#: includes/template-functions.php:304
+#: includes/template-functions.php:154
+msgid "Includes %1$s&#37; tax"
+msgstr "Sisältää %1$s&#37; veron"
+
+#: includes/template-functions.php:308
 msgid "Gray"
 msgstr "Harmaa"
 
-#: includes/template-functions.php:305
+#: includes/template-functions.php:309
 msgid "Blue"
 msgstr "Sininen"
 
-#: includes/template-functions.php:306
+#: includes/template-functions.php:310
 msgid "Green"
 msgstr "Vihreä"
 
-#: includes/template-functions.php:307
+#: includes/template-functions.php:311
 msgid "Yellow"
 msgstr "Keltainen"
 
-#: includes/template-functions.php:308
+#: includes/template-functions.php:312
 msgid "Dark Gray"
 msgstr "Tummanharmaa"
 
-#: includes/template-functions.php:309
+#: includes/template-functions.php:313
 msgid "Inherit"
 msgstr "Peri"
 
-#: includes/template-functions.php:325
+#: includes/template-functions.php:329
 msgid "Button"
 msgstr "Painike"
 
-#: includes/template-functions.php:326
+#: includes/template-functions.php:330
 msgid "Plain Text"
 msgstr "Teksti"
 
-#: includes/template-functions.php:349
+#: includes/template-functions.php:353
 msgid "You have already purchased this item, but you may purchase it again."
 msgstr "Olet jo ostanut tämän tuotteen mutta voit ostaa sen myös uudelleen."
 
-#: includes/template-functions.php:393
+#: includes/template-functions.php:397
 msgid "No downloads found"
 msgstr "Latauksia ei löytynyt"
 
@@ -4489,10 +4649,14 @@ msgstr "Ladattavia tiedostoja ei löytynyt."
 msgid "Title"
 msgstr "Otsikko"
 
+#. #-#-#-#-#  easy-digital-downloads.pot (Easy Digital Downloads 1.7.1)  #-#-#-#-#
+#. Description of the plugin/theme
 #: languages/strings.php:16
 msgid "Serve Digital Downloads Through WordPress"
 msgstr "Digitaalisia tuotteita (latauksia) WordPressin avulla"
 
+#. #-#-#-#-#  easy-digital-downloads.pot (Easy Digital Downloads 1.7.1)  #-#-#-#-#
+#. Author of the plugin/theme
 #: languages/strings.php:17
 msgid "Pippin Williamson"
 msgstr "Pippin Williamson"
@@ -4614,6 +4778,26 @@ msgstr "Välisumma:"
 #: templates/widget-cart-item.php:4
 msgid "remove"
 msgstr "poista"
+
+#. Plugin URI of the plugin/theme
+msgid "http://easydigitaldownloads.com"
+msgstr "http://easydigitaldownloads.com"
+
+#. Author URI of the plugin/theme
+msgid "http://pippinsplugins.com"
+msgstr "http://pippinsplugins.com"
+
+#~ msgid ""
+#~ "In order for <strong>WP Super Cache</strong> to work with Easy Digital "
+#~ "Downloads you must enable dynamic caching in WP Super Cache settings <a "
+#~ "href=\"%s\">here</a>."
+#~ msgstr ""
+#~ "Jos haluat <strong>WP Super Cache</strong> -lisäosan toimivan Easy "
+#~ "Digital Downloads -lisäosan kanssa, ota käyttöön \"dynamic caching\" WP "
+#~ "Super Cache -lisäosan asetuksista <a href=\"%s\">täällä</a>."
+
+#~ msgid "Invalid IPN"
+#~ msgstr "Virheellinen IPN"
 
 #~ msgid "This discount code has been used already"
 #~ msgstr "Alennuskoodi on jo käytetty"
