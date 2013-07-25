@@ -34,7 +34,7 @@ function edd_download_shortcode( $atts, $content = null ) {
 			'color'         => isset( $edd_options[ 'checkout_color' ] ) 	? $edd_options[ 'checkout_color' ] 		: 'blue',
 			'class'         => 'edd-submit'
 		),
-		$atts )
+		$atts, 'purchase_link' )
 	);
 
 	// Override color if color == inherit
@@ -131,7 +131,7 @@ add_shortcode( 'download_cart', 'edd_cart_shortcode' );
 function edd_login_form_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'redirect' => '',
-		), $atts )
+		), $atts, 'edd_login' )
 	);
 	return edd_login_form( $redirect );
 }
@@ -203,7 +203,7 @@ function edd_purchase_collection_shortcode( $atts, $content = null ) {
 			'style'		=> isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button',
 			'color'		=> isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue',
 			'class'		=> 'edd-submit'
-		), $atts )
+		), $atts, 'purchase_collection' )
 	);
 
 	$button_display = implode( ' ', array( $style, $color, $class ) );
@@ -243,7 +243,7 @@ function edd_downloads_query( $atts, $content = null ) {
 			'orderby'          => 'post_date',
 			'order'            => 'DESC',
 			'ids'              => ''
-		), $atts )
+		), $atts, 'downloads' )
 	);
 
 	$query = array(
@@ -420,7 +420,7 @@ add_shortcode( 'downloads', 'edd_downloads_query' );
 function edd_download_price_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'id' => NULL,
-		), $atts )
+		), $atts, 'edd_price' )
 	);
 
 	if ( is_null( $id ) )
@@ -453,7 +453,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 		'payment_key'     => true,
 		'payment_method'  => true,
 		'payment_id'      => true
-	), $atts );
+	), $atts, 'edd_receipt' );
 
 	$session = edd_get_purchase_session();
 	if ( isset( $_GET[ 'payment_key' ] ) ) {
