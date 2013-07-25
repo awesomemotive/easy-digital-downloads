@@ -112,3 +112,8 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 /* General styles
 -------------------------------------------------------------- */
 .edd-select-chosen { width: 300px; }
+
+.chzn-container-multi .chzn-choices{ -webkit-border-radius: 3px; border-radius: 3px; border-color: #dfdfdf; background-image:none; }
+.chzn-container-multi .chzn-choices li.search-field input{ margin:2px; height:auto; border-color: #dfdfdf; }
+.chzn-container .chzn-drop { border-color: #aaa; -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); }
+.chzn-container-active .chzn-choices { -webkit-border-top-left-radius: 3px; border-top-left-radius: 3px; -webkit-border-top-right-radius: 3px; border-top-right-radius: 3px; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-color: #aaa; -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); }
