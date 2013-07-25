@@ -244,6 +244,13 @@ function edd_register_settings() {
 					'type' => 'textarea',
 					'std'  => get_bloginfo( 'admin_email' )
 				),
+				'admin_notice_emails' => array(
+					'id' => 'admin_notice_emails',
+					'name' => __( 'Sale Notification Emails', 'edd' ),
+					'desc' => __( 'Enter the email address(es) that should receive a notification anytime a sale is made, one per line', 'edd' ),
+					'type' => 'textarea',
+					'std'  => get_bloginfo( 'admin_email' )
+				),
 				'disable_admin_notices' => array(
 					'id' => 'disable_admin_notices',
 					'name' => __( 'Disable Admin Notifications', 'edd' ),
