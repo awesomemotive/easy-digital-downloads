@@ -334,7 +334,15 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'delete' => __( 'Delete', 'edd' )
+			'delete' => __( 'Delete', 'edd' ),
+			'set-status-publish' => __( 'Set To Completed', 'edd' ),
+			'set-status-pending' => __( 'Set To Pending', 'edd' ),
+			'set-status-refunded' => __( 'Set To Refunded', 'edd' ),
+			'set-status-revoked' => __( 'Set To Revoked', 'edd' ),
+			'set-status-failed' => __( 'Set To Failed', 'edd' ),
+			'set-status-abandoned' => __( 'Set To Abandoned', 'edd' ),
+			'set-status-preapproval' => __( 'Set To Preapproval', 'edd' ),
+			'set-status-cancelled' => __( 'Set To Cancelled', 'edd' )
 		);
 
 		return apply_filters( 'edd_payments_table_bulk_actions', $actions );
@@ -358,6 +366,39 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			if ( 'delete' === $this->current_action() ) {
 				edd_delete_purchase( $id );
 			}
+
+			if ( 'set-status-publish' === $this->current_action() ) {
+				edd_update_payment_status( $id, 'publish' );
+			}
+
+			if ( 'set-status-pending' === $this->current_action() ) {
+				edd_update_payment_status( $id, 'pending' );
+			}
+
+			if ( 'set-status-refunded' === $this->current_action() ) {
+				edd_update_payment_status( $id, 'refunded' );
+			}
+
+			if ( 'set-status-revoked' === $this->current_action() ) {
+				edd_update_payment_status( $id, 'revoked' );
+			}
+
+			if ( 'set-status-failed' === $this->current_action() ) {
+				edd_update_payment_status( $id, 'failed' );
+			}
+
+			if ( 'set-status-abandoned' === $this->current_action() ) {
+				edd_update_payment_status( $id, 'abandoned' );
+			}
+
+			if ( 'set-status-preapproval' === $this->current_action() ) {
+				edd_update_payment_status( $id, 'preapproval' );
+			}
+
+			if ( 'set-status-cancelled' === $this->current_action() ) {
+				edd_update_payment_status( $id, 'cancelled' );
+			}
+
 			do_action( 'edd_payments_table_do_bulk_action', $id, $this->current_action() );
 		}
 	}
