@@ -200,7 +200,7 @@ class EDD_Welcome {
 				<div class="feature-section col three-col">
 					<div>
 						<h4><?php _e( 'Brought Back [download_history]', 'edd' );?></h4>
-						<p><?php _e( 'The return of the [downloads_history] short code was one of our most common user requests since it was removed. We listened and it is back!', 'edd' );?></p>
+						<p><?php _e( 'The return of the [download_history] short code was one of our most common user requests since it was removed. We listened and it is back!', 'edd' );?></p>
 
 						<h4><?php _e( 'Full Retina Support', 'edd' );?></h4>
 						<p><?php _e( 'Every image and icon used in Easy Digital Downloads has been remade with complete support for high resolution / retina displays.', 'edd' );?></p>
