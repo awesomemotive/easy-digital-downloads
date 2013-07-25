@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/easy-digital-downloads\n"
 "POT-Creation-Date: 2013-07-25 13:46:18+00:00\n"
-"PO-Revision-Date: 2013-07-25 20:05+0100\n"
+"PO-Revision-Date: 2013-07-25 20:21+0100\n"
 "Last-Translator: FxB <traductions@fxbenard.com>\n"
 "Language-Team: FxB <traductions@fxbenard.com>\n"
 "Language: fr_FR\n"
@@ -3462,13 +3462,13 @@ msgid ""
 "rates."
 msgstr ""
 "La position de chaque champ a été soigneusement revue pour s'assurer qu'il "
-"était bien au bon endroit afin de créer le meilleur taux de conversion "
+"soit bien au bon endroit afin de créer le meilleur taux de conversion "
 "possible."
 
 #: includes/admin/welcome.php:160
 msgid "Selling Licenses or Multiple Copies at Once?"
 msgstr ""
-"Vous voulez vendre des licenses ou de multiples copies en une seule fois ?"
+"Vous voulez vendre des licences ou de multiples copies en une seule fois ?"
 
 #: includes/admin/welcome.php:161
 msgid ""
@@ -3599,7 +3599,7 @@ msgstr ""
 
 #: includes/admin/welcome.php:218
 msgid "Settings Import / Export"
-msgstr "Less réglages d'import et d'export"
+msgstr "Les réglages d'import et d'export"
 
 #: includes/admin/welcome.php:219
 msgid ""
