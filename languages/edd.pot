@@ -1,10 +1,10 @@
-# Copyright (C) 2013 
-# This file is distributed under the same license as the  package.
+# Copyright (C) 2013 Easy Digital Downloads
+# This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version:  \n"
-"Report-Msgid-Bugs-To: http://wordpress.org/tag/svn\n"
-"POT-Creation-Date: 2013-07-20 18:18:30+00:00\n"
+"Project-Id-Version: Easy Digital Downloads 1.7.1\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/easy-digital-downloads\n"
+"POT-Creation-Date: 2013-07-25 13:46:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -482,7 +482,6 @@ msgstr ""
 #: includes/admin/discounts/contextual-help.php:38
 #: includes/admin/settings/contextual-help.php:42
 #: includes/admin/settings/display-settings.php:33
-#: includes/admin/settings/settings.php:34
 msgid "General"
 msgstr ""
 
@@ -1147,7 +1146,7 @@ msgid "Downloads Purchased"
 msgstr ""
 
 #: includes/admin/payments/edit-payment.php:72
-#: includes/admin/settings/register-settings.php:1149 includes/scripts.php:220
+#: includes/admin/settings/register-settings.php:1154 includes/scripts.php:220
 #: templates/checkout_cart.php:43
 msgid "Remove"
 msgstr ""
@@ -1716,6 +1715,8 @@ msgstr ""
 msgid "Sales and earnings reports for the current year for all products"
 msgstr ""
 
+#. #-#-#-#-#  easy-digital-downloads.pot (Easy Digital Downloads 1.7.1)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
 #: includes/admin/reporting/pdf-reports.php:39
 #: includes/admin/reporting/pdf-reports.php:40 languages/strings.php:15
 msgid "Easy Digital Downloads"
@@ -1812,7 +1813,6 @@ msgstr ""
 #: includes/admin/reporting/reports.php:61
 #: includes/admin/settings/contextual-help.php:71
 #: includes/admin/settings/display-settings.php:37
-#: includes/admin/settings/settings.php:38
 msgid "Taxes"
 msgstr ""
 
@@ -1891,7 +1891,6 @@ msgstr ""
 #: includes/admin/reporting/reports.php:298
 #: includes/admin/settings/contextual-help.php:57
 #: includes/admin/settings/display-settings.php:35
-#: includes/admin/settings/settings.php:36
 msgid "Emails"
 msgstr ""
 
@@ -1920,7 +1919,6 @@ msgstr ""
 #: includes/admin/settings/contextual-help.php:48
 #: includes/admin/settings/display-settings.php:34
 #: includes/admin/settings/register-settings.php:126
-#: includes/admin/settings/settings.php:35
 msgid "Payment Gateways"
 msgstr ""
 
@@ -1965,7 +1963,6 @@ msgstr ""
 
 #: includes/admin/settings/contextual-help.php:65
 #: includes/admin/settings/display-settings.php:36
-#: includes/admin/settings/settings.php:37
 msgid "Styles"
 msgstr ""
 
@@ -2012,7 +2009,6 @@ msgid "Licenses"
 msgstr ""
 
 #: includes/admin/settings/display-settings.php:44
-#: includes/admin/settings/settings.php:39
 msgid "Misc"
 msgstr ""
 
@@ -2352,7 +2348,7 @@ msgid "Display Tax Rate on Prices"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:330
-msgid "Some contries require a notice when product prices include tax."
+msgid "Some countries require a notice when product prices include tax."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:336
@@ -2434,6 +2430,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:402
+#: includes/admin/welcome.php:154
 msgid "Item Quantities"
 msgstr ""
 
@@ -2603,52 +2600,52 @@ msgid ""
 "The callback function used for the <strong>%s</strong> setting is missing."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1065
+#: includes/admin/settings/register-settings.php:1070
 msgid "Upload File"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1145
+#: includes/admin/settings/register-settings.php:1150
 msgid "Country"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1146
+#: includes/admin/settings/register-settings.php:1151
 #: includes/checkout/template.php:315
 msgid "State / Province"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1147
+#: includes/admin/settings/register-settings.php:1152
 msgid "Apply rate to whole country, regardless of state / province"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1147
+#: includes/admin/settings/register-settings.php:1152
 msgid "Country Wide"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1148
+#: includes/admin/settings/register-settings.php:1153
 msgid "Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1184
-#: includes/admin/settings/register-settings.php:1206
+#: includes/admin/settings/register-settings.php:1189
+#: includes/admin/settings/register-settings.php:1211
 msgid "Apply to whole country"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1187
-#: includes/admin/settings/register-settings.php:1209
+#: includes/admin/settings/register-settings.php:1192
+#: includes/admin/settings/register-settings.php:1214
 msgid "Remove Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1214
+#: includes/admin/settings/register-settings.php:1219
 msgid "Add Tax Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1244
+#: includes/admin/settings/register-settings.php:1249
 msgid "Deactivate License"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1277
-#: includes/admin/settings/register-settings.php:1296
-#: includes/admin/settings/register-settings.php:1317
+#: includes/admin/settings/register-settings.php:1282
+#: includes/admin/settings/register-settings.php:1301
+#: includes/admin/settings/register-settings.php:1322
 msgid "Settings Updated"
 msgstr ""
 
@@ -2820,6 +2817,156 @@ msgstr ""
 
 #: includes/admin/welcome.php:133 includes/admin/welcome.php:253
 msgid "Credits"
+msgstr ""
+
+#: includes/admin/welcome.php:138
+msgid "Simple, Beautiful Checkout"
+msgstr ""
+
+#: includes/admin/welcome.php:144
+msgid "Prettier, More Versatile Styles"
+msgstr ""
+
+#: includes/admin/welcome.php:145
+msgid ""
+"We have completely rewritten the checkout CSS to make it more attractive, "
+"more flexible, and more compatible with a wider variety of themes."
+msgstr ""
+
+#: includes/admin/welcome.php:147
+msgid "Better Checkout Layout"
+msgstr ""
+
+#: includes/admin/welcome.php:148
+msgid ""
+"The position of each field on the checkout has been carefully reconsidered "
+"to ensure it is in the proper location so as to best create high conversion "
+"rates."
+msgstr ""
+
+#: includes/admin/welcome.php:160
+msgid "Selling Licenses or Multiple Copies at Once?"
+msgstr ""
+
+#: includes/admin/welcome.php:161
+msgid ""
+"With the new item quantities feature, your customers can choose how many of "
+"an item they wish to purchase at one time."
+msgstr ""
+
+#: includes/admin/welcome.php:163
+msgid "Makes Bulk Purchases Simple"
+msgstr ""
+
+#: includes/admin/welcome.php:164
+msgid ""
+"No longer is purchasing many copies of the same item difficult or tedious. "
+"Simply enter the quantity and complete the purchase."
+msgstr ""
+
+#: includes/admin/welcome.php:171
+msgid "Direct to PayPal Purchase Buttons"
+msgstr ""
+
+#: includes/admin/welcome.php:177
+msgid "Buy Now"
+msgstr ""
+
+#: includes/admin/welcome.php:178
+msgid ""
+"The Direct purchase option allows you to create Buy Now buttons that take "
+"your customers straight to PayPal, completely bypassing the checkout screen."
+msgstr ""
+
+#: includes/admin/welcome.php:180
+msgid "Higher Turnover Rates"
+msgstr ""
+
+#: includes/admin/welcome.php:181
+msgid ""
+"By sending your customers straight to PayPal, you can dramatically increase "
+"your conversion rates by reducing the amount of friction in the purchase "
+"process."
+msgstr ""
+
+#: includes/admin/welcome.php:187
+msgid "Multiple Discount Codes Per Purchase"
+msgstr ""
+
+#: includes/admin/welcome.php:191
+msgid "Offer Bigger, Better Promotions"
+msgstr ""
+
+#: includes/admin/welcome.php:192
+msgid ""
+"With the Ability to redeem multiple discount codes per purchase, you can "
+"give your customers even more incentives to purchase your products."
+msgstr ""
+
+#: includes/admin/welcome.php:198
+msgid "Additional Updates"
+msgstr ""
+
+#: includes/admin/welcome.php:202
+msgid "Brought Back [download_history]"
+msgstr ""
+
+#: includes/admin/welcome.php:203
+msgid ""
+"The return of the [downloads_history] short code was one of our most common "
+"user requests since it was removed. We listened and it is back!"
+msgstr ""
+
+#: includes/admin/welcome.php:205
+msgid "Full Retina Support"
+msgstr ""
+
+#: includes/admin/welcome.php:206
+msgid ""
+"Every image and icon used in Easy Digital Downloads has been remade with "
+"complete support for high resolution / retina displays."
+msgstr ""
+
+#: includes/admin/welcome.php:210
+msgid "Customer Reports Search"
+msgstr ""
+
+#: includes/admin/welcome.php:211
+msgid ""
+"Want to find out how much a customer has spent, or how many customers you "
+"have with a specific domain's email address? Now you can."
+msgstr ""
+
+#: includes/admin/welcome.php:213
+msgid "Better Admin Notifications"
+msgstr ""
+
+#: includes/admin/welcome.php:214
+msgid ""
+"The admin sale notification emails can now be completely customized in the "
+"same way as purchase receipts. Want to know all details of the customer? Now "
+"you can."
+msgstr ""
+
+#: includes/admin/welcome.php:218
+msgid "Settings Import / Export"
+msgstr ""
+
+#: includes/admin/welcome.php:219
+msgid ""
+"The ability to export and import all store settings makes the process of "
+"moving sites from development to live a lot easier."
+msgstr ""
+
+#: includes/admin/welcome.php:221
+msgid "Improved Performance"
+msgstr ""
+
+#: includes/admin/welcome.php:222
+msgid ""
+"Several key areas (such as Payment History) of Easy Digital Downloads have "
+"been dramatically improved in terms of performance to make your site run "
+"better and faster."
 msgstr ""
 
 #: includes/admin/welcome.php:228
@@ -3204,13 +3351,6 @@ msgid ""
 "\" option in W3 Total Cache settings <a href=\"%s\">here</a>."
 msgstr ""
 
-#: includes/class-edd-cache-helper.php:116
-msgid ""
-"In order for <strong>WP Super Cache</strong> to work with Easy Digital "
-"Downloads you must enable dynamic caching in WP Super Cache settings <a href="
-"\"%s\">here</a>."
-msgstr ""
-
 #: includes/class-edd-cron.php:44
 msgid "Once Weekly"
 msgstr ""
@@ -3219,7 +3359,7 @@ msgstr ""
 msgid "No products found"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:83 includes/shortcodes.php:175
+#: includes/class-edd-html-elements.php:83 includes/shortcodes.php:176
 msgid "No discounts found"
 msgstr ""
 
@@ -3477,8 +3617,9 @@ msgstr ""
 #: includes/gateways/paypal-standard.php:282
 #: includes/gateways/paypal-standard.php:287
 #: includes/gateways/paypal-standard.php:367
-#: includes/gateways/paypal-standard.php:378
-#: includes/gateways/paypal-standard.php:383
+#: includes/gateways/paypal-standard.php:375
+#: includes/gateways/paypal-standard.php:386
+#: includes/gateways/paypal-standard.php:391
 msgid "IPN Error"
 msgstr ""
 
@@ -3488,31 +3629,31 @@ msgid "Invalid IPN verification response. IPN data: %s"
 msgstr ""
 
 #: includes/gateways/paypal-standard.php:367
+msgid "Invalid business email in IPN response. IPN data: %s"
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:375
 msgid "Invalid currency in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:378
+#: includes/gateways/paypal-standard.php:386
 msgid "Invalid payment amount in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:383
+#: includes/gateways/paypal-standard.php:391
 msgid "Invalid purchase key in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:389
+#: includes/gateways/paypal-standard.php:397
 msgid "PayPal Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:410
+#: includes/gateways/paypal-standard.php:418
 msgid "PayPal Payment #%s Refunded"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:411
+#: includes/gateways/paypal-standard.php:419
 msgid "PayPal Refund Transaction ID: %s"
-msgstr ""
-
-#: includes/gateways/paypal.php:267
-msgid "Invalid IPN"
 msgstr ""
 
 #: includes/install.php:52 includes/template-functions.php:131
@@ -3968,11 +4109,11 @@ msgstr ""
 msgid "%2$s submitted. %1$sView %2$s%3$s."
 msgstr ""
 
-#: includes/process-download.php:149
+#: includes/process-download.php:151
 msgid "You do not have permission to download this file"
 msgstr ""
 
-#: includes/process-download.php:150
+#: includes/process-download.php:152
 msgid "Purchase Verification Failed"
 msgstr ""
 
@@ -4136,29 +4277,25 @@ msgstr ""
 msgid "You must have at least one field"
 msgstr ""
 
-#: includes/shortcodes.php:201
+#: includes/shortcodes.php:202
 msgid "Purchase All Items"
 msgstr ""
 
-#: includes/shortcodes.php:402
+#: includes/shortcodes.php:403
 msgctxt "download post type name"
 msgid "No %s found"
 msgstr ""
 
-#: includes/shortcodes.php:446
+#: includes/shortcodes.php:447
 msgid "Sorry, trouble retrieving payment receipt."
 msgstr ""
 
-#: includes/shortcodes.php:551
+#: includes/shortcodes.php:552
 msgid "The passwords you entered do not match. Please try again."
 msgstr ""
 
-#: includes/template-functions.php:81
+#: includes/template-functions.php:85
 msgid "Free"
-msgstr ""
-
-#: includes/template-functions.php:103
-msgid "Includes %1$s&#37; tax"
 msgstr ""
 
 #: includes/template-functions.php:143
@@ -4169,43 +4306,47 @@ msgstr ""
 msgid "Go to Checkout"
 msgstr ""
 
-#: includes/template-functions.php:304
-msgid "Gray"
-msgstr ""
-
-#: includes/template-functions.php:305
-msgid "Blue"
-msgstr ""
-
-#: includes/template-functions.php:306
-msgid "Green"
-msgstr ""
-
-#: includes/template-functions.php:307
-msgid "Yellow"
+#: includes/template-functions.php:154
+msgid "Includes %1$s&#37; tax"
 msgstr ""
 
 #: includes/template-functions.php:308
-msgid "Dark Gray"
+msgid "Gray"
 msgstr ""
 
 #: includes/template-functions.php:309
+msgid "Blue"
+msgstr ""
+
+#: includes/template-functions.php:310
+msgid "Green"
+msgstr ""
+
+#: includes/template-functions.php:311
+msgid "Yellow"
+msgstr ""
+
+#: includes/template-functions.php:312
+msgid "Dark Gray"
+msgstr ""
+
+#: includes/template-functions.php:313
 msgid "Inherit"
 msgstr ""
 
-#: includes/template-functions.php:325
+#: includes/template-functions.php:329
 msgid "Button"
 msgstr ""
 
-#: includes/template-functions.php:326
+#: includes/template-functions.php:330
 msgid "Plain Text"
 msgstr ""
 
-#: includes/template-functions.php:349
+#: includes/template-functions.php:353
 msgid "You have already purchased this item, but you may purchase it again."
 msgstr ""
 
-#: includes/template-functions.php:393
+#: includes/template-functions.php:397
 msgid "No downloads found"
 msgstr ""
 
@@ -4246,10 +4387,14 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
+#. #-#-#-#-#  easy-digital-downloads.pot (Easy Digital Downloads 1.7.1)  #-#-#-#-#
+#. Description of the plugin/theme
 #: languages/strings.php:16
 msgid "Serve Digital Downloads Through WordPress"
 msgstr ""
 
+#. #-#-#-#-#  easy-digital-downloads.pot (Easy Digital Downloads 1.7.1)  #-#-#-#-#
+#. Author of the plugin/theme
 #: languages/strings.php:17
 msgid "Pippin Williamson"
 msgstr ""
@@ -4368,4 +4513,12 @@ msgstr ""
 
 #: templates/widget-cart-item.php:4
 msgid "remove"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://easydigitaldownloads.com"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://pippinsplugins.com"
 msgstr ""
