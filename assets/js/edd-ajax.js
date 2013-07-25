@@ -85,8 +85,6 @@ jQuery(document).ready(function ($) {
             'margin-top' : spinnerHeight / -2
         });
 
-        console.log(spinnerHeight);
-
         var form           = $this.parents('form').last();
         var download       = $this.data('download-id');
         var variable_price = $this.data('variable-price');
