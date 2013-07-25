@@ -323,6 +323,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	$paypal_amount  = $data['mc_gross'];
 	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
+	$business_email = trim( $data['receiver_email'] );
 
 	// Retrieve the total purchase amount (before PayPal)
 	$payment_amount = edd_get_payment_amount( $payment_id );
@@ -360,9 +361,16 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 		update_post_meta( $payment_id, '_edd_payment_meta', $payment_meta );
 	}
 
-	// Verify details
+	// Verify payment recipient
+	if ( strcasecmp( $business_email, trim( $edd_options['paypal_email'] ) ) != 0 ) {
+
+		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid business email in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
+		edd_update_payment_status( $payment_id, 'failed' );
+		return;
+	}
+
+	// Verify payment currency
 	if ( $currency_code != strtolower( edd_get_currency() ) ) {
-		// The currency code is invalid
 
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid currency in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 		edd_update_payment_status( $payment_id, 'failed' );

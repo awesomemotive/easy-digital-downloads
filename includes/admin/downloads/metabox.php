@@ -647,8 +647,8 @@ function edd_render_disable_button( $post_id ) {
 	<p>
 		<label for="_edd_button_behavior">
 			<select name="_edd_button_behavior" id="_edd_button_behavior" >
-				<option value="add_to_cart"<?php selected( $behavior, 'add_to_cart' ); ?>>Add to Cart</option>
-				<option value="direct"<?php selected( $behavior, 'direct' ); ?>>Buy Now</option>
+				<option value="add_to_cart"<?php selected( $behavior, 'add_to_cart' ); ?>><?php _e( 'Add to Cart', 'edd' ); ?></option>
+				<option value="direct"<?php selected( $behavior, 'direct' ); ?>><?php _e( 'Buy Now', 'edd' ); ?></option>
 			</select>
 			<?php _e( 'Select the purchase button behavior', 'edd' ); ?>
 		</label>
