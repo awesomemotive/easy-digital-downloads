@@ -72,6 +72,7 @@ Easy Digital Downloads as been translated into the following languages:
 13. Czech
 14. Japanese
 15. Farsi
+16. Finnish
 
 Would you like to help translate the plugin into more languages? [Contact Pippin](http://easydigitaldownloads.com/contact-developer/).
 
