@@ -75,7 +75,7 @@ jQuery(document).ready(function ($) {
         var container = $this.closest('div');
 
         var spinnerWidth  = $spinner.width();
-            spinnerHeight = $spinner.height();
+        var spinnerHeight = $spinner.height();
 
         // Show the spinner
         $this.attr('data-edd-loading', '');
