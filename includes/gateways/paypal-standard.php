@@ -137,7 +137,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
         		if( edd_use_skus() ) {
 	        		$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
 	    		}
-    	    	$paypal_args['quantity_' . $i ]        = '1';
+    	    	$paypal_args['quantity_' . $i ]        = $item['quantity'];
         		$paypal_args['amount_' . $i ]          = $price;
         		$i++;
 	        }
