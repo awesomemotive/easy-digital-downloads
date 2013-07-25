@@ -334,15 +334,15 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'delete'					=> __( 'Delete',				'edd' ),
-			'set-status-publish'	 	=> __( 'Set To Completed', 		'edd' ),
-			'set-status-pending'	 	=> __( 'Set To Pending',		'edd' ),
-			'set-status-refunded'	 	=> __( 'Set To Refunded',		'edd' ),
-			'set-status-revoked'	 	=> __( 'Set To Revoked',		'edd' ),
-			'set-status-failed'		 	=> __( 'Set To Failed',			'edd' ),
-			'set-status-abandoned'	 	=> __( 'Set To Abandoned',		'edd' ),
-			'set-status-preapproval'	=> __( 'Set To Preapproval',	'edd' ),
-			'set-status-cancelled'	 	=> __( 'Set To Cancelled',		'edd' )
+			'delete'					=> __( 'Delete', 'edd' ),
+			'set-status-publish'	 	=> __( 'Set To Completed', 'edd' ),
+			'set-status-pending'	 	=> __( 'Set To Pending', 'edd' ),
+			'set-status-refunded'	 	=> __( 'Set To Refunded', 'edd' ),
+			'set-status-revoked'	 	=> __( 'Set To Revoked', 'edd' ),
+			'set-status-failed'		 	=> __( 'Set To Failed', 'edd' ),
+			'set-status-abandoned'	 	=> __( 'Set To Abandoned', 'edd' ),
+			'set-status-preapproval'	=> __( 'Set To Preapproval', 'edd' ),
+			'set-status-cancelled'	 	=> __( 'Set To Cancelled', 'edd' )
 		);
 
 		return apply_filters( 'edd_payments_table_bulk_actions', $actions );
