@@ -117,6 +117,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->api = new EDD_API();
 			self::$instance->session = new EDD_Session();
 			self::$instance->html = new EDD_HTML_Elements();
+			self::$instance->cart_saving = new EDD_Cart_Saving();
 		}
 		return self::$instance;
 	}
@@ -196,6 +197,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/cart/class-edd-cart-saving.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-api.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cron.php';
