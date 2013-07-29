@@ -162,7 +162,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin Folder Path
 		if ( ! defined( 'EDD_PLUGIN_DIR' ) )
-		define( 'EDD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+			define( 'EDD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 		// Plugin Folder URL
 		if ( ! defined( 'EDD_PLUGIN_URL' ) )
