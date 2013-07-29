@@ -254,6 +254,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/import-export.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/plugins.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/welcome.php';
