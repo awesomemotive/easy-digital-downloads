@@ -67,7 +67,7 @@ msgstr ""
 
 #: includes/class-edd-api.php:671
 #: includes/class-edd-api.php:765
-msgid "The end date must be later than the date date!"
+msgid "The end date must be later than the starting date!"
 msgstr ""
 
 #: includes/class-edd-api.php:700
