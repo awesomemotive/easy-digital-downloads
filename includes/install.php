@@ -2,8 +2,8 @@
 /**
  * Install Function
  *
- * @package     Easy Digital Downloads
- * @subpackage  Install Function
+ * @package     EDD
+ * @subpackage  Functions/Install
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -15,14 +15,20 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Install
  *
- * Runs on plugin install.
+ * Runs on plugin install by setting up the post types, custom taxonomies,
+ * flushing rewrite rules to initiate the new 'downloads' slug and also
+ * creates the plugin and populates the settings fields for those plugin
+ * pages. After successfull install, the user is redirected to the EDD Welcome
+ * screen.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @global $wpdb
+ * @global $edd_options
+ * @global $wp_version
+ * @return void
  */
 function edd_install() {
-	global $wpdb, $edd_options;
+	global $wpdb, $edd_options, $wp_version;
 
 	// Setup the Downloads Custom Post Type
 	edd_setup_edd_post_types();
@@ -32,6 +38,11 @@ function edd_install() {
 
 	// Clear the permalinks
 	flush_rewrite_rules();
+
+	// Add Upgraded From Option
+	$current_version = get_option( 'edd_version' );
+	if ( $current_version )
+		update_option( 'edd_version_upgraded_from', $current_version );
 
 	// Checks if the purchase page option exists
 	if ( ! isset( $edd_options['purchase_page'] ) ) {
@@ -76,7 +87,7 @@ function edd_install() {
 		$history = wp_insert_post(
 			array(
 				'post_title'     => __( 'Purchase History', 'edd' ),
-				'post_content'   => '[download_history]',
+				'post_content'   => '[purchase_history]',
 				'post_status'    => 'publish',
 				'post_author'    => 1,
 				'post_type'      => 'page',
@@ -94,12 +105,44 @@ function edd_install() {
 
 		update_option( 'edd_settings_general', $options );
 		update_option( 'edd_version', EDD_VERSION );
+
+		// Add a temporary option to note that EDD pages have been created
+		$activation_pages = array_merge( $options, array( 'history_page' => $history ) );
+		set_transient( '_edd_activation_pages', $activation_pages, 30 );
 	}
 
 	// Bail if activating from network, or bulk
 	if ( is_network_admin() || isset( $_GET['activate-multi'] ) )
+		return;
 
 	// Add the transient to redirect
-    set_transient( '_edd_activation_redirect', true, 30 );
+	set_transient( '_edd_activation_redirect', true, 30 );
 }
 register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
+
+/**
+ * Post-installation
+ *
+ * Runs just after plugin installation and exposes the
+ * edd_after_install hook.
+ *
+ * @since 1.7
+ * @return void
+ */
+function edd_after_install() {
+
+	if( ! is_admin() )
+		return;
+
+	$activation_pages = get_transient( '_edd_activation_pages' );
+
+	// Exit if not in admin or the transient doesn't exist
+	if ( false === $activation_pages )
+		return;
+
+	// Delete the transient
+	delete_transient( '_edd_activation_pages' );
+
+	do_action( 'edd_after_install', $activation_pages );
+}
+add_action( 'admin_init', 'edd_after_install' );

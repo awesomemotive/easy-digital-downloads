@@ -1,0 +1,3754 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Easy Digital Downloads\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-01-21 11:56+0100\n"
+"PO-Revision-Date: 2013-03-09 21:06+0100\n"
+"Last-Translator: Jan Čepelka <jan.cepelka@gmail.com>\n"
+"Language-Team: Cilevedome.cz <redakce@cilevedome.cz>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e;_x;_n;esc_attr__;esc_attr_e;esc_html__;"
+"esc_html_e;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;_n:1,2\n"
+"X-Poedit-Basepath: ../\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 1.5.4\n"
+"Language: cz\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: includes/ajax-functions.php:111
+msgid "This discount code has been used already"
+msgstr "Slevový kód již byl použit"
+
+#: includes/ajax-functions.php:132 includes/process-purchase.php:254
+msgid "The discount you entered is invalid"
+msgstr "Slevový kód, který jste zadali je neplatný"
+
+#: includes/class-edd-logging.php:55 includes/admin/reporting/reports.php:36
+msgid "Logs"
+msgstr "Log"
+
+#: includes/download-functions.php:743
+msgid "Sorry but you have hit your download limit for this file."
+msgstr "Je nám líto, limit počtu stažení souboru již byl vyčerpán."
+
+#: includes/download-functions.php:743 includes/error-tracking.php:38
+#: includes/process-download.php:96 includes/process-download.php:111
+#: includes/query-filters.php:43 includes/admin/discounts/edit-discount.php:17
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:132
+msgid "Error"
+msgstr "chyba"
+
+#: includes/formatting.php:67
+#, php-format
+msgid "%1$s Not Available"
+msgstr "%1$s není dostupný"
+
+#: includes/install.php:42 includes/template-functions.php:105
+#: includes/cart/template.php:51 includes/cart/template.php:54
+msgid "Checkout"
+msgstr "Pokladna"
+
+#: includes/install.php:53
+msgid "Purchase Confirmation"
+msgstr "Potvrzení nákupu"
+
+#: includes/install.php:54
+msgid "Thank you for your purchase!"
+msgstr "Děkujeme za váš nákup!"
+
+#: includes/install.php:64 includes/admin/upgrades/upgrade-functions.php:201
+msgid "Transaction Failed"
+msgstr "Transakce selhala."
+
+#: includes/install.php:65 includes/admin/upgrades/upgrade-functions.php:202
+msgid "Your transaction failed, please try again or contact site support."
+msgstr ""
+"Jen nám to líto, ale vaše transakce se nezdařila, prosím, opakujte ji nebo "
+"nás kontaktujte. "
+
+#: includes/install.php:76 includes/widgets.php:195
+msgid "Purchase History"
+msgstr "Historie nákupů"
+
+#: includes/login-register.php:39
+msgid "Log into Your Account"
+msgstr "Přihlašte se, prosím."
+
+#: includes/login-register.php:41 includes/login-register.php:42
+#: includes/checkout/template.php:293 includes/checkout/template.php:294
+#: includes/checkout/template.php:350
+#: templates/shortcode-profile-editor.php:75
+msgid "Username"
+msgstr "Uživatelské jméno"
+
+#: includes/login-register.php:45 includes/checkout/template.php:297
+#: includes/checkout/template.php:298 includes/checkout/template.php:354
+#: templates/shortcode-profile-editor.php:76
+msgid "Password"
+msgstr "Heslo"
+
+#: includes/login-register.php:52 includes/checkout/template.php:288
+msgid "Login"
+msgstr "Login"
+
+#: includes/login-register.php:55
+msgid "Lost Password"
+msgstr "Zapomenuté heslo"
+
+#: includes/login-register.php:56
+msgid "Lost Password?"
+msgstr "Zapomněli jste heslo?"
+
+#: includes/login-register.php:63
+msgid "You are already logged in"
+msgstr "Již jste přihlášen"
+
+#: includes/login-register.php:86 includes/process-purchase.php:456
+msgid "The password you entered is incorrect"
+msgstr "Zadané heslo je nesprávné"
+
+#: includes/login-register.php:89 includes/process-purchase.php:475
+msgid "The username you entered does not exist"
+msgstr "Uživatelské jméno, které jste zadali, neexistuje."
+
+#: includes/misc-functions.php:240
+msgid "US Dollars (&#36;)"
+msgstr "USD"
+
+#: includes/misc-functions.php:241
+msgid "Euros (&euro;)"
+msgstr "Euro"
+
+#: includes/misc-functions.php:242
+msgid "Pounds Sterling (&pound;)"
+msgstr "Britská libra"
+
+#: includes/misc-functions.php:243
+msgid "Australian Dollars (&#36;)"
+msgstr "Australský dolar"
+
+#: includes/misc-functions.php:244
+msgid "Brazilian Real (&#36;)"
+msgstr "Brazilský real"
+
+#: includes/misc-functions.php:245
+msgid "Canadian Dollars (&#36;)"
+msgstr "Kanadský dolar"
+
+#: includes/misc-functions.php:246
+msgid "Czech Koruna"
+msgstr "Česká koruna"
+
+#: includes/misc-functions.php:247
+msgid "Danish Krone"
+msgstr "Dánská koruna"
+
+#: includes/misc-functions.php:248
+msgid "Hong Kong Dollar (&#36;)"
+msgstr "Honkongský dolar"
+
+#: includes/misc-functions.php:249
+msgid "Hungarian Forint"
+msgstr "Maďarský forint"
+
+#: includes/misc-functions.php:250
+msgid "Israeli Shekel"
+msgstr "Izraelský Šekel"
+
+#: includes/misc-functions.php:251
+msgid "Japanese Yen (&yen;)"
+msgstr "Japonský jen"
+
+#: includes/misc-functions.php:252
+msgid "Malaysian Ringgits"
+msgstr "Malajský Ringgits"
+
+#: includes/misc-functions.php:253
+msgid "Mexican Peso (&#36;)"
+msgstr "Mexické peso"
+
+#: includes/misc-functions.php:254
+msgid "New Zealand Dollar (&#36;)"
+msgstr "Novozélandský dolar"
+
+#: includes/misc-functions.php:255
+msgid "Norwegian Krone"
+msgstr "Norská koruna"
+
+#: includes/misc-functions.php:256
+msgid "Philippine Pesos"
+msgstr "Filipínské peso"
+
+#: includes/misc-functions.php:257
+msgid "Polish Zloty"
+msgstr "Polský zlotý"
+
+#: includes/misc-functions.php:258
+msgid "Singapore Dollar (&#36;)"
+msgstr "Singapurský dolar"
+
+#: includes/misc-functions.php:259
+msgid "Swedish Krona"
+msgstr "Švédská koruna"
+
+#: includes/misc-functions.php:260
+msgid "Swiss Franc"
+msgstr "Švýcarský frank"
+
+#: includes/misc-functions.php:261
+msgid "Taiwan New Dollars"
+msgstr "Taiwanský dolar"
+
+#: includes/misc-functions.php:262
+msgid "Thai Baht"
+msgstr "Thajský Bát"
+
+#: includes/misc-functions.php:263
+msgid "Indian Rupee"
+msgstr "Indická rupie"
+
+#: includes/misc-functions.php:264
+msgid "Turkish Lira"
+msgstr "Turecká lira"
+
+#: includes/misc-functions.php:265
+msgid "Iranian Rial"
+msgstr "Iránský rial"
+
+#: includes/misc-functions.php:750
+#, php-format
+msgid ""
+"%1$s is <strong>deprecated</strong> since Easy Digital Downloads version "
+"%2$s! Use %3$s instead."
+msgstr ""
+"%1$s již není <strong>podporován</strong> od Easy Digital Downloads verze "
+"%2$s! Použijte verzi %3$s."
+
+#: includes/misc-functions.php:755
+#, php-format
+msgid ""
+"%1$s is <strong>deprecated</strong> since Easy Digital Downloads version "
+"%2$s with no alternative available."
+msgstr ""
+"%1$s není <strong>podporován</strong>od Easy Digital Downloads verze %2$s a "
+"neexistuje k němu žádná alternativa."
+
+#: includes/plugin-compatibility.php:101
+msgid "No Caching on Checkout?"
+msgstr "Necachovat na Pokladně?"
+
+#: includes/plugin-compatibility.php:102
+msgid ""
+"Check this box in order to append a ?nocache parameter to the checkout URL "
+"to prevent caching plugins from caching the page."
+msgstr ""
+"Zaškrtněte toto políčko, aby se zabránilo cachování URL stránek pluginů."
+
+#: includes/post-types.php:45 includes/post-types.php:83
+msgid "Add New"
+msgstr "Přidat obsah"
+
+#: includes/post-types.php:46
+#, php-format
+msgid "Add New %1$s"
+msgstr "Přidat %1$s"
+
+#: includes/post-types.php:47
+#, php-format
+msgid "Edit %1$s"
+msgstr "Editovat %1$s"
+
+#: includes/post-types.php:48
+#, php-format
+msgid "New %1$s"
+msgstr "Nový %1$s"
+
+#: includes/post-types.php:49
+#, php-format
+msgid "All %2$s"
+msgstr "Obsah %2$s"
+
+#: includes/post-types.php:50
+#, php-format
+msgid "View %1$s"
+msgstr "Prohlédnout %1$s"
+
+#: includes/post-types.php:51
+#, php-format
+msgid "Search %2$s"
+msgstr "Hledat %2$s"
+
+#: includes/post-types.php:52
+#, php-format
+msgid "No %2$s found"
+msgstr "%2$s nenalezen"
+
+#: includes/post-types.php:53
+#, php-format
+msgid "No %2$s found in Trash"
+msgstr "%2$s nebyl v koši nalezen"
+
+#: includes/post-types.php:55
+#, php-format
+msgid "%2$s"
+msgstr "%2$s"
+
+#: includes/post-types.php:81
+msgctxt "post type general name"
+msgid "Payments"
+msgstr "Platby"
+
+#: includes/post-types.php:82
+msgctxt "post type singular name"
+msgid "Payment"
+msgstr "Platba"
+
+#: includes/post-types.php:84
+msgid "Add New Payment"
+msgstr "Přidat platbu"
+
+#: includes/post-types.php:85 includes/admin/payments/edit-payment.php:19
+msgid "Edit Payment"
+msgstr "Edidovat platbu"
+
+#: includes/post-types.php:86
+msgid "New Payment"
+msgstr "Nová platba"
+
+#: includes/post-types.php:87
+msgid "All Payments"
+msgstr "Všechny platby"
+
+#: includes/post-types.php:88
+msgid "View Payment"
+msgstr "Prohlédnout platbu"
+
+#: includes/post-types.php:89
+msgid "Search Payments"
+msgstr "Hledat platby"
+
+#: includes/post-types.php:90
+msgid "No Payments found"
+msgstr "Žádné platby nenalezeny"
+
+#: includes/post-types.php:91
+msgid "No Payments found in Trash"
+msgstr "V koši nebyly nalezeny žádné platby"
+
+#: includes/post-types.php:93 includes/admin/admin-pages.php:30
+#: includes/admin/payments/payments-history.php:36
+msgid "Payment History"
+msgstr "Historie plateb"
+
+#: includes/post-types.php:135
+#: includes/admin/reporting/class-sales-logs-list-table.php:104
+msgid "Download"
+msgstr "Download"
+
+#: includes/post-types.php:136
+msgid "Downloads"
+msgstr "ED Download"
+
+#: includes/post-types.php:182
+#, php-format
+msgid "Enter %s title here"
+msgstr "Vložte %s název"
+
+#: includes/post-types.php:209
+msgctxt "taxonomy general name"
+msgid "Categories"
+msgstr "Kategorie"
+
+#: includes/post-types.php:210
+msgctxt "taxonomy singular name"
+msgid "Category"
+msgstr "Kategorie"
+
+#: includes/post-types.php:211
+msgid "Search Categories"
+msgstr "Prohledat kategorie"
+
+#: includes/post-types.php:212
+msgid "All Categories"
+msgstr "Všechny kategorie"
+
+#: includes/post-types.php:213
+msgid "Parent Category"
+msgstr "Nadřazená kategorie"
+
+#: includes/post-types.php:214
+msgid "Parent Category:"
+msgstr "Nadřazená kategorie:"
+
+#: includes/post-types.php:215
+msgid "Edit Category"
+msgstr "Editovat kategorii"
+
+#: includes/post-types.php:216
+msgid "Update Category"
+msgstr "Upravit kategorii"
+
+#: includes/post-types.php:217
+msgid "Add New Category"
+msgstr "Přidat novou kategorii"
+
+#: includes/post-types.php:218
+msgid "New Category Name"
+msgstr "Nový název kategorie"
+
+#: includes/post-types.php:219 includes/widgets.php:171
+#: includes/admin/downloads/dashboard-columns.php:30
+#: includes/admin/reporting/pdf-reports.php:65
+msgid "Categories"
+msgstr "Kategorie"
+
+#: includes/post-types.php:234
+msgctxt "taxonomy general name"
+msgid "Tags"
+msgstr "Štítky"
+
+#: includes/post-types.php:235
+msgctxt "taxonomy singular name"
+msgid "Tag"
+msgstr "Štítek"
+
+#: includes/post-types.php:236
+msgid "Search Tags"
+msgstr "Prohledat štítky"
+
+#: includes/post-types.php:237
+msgid "All Tags"
+msgstr "Všechny štítky"
+
+#: includes/post-types.php:238
+msgid "Parent Tag"
+msgstr "Nadřazený štítek"
+
+#: includes/post-types.php:239
+msgid "Parent Tag:"
+msgstr "Nadřazený štítek:"
+
+#: includes/post-types.php:240
+msgid "Edit Tag"
+msgstr "Editovat štítek"
+
+#: includes/post-types.php:241
+msgid "Update Tag"
+msgstr "Upravit štítek"
+
+#: includes/post-types.php:242
+msgid "Add New Tag"
+msgstr "Přidat nový štítek"
+
+#: includes/post-types.php:243
+msgid "New Tag Name"
+msgstr "Název nového štítku"
+
+#: includes/post-types.php:244 includes/widgets.php:172
+#: includes/admin/downloads/dashboard-columns.php:31
+#: includes/admin/reporting/pdf-reports.php:66
+msgid "Tags"
+msgstr "Štítky"
+
+#: includes/post-types.php:299 includes/post-types.php:300
+#, php-format
+msgid "%2$s updated. %1$sView %2$s%3$s."
+msgstr "%2$s aktualizován. %1$s zobrazení %2$s%3$s."
+
+#: includes/post-types.php:301
+#, php-format
+msgid "%2$s published. %1$sView %2$s%3$s."
+msgstr "%2$s publikován. %1$s zobrazení %2$s%3$s."
+
+#: includes/post-types.php:302
+#, php-format
+msgid "%2$s saved. %1$sView %2$s%3$s."
+msgstr "%2$s uložen. %1$s zobrazení %2$s%3$s."
+
+#: includes/post-types.php:303
+#, php-format
+msgid "%2$s submitted. %1$sView %2$s%3$s."
+msgstr "%2$s odeslán. %1$s zobrazení %2$s%3$s."
+
+#: includes/process-download.php:96 includes/process-download.php:111
+msgid "Sorry but this file does not exist."
+msgstr "Je nám líto, ale takový soubor neexistuje. "
+
+#: includes/process-download.php:122
+msgid "You do not have permission to download this file"
+msgstr "Nemáte bohužel práva ke stažení souboru"
+
+#: includes/process-download.php:123
+msgid "Purchase Verification Failed"
+msgstr "Ověření nákupu selhalo"
+
+#: includes/process-purchase.php:28
+msgid "Security check failed. Please refresh the page and try again."
+msgstr ""
+"Bezpečnostní kontrola se nezdařila. Prosím znovu načtěte stránku a kontrolu "
+"opakujte."
+
+#: includes/process-purchase.php:32 includes/cart/template.php:111
+msgid "Your cart is empty."
+msgstr "Košík je prázdný."
+
+#: includes/process-purchase.php:206
+msgid "The selected gateway is not active"
+msgstr "Zvolená metoda platby není aktivovaná"
+
+#: includes/process-purchase.php:210
+msgid "No gateway has been selected"
+msgstr "Nebyla vybrána žádná metoda platby"
+
+#: includes/process-purchase.php:273
+msgid "You must agree to the terms of use"
+msgstr "Je třeba potvrdit souhlas s obchodními podmínkami"
+
+#: includes/process-purchase.php:301
+msgid "Please enter a valid email address."
+msgstr "Vložte skutečně platnou emailovou adresu."
+
+#: includes/process-purchase.php:305
+msgid "Please enter your first name."
+msgstr "Prosím, napište vaše křestní jméno."
+
+#: includes/process-purchase.php:319
+msgid "The user information is invalid."
+msgstr "Neplatné uživatelské údaje."
+
+#: includes/process-purchase.php:362
+msgid "Username already taken"
+msgstr "Toto uživatelské jméno již používá jiný uživatel"
+
+#: includes/process-purchase.php:367
+msgid "Invalid username. Only lowercase letters (a-z) and numbers are allowed"
+msgstr "Neplatné uživatelské jméno. Použijte pouze znaky a-z a číslice 0-9."
+
+#: includes/process-purchase.php:369
+msgid "Invalid username"
+msgstr "Neplatné uživatelské jméno"
+
+#: includes/process-purchase.php:377
+msgid "You must register or login to complete your purchase"
+msgstr "Pro dokončení nákupu je třeba se zaregistrovat a přihlásit"
+
+#: includes/process-purchase.php:385 includes/process-purchase.php:505
+msgid "Invalid email"
+msgstr "Neplatný email"
+
+#: includes/process-purchase.php:388
+msgid "Email already used"
+msgstr "Tato emailová adresa již byla pro registraci použita."
+
+#: includes/process-purchase.php:395 includes/process-purchase.php:512
+msgid "Enter an email"
+msgstr "Vložte email"
+
+#: includes/process-purchase.php:403
+msgid "Passwords don't match"
+msgstr "Zadaná hesla se neshodují"
+
+#: includes/process-purchase.php:412 includes/process-purchase.php:471
+msgid "Enter a password"
+msgstr "Zadejte heslo"
+
+#: includes/process-purchase.php:415
+msgid "Enter the password confirmation"
+msgstr "Vložte potvrzovací heslo"
+
+#: includes/process-purchase.php:438
+msgid "You must login or register to complete your purchase"
+msgstr "Pro dokončení objednávky je třeba se přihlásit nebo zaregistrovat"
+
+#: includes/query-filters.php:43
+msgid "You do not have permission to view this file."
+msgstr "Nemáte oprávnění prohlížet tento soubor."
+
+#: includes/register-settings.php:43
+msgid "Test Mode"
+msgstr "Testovací mód"
+
+#: includes/register-settings.php:44
+msgid ""
+"While in test mode no live transactions are processed. To fully use test "
+"mode, you must have a sandbox (test) account for the payment gateway you are "
+"testing."
+msgstr ""
+"Jste-li v testovacím módu, nejsou systémem zpracovávány žádné reálné "
+"objednávky. Abyste otestovali skutečně vše, je třeba použít sandbox (test) "
+"účet a otestovat i funkci platebních bran."
+
+#: includes/register-settings.php:49
+msgid "Checkout Page"
+msgstr "Stránka Pokladna"
+
+#: includes/register-settings.php:50
+msgid "This is the checkout page where buyers will complete their purchases"
+msgstr "Toto je stránka Pokladna, na které kupující dokončují svoji objednávku"
+
+#: includes/register-settings.php:56
+msgid "Success Page"
+msgstr "Dokončeno"
+
+#: includes/register-settings.php:57
+msgid "This is the page buyers are sent to after completing their purchases"
+msgstr "Na tuto stránku jsou kupující nasměrováni po úspěšném nákupu."
+
+#: includes/register-settings.php:63
+msgid "Failed Transaction Page"
+msgstr "Chyba při zpracování objednávky"
+
+#: includes/register-settings.php:64
+msgid ""
+"This is the page buyers are sent to if their transaction is cancelled or "
+"fails"
+msgstr ""
+"Na tuto stránku jsou kupující nasměřováni, když je transakce přeušena nebo "
+"dojde k chybě"
+
+#: includes/register-settings.php:70
+msgid "Currency Settings"
+msgstr "Nastavení měn"
+
+#: includes/register-settings.php:71
+msgid "Configure the currency options"
+msgstr "Nastavení možností měny"
+
+#: includes/register-settings.php:76
+msgid "Currency"
+msgstr "Měna"
+
+#: includes/register-settings.php:77
+msgid ""
+"Choose your currency. Note that some payment gateways have currency "
+"restrictions."
+msgstr ""
+"Vyberte vaši měnu. Pamatujte na to, že některé platební brány lze použít "
+"pouze s určitou měnou."
+
+#: includes/register-settings.php:83
+msgid "Currency Position"
+msgstr "Umístění měny"
+
+#: includes/register-settings.php:84
+msgid "Choose the location of the currency sign."
+msgstr "Vyberte umístění označení měny."
+
+#: includes/register-settings.php:87
+msgid "Before - $10"
+msgstr "Před - $10"
+
+#: includes/register-settings.php:88
+msgid "After - 10$"
+msgstr "Za - 10$"
+
+#: includes/register-settings.php:93
+msgid "Thousands Separator"
+msgstr "Oddělovač tisíců"
+
+#: includes/register-settings.php:94
+msgid "The symbol (usually , or .) to separate thousands"
+msgstr "Symbol (například čárka nebo tečka) k oddělení tisíců "
+
+#: includes/register-settings.php:101
+msgid "Decimal Separator"
+msgstr "Oddělovač desítek"
+
+#: includes/register-settings.php:102
+msgid "The symbol (usually , or .) to separate decimal points"
+msgstr "Symbol (například čárka nebo tečka) k oddělení desítek"
+
+#: includes/register-settings.php:109
+msgid "Usage Tracking"
+msgstr "Použít tracking"
+
+#: includes/register-settings.php:115
+msgid "Enable Tracking"
+msgstr "Povolit tracking"
+
+#: includes/register-settings.php:116
+msgid ""
+"Check this box to allow Easy Digital Downloads to track how the plugin is "
+"used. No personal info is ever collected. This helps us better improve the "
+"plugin."
+msgstr ""
+"Zaškrtnutím tohoto políčka umožníte autorovi sledovat jak je Easy Digital "
+"Downloads používán. Nejsou přitom sledovány žádné osobní údaje. Tato vaše "
+"vstřícnost pomůže autorovi vylepšit systém."
+
+#: includes/register-settings.php:125
+#: includes/admin/settings/contextual-help.php:50
+#: includes/admin/settings/settings.php:35
+msgid "Payment Gateways"
+msgstr "Platební brány"
+
+#: includes/register-settings.php:126
+msgid "Choose the payment gateways you want to enable."
+msgstr "Vyberte platební brány, které budou nabízeny kupujícím"
+
+#: includes/register-settings.php:132
+msgid "Accepted Payment Method Icons"
+msgstr "Ikony akceptovaných platebních metod"
+
+#: includes/register-settings.php:133
+msgid "Display icons for the selected payment methods"
+msgstr "Zobrazovat ikony u vybraných platebních  metod"
+
+#: includes/register-settings.php:133
+msgid ""
+"You will also need to configure your gateway settings if you are accepting "
+"credit cards"
+msgstr ""
+"Potřebujete nastavit parametry platební brány, abyste mohli akceptovat "
+"platební karty"
+
+#: includes/register-settings.php:146
+msgid "PayPal Settings"
+msgstr "PayPal nastavení"
+
+#: includes/register-settings.php:147
+msgid "Configure the PayPal settings"
+msgstr "Konfigurace PayPal nastavení"
+
+#: includes/register-settings.php:152
+msgid "PayPal Email"
+msgstr "PayPal Email"
+
+#: includes/register-settings.php:153
+msgid "Enter your PayPal account's email"
+msgstr "Vyplňte email vašeho PayPal účtu"
+
+#: includes/register-settings.php:159
+msgid "PayPal Page Style"
+msgstr "Vzhled PayPal stránky"
+
+#: includes/register-settings.php:160
+msgid "Enter the name of the page style to use, or leave blank for default"
+msgstr ""
+"Vložte název používaného stylu nebo ponechte pole prázdné (výchozí nastavení)"
+
+#: includes/register-settings.php:166
+msgid "Alternate PayPal Purchase Verification"
+msgstr "Alternativní PayPal ověření transakce"
+
+#: includes/register-settings.php:167
+msgid ""
+"If payments are not getting marked as complete, then check this box. Note, "
+"this requires that buyers return to your site from PayPal."
+msgstr ""
+"Jestliže platby nejsou označovány jako kompletní, zaškrtněte toto pole. "
+"Pamatujte, že kupující se na stránku vašeho obchodu vrací ze stránky PayPal."
+
+#: includes/register-settings.php:172
+msgid "Disable PayPal IPN Verification"
+msgstr "Deaktivujte PayPal IPN verifikaci"
+
+#: includes/register-settings.php:173
+msgid ""
+"If payments are not getting marked as complete, then check this box. This "
+"forces the site to use a slightly less secure method of verifying purchases."
+msgstr ""
+"Pokud nejsou platby označovány jako dokončené, zaškrtněte toto políčko. Bude "
+"nastavena méně zabezpečená varianta ověření nákupu."
+
+#: includes/register-settings.php:182
+msgid "Email Template"
+msgstr "Šablona emailu"
+
+#: includes/register-settings.php:183
+msgid ""
+"Choose a template. Click \"Save Changes\" then \"Preview Purchase Receipt\" "
+"to see the new template."
+msgstr ""
+"Vyberte šablonu. Klikněte na Uložit změny a pak na Náhled Účtenky, abyste "
+"viděli jak nová šablona funguje."
+
+#: includes/register-settings.php:195
+msgid "From Name"
+msgstr "Odesílatel"
+
+#: includes/register-settings.php:196
+msgid ""
+"The name purchase receipts are said to come from. This should probably be "
+"your site or shop name."
+msgstr ""
+"Název prodejce jehož jménem je účtenka zasílána. Pravděpodobně název eshopu "
+"nebo webu."
+
+#: includes/register-settings.php:201
+msgid "From Email"
+msgstr "Email odesílatele"
+
+#: includes/register-settings.php:202
+msgid ""
+"Email to send purchase receipts from. This will act as the \"from\" and "
+"\"reply-to\" address."
+msgstr ""
+"Emailová adresa ze které se email odesílá. Bude nastavena jako adresa Od a "
+"Odpovídat na"
+
+#: includes/register-settings.php:207
+msgid "Purchase Email Subject"
+msgstr "Předmět emailu s účtenkou"
+
+#: includes/register-settings.php:208
+msgid "Enter the subject line for the purchase receipt email"
+msgstr "Vložte text předmětu, který bude obsahovat email s účtenkou"
+
+#: includes/register-settings.php:213 includes/emails/functions.php:49
+msgid "Purchase Receipt"
+msgstr "Účtenka"
+
+#: includes/register-settings.php:214
+msgid ""
+"Enter the email that is sent to users after completing a successful "
+"purchase. HTML is accepted. Available template tags:"
+msgstr ""
+"Vložte text emailu, který kupující obdrží po úspěšném nákupu. Je možné "
+"využít i HTML formátování. Dostupné jsou následující parametry:"
+
+#: includes/register-settings.php:215
+msgid "A list of download links for each download purchased"
+msgstr "Seznam odkazů stažení jednotlivých nákupů"
+
+#: includes/register-settings.php:216
+msgid "A plain-text list of download URLs for each download purchased"
+msgstr ""
+"Neformátovaný text se seznamem URL adres na stažení zakoupených souborů"
+
+#: includes/register-settings.php:217
+msgid "The buyer's first name"
+msgstr "Křestní jméno kupujícího"
+
+#: includes/register-settings.php:218
+msgid "The buyer's full name, first and last"
+msgstr "Celé jméno a příjmení kupujícícho "
+
+#: includes/register-settings.php:219
+msgid "The buyer's user name on the site, if they registered an account"
+msgstr "Uživatelské jméno kupujícího, je-li již zaregistrován"
+
+#: includes/register-settings.php:220
+msgid "The date of the purchase"
+msgstr "Datum nákupu"
+
+#: includes/register-settings.php:221
+msgid "The price of the purchase before taxes"
+msgstr "Cena objednávky bez poplatků"
+
+#: includes/register-settings.php:222
+msgid "The taxed amount of the purchase"
+msgstr "Cena včetně daně"
+
+#: includes/register-settings.php:223
+msgid "The total price of the purchase"
+msgstr "Celková částka objednávky"
+
+#: includes/register-settings.php:224
+msgid "The unique ID number for this purchase receipt"
+msgstr "Identifikace účtenky "
+
+#: includes/register-settings.php:225
+msgid "The method of payment used for this purchase"
+msgstr "Použitá platební metoda nákupu"
+
+#: includes/register-settings.php:226
+msgid "Your site name"
+msgstr "Název obchodu (eshopu)"
+
+#: includes/register-settings.php:231
+msgid "Sale Notification Emails"
+msgstr "Emailová notifikace prodeje"
+
+#: includes/register-settings.php:232
+msgid ""
+"Enter the email address(es) that should receive a notification anytime a "
+"sale is made, one per line"
+msgstr ""
+"Vložte adresu/y kam budou zasílány notifikační emaily o prodejích, další "
+"emailové adresy pište vždy na samostatný řádek "
+
+#: includes/register-settings.php:242
+msgid "Disable Styles"
+msgstr "Vypnout stylování"
+
+#: includes/register-settings.php:243
+msgid "Check this to disable all included styling"
+msgstr "Zaškrtněte, chcete-li zakázat použití všech zahrnutých stylů"
+
+#: includes/register-settings.php:248
+msgid "Buttons"
+msgstr "Tlačítko"
+
+#: includes/register-settings.php:249
+msgid "Options for add to cart and purchase buttons"
+msgstr "Možnosti pro přidání zboží do košíku a nákupní tlačítko"
+
+#: includes/register-settings.php:254
+msgid "Default Button Style"
+msgstr "Výchozí vzhled tlačítka"
+
+#: includes/register-settings.php:255
+msgid "Choose the style you want to use for the buttons."
+msgstr "Vyberte vzhled, který bude použit pro tlačítka."
+
+#: includes/register-settings.php:261
+msgid "Default Button Color"
+msgstr "Výchozí barva tlačítka"
+
+#: includes/register-settings.php:262
+msgid "Choose the color you want to use for the buttons."
+msgstr "Vyberte barvu, kteru chcete použít na tlačítku."
+
+#: includes/register-settings.php:272
+msgid "Enable Taxes"
+msgstr "Povolit počítání daně"
+
+#: includes/register-settings.php:273
+msgid "Check this to enable taxes on purchases."
+msgstr "Zaškrtněte, chcete-li na účtence zobrazit samostatně daň."
+
+#: includes/register-settings.php:278
+msgid "Tax Rate"
+msgstr "Procento daně"
+
+#: includes/register-settings.php:279
+msgid "Enter a percentage, such as 6.5."
+msgstr "Vložte procentuální výši daně, např. 21"
+
+#: includes/register-settings.php:285
+msgid "Apply Taxes to:"
+msgstr "Použít daň na:"
+
+#: includes/register-settings.php:286
+msgid "Who should have tax added to their purchases?"
+msgstr "Kdo má mít daň připočtenu k nákupu?"
+
+#: includes/register-settings.php:289
+msgid "Everyone"
+msgstr "Všichni"
+
+#: includes/register-settings.php:290
+msgid "Local residents only"
+msgstr "Tuzemští nakupující"
+
+#: includes/register-settings.php:295
+msgid "Tax Opt-In"
+msgstr "Daňové Opt-In"
+
+#: includes/register-settings.php:296
+msgid ""
+"Customers will be given a checkbox to click if they reside in your local "
+"area. Please enter directions for them here. Customers <strong>must</strong> "
+"opt into this."
+msgstr ""
+"Zákazníci budou moci zaškrtnout, jestli přebývají ve vaší zemi. Zadejte pro "
+"ně pokyny. Zákazníci to<strong>musí</strong> vyplnit."
+
+#: includes/register-settings.php:302
+msgid "Tax in Prices"
+msgstr "Včetně daně"
+
+#: includes/register-settings.php:303
+msgid "Include taxes in individual product prices?"
+msgstr "Zahrnout daň do jednotlivých cen produktů?"
+
+#: includes/register-settings.php:308
+msgid "Calculate Tax After Discounts?"
+msgstr "Počítat daň z cen po slevě?"
+
+#: includes/register-settings.php:309
+msgid ""
+"Check this if you would like taxes calculated after discounts. By default "
+"taxes are calculated before discounts are applied."
+msgstr ""
+"Zaškrtněte, chcete-li daň vypočítávat z cen po slevě. Jinak bude účtována z "
+"cen před slevou."
+
+#: includes/register-settings.php:318
+msgid "Disable Ajax"
+msgstr "Zakázat Ajax"
+
+#: includes/register-settings.php:319
+msgid "Check this to disable AJAX for the shopping cart."
+msgstr "Zaškrtněte, chcete-li vypnout použití AJAX v nákupním košíku."
+
+#: includes/register-settings.php:324
+msgid "Redirect to Checkout"
+msgstr "Přesměrovat automaticky do pokladny"
+
+#: includes/register-settings.php:325
+msgid "Immediately redirect to checkout after adding an item to the cart?"
+msgstr ""
+"Zobrazit automaticky stránku pokladny hned po přidání zboží do nákupního "
+"košíku?"
+
+#: includes/register-settings.php:330
+msgid "Enable jQuery Validation"
+msgstr "Zapnout jQuery validaci"
+
+#: includes/register-settings.php:331
+msgid "Check this to enable jQuery validation on the checkout form."
+msgstr ""
+"Zaškrtněte, chcete-li kontrolovat vyplnění položek pomocí jQuery "
+"formulářových funkcí."
+
+#: includes/register-settings.php:336
+msgid "Disable Live Credit Card Validation"
+msgstr "Vypnout validaci platebních karet"
+
+#: includes/register-settings.php:337
+msgid ""
+"Live credit card validation means that that card type and number will be "
+"validated as the customer enters the number."
+msgstr ""
+"Validace platebních karet kontroluje, jestli zákazník vyplnil jako znaky "
+"skutečně jen čísla."
+
+#: includes/register-settings.php:342
+msgid "Disable Guest Checkout"
+msgstr "Znemožnit nákup neregistrovaným"
+
+#: includes/register-settings.php:343
+msgid "Require that users be logged-in to purchase files."
+msgstr "Vyžadovat při nákupu přihlášení/registraci kupujícího."
+
+#: includes/register-settings.php:348
+msgid "Show Register / Login Form?"
+msgstr "Zobrazit registrační / přihlašovací stránku?"
+
+#: includes/register-settings.php:349
+msgid ""
+"Display the registration and login forms on the checkout page for non-logged-"
+"in users."
+msgstr ""
+"Zobrazit nepřihlášeným uživatelům na stránce pokladny regsitrační a "
+"přihlašovací formulář."
+
+#: includes/register-settings.php:354
+msgid "Download Link Expiration"
+msgstr "Platnost odkazu na stažení souboru"
+
+#: includes/register-settings.php:355
+msgid ""
+"How long should download links be valid for? Default is 24 hours from the "
+"time they are generated. Enter a time in hours."
+msgstr ""
+"Jak dlouho bude odkaz na stažení platný? Výchozí nastavení umožňuje stažení "
+"24 hodin od vygenerování odkazu. Požadované omezení vložte v hodinách."
+
+#: includes/register-settings.php:361
+msgid "Disable Redownload?"
+msgstr "Znemožnit opětovné stažení"
+
+#: includes/register-settings.php:362
+msgid ""
+"Check this if you do not want to allow users to redownload items from their "
+"purchase history."
+msgstr ""
+"Zaškrtněte, jestliže si nepřejete, aby zákazníci měli možnost stažení "
+"souboru v jejich nákupní historii."
+
+#: includes/register-settings.php:367
+msgid "Terms of Agreement"
+msgstr "Obchodní podmínky"
+
+#: includes/register-settings.php:373
+msgid "Agree to Terms"
+msgstr "Souhlas s podmínkami"
+
+#: includes/register-settings.php:374
+msgid ""
+"Check this to show an agree to terms on the checkout that users must agree "
+"to before purchasing."
+msgstr ""
+"Zaškrtněte, chcete-li vyžadovat souhlas s obchodními podmínkami před "
+"dokončením nákupu."
+
+#: includes/register-settings.php:379
+msgid "Agree to Terms Label"
+msgstr "Nadpis souhlasu s pomínkami"
+
+#: includes/register-settings.php:380
+msgid "Label shown next to the agree to terms check box."
+msgstr ""
+"Text zobrazený vedle zaškrtávacího políčka souhlasu s obchodními podmínkami."
+
+#: includes/register-settings.php:386
+msgid "Agreement Text"
+msgstr "Text obchodních podmínek"
+
+#: includes/register-settings.php:387
+msgid "If Agree to Terms is checked, enter the agreement terms here."
+msgstr ""
+"Pokud je zaškrtnuto zobrazení Souhlasu s podmínkami, zadejte zde text "
+"obchodních podmínek."
+
+#: includes/register-settings.php:392
+msgid "Complete Purchase Text"
+msgstr "Text Dokončené objednávky"
+
+#: includes/register-settings.php:393
+msgid "The button label for completing a purchase."
+msgstr "Text na tlačítko dokončení nákupu."
+
+#: includes/register-settings.php:398
+msgid "Add to Cart Text"
+msgstr "Text pro přidání do košíku"
+
+#: includes/register-settings.php:399
+msgid "Text shown on the Add to Cart Buttons"
+msgstr "Text zobrazovaný na tlačítku Přidat do košíku"
+
+#: includes/register-settings.php:428
+msgid "General Settings"
+msgstr "Základní nastavení"
+
+#: includes/register-settings.php:454
+msgid "Payment Gateway Settings"
+msgstr "Nastavení platebních metod"
+
+#: includes/register-settings.php:480
+msgid "Email Settings"
+msgstr "Nastavení Emailů"
+
+#: includes/register-settings.php:506
+msgid "Style Settings"
+msgstr "Nastavení vzhledu"
+
+#: includes/register-settings.php:532
+msgid "Tax Settings"
+msgstr "Nastavení daní (DPH)"
+
+#: includes/register-settings.php:558
+msgid "Misc Settings"
+msgstr "Ostatní nastavení"
+
+#: includes/register-settings.php:605
+msgid "These settings will let you configure simple tax rules for purchases."
+msgstr ""
+"Tato nastavení vám umožní konfigurovat jednoduchá daňová pravidla nákupu. "
+
+#: includes/register-settings.php:790
+#, php-format
+msgid ""
+"The callback function used for the <strong>%s</strong> setting is missing."
+msgstr ""
+"Funkci Callback použijte pro <strong>%s</strong>, chybí-li správné nastavení."
+
+#: includes/register-settings.php:859
+msgid "Upload File"
+msgstr "Nahrát soubor"
+
+#: includes/register-settings.php:894
+msgid "Settings Updated"
+msgstr "Nastavení uloženo"
+
+#: includes/scripts.php:43
+msgid "You have already added this item to your cart"
+msgstr "Tato položka již byla do košíku přidána"
+
+#: includes/scripts.php:44
+msgid "Your cart is empty"
+msgstr "Košík je prázdný"
+
+#: includes/scripts.php:45
+msgid "Loading"
+msgstr "Nahrávám"
+
+#: includes/scripts.php:72
+msgid "Please select a payment method"
+msgstr "Vyberte, prosím, způsob platby"
+
+#: includes/scripts.php:73
+msgid "Please enter a discount code"
+msgstr "Vložte slevový kód, znáte-li jej"
+
+#: includes/scripts.php:74
+msgid "Discount Applied"
+msgstr "Sleva uplatněna"
+
+#: includes/scripts.php:75
+msgid "Please enter an email address before applying a discount code"
+msgstr "Před uplatněnním slevového kódu, zadejte prosím váš email"
+
+#: includes/scripts.php:76
+msgid "Please enter a username before applying a discount code"
+msgstr ""
+"Před uplatněnním slevového kódu, zadejte prosím vaše přihlašovací jméno"
+
+#: includes/scripts.php:153
+msgid "Add New Download"
+msgstr "Přidat nový obsah ke stažení"
+
+#: includes/scripts.php:154
+msgid "Use This File"
+msgstr "Použít tento soubor"
+
+#: includes/scripts.php:155
+msgid "Sorry, not available for variable priced products."
+msgstr "Je nám líto, nelze použít pro proměnnou cenou zboží."
+
+#: includes/scripts.php:156
+msgid "Are you sure you wish to delete this payment?"
+msgstr "Opravdu si přejete smazat tuto platbu?"
+
+#: includes/scripts.php:157
+msgid "You must have at least one price"
+msgstr "Je nutné zadat alespoň jednu cenu"
+
+#: includes/scripts.php:158
+msgid "You must have at least one file"
+msgstr "Je nutné vložit alespoň jeden soubor"
+
+#: includes/scripts.php:159
+msgid "You must have at least one field"
+msgstr "Je nutné vyplnit alespoň jedno pole"
+
+#: includes/shortcodes.php:31 includes/template-functions.php:57
+#: includes/admin/thickbox.php:69
+#: includes/admin/downloads/dashboard-columns.php:60
+#: includes/checkout/template.php:564
+msgid "Purchase"
+msgstr "Koupit"
+
+#: includes/shortcodes.php:195
+msgid "Purchase All Items"
+msgstr "Zakoupit všechny položky"
+
+#: includes/shortcodes.php:390
+#, php-format
+msgctxt "download post type name"
+msgid "No %s found"
+msgstr "Bohužel %s nebyl nenalezen"
+
+#: includes/shortcodes.php:434
+msgid "Sorry, trouble retrieving payment receipt."
+msgstr "Omlouváme se, ale nepodařilo přijmout potvrzení o platbě."
+
+#: includes/shortcodes.php:533
+msgid "The passwords you entered do not match. Please try again."
+msgstr "Zadaná hesla se neshodují. Zadejte hesla ještě jednou."
+
+#: includes/template-functions.php:49
+#, php-format
+msgid ""
+"No checkout page has been configured. Visit <a href=\"%s\">Settings</a> to "
+"set one."
+msgstr ""
+"Ještě jste nenastavili parametry strany Pokladna. Udělejte to na stránce <a "
+"href=\"%s\">Settings</a>."
+
+#: includes/template-functions.php:116
+msgid "Item successfully added to your cart."
+msgstr "Položka byla přidána do košíku."
+
+#: includes/template-functions.php:269
+msgid "Gray"
+msgstr "šedá"
+
+#: includes/template-functions.php:270
+msgid "Blue"
+msgstr "modrá"
+
+#: includes/template-functions.php:271
+msgid "Green"
+msgstr "zelená"
+
+#: includes/template-functions.php:272
+msgid "Yellow"
+msgstr "žlutá"
+
+#: includes/template-functions.php:273
+msgid "Dark Gray"
+msgstr "tmavě šedá"
+
+#: includes/template-functions.php:292
+msgid "Button"
+msgstr "Tlačítko"
+
+#: includes/template-functions.php:293
+msgid "Plain Text"
+msgstr "Prostý text"
+
+#: includes/template-functions.php:314
+msgid "You have already purchased this item, but you may purchase it again."
+msgstr ""
+"Tuto položku jste již v minulosti zakoupil, přesto je možné si ji opět "
+"objednat."
+
+#: includes/template-functions.php:363
+msgid "No downloads found"
+msgstr "Nenalezen žádný obsah ke stažení"
+
+#: includes/widgets.php:41
+msgid "Downloads Cart"
+msgstr "Košík"
+
+#: includes/widgets.php:41
+msgid "Display the downloads shopping cart"
+msgstr "Zobrazit obsah nákupního košíku"
+
+#: includes/widgets.php:84 includes/widgets.php:164
+msgid "Title:"
+msgstr "Nadpis:"
+
+#: includes/widgets.php:89
+msgid "Show Quantity:"
+msgstr "Počet:"
+
+#: includes/widgets.php:114
+msgid "Downloads Categories / Tags"
+msgstr "Kategorie / štítky obsahu ke stažení"
+
+#: includes/widgets.php:114
+msgid "Display the downloads categories or tags"
+msgstr "Zobrazí kategorie a štítky obsahu ke stažení"
+
+#: includes/widgets.php:169
+msgid "Taxonomy:"
+msgstr "Taxonomie:"
+
+#: includes/widgets.php:195
+msgid "Display a user's purchase history"
+msgstr "Zobrazit zákaznickou historii nákupů"
+
+#: includes/widgets.php:234 templates/history-downloads.php:58
+#: templates/history-purchases.php:57 templates/shortcode-receipt.php:111
+msgid "No downloadable files found."
+msgstr "Nebyly nalazeny žádné soubory ke stažení."
+
+#: includes/widgets.php:261
+msgid "Title"
+msgstr "Nadpis"
+
+#: includes/admin/add-ons.php:47
+msgid "Add Ons for Easy Digital Downloads"
+msgstr "Přidat doplňky Easy Digital Download"
+
+#: includes/admin/add-ons.php:48
+msgid "Browse All Extensions"
+msgstr "Procházet všechna rozšíření"
+
+#: includes/admin/add-ons.php:50
+msgid "These add-ons extend the functionality of Easy Digital Downloads."
+msgstr ""
+"Tato rozšíření přidávají další funkce do eshopu Easy Digital Downloads."
+
+#: includes/admin/add-ons.php:77
+msgid ""
+"There was an error retrieving the extensions list from the server. Please "
+"try again later."
+msgstr ""
+"Při načítání seznamu doplňků ze serveru došlo k chybě. Zkuste znovu načíst "
+"obsah stránky."
+
+#: includes/admin/admin-notices.php:33
+msgid "Discount code updated."
+msgstr "Kód slevy byl změněn."
+
+#: includes/admin/admin-notices.php:37
+msgid "There was a problem updating your discount code, please try again."
+msgstr ""
+"Vyskytl se problém pri aktualizaci slevového kódu, opakujte svůj poslední "
+"úkon."
+
+#: includes/admin/admin-notices.php:41
+msgid "The payment has been deleted."
+msgstr "Platba byla odstraněna."
+
+#: includes/admin/admin-notices.php:45
+msgid "The purchase receipt has been resent."
+msgstr "Účtenka byla znovu zaslána."
+
+#: includes/admin/admin-notices.php:62
+msgid ""
+"There seems to be an issue with the server. Please try again in a few "
+"minutes."
+msgstr ""
+"Zdá se, že je aktuálně problém se serverem. Zkuste to, prosím, znovu za "
+"několik minut."
+
+#: includes/admin/admin-pages.php:31 includes/admin/welcome.php:190
+#: includes/admin/discounts/discount-codes.php:38
+msgid "Discount Codes"
+msgstr "Slevové kódy"
+
+#: includes/admin/admin-pages.php:32
+msgid "Earnings and Sales Reports"
+msgstr "Zisk a zprávy o prodejích"
+
+#: includes/admin/admin-pages.php:32
+#: includes/admin/reporting/contextual-help.php:44
+#: includes/admin/reporting/reports.php:34
+msgid "Reports"
+msgstr "Reporty"
+
+#: includes/admin/admin-pages.php:33
+msgid "Easy Digital Download Settings"
+msgstr "Konfigurace Easy Digital Download"
+
+#: includes/admin/admin-pages.php:33
+msgid "Settings"
+msgstr "Konfigurace"
+
+#: includes/admin/admin-pages.php:34
+msgid "Easy Digital Download System Info"
+msgstr "Systémové informace Easy Digital Download"
+
+#: includes/admin/admin-pages.php:34 includes/admin/welcome.php:166
+msgid "System Info"
+msgstr "Systémové informace"
+
+#: includes/admin/admin-pages.php:35
+msgid "Easy Digital Download Add Ons"
+msgstr "Doplňky Easy Digital Download"
+
+#: includes/admin/admin-pages.php:35
+msgid "Add Ons"
+msgstr "Doplňky EDD"
+
+#: includes/admin/admin-pages.php:36
+msgid "EDD Upgrades"
+msgstr "EDD aktualizace"
+
+#: includes/admin/dashboard-widgets.php:28
+msgid "Easy Digital Downloads Sales Summary"
+msgstr "EDD prodejní přehled"
+
+#: includes/admin/dashboard-widgets.php:59
+msgid "Current Month"
+msgstr "Aktuální měsíc"
+
+#: includes/admin/dashboard-widgets.php:64
+#: includes/admin/dashboard-widgets.php:79
+#: includes/admin/downloads/dashboard-columns.php:34
+#: includes/admin/reporting/class-download-reports-table.php:79
+#: includes/admin/reporting/graphing.php:131
+#: includes/admin/reporting/pdf-reports.php:195
+#: includes/admin/reporting/reports.php:60
+msgid "Earnings"
+msgstr "Příjmy"
+
+#: includes/admin/dashboard-widgets.php:69
+#: includes/admin/dashboard-widgets.php:83
+msgid "Sale"
+msgid_plural "Sales"
+msgstr[0] "Prodej"
+msgstr[1] "Prodeje"
+
+#: includes/admin/dashboard-widgets.php:73
+#: includes/admin/reporting/graphing.php:229
+msgid "Last Month"
+msgstr "Minulý měsíc"
+
+#: includes/admin/dashboard-widgets.php:87
+msgid "Totals"
+msgstr "Celkem"
+
+#: includes/admin/dashboard-widgets.php:92
+msgid "Total Earnings"
+msgstr "Celkový zisk"
+
+#: includes/admin/dashboard-widgets.php:96
+msgid "Total Sales"
+msgstr "Celkem prodejů"
+
+#: includes/admin/dashboard-widgets.php:102
+msgid "Lifetime Best Selling"
+msgstr "Celkově nejprodávanější"
+
+#: includes/admin/dashboard-widgets.php:119
+msgid "Recent Purchases"
+msgstr "Poslední nákupy"
+
+#: includes/admin/dashboard-widgets.php:128
+#: includes/admin/payments/class-payments-table.php:256
+#, php-format
+msgid "Purchase Details for Payment #%s"
+msgstr "Nákupní podrobnosti o platbě  #%s"
+
+#: includes/admin/dashboard-widgets.php:128
+#: includes/admin/payments/class-payments-table.php:256
+msgid "View Order Details"
+msgstr "Zobrazit podrobnosti objednávky"
+
+#: includes/admin/dashboard-widgets.php:136
+#: includes/admin/payments/class-payments-table.php:268
+msgid "Purchased File"
+msgstr "Zakoupený soubor"
+
+#: includes/admin/dashboard-widgets.php:136
+#: includes/admin/payments/class-payments-table.php:268
+msgid "Purchased Files"
+msgstr "Zakoupené soubory"
+
+#: includes/admin/dashboard-widgets.php:162
+#: includes/admin/payments/class-payments-table.php:307
+msgid "Date and Time:"
+msgstr "Datum a čas:"
+
+#: includes/admin/dashboard-widgets.php:163
+#: includes/admin/payments/class-payments-table.php:308
+msgid "Discount used:"
+msgstr "Použitá sleva:"
+
+#: includes/admin/dashboard-widgets.php:163
+#: includes/admin/export-functions.php:118
+#: includes/admin/export-functions.php:131
+#: includes/admin/payments/class-payments-table.php:308
+msgid "none"
+msgstr "žádná"
+
+#: includes/admin/dashboard-widgets.php:164
+#: includes/admin/payments/class-payments-table.php:309
+msgid "Total:"
+msgstr "Celkem:"
+
+#: includes/admin/dashboard-widgets.php:167
+#: includes/admin/payments/class-payments-table.php:312
+msgid "Buyer's Personal Details:"
+msgstr "Osobní údaje kupujícího:"
+
+#: includes/admin/dashboard-widgets.php:169
+#: includes/admin/payments/class-payments-table.php:314
+msgid "Name:"
+msgstr "Jméno:"
+
+#: includes/admin/dashboard-widgets.php:170
+#: includes/admin/payments/class-payments-table.php:315
+msgid "Email:"
+msgstr "Email:"
+
+#: includes/admin/dashboard-widgets.php:175 includes/admin/welcome.php:175
+#: includes/admin/payments/class-payments-table.php:320
+#: includes/admin/payments/edit-payment.php:51
+msgid "Payment Notes"
+msgstr "Poznámky k platbě"
+
+#: includes/admin/dashboard-widgets.php:185
+#: includes/admin/payments/class-payments-table.php:330
+#: includes/admin/payments/edit-payment.php:63
+msgid "EDD Bot"
+msgstr "EDD Bot"
+
+#: includes/admin/dashboard-widgets.php:191
+#: includes/admin/payments/class-payments-table.php:336
+#: includes/admin/payments/edit-payment.php:69
+msgid "No payment notes"
+msgstr "Žádné poznámky o platbě"
+
+#: includes/admin/dashboard-widgets.php:199
+#: includes/admin/payments/class-payments-table.php:344
+msgid "Payment Method:"
+msgstr "Platební metoda:"
+
+#: includes/admin/dashboard-widgets.php:204
+#: includes/admin/payments/class-payments-table.php:349
+msgid "Purchase Key"
+msgstr "nákupní klíč"
+
+#: includes/admin/dashboard-widgets.php:207
+#: includes/admin/payments/class-payments-table.php:352
+#: includes/admin/payments/edit-payment.php:122
+msgid "Close"
+msgstr "Zavřít"
+
+#: includes/admin/export-functions.php:49
+#: includes/admin/discounts/class-discount-codes-table.php:135
+#: includes/admin/payments/class-payments-table.php:149
+msgid "ID"
+msgstr "ID"
+
+#: includes/admin/export-functions.php:50
+#: includes/admin/export-functions.php:181
+#: includes/admin/payments/class-payments-table.php:150
+#: includes/admin/reporting/class-customer-reports-table.php:99
+#: includes/checkout/template.php:307 includes/checkout/template.php:308
+msgid "Email"
+msgstr "Email"
+
+#: includes/admin/export-functions.php:51 includes/checkout/template.php:138
+#: includes/checkout/template.php:139 includes/checkout/template.php:311
+#: includes/checkout/template.php:312
+#: templates/shortcode-profile-editor.php:23
+msgid "First Name"
+msgstr "Křestní jméno"
+
+#: includes/admin/export-functions.php:52 includes/checkout/template.php:143
+#: includes/checkout/template.php:316
+#: templates/shortcode-profile-editor.php:26
+msgid "Last Name"
+msgstr "Příjmení"
+
+#: includes/admin/export-functions.php:53 templates/shortcode-receipt.php:75
+msgid "Products"
+msgstr "Produkty"
+
+#: includes/admin/export-functions.php:54
+msgid "Discounts,"
+msgstr "Slevy, "
+
+#: includes/admin/export-functions.php:55
+msgid "Amount paid"
+msgstr "Vyplacená částka"
+
+#: includes/admin/export-functions.php:57
+msgid "Amount taxed"
+msgstr "Daň"
+
+#: includes/admin/export-functions.php:59
+msgid "Payment method"
+msgstr "Platební metoda"
+
+#: includes/admin/export-functions.php:60
+msgid "Key"
+msgstr "Klíč"
+
+#: includes/admin/export-functions.php:61
+#: includes/admin/export-functions.php:237
+#: includes/admin/downloads/dashboard-columns.php:36
+#: includes/admin/payments/class-payments-table.php:153
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:132
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:136
+#: includes/admin/reporting/class-sales-logs-list-table.php:107
+#: templates/history-purchases.php:11 templates/shortcode-receipt.php:27
+msgid "Date"
+msgstr "Datum"
+
+#: includes/admin/export-functions.php:62
+#: includes/admin/payments/class-payments-table.php:154
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:128
+#: includes/admin/reporting/class-sales-logs-list-table.php:103
+msgid "User"
+msgstr "Zákazník"
+
+#: includes/admin/export-functions.php:63
+#: includes/admin/discounts/class-discount-codes-table.php:143
+#: includes/admin/discounts/edit-discount.php:105
+#: includes/admin/payments/class-payments-table.php:155
+msgid "Status"
+msgstr "Stav"
+
+#: includes/admin/export-functions.php:139
+#: includes/admin/payments/class-payments-table.php:374
+#: includes/admin/payments/class-payments-table.php:376
+msgid "guest"
+msgstr "návštěvník"
+
+#: includes/admin/export-functions.php:146
+msgid "No payments recorded yet"
+msgstr "Dosud neevidujeme žádné platby"
+
+#: includes/admin/export-functions.php:182
+#: includes/admin/discounts/add-discount.php:23
+#: includes/admin/discounts/class-discount-codes-table.php:136
+#: includes/admin/discounts/edit-discount.php:30
+#: includes/admin/downloads/dashboard-columns.php:29
+#: includes/admin/reporting/class-customer-reports-table.php:98
+#: templates/shortcode-receipt.php:79
+msgid "Name"
+msgstr "Název"
+
+#: includes/admin/export-functions.php:183
+msgid "Total Purchases"
+msgstr "Nákupy celkem"
+
+#: includes/admin/export-functions.php:184
+msgid "Total Purchased"
+msgstr "Celkem zakoupeno"
+
+#: includes/admin/export-functions.php:190
+#: includes/admin/reporting/class-customer-reports-table.php:159
+msgid "Guest"
+msgstr "Návštěvník"
+
+#: includes/admin/export-functions.php:199
+#: includes/admin/export-functions.php:294
+msgid "Export not allowed for non-administrators."
+msgstr "Export je dostupný pouze administrátorům."
+
+#: includes/admin/export-functions.php:238
+msgid "Downloaded by"
+msgstr "Staženo z"
+
+#: includes/admin/export-functions.php:239
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:131
+msgid "IP Address"
+msgstr "IP adresa"
+
+#: includes/admin/export-functions.php:240
+msgid "Product"
+msgstr "Produkt"
+
+#: includes/admin/export-functions.php:241
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:130
+msgid "File"
+msgstr "Soubor"
+
+#: includes/admin/system-info.php:37
+msgid "System Information"
+msgstr "Systémové informace"
+
+#: includes/admin/system-info.php:39
+msgid ""
+"To copy the system info, click below then press Ctrl + C (PC) or Cmd + C "
+"(Mac)."
+msgstr ""
+"Pro zkopírování systémových informací, klikněte níže a stiskněte na PC CTRL"
+"+C nebo na Mac Cmd+C."
+
+#: includes/admin/system-info.php:79
+msgid "On"
+msgstr "Zapnout"
+
+#: includes/admin/system-info.php:79
+msgid "Off"
+msgstr "Vypnout"
+
+#: includes/admin/system-info.php:81
+msgid "Your server supports fsockopen."
+msgstr "Server/hosting podporuje fsockopen."
+
+#: includes/admin/system-info.php:81
+msgid "Your server does not support fsockopen."
+msgstr "Server/hosting nepodporuje fsockopen."
+
+#: includes/admin/system-info.php:115
+msgid "Download System Info File"
+msgstr "Stáhnout Info soubor o systému"
+
+#: includes/admin/thickbox.php:34 includes/admin/thickbox.php:130
+#, php-format
+msgid "Insert %s"
+msgstr "Vložit %s"
+
+#: includes/admin/thickbox.php:35 includes/admin/thickbox.php:38
+msgid "Insert Download"
+msgstr "Vložit obsah ke stažení"
+
+#: includes/admin/thickbox.php:73
+msgid "You must choose a download"
+msgstr "Je třeba vybrat obsah ke stažení"
+
+#: includes/admin/thickbox.php:95
+#, php-format
+msgid "Use the form below to insert the short code for purchasing a %s"
+msgstr "Použijte níže uvedený formulář pro vložení krátkého kódu nákupu %s"
+
+#: includes/admin/thickbox.php:98
+#, php-format
+msgid "Choose a %s"
+msgstr "Vyberte %s"
+
+#: includes/admin/thickbox.php:107
+msgid "Choose a style"
+msgstr "Vyberte styl vzhledu"
+
+#: includes/admin/thickbox.php:118
+msgid "Choose a button color"
+msgstr "Vyberte barvu tlačítka"
+
+#: includes/admin/thickbox.php:127
+msgid "Link text . . ."
+msgstr "Text odkazu . . ."
+
+#: includes/admin/thickbox.php:131
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: includes/admin/welcome.php:57 includes/admin/welcome.php:58
+#: includes/admin/welcome.php:66 includes/admin/welcome.php:67
+msgid "Welcome to Easy Digital Downloads"
+msgstr "Vítáme vás v Easy Digital Downloads"
+
+#: includes/admin/welcome.php:124 includes/admin/welcome.php:231
+#, php-format
+msgid "Welcome to Easy Digital Downloads %s"
+msgstr "Vítáme vás v Easy Digital Downloads %s"
+
+#: includes/admin/welcome.php:125 includes/admin/welcome.php:232
+#, php-format
+msgid ""
+"Thank you for updating to the latest version! Easy Digital Downloads %s is "
+"ready to make your online store faster, safer and better!"
+msgstr ""
+"Děkujem, že jste aktualizovali systém EDD na jeho aktuální verzi. Easy "
+"Digital Downloads %s je nyní připraveno vám poskytovat služby ještě "
+"rychleji, bezpečněji a lépe!"
+
+#: includes/admin/welcome.php:126 includes/admin/welcome.php:233
+#, php-format
+msgid "Version %s"
+msgstr "Verze %s"
+
+#: includes/admin/welcome.php:130 includes/admin/welcome.php:237
+msgid "What's New"
+msgstr "Novinky"
+
+#: includes/admin/welcome.php:132 includes/admin/welcome.php:239
+msgid "Credits"
+msgstr "Poděkování"
+
+#: includes/admin/welcome.php:137
+msgid "Log Viewing Interface"
+msgstr "Log prohlížení "
+
+#: includes/admin/welcome.php:140
+#, php-format
+msgid "Downloads &rarr; Reports &rarr; <a href=\"%s\">Logs</a>"
+msgstr "Stažení &rarr; Reporty &rarr; <a href=\"%s\">Log soubory</a>"
+
+#: includes/admin/welcome.php:141
+msgid ""
+"You can now view detailed log entries to see exactly what is going on behind "
+"the scenes of your store."
+msgstr ""
+"Nyní si můžete zobrazit podrobné záznamy logu a  vidět, co se děje v "
+"zákulisí vašeho obchodu."
+
+#: includes/admin/welcome.php:143
+msgid "File Download Logs"
+msgstr "Logy stažení souborů"
+
+#: includes/admin/welcome.php:144
+msgid ""
+"See the exact files that are getting downloaded, who is downloading them, "
+"and even the IP address they are getting downloaded from."
+msgstr ""
+"Uvidíte jaké soubory jsou stahovány, kdo je stahoval, a to dokonce včetně  "
+"IP adresy, ze které byly soubory staženy."
+
+#: includes/admin/welcome.php:146
+msgid "Download Sale Logs"
+msgstr "Prodejní log stažených souborů"
+
+#: includes/admin/welcome.php:147
+msgid ""
+"You can see exactly which products have been purchased, when they were "
+"purchased, and who purchased them."
+msgstr ""
+"Můžete přesně zjistit, jaké výrobky byly zakoupeny, kdy byly koupeny, a kdo "
+"je zakoupil."
+
+#: includes/admin/welcome.php:149
+msgid "Payment Gateway Error Logs"
+msgstr "Log chybových hlášení platební brány"
+
+#: includes/admin/welcome.php:150
+msgid ""
+"Track declined credit cards and other payment failures to help keep an eye "
+"on shop activity."
+msgstr ""
+"Záznamy o odmítnutých platebních kartách a další selhání, které vám pomohou "
+"odhalit problémy spojené s fungováním obchodu."
+
+#: includes/admin/welcome.php:157
+msgid "Improved Purchase Summaries"
+msgstr "Shrnutí o nákupech"
+
+#: includes/admin/welcome.php:160
+msgid "Receipt Short Code"
+msgstr "Účtenka"
+
+#: includes/admin/welcome.php:161
+msgid ""
+"The new <code>[edd_receipt]</code> short code will display a detailed break "
+"down of customer's purchases after completing a payment."
+msgstr ""
+"Nová <code>[edd_receipt]</code> účtenka bude zobrazena v detailním přehledu "
+"nákupů zákazníka vždy po obdržení platby."
+
+#: includes/admin/welcome.php:169
+#, php-format
+msgid "Downloads &rarr; <a href=\"%s\">System Info</a>"
+msgstr "Stažení &rarr; <a href=\"%s\">systémových informací</a>"
+
+#: includes/admin/welcome.php:170
+msgid ""
+"If you are having problems with any aspect, giving the system info download "
+"file to support will help us assist you in getting issues resolved."
+msgstr ""
+"Pokud máte problémy s funkcemi EDD, vždy si stáhněte svůj  systémový info "
+"soubor a zašlete jej autorovi Easy Digital Download na jeho zákaznickou "
+"podporu, usnadní to odhalení příčiny problémů."
+
+#: includes/admin/welcome.php:178
+msgid "Track Changes to Purchases"
+msgstr "Sledovat změny nákupů"
+
+#: includes/admin/welcome.php:179
+msgid ""
+"The new notes feature for payments makes it easy for store managers to leave "
+"notes on individual purchases."
+msgstr ""
+"Nová funkce poznámek pro platby usnadňuje správu eshopu tím, že umožňuje k "
+"jednotlivým nákupům přidat vlastní poznámky."
+
+#: includes/admin/welcome.php:181
+#, php-format
+msgid ""
+"Simply go to Downloads &rarr; <a href=\"%s\">Payment History</a> and click "
+"<em>Edit</em> on any payment. From this screen you can now post notes to "
+"payments."
+msgstr ""
+"Jednoduše běžte do sekce Downloads &rarr; <a href=\"%s\">Historie plateb</a> "
+"a klikněte na <em>Editovat</em> u kterékoliv platby. Z této obrazovky můžete "
+"nyní snadno doplňovat poznámky k platbám."
+
+#: includes/admin/welcome.php:186
+msgid "Under the Hood"
+msgstr "Pod pokličkou"
+
+#: includes/admin/welcome.php:191
+msgid ""
+"Discount codes are now stored as a custom post type and will allow for "
+"dramatically more powerful coupons in coming versions."
+msgstr ""
+"Slevové kódy jsou nyní uloženy jako samostatný uživatelský obsah a umožní "
+"zvýšení praktického využití kuponů v budoucích verzích EDD."
+
+#: includes/admin/welcome.php:193
+msgid "Plugin Directory Structure"
+msgstr "Struktura složek pluginů"
+
+#: includes/admin/welcome.php:194
+msgid ""
+"We have significantly improved the file / folder organized of the plugin, "
+"making it easier for developers to get involved in development."
+msgstr ""
+"Výrazně jsme zlepšili strukturu souborů / složek pluginu, abychom usnadnili "
+"vývojářům zapojení se do vývoje."
+
+#: includes/admin/welcome.php:198
+msgid "File Optimization"
+msgstr "Optimalizace souborů"
+
+#: includes/admin/welcome.php:199
+msgid ""
+"Every file in the plugin has been optimized to help slim down the overall "
+"size of Easy Digital Downloads."
+msgstr ""
+"Každý soubor pluginu byl optimalizován tak, aby se zmenšila celková velikost "
+"Easy Digital Downloads."
+
+#: includes/admin/welcome.php:201
+msgid "Better AJAX Functionality"
+msgstr "Lepší AJAX funkce"
+
+#: includes/admin/welcome.php:202
+msgid ""
+"The ajaxed functions, such as payment gateway loading, have been "
+"significantly improved to make them faster."
+msgstr ""
+"AJAX funkce, jako je napojení na platební brány, byly výrazně vylepšeny, aby "
+"došlo především k jejich zrychlení."
+
+#: includes/admin/welcome.php:206
+msgid "WordPress 3.5-ready"
+msgstr "WordPress 3.5 komtatibilní"
+
+#: includes/admin/welcome.php:207
+msgid ""
+"Every aspect of the plugin has been fully tested with WordPress 3.5 to "
+"ensure absolute compatibility."
+msgstr ""
+"Každá funkce pluginu byla důkladně testována s WordPress verze 3.5, abychom "
+"vám zajistili plnou kompatibilitu."
+
+#: includes/admin/welcome.php:209
+msgid "Retina Ready"
+msgstr "Umožnuje použití s Retina displeji"
+
+#: includes/admin/welcome.php:210
+msgid "All graphics have been optimized and tested with retina displays."
+msgstr "Veškerá grafika byla optimalizována a testována s Retina displeji."
+
+#: includes/admin/welcome.php:216
+msgid "Go to Easy Digital Downloads Settings"
+msgstr "Nastavte Easy Digital Download konfiguraci"
+
+#: includes/admin/welcome.php:243
+msgid ""
+"Easy Digital Downloads is created by a worldwide team of developers who aim "
+"to provide the #1 eCommerce platform for selling digital goods through "
+"WordPress."
+msgstr ""
+"Easy Digital Downloads je vytvořen celosvětovým týmem vývojářů, kteří se vám "
+"snaží poskytnout tu nejlepší e-commerce platformu pro prodej digitálního "
+"obsahu přes WordPress."
+
+#: includes/admin/welcome.php:270
+#, php-format
+msgid "View %s"
+msgstr "Shlédnutí %s"
+
+#: includes/admin/discounts/add-discount.php:16
+msgid "Add New Discount"
+msgstr "Přidat novou slevu"
+
+#: includes/admin/discounts/add-discount.php:27
+#: includes/admin/discounts/edit-discount.php:34
+msgid "The name of this discount"
+msgstr "Název slevy"
+
+#: includes/admin/discounts/add-discount.php:32
+#: includes/admin/discounts/class-discount-codes-table.php:137
+#: includes/admin/discounts/edit-discount.php:39
+msgid "Code"
+msgstr "Kód"
+
+#: includes/admin/discounts/add-discount.php:36
+#: includes/admin/discounts/edit-discount.php:43
+msgid "Enter a code for this discount, such as 10PERCENT"
+msgstr "Vložte kód slevy, například text 10PROCENT"
+
+#: includes/admin/discounts/add-discount.php:41
+#: includes/admin/discounts/edit-discount.php:48
+msgid "Type"
+msgstr "Typ"
+
+#: includes/admin/discounts/add-discount.php:45
+#: includes/admin/discounts/edit-discount.php:52
+msgid "Percentage"
+msgstr "Procentuální"
+
+#: includes/admin/discounts/add-discount.php:46
+#: includes/admin/discounts/edit-discount.php:53
+msgid "Flat amount"
+msgstr "Pevná částka"
+
+#: includes/admin/discounts/add-discount.php:48
+#: includes/admin/discounts/edit-discount.php:55
+msgid "The kind of discount to apply for this discount."
+msgstr "Druh slevy vztahující na tuto slevu."
+
+#: includes/admin/discounts/add-discount.php:53
+#: includes/admin/discounts/class-discount-codes-table.php:138
+#: includes/admin/discounts/edit-discount.php:60
+#: includes/admin/payments/class-payments-table.php:152
+#: templates/history-purchases.php:12
+msgid "Amount"
+msgstr "Částka"
+
+#: includes/admin/discounts/add-discount.php:57
+#: includes/admin/discounts/edit-discount.php:64
+msgid "The amount of this discount code."
+msgstr "Částka tohoto slevového kódu."
+
+#: includes/admin/discounts/add-discount.php:62
+#: includes/admin/discounts/edit-discount.php:69
+msgid "Start date"
+msgstr "Platnost od"
+
+#: includes/admin/discounts/add-discount.php:66
+#: includes/admin/discounts/edit-discount.php:73
+msgid ""
+"Enter the start date for this discount code in the format of mm/dd/yyyy. For "
+"no start date, leave blank. If entered, the discount can only be used after "
+"or on this date."
+msgstr ""
+"Zadejte počáteční datum platnosti tohoto slevového kódu ve formátu mm / dd / "
+"rrrr. Nechcete-li platnost omezit, nevyplňujte žádné datum. Bude-li datum "
+"zadáno, slevu bude možné uplatnit po tomto datu nebo v daný den."
+
+#: includes/admin/discounts/add-discount.php:71
+#: includes/admin/discounts/edit-discount.php:78
+msgid "Expiration date"
+msgstr "Vypršení platnosti"
+
+#: includes/admin/discounts/add-discount.php:75
+#: includes/admin/discounts/edit-discount.php:82
+msgid ""
+"Enter the expiration date for this discount code in the format of mm/dd/"
+"yyyy. For no expiration, leave blank"
+msgstr ""
+"Zadejte datum vypršení platnosti tohoto slevového u ve formátu mm / dd / "
+"rrrr. Pro neomezenou platnost kódu, ponechte pole prázdné."
+
+#: includes/admin/discounts/add-discount.php:80
+#: includes/admin/discounts/edit-discount.php:96
+msgid "Minimum Amount"
+msgstr "Minimální částka"
+
+#: includes/admin/discounts/add-discount.php:84
+#: includes/admin/discounts/edit-discount.php:100
+msgid ""
+"The minimum amount that must be purchased before this discount can be used. "
+"Leave blank for no minimum."
+msgstr ""
+"Minimální částka, za kterou je nutno nakoupit před před uplatněním slevy, "
+"aby byla sleva účinná. Nechcete-li poskytnutí slevy minimální částkou "
+"omezovat, ponechte pole prázdné."
+
+#: includes/admin/discounts/add-discount.php:89
+#: includes/admin/discounts/class-discount-codes-table.php:140
+#: includes/admin/discounts/edit-discount.php:87
+msgid "Max Uses"
+msgstr "Omezení užití"
+
+#: includes/admin/discounts/add-discount.php:93
+#: includes/admin/discounts/edit-discount.php:91
+msgid ""
+"The maximum number of times this discount can be used. Leave blank for "
+"unlimited."
+msgstr ""
+"Maximální počet čerpání slevy. Pro neomezená čerpání slevy ponechte pole "
+"prázdné."
+
+#: includes/admin/discounts/add-discount.php:102
+msgid "Add Discount Code"
+msgstr "Přidat slevový kód"
+
+#: includes/admin/discounts/class-discount-codes-table.php:115
+#: includes/admin/payments/class-payments-table.php:127
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:303
+#: includes/admin/reporting/class-sales-logs-list-table.php:273
+msgid "All"
+msgstr "Všechna"
+
+#: includes/admin/discounts/class-discount-codes-table.php:116
+#: includes/admin/discounts/edit-discount.php:109
+msgid "Active"
+msgstr "Aktivní"
+
+#: includes/admin/discounts/class-discount-codes-table.php:117
+#: includes/admin/discounts/edit-discount.php:110
+msgid "Inactive"
+msgstr "Neaktivní"
+
+#: includes/admin/discounts/class-discount-codes-table.php:139
+msgid "Uses"
+msgstr "Využito"
+
+#: includes/admin/discounts/class-discount-codes-table.php:141
+msgid "Start Date"
+msgstr "Datum od"
+
+#: includes/admin/discounts/class-discount-codes-table.php:142
+msgid "Expiration"
+msgstr "Expirace"
+
+#: includes/admin/discounts/class-discount-codes-table.php:197
+#: includes/admin/payments/class-payments-table.php:217
+msgid "Edit"
+msgstr "Editovat"
+
+#: includes/admin/discounts/class-discount-codes-table.php:200
+msgid "Deactive"
+msgstr "Deaktivovat"
+
+#: includes/admin/discounts/class-discount-codes-table.php:202
+msgid "Activate"
+msgstr "Aktivovat"
+
+#: includes/admin/discounts/class-discount-codes-table.php:204
+#: includes/admin/discounts/class-discount-codes-table.php:239
+#: includes/admin/payments/class-payments-table.php:222
+#: includes/admin/payments/class-payments-table.php:393
+msgid "Delete"
+msgstr "Smazat"
+
+#: includes/admin/discounts/class-discount-codes-table.php:327
+msgid "unlimited"
+msgstr "neomezeně"
+
+#: includes/admin/discounts/class-discount-codes-table.php:329
+msgid "Unlimited"
+msgstr "Neomezeně"
+
+#: includes/admin/discounts/class-discount-codes-table.php:337
+msgid "No start date"
+msgstr "Žádné datum"
+
+#: includes/admin/discounts/class-discount-codes-table.php:341
+msgid "Expired"
+msgstr "Platnost vypršela"
+
+#: includes/admin/discounts/class-discount-codes-table.php:343
+msgid "No expiration"
+msgstr "Bez expirace"
+
+#: includes/admin/discounts/contextual-help.php:30
+#: includes/admin/downloads/contextual-help.php:34
+#: includes/admin/payments/contextual-help.php:29
+#: includes/admin/reporting/contextual-help.php:31
+#: includes/admin/settings/contextual-help.php:31
+msgid "For more information:"
+msgstr "Další informace:"
+
+#: includes/admin/discounts/contextual-help.php:31
+#: includes/admin/downloads/contextual-help.php:35
+#: includes/admin/payments/contextual-help.php:30
+#: includes/admin/reporting/contextual-help.php:32
+#: includes/admin/settings/contextual-help.php:32
+#, php-format
+msgid ""
+"Visit the <a href=\"%s\">documentation</a> on the Easy Digital Downloads "
+"website."
+msgstr ""
+"Navštivte stránku<a href=\"%s\">dokumentace</a> na Easy Digital Downloads "
+"webu."
+
+#: includes/admin/discounts/contextual-help.php:33
+#: includes/admin/downloads/contextual-help.php:37
+#: includes/admin/payments/contextual-help.php:32
+#: includes/admin/reporting/contextual-help.php:34
+#: includes/admin/settings/contextual-help.php:34
+#, php-format
+msgid ""
+"<a href=\"%s\">Post an issue</a> on <a href=\"%s\">GitHub</a>. View <a href="
+"\"%s\">extensions</a> or <a href=\"%s\">themes</a>."
+msgstr ""
+"<a href=\"%s\">Napište svůj názor</a> na <a href=\"%s\">GitHub</a>. "
+"Podívejte se na <a href=\"%s\">rozšíření</a> a <a href=\"%s\">témata "
+"vzhledu</a>."
+
+#: includes/admin/discounts/contextual-help.php:43
+#: includes/admin/settings/contextual-help.php:44
+#: includes/admin/settings/settings.php:34
+msgid "General"
+msgstr "Obecné"
+
+#: includes/admin/discounts/contextual-help.php:45
+msgid ""
+"Discount codes allow you to offer buyers special discounts by having them "
+"enter predefined codes during checkout."
+msgstr ""
+"Slevové kódy umožňují využít kupujícímu speciální slevy tím, že zadají "
+"některý z definovaných platných kódů během vyplňování formuláře stránky "
+"Pokladna."
+
+#: includes/admin/discounts/contextual-help.php:46
+msgid "Discount codes that are set to \"inactive\" cannot be redeemed."
+msgstr "Slevové kódy označené jako \"neaktivní\" nemohou být uplatněny."
+
+#: includes/admin/discounts/contextual-help.php:47
+msgid ""
+"Discount codes are setup to only be used only one time by each customer. If "
+"a customer attempts to use a code a second time, they will be given an error."
+msgstr ""
+"Slevové kódy, které jsou jsou nastaveny pro jednorázové použití každým "
+"zákazníkem lze uplatnit klientem vždy pouze jednou. Pokud se zákazník pokusí "
+"použít kód podruhé, bude mu zobrazeno chybové hlášení."
+
+#: includes/admin/discounts/contextual-help.php:52
+msgid "Adding Discounts"
+msgstr "Přidávání slev"
+
+#: includes/admin/discounts/contextual-help.php:54
+msgid "You can create any number of discount codes easily from this page."
+msgstr "Můžete snadno vytvořit libovolný počet slevových kódů z této stránky."
+
+#: includes/admin/discounts/contextual-help.php:55
+msgid "Discount codes have several options:"
+msgstr "Slevové kódy mají několik variant:"
+
+#: includes/admin/discounts/contextual-help.php:57
+msgid ""
+"<strong>Name</strong> - this is the name given to the discount. Used "
+"primarily for administrative purposes."
+msgstr ""
+"<strong>Název</strong> - tento text je názvem slevy. Bude použit především "
+"pro účely administrace."
+
+#: includes/admin/discounts/contextual-help.php:58
+msgid ""
+"<strong>Code</strong> - this is the unique code that customers will enter "
+"during checkout to redeem the code."
+msgstr ""
+"<strong>Kód</strong> - tento text unikátního kódu budou zákazníci zadávat do "
+"formuláře při vyplňování údajů na Pokladně."
+
+#: includes/admin/discounts/contextual-help.php:59
+msgid "<strong>Type</strong> - this is the type of discount this code awards."
+msgstr "<strong> Typ </ strong> - je druh slevy tohoto kódu ocenění."
+
+#: includes/admin/discounts/contextual-help.php:60
+msgid ""
+"<strong>Amount</strong> - this discount amount provided by this code. For "
+"percentage based discounts, enter a number such as 70 for 70%. Do not enter "
+"a percent sign."
+msgstr ""
+"<strong> Částka </ strong> - tato položka stanovuje částku slevy slevového "
+"kódu. Slevy na procentní bázi, zadejte číslem jako 70 pro 70%. Nezadávejte "
+"znak procenta."
+
+#: includes/admin/discounts/contextual-help.php:61
+msgid ""
+"<strong>Start Date</strong> - this is the date that this code becomes "
+"available. If a customer attempts to redeem the code prior to this date, "
+"they will be given an error. This is optional."
+msgstr ""
+"<strong> Datum platnosti od</ strong> - to je datum, od kdy bude sleva "
+"platná. Pokud se zákazník pokusí uplatnit kód před tímto datem, objeví se mu "
+"chybová hláška. Tato možnost je volitelná."
+
+#: includes/admin/discounts/contextual-help.php:62
+msgid ""
+"<strong>Expiration Date</strong> - this is the end date for the discount. "
+"After this date, the code will no longer be able to be used. This is "
+"optional."
+msgstr ""
+"<strong> Datum vypršení platnosti </ strong> - to je konečné datum platnosti "
+"slevy. Po tomto datu bude kód neúčinný. Tato možnost je volitelná."
+
+#: includes/admin/discounts/contextual-help.php:63
+msgid ""
+"<strong>Minimum Amount</strong> - this is the minimum purchase amount "
+"required to use this code. If a customer has less than this amount in their "
+"cart, they will be given an error. This is optional."
+msgstr ""
+"<strong> Minimální částka </ strong> - to je minimální nákupní částka "
+"potřebná k používání tohoto kódu. Pokud je objednávka zákazníka nižší než "
+"tato částka, nebude možné uplatnit slevový kód. Tato možnost je volitelná."
+
+#: includes/admin/discounts/contextual-help.php:64
+msgid ""
+"<strong>Max Uses</strong> - this is the maximum number of times this "
+"discount can be redeemed. Once this number is reached, no more customers "
+"will be allowed to use it."
+msgstr ""
+"<strong> Omezení užití </ strong> - to je maximální počet, kolikrát může být "
+"sleva maximálně uplatněna. Jakmile je tohoto počtu dosaženo, nebude už možné "
+"slevu uplatnit novými zákazníky."
+
+#: includes/admin/discounts/discount-codes.php:41
+#: includes/admin/payments/payments-history.php:39
+#: includes/admin/reporting/logs.php:53
+msgid "Search"
+msgstr "Hledat"
+
+#: includes/admin/discounts/edit-discount.php:17
+msgid "Something went wrong."
+msgstr "Něco je špatně."
+
+#: includes/admin/discounts/edit-discount.php:23
+msgid "Edit Discount"
+msgstr "Editovat slevu"
+
+#: includes/admin/discounts/edit-discount.php:23
+#: includes/admin/payments/edit-payment.php:19
+msgid "Go Back"
+msgstr "Zpět"
+
+#: includes/admin/discounts/edit-discount.php:112
+msgid "The status of this discount code."
+msgstr "Statut tohoto slevového kódu."
+
+#: includes/admin/discounts/edit-discount.php:123
+msgid "Update Discount Code"
+msgstr "Aktualizovat kód slevy"
+
+#: includes/admin/downloads/contextual-help.php:47
+msgid "Download Configuration"
+msgstr "Konfigurace Stahování"
+
+#: includes/admin/downloads/contextual-help.php:49
+msgid ""
+"<strong>Pricing Options</strong> - Either define a single fixed price, or "
+"enable variable pricing. By enabling variable pricing, multiple download "
+"options and prices can be configured."
+msgstr ""
+"<strong> Varianty ceny </ strong> - buď můžete definovat jedinou pevnou cenu "
+"nebo povolit variabilní ceny. Tím, že umožníte variabilní ceny, vznikne více "
+"možností stažení souboru a je třeba cenu nakonfigurovat."
+
+#: includes/admin/downloads/contextual-help.php:51
+msgid ""
+"<strong>File Downloads</strong> - Define download file names and their "
+"respsective file URL. Multiple files can be assigned to a single price, or "
+"variable prices."
+msgstr ""
+"<strong> Stažení souborů </ strong> - definuje názvy stahovaných souborů a "
+"jejich URL adresy pro stažení. Více souborů může být přiřazeno k jedné ceně "
+"nebo může mít cenu variabilní."
+
+#: includes/admin/downloads/contextual-help.php:53
+msgid ""
+"<strong>File Download Limit</strong> - Define how many times customers are "
+"allowed to download their purchased files. Leave at 0 for unlimited. "
+"Resending the purchase receipt will permit the customer one additional "
+"download if their limit has already been reached."
+msgstr ""
+"<strong> Limit počtu stažení souboru</ strong> - definuje kolikrát mohou "
+"zákazníci stahovat své zakoupené soubory. Nechte nastaveno na 0 pro "
+"neomezený počet stažení. Přeposlání potvrzení o nákupu umožní zákazníkům "
+"vždy jedno dodatečné stažení, pokud již omezení bylo dosaženo."
+
+#: includes/admin/downloads/contextual-help.php:55
+msgid ""
+"<strong>Button Options</strong> - Disable the automatic output the purchase "
+"button. If disabled, no button will be added to the download page unless the "
+"<code>[purchase_link]</code> shortcode is used."
+msgstr ""
+"<strong> Tlačítko - možnosti</ strong> - zakazuje automatickou operaci při "
+"kliknutí na kupní tlačítko. Pokud je funkce vypnutá, nebude stránka stažení "
+"obsahovat žádné tlačítko přídáno , pokud <code> [purchase_link] </ code> je "
+"použit jako zkrácený kód odkazu."
+
+#: includes/admin/downloads/contextual-help.php:60
+#: includes/admin/downloads/metabox.php:30
+msgid "Product Notes"
+msgstr "Poznámky k produktu"
+
+#: includes/admin/downloads/contextual-help.php:61
+msgid ""
+"Special notes or instructions for the product. These notes will be added to "
+"the purchase receipt, and additionaly may be used by some extensions or "
+"themes on the frontend."
+msgstr ""
+"Zvláštní poznámky nebo pokyny pro daný produkt. Tyto poznámky budou přidány "
+"do dokladu o koupi, a dodatečně mohou být použity v doplňkových funkcích "
+"systému EDD nebo v rámci témat vzhledu uživatelského rozhraní."
+
+#: includes/admin/downloads/contextual-help.php:70
+msgid "Purchase Shortcode"
+msgstr "Účtenka"
+
+#: includes/admin/downloads/contextual-help.php:72
+msgid ""
+"<strong>Purchase Shortcode</strong> - If the automatic output of the "
+"purchase button has been disabled via the Download Configuration box, a "
+"shortcode can be used to output the button or link."
+msgstr ""
+"<strong> Účtenka </ strong> - pokud je vypnut v nastavení automatický výstup "
+"kupního tlačítka v nastavení Stažení - konfigurace, může být zkrácený kód "
+"použit jako text na tlačítko nebo pro odkaz."
+
+#: includes/admin/downloads/contextual-help.php:75
+msgid "The ID of a specific download to purchase."
+msgstr "ID konkrétního soubory zakoupeného ke stažení."
+
+#: includes/admin/downloads/contextual-help.php:76
+msgid ""
+"Whether to show the price on the purchase button. 1 to show the price, 0 to "
+"disable it."
+msgstr ""
+"Nastavení, zda se májí zobrazit ceny na nákupním tlačítku. 1 pro zobrazovat "
+"ceny, 0 pro nezobrazovat."
+
+#: includes/admin/downloads/contextual-help.php:77
+msgid "The text to be displayed on the button or link."
+msgstr "Text, který se zobrazí na tlačítku nebo v odkazu."
+
+#: includes/admin/downloads/contextual-help.php:78
+msgid "<em>button</em> | <em>text</em> - The style of the purchase link."
+msgstr ""
+"<em> tlačítko </ em> | <em> text </ em> - vzhled/styl nákupního odkazu."
+
+#: includes/admin/downloads/contextual-help.php:80
+msgid "One or more custom CSS classes you want applied to the button."
+msgstr "Jedna nebo více vlastních CSS tříd, které chcete použít na tlačítku."
+
+#: includes/admin/downloads/contextual-help.php:82
+#, php-format
+msgid ""
+"For more information, see <a href=\"%s\">using Shortcodes</a> on the "
+"WordPress.org Codex or <a href=\"%s\">Easy Digital Downloads Documentation</"
+"a>"
+msgstr ""
+"Pro více informací, navštivte stránku <a href=\"%s\"> používání zkratek </ "
+"a> na WordPress.org nebo <a href=\"%s\"> stránku dokumentace Easy Digital "
+"Downloads </ a>"
+
+#: includes/admin/downloads/dashboard-columns.php:32
+#: includes/admin/downloads/dashboard-columns.php:234
+#: includes/admin/downloads/metabox.php:223
+#: includes/admin/reporting/pdf-reports.php:64
+#: templates/shortcode-receipt.php:80
+msgid "Price"
+msgstr "Cena"
+
+#: includes/admin/downloads/dashboard-columns.php:33
+#: includes/admin/reporting/class-download-reports-table.php:78
+#: includes/admin/reporting/graphing.php:102
+#: includes/admin/reporting/logs.php:96
+#: includes/admin/reporting/pdf-reports.php:212
+msgid "Sales"
+msgstr "Prodeje"
+
+#: includes/admin/downloads/dashboard-columns.php:35
+msgid "Purchase Short Code"
+msgstr "Účtenka"
+
+#: includes/admin/downloads/dashboard-columns.php:195
+msgid "Show all categories"
+msgstr "Zobrazit všechny kategorie"
+
+#: includes/admin/downloads/dashboard-columns.php:206
+msgid "Show all tags"
+msgstr "Zobrazit všechny štítky"
+
+#: includes/admin/downloads/dashboard-columns.php:232
+#, php-format
+msgid "%s Configuration"
+msgstr "%s nastavení"
+
+#: includes/admin/downloads/metabox.php:27
+#, php-format
+msgid "%1$s Configuration"
+msgstr "%1$s nastavení"
+
+#: includes/admin/downloads/metabox.php:33
+#, php-format
+msgid "%1$s Stats"
+msgstr "%1$s Statistiky"
+
+#: includes/admin/downloads/metabox.php:36
+msgid "Purchase Log"
+msgstr "Logování nákupů"
+
+#: includes/admin/downloads/metabox.php:39
+msgid "File Download Log"
+msgstr "Logování stažení souborů"
+
+#: includes/admin/downloads/metabox.php:195
+msgid "Pricing Options:"
+msgstr "Možnosti cen:"
+
+#: includes/admin/downloads/metabox.php:201
+msgid "Enable variable pricing"
+msgstr "Umožnit variabilní ceny"
+
+#: includes/admin/downloads/metabox.php:222
+#: includes/admin/downloads/metabox.php:286
+msgid "Option Name"
+msgstr "Volitelný název"
+
+#: includes/admin/downloads/metabox.php:251
+msgid "Add New Price"
+msgstr "Přidat novou cenu"
+
+#: includes/admin/downloads/metabox.php:328
+msgid "File Downloads:"
+msgstr "Soubor Downloads:"
+
+#: includes/admin/downloads/metabox.php:337
+#: includes/admin/downloads/metabox.php:405
+msgid "File Name"
+msgstr "Název souboru"
+
+#: includes/admin/downloads/metabox.php:338
+msgid "File URL"
+msgstr "URL souboru"
+
+#: includes/admin/downloads/metabox.php:339
+msgid "Price Assignment"
+msgstr "Přiřazení cen"
+
+#: includes/admin/downloads/metabox.php:367
+msgid "Add New File"
+msgstr "Přidat nový soubor"
+
+#: includes/admin/downloads/metabox.php:410
+msgid "http://"
+msgstr "http://"
+
+#: includes/admin/downloads/metabox.php:413
+msgid "Upload a File"
+msgstr "Nahrát soubor"
+
+#: includes/admin/downloads/metabox.php:420
+msgid "All Prices"
+msgstr "Všechny ceny"
+
+#: includes/admin/downloads/metabox.php:453
+msgid "File Download Limit:"
+msgstr "Limit stažení soboru:"
+
+#: includes/admin/downloads/metabox.php:457
+msgid ""
+"The maximum number of times a buyer can download each file. Leave blank or "
+"set to 0 for unlimited"
+msgstr ""
+"Maximální počet stažení každého souboru. Ponechte prázdné nebo nastavte na 0 "
+"pro neomezený počet stažení"
+
+#: includes/admin/downloads/metabox.php:477
+msgid "Button Options:"
+msgstr "Tlačítka - možnosti:"
+
+#: includes/admin/downloads/metabox.php:483
+msgid "Disable the automatic output of the purchase button"
+msgstr "Zakázat automatický výstup nákupního tlačítka"
+
+#: includes/admin/downloads/metabox.php:548
+msgid ""
+"Special notes or instructions for this product. These notes will be added to "
+"the purchase receipt."
+msgstr ""
+"Zvláštní poznámky nebo instrukce pro tento produkt. Tyto poznámky budou "
+"přidány na účtenku."
+
+#: includes/admin/downloads/metabox.php:572
+msgid "Sales:"
+msgstr "Prodeje:"
+
+#: includes/admin/downloads/metabox.php:578
+msgid "Earnings:"
+msgstr "Příjmy:"
+
+#: includes/admin/downloads/metabox.php:607
+msgid "Sales Log"
+msgstr "Prodejní log"
+
+#: includes/admin/downloads/metabox.php:609
+msgid "Each sale for this download is listed below."
+msgstr "Každý prodej stažení tohoto obsahu je uveden níže."
+
+#: includes/admin/downloads/metabox.php:626
+#: includes/admin/downloads/metabox.php:719
+msgid "Date:"
+msgstr "Datum:"
+
+#: includes/admin/downloads/metabox.php:630
+msgid "Buyer:"
+msgstr "Kupující:"
+
+#: includes/admin/downloads/metabox.php:634
+msgid "Purchase ID:"
+msgstr "ID nákupu:"
+
+#: includes/admin/downloads/metabox.php:642
+msgid "No sales yet"
+msgstr "Dosud neprodán"
+
+#: includes/admin/downloads/metabox.php:658
+#: includes/admin/downloads/metabox.php:756
+msgid "Previous"
+msgstr "Předchozí"
+
+#: includes/admin/downloads/metabox.php:659
+#: includes/admin/downloads/metabox.php:757 includes/checkout/template.php:544
+msgid "Next"
+msgstr "Další"
+
+#: includes/admin/downloads/metabox.php:691
+msgid "Download Log"
+msgstr "Log stažení souborů"
+
+#: includes/admin/downloads/metabox.php:693
+msgid "Each time a file is downloaded, it is recorded below."
+msgstr "Pokaždé, když je soubor stažen, je to zaznamenáno v seznamu níže."
+
+#: includes/admin/downloads/metabox.php:723
+msgid "Downloaded by:"
+msgstr "Staženo:"
+
+#: includes/admin/downloads/metabox.php:727
+msgid "IP Address:"
+msgstr "IP adresa:"
+
+#: includes/admin/downloads/metabox.php:731
+msgid "File: "
+msgstr "Soubor:"
+
+#: includes/admin/downloads/metabox.php:740
+msgid "No file downloads yet"
+msgstr "Žádný soubor ještě nebyl stažen"
+
+#: includes/admin/payments/class-payments-table.php:128
+msgid "Completed"
+msgstr "Dokončeno"
+
+#: includes/admin/payments/class-payments-table.php:129
+#: includes/payments/functions.php:413
+msgid "Pending"
+msgstr "Nevyřízeno"
+
+#: includes/admin/payments/class-payments-table.php:130
+#: includes/payments/functions.php:415
+msgid "Refunded"
+msgstr "Vráceno"
+
+#: includes/admin/payments/class-payments-table.php:131
+#: includes/payments/functions.php:416
+msgid "Failed"
+msgstr "Neúspěšné"
+
+#: includes/admin/payments/class-payments-table.php:151
+msgid "Details"
+msgstr "Podrobnosti"
+
+#: includes/admin/payments/class-payments-table.php:220
+msgid "Resend Purchase Receipt"
+msgstr "Přeposlat účtenku"
+
+#: includes/admin/payments/contextual-help.php:42
+msgid "Overview"
+msgstr "Přehled"
+
+#: includes/admin/payments/contextual-help.php:44
+msgid "This screen provides access to all of your store's transactions."
+msgstr "Tato obrazovka poskytuje přístup ke všem transakcím ve vašem obchodě."
+
+#: includes/admin/payments/contextual-help.php:45
+msgid ""
+"Payments can be searched by email address, user name, or filtered by status "
+"(completed, pending, etc.)"
+msgstr ""
+"Platby lze vyhledávat podle e-mailové adresy, uživatelského jméno nebo "
+"filtrovat podle stavu (Dokončeno, nevyřízeno, atd.)"
+
+#: includes/admin/payments/contextual-help.php:46
+msgid "You also have the option to bulk delete payment should you wish."
+msgstr "Máte také možnost hromadného mazání plateb, chcete-li."
+
+#: includes/admin/payments/contextual-help.php:51
+msgid "Order Details"
+msgstr "Podrobnosti objednávky"
+
+#: includes/admin/payments/contextual-help.php:53
+msgid ""
+"Each payment can be further inspected by clicking the corresponding <em>View "
+"Order Details</em> link. This will provide more information including:"
+msgstr ""
+"Každá platba může být dále zkontrolována kliknutím na příslušný odkaz <em> "
+"Zobrazit podrobnosti objednávky</ em>. To poskytuje více informací, včetně:"
+
+#: includes/admin/payments/contextual-help.php:56
+msgid "The file associated with the purchase."
+msgstr "Soubor spojený s nákupem."
+
+#: includes/admin/payments/contextual-help.php:57
+msgid "The exact date and time the payment was completed."
+msgstr "Přesné datum a čas kdy byla platba dokončena."
+
+#: includes/admin/payments/contextual-help.php:58
+msgid "If a coupon or discount was used during the checkout process."
+msgstr "Pokud byl kupón nebo sleva použity během procesu platby."
+
+#: includes/admin/payments/contextual-help.php:59
+msgid "The buyer's name."
+msgstr "Jméno kupujícího."
+
+#: includes/admin/payments/contextual-help.php:60
+msgid "The buyer's email address."
+msgstr "Emailová adresa kupujícího."
+
+#: includes/admin/payments/contextual-help.php:61
+msgid "Any customer-specific notes related to the payment."
+msgstr "Specifické poznámky pro zákazníka týkající se platby."
+
+#: includes/admin/payments/contextual-help.php:62
+msgid "The name of the payment gateway used to complete the payment."
+msgstr "Název platební brány použité k dokončení platby."
+
+#: includes/admin/payments/contextual-help.php:63
+msgid "A unique key used to identify the payment."
+msgstr "Unikátní klíč použitý pro identifikaci platby."
+
+#: includes/admin/payments/edit-payment.php:25
+msgid "Buyer's Email"
+msgstr "Email kupujícího"
+
+#: includes/admin/payments/edit-payment.php:29
+msgid "If needed, you can update the buyer's email here."
+msgstr "V případě potřeby můžete aktualizovat  e-mail kupujícího zde."
+
+#: includes/admin/payments/edit-payment.php:34
+msgid "Downloads Purchased"
+msgstr "Zakoupené soubory ke stažení"
+
+#: includes/admin/payments/edit-payment.php:46
+#, php-format
+msgid "Add download to purchase #%s"
+msgstr "Přidat obsah ke koupi #%s"
+
+#: includes/admin/payments/edit-payment.php:46
+msgid "Add download to purchase"
+msgstr "Přidat obsah ke koupi"
+
+#: includes/admin/payments/edit-payment.php:72
+msgid "Add New Note"
+msgstr "Přidat nové poznámky"
+
+#: includes/admin/payments/edit-payment.php:78
+msgid "Payment Status"
+msgstr "Statut platby"
+
+#: includes/admin/payments/edit-payment.php:94
+msgid "Send Purchase Receipt"
+msgstr "Poslat účtenku"
+
+#: includes/admin/payments/edit-payment.php:98
+msgid ""
+"Check this box to send the purchase receipt, including all download links."
+msgstr ""
+"Zaškrtněte toto políčko, chcete-li poslat účtenku včetně odkazů ke stažení "
+"obsahu."
+
+#: includes/admin/payments/edit-payment.php:108
+msgid "Update Payment"
+msgstr "Upravit platbu"
+
+#: includes/admin/payments/edit-payment.php:121
+msgid "Add Selected Downloads"
+msgstr "Přidat vybraný obsah ke stažení"
+
+#: includes/admin/reporting/class-customer-reports-table.php:53
+msgid "Customer"
+msgstr "Zákazník"
+
+#: includes/admin/reporting/class-customer-reports-table.php:54
+#: includes/admin/reporting/reports.php:62
+msgid "Customers"
+msgstr "Zákazníci"
+
+#: includes/admin/reporting/class-customer-reports-table.php:100
+msgid "Number of Purchases"
+msgstr "Počet nákupů"
+
+#: includes/admin/reporting/class-customer-reports-table.php:101
+msgid "Total Amount Spent"
+msgstr "Celková vynaložená částka"
+
+#: includes/admin/reporting/class-customer-reports-table.php:102
+msgid "Files Downloaded"
+msgstr "Stažené soubory"
+
+#: includes/admin/reporting/class-download-reports-table.php:80
+msgid "Monthly Average Sales"
+msgstr "Průměr prodejů za měsíc"
+
+#: includes/admin/reporting/class-download-reports-table.php:81
+msgid "Monthly Average Earnings"
+msgstr "Průměrné příjmy za měsíc"
+
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:126
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:130
+#: includes/admin/reporting/class-sales-logs-list-table.php:102
+msgid "Log ID"
+msgstr "Log ID"
+
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:129
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:131
+#: includes/admin/reporting/class-sales-logs-list-table.php:106
+msgid "Payment ID"
+msgstr "ID platby"
+
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:72
+#: includes/gateways/manual.php:77 includes/gateways/paypal-standard.php:83
+msgid "Payment Error"
+msgstr "Chyba při platbě"
+
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:94
+msgid "View Log Message"
+msgstr "Zobrazit logovací zprávu"
+
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:108
+msgid "<strong>Log data:</strong>"
+msgstr "<strong>Logované údaje:</strong>"
+
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:133
+msgid "Error Message"
+msgstr "Chybová hláška"
+
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:134
+msgid "Gateway"
+msgstr "Brána"
+
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:135
+msgid "Buyer"
+msgstr "Kupující"
+
+#: includes/admin/reporting/class-sales-logs-list-table.php:105
+msgid "Item Amount"
+msgstr "Položka částky"
+
+#: includes/admin/reporting/contextual-help.php:45
+msgid ""
+"This screen provides you with reports for your earnings, downloads, "
+"customers and taxes."
+msgstr ""
+"Tato obrazovka vám nabízí reporty vašich příjmů, stažení, zákazníků a daní."
+
+#: includes/admin/reporting/contextual-help.php:50
+#: includes/admin/reporting/reports.php:35
+msgid "Export"
+msgstr "Export"
+
+#: includes/admin/reporting/contextual-help.php:52
+msgid "This screen allows you to export your reports into a PDF or CSV format."
+msgstr ""
+"Tato obrazovka umožňuje exportovat sestavy do formátu PDF nebo CSV formátu."
+
+#: includes/admin/reporting/contextual-help.php:53
+msgid ""
+"<strong>Sales and Earnings</strong> - This report exports all of the sales "
+"and earnings that you have made in the current year. This report includes "
+"your sales and earnings for each product as well a graphs of sales and "
+"earnings so you can compare them for each month."
+msgstr ""
+"<strong> Prodeje a příjmy </ strong> - Tato zpráva exportuje údaje o "
+"prodejích a příjmech, které jste provedli v běžném roce. Tato zpráva "
+"obsahuje vaše tržeb a výnosů pro každý výrobek, a také grafy prodeje a "
+"příjmů, takže si můžete porovnat údaje za každý měsíc."
+
+#: includes/admin/reporting/contextual-help.php:54
+msgid ""
+"<strong>Payment History</strong> - This report exports all of payments you "
+"have received on your EDD store in a CSV format.  The report includes the "
+"contact details of the customer, the products they have purchased as well as "
+"any discount codes they have used and the final price they have paid."
+msgstr ""
+"<strong> Historie plateb </ strong> - tato zpráva exportuje všechny platby, "
+"které jste obdrželi v EDD obchodě do formátu CSV. Zpráva obsahuje kontaktní "
+"údaje zákazníka, výrobky, které si zakoupil, stejně jako použité slevové "
+"kódy a konečnou cenou, kterou zákazník zaplatil."
+
+#: includes/admin/reporting/contextual-help.php:55
+msgid ""
+"<strong>Customers</strong> - This report exports all of your customers in a "
+"CSV format. It exports the customer's name and email address and the amount "
+"of products they have purchased as well as the final price of their total "
+"purchases."
+msgstr ""
+"<strong> Zákazníci </ strong> - tento report eyportuje všechny zákazníky ve "
+"formátu CSV. Exportuje se na jejich jméno, emailová adresa a množství "
+"výrobků, které si zakoupili i konečné ceny jejich nákupů."
+
+#: includes/admin/reporting/contextual-help.php:56
+msgid ""
+"<strong>Download History</strong> - This report exports all of the downloads "
+"you have received in the current month into a CSV. It exports the date the "
+"file was downloaded, the customer it was downloaded by, their IP address, "
+"the name of the product and the file they downloaded."
+msgstr ""
+"<strong> Historie stahování </ strong> - tento soubor obsahuje všechny "
+"stažení, které proběhli v aktuálním měsíci a je ve formátu .CSV. Obsahuje "
+"datum, kdy byl soubor stažen, jakým zákazníkem, jejich IP adresu, název "
+"staženého produktu a adresu souboru, který si stáhli."
+
+#: includes/admin/reporting/graphing.php:204
+msgid "Earnings Over Time"
+msgstr "Příjmy v průběhu času"
+
+#: includes/admin/reporting/graphing.php:209
+msgid "Total earnings for period shown: "
+msgstr "Celkové příjmy za zobrazené období:  "
+
+#: includes/admin/reporting/graphing.php:228
+msgid "This Month"
+msgstr "Tento měsíc"
+
+#: includes/admin/reporting/graphing.php:230
+msgid "This Quarter"
+msgstr "Toto čtvrtletí"
+
+#: includes/admin/reporting/graphing.php:231
+msgid "Last Quarter"
+msgstr "Minulé čtvrtletí"
+
+#: includes/admin/reporting/graphing.php:232
+msgid "This Year"
+msgstr "Tento rok"
+
+#: includes/admin/reporting/graphing.php:233
+msgid "Last Year"
+msgstr "Minulý rok"
+
+#: includes/admin/reporting/graphing.php:234
+msgid "Other"
+msgstr "Ostatní"
+
+#: includes/admin/reporting/graphing.php:262
+msgid "From"
+msgstr "Od"
+
+#: includes/admin/reporting/graphing.php:268
+msgid "To"
+msgstr "Do"
+
+#: includes/admin/reporting/graphing.php:282
+msgid "Filter"
+msgstr "Filtrovat"
+
+#: includes/admin/reporting/logs.php:95
+msgid "File Downloads"
+msgstr "Soubor ke stažení"
+
+#: includes/admin/reporting/logs.php:97
+msgid "Payment Errors"
+msgstr "Platební chyby"
+
+#: includes/admin/reporting/logs.php:120
+msgid "Log Type"
+msgstr "Typ logu"
+
+#: includes/admin/reporting/logs.php:132
+msgid "Apply"
+msgstr "Použít"
+
+#: includes/admin/reporting/pdf-reports.php:34
+msgid "to"
+msgstr "do"
+
+#: includes/admin/reporting/pdf-reports.php:39
+#: includes/admin/reporting/pdf-reports.php:50
+msgid "Sales and earnings reports for the current year for all products"
+msgstr ""
+"českyanglickyněmeckyProdeje a příjmy v reportu za aktuální rok a všechny "
+"produkty"
+
+#: includes/admin/reporting/pdf-reports.php:40
+#: includes/admin/reporting/pdf-reports.php:41 languages/strings.php:15
+msgid "Easy Digital Downloads"
+msgstr "Easy Digital Downloads"
+
+#: includes/admin/reporting/pdf-reports.php:55
+msgid "Date Range: "
+msgstr "Časové období:"
+
+#: includes/admin/reporting/pdf-reports.php:59
+msgid "Table View"
+msgstr "Tabulkové zobrazení"
+
+#: includes/admin/reporting/pdf-reports.php:63
+msgid "Product Name"
+msgstr "Název produktu"
+
+#: includes/admin/reporting/pdf-reports.php:67
+msgid "Number of Sales"
+msgstr "Počet prodejů"
+
+#: includes/admin/reporting/pdf-reports.php:68
+msgid "Earnings to Date"
+msgstr "Příjmy do data"
+
+#: includes/admin/reporting/pdf-reports.php:116
+#, php-format
+msgid "No %s found."
+msgstr "Nic %s nenalezeno."
+
+#: includes/admin/reporting/pdf-reports.php:123
+msgid "Graph View"
+msgstr "Zobrazit graf"
+
+#: includes/admin/reporting/pdf-reports.php:216
+msgid "Sales and Earnings by Month for all Products"
+msgstr "Prodeje a příjmy za měsíc a všechny produkty"
+
+#: includes/admin/reporting/pdf-reports.php:227
+msgid "Jan"
+msgstr "Leden"
+
+#: includes/admin/reporting/pdf-reports.php:228
+msgid "Feb"
+msgstr "Únor"
+
+#: includes/admin/reporting/pdf-reports.php:229
+msgid "Mar"
+msgstr "Březen"
+
+#: includes/admin/reporting/pdf-reports.php:230
+msgid "Apr"
+msgstr "Duben"
+
+#: includes/admin/reporting/pdf-reports.php:231
+msgid "May"
+msgstr "Květen"
+
+#: includes/admin/reporting/pdf-reports.php:232
+msgid "June"
+msgstr "Červen"
+
+#: includes/admin/reporting/pdf-reports.php:233
+msgid "July"
+msgstr "Červenec"
+
+#: includes/admin/reporting/pdf-reports.php:234
+msgid "Aug"
+msgstr "Srpen"
+
+#: includes/admin/reporting/pdf-reports.php:235
+msgid "Sept"
+msgstr "Září"
+
+#: includes/admin/reporting/pdf-reports.php:236
+msgid "Oct"
+msgstr "Říjen"
+
+#: includes/admin/reporting/pdf-reports.php:237
+msgid "Nov"
+msgstr "Listopad"
+
+#: includes/admin/reporting/pdf-reports.php:238
+msgid "Dec"
+msgstr "Prosinec"
+
+#: includes/admin/reporting/reports.php:63
+#: includes/admin/settings/contextual-help.php:73
+#: includes/admin/settings/settings.php:38
+msgid "Taxes"
+msgstr "Daně"
+
+#: includes/admin/reporting/reports.php:106
+msgid "Report Type"
+msgstr "Typ reportu"
+
+#: includes/admin/reporting/reports.php:116
+msgid "Show"
+msgstr "Zobrazit"
+
+#: includes/admin/reporting/reports.php:193
+msgid "Tax Report"
+msgstr "Daňový report"
+
+#: includes/admin/reporting/reports.php:196
+msgid ""
+"This report shows the total amount collected in sales tax for the given year."
+msgstr ""
+"Tento report ukazuje celkovou částku vybranou na dani z prodeje v daném roce."
+
+#: includes/admin/reporting/reports.php:208
+msgid "Submit"
+msgstr "Odeslat"
+
+#: includes/admin/reporting/reports.php:234
+msgid "Export PDF of Sales and Earnings"
+msgstr "Exportovat do PDF souboru prodeje a příjmy"
+
+#: includes/admin/reporting/reports.php:236
+msgid ""
+"Download a PDF of Sales and Earnings reports for all products for the "
+"current year."
+msgstr ""
+"Stáhnout ve formátu PDF report prodejů a příjmů za všechny produkty v "
+"aktuálním roce."
+
+#: includes/admin/reporting/reports.php:236
+msgid "Date range reports will be coming soon."
+msgstr "Již brzy přibudou reporty omezené dle dat."
+
+#: includes/admin/reporting/reports.php:237
+msgid "Generate PDF"
+msgstr "Genrovat PDF"
+
+#: includes/admin/reporting/reports.php:242
+msgid "Export Payment History"
+msgstr "Exportovat historii plateb"
+
+#: includes/admin/reporting/reports.php:244
+msgid "Download a CSV of all payments recorded."
+msgstr "Stáhněte si CSV soubor všech zaznamenaných plateb."
+
+#: includes/admin/reporting/reports.php:245
+#: includes/admin/reporting/reports.php:254
+#: includes/admin/reporting/reports.php:262
+msgid "Generate CSV"
+msgstr "Generovat CSV"
+
+#: includes/admin/reporting/reports.php:251
+msgid "Export Customers in CSV"
+msgstr "Exportovat zákazníky ve formátu .csv"
+
+#: includes/admin/reporting/reports.php:253
+msgid ""
+"Download a CSV of all customer emails. This export includes purchase numbers "
+"and amounts for each customer."
+msgstr ""
+"Stáhněte si soubor .csv formátu se emaily zákazníků. Tento export zahrnuje "
+"též čísla nákupů a částky u každého zákazníka."
+
+#: includes/admin/reporting/reports.php:259
+msgid "Export Download History in CSV"
+msgstr "Exportovat historii stažení v CSV"
+
+#: includes/admin/reporting/reports.php:261
+msgid "Download a CSV of all file downloads for the current month."
+msgstr ""
+"českyanglickyněmeckyStáhněte si soubor ve formátu .csv s reportem stažení "
+"všech souborů v aktuálním měsíci."
+
+#: includes/admin/settings/contextual-help.php:45
+msgid ""
+"This screen provides the most basic settings for configuring your store. You "
+"can set the currency, page templates, and turn <em>Test Mode</em> on and off."
+msgstr ""
+"Tato obrazovka poskytuje nejzákladnější nastavení pro konfiguraci vašeho "
+"obchodu. Můžete nastavit měnu, šablony stránek, a zapnout nebo vypnout <em> "
+"testovací režim </ em>."
+
+#: includes/admin/settings/contextual-help.php:52
+msgid ""
+"This screen provides ways to toggle payment gateways on or off, as well as "
+"configure gateway-specific settings. Any extra payment gateway extensions "
+"you have installed will appear on this page, and can be configured to suit "
+"your needs."
+msgstr ""
+"Tato obrazovka poskytuje způsob, jak aktivovat/deaktivovat platební brány, "
+"nastavit jejich parametry a mnohá další rozšíření platebních bran, které "
+"jste nainstalovali. Vše se objeví na této stránce, a může být "
+"nakonfigurováno tak, aby to vyhovovalo vašim potřebám."
+
+#: includes/admin/settings/contextual-help.php:53
+msgid ""
+"<strong>Test Payment</strong> - This included gateway is great for testing "
+"your store, as it requires no payment, and leads straight to product "
+"downloads. However, please remember to turn it off once your site is live!"
+msgstr ""
+"<strong> Testování plateb </ strong> - tato interní platební brána je "
+"ideální pro testování konfigurace eshopu, protože nevyžaduje žádnou platbu, "
+"a vede přímo ke stažení produktu. Nicméně, nezapomeňte ji vypnout, jakmile "
+"váš web spustíte do veřejného provozu!"
+
+#: includes/admin/settings/contextual-help.php:54
+msgid ""
+"<strong>PayPal</strong> - A PayPal payment gateway is included as standard "
+"with Easy Digital Downloads. To test the PayPal gateway, you need a Sandbox "
+"account for PayPal and the site must be placed in Test Mode from the General "
+"settings tab. Please remember to enter your PayPal account email address in "
+"order for payments to get processed."
+msgstr ""
+"<strong> PayPal </ strong> - PayPal platební brána je součástí standardní "
+"výbavy Easy Digital Download. Chcete-li otestovat PayPal bránu, budete "
+"potřebovat Sandbox účet PayPal a stránky musí být nastaveny v testovacím "
+"režimu na stránce Základní nastavení. Mějte na paměti, že zadáním svého "
+"PayPal účtu při objednávce mohou být platby skutečně zpracovány, není-li "
+"správně nastaven testovací režim."
+
+#: includes/admin/settings/contextual-help.php:59
+#: includes/admin/settings/settings.php:36
+msgid "Emails"
+msgstr "Emaily"
+
+#: includes/admin/settings/contextual-help.php:61
+msgid ""
+"This screen allows you to customize how emails act throughout your store. "
+"You can choose a premade template, set the sender's name, email address, and "
+"subject."
+msgstr ""
+"Tato obrazovka vám umožní nastavit, jak pracovat s e-maily ve vašem obchodě. "
+"Můžete si upravit předpřipravené šablony, nastavit jméno odesílatele, e-"
+"mailovou adresu a předmět zasílaných zpráv."
+
+#: includes/admin/settings/contextual-help.php:62
+msgid ""
+"A set of email tags has also been provided to allow the creation of "
+"personalized emails. A tag consists of a keyword surrounded by curly braces: "
+"<code>{tag}</code>. A description of each of these tags appear below the "
+"editor."
+msgstr ""
+"Sada e-mailových značek umožňuje vytváření personalizovaných e-mailů. Tag se "
+"skládá z klíčového slova ve složených závorkách: <code> {tag} </ code>. "
+"Popis každé z těchto značek se zobrazí pod editorem."
+
+#: includes/admin/settings/contextual-help.php:67
+#: includes/admin/settings/settings.php:37
+msgid "Styles"
+msgstr "Styly"
+
+#: includes/admin/settings/contextual-help.php:68
+msgid ""
+"This screen provides allows customization of your store's styles. For "
+"complete control, you can completely disable all styles generated by the "
+"plugin."
+msgstr ""
+"Tato obrazovka umožňuje přizpůsobení vzhledu vašeho obchodu. Pro úplnou "
+"kontrolu, můžete zakázat všechny styly generované pluginen EDD."
+
+#: includes/admin/settings/contextual-help.php:74
+msgid ""
+"This screen provides basic settings for adjusting how tax rules work for "
+"purchases."
+msgstr ""
+"Tato obrazovka obsahuje základní nastavení pro úpravu parametrů dle daňových "
+"předpisů ve vaší zemi."
+
+#: includes/admin/settings/contextual-help.php:79
+msgid "Miscellaneous"
+msgstr "Různé"
+
+#: includes/admin/settings/contextual-help.php:81
+msgid ""
+"This screen provides other miscellaneous options such as disabling jQuery, "
+"allowing guest checkout, and configuring your terms of service."
+msgstr ""
+"Tato obrazovka umožňuje nastavit další možnosti, jako je vypnutí jQuery, "
+"povolení nákupu bez registrace, a konfigurování obchodních podmínek eshopu."
+
+#: includes/admin/settings/contextual-help.php:82
+msgid "A description of all the options are provided beside their input boxes."
+msgstr "Popisy všech možností jsou uvedeny vedle jejich vstupních polí."
+
+#: includes/admin/settings/settings.php:39
+msgid "Misc"
+msgstr "Různé"
+
+#: includes/admin/upgrades/upgrade-functions.php:42
+#, php-format
+msgid "The Payment History needs to be updated. %s"
+msgstr "Historii plateb je třeba aktualizovat. %s"
+
+#: includes/admin/upgrades/upgrade-functions.php:42
+msgid "Click to Upgrade"
+msgstr "Kliknutím spustíte Upgrade"
+
+#: includes/admin/upgrades/upgrade-functions.php:48
+#, php-format
+msgid ""
+"The purchase and file download history in Easy Digital Downloads needs "
+"upgraded, click %shere%s to start the upgrade."
+msgstr ""
+"Nákupy a historie stahování souborů v Easy Digital Downloads vyžadují novou "
+"verzi, klepněte na tlačítko %shere%s s a spusťte aktualizaci."
+
+#: includes/admin/upgrades/upgrade-functions.php:56
+#, php-format
+msgid ""
+"Easy Digital Downloads needs to upgrade the plugin pages, click %shere%s to "
+"start the upgrade."
+msgstr ""
+"Easy Digital Downloads vyžaduje upgrade na novou verzi, klikněte %shere%s a "
+"spusťte upgrade."
+
+#: includes/admin/upgrades/upgrades.php:27
+msgid "Easy Digital Downloads - Upgrades"
+msgstr "Easy Digital Downloads - nové verze"
+
+#: includes/admin/upgrades/upgrades.php:30
+msgid ""
+"The upgrade process has started, please be patient. This could take several "
+"minutes. You will be automatically redirected when the upgrade is finished."
+msgstr ""
+"Proces upgradu začal, prosím, buďte trpěliví. Bude to trvat maximálně "
+"několik minut. Po dokončení aktualizace budete přesměrováni a informováni o "
+"dokončení aktualizace."
+
+#: includes/cart/functions.php:611
+#, php-format
+msgid "You have successfully added %s to your shopping cart."
+msgstr "Zboží %s bylo přidáno do nákupního košíku."
+
+#: includes/cart/functions.php:612
+msgid "Checkout."
+msgstr "Pokladna."
+
+#: includes/cart/template.php:92 templates/checkout_cart.php:35
+msgid "remove"
+msgstr "odstranit"
+
+#: includes/checkout/template.php:130
+msgid "Personal Info"
+msgstr "Osobní informace"
+
+#: includes/checkout/template.php:133
+msgid "Email address"
+msgstr "Emailová adresa"
+
+#: includes/checkout/template.php:134
+#: templates/shortcode-profile-editor.php:46
+msgid "Email Address"
+msgstr "Emailová adresa"
+
+#: includes/checkout/template.php:142 includes/checkout/template.php:315
+msgid "Last name"
+msgstr "Příjmení"
+
+#: includes/checkout/template.php:166
+msgid "Credit Card Info"
+msgstr "Informace o platební kartě"
+
+#: includes/checkout/template.php:168
+msgid "Card number"
+msgstr "Číslo karty"
+
+#: includes/checkout/template.php:169
+msgid "Card Number"
+msgstr "Číslo karty"
+
+#: includes/checkout/template.php:172
+msgid "Security code"
+msgstr "Bezpečnostní kód"
+
+#: includes/checkout/template.php:173
+msgid "CVC"
+msgstr "CVC"
+
+#: includes/checkout/template.php:176
+msgid "Card name"
+msgstr "Název karty"
+
+#: includes/checkout/template.php:177
+msgid "Name on the Card"
+msgstr "Jméno uvedené na platební kartě"
+
+#: includes/checkout/template.php:188
+msgid "Expiration (MM/YYYY)"
+msgstr "Datum expirace (MM/YYYY)"
+
+#: includes/checkout/template.php:217
+msgid "Address line 1"
+msgstr "Ulice"
+
+#: includes/checkout/template.php:218
+msgid "Billing Address"
+msgstr "Fakturační adresa"
+
+#: includes/checkout/template.php:221
+msgid "Address line 2"
+msgstr "Adresní řádek 2"
+
+#: includes/checkout/template.php:222
+msgid "Billing Address Line 2"
+msgstr "Fakturační adresa řádek 2"
+
+#: includes/checkout/template.php:225
+msgid "City"
+msgstr "Město"
+
+#: includes/checkout/template.php:226
+msgid "Billing City"
+msgstr "Město (na účtence)"
+
+#: includes/checkout/template.php:237
+msgid "Billing Country"
+msgstr "Země (na účtence)"
+
+#: includes/checkout/template.php:240
+msgid "State / Province"
+msgstr "Stát / region"
+
+#: includes/checkout/template.php:257
+msgid "Billing State / Province"
+msgstr "Stát uvedený na účtence"
+
+#: includes/checkout/template.php:260
+msgid "Zip / Postal code"
+msgstr "PSČ"
+
+#: includes/checkout/template.php:261
+msgid "Billing Zip / Postal Code"
+msgstr "PSČ faktury"
+
+#: includes/checkout/template.php:288
+msgid "Already have an account?"
+msgstr "Máte již svůj účet?"
+
+#: includes/checkout/template.php:290
+msgid "Create an account"
+msgstr "Vytvořit účet"
+
+#: includes/checkout/template.php:290
+msgid "(optional)"
+msgstr "(nepovinné)"
+
+#: includes/checkout/template.php:301
+msgid "Confirm password"
+msgstr "Potvrďte heslo"
+
+#: includes/checkout/template.php:302
+msgid "Password Again"
+msgstr "Heslo pro kontrolu"
+
+#: includes/checkout/template.php:346
+msgid "Login to your account"
+msgstr "Přihlašte se do svého zákaznického profilu"
+
+#: includes/checkout/template.php:349
+msgid "Your username"
+msgstr "Vaše přihlašovací jméno"
+
+#: includes/checkout/template.php:353
+msgid "Your password"
+msgstr "Vaše heslo"
+
+#: includes/checkout/template.php:360
+msgid "Need to create an account?"
+msgstr "Přejete si vytvořit vlastní účet?"
+
+#: includes/checkout/template.php:362
+msgid "Register"
+msgstr "Zaregistrujte se"
+
+#: includes/checkout/template.php:362
+msgid "or checkout as a guest."
+msgstr "nebo dokončete objednávku bez registrace."
+
+#: includes/checkout/template.php:392
+msgid "Select payment method"
+msgstr "Vyberte platební metodu"
+
+#: includes/checkout/template.php:425
+msgid "Enter discount"
+msgstr "Vložte slevu"
+
+#: includes/checkout/template.php:427 templates/shortcode-receipt.php:51
+msgid "Discount"
+msgstr "Sleva"
+
+#: includes/checkout/template.php:460
+msgid "Show Terms"
+msgstr "Zobrazit podmínky"
+
+#: includes/checkout/template.php:461
+msgid "Hide Terms"
+msgstr "Skrýt podmínky"
+
+#: includes/checkout/template.php:464
+msgid "Agree to Terms?"
+msgstr "Souhlasíte s podmínkami?"
+
+#: includes/checkout/template.php:488
+msgid "Opt Into Taxes?"
+msgstr "Opt in daně?"
+
+#: includes/checkout/template.php:519
+msgid "Go back"
+msgstr "Zpět"
+
+#: includes/emails/functions.php:91
+msgid "New download purchase"
+msgstr "Nová objednávka"
+
+#: includes/emails/functions.php:93
+msgid "Hello"
+msgstr "Zdravíme"
+
+#: includes/emails/functions.php:93
+#, php-format
+msgid "A %s purchase has been made"
+msgstr "%s nákup byl proveden"
+
+#: includes/emails/functions.php:94
+#, php-format
+msgid "%s sold:"
+msgstr "%s prodáno:"
+
+#: includes/emails/functions.php:113
+msgid "Purchased by: "
+msgstr "Zakoupeno:"
+
+#: includes/emails/functions.php:114
+msgid "Amount: "
+msgstr "částka:"
+
+#: includes/emails/functions.php:115
+msgid "Payment Method: "
+msgstr "Platební metoda:"
+
+#: includes/emails/functions.php:116
+msgid "Thank you"
+msgstr "Děkujeme Vám."
+
+#: includes/emails/template.php:24
+msgid "Default Template"
+msgstr "Výchozí šablona"
+
+#: includes/emails/template.php:25
+msgid "No template, plain text only"
+msgstr "Bez šablony, pouze prostý text"
+
+#: includes/emails/template.php:150
+msgid "Sample Product Title"
+msgstr "Název ochutnávky/vzorku"
+
+#: includes/emails/template.php:153
+msgid "Sample Download File Name"
+msgstr "Název ukázky obsahu ke stažení"
+
+#: includes/emails/template.php:153
+msgid "Optional notes about this download."
+msgstr "Doplňující nepovinné poznámky o tomto obsahu (zboží)."
+
+#: includes/emails/template.php:166
+msgid "These are some sample notes added to a product."
+msgstr "Sem můžete vložit doplňující poznámky o výrobku."
+
+#: includes/emails/template.php:208 includes/emails/template.php:263
+msgid "Dear"
+msgstr "Dobrý den"
+
+#: includes/emails/template.php:209 includes/emails/template.php:264
+msgid ""
+"Thank you for your purchase. Please click on the link(s) below to download "
+"your files."
+msgstr ""
+"Děkujeme Vám za nákup. Kliknutím na odkaz/y si stáhnete svůj zakoupený obsah."
+
+#: includes/emails/template.php:216
+msgid "Purchase Receipt Preview"
+msgstr "Účtenka - náhled"
+
+#: includes/emails/template.php:216
+msgid "Preview Purchase Receipt"
+msgstr "Náhled účtenky"
+
+#: includes/gateways/functions.php:30
+msgid "Test Payment"
+msgstr "Testovací platba"
+
+#: includes/gateways/functions.php:225
+msgid "You must enable a payment gateway to use Easy Digital Downloads"
+msgstr "Nastavte platební bránu, kterou má systém EDD používat."
+
+#: includes/gateways/manual.php:77
+#, php-format
+msgid ""
+"Payment creation failed while processing a manual (free or test) purchase. "
+"Payment data: %s"
+msgstr ""
+"Platba selhala při manuálním zadání nebo testování platby. Platební údaje: %s"
+
+#: includes/gateways/paypal-standard.php:83
+#, php-format
+msgid ""
+"Payment creation failed before sending buyer to PayPal. Payment data: %s"
+msgstr ""
+"Platba selhala před zasláním platebních údajů PayPalu. Platební údaje: %s"
+
+#: includes/gateways/paypal-standard.php:270
+#: includes/gateways/paypal-standard.php:275
+#: includes/gateways/paypal-standard.php:325
+#: includes/gateways/paypal-standard.php:332
+#: includes/gateways/paypal-standard.php:337
+msgid "IPN Error"
+msgstr "Chyba IPN"
+
+#: includes/gateways/paypal-standard.php:270
+#: includes/gateways/paypal-standard.php:275
+msgid "Invalid IPN verification response. IPN data: "
+msgstr "Neplatná IPN verifikace. IPN údaje:"
+
+#: includes/gateways/paypal-standard.php:325
+msgid "Invalid currency in IPN response. IPN data: "
+msgstr "Neplatná zadaná měna dle IPN. IPN údaje:"
+
+#: includes/gateways/paypal-standard.php:332
+msgid "Invalid payment amount in IPN response. IPN data: "
+msgstr "Neplatná částka platby dle IPN. IPN údaje:"
+
+#: includes/gateways/paypal-standard.php:337
+msgid "Invalid purchase key in IPN response. IPN data: "
+msgstr "Neplatný nákupní IPN klíč. IPN údaje: "
+
+#: includes/gateways/paypal-standard.php:345
+#, php-format
+msgid "PayPal Transaction ID: %s"
+msgstr "ID PayPal transakce: %s"
+
+#: includes/payments/functions.php:414
+msgid "Complete"
+msgstr "Dokončeno"
+
+#: languages/strings.php:16
+msgid "Serve Digital Downloads Through WordPress"
+msgstr "Provozováno na Easy Digital Downoalds & WordPress"
+
+#: languages/strings.php:17
+msgid "Pippin Williamson"
+msgstr "Pippin Williamson"
+
+#: templates/checkout_cart.php:6
+msgid "Item Name"
+msgstr "Název položky"
+
+#: templates/checkout_cart.php:7
+msgid "Item Price"
+msgstr "Jednotková cena"
+
+#: templates/checkout_cart.php:8
+msgid "Actions"
+msgstr "Akce"
+
+#: templates/checkout_cart.php:50 templates/shortcode-receipt.php:35
+msgid "Subtotal"
+msgstr "Mezisoučet"
+
+#: templates/checkout_cart.php:57 templates/shortcode-receipt.php:39
+msgid "Tax"
+msgstr "Daň"
+
+#: templates/checkout_cart.php:71
+msgid "Total"
+msgstr "Celkem"
+
+#: templates/history-downloads.php:9
+msgid "Download Name"
+msgstr "Název pro stažení"
+
+#: templates/history-downloads.php:11 templates/history-purchases.php:13
+msgid "Files"
+msgstr "Soubory"
+
+#: templates/history-downloads.php:89
+msgid "You have not purchased any downloads"
+msgstr "Zatím jste nic nezakoupili"
+
+#: templates/history-purchases.php:10
+msgid "Purchase ID"
+msgstr "ID nákupu"
+
+#: templates/history-purchases.php:82
+msgid "You have not made any purchases"
+msgstr "Neprovedli jste dosud žádný nákup"
+
+#: templates/shortcode-profile-editor.php:17
+msgid "Success"
+msgstr "Dokončeno"
+
+#: templates/shortcode-profile-editor.php:17
+msgid "Your profile has been edited successfully."
+msgstr "Váš osobní profil byl úspěšně aktualizován."
+
+#: templates/shortcode-profile-editor.php:21
+msgid "Change your Name"
+msgstr "Změnte název"
+
+#: templates/shortcode-profile-editor.php:30
+msgid "Display Name"
+msgstr "Zobrazit název"
+
+#: templates/shortcode-profile-editor.php:49
+msgid "Change your Password"
+msgstr "Změna hesla"
+
+#: templates/shortcode-profile-editor.php:51
+msgid "New Password"
+msgstr "Nové heslo"
+
+#: templates/shortcode-profile-editor.php:54
+msgid "Re-enter Password"
+msgstr "Vložte heslo pro kontrolu shody"
+
+#: templates/shortcode-profile-editor.php:57
+msgid "Please note after changing your password, you must log back in."
+msgstr ""
+"Prosím pamatujte na to, že po změně hesla je třeba se opětovně přihlásit."
+
+#: templates/shortcode-profile-editor.php:62
+msgid "Save Changes"
+msgstr "Uložit změny"
+
+#: templates/shortcode-profile-editor.php:70
+msgid "You need to login to edit your profile."
+msgstr "Pro editaci profilu je třeba být přihlášen."
+
+#: templates/shortcode-profile-editor.php:77
+msgid "Remember me?"
+msgstr "Zapamatovat si?"
+
+#: templates/shortcode-profile-editor.php:78
+msgid "Log In"
+msgstr "Přihlášení"
+
+#: templates/shortcode-receipt.php:20
+msgid "Payment"
+msgstr "Platba"
+
+#: templates/shortcode-receipt.php:44 templates/shortcode-receipt.php:84
+msgid "Total Price"
+msgstr "Celková cena"
+
+#: templates/shortcode-receipt.php:58
+msgid "Payment Method"
+msgstr "Platební metoda"
+
+#: templates/shortcode-receipt.php:65
+msgid "Payment Key"
+msgstr "Platební klíč"

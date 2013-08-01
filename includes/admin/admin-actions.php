@@ -2,8 +2,8 @@
 /**
  * Admin Actions
  *
- * @package     Easy Digital Downloads
- * @subpackage  Admin Actions
+ * @package     EDD
+ * @subpackage  Admin/Actions
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -13,11 +13,11 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Process Actions
+ * Processes all EDD actions sent via POST and GET by looking for the 'edd-action'
+ * request and running do_action() to call the function
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @return void
  */
 function edd_process_actions() {
 	if ( isset( $_POST['edd-action'] ) ) {

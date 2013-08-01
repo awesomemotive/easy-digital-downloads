@@ -4,8 +4,8 @@
  *
  * This class handles customer export
  *
- * @package     Easy Digital Downloads
- * @subpackage  Export Class
+ * @package     EDD
+ * @subpackage  Admin/Reports
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
@@ -14,22 +14,26 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * EDD_Customers_Export Class
+ *
+ * @since 1.4.4
+ */
 class EDD_Customers_Export extends EDD_Export {
 	/**
-	 * Our export type. Used for export-type specific filters / actions
+	 * Our export type. Used for export-type specific filters/actions
 	 *
-	 * @access      public
-	 * @var         string
-	 * @since       1.4.4
+	 * @var string
+	 * @since 1.4.4
 	 */
 	public $export_type = 'customers';
 
 	/**
 	 * Set the export headers
 	 *
-	 * @access      public
-	 * @since       1.4.4
-	 * @return      void
+	 * @access public
+	 * @since 1.4.4
+	 * @return void
 	 */
 	public function headers() {
 		ignore_user_abort( true );
@@ -52,9 +56,9 @@ class EDD_Customers_Export extends EDD_Export {
 	/**
 	 * Set the CSV columns
 	 *
-	 * @access      public
-	 * @since       1.4.4
-	 * @return      array
+	 * @access public
+	 * @since 1.4.4
+	 * @return array $cols All the columns
 	 */
 	public function csv_cols() {
 		if ( ! empty( $_POST['edd_export_download'] ) ) {
@@ -64,23 +68,34 @@ class EDD_Customers_Export extends EDD_Export {
 				'date'      => __( 'Date Purchased', 'edd' )
 			);
 		} else {
-			$cols = array(
-				'name'      => __( 'Name',   'edd' ),
-				'email'     => __( 'Email', 'edd' ),
-				'purchases' => __( 'Total Purchases', 'edd' ),
-				'amount'    => __( 'Total Purchased', 'edd' )
-			);
+
+			$cols = array();
+
+			if( 'emails' != $_POST['edd_export_option'] ) {
+				$cols['name'] = __( 'Name',   'edd' );
+			}
+
+			$cols['email'] = __( 'Email',   'edd' );
+
+			if( 'full' == $_POST['edd_export_option'] ) {
+				$cols['purchases'] = __( 'Total Purchases',   'edd' );
+				$cols['amount']    = __( 'Total Purchased', 'edd' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')';
+			}
+
 		}
 
 		return $cols;
 	}
 
 	/**
-	 * Get the data being exported
+	 * Get the Export Data
 	 *
-	 * @access      public
-	 * @since       1.4.4
-	 * @return      array
+	 * @access public
+	 * @since 1.4.4
+	 * @global object $wpdb Used to query the database using the WordPress
+	 *   Database API
+	 * @global object $edd_logs EDD Logs Object
+	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
 		global $wpdb;
@@ -94,7 +109,7 @@ class EDD_Customers_Export extends EDD_Export {
 			$args = array(
 				'post_parent'  => absint( $_POST['edd_export_download'] ),
 				'log_type'     => 'sale',
-				'no_paging'    => true
+				'nopaging'    => true
 			);
 
 			$logs = $edd_logs->get_connected_logs( $args );
@@ -117,15 +132,23 @@ class EDD_Customers_Export extends EDD_Export {
 			// Export all customers
 			$emails = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' " );
 
-			foreach ( $emails as $email ) {
-				$wp_user = get_user_by( 'email', $email );
+			$i = 0;
 
-				$data[] = array(
-					'name'      => $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' ),
-					'email'     => $email,
-					'purchases' => edd_count_purchases_of_customer( $email ),
-					'amount'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_purchase_total_of_user( $email ) ) ) )
-				);
+			foreach ( $emails as $email ) {
+
+				if( 'emails' != $_POST['edd_export_option'] ) {
+					$wp_user = get_user_by( 'email', $email );
+					$data[$i]['name'] = $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' );
+				}
+
+				$data[$i]['email'] = $email;
+
+				if( 'full' == $_POST['edd_export_option'] ) {
+					$stats = edd_get_purchase_stats_by_user( $email );
+					$data[$i]['purchases'] = $stats['purchases'];
+					$data[$i]['amount']    = edd_format_amount( $stats['total_spent'] );
+				}
+				$i++;
 			}
 		}
 

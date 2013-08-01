@@ -1,9 +1,9 @@
 <?php
 /**
- * Edit Discount Template
+ * Edit Discount Page
  *
- * @package     Easy Digital Downloads
- * @subpackage  Discounts
+ * @package     EDD
+ * @subpackage  Admin/Discounts
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -80,7 +80,7 @@ $single_use   = edd_discount_is_single_use( $discount_id );
 					</p>
 					<select multiple id="edd-products" name="products[]" class="edd-select-chosen" data-placeholder="<?php printf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ); ?>">
 						<?php
-						$downloads = get_posts( array( 'post_type' => 'download', 'no_paging' => 1 ) );
+						$downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
 						if( $downloads ) :
 							foreach( $downloads as $download ) :
 								echo '<option value="' . esc_attr( $download->ID ) . '"' . selected( true, in_array( $download->ID, $product_reqs ), false ) . '>' . esc_html( get_the_title( $download->ID ) ) . '</option>';
@@ -151,7 +151,7 @@ $single_use   = edd_discount_is_single_use( $discount_id );
 				</th>
 				<td>
 					<input type="checkbox" id="edd-use-once" name="use_once" value="1"<?php checked( true, $single_use ); ?>/>
-					<span class="description"><?php _e( 'Limit this discount to a single-user per customer?', 'edd' ); ?></span>
+					<span class="description"><?php _e( 'Limit this discount to a single-use per customer?', 'edd' ); ?></span>
 				</td>
 			</tr>
 		</tbody>

@@ -2,44 +2,42 @@
 /**
  * Front-end Actions
  *
- * @package     Easy Digital Downloads
- * @subpackage  Front-end Actions
+ * @package     EDD
+ * @subpackage  Functions
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0.8.1
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Get Actions
+ * Hooks EDD actions, when present in the $_GET superglobal. Every edd_aciton
+ * present in $_GET is called using WordPress's do_action function. These
+ * functions are called on init.
  *
- * Hooks EDD actions, when present in $_GET.
- *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @return void
 */
-function edd_cart_get_actions() {
+function edd_get_actions() {
 	if ( isset( $_GET['edd_action'] ) ) {
 		do_action( 'edd_' . $_GET['edd_action'], $_GET );
 	}
 }
-add_action('init', 'edd_cart_get_actions');
+add_action( 'init', 'edd_get_actions' );
 
 /**
- * Post Actions
+ * Hooks EDD actions, when present in the $_POST superglobal. Every edd_aciton
+ * present in $_POST is called using WordPress's do_action function. These
+ * functions are called on init.
  *
- * Hooks EDD actions, when present in $_POST.
- *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @return void
 */
-function edd_cart_post_actions() {
+function edd_post_actions() {
 	if ( isset( $_POST['edd_action'] ) ) {
 		do_action( 'edd_' . $_POST['edd_action'], $_POST );
 	}
 }
-add_action('init', 'edd_cart_post_actions');
+add_action( 'init', 'edd_post_actions' );

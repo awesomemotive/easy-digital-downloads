@@ -2,8 +2,8 @@
 /**
  * Upgrade Functions
  *
- * @package     Easy Digital Downloads
- * @subpackage  Download Functions
+ * @package     EDD
+ * @subpackage  Admin/Upgrades
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.1
@@ -15,9 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Display Upgrade Notices
  *
- * @access      private
- * @since       1.3.1
- * @return      void
+ * @since 1.3.1
+ * @return void
 */
 function edd_show_upgrade_notices() {
 	if ( isset( $_GET['page'] ) && $_GET['page'] == 'edd-upgrades' )
@@ -42,7 +41,7 @@ function edd_show_upgrade_notices() {
 
 	if ( version_compare( $edd_version, '1.3.2', '<' ) && ! get_option( 'edd_logs_upgraded' ) ) {
 		printf(
-			'<div class="updated"><p>' . esc_html__( 'The purchase and file download history in Easy Digital Downloads needs upgraded, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
+			'<div class="updated"><p>' . esc_html__( 'The Purchase and File Download History in Easy Digital Downloads needs to be upgraded, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
 			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
 			'</a>'
 		);
@@ -69,11 +68,10 @@ add_action( 'admin_notices', 'edd_show_upgrade_notices' );
 /**
  * Triggers all upgrade functions
  *
- * This function is usually triggered via ajax
+ * This function is usually triggered via AJAX
  *
- * @access      private
- * @since       1.3.1
- * @return      void
+ * @since 1.3.1
+ * @return void
 */
 function edd_trigger_upgrades() {
 	$edd_version = get_option( 'edd_version' );
@@ -103,16 +101,17 @@ function edd_trigger_upgrades() {
 	update_option( 'edd_version', EDD_VERSION );
 
 	if ( DOING_AJAX )
-		die( 'complete' ); // Let ajax know we are done
+		die( 'complete' ); // Let AJAX know that the upgrade is complete
 }
 add_action( 'wp_ajax_edd_trigger_upgrades', 'edd_trigger_upgrades' );
 
 /**
  * Converts old sale and file download logs to new logging system
  *
- * @access      private
- * @since       1.3.1
- * @return      void
+ * @since 1.3.1
+ * @uses WP_Query
+ * @uses EDD_Logging
+ * @return void
  */
 function edd_v131_upgrades() {
 	if ( get_option( 'edd_logs_upgraded' ) )
@@ -188,9 +187,8 @@ function edd_v131_upgrades() {
 /**
  * Upgrade routine for v1.3.4
  *
- * @access      private
- * @since       1.3.4
- * @return      void
+ * @since 1.3.4
+ * @return void
  */
 function edd_v134_upgrades() {
 	$general_options = get_option( 'edd_settings_general' );
@@ -219,9 +217,9 @@ function edd_v134_upgrades() {
 /**
  * Upgrade routine for v1.4
  *
- * @access      private
- * @since       1.4
- * @return      void
+ * @since 1.4
+ * @global $edd_options Array of all the EDD Options
+ * @return void
  */
 function edd_v14_upgrades() {
 	global $edd_options;
@@ -239,7 +237,7 @@ function edd_v14_upgrades() {
 	$discounts = get_option( 'edd_discounts' );
 
 	if ( $discounts ) {
-		foreach ( $discounts as $key => $discount ) {
+		foreach ( $discounts as $discount_key => $discount ) {
 			$status = isset( $discount['status'] ) ? $discount['status'] : 'inactive';
 
 			$discount_id = wp_insert_post( array(
@@ -259,8 +257,8 @@ function edd_v14_upgrades() {
 				'min_price'   => isset( $discount['min_price'] ) ? $discount['min_price'] : ''
 			);
 
-			foreach ( $meta as $key => $value ) {
-				update_post_meta( $discount_id, '_edd_discount_' . $key, $value );
+			foreach ( $meta as $meta_key => $value ) {
+				update_post_meta( $discount_id, '_edd_discount_' . $meta_key, $value );
 			}
 		}
 
@@ -273,12 +271,10 @@ function edd_v14_upgrades() {
 /**
  * Upgrade routine for v1.5
  *
- * @access      private
- * @since       1.5
- * @return      void
+ * @since 1.5
+ * @return void
  */
 function edd_v15_upgrades() {
-
 	// Update options for missing tax settings
 	$tax_options = get_option( 'edd_settings_taxes' );
 
@@ -296,5 +292,4 @@ function edd_v15_upgrades() {
 
 	// Flush the rewrite rules for the new /edd-api/ end point
 	flush_rewrite_rules();
-
 }

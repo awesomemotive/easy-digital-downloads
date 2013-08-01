@@ -2,8 +2,8 @@
 /**
  * Edit Payment Template
  *
- * @package     Easy Digital Downloads
- * @subpackage  Edit Payment
+ * @package     EDD
+ * @subpackage  Admin/Payments
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -26,7 +26,7 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 						<span><?php _e( 'Buyer\'s Email', 'edd' ); ?></span>
 					</th>
 					<td>
-						<input class="regular-text" type="text" name="edd-buyer-email" id="edd-buyer-email" value="<?php echo $payment_data['email']; ?>"/>
+						<input class="regular-text" type="text" name="edd-buyer-email" id="edd-buyer-email" value="<?php echo edd_get_payment_user_email( $payment_id ); ?>"/>
 						<p class="description"><?php _e( 'If needed, you can update the buyer\'s email here.', 'edd' ); ?></p>
 					</td>
 				</tr>
@@ -35,8 +35,17 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 						<span><?php _e( 'Buyer\'s User ID', 'edd' ); ?></span>
 					</th>
 					<td>
-						<input class="small-text" type="number" min="-1" step="1" name="edd-buyer-user-id" id="edd-buyer-user-id" value="<?php echo $payment_data['user_id']; ?>"/>
+						<input class="small-text" type="number" min="-1" step="1" name="edd-buyer-user-id" id="edd-buyer-user-id" value="<?php echo edd_get_payment_user_id( $payment_id ); ?>"/>
 						<p class="description"><?php _e( 'If needed, you can update the buyer\'s WordPress user ID here.', 'edd' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row" valign="top">
+						<span><?php printf( __( 'Payment Amount in %s', 'edd' ), edd_get_currency() ); ?></span>
+					</th>
+					<td>
+						<input class="small-text" type="number" min="0" step="0.01" name="edd-payment-amount" id="edd-payment-amount" value="<?php echo edd_get_payment_amount( $payment_id ); ?>"/>
+						<p class="description"><?php _e( 'If needed, you can update the purchase total here.', 'edd' ); ?></p>
 					</td>
 				</tr>
 				<tr>
@@ -84,7 +93,14 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 									} else {
 										$user = __( 'EDD Bot', 'edd' );
 									}
-									echo '<p><strong>' . $user . '</strong>&nbsp;<em>' . $note->comment_date . '</em>&nbsp;&mdash;' . $note->comment_content . '</p>';
+									$delete_note_url = wp_nonce_url( add_query_arg( array(
+										'edd-action' => 'delete_payment_note',
+										'note_id'    => $note->comment_ID
+									) ), 'edd_delete_payment_note' );
+									echo '<li>';
+										echo '<strong>' . $user . '</strong>&nbsp;<em>' . $note->comment_date . '</em>&nbsp;&mdash;&nbsp;' . $note->comment_content;
+										echo '&nbsp;&ndash;&nbsp;<a href="' . $delete_note_url . '" class="edd-delete-payment-note" title="' . __( 'Delete this payment note', 'edd' ) . '">' . __( 'Delete', 'edd' ) . '</a>';
+										echo '</li>';
 								endforeach;
 								echo '</ul>';
 							else :
@@ -111,20 +127,29 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 						</select>
 					</td>
 				</tr>
+				<tr>
+					<th scope="row" valign="top">
+						<span><?php _e( 'Unlimited Downloads', 'edd' ); ?></span>
+					</th>
+					<td>
+						<input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" value="1"<?php checked( true, get_post_meta( $payment_id, '_unlimited_file_downloads', true ) ); ?>/>
+						<label class="description" for="edd_unlimited_downloads"><?php _e( 'Check this box to enable unlimited file downloads for this purchase.', 'edd' ); ?></label>
+					</td>
+				</tr>
 				<tr id="edd_payment_notification" style="display:none;">
 					<th scope="row" valign="top">
 						<span><?php _e( 'Send Purchase Receipt', 'edd' ); ?></span>
 					</th>
 					<td>
 						<input type="checkbox" name="edd-payment-send-email" id="edd_send_email" value="yes"/>
-						<span class="description"><?php _e( 'Check this box to send the purchase receipt, including all download links.', 'edd' ); ?></span>
+						<label class="description" for="edd_send_email"><?php _e( 'Check this box to send the purchase receipt, including all download links.', 'edd' ); ?></label>
 					</td>
 				</tr>
 				<?php do_action( 'edd_edit_payment_bottom', $payment->ID ); ?>
 			</tbody>
 		</table>
 
-		<input type="hidden" name="edd-action" value="edit_payment"/>
+		<input type="hidden" name="edd_action" value="edit_payment"/>
 		<input type="hidden" name="edd-old-status" value="<?php echo $status; ?>"/>
 		<input type="hidden" name="payment-id" value="<?php echo $payment_id; ?>"/>
 		<?php wp_nonce_field( 'edd_payment_nonce', 'edd-payment-nonce' ); ?>
@@ -135,7 +160,7 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 			<p>
 				<select name="downloads[0][id]" class="edd-downloads-list">
 				<?php
-				$downloads = get_posts( apply_filters( 'edd_add_downloads_to_purchase_query', array( 'post_type' => 'download', 'posts_per_page' => -1 ) ) );
+				$downloads = get_posts( apply_filters( 'edd_add_downloads_to_purchase_query', array( 'post_type' => 'download', 'posts_per_page' => -1, 'orderby' => 'title', 'order' => 'ASC' ) ) );
 				echo '<option value="0">' . sprintf( __('Select a %s', 'edd'), esc_html( edd_get_label_singular() ) ) . '</option>';
 				foreach( $downloads as $download ) {
 					?>

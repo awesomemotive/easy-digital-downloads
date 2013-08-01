@@ -2,26 +2,23 @@
 /**
  * Thickbox
  *
- * @package     Easy Digital Downloads
- * @subpackage  Thickbox
+ * @package     EDD
+ * @subpackage  Admin
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Media Button
+ * Adds an "Insert Download" button above the TinyMCE Editor on add/edit screens.
  *
- * Returns the Insert Download TinyMCE button.
- *
- * @access      private
- * @since       1.0
- * @return      string
-*/
-function edd_media_button( $context ) {
+ * @since 1.0
+ * @return string "Insert Download" Button
+ */
+function edd_media_button() {
 	global $pagenow, $typenow, $wp_version;
 	$output = '';
 
@@ -33,12 +30,12 @@ function edd_media_button( $context ) {
 			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox" title="' . __( 'Insert Download', 'edd' ) . '">' . $img . '</a>';
 		} else {
 			$img = '<span class="wp-media-buttons-icon" id="edd-media-button"></span>';
-			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button" title="' . __( 'Insert Download', 'edd' ) . '" style="padding-left: .4em;">' . $img . 'Insert Download'. '</a>';
+			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button" title="' . sprintf( __( 'Insert %s', 'edd' ), strtolower ( edd_get_label_singular() ) ) . '" style="padding-left: .4em;">' . $img . sprintf( __( 'Insert %s', 'edd' ), strtolower( edd_get_label_singular() ) ) . '</a>';
 		}
 	}
-	return $context . $output;
+	echo $output;
 }
-add_filter( 'media_buttons_context', 'edd_media_button' );
+add_action( 'media_buttons', 'edd_media_button', 11 );
 
 /**
  * Admin Footer For Thickbox
@@ -46,10 +43,11 @@ add_filter( 'media_buttons_context', 'edd_media_button' );
  * Prints the footer code needed for the Insert Download
  * TinyMCE button.
  *
- * @access      private
- * @since       1.0
- * @return      void
-*/
+ * @since 1.0
+ * @global $pagenow
+ * @global $typenow
+ * @return void
+ */
 function edd_admin_footer_for_thickbox() {
 	global $pagenow, $typenow;
 
@@ -59,7 +57,8 @@ function edd_admin_footer_for_thickbox() {
 		?>
 		<script type="text/javascript">
             function insertDownload() {
-                var id = jQuery('#select-edd-download').val(),
+                var id = jQuery('#edd_products').val(),
+                    direct = jQuery('#select-edd-direct').val(),
                     style = jQuery('#select-edd-style').val(),
                     color = jQuery('#select-edd-color').is(':visible') ? jQuery('#select-edd-color').val() : '',
                     text = jQuery('#edd-text').val() || '<?php _e( "Purchase", "edd" ); ?>';
@@ -70,8 +69,14 @@ function edd_admin_footer_for_thickbox() {
                     return;
                 }
 
+                if( '2' == direct ) {
+                	direct = ' direct="true"';
+                } else {
+                	direct = '';
+                }
+
                 // Send the shortcode to the editor
-                window.send_to_editor('[purchase_link id="' + id + '" style="' + style + '" color="' + color + '" text="' + text + '"]');
+                window.send_to_editor('[purchase_link id="' + id + '" style="' + style + '" color="' + color + '" text="' + text + '"' + direct +']');
             }
             jQuery(document).ready(function ($) {
                 $('#select-edd-style').change(function () {
@@ -90,16 +95,17 @@ function edd_admin_footer_for_thickbox() {
 			if ( $downloads ) { ?>
 				<p><?php echo sprintf( __( 'Use the form below to insert the short code for purchasing a %s', 'edd' ), edd_get_label_singular() ); ?></p>
 				<div>
-					<select id="select-edd-download" style="clear: both; display: block; margin-bottom: 1em;">
-						<option value=""><?php echo sprintf( __( 'Choose a %s', 'edd' ), edd_get_label_singular() ); ?></option>
-						<?php
-							foreach ( $downloads as $download )
-								echo '<option value="' . absint( $download->ID ) . '">' . esc_attr( $download->post_title ) . '</option>';
-						?>
+					<?php echo EDD()->html->product_dropdown(); ?>
+				</div>
+				<div>
+					<select id="select-edd-direct" style="clear: both; display: block; margin-bottom: 1em; margin-top: 1em;">
+						<option value="0"><?php _e( 'Choose the button behavior', 'edd' ); ?></option>
+						<option value="1"><?php _e( 'Add to Cart', 'edd' ); ?></option>
+						<option value="2"><?php _e( 'Direct Purchase Link', 'edd' ); ?></option>
 					</select>
 				</div>
 				<div>
-					<select id="select-edd-style" style="clear: both; display: block; margin-bottom: 1em;">
+					<select id="select-edd-style" style="clear: both; display: block; margin-bottom: 1em; margin-top: 1em;">
 						<option value=""><?php _e( 'Choose a style', 'edd' ); ?></option>
 						<?php
 							$styles = array( 'button', 'text link' );
@@ -109,16 +115,19 @@ function edd_admin_footer_for_thickbox() {
 						?>
 					</select>
 				</div>
+				<?php
+				$colors = edd_get_button_colors();
+				if( $colors ) { ?>
 				<div id="edd-color-choice" style="display: none;">
 					<select id="select-edd-color" style="clear: both; display: block; margin-bottom: 1em;">
 						<option value=""><?php _e('Choose a button color', 'edd'); ?></option>
 						<?php
-							$colors = edd_get_button_colors();
 							foreach ( $colors as $key => $color )
 								echo '<option value="' . str_replace( ' ', '_', $key ) . '">' . $color . '</option>';
 						?>
 					</select>
 				</div>
+				<?php } ?>
 				<div>
 					<input type="text" class="regular-text" id="edd-text" value="" placeholder="<?php _e( 'Link text . . .', 'edd' ); ?>"/>
 				</div>

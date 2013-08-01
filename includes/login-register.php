@@ -2,8 +2,8 @@
 /**
  * Login / Register Functions
  *
- * @package     Easy Digital Downloads
- * @subpackage  Login/Register
+ * @package     EDD
+ * @subpackage  Functions/Login
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -15,9 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Login Form
  *
- * @access      private
- * @since       1.0
- * @return      string
+ * @since 1.0
+ * @global $edd_options
+ * @global $post
+ * @param string $redirect Redirect page URL
+ * @return string Login form
 */
 function edd_login_form( $redirect = '' ) {
 	global $edd_options, $post;
@@ -55,12 +57,12 @@ function edd_login_form( $redirect = '' ) {
 						<?php _e( 'Lost Password?', 'edd' ); ?>
 					</a>
 				</p>
-				<?php do_action('edd_checkout_login_fields_after');?>
+				<?php do_action( 'edd_checkout_login_fields_after' );?>
 			</fieldset>
 		</form>
 	<?php
 	} else {
-		echo '<p class="edd-logged-in">' . __('You are already logged in', 'edd' ) . '</p>';
+		echo '<p class="edd-logged-in">' . __( 'You are already logged in', 'edd' ) . '</p>';
 	}
 	return ob_get_clean();
 }
@@ -68,9 +70,9 @@ function edd_login_form( $redirect = '' ) {
 /**
  * Process Login Form
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @param array $data Data sent from the login form
+ * @return void
 */
 function edd_process_login_form( $data ) {
 	if ( wp_verify_nonce( $data['edd_login_nonce'], 'edd-login-nonce' ) ) {
@@ -91,7 +93,7 @@ function edd_process_login_form( $data ) {
 		if ( ! $errors ) {
 			$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], $user_ID );
 			wp_redirect( $redirect );
-			exit;
+			edd_die();
 		}
 	}
 }
@@ -100,9 +102,11 @@ add_action( 'edd_user_login', 'edd_process_login_form' );
 /**
  * Log User In
  *
- * @access      public
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @param int $user_id User ID
+ * @param string $user_login Username
+ * @param string $user_pass Password
+ * @return void
 */
 function edd_log_user_in( $user_id, $user_login, $user_pass ) {
 	if ( $user_id < 1 )

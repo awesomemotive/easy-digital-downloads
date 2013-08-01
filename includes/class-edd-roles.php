@@ -1,32 +1,35 @@
 <?php
-
 /**
- * Roles / caps
+ * Roles and Capabilities
  *
- * @package     Easy Digital Downloads
- * @subpackage  Roles / Caps
+ * @package     EDD
+ * @subpackage  Classes/Roles
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
 */
 
 /**
+ * EDD_Roles Class
+ *
  * This class handles the role creation and assignment of capabilities for those roles.
  *
  * These roles let us have Shop Accountants, Shop Workers, etc, each of whom can do
  * certain things within the EDD store
  *
- * @since  1.4.4
- * @return void
+ * @since 1.4.4
  */
 class EDD_Roles {
 	/**
 	 * Get things going
 	 *
-	 * @since  1.4.4
+	 * @access public
+	 * @since 1.4.4
+	 * @see EDD_Roles::add_roles()
+	 * @see EDD_Roles::add_caps()
 	 * @return void
 	 */
-	function __construct() {
+	public function __construct() {
 		$this->add_roles();
 		$this->add_caps();
 	}
@@ -34,7 +37,8 @@ class EDD_Roles {
 	/**
 	 * Add new shop roles with default WP caps
 	 *
-	 * @since  1.4.4
+	 * @access public
+	 * @since 1.4.4
 	 * @return void
 	 */
 	public function add_roles() {
@@ -49,7 +53,6 @@ class EDD_Roles {
 			'delete_others_pages'    => true,
 			'delete_others_posts'    => true,
 			'delete_pages'           => true,
-			'delete_posts'           => true,
 			'delete_private_pages'   => true,
 			'delete_private_posts'   => true,
 			'delete_published_pages' => true,
@@ -57,7 +60,6 @@ class EDD_Roles {
 			'edit_others_pages'      => true,
 			'edit_others_posts'      => true,
 			'edit_pages'             => true,
-			'edit_posts'             => true,
 			'edit_private_pages'     => true,
 			'edit_private_posts'     => true,
 			'edit_published_pages'   => true,
@@ -95,7 +97,9 @@ class EDD_Roles {
 	/**
 	 * Add new shop-specific capabilities
 	 *
+	 * @access public
 	 * @since  1.4.4
+	 * @global obj $wp_roles
 	 * @return void
 	 */
 	public function add_caps() {
@@ -129,7 +133,7 @@ class EDD_Roles {
 			}
 
 			$wp_roles->add_cap( 'shop_accountant', 'edit_products' );
-			$wp_roles->add_cap( 'shop_accountant', 'read_private_prodcuts' );
+			$wp_roles->add_cap( 'shop_accountant', 'read_private_products' );
 			$wp_roles->add_cap( 'shop_accountant', 'view_shop_reports' );
 			$wp_roles->add_cap( 'shop_accountant', 'export_shop_reports' );
 			$wp_roles->add_cap( 'shop_accountant', 'edit_shop_payments' );
@@ -148,8 +152,9 @@ class EDD_Roles {
 	/**
 	 * Gets the core post type capabilties
 	 *
+	 * @access public
 	 * @since  1.4.4
-	 * @return array
+	 * @return array $capabilities Core post type capabilties
 	 */
 	public function get_core_caps() {
 		$capabilities = array();
@@ -182,5 +187,60 @@ class EDD_Roles {
 		}
 
 		return $capabilities;
+	}
+
+	/**
+	 * Remove core post type capabilities (called on uninstall)
+	 *
+	 * @access public
+	 * @since 1.5.2
+	 * @return void
+	 */
+	public function remove_caps() {
+		if ( class_exists( 'WP_Roles' ) )
+			if ( ! isset( $wp_roles ) )
+				$wp_roles = new WP_Roles();
+
+		if ( is_object( $wp_roles ) ) {
+			/** Shop Manager Capabilities */
+			$wp_roles->remove_cap( 'shop_manager', 'view_shop_reports' );
+			$wp_roles->remove_cap( 'shop_manager', 'view_shop_sensitive_data' );
+			$wp_roles->remove_cap( 'shop_manager', 'export_shop_reports' );
+			$wp_roles->remove_cap( 'shop_manager', 'manage_shop_discounts' );
+			$wp_roles->remove_cap( 'shop_manager', 'manage_shop_settings' );
+
+			/** Site Administrator Capabilities */
+			$wp_roles->remove_cap( 'administrator', 'view_shop_reports' );
+			$wp_roles->remove_cap( 'administrator', 'view_shop_sensitive_data' );
+			$wp_roles->remove_cap( 'administrator', 'export_shop_reports' );
+			$wp_roles->remove_cap( 'administrator', 'manage_shop_discounts' );
+			$wp_roles->remove_cap( 'administrator', 'manage_shop_settings' );
+
+			/** Remove the Main Post Type Capabilities */
+			$capabilities = $this->get_core_caps();
+
+			foreach ( $capabilities as $cap_group ) {
+				foreach ( $cap_group as $cap ) {
+					$wp_roles->remove_cap( 'shop_manager', $cap );
+					$wp_roles->remove_cap( 'administrator', $cap );
+					$wp_roles->remove_cap( 'shop_worker', $cap );
+				}
+			}
+
+			/** Shop Accountant Capabilities */
+			$wp_roles->remove_cap( 'shop_accountant', 'edit_products' );
+			$wp_roles->remove_cap( 'shop_accountant', 'read_private_products' );
+			$wp_roles->remove_cap( 'shop_accountant', 'view_shop_reports' );
+			$wp_roles->remove_cap( 'shop_accountant', 'export_shop_reports' );
+
+			/** Shop Vendor Capabilities */
+			$wp_roles->remove_cap( 'shop_vendor', 'edit_product' );
+			$wp_roles->remove_cap( 'shop_vendor', 'edit_products' );
+			$wp_roles->remove_cap( 'shop_vendor', 'delete_product' );
+			$wp_roles->remove_cap( 'shop_vendor', 'delete_products' );
+			$wp_roles->remove_cap( 'shop_vendor', 'publish_products' );
+			$wp_roles->remove_cap( 'shop_vendor', 'edit_published_products' );
+			$wp_roles->remove_cap( 'shop_vendor', 'upload_files' );
+		}
 	}
 }

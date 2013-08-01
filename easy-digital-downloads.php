@@ -1,80 +1,91 @@
 <?php
-/*
-Plugin Name: Easy Digital Downloads
-Plugin URI: http://easydigitaldownloads.com
-Description: Serve Digital Downloads Through WordPress
-Author: Pippin Williamson
-Author URI: http://pippinsplugins.com
-Version: 1.5
-Text Domain: edd
-Domain Path: languages
-
-Easy Digital Downloads is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-any later version.
-
-Easy Digital Downloads is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Easy Digital Downloads. If not, see <http://www.gnu.org/licenses/>.
-*/
+/**
+ * Plugin Name: Easy Digital Downloads
+ * Plugin URI: http://easydigitaldownloads.com
+ * Description: Serve Digital Downloads Through WordPress
+ * Author: Pippin Williamson
+ * Author URI: http://pippinsplugins.com
+ * Version: 1.7.2
+ * Text Domain: edd
+ * Domain Path: languages
+ *
+ * Easy Digital Downloads is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * Easy Digital Downloads is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Easy Digital Downloads. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @package EDD
+ * @category Core
+ * @author Pippin Williamson
+ * @version 1.7.2
+ */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( !class_exists( 'Easy_Digital_Downloads' ) ) :
+if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
 
 /**
  * Main Easy_Digital_Downloads Class
  *
- * @since v1.4
+ * @since 1.4
  */
-
 final class Easy_Digital_Downloads {
 	/** Singleton *************************************************************/
 
 	/**
 	 * @var Easy_Digital_Downloads The one true Easy_Digital_Downloads
+	 * @since 1.4
 	 */
 	private static $instance;
 
 	/**
-	 * EDD user roles and capabilities object
-	 * @since 1.4.4
+	 *  EDD User Roles and Capabilities Object
+	 *
 	 * @var object
+	 * @since 1.4.4
 	 */
-	private $roles;
+	public $roles;
 
 	/**
-	 * EDD cart fees object
+	 * EDD Cart Fees Object
+	 *
 	 * @var object
 	 * @since 1.5
 	 */
 	public $fees;
 
 	/**
-	 * EDD API object
+	 * EDD API Object
+	 *
+	 * @var object
 	 * @since 1.5
 	 */
 	public $api;
 
-
 	/**
-	 * EDD HTML session object
+	 * EDD HTML Session Object
 	 *
 	 * This holds cart items, purchase sessions, and anything else stored in the session
 	 *
+	 *
+	 * @var object
 	 * @since 1.5
 	 */
 	public $session;
 
-
 	/**
-	 * EDD HTML Element helper object
+	 * EDD HTML Element Helper Object
+	 *
+	 * @var object
 	 * @since 1.5
 	 */
 	public $html;
@@ -87,6 +98,7 @@ final class Easy_Digital_Downloads {
 	 * time. Also prevents needing to define globals all over the place.
 	 *
 	 * @since 1.4
+	 * @static
 	 * @staticvar array $instance
 	 * @uses Easy_Digital_Downloads::setup_globals() Setup the globals needed
 	 * @uses Easy_Digital_Downloads::includes() Include the required files
@@ -95,7 +107,7 @@ final class Easy_Digital_Downloads {
 	 * @return The one true Easy_Digital_Downloads
 	 */
 	public static function instance() {
-		if ( ! isset( self::$instance ) ) {
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Easy_Digital_Downloads ) ) {
 			self::$instance = new Easy_Digital_Downloads;
 			self::$instance->setup_constants();
 			self::$instance->includes();
@@ -110,38 +122,63 @@ final class Easy_Digital_Downloads {
 	}
 
 	/**
+	 * Throw error on object clone
+	 *
+	 * The whole idea of the singleton design pattern is that there is a single
+	 * object therefore, we don't want the object to be cloned.
+	 *
+	 * @since 1.6
+	 * @access protected
+	 * @return void
+	 */
+	public function __clone() {
+		// Cloning instances of the class is forbidden
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'edd' ), '1.6' );
+	}
+
+	/**
+	 * Disable unserializing of the class
+	 *
+	 * @since 1.6
+	 * @access protected
+	 * @return void
+	 */
+	public function __wakeup() {
+		// Unserializing instances of the class is forbidden
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'edd' ), '1.6' );
+	}
+
+	/**
 	 * Setup plugin constants
 	 *
-	 * @since 1.4
 	 * @access private
-	 * @uses plugin_dir_path() To generate EDD plugin path
-	 * @uses plugin_dir_url() To generate EDD plugin url
+	 * @since 1.4
+	 * @return void
 	 */
 	private function setup_constants() {
 		// Plugin version
-
-		if( ! defined( 'EDD_VERSION' ) )
-			define( 'EDD_VERSION', '1.5' );
-
-		// Plugin Folder URL
-		if( ! defined( 'EDD_PLUGIN_URL' ) )
-			define( 'EDD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+		if ( ! defined( 'EDD_VERSION' ) )
+			define( 'EDD_VERSION', '1.7.2' );
 
 		// Plugin Folder Path
-		if( ! defined( 'EDD_PLUGIN_DIR' ) )
+		if ( ! defined( 'EDD_PLUGIN_DIR' ) )
 			define( 'EDD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
+		// Plugin Folder URL
+		if ( ! defined( 'EDD_PLUGIN_URL' ) )
+			define( 'EDD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
 		// Plugin Root File
-		if( ! defined( 'EDD_PLUGIN_FILE' ) )
+		if ( ! defined( 'EDD_PLUGIN_FILE' ) )
 			define( 'EDD_PLUGIN_FILE', __FILE__ );
 	}
 
 	/**
 	 * Include required files
 	 *
-	 * @since 1.4
 	 * @access private
-	 * @uses is_admin() If in WordPress admin, load additional file
+	 * @since 1.4
+	 * @return void
 	 */
 	private function includes() {
 		global $edd_options;
@@ -160,14 +197,18 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-api.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cron.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-session.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-roles.php';
+		require_once EDD_PLUGIN_DIR . 'includes/country-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/formatting.php';
 		require_once EDD_PLUGIN_DIR . 'includes/widgets.php';
 		require_once EDD_PLUGIN_DIR . 'includes/mime-types.php';
+		require_once EDD_PLUGIN_DIR . 'includes/gateways/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/manual.php';
@@ -212,6 +253,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/import-export.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/welcome.php';
@@ -225,14 +267,9 @@ final class Easy_Digital_Downloads {
 	/**
 	 * Loads the plugin language files
 	 *
+	 * @access public
 	 * @since 1.4
-	 * @access private
-	 * @uses dirname()
-	 * @uses plugin_basename()
-	 * @uses apply_filters()
-	 * @uses load_textdomain()
-	 * @uses get_locale()
-	 * @uses load_plugin_textdomain()
+	 * @return void
 	 */
 	public function load_textdomain() {
 		// Set filter for plugin's languages directory
@@ -265,7 +302,7 @@ endif; // End if class_exists check
 
 /**
  * The main function responsible for returning the one true Easy_Digital_Downloads
- *  Instance to functions everywhere.
+ * Instance to functions everywhere.
  *
  * Use this function like you would a global variable, except without needing
  * to declare the global.
@@ -273,12 +310,11 @@ endif; // End if class_exists check
  * Example: <?php $edd = EDD(); ?>
  *
  * @since 1.4
- * @return The one true Easy_Digital_Downloads Instance
+ * @return object The one true Easy_Digital_Downloads Instance
  */
-
 function EDD() {
 	return Easy_Digital_Downloads::instance();
 }
 
-// Starts EDD running
+// Get EDD Running
 EDD();
