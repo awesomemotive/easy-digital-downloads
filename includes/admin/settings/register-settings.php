@@ -816,7 +816,7 @@ function edd_multicheck_callback( $args ) {
 
 	foreach( $args['options'] as $key => $option ):
 		if( isset( $edd_options[$args['id']][$key] ) ) { $enabled = $option; } else { $enabled = NULL; }
-		echo '<input name="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
+		echo '<input name="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" id="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
 		echo '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
 	endforeach;
 	echo '<p class="description">' . $args['desc'] . '</p>';
