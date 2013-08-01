@@ -50,22 +50,22 @@ class EDD_Stats {
 
 		$this->setup_dates();
 
-		$this->get_stats();
-
 	}
 
-	private function get_stats() {
+	public function get_stats( $download_id = 0 ) {
 
 		if( 'sales' == $this->type ) {
-			$stats = $this->get_sales();
+			$stats = $this->get_sales( $download_id );
 		} else {
-			$stats = $this->get_earnings();
+			$stats = $this->get_earnings( $download_id );
 		}
 
-		return apply_filters( 'edd_stats', $stats, $this->type, $this );
+		return apply_filters( 'edd_stats', $stats, $this->type, &$this );
 	}
 
-	public function get_sales( $status = 'publish' ) {
+	public function get_sales( $download_id = 0, $status = 'publish' ) {
+
+		// if download Id, get stats for specific download
 
 		add_filter( 'edd_count_payments_where', array( $this, 'count_where' );
 
@@ -77,7 +77,9 @@ class EDD_Stats {
 
 	}
 
-	public function get_earnings() {
+	public function get_earnings( $download_id = 0 ) {
+
+		// if download Id, get stats for specific download
 
 		$earnings = 0;
 
