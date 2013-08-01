@@ -4,8 +4,8 @@
  *
  * This class handles customer export
  *
- * @package     Easy Digital Downloads
- * @subpackage  Export Class
+ * @package     EDD
+ * @subpackage  Admin/Reports
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
@@ -14,22 +14,50 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * EDD_Download_History_Export Class
+ *
+ * @since 1.4.4
+ */
 class EDD_Download_History_Export extends EDD_Export {
 	/**
-	 * Our export type. Used for export-type specific filters / actions
+	 * Our export type. Used for export-type specific filters/actions
 	 *
-	 * @access      public
-	 * @var         string
-	 * @since       1.4.4
+	 * @var string
+	 * @since 1.4.4
 	 */
 	public $export_type = 'download_history';
+
+
+	/**
+	 * Set the export headers
+	 *
+	 * @access public
+	 * @since 1.4.4
+	 * @return void
+	 */
+	public function headers() {
+		ignore_user_abort( true );
+
+		if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) )
+			set_time_limit( 0 );
+
+		$month = isset( $_POST['month'] ) ? absint( $_POST['month'] ) : date( 'n' );
+		$year  = isset( $_POST['year']  ) ? absint( $_POST['year']  ) : date( 'Y' );
+
+		nocache_headers();
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename=edd-export-' . $this->export_type . '-' . $month . '-' . $year . '.csv' );
+		header( "Expires: 0" );
+	}
+
 
 	/**
 	 * Set the CSV columns
 	 *
-	 * @access      public
-	 * @since       1.4.4
-	 * @return      array
+	 * @access public
+	 * @since 1.4.4
+	 * @return array $cols All the columns
 	 */
 	public function csv_cols() {
 		$cols = array(
@@ -43,23 +71,26 @@ class EDD_Download_History_Export extends EDD_Export {
 	}
 
 	/**
-	 * Get the data being exported
+	 * Get the Export Data
 	 *
-	 * @access      public
-	 * @since       1.4.4
-	 * @return      array
+	 * @access public
+	 * @since 1.4.4
+ 	 * @global object $edd_logs EDD Logs Object
+	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
 		global $edd_logs;
 
 		$data = array();
 
-		$logs = $edd_logs->get_connected_logs( array(
+		$args = array(
 			'nopaging' => true,
 			'log_type' => 'file_download',
-			'month'    => date( 'n' ),
-			'year'     => date( 'Y' )
-		) );
+			'monthnum' => isset( $_POST['month'] ) ? absint( $_POST['month'] ) : date( 'n' ),
+			'year'     => isset( $_POST['year'] ) ? absint( $_POST['year'] ) : date( 'Y' )
+		);
+
+		$logs = $edd_logs->get_connected_logs( $args );
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {

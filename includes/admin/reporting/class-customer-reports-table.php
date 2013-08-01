@@ -2,43 +2,55 @@
 /**
  * Customer Reports Table Class
  *
- * @package     Easy Digital Downloads
- * @subpackage  Customer Reports List Table Class
+ * @package     EDD
+ * @subpackage  Admin/Reports
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.5
  */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 // Load WP_List_Table if not loaded
-if( ! class_exists( 'WP_List_Table' ) ) {
+if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 /**
- * EDD Customer Reports Table Class
+ * EDD_Customer_Reports_Table Class
  *
  * Renders the Customer Reports table
  *
- * @access      private
+ * @since 1.5
  */
 class EDD_Customer_Reports_Table extends WP_List_Table {
+
 	/**
-	 * Number of results to show per page
+	 * Number of items per page
+	 *
 	 * @var int
-	 * @since  1.4
+	 * @since 1.5
 	 */
 	public $per_page = 30;
 
 	/**
+	 * Number of customers found
+	 *
+	 * @var int
+	 * @since 1.7
+	 */
+	public $count = 0;
+
+	/**
 	 * Get things started
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @return      void
+	 * @access public
+	 * @since 1.5
+	 * @see WP_List_Table::__construct()
+	 * @return void
 	 */
-	function __construct() {
+	public function __construct() {
 		global $status, $page;
 
 		// Set parent defaults
@@ -51,13 +63,44 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Render most columns
+	 * Show the search field
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @return      string
+	 * @since 1.7
+	 * @access public
+	 *
+	 * @param string $text Label for the search box
+	 * @param string $input_id ID of the search box
+	 *
+	 * @return void
 	 */
-	function column_default( $item, $column_name ) {
+	public function search_box( $text, $input_id ) {
+		$input_id = $input_id . '-search-input';
+
+		if ( ! empty( $_REQUEST['orderby'] ) )
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+		if ( ! empty( $_REQUEST['order'] ) )
+			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		?>
+		<p class="search-box">
+			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
+			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
+			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
+		</p>
+		<?php
+	}
+
+	/**
+	 * This function renders most of the columns in the list table.
+	 *
+	 * @access public
+	 * @since 1.5
+	 *
+	 * @param array $item Contains all the data of the customers
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Column Name
+	 */
+	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'name' :
 				return '<a href="' .
@@ -79,11 +122,11 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Retrieve the table columns
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @return      array
+	 * @access public
+	 * @since 1.5
+	 * @return array $columns Array of all the list table columns
 	 */
-	function get_columns(){
+	public function get_columns() {
 		$columns = array(
 			'name'     		=> __( 'Name', 'edd' ),
 			'email'     	=> __( 'Email', 'edd' ),
@@ -96,13 +139,13 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Show reporting views
+	 * Outputs the reporting views
 	 *
-	 * @access      private
-	 * @since       1.3
-	 * @return      void
+	 * @access public
+	 * @since 1.5
+	 * @return void
 	 */
-	function bulk_actions() {
+	public function bulk_actions() {
 		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_report_views();
 	}
@@ -110,76 +153,101 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	/**
 	 * Retrieve the current page number
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @return      int
+	 * @access public
+	 * @since 1.5
+	 * @return int Current page number
 	 */
-	function get_paged() {
+	public function get_paged() {
 		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 	}
 
 	/**
 	 * Retrieve the total customers from the database
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @return      int
+	 * @access public
+	 * @since 1.5
+	 * @global object $wpdb Used to query the database using the WordPress
+	 *   Database API
+	 * @return int $count The number of customers from the database
 	 */
-	function get_total_customers() {
-		global $wpdb;
-		$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
-		return $count[0];
+	public function get_total_customers() {
+		return $this->count;
+	}
+
+	/**
+	 * Retrieves the search query string
+	 *
+	 * @access public
+	 * @since 1.7
+	 * @return mixed string If search is present, false otherwise
+	 */
+	public function get_search() {
+		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
 	}
 
 	/**
 	 * Build all the reports data
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @return      array $reports_data
+	 * @access public
+	 * @since 1.5
+	  * @global object $wpdb Used to query the database using the WordPress
+	 *   Database API
+	 * @return array $reports_data All the data for customer reports
 	 */
-	function reports_data() {
+	public function reports_data() {
 		global $wpdb;
 
-		$reports_data = array();
-		$paged        = $this->get_paged();
-		$offset       = $this->per_page * ( $paged - 1 );
-		$customers    = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' ORDER BY meta_id DESC LIMIT $this->per_page OFFSET $offset" );
+		$data   = array();
+		$paged  = $this->get_paged();
+		$offset = $this->per_page * ( $paged - 1 );
+		$search = $this->get_search();
+		$where  = "WHERE meta_key = '_edd_payment_user_email'";
+
+		if ( $search ) {
+			$where .= " AND meta_value LIKE '%$search%'";
+		}
+
+		$customers = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta $where ORDER BY meta_id DESC LIMIT $this->per_page OFFSET $offset" );
 
 		if ( $customers ) {
+
+			$this->count = count( $customers );
+
 			foreach ( $customers as $customer_email ) {
 				$wp_user = get_user_by( 'email', $customer_email );
 
 				$user_id = $wp_user ? $wp_user->ID : 0;
 
-				$reports_data[] = array(
+				$mode    = edd_is_test_mode() ? 'test' : 'live';
+
+				$stats   = edd_get_purchase_stats_by_user( $customer_email, $mode );
+
+				$data[] = array(
 					'ID' 			=> $user_id,
 					'name' 			=> $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' ),
 					'email' 		=> $customer_email,
-					'num_purchases'	=> edd_count_purchases_of_customer( $customer_email ),
-					'amount_spent'	=> edd_purchase_total_of_user( $customer_email ),
+					'num_purchases'	=> $stats['purchases'],
+					'amount_spent'	=> $stats['total_spent'],
 					'file_downloads'=> edd_count_file_downloads_of_user( ! empty( $user_id ) ? $user_id : $customer_email )
 				);
 			}
 		}
 
-		return $reports_data;
+		return $data;
 	}
 
 	/**
 	 * Setup the final data for the table
 	 *
-	 * @access      private
-	 * @since       1.4
-	 * @uses        $this->_column_headers
-	 * @uses        $this->items
-	 * @uses        $this->get_columns()
-	 * @uses        $this->get_sortable_columns()
-	 * @uses        $this->get_pagenum()
-	 * @uses        $this->set_pagination_args()
-	 * @return      array
+	 * @access public
+	 * @since 1.5
+	 * @uses EDD_Customer_Reports_Table::get_columns()
+	 * @uses WP_List_Table::get_sortable_columns()
+	 * @uses EDD_Customer_Reports_Table::get_pagenum()
+	 * @uses EDD_Customer_Reports_Table::get_total_customers()
+	 * @return void
 	 */
-	function prepare_items() {
+	public function prepare_items() {
 		$columns = $this->get_columns();
 
 		$hidden = array(); // No hidden columns
@@ -190,16 +258,12 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		$current_page = $this->get_pagenum();
 
-		$total_items = $this->get_total_customers();
-
-		//$data = array_slice( $data,( ( $current_page - 1 ) * $per_page ), $per_page );
-
 		$this->items = $this->reports_data();
 
 		$this->set_pagination_args( array(
-			'total_items' => $total_items,                  	// WE have to calculate the total number of items
+			'total_items' => $this->count,                  	// WE have to calculate the total number of items
 			'per_page'    => $this->per_page,                     	// WE have to determine how many items to show on a page
-			'total_pages' => ceil( $total_items / $this->per_page )   // WE have to calculate the total number of pages
+			'total_pages' => ceil( $this->count / $this->per_page )   // WE have to calculate the total number of pages
 		) );
 	}
 }

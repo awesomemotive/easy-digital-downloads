@@ -4,8 +4,8 @@
  *
  * Functions related to users / customers
  *
- * @package     Easy Digital Downloads
- * @subpackage  AJAX
+ * @package     EDD
+ * @subpackage  Functions
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0.8.6
@@ -26,12 +26,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @return array List of all user purchases
  */
-function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false ) {
+function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, $status = 'complete' ) {
 	if ( empty( $user ) ) {
-		global $user_ID;
-
-		$user = $user_ID;
+		$user = get_current_user_id();
 	}
+
+	$status = $status === 'complete' ? 'publish' : $status;
 
 	$mode = edd_is_test_mode() ? 'test' : 'live';
 
@@ -48,7 +48,7 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false )
 		'mode'   => $mode,
 		'user'   => $user,
 		'number' => $number,
-		'status' => 'publish'
+		'status' => $status
 	) );
 
 	if ( $pagination )
@@ -78,8 +78,6 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false )
  * @return      boolean - true if has purchased, false otherwise
  */
 function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null ) {
-	if ( ! is_user_logged_in() )
-		return false; // At some point this should support email checking
 
 	$users_purchases = edd_get_users_purchases( $user_id );
 
@@ -91,14 +89,15 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
 
 	if ( $users_purchases ) {
 		foreach ( $users_purchases as $purchase ) {
-			$purchase_meta = edd_get_payment_meta( $purchase->ID );
-			$purchased_files = maybe_unserialize( $purchase_meta['downloads'] );
+
+			$purchased_files = edd_get_payment_meta_downloads( $purchase->ID );
 
 			if ( is_array( $purchased_files ) ) {
 				foreach ( $purchased_files as $download ) {
 					if ( in_array( $download['id'], $downloads ) ) {
-						if ( !is_null( $variable_price_id ) && $variable_price_id !== false ) {
-							if ( $variable_price_id == $download['options']['price_id'] ) {
+						$variable_prices = edd_has_variable_prices( $download['id'] );
+						if ( $variable_prices && ! is_null( $variable_price_id ) && $variable_price_id !== false ) {
+							if ( isset( $download['options']['price_id'] ) && $variable_price_id == $download['options']['price_id'] ) {
 								return true;
 							} else {
 								$return = false;
@@ -126,9 +125,8 @@ function edd_has_user_purchased( $user_id, $downloads, $variable_price_id = null
  * @return      bool - true if has purchased, false other wise.
  */
 function edd_has_purchases( $user_id = null ) {
-	if ( is_null( $user_id ) ) {
-		global $user_ID;
-		$user_id = $user_ID;
+	if ( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
 	}
 
 	if ( edd_get_users_purchases( $user_id, 1 ) ) {
@@ -136,6 +134,62 @@ function edd_has_purchases( $user_id = null ) {
 	}
 	return false; // User has never purchased anything
 }
+
+
+/**
+ * Get Purchase Status for User
+ *
+ * Retrieves the purchase count and the total amount spent for a specific user
+ *
+ * @access      public
+ * @since       1.6
+ * @param       $user int|string - the ID or email of the customer to retrieve stats for
+ * @param       $mode string - "test" or "live"
+ * @return      array
+ */
+function edd_get_purchase_stats_by_user( $user = '', $mode = 'live' ) {
+
+	global $wpdb;
+
+	if( is_email( $user ) )
+		$field = 'email';
+	elseif( is_numeric( $user ) )
+		$field = 'id';
+	else
+		return false;
+
+	$stats = array(
+		'purchases'   => 0,
+		'total_spent' => 0
+	);
+
+	$query = "SELECT {$wpdb->prefix}mb.meta_value AS payment_total
+		FROM {$wpdb->prefix}postmeta {$wpdb->prefix}m
+		LEFT JOIN {$wpdb->prefix}postmeta {$wpdb->prefix}ma
+			ON {$wpdb->prefix}ma.post_id = {$wpdb->prefix}m.post_id
+			AND {$wpdb->prefix}ma.meta_key = '_edd_payment_user_{$field}'
+			AND {$wpdb->prefix}ma.meta_value = '%s'
+		LEFT JOIN {$wpdb->prefix}postmeta {$wpdb->prefix}mb
+			ON {$wpdb->prefix}mb.post_id = {$wpdb->prefix}ma.post_id
+			AND {$wpdb->prefix}mb.meta_key = '_edd_payment_total'
+		INNER JOIN {$wpdb->prefix}posts {$wpdb->prefix}
+			ON {$wpdb->prefix}.id = {$wpdb->prefix}m.post_id
+			AND {$wpdb->prefix}.post_status = 'publish'
+		WHERE {$wpdb->prefix}m.meta_key = '_edd_payment_mode'
+		AND {$wpdb->prefix}m.meta_value = '%s'";
+
+	$purchases = $wpdb->get_col( $wpdb->prepare( $query, $user, $mode ) );
+
+	$purchases = array_filter( $purchases );
+
+	if( $purchases ) {
+		$stats['purchases']   = count( $purchases );
+		$stats['total_spent'] = round( array_sum( $purchases ), 2 );
+	}
+
+	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user, $mode );
+}
+
 
 /**
  * Count number of purchases of a customer
@@ -151,17 +205,11 @@ function edd_count_purchases_of_customer( $user = null ) {
 	if ( empty( $user ) )
 		$user = get_current_user_id();
 
-	$args = array(
-		'number'   => -1,
-		'mode'     => 'live',
-		'user'     => $user,
-		'status'   => 'publish'
-	);
+	$mode  = edd_is_test_mode() ? 'test' : 'live';
 
-	$customer_purchases = edd_get_payments( $args );
-	if ( $customer_purchases )
-		return count( $customer_purchases );
-	return 0;
+	$stats = edd_get_purchase_stats_by_user( $user, $mode );
+
+	return $stats['purchases'];
 }
 
 /**
@@ -173,28 +221,14 @@ function edd_count_purchases_of_customer( $user = null ) {
  * @return      float - the total amount the user has spent
  */
 function edd_purchase_total_of_user( $user = null ) {
-	$args = array(
-		'number'   => -1,
-		'mode'     => 'live',
-		'user'     => $user,
-		'status'   => 'publish'
-	);
 
-	$customer_purchases = edd_get_payments( $args );
+	global $wpdb;
 
-	$amount = get_transient( md5( 'edd_customer_total_' . $user ) );
-	if ( false === $amount ) {
-		$amount = 0;
+	$mode  = edd_is_test_mode() ? 'test' : 'live';
 
-		if ( $customer_purchases ) :
-			foreach ( $customer_purchases as $purchase ) :
-				$amount += edd_get_payment_amount( $purchase->ID );
-			endforeach;
-		endif;
-		set_transient( md5( 'edd_customer_total_' . $user ), $amount );
-	}
+	$stats = edd_get_purchase_stats_by_user( $user, $mode );
 
-	return round( $amount, 2 );
+	return $stats['total_spent'];
 }
 
 /**
@@ -240,4 +274,55 @@ function edd_validate_username( $username ) {
 	$sanitized = sanitize_user( $username, false );
 	$valid = ( $sanitized == $username );
 	return (bool) apply_filters( 'edd_validate_username', $valid, $username );
+}
+
+
+/**
+ * Looks up purchases by email that match the registering user
+ *
+ * This is for users that purchased as a guest and then came
+ * back and created an account.
+ *
+ * @access      public
+ * @since       1.6
+ * @param       $user_id INT - the new user's ID
+ * @return      void
+ */
+function edd_add_past_purchases_to_new_user( $user_id ) {
+
+	$email    = get_user_meta( $user_id, 'user_email', true );
+	$mode     = edd_is_test_mode() ? 'test' : 'live';
+	$payments = edd_get_payments( array( 's' => $email, 'mode' => $mode ) );
+	if( $payments ) {
+		foreach( $payments as $payment ) {
+			if( intval( edd_get_payment_user_id( $payment->ID ) ) > 0 )
+				continue; // This payment already associated with an account
+
+			$meta                    = edd_get_payment_meta( $payment->ID );
+			$meta['user_info']       = maybe_unserialize( $meta['user_info'] );
+			$meta['user_info']['id'] = $user_id;
+			$meta['user_info']       = serialize( $meta['user_info'] );
+
+			// Store the updated user ID in the payment meta
+			update_post_meta( $payment->ID, '_edd_payment_meta', $meta );
+		}
+	}
+
+}
+add_action( 'user_register', 'edd_add_past_purchases_to_new_user' );
+
+
+/**
+ * Counts the total number of customers.
+ *
+ * @access 		public
+ * @since 		1.7
+ * @global object $wpdb Used to query the database using the WordPress
+ *   Database API
+ * @return 		int - The total number of customers.
+ */
+function edd_count_total_customers() {
+	global $wpdb;
+	$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
+	return $count[0];
 }

@@ -1,9 +1,9 @@
 <?php
 /**
- * Add Discount Template
+ * Add Discount Page
  *
- * @package     Easy Digital Downloads
- * @subpackage  Discounts
+ * @package     EDD
+ * @subpackage  Admin/Discounts
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
@@ -12,7 +12,7 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
-<h3><?php _e( 'Add New Discount', 'edd' ); ?></h3>
+	<h2><?php _e( 'Add New Discount', 'edd' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
 <form id="edd-add-discount" action="" method="POST">
 	<?php do_action( 'edd_add_discount_form_top' ); ?>
 	<table class="form-table">
@@ -70,7 +70,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					</p>
 					<select multiple id="edd-products" name="products[]" class="edd-select-chosen" data-placeholder="<?php printf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ); ?>">
 						<?php
-						$downloads = get_posts( array( 'post_type' => 'download', 'no_paging' => 1 ) );
+						$downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
 						if( $downloads ) :
 							foreach( $downloads as $download ) :
 								echo '<option value="' . esc_attr( $download->ID ) . '">' . esc_html( get_the_title( $download->ID ) ) . '</option>';
@@ -130,7 +130,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				</th>
 				<td>
 					<input type="checkbox" id="edd-use-once" name="use_once" value="1"/>
-					<span class="description"><?php _e( 'Limit this discount to a single-user per customer?', 'edd' ); ?></span>
+					<span class="description"><?php _e( 'Limit this discount to a single-use per customer?', 'edd' ); ?></span>
 				</td>
 			</tr>
 		</tbody>
@@ -138,6 +138,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<?php do_action( 'edd_add_discount_form_bottom' ); ?>
 	<p class="submit">
 		<input type="hidden" name="edd-action" value="add_discount"/>
+		<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ); ?>"/>
 		<input type="hidden" name="edd-discount-nonce" value="<?php echo wp_create_nonce( 'edd_discount_nonce' ); ?>"/>
 		<input type="submit" value="<?php _e( 'Add Discount Code', 'edd' ); ?>" class="button-primary"/>
 	</p>

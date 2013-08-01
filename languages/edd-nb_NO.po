@@ -1,0 +1,4340 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Easy Digital Downloads\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-03-12 00:55+0100\n"
+"PO-Revision-Date: 2013-05-02 20:57+0100\n"
+"Last-Translator: Stein <stein@brauten.com>\n"
+"Language-Team: Stein Brauten <stein@brauten.com>\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e;_x;_n;esc_attr__;esc_attr_e;esc_html__;"
+"esc_html_e;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;_n:1,2\n"
+"X-Poedit-Basepath: ../\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: includes/ajax-functions.php:118
+msgid "This discount code has been used already"
+msgstr "Denne rabattkoden har allerede blitt brukt"
+
+#: includes/ajax-functions.php:134 includes/process-purchase.php:224
+msgid "The discount you entered is invalid"
+msgstr "Rabatten du skrev inn er ugyldig"
+
+#: includes/class-edd-api.php:186
+msgid "You must specify both user and API key!"
+msgstr "Du må angi både bruker og API-nøkkel!"
+
+#: includes/class-edd-api.php:203
+msgid "The email address specified is not registered!"
+msgstr "E-postadressen som angis er ikke registrert!"
+
+#: includes/class-edd-api.php:219
+#, php-format
+msgid "Invalid API key for %s!"
+msgstr "Ugyldig API-nøkkel for %s!"
+
+#: includes/class-edd-api.php:326
+msgid "Invalid query!"
+msgstr "Ugyldig forespørsel!"
+
+#: includes/class-edd-api.php:428 includes/class-edd-api.php:429
+#: includes/class-edd-api.php:430 includes/class-edd-api.php:431
+#: includes/admin/reporting/class-customer-reports-table.php:157
+#: includes/admin/reporting/class-export-customers.php:110
+#: includes/admin/reporting/class-export-customers.php:124
+msgid "Guest"
+msgstr "Gjest"
+
+#: includes/class-edd-api.php:471
+#, php-format
+msgid "Customer %s not found!"
+msgstr "Kunde %s ikke funnet!"
+
+#: includes/class-edd-api.php:590 includes/class-edd-api.php:730
+#: includes/class-edd-api.php:826
+#, php-format
+msgid "Product %s not found!"
+msgstr "Produktet %s finnes ikke!"
+
+#: includes/class-edd-api.php:671 includes/class-edd-api.php:765
+msgid "The end date must be later than the date date!"
+msgstr "Sluttdatoen må være senere enn dagens dato!"
+
+#: includes/class-edd-api.php:700 includes/class-edd-api.php:794
+msgid "Invalid or no date range specified!"
+msgstr "Ugyldig eller ingen dato fra - til er angitt!"
+
+#: includes/class-edd-api.php:705 includes/class-edd-api.php:801
+msgid "Invalid option for argument 'date'!"
+msgstr "Ugyldig alternativ for argumentet 'dato'!"
+
+#: includes/class-edd-api.php:1031
+msgid "Easy Digital Downloads API Key"
+msgstr "Easy Digital Downloads API-nøkkel"
+
+#: includes/class-edd-api.php:1036
+msgid "Generate API Key"
+msgstr "Generer API-nøkkel"
+
+#: includes/class-edd-api.php:1040
+msgid "Revoke API Key"
+msgstr "Opphev API-nøkkel"
+
+#: includes/class-edd-html-elements.php:43
+msgid "No products found"
+msgstr "Ingen produkter funnet"
+
+#: includes/class-edd-logging.php:46 includes/admin/reporting/reports.php:36
+msgid "Logs"
+msgstr "Logger"
+
+#: includes/class-edd-roles.php:41
+msgid "Shop Manager"
+msgstr "Butikkleder"
+
+#: includes/class-edd-roles.php:74
+msgid "Shop Accountant"
+msgstr "Regnskapsfører"
+
+#: includes/class-edd-roles.php:80
+msgid "Shop Worker"
+msgstr "Butikkarbeider"
+
+#: includes/class-edd-roles.php:87
+msgid "Shop Vendor"
+msgstr "Selger"
+
+#: includes/download-functions.php:801
+msgid "Sorry but you have hit your download limit for this file."
+msgstr "Beklager, men du har nådd din nedlastingsgrense for denne filen."
+
+#: includes/download-functions.php:801 includes/error-tracking.php:35
+#: includes/query-filters.php:39
+#: includes/admin/discounts/discount-actions.php:91
+#: includes/admin/discounts/edit-discount.php:16
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:121
+#: includes/admin/reporting/class-export.php:166
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:115
+#: includes/emails/template.php:384
+msgid "Error"
+msgstr "Feil"
+
+#: includes/formatting.php:61
+#, php-format
+msgid "%1$s Not Available"
+msgstr "%1$s er ikke tilgjengelig"
+
+#: includes/install.php:41 includes/template-functions.php:100
+#: templates/widget-cart-checkout.php:1 templates/widget-cart-empty.php:2
+msgid "Checkout"
+msgstr "Til kassen"
+
+#: includes/install.php:53
+msgid "Purchase Confirmation"
+msgstr "Kjøpsbekreftelse"
+
+#: includes/install.php:54
+msgid "Thank you for your purchase! [edd_receipt]"
+msgstr "Takk for kjøpet! [edd_receipt]"
+
+#: includes/install.php:65 includes/admin/upgrades/upgrade-functions.php:204
+msgid "Transaction Failed"
+msgstr "Transaksjonen kunne ikke gjennomføres"
+
+#: includes/install.php:66 includes/admin/upgrades/upgrade-functions.php:205
+msgid "Your transaction failed, please try again or contact site support."
+msgstr ""
+"Transaksjonen mislyktes, vennligst prøv igjen, eller kontakt sidens støtte/"
+"hjelp."
+
+#: includes/install.php:78 includes/widgets.php:178
+msgid "Purchase History"
+msgstr "Kjøpshistorikk"
+
+#: includes/login-register.php:37
+msgid "Log into Your Account"
+msgstr "Logg inn på din konto"
+
+#: includes/login-register.php:40 includes/login-register.php:41
+#: includes/checkout/template.php:306 includes/checkout/template.php:308
+#: includes/checkout/template.php:344
+#: templates/shortcode-profile-editor.php:70
+msgid "Username"
+msgstr "Brukernavn"
+
+#: includes/login-register.php:44 includes/checkout/template.php:311
+#: includes/checkout/template.php:313 includes/checkout/template.php:348
+#: templates/shortcode-profile-editor.php:71
+msgid "Password"
+msgstr "Passord"
+
+#: includes/login-register.php:51 includes/checkout/template.php:286
+msgid "Login"
+msgstr "Logg inn"
+
+#: includes/login-register.php:54
+msgid "Lost Password"
+msgstr "Mistet Passord"
+
+#: includes/login-register.php:55
+msgid "Lost Password?"
+msgstr "Mistet Passordet?"
+
+#: includes/login-register.php:63
+msgid "You are already logged in"
+msgstr "Du er allerede logget inn"
+
+#: includes/login-register.php:84 includes/process-purchase.php:440
+msgid "The password you entered is incorrect"
+msgstr "Passordet du skrev inn er feil"
+
+#: includes/login-register.php:87 includes/process-purchase.php:459
+msgid "The username you entered does not exist"
+msgstr "Brukernavnet du skrev inn eksisterer ikke"
+
+#: includes/misc-functions.php:209
+msgid "US Dollars (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:210
+msgid "Euros (&euro;)"
+msgstr ""
+
+#: includes/misc-functions.php:211
+msgid "Pounds Sterling (&pound;)"
+msgstr ""
+
+#: includes/misc-functions.php:212
+msgid "Australian Dollars (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:213
+msgid "Brazilian Real (R&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:214
+msgid "Canadian Dollars (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:215
+msgid "Czech Koruna"
+msgstr ""
+
+#: includes/misc-functions.php:216
+msgid "Danish Krone"
+msgstr ""
+
+#: includes/misc-functions.php:217
+msgid "Hong Kong Dollar (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:218
+msgid "Hungarian Forint"
+msgstr ""
+
+#: includes/misc-functions.php:219
+msgid "Israeli Shekel"
+msgstr ""
+
+#: includes/misc-functions.php:220
+msgid "Japanese Yen (&yen;)"
+msgstr ""
+
+#: includes/misc-functions.php:221
+msgid "Malaysian Ringgits"
+msgstr ""
+
+#: includes/misc-functions.php:222
+msgid "Mexican Peso (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:223
+msgid "New Zealand Dollar (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:224
+msgid "Norwegian Krone"
+msgstr "Kr"
+
+#: includes/misc-functions.php:225
+msgid "Philippine Pesos"
+msgstr ""
+
+#: includes/misc-functions.php:226
+msgid "Polish Zloty"
+msgstr ""
+
+#: includes/misc-functions.php:227
+msgid "Singapore Dollar (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:228
+msgid "Swedish Krona"
+msgstr ""
+
+#: includes/misc-functions.php:229
+msgid "Swiss Franc"
+msgstr ""
+
+#: includes/misc-functions.php:230
+msgid "Taiwan New Dollars"
+msgstr ""
+
+#: includes/misc-functions.php:231
+msgid "Thai Baht"
+msgstr ""
+
+#: includes/misc-functions.php:232
+msgid "Indian Rupee"
+msgstr ""
+
+#: includes/misc-functions.php:233
+msgid "Turkish Lira"
+msgstr ""
+
+#: includes/misc-functions.php:234
+msgid "Iranian Rial"
+msgstr ""
+
+#: includes/misc-functions.php:695
+#, php-format
+msgid ""
+"%1$s is <strong>deprecated</strong> since Easy Digital Downloads version "
+"%2$s! Use %3$s instead."
+msgstr ""
+"%1$s er <strong> foreldet </ strong> siden Easy Digital Downloas versjon "
+"%2$s! Bruk %3$s i stedet."
+
+#: includes/misc-functions.php:700
+#, php-format
+msgid ""
+"%1$s is <strong>deprecated</strong> since Easy Digital Downloads version "
+"%2$s with no alternative available."
+msgstr ""
+"%1$s er <strong> foreldet </ strong> siden Easy Digital Downloads versjon "
+"%2$s, ingen alternativer er tilgjengelige."
+
+#: includes/plugin-compatibility.php:92
+msgid "No Caching on Checkout?"
+msgstr "Ingen mellomlagring for Kassen?"
+
+#: includes/plugin-compatibility.php:93
+msgid ""
+"Check this box in order to append a ?nocache parameter to the checkout URL "
+"to prevent caching plugins from caching the page."
+msgstr ""
+"Kryss av for å legge et ?nocache parameter til kassens URL for å unngå at "
+"mellomlagringsutvidelser ikke mellomlagrer siden."
+
+#: includes/post-types.php:43 includes/post-types.php:81
+#: includes/post-types.php:111
+msgid "Add New"
+msgstr "Legg til ny"
+
+#: includes/post-types.php:44
+#, php-format
+msgid "Add New %1$s"
+msgstr "Legg til ny %1$s"
+
+#: includes/post-types.php:45
+#, php-format
+msgid "Edit %1$s"
+msgstr "Rediger %1$s"
+
+#: includes/post-types.php:46
+#, php-format
+msgid "New %1$s"
+msgstr "Ny %1$s"
+
+#: includes/post-types.php:47
+#, php-format
+msgid "All %2$s"
+msgstr "Alle %2$s"
+
+#: includes/post-types.php:48
+#, php-format
+msgid "View %1$s"
+msgstr "Se %1$s"
+
+#: includes/post-types.php:49
+#, php-format
+msgid "Search %2$s"
+msgstr "Søk %2$s"
+
+#: includes/post-types.php:50
+#, php-format
+msgid "No %2$s found"
+msgstr "Ingen %2$s funnet"
+
+#: includes/post-types.php:51
+#, php-format
+msgid "No %2$s found in Trash"
+msgstr "Ingen %2$s funnet i søppelboksen"
+
+#: includes/post-types.php:53
+#, php-format
+msgid "%2$s"
+msgstr "%2$s"
+
+#: includes/post-types.php:79
+msgctxt "post type general name"
+msgid "Payments"
+msgstr "Betalinger"
+
+#: includes/post-types.php:80
+msgctxt "post type singular name"
+msgid "Payment"
+msgstr "Betaling"
+
+#: includes/post-types.php:82
+msgid "Add New Payment"
+msgstr "Legg til ny betaling"
+
+#: includes/post-types.php:83 includes/admin/payments/edit-payment.php:19
+msgid "Edit Payment"
+msgstr "Rediger betaling"
+
+#: includes/post-types.php:84
+msgid "New Payment"
+msgstr "Ny betaling"
+
+#: includes/post-types.php:85
+msgid "All Payments"
+msgstr "Alle betalinger"
+
+#: includes/post-types.php:86
+msgid "View Payment"
+msgstr "Se på betalinger"
+
+#: includes/post-types.php:87
+msgid "Search Payments"
+msgstr "Søk etter betalinger"
+
+#: includes/post-types.php:88
+msgid "No Payments found"
+msgstr "Ingen betalinger funnet"
+
+#: includes/post-types.php:89
+msgid "No Payments found in Trash"
+msgstr "Ingen betalinger funnet i søppelboksen"
+
+#: includes/post-types.php:91 includes/admin/admin-pages.php:29
+#: includes/admin/payments/payments-history.php:35
+msgid "Payment History"
+msgstr "Betalingshistorie"
+
+#: includes/post-types.php:109
+msgctxt "post type general name"
+msgid "Discounts"
+msgstr "Rabatter"
+
+#: includes/post-types.php:110
+msgctxt "post type singular name"
+msgid "Discount"
+msgstr "Rabatt"
+
+#: includes/post-types.php:112 includes/admin/discounts/add-discount.php:15
+msgid "Add New Discount"
+msgstr "Legg til ny rabatt"
+
+#: includes/post-types.php:113 includes/admin/discounts/edit-discount.php:25
+msgid "Edit Discount"
+msgstr "Rediger rabatt"
+
+#: includes/post-types.php:114
+msgid "New Discount"
+msgstr "Ny rabatt"
+
+#: includes/post-types.php:115
+msgid "All Discounts"
+msgstr "Alle rabatter"
+
+#: includes/post-types.php:116
+msgid "View Discount"
+msgstr "Se på rabatter"
+
+#: includes/post-types.php:117
+msgid "Search Discounts"
+msgstr "Søk rabatter"
+
+#: includes/post-types.php:118
+msgid "No Discounts found"
+msgstr "Ingen rabatter funnet"
+
+#: includes/post-types.php:119
+msgid "No Discounts found in Trash"
+msgstr "Ingen rabatter funnet i søppelboksen"
+
+#: includes/post-types.php:121
+msgid "Discounts"
+msgstr "Rabatt"
+
+#: includes/post-types.php:148
+#: includes/admin/reporting/class-sales-logs-list-table.php:92
+msgid "Download"
+msgstr "Last ned"
+
+#: includes/post-types.php:149
+msgid "Downloads"
+msgstr "Nedlastinger"
+
+#: includes/post-types.php:191
+#, php-format
+msgid "Enter %s title here"
+msgstr "Skriv inn%s tittelen her"
+
+#: includes/post-types.php:215
+msgctxt "taxonomy general name"
+msgid "Categories"
+msgstr "Kategorier"
+
+#: includes/post-types.php:216
+msgctxt "taxonomy singular name"
+msgid "Category"
+msgstr "Kategori"
+
+#: includes/post-types.php:217
+msgid "Search Categories"
+msgstr "Søk kategorier"
+
+#: includes/post-types.php:218
+msgid "All Categories"
+msgstr "Alle kategorier"
+
+#: includes/post-types.php:219
+msgid "Parent Category"
+msgstr "Overordnet kategori"
+
+#: includes/post-types.php:220
+msgid "Parent Category:"
+msgstr "Overordnet kategori:"
+
+#: includes/post-types.php:221
+msgid "Edit Category"
+msgstr "Rediger kategori"
+
+#: includes/post-types.php:222
+msgid "Update Category"
+msgstr "Oppdater kategori"
+
+#: includes/post-types.php:223
+msgid "Add New Category"
+msgstr "Legg til ny kategori"
+
+#: includes/post-types.php:224
+msgid "New Category Name"
+msgstr "Nytt kategorinavn"
+
+#: includes/post-types.php:225 includes/widgets.php:158
+#: includes/admin/downloads/dashboard-columns.php:28
+#: includes/admin/reporting/pdf-reports.php:64
+msgid "Categories"
+msgstr "Kategorier"
+
+#: includes/post-types.php:240
+msgctxt "taxonomy general name"
+msgid "Tags"
+msgstr "Tagger"
+
+#: includes/post-types.php:241
+msgctxt "taxonomy singular name"
+msgid "Tag"
+msgstr "Tagg"
+
+#: includes/post-types.php:242
+msgid "Search Tags"
+msgstr "Søk tagger"
+
+#: includes/post-types.php:243
+msgid "All Tags"
+msgstr "Alle tagger"
+
+#: includes/post-types.php:244
+msgid "Parent Tag"
+msgstr "Overordnet tag"
+
+#: includes/post-types.php:245
+msgid "Parent Tag:"
+msgstr "Overordnet tag:"
+
+#: includes/post-types.php:246
+msgid "Edit Tag"
+msgstr "Rediger tag"
+
+#: includes/post-types.php:247
+msgid "Update Tag"
+msgstr "Oppdater tag"
+
+#: includes/post-types.php:248
+msgid "Add New Tag"
+msgstr "Legg til ny tag"
+
+#: includes/post-types.php:249
+msgid "New Tag Name"
+msgstr "Nytt tag navn"
+
+#: includes/post-types.php:250 includes/widgets.php:159
+#: includes/admin/downloads/dashboard-columns.php:29
+#: includes/admin/reporting/pdf-reports.php:65
+msgid "Tags"
+msgstr "Tagger"
+
+#: includes/post-types.php:275
+msgctxt "Refunded payment status"
+msgid "Refunded"
+msgstr "Refundert"
+
+#: includes/post-types.php:283
+msgctxt "Failed payment status"
+msgid "Failed"
+msgstr "Mislyktes"
+
+#: includes/post-types.php:291
+msgctxt "Revoked payment status"
+msgid "Revoked"
+msgstr "Opphevet"
+
+#: includes/post-types.php:301
+msgctxt "Active discount code status"
+msgid "Active"
+msgstr "Aktiv"
+
+#: includes/post-types.php:309
+msgctxt "Inactive discount code status"
+msgid "Inactive"
+msgstr "Ikke aktiv"
+
+#: includes/post-types.php:336 includes/post-types.php:337
+#, php-format
+msgid "%2$s updated. %1$sView %2$s%3$s."
+msgstr "%2$s oppdatert. %1$sSe %2$s%3$s."
+
+#: includes/post-types.php:338
+#, php-format
+msgid "%2$s published. %1$sView %2$s%3$s."
+msgstr "%2$s publisert. %1$sSe %2$s%3$s."
+
+#: includes/post-types.php:339
+#, php-format
+msgid "%2$s saved. %1$sView %2$s%3$s."
+msgstr "%2$s lagret. %1$sSe %2$s%3$s."
+
+#: includes/post-types.php:340
+#, php-format
+msgid "%2$s submitted. %1$sView %2$s%3$s."
+msgstr "%2$s levert. %1$sSe %2$s%3$s."
+
+#: includes/process-download.php:116
+msgid "You do not have permission to download this file"
+msgstr "Du har ikke tillatelse til å laste ned denne filen"
+
+#: includes/process-download.php:117
+msgid "Purchase Verification Failed"
+msgstr "Verifisering av kjøpet mislyktes"
+
+#: includes/process-purchase.php:28 includes/cart/template.php:113
+msgid "Your cart is empty."
+msgstr "Handlekurven er tom."
+
+#: includes/process-purchase.php:185
+msgid "The selected gateway is not active"
+msgstr "Den valgte gateway er ikke aktiv"
+
+#: includes/process-purchase.php:187
+msgid "No gateway has been selected"
+msgstr "Ingen gateway er valgt"
+
+#: includes/process-purchase.php:242
+msgid "You must agree to the terms of use"
+msgstr "Du må godta bruksvilkårene"
+
+#: includes/process-purchase.php:257
+msgid "Please enter your first name."
+msgstr "Skriv inn ditt fornavn."
+
+#: includes/process-purchase.php:285
+msgid "Please enter a valid email address."
+msgstr "Vennligst skriv inn en gyldig e-postadresse."
+
+#: includes/process-purchase.php:306
+msgid "The user information is invalid."
+msgstr "Brukerinformasjonen er ugyldig."
+
+#: includes/process-purchase.php:348
+msgid "Username already taken"
+msgstr "Brukernavn allerede i bruk"
+
+#: includes/process-purchase.php:353
+msgid "Invalid username. Only lowercase letters (a-z) and numbers are allowed"
+msgstr "Ugyldig brukernavn. Bare små bokstaver (a-z) og tall er tillatt"
+
+#: includes/process-purchase.php:355
+msgid "Invalid username"
+msgstr "Ugyldig brukernavn"
+
+#: includes/process-purchase.php:362
+msgid "You must register or login to complete your purchase"
+msgstr "Du må registrere deg eller logge inn for å fullføre kjøpet"
+
+#: includes/process-purchase.php:370 includes/process-purchase.php:492
+msgid "Invalid email"
+msgstr "Ugyldig e-post"
+
+#: includes/process-purchase.php:373
+msgid "Email already used"
+msgstr "E-postadressen er allerede i bruk"
+
+#: includes/process-purchase.php:380 includes/process-purchase.php:499
+msgid "Enter an email"
+msgstr "Skriv inn en e-postadresse"
+
+#: includes/process-purchase.php:388
+msgid "Passwords don't match"
+msgstr "Passordene stemmer ikke overens"
+
+#: includes/process-purchase.php:397 includes/process-purchase.php:455
+msgid "Enter a password"
+msgstr "Skriv inn passordet"
+
+#: includes/process-purchase.php:400
+msgid "Enter the password confirmation"
+msgstr "Bekreft passordet"
+
+#: includes/process-purchase.php:423
+msgid "You must login or register to complete your purchase"
+msgstr "Du må logge inn eller registrere deg for å fullføre kjøpet"
+
+#: includes/process-purchase.php:481
+msgid "You must be logged into an account to purchase."
+msgstr "Du må være logget inn på en konto for å handle."
+
+#: includes/process-purchase.php:628
+msgid "The zip code you entered for your credit card is invalid"
+msgstr "Koden du angav for kredittkortet ditt er ugyldig"
+
+#: includes/query-filters.php:39
+msgid "You do not have permission to view this file."
+msgstr "Du har ikke tillatelse til å se denne filen."
+
+#: includes/scripts.php:44
+msgid "Please select a payment method"
+msgstr "Vennligst velg en betalingsmåte"
+
+#: includes/scripts.php:45
+msgid "Please enter a discount code"
+msgstr "Vennligst skriv inn en rabattkode"
+
+#: includes/scripts.php:46
+msgid "Discount Applied"
+msgstr "Rabatt er anvendt"
+
+#: includes/scripts.php:47
+msgid "Please enter an email address before applying a discount code"
+msgstr "Vennligst skriv inn en e-postadresse før du bruker en rabattkode"
+
+#: includes/scripts.php:48
+msgid "Please enter a username before applying a discount code"
+msgstr "Vennligst skriv inn et brukernavn før du angir en rabattkode"
+
+#: includes/scripts.php:49
+msgid "Please Wait..."
+msgstr "Vennligst vent . . ."
+
+#: includes/scripts.php:50 includes/shortcodes.php:30
+#: includes/template-functions.php:56 includes/admin/thickbox.php:65
+#: includes/admin/downloads/dashboard-columns.php:61
+#: includes/checkout/template.php:564
+msgid "Purchase"
+msgstr "Handel"
+
+#: includes/scripts.php:61
+msgid "You have already added this item to your cart"
+msgstr "Du har allerede lagt til dette produktet i handlekurven"
+
+#: includes/scripts.php:62
+msgid "Your cart is empty"
+msgstr "Handlekurven er tom"
+
+#: includes/scripts.php:63 includes/template-functions.php:110
+msgid "Loading"
+msgstr "Laster"
+
+#: includes/scripts.php:146
+msgid "Add New Download"
+msgstr "Legg til ny nedlasting"
+
+#: includes/scripts.php:147
+msgid "Use This File"
+msgstr "Bruk denne filen"
+
+#: includes/scripts.php:148
+msgid "Sorry, not available for variable priced products."
+msgstr "Beklager, ikke tilgjengelig for variabelt prisede produkter."
+
+#: includes/scripts.php:149
+msgid "Are you sure you wish to delete this payment?"
+msgstr "Er du sikker på at du vil slette denne betalingen?"
+
+#: includes/scripts.php:150
+msgid "You must have at least one price"
+msgstr "Du må ha minst én pris"
+
+#: includes/scripts.php:151
+msgid "You must have at least one file"
+msgstr "Du må ha minst én fil"
+
+#: includes/scripts.php:152
+msgid "You must have at least one field"
+msgstr "Du må ha minst ett felt"
+
+#: includes/scripts.php:156 includes/admin/payments/edit-payment.php:63
+#: templates/checkout_cart.php:37
+msgid "Remove"
+msgstr "Fjern"
+
+#: includes/shortcodes.php:180
+msgid "Purchase All Items"
+msgstr "Kjøp alle varer"
+
+#: includes/shortcodes.php:375
+#, php-format
+msgctxt "download post type name"
+msgid "No %s found"
+msgstr "Ingen %s funnet"
+
+#: includes/shortcodes.php:417
+msgid "Sorry, trouble retrieving payment receipt."
+msgstr "Beklager, problemer med å hente kjøpskvittering."
+
+#: includes/shortcodes.php:514
+msgid "The passwords you entered do not match. Please try again."
+msgstr "Passordene du skrev inn stemmer ikke overens. Vennligst prøv igjen."
+
+#: includes/template-functions.php:48 includes/admin/admin-notices.php:46
+#, php-format
+msgid ""
+"No checkout page has been configured. Visit <a href=\"%s\">Settings</a> to "
+"set one."
+msgstr ""
+"Ingen utsjekkside er konfigurert. Gå til <a href=\"%s\">Innstillinger</a> "
+"for å angi en."
+
+#: includes/template-functions.php:113
+#, php-format
+msgid "Item successfully added to your %scart%s."
+msgstr "Varen lagt i %shandlekurven%s."
+
+#: includes/template-functions.php:114
+msgid "Go to Checkout"
+msgstr "Gå til kassen"
+
+#: includes/template-functions.php:265
+msgid "Gray"
+msgstr "Grå"
+
+#: includes/template-functions.php:266
+msgid "Blue"
+msgstr "Blå"
+
+#: includes/template-functions.php:267
+msgid "Green"
+msgstr "Grønn"
+
+#: includes/template-functions.php:268
+msgid "Yellow"
+msgstr "Gul"
+
+#: includes/template-functions.php:269
+msgid "Dark Gray"
+msgstr "Mørk grå"
+
+#: includes/template-functions.php:286
+msgid "Button"
+msgstr "Knapp"
+
+#: includes/template-functions.php:287
+msgid "Plain Text"
+msgstr "Vanlig tekst"
+
+#: includes/template-functions.php:306
+msgid "You have already purchased this item, but you may purchase it again."
+msgstr "Du har allerede kjøpt dette produktet, men du kan kjøpe det på nytt."
+
+#: includes/template-functions.php:349
+msgid "No downloads found"
+msgstr "Ingen nedlasting funnet"
+
+#: includes/widgets.php:38
+msgid "Downloads Cart"
+msgstr "Nedlastingskurv"
+
+#: includes/widgets.php:38
+msgid "Display the downloads shopping cart"
+msgstr "Vis nedlastingskurven"
+
+#: includes/widgets.php:78 includes/widgets.php:151
+msgid "Title:"
+msgstr "Tittel:"
+
+#: includes/widgets.php:83
+msgid "Show Quantity:"
+msgstr "Vis antall:"
+
+#: includes/widgets.php:104
+msgid "Downloads Categories / Tags"
+msgstr "Nedlastingskategorier / tags"
+
+#: includes/widgets.php:104
+msgid "Display the downloads categories or tags"
+msgstr "Vis nedlastingskategorier eller tags"
+
+#: includes/widgets.php:156
+msgid "Taxonomy:"
+msgstr "Taxonomy:"
+
+#: includes/widgets.php:178
+msgid "Display a user's purchase history"
+msgstr "Vis en kundes kjøpshistorikk"
+
+#: includes/widgets.php:217 templates/history-downloads.php:49
+#: templates/history-purchases.php:48 templates/shortcode-receipt.php:157
+msgid "No downloadable files found."
+msgstr "Ingen nedlastbare filer funnet."
+
+#: includes/widgets.php:244
+msgid "Title"
+msgstr "Tittel"
+
+#: includes/admin/add-ons.php:43
+msgid "Add Ons for Easy Digital Downloads"
+msgstr "Utvidelser/tillegg til Easy Digital Downloads"
+
+#: includes/admin/add-ons.php:44
+msgid "Browse All Extensions"
+msgstr "Søk i Alle utvidelser/tillegg"
+
+#: includes/admin/add-ons.php:46
+msgid "These add-ons extend the functionality of Easy Digital Downloads."
+msgstr "Disse tilleggene utvider funksjonaliteten til Easy Digital Downloads."
+
+#: includes/admin/add-ons.php:71
+msgid ""
+"There was an error retrieving the extensions list from the server. Please "
+"try again later."
+msgstr ""
+"Det skjedde en feil ved henting av utvidelseslisten fra serveren. Vennligst "
+"prøv igjen senere."
+
+#: includes/admin/admin-notices.php:26
+msgid "Discount code updated."
+msgstr "Rabattkoden er oppdatert."
+
+#: includes/admin/admin-notices.php:30
+msgid "There was a problem updating your discount code, please try again."
+msgstr ""
+"Vi fikk et problem med å oppdatere din rabattkode, vennligst prøv igjen."
+
+#: includes/admin/admin-notices.php:34
+msgid "The payment has been deleted."
+msgstr "Betalingen er slettet."
+
+#: includes/admin/admin-notices.php:38
+msgid "The purchase receipt has been resent."
+msgstr "Kvittering er sendt på nytt."
+
+#: includes/admin/admin-notices.php:42
+#, php-format
+msgid ""
+"Note: Test Mode is enabled, only test payments are shown below. %sSettings%s."
+msgstr ""
+"Merk: Testmodus er aktivert, bare testbetalinger er vist nedenfor. "
+"%sInnstillinger%s."
+
+#: includes/admin/admin-notices.php:61
+msgid ""
+"There seems to be an issue with the server. Please try again in a few "
+"minutes."
+msgstr ""
+"Det synes å være et problem med serveren. Vennligst prøv igjen om noen "
+"minutter."
+
+#: includes/admin/admin-pages.php:30
+#: includes/admin/discounts/discount-codes.php:36
+msgid "Discount Codes"
+msgstr "Rabattkoder"
+
+#: includes/admin/admin-pages.php:31
+msgid "Earnings and Sales Reports"
+msgstr "Inntjening og salgsrapporter"
+
+#: includes/admin/admin-pages.php:31
+#: includes/admin/reporting/contextual-help.php:42
+#: includes/admin/reporting/reports.php:32
+msgid "Reports"
+msgstr "Rapporter"
+
+#: includes/admin/admin-pages.php:32
+msgid "Easy Digital Download Settings"
+msgstr "Easy Digital Download Innstillinger"
+
+#: includes/admin/admin-pages.php:32
+msgid "Settings"
+msgstr "Innstillinger"
+
+#: includes/admin/admin-pages.php:33
+msgid "Easy Digital Download System Info"
+msgstr "Easy Digital Download Systeminformasjon"
+
+#: includes/admin/admin-pages.php:33
+msgid "System Info"
+msgstr "Systeminformasjon"
+
+#: includes/admin/admin-pages.php:34
+msgid "Easy Digital Download Add Ons"
+msgstr "Easy Digital Download Utvidelser/tillegg"
+
+#: includes/admin/admin-pages.php:34
+msgid "Add Ons"
+msgstr "Utvidelser/tillegg"
+
+#: includes/admin/admin-pages.php:35
+msgid "EDD Upgrades"
+msgstr "EDD Oppdatering"
+
+#: includes/admin/dashboard-widgets.php:26
+msgid "Easy Digital Downloads Sales Summary"
+msgstr "Easy Digital Downloads Salgsoversikt"
+
+#: includes/admin/dashboard-widgets.php:55
+msgid "Current Month"
+msgstr "Nåværende måned"
+
+#: includes/admin/dashboard-widgets.php:60
+#: includes/admin/dashboard-widgets.php:75
+#: includes/admin/downloads/dashboard-columns.php:32
+#: includes/admin/reporting/class-download-reports-table.php:80
+#: includes/admin/reporting/graphing.php:206
+#: includes/admin/reporting/pdf-reports.php:192
+#: includes/admin/reporting/reports.php:58
+msgid "Earnings"
+msgstr "Inntjening"
+
+#: includes/admin/dashboard-widgets.php:65
+#: includes/admin/dashboard-widgets.php:79
+msgid "Sale"
+msgid_plural "Sales"
+msgstr[0] "Salg"
+msgstr[1] "Salg"
+
+#: includes/admin/dashboard-widgets.php:69
+#: includes/admin/reporting/graphing.php:309
+msgid "Last Month"
+msgstr "Foregående måned"
+
+#: includes/admin/dashboard-widgets.php:83
+msgid "Totals"
+msgstr "Totalsummer"
+
+#: includes/admin/dashboard-widgets.php:88
+msgid "Total Earnings"
+msgstr "Samlede inntekter"
+
+#: includes/admin/dashboard-widgets.php:92
+msgid "Total Sales"
+msgstr "Samlet salg"
+
+#: includes/admin/dashboard-widgets.php:98
+msgid "Lifetime Best Selling"
+msgstr "Beste salgsresultat"
+
+#: includes/admin/dashboard-widgets.php:116
+msgid "Recent Purchases"
+msgstr "Siste kjøp"
+
+#: includes/admin/dashboard-widgets.php:125
+#: includes/admin/payments/class-payments-table.php:242
+#, php-format
+msgid "Purchase Details for Payment #%s"
+msgstr "Kjøpsdetaljer for betaling #%s"
+
+#: includes/admin/dashboard-widgets.php:125
+#: includes/admin/payments/class-payments-table.php:242
+msgid "View Order Details"
+msgstr "Vis bestillingsdetaljer"
+
+#: includes/admin/dashboard-widgets.php:133
+#: includes/admin/payments/class-payments-table.php:254
+msgid "Purchased File"
+msgstr "Kjøpsfil"
+
+#: includes/admin/dashboard-widgets.php:133
+#: includes/admin/payments/class-payments-table.php:254
+msgid "Purchased Files"
+msgstr "Kjøpsfiler"
+
+#: includes/admin/dashboard-widgets.php:159
+#: includes/admin/payments/class-payments-table.php:293
+msgid "Date and Time:"
+msgstr "Dato og Tid:"
+
+#: includes/admin/dashboard-widgets.php:160
+#: includes/admin/payments/class-payments-table.php:294
+msgid "Discount used:"
+msgstr "Rabatt brukt:"
+
+#: includes/admin/dashboard-widgets.php:160
+#: includes/admin/payments/class-payments-table.php:294
+#: includes/admin/reporting/class-export-payments.php:121
+msgid "none"
+msgstr "ingen"
+
+#: includes/admin/dashboard-widgets.php:170
+#: includes/admin/payments/class-payments-table.php:304
+msgid "Total:"
+msgstr "Sum:"
+
+#: includes/admin/dashboard-widgets.php:173
+#: includes/admin/payments/class-payments-table.php:307
+msgid "Buyer's Personal Details:"
+msgstr "Kjøpers detaljer:"
+
+#: includes/admin/dashboard-widgets.php:175
+#: includes/admin/payments/class-payments-table.php:309
+msgid "Name:"
+msgstr "Navn:"
+
+#: includes/admin/dashboard-widgets.php:176
+#: includes/admin/payments/class-payments-table.php:310
+msgid "Email:"
+msgstr "E-post:"
+
+#: includes/admin/dashboard-widgets.php:181
+#: includes/admin/payments/class-payments-table.php:315
+#: includes/admin/payments/edit-payment.php:73
+msgid "Payment Notes"
+msgstr "Betalingsmerknader"
+
+#: includes/admin/dashboard-widgets.php:191
+#: includes/admin/payments/class-payments-table.php:325
+#: includes/admin/payments/edit-payment.php:85
+msgid "EDD Bot"
+msgstr "EDD Bot"
+
+#: includes/admin/dashboard-widgets.php:197
+#: includes/admin/payments/class-payments-table.php:331
+#: includes/admin/payments/edit-payment.php:91
+msgid "No payment notes"
+msgstr "Ingen betalingsmerknader"
+
+#: includes/admin/dashboard-widgets.php:205
+#: includes/admin/payments/class-payments-table.php:339
+msgid "Payment Method:"
+msgstr "Betalingsmetode:"
+
+#: includes/admin/dashboard-widgets.php:210
+#: includes/admin/payments/class-payments-table.php:344
+#: includes/admin/reporting/class-export-payments.php:44
+msgid "Purchase Key"
+msgstr "Kjøpsnøkkel"
+
+#: includes/admin/dashboard-widgets.php:216
+#: includes/admin/payments/class-payments-table.php:350
+#: includes/admin/payments/edit-payment.php:154
+msgid "Close"
+msgstr "Lukk"
+
+#: includes/admin/system-info.php:35
+msgid "System Information"
+msgstr "Systeminformasjon"
+
+#: includes/admin/system-info.php:37
+msgid ""
+"To copy the system info, click below then press Ctrl + C (PC) or Cmd + C "
+"(Mac)."
+msgstr ""
+"For å kopiere systeminformasjonen, klikk nedenfor og trykk deretter på  Ctrl "
+"+ C (PC) eller Cmd + C (Mac)."
+
+#: includes/admin/system-info.php:90
+msgid "Your server supports fsockopen."
+msgstr "Din server støtter fsockopen."
+
+#: includes/admin/system-info.php:90
+msgid "Your server does not support fsockopen."
+msgstr "Din server støtter ikke fsockopen."
+
+#: includes/admin/system-info.php:124
+msgid "Download System Info File"
+msgstr "Last ned systeminformasjonsfilen"
+
+#: includes/admin/thickbox.php:32 includes/admin/thickbox.php:126
+#, php-format
+msgid "Insert %s"
+msgstr "Sett inn %s"
+
+#: includes/admin/thickbox.php:33 includes/admin/thickbox.php:36
+msgid "Insert Download"
+msgstr "Sett inn nedlasting"
+
+#: includes/admin/thickbox.php:69
+msgid "You must choose a download"
+msgstr "Du må velge en nedlasting"
+
+#: includes/admin/thickbox.php:91
+#, php-format
+msgid "Use the form below to insert the short code for purchasing a %s"
+msgstr "Bruk skjemaet nedenfor for å sette inn kortkoden for å kjøpe et %s"
+
+#: includes/admin/thickbox.php:94
+#, php-format
+msgid "Choose a %s"
+msgstr "Velg et %s"
+
+#: includes/admin/thickbox.php:103
+msgid "Choose a style"
+msgstr "Velg eet utseende"
+
+#: includes/admin/thickbox.php:114
+msgid "Choose a button color"
+msgstr "Velg en farge for knappen"
+
+#: includes/admin/thickbox.php:123
+msgid "Link text . . ."
+msgstr "Lenketekst . . ."
+
+#: includes/admin/thickbox.php:127
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: includes/admin/welcome.php:54 includes/admin/welcome.php:55
+#: includes/admin/welcome.php:63 includes/admin/welcome.php:64
+msgid "Welcome to Easy Digital Downloads"
+msgstr "Velkommen til Easy Digital Downloads"
+
+#: includes/admin/welcome.php:118 includes/admin/welcome.php:253
+#, php-format
+msgid "Welcome to Easy Digital Downloads %s"
+msgstr "Velkommen til Easy Digital Downloads %s"
+
+#: includes/admin/welcome.php:119 includes/admin/welcome.php:254
+#, php-format
+msgid ""
+"Thank you for updating to the latest version! Easy Digital Downloads %s is "
+"ready to make your online store faster, safer and better!"
+msgstr ""
+"Takk for at du oppdaterer til den nyeste versjonen! Easy Digital Downloads "
+"%s er klar til å gjøre din nettbutikk raskere, sikrere og bedre!"
+
+#: includes/admin/welcome.php:120 includes/admin/welcome.php:255
+#, php-format
+msgid "Version %s"
+msgstr "Versjon %s"
+
+#: includes/admin/welcome.php:124 includes/admin/welcome.php:259
+msgid "What's New"
+msgstr "Hva er nytt"
+
+#: includes/admin/welcome.php:126 includes/admin/welcome.php:261
+msgid "Credits"
+msgstr "Kreditter"
+
+#: includes/admin/welcome.php:131
+msgid "Improved Checkout User Experience"
+msgstr "Forbedret brukeropplevelse ved utsjekking"
+
+#: includes/admin/welcome.php:135
+msgid "Preload Default Payment Method"
+msgstr "Forhåndslasting av standard betalingsmetode"
+
+#: includes/admin/welcome.php:136
+msgid ""
+"You can now define the default payment method for customers that will be "
+"loaded immediately when accessing the checkout page. This saves the customer "
+"a click and results in more conversions for you."
+msgstr ""
+"Du kan nå definere standard betalingsmetode for kundene som vil bli lastet "
+"umiddelbart ved tilgang til utsjekkingsisden. Dette sparer kunden et klikk "
+"og resulterer i flere konverteringer for deg."
+
+#: includes/admin/welcome.php:138
+msgid "Better Payment Method Select"
+msgstr "Velg en bedre betalingsmåte"
+
+#: includes/admin/welcome.php:139
+msgid ""
+"Payment methods are now displayed as radio buttons, making the options more "
+"accessible and easier to see / understand for customers."
+msgstr ""
+"Betalingsmåter vises nå som radioknapper slik at alternativene blir mer "
+"tilgjengelige og enklere å se / forstå for kundene."
+
+#: includes/admin/welcome.php:141
+msgid "Field Descriptions"
+msgstr "Feltbeskrivelser"
+
+#: includes/admin/welcome.php:142
+msgid ""
+"It has been proven by countless studies that descriptive text by every field "
+"helps customers complete the purchase process, so we have added description "
+"text for each field."
+msgstr ""
+"Beskrivende tekst ved hvert felt hjelper kunden å fullføre kjøpsprosessen så "
+"vi har lagt til beskrivende tekst for hvert enkelt felt."
+
+#: includes/admin/welcome.php:144
+msgid "Reworked Field Order"
+msgstr "Omarbeidet rekkefølge av felter"
+
+#: includes/admin/welcome.php:145
+msgid ""
+"The order that the fields are displayed on the checkout has been updated to "
+"reflect the findings of many UX studies to help ensure customers have a "
+"simple, enjoyable experiencing purchasing through your store."
+msgstr ""
+"Rekkefølgen som feltene vises ved utsjekking er oppdatert for å reflektere "
+"resultatene av mange UX studier for å sikre at kundene har en enkel og "
+"morsom opplevelse ved kjøp gjennom butikken din."
+
+#: includes/admin/welcome.php:151
+msgid "Greatly Improved Discount Codes"
+msgstr "Kraftig forbedrede rabattkoder"
+
+#: includes/admin/welcome.php:155
+msgid "Per-Product Discounts"
+msgstr "Rabatter for enkeltprodukter"
+
+#: includes/admin/welcome.php:156
+msgid ""
+"Discount codes can now be restricted to individual (or several) products, "
+"giving you greater control over your marketing."
+msgstr ""
+"Rabattkoder kan nå begrenses til enkelte (eller flere) produkter, noe som "
+"gir deg større kontroll over markedsføringen."
+
+#: includes/admin/welcome.php:158
+msgid "Once-Per-Customer Discounts"
+msgstr "Rabatt for hver enkeltkunde"
+
+#: includes/admin/welcome.php:159
+msgid ""
+"You can now specify on a per-discount basis whether customers should be able "
+"to use a discount more than once."
+msgstr ""
+"Du kan nå spesifisere på en per-rabatt basis om kunden skal kunne bruke en "
+"rabatt mer enn én gang."
+
+#: includes/admin/welcome.php:166
+msgid "Improved Tax Options"
+msgstr "Forbedrede skattealternativer"
+
+#: includes/admin/welcome.php:170
+msgid "Checkout Display Options"
+msgstr "Kassens visningsmuligheter"
+
+#: includes/admin/welcome.php:171
+msgid ""
+"New options to better control how taxes are displayed on checkout have been "
+"added."
+msgstr ""
+"Nye muligheter for bedre å kontrollere hvordan moms vises ved utsjekking har "
+"blitt lagt til."
+
+#: includes/admin/welcome.php:173
+msgid "Better Tax Calculation"
+msgstr "Bedre avgiftsberegning"
+
+#: includes/admin/welcome.php:174
+msgid ""
+"Taxes are now more accurately calculated and there is an option to set "
+"product prices as inclusive or exclusive of tax."
+msgstr ""
+"Avgifter beregnes nå mer nøyaktig og det er et alternativ å sette inn "
+"produktprisene med eller uten avgift."
+
+#: includes/admin/welcome.php:180
+msgid "Improved Reports and Data Export"
+msgstr "Forbedrede rapporter og data eksport"
+
+#: includes/admin/welcome.php:184
+msgid "Per-Product Customer Export"
+msgstr "Eksport av Per-produkt for kunde"
+
+#: includes/admin/welcome.php:185
+#, php-format
+msgid ""
+"You can now export all customers that have purchased a particular product "
+"from the %sExport%s screen."
+msgstr ""
+"Du kan nå eksportere alle kunder som har kjøpt et bestemt produkt fra %s "
+"Eksport %s skjermen."
+
+#: includes/admin/welcome.php:187
+msgid "Export Payment History By Status"
+msgstr "Eksporter betalingshistorikk etter status"
+
+#: includes/admin/welcome.php:188
+msgid ""
+"The Payment History export now includes an option to only export payments of "
+"a particular status. Want to export all of your failed payments? Now you can."
+msgstr ""
+"Eksport av betalingshistorikken har nå et alternativ for å bare eksportere "
+"betaling av en bestemt status. Vil du eksportere alle dine mislykkede "
+"betalinger? Nå kan du."
+
+#: includes/admin/welcome.php:190
+msgid "Estimated Monthly Stats"
+msgstr "Estimerte månedlige statistikker"
+
+#: includes/admin/welcome.php:191
+msgid ""
+"Monthly estimates for sales and earnings are now displayed below the graphs "
+"in the Reports page."
+msgstr ""
+"Månedlige estimater for salg og inntjening blir nå vist under grafene i "
+"rapportene."
+
+#: includes/admin/welcome.php:197
+msgid "RESTful API"
+msgstr "RESTful API"
+
+#: includes/admin/welcome.php:200
+msgid "Creation of Third Party Stat Tracking Apps Now Possible"
+msgstr "Opprettelse av tredjeparts Stat Tracking Apps er nå mulig"
+
+#: includes/admin/welcome.php:201
+msgid ""
+"The new RESTful API available in Easy Digital Downloads makes it possible to "
+"create 3rd party apps (iOS, Android, etc) for tracking your store sales and "
+"earnings."
+msgstr ""
+"Den nye tilgjengelige RESTful API i Easy Digital Downloads gjør det mulig å "
+"lage 3. parts programmer (iOS, Android, etc) for sporing av salg og "
+"inntjening."
+
+#: includes/admin/welcome.php:203
+#, php-format
+msgid ""
+"The API is %sfully documented%s and ready for developers to have fun with."
+msgstr ""
+"API er %s fullstendig dokumentert %s og klar for utviklere til å ha det gøy "
+"med."
+
+#: includes/admin/welcome.php:208
+msgid "Under the Hood"
+msgstr "Under panseret"
+
+#: includes/admin/welcome.php:212
+msgid "EDD_Fees Class"
+msgstr "EDD_gebyrklasse"
+
+#: includes/admin/welcome.php:213
+#, php-format
+msgid ""
+"The new %sEDD_Fees class%s makes it possible to create arbitrary fees (or "
+"discounts) that are applied to the shopping cart contents."
+msgstr ""
+"Den nye %s EDD_gebyrklassen %s gjør det mulig å lage vilkårlige avgifter "
+"(eller rabatter) som er brukt til innholdet i handlekurven."
+
+#: includes/admin/welcome.php:215
+msgid "Better Session Management"
+msgstr "Bedre økthåndtering"
+
+#: includes/admin/welcome.php:216
+#, php-format
+msgid ""
+"We have replaced usage of the standard PHP $_SESSION with the phenomenal "
+"%sWP_Session%s system developed by Eric Mann. This will provide a more "
+"stable experience and greater support for more hosts."
+msgstr ""
+"Vi har erstattet bruk av standard PHP $ _SESSION med den fenomenale %s "
+"WP_Session%s system utviklet av Eric Mann. Dette vil gi en mer stabil "
+"opplevelse og forbedret støtte for flere verter."
+
+#: includes/admin/welcome.php:220
+msgid "More Template Files"
+msgstr "Flere malfiler"
+
+#: includes/admin/welcome.php:221
+#, php-format
+msgid ""
+"Additional %stemplate files%s that can be modified via your theme have been "
+"added for the cart widget and shopping cart short code."
+msgstr ""
+"Flere %s malfiler%s som kan modifiseres via temaet har blitt lagt til "
+"handlekurv widget og handlekurvens short code."
+
+#: includes/admin/welcome.php:223
+msgid "Better AJAX Functionality"
+msgstr "Bedre AJAX funksjonalitet"
+
+#: includes/admin/welcome.php:224
+msgid ""
+"The ajaxed functions, such as payment gateway loading, have been "
+"significantly improved to make them faster."
+msgstr ""
+"AJAXed funksjonenen, f. eks. lasting av betalings gateway har blitt "
+"betydelig forbedret for å gjøre dem raskere."
+
+#: includes/admin/welcome.php:228
+msgid "New Product Microdata"
+msgstr "Nye produkt mikrodata"
+
+#: includes/admin/welcome.php:229
+msgid ""
+"Microdata defined by Schema.org/Product has been added to all download "
+"products to improve product appearance in search engines."
+msgstr ""
+"Mikrodata definert av Schema.org/Product har blitt lagt til i alle "
+"nedlastingsprodukter for å forbedre utseendet til produktet i søkemotorene."
+
+#: includes/admin/welcome.php:231
+msgid "Improved Performance"
+msgstr "Forbedret ytelse"
+
+#: includes/admin/welcome.php:232
+msgid ""
+"Memory usage and general performance of the plugin was investigated and "
+"dramatically improved in several key areas of the admin interfaces."
+msgstr ""
+"Minnebruk og generell ytelse av plugin ble utforsket og dramatisk forbedret "
+"på flere viktige områder i admin grensesnittet."
+
+#: includes/admin/welcome.php:238
+msgid "Go to Easy Digital Downloads Settings"
+msgstr "Gå til Easy Digital Downloads Innstillinger"
+
+#: includes/admin/welcome.php:265
+msgid ""
+"Easy Digital Downloads is created by a worldwide team of developers who aim "
+"to provide the #1 eCommerce platform for selling digital goods through "
+"WordPress."
+msgstr ""
+"Easy Digital Downloads er skapt av et verdensomspennende team av utviklere "
+"som tar sikte på å gi deg en #1 eCommerce plattform for salg av digitale "
+"varer via WordPress."
+
+#: includes/admin/welcome.php:292
+#, php-format
+msgid "View %s"
+msgstr "Se %s"
+
+#: includes/admin/discounts/add-discount.php:22
+#: includes/admin/discounts/class-discount-codes-table.php:124
+#: includes/admin/discounts/edit-discount.php:32
+#: includes/admin/downloads/dashboard-columns.php:27
+#: includes/admin/reporting/class-customer-reports-table.php:88
+#: includes/admin/reporting/class-export-customers.php:62
+#: includes/admin/reporting/class-export-customers.php:68
+#: templates/shortcode-receipt.php:123
+msgid "Name"
+msgstr "Navn"
+
+#: includes/admin/discounts/add-discount.php:26
+#: includes/admin/discounts/edit-discount.php:36
+msgid "The name of this discount"
+msgstr "Navnet på denne rabatten"
+
+#: includes/admin/discounts/add-discount.php:31
+#: includes/admin/discounts/class-discount-codes-table.php:125
+#: includes/admin/discounts/edit-discount.php:41
+msgid "Code"
+msgstr "Kode"
+
+#: includes/admin/discounts/add-discount.php:35
+#: includes/admin/discounts/edit-discount.php:45
+msgid "Enter a code for this discount, such as 10PERCENT"
+msgstr "Angi en kode for denne rabatten, f. eks. 10PROSENT"
+
+#: includes/admin/discounts/add-discount.php:40
+#: includes/admin/discounts/edit-discount.php:50
+msgid "Type"
+msgstr "Type/Skriv"
+
+#: includes/admin/discounts/add-discount.php:44
+#: includes/admin/discounts/edit-discount.php:54
+msgid "Percentage"
+msgstr "Prosent"
+
+#: includes/admin/discounts/add-discount.php:45
+#: includes/admin/discounts/edit-discount.php:55
+msgid "Flat amount"
+msgstr "Fast beløp"
+
+#: includes/admin/discounts/add-discount.php:47
+#: includes/admin/discounts/edit-discount.php:57
+msgid "The kind of discount to apply for this discount."
+msgstr "Hvilken rabattype som skal brukes for denne rabatten."
+
+#: includes/admin/discounts/add-discount.php:52
+#: includes/admin/discounts/class-discount-codes-table.php:126
+#: includes/admin/discounts/edit-discount.php:62
+#: includes/admin/payments/class-payments-table.php:140
+#: includes/admin/reporting/class-export-payments.php:41
+#: templates/history-purchases.php:11
+msgid "Amount"
+msgstr "Beløp"
+
+#: includes/admin/discounts/add-discount.php:56
+#: includes/admin/discounts/edit-discount.php:66
+msgid "The amount of this discount code."
+msgstr "Størrelsen på denne rabattkoden."
+
+#: includes/admin/discounts/add-discount.php:61
+#: includes/admin/discounts/edit-discount.php:71
+#, php-format
+msgid "%s Requirements"
+msgstr "%s Forutsetninger"
+
+#: includes/admin/discounts/add-discount.php:66
+#: includes/admin/discounts/edit-discount.php:76
+#, php-format
+msgid "All Selected %s"
+msgstr "Alle valgt %s"
+
+#: includes/admin/discounts/add-discount.php:67
+#: includes/admin/discounts/edit-discount.php:77
+#, php-format
+msgid "Any Selected %s"
+msgstr "Any Selected %s"
+
+#: includes/admin/discounts/add-discount.php:69
+#: includes/admin/discounts/edit-discount.php:79
+msgid "Condition"
+msgstr "Betingelse"
+
+#: includes/admin/discounts/add-discount.php:71
+#: includes/admin/discounts/edit-discount.php:81
+#, php-format
+msgid "Choose one or more %s"
+msgstr "Velg et, eller flere %s"
+
+#: includes/admin/discounts/add-discount.php:81
+#: includes/admin/discounts/edit-discount.php:91
+#, php-format
+msgid "%s required to be purchased for this discount."
+msgstr "%s nødvendig for å kunne kjøpes med denne rabatten."
+
+#: includes/admin/discounts/add-discount.php:86
+#: includes/admin/discounts/edit-discount.php:95
+#, php-format
+msgid "Apply discount only to selected %s?"
+msgstr "Påfør rabatt bare på utvalgte %s?"
+
+#: includes/admin/discounts/add-discount.php:93
+#: includes/admin/discounts/edit-discount.php:102
+msgid "Start date"
+msgstr "Startdato"
+
+#: includes/admin/discounts/add-discount.php:97
+#: includes/admin/discounts/edit-discount.php:106
+msgid ""
+"Enter the start date for this discount code in the format of mm/dd/yyyy. For "
+"no start date, leave blank. If entered, the discount can only be used after "
+"or on this date."
+msgstr ""
+"Angi startdatoen for denne rabatt koden i formatet <strong>mm/dd/åååå</ "
+"strong>. For ingen startdato, la feltet stå tomt. Hvis angitt kan rabatten "
+"bare brukes etter eller på denne datoen."
+
+#: includes/admin/discounts/add-discount.php:102
+#: includes/admin/discounts/edit-discount.php:111
+msgid "Expiration date"
+msgstr "Utløpsdato"
+
+#: includes/admin/discounts/add-discount.php:106
+#: includes/admin/discounts/edit-discount.php:115
+msgid ""
+"Enter the expiration date for this discount code in the format of mm/dd/"
+"yyyy. For no expiration, leave blank"
+msgstr ""
+"Angi utløpsdatoen for denne rabattkoden i formatet <strong>mm/dd/åååå </ "
+"strong>. For ingen utløpsdato, la stå tom."
+
+#: includes/admin/discounts/add-discount.php:111
+#: includes/admin/discounts/edit-discount.php:129
+msgid "Minimum Amount"
+msgstr "Minimumsbeløp"
+
+#: includes/admin/discounts/add-discount.php:115
+#: includes/admin/discounts/edit-discount.php:133
+msgid ""
+"The minimum amount that must be purchased before this discount can be used. "
+"Leave blank for no minimum."
+msgstr ""
+"Minimumsbeløp som må handles før denne rabatten kan brukes. La stå tom for "
+"ingen minimumsgrense."
+
+#: includes/admin/discounts/add-discount.php:120
+#: includes/admin/discounts/class-discount-codes-table.php:128
+#: includes/admin/discounts/edit-discount.php:120
+msgid "Max Uses"
+msgstr "Maksimumsgrense"
+
+#: includes/admin/discounts/add-discount.php:124
+#: includes/admin/discounts/edit-discount.php:124
+msgid ""
+"The maximum number of times this discount can be used. Leave blank for "
+"unlimited."
+msgstr ""
+"Det maksimale antall ganger denne rabatten kan brukes. La stå tom for "
+"ubegrenset."
+
+#: includes/admin/discounts/add-discount.php:129
+#: includes/admin/discounts/edit-discount.php:150
+msgid "Use Once Per Customer"
+msgstr "Bruk en gang pr. kunde"
+
+#: includes/admin/discounts/add-discount.php:133
+#: includes/admin/discounts/edit-discount.php:154
+msgid "Limit this discount to a single-user per customer?"
+msgstr "Begrens denne rabatten til en enkeltbruker per kunde?"
+
+#: includes/admin/discounts/add-discount.php:142
+msgid "Add Discount Code"
+msgstr "Legg til rabattkode"
+
+#: includes/admin/discounts/class-discount-codes-table.php:105
+#: includes/admin/payments/class-payments-table.php:116
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:281
+#: includes/admin/reporting/class-sales-logs-list-table.php:250
+#: includes/admin/reporting/reports.php:255
+msgid "All"
+msgstr "Alle"
+
+#: includes/admin/discounts/class-discount-codes-table.php:106
+#: includes/admin/discounts/edit-discount.php:142
+msgid "Active"
+msgstr "Aktiv"
+
+#: includes/admin/discounts/class-discount-codes-table.php:107
+#: includes/admin/discounts/edit-discount.php:143
+msgid "Inactive"
+msgstr "Inaktiv"
+
+#: includes/admin/discounts/class-discount-codes-table.php:123
+#: includes/admin/payments/class-payments-table.php:137
+#: includes/admin/reporting/class-export-payments.php:36
+#: includes/admin/reporting/class-export.php:66
+#: templates/history-purchases.php:9
+msgid "ID"
+msgstr "ID"
+
+#: includes/admin/discounts/class-discount-codes-table.php:127
+msgid "Uses"
+msgstr "Bruksområde"
+
+#: includes/admin/discounts/class-discount-codes-table.php:129
+msgid "Start Date"
+msgstr "Startdato"
+
+#: includes/admin/discounts/class-discount-codes-table.php:130
+msgid "Expiration"
+msgstr "Utløp"
+
+#: includes/admin/discounts/class-discount-codes-table.php:131
+#: includes/admin/discounts/edit-discount.php:138
+#: includes/admin/payments/class-payments-table.php:143
+#: includes/admin/reporting/class-export-payments.php:47
+msgid "Status"
+msgstr "Status"
+
+#: includes/admin/discounts/class-discount-codes-table.php:180
+#: includes/admin/payments/class-payments-table.php:205
+msgid "Edit"
+msgstr "Rediger"
+
+#: includes/admin/discounts/class-discount-codes-table.php:183
+msgid "Deactive"
+msgstr "Deaktivert"
+
+#: includes/admin/discounts/class-discount-codes-table.php:185
+msgid "Activate"
+msgstr "Aktiver"
+
+#: includes/admin/discounts/class-discount-codes-table.php:187
+#: includes/admin/discounts/class-discount-codes-table.php:218
+#: includes/admin/payments/class-payments-table.php:210
+#: includes/admin/payments/class-payments-table.php:390
+msgid "Delete"
+msgstr "Fjern"
+
+#: includes/admin/discounts/class-discount-codes-table.php:302
+msgid "unlimited"
+msgstr "ubegrenset"
+
+#: includes/admin/discounts/class-discount-codes-table.php:304
+msgid "Unlimited"
+msgstr "Ubegrenset"
+
+#: includes/admin/discounts/class-discount-codes-table.php:312
+msgid "No start date"
+msgstr "Ingen startdato"
+
+#: includes/admin/discounts/class-discount-codes-table.php:316
+msgid "Expired"
+msgstr "Utløpt"
+
+#: includes/admin/discounts/class-discount-codes-table.php:318
+msgid "No expiration"
+msgstr "Ingen utløpsbegrensning"
+
+#: includes/admin/discounts/contextual-help.php:28
+#: includes/admin/downloads/contextual-help.php:32
+#: includes/admin/payments/contextual-help.php:29
+#: includes/admin/reporting/contextual-help.php:29
+#: includes/admin/settings/contextual-help.php:29
+msgid "For more information:"
+msgstr "For mer informasjon:"
+
+#: includes/admin/discounts/contextual-help.php:29
+#: includes/admin/downloads/contextual-help.php:33
+#: includes/admin/payments/contextual-help.php:30
+#: includes/admin/reporting/contextual-help.php:30
+#: includes/admin/settings/contextual-help.php:30
+#, php-format
+msgid ""
+"Visit the <a href=\"%s\">documentation</a> on the Easy Digital Downloads "
+"website."
+msgstr ""
+"Besøk <a href=\"%s\">documentation</a> på Easy Digital Downloads hjemmeside."
+
+#: includes/admin/discounts/contextual-help.php:31
+#: includes/admin/downloads/contextual-help.php:35
+#: includes/admin/payments/contextual-help.php:32
+#: includes/admin/reporting/contextual-help.php:32
+#: includes/admin/settings/contextual-help.php:32
+#, php-format
+msgid ""
+"<a href=\"%s\">Post an issue</a> on <a href=\"%s\">GitHub</a>. View <a href="
+"\"%s\">extensions</a> or <a href=\"%s\">themes</a>."
+msgstr ""
+"<a href=\"%s\">Post an issue</a> on <a href=\"%s\">GitHub</a>. View <a href="
+"\"%s\">extensions</a> or <a href=\"%s\">themes</a>."
+
+#: includes/admin/discounts/contextual-help.php:41
+#: includes/admin/settings/contextual-help.php:42
+#: includes/admin/settings/display-settings.php:32
+msgid "General"
+msgstr "Generelt"
+
+#: includes/admin/discounts/contextual-help.php:43
+msgid ""
+"Discount codes allow you to offer buyers special discounts by having them "
+"enter predefined codes during checkout."
+msgstr ""
+"Rabattkoder gir deg mulighet til å tilby kjøperne spesielle rabatter ved at "
+"de skriver inn forhåndsdefinerte koder ved utsjekk."
+
+#: includes/admin/discounts/contextual-help.php:44
+msgid "Discount codes that are set to \"inactive\" cannot be redeemed."
+msgstr "Rabattkoder som er satt til \"inaktiv\" kan ikke innløses."
+
+#: includes/admin/discounts/contextual-help.php:45
+msgid ""
+"Discount codes are setup to only be used only one time by each customer. If "
+"a customer attempts to use a code a second time, they will be given an error."
+msgstr ""
+"Rabattkoder er satt opp til å kunne brukes bare én gang fra hver enkelt "
+"kunde. Hvis en kunde forsøker å gjenta en kode, vil de bli gitt en "
+"feilmelding."
+
+#: includes/admin/discounts/contextual-help.php:50
+msgid "Adding Discounts"
+msgstr "Legge til rabatter"
+
+#: includes/admin/discounts/contextual-help.php:52
+msgid "You can create any number of discount codes easily from this page."
+msgstr ""
+"Du kan enkelt opprette et ubegrenset antall rabattkoder fra denne siden."
+
+#: includes/admin/discounts/contextual-help.php:53
+msgid "Discount codes have several options:"
+msgstr "Rabattkodene har flere innstillinger:"
+
+#: includes/admin/discounts/contextual-help.php:55
+msgid ""
+"<strong>Name</strong> - this is the name given to the discount. Used "
+"primarily for administrative purposes."
+msgstr ""
+"<strong>Navn</strong> - dette er navnet gitt til rabatten. Brukes "
+"hovedsakelig for administrative formål."
+
+#: includes/admin/discounts/contextual-help.php:56
+msgid ""
+"<strong>Code</strong> - this is the unique code that customers will enter "
+"during checkout to redeem the code."
+msgstr ""
+"<strong>Kode</strong> - Dette er en unik kode som kunden skal benytte ved "
+"utsjekk for å innløse koden."
+
+#: includes/admin/discounts/contextual-help.php:57
+msgid "<strong>Type</strong> - this is the type of discount this code awards."
+msgstr "<strong>Type</strong> - Dette er den type rabatt denne koden gir."
+
+#: includes/admin/discounts/contextual-help.php:58
+msgid ""
+"<strong>Amount</strong> - this discount amount provided by this code. For "
+"percentage based discounts, enter a number such as 70 for 70%. Do not enter "
+"a percent sign."
+msgstr ""
+"<strong>Beløp</strong> - rabattbeløpet oppgitt til denne koden. For "
+"prosentpoeng baserte rabatter, skriv inn et tall, for eksempel 70 for 70%. "
+"Ikke angi et prosenttegn."
+
+#: includes/admin/discounts/contextual-help.php:59
+msgid ""
+"<strong>Requirements</strong> - This allows you to select the product(s) "
+"that are required to be purchased in order for a discount to be applied."
+msgstr ""
+"<strong>Forutsetning</strong> - Her kan du kan velge varen (e) som er "
+"nødvendig å kjøpe for at en rabatt skal kunne benyttes."
+
+#: includes/admin/discounts/contextual-help.php:60
+msgid ""
+"- <strong>Condition</strong> - This lets you set whether all selected "
+"products must be in the cart, or just a minimum of one."
+msgstr ""
+"- <strong>Betingelse</strong> - Angi om alle valgte produkter skal være i "
+"handlekurven, eller bare et minimum av én."
+
+#: includes/admin/discounts/contextual-help.php:61
+msgid ""
+"- <strong>Apply discount only to selected Downloads?</strong> - If this box "
+"is checked, only the prices of the required products will be discounted. If "
+"left unchecked, the discount will apply to all products in the cart."
+msgstr ""
+"- <strong> Bruk rabatt bare til utvalgte nedlastinger? </strong> - Hvis "
+"dette er avkrysset, vil bare prisene på de aktuelle produktene være "
+"diskontert. Hvis du lar dette være uavkrysset, vil rabatten gjelde for "
+"<strong>alle>/strong> produkter i handlekurven."
+
+#: includes/admin/discounts/contextual-help.php:62
+msgid ""
+"<strong>Start Date</strong> - this is the date that this code becomes "
+"available. If a customer attempts to redeem the code prior to this date, "
+"they will be given an error. This is optional."
+msgstr ""
+"<strong>Startdato</strong> - Dette er datoen da denne koden blir "
+"tilgjengelig. Hvis en kunde forsøker å løse inn koden før denne dato, vil de "
+"bli gitt en feilmelding. Dette er valgfritt."
+
+#: includes/admin/discounts/contextual-help.php:63
+msgid ""
+"<strong>Expiration Date</strong> - this is the end date for the discount. "
+"After this date, the code will no longer be able to be used. This is "
+"optional."
+msgstr ""
+"<strong>Utløpsdato</strong> - dette er sluttdatoen for rabatten. Etter dette "
+"tidspunkt er ikke koden lenger mulig å bruke. Dette er valgfritt."
+
+#: includes/admin/discounts/contextual-help.php:64
+msgid ""
+"<strong>Minimum Amount</strong> - this is the minimum purchase amount "
+"required to use this code. If a customer has less than this amount in their "
+"cart, they will be given an error. This is optional."
+msgstr ""
+"<strong>Minimumsbeløp</strong> - dette er minste kjøpsbeløp som kreves for å "
+"bruke denne koden. Hvis en kunde har mindre enn dette beløpet i sin "
+"handlekurv, vil de bli gitt en feilmelding. Dette er valgfritt."
+
+#: includes/admin/discounts/contextual-help.php:65
+msgid ""
+"<strong>Max Uses</strong> - this is the maximum number of times this "
+"discount can be redeemed. Once this number is reached, no more customers "
+"will be allowed to use it."
+msgstr ""
+"<strong>Maksimumsgrense</strong> - Dette er det maksimale antall ganger "
+"denne rabatten kan innløses. Når dette tallet er nådd, vil ingen flere "
+"kunder kunne bruke den."
+
+#: includes/admin/discounts/discount-actions.php:91
+msgid "Trying to cheat or something?"
+msgstr "Prøver du å jukse eller  . . .?"
+
+#: includes/admin/discounts/discount-codes.php:39
+#: includes/admin/payments/payments-history.php:38
+#: includes/admin/reporting/logs.php:49 includes/admin/reporting/logs.php:96
+msgid "Search"
+msgstr "Søk"
+
+#: includes/admin/discounts/edit-discount.php:16
+msgid "Something went wrong."
+msgstr "Det skjedde en feil."
+
+#: includes/admin/discounts/edit-discount.php:25
+#: includes/admin/payments/edit-payment.php:19
+msgid "Go Back"
+msgstr "Gå tilbake"
+
+#: includes/admin/discounts/edit-discount.php:145
+msgid "The status of this discount code."
+msgstr "Status for denne rabattkoden"
+
+#: includes/admin/discounts/edit-discount.php:165
+msgid "Update Discount Code"
+msgstr "Oppdater rabattkoden"
+
+#: includes/admin/downloads/contextual-help.php:45
+msgid "Download Configuration"
+msgstr "Konfigurer nedlasting"
+
+#: includes/admin/downloads/contextual-help.php:47
+msgid ""
+"<strong>Pricing Options</strong> - Either define a single fixed price, or "
+"enable variable pricing. By enabling variable pricing, multiple download "
+"options and prices can be configured."
+msgstr ""
+"<strong>Prisalternativer </strong> - Definer enten en fast pris, eller "
+"aktiver variabel prising. Ved å aktivere variabel prising, kan flere "
+"alternativer for nedlasting og priser konfigureres."
+
+#: includes/admin/downloads/contextual-help.php:49
+msgid ""
+"<strong>File Downloads</strong> - Define download file names and their "
+"respsective file URL. Multiple files can be assigned to a single price, or "
+"variable prices."
+msgstr ""
+"<strong>Nedlastinger</strong> - Definer nedlastingenes filnavn og deres "
+"respsektive URL. Flere filer kan tildeles én pris, eller variable priser."
+
+#: includes/admin/downloads/contextual-help.php:51
+msgid ""
+"<strong>File Download Limit</strong> - Define how many times customers are "
+"allowed to download their purchased files. Leave at 0 for unlimited. "
+"Resending the purchase receipt will permit the customer one additional "
+"download if their limit has already been reached."
+msgstr ""
+"<strong>Nedlastingsbegrensning</strong> - Angi hvor mange ganger kunden har "
+"lov til å laste ned deres kjøpte filer. Ved 0 er antall nedlastinger "
+"ubegrenset. Ved å resende kjøpskvittering vil kunden tillates en ekstra "
+"nedlasting hvis deres grense allerede er nådd."
+
+#: includes/admin/downloads/contextual-help.php:53
+msgid ""
+"<strong>Button Options</strong> - Disable the automatic output the purchase "
+"button. If disabled, no button will be added to the download page unless the "
+"<code>[purchase_link]</code> shortcode is used."
+msgstr ""
+"<strong>Knappalternativer</strong> - deaktiver den automatiske utgang på "
+"kjøp-knappen. Hvis den er deaktivert, vil ingen knapp bli lagt til på "
+"nedlastingssiden om ikke <code> [purchase_link] </code> snarvei brukes."
+
+#: includes/admin/downloads/contextual-help.php:58
+#: includes/admin/downloads/metabox.php:29
+msgid "Product Notes"
+msgstr "Produktbemerkninger"
+
+#: includes/admin/downloads/contextual-help.php:59
+msgid ""
+"Special notes or instructions for the product. These notes will be added to "
+"the purchase receipt, and additionaly may be used by some extensions or "
+"themes on the frontend."
+msgstr ""
+"Spesielle bemerkninger eller instrukser for produktet. Disse notatene vil "
+"bli lagt til kvittering, og kan i tillegg brukes av enkelte utvidelser eller "
+"temaer på forsiden."
+
+#: includes/admin/downloads/contextual-help.php:68
+msgid "Purchase Shortcode"
+msgstr "Kjøps- \"shortcode\""
+
+#: includes/admin/downloads/contextual-help.php:70
+msgid ""
+"<strong>Purchase Shortcode</strong> - If the automatic output of the "
+"purchase button has been disabled via the Download Configuration box, a "
+"shortcode can be used to output the button or link."
+msgstr ""
+"<strong>Kjøps- \"shortcode\"</strong> - Hvis den automatiske innsetting av "
+"nedlastingsfilen i kjøp-knappen er deaktivert via Download "
+"konfigurasjonboksen, kan en snarvei brukes til å lage den knappen eller "
+"koblingen."
+
+#: includes/admin/downloads/contextual-help.php:73
+msgid "The ID of a specific download to purchase."
+msgstr "IDen til en bestemt nedlasting som skal kjøpes."
+
+#: includes/admin/downloads/contextual-help.php:74
+msgid ""
+"Whether to show the price on the purchase button. 1 to show the price, 0 to "
+"disable it."
+msgstr ""
+"Skal prisen vises på kjøp-knappen? 1 for å vise prisen - 0 for å deaktivere "
+"den."
+
+#: includes/admin/downloads/contextual-help.php:75
+msgid "The text to be displayed on the button or link."
+msgstr "Teksten som skal vises på knappen eller koblingen."
+
+#: includes/admin/downloads/contextual-help.php:76
+msgid "<em>button</em> | <em>text</em> - The style of the purchase link."
+msgstr ""
+"<em>button</em> | <em>text</em> - Stilen som skal vises på kjøpslenken."
+
+#: includes/admin/downloads/contextual-help.php:78
+msgid "One or more custom CSS classes you want applied to the button."
+msgstr "En eller flere tilpassede CSS klasser du vil bruke på knappen."
+
+#: includes/admin/downloads/contextual-help.php:80
+#, php-format
+msgid ""
+"For more information, see <a href=\"%s\">using Shortcodes</a> on the "
+"WordPress.org Codex or <a href=\"%s\">Easy Digital Downloads Documentation</"
+"a>"
+msgstr ""
+"For mer informasjon, se <a href=\"%s\">using Shortcodes</a> på WordPress.org "
+"Codex eller <a href=\"%s\">Easy Digital Downloads Documentation</a>"
+
+#: includes/admin/downloads/dashboard-columns.php:30
+#: includes/admin/downloads/dashboard-columns.php:227
+#: includes/admin/downloads/metabox.php:219
+#: includes/admin/reporting/pdf-reports.php:63
+#: templates/shortcode-receipt.php:124
+msgid "Price"
+msgstr "Pris"
+
+#: includes/admin/downloads/dashboard-columns.php:31
+#: includes/admin/reporting/class-download-reports-table.php:79
+#: includes/admin/reporting/graphing.php:142
+#: includes/admin/reporting/logs.php:120
+#: includes/admin/reporting/pdf-reports.php:209
+msgid "Sales"
+msgstr "Salg"
+
+#: includes/admin/downloads/dashboard-columns.php:33
+msgid "Purchase Short Code"
+msgstr "Kjøps-\"short code\""
+
+#: includes/admin/downloads/dashboard-columns.php:34
+#: includes/admin/payments/class-payments-table.php:141
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:149
+#: includes/admin/reporting/class-export-download-history.php:36
+#: includes/admin/reporting/class-export-payments.php:45
+#: includes/admin/reporting/class-export.php:67
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:120
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:118
+#: includes/admin/reporting/class-sales-logs-list-table.php:95
+#: templates/history-purchases.php:10 templates/shortcode-receipt.php:28
+msgid "Date"
+msgstr "Dato"
+
+#: includes/admin/downloads/dashboard-columns.php:190
+msgid "Show all categories"
+msgstr "Vis alle kategorier"
+
+#: includes/admin/downloads/dashboard-columns.php:201
+msgid "Show all tags"
+msgstr "Vis alle tags"
+
+#: includes/admin/downloads/dashboard-columns.php:225
+#, php-format
+msgid "%s Configuration"
+msgstr "%s Innstillinger"
+
+#: includes/admin/downloads/metabox.php:26
+#, php-format
+msgid "%1$s Configuration"
+msgstr "%1$s Innstillinger"
+
+#: includes/admin/downloads/metabox.php:34
+#, php-format
+msgid "%1$s Stats"
+msgstr "%1$s Status"
+
+#: includes/admin/downloads/metabox.php:37
+msgid "File Download Log"
+msgstr "Filnedlastingslogg"
+
+#: includes/admin/downloads/metabox.php:186
+msgid "Pricing Options:"
+msgstr "Prisinnstilling:"
+
+#: includes/admin/downloads/metabox.php:192
+msgid "Enable variable pricing"
+msgstr "Aktiver variabel prising"
+
+#: includes/admin/downloads/metabox.php:212
+msgid ""
+"Enable multi option purchase mode. Leave unchecked to only permit a single "
+"price option to be purchased"
+msgstr ""
+"Aktiver flere alternativ for kjøpsmodus. Ikke avmerk for bare å tillate én "
+"prismulighet for kjøpet"
+
+#: includes/admin/downloads/metabox.php:218
+#: includes/admin/downloads/metabox.php:280
+msgid "Option Name"
+msgstr "Alternativt navn"
+
+#: includes/admin/downloads/metabox.php:247
+msgid "Add New Price"
+msgstr "Legg til ny pris"
+
+#: includes/admin/downloads/metabox.php:320
+msgid "File Downloads:"
+msgstr "Nedlastingsfil:"
+
+#: includes/admin/downloads/metabox.php:329
+#: includes/admin/downloads/metabox.php:396
+msgid "File Name"
+msgstr "Filnavn"
+
+#: includes/admin/downloads/metabox.php:330
+msgid "File URL"
+msgstr "Filens URL"
+
+#: includes/admin/downloads/metabox.php:331
+msgid "Price Assignment"
+msgstr "Prissetting"
+
+#: includes/admin/downloads/metabox.php:359
+msgid "Add New File"
+msgstr "Legg til ny fil"
+
+#: includes/admin/downloads/metabox.php:401
+msgid "http://"
+msgstr "http://"
+
+#: includes/admin/downloads/metabox.php:404
+msgid "Insert"
+msgstr "Sett inn"
+
+#: includes/admin/downloads/metabox.php:404
+msgid "Upload a File"
+msgstr "Last opp en fil"
+
+#: includes/admin/downloads/metabox.php:411
+msgid "All Prices"
+msgstr "Alle priser"
+
+#: includes/admin/downloads/metabox.php:442
+msgid "File Download Limit:"
+msgstr "Nedlastingsbegrensning:"
+
+#: includes/admin/downloads/metabox.php:446
+msgid ""
+"The maximum number of times a buyer can download each file. Leave blank or "
+"set to 0 for unlimited"
+msgstr ""
+"Det maksimale antall ganger en kjøper kan laste ned hver fil. La stå tomt "
+"eller sett til 0 for ubegrenset"
+
+#: includes/admin/downloads/metabox.php:466
+msgid "Button Options:"
+msgstr "Knappeinnstillinger:"
+
+#: includes/admin/downloads/metabox.php:472
+msgid "Disable the automatic output of the purchase button"
+msgstr "Deaktiver den automatiske innsetting til kjøps-knappen"
+
+#: includes/admin/downloads/metabox.php:532
+msgid ""
+"Special notes or instructions for this product. These notes will be added to "
+"the purchase receipt."
+msgstr ""
+"Spesielle bemerkninger eller instrukser for produktet. Disse notatene vil "
+"bli lagt til kvittering."
+
+#: includes/admin/downloads/metabox.php:555
+msgid "Sales:"
+msgstr "Salg:"
+
+#: includes/admin/downloads/metabox.php:557
+msgid "View Sales Log"
+msgstr "Se salgsloggen"
+
+#: includes/admin/downloads/metabox.php:561
+msgid "Earnings:"
+msgstr "Inntjening:"
+
+#: includes/admin/downloads/metabox.php:589
+msgid "Download Log"
+msgstr "Nedlastingslogg"
+
+#: includes/admin/downloads/metabox.php:591
+msgid "Each time a file is downloaded, it is recorded below."
+msgstr "Hver gang en fil blir lastet ned blir den registrert under."
+
+#: includes/admin/downloads/metabox.php:617
+msgid "Date:"
+msgstr "Dato:"
+
+#: includes/admin/downloads/metabox.php:621
+msgid "Downloaded by:"
+msgstr "Lastet ned av:"
+
+#: includes/admin/downloads/metabox.php:625
+msgid "IP Address:"
+msgstr "IP adresse:"
+
+#: includes/admin/downloads/metabox.php:629
+msgid "File: "
+msgstr "Fil:"
+
+#: includes/admin/downloads/metabox.php:638
+msgid "No file downloads yet"
+msgstr "Ingen nedlastinger ennå"
+
+#: includes/admin/downloads/metabox.php:654
+msgid "Previous"
+msgstr "Forrige"
+
+#: includes/admin/downloads/metabox.php:655 includes/checkout/template.php:546
+msgid "Next"
+msgstr "Neste"
+
+#: includes/admin/payments/class-payments-table.php:117
+msgid "Completed"
+msgstr "Ferdig"
+
+#: includes/admin/payments/class-payments-table.php:118
+#: includes/payments/functions.php:393
+msgid "Pending"
+msgstr "Venter"
+
+#: includes/admin/payments/class-payments-table.php:119
+#: includes/payments/functions.php:395
+msgid "Refunded"
+msgstr "Refundert"
+
+#: includes/admin/payments/class-payments-table.php:120
+#: includes/payments/functions.php:397
+msgid "Revoked"
+msgstr "Opphevet"
+
+#: includes/admin/payments/class-payments-table.php:121
+#: includes/payments/functions.php:396
+msgid "Failed"
+msgstr "Feilet"
+
+#: includes/admin/payments/class-payments-table.php:138
+#: includes/admin/reporting/class-customer-reports-table.php:89
+#: includes/admin/reporting/class-export-customers.php:63
+#: includes/admin/reporting/class-export-customers.php:69
+#: includes/admin/reporting/class-export-payments.php:37
+#: includes/checkout/template.php:288 includes/checkout/template.php:290
+msgid "Email"
+msgstr "E-post"
+
+#: includes/admin/payments/class-payments-table.php:139
+msgid "Details"
+msgstr "Detaljer"
+
+#: includes/admin/payments/class-payments-table.php:142
+#: includes/admin/reporting/class-export-payments.php:46
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:116
+#: includes/admin/reporting/class-sales-logs-list-table.php:91
+msgid "User"
+msgstr "Bruker"
+
+#: includes/admin/payments/class-payments-table.php:208
+msgid "Resend Purchase Receipt"
+msgstr "Send kjøpskvitteringen igjen"
+
+#: includes/admin/payments/class-payments-table.php:372
+#: includes/admin/payments/class-payments-table.php:374
+#: includes/admin/reporting/class-export-payments.php:125
+msgid "guest"
+msgstr "gjest"
+
+#: includes/admin/payments/contextual-help.php:42
+msgid "Overview"
+msgstr "Oversikt"
+
+#: includes/admin/payments/contextual-help.php:44
+msgid "This screen provides access to all of your store's transactions."
+msgstr "Denne skjermen gir tilgang til alle butikkens transaksjoner."
+
+#: includes/admin/payments/contextual-help.php:45
+msgid ""
+"Payments can be searched by email address, user name, or filtered by status "
+"(completed, pending, etc.)"
+msgstr ""
+"Betalinger kan søkes på e-postadresse, brukernavn eller filtrert av status "
+"(fullført, i påvente, etc.)"
+
+#: includes/admin/payments/contextual-help.php:46
+msgid "You also have the option to bulk delete payment should you wish."
+msgstr ""
+"Du har også muligheten til å masseslette (bulk) betaling dersom du ønsker."
+
+#: includes/admin/payments/contextual-help.php:51
+msgid "Order Details"
+msgstr "Bestillingsdetaljer"
+
+#: includes/admin/payments/contextual-help.php:53
+msgid ""
+"Each payment can be further inspected by clicking the corresponding <em>View "
+"Order Details</em> link. This will provide more information including:"
+msgstr ""
+"Hver betaling kan ytterligere undersøkes ved å klikke på tilhørende <em>Vis "
+"bestillingsdetaljer</ em> link. Dette vil gi mer informasjon, inkludert:"
+
+#: includes/admin/payments/contextual-help.php:56
+msgid "The file associated with the purchase."
+msgstr "Filen tilknyttet kjøpet."
+
+#: includes/admin/payments/contextual-help.php:57
+msgid "The exact date and time the payment was completed."
+msgstr "Den eksakte dato og klokkeslett betalingen ble fullført."
+
+#: includes/admin/payments/contextual-help.php:58
+msgid "If a coupon or discount was used during the checkout process."
+msgstr "Viser om en kupong eller rabatt ble brukt under betalingsprosessen."
+
+#: includes/admin/payments/contextual-help.php:59
+msgid "The buyer's name."
+msgstr "Kjøpers navn"
+
+#: includes/admin/payments/contextual-help.php:60
+msgid "The buyer's email address."
+msgstr "Kjøpers e-postadresse."
+
+#: includes/admin/payments/contextual-help.php:61
+msgid "Any customer-specific notes related to the payment."
+msgstr "Eventuelle kundespesifikke bemerkninger relatert til betaling."
+
+#: includes/admin/payments/contextual-help.php:62
+msgid "The name of the payment gateway used to complete the payment."
+msgstr ""
+"Navnet på betalings \"gateway\" (PayPal) brukt for å fullføre betalingen."
+
+#: includes/admin/payments/contextual-help.php:63
+msgid "A unique key used to identify the payment."
+msgstr "En unik nøkkel som brukes til å identifisere betalingen."
+
+#: includes/admin/payments/edit-payment.php:26
+msgid "Buyer's Email"
+msgstr "Kjøpers Epost"
+
+#: includes/admin/payments/edit-payment.php:30
+msgid "If needed, you can update the buyer's email here."
+msgstr "Hvis nødvendig kan du oppdatere kjøpers e-post her."
+
+#: includes/admin/payments/edit-payment.php:35
+msgid "Buyer's User ID"
+msgstr "Kjøpers bruker-ID"
+
+#: includes/admin/payments/edit-payment.php:39
+msgid "If needed, you can update the buyer's WordPress user ID here."
+msgstr "Hvis nødvendig kan du oppdatere kjøpers WordPress bruker-ID her."
+
+#: includes/admin/payments/edit-payment.php:44
+msgid "Downloads Purchased"
+msgstr "Nedlastinger kjøpt"
+
+#: includes/admin/payments/edit-payment.php:68
+#, php-format
+msgid "Add %s to purchase"
+msgstr "Legg til %s for å kjøpe"
+
+#: includes/admin/payments/edit-payment.php:94
+msgid "Add New Note"
+msgstr "Legg til ny bemerkning"
+
+#: includes/admin/payments/edit-payment.php:100
+msgid "Payment Status"
+msgstr "Betalingsstatus"
+
+#: includes/admin/payments/edit-payment.php:116
+msgid "Send Purchase Receipt"
+msgstr "Send kjøpskvittering"
+
+#: includes/admin/payments/edit-payment.php:120
+msgid ""
+"Check this box to send the purchase receipt, including all download links."
+msgstr "Kryss av for å sende kvitteringen, inkludert alle nedlastingslenker."
+
+#: includes/admin/payments/edit-payment.php:131
+msgid "Update Payment"
+msgstr "Oppdater betaling"
+
+#: includes/admin/payments/edit-payment.php:139
+#, php-format
+msgid "Select a %s"
+msgstr "Velg en %s"
+
+#: includes/admin/payments/edit-payment.php:150
+#, php-format
+msgid "Add Another %s"
+msgstr "Legg til en annen %s"
+
+#: includes/admin/payments/edit-payment.php:153
+msgid "Add Selected Downloads"
+msgstr "Legg til valgt nedlasting"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:112
+msgid "View Request Details"
+msgstr "Se på forespørseldetaljer"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:112
+msgid "View Request"
+msgstr "Vis forespørsel"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:118
+msgid "API Request:"
+msgstr "API bestilling:"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:124
+msgid "API User:"
+msgstr "API bruker:"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:126
+msgid "API Key:"
+msgstr "API nøkkel:"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:128
+msgid "Request Date:"
+msgstr "Bestillingsdato:"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:146
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:114
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:113
+#: includes/admin/reporting/class-sales-logs-list-table.php:90
+msgid "Log ID"
+msgstr "Logg ID"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:147
+msgid "Request Details"
+msgstr "Be om detaljer"
+
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:148
+msgid "Request IP"
+msgstr "Be om IP"
+
+#: includes/admin/reporting/class-customer-reports-table.php:46
+msgid "Customer"
+msgstr "Kunde"
+
+#: includes/admin/reporting/class-customer-reports-table.php:47
+#: includes/admin/reporting/reports.php:60
+msgid "Customers"
+msgstr "Kunder"
+
+#: includes/admin/reporting/class-customer-reports-table.php:90
+msgid "Purchases"
+msgstr "Kjøp"
+
+#: includes/admin/reporting/class-customer-reports-table.php:91
+msgid "Total Spent"
+msgstr "Totalt brukt"
+
+#: includes/admin/reporting/class-customer-reports-table.php:92
+msgid "Files Downloaded"
+msgstr "Filer nedlastet"
+
+#: includes/admin/reporting/class-download-reports-table.php:81
+msgid "Monthly Average Sales"
+msgstr "Gjennomsnittslig månedssalg"
+
+#: includes/admin/reporting/class-download-reports-table.php:82
+msgid "Monthly Average Earnings"
+msgstr "Gjennomsnittlig månedsinntjening"
+
+#: includes/admin/reporting/class-export-customers.php:64
+msgid "Date Purchased"
+msgstr "Dato kjøpt"
+
+#: includes/admin/reporting/class-export-customers.php:70
+msgid "Total Purchases"
+msgstr "Sum kjøp"
+
+#: includes/admin/reporting/class-export-customers.php:71
+msgid "Total Purchased"
+msgstr "Sum kjøp"
+
+#: includes/admin/reporting/class-export-download-history.php:37
+msgid "Downloaded by"
+msgstr "Laste ned av"
+
+#: includes/admin/reporting/class-export-download-history.php:38
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:119
+msgid "IP Address"
+msgstr "IP adresse"
+
+#: includes/admin/reporting/class-export-download-history.php:39
+msgid "Product"
+msgstr "Produkt"
+
+#: includes/admin/reporting/class-export-download-history.php:40
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:118
+msgid "File"
+msgstr "Fil"
+
+#: includes/admin/reporting/class-export-payments.php:38
+#: includes/checkout/template.php:125 includes/checkout/template.php:127
+#: includes/checkout/template.php:293 includes/checkout/template.php:295
+#: templates/shortcode-profile-editor.php:20
+msgid "First Name"
+msgstr "Fornavn"
+
+#: includes/admin/reporting/class-export-payments.php:39
+#: includes/checkout/template.php:130 includes/checkout/template.php:298
+#: templates/shortcode-profile-editor.php:23
+msgid "Last Name"
+msgstr "Etternavn"
+
+#: includes/admin/reporting/class-export-payments.php:40
+#: templates/shortcode-receipt.php:119
+msgid "Products"
+msgstr "Produkter"
+
+#: includes/admin/reporting/class-export-payments.php:42
+#: templates/checkout_cart.php:72 templates/shortcode-receipt.php:58
+msgid "Tax"
+msgstr "moms"
+
+#: includes/admin/reporting/class-export-payments.php:43
+#: templates/shortcode-receipt.php:101
+msgid "Payment Method"
+msgstr "Betalingsmetode"
+
+#: includes/admin/reporting/class-export.php:166
+msgid "You do not have permission to export data."
+msgstr "Du har ikke tillatelse til å eksportere data."
+
+#: includes/admin/reporting/class-file-downloads-logs-list-table.php:117
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:114
+#: includes/admin/reporting/class-sales-logs-list-table.php:94
+msgid "Payment ID"
+msgstr "Betalings-ID"
+
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:64
+#: includes/gateways/manual.php:73 includes/gateways/paypal-standard.php:73
+msgid "Payment Error"
+msgstr "Feil ved betaling"
+
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:79
+msgid "View Log Message"
+msgstr "Vis Loggmelding"
+
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:93
+msgid "<strong>Log data:</strong>"
+msgstr "<strong>Log data:</strong>"
+
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:116
+msgid "Error Message"
+msgstr "Feilmelding"
+
+#: includes/admin/reporting/class-gateway-error-logs-list-table.php:117
+msgid "Gateway"
+msgstr "Gateway"
+
+#: includes/admin/reporting/class-sales-logs-list-table.php:93
+msgid "Item Amount"
+msgstr "Varepris"
+
+#: includes/admin/reporting/contextual-help.php:43
+msgid ""
+"This screen provides you with reports for your earnings, downloads, "
+"customers and taxes."
+msgstr ""
+"Denne skjermen viser deg rapporter for inntjening, nedlastinger, kunder og "
+"moms."
+
+#: includes/admin/reporting/contextual-help.php:48
+#: includes/admin/reporting/reports.php:34
+msgid "Export"
+msgstr "Eksport"
+
+#: includes/admin/reporting/contextual-help.php:50
+msgid "This screen allows you to export your reports into a PDF or CSV format."
+msgstr ""
+"Denne skjermen lar deg eksportere rapporter til en PDF-eller CSV-format."
+
+#: includes/admin/reporting/contextual-help.php:51
+msgid ""
+"<strong>Sales and Earnings</strong> - This report exports all of the sales "
+"and earnings that you have made in the current year. This report includes "
+"your sales and earnings for each product as well a graphs of sales and "
+"earnings so you can compare them for each month."
+msgstr ""
+"<strong>Salg og Inntjening</strong> - Denne rapporten eksporterer alle salg "
+"og inntjening i inneværende år. Denne rapporten omfatter salg og inntjening "
+"for hvert produkt samt grafer over salg og inntjening slik at du kan "
+"sammenligne dem for hver måned."
+
+#: includes/admin/reporting/contextual-help.php:52
+msgid ""
+"<strong>Payment History</strong> - This report exports all of payments you "
+"have received on your EDD store in a CSV format.  The report includes the "
+"contact details of the customer, the products they have purchased as well as "
+"any discount codes they have used and the final price they have paid."
+msgstr ""
+"<strong>Betalingshistorikk</strong> - Denne rapporten eksporterer alle "
+"betalinger mottatt på din EDD butikk i et CSV-format. Rapporten inneholder "
+"kontaktinformasjon på kunden, produktene de har kjøpt samt eventuelle "
+"rabattkoder de har brukt og den endelige prisen de har betalt."
+
+#: includes/admin/reporting/contextual-help.php:53
+msgid ""
+"<strong>Customers</strong> - This report exports all of your customers in a "
+"CSV format. It exports the customer's name and email address and the amount "
+"of products they have purchased as well as the final price of their total "
+"purchases."
+msgstr ""
+"<strong>Kunder</strong> - Denne rapporten eksporterer alle dine kunder i et "
+"CSV-format. Det eksporterer kundens navn, e-postadresse og antall produkter "
+"de har kjøpt samt den endelige prisen på sine samlede innkjøp."
+
+#: includes/admin/reporting/contextual-help.php:54
+msgid ""
+"<strong>Download History</strong> - This report exports all of the downloads "
+"you have received in the current month into a CSV. It exports the date the "
+"file was downloaded, the customer it was downloaded by, their IP address, "
+"the name of the product and the file they downloaded."
+msgstr ""
+"<strong>Nedlastingshistorikk</strong> - Denne rapporten eksporterer alle "
+"nedlastinger mottatt i inneværende måned til en CSV. Den eksporterer datoen "
+"filen ble lastet ned, kunden den ble lastet ned av, deres IP-adresse, navnet "
+"på produktet og filen som ble lastet ned."
+
+#: includes/admin/reporting/graphing.php:279
+msgid "Earnings Over Time"
+msgstr "Inntjening over tid"
+
+#: includes/admin/reporting/graphing.php:285
+msgid "Total earnings for period shown: "
+msgstr "Samlet resultat for perioden vist:"
+
+#: includes/admin/reporting/graphing.php:286
+msgid "Total sales for period shown: "
+msgstr "Totalomsetningen for perioden vist:"
+
+#: includes/admin/reporting/graphing.php:287
+msgid "Estimated monthly earnings: "
+msgstr "Anslått månedlig inntjening:"
+
+#: includes/admin/reporting/graphing.php:288
+msgid "Estimated monthly sales: "
+msgstr "Anslått månedlig salg:"
+
+#: includes/admin/reporting/graphing.php:305
+msgid "Today"
+msgstr "I dag"
+
+#: includes/admin/reporting/graphing.php:306
+msgid "This Week"
+msgstr "Denne uke"
+
+#: includes/admin/reporting/graphing.php:307
+msgid "Last Week"
+msgstr "Forrige uke"
+
+#: includes/admin/reporting/graphing.php:308
+msgid "This Month"
+msgstr "Denne måned"
+
+#: includes/admin/reporting/graphing.php:310
+msgid "This Quarter"
+msgstr "Dette kvartal"
+
+#: includes/admin/reporting/graphing.php:311
+msgid "Last Quarter"
+msgstr "Forrige kvartal"
+
+#: includes/admin/reporting/graphing.php:312
+msgid "This Year"
+msgstr "I år"
+
+#: includes/admin/reporting/graphing.php:313
+msgid "Last Year"
+msgstr "Forrige år"
+
+#: includes/admin/reporting/graphing.php:314
+msgid "Custom"
+msgstr "Egendefinert/tilpasset"
+
+#: includes/admin/reporting/graphing.php:341
+msgid "From"
+msgstr "Fra"
+
+#: includes/admin/reporting/graphing.php:347
+msgid "To"
+msgstr "Til"
+
+#: includes/admin/reporting/graphing.php:361
+msgid "Filter"
+msgstr "Filter"
+
+#: includes/admin/reporting/logs.php:119
+msgid "File Downloads"
+msgstr "Filer nedlastet"
+
+#: includes/admin/reporting/logs.php:121
+msgid "Payment Errors"
+msgstr "Betalingsfeil"
+
+#: includes/admin/reporting/logs.php:122
+msgid "API Requests"
+msgstr "Anmodning om API"
+
+#: includes/admin/reporting/logs.php:143
+msgid "Log Type"
+msgstr "Logg type"
+
+#: includes/admin/reporting/logs.php:155
+msgid "Apply"
+msgstr "Påfør"
+
+#: includes/admin/reporting/pdf-reports.php:33
+msgid "to"
+msgstr "til"
+
+#: includes/admin/reporting/pdf-reports.php:38
+#: includes/admin/reporting/pdf-reports.php:49
+msgid "Sales and earnings reports for the current year for all products"
+msgstr ""
+"Omsetning- og inntjeningsrapporter for inneværende år for alle produkter"
+
+#: includes/admin/reporting/pdf-reports.php:39
+#: includes/admin/reporting/pdf-reports.php:40 languages/strings.php:15
+msgid "Easy Digital Downloads"
+msgstr "Easy Digital Downloads"
+
+#: includes/admin/reporting/pdf-reports.php:54
+msgid "Date Range: "
+msgstr "Periode:"
+
+#: includes/admin/reporting/pdf-reports.php:58
+msgid "Table View"
+msgstr "Tabellvisning"
+
+#: includes/admin/reporting/pdf-reports.php:62
+msgid "Product Name"
+msgstr "Produktnavn"
+
+#: includes/admin/reporting/pdf-reports.php:66
+msgid "Number of Sales"
+msgstr "Antall salg"
+
+#: includes/admin/reporting/pdf-reports.php:67
+msgid "Earnings to Date"
+msgstr "Inntjening pr. dags dato"
+
+#: includes/admin/reporting/pdf-reports.php:115
+#, php-format
+msgid "No %s found."
+msgstr "Ingen %s funnet."
+
+#: includes/admin/reporting/pdf-reports.php:122
+msgid "Graph View"
+msgstr "Grafvisning"
+
+#: includes/admin/reporting/pdf-reports.php:213
+msgid "Sales and Earnings by Month for all Products"
+msgstr "Salg og inntjening pr. måned for alle produkter"
+
+#: includes/admin/reporting/pdf-reports.php:224
+msgid "Jan"
+msgstr "jan"
+
+#: includes/admin/reporting/pdf-reports.php:225
+msgid "Feb"
+msgstr "feb"
+
+#: includes/admin/reporting/pdf-reports.php:226
+msgid "Mar"
+msgstr "mar"
+
+#: includes/admin/reporting/pdf-reports.php:227
+msgid "Apr"
+msgstr "apr"
+
+#: includes/admin/reporting/pdf-reports.php:228
+msgid "May"
+msgstr "mai"
+
+#: includes/admin/reporting/pdf-reports.php:229
+msgid "June"
+msgstr "juni"
+
+#: includes/admin/reporting/pdf-reports.php:230
+msgid "July"
+msgstr "juli"
+
+#: includes/admin/reporting/pdf-reports.php:231
+msgid "Aug"
+msgstr "aug"
+
+#: includes/admin/reporting/pdf-reports.php:232
+msgid "Sept"
+msgstr "sep"
+
+#: includes/admin/reporting/pdf-reports.php:233
+msgid "Oct"
+msgstr "okt"
+
+#: includes/admin/reporting/pdf-reports.php:234
+msgid "Nov"
+msgstr "nov"
+
+#: includes/admin/reporting/pdf-reports.php:235
+msgid "Dec"
+msgstr "des"
+
+#: includes/admin/reporting/reports.php:61
+#: includes/admin/settings/contextual-help.php:71
+#: includes/admin/settings/display-settings.php:36
+msgid "Taxes"
+msgstr "Moms"
+
+#: includes/admin/reporting/reports.php:100
+msgid "Report Type"
+msgstr "Rapporttype"
+
+#: includes/admin/reporting/reports.php:110
+msgid "Show"
+msgstr "Vis"
+
+#: includes/admin/reporting/reports.php:180
+msgid "Tax Report"
+msgstr "momsrapport"
+
+#: includes/admin/reporting/reports.php:183
+msgid ""
+"This report shows the total amount collected in sales tax for the given year."
+msgstr ""
+"Denne rapporten viser det totale beløpet som er samlet inn i "
+"omsetningsavgift for det enkelte år."
+
+#: includes/admin/reporting/reports.php:195
+msgid "Submit"
+msgstr "Send"
+
+#: includes/admin/reporting/reports.php:219
+msgid "Export PDF of Sales and Earnings"
+msgstr "Eksporter til PDF salg og inntjening"
+
+#: includes/admin/reporting/reports.php:221
+msgid ""
+"Download a PDF of Sales and Earnings reports for all products for the "
+"current year."
+msgstr ""
+"Last ned en PDF av salg- og inntjeningsrapporter for alle produkter for "
+"inneværende år."
+
+#: includes/admin/reporting/reports.php:221
+msgid "Date range reports will be coming soon."
+msgstr "Perioderapporter kommer snart."
+
+#: includes/admin/reporting/reports.php:222
+msgid "Generate PDF"
+msgstr "Generer PDF"
+
+#: includes/admin/reporting/reports.php:227
+msgid "Export Payment History"
+msgstr "Eksporter betalingshistorikk"
+
+#: includes/admin/reporting/reports.php:229
+msgid "Download a CSV of all payments recorded."
+msgstr "Last ned en CSV av alle registrerte betalinger."
+
+#: includes/admin/reporting/reports.php:233
+msgid "All Statuses"
+msgstr "Alle statuser"
+
+#: includes/admin/reporting/reports.php:242
+#: includes/admin/reporting/reports.php:266
+#: includes/admin/reporting/reports.php:276
+msgid "Generate CSV"
+msgstr "Generer CSV"
+
+#: includes/admin/reporting/reports.php:249
+msgid "Export Customers in CSV"
+msgstr "Eksporter Kunder i CSV"
+
+#: includes/admin/reporting/reports.php:251
+msgid ""
+"Download a CSV of all customer emails. Optionally export only customers that "
+"have purchased a particular product."
+msgstr ""
+"Last ned en CSV av alle kundens e-poster. Eventuelt eksporter bare kunder "
+"som har kjøpt et bestemt produkt."
+
+#: includes/admin/reporting/reports.php:273
+msgid "Export Download History in CSV"
+msgstr "Eksporter nedlastingshistorikk til CSV"
+
+#: includes/admin/reporting/reports.php:275
+msgid "Download a CSV of all file downloads for the current month."
+msgstr "Last ned en CSV av alle nedlastinger for inneværende måned."
+
+#: includes/admin/settings/contextual-help.php:43
+msgid ""
+"This screen provides the most basic settings for configuring your store. You "
+"can set the currency, page templates, and turn <em>Test Mode</em> on and off."
+msgstr ""
+"Dette skjermbildet gir de mest grunnleggende innstillinger for konfigurering "
+"av butikken. Du kan sette valuta, sidemaler, og slå <em>Test modus</em> av "
+"og på."
+
+#: includes/admin/settings/contextual-help.php:48
+#: includes/admin/settings/display-settings.php:33
+#: includes/admin/settings/register-settings.php:135
+msgid "Payment Gateways"
+msgstr "Betalingsløsninger"
+
+#: includes/admin/settings/contextual-help.php:50
+msgid ""
+"This screen provides ways to toggle payment gateways on or off, as well as "
+"configure gateway-specific settings. Any extra payment gateway extensions "
+"you have installed will appear on this page, and can be configured to suit "
+"your needs."
+msgstr ""
+"Dette skjermbildet angir måter å veksle mellom betalingsløsninger og - på "
+"eller av, samt konfigurere gateway-innstillinger. Eventuelle andre betalings "
+"gateway utvidelser du har installert vises på denne siden, og kan "
+"konfigureres etter behov."
+
+#: includes/admin/settings/contextual-help.php:51
+msgid ""
+"<strong>Test Payment</strong> - This included gateway is great for testing "
+"your store, as it requires no payment, and leads straight to product "
+"downloads. However, please remember to turn it off once your site is live!"
+msgstr ""
+"<strong>Test av Betalingsløsninger</strong> - Den inkluderte gateway'en er "
+"grei for testing av butikken da det ikke kreves betaling, og fører rett til "
+"produktnedlastinger. Men <strong>husk å slå den av</strong> før hjemmesiden "
+"går <strong>\"live\"</strong>!"
+
+#: includes/admin/settings/contextual-help.php:52
+msgid ""
+"<strong>PayPal</strong> - A PayPal payment gateway is included as standard "
+"with Easy Digital Downloads. To test the PayPal gateway, you need a Sandbox "
+"account for PayPal and the site must be placed in Test Mode from the General "
+"settings tab. Please remember to enter your PayPal account email address in "
+"order for payments to get processed."
+msgstr ""
+"<strong>PayPal</strong> - En PayPal betalingsløsning er inkludert som "
+"standard med Easy Digitale Downloads. For å teste PayPal gateway, trenger du "
+"en Sandbox konto for PayPal og området må plasseres i testmodus fra "
+"kategorien Generelle innstillinger. Husk å oppgi din PayPal-konto's e-"
+"postadresse for at betalinger skal bli behandlet."
+
+#: includes/admin/settings/contextual-help.php:57
+#: includes/admin/settings/display-settings.php:34
+msgid "Emails"
+msgstr "Eposter"
+
+#: includes/admin/settings/contextual-help.php:59
+msgid ""
+"This screen allows you to customize how emails act throughout your store. "
+"You can choose a premade template, set the sender's name, email address, and "
+"subject."
+msgstr ""
+"Denne skjermen lar deg tilpasse hvordan e-postene fungerer for hele "
+"butikken. Du kan velge en forhåndslagd mal, sette avsenderens navn, e-"
+"postadresse og emne."
+
+#: includes/admin/settings/contextual-help.php:60
+msgid ""
+"A set of email tags has also been provided to allow the creation of "
+"personalized emails. A tag consists of a keyword surrounded by curly braces: "
+"<code>{tag}</code>. A description of each of these tags appear below the "
+"editor."
+msgstr ""
+"Et sett med e-post tags er også gitt for å tillate oppsett av personlige e-"
+"poster. En kode består av et nøkkelord i klammeparentes: <code {tag}</code>. "
+"En beskrivelse av hver av disse kodene vises nedenfor i redigeringsvinduet."
+
+#: includes/admin/settings/contextual-help.php:65
+#: includes/admin/settings/display-settings.php:35
+msgid "Styles"
+msgstr "Stiler"
+
+#: includes/admin/settings/contextual-help.php:66
+msgid ""
+"This screen provides allows customization of your store's styles. For "
+"complete control, you can completely disable all styles generated by the "
+"plugin."
+msgstr ""
+"Denne skjermen gjør det mulig å tilpasse butikkens stiler (utseende). For "
+"full kontroll kan du deaktivere alle stilarter som genereres av plugin."
+
+#: includes/admin/settings/contextual-help.php:72
+msgid ""
+"This screen provides basic settings for adjusting how tax rules work for "
+"purchases."
+msgstr ""
+"Dette skjermbildet gir grunnleggende innstillinger for å justere hvordan "
+"skattereglene fungerer for kjøp."
+
+#: includes/admin/settings/contextual-help.php:77
+msgid "Miscellaneous"
+msgstr "Diverse"
+
+#: includes/admin/settings/contextual-help.php:79
+msgid ""
+"This screen provides other miscellaneous options such as disabling jQuery, "
+"allowing guest checkout, and configuring your terms of service."
+msgstr ""
+"Dette skjermbildet gir diverse andre alternativer som å deaktivere jQuery, "
+"tillate utsjekk av gjester samt konfigurerer vilkårene for tjenesten."
+
+#: includes/admin/settings/contextual-help.php:80
+msgid "A description of all the options are provided beside their input boxes."
+msgstr ""
+"En beskrivelse av alle alternativene er gitt ved siden av "
+"innskrivingsfeltene."
+
+#: includes/admin/settings/display-settings.php:37
+msgid "Misc"
+msgstr "Forskjellig"
+
+#: includes/admin/settings/register-settings.php:41
+msgid "Test Mode"
+msgstr "Testmodus"
+
+#: includes/admin/settings/register-settings.php:42
+msgid ""
+"While in test mode no live transactions are processed. To fully use test "
+"mode, you must have a sandbox (test) account for the payment gateway you are "
+"testing."
+msgstr ""
+"Mens en er i testmodus kan ingen live-transaksjoner bli behandlet. For å dra "
+"full nytte av test-modus, må du ha en Sandbox (test)-konto for "
+"betalingsløsningen du tester."
+
+#: includes/admin/settings/register-settings.php:47
+msgid "Checkout Page"
+msgstr "Utsjekkside"
+
+#: includes/admin/settings/register-settings.php:48
+msgid ""
+"This is the checkout page where buyers will complete their purchases. The "
+"[download_checkout] short code must be on this page."
+msgstr ""
+"Dette er utsjekksiden hvor kjøperen vil fullføre sine innkjøp. \"Short code"
+"\" [download_checkout] skal settes inn på denne siden."
+
+#: includes/admin/settings/register-settings.php:54
+msgid "Success Page"
+msgstr "Suksessiden"
+
+#: includes/admin/settings/register-settings.php:55
+msgid ""
+"This is the page buyers are sent to after completing their purchases. The "
+"[edd_receipt] short code should be on this page."
+msgstr ""
+"Dette er siden kjøperen blir sendt til etter å ha fullført sine innkjøp. "
+"\"Short code\" [edd_receipt] skal settes inn på denne siden."
+
+#: includes/admin/settings/register-settings.php:61
+msgid "Failed Transaction Page"
+msgstr "Side for mislykket transaksjon"
+
+#: includes/admin/settings/register-settings.php:62
+msgid ""
+"This is the page buyers are sent to if their transaction is cancelled or "
+"fails"
+msgstr ""
+"Dette er siden kjøperne er sendt til dersom transaksjonen blir kansellert "
+"eller feiler"
+
+#: includes/admin/settings/register-settings.php:68
+msgid "Currency Settings"
+msgstr "Valutainnstillnger"
+
+#: includes/admin/settings/register-settings.php:69
+msgid "Configure the currency options"
+msgstr "Konfigurer valutaopsjonene"
+
+#: includes/admin/settings/register-settings.php:74
+msgid "Currency"
+msgstr "Valuta"
+
+#: includes/admin/settings/register-settings.php:75
+msgid ""
+"Choose your currency. Note that some payment gateways have currency "
+"restrictions."
+msgstr ""
+"Velg din valuta. Vær oppmerksom på at enkelte betalingsløsninger kan ha "
+"valutarestriksjoner."
+
+#: includes/admin/settings/register-settings.php:81
+msgid "Currency Position"
+msgstr "Valutaplassering"
+
+#: includes/admin/settings/register-settings.php:82
+msgid "Choose the location of the currency sign."
+msgstr "Velg plassering av valutategn."
+
+#: includes/admin/settings/register-settings.php:85
+msgid "Before - $10"
+msgstr "Før - Kr 10"
+
+#: includes/admin/settings/register-settings.php:86
+msgid "After - 10$"
+msgstr "Etter - 10 Kr"
+
+#: includes/admin/settings/register-settings.php:91
+msgid "Thousands Separator"
+msgstr "Tusenskilletegn"
+
+#: includes/admin/settings/register-settings.php:92
+msgid "The symbol (usually , or .) to separate thousands"
+msgstr "Symbolet (vanligvis . eller ,) for å skille tusener"
+
+#: includes/admin/settings/register-settings.php:99
+msgid "Decimal Separator"
+msgstr "Desimalskilletegn"
+
+#: includes/admin/settings/register-settings.php:100
+msgid "The symbol (usually , or .) to separate decimal points"
+msgstr "Symbolet (valigvis , eller .) for å skille desimaler"
+
+#: includes/admin/settings/register-settings.php:107
+msgid "Usage Tracking"
+msgstr "Sporing av bruk"
+
+#: includes/admin/settings/register-settings.php:113
+msgid "Enable Tracking"
+msgstr "Aktiver sporing"
+
+#: includes/admin/settings/register-settings.php:114
+msgid ""
+"Check this box to allow Easy Digital Downloads to track how the plugin is "
+"used. No personal info is ever collected. This helps us better improve the "
+"plugin."
+msgstr ""
+"Kryss av for å tillate Easy Digital Downloads å spore hvordan utvidelsen "
+"(plugin) brukes. Ingen personlig informasjon blir samlet og sendt. Dette "
+"hjelper oss å forbedre utvidelsen (plugin)."
+
+#: includes/admin/settings/register-settings.php:119
+msgid "API Settings"
+msgstr "API Innstillinger"
+
+#: includes/admin/settings/register-settings.php:125
+msgid "Allow User Keys"
+msgstr "Tillat brukeres nøkkel"
+
+#: includes/admin/settings/register-settings.php:126
+msgid ""
+"Check this box to allow all users to generate API keys. Users with the "
+"'manage_shop_settings' capability are always allowed to generate keys."
+msgstr ""
+"Kryss av for å tillate alle brukere å generere API nøkler. Brukere med "
+"'manage_shop_settings' tillatelse har alltid lov til å generere nøkler."
+
+#: includes/admin/settings/register-settings.php:136
+msgid "Choose the payment gateways you want to enable."
+msgstr "Velg betalingsløsninger du ønsker å aktivere."
+
+#: includes/admin/settings/register-settings.php:142
+msgid "Default Gateway"
+msgstr "Standardløsning"
+
+#: includes/admin/settings/register-settings.php:143
+msgid "This gateway will be loaded automatically with the checkout page."
+msgstr "Denne betalingsløsningen vil bli lastet automatisk ved utsjekk."
+
+#: includes/admin/settings/register-settings.php:149
+msgid "Accepted Payment Method Icons"
+msgstr "Ikon for godkjent betalingsløsning"
+
+#: includes/admin/settings/register-settings.php:150
+msgid "Display icons for the selected payment methods"
+msgstr "Vis ikoner for de valgte betalingsmetoder"
+
+#: includes/admin/settings/register-settings.php:150
+msgid ""
+"You will also need to configure your gateway settings if you are accepting "
+"credit cards"
+msgstr ""
+"Hvis du godtar kredittkort må du også konfigurere gateway-innstillingene"
+
+#: includes/admin/settings/register-settings.php:163
+msgid "PayPal Settings"
+msgstr "PayPal Innstillinger"
+
+#: includes/admin/settings/register-settings.php:164
+msgid "Configure the PayPal settings"
+msgstr "Konfigurer PayPal innstillingene"
+
+#: includes/admin/settings/register-settings.php:169
+msgid "PayPal Email"
+msgstr "PayPal Epost"
+
+#: includes/admin/settings/register-settings.php:170
+msgid "Enter your PayPal account's email"
+msgstr "Skriv inn din PayPal konto's Epost"
+
+#: includes/admin/settings/register-settings.php:176
+msgid "PayPal Page Style"
+msgstr "PayPal sidestil (utseende)"
+
+#: includes/admin/settings/register-settings.php:177
+msgid "Enter the name of the page style to use, or leave blank for default"
+msgstr ""
+"Skriv inn navnet på sidestilen som skal brukes, eller la stå tomt for "
+"standard"
+
+#: includes/admin/settings/register-settings.php:183
+msgid "Disable PayPal IPN Verification"
+msgstr "Deaktiver PayPal IPN Verifikasjon"
+
+#: includes/admin/settings/register-settings.php:184
+msgid ""
+"If payments are not getting marked as complete, then check this box. This "
+"forces the site to use a slightly less secure method of verifying purchases."
+msgstr ""
+"Hvis betalingen ikke blir merket som fullført, sjekk denne boksen. Dette "
+"tvinger nettstedet til å bruke en litt mindre sikker metode for å "
+"kontrollere at betalingen er gjennomført."
+
+#: includes/admin/settings/register-settings.php:193
+msgid "Email Template"
+msgstr "Epost mal"
+
+#: includes/admin/settings/register-settings.php:194
+msgid ""
+"Choose a template. Click \"Save Changes\" then \"Preview Purchase Receipt\" "
+"to see the new template."
+msgstr ""
+"Velg en mal. Klikk \"Lagre endringene\" og deretter \"Forhåndsvisning av "
+"kvitteringen\" for å se den nye malen."
+
+#: includes/admin/settings/register-settings.php:206
+msgid "From Name"
+msgstr "Fra navn"
+
+#: includes/admin/settings/register-settings.php:207
+msgid ""
+"The name purchase receipts are said to come from. This should probably be "
+"your site or shop name."
+msgstr ""
+"Navnet kvitteringer er oppgitt å komme fra. Dette bør trolig være ditt "
+"nettsted eller butikkens navn."
+
+#: includes/admin/settings/register-settings.php:212
+msgid "From Email"
+msgstr "Fra Epost"
+
+#: includes/admin/settings/register-settings.php:213
+msgid ""
+"Email to send purchase receipts from. This will act as the \"from\" and "
+"\"reply-to\" address."
+msgstr ""
+"Epost å sende kvitteringer fra. Dette vil fungere som \"fra\" og \"svar til"
+"\" adresse."
+
+#: includes/admin/settings/register-settings.php:218
+msgid "Purchase Email Subject"
+msgstr "Kjøpets Epost Emne"
+
+#: includes/admin/settings/register-settings.php:219
+msgid "Enter the subject line for the purchase receipt email"
+msgstr "Skriv inn emnefeltet for kvitteringsepost"
+
+#: includes/admin/settings/register-settings.php:224
+#: includes/emails/functions.php:48 includes/emails/functions.php:95
+msgid "Purchase Receipt"
+msgstr "Kjøpskvittering"
+
+#: includes/admin/settings/register-settings.php:225
+msgid ""
+"Enter the email that is sent to users after completing a successful "
+"purchase. HTML is accepted. Available template tags:"
+msgstr ""
+"Skriv inn e-post som sendes til kunden etter å ha fullført et vellykket "
+"kjøp. HTML er akseptert. Tilgjengelige maltags (koder):"
+
+#: includes/admin/settings/register-settings.php:226
+msgid "A list of download links for each download purchased"
+msgstr "En liste over nedlastingslenkerr for hver nedlasting kjøpt"
+
+#: includes/admin/settings/register-settings.php:227
+msgid "A plain-text list of download URLs for each download purchased"
+msgstr "En ren tekstliste over nedlastings-URLer for hver nedlasting kjøpt"
+
+#: includes/admin/settings/register-settings.php:228
+msgid "The buyer's first name"
+msgstr "Kjøpers fornavn"
+
+#: includes/admin/settings/register-settings.php:229
+msgid "The buyer's full name, first and last"
+msgstr "Kjøpers fulle navn, fornavn og etternavn"
+
+#: includes/admin/settings/register-settings.php:230
+msgid "The buyer's user name on the site, if they registered an account"
+msgstr "Kjøpers brukernavn på nettstedet, hvis de registrerte en konto"
+
+#: includes/admin/settings/register-settings.php:231
+msgid "The date of the purchase"
+msgstr "Datoen for kjøpet"
+
+#: includes/admin/settings/register-settings.php:232
+msgid "The price of the purchase before taxes"
+msgstr "Prisen på kjøp før moms"
+
+#: includes/admin/settings/register-settings.php:233
+msgid "The taxed amount of the purchase"
+msgstr "moms for kjøpet"
+
+#: includes/admin/settings/register-settings.php:234
+msgid "The total price of the purchase"
+msgstr "Totalprisen for kjøpet"
+
+#: includes/admin/settings/register-settings.php:235
+msgid "The unique ID number for this purchase"
+msgstr "Det unike ID-nummeret for dette kjøpet"
+
+#: includes/admin/settings/register-settings.php:236
+msgid "The unique ID number for this purchase receipt"
+msgstr "Det unike ID-nummeret for denne kvitteringen"
+
+#: includes/admin/settings/register-settings.php:237
+msgid "The method of payment used for this purchase"
+msgstr "Betalingsløsningen benyttet ved dette kjøpet"
+
+#: includes/admin/settings/register-settings.php:238
+msgid "Your site name"
+msgstr "Navnet på din nettside"
+
+#: includes/admin/settings/register-settings.php:239
+msgid ""
+"Adds a link so users can view their receipt directly on your website if they "
+"are unable to view it in the browser correctly."
+msgstr ""
+"Legger til en lenke slik at kunden kan se kvittering direkte på nettstedet "
+"ditt hvis den ikke vises riktig på deres nettleser."
+
+#: includes/admin/settings/register-settings.php:244
+msgid "Sale Notification Emails"
+msgstr "Melding om kjøp Epost"
+
+#: includes/admin/settings/register-settings.php:245
+msgid ""
+"Enter the email address(es) that should receive a notification anytime a "
+"sale is made, one per line"
+msgstr ""
+"Skriv inn e-postadressen (e) som skal motta varsling når et salg er gjort, "
+"én per linje"
+
+#: includes/admin/settings/register-settings.php:255
+msgid "Disable Styles"
+msgstr "Deaktiver stiler"
+
+#: includes/admin/settings/register-settings.php:256
+msgid ""
+"Check this to disable all included styling of buttons, checkout fields, and "
+"all other elements."
+msgstr ""
+"Sjekk denne for å deaktivere alt inkludert styling av knapper, utsjekksfelt, "
+"og alle andre elementer."
+
+#: includes/admin/settings/register-settings.php:261
+msgid "Buttons"
+msgstr "Knapper"
+
+#: includes/admin/settings/register-settings.php:262
+msgid "Options for add to cart and purchase buttons"
+msgstr "Alternativer for å legge til handlekurv- og kjøpsknapper"
+
+#: includes/admin/settings/register-settings.php:267
+msgid "Default Button Style"
+msgstr "Standard knapputseende"
+
+#: includes/admin/settings/register-settings.php:268
+msgid "Choose the style you want to use for the buttons."
+msgstr "Velg hvordan knappene skal se ut."
+
+#: includes/admin/settings/register-settings.php:274
+msgid "Default Button Color"
+msgstr "Standard knappefarge"
+
+#: includes/admin/settings/register-settings.php:275
+msgid "Choose the color you want to use for the buttons."
+msgstr "Velg farge på knappen."
+
+#: includes/admin/settings/register-settings.php:285
+msgid "Enable Taxes"
+msgstr "Aktiver moms"
+
+#: includes/admin/settings/register-settings.php:286
+msgid "Check this to enable taxes on purchases."
+msgstr "Sjekk denne for å aktivere moms på kjøp."
+
+#: includes/admin/settings/register-settings.php:292
+msgid "Tax Rate"
+msgstr "Skatte/avgiftsats"
+
+#: includes/admin/settings/register-settings.php:293
+msgid "Enter a percentage, such as 6.5."
+msgstr "Skriv inn en prosentandel, f. eks. 6,5."
+
+#: includes/admin/settings/register-settings.php:299
+msgid "Prices entered with tax"
+msgstr "Prisene er oppgitt inkl. moms"
+
+#: includes/admin/settings/register-settings.php:300
+msgid "This option affects how you enter prices."
+msgstr "Denne innstillingen påvirker hvordan du angir priser."
+
+#: includes/admin/settings/register-settings.php:304
+msgid "Yes, I will enter prices inclusive of tax"
+msgstr "Ja, jeg vil oppgi priser inkl. moms"
+
+#: includes/admin/settings/register-settings.php:305
+msgid "No, I will enter prices exclusive of tax"
+msgstr "Nei, jeg vil oppgi priser eksl. moms"
+
+#: includes/admin/settings/register-settings.php:310
+msgid "Apply Taxes to:"
+msgstr "Påfør moms for:"
+
+#: includes/admin/settings/register-settings.php:311
+msgid "Who should have tax added to their purchases?"
+msgstr "Hvem skal ha lagt til moms for sine innkjøp?"
+
+#: includes/admin/settings/register-settings.php:315
+msgid "Everyone"
+msgstr "Alle"
+
+#: includes/admin/settings/register-settings.php:316
+msgid "Local residents only"
+msgstr "Bare fastboende"
+
+#: includes/admin/settings/register-settings.php:321
+msgid "Tax Opt-In"
+msgstr "Moms Opt-In"
+
+#: includes/admin/settings/register-settings.php:322
+msgid ""
+"Customers will be given a checkbox to click if they reside in your local "
+"area. Please enter directions for them here. Customers <strong>must</strong> "
+"opt into this."
+msgstr ""
+"Kundene vil bli gitt en avmerkingsboks til å klikke hvis de bor i ditt "
+"lokale område. Vennligst skriv instruksjonene for dem her. Kunder "
+"<strong>må</ strong> opt inn for dette."
+
+#: includes/admin/settings/register-settings.php:328
+msgid "Display during checkout"
+msgstr "Vis ved utsjekk"
+
+#: includes/admin/settings/register-settings.php:329
+msgid "Should prices on the checkout page be shown with or without tax?"
+msgstr "Skal prisene på utsjekksiden vises med eller uten skatt?"
+
+#: includes/admin/settings/register-settings.php:333
+msgid "Including tax"
+msgstr "Inkludert moms"
+
+#: includes/admin/settings/register-settings.php:334
+msgid "Excluding tax"
+msgstr "Eksludert moms"
+
+#: includes/admin/settings/register-settings.php:339
+msgid "Calculate Tax After Discounts?"
+msgstr "Beregn moms etter rabatter?"
+
+#: includes/admin/settings/register-settings.php:340
+msgid ""
+"Check this if you would like taxes calculated after discounts. By default "
+"taxes are calculated before discounts are applied."
+msgstr ""
+"Sjekk dette hvis du ønsker beregnet moms etter rabatter. Som standard er "
+"skatt/avgift beregnet før rabatter er brukt."
+
+#: includes/admin/settings/register-settings.php:350
+msgid "Disable Ajax"
+msgstr "Deaktiver AJAX"
+
+#: includes/admin/settings/register-settings.php:351
+msgid "Check this to disable AJAX for the shopping cart."
+msgstr "Sjekk denne for å deaktivere AJAX for handlekurven."
+
+#: includes/admin/settings/register-settings.php:356
+msgid "Redirect to Checkout"
+msgstr "Omdiriger til Utsjekk"
+
+#: includes/admin/settings/register-settings.php:357
+msgid "Immediately redirect to checkout after adding an item to the cart?"
+msgstr ""
+"Umiddelbart omdiriger til utsjekk etter å ha lagt en vare i handlekurven?"
+
+#: includes/admin/settings/register-settings.php:362
+msgid "Disable Live Credit Card Validation"
+msgstr "Deaktiver sanntids kredittkortvalidering"
+
+#: includes/admin/settings/register-settings.php:363
+msgid ""
+"Live credit card validation means that that card type and number will be "
+"validated as the customer enters the number."
+msgstr ""
+"Sanntidsvalidering av kredittkort betyr at korttype og nummer skal "
+"godkjennes ettersom kunden skriver inn nummeret."
+
+#: includes/admin/settings/register-settings.php:368
+msgid "Disable Guest Checkout"
+msgstr "Deaktiver utsjekk av gjest"
+
+#: includes/admin/settings/register-settings.php:369
+msgid "Require that users be logged-in to purchase files."
+msgstr "Krev at brukere være logget på for å kjøpe filer."
+
+#: includes/admin/settings/register-settings.php:374
+msgid "Show Register / Login Form?"
+msgstr "Vis Registrer / Logg inn skjema?"
+
+#: includes/admin/settings/register-settings.php:375
+msgid ""
+"Display the registration and login forms on the checkout page for non-logged-"
+"in users."
+msgstr ""
+"Vis registrering- og innloggingskjemaer på utsjekksiden for ikke-innloggede "
+"brukere."
+
+#: includes/admin/settings/register-settings.php:380
+msgid "Download Link Expiration"
+msgstr "Nedlastinglenkens utløp"
+
+#: includes/admin/settings/register-settings.php:381
+msgid ""
+"How long should download links be valid for? Default is 24 hours from the "
+"time they are generated. Enter a time in hours."
+msgstr ""
+"Hvor lenge skal nedlastingslenken være gyldig? Standard er 24 timer fra det "
+"tidspunkt de er generert. Skriv inn en tid i timer."
+
+#: includes/admin/settings/register-settings.php:387
+msgid "Disable Redownload?"
+msgstr "Deaktiver gjentatt nedlasting?"
+
+#: includes/admin/settings/register-settings.php:388
+msgid ""
+"Check this if you do not want to allow users to redownload items from their "
+"purchase history."
+msgstr ""
+"Sjekk denne hvis du ikke ønsker å tillate kunder gjentatt nedlasting fra "
+"deres kjøpshistorikk."
+
+#: includes/admin/settings/register-settings.php:393
+msgid "Terms of Agreement"
+msgstr "Vilkår for avtalen"
+
+#: includes/admin/settings/register-settings.php:399
+msgid "Agree to Terms"
+msgstr "Godta vilkårene"
+
+#: includes/admin/settings/register-settings.php:400
+msgid ""
+"Check this to show an agree to terms on the checkout that users must agree "
+"to before purchasing."
+msgstr ""
+"Sjekk dette for å vise en \"Godta vilkårene\" som kunden må godta ved "
+"utsjekk før han kjøper."
+
+#: includes/admin/settings/register-settings.php:405
+msgid "Agree to Terms Label"
+msgstr "Godta vilkårene etikett"
+
+#: includes/admin/settings/register-settings.php:406
+msgid "Label shown next to the agree to terms check box."
+msgstr "Etiketten som vises ved siden av boksen \"Aksepter vilkårene\"."
+
+#: includes/admin/settings/register-settings.php:412
+msgid "Agreement Text"
+msgstr "Avtaletekst"
+
+#: includes/admin/settings/register-settings.php:413
+msgid "If Agree to Terms is checked, enter the agreement terms here."
+msgstr "Hvis \"Godta vilkårene\" er avmerket, skriv inn avtalevilkårene her."
+
+#: includes/admin/settings/register-settings.php:418
+msgid "Complete Purchase Text"
+msgstr "Full kjøpstekst"
+
+#: includes/admin/settings/register-settings.php:419
+msgid "The button label for completing a purchase."
+msgstr "Knappeetiketten for å fullføre et kjøp."
+
+#: includes/admin/settings/register-settings.php:424
+msgid "Add to Cart Text"
+msgstr "Legg i handlekurven tekst"
+
+#: includes/admin/settings/register-settings.php:425
+msgid "Text shown on the Add to Cart Buttons"
+msgstr "Tekst vist på Legg i Handlekurven knapper"
+
+#: includes/admin/settings/register-settings.php:454
+msgid "General Settings"
+msgstr "Generelle innstillinger"
+
+#: includes/admin/settings/register-settings.php:480
+msgid "Payment Gateway Settings"
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:506
+msgid "Email Settings"
+msgstr "Epost innstillinger"
+
+#: includes/admin/settings/register-settings.php:532
+msgid "Style Settings"
+msgstr "Stil innstillinger"
+
+#: includes/admin/settings/register-settings.php:558
+msgid "Tax Settings"
+msgstr "Skat/avgift innstillinger"
+
+#: includes/admin/settings/register-settings.php:584
+msgid "Misc Settings"
+msgstr "Diverse innstillinger"
+
+#: includes/admin/settings/register-settings.php:628
+msgid "These settings will let you configure simple tax rules for purchases."
+msgstr "Disse innstillingene lar deg konfigurere enkle momsregler ved kjøp."
+
+#: includes/admin/settings/register-settings.php:818
+#, php-format
+msgid ""
+"The callback function used for the <strong>%s</strong> setting is missing."
+msgstr ""
+"Tilbakeringfunksjonen som brukes til <strong>%s </strong>innstillingen "
+"mangler."
+
+#: includes/admin/settings/register-settings.php:882
+msgid "Upload File"
+msgstr "Last opp fil"
+
+#: includes/admin/settings/register-settings.php:905
+msgid "Deactivate License"
+msgstr "Deaktivere lisensen"
+
+#: includes/admin/settings/register-settings.php:937
+msgid "Settings Updated"
+msgstr "Innstillinger oppdatert"
+
+#: includes/admin/upgrades/upgrade-functions.php:39
+#, php-format
+msgid "The Payment History needs to be updated. %s"
+msgstr "Betalingshistorikken må oppdateres. %s"
+
+#: includes/admin/upgrades/upgrade-functions.php:39
+msgid "Click to Upgrade"
+msgstr "Klikk for oppgradering"
+
+#: includes/admin/upgrades/upgrade-functions.php:45
+#, php-format
+msgid ""
+"The purchase and file download history in Easy Digital Downloads needs "
+"upgraded, click %shere%s to start the upgrade."
+msgstr ""
+"Kjøp- og filnedlastingshistorikken for Easy Digital Downloads må "
+"oppgraderes, klikk %sher%s for å starte oppgraderingen."
+
+#: includes/admin/upgrades/upgrade-functions.php:53
+#, php-format
+msgid ""
+"Easy Digital Downloads needs to upgrade the plugin pages, click %shere%s to "
+"start the upgrade."
+msgstr ""
+"Easy Digital Downloads må oppgradere plugin sider, klikk%sher%s for å starte "
+"oppgraderingen."
+
+#: includes/admin/upgrades/upgrade-functions.php:61
+#, php-format
+msgid ""
+"Easy Digital Downloads needs to upgrade the database, click %shere%s to "
+"start the upgrade."
+msgstr ""
+"Easy Digital Downloads må oppgradere databasen, klikk %sher%s for å starte "
+"oppgraderingen."
+
+#: includes/admin/upgrades/upgrades.php:25
+msgid "Easy Digital Downloads - Upgrades"
+msgstr "Easy Digital Downloads -Oppgraderinger"
+
+#: includes/admin/upgrades/upgrades.php:28
+msgid ""
+"The upgrade process has started, please be patient. This could take several "
+"minutes. You will be automatically redirected when the upgrade is finished."
+msgstr ""
+"Oppgraderingsprosessen har startet, vær tålmodig. Dette kan ta flere "
+"minutter. Du vil automatisk bli omdirigert når oppgraderingen er ferdig."
+
+#: includes/cart/functions.php:228 includes/cart/functions.php:330
+#: templates/shortcode-receipt.php:174
+msgid "(ex. tax)"
+msgstr "(eks. moms)"
+
+#: includes/cart/functions.php:232 includes/cart/functions.php:334
+msgid "(incl. tax)"
+msgstr "(inkl. moms)"
+
+#: includes/cart/functions.php:498 templates/shortcode-receipt.php:69
+#: templates/shortcode-receipt.php:176
+#, php-format
+msgid "(includes %s tax)"
+msgstr "(inkludert %s moms)"
+
+#: includes/cart/functions.php:692
+#, php-format
+msgid "You have successfully added %s to your shopping cart."
+msgstr "Du har lagt til %s til handlekurven."
+
+#: includes/cart/functions.php:693
+msgid "Checkout."
+msgstr "Sjekk ut."
+
+#: includes/checkout/template.php:116
+msgid "Personal Info"
+msgstr "Personlig info"
+
+#: includes/checkout/template.php:119
+#: templates/shortcode-profile-editor.php:43
+msgid "Email Address"
+msgstr "Epostadresse"
+
+#: includes/checkout/template.php:120 includes/checkout/template.php:289
+msgid "We will send the purchase receipt to this address."
+msgstr "Vi vil sende kvitteringen til denne adressen."
+
+#: includes/checkout/template.php:121
+msgid "Email address"
+msgstr "Epostadresse"
+
+#: includes/checkout/template.php:126 includes/checkout/template.php:294
+msgid "We will use this to personalize your account experience."
+msgstr "Vi vil bruke dette til å personliggjøre din konto opplevelse."
+
+#: includes/checkout/template.php:131 includes/checkout/template.php:299
+msgid "We will use this as well to personalize your account experience."
+msgstr "Vi vil bruke dette også til å personliggjøre din konto opplevelse."
+
+#: includes/checkout/template.php:132 includes/checkout/template.php:300
+msgid "Last name"
+msgstr "Etternavn"
+
+#: includes/checkout/template.php:153
+msgid "Credit Card Info"
+msgstr "Kredittkortinformasjon"
+
+#: includes/checkout/template.php:157
+msgid "This is a secure SSL encrypted payment."
+msgstr "Dette er en sikker SSL-kryptert betaling."
+
+#: includes/checkout/template.php:161
+msgid "Card Number"
+msgstr "Kortnummer"
+
+#: includes/checkout/template.php:162
+msgid "The (typically) 16 digits on the front of your credit card."
+msgstr "De (vanligvis) 16 siffer på forsiden av kredittkortet ditt."
+
+#: includes/checkout/template.php:163
+msgid "Card number"
+msgstr "Kortnummer"
+
+#: includes/checkout/template.php:166
+msgid "CVC"
+msgstr "CVC"
+
+#: includes/checkout/template.php:167
+msgid "The 3 digit (back) or 4 digit (front) value on your card."
+msgstr "3 siffer (baksiden) eller 4 siffer (foran) på kortet ditt."
+
+#: includes/checkout/template.php:168
+msgid "Security code"
+msgstr "Sikkerhetskode"
+
+#: includes/checkout/template.php:171
+msgid "Name on the Card"
+msgstr "Navn på kortet"
+
+#: includes/checkout/template.php:172
+msgid "The name printed on the front of your credit card."
+msgstr "Navnet trykt på forsiden av kredittkortet ditt."
+
+#: includes/checkout/template.php:173
+msgid "Card name"
+msgstr "Kortnavn"
+
+#: includes/checkout/template.php:177
+msgid "Expiration (MM/YY)"
+msgstr "Utløper (MM/ÅÅ)"
+
+#: includes/checkout/template.php:178
+msgid "The date your credit card expires, typically on the front of the card."
+msgstr "Datoen kredittkortet ditt utløper, vanligvis på forsiden av kortet."
+
+#: includes/checkout/template.php:211
+msgid "Billing Address"
+msgstr "Faktureringsadresse"
+
+#: includes/checkout/template.php:212
+msgid "The primary billing address for your credit card."
+msgstr "Den primære fakturaadressen for kredittkortet ditt."
+
+#: includes/checkout/template.php:213
+msgid "Address line 1"
+msgstr "Adresse 1"
+
+#: includes/checkout/template.php:216
+msgid "Billing Address Line 2 (optional)"
+msgstr "Fakturaadresse 2 (valgfritt)"
+
+#: includes/checkout/template.php:217
+msgid "The suite, apt no, PO box, etc, associated with your billing address."
+msgstr ""
+"Bygning Nr.,Leilighet Nr., Postboks Nr., etc, knyttet til din fakturaadresse."
+
+#: includes/checkout/template.php:218
+msgid "Address line 2"
+msgstr "Adresse 2"
+
+#: includes/checkout/template.php:221
+msgid "Billing City"
+msgstr "Sted"
+
+#: includes/checkout/template.php:222
+msgid "The city for your billing address."
+msgstr "                        "
+
+#: includes/checkout/template.php:223
+msgid "City"
+msgstr "Sted"
+
+#: includes/checkout/template.php:226
+msgid "Billing Country"
+msgstr "                             "
+
+#: includes/checkout/template.php:227
+msgid "The country for your billing address."
+msgstr "                          "
+
+#: includes/checkout/template.php:238
+msgid "Billing State / Province"
+msgstr "                              "
+
+#: includes/checkout/template.php:239
+msgid "The state or province for your billing address."
+msgstr "                        "
+
+#: includes/checkout/template.php:240
+msgid "State / Province"
+msgstr "                              "
+
+#: includes/checkout/template.php:259
+msgid "Billing Zip / Postal Code"
+msgstr "Postnummer"
+
+#: includes/checkout/template.php:260
+msgid "The zip or postal code for your billing address."
+msgstr "                                 "
+
+#: includes/checkout/template.php:261
+msgid "Zip / Postal code"
+msgstr "                                 "
+
+#: includes/checkout/template.php:286
+msgid "Already have an account?"
+msgstr "Har du allerede en konto?"
+
+#: includes/checkout/template.php:303
+msgid "Create an account"
+msgstr "Opprett en konto"
+
+#: includes/checkout/template.php:303
+msgid "(optional)"
+msgstr "(valgfritt)"
+
+#: includes/checkout/template.php:307
+msgid "The username you will use to log into your account."
+msgstr "Brukernavnet du vil bruke til å logge på kontoen din."
+
+#: includes/checkout/template.php:312
+msgid "The password used to access your account."
+msgstr "Passord til å få tilgang til kontoen."
+
+#: includes/checkout/template.php:316
+msgid "Password Again"
+msgstr "Gjenta passord"
+
+#: includes/checkout/template.php:317
+msgid "Confirm your password."
+msgstr "Bekreft ditt passord"
+
+#: includes/checkout/template.php:318
+msgid "Confirm password"
+msgstr "Bekreft passord"
+
+#: includes/checkout/template.php:341
+msgid "Login to your account"
+msgstr "Logg inn til din konto"
+
+#: includes/checkout/template.php:345
+msgid "Your username"
+msgstr "Ditt brukernavn"
+
+#: includes/checkout/template.php:349
+msgid "Your password"
+msgstr "Ditt passord"
+
+#: includes/checkout/template.php:355
+msgid "Need to create an account?"
+msgstr "Trenger du å opprette en konto?"
+
+#: includes/checkout/template.php:357
+msgid "Register"
+msgstr "Registrer"
+
+#: includes/checkout/template.php:357
+msgid "or checkout as a guest."
+msgstr "eller sjekk ut som gjest."
+
+#: includes/checkout/template.php:380
+msgid "Select Payment Method"
+msgstr "Velg betalingsløsning"
+
+#: includes/checkout/template.php:415 templates/shortcode-receipt.php:94
+msgid "Discount"
+msgstr "Rabatt"
+
+#: includes/checkout/template.php:418
+msgid "Enter a coupon code if you have one."
+msgstr "Skriv inn en kupongkode hvis du har en."
+
+#: includes/checkout/template.php:419
+msgid "Enter discount"
+msgstr "Skriv inn rabatt"
+
+#: includes/checkout/template.php:448
+msgid "Show Terms"
+msgstr "Vis vilkårene"
+
+#: includes/checkout/template.php:449
+msgid "Hide Terms"
+msgstr "Skjul vilkårene"
+
+#: includes/checkout/template.php:451
+msgid "Agree to Terms?"
+msgstr "Godtar du vilkårene?"
+
+#: includes/checkout/template.php:473
+msgid "Opt Into Taxes?"
+msgstr "Innmelding for moms?"
+
+#: includes/checkout/template.php:494
+msgid "Purchase Total:"
+msgstr "Sum kjøp:"
+
+#: includes/checkout/template.php:523
+msgid "Go back"
+msgstr "Gå tilbake"
+
+#: includes/emails/functions.php:79 includes/emails/template.php:216
+#: includes/emails/template.php:270
+msgid "Dear"
+msgstr "Kjære"
+
+#: includes/emails/functions.php:80 includes/emails/template.php:217
+#: includes/emails/template.php:271
+msgid ""
+"Thank you for your purchase. Please click on the link(s) below to download "
+"your files."
+msgstr ""
+"Takk for kjøpet. Vennligst klikk på linken (e) under for å laste ned filene."
+
+#: includes/emails/functions.php:128
+msgid "New download purchase"
+msgstr "Nytt nedlastingskjøp"
+
+#: includes/emails/functions.php:130
+msgid "Hello"
+msgstr "Hallo"
+
+#: includes/emails/functions.php:130
+#, php-format
+msgid "A %s purchase has been made"
+msgstr "Et %s kjøp er gjennomført"
+
+#: includes/emails/functions.php:131
+#, php-format
+msgid "%s sold:"
+msgstr "%s solgt:"
+
+#: includes/emails/functions.php:152
+msgid "Purchased by: "
+msgstr "Kjøpt av:"
+
+#: includes/emails/functions.php:153
+msgid "Amount: "
+msgstr "Beløp:"
+
+#: includes/emails/functions.php:154
+msgid "Payment Method: "
+msgstr "Betalingsløsning:"
+
+#: includes/emails/functions.php:155
+msgid "Thank you"
+msgstr "Mange takk"
+
+#: includes/emails/template.php:24
+msgid "Default Template"
+msgstr "Standardmal"
+
+#: includes/emails/template.php:25
+msgid "No template, plain text only"
+msgstr "Ingen mal, bare tekst"
+
+#: includes/emails/template.php:130 includes/emails/template.php:188
+#, php-format
+msgid "%1$sView it in your browser.%2$s"
+msgstr "%1$sSe det i egen browser.%2$s"
+
+#: includes/emails/template.php:150
+msgid "Sample Product Title"
+msgstr "Tittel på produkteksempel"
+
+#: includes/emails/template.php:153
+msgid "Sample Download File Name"
+msgstr "Navn på eksempel nedlastingsfil"
+
+#: includes/emails/template.php:153
+msgid "Optional notes about this download."
+msgstr "Merknader om denne nedlastingen."
+
+#: includes/emails/template.php:166
+msgid "These are some sample notes added to a product."
+msgstr "Dette er noen eksempler på merknader som legges til et produkt."
+
+#: includes/emails/template.php:224
+msgid "Purchase Receipt Preview"
+msgstr "Kjøpskvitteringen - forhåndsvisning"
+
+#: includes/emails/template.php:224
+msgid "Preview Purchase Receipt"
+msgstr "Forhåndsvisning av kvitteringen"
+
+#: includes/emails/template.php:225
+msgid "This will send a demo purchase receipt to the emails listed below."
+msgstr ""
+"Dette vil sende en demokvitteringen til e-postadressene listet nedenfor."
+
+#: includes/emails/template.php:225
+msgid "Send Test Email"
+msgstr "Send test Epost"
+
+#: includes/emails/template.php:384
+msgid "Missing purchase key."
+msgstr "Mangler kjøpsnøkkel."
+
+#: includes/emails/template.php:392
+msgid "Receipt"
+msgstr "Kvittering"
+
+#: includes/gateways/functions.php:28
+msgid "Test Payment"
+msgstr "Testbetaling"
+
+#: includes/gateways/functions.php:218
+msgid "You must enable a payment gateway to use Easy Digital Downloads"
+msgstr "Du må aktivere en betalingsløsning fo å bruke Easy Digital Downloads"
+
+#: includes/gateways/manual.php:73
+#, php-format
+msgid ""
+"Payment creation failed while processing a manual (free or test) purchase. "
+"Payment data: %s"
+msgstr ""
+"Opprettelse av koplingen for betaling mislyktes under behandling av et "
+"manuelt (gratis eller test) kjøp. Betalings data:%s"
+
+#: includes/gateways/paypal-standard.php:73
+#, php-format
+msgid ""
+"Payment creation failed before sending buyer to PayPal. Payment data: %s"
+msgstr ""
+"Opprettelse av koplingen for betaling mislyktes før kjøperen ble sendt til "
+"PayPal. Betalings data:%s"
+
+#: includes/gateways/paypal-standard.php:224
+#: includes/gateways/paypal-standard.php:229
+#: includes/gateways/paypal-standard.php:280
+#: includes/gateways/paypal-standard.php:294
+#: includes/gateways/paypal-standard.php:299
+msgid "IPN Error"
+msgstr "IPN feil"
+
+#: includes/gateways/paypal-standard.php:224
+#: includes/gateways/paypal-standard.php:229
+msgid "Invalid IPN verification response. IPN data: "
+msgstr "Ugyldig IPN verifisering respons. IPN-data:"
+
+#: includes/gateways/paypal-standard.php:280
+msgid "Invalid currency in IPN response. IPN data: "
+msgstr "Ugyldig valuta i IPN respons. IPN-data:"
+
+#: includes/gateways/paypal-standard.php:294
+msgid "Invalid payment amount in IPN response. IPN data: "
+msgstr "Ugyldig betalingsbeløp i IPN respons. IPN-data:"
+
+#: includes/gateways/paypal-standard.php:299
+msgid "Invalid purchase key in IPN response. IPN data: "
+msgstr "Ugyldig kjøpsnøkkelen i IPN respons. IPN-data:"
+
+#: includes/gateways/paypal-standard.php:305
+#, php-format
+msgid "PayPal Transaction ID: %s"
+msgstr "PayPal transaksjons ID: %s"
+
+#: includes/gateways/paypal-standard.php:326
+#, php-format
+msgid "PayPal Payment #%s Refunded"
+msgstr "PayPal betaling #%s tilbakebetalt"
+
+#: includes/gateways/paypal-standard.php:327
+#, php-format
+msgid "PayPal Refund Transaction ID: %s"
+msgstr "PayPal tilbakebetaling Transaksjons-ID: %s"
+
+#: includes/payments/actions.php:93
+#, php-format
+msgid "Status changed from %s to %s"
+msgstr "Status endret fra %s til %s"
+
+#: includes/payments/functions.php:394
+msgid "Complete"
+msgstr "Fullført"
+
+#: languages/strings.php:16
+msgid "Serve Digital Downloads Through WordPress"
+msgstr "Utfører digitale nedlastinger via WordPress"
+
+#: languages/strings.php:17
+msgid "Pippin Williamson"
+msgstr ""
+
+#: templates/checkout_cart.php:6
+msgid "Item Name"
+msgstr "Varenavn"
+
+#: templates/checkout_cart.php:7
+msgid "Item Price"
+msgstr "Varepris"
+
+#: templates/checkout_cart.php:8
+msgid "Actions"
+msgstr "Handlinger"
+
+#: templates/checkout_cart.php:63 templates/shortcode-receipt.php:51
+msgid "Subtotal"
+msgstr "Subtotal"
+
+#: templates/checkout_cart.php:90
+msgid "Total"
+msgstr "Total"
+
+#: templates/history-downloads.php:9
+msgid "Download Name"
+msgstr "Navn på nedlastingen"
+
+#: templates/history-downloads.php:11 templates/history-purchases.php:12
+msgid "Files"
+msgstr "Filer"
+
+#: templates/history-downloads.php:78
+msgid "You have not purchased any downloads"
+msgstr "Du har ikke kjøpt noen nedlastinger"
+
+#: templates/history-purchases.php:72
+msgid "You have not made any purchases"
+msgstr "Du har ikke kjøpt noe"
+
+#: templates/shortcode-profile-editor.php:14
+msgid "Success"
+msgstr "Suksess"
+
+#: templates/shortcode-profile-editor.php:14
+msgid "Your profile has been edited successfully."
+msgstr "Din profil er endret."
+
+#: templates/shortcode-profile-editor.php:18
+msgid "Change your Name"
+msgstr "Endre ditt navn"
+
+#: templates/shortcode-profile-editor.php:27
+msgid "Display Name"
+msgstr "Vis navn"
+
+#: templates/shortcode-profile-editor.php:46
+msgid "Change your Password"
+msgstr "Endre passord"
+
+#: templates/shortcode-profile-editor.php:48
+msgid "New Password"
+msgstr "Nytt passord"
+
+#: templates/shortcode-profile-editor.php:51
+msgid "Re-enter Password"
+msgstr "Gjenta passord"
+
+#: templates/shortcode-profile-editor.php:54
+msgid "Please note after changing your password, you must log back in."
+msgstr "Etter endring av passordet må du logge inn på nytt."
+
+#: templates/shortcode-profile-editor.php:59
+msgid "Save Changes"
+msgstr "Lagre endringer"
+
+#: templates/shortcode-profile-editor.php:65
+msgid "You need to login to edit your profile."
+msgstr "Du må logge inn for å endre din profil."
+
+#: templates/shortcode-profile-editor.php:72
+msgid "Remember me?"
+msgstr "Husk meg?"
+
+#: templates/shortcode-profile-editor.php:73
+msgid "Log In"
+msgstr "Logg inn"
+
+#: templates/shortcode-receipt.php:18
+msgid "Payment"
+msgstr "Betaling"
+
+#: templates/shortcode-receipt.php:34 templates/shortcode-receipt.php:77
+msgid "Fees"
+msgstr "Gebyrer"
+
+#: templates/shortcode-receipt.php:63 templates/shortcode-receipt.php:168
+msgid "Total Price"
+msgstr "Sum"
+
+#: templates/shortcode-receipt.php:108
+msgid "Payment Key"
+msgstr "Betalingsnøkkel"
+
+#: templates/widget-cart-item.php:4
+msgid "remove"
+msgstr "fjern"
+
+#~ msgid ""
+#~ "We have significantly improved the file / folder organized of the plugin, "
+#~ "making it easier for developers to get involved in development."
+#~ msgstr ""
+#~ "We have significantly improved the file / folder organisation of the "
+#~ "plugin, making it easier for developers to get involved in development."
+
+#~ msgid "File Optimization"
+#~ msgstr "File Optimisation"
+
+#~ msgid ""
+#~ "Every file in the plugin has been optimized to help slim down the overall "
+#~ "size of Easy Digital Downloads."
+#~ msgstr ""
+#~ "Every file in the plugin has been optimised to help slim down the overall "
+#~ "size of Easy Digital Downloads."
+
+#~ msgid "All graphics have been optimized and tested with retina displays."
+#~ msgstr "All graphics have been optimised and tested with retina displays."

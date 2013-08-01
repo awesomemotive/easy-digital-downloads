@@ -2,8 +2,8 @@
 /**
  * Contextual Help
  *
- * @package     Easy Digital Downloads
- * @subpackage  Downloads
+ * @package     EDD
+ * @subpackage  Admin/Payments
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
@@ -30,8 +30,8 @@ function edd_payments_contextual_help() {
 		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'edd' ), esc_url( 'https://easydigitaldownloads.com/documentation/' ) ) ) . '</p>' .
 		'<p>' . sprintf(
 					__( '<a href="%s">Post an issue</a> on <a href="%s">GitHub</a>. View <a href="%s">extensions</a> or <a href="%s">themes</a>.', 'edd' ),
-					esc_url( 'https://github.com/pippinsplugins/Easy-Digital-Downloads/issues' ),
-					esc_url( 'https://github.com/pippinsplugins/Easy-Digital-Downloads' ),
+					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues' ),
+					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads' ),
 					esc_url( 'https://easydigitaldownloads.com/extensions/' ),
 					esc_url( 'https://easydigitaldownloads.com/themes/' )
 				) . '</p>'
@@ -44,6 +44,18 @@ function edd_payments_contextual_help() {
 			'<p>' . __( "This screen provides access to all of your store's transactions.", 'edd' ) . '</p>' . 
 			'<p>' . __( 'Payments can be searched by email address, user name, or filtered by status (completed, pending, etc.)', 'edd' ) . '</p>' .
 			'<p>' . __( 'You also have the option to bulk delete payment should you wish.', 'edd' ) . '</p>'
+	) );
+
+	$screen->add_help_tab( array(
+		'id'	    => 'edd-payments-search',
+		'title'	    => __( 'Search Payments', 'edd' ),
+		'content'	=>
+			'<p>' . __( 'The payment history can be searched in several different ways:', 'edd' ) . '</p>' .
+			'<ul>
+				<li>' . __( 'You can enter the customer\'s email address', 'edd' ) . '</li>
+				<li>' . __( 'You can enter the customer\'s name', 'edd' ) . '</li>
+				<li>' . __( 'You can enter the 32-character purchase key', 'edd' ) . '</li>
+			</ul>'
 	) );
 
 	$screen->add_help_tab( array(

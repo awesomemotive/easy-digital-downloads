@@ -2,8 +2,8 @@
 /**
  * Contextual Help
  *
- * @package     Easy Digital Downloads
- * @subpackage  Contextual Help
+ * @package     EDD
+ * @subpackage  Admin/Reports
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
@@ -30,8 +30,8 @@ function edd_reporting_contextual_help() {
 		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'edd' ), esc_url( 'https://easydigitaldownloads.com/documentation/' ) ) ) . '</p>' .
 		'<p>' . sprintf(
 					__( '<a href="%s">Post an issue</a> on <a href="%s">GitHub</a>. View <a href="%s">extensions</a> or <a href="%s">themes</a>.', 'edd' ),
-					esc_url( 'https://github.com/pippinsplugins/Easy-Digital-Downloads/issues' ),
-					esc_url( 'https://github.com/pippinsplugins/Easy-Digital-Downloads' ),
+					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues' ),
+					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads' ),
 					esc_url( 'https://easydigitaldownloads.com/extensions/' ),
 					esc_url( 'https://easydigitaldownloads.com/themes/' )
 				) . '</p>'
@@ -53,6 +53,20 @@ function edd_reporting_contextual_help() {
 			'<p>' . __( "<strong>Customers</strong> - This report exports all of your customers in a CSV format. It exports the customer's name and email address and the amount of products they have purchased as well as the final price of their total purchases.", 'edd' ) . '</p>' .
 			'<p>' . __( '<strong>Download History</strong> - This report exports all of the downloads you have received in the current month into a CSV. It exports the date the file was downloaded, the customer it was downloaded by, their IP address, the name of the product and the file they downloaded.', 'edd' ) . '</p>'
 	) );
+
+	if( ! empty( $_GET['tab'] ) && 'logs' == $_GET['tab'] ) {
+		$screen->add_help_tab( array(
+			'id'	    => 'edd-reports-log-search',
+			'title'	    => __( 'Search File Downloads', 'edd' ),
+			'content'	=>
+				'<p>' . __( 'The file download log can be searched in several different ways:', 'edd' ) . '</p>' .
+				'<ul>
+					<li>' . __( 'You can enter the customer\'s email address', 'edd' ) . '</li>
+					<li>' . __( 'You can enter the customer\'s IP address', 'edd' ) . '</li>
+					<li>' . __( 'You can enter the download file\'s name', 'edd' ) . '</li>
+				</ul>'
+		) );
+	}
 
 	do_action( 'edd_reports_contextual_help', $screen );
 }

@@ -2,15 +2,18 @@
 /**
  * Uninstall Easy Digital Downloads
  *
- * @package     Easy Digital Downloads
+ * @package     EDD
  * @subpackage  Uninstall
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.3
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
+
+// Load EDD file
+include_once( 'easy-digital-downloads.php' );
 
 global $wpdb, $edd_options, $wp_roles;
 
@@ -57,50 +60,7 @@ delete_option( 'edd_settings_taxes' );
 delete_option( 'edd_settings_misc' );
 
 /** Delete Capabilities */
-if ( class_exists( 'WP_Roles' ) )
-	if ( ! isset( $wp_roles ) )
-		$wp_roles = new WP_Roles();
-
-if ( is_object( $wp_roles ) ) {
-	/** Shop Manager Capabilities */
-	$wp_roles->remove_cap( 'shop_manager', 'view_shop_reports' );
-	$wp_roles->remove_cap( 'shop_manager', 'view_shop_sensitive_data' );
-	$wp_roles->remove_cap( 'shop_manager', 'export_shop_reports' );
-	$wp_roles->remove_cap( 'shop_manager', 'manage_shop_discounts' );
-	$wp_roles->remove_cap( 'shop_manager', 'manage_shop_settings' );
-
-	/** Site Administrator Capabilities */
-	$wp_roles->remove_cap( 'administrator', 'view_shop_reports' );
-	$wp_roles->remove_cap( 'administrator', 'view_shop_sensitive_data' );
-	$wp_roles->remove_cap( 'administrator', 'export_shop_reports' );
-	$wp_roles->remove_cap( 'administrator', 'manage_shop_discounts' );
-	$wp_roles->remove_cap( 'administrator', 'manage_shop_settings' );
-
-	/** Remove the Main Post Type Capabilities */
-	$capabilities = EDD()->roles->get_core_caps();
-	foreach ( $capabilities as $cap_group ) {
-		foreach ( $cap_group as $cap ) {
-			$wp_roles->remove_cap( 'shop_manager', $cap );
-			$wp_roles->remove_cap( 'administrator', $cap );
-			$wp_roles->remove_cap( 'shop_worker', $cap );
-		}
-	}
-
-	/** Shop Accountant Capabilities */
-	$wp_roles->remove_cap( 'shop_accountant', 'edit_products' );
-	$wp_roles->remove_cap( 'shop_accountant', 'read_private_prodcuts' );
-	$wp_roles->remove_cap( 'shop_accountant', 'view_shop_reports' );
-	$wp_roles->remove_cap( 'shop_accountant', 'export_shop_reports' );
-
-	/** Shop Vendor Capabilities */
-	$wp_roles->remove_cap( 'shop_vendor', 'edit_product' );
-	$wp_roles->remove_cap( 'shop_vendor', 'edit_products' );
-	$wp_roles->remove_cap( 'shop_vendor', 'delete_product' );
-	$wp_roles->remove_cap( 'shop_vendor', 'delete_products' );
-	$wp_roles->remove_cap( 'shop_vendor', 'publish_products' );
-	$wp_roles->remove_cap( 'shop_vendor', 'edit_published_products' );
-	$wp_roles->remove_cap( 'shop_vendor', 'upload_files' );
-}
+EDD()->roles->remove_caps();
 
 /** Delete the Roles */
 $edd_roles = array( 'shop_manager', 'shop_accountant', 'shop_worker', 'shop_vendor' );

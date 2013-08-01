@@ -2,7 +2,7 @@
 /**
  * Widgets
  *
- * @package     Easy Digital Downloads
+ * @package     EDD
  * @subpackage  Widgets
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
@@ -28,9 +28,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Downloads cart widget class.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @return void
 */
 class edd_cart_widget extends WP_Widget {
 	/** Constructor */
@@ -41,19 +40,13 @@ class edd_cart_widget extends WP_Widget {
 	/** @see WP_Widget::widget */
 	function widget( $args, $instance ) {
 		extract( $args );
-		$title = apply_filters( 'widget_title', $instance['title'] );
-		$quantity = isset( $instance['quantity'] ) ? $instance['quantity'] : false;
+		$title = apply_filters( 'widget_title', $instance[ 'title' ] );
 
 		global $post, $edd_options;
 
 		echo $before_widget;
 		if ( $title ) {
-			if ( $quantity == 1 ) {
-				$quantity = ' - <span class="edd-cart-quantity">' . edd_get_cart_quantity() . '</span>';
-			} else {
-				$quantity = '';
-			}
-			echo $before_title . $title . $quantity . $after_title;
+			echo $before_title . $title . $after_title;
 		}
 		do_action( 'edd_before_cart_widget' );
 		edd_shopping_cart( true );
@@ -71,21 +64,15 @@ class edd_cart_widget extends WP_Widget {
 
 	/** @see WP_Widget::form */
 	function form( $instance ) {
-		$title = isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
-		$quantity = isset( $instance['quantity'] ) ? esc_attr( $instance['quantity'] ) : '';
+		$title = isset( $instance[ 'title' ] ) ? esc_attr( $instance[ 'title' ] ) : '';
 		?>
-	<p>
-		<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'edd' ); ?></label>
-		<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>"
-			   name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>"/>
-	</p>
-	<p>
-		<label for="<?php echo $this->get_field_id( 'quantity' ); ?>"><?php _e( 'Show Quantity:', 'edd' ); ?></label>
-		<input id="<?php echo $this->get_field_id( 'quantity' ); ?>"
-			   name="<?php echo $this->get_field_name( 'quantity' ); ?>" type="checkbox"
-			   value="1" <?php checked( '1', $quantity ); ?>/>
-	</p>
-	<?php
+		<p>
+       		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'edd' ); ?></label>
+     		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>"
+          	 name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>"/>
+    		</p>
+    
+   		 <?php
 	}
 }
 
@@ -94,9 +81,8 @@ class edd_cart_widget extends WP_Widget {
  *
  * Downloads categories / tags widget class.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @return void
 */
 class edd_categories_tags_widget extends WP_Widget {
 	/** Constructor */
@@ -168,9 +154,8 @@ class edd_categories_tags_widget extends WP_Widget {
  *
  * Displays a user's purchase history.
  *
- * @access        private
- * @since        1.2
- * @return        void
+ * @since 1.2
+ * @return void
  */
 class edd_purchase_history_widget extends WP_Widget {
 	/** Constructor */
@@ -224,8 +209,8 @@ class edd_purchase_history_widget extends WP_Widget {
 					}
 
 				}
+				echo $after_widget;
 			}
-			echo $after_widget;
 		}
 	}
 
@@ -253,9 +238,8 @@ class edd_purchase_history_widget extends WP_Widget {
  *
  * Registers the EDD Widgets.
  *
- * @access      private
- * @since       1.0
- * @return      void
+ * @since 1.0
+ * @return void
  */
 function edd_register_widgets() {
 	register_widget( 'edd_cart_widget' );

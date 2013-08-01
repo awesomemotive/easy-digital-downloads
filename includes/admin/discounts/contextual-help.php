@@ -2,8 +2,8 @@
 /**
  * Contextual Help
  *
- * @package     Easy Digital Downloads
- * @subpackage  Downloads
+ * @package     EDD
+ * @subpackage  Admin/Discounts
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.2.3
@@ -13,13 +13,10 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Discounts contextual help.
+ * Adds the Contextual Help for the Discount Codes Page
  *
- * Adds help for discount settings
- *
- * @access      private
- * @since       1.3
- * @return      void
+ * @since 1.3
+ * @return void
  */
 function edd_discounts_contextual_help() {
 	$screen = get_current_screen();
@@ -29,8 +26,8 @@ function edd_discounts_contextual_help() {
 		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'edd' ), esc_url( 'https://easydigitaldownloads.com/documentation/' ) ) ) . '</p>' .
 		'<p>' . sprintf(
 					__( '<a href="%s">Post an issue</a> on <a href="%s">GitHub</a>. View <a href="%s">extensions</a> or <a href="%s">themes</a>.', 'edd' ),
-					esc_url( 'https://github.com/pippinsplugins/Easy-Digital-Downloads/issues' ),
-					esc_url( 'https://github.com/pippinsplugins/Easy-Digital-Downloads' ),
+					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues' ),
+					esc_url( 'https://github.com/easydigitaldownloads/Easy-Digital-Downloads' ),
 					esc_url( 'https://easydigitaldownloads.com/extensions/' ),
 					esc_url( 'https://easydigitaldownloads.com/themes/' )
 				) . '</p>'
