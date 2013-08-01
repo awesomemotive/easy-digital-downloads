@@ -1186,7 +1186,7 @@ function edd_tax_rates_callback($args) {
 				</td>
 				<td class="edd_tax_global">
 					<input type="checkbox" name="tax_rates[<?php echo $key; ?>][global]" id="tax_rates[<?php echo $key; ?>][global]" value="1"<?php checked( true, ! empty( $rate['global'] ) ); ?>/>
-					<label for="tax_rates[<?php echo $key; ?>][global]"><?php _e( 'Apply to whole country', 'edd' ); ?></a>
+					<label for="tax_rates[<?php echo $key; ?>][global]"><?php _e( 'Apply to whole country', 'edd' ); ?></label>
 				</td>
 				<td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[<?php echo $key; ?>][rate]" value="<?php echo $rate['rate']; ?>"/></td>
 				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'edd' ); ?></span></td>
@@ -1208,7 +1208,7 @@ function edd_tax_rates_callback($args) {
 				</td>
 				<td class="edd_tax_global">
 					<input type="checkbox" name="tax_rates[0][global]" value="1"/>
-					<label for="tax_rates[0][global]"><?php _e( 'Apply to whole country', 'edd' ); ?></a>
+					<label for="tax_rates[0][global]"><?php _e( 'Apply to whole country', 'edd' ); ?></label>
 				</td>
 				<td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0" name="tax_rates[0][rate]" value=""/></td>
 				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'edd' ); ?></span></td>
