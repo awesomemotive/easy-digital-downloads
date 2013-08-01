@@ -406,6 +406,8 @@ function edd_count_payments( $args = array() ) {
 
 	}
 
+	$where = apply_filters( 'edd_count_payments_where', $where );
+
 	$query = "SELECT p.post_status,count( * ) AS num_posts
 		FROM $wpdb->posts p
 		$join
@@ -526,7 +528,6 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 
 	$args     = apply_filters( 'edd_get_earnings_by_date_args', $args );
 	$key      = md5( serialize( $args ) );
-	delete_transient( $key );
 	$earnings = get_transient( $key );
 
 	if( false === $earnings ) {
