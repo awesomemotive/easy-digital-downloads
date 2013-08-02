@@ -173,9 +173,7 @@ class EDD_Stats {
 			switch( $date ) {
 
 				case 'this_month' :
-
-					$month = date( 'n' );
-
+					// use defaults
 				break;
 
 				case 'last_month' :
@@ -190,27 +188,47 @@ class EDD_Stats {
 
 				case 'today' :
 
-					$start_day = date( 'd' );
+					$day = date( 'd' );
 
 				break;
 
 				case 'this_week' :
 
-					$day1 = date( 'd', current_time( 'timestamp' ) - ( date( 'w' ) - 1 ) *60*60*24 ) - 1;
-					$day1 += get_option( 'start_of_week' );
+					if( ! $end_date ) {
 
-					$date = $day1;
-					$this->end_date = $day1 + 6;
+					 	// Getting the start daye
+
+						$day = date( 'd', current_time( 'timestamp' ) - ( date( 'w' ) - 1 ) *60*60*24 ) - 1;
+						$day += get_option( 'start_of_week' );
+
+					} else {
+
+						// Getting the end day
+
+						$day = date( 'd', current_time( 'timestamp' ) - ( date( 'w' ) - 1 ) *60*60*24 ) - 1;
+						$day += get_option( 'start_of_week' ) + 6;
+
+					}
 
 				break;
 
 				case 'last_week' :
 
-					$day1 = date( 'd', current_time( 'timestamp' ) - ( date( 'w' ) - 1 ) *60*60*24 ) - 8;
-					$day1 += get_option( 'start_of_week' );
+					if( ! $end_date ) {
 
-					$date 	= $day1;
-					$this->end_date 	= $day1 + 6;
+					 	// Getting the start daye
+
+						$day = date( 'd', current_time( 'timestamp' ) - ( date( 'w' ) - 1 ) *60*60*24 ) - 8;
+						$day += get_option( 'start_of_week' );
+
+					} else {
+
+						// Getting the end day
+
+						$day = date( 'd', current_time( 'timestamp' ) - ( date( 'w' ) - 1 ) *60*60*24 ) - 8;
+						$day += get_option( 'start_of_week' ) + 6;
+
+					}
 
 				break;
 
@@ -291,12 +309,26 @@ class EDD_Stats {
 
 
 		} else if( false !== strtotime( $date, current_time( 'timestamp' ) ) ) {
+
 			// This is a date provided as a string
-			return strtotime( $date, current_time( 'timestamp' ) );
+			$date = strtotime( $date, current_time( 'timestamp' ) );
 
 		} else {
-			return new WP_Error( 'invalid_date', __( 'Improper date provided.', 'edd' ) );
+
+			$date =new WP_Error( 'invalid_date', __( 'Improper date provided.', 'edd' ) );
+
 		}
+
+		if( ! is_wp_error( $date ) ) {
+
+			return mktime( $hour, $minute, 0, $month, $day, $year );
+
+		} else {
+
+			return $date; // Return the error
+
+		}
+
 	}
 
 
