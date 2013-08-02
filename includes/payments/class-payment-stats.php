@@ -27,6 +27,8 @@ class EDD_Stats {
 
 	public $end_date;
 
+	public $single_day = false;
+
 
 
 	/**
@@ -150,6 +152,9 @@ class EDD_Stats {
 
 		if( ! $this->end_date )
 			$this->end_date = $this->start_date;
+
+		if( 'today' == $this->start_date || 'yesterday' == $this->start_date )
+			$this->single_day = true;
 
 		$this->start_date = $this->convert_date( $this->start_date );
 		$this->end_date   = $this->convert_date( $this->end_date, true );
@@ -353,12 +358,13 @@ class EDD_Stats {
 			$start_where = " AND p.post_date >= '{$start_date}'";
 		}
 
-		if( $this->end_date ) {
+		if( $this->end_date && ! $this->single_day ) {
 			$end_date  = date( 'Y-m-d', $this->end_date );
 			$end_where = " AND p.post_date <= '{$end_date}'";
 		}
 
 		$where .= "{$start_where}{$end_where}";
+		//echo $where; exit;
 		return $where;
 	}
 
@@ -372,7 +378,7 @@ class EDD_Stats {
 			$start_where = " AND post_date >= '{$start_date}'";
 		}
 
-		if( $this->end_date ) {
+		if( $this->end_date && ! $this->single_day ) {
 			$end_date  = date( 'Y-m-d', $this->end_date );
 			$end_where = " AND post_date <= '{$end_date}'";
 		}
