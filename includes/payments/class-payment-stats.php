@@ -200,6 +200,22 @@ class EDD_Stats {
 
 				break;
 
+				case 'yesterday' :
+
+					$day = date( 'd' ) - 1;
+					if( $day < 1 ) {
+						// Today is the first day of the month
+						if( 1 == $month ) {
+							$year -= 1; // Today is January 1, so skip back to December
+							$month -= 1;
+							$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+						} else {
+							$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+						}
+					}
+
+				break;
+
 				case 'this_week' :
 
 					if( ! $end_date ) {
