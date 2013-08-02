@@ -167,11 +167,9 @@ class EDD_Stats {
 
 		$minute      = 0;
 		$hour        = 0;
-		$day         = 0;
+		$day         = 1;
 		$month       = date( 'n' );
 		$year        = date( 'Y' );
-
-		// Setup start date
 
 		if ( array_key_exists( $date, $this->get_predefined_dates() ) ) {
 			// This is a predefined date rate, such as last_week
@@ -179,7 +177,9 @@ class EDD_Stats {
 			switch( $date ) {
 
 				case 'this_month' :
-					// use defaults
+					if( $end_date ) {
+						$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+					}
 				break;
 
 				case 'last_month' :
@@ -188,6 +188,10 @@ class EDD_Stats {
 						$month = 12;
 					} else {
 						$month = date( 'n' ) - 1;
+					}
+
+					if( $end_date ) {
+						$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 					}
 
 				break;
