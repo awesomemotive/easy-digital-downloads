@@ -21,11 +21,11 @@
 class EDD_Stats {
 
 
-	public $type       = 'earnings'; // 'sales' or 'earnings'
+	public $type; // 'sales' or 'earnings'
 
-	public $start_date = 'this_month';
+	public $start_date;
 
-	public $end_date   = false;
+	public $end_date;
 
 
 
@@ -36,7 +36,7 @@ class EDD_Stats {
 	 * @since 1.8
 	 * @return void
 	 */
-	public function __construct( $_type, $_start_date, $_end_date ) {
+	public function __construct( $_type = 'earnings', $_start_date = 'this_month', $_end_date = false ) {
 
 		$this->type = $_type;
 
