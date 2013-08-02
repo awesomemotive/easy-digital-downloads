@@ -147,6 +147,10 @@ class EDD_Stats {
 
 
 	private function setup_dates() {
+
+		if( ! $this->end_date )
+			$this->end_date = $this->start_date;
+
 		$this->start_date = $this->convert_date( $this->start_date );
 		$this->end_date   = $this->convert_date( $this->end_date, true );
 
