@@ -166,8 +166,8 @@ class EDD_Stats {
 		$minute      = 0;
 		$hour        = 0;
 		$day         = 1;
-		$month       = date( 'n' );
-		$year        = date( 'Y' );
+		$month       = date( 'n', current_time( 'timestamp' ) );
+		$year        = date( 'Y', current_time( 'timestamp' ) );
 
 		if ( array_key_exists( $date, $this->get_predefined_dates() ) ) {
 			// This is a predefined date rate, such as last_week
@@ -185,7 +185,7 @@ class EDD_Stats {
 					if( $month == 1 && ! $end_date ) {
 						$month = 12;
 					} else {
-						$month = date( 'n' ) - 1;
+						$month = date( 'n', current_time( 'timestamp' ) ) - 1;
 					}
 
 					if( $end_date ) {
@@ -196,7 +196,7 @@ class EDD_Stats {
 
 				case 'today' :
 
-					$day = date( 'd' );
+					$day = date( 'd', current_time( 'timestamp' ) );
 
 				break;
 
@@ -278,27 +278,40 @@ class EDD_Stats {
 
 				case 'this_quarter' :
 
-					$month_now = date( 'n' );
+					$month_now = date( 'n', current_time( 'timestamp' ) );
 
 					if ( $month_now <= 3 ) {
 
-						$date = 1;
-						$this->end_date	  = 3;
+						if( ! $end_date ) {
+							$month = 1;
+						} else {
+							$month = 3;
+						}
 
 					} else if ( $month_now <= 6 ) {
 
-						$date = 4;
-						$this->end_date   = 6;
+						if( ! $end_date ) {
+							$month = 4;
+						} else {
+							$month = 6;
+						}
 
 					} else if ( $month_now <= 9 ) {
 
-						$date = 7;
-						$this->end_date	  = 9;
+						if( ! $end_date ) {
+							$month = 7;
+						} else {
+							$month = 9;
+						}
 
 					} else {
 
-						$date = 10;
-						$this->end_date	  = 12;
+						if( ! $end_date ) {
+							$month = 10;
+						} else {
+							$month = 12;
+						}
+
 
 					}
 
@@ -306,31 +319,40 @@ class EDD_Stats {
 
 				case 'last_quarter' :
 
-					$month_now = date( 'n' );
+					$month_now = date( 'n', current_time( 'timestamp' ) );
 
 					if ( $month_now <= 3 ) {
 
-						$date = 10;
-						$this->end_date   = 12;
-						$dates['year']		= date( 'Y' ) - 1; // Previous year
+						if( ! $end_date ) {
+							$month = 10;
+						} else {
+							$year -= 1;
+							$month = 12;
+						}
 
 					} else if ( $month_now <= 6 ) {
 
-						$date = 1;
-						$this->end_date   = 3;
-						$dates['year']		= date( 'Y' );
+						if( ! $end_date ) {
+							$month = 1;
+						} else {
+							$month = 3;
+						}
 
 					} else if ( $month_now <= 9 ) {
 
-						$date = 4;
-						$this->end_date   = 6;
-						$dates['year']		= date( 'Y' );
+						if( ! $end_date ) {
+							$month = 4;
+						} else {
+							$month = 6;
+						}
 
 					} else {
 
-						$date = 7;
-						$this->end_date   = 9;
-						$dates['year']		= date( 'Y' );
+						if( ! $end_date ) {
+							$month = 7;
+						} else {
+							$month = 9;
+						}
 
 					}
 
