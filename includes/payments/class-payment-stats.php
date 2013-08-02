@@ -295,7 +295,7 @@ class EDD_Stats {
 	}
 
 
-	private function count_where( $where = '' ) {
+	public function count_where( $where = '' ) {
 		// Only get payments in our date range
 		$start = date( 'Y-m-d', $this->start_date );
 		$end   = date( 'Y-m-d', $this->end_date );
@@ -303,7 +303,7 @@ class EDD_Stats {
 		return $where;
 	}
 
-	private function payments_where( $where = '' ) {
+	public function payments_where( $where = '' ) {
 		// Only get payments in our date range
 		$start = date( 'Y-m-d', $this->start_date );
 		$end   = date( 'Y-m-d', $this->end_date );
