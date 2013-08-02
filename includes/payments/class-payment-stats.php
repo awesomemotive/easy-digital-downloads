@@ -157,12 +157,6 @@ class EDD_Stats {
 
 	private function convert_date( $date, $end_date = false ) {
 
-		// Not even remotely finished
-
-		$is_string   = true;
-		$is_time     = false;
-		$is_date     = false;
-
 		$minute      = 0;
 		$hour        = 0;
 		$day         = 1;
