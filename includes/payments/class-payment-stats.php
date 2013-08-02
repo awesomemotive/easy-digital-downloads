@@ -344,17 +344,42 @@ class EDD_Stats {
 
 	public function count_where( $where = '' ) {
 		// Only get payments in our date range
-		$start = date( 'Y-m-d', $this->start_date );
-		$end   = date( 'Y-m-d', $this->end_date );
-		$where .= " AND p.post_date <= '{$start}' AND p.post_date >= '{$end}'";
+
+		$start_where = '';
+		$end_where   = '';
+
+		if( $this->start_date ) {
+			$start_date  = date( 'Y-m-d', $this->start_date );
+			$start_where = " AND p.post_date >= '{$start_date}'";
+		}
+
+		if( $this->end_date ) {
+			$end_date  = date( 'Y-m-d', $this->end_date );
+			$end_where = " AND p.post_date <= '{$end_date}'";
+		}
+
+		$where .= "{$start_where}{$end_where}";
 		return $where;
 	}
 
 	public function payments_where( $where = '' ) {
-		// Only get payments in our date range
-		$start = date( 'Y-m-d', $this->start_date );
-		$end   = date( 'Y-m-d', $this->end_date );
-		$where .= " AND post_date <= '{$start}' AND post_date >= '{$end}'";
+
+		$start_where = '';
+		$end_where   = '';
+
+		if( $this->start_date ) {
+			$start_date  = date( 'Y-m-d', $this->start_date );
+			$start_where = " AND post_date >= '{$start_date}'";
+		}
+
+		if( $this->end_date ) {
+			$end_date  = date( 'Y-m-d', $this->end_date );
+			$end_where = " AND post_date <= '{$end_date}'";
+		}
+
+		$where .= "{$start_where}{$end_where}";
+
+		//echo $where; exit;
 		return $where;
 	}
 
