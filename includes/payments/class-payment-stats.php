@@ -359,16 +359,24 @@ class EDD_Stats {
 				break;
 
 				case 'this_year' :
-					$date 	= 1;
-					$dates['m_end']		= 12;
-					$dates['year']		= date( 'Y' );
+
+					if( ! $end_date ) {
+						$month = 1;
+					} else {
+						$month = 12;
+					}
+
 				break;
 
 				case 'last_year' :
-					$date 	= 1;
-					$dates['m_end']		= 12;
-					$dates['year']		= date( 'Y' ) - 1;
-					$dates['year_end']  = date( 'Y' ) - 1;
+
+					$year -= 1;
+					if( ! $end_date ) {
+						$month = 1;
+					} else {
+						$month = 12;
+					}
+
 				break;
 
 			}
