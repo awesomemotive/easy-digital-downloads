@@ -54,6 +54,12 @@ class EDD_Stats {
 
 	public function get_stats( $download_id = 0 ) {
 
+		if( is_wp_error( $this->start_date ) )
+			return $this->start_date;
+
+		if( is_wp_error( $this->end_date ) )
+			return $this->end_date;
+
 		if( 'sales' == $this->type ) {
 			$stats = $this->get_sales( $download_id );
 		} else {
@@ -139,7 +145,6 @@ class EDD_Stats {
 
 
 	private function setup_dates() {
-
 		$this->start_date = $this->convert_date( $this->start_date );
 		$this->end_date   = $this->convert_date( $this->end_date, true );
 
