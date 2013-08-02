@@ -108,9 +108,6 @@ class EDD_Email_Template_Tags
 	}
 
 	public function do_tag( $m ) {
-		echo '<pre>';
-			print_r( $m );
-		echo '</pre>';
 
 		// Get tag
 		$tag = $m[ 1 ];
