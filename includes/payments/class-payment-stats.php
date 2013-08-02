@@ -67,11 +67,11 @@ class EDD_Stats {
 
 		// if download Id, get stats for specific download
 
-		add_filter( 'edd_count_payments_where', array( $this, 'count_where' );
+		add_filter( 'edd_count_payments_where', array( $this, 'count_where' ) );
 
 		$count = edd_count_payments()->$status;
 
-		remove_filter( 'edd_count_payments_where', array( $this, 'count_where' );
+		remove_filter( 'edd_count_payments_where', array( $this, 'count_where' ) );
 
 		return $count;
 
@@ -83,7 +83,7 @@ class EDD_Stats {
 
 		$earnings = 0;
 
-		add_filter( 'posts_where', array( $this, 'payments_where' );
+		add_filter( 'posts_where', array( $this, 'payments_where' ) );
 
 		$args = array(
 			'post_type'   => 'edd_payment',
@@ -114,7 +114,7 @@ class EDD_Stats {
 			set_transient( $key, $earnings, 60*60 );
 		}
 
-		remove_filter( 'posts_where', array( $this, 'payments_where' );
+		remove_filter( 'posts_where', array( $this, 'payments_where' ) );
 
 		return round( $earnings, 2 );
 
