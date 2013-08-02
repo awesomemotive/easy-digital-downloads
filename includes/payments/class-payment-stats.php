@@ -382,7 +382,7 @@ class EDD_Stats {
 			}
 
 
-		} else if( false !== strtotime( $date, current_time( 'timestamp' ) ) ) {
+		} else if( false !== strtotime( $date ) ) {
 
 			// This is a date provided as a string
 			$date = strtotime( $date, current_time( 'timestamp' ) );
