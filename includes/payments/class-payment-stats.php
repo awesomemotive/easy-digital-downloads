@@ -382,6 +382,10 @@ class EDD_Stats {
 			}
 
 
+		} else if( is_int( $date ) ) {
+
+			// return $date unchanged since it is a timestamp
+
 		} else if( false !== strtotime( $date ) ) {
 
 			// This is a date provided as a string
@@ -389,7 +393,7 @@ class EDD_Stats {
 
 		} else {
 
-			$date =new WP_Error( 'invalid_date', __( 'Improper date provided.', 'edd' ) );
+			$date = new WP_Error( 'invalid_date', __( 'Improper date provided.', 'edd' ) );
 
 		}
 
