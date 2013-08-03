@@ -135,91 +135,91 @@ class EDD_Welcome {
 			</h2>
 
 			<div class="changelog">
-				<h3>Simple, Beautiful Checkout</h3>
+				<h3><?php _e( 'Simple, Beautiful Checkout', 'edd' );?></h3>
 
 				<div class="feature-section">
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/17checkout.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4>Prettier, More Versatile Styles</h4>
-					<p>We have completely rewritten the checkout CSS to make it more attractive, more flexible, and more compatible with a wider variety of themes.</p>
+					<h4><?php _e( 'Prettier, More Versatile Styles', 'edd' );?></h4>
+					<p><?php _e( 'We have completely rewritten the checkout CSS to make it more attractive, more flexible, and more compatible with a wider variety of themes.', 'edd' );?></p>
 
-					<h4>Better Checkout Layout</h4>
-					<p>The position of each field on the checkout has been carefully reconsidered to ensure it is in the proper location so as to best create high conversion rates.</p>
+					<h4><?php _e( 'Better Checkout Layout', 'edd' );?></h4>
+					<p><?php _e( 'The position of each field on the checkout has been carefully reconsidered to ensure it is in the proper location so as to best create high conversion rates.', 'edd' );?></p>
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3>Item Quantities</h3>
+				<h3><?php _e( 'Item Quantities', 'edd' );?></h3>
 
 				<div class="feature-section">
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/17quantities.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4>Selling Licenses or Multiple Copies at Once?</h4>
-					<p>With the new item quantities feature, your customers can choose how many of an item they wish to purchase at one time.</p>
+					<h4><?php _e( 'Selling Licenses or Multiple Copies at Once?','edd' );?></h4>
+					<p><?php _e( 'With the new item quantities feature, your customers can choose how many of an item they wish to purchase at one time.', 'edd' );?></p>
 
-					<h4>Makes Bulk Purchases Simple</h4>
-					<p>No longer is purchasing many copies of the same item difficult or tedious. Simply enter the quantity and complete the purchase.</p>
+					<h4><?php _e( 'Makes Bulk Purchases Simple', 'edd' );?></h4>
+					<p><?php _e( 'No longer is purchasing many copies of the same item difficult or tedious. Simply enter the quantity and complete the purchase.', 'edd' );?></p>
 
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3>Direct to PayPal Purchase Buttons</h3>
+				<h3><?php _e( 'Direct to PayPal Purchase Buttons', 'edd' );?></h3>
 
 				<div class="feature-section">
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/17direct.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4>Buy Now</h4>
-					<p>The Direct purchase option allows you to create Buy Now buttons that take your customers straight to PayPal, completely bypassing the checkout screen.</p>
+					<h4><?php _e( 'Buy Now', 'edd' );?></h4>
+					<p><?php _e( 'The Direct purchase option allows you to create Buy Now buttons that take your customers straight to PayPal, completely bypassing the checkout screen.', 'edd' );?></p>
 
-					<h4>Higher Turnover Rates</h4>
-					<p>By sending your customers straight to PayPal, you can dramatically increase your conversion rates by reducing the amount of friction in the purchase process.</p>
+					<h4><?php _e( 'Higher Turnover Rates', 'edd' );?></h4>
+					<p><?php _e( 'By sending your customers straight to PayPal, you can dramatically increase your conversion rates by reducing the amount of friction in the purchase process.', 'edd' );?></p>
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3>Multiple Discount Codes Per Purchase</h3>
+				<h3><?php _e( 'Multiple Discount Codes Per Purchase', 'edd' );?></h3>
 
 				<div class="feature-section">
 
-					<h4>Offer Bigger, Better Promotions </h4>
-					<p>With the Ability to redeem multiple discount codes per purchase, you can give your customers even more incentives to purchase your products.</p>
+					<h4><?php _e( 'Offer Bigger, Better Promotions','edd' );?></h4>
+					<p><?php _e( 'With the Ability to redeem multiple discount codes per purchase, you can give your customers even more incentives to purchase your products.', 'edd' );?></p>
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3>Additional Updates</h3>
+				<h3><?php _e( 'Additional Updates', 'edd' );?></h3>
 
 				<div class="feature-section col three-col">
 					<div>
-						<h4>Brought Back [download_history]</h4>
-						<p>The return of the [downloads_history] short code was one of our most common user requests since it was removed. We listened and it is back!</p>
+						<h4><?php _e( 'Brought Back [download_history]', 'edd' );?></h4>
+						<p><?php _e( 'The return of the [download_history] short code was one of our most common user requests since it was removed. We listened and it is back!', 'edd' );?></p>
 
-						<h4>Full Retina Support</h4>
-						<p>Every image and icon used in Easy Digital Downloads has been remade with complete support for high resolution / retina displays.</p>
+						<h4><?php _e( 'Full Retina Support', 'edd' );?></h4>
+						<p><?php _e( 'Every image and icon used in Easy Digital Downloads has been remade with complete support for high resolution / retina displays.', 'edd' );?></p>
 					</div>
 
 					<div>
-						<h4>Customer Reports Search</h4>
-						<p>Want to find out how much a customer has spent, or how many customers you have with a specific domain\'s email address? Now you can.</p>
+						<h4><?php _e( 'Customer Reports Search', 'edd' );?></h4>
+						<p><?php _e( 'Want to find out how much a customer has spent, or how many customers you have with a specific domain\'s email address? Now you can.', 'edd' );?></p>
 
-						<h4>Better Admin Notifications</h4>
-						<p>The admin sale notification emails can now be completely customized in the same way as purchase receipts. Want to know all details of the customer? Now you can.</p>
+						<h4><?php _e( 'Better Admin Notifications', 'edd' );?></h4>
+						<p><?php _e( 'The admin sale notification emails can now be completely customized in the same way as purchase receipts. Want to know all details of the customer? Now you can.', 'edd' );?></p>
 					</div>
 
 					<div class="last-feature">
-						<h4>Settings Import / Export</h4>
-						<p>The ability to export and import all store settings makes the process of moving sites from development to live a lot easier.</p>
+						<h4><?php _e( 'Settings Import / Export', 'edd' );?></h4>
+						<p><?php _e( 'The ability to export and import all store settings makes the process of moving sites from development to live a lot easier.' ,'edd' );?></p>
 
-						<h4>Improved Performance</h4>
-						<p>Several key areas (such as Payment History) of Easy Digital Downloads have been dramatically improved in terms of performance to make your site run better and faster.</p>
+						<h4><?php _e( 'Improved Performance','edd' );?></h4>
+						<p><?php _e( 'Several key areas (such as Payment History) of Easy Digital Downloads have been dramatically improved in terms of performance to make your site run better and faster.', 'edd' );?></p>
 					</div>
 				</div>
 			</div>

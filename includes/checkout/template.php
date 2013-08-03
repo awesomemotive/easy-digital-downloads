@@ -526,6 +526,9 @@ add_action( 'edd_payment_mode_select', 'edd_payment_mode_select' );
 function edd_show_payment_icons() {
 	global $edd_options;
 
+	if( edd_show_gateways() && did_action( 'edd_payment_mode_top' ) )
+		return;
+
 	if ( isset( $edd_options['accepted_cards'] ) ) {
 		echo '<div class="edd-payment-icons">';
 		foreach( $edd_options['accepted_cards'] as $key => $card ) {
@@ -538,7 +541,8 @@ function edd_show_payment_icons() {
 		echo '</div>';
 	}
 }
-add_action( 'edd_payment_mode_before_gateways', 'edd_show_payment_icons' );
+add_action( 'edd_payment_mode_top', 'edd_show_payment_icons' );
+add_action( 'edd_checkout_form_top', 'edd_show_payment_icons' );
 
 
 /**

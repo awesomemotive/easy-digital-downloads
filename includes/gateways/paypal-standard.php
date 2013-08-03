@@ -137,7 +137,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
         		if( edd_use_skus() ) {
 	        		$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
 	    		}
-    	    	$paypal_args['quantity_' . $i ]        = '1';
+    	    	$paypal_args['quantity_' . $i ]        = $item['quantity'];
         		$paypal_args['amount_' . $i ]          = $price;
         		$i++;
 	        }
@@ -323,7 +323,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	$paypal_amount  = $data['mc_gross'];
 	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
-	$business_email = trim( $data['receiver_email'] );
+	$business_email = trim( $data['business'] );
 
 	// Retrieve the total purchase amount (before PayPal)
 	$payment_amount = edd_get_payment_amount( $payment_id );

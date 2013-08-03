@@ -34,7 +34,7 @@ function edd_download_shortcode( $atts, $content = null ) {
 			'color'         => isset( $edd_options[ 'checkout_color' ] ) 	? $edd_options[ 'checkout_color' ] 		: 'blue',
 			'class'         => 'edd-submit'
 		),
-		$atts )
+		$atts, 'purchase_link' )
 	);
 
 	// Override color if color == inherit
@@ -131,7 +131,7 @@ add_shortcode( 'download_cart', 'edd_cart_shortcode' );
 function edd_login_form_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'redirect' => '',
-		), $atts )
+		), $atts, 'edd_login' )
 	);
 	return edd_login_form( $redirect );
 }
@@ -203,7 +203,7 @@ function edd_purchase_collection_shortcode( $atts, $content = null ) {
 			'style'		=> isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button',
 			'color'		=> isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue',
 			'class'		=> 'edd-submit'
-		), $atts )
+		), $atts, 'purchase_collection' )
 	);
 
 	$button_display = implode( ' ', array( $style, $color, $class ) );
@@ -243,7 +243,7 @@ function edd_downloads_query( $atts, $content = null ) {
 			'orderby'          => 'post_date',
 			'order'            => 'DESC',
 			'ids'              => ''
-		), $atts )
+		), $atts, 'downloads' )
 	);
 
 	$query = array(
@@ -343,7 +343,7 @@ function edd_downloads_query( $atts, $content = null ) {
 	endswitch;
 
 	// Allow the query to be manipulated by other plugins
-	$query = apply_filters( 'edd_downloads_query', $query );
+	$query = apply_filters( 'edd_downloads_query', $query, $atts );
 
 	$downloads = new WP_Query( $query );
 	if ( $downloads->have_posts() ) :
@@ -384,18 +384,29 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			<div style="clear:both;"></div>
 
+			<?php wp_reset_postdata(); ?>
+
 			<div id="edd_download_pagination" class="navigation">
 				<?php
-				$big = 999999;
-				echo paginate_links( array(
-					'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-					'format'  => '?paged=%#%',
-					'current' => max( 1, $query['paged'] ),
-					'total'   => $downloads->max_num_pages
-				) );
+				if ( is_single() ) {
+					echo paginate_links( array(
+						'base'    => get_permalink() . '%#%',
+						'format'  => '?paged=%#%',
+						'current' => max( 1, $query['paged'] ),
+						'total'   => $downloads->max_num_pages
+					) );
+				} else {
+					$big = 999999;
+					echo paginate_links( array(
+						'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+						'format'  => '?paged=%#%',
+						'current' => max( 1, $query['paged'] ),
+						'total'   => $downloads->max_num_pages
+					) );
+				}	
 				?>
 			</div>
-			<?php wp_reset_postdata(); ?>
+
 		</div>
 		<?php
 		$display = ob_get_clean();
@@ -420,7 +431,7 @@ add_shortcode( 'downloads', 'edd_downloads_query' );
 function edd_download_price_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'id' => NULL,
-		), $atts )
+		), $atts, 'edd_price' )
 	);
 
 	if ( is_null( $id ) )
@@ -453,7 +464,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 		'payment_key'     => true,
 		'payment_method'  => true,
 		'payment_id'      => true
-	), $atts );
+	), $atts, 'edd_receipt' );
 
 	$session = edd_get_purchase_session();
 	if ( isset( $_GET[ 'payment_key' ] ) ) {
