@@ -113,11 +113,11 @@ class EDD_Stats {
 			'end_date'    => $this->end_date
 		);
 
-		$args     = apply_filters( 'edd_stats_earnings_args', $args );
-		$key      = md5( serialize( $args ) );
+		$args = apply_filters( 'edd_stats_earnings_args', $args );
+		$key  = md5( serialize( $args ) );
 
-		//$earnings = get_transient( $key );
-		//if( false === $earnings ) {
+		$earnings = get_transient( $key );
+		if( false === $earnings ) {
 			$sales = get_posts( $args );
 			$earnings = 0;
 			if ( $sales ) {
@@ -127,8 +127,8 @@ class EDD_Stats {
 				}
 			}
 			// Cache the results for one hour
-			//set_transient( $key, $earnings, 60*60 );
-		//}
+			set_transient( $key, $earnings, 60*60 );
+		}
 
 		remove_filter( 'posts_where', array( $this, 'payments_where' ) );
 
