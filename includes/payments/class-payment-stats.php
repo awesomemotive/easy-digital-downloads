@@ -71,11 +71,20 @@ class EDD_Stats {
 
 	public function get_sales( $download_id = 0, $status = 'publish' ) {
 
-		// if download Id, get stats for specific download
-
 		add_filter( 'edd_count_payments_where', array( $this, 'count_where' ) );
 
-		$count = edd_count_payments()->$status;
+		if( empty( $download_id ) ) {
+
+			// Global sale stats
+			$count = edd_count_payments()->$status;
+
+		} else {
+
+			// Product specific stats
+			global $edd_logs;
+			$count = $edd_logs->get_log_count( $download_id, 'sale' );
+
+		}
 
 		remove_filter( 'edd_count_payments_where', array( $this, 'count_where' ) );
 
