@@ -384,18 +384,29 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			<div style="clear:both;"></div>
 
+			<?php wp_reset_postdata(); ?>
+
 			<div id="edd_download_pagination" class="navigation">
 				<?php
-				$big = 999999;
-				echo paginate_links( array(
-					'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-					'format'  => '?paged=%#%',
-					'current' => max( 1, $query['paged'] ),
-					'total'   => $downloads->max_num_pages
-				) );
+				if ( is_single() ) {
+					echo paginate_links( array(
+						'base'    => get_permalink() . '%#%',
+						'format'  => '?paged=%#%',
+						'current' => max( 1, $query['paged'] ),
+						'total'   => $downloads->max_num_pages
+					) );
+				} else {
+					$big = 999999;
+					echo paginate_links( array(
+						'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+						'format'  => '?paged=%#%',
+						'current' => max( 1, $query['paged'] ),
+						'total'   => $downloads->max_num_pages
+					) );
+				}	
 				?>
 			</div>
-			<?php wp_reset_postdata(); ?>
+
 		</div>
 		<?php
 		$display = ob_get_clean();
