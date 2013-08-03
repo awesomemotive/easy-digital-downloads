@@ -552,7 +552,7 @@ function edd_register_settings() {
 			'edd_settings_general',
 			array(
 				'id' => $option['id'],
-				'desc' => $option['desc'],
+				'desc' => ! empty( $option['desc'] ) ? $option['desc'] : '',
 				'name' => $option['name'],
 				'section' => 'general',
 				'size' => isset( $option['size'] ) ? $option['size'] : null,
@@ -578,7 +578,7 @@ function edd_register_settings() {
 			'edd_settings_gateways',
 			array(
 				'id' => $option['id'],
-				'desc' => $option['desc'],
+				'desc' => ! empty( $option['desc'] ) ? $option['desc'] : '',
 				'name' => $option['name'],
 				'section' => 'gateways',
 				'size' => isset( $option['size'] ) ? $option['size'] : null,
@@ -604,7 +604,7 @@ function edd_register_settings() {
 			'edd_settings_emails',
 			array(
 				'id' => $option['id'],
-				'desc' => $option['desc'],
+				'desc' => ! empty( $option['desc'] ) ? $option['desc'] : '',
 				'name' => $option['name'],
 				'section' => 'emails',
 				'size' => isset( $option['size'] ) ? $option['size'] : null,
@@ -630,7 +630,7 @@ function edd_register_settings() {
 			'edd_settings_styles',
 			array(
 				'id' => $option['id'],
-				'desc' => $option['desc'],
+				'desc' => ! empty( $option['desc'] ) ? $option['desc'] : '',
 				'name' => $option['name'],
 				'section' => 'styles',
 				'size' => isset( $option['size'] ) ? $option['size'] : '' ,
@@ -656,7 +656,7 @@ function edd_register_settings() {
 			'edd_settings_taxes',
 			array(
 				'id' => $option['id'],
-				'desc' => $option['desc'],
+				'desc' => ! empty( $option['desc'] ) ? $option['desc'] : '',
 				'name' => $option['name'],
 				'section' => 'taxes',
 				'size' => isset( $option['size'] ) ? $option['size'] : '' ,
@@ -682,7 +682,7 @@ function edd_register_settings() {
 			'edd_settings_extensions',
 			array(
 				'id' => $option['id'],
-				'desc' => $option['desc'],
+				'desc' => ! empty( $option['desc'] ) ? $option['desc'] : '',
 				'name' => $option['name'],
 				'section' => 'extensions',
 				'size' => isset( $option['size'] ) ? $option['size'] : '',
@@ -708,7 +708,7 @@ function edd_register_settings() {
 			'edd_settings_licenses',
 			array(
 				'id' => $option['id'],
-				'desc' => $option['desc'],
+				'desc' => ! empty( $option['desc'] ) ? $option['desc'] : '',
 				'name' => $option['name'],
 				'section' => 'licenses',
 				'size' => isset( $option['size'] ) ? $option['size'] : '',
@@ -734,7 +734,7 @@ function edd_register_settings() {
 			'edd_settings_misc',
 			array(
 				'id' => $option['id'],
-				'desc' => $option['desc'],
+				'desc' => ! empty( $option['desc'] ) ? $option['desc'] : '',
 				'name' => $option['name'],
 				'section' => 'misc',
 				'size' => isset( $option['size'] ) ? $option['size'] : '' ,
