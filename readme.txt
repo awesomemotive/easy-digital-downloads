@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.6
 
-Stable Tag: 1.7.1
+Stable Tag: 1.7.2
 License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -184,6 +184,21 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 1.7.2: July 30, 2013 =
+
+* Fix: Translation error with GB file
+* Fix: Payment method icons not showing with only one payment gateway enabled
+* Fix: HTML being outputted even when no excerpt
+* Fix: Incorrect PayPal item quantities
+* Fix: Height bug with jQuery Chosen fields
+* Fix: Admin sale notification has no formatting
+
+* Tweak: Added the_title_attribute() to shortcode-content-title.php template file
+* Tweak: Updated pot files
+* Tweak: Add new shortcode_atts() parameter for the new filter in WP 3.6
+* Tweak: Improved styling of discount section on checkout
+* Tweak: Added new javascript actions for discount actions
 
 = 1.7.1: July 23, 2013 =
 

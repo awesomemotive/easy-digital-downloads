@@ -74,7 +74,7 @@ jQuery(document).ready(function ($) {
         var $spinner = $this.find('.edd-loading');
         var container = $this.closest('div');
 
-        var spinnerWidth  = $spinner.width();
+        var spinnerWidth  = $spinner.width(),
             spinnerHeight = $spinner.height();
 
         // Show the spinner
@@ -84,8 +84,6 @@ jQuery(document).ready(function ($) {
             'margin-left': spinnerWidth / -2,
             'margin-top' : spinnerHeight / -2
         });
-
-        console.log(spinnerHeight);
 
         var form           = $this.parents('form').last();
         var download       = $this.data('download-id');
