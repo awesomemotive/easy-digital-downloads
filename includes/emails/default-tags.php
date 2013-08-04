@@ -111,7 +111,7 @@ function edd_email_tag_tax( $payment_id ) {
 }
 
 function edd_email_tag_price( $payment_id ) {
-	return '!{price}';
+	return edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) );
 }
 
 /**
