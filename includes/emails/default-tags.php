@@ -35,10 +35,11 @@ function edd_email_tag_file_urls( $payment_id ) {
 
 /**
  * Email template tag: name
+ * The buyer's first name
  *
  * @param int $payment_id
  *
- * @return string The buyer's first name
+ * @return string name
  */
 function edd_email_tag_name( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
@@ -48,10 +49,11 @@ function edd_email_tag_name( $payment_id ) {
 
 /**
  * Email template tag: fullname
+ * The buyer's full name, first and last
  *
  * @param int $payment_id
  *
- * @return string The buyer's full name
+ * @return string fullname
  */
 function edd_email_tag_fullname( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
@@ -61,10 +63,11 @@ function edd_email_tag_fullname( $payment_id ) {
 
 /**
  * Email template tag: username
+ * The buyer's user name on the site, if they registered an account
  *
  * @param int $payment_id
  *
- * @return string The buyer's username
+ * @return string username
  */
 function edd_email_tag_username( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
@@ -74,10 +77,11 @@ function edd_email_tag_username( $payment_id ) {
 
 /**
  * Email template tag: user_email
+ * The buyer's email address
  *
  * @param int $payment_id
  *
- * @return string User's email
+ * @return string user_email
  */
 function edd_email_tag_user_email( $payment_id ) {
 	return edd_get_payment_user_email( $payment_id );
@@ -85,10 +89,11 @@ function edd_email_tag_user_email( $payment_id ) {
 
 /**
  * Email template tag: date
+ * Date of purchase
  *
  * @param int $payment_id
  *
- * @return string Date of purchase
+ * @return string date
  */
 function edd_email_tag_date( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
@@ -97,10 +102,11 @@ function edd_email_tag_date( $payment_id ) {
 
 /**
  * Email template tag: subtotal
+ * Price of purchase before taxes
  *
  * @param int $payment_id
  *
- * @return string Price of purchase before taxes
+ * @return string subtotal
  */
 function edd_email_tag_subtotal( $payment_id ) {
 	return edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
@@ -108,10 +114,11 @@ function edd_email_tag_subtotal( $payment_id ) {
 
 /**
  * Email template tag: tax
+ * The taxed amount of the purchase
  *
  * @param int $payment_id
  *
- * @return string The taxed amount of the purchase
+ * @return string tax
  */
 function edd_email_tag_tax( $payment_id ) {
 	return edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) );
@@ -119,10 +126,11 @@ function edd_email_tag_tax( $payment_id ) {
 
 /**
  * Email template tag: price
+ * The total price of the purchase
  *
  * @param int $payment_id
  *
- * @return string The total price of the purchase
+ * @return string price
  */
 function edd_email_tag_price( $payment_id ) {
 	return edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) );
@@ -130,10 +138,11 @@ function edd_email_tag_price( $payment_id ) {
 
 /**
  * Email template tag: payment_id
+ * The unique ID number for this purchase
  *
  * @param int $payment_id
  *
- * @return int The unique ID number for this purchase
+ * @return int payment_id
  */
 function edd_email_tag_payment_id( $payment_id ) {
 	return $payment_id;
@@ -141,10 +150,11 @@ function edd_email_tag_payment_id( $payment_id ) {
 
 /**
  * Email template tag: receipt_id
+ * The unique ID number for this purchase receipt
  *
  * @param int $payment_id
  *
- * @return The method of payment used for this purchase
+ * @return string receipt_id
  */
 function edd_email_tag_receipt_id( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
@@ -153,10 +163,11 @@ function edd_email_tag_receipt_id( $payment_id ) {
 
 /**
  * Email template tag: payment_method
+ * The method of payment used for this purchase
  *
  * @param int $payment_id
  *
- * @return string The method of payment used for this purchase
+ * @return string gateway
  */
 function edd_email_tag_payment_method( $payment_id ) {
 	return edd_get_gateway_checkout_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
@@ -164,10 +175,11 @@ function edd_email_tag_payment_method( $payment_id ) {
 
 /**
  * Email template tag: sitename
+ * Your site name
  *
  * @param int $payment_id
  *
- * @return string Your site name
+ * @return string sitename
  */
 function edd_email_tag_sitename( $payment_id ) {
 	return get_bloginfo( 'name' );
