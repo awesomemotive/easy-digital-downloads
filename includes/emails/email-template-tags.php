@@ -19,7 +19,7 @@
  * @subpackage  Emails
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.7.x
+ * @since       1.x
  * @author			Barry Kooij
  */
 
@@ -53,7 +53,7 @@ class EDD_Email_Template_Tags
 	/**
 	 * Add hook for email tag
 	 *
-	 * @since 1.7.x
+	 * @since 1.x
 	 *
 	 * @param string $tag Email tag to be replace in email
 	 * @param callable $func Hook to run when email tag is found
@@ -70,7 +70,7 @@ class EDD_Email_Template_Tags
 	/**
 	 * Remove hook for email tag
 	 *
-	 * @since 1.7.x
+	 * @since 1.x
 	 *
 	 * @param string $tag Email tag to remove hook from
 	 */
@@ -81,7 +81,7 @@ class EDD_Email_Template_Tags
 	/**
 	 * Whether a registered email tag exists names $tag
 	 *
-	 * @since 1.7.x
+	 * @since 1.x
 	 *
 	 * @param string $tag Email tag that will be searched
 	 */
