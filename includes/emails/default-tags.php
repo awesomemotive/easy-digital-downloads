@@ -52,7 +52,7 @@ function edd_email_tag_username( $payment_id ) {
 }
 
 function edd_email_tag_user_email( $payment_id ) {
-	return '!{user_email}';
+	return edd_get_payment_user_email( $payment_id );
 }
 
 function edd_email_tag_date( $payment_id ) {
