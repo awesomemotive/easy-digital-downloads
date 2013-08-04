@@ -151,8 +151,15 @@ function edd_email_tag_receipt_id( $payment_id ) {
 	return $payment_data[ 'key' ];
 }
 
+/**
+ * Email template tag: payment_method
+ *
+ * @param int $payment_id
+ *
+ * @return string The method of payment used for this purchase
+ */
 function edd_email_tag_payment_method( $payment_id ) {
-	return '!{payment_method}';
+	return edd_get_gateway_checkout_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
 }
 
 function edd_email_tag_sitename( $payment_id ) {
