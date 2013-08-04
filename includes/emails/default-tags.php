@@ -56,7 +56,8 @@ function edd_email_tag_user_email( $payment_id ) {
 }
 
 function edd_email_tag_date( $payment_id ) {
-	return '!{date}';
+	$payment_data = edd_get_payment_meta( $payment_id );
+	return date_i18n( get_option( 'date_format' ), strtotime( $payment_data[ 'date' ] ) );
 }
 
 /**
