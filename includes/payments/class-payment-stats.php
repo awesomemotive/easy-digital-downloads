@@ -23,16 +23,6 @@ class EDD_Stats {
 
 
 	/**
-	 * The type of stat we are retrieving
-	 *
-	 * 'sales' or 'earnings'
-	 *
-	 * @access public
-	 * @since 1.8
-	 */
-	public $type;
-
-	/**
 	 * The start date for the period we're getting stats for
 	 *
 	 * Can be a timestamp, formatted date, date string (such as August 3, 2013),
