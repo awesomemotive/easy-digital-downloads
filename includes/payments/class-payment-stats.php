@@ -230,21 +230,31 @@ class EDD_Stats {
 			switch( $date ) {
 
 				case 'this_month' :
+
 					if( $end_date ) {
+
 						$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+
 					}
+
 				break;
 
 				case 'last_month' :
 
 					if( $month == 1 && ! $end_date ) {
+
 						$month = 12;
+
 					} else {
+
 						$month = date( 'n', current_time( 'timestamp' ) ) - 1;
+
 					}
 
 					if( $end_date ) {
+
 						$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+
 					}
 
 				break;
@@ -259,13 +269,18 @@ class EDD_Stats {
 
 					$day = date( 'd' ) - 1;
 					if( $day < 1 ) {
+
 						// Today is the first day of the month
 						if( 1 == $month ) {
+
 							$year -= 1; // Today is January 1, so skip back to December
 							$month -= 1;
 							$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+
 						} else {
+
 							$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+
 						}
 					}
 
@@ -275,12 +290,15 @@ class EDD_Stats {
 
 					$days_to_week_start = ( date( 'w' ) - 1 ) *60*60*24;
 				 	$today = date( 'd', current_time( 'timestamp' ) );
+
 				 	if( $today < $days_to_week_start ) {
+
 				 		if( $month > 1 ) {
 					 		$month -= 1;
 					 	} else {
 					 		$month = 12;
 					 	}
+
 				 	}
 
 					if( ! $end_date ) {
@@ -305,12 +323,15 @@ class EDD_Stats {
 
 					$days_to_week_start = ( date( 'w' ) - 1 ) *60*60*24;
 				 	$today = date( 'd', current_time( 'timestamp' ) );
+
 				 	if( $today < $days_to_week_start ) {
+
 				 		if( $month > 1 ) {
 					 		$month -= 1;
 					 	} else {
 					 		$month = 12;
 					 	}
+
 				 	}
 
 					if( ! $end_date ) {
@@ -366,7 +387,6 @@ class EDD_Stats {
 						} else {
 							$month = 12;
 						}
-
 
 					}
 
@@ -484,7 +504,7 @@ class EDD_Stats {
 		}
 
 		$where .= "{$start_where}{$end_where}";
-		//echo $where; exit;
+
 		return $where;
 	}
 
@@ -507,7 +527,6 @@ class EDD_Stats {
 
 		$where .= "{$start_where}{$end_where}";
 
-		//echo $where; exit;
 		return $where;
 	}
 
