@@ -107,7 +107,7 @@ function edd_email_tag_subtotal( $payment_id ) {
 }
 
 function edd_email_tag_tax( $payment_id ) {
-	return '!{tax}';
+	return edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) );
 }
 
 function edd_email_tag_price( $payment_id ) {
