@@ -139,8 +139,16 @@ function edd_email_tag_payment_id( $payment_id ) {
 	return $payment_id;
 }
 
+/**
+ * Email template tag: receipt_id
+ *
+ * @param int $payment_id
+ *
+ * @return The method of payment used for this purchase
+ */
 function edd_email_tag_receipt_id( $payment_id ) {
-	return '!{receipt_id}';
+	$payment_data = edd_get_payment_meta( $payment_id );
+	return $payment_data[ 'key' ];
 }
 
 function edd_email_tag_payment_method( $payment_id ) {
