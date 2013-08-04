@@ -42,7 +42,7 @@ class EDD_Stats {
 			$this->start_date = $_start_date;
 		}
 
-		if( ! empty( $_date1 ) ) {
+		if( ! empty( $_end_date ) ) {
 			$this->end_date = $_end_date;
 		}
 
@@ -154,18 +154,18 @@ class EDD_Stats {
 			);
 
 			$log_ids     = $edd_logs->get_connected_logs( $args, 'sale' );
-			$log_ids     = implode( ',', $log_ids );
 
-			$payment_ids = $wpdb->get_col( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key='_edd_log_payment_id' AND post_id IN ($log_ids);" );
+			if( $log_ids ) {
+				$log_ids     = implode( ',', $log_ids );
+				$payment_ids = $wpdb->get_col( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key='_edd_log_payment_id' AND post_id IN ($log_ids);" );
 
-			foreach( $payment_ids as $payment_id ) {
-				$items = edd_get_payment_meta_cart_details( $payment_id );
-				//echo $payment_id; exit;
-				foreach( $items as $item ) {
-					$earnings += $item['price'];
+				foreach( $payment_ids as $payment_id ) {
+					$items = edd_get_payment_meta_cart_details( $payment_id );
+					foreach( $items as $item ) {
+						$earnings += $item['price'];
+					}
 				}
 			}
-
 		}
 
 		remove_filter( 'posts_where', array( $this, 'payments_where' ) );
@@ -204,6 +204,7 @@ class EDD_Stats {
 
 	private function convert_date( $date, $end_date = false ) {
 
+		$timestamp   = false;
 		$minute      = 0;
 		$hour        = 0;
 		$day         = 1;
@@ -426,25 +427,27 @@ class EDD_Stats {
 		} else if( is_int( $date ) ) {
 
 			// return $date unchanged since it is a timestamp
+			$timestamp = true;
 
 		} else if( false !== strtotime( $date ) ) {
 
-			// This is a date provided as a string
-			$date = strtotime( $date, current_time( 'timestamp' ) );
+			$timestamp = true;
+			$date      = strtotime( $date, current_time( 'timestamp' ) );
 
 		} else {
 
-			$date = new WP_Error( 'invalid_date', __( 'Improper date provided.', 'edd' ) );
+			return WP_Error( 'invalid_date', __( 'Improper date provided.', 'edd' ) );
 
 		}
 
-		if( ! is_wp_error( $date ) ) {
+		if( ! is_wp_error( $date ) && ! $timestamp ) {
 
+			// Create an exact timestamp
 			return mktime( $hour, $minute, 0, $month, $day, $year );
 
 		} else {
 
-			return $date; // Return the error
+			return $date; // Return a timestamp
 
 		}
 
