@@ -33,28 +33,63 @@ function edd_email_tag_file_urls( $payment_id ) {
 	return '!{file_urls}';
 }
 
+/**
+ * Email template tag: name
+ *
+ * @param int $payment_id
+ *
+ * @return string The buyer's first name
+ */
 function edd_email_tag_name( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
 	$email_name 	= edd_get_email_names( $payment_data['user_info'] );
 	return $email_name[ 'name' ];
 }
 
+/**
+ * Email template tag: fullname
+ *
+ * @param int $payment_id
+ *
+ * @return string The buyer's full name
+ */
 function edd_email_tag_fullname( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
 	$email_name 	= edd_get_email_names( $payment_data['user_info'] );
 	return $email_name[ 'fullname' ];
 }
 
+/**
+ * Email template tag: username
+ *
+ * @param int $payment_id
+ *
+ * @return string The buyer's username
+ */
 function edd_email_tag_username( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
 	$email_name 	= edd_get_email_names( $payment_data['user_info'] );
 	return $email_name[ 'username' ];
 }
 
+/**
+ * Email template tag: user_email
+ *
+ * @param int $payment_id
+ *
+ * @return string User's email
+ */
 function edd_email_tag_user_email( $payment_id ) {
 	return edd_get_payment_user_email( $payment_id );
 }
 
+/**
+ * Email template tag: date
+ *
+ * @param int $payment_id
+ *
+ * @return string Date of purchase
+ */
 function edd_email_tag_date( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
 	return date_i18n( get_option( 'date_format' ), strtotime( $payment_data[ 'date' ] ) );
@@ -65,7 +100,7 @@ function edd_email_tag_date( $payment_id ) {
  *
  * @param int $payment_id
  *
- * @return string subtotal
+ * @return string Price of purchase before taxes
  */
 function edd_email_tag_subtotal( $payment_id ) {
 	return edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
