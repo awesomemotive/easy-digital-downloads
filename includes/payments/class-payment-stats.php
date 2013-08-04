@@ -252,11 +252,11 @@ class EDD_Stats {
 	/**
 	 * Get the predefined date periods permitted
 	 *
-	 * @access private
+	 * @access public
 	 * @since 1.8
 	 * @return array
 	 */
-	private function get_predefined_dates() {
+	public function get_predefined_dates() {
 		$predefined = array(
 			'today'        => __( 'Today',        'edd' ),
 			'yesterday'    => __( 'Yesterday',    'edd' ),
@@ -296,7 +296,7 @@ class EDD_Stats {
 	 *
 	 * @access private
 	 * @since 1.8
-	 * @return array
+	 * @return array|WP_Error If the date is invalid, a WP_Error object will be returned
 	 */
 	private function convert_date( $date, $end_date = false ) {
 
@@ -308,6 +308,7 @@ class EDD_Stats {
 		$year        = date( 'Y', current_time( 'timestamp' ) );
 
 		if ( array_key_exists( $date, $this->get_predefined_dates() ) ) {
+
 			// This is a predefined date rate, such as last_week
 
 			switch( $date ) {
@@ -320,7 +321,7 @@ class EDD_Stats {
 
 					}
 
-				break;
+					break;
 
 				case 'last_month' :
 
@@ -340,13 +341,13 @@ class EDD_Stats {
 
 					}
 
-				break;
+					break;
 
 				case 'today' :
 
 					$day = date( 'd', current_time( 'timestamp' ) );
 
-				break;
+					break;
 
 				case 'yesterday' :
 
@@ -367,7 +368,7 @@ class EDD_Stats {
 						}
 					}
 
-				break;
+					break;
 
 				case 'this_week' :
 
@@ -400,7 +401,7 @@ class EDD_Stats {
 
 					}
 
-				break;
+					break;
 
 				case 'last_week' :
 
@@ -433,7 +434,7 @@ class EDD_Stats {
 
 					}
 
-				break;
+					break;
 
 				case 'this_quarter' :
 
@@ -473,7 +474,7 @@ class EDD_Stats {
 
 					}
 
-				break;
+					break;
 
 				case 'last_quarter' :
 
@@ -514,7 +515,7 @@ class EDD_Stats {
 
 					}
 
-				break;
+					break;
 
 				case 'this_year' :
 
@@ -524,7 +525,7 @@ class EDD_Stats {
 						$month = 12;
 					}
 
-				break;
+					break;
 
 				case 'last_year' :
 
@@ -559,13 +560,11 @@ class EDD_Stats {
 		if( ! is_wp_error( $date ) && ! $timestamp ) {
 
 			// Create an exact timestamp
-			return mktime( $hour, $minute, 0, $month, $day, $year );
-
-		} else {
-
-			return $date; // Return a timestamp
+			$date = mktime( $hour, $minute, 0, $month, $day, $year );
 
 		}
+
+		return apply_filters( 'edd_stats_date', $date, $end_date, $this );
 
 	}
 
