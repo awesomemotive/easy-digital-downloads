@@ -173,6 +173,15 @@ function edd_email_tag_sitename( $payment_id ) {
 	return get_bloginfo( 'name' );
 }
 
+/**
+ * Email template tag: receipt_link
+ * Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly
+ *
+ * @param $int payment_id
+ *
+ * @return string receipt_link
+ */
 function edd_email_tag_receipt_link( $payment_id ) {
-	return '!{receipt_link}';
+	$payment_data = edd_get_payment_meta( $payment_id );
+	return sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'payment_key' => $payment_data[ 'key' ], 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' );
 }
