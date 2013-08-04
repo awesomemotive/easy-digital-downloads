@@ -31,10 +31,10 @@ class EDD_Stats {
 	 * Predefined date options are: today, yesterday, this_week, last_week, this_month, last_month
 	 * this_quarter, last_quarter, this_year, last_year
 	 *
-	 * @access public
+	 * @access private
 	 * @since 1.8
 	 */
-	public $start_date;
+	private $start_date;
 
 
 	/**
@@ -48,10 +48,10 @@ class EDD_Stats {
 	 *
 	 * The end date is optional
 	 *
-	 * @access public
+	 * @access private
 	 * @since 1.8
 	 */
-	public $end_date;
+	private $end_date;
 
 	/**
 	 * Get things going
@@ -74,7 +74,9 @@ class EDD_Stats {
 	 * @param $status string The sale status to count. Only valid when retrieving global stats
 	 * @return float|int
 	 */
-	public function get_sales( $download_id = 0, $status = 'publish' ) {
+	public function get_sales( $download_id = 0, $start_date = false, $end_date = false, $status = 'publish' ) {
+
+		$this->setup_dates( $start_date, $end_date );
 
 		// Make sure start date is valid
 		if( is_wp_error( $this->start_date ) )
@@ -119,7 +121,9 @@ class EDD_Stats {
 	 * @param $download_id INT The download product to retrieve stats for. If false, gets stats for all products
 	 * @return float|int
 	 */
-	public function get_earnings( $download_id = 0 ) {
+	public function get_earnings( $download_id = 0, $start_date = false, $end_date = false ) {
+
+		$this->setup_dates( $start_date, $end_date );
 
 		// Make sure start date is valid
 		if( is_wp_error( $this->start_date ) )
@@ -248,11 +252,13 @@ class EDD_Stats {
 	 * @since 1.8
 	 * @return void
 	 */
-	public function setup_dates( $_start_date = 'this_month', $_end_date = false ) {
+	private function setup_dates( $_start_date = 'this_month', $_end_date = false ) {
 
-		if( ! empty( $_start_date ) ) {
-			$this->start_date = $_start_date;
+		if( empty( $_start_date ) ) {
+			$this->start_date = 'this_month';
 		}
+
+		$this->start_date = $_start_date;
 
 		if( ! empty( $_end_date ) ) {
 			$this->end_date = $_end_date;
