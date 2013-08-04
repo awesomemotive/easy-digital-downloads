@@ -51,6 +51,13 @@ function edd_dashboard_sales_widget() {
 	);
 
 	$top_selling = get_posts( $top_selling_args );
+
+	$this_month_stats = new EDD_Stats;
+	$this_month_stats->setup_dates( 'this_month' );
+
+	$last_month_stats = new EDD_Stats;
+	$last_month_stats->setup_dates( 'last_month' );
+
 	?>
 	<div class="edd_dashboard_widget">
 		<div class="table table_left table_current_month">
@@ -58,26 +65,22 @@ function edd_dashboard_sales_widget() {
 			<table>
 				<tbody>
 					<tr class="first">
-						<td class="first b"><?php echo edd_currency_filter( edd_format_amount( edd_get_earnings_by_date( null, date( 'n' ), date( 'Y' ) ) ) ); ?></td>
+						<td class="first b"><?php echo edd_currency_filter( edd_format_amount( $this_month_stats->get_earnings() ) ); ?></td>
 						<td class="t monthly_earnings"><?php _e( 'Earnings', 'edd' ); ?></td>
 					</tr>
 					<tr>
-						<?php $monthly_sales = edd_get_sales_by_date( null, date( 'n' ), date( 'Y' ) ); ?>
+						<?php $monthly_sales = $this_month_stats->get_sales(); ?>
 						<td class="first b"><?php echo $monthly_sales; ?></td>
 						<td class="t monthly_sales"><?php echo _n( 'Sale', 'Sales', $monthly_sales, 'edd' ); ?></td>
 					</tr>
 				</tbody>
 			</table>
 			<p class="label_heading"><?php _e( 'Last Month', 'edd' ) ?></p>
-			<?php
-			$previous_month   = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
-			$previous_year    = $previous_month == 12 ? date( 'Y' ) - 1 : date( 'Y' );
-			?>
 			<div>
-				<?php echo __( 'Earnings', 'edd' ) . ':&nbsp;<span class="edd_price_label">' . edd_currency_filter( edd_format_amount( edd_get_earnings_by_date( null, $previous_month, $previous_year ) ) ) . '</span>'; ?>
+				<?php echo __( 'Earnings', 'edd' ) . ':&nbsp;<span class="edd_price_label">' . edd_currency_filter( edd_format_amount( $last_month_stats->get_earnings() ) ) . '</span>'; ?>
 			</div>
 			<div>
-				<?php $last_month_sales = edd_get_sales_by_date( null, $previous_month, $previous_year ); ?>
+				<?php $last_month_sales = $last_month_stats->get_sales(); ?>
 				<?php echo _n( 'Sale', 'Sales', $last_month_sales, 'edd' ) . ':&nbsp;' . '<span class="edd_price_label">' . $last_month_sales . '</span>'; ?>
 			</div>
 		</div>
