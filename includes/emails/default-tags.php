@@ -34,15 +34,21 @@ function edd_email_tag_file_urls( $payment_id ) {
 }
 
 function edd_email_tag_name( $payment_id ) {
-	return '!{name}';
+	$payment_data = edd_get_payment_meta( $payment_id );
+	$email_name 	= edd_get_email_names( $payment_data['user_info'] );
+	return $email_name[ 'name' ];
 }
 
 function edd_email_tag_fullname( $payment_id ) {
-	return '!{fullname}';
+	$payment_data = edd_get_payment_meta( $payment_id );
+	$email_name 	= edd_get_email_names( $payment_data['user_info'] );
+	return $email_name[ 'fullname' ];
 }
 
 function edd_email_tag_username( $payment_id ) {
-	return '!{username}';
+	$payment_data = edd_get_payment_meta( $payment_id );
+	$email_name 	= edd_get_email_names( $payment_data['user_info'] );
+	return $email_name[ 'username' ];
 }
 
 function edd_email_tag_user_email( $payment_id ) {
