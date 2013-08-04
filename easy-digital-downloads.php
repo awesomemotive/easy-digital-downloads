@@ -224,6 +224,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/emails/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/email-template-tags.php';
+		require_once EDD_PLUGIN_DIR . 'includes/emails/default-tags.php';
 		require_once EDD_PLUGIN_DIR . 'includes/error-tracking.php';
 		require_once EDD_PLUGIN_DIR . 'includes/user-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
