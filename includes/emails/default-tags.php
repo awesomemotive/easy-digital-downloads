@@ -1,0 +1,100 @@
+<?php
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/*
+ * Add default EDD email template tags
+ */
+function edd_setup_default_email_tags() {
+	edd_add_email_tag( 'download_list', __( 'A list of download links for each download purchased', 'edd' ), 'edd_email_tag_download_list' );
+	edd_add_email_tag( 'file_urls', __( 'A plain-text list of download URLs for each download purchased', 'edd' ), 'edd_email_tag_file_urls' );
+	edd_add_email_tag( 'name', __( 'A plain-text list of download URLs for each download purchased', 'edd' ), 'edd_email_tag_name' );
+	edd_add_email_tag( 'fullname', __( "The buyer's full name, first and last", 'edd' ), 'edd_email_tag_fullname' );
+	edd_add_email_tag( 'username', __( "The buyer's user name on the site, if they registered an account", 'edd' ), 'edd_email_tag_username' );
+	edd_add_email_tag( 'user_email', __( "The buyer's email address", 'edd' ), 'edd_email_tag_user_email' );
+	edd_add_email_tag( 'date', __( 'The date of the purchase', 'edd' ), 'edd_email_tag_date' );
+	edd_add_email_tag( 'subtotal', __( 'The price of the purchase before taxes', 'edd' ), 'edd_email_tag_subtotal' );
+	edd_add_email_tag( 'tax', __( 'The taxed amount of the purchase', 'edd' ), 'edd_email_tag_tax' );
+	edd_add_email_tag( 'price', __( 'The total price of the purchase', 'edd' ), 'edd_email_tag_price' );
+	edd_add_email_tag( 'payment_id', __( 'The unique ID number for this purchase', 'edd' ), 'edd_email_tag_payment_id' );
+	edd_add_email_tag( 'receipt_id', __( 'The unique ID number for this purchase receipt', 'edd' ), 'edd_email_tag_receipt_id' );
+	edd_add_email_tag( 'payment_method', __( 'The method of payment used for this purchase', 'edd' ), 'edd_email_tag_payment_method' );
+	edd_add_email_tag( 'sitename', __( 'Your site name', 'edd' ), 'edd_email_tag_sitename' );
+	edd_add_email_tag( 'receipt_link', __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'edd' ), 'edd_email_tag_receipt_link' );
+}
+add_action( 'edd_add_email_tags', 'edd_setup_default_email_tags' );
+
+function edd_email_tag_download_list( $payment_id ) {
+	return '!{download_list}';
+}
+
+function edd_email_tag_file_urls( $payment_id ) {
+	return '!{file_urls}';
+}
+
+function edd_email_tag_name( $payment_id ) {
+	return '!{name}';
+}
+
+function edd_email_tag_fullname( $payment_id ) {
+	return '!{fullname}';
+}
+
+function edd_email_tag_username( $payment_id ) {
+	return '!{username}';
+}
+
+function edd_email_tag_user_email( $payment_id ) {
+	return '!{user_email}';
+}
+
+function edd_email_tag_date( $payment_id ) {
+	return '!{date}';
+}
+
+/**
+ * Email template tag: subtotal
+ *
+ * @param int $payment_id
+ *
+ * @return string subtotal
+ */
+function edd_email_tag_subtotal( $payment_id ) {
+	return edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
+}
+
+function edd_email_tag_tax( $payment_id ) {
+	return '!{tax}';
+}
+
+function edd_email_tag_price( $payment_id ) {
+	return '!{price}';
+}
+
+/**
+ * Email template tag: payment_id
+ *
+ * @param int $payment_id
+ *
+ * @return int $payment_id
+ */
+function edd_email_tag_payment_id( $payment_id ) {
+	return $payment_id;
+}
+
+function edd_email_tag_receipt_id( $payment_id ) {
+	return '!{receipt_id}';
+}
+
+function edd_email_tag_payment_method( $payment_id ) {
+	return '!{payment_method}';
+}
+
+function edd_email_tag_sitename( $payment_id ) {
+	return '!{sitename}';
+}
+
+function edd_email_tag_receipt_link( $payment_id ) {
+	return '!{receipt_link}';
+}
