@@ -162,8 +162,15 @@ function edd_email_tag_payment_method( $payment_id ) {
 	return edd_get_gateway_checkout_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
 }
 
+/**
+ * Email template tag: sitename
+ *
+ * @param int $payment_id
+ *
+ * @return string Your site name
+ */
 function edd_email_tag_sitename( $payment_id ) {
-	return '!{sitename}';
+	return get_bloginfo( 'name' );
 }
 
 function edd_email_tag_receipt_link( $payment_id ) {
