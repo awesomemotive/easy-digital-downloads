@@ -59,7 +59,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 							}
 						}
 
-						$amount = isset( $downlod['price'] ) ? $downlod['price'] : null;
+						$amount = isset( $download['price'] ) ? $download['price'] : null;
 					}
 
 					$amount = edd_get_download_final_price( $download['id'], $user_info, $amount );
