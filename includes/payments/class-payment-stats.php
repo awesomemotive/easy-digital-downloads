@@ -71,48 +71,8 @@ class EDD_Stats {
 	 * @since 1.8
 	 * @return void
 	 */
-	public function __construct( $_type = 'earnings', $_start_date = 'this_month', $_end_date = false ) {
+	public function __construct() { /* nothing here. Call get_sales() and get_earnings() directly */ }
 
-		$this->type = $_type;
-
-		if( ! empty( $_start_date ) ) {
-			$this->start_date = $_start_date;
-		}
-
-		if( ! empty( $_end_date ) ) {
-			$this->end_date = $_end_date;
-		}
-
-		$this->setup_dates();
-
-	}
-
-	/**
-	 * Retrieve stats
-	 *
-	 * @access public
-	 * @since 1.8
-	 * @param $download_id INT The download product to retrieve stats for. If false, gets stats for all products
-	 * @return float|int
-	 */
-	public function get_stats( $download_id = 0 ) {
-
-		// Make sure start date is valid
-		if( is_wp_error( $this->start_date ) )
-			return $this->start_date;
-
-		// Make sure end date is valid
-		if( is_wp_error( $this->end_date ) )
-			return $this->end_date;
-
-		if( 'sales' == $this->type ) {
-			$stats = $this->get_sales( $download_id );
-		} else {
-			$stats = $this->get_earnings( $download_id );
-		}
-
-		return apply_filters( 'edd_stats', $stats, $this->type, &$this );
-	}
 
 	/**
 	 * Retrieve sale stats
@@ -124,6 +84,14 @@ class EDD_Stats {
 	 * @return float|int
 	 */
 	public function get_sales( $download_id = 0, $status = 'publish' ) {
+
+		// Make sure start date is valid
+		if( is_wp_error( $this->start_date ) )
+			return $this->start_date;
+
+		// Make sure end date is valid
+		if( is_wp_error( $this->end_date ) )
+			return $this->end_date;
 
 		if( empty( $download_id ) ) {
 
@@ -161,6 +129,14 @@ class EDD_Stats {
 	 * @return float|int
 	 */
 	public function get_earnings( $download_id = 0 ) {
+
+		// Make sure start date is valid
+		if( is_wp_error( $this->start_date ) )
+			return $this->start_date;
+
+		// Make sure end date is valid
+		if( is_wp_error( $this->end_date ) )
+			return $this->end_date;
 
 		$earnings = 0;
 
@@ -281,7 +257,15 @@ class EDD_Stats {
 	 * @since 1.8
 	 * @return void
 	 */
-	private function setup_dates() {
+	public function setup_dates( $_start_date = 'this_month', $_end_date = false ) {
+
+		if( ! empty( $_start_date ) ) {
+			$this->start_date = $_start_date;
+		}
+
+		if( ! empty( $_end_date ) ) {
+			$this->end_date = $_end_date;
+		}
 
 		if( ! $this->end_date )
 			$this->end_date = $this->start_date;
