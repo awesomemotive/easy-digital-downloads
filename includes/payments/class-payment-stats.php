@@ -110,16 +110,16 @@ class EDD_Stats {
 			// Global earning stats
 
 			$args = array(
-				'post_type'   => 'edd_payment',
-				'nopaging'    => true,
-				'meta_key'    => '_edd_payment_mode',
-				'meta_value'  => 'live',
-				'post_status' => array( 'publish', 'revoked' ),
-				'fields'      => 'ids',
+				'post_type'              => 'edd_payment',
+				'nopaging'               => true,
+				'meta_key'               => '_edd_payment_mode',
+				'meta_value'             => 'live',
+				'post_status'            => array( 'publish', 'revoked' ),
+				'fields'                 => 'ids',
 				'update_post_term_cache' => false,
-				'suppress_filters' => false,
-				'start_date'  => $this->start_date, // These dates are not valid query args, but they are used for cache keys
-				'end_date'    => $this->end_date
+				'suppress_filters'       => false,
+				'start_date'             => $this->start_date, // These dates are not valid query args, but they are used for cache keys
+				'end_date'               => $this->end_date
 			);
 
 			$args = apply_filters( 'edd_stats_earnings_args', $args );
@@ -146,25 +146,38 @@ class EDD_Stats {
 			global $edd_logs, $wpdb;
 
 			$args = array(
-				'post_parent' => $download_id,
-				'nopaging'    => true,
-				'log_type'    => 'sale',
-				'fields'      => 'ids',
-				'suppress_filters' => false
+				'post_parent'      => $download_id,
+				'nopaging'         => true,
+				'log_type'         => 'sale',
+				'fields'           => 'ids',
+				'suppress_filters' => false,
+				'start_date'       => $this->start_date, // These dates are not valid query args, but they are used for cache keys
+				'end_date'         => $this->end_date
 			);
 
-			$log_ids     = $edd_logs->get_connected_logs( $args, 'sale' );
+			$args = apply_filters( 'edd_stats_earnings_args', $args );
+			$key  = md5( serialize( $args ) );
 
-			if( $log_ids ) {
-				$log_ids     = implode( ',', $log_ids );
-				$payment_ids = $wpdb->get_col( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key='_edd_log_payment_id' AND post_id IN ($log_ids);" );
+			$earnings = get_transient( $key );
+			if( false === $earnings ) {
 
-				foreach( $payment_ids as $payment_id ) {
-					$items = edd_get_payment_meta_cart_details( $payment_id );
-					foreach( $items as $item ) {
-						$earnings += $item['price'];
+				$log_ids  = $edd_logs->get_connected_logs( $args, 'sale' );
+				$earnings = 0;
+
+				if( $log_ids ) {
+					$log_ids     = implode( ',', $log_ids );
+					$payment_ids = $wpdb->get_col( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key='_edd_log_payment_id' AND post_id IN ($log_ids);" );
+
+					foreach( $payment_ids as $payment_id ) {
+						$items = edd_get_payment_meta_cart_details( $payment_id );
+						foreach( $items as $item ) {
+							$earnings += $item['price'];
+						}
 					}
 				}
+
+				// Cache the results for one hour
+				set_transient( $key, $earnings, 60*60 );
 			}
 		}
 
