@@ -21,14 +21,51 @@
 class EDD_Stats {
 
 
-	public $type; // 'sales' or 'earnings'
+	/**
+	 * The type of stat we are retrieving
+	 *
+	 * 'sales' or 'earnings'
+	 *
+	 * @access public
+	 * @since 1.8
+	 */
+	public $type;
 
+	/**
+	 * The start date for the period we're getting stats for
+	 *
+	 * Can be a timestamp, formatted date, date string (such as August 3, 2013),
+	 * or a predefined date string, such as last_week or this_month
+	 *
+	 * Predefined date options are: today, yesterday, this_week, last_week, this_month, last_month
+	 * this_quarter, last_quarter, this_year, last_year
+	 *
+	 * @access public
+	 * @since 1.8
+	 */
 	public $start_date;
 
+
+	/**
+	 * The end date for the period we're getting stats for
+	 *
+	 * Can be a timestamp, formatted date, date string (such as August 3, 2013),
+	 * or a predefined date string, such as last_week or this_month
+	 *
+	 * Predefined date options are: today, yesterday, this_week, last_week, this_month, last_month
+	 * this_quarter, last_quarter, this_year, last_year
+	 *
+	 * The end date is optional
+	 *
+	 * @access public
+	 * @since 1.8
+	 */
 	public $end_date;
 
 	/**
 	 * Get things going
+	 *
+	 * This sets up our dates and defines the type of stats being requsted
 	 *
 	 * @access public
 	 * @since 1.8
@@ -50,6 +87,14 @@ class EDD_Stats {
 
 	}
 
+	/**
+	 * Retrieve stats
+	 *
+	 * @access public
+	 * @since 1.8
+	 * @param $download_id INT The download product to retrieve stats for. If false, gets stats for all products
+	 * @return float|int
+	 */
 	public function get_stats( $download_id = 0 ) {
 
 		// Make sure start date is valid
@@ -69,8 +114,16 @@ class EDD_Stats {
 		return apply_filters( 'edd_stats', $stats, $this->type, &$this );
 	}
 
+	/**
+	 * Retrieve sale stats
+	 *
+	 * @access public
+	 * @since 1.8
+	 * @param $download_id INT The download product to retrieve stats for. If false, gets stats for all products
+	 * @param $status string The sale status to count. Only valid when retrieving global stats
+	 * @return float|int
+	 */
 	public function get_sales( $download_id = 0, $status = 'publish' ) {
-
 
 		if( empty( $download_id ) ) {
 
@@ -94,11 +147,19 @@ class EDD_Stats {
 
 		}
 
-
 		return $count;
 
 	}
 
+
+	/**
+	 * Retrieve earning stats
+	 *
+	 * @access public
+	 * @since 1.8
+	 * @param $download_id INT The download product to retrieve stats for. If false, gets stats for all products
+	 * @return float|int
+	 */
 	public function get_earnings( $download_id = 0 ) {
 
 		$earnings = 0;
@@ -187,6 +248,14 @@ class EDD_Stats {
 
 	}
 
+
+	/**
+	 * Get the predefined date periods permitted
+	 *
+	 * @access private
+	 * @since 1.8
+	 * @return array
+	 */
 	private function get_predefined_dates() {
 		$predefined = array(
 			'today'        => __( 'Today',        'edd' ),
@@ -203,7 +272,15 @@ class EDD_Stats {
 		return apply_filters( 'edd_stats_predefined_dates', $predefined );
 	}
 
-
+	/**
+	 * Setup the dates passed to our constructor.
+	 *
+	 * This calls the convert_date() member function to ensure the dates are formatted correctly
+	 *
+	 * @access private
+	 * @since 1.8
+	 * @return void
+	 */
 	private function setup_dates() {
 
 		if( ! $this->end_date )
@@ -214,7 +291,13 @@ class EDD_Stats {
 
 	}
 
-
+	/**
+	 * Converts a date to a timestamp
+	 *
+	 * @access private
+	 * @since 1.8
+	 * @return array
+	 */
 	private function convert_date( $date, $end_date = false ) {
 
 		$timestamp   = false;
@@ -486,7 +569,13 @@ class EDD_Stats {
 
 	}
 
-
+	/**
+	 * Modifies the WHERE flag for payment counts
+	 *
+	 * @access public
+	 * @since 1.8
+	 * @return string
+	 */
 	public function count_where( $where = '' ) {
 		// Only get payments in our date range
 
@@ -508,6 +597,13 @@ class EDD_Stats {
 		return $where;
 	}
 
+	/**
+	 * Modifies the WHERE flag for payment queries
+	 *
+	 * @access public
+	 * @since 1.8
+	 * @return string
+	 */
 	public function payments_where( $where = '' ) {
 
 		global $wpdb;
