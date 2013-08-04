@@ -22,6 +22,10 @@
  * @since       1.7.x
  * @author			Barry Kooij
  */
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class EDD_Email_Template_Tags
 {
 
@@ -147,15 +151,3 @@ function edd_load_email_tags() {
 	do_action( 'edd_add_email_tags' );
 }
 add_action( 'init', 'edd_load_email_tags' );
-
-/**
- * Add EDD email tags
- */
-function edd_setup_default_email_tags() {
-	edd_add_email_tag( 'subtotal', 'Subtotal description', 'edd_email_tag_subtotal' );
-}
-add_action( 'edd_add_email_tags', 'edd_setup_default_email_tags' );
-
-function edd_email_tag_subtotal( $payment_id ) {
-	return edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
-}
