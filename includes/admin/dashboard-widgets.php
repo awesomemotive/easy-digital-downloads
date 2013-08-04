@@ -51,8 +51,7 @@ function edd_dashboard_sales_widget() {
 	);
 
 	$top_selling = get_posts( $top_selling_args );
-
-	$stats = new EDD_Stats;
+	$stats       = new EDD_Stats;
 
 	?>
 	<div class="edd_dashboard_widget">
