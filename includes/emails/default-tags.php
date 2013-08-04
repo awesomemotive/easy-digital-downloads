@@ -117,6 +117,13 @@ function edd_email_tag_tax( $payment_id ) {
 	return edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) );
 }
 
+/**
+ * Email template tag: price
+ *
+ * @param int $payment_id
+ *
+ * @return string The total price of the purchase
+ */
 function edd_email_tag_price( $payment_id ) {
 	return edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) );
 }
@@ -126,7 +133,7 @@ function edd_email_tag_price( $payment_id ) {
  *
  * @param int $payment_id
  *
- * @return int $payment_id
+ * @return int The unique ID number for this purchase
  */
 function edd_email_tag_payment_id( $payment_id ) {
 	return $payment_id;
