@@ -106,6 +106,13 @@ function edd_email_tag_subtotal( $payment_id ) {
 	return edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
 }
 
+/**
+ * Email template tag: tax
+ *
+ * @param int $payment_id
+ *
+ * @return string The taxed amount of the purchase
+ */
 function edd_email_tag_tax( $payment_id ) {
 	return edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) );
 }
