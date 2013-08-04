@@ -149,12 +149,15 @@ class EDD_Stats {
 				'post_parent' => $download_id,
 				'nopaging'    => true,
 				'log_type'    => 'sale',
-				'fields'      => 'ids'
+				'fields'      => 'ids',
+				'suppress_filters' => false
 			);
 
 			$log_ids     = $edd_logs->get_connected_logs( $args, 'sale' );
 			$log_ids     = implode( ',', $log_ids );
+
 			$payment_ids = $wpdb->get_col( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key='_edd_log_payment_id' AND post_id IN ($log_ids);" );
+
 			foreach( $payment_ids as $payment_id ) {
 				$items = edd_get_payment_meta_cart_details( $payment_id );
 				//echo $payment_id; exit;
