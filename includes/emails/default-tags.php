@@ -29,8 +29,49 @@ function edd_email_tag_download_list( $payment_id ) {
 	return '!{download_list}';
 }
 
+/**
+ * Email template tag: file_urls
+ * A plain-text list of download URLs for each download purchased
+ *
+ * @param int $payment_id
+ *
+ * @return string $file_urls
+ */
 function edd_email_tag_file_urls( $payment_id ) {
-	return '!{file_urls}';
+
+	$payment_data = edd_get_payment_meta( $payment_id );
+	$file_urls 		= '';
+	$cart_items 	= edd_get_payment_meta_cart_details( $payment_id );
+
+	foreach ( $cart_items as $item ) {
+
+		$price_id = edd_get_cart_item_price_id( $item );
+		$files 		= edd_get_download_files( $item['id'], $price_id );
+
+		if ( $files ) {
+			foreach ( $files as $filekey => $file ) {
+				$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $item['id'], $price_id );
+
+				$file_urls .= esc_html( $file_url ) . '<br/>';
+			}
+		} elseif( edd_is_bundled_product( $item['id'] ) ) {
+
+			$bundled_products = edd_get_bundled_products( $item['id'] );
+
+			foreach( $bundled_products as $bundle_item ) {
+
+				$files = edd_get_download_files( $bundle_item );
+				foreach ( $files as $filekey => $file ) {
+					$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $bundle_item, $price_id );
+					$file_urls .= esc_html( $file_url ) . '<br/>';
+				}
+
+			}
+		}
+
+	}
+
+	return $file_urls;
 }
 
 /**
