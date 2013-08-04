@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_setup_default_email_tags() {
 	edd_add_email_tag( 'download_list', __( 'A list of download links for each download purchased', 'edd' ), 'edd_email_tag_download_list' );
 	edd_add_email_tag( 'file_urls', __( 'A plain-text list of download URLs for each download purchased', 'edd' ), 'edd_email_tag_file_urls' );
-	edd_add_email_tag( 'name', __( 'A plain-text list of download URLs for each download purchased', 'edd' ), 'edd_email_tag_name' );
+	edd_add_email_tag( 'name', __( "The buyer's first name", 'edd' ), 'edd_email_tag_name' );
 	edd_add_email_tag( 'fullname', __( "The buyer's full name, first and last", 'edd' ), 'edd_email_tag_fullname' );
 	edd_add_email_tag( 'username', __( "The buyer's user name on the site, if they registered an account", 'edd' ), 'edd_email_tag_username' );
 	edd_add_email_tag( 'user_email', __( "The buyer's email address", 'edd' ), 'edd_email_tag_user_email' );
