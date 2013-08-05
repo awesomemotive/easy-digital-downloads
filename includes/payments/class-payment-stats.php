@@ -219,6 +219,27 @@ class EDD_Stats {
 
 	}
 
+	/**
+	 * Get the best selling products
+	 *
+	 * @access public
+	 * @since 1.8
+	 * @return array
+	 */
+	public function get_best_selling( $number = 10 ) {
+
+		global $wpdb;
+
+		$downloads = $wpdb->get_results( $wpdb->prepare(
+			"SELECT post_id as download_id, max(meta_value) as sales
+				FROM $wpdb->postmeta WHERE meta_key='_edd_download_sales' AND meta_value > 0
+				GROUP BY meta_value
+				DESC LIMIT %d;", $number
+		) );
+
+		return $downloads;
+	}
+
 
 	/**
 	 * Get the predefined date periods permitted
