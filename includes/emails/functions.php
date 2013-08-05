@@ -117,13 +117,13 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 
 	/* Send an email notification to the admin */
 	$admin_email = edd_get_admin_notice_emails();
-	$user_id      = edd_get_payment_user_id( $payment_id );
+	$user_id     = edd_get_payment_user_id( $payment_id );
 	$user_info   = maybe_unserialize( $payment_data['user_info'] );
 
 	if ( isset( $user_id ) && $user_id > 0 ) {
 		$user_data = get_userdata($user_id);
 		$name = $user_data->display_name;
-	} elseif ( isset( $user_info['first_name'] ) && isset($user_info['last_name'] ) ) {
+	} elseif ( isset( $user_info['first_name'] ) && isset( $user_info['last_name'] ) ) {
 		$name = $user_info['first_name'] . ' ' . $user_info['last_name'];
 	} else {
 		$name = $user_info['email'];
@@ -133,13 +133,21 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 	$admin_message .= edd_get_sale_notification_body_content( $payment_id, $payment_data );
 	$admin_message .= edd_get_email_body_footer();
 
-	$admin_subject = apply_filters( 'edd_admin_sale_notification_subject', !empty( $edd_options['sale_notification_subject'] )
-		? wp_strip_all_tags( $edd_options['sale_notification_subject'], true )
-		: sprintf( __( 'New download purchase - Order #%1$s', 'edd' ), $payment_id ), $payment_id, $payment_data );
+	if( ! empty( $edd_options['sale_notification_subject'] ) ) {
+		$admin_subject = wp_strip_all_tags( $edd_options['sale_notification_subject'], true );
+	} else {
+		$admin_subject = sprintf( __( 'New download purchase - Order #%1$s', 'edd' ), $payment_id );
+	}
 
 	$admin_subject = edd_email_template_tags( $admin_subject, $payment_data, $payment_id, true );
+	$admin_subject = apply_filters( 'edd_admin_sale_notification_subject', $admin_subject, $payment_id, $payment_data );
 
-	$admin_headers = "MIME-Version: 1.0\r\n";
+	$from_name  = isset( $edd_options['from_name'] )  ? $edd_options['from_name']  : get_bloginfo('name');
+	$from_email = isset( $edd_options['from_email'] ) ? $edd_options['from_email'] : get_option('admin_email');
+
+	$admin_headers = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
+	$admin_headers .= "Reply-To: ". $from_email . "\r\n";
+	$admin_headers .= "MIME-Version: 1.0\r\n";
 	$admin_headers .= "Content-Type: text/html; charset=utf-8\r\n";
 	$admin_headers .= apply_filters( 'edd_admin_sale_notification_headers', $admin_headers, $payment_id, $payment_data );
 
