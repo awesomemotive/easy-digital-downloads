@@ -54,9 +54,6 @@ class EDD_Stats {
 	private $end_date;
 
 	/**
-	 * Get things going
-	 *
-	 * This sets up our dates and defines the type of stats being requsted
 	 *
 	 * @access public
 	 * @since 1.8
