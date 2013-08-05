@@ -38,22 +38,7 @@ add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets' );
  * @return void
  */
 function edd_dashboard_sales_widget() {
-	$top_selling_args = array(
-		'post_type'              => 'download',
-		'posts_per_page'         => 1,
-		'post_status'            => 'publish',
-		'meta_key'               => '_edd_download_sales',
-		'meta_compare'           => '>',
-		'meta_value'             => 0,
-		'orderby'                => 'meta_value_num',
-		'update_post_term_cache' => false,
-		'order'                  => 'DESC'
-	);
-
-	$top_selling = get_posts( $top_selling_args );
-	$stats       = new EDD_Stats;
-
-	?>
+	$stats = new EDD_Stats; ?>
 	<div class="edd_dashboard_widget">
 		<div class="table table_left table_current_month">
 			<p class="sub"><?php _e( 'Current Month', 'edd' ) ?></p>
@@ -93,10 +78,12 @@ function edd_dashboard_sales_widget() {
 					</tr>
 				</tbody>
 			</table>
-			<?php if ( $top_selling ) {
-				foreach( $top_selling as $list ) { ?>
+			<?php
+			$best_selling = $stats->get_best_selling( 1 );
+			if ( ! empty( $best_selling ) ) {
+				foreach( $best_selling as $top_seller ) { ?>
 					<p class="lifetime_best_selling label_heading"><?php _e('Lifetime Best Selling', 'edd') ?></p>
-					<p><span class="lifetime_best_selling_label"><?php echo edd_get_download_sales_stats( $list->ID ); ?></span> <a href="<?php echo get_permalink( $list->ID ); ?>"><?php echo get_the_title( $list->ID ); ?></a></p>
+					<p><span class="lifetime_best_selling_label"><?php echo $top_seller->sales; ?></span> <a href="<?php echo get_permalink( $top_seller->download_id ); ?>"><?php echo get_the_title( $top_seller->download_id ); ?></a></p>
 			<?php } } ?>
 		</div>
 		<div style="clear: both"></div>
