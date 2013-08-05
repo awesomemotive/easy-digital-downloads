@@ -26,6 +26,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since  1.5
  */
 class EDD_API {
+
+	/**
+	 * API Version
+	 */
+	const VERSION = '1.1';
+
 	/**
 	 * Pretty Print?
 	 *
