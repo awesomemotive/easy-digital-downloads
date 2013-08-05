@@ -1337,12 +1337,13 @@ class EDD_API {
 	 * @return array default sales statistics
 	 */
 	private function get_default_sales_stats() {
-		// Default sales return
-		$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
-		$previous_year  = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
 
-		$sales['sales']['current_month'] = edd_get_sales_by_date( null, date( 'n' ), date( 'Y' ) );
-		$sales['sales']['last_month']    = edd_get_sales_by_date( null, $previous_month, $previous_year );
+		// Default sales return
+
+		$stats = new EDD_Stats;
+
+		$sales['sales']['current_month'] = $stats->get_sales( 0, 'this_month' );
+		$sales['sales']['last_month']    = $stats->get_sales( 0, 'this_month' );
 		$sales['sales']['totals']        = edd_get_total_sales();
 
 		return $sales;
@@ -1356,12 +1357,13 @@ class EDD_API {
 	 * @return array default eranings statistics
 	 */
 	private function get_default_earnings_stats() {
-		// Default earnings return
-		$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
-		$previous_year  = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
 
-		$earnings['earnings']['current_month'] = edd_get_earnings_by_date( null, date( 'n' ), date( 'Y' ) );
-		$earnings['earnings']['last_month']    = edd_get_earnings_by_date( null, $previous_month, $previous_year );
+		// Default earnings return
+
+		$stats = new EDD_Stats;
+
+		$earnings['earnings']['current_month'] = $stats->get_earnings( 0, 'this_month' );
+		$earnings['earnings']['last_month']    = $stats->get_earnings( 0, 'this_month' );
 		$earnings['earnings']['totals']        = edd_get_total_earnings();
 
 		return $earnings;
