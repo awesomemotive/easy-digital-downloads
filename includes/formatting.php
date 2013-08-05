@@ -68,7 +68,7 @@ function edd_format_amount( $amount ) {
 		$amount = str_replace( ',', '', $amount );
 	}
 
-	$decimals  = apply_filters( 'edd_format_amount_decimals', 2 );
+	$decimals  = apply_filters( 'edd_format_amount_decimals', 2, $amount );
 	$formatted = number_format( $amount, $decimals, $decimal_sep, $thousands_sep );
 
 	return apply_filters( 'edd_format_amount', $formatted, $amount, $decimals, $decimal_sep, $thousands_sep );
