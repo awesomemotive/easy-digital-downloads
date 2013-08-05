@@ -358,9 +358,6 @@ function edd_count_payments( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
-	$cache_key = md5( implode( '|', $args ) );
-
-
 	$join = '';
 	$where = "WHERE p.post_type = 'edd_payment'";
 
@@ -407,6 +404,8 @@ function edd_count_payments( $args = array() ) {
 	}
 
 	$where = apply_filters( 'edd_count_payments_where', $where );
+
+	$cache_key = md5( implode( '|', $args ) . $where );
 
 	$query = "SELECT p.post_status,count( * ) AS num_posts
 		FROM $wpdb->posts p
