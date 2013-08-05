@@ -191,7 +191,7 @@ function edd_register_settings() {
 					'id' => 'email_settings',
 					'name' => '',
 					'desc' => '',
-					'type' => 'hook',
+					'type' => 'hook'
 				),
 				'from_name' => array(
 					'id' => 'from_name',
@@ -291,7 +291,7 @@ function edd_register_settings() {
 					'name' => __( 'Enable Taxes', 'edd' ),
 					'desc' => __( 'Check this to enable taxes on purchases.', 'edd' ),
 					'type' => 'checkbox',
-					'std' => 'no',
+					'std' => 'no'
 				),
 				'tax_rate' => array(
 					'id' => 'tax_rate',
@@ -395,7 +395,7 @@ function edd_register_settings() {
 					'id' => 'show_register_form',
 					'name' => __( 'Show Register / Login Form?', 'edd' ),
 					'desc' => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'edd' ),
-					'type' => 'checkbox',
+					'type' => 'checkbox'
 				),
 				'item_quantities' => array(
 					'id' => 'item_quantities',
@@ -413,7 +413,7 @@ function edd_register_settings() {
 					'id' => 'field_downloads',
 					'name' => '<strong>' . __( 'File Downloads', 'edd' ) . '</strong>',
 					'desc' => '',
-					'type' => 'header',
+					'type' => 'header'
 				),
 				'download_method' => array(
 					'id' => 'download_method',
@@ -429,7 +429,7 @@ function edd_register_settings() {
 					'id' => 'symlink_file_downloads',
 					'name' => __( 'Symlink File Downloads?', 'edd' ),
 					'desc' => __( 'Check this if you are delivering really large files or having problems with file downloads completing.', 'edd' ),
-					'type' => 'checkbox',
+					'type' => 'checkbox'
 				),
 				'file_download_limit' => array(
 					'id' => 'file_download_limit',
@@ -449,7 +449,7 @@ function edd_register_settings() {
 					'id' => 'disable_redownload',
 					'name' => __( 'Disable Redownload?', 'edd' ),
 					'desc' => __( 'Check this if you do not want to allow users to redownload items from their purchase history.', 'edd' ),
-					'type' => 'checkbox',
+					'type' => 'checkbox'
 				),
 				'accounting_settings' => array(
 					'id' => 'accounting_settings',
@@ -467,13 +467,13 @@ function edd_register_settings() {
 					'id' => 'terms',
 					'name' => '<strong>' . __( 'Terms of Agreement', 'edd' ) . '</strong>',
 					'desc' => '',
-					'type' => 'header',
+					'type' => 'header'
 				),
 				'show_agree_to_terms' => array(
 					'id' => 'show_agree_to_terms',
 					'name' => __( 'Agree to Terms', 'edd' ),
 					'desc' => __( 'Check this to show an agree to terms on the checkout that users must agree to before purchasing.', 'edd' ),
-					'type' => 'checkbox',
+					'type' => 'checkbox'
 				),
 				'agree_label' => array(
 					'id' => 'agree_label',
@@ -486,13 +486,13 @@ function edd_register_settings() {
 					'id' => 'agree_text',
 					'name' => __( 'Agreement Text', 'edd' ),
 					'desc' => __( 'If Agree to Terms is checked, enter the agreement terms here.', 'edd' ),
-					'type' => 'rich_editor',
+					'type' => 'rich_editor'
 				),
 				'checkout_label' => array(
 					'id' => 'checkout_label',
 					'name' => __( 'Complete Purchase Text', 'edd' ),
 					'desc' => __( 'The button label for completing a purchase.', 'edd' ),
-					'type' => 'text',
+					'type' => 'text'
 				),
 				'add_to_cart_text' => array(
 					'id' => 'add_to_cart_text',
