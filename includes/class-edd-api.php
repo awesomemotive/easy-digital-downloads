@@ -63,6 +63,15 @@ class EDD_API {
 	private $user_id = 0;
 
 	/**
+	 * Instance of EDD Stats class
+	 *
+	 * @var object
+	 * @access private
+	 * @since 1.7
+	 */
+	private $stats;
+
+	/**
 	 * Response data to return
 	 *
 	 * @var array
@@ -99,6 +108,10 @@ class EDD_API {
 
 		// Allow API request logging to be turned off
 		$this->log_requests = apply_filters( 'edd_api_log_requests', $this->log_requests );
+
+		// Setup EDD_Stats instance
+		$this->stats = new EDD_Stats;
+
 	}
 
 	/**
@@ -1340,10 +1353,8 @@ class EDD_API {
 
 		// Default sales return
 
-		$stats = new EDD_Stats;
-
-		$sales['sales']['current_month'] = $stats->get_sales( 0, 'this_month' );
-		$sales['sales']['last_month']    = $stats->get_sales( 0, 'last_month' );
+		$sales['sales']['current_month'] = $this->stats->get_sales( 0, 'this_month' );
+		$sales['sales']['last_month']    = $this->stats->get_sales( 0, 'last_month' );
 		$sales['sales']['totals']        = edd_get_total_sales();
 
 		return $sales;
@@ -1360,10 +1371,8 @@ class EDD_API {
 
 		// Default earnings return
 
-		$stats = new EDD_Stats;
-
-		$earnings['earnings']['current_month'] = $stats->get_earnings( 0, 'this_month' );
-		$earnings['earnings']['last_month']    = $stats->get_earnings( 0, 'last_month' );
+		$earnings['earnings']['current_month'] = $this->stats->get_earnings( 0, 'this_month' );
+		$earnings['earnings']['last_month']    = $this->stats->get_earnings( 0, 'last_month' );
 		$earnings['earnings']['totals']        = edd_get_total_earnings();
 
 		return $earnings;
