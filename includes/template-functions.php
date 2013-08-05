@@ -152,7 +152,7 @@ function edd_purchase_variable_pricing( $download_id ) {
 					foreach( $prices as $key => $price ) :
 						printf(
 							'<li><label for="%2$s"><input type="radio" %1$s name="edd_options[price_id]" id="%2$s" class="%3$s" value="%4$s"/> %5$s</label></li>',
-							checked( 0, $key, false ),
+							checked( apply_filters( 'edd_price_option_checked', 0, $download_id ), $key, false ),
 							esc_attr( 'edd_price_option_' . $download_id . '_' . $key ),
 							esc_attr( 'edd_price_option_' . $download_id ),
 							esc_attr( $key ),
