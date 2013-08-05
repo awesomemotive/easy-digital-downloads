@@ -280,10 +280,9 @@ class EDD_Stats {
 
 		if( ! empty( $_end_date ) ) {
 			$this->end_date = $_end_date;
-		}
-
-		if( ! $this->end_date )
+		} else {
 			$this->end_date = $this->start_date;
+		}
 
 		$this->start_date = $this->convert_date( $this->start_date );
 		$this->end_date   = $this->convert_date( $this->end_date, true );
@@ -331,7 +330,6 @@ class EDD_Stats {
 					} else {
 
 						$month = date( 'n', current_time( 'timestamp' ) ) - 1;
-
 					}
 
 					if( $end_date ) {
