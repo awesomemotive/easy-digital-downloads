@@ -1343,7 +1343,7 @@ class EDD_API {
 		$stats = new EDD_Stats;
 
 		$sales['sales']['current_month'] = $stats->get_sales( 0, 'this_month' );
-		$sales['sales']['last_month']    = $stats->get_sales( 0, 'this_month' );
+		$sales['sales']['last_month']    = $stats->get_sales( 0, 'last_month' );
 		$sales['sales']['totals']        = edd_get_total_sales();
 
 		return $sales;
@@ -1363,7 +1363,7 @@ class EDD_API {
 		$stats = new EDD_Stats;
 
 		$earnings['earnings']['current_month'] = $stats->get_earnings( 0, 'this_month' );
-		$earnings['earnings']['last_month']    = $stats->get_earnings( 0, 'this_month' );
+		$earnings['earnings']['last_month']    = $stats->get_earnings( 0, 'last_month' );
 		$earnings['earnings']['totals']        = edd_get_total_earnings();
 
 		return $earnings;
