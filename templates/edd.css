@@ -13,8 +13,8 @@
 -------------------------------------------------------------- */
 @font-face {
   font-family: 'padlock';
-  src: url("../fonts/padlock.eot?64116112");
-  src: url("../fonts/padlock.eot?64116112#iefix") format('embedded-opentype'), url("../assets/fonts/padlock.svg?64116112#padlock") format('svg');
+  src: url("../assets/fonts/padlock.eot?64116112");
+  src: url("../assets/fonts/padlock.eot?64116112#iefix") format('embedded-opentype'), url("../assets/fonts/padlock.svg?64116112#padlock") format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -27,10 +27,7 @@
 @font-face {
 	font-family: 'EDD-Icons';
 	src:url('../assets/fonts/EDD-Icons.eot');
-	src:url('../assets/fonts/EDD-Icons.eot?#iefix') format('embedded-opentype'),
-		url('../assets/fonts/EDD-Icons.woff') format('woff'),
-		url('../assets/fonts/EDD-Icons.ttf') format('truetype'),
-		url('../assets/fonts/EDD-Icons.svg#EDD-Icons') format('svg');
+	src:url('../assets/fonts/EDD-Icons.eot?#iefix') format('embedded-opentype'), url('../assets/fonts/EDD-Icons.woff') format('woff'), url('../assets/fonts/EDD-Icons.ttf') format('truetype'), url('../assets/fonts/EDD-Icons.svg#EDD-Icons') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -242,6 +239,7 @@ table#edd_purchase_receipt_products .edd_bundled_product_name { font-style: ital
 /* =Purchase buttons
 -------------------------------------------------------------- */
 input.edd_submit_plain { background: none !important; border: none !important; padding: 0 !important; display: inline; cursor: pointer; }
+.single-download .edd_download_purchase_form { margin-bottom: 1.387em; }
 .edd_download_purchase_form .edd_price_options { margin: 0 0 15px; }
 .edd_download_purchase_form .edd_price_options ul { margin: 0; padding: 0; list-style: none; }
 .edd_download_purchase_form .edd_price_options li { display: block; padding: 0; margin: 0; }
