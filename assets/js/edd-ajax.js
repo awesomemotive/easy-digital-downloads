@@ -29,6 +29,7 @@ jQuery(document).ready(function ($) {
                 if( $( '#edd_purchase_' + id ).length ) {
                     $( '#edd_purchase_' + id + ' .edd_go_to_checkout' ).hide();
                     $( '#edd_purchase_' + id + ' a.edd-add-to-cart' ).show();
+                    $( '#edd_purchase_' + id + ' a.edd-add-to-cart' ).removeAttr('data-edd-loading');
                 }
 
                 $('span.edd-cart-quantity').each(function() {
