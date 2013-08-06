@@ -142,14 +142,19 @@ function edd_calculate_tax( $amount, $sum = true, $country = false, $state = fal
 	$tax = 0.00;
 	$prices_include_tax = edd_prices_include_tax();
 
-	$tax = $amount * $rate;
-
 	if ( $sum ) {
 
 		if ( $prices_include_tax ) {
-			$tax = $amount - $tax;
+			$tax = $amount - (($amount / (1+$rate)) * $rate);
 		} else {
-			$tax = $amount + $tax;
+			$tax = $amount + ($amount * $rate);
+				}
+		} else {
+
+		if ( $prices_include_tax ) {
+			$tax = ($amount / (1+$rate)) * $rate;
+		} else {
+			$tax = $amount * rate;
 		}
 
 	}
