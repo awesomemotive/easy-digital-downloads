@@ -1280,7 +1280,7 @@ function edd_hook_callback( $args ) {
  */
 function edd_settings_sanitize( $input ) {
 	add_settings_error( 'edd-notices', '', __( 'Settings Updated', 'edd' ), 'updated' );
-	return $input;
+	return apply_filters( 'edd_save_settings_before', $input );
 }
 
 /**
