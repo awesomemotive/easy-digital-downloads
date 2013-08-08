@@ -30,8 +30,6 @@ function edd_plugin_action_links( $links, $file ) {
 
 	return $links;
 }
-
-
 add_filter( 'plugin_action_links', 'edd_plugin_action_links', 10, 2 );
 
 
@@ -56,6 +54,4 @@ function edd_plugin_row_meta( $input, $file ) {
 
 	return $input;
 }
-
-
 add_filter( 'plugin_row_meta', 'edd_plugin_row_meta', 10, 2 );
