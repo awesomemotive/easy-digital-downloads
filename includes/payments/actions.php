@@ -241,7 +241,7 @@ add_action( 'edd_insert_payment', 'edd_clear_earnings_cache', 10, 2 );
  * is updated
  *
  * @since 1.2.2
- * @param int $payment Payment ID
+ * @param int $payment_id Payment ID
  * @param string $new_status the status of the payment, probably "publish"
  * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
  * @return void

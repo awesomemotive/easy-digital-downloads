@@ -452,10 +452,13 @@ function edd_get_templates_url() {
  *
  * @param string $slug
  * @param string $name Optional. Default null
+ * @param bool $load
  *
  * @uses edd_locate_template()
  * @uses load_template()
  * @uses get_template_part()
+ *
+ * @return string
  */
 function edd_get_template_part( $slug, $name = null, $load = true ) {
 	// Execute code for this part

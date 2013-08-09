@@ -263,6 +263,7 @@ function edd_get_currency() {
  * Takes a month number and returns the name three letter name of it.
  *
  * @since 1.0
+ * @param $n
  * @return string Short month name
  */
 function edd_month_num_to_name( $n ) {
@@ -374,7 +375,8 @@ function edd_is_func_disabled( $function ) {
  * @since 1.4
  * @usedby edd_settings()
  * @author Chris Christoff
- * @return $ret
+ * @param $v
+ * @return int|string
  */
 function edd_let_to_num( $v ) {
 	$l   = substr( $v, -1 );

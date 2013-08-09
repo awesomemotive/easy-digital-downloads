@@ -767,14 +767,13 @@ function edd_get_file_price_condition( $download_id, $file_key ) {
  *
  * Constructs the file download url for a specific file.
  *
- * @since 1.0
  * @param string $key
  * @param string $email Customer email addresss
- * @param int $filekey File key
+ * @param $filekey File key
  * @param int $download_id Download ID
- * @param int $price_id
- * @return string $download_url Constructed download URL
-*/
+ * @param bool $price_id
+ * @return string Constructed download URL
+ */
 function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price_id = false ) {
 	global $edd_options;
 
@@ -805,11 +804,11 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price
  * Verifies a download purchase using a purchase key and email.
  *
  * @since 1.0
- * @param int $download_id Download ID
+ * @param int    $download_id Download ID
  * @param string $key
  * @param string $email
  * @param string $expire
- * @param string $file_key
+ * @param int    $file_key
  * @return bool True if payment and link was verified, false otherwise
  */
 function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $expire = '', $file_key = 0 ) {
@@ -895,8 +894,8 @@ function edd_get_product_notes( $download_id ) {
  *
  * @since 1.6
  * @author Daniel J Griffiths
- * @param int $download Download ID
- * @return string|int $sku Download SKU
+ * @param int $download_id Download ID
+ * @return mixed|void Download SKU
  */
 function edd_get_download_sku( $download_id = 0 ) {
 	$sku = get_post_meta( $download_id, 'edd_sku', true );

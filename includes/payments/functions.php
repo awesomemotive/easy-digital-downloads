@@ -454,9 +454,9 @@ function edd_check_for_existing_payment( $payment_id ) {
  * Get Payment Status
  *
  * @since 1.0
- * @param obj $payment Payment Object
- * @param bool $return_label Whether to return the payment status or not
- * @return mixed string if payment status exists, false otherwise
+ * @param string $payment
+ * @param bool   $return_label Whether to return the payment status or not
+ * @return bool|mixed string if payment status exists, false otherwise
  */
 function edd_get_payment_status( $payment = OBJECT, $return_label = false ) {
 	if ( ! is_object( $payment ) || !isset( $payment->post_status ) )
@@ -1048,11 +1048,11 @@ function edd_delete_payment_note( $comment_id = 0, $payment_id = 0 ) {
  * Comments widgets
  *
  * @since 1.4.1
- * @param array $clauses Comment clauses for comment query
- * @param obj $wp_comment_query WordPress Comment Query Object
+ * @param array $clauses comment clauses for comment query
+ * @param WP_Comment_Query $wp_comment_query WordPress Comment Query Object
  * @return array $clauses Updated comment clauses
  */
-function edd_hide_payment_notes( $clauses, $wp_comment_query ) {
+function edd_hide_payment_notes( Array $clauses, WP_Comment_Query $wp_comment_query ) {
     global $wpdb;
 
 	$clauses['where'] .= ' AND comment_type != "edd_payment_note"';

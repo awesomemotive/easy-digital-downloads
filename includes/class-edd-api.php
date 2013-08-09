@@ -763,6 +763,8 @@ class EDD_API {
 	 * @global object $wpdb Used to query the database using the WordPress
 	 *   Database API
 	 * @param array $args Arguments provided by API Request
+	 *
+	 * @return array
 	 */
 	public function get_stats( $args = array() ) {
 		$defaults = array(
