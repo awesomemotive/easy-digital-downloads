@@ -492,23 +492,15 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function prepare_items() {
-		$per_page = $this->per_page;
 
-		$columns = $this->get_columns();
-
-		$hidden = array(); // No hidden columns
-
+		$columns  = $this->get_columns();
+		$hidden   = array(); // No hidden columns
 		$sortable = $this->get_sortable_columns();
-
-		$this->_column_headers = array( $columns, $hidden, $sortable );
+		$data     = $this->payments_data();
+		$status   = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
 
 		$this->process_bulk_action();
-
-		$data = $this->payments_data();
-
-		$current_page = $this->get_pagenum();
-
-		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
+		$this->_column_headers = array( $columns, $hidden, $sortable );
 
 		switch ( $status ) {
 			case 'publish':
@@ -541,8 +533,8 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,                  	// WE have to calculate the total number of items
-				'per_page'    => $per_page,                     	// WE have to determine how many items to show on a page
-				'total_pages' => ceil( $total_items / $per_page )   // WE have to calculate the total number of pages
+				'per_page'    => $this->per_page,                     	// WE have to determine how many items to show on a page
+				'total_pages' => ceil( $total_items / $this->per_page )   // WE have to calculate the total number of pages
 			)
 		);
 	}
