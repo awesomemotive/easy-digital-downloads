@@ -90,11 +90,11 @@ class EDD_Stats_Base {
 	 *
 	 * This calls the convert_date() member function to ensure the dates are formatted correctly
 	 *
-	 * @access private
+	 * @access public
 	 * @since 1.8
 	 * @return void
 	 */
-	private function setup_dates( $_start_date = 'this_month', $_end_date = false ) {
+	public function setup_dates( $_start_date = 'this_month', $_end_date = false ) {
 
 		if( empty( $_start_date ) ) {
 			$this->start_date = 'this_month';
@@ -116,11 +116,11 @@ class EDD_Stats_Base {
 	/**
 	 * Converts a date to a timestamp
 	 *
-	 * @access private
+	 * @access public
 	 * @since 1.8
 	 * @return array|WP_Error If the date is invalid, a WP_Error object will be returned
 	 */
-	private function convert_date( $date, $end_date = false ) {
+	public function convert_date( $date, $end_date = false ) {
 
 		$timestamp   = false;
 		$minute      = 0;
