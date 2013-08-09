@@ -83,7 +83,7 @@ class EDD_Payments_Query extends EDD_Stats_Base {
 
 				$details->ID           = $payment->ID;
 				$details->date         = $payment->post_date;
-				$details->status       = edd_get_payment_status( $payment );
+				$details->post_status  = edd_get_payment_status( $payment );
 				$details->total        = edd_get_payment_amount( $payment->ID );
 				$details->subtotal     = edd_get_payment_subtotal( $payment->ID );
 				$details->tax          = edd_get_payment_tax( $payment->ID );
