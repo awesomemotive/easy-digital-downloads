@@ -64,7 +64,7 @@ function edd_login_form( $redirect = '' ) {
 	} else {
 		echo '<p class="edd-logged-in">' . __( 'You are already logged in', 'edd' ) . '</p>';
 	}
-	return ob_get_clean();
+	return apply_filters( 'edd_login_form', ob_get_clean() );
 }
 
 /**
