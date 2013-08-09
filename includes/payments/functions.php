@@ -717,7 +717,7 @@ function edd_get_payment_meta_user_info( $payment_id ) {
  */
 function edd_get_payment_meta_downloads( $payment_id ) {
 	$payment_meta = edd_get_payment_meta( $payment_id );
-	$downloads    = maybe_unserialize( $payment_meta['downloads'] );
+	$downloads    = isset( $payment_meta['downloads'] ) ? maybe_unserialize( $payment_meta['downloads'] ) : array();
 
 	return apply_filters( 'edd_payment_meta_downloads', $downloads );
 }
