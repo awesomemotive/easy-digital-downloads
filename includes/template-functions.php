@@ -362,8 +362,8 @@ add_action( 'edd_after_download_content', 'edd_show_has_purchased_item_message' 
  * This excerpt is primarily used in the [downloads] short code
  *
  * @since 1.0.8.4
- * @param string $excerpt Content before filterting
- * @return string $excerpt Content after filterting
+ * @param string $excerpt Content before filtering
+ * @return string $excerpt Content after filtering
  * @return string
  */
 function edd_downloads_default_excerpt( $excerpt ) {
@@ -467,7 +467,7 @@ function edd_get_template_part( $slug, $name = null, $load = true ) {
 		$templates[] = $slug . '-' . $name . '.php';
 	$templates[] = $slug . '.php';
 
-	// Allow template parst to be filtered
+	// Allow template parts to be filtered
 	$templates = apply_filters( 'edd_get_template_part', $templates, $slug, $name );
 
 	// Return the part that is found
