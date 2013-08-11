@@ -11,6 +11,7 @@ jQuery(document).ready(function ($) {
 			this.type();
 			this.prices();
 			this.files();
+			this.updatePrices();
 		},
 		clone_repeatable : function(row) {
 
@@ -33,6 +34,7 @@ jQuery(document).ready(function ($) {
 
 				$( this ).attr( 'name', name ).attr( 'id', name );
 			});
+
 			return clone;
 		},
 
@@ -77,6 +79,9 @@ jQuery(document).ready(function ($) {
 					type  = $(this).data('type'),
 					repeatable = 'tr.edd_repeatable_' + type + 's';
 
+				/** remove from price condition */
+			    $( '.edd_repeatable_condition_field option[value=' + row.index() + ']' ).remove();
+
 				if( count > 1 ) {
 					$( 'input, select', row ).val( '' );
 					row.fadeOut( 'fast' ).remove();
@@ -102,7 +107,6 @@ jQuery(document).ready(function ($) {
 			        	$( this ).attr( 'name', name ).attr( 'id', name );
 			    	});
 			    });
-
 			});
 		},
 
@@ -237,6 +241,23 @@ jQuery(document).ready(function ($) {
 				window.formfield = '';
 			}
 
+		},
+
+		updatePrices : function() {
+			$( '#edd_price_fields' ).on( 'keyup', '.edd_variable_prices_name', function() {
+				var key  = $(this).parents( 'tr' ).index(),
+				    name = $( this ).val();
+
+				if ( $( '.edd_repeatable_condition_field option[value=' + key + ']' ).length > 0 ) {
+					$( '.edd_repeatable_condition_field option[value=' + key + ']' ).text( name );
+				} else {
+					$( '.edd_repeatable_condition_field' ).append( 
+						$( '<option></option>' )
+						.attr( 'value', key )
+						.text( name )
+					); 
+				}
+			});
 		}
 
 	}
