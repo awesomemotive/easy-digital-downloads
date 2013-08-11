@@ -176,7 +176,7 @@ function edd_get_purchase_link( $args = array() ) {
  * Variable price output
  *
  * Outputs variable pricing options for each download or a specified downloads in a list.
- * The output generated can be overriden by the filters provided or by removing
+ * The output generated can be overridden by the filters provided or by removing
  * the action and adding your own custom action.
  *
  * @since 1.2.3
@@ -228,7 +228,7 @@ add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10 );
 /**
  * Before Download Content
  *
- * Adds an action to the begining of download post content that can be hooked to
+ * Adds an action to the beginning of download post content that can be hooked to
  * by other functions.
  *
  * @since 1.0.8
@@ -377,8 +377,8 @@ add_filter( 'edd_downloads_excerpt', 'edd_downloads_default_excerpt' );
  * This is primarily used in the [downloads] short code
  *
  * @since 1.0.8.4
- * @param string $content Content before filterting
- * @return string $content Content after filterting
+ * @param string $content Content before filtering
+ * @return string $content Content after filtering
  */
 function edd_downloads_default_content( $content ) {
 	return do_shortcode( wpautop( $content ) );
