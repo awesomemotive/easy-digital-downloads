@@ -541,13 +541,13 @@ function edd_get_theme_template_dir_name() {
 }
 
 /**
- * Should we add schema.org mcirodata?
+ * Should we add schema.org microdata?
  *
  * @since 1.7
  * @return bool
  */
 function edd_add_schema_microdata() {
-	// Don't modify anything until after wp_head() is callsed
+	// Don't modify anything until after wp_head() is called
 	$ret = did_action( 'wp_head' );
 	return apply_filters( 'edd_add_schema_microdata', $ret );
 }
