@@ -181,7 +181,7 @@ final class Easy_Digital_Downloads {
 	 * @return void
 	 */
 	private function includes() {
-		global $edd_options;
+		global $edd_options, $wp_version;
 
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php';
 		$edd_options = edd_get_settings();
@@ -203,7 +203,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-session.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-stats-base.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-stats.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-roles.php';
 		require_once EDD_PLUGIN_DIR . 'includes/country-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/formatting.php';
@@ -261,6 +261,9 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/welcome.php';
+			if( version_compare( $wp_version, '3.6', '>=' ) ) {
+				require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
+			}
 		} else {
 			require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
 			require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';

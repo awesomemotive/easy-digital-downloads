@@ -45,12 +45,12 @@ function edd_dashboard_sales_widget() {
 			<table>
 				<tbody>
 					<tr class="first">
-						<td class="first b"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'this_month' ) ) ); ?></td>
+						<td class="first b b-earnings"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'this_month' ) ) ); ?></td>
 						<td class="t monthly_earnings"><?php _e( 'Earnings', 'edd' ); ?></td>
 					</tr>
 					<tr>
 						<?php $monthly_sales = $stats->get_sales( 0, 'this_month' ); ?>
-						<td class="first b"><?php echo $monthly_sales; ?></td>
+						<td class="first b b-sales"><?php echo $monthly_sales; ?></td>
 						<td class="t monthly_sales"><?php echo _n( 'Sale', 'Sales', $monthly_sales, 'edd' ); ?></td>
 					</tr>
 				</tbody>
