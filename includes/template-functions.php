@@ -309,6 +309,7 @@ function edd_get_button_colors() {
 		'blue'      => __( 'Blue', 'edd' ),
 		'green'     => __( 'Green', 'edd' ),
 		'yellow'    => __( 'Yellow', 'edd' ),
+		'orange'    => __( 'Orange', 'edd' ),
 		'dark-gray' => __( 'Dark Gray', 'edd' ),
 		'inherit'	=> __( 'Inherit', 'edd' ),
 	);
