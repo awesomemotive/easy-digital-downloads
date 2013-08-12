@@ -116,7 +116,7 @@ class EDD_API {
 		$this->log_requests = apply_filters( 'edd_api_log_requests', $this->log_requests );
 
 		// Setup EDD_Stats instance
-		$this->stats = new EDD_Stats;
+		$this->stats = new EDD_Payment_Stats;
 
 	}
 

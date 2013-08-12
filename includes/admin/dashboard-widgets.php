@@ -38,7 +38,7 @@ add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets' );
  * @return void
  */
 function edd_dashboard_sales_widget() {
-	$stats = new EDD_Stats; ?>
+	$stats = new EDD_Payment_Stats; ?>
 	<div class="edd_dashboard_widget">
 		<div class="table table_left table_current_month">
 			<p class="sub"><?php _e( 'Current Month', 'edd' ) ?></p>

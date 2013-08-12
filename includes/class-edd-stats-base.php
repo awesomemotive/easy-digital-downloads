@@ -11,7 +11,7 @@
 
 
 /**
- * EDD_Stats_Base Class
+ * EDD_Stats Class
  *
  * Base class for other stats classes
  *
@@ -19,7 +19,7 @@
  *
  * @since 1.8
  */
-class EDD_Stats_Base {
+class EDD_Stats {
 
 
 	/**

@@ -19,7 +19,7 @@
  *
  * @since 1.8
  */
-class EDD_Payments_Query extends EDD_Stats_Base {
+class EDD_Payments_Query extends EDD_Stats {
 
 
 	/**
