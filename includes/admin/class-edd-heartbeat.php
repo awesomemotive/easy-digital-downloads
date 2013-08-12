@@ -29,10 +29,10 @@ class EDD_Heartbeat {
 	 * @since 1.8
 	 * @return void
 	 */
-	public function __construct() {
+	public static function init() {
 
-		add_filter( 'heartbeat_received', array( $this, 'heartbeat_received' ), 10, 2 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_filter( 'heartbeat_received', array( 'EDD_Heartbeat', 'heartbeat_received' ), 10, 2 );
+		add_action( 'admin_enqueue_scripts', array( 'EDD_Heartbeat', 'enqueue_scripts' ) );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class EDD_Heartbeat {
 	 * @since 1.8
 	 * @return array
 	 */
-	public function heartbeat_received( $response, $data ) {
+	public static function heartbeat_received( $response, $data ) {
 
 		  // Make sure we only run our query if the edd_heartbeat key is present
 		if( $data['edd_heartbeat'] == 'dashboard_summary' ) {
@@ -71,10 +71,10 @@ class EDD_Heartbeat {
 	 * @since 1.8
 	 * @return array
 	 */
-	public function enqueue_scripts() {
+	public static function enqueue_scripts() {
 		// Make sure the JS part of the Heartbeat API is loaded.
 		wp_enqueue_script( 'heartbeat' );
-		add_action( 'admin_print_footer_scripts', array( $this, 'footer_js' ), 20 );
+		add_action( 'admin_print_footer_scripts', array( 'EDD_Heartbeat', 'footer_js' ), 20 );
 	}
 
 	/**
@@ -84,7 +84,7 @@ class EDD_Heartbeat {
 	 * @since 1.8
 	 * @return array
 	 */
-	public function footer_js() {
+	public static function footer_js() {
 		global $pagenow;
 
 		// Only proceed if on the dashboard
@@ -127,4 +127,4 @@ class EDD_Heartbeat {
 		<?php
 	}
 }
-$edd_heartbeart = new EDD_Heartbeat;
+add_action( 'plugins_loaded', array( 'EDD_Heartbeat', 'init' ) );
