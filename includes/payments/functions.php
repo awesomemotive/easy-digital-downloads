@@ -613,27 +613,9 @@ function edd_is_payment_complete( $payment_id ) {
  * @return int $count Total sales
  */
 function edd_get_total_sales() {
-	$args = apply_filters( 'edd_get_total_sales_args', array(
-		'post_type'              => 'edd_payment',
-		'nopaging'               => true,
-		'meta_key'               => '_edd_payment_mode',
-		'meta_value'             => 'live',
-		'fields'                 => 'ids',
-		'post_status'            => array( 'publish', 'revoked' ),
-		'update_post_meta_cache' => false,
-		'update_post_term_cache' => false
-	) );
 
-	$key   = md5( serialize( $args ) );
-	$count = get_transient( $key );
-
-	if ( false === $count ) {
-		$sales = new WP_Query( $args );
-		$count = (int) $sales->post_count;
-		set_transient( $key, $count, 60 * 60 );
-
-	}
-	return $count;
+	$payments = edd_count_payments();
+	return $payments->revoked + $payments->publish;
 }
 
 /**
