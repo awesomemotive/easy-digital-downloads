@@ -717,7 +717,7 @@ function edd_get_payment_meta_user_info( $payment_id ) {
  */
 function edd_get_payment_meta_downloads( $payment_id ) {
 	$payment_meta = edd_get_payment_meta( $payment_id );
-	$downloads    = maybe_unserialize( $payment_meta['downloads'] );
+	$downloads    = isset( $payment_meta['downloads'] ) ? maybe_unserialize( $payment_meta['downloads'] ) : array();
 
 	return apply_filters( 'edd_payment_meta_downloads', $downloads );
 }
@@ -732,7 +732,7 @@ function edd_get_payment_meta_downloads( $payment_id ) {
  */
 function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files = false ) {
 	$payment_meta = edd_get_payment_meta( $payment_id );
-	$cart_details = maybe_unserialize( $payment_meta['cart_details'] );
+	$cart_details = (array) maybe_unserialize( $payment_meta['cart_details'] );
 
 	if( $include_bundle_files ) {
 
