@@ -413,16 +413,19 @@ class EDD_Payments_Query extends EDD_Stats {
 			'no_found_rows'          => true,
 			'update_post_term_cache' => false,
 			'update_post_meta_cache' => false,
-			'cache_results'          => false
+			'cache_results'          => false,
+			'fields'                 => 'ids'
 		) );
 
-		if ( empty( $sales ) )
-			return;
+		if ( empty( $sales ) ) {
+			// Set post_parent to something crazy so it doesn't fin anything
+			$this->__set( 'post_parent', 999999999999999 );
+		}
 
 		$payments = array();
 
 		foreach ( $sales as $sale ) {
-			$payments[] = get_post_meta( $sale->ID, '_edd_log_payment_id', true );
+			$payments[] = get_post_meta( $sale, '_edd_log_payment_id', true );
 		}
 
 		$this->__set( 'post__in', $payments );
