@@ -142,7 +142,7 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		do_action( 'edd_pre_get_payments', $this );
 
-		$query = new WP_Query( apply_filters( 'edd_get_payments_args', $this->args ) );
+		$query = new WP_Query( $this->args );
 
 		if ( 'payments' != $this->args[ 'output' ] )
 			return $query->posts;
