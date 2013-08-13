@@ -123,7 +123,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		add_action( 'edd_pre_get_payments', array( $this, 'user' ) );
 		add_action( 'edd_pre_get_payments', array( $this, 'search' ) );
 		add_action( 'edd_pre_get_payments', array( $this, 'mode' ) );
-		add_action( 'edd_pre_get_payments', array( $this, 'chilren' ) );
+		add_action( 'edd_pre_get_payments', array( $this, 'children' ) );
 		add_action( 'edd_pre_get_payments', array( $this, 'download' ) );
 	}
 
@@ -145,7 +145,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		$query = new WP_Query( apply_filters( 'edd_get_payments_args', $this->args ) );
 
 		if ( 'payments' != $this->args[ 'output' ] )
-			return $query;
+			return $query->posts;
 
 		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) {
