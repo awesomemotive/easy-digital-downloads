@@ -317,9 +317,11 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return void
 	 */
 	public function search() {
+
 		$search = trim( $this->args[ 's' ] );
 
 		if ( is_email( $search ) || strlen( $search ) == 32 ) {
+
 			$key = is_email( $search ) ? '_edd_payment_user_email' : '_edd_payment_purchase_key';
 
 			$search_meta = array(
@@ -329,7 +331,9 @@ class EDD_Payments_Query extends EDD_Stats {
 
 			$this->__set( 'meta_query', $search_meta );
 			$this->__unset( 's' );
+
 		} elseif ( is_numeric( $search ) ) {
+
 			$search_meta = array(
 				'key'   => '_edd_payment_user_id',
 				'value' => $search
@@ -337,12 +341,18 @@ class EDD_Payments_Query extends EDD_Stats {
 
 			$this->__set( 'meta_query', $search_meta );
 			$this->__unset( 's' );
+
 		} elseif ( '#' == substr( $search, 0, 1 ) ) {
+
 			$this->__set( 'download', str_replace( '#', '', $search ) );
 			$this->__unset( 's' );
+
 		} else {
+
 			$this->__set( 's', $search );
+
 		}
+
 	}
 
 	/**
