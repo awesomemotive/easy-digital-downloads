@@ -146,7 +146,7 @@ function edd_do_email_tags( $content, $payment_id ) {
 	$content = EDD_Email_Template_Tags::get_instance()->do_tags( $content, $payment_id );
 
 	// Maintaining backwards compatibility
-	$content = apply_filters( 'edd_email_template_tags', $content, edd_get_payment_meta( $payment_id ) );
+	$content = apply_filters( 'edd_email_template_tags', $content, edd_get_payment_meta( $payment_id ), $payment_id );
 
 	// Return content
 	return $content;
