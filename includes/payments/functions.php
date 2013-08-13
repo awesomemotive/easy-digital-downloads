@@ -24,137 +24,17 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * $offset = 0, $number = 20, $mode = 'live', $orderby = 'ID', $order = 'DESC',
  * $user = null, $status = 'any', $meta_key = null
  *
+ * As of EDD 1.8 this simply wraps EDD_Payments_Query
+ *
  * @since 1.0
  * @param array $args Arguments passed to get payments
  * @return object $payments Payments retrieved from the database
  */
 function edd_get_payments( $args = array() ) {
-	$defaults = array(
-		'number'   => 20,
-		'page'     => null,
-		'mode'     => 'live',
-		'orderby'  => 'ID',
-		'order'    => 'DESC',
-		'user'     => null,
-		'status'   => 'any',
-		'meta_key' => null,
-		'year'     => null,
-		'month'    => null,
-		'day'      => null,
-		's'        => null,
-		'children' => false,
-		'fields'   => null
-	);
 
-	$args = wp_parse_args( $args, $defaults );
-
-	$payment_args = array(
-		'post_type'      => 'edd_payment',
-		'paged'          => $args['page'],
-		'order'          => $args['order'],
-		'orderby'        => $args['orderby'],
-		'post_status'    => $args['status'],
-		'year'           => $args['year'],
-		'monthnum'       => $args['month'],
-		'day'            => $args['day'],
-		'fields'         => $args['fields']
-	);
-
-	if( $args['number'] == -1 )
-		$payment_args['nopaging'] = true;
-	else
-		$payment_args['posts_per_page'] = $args['number'];
-
-	switch ( $args['orderby'] ) :
-		case 'amount' :
-			$payment_args['orderby']  = 'meta_value_num';
-			$payment_args['meta_key'] = '_edd_payment_total';
-			break;
-		default :
-			$payment_args['orderby'] = $args['orderby'];
-			break;
-	endswitch;
-
-	if ( ! $args['children'] )
-		$payment_args['post_parent'] = 0; // Only get top level payments
-
-	if ( ! is_null( $args['meta_key'] ) )
-		$payment_args['meta_key'] = $args['meta_key'];
-
-	if ( ! is_null( $args['user'] ) ) {
-		if ( is_numeric( $args['user'] ) ) {
-			$user_key = '_edd_payment_user_id';
-		} else {
-			$user_key = '_edd_payment_user_email';
-		}
-		$payment_args['meta_query'] = array(
-			array(
-				'key'   => $user_key,
-				'value' => $args['user']
-			)
-		);
-	}
-
-	$search = trim( $args['s'] );
-
-	if ( is_email( $search ) || strlen( $search ) == 32 ) {
-		// This is a purchase key search
-		$key = is_email( $search ) ? '_edd_payment_user_email' : '_edd_payment_purchase_key';
-
-		$search_meta = array(
-			'key'   => $key,
-			'value' => $search
-		);
-
-		if ( isset( $payment_args['meta_query'] ) ) {
-			$payment_args['meta_query'][1] = $search_meta;
-		} else {
-			// Create a new meta query
-			$payment_args['meta_query'] = array( $search_meta );
-		}
-	} elseif ( is_numeric( $search ) ) {
-		// Searching for payments by user ID
-		$search_meta = array(
-			'key'   => '_edd_payment_user_id',
-			'value' => $search
-		);
-
-		if ( isset( $payment_args['meta_query'] ) ) {
-			$payment_args['meta_query'][1] = $search_meta;
-		} else {
-			// Create a new meta query
-			$payment_args['meta_query'] = array( $search_meta );
-		}
-	} else {
-		$payment_args['s'] = $search;
-	}
-
-	if ( $args['mode'] != 'all' ) {
-		if ( isset( $payment_args['meta_query'] ) ) {
-
-			// Append to the user meta query
-			$payment_args['meta_query'][2] = array(
-				'key'   => '_edd_payment_mode',
-				'value' => $args['mode']
-			);
-		} else {
-			// Create a new meta query
-			$payment_args['meta_query'] = array(
-				array(
-					'key'   => '_edd_payment_mode',
-					'value' => $args['mode']
-				)
-			);
-		}
-	}
-
-	$payment_args = apply_filters( 'edd_get_payments_args', $payment_args );
-	$payments     = new WP_Query;
-	if ( $payments ) {
-		return $payments->query( $payment_args );
-	}
-
-	return false;
+	$args     = apply_filters( 'edd_get_payments_args', $args );
+	$payments = new EDD_Payments_Query( $args );
+	return $payments->get_payments();
 }
 
 /**
