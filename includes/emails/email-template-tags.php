@@ -141,7 +141,15 @@ function edd_email_tag_exists( $tag ) {
 }
 
 function edd_do_email_tags( $content, $payment_id ) {
-	return EDD_Email_Template_Tags::get_instance()->do_tags( $content, $payment_id );
+
+	// Replace all tags
+	$content = EDD_Email_Template_Tags::get_instance()->do_tags( $content, $payment_id );
+
+	// Maintaining backwards compatibility
+	$content = apply_filters( 'edd_email_template_tags', $content, edd_get_payment_meta( $payment_id ) );
+
+	// Return content
+	return $content;
 }
 
 /**
