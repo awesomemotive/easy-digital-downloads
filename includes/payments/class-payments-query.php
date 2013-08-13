@@ -238,21 +238,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	}
 
 	/**
-	 * Current Month
-	 *
-	 * @access public
-	 * @since 1.8
-	 * @return void
-	 */
-	public function month() {
-		if ( ! isset ( $this->args[ 'month' ] ) )
-			return;
-
-		$this->__set( 'monthnum', $this->args[ 'month' ] );
-		$this->__unset( 'month' );
-	}
-
-	/**
 	 * Posts Per Page
 	 *
 	 * @access public
@@ -266,6 +251,21 @@ class EDD_Payments_Query extends EDD_Stats {
 			$this->__set( 'posts_per_page', $this->args[ 'number' ] );
 
 		$this->__unset( 'number' );
+	}
+
+	/**
+	 * Current Month
+	 *
+	 * @access public
+	 * @since 1.8
+	 * @return void
+	 */
+	public function month() {
+		if ( ! isset ( $this->args[ 'month' ] ) )
+			return;
+
+		$this->__set( 'monthnum', $this->args[ 'month' ] );
+		$this->__unset( 'month' );
 	}
 
 	/**
