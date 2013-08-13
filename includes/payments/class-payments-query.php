@@ -138,9 +138,9 @@ class EDD_Payments_Query extends EDD_Stats {
 	 */
 	public function get_payments() {
 		do_action( 'edd_pre_get_payments', $this );
-		
+
 		$query = new WP_Query( apply_filters( 'edd_get_payments_args', $this->args ) );
-		
+
 		if ( 'payments' != $this->args[ 'output' ] )
 			return $query;
 
@@ -200,7 +200,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	public function date_filter_post() {
 		if ( ! ( $this->args[ 'start_date' ] || $this->args[ 'end_date' ] ) )
 			return;
-		
+
 		remove_filter( 'posts_where', array( $this, 'payments_where' ) );
 	}
 
@@ -260,7 +260,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		if ( $this->args[ 'number' ] == -1 )
 			$this->__set( 'nopaging', true );
 		else
-			$this->__unset( 'posts_per_page', $this->args[ 'number' ] );
+			$this->__set( 'posts_per_page', $this->args[ 'number' ] );
 
 		$this->__unset( 'number' );
 	}
@@ -377,7 +377,7 @@ class EDD_Payments_Query extends EDD_Stats {
 		global $edd_logs;
 
 		$sales = $edd_logs->get_connected_logs( array(
-			'post_parent'            => $this->args[ 'download' ], 
+			'post_parent'            => $this->args[ 'download' ],
 			'log_type'               => 'sale',
 			'post_status'            => array( 'publish' ),
 			'nopaging'               => true,
