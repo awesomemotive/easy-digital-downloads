@@ -463,6 +463,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$search         = isset( $_GET['s'] )           ? sanitize_text_field( $_GET['s'] ) : null;
 
 		$args = array(
+			'output'   => 'payments',
 			'number'   => $per_page,
 			'page'     => isset( $_GET['paged'] ) ? $_GET['paged'] : null,
 			'mode'     => $mode,
