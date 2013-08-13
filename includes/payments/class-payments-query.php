@@ -417,18 +417,24 @@ class EDD_Payments_Query extends EDD_Stats {
 			'fields'                 => 'ids'
 		) );
 
-		if ( empty( $sales ) ) {
+		if ( ! empty( $sales ) ) {
+
+			$payments = array();
+
+			foreach ( $sales as $sale ) {
+				$payments[] = get_post_meta( $sale, '_edd_log_payment_id', true );
+			}
+
+			$this->__set( 'post__in', $payments );
+
+		} else {
+
 			// Set post_parent to something crazy so it doesn't fin anything
 			$this->__set( 'post_parent', 999999999999999 );
+
 		}
 
-		$payments = array();
-
-		foreach ( $sales as $sale ) {
-			$payments[] = get_post_meta( $sale, '_edd_log_payment_id', true );
-		}
-
-		$this->__set( 'post__in', $payments );
 		$this->__unset( 'download' );
+
 	}
 }
