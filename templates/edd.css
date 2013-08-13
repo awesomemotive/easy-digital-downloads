@@ -277,8 +277,8 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd-submit.button.dark-gray:active { border-color: #000 #222 #222; background: #2b2b2b; }
 
 /* Orange */
-.edd-submit.button.orange { color: #fff; border-color: #f96f0c; background: #e88449; background: -moz-linear-gradient(top, #e88449, #ff8c00); background: -webkit-linear-gradient(top, #e88449, #ff8c00); background: linear-gradient(top, #e88449, #ff8c00); }
-.edd-submit.button.orange:hover { background: #ff9840; }
+.edd-submit.button.orange { color: #fff; border-color: #f96f0c; background: #e96a2a; background: -moz-linear-gradient(top, #ff8c00, #e96a2a); background: -webkit-linear-gradient(top, #ff8c00, #e96a2a); background: linear-gradient(top, #ff8c00, #e96a2a); }
+.edd-submit.button.orange:hover { background: #e96a2a; }
 .edd-submit.button.orange:active { border-color: #ff6c00; background: #ff8100; }
 
 /* =Downloads Shortcode
