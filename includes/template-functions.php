@@ -149,11 +149,11 @@ function edd_get_purchase_link( $args = array() ) {
 				</span>
 			<?php endif; ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
-		
+
 		<?php if( edd_display_tax_rate() ) {
 			echo '<div class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), $edd_options['tax_rate'] ) . '</div>';
 		} ?>
-		
+
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $args['download_id'] ); ?>">
 		<?php if( ! empty( $args['direct'] ) ) { ?>
 			<input type="hidden" name="edd_action" class="edd_action_input" value="straight_to_gateway">
@@ -176,7 +176,7 @@ function edd_get_purchase_link( $args = array() ) {
  * Variable price output
  *
  * Outputs variable pricing options for each download or a specified downloads in a list.
- * The output generated can be overriden by the filters provided or by removing
+ * The output generated can be overridden by the filters provided or by removing
  * the action and adding your own custom action.
  *
  * @since 1.2.3
@@ -228,7 +228,7 @@ add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10 );
 /**
  * Before Download Content
  *
- * Adds an action to the begining of download post content that can be hooked to
+ * Adds an action to the beginning of download post content that can be hooked to
  * by other functions.
  *
  * @since 1.0.8
@@ -309,6 +309,7 @@ function edd_get_button_colors() {
 		'blue'      => __( 'Blue', 'edd' ),
 		'green'     => __( 'Green', 'edd' ),
 		'yellow'    => __( 'Yellow', 'edd' ),
+		'orange'    => __( 'Orange', 'edd' ),
 		'dark-gray' => __( 'Dark Gray', 'edd' ),
 		'inherit'	=> __( 'Inherit', 'edd' ),
 	);
@@ -362,8 +363,8 @@ add_action( 'edd_after_download_content', 'edd_show_has_purchased_item_message' 
  * This excerpt is primarily used in the [downloads] short code
  *
  * @since 1.0.8.4
- * @param string $excerpt Content before filterting
- * @return string $excerpt Content after filterting
+ * @param string $excerpt Content before filtering
+ * @return string $excerpt Content after filtering
  * @return string
  */
 function edd_downloads_default_excerpt( $excerpt ) {
@@ -377,8 +378,8 @@ add_filter( 'edd_downloads_excerpt', 'edd_downloads_default_excerpt' );
  * This is primarily used in the [downloads] short code
  *
  * @since 1.0.8.4
- * @param string $content Content before filterting
- * @return string $content Content after filterting
+ * @param string $content Content before filtering
+ * @return string $content Content after filtering
  */
 function edd_downloads_default_content( $content ) {
 	return do_shortcode( wpautop( $content ) );
@@ -467,7 +468,7 @@ function edd_get_template_part( $slug, $name = null, $load = true ) {
 		$templates[] = $slug . '-' . $name . '.php';
 	$templates[] = $slug . '.php';
 
-	// Allow template parst to be filtered
+	// Allow template parts to be filtered
 	$templates = apply_filters( 'edd_get_template_part', $templates, $slug, $name );
 
 	// Return the part that is found
@@ -541,13 +542,13 @@ function edd_get_theme_template_dir_name() {
 }
 
 /**
- * Should we add schema.org mcirodata?
+ * Should we add schema.org microdata?
  *
  * @since 1.7
  * @return bool
  */
 function edd_add_schema_microdata() {
-	// Don't modify anything until after wp_head() is callsed
+	// Don't modify anything until after wp_head() is called
 	$ret = did_action( 'wp_head' );
 	return apply_filters( 'edd_add_schema_microdata', $ret );
 }

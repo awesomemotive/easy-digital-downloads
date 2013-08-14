@@ -518,3 +518,29 @@ function edd_object_to_array( $data ) {
 	}
 	return $data;
 }
+
+/**
+ * Set Upload Directory
+ *
+ * Sets the upload dir to edd. This function is called from
+ * edd_change_downloads_upload_dir()
+ *
+ * @since 1.0
+ * @return array Upload directory information
+*/
+function edd_set_upload_dir( $upload ) {
+
+	// Override the year / month being based on the post publication date, if year/month organization is enabled
+	if ( get_option( 'uploads_use_yearmonth_folders' ) ) {
+		// Generate the yearly and monthly dirs
+		$time = current_time( 'mysql' );
+		$y = substr( $time, 0, 4 );
+		$m = substr( $time, 5, 2 );
+		$upload['subdir'] = "/$y/$m";
+	}
+
+	$upload['subdir'] = '/edd' . $upload['subdir'];
+	$upload['path']   = $upload['basedir'] . $upload['subdir'];
+	$upload['url']	  = $upload['baseurl'] . $upload['subdir'];
+	return $upload;
+}
