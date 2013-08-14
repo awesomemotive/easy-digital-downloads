@@ -38,7 +38,7 @@ add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets' );
  * @return void
  */
 function edd_dashboard_sales_widget() {
-	$stats = new EDD_Stats; ?>
+	$stats = new EDD_Payment_Stats; ?>
 	<div class="edd_dashboard_widget">
 		<div class="table table_left table_current_month">
 			<p class="sub"><?php _e( 'Current Month', 'edd' ) ?></p>
@@ -88,16 +88,13 @@ function edd_dashboard_sales_widget() {
 		</div>
 		<div style="clear: both"></div>
 		<?php
-		$payments = edd_get_payments( array(
+		$p_query = new EDD_Payments_Query( array(
 			'number'   => 5,
 			'mode'     => 'live',
-			'orderby'  => 'post_date',
-			'order'    => 'DESC',
-			'user'     => null,
-			'status'   => 'publish',
-			'meta_key' => null,
-			'fields'   => 'ids',
+			'status'   => 'publish'
 		) );
+
+		$payments = $p_query->get_payments();
 
 		if ( $payments ) { ?>
 		<p class="edd_dashboard_widget_subheading"><?php _e( 'Recent Purchases', 'edd' ); ?></p>
@@ -105,11 +102,10 @@ function edd_dashboard_sales_widget() {
 			<table>
 				<tbody>
 					<?php
-					foreach ( $payments as $payment ) {
-						$payment_meta = edd_get_payment_meta( $payment ); ?>
+					foreach ( $payments as $payment ) { ?>
 						<tr>
 							<td>
-								<?php echo get_the_title( $payment ) ?> - (<?php echo $payment_meta['email'] ?>) - <span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment ) ) ); ?></span> - <a href="<?php echo add_query_arg( 'id', $payment, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment ); ?> "><?php _e( 'View Order Details', 'edd' ); ?></a>
+								<?php echo get_the_title( $payment->ID ) ?> - (<?php echo $payment->user_info['email'] ?>) - <span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( $payment->total ) ); ?></span> - <a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> "><?php _e( 'View Order Details', 'edd' ); ?></a>
 							</td>
 						</tr>
 						<?php
