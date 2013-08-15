@@ -836,3 +836,143 @@ function edd_set_purchase_session( $purchase_data ) {
 function edd_get_purchase_session() {
 	return EDD()->session->get( 'edd_purchase' );
 }
+
+/**
+ * Checks if a cart has been saved
+ *
+ * @since 1.8
+ * @return bool
+ */
+function edd_is_cart_saved() {
+	$current_user_ID = get_current_user_id();
+
+	if ( is_user_logged_in() && get_user_meta( $current_user_ID, 'edd_saved_cart', true ) )
+		return true;
+
+	if ( ! is_user_logged_in() && isset( $_COOKIE['edd_saved_cart'] ) )
+		return true;
+
+	return false;
+}
+
+/**
+ * Display the "Save Cart" button on the checkout underneath
+ * the cart.
+ *
+ * @since 1.8
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_save_cart_button() {
+	global $edd_options;
+
+	if ( ! apply_filters( 'edd_cart_saving', true ) )
+		return;
+
+	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
+	$color = ( $color == 'inherit' ) ? '' : $color;
+	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
+	?>
+	<p>
+		<a class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-save-cart-button" href="<?php echo add_query_arg( 'edd_action', 'save_cart' ) ?>"><?php _e( 'Save Cart', 'edd' ); ?></a>
+		<?php if ( edd_is_cart_saved() ) : ?>
+		<a class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-restore-cart-button" href="<?php echo add_query_arg( 'edd_action', 'restore_cart' ) ?>"><?php _e( 'Restore Cart', 'edd' ); ?></a>
+		<?php endif; ?>
+	</p>
+	<?php
+}
+add_action( 'edd_after_checkout_cart', 'edd_save_cart_button' );
+
+/**
+ * Process the Cart Save
+ *
+ * @since 1.8
+ * @return void
+ */
+function edd_save_cart() {
+	if ( ! apply_filters( 'edd_cart_saving', true ) )
+		return;
+
+	$current_user_ID = get_current_user_id();
+
+	$cart = EDD()->session->get( 'edd_cart' );
+
+	/** Does a saved cart already exist? */
+	if ( is_user_logged_in() && ! get_user_meta( $current_user_ID, 'edd_saved_cart', true ) ) {
+		add_user_meta( $current_user_ID, 'edd_saved_cart', $cart, false );
+
+		$messages = EDD()->session->get( 'edd_cart_saving_messages' );
+
+		if ( ! $messages )
+			$messages = array();
+
+		$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), 'Cart saved successfully.' );
+
+		EDD()->session->set( 'edd_cart_saving_messages', $messages );
+	} elseif ( ! is_user_logged_in() && ! isset( $_COOKIE['edd_saved_cart'] ) ) {
+		$cart = serialize( $cart );
+
+		setcookie( 'edd_saved_cart', $cart, time()+3600*24*7 );
+	}
+}
+add_action( 'edd_save_cart', 'edd_save_cart' );
+
+/**
+ * Process the Cart Restoration
+ *
+ * @since 1.8
+ * @return void
+ */
+function edd_restore_cart() {
+	if ( ! apply_filters( 'edd_cart_saving', true ) )
+		return;
+
+	$current_user_ID = get_current_user_id();
+
+	if ( is_user_logged_in() && get_user_meta( $current_user_ID, 'edd_saved_cart', true ) ) {
+		$saved_cart = get_user_meta( $current_user_ID, 'edd_saved_cart', true );
+
+		EDD()->session->set( 'edd_cart', $saved_cart );
+
+		delete_user_meta( $current_user_ID, 'edd_saved_cart' );
+
+		$messages = EDD()->session->get( 'edd_cart_saving_messages' );
+
+		if ( ! $messages )
+			$messages = array();
+
+		$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), 'Cart restored successfully.' );
+
+		EDD()->session->set( 'edd_cart_saving_messages', $messages );
+	} elseif ( ! is_user_logged_in() && isset( $_COOKIE['edd_saved_cart'] ) ) {
+		$cart = $_COOKIE['edd_saved_cart'];
+
+		$cart = stripslashes( $cart );
+
+		$cart = unserialize( $cart );
+
+		EDD()->session->set( 'edd_cart', $cart );
+
+		setcookie( 'edd_saved_cart', '', time()-3600 );
+	}
+}
+add_action( 'edd_restore_cart', 'edd_restore_cart' );
+
+function edd_process_cart_saving_messages() {
+	$messages = EDD()->session->get( 'edd_cart_saving_messages' );
+
+	if ( $messages ) {
+		$classes = apply_filters( 'edd_error_class', array(
+			'edd_errors'
+		) );
+		echo '<div class="' . implode( ' ', $classes ) . '">';
+		    // Loop message codes and display messages
+		   foreach ( $messages as $message_id => $message ){
+		        echo '<p class="edd_error" id="edd_msg_' . $message_id . '">' . $message . '</p>';
+		   }
+		echo '</div>';
+
+		EDD()->session->set( 'edd_cart_saving_messages', null );
+	}
+}
+add_action( 'edd_before_checkout_cart', 'edd_process_cart_saving_messages' );
