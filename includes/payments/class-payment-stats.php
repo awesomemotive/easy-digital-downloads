@@ -160,6 +160,9 @@ class EDD_Payment_Stats extends EDD_Stats {
 					foreach( $payment_ids as $payment_id ) {
 						$items = edd_get_payment_meta_cart_details( $payment_id );
 						foreach( $items as $item ) {
+							if( $item['id'] != $download_id )
+								continue;
+
 							$earnings += $item['price'];
 						}
 					}
