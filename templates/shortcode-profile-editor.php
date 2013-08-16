@@ -9,6 +9,7 @@ if ( is_user_logged_in() ):
 	$first_name   = get_user_meta( $user_id, 'first_name', true );
 	$last_name    = get_user_meta( $user_id, 'last_name', true );
 	$display_name = $current_user->display_name;
+	$address      = get_user_meta( $user_id, '_edd_user_address', true );
 
 	if ( isset( $_GET['updated'] ) && $_GET['updated'] == true && ! edd_get_errors() ): ?>
 	<p class="edd_success"><strong><?php _e( 'Success', 'edd'); ?>:</strong> <?php _e( 'Your profile has been edited successfully.', 'edd' ); ?></p>
@@ -42,6 +43,21 @@ if ( is_user_logged_in() ):
 			<p>
 				<label for="edd_email"><?php _e( 'Email Address', 'edd' ); ?></label>
 				<input name="edd_email" id="edd_email" class="text edd-input required" type="email" value="<?php echo $current_user->user_email; ?>" />
+			</p>
+			<span><legend><?php _e( 'Change your Billing Address', 'edd' ); ?></legend></span>
+			<p id="edd_profile_billing_address_wrap">
+				<label for="edd_address_line1"><?php _e( 'Line 1', 'edd' ); ?></label>
+				<input name="edd_address_line1" id="edd_address_line1" class="text edd-input" type="text" value="<?php echo $address['line1']; ?>" />
+				<label for="edd_address_line2"><?php _e( 'Line 2', 'edd' ); ?></label>
+				<input name="edd_address_line2" id="edd_address_line2" class="text edd-input" type="text" value="<?php echo $address['line2']; ?>" />
+				<label for="edd_address_city"><?php _e( 'City', 'edd' ); ?></label>
+				<input name="edd_address_city" id="edd_address_city" class="text edd-input" type="text" value="<?php echo $address['city']; ?>" />
+				<label for="edd_address_state"><?php _e( 'State', 'edd' ); ?></label>
+				<input name="edd_address_state" id="edd_address_state" class="text edd-input" type="text" value="<?php echo $address['state']; ?>" />
+				<label for="edd_address_zip"><?php _e( 'Zip', 'edd' ); ?></label>
+				<input name="edd_address_zip" id="edd_address_zip" class="text edd-input" type="text" value="<?php echo $address['zip']; ?>" />
+				<label for="edd_address_country"><?php _e( 'Country', 'edd' ); ?></label>
+				<input name="edd_address_country" id="edd_address_country" class="text edd-input" type="text" value="<?php echo $address['country']; ?>" />
 			</p>
 			<span><legend><?php _e( 'Change your Password', 'edd' ); ?></legend></span>
 			<p id="edd_profile_password_wrap">
