@@ -36,7 +36,7 @@ function edd_login_form( $redirect = '' ) {
 		edd_print_errors(); ?>
 		<form id="edd_login_form" class="edd_form" action="" method="post">
 			<fieldset>
-				<legend><?php _e( 'Log into Your Account', 'edd' ); ?></legend>
+				<span><legend><?php _e( 'Log into Your Account', 'edd' ); ?></legend></span>
 				<?php do_action( 'edd_checkout_login_fields_before' ); ?>
 				<p>
 					<label for="edd_user_Login"><?php _e( 'Username', 'edd' ); ?></label>
