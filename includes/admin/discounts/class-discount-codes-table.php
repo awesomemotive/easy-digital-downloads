@@ -252,9 +252,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'delete'     => __( 'Delete', 'edd' ),
 			'activate'   => __( 'Activate', 'edd' ),
-			'deactivate' => __( 'Deactivate', 'edd' )
+			'deactivate' => __( 'Deactivate', 'edd' ),
+			'delete'     => __( 'Delete', 'edd' )
 		);
 
 		return $actions;
