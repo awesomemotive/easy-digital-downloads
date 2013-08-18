@@ -234,6 +234,16 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Message to be displayed when there are no items
+	 *
+	 * @since 1.7.2
+	 * @access public
+	 */
+	function no_items() {
+		_e( 'No discounts found.', 'edd' );
+	}
+
+	/**
 	 * Retrieve the bulk actions
 	 *
 	 * @access public
