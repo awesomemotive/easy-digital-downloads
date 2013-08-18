@@ -228,7 +228,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/ $this->_args['singular'],
+			/*$1%s*/ 'discount',
 			/*$2%s*/ $item['ID']
 		);
 	}
@@ -256,7 +256,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function process_bulk_action() {
-		$ids = isset( $_GET[ strtolower( edd_get_label_singular() ) ] ) ? $_GET[ strtolower( edd_get_label_singular() ) ] : false;
+		$ids = isset( $_GET['discount'] ) ? $_GET['discount'] : false;
 
 		if ( ! is_array( $ids ) )
 			$ids = array( $ids );
