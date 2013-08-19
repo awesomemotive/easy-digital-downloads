@@ -85,7 +85,7 @@ function edd_email_test_purchase_receipt() {
 	$email = isset( $edd_options['purchase_receipt'] ) ? $edd_options['purchase_receipt'] : $default_email_body;
 
 	$message = edd_get_email_body_header();
-	$message .= apply_filters( 'edd_purchase_receipt', edd_email_preview_templage_tags( $email ), 0, array() );
+	$message .= apply_filters( 'edd_purchase_receipt', edd_email_preview_template_tags( $email ), 0, array() );
 	$message .= edd_get_email_body_footer();
 
 	$from_name = isset( $edd_options['from_name'] ) ? $edd_options['from_name'] : get_bloginfo('name');
