@@ -177,7 +177,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_n
  * @param string $message Email message with template tags
  * @return string $message Fully formatted message
  */
-function edd_email_preview_templage_tags( $message ) {
+function edd_email_preview_template_tags( $message ) {
 	global $edd_options;
 
 	$download_list = '<ul>';
@@ -400,7 +400,7 @@ function edd_apply_email_template( $body, $payment_id, $payment_data=array() ) {
 
 	if ( $template_name == 'none' ) {
 		if ( is_admin() )
-			$body = edd_email_preview_templage_tags( $body );
+			$body = edd_email_preview_template_tags( $body );
 
 		return $body; // Return the plain email with no template
 	}
@@ -412,7 +412,7 @@ function edd_apply_email_template( $body, $payment_id, $payment_data=array() ) {
 	$template = ob_get_clean();
 
 	if ( is_admin() )
-		$body = edd_email_preview_templage_tags( $body );
+		$body = edd_email_preview_template_tags( $body );
 
 	$body = apply_filters( 'edd_purchase_receipt_' . $template_name, $body );
 
