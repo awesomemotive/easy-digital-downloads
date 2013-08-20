@@ -28,7 +28,7 @@ jQuery(document).ready(function ($) {
                 // Check to see if the purchase form for this download is present on this page
                 if( $( '#edd_purchase_' + id ).length ) {
                     $( '#edd_purchase_' + id + ' .edd_go_to_checkout' ).hide();
-                    $( '#edd_purchase_' + id + ' a.edd-add-to-cart' ).show();
+                    $( '#edd_purchase_' + id + ' a.edd-add-to-cart' ).show().removeAttr('data-edd-loading');
                 }
 
                 $('span.edd-cart-quantity').each(function() {

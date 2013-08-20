@@ -206,7 +206,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Edit', 'edd' ) . '</a>';
 
 		if( strtolower( $item['status'] ) == 'active' )
-			$row_actions['deactivate'] = '<a href="' . add_query_arg( array( 'edd-action' => 'deactivate_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Deactive', 'edd' ) . '</a>';
+			$row_actions['deactivate'] = '<a href="' . add_query_arg( array( 'edd-action' => 'deactivate_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Deactivate', 'edd' ) . '</a>';
 		else
 			$row_actions['activate'] = '<a href="' . add_query_arg( array( 'edd-action' => 'activate_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Activate', 'edd' ) . '</a>';
 
@@ -228,9 +228,19 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/ $this->_args['singular'],
+			/*$1%s*/ 'discount',
 			/*$2%s*/ $item['ID']
 		);
+	}
+
+	/**
+	 * Message to be displayed when there are no items
+	 *
+	 * @since 1.7.2
+	 * @access public
+	 */
+	function no_items() {
+		_e( 'No discounts found.', 'edd' );
 	}
 
 	/**
@@ -242,7 +252,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'delete' => __( 'Delete', 'edd' )
+			'activate'   => __( 'Activate', 'edd' ),
+			'deactivate' => __( 'Deactivate', 'edd' ),
+			'delete'     => __( 'Delete', 'edd' )
 		);
 
 		return $actions;
@@ -256,7 +268,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function process_bulk_action() {
-		$ids = isset( $_GET['download'] ) ? $_GET['download'] : false;
+		$ids = isset( $_GET['discount'] ) ? $_GET['discount'] : false;
 
 		if ( ! is_array( $ids ) )
 			$ids = array( $ids );
@@ -264,6 +276,12 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		foreach ( $ids as $id ) {
 			if ( 'delete' === $this->current_action() ) {
 				edd_remove_discount( $id );
+			}
+			if ( 'activate' === $this->current_action() ) {
+				edd_update_discount_status( $id, 'active' );
+			}
+			if ( 'deactivate' === $this->current_action() ) {
+				edd_update_discount_status( $id, 'inactive' );
 			}
 		}
 
