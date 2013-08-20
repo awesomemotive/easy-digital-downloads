@@ -49,7 +49,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 		? wp_strip_all_tags( $edd_options['purchase_subject'], true )
 		: __( 'Purchase Receipt', 'edd' ), $payment_id );
 
-	$subject = edd_email_template_tags( $subject, $payment_data, $payment_id );
+	$subject = edd_do_email_tags( $subject, $payment_id );
 
 	$headers = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
 	$headers .= "Reply-To: ". $from_email . "\r\n";
@@ -139,7 +139,7 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 		$admin_subject = sprintf( __( 'New download purchase - Order #%1$s', 'edd' ), $payment_id );
 	}
 
-	$admin_subject = edd_email_template_tags( $admin_subject, $payment_data, $payment_id, true );
+	$admin_subject = edd_do_email_tags( $admin_subject, $payment_id );
 	$admin_subject = apply_filters( 'edd_admin_sale_notification_subject', $admin_subject, $payment_id, $payment_data );
 
 	$from_name  = isset( $edd_options['from_name'] )  ? $edd_options['from_name']  : get_bloginfo('name');
