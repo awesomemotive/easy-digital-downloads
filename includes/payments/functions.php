@@ -18,7 +18,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Retrieve payments from the database.
  *
  * Since 1.2, this function takes an array of arguments, instead of individual
- * parameters. All of the original paremeters remain, but can be passed in any
+ * parameters. All of the original parameters remain, but can be passed in any
  * order via the array.
  *
  * $offset = 0, $number = 20, $mode = 'live', $orderby = 'ID', $order = 'DESC',
@@ -851,7 +851,7 @@ function edd_get_payment_amount( $payment_id ) {
 
 /**
  * Retrieves subtotal for payment (this is the amount before taxes) and then
- * returns a full formatted amount. This function essentialy calls
+ * returns a full formatted amount. This function essentially calls
  * edd_get_payment_subtotal()
  *
  * @since 1.3.3
@@ -888,7 +888,7 @@ function edd_get_payment_subtotal( $payment_id = 0) {
 
 /**
  * Retrieves taxed amount for payment and then returns a full formatted amount
- * This function essentialy calls edd_get_payment_tax()
+ * This function essentially calls edd_get_payment_tax()
  *
  * @since 1.3.3
  * @see edd_get_payment_tax()

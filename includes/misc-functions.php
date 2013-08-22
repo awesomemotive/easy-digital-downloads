@@ -53,7 +53,7 @@ function edd_no_guest_checkout() {
  *
  * @since 1.0
  * @global $edd_options
- * @return bool $ret Wheter or not the logged_in_only setting is set
+ * @return bool $ret Whether or not the logged_in_only setting is set
  */
 function edd_logged_in_only() {
 	global $edd_options;
@@ -108,7 +108,7 @@ function edd_is_cc_verify_enabled() {
 	$ret = true;
 
 	/*
-	 * Enable if use a single gateway other than PayPal or Manual. We have to assume it accepts cerdit cards
+	 * Enable if use a single gateway other than PayPal or Manual. We have to assume it accepts credit cards
 	 * Enable if using more than one gateway if they aren't both PayPal and manual, again assuming credit card usage
 	 */
 
@@ -130,7 +130,7 @@ function edd_is_cc_verify_enabled() {
 /**
  * Is Odd
  *
- * Checks wether an integer is odd.
+ * Checks whether an integer is odd.
  *
  * @since 1.0
  * @param int $int The integer to check
@@ -272,7 +272,7 @@ function edd_month_num_to_name( $n ) {
 }
 
 /**
- * Get PHP Arg Separator Ouput
+ * Get PHP Arg Separator Output
  *
  * @since 1.0.8.3
  * @return string Arg separator output
@@ -341,12 +341,12 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
 		if ( ! is_null( $replacement ) ) {
 			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
 			trigger_error(  print_r( $backtrace ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
-			// Alernatively we could dump this to a file.
+			// Alternatively we could dump this to a file.
 		}
 		else {
 			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'edd'), $function, $version ) );
 			trigger_error( print_r($backtrace) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
-			// Alernatively we could dump this to a file.
+			// Alternatively we could dump this to a file.
 		}
 	}
 }
@@ -424,7 +424,7 @@ function edd_get_symlink_dir() {
 }
 
 /**
- * Delete symbolic links afer they have been used
+ * Delete symbolic links after they have been used
  *
  * @access public
  * @since  1.5
