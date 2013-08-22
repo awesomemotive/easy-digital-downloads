@@ -48,7 +48,14 @@ class EDD_Payment_Stats extends EDD_Stats {
 			// Global sale stats
 			add_filter( 'edd_count_payments_where', array( $this, 'count_where' ) );
 
-			$count = edd_count_payments()->$status;
+			if( is_array( $status ) ) {
+				$count = 0;
+				foreach( $status as $payment_status ) {
+					$count += edd_count_payments()->$payment_status;
+				}
+			} else {
+				$count = edd_count_payments()->$status;
+			}
 
 			remove_filter( 'edd_count_payments_where', array( $this, 'count_where' ) );
 
