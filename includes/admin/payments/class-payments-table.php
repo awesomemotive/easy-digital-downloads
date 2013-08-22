@@ -119,7 +119,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		) );
 
 		$this->get_payment_counts();
-
+		$this->process_bulk_action();
 		$this->base_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history' );
 	}
 
@@ -405,6 +405,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 			do_action( 'edd_payments_table_do_bulk_action', $id, $this->current_action() );
 		}
+
 	}
 
 	/**
@@ -499,13 +500,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function prepare_items() {
 
+		wp_reset_vars( array( 'action', 'payment', 'orderby', 'order', 's' ) );
+
 		$columns  = $this->get_columns();
 		$hidden   = array(); // No hidden columns
 		$sortable = $this->get_sortable_columns();
 		$data     = $this->payments_data();
 		$status   = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
 
-		$this->process_bulk_action();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
 		switch ( $status ) {
