@@ -135,7 +135,7 @@ function edd_get_variable_prices( $download_id ) {
  * Checks to see if a download has variable prices enabled.
  *
  * @since 1.0.7
- * @param int $download_id ID number of the download to checl
+ * @param int $download_id ID number of the download to check
  * @return bool true if has variable prices, false otherwise
  */
 function edd_has_variable_prices( $download_id ) {
@@ -285,7 +285,7 @@ function edd_get_download_type( $download_id ) {
 
 
 /**
- * Deterimes if a product is a bundle
+ * Determines if a product is a bundle
  *
  * @since 1.6
  * @param int $download_id Download ID
@@ -380,7 +380,7 @@ function edd_record_sale_in_log( $download_id, $payment_id ) {
  * @since 1.0
  * @global $edd_logs
  * @param int $download_id Download ID
- * @param int $file_id ID of the file dowloded
+ * @param int $file_id ID of the file downloaded
  * @param array $user_info User information
  * @param string $ip IP Address
  * @param int $payment_id Payment ID
@@ -579,7 +579,7 @@ function edd_get_download_files( $download_id, $variable_price_id = null ) {
 }
 
 /**
- * Retrieves a file name for a product's downlaod file
+ * Retrieves a file name for a product's download file
  *
  * Defaults to the file's actual name if no 'name' key is present
  *
@@ -671,7 +671,7 @@ function edd_get_file_download_limit_override( $download_id = 0, $payment_id = 0
  * Sets the file download file limit override for a particular download
  *
  * The override allows the main file download limit to be bypassed
- * If no override is set yet, the override is set to the main limmit + 1
+ * If no override is set yet, the override is set to the main limit + 1
  * If the override is already set, then it is simply incremented by 1
  *
  * @since 1.3.2
@@ -769,7 +769,7 @@ function edd_get_file_price_condition( $download_id, $file_key ) {
  *
  * @since 1.0
  * @param string $key
- * @param string $email Customer email addresss
+ * @param string $email Customer email address
  * @param int $filekey File key
  * @param int $download_id Download ID
  * @param int $price_id

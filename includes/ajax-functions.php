@@ -298,7 +298,7 @@ add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
 
 /**
  * Check for Download Price Variations via AJAX (this function can only be used
- * in WordPress Admin). This function isused for the Edit Payment screen when downloads
+ * in WordPress Admin). This function is used for the Edit Payment screen when downloads
  * are added to the purchase. When each download is chosen, an AJAX call is fired
  * to this function which will check if variable prices exist for that download.
  * If they do, it will output a dropdown of all the variable prices available for
