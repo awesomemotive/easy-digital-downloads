@@ -59,7 +59,7 @@ function edd_checkout_form() {
 
 /**
  * Renders the Purchase Form, hooks are provided to add to the purchase form.
- * The default Purchase Form rendered deisplays a list of the enabled payment
+ * The default Purchase Form rendered displays a list of the enabled payment
  * gateways, a user registration form (if enable) and a credit card info form
  * if credit cards are enabled
  *
@@ -517,7 +517,7 @@ add_action( 'edd_payment_mode_select', 'edd_payment_mode_select' );
 
 /**
  * Show Payment Icons by getting all the accepted icons from the EDD Settings
- * then ouputting the icons.
+ * then outputting the icons.
  *
  * @since 1.0
  * @global $edd_options Array of all the EDD Options
@@ -581,7 +581,7 @@ add_action( 'edd_checkout_form_top', 'edd_discount_field', -1 );
 /**
  * Renders the Checkout Agree to Terms, this displays a checkbox for users to
  * agree the T&Cs set in the EDD Settings. This is only displayed if T&Cs are
- * set in the EDD Settigs.
+ * set in the EDD Settings.
  *
  * @since 1.3.2
  * @global $edd_options Array of all the EDD Options
