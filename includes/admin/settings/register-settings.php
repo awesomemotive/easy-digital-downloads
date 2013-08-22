@@ -1066,40 +1066,34 @@ function edd_settings_sanitize( $input = array() ) {
 
 	global $edd_options;
 
+	parse_str( $_POST['_wp_http_referer'], $referrer );
+
 	$output   = array();
 	$settings = edd_get_registered_settings();
+	$tab      = $referrer['tab'];
 
-	// Locate the tab we're saving
-	foreach( $settings as $section => $section_settings ) {
-
-		// This is necessary due to the pre 1.8 structure of the EDD settings API
-		if( isset( $_POST[ 'edd_settings_' . $section ] ) ) {
-
-			// Tab found, set the input value and get out
-			$input = apply_filters( 'edd_settings_' . $section . '_sanitize', $_POST[ 'edd_settings_' . $section ] );
-			break;
-
-		}
-
-	}
+	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $_POST[ 'edd_settings_' . $tab ] );
 
 	// Loop through each setting being saved and pass it through a sanitization filter
 	foreach( $input as $key => $value ) {
 
 		// Get the setting type (checkbox, select, etc)
-		$type = isset( $section_settings[ $key ][ 'type' ] ) ? $section_settings[ $key ][ 'type' ] : 'text';
+		$type = isset( $settings[ $key ][ 'type' ] ) ? $settings[ $key ][ 'type' ] : 'text';
 
 		$output[ $key ] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
 
 	}
 
-	// Loop through the whitelist and unset any that are empty
-	foreach( $section_settings as $key => $value ) {
 
-		if( empty( $_POST[ 'edd_settings_' . $section ][ $key ] ) ) {
-			unset( $edd_options[ $key ] );
+	// Loop through the whitelist and unset any that are empty for the tab being saved
+	if( ! empty( $settings[ $tab ] ) ) {
+		foreach( $settings[ $tab ] as $key => $value ) {
+
+			if( empty( $_POST[ 'edd_settings_' . $tab ][ $key ] ) ) {
+				unset( $edd_options[ $key ] );
+			}
+
 		}
-
 	}
 
 	// Merge our new settings with the existing
