@@ -245,6 +245,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return void
 	 */
 	public function per_page() {
+
 		if ( $this->args[ 'number' ] == -1 )
 			$this->__set( 'nopaging', true );
 		else
