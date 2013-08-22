@@ -104,7 +104,7 @@ class GoogleChartApi
 //@{
 
 	/**
-	 * Set wether you want the class to use GET or POST for querying the API.
+	 * Set whether you want the class to use GET or POST for querying the API.
 	 *
 	 * Default method is POST.
 	 *
