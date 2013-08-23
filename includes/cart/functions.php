@@ -874,7 +874,10 @@ function edd_save_cart_button() {
 	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
 	?>
 	<p>
+
+		<?php if ( ! did_action( 'edd_cart_empty' ) ) : // We don't want to display the 'Save Cart' button when the cart is empty ?>
 		<a class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-save-cart-button" href="<?php echo add_query_arg( 'edd_action', 'save_cart' ) ?>"><?php _e( 'Save Cart', 'edd' ); ?></a>
+		<?php endif; ?>
 		<?php if ( edd_is_cart_saved() ) : ?>
 		<a class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-restore-cart-button" href="<?php echo add_query_arg( 'edd_action', 'restore_cart' ) ?>"><?php _e( 'Restore Cart', 'edd' ); ?></a>
 		<?php endif; ?>
@@ -882,6 +885,7 @@ function edd_save_cart_button() {
 	<?php
 }
 add_action( 'edd_before_checkout_cart', 'edd_save_cart_button' );
+add_action( 'edd_cart_empty', 'edd_save_cart_button', 1 );
 
 /**
  * Process the Cart Save
