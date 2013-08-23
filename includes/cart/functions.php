@@ -928,7 +928,7 @@ function edd_save_cart() {
 		$cart = serialize( $cart );
 
 		setcookie( 'edd_saved_cart', $cart, time()+3600*24*7 );
-		setcookie( 'edc_cart_token', $token, time()+3600*24*7 );
+		setcookie( 'edd_cart_token', $token, time()+3600*24*7 );
 
 		$messages = EDD()->session->get( 'edd_cart_saving_messages' );
 
@@ -1043,7 +1043,7 @@ add_action( 'edd_before_checkout_cart', 'edd_process_cart_saving_messages' );
  * Delete Saved Carts after one week
  */
 function edd_delete_saved_carts() {
-	
+
 }
 add_action( 'edd_weekly_scheduled_events', 'edd_delete_saved_carts' );
 
