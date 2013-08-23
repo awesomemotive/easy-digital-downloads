@@ -52,9 +52,7 @@ function edd_admin_footer_for_thickbox() {
 	global $pagenow, $typenow;
 
 	// Only run in post/page creation and edit screens
-	if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow != 'download' ) {
-		$downloads = get_posts( array( 'post_type' => 'download', 'posts_per_page' => -1 ) );
-		?>
+	if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow != 'download' ) { ?>
 		<script type="text/javascript">
             function insertDownload() {
                 var id = jQuery('#edd_products').val(),
@@ -91,8 +89,6 @@ function edd_admin_footer_for_thickbox() {
 
 		<div id="choose-download" style="display: none;">
 			<div class="wrap" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
-			<?php
-			if ( $downloads ) { ?>
 				<p><?php echo sprintf( __( 'Use the form below to insert the short code for purchasing a %s', 'edd' ), edd_get_label_singular() ); ?></p>
 				<div>
 					<?php echo EDD()->html->product_dropdown(); ?>
@@ -135,9 +131,8 @@ function edd_admin_footer_for_thickbox() {
 					<input type="button" id="edd-insert-download" class="button-primary" value="<?php echo sprintf( __( 'Insert %s', 'edd' ), edd_get_label_singular() ); ?>" onclick="insertDownload();" />
 					<a id="edd-cancel-download-insert" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Cancel', 'edd' ); ?>"><?php _e( 'Cancel', 'edd' ); ?></a>
 				</p>
-			<?php } ?>
+			</div>
 		</div>
-	</div>
 	<?php
 	}
 }
