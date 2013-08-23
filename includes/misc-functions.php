@@ -22,10 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_is_test_mode() {
 	global $edd_options;
 
-	if ( ! isset( $edd_options['test_mode'] ) || is_null( $edd_options['test_mode'] ) )
-		$ret = false;
-	else
-		$ret = true;
+	$ret = ! empty( $edd_options['test_mode'] );
 
 	return (bool) apply_filters( 'edd_is_test_mode', $ret );
 }
