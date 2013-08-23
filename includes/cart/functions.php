@@ -901,29 +901,43 @@ add_action( 'edd_cart_empty', 'edd_save_cart_button', 9 );
  * @return void
  */
 function edd_save_cart() {
+	global $edd_options;
+
 	if ( ! apply_filters( 'edd_cart_saving', true ) )
 		return;
 
 	$current_user_ID = get_current_user_id();
 
 	$cart = EDD()->session->get( 'edd_cart' );
+	$token = edd_generate_cart_token();
 
 	/** Does a saved cart already exist? */
 	if ( is_user_logged_in() && ! get_user_meta( $current_user_ID, 'edd_saved_cart', true ) ) {
 		add_user_meta( $current_user_ID, 'edd_saved_cart', $cart, false );
+		add_user_meta( $current_user_ID, 'edd_cart_token', $token, false );
 
 		$messages = EDD()->session->get( 'edd_cart_saving_messages' );
 
 		if ( ! $messages )
 			$messages = array();
 
-		$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), 'Cart saved successfully.' );
+		$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), __( 'Cart saved successfully. You can restore your cart using this URL:', 'edd' ) . ' ' . '<a href="' .  get_permalink( $edd_options['purchase_page'] ) . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  get_permalink( $edd_options['purchase_page'] ) . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>' );
 
 		EDD()->session->set( 'edd_cart_saving_messages', $messages );
-	} elseif ( ! is_user_logged_in() && ! isset( $_COOKIE['edd_saved_cart'] ) ) {
+	} elseif ( ! is_user_logged_in() && ! isset( $_COOKIE['edd_saved_cart'] ) && ! isset( $_COOKIE['edd_cart_token'] ) ) {
 		$cart = serialize( $cart );
 
 		setcookie( 'edd_saved_cart', $cart, time()+3600*24*7 );
+		setcookie( 'edc_cart_token', $token, time()+3600*24*7 );
+
+		$messages = EDD()->session->get( 'edd_cart_saving_messages' );
+
+		if ( ! $messages )
+			$messages = array();
+
+		$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), __( 'Cart saved successfully. You can restore your cart using this URL:', 'edd' ) . ' ' . '<a href="' .  get_permalink( $edd_options['purchase_page'] ) . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  get_permalink( $edd_options['purchase_page'] ) . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>' );
+
+		EDD()->session->set( 'edd_cart_saving_messages', $messages );
 	}
 }
 add_action( 'edd_save_cart', 'edd_save_cart' );
@@ -940,12 +954,49 @@ function edd_restore_cart() {
 
 	$current_user_ID = get_current_user_id();
 
-	if ( is_user_logged_in() && get_user_meta( $current_user_ID, 'edd_saved_cart', true ) ) {
+	if ( is_user_logged_in() && get_user_meta( $current_user_ID, 'edd_saved_cart', true ) && isset( $_GET['edd_cart_token'] ) ) {
+		$token = get_user_meta( $current_user_ID, 'edd_cart_token', true );
+
+		if ( ! $_GET['edd_cart_token'] == $token )
+			return;
+
 		$saved_cart = get_user_meta( $current_user_ID, 'edd_saved_cart', true );
 
 		EDD()->session->set( 'edd_cart', $saved_cart );
 
 		delete_user_meta( $current_user_ID, 'edd_saved_cart' );
+		delete_user_meta( $current_user_ID, 'edd_cart_token' );
+
+		$messages = EDD()->session->get( 'edd_cart_saving_messages' );
+
+		if ( ! $messages )
+			$messages = array();
+
+		$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), 'Cart restored successfully.' );
+
+		EDD()->session->set( 'edd_cart_saving_messages', $messages );
+	} elseif ( ! is_user_logged_in() && isset( $_COOKIE['edd_saved_cart'] ) && isset( $_COOKIE['edd_cart_token'] ) && isset( $_GET['edd_cart_token'] ) ) {
+		$cart = $_COOKIE['edd_saved_cart'];
+		$token = $_COOKIE['edd_cart_token'];
+
+		if ( ! $_GET['edd_cart_token'] == $token )
+			return;
+
+		$cart = stripslashes( $cart );
+
+		$cart = unserialize( $cart );
+
+		EDD()->session->set( 'edd_cart', $cart );
+
+		setcookie( 'edd_saved_cart', '', time()-3600 );
+		setcookie( 'edd_cart_token', '', time()-3600 );
+	} elseif ( is_user_logged_in() && get_user_meta( $current_user_ID, 'edd_saved_cart', true ) ) {
+		$saved_cart = get_user_meta( $current_user_ID, 'edd_saved_cart', true );
+
+		EDD()->session->set( 'edd_cart', $saved_cart );
+
+		delete_user_meta( $current_user_ID, 'edd_saved_cart' );
+		delete_user_meta( $current_user_ID, 'edd_cart_token' );
 
 		$messages = EDD()->session->get( 'edd_cart_saving_messages' );
 
@@ -987,3 +1038,18 @@ function edd_process_cart_saving_messages() {
 	}
 }
 add_action( 'edd_before_checkout_cart', 'edd_process_cart_saving_messages' );
+
+/**
+ * Delete Saved Carts after one week
+ */
+function edd_delete_saved_carts() {
+	
+}
+add_action( 'edd_weekly_scheduled_events', 'edd_delete_saved_carts' );
+
+/**
+ * Generate URL token to restore the cart via a URL
+ */
+function edd_generate_cart_token() {
+	return time();
+}
