@@ -144,7 +144,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb'        => '<input type="checkbox" />',
-			'ID'     	=> __( 'ID', 'edd' ),
 			'name'  	=> __( 'Name', 'edd' ),
 			'code'  	=> __( 'Code', 'edd' ),
 			'amount'  	=> __( 'Amount', 'edd' ),
@@ -167,7 +166,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'ID'     => array( 'ID', true ),
 			'name'   => array( 'name', false )
 		);
 	}
