@@ -37,10 +37,7 @@ function edd_is_test_mode() {
 function edd_no_guest_checkout() {
 	global $edd_options;
 
-	if ( isset( $edd_options['logged_in_only'] ) )
-		$ret = true;
-	else
-		$ret = false;
+	$ret = ! empty ( $edd_options['logged_in_only'] );
 
 	return (bool) apply_filters( 'edd_no_guest_checkout', $ret );
 }
@@ -55,10 +52,7 @@ function edd_no_guest_checkout() {
 function edd_logged_in_only() {
 	global $edd_options;
 
-	if ( isset( $edd_options['logged_in_only'] ) )
-		$ret = true;
-	else
-		$ret = false;
+	$ret = ! empty( $edd_options['logged_in_only'] );
 
 	return (bool) apply_filters( 'edd_logged_in_only', $ret );
 }
@@ -86,10 +80,9 @@ function edd_straight_to_checkout() {
 function edd_no_redownload() {
 	global $edd_options;
 
-	if ( isset( $edd_options['disable_redownload'] ) )
-		return true;
+	$ret = isset( $edd_options['disable_redownload'] );
 
-	return (bool) apply_filters( 'edd_no_redownload', false );
+	return (bool) apply_filters( 'edd_no_redownload', $ret );
 }
 
 /**
