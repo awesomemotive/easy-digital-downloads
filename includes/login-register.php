@@ -24,14 +24,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_login_form( $redirect = '' ) {
 	global $edd_options, $post;
 
-	if ( $redirect == '' ) {
+	if ( empty( $redirect ) ) {
 		$redirect = edd_get_current_page_url();
 	}
 
 	ob_start();
 
-	if ( ! is_user_logged_in() ) { ?>
-		<?php
+	if ( ! is_user_logged_in() ) {
+
 		// Show any error messages after form submission
 		edd_print_errors(); ?>
 		<form id="edd_login_form" class="edd_form" action="" method="post">
