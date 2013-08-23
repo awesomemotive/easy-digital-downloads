@@ -37,7 +37,7 @@ function edd_login_form( $redirect = '' ) {
 		<form id="edd_login_form" class="edd_form" action="" method="post">
 			<fieldset>
 				<span><legend><?php _e( 'Log into Your Account', 'edd' ); ?></legend></span>
-				<?php do_action( 'edd_checkout_login_fields_before' ); ?>
+				<?php do_action( 'edd_login_fields_before' ); ?>
 				<p>
 					<label for="edd_user_Login"><?php _e( 'Username', 'edd' ); ?></label>
 					<input name="edd_user_login" id="edd_user_login" class="required" type="text" title="<?php _e( 'Username', 'edd' ); ?>"/>
@@ -57,7 +57,7 @@ function edd_login_form( $redirect = '' ) {
 						<?php _e( 'Lost Password?', 'edd' ); ?>
 					</a>
 				</p>
-				<?php do_action( 'edd_checkout_login_fields_after' ); ?>
+				<?php do_action( 'edd_login_fields_after' ); ?>
 			</fieldset>
 		</form>
 	<?php
