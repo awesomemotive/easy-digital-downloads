@@ -77,14 +77,7 @@ function edd_process_settings_export() {
 	if( ! current_user_can( 'manage_shop_settings' ) )
 		return;
 
-	$settings = array();
-	$settings['general']    = get_option( 'edd_general' );
-	$settings['gateways']   = get_option( 'edd_gateways' );
-	$settings['emails']     = get_option( 'edd_emails' );
-	$settings['styles']     = get_option( 'edd_styles' );
-	$settings['taxes']      = get_option( 'edd_taxes' );
-	$settings['extensions'] = get_option( 'edd_extensions' );
-	$settings['misc']       = get_option( 'edd_misc' );
+	$settings = get_option( 'edd_settings' );
 
 	ignore_user_abort( true );
 
@@ -128,13 +121,7 @@ function edd_process_settings_import() {
 	// Retrieve the settings from the file and convert the json object to an array
 	$settings = edd_object_to_array( json_decode( file_get_contents( $import_file ) ) );
 
-	update_option( 'edd_general'   , $settings['general']    );
-	update_option( 'edd_gateways'  , $settings['gateways']   );
-	update_option( 'edd_emails'    , $settings['emails']     );
-	update_option( 'edd_styles'    , $settings['styles']     );
-	update_option( 'edd_taxes'     , $settings['taxes']      );
-	update_option( 'edd_extensions', $settings['extensions'] );
-	update_option( 'edd_misc'      , $settings['misc']       );
+	update_option( 'edd_settings', $settings );
 
 	wp_safe_redirect( admin_url( 'tools.php?page=edd-settings-export-import&edd-message=settings-imported' ) ); exit;
 
