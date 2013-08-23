@@ -18,12 +18,10 @@
 					<?php do_action( 'edd_checkout_table_body_first', $item['id'] ); ?>
 					<td class="edd_cart_item_name">
 						<?php
-							if ( current_theme_supports( 'post-thumbnails' ) ) {
-								if ( has_post_thumbnail( $item['id'] ) ) {
-									echo '<div class="edd_cart_item_image">';
-										echo get_the_post_thumbnail( $item['id'], apply_filters( 'edd_checkout_image_size', array( 25,25 ) ) );
-									echo '</div>';
-								}
+							if ( current_theme_supports( 'post-thumbnails' ) && has_post_thumbnail( $item['id'] ) ) {
+								echo '<div class="edd_cart_item_image">';
+									echo get_the_post_thumbnail( $item['id'], apply_filters( 'edd_checkout_image_size', array( 25,25 ) ) );
+								echo '</div>';
 							}
 							$item_title = get_the_title( $item['id'] );
 							$variable_pricing = edd_has_variable_prices( $item['id'] );
