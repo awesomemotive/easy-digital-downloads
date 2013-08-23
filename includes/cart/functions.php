@@ -881,7 +881,7 @@ function edd_save_cart_button() {
 	</p>
 	<?php
 }
-add_action( 'edd_after_checkout_cart', 'edd_save_cart_button' );
+add_action( 'edd_before_checkout_cart', 'edd_save_cart_button' );
 
 /**
  * Process the Cart Save
