@@ -103,7 +103,7 @@ function edd_install() {
 			'failure_page'  => $failed
 		);
 
-		update_option( 'edd_settings_general', $options );
+		update_option( 'edd_settings', $options );
 		update_option( 'edd_version', EDD_VERSION );
 
 		// Add a temporary option to note that EDD pages have been created
