@@ -64,14 +64,14 @@ function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_n
 	}
 
 	$address = '';
-	if ( !empty( $user_info['address'] ) ) {
+	if ( ! empty( $user_info['address'] ) ) {
 		$address .= $user_info['address']['line1'] . '<br/>';
 		$address .= $user_info['address']['line2'] . '<br/>';
 		$address .= $user_info['address']['city'] . ', ';
 		$address .= $user_info['address']['state'] . ' ';
 		$address .= $user_info['address']['zip'];
 
-		if( !empty( $user_info['address']['country'] ) ) {
+		if( ! empty( $user_info['address']['country'] ) ) {
 			$address .= ', ' . $user_info['address']['country'];
 		}
 	}
