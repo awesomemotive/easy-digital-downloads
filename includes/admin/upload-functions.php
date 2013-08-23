@@ -137,6 +137,6 @@ function edd_get_htaccess_rules( $method = false ) {
 			break;
 
 	endswitch;
-	$rules = apply_filters( 'edd_protected_directory_htaccess_rules', $rules );
+	$rules = apply_filters( 'edd_protected_directory_htaccess_rules', $rules, $method );
 	return $rules;
 }
