@@ -1371,7 +1371,7 @@ class EDD_API {
 	 *
 	 * @access private
 	 * @since 1.5.3
-	 * @return array default eranings statistics
+	 * @return array default earnings statistics
 	 */
 	private function get_default_earnings_stats() {
 

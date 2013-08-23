@@ -150,11 +150,11 @@ class EDD_Roles {
 	}
 
 	/**
-	 * Gets the core post type capabilties
+	 * Gets the core post type capabilities
 	 *
 	 * @access public
 	 * @since  1.4.4
-	 * @return array $capabilities Core post type capabilties
+	 * @return array $capabilities Core post type capabilities
 	 */
 	public function get_core_caps() {
 		$capabilities = array();

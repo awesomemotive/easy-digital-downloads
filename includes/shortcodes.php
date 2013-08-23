@@ -218,7 +218,7 @@ add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
  * This shortcodes uses the WordPress Query API to get downloads with the
  * arguments specified when using the shortcode. A list of the arguments
  * can be found from the EDD Dccumentation. The shortcode will take all the
- * paramaters and display the downloads queried in a valid HTML <div> tags.
+ * parameters and display the downloads queried in a valid HTML <div> tags.
  *
  * @since 1.0.6
  * @internal Incomplete shortcode
