@@ -21,7 +21,27 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @return array EDD settings
  */
 function edd_get_settings() {
-	$settings = (array) get_option( 'edd_settings' );
+
+	$settings = get_option( 'edd_settings' );
+
+	if( empty( $settings ) ) {
+
+		// Update old settings with new single option
+
+		$general_settings = is_array( get_option( 'edd_settings_general' ) )    ? get_option( 'edd_settings_general' )  	: array();
+		$gateway_settings = is_array( get_option( 'edd_settings_gateways' ) )   ? get_option( 'edd_settings_gateways' ) 	: array();
+		$email_settings   = is_array( get_option( 'edd_settings_emails' ) )     ? get_option( 'edd_settings_emails' )   	: array();
+		$style_settings   = is_array( get_option( 'edd_settings_styles' ) )     ? get_option( 'edd_settings_styles' )   	: array();
+		$tax_settings     = is_array( get_option( 'edd_settings_taxes' ) )      ? get_option( 'edd_settings_taxes' )    	: array();
+		$ext_settings     = is_array( get_option( 'edd_settings_extensions' ) ) ? get_option( 'edd_settings_extensions' )	: array();
+		$license_settings = is_array( get_option( 'edd_settings_licenses' ) )   ? get_option( 'edd_settings_licenses' )		: array();
+		$misc_settings    = is_array( get_option( 'edd_settings_misc' ) )       ? get_option( 'edd_settings_misc' )			: array();
+
+		$settings = array_merge( $general_settings, $gateway_settings, $email_settings, $style_settings, $tax_settings, $ext_settings, $license_settings, $misc_settings );
+
+		update_option( 'edd_settings', $settings );
+
+	}
 	return apply_filters( 'edd_get_settings', $settings );
 }
 
@@ -1066,40 +1086,34 @@ function edd_settings_sanitize( $input = array() ) {
 
 	global $edd_options;
 
+	parse_str( $_POST['_wp_http_referer'], $referrer );
+
 	$output   = array();
 	$settings = edd_get_registered_settings();
+	$tab      = $referrer['tab'];
 
-	// Locate the tab we're saving
-	foreach( $settings as $section => $section_settings ) {
-
-		// This is necessary due to the pre 1.8 structure of the EDD settings API
-		if( isset( $_POST[ 'edd_settings_' . $section ] ) ) {
-
-			// Tab found, set the input value and get out
-			$input = apply_filters( 'edd_settings_' . $section . '_sanitize', $_POST[ 'edd_settings_' . $section ] );
-			break;
-
-		}
-
-	}
+	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $_POST[ 'edd_settings_' . $tab ] );
 
 	// Loop through each setting being saved and pass it through a sanitization filter
 	foreach( $input as $key => $value ) {
 
 		// Get the setting type (checkbox, select, etc)
-		$type = isset( $section_settings[ $key ][ 'type' ] ) ? $section_settings[ $key ][ 'type' ] : 'text';
+		$type = isset( $settings[ $key ][ 'type' ] ) ? $settings[ $key ][ 'type' ] : 'text';
 
 		$output[ $key ] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
 
 	}
 
-	// Loop through the whitelist and unset any that are empty
-	foreach( $section_settings as $key => $value ) {
 
-		if( empty( $_POST[ 'edd_settings_' . $section ][ $key ] ) ) {
-			unset( $edd_options[ $key ] );
+	// Loop through the whitelist and unset any that are empty for the tab being saved
+	if( ! empty( $settings[ $tab ] ) ) {
+		foreach( $settings[ $tab ] as $key => $value ) {
+
+			if( empty( $_POST[ 'edd_settings_' . $tab ][ $key ] ) ) {
+				unset( $edd_options[ $key ] );
+			}
+
 		}
-
 	}
 
 	// Merge our new settings with the existing

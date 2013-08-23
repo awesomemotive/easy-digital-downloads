@@ -52,7 +52,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 */
 	public function __construct( $args = array() ) {
 		$defaults = array(
-			'output'     => 'posts', // If you want to build awesome payment objects, output as `payments`
+			'output'     => 'payments', // Use 'posts' to get standard post objects
 			'post_type'  => array( 'edd_payment' ),
 			'start_date' => false,
 			'end_date'   => false,
@@ -245,6 +245,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return void
 	 */
 	public function per_page() {
+
 		if ( $this->args[ 'number' ] == -1 )
 			$this->__set( 'nopaging', true );
 		else
