@@ -76,7 +76,7 @@ function edd_get_tax_rates() {
  *
  * @since 1.3.3
  * @global $edd_options
- * @return float $trate Taxation rate
+ * @return float $rate Taxation rate
  */
 function edd_get_tax_rate( $country = false, $state = false ) {
 	global $edd_options;

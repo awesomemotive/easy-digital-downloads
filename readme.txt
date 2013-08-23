@@ -390,7 +390,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 = 1.5.2.1: April 23, 2013 =
 
 * Fix: A bug that caused taxes to be calculated incorrectly
-* FIx: A bug that caused purchase receipts to not respect an edited email addresss
+* FIx: A bug that caused purchase receipts to not respect an edited email address
 
 = 1.5.2: April 13, 2013 =
 
