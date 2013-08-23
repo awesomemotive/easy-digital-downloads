@@ -63,6 +63,19 @@ function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_n
 		$username = $user_info['email'];
 	}
 
+	$address = '';
+	if ( ! empty( $user_info['address'] ) ) {
+		$address .= $user_info['address']['line1'] . '<br/>';
+		$address .= $user_info['address']['line2'] . '<br/>';
+		$address .= $user_info['address']['city'] . ', ';
+		$address .= $user_info['address']['state'] . ' ';
+		$address .= $user_info['address']['zip'];
+
+		if( ! empty( $user_info['address']['country'] ) ) {
+			$address .= ', ' . $user_info['address']['country'];
+		}
+	}
+
 	$file_urls     = '';
 	$download_list = '<ul>';
 	$cart_items     = edd_get_payment_meta_cart_details( $payment_id );
@@ -158,7 +171,8 @@ function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_n
 	$message = str_replace( '{payment_method}', $gateway, $message );
 	$message = str_replace( '{receipt_id}', $receipt_id, $message );
 	$message = str_replace( '{payment_id}', $payment_id, $message );
-	$message = str_replace( '{user_email}', $email, $message );
+    $message = str_replace( '{user_email}', $email, $message );
+	$message = str_replace( '{billing_address}', $address, $message );
 
 	if( ! $admin_notice ) {
 		$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'payment_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' ), $message );
