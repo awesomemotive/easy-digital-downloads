@@ -846,11 +846,19 @@ function edd_get_purchase_session() {
 function edd_is_cart_saved() {
 	$current_user_ID = get_current_user_id();
 
-	if ( is_user_logged_in() && get_user_meta( $current_user_ID, 'edd_saved_cart', true ) )
-		return true;
+	if ( is_user_logged_in() && get_user_meta( $current_user_ID, 'edd_saved_cart', true ) ) {
+		if ( get_user_meta( $current_user_ID, 'edd_saved_cart', true  ) === EDD()->session->get( 'edd_cart' ) )
+			return false;
 
-	if ( ! is_user_logged_in() && isset( $_COOKIE['edd_saved_cart'] ) )
 		return true;
+	}
+
+	if ( ! is_user_logged_in() && isset( $_COOKIE['edd_saved_cart'] ) ) {
+		if ( stripslashes( unserialize( $_COOKIE['edd_saved_cart'] ) ) === EDD()->session->get( 'edd_cart' ) )
+			return false;
+
+		return true;
+	}
 
 	return false;
 }
@@ -884,7 +892,7 @@ function edd_save_cart_button() {
 	<?php
 }
 add_action( 'edd_before_checkout_cart', 'edd_save_cart_button' );
-add_action( 'edd_cart_empty', 'edd_save_cart_button', 1 );
+add_action( 'edd_cart_empty', 'edd_save_cart_button', 9 );
 
 /**
  * Process the Cart Save
