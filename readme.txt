@@ -14,9 +14,8 @@ Sell digital downloads through WordPress with this complete digital downloads ma
 
 == Description ==
 
-Selling digital downloads is something that not a single one of the large WordPress ecommerce plugins has ever gotten really right. This plugin aims to fix that. Instead of focusing on providing every single feature under the sun, Easy Digital Downloads tries to provide only the ones that you really need. It aims to make selling digital downloads through WordPress easy, and complete.
+Easy Digital Downloads is a complete e-commerce solution for selling digital products in a light, performant, and easy to use plugin. Rather that attempting to provide every feature under the sun, Easy Digital Downloads makes selling digital simple and complete by providing just the features you need.
 
-**Follow this plugin on [GitHub](https://github.com/easydigitaldownloads/Easy-Digital-Downloads)**
 
 Features of the plugin include:
 
@@ -38,6 +37,8 @@ Features of the plugin include:
 More information at [Easy Digital Downloads.com](https://easydigitaldownloads.com/extensions/?utm_source=readme&utm_medium=description_tab&utm_content=home_link&utm_campaign=edd_home).
 
 [youtube http://www.youtube.com/watch?v=japHPcIFs4I]
+
+**Follow this plugin on [GitHub](https://github.com/easydigitaldownloads/Easy-Digital-Downloads)**
 
 **Sell and Track Software License Keys**
 
