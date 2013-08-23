@@ -588,6 +588,19 @@ function edd_get_registered_settings() {
 }
 
 /**
+ * Header Callback
+ *
+ * Renders the header.
+ *
+ * @since 1.0
+ * @param array $args Arguments passed by the setting
+ * @return void
+ */
+function edd_header_callback( $args ) {
+	echo '';
+}
+
+/**
  * Checkbox Callback
  *
  * Renders checkboxes.
