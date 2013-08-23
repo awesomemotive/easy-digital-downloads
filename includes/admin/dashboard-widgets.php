@@ -49,7 +49,7 @@ function edd_dashboard_sales_widget() {
 						<td class="t monthly_earnings"><?php _e( 'Earnings', 'edd' ); ?></td>
 					</tr>
 					<tr>
-						<?php $monthly_sales = $stats->get_sales( 0, 'this_month' ); ?>
+						<?php $monthly_sales = $stats->get_sales( 0, 'this_month', false, array( 'publish', 'revoked' ) ); ?>
 						<td class="first b"><?php echo $monthly_sales; ?></td>
 						<td class="t monthly_sales"><?php echo _n( 'Sale', 'Sales', $monthly_sales, 'edd' ); ?></td>
 					</tr>
@@ -60,7 +60,7 @@ function edd_dashboard_sales_widget() {
 				<?php echo __( 'Earnings', 'edd' ) . ':&nbsp;<span class="edd_price_label">' . edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'last_month' ) ) ) . '</span>'; ?>
 			</div>
 			<div>
-				<?php $last_month_sales = $stats->get_sales( 0, 'last_month' ); ?>
+				<?php $last_month_sales = $stats->get_sales( 0, 'last_month', false, array( 'publish', 'revoked' ) ); ?>
 				<?php echo _n( 'Sale', 'Sales', $last_month_sales, 'edd' ) . ':&nbsp;' . '<span class="edd_price_label">' . $last_month_sales . '</span>'; ?>
 			</div>
 		</div>
