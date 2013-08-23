@@ -158,17 +158,7 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 	<div id="available-downloads" style="display:none;">
 		<form id="edd-add-downloads-to-purchase">
 			<p>
-				<select name="downloads[0][id]" class="edd-downloads-list">
-				<?php
-				$downloads = get_posts( apply_filters( 'edd_add_downloads_to_purchase_query', array( 'post_type' => 'download', 'posts_per_page' => -1, 'orderby' => 'title', 'order' => 'ASC' ) ) );
-				echo '<option value="0">' . sprintf( __('Select a %s', 'edd'), esc_html( edd_get_label_singular() ) ) . '</option>';
-				foreach( $downloads as $download ) {
-					?>
-					<option value="<?php echo $download->ID; ?>"><?php echo get_the_title( $download->ID ) ?></option>
-					<?php
-				}
-				?>
-				</select>
+				<?php echo EDD()->html->product_dropdown( 'downloads[0][id]' ); ?>
 				&nbsp;<img src="<?php echo admin_url('/images/wpspin_light.gif'); ?>" class="hidden edd_add_download_to_purchase_waiting waiting" />
 			</p>
 			<p>
