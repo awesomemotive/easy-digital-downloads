@@ -1080,13 +1080,28 @@ function edd_delete_saved_carts() {
 		", ARRAY_A
 	);
 
-	foreach ( $carts as $cart ) {
-		$user_id = $cart['user_id'];
-		$meta_value = $cart['date'];
+	if ( $carts ) {
+		foreach ( $carts as $cart ) {
+			$user_id    = $cart['user_id'];
+			$meta_value = $cart['date'];
+	
+			if ( strtotime( $meta_value ) < strtotime( '-1 week' ) ) {
+				$wpdb->delete(
+					$wpdb->usermeta,
+					array(
+						'user_id'  => $user_id,
+						'meta_key' => 'edd_cart_token'
+					)
+				);
 
-		if ( strtotime( $meta_value ) < strtotime( '-1 week' ) ) {
-			$wpdb->delete( $wpdb->usermeta, array( 'user_id' => $user_id, 'meta_key' => 'edd_cart_token' ) );
-			$wpdb->delete( $wpdb->usermeta, array( 'user_id' => $user_id, 'meta_key' => 'edd_saved_cart' ) );
+				$wpdb->delete(
+					$wpdb->usermeta,
+					array(
+						'user_id'  => $user_id,
+						'meta_key' => 'edd_saved_cart'
+					)
+				);
+			}
 		}
 	}
 }
