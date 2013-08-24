@@ -1036,6 +1036,12 @@ function edd_restore_cart() {
 }
 add_action( 'edd_restore_cart', 'edd_restore_cart' );
 
+/**
+ * Display the messages that are related to cart saving
+ *
+ * @since 1.8
+ * @return void
+ */
 function edd_process_cart_saving_messages() {
 	$messages = EDD()->session->get( 'edd_cart_saving_messages' );
 
@@ -1057,9 +1063,32 @@ add_action( 'edd_before_checkout_cart', 'edd_process_cart_saving_messages' );
 
 /**
  * Delete Saved Carts after one week
+ *
+ * @since 1.8
+ * @global $wpdb
+ * @return void
  */
 function edd_delete_saved_carts() {
+	global $wpdb;
 
+	$start = date( 'Y-m-d', strtotime( '-7 days' ) );
+	$carts = $wpdb->get_results(
+		"
+		SELECT user_id, meta_key, FROM_UNIXTIME(meta_value, '%Y-%m-%d') AS date
+		FROM {$wpdb->usermeta}
+		WHERE meta_key = 'edd_cart_token'
+		", ARRAY_A
+	);
+
+	foreach ( $carts as $cart ) {
+		$user_id = $cart['user_id'];
+		$meta_value = $cart['date'];
+
+		if ( strtotime( $meta_value ) < strtotime( '-1 week' ) ) {
+			$wpdb->delete( $wpdb->usermeta, array( 'user_id' => $user_id, 'meta_key' => 'edd_cart_token' ) );
+			$wpdb->delete( $wpdb->usermeta, array( 'user_id' => $user_id, 'meta_key' => 'edd_saved_cart' ) );
+		}
+	}
 }
 add_action( 'edd_weekly_scheduled_events', 'edd_delete_saved_carts' );
 
