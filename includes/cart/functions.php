@@ -838,6 +838,22 @@ function edd_get_purchase_session() {
 }
 
 /**
+ * Checks if cart saving has been disabled
+ *
+ * @since 1.8
+ * @global $edd_options
+ * @return bool Whether or not cart saving has been disabled
+ */
+function edd_is_cart_saving_disabled() {
+	global $edd_options;
+
+	if ( isset( $edd_options['disable_cart_saving'] ) )
+		return true;
+
+	return false;
+}
+
+/**
  * Checks if a cart has been saved
  *
  * @since 1.8
@@ -874,7 +890,7 @@ function edd_is_cart_saved() {
 function edd_save_cart_button() {
 	global $edd_options;
 
-	if ( ! apply_filters( 'edd_cart_saving', true ) )
+	if ( edd_is_cart_saving_disabled() )
 		return;
 
 	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
@@ -903,7 +919,7 @@ add_action( 'edd_cart_empty', 'edd_save_cart_button', 9 );
 function edd_save_cart() {
 	global $edd_options;
 
-	if ( ! apply_filters( 'edd_cart_saving', true ) )
+	if ( edd_is_cart_saving_disabled() )
 		return;
 
 	$current_user_ID = get_current_user_id();
@@ -949,7 +965,7 @@ add_action( 'edd_save_cart', 'edd_save_cart' );
  * @return void
  */
 function edd_restore_cart() {
-	if ( ! apply_filters( 'edd_cart_saving', true ) )
+	if ( edd_is_cart_saving_disabled() )
 		return;
 
 	$current_user_ID = get_current_user_id();
