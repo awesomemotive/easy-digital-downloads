@@ -21,7 +21,7 @@
 							if ( current_theme_supports( 'post-thumbnails' ) ) {
 								if ( has_post_thumbnail( $item['id'] ) ) {
 									echo '<div class="edd_cart_item_image">';
-										echo get_the_post_thumbnail( $item['id'], apply_filters( 'edd_checkout_image_size', array( 25,25 ) ), $item );
+										echo get_the_post_thumbnail( $item['id'], apply_filters( 'edd_checkout_image_size', array( 25,25 ) ) );
 									echo '</div>';
 								}
 							}
