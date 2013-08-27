@@ -548,12 +548,12 @@ function edd_process_profile_editor_updates( $data ) {
 	$first_name   = sanitize_text_field( $data['edd_first_name'] );
 	$last_name    = sanitize_text_field( $data['edd_last_name'] );
 	$email        = sanitize_email( $data['edd_email'] );
-	$line1        = sanitize_text_field( $data['edd_address_line1'] );
-	$line2        = sanitize_text_field( $data['edd_address_line2'] );
-	$city         = sanitize_text_field( $data['edd_address_city'] );
-	$state        = sanitize_text_field( $data['edd_address_state'] );
-	$zip          = sanitize_text_field( $data['edd_address_zip'] );
-	$country      = sanitize_text_field( $data['edd_address_country'] );
+	$line1        = ( isset( $data['edd_address_line1'] ) ? sanitize_text_field( $data['edd_address_line1'] ) : '' );
+	$line2        = ( isset( $data['edd_address_line2'] ) ? sanitize_text_field( $data['edd_address_line2'] ) : '' );
+	$city         = ( isset( $data['edd_address_city'] ) ? sanitize_text_field( $data['edd_address_city'] ) : '' );
+	$state        = ( isset( $data['edd_address_state'] ) ? sanitize_text_field( $data['edd_address_state'] ) : '' );
+	$zip          = ( isset( $data['edd_address_zip'] ) ? sanitize_text_field( $data['edd_address_zip'] ) : '' );
+	$country      = ( isset( $data['edd_address_country'] ) ? sanitize_text_field( $data['edd_address_country'] ) : '' );
 
 	$userdata = array(
 		'ID'           => $user_id,
