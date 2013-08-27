@@ -139,3 +139,17 @@ function edd_empty_checkout_cart() {
 	echo edd_empty_cart_message();
 }
 add_action( 'edd_cart_empty', 'edd_empty_checkout_cart' );
+
+/**
+ * Calculate the number of columns in the cart table dynamically.
+ *
+ * @since 1.8
+ * @return int The number of columns
+ */
+function edd_checkout_cart_columns() {
+	$head_first = did_action( 'edd_checkout_table_header_first' );
+	$head_last  = did_action( 'edd_checkout_table_header_last' );
+	$default    = 3;
+
+	return apply_filters( 'edd_checkout_cart_columns', $head_first + $head_last + $default );
+}
