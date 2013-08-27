@@ -548,6 +548,12 @@ function edd_process_profile_editor_updates( $data ) {
 	$first_name   = sanitize_text_field( $data['edd_first_name'] );
 	$last_name    = sanitize_text_field( $data['edd_last_name'] );
 	$email        = sanitize_email( $data['edd_email'] );
+	$line1        = ( isset( $data['edd_address_line1'] ) ? sanitize_text_field( $data['edd_address_line1'] ) : '' );
+	$line2        = ( isset( $data['edd_address_line2'] ) ? sanitize_text_field( $data['edd_address_line2'] ) : '' );
+	$city         = ( isset( $data['edd_address_city'] ) ? sanitize_text_field( $data['edd_address_city'] ) : '' );
+	$state        = ( isset( $data['edd_address_state'] ) ? sanitize_text_field( $data['edd_address_state'] ) : '' );
+	$zip          = ( isset( $data['edd_address_zip'] ) ? sanitize_text_field( $data['edd_address_zip'] ) : '' );
+	$country      = ( isset( $data['edd_address_country'] ) ? sanitize_text_field( $data['edd_address_country'] ) : '' );
 
 	$userdata = array(
 		'ID'           => $user_id,
@@ -555,6 +561,15 @@ function edd_process_profile_editor_updates( $data ) {
 		'last_name'    => $last_name,
 		'display_name' => $display_name,
 		'user_email'   => $email
+	);
+
+	$address = array(
+		'line1'    => $line1,
+		'line2'    => $line2,
+		'city'     => $city,
+		'state'    => $state,
+		'zip'      => $zip,
+		'country'  => $country
 	);
 
 	// New password
@@ -567,6 +582,7 @@ function edd_process_profile_editor_updates( $data ) {
 	}
 
 	// Update the user
+	$meta    = update_user_meta( $user_id, '_edd_user_address', $address );
 	$updated = wp_update_user( $userdata );
 
 	if ( $updated ) {
