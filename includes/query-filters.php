@@ -15,21 +15,6 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Register EDD Query Vars
- *
- * @since 1.0
- * @param array $vars Query vars
- * @return array $vars Query vars
- */
-function edd_query_vars( $vars ) {
-	$vars[] = 'edd_action';
-	$vars[] = 'cart_item';
-	$vars[] = 'edd-listener';
-	return $vars;
-}
-add_filter( 'query_vars', 'edd_query_vars' );
-
-/**
  * Blocks access to Download attachments
   *
  * @since 1.2.2
