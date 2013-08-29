@@ -81,7 +81,7 @@ function edd_download_meta_box_save( $post_id) {
 	}
 
 	foreach ( $fields as $field ) {
-		if ( isset( $_POST[ $field ] ) ) {
+		if ( ! empty( $_POST[ $field ] ) ) {
 			if ( is_string( $_POST[ $field ] ) ) {
 				$new = esc_attr( $_POST[ $field ] );
 			} else {
