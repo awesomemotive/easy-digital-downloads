@@ -154,7 +154,7 @@ function edd_calculate_tax( $amount, $sum = true, $country = false, $state = fal
 		if ( $prices_include_tax ) {
 			$tax = ($amount / (1+$rate)) * $rate;
 		} else {
-			$tax = $amount * rate;
+			$tax = $amount * $rate;
 		}
 
 	}
