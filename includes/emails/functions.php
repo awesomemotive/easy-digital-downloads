@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @param bool $admin_notice Whether to send the admin email notification or not (default: true)
  * @return void
  */
-function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
+function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $purchase_receipt = true ) {
 	global $edd_options;
 
 	$payment_data = edd_get_payment_meta( $payment_id );
@@ -60,7 +60,8 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	// Allow add-ons to add file attachments
 	$attachments = apply_filters( 'edd_receipt_attachments', array(), $payment_id, $payment_data );
 
-	wp_mail( $email, $subject, $message, $headers, $attachments );
+	if ( apply_filters( 'edd_email_purchase_receipt', $purchase_receipt ) )
+		wp_mail( $email, $subject, $message, $headers, $attachments );
 
 	if ( $admin_notice && ! edd_admin_notices_disabled( $payment_id ) ) {
 		do_action( 'edd_admin_sale_notice', $payment_id, $payment_data );
