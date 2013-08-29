@@ -271,7 +271,7 @@ function edd_default_cc_address_fields() {
 		<p id="edd-card-zip-wrap">
 			<label class="edd-label"><?php _e( 'Billing Zip / Postal Code', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The zip or postal code for your billing address.', 'edd' ); ?></span>
-			<input type="text" size="4" name="card_zip" class="card-zip edd-input required" placeholder="<?php _e( 'Zip / Postal code', 'edd' ); ?>"/>
+			<input type="text" size="4" name="card_zip" class="card-zip edd-input required" placeholder="<?php _e( 'Zip / Postal code', 'edd' ); ?>" value="<?php echo $zip; ?>"/>
 		</p>
 		<p id="edd-card-country-wrap">
 			<label class="edd-label"><?php _e( 'Billing Country', 'edd' ); ?></label>
