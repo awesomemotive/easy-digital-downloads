@@ -46,18 +46,23 @@ if ( is_user_logged_in() ):
 			</p>
 			<span><legend><?php _e( 'Change your Billing Address', 'edd' ); ?></legend></span>
 			<p id="edd_profile_billing_address_wrap">
-				<span><label for="edd_address_line1"><?php _e( 'Line 1', 'edd' ); ?></label>
-				<input name="edd_address_line1" id="edd_address_line1" class="text edd-input" type="text" value="<?php echo $address['line1']; ?>" /></span>
-				<span><label for="edd_address_line2"><?php _e( 'Line 2', 'edd' ); ?></label>
-				<input name="edd_address_line2" id="edd_address_line2" class="text edd-input" type="text" value="<?php echo $address['line2']; ?>" /></span>
-				<span><label for="edd_address_city"><?php _e( 'City', 'edd' ); ?></label>
-				<input name="edd_address_city" id="edd_address_city" class="text edd-input" type="text" value="<?php echo $address['city']; ?>" /></span>
-				<span><label for="edd_address_state"><?php _e( 'State', 'edd' ); ?></label>
-				<input name="edd_address_state" id="edd_address_state" class="text edd-input" type="text" value="<?php echo $address['state']; ?>" /></span>
-				<span><label for="edd_address_zip"><?php _e( 'Zip', 'edd' ); ?></label>
-				<input name="edd_address_zip" id="edd_address_zip" class="text edd-input" type="text" value="<?php echo $address['zip']; ?>" /></span>
-				<span><label for="edd_address_country"><?php _e( 'Country', 'edd' ); ?></label>
-				<input name="edd_address_country" id="edd_address_country" class="text edd-input" type="text" value="<?php echo $address['country']; ?>" /></span>
+				<label for="edd_address_line1"><?php _e( 'Line 1', 'edd' ); ?></label>
+				<input name="edd_address_line1" id="edd_address_line1" class="text edd-input" type="text" value="<?php echo $address['line1']; ?>" />
+				<br/>
+				<label for="edd_address_line2"><?php _e( 'Line 2', 'edd' ); ?></label>
+				<input name="edd_address_line2" id="edd_address_line2" class="text edd-input" type="text" value="<?php echo $address['line2']; ?>" />
+				<br/>
+				<label for="edd_address_city"><?php _e( 'City', 'edd' ); ?></label>
+				<input name="edd_address_city" id="edd_address_city" class="text edd-input" type="text" value="<?php echo $address['city']; ?>" />
+				<br/>
+				<label for="edd_address_state"><?php _e( 'State', 'edd' ); ?></label>
+				<input name="edd_address_state" id="edd_address_state" class="text edd-input" type="text" value="<?php echo $address['state']; ?>" />
+				<br/>
+				<label for="edd_address_zip"><?php _e( 'Zip', 'edd' ); ?></label>
+				<input name="edd_address_zip" id="edd_address_zip" class="text edd-input" type="text" value="<?php echo $address['zip']; ?>" />
+				<br/>
+				<label for="edd_address_country"><?php _e( 'Country', 'edd' ); ?></label>
+				<input name="edd_address_country" id="edd_address_country" class="text edd-input" type="text" value="<?php echo $address['country']; ?>" />
 			</p>
 			<span><legend><?php _e( 'Change your Password', 'edd' ); ?></legend></span>
 			<p id="edd_profile_password_wrap">
