@@ -26,7 +26,7 @@ if ( is_user_logged_in() ):
 			</p>
 			<p id="edd_profile_display_name_wrap">
 				<label for="edd_display_name"><?php _e( 'Display Name', 'edd' ); ?></label>
-				<select name="edd_display_name">
+				<select name="edd_display_name" id="edd_display_name" class="select edd-select">
 					<?php if ( ! empty( $current_user->first_name ) ): ?>
 					<option <?php selected( $display_name, $current_user->first_name ); ?> value="<?php echo $current_user->first_name; ?>"><?php echo $current_user->first_name; ?></option>
 					<?php endif; ?>
@@ -55,14 +55,18 @@ if ( is_user_logged_in() ):
 				<label for="edd_address_city"><?php _e( 'City', 'edd' ); ?></label>
 				<input name="edd_address_city" id="edd_address_city" class="text edd-input" type="text" value="<?php echo $address['city']; ?>" />
 				<br/>
-				<label for="edd_address_state"><?php _e( 'State', 'edd' ); ?></label>
-				<input name="edd_address_state" id="edd_address_state" class="text edd-input" type="text" value="<?php echo $address['state']; ?>" />
-				<br/>
-				<label for="edd_address_zip"><?php _e( 'Zip', 'edd' ); ?></label>
+				<label for="edd_address_zip"><?php _e( 'Zip / Postal Code', 'edd' ); ?></label>
 				<input name="edd_address_zip" id="edd_address_zip" class="text edd-input" type="text" value="<?php echo $address['zip']; ?>" />
 				<br/>
 				<label for="edd_address_country"><?php _e( 'Country', 'edd' ); ?></label>
-				<input name="edd_address_country" id="edd_address_country" class="text edd-input" type="text" value="<?php echo $address['country']; ?>" />
+				<select name="edd_address_country" id="edd_address_country" class="select edd-select">
+					<?php foreach( edd_get_country_list() as $key => $country ) : ?>
+					<option value="<?php echo $key; ?>"<?php selected( $address['country'], $key ); ?>><?php echo $country; ?></option>
+					<?php endforeach; ?>
+				</select>
+				<label for="edd_address_state"><?php _e( 'State / Province', 'edd' ); ?></label>
+				<input name="edd_address_state" id="edd_address_state" class="text edd-input" type="text" value="<?php echo $address['state']; ?>" />
+				<br/>
 			</p>
 			<span><legend><?php _e( 'Change your Password', 'edd' ); ?></legend></span>
 			<p id="edd_profile_password_wrap">
