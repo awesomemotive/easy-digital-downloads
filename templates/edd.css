@@ -245,7 +245,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd_download_purchase_form .edd_price_options li { display: block; padding: 0; margin: 0; }
 .edd_download_purchase_form .edd_price_options span { display: inline; padding: 0; margin: 0; }
 
-.edd-submit {
+.edd-submit, #edd-purchase-button {
   display: inline-block;
   padding: 6px 12px;
   margin-bottom: 0;
@@ -275,8 +275,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
   text-decoration: none;
 }
 
-.edd-submit.button:active,
-.edd-submit.button.active {
+.edd-submit.button:active {
   background-image: none;
   outline: 0;
   -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
@@ -290,7 +289,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 /** Gray (Default) */
 .edd-submit.button.gray {
   color: #333333;
-  background-color: #f0f0f0;
+  background: #f0f0f0;
   border-color: #cccccc;
 }
 
@@ -298,7 +297,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd-submit.button.gray:focus,
 .edd-submit.button.gray:active {
   color: #333333;
-  background-color: #ebebeb;
+  background: #ebebeb;
   border-color: #adadad;
 }
 
@@ -309,7 +308,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 /** White */
 .edd-submit.button.white {
   color: #333333;
-  background-color: #ffffff;
+  background: #ffffff;
   border-color: #cccccc;
 }
 
@@ -317,7 +316,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd-submit.button.white:focus,
 .edd-submit.button.white:active {
   color: #333333;
-  background-color: #ebebeb;
+  background: #ebebeb;
   border-color: #adadad;
 }
 
@@ -328,14 +327,14 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 /** Blue */
 .edd-submit.button.blue {
   color: #ffffff;
-  background-color: #428bca;
+  background: #428bca;
   border-color: #357ebd;
 }
 .edd-submit.button.blue:hover,
 .edd-submit.button.blue:focus,
 .edd-submit.button.blue.active {
   color: #ffffff;
-  background-color: #3276b1;
+  background: #3276b1;
   border-color: #285e8e;
 }
 .edd-submit.button.blue.active {
@@ -345,7 +344,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 /** Red */
 .edd-submit.button.red {
   color: #ffffff;
-  background-color: #d9534f;
+  background: #d9534f;
   border-color: #d43f3a;
 }
 
@@ -353,7 +352,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd-submit.button.red:focus,
 .edd-submit.button.red:active {
   color: #ffffff;
-  background-color: #d2322d;
+  background: #d2322d;
   border-color: #ac2925;
 }
 
@@ -364,7 +363,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 /** Green */
 .edd-submit.button.green {
   color: #ffffff;
-  background-color: #5cb85c;
+  background: #5cb85c;
   border-color: #4cae4c;
 }
 
@@ -372,7 +371,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd-submit.button.green:focus,
 .edd-submit.button.green:active {
   color: #ffffff;
-  background-color: #47a447;
+  background: #47a447;
   border-color: #398439;
 }
 
@@ -383,7 +382,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 /** Yellow */
 .edd-submit.button.yellow {
   color: #ffffff;
-  background-color: #f0ad4e;
+  background: #f0ad4e;
   border-color: #eea236;
 }
 
@@ -391,7 +390,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd-submit.button.yellow:focus,
 .edd-submit.button.yellow:active {
   color: #ffffff;
-  background-color: #ed9c28;
+  background: #ed9c28;
   border-color: #d58512;
 }
 
@@ -402,7 +401,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 /** Orange */
 .edd-submit.button.orange {
   color: #ffffff;
-  background-color: #ed9c28;
+  background: #ed9c28;
   border-color: #e3921e;
 }
 
@@ -410,7 +409,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd-submit.button.orange:focus,
 .edd-submit.button.orange:active {
   color: #ffffff;
-  background-color: #e59016;
+  background: #e59016;
   border-color: #d58512;
 }
 
@@ -421,7 +420,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 /** Dark Gray */
 .edd-submit.button.dark-gray {
   color: #fff;
-  background-color: #363636;
+  background: #363636;
   border-color: #222;
 }
 
@@ -429,7 +428,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd-submit.button.dark-gray:focus,
 .edd-submit.button.dark-gray:active {
   color: #fff;
-  background-color: #333;
+  background: #333;
   border-color: #adadad;
 }
 
