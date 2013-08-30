@@ -14,40 +14,6 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-
-/**
- * Count Payments
- *
- * Returns the total number of payments recorded.
- *
- * @since 1.0
- * @deprecated 1.2
- * @param string $mode Payment mode (i.e. publish)
- * @param string $user Customer ID (default: null)
- * @return int $count Number of payments
- */
-function edd_count_payments( $mode, $user = null ) {
-	$backtrace = debug_backtrace();
-
-	_edd_deprecated_function( __FUNCTION__, '1.2', null, $backtrace );
-
-	$payments = edd_get_payments( array(
-		'offset'  => 0,
-		'number'  => -1,
-		'mode'    => $mode,
-		'orderby' => 'ID',
-		'order'   => 'DESC',
-		'user'    => $user
-	) );
-	$count = 0;
-
-	if ( $payments ) {
-		$count = count( $payments );
-	}
-
-	return $count;
-}
-
 /**
  * Get Download Sales Log
  *

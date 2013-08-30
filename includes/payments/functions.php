@@ -18,7 +18,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * Retrieve payments from the database.
  *
  * Since 1.2, this function takes an array of arguments, instead of individual
- * parameters. All of the original paremeters remain, but can be passed in any
+ * parameters. All of the original parameters remain, but can be passed in any
  * order via the array.
  *
  * $offset = 0, $number = 20, $mode = 'live', $orderby = 'ID', $order = 'DESC',
@@ -205,7 +205,8 @@ function edd_insert_payment( $payment_data = array() ) {
 		);
 
 		$mode    = edd_is_test_mode() ? 'test' : 'live';
-		$gateway = isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : '';
+		$gateway = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
+		$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
 
 		// Record the payment details
 		update_post_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
@@ -335,6 +336,102 @@ function edd_undo_purchase( $download_id, $payment_id ) {
 
 	edd_decrease_earnings( $download_id, $amount );
 }
+
+
+/**
+ * Count Payments
+ *
+ * Returns the total number of payments recorded.
+ *
+ * @since 1.0
+ * @param array $args
+ * @return array $count Number of payments sorted by payment status
+ */
+function edd_count_payments( $args = array() ) {
+
+	global $wpdb;
+
+	$defaults = array(
+		'user' => null,
+		's'    => null
+	);
+
+	$args = wp_parse_args( $args, $defaults );
+
+	$cache_key = md5( implode( '|', $args ) );
+
+
+	$join = '';
+	$where = "WHERE p.post_type = 'edd_payment'";
+
+	// Count payments for a specific user
+	if( ! empty( $args['user'] ) ) {
+
+		if( is_email( $args['user'] ) )
+			$field = 'email';
+		elseif( is_numeric( $args['user'] ) )
+			$field = 'id';
+
+		$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
+		$where .= "
+			AND m.meta_key = '_edd_payment_user_{$field}'
+			AND m.meta_value = '{$args['user']}'";
+
+	// Count payments for a search
+	} elseif( ! empty( $args['s'] ) ) {
+
+		if ( is_email( $args['s'] ) || strlen( $args['s'] ) == 32 ) {
+
+			if( is_email( $args['s'] ) )
+				$field = '_edd_payment_user_email';
+			else
+				$field = '_edd_payment_purchase_key';
+
+
+			$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
+			$where .= "
+				AND m.meta_key = '{$field}'
+				AND m.meta_value = '{$args['s']}'";
+
+		} elseif ( is_numeric( $args['s'] ) ) {
+
+			$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
+			$where .= "
+				AND m.meta_key = '_edd_payment_user_id'
+				AND m.meta_value = '{$args['s']}'";
+
+		} else {
+			$where .= "AND ((p.post_title LIKE '%{$args['s']}%') OR (p.post_content LIKE '%{$args['s']}%'))";
+		}
+
+	}
+
+	$query = "SELECT p.post_status,count( * ) AS num_posts
+		FROM $wpdb->posts p
+		$join
+		$where
+		GROUP BY p.post_status
+	";
+
+	$count = wp_cache_get( $cache_key, 'counts');
+	if ( false !== $count )
+		return $count;
+
+	$count = $wpdb->get_results( $query, ARRAY_A );
+
+	$stats = array();
+	foreach ( get_post_stati() as $state )
+		$stats[$state] = 0;
+
+	foreach ( (array) $count as $row )
+		$stats[$row['post_status']] = $row['num_posts'];
+
+	$stats = (object) $stats;
+	wp_cache_set( $cache_key, $stats, 'counts' );
+
+	return $stats;
+}
+
 
 /**
  * Check For Existing Payment
@@ -588,9 +685,6 @@ function edd_get_payment_meta( $payment_id ) {
 	if ( ! isset( $meta['key'] ) )
 		$meta['key'] = edd_get_payment_key( $payment_id );
 
-	if ( ! isset( $meta['amount'] ) )
-		$meta['amount'] = edd_get_payment_amount( $payment_id );
-
 	if ( ! isset( $meta['email'] ) )
 		$meta['email'] = edd_get_payment_user_email( $payment_id );
 
@@ -746,12 +840,18 @@ function edd_payment_amount( $payment_id = 0 ) {
  */
 function edd_get_payment_amount( $payment_id ) {
 	$amount = get_post_meta( $payment_id, '_edd_payment_total', true );
+	if( empty( $amount ) && '0.00' != $amount ) {
+		$meta   = get_post_meta( $payment_id, '_edd_payment_meta', true );
+		$meta   = maybe_unserialize( $meta );
+		if( isset( $meta['amount'] ) )
+			$amount = $meta['amount'];
+	}
 	return apply_filters( 'edd_payment_amount', $amount );
 }
 
 /**
  * Retrieves subtotal for payment (this is the amount before taxes) and then
- * returns a full formatted amount. This function essentialy calls
+ * returns a full formatted amount. This function essentially calls
  * edd_get_payment_subtotal()
  *
  * @since 1.3.3
@@ -788,7 +888,7 @@ function edd_get_payment_subtotal( $payment_id = 0) {
 
 /**
  * Retrieves taxed amount for payment and then returns a full formatted amount
- * This function essentialy calls edd_get_payment_tax()
+ * This function essentially calls edd_get_payment_tax()
  *
  * @since 1.3.3
  * @see edd_get_payment_tax()

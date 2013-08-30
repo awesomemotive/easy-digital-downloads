@@ -68,7 +68,7 @@ function edd_format_amount( $amount ) {
 		$amount = str_replace( ',', '', $amount );
 	}
 
-	$decimals  = apply_filters( 'edd_format_amount_decimals', 2 );
+	$decimals  = apply_filters( 'edd_format_amount_decimals', 2, $amount );
 	$formatted = number_format( $amount, $decimals, $decimal_sep, $thousands_sep );
 
 	return apply_filters( 'edd_format_amount', $formatted, $amount, $decimals, $decimal_sep, $thousands_sep );
@@ -90,40 +90,52 @@ function edd_currency_filter( $price ) {
 
 	if ( $position == 'before' ):
 		switch ( $currency ):
-			case "GBP" : return '&pound;' . $price; break;
-			case "BRL" : return 'R&#36;' . $price; break;
+			case "GBP" : 
+				$formatted = '&pound;' . $price; 
+				break;
+			case "BRL" : 
+				$formatted = 'R&#36;' . $price; 
+				break;
 			case "USD" :
 			case "AUD" :
 			case "CAD" :
 			case "HKD" :
 			case "MXN" :
-			case "SGD" :
-				return '&#36;' . $price;
-			break;
-			case "JPY" : return '&yen;' . $price; break;
+			case "SGD" : 
+				$formatted = '&#36;' . $price; 
+				break;
+			case "JPY" : 
+				$formatted = '&yen;' . $price; 
+				break;
 			default :
 			    $formatted = $currency . ' ' . $price;
-    		    return apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
-			break;
+				break;
 		endswitch;
+		return apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
 	else :
 		switch ( $currency ) :
-			case "GBP" : return $price . '&pound;'; break;
-			case "BRL" : return $price . 'R&#36;'; break;
+			case "GBP" : 
+				$formatted = $price . '&pound;'; 
+				break;
+			case "BRL" :
+				$formatted = $price . 'R&#36;'; 
+				break;
 			case "USD" :
 			case "AUD" :
 			case "CAD" :
 			case "HKD" :
 			case "MXN" :
 			case "SGD" :
-				return $price . '&#36;';
-			break;
-			case "JPY" : return $price . '&yen;'; break;
+				$formatted = $price . '&#36;';
+				break;
+			case "JPY" :
+				$formatted = $price . '&yen;'; 
+				break;
 			default :
 			    $formatted = $price . ' ' . $currency;
-			    return apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
-			break;
+				break;
 		endswitch;
+		return apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
 	endif;
 }
 

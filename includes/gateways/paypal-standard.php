@@ -30,10 +30,6 @@ add_action( 'edd_paypal_cc_form', '__return_false' );
 function edd_process_paypal_purchase( $purchase_data ) {
     global $edd_options;
 
-    // Check there is a gateway name
-    if ( ! isset( $purchase_data['post_data']['edd-gateway'] ) )
-    	return;
-
     /*
     Purchase data comes in like this:
 
@@ -62,6 +58,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
         'downloads'     => $purchase_data['downloads'],
         'user_info'     => $purchase_data['user_info'],
         'cart_details'  => $purchase_data['cart_details'],
+        'gateway'       => 'paypal',
         'status'        => 'pending'
      );
 
@@ -140,7 +137,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
         		if( edd_use_skus() ) {
 	        		$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
 	    		}
-    	    	$paypal_args['quantity_' . $i ]        = '1';
+    	    	$paypal_args['quantity_' . $i ]        = $item['quantity'];
         		$paypal_args['amount_' . $i ]          = $price;
         		$i++;
 	        }
@@ -326,9 +323,10 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	$paypal_amount  = $data['mc_gross'];
 	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
+	$business_email = trim( $data['business'] );
 
-	// Retrieve the meta info for this payment
-	$payment_amount = edd_format_amount( edd_get_payment_amount( $payment_id ) );
+	// Retrieve the total purchase amount (before PayPal)
+	$payment_amount = edd_get_payment_amount( $payment_id );
 
 	if( get_post_status( $payment_id ) == 'publish' )
 		return; // Only complete payments once
@@ -336,9 +334,43 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	if ( edd_get_payment_gateway( $payment_id ) != 'paypal' )
 		return; // this isn't a PayPal standard IPN
 
-	// Verify details
+	if( ! edd_get_payment_user_email( $payment_id ) ) {
+
+		// No email associated with purchase, so store from PayPal
+		update_post_meta( $payment_id, '_edd_payment_user_email', $data['payer_email'] );
+
+		// Setup and store the customers's details
+		$address = array();
+		$address['line1']   = ! empty( $data['address_street']       ) ? $data['address_street']       : false;
+		$address['city']    = ! empty( $data['address_city']         ) ? $data['address_city']         : false;
+		$address['state']   = ! empty( $data['address_state']        ) ? $data['address_state']        : false;
+		$address['country'] = ! empty( $data['address_country_code'] ) ? $data['address_country_code'] : false;
+		$address['zip']     = ! empty( $data['address_zip']          ) ? $data['address_zip']          : false;
+
+		$user_info = array(
+			'id'         => '-1',
+			'email'      => $data['payer_email'],
+			'first_name' => $data['first_name'],
+			'last_name'  => $data['last_name'],
+			'discount'   => '',
+			'address'    => $address
+		);
+
+		$payment_meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
+		$payment_meta['user_info'] = serialize( $user_info );
+		update_post_meta( $payment_id, '_edd_payment_meta', $payment_meta );
+	}
+
+	// Verify payment recipient
+	if ( strcasecmp( $business_email, trim( $edd_options['paypal_email'] ) ) != 0 ) {
+
+		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid business email in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
+		edd_update_payment_status( $payment_id, 'failed' );
+		return;
+	}
+
+	// Verify payment currency
 	if ( $currency_code != strtolower( edd_get_currency() ) ) {
-		// The currency code is invalid
 
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid currency in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 		edd_update_payment_status( $payment_id, 'failed' );
@@ -349,10 +381,10 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 		// Process a refund
 		edd_process_paypal_refund( $data );
 	} else {
-		if ( number_format( (float)$paypal_amount, 2) != $payment_amount ) {
+		if ( number_format( (float) $paypal_amount, 2 ) < number_format( (float) $payment_amount, 2 ) ) {
 			// The prices don't match
 			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid payment amount in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
-		   //return;
+		   return;
 		}
 		if ( $purchase_key != edd_get_payment_key( $payment_id ) ) {
 			// Purchase keys don't match
