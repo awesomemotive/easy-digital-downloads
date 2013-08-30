@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.6
 
-Stable Tag: 1.6.4
+Stable Tag: 1.7.2
 License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -72,6 +72,7 @@ Easy Digital Downloads as been translated into the following languages:
 13. Czech
 14. Japanese
 15. Farsi
+16. Finnish
 
 Would you like to help translate the plugin into more languages? [Contact Pippin](http://easydigitaldownloads.com/contact-developer/).
 
@@ -184,6 +185,90 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 1.7.2: July 30, 2013 =
+
+* Fix: Translation error with GB file
+* Fix: Payment method icons not showing with only one payment gateway enabled
+* Fix: HTML being outputted even when no excerpt
+* Fix: Incorrect PayPal item quantities
+* Fix: Height bug with jQuery Chosen fields
+* Fix: Admin sale notification has no formatting
+
+* Tweak: Added the_title_attribute() to shortcode-content-title.php template file
+* Tweak: Updated pot files
+* Tweak: Add new shortcode_atts() parameter for the new filter in WP 3.6
+* Tweak: Improved styling of discount section on checkout
+* Tweak: Added new javascript actions for discount actions
+
+= 1.7.1: July 23, 2013 =
+
+* Fix: Payment amount check in PayPal IPN
+* Fix: Typo in register-settings.php
+* Fix: Retina payment icon size
+* Fix: Undefined index errpr
+* Fix: 'std' option doesn't work for select fields
+* Fix: Disable purchase link on non-published products
+* Fix: Schema.org microdata titles cause span tags to show in header section
+* Fix: Disable deprecated WP Super Cache Dynamic Content check
+
+* Tweak: Move tax rate below purchase button
+
+= 1.7: July 20, 2013 =
+
+* New: Brand new styling for the checkout form
+* New: Added options to configure the admin purchase notification email
+* New: Added search to customer reports
+* New: Added item quantity support on checkout
+* New: Brought back the [downloads_history] short code
+* New: Added the ability to use multiple discounts per-purchase
+* New: Added filter to disable schema.org microdata
+* New: Better payment method icons, including full retina support
+* New: Better icons throughout admin, including full retina support
+* New: Added complete Swedish translation
+* New: Include any discounts used in Payment History export
+* New: Added new post installation hook: edd_after_install
+* New: Introduced function for retrieving random Download ID numbers (for themes)
+* New: Added option to resend purchase receipts from the View Order Details page
+* New: Added option under Tools menu to import / export store settings
+* New: Introduced "Buy Now" option for (PayPal) purchase buttons
+
+* Tweak: Improved add to cart ajax indicator
+* Tweak: Better caching plugin support
+* Tweak: Added HTTP status headers to the EDD_API class
+* Tweak: Improved purchase notification emails
+* Tweak: Allow the enctype of the purchase form to be changed
+* Tweak: Modified the tax display on the purchase receipt
+* Tweak: Added the Order ID # to the admin sales notice subject
+* Tweak: Changed the capability of the EDD Add Ons page
+* Tweak: Moved the Zip / Postal Code field just after the Billing City field
+* Tweak: Added "inherit" to the button color options
+* Tweak: Added additional server / environment details to System Info
+* Tweak: Improved variable price option display for products with duplicate price amounts
+* Tweak: Greatly refactored admin-side javascript
+* Tweak: Better required fields handling for checkout
+* Tweak: Show 0.00 prices as "Free"
+* Tweak: Allow Reports and REST API to cross year boundaries
+* Tweak: Better date selection options in Reports
+* Tweak: Better permission checks in the REST API
+
+* Fix: RTL compatibility issues
+* Fix: qTranslate plugin compatibility
+* Fix: System Info bug with display server Memory incorrect
+* Fix: User ID not stored correctly in purchase meta
+* Fix: Cart amount should never be allowed to go negative
+* Fix: Payment email not properly updated when editing a payment
+* Fix: 100% discount code purchases getting set as PayPal purchases
+* Fix: Bugs with "Sorry, trouble retrieving payment receipt."
+* Fix: File uploads going into incorrect year directory
+* Fix: Subtotal in cart widget only showing one decimal place
+* Fix: Incorrect usage of edd_log_test_payment_stats filter
+* Fix: Check for existence of country code in zip/postal code regex
+* Fix: Variable pricing didn't follow currency position
+* Fix: Invalid foreach error with [downloads_discounts] short code
+* Fix: [purchase_collection] short code broken
+* Fix: Customers not always receiving purchase receipt
+
+
 = 1.6.4: June 24, 2013 =
 
 * Fix: Semicolon instead of comma
@@ -207,8 +292,6 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Sanitize subjects for email receipts
 * Tweak: Allow 3 and 4 decimal tax rates
 * Tweak: Changed "Download" to "Free Download" for 0.00 purchases
-
-
 
 = 1.6.3: June 13, 2013 =
 
@@ -306,7 +389,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 = 1.5.2.1: April 23, 2013 =
 
 * Fix: A bug that caused taxes to be calculated incorrectly
-* FIx: A bug that caused purchase receipts to not respect an edited email addresss
+* FIx: A bug that caused purchase receipts to not respect an edited email address
 
 = 1.5.2: April 13, 2013 =
 

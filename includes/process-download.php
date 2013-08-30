@@ -75,6 +75,7 @@ function edd_process_download() {
 		if( function_exists( 'apache_setenv' ) ) @apache_setenv('no-gzip', 1);
 		@ini_set( 'zlib.output_compression', 'Off' );
 
+
 		nocache_headers();
 		header("Robots: none");
 		header("Content-Type: " . $ctype . "");
@@ -99,13 +100,16 @@ function edd_process_download() {
 			case 'direct' :
 			default:
 
-				$direct    = false;
+				$direct       = false;
+				$file_details = parse_url( $requested_file );
 
-				if ( strpos( $requested_file, 'http://' ) === false && strpos( $requested_file, 'https://' ) === false && strpos( $requested_file, 'ftp://' ) === false && file_exists( $requested_file ) ) {
+				if ( ! isset( $file_details['scheme'] ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
 
 					/** This is an absolute path */
 					$direct    = true;
 					$file_path = $requested_file;
+
+
 
 				} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false ) {
 
@@ -123,7 +127,7 @@ function edd_process_download() {
 
 				} elseif ( stristr( getenv( 'SERVER_SOFTWARE' ), 'lighttpd' ) ) {
 
-					header( "X-Lighttpd-Sendfile: $file_path" );
+					header( "X-LIGHTTPD-send-file: $file_path" );
 
 				} elseif ( stristr( getenv( 'SERVER_SOFTWARE' ), 'nginx' ) || stristr( getenv( 'SERVER_SOFTWARE' ), 'cherokee' ) ) {
 

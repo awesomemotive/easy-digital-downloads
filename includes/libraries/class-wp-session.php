@@ -291,9 +291,9 @@ final class WP_Session extends Recursive_ArrayAccess implements Iterator, Counta
 		return $this->offsetExists( $this->key() );
 	}
 
-	/*****************************************************************/
-	/*                    Countable Implementation                   */
-	/*****************************************************************/
+	/**
+	 * Countable Implementation 
+        */
 
 	/**
 	 * Get the count of elements in the container array.

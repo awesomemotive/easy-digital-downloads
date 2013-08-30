@@ -26,15 +26,20 @@ function edd_download_shortcode( $atts, $content = null ) {
 	global $post, $edd_options;
 
 	extract( shortcode_atts( array(
-			'id' 	=> $post->ID,
-			'price' => '1',
-			'text'	=> isset( $edd_options[ 'add_to_cart_text' ] )  && $edd_options[ 'add_to_cart_text' ]    != '' ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
-			'style' => isset( $edd_options[ 'button_style' ] ) 	 	? $edd_options[ 'button_style' ] 		: 'button',
-			'color' => isset( $edd_options[ 'checkout_color' ] ) 	? $edd_options[ 'checkout_color' ] 		: 'blue',
-			'class' => 'edd-submit'
+			'id' 	        => $post->ID,
+			'price'         => '1',
+			'paypal_direct' => '0',
+			'text'	        => isset( $edd_options[ 'add_to_cart_text' ] )  && $edd_options[ 'add_to_cart_text' ]    != '' ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
+			'style'         => isset( $edd_options[ 'button_style' ] ) 	 	? $edd_options[ 'button_style' ] 		: 'button',
+			'color'         => isset( $edd_options[ 'checkout_color' ] ) 	? $edd_options[ 'checkout_color' ] 		: 'blue',
+			'class'         => 'edd-submit'
 		),
-		$atts )
+		$atts, 'purchase_link' )
 	);
+
+	// Override color if color == inherit
+	if( isset( $atts['color'] )	)
+		$atts['color'] = ( $atts['color'] == 'inherit' ) ? '' : $atts['color'];
 
 	// Edd_get_purchase_link() expects the ID to be download_id since v1.3
 	$atts['download_id'] = $atts['id'];
@@ -126,7 +131,7 @@ add_shortcode( 'download_cart', 'edd_cart_shortcode' );
 function edd_login_form_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'redirect' => '',
-		), $atts )
+		), $atts, 'edd_login' )
 	);
 	return edd_login_form( $redirect );
 }
@@ -149,7 +154,7 @@ function edd_discounts_shortcode( $atts, $content = null ) {
 
 	$discounts_list = '<ul id="edd_discounts_list">';
 
-	if ( $discounts && edd_has_active_discounts() ) {
+	if ( ! empty( $discounts ) && edd_has_active_discounts() ) {
 
 		foreach ( $discounts as $discount ) {
 
@@ -167,6 +172,8 @@ function edd_discounts_shortcode( $atts, $content = null ) {
 
 		}
 
+	} else {
+		$discounts_list .= '<li class="edd_discount">' . __( 'No discounts found', 'edd' ) . '</li>';
 	}
 
 	$discounts_list .= '</ul>';
@@ -196,7 +203,7 @@ function edd_purchase_collection_shortcode( $atts, $content = null ) {
 			'style'		=> isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button',
 			'color'		=> isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue',
 			'class'		=> 'edd-submit'
-		), $atts )
+		), $atts, 'purchase_collection' )
 	);
 
 	$button_display = implode( ' ', array( $style, $color, $class ) );
@@ -211,7 +218,7 @@ add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
  * This shortcodes uses the WordPress Query API to get downloads with the
  * arguments specified when using the shortcode. A list of the arguments
  * can be found from the EDD Dccumentation. The shortcode will take all the
- * paramaters and display the downloads queried in a valid HTML <div> tags.
+ * parameters and display the downloads queried in a valid HTML <div> tags.
  *
  * @since 1.0.6
  * @internal Incomplete shortcode
@@ -236,7 +243,7 @@ function edd_downloads_query( $atts, $content = null ) {
 			'orderby'          => 'post_date',
 			'order'            => 'DESC',
 			'ids'              => ''
-		), $atts )
+		), $atts, 'downloads' )
 	);
 
 	$query = array(
@@ -336,7 +343,7 @@ function edd_downloads_query( $atts, $content = null ) {
 	endswitch;
 
 	// Allow the query to be manipulated by other plugins
-	$query = apply_filters( 'edd_downloads_query', $query );
+	$query = apply_filters( 'edd_downloads_query', $query, $atts );
 
 	$downloads = new WP_Query( $query );
 	if ( $downloads->have_posts() ) :
@@ -377,18 +384,29 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			<div style="clear:both;"></div>
 
+			<?php wp_reset_postdata(); ?>
+
 			<div id="edd_download_pagination" class="navigation">
 				<?php
-				$big = 999999;
-				echo paginate_links( array(
-					'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-					'format'  => '?paged=%#%',
-					'current' => max( 1, $query['paged'] ),
-					'total'   => $downloads->max_num_pages
-				) );
+				if ( is_single() ) {
+					echo paginate_links( array(
+						'base'    => get_permalink() . '%#%',
+						'format'  => '?paged=%#%',
+						'current' => max( 1, $query['paged'] ),
+						'total'   => $downloads->max_num_pages
+					) );
+				} else {
+					$big = 999999;
+					echo paginate_links( array(
+						'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+						'format'  => '?paged=%#%',
+						'current' => max( 1, $query['paged'] ),
+						'total'   => $downloads->max_num_pages
+					) );
+				}
 				?>
 			</div>
-			<?php wp_reset_postdata(); ?>
+
 		</div>
 		<?php
 		$display = ob_get_clean();
@@ -413,7 +431,7 @@ add_shortcode( 'downloads', 'edd_downloads_query' );
 function edd_download_price_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 			'id' => NULL,
-		), $atts )
+		), $atts, 'edd_price' )
 	);
 
 	if ( is_null( $id ) )
@@ -446,7 +464,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 		'payment_key'     => true,
 		'payment_method'  => true,
 		'payment_id'      => true
-	), $atts );
+	), $atts, 'edd_receipt' );
 
 	$session = edd_get_purchase_session();
 	if ( isset( $_GET[ 'payment_key' ] ) ) {
@@ -524,12 +542,13 @@ function edd_process_profile_editor_updates( $data ) {
 	if ( ! wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) )
 		return false;
 
-	$user_id = get_current_user_id();
+	$user_id       = get_current_user_id();
+	$old_user_data = get_userdata( $user_id );
+	$display_name  = sanitize_text_field( $data['edd_display_name'] );
+	$first_name    = sanitize_text_field( $data['edd_first_name'] );
+	$last_name     = sanitize_text_field( $data['edd_last_name'] );
+	$email         = sanitize_email( $data['edd_email'] );
 
-	$display_name = sanitize_text_field( $data['edd_display_name'] );
-	$first_name   = sanitize_text_field( $data['edd_first_name'] );
-	$last_name    = sanitize_text_field( $data['edd_last_name'] );
-	$email        = sanitize_email( $data['edd_email'] );
 
 	$userdata = array(
 		'ID'           => $user_id,
@@ -539,6 +558,8 @@ function edd_process_profile_editor_updates( $data ) {
 		'user_email'   => $email
 	);
 
+	do_action( 'edd_pre_update_user_profile', $user_id, $userdata );
+
 	// New password
 	if ( ! empty( $data['edd_new_user_pass1'] ) ) {
 		if ( $data['edd_new_user_pass1'] !== $data['edd_new_user_pass2'] ) {
@@ -546,6 +567,22 @@ function edd_process_profile_editor_updates( $data ) {
 		} else {
 			$userdata['user_pass'] = $data['edd_new_user_pass1'];
 		}
+	}
+
+	// Make sure the new email doesn't belong to another user
+	if( $email != $old_user_data->user_email ) {
+		if( email_exists( $email ) ) {
+			edd_set_error( 'email_exists', __( 'The email you entered belongs to another user. Please use another.', 'edd' ) );
+		}
+	}
+
+	// Check for errors
+	$errors = edd_get_errors();
+
+	if( $errors ) {
+		// Send back to the profile editor if there are errors
+		wp_redirect( $data['edd_redirect'] );
+		edd_die();
 	}
 
 	// Update the user
