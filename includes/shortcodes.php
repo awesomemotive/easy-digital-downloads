@@ -403,7 +403,7 @@ function edd_downloads_query( $atts, $content = null ) {
 						'current' => max( 1, $query['paged'] ),
 						'total'   => $downloads->max_num_pages
 					) );
-				}	
+				}
 				?>
 			</div>
 
