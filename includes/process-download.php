@@ -127,7 +127,7 @@ function edd_process_download() {
 
 				} elseif ( stristr( getenv( 'SERVER_SOFTWARE' ), 'lighttpd' ) ) {
 
-					header( "X-Lighttpd-Sendfile: $file_path" );
+					header( "X-LIGHTTPD-send-file: $file_path" );
 
 				} elseif ( stristr( getenv( 'SERVER_SOFTWARE' ), 'nginx' ) || stristr( getenv( 'SERVER_SOFTWARE' ), 'cherokee' ) ) {
 
