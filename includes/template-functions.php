@@ -305,8 +305,10 @@ add_filter( 'the_content', 'edd_filter_success_page_content' );
  */
 function edd_get_button_colors() {
 	$colors = array(
+		'white'     => __( 'White', 'edd' ),
 		'gray'      => __( 'Gray', 'edd' ),
 		'blue'      => __( 'Blue', 'edd' ),
+		'red'       => __( 'Red', 'edd' ),
 		'green'     => __( 'Green', 'edd' ),
 		'yellow'    => __( 'Yellow', 'edd' ),
 		'orange'    => __( 'Orange', 'edd' ),
