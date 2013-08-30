@@ -542,12 +542,12 @@ function edd_process_profile_editor_updates( $data ) {
 	if ( ! wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) )
 		return false;
 
-	$user_id = get_current_user_id();
-
-	$display_name = sanitize_text_field( $data['edd_display_name'] );
-	$first_name   = sanitize_text_field( $data['edd_first_name'] );
-	$last_name    = sanitize_text_field( $data['edd_last_name'] );
-	$email        = sanitize_email( $data['edd_email'] );
+	$user_id       = get_current_user_id();
+	$old_user_data = get_userdata( $user_id );
+	$display_name  = sanitize_text_field( $data['edd_display_name'] );
+	$first_name    = sanitize_text_field( $data['edd_first_name'] );
+	$last_name     = sanitize_text_field( $data['edd_last_name'] );
+	$email         = sanitize_email( $data['edd_email'] );
 
 
 	$userdata = array(
@@ -567,6 +567,22 @@ function edd_process_profile_editor_updates( $data ) {
 		} else {
 			$userdata['user_pass'] = $data['edd_new_user_pass1'];
 		}
+	}
+
+	// Make sure the new email doesn't belong to another user
+	if( $email != $old_user_data->user_email ) {
+		if( email_exists( $email ) ) {
+			edd_set_error( 'email_exists', __( 'The email you entered belongs to another user. Please use another.', 'edd' ) );
+		}
+	}
+
+	// Check for errors
+	$errors = edd_get_errors();
+
+	if( $errors ) {
+		// Send back to the profile editor if there are errors
+		wp_redirect( $data['edd_redirect'] );
+		edd_die();
 	}
 
 	// Update the user
