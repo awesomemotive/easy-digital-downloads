@@ -549,6 +549,7 @@ function edd_process_profile_editor_updates( $data ) {
 	$last_name    = sanitize_text_field( $data['edd_last_name'] );
 	$email        = sanitize_email( $data['edd_email'] );
 
+
 	$userdata = array(
 		'ID'           => $user_id,
 		'first_name'   => $first_name,
@@ -556,6 +557,8 @@ function edd_process_profile_editor_updates( $data ) {
 		'display_name' => $display_name,
 		'user_email'   => $email
 	);
+
+	do_action( 'edd_pre_update_user_profile', $user_id, $userdata );
 
 	// New password
 	if ( ! empty( $data['edd_new_user_pass1'] ) ) {
