@@ -277,7 +277,7 @@ function edd_purchase_form_required_fields() {
 		'edd_first' => array(
 			'error_id' => 'invalid_first_name',
 			'error_message' => __( 'Please enter your first name', 'edd' )
-		),
+		)
 	);
 	return apply_filters( 'edd_purchase_form_required_fields', $required_fields );
 }
