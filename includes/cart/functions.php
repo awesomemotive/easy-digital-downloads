@@ -458,7 +458,7 @@ function edd_get_cart_total( $discounts = false ) {
 
 	$subtotal = edd_get_cart_subtotal( edd_prices_include_tax() );
 	$fees     = edd_get_cart_fee_total();
-	$cart_tax = edd_is_cart_taxed() ? edd_get_cart_tax( $discounts ) : 0;
+	$cart_tax = edd_is_cart_taxed() && ! edd_prices_include_tax() ? edd_get_cart_tax( $discounts ) : 0;
 	$discount = edd_get_cart_discounted_amount( $discounts );
 
 	$total    = $subtotal + $fees + $cart_tax - $discount;
