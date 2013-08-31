@@ -402,45 +402,6 @@ function edd_get_cart_subtotal( $tax = true ) {
 }
 
 /**
- * Check if cart has fees applied
- *
- * Just a simple wrapper function for EDD_Fees::has_fees()
- *
- * @since 1.5
- * @uses EDD()->fees->has_fees()
- * @return bool Whether the cart has fees applied or not
- */
-function edd_cart_has_fees() {
-	return EDD()->fees->has_fees();
-}
-
-/**
- * Get Cart Fees
- *
- * Just a simple wrapper function for EDD_Fees::get_fees()
- *
- * @since 1.5
- * @uses EDD()->fees->get_fees()
- * @return array All the cart fees that have been applied
- */
-function edd_get_cart_fees() {
-	return EDD()->fees->get_fees();
-}
-
-/**
- * Get Cart Fee Total
- *
- * Just a simple wrapper function for EDD_Fees::total()
- *
- * @since 1.5
- * @uses EDD()->fees->total()
- * @return float Total Cart Fees
- */
-function edd_get_cart_fee_total() {
-	return EDD()->fees->total();
-}
-
-/**
  * Get Cart Amount
  *
  * @since 1.0
@@ -532,6 +493,45 @@ function edd_cart_total( $echo = true ) {
 	}
 
 	echo $total;
+}
+
+/**
+ * Check if cart has fees applied
+ *
+ * Just a simple wrapper function for EDD_Fees::has_fees()
+ *
+ * @since 1.5
+ * @uses EDD()->fees->has_fees()
+ * @return bool Whether the cart has fees applied or not
+ */
+function edd_cart_has_fees() {
+	return EDD()->fees->has_fees();
+}
+
+/**
+ * Get Cart Fees
+ *
+ * Just a simple wrapper function for EDD_Fees::get_fees()
+ *
+ * @since 1.5
+ * @uses EDD()->fees->get_fees()
+ * @return array All the cart fees that have been applied
+ */
+function edd_get_cart_fees() {
+	return EDD()->fees->get_fees();
+}
+
+/**
+ * Get Cart Fee Total
+ *
+ * Just a simple wrapper function for EDD_Fees::total()
+ *
+ * @since 1.5
+ * @uses EDD()->fees->total()
+ * @return float Total Cart Fees
+ */
+function edd_get_cart_fee_total() {
+	return EDD()->fees->total();
 }
 
 /**
