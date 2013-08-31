@@ -140,8 +140,13 @@ TEMPLATES:
 <?php
 // Show templates that have been copied to the theme's edd_templates dir
 $dir = get_stylesheet_directory() . '/edd_templates/*';
-foreach ( glob( $dir ) as $file ) {
-	echo "Filename: " . basename( $file ) . "\n";
+if (!empty($dir)){
+	foreach ( glob( $dir ) as $file ) {
+		echo "Filename: " . basename( $file ) . "\n";
+	}
+}
+else {
+	echo 'No overrides found';
 }
 ?>
 
