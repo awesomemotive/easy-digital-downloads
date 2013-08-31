@@ -410,6 +410,9 @@ function edd_get_cart_subtotal( $tax = true ) {
  * @return float Total amount
 */
 function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
+
+	// This function needs to be deprecated but is still used
+
 	$amount = edd_get_cart_subtotal( false );
 	if ( ! empty( $_POST['edd-discount'] ) || edd_get_cart_discounts() !== false ) {
 		// Retrieve the discount stored in cookies
