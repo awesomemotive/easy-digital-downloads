@@ -118,7 +118,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 	} else {
 		foreach ( $options['price_id'] as $price_id ) {
 			$prices = edd_get_variable_prices( $download_id );
-			$price_options[] = array(
+			$price_options = array(
 				'price_id' => $price_id,
 				'amount'   => $prices[ $price_id ]['amount']
 			);
