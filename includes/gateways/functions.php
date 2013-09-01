@@ -112,10 +112,10 @@ function edd_get_gateway_checkout_label( $gateway ) {
  */
 function edd_build_straight_to_gateway_data( $download_id = 0, $options = array() ) {
 
+	$price_options = array();
 	if( empty( $options ) || ! edd_has_variable_prices( $download_id ) ) {
 		$price = edd_get_download_price( $download_id );
 	} else {
-		$price_options = array();
 		foreach ( $options['price_id'] as $price_id ) {
 			$prices = edd_get_variable_prices( $download_id );
 			$price_options[] = array(
