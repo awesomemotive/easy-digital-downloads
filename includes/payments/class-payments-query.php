@@ -388,12 +388,10 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return void
 	 */
 	public function children() {
-		if ( ! $this->args[ 'children' ] ) {
+		if ( empty( $this->args[ 'children' ] ) ) {
 			$this->__set( 'post_parent', 0 );
 		}
-
 		$this->__unset( 'children' );
-
 	}
 
 	/**
