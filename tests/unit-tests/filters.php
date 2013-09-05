@@ -172,8 +172,8 @@ class Tests_Filters extends EDD_UnitTestCase {
 
 	public function test_edd_checkout_form_top() {
 		global $wp_filter;
-		$this->markTestIncomplete('This one needs to be fixed per #600');
-		//$this->assertarrayHasKey( 'edd_show_payment_icons', $wp_filter['edd_checkout_form_top'][10] );
+		$this->assertarrayHasKey( 'edd_discount_field', $wp_filter['edd_checkout_form_top'][-1] );
+		$this->assertarrayHasKey( 'edd_show_payment_icons', $wp_filter['edd_checkout_form_top'][10] );
 		$this->assertarrayHasKey( 'edd_agree_to_terms_js', $wp_filter['edd_checkout_form_top'][10] );
 	}
 
