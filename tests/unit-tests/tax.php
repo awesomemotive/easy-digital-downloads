@@ -27,11 +27,40 @@ class Tests_Taxes extends EDD_UnitTestCase {
 
 	public function test_get_tax_rate() {
 		global $edd_options;
+
+		// Setup global tax rate
 		$options = array();
 		$options['tax_rate'] = '3.6';
-		update_option( 'edd_options', array_merge( $options, $edd_options ) );
-		$this->assertInternalType( 'float', edd_get_tax_rate() );
-		$this->assertEquals( '0.036', edd_get_tax_rate() );
+		$edd_options = array_merge( $options, $edd_options );
+
+		// Setup country / state tax rates
+		$tax_rates = array();
+		$tax_rates[] = array( 'country' => 'US', 'state' => 'AL', 'rate' => 15 );
+
+		update_option( 'edd_options', $edd_options );
+		update_option( 'edd_tax_rates', $tax_rates );
+
+		$this->assertInternalType( 'float', edd_get_tax_rate( 'US', 'AL' ) );
+		$this->assertEquals( '0.15', edd_get_tax_rate( 'US', 'AL' ) );
+	}
+
+	public function test_get_global_tax_rate() {
+		global $edd_options;
+
+		// Setup global tax rate
+		$options = array();
+		$options['tax_rate'] = '3.6';
+		$edd_options = array_merge( $options, $edd_options );
+
+		// Setup country / state tax rates
+		$tax_rates = array();
+		$tax_rates[] = array( 'country' => 'US', 'state' => 'AL', 'rate' => 15 );
+
+		update_option( 'edd_options', $edd_options );
+		update_option( 'edd_tax_rates', $tax_rates );
+
+		$this->assertInternalType( 'float', edd_get_tax_rate( 'CA', 'AB' ) );
+		$this->assertEquals( '0.036', edd_get_tax_rate( 'CA', 'AB' ) );
 	}
 
 	public function test_calculate_tax() {
