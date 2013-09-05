@@ -107,10 +107,8 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 		$this->assertEquals( '<span class="edd_price" id="edd_price_'. $post_id .'">&#36;54.43</span>', edd_download_price_shortcode( array( 'id' => $post_id ) ) );
 	}
 
-	/**
-	 * This test is failing for some reason. Needs further work.
-	 */
 	public function test_receipt_shortcode() {
-		$this->markTestIncomplete( 'This test needs to be rewritten per #600.');
+		$this->assertInternalType( 'string', edd_receipt_shortcode() );
+		$this->assertEquals( '<table id="edd_purchase_receipt">', edd_receipt_shortcode() );
 	}
 }
