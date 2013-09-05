@@ -17,23 +17,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		$this->assertFalse( edd_use_taxes() );
 	}
 
-	public function test_local_taxes_only() {
-		$this->assertTrue ( 1 == 1);
-	//	$this->assertFalse( edd_local_taxes_only() );
-	}
-
-	public function test_opt_into_local_taxes() {
-		$this->assertTrue ( 1 == 1);
-	//	edd_opt_into_local_taxes();
-	//	$this->assertTrue( edd_local_tax_opted_in() );
-	}
-
-	public function test_opt_out_local_taxes() {
-		$this->assertTrue ( 1 == 1);
-	//	$this->assertNull( edd_opt_out_local_taxes() );
-	}
-
-	public function test_taxes_one_prices() {
+	public function test_taxes_on_prices() {
 		$this->assertFalse( edd_taxes_on_prices() );
 	}
 
