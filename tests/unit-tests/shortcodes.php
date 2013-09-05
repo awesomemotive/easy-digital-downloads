@@ -42,11 +42,12 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 
 	public function test_checkout_form_shortcode() {
 		$this->assertInternalType( 'string', edd_checkout_form_shortcode() );
-		$this->markTestIncomplete( 'This test needs to be rewritten per #600.');
+		$this->assertContains( '<div id="edd_checkout_wrap">', edd_checkout_form_shortcode() );
 	}
 
 	public function test_cart_shortcode() {
-		$this->markTestIncomplete( 'This test needs to be rewritten per #600.');
+		$this->assertInternalType( 'string', edd_cart_shortcode() );
+		$this->assertContains( '<ul class="edd-cart">', edd_cart_shortcode() );
 	}
 
 	public function test_login_form() {
