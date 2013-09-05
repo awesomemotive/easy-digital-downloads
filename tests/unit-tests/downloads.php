@@ -151,7 +151,7 @@ class Tests_Downloads extends EDD_UnitTestCase {
 
 	public function test_get_download_files() {
 		$out = edd_get_download_files( $this->_post->ID );
-		
+
 		foreach ( $out as $file ) {
 			$this->assertArrayHasKey( 'name', $file );
 			$this->assertArrayHasKey( 'file', $file );
