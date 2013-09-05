@@ -109,13 +109,13 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 
 	public function test_receipt_shortcode() {
 		$this->assertInternalType( 'string', edd_receipt_shortcode() );
-		$this->assertEquals( '<table id="edd_purchase_receipt">', edd_receipt_shortcode() );
+		$this->assertContains( '<table id="edd_purchase_receipt">', edd_receipt_shortcode() );
 
 		// this should set a purchase session and then perform a better check to ensure the receipt contents were retrieved successfully
 	}
 
 	public function test_profile_shortcode() {
 		$this->assertInternalType( 'string', edd_profile_editor_shortcode() );
-		$this->assertEquals( '<form id="edd_profile_editor_form" class="edd_form" action="', edd_profile_editor_shortcode() );
+		$this->assertContains( '<form id="edd_profile_editor_form" class="edd_form" action="', edd_profile_editor_shortcode() );
 	}
 }
