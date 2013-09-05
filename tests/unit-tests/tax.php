@@ -26,8 +26,12 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_get_tax_rate() {
-		$this->assertInternalType( 'integer', edd_get_tax_rate() );
-		$this->assertEquals( 0, edd_get_tax_rate() );
+		global $edd_options;
+		$options = array();
+		$options['tax_rate'] = '3.6';
+		update_option( 'edd_options', array_merge( $options, $edd_options ) );
+		$this->assertInternalType( 'float', edd_get_tax_rate() );
+		$this->assertEquals( '0.036', edd_get_tax_rate() );
 	}
 
 	public function test_calculate_tax() {
