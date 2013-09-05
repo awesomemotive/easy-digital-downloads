@@ -179,8 +179,7 @@ class Tests_Filters extends EDD_UnitTestCase {
 
 	public function test_edd_empty_cart() {
 		global $wp_filter;
-		$this->markTestIncomplete('This one needs to be fixed per #600');
-		//$this->assertarrayHasKey( 'edd_empty_checkout_cart', $wp_filter['edd_empty_cart'][10] );
+		$this->assertarrayHasKey( 'edd_empty_checkout_cart', $wp_filter['edd_cart_empty'][10] );
 	}
 
 	public function test_edd_add_to_cart() {
