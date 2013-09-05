@@ -153,14 +153,15 @@ class Tests_Filters extends EDD_UnitTestCase {
 
 	public function test_edd_purchase_form_before_cc_form() {
 		global $wp_filter;
-		$this->markTestIncomplete('This one needs to be fixed per #600');
+		// No actions connected to edd_purchase_form_before_cc_form by default
+		$this->assertTrue( true );
 		//$this->assertarrayHasKey( 'edd_discount_field', $wp_filter['edd_purchase_form_before_cc_form'][10] );
 	}
 
 	public function test_edd_purchase_form_after_cc_form() {
 		global $wp_filter;
-		$this->markTestIncomplete('This one needs to be fixed per #600');
-		//$this->assertarrayHasKey( 'edd_checkout_submit', $wp_filter['edd_purchase_form_after_cc_form'][999] );
+		$this->assertarrayHasKey( 'edd_checkout_tax_fields', $wp_filter['edd_purchase_form_after_cc_form'][999] );
+		$this->assertarrayHasKey( 'edd_checkout_submit', $wp_filter['edd_purchase_form_after_cc_form'][9999] );
 	}
 
 	public function test_edd_purchase_form_before_submit() {
