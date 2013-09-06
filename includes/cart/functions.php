@@ -571,7 +571,8 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
  */
 function edd_get_cart_tax( $discounts = false ) {
 	$subtotal     = edd_get_cart_subtotal( false );
-	$subtotal    += edd_get_cart_fee_total();
+	$cart_fees    = edd_get_cart_fee_total();
+	$subtotal    += $cart_fees;
 	$cart_tax     = 0;
 	$billing_info = edd_get_purchase_cc_info();
 
@@ -579,6 +580,11 @@ function edd_get_cart_tax( $discounts = false ) {
 
 		if ( edd_taxes_after_discounts() ) {
 			$subtotal -= edd_get_cart_discounted_amount( $discounts );
+		} else {
+			if( edd_get_cart_fee_total() < 0 ) {
+				// If fees are negative, they are treated as a discount. This undoes the step above where we added $cart_fees to the $subtotal
+				$subtotal -= $cart_fees;
+			}
 		}
 
 		$cart_tax = edd_calculate_tax( $subtotal, false, $billing_info['card_country'], $billing_info['card_state'] );
