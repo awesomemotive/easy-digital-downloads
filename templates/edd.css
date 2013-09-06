@@ -432,9 +432,7 @@ input.edd_submit_plain { background: none !important; border: none !important; p
   border-color: #adadad;
 }
 
-.edd-submit.button.dark-gray:active {
-  background-image: none;
-}
+.edd-submit.button.dark-gray:active { background-image: none; }
 
 /* =Downloads Shortcode
 -------------------------------------------------------------- */
