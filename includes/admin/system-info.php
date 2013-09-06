@@ -76,6 +76,16 @@ Downloads slug:           <?php echo defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG . "\
 
 Taxes Enabled:            <?php echo edd_use_taxes() ? "Yes\n" : "No\n"; ?>
 Taxes After Discounts:    <?php echo edd_taxes_after_discounts() ? "Yes\n" : "No\n"; ?>
+Tax Rate:                 <?php echo edd_get_tax_rate() * 100; ?>%
+Country / State Rates:    <?php
+
+$rates = edd_get_tax_rates();
+if( ! empty( $rates ) ) {
+	foreach( $rates as $rate ) {
+		echo 'Country: ' . $rate['country'] . ', State: ' . $rate['state'] . ', Rate: ' . $rate['rate'] . ' | ';
+	}
+}
+?>
 
 Registered Post Stati:    <?php echo implode( ', ', get_post_stati() ) . "\n\n"; ?>
 
