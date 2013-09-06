@@ -50,7 +50,7 @@ function edd_dashboard_sales_widget() {
 					</tr>
 					<tr>
 						<?php $monthly_sales = $stats->get_sales( 0, 'this_month', false, array( 'publish', 'revoked' ) ); ?>
-						<td class="first b"><?php echo $monthly_sales; ?></td>
+						<td class="first b b-sales"><?php echo $monthly_sales; ?></td>
 						<td class="t monthly_sales"><?php echo _n( 'Sale', 'Sales', $monthly_sales, 'edd' ); ?></td>
 					</tr>
 				</tbody>
