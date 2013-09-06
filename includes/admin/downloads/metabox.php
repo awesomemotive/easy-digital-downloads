@@ -82,14 +82,7 @@ function edd_download_meta_box_save( $post_id) {
 
 	foreach ( $fields as $field ) {
 		if ( ! empty( $_POST[ $field ] ) ) {
-			if ( is_string( $_POST[ $field ] ) ) {
-				$new = esc_attr( $_POST[ $field ] );
-			} else {
-				$new = $_POST[ $field ];
-			}
-
-			$new = apply_filters( 'edd_metabox_save_' . $field, $new );
-
+			$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
 			update_post_meta( $post_id, $field, $new );
 		} else {
 			delete_post_meta( $post_id, $field );

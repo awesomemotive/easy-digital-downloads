@@ -402,45 +402,6 @@ function edd_get_cart_subtotal( $tax = true ) {
 }
 
 /**
- * Check if cart has fees applied
- *
- * Just a simple wrapper function for EDD_Fees::has_fees()
- *
- * @since 1.5
- * @uses EDD()->fees->has_fees()
- * @return bool Whether the cart has fees applied or not
- */
-function edd_cart_has_fees() {
-	return EDD()->fees->has_fees();
-}
-
-/**
- * Get Cart Fees
- *
- * Just a simple wrapper function for EDD_Fees::get_fees()
- *
- * @since 1.5
- * @uses EDD()->fees->get_fees()
- * @return array All the cart fees that have been applied
- */
-function edd_get_cart_fees() {
-	return EDD()->fees->get_fees();
-}
-
-/**
- * Get Cart Fee Total
- *
- * Just a simple wrapper function for EDD_Fees::total()
- *
- * @since 1.5
- * @uses EDD()->fees->total()
- * @return float Total Cart Fees
- */
-function edd_get_cart_fee_total() {
-	return EDD()->fees->total();
-}
-
-/**
  * Get Cart Amount
  *
  * @since 1.0
@@ -449,6 +410,9 @@ function edd_get_cart_fee_total() {
  * @return float Total amount
 */
 function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
+
+	// This function needs to be deprecated but is still used
+
 	$amount = edd_get_cart_subtotal( false );
 	if ( ! empty( $_POST['edd-discount'] ) || edd_get_cart_discounts() !== false ) {
 		// Retrieve the discount stored in cookies
@@ -494,7 +458,7 @@ function edd_get_cart_total( $discounts = false ) {
 
 	$subtotal = edd_get_cart_subtotal( edd_prices_include_tax() );
 	$fees     = edd_get_cart_fee_total();
-	$cart_tax = edd_is_cart_taxed() ? edd_get_cart_tax( $discounts ) : 0;
+	$cart_tax = edd_is_cart_taxed() && ! edd_prices_include_tax() ? edd_get_cart_tax( $discounts ) : 0;
 	$discount = edd_get_cart_discounted_amount( $discounts );
 
 	$total    = $subtotal + $fees + $cart_tax - $discount;
@@ -535,6 +499,45 @@ function edd_cart_total( $echo = true ) {
 }
 
 /**
+ * Check if cart has fees applied
+ *
+ * Just a simple wrapper function for EDD_Fees::has_fees()
+ *
+ * @since 1.5
+ * @uses EDD()->fees->has_fees()
+ * @return bool Whether the cart has fees applied or not
+ */
+function edd_cart_has_fees() {
+	return EDD()->fees->has_fees();
+}
+
+/**
+ * Get Cart Fees
+ *
+ * Just a simple wrapper function for EDD_Fees::get_fees()
+ *
+ * @since 1.5
+ * @uses EDD()->fees->get_fees()
+ * @return array All the cart fees that have been applied
+ */
+function edd_get_cart_fees() {
+	return EDD()->fees->get_fees();
+}
+
+/**
+ * Get Cart Fee Total
+ *
+ * Just a simple wrapper function for EDD_Fees::total()
+ *
+ * @since 1.5
+ * @uses EDD()->fees->total()
+ * @return float Total Cart Fees
+ */
+function edd_get_cart_fee_total() {
+	return EDD()->fees->total();
+}
+
+/**
  * Get Purchase Summary
  *
  * Retrieves the purchase summary.
@@ -568,7 +571,8 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
  */
 function edd_get_cart_tax( $discounts = false ) {
 	$subtotal     = edd_get_cart_subtotal( false );
-	$subtotal    += edd_get_cart_fee_total();
+	$cart_fees    = edd_get_cart_fee_total();
+	$subtotal    += $cart_fees;
 	$cart_tax     = 0;
 	$billing_info = edd_get_purchase_cc_info();
 
@@ -576,6 +580,11 @@ function edd_get_cart_tax( $discounts = false ) {
 
 		if ( edd_taxes_after_discounts() ) {
 			$subtotal -= edd_get_cart_discounted_amount( $discounts );
+		} else {
+			if( edd_get_cart_fee_total() < 0 ) {
+				// If fees are negative, they are treated as a discount. This undoes the step above where we added $cart_fees to the $subtotal
+				$subtotal -= $cart_fees;
+			}
 		}
 
 		$cart_tax = edd_calculate_tax( $subtotal, false, $billing_info['card_country'], $billing_info['card_state'] );
