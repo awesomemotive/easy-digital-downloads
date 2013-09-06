@@ -119,9 +119,10 @@ class EDD_Payment_Stats extends EDD_Stats {
 			);
 
 			$args = apply_filters( 'edd_stats_earnings_args', $args );
-			$key  = md5( serialize( $args ) );
 
+			$key = md5( 'edd_earnings_' . $start_date . $start_date );
 			$earnings = get_transient( $key );
+
 			if( false === $earnings ) {
 				$sales = get_posts( $args );
 				$earnings = 0;
