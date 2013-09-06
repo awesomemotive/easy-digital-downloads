@@ -245,41 +245,196 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd_download_purchase_form .edd_price_options li { display: block; padding: 0; margin: 0; }
 .edd_download_purchase_form .edd_price_options span { display: inline; padding: 0; margin: 0; }
 
-.edd-submit { text-shadow: 1px 1px #FAFAFA; line-height: normal; cursor: pointer; }
-.edd-submit.button { font-size: inherit; }
-.edd-submit.plain { text-shadow: none; margin: 0; padding: 0; background: none; border: 0; }
-.edd-submit.plain:hover { text-decoration: underline; }
+.edd-submit, #edd-purchase-button {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.428571429;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+       -o-user-select: none;
+          user-select: none;
+}
+.edd-submit.button:focus {
+  outline: thin dotted #333;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.edd-submit.button:hover,
+.edd-submit.button:focus {
+  color: #333333;
+  text-decoration: none;
+}
+
+.edd-submit.button:active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+          box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+.edd-submit.plain {
+  padding: 0;
+}
 
 /** Gray (Default) */
-.edd-submit.button { text-shadow: 0 -1px 0 rgba(0, 0, 0, .25); line-height: normal; cursor: pointer; padding: 5px 15px 6px; outline: none; position: relative; border: 1px solid; -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 1px 3px rgba(0, 0, 0, .10); -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 1px 3px rgba(0, 0, 0, .10); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 1px 3px rgba(0, 0, 0, .10); border-radius:  3px; color: #555; border-color: #BBB; background: #E8E8E8; background: -moz-linear-gradient(top, #eeeeee, #e2e2e2); background: -webkit-linear-gradient(top, #eeeeee, #e2e2e2); background: linear-gradient(top, #eeeeee, #e2e2e2); }
-.edd-submit.button.gray { text-shadow: 0 -1px 0 rgba(255, 255, 255, .25); }
-.edd-submit.button:hover { text-decoration: none; background: #E8E8E8; }
-.edd-submit.button:active { text-decoration: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; border: 1px solid #BBB; background: #E3E3E3; }
+.edd-submit.button.gray {
+  color: #333333;
+  background: #f0f0f0;
+  border-color: #cccccc;
+}
+
+.edd-submit.button.gray:hover,
+.edd-submit.button.gray:focus,
+.edd-submit.button.gray:active {
+  color: #333333;
+  background: #ebebeb;
+  border-color: #adadad;
+}
+
+.edd-submit.button.gray:active {
+  background-image: none;
+}
+
+/** White */
+.edd-submit.button.white {
+  color: #333333;
+  background: #ffffff;
+  border-color: #cccccc;
+}
+
+.edd-submit.button.white:hover,
+.edd-submit.button.white:focus,
+.edd-submit.button.white:active {
+  color: #333333;
+  background: #ebebeb;
+  border-color: #adadad;
+}
+
+.edd-submit.button.white:active {
+  background-image: none;
+}
 
 /** Blue */
-.edd-submit.button.blue { color: #fff; border-color: #04C #04C #002A80; background: #006DCC; background: -moz-linear-gradient(top, #08C, #04C); background: -webkit-linear-gradient(top, #08C, #04C); background: linear-gradient(top, #08C, #04C); }
-.edd-submit.button.blue:hover { background: #006DCC; }
-.edd-submit.button.blue:active { border-color: #002A80 #04C #04C; background: #005fb1; }
+.edd-submit.button.blue {
+  color: #ffffff;
+  background: #428bca;
+  border-color: #357ebd;
+}
+.edd-submit.button.blue:hover,
+.edd-submit.button.blue:focus,
+.edd-submit.button.blue.active {
+  color: #ffffff;
+  background: #3276b1;
+  border-color: #285e8e;
+}
+.edd-submit.button.blue.active {
+  background-image: none;
+}
+
+/** Red */
+.edd-submit.button.red {
+  color: #ffffff;
+  background: #d9534f;
+  border-color: #d43f3a;
+}
+
+.edd-submit.button.red:hover,
+.edd-submit.button.red:focus,
+.edd-submit.button.red:active {
+  color: #ffffff;
+  background: #d2322d;
+  border-color: #ac2925;
+}
+
+.edd-submit.button.red:active, {
+  background-image: none;
+}
 
 /** Green */
-.edd-submit.button.green { color: #fff; border-color: #51A351 #51A351 #387038; background: #5BB75B; background: -moz-linear-gradient(top, #62C462, #51A351); background: -webkit-linear-gradient(top, #62C462, #51A351); background: linear-gradient(top, #62C462, #51A351); }
-.edd-submit.button.green:hover { background: #5BB75B; }
-.edd-submit.button.green:active { border-color: #387038 #51A351 #51A351; background: #51a451; }
+.edd-submit.button.green {
+  color: #ffffff;
+  background: #5cb85c;
+  border-color: #4cae4c;
+}
+
+.edd-submit.button.green:hover,
+.edd-submit.button.green:focus,
+.edd-submit.button.green:active {
+  color: #ffffff;
+  background: #47a447;
+  border-color: #398439;
+}
+
+.edd-submit.button.green:active {
+  background-image: none;
+}
 
 /** Yellow */
-.edd-submit.button.yellow { color: #fff; border-color: #F89406 #F89406 #AD6704; background: #FAA732; background: -moz-linear-gradient(top, #FBB450, #F89406); background: -webkit-linear-gradient(top, #FBB450, #F89406); background: linear-gradient(top, #FBB450, #F89406); }
-.edd-submit.button.yellow:hover { background: #FAA732; }
-.edd-submit.button.yellow:active { border-color: #AD6704 #F89406 #F89406; background: #f09e2b; }
+.edd-submit.button.yellow {
+  color: #ffffff;
+  background: #f0ad4e;
+  border-color: #eea236;
+}
+
+.edd-submit.button.yellow:hover,
+.edd-submit.button.yellow:focus,
+.edd-submit.button.yellow:active {
+  color: #ffffff;
+  background: #ed9c28;
+  border-color: #d58512;
+}
+
+.edd-submit.button.yellow:active {
+  background-image: none;
+}
+
+/** Orange */
+.edd-submit.button.orange {
+  color: #ffffff;
+  background: #ed9c28;
+  border-color: #e3921e;
+}
+
+.edd-submit.button.orange:hover,
+.edd-submit.button.orange:focus,
+.edd-submit.button.orange:active {
+  color: #ffffff;
+  background: #e59016;
+  border-color: #d58512;
+}
+
+.edd-submit.button.orange:active {
+  background-image: none;
+}
 
 /** Dark Gray */
-.edd-submit.button.dark-gray { color: #FFFFFF; border-color: #222 #222 black; background: #363636; background: -moz-linear-gradient(top, #444, #222); background: -webkit-linear-gradient(top, #444, #222); background: linear-gradient(top, #444, #222); }
-.edd-submit.button.dark-gray:hover { background: #363636; }
-.edd-submit.button.dark-gray:active { border-color: #000 #222 #222; background: #2b2b2b; }
+.edd-submit.button.dark-gray {
+  color: #fff;
+  background: #363636;
+  border-color: #222;
+}
 
-/* Orange */
-.edd-submit.button.orange { color: #fff; border-color: #f96f0c; background: #e96a2a; background: -moz-linear-gradient(top, #ff8c00, #e96a2a); background: -webkit-linear-gradient(top, #ff8c00, #e96a2a); background: linear-gradient(top, #ff8c00, #e96a2a); }
-.edd-submit.button.orange:hover { background: #e96a2a; }
-.edd-submit.button.orange:active { border-color: #ff6c00; background: #ff8100; }
+.edd-submit.button.dark-gray:hover,
+.edd-submit.button.dark-gray:focus,
+.edd-submit.button.dark-gray:active {
+  color: #fff;
+  background: #333;
+  border-color: #adadad;
+}
+
+.edd-submit.button.dark-gray:active {
+  background-image: none;
+}
 
 /* =Downloads Shortcode
 -------------------------------------------------------------- */
