@@ -1111,10 +1111,15 @@ function edd_settings_sanitize( $input = array() ) {
 	foreach( $input as $key => $value ) {
 
 		// Get the setting type (checkbox, select, etc)
-		$type = isset( $settings[ $key ][ 'type' ] ) ? $settings[ $key ][ 'type' ] : 'text';
+		$type = isset( $settings[ $key ][ 'type' ] ) ? $settings[ $key ][ 'type' ] : false;
 
-		$output[ $key ] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
+		if( $type ) {
+			// Field type specific filter
+			$output[ $key ] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
+		}
 
+		// General filter
+		$output[ $key ] = apply_filters( 'edd_settings_sanitize', $value, $key );
 	}
 
 
