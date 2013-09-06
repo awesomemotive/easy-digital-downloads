@@ -404,7 +404,7 @@ function edd_downloads_query( $atts, $content = null ) {
 						'current' => max( 1, $query['paged'] ),
 						'total'   => $downloads->max_num_pages
 					) );
-				}	
+				}
 				?>
 			</div>
 
@@ -462,7 +462,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 		'products'        => true,
 		'date'            => true,
 		'notes'           => true,
-		'payment_key'     => true,
+		'payment_key'     => false,
 		'payment_method'  => true,
 		'payment_id'      => true
 	), $atts, 'edd_receipt' );
@@ -470,6 +470,8 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	$session = edd_get_purchase_session();
 	if ( isset( $_GET[ 'payment_key' ] ) ) {
 		$payment_key = urldecode( $_GET[ 'payment_key' ] );
+	} elseif ( $edd_receipt_args['payment_key'] ) {
+		$payment_key = $edd_receipt_args['payment_key'];
 	} else if ( $session ) {
 		$payment_key = $session[ 'purchase_key' ];
 	}
@@ -543,7 +545,8 @@ function edd_process_profile_editor_updates( $data ) {
 	if ( ! wp_verify_nonce( $data['edd_profile_editor_nonce'], 'edd-profile-editor-nonce' ) )
 		return false;
 
-	$user_id = get_current_user_id();
+	$user_id       = get_current_user_id();
+	$old_user_data = get_userdata( $user_id );
 
 	$display_name = sanitize_text_field( $data['edd_display_name'] );
 	$first_name   = sanitize_text_field( $data['edd_first_name'] );
@@ -564,6 +567,7 @@ function edd_process_profile_editor_updates( $data ) {
 		'user_email'   => $email
 	);
 
+
 	$address = array(
 		'line1'    => $line1,
 		'line2'    => $line2,
@@ -573,6 +577,8 @@ function edd_process_profile_editor_updates( $data ) {
 		'country'  => $country
 	);
 
+	do_action( 'edd_pre_update_user_profile', $user_id, $userdata );
+
 	// New password
 	if ( ! empty( $data['edd_new_user_pass1'] ) ) {
 		if ( $data['edd_new_user_pass1'] !== $data['edd_new_user_pass2'] ) {
@@ -580,6 +586,22 @@ function edd_process_profile_editor_updates( $data ) {
 		} else {
 			$userdata['user_pass'] = $data['edd_new_user_pass1'];
 		}
+	}
+
+	// Make sure the new email doesn't belong to another user
+	if( $email != $old_user_data->user_email ) {
+		if( email_exists( $email ) ) {
+			edd_set_error( 'email_exists', __( 'The email you entered belongs to another user. Please use another.', 'edd' ) );
+		}
+	}
+
+	// Check for errors
+	$errors = edd_get_errors();
+
+	if( $errors ) {
+		// Send back to the profile editor if there are errors
+		wp_redirect( $data['edd_redirect'] );
+		edd_die();
 	}
 
 	// Update the user

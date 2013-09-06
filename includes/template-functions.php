@@ -150,8 +150,10 @@ function edd_get_purchase_link( $args = array() ) {
 			<?php endif; ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
 
-		<?php if( edd_display_tax_rate() ) {
+		<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
 			echo '<div class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), $edd_options['tax_rate'] ) . '</div>';
+		} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
+			echo '<div class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'edd' ), $edd_options['tax_rate'] ) . '</div>';
 		} ?>
 
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $args['download_id'] ); ?>">
@@ -204,7 +206,7 @@ function edd_purchase_variable_pricing( $download_id = 0 ) {
 					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '">';
 					printf(
 						'<label for="%3$s"><input type="%2$s" %1$s name="edd_options[price_id][]" id="%3$s" class="%4$s" value="%5$s" %7$s/> %6$s</label>',
-						checked( 0, $key, false ),
+						checked( apply_filters( 'edd_price_option_checked', 0, $download_id, $key ), $key, false ),
 						$type,
 						esc_attr( 'edd_price_option_' . $download_id . '_' . $key ),
 						esc_attr( 'edd_price_option_' . $download_id ),
