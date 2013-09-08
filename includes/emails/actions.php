@@ -62,7 +62,7 @@ add_action( 'edd_email_links', 'edd_resend_purchase_receipt' );
  * Trigger the sending of a Test Email
  *
  * @since 1.5
- * @param array $data Paramaters sent from Settings page
+ * @param array $data Parameters sent from Settings page
  * @return void
  */
 function edd_send_test_email( $data ) {

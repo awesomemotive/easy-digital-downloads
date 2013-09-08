@@ -15,7 +15,7 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 	}
 
 	public function test_product_dropdown() {
-		$expected = '<select name="edd_products" id="edd_products" class="edd-select edd_products"><option value="'. $this->_post_id .'">Test Download</option></select>';
+		$expected = '<select name="edd_products" id="edd_products" class="edd-select edd_products"><option value="-1">None</option><option value="'. $this->_post_id .'">Test Download</option></select>';
 		$this->assertEquals( $expected, EDD()->html->product_dropdown() );
 	}
 
