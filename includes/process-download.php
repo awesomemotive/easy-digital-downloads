@@ -127,7 +127,7 @@ function edd_process_download() {
 
 				} elseif ( stristr( getenv( 'SERVER_SOFTWARE' ), 'lighttpd' ) ) {
 
-					header( "X-Lighttpd-Sendfile: $file_path" );
+					header( "X-LIGHTTPD-send-file: $file_path" );
 
 				} elseif ( stristr( getenv( 'SERVER_SOFTWARE' ), 'nginx' ) || stristr( getenv( 'SERVER_SOFTWARE' ), 'cherokee' ) ) {
 
@@ -547,8 +547,8 @@ function edd_readfile_chunked( $file, $retbytes = TRUE ) {
 	while ( ! feof( $handle ) ) :
 	   $buffer = fread( $handle, $chunksize );
 	   echo $buffer;
-	   ob_flush();
-	   flush();
+	   //ob_flush();
+	   //flush();
 
 	   if ( $retbytes ) $cnt += strlen( $buffer );
 	endwhile;

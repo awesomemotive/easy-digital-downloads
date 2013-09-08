@@ -115,7 +115,7 @@ add_action( 'edd_activate_discount', 'edd_activate_discount' );
 /**
  * Deactivate Discount
  *
- * Sets a discount code's status to deactive
+ * Sets a discount code's status to deactivate
  *
  * @since 1.0
  * @param array $data Discount code data
