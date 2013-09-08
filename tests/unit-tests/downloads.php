@@ -111,7 +111,10 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	}
 
 	public function test_price_range() {
-		$this->markTestIncomplete( 'This test needs to be rewritten per #600.');
+		$range = edd_price_range( $this->_post->ID );
+		$expected = '<span class="edd_price_range_low">&#36;20</span><span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_range_high">&#36;100</span>';
+		$this->assertInternalType( 'string', $range );
+		$this->assertEquals( $expected, $range );
 	}
 
 	public function test_single_price_option_mode() {
@@ -148,7 +151,7 @@ class Tests_Downloads extends EDD_UnitTestCase {
 
 	public function test_get_download_files() {
 		$out = edd_get_download_files( $this->_post->ID );
-		
+
 		foreach ( $out as $file ) {
 			$this->assertArrayHasKey( 'name', $file );
 			$this->assertArrayHasKey( 'file', $file );

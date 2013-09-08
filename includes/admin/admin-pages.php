@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 1.0
  * @global $edd_discounts_page
- * @global @edd_payments_page
+ * @global $edd_payments_page
  * @global $edd_settings_page
  * @global $edd_reports_page
  * @global $edd_system_info_page

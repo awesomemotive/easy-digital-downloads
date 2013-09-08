@@ -38,12 +38,6 @@ script:
     - php tests/includes/clover.php tests/clover.xml 90
 
 notifications:
-    email:
-        recipients:
-          - edd.unit.tests@gmail.com
-        on_success: change
-        on_failure: always
-
     irc:
         channels:
             - "irc.freenode.net#eddwp"

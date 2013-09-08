@@ -76,7 +76,7 @@ function edd_get_tax_rates() {
  *
  * @since 1.3.3
  * @global $edd_options
- * @return float $trate Taxation rate
+ * @return float $rate Taxation rate
  */
 function edd_get_tax_rate( $country = false, $state = false ) {
 	global $edd_options;
@@ -136,25 +136,27 @@ function edd_calculate_tax( $amount, $sum = true, $country = false, $state = fal
 	global $edd_options;
 
 	// Not using taxes
-	if ( ! edd_use_taxes() ) return $amount;
+	if ( ! edd_use_taxes() ) {
+		return $amount;
+	}
 
 	$rate = edd_get_tax_rate( $country, $state );
-	$tax = 0.00;
-	$prices_include_tax = edd_prices_include_tax();
+	$tax  = 0.00;
 
 	if ( $sum ) {
 
-		if ( $prices_include_tax ) {
-			$tax = $amount - (($amount / (1+$rate)) * $rate);
+		if ( edd_prices_include_tax() ) {
+			$tax = $amount - ( ( $amount / ( 1 + $rate ) ) * $rate );
 		} else {
-			$tax = $amount + ($amount * $rate);
-				}
-		} else {
+			$tax = $amount + ( $amount * $rate );
+		}
 
-		if ( $prices_include_tax ) {
-			$tax = ($amount / (1+$rate)) * $rate;
+	} else {
+
+		if ( edd_prices_include_tax() ) {
+			$tax = ( $amount / ( 1 + $rate ) ) * $rate;
 		} else {
-			$tax = $amount * rate;
+			$tax = $amount * $rate;
 		}
 
 	}

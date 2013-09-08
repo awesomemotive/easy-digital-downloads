@@ -916,6 +916,10 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 		}
 	}
 
+	if( ! edd_taxes_after_discounts() ) {
+		$amounts[] = edd_get_cart_tax();
+	}
+
 	// Add up the total amount
 	$discounted_amount = 0.00;
 	$item_discount     = array_sum( $discounted_items );
