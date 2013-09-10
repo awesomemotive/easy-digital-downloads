@@ -26,7 +26,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_tools_page() {
 ?>
 	<div class="wrap">
-		<h2><?php _e( 'Tools', 'edd' ) ?></h2><br/>
+		<?php screen_icon(); ?>
+		<h2><?php _e( 'Tools', 'edd' ) ?></h2>
 		<div class="metabox-holder">
 			<?php do_action( 'edd_tools_before' ); ?>
 			<div class="postbox">
