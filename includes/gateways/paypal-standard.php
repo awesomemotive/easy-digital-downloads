@@ -73,7 +73,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
         edd_send_back_to_checkout( '?payment-mode=' . $purchase_data['post_data']['edd-gateway'] );
     } else {
         // Only send to PayPal if the pending payment is created successfully
-        $listener_url = trailingslashit( home_url() ).'?edd-listener=IPN';
+        $listener_url = trailingslashit( home_url( 'index.php' ) ).'?edd-listener=IPN';
 
          // Get the success url
         $return_url = add_query_arg( 'payment-confirmation', 'paypal', get_permalink( $edd_options['success_page'] ) );
