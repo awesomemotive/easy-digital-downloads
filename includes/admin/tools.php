@@ -85,13 +85,13 @@ function edd_process_settings_export() {
 		return;
 
 	$settings = array();
-	$settings['general']    = get_option( 'edd_general' );
-	$settings['gateways']   = get_option( 'edd_gateways' );
-	$settings['emails']     = get_option( 'edd_emails' );
-	$settings['styles']     = get_option( 'edd_styles' );
-	$settings['taxes']      = get_option( 'edd_taxes' );
-	$settings['extensions'] = get_option( 'edd_extensions' );
-	$settings['misc']       = get_option( 'edd_misc' );
+	$settings['general']    = get_option( 'edd_settings_general' );
+	$settings['gateways']   = get_option( 'edd_settings_gateways' );
+	$settings['emails']     = get_option( 'edd_settings_emails' );
+	$settings['styles']     = get_option( 'edd_settings_styles' );
+	$settings['taxes']      = get_option( 'edd_settings_taxes' );
+	$settings['extensions'] = get_option( 'edd_settings_extensions' );
+	$settings['misc']       = get_option( 'edd_settings_misc' );
 
 	ignore_user_abort( true );
 
