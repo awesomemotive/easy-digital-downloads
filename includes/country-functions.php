@@ -654,7 +654,7 @@ function edd_get_new_zealand_states_list() {
  * @since 1.6
  * @return array $states A list of states
  */
-function edd_get_indonesian_states_list() {
+function edd_get_indonesia_states_list() {
 	$states = array(
 		'AC' => 'Daerah Istimewa Aceh',
 	    'SU' => 'Sumatera Utara',
@@ -692,7 +692,7 @@ function edd_get_indonesian_states_list() {
 	    'PB' => 'Papua Barat'
 	);
 
-	return apply_filters( 'edd_indonesian_states', $states );
+	return apply_filters( 'edd_indonesia_states', $states );
 }
 
 /**
