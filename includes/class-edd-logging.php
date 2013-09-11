@@ -283,10 +283,11 @@ class EDD_Logging {
 	 */
 	public function get_log_count( $object_id = 0, $type = null, $meta_query = null ) {
 		$query_args = array(
-			'post_parent' 	=> $object_id,
-			'post_type'		=> 'edd_log',
-			'posts_per_page'=> -1,
-			'post_status'	=> 'publish'
+			'post_parent' 	   => $object_id,
+			'post_type'		   => 'edd_log',
+			'posts_per_page'   => -1,
+			'post_status'	   => 'publish',
+			'suppress_filters' => true
 		);
 
 		if ( ! empty( $type ) && $this->valid_type( $type ) ) {
