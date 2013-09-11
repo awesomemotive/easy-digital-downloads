@@ -93,13 +93,15 @@ function edd_admin_footer_for_thickbox() {
 				<div>
 					<?php echo EDD()->html->product_dropdown(); ?>
 				</div>
-				<div>
-					<select id="select-edd-direct" style="clear: both; display: block; margin-bottom: 1em; margin-top: 1em;">
-						<option value="0"><?php _e( 'Choose the button behavior', 'edd' ); ?></option>
-						<option value="1"><?php _e( 'Add to Cart', 'edd' ); ?></option>
-						<option value="2"><?php _e( 'Direct Purchase Link', 'edd' ); ?></option>
-					</select>
-				</div>
+				<?php if( edd_shop_supports_buy_now() ) : ?>
+					<div>
+						<select id="select-edd-direct" style="clear: both; display: block; margin-bottom: 1em; margin-top: 1em;">
+							<option value="0"><?php _e( 'Choose the button behavior', 'edd' ); ?></option>
+							<option value="1"><?php _e( 'Add to Cart', 'edd' ); ?></option>
+							<option value="2"><?php _e( 'Direct Purchase Link', 'edd' ); ?></option>
+						</select>
+					</div>
+				<?php endif; ?>
 				<div>
 					<select id="select-edd-style" style="clear: both; display: block; margin-bottom: 1em; margin-top: 1em;">
 						<option value=""><?php _e( 'Choose a style', 'edd' ); ?></option>
