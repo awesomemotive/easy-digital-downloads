@@ -32,7 +32,8 @@ function edd_download_shortcode( $atts, $content = null ) {
 			'text'	        => isset( $edd_options[ 'add_to_cart_text' ] )  && $edd_options[ 'add_to_cart_text' ]    != '' ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
 			'style'         => isset( $edd_options[ 'button_style' ] ) 	 	? $edd_options[ 'button_style' ] 		: 'button',
 			'color'         => isset( $edd_options[ 'checkout_color' ] ) 	? $edd_options[ 'checkout_color' ] 		: 'blue',
-			'class'         => 'edd-submit'
+			'class'         => 'edd-submit',
+			'form_id'       => ''
 		),
 		$atts, 'purchase_link' )
 	);
