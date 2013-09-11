@@ -29,12 +29,12 @@ class EDD_HTML_Elements {
 	 * @param int $selected Download to select automatically
 	 * @return string $output Product dropdown
 	 */
-	public function product_dropdown( $name = 'edd_products', $selected = 0 ) {
+	public function product_dropdown( $name = 'edd_products', $selected = 0, $multiple = false, $chosen = false ) {
 		$products = get_posts( array(
-			'post_type' => 'download',
-			'nopaging'  => true,
-			'orderby'   => 'title',
-			'order'     => 'ASC'
+			'post_type'      => 'download',
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+			'posts_per_page' => 30
 		) );
 
 		if ( $products ) {
@@ -48,7 +48,9 @@ class EDD_HTML_Elements {
 		$output = $this->select( array(
 			'name'             => $name,
 			'selected'         => $selected,
+			'class'            => $chosen ? 'edd-select-chosen' : '',
 			'options'          => $options,
+			'multiple'         => $multiple,
 			'show_option_all'  => false,
 			'show_option_none' => __( 'None', 'edd' )
 		) );
@@ -196,14 +198,23 @@ class EDD_HTML_Elements {
 		$defaults = array(
 			'options'          => array(),
 			'name'             => null,
+			'class'            => null,
 			'selected'         => 0,
+			'multiple'         => false,
 			'show_option_all'  => _x( 'All', 'all dropdown items', 'edd' ),
 			'show_option_none' => _x( 'None', 'no dropdown items', 'edd' )
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="edd-select ' . esc_attr( $args[ 'name'] ) . '">';
+		if( $args['multiple'] ) {
+			$args['name'] .= '[]';
+			$multiple = ' MULTIPLE';
+		} else {
+			$miltiple = '';
+		}
+
+		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . '>';
 
 		if ( ! empty( $args[ 'options' ] ) ) {
 			if ( $args[ 'show_option_all' ] )
@@ -213,7 +224,14 @@ class EDD_HTML_Elements {
 				$output .= '<option value="-1"' . selected( $args['selected'], -1, false ) . '>' . esc_html( $args[ 'show_option_none' ] ) . '</option>';
 
 			foreach( $args[ 'options' ] as $key => $option ) {
-				$output .= '<option value="' . esc_attr( $key ) . '"' . selected( $args['selected'], $key, false ) . '>' . esc_html( $option ) . '</option>';
+
+				if( $args['multiple'] ) {
+					$selected = selected( true, in_array( $key, $args['selected'] ), false );
+				} else {
+					$selected = selected( $args['selected'], $key, false );
+				}
+
+				$output .= '<option value="' . esc_attr( $key ) . '"' . $selected . '>' . esc_html( $option ) . '</option>';
 			}
 		}
 
