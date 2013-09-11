@@ -637,6 +637,7 @@ function edd_render_disable_button( $post_id ) {
 			<?php _e( 'Disable the automatic output of the purchase button', 'edd' ); ?>
 		</label>
 	</p>
+	<?php if( edd_shop_supports_buy_now() ) : ?>
 	<p>
 		<label for="_edd_button_behavior">
 			<select name="_edd_button_behavior" id="_edd_button_behavior" >
@@ -647,6 +648,7 @@ function edd_render_disable_button( $post_id ) {
 		</label>
 	</p>
 <?php
+	endif;
 }
 add_action( 'edd_meta_box_fields', 'edd_render_disable_button', 30 );
 
