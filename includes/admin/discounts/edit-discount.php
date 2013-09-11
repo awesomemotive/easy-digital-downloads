@@ -78,7 +78,7 @@ $single_use   = edd_discount_is_single_use( $discount_id );
 						</select>
 						<label for="edd-product-condition"><?php _e( 'Condition', 'edd' ); ?></label>
 					</p>
-					<?php echo EDD()->html->product_dropdown( 'products', $product_reqs, true, true ); ?><br/>
+					<?php echo EDD()->html->product_dropdown( 'products[]', $product_reqs, true, true ); ?><br/>
 					<p class="description"><?php printf( __( '%s required to be purchased for this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
 					<p>
 						<label for="edd-non-global-discount">

@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.5
  */
 class EDD_HTML_Elements {
+
 	/**
 	 * Renders an HTML Dropdown of all the Products (Downloads)
 	 *
@@ -208,7 +209,6 @@ class EDD_HTML_Elements {
 		$args = wp_parse_args( $args, $defaults );
 
 		if( $args['multiple'] ) {
-			$args['name'] .= '[]';
 			$multiple = ' MULTIPLE';
 		} else {
 			$miltiple = '';
