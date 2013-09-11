@@ -130,7 +130,7 @@ function edd_get_htaccess_rules( $method = false ) {
 			// Prevent directory browsing and direct access to all files, except images (they must be allowed for featured images / thumbnails)
 			$rules = "Options -Indexes\n";
 			$rules .= "deny from all\n";
-			$rules .= "<FilesMatch '\.(jpg|png|gif)$'>\n";
+			$rules .= "<FilesMatch '\.(jpg|png|gif|mp3|ogg)$'>\n";
 			    $rules .= "Order Allow,Deny\n";
 			    $rules .= "Allow from all\n";
 			$rules .= "</FilesMatch>\n";
