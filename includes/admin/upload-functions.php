@@ -46,8 +46,11 @@ add_action( 'admin_init', 'edd_change_downloads_upload_dir', 999 );
  * have their necessary protection files
  *
  * @since 1.1.5
- * @return void
+ *
+ * @param bool $force
+ * @param bool $method
  */
+
 function edd_create_protection_files( $force = false, $method = false ) {
 	if ( false === get_transient( 'edd_check_protection_files' ) || $force ) {
 		$wp_upload_dir = wp_upload_dir();
@@ -111,7 +114,9 @@ function edd_scan_folders( $path = '', $return = array() ) {
  * Retrieve the .htaccess rules to wp-content/uploads/edd/
  *
  * @since 1.6
- * @return string The htaccess rules
+ *
+ * @param bool $method
+ * @return mixed|void The htaccess rules
  */
 function edd_get_htaccess_rules( $method = false ) {
 

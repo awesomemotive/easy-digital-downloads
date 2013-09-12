@@ -29,9 +29,7 @@ class EDD_Welcome {
 	/**
 	 * Get things started
 	 *
-	 * @access  public
 	 * @since 1.4
-	 * @return void
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menus') );
