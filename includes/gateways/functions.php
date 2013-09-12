@@ -162,9 +162,12 @@ function edd_shop_supports_buy_now() {
  * Build the purchase data for a straight-to-gateway purchase button
  *
  * @since 1.7
- * @return array
+ *
+ * @param int   $download_id
+ * @param array $options
+ * @return mixed|void
  */
-function edd_build_straight_to_gateway_data( $download_id = 0, $options = array() ) {
+function edd_build_straight_to_gateway_data( $download_id = 0, array $options = array() ) {
 
 	$price_options = array();
 	if( empty( $options ) || ! edd_has_variable_prices( $download_id ) ) {
@@ -324,11 +327,13 @@ function edd_record_gateway_error( $title = '', $message = '', $parent = 0 ) {
 	return edd_record_log( $title, $message, $parent, 'gateway_error' );
 }
 
-
 /**
  * Counts the number of purchases made with a gateway
  *
  * @since 1.6
+ *
+ * @param string $gateway_id
+ * @param string $status
  * @return int
  */
 function edd_count_sales_by_gateway( $gateway_id = 'paypal', $status = 'publish' ) {
