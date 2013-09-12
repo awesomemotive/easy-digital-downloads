@@ -455,12 +455,12 @@ function edd_check_for_existing_payment( $payment_id ) {
  *
  * @since 1.0
  *
- * @param string $payment
+ * @param WP_Post $payment
  * @param bool   $return_label Whether to return the payment status or not
  *
  * @return bool|mixed if payment status exists, false otherwise
  */
-function edd_get_payment_status( $payment = OBJECT, $return_label = false ) {
+function edd_get_payment_status( WP_Post $payment, $return_label = false ) {
 	if ( ! is_object( $payment ) || !isset( $payment->post_status ) )
 		return false;
 
