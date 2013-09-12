@@ -83,11 +83,25 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 
 	$rate = isset( $edd_options['tax_rate'] ) ? (float) $edd_options['tax_rate'] : 0;
 
-	if( empty( $country ) )
-		$country = ! empty( $_POST['country'] ) ? $_POST['country'] : edd_get_shop_country();
+	$user_address = edd_get_customer_address();
 
-	if( empty( $state ) )
-		$state = ! empty( $_POST['state'] ) ? $_POST['state'] : edd_get_shop_state();
+	if( empty( $country ) ) {
+		if( ! empty( $_POST['country'] ) ) {
+			$country = $_POST['country'];
+		} elseif( is_user_logged_in() && ! empty( $user_address ) ) {
+			$country = $user_address['country'];
+		}
+		$country = ! empty( $country ) ? $country : edd_get_shop_country();
+	}
+
+	if( empty( $state ) ) {
+		if( ! empty( $_POST['state'] ) ) {
+			$state = $_POST['state'];
+		} elseif( is_user_logged_in() && ! empty( $user_address ) ) {
+			$state = $user_address['state'];
+		}
+		$state = ! empty( $state ) ? $state : edd_get_shop_state();
+	}
 
 	if( ! empty( $country ) ) {
 		$tax_rates   = edd_get_tax_rates();
