@@ -19,12 +19,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Retrieves a list of all purchases by a specific user.
  *
- * @access public
- * @since  1.0
- * @param  int|string $user   User ID or email address
- * @param  int $number        Number of purchases to retrieve
+ * @param int    $user User ID or email address
+ * @param int    $number Number of purchases to retrieve
+ * @param bool   $pagination
+ * @param string $status
  *
- * @return array List of all user purchases
+ * @return bool|object List of all user purchases
  */
 function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, $status = 'complete' ) {
 	if ( empty( $user ) ) {

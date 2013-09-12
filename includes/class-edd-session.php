@@ -49,9 +49,7 @@ class EDD_Session {
 	 * Defines our WP_Session constants, includes the necessary libraries and
 	 * retrieves the WP Session instance
 	 *
-	 * @access public
 	 * @since 1.5
-	 * @return void
 	 */
 	public function __construct() {
 
@@ -132,15 +130,14 @@ class EDD_Session {
 		return isset( $this->session[ $key ] ) ? maybe_unserialize( $this->session[ $key ] ) : false;
 	}
 
-
 	/**
 	 * Set a session variable
 	 *
-	 * @access public
 	 * @since 1.5
-	 * @param string $key Session key
-	 * @param string $variable Session variable
-	 * @return array Session variable
+	 *
+	 * @param $key Session key
+	 * @param $value Session variable
+	 * @return mixed Session variable
 	 */
 	public function set( $key, $value ) {
 		$key = sanitize_key( $key );

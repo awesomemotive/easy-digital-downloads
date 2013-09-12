@@ -20,10 +20,8 @@ class EDD_Cron {
 	/**
 	 * Get things going
 	 *
-	 * @access public
 	 * @since 1.6
 	 * @see EDD_Cron::weekly_events()
-	 * @return void
 	 */
 	public function __construct() {
 		add_filter( 'cron_schedules', array( $this, 'add_schedules'   ) );
@@ -33,11 +31,12 @@ class EDD_Cron {
 	/**
 	 * Registers new cron schedules
 	 *
-	 * @access public
 	 * @since 1.6
-	 * @return void
+	 *
+	 * @param array $schedules
+	 * @return array
 	 */
-	public function add_schedules( $schedules = array() ) {
+	public function add_schedules( array $schedules = array() ) {
 		// Adds once weekly to the existing schedules.
 		$schedules['weekly'] = array(
 			'interval' => 604800,

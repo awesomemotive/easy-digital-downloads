@@ -20,12 +20,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.3.1
  */
 class EDD_Logging {
+
 	/**
 	 * Set up the EDD Logging Class
 	 *
-	 * @access public
 	 * @since 1.3.1
-	 * @return void
 	 */
 	public function __construct() {
 		// Create the log post type
@@ -363,9 +362,17 @@ $GLOBALS['edd_logs'] = new EDD_Logging();
  * This is just a simple wrapper function for the log class add() function
  *
  * @since 1.3.3
+ *
+ * @param string $title
+ * @param string $message
+ * @param int    $parent
+ * @param null   $type
+ *
  * @global $edd_logs EDD Logs Object
+ *
  * @uses EDD_Logging::add()
- * @return int $log ID of the new log entry
+ *
+ * @return mixed ID of the new log entry
  */
 function edd_record_log( $title = '', $message = '', $parent = 0, $type = null ) {
 	global $edd_logs;
