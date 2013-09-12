@@ -9,7 +9,7 @@ if ( is_user_logged_in() ):
 	$first_name   = get_user_meta( $user_id, 'first_name', true );
 	$last_name    = get_user_meta( $user_id, 'last_name', true );
 	$display_name = $current_user->display_name;
-	$address      = get_user_meta( $user_id, '_edd_user_address', true );
+	$address      = edd_get_customer_address( $user_id );
 
 	if ( isset( $_GET['updated'] ) && $_GET['updated'] == true && ! edd_get_errors() ): ?>
 	<p class="edd_success"><strong><?php _e( 'Success', 'edd'); ?>:</strong> <?php _e( 'Your profile has been edited successfully.', 'edd' ); ?></p>
