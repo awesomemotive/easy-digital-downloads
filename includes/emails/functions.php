@@ -176,12 +176,13 @@ function edd_get_admin_notice_emails() {
 	return apply_filters( 'edd_admin_notice_emails', $emails );
 }
 
-
 /**
  * Checks whether admin sale notices are disabled
  *
  * @since 1.5.2
- * @return bool
+ *
+ * @param int $payment_id
+ * @return mixed|void
  */
 function edd_admin_notices_disabled( $payment_id = 0 ) {
 	global $edd_options;
