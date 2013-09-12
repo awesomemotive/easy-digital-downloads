@@ -19,6 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Retrieves a list of all purchases by a specific user.
  *
+ * @since  1.0
+ *
  * @param int    $user User ID or email address
  * @param int    $number Number of purchases to retrieve
  * @param bool   $pagination

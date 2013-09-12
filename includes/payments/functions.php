@@ -860,6 +860,8 @@ function edd_get_payment_amount( $payment_id ) {
  *
  * @param int $payment_id Payment ID
  *
+ * @see edd_get_payment_subtotal()
+ *
  * @return array Fully formatted payment subtotal
  */
 function edd_payment_subtotal( $payment_id = 0 ) {
