@@ -184,7 +184,10 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown
 	 *
+	 * @since 1.6
+	 *
 	 * @param array $args
+	 *
 	 * @return string
 	 */
 	public function select( array $args = array() ) {
