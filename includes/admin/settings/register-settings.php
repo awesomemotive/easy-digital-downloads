@@ -357,7 +357,7 @@ function edd_get_registered_settings() {
 					'id' => 'checkout_color',
 					'name' => __( 'Default Button Color', 'edd' ),
 					'desc' => __( 'Choose the color you want to use for the buttons.', 'edd' ),
-					'type' => 'select',
+					'type' => 'color_select',
 					'options' => edd_get_button_colors()
 				)
 			)
@@ -828,6 +828,37 @@ function edd_select_callback($args) {
 	foreach ( $args['options'] as $option => $name ) :
 		$selected = selected( $option, $value, false );
 		$html .= '<option value="' . $option . '" ' . $selected . '>' . $name . '</option>';
+	endforeach;
+
+	$html .= '</select>';
+	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+	echo $html;
+}
+
+/**
+ * Color select Callback
+ *
+ * Renders color select fields.
+ *
+ * @since 1.8
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_color_select_callback( $args ) {
+	global $edd_options;
+
+	if ( isset( $edd_options[ $args['id'] ] ) )
+		$value = $edd_options[ $args['id'] ];
+	else
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+
+	$html = '<select id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"/>';
+
+	foreach ( $args['options'] as $option => $color ) :
+		$selected = selected( $option, $value, false );
+		$html .= '<option value="' . $option . '" ' . $selected . '>' . $color['label'] . '</option>';
 	endforeach;
 
 	$html .= '</select>';

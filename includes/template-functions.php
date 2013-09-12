@@ -309,15 +309,42 @@ add_filter( 'the_content', 'edd_filter_success_page_content' );
  */
 function edd_get_button_colors() {
 	$colors = array(
-		'white'     => __( 'White', 'edd' ),
-		'gray'      => __( 'Gray', 'edd' ),
-		'blue'      => __( 'Blue', 'edd' ),
-		'red'       => __( 'Red', 'edd' ),
-		'green'     => __( 'Green', 'edd' ),
-		'yellow'    => __( 'Yellow', 'edd' ),
-		'orange'    => __( 'Orange', 'edd' ),
-		'dark-gray' => __( 'Dark Gray', 'edd' ),
-		'inherit'	=> __( 'Inherit', 'edd' ),
+		'white'     => array(
+			'label' => __( 'White', 'edd' ),
+			'hex'   => '#ffffff'
+		),
+		'gray'      => array(
+			'label' => __( 'Gray', 'edd' ),
+			'hex'   => '#f0f0f0'
+		),
+		'blue'      => array(
+			'label' => __( 'Blue', 'edd' ),
+			'hex'   => '#428bca'
+		),
+		'red'       => array(
+			'label' => __( 'Red', 'edd' ),
+			'hex'   => '#d9534f'
+		),
+		'green'     => array(
+			'label' => __( 'Green', 'edd' ),
+			'hex'   => '#5cb85c'
+		),
+		'yellow'    => array(
+			'label' => __( 'Yellow', 'edd' ),
+			'hex'   => '#f0ad4e'
+		),
+		'orange'    => array(
+			'label' => __( 'Orange', 'edd' ),
+			'hex'   => '#ed9c28'
+		),
+		'dark-gray' => array(
+			'label' => __( 'Dark Gray', 'edd' ),
+			'hex'   => '#363636'
+		),
+		'inherit'	=> array(
+			'label' => __( 'Inherit', 'edd' ),
+			'hex'   => ''
+		)
 	);
 
 	return apply_filters( 'edd_button_colors', $colors );

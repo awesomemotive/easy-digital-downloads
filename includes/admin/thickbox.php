@@ -121,7 +121,7 @@ function edd_admin_footer_for_thickbox() {
 						<option value=""><?php _e('Choose a button color', 'edd'); ?></option>
 						<?php
 							foreach ( $colors as $key => $color )
-								echo '<option value="' . str_replace( ' ', '_', $key ) . '">' . $color . '</option>';
+								echo '<option value="' . str_replace( ' ', '_', $key ) . '">' . $color['label'] . '</option>';
 						?>
 					</select>
 				</div>
