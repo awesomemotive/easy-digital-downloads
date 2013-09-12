@@ -454,9 +454,11 @@ function edd_check_for_existing_payment( $payment_id ) {
  * Get Payment Status
  *
  * @since 1.0
- * @param obj $payment Payment Object
- * @param bool $return_label Whether to return the payment status or not
- * @return mixed string if payment status exists, false otherwise
+ *
+ * @param string $payment
+ * @param bool   $return_label Whether to return the payment status or not
+ *
+ * @return bool|mixed if payment status exists, false otherwise
  */
 function edd_get_payment_status( $payment = OBJECT, $return_label = false ) {
 	if ( ! is_object( $payment ) || !isset( $payment->post_status ) )
@@ -855,10 +857,10 @@ function edd_get_payment_amount( $payment_id ) {
  * edd_get_payment_subtotal()
  *
  * @since 1.3.3
- * @see edd_get_payment_subtotal()
+ *
  * @param int $payment_id Payment ID
- * @param bool $payment_meta Payment Meta provided? (default: false)
- * @return string $subtotal Fully formatted payment subtotal
+ *
+ * @return array Fully formatted payment subtotal
  */
 function edd_payment_subtotal( $payment_id = 0 ) {
 	$subtotal = edd_get_payment_subtotal( $payment_id );
