@@ -34,8 +34,10 @@ function edd_checkout_cart() {
  * Renders the Shopping Cart
  *
  * @since 1.0
+ *
+ * @param bool $echo
  * @return string Fully formatted cart
-*/
+ */
 function edd_shopping_cart( $echo = false ) {
 	global $edd_options;
 
