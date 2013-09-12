@@ -82,10 +82,8 @@ class EDD_API {
 	/**
 	 * Setup the EDD API
 	 *
-	 * @access public
 	 * @author Daniel J Griffiths
 	 * @since 1.5
-	 * @return void
 	 */
 	public function __construct() {
 		add_action( 'init',                    array( $this, 'add_endpoint'   ) );
@@ -182,9 +180,11 @@ class EDD_API {
 	 * @access public
 	 * @since 1.5.1
 	 * @global object $wpdb Used to query the database using the WordPress
-	 *   Database API
-	 * @param int $key Public Key
-	 * @return mixed string if user ID is found, false otherwise
+	 * Database API
+	 *
+	 * @param string $key Public Key
+	 *
+	 * @return bool if user ID is found, false otherwise
 	 */
 	public function get_user( $key = '' ) {
 		global $wpdb, $wp_query;
@@ -407,10 +407,9 @@ class EDD_API {
 	 *
 	 * Determines whether results should be displayed in XML or JSON
 	 *
-	 * @access private
 	 * @since 1.5
-	 * @global $wp_query
-	 * @return $format Output format
+	 *
+	 * @return mixed|void
 	 */
 	public function get_output_format() {
 		global $wp_query;
@@ -757,12 +756,14 @@ class EDD_API {
 	/**
 	 * Process Get Stats API Request
 	 *
-	 * @access public
 	 * @author Daniel J Griffiths
 	 * @since 1.5
+	 *
 	 * @global object $wpdb Used to query the database using the WordPress
-	 *   Database API
-	 * @param array $args Arguments provided by API Request
+	 *
+	 * @param array $args
+	 *
+	 * @return array
 	 */
 	public function get_stats( $args = array() ) {
 		$defaults = array(
@@ -1200,17 +1201,15 @@ class EDD_API {
 		return $this->data;
 	}
 
-
 	/**
 	 * Output Query in either JSON/XML. The query data is outputted as JSON
 	 * by default
 	 *
-	 * @access public
 	 * @author Daniel J Griffiths
 	 * @since 1.5
 	 * @global $wp_query
-	 * @param array $data
-	 * @return void
+	 *
+	 * @param int $status_code
 	 */
 	public function output( $status_code = 200 ) {
 		global $wp_query;

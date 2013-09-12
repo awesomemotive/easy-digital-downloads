@@ -41,7 +41,9 @@ function edd_get_shop_state() {
  * Get Shop States
  *
  * @since 1.6
- * @return array $states A list of states for the shop's base country
+ *
+ * @param null $country
+ * @return mixed|void  A list of states for the shop's base country
  */
 function edd_get_shop_states( $country = null ) {
 	global $edd_options;

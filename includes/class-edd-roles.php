@@ -23,11 +23,9 @@ class EDD_Roles {
 	/**
 	 * Get things going
 	 *
-	 * @access public
 	 * @since 1.4.4
 	 * @see EDD_Roles::add_roles()
 	 * @see EDD_Roles::add_caps()
-	 * @return void
 	 */
 	public function __construct() {
 		$this->add_roles();

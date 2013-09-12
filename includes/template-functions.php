@@ -237,8 +237,9 @@ add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10 );
  *
  * @since 1.0.8
  * @global $post
- * @param $content string The the_content field of the download object
- * @return $content string the content with any additional data attached
+ *
+ * @param $content The the_content field of the download object
+ * @return string the content with any additional data attached
  */
 function edd_before_download_content( $content ) {
 	global $post;
@@ -261,8 +262,9 @@ add_filter( 'the_content', 'edd_before_download_content' );
  *
  * @since 1.0.8
  * @global $post
- * @param $content string The the_content field of the download object
- * @return $content string the content with any additional data attached
+ *
+ * @param $content The the_content field of the download object
+ * @return string the content with any additional data attached
  */
 function edd_after_download_content( $content ) {
 	global $post;
@@ -344,8 +346,6 @@ function edd_get_button_styles() {
  *
  * @since 1.0
  * @global $user_ID
- * @param int $download_id Download ID
- * @return void
  */
 function edd_show_has_purchased_item_message() {
 	global $user_ID, $post;
@@ -456,6 +456,9 @@ function edd_get_templates_url() {
  *
  * @param string $slug
  * @param string $name Optional. Default null
+ * @param bool   $load
+ *
+ * @return string
  *
  * @uses edd_locate_template()
  * @uses load_template()
@@ -584,9 +587,9 @@ add_filter( 'the_title', 'edd_microdata_title', 10, 2 );
  *
  * @since 1.5
  * @author Sunny Ratilal
- * @param string $title Post Title
- * @param int $id Post ID
- * @return string $title New title
+ *
+ * @param $content
+ * @return mixed|void New title
  */
 function edd_microdata_wrapper( $content ) {
 	global $post;

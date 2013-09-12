@@ -14,10 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 class EDD_Cache_Helper {
 
 	/**
-	 * __construct function.
-	 *
-	 * @access public
-	 * @return void
+	 * Initializes the object instance
 	 */
 	public function __construct() {
 
