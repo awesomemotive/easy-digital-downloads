@@ -362,7 +362,7 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 
 	$email = isset( $edd_options['sale_notification'] ) ? $edd_options['sale_notification'] : $default_email_body;
 
-	$email_body = edd_email_template_tags( $email, $payment_data, $payment_id, true );
+	$email_body = nl2br( edd_email_template_tags( $email, $payment_data, $payment_id, true ) );
 
 	return apply_filters( 'edd_sale_notification', $email_body, $payment_id, $payment_data );
 }
