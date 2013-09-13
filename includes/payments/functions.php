@@ -662,7 +662,7 @@ function edd_get_total_earnings() {
 		$payments = edd_get_payments( $args );
 		if ( $payments ) {
 			foreach ( $payments as $payment ) {
-				$total += edd_get_payment_amount( $payment );
+				$total += floatval( edd_get_payment_amount( $payment ) );
 			}
 		}
 
