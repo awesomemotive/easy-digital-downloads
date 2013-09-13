@@ -119,6 +119,8 @@ add_action( 'edd_purchase_form', 'edd_show_purchase_form' );
  * @return void
  */
 function edd_user_info_fields() {
+	global $edd_options;
+
 	if ( is_user_logged_in() ) :
 		$user_data = get_userdata( get_current_user_id() );
 	endif;
@@ -137,6 +139,7 @@ function edd_user_info_fields() {
 			<input class="edd-input required" type="email" name="edd_email" placeholder="<?php _e( 'Email address', 'edd' ); ?>" id="edd-email" value="<?php echo is_user_logged_in() ? $user_data->user_email : ''; ?>"/>
 		</p>
 		<?php do_action( 'edd_purchase_form_after_email' ); ?>
+		<?php if( $edd_options[ 'customer_name_style' ] == 'firstlast' ) : ?>
 		<p id="edd-first-name-wrap">
 			<label class="edd-label" for="edd-first">
 				<?php _e( 'First Name', 'edd' ); ?>
@@ -157,6 +160,18 @@ function edd_user_info_fields() {
 			<span class="edd-description"><?php _e( 'We will use this as well to personalize your account experience.', 'edd' ); ?></span>
 			<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e( 'Last name', 'edd' ); ?>" value="<?php echo is_user_logged_in() ? $user_data->last_name : ''; ?>"/>
 		</p>
+		<?php else : ?>
+		<p id="edd-first-name-wrap">
+			<label class="edd-label" for="edd-first">
+				<?php _e( 'Name', 'edd' ); ?>
+				<?php if( edd_field_is_required( 'edd_first' ) ) { ?>
+					<span class="edd-required-indicator">*</span>
+				<?php } ?>
+			</label>
+			<span class="edd-description"><?php _e( 'We will use this to personalize your account experience.', 'edd' ); ?></span>
+			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e( 'Name', 'edd' ); ?>" id="edd-first" value="<?php echo is_user_logged_in() ? $user_data->display_name : ''; ?>"/>
+		</p>
+		<?php endif; ?>
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
 	</fieldset>
 	<?php
