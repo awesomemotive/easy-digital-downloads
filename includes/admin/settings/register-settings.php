@@ -65,10 +65,10 @@ function edd_register_settings() {
 					'type' => 'select',
 					'options' => $pages_options
 				),
-				'currency_settings' => array(
-					'id' => 'currency_settings',
-					'name' => '<strong>' . __( 'Currency Settings', 'edd' ) . '</strong>',
-					'desc' => __( 'Configure the currency options', 'edd' ),
+				'internationalization_settings' => array(
+					'id' => 'internationalization_settings',
+					'name' => '<strong>' . __( 'Internationalization Settings', 'edd' ) . '</strong>',
+					'desc' => __( 'Configure options for different locales', 'edd' ),
 					'type' => 'header'
 				),
 				'currency' => array(
@@ -103,6 +103,16 @@ function edd_register_settings() {
 					'type' => 'text',
 					'size' => 'small',
 					'std' => '.'
+				),
+				'customer_name_style' => array(
+					'id' => 'customer_name_style',
+					'name' => __( 'Customer Name Style', 'edd' ),
+					'desc' => __( 'Configure how customer names are stored in the database.', 'edd' ),
+					'type' => 'select',
+					'options' => array(
+						'simple' => __( 'Simple Name Field', 'edd' ),
+						'firstlast' => __( 'First Name / Last Name', 'edd' )
+					)
 				),
 				'api_settings' => array(
 					'id' => 'api_settings',
