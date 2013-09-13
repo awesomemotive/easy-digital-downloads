@@ -167,7 +167,7 @@ function edd_shop_supports_buy_now() {
  * @param array $options
  * @return mixed|void
  */
-function edd_build_straight_to_gateway_data( $download_id = 0, array $options = array() ) {
+function edd_build_straight_to_gateway_data( $download_id = 0, $options = array() ) {
 
 	$price_options = array();
 	if( empty( $options ) || ! edd_has_variable_prices( $download_id ) ) {
