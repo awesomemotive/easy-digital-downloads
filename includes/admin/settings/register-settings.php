@@ -1184,14 +1184,14 @@ function edd_settings_sanitize_misc( $input ) {
 
 	global $edd_options;
 
-	if( edd_get_file_download_method() != $input['download_method'] ) {
+	if( edd_get_file_download_method() != $input['download_method'] || ! edd_htaccess_exists() ) {
 		// Force the .htaccess files to be updated if the Download method was changed.
 		edd_create_protection_files( true, $input['download_method'] );
 	}
 
 	return $input;
 }
-add_filter( 'edd_settings_misc_sanitize', 'edd_settings_sanitize_taxes' );
+add_filter( 'edd_settings_misc_sanitize', 'edd_settings_sanitize_misc' );
 
 /**
  * Taxes Settings Sanitization
