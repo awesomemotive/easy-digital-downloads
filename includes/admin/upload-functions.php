@@ -84,6 +84,18 @@ function edd_create_protection_files( $force = false, $method = false ) {
 add_action( 'admin_init', 'edd_create_protection_files' );
 
 /**
+ * Checks if the .htaccess file exists in wp-content/uploads/edd
+ *
+ * @since 1.8
+ * @return bool
+ */
+function edd_htaccess_exists() {
+	$upload_path = edd_get_upload_dir();
+
+	return file_exists( $upload_path . '/.htaccess' );
+}
+
+/**
  * Scans all folders inside of /uploads/edd
  *
  * @since 1.1.5
