@@ -414,6 +414,20 @@ function edd_get_symlink_dir() {
 }
 
 /**
+ * Retrieve the absolute path to the file upload directory without the trailing slash
+ *
+ * @since  1.8
+ * @return string $path Absolute path to the EDD upload directory
+ */
+function edd_get_upload_dir() {
+	$wp_upload_dir = wp_upload_dir();
+	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd' );
+	$path = $wp_upload_dir['basedir'] . '/edd';
+
+	return apply_filters( 'edd_get_upload_dir', $path );
+}
+
+/**
  * Delete symbolic links after they have been used
  *
  * @access public
