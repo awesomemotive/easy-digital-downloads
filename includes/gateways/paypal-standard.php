@@ -133,7 +133,9 @@ function edd_process_paypal_purchase( $purchase_data ) {
         			$price = $item['price'];
 	        	}
 
-	        	$
+	        	if( edd_get_cart_item_price_id( $item ) ) {
+	        		$item['name'] .= ' - ' . edd_get_cart_item_price_name( $item );
+	        	}
 
     	    	$paypal_args['item_name_' . $i ]       = stripslashes_deep( html_entity_decode( wp_strip_all_tags( $item['name'] ), ENT_COMPAT, 'UTF-8' ) );
         		if( edd_use_skus() ) {
