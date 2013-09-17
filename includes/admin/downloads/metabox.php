@@ -333,19 +333,23 @@ function edd_render_price_row( $key, $args = array(), $post_id ) {
 }
 add_action( 'edd_render_price_row', 'edd_render_price_row', 10, 3 );
 
-
+/**
+ * Product type options
+ *
+ * @access      private
+ * @since       1.6
+ * @return      void
+ */
 function edd_render_product_type_field( $post_id = 0 ) {
 
-	$type = edd_get_download_type( $post_id );
+	$types = edd_get_download_types();
+	$type  = edd_get_download_type( $post_id );
 ?>
 	<p>
 		<strong><?php apply_filters( 'edd_product_type_options_heading', _e( 'Product Type Options:', 'edd' ) ); ?></strong>
 	</p>
 	<p>
-		<select name="_edd_product_type" id="edd_product_type">
-			<option value="0"><?php _e( 'Default', 'edd' ); ?></option>
-			<option value="bundle"<?php selected( 'bundle', $type ); ?>><?php _e( 'Bundle', 'edd' ); ?></option>
-		</select>
+		<?php echo EDD()->html->select( array( 'options' => $types, 'name' => '_edd_product_type', 'selected' => $type, 'show_option_all' => false, 'show_option_none' => false ) ); ?>
 		<label for="edd_product_type"><?php _e( 'Select a product type', 'edd' ); ?></label>
 	</p>
 <?php
