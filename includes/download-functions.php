@@ -270,6 +270,22 @@ function edd_single_price_option_mode( $download_id = 0 ) {
 }
 
 /**
+ * Get product types
+ *
+ * @since 1.8
+ * @return array $types Download types
+ */
+function edd_get_download_types() {
+
+	$types = array(
+		'0'       => __( 'Default', 'edd' ),
+		'bundle'  => __( 'Bundle', 'edd' )
+	);
+
+	return apply_filters( 'edd_download_types', $types );
+}
+
+/**
  * Gets the Download type, either default or "bundled"
  *
  * @since 1.6
@@ -282,7 +298,6 @@ function edd_get_download_type( $download_id ) {
 		$type = 'default';
 	return apply_filters( 'edd_get_download_type', $type, $download_id );
 }
-
 
 /**
  * Determines if a product is a bundle
