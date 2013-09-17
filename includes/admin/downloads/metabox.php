@@ -22,23 +22,18 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_add_download_meta_box() {
 	/** Download Configuration */
-	$post_types = array('download');
-	$post_types = apply_fiters( 'edd_post_types_for_downloadinformation_metabox', $post_types );
+	$post_types = apply_fiters( 'edd_download_metabox_post_types' , array( 'download' ) );
 	foreach ($post_types as $post_type){
 		add_meta_box( 'downloadinformation', sprintf( __( '%1$s Configuration', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ),  'edd_render_download_meta_box', $post_type, 'normal', 'default' );
 	}
 	
 	/** Product Notes */
-	$post_types = array('download');
-	$post_types = apply_fiters( 'edd_post_types_for_product_notes_metabox', $post_types );
 	foreach ($post_types as $post_type){
 		add_meta_box( 'edd_product_notes', __( 'Product Notes', 'edd' ), 'edd_render_product_notes_meta_box', $post_type, 'normal', 'default' );
 	}
 	
 	if ( current_user_can( 'view_shop_reports' ) || current_user_can( 'edit_product', get_the_ID() ) ) {
 		/** Download Stats */
-		$post_types = array('download');
-		$post_types = apply_fiters( 'edd_post_types_for_download_stats_metabox', $post_types );
 		foreach ($post_types as $post_type){
 			add_meta_box( 'edd_download_stats', sprintf( __( '%1$s Stats', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', $post_type, 'side', 'high' );
 		}
