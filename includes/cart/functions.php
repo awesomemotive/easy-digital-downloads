@@ -314,13 +314,9 @@ function edd_get_cart_item_price( $item_id, $options = array(), $taxed = true ) 
  * @param array $options Optional parameters, used for defining variable prices
  * @return string Name of the price option
  */
-function edd_get_cart_item_price_name( $item_id, $options = array() ) {
-
-	// This is a stupid, stupid function. It will fail if there are multiple of the same product in the cart with different price options.
-	// It's just dumb
-
+function edd_get_price_name( $item_id, $options = array() ) {
 	$return = false;
-	$variable_pricing = get_post_meta( $item_id, '_variable_pricing', true );
+	$variable_pricing = get_post_meta($item_id, '_variable_pricing', true);
 	if( $variable_pricing && !empty( $options ) ) {
 		// If variable prices are enabled, retrieve the options
 		$prices = get_post_meta( $item_id, 'edd_variable_prices', true );
@@ -331,7 +327,7 @@ function edd_get_cart_item_price_name( $item_id, $options = array() ) {
 		}
 		$return = $name;
 	}
-	return apply_filters( 'edd_get_cart_item_price_name', $return, $item_id, $options );
+	return apply_filters( 'edd_get_price_name', $return, $item_id, $options );
 }
 
 
@@ -343,7 +339,26 @@ function edd_get_cart_item_price_name( $item_id, $options = array() ) {
  * @return int Price id
  */
 function edd_get_cart_item_price_id( $item = array() ) {
-	return isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
+	if( isset( $item['item_number'] ) ) {
+		$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
+	} else {
+		$price_id = isset( $item['options']['price_id'] ) ? $item['options']['price_id'] : null;
+	}
+	return $price_id;
+}
+
+/**
+ * Get cart item price name
+ *
+ * @since 1.8
+ * @param int $item Cart item array
+ * @return string Price name
+ */
+function edd_get_cart_item_price_name( $item = array() ) {
+	$price_id = (int) edd_get_cart_item_price_id( $item );
+	$prices   = edd_get_variable_prices( $item['id'] );
+	$name     = $prices[ $price_id ]['name'];
+	return apply_filters( 'edd_get_cart_item_price_name', $name, $item['id'], $price_id, $item );
 }
 
 
