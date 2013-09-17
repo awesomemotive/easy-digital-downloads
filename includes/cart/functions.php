@@ -315,8 +315,12 @@ function edd_get_cart_item_price( $item_id, $options = array(), $taxed = true ) 
  * @return string Name of the price option
  */
 function edd_get_cart_item_price_name( $item_id, $options = array() ) {
+
+	// This is a stupid, stupid function. It will fail if there are multiple of the same product in the cart with different price options.
+	// It's just dumb
+
 	$return = false;
-	$variable_pricing = get_post_meta($item_id, '_variable_pricing', true);
+	$variable_pricing = get_post_meta( $item_id, '_variable_pricing', true );
 	if( $variable_pricing && !empty( $options ) ) {
 		// If variable prices are enabled, retrieve the options
 		$prices = get_post_meta( $item_id, 'edd_variable_prices', true );
