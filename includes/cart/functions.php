@@ -718,13 +718,13 @@ function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
 	global $post;
 
 	if( is_page() ) {
-		$current_page = add_query_arg( 'page_id', $post->ID, home_url('/') );
+		$current_page = add_query_arg( 'page_id', $post->ID, home_url( 'index.php' ) );
 	} else if( is_singular() ) {
-		$current_page = add_query_arg( 'p', $post->ID, home_url('/') );
+		$current_page = add_query_arg( 'p', $post->ID, home_url( 'index.php' ) );
 	} else {
 		$current_page = edd_get_current_page_url();
 	}
-	$remove_url = add_query_arg( array('cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page );
+	$remove_url = add_query_arg( array( 'cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page );
 
 	return apply_filters( 'edd_remove_item_url', $remove_url );
 }
