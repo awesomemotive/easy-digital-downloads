@@ -535,7 +535,9 @@ function edd_show_payment_icons() {
 			if( edd_string_is_image_url( $key ) ) {
 				echo '<img class="payment-icon" src="' . $key . '"/>';
 			} else {
-				echo '<img class="payment-icon" src="' . EDD_PLUGIN_URL . 'assets/images/icons/' . strtolower( str_replace( ' ', '', $card ) ) . '.gif"/>';
+				$image = edd_locate_template( 'images/icons/' . strtolower( str_replace( ' ', '', $card ) ) . '.gif', false );
+				$image = str_replace( ABSPATH, home_url( '/' ), $image );
+				echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
 			}
 		}
 		echo '</div>';
