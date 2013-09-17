@@ -102,14 +102,13 @@ function edd_process_download() {
 
 				$direct       = false;
 				$file_details = parse_url( $requested_file );
+				$schemes      = array( 'http', 'https' ); // Direct URL schemes
 
-				if ( ! isset( $file_details['scheme'] ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
+				if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
 
 					/** This is an absolute path */
 					$direct    = true;
 					$file_path = $requested_file;
-
-
 
 				} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false ) {
 
