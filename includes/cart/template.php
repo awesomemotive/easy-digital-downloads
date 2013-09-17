@@ -96,7 +96,11 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 	$price      = edd_get_cart_item_price( $id, $options );
 
 	if ( ! empty( $options ) ) {
-		$title .= ( edd_has_variable_prices( $item['id'] ) ) ? ' <span class="edd-cart-item-separator">-</span> ' . edd_get_price_name( $id, $item['options'] ) : edd_get_price_name( $id, $item['options'] );
+		$title .= ( edd_has_variable_prices( $item['id'] ) ) ? ' <span class="edd-cart-item-separator">-</span> ' . 
+
+edd_get_cart_item_price_name( $id, $item['options'] ) : 
+
+edd_get_cart_item_price_name( $id, $item['options'] );
 	}
 
 	ob_start();
