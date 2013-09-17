@@ -26,7 +26,7 @@
 							$item_title = get_the_title( $item['id'] );
 							$variable_pricing = edd_has_variable_prices( $item['id'] );
 							if ( !empty( $item['options'] ) ) {
-								$item_title .= $variable_pricing ? ' - ' . edd_get_price_name( $item['id'], $item['options'] ) : edd_get_price_name( $item['id'], $item['options'] );
+								$item_title .= $variable_pricing ? ' - ' . edd_get_cart_item_price_name( $item['id'], $item['options'] ) : edd_get_cart_item_price_name( $item['id'], $item['options'] );
 							}
 							echo '<span class="edd_checkout_cart_item_title">' . esc_html( $item_title ) . '</span>';
 						?>

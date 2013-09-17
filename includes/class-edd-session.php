@@ -69,7 +69,7 @@ class EDD_Session {
 			// Use WP_Session (default)
 
 			if ( ! defined( 'WP_SESSION_COOKIE' ) )
-				define( 'WP_SESSION_COOKIE', 'wordpress_wp_session' );
+				define( 'WP_SESSION_COOKIE', 'edd_wp_session' );
 
 			if ( ! class_exists( 'Recursive_ArrayAccess' ) )
 				require_once EDD_PLUGIN_DIR . 'includes/libraries/class-recursive-arrayaccess.php';
@@ -180,7 +180,7 @@ class EDD_Session {
 			if( $set ) {
 				setcookie( 'edd_items_in_cart', '1', time() + 30 * 60, COOKIEPATH, COOKIE_DOMAIN, false );
 			} else {
-				setcookie( 'edd_items_in_cart', '0', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, false );
+				setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, false );
 			}
 		}
 	}

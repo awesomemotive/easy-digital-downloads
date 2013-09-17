@@ -314,7 +314,7 @@ function edd_get_cart_item_price( $item_id, $options = array(), $taxed = true ) 
  * @param array $options Optional parameters, used for defining variable prices
  * @return string Name of the price option
  */
-function edd_get_price_name( $item_id, $options = array() ) {
+function edd_get_cart_item_price_name( $item_id, $options = array() ) {
 	$return = false;
 	$variable_pricing = get_post_meta($item_id, '_variable_pricing', true);
 	if( $variable_pricing && !empty( $options ) ) {
@@ -327,7 +327,7 @@ function edd_get_price_name( $item_id, $options = array() ) {
 		}
 		$return = $name;
 	}
-	return apply_filters( 'edd_get_price_name', $return, $item_id, $options );
+	return apply_filters( 'edd_get_cart_item_price_name', $return, $item_id, $options );
 }
 
 
