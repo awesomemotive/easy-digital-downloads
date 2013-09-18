@@ -206,7 +206,7 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 	public function test_downloads_query() {
 		$post_id = $this->factory->post->create( array( 'post_type' => 'download', 'post_status' => 'publish' ) );
 		$this->assertInternalType( 'string', edd_downloads_query() );
-		$this->assertContains( '<div class="edd_downloads_list">', edd_downloads_query() );
+		$this->assertContains( '<div class="edd_downloads_list', edd_downloads_query() );
 		$this->assertContains( '<div class="edd_download_inner">', edd_downloads_query() ); // edd_download_inner will only be found if products were returned successfully
 	}
 
