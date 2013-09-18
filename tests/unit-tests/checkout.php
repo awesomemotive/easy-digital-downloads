@@ -61,6 +61,9 @@ class Tests_Checkout extends EDD_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_agree_to_terms_js',         $wp_filter['edd_checkout_form_top'][10]             );
 	}
 
+	/**
+     * Test the can checkout function
+     */
 	public function test_can_checkout() {
 		$this->assertTrue( edd_can_checkout() );
 	}
@@ -74,5 +77,21 @@ class Tests_Checkout extends EDD_UnitTestCase {
 		$this->assertContains( '<div id="edd_checkout_wrap">', edd_checkout_form() );
 		// The checkout form will always have this if there are items in the cart
 		$this->assertContains( '<div id="edd_checkout_form_wrap" class="edd_clearfix">', edd_checkout_form() );
+	}
+
+	/**
+     * Test to make sure the Next button is returned properly
+     */
+	public function test_checkout_button_next() {
+		$this->assertInternalType( 'string', edd_checkout_button_next() );
+		$this->assertContains( '<input type="hidden" name="edd_action" value="gateway_select" />', edd_checkout_button_next() );
+	}
+
+	/**
+     * Test to make sure the purchase button is returned properly
+     */
+	public function test_checkout_button_purchase() {
+		$this->assertInternalType( 'string', edd_checkout_button_purchase() );
+		$this->assertContains( '<input type="submit" class="edd-submit gray button" id="edd-purchase-button" name="edd-purchase" value="Purchase"/>', edd_checkout_button_purchase() );
 	}
 }
