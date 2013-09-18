@@ -346,11 +346,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_send_test_email', $wp_filter['edd_send_test_email'][10] );
 	}
 
-	public function test_query_vars() {
-		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_query_vars', $wp_filter['query_vars'][10] );
-	}
-
 	public function test_edd_purchase() {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_process_purchase_form', $wp_filter['edd_purchase'][10] );
