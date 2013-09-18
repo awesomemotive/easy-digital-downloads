@@ -39,9 +39,11 @@ class Tests_Checkout extends EDD_UnitTestCase {
 		edd_add_to_cart( $this->_post->ID, $options );
 	}
 
+	/**
+     * Test that each of the template actions are added and each hooked in with the right priority
+     */
 	public function test_checkout_actions() {
 		global $wp_filter;
-		$this->markTestIncomplete( 'This test kills PHP unit for some reason.' );
 		$this->assertarrayHasKey( 'edd_show_purchase_form',        $wp_filter['edd_purchase_form'][10]                 );
 		$this->assertarrayHasKey( 'edd_user_info_fields',          $wp_filter['edd_purchase_form_after_user_info'][10] );
 		$this->assertarrayHasKey( 'edd_get_cc_form',               $wp_filter['edd_cc_form'][10]                       );
@@ -56,7 +58,7 @@ class Tests_Checkout extends EDD_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_terms_agreement',           $wp_filter['edd_purchase_form_before_submit'][10]   );
 		$this->assertarrayHasKey( 'edd_checkout_final_total',      $wp_filter['edd_purchase_form_before_submit'][999]  );
 		$this->assertarrayHasKey( 'edd_checkout_submit',           $wp_filter['edd_purchase_form_after_cc_form'][9999] );
-		$this->assertarrayHasKey( 'edd_agree_to_terms_js',         $wp_filter['edd_checkout_form_top'][9999]           );
+		$this->assertarrayHasKey( 'edd_agree_to_terms_js',         $wp_filter['edd_checkout_form_top'][10]             );
 	}
 
 	public function test_can_checkout() {
