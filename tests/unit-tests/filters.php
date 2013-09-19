@@ -48,6 +48,12 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_register_settings', $wp_filter['admin_init'][10] );
 	}
 
+	public function test_dashboard_widget() {
+		global $wp_filter;
+		$this->markTestIncomplete('This check kills phpunit');
+		$this->assertarrayHasKey( 'edd_register_dashboard_widgets', $wp_filter['wp_dashboard_setup'][10] );
+	}
+
 	public function test_delete_post() {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_remove_download_logs_on_delete', $wp_filter['delete_post'][10] );
@@ -365,4 +371,5 @@ class Tests_Filters extends EDD_UnitTestCase {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_responsive_download_post_class', $wp_filter['post_class'][999] );
 	}
+
 }
