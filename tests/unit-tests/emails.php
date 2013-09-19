@@ -29,6 +29,10 @@ class Tests_Emails extends EDD_UnitTestCase {
 		$this->assertEquals( $expected, edd_get_admin_notice_emails() );
 	}
 
+	public function test_admin_notice_disabled() {
+		$this->assertFalse( edd_admin_notices_disabled() );
+	}
+
 	public function test_email_templates() {
 		$expected = array(
 			'default' => 'Default Template',
