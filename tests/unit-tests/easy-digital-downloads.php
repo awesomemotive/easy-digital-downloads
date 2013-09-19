@@ -33,7 +33,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$path = str_replace( 'tests/unit-tests/', '', plugin_dir_path( __FILE__ ) );
 		$this->assertSame( EDD_PLUGIN_FILE, $path.'easy-digital-downloads.php' );
 	}
-	
+
 	/**
 	 * @covers Easy_Digital_Downloads::includes
 	 */
@@ -50,11 +50,13 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/cart/functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/cart/actions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-api.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-fees.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-logging.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-session.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-roles.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-stats.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/formatting.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/widgets.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/mime-types.php' );
@@ -64,6 +66,8 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/discount-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/payments/functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/payments/actions.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/payments/class-payments-stats.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/payments/class-payments-query.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/misc-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/download-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/scripts.php' );
@@ -102,6 +106,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/welcome.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/process-download.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/shortcodes.php' );
