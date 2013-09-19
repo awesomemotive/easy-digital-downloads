@@ -17,14 +17,6 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	}
 
 	/**
-     * Test that each of the actions are added and each hooked in with the right priority
-     */
-	public function test_login_actions() {
-		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_process_login_form', $wp_filter['edd_user_login'][10] );
-	}
-
-	/**
      * Test that the edd_log_user_in() function successfully logs the user in
      */
 	public function test_log_user_in() {
