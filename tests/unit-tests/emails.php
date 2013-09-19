@@ -73,7 +73,7 @@ class Tests_Emails extends EDD_UnitTestCase {
 			'edd_price' => '0.00',
 			'_variable_pricing' => 1,
 			'_edd_price_options_mode' => 'on',
-			'edd_variable_prices' => array_values( $_variable_pricing ), 
+			'edd_variable_prices' => array_values( $_variable_pricing ),
 			'edd_download_files' => array_values( $_download_files ),
 			'_edd_download_limit' => 20,
 			'_edd_hide_purchase_link' => 1,
@@ -170,10 +170,10 @@ Hey {fullname},
 
 {receipt_link}
 DATA;
-		
+
 		$this->assertContains( 'Hey Network Administrator', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
 		$this->assertContains( '<ul><li>Test Download&nbsp;&ndash;&nbsp;Advanced<br/><ul><li>', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
-		$this->markTestIncomplete('This needs to be rewritten per #600');
+		$this->markTestIncomplete('This needs to be rewritten');
 		//$this->assertContains( 'File 1</a></li><li>', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
 		$this->assertContains( 'File 2</a></li></ul> &mdash; <small>Purchase Notes</small></li></ul>', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
 		$this->assertContains( 'http://example.org', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
