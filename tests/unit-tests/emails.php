@@ -243,4 +243,22 @@ DATA;
 
 		$this->assertEquals( $expected, edd_email_default_formatting($message) );
 	}
+
+
+	public function test_edd_get_purchase_receipt_template_tags() {
+		$this->markTestIncomplete('This needs to be rwritten once #1451 is completed');
+	}
+
+	public function test_edd_get_sale_notification_template_tags() {
+		$this->markTestIncomplete('This needs to be rwritten once #1451 is completed');
+	}
+
+	public function test_edd_get_default_sale_notification_email() {
+		$this->assertContains( 'Hello', edd_get_default_sale_notification_email() );
+		$this->assertContains( 'A Downloads purchase has been made', edd_get_default_sale_notification_email() );
+		$this->assertContains( 'Downloads sold:', edd_get_default_sale_notification_email() );
+		$this->assertContains( '{download_list}', edd_get_default_sale_notification_email() );
+		$this->assertContains( 'Amount:  {price}', edd_get_default_sale_notification_email() );
+	}
+
 }
