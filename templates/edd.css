@@ -150,7 +150,7 @@
 #edd_checkout_form_wrap span.card-type.visa { background: url( images/icons/visa.gif ) no-repeat; }
 #edd_checkout_form_wrap span.card-type.mastercard { background: url( images/icons/mastercard.gif ) no-repeat; }
 #edd_checkout_form_wrap span.card-type.discover { background: url( images/icons/discover.gif ) no-repeat; }
-#edd_checkout_form_wrap span.card-type.americanexpress { background: url( images/icons/americanexpress.gif ) no-repeat; }
+#edd_checkout_form_wrap span.card-type.amex { background: url( images/icons/americanexpress.gif ) no-repeat; }
 #edd_checkout_form_wrap #edd-discount-loader, #edd_checkeout_form_wrap .edd-cart-ajax { -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
 
 /* =Ajax Add To Cart Button
