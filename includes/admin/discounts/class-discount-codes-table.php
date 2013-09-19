@@ -309,8 +309,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	public function discount_codes_data() {
 		$discount_codes_data = array();
 
-		if ( isset( $_GET['paged'] ) ) $page = $_GET['paged']; else $page = 1;
-
 		$per_page = $this->per_page;
 
 		$mode = edd_is_test_mode() ? 'test' : 'live';
@@ -325,7 +323,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 		$discounts = edd_get_discounts( array(
 			'posts_per_page' => $per_page,
-			'page'           => isset( $_GET['paged'] ) ? $_GET['paged'] : null,
+			'paged'          => isset( $_GET['paged'] ) ? $_GET['paged'] : 1,
 			'orderby'        => $orderby,
 			'order'          => $order,
 			'post_status'    => $status,
