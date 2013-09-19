@@ -28,6 +28,7 @@ class Tests_Login_Register extends EDD_UnitTestCase {
      * Test that the edd_log_user_in() function successfully logs the user in
      */
 	public function test_log_user_in() {
+		wp_logout();
 		edd_log_user_in( 1 );
 		$this->assertTrue( is_user_logged_in() );
 	}
