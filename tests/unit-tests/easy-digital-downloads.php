@@ -66,7 +66,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/discount-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/payments/functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/payments/actions.php' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/payments/class-payments-stats.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/payments/class-payment-stats.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/payments/class-payments-query.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/misc-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/download-functions.php' );
