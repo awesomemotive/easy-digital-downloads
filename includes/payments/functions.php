@@ -393,6 +393,9 @@ function edd_get_payment_statuses() {
  * @return int $earnings Earnings
  */
 function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour = null ) {
+
+	// This is getting deprecated soon. Use EDD_Payment_Stats with the get_earnings() method instead
+
 	$args = array(
 		'post_type'      => 'edd_payment',
 		'nopaging'       => true,
@@ -442,6 +445,9 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
  * @return int $count Sales
  */
 function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $hour = null ) {
+
+	// This is getting deprecated soon. Use EDD_Payment_Stats with the get_sales() method instead
+
 	$args = array(
 		'post_type'      => 'edd_payment',
 		'nopaging'       => true,
