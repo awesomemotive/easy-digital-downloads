@@ -2,7 +2,7 @@
 namespace EDD_Unit_Tests;
 
 /**
- * @group edd_filters
+ * @group edd_stats
  */
 class Tests_Stats extends EDD_UnitTestCase {
 
