@@ -16,8 +16,8 @@ class Tests_Stats extends EDD_UnitTestCase {
 
 		// Instantiating these kills phpunit
 
-	//	$this->_stats = new EDD_Stats();
-	//	$this->_payment_stats = new EDD_Payment_Stats;
+		$this->_stats = new EDD_Stats();
+		$this->_payment_stats = new EDD_Payment_Stats;
 	}
 
 	/*
@@ -30,7 +30,7 @@ class Tests_Stats extends EDD_UnitTestCase {
 
 		$this->markTestIncomplete('Instantiating EDD_Payment_Stats kills phpunit for some reason');
 
-		/*$out = $this->_stats->get_predefined_dates();
+		$out = $this->_stats->get_predefined_dates();
 
 		$expected = array(
 			'today'        => 'Today',
@@ -46,7 +46,7 @@ class Tests_Stats extends EDD_UnitTestCase {
 		);
 
 		$this->assertEquals( $expected, $out );
-*/
+
 	}
 
 	/*
@@ -59,40 +59,40 @@ class Tests_Stats extends EDD_UnitTestCase {
 
 		$this->markTestIncomplete('Instantiating EDD_Payment_Stats kills phpunit for some reason');
 
-	//	$stats = new EDD_Payment_Stats;
-	//	$earnings = $stats->get_earnings( 0, 'this_month' );
+		$stats = new EDD_Payment_Stats;
+		$earnings = $stats->get_earnings( 0, 'this_month' );
 
-	//	$this->assertEquals( 100, $earnings );
+		$this->assertEquals( 100, $earnings );
 	}
 
 	public function test_get_sales_by_date() {
 
 		$this->markTestIncomplete('Instantiating EDD_Payment_Stats kills phpunit for some reason');
 
-	//	$stats = new EDD_Payment_Stats;
-	//	$sales = $stats->get_sales( 0, 'this_month' );
+		$stats = new EDD_Payment_Stats;
+		$sales = $stats->get_sales( 0, 'this_month' );
 
-	//	$this->assertEquals( 1, $sales );
+		$this->assertEquals( 1, $sales );
 	}
 
 	public function test_get_earnings_by_date_of_download() {
 
 		$this->markTestIncomplete('Instantiating EDD_Payment_Stats kills phpunit for some reason');
 
-	//	$stats = new EDD_Payment_Stats;
-	//	$earnings = $stats->get_earnings( $this->_post->ID, 'this_month' );
+		$stats = new EDD_Payment_Stats;
+		$earnings = $stats->get_earnings( $this->_post->ID, 'this_month' );
 
-	//	$this->assertEquals( 100, $earnings );
+		$this->assertEquals( 100, $earnings );
 	}
 
 	public function test_get_sales_by_date_of_download() {
 
 		$this->markTestIncomplete('Instantiating EDD_Payment_Stats kills phpunit for some reason');
 
-	//	$stats = new EDD_Payment_Stats;
-	//	$sales = $stats->get_sales( $this->_post->ID, 'this_month' );
+		$stats = new EDD_Payment_Stats;
+		$sales = $stats->get_sales( $this->_post->ID, 'this_month' );
 
-	//	$this->assertEquals( 1, $sales );
+		$this->assertEquals( 1, $sales );
 	}
 
 }
