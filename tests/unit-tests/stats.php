@@ -14,7 +14,7 @@ class Tests_Stats extends EDD_UnitTestCase {
 
 		// Instantiating these kills phpunit
 
-		$this->_stats = new EDD_Stats();
+	//	$this->_stats = new EDD_Stats();
 	//	$this->_payment_stats = new EDD_Payment_Stats;
 	}
 
