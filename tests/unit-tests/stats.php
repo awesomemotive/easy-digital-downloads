@@ -10,7 +10,9 @@ class Tests_Stats extends EDD_UnitTestCase {
 	protected $_payment_stats;
 
 	public function setUp() {
-	//	parent::setUp();
+		parent::setUp();
+		error_reporting( 0 & ~E_WARNING );
+		var_dump('test');
 
 		// Instantiating these kills phpunit
 
