@@ -150,13 +150,12 @@ function edd_get_purchase_link( $args = array() ) {
 					</span>
 				</span>
 			<?php endif; ?>
+			<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
+				echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), $edd_options['tax_rate'] ) . '</span>';
+			} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
+				echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'edd' ), $edd_options['tax_rate'] ) . '</span>';
+			} ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
-
-		<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
-			echo '<div class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), $edd_options['tax_rate'] ) . '</div>';
-		} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
-			echo '<div class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'edd' ), $edd_options['tax_rate'] ) . '</div>';
-		} ?>
 
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $args['download_id'] ); ?>">
 		<?php if( ! empty( $args['direct'] ) ) { ?>

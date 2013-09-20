@@ -339,7 +339,26 @@ function edd_get_price_name( $item_id, $options = array() ) {
  * @return int Price id
  */
 function edd_get_cart_item_price_id( $item = array() ) {
-	return isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
+	if( isset( $item['item_number'] ) ) {
+		$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
+	} else {
+		$price_id = isset( $item['options']['price_id'] ) ? $item['options']['price_id'] : null;
+	}
+	return $price_id;
+}
+
+/**
+ * Get cart item price name
+ *
+ * @since 1.8
+ * @param int $item Cart item array
+ * @return string Price name
+ */
+function edd_get_cart_item_price_name( $item = array() ) {
+	$price_id = (int) edd_get_cart_item_price_id( $item );
+	$prices   = edd_get_variable_prices( $item['id'] );
+	$name     = $prices[ $price_id ]['name'];
+	return apply_filters( 'edd_get_cart_item_price_name', $name, $item['id'], $price_id, $item );
 }
 
 
@@ -458,7 +477,7 @@ function edd_get_cart_total( $discounts = false ) {
 
 	$subtotal = edd_get_cart_subtotal( edd_prices_include_tax() );
 	$fees     = edd_get_cart_fee_total();
-	$cart_tax = edd_is_cart_taxed() && ! edd_prices_include_tax() ? edd_get_cart_tax( $discounts ) : 0;
+	$cart_tax = edd_get_cart_tax( $discounts );
 	$discount = edd_get_cart_discounted_amount( $discounts );
 
 	$total    = $subtotal + $fees + $cart_tax - $discount;
@@ -699,13 +718,13 @@ function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
 	global $post;
 
 	if( is_page() ) {
-		$current_page = add_query_arg( 'page_id', $post->ID, home_url('/') );
+		$current_page = add_query_arg( 'page_id', $post->ID, home_url( 'index.php' ) );
 	} else if( is_singular() ) {
-		$current_page = add_query_arg( 'p', $post->ID, home_url('/') );
+		$current_page = add_query_arg( 'p', $post->ID, home_url( 'index.php' ) );
 	} else {
 		$current_page = edd_get_current_page_url();
 	}
-	$remove_url = add_query_arg( array('cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page );
+	$remove_url = add_query_arg( array( 'cart_item' => $cart_key, 'edd_action' => 'remove' ), $current_page );
 
 	return apply_filters( 'edd_remove_item_url', $remove_url );
 }

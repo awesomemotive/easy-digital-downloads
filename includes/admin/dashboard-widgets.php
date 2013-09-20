@@ -24,7 +24,7 @@ function edd_register_dashboard_widgets() {
 		wp_add_dashboard_widget( 'edd_dashboard_sales', __('Easy Digital Downloads Sales Summary', 'edd'), 'edd_dashboard_sales_widget' );
 	}
 }
-add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets' );
+add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets', 10 );
 
 /**
  * Sales Summary Dashboard Widget
