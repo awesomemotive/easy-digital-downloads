@@ -189,4 +189,12 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	public function test_get_product_notes() {
 		$this->assertEquals( 'Purchase Notes', edd_get_product_notes( $this->_post->ID ) );
 	}
+
+	public function test_get_download_type() {
+		$this->assertEquals( 'default', edd_get_download_type( $this->_post->ID ) );
+	}
+
+	public function test_get_download_is_bundle() {
+		$this->assertFalse( edd_is_bundled_product( $this->_post->ID ) );
+	}
 }
