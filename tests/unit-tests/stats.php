@@ -28,7 +28,7 @@ class Tests_Stats extends EDD_UnitTestCase {
 
 		$this->markTestIncomplete('Instantiating EDD_Payment_Stats kills phpunit for some reason');
 
-		$out = $this->_stats->get_predefined_dates();
+		//$out = $this->_stats->get_predefined_dates();
 
 		$expected = array(
 			'today'        => 'Today',
