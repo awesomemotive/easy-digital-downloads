@@ -898,7 +898,6 @@ function edd_is_cart_saved() {
 	return false;
 }
 
-
 /**
  * Process the Cart Save
  *
@@ -1057,5 +1056,5 @@ add_action( 'edd_weekly_scheduled_events', 'edd_delete_saved_carts' );
  * @return string UNIX timestamp
  */
 function edd_generate_cart_token() {
-	return time();
+	return apply_filters( 'edd_generate_cart_token', time() );
 }
