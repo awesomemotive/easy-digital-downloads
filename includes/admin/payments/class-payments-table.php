@@ -525,6 +525,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				break;
 			case 'revoked':
 				$total_items = $this->revoked_count;
+				break;
 			case 'abandoned':
 				$total_items = $this->abandoned_count;
 				break;

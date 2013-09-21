@@ -48,7 +48,7 @@ function edd_shopping_cart( $echo = false ) {
   	  $display = "";
   	}
 
-  	echo "<p class='edd-cart-number-of-items' {$display}>" . __( 'Number of items in cart', 'edd' ) . ': <span class="edd-cart-quantity">' . $cart_quantity . '<span></p>';
+  	echo "<p class='edd-cart-number-of-items' {$display}>" . __( 'Number of items in cart', 'edd' ) . ': <span class="edd-cart-quantity">' . $cart_quantity . '</span></p>';
  	?>
 
 	<ul class="edd-cart">
