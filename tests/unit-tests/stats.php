@@ -1,6 +1,6 @@
 <?php
 namespace EDD_Unit_Tests;
-
+use EDD_Stats;
 /**
  * @group edd_stats
  */
@@ -8,7 +8,7 @@ class Tests_Stats extends EDD_UnitTestCase {
 
 	public $_stats;
 	public $_payment_stats;
-		use EDD_Stats;
+
 	public function setUp() {
 		parent::setUp();
 
