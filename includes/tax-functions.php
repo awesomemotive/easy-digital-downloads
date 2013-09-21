@@ -153,7 +153,6 @@ function edd_calculate_tax( $amount, $sum = true, $country = false, $state = fal
 	if ( ! edd_use_taxes() ) {
 		return $amount;
 	}
-
 	$rate = edd_get_tax_rate( $country, $state );
 	$tax  = 0.00;
 
