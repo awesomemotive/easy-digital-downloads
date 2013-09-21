@@ -157,7 +157,7 @@ final class Easy_Digital_Downloads {
 	private function setup_constants() {
 		// Plugin version
 		if ( ! defined( 'EDD_VERSION' ) )
-			define( 'EDD_VERSION', '1.7.2' );
+			define( 'EDD_VERSION', '1.8-beta' );
 
 		// Plugin Folder Path
 		if ( ! defined( 'EDD_PLUGIN_DIR' ) )
