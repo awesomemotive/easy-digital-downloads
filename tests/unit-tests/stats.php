@@ -26,9 +26,9 @@ class Tests_Stats extends EDD_UnitTestCase {
 	 */
 
 	public function test_predefined_date_ranges() {
-		$this->_stats = new EDD_Stats();
+		$stats = new EDD_Stats();
 		//$this->_payment_stats = new EDD_Payment_Stats;
-	//	$out = $this->_stats->get_predefined_dates();
+		$out = $stats->get_predefined_dates();
 		$expected = array(
 			'today'        => 'Today',
 			'yesterday'    => 'Yesterday',
@@ -43,17 +43,19 @@ class Tests_Stats extends EDD_UnitTestCase {
 		);
 
 		$this->assertEquals( $expected, $out );
+		var_dump('1');
 
 	}
-	/*
+
 	public function test_get_earnings_by_date() {
 
 		$stats = new EDD_Payment_Stats;
 		$earnings = $stats->get_earnings( 0, 'this_month' );
 
 		$this->assertEquals( 100, $earnings );
+				var_dump('2');
 	}
-
+	/*
 	public function test_get_sales_by_date() {
 
 		$stats = new EDD_Payment_Stats;
