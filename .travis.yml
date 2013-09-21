@@ -33,7 +33,7 @@ before_script:
     - mysql -e 'CREATE DATABASE wordpress_test;' -uroot
     - curl -s http://getcomposer.org/installer | php
     - php composer.phar install --dev --no-interaction
-	
+
 script:
     - mkdir -p build/logs
     - php vendor/bin/phpunit -c phpunit.xml.dist
