@@ -899,12 +899,11 @@ function edd_save_cart() {
 		return;
 
 	$user_id = get_current_user_id();
+	$cart    = EDD()->session->get( 'edd_cart' );
+	$token   = edd_generate_cart_token();
 
-	$cart = EDD()->session->get( 'edd_cart' );
-	$token = edd_generate_cart_token();
-
-	/** Does a saved cart already exist? */
 	if ( is_user_logged_in() ) {
+
 		update_user_meta( $user_id, 'edd_saved_cart', $cart, false );
 		update_user_meta( $user_id, 'edd_cart_token', $token, false );
 
@@ -913,10 +912,12 @@ function edd_save_cart() {
 		if ( ! $messages )
 			$messages = array();
 
-		$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), __( 'Cart saved successfully. You can restore your cart using this URL:', 'edd' ) . ' ' . '<a href="' .  get_permalink( $edd_options['purchase_page'] ) . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  get_permalink( $edd_options['purchase_page'] ) . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>' );
+		$messages['edd_cart_save_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), __( 'Cart saved successfully. You can restore your cart using this URL:', 'edd' ) . ' ' . '<a href="' .  get_permalink( $edd_options['purchase_page'] ) . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  get_permalink( $edd_options['purchase_page'] ) . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>' );
 
 		EDD()->session->set( 'edd_cart_saving_messages', $messages );
-	} elseif ( ! is_user_logged_in() && ! isset( $_COOKIE['edd_saved_cart'] ) && ! isset( $_COOKIE['edd_cart_token'] ) ) {
+
+	} elseif ( ! is_user_logged_in() ) {
+
 		$cart = serialize( $cart );
 
 		setcookie( 'edd_saved_cart', $cart, time()+3600*24*7, COOKIEPATH, COOKIE_DOMAIN );
@@ -927,7 +928,7 @@ function edd_save_cart() {
 		if ( ! $messages )
 			$messages = array();
 
-		$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), __( 'Cart saved successfully. You can restore your cart using this URL:', 'edd' ) . ' ' . '<a href="' .  get_permalink( $edd_options['purchase_page'] ) . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  get_permalink( $edd_options['purchase_page'] ) . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>' );
+		$messages['edd_cart_save_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), __( 'Cart saved successfully. You can restore your cart using this URL:', 'edd' ) . ' ' . '<a href="' .  get_permalink( $edd_options['purchase_page'] ) . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  get_permalink( $edd_options['purchase_page'] ) . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>' );
 
 		EDD()->session->set( 'edd_cart_saving_messages', $messages );
 	}
