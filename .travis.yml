@@ -39,7 +39,7 @@ script:
     - phpunit -c phpunit.xml
 
 after_script:
-    - php coveralls -v
+    - php vendor/bin/coveralls -v
 
 notifications:
     irc:
