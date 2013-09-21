@@ -140,7 +140,11 @@ add_action( 'edd_save_cart', 'edd_process_cart_save' );
  */
 function edd_process_cart_restore( $data ) {
 
-	edd_restore_cart();
+	$cart = edd_restore_cart();
+
+	if( is_wp_error( $cart ) ) {
+
+	}
 
 }
 add_action( 'edd_restore_cart', 'edd_process_cart_restore' );
