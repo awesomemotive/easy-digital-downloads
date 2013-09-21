@@ -90,6 +90,13 @@ final class Easy_Digital_Downloads {
 	 */
 	public $html;
 
+	/**
+	 * EDD Stats Object
+	 *
+	 * @var object
+	 * @since 1.8
+	 */
+	public $html;
 
 	/**
 	 * Main Easy_Digital_Downloads Instance
@@ -117,6 +124,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->api = new EDD_API();
 			self::$instance->session = new EDD_Session();
 			self::$instance->html = new EDD_HTML_Elements();
+			self::$instance->stats = new EDD_Stats();
 		}
 		return self::$instance;
 	}
