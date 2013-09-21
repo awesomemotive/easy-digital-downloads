@@ -133,6 +133,25 @@ class Tests_Stats extends EDD_UnitTestCase {
 
 	}
 
+	public function test_setup_dates() {
+
+		// Set start date only
+		$this->_stats->setup_dates( 'yesterday' );
+		$this->assertInternalType( 'int', $this->_stats->start_date );
+		$this->assetFalse( $this->_stats->end_date );
+
+		// Set some valid dates
+		$this->_stats->setup_dates( 'yesterday', 'today' );
+		$this->assertInternalType( 'int', $this->_stats->start_date );
+		$this->assertInternalType( 'int', $this->_stats->end_date );
+
+		// Set some invalid dates
+		$this->_stats->setup_dates( 'nonvaliddatestring', 'nonvaliddatestring' );
+		$this->assertInternalType( 'int', $this->_stats->start_date );
+		$this->assertInternalType( 'int', $this->_stats->end_date );
+
+	}
+
 
 	/*
 	 *
