@@ -31,7 +31,7 @@ before_script:
     - sed -i "s/yourusernamehere/root/" tmp/wordpress-tests/wp-tests-config.php
     - sed -i "s/yourpasswordhere//" tmp/wordpress-tests/wp-tests-config.php
     - mysql -e 'CREATE DATABASE wordpress_test;' -uroot
-    - curl -s http://getcomposer.org/installer | php
+    - wget http://getcomposer.org/composer.phar
     - php composer.phar install --dev --no-interaction
 
 script:
@@ -39,7 +39,7 @@ script:
     - phpunit -c phpunit.xml
 
 after_script:
-    - php vendor/bin/coveralls -v
+    - php vendor/bin/coveralls --config .coveralls.yml -v
 
 notifications:
     irc:
