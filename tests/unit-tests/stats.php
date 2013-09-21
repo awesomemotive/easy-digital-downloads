@@ -1,4 +1,5 @@
 <?php
+use EDD_Stats;
 namespace EDD_Unit_Tests;
 
 /**
@@ -12,10 +13,8 @@ class Tests_Stats extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		// Instantiating these kills phpunit
-
-		//$this->_stats = new EDD_Stats();
-		//$this->_payment_stats = new EDD_Payment_Stats;
+		$this->_stats = new EDD_Stats();
+		$this->_payment_stats = new EDD_Payment_Stats;
 	}
 
 	/*
@@ -25,8 +24,6 @@ class Tests_Stats extends EDD_UnitTestCase {
 	 */
 
 	public function test_predefined_date_rages() {
-
-		$this->markTestIncomplete('Instantiating EDD_Payment_Stats kills phpunit for some reason');
 
 		$out = $this->_stats->get_predefined_dates();
 
