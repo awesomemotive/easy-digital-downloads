@@ -27,9 +27,9 @@ class Tests_Stats extends EDD_UnitTestCase {
 		parent::tearDown();
 	}
 	public function test_predefined_date_ranges() {
-		$stats2 = new EDD_Stats();
+	//	$stats2 = new EDD_Stats();
 		//$this->_payment_stats = new EDD_Payment_Stats;
-		$out = $stats2->get_predefined_dates();
+		$out =  EDD()->stats->get_predefined_dates();
 		$expected = array(
 			'today'        => 'Today',
 			'yesterday'    => 'Yesterday',
