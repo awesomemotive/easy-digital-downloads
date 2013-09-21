@@ -898,15 +898,15 @@ function edd_save_cart() {
 	if ( edd_is_cart_saving_disabled() )
 		return;
 
-	$current_user_ID = get_current_user_id();
+	$user_id = get_current_user_id();
 
 	$cart = EDD()->session->get( 'edd_cart' );
 	$token = edd_generate_cart_token();
 
 	/** Does a saved cart already exist? */
-	if ( is_user_logged_in() && ! get_user_meta( $current_user_ID, 'edd_saved_cart', true ) ) {
-		add_user_meta( $current_user_ID, 'edd_saved_cart', $cart, false );
-		add_user_meta( $current_user_ID, 'edd_cart_token', $token, false );
+	if ( is_user_logged_in() ) {
+		update_user_meta( $user_id, 'edd_saved_cart', $cart, false );
+		update_user_meta( $user_id, 'edd_cart_token', $token, false );
 
 		$messages = EDD()->session->get( 'edd_cart_saving_messages' );
 
