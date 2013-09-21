@@ -866,20 +866,33 @@ function edd_is_cart_saving_disabled() {
  * @return bool
  */
 function edd_is_cart_saved() {
-	$user_id = get_current_user_id();
 
-	if ( is_user_logged_in() && get_user_meta( $user_id, 'edd_saved_cart', true ) ) {
-		if ( get_user_meta( $user_id, 'edd_saved_cart', true  ) === EDD()->session->get( 'edd_cart' ) )
+	if ( is_user_logged_in() ) {
+
+		$saved_cart = get_user_meta( $get_current_user_id(), 'edd_saved_cart', true );
+
+		// Check that a cart exists
+		if( ! $saved_cart )
+			return false;
+
+		// Check that the saved cart is not the same as the current cart
+		if ( $saved_cart === EDD()->session->get( 'edd_cart' ) )
 			return false;
 
 		return true;
-	}
 
-	if ( ! is_user_logged_in() && isset( $_COOKIE['edd_saved_cart'] ) ) {
-		if ( stripslashes( unserialize( $_COOKIE['edd_saved_cart'] ) ) === EDD()->session->get( 'edd_cart' ) )
+	} else {
+
+		// Check that a saved cart exists
+		if ( ! isset( $_COOKIE['edd_saved_cart'] ) )
+			return false;
+
+		// Check that the saved cart is not the same as the current cart
+		if ( stripslashes( maybe_unserialize( $_COOKIE['edd_saved_cart'] ) ) === EDD()->session->get( 'edd_cart' ) )
 			return false;
 
 		return true;
+
 	}
 
 	return false;

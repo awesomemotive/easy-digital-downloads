@@ -159,7 +159,9 @@ function edd_save_cart_button() {
 	<a class="edd-cart-saving-button edd-submit button" id="edd-save-cart-button" href="<?php echo add_query_arg( 'edd_action', 'save_cart' ) ?>"><?php _e( 'Save Cart', 'edd' ); ?></a>
 	<?php
 }
-add_action( 'edd_cart_footer_buttons', 'edd_save_cart_button' );
+if( ! edd_is_cart_saving_disabled() ) {
+	add_action( 'edd_cart_footer_buttons', 'edd_save_cart_button' );
+}
 
 /**
  * Display the "Save Cart" button on the checkout
@@ -179,7 +181,9 @@ function edd_update_cart_button() {
 <?php
 
 }
-add_action( 'edd_cart_footer_buttons', 'edd_update_cart_button' );
+if( edd_item_quanities_enabled() ) {
+	add_action( 'edd_cart_footer_buttons', 'edd_update_cart_button' );
+}
 
 /**
  * Display the messages that are related to cart saving
