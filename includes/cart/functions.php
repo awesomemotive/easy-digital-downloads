@@ -856,10 +856,7 @@ function edd_get_purchase_session() {
 function edd_is_cart_saving_disabled() {
 	global $edd_options;
 
-	if ( isset( $edd_options['disable_cart_saving'] ) )
-		return true;
-
-	return false;
+	return apply_filters( 'edd_cart_saving_disabled', isset( $edd_options['disable_cart_saving'] ) );
 }
 
 /**
