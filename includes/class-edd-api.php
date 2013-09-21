@@ -75,7 +75,7 @@ class EDD_API {
 	 * @access private
 	 * @since 1.7
 	 */
-	private $stats;
+//	private $stats;
 
 	/**
 	 * Response data to return
@@ -116,7 +116,7 @@ class EDD_API {
 		$this->log_requests = apply_filters( 'edd_api_log_requests', $this->log_requests );
 
 		// Setup EDD_Stats instance
-		$this->stats = new EDD_Payment_Stats;
+	//	$this->stats = new EDD_Payment_Stats;
 
 	}
 
@@ -300,17 +300,17 @@ class EDD_API {
 
 		switch( $query_mode ) :
 
-			case 'stats' :
+		//	case 'stats' :
 
-				$data = $this->get_stats( array(
+		//		$data = $this->get_stats( array(
 					'type'      => isset( $wp_query->query_vars['type'] )      ? $wp_query->query_vars['type']      : null,
-					'product'   => isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null,
-					'date'      => isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null,
-					'startdate' => isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null,
-					'enddate'   => isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null
-				) );
+		//			'product'   => isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null,
+		//			'date'      => isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null,
+		//			'startdate' => isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null,
+		//			'enddate'   => isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null
+		//		) );
 
-				break;
+		//		break;
 
 			case 'products' :
 
