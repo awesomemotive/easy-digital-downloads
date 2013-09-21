@@ -82,45 +82,5 @@ class Test_Cart extends EDD_UnitTestCase {
 		$this->assertEquals( 0, edd_add_to_cart( $this->_post->ID, $options ) );
 	}
 
-	public function test_get_cart_contents() {
-		$expected = array(
-			'0' => array(
-				'id' => $this->_post->ID - 1,
-				'options' => array(
-					'price_id' => 0,
-					'name' => 'Simple',
-					'amount' => 20,
-					'quantity' => 1
-				),
-				'quantity' => 1
-			)
-		);
 
-		$this->assertEquals($expected, edd_get_cart_contents());
-	}
-
-	public function test_cart_quantity() {
-		$this->assertEquals(1, edd_get_cart_quantity());
-	}
-
-	public function test_item_in_cart() {
-		$this->assertFalse(edd_item_in_cart($this->_post->ID));
-	}
-
-	public function test_cart_item_price() {
-		$this->assertEquals( '&#036;0.00' , edd_cart_item_price( 0 ) );
-	}
-
-	public function test_remove_from_cart() {
-		$expected = array();
-		$this->assertEquals( $expected, edd_remove_from_cart( 0 ) );
-	}
-
-	public function test_set_purchase_session() {
-		$this->assertNull( edd_set_purchase_session() );
-	}
-
-	public function test_get_purchase_session() {
-		$this->assertEmpty( edd_get_purchase_session() );
-	}
 }
