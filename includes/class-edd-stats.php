@@ -59,8 +59,7 @@ class EDD_Stats {
 	 * @since 1.8
 	 * @return void
 	 */
-	public function __construct() { /* nothing here. Call get_sales() and get_earnings() directly */ }
-
+	public function __construct() { }
 
 	/**
 	 * Get the predefined date periods permitted
