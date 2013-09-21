@@ -25,7 +25,6 @@ class Tests_Stats extends EDD_UnitTestCase {
 	 */
 
 	public function test_predefined_date_ranges() {
-		var_dump(class_exists('EDD_Stats'));
 		$stats2 = new EDD_Stats();
 		//$this->_payment_stats = new EDD_Payment_Stats;
 		$out = $stats2->get_predefined_dates();
