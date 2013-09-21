@@ -898,23 +898,15 @@ function edd_save_cart() {
 	if ( edd_is_cart_saving_disabled() )
 		return;
 
-	$user_id = get_current_user_id();
-	$cart    = EDD()->session->get( 'edd_cart' );
-	$token   = edd_generate_cart_token();
+	$user_id  = get_current_user_id();
+	$cart     = EDD()->session->get( 'edd_cart' );
+	$token    = edd_generate_cart_token();
+	$messages = EDD()->session->get( 'edd_cart_messages' );
 
 	if ( is_user_logged_in() ) {
 
 		update_user_meta( $user_id, 'edd_saved_cart', $cart, false );
 		update_user_meta( $user_id, 'edd_cart_token', $token, false );
-
-		$messages = EDD()->session->get( 'edd_cart_messages' );
-
-		if ( ! $messages )
-			$messages = array();
-
-		$messages['edd_cart_save_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), __( 'Cart saved successfully. You can restore your cart using this URL:', 'edd' ) . ' ' . '<a href="' .  get_permalink( $edd_options['purchase_page'] ) . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  get_permalink( $edd_options['purchase_page'] ) . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>' );
-
-		EDD()->session->set( 'edd_cart_messages', $messages );
 
 	} elseif ( ! is_user_logged_in() ) {
 
@@ -923,15 +915,20 @@ function edd_save_cart() {
 		setcookie( 'edd_saved_cart', $cart, time()+3600*24*7, COOKIEPATH, COOKIE_DOMAIN );
 		setcookie( 'edd_cart_token', $token, time()+3600*24*7, COOKIEPATH, COOKIE_DOMAIN );
 
-		$messages = EDD()->session->get( 'edd_cart_messages' );
-
-		if ( ! $messages )
-			$messages = array();
-
-		$messages['edd_cart_save_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), __( 'Cart saved successfully. You can restore your cart using this URL:', 'edd' ) . ' ' . '<a href="' .  get_permalink( $edd_options['purchase_page'] ) . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  get_permalink( $edd_options['purchase_page'] ) . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>' );
-
-		EDD()->session->set( 'edd_cart_messages', $messages );
 	}
+
+	$messages = EDD()->session->get( 'edd_cart_messages' );
+
+	if ( ! $messages )
+		$messages = array();
+
+	$messages['edd_cart_save_successful'] = sprintf(
+		'<strong>%1$s</strong>: %2$s',
+		__( 'Success', 'edd' ),
+		__( 'Cart saved successfully. You can restore your cart using this URL:', 'edd' ) . ' ' . '<a href="' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>'
+	);
+
+	EDD()->session->set( 'edd_cart_messages', $messages );
 }
 
 
@@ -942,6 +939,7 @@ function edd_save_cart() {
  * @return void || false Returns false if cart saving is disabled
  */
 function edd_restore_cart() {
+
 	if ( edd_is_cart_saving_disabled() )
 		return;
 
