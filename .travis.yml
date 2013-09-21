@@ -31,10 +31,11 @@ before_script:
     - sed -i "s/yourusernamehere/root/" tmp/wordpress-tests/wp-tests-config.php
     - sed -i "s/yourpasswordhere//" tmp/wordpress-tests/wp-tests-config.php
     - mysql -e 'CREATE DATABASE wordpress_test;' -uroot
-    - wget http://getcomposer.org/composer.phar
-    - php composer.phar install --dev --no-interaction --prefer-source
-    - mkdir -p build/logs
+    - curl -s http://getcomposer.org/installer | php
+    - php composer.phar install --dev --no-interaction
+	
 script:
+    - mkdir -p build/logs
     - phpunit -c phpunit.xml --coverage-clover build/logs/clover.xml
 
 after_script:
