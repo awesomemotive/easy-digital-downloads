@@ -13,7 +13,7 @@
 		 stopOnSkipped="false"
 		 syntaxCheck="false"
 		 verbose="true"
-		 strict="true"
+		 strict="false"
 		 bootstrap="tests/bootstrap.php">
 	<testsuites>
 		<testsuite name="Easy Digital Downloads Test Suite">
