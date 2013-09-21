@@ -10,10 +10,10 @@ echo "Authors: Chris Christoff and Sunny Ratilal" . PHP_EOL;
 
 $config_file_path = $argv[1];
 $multisite = ! empty( $argv[2] );
-
+ob_start();
 require_once $config_file_path;
 require_once dirname( $config_file_path ) . '/includes/functions.php';
-
+ob_get_clean();
 
 // Load EDD
 function _load_edd() {
@@ -27,9 +27,9 @@ tests_add_filter( 'show_admin_bar', '__return_true' );
 $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
 $_SERVER['HTTP_HOST'] = WP_TESTS_DOMAIN;
 $PHP_SELF = $GLOBALS['PHP_SELF'] = $_SERVER['PHP_SELF'] = '/index.php';
-
+ob_start();
 require_once ABSPATH . '/wp-settings.php';
-
+ob_get_clean();
 echo "Installing Easy Digital Downloads...\n";
 
 // Install Easy Digital Downloads
