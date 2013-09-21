@@ -58,14 +58,12 @@
 	</tbody>
 	<tfoot>
 
-		<?php if( edd_item_quanities_enabled() ) : ?>
-			<tr class="edd_cart_footer_row edd_cart_update_row">
+		<?php if( has_action( 'edd_cart_footer_buttons' ) ) : ?>
+			<tr class="edd_cart_footer_row">
 				<th colspan="<?php echo edd_checkout_cart_columns(); ?>">
-					<input type="submit" name="edd_update_cart_submit" value="<?php _e( 'Update Cart', 'edd' ); ?>"/>
-					<input type="hidden" name="edd_action" value="update_cart"/>
+					<?php do_action( 'edd_cart_footer_buttons' ); ?>
 				</th>
 			</tr>
-
 		<?php endif; ?>
 
 		<?php if( edd_use_taxes() ) : ?>

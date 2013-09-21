@@ -95,6 +95,7 @@
 .edd_discount_remove { display: inline-block; width: 10px; height: 11px; background: url( images/xit.gif ) 0 0 no-repeat; position: relative; top: 3px; }
 .edd_discount_remove:hover { background-position: -10px 0; }
 #edd_checkout_cart br { display: none; }
+#edd_checkout_cart a.edd-cart-saving-button { font-weight: normal; text-decoration: none; }
 
 /* Checkout Fields */
 #edd_checkout_form_wrap legend { display:block; font-size: 120%; line-height: 1; font-weight: bold; width: 100%; margin: 0 0 21px 0; padding: 0; }
@@ -245,10 +246,10 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 .edd_download_purchase_form .edd_price_options li { display: block; padding: 0; margin: 0; }
 .edd_download_purchase_form .edd_price_options span { display: inline; padding: 0; margin: 0; }
 
-.edd-submit, #edd-purchase-button {
+.edd-submit, #edd-purchase-button, input[type="submit"].edd-submit {
   display: inline-block;
   padding: 6px 12px;
-  margin-bottom: 0;
+  margin: 0;
   font-size: 14px;
   font-weight: normal;
   line-height: 1.428571429;
@@ -256,19 +257,24 @@ input.edd_submit_plain { background: none !important; border: none !important; p
   white-space: nowrap;
   vertical-align: middle;
   cursor: pointer;
-  border: 1px solid transparent;
+  border: 1px solid #cccccc;
   border-radius: 4px;
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
        -o-user-select: none;
           user-select: none;
 }
-.edd-submit.button:focus {
+.edd-submit.button:focus,, input[type="submit"].edd-submit:focus {
   outline: thin dotted #333;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
+input[type="submit"].edd-submit:hover,
+input[type="submit"].edd-submit:focus,
 .edd-submit.button:hover,
 .edd-submit.button:focus {
   color: #333333;
@@ -287,12 +293,15 @@ input.edd_submit_plain { background: none !important; border: none !important; p
 }
 
 /** Gray (Default) */
-.edd-submit.button.gray {
+input.edd-submit.button,a.edd-submit.button,a.edd-submit.button:visited,.edd-submit.button,.edd-submit.button.gray {
   color: #333333;
   background: #f0f0f0;
   border-color: #cccccc;
 }
 
+.edd-submit.button:hover.
+.edd-submit.button:focus,
+.edd-submit.button:active,
 .edd-submit.button.gray:hover,
 .edd-submit.button.gray:focus,
 .edd-submit.button.gray:active {
