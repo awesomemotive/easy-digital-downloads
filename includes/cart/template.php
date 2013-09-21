@@ -139,3 +139,91 @@ function edd_empty_checkout_cart() {
 	echo edd_empty_cart_message();
 }
 add_action( 'edd_cart_empty', 'edd_empty_checkout_cart' );
+
+/**
+ * Display the "Save Cart" button on the checkout
+ *
+ * @since 1.8
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_save_cart_button() {
+	global $edd_options;
+
+	if ( edd_is_cart_saving_disabled() )
+		return;
+
+	if ( edd_is_cart_saved() ) : ?>
+		<a class="edd-cart-saving-button edd-submit button" id="edd-restore-cart-button" href="<?php echo add_query_arg( 'edd_action', 'restore_cart' ) ?>"><?php _e( 'Restore Previous Cart', 'edd' ); ?></a>
+	<?php endif; ?>
+	<a class="edd-cart-saving-button edd-submit button" id="edd-save-cart-button" href="<?php echo add_query_arg( 'edd_action', 'save_cart' ) ?>"><?php _e( 'Save Cart', 'edd' ); ?></a>
+	<?php
+}
+if( ! edd_is_cart_saving_disabled() ) {
+	add_action( 'edd_cart_footer_buttons', 'edd_save_cart_button' );
+}
+
+/**
+ * Displays the restore cart link on the empty cart page, if a cart is saved
+ *
+ * @since 1.8
+ * @return void
+ */
+function edd_empty_cart_restore_cart_link() {
+
+	if( edd_is_cart_saving_disabled() )
+		return;
+
+	if( edd_is_cart_saved() ) {
+		echo ' <a class="edd-cart-saving-link" id="edd-restore-cart-link" href="' . add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ) ) . '">' . __( 'Restore Previous Cart.', 'edd' ) . '</a>';
+	}
+}
+add_action( 'edd_cart_empty', 'edd_empty_cart_restore_cart_link' );
+
+/**
+ * Display the "Save Cart" button on the checkout
+ *
+ * @since 1.8
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_update_cart_button() {
+	global $edd_options;
+
+	if ( ! edd_item_quanities_enabled() )
+		return;
+?>
+	<input type="submit" name="edd_update_cart_submit" value="<?php _e( 'Update Cart', 'edd' ); ?>"/>
+	<input type="hidden" name="edd_action" value="update_cart"/>
+<?php
+
+}
+if( edd_item_quanities_enabled() ) {
+	add_action( 'edd_cart_footer_buttons', 'edd_update_cart_button' );
+}
+
+/**
+ * Display the messages that are related to cart saving
+ *
+ * @since 1.8
+ * @return void
+ */
+function edd_display_cart_messages() {
+	$messages = EDD()->session->get( 'edd_cart_messages' );
+
+	if ( $messages ) {
+		$classes = apply_filters( 'edd_error_class', array(
+			'edd_errors'
+		) );
+		echo '<div class="' . implode( ' ', $classes ) . '">';
+		    // Loop message codes and display messages
+		   foreach ( $messages as $message_id => $message ){
+		        echo '<p class="edd_error" id="edd_msg_' . $message_id . '">' . $message . '</p>';
+		   }
+		echo '</div>';
+
+		// Remove all of the cart saving messages
+		EDD()->session->set( 'edd_cart_messages', null );
+	}
+}
+add_action( 'edd_before_checkout_cart', 'edd_display_cart_messages' );

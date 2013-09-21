@@ -95,6 +95,7 @@
 .edd_discount_remove { display: inline-block; width: 10px; height: 11px; background: url( ../assets/images/xit.gif ) 0 0 no-repeat; position: relative; top: 3px; }
 .edd_discount_remove:hover { background-position: -10px 0; }
 #edd_checkout_cart br { display: none; }
+#edd_checkout_cart a.edd-cart-saving-button { font-weight: normal; text-decoration: none; }
 
 /* Checkout Fields */
 #edd_checkout_form_wrap legend { display:block; font-size: 120%; line-height: 1; font-weight: bold; width: 100%; margin: 0 0 21px 0; padding: 0; }
@@ -142,7 +143,7 @@
 #edd_checkout_form_wrap #edd_purchase_final_total p { margin: 0; }
 
 #edd_secure_site_wrapper { padding: 4px 4px 4px 0; font-weight: bold; }
-#edd_secure_site_wrapper span.padlock:before { font-family: 'padlock'; font-style: normal; font-weight: normal; speak: none; display: inline-block; text-decoration: inherit; width: 1em; margin-right: 0.2em; text-align: center;	line-height: 1em; margin-left: 0.2em; font-size: 120%; text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); content: '🔒'; }
+#edd_secure_site_wrapper span.padlock:before { font-family: 'padlock'; font-style: normal; font-weight: normal; speak: none; display: inline-block; text-decoration: inherit; width: 1em; margin-right: 0.2em; text-align: center;  line-height: 1em; margin-left: 0.2em; font-size: 120%; text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); content: '🔒'; }
 #edd_checkout_form_wrap input.edd-input.card-number.valid { background-image: url(../assets/images/tick.png); background-repeat: no-repeat; background-position: 98% 50%; }
 #edd_checkout_form_wrap span.exp-divider { display: inline; }
 #edd_checkout_form_wrap span.card-type { position: absolute; top: -2px; right: 0; width: 32px; height: 32px; }
