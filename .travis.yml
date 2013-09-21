@@ -36,10 +36,10 @@ before_script:
 
 script:
     - mkdir -p build/logs
-    - php phpunit -c phpunit.xml.dist
+    - php phpunit -c phpunit.xml
 
 after_script:
-    - php vendor/bin/coveralls -v
+    - php coveralls -v
 
 notifications:
     irc:
