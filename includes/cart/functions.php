@@ -869,7 +869,7 @@ function edd_is_cart_saved() {
 
 	if ( is_user_logged_in() ) {
 
-		$saved_cart = get_user_meta( $get_current_user_id(), 'edd_saved_cart', true );
+		$saved_cart = get_user_meta( get_current_user_id(), 'edd_saved_cart', true );
 
 		// Check that a cart exists
 		if( ! $saved_cart )
@@ -957,10 +957,9 @@ function edd_restore_cart() {
 
 	$user_id    = get_current_user_id();
 	$saved_cart = get_user_meta( $user_id, 'edd_saved_cart', true );
+	$token      = edd_get_cart_token();
 
 	if ( is_user_logged_in() && $saved_cart ) {
-
-		$token = get_user_meta( $user_id, 'edd_cart_token', true );
 
 		$messages = EDD()->session->get( 'edd_cart_messages' );
 
@@ -978,10 +977,9 @@ function edd_restore_cart() {
 		delete_user_meta( $user_id, 'edd_saved_cart' );
 		delete_user_meta( $user_id, 'edd_cart_token' );
 
-	} elseif ( ! is_user_logged_in() && isset( $_COOKIE['edd_saved_cart'] ) && isset( $_COOKIE['edd_cart_token'] ) ) {
+	} elseif ( ! is_user_logged_in() && isset( $_COOKIE['edd_saved_cart'] ) && $token ) {
 
 		$saved_cart = $_COOKIE['edd_saved_cart'];
-		$token      = $_COOKIE['edd_cart_token'];
 
 		if ( $_GET['edd_cart_token'] != $token ) {
 
@@ -1001,6 +999,24 @@ function edd_restore_cart() {
 	$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), 'Cart restored successfully.' );
 	EDD()->session->set( 'edd_cart', $saved_cart );
 	EDD()->session->set( 'edd_cart_messages', $messages );
+}
+
+/**
+ * Retrieve a saved cart token. Used in validating saved carts
+ *
+ * @since 1.8
+ * @return int
+ */
+function edd_get_cart_token() {
+
+	$user_id = get_current_user_id();
+
+	if( is_user_logged_in() ) {
+		$token = get_user_meta( $user_id, 'edd_cart_token', true );
+	} else {
+		$token = isset( $_COOKIE['edd_cart_token'] ) ? $_COOKIE['edd_cart_token'] : false;
+	}
+	return apply_filters( 'edd_get_cart_token', $token, $user_id );
 }
 
 /**
