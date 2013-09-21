@@ -34,7 +34,7 @@ before_script:
     - mysql -e 'CREATE DATABASE wordpress_test;' -uroot
 
 script:
-    - phpunit --verbose --debug
+    - phpunit --verbose
     - php tests/includes/clover.php tests/clover.xml 90
 
 notifications:
