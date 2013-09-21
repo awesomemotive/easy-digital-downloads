@@ -1035,6 +1035,7 @@ function edd_restore_cart() {
 
 		$cart = unserialize( $cart );
 
+		// Update the cart to have the contents of the saved cart
 		EDD()->session->set( 'edd_cart', $cart );
 
 		setcookie( 'edd_saved_cart', '', time()-3600, COOKIEPATH, COOKIE_DOMAIN );
@@ -1062,6 +1063,7 @@ function edd_process_cart_saving_messages() {
 		   }
 		echo '</div>';
 
+		// Remove all of the cart saving messages
 		EDD()->session->set( 'edd_cart_saving_messages', null );
 	}
 }
@@ -1090,7 +1092,7 @@ function edd_delete_saved_carts() {
 		foreach ( $carts as $cart ) {
 			$user_id    = $cart['user_id'];
 			$meta_value = $cart['date'];
-	
+
 			if ( strtotime( $meta_value ) < strtotime( '-1 week' ) ) {
 				$wpdb->delete(
 					$wpdb->usermeta,
