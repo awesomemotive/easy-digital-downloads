@@ -949,8 +949,8 @@ function edd_save_cart() {
 	} elseif ( ! is_user_logged_in() && ! isset( $_COOKIE['edd_saved_cart'] ) && ! isset( $_COOKIE['edd_cart_token'] ) ) {
 		$cart = serialize( $cart );
 
-		setcookie( 'edd_saved_cart', $cart, time()+3600*24*7 );
-		setcookie( 'edd_cart_token', $token, time()+3600*24*7 );
+		setcookie( 'edd_saved_cart', $cart, time()+3600*24*7, COOKIEPATH, COOKIE_DOMAIN );
+		setcookie( 'edd_cart_token', $token, time()+3600*24*7, COOKIEPATH, COOKIE_DOMAIN );
 
 		$messages = EDD()->session->get( 'edd_cart_saving_messages' );
 
@@ -1010,8 +1010,8 @@ function edd_restore_cart() {
 
 		EDD()->session->set( 'edd_cart', $cart );
 
-		setcookie( 'edd_saved_cart', '', time()-3600 );
-		setcookie( 'edd_cart_token', '', time()-3600 );
+		setcookie( 'edd_saved_cart', '', time()-3600, COOKIEPATH, COOKIE_DOMAIN );
+		setcookie( 'edd_cart_token', '', time()-3600, COOKIEPATH, COOKIE_DOMAIN );
 	} elseif ( is_user_logged_in() && get_user_meta( $current_user_ID, 'edd_saved_cart', true ) ) {
 		$saved_cart = get_user_meta( $current_user_ID, 'edd_saved_cart', true );
 
@@ -1037,7 +1037,7 @@ function edd_restore_cart() {
 
 		EDD()->session->set( 'edd_cart', $cart );
 
-		setcookie( 'edd_saved_cart', '', time()-3600 );
+		setcookie( 'edd_saved_cart', '', time()-3600, COOKIEPATH, COOKIE_DOMAIN );
 	}
 }
 add_action( 'edd_restore_cart', 'edd_restore_cart' );
