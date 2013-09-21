@@ -863,3 +863,235 @@ function edd_set_purchase_session( $purchase_data ) {
 function edd_get_purchase_session() {
 	return EDD()->session->get( 'edd_purchase' );
 }
+
+/**
+ * Checks if cart saving has been disabled
+ *
+ * @since 1.8
+ * @global $edd_options
+ * @return bool Whether or not cart saving has been disabled
+ */
+function edd_is_cart_saving_disabled() {
+	global $edd_options;
+
+	return apply_filters( 'edd_cart_saving_disabled', isset( $edd_options['disable_cart_saving'] ) );
+}
+
+/**
+ * Checks if a cart has been saved
+ *
+ * @since 1.8
+ * @return bool
+ */
+function edd_is_cart_saved() {
+
+	if( edd_is_cart_saving_disabled() )
+		return false;
+
+	if ( is_user_logged_in() ) {
+
+		$saved_cart = get_user_meta( get_current_user_id(), 'edd_saved_cart', true );
+
+		// Check that a cart exists
+		if( ! $saved_cart )
+			return false;
+
+		// Check that the saved cart is not the same as the current cart
+		if ( $saved_cart === EDD()->session->get( 'edd_cart' ) )
+			return false;
+
+		return true;
+
+	} else {
+
+		// Check that a saved cart exists
+		if ( ! isset( $_COOKIE['edd_saved_cart'] ) )
+			return false;
+
+		// Check that the saved cart is not the same as the current cart
+		if ( stripslashes( maybe_unserialize( $_COOKIE['edd_saved_cart'] ) ) === EDD()->session->get( 'edd_cart' ) )
+			return false;
+
+		return true;
+
+	}
+
+	return false;
+}
+
+/**
+ * Process the Cart Save
+ *
+ * @since 1.8
+ * @return void
+ */
+function edd_save_cart() {
+	global $edd_options;
+
+	if ( edd_is_cart_saving_disabled() )
+		return;
+
+	$user_id  = get_current_user_id();
+	$cart     = EDD()->session->get( 'edd_cart' );
+	$token    = edd_generate_cart_token();
+	$messages = EDD()->session->get( 'edd_cart_messages' );
+
+	if ( is_user_logged_in() ) {
+
+		update_user_meta( $user_id, 'edd_saved_cart', $cart, false );
+		update_user_meta( $user_id, 'edd_cart_token', $token, false );
+
+	} else {
+
+		$cart = serialize( $cart );
+
+		setcookie( 'edd_saved_cart', $cart, time()+3600*24*7, COOKIEPATH, COOKIE_DOMAIN );
+		setcookie( 'edd_cart_token', $token, time()+3600*24*7, COOKIEPATH, COOKIE_DOMAIN );
+
+	}
+
+	$messages = EDD()->session->get( 'edd_cart_messages' );
+
+	if ( ! $messages )
+		$messages = array();
+
+	$messages['edd_cart_save_successful'] = sprintf(
+		'<strong>%1$s</strong>: %2$s',
+		__( 'Success', 'edd' ),
+		__( 'Cart saved successfully. You can restore your cart using this URL:', 'edd' ) . ' ' . '<a href="' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>'
+	);
+
+	EDD()->session->set( 'edd_cart_messages', $messages );
+}
+
+
+/**
+ * Process the Cart Restoration
+ *
+ * @since 1.8
+ * @return void || false Returns false if cart saving is disabled
+ */
+function edd_restore_cart() {
+
+	if ( edd_is_cart_saving_disabled() )
+		return;
+
+	$user_id    = get_current_user_id();
+	$saved_cart = get_user_meta( $user_id, 'edd_saved_cart', true );
+	$token      = edd_get_cart_token();
+
+	if ( is_user_logged_in() && $saved_cart ) {
+
+		$messages = EDD()->session->get( 'edd_cart_messages' );
+
+		if ( ! $messages )
+			$messages = array();
+
+		if ( isset( $_GET['edd_cart_token'] ) && $_GET['edd_cart_token'] != $token ) {
+
+			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'edd' ), 'Cart restoration failed. Invalid token.' );
+			EDD()->session->set( 'edd_cart_messages', $messages );
+
+			return new WP_Error( 'invalid_cart_token', __( 'The cart cannot be restored. Invalid token.', 'edd' ) );
+		}
+
+		delete_user_meta( $user_id, 'edd_saved_cart' );
+		delete_user_meta( $user_id, 'edd_cart_token' );
+
+	} elseif ( ! is_user_logged_in() && isset( $_COOKIE['edd_saved_cart'] ) && $token ) {
+
+		$saved_cart = $_COOKIE['edd_saved_cart'];
+
+		if ( $_GET['edd_cart_token'] != $token ) {
+
+			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'edd' ), 'Cart restoration failed. Invalid token.' );
+			EDD()->session->set( 'edd_cart_messages', $messages );
+
+			return new WP_Error( 'invalid_cart_token', __( 'The cart cannot be restored. Invalid token.', 'edd' ) );
+		}
+
+		$saved_cart = maybe_unserialize( stripslashes( $saved_cart ) );
+
+		setcookie( 'edd_saved_cart', '', time()-3600, COOKIEPATH, COOKIE_DOMAIN );
+		setcookie( 'edd_cart_token', '', time()-3600, COOKIEPATH, COOKIE_DOMAIN );
+
+	}
+
+	$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), 'Cart restored successfully.' );
+	EDD()->session->set( 'edd_cart', $saved_cart );
+	EDD()->session->set( 'edd_cart_messages', $messages );
+}
+
+/**
+ * Retrieve a saved cart token. Used in validating saved carts
+ *
+ * @since 1.8
+ * @return int
+ */
+function edd_get_cart_token() {
+
+	$user_id = get_current_user_id();
+
+	if( is_user_logged_in() ) {
+		$token = get_user_meta( $user_id, 'edd_cart_token', true );
+	} else {
+		$token = isset( $_COOKIE['edd_cart_token'] ) ? $_COOKIE['edd_cart_token'] : false;
+	}
+	return apply_filters( 'edd_get_cart_token', $token, $user_id );
+}
+
+/**
+ * Delete Saved Carts after one week
+ *
+ * @since 1.8
+ * @global $wpdb
+ * @return void
+ */
+function edd_delete_saved_carts() {
+	global $wpdb;
+
+	$start = date( 'Y-m-d', strtotime( '-7 days' ) );
+	$carts = $wpdb->get_results(
+		"
+		SELECT user_id, meta_key, FROM_UNIXTIME(meta_value, '%Y-%m-%d') AS date
+		FROM {$wpdb->usermeta}
+		WHERE meta_key = 'edd_cart_token'
+		", ARRAY_A
+	);
+
+	if ( $carts ) {
+		foreach ( $carts as $cart ) {
+			$user_id    = $cart['user_id'];
+			$meta_value = $cart['date'];
+
+			if ( strtotime( $meta_value ) < strtotime( '-1 week' ) ) {
+				$wpdb->delete(
+					$wpdb->usermeta,
+					array(
+						'user_id'  => $user_id,
+						'meta_key' => 'edd_cart_token'
+					)
+				);
+
+				$wpdb->delete(
+					$wpdb->usermeta,
+					array(
+						'user_id'  => $user_id,
+						'meta_key' => 'edd_saved_cart'
+					)
+				);
+			}
+		}
+	}
+}
+add_action( 'edd_weekly_scheduled_events', 'edd_delete_saved_carts' );
+
+/**
+ * Generate URL token to restore the cart via a URL
+ *
+ * @since 1.8
+ * @return string UNIX timestamp
+ */
+function edd_generate_cart_token() {
+	return apply_filters( 'edd_generate_cart_token', time() );
+}

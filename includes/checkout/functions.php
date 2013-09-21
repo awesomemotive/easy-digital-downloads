@@ -27,7 +27,6 @@ function edd_can_checkout() {
 	return (bool) apply_filters( 'edd_can_checkout', $can_checkout );
 }
 
-
 /**
  * Retrieve the Success page URI
  *
@@ -42,7 +41,6 @@ function edd_get_success_page_uri() {
 
 	return apply_filters( 'edd_get_success_page_uri', get_permalink( $edd_options['success_page'] ) );
 }
-
 
 /**
  * Send To Success Page
@@ -113,7 +111,6 @@ function edd_get_success_page_url( $query_string = null ) {
 
 	return apply_filters( 'edd_success_page_url', $success_page );
 }
-
 
 /**
  * Check if a field is required

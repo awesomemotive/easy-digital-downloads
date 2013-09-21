@@ -11,9 +11,17 @@ if ( is_user_logged_in() ):
 	$display_name = $current_user->display_name;
 	$address      = edd_get_customer_address( $user_id );
 
-	if ( isset( $_GET['updated'] ) && $_GET['updated'] == true && ! edd_get_errors() ): ?>
-	<p class="edd_success"><strong><?php _e( 'Success', 'edd'); ?>:</strong> <?php _e( 'Your profile has been edited successfully.', 'edd' ); ?></p>
-	<?php endif; edd_print_errors(); ?>
+	if ( edd_is_cart_saved() ): ?>
+		<?php $restore_url = add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ), edd_get_checkout_uri() ); ?>
+		<p class="edd_success"><strong><?php _e( 'Saved cart', 'edd'); ?>:</strong> <?php printf( __( 'You have a saved cart, <a href="%s">click here</a> to restore it.', 'edd' ), $restore_url ); ?></p>
+	<?php endif; ?>
+
+	<?php if ( isset( $_GET['updated'] ) && $_GET['updated'] == true && ! edd_get_errors() ): ?>
+		<p class="edd_success"><strong><?php _e( 'Success', 'edd'); ?>:</strong> <?php _e( 'Your profile has been edited successfully.', 'edd' ); ?></p>
+	<?php endif; ?>
+
+	<?php edd_print_errors(); ?>
+
 	<form id="edd_profile_editor_form" class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
 		<fieldset>
 			<span><legend><?php _e( 'Change your Name', 'edd' ); ?></legend></span>
