@@ -24,9 +24,10 @@ class Tests_Stats extends EDD_UnitTestCase {
 	 * EDD_Stats tests
 	 *
 	 */
-	/*
-	public function test_predefined_date_ranges() {
 
+	public function test_predefined_date_ranges() {
+		$this->_stats = new EDD_Stats();
+		$this->_payment_stats = new EDD_Payment_Stats;
 		$out = $this->_stats->get_predefined_dates();
 
 		$expected = array(
@@ -45,7 +46,7 @@ class Tests_Stats extends EDD_UnitTestCase {
 		$this->assertEquals( $expected, $out );
 
 	}
-
+	/*
 	public function test_get_earnings_by_date() {
 
 		$stats = new EDD_Payment_Stats;
