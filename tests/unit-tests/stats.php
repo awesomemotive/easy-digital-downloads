@@ -49,8 +49,7 @@ class Tests_Stats extends EDD_UnitTestCase {
 
 	public function test_get_earnings_by_date() {
 
-		$stats = new EDD_Payment_Stats;
-		$earnings = $stats->get_earnings( 0, 'this_month' );
+		$earnings  =EDD()->stats->get_earnings( 0, 'this_month' );
 
 		$this->assertEquals( 100, $earnings );
 	}
