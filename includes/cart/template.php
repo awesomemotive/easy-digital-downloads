@@ -139,3 +139,44 @@ function edd_empty_checkout_cart() {
 	echo edd_empty_cart_message();
 }
 add_action( 'edd_cart_empty', 'edd_empty_checkout_cart' );
+
+/**
+ * Display the "Save Cart" button on the checkout
+ *
+ * @since 1.8
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_save_cart_button() {
+	global $edd_options;
+
+	if ( edd_is_cart_saving_disabled() )
+		return;
+
+	if ( edd_is_cart_saved() ) : ?>
+		<a class="edd-cart-saving-button edd-submit button" id="edd-restore-cart-button" href="<?php echo add_query_arg( 'edd_action', 'restore_cart' ) ?>"><?php _e( 'Restore Previous Cart', 'edd' ); ?></a>
+	<?php endif; ?>
+	<a class="edd-cart-saving-button edd-submit button" id="edd-save-cart-button" href="<?php echo add_query_arg( 'edd_action', 'save_cart' ) ?>"><?php _e( 'Save Cart', 'edd' ); ?></a>
+	<?php
+}
+add_action( 'edd_cart_footer_buttons', 'edd_save_cart_button' );
+
+/**
+ * Display the "Save Cart" button on the checkout
+ *
+ * @since 1.8
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_update_cart_button() {
+	global $edd_options;
+
+	if ( ! edd_item_quanities_enabled() )
+		return;
+?>
+	<input type="submit" name="edd_update_cart_submit" value="<?php _e( 'Update Cart', 'edd' ); ?>"/>
+	<input type="hidden" name="edd_action" value="update_cart"/>
+<?php
+
+}
+add_action( 'edd_cart_footer_buttons', 'edd_update_cart_button' );
