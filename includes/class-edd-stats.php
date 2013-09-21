@@ -53,13 +53,7 @@ class EDD_Stats {
 	 */
 	public $end_date;
 
-	/**
-	 *
-	 * @access public
-	 * @since 1.8
-	 * @return void
-	 */
-	public function __construct() { }
+
 
 	/**
 	 * Get the predefined date periods permitted
