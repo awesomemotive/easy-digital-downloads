@@ -16,7 +16,7 @@ env:
     - WP_VERSION=3.5 WP_MULTISITE=1
 
 before_script:
-    - phpenv config-add travis.ini
+#    - phpenv config-add travis.ini
     - mkdir -p tmp
     - WP_CORE_DIR=tmp/wordpress/
     - WP_TESTS_DIR=tmp/wordpress-tests/
