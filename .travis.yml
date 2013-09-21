@@ -16,7 +16,6 @@ env:
     - WP_VERSION=3.5 WP_MULTISITE=1
 
 before_script:
-    - php kill-travis.php
     - mkdir -p tmp
     - WP_CORE_DIR=tmp/wordpress/
     - WP_TESTS_DIR=tmp/wordpress-tests/
