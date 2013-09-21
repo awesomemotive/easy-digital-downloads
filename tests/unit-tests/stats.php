@@ -1,5 +1,5 @@
 <?php
-use EDD_Stats;
+use \EDD_Stats;
 namespace EDD_Unit_Tests;
 
 /**
