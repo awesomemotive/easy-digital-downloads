@@ -117,6 +117,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->api = new EDD_API();
 			self::$instance->session = new EDD_Session();
 			self::$instance->html = new EDD_HTML_Elements();
+			self::$instance->stats = new EDD_Stats();
 		}
 		return self::$instance;
 	}
