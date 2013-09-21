@@ -3,7 +3,7 @@
 		 backupGlobals="false"
 		 backupStaticAttributes="false"
 		 colors="true"
-		 processIsolation="true"
+		 processIsolation="false"
 		 convertErrorsToExceptions="true"
 		 convertNoticesToExceptions="true"
 		 convertWarningsToExceptions="true"
