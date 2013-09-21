@@ -26,9 +26,12 @@ class Tests_Stats extends EDD_UnitTestCase {
 	 */
 
 	public function test_predefined_date_ranges() {
+		var_dump('0');	
 		$stats = new EDD_Stats();
+				var_dump('0.4');
 		//$this->_payment_stats = new EDD_Payment_Stats;
 		$out = $stats->get_predefined_dates();
+				var_dump('0.8');
 		$expected = array(
 			'today'        => 'Today',
 			'yesterday'    => 'Yesterday',
