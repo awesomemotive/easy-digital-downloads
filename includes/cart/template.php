@@ -164,6 +164,23 @@ if( ! edd_is_cart_saving_disabled() ) {
 }
 
 /**
+ * Displays the restore cart link on the empty cart page, if a cart is saved
+ *
+ * @since 1.8
+ * @return void
+ */
+function edd_empty_cart_restore_cart_link() {
+
+	if( edd_is_cart_saving_disabled() )
+		return;
+
+	if( edd_is_cart_saved() ) {
+		echo ' <a class="edd-cart-saving-link" id="edd-restore-cart-link" href="' . add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ) ) . '">' . __( 'Restore Previous Cart.', 'edd' ) . '</a>';
+	}
+}
+add_action( 'edd_cart_empty', 'edd_empty_cart_restore_cart_link' );
+
+/**
  * Display the "Save Cart" button on the checkout
  *
  * @since 1.8
