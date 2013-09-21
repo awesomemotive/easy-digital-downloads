@@ -1,7 +1,7 @@
 <?php
 namespace EDD_Unit_Tests;
 use \EDD_Stats;
-
+use \EDD_Payment_Stats;
 /**
  * @group edd_stats
  */
