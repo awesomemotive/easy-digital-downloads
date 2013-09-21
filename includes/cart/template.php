@@ -180,3 +180,29 @@ function edd_update_cart_button() {
 
 }
 add_action( 'edd_cart_footer_buttons', 'edd_update_cart_button' );
+
+/**
+ * Display the messages that are related to cart saving
+ *
+ * @since 1.8
+ * @return void
+ */
+function edd_display_cart_messages() {
+	$messages = EDD()->session->get( 'edd_cart_messages' );
+
+	if ( $messages ) {
+		$classes = apply_filters( 'edd_error_class', array(
+			'edd_errors'
+		) );
+		echo '<div class="' . implode( ' ', $classes ) . '">';
+		    // Loop message codes and display messages
+		   foreach ( $messages as $message_id => $message ){
+		        echo '<p class="edd_error" id="edd_msg_' . $message_id . '">' . $message . '</p>';
+		   }
+		echo '</div>';
+
+		// Remove all of the cart saving messages
+		EDD()->session->set( 'edd_cart_messages', null );
+	}
+}
+add_action( 'edd_before_checkout_cart', 'edd_display_cart_messages' );
