@@ -73,7 +73,7 @@ function edd_get_shop_states( $country = null ) {
 			$states = edd_get_hungary_states_list();
 			break;
 		case 'ID' :
-			$states = edd_get_indonesia_states_list();
+			$states = edd_get_indonesian_states_list();
 			break;
 		case 'IN' :
 			$states = edd_get_indian_states_list();
@@ -654,7 +654,7 @@ function edd_get_new_zealand_states_list() {
  * @since 1.6
  * @return array $states A list of states
  */
-function edd_get_indonesia_states_list() {
+function edd_get_indonesian_states_list() {
 	$states = array(
 		'AC' => 'Daerah Istimewa Aceh',
 	    'SU' => 'Sumatera Utara',
