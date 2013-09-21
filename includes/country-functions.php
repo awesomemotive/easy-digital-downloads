@@ -73,7 +73,8 @@ function edd_get_shop_states( $country = null ) {
 			$states = edd_get_hungary_states_list();
 			break;
 		case 'ID' :
-			$states = edd_get_indonesia_states_list();
+			//fix typos for Indonesian provinces ( we call province not state )
+			$states = edd_get_indonesian_states_list();
 			break;
 		case 'IN' :
 			$states = edd_get_indian_states_list();

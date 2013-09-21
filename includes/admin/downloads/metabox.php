@@ -331,14 +331,24 @@ add_action( 'edd_render_price_row', 'edd_render_price_row', 10, 3 );
 function edd_render_product_type_field( $post_id = 0 ) {
 
 	$type = edd_get_download_type( $post_id );
+	
+	/*
+	* extensions add product type here
+	*/
+	$product_type = apply_filters( 'edd_product_type_select_options', array(
+		'bundle'	=> __( 'Bundle', 'edd' ),
+	) );
 ?>
 	<p>
 		<strong><?php apply_filters( 'edd_product_type_options_heading', _e( 'Product Type Options:', 'edd' ) ); ?></strong>
 	</p>
 	<p>
 		<select name="_edd_product_type" id="edd_product_type">
+			<?php //Just add default before loop product type options  ?>
 			<option value="0"><?php _e( 'Default', 'edd' ); ?></option>
-			<option value="bundle"<?php selected( 'bundle', $type ); ?>><?php _e( 'Bundle', 'edd' ); ?></option>
+			<?php foreach ( $product_type as $key => $value ) : ?>
+				<option value="<?php echo $key; ?>"<?php selected( $key, $type ); ?>><?php echo $value; ?></option>
+			<?php endforeach; ?>
 		</select>
 		<label for="edd_product_type"><?php _e( 'Select a product type', 'edd' ); ?></label>
 	</p>
