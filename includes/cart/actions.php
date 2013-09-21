@@ -118,3 +118,29 @@ function edd_process_cart_update( $data ) {
 
 }
 add_action( 'edd_update_cart', 'edd_process_cart_update' );
+
+/**
+ * Process cart save
+ *
+ * @since 1.8
+ * @return void
+ */
+function edd_process_cart_save( $data ) {
+
+	edd_save_cart();
+
+}
+add_action( 'edd_save_cart', 'edd_process_cart_save' );
+
+/**
+ * Process cart save
+ *
+ * @since 1.8
+ * @return void
+ */
+function edd_process_cart_restore( $data ) {
+
+	edd_restore_cart();
+
+}
+add_action( 'edd_restore_cart', 'edd_process_cart_restore' );

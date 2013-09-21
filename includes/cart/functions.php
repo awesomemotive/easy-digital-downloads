@@ -932,7 +932,7 @@ function edd_save_cart() {
 		EDD()->session->set( 'edd_cart_saving_messages', $messages );
 	}
 }
-add_action( 'edd_save_cart', 'edd_save_cart' );
+
 
 /**
  * Process the Cart Restoration
@@ -1011,7 +1011,6 @@ function edd_restore_cart() {
 		setcookie( 'edd_saved_cart', '', time()-3600, COOKIEPATH, COOKIE_DOMAIN );
 	}
 }
-add_action( 'edd_restore_cart', 'edd_restore_cart' );
 
 /**
  * Display the messages that are related to cart saving
