@@ -130,45 +130,5 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$this->assertEquals( 'edd_payment', $out[0]->post_type );
 	}
 
-	public function test_fake_insert_payment() {
-		$this->assertFalse( edd_insert_payment() );
-	}
 
-	public function test_update_payment_status() {
-		edd_update_payment_status( $this->_payment_id );
-
-		$out = edd_get_payments();
-		$this->assertEquals( 'publish', $out[0]->post_status );
-	}
-
-	public function test_check_for_existing_payment() {
-		$this->assertTrue( edd_check_for_existing_payment( $this->_post->ID ) );
-	}
-
-	public function test_get_payment_statuses() {
-		$out = edd_get_payment_statuses();
-
-		$expected = array(
-			'pending' => 'Pending',
-			'publish' => 'Complete',
-			'refunded' => 'Refunded',
-			'failed' => 'Failed',
-			'revoked' => 'Revoked',
-			'abandoned' => 'Abandoned'
-		);
-
-		$this->assertEquals( $expected, $out );
-	}
-
-	public function test_undo_purchase() {
-		edd_undo_purchase( $this->_post->ID, $this->_payment_id );
-		$this->assertEquals( 0, edd_get_total_earnings() );
-	}
-
-	public function test_delete_purchase() {
-		edd_delete_purchase( $this->_payment_id );
-		// This returns an empty array(), so empty makes it false
-		$cart = edd_get_payments();
-		$this->assertTrue( empty( $cart ) );
-	}
 }
