@@ -19,6 +19,7 @@
  *
  * @since 1.8
  */
+ if(!class_exists('EDD_Stats')){
 class EDD_Stats {
 
 
@@ -439,4 +440,5 @@ class EDD_Stats {
 		return $where;
 	}
 
+}
 }
