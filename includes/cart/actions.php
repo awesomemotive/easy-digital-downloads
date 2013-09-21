@@ -127,7 +127,10 @@ add_action( 'edd_update_cart', 'edd_process_cart_update' );
  */
 function edd_process_cart_save( $data ) {
 
-	edd_save_cart();
+	$cart = edd_save_cart();
+	if( ! is_wp_error( $cart ) ) {
+		wp_redirect( edd_get_checkout_uri() ); exit;
+	}
 
 }
 add_action( 'edd_save_cart', 'edd_process_cart_save' );
@@ -140,7 +143,10 @@ add_action( 'edd_save_cart', 'edd_process_cart_save' );
  */
 function edd_process_cart_restore( $data ) {
 
-	edd_restore_cart();
+	$cart = edd_restore_cart();
+	if( ! is_wp_error( $cart ) ) {
+		wp_redirect( edd_get_checkout_uri() ); exit;
+	}
 
 }
 add_action( 'edd_restore_cart', 'edd_process_cart_restore' );
