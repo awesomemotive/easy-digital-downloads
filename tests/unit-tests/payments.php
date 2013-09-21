@@ -1,6 +1,6 @@
 <?php
 namespace EDD_Unit_Tests;
-
+use \EDD_Payments_Query;
 /**
  * @group edd_payments
  */
@@ -129,6 +129,16 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'post_type', (array) $out[0] );
 		$this->assertEquals( 'edd_payment', $out[0]->post_type );
 	}
+
+	public function test_payments_query() {
+		$payments = new EDD_Payments_Query;
+		$out = $payments->get_payments();
+		$this->assertTrue( is_array( (array) $out[0] ) );
+		$this->assertArrayHasKey( 'ID', (array) $out[0] );
+		$this->assertArrayHasKey( 'cart_details', (array) $out[0] );
+		$this->assertArrayHasKey( 'user_info', (array) $out[0] );
+	}
+
 
 	public function test_fake_insert_payment() {
 		$this->assertFalse( edd_insert_payment() );
