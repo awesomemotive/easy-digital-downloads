@@ -898,17 +898,14 @@ function edd_save_cart_button() {
 
 	if ( edd_is_cart_saving_disabled() )
 		return;
-
-	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
-	$color = ( $color == 'inherit' ) ? '' : $color;
-	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
 	?>
 	<p>
 		<?php if ( ! did_action( 'edd_cart_empty' ) ) : // We don't want to display the 'Save Cart' button when the cart is empty ?>
-		<a class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-save-cart-button" href="<?php echo add_query_arg( 'edd_action', 'save_cart' ) ?>"><?php _e( 'Save Cart', 'edd' ); ?></a>
+			<a class="edd-cart-saving-button" id="edd-save-cart-button" href="<?php echo add_query_arg( 'edd_action', 'save_cart' ) ?>"><?php _e( 'Save Cart', 'edd' ); ?></a>
 		<?php endif; ?>
+
 		<?php if ( edd_is_cart_saved() ) : ?>
-		<a class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-restore-cart-button" href="<?php echo add_query_arg( 'edd_action', 'restore_cart' ) ?>"><?php _e( 'Restore Previous Cart', 'edd' ); ?></a>
+			<a class="edd-cart-saving-button" id="edd-restore-cart-button" href="<?php echo add_query_arg( 'edd_action', 'restore_cart' ) ?>"><?php _e( 'Restore Previous Cart', 'edd' ); ?></a>
 		<?php endif; ?>
 	</p>
 	<?php
@@ -968,7 +965,7 @@ add_action( 'edd_save_cart', 'edd_save_cart' );
  * Process the Cart Restoration
  *
  * @since 1.8
- * @return void
+ * @return void || false Returns false if cart saving is disabled
  */
 function edd_restore_cart() {
 	if ( edd_is_cart_saving_disabled() )
@@ -1117,6 +1114,9 @@ add_action( 'edd_weekly_scheduled_events', 'edd_delete_saved_carts' );
 
 /**
  * Generate URL token to restore the cart via a URL
+ *
+ * @since 1.8
+ * @return string UNIX timestamp
  */
 function edd_generate_cart_token() {
 	return time();
