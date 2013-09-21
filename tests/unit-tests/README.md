@@ -1,4 +1,4 @@
-#Easy Digital Downloads Unit Tests [![Build Status](https://secure.travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads.png?branch=master)](http://travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads)
+# Easy Digital Downloads Unit Tests [![Build Status](https://secure.travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads.png?branch=master)](http://travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads) [![Coverage Status](https://coveralls.io/repos/easydigitaldownloads/Easy-Digital-Downloads/badge.png)](https://coveralls.io/r/easydigitaldownloads/Easy-Digital-Downloads)
 
 =================
 
