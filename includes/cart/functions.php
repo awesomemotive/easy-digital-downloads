@@ -908,7 +908,7 @@ function edd_save_cart_button() {
 		<a class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-save-cart-button" href="<?php echo add_query_arg( 'edd_action', 'save_cart' ) ?>"><?php _e( 'Save Cart', 'edd' ); ?></a>
 		<?php endif; ?>
 		<?php if ( edd_is_cart_saved() ) : ?>
-		<a class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-restore-cart-button" href="<?php echo add_query_arg( 'edd_action', 'restore_cart' ) ?>"><?php _e( 'Restore Cart', 'edd' ); ?></a>
+		<a class="edd-submit <?php echo $color; ?> <?php echo $style; ?>" id="edd-restore-cart-button" href="<?php echo add_query_arg( 'edd_action', 'restore_cart' ) ?>"><?php _e( 'Restore Previous Cart', 'edd' ); ?></a>
 		<?php endif; ?>
 	</p>
 	<?php
