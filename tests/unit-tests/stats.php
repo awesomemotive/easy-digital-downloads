@@ -23,7 +23,9 @@ class Tests_Stats extends EDD_UnitTestCase {
 	 * EDD_Stats tests
 	 *
 	 */
-
+	public function tearDown() {
+		parent::tearDown();
+	}
 	public function test_predefined_date_ranges() {
 		$stats2 = new EDD_Stats();
 		//$this->_payment_stats = new EDD_Payment_Stats;
