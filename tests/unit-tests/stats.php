@@ -6,8 +6,8 @@ namespace EDD_Unit_Tests;
  */
 class Tests_Stats extends EDD_UnitTestCase {
 
-	protected $_stats;
-	protected $_payment_stats;
+	public $_stats;
+	public $_payment_stats;
 
 	public function setUp() {
 		parent::setUp();
