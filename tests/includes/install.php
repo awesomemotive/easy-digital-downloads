@@ -12,7 +12,11 @@ $config_file_path = $argv[1];
 $multisite = ! empty( $argv[2] );
 ob_start();
 require_once $config_file_path;
+$output = ob_get_contents();
+ob_end_clean();
+ob_start();
 require_once dirname( $config_file_path ) . '/includes/functions.php';
+$output2 = ob_get_contents();
 ob_end_clean();
 // Load EDD
 function _load_edd() {
