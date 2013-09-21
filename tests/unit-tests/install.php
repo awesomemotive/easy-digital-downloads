@@ -10,6 +10,7 @@ class Tests_Activation extends EDD_UnitTestCase {
 	}
 
 	public function test_settings_general() {
+		$this->markTestIncomplete('This test needs to be fixed');
 	//	$this->assertArrayHasKey( 'purchase_page', get_option( 'edd_settings_general' ) );
 	//	$this->assertArrayHasKey( 'success_page', get_option( 'edd_settings_general' ) );
 	//	$this->assertArrayHasKey( 'failure_page', get_option( 'edd_settings_general' ) );
