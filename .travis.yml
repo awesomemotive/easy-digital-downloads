@@ -16,8 +16,6 @@ env:
     - WP_VERSION=3.5 WP_MULTISITE=1
 
 before_script:
-    - wget http://getcomposer.org/composer.phar
-    - php composer.phar install --dev --no-interaction
     - mkdir -p tmp
     - WP_CORE_DIR=tmp/wordpress/
     - WP_TESTS_DIR=tmp/wordpress-tests/
@@ -33,7 +31,8 @@ before_script:
     - sed -i "s/yourusernamehere/root/" tmp/wordpress-tests/wp-tests-config.php
     - sed -i "s/yourpasswordhere//" tmp/wordpress-tests/wp-tests-config.php
     - mysql -e 'CREATE DATABASE wordpress_test;' -uroot
-
+    - wget http://getcomposer.org/composer.phar
+    - php composer.phar install --dev --no-interaction --prefer-source
 script:
     - mkdir -p build/logs
     - phpunit -c phpunit.xml --coverage-clover build/logs/clover.xml
