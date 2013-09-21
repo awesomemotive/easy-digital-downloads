@@ -1,6 +1,6 @@
 <?php
-use \EDD_Stats;
 namespace EDD_Unit_Tests;
+use \EDD_Stats;
 
 /**
  * @group edd_stats
