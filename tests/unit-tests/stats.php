@@ -28,8 +28,8 @@ class Tests_Stats extends EDD_UnitTestCase {
 	public function test_predefined_date_ranges() {
 		$this->_stats = new EDD_Stats();
 		//$this->_payment_stats = new EDD_Payment_Stats;
-		$out = $this->_stats->get_predefined_dates();
-
+	//	$out = $this->_stats->get_predefined_dates();
+$out = array();
 		$expected = array(
 			'today'        => 'Today',
 			'yesterday'    => 'Yesterday',
