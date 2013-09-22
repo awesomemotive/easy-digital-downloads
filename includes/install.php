@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Runs on plugin install by setting up the post types, custom taxonomies,
  * flushing rewrite rules to initiate the new 'downloads' slug and also
  * creates the plugin and populates the settings fields for those plugin
- * pages. After successfull install, the user is redirected to the EDD Welcome
+ * pages. After successful install, the user is redirected to the EDD Welcome
  * screen.
  *
  * @since 1.0
@@ -103,8 +103,11 @@ function edd_install() {
 			'failure_page'  => $failed
 		);
 
-		update_option( 'edd_settings_general', $options );
+		update_option( 'edd_settings', $options );
 		update_option( 'edd_version', EDD_VERSION );
+
+		// Create wp-content/uploads/edd/ foloder and the .htaccess file
+		edd_create_protection_files( true );
 
 		// Add a temporary option to note that EDD pages have been created
 		$activation_pages = array_merge( $options, array( 'history_page' => $history ) );

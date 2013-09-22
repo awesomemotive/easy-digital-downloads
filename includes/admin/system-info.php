@@ -41,6 +41,12 @@ function edd_system_info() {
 		$theme_data = wp_get_theme();
 		$theme      = $theme_data->Name . ' ' . $theme_data->Version;
 	}
+
+	// Try to identifty the hosting provider
+	$host = false;
+	if( defined( 'WPE_APIKEY' ) ) {
+		$host = 'WP Engine';
+	}
 ?>
 	<div class="wrap">
 		<h2><?php _e( 'System Information', 'edd' ) ?></h2><br/>
@@ -62,6 +68,9 @@ Upgraded From:            <?php echo get_option( 'edd_version_upgraded_from', 'N
 WordPress Version:        <?php echo get_bloginfo( 'version' ) . "\n"; ?>
 Permalink Structure:      <?php echo get_option( 'permalink_structure' ) . "\n"; ?>
 Active Theme:             <?php echo $theme . "\n"; ?>
+<?php if( $host ) : ?>
+Host:                     <?php echo $host . "\n"; ?>
+<?php endif; ?>
 
 Test Mode Enabled:        <?php echo edd_is_test_mode() ? "Yes\n" : "No\n"; ?>
 Ajax Enabled:             <?php echo edd_is_ajax_enabled() ? "Yes\n" : "No\n"; ?>
@@ -76,6 +85,16 @@ Downloads slug:           <?php echo defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG . "\
 
 Taxes Enabled:            <?php echo edd_use_taxes() ? "Yes\n" : "No\n"; ?>
 Taxes After Discounts:    <?php echo edd_taxes_after_discounts() ? "Yes\n" : "No\n"; ?>
+Tax Rate:                 <?php echo edd_get_tax_rate() * 100; ?>%
+Country / State Rates:    <?php
+
+$rates = edd_get_tax_rates();
+if( ! empty( $rates ) ) {
+	foreach( $rates as $rate ) {
+		echo 'Country: ' . $rate['country'] . ', State: ' . $rate['state'] . ', Rate: ' . $rate['rate'] . ' | ';
+	}
+}
+?>
 
 Registered Post Stati:    <?php echo implode( ', ', get_post_stati() ) . "\n\n"; ?>
 
@@ -140,8 +159,13 @@ TEMPLATES:
 <?php
 // Show templates that have been copied to the theme's edd_templates dir
 $dir = get_stylesheet_directory() . '/edd_templates/*';
-foreach ( glob( $dir ) as $file ) {
-	echo "Filename: " . basename( $file ) . "\n";
+if (!empty($dir)){
+	foreach ( glob( $dir ) as $file ) {
+		echo "Filename: " . basename( $file ) . "\n";
+	}
+}
+else {
+	echo 'No overrides found';
 }
 ?>
 

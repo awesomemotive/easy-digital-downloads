@@ -21,8 +21,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_get_payment_gateways() {
 	// Default, built-in gateways
 	$gateways = array(
-		'paypal' => array( 'admin_label' => __( 'PayPal Standard', 'edd' ), 'checkout_label' => __( 'PayPal', 'edd' ) ),
-		'manual' => array( 'admin_label' => __( 'Test Payment', 'edd' ), 'checkout_label' => __( 'Test Payment', 'edd' ) ),
+		'paypal' => array(
+			'admin_label'    => __( 'PayPal Standard', 'edd' ),
+			'checkout_label' => __( 'PayPal', 'edd' ),
+			'supports'       => array( 'buy_now' )
+		),
+		'manual' => array(
+			'admin_label'    => __( 'Test Payment', 'edd' ),
+			'checkout_label' => __( 'Test Payment', 'edd' )
+		),
 	);
 
 	return apply_filters( 'edd_payment_gateways', $gateways );
@@ -105,6 +112,53 @@ function edd_get_gateway_checkout_label( $gateway ) {
 }
 
 /**
+ * Returns the options a gateway supports
+ *
+ * @since 1.8
+ * @param string $gateway ID of the gateway to retrieve a label for
+ * @return array Options the gateway supports
+ */
+function edd_get_gateway_supports( $gateway ) {
+	$gateways = edd_get_enabled_payment_gateways();
+	return isset( $gateways[ $gateway ]['supports'] ) ? $gateways[ $gateway ]['supports'] : array();
+}
+
+/**
+ * Checks if a gateway supports buy now
+ *
+ * @since 1.8
+ * @param string $gateway ID of the gateway to retrieve a label for
+ * @return bool
+ */
+function edd_gateway_supports_buy_now( $gateway ) {
+	$supports = edd_get_gateway_supports( $gateway );
+	$ret = in_array( 'buy_now', $supports );
+	return apply_filters( 'edd_gateway_supports_buy_now', $ret, $gateway );
+}
+
+/**
+ * Checks if an enabled gateway supports buy now
+ *
+ * @since 1.8
+ * @return bool
+ */
+function edd_shop_supports_buy_now() {
+	$gateways = edd_get_enabled_payment_gateways();
+	$ret      = false;
+
+	if( $gateways ) {
+		foreach( $gateways as $gateway_id => $gateway ) {
+			if( edd_gateway_supports_buy_now( $gateway_id ) ) {
+				$ret = true;
+				break;
+			}
+		}
+	}
+
+	return apply_filters( 'edd_shop_supports_buy_now', $ret );
+}
+
+/**
  * Build the purchase data for a straight-to-gateway purchase button
  *
  * @since 1.7
@@ -112,13 +166,13 @@ function edd_get_gateway_checkout_label( $gateway ) {
  */
 function edd_build_straight_to_gateway_data( $download_id = 0, $options = array() ) {
 
+	$price_options = array();
 	if( empty( $options ) || ! edd_has_variable_prices( $download_id ) ) {
 		$price = edd_get_download_price( $download_id );
 	} else {
-		$price_options = array();
 		foreach ( $options['price_id'] as $price_id ) {
 			$prices = edd_get_variable_prices( $download_id );
-			$price_options[] = array(
+			$price_options = array(
 				'price_id' => $price_id,
 				'amount'   => $prices[ $price_id ]['amount']
 			);

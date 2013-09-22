@@ -60,7 +60,9 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	// Allow add-ons to add file attachments
 	$attachments = apply_filters( 'edd_receipt_attachments', array(), $payment_id, $payment_data );
 
-	wp_mail( $email, $subject, $message, $headers, $attachments );
+	if ( apply_filters( 'edd_email_purchase_receipt', true ) ) {
+		wp_mail( $email, $subject, $message, $headers, $attachments );
+	}
 
 	if ( $admin_notice && ! edd_admin_notices_disabled( $payment_id ) ) {
 		do_action( 'edd_admin_sale_notice', $payment_id, $payment_data );
@@ -85,7 +87,7 @@ function edd_email_test_purchase_receipt() {
 	$email = isset( $edd_options['purchase_receipt'] ) ? $edd_options['purchase_receipt'] : $default_email_body;
 
 	$message = edd_get_email_body_header();
-	$message .= apply_filters( 'edd_purchase_receipt', edd_email_preview_templage_tags( $email ), 0, array() );
+	$message .= apply_filters( 'edd_purchase_receipt', edd_email_preview_template_tags( $email ), 0, array() );
 	$message .= edd_get_email_body_footer();
 
 	$from_name = isset( $edd_options['from_name'] ) ? $edd_options['from_name'] : get_bloginfo('name');
@@ -204,7 +206,8 @@ function edd_get_purchase_receipt_template_tags() {
 		'{name} - ' . __('The buyer\'s first name', 'edd') . '<br/>' .
 		'{fullname} - ' . __('The buyer\'s full name, first and last', 'edd') . '<br/>' .
 		'{username} - ' . __('The buyer\'s user name on the site, if they registered an account', 'edd') . '<br/>' .
-		'{user_email} - ' . __('The buyer\'s email address', 'edd') . '<br/>' .
+        '{user_email} - ' . __('The buyer\'s email address', 'edd') . '<br/>' .
+		'{billing_address} - ' . __('The buyer\'s billing address', 'edd') . '<br/>' .
 		'{date} - ' . __('The date of the purchase', 'edd') . '<br/>' .
 		'{subtotal} - ' . __('The price of the purchase before taxes', 'edd') . '<br/>' .
 		'{tax} - ' . __('The taxed amount of the purchase', 'edd') . '<br/>' .
@@ -236,6 +239,7 @@ function edd_get_sale_notification_template_tags() {
 		'{fullname} - ' . __('The buyer\'s full name, first and last', 'edd') . '<br/>' .
 		'{username} - ' . __('The buyer\'s user name on the site, if they registered an account', 'edd') . '<br/>' .
 		'{user_email} - ' . __('The buyer\'s email address', 'edd') . '<br/>' .
+		'{billing_address} - ' . __('The buyer\'s billing address', 'edd') . '<br/>' .
 		'{date} - ' . __('The date of the purchase', 'edd') . '<br/>' .
 		'{subtotal} - ' . __('The price of the purchase before taxes', 'edd') . '<br/>' .
 		'{tax} - ' . __('The taxed amount of the purchase', 'edd') . '<br/>' .

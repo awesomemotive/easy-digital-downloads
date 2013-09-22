@@ -21,15 +21,21 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_add_download_meta_box() {
-	/** Download Configuration */
-	add_meta_box( 'downloadinformation', sprintf( __( '%1$s Configuration', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ),  'edd_render_download_meta_box', 'download', 'normal', 'default' );
 
-	/** Product Notes */
-	add_meta_box( 'edd_product_notes', __( 'Product Notes', 'edd' ), 'edd_render_product_notes_meta_box', 'download', 'normal', 'default' );
+	$post_types = apply_filters( 'edd_download_metabox_post_types' , array( 'download' ) );
 
-	if ( current_user_can( 'view_shop_reports' ) || current_user_can( 'edit_product', get_the_ID() ) ) {
-		/** Download Stats */
-		add_meta_box( 'edd_download_stats', sprintf( __( '%1$s Stats', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', 'download', 'side', 'high' );
+	foreach ( $post_types as $post_type ) {
+
+		/** Download Configuration */
+		add_meta_box( 'downloadinformation', sprintf( __( '%1$s Configuration', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ),  'edd_render_download_meta_box', $post_type, 'normal', 'default' );
+
+		/** Product Notes */
+		add_meta_box( 'edd_product_notes', __( 'Product Notes', 'edd' ), 'edd_render_product_notes_meta_box', $post_type, 'normal', 'default' );
+
+		if ( current_user_can( 'view_shop_reports' ) || current_user_can( 'edit_product', get_the_ID() ) ) {
+			/** Download Stats */
+			add_meta_box( 'edd_download_stats', sprintf( __( '%1$s Stats', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', $post_type, 'side', 'high' );
+		}
 	}
 }
 add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
@@ -48,14 +54,14 @@ function edd_download_meta_box_save( $post_id) {
 	if ( ! isset( $_POST['edd_download_meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['edd_download_meta_box_nonce'], basename( __FILE__ ) ) )
 		return $post_id;
 
-	if ( ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) || ( defined( 'DOING_AJAX') && DOING_AJAX ) || isset( $_REQUEST['bulk_edit'] ) ) return $post_id;
+	if ( ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) || ( defined( 'DOING_AJAX') && DOING_AJAX ) || isset( $_REQUEST['bulk_edit'] ) )
+		return $post_id;
 
 	if ( isset( $post->post_type ) && $post->post_type == 'revision' )
 		return $post_id;
 
-	if ( ! current_user_can( 'edit_product', $post_id ) ) {
+	if ( ! current_user_can( 'edit_product', $post_id ) )
 		return $post_id;
-	}
 
 	// The default fields that get saved
 	$fields = apply_filters( 'edd_metabox_fields_save', array(
@@ -81,15 +87,8 @@ function edd_download_meta_box_save( $post_id) {
 	}
 
 	foreach ( $fields as $field ) {
-		if ( isset( $_POST[ $field ] ) ) {
-			if ( is_string( $_POST[ $field ] ) ) {
-				$new = esc_attr( $_POST[ $field ] );
-			} else {
-				$new = $_POST[ $field ];
-			}
-
-			$new = apply_filters( 'edd_metabox_save_' . $field, $new );
-
+		if ( ! empty( $_POST[ $field ] ) ) {
+			$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
 			update_post_meta( $post_id, $field, $new );
 		} else {
 			delete_post_meta( $post_id, $field );
@@ -334,19 +333,23 @@ function edd_render_price_row( $key, $args = array(), $post_id ) {
 }
 add_action( 'edd_render_price_row', 'edd_render_price_row', 10, 3 );
 
-
+/**
+ * Product type options
+ *
+ * @access      private
+ * @since       1.6
+ * @return      void
+ */
 function edd_render_product_type_field( $post_id = 0 ) {
 
-	$type = edd_get_download_type( $post_id );
+	$types = edd_get_download_types();
+	$type  = edd_get_download_type( $post_id );
 ?>
 	<p>
 		<strong><?php apply_filters( 'edd_product_type_options_heading', _e( 'Product Type Options:', 'edd' ) ); ?></strong>
 	</p>
 	<p>
-		<select name="_edd_product_type" id="edd_product_type">
-			<option value="0"><?php _e( 'Default', 'edd' ); ?></option>
-			<option value="bundle"<?php selected( 'bundle', $type ); ?>><?php _e( 'Bundle', 'edd' ); ?></option>
-		</select>
+		<?php echo EDD()->html->select( array( 'options' => $types, 'name' => '_edd_product_type', 'selected' => $type, 'show_option_all' => false, 'show_option_none' => false ) ); ?>
 		<label for="edd_product_type"><?php _e( 'Select a product type', 'edd' ); ?></label>
 	</p>
 <?php
@@ -644,6 +647,7 @@ function edd_render_disable_button( $post_id ) {
 			<?php _e( 'Disable the automatic output of the purchase button', 'edd' ); ?>
 		</label>
 	</p>
+	<?php if( edd_shop_supports_buy_now() ) : ?>
 	<p>
 		<label for="_edd_button_behavior">
 			<select name="_edd_button_behavior" id="_edd_button_behavior" >
@@ -654,6 +658,7 @@ function edd_render_disable_button( $post_id ) {
 		</label>
 	</p>
 <?php
+	endif;
 }
 add_action( 'edd_meta_box_fields', 'edd_render_disable_button', 30 );
 

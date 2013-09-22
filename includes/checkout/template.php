@@ -59,7 +59,7 @@ function edd_checkout_form() {
 
 /**
  * Renders the Purchase Form, hooks are provided to add to the purchase form.
- * The default Purchase Form rendered deisplays a list of the enabled payment
+ * The default Purchase Form rendered displays a list of the enabled payment
  * gateways, a user registration form (if enable) and a credit card info form
  * if credit cards are enabled
  *
@@ -183,42 +183,42 @@ function edd_get_cc_form() {
 			</div>
 		<?php endif; ?>
 		<p id="edd-card-number-wrap">
-			<label class="edd-label">
+			<label for="card_number" class="edd-label">
 				<?php _e( 'Card Number', 'edd' ); ?>
 				<span class="edd-required-indicator">*</span>
 				<span class="card-type"></span>
 			</label>
 			<span class="edd-description"><?php _e( 'The (typically) 16 digits on the front of your credit card.', 'edd' ); ?></span>
-			<input type="text" autocomplete="off" name="card_number" class="card-number edd-input required" placeholder="<?php _e( 'Card number', 'edd' ); ?>" />
+			<input type="text" autocomplete="off" name="card_number" id="card_number" class="card-number edd-input required" placeholder="<?php _e( 'Card number', 'edd' ); ?>" />
 		</p>
 		<p id="edd-card-cvc-wrap">
-			<label class="edd-label">
+			<label for="card_cvc" class="edd-label">
 				<?php _e( 'CVC', 'edd' ); ?>
 				<span class="edd-required-indicator">*</span>
 			</label>
 			<span class="edd-description"><?php _e( 'The 3 digit (back) or 4 digit (front) value on your card.', 'edd' ); ?></span>
-			<input type="text" size="4" autocomplete="off" name="card_cvc" class="card-cvc edd-input required" placeholder="<?php _e( 'Security code', 'edd' ); ?>" />
+			<input type="text" size="4" autocomplete="off" name="card_cvc" id="card_cvc" class="card-cvc edd-input required" placeholder="<?php _e( 'Security code', 'edd' ); ?>" />
 		</p>
 		<p id="edd-card-name-wrap">
-			<label class="edd-label">
+			<label for="card_name" class="edd-label">
 				<?php _e( 'Name on the Card', 'edd' ); ?>
 				<span class="edd-required-indicator">*</span>
 			</label>
 			<span class="edd-description"><?php _e( 'The name printed on the front of your credit card.', 'edd' ); ?></span>
-			<input type="text" autocomplete="off" name="card_name" class="card-name edd-input required" placeholder="<?php _e( 'Card name', 'edd' ); ?>" />
+			<input type="text" autocomplete="off" name="card_name" id="card_name" class="card-name edd-input required" placeholder="<?php _e( 'Card name', 'edd' ); ?>" />
 		</p>
 		<?php do_action( 'edd_before_cc_expiration' ); ?>
 		<p class="card-expiration">
-			<label class="edd-label">
+			<label for="card_exp_month" class="edd-label">
 				<?php _e( 'Expiration (MM/YY)', 'edd' ); ?>
 				<span class="edd-required-indicator">*</span>
 			</label>
 			<span class="edd-description"><?php _e( 'The date your credit card expires, typically on the front of the card.', 'edd' ); ?></span>
-			<select name="card_exp_month" class="card-expiry-month edd-select edd-select-small required">
+			<select id="card_exp_month" name="card_exp_month" class="card-expiry-month edd-select edd-select-small required">
 				<?php for( $i = 1; $i <= 12; $i++ ) { echo '<option value="' . $i . '">' . sprintf ('%02d', $i ) . '</option>'; } ?>
 			</select>
 			<span class="exp-divider"> / </span>
-			<select name="card_exp_year" class="card-expiry-year edd-select edd-select-small required">
+			<select id="card_exp_year" name="card_exp_year" class="card-expiry-year edd-select edd-select-small required">
 				<?php for( $i = date('Y'); $i <= date('Y') + 10; $i++ ) { echo '<option value="' . $i . '">' . substr( $i, 2 ) . '</option>'; } ?>
 			</select>
 		</p>
@@ -254,29 +254,29 @@ function edd_default_cc_address_fields() {
 		<span><legend><?php _e( 'Billing Details', 'edd' ); ?></legend></span>
 		<?php do_action( 'edd_cc_billing_top' ); ?>
 		<p id="edd-card-address-wrap">
-			<label class="edd-label"><?php _e( 'Billing Address', 'edd' ); ?></label>
+			<label for="card_address" class="edd-label"><?php _e( 'Billing Address', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The primary billing address for your credit card.', 'edd' ); ?></span>
-			<input type="text" name="card_address" class="card-address edd-input required" placeholder="<?php _e( 'Address line 1', 'edd' ); ?>" value="<?php echo $line1; ?>"/>
+			<input type="text" id="card_address" name="card_address" class="card-address edd-input required" placeholder="<?php _e( 'Address line 1', 'edd' ); ?>" value="<?php echo $line1; ?>"/>
 		</p>
 		<p id="edd-card-address-2-wrap">
-			<label class="edd-label"><?php _e( 'Billing Address Line 2 (optional)', 'edd' ); ?></label>
+			<label for="card_address_2" class="edd-label"><?php _e( 'Billing Address Line 2 (optional)', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The suite, apt no, PO box, etc, associated with your billing address.', 'edd' ); ?></span>
-			<input type="text" name="card_address_2" class="card-address-2 edd-input" placeholder="<?php _e( 'Address line 2', 'edd' ); ?>" value="<?php echo $line2; ?>"/>
+			<input type="text" id="card_address_2" name="card_address_2" class="card-address-2 edd-input" placeholder="<?php _e( 'Address line 2', 'edd' ); ?>" value="<?php echo $line2; ?>"/>
 		</p>
 		<p id="edd-card-city-wrap">
-			<label class="edd-label"><?php _e( 'Billing City', 'edd' ); ?></label>
+			<label for="card_city" class="edd-label"><?php _e( 'Billing City', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The city for your billing address.', 'edd' ); ?></span>
-			<input type="text" name="card_city" class="card-city edd-input required" placeholder="<?php _e( 'City', 'edd' ); ?>" value="<?php echo $city; ?>"/>
+			<input type="text" id="card_city" name="card_city" class="card-city edd-input required" placeholder="<?php _e( 'City', 'edd' ); ?>" value="<?php echo $city; ?>"/>
 		</p>
 		<p id="edd-card-zip-wrap">
-			<label class="edd-label"><?php _e( 'Billing Zip / Postal Code', 'edd' ); ?></label>
+			<label for="card_zip" class="edd-label"><?php _e( 'Billing Zip / Postal Code', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The zip or postal code for your billing address.', 'edd' ); ?></span>
-			<input type="text" size="4" name="card_zip" class="card-zip edd-input required" placeholder="<?php _e( 'Zip / Postal code', 'edd' ); ?>"/>
+			<input type="text" size="4" name="card_zip" class="card-zip edd-input required" placeholder="<?php _e( 'Zip / Postal code', 'edd' ); ?>" value="<?php echo $zip; ?>"/>
 		</p>
 		<p id="edd-card-country-wrap">
-			<label class="edd-label"><?php _e( 'Billing Country', 'edd' ); ?></label>
+			<label for="billing_country" class="edd-label"><?php _e( 'Billing Country', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The country for your billing address.', 'edd' ); ?></span>
-			<select name="billing_country" id="billing_country" class="billing_country edd-select required">
+			<select id="billing_country" name="billing_country" id="billing_country" class="billing_country edd-select required">
 				<?php
 
 				$selected_country = edd_get_shop_country();
@@ -293,7 +293,7 @@ function edd_default_cc_address_fields() {
 			</select>
 		</p>
 		<p id="edd-card-state-wrap">
-			<label class="edd-label"><?php _e( 'Billing State / Province', 'edd' ); ?></label>
+			<label for="card_state" class="edd-label"><?php _e( 'Billing State / Province', 'edd' ); ?></label>
 			<span class="edd-description"><?php _e( 'The state or province for your billing address.', 'edd' ); ?></span>
             <?php
             $selected_state = edd_get_shop_state();
@@ -304,7 +304,7 @@ function edd_default_cc_address_fields() {
 			}
 
             if( ! empty( $states ) ) : ?>
-            <select name="card_state" id="card_state" class="card_state edd-select required">
+            <select id="card_state" name="card_state" id="card_state" class="card_state edd-select required">
                 <?php
                     foreach( $states as $state_code => $state ) {
                         echo '<option value="' . $state_code . '"' . selected( $state_code, $selected_state, false ) . '>' . $state . '</option>';
@@ -517,7 +517,7 @@ add_action( 'edd_payment_mode_select', 'edd_payment_mode_select' );
 
 /**
  * Show Payment Icons by getting all the accepted icons from the EDD Settings
- * then ouputting the icons.
+ * then outputting the icons.
  *
  * @since 1.0
  * @global $edd_options Array of all the EDD Options
@@ -535,7 +535,9 @@ function edd_show_payment_icons() {
 			if( edd_string_is_image_url( $key ) ) {
 				echo '<img class="payment-icon" src="' . $key . '"/>';
 			} else {
-				echo '<img class="payment-icon" src="' . EDD_PLUGIN_URL . 'assets/images/icons/' . strtolower( str_replace( ' ', '', $card ) ) . '.gif"/>';
+				$image = edd_locate_template( 'images/icons/' . strtolower( str_replace( ' ', '', $card ) ) . '.gif', false );
+				$image = str_replace( ABSPATH, home_url( '/' ), $image );
+				echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
 			}
 		}
 		echo '</div>';
@@ -581,7 +583,7 @@ add_action( 'edd_checkout_form_top', 'edd_discount_field', -1 );
 /**
  * Renders the Checkout Agree to Terms, this displays a checkbox for users to
  * agree the T&Cs set in the EDD Settings. This is only displayed if T&Cs are
- * set in the EDD Settigs.
+ * set in the EDD Settings.
  *
  * @since 1.3.2
  * @global $edd_options Array of all the EDD Options
@@ -609,7 +611,7 @@ function edd_terms_agreement() {
 <?php
 	}
 }
-add_action( 'edd_purchase_form_after_cc_form', 'edd_terms_agreement', 999 );
+add_action( 'edd_purchase_form_before_submit', 'edd_terms_agreement' );
 
 /**
  * Shows the final purchase total at the bottom of the checkout page

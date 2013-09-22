@@ -24,20 +24,20 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_login_form( $redirect = '' ) {
 	global $edd_options, $post;
 
-	if ( $redirect == '' ) {
+	if ( empty( $redirect ) ) {
 		$redirect = edd_get_current_page_url();
 	}
 
 	ob_start();
 
-	if ( ! is_user_logged_in() ) { ?>
-		<?php
+	if ( ! is_user_logged_in() ) {
+
 		// Show any error messages after form submission
 		edd_print_errors(); ?>
-		<form id="edd_login_form"  class="edd_form" action="" method="post">
+		<form id="edd_login_form" class="edd_form" action="" method="post">
 			<fieldset>
-				<legend><?php _e( 'Log into Your Account', 'edd' ); ?></legend>
-				<?php do_action('edd_checkout_login_fields_before');?>
+				<span><legend><?php _e( 'Log into Your Account', 'edd' ); ?></legend></span>
+				<?php do_action( 'edd_login_fields_before' ); ?>
 				<p>
 					<label for="edd_user_Login"><?php _e( 'Username', 'edd' ); ?></label>
 					<input name="edd_user_login" id="edd_user_login" class="required" type="text" title="<?php _e( 'Username', 'edd' ); ?>"/>
@@ -57,14 +57,14 @@ function edd_login_form( $redirect = '' ) {
 						<?php _e( 'Lost Password?', 'edd' ); ?>
 					</a>
 				</p>
-				<?php do_action( 'edd_checkout_login_fields_after' );?>
+				<?php do_action( 'edd_login_fields_after' ); ?>
 			</fieldset>
 		</form>
 	<?php
 	} else {
 		echo '<p class="edd-logged-in">' . __( 'You are already logged in', 'edd' ) . '</p>';
 	}
-	return ob_get_clean();
+	return apply_filters( 'edd_login_form', ob_get_clean() );
 }
 
 /**
@@ -83,10 +83,10 @@ function edd_process_login_form( $data ) {
 			if ( wp_check_password( $data['edd_user_pass'], $user_data->user_pass, $user_data->ID ) ) {
 				edd_log_user_in( $user_data->ID, $data['edd_user_login'], $data['edd_user_pass'] );
 			} else {
-				edd_set_error( 'password_incorrect', __('The password you entered is incorrect', 'edd' ) );
+				edd_set_error( 'password_incorrect', __( 'The password you entered is incorrect', 'edd' ) );
 			}
 		} else {
-			edd_set_error( 'username_incorrect', __('The username you entered does not exist', 'edd' ) );
+			edd_set_error( 'username_incorrect', __( 'The username you entered does not exist', 'edd' ) );
 		}
 		// Check for errors and redirect if none present
 		$errors = edd_get_errors();
