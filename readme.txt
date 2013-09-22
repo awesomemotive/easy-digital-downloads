@@ -227,6 +227,8 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: AJAX loading indicator breaks if edd.css is moved to edd_templates folder
 * Fix: negative Fees (discounts) don't respect "Taxes after discounts"
 * Fix: [downloads] pagination doesn't work on non hierarchical single post types
+* Fix: stripslashes on discount code name fields
+* Fix: incorrect label for "Deactivate" in Discount Codes
 
 * Tweak: small improvements to checkout UI
 * Tweak: some settings callbacks not using size argument
