@@ -130,7 +130,7 @@ add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_sanitize_variable_price
  * @param array $products
  * @return array
  */
-function edd_sanitize_bundled_products_save( array $products = array() ) {
+function edd_sanitize_bundled_products_save( $products = array() ) {
 
 	global $post;
 

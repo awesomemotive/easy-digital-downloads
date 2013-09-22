@@ -765,7 +765,7 @@ class EDD_API {
 	 *
 	 * @return array
 	 */
-	public function get_stats( array $args = array() ) {
+	public function get_stats( $args = array() ) {
 		$defaults = array(
 			'type'      => null,
 			'product'   => null,

@@ -344,7 +344,7 @@ function edd_get_price_name( $item_id, array $options = array() ) {
  * @param array $item Cart item array
  * @return int Price id
  */
-function edd_get_cart_item_price_id( array $item = array() ) {
+function edd_get_cart_item_price_id( $item = array() ) {
 	return isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
 }
 
