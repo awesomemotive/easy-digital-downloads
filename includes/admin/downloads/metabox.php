@@ -292,7 +292,7 @@ add_action( 'edd_meta_box_fields', 'edd_render_price_field', 10 );
  * @param array $args
  * @param       $post_id
  */
-function edd_render_price_row( $key, array $args = array(), $post_id ) {
+function edd_render_price_row( $key, $args = array(), $post_id ) {
 	global $edd_options;
 
 	$defaults = array(
