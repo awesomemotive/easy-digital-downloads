@@ -97,8 +97,10 @@ function edd_get_file_download_log( $download_id, $paginate = false, $number = 1
  *
  * @since 1.0
  * @deprecated 1.4
- * @param int $payment_id ID number of the purchase
- * @return mixed array if purchase exists, false otherwise
+ *
+ * @param int  $payment_id ID number of the purchase
+ * @param null $payment_meta
+ * @return bool|mixed
  */
 function edd_get_downloads_of_purchase( $payment_id, $payment_meta = null ) {
 	$backtrace = debug_backtrace();

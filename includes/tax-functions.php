@@ -70,13 +70,15 @@ function edd_get_tax_rates() {
 	return apply_filters( 'edd_get_tax_rates', $rates );
 }
 
-
 /**
  * Get taxation rate
  *
  * @since 1.3.3
  * @global $edd_options
- * @return float $rate Taxation rate
+ *
+ * @param bool $country
+ * @param bool $state
+ * @return mixed|void
  */
 function edd_get_tax_rate( $country = false, $state = false ) {
 	global $edd_options;
