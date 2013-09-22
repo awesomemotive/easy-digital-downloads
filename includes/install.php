@@ -106,6 +106,9 @@ function edd_install() {
 		update_option( 'edd_settings', $options );
 		update_option( 'edd_version', EDD_VERSION );
 
+		// Create wp-content/uploads/edd/ foloder and the .htaccess file
+		edd_create_protection_files( true );
+
 		// Add a temporary option to note that EDD pages have been created
 		$activation_pages = array_merge( $options, array( 'history_page' => $history ) );
 		set_transient( '_edd_activation_pages', $activation_pages, 30 );
