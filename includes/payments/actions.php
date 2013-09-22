@@ -243,10 +243,10 @@ add_action( 'edd_insert_payment', 'edd_clear_earnings_cache', 10, 2 );
  * is updated
  *
  * @since 1.2.2
- * @param int $payment Payment ID
- * @param string $new_status the status of the payment, probably "publish"
- * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
- * @return void
+ *
+ * @param $payment_id
+ * @param $new_status the status of the payment, probably "publish"
+ * @param $old_status the status of the payment prior to being marked as "complete", probably "pending"
  */
 function edd_clear_user_history_cache( $payment_id, $new_status, $old_status ) {
 	$user_info = edd_get_payment_meta_user_info( $payment_id );

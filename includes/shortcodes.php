@@ -511,10 +511,12 @@ add_shortcode( 'edd_receipt', 'edd_receipt_shortcode' );
  * templating system is used.
  *
  * @since 1.4
+ *
  * @author Sunny Ratilal
- * @param array $atts Shortcode attributes
- * @param string $content
- * @return $display Output generated from the profile editor
+ *
+ * @param      $atts Shortcode attributes
+ * @param null $content
+ * @return string Output generated from the profile editor
  */
 function edd_profile_editor_shortcode( $atts, $content = null ) {
 	ob_start();

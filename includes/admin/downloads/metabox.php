@@ -126,15 +126,15 @@ function edd_sanitize_variable_prices_save( $prices ) {
 }
 add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_sanitize_variable_prices_save' );
 
-
 /**
  * Sanitize bundled products on save
  *
  * Ensures a user doesn't try and include a product's ID in the products bundled with that product
  *
- * @access      private
  * @since       1.6
- * @return      array
+ *
+ * @param array $products
+ * @return array
  */
 function edd_sanitize_bundled_products_save( $products = array() ) {
 
@@ -184,7 +184,6 @@ function edd_render_download_meta_box() {
 	wp_nonce_field( basename( __FILE__ ), 'edd_download_meta_box_nonce' );
 }
 
-
 /**
  * Price Section
  *
@@ -195,8 +194,10 @@ function edd_render_download_meta_box() {
  * hook, and actual columns via `edd_download_file_table_row`
  *
  * @since 1.0
+ *
  * @see edd_render_price_row()
- * @return void
+ *
+ * @param $post_id
  */
 function edd_render_price_field( $post_id ) {
 	global $edd_options;
@@ -292,7 +293,10 @@ add_action( 'edd_meta_box_fields', 'edd_render_price_field', 10 );
  * Can be called directly, or attached to an action.
  *
  * @since 1.2.2
- * @return void
+ *
+ * @param       $key
+ * @param array $args
+ * @param       $post_id
  */
 function edd_render_price_row( $key, $args = array(), $post_id ) {
 	global $edd_options;
@@ -356,12 +360,11 @@ function edd_render_product_type_field( $post_id = 0 ) {
 }
 add_action( 'edd_meta_box_fields', 'edd_render_product_type_field', 10 );
 
-
 /**
+ * Renders product field
+ * @since 1.6
  *
- * @access      private
- * @since       1.6
- * @return      void
+ * @param $post_id
  */
 function edd_render_products_field( $post_id ) {
 	$type     = edd_get_download_type( $post_id );
@@ -414,9 +417,9 @@ add_action( 'edd_meta_box_fields', 'edd_render_products_field', 10 );
 /**
  * TODO Update doc
  *
- * @access      private
  * @since       1.6
- * @return      void
+ * @param int $product_id
+ * @param     $post_id
  */
 function edd_render_product_row( $product_id = 0, $post_id ) {
 

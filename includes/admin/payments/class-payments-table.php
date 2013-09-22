@@ -101,11 +101,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	/**
 	 * Get things started
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @uses EDD_Payment_History_Table::get_payment_counts()
 	 * @see WP_List_Table::__construct()
-	 * @return void
 	 */
 	public function __construct() {
 

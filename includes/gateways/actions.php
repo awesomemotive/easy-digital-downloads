@@ -16,7 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Processes gateway select on checkout. Only for users without ajax / javascript
  *
  * @since 1.7
- * @return void
+ *
+ * @param $data
  */
 function edd_process_gateway_select( $data ) {
 	if( isset( $_POST['gateway_submit'] ) ) {
