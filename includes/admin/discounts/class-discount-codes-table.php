@@ -210,7 +210,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $discount );
 
-		return $item['name'] . $this->row_actions( $row_actions );
+		return stripslashes( $item['name'] ) . $this->row_actions( $row_actions );
 	}
 
 	/**
