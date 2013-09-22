@@ -129,7 +129,7 @@ function edd_remove_from_cart( $cart_key ) {
  * @param array $options
  * @return bool Item in the cart or not?
  */
-function edd_item_in_cart( $download_id = 0, array $options = array() ) {
+function edd_item_in_cart( $download_id = 0, $options = array() ) {
 	$cart_items = edd_get_cart_contents();
 
 	$ret = false;
@@ -162,7 +162,7 @@ function edd_item_in_cart( $download_id = 0, array $options = array() ) {
  * @param array $options array of price options
  * @return bool|int|string false if empty cart |  position of the item in the cart
  */
-function edd_get_item_position_in_cart( $download_id = 0, array $options = array() ) {
+function edd_get_item_position_in_cart( $download_id = 0, $options = array() ) {
 	$cart_items = edd_get_cart_contents();
 	if ( ! is_array( $cart_items ) ) {
 		return false; // Empty cart
@@ -205,7 +205,7 @@ function edd_item_quanities_enabled() {
  * @param array $options Download options, such as price ID
  * @return mixed New Cart array
  */
-function edd_set_cart_item_quantity( $download_id = 0, $quantity = 1, array $options = array() ) {
+function edd_set_cart_item_quantity( $download_id = 0, $quantity = 1, $options = array() ) {
 	$cart = edd_get_cart_contents();
 	$key  = edd_get_item_position_in_cart( $download_id, $options );
 
@@ -279,7 +279,7 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  * @param bool  $taxed
  * @return mixed|void Price for this item
  */
-function edd_get_cart_item_price( $item_id, array $options = array(), $taxed = true ) {
+function edd_get_cart_item_price( $item_id, $options = array(), $taxed = true ) {
 	global $edd_options;
 
 	$price = edd_get_download_price( $item_id );
@@ -320,7 +320,7 @@ function edd_get_cart_item_price( $item_id, array $options = array(), $taxed = t
  * @param array $options Optional parameters, used for defining variable prices
  * @return mixed|void Name of the price option
  */
-function edd_get_price_name( $item_id, array $options = array() ) {
+function edd_get_price_name( $item_id, $options = array() ) {
 	$return = false;
 	$variable_pricing = get_post_meta($item_id, '_variable_pricing', true);
 	if( $variable_pricing && !empty( $options ) ) {
