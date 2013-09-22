@@ -190,7 +190,7 @@ class EDD_HTML_Elements {
 	 *
 	 * @return string
 	 */
-	public function select( array $args = array() ) {
+	public function select( $args = array() ) {
 		$defaults = array(
 			'options'          => array(),
 			'name'             => null,

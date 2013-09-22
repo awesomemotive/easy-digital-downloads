@@ -36,7 +36,7 @@ class EDD_Cron {
 	 * @param array $schedules
 	 * @return array
 	 */
-	public function add_schedules( array $schedules = array() ) {
+	public function add_schedules( $schedules = array() ) {
 		// Adds once weekly to the existing schedules.
 		$schedules['weekly'] = array(
 			'interval' => 604800,
