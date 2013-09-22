@@ -241,6 +241,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: added a column class to the [downloads] short code
 * Tweak: added SPAN tags around checkoug LEGEND tags
 * Tweak: automatically update file price conditions when new price options are added
+* Tweak: fire edd_create_protection_files() on install process to ensure .htaccess file is created in uploads/edd directory
 
 
 = 1.7.2: July 30, 2013 =
