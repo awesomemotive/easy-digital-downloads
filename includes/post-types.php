@@ -169,8 +169,10 @@ function edd_get_label_plural( $lowercase = false ) {
  * @return string $title New placeholder text
  */
 function edd_change_default_title( $title ) {
-     // If a frontend plugin uses this common wp filter
+     // If a frontend plugin uses this filter
      if (!is_admin()){
+     	$label = edd_get_label_singular();
+        $title = sprintf( __( 'Enter %s title here', 'edd' ), $label );
      	return $title;
      }
      
