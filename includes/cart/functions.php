@@ -124,7 +124,9 @@ function edd_remove_from_cart( $cart_key ) {
  * Checks the see if an item is already in the cart and returns a boolean
  *
  * @since 1.0
- * @param int $download_id ID of the download to remove
+ *
+ * @param int   $download_id ID of the download to remove
+ * @param array $options
  * @return bool Item in the cart or not?
  */
 function edd_item_in_cart( $download_id = 0, $options = array() ) {
@@ -155,9 +157,10 @@ function edd_item_in_cart( $download_id = 0, $options = array() ) {
  * Get the Item Position in Cart
  *
  * @since 1.0.7.2
- * @param int $download_id ID of the download to get position of
- * @param int $options array of price options
- * @return mixed false if empty cart | int $position position of the item in the cart
+ *
+ * @param int   $download_id ID of the download to get position of
+ * @param array $options array of price options
+ * @return bool|int|string false if empty cart |  position of the item in the cart
  */
 function edd_get_item_position_in_cart( $download_id = 0, $options = array() ) {
 	$cart_items = edd_get_cart_contents();
@@ -192,15 +195,15 @@ function edd_item_quanities_enabled() {
 	return apply_filters( 'edd_item_quantities_enabled', $ret );
 }
 
-
 /**
  * Set Cart Item Quantity
  *
  * @since 1.7
- * @param int $download_id Download (cart item) ID number
- * @param int $download_id Download (cart item) ID number
+ *
+ * @param int   $download_id Download (cart item) ID number
+ * @param int   $quantity
  * @param array $options Download options, such as price ID
- * @return array New Cart array
+ * @return mixed New Cart array
  */
 function edd_set_cart_item_quantity( $download_id = 0, $quantity = 1, $options = array() ) {
 	$cart = edd_get_cart_contents();
@@ -237,7 +240,8 @@ function edd_get_cart_item_quantity( $download_id = 0, $options = array() ) {
  * Get Cart Item Price
  *
  * @since 1.0
- * @param int $item Download (cart item) ID number
+ *
+ * @param int   $item_id Download (cart item) ID number
  * @param array $options Optional parameters, used for defining variable prices
  * @return string Fully formatted price
  */
@@ -270,9 +274,10 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  * Gets the price of the cart item.
  *
  * @since 1.0
- * @param int $item Download ID number
+ * @param int   $item_id Download ID number
  * @param array $options Optional parameters, used for defining variable prices
- * @return string Price for this item
+ * @param bool  $taxed
+ * @return mixed|void Price for this item
  */
 function edd_get_cart_item_price( $download_id = 0, $options = array(), $taxed = true ) {
 	global $edd_options;
@@ -308,9 +313,10 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $taxed =
  * for variable pricing only.
  *
  * @since 1.0
- * @param int $item Download ID number
+ *
+ * @param       $item_id Download ID number
  * @param array $options Optional parameters, used for defining variable prices
- * @return string Name of the price option
+ * @return mixed|void Name of the price option
  */
 function edd_get_price_name( $item_id, $options = array() ) {
 	$return = false;
@@ -328,12 +334,12 @@ function edd_get_price_name( $item_id, $options = array() ) {
 	return apply_filters( 'edd_get_price_name', $return, $item_id, $options );
 }
 
-
 /**
  * Get cart item price id
  *
  * @since 1.0
- * @param int $item Cart item array
+ *
+ * @param array $item Cart item array
  * @return int Price id
  */
 function edd_get_cart_item_price_id( $item = array() ) {
@@ -465,8 +471,11 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
  * Returns amount after taxes and discounts
  *
  * @since 1.4.1
+ *
  * @global $edd_options Array of all the EDD Options
- * @param  array $discounts Array of discounts to apply (needed during AJAX calls)
+ *
+ * @param bool $discounts Array of discounts to apply (needed during AJAX calls)
+ *
  * @return float Cart amount
  */
 function edd_get_cart_total( $discounts = false ) {
@@ -484,16 +493,18 @@ function edd_get_cart_total( $discounts = false ) {
 	return (float) apply_filters( 'edd_get_cart_total', $total );
 }
 
+
 /**
  * Get Total Cart Amount
  *
  * Gets the fully formatted total price amount in the cart.
  * uses edd_get_cart_amount().
  *
- * @access public
  * @global $edd_options Array of all the EDD Options
  * @since 1.3.3
- * @return string - the cart amount
+ *
+ * @param bool $echo
+ * @return mixed|string|void
  */
 function edd_cart_total( $echo = true ) {
 	global $edd_options;
@@ -557,9 +568,11 @@ function edd_get_cart_fee_total() {
  *
  * Retrieves the purchase summary.
  *
- * @access      public
  * @since       1.0
- * @return      string
+ *
+ * @param      $purchase_data
+ * @param bool $email
+ * @return string
  */
 function edd_get_purchase_summary( $purchase_data, $email = true ) {
 	$summary = '';
@@ -581,8 +594,9 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
  * Gets the total tax amount for the cart contents
  *
  * @since 1.2.3
- * @param array $discounts Array of discounts to take into account (required for AJAX calls)
- * @return string Total tax amount
+ *
+ * @param bool $discounts Array of discounts to take into account (required for AJAX calls)
+ * @return mixed|void Total tax amount
  */
 function edd_get_cart_tax( $discounts = false ) {
 
@@ -792,8 +806,9 @@ function edd_get_checkout_uri( $args = array() ) {
  *
  * @since 1.3.4
  * @global $edd_options Array of all the EDD Options
- * @param string $extras Extras to append to the URL
- * @return string Full URL to the Transaction Failed page, if present, home page if it doesn't exist
+ *
+ * @param bool $extras Extras to append to the URL
+ * @return mixed|void Full URL to the Transaction Failed page, if present, home page if it doesn't exist
  */
 function edd_get_failed_transaction_uri( $extras = false ) {
 	global $edd_options;
@@ -843,8 +858,10 @@ function edd_empty_cart() {
  * Used for storing info about purchase
  *
  * @since 1.1.5
+ *
+ * @param $purchase_data
+ *
  * @uses EDD()->session->set()
- * @return void
  */
 function edd_set_purchase_session( $purchase_data ) {
 	EDD()->session->set( 'edd_purchase', $purchase_data );

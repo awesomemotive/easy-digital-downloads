@@ -141,6 +141,8 @@ function edd_get_default_labels() {
  * Get Singular Label
  *
  * @since 1.0.8.3
+ *
+ * @param bool $lowercase
  * @return string $defaults['singular'] Singular label
  */
 function edd_get_label_singular( $lowercase = false ) {
