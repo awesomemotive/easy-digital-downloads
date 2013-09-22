@@ -174,8 +174,8 @@ class EDD_Welcome {
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/18-button-colors.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( '8 Button Colors', 'edd' );?></h4>
-					<p><?php _e( 'With 8 beautifully button colors to choose from, you will almost certainly find the color to match your site.', 'edd' );?></p>
+					<h4><?php _e( 'Eight Button Colors', 'edd' );?></h4>
+					<p><?php _e( 'With eight beautifully button colors to choose from, you will almost certainly find the color to match your site.', 'edd' );?></p>
 
 					<h4><?php _e( 'Simpler; Cleaner', 'edd' );?></h4>
 					<p><?php _e( 'Purchase buttons are cleaner, simpler, and just all around better with Easy Digital Downloads 1.8.', 'edd' );?></p>
