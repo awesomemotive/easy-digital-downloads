@@ -158,7 +158,7 @@ class EDD_Welcome {
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/18cart-saving.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4><?php _e( 'Allow Customers to Save Their Carts for Later','edd' );?></h4>
-					<p><?php _e( 'With Cart Saving, customers can save their shopping carts and then come back and restore then at a later point.', 'edd' );?></p>
+					<p><?php _e( 'With Cart Saving, customers can save their shopping carts and then come back and restore them at a later point.', 'edd' );?></p>
 
 					<h4><?php _e( 'Encourage Customers to Come Back', 'edd' );?></h4>
 					<p><?php _e( 'By making it easier for customers to save their cart and return later, you can increase the conversion rate of the customers that need time to think about their purchase.', 'edd' );?></p>
@@ -193,7 +193,7 @@ class EDD_Welcome {
 					<p><?php _e( 'The new EDD_Payment_Stats class provides a simple way to retrieve earnings and sales stats for the store, or any specific Download product, for any date range. Get sales or earnings for this month, last month, this year, or even any custom date range.', 'edd' );?></p>
 
 					<h4><?php _e( 'EDD_Payments_Query', 'edd' ); ?></h4>
-					<p><?php _e( 'Easily retrieve payment data for any Download product or the entire store. EDD_Payments_Query even allows you to pass any any date range to retrieve payments for a specific period. EDD_Payments_Query works nearly identical to WP_Query, so it is simple and familiar.', 'edd' ); ?></p>
+					<p><?php _e( 'Easily retrieve payment data for any Download product or the entire store. EDD_Payments_Query even allows you to pass in any date range to retrieve payments for a specific period. EDD_Payments_Query works nearly identical to WP_Query, so it is simple and familiar.', 'edd' ); ?></p>
 
 				</div>
 			</div>
