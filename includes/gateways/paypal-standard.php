@@ -73,7 +73,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
         edd_send_back_to_checkout( '?payment-mode=' . $purchase_data['post_data']['edd-gateway'] );
     } else {
         // Only send to PayPal if the pending payment is created successfully
-        $listener_url = trailingslashit( home_url() ).'?edd-listener=IPN';
+        $listener_url = trailingslashit( home_url( 'index.php' ) ).'?edd-listener=IPN';
 
          // Get the success url
         $return_url = add_query_arg( 'payment-confirmation', 'paypal', get_permalink( $edd_options['success_page'] ) );
@@ -131,6 +131,10 @@ function edd_process_paypal_purchase( $purchase_data ) {
     	    		$price =  $item['price'] - $item['tax'];
         		} else {
         			$price = $item['price'];
+	        	}
+
+	        	if( edd_get_cart_item_price_id( $item ) ) {
+	        		$item['name'] .= ' - ' . edd_get_cart_item_price_name( $item );
 	        	}
 
     	    	$paypal_args['item_name_' . $i ]       = stripslashes_deep( html_entity_decode( wp_strip_all_tags( $item['name'] ), ENT_COMPAT, 'UTF-8' ) );

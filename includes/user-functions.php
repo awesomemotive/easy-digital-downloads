@@ -326,3 +326,18 @@ function edd_count_total_customers() {
 	$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
 	return $count[0];
 }
+
+
+/**
+ * Returns the saved address for a customer
+ *
+ * @access 		public
+ * @since 		1.8
+ * @return 		array - The customer's address, if any
+ */
+function edd_get_customer_address( $user_id = 0 ) {
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+	return get_user_meta( $user_id, '_edd_user_address', true );
+}

@@ -22,10 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_is_test_mode() {
 	global $edd_options;
 
-	if ( ! isset( $edd_options['test_mode'] ) || is_null( $edd_options['test_mode'] ) )
-		$ret = false;
-	else
-		$ret = true;
+	$ret = ! empty( $edd_options['test_mode'] );
 
 	return (bool) apply_filters( 'edd_is_test_mode', $ret );
 }
@@ -40,10 +37,7 @@ function edd_is_test_mode() {
 function edd_no_guest_checkout() {
 	global $edd_options;
 
-	if ( isset( $edd_options['logged_in_only'] ) )
-		$ret = true;
-	else
-		$ret = false;
+	$ret = ! empty ( $edd_options['logged_in_only'] );
 
 	return (bool) apply_filters( 'edd_no_guest_checkout', $ret );
 }
@@ -53,15 +47,12 @@ function edd_no_guest_checkout() {
  *
  * @since 1.0
  * @global $edd_options
- * @return bool $ret Wheter or not the logged_in_only setting is set
+ * @return bool $ret Whether or not the logged_in_only setting is set
  */
 function edd_logged_in_only() {
 	global $edd_options;
 
-	if ( isset( $edd_options['logged_in_only'] ) )
-		$ret = true;
-	else
-		$ret = false;
+	$ret = ! empty( $edd_options['logged_in_only'] );
 
 	return (bool) apply_filters( 'edd_logged_in_only', $ret );
 }
@@ -89,10 +80,9 @@ function edd_straight_to_checkout() {
 function edd_no_redownload() {
 	global $edd_options;
 
-	if ( isset( $edd_options['disable_redownload'] ) )
-		return true;
+	$ret = isset( $edd_options['disable_redownload'] );
 
-	return (bool) apply_filters( 'edd_no_redownload', false );
+	return (bool) apply_filters( 'edd_no_redownload', $ret );
 }
 
 /**
@@ -108,7 +98,7 @@ function edd_is_cc_verify_enabled() {
 	$ret = true;
 
 	/*
-	 * Enable if use a single gateway other than PayPal or Manual. We have to assume it accepts cerdit cards
+	 * Enable if use a single gateway other than PayPal or Manual. We have to assume it accepts credit cards
 	 * Enable if using more than one gateway if they aren't both PayPal and manual, again assuming credit card usage
 	 */
 
@@ -130,7 +120,7 @@ function edd_is_cc_verify_enabled() {
 /**
  * Is Odd
  *
- * Checks wether an integer is odd.
+ * Checks whether an integer is odd.
  *
  * @since 1.0
  * @param int $int The integer to check
@@ -272,7 +262,7 @@ function edd_month_num_to_name( $n ) {
 }
 
 /**
- * Get PHP Arg Separator Ouput
+ * Get PHP Arg Separator Output
  *
  * @since 1.0.8.3
  * @return string Arg separator output
@@ -341,12 +331,12 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
 		if ( ! is_null( $replacement ) ) {
 			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
 			trigger_error(  print_r( $backtrace ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
-			// Alernatively we could dump this to a file.
+			// Alternatively we could dump this to a file.
 		}
 		else {
 			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'edd'), $function, $version ) );
 			trigger_error( print_r($backtrace) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
-			// Alernatively we could dump this to a file.
+			// Alternatively we could dump this to a file.
 		}
 	}
 }
@@ -424,7 +414,21 @@ function edd_get_symlink_dir() {
 }
 
 /**
- * Delete symbolic links afer they have been used
+ * Retrieve the absolute path to the file upload directory without the trailing slash
+ *
+ * @since  1.8
+ * @return string $path Absolute path to the EDD upload directory
+ */
+function edd_get_upload_dir() {
+	$wp_upload_dir = wp_upload_dir();
+	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd' );
+	$path = $wp_upload_dir['basedir'] . '/edd';
+
+	return apply_filters( 'edd_get_upload_dir', $path );
+}
+
+/**
+ * Delete symbolic links after they have been used
  *
  * @access public
  * @since  1.5
@@ -517,4 +521,30 @@ function edd_object_to_array( $data ) {
 		return $result;
 	}
 	return $data;
+}
+
+/**
+ * Set Upload Directory
+ *
+ * Sets the upload dir to edd. This function is called from
+ * edd_change_downloads_upload_dir()
+ *
+ * @since 1.0
+ * @return array Upload directory information
+*/
+function edd_set_upload_dir( $upload ) {
+
+	// Override the year / month being based on the post publication date, if year/month organization is enabled
+	if ( get_option( 'uploads_use_yearmonth_folders' ) ) {
+		// Generate the yearly and monthly dirs
+		$time = current_time( 'mysql' );
+		$y = substr( $time, 0, 4 );
+		$m = substr( $time, 5, 2 );
+		$upload['subdir'] = "/$y/$m";
+	}
+
+	$upload['subdir'] = '/edd' . $upload['subdir'];
+	$upload['path']   = $upload['basedir'] . $upload['subdir'];
+	$upload['url']	  = $upload['baseurl'] . $upload['subdir'];
+	return $upload;
 }

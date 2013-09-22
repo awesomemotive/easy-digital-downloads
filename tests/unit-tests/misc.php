@@ -448,4 +448,8 @@ class Test_Misc extends EDD_UnitTestCase {
 	public function test_get_symlink_url() {
 		$this->assertEquals( 'http://example.org/wp-content/uploads/edd/symlinks', edd_get_symlink_url() );
 	}
+
+	public function test_use_skus() {
+		$this->assertFalse( edd_use_skus() );
+	}
 }

@@ -273,7 +273,7 @@ function edd_get_discount_code( $code_id = null ) {
 }
 
 /**
- * Retrieve the discount code expiration date
+ * Retrieve the discount code start date
  *
  * @since 1.4
  * @param int $code_id Discount ID

@@ -26,6 +26,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since  1.5
  */
 class EDD_API {
+
+	/**
+	 * API Version
+	 */
+	const VERSION = '1.1';
+
 	/**
 	 * Pretty Print?
 	 *
@@ -61,6 +67,15 @@ class EDD_API {
 	 * @since 1.5.1
 	 */
 	private $user_id = 0;
+
+	/**
+	 * Instance of EDD Stats class
+	 *
+	 * @var object
+	 * @access private
+	 * @since 1.7
+	 */
+	private $stats;
 
 	/**
 	 * Response data to return
@@ -99,6 +114,10 @@ class EDD_API {
 
 		// Allow API request logging to be turned off
 		$this->log_requests = apply_filters( 'edd_api_log_requests', $this->log_requests );
+
+		// Setup EDD_Stats instance
+		$this->stats = new EDD_Payment_Stats;
+
 	}
 
 	/**
@@ -1337,12 +1356,11 @@ class EDD_API {
 	 * @return array default sales statistics
 	 */
 	private function get_default_sales_stats() {
-		// Default sales return
-		$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
-		$previous_year  = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
 
-		$sales['sales']['current_month'] = edd_get_sales_by_date( null, date( 'n' ), date( 'Y' ) );
-		$sales['sales']['last_month']    = edd_get_sales_by_date( null, $previous_month, $previous_year );
+		// Default sales return
+
+		$sales['sales']['current_month'] = $this->stats->get_sales( 0, 'this_month' );
+		$sales['sales']['last_month']    = $this->stats->get_sales( 0, 'last_month' );
 		$sales['sales']['totals']        = edd_get_total_sales();
 
 		return $sales;
@@ -1353,15 +1371,14 @@ class EDD_API {
 	 *
 	 * @access private
 	 * @since 1.5.3
-	 * @return array default eranings statistics
+	 * @return array default earnings statistics
 	 */
 	private function get_default_earnings_stats() {
-		// Default earnings return
-		$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
-		$previous_year  = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
 
-		$earnings['earnings']['current_month'] = edd_get_earnings_by_date( null, date( 'n' ), date( 'Y' ) );
-		$earnings['earnings']['last_month']    = edd_get_earnings_by_date( null, $previous_month, $previous_year );
+		// Default earnings return
+
+		$earnings['earnings']['current_month'] = $this->stats->get_earnings( 0, 'this_month' );
+		$earnings['earnings']['last_month']    = $this->stats->get_earnings( 0, 'last_month' );
 		$earnings['earnings']['totals']        = edd_get_total_earnings();
 
 		return $earnings;
