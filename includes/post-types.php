@@ -169,6 +169,11 @@ function edd_get_label_plural( $lowercase = false ) {
  * @return string $title New placeholder text
  */
 function edd_change_default_title( $title ) {
+     // If a frontend plugin uses this common wp filter
+     if (!is_admin()){
+     	return $title;
+     }
+     
      $screen = get_current_screen();
 
      if  ( 'download' == $screen->post_type ) {
