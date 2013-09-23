@@ -45,7 +45,7 @@ class EDD_Heartbeat {
 	public static function heartbeat_received( $response, $data ) {
 
 		  // Make sure we only run our query if the edd_heartbeat key is present
-		 if( ( isset( $data['edd_heartbeat'] ) ) && ( $data['edd_heartbeat'] == 'dashboard_summary') ) {
+		 if( ( isset( $data['edd_heartbeat'] ) ) && ( $data['edd_heartbeat'] == 'dashboard_summary' ) ) {
 
 			// Instantiate the stats class
 			$stats = new EDD_Payment_Stats;
