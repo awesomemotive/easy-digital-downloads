@@ -93,6 +93,14 @@ Above usually suffices to upgrade an existing PEAR installation. The PEAR Manual
 	
 ##### Note: Due to a bug present in WordPress 3.5 MU, you may see database errors on install.
 
+# External Testing URLs #
+* Travis-CI (automated unit testing): https://travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads/
+* Coveralls.io (automated code coverage): https://coveralls.io/r/easydigitaldownloads/Easy-Digital-Downloads
+
+Other Supported (manually run):
+* PHPCI: http://www.phptesting.org/
+* PHPUnit: http://phpunit.de/manual/current/en/index.html
+
 # Changelog:
 Version 1.0: 
 * Initial development
