@@ -229,7 +229,8 @@ function edd_get_currencies() {
 		'THB'  => __( 'Thai Baht (&#3647;)', 'edd' ),
 		'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
 		'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
-		'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' )
+		'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
+		'RUB'  => __( 'Russian Rubles', 'edd' )
 	);
 
 	return apply_filters( 'edd_currencies', $currencies );
