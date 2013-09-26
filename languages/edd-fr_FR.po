@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Easy Digital Downloads\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/easy-digital-downloads\n"
 "POT-Creation-Date: 2013-09-23 20:33:23+00:00\n"
-"PO-Revision-Date: 2013-09-23 23:10+0100\n"
+"PO-Revision-Date: 2013-09-26 10:55+0100\n"
 "Last-Translator: FxB <fx@fxbenard.com>\n"
 "Language-Team: FxB <traductions@fxbenard.com>\n"
 "Language: fr_FR\n"
@@ -104,11 +104,13 @@ msgid ""
 "strong>. Please create a file called \".htaccess\", place it in <strong>%s</"
 "strong>, and put the following contents inside the file:"
 msgstr ""
+"Le fichier htaccess d'Easy Digital Downloads est absent de <strong>%s</"
+"strong>. S'il vous plaît créer un fichier appelé \".htaccess\",  placez-le "
+"dans <strong>%s</strong>, et inscrivez-y les éléments suivants :"
 
 #: includes/admin/admin-notices.php:65
-#, fuzzy
 msgid "Dismiss Notice"
-msgstr "Notice de copyright "
+msgstr "Avis de rejet"
 
 #: includes/admin/admin-notices.php:80
 msgid ""
@@ -1235,7 +1237,7 @@ msgstr "Réglé sur terminé"
 # @ edd
 #: includes/admin/payments/class-payments-table.php:336
 msgid "Set To Pending"
-msgstr "Réglé sur en attente"
+msgstr "Réglé sur en attente "
 
 #: includes/admin/payments/class-payments-table.php:337
 msgid "Set To Refunded"
@@ -1386,7 +1388,7 @@ msgstr ""
 # @ edd
 #: includes/admin/payments/edit-payment.php:44
 msgid "Payment Amount in %s"
-msgstr "Montant du paiement en%s"
+msgstr "Montant du paiement en %s"
 
 #: includes/admin/payments/edit-payment.php:48
 msgid "If needed, you can update the purchase total here."
@@ -1451,7 +1453,7 @@ msgstr "Téléchargements illimités"
 #: includes/admin/payments/edit-payment.php:136
 msgid "Check this box to enable unlimited file downloads for this purchase."
 msgstr ""
-"Cochez cette case pour activer les téléchargements illimités du fichier pour "
+"Cocher cette case pour activer les téléchargements illimités du fichier pour "
 "cet achat."
 
 # @ edd
@@ -1604,7 +1606,7 @@ msgstr "Date :"
 
 #: includes/admin/payments/view-order-details.php:141
 msgid "Time:"
-msgstr "Fois :"
+msgstr "Heure :"
 
 # @ edd
 #: includes/admin/payments/view-order-details.php:145
@@ -2567,7 +2569,7 @@ msgid ""
 "Check this box to allow all users to generate API keys. Users with the "
 "'manage_shop_settings' capability are always allowed to generate keys."
 msgstr ""
-"Cochez cette case pour permettre à tous les utilisateurs de générer des clés "
+"Cocher cette case pour permettre à tous les utilisateurs de générer des clés "
 "API. Les utilisateurs disposant des capacités de 'manage_shop_settings' sont "
 "toujours autorisés à générer des clés."
 
@@ -3448,7 +3450,7 @@ msgstr "Crédits"
 
 #: includes/admin/welcome.php:136
 msgid "A Great Checkout Experience"
-msgstr ""
+msgstr "Une meilleure expérience de paiement"
 
 # @ edd
 #: includes/admin/welcome.php:142
@@ -3461,6 +3463,10 @@ msgid ""
 "Easy Digital Downloads, and with just a few subtle tweaks, we have made the "
 "experience in Easy Digital Downloads version 1.8 even better than before."
 msgstr ""
+"Nous avons travaillé sans relâche à sans cesse améliorer l'expérience du "
+"paiement d'Easy Digital Downloads, et avec uniquement quelques subtiles "
+"modifications de la version 1.8, nous l'avons encore rendu meilleure "
+"qu'avant."
 
 #: includes/admin/welcome.php:145
 msgid "Better Checkout Layout"
@@ -3482,19 +3488,19 @@ msgstr "Sauvegarde du panier"
 
 #: includes/admin/welcome.php:158
 msgid "Allow Customers to Save Their Carts for Later"
-msgstr "Permettez à vos clients de sauvegarder leurs paniers pour plus tard"
+msgstr "Permettre aux clients de sauvegarder leurs paniers pour plus tard"
 
 #: includes/admin/welcome.php:159
 msgid ""
 "With Cart Saving, customers can save their shopping carts and then come back "
 "and restore them at a later point."
 msgstr ""
-"Avec la sauvegarde du panier, les clients peuvent enregistrer leurs paniers, "
-"revenir ultérieurement et repartir de la ou ils étaient restés."
+"Avec la sauvegarde du panier, les clients peuvent les enregistrer,  puis y "
+"revenir et les restaurer à une date antérieure."
 
 #: includes/admin/welcome.php:161
 msgid "Encourage Customers to Come Back"
-msgstr "Encouragez vos clients à revenir"
+msgstr "Encourager les clients à revenir"
 
 #: includes/admin/welcome.php:162
 msgid ""
@@ -3502,6 +3508,9 @@ msgid ""
 "can increase the conversion rate of the customers that need time to think "
 "about their purchase."
 msgstr ""
+"En le rendant plus facile pour les clients la sauvegarde de leur panier, "
+"vous pouvez augmenter le taux de conversion des clients qui ont besoin de "
+"temps pour réfléchir à leur achat."
 
 #: includes/admin/welcome.php:169
 msgid "Better Purchase Button Colors"
@@ -3517,17 +3526,20 @@ msgid ""
 "With eight beautifully button colors to choose from, you will almost "
 "certainly find the color to match your site."
 msgstr ""
+"Avec un choix de huit couleurs des boutons, vous trouverez sûrement la "
+"couleur correspondante à votre site."
 
 #: includes/admin/welcome.php:178
 msgid "Simpler; Cleaner"
-msgstr "Plus simple; plus propre"
+msgstr "Plus simple, plus propre"
 
 #: includes/admin/welcome.php:179
-#, fuzzy
 msgid ""
 "Purchase buttons are cleaner, simpler, and just all around better with Easy "
 "Digital Downloads 1.8."
-msgstr "Les boutons d'achat sont plus simples, plus propres"
+msgstr ""
+"Les boutons d'achat sont plus simples, plus propres, et s'intègrent mieux "
+"avec Easy Digital Downloads 1.8."
 
 #: includes/admin/welcome.php:180
 msgid ""
@@ -3535,6 +3547,10 @@ msgid ""
 "ensure better compatibility with more themes and easier customization for "
 "advanced users and developers."
 msgstr ""
+"En simplifiant un des aspects les plus importants de votre boutique "
+"numérique, nous assurons une meilleure compatibilité avec plus de thèmes et "
+"facilitons la personnalisation pour les utilisateurs avancés et les "
+"développeurs."
 
 #: includes/admin/welcome.php:186
 msgid "Better APIs for Developers"
@@ -3552,6 +3568,11 @@ msgid ""
 "date range. Get sales or earnings for this month, last month, this year, or "
 "even any custom date range."
 msgstr ""
+"La nouvelle classe EDD_Payment_Stats fournit un moyen simple de récupérer "
+"les revenus et les stats des ventes de la boutique, ou tout autre produit de "
+"téléchargement spécifique, pour une plage de dates donnée. Récupérer les "
+"ventes ou les bénéfices pour ce mois, le mois dernier, cette année, voire "
+"toute autre plage de dates personnalisée."
 
 # @ edd
 #: includes/admin/welcome.php:193
@@ -3565,6 +3586,11 @@ msgid ""
 "payments for a specific period. EDD_Payments_Query works nearly identical to "
 "WP_Query, so it is simple and familiar."
 msgstr ""
+"Récupérer facilement des données de paiement pour tout produit Télécharger "
+"ou l'ensemble de la boutique. EDD_Payments_Query vous permet même d'utiliser "
+"une plage de dates pour récupérer les paiements pour une période spécifique. "
+"EDD_Payments_Query fonctionne presque de la même façon que WP_Query, elle "
+"est donc simple et connue."
 
 #: includes/admin/welcome.php:200
 msgid "Additional Updates"
@@ -3580,6 +3606,9 @@ msgid ""
 "Every icon and image asset used by the Easy Digital Downloads checkout is "
 "now fully retina ready to ensure your most important page always looks great."
 msgstr ""
+"Chaque icône et images utilisées par le paiement d'Easy Digital Downloads "
+"sont maintenant entièrement rétina ready pour permettre à votre page la plus "
+"importante de toujours être parfaite."
 
 # @ edd
 #: includes/admin/welcome.php:207
@@ -3591,26 +3620,36 @@ msgid ""
 "The EDD settings API has been dramatically simplified to be more performant, "
 "provide better filters, and even support custom settings tabs."
 msgstr ""
+"Les paramètres de l'API  d'EDD ont été considérablement simplifié pour être "
+"plus performant, offrir de meilleurs filtres et même d'être compatible avec "
+"les paramètres des onglets personnalisés."
 
 #: includes/admin/welcome.php:212
 msgid "Live Dashboard Updates"
-msgstr "Mises à jour du tableau de bord en direct"
+msgstr "Mises à jour du tableau de bord en temps réel"
 
 #: includes/admin/welcome.php:213
 msgid ""
 "The Dashboard summary widget now updates live with the WP Heartbeat API, "
 "meaning you can literally watch your stats update live as sales come in."
 msgstr ""
+"Le widget du tableau de bord est désormais mise à jour en temps réel grace "
+"à  l'API Heartbeat de WP, ce qui signifie que vous pouvez littéralement "
+"regarder vos statistiques de ventes se mettre à jour en direct quand une "
+"vente est réalisée."
 
 #: includes/admin/welcome.php:215
 msgid "Category Filters for Downloads Reports"
-msgstr ""
+msgstr "Des filtres par catégorie dans le rapport des téléchargements"
 
 #: includes/admin/welcome.php:216
 msgid ""
 "The Downloads Reports view now supports filtering Downloads by category, "
 "making it easier to see earnings and sales based on product categories."
 msgstr ""
+"Le rapport des téléchargements prend désormais en charge le filtrage par "
+"catégorie, ce qui facilite l'affichage des bénéfices et des ventes en "
+"fonction des catégories de produits."
 
 #: includes/admin/welcome.php:220
 msgid "Tools Menu"
@@ -3621,17 +3660,23 @@ msgid ""
 "A new Tools submenu has been added to the main Downloads menu that houses "
 "settings import / export, as well as other utilities added by extensions."
 msgstr ""
+"Un nouveau sous-menu d'outils a été ajoutée au menu principal des "
+"Téléchargements pour regrouper les paramètres d'importation/exportation, "
+"ainsi que les autres fonctions ajoutés par les extensions."
 
 # @ edd
 #: includes/admin/welcome.php:223
 msgid "Bulk Payment History Update"
-msgstr "Les actions groupés de l'historique des paiements mises à jour"
+msgstr "Les actions groupées de l'historique des paiements mises à jour"
 
 #: includes/admin/welcome.php:224
 msgid ""
 "The bulk update options for Payments have been updated to include all "
 "payment status options, making it easier to manage payment updates in bulk."
 msgstr ""
+"Les options des mises à jour groupées pour les paiements ont été mis à jour "
+"pour inclure toutes les options d'état de paiement, ce qui rend plus facile "
+"leurs gestions."
 
 # @ edd
 #: includes/admin/welcome.php:230
@@ -3690,10 +3735,12 @@ msgstr "Succès"
 #: includes/cart/functions.php:978
 msgid "Cart saved successfully. You can restore your cart using this URL:"
 msgstr ""
+"Panier sauvegardé avec succès. Vous pouvez restaurer votre panier en "
+"utilisant l'URL suivante :"
 
 #: includes/cart/functions.php:1012 includes/cart/functions.php:1027
 msgid "The cart cannot be restored. Invalid token."
-msgstr ""
+msgstr "Le panier ne peut pas être restaurée. Jeton non valide."
 
 #: includes/cart/template.php:53
 msgid "Number of items in cart"
@@ -4170,9 +4217,8 @@ msgstr "Hier"
 
 # @ edd
 #: includes/class-edd-stats.php:81
-#, fuzzy
 msgid "Last Quater"
-msgstr "Dernière instance"
+msgstr "Dernier quart"
 
 #: includes/class-edd-stats.php:377
 msgid "Improper date provided."
