@@ -118,7 +118,7 @@ function edd_process_download() {
 					$direct     = true;
 
 				}
-
+				/*
 				// Now deliver the file based on the kind of software the server is running / has enabled
 				if ( function_exists( 'apache_get_modules' ) && in_array( 'mod_xsendfile', apache_get_modules() ) ) {
 
@@ -134,7 +134,9 @@ function edd_process_download() {
 					$file_path = str_ireplace( $_SERVER[ 'DOCUMENT_ROOT' ], '', $file_path );
 					header( "X-Accel-Redirect: /$file_path" );
 
-				} elseif( $direct ) {
+				} else
+*/
+				if( $direct ) {
 					edd_deliver_download( $file_path );
 				} else {
 					// The file supplied does not have a discoverable absolute path

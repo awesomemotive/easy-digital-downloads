@@ -185,7 +185,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php';
 		$edd_options = edd_get_settings();
 
-		require_once EDD_PLUGIN_DIR . 'includes/install.php';
 		require_once EDD_PLUGIN_DIR . 'includes/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
@@ -268,6 +267,8 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
 			require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
 		}
+
+		require_once EDD_PLUGIN_DIR . 'includes/install.php';
 	}
 
 	/**
