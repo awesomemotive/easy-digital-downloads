@@ -31,6 +31,8 @@ require_once ABSPATH . '/wp-settings.php';
 
 echo "Installing Easy Digital Downloads...\n";
 
+define( 'WP_ADMIN', true );
+
 // Install Easy Digital Downloads
 edd_install();
 
