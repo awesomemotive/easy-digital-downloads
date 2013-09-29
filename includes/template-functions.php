@@ -369,27 +369,6 @@ function edd_get_button_styles() {
 }
 
 /**
- * Show Has Purchased Item Message
- *
- * Prints a notice when user has already purchased the item.
- *
- * @since 1.0
- * @global $user_ID
- */
-function edd_show_has_purchased_item_message() {
-	global $user_ID, $post;
-
-	if( !isset( $post->ID ) )
-		return;
-
-	if ( edd_has_user_purchased( $user_ID, $post->ID ) ) {
-		$alert = '<p class="edd_has_purchased">' . __( 'You have already purchased this item, but you may purchase it again.', 'edd' ) . '</p>';
-		echo apply_filters( 'edd_show_has_purchased_item_message', $alert );
-	}
-}
-add_action( 'edd_after_download_content', 'edd_show_has_purchased_item_message' );
-
-/**
  * Default formatting for download excerpts
  *
  * This excerpt is primarily used in the [downloads] short code
