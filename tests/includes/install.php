@@ -6,7 +6,7 @@ error_reporting( E_ALL & ~E_DEPRECATED & ~E_STRICT );
 
 echo "Welcome to the Easy Digital Downloads Test Suite" . PHP_EOL;
 echo "Version: 1.0" . PHP_EOL;
-echo "Authors: Chris Christoff and Sunny Ratilal" . PHP_EOL;
+echo "Authors: Chris Christoff, Sunny Ratilal, and Pippin Williamson" . PHP_EOL;
 
 $config_file_path = $argv[1];
 $multisite = ! empty( $argv[2] );
