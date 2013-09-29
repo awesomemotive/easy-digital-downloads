@@ -14,6 +14,9 @@ $multisite = ! empty( $argv[2] );
 require_once $config_file_path;
 require_once dirname( $config_file_path ) . '/includes/functions.php';
 
+// Force WP_ADMIN to be true
+define( 'WP_ADMIN', true );
+
 // Load EDD
 function _load_edd() {
 	require dirname( dirname( dirname( __FILE__ ) ) ) . '/easy-digital-downloads.php';
@@ -31,7 +34,6 @@ require_once ABSPATH . '/wp-settings.php';
 
 echo "Installing Easy Digital Downloads...\n";
 
-define( 'WP_ADMIN', true );
 
 // Install Easy Digital Downloads
 edd_install();
