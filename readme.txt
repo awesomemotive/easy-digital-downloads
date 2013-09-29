@@ -205,6 +205,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * New: added WP Heartbeat API to the EDD Dashboard summary widget for live dashboard updating
 * New: added category filtering support to Downloads > Reports > Downloads
 
+* Fix: allow payment status to be translated before inserting the payment note on status change
 * Fix: tax calculation bug with 100% discount codes
 * Fix: broken pagination on Discounts page
 * Fix: missing linebreaks in admin sale notification email
