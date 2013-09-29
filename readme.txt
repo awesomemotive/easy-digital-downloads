@@ -231,6 +231,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: stripslashes on discount code name fields
 * Fix: incorrect label for "Deactivate" in Discount Codes
 
+* Tweak: removed the "You have already purchased this" message from the single Download pages
 * Tweak: small improvements to checkout UI
 * Tweak: some settings callbacks not using size argument
 * Tweak: hide Buy Now button behavior option is supported gateway is not active
