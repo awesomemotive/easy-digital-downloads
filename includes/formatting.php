@@ -93,22 +93,22 @@ function edd_currency_filter( $price ) {
 
 	if ( $position == 'before' ):
 		switch ( $currency ):
-			case "GBP" : 
-				$formatted = '&pound;' . $price; 
+			case "GBP" :
+				$formatted = '&pound;' . $price;
 				break;
-			case "BRL" : 
-				$formatted = 'R&#36;' . $price; 
+			case "BRL" :
+				$formatted = 'R&#36;' . $price;
 				break;
 			case "USD" :
 			case "AUD" :
 			case "CAD" :
 			case "HKD" :
 			case "MXN" :
-			case "SGD" : 
-				$formatted = '&#36;' . $price; 
+			case "SGD" :
+				$formatted = '&#36;' . $price;
 				break;
-			case "JPY" : 
-				$formatted = '&yen;' . $price; 
+			case "JPY" :
+				$formatted = '&yen;' . $price;
 				break;
 			default :
 			    $formatted = $currency . ' ' . $price;
@@ -117,11 +117,11 @@ function edd_currency_filter( $price ) {
 		return apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
 	else :
 		switch ( $currency ) :
-			case "GBP" : 
-				$formatted = $price . '&pound;'; 
+			case "GBP" :
+				$formatted = $price . '&pound;';
 				break;
 			case "BRL" :
-				$formatted = $price . 'R&#36;'; 
+				$formatted = $price . 'R&#36;';
 				break;
 			case "USD" :
 			case "AUD" :
@@ -132,7 +132,7 @@ function edd_currency_filter( $price ) {
 				$formatted = $price . '&#36;';
 				break;
 			case "JPY" :
-				$formatted = $price . '&yen;'; 
+				$formatted = $price . '&yen;';
 				break;
 			default :
 			    $formatted = $price . ' ' . $currency;
