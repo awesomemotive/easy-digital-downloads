@@ -700,11 +700,13 @@ function edd_get_purchase_cc_info() {
 
 /**
  * Validate zip code based on country code
- *
- * @access		private
  * @since		1.4.4
- * @return		bool
-*/
+ *
+ * @param int    $zip
+ * @param string $country_code
+ *
+ * @return bool|mixed|void
+ */
 function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 	$ret = false;
 

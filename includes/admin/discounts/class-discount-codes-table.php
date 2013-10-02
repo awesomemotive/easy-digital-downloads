@@ -62,11 +62,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Get things started
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @uses EDD_Discount_Codes_Table::get_discount_code_counts()
 	 * @see WP_List_Table::__construct()
-	 * @return void
 	 */
 	public function __construct() {
 		global $status, $page;
@@ -212,7 +210,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $discount );
 
-		return $item['name'] . $this->row_actions( $row_actions );
+		return stripslashes( $item['name'] ) . $this->row_actions( $row_actions );
 	}
 
 	/**

@@ -97,8 +97,10 @@ function edd_get_file_download_log( $download_id, $paginate = false, $number = 1
  *
  * @since 1.0
  * @deprecated 1.4
- * @param int $payment_id ID number of the purchase
- * @return mixed array if purchase exists, false otherwise
+ *
+ * @param int  $payment_id ID number of the purchase
+ * @param null $payment_meta
+ * @return bool|mixed
  */
 function edd_get_downloads_of_purchase( $payment_id, $payment_meta = null ) {
 	$backtrace = debug_backtrace();
@@ -175,4 +177,30 @@ function edd_local_tax_opted_in() {
 
 	$opted_in = EDD()->session->get( 'edd_local_tax_opt_in' );
 	return ! empty( $opted_in );
+}
+
+/**
+ * Show Has Purchased Item Message
+ *
+ * Prints a notice when user has already purchased the item.
+ *
+ * @since 1.0
+ * @deprecated 1.8
+ * @global $user_ID
+ */
+function edd_show_has_purchased_item_message() {
+
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '1.8', 'no alternatives', $backtrace );
+
+	global $user_ID, $post;
+
+	if( !isset( $post->ID ) )
+		return;
+
+	if ( edd_has_user_purchased( $user_ID, $post->ID ) ) {
+		$alert = '<p class="edd_has_purchased">' . __( 'You have already purchased this item, but you may purchase it again.', 'edd' ) . '</p>';
+		echo apply_filters( 'edd_show_has_purchased_item_message', $alert );
+	}
 }
