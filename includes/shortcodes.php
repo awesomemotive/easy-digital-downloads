@@ -353,7 +353,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		ob_start(); ?>
 		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_class, $atts ); ?>">
 			<?php while ( $downloads->have_posts() ) : $downloads->the_post(); ?>
-				<div itemscope itemtype="http://schema.org/Product" class="edd_download" id="edd_download_<?php echo get_the_ID(); ?>" style="width: <?php echo $column_width; ?>; float: left;">
+				<div itemscope itemtype="http://schema.org/Product" class="<?php echo apply_filters( 'edd_download_class', 'edd_download', get_the_ID(), $atts ); ?>" id="edd_download_<?php echo get_the_ID(); ?>" style="width: <?php echo $column_width; ?>; float: left;">
 					<div class="edd_download_inner">
 						<?php
 
@@ -511,10 +511,12 @@ add_shortcode( 'edd_receipt', 'edd_receipt_shortcode' );
  * templating system is used.
  *
  * @since 1.4
+ *
  * @author Sunny Ratilal
- * @param array $atts Shortcode attributes
- * @param string $content
- * @return $display Output generated from the profile editor
+ *
+ * @param      $atts Shortcode attributes
+ * @param null $content
+ * @return string Output generated from the profile editor
  */
 function edd_profile_editor_shortcode( $atts, $content = null ) {
 	ob_start();

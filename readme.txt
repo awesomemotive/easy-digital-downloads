@@ -5,9 +5,9 @@ Contributors: mordauk, sunnyratilal, chriscct7, SpencerFinnell, sksmatt, ghost12
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.3
-Tested up to: 3.6
+Tested up to: 3.7
 
-Stable Tag: 1.8-beta
+Stable Tag: 1.8
 License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -205,6 +205,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * New: added WP Heartbeat API to the EDD Dashboard summary widget for live dashboard updating
 * New: added category filtering support to Downloads > Reports > Downloads
 
+* Fix: allow payment status to be translated before inserting the payment note on status change
 * Fix: tax calculation bug with 100% discount codes
 * Fix: broken pagination on Discounts page
 * Fix: missing linebreaks in admin sale notification email
@@ -227,7 +228,10 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: AJAX loading indicator breaks if edd.css is moved to edd_templates folder
 * Fix: negative Fees (discounts) don't respect "Taxes after discounts"
 * Fix: [downloads] pagination doesn't work on non hierarchical single post types
+* Fix: stripslashes on discount code name fields
+* Fix: incorrect label for "Deactivate" in Discount Codes
 
+* Tweak: removed the "You have already purchased this" message from the single Download pages
 * Tweak: small improvements to checkout UI
 * Tweak: some settings callbacks not using size argument
 * Tweak: hide Buy Now button behavior option is supported gateway is not active

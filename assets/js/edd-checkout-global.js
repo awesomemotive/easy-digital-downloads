@@ -63,6 +63,10 @@ jQuery(document).ready(function($) {
             success: function (tax_response) {
                 $('#edd_checkout_cart').replaceWith(tax_response.html);
                 $('.edd_cart_amount').html(tax_response.total);
+                var tax_data = new Object();
+                tax_data.postdata = postData;
+                tax_data.response = tax_response;
+                $('body').trigger('edd_taxes_recalculated', [ tax_data ]);
             }
         }).fail(function (data) {
             console.log(data);

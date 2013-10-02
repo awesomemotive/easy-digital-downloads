@@ -103,7 +103,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 	public function test_edd_after_download_content() {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_append_purchase_link', $wp_filter['edd_after_download_content'][10] );
-		$this->assertarrayHasKey( 'edd_show_has_purchased_item_message', $wp_filter['edd_after_download_content'][10] );
 		$this->assertarrayHasKey( 'edd_show_added_to_cart_messages', $wp_filter['edd_after_download_content'][10] );
 	}
 

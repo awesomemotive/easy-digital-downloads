@@ -136,8 +136,10 @@ function edd_is_odd( $int ) {
  * Returns the file extension of a filename.
  *
  * @since 1.0
- * @param string $string Filename
- * @return string $parts File extension
+ *
+ * @param $str File name
+ *
+ * @return mixed File extension
  */
 function edd_get_file_extension( $str ) {
    $parts = explode( '.', $str );
@@ -227,7 +229,8 @@ function edd_get_currencies() {
 		'THB'  => __( 'Thai Baht (&#3647;)', 'edd' ),
 		'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
 		'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
-		'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' )
+		'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
+		'RUB'  => __( 'Russian Rubles', 'edd' )
 	);
 
 	return apply_filters( 'edd_currencies', $currencies );
@@ -246,13 +249,14 @@ function edd_get_currency() {
 	return apply_filters( 'edd_currency', $currency );
 }
 
-
 /**
  * Month Num To Name
  *
  * Takes a month number and returns the name three letter name of it.
  *
  * @since 1.0
+ *
+ * @param $n
  * @return string Short month name
  */
 function edd_month_num_to_name( $n ) {
@@ -364,7 +368,9 @@ function edd_is_func_disabled( $function ) {
  * @since 1.4
  * @usedby edd_settings()
  * @author Chris Christoff
- * @return $ret
+ *
+ * @param $v
+ * @return int|string
  */
 function edd_let_to_num( $v ) {
 	$l   = substr( $v, -1 );
@@ -503,14 +509,15 @@ function edd_get_timezone_id() {
     return 'UTC';
 }
 
-
 /**
  * Convert an object to an associative array.
  *
  * Can handle multidimensional arrays
  *
  * @since 1.7
- * @return array $data The converted array
+ *
+ * @param $data
+ * @return array
  */
 function edd_object_to_array( $data ) {
 	if ( is_array( $data ) || is_object( $data ) ) {

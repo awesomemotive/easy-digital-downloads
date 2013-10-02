@@ -64,6 +64,9 @@ function edd_payment_history_page() {
  * Payment History admin titles
  *
  * @since 1.6
+ *
+ * @param $admin_title
+ * @param $title
  * @return string
  */
 function edd_view_order_details_title( $admin_title, $title ) {
