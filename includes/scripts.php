@@ -171,6 +171,8 @@ function edd_load_admin_scripts( $hook ) {
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
 	$edd_pages = array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_upgrades_screen, 'index.php', );
+	$edd_pages = apply_filters( 'edd_load_scripts_for_these_pages', $edd_pages );
+
 	$edd_cpt   = apply_filters( 'edd_load_scripts_for_these_types', array( 'download', 'edd_payment', ) );
 
 	if ( ! in_array( $hook, $edd_pages ) && ! is_object( $post ) )
@@ -179,10 +181,10 @@ function edd_load_admin_scripts( $hook ) {
 	if ( is_object( $post ) && ! in_array( $post->post_type, $edd_cpt ) )
 		return;
 
-	if ( 'download_page_edd-reports' == $hook ) {
+	if ( in_array( $hook, apply_filters( 'edd_load_scripts_for_reports', array( 'download_page_edd-reports', ) ) ) ) {
 		wp_enqueue_script( 'jquery-flot', $js_dir . 'jquery.flot' . $suffix . '.js' );
 	}
-	if ( 'download_page_edd-discounts' == $hook ) {
+	if ( in_array( $hook, apply_filters( 'edd_load_scripts_for_discounts', array( 'download_page_edd-discounts', ) ) ) ) {
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
 		wp_enqueue_style( 'jquery-ui-css', $css_dir . 'jquery-ui-' . $ui_style . $suffix . '.css' );
