@@ -35,11 +35,6 @@ function edd_download_columns( $download_columns ) {
 		'date'              => __( 'Date', 'edd' )
 	);
 
-	if ( ! current_user_can( 'view_shop_reports' ) ) {
-		unset( $download_columns['sales'] );
-		unset( $download_columns['earnings'] );
-	}
-
 	return apply_filters( 'edd_download_columns', $download_columns );
 }
 add_filter( 'manage_edit-download_columns', 'edd_download_columns' );
@@ -77,10 +72,18 @@ function edd_render_download_columns( $column_name, $post_id ) {
 				}
 				break;
 			case 'sales':
-				echo edd_get_download_sales_stats( $post_id );
+				if ( current_user_can( 'edit_product', $post_id ) ) {
+					echo edd_get_download_sales_stats( $post_id );
+				} else {
+					echo '-';
+				}
 				break;
 			case 'earnings':
-				echo edd_currency_filter( edd_format_amount( edd_get_download_earnings_stats( $post_id ) ) );
+				if ( current_user_can( 'edit_product', $post_id ) ) {
+					echo edd_currency_filter( edd_format_amount( edd_get_download_earnings_stats( $post_id ) ) );
+				} else {
+					echo '-';
+				}
 				break;
 			case 'shortcode':
 				echo '[purchase_link id="' . absint( $post_id ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]';
