@@ -45,7 +45,7 @@ function edd_system_info() {
 	$return  = '### Begin System Info ###' . "\n\n";
 	$return .= '## Please include this information when posting support requests ##' . "\n\n";
 
-	do_action( 'edd_system_info_before' );
+	$return = apply_filters( 'edd_system_info_before', $return );
 
 	// Site basics
 	$return .= '-- Site Info' . "\n\n";
@@ -54,16 +54,14 @@ function edd_system_info() {
 	$return .= 'Home URL:                 ' . home_url() . "\n";
 	$return .= 'Multisite:                ' . ( is_multisite() ? 'Yes' : 'No' ) . "\n";
 
-	if( has_filter( 'edd_after_site_info' ) )
-		$return = apply_filters( 'edd_after_site_info', $return );
+	$return = apply_filters( 'edd_system_info_after_site_info', $return );
 
 	// Browser info, handled by the Browser class
 	$return .= "\n" . '-- User Browser' . "\n\n";
 
 	$return .= $browser;
 
-	if( has_filter( 'edd_after_user_browser' ) )
-		$return = apply_filters( 'edd_after_user_browser', $return );
+	$return = apply_filters( 'edd_system_info_after_user_browser', $return );
 
 	// WordPress configuration
 	$return .= "\n" . '-- WordPress Configuration' . "\n\n";
@@ -106,8 +104,7 @@ function edd_system_info() {
 	$return .= 'Memory Limit:             ' . WP_MEMORY_LIMIT . "\n";
 	$return .= 'Registered Post Stati:    ' . implode( ', ', get_post_stati() ) . "\n";
 
-	if( has_filter( 'edd_after_wordpress_config' ) )
-		$return = apply_filters( 'edd_after_wordpress_config', $return );
+	$return = apply_filters( 'edd_system_info_after_wordpress_config', $return );
 
 	// EDD Config
 	$return .= "\n" . '-- EDD Configuration' . "\n\n";
@@ -139,8 +136,7 @@ function edd_system_info() {
 		}
 	}
 
-	if( has_filter( 'edd_after_edd_config' ) )
-		$return = apply_filters( 'edd_after_edd_config', $return );
+	$return = apply_filters( 'edd_system_info_after_edd_config', $return );
 
 	// EDD Template Overrides
 	$dir = get_stylesheet_directory() . '/edd_templates/';
@@ -152,8 +148,7 @@ function edd_system_info() {
 		}
 	}
 
-	if( has_filter( 'edd_after_edd_templates' ) )
-		$return = apply_filters( 'edd_after_edd_templates', $return );
+	$return = apply_filters( 'edd_system_info_after_edd_templates', $return );
 
 	// WordPress active plugins
 	$return .= "\n" . '-- WordPress Active Plugins' . "\n\n";
@@ -207,8 +202,7 @@ function edd_system_info() {
 		}
 	}
 
-	if( has_filter( 'edd_after_wordpress_plugins' ) )
-		$return = apply_filters( 'edd_after_wordpress_plugins', $return );
+	$return = apply_filters( 'edd_system_info_after_wordpress_plugins', $return );
 
 	// Server configuration
 	$return .= "\n" . '-- Webserver Configuration' . "\n\n";
@@ -217,8 +211,7 @@ function edd_system_info() {
 	$return .= 'MySQL Version:            ' . mysql_get_server_info() . "\n";
 	$return .= 'Webserver Info:           ' . $_SERVER['SERVER_SOFTWARE'] . "\n";
 
-	if( has_filter( 'edd_after_webserver_config' ) )
-		$return = apply_filters( 'edd_after_webserver_config', $return );
+	$return = apply_filters( 'edd_system_info_after_webserver_config', $return );
 
 	// PHP configs
 	$return .= "\n" . '-- PHP Configuration' . "\n\n";
@@ -232,8 +225,7 @@ function edd_system_info() {
 	$return .= 'Max Input Vars:           ' . ini_get( 'max_input_vars' ) . "\n";
 	$return .= 'Display Errors:           ' . ( ini_get( 'display_errors' ) ? 'On (' . ini_get( 'display_errors' ) . ')' : 'N/A' ) . "\n";
 
-	if( has_filter( 'edd_after_php_config' ) )
-		$return = apply_filters( 'edd_after_php_config', $return );
+	$return = apply_filters( 'edd_system_info_after_php_config', $return );
 
 	// PHP extensions
 	$return .= "\n" . '-- PHP Extensions' . "\n\n";
@@ -243,8 +235,7 @@ function edd_system_info() {
 	$return .= 'SOAP Client:              ' . ( class_exists( 'SoapClient' ) ? 'Installed' : 'Not Installed' ) . "\n";
 	$return .= 'Suhosin:                  ' . ( extension_loaded( 'suhosin' ) ? 'Installed' : 'Not Installed' ) . "\n";
 
-	if( has_filter( 'edd_after_php_ext' ) )
-		$return = apply_filters( 'edd_after_php_ext', $return );
+	$return = apply_filters( 'edd_system_info_after_php_ext', $return );
 
 	// Session information
 	$return .= "\n" . '-- Session Configuration' . "\n\n";
@@ -259,10 +250,9 @@ function edd_system_info() {
 		$return .= 'Use Only Cookies:         ' . ( ini_get( 'session.use_only_cookies' ) ? 'On' : 'Off' ) . "\n";
 	}
 
-	if( has_filter( 'edd_after_session_info' ) )
-		$return = apply_filters( 'edd_after_session_info', $return );
+	$return = apply_filters( 'edd_system_info_after_session_info', $return );
 
-	do_action( 'edd_system_info_after' );
+	$return = apply_filters( 'edd_system_info_after', $return );
 
 	$return .= "\n" . '### End System Info ###';
 
