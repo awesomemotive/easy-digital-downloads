@@ -293,7 +293,7 @@ input[type="submit"].edd-submit:focus,
 }
 
 /** Gray (Default) */
-input.edd-submit.button,a.edd-submit.button,a.edd-submit.button:visited,.edd-submit.button,.edd-submit.button.gray {
+.edd-submit.button,.edd-submit.button,.edd-submit.button:visited,.edd-submit.button,.edd-submit.button.gray {
   color: #333333;
   background: #f0f0f0;
   border-color: #cccccc;
