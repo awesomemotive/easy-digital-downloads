@@ -302,7 +302,7 @@ function edd_trigger_payment_note_deletion( $data ) {
 	if( ! wp_verify_nonce( $data['_wpnonce'], 'edd_delete_payment_note' ) )
 		return;
 
-	$edit_order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&edd-action=edit-payment&purchase_id=' . absint( $data['purchase_id'] ) );
+	$edit_order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=edit-payment&edd-message=payment_note_deleted&purchase_id=' . absint( $data['purchase_id'] ) );
 
 	edd_delete_payment_note( $data['note_id'], $data['purchase_id'] );
 

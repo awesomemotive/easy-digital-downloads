@@ -44,7 +44,11 @@ function edd_admin_messages() {
 
 	if ( isset( $_GET['edd-message'] ) && 'email_sent' == $_GET['edd-message'] && current_user_can( 'view_shop_reports' ) ) {
 		add_settings_error( 'edd-notices', 'edd-payment-sent', __( 'The purchase receipt has been resent.', 'edd' ), 'updated' );
-	}
+    }
+
+    if ( isset( $_GET['edd-message'] ) && 'payment_note_deleted' == $_GET['edd-message'] && current_user_can( 'view_shop_reports' ) ) {
+        add_settings_error( 'edd-notices', 'edd-payment-note-deleted', __( 'The payment note has been deleted.', 'edd' ), 'updated' );
+    }
 
 	if ( isset( $_GET['page'] ) && 'edd-payment-history' == $_GET['page'] && current_user_can( 'view_shop_reports' ) && edd_is_test_mode() ) {
 		add_settings_error( 'edd-notices', 'edd-payment-sent', sprintf( __( 'Note: Test Mode is enabled, only test payments are shown below. %sSettings%s.', 'edd' ), '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-settings' ) . '">', '</a>' ), 'updated' );
