@@ -199,6 +199,9 @@ function edd_delete_purchase( $payment_id = 0 ) {
  * @return void
  */
 function edd_undo_purchase( $download_id, $payment_id ) {
+	if ( edd_is_test_mode() )
+        return; // Don't undo if we are in test mode!
+
 	$payment = get_post( $payment_id );
 
 	$status  = $payment->post_status;
