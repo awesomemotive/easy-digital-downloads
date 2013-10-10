@@ -120,6 +120,10 @@ function edd_process_settings_import() {
 	if( ! current_user_can( 'manage_shop_settings' ) )
 		return;
 
+    if( substr( $_FILES['import_file']['name'], -4 ) != 'json' ) {
+        wp_die( __( 'Please upload a valid .json file', 'edd' ) );
+    }
+
 	$import_file = $_FILES['import_file']['tmp_name'];
 
 	if( empty( $import_file ) ) {
