@@ -1164,6 +1164,11 @@ function edd_settings_sanitize( $input = array() ) {
 	if( ! empty( $settings[ $tab ] ) ) {
 		foreach( $settings[ $tab ] as $key => $value ) {
 
+			// settings used to have numeric keys, now they have keys that match the option ID. This ensures both methods work
+			if( is_numeric( $key ) ) {
+				$key = $value['id'];
+			}
+
 			if( empty( $_POST[ 'edd_settings_' . $tab ][ $key ] ) ) {
 				unset( $edd_options[ $key ] );
 			}
