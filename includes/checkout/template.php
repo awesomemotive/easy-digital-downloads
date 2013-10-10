@@ -597,7 +597,7 @@ function edd_terms_agreement() {
 			<div id="edd_terms" style="display:none;">
 				<?php
 					do_action( 'edd_before_terms' );
-					echo wpautop( $edd_options['agree_text'] );
+					echo wpautop( stripslashes( $edd_options['agree_text'] ) );
 					do_action( 'edd_after_terms' );
 				?>
 			</div>
@@ -605,7 +605,7 @@ function edd_terms_agreement() {
 				<a href="#" class="edd_terms_links"><?php _e( 'Show Terms', 'edd' ); ?></a>
 				<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Terms', 'edd' ); ?></a>
 			</div>
-			<label for="edd_agree_to_terms"><?php echo isset( $edd_options['agree_label'] ) ? $edd_options['agree_label'] : __( 'Agree to Terms?', 'edd' ); ?></label>
+			<label for="edd_agree_to_terms"><?php echo isset( $edd_options['agree_label'] ) ? stripslashes( $edd_options['agree_label'] ) : __( 'Agree to Terms?', 'edd' ); ?></label>
 			<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
 		</fieldset>
 <?php
