@@ -171,13 +171,13 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$revoked_count  = '&nbsp;<span class="count">(' . $this->revoked_count   . ')</span>';
 
 		$views = array(
-			'all'		=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status' ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'edd') . $total_count ),
-			'publish'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'publish' ), $current === 'publish' ? ' class="current"' : '', __('Completed', 'edd') . $complete_count ),
-			'pending'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'pending' ), $current === 'pending' ? ' class="current"' : '', __('Pending', 'edd') . $pending_count ),
-			'refunded'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'refunded' ), $current === 'refunded' ? ' class="current"' : '', __('Refunded', 'edd') . $refunded_count ),
-			'revoked'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'revoked' ), $current === 'revoked' ? ' class="current"' : '', __('Revoked', 'edd') . $revoked_count ),
-			'failed'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'failed' ), $current === 'failed' ? ' class="current"' : '', __('Failed', 'edd') . $failed_count ),
-			'abandoned'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'abandoned' ), $current === 'abandoned' ? ' class="current"' : '', __('Abandoned', 'edd') . $abandoned_count )
+			'all'		=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( array( 'status', 'paged' ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'edd') . $total_count ),
+			'publish'	=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'paged', add_query_arg( 'status', 'publish' ) ), $current === 'publish' ? ' class="current"' : '', __('Completed', 'edd') . $complete_count ),
+			'pending'	=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'paged', add_query_arg( 'status', 'pending' ) ), $current === 'pending' ? ' class="current"' : '', __('Pending', 'edd') . $pending_count ),
+			'refunded'	=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'paged', add_query_arg( 'status', 'refunded' ) ), $current === 'refunded' ? ' class="current"' : '', __('Refunded', 'edd') . $refunded_count ),
+			'revoked'	=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'paged', add_query_arg( 'status', 'revoked' ) ), $current === 'revoked' ? ' class="current"' : '', __('Revoked', 'edd') . $revoked_count ),
+			'failed'	=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'paged', add_query_arg( 'status', 'failed' ) ), $current === 'failed' ? ' class="current"' : '', __('Failed', 'edd') . $failed_count ),
+			'abandoned'	=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'paged', add_query_arg( 'status', 'abandoned' ) ), $current === 'abandoned' ? ' class="current"' : '', __('Abandoned', 'edd') . $abandoned_count )
 		);
 
 		return apply_filters( 'edd_payments_table_views', $views );
