@@ -318,7 +318,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			$display_name = __( 'guest', 'edd' );
 		}
 
-		$value = '<a href="' . remove_query_arg( 'paged', add_query_arg( 'user', $payment->user_info['email'] ) ) . '">' . $display_name . '</a>';
+		$value = '<a href="' . esc_url( add_query_arg( array( 'user' => $payment->user_info['email'], 'paged' => false ) ) ) . '">' . $display_name . '</a>';
 		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, 'user' );
 	}
 
