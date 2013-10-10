@@ -246,7 +246,7 @@ function edd_email_preview_template_tags( $message ) {
  * @return string $message Formatted message with <p> tags added
  */
 function edd_email_default_formatting( $message ) {
-	return wpautop( $message );
+	return wpautop( stripslashes( $message ) );
 }
 add_filter( 'edd_purchase_receipt', 'edd_email_default_formatting' );
 
@@ -265,7 +265,7 @@ function edd_email_template_preview() {
 	$default_email_body .= "{download_list}\n\n";
 	$default_email_body .= "{sitename}";
 
-	$email_body = isset( $edd_options['purchase_receipt'] ) ? $edd_options['purchase_receipt'] : $default_email_body;
+	$email_body = isset( $edd_options['purchase_receipt'] ) ? stripslashes( $edd_options['purchase_receipt'] ) : $default_email_body;
 	ob_start();
 	?>
 	<a href="#email-preview" id="open-email-preview" class="button-secondary" title="<?php _e( 'Purchase Receipt Preview', 'edd' ); ?> "><?php _e( 'Preview Purchase Receipt', 'edd' ); ?></a>
@@ -317,7 +317,7 @@ function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) 
 	$default_email_body .= "{download_list}\n\n";
 	$default_email_body .= "{sitename}";
 
-	$email = isset( $edd_options['purchase_receipt'] ) ? $edd_options['purchase_receipt'] : $default_email_body;
+	$email = isset( $edd_options['purchase_receipt'] ) ? stripslashes( $edd_options['purchase_receipt'] ) : $default_email_body;
 
 	$email_body = edd_email_template_tags( $email, $payment_data, $payment_id );
 
