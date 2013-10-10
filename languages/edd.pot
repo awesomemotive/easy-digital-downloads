@@ -2,9 +2,10 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 1.8-beta\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/tag/easy-digital-downloads\n"
-"POT-Creation-Date: 2013-09-23 20:33:23+00:00\n"
+"Project-Id-Version: Easy Digital Downloads 1.8\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/easy-digital-"
+"downloads\n"
+"POT-Creation-Date: 2013-10-10 11:59:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -59,32 +60,36 @@ msgid "The purchase receipt has been resent."
 msgstr ""
 
 #: includes/admin/admin-notices.php:50
+msgid "The payment note has been deleted."
+msgstr ""
+
+#: includes/admin/admin-notices.php:54
 msgid ""
 "Note: Test Mode is enabled, only test payments are shown below. %sSettings%s."
 msgstr ""
 
-#: includes/admin/admin-notices.php:54 includes/template-functions.php:53
+#: includes/admin/admin-notices.php:58 includes/template-functions.php:53
 msgid ""
 "No checkout page has been configured. Visit <a href=\"%s\">Settings</a> to "
 "set one."
 msgstr ""
 
-#: includes/admin/admin-notices.php:58
+#: includes/admin/admin-notices.php:62
 msgid "The settings have been imported."
 msgstr ""
 
-#: includes/admin/admin-notices.php:63
+#: includes/admin/admin-notices.php:67
 msgid ""
 "The Easy Digital Downloads .htaccess file is missing from <strong>%s</"
 "strong>. Please create a file called \".htaccess\", place it in <strong>%s</"
 "strong>, and put the following contents inside the file:"
 msgstr ""
 
-#: includes/admin/admin-notices.php:65
+#: includes/admin/admin-notices.php:69
 msgid "Dismiss Notice"
 msgstr ""
 
-#: includes/admin/admin-notices.php:80
+#: includes/admin/admin-notices.php:84
 msgid ""
 "There seems to be an issue with the server. Please try again in a few "
 "minutes."
@@ -941,27 +946,27 @@ msgid "Completed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:176
-#: includes/payments/functions.php:376
+#: includes/payments/functions.php:379
 msgid "Pending"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:177
-#: includes/payments/functions.php:378
+#: includes/payments/functions.php:381
 msgid "Refunded"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:178
-#: includes/payments/functions.php:381
+#: includes/payments/functions.php:384
 msgid "Revoked"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:179
-#: includes/payments/functions.php:379
+#: includes/payments/functions.php:382
 msgid "Failed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:180
-#: includes/payments/functions.php:380
+#: includes/payments/functions.php:383
 msgid "Abandoned"
 msgstr ""
 
@@ -1726,7 +1731,7 @@ msgstr ""
 msgid "Sales and earnings reports for the current year for all products"
 msgstr ""
 
-#. #-#-#-#-#  easy-digital-downloads.pot (Easy Digital Downloads 1.8-beta)  #-#-#-#-#
+#. #-#-#-#-#  easy-digital-downloads.pot (Easy Digital Downloads 1.8)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: includes/admin/reporting/pdf-reports.php:39
 #: includes/admin/reporting/pdf-reports.php:40 languages/strings.php:15
@@ -2634,57 +2639,57 @@ msgstr ""
 msgid "Misc"
 msgstr ""
 
-#: includes/admin/system-info.php:52
+#: includes/admin/system-info.php:54
 msgid "System Information"
 msgstr ""
 
-#: includes/admin/system-info.php:54
+#: includes/admin/system-info.php:56
 msgid ""
 "To copy the system info, click below then press Ctrl + C (PC) or Cmd + C "
 "(Mac)."
 msgstr ""
 
-#: includes/admin/system-info.php:136
+#: includes/admin/system-info.php:138
 msgid "wp_remote_post() works"
 msgstr ""
 
-#: includes/admin/system-info.php:138
+#: includes/admin/system-info.php:140
 msgid "wp_remote_post() does not work"
 msgstr ""
 
-#: includes/admin/system-info.php:152
+#: includes/admin/system-info.php:154
 msgid "Your server supports fsockopen."
 msgstr ""
 
-#: includes/admin/system-info.php:152
+#: includes/admin/system-info.php:154
 msgid "Your server does not support fsockopen."
 msgstr ""
 
-#: includes/admin/system-info.php:153
+#: includes/admin/system-info.php:155
 msgid "Your server supports cURL."
 msgstr ""
 
-#: includes/admin/system-info.php:153
+#: includes/admin/system-info.php:155
 msgid "Your server does not support cURL."
 msgstr ""
 
-#: includes/admin/system-info.php:154
+#: includes/admin/system-info.php:156
 msgid "Your server has the SOAP Client enabled."
 msgstr ""
 
-#: includes/admin/system-info.php:154
+#: includes/admin/system-info.php:156
 msgid "Your server does not have the SOAP Client enabled."
 msgstr ""
 
-#: includes/admin/system-info.php:155
+#: includes/admin/system-info.php:157
 msgid "Your server has SUHOSIN installed."
 msgstr ""
 
-#: includes/admin/system-info.php:155
+#: includes/admin/system-info.php:157
 msgid "Your server does not have SUHOSIN installed."
 msgstr ""
 
-#: includes/admin/system-info.php:214
+#: includes/admin/system-info.php:216
 msgid "Download System Info File"
 msgstr ""
 
@@ -3058,8 +3063,16 @@ msgstr ""
 msgid "Cart saved successfully. You can restore your cart using this URL:"
 msgstr ""
 
+#: includes/cart/functions.php:1009 includes/cart/functions.php:1024
+msgid "Cart restoration failed. Invalid token."
+msgstr ""
+
 #: includes/cart/functions.php:1012 includes/cart/functions.php:1027
 msgid "The cart cannot be restored. Invalid token."
+msgstr ""
+
+#: includes/cart/functions.php:1037
+msgid "Cart restored successfully."
 msgstr ""
 
 #: includes/cart/template.php:53
@@ -3082,7 +3095,7 @@ msgstr ""
 msgid "Restore Previous Cart."
 msgstr ""
 
-#: includes/cart/template.php:215
+#: includes/cart/template.php:218
 msgid "Update Cart"
 msgstr ""
 
@@ -3482,6 +3495,10 @@ msgstr ""
 msgid "Choose"
 msgstr ""
 
+#: includes/deprecated-functions.php:203
+msgid "You have already purchased this item, but you may purchase it again."
+msgstr ""
+
 #: includes/download-functions.php:281
 msgid "Default"
 msgstr ""
@@ -3838,69 +3855,73 @@ msgstr ""
 msgid "Japanese Yen (&yen;)"
 msgstr ""
 
-#: includes/misc-functions.php:219
+#: includes/misc-functions.php:219 tests/unit-tests/misc.php:68
 msgid "Malaysian Ringgits"
 msgstr ""
 
-#: includes/misc-functions.php:220 tests/unit-tests/misc.php:68
+#: includes/misc-functions.php:220 tests/unit-tests/misc.php:69
 msgid "Mexican Peso (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:221 tests/unit-tests/misc.php:69
+#: includes/misc-functions.php:221 tests/unit-tests/misc.php:70
 msgid "New Zealand Dollar (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:222 tests/unit-tests/misc.php:70
+#: includes/misc-functions.php:222 tests/unit-tests/misc.php:71
 msgid "Norwegian Krone"
 msgstr ""
 
-#: includes/misc-functions.php:223 tests/unit-tests/misc.php:71
+#: includes/misc-functions.php:223 tests/unit-tests/misc.php:72
 msgid "Philippine Pesos"
 msgstr ""
 
-#: includes/misc-functions.php:224 tests/unit-tests/misc.php:72
+#: includes/misc-functions.php:224 tests/unit-tests/misc.php:73
 msgid "Polish Zloty"
 msgstr ""
 
-#: includes/misc-functions.php:225 tests/unit-tests/misc.php:73
+#: includes/misc-functions.php:225 tests/unit-tests/misc.php:74
 msgid "Singapore Dollar (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:226 tests/unit-tests/misc.php:74
+#: includes/misc-functions.php:226 tests/unit-tests/misc.php:75
 msgid "Swedish Krona"
 msgstr ""
 
-#: includes/misc-functions.php:227 tests/unit-tests/misc.php:75
+#: includes/misc-functions.php:227 tests/unit-tests/misc.php:76
 msgid "Swiss Franc"
 msgstr ""
 
-#: includes/misc-functions.php:228 tests/unit-tests/misc.php:76
+#: includes/misc-functions.php:228 tests/unit-tests/misc.php:77
 msgid "Taiwan New Dollars"
 msgstr ""
 
-#: includes/misc-functions.php:229 tests/unit-tests/misc.php:77
+#: includes/misc-functions.php:229 tests/unit-tests/misc.php:78
 msgid "Thai Baht (&#3647;)"
 msgstr ""
 
-#: includes/misc-functions.php:230 tests/unit-tests/misc.php:78
+#: includes/misc-functions.php:230 tests/unit-tests/misc.php:79
 msgid "Indian Rupee (&#8377;)"
 msgstr ""
 
-#: includes/misc-functions.php:231 tests/unit-tests/misc.php:79
+#: includes/misc-functions.php:231 tests/unit-tests/misc.php:80
 msgid "Turkish Lira (&#8378;)"
 msgstr ""
 
-#: includes/misc-functions.php:232 tests/unit-tests/misc.php:80
+#: includes/misc-functions.php:232 tests/unit-tests/misc.php:81
 msgid "Iranian Rial (&#65020;)"
 msgstr ""
 
-#: includes/misc-functions.php:335
+#: includes/misc-functions.php:233 tests/unit-tests/misc.php:82
+msgid "Russian Rubles"
+msgstr ""
+
+#: includes/misc-functions.php:336
 msgid ""
 "%1$s is <strong>deprecated</strong> since Easy Digital Downloads version "
 "%2$s! Use %3$s instead."
 msgstr ""
 
-#: includes/misc-functions.php:340
+#: includes/misc-functions.php:341
 msgid ""
 "%1$s is <strong>deprecated</strong> since Easy Digital Downloads version "
 "%2$s with no alternative available."
@@ -3910,7 +3931,7 @@ msgstr ""
 msgid "Status changed from %s to %s"
 msgstr ""
 
-#: includes/payments/functions.php:377
+#: includes/payments/functions.php:380
 msgid "Complete"
 msgstr ""
 
@@ -4202,11 +4223,11 @@ msgstr ""
 msgid "%2$s submitted. %1$sView %2$s%3$s."
 msgstr ""
 
-#: includes/process-download.php:150
+#: includes/process-download.php:152
 msgid "You do not have permission to download this file"
 msgstr ""
 
-#: includes/process-download.php:151
+#: includes/process-download.php:153
 msgid "Purchase Verification Failed"
 msgstr ""
 
@@ -4455,11 +4476,7 @@ msgstr ""
 msgid "Plain Text"
 msgstr ""
 
-#: includes/template-functions.php:386
-msgid "You have already purchased this item, but you may purchase it again."
-msgstr ""
-
-#: includes/template-functions.php:430
+#: includes/template-functions.php:409
 msgid "No downloads found"
 msgstr ""
 
@@ -4500,13 +4517,13 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#. #-#-#-#-#  easy-digital-downloads.pot (Easy Digital Downloads 1.8-beta)  #-#-#-#-#
+#. #-#-#-#-#  easy-digital-downloads.pot (Easy Digital Downloads 1.8)  #-#-#-#-#
 #. Description of the plugin/theme
 #: languages/strings.php:16
 msgid "Serve Digital Downloads Through WordPress"
 msgstr ""
 
-#. #-#-#-#-#  easy-digital-downloads.pot (Easy Digital Downloads 1.8-beta)  #-#-#-#-#
+#. #-#-#-#-#  easy-digital-downloads.pot (Easy Digital Downloads 1.8)  #-#-#-#-#
 #. Author of the plugin/theme
 #: languages/strings.php:17
 msgid "Pippin Williamson"
