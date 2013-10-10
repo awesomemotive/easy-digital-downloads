@@ -309,9 +309,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function column_user( $payment ) {
 
-		$user_id   = $payment->user_info['id'];
+		$user_id = edd_get_payment_user_id( $payment->ID )
 
-		if ( $user_id > 0 ) {
+		if ( $user_id && $user_id > 0 ) {
 			$user = get_userdata( $user_id ) ;
 			$display_name = is_object( $user ) ? $user->display_name : __( 'guest', 'edd' );
 		} else {
