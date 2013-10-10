@@ -397,10 +397,9 @@ function edd_cart_subtotal() {
  *
  * @since 1.3.3
  * @global $edd_options Array of all the EDD Options
- * @param bool $tax Whether tax is enabled or not (default: true)
  * @return float Total amount before taxes
  */
-function edd_get_cart_subtotal( $tax = true ) {
+function edd_get_cart_subtotal() {
 	global $edd_options;
 
 	$cart_items = edd_get_cart_contents();
@@ -408,7 +407,7 @@ function edd_get_cart_subtotal( $tax = true ) {
 
 	if ( $cart_items ) {
 		foreach ( $cart_items as $item ) {
-			$amount += ( edd_get_cart_item_price( $item['id'], $item['options'], $tax ) * edd_get_cart_item_quantity( $item['id'], $item['options'] ) );
+			$amount += ( edd_get_cart_item_price( $item['id'], $item['options'], false ) * edd_get_cart_item_quantity( $item['id'], $item['options'] ) );
 		}
 	}
 
@@ -476,9 +475,9 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 function edd_get_cart_total( $discounts = false ) {
 	global $edd_options;
 
-	$subtotal = edd_get_cart_subtotal( edd_prices_include_tax() );
+	$subtotal = edd_get_cart_subtotal();
 	$fees     = edd_get_cart_fee_total();
-	$cart_tax = edd_get_cart_tax( $discounts );
+	$cart_tax = edd_prices_include_tax() ? 0 : edd_get_cart_tax( $discounts );
 	$discount = edd_get_cart_discounted_amount( $discounts );
 	$total    = $subtotal + $fees + $cart_tax - $discount;
 
