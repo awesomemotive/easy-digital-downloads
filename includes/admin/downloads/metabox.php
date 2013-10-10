@@ -591,7 +591,11 @@ add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
  * @return void
  */
 function edd_render_download_limit_row( $post_id ) {
-	global $edd_options;
+    global $edd_options;
+
+    if( !current_user_can( 'manage_shop_settings' ) )
+        return;
+
 	$edd_download_limit = edd_get_file_download_limit( $post_id );
 ?>
 	<p><strong><?php _e( 'File Download Limit:', 'edd' ); ?></strong></p>
