@@ -50,20 +50,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 					edd_record_sale_in_log( $download['id'], $payment_id, $user_info );
 					edd_increase_purchase_count( $download['id'] );
-					$amount = null;
-
-					if ( is_array( $cart_details ) ) {
-						foreach ( $cart_details as $key => $item ) {
-							if ( array_search( $download['id'], $item ) ) {
-								$cart_item_id = $key;
-							}
-						}
-
-						$amount = isset( $download['price'] ) ? $download['price'] : null;
-					}
-
-					$amount = edd_get_download_final_price( $download['id'], $user_info, $amount );
-					edd_increase_earnings( $download['id'], $amount );
+					edd_increase_earnings( $download['id'], $download['price'] );
 
 				}
 
