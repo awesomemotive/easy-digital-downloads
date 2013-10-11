@@ -74,7 +74,6 @@ function edd_download_meta_box_save( $post_id) {
 			'_edd_purchase_text',
 			'_edd_purchase_style',
 			'_edd_purchase_color',
-			'_edd_download_limit',
 			'_edd_bundled_products',
 			'_edd_hide_purchase_link',
 			'_edd_button_behavior',
@@ -82,12 +81,16 @@ function edd_download_meta_box_save( $post_id) {
 		)
 	);
 
+    if ( current_user_can( 'manage_shop_settings' ) ) {
+        $fields[] = '_edd_download_limit';
+    }
+
 	if ( edd_use_skus() ) {
 		$fields[] = 'edd_sku';
 	}
 
 	foreach ( $fields as $field ) {
-		if ( ! empty( $_POST[ $field ] ) ) {
+        if ( ! empty( $_POST[ $field ] ) ) {
 			$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
 			update_post_meta( $post_id, $field, $new );
 		} else {
