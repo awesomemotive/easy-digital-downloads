@@ -125,13 +125,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
     	    $i = 1;
         	foreach( $purchase_data['cart_details'] as $item ) {
 
-        		$deduct_tax = ( edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax() );
-
-	        	if( $deduct_tax && edd_use_taxes() ) {
-    	    		$price =  $item['price'] - $item['tax'];
-        		} else {
-        			$price = $item['price'];
-	        	}
+        		$price = $item['price'] - $item['tax'];
 
 	        	if( edd_has_variable_prices( $item['id'] ) && edd_get_cart_item_price_id( $item ) !== false ) {
 	        		$item['name'] .= ' - ' . edd_get_cart_item_price_name( $item );
@@ -147,8 +141,9 @@ function edd_process_paypal_purchase( $purchase_data ) {
 	        }
 		}
 
+
    	    // Calculate discount
-       	$discounted_amount = $purchase_data['discount'];
+       	$discounted_amount = 0.00;
         if( ! empty( $purchase_data['fees'] ) ) {
        	 	$i = empty( $i ) ? 1 : $i;
 	        foreach( $purchase_data['fees'] as $fee ) {
