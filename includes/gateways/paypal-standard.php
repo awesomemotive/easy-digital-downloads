@@ -30,6 +30,8 @@ add_action( 'edd_paypal_cc_form', '__return_false' );
 function edd_process_paypal_purchase( $purchase_data ) {
     global $edd_options;
 
+	//echo '<pre>'; print_r( $purchase_data ); echo '</pre>'; exit;
+
     /*
     Purchase data comes in like this:
 
@@ -125,8 +127,6 @@ function edd_process_paypal_purchase( $purchase_data ) {
     	    $i = 1;
         	foreach( $purchase_data['cart_details'] as $item ) {
 
-        		$price = $item['price'] - $item['tax'];
-
 	        	if( edd_has_variable_prices( $item['id'] ) && edd_get_cart_item_price_id( $item ) !== false ) {
 	        		$item['name'] .= ' - ' . edd_get_cart_item_price_name( $item );
 	        	}
@@ -136,7 +136,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 	        		$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
 	    		}
     	    	$paypal_args['quantity_' . $i ]        = $item['quantity'];
-        		$paypal_args['amount_' . $i ]          = $price;
+        		$paypal_args['amount_' . $i ]          = $item['price'];
         		$i++;
 	        }
 		}
@@ -162,6 +162,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
 	    if( $discounted_amount > '0' )
 			$paypal_args['discount_amount_cart'] = $discounted_amount;
+
+
 
 		// Add taxes to the cart
         if ( edd_use_taxes() && $itemize )
