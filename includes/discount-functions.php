@@ -887,7 +887,7 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 	if ( empty( $discounts ) || ! is_array( $discounts ) )
 		return 0.00;
 
-	$subtotal = edd_get_cart_subtotal( $tax = false );
+	$subtotal = edd_get_cart_subtotal( true );
 	$amounts  = array();
 	$discounted_items = array();
 
