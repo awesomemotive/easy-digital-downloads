@@ -293,6 +293,7 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $taxed =
 		}
 	}
 
+
 	// Determine if we need to add tax to the price
 	if ( $taxed &&
 		(
@@ -399,7 +400,7 @@ function edd_cart_subtotal() {
  * @global $edd_options Array of all the EDD Options
  * @return float Total amount before taxes
  */
-function edd_get_cart_subtotal() {
+function edd_get_cart_subtotal( $tax = false) {
 	global $edd_options;
 
 	$cart_items = edd_get_cart_contents();
@@ -407,7 +408,7 @@ function edd_get_cart_subtotal() {
 
 	if ( $cart_items ) {
 		foreach ( $cart_items as $item ) {
-			$amount += ( edd_get_cart_item_price( $item['id'], $item['options'], false ) * edd_get_cart_item_quantity( $item['id'], $item['options'] ) );
+			$amount += ( edd_get_cart_item_price( $item['id'], $item['options'], $tax ) * edd_get_cart_item_quantity( $item['id'], $item['options'] ) );
 		}
 	}
 
@@ -595,7 +596,7 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
 function edd_get_cart_tax( $discounts = false ) {
 
 	$add_taxes    = edd_taxes_after_discounts() ? true : false;
-	$subtotal     = edd_get_cart_subtotal( $add_taxes );
+	$subtotal     = edd_get_cart_subtotal( false );
 	$cart_fees    = edd_get_cart_fee_total();
 	$subtotal    += $cart_fees;
 	$cart_tax     = 0;
