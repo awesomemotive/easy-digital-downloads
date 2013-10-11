@@ -62,7 +62,10 @@ function edd_admin_messages() {
 		add_settings_error( 'edd-notices', 'edd-settings-imported', __( 'The settings have been imported.', 'edd' ), 'updated' );
 	}
 
-	if( ! edd_htaccess_exists() && ! get_user_meta( get_current_user_id(), '_edd_htaccess_missing_dismissed', true ) ) {
+    if( ! edd_htaccess_exists() && ! get_user_meta( get_current_user_id(), '_edd_htaccess_missing_dismissed', true ) ) {
+        if( ! stristr( $_SERVER['SERVER_SOFTWARE'], 'apache' ) )
+            return; // Bail if we aren't using Apache... nginx doesn't use htaccess!
+
 		echo '<div class="error">';
 			echo '<p>' . sprintf( __( 'The Easy Digital Downloads .htaccess file is missing from <strong>%s</strong>. Please create a file called ".htaccess", place it in <strong>%s</strong>, and put the following contents inside the file:', 'edd' ), edd_get_upload_dir(), edd_get_upload_dir() ) . '</p>';
 			echo '<p><pre>' . edd_get_htaccess_rules() . '</pre></pre>';
