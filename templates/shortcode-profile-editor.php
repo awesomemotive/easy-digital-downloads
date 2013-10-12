@@ -95,6 +95,6 @@ if ( is_user_logged_in() ):
 	</form><!-- #edd_profile_editor_form -->
 	<?php
 else:
-	echo '<p>' . __( 'You need to login to edit your profile.', 'edd' ) . '</p>';
+	echo __( 'You need to login to edit your profile.', 'edd' );
 	echo edd_login_form();
 endif;
