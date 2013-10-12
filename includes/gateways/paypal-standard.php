@@ -128,6 +128,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
         		$price = $item['price'] - $item['tax'];
 
 	        	if( edd_has_variable_prices( $item['id'] ) && edd_get_cart_item_price_id( $item ) !== false ) {
+
 	        		$item['name'] .= ' - ' . edd_get_cart_item_price_name( $item );
 	        	}
 

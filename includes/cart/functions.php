@@ -660,9 +660,9 @@ function edd_get_cart_content_details() {
 
 	foreach( $cart_items as $key => $item ) {
 
+		$original_price = edd_get_cart_item_price( $item['id'], $item['options'], false );
 		$price      = edd_get_cart_item_price( $item['id'], $item['options'] );
 		$base_price = edd_get_cart_item_price( $item['id'], $item['options'], false );
-		$tax        = $price - $base_price;
 
 		// Calculate the discounted price, if any
 		$discounts = edd_get_cart_discounts();
@@ -706,9 +706,19 @@ function edd_get_cart_content_details() {
 					}
 				}
 
-				// Recalculate tax based on discounts
-				$tax = $price - edd_calculate_tax( $price );
 			}
+		}
+
+		if( edd_prices_include_tax() && ! edd_taxes_after_discounts() ) {
+			$tax = $is_taxed ? $original_price - edd_calculate_tax( $original_price ) : 0.00;
+			$price += $tax;
+		} elseif( edd_prices_include_tax() && edd_taxes_after_discounts() ) {
+			$tax = $is_taxed ? $price - edd_calculate_tax( $price ) : 0.00;
+		} elseif( edd_taxes_after_discounts() ) {
+			$tax = $is_taxed ? edd_calculate_tax( $price ) - $price : 0.00;
+			$price += $tax;
+		} else {
+			$tax = $is_taxed ? edd_calculate_tax( $original_price ) - $base_price : 0.00;
 		}
 
 
