@@ -74,7 +74,6 @@ function edd_download_meta_box_save( $post_id) {
 			'_edd_purchase_text',
 			'_edd_purchase_style',
 			'_edd_purchase_color',
-			'_edd_download_limit',
 			'_edd_bundled_products',
 			'_edd_hide_purchase_link',
 			'_edd_button_behavior',
@@ -82,12 +81,16 @@ function edd_download_meta_box_save( $post_id) {
 		)
 	);
 
+    if ( current_user_can( 'manage_shop_settings' ) ) {
+        $fields[] = '_edd_download_limit';
+    }
+
 	if ( edd_use_skus() ) {
 		$fields[] = 'edd_sku';
 	}
 
 	foreach ( $fields as $field ) {
-		if ( ! empty( $_POST[ $field ] ) ) {
+        if ( ! empty( $_POST[ $field ] ) ) {
 			$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
 			update_post_meta( $post_id, $field, $new );
 		} else {
@@ -591,7 +594,11 @@ add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
  * @return void
  */
 function edd_render_download_limit_row( $post_id ) {
-	global $edd_options;
+    global $edd_options;
+
+    if( !current_user_can( 'manage_shop_settings' ) )
+        return;
+
 	$edd_download_limit = edd_get_file_download_limit( $post_id );
 ?>
 	<p><strong><?php _e( 'File Download Limit:', 'edd' ); ?></strong></p>
