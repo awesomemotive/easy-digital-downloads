@@ -30,6 +30,8 @@ add_action( 'edd_paypal_cc_form', '__return_false' );
 function edd_process_paypal_purchase( $purchase_data ) {
     global $edd_options;
 
+   	//echo '<pre>'; print_r( $purchase_data ); echo '</pre>'; exit;
+
     /*
     Purchase data comes in like this:
 
@@ -82,7 +84,9 @@ function edd_process_paypal_purchase( $purchase_data ) {
         $paypal_redirect = trailingslashit( edd_get_paypal_redirect() ) . '?';
 
 		// Do we have too many items to itemize?
-		$itemize = ( count( $purchase_data['cart_details'] ) > 9 ? false : true );
+		//$itemize = ( count( $purchase_data['cart_details'] ) > 9 ? false : true );
+
+        $itemize = false;
 
         // Setup PayPal arguments
         $paypal_args = array(
@@ -161,8 +165,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
 	        }
 	    }
 
-	    if( $discounted_amount > '0' )
-			$paypal_args['discount_amount_cart'] = $discounted_amount;
+	   // if( $discounted_amount > '0' )
+		//	$paypal_args['discount_amount_cart'] = $discounted_amount;
 
 		// Add taxes to the cart
         if ( edd_use_taxes() && $itemize )
