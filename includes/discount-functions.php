@@ -887,7 +887,6 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 	if ( empty( $discounts ) || ! is_array( $discounts ) )
 		return 0.00;
 
-	$subtotal = edd_get_cart_subtotal( $tax = false );
 	$amounts  = array();
 	$discounted_items = array();
 
@@ -912,7 +911,7 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 			}
 		} else {
 			// This is a global cart discount
-			$subtotal  = edd_get_cart_subtotal();
+			$subtotal  = edd_get_cart_subtotal( ! edd_taxes_after_discounts() );
 			$amount    = edd_get_discounted_amount( $discount, $subtotal );
 			$amounts[] = $subtotal - $amount;
 		}
