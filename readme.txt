@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.7
 
-Stable Tag: 1.8
+Stable Tag: 1.8.1
 License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -185,6 +185,25 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 1.8.1: October 12, 2013 =
+
+* Tweak: Itemization in PayPal disabled due to bugs with amount calculation. Will be fixed in 1.9
+* Tweak: Added filters to admin script loaders so extensions can enable core EDD scripts on custom pages
+
+* Fix: Download Limit field shown incorrectly to shop vendors
+* Fix: Price option name not passed to PayPal
+* Fix: Settings import doe not perform a filetype check
+* Fix: Bug with Payment History pagination
+* Fix: Escapaing issues with text and textarea fields in settings
+* Fix: Previous purchase lookup on user registration not working
+* Fix: Deleting payment note redirects to Payment History instead of Edit screen
+* Fix: Incorrect username in Payment History for guest purchases
+* Fix: Check for apache before showing .htaccess missing warning
+* Fix: Add fallback cor cal_days_in_month()
+* Fix: Tax calculation bug
+* Fix: Checkboxes in Settings > Extensions cannot be turned off
+* Fix: Extra <p> tag in profile editor
 
 = 1.8: September 26, 2013 =
 
