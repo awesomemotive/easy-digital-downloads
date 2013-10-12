@@ -81,9 +81,9 @@ function edd_download_meta_box_save( $post_id) {
 		)
 	);
 
-    if ( current_user_can( 'manage_shop_settings' ) ) {
-        $fields[] = '_edd_download_limit';
-    }
+	if ( current_user_can( 'manage_shop_settings' ) ) {
+		$fields[] = '_edd_download_limit';
+	}
 
 	if ( edd_use_skus() ) {
 		$fields[] = 'edd_sku';
