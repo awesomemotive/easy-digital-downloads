@@ -75,7 +75,6 @@ function edd_process_download() {
 		if( function_exists( 'apache_setenv' ) ) @apache_setenv('no-gzip', 1);
 		@ini_set( 'zlib.output_compression', 'Off' );
 
-
 		nocache_headers();
 		header("Robots: none");
 		header("Content-Type: " . $ctype . "");
@@ -103,7 +102,6 @@ function edd_process_download() {
 				$direct       = false;
 				$file_details = parse_url( $requested_file );
 				$schemes      = array( 'http', 'https' ); // Direct URL schemes
-
 				if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
 
 					/** This is an absolute path */
@@ -118,7 +116,7 @@ function edd_process_download() {
 					$direct     = true;
 
 				}
-				/*
+
 				// Now deliver the file based on the kind of software the server is running / has enabled
 				if ( function_exists( 'apache_get_modules' ) && in_array( 'mod_xsendfile', apache_get_modules() ) ) {
 
@@ -135,7 +133,7 @@ function edd_process_download() {
 					header( "X-Accel-Redirect: /$file_path" );
 
 				} else
-*/
+
 				if( $direct ) {
 					edd_deliver_download( $file_path );
 				} else {
