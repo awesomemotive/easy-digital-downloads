@@ -26,6 +26,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since  1.5
  */
 class EDD_API {
+
+	/**
+	 * API Version
+	 */
+	const VERSION = '1.1';
+
 	/**
 	 * Pretty Print?
 	 *
@@ -63,6 +69,15 @@ class EDD_API {
 	private $user_id = 0;
 
 	/**
+	 * Instance of EDD Stats class
+	 *
+	 * @var object
+	 * @access private
+	 * @since 1.7
+	 */
+	private $stats;
+
+	/**
 	 * Response data to return
 	 *
 	 * @var array
@@ -82,10 +97,8 @@ class EDD_API {
 	/**
 	 * Setup the EDD API
 	 *
-	 * @access public
 	 * @author Daniel J Griffiths
 	 * @since 1.5
-	 * @return void
 	 */
 	public function __construct() {
 		add_action( 'init',                    array( $this, 'add_endpoint'   ) );
@@ -99,6 +112,10 @@ class EDD_API {
 
 		// Allow API request logging to be turned off
 		$this->log_requests = apply_filters( 'edd_api_log_requests', $this->log_requests );
+
+		// Setup EDD_Stats instance
+		$this->stats = new EDD_Payment_Stats;
+
 	}
 
 	/**
@@ -182,9 +199,11 @@ class EDD_API {
 	 * @access public
 	 * @since 1.5.1
 	 * @global object $wpdb Used to query the database using the WordPress
-	 *   Database API
-	 * @param int $key Public Key
-	 * @return mixed string if user ID is found, false otherwise
+	 * Database API
+	 *
+	 * @param string $key Public Key
+	 *
+	 * @return bool if user ID is found, false otherwise
 	 */
 	public function get_user( $key = '' ) {
 		global $wpdb, $wp_query;
@@ -407,10 +426,9 @@ class EDD_API {
 	 *
 	 * Determines whether results should be displayed in XML or JSON
 	 *
-	 * @access private
 	 * @since 1.5
-	 * @global $wp_query
-	 * @return $format Output format
+	 *
+	 * @return mixed|void
 	 */
 	public function get_output_format() {
 		global $wp_query;
@@ -757,12 +775,14 @@ class EDD_API {
 	/**
 	 * Process Get Stats API Request
 	 *
-	 * @access public
 	 * @author Daniel J Griffiths
 	 * @since 1.5
+	 *
 	 * @global object $wpdb Used to query the database using the WordPress
-	 *   Database API
+	 *
 	 * @param array $args Arguments provided by API Request
+	 *
+	 * @return array
 	 */
 	public function get_stats( $args = array() ) {
 		$defaults = array(
@@ -1200,17 +1220,15 @@ class EDD_API {
 		return $this->data;
 	}
 
-
 	/**
 	 * Output Query in either JSON/XML. The query data is outputted as JSON
 	 * by default
 	 *
-	 * @access public
 	 * @author Daniel J Griffiths
 	 * @since 1.5
 	 * @global $wp_query
-	 * @param array $data
-	 * @return void
+	 *
+	 * @param int $status_code
 	 */
 	public function output( $status_code = 200 ) {
 		global $wp_query;
@@ -1337,12 +1355,11 @@ class EDD_API {
 	 * @return array default sales statistics
 	 */
 	private function get_default_sales_stats() {
-		// Default sales return
-		$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
-		$previous_year  = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
 
-		$sales['sales']['current_month'] = edd_get_sales_by_date( null, date( 'n' ), date( 'Y' ) );
-		$sales['sales']['last_month']    = edd_get_sales_by_date( null, $previous_month, $previous_year );
+		// Default sales return
+
+		$sales['sales']['current_month'] = $this->stats->get_sales( 0, 'this_month' );
+		$sales['sales']['last_month']    = $this->stats->get_sales( 0, 'last_month' );
 		$sales['sales']['totals']        = edd_get_total_sales();
 
 		return $sales;
@@ -1353,15 +1370,14 @@ class EDD_API {
 	 *
 	 * @access private
 	 * @since 1.5.3
-	 * @return array default eranings statistics
+	 * @return array default earnings statistics
 	 */
 	private function get_default_earnings_stats() {
-		// Default earnings return
-		$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
-		$previous_year  = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
 
-		$earnings['earnings']['current_month'] = edd_get_earnings_by_date( null, date( 'n' ), date( 'Y' ) );
-		$earnings['earnings']['last_month']    = edd_get_earnings_by_date( null, $previous_month, $previous_year );
+		// Default earnings return
+
+		$earnings['earnings']['current_month'] = $this->stats->get_earnings( 0, 'this_month' );
+		$earnings['earnings']['last_month']    = $this->stats->get_earnings( 0, 'last_month' );
 		$earnings['earnings']['totals']        = edd_get_total_earnings();
 
 		return $earnings;

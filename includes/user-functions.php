@@ -19,12 +19,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Retrieves a list of all purchases by a specific user.
  *
- * @access public
  * @since  1.0
- * @param  int|string $user   User ID or email address
- * @param  int $number        Number of purchases to retrieve
  *
- * @return array List of all user purchases
+ * @param int    $user User ID or email address
+ * @param int    $number Number of purchases to retrieve
+ * @param bool   $pagination
+ * @param string $status
+ *
+ * @return bool|object List of all user purchases
  */
 function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, $status = 'complete' ) {
 	if ( empty( $user ) ) {
@@ -305,6 +307,7 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 
 			// Store the updated user ID in the payment meta
 			update_post_meta( $payment->ID, '_edd_payment_meta', $meta );
+			update_post_meta( $payment->ID, '_edd_payment_user_id', $user_id );
 		}
 	}
 
@@ -325,4 +328,19 @@ function edd_count_total_customers() {
 	global $wpdb;
 	$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
 	return $count[0];
+}
+
+
+/**
+ * Returns the saved address for a customer
+ *
+ * @access 		public
+ * @since 		1.8
+ * @return 		array - The customer's address, if any
+ */
+function edd_get_customer_address( $user_id = 0 ) {
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+	return get_user_meta( $user_id, '_edd_user_address', true );
 }

@@ -60,7 +60,8 @@ add_action( 'template_redirect', 'edd_process_cart_endpoints', 100 );
  * Process the Add to Cart request
  *
  * @since 1.0
- * @return void
+ *
+ * @param $data
  */
 function edd_process_add_to_cart( $data ) {
 	$download_id = $data['download_id'];
@@ -78,7 +79,8 @@ add_action( 'edd_add_to_cart', 'edd_process_add_to_cart' );
  * Process the Remove form Cart request
  *
  * @since 1.0
- * @return void
+ *
+ * @param $data
  */
 function edd_process_remove_from_cart( $data ) {
 	$cart_key = $_GET['cart_item'];
@@ -90,7 +92,8 @@ add_action( 'edd_remove', 'edd_process_remove_from_cart' );
  * Process the Collection Purchase request
  *
  * @since 1.0
- * @return void
+ *
+ * @param $data
  */
 function edd_process_collection_purchase( $data ) {
 	$taxonomy   = urldecode( $data['taxonomy'] );
@@ -106,7 +109,6 @@ add_action( 'edd_purchase_collection', 'edd_process_collection_purchase' );
  * Process cart updates, primarily for quantities
  *
  * @since 1.7
- * @return void
  */
 function edd_process_cart_update( $data ) {
 
@@ -118,3 +120,35 @@ function edd_process_cart_update( $data ) {
 
 }
 add_action( 'edd_update_cart', 'edd_process_cart_update' );
+
+/**
+ * Process cart save
+ *
+ * @since 1.8
+ * @return void
+ */
+function edd_process_cart_save( $data ) {
+
+	$cart = edd_save_cart();
+	if( ! is_wp_error( $cart ) ) {
+		wp_redirect( edd_get_checkout_uri() ); exit;
+	}
+
+}
+add_action( 'edd_save_cart', 'edd_process_cart_save' );
+
+/**
+ * Process cart save
+ *
+ * @since 1.8
+ * @return void
+ */
+function edd_process_cart_restore( $data ) {
+
+	$cart = edd_restore_cart();
+	if( ! is_wp_error( $cart ) ) {
+		wp_redirect( edd_get_checkout_uri() ); exit;
+	}
+
+}
+add_action( 'edd_restore_cart', 'edd_process_cart_restore' );

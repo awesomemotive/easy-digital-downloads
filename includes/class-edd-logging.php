@@ -20,12 +20,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.3.1
  */
 class EDD_Logging {
+
 	/**
 	 * Set up the EDD Logging Class
 	 *
-	 * @access public
 	 * @since 1.3.1
-	 * @return void
 	 */
 	public function __construct() {
 		// Create the log post type
@@ -283,10 +282,11 @@ class EDD_Logging {
 	 */
 	public function get_log_count( $object_id = 0, $type = null, $meta_query = null ) {
 		$query_args = array(
-			'post_parent' 	=> $object_id,
-			'post_type'		=> 'edd_log',
-			'posts_per_page'=> -1,
-			'post_status'	=> 'publish'
+			'post_parent' 	   => $object_id,
+			'post_type'		   => 'edd_log',
+			'posts_per_page'   => -1,
+			'post_status'	   => 'publish',
+			'suppress_filters' => true
 		);
 
 		if ( ! empty( $type ) && $this->valid_type( $type ) ) {
@@ -362,9 +362,17 @@ $GLOBALS['edd_logs'] = new EDD_Logging();
  * This is just a simple wrapper function for the log class add() function
  *
  * @since 1.3.3
+ *
+ * @param string $title
+ * @param string $message
+ * @param int    $parent
+ * @param null   $type
+ *
  * @global $edd_logs EDD Logs Object
+ *
  * @uses EDD_Logging::add()
- * @return int $log ID of the new log entry
+ *
+ * @return mixed ID of the new log entry
  */
 function edd_record_log( $title = '', $message = '', $parent = 0, $type = null ) {
 	global $edd_logs;

@@ -50,20 +50,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 					edd_record_sale_in_log( $download['id'], $payment_id, $user_info );
 					edd_increase_purchase_count( $download['id'] );
-					$amount = null;
-
-					if ( is_array( $cart_details ) ) {
-						foreach ( $cart_details as $key => $item ) {
-							if ( array_search( $download['id'], $item ) ) {
-								$cart_item_id = $key;
-							}
-						}
-
-						$amount = isset( $download['price'] ) ? $download['price'] : null;
-					}
-
-					$amount = edd_get_download_final_price( $download['id'], $user_info, $amount );
-					edd_increase_earnings( $download['id'], $amount );
+					edd_increase_earnings( $download['id'], $download['price'] );
 
 				}
 
@@ -75,6 +62,8 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 		// Clear the total earnings cache
 		delete_transient( 'edd_earnings_total' );
+		// Clear the This Month earnings (this_monththis_month is NOT a typo)
+		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 	}
 
 	// Check for discount codes and increment their use counts
@@ -111,11 +100,11 @@ add_action( 'edd_update_payment_status', 'edd_complete_purchase', 100, 3 );
  * @return void
  */
 function edd_record_status_change( $payment_id, $new_status, $old_status ) {
-	if ( $new_status == 'publish' )
-		$new_status = 'complete';
 
-	if ( $old_status == 'publish' )
-		$old_status = 'complete';
+	// Get the list of statuses so that status in the payment note can be translated
+	$stati      = edd_get_payment_statuses();
+	$old_status = isset( $stati[ $old_status ] ) ? $stati[ $old_status ] : $old_status;
+	$new_status = isset( $stati[ $new_status ] ) ? $stati[ $new_status ] : $new_status;
 
 	$status_change = sprintf( __( 'Status changed from %s to %s', 'edd' ), $old_status, $new_status );
 
@@ -241,10 +230,10 @@ add_action( 'edd_insert_payment', 'edd_clear_earnings_cache', 10, 2 );
  * is updated
  *
  * @since 1.2.2
- * @param int $payment Payment ID
- * @param string $new_status the status of the payment, probably "publish"
- * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
- * @return void
+ *
+ * @param $payment_id
+ * @param $new_status the status of the payment, probably "publish"
+ * @param $old_status the status of the payment prior to being marked as "complete", probably "pending"
  */
 function edd_clear_user_history_cache( $payment_id, $new_status, $old_status ) {
 	$user_info = edd_get_payment_meta_user_info( $payment_id );
@@ -300,7 +289,7 @@ function edd_trigger_payment_note_deletion( $data ) {
 	if( ! wp_verify_nonce( $data['_wpnonce'], 'edd_delete_payment_note' ) )
 		return;
 
-	$edit_order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&edd-action=edit-payment&purchase_id=' . absint( $data['purchase_id'] ) );
+	$edit_order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=edit-payment&edd-message=payment_note_deleted&purchase_id=' . absint( $data['purchase_id'] ) );
 
 	edd_delete_payment_note( $data['note_id'], $data['purchase_id'] );
 

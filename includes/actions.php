@@ -13,7 +13,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Hooks EDD actions, when present in the $_GET superglobal. Every edd_aciton
+ * Hooks EDD actions, when present in the $_GET superglobal. Every edd_action
  * present in $_GET is called using WordPress's do_action function. These
  * functions are called on init.
  *
@@ -28,7 +28,7 @@ function edd_get_actions() {
 add_action( 'init', 'edd_get_actions' );
 
 /**
- * Hooks EDD actions, when present in the $_POST superglobal. Every edd_aciton
+ * Hooks EDD actions, when present in the $_POST superglobal. Every edd_action
  * present in $_POST is called using WordPress's do_action function. These
  * functions are called on init.
  *

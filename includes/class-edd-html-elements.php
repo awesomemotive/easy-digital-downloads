@@ -50,7 +50,7 @@ class EDD_HTML_Elements {
 			'selected'         => $selected,
 			'options'          => $options,
 			'show_option_all'  => false,
-			'show_option_none' => false
+			'show_option_none' => __( 'None', 'edd' )
 		) );
 
 		return $output;
@@ -184,15 +184,13 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown
 	 *
-	 * @access public
 	 * @since 1.6
-	 * @param string $options Options of the dropdown
-	 * @param string $name Name attribute of the dropdown
-	 * @param int    $selected Option key to select by default
-	 * @return string $output The dropdown
+	 *
+	 * @param array $args
+	 *
+	 * @return string
 	 */
-
-	public function select( $args = array()) {
+	public function select( $args = array() ) {
 		$defaults = array(
 			'options'          => array(),
 			'name'             => null,
@@ -225,11 +223,13 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Text field
 	 *
-	 * @access public
 	 * @since 1.5.2
+	 *
 	 * @param string $name Name attribute of the text field
 	 * @param string $value The value to prepopulate the field with
-	 * @return string $output Text field
+	 * @param string $label
+	 * @param string $desc
+	 * @return string Text field
 	 */
 	public function text( $name = 'text', $value = '', $label = '', $desc = '' ) {
 		$output = '<p id="edd-' . sanitize_key( $name ) . '-wrap">';

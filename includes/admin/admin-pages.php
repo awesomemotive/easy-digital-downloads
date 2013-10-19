@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 1.0
  * @global $edd_discounts_page
- * @global @edd_payments_page
+ * @global $edd_payments_page
  * @global $edd_settings_page
  * @global $edd_reports_page
  * @global $edd_system_info_page
@@ -36,9 +36,9 @@ function edd_add_options_link() {
 	$edd_discounts_page     = add_submenu_page( 'edit.php?post_type=download', __( 'Discount Codes', 'edd' ), __( 'Discount Codes', 'edd' ), 'manage_shop_discounts', 'edd-discounts', 'edd_discounts_page' );
 	$edd_reports_page 	    = add_submenu_page( 'edit.php?post_type=download', __( 'Earnings and Sales Reports', 'edd' ), __( 'Reports', 'edd' ), 'view_shop_reports', 'edd-reports', 'edd_reports_page' );
 	$edd_settings_page 	    = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download Settings', 'edd' ), __( 'Settings', 'edd' ), 'manage_shop_settings', 'edd-settings', 'edd_options_page' );
+	$edd_tools_page         = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download Tools', 'edd' ), __( 'Tools', 'edd' ), 'install_plugins', 'edd-tools', 'edd_tools_page' );
 	$edd_system_info_page 	= add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download System Info', 'edd' ), __( 'System Info', 'edd' ), 'install_plugins', 'edd-system-info', 'edd_system_info' );
 	$edd_add_ons_page 	    = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download Add Ons', 'edd' ), __( 'Add Ons', 'edd' ), 'install_plugins', 'edd-addons', 'edd_add_ons_page' );
-	$edd_settings_export    = add_management_page( __( 'EDD Settings Export / Import', 'edd' ), __( 'Export / Import EDD', 'edd' ), 'manage_shop_settings', 'edd-settings-export-import', 'edd_export_import' );
 	$edd_upgrades_screen    = add_submenu_page( null, __( 'EDD Upgrades', 'edd' ), __( 'EDD Upgrades', 'edd' ), 'install_plugins', 'edd-upgrades', 'edd_upgrades_screen' );
 }
 add_action( 'admin_menu', 'edd_add_options_link', 10 );
