@@ -76,7 +76,7 @@ if ( $purchases ) :
 							</td>
 						<?php endif; // End if ! edd_no_redownload()
 
-						do_action( 'edd_download_history_row_end', $payment->ID, $id );
+						do_action( 'edd_download_history_row_end', $payment->ID, $download['id'] );
 						?>
 					</tr>
 					<?php

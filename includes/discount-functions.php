@@ -273,7 +273,7 @@ function edd_get_discount_code( $code_id = null ) {
 }
 
 /**
- * Retrieve the discount code expiration date
+ * Retrieve the discount code start date
  *
  * @since 1.4
  * @param int $code_id Discount ID
@@ -863,8 +863,10 @@ function edd_cart_has_discounts() {
  * Retrieves the total discounted amount on the cart
  *
  * @since 1.4.1
- * @param array $discounts Discount codes
- * @return float $discounted_amount Total discounted amount
+ *
+ * @param bool $discounts Discount codes
+ *
+ * @return float|mixed|void Total discounted amount
  */
 function edd_get_cart_discounted_amount( $discounts = false ) {
 	if ( empty( $discounts ) )
@@ -885,7 +887,6 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 	if ( empty( $discounts ) || ! is_array( $discounts ) )
 		return 0.00;
 
-	$subtotal = edd_get_cart_subtotal( $tax = false );
 	$amounts  = array();
 	$discounted_items = array();
 
@@ -910,7 +911,7 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 			}
 		} else {
 			// This is a global cart discount
-			$subtotal  = edd_get_cart_subtotal();
+			$subtotal  = edd_get_cart_subtotal( ! edd_taxes_after_discounts() );
 			$amount    = edd_get_discounted_amount( $discount, $subtotal );
 			$amounts[] = $subtotal - $amount;
 		}
@@ -940,7 +941,9 @@ function edd_cart_discounts_html() {
  * Retrieves the HTML for all discounts applied to the cart
  *
  * @since 1.4.1
- * @return string
+ *
+ * @param bool $discounts
+ * @return mixed|void
  */
 function edd_get_cart_discounts_html( $discounts = false ) {
 	if ( ! $discounts )
@@ -1016,14 +1019,14 @@ function edd_remove_cart_discount() {
 }
 add_action( 'edd_remove_cart_discount', 'edd_remove_cart_discount' );
 
-
 /**
  * Checks whether discounts are still valid when removing items from the cart
  *
  * If a discount requires a certain product, and that product is no longer in the cart, the discount is removed
  *
  * @since 1.5.2
- * @return void
+ *
+ * @param int $cart_key
  */
 function edd_maybe_remove_cart_discount( $cart_key = 0 ) {
 

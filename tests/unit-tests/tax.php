@@ -17,23 +17,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		$this->assertFalse( edd_use_taxes() );
 	}
 
-	public function test_local_taxes_only() {
-		$this->assertTrue ( 1 == 1);
-	//	$this->assertFalse( edd_local_taxes_only() );
-	}
-
-	public function test_opt_into_local_taxes() {
-		$this->assertTrue ( 1 == 1);
-	//	edd_opt_into_local_taxes();
-	//	$this->assertTrue( edd_local_tax_opted_in() );
-	}
-
-	public function test_opt_out_local_taxes() {
-		$this->assertTrue ( 1 == 1);
-	//	$this->assertNull( edd_opt_out_local_taxes() );
-	}
-
-	public function test_taxes_one_prices() {
+	public function test_taxes_on_prices() {
 		$this->assertFalse( edd_taxes_on_prices() );
 	}
 
@@ -42,8 +26,41 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_get_tax_rate() {
-		$this->assertInternalType( 'integer', edd_get_tax_rate() );
-		$this->assertEquals( 0, edd_get_tax_rate() );
+		global $edd_options;
+
+		// Setup global tax rate
+		$options = array();
+		$options['tax_rate'] = '3.6';
+		$edd_options = array_merge( $options, $edd_options );
+
+		// Setup country / state tax rates
+		$tax_rates = array();
+		$tax_rates[] = array( 'country' => 'US', 'state' => 'AL', 'rate' => 15 );
+
+		update_option( 'edd_options', $edd_options );
+		update_option( 'edd_tax_rates', $tax_rates );
+
+		$this->assertInternalType( 'float', edd_get_tax_rate( 'US', 'AL' ) );
+		$this->assertEquals( '0.15', edd_get_tax_rate( 'US', 'AL' ) );
+	}
+
+	public function test_get_global_tax_rate() {
+		global $edd_options;
+
+		// Setup global tax rate
+		$options = array();
+		$options['tax_rate'] = '3.6';
+		$edd_options = array_merge( $options, $edd_options );
+
+		// Setup country / state tax rates
+		$tax_rates = array();
+		$tax_rates[] = array( 'country' => 'US', 'state' => 'AL', 'rate' => 15 );
+
+		update_option( 'edd_options', $edd_options );
+		update_option( 'edd_tax_rates', $tax_rates );
+
+		$this->assertInternalType( 'float', edd_get_tax_rate( 'CA', 'AB' ) );
+		$this->assertEquals( '0.036', edd_get_tax_rate( 'CA', 'AB' ) );
 	}
 
 	public function test_calculate_tax() {

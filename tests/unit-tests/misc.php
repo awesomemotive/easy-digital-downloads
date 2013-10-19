@@ -65,6 +65,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'HUF'  => __( 'Hungarian Forint', 'edd' ),
 			'ILS'  => __( 'Israeli Shekel (&#8362;)', 'edd' ),
 			'JPY'  => __( 'Japanese Yen (&yen;)', 'edd' ),
+			'MYR'  => __( 'Malaysian Ringgits', 'edd' ),
 			'MXN'  => __( 'Mexican Peso (&#36;)', 'edd' ),
 			'NZD'  => __( 'New Zealand Dollar (&#36;)', 'edd' ),
 			'NOK'  => __( 'Norwegian Krone', 'edd' ),
@@ -78,7 +79,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
 			'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
 			'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
-			'MYR' => 'Malaysian Ringgits'
+			'RUB'  => __( 'Russian Rubles', 'edd' )
 		);
 
 		$this->assertEquals( $expected, edd_get_currencies() );
@@ -447,5 +448,9 @@ class Test_Misc extends EDD_UnitTestCase {
 	 */
 	public function test_get_symlink_url() {
 		$this->assertEquals( 'http://example.org/wp-content/uploads/edd/symlinks', edd_get_symlink_url() );
+	}
+
+	public function test_use_skus() {
+		$this->assertFalse( edd_use_skus() );
 	}
 }

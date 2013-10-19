@@ -19,7 +19,8 @@ class Tests_Mime extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'zip', $mime );
 		$this->assertArrayHasKey( 'epub', $mime );
 		$this->assertArrayHasKey( 'mobi', $mime );
-		$this->assertArrayHasKey( 'm4r', $mime );
+		$this->assertArrayHasKey( 'aiff', $mime );
+		$this->assertArrayHasKey( 'aif', $mime );
 		$this->assertArrayHasKey( 'psd', $mime );
 		$this->assertArrayHasKey( 'exe', $mime );
 		$this->assertArrayHasKey( 'apk', $mime );

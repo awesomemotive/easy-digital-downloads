@@ -5,18 +5,17 @@ Contributors: mordauk, sunnyratilal, chriscct7, SpencerFinnell, sksmatt, ghost12
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.3
-Tested up to: 3.6
+Tested up to: 3.7
 
-Stable Tag: 1.7.2
+Stable Tag: 1.8.1
 License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
 
 == Description ==
 
-Selling digital downloads is something that not a single one of the large WordPress ecommerce plugins has ever gotten really right. This plugin aims to fix that. Instead of focusing on providing every single feature under the sun, Easy Digital Downloads tries to provide only the ones that you really need. It aims to make selling digital downloads through WordPress easy, and complete.
+Easy Digital Downloads is a complete e-commerce solution for selling digital products in a light, performant, and easy to use plugin. Rather that attempting to provide every feature under the sun, Easy Digital Downloads makes selling digital simple and complete by providing just the features you need.
 
-**Follow this plugin on [GitHub](https://github.com/easydigitaldownloads/Easy-Digital-Downloads)**
 
 Features of the plugin include:
 
@@ -38,6 +37,8 @@ Features of the plugin include:
 More information at [Easy Digital Downloads.com](https://easydigitaldownloads.com/extensions/?utm_source=readme&utm_medium=description_tab&utm_content=home_link&utm_campaign=edd_home).
 
 [youtube http://www.youtube.com/watch?v=japHPcIFs4I]
+
+**Follow this plugin on [GitHub](https://github.com/easydigitaldownloads/Easy-Digital-Downloads)**
 
 **Sell and Track Software License Keys**
 
@@ -184,6 +185,87 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 1.8.1: October 12, 2013 =
+
+* Tweak: Itemization in PayPal disabled due to bugs with amount calculation. Will be fixed in 1.9
+* Tweak: Added filters to admin script loaders so extensions can enable core EDD scripts on custom pages
+
+* Fix: Download Limit field shown incorrectly to shop vendors
+* Fix: Price option name not passed to PayPal
+* Fix: Settings import doe not perform a filetype check
+* Fix: Bug with Payment History pagination
+* Fix: Escapaing issues with text and textarea fields in settings
+* Fix: Previous purchase lookup on user registration not working
+* Fix: Deleting payment note redirects to Payment History instead of Edit screen
+* Fix: Incorrect username in Payment History for guest purchases
+* Fix: Check for apache before showing .htaccess missing warning
+* Fix: Add fallback cor cal_days_in_month()
+* Fix: Tax calculation bug
+* Fix: Checkboxes in Settings > Extensions cannot be turned off
+* Fix: Extra <p> tag in profile editor
+
+= 1.8: September 26, 2013 =
+
+* New: added Cart Saving feature
+* New: new button color options
+* New: redesigned purchase button styles
+* New: display a notice if the .htaccess file for file protection is not present
+* New: improved caching compatibility with new cookie that can be detected by hosts and caching plugins
+* New: "activate" and "deactivate" options added to Discount code bulk actions menu
+* New: added Downloads > Tools menu for settings export / import and other utility options
+* New: introduced EDD_Payments_Query class for querying payment records
+* New: introduced EDD_Payment_Stats class for querying earnings and sales data
+* New: introduced EDD_Stats base class to be extended by other classes for retrieving data-based data
+* New: added settings and donate links to plugin action links
+* New: add email tags for billing address
+* New: added address fields to [edd_profile_editor] to allow customers to update their stored billing address
+* New: add status options to Payment History bulk action menu to allow payment statuses to be updated in bulk
+* New: added WP Heartbeat API to the EDD Dashboard summary widget for live dashboard updating
+* New: added category filtering support to Downloads > Reports > Downloads
+
+* Fix: allow payment status to be translated before inserting the payment note on status change
+* Fix: tax calculation bug with 100% discount codes
+* Fix: broken pagination on Discounts page
+* Fix: missing linebreaks in admin sale notification email
+* Fix: tax not initially calculated for logged-in user
+* Fix: better prevent broken download URLs by including index.php in all file download URLs
+* Fix: typo in states list function
+* Fix: broken file downloads when using absolute path on Windows servers
+* Fix: file download limit not working
+* Fix: price option name not passed to PayPal purchase
+* Fix: corrupted file downloads caused by ob_flush() and flush()
+* Fix: file download bug when using a lighttpd server
+* Fix: email address not checked for existing email when updating user profile
+* Fix: price option name not displayed on purchase confirmation
+* Fix: add to cart redirects incorrectly when ajax is disabled
+* Fix: price assignment for download files doesn't work correctly with Buy Now
+* Fix: edd_download_history_row_end action passed wrong variable
+* Fix: tax calculation incorrect when Prices entered with tax set to "Yes, I will enter prices inclusive of tax"
+* Fix: PHP notices for settings descriptions
+* Fix: incorrect label ending HTML tags
+* Fix: AJAX loading indicator breaks if edd.css is moved to edd_templates folder
+* Fix: negative Fees (discounts) don't respect "Taxes after discounts"
+* Fix: [downloads] pagination doesn't work on non hierarchical single post types
+* Fix: stripslashes on discount code name fields
+* Fix: incorrect label for "Deactivate" in Discount Codes
+
+* Tweak: removed the "You have already purchased this" message from the single Download pages
+* Tweak: small improvements to checkout UI
+* Tweak: some settings callbacks not using size argument
+* Tweak: hide Buy Now button behavior option is supported gateway is not active
+* Tweak: redundant post meta created on Download publication
+* Tweak: added support for adding default Download metaboxes to other post types
+* Tweak: added host detection to System Info
+* Tweak: added a filter to product types to allow new product types to be registered
+* Tweak: added hex values to edd_get_button_colors()
+* Tweak: added form_id attribute to [edd_purchase_link]
+* Tweak: dramatically improved the EDD settings API
+* Tweak: added a column class to the [downloads] short code
+* Tweak: added SPAN tags around checkoug LEGEND tags
+* Tweak: automatically update file price conditions when new price options are added
+* Tweak: fire edd_create_protection_files() on install process to ensure .htaccess file is created in uploads/edd directory
+
 
 = 1.7.2: July 30, 2013 =
 
@@ -389,7 +471,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 = 1.5.2.1: April 23, 2013 =
 
 * Fix: A bug that caused taxes to be calculated incorrectly
-* FIx: A bug that caused purchase receipts to not respect an edited email addresss
+* FIx: A bug that caused purchase receipts to not respect an edited email address
 
 = 1.5.2: April 13, 2013 =
 
