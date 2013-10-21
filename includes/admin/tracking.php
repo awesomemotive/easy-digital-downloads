@@ -63,7 +63,7 @@ class EDD_Tracking {
 		$this->data = $data;
 	}
 
-	private function send_remote( $override = false ) {
+	private function send_checkin( $override = false ) {
 
 		if( ! $this->tracking_allowed() && ! $override )
 			return;
@@ -75,27 +75,25 @@ class EDD_Tracking {
 
 		$this->setup_data();
 
-		//$request = wp_remote_post( 'https://easydigitaldownloads.com/?edd_action=checkin', array(
 		$request = wp_remote_post( 'https://easydigitaldownloads.com/?edd_action=checkin', array(
 			'method'      => 'POST',
-			'timeout'     => 45,
+			'timeout'     => 20,
 			'redirection' => 5,
 			'httpversion' => '1.0',
-			'blocking'    => false,
+			'blocking'    => true,
 			'body'        => $this->data,
 			'user-agent'  => 'EDD/' . EDD_VERSION . '; ' . get_bloginfo( 'url' )
-		    )
-		);
+		) );
 
 		update_option( 'edd_tracking_last_send', time() );
 
 	}
 
 	public function check_for_optin( $input ) {
-		// Send a optin on settings save
+		// Send an intial check in on settings save
 
 		if( isset( $input['allow_tracking'] ) ) {
-			$this->send_remote( true );
+			$this->send_checkin( true );
 		}
 
 		return $input;
@@ -108,8 +106,8 @@ class EDD_Tracking {
 
 	private function schedule_send() {
 		// We send once a week (while tracking is allowed) to check in, which can be used to determine active sites
-		add_action( 'edd_weekly_scheduled_events', array( $this, 'send_remote' ) );
+		add_action( 'edd_weekly_scheduled_events', array( $this, 'send_checkin' ) );
 	}
 
 }
-new EDD_Tracking;
+$edd_tracking = new EDD_Tracking;
