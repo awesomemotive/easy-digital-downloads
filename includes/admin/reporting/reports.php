@@ -368,8 +368,9 @@ function edd_estimated_monthly_stats() {
 		if ( $products ) {
 			foreach ( $products as $download ) {
 				$estimated['earnings'] += edd_get_average_monthly_download_earnings( $download );
-				$estimated['sales']    += number_format( edd_get_average_monthly_download_sales( $download ), 0 );
+				$estimated['sales']    += edd_get_average_monthly_download_sales( $download );
 			}
+			$estimated['sales'] = number_format_i18n( $estimated['sales'], 0 );
 		}
 
 		// Cache for one day
