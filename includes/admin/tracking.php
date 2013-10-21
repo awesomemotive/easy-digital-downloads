@@ -39,7 +39,10 @@ class EDD_Tracking {
 
 		$this->schedule_send();
 
-		add_action( 'edd_settings_general_sanitize', array( $this, 'check_for_optin' ) );
+		add_action( 'edd_settings_general_sanitize', array( $this, 'check_for_settings_optin' ) );
+		add_action( 'edd_opt_into_tracking', array( $this, 'check_for_optin' ) );
+		add_action( 'edd_opt_out_of_tracking', array( $this, 'check_for_optout' ) );
+		add_action( 'admin_notices', array( $this, 'admin_notice' ) );
 
 	}
 
@@ -134,7 +137,7 @@ class EDD_Tracking {
 	 * @access public
 	 * @return array
 	 */
-	public function check_for_optin( $input ) {
+	public function check_for_settings_optin( $input ) {
 		// Send an intial check in on settings save
 
 		if( isset( $input['allow_tracking'] ) ) {
@@ -142,6 +145,45 @@ class EDD_Tracking {
 		}
 
 		return $input;
+
+	}
+
+	/**
+	 * Check for a new opt-in via the admin notice
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function check_for_optin( $data ) {
+
+		global $edd_options;
+
+		$edd_options['allow_tracking'] = '1';
+
+		update_option( 'edd_settings', $edd_options );
+
+		$this->send_checkin( true );
+
+		update_option( 'edd_tracking_notice', '1' );
+
+	}
+
+	/**
+	 * Check for a new opt-in via the admin notice
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function check_for_optout( $data ) {
+
+		global $edd_options;
+
+		if( isset( $edd_options['allow_tracking'] ) ) {
+			unset( $edd_options['allow_tracking'] );
+			update_option( 'edd_settings', $edd_options );
+		}
+
+		update_option( 'edd_tracking_notice', '1' );
 
 	}
 
@@ -164,6 +206,29 @@ class EDD_Tracking {
 	private function schedule_send() {
 		// We send once a week (while tracking is allowed) to check in, which can be used to determine active sites
 		add_action( 'edd_weekly_scheduled_events', array( $this, 'send_checkin' ) );
+	}
+
+	/**
+	 * Display the admin notice to users that have not opted-in or out
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function admin_notice() {
+
+		global $edd_options;
+
+		if( ! get_option( 'edd_tracking_notice' ) && ! isset( $edd_options['allow_tracking'] ) ) {
+
+			$optin_url  = add_query_arg( 'edd_action', 'opt_into_tracking' );
+			$optout_url = add_query_arg( 'edd_action', 'opt_out_of_tracking' );
+
+			echo '<div class="updated"><p>';
+				echo __( 'Allow Easy Digital Downloads to track plugin usage? Opt-in and immediately be emailed a 20% discount to the shop for <a href="https://easydigitaldownloads.com/extensions" target="_blank">Extensions and Themes</a>. No sensitive data is tracked.', 'edd' );
+				echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-secondary">' . __( 'Allow', 'edd' ) . '</a>';
+				echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow', 'edd' ) . '</a>';
+			echo '</p></div>';
+		}
 	}
 
 }
