@@ -749,6 +749,8 @@ function edd_increase_discount_usage( $code ) {
 
 	update_post_meta( $id, '_edd_discount_uses', $uses );
 
+	do_action( 'edd_discount_increase_use_count', $uses, $id, $code );
+
 	return $uses;
 
 }
