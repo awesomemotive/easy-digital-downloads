@@ -81,6 +81,10 @@ class EDD_Tracking {
 		$data['email']  = get_bloginfo( 'admin_email' );
 
 		// Retrieve current plugin information
+		if( ! function_exists( 'get_plugins' ) ) {
+			include ABSPATH . '/wp-admin/includes/plugin.php';
+		}
+
 		$plugins        = array_keys( get_plugins() );
 		$active_plugins = get_option( 'active_plugins', array() );
 
