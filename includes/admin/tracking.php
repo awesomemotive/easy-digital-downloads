@@ -12,10 +12,29 @@
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
+
+/**
+ * Usage tracking
+ *
+ * @access public
+ * @since  1.8.2
+ * @return void
+ */
 class EDD_Tracking {
 
+	/**
+	 * The data to send to the EDD site
+	 *
+	 * @access private
+	 */
 	private $data;
 
+	/**
+	 * Get things going
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function __construct() {
 
 		$this->schedule_send();
@@ -24,11 +43,23 @@ class EDD_Tracking {
 
 	}
 
+	/**
+	 * Check if the user has opted into tracking
+	 *
+	 * @access private
+	 * @return bool
+	 */
 	private function tracking_allowed() {
 		global $edd_options;
 		return isset( $edd_options['allow_tracking'] );
 	}
 
+	/**
+	 * Setup the data that is going to be tracked
+	 *
+	 * @access private
+	 * @return void
+	 */
 	private function setup_data() {
 
 		$data = array();
@@ -63,6 +94,12 @@ class EDD_Tracking {
 		$this->data = $data;
 	}
 
+	/**
+	 * Send the data to the EDD server
+	 *
+	 * @access private
+	 * @return void
+	 */
 	private function send_checkin( $override = false ) {
 
 		if( ! $this->tracking_allowed() && ! $override )
@@ -89,6 +126,14 @@ class EDD_Tracking {
 
 	}
 
+	/**
+	 * Check for a new opt-in on settings save
+	 *
+	 * This runs during the sanitation of General settings, thus the return
+	 *
+	 * @access public
+	 * @return array
+	 */
 	public function check_for_optin( $input ) {
 		// Send an intial check in on settings save
 
@@ -100,10 +145,22 @@ class EDD_Tracking {
 
 	}
 
+	/**
+	 * Get the last time a checkin was sent
+	 *
+	 * @access private
+	 * @return false/string
+	 */
 	private function get_last_send() {
 		return get_option( 'edd_tracking_last_send' );
 	}
 
+	/**
+	 * Schedule a weekly checkin
+	 *
+	 * @access private
+	 * @return void
+	 */
 	private function schedule_send() {
 		// We send once a week (while tracking is allowed) to check in, which can be used to determine active sites
 		add_action( 'edd_weekly_scheduled_events', array( $this, 'send_checkin' ) );
