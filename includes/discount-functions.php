@@ -159,7 +159,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 		do_action( 'edd_post_update_discount', $details, $discount_id );
 
 		// Discount code updated
-		return true;
+		return $discount_id;
 	} else {
 		// Add the discount
 
@@ -180,7 +180,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 		do_action( 'edd_post_insert_discount', $details, $discount_id );
 
 		// Discount code created
-		return true;
+		return $discount_id;
 	}
 }
 
