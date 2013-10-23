@@ -871,7 +871,9 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 
 			$cart_details = edd_get_payment_meta_cart_details( $payment->ID, true );
 
-			if ( $payment->post_status != 'publish' && $payment->post_status != 'complete' )
+			$accepted_stati = apply_filters( 'edd_allowed_download_stati', array( 'publish', 'complete' ) );
+
+			if ( ! in_array( $payment->post_status, $accepted_stati ) )
 				return false;
 
 			if ( ! empty( $cart_details ) ) {
