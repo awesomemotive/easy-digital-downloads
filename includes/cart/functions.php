@@ -383,7 +383,7 @@ function edd_cart_subtotal() {
 
 	if ( edd_is_cart_taxed() ) {
 		if ( edd_prices_show_tax_on_checkout() ) {
-			$price .= '<br/><span style="font-weight:normal;text-transform:none;">' . __( '(excl. tax)', 'edd' ) . '</span>';
+			$price .= '<span class="edd_cart_subtotal_tax_text" style="font-weight:normal;text-transform:none;">' . __( '(excl. tax)', 'edd' ) . '</span>';
 		}
 	}
 
