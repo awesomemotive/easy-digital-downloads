@@ -99,6 +99,9 @@ function edd_currency_filter( $price ) {
 			case "BRL" :
 				$formatted = 'R&#36;' . $price;
 				break;
+			case "EUR" :
+				$formatted = '&euro;' . $price;
+				break;
 			case "USD" :
 			case "AUD" :
 			case "CAD" :
@@ -122,6 +125,9 @@ function edd_currency_filter( $price ) {
 				break;
 			case "BRL" :
 				$formatted = $price . 'R&#36;';
+				break;
+			case "EUR" :
+				$formatted = $price . '&euro;';
 				break;
 			case "USD" :
 			case "AUD" :
