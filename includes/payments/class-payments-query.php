@@ -402,7 +402,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return void
 	 */
 	public function download() {
-		if ( ! empty( $this->args[ 'download' ] ) )
+		if ( empty( $this->args[ 'download' ] ) )
 			return;
 
 		global $edd_logs;
