@@ -232,12 +232,12 @@ class EDD_HTML_Elements {
 	 * @return string Text field
 	 */
 	public function text( $name = 'text', $value = '', $label = '', $desc = '' ) {
-		$output = '<p id="edd-' . sanitize_key( $name ) . '-wrap">';
+		$output = '<span id="edd-' . sanitize_key( $name ) . '-wrap">';
 			$output .= '<label class="edd-label" for="edd-' . sanitize_key( $name ) . '">' . esc_html( $label ) . '</label>';
 			if ( ! empty( $desc ) )
 				$output .= '<span class="edd-description">' . esc_html( $desc ) . '</span>';
 			$output = '<input type="text" name="' . esc_attr( $name ) . '" id="' . esc_attr( $name )  . '" value="' . esc_attr( $value ) . '"/>';
-		$output .= '</p>';
+		$output .= '</span>';
 
 		return $output;
 	}
