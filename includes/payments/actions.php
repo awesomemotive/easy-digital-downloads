@@ -196,6 +196,31 @@ function edd_update_edited_purchase( $data ) {
 add_action( 'edd_edit_payment', 'edd_update_edited_purchase' );
 
 /**
+ * Reduces earnings and sales stats when a purchase is refunded
+ *
+ * @since 1.8.2
+ * @param $data Arguments passed
+ * @return void
+ */
+function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
+
+	if( 'publish' != $old_status )
+		return;
+
+	if( 'refunded' != $new_status )
+		return;
+
+	$downloads = edd_get_payment_meta_cart_details( $payment_id );
+	if( $downloads ) {
+		foreach( $downloads as $download ) {
+			edd_undo_purchase( $download['id'], $payment_id );
+		}
+	}
+}
+add_action( 'edd_update_payment_status', 'edd_undo_purchase_on_refund', 100, 3 );
+
+
+/**
  * Trigger a Purchase Deletion
  *
  * @since 1.3.4

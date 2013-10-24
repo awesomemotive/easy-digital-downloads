@@ -194,6 +194,18 @@ function edd_get_registered_settings() {
 					'name' => __( 'Allow User Keys', 'edd' ),
 					'desc' => __( 'Check this box to allow all users to generate API keys. Users with the \'manage_shop_settings\' capability are always allowed to generate keys.', 'edd' ),
 					'type' => 'checkbox'
+				),
+				'tracking_settings' => array(
+					'id' => 'tracking_settings',
+					'name' => '<strong>' . __( 'Tracking Settings', 'edd' ) . '</strong>',
+					'desc' => '',
+					'type' => 'header'
+				),
+				'allow_tracking' => array(
+					'id' => 'allow_tracking',
+					'name' => __( 'Allow Usage Tracking?', 'edd' ),
+					'desc' => __( 'Allow Easy Digital Downloads to annonymously track how this plugin is used and help us make the plugin better. Opt-in and receive a 20% discount code for any purchase from the <a href="https://easydigitaldownloads.com/extensions" target="_blank">Easy Digital Downloads store</a>. Your discount code will be emailed to you.', 'edd' ),
+					'type' => 'checkbox'
 				)
 			)
 		),
