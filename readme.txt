@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.7
 
-Stable Tag: 1.8.1
+Stable Tag: 1.8.2.1
 License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -185,6 +185,24 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 1.8.2.1: October 20, 2013 =
+
+* Fix: Ensure get_plugins() function exists and load it if not before using it
+
+= 1.8.2: October 20, 2013 =
+
+* New: Added optional plugin usage tracking (opt-in and get a discount code)
+
+* Fix: Incorrect tax label on cart subtotal
+* Fix: Download earnings / sales not decreased when refunding a payment
+* Fix: Aposthrophes in first / last name fields on checkout broke order details
+* Fix: Pagination broken on Downloads report list table
+* Fix: Undefined offset when no variable prices are saved
+* Fix: Undefined offset when no variable prices are saved
+* Fix: Purchase link tax label does not respect logged-in user's stored billing details
+
+* Tweak: Set Purchase Confirmation as a child of the checkout page on install
 
 = 1.8.1: October 12, 2013 =
 
