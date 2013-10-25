@@ -250,7 +250,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				$value = '<a href="' . add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ) . '">' . __( 'View Order Details', 'edd' ) . '</a>';
 				break;
 			default:
-				$value = isset( $payment->$column_name ) ? $payment->$column_name : $payment;
+				$value = isset( $payment->$column_name ) ? $payment->$column_name : '';
 				break;
 
 		}
