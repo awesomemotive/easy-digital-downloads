@@ -54,9 +54,9 @@ class EDD_Heartbeat {
 
 			// Send back the number of complete payments
 			$response['edd-total-payments'] = number_format_i18n( edd_get_total_sales() );
-			$response['edd-total-earnings'] = html_entity_decode( edd_currency_filter( $earnings, ENT_COMPAT, 'UTF-8' ) );
+			$response['edd-total-earnings'] = html_entity_decode( edd_currency_filter( $earnings ), ENT_COMPAT, 'UTF-8' );
 			$response['edd-payments-month'] = number_format_i18n( $stats->get_sales( 0, 'this_month', false, array( 'publish', 'revoked' ) ) );
-			$response['edd-earnings-month'] = html_entity_decode( edd_currency_filter( $stats->get_earnings( 0, 'this_month' ), ENT_COMPAT, 'UTF-8' ) );
+			$response['edd-earnings-month'] = html_entity_decode( edd_currency_filter( $stats->get_earnings( 0, 'this_month' ) ), ENT_COMPAT, 'UTF-8' );
 
 		}
 
