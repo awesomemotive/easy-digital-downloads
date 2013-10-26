@@ -47,7 +47,7 @@ function edd_get_payments( $args = array() ) {
  *
  * @since 1.0
  * @param array $payment_data
- * @return bool true if payment is inserted, false otherwise
+ * @return int|bool Payment ID if payment is inserted, false otherwise
  */
 function edd_insert_payment( $payment_data = array() ) {
 	if ( empty( $payment_data ) )
