@@ -444,7 +444,7 @@ add_filter( 'edd_purchase_receipt', 'edd_apply_email_template', 20, 3 );
  */
 function edd_default_email_template() {
 	echo '<div style="margin: 0; background-color: #fafafa; width: auto; padding: 30px;"><center>';
-		echo '<div style="border: 1px solid #ddd; width: 550px; background: #f0f0f0; padding: 8px; margin: 0;">';
+		echo '<div style="border: 1px solid #ddd; width: 660px; background: #f0f0f0; padding: 8px; margin: 0;">';
 			echo '<div id="edd-email-content" style="background: #fff; border: 1px solid #ddd; padding: 15px; text-align: left !important;">';
 				echo '{email}'; // This tag is required in order for the contents of the email to be shown
 			echo '</div>';
