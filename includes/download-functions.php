@@ -587,7 +587,7 @@ function edd_get_average_monthly_download_sales( $download_id ) {
  * @param int $variable_price_id Variable pricing option ID
  * @return array $files Download files
  */
-function edd_get_download_files( $download_id, $variable_price_id = null ) {
+function edd_get_download_files( $download_id = 0, $variable_price_id = null ) {
 	$files = array();
 
 	// Bundled products are not allowed to have files
@@ -610,7 +610,7 @@ function edd_get_download_files( $download_id, $variable_price_id = null ) {
 		}
 	}
 
-	return $files;
+	return apply_filters( 'edd_download_files', $files, $download_id, $variable_price_id );
 }
 
 /**
