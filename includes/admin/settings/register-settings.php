@@ -1150,11 +1150,12 @@ function edd_settings_sanitize( $input = array() ) {
 
 	parse_str( $_POST['_wp_http_referer'], $referrer );
 
-	$output   = array();
-	$settings = edd_get_registered_settings();
-	$tab      = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
+	$output    = array();
+	$settings  = edd_get_registered_settings();
+	$tab       = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
+	$post_data = isset( $_POST[ 'edd_settings_' . $tab ] ) ? $_POST[ 'edd_settings_' . $tab ] : array();
 
-	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $_POST[ 'edd_settings_' . $tab ] );
+	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $post_data );
 
 	// Loop through each setting being saved and pass it through a sanitization filter
 	foreach( $input as $key => $value ) {
@@ -1258,6 +1259,8 @@ add_filter( 'edd_settings_sanitize_text', 'edd_sanitize_text_field' );
  */
 function edd_get_settings_tabs() {
 
+	$settings = edd_get_registered_settings();
+
 	$tabs             = array();
 	$tabs['general']  = __( 'General', 'edd' );
 	$tabs['gateways'] = __( 'Payment Gateways', 'edd' );
@@ -1265,11 +1268,10 @@ function edd_get_settings_tabs() {
 	$tabs['styles']   = __( 'Styles', 'edd' );
 	$tabs['taxes']    = __( 'Taxes', 'edd' );
 
-	if( has_filter( 'edd_settings_extensions' ) ) {
+	if( ! empty( $settings['extensions'] ) ) {
 		$tabs['extensions'] = __( 'Extensions', 'edd' );
 	}
-
-	if( has_filter( 'edd_settings_licenses' ) ) {
+	if( ! empty( $settings['licenses'] ) ) {
 		$tabs['licenses'] = __( 'Licenses', 'edd' );
 	}
 
