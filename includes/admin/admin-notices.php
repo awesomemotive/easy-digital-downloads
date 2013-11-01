@@ -67,8 +67,9 @@ function edd_admin_messages() {
             return; // Bail if we aren't using Apache... nginx doesn't use htaccess!
 
 		echo '<div class="error">';
-			echo '<p>' . sprintf( __( 'The Easy Digital Downloads .htaccess file is missing from <strong>%s</strong>. Please create a file called ".htaccess", place it in <strong>%s</strong>, and put the following contents inside the file:', 'edd' ), edd_get_upload_dir(), edd_get_upload_dir() ) . '</p>';
-			echo '<p><pre>' . edd_get_htaccess_rules() . '</pre></pre>';
+			echo '<p>' . sprintf( __( 'The Easy Digital Downloads .htaccess file is missing from <strong>%s</strong>!', 'edd' ), edd_get_upload_dir() ) . '</p>';
+			echo '<p>' . sprintf( __( 'First, please resave the Misc settings tab. If this warning continues to appear, create a file called ".htaccess" in the <strong>%s</strong> directory, and copy the following into it:', 'edd' ), edd_get_upload_dir() ) . '</p>';
+			echo '<p><pre>' . edd_get_htaccess_rules() . '</pre>';
 			echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'htaccess_missing' ) ) . '">' . __( 'Dismiss Notice', 'edd' ) . '</a></p>';
 		echo '</div>';
 	}
