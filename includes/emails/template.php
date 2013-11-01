@@ -374,7 +374,7 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 	$default_email_body .= __( 'Payment Method: ', 'edd' ) . " " . $gateway . "\n\n";
 	$default_email_body .= __( 'Thank you', 'edd' );
 
-	$email = isset( $edd_options['sale_notification'] ) ? $edd_options['sale_notification'] : $default_email_body;
+	$email = isset( $edd_options['sale_notification'] ) ? stripslashes( $edd_options['sale_notification'] ) : $default_email_body;
 
 	$email_body = nl2br( edd_email_template_tags( $email, $payment_data, $payment_id, true ) );
 
