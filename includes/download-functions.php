@@ -826,7 +826,7 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price
 		'email' 		=> rawurlencode( $email ),
 		'file' 			=> $filekey,
 		'price_id'      => (int) $price_id,
-		'download' 		=> $download_id,
+		'download_id' 	=> $download_id,
 		'expire' 		=> rawurlencode( base64_encode( $date ) )
 	);
 
