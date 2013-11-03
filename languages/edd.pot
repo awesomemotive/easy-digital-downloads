@@ -3,9 +3,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 1.8.2.1\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/easy-digital-"
-"downloads\n"
-"POT-Creation-Date: 2013-10-25 12:44:58+00:00\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/Easy-Digital-"
+"Downloads\n"
+"POT-Creation-Date: 2013-11-03 16:13:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -81,15 +81,21 @@ msgstr ""
 #: includes/admin/admin-notices.php:70
 msgid ""
 "The Easy Digital Downloads .htaccess file is missing from <strong>%s</"
-"strong>. Please create a file called \".htaccess\", place it in <strong>%s</"
-"strong>, and put the following contents inside the file:"
+"strong>!"
 msgstr ""
 
-#: includes/admin/admin-notices.php:72
+#: includes/admin/admin-notices.php:71
+msgid ""
+"First, please resave the Misc settings tab. If this warning continues to "
+"appear, create a file called \".htaccess\" in the <strong>%s</strong> "
+"directory, and copy the following into it:"
+msgstr ""
+
+#: includes/admin/admin-notices.php:73
 msgid "Dismiss Notice"
 msgstr ""
 
-#: includes/admin/admin-notices.php:87
+#: includes/admin/admin-notices.php:88
 msgid ""
 "There seems to be an issue with the server. Please try again in a few "
 "minutes."
@@ -495,7 +501,7 @@ msgstr ""
 
 #: includes/admin/discounts/contextual-help.php:38
 #: includes/admin/settings/contextual-help.php:42
-#: includes/admin/settings/register-settings.php:1262
+#: includes/admin/settings/register-settings.php:1265
 msgid "General"
 msgstr ""
 
@@ -607,7 +613,7 @@ msgstr ""
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:135
 #: includes/admin/reporting/class-export.php:173
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:119
-#: includes/cart/functions.php:1063 includes/cart/functions.php:1078
+#: includes/cart/functions.php:1070 includes/cart/functions.php:1085
 #: includes/download-functions.php:897 includes/download-functions.php:901
 #: includes/download-functions.php:911 includes/emails/template.php:486
 #: includes/error-tracking.php:36 includes/query-filters.php:37
@@ -1731,7 +1737,7 @@ msgstr ""
 msgid "Sales and earnings reports for the current year for all products"
 msgstr ""
 
-#. #-#-#-#-#  easy-digital-downloads.pot (Easy Digital Downloads 1.8.2.1)  #-#-#-#-#
+#. #-#-#-#-#  edd.pot (Easy Digital Downloads 1.8.2.1)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: includes/admin/reporting/pdf-reports.php:39
 #: includes/admin/reporting/pdf-reports.php:40
@@ -1828,7 +1834,7 @@ msgstr ""
 
 #: includes/admin/reporting/reports.php:61
 #: includes/admin/settings/contextual-help.php:71
-#: includes/admin/settings/register-settings.php:1266
+#: includes/admin/settings/register-settings.php:1269
 msgid "Taxes"
 msgstr ""
 
@@ -1906,7 +1912,7 @@ msgstr ""
 
 #: includes/admin/reporting/reports.php:298
 #: includes/admin/settings/contextual-help.php:57
-#: includes/admin/settings/register-settings.php:1264
+#: includes/admin/settings/register-settings.php:1267
 msgid "Emails"
 msgstr ""
 
@@ -1934,7 +1940,7 @@ msgstr ""
 
 #: includes/admin/settings/contextual-help.php:48
 #: includes/admin/settings/register-settings.php:217
-#: includes/admin/settings/register-settings.php:1263
+#: includes/admin/settings/register-settings.php:1266
 msgid "Payment Gateways"
 msgstr ""
 
@@ -1978,7 +1984,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:65
-#: includes/admin/settings/register-settings.php:1265
+#: includes/admin/settings/register-settings.php:1268
 msgid "Styles"
 msgstr ""
 
@@ -1995,7 +2001,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:77
-#: includes/admin/settings/register-settings.php:1269
+#: includes/admin/settings/register-settings.php:1272
 msgid "Extensions"
 msgstr ""
 
@@ -2644,15 +2650,15 @@ msgstr ""
 msgid "Deactivate License"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1194
+#: includes/admin/settings/register-settings.php:1195
 msgid "Settings Updated"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1273
+#: includes/admin/settings/register-settings.php:1275
 msgid "Licenses"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1276
+#: includes/admin/settings/register-settings.php:1278
 msgid "Misc"
 msgstr ""
 
@@ -3065,53 +3071,53 @@ msgstr ""
 msgid "View %s"
 msgstr ""
 
-#: includes/ajax-functions.php:157
+#: includes/ajax-functions.php:165
 msgid "The discount you entered is invalid"
 msgstr ""
 
-#: includes/cart/functions.php:257
+#: includes/cart/functions.php:264
 msgid "(ex. tax)"
 msgstr ""
 
-#: includes/cart/functions.php:261 templates/shortcode-receipt.php:230
+#: includes/cart/functions.php:268 templates/shortcode-receipt.php:230
 msgid "(incl. tax)"
 msgstr ""
 
-#: includes/cart/functions.php:386
+#: includes/cart/functions.php:393
 msgid "(excl. tax)"
 msgstr ""
 
-#: includes/cart/functions.php:511 templates/shortcode-receipt.php:74
+#: includes/cart/functions.php:518 templates/shortcode-receipt.php:74
 #: templates/shortcode-receipt.php:232
 msgid "(includes %s tax)"
 msgstr ""
 
-#: includes/cart/functions.php:812
+#: includes/cart/functions.php:819
 msgid "You have successfully added %s to your shopping cart."
 msgstr ""
 
-#: includes/cart/functions.php:813
+#: includes/cart/functions.php:820
 msgid "Checkout."
 msgstr ""
 
-#: includes/cart/functions.php:1031 includes/cart/functions.php:1091
+#: includes/cart/functions.php:1038 includes/cart/functions.php:1098
 #: templates/shortcode-profile-editor.php:20
 msgid "Success"
 msgstr ""
 
-#: includes/cart/functions.php:1032
+#: includes/cart/functions.php:1039
 msgid "Cart saved successfully. You can restore your cart using this URL:"
 msgstr ""
 
-#: includes/cart/functions.php:1063 includes/cart/functions.php:1078
+#: includes/cart/functions.php:1070 includes/cart/functions.php:1085
 msgid "Cart restoration failed. Invalid token."
 msgstr ""
 
-#: includes/cart/functions.php:1066 includes/cart/functions.php:1081
+#: includes/cart/functions.php:1073 includes/cart/functions.php:1088
 msgid "The cart cannot be restored. Invalid token."
 msgstr ""
 
-#: includes/cart/functions.php:1091
+#: includes/cart/functions.php:1098
 msgid "Cart restored successfully."
 msgstr ""
 
@@ -4263,11 +4269,11 @@ msgstr ""
 msgid "%2$s submitted. %1$sView %2$s%3$s."
 msgstr ""
 
-#: includes/process-download.php:150
+#: includes/process-download.php:155
 msgid "You do not have permission to download this file"
 msgstr ""
 
-#: includes/process-download.php:151
+#: includes/process-download.php:156
 msgid "Purchase Verification Failed"
 msgstr ""
 
