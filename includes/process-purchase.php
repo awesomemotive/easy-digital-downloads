@@ -215,7 +215,7 @@ function edd_purchase_form_validate_discounts() {
 	$error     = false;
 
 	// Check for valid discount(s) is present
-	if ( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) ) {
+	if ( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) && __( 'Enter discount', 'edd' ) != $_POST['edd-discount'] ) {
 		// Check for a posted discount
 		$posted_discount = isset( $_POST['edd-discount'] ) ? trim( $_POST['edd-discount'] ) : false;
 
