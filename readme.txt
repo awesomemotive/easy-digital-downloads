@@ -75,7 +75,7 @@ Easy Digital Downloads as been translated into the following languages:
 15. Farsi
 16. Finnish
 
-Would you like to help translate the plugin into more languages? [Contact Pippin](http://easydigitaldownloads.com/contact-developer/).
+Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](https://www.transifex.com/projects/p/easy-digital-downloads/).
 
 == Installation ==
 
