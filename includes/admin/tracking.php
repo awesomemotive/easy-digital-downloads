@@ -107,7 +107,7 @@ class EDD_Tracking {
 	 * @access private
 	 * @return void
 	 */
-	private function send_checkin( $override = false ) {
+	public function send_checkin( $override = false ) {
 
 		if( ! $this->tracking_allowed() && ! $override )
 			return;
