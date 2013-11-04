@@ -102,6 +102,8 @@ $status    = edd_get_payment_status( $payment, true );
 	</tbody>
 </table>
 
+<?php do_action( 'edd_payment_receipt_after_table', $payment, $edd_receipt_args ); ?>
+
 <?php if ( $edd_receipt_args[ 'products' ] ) : ?>
 
 	<h3><?php echo apply_filters( 'edd_payment_receipt_products_title', __( 'Products', 'edd' ) ); ?></h3>
