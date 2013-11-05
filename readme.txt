@@ -189,6 +189,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 = 1.8.3.1: November 5, 2014 =
 
 * Fix: a bug that prevented EDD cron events from firing
+* Fix: incorrect display of negative amounts for EDD_Fees
 
 = 1.8.3: November 4, 2014 =
 
