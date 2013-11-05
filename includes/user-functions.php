@@ -292,7 +292,7 @@ function edd_validate_username( $username ) {
  */
 function edd_add_past_purchases_to_new_user( $user_id ) {
 
-	$email    = get_user_meta( $user_id, 'user_email', true );
+	$email    = get_the_author_meta( 'user_email', $user_id );
 	$mode     = edd_is_test_mode() ? 'test' : 'live';
 	$payments = edd_get_payments( array( 's' => $email, 'mode' => $mode ) );
 	if( $payments ) {
