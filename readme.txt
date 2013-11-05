@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.7
 
-Stable Tag: 1.8.2.1
+Stable Tag: 1.8.3
 License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -185,6 +185,29 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 1.8.3: November 4, 2014 =
+
+* New: added edd_payment_receipt_after_table hook
+
+* Fix: account for themes that set form input values to the value of the placeholder (caused a bug with discount codes)
+* Fix: show tax as whole number, not as decimal on prices
+* Fix: incorrect user assigned to purchases made when registering an account
+* Fix: 404 error due to "download" parameter in file download URLs on some hosts
+* Fix: fatal error in payment history column
+* Fix: payment method icons not respecting WP in its own directory
+* Fix: invalid UTF8 sequence in heartbeat API response
+* Fix: illegal offset with user address in profile editor short code
+* Fix: empty paragraph tag after tax rates in tax settings
+* Fix: undefined notices when saving Extensions tab with only one checkbox
+* Fix: double subtotal when two cart widgets are displayed on the same page
+* Fix: security flaw with user registration process during checkout
+* Fix: rich editor escaping issue in admin sale notification email
+
+* Tweak: improved .htaccess missing error message
+* Tweak: increased width of default email receipt template
+* Tweak: display EURO with symbol, not as EUR
+* Tweak: updated many translation files
 
 = 1.8.2.1: October 20, 2013 =
 
