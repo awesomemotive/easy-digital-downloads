@@ -7,6 +7,6 @@
   Join our WP-Translations Community at
   https://www.transifex.com/projects/p/easy-digital-downloads/
 
-  More infos at http://wp-translations.org/
+  More info at http://wp-translations.org/
 
 ********************************************************
