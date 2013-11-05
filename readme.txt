@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.7
 
-Stable Tag: 1.8
+Stable Tag: 1.8.3
 License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -75,7 +75,7 @@ Easy Digital Downloads as been translated into the following languages:
 15. Farsi
 16. Finnish
 
-Would you like to help translate the plugin into more languages? [Contact Pippin](http://easydigitaldownloads.com/contact-developer/).
+Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](https://www.transifex.com/projects/p/easy-digital-downloads/).
 
 == Installation ==
 
@@ -185,6 +185,66 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 1.8.3: November 4, 2014 =
+
+* New: added edd_payment_receipt_after_table hook
+
+* Fix: account for themes that set form input values to the value of the placeholder (caused a bug with discount codes)
+* Fix: show tax as whole number, not as decimal on prices
+* Fix: incorrect user assigned to purchases made when registering an account
+* Fix: 404 error due to "download" parameter in file download URLs on some hosts
+* Fix: fatal error in payment history column
+* Fix: payment method icons not respecting WP in its own directory
+* Fix: invalid UTF8 sequence in heartbeat API response
+* Fix: illegal offset with user address in profile editor short code
+* Fix: empty paragraph tag after tax rates in tax settings
+* Fix: undefined notices when saving Extensions tab with only one checkbox
+* Fix: double subtotal when two cart widgets are displayed on the same page
+* Fix: security flaw with user registration process during checkout
+* Fix: rich editor escaping issue in admin sale notification email
+
+* Tweak: improved .htaccess missing error message
+* Tweak: increased width of default email receipt template
+* Tweak: display EURO with symbol, not as EUR
+* Tweak: updated many translation files
+
+= 1.8.2.1: October 20, 2013 =
+
+* Fix: Ensure get_plugins() function exists and load it if not before using it
+
+= 1.8.2: October 20, 2013 =
+
+* New: Added optional plugin usage tracking (opt-in and get a discount code)
+
+* Fix: Incorrect tax label on cart subtotal
+* Fix: Download earnings / sales not decreased when refunding a payment
+* Fix: Aposthrophes in first / last name fields on checkout broke order details
+* Fix: Pagination broken on Downloads report list table
+* Fix: Undefined offset when no variable prices are saved
+* Fix: Undefined offset when no variable prices are saved
+* Fix: Purchase link tax label does not respect logged-in user's stored billing details
+
+* Tweak: Set Purchase Confirmation as a child of the checkout page on install
+
+= 1.8.1: October 12, 2013 =
+
+* Tweak: Itemization in PayPal disabled due to bugs with amount calculation. Will be fixed in 1.9
+* Tweak: Added filters to admin script loaders so extensions can enable core EDD scripts on custom pages
+
+* Fix: Download Limit field shown incorrectly to shop vendors
+* Fix: Price option name not passed to PayPal
+* Fix: Settings import doe not perform a filetype check
+* Fix: Bug with Payment History pagination
+* Fix: Escapaing issues with text and textarea fields in settings
+* Fix: Previous purchase lookup on user registration not working
+* Fix: Deleting payment note redirects to Payment History instead of Edit screen
+* Fix: Incorrect username in Payment History for guest purchases
+* Fix: Check for apache before showing .htaccess missing warning
+* Fix: Add fallback cor cal_days_in_month()
+* Fix: Tax calculation bug
+* Fix: Checkboxes in Settings > Extensions cannot be turned off
+* Fix: Extra <p> tag in profile editor
 
 = 1.8: September 26, 2013 =
 

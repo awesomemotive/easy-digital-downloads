@@ -159,7 +159,7 @@ class Tests_Stats extends EDD_UnitTestCase {
 		$this->assertInternalType( 'int', $this->_stats->end_date );
 		$this->assertGreaterThan( $this->_stats->start_date, $this->_stats->end_date );
 
-		/*
+		
 		// Set some valid timestamps
 		$this->_stats->setup_dates( '1379635200', '1379645200' );
 		$this->assertInternalType( 'int', $this->_stats->start_date );
@@ -170,7 +170,7 @@ class Tests_Stats extends EDD_UnitTestCase {
 		$this->_stats->setup_dates( 'nonvaliddatestring', 'nonvaliddatestring' );
 		$this->assertInstanceOf( 'WP_Error', $this->_stats->start_date );
 		$this->assertInstanceOf( 'WP_Error', $this->_stats->end_date );
-		*/
+		
 	}
 
 

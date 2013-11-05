@@ -46,6 +46,8 @@ function edd_system_info() {
 	$host = false;
 	if( defined( 'WPE_APIKEY' ) ) {
 		$host = 'WP Engine';
+	} elseif( defined( 'PAGELYBIN' ) ) {
+		$host = 'Pagely';
 	}
 ?>
 	<div class="wrap">

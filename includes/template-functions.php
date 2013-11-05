@@ -151,9 +151,9 @@ function edd_get_purchase_link( $args = array() ) {
 				</span>
 			<?php endif; ?>
 			<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
-				echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), $edd_options['tax_rate'] ) . '</span>';
+				echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), edd_get_tax_rate() * 100 ) . '</span>';
 			} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
-				echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'edd' ), $edd_options['tax_rate'] ) . '</span>';
+				echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'edd' ), edd_get_tax_rate() * 100 ) . '</span>';
 			} ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
 

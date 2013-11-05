@@ -194,6 +194,18 @@ function edd_get_registered_settings() {
 					'name' => __( 'Allow User Keys', 'edd' ),
 					'desc' => __( 'Check this box to allow all users to generate API keys. Users with the \'manage_shop_settings\' capability are always allowed to generate keys.', 'edd' ),
 					'type' => 'checkbox'
+				),
+				'tracking_settings' => array(
+					'id' => 'tracking_settings',
+					'name' => '<strong>' . __( 'Tracking Settings', 'edd' ) . '</strong>',
+					'desc' => '',
+					'type' => 'header'
+				),
+				'allow_tracking' => array(
+					'id' => 'allow_tracking',
+					'name' => __( 'Allow Usage Tracking?', 'edd' ),
+					'desc' => __( 'Allow Easy Digital Downloads to annonymously track how this plugin is used and help us make the plugin better. Opt-in and receive a 20% discount code for any purchase from the <a href="https://easydigitaldownloads.com/extensions" target="_blank">Easy Digital Downloads store</a>. Your discount code will be emailed to you.', 'edd' ),
+					'type' => 'checkbox'
 				)
 			)
 		),
@@ -742,7 +754,7 @@ function edd_text_callback( $args ) {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="text" class="' . $size . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
+	$html = '<input type="text" class="' . $size . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
 	echo $html;
@@ -767,7 +779,7 @@ function edd_textarea_callback( $args ) {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<textarea class="large-text" cols="50" rows="5" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']">' . esc_textarea( $value ) . '</textarea>';
+	$html = '<textarea class="large-text" cols="50" rows="5" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
 	echo $html;
@@ -892,9 +904,9 @@ function edd_rich_editor_callback( $args ) {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 
 	if ( $wp_version >= 3.3 && function_exists( 'wp_editor' ) ) {
-		$html = wp_editor( $value, 'edd_settings_' . $args['section'] . '[' . $args['id'] . ']', array( 'textarea_name' => 'edd_settings_' . $args['section'] . '[' . $args['id'] . ']' ) );
+		$html = wp_editor( stripslashes( $value ), 'edd_settings_' . $args['section'] . '[' . $args['id'] . ']', array( 'textarea_name' => 'edd_settings_' . $args['section'] . '[' . $args['id'] . ']' ) );
 	} else {
-		$html = '<textarea class="large-text" rows="10" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']">' . esc_textarea( $value ) . '</textarea>';
+		$html = '<textarea class="large-text" rows="10" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 	}
 
 	$html .= '<br/><label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
@@ -921,7 +933,7 @@ function edd_upload_callback( $args ) {
 		$value = isset($args['std']) ? $args['std'] : '';
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="text" class="' . $size . '-text edd_upload_field" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
+	$html = '<input type="text" class="' . $size . '-text edd_upload_field" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 	$html .= '<span>&nbsp;<input type="button" class="edd_settings_upload_button button-secondary" value="' . __( 'Upload File', 'edd' ) . '"/></span>';
 	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
@@ -1138,11 +1150,12 @@ function edd_settings_sanitize( $input = array() ) {
 
 	parse_str( $_POST['_wp_http_referer'], $referrer );
 
-	$output   = array();
-	$settings = edd_get_registered_settings();
-	$tab      = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
+	$output    = array();
+	$settings  = edd_get_registered_settings();
+	$tab       = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
+	$post_data = isset( $_POST[ 'edd_settings_' . $tab ] ) ? $_POST[ 'edd_settings_' . $tab ] : array();
 
-	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $_POST[ 'edd_settings_' . $tab ] );
+	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $post_data );
 
 	// Loop through each setting being saved and pass it through a sanitization filter
 	foreach( $input as $key => $value ) {
@@ -1163,6 +1176,11 @@ function edd_settings_sanitize( $input = array() ) {
 	// Loop through the whitelist and unset any that are empty for the tab being saved
 	if( ! empty( $settings[ $tab ] ) ) {
 		foreach( $settings[ $tab ] as $key => $value ) {
+
+			// settings used to have numeric keys, now they have keys that match the option ID. This ensures both methods work
+			if( is_numeric( $key ) ) {
+				$key = $value['id'];
+			}
 
 			if( empty( $_POST[ 'edd_settings_' . $tab ][ $key ] ) ) {
 				unset( $edd_options[ $key ] );
@@ -1241,6 +1259,8 @@ add_filter( 'edd_settings_sanitize_text', 'edd_sanitize_text_field' );
  */
 function edd_get_settings_tabs() {
 
+	$settings = edd_get_registered_settings();
+
 	$tabs             = array();
 	$tabs['general']  = __( 'General', 'edd' );
 	$tabs['gateways'] = __( 'Payment Gateways', 'edd' );
@@ -1248,11 +1268,10 @@ function edd_get_settings_tabs() {
 	$tabs['styles']   = __( 'Styles', 'edd' );
 	$tabs['taxes']    = __( 'Taxes', 'edd' );
 
-	if( has_filter( 'edd_settings_extensions' ) ) {
+	if( ! empty( $settings['extensions'] ) ) {
 		$tabs['extensions'] = __( 'Extensions', 'edd' );
 	}
-
-	if( has_filter( 'edd_settings_licenses' ) ) {
+	if( ! empty( $settings['licenses'] ) ) {
 		$tabs['licenses'] = __( 'Licenses', 'edd' );
 	}
 

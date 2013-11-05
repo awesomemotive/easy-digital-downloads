@@ -211,8 +211,11 @@ function edd_update_cart_button() {
 
 	if ( ! edd_item_quanities_enabled() )
 		return;
+
+	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
+	$color = ( $color == 'inherit' ) ? '' : $color;
 ?>
-	<input type="submit" name="edd_update_cart_submit" class="edd-submit button" value="<?php _e( 'Update Cart', 'edd' ); ?>"/>
+	<input type="submit" name="edd_update_cart_submit" class="edd-submit button<?php echo ' ' . $color; ?>" value="<?php _e( 'Update Cart', 'edd' ); ?>"/>
 	<input type="hidden" name="edd_action" value="update_cart"/>
 <?php
 
