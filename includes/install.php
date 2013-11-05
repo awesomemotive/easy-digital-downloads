@@ -65,6 +65,7 @@ function edd_install() {
 				'post_content'   => __( 'Thank you for your purchase! [edd_receipt]', 'edd' ),
 				'post_status'    => 'publish',
 				'post_author'    => 1,
+				'post_parent'    => $checkout,
 				'post_type'      => 'page',
 				'comment_status' => 'closed'
 			)

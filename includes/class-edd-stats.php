@@ -172,7 +172,7 @@ class EDD_Stats {
 
 				case 'yesterday' :
 
-					$day = date( 'd' ) - 1;
+					$day = date( 'd', current_time( 'timestamp' ) ) - 1;
 					if( $day < 1 ) {
 
 						// Today is the first day of the month
@@ -193,7 +193,7 @@ class EDD_Stats {
 
 				case 'this_week' :
 
-					$days_to_week_start = ( date( 'w' ) - 1 ) *60*60*24;
+					$days_to_week_start = ( date( 'w', current_time( 'timestamp' ) ) - 1 ) *60*60*24;
 				 	$today = date( 'd', current_time( 'timestamp' ) );
 
 				 	if( $today < $days_to_week_start ) {
@@ -226,7 +226,7 @@ class EDD_Stats {
 
 				case 'last_week' :
 
-					$days_to_week_start = ( date( 'w' ) - 1 ) *60*60*24;
+					$days_to_week_start = ( date( 'w', current_time( 'timestamp' ) ) - 1 ) *60*60*24;
 				 	$today = date( 'd', current_time( 'timestamp' ) );
 
 				 	if( $today < $days_to_week_start ) {
@@ -374,7 +374,7 @@ class EDD_Stats {
 
 		} else {
 
-			return WP_Error( 'invalid_date', __( 'Improper date provided.', 'edd' ) );
+			return new WP_Error( 'invalid_date', __( 'Improper date provided.', 'edd' ) );
 
 		}
 

@@ -30,6 +30,8 @@ add_action( 'edd_paypal_cc_form', '__return_false' );
 function edd_process_paypal_purchase( $purchase_data ) {
     global $edd_options;
 
+   	//echo '<pre>'; print_r( $purchase_data ); echo '</pre>'; exit;
+
     /*
     Purchase data comes in like this:
 
@@ -82,7 +84,9 @@ function edd_process_paypal_purchase( $purchase_data ) {
         $paypal_redirect = trailingslashit( edd_get_paypal_redirect() ) . '?';
 
 		// Do we have too many items to itemize?
-		$itemize = ( count( $purchase_data['cart_details'] ) > 9 ? false : true );
+		//$itemize = ( count( $purchase_data['cart_details'] ) > 9 ? false : true );
+
+        $itemize = false;
 
         // Setup PayPal arguments
         $paypal_args = array(
@@ -125,15 +129,10 @@ function edd_process_paypal_purchase( $purchase_data ) {
     	    $i = 1;
         	foreach( $purchase_data['cart_details'] as $item ) {
 
-        		$deduct_tax = ( edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax() );
+        		$price = $item['price'] - $item['tax'];
 
-	        	if( $deduct_tax && edd_use_taxes() ) {
-    	    		$price =  $item['price'] - $item['tax'];
-        		} else {
-        			$price = $item['price'];
-	        	}
+	        	if( edd_has_variable_prices( $item['id'] ) && edd_get_cart_item_price_id( $item ) !== false ) {
 
-	        	if( edd_get_cart_item_price_id( $item ) ) {
 	        		$item['name'] .= ' - ' . edd_get_cart_item_price_name( $item );
 	        	}
 
@@ -147,8 +146,9 @@ function edd_process_paypal_purchase( $purchase_data ) {
 	        }
 		}
 
+
    	    // Calculate discount
-       	$discounted_amount = $purchase_data['discount'];
+       	$discounted_amount = 0.00;
         if( ! empty( $purchase_data['fees'] ) ) {
        	 	$i = empty( $i ) ? 1 : $i;
 	        foreach( $purchase_data['fees'] as $fee ) {
@@ -165,8 +165,8 @@ function edd_process_paypal_purchase( $purchase_data ) {
 	        }
 	    }
 
-	    if( $discounted_amount > '0' )
-			$paypal_args['discount_amount_cart'] = $discounted_amount;
+	   // if( $discounted_amount > '0' )
+		//	$paypal_args['discount_amount_cart'] = $discounted_amount;
 
 		// Add taxes to the cart
         if ( edd_use_taxes() && $itemize )

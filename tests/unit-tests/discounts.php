@@ -41,7 +41,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 			'expiration' => '12/31/2050 00:00:00'
 		);
 
-		$this->assertTrue( edd_store_discount( $post ) );
+		$this->assertInternalType( 'int', edd_store_discount( $post ) );
 	}
 
 	public function test_discount_status_update() {

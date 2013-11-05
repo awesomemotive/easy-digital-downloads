@@ -147,7 +147,7 @@ class Tests_AJAX extends EDD_UnitTestCase {
 			'nonce' => wp_create_nonce( 'edd_ajax_nonce' ),
 		);
 
-		$this->assertEquals( 'removed', $this->_handleAjax( 'edd_remove_from_cart' ) );
+		$this->assertEquals( '{"removed":1,"subtotal":"$0.00"}', $this->_handleAjax( 'edd_remove_from_cart' ) );
 	}
 
 	public function test_checkout_register_fields() {
