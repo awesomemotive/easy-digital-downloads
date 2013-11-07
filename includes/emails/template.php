@@ -461,8 +461,10 @@ add_action( 'edd_email_template_default', 'edd_default_email_template' );
  * @return string $email_body Email template with styling
  */
 function edd_default_email_styling( $email_body ) {
-	$first_p    = strpos( $email_body, '<p style="font-size: 14px;">' );
-	$email_body = substr_replace( $email_body, '<p style="font-size: 14px; margin-top:0;">', $first_p, 3 );
+	$first_p  = strpos( $email_body, '<p style="font-size: 14px;">' );
+	if( $first_p ) {
+		$email_body = substr_replace( $email_body, '<p style="font-size: 14px; margin-top:0;">', $first_p, 3 );
+	}
 	$email_body = str_replace( '<p>', '<p style="font-size: 14px; line-height: 150%">', $email_body );
 	$email_body = str_replace( '<ul>', '<ul style="margin: 0 0 10px 0; padding: 0;">', $email_body );
 	$email_body = str_replace( '<li>', '<li style="font-size: 14px; line-height: 150%; display:block; margin: 0 0 4px 0;">', $email_body );
