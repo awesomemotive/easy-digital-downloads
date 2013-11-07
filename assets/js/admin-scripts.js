@@ -651,9 +651,10 @@ jQuery(document).ready(function ($) {
 
 			// Show the email template previews
 			if( $('#email-preview-wrap').length ) {
+				var emailPreview = $('#email-preview');
 				$('#open-email-preview').colorbox({
 					inline: true,
-					href: '#email-preview',
+					href: emailPreview,
 					width: '80%',
 					height: 'auto'
 				});
