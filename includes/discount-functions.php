@@ -159,7 +159,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 		do_action( 'edd_post_update_discount', $details, $discount_id );
 
 		// Discount code updated
-		return true;
+		return $discount_id;
 	} else {
 		// Add the discount
 
@@ -180,7 +180,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 		do_action( 'edd_post_insert_discount', $details, $discount_id );
 
 		// Discount code created
-		return true;
+		return $discount_id;
 	}
 }
 
@@ -749,6 +749,8 @@ function edd_increase_discount_usage( $code ) {
 
 	update_post_meta( $id, '_edd_discount_uses', $uses );
 
+	do_action( 'edd_discount_increase_use_count', $uses, $id, $code );
+
 	return $uses;
 
 }
@@ -887,7 +889,6 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 	if ( empty( $discounts ) || ! is_array( $discounts ) )
 		return 0.00;
 
-	$subtotal = edd_get_cart_subtotal( $tax = false );
 	$amounts  = array();
 	$discounted_items = array();
 
@@ -912,7 +913,7 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 			}
 		} else {
 			// This is a global cart discount
-			$subtotal  = edd_get_cart_subtotal();
+			$subtotal  = edd_get_cart_subtotal( ! edd_taxes_after_discounts() );
 			$amount    = edd_get_discounted_amount( $discount, $subtotal );
 			$amounts[] = $subtotal - $amount;
 		}

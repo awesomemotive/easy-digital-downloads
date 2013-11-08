@@ -47,7 +47,7 @@ function edd_get_payments( $args = array() ) {
  *
  * @since 1.0
  * @param array $payment_data
- * @return bool true if payment is inserted, false otherwise
+ * @return int|bool Payment ID if payment is inserted, false otherwise
  */
 function edd_insert_payment( $payment_data = array() ) {
 	if ( empty( $payment_data ) )
@@ -199,27 +199,27 @@ function edd_delete_purchase( $payment_id = 0 ) {
  * @return void
  */
 function edd_undo_purchase( $download_id, $payment_id ) {
+	if ( edd_is_test_mode() )
+        return; // Don't undo if we are in test mode!
+
 	$payment = get_post( $payment_id );
 
-	$status  = $payment->post_status;
-
-	if ( $status != 'publish' )
-		return; // Payment has already been reversed, or was never completed
 
 	edd_decrease_purchase_count( $download_id );
-	$purchase_meta      = edd_get_payment_meta( $payment_id );
-	$user_purchase_info = maybe_unserialize( $purchase_meta['user_info'] );
-	$cart_details       = maybe_unserialize( $purchase_meta['cart_details'] );
-	$amount             = null;
+	$user_info    = edd_get_payment_meta_user_info( $payment_id );
+	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
+	$amount       = null;
 
-	if ( is_array( $cart_details ) ) {
-		$cart_item_id   = array_search( $download_id, $cart_details );
-		$amount         = isset( $cart_details[$cart_item_id]['price'] ) ? $cart_details[$cart_item_id]['price'] : null;
+	if ( is_array( $cart_details ) && edd_has_variable_prices( $download_id ) ) {
+
+		$cart_item_id = array_search( $download_id, $cart_details );
+		$price_id     = isset( $cart_details[ $cart_item_id ]['price'] ) ? $cart_details[ $cart_item_id ]['price'] : null;
+		$amount       = edd_get_price_option_amount( $download_id, $price_id );
 	}
 
-	$amount = edd_get_download_final_price( $download_id, $user_purchase_info, $amount );
-
+	$amount = edd_get_download_final_price( $download_id, $user_info, $amount );
 	edd_decrease_earnings( $download_id, $amount );
+
 }
 
 

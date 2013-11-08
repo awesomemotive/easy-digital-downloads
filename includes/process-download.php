@@ -22,8 +22,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return      void
  */
 function edd_process_download() {
+
+	if( ! isset( $_GET['download_id'] ) && isset( $_GET['download'] ) ) {
+		$_GET['download_id'] = $_GET['download'];
+	}
+
 	$args = apply_filters( 'edd_process_download_args', array(
-		'download' => ( isset( $_GET['download'] ) )     ? (int) $_GET['download']                          : '',
+		'download' => ( isset( $_GET['download_id'] ) )  ? (int) $_GET['download_id']                    : '',
 		'email'    => ( isset( $_GET['email'] ) )        ? rawurldecode( $_GET['email'] )                   : '',
 		'expire'   => ( isset( $_GET['expire'] ) )       ? base64_decode( rawurldecode( $_GET['expire'] ) ) : '',
 		'file_key' => ( isset( $_GET['file'] ) )         ? (int) $_GET['file']                              : '',
@@ -75,7 +80,6 @@ function edd_process_download() {
 		if( function_exists( 'apache_setenv' ) ) @apache_setenv('no-gzip', 1);
 		@ini_set( 'zlib.output_compression', 'Off' );
 
-
 		nocache_headers();
 		header("Robots: none");
 		header("Content-Type: " . $ctype . "");
@@ -103,7 +107,6 @@ function edd_process_download() {
 				$direct       = false;
 				$file_details = parse_url( $requested_file );
 				$schemes      = array( 'http', 'https' ); // Direct URL schemes
-
 				if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
 
 					/** This is an absolute path */
@@ -118,7 +121,7 @@ function edd_process_download() {
 					$direct     = true;
 
 				}
-				/*
+
 				// Now deliver the file based on the kind of software the server is running / has enabled
 				if ( function_exists( 'apache_get_modules' ) && in_array( 'mod_xsendfile', apache_get_modules() ) ) {
 
@@ -135,7 +138,7 @@ function edd_process_download() {
 					header( "X-Accel-Redirect: /$file_path" );
 
 				} else
-*/
+
 				if( $direct ) {
 					edd_deliver_download( $file_path );
 				} else {

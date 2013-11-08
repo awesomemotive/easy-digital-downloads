@@ -50,20 +50,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 					edd_record_sale_in_log( $download['id'], $payment_id, $user_info );
 					edd_increase_purchase_count( $download['id'] );
-					$amount = null;
-
-					if ( is_array( $cart_details ) ) {
-						foreach ( $cart_details as $key => $item ) {
-							if ( array_search( $download['id'], $item ) ) {
-								$cart_item_id = $key;
-							}
-						}
-
-						$amount = isset( $download['price'] ) ? $download['price'] : null;
-					}
-
-					$amount = edd_get_download_final_price( $download['id'], $user_info, $amount );
-					edd_increase_earnings( $download['id'], $amount );
+					edd_increase_earnings( $download['id'], $download['price'] );
 
 				}
 
@@ -209,6 +196,31 @@ function edd_update_edited_purchase( $data ) {
 add_action( 'edd_edit_payment', 'edd_update_edited_purchase' );
 
 /**
+ * Reduces earnings and sales stats when a purchase is refunded
+ *
+ * @since 1.8.2
+ * @param $data Arguments passed
+ * @return void
+ */
+function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
+
+	if( 'publish' != $old_status )
+		return;
+
+	if( 'refunded' != $new_status )
+		return;
+
+	$downloads = edd_get_payment_meta_cart_details( $payment_id );
+	if( $downloads ) {
+		foreach( $downloads as $download ) {
+			edd_undo_purchase( $download['id'], $payment_id );
+		}
+	}
+}
+add_action( 'edd_update_payment_status', 'edd_undo_purchase_on_refund', 100, 3 );
+
+
+/**
  * Trigger a Purchase Deletion
  *
  * @since 1.3.4
@@ -302,7 +314,7 @@ function edd_trigger_payment_note_deletion( $data ) {
 	if( ! wp_verify_nonce( $data['_wpnonce'], 'edd_delete_payment_note' ) )
 		return;
 
-	$edit_order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&edd-action=edit-payment&purchase_id=' . absint( $data['purchase_id'] ) );
+	$edit_order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=edit-payment&edd-message=payment_note_deleted&purchase_id=' . absint( $data['purchase_id'] ) );
 
 	edd_delete_payment_note( $data['note_id'], $data['purchase_id'] );
 

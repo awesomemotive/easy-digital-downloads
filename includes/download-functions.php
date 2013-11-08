@@ -152,10 +152,9 @@ function edd_has_variable_prices( $download_id ) {
  * @since 1.0.9
  * @param int $download_id ID of the download
  * @param int $price_id ID of the price option
- * @param int @payment_id ID of the payment
  * @return string $price_name Name of the price option
  */
-function edd_get_price_option_name( $download_id, $price_id, $payment_id = 0 ) {
+function edd_get_price_option_name( $download_id, $price_id = 0 ) {
 	$prices = edd_get_variable_prices( $download_id );
 	$price_name = '';
 
@@ -164,7 +163,28 @@ function edd_get_price_option_name( $download_id, $price_id, $payment_id = 0 ) {
 			$price_name = $prices[ $price_id ]['name'];
 	}
 
-	return apply_filters( 'edd_get_price_option_name', $price_name, $download_id, $payment_id );
+	return apply_filters( 'edd_get_price_option_name', $price_name, $download_id );
+}
+
+/**
+ * Retrieves the amount of a variable price option
+ *
+ * @since 1.8.2
+ * @param int $download_id ID of the download
+ * @param int $price_id ID of the price option
+ * @param int @payment_id ID of the payment
+ * @return float $amount Amount of the price option
+ */
+function edd_get_price_option_amount( $download_id, $price_id = 0 ) {
+	$prices = edd_get_variable_prices( $download_id );
+	$amount = 0.00;
+
+	if ( $prices && is_array( $prices ) ) {
+		if ( isset( $prices[ $price_id ] ) )
+			$amount = $prices[ $price_id ]['amount'];
+	}
+
+	return apply_filters( 'edd_get_price_option_amount', $amount, $download_id );
 }
 
 /**
@@ -567,7 +587,7 @@ function edd_get_average_monthly_download_sales( $download_id ) {
  * @param int $variable_price_id Variable pricing option ID
  * @return array $files Download files
  */
-function edd_get_download_files( $download_id, $variable_price_id = null ) {
+function edd_get_download_files( $download_id = 0, $variable_price_id = null ) {
 	$files = array();
 
 	// Bundled products are not allowed to have files
@@ -590,7 +610,7 @@ function edd_get_download_files( $download_id, $variable_price_id = null ) {
 		}
 	}
 
-	return $files;
+	return apply_filters( 'edd_download_files', $files, $download_id, $variable_price_id );
 }
 
 /**
@@ -806,7 +826,7 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price
 		'email' 		=> rawurlencode( $email ),
 		'file' 			=> $filekey,
 		'price_id'      => (int) $price_id,
-		'download' 		=> $download_id,
+		'download_id' 	=> $download_id,
 		'expire' 		=> rawurlencode( base64_encode( $date ) )
 	);
 
@@ -851,7 +871,9 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 
 			$cart_details = edd_get_payment_meta_cart_details( $payment->ID, true );
 
-			if ( $payment->post_status != 'publish' && $payment->post_status != 'complete' )
+			$accepted_stati = apply_filters( 'edd_allowed_download_stati', array( 'publish', 'complete' ) );
+
+			if ( ! in_array( $payment->post_status, $accepted_stati ) )
 				return false;
 
 			if ( ! empty( $cart_details ) ) {

@@ -292,7 +292,7 @@ function edd_validate_username( $username ) {
  */
 function edd_add_past_purchases_to_new_user( $user_id ) {
 
-	$email    = get_user_meta( $user_id, 'user_email', true );
+	$email    = get_the_author_meta( 'user_email', $user_id );
 	$mode     = edd_is_test_mode() ? 'test' : 'live';
 	$payments = edd_get_payments( array( 's' => $email, 'mode' => $mode ) );
 	if( $payments ) {
@@ -342,5 +342,26 @@ function edd_get_customer_address( $user_id = 0 ) {
 	if( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}
-	return get_user_meta( $user_id, '_edd_user_address', true );
+
+	$address = get_user_meta( $user_id, '_edd_user_address', true );
+
+	if( ! isset( $address['line1'] ) )
+		$address['line1'] = '';
+
+	if( ! isset( $address['line2'] ) )
+		$address['line2'] = '';
+
+	if( ! isset( $address['city'] ) )
+		$address['city'] = '';
+
+	if( ! isset( $address['zip'] ) )
+		$address['zip'] = '';
+
+	if( ! isset( $address['country'] ) )
+		$address['country'] = '';
+
+	if( ! isset( $address['state'] ) )
+		$address['state'] = '';
+
+	return $address;
 }

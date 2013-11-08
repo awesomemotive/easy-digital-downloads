@@ -64,15 +64,22 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 
 	$to_add = array();
 
+	if( isset( $options['quantity'] ) ) {
+		$quantity = absint( $options['quantity'] );
+		unset( $options['quantity'] );
+	} else {
+		$quantity = 1;
+	}
+
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
 		// Process multiple price options at once
 		foreach ( $options['price_id'] as $price ) {
 			$price_options = array( 'price_id' => $price );
-			$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $price_options, 'quantity' => 1 ) );
+			$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $price_options, 'quantity' => $quantity ) );
 		}
 	} else {
 		// Add a single item
-		$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $options, 'quantity' => 1 ) );
+		$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $options, 'quantity' => $quantity ) );
 	}
 
 	if ( is_array( $cart ) ) {
@@ -293,6 +300,7 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $taxed =
 		}
 	}
 
+
 	// Determine if we need to add tax to the price
 	if ( $taxed &&
 		(
@@ -361,7 +369,7 @@ function edd_get_cart_item_price_id( $item = array() ) {
 function edd_get_cart_item_price_name( $item = array() ) {
 	$price_id = (int) edd_get_cart_item_price_id( $item );
 	$prices   = edd_get_variable_prices( $item['id'] );
-	$name     = $prices[ $price_id ]['name'];
+	$name     = !empty( $prices ) ? $prices[ $price_id ]['name'] : '';
 	return apply_filters( 'edd_get_cart_item_price_name', $name, $item['id'], $price_id, $item );
 }
 
@@ -378,16 +386,11 @@ function edd_get_cart_item_price_name( $item = array() ) {
 function edd_cart_subtotal() {
 	global $edd_options;
 
-	$tax = ( ( ! edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) || ( ! edd_prices_include_tax() && edd_prices_show_tax_on_checkout() ) );
 	$price = esc_html( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) );
 
 	if ( edd_is_cart_taxed() ) {
-		if ( edd_prices_show_tax_on_checkout() && edd_prices_include_tax() ) {
-			$price .= '<br/><span style="font-weight:normal;text-transform:none;">' . __( '(ex. tax)', 'edd' ) . '</span>';
-		}
-
-		if ( edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax() ) {
-			$price .= '<br/><span style="font-weight:normal;text-transform:none;">' . __( '(incl. tax)', 'edd' ) . '</span>';
+		if ( edd_prices_show_tax_on_checkout() ) {
+			$price .= '<span class="edd_cart_subtotal_tax_text" style="font-weight:normal;text-transform:none;">' . __( '(excl. tax)', 'edd' ) . '</span>';
 		}
 	}
 
@@ -402,10 +405,9 @@ function edd_cart_subtotal() {
  *
  * @since 1.3.3
  * @global $edd_options Array of all the EDD Options
- * @param bool $tax Whether tax is enabled or not (default: true)
  * @return float Total amount before taxes
  */
-function edd_get_cart_subtotal( $tax = true ) {
+function edd_get_cart_subtotal( $tax = false) {
 	global $edd_options;
 
 	$cart_items = edd_get_cart_contents();
@@ -481,9 +483,9 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 function edd_get_cart_total( $discounts = false ) {
 	global $edd_options;
 
-	$subtotal = edd_get_cart_subtotal( edd_prices_include_tax() );
+	$subtotal = edd_get_cart_subtotal();
 	$fees     = edd_get_cart_fee_total();
-	$cart_tax = edd_get_cart_tax( $discounts );
+	$cart_tax = edd_prices_include_tax() ? 0 : edd_get_cart_tax( $discounts );
 	$discount = edd_get_cart_discounted_amount( $discounts );
 	$total    = $subtotal + $fees + $cart_tax - $discount;
 
@@ -601,7 +603,7 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
 function edd_get_cart_tax( $discounts = false ) {
 
 	$add_taxes    = edd_taxes_after_discounts() ? true : false;
-	$subtotal     = edd_get_cart_subtotal( $add_taxes );
+	$subtotal     = edd_get_cart_subtotal( false );
 	$cart_fees    = edd_get_cart_fee_total();
 	$subtotal    += $cart_fees;
 	$cart_tax     = 0;
@@ -665,8 +667,67 @@ function edd_get_cart_content_details() {
 
 	foreach( $cart_items as $key => $item ) {
 
-		$price = edd_get_cart_item_price( $item['id'], $item['options'] );
-		$non_taxed_price = edd_get_cart_item_price( $item['id'], $item['options'], false );
+		$original_price = edd_get_cart_item_price( $item['id'], $item['options'], false );
+		$price      = edd_get_cart_item_price( $item['id'], $item['options'] );
+		$base_price = edd_get_cart_item_price( $item['id'], $item['options'], false );
+
+		// Calculate the discounted price, if any
+		$discounts = edd_get_cart_discounts();
+		if( $discounts ) {
+			foreach ( $discounts as $discount ) {
+				$code_id = edd_get_discount_id_by_code( $discount );
+				$reqs    = edd_get_discount_product_reqs( $code_id );
+
+				// Make sure requirements are set and that this discount shouldn't apply to the whole cart
+				if ( ! empty( $reqs ) && edd_is_discount_not_global( $code_id ) ) {
+					// This is a product(s) specific discount
+
+					foreach ( $reqs as $download_id ) {
+						if ( $download_id == $item['id'] ) {
+
+							if( edd_taxes_after_discounts() ) {
+
+								$price = edd_get_discounted_amount( $discount, $base_price );
+
+							} else {
+
+								$price = edd_get_discounted_amount( $discount, $price );
+
+							}
+
+						}
+					}
+
+				} else {
+
+					// This is a global cart discount
+
+					if( edd_taxes_after_discounts() ) {
+
+						$price = edd_get_discounted_amount( $discount, $base_price );
+
+					} else {
+
+						$price = edd_get_discounted_amount( $discount, $price );
+
+					}
+				}
+
+			}
+		}
+
+		if( edd_prices_include_tax() && ! edd_taxes_after_discounts() ) {
+			$tax = $is_taxed ? $original_price - edd_calculate_tax( $original_price ) : 0.00;
+			$price += $tax;
+		} elseif( edd_prices_include_tax() && edd_taxes_after_discounts() ) {
+			$tax = $is_taxed ? $price - edd_calculate_tax( $price ) : 0.00;
+		} elseif( edd_taxes_after_discounts() ) {
+			$tax = $is_taxed ? edd_calculate_tax( $price ) - $price : 0.00;
+			$price += $tax;
+		} else {
+			$tax = $is_taxed ? edd_calculate_tax( $original_price ) - $base_price : 0.00;
+		}
+
 
 		$details[ $key ]  = array(
 			'name'        => get_the_title( $item['id'] ),
@@ -674,7 +735,7 @@ function edd_get_cart_content_details() {
 			'item_number' => $item,
 			'price'       => $price,
 			'quantity'    => edd_get_cart_item_quantity( $item['id'], $item['options'] ),
-			'tax'         => $is_taxed ? edd_calculate_tax( $non_taxed_price, false ) : 0,
+			'tax'         => $tax,
 		);
 	}
 
@@ -1006,7 +1067,7 @@ function edd_restore_cart() {
 
 		if ( isset( $_GET['edd_cart_token'] ) && $_GET['edd_cart_token'] != $token ) {
 
-			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'edd' ), 'Cart restoration failed. Invalid token.' );
+			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'edd' ), __( 'Cart restoration failed. Invalid token.', 'edd' ) );
 			EDD()->session->set( 'edd_cart_messages', $messages );
 
 			return new WP_Error( 'invalid_cart_token', __( 'The cart cannot be restored. Invalid token.', 'edd' ) );
@@ -1021,7 +1082,7 @@ function edd_restore_cart() {
 
 		if ( $_GET['edd_cart_token'] != $token ) {
 
-			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'edd' ), 'Cart restoration failed. Invalid token.' );
+			$messages['edd_cart_restoration_failed'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Error', 'edd' ), __( 'Cart restoration failed. Invalid token.', 'edd' ) );
 			EDD()->session->set( 'edd_cart_messages', $messages );
 
 			return new WP_Error( 'invalid_cart_token', __( 'The cart cannot be restored. Invalid token.', 'edd' ) );
@@ -1034,7 +1095,7 @@ function edd_restore_cart() {
 
 	}
 
-	$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), 'Cart restored successfully.' );
+	$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), __( 'Cart restored successfully.', 'edd' ) );
 	EDD()->session->set( 'edd_cart', $saved_cart );
 	EDD()->session->set( 'edd_cart_messages', $messages );
 }
