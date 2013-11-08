@@ -502,7 +502,14 @@ function edd_purchase_form_validate_user_login() {
 			// Check if password is valid
 			if ( ! wp_check_password( $user_pass, $user_data->user_pass, $user_data->ID ) ) {
 				// Incorrect password
-				edd_set_error( 'password_incorrect', __( 'The password you entered is incorrect', 'edd' ) );
+				edd_set_error(
+					'password_incorrect',
+					sprintf( 
+						__( 'The password you entered is incorrect. %sReset Password%s', 'edd' ),
+						'<a href="' . wp_lostpassword_url( edd_get_checkout_uri() ) . '" title="' . __( 'Lost Password' ) . '">',
+						'</a>'
+					)
+				);
 			// All is correct
 			} else {
 				// Repopulate the valid user data array
