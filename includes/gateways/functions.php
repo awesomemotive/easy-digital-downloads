@@ -96,7 +96,16 @@ function edd_get_default_gateway() {
  */
 function edd_get_gateway_admin_label( $gateway ) {
 	$gateways = edd_get_enabled_payment_gateways();
-	return isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['admin_label'] : $gateway;
+	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['admin_label'] : $gateway;
+	$payment  = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : false;
+
+	if( $gateway == 'manual' && $payment ) {
+		if( edd_get_payment_amount( $payment ) == 0 ) {
+			$label = __( 'Free Purchase', 'edd' );
+		}
+	}
+
+	return apply_filters( 'edd_gateway_admin_label', $label, $gateway );
 }
 
 /**
@@ -108,7 +117,13 @@ function edd_get_gateway_admin_label( $gateway ) {
  */
 function edd_get_gateway_checkout_label( $gateway ) {
 	$gateways = edd_get_enabled_payment_gateways();
-	return isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['checkout_label'] : $gateway;
+	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['checkout_label'] : $gateway;
+
+	if( $gateway == 'manual' ) {
+		$label = __( 'Free Purchase', 'edd' );
+	}
+
+	return apply_filters( 'edd_gateway_checkout_label', $label, $gateway );
 }
 
 /**
