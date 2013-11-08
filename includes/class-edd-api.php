@@ -175,7 +175,7 @@ class EDD_API {
 		$this->override = false;
 
         // Make sure we have both user and api key
-		if ( !empty( $wp_query->query_vars['edd-api'] ) && $wp_query->query_vars['edd-api'] != 'products' ) {
+		if ( ! empty( $wp_query->query_vars['edd-api'] ) && ( $wp_query->query_vars['edd-api'] != 'products' || ! empty( $wp_query->query_vars['token'] ) ) ) {
 			if ( empty( $wp_query->query_vars['token'] ) || empty( $wp_query->query_vars['key'] ) )
 				$this->missing_auth();
 
