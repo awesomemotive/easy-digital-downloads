@@ -92,3 +92,28 @@ function edd_view_order_details_title( $admin_title, $title ) {
 	return $title;
 }
 add_filter( 'admin_title', 'edd_view_order_details_title', 10, 2 );
+
+/**
+ * Intercept default Edit post links for EDD payments and rewrite them to the View Order Details screen
+ *
+ * @since 1.8.3
+ *
+ * @param $url
+ * @param $post_id
+ * @param $context
+ * @return string
+ */
+function edd_override_edit_post_for_payment_link( $url, $post_id = 0, $context ) {
+
+	$post = get_post( $post_id );
+	if( ! $post )
+		return $url;
+
+	if( 'edd_payment' != $post->post_type )
+		return $url;
+
+	$url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $post_id );
+
+	return $url;
+}
+add_filter( 'get_edit_post_link', 'edd_override_edit_post_for_payment_link', 10, 3 );

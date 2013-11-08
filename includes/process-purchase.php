@@ -68,6 +68,7 @@ function edd_process_purchase_form() {
 		'discount'   => $valid_data['discount'],
 		'address'    => $user['address']
 	);
+
 	// Setup purchase information
 	$purchase_data = array(
 		'downloads'    => edd_get_cart_contents(),
@@ -79,7 +80,7 @@ function edd_process_purchase_form() {
 		'purchase_key' => strtolower( md5( uniqid() ) ), 	// Random key
 		'user_email'   => $user['user_email'],
 		'date'         => date( 'Y-m-d H:i:s' ),
-		'user_info'    => $user_info,
+		'user_info'    => stripslashes_deep( $user_info ),
 		'post_data'    => $_POST,
 		'cart_details' => edd_get_cart_content_details(),
 		'gateway'      => $valid_data['gateway'],
@@ -254,7 +255,7 @@ function edd_purchase_form_validate_discounts() {
 	$error     = false;
 
 	// Check for valid discount(s) is present
-	if ( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) ) {
+	if ( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) && __( 'Enter discount', 'edd' ) != $_POST['edd-discount'] ) {
 		// Check for a posted discount
 		$posted_discount = isset( $_POST['edd-discount'] ) ? trim( $_POST['edd-discount'] ) : false;
 
@@ -593,6 +594,9 @@ function edd_purchase_form_validate_guest_user() {
 function edd_register_and_login_new_user( $user_data = array() ) {
 	// Verify the array
 	if ( empty( $user_data ) )
+		return -1;
+
+	if( edd_get_errors() )
 		return -1;
 
 	$user_args = array(

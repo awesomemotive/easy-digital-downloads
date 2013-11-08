@@ -171,13 +171,13 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$revoked_count  = '&nbsp;<span class="count">(' . $this->revoked_count   . ')</span>';
 
 		$views = array(
-			'all'		=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status' ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'edd') . $total_count ),
-			'publish'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'publish' ), $current === 'publish' ? ' class="current"' : '', __('Completed', 'edd') . $complete_count ),
-			'pending'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'pending' ), $current === 'pending' ? ' class="current"' : '', __('Pending', 'edd') . $pending_count ),
-			'refunded'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'refunded' ), $current === 'refunded' ? ' class="current"' : '', __('Refunded', 'edd') . $refunded_count ),
-			'revoked'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'revoked' ), $current === 'revoked' ? ' class="current"' : '', __('Revoked', 'edd') . $revoked_count ),
-			'failed'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'failed' ), $current === 'failed' ? ' class="current"' : '', __('Failed', 'edd') . $failed_count ),
-			'abandoned'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'abandoned' ), $current === 'abandoned' ? ' class="current"' : '', __('Abandoned', 'edd') . $abandoned_count )
+			'all'		=> sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( array( 'status', 'paged' ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All', 'edd') . $total_count ),
+			'publish'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'publish', 'paged' => FALSE ) ), $current === 'publish' ? ' class="current"' : '', __('Completed', 'edd') . $complete_count ),
+			'pending'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'pending', 'paged' => FALSE ) ), $current === 'pending' ? ' class="current"' : '', __('Pending', 'edd') . $pending_count ),
+			'refunded'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'refunded', 'paged' => FALSE ) ), $current === 'refunded' ? ' class="current"' : '', __('Refunded', 'edd') . $refunded_count ),
+			'revoked'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'revoked', 'paged' => FALSE ) ), $current === 'revoked' ? ' class="current"' : '', __('Revoked', 'edd') . $revoked_count ),
+            'failed'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'failed', 'paged' => FALSE ) ), $current === 'failed' ? ' class="current"' : '', __('Failed', 'edd') . $failed_count ),
+            'abandoned'	=> sprintf( '<a href="%s"%s>%s</a>', add_query_arg( array( 'status' => 'abandoned', 'paged' => FALSE ) ), $current === 'abandoned' ? ' class="current"' : '', __('Abandoned', 'edd') . $abandoned_count )
 		);
 
 		return apply_filters( 'edd_payments_table_views', $views );
@@ -250,7 +250,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				$value = '<a href="' . add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ) . '">' . __( 'View Order Details', 'edd' ) . '</a>';
 				break;
 			default:
-				$value = isset( $payment->$column_name ) ? $payment->$column_name : $payment;
+				$value = isset( $payment->$column_name ) ? $payment->$column_name : '';
 				break;
 
 		}
@@ -309,16 +309,16 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function column_user( $payment ) {
 
-		$user_id   = $payment->user_info['id'];
+		$user_id = edd_get_payment_user_id( $payment->ID );
 
-		if ( $user_id > 0 ) {
+		if ( $user_id && $user_id > 0 ) {
 			$user = get_userdata( $user_id ) ;
 			$display_name = is_object( $user ) ? $user->display_name : __( 'guest', 'edd' );
 		} else {
 			$display_name = __( 'guest', 'edd' );
 		}
 
-		$value = '<a href="' . remove_query_arg( 'paged', add_query_arg( 'user', $payment->user_info['email'] ) ) . '">' . $display_name . '</a>';
+		$value = '<a href="' . esc_url( add_query_arg( array( 'user' => $payment->user_info['email'], 'paged' => false ) ) ) . '">' . $display_name . '</a>';
 		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, 'user' );
 	}
 

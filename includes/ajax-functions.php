@@ -54,8 +54,16 @@ function edd_get_ajax_url() {
  */
 function edd_ajax_remove_from_cart() {
 	if ( isset( $_POST['cart_item'] ) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
+		
 		edd_remove_from_cart( $_POST['cart_item'] );
-		echo 'removed';
+		
+		$return = array(
+			'removed'  => 1,
+			'subtotal' => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+		);
+
+		echo json_encode( $return );
+
 	}
 	edd_die();
 }
@@ -81,26 +89,26 @@ function edd_ajax_add_to_cart() {
 		}
 
 		foreach ( $to_add as $options ) {
-			if ( ! edd_item_in_cart( $_POST['download_id'], $options ) ) {
 
-				if( $_POST['download_id'] == $options['price_id'] )
-					$options = array();
+			if( $_POST['download_id'] == $options['price_id'] )
+				$options = array();
 
-				$key          = edd_add_to_cart( $_POST['download_id'], $options );
+			$key = edd_add_to_cart( $_POST['download_id'], $options );
 
-				$item         = array(
-					'id'      => $_POST['download_id'],
-					'options' => $options
-				);
+			$item = array(
+				'id'      => $_POST['download_id'],
+				'options' => $options
+			);
 
-				$item = apply_filters( 'edd_ajax_pre_cart_item_template', $item );
+			$item = apply_filters( 'edd_ajax_pre_cart_item_template', $item );
 
-				$cart_item    = edd_get_cart_item_template( $key, $item, true );
+			$return = array(
+				'subtotal'  => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+				'cart_item' => html_entity_decode( edd_get_cart_item_template( $key, $item, true ), ENT_COMPAT, 'UTF-8' )
+			);
 
-				echo $cart_item;
-			} else {
-				echo 'incart';
-			}
+			echo json_encode( $return );
+
 		}
 	}
 	edd_die();

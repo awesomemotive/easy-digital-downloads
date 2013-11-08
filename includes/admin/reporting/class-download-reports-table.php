@@ -150,7 +150,12 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @return int $total Total number of downloads
 	 */
 	public function get_total_downloads() {
-		return $this->products->post_count;
+		$total  = 0;
+		$counts = wp_count_posts( 'download', 'readable' );
+		foreach( $counts as $status => $count ) {
+			$total += $count;
+		}
+		return $total;
 	}
 
 	/**
@@ -198,7 +203,8 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 			'order'			=> $order,
 			'fields'        => 'ids',
 			'posts_per_page'=> $this->per_page,
-			'paged'         => $this->get_paged()
+			'paged'         => $this->get_paged(),
+			'suppress_filters' => true
 		);
 
 		if( ! empty( $category ) ) {
