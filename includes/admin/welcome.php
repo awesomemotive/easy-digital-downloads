@@ -443,7 +443,13 @@ class EDD_Welcome {
 		if ( is_network_admin() || isset( $_GET['activate-multi'] ) )
 			return;
 
-		wp_safe_redirect( admin_url( 'index.php?page=edd-about' ) ); exit;
+		$upgrade = get_option( 'edd_version_upgraded_from' );
+
+		if( ! $upgrade ) { // First time install
+			wp_safe_redirect( admin_url( 'index.php?page=edd-getting-started' ) ); exit;
+		} else { // Update
+			wp_safe_redirect( admin_url( 'index.php?page=edd-about' ) ); exit;
+		}
 	}
 }
 new EDD_Welcome();
