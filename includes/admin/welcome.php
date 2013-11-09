@@ -55,10 +55,19 @@ class EDD_Welcome {
 			array( $this, 'about_screen' )
 		);
 
+		// Getting Started Page
+		add_dashboard_page(
+			__( 'Getting started with Easy Digital Downloads', 'edd' ),
+			__( 'Getting started with Easy Digital Downloads', 'edd' ),
+			$this->minimum_capability,
+			'edd-getting-started',
+			array( $this, 'getting_started_screen' )
+		);
+
 		// Credits Page
 		add_dashboard_page(
-			__( 'Welcome to Easy Digital Downloads', 'edd' ),
-			__( 'Welcome to Easy Digital Downloads', 'edd' ),
+			__( 'The people that build Easy Digital Downloads', 'edd' ),
+			__( 'The people that build Easy Digital Downloads', 'edd' ),
 			$this->minimum_capability,
 			'edd-credits',
 			array( $this, 'credits_screen' )
@@ -74,6 +83,7 @@ class EDD_Welcome {
 	 */
 	public function admin_head() {
 		remove_submenu_page( 'index.php', 'edd-about' );
+		remove_submenu_page( 'index.php', 'edd-getting-started' );
 		remove_submenu_page( 'index.php', 'edd-credits' );
 
 		// Badge for welcome page
@@ -229,6 +239,79 @@ class EDD_Welcome {
 			<div class="return-to-dashboard">
 				<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'post_type' => 'download', 'page' => 'edd-settings' ), 'edit.php' ) ) ); ?>"><?php _e( 'Go to Easy Digital Downloads Settings', 'edd' ); ?></a>
 			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render Getting Started Screen
+	 *
+	 * @access public
+	 * @since 1.9
+	 * @return void
+	 */
+	public function getting_started_screen() {
+		list( $display_version ) = explode( '-', EDD_VERSION );
+		?>
+		<div class="wrap about-wrap">
+			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
+			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
+			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
+
+			<?php $this->tabs(); ?>
+
+			<p class="about-description"><?php _e( 'Use the tips below to get started using Easy Digital Downloads. You will be up and running in no time!', 'edd' ); ?></p>
+
+			<div class="changelog">
+				<h3><?php _e( 'Creating Your First Download Product', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/17checkout.png'; ?>" class="edd-welcome-screenshots"/>
+
+					<h4><?php _e( 'Simple, Beautiful Checkout', 'edd' );?></h4>
+					<p><?php _e( 'We have worked tirelessly to continually improve the checkout experience of Easy Digital Downloads, and with just a few subtle tweaks, we have made the experience in Easy Digital Downloads version 1.8 even better than before.', 'edd' );?></p>
+
+					<h4><?php _e( 'Better Checkout Layout', 'edd' );?></h4>
+					<p><?php _e( 'The position of each field on the checkout has been carefully reconsidered to ensure it is in the proper location so as to best create high conversion rates.', 'edd' );?></p>
+
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Display a Product Grid', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/18cart-saving.png'; ?>" class="edd-welcome-screenshots"/>
+
+					<h4><?php _e( 'Allow Customers to Save Their Carts for Later','edd' );?></h4>
+					<p><?php _e( 'With Cart Saving, customers can save their shopping carts and then come back and restore them at a later point.', 'edd' );?></p>
+
+					<h4><?php _e( 'Encourage Customers to Come Back', 'edd' );?></h4>
+					<p><?php _e( 'By making it easier for customers to save their cart and return later, you can increase the conversion rate of the customers that need time to think about their purchase.', 'edd' );?></p>
+
+
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Purchase Buttons Anywhere', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/18cart-saving.png'; ?>" class="edd-welcome-screenshots"/>
+
+					<h4><?php _e( 'Allow Customers to Save Their Carts for Later','edd' );?></h4>
+					<p><?php _e( 'With Cart Saving, customers can save their shopping carts and then come back and restore them at a later point.', 'edd' );?></p>
+
+					<h4><?php _e( 'Encourage Customers to Come Back', 'edd' );?></h4>
+					<p><?php _e( 'By making it easier for customers to save their cart and return later, you can increase the conversion rate of the customers that need time to think about their purchase.', 'edd' );?></p>
+
+
+				</div>
+			</div>
+
 		</div>
 		<?php
 	}
