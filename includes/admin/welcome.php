@@ -287,11 +287,14 @@ class EDD_Welcome {
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/edit-download.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Simple, Beautiful Checkout', 'edd' );?></h4>
-					<p><?php _e( 'We have worked tirelessly to continually improve the checkout experience of Easy Digital Downloads, and with just a few subtle tweaks, we have made the experience in Easy Digital Downloads version 1.8 even better than before.', 'edd' );?></p>
+					<h4><?php printf( __( '<a href="%s">%s &rarr; Add New</a>', 'edd' ), admin_url( 'post-new.php?post_type=download' ), edd_get_label_plural() ); ?></h4>
+					<p><?php printf( __( 'The %s menu is your access point for all aspects of your Easy Digital Downloads product creation and setup. To create your first product, simply click Add New and then fill out the product details.', 'edd' ), edd_get_label_plural() ); ?></p>
 
-					<h4><?php _e( 'Better Checkout Layout', 'edd' );?></h4>
-					<p><?php _e( 'The position of each field on the checkout has been carefully reconsidered to ensure it is in the proper location so as to best create high conversion rates.', 'edd' );?></p>
+					<h4><?php _e( 'Product Price', 'edd' );?></h4>
+					<p><?php _e( 'Products can have simple prices or variable prices if you wish to have more than one price point for a product. For a single price, simply enter the price. For multiple price points, click <em>Enable variable pricing</em> and enter the options.', 'edd' );?></p>
+
+					<h4><?php _e( 'Download Files', 'edd' );?></h4>
+					<p><?php _e( 'Uploading the downloadable files is simple. Click <em>Upload File</em> in the Download Files section and choose your download file. To add more than one file, simply click the <em>Add New</em> button.', 'edd' );?></p>
 
 				</div>
 			</div>
