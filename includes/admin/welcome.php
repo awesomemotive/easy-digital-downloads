@@ -120,6 +120,30 @@ class EDD_Welcome {
 	}
 
 	/**
+	 * Navigation tabs
+	 *
+	 * @access public
+	 * @since 1.9
+	 * @return void
+	 */
+	public function tabs() {
+		$selected = isset( $_GET['page'] ) ? $_GET['page'] : 'edd-about';
+		?>
+		<h2 class="nav-tab-wrapper">
+			<a class="nav-tab <?php echo $selected == 'edd-about' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-about' ), 'index.php' ) ) ); ?>">
+				<?php _e( "What's New", 'edd' ); ?>
+			</a>
+			<a class="nav-tab <?php echo $selected == 'edd-getting-started' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-getting-started' ), 'index.php' ) ) ); ?>">
+				<?php _e( 'Getting Started', 'edd' ); ?>
+			</a>
+			<a class="nav-tab <?php echo $selected == 'edd-credits' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-credits' ), 'index.php' ) ) ); ?>">
+				<?php _e( 'Credits', 'edd' ); ?>
+			</a>
+		</h2>
+		<?php
+	}
+
+	/**
 	 * Render About Screen
 	 *
 	 * @access public
@@ -134,13 +158,7 @@ class EDD_Welcome {
 			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
 			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
 
-			<h2 class="nav-tab-wrapper">
-				<a class="nav-tab nav-tab-active" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-about' ), 'index.php' ) ) ); ?>">
-					<?php _e( "What's New", 'edd' ); ?>
-				</a><a class="nav-tab" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-credits' ), 'index.php' ) ) ); ?>">
-					<?php _e( 'Credits', 'edd' ); ?>
-				</a>
-			</h2>
+			<?php $this->tabs(); ?>
 
 			<div class="changelog">
 				<h3><?php _e( 'A Great Checkout Experience', 'edd' );?></h3>
@@ -331,13 +349,7 @@ class EDD_Welcome {
 			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
 			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
 
-			<h2 class="nav-tab-wrapper">
-				<a class="nav-tab" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-about' ), 'index.php' ) ) ); ?>">
-					<?php _e( "What's New", 'edd' ); ?>
-				</a><a class="nav-tab nav-tab-active" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-credits' ), 'index.php' ) ) ); ?>">
-					<?php _e( 'Credits', 'edd' ); ?>
-				</a>
-			</h2>
+			<?php $this->tabs(); ?>
 
 			<p class="about-description"><?php _e( 'Easy Digital Downloads is created by a worldwide team of developers who aim to provide the #1 eCommerce platform for selling digital goods through WordPress.', 'edd' ); ?></p>
 
