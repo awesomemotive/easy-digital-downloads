@@ -281,7 +281,7 @@ function edd_default_cc_address_fields() {
 
 				$selected_country = edd_get_shop_country();
 
-				if( $logged_in && ! empty( $user_address['country'] ) ) {
+				if( $logged_in && ! empty( $user_address['country'] ) && '*' !== $user_address['country'] ) {
 					$selected_country = $user_address['country'];
 				}
 
