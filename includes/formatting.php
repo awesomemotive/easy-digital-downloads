@@ -97,6 +97,8 @@ function edd_currency_filter( $price ) {
 		$price *= -1; // Turn amount positive
 	}
 
+	$price = edd_format_amount( $price );
+
 	if ( $position == 'before' ):
 		switch ( $currency ):
 			case "GBP" :
