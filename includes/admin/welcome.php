@@ -309,7 +309,6 @@ class EDD_Welcome {
 					<h4><?php _e( 'Encourage Customers to Come Back', 'edd' );?></h4>
 					<p><?php _e( 'By making it easier for customers to save their cart and return later, you can increase the conversion rate of the customers that need time to think about their purchase.', 'edd' );?></p>
 
-
 				</div>
 			</div>
 
@@ -326,6 +325,19 @@ class EDD_Welcome {
 					<h4><?php _e( 'Encourage Customers to Come Back', 'edd' );?></h4>
 					<p><?php _e( 'By making it easier for customers to save their cart and return later, you can increase the conversion rate of the customers that need time to think about their purchase.', 'edd' );?></p>
 
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Need Help?', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<h4><?php _e( 'Phenomenal Support','edd' );?></h4>
+					<p><?php _e( 'We do our best to provide the best support we can. If you encounter a problem or have a question, post a question in the <a href="https://easydigitaldownloads.com/support">support forums</a>.', 'edd' );?></p>
+
+					<h4><?php _e( 'Need Even Faster Support?', 'edd' );?></h4>
+					<p><?php _e( 'Our <a href="https://easydigitaldownloads.com/support/pricing/">Priority Support forums</a> are there for customers that need faster and/or more in-depth assistance.', 'edd' );?></p>
 
 				</div>
 			</div>
