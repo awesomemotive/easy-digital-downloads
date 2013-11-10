@@ -247,9 +247,9 @@ class EDD_Product_Details_Widget extends WP_Widget {
     public function __construct() {
 		parent::__construct(
 			'edd_product_details',
-			__( 'Download Details', 'edd-product-details' ),
+			__( 'Download Details', 'edd' ),
 			array( 
-				'description' => __( 'Display the details of a specific Download product', 'edd-product-details' ),
+				'description' => __( 'Display the details of a specific Download product', 'edd' ),
 			)
 		);
 	}
@@ -260,7 +260,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
 
         if ( 'current' == $instance['download_id'] && ! is_singular( 'download' ) )
         	return;
-        
+
        	// set correct download ID
         if ( 'current' == $instance['download_id'] && is_singular( 'download' ) )
         	$download_id = get_the_ID();
@@ -295,15 +295,15 @@ class EDD_Product_Details_Widget extends WP_Widget {
         $text = '';
 
         if( $category_list || $tag_list ) {
-        	$text .= '<div class="edd-product-meta">';
+        	$text .= '<p class="edd-meta">';
 
         	if( $category_list )
-	        	$text .= '<span class="categories">' . __( 'Categories: %1$s', 'edd-product-details' ). '</span><br/>';
+	        	$text .= '<span class="categories">' . __( 'Categories: %1$s', 'edd' ). '</span><br/>';
 
 	        if ( $tag_list )
-	            $text .= '<span class="tags">' . __( 'Tags: %2$s', 'edd-product-details' ) . '</span>';
+	            $text .= '<span class="tags">' . __( 'Tags: %2$s', 'edd' ) . '</span>';
 
-        	$text .= '</div>';
+        	$text .= '</p>';
         }
         
         printf( $text, $category_list, $tag_list );
@@ -316,7 +316,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
     public function form( $instance ) {
         // Set up some default widget settings.
         $defaults = array(
-            'title' 			=> sprintf( __( 'About this %s', 'edd-product-details' ), strtolower( edd_get_label_singular() ) ),
+            'title' 			=> sprintf( __( 'About this %s', 'edd' ), strtolower( edd_get_label_singular() ) ),
             'download_id' 		=> 'current',
             'download_title' 	=> 'on',
             'purchase_button' 	=> 'on',
@@ -328,7 +328,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
         
         <!-- Title -->
         <p>
-            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'edd-product-details' ) ?></label>
+            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'edd' ) ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $instance['title']; ?>" />
         </p>
 
@@ -342,9 +342,9 @@ class EDD_Product_Details_Widget extends WP_Widget {
 	        $downloads = get_posts( $args );
         ?>
         <p>
-            <label for="<?php echo $this->get_field_id( 'download_id' ); ?>"><?php printf( __( '%s', 'edd-product-details' ), edd_get_label_singular() ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'download_id' ); ?>"><?php printf( __( '%s', 'edd' ), edd_get_label_singular() ); ?></label>
             <select class="widefat" name="<?php echo $this->get_field_name( 'download_id' ); ?>" id="<?php echo $this->get_field_id( 'download_id' ); ?>">
-            	<option value="current"><?php _e( 'Use current', 'edd-product-details' ); ?></option>
+            	<option value="current"><?php _e( 'Use current', 'edd' ); ?></option>
             <?php foreach ( $downloads as $download ) { ?>
                 <option <?php selected( $instance['download_id'], $download->ID ); ?> value="<?php echo $download->ID; ?>"><?php echo $download->post_title; ?></option>
             <?php } ?>
@@ -354,25 +354,25 @@ class EDD_Product_Details_Widget extends WP_Widget {
         <!-- Download title -->
         <p>
             <input <?php checked( $instance['download_title'], 'on' ); ?> id="<?php echo $this->get_field_id( 'download_title' ); ?>" name="<?php echo $this->get_field_name( 'download_title' ); ?>" type="checkbox" />
-            <label for="<?php echo $this->get_field_id( 'download_title' ); ?>"><?php _e( 'Show Title', 'edd-product-details' ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'download_title' ); ?>"><?php _e( 'Show Title', 'edd' ); ?></label>
         </p>
 
         <!-- Show purchase button -->
         <p>
             <input <?php checked( $instance['purchase_button'], 'on' ); ?> id="<?php echo $this->get_field_id( 'purchase_button' ); ?>" name="<?php echo $this->get_field_name( 'purchase_button' ); ?>" type="checkbox" />
-            <label for="<?php echo $this->get_field_id( 'purchase_button' ); ?>"><?php _e( 'Show Purchase Button', 'edd-product-details' ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'purchase_button' ); ?>"><?php _e( 'Show Purchase Button', 'edd' ); ?></label>
         </p>
 
         <!-- Show download categories -->
         <p>
             <input <?php checked( $instance['categories'], 'on' ); ?> id="<?php echo $this->get_field_id( 'categories' ); ?>" name="<?php echo $this->get_field_name( 'categories' ); ?>" type="checkbox" />
-            <label for="<?php echo $this->get_field_id( 'categories' ); ?>"><?php _e( 'Show Categories', 'edd-product-details' ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'categories' ); ?>"><?php _e( 'Show Categories', 'edd' ); ?></label>
         </p>
 
         <!-- Show download tags -->
         <p>
             <input <?php checked( $instance['tags'], 'on' ); ?> id="<?php echo $this->get_field_id( 'tags' ); ?>" name="<?php echo $this->get_field_name( 'tags' ); ?>" type="checkbox" />
-            <label for="<?php echo $this->get_field_id( 'tags' ); ?>"><?php _e( 'Show Tags', 'edd-product-details' ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'tags' ); ?>"><?php _e( 'Show Tags', 'edd' ); ?></label>
         </p>
     <?php }
 
