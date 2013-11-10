@@ -2,10 +2,10 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 1.8.2.1\n"
+"Project-Id-Version: Easy Digital Downloads 1.8.3.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/Easy-Digital-"
 "Downloads\n"
-"POT-Creation-Date: 2013-11-03 16:13:44+00:00\n"
+"POT-Creation-Date: 2013-11-10 19:05:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -235,7 +235,7 @@ msgstr ""
 #: includes/admin/reporting/class-customer-reports-table.php:129
 #: includes/admin/reporting/class-export-customers.php:66
 #: includes/admin/reporting/class-export-customers.php:75
-#: templates/shortcode-receipt.php:111
+#: templates/shortcode-receipt.php:113
 msgid "Name"
 msgstr ""
 
@@ -615,7 +615,7 @@ msgstr ""
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:119
 #: includes/cart/functions.php:1070 includes/cart/functions.php:1085
 #: includes/download-functions.php:897 includes/download-functions.php:901
-#: includes/download-functions.php:911 includes/emails/template.php:486
+#: includes/download-functions.php:911 includes/emails/template.php:488
 #: includes/error-tracking.php:36 includes/query-filters.php:37
 msgid "Error"
 msgstr ""
@@ -750,7 +750,7 @@ msgstr ""
 #: includes/admin/downloads/dashboard-columns.php:223
 #: includes/admin/downloads/metabox.php:253
 #: includes/admin/reporting/pdf-reports.php:63
-#: templates/shortcode-receipt.php:118
+#: templates/shortcode-receipt.php:120
 msgid "Price"
 msgstr ""
 
@@ -1274,7 +1274,7 @@ msgid "Fees"
 msgstr ""
 
 #: includes/admin/payments/view-order-details.php:68
-#: templates/shortcode-receipt.php:68 templates/shortcode-receipt.php:224
+#: templates/shortcode-receipt.php:68 templates/shortcode-receipt.php:226
 msgid "Total Price"
 msgstr ""
 
@@ -1357,8 +1357,8 @@ msgstr ""
 #: includes/admin/reporting/class-customer-reports-table.php:225
 #: includes/admin/reporting/class-export-customers.php:125
 #: includes/admin/reporting/class-export-customers.php:141
-#: includes/class-edd-api.php:634 includes/class-edd-api.php:635
-#: includes/class-edd-api.php:636 includes/class-edd-api.php:637
+#: includes/class-edd-api.php:639 includes/class-edd-api.php:640
+#: includes/class-edd-api.php:641 includes/class-edd-api.php:642
 msgid "Guest"
 msgstr ""
 
@@ -1506,7 +1506,7 @@ msgid "Last Name"
 msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:67
-#: templates/shortcode-receipt.php:107
+#: templates/shortcode-receipt.php:109
 msgid "Products"
 msgstr ""
 
@@ -1737,7 +1737,7 @@ msgstr ""
 msgid "Sales and earnings reports for the current year for all products"
 msgstr ""
 
-#. #-#-#-#-#  edd.pot (Easy Digital Downloads 1.8.2.1)  #-#-#-#-#
+#. #-#-#-#-#  edd.pot (Easy Digital Downloads 1.8.3.1)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: includes/admin/reporting/pdf-reports.php:39
 #: includes/admin/reporting/pdf-reports.php:40
@@ -2140,7 +2140,7 @@ msgstr ""
 
 #: includes/admin/settings/register-settings.php:207
 msgid ""
-"Allow Easy Digital Downloads to annonymously track how this plugin is used "
+"Allow Easy Digital Downloads to anonymously track how this plugin is used "
 "and help us make the plugin better. Opt-in and receive a 20% discount code "
 "for any purchase from the <a href=\"https://easydigitaldownloads.com/"
 "extensions\" target=\"_blank\">Easy Digital Downloads store</a>. Your "
@@ -3079,7 +3079,7 @@ msgstr ""
 msgid "(ex. tax)"
 msgstr ""
 
-#: includes/cart/functions.php:268 templates/shortcode-receipt.php:230
+#: includes/cart/functions.php:268 templates/shortcode-receipt.php:232
 msgid "(incl. tax)"
 msgstr ""
 
@@ -3088,7 +3088,7 @@ msgid "(excl. tax)"
 msgstr ""
 
 #: includes/cart/functions.php:518 templates/shortcode-receipt.php:74
-#: templates/shortcode-receipt.php:232
+#: templates/shortcode-receipt.php:234
 msgid "(includes %s tax)"
 msgstr ""
 
@@ -3379,7 +3379,8 @@ msgstr ""
 msgid "Enter a coupon code if you have one."
 msgstr ""
 
-#: includes/checkout/template.php:575 includes/scripts.php:52
+#: includes/checkout/template.php:575 includes/process-purchase.php:218
+#: includes/scripts.php:52
 msgid "Enter discount"
 msgstr ""
 
@@ -3411,64 +3412,64 @@ msgstr ""
 msgid "Free Download"
 msgstr ""
 
-#: includes/class-edd-api.php:233
+#: includes/class-edd-api.php:238
 msgid "You must specify both a token and API key!"
 msgstr ""
 
-#: includes/class-edd-api.php:249
+#: includes/class-edd-api.php:254
 msgid "Your request could not be authenticated!"
 msgstr ""
 
-#: includes/class-edd-api.php:266
+#: includes/class-edd-api.php:271
 msgid "Invalid API key!"
 msgstr ""
 
-#: includes/class-edd-api.php:381
+#: includes/class-edd-api.php:386
 msgid "Invalid query!"
 msgstr ""
 
-#: includes/class-edd-api.php:666
+#: includes/class-edd-api.php:671
 msgid "Customer %s not found!"
 msgstr ""
 
-#: includes/class-edd-api.php:767 includes/class-edd-api.php:900
-#: includes/class-edd-api.php:1002
+#: includes/class-edd-api.php:772 includes/class-edd-api.php:905
+#: includes/class-edd-api.php:1007
 msgid "Product %s not found!"
 msgstr ""
 
-#: includes/class-edd-api.php:817 includes/class-edd-api.php:917
+#: includes/class-edd-api.php:822 includes/class-edd-api.php:922
 msgid "The end date must be later than the start date!"
 msgstr ""
 
-#: includes/class-edd-api.php:822 includes/class-edd-api.php:922
+#: includes/class-edd-api.php:827 includes/class-edd-api.php:927
 msgid "Invalid or no date range specified!"
 msgstr ""
 
-#: includes/class-edd-api.php:1158
+#: includes/class-edd-api.php:1163
 msgid "Discount %s not found!"
 msgstr ""
 
-#: includes/class-edd-api.php:1299
+#: includes/class-edd-api.php:1304
 msgid "Easy Digital Downloads API Keys"
 msgstr ""
 
-#: includes/class-edd-api.php:1304
+#: includes/class-edd-api.php:1309
 msgid "Generate API Key"
 msgstr ""
 
-#: includes/class-edd-api.php:1306
+#: includes/class-edd-api.php:1311
 msgid "Public key:"
 msgstr ""
 
-#: includes/class-edd-api.php:1307
+#: includes/class-edd-api.php:1312
 msgid "Secret key:"
 msgstr ""
 
-#: includes/class-edd-api.php:1308
+#: includes/class-edd-api.php:1313
 msgid "Token:"
 msgstr ""
 
-#: includes/class-edd-api.php:1310
+#: includes/class-edd-api.php:1315
 msgid "Revoke API Keys"
 msgstr ""
 
@@ -3695,7 +3696,7 @@ msgstr ""
 msgid "No template, plain text only"
 msgstr ""
 
-#: includes/emails/template.php:98 templates/shortcode-receipt.php:113
+#: includes/emails/template.php:98 templates/shortcode-receipt.php:115
 msgid "SKU"
 msgstr ""
 
@@ -3735,11 +3736,11 @@ msgstr ""
 msgid "Send Test Email"
 msgstr ""
 
-#: includes/emails/template.php:486
+#: includes/emails/template.php:488
 msgid "Missing purchase key."
 msgstr ""
 
-#: includes/emails/template.php:494
+#: includes/emails/template.php:496
 msgid "Receipt"
 msgstr ""
 
@@ -3757,6 +3758,10 @@ msgstr ""
 
 #: includes/gateways/functions.php:30 includes/gateways/functions.php:31
 msgid "Test Payment"
+msgstr ""
+
+#: includes/gateways/functions.php:104 includes/gateways/functions.php:123
+msgid "Free Purchase"
 msgstr ""
 
 #: includes/gateways/manual.php:73
@@ -4357,7 +4362,7 @@ msgstr ""
 msgid "You must be logged into an account to purchase"
 msgstr ""
 
-#: includes/process-purchase.php:670
+#: includes/process-purchase.php:673
 msgid "The zip code you entered for your credit card is invalid"
 msgstr ""
 
@@ -4555,7 +4560,7 @@ msgid "Display a user's purchase history"
 msgstr ""
 
 #: includes/widgets.php:202 templates/history-downloads.php:66
-#: templates/shortcode-receipt.php:192
+#: templates/shortcode-receipt.php:194
 msgid "No downloadable files found."
 msgstr ""
 
@@ -4679,11 +4684,11 @@ msgstr ""
 msgid "Payment Key"
 msgstr ""
 
-#: templates/shortcode-receipt.php:116
+#: templates/shortcode-receipt.php:118
 msgid "Quantity"
 msgstr ""
 
-#: templates/shortcode-receipt.php:183
+#: templates/shortcode-receipt.php:185
 msgid "No downloadable files found for this bundled item."
 msgstr ""
 
