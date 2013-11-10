@@ -247,9 +247,9 @@ class EDD_Product_Details_Widget extends WP_Widget {
     public function __construct() {
 		parent::__construct(
 			'edd_product_details',
-			sprintf( __( '%s Details', 'edd-product-details' ), edd_get_label_plural() ),
+			__( 'Download Details', 'edd-product-details' ),
 			array( 
-				'description' => sprintf( __( 'Display the %s details', 'edd-product-details' ), strtolower( edd_get_label_plural() ) ),
+				'description' => __( 'Display the details of a specific Download product', 'edd-product-details' ),
 			)
 		);
 	}
@@ -258,11 +258,14 @@ class EDD_Product_Details_Widget extends WP_Widget {
     public function widget( $args, $instance ) {
         extract( $args );
 
-        // get download ID
-        if ( 'current' != $instance['download_id'] )
-        	$download_id = $instance['download_id'];
-        else
+        if ( 'current' == $instance['download_id'] && ! is_singular( 'download' ) )
+        	return;
+        
+       	// set correct download ID
+        if ( 'current' == $instance['download_id'] && is_singular( 'download' ) )
         	$download_id = get_the_ID();
+        else
+        	$download_id = $instance['download_id'];
 
         // Variables from widget settings
         $title = apply_filters( 'widget_title', $instance['title'] );
