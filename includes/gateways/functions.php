@@ -185,17 +185,29 @@ function edd_shop_supports_buy_now() {
 function edd_build_straight_to_gateway_data( $download_id = 0, $options = array() ) {
 
 	$price_options = array();
+
 	if( empty( $options ) || ! edd_has_variable_prices( $download_id ) ) {
 		$price = edd_get_download_price( $download_id );
 	} else {
-		foreach ( $options['price_id'] as $price_id ) {
-			$prices = edd_get_variable_prices( $download_id );
-			$price_options = array(
-				'price_id' => $price_id,
-				'amount'   => $prices[ $price_id ]['amount']
-			);
-			$price  = $prices[ $price_id ]['amount'];
+			
+		if( is_array( $options['price_id'] ) ) {
+			$price_id = $options['price_id'][0];
+		} else {
+			$price_id = $options['price_id'];
 		}
+
+		$prices = edd_get_variable_prices( $download_id );
+
+		// Make sure a valid price ID was supplied
+		if( ! isset( $prices[ $price_id ] ) ) {
+			wp_die( __( 'The requested price ID does not exist.', 'edd' ), __( 'Error', 'edd' ) );
+		}
+
+		$price_options = array(
+			'price_id' => $price_id,
+			'amount'   => $prices[ $price_id ]['amount']
+		);
+		$price  = $prices[ $price_id ]['amount'];
 	}
 
 	// Set up Downloads array
