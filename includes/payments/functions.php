@@ -346,7 +346,7 @@ function edd_check_for_existing_payment( $payment_id ) {
  *
  * @return bool|mixed if payment status exists, false otherwise
  */
-function edd_get_payment_status( WP_Post $payment, $return_label = false ) {
+function edd_get_payment_status( $payment, $return_label = false ) {
 	if ( ! is_object( $payment ) || !isset( $payment->post_status ) )
 		return false;
 
