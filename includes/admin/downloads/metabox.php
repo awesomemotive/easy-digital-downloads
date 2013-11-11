@@ -97,6 +97,11 @@ function edd_download_meta_box_save( $post_id) {
 			delete_post_meta( $post_id, $field );
 		}
 	}
+
+	if( edd_has_variable_prices( $post_id ) ) {
+		$lowest = edd_get_lowest_price_option( $post_id );
+		update_post_meta( $post_id, 'edd_price', $lowest );
+	}
 }
 add_action( 'save_post', 'edd_download_meta_box_save' );
 
@@ -124,6 +129,9 @@ add_filter( 'edd_metabox_save_edd_price', 'edd_sanitize_price_save' );
  * @return array $prices Array of the remapped variable prices
  */
 function edd_sanitize_variable_prices_save( $prices ) {
+
+	global $post;
+
 	// Make sure all prices are rekeyed starting at 0
 	return array_values( $prices );
 }
