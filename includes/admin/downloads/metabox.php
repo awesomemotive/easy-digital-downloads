@@ -491,7 +491,7 @@ function edd_render_files_field( $post_id = 0 ) {
 				</thead>
 				<tbody>
 				<?php
-					if ( ! empty( $files ) ) :
+					if ( ! empty( $files ) && is_array( $files ) ) :
 						foreach ( $files as $key => $value ) :
 							$name = isset( $value['name'] ) ? $value['name'] : '';
 							$file = isset( $value['file'] ) ? $value['file'] : '';
