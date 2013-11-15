@@ -554,6 +554,9 @@ function edd_get_total_earnings() {
 
 			// Cache results for 1 day. This cache is cleared automatically when a payment is made
 			set_transient( 'edd_earnings_total', $total, 86400 );
+			
+			// Store the total for the first time
+			update_option( 'edd_earnings_total', $total );
 		}
 	}
 
