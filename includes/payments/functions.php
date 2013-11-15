@@ -170,8 +170,12 @@ function edd_delete_purchase( $payment_id = 0 ) {
 	}
 
 	$amount = edd_get_payment_amount( $payment_id );
+	$status = get_post( $payment_id )->post_status;
 
-	edd_decrease_total_earnings( $amount );
+	if( $status == 'revoked' || $status == 'publish' ) {
+		// Only decrease earnings if they haven't already been decreased (or were never increased for this payment)
+		edd_decrease_total_earnings( $amount );
+	}
 
 	do_action( 'edd_payment_delete', $payment_id );
 
@@ -525,7 +529,7 @@ function edd_get_total_earnings() {
 	$total = get_option( 'edd_earnings_total', 0 );
 
 	// If no total stored in DB, use old method of calculating total earnings
-	if( ! $total ) {
+	if( $total === false ) {
 
 		$total = get_transient( 'edd_earnings_total' );
 
