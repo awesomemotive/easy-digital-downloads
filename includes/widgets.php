@@ -244,12 +244,12 @@ class edd_purchase_history_widget extends WP_Widget {
  */
 class EDD_Product_Details_Widget extends WP_Widget {
     /** Constructor */
-    public function __construct() {
+	public function __construct() {
 		parent::__construct(
 			'edd_product_details',
-			__( 'Download Details', 'edd' ),
+			sprintf( __( 'EDD %s Details', 'edd' ), edd_get_label_singular() ),
 			array( 
-				'description' => __( 'Display the details of a specific Download product', 'edd' ),
+				'description' => sprintf( __( '%s details widget', 'edd' ), edd_get_label_singular() ),
 			)
 		);
 	}
