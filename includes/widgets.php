@@ -247,9 +247,9 @@ class EDD_Product_Details_Widget extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			'edd_product_details',
-			sprintf( __( 'EDD %s Details', 'edd' ), edd_get_label_singular() ),
+			sprintf( __( '%s Details', 'edd' ), edd_get_label_singular() ),
 			array( 
-				'description' => sprintf( __( '%s details widget', 'edd' ), edd_get_label_singular() ),
+				'description' => sprintf( __( 'Display the details of a specific %s', 'edd' ), edd_get_label_singular() ),
 			)
 		);
 	}
