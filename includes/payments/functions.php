@@ -519,31 +519,64 @@ function edd_get_total_sales() {
  */
 function edd_get_total_earnings() {
 
-	$total = get_transient( 'edd_earnings_total' );
+	$total = get_option( 'edd_earnings_total', 0 );
 
-	if( false === $total ) {
+	// If no total stored in DB, use old method of calculating total earnings
+	if( ! $total ) {
 
-		$total = (float) 0;
+		$total = get_transient( 'edd_earnings_total' );
 
-		$args = apply_filters( 'edd_get_total_earnings_args', array(
-			'offset' => 0,
-			'number' => -1,
-			'mode'   => 'live',
-			'status' => array( 'publish', 'revoked' ),
-			'fields' => 'ids'
-		) );
+		if( false === $total ) {
 
-		$payments = edd_get_payments( $args );
-		if ( $payments ) {
-			foreach ( $payments as $payment ) {
-				$total += edd_get_payment_amount( $payment );
+			$total = (float) 0;
+
+			$args = apply_filters( 'edd_get_total_earnings_args', array(
+				'offset' => 0,
+				'number' => -1,
+				'mode'   => 'live',
+				'status' => array( 'publish', 'revoked' ),
+				'fields' => 'ids'
+			) );
+
+			$payments = edd_get_payments( $args );
+			if ( $payments ) {
+				foreach ( $payments as $payment ) {
+					$total += edd_get_payment_amount( $payment );
+				}
 			}
-		}
 
-		// Cache results for 1 day. This cache is cleared automatically when a payment is made
-		set_transient( 'edd_earnings_total', $total, 86400 );
+			// Cache results for 1 day. This cache is cleared automatically when a payment is made
+			set_transient( 'edd_earnings_total', $total, 86400 );
+		}
 	}
+
 	return apply_filters( 'edd_total_earnings', round( $total, 2 ) );
+}
+
+/**
+ * Increase the Total Earnings
+ *
+ * @since 1.8.4
+ * @return float $total Total earnings
+ */
+function edd_increase_total_earnings( $amount = 0 ) {
+	$total = edd_get_total_earnings();
+	$total += $amount;
+	update_option( 'edd_earnings_total', $total );
+	return $total;
+}
+
+/**
+ * Decrease the Total Earnings
+ *
+ * @since 1.8.4
+ * @return float $total Total earnings
+ */
+function edd_decrease_total_earnings( $amount = 0 ) {
+	$total = edd_get_total_earnings();
+	$total -= $amount;
+	update_option( 'edd_earnings_total', $total );
+	return $total;
 }
 
 /**
