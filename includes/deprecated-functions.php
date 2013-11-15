@@ -204,3 +204,22 @@ function edd_show_has_purchased_item_message() {
 		echo apply_filters( 'edd_show_has_purchased_item_message', $alert );
 	}
 }
+
+/**
+ * Flushes the total earning cache when a new payment is created
+ *
+ * @since 1.2
+ * @deprecated 1.8.4
+ * @param int $payment Payment ID
+ * @param array $payment_data Payment Data
+ * @return void
+ */
+function edd_clear_earnings_cache( $payment, $payment_data ) {
+
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '1.8.4', 'no alternatives', $backtrace );
+
+	delete_transient( 'edd_total_earnings' );
+}
+//add_action( 'edd_insert_payment', 'edd_clear_earnings_cache', 10, 2 );
