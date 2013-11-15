@@ -83,7 +83,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		}
 	}
 
-	edd_increase_total_earnings( $total );
+	edd_increase_total_earnings( $amount );
 
 	do_action( 'edd_complete_purchase', $payment_id );
 
@@ -220,9 +220,12 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 		}
 	}
 
+	// Decrease store earnings
 	$amount = edd_get_payment_amount( $payment_id );
-
 	edd_decrease_total_earnings( $amount );
+	
+	// Clear the This Month earnings (this_monththis_month is NOT a typo)
+	delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 }
 add_action( 'edd_update_payment_status', 'edd_undo_purchase_on_refund', 100, 3 );
 

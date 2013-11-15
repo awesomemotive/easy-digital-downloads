@@ -175,6 +175,8 @@ function edd_delete_purchase( $payment_id = 0 ) {
 	if( $status == 'revoked' || $status == 'publish' ) {
 		// Only decrease earnings if they haven't already been decreased (or were never increased for this payment)
 		edd_decrease_total_earnings( $amount );
+		// Clear the This Month earnings (this_monththis_month is NOT a typo)
+		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 	}
 
 	do_action( 'edd_payment_delete', $payment_id );
@@ -560,6 +562,10 @@ function edd_get_total_earnings() {
 		}
 	}
 
+	if( $total < 0 ) {
+		$total = 0; // Don't ever show negative earnings
+	}
+
 	return apply_filters( 'edd_total_earnings', round( $total, 2 ) );
 }
 
@@ -585,6 +591,9 @@ function edd_increase_total_earnings( $amount = 0 ) {
 function edd_decrease_total_earnings( $amount = 0 ) {
 	$total = edd_get_total_earnings();
 	$total -= $amount;
+	if( $total < 0 ) {
+		$total = 0;
+	}
 	update_option( 'edd_earnings_total', $total );
 	return $total;
 }
