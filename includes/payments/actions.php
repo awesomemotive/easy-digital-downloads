@@ -33,6 +33,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		return;
 
 	$user_info    = edd_get_payment_meta_user_info( $payment_id );
+	$amount       = edd_get_payment_amount( $payment_id );
 	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
 
 	if ( is_array( $cart_details ) ) {
@@ -81,6 +82,8 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 		}
 	}
+
+	edd_increase_total_earnings( $total );
 
 	do_action( 'edd_complete_purchase', $payment_id );
 
@@ -216,6 +219,10 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 			edd_undo_purchase( $download['id'], $payment_id );
 		}
 	}
+
+	$amount = edd_get_payment_amount( $payment_id );
+
+	edd_decrease_total_earnings( $amount );
 }
 add_action( 'edd_update_payment_status', 'edd_undo_purchase_on_refund', 100, 3 );
 

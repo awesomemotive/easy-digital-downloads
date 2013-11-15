@@ -169,6 +169,10 @@ function edd_delete_purchase( $payment_id = 0 ) {
 		}
 	}
 
+	$amount = edd_get_payment_amount( $payment_id );
+
+	edd_decrease_total_earnings( $amount );
+
 	do_action( 'edd_payment_delete', $payment_id );
 
 	// Remove the payment
@@ -203,7 +207,6 @@ function edd_undo_purchase( $download_id, $payment_id ) {
         return; // Don't undo if we are in test mode!
 
 	$payment = get_post( $payment_id );
-
 
 	edd_decrease_purchase_count( $download_id );
 	$user_info    = edd_get_payment_meta_user_info( $payment_id );
