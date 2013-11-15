@@ -152,9 +152,10 @@ function edd_has_variable_prices( $download_id ) {
  * @since 1.0.9
  * @param int $download_id ID of the download
  * @param int $price_id ID of the price option
+ * @param int $payment_id optional payment ID for use in filters
  * @return string $price_name Name of the price option
  */
-function edd_get_price_option_name( $download_id, $price_id = 0 ) {
+function edd_get_price_option_name( $download_id = 0, $price_id = 0, $payment_id = 0 ) {
 	$prices = edd_get_variable_prices( $download_id );
 	$price_name = '';
 
@@ -163,7 +164,7 @@ function edd_get_price_option_name( $download_id, $price_id = 0 ) {
 			$price_name = $prices[ $price_id ]['name'];
 	}
 
-	return apply_filters( 'edd_get_price_option_name', $price_name, $download_id );
+	return apply_filters( 'edd_get_price_option_name', $price_name, $download_id, $payment_id );
 }
 
 /**
