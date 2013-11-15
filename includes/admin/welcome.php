@@ -304,14 +304,17 @@ class EDD_Welcome {
 
 				<div class="feature-section">
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/18cart-saving.png'; ?>" class="edd-welcome-screenshots"/>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/grid.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Allow Customers to Save Their Carts for Later','edd' );?></h4>
-					<p><?php _e( 'With Cart Saving, customers can save their shopping carts and then come back and restore them at a later point.', 'edd' );?></p>
+					<h4><?php _e( 'Flexible Product Grids','edd' );?></h4>
+					<p><?php _e( 'The [downloads] short code will display a product grid that works with any theme, no matter the size. It is even responive!', 'edd' );?></p>
 
-					<h4><?php _e( 'Encourage Customers to Come Back', 'edd' );?></h4>
-					<p><?php _e( 'By making it easier for customers to save their cart and return later, you can increase the conversion rate of the customers that need time to think about their purchase.', 'edd' );?></p>
+					<h4><?php _e( 'Change the Number of Columns', 'edd' );?></h4>
+					<p><?php _e( 'You can easily change the number of columns by adding the columns="x" parameter:', 'edd' );?></p>
+					<p><pre>[downloads columns="4"]</pre></p>
 
+					<h4><?php _e( 'Additional Display Options', 'edd' ); ?></h4>
+					<p><?php printf( __( 'The product grids can be customized in any way you wish and there is <a href="%s">extensive documentation</a> to assist you.', 'edd' ), 'http://easydigitaldownloads.com/documentation' ); ?></p>
 				</div>
 			</div>
 
@@ -320,13 +323,13 @@ class EDD_Welcome {
 
 				<div class="feature-section">
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/18cart-saving.png'; ?>" class="edd-welcome-screenshots"/>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/purchase-link.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Allow Customers to Save Their Carts for Later','edd' );?></h4>
-					<p><?php _e( 'With Cart Saving, customers can save their shopping carts and then come back and restore them at a later point.', 'edd' );?></p>
+					<h4><?php _e( 'The <em>[purchase_link]</em> Short Code','edd' );?></h4>
+					<p><?php _e( 'With easily accessible short codes to display purchase buttons, you can add a Buy Now or Add to Cart button for any product anywhere on your site in seconds.', 'edd' );?></p>
 
-					<h4><?php _e( 'Encourage Customers to Come Back', 'edd' );?></h4>
-					<p><?php _e( 'By making it easier for customers to save their cart and return later, you can increase the conversion rate of the customers that need time to think about their purchase.', 'edd' );?></p>
+					<h4><?php _e( 'Buy Now Buttons', 'edd' );?></h4>
+					<p><?php _e( 'Purchase buttons can behave as either Add to Cart or Buy Now buttons. With Buy Now buttons customers are taken straight to PayPal, giving them the most frictionless purchasing experience possible.', 'edd' );?></p>
 
 				</div>
 			</div>
