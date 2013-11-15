@@ -238,19 +238,6 @@ function edd_trigger_purchase_delete( $data ) {
 add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
 
 /**
- * Flushes the total earning cache when a new payment is created
- *
- * @since 1.2
- * @param int $payment Payment ID
- * @param array $payment_data Payment Data
- * @return void
- */
-function edd_clear_earnings_cache( $payment, $payment_data ) {
-	delete_transient( 'edd_total_earnings' );
-}
-add_action( 'edd_insert_payment', 'edd_clear_earnings_cache', 10, 2 );
-
-/**
  * Flushes the current user's purchase history transient when a payment status
  * is updated
  *
