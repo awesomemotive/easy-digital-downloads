@@ -66,6 +66,8 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 #edd-order-data .data span { color: #666; font-weight: 600; }
 #edd-purchased-files .inside { margin: 0; padding: 0; }
 
+.edd-price-field { width: 80px; }
+
 /* Dashboard Widget Styles
 -------------------------------------------------------------- */
 .edd_dashboard_widget .table { margin: 20px 0 0 0; padding: 0; position: relative; border-top: 1px solid #ececec; }
