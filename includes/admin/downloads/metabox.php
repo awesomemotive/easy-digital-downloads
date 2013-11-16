@@ -306,10 +306,20 @@ function edd_render_price_field( $post_id ) {
 	</p>
 
 	<div id="edd_regular_price_field" class="edd_pricing_fields" <?php echo $price_display; ?>>
+		<?php
+			$price_args = array( 
+				'name'  => 'edd_price', 
+				'value' => isset( $price ) ? esc_attr( edd_format_amount( $price ) ) : '', 
+				'class' => 'edd-price-field'
+			); 
+		?>
+
 		<?php if ( ! isset( $edd_options['currency_position'] ) || $edd_options['currency_position'] == 'before' ) : ?>
-			<?php echo edd_currency_filter( '' ); ?><input type="text" name="edd_price" id="edd_price" value="<?php echo isset( $price ) ? esc_attr( edd_format_amount( $price ) ) : ''; ?>" size="30" style="width: 80px;" placeholder="9.99"/>
+			<?php echo edd_currency_filter( '' ); ?>
+			<?php echo EDD()->html->text( $price_args ); ?>
 		<?php else : ?>
-			<input type="text" name="edd_price" id="edd_price" value="<?php echo isset( $price ) ? esc_attr( edd_format_amount( $price ) ) : ''; ?>" size="30" style="width: 80px;" placeholder="9.99"/><?php echo edd_currency_filter( '' ); ?>
+			<?php echo EDD()->html->text( $price_args ); ?>
+			<?php echo edd_currency_filter( '' ); ?>
 		<?php endif; ?>
 
 		<?php do_action( 'edd_price_field', $post_id ); ?>
@@ -331,7 +341,7 @@ function edd_render_price_field( $post_id ) {
 						<th style="width: 20px"></th>
 						-->
 						<th><?php _e( 'Option Name', 'edd' ); ?></th>
-						<th style="width: 90px"><?php _e( 'Price', 'edd' ); ?></th>
+						<th style="width: 100px"><?php _e( 'Price', 'edd' ); ?></th>
 						<?php do_action( 'edd_download_price_table_head', $post_id ); ?>
 						<th style="width: 2%"></th>
 					</tr>
@@ -401,14 +411,28 @@ function edd_render_price_row( $key, $args = array(), $post_id ) {
 	-->
 
 	<td>
-		<input type="text" class="edd_variable_prices_name" placeholder="<?php _e( 'Option Name', 'edd' ); ?>" name="edd_variable_prices[<?php echo $key; ?>][name]" id="edd_variable_prices[<?php echo $key; ?>][name]" value="<?php echo esc_attr( $name ); ?>" size="20" style="width:100%" />
+		<?php echo EDD()->html->text( array(
+			'name'  => 'edd_variable_prices[' . $key . '][name]',
+			'value' => esc_attr( $name ),
+			'class' => 'large-text'
+		) ); ?>
 	</td>
 
 	<td>
+		<?php
+			$price_args = array( 
+				'name'  => 'edd_variable_prices[' . $key . '][amount]', 
+				'value' => $amount, 
+				'class' => 'edd-price-field'
+			); 
+		?>
+
 		<?php if( ! isset( $edd_options['currency_position'] ) || $edd_options['currency_position'] == 'before' ) : ?>
-			<span><?php echo edd_currency_filter( '' ); ?></span> <input type="text" class="edd_variable_prices_amount text" value="<?php echo $amount; ?>" placeholder="9.99" name="edd_variable_prices[<?php echo $key; ?>][amount]" id="edd_variable_prices[<?php echo $key; ?>][amount]" size="30" style="width:80px;" />
+			<span><?php echo edd_currency_filter( '' ); ?></span>
+			<?php echo EDD()->html->text( $price_args ); ?>
 		<?php else : ?>
-			<input type="text" class="edd_variable_prices_amount text" value="<?php echo $amount; ?>" placeholder="9.99" name="edd_variable_prices[<?php echo $key; ?>][amount]" id="edd_variable_prices[<?php echo $key; ?>][amount]" size="30" style="width:80px;" /><?php echo edd_currency_filter( '' ); ?>
+			<?php echo EDD()->html->text( $price_args ); ?>
+			<?php echo edd_currency_filter( '' ); ?>
 		<?php endif; ?>
 	</td>
 
