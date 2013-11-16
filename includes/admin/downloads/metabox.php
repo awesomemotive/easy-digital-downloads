@@ -461,7 +461,13 @@ function edd_render_product_type_field( $post_id = 0 ) {
 		<strong><?php apply_filters( 'edd_product_type_options_heading', _e( 'Product Type Options:', 'edd' ) ); ?></strong>
 	</p>
 	<p>
-		<?php echo EDD()->html->select( array( 'options' => $types, 'name' => '_edd_product_type', 'selected' => $type, 'show_option_all' => false, 'show_option_none' => false ) ); ?>
+		<?php echo EDD()->html->select( array( 
+			'options'          => $types, 
+			'name'             => '_edd_product_type', 
+			'selected'         => $type, 
+			'show_option_all'  => false, 
+			'show_option_none' => false 
+		) ); ?>
 		<label for="edd_product_type"><?php _e( 'Select a product type', 'edd' ); ?></label>
 	</p>
 <?php
@@ -864,25 +870,23 @@ function edd_render_stats_meta_box() {
 
 	$earnings = edd_get_download_earnings_stats( $post->ID );
 	$sales    = edd_get_download_sales_stats( $post->ID );
+?>
 
-	echo '<table class="form-table">';
-		echo '<tr>';
-			echo '<th style="width: 20%">' . __( 'Sales:', 'edd' ) . '</th>';
-			echo '<td class="edd_download_stats">';
-				echo $sales . '&nbsp;&ndash;&nbsp;<a href="' . admin_url( '/edit.php?page=edd-reports&view=sales&post_type=download&tab=logs&download=' . $post->ID ) . '">' . __( 'View Sales Log', 'edd' ) . '</a>';
-			echo '</td>';
-		echo '</tr>';
-		echo '<tr>';
-			echo '<th style="width: 30%">' . __( 'Earnings:', 'edd' ) . '</th>';
-			echo '<td class="edd_download_stats">';
-				echo edd_currency_filter( edd_format_amount( $earnings ) );
-			echo '</td>';
-		echo '</tr>';
-		echo '<tr>';
-			echo '<td colspan="2" class="edd_download_stats">';
-				echo '<a href="' . admin_url( '/edit.php?page=edd-reports&view=file_downloads&post_type=download&tab=logs&download=' . $post->ID ) . '">' . __( 'View File Download Log', 'edd' ) . '</a>';
-			echo '</td>';
-		echo '</tr>';
-		do_action('edd_stats_meta_box');
-	echo '</table>';
+	<p>
+		<strong class="label"><?php _e( 'Sales:', 'edd' ); ?></strong>
+		<span><?php echo $sales; ?> &mdash; <a href="<?php echo admin_url( '/edit.php?page=edd-reports&view=sales&post_type=download&tab=logs&download=' . $post->ID ); ?>"><?php _e( 'View Sales Log', 'edd' ); ?></a></span>
+	</p>
+
+	<p>
+		<strong class="label"><?php _e( 'Earnings:', 'edd' ); ?></strong>
+		<span><?php echo edd_currency_filter( edd_format_amount( $earnings ) ); ?></span>
+	</p>
+
+	<hr />
+
+	<p>
+		<span><a href="<?php echo admin_url( '/edit.php?page=edd-reports&view=file_downloads&post_type=download&tab=logs&download=' . $post->ID ); ?>"><?php _e( 'View File Download Log', 'edd' ); ?></a></span>
+	</p>
+<?php
+	do_action('edd_stats_meta_box');
 }
