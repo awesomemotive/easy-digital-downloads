@@ -26,15 +26,21 @@ function edd_add_download_meta_box() {
 
 	foreach ( $post_types as $post_type ) {
 
-		/** Download Configuration */
-		add_meta_box( 'downloadinformation', sprintf( __( '%1$s Configuration', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ),  'edd_render_download_meta_box', $post_type, 'normal', 'default' );
+		/** Product Prices **/
+		add_meta_box( 'edd_product_prices', sprintf( __( '%1$s Configuration', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ),  'edd_render_download_meta_box', $post_type, 'normal', 'high' );
 
+		/** Product Files (and bundled products) **/
+		add_meta_box( 'edd_product_files', sprintf( __( '%1$s Files', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ),  'edd_render_files_meta_box', $post_type, 'normal', 'high' );
+
+		/** Product Settings **/
+		add_meta_box( 'edd_product_settings', sprintf( __( '%1$s Settings', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ),  'edd_render_settings_meta_box', $post_type, 'normal', 'high' );
+		
 		/** Product Notes */
-		add_meta_box( 'edd_product_notes', __( 'Product Notes', 'edd' ), 'edd_render_product_notes_meta_box', $post_type, 'normal', 'default' );
+		add_meta_box( 'edd_product_notes', sprintf( __( '%1$s Notes', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_product_notes_meta_box', $post_type, 'normal', 'high' );
 
 		if ( current_user_can( 'view_shop_reports' ) || current_user_can( 'edit_product', get_the_ID() ) ) {
-			/** Download Stats */
-			add_meta_box( 'edd_download_stats', sprintf( __( '%1$s Stats', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', $post_type, 'side', 'high' );
+			/** Product Stats */
+			add_meta_box( 'edd_product_stats', sprintf( __( '%1$s Stats', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', $post_type, 'side', 'high' );
 		}
 	}
 }
@@ -176,6 +182,28 @@ function edd_sanitize_files_save( $files ) {
 }
 add_filter( 'edd_metabox_save_edd_download_files', 'edd_sanitize_files_save' );
 
+/**
+ * Don't save blank rows.
+ *
+ * When saving, check the price and file table for blank rows.
+ * If the name of the price or file is empty, that row should not
+ * be saved.
+ *
+ * @since 1.2.2
+ * @param array $new Array of all the meta values
+ * @return array $new New meta value with empty keys removed
+ */
+function edd_metabox_save_check_blank_rows( $new ) {
+	foreach ( $new as $key => $value ) {
+		if ( empty( $value['name'] ) && empty( $value['amount'] ) && empty( $value['file'] ) )
+			unset( $new[ $key ] );
+	}
+
+	return $new;
+}
+add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_metabox_save_check_blank_rows' );
+add_filter( 'edd_metabox_save_edd_download_files', 'edd_metabox_save_check_blank_rows' );
+
 
 /** Download Configuration *****************************************************************/
 
@@ -191,8 +219,53 @@ add_filter( 'edd_metabox_save_edd_download_files', 'edd_sanitize_files_save' );
 function edd_render_download_meta_box() {
 	global $post, $edd_options;
 
+	/*
+	 * Output the price fields
+	 * @since 1.9
+	 */
+	do_action( 'edd_meta_box_price_fields', $post->ID );
+
+	/*
+	 * Output the price fields
+	 *
+	 * Left for backwards compatibility
+	 *
+	 */
 	do_action( 'edd_meta_box_fields', $post->ID );
+
 	wp_nonce_field( basename( __FILE__ ), 'edd_download_meta_box_nonce' );
+}
+
+/**
+ * Download Files Metabox
+ *
+ * @since 1.9
+ * @return void
+ */
+function edd_render_files_meta_box() {
+	global $post, $edd_options;
+
+	/*
+	 * Output the files fields
+	 * @since 1.9
+	 */
+	do_action( 'edd_meta_box_files_fields', $post->ID );
+}
+
+/**
+ * Download Settings Metabox
+ *
+ * @since 1.9
+ * @return void
+ */
+function edd_render_settings_meta_box() {
+	global $post, $edd_options;
+
+	/*
+	 * Output the files fields
+	 * @since 1.9
+	 */
+	do_action( 'edd_meta_box_settings_fields', $post->ID );
 }
 
 /**
@@ -295,7 +368,7 @@ function edd_render_price_field( $post_id ) {
 	</div><!--end #edd_variable_price_fields-->
 <?php
 }
-add_action( 'edd_meta_box_fields', 'edd_render_price_field', 10 );
+add_action( 'edd_meta_box_price_fields', 'edd_render_price_field', 10 );
 
 /**
  * Individual Price Row
@@ -369,7 +442,7 @@ function edd_render_product_type_field( $post_id = 0 ) {
 	</p>
 <?php
 }
-add_action( 'edd_meta_box_fields', 'edd_render_product_type_field', 10 );
+add_action( 'edd_meta_box_files_fields', 'edd_render_product_type_field', 10 );
 
 /**
  * Renders product field
@@ -423,7 +496,7 @@ function edd_render_products_field( $post_id ) {
 	</div>
 <?php
 }
-add_action( 'edd_meta_box_fields', 'edd_render_products_field', 10 );
+add_action( 'edd_meta_box_files_fields', 'edd_render_products_field', 10 );
 
 /**
  * TODO Update doc
@@ -521,7 +594,7 @@ function edd_render_files_field( $post_id = 0 ) {
 	</div>
 <?php
 }
-add_action( 'edd_meta_box_fields', 'edd_render_files_field', 20 );
+add_action( 'edd_meta_box_files_fields', 'edd_render_files_field', 20 );
 
 
 /**
@@ -616,7 +689,7 @@ function edd_render_download_limit_row( $post_id ) {
 	</label>
 <?php
 }
-add_action( 'edd_meta_box_fields', 'edd_render_download_limit_row', 20 );
+add_action( 'edd_meta_box_settings_fields', 'edd_render_download_limit_row', 20 );
 
 
 /**
@@ -644,7 +717,7 @@ function edd_render_accounting_options( $post_id ) {
 		</p>
 <?php
 }
-add_action( 'edd_meta_box_fields', 'edd_render_accounting_options', 25 );
+add_action( 'edd_meta_box_settings_fields', 'edd_render_accounting_options', 25 );
 
 
 /**
@@ -678,30 +751,7 @@ function edd_render_disable_button( $post_id ) {
 <?php
 	endif;
 }
-add_action( 'edd_meta_box_fields', 'edd_render_disable_button', 30 );
-
-
-/**
- * Don't save blank rows.
- *
- * When saving, check the price and file table for blank rows.
- * If the name of the price or file is empty, that row should not
- * be saved.
- *
- * @since 1.2.2
- * @param array $new Array of all the meta values
- * @return array $new New meta value with empty keys removed
- */
-function edd_metabox_save_check_blank_rows( $new ) {
-	foreach ( $new as $key => $value ) {
-		if ( empty( $value['name'] ) && empty( $value['amount'] ) && empty( $value['file'] ) )
-			unset( $new[ $key ] );
-	}
-
-	return $new;
-}
-add_filter( 'edd_metabox_save_edd_variable_prices', 'edd_metabox_save_check_blank_rows' );
-add_filter( 'edd_metabox_save_edd_download_files', 'edd_metabox_save_check_blank_rows' );
+add_action( 'edd_meta_box_settings_fields', 'edd_render_disable_button', 30 );
 
 
 /** Product Notes *****************************************************************/
