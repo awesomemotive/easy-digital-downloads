@@ -362,7 +362,7 @@ class EDD_Stats {
 			}
 
 
-		} else if( is_int( $date ) ) {
+		} else if( is_numeric( $date ) ) {
 
 			// return $date unchanged since it is a timestamp
 			$timestamp = true;
