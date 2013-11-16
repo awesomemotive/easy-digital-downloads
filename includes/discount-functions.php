@@ -34,8 +34,21 @@ function edd_get_discounts( $args = array() ) {
 
 	$discounts = get_posts( $args );
 
-	if ( $discounts )
+	if ( $discounts ) {
 		return $discounts;
+	}
+
+	if( ! $discounts && ! empty( $args['s'] ) ) {
+		// If no discounts are found and we are searching, re-query with a meta key to find discounts by code
+		$args['meta_key']   = '_edd_discount_code';
+		$args['meta_value'] = $args['s'];
+		unset( $args['s'] );
+		$discounts = get_posts( $args );
+	}
+
+	if( $discounts ) {
+		return $discounts;
+	}
 
 	return false;
 }
