@@ -221,6 +221,29 @@ class EDD_HTML_Elements {
 	}
 
 	/**
+	 * Renders an HTML Checkbox
+	 *
+	 * @since 1.9
+	 *
+	 * @param array $args
+	 *
+	 * @return string
+	 */
+	public function checkbox( $args = array() ) {
+		$defaults = array(
+			'name'     => null,
+			'current'  => null,
+			'class'    => 'edd-select'
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$output = '<input type="checkbox" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="edd-select ' . esc_attr( $args[ 'name'] ) . '" ' . checked( 1, $args[ 'current' ], false ) . '" class="' . $args[ 'class' ] .'"  />';
+
+		return $output;
+	}
+
+	/**
 	 * Renders an HTML Text field
 	 *
 	 * @since 1.5.2
