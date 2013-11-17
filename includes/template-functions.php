@@ -543,12 +543,16 @@ function edd_locate_template( $template_names, $load = false, $require_once = tr
  */
 function edd_get_theme_template_paths() {
 	$file_paths = array(
-		get_stylesheet_directory() . 'edd_templates/',
-		get_template_directory() . 'edd_templates/',
-		edd_get_templates_dir()
+		1 => trailingslashit( get_stylesheet_directory() ) . 'edd_templates/',
+		10 => trailingslashit( get_template_directory() ) . 'edd_templates/',
+		100 => edd_get_templates_dir()
 	);
 
 	$file_paths = apply_filters( 'edd_template_paths', $file_paths );
+
+	// sort the file paths based on priority
+	ksort( $file_paths, SORT_NUMERIC );
+
 	return array_map( 'trailingslashit', $file_paths );
 }
 
