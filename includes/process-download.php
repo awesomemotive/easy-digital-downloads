@@ -64,7 +64,7 @@ function edd_process_download() {
 			$user_info['name'] 	= $user_data->display_name;
 		}
 
-		edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip(), $payment );
+		edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip(), $payment, $args['price_id'] );
 
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );
