@@ -531,7 +531,7 @@ function edd_get_total_earnings() {
 	$total = get_option( 'edd_earnings_total', 0 );
 
 	// If no total stored in DB, use old method of calculating total earnings
-	if( $total === false ) {
+	if( ! $total ) {
 
 		$total = get_transient( 'edd_earnings_total' );
 
