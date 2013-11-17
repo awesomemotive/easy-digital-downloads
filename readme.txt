@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.7
 
-Stable Tag: 1.8.3.1
+Stable Tag: 1.8.4
 License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -185,6 +185,29 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 1.8.4: November 17, 2014 =
+
+* Fix: discounts cannot be searched by discount code
+* Fix: file download limit not honored when files are assigned to price IDs
+* Fix: ajax cart item remove URL always set to key of 0
+* Fix: bug with price IDs and the straight to gateway action
+* Fix: do not execute before/after download contnet hooks if download requires a password
+* Fix: bug with styling of first P tag in purchase receipts
+* Fix: email preview could only be shown once per page load
+* Fix: API keygen option not shown to users even when enabled
+* Fix: I18N error
+
+* Tweak: MP6 UI compatibility
+* Tweak: add edd_get_option() helper function
+* Tweak: enable mobile app link to be removed
+* Tweak: pass $item along with edd_email_receipt_download_title filter 
+* Tweak: map lowest price option amount to edd_price
+* Tweak: add new user notification on checkout user registration
+* Tweak: check the address is not equal to * when selecting country
+* Tweak: show manual payment gateway as "Free Purchase" on payment receipt
+* Tweak: store total shop earnings in database to improve performance
+* Tweak: enable access to products API end point wiithout API keys
 
 = 1.8.3.1: November 5, 2014 =
 
