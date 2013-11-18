@@ -24,7 +24,6 @@
 								echo '</div>';
 							}
 							$item_title = get_the_title( $item['id'] );
-							$variable_pricing = edd_has_variable_prices( $item['id'] );
 							if ( ! empty( $item['options'] ) ) {
 								$item_title .= ' - ' . edd_get_cart_item_price_name( $item );
 							}
