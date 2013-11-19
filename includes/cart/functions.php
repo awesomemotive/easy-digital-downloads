@@ -128,7 +128,7 @@ function edd_remove_from_cart( $cart_key ) {
 }
 
 /**
- * Checks the see if an item is already in the cart and returns a boolean
+ * Checks to see if an item is already in the cart and returns a boolean
  *
  * @since 1.0
  *
