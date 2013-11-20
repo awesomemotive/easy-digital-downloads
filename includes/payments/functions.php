@@ -574,6 +574,7 @@ function edd_get_total_earnings() {
  * Increase the Total Earnings
  *
  * @since 1.8.4
+ * @param $amount int The amount you would like to increase the total earnings by.
  * @return float $total Total earnings
  */
 function edd_increase_total_earnings( $amount = 0 ) {
