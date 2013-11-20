@@ -133,7 +133,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				if ( $sales ) {
 					foreach ( $sales as $sale ) {
 						$amount    = edd_get_payment_amount( $sale );
-						$earnings  = $earnings + $amount;
+						$earnings  = floatval( $earnings ) +  floatval( $amount );
 					}
 				}
 				// Cache the results for one hour
