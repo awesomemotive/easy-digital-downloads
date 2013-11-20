@@ -875,17 +875,14 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 		)
 	);
 
-	$payments = get_posts( array( 'meta_query' => $meta_query, 'post_type' => 'edd_payment' ) );
+	$accepted_stati = apply_filters( 'edd_allowed_download_stati', array( 'publish', 'complete' ) );
+
+	$payments = get_posts( array( 'meta_query' => $meta_query, 'post_type' => 'edd_payment', 'post_status' => $accepted_stati ) );
 
 	if ( $payments ) {
 		foreach ( $payments as $payment ) {
 
 			$cart_details = edd_get_payment_meta_cart_details( $payment->ID, true );
-
-			$accepted_stati = apply_filters( 'edd_allowed_download_stati', array( 'publish', 'complete' ) );
-
-			if ( ! in_array( $payment->post_status, $accepted_stati ) )
-				return false;
 
 			if ( ! empty( $cart_details ) ) {
 				foreach ( $cart_details as $cart_key => $cart_item ) {
