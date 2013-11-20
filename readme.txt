@@ -186,11 +186,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
-= 1.8.5: November 18, 2014 =
+= 1.8.5: November 18, 2013 =
 
 * Fix: revert accidental introduction of new meta box UI that broke file URL saving
 
-= 1.8.4: November 17, 2014 =
+= 1.8.4: November 17, 2013 =
 
 * Fix: discounts cannot be searched by discount code
 * Fix: file download limit not honored when files are assigned to price IDs
