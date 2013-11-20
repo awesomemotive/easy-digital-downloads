@@ -142,7 +142,9 @@ $status    = edd_get_payment_status( $payment, true );
 						<div class="edd_purchase_receipt_product_notes"><?php echo edd_get_product_notes( $item['id'] ); ?></div>
 					<?php endif; ?>
 
-					<?php if( edd_is_payment_complete( $payment->ID ) ) : ?>
+					<?php 
+					$has_download_files = apply_filters( 'edd_downloadable_files', true );
+					if( edd_is_payment_complete( $payment->ID ) && $has_download_files ) : ?>
 					<ul class="edd_purchase_receipt_files">
 						<?php
 						if ( $download_files && is_array( $download_files ) ) :
