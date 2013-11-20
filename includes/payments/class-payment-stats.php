@@ -196,6 +196,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 	 *
 	 * @access public
 	 * @since 1.8
+	 * @param $number int The number of results to retrieve with the default set to 10.
 	 * @return array
 	 */
 	public function get_best_selling( $number = 10 ) {
