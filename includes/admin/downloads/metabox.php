@@ -415,6 +415,7 @@ function edd_render_price_row( $key, $args = array(), $post_id ) {
 		<?php echo EDD()->html->text( array(
 			'name'  => 'edd_variable_prices[' . $key . '][name]',
 			'value' => esc_attr( $name ),
+			'placeholder' => __( 'Option Name', 'edd' ),
 			'class' => 'large-text'
 		) ); ?>
 	</td>
@@ -423,7 +424,8 @@ function edd_render_price_row( $key, $args = array(), $post_id ) {
 		<?php
 			$price_args = array( 
 				'name'  => 'edd_variable_prices[' . $key . '][amount]', 
-				'value' => $amount, 
+				'value' => $amount,
+				'placeholder' => '9.99',
 				'class' => 'edd-price-field'
 			); 
 		?>
