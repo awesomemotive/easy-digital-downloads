@@ -666,7 +666,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 			'name'        => 'edd_download_files[' . $key . '][name]',
 			'value'       => $name,
 			'placeholder' => __( 'File Name', 'edd' ),
-			'class'       => 'large-text'
+			'class'       => 'edd_repeatable_name_field large-text'
 		) ); ?>
 	</td>
 
