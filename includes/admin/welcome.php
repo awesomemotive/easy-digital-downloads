@@ -362,6 +362,20 @@ class EDD_Welcome {
 				</div>
 			</div>
 
+			<div class="changelog">
+				<h3><?php _e( 'Extensions for Everything', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<h4><?php _e( 'Over 170 Extensions','edd' );?></h4>
+					<p><?php _e( 'Add-on plugins are available that greatly extend the default functionality of Easy Digital Downloads. There are extensions for payment processors, such as Stripe and PayPal, extensions for newsletter integrations, and many, many more.', 'edd' );?></p>
+
+					<h4><?php _e( 'Visit the Extension Store', 'edd' );?></h4>
+					<p><?php _e( '<a href="https://easydigitaldownloads.com/extensions" target="_blank">The Extensions store</a> has a list of all available extensions, including convenient category filters so you can find exactly what you are looking for.', 'edd' );?></p>
+
+				</div>
+			</div>
+
 		</div>
 		<?php
 	}
