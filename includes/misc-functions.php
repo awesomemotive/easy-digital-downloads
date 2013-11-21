@@ -565,3 +565,14 @@ if ( ! function_exists( 'cal_days_in_month' ) ) {
 		return date( 't', mktime( 0, 0, 0, $month, 1, $year ) );
 	}
 }
+
+
+/**
+ * Show a download's files in the purchase receipt
+ *
+ * @since 1.8.6
+ * @return boolean
+*/
+function edd_receipt_show_download_files( $item_id ) {
+	return apply_filters( 'edd_receipt_show_download_files', true, $item_id );
+}
