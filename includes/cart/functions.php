@@ -59,7 +59,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 
 	if ( edd_has_variable_prices( $download_id )  && ! isset( $options['price_id'] ) ) {
 		// Forces to the first price ID if none is specified and download has variable prices
-		$options['price_id'] = 0;
+		$options['price_id'] = '0';
 	}
 
 	$to_add = array();
