@@ -88,7 +88,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		$cart = $to_add;
 	}
 
-	$cart = EDD()->session->set( 'edd_cart', $cart );
+	EDD()->session->set( 'edd_cart', $cart );
 
 	do_action( 'edd_post_add_to_cart', $download_id, $options );
 
@@ -102,7 +102,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
  * Removes a Download from the Cart
  *
  * @since 1.0
- * @param int $cart_key the cart key to remove
+ * @param int $cart_key the cart key to remove. This key is the numerical index of the item contained within the cart array.
  * @return array Updated cart items
  */
 function edd_remove_from_cart( $cart_key ) {
@@ -128,7 +128,7 @@ function edd_remove_from_cart( $cart_key ) {
 }
 
 /**
- * Checks the see if an item is already in the cart and returns a boolean
+ * Checks to see if an item is already in the cart and returns a boolean
  *
  * @since 1.0
  *
