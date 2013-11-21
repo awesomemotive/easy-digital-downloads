@@ -177,6 +177,7 @@ add_filter( 'edd_metabox_save__edd_bundled_products', 'edd_sanitize_bundled_prod
  * @return array $files Array of the remapped file downloads
  */
 function edd_sanitize_files_save( $files ) {
+
 	// Make sure all files are rekeyed starting at 0
 	return array_values( $files );
 }
@@ -674,7 +675,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 		<div class="edd_repeatable_upload_field_container">
 			<?php echo EDD()->html->text( array(
 				'name'        => 'edd_download_files[' . $key . '][file]',
-				'value'       => $name,
+				'value'       => $file,
 				'placeholder' => __( 'Upload or enter the file URL', 'edd' ),
 				'class'       => 'edd_repeatable_upload_field edd_upload_field large-text'
 			) ); ?>
