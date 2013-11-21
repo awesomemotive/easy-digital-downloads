@@ -47,7 +47,7 @@ tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 #downloadinformation .edd_meta_table_wrap table textarea { margin: 4px 0; width: 100%; }
 #downloadinformation .edd_meta_table_wrap table .submit input { width: auto; }
 .edd_repeatable_upload_wrapper .edd_repeatable_upload_field_container { position: relative; }
-.edd_upload_file { position: absolute; top: 5px; right: 3px; padding: 2px 8px 2px; display: block; background: #fff; }
+.edd_upload_file { position: absolute; top: 3px; right: 8px; padding: 2px 8px 2px; display: block; background: #fff; }
 .edd_remove_repeatable { margin: 11px 0 0 0; cursor: pointer; width: 10px; height: 10px; display: inline-block; text-indent: -9999px; overflow: hidden; }
 .edd_remove_repeatable:active, .edd_remove_repeatable:hover { background-position: -10px 0!important }
 .edd_draghandle { display: block; width: 20px; height: 20px; background: url(../images/edd-cross-hair.png); cursor: move; margin: 4px 0 0 0; }
