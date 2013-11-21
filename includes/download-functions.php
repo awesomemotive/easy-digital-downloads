@@ -433,9 +433,11 @@ function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip, $p
 		'log_type'		=> 'file_download'
 	);
 
+	$user_id = isset( $user_info['id'] ) ? $user_info['id'] : (int) -1;
+	
 	$log_meta = array(
 		'user_info'	=> $user_info,
-		'user_id'	=> (int) $user_info['id'],
+		'user_id'	=> $user_id,
 		'file_id'	=> (int) $file_id,
 		'ip'		=> $ip,
 		'payment_id'=> $payment_id,
@@ -890,12 +892,13 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 					if ( $cart_item['id'] != $download_id )
 						continue;
 
-					$price_options = isset( $cart_item['item_number']['options'] ) ? $cart_item['item_number']['options'] : false;
+					$price_options 	= isset( $cart_item['item_number']['options'] ) ? $cart_item['item_number']['options'] : false;
+					$price_id 		= isset( $price_options['price_id'] ) ? $price_options['price_id'] : false;
 
 					$file_condition = edd_get_file_price_condition( $cart_item['id'], $file_key );
 
 					// Check to see if the file download limit has been reached
-					if ( edd_is_file_at_download_limit( $cart_item['id'], $payment->ID, $file_key, $price_options['price_id'] ) )
+					if ( edd_is_file_at_download_limit( $cart_item['id'], $payment->ID, $file_key, $price_id ) )
 						wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'edd' ) ), __( 'Error', 'edd' ) );
 
 					// If this download has variable prices, we have to confirm that this file was included in their purchase
