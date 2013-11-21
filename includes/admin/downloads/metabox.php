@@ -680,7 +680,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 			) ); ?>
 
 			<span class="edd_upload_file">
-				<a href="#" data-uploader_title="" data-uploader_button_text="<?php _e( 'Insert', 'edd' ); ?>" class="edd_upload_image_button" onclick="return false;"><?php _e( 'Upload a File', 'edd' ); ?></a>
+				<a href="#" data-uploader_title="" data-uploader_button_text="<?php _e( 'Insert', 'edd' ); ?>" class="edd_upload_file_button" onclick="return false;"><?php _e( 'Upload a File', 'edd' ); ?></a>
 			</span>
 		</div>
 	</td>
