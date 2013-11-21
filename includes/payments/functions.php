@@ -708,7 +708,6 @@ function edd_get_payment_user_email( $payment_id ) {
 	return apply_filters( 'edd_payment_user_email', $email );
 }
 
-
 /**
  * Get the user ID associated with a payment
  *
@@ -720,6 +719,18 @@ function edd_get_payment_user_id( $payment_id ) {
 	$user_id = get_post_meta( $payment_id, '_edd_payment_user_id', true );
 
 	return apply_filters( 'edd_payment_user_id', $user_id );
+}
+
+/**
+ * Get the IP address used to make a purchase
+ *
+ * @since 1.9
+ * @param int $payment_id Payment ID
+ * @return string $ip User IP
+ */
+function edd_get_payment_user_ip( $payment_id ) {
+	$ip = get_post_meta( $payment_id, '_edd_payment_user_ip', true );
+	return apply_filters( 'edd_payment_user_ip', $ip );
 }
 
 /**
