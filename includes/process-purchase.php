@@ -37,7 +37,13 @@ function edd_process_purchase_form() {
 
 	$is_ajax = isset( $_POST['edd_ajax'] );
 
-	$user    = edd_get_purchase_form_user( $valid_data );
+	// Process the login form
+	if( isset( $_POST['edd_login_submit'] ) ) {
+		edd_process_purchase_login();
+	}
+
+	// Validate the user
+	$user = edd_get_purchase_form_user( $valid_data );
 
 	if ( edd_get_errors() || ! $user ) {
 		if ( $is_ajax ) {
@@ -115,8 +121,42 @@ function edd_process_purchase_form() {
 	edd_die();
 }
 add_action( 'edd_purchase', 'edd_process_purchase_form' );
-add_action( 'wp_ajax_edd_process_checkout', 'edd_process_purchase_form' );
+add_action( 'wp_ajax_edd_edd_process_checkout_login', 'edd_process_purchase_form' );
 add_action( 'wp_ajax_nopriv_edd_process_checkout', 'edd_process_purchase_form' );
+
+/**
+ * Process the checkout login form
+ *
+ * @access      private
+ * @since       1.8
+ * @return      void
+ */
+function edd_process_purchase_login() {
+
+	$is_ajax = isset( $_POST['edd_ajax'] );
+
+	$user_data = edd_purchase_form_validate_user_login();
+
+	if ( edd_get_errors() || $user_data['user_id'] < 1 ) {
+		if ( $is_ajax ) {
+			do_action( 'edd_ajax_checkout_errors' );
+			edd_die();
+		} else {
+			wp_redirect( $_SERVER['HTTP_REFERER'] ); exit;
+		}
+	}
+
+	edd_log_user_in( $user_data['user_id'], $user_data['user_login'], $user_data['user_pass'] );
+
+	if ( $is_ajax ) {
+		echo 'success';
+		edd_die();
+	} else {
+		wp_redirect( edd_get_checkout_uri( $_SERVER['QUERY_STRING'] ) );
+	}
+}
+add_action( 'wp_ajax_edd_process_checkout_login', 'edd_process_purchase_login' );
+add_action( 'wp_ajax_nopriv_edd_process_checkout_login', 'edd_process_purchase_login' );
 
 /**
  * Purchase Form Validate Fields
@@ -437,6 +477,7 @@ function edd_purchase_form_validate_new_user() {
  * @return      array
 */
 function edd_purchase_form_validate_user_login() {
+
 	// Start an array to collect valid user data
 	$valid_user_data = array(
 		// Assume there will be errors
@@ -462,7 +503,14 @@ function edd_purchase_form_validate_user_login() {
 			// Check if password is valid
 			if ( ! wp_check_password( $user_pass, $user_data->user_pass, $user_data->ID ) ) {
 				// Incorrect password
-				edd_set_error( 'password_incorrect', __( 'The password you entered is incorrect', 'edd' ) );
+				edd_set_error(
+					'password_incorrect',
+					sprintf( 
+						__( 'The password you entered is incorrect. %sReset Password%s', 'edd' ),
+						'<a href="' . wp_lostpassword_url( edd_get_checkout_uri() ) . '" title="' . __( 'Lost Password' ) . '">',
+						'</a>'
+					)
+				);
 			// All is correct
 			} else {
 				// Repopulate the valid user data array
@@ -607,6 +655,17 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 			$user['user_id'] = edd_register_and_login_new_user( $user );
 		// User login
 		} else if ( $valid_data['need_user_login'] === true  && ! $is_ajax ) {
+
+			/*
+			 * The login form is now processed in the edd_process_purchase_login() function.
+			 * This is still here for backwards compatibility.
+			 * This also allows the old login process to still work if a user removes the
+			 * checkout login submit button.
+			 *
+			 * This also ensures that the customer is logged in correctly if they click "Purchase"
+			 * instead of submitting the login form, meaning the customer is logged in during the purchase process.
+			 */
+
 			// Set user
 			$user = $valid_data['login_user_data'];
 			// Login user

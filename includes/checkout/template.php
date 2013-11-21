@@ -439,6 +439,12 @@ add_action( 'edd_purchase_form_register_fields', 'edd_get_register_fields' );
  * @return string
  */
 function edd_get_login_fields() {
+	global $edd_options;
+
+	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
+	$color = ( $color == 'inherit' ) ? '' : $color;
+	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
+
 	ob_start(); ?>
 		<fieldset id="edd_login_fields">
 			<p id="edd-new-account-wrap">
@@ -456,6 +462,9 @@ function edd_get_login_fields() {
 				<label class="edd-label" for="edd-password"><?php _e( 'Password', 'edd' ); ?></label>
 				<input class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" type="password" name="edd_user_pass" id="edd_user_pass" placeholder="<?php _e( 'Your password', 'edd' ); ?>"/>
 				<input type="hidden" name="edd-purchase-var" value="needs-to-login"/>
+			</p>
+			<p id="edd-user-login-submit">
+				<input type="submit" class="edd-submit button <?php echo $color; ?>" name="edd_login_submit" value="<?php _e( 'Login', 'edd' ); ?>"/>
 			</p>
 			<?php do_action('edd_checkout_login_fields_after'); ?>
 		</fieldset><!--end #edd_login_fields-->
