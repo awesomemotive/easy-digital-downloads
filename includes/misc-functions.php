@@ -104,17 +104,18 @@ function edd_is_cc_verify_enabled() {
 
 	$gateways = edd_get_enabled_payment_gateways();
 
-	if ( count( $gateways ) == 1 && ! isset( $gateways['paypal'] ) && ! isset( $gateways['manual'] ) )
+	if ( count( $gateways ) == 1 && ! isset( $gateways['paypal'] ) && ! isset( $gateways['manual'] ) ) {
 		$ret = true;
-	else if ( count( $gateways ) == 1 )
-			$ret = false;
-		else if ( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) )
-				$ret = false;
+	} else if ( count( $gateways ) == 1 ) {
+		$ret = false;
+	} else if ( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) ) {
+		$ret = false;
+	}
 
-			if ( isset( $edd_options['edd_is_cc_verify_enabled'] ) )
-				$ret = false; // Global override
+	if ( isset( $edd_options['edd_is_cc_verify_enabled'] ) )
+		$ret = false; // Global override
 
-			return (bool) apply_filters( 'edd_verify_credit_cards', $ret );
+	return (bool) apply_filters( 'edd_verify_credit_cards', $ret );
 }
 
 /**

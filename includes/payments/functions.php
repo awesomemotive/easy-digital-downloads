@@ -169,6 +169,16 @@ function edd_delete_purchase( $payment_id = 0 ) {
 		}
 	}
 
+	$amount = edd_get_payment_amount( $payment_id );
+	$status = get_post( $payment_id )->post_status;
+
+	if( $status == 'revoked' || $status == 'publish' ) {
+		// Only decrease earnings if they haven't already been decreased (or were never increased for this payment)
+		edd_decrease_total_earnings( $amount );
+		// Clear the This Month earnings (this_monththis_month is NOT a typo)
+		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
+	}
+
 	do_action( 'edd_payment_delete', $payment_id );
 
 	// Remove the payment
@@ -203,7 +213,6 @@ function edd_undo_purchase( $download_id, $payment_id ) {
         return; // Don't undo if we are in test mode!
 
 	$payment = get_post( $payment_id );
-
 
 	edd_decrease_purchase_count( $download_id );
 	$user_info    = edd_get_payment_meta_user_info( $payment_id );
@@ -346,7 +355,7 @@ function edd_check_for_existing_payment( $payment_id ) {
  *
  * @return bool|mixed if payment status exists, false otherwise
  */
-function edd_get_payment_status( WP_Post $payment, $return_label = false ) {
+function edd_get_payment_status( $payment, $return_label = false ) {
 	if ( ! is_object( $payment ) || !isset( $payment->post_status ) )
 		return false;
 
@@ -493,10 +502,11 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
  */
 function edd_is_payment_complete( $payment_id ) {
 	$payment = get_post( $payment_id );
-	if ( $payment )
-		if ( $payment->post_status == 'publish' )
-			return true;
-	return false;
+	$ret = false;
+	if ( $payment && $payment->post_status == 'publish' ) {
+		$ret = true;
+	}
+	return apply_filters( 'edd_is_payment_complete', $ret, $payment_id, $payment->post_status );
 }
 
 /**
@@ -519,31 +529,76 @@ function edd_get_total_sales() {
  */
 function edd_get_total_earnings() {
 
-	$total = get_transient( 'edd_earnings_total' );
+	$total = get_option( 'edd_earnings_total', 0 );
 
-	if( false === $total ) {
+	// If no total stored in DB, use old method of calculating total earnings
+	if( ! $total ) {
 
-		$total = (float) 0;
+		$total = get_transient( 'edd_earnings_total' );
 
-		$args = apply_filters( 'edd_get_total_earnings_args', array(
-			'offset' => 0,
-			'number' => -1,
-			'mode'   => 'live',
-			'status' => array( 'publish', 'revoked' ),
-			'fields' => 'ids'
-		) );
+		if( false === $total ) {
 
-		$payments = edd_get_payments( $args );
-		if ( $payments ) {
-			foreach ( $payments as $payment ) {
-				$total += edd_get_payment_amount( $payment );
+			$total = (float) 0;
+
+			$args = apply_filters( 'edd_get_total_earnings_args', array(
+				'offset' => 0,
+				'number' => -1,
+				'mode'   => 'live',
+				'status' => array( 'publish', 'revoked' ),
+				'fields' => 'ids'
+			) );
+
+			$payments = edd_get_payments( $args );
+			if ( $payments ) {
+				foreach ( $payments as $payment ) {
+					$total += edd_get_payment_amount( $payment );
+				}
 			}
-		}
 
-		// Cache results for 1 day. This cache is cleared automatically when a payment is made
-		set_transient( 'edd_earnings_total', $total, 86400 );
+			// Cache results for 1 day. This cache is cleared automatically when a payment is made
+			set_transient( 'edd_earnings_total', $total, 86400 );
+			
+			// Store the total for the first time
+			update_option( 'edd_earnings_total', $total );
+		}
 	}
+
+	if( $total < 0 ) {
+		$total = 0; // Don't ever show negative earnings
+	}
+
 	return apply_filters( 'edd_total_earnings', round( $total, 2 ) );
+}
+
+/**
+ * Increase the Total Earnings
+ *
+ * @since 1.8.4
+ * @param $amount int The amount you would like to increase the total earnings by.
+ * @return float $total Total earnings
+ */
+function edd_increase_total_earnings( $amount = 0 ) {
+	$total = edd_get_total_earnings();
+	$total += $amount;
+	update_option( 'edd_earnings_total', $total );
+	return $total;
+}
+
+/**
+ * Decrease the Total Earnings
+ *
+ * @since 1.8.4
+ * @param $amount int The amount you would like to decrease the total earnings by.
+ * @return float $total Total earnings
+ */
+function edd_decrease_total_earnings( $amount = 0 ) {
+	$total = edd_get_total_earnings();
+	$total -= $amount;
+	if( $total < 0 ) {
+		$total = 0;
+	}
+	update_option( 'edd_earnings_total', $total );
+	return $total;
 }
 
 /**
@@ -653,7 +708,6 @@ function edd_get_payment_user_email( $payment_id ) {
 	return apply_filters( 'edd_payment_user_email', $email );
 }
 
-
 /**
  * Get the user ID associated with a payment
  *
@@ -665,6 +719,18 @@ function edd_get_payment_user_id( $payment_id ) {
 	$user_id = get_post_meta( $payment_id, '_edd_payment_user_id', true );
 
 	return apply_filters( 'edd_payment_user_id', $user_id );
+}
+
+/**
+ * Get the IP address used to make a purchase
+ *
+ * @since 1.9
+ * @param int $payment_id Payment ID
+ * @return string $ip User IP
+ */
+function edd_get_payment_user_ip( $payment_id ) {
+	$ip = get_post_meta( $payment_id, '_edd_payment_user_ip', true );
+	return apply_filters( 'edd_payment_user_ip', $ip );
 }
 
 /**

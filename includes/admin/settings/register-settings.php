@@ -12,6 +12,20 @@
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
+
+/**
+ * Get an option
+ *
+ * Looks to see if the specified setting exists, returns default if not
+ *
+ * @since 1.8.4
+ * @return mixed
+ */
+function edd_get_option( $key = '', $default = false ) {
+	global $edd_options;
+	return isset( $edd_options[ $key ] ) ? $edd_options[ $key ] : $default;
+}
+
 /**
  * Get Settings
  *
@@ -204,7 +218,7 @@ function edd_get_registered_settings() {
 				'allow_tracking' => array(
 					'id' => 'allow_tracking',
 					'name' => __( 'Allow Usage Tracking?', 'edd' ),
-					'desc' => __( 'Allow Easy Digital Downloads to annonymously track how this plugin is used and help us make the plugin better. Opt-in and receive a 20% discount code for any purchase from the <a href="https://easydigitaldownloads.com/extensions" target="_blank">Easy Digital Downloads store</a>. Your discount code will be emailed to you.', 'edd' ),
+					'desc' => __( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in and receive a 20% discount code for any purchase from the <a href="https://easydigitaldownloads.com/extensions" target="_blank">Easy Digital Downloads store</a>. Your discount code will be emailed to you.', 'edd' ),
 					'type' => 'checkbox'
 				)
 			)
