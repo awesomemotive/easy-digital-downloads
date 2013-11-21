@@ -663,18 +663,20 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 	-->
 	<td>
 		<?php echo EDD()->html->text( array(
-			'name'  => 'edd_download_files[' . $key . '][name]',
-			'value' => $name,
-			'class' => 'large-text'
+			'name'        => 'edd_download_files[' . $key . '][name]',
+			'value'       => $name,
+			'placeholder' => __( 'File Name', 'edd' ),
+			'class'       => 'large-text'
 		) ); ?>
 	</td>
 
 	<td>
 		<div class="edd_repeatable_upload_field_container">
 			<?php echo EDD()->html->text( array(
-				'name'  => 'edd_download_files[' . $key . '][file]',
-				'value' => $name,
-				'class' => 'edd_repeatable_upload_field edd_upload_field large-text'
+				'name'        => 'edd_download_files[' . $key . '][file]',
+				'value'       => $name,
+				'placeholder' => __( 'Upload or enter the file URL', 'edd' ),
+				'class'       => 'edd_repeatable_upload_field edd_upload_field large-text'
 			) ); ?>
 
 			<span class="edd_upload_file">
