@@ -97,6 +97,7 @@ class EDD_Tracking {
 
 		$data['active_plugins']   = $active_plugins;
 		$data['inactive_plugins'] = $plugins;
+		$data['products']         = wp_count_posts( 'download' )->publish;
 
 		$this->data = $data;
 	}
@@ -228,7 +229,7 @@ class EDD_Tracking {
 			$optout_url = add_query_arg( 'edd_action', 'opt_out_of_tracking' );
 
 			echo '<div class="updated"><p>';
-				echo __( 'Allow Easy Digital Downloads to track plugin usage? Opt-in and immediately be emailed a 20% discount to the shop for <a href="https://easydigitaldownloads.com/extensions" target="_blank">Extensions and Themes</a>. No sensitive data is tracked.', 'edd' );
+				echo __( 'Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a 20% discount to the shop for <a href="https://easydigitaldownloads.com/extensions" target="_blank">Extensions and Themes</a>. No sensitive data is tracked.', 'edd' );
 				echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-secondary">' . __( 'Allow', 'edd' ) . '</a>';
 				echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow', 'edd' ) . '</a>';
 			echo '</p></div>';

@@ -68,7 +68,7 @@ function edd_admin_messages() {
 
 		echo '<div class="error">';
 			echo '<p>' . sprintf( __( 'The Easy Digital Downloads .htaccess file is missing from <strong>%s</strong>!', 'edd' ), edd_get_upload_dir() ) . '</p>';
-			echo '<p>' . sprintf( __( 'First, please resave the Misc settings tab. If this warning continues to appear, create a file called ".htaccess" in the <strong>%s</strong> directory, and copy the following into it:', 'edd' ), edd_get_upload_dir() ) . '</p>';
+			echo '<p>' . sprintf( __( 'First, please resave the Misc settings tab a few times. If this warning continues to appear, create a file called ".htaccess" in the <strong>%s</strong> directory, and copy the following into it:', 'edd' ), edd_get_upload_dir() ) . '</p>';
 			echo '<p><pre>' . edd_get_htaccess_rules() . '</pre>';
 			echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'htaccess_missing' ) ) . '">' . __( 'Dismiss Notice', 'edd' ) . '</a></p>';
 		echo '</div>';
