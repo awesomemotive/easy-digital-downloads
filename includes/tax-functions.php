@@ -146,12 +146,14 @@ function edd_get_tax_rate( $country = false, $state = false ) {
  *
  * @since 1.3.3
  * @param $amount float The original amount to calculate a tax cost
+ * @param $country string The country to calculate tax for. Will use default if not passed
+ * @param $state string The state to calculate tax for. Will use default if not passed
  * @return float $tax Taxed amount
  */
-function edd_calculate_tax( $amount, $sum = true, $country = false, $state = false ) {
+function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
 	global $edd_options;
 
-	// TODO - rewrite this and get rid of $sum
+	// TODO - this should return the taxed amount, not the new amount with tax
 
 	// Not using taxes
 	if ( ! edd_use_taxes() ) {
@@ -160,24 +162,13 @@ function edd_calculate_tax( $amount, $sum = true, $country = false, $state = fal
 	$rate = edd_get_tax_rate( $country, $state );
 	$tax  = 0.00;
 
-	if ( $sum ) {
-
-		if ( edd_prices_include_tax() ) {
-			$tax = $amount - ( ( $amount / ( 1 + $rate ) ) * $rate );
-		} else {
-			$tax = $amount + ( $amount * $rate );
-		}
-
+	if ( edd_prices_include_tax() ) {
+		$tax = ( $amount / ( 1 + $rate ) ) * $rate;
 	} else {
-
-		if ( edd_prices_include_tax() ) {
-			$tax = ( $amount / ( 1 + $rate ) ) * $rate;
-		} else {
-			$tax = $amount * $rate;
-		}
-
+		$tax = $amount * $rate;
 	}
-	return apply_filters( 'edd_taxed_amount', round( $tax, 2 ), $rate );
+
+	return apply_filters( 'edd_taxed_amount', round( $tax, 2 ), $rate, $country, $state );
 }
 
 /**
@@ -239,6 +230,8 @@ function edd_get_sales_tax_for_year( $year = null ) {
 */
 function edd_prices_include_tax() {
 	global $edd_options;
+
+	// TODO rewrite this. Should never check for "yes", just isset()
 
 	return isset( $edd_options['prices_include_tax'] ) && $edd_options['prices_include_tax'] == 'yes';
 }
