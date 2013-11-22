@@ -362,16 +362,7 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $depreca
 function edd_get_cart_item_discount_amount( $item ) {
 
 	$amount = 0;
-
-	// Get the subtotal of the item
-
-	// TODO account for taxes
-
-	if( edd_taxes_after_discounts() ) {
-		
-	}
-	
-	$price = edd_get_cart_item_price( $item['id'], $item['options'] );
+	$price  = edd_get_cart_item_price( $item['id'], $item['options'] );
 		
 	// Retrieve all discounts applied to the cart
 	$discounts = edd_get_cart_discounts();
