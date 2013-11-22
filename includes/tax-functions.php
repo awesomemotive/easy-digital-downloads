@@ -30,19 +30,6 @@ function edd_use_taxes() {
 	return apply_filters( 'edd_use_taxes', isset( $edd_options['enable_taxes'] ) );
 }
 
-
-/**
- * Show taxes on individual prices?
- *
- * @since 1.4
- * @global $edd_options
- * @return bool Whether or not to show taxes on prices
- */
-function edd_taxes_on_prices() {
-	global $edd_options;
-	return apply_filters( 'edd_taxes_on_prices', isset( $edd_options['taxes_on_prices'] ) );
-}
-
 /**
  * Checks if the user has enabled the option to calculate taxes after discounts
  * have been entered
@@ -57,6 +44,18 @@ function edd_taxes_after_discounts() {
 	return apply_filters( 'edd_taxes_after_discounts', $ret );
 }
 
+/**
+ * Checks whether the user has enabled display of taxes on the checkout
+ *
+ * @since 1.5
+ * @global $edd_options
+ * @return bool $include_tax
+ */
+function edd_prices_show_tax_on_checkout() {
+	global $edd_options;
+	$ret = isset( $edd_options['checkout_include_tax'] ) && $edd_options['checkout_include_tax'] == 'yes' && edd_use_taxes();
+	return apply_filters( 'edd_taxes_on_prices', isset( $edd_options['taxes_on_prices'] ) );
+}
 
 /**
  * Retrieve tax rates
