@@ -885,62 +885,12 @@ function edd_cart_has_discounts() {
  * @return float|mixed|void Total discounted amount
  */
 function edd_get_cart_discounted_amount( $discounts = false ) {
-	if ( empty( $discounts ) )
-		$discounts = edd_get_cart_discounts();
+	
+	$items     = edd_get_cart_content_details();
+	$discounts = wp_list_pluck( $items, 'discount' );
+	$amount    = array_sum( $discounts );
 
-	// Setup the array of discounts
-	if ( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) ) {
-		// Check for a posted discount
-		$posted_discount = isset( $_POST['edd-discount'] ) ? trim( $_POST['edd-discount'] ) : false;
-
-		if ( $posted_discount ) {
-			$discounts = array();
-			$discounts[] = $posted_discount;
-		}
-	}
-
-	// Return 0.00 if no discounts present
-	if ( empty( $discounts ) || ! is_array( $discounts ) )
-		return 0.00;
-
-	$amounts  = array();
-	$discounted_items = array();
-
-	foreach ( $discounts as $discount ) {
-		$code_id   = edd_get_discount_id_by_code( $discount );
-		$reqs      = edd_get_discount_product_reqs( $code_id );
-
-		// Make sure requirements are set and that this discount shouldn't apply to the whole cart
-		if ( ! empty( $reqs ) && edd_is_discount_not_global( $code_id ) ) {
-			// This is a product(s) specific discount
-
-			$condition  = edd_get_discount_product_condition( $code_id );
-			$cart_items = edd_get_cart_contents();
-
-			foreach ( $reqs as $download_id ) {
-				if ( edd_item_in_cart( $download_id ) ) {
-					$cart_key  = edd_get_item_position_in_cart( $download_id );
-					$price     = edd_get_cart_item_price( $download_id, $cart_items[ $cart_key ]['options'] );
-					$amount    = edd_get_discounted_amount( $discount, $price );
-					$discounted_items[] = $price - $amount;
-				}
-			}
-		} else {
-			// This is a global cart discount
-			$subtotal  = edd_get_cart_subtotal( ! edd_taxes_after_discounts() );
-			$amount    = edd_get_discounted_amount( $discount, $subtotal );
-			$amounts[] = $subtotal - $amount;
-		}
-	}
-
-	// Add up the total amount
-	$discounted_amount = 0.00;
-	$item_discount     = array_sum( $discounted_items );
-	$global_discount   = array_sum( $amounts );
-	$discounted_amount += $item_discount;
-	$discounted_amount += $global_discount;
-
-	return apply_filters( 'edd_get_cart_discounted_amount', edd_sanitize_amount( $discounted_amount ) );
+	return apply_filters( 'edd_get_cart_discounted_amount', $amount );
 }
 
 /**
