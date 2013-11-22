@@ -163,7 +163,8 @@ function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
 	$tax  = 0.00;
 
 	if ( edd_prices_include_tax() ) {
-		$tax = ( $amount / ( 1 + $rate ) ) * $rate;
+		$pre_tax = ( $amount / ( 1 + $rate ) );
+		$tax     = $amount - $pre_tax;
 	} else {
 		$tax = $amount * $rate;
 	}
@@ -248,7 +249,6 @@ function edd_is_cart_taxed() {
 	return edd_use_taxes();
 }
 
-
 /**
  * Check to see if we should show included taxes
  *
@@ -266,7 +266,6 @@ function edd_display_tax_rate() {
 	return apply_filters( 'edd_display_tax_rate', $ret );
 }
 
-
 /**
  * Should we show address fields for taxation purposes?
  *
@@ -280,4 +279,16 @@ function edd_cart_needs_tax_address_fields() {
 
 	return ! did_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
 
+}
+
+/**
+ * Is this Download excluded from tax?
+ *
+ * @since 1.9
+ * @return bool
+ */
+function edd_download_is_tax_exclusive( $download_id = 0 ) {
+	$ret = false;
+	// TODO this will have a checkbox in Download Settings
+	return apply_filters( 'edd_download_is_tax_exclusive', $ret, $download_id );
 }

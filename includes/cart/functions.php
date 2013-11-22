@@ -319,18 +319,17 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
 /**
  * Get Cart Item Price
  *
- * Gets the price of the cart item.
+ * Gets the price of the cart item. Always exclusive of taxes
  *
- * Do not use this for getting the finak price (with taxes and discounts) of an item.
+ * Do not use this for getting the final price (with taxes and discounts) of an item.
  * Use edd_get_cart_item_final_price()
  *
  * @since 1.0
  * @param int   $item_id Download ID number
  * @param array $options Optional parameters, used for defining variable prices
- * @param bool  $taxed
  * @return mixed|void Price for this item
  */
-function edd_get_cart_item_price( $download_id = 0, $options = array(), $taxed = false ) {
+function edd_get_cart_item_price( $download_id = 0, $options = array(), $deprecated = false ) {
 	global $edd_options;
 
 	$price = false;
@@ -347,13 +346,12 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $taxed =
 		$price = edd_get_download_price( $download_id );
 	}
 
-	if( $taxed ) {
-
-		$price += edd_calculate_tax( $price );
-
+	if( edd_prices_include_tax() && ! edd_download_is_tax_exclusive( $download_id ) ) {
+		// If price is entered with tax, we have to deduct the taxed amount from the price to determine the actual price
+		$price -= edd_calculate_tax( $price );
 	}
 
-	return apply_filters( 'edd_cart_item_price', $price, $download_id, $options, $taxed );
+	return apply_filters( 'edd_cart_item_price', $price, $download_id, $options, $deprecated );
 }
 
 function edd_get_cart_item_discount_amount( $item ) {
@@ -361,12 +359,15 @@ function edd_get_cart_item_discount_amount( $item ) {
 	$amount = 0;
 
 	// Get the subtotal of the item
+
+	// TODO account for taxes
+
 	if( edd_taxes_after_discounts() ) {
-		$price = edd_get_cart_item_price( $item['id'], $item['options'], true );
-	} else {
-		$price = edd_get_cart_item_price( $item['id'], $item['options'], false );
+		
 	}
 	
+	$price = edd_get_cart_item_price( $item['id'], $item['options'] );
+		
 	// Retrieve all discounts applied to the cart
 	$discounts = edd_get_cart_discounts();
 	
@@ -419,12 +420,25 @@ function edd_get_cart_item_final_price( $item_key = 0 ) {
  */
 function edd_get_cart_item_tax( $item = array() ) {
 	
-	// TODO this should account for prices inclusive of tax
+	$tax = 0;
 
-	// TODO this should account for products that do not include tax (exclude tax for product)
+	if( ! edd_download_is_tax_exclusive( $item['id'] ) ) {
 
-	$price = edd_get_cart_item_price( $item['id'], $item['options'] );
-	$tax   = edd_calculate_tax( $price );
+		if ( edd_has_variable_prices( $item['id'] ) && ! empty( $item['options'] ) ) {
+			$prices = edd_get_variable_prices( $item['id'] );
+			if ( $prices ) {
+				$price = isset( $prices[ $item['options']['price_id'] ] ) ? $prices[ $item['options']['price_id'] ]['amount'] : false;
+			}
+		}
+
+		if( ! $price ) {
+			// Get the standard Download price if not using variable prices
+			$price = edd_get_download_price( $item['id'] );
+		}
+
+		$tax = edd_calculate_tax( $price );
+
+	}
 
 	return apply_filters( 'edd_get_cart_item_tax', $tax, $item['id'], $item );
 }
