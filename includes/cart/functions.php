@@ -384,6 +384,7 @@ function edd_get_cart_item_discount_amount( $item ) {
 
 			// Make sure requirements are set and that this discount shouldn't apply to the whole cart
 			if ( ! empty( $reqs ) && edd_is_discount_not_global( $code_id ) ) {
+				
 				// This is a product(s) specific discount
 
 				foreach ( $reqs as $download_id ) {
@@ -425,7 +426,8 @@ function edd_get_cart_item_final_price( $item_key = 0 ) {
  */
 function edd_get_cart_item_tax( $item = array() ) {
 	
-	$tax = 0;
+	$tax   = 0;
+	$price = false;
 
 	if( ! edd_download_is_tax_exclusive( $item['id'] ) ) {
 
@@ -439,6 +441,10 @@ function edd_get_cart_item_tax( $item = array() ) {
 		if( ! $price ) {
 			// Get the standard Download price if not using variable prices
 			$price = edd_get_download_price( $item['id'] );
+		}
+
+		if( edd_taxes_after_discounts() ) {
+			$price -= edd_get_cart_item_discount_amount( $item );
 		}
 
 		$tax = edd_calculate_tax( $price );
