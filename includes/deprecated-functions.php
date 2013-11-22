@@ -179,19 +179,22 @@ function edd_local_tax_opted_in() {
 	return ! empty( $opted_in );
 }
 
-
 /**
- * Checks whether the user has enabled display of taxes on the checkout
+ * Show taxes on individual prices?
  *
- * @since 1.5
+ * @since 1.4
  * @deprecated 1.9
  * @global $edd_options
- * @return bool $include_tax
+ * @return bool Whether or not to show taxes on prices
  */
-function edd_prices_show_tax_on_checkout() {
+function edd_taxes_on_prices() {
 	global $edd_options;
 
-	return isset( $edd_options['checkout_include_tax'] ) && $edd_options['checkout_include_tax'] == 'yes';
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '1.9', 'no alternatives', $backtrace );
+
+	return apply_filters( 'edd_taxes_on_prices', isset( $edd_options['taxes_on_prices'] ) );
 }
 
 /**
