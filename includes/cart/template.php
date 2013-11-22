@@ -19,6 +19,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_checkout_cart() {
+	echo '<pre>'; print_r( edd_get_cart_content_details() ); echo '</pre>';
 	do_action( 'edd_before_checkout_cart' );
 	echo '<!--dynamic-cached-content-->';
 	echo '<form id="edd_checkout_cart_form" method="post">';
@@ -114,7 +115,7 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 	$item = str_replace( '{remove_url}', $remove_url, $item );
   	$subtotal = '';
   	if ( $ajax ){
-   	 $subtotal = edd_currency_filter( edd_format_amount( edd_get_cart_amount( false ) ) ) ;
+   	 $subtotal = edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) ;
   	}
  	$item = str_replace( '{subtotal}', $subtotal, $item );
 
