@@ -53,7 +53,8 @@ function edd_taxes_on_prices() {
  */
 function edd_taxes_after_discounts() {
 	global $edd_options;
-	return apply_filters( 'edd_taxes_after_discounts', isset( $edd_options['taxes_after_discounts'] ) );
+	$ret = isset( $edd_options['taxes_after_discounts'] ) && edd_use_taxes();
+	return apply_filters( 'edd_taxes_after_discounts', $ret );
 }
 
 
