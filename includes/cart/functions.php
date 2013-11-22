@@ -43,67 +43,20 @@ function edd_get_cart_content_details() {
 
 	foreach( $cart_items as $key => $item ) {
 
-		$price      = edd_get_cart_item_price( $item['id'], $item['options'] );
-		$base_price = edd_get_cart_item_price( $item['id'], $item['options'], false );
-
-		// TODO move discount price calculation to a helper function
-
-		// Calculate the discounted price, if any
-		$discounts = edd_get_cart_discounts();
-		if( $discounts ) {
-			foreach ( $discounts as $discount ) {
-				$code_id = edd_get_discount_id_by_code( $discount );
-				$reqs    = edd_get_discount_product_reqs( $code_id );
-
-				// Make sure requirements are set and that this discount shouldn't apply to the whole cart
-				if ( ! empty( $reqs ) && edd_is_discount_not_global( $code_id ) ) {
-					// This is a product(s) specific discount
-
-					foreach ( $reqs as $download_id ) {
-						if ( $download_id == $item['id'] ) {
-
-							if( edd_taxes_after_discounts() ) {
-
-								$price = edd_get_discounted_amount( $discount, $base_price );
-
-							} else {
-
-								$price = edd_get_discounted_amount( $discount, $price );
-
-							}
-
-						}
-					}
-
-				} else {
-
-					// This is a global cart discount
-
-					if( edd_taxes_after_discounts() ) {
-
-						$price = edd_get_discounted_amount( $discount, $base_price );
-
-					} else {
-
-						$price = edd_get_discounted_amount( $discount, $price );
-
-					}
-				}
-			}
-		}
-
-		$tax      = edd_get_cart_item_tax( $item );
-		$quantity = edd_get_cart_item_quantity( $item['id'], $item['options'] );
+		$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
+		$discount   = edd_get_cart_item_discount_amount( $item );		
+		$tax        = edd_get_cart_item_tax( $item );
+		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
 
 		$details[ $key ]  = array(
 			'name'        => get_the_title( $item['id'] ),
 			'id'          => $item['id'],
 			'item_number' => $item,
 			'quantity'    => $quantity,
-			'subtotal'    => round( $base_price * $quantity, 2 ),
-			'discount'    => round( $price - $base_price, 2 ),
+			'subtotal'    => round( ( $item_price - $discount ) * $quantity, 2 ),
+			'discount'    => $discount,
 			'tax'         => $tax,
-			'price'       => round( $price + $tax, 2 ),
+			'price'       => round( $item_price + $tax, 2 ),
 		);
 	}
 
@@ -377,10 +330,8 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  * @param bool  $taxed
  * @return mixed|void Price for this item
  */
-function edd_get_cart_item_price( $download_id = 0, $options = array(), $taxed = true ) {
+function edd_get_cart_item_price( $download_id = 0, $options = array(), $taxed = false ) {
 	global $edd_options;
-
-	// TODO this should account for prices inclusive of tax, but this value should ALWAYS be the untaxed version
 
 	$price = false;
 
@@ -392,17 +343,65 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $taxed =
 	}
 
 	if( ! $price ) {
-		// Get the standard Download price
+		// Get the standard Download price if not using variable prices
 		$price = edd_get_download_price( $download_id );
 	}
 
+	if( $taxed ) {
 
+		$price += edd_calculate_tax( $price );
 
-	// TODO - add tax to the price
+	}
 
 	return apply_filters( 'edd_cart_item_price', $price, $download_id, $options, $taxed );
 }
 
+function edd_get_cart_item_discount_amount( $item ) {
+
+	$amount = 0;
+
+	// Get the subtotal of the item
+	if( edd_taxes_after_discounts() ) {
+		$price = edd_get_cart_item_price( $item['id'], $item['options'], true );
+	} else {
+		$price = edd_get_cart_item_price( $item['id'], $item['options'], false );
+	}
+	
+	// Retrieve all discounts applied to the cart
+	$discounts = edd_get_cart_discounts();
+	
+	if( $discounts ) {
+		foreach ( $discounts as $discount ) {
+
+			$code_id = edd_get_discount_id_by_code( $discount );
+			$reqs    = edd_get_discount_product_reqs( $code_id );
+
+			// Make sure requirements are set and that this discount shouldn't apply to the whole cart
+			if ( ! empty( $reqs ) && edd_is_discount_not_global( $code_id ) ) {
+				// This is a product(s) specific discount
+
+				foreach ( $reqs as $download_id ) {
+					if ( $download_id == $item['id'] ) {
+
+						$discounted_price = edd_get_discounted_amount( $discount, $price );
+
+					}
+				}
+
+			} else {
+
+				// This is a global cart discount
+				$discounted_price = edd_get_discounted_amount( $discount, $price );
+	
+			}
+		}
+
+		$amount = round( $price - $discounted_price, 2 );
+	}
+
+	return $amount;
+
+}
 
 function edd_get_cart_item_final_price( $item_key = 0 ) {
 
