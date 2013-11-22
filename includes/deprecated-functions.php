@@ -179,6 +179,21 @@ function edd_local_tax_opted_in() {
 	return ! empty( $opted_in );
 }
 
+
+/**
+ * Checks whether the user has enabled display of taxes on the checkout
+ *
+ * @since 1.5
+ * @deprecated 1.9
+ * @global $edd_options
+ * @return bool $include_tax
+ */
+function edd_prices_show_tax_on_checkout() {
+	global $edd_options;
+
+	return isset( $edd_options['checkout_include_tax'] ) && $edd_options['checkout_include_tax'] == 'yes';
+}
+
 /**
  * Show Has Purchased Item Message
  *

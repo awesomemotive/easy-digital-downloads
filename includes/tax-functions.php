@@ -151,6 +151,8 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 function edd_calculate_tax( $amount, $sum = true, $country = false, $state = false ) {
 	global $edd_options;
 
+	// TODO - rewrite this and get rid of $sum
+
 	// Not using taxes
 	if ( ! edd_use_taxes() ) {
 		return $amount;
@@ -227,19 +229,6 @@ function edd_get_sales_tax_for_year( $year = null ) {
 	return apply_filters( 'edd_get_sales_tax_for_year', $tax, $year );
 }
 
-
-/**
- * Checks whether the user has enabled display of taxes on the checkout
- *
- * @since 1.5
- * @global $edd_options
- * @return bool $include_tax
- */
-function edd_prices_show_tax_on_checkout() {
-	global $edd_options;
-
-	return isset( $edd_options['checkout_include_tax'] ) && $edd_options['checkout_include_tax'] == 'yes';
-}
 
 /**
  * Check if the individual product prices include tax
