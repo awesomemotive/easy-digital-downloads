@@ -153,14 +153,13 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
 	global $edd_options;
 
-	// TODO - this should return the taxed amount, not the new amount with tax
+	$rate = edd_get_tax_rate( $country, $state );
+	$tax  = 0.00;
 
 	// Not using taxes
 	if ( ! edd_use_taxes() ) {
-		return $amount;
+		return $tax;
 	}
-	$rate = edd_get_tax_rate( $country, $state );
-	$tax  = 0.00;
 
 	if ( edd_prices_include_tax() ) {
 		$pre_tax = ( $amount / ( 1 + $rate ) );
@@ -234,7 +233,9 @@ function edd_prices_include_tax() {
 
 	// TODO rewrite this. Should never check for "yes", just isset()
 
-	return isset( $edd_options['prices_include_tax'] ) && $edd_options['prices_include_tax'] == 'yes';
+	$ret = isset( $edd_options['prices_include_tax'] ) && $edd_options['prices_include_tax'] == 'yes' && edd_use_taxes();
+
+	return apply_filters( 'edd_prices_include_tax', $ret );
 }
 
 /**
