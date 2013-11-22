@@ -574,6 +574,7 @@ function edd_get_total_earnings() {
  * Increase the Total Earnings
  *
  * @since 1.8.4
+ * @param $amount int The amount you would like to increase the total earnings by.
  * @return float $total Total earnings
  */
 function edd_increase_total_earnings( $amount = 0 ) {
@@ -587,6 +588,7 @@ function edd_increase_total_earnings( $amount = 0 ) {
  * Decrease the Total Earnings
  *
  * @since 1.8.4
+ * @param $amount int The amount you would like to decrease the total earnings by.
  * @return float $total Total earnings
  */
 function edd_decrease_total_earnings( $amount = 0 ) {
@@ -706,7 +708,6 @@ function edd_get_payment_user_email( $payment_id ) {
 	return apply_filters( 'edd_payment_user_email', $email );
 }
 
-
 /**
  * Get the user ID associated with a payment
  *
@@ -718,6 +719,18 @@ function edd_get_payment_user_id( $payment_id ) {
 	$user_id = get_post_meta( $payment_id, '_edd_payment_user_id', true );
 
 	return apply_filters( 'edd_payment_user_id', $user_id );
+}
+
+/**
+ * Get the IP address used to make a purchase
+ *
+ * @since 1.9
+ * @param int $payment_id Payment ID
+ * @return string $ip User IP
+ */
+function edd_get_payment_user_ip( $payment_id ) {
+	$ip = get_post_meta( $payment_id, '_edd_payment_user_ip', true );
+	return apply_filters( 'edd_payment_user_ip', $ip );
 }
 
 /**

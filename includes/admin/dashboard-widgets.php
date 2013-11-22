@@ -90,7 +90,6 @@ function edd_dashboard_sales_widget() {
 		<?php
 		$p_query = new EDD_Payments_Query( array(
 			'number'   => 5,
-			'mode'     => 'live',
 			'status'   => 'publish'
 		) );
 

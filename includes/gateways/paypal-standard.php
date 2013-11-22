@@ -179,6 +179,9 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		// Build query
 		$paypal_redirect .= http_build_query( $paypal_args );
 
+		// Fix for some sites that encode the entities
+		$paypal_redirect = str_replace( '&amp;', '&', $paypal_redirect );
+
 		// Get rid of cart contents
 		edd_empty_cart();
 

@@ -42,13 +42,12 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Default query arguments.
 	 *
-	 * Not all of these are valid arguments that can be passed to WP_Query.
-	 * The ones that are not, are modified before the query is run to convert
-	 * them to the proper syntax.
+	 * Not all of these are valid arguments that can be passed to WP_Query. The ones that are not, are modified before
+	 * the query is run to convert them to the proper syntax.
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @return void
+	 * @param $args array The array of arguments that can be passed in and used for setting up this payment query.
 	 */
 	public function __construct( $args = array() ) {
 		$defaults = array(
@@ -83,7 +82,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @return void
 	 */
 	public function __set( $query_var, $value ) {
 		if ( in_array( $query_var, array( 'meta_query', 'tax_query' ) ) )
@@ -97,7 +95,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @return void
 	 */
 	public function __unset( $query_var ) {
 		unset( $this->args[ $query_var ] );
@@ -373,9 +370,8 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return void
 	 */
 	public function mode() {
-		if ( $this->args[ 'mode' ] == 'all' ) {
+		if ( $this->args[ 'mode' ] == 'all' || empty( $this->args[ 'mode' ] ) ) {
 			$this->__unset( 'mode' );
-
 			return;
 		}
 
