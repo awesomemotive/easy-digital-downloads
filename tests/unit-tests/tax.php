@@ -5,8 +5,81 @@ namespace EDD_Unit_Tests;
  * @group edd_tax
  */
 class Tests_Taxes extends EDD_UnitTestCase {
+
+	protected $_payment_id = null;
+
+	protected $_post = null;
+
 	public function setUp() {
 		parent::setUp();
+
+		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
+
+		$meta = array(
+			'edd_price' => '10.00',
+		);
+		foreach( $meta as $key => $value ) {
+			update_post_meta( $post_id, $key, $value );
+		}
+
+		$this->_post = get_post( $post_id );
+
+		/** Generate some sales */
+		$user = get_userdata(1);
+
+		$user_info = array(
+			'id' => $user->ID,
+			'email' => $user->user_email,
+			'first_name' => $user->first_name,
+			'last_name' => $user->last_name,
+			'discount' => 'none'
+		);
+
+		$download_details = array(
+			array(
+				'id' => $this->_post->ID,
+				'options' => array(
+					'price_id' => 1
+				)
+			)
+		);
+
+		$total += $item_price;
+
+		$cart_details = array(
+			array(
+				'name' => 'Test Download',
+				'id' => $this->_post->ID,
+				'item_number' => array(
+					'id' => $this->_post->ID,
+					'options' => array()
+				),
+				'subtotal' => '10',
+				'discount' => '0',
+				'tax'      => '0.36'
+				'price'    => '10.36',
+				'quantity' => 1
+			)
+		);
+
+		$purchase_data = array(
+			'price' => '10.36',
+			'date' => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
+			'purchase_key' => strtolower( md5( uniqid() ) ),
+			'user_email' => $user_info['email'],
+			'user_info' => $user_info,
+			'currency' => 'USD',
+			'downloads' => $download_details,
+			'cart_details' => $cart_details,
+			'status' => 'complete'
+		);
+
+		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
+		$_SERVER['SERVER_NAME'] = 'edd_virtual';
+
+		$payment_id = edd_insert_payment( $purchase_data );
+
+		$this->_payment_id = $payment_id;
 	}
 
 	public function tearDown() {
@@ -80,19 +153,11 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		$this->assertEquals( '1.944', edd_calculate_tax( 54 ) );
 	}
 
-	public function test_sales_tax_for_year() {
-		$o = ob_start();
-		edd_sales_tax_for_year( 2013 );
-		$o = ob_get_clean();
-
-		$this->assertEquals( '&#36;0.00', $o );
-	}
-
 	public function test_get_sales_tax_for_year() {
 
 		// This needs to test with a payment created
 
-		$this->assertEquals( 0, edd_get_sales_tax_for_year( 2013 ) );
+		$this->assertEquals( 0, edd_get_sales_tax_for_year( date( 'Y' ) ) );
 	}
 
 	public function test_prices_show_tax_on_checkout() {
