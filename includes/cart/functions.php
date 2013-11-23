@@ -34,7 +34,7 @@ function edd_get_cart_contents() {
 function edd_get_cart_content_details() {
 
 	$cart_items = edd_get_cart_contents();
-	
+
 	if ( empty( $cart_items ) ) {
 		return false;
 	}
@@ -44,7 +44,7 @@ function edd_get_cart_content_details() {
 	foreach( $cart_items as $key => $item ) {
 
 		$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
-		$discount   = edd_get_cart_item_discount_amount( $item );		
+		$discount   = edd_get_cart_item_discount_amount( $item );
 		$tax        = edd_get_cart_item_tax( $item );
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
 
@@ -381,10 +381,10 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 
 	$amount = 0;
 	$price  = edd_get_cart_item_price( $item['id'], $item['options'] );
-		
+
 	// Retrieve all discounts applied to the cart
 	$discounts = edd_get_cart_discounts();
-	
+
 	if( $discounts ) {
 		foreach ( $discounts as $discount ) {
 
@@ -393,7 +393,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 
 			// Make sure requirements are set and that this discount shouldn't apply to the whole cart
 			if ( ! empty( $reqs ) && edd_is_discount_not_global( $code_id ) ) {
-				
+
 				// This is a product(s) specific discount
 
 				foreach ( $reqs as $download_id ) {
@@ -408,7 +408,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 
 				// This is a global cart discount
 				$discounted_price = edd_get_discounted_amount( $discount, $price );
-	
+
 			}
 		}
 
@@ -442,7 +442,7 @@ function edd_get_cart_item_final_price( $item_key = 0 ) {
  * @return float Tax amount
  */
 function edd_get_cart_item_tax( $item = array() ) {
-	
+
 	$tax   = 0;
 	$price = false;
 

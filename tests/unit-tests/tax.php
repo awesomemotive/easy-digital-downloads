@@ -15,10 +15,11 @@ class Tests_Taxes extends EDD_UnitTestCase {
 
 	public function test_use_taxes() {
 		$this->assertFalse( edd_use_taxes() );
-	}
-
-	public function test_taxes_on_prices() {
-		$this->assertFalse( edd_taxes_on_prices() );
+		$options = array();
+		$options['edd_use_taxes'] = '1';
+		$edd_options = array_merge( $options, $edd_options );
+		update_option( 'edd_options', $edd_options );
+		$this->assertTrue( edd_use_taxes() );
 	}
 
 	public function test_taxes_after_discounts() {
@@ -61,10 +62,22 @@ class Tests_Taxes extends EDD_UnitTestCase {
 
 		$this->assertInternalType( 'float', edd_get_tax_rate( 'CA', 'AB' ) );
 		$this->assertEquals( '0.036', edd_get_tax_rate( 'CA', 'AB' ) );
+
+		$this->assertInternalType( 'float', edd_get_tax_rate() );
+		$this->assertEquals( '0.036', edd_get_tax_rate() );
 	}
 
 	public function test_calculate_tax() {
+		global $edd_options;
+
+		// Calculate with taxes disabled
 		$this->assertEquals( 54, edd_calculate_tax( 54 ) );
+
+		// Enable taxes
+		$edd_options['edd_use_taxes'] = '1';
+
+		// Calculate with taxes enabled
+		$this->assertEquals( '1.944', edd_calculate_tax( 54 ) );
 	}
 
 	public function test_sales_tax_for_year() {
@@ -76,6 +89,9 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_get_sales_tax_for_year() {
+
+		// This needs to test with a payment created
+
 		$this->assertEquals( 0, edd_get_sales_tax_for_year( 2013 ) );
 	}
 
@@ -88,6 +104,25 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_is_cart_taxed() {
+		global $edd_options;
+
 		$this->assertFalse( edd_is_cart_taxed() );
+
+		$edd_options['edd_use_taxes'] = '1';
+
+		$this->assertTrue( edd_is_cart_taxed() );
+
+	}
+
+	public function test_display_tax_rates() {
+		global $edd_options;
+
+		$this->assertFalse( edd_display_tax_rate() );
+
+		$edd_options['edd_use_taxes'] = '1';
+		$edd_options['display_tax_rate'] = '1';
+
+		$this->assertTrue( edd_is_cart_taxed() );
+
 	}
 }
