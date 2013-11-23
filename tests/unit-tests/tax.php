@@ -144,7 +144,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		global $edd_options;
 
 		// Calculate with taxes disabled
-		$this->assertEquals( 54, edd_calculate_tax( 54 ) );
+		$this->assertEquals( 0.0, edd_calculate_tax( 54 ) );
 
 		// Enable taxes
 		$edd_options['edd_use_taxes'] = '1';
