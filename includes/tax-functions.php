@@ -128,6 +128,14 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 	return apply_filters( 'edd_tax_rate', $rate, $country, $state );
 }
 
+/**
+ * Retrieve a fully formatted tax rate
+ *
+ * @since 1.9
+ * @param string $country The country to retrieve a rate for
+ * @param string $state The state to retrieve a rate for
+ * @return string Formatted rate
+ */
 function edd_get_formatted_tax_rate( $country = false, $state = false ) {
 	$rate = edd_get_tax_rate( $country, $state );
 	$rate = round( $rate * 100, 4 );
