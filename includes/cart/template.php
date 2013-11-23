@@ -19,7 +19,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_checkout_cart() {
-	echo '<pre>'; print_r( edd_get_cart_content_details() ); echo '</pre>';
+	//echo '<pre>'; print_r( edd_get_cart_content_details() ); echo '</pre>';
 	do_action( 'edd_before_checkout_cart' );
 	echo '<!--dynamic-cached-content-->';
 	echo '<form id="edd_checkout_cart_form" method="post">';

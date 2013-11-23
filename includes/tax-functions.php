@@ -45,19 +45,6 @@ function edd_taxes_after_discounts() {
 }
 
 /**
- * Checks whether the user has enabled display of taxes on the checkout
- *
- * @since 1.5
- * @global $edd_options
- * @return bool $include_tax
- */
-function edd_prices_show_tax_on_checkout() {
-	global $edd_options;
-	$ret = isset( $edd_options['checkout_include_tax'] ) && $edd_options['checkout_include_tax'] == 'yes' && edd_use_taxes();
-	return apply_filters( 'edd_taxes_on_prices', isset( $edd_options['taxes_on_prices'] ) );
-}
-
-/**
  * Retrieve tax rates
  *
  * @since 1.6
@@ -141,6 +128,13 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 	return apply_filters( 'edd_tax_rate', $rate, $country, $state );
 }
 
+function edd_get_formatted_tax_rate( $country = false, $state = false ) {
+	$rate = edd_get_tax_rate( $country, $state );
+	$rate = round( $rate * 100, 4 );
+	$formatted = $rate .= '%';
+	return apply_filters( 'edd_formatted_tax_rate', $formatted, $rate, $country, $state );
+}
+
 /**
  * Calculate the taxed amount
  *
@@ -220,6 +214,17 @@ function edd_get_sales_tax_for_year( $year = null ) {
 	return apply_filters( 'edd_get_sales_tax_for_year', $tax, $year );
 }
 
+/**
+ * Is the cart taxed?
+ *
+ * This used to include a check for local tax opt-in, but that was ripped out in v1.6, so this is just a wrapper now
+ *
+ * @since 1.5
+ * @return bool
+ */
+function edd_is_cart_taxed() {
+	return edd_use_taxes();
+}
 
 /**
  * Check if the individual product prices include tax
@@ -231,23 +236,22 @@ function edd_get_sales_tax_for_year( $year = null ) {
 function edd_prices_include_tax() {
 	global $edd_options;
 
-	// TODO rewrite this. Should never check for "yes", just isset()
-
 	$ret = isset( $edd_options['prices_include_tax'] ) && $edd_options['prices_include_tax'] == 'yes' && edd_use_taxes();
 
 	return apply_filters( 'edd_prices_include_tax', $ret );
 }
 
 /**
- * Is the cart taxed?
- *
- * This used to include a check for local tax opt-in, but that was ripped out in v1.6, so this is just a wrapper now
+ * Checks whether the user has enabled display of taxes on the checkout
  *
  * @since 1.5
- * @return bool
+ * @global $edd_options
+ * @return bool $include_tax
  */
-function edd_is_cart_taxed() {
-	return edd_use_taxes();
+function edd_prices_show_tax_on_checkout() {
+	global $edd_options;
+	$ret = isset( $edd_options['checkout_include_tax'] ) && $edd_options['checkout_include_tax'] == 'yes' && edd_use_taxes();
+	return apply_filters( 'edd_taxes_on_prices_on_checkout', $ret );
 }
 
 /**

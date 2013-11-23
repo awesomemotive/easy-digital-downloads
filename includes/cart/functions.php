@@ -311,12 +311,20 @@ function edd_get_cart_item_quantity( $download_id = 0, $options = array() ) {
 function edd_cart_item_price( $item_id = 0, $options = array() ) {
 	global $edd_options;
 
-	$price = edd_get_cart_item_price( $item_id, $options );
-	$label = '';
+	$tax_on_prices = edd_prices_show_tax_on_checkout();
 
-	// Todo - Show tax labels here (if needed)
-
+	$price = edd_get_cart_item_price( $item_id, $options, $tax_on_prices );
 	$price = edd_currency_filter( edd_format_amount( $price ) );
+	$label = '';
+	if( edd_display_tax_rate() ) {
+		$label = '&nbsp;&ndash;&nbsp;';
+		if( $tax_on_prices ) {
+			$label .= sprintf( __( 'includes %s tax', 'edd' ), edd_get_formatted_tax_rate() );
+		} else {
+			$label .= sprintf( __( 'excludes %s tax', 'edd' ), edd_get_formatted_tax_rate() );
+		}
+
+	}
 
 	return esc_html( $price . $label );
 }
@@ -334,7 +342,7 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  * @param array $options Optional parameters, used for defining variable prices
  * @return mixed|void Price for this item
  */
-function edd_get_cart_item_price( $download_id = 0, $options = array(), $deprecated = false ) {
+function edd_get_cart_item_price( $download_id = 0, $options = array(), $include_taxes = false ) {
 	global $edd_options;
 
 	$price = false;
@@ -351,7 +359,7 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $depreca
 		$price = edd_get_download_price( $download_id );
 	}
 
-	if( edd_prices_include_tax() && ! edd_download_is_tax_exclusive( $download_id ) ) {
+	if( edd_prices_include_tax() && ! edd_download_is_tax_exclusive( $download_id ) && ! $include_taxes ) {
 		// If price is entered with tax, we have to deduct the taxed amount from the price to determine the actual price
 		$price -= edd_calculate_tax( $price );
 	}
