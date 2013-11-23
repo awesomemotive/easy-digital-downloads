@@ -190,4 +190,9 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		$this->assertTrue( edd_is_cart_taxed() );
 
 	}
+
+	public function test_download_is_exclusive_of_tax() {
+		$this->assertFalse( edd_download_is_tax_exclusive( $this->_post->ID ) );
+	}
+
 }
