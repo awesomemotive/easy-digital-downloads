@@ -174,7 +174,7 @@ class EDD_API {
 
 		$this->override = false;
 
-        // Make sure we have both user and api key
+		// Make sure we have both user and api key
 		if ( ! empty( $wp_query->query_vars['edd-api'] ) && ( $wp_query->query_vars['edd-api'] != 'products' || ! empty( $wp_query->query_vars['token'] ) ) ) {
 			if ( empty( $wp_query->query_vars['token'] ) || empty( $wp_query->query_vars['key'] ) )
 				$this->missing_auth();
@@ -308,12 +308,12 @@ class EDD_API {
 			case 'stats' :
 
 				$data = $this->get_stats( array(
-					'type'      => isset( $wp_query->query_vars['type'] )      ? $wp_query->query_vars['type']      : null,
-					'product'   => isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null,
-					'date'      => isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null,
-					'startdate' => isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null,
-					'enddate'   => isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null
-				) );
+						'type'      => isset( $wp_query->query_vars['type'] )      ? $wp_query->query_vars['type']      : null,
+						'product'   => isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null,
+						'date'      => isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null,
+						'startdate' => isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null,
+						'enddate'   => isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null
+					) );
 
 				break;
 
@@ -372,12 +372,12 @@ class EDD_API {
 
 		// Whitelist our query options
 		$accepted = apply_filters( 'edd_api_valid_query_modes', array(
-			'stats',
-			'products',
-			'customers',
-			'sales',
-			'discounts'
-		) );
+				'stats',
+				'products',
+				'customers',
+				'sales',
+				'discounts'
+			) );
 
 		$query = isset( $wp_query->query_vars['edd-api'] ) ? $wp_query->query_vars['edd-api'] : null;
 
@@ -450,7 +450,7 @@ class EDD_API {
 	 * @since 1.5.1
 	 * @param array $args Arguments to override defaults
 	 * @return array $dates
-	*/
+	 */
 	public function get_dates( $args = array() ) {
 		$dates = array();
 
@@ -484,21 +484,21 @@ class EDD_API {
 					$dates['m_start'] 	= date( 'n' );
 					$dates['m_end']		= date( 'n' );
 					$dates['year']		= date( 'Y' );
-				break;
+					break;
 
 				case 'last_month' :
 					$dates['day'] 	  = null;
 					$dates['m_start'] = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
 					$dates['m_end']	  = $dates['m_start'];
 					$dates['year']    = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
-				break;
+					break;
 
 				case 'today' :
 					$dates['day']		= date( 'd' );
 					$dates['m_start'] 	= date( 'n' );
 					$dates['m_end']		= date( 'n' );
 					$dates['year']		= date( 'Y' );
-				break;
+					break;
 
 				case 'yesterday' :
 					$month              = date( 'n' ) == 1 ? 12 : date( 'n' );
@@ -508,7 +508,7 @@ class EDD_API {
 					$dates['m_start'] 	= $month;
 					$dates['m_end'] 	= $month;
 					$dates['year']		= $month == 1 && date( 'd' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
-				break;
+					break;
 
 				case 'this_quarter' :
 					$month_now = date( 'n' );
@@ -540,7 +540,7 @@ class EDD_API {
 						$dates['year']		= date( 'Y' );
 
 					}
-				break;
+					break;
 
 				case 'last_quarter' :
 					$month_now = date( 'n' );
@@ -572,21 +572,21 @@ class EDD_API {
 						$dates['year']		= date( 'Y' );
 
 					}
-				break;
+					break;
 
 				case 'this_year' :
 					$dates['day'] 	    = null;
 					$dates['m_start'] 	= null;
 					$dates['m_end']		= null;
 					$dates['year']		= date( 'Y' );
-				break;
+					break;
 
 				case 'last_year' :
 					$dates['day'] 	    = null;
 					$dates['m_start'] 	= null;
 					$dates['m_end']		= null;
 					$dates['year']		= date( 'Y' ) - 1;
-				break;
+					break;
 
 			endswitch;
 		}
@@ -706,6 +706,8 @@ class EDD_API {
 					$products['products'][$i]['info']['link']                         = html_entity_decode( $product_info->guid );
 					$products['products'][$i]['info']['content']                      = $product_info->post_content;
 					$products['products'][$i]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
+					$products['products'][$i]['info']['category']                     = get_the_terms($product_info, 'download_category');
+					$products['products'][$i]['info']['tags']                         = get_the_terms($product_info, 'download_tag');
 
 					if( user_can( $this->user_id, 'view_shop_reports' ) || $this->override) {
 						$products['products'][$i]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
@@ -745,6 +747,8 @@ class EDD_API {
 				$products['products'][0]['info']['link']                         = html_entity_decode( $product_info->guid );
 				$products['products'][0]['info']['content']                      = $product_info->post_content;
 				$products['products'][0]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
+				$products['products'][0]['info']['category']                     = get_the_terms($product_info, 'download_category');
+				$products['products'][0]['info']['tags']                         = get_the_terms($product_info, 'download_tag');
 
 				if( user_can( $this->user_id, 'view_shop_reports' ) || $this->override ) {
 					$products['products'][0]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
@@ -875,7 +879,7 @@ class EDD_API {
 					$sales['totals'] = $total;
 				} else {
 					if( $args['date'] == 'this_quarter' || $args['date'] == 'last_quarter'  ) {
-   						$sales_count = 0;
+						$sales_count = 0;
 
 						// Loop through the months
 						$month = $dates['m_start'];
@@ -886,9 +890,9 @@ class EDD_API {
 						endwhile;
 
 						$sales['sales'][ $args['date'] ] = $sales_count;
-   					} else {
+					} else {
 						$sales['sales'][ $args['date'] ] = edd_get_sales_by_date( $dates['day'], $dates['m_start'], $dates['year'] );
-   					}
+					}
 				}
 			} elseif ( $args['product'] == 'all' ) {
 				$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
@@ -976,7 +980,7 @@ class EDD_API {
 					$earnings['totals'] = $total;
 				} else {
 					if ( $args['date'] == 'this_quarter' || $args['date'] == 'last_quarter'  ) {
-   						$earnings_count = (float) 0.00;
+						$earnings_count = (float) 0.00;
 
 						// Loop through the months
 						$month = $dates['m_start'];
@@ -987,9 +991,9 @@ class EDD_API {
 						endwhile;
 
 						$earnings['earnings'][ $args['date'] ] = $earnings_count;
-   					} else {
+					} else {
 						$earnings['earnings'][ $args['date'] ] = edd_get_earnings_by_date( $dates['day'], $dates['m_start'], $dates['year'] );
-   					}
+					}
 				}
 			} elseif ( $args['product'] == 'all' ) {
 				$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
@@ -1305,8 +1309,8 @@ class EDD_API {
 						</th>
 						<td>
 							<?php if ( empty( $user->edd_user_public_key ) ) { ?>
-							<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
-							<span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
+								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
+								<span class="description"><?php _e( 'Generate API Key', 'edd' ); ?></span>
 							<?php } else { ?>
 								<strong><?php _e( 'Public key:', 'edd' ); ?>&nbsp;</strong><span id="publickey"><?php echo $user->edd_user_public_key; ?></span><br/>
 								<strong><?php _e( 'Secret key:', 'edd' ); ?>&nbsp;</strong><span id="privatekey"><?php echo $user->edd_user_secret_key; ?></span><br/>
