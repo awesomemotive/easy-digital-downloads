@@ -569,7 +569,7 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 		return -1;
 
 	// Allow themes and plugins to hook
-	do_action( 'edd_insert_user', $user_id );
+	do_action( 'edd_insert_user', $user_id, $user_data );
 
 	// Login new user
 	edd_log_user_in( $user_id, $user_data['user_login'], $user_data['user_pass'] );
