@@ -280,6 +280,29 @@ function edd_purchase_form_required_fields() {
 			'error_message' => __( 'Please enter your first name', 'edd' )
 		)
 	);
+
+	// Let payment gateways and other extensions determine if address fields should be required
+	$require_address = apply_filters( 'edd_require_billing_address', edd_use_taxes() );
+
+	if( $require_address ) {
+		$required_fields['card_zip'] = array(
+			'error_id' => 'invalid_zip_code',
+			'error_message' => __( 'Please enter your zip / postal code', 'edd' )
+		);
+		$required_fields['card_city'] = array(
+			'error_id' => 'invalid_city',
+			'error_message' => __( 'Please enter your billing city', 'edd' )
+		);
+		$required_fields['billing_country'] = array(
+			'error_id' => 'invalid_country',
+			'error_message' => __( 'Please select your billing country', 'edd' )
+		);
+		$required_fields['card_state'] = array(
+			'error_id' => 'invalid_state',
+			'error_message' => __( 'Please enter billing state / province', 'edd' )
+		);
+	}
+
 	return apply_filters( 'edd_purchase_form_required_fields', $required_fields );
 }
 
@@ -669,8 +692,9 @@ function edd_purchase_form_validate_cc() {
 
 	// Validate the card zip
 	if ( ! empty( $card_data['card_zip'] ) ) {
-		if ( ! edd_purchase_form_validate_cc_zip( $card_data['card_zip'], $card_data['card_country'] ) )
+		if ( ! edd_purchase_form_validate_cc_zip( $card_data['card_zip'], $card_data['card_country'] ) ) {
 			edd_set_error( 'invalid_cc_zip', __( 'The zip code you entered for your credit card is invalid', 'edd' ) );
+		}
 	}
 
 	// This should validate card numbers at some point too
