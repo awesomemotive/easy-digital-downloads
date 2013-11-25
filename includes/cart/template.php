@@ -209,7 +209,7 @@ add_action( 'edd_cart_empty', 'edd_empty_cart_restore_cart_link' );
 function edd_update_cart_button() {
 	global $edd_options;
 
-	if ( ! edd_item_quanities_enabled() )
+	if ( ! edd_item_quantities_enabled() )
 		return;
 
 	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
@@ -220,7 +220,7 @@ function edd_update_cart_button() {
 <?php
 
 }
-if( edd_item_quanities_enabled() ) {
+if( edd_item_quantities_enabled() ) {
 	add_action( 'edd_cart_footer_buttons', 'edd_update_cart_button' );
 }
 
