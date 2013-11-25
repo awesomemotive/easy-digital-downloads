@@ -197,7 +197,7 @@ $payment_date = strtotime( $item->post_date );
 													}
 													?>
 												</td>
-												<?php if( edd_item_quanities_enabled() ) : ?>
+												<?php if( edd_item_quantities_enabled() ) : ?>
 												<td class="quantity column-quantity">
 													<?php echo __( 'Quantity:', 'edd' ) . '&nbsp;' . $cart_item['quantity']; ?>
 												</td>
