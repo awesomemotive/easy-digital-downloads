@@ -12,6 +12,20 @@
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
+
+/**
+ * Get an option
+ *
+ * Looks to see if the specified setting exists, returns default if not
+ *
+ * @since 1.8.4
+ * @return mixed
+ */
+function edd_get_option( $key = '', $default = false ) {
+	global $edd_options;
+	return isset( $edd_options[ $key ] ) ? $edd_options[ $key ] : $default;
+}
+
 /**
  * Get Settings
  *

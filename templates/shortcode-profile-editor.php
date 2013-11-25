@@ -24,7 +24,7 @@ if ( is_user_logged_in() ):
 
 	<form id="edd_profile_editor_form" class="edd_form" action="<?php echo edd_get_current_page_url(); ?>" method="post">
 		<fieldset>
-			<span><legend><?php _e( 'Change your Name', 'edd' ); ?></legend></span>
+			<span id="edd_profile_name_label"><legend><?php _e( 'Change your Name', 'edd' ); ?></legend></span>
 			<p id="edd_profile_name_wrap">
 				<label for="edd_first_name"><?php _e( 'First Name', 'edd' ); ?></label>
 				<input name="edd_first_name" id="edd_first_name" class="text edd-input" type="text" value="<?php echo $first_name; ?>" />
@@ -52,7 +52,7 @@ if ( is_user_logged_in() ):
 				<label for="edd_email"><?php _e( 'Email Address', 'edd' ); ?></label>
 				<input name="edd_email" id="edd_email" class="text edd-input required" type="email" value="<?php echo $current_user->user_email; ?>" />
 			</p>
-			<span><legend><?php _e( 'Change your Billing Address', 'edd' ); ?></legend></span>
+			<span id="edd_profile_billing_address_label"><legend><?php _e( 'Change your Billing Address', 'edd' ); ?></legend></span>
 			<p id="edd_profile_billing_address_wrap">
 				<label for="edd_address_line1"><?php _e( 'Line 1', 'edd' ); ?></label>
 				<input name="edd_address_line1" id="edd_address_line1" class="text edd-input" type="text" value="<?php echo $address['line1']; ?>" />
@@ -76,7 +76,7 @@ if ( is_user_logged_in() ):
 				<input name="edd_address_state" id="edd_address_state" class="text edd-input" type="text" value="<?php echo $address['state']; ?>" />
 				<br/>
 			</p>
-			<span><legend><?php _e( 'Change your Password', 'edd' ); ?></legend></span>
+			<span id="edd_profile_password_label"><legend><?php _e( 'Change your Password', 'edd' ); ?></legend></span>
 			<p id="edd_profile_password_wrap">
 				<label for="edd_user_pass"><?php _e( 'New Password', 'edd' ); ?></label>
 				<input name="edd_new_user_pass1" id="edd_new_user_pass1" class="password edd-input" type="password"/>
