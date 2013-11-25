@@ -311,7 +311,7 @@ function edd_get_cart_item_quantity( $download_id = 0, $options = array() ) {
 function edd_cart_item_price( $item_id = 0, $options = array() ) {
 	global $edd_options;
 
-	$tax_on_prices = edd_prices_show_tax_on_checkout();
+	$tax_on_prices = edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax();
 
 	$price = edd_get_cart_item_price( $item_id, $options, $tax_on_prices );
 	$price = edd_currency_filter( edd_format_amount( $price ) );
