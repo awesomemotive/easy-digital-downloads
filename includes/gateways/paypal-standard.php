@@ -138,8 +138,6 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
         $paypal_args = apply_filters('edd_paypal_redirect_args', $paypal_args, $purchase_data );
 
-       // echo '<pre>'; print_r( $paypal_args ); echo '</pre>'; exit;
-
 		// Build query
 		$paypal_redirect .= http_build_query( $paypal_args );
 
