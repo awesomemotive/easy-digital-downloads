@@ -691,7 +691,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 	<td class="pricing"<?php echo $variable_display; ?>>
 		<?php 
 			$options = array();
-
+			$options['all'] = __( 'All', 'edd' );
 			if ( $prices ) {
 				foreach ( $prices as $price_key => $price ) {
 					$options[ $price_key ] = $prices[ $price_key ][ 'name' ];
@@ -699,10 +699,12 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 			}
 
 			echo EDD()->html->select( array(
-				'name'     => 'edd_download_files[' . $key . '][condition]',
-				'class'    => 'edd_repeatable_condition_field',
-				'options'  => $options,
-				'selected' => $condition
+				'name'             => 'edd_download_files[' . $key . '][condition]',
+				'class'            => 'edd_repeatable_condition_field',
+				'options'          => $options,
+				'selected'         => $condition,
+				'show_option_all'  => false,
+				'show_option_none' => false
 			) ); 
 		?>
 	</td>
