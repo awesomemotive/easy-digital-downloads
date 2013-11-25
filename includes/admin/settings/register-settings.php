@@ -23,7 +23,9 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_option( $key = '', $default = false ) {
 	global $edd_options;
-	return isset( $edd_options[ $key ] ) ? $edd_options[ $key ] : $default;
+	$value = isset( $edd_options[ $key ] ) ? $edd_options[ $key ] : $default;
+	$value = apply_filters( 'edd_get_option', $value, $key, $default );
+	return apply_filters( 'edd_get_option_' . $key, $value, $key, $default );
 }
 
 /**
