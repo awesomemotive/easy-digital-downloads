@@ -42,8 +42,11 @@ function edd_payment_history_page() {
 			<input type="hidden" name="post_type" value="download" />
 			<input type="hidden" name="page" value="edd-payment-history" />
 
+
 			<?php $payments_table->views() ?>
 
+			<?php $payments_table->advanced_filters(); ?>
+			
 			<?php $payments_table->display() ?>
 		</form>
 		<?php do_action( 'edd_payments_page_bottom' ); ?>
