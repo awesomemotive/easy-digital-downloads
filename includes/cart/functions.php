@@ -380,7 +380,7 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $include
 function edd_get_cart_item_discount_amount( $item = array() ) {
 
 	$amount = 0;
-	$price  = edd_get_cart_item_price( $item['id'], $item['options'] );
+	$price  = edd_get_cart_item_price( $item['id'], $item['options'], edd_prices_include_tax() );
 
 	// Retrieve all discounts applied to the cart
 	$discounts = edd_get_cart_discounts();
