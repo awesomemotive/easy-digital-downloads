@@ -568,6 +568,9 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 	if ( is_wp_error( $user_id ) )
 		return -1;
 
+	// Allow themes and plugins to filter the user data
+	$user_data = apply_filters( 'edd_insert_user_data', $user_data, $user_args );
+
 	// Allow themes and plugins to hook
 	do_action( 'edd_insert_user', $user_id, $user_data );
 
