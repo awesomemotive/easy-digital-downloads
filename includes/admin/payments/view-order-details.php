@@ -149,6 +149,7 @@ $payment_date = strtotime( $item->post_date );
 										<p class="data"><span><?php _e( 'User ID:', 'edd' ); ?></span> <?php echo $user_id; ?></p>
 									<?php endif; ?>
 									<p class="data"><span><?php _e( 'Email:', 'edd' ); ?></span> <a href="mailto:<?php echo $payment_meta['email']; ?>"><?php echo $payment_meta['email']; ?></a></p>
+									<p class="data"><span><?php _e( 'IP:', 'edd' ); ?></span> <?php echo edd_get_payment_user_ip( $payment_id ); ?></p>
 									<ul><?php do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info ); ?></ul>
 								</div>
 
