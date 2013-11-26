@@ -23,6 +23,36 @@
 
 /* Payment History Styles
 -------------------------------------------------------------- */
+#edd-payment-filters {
+	clear: both;	background: #f5f5f5;
+	background-image: -webkit-gradient(linear, left bottom, left top, from(#f5f5f5), to(#fafafa));
+	background-image: -webkit-linear-gradient(bottom, #f5f5f5, #fafafa);
+	background-image:    -moz-linear-gradient(bottom, #f5f5f5, #fafafa);
+	background-image:      -o-linear-gradient(bottom, #f5f5f5, #fafafa);
+	background-image: linear-gradient(to top, #f5f5f5, #fafafa);
+	border-color: #dfdfdf;
+	position: relative;
+	overflow: auto;
+	margin: 20px 0;
+	padding: 23px 10px 12px;
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 3px;
+	font-size: 13px;
+	line-height: 2.1em;
+}
+#edd-payment-filters p {
+	color: #777;
+}
+.edd-close-panel {
+	position: absolute;
+	top: 5px;
+	right: 10px;
+	padding: 8px 3px;
+	font-size: 13px;
+	text-decoration: none;
+	line-height: 1;
+}
 tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 .wp-list-table.downloads th#ID { width: 80px; }
 .wp-list-table.downloads th#details { width: 130px; }

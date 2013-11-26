@@ -267,7 +267,7 @@ jQuery(document).ready(function ($) {
 	//$('#edit-slug-box').remove();
 
 	// Date picker
-	if ($('.form-table .edd_datepicker').length > 0) {
+	if ($('.edd_datepicker').length > 0) {
 		var dateFormat = 'mm/dd/yy';
 		$('.edd_datepicker').datepicker({
 			dateFormat: dateFormat
