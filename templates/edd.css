@@ -102,15 +102,15 @@
 #edd_checkout_form_wrap label { font-weight: bold; display:block; position: relative; line-height: 100%; font-size: 95%; margin: 0 0 5px; }
 #edd_checkout_form_wrap label:after { display: block; visibility: hidden; float: none; clear: both; height: 0; text-indent: -9999px; content: "."; }
 #edd_checkout_form_wrap span.edd-description { color: #666; font-size: 80%; display: block; margin: 0 0 5px; }
-#edd_checkout_form_wrap input.edd-input { display:block; width: 80%; }
+#edd_checkout_form_wrap input.edd-input, #edd_checkout_form_wrap textarea.edd-input { display:block; width: 80%; }
 #edd_checkout_form_wrap select.edd-select { display:block; width: 60%; }
 #edd_checkout_form_wrap select.edd-select.edd-select-small { display:inline; width: auto; }
-#edd_checkout_form_wrap input.edd-input.error { border-color: #c4554e; }
+#edd_checkout_form_wrap input.edd-input.error, #edd_checkout_form_wrap textarea.edd-input.error { border-color: #c4554e; }
 #edd_checkout_form_wrap #edd_terms_agreement label,
 #edd_checkout_form_wrap #edd_tax_opt_in_fields label { display: inline-block;  width: auto; }
 #edd_checkout_form_wrap p { margin: 0 0 21px; }
 #edd_checkout_form_wrap span.edd-required-indicator { color: #b94a48; display: inline; }
-#edd_checkout_form_wrap input[type="text"], #edd_checkout_form_wrap input[type="email"], #edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; }
+#edd_checkout_form_wrap textarea, #edd_checkout_form_wrap input[type="text"], #edd_checkout_form_wrap input[type="email"], #edd_checkout_form_wrap input[type="password"] { padding: 4px 6px; }
 #edd_checkout_form_wrap input[type="radio"] { border: none; margin-right: 5px; }
 #edd_checkout_form_wrap input[type="checkbox"] { float: left; margin: 0 8px 0 0; }
 #edd_checkout_form_wrap .edd-payment-icons { height: 32px; display: block; margin: 0 0 8px; }
