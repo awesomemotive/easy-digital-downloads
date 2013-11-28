@@ -181,24 +181,21 @@ function edd_load_admin_scripts( $hook ) {
 	if ( is_object( $post ) && ! in_array( $post->post_type, $edd_cpt ) )
 		return;
 
-	if ( in_array( $hook, apply_filters( 'edd_load_scripts_for_reports', array( 'download_page_edd-reports' ) ) ) ) {
-		wp_enqueue_script( 'jquery-flot', $js_dir . 'jquery.flot' . $suffix . '.js' );
-	}
-	if ( in_array( $hook, apply_filters( 'edd_load_scripts_for_discounts', array( 'download_page_edd-discounts' ) ) ) ) {
-		wp_enqueue_script( 'jquery-ui-datepicker' );
-		$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
-		wp_enqueue_style( 'jquery-ui-css', $css_dir . 'jquery-ui-' . $ui_style . $suffix . '.css' );
-	}
 	if ( $hook == $edd_settings_page ) {
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
 		wp_enqueue_style( 'colorbox', $css_dir . 'colorbox' . $suffix . '.css', array(), '1.3.20' );
 		wp_enqueue_script( 'colorbox', $js_dir . 'jquery.colorbox-min.js', array( 'jquery' ), '1.3.20' );
 		if( function_exists( 'wp_enqueue_media' ) && version_compare( $wp_version, '3.5', '>=' ) ) {
-        	 //call for new media manager
-         	wp_enqueue_media();
-      }
+			//call for new media manager
+			wp_enqueue_media();
+		}
 	}
+
+	wp_enqueue_script( 'jquery-flot', $js_dir . 'jquery.flot' . $suffix . '.js' );
+	wp_enqueue_script( 'jquery-ui-datepicker' );
+	$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
+	wp_enqueue_style( 'jquery-ui-css', $css_dir . 'jquery-ui-' . $ui_style . $suffix . '.css' );
 	wp_enqueue_style( 'jquery-chosen', $css_dir . 'chosen' . $suffix . '.css', array(), EDD_VERSION );
 	wp_enqueue_script( 'jquery-chosen', $js_dir . 'chosen.jquery.min.js', array( 'jquery' ), EDD_VERSION );
 	wp_enqueue_script( 'media-upload' );
