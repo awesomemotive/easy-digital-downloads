@@ -139,7 +139,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$input_id = $input_id . '-search-input';
 
 		if ( ! empty( $_REQUEST['orderby'] ) )
-			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQU EST['orderby'] ) . '" />';
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
 		if ( ! empty( $_REQUEST['order'] ) )
 			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
 ?>
@@ -160,7 +160,12 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public function advanced_filters() {
 ?>
 	<div id="edd-payment-filters">
-
+		<a class="edd-close-panel" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>"><?php _e( 'Close', 'edd' ); ?></a>
+		<label for="start-date"><?php _e( 'Start Date:', 'edd' ); ?></label>
+		<input type="text" id="start-date" name="start-date" class="edd_datepicker" value=""/>
+		<label for="end-date"><?php _e( 'End Date:', 'edd' ); ?></label>
+		<input type="text" id="end-date" name="end-date" class="edd_datepicker" value=""/>
+		<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
 	</div>
 		
 <?php
@@ -462,18 +467,20 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$page = isset( $_GET['paged'] ) ? $_GET['paged'] : 1;
 
 		$per_page       = $this->per_page;
-		$mode           = edd_is_test_mode()            ? 'test'                            : 'live';
-		$orderby 		= isset( $_GET['orderby'] )     ? $_GET['orderby']                  : 'ID';
-		$order 			= isset( $_GET['order'] )       ? $_GET['order']                    : 'DESC';
-		$order_inverse 	= $order == 'DESC'              ? 'ASC'                             : 'DESC';
+		$mode           = edd_is_test_mode()            ? 'test'                                     : 'live';
+		$orderby 		= isset( $_GET['orderby'] )     ? $_GET['orderby']                           : 'ID';
+		$order 			= isset( $_GET['order'] )       ? $_GET['order']                             : 'DESC';
+		$order_inverse 	= $order == 'DESC'              ? 'ASC'                                      : 'DESC';
 		$order_class 	= strtolower( $order_inverse );
-		$user 			= isset( $_GET['user'] )        ? $_GET['user']                     : null;
-		$status 		= isset( $_GET['status'] )      ? $_GET['status']                   : 'any';
-		$meta_key		= isset( $_GET['meta_key'] )    ? $_GET['meta_key']                 : null;
-		$year 			= isset( $_GET['year'] )        ? $_GET['year']                     : null;
-		$month 			= isset( $_GET['m'] )           ? $_GET['m']                        : null;
-		$day 			= isset( $_GET['day'] )         ? $_GET['day']                      : null;
-		$search         = isset( $_GET['s'] )           ? sanitize_text_field( $_GET['s'] ) : null;
+		$user 			= isset( $_GET['user'] )        ? $_GET['user']                              : null;
+		$status 		= isset( $_GET['status'] )      ? $_GET['status']                            : 'any';
+		$meta_key		= isset( $_GET['meta_key'] )    ? $_GET['meta_key']                          : null;
+		$year 			= isset( $_GET['year'] )        ? $_GET['year']                              : null;
+		$month 			= isset( $_GET['m'] )           ? $_GET['m']                                 : null;
+		$day 			= isset( $_GET['day'] )         ? $_GET['day']                               : null;
+		$search         = isset( $_GET['s'] )           ? sanitize_text_field( $_GET['s'] )          : null;
+		$start_date     = isset( $_GET['start-date'] )  ? sanitize_text_field( $_GET['start-date'] ) : null;
+		$end_date       = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : null;
 
 		$args = array(
 			'output'   => 'payments',
@@ -488,7 +495,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'year'	   => $year,
 			'month'    => $month,
 			'day' 	   => $day,
-			's'        => $search
+			's'        => $search,
+			'start_date' => $start_date,
+			'end_date'   => $end_date,
 		);
 
 		$p_query  = new EDD_Payments_Query( $args );
