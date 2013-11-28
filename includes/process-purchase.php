@@ -163,7 +163,11 @@ function edd_purchase_form_validate_fields() {
 		$valid_data['need_user_login'] = true;
 
 		// Validate users login info
-		$valid_data['login_user_data'] = edd_purchase_form_validate_user_login();
+		if( has_filter( 'edd_validate_user_login' ) ) {
+			$valid_data['login_user_data'] = apply_filters( 'edd_validate_user_login', $valid_data['login_user_data'] );
+		} else {
+			$valid_data['login_user_data'] = edd_purchase_form_validate_user_login();
+		}
 	} else {
 		// Not registering or logging in, so setup guest user data
 		$valid_data['guest_user_data'] = edd_purchase_form_validate_guest_user();
