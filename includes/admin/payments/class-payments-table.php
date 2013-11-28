@@ -121,6 +121,29 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$this->base_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history' );
 	}
 
+	public function advanced_filters() {
+		$start_date = isset( $_GET['start-date'] )  ? sanitize_text_field( $_GET['start-date'] ) : null;
+		$end_date   = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : null;
+		$status     = isset( $_GET['status'] )      ? $_GET['status'] : '';
+?>
+		<div id="edd-payment-filters">
+			<label for="start-date"><?php _e( 'Start Date:', 'edd' ); ?></label>
+			<input type="text" id="start-date" name="start-date" class="edd_datepicker" value="<?php echo $start_date; ?>" placeholder="mm/dd/yyyy"/>
+			<label for="end-date"><?php _e( 'End Date:', 'edd' ); ?></label>
+			<input type="text" id="end-date" name="end-date" class="edd_datepicker" value="<?php echo $end_date; ?>" placeholder="mm/dd/yyyy"/>
+			<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
+			<?php if( ! empty( $status ) ) : ?>
+				<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
+			<?php endif; ?>
+			<?php if( ! empty( $start_date || ! empty( $end_date ) ) ) : ?>
+				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>" class="button-secondary"><?php _e( 'Clear Filter', 'edd' ); ?></a>
+			<?php endif; ?>
+			<?php $this->search_box( __( 'Search', 'edd' ), 'edd-payments' ); ?>
+		</div>	
+
+<?php
+	}
+
 	/**
 	 * Show the search field
 	 *
@@ -154,27 +177,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 				<input type="radio" name="edd_field" value="notes"/>Notes
 			</span>
 		</p>
-<?php
-	}
-
-	public function advanced_filters() {
-		$start_date = isset( $_GET['start-date'] )  ? sanitize_text_field( $_GET['start-date'] ) : null;
-		$end_date   = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : null;
-		$status     = isset( $_GET['status'] )      ? $_GET['status'] : '';
-?>
-		<div id="edd-payment-filters">
-			<label for="start-date"><?php _e( 'Start Date:', 'edd' ); ?></label>
-			<input type="text" id="start-date" name="start-date" class="edd_datepicker" value="<?php echo $start_date; ?>" placeholder="mm/dd/yyyy"/>
-			<label for="end-date"><?php _e( 'End Date:', 'edd' ); ?></label>
-			<input type="text" id="end-date" name="end-date" class="edd_datepicker" value="<?php echo $end_date; ?>" placeholder="mm/dd/yyyy"/>
-			<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
-			<?php if( ! empty( $status ) ) : ?>
-				<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
-			<?php endif; ?>
-			<?php if( ! empty( $start_date || ! empty( $end_date ) ) ) : ?>
-				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>" class="button-secondary"><?php _e( 'Clear Filter', 'edd' ); ?></a>
-			<?php endif; ?>
-		</div>	
 <?php
 	}
 
