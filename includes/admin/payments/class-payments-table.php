@@ -480,7 +480,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$day 			= isset( $_GET['day'] )         ? $_GET['day']                               : null;
 		$search         = isset( $_GET['s'] )           ? sanitize_text_field( $_GET['s'] )          : null;
 		$start_date     = isset( $_GET['start-date'] )  ? sanitize_text_field( $_GET['start-date'] ) : null;
-		$end_date       = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : null;
+		$end_date       = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
 
 		$args = array(
 			'output'   => 'payments',
