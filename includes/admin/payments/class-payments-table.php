@@ -159,15 +159,13 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 	public function advanced_filters() {
 ?>
-	<div id="edd-payment-filters">
-		<a class="edd-close-panel" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>"><?php _e( 'Close', 'edd' ); ?></a>
-		<label for="start-date"><?php _e( 'Start Date:', 'edd' ); ?></label>
-		<input type="text" id="start-date" name="start-date" class="edd_datepicker" value=""/>
-		<label for="end-date"><?php _e( 'End Date:', 'edd' ); ?></label>
-		<input type="text" id="end-date" name="end-date" class="edd_datepicker" value=""/>
-		<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
-	</div>
-		
+		<div id="edd-payment-filters">
+			<label for="start-date"><?php _e( 'Start Date:', 'edd' ); ?></label>
+			<input type="text" id="start-date" name="start-date" class="edd_datepicker" value="" placeholder="mm/dd/yyyy"/>
+			<label for="end-date"><?php _e( 'End Date:', 'edd' ); ?></label>
+			<input type="text" id="end-date" name="end-date" class="edd_datepicker" value="" placeholder="mm/dd/yyyy"/>
+			<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
+		</div>	
 <?php
 	}
 
