@@ -222,10 +222,13 @@ class EDD_Tracking {
 	public function admin_notice() {
 
 		global $edd_options;
-
+		delete_option( 'edd_tracking_notice' );
 		if( ! get_option( 'edd_tracking_notice' ) && ! isset( $edd_options['allow_tracking'] ) ) {
-
-			if( stristr( network_site_url( '/' ), 'dev' ) !== false && stristr( network_site_url( '/' ), 'localhost' ) !== false ) {
+			if( 
+				stristr( network_site_url( '/' ), 'dev'       ) !== false ||
+				stristr( network_site_url( '/' ), 'localhost' ) !== false ||
+				stristr( network_site_url( '/' ), ':8888'     ) !== false // This is common with MAMP on OS X
+			) {
 				update_option( 'edd_tracking_notice', '1' );
 			} else {
 				$optin_url  = add_query_arg( 'edd_action', 'opt_into_tracking' );
