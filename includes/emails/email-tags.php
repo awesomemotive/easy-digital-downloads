@@ -113,21 +113,21 @@ class EDD_Email_Template_Tags {
  * Functions
  */
 function edd_add_email_tag( $tag, $description, $func ) {
-	EDD_Email_Template_Tags::get()->add( $tag, $description, $func );
+	EDD()->email_tags->add( $tag, $description, $func );
 }
 
 function edd_remove_email_tag( $tag ) {
-	EDD_Email_Template_Tags::get()->remove( $tag );
+	EDD()->email_tags->remove( $tag );
 }
 
 function edd_email_tag_exists( $tag ) {
-	return EDD_Email_Template_Tags::get()->email_tag_exists( $tag );
+	EDD()->email_tags->email_tag_exists( $tag );
 }
 
 function edd_do_email_tags( $content, $payment_id ) {
 
 	// Replace all tags
-	$content = EDD_Email_Template_Tags::get()->do_tags( $content, $payment_id );
+	$content = EDD()->email_tags->do_tags( $content, $payment_id );
 
 	// Maintaining backwards compatibility
 	$content = apply_filters( 'edd_email_template_tags', $content, edd_get_payment_meta( $payment_id ), $payment_id );
