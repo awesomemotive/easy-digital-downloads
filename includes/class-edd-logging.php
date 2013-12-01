@@ -71,14 +71,6 @@ class EDD_Logging {
 	*/
 	public function register_taxonomy() {
 		register_taxonomy( 'edd_log_type', 'edd_log', array( 'public' => false ) );
-
-		$types = $this->log_types();
-
-		foreach ( $types as $type ) {
-			if ( ! term_exists( $type, 'edd_log_type' ) ) {
-				wp_insert_term( $type, 'edd_log_type' );
-			}
-		}
 	}
 
 	/**
