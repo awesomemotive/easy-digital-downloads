@@ -82,6 +82,7 @@ function edd_download_meta_box_save( $post_id) {
 			'_edd_purchase_color',
 			'_edd_bundled_products',
 			'_edd_hide_purchase_link',
+			'_edd_download_tax_exclusive',
 			'_edd_button_behavior',
 			'edd_product_notes'
 		)
@@ -748,6 +749,34 @@ function edd_render_download_limit_row( $post_id ) {
 }
 add_action( 'edd_meta_box_settings_fields', 'edd_render_download_limit_row', 20 );
 
+/**
+ * Product tax settings
+ *
+ * Outputs the option to mark whether a product is exclusive of tax
+ *
+ * @since 1.9
+ * @param int $post_id Download (Post) ID
+ * @return void
+ */
+function edd_render_dowwn_tax_options( $post_id = 0 ) {
+    global $edd_options;
+
+    if( ! current_user_can( 'manage_shop_settings' ) || ! edd_use_taxes() )
+        return;
+
+	$exclusive = edd_download_is_tax_exclusive( $post_id );
+?>
+	<p><strong><?php _e( 'Ignore Tax:', 'edd' ); ?></strong></p>
+	<label for="_edd_download_tax_exclusive">
+		<?php echo EDD()->html->checkbox( array(
+			'name'    => '_edd_download_tax_exclusive',
+			'current' => $exclusive
+		) ); ?>
+		<?php _e( 'Check this box if this product should be exclusive of tax', 'edd' ); ?>
+	</label>
+<?php
+}
+add_action( 'edd_meta_box_settings_fields', 'edd_render_dowwn_tax_options', 30 );
 
 /**
  * Render Accounting Options

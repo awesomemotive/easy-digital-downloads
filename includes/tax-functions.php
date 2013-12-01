@@ -302,7 +302,6 @@ function edd_cart_needs_tax_address_fields() {
  * @return bool
  */
 function edd_download_is_tax_exclusive( $download_id = 0 ) {
-	$ret = false;
-	// TODO this will have a checkbox in Download Settings
+	$ret = (bool) get_post_meta( $download_id, '_edd_download_tax_exclusive', true );
 	return apply_filters( 'edd_download_is_tax_exclusive', $ret, $download_id );
 }
