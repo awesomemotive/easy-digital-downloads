@@ -316,7 +316,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
     public function form( $instance ) {
         // Set up some default widget settings.
         $defaults = array(
-            'title' 			=> sprintf( __( 'About this %s', 'edd' ), strtolower( edd_get_label_singular() ) ),
+            'title' 			=> sprintf( __( '%s Details', 'edd' ), edd_get_label_singular() ),
             'download_id' 		=> 'current',
             'download_title' 	=> 'on',
             'purchase_button' 	=> 'on',
