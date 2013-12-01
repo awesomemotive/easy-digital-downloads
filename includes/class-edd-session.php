@@ -49,9 +49,7 @@ class EDD_Session {
 	 * Defines our WP_Session constants, includes the necessary libraries and
 	 * retrieves the WP Session instance
 	 *
-	 * @access public
 	 * @since 1.5
-	 * @return void
 	 */
 	public function __construct() {
 
@@ -69,7 +67,7 @@ class EDD_Session {
 			// Use WP_Session (default)
 
 			if ( ! defined( 'WP_SESSION_COOKIE' ) )
-				define( 'WP_SESSION_COOKIE', 'wordpress_wp_session' );
+				define( 'WP_SESSION_COOKIE', 'edd_wp_session' );
 
 			if ( ! class_exists( 'Recursive_ArrayAccess' ) )
 				require_once EDD_PLUGIN_DIR . 'includes/libraries/class-recursive-arrayaccess.php';
@@ -103,6 +101,15 @@ class EDD_Session {
 		else
 			$this->session = WP_Session::get_instance();
 
+		$cart     = $this->get( 'edd_cart' );
+		$purchase = $this->get( 'edd_purchase' );
+
+		if( ! empty( $cart ) || ! empty( $purchase ) ) {
+			$this->set_cart_cookie();
+		} else {
+			$this->set_cart_cookie( false );
+		}
+
 		return $this->session;
 	}
 
@@ -132,15 +139,14 @@ class EDD_Session {
 		return isset( $this->session[ $key ] ) ? maybe_unserialize( $this->session[ $key ] ) : false;
 	}
 
-
 	/**
 	 * Set a session variable
 	 *
-	 * @access public
 	 * @since 1.5
-	 * @param string $key Session key
-	 * @param string $variable Session variable
-	 * @return array Session variable
+	 *
+	 * @param $key Session key
+	 * @param $value Session variable
+	 * @return mixed Session variable
 	 */
 	public function set( $key, $value ) {
 		$key = sanitize_key( $key );
@@ -154,5 +160,25 @@ class EDD_Session {
 			$_SESSION['edd'] = $this->session;
 
 		return $this->session[ $key ];
+	}
+
+	/**
+	 * Set a cookie to identify whether the cart is empty or not
+	 *
+	 * This is for hosts and caching plugins to identify if caching should be disabled
+	 *
+	 * @access public
+	 * @since 1.8
+	 * @param string $set Whether to set or destroy
+	 * @return void
+	 */
+	public function set_cart_cookie( $set = true ) {
+		if( ! headers_sent() ) {
+			if( $set ) {
+				setcookie( 'edd_items_in_cart', '1', time() + 30 * 60, COOKIEPATH, COOKIE_DOMAIN, false );
+			} else {
+				setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, false );
+			}
+		}
 	}
 }

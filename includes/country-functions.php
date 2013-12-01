@@ -41,7 +41,9 @@ function edd_get_shop_state() {
  * Get Shop States
  *
  * @since 1.6
- * @return array $states A list of states for the shop's base country
+ *
+ * @param null $country
+ * @return mixed|void  A list of states for the shop's base country
  */
 function edd_get_shop_states( $country = null ) {
 	global $edd_options;
@@ -73,7 +75,7 @@ function edd_get_shop_states( $country = null ) {
 			$states = edd_get_hungary_states_list();
 			break;
 		case 'ID' :
-			$states = edd_get_indonesia_states_list();
+			$states = edd_get_indonesian_states_list();
 			break;
 		case 'IN' :
 			$states = edd_get_indian_states_list();
@@ -655,7 +657,7 @@ function edd_get_new_zealand_states_list() {
  * @return array $states A list of states
  */
 function edd_get_indonesian_states_list() {
-	$states = array(
+	$states  = array(
 		'AC' => 'Daerah Istimewa Aceh',
 	    'SU' => 'Sumatera Utara',
 	    'SB' => 'Sumatera Barat',
@@ -692,7 +694,7 @@ function edd_get_indonesian_states_list() {
 	    'PB' => 'Papua Barat'
 	);
 
-	return apply_filters( 'edd_indonesian_states', $states );
+	return apply_filters( 'edd_indonesia_states', $states );
 }
 
 /**

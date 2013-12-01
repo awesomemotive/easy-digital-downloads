@@ -22,8 +22,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return      void
  */
 function edd_process_download() {
+
+	if( ! isset( $_GET['download_id'] ) && isset( $_GET['download'] ) ) {
+		$_GET['download_id'] = $_GET['download'];
+	}
+
 	$args = apply_filters( 'edd_process_download_args', array(
-		'download' => ( isset( $_GET['download'] ) )     ? (int) $_GET['download']                          : '',
+		'download' => ( isset( $_GET['download_id'] ) )  ? (int) $_GET['download_id']                    : '',
 		'email'    => ( isset( $_GET['email'] ) )        ? rawurldecode( $_GET['email'] )                   : '',
 		'expire'   => ( isset( $_GET['expire'] ) )       ? base64_decode( rawurldecode( $_GET['expire'] ) ) : '',
 		'file_key' => ( isset( $_GET['file'] ) )         ? (int) $_GET['file']                              : '',
@@ -59,7 +64,7 @@ function edd_process_download() {
 			$user_info['name'] 	= $user_data->display_name;
 		}
 
-		edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip(), $payment );
+		edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip(), $payment, $args['price_id'] );
 
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );
@@ -74,7 +79,6 @@ function edd_process_download() {
 		@session_write_close();
 		if( function_exists( 'apache_setenv' ) ) @apache_setenv('no-gzip', 1);
 		@ini_set( 'zlib.output_compression', 'Off' );
-
 
 		nocache_headers();
 		header("Robots: none");
@@ -102,14 +106,12 @@ function edd_process_download() {
 
 				$direct       = false;
 				$file_details = parse_url( $requested_file );
-
-				if ( ! isset( $file_details['scheme'] ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
+				$schemes      = array( 'http', 'https' ); // Direct URL schemes
+				if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
 
 					/** This is an absolute path */
 					$direct    = true;
 					$file_path = $requested_file;
-
-
 
 				} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false ) {
 
@@ -127,7 +129,7 @@ function edd_process_download() {
 
 				} elseif ( stristr( getenv( 'SERVER_SOFTWARE' ), 'lighttpd' ) ) {
 
-					header( "X-Lighttpd-Sendfile: $file_path" );
+					header( "X-LIGHTTPD-send-file: $file_path" );
 
 				} elseif ( stristr( getenv( 'SERVER_SOFTWARE' ), 'nginx' ) || stristr( getenv( 'SERVER_SOFTWARE' ), 'cherokee' ) ) {
 
@@ -135,7 +137,9 @@ function edd_process_download() {
 					$file_path = str_ireplace( $_SERVER[ 'DOCUMENT_ROOT' ], '', $file_path );
 					header( "X-Accel-Redirect: /$file_path" );
 
-				} elseif( $direct ) {
+				} else
+
+				if( $direct ) {
 					edd_deliver_download( $file_path );
 				} else {
 					// The file supplied does not have a discoverable absolute path
@@ -547,8 +551,8 @@ function edd_readfile_chunked( $file, $retbytes = TRUE ) {
 	while ( ! feof( $handle ) ) :
 	   $buffer = fread( $handle, $chunksize );
 	   echo $buffer;
-	   ob_flush();
-	   flush();
+	   //ob_flush();
+	   //flush();
 
 	   if ( $retbytes ) $cnt += strlen( $buffer );
 	endwhile;

@@ -62,7 +62,7 @@ add_action( 'edd_email_links', 'edd_resend_purchase_receipt' );
  * Trigger the sending of a Test Email
  *
  * @since 1.5
- * @param array $data Paramaters sent from Settings page
+ * @param array $data Parameters sent from Settings page
  * @return void
  */
 function edd_send_test_email( $data ) {
@@ -70,6 +70,9 @@ function edd_send_test_email( $data ) {
 		return;
 
 	// Send a test email
-	edd_email_test_purchase_receipt();
+    edd_email_test_purchase_receipt();
+
+    // Remove the test email query arg
+    wp_redirect( remove_query_arg( 'edd_action' ) ); exit;
 }
 add_action( 'edd_send_test_email', 'edd_send_test_email' );

@@ -68,6 +68,9 @@ function edd_format_amount( $amount ) {
 		$amount = str_replace( ',', '', $amount );
 	}
 
+	if( empty( $amount ) )
+		$amount = 0;
+
 	$decimals  = apply_filters( 'edd_format_amount_decimals', 2, $amount );
 	$formatted = number_format( $amount, $decimals, $decimal_sep, $thousands_sep );
 
@@ -88,37 +91,49 @@ function edd_currency_filter( $price ) {
 	$currency = edd_get_currency();
 	$position = isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before';
 
+	$negative = $price < 0;
+
+	if( $negative ) {
+		$price *= -1; // Turn amount positive
+	}
+
 	if ( $position == 'before' ):
 		switch ( $currency ):
-			case "GBP" : 
-				$formatted = '&pound;' . $price; 
+			case "GBP" :
+				$formatted = '&pound;' . $price;
 				break;
-			case "BRL" : 
-				$formatted = 'R&#36;' . $price; 
+			case "BRL" :
+				$formatted = 'R&#36;' . $price;
+				break;
+			case "EUR" :
+				$formatted = '&euro;' . $price;
 				break;
 			case "USD" :
 			case "AUD" :
 			case "CAD" :
 			case "HKD" :
 			case "MXN" :
-			case "SGD" : 
-				$formatted = '&#36;' . $price; 
+			case "SGD" :
+				$formatted = '&#36;' . $price;
 				break;
-			case "JPY" : 
-				$formatted = '&yen;' . $price; 
+			case "JPY" :
+				$formatted = '&yen;' . $price;
 				break;
 			default :
 			    $formatted = $currency . ' ' . $price;
 				break;
 		endswitch;
-		return apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
+		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
 	else :
 		switch ( $currency ) :
-			case "GBP" : 
-				$formatted = $price . '&pound;'; 
+			case "GBP" :
+				$formatted = $price . '&pound;';
 				break;
 			case "BRL" :
-				$formatted = $price . 'R&#36;'; 
+				$formatted = $price . 'R&#36;';
+				break;
+			case "EUR" :
+				$formatted = $price . '&euro;';
 				break;
 			case "USD" :
 			case "AUD" :
@@ -129,14 +144,21 @@ function edd_currency_filter( $price ) {
 				$formatted = $price . '&#36;';
 				break;
 			case "JPY" :
-				$formatted = $price . '&yen;'; 
+				$formatted = $price . '&yen;';
 				break;
 			default :
 			    $formatted = $price . ' ' . $currency;
 				break;
 		endswitch;
-		return apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
+		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
 	endif;
+
+	if( $negative ) {
+		// Prepend the mins sign before the currency sign
+		$formatted = '-' . $formatted;
+	}
+
+	return $formatted;
 }
 
 /**

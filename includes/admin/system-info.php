@@ -41,6 +41,14 @@ function edd_system_info() {
 		$theme_data = wp_get_theme();
 		$theme      = $theme_data->Name . ' ' . $theme_data->Version;
 	}
+
+	// Try to identifty the hosting provider
+	$host = false;
+	if( defined( 'WPE_APIKEY' ) ) {
+		$host = 'WP Engine';
+	} elseif( defined( 'PAGELYBIN' ) ) {
+		$host = 'Pagely';
+	}
 ?>
 	<div class="wrap">
 		<h2><?php _e( 'System Information', 'edd' ) ?></h2><br/>
@@ -62,6 +70,9 @@ Upgraded From:            <?php echo get_option( 'edd_version_upgraded_from', 'N
 WordPress Version:        <?php echo get_bloginfo( 'version' ) . "\n"; ?>
 Permalink Structure:      <?php echo get_option( 'permalink_structure' ) . "\n"; ?>
 Active Theme:             <?php echo $theme . "\n"; ?>
+<?php if( $host ) : ?>
+Host:                     <?php echo $host . "\n"; ?>
+<?php endif; ?>
 
 Test Mode Enabled:        <?php echo edd_is_test_mode() ? "Yes\n" : "No\n"; ?>
 Ajax Enabled:             <?php echo edd_is_ajax_enabled() ? "Yes\n" : "No\n"; ?>
@@ -76,6 +87,16 @@ Downloads slug:           <?php echo defined( 'EDD_SLUG' ) ? '/' . EDD_SLUG . "\
 
 Taxes Enabled:            <?php echo edd_use_taxes() ? "Yes\n" : "No\n"; ?>
 Taxes After Discounts:    <?php echo edd_taxes_after_discounts() ? "Yes\n" : "No\n"; ?>
+Tax Rate:                 <?php echo edd_get_tax_rate() * 100; ?>%
+Country / State Rates:    <?php
+
+$rates = edd_get_tax_rates();
+if( ! empty( $rates ) ) {
+	foreach( $rates as $rate ) {
+		echo 'Country: ' . $rate['country'] . ', State: ' . $rate['state'] . ', Rate: ' . $rate['rate'] . ' | ';
+	}
+}
+?>
 
 Registered Post Stati:    <?php echo implode( ', ', get_post_stati() ) . "\n\n"; ?>
 
@@ -87,6 +108,7 @@ Web Server Info:          <?php echo $_SERVER['SERVER_SOFTWARE'] . "\n"; ?>
 
 PHP Safe Mode:            <?php echo ini_get( 'safe_mode' ) ? "Yes" : "No\n"; ?>
 PHP Memory Limit:         <?php echo ini_get( 'memory_limit' ) . "\n"; ?>
+WordPress Memory Limit:   <?php echo ( edd_let_to_num( WP_MEMORY_LIMIT )/( 1024 ) )."MB"; ?><?php echo "\n"; ?>
 PHP Upload Max Size:      <?php echo ini_get( 'upload_max_filesize' ) . "\n"; ?>
 PHP Post Max Size:        <?php echo ini_get( 'post_max_size' ) . "\n"; ?>
 PHP Upload Max Filesize:  <?php echo ini_get( 'upload_max_filesize' ) . "\n"; ?>
@@ -128,7 +150,6 @@ Save Path:                <?php echo esc_html( ini_get( 'session.save_path' ) );
 Use Cookies:              <?php echo ini_get( 'session.use_cookies' ) ? 'On' : 'Off'; ?><?php echo "\n"; ?>
 Use Only Cookies:         <?php echo ini_get( 'session.use_only_cookies' ) ? 'On' : 'Off'; ?><?php echo "\n"; ?>
 
-WordPress Memory Limit:   <?php echo ( edd_let_to_num( WP_MEMORY_LIMIT )/( 1024 ) )."MB"; ?><?php echo "\n"; ?>
 DISPLAY ERRORS:           <?php echo ( ini_get( 'display_errors' ) ) ? 'On (' . ini_get( 'display_errors' ) . ')' : 'N/A'; ?><?php echo "\n"; ?>
 FSOCKOPEN:                <?php echo ( function_exists( 'fsockopen' ) ) ? __( 'Your server supports fsockopen.', 'edd' ) : __( 'Your server does not support fsockopen.', 'edd' ); ?><?php echo "\n"; ?>
 cURL:                     <?php echo ( function_exists( 'curl_init' ) ) ? __( 'Your server supports cURL.', 'edd' ) : __( 'Your server does not support cURL.', 'edd' ); ?><?php echo "\n"; ?>
@@ -140,8 +161,13 @@ TEMPLATES:
 <?php
 // Show templates that have been copied to the theme's edd_templates dir
 $dir = get_stylesheet_directory() . '/edd_templates/*';
-foreach ( glob( $dir ) as $file ) {
-	echo "Filename: " . basename( $file ) . "\n";
+if (!empty($dir)){
+	foreach ( glob( $dir ) as $file ) {
+		echo "Filename: " . basename( $file ) . "\n";
+	}
+}
+else {
+	echo 'No overrides found';
 }
 ?>
 

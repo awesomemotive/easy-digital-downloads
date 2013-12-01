@@ -26,6 +26,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since  1.5
  */
 class EDD_API {
+
+	/**
+	 * API Version
+	 */
+	const VERSION = '1.1';
+
 	/**
 	 * Pretty Print?
 	 *
@@ -63,6 +69,15 @@ class EDD_API {
 	private $user_id = 0;
 
 	/**
+	 * Instance of EDD Stats class
+	 *
+	 * @var object
+	 * @access private
+	 * @since 1.7
+	 */
+	private $stats;
+
+	/**
 	 * Response data to return
 	 *
 	 * @var array
@@ -82,10 +97,8 @@ class EDD_API {
 	/**
 	 * Setup the EDD API
 	 *
-	 * @access public
 	 * @author Daniel J Griffiths
 	 * @since 1.5
-	 * @return void
 	 */
 	public function __construct() {
 		add_action( 'init',                    array( $this, 'add_endpoint'   ) );
@@ -99,6 +112,10 @@ class EDD_API {
 
 		// Allow API request logging to be turned off
 		$this->log_requests = apply_filters( 'edd_api_log_requests', $this->log_requests );
+
+		// Setup EDD_Stats instance
+		$this->stats = new EDD_Payment_Stats;
+
 	}
 
 	/**
@@ -157,23 +174,28 @@ class EDD_API {
 
 		$this->override = false;
 
-		// Make sure we have both user and api key
-		if ( empty( $wp_query->query_vars['token'] ) || empty( $wp_query->query_vars['key'] ) )
-			$this->missing_auth();
+        // Make sure we have both user and api key
+		if ( ! empty( $wp_query->query_vars['edd-api'] ) && ( $wp_query->query_vars['edd-api'] != 'products' || ! empty( $wp_query->query_vars['token'] ) ) ) {
+			if ( empty( $wp_query->query_vars['token'] ) || empty( $wp_query->query_vars['key'] ) )
+				$this->missing_auth();
 
-		// Retrieve the user by public API key and ensure they exist
-		if ( ! ( $user = $this->get_user( $wp_query->query_vars['key'] ) ) ) :
-			$this->invalid_key();
-		else :
-			$token  = urldecode( $wp_query->query_vars['token'] );
-			$secret = get_user_meta( $user, 'edd_user_secret_key', true );
-			$public = urldecode( $wp_query->query_vars['key'] );
+			// Retrieve the user by public API key and ensure they exist
+			if ( ! ( $user = $this->get_user( $wp_query->query_vars['key'] ) ) ) :
+				$this->invalid_key();
+			else :
+				$token  = urldecode( $wp_query->query_vars['token'] );
+				$secret = get_user_meta( $user, 'edd_user_secret_key', true );
+				$public = urldecode( $wp_query->query_vars['key'] );
 
-			if ( hash( 'md5', $secret . $public ) === $token )
-				$this->is_valid_request = true;
-			else
-				$this->invalid_auth();
-		endif;
+				if ( hash( 'md5', $secret . $public ) === $token )
+					$this->is_valid_request = true;
+				else
+					$this->invalid_auth();
+			endif;
+		} elseif ( !empty( $wp_query->query_vars['edd-api'] ) && $wp_query->query_vars['edd-api'] == 'products' ) {
+			$this->is_valid_request = true;
+			$wp_query->set( 'key', 'public' );
+		}
 	}
 
 	/**
@@ -182,9 +204,11 @@ class EDD_API {
 	 * @access public
 	 * @since 1.5.1
 	 * @global object $wpdb Used to query the database using the WordPress
-	 *   Database API
-	 * @param int $key Public Key
-	 * @return mixed string if user ID is found, false otherwise
+	 * Database API
+	 *
+	 * @param string $key Public Key
+	 *
+	 * @return bool if user ID is found, false otherwise
 	 */
 	public function get_user( $key = '' ) {
 		global $wpdb, $wp_query;
@@ -407,10 +431,9 @@ class EDD_API {
 	 *
 	 * Determines whether results should be displayed in XML or JSON
 	 *
-	 * @access private
 	 * @since 1.5
-	 * @global $wp_query
-	 * @return $format Output format
+	 *
+	 * @return mixed|void
 	 */
 	public function get_output_format() {
 		global $wp_query;
@@ -683,6 +706,8 @@ class EDD_API {
 					$products['products'][$i]['info']['link']                         = html_entity_decode( $product_info->guid );
 					$products['products'][$i]['info']['content']                      = $product_info->post_content;
 					$products['products'][$i]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
+					$products['products'][$i]['info']['category']                     = get_the_terms( $product_info, 'download_category' );
+					$products['products'][$i]['info']['tags']                         = get_the_terms( $product_info, 'download_tag' );
 
 					if( user_can( $this->user_id, 'view_shop_reports' ) || $this->override) {
 						$products['products'][$i]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
@@ -722,6 +747,8 @@ class EDD_API {
 				$products['products'][0]['info']['link']                         = html_entity_decode( $product_info->guid );
 				$products['products'][0]['info']['content']                      = $product_info->post_content;
 				$products['products'][0]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
+				$products['products'][0]['info']['category']                     = get_the_terms( $product_info, 'download_category' );
+				$products['products'][0]['info']['tags']                         = get_the_terms( $product_info, 'download_tag' );
 
 				if( user_can( $this->user_id, 'view_shop_reports' ) || $this->override ) {
 					$products['products'][0]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
@@ -757,12 +784,14 @@ class EDD_API {
 	/**
 	 * Process Get Stats API Request
 	 *
-	 * @access public
 	 * @author Daniel J Griffiths
 	 * @since 1.5
+	 *
 	 * @global object $wpdb Used to query the database using the WordPress
-	 *   Database API
+	 *
 	 * @param array $args Arguments provided by API Request
+	 *
+	 * @return array
 	 */
 	public function get_stats( $args = array() ) {
 		$defaults = array(
@@ -1200,17 +1229,15 @@ class EDD_API {
 		return $this->data;
 	}
 
-
 	/**
 	 * Output Query in either JSON/XML. The query data is outputted as JSON
 	 * by default
 	 *
-	 * @access public
 	 * @author Daniel J Griffiths
 	 * @since 1.5
 	 * @global $wp_query
-	 * @param array $data
-	 * @return void
+	 *
+	 * @param int $status_code
 	 */
 	public function output( $status_code = 200 ) {
 		global $wp_query;
@@ -1271,7 +1298,7 @@ class EDD_API {
 	function user_key_field( $user ) {
 		global $edd_options;
 
-		if ( ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'view_shop_reports' ) ) {
+		if ( ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'edit_user', $user->ID ) ) {
 			$user = get_userdata( $user->ID );
 			?>
 			<table class="form-table">
@@ -1337,12 +1364,11 @@ class EDD_API {
 	 * @return array default sales statistics
 	 */
 	private function get_default_sales_stats() {
-		// Default sales return
-		$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
-		$previous_year  = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
 
-		$sales['sales']['current_month'] = edd_get_sales_by_date( null, date( 'n' ), date( 'Y' ) );
-		$sales['sales']['last_month']    = edd_get_sales_by_date( null, $previous_month, $previous_year );
+		// Default sales return
+
+		$sales['sales']['current_month'] = $this->stats->get_sales( 0, 'this_month' );
+		$sales['sales']['last_month']    = $this->stats->get_sales( 0, 'last_month' );
 		$sales['sales']['totals']        = edd_get_total_sales();
 
 		return $sales;
@@ -1353,15 +1379,14 @@ class EDD_API {
 	 *
 	 * @access private
 	 * @since 1.5.3
-	 * @return array default eranings statistics
+	 * @return array default earnings statistics
 	 */
 	private function get_default_earnings_stats() {
-		// Default earnings return
-		$previous_month = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
-		$previous_year  = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
 
-		$earnings['earnings']['current_month'] = edd_get_earnings_by_date( null, date( 'n' ), date( 'Y' ) );
-		$earnings['earnings']['last_month']    = edd_get_earnings_by_date( null, $previous_month, $previous_year );
+		// Default earnings return
+
+		$earnings['earnings']['current_month'] = $this->stats->get_earnings( 0, 'this_month' );
+		$earnings['earnings']['last_month']    = $this->stats->get_earnings( 0, 'last_month' );
 		$earnings['earnings']['totals']        = edd_get_total_earnings();
 
 		return $earnings;
