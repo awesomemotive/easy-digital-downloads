@@ -131,10 +131,10 @@ jQuery(document).ready(function ($) {
 		files : function() {
 			if( typeof wp == "undefined" || edd_vars.new_media_ui != '1' ){
 				//Old Thickbox uploader
-				if ( $( '.edd_upload_image_button' ).length > 0 ) {
+				if ( $( '.edd_upload_file_button' ).length > 0 ) {
 					window.formfield = '';
 
-					$('body').on('click', '.edd_upload_image_button', function(e) {
+					$('body').on('click', '.edd_upload_file_button', function(e) {
 						e.preventDefault();
 						window.formfield = $(this).parent().prev();
 						window.tbframe_interval = setInterval(function() {
@@ -166,7 +166,7 @@ jQuery(document).ready(function ($) {
 				var file_frame;
 				window.formfield = '';
 
-				$('body').on('click', '.edd_upload_image_button', function(e) {
+				$('body').on('click', '.edd_upload_file_button', function(e) {
 
 					e.preventDefault();
 
