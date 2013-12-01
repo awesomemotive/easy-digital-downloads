@@ -37,7 +37,7 @@ class EDD_Email_Template_Tags {
 	/**
 	 * Add hook for email tag
 	 *
-	 * @since 1.x
+	 * @since 1.9
 	 *
 	 * @param string   $tag  Email tag to be replace in email
 	 * @param callable $func Hook to run when email tag is found
@@ -54,7 +54,7 @@ class EDD_Email_Template_Tags {
 	/**
 	 * Remove hook for email tag
 	 *
-	 * @since 1.x
+	 * @since 1.9
 	 *
 	 * @param string $tag Email tag to remove hook from
 	 */
@@ -65,7 +65,7 @@ class EDD_Email_Template_Tags {
 	/**
 	 * Whether a registered email tag exists names $tag
 	 *
-	 * @since 1.x
+	 * @since 1.9
 	 *
 	 * @param string $tag Email tag that will be searched
 	 */
@@ -77,6 +77,8 @@ class EDD_Email_Template_Tags {
 	 * Search content for email tags and filter email tags through their hooks
 	 *
 	 * @param string $content Content to search for email tags
+	 *
+	 * @since 1.9
 	 *
 	 * @return string Content with email tags filtered out.
 	 */
