@@ -43,12 +43,13 @@ class EDD_Email_Template_Tags {
 	 * @param callable $func Hook to run when email tag is found
 	 */
 	public function add( $tag, $description, $func ) {
-		if ( is_callable( $func ) )
+		if ( is_callable( $func ) ) {
 			$this->tags[ $tag ] = array(
 				'tag'         => $tag,
 				'description' => $description,
 				'func'        => $func
 			);
+		}
 	}
 
 	/**
@@ -59,7 +60,7 @@ class EDD_Email_Template_Tags {
 	 * @param string $tag Email tag to remove hook from
 	 */
 	public function remove( $tag ) {
-		unset( $this->tags[$tag] );
+		unset( $this->tags[ $tag ] );
 	}
 
 	/**
@@ -85,8 +86,9 @@ class EDD_Email_Template_Tags {
 	public function do_tags( $content, $payment_id ) {
 
 		// Check if there is atleast one tag added
-		if ( empty( $this->tags ) || ! is_array( $this->tags ) )
+		if ( empty( $this->tags ) || ! is_array( $this->tags ) ) {
 			return $content;
+		}
 
 		$this->payment_id = $payment_id;
 
@@ -103,8 +105,9 @@ class EDD_Email_Template_Tags {
 		$tag = $m[1];
 
 		// Return tag if tag not set
-		if ( ! self::email_tag_exists( $tag ) )
+		if ( ! self::email_tag_exists( $tag ) ) {
 			return $m[0];
+		}
 
 		return call_user_func( $this->tags[$tag]['func'], $this->payment_id, $tag );
 	}
@@ -188,8 +191,9 @@ function edd_email_tag_download_list( $payment_id ) {
 
 		foreach ( $cart_items as $item ) {
 
-			if ( edd_use_skus() )
+			if ( edd_use_skus() ) {
 				$sku = edd_get_download_sku( $item['id'] );
+			}
 
 			$price_id = edd_get_cart_item_price_id( $item );
 
@@ -197,11 +201,13 @@ function edd_email_tag_download_list( $payment_id ) {
 
 				$title = get_the_title( $item['id'] );
 
-				if ( ! empty( $sku ) )
+				if ( ! empty( $sku ) ) {
 					$title .= "&nbsp;&ndash;&nbsp;" . __( 'SKU', 'edd' ) . ': ' . $sku;
+				}
 
-				if ( $price_id !== false )
+				if ( $price_id !== false ) {
 					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id );
+				}
 
 				$download_list .= '<li>' . apply_filters( 'edd_email_receipt_download_title', $title, $item['id'], $price_id ) . '<br/>';
 				$download_list .= '<ul>';
@@ -240,8 +246,10 @@ function edd_email_tag_download_list( $payment_id ) {
 				$download_list .= '</ul>';
 			}
 
-			if ( '' != edd_get_product_notes( $item['id'] ) )
+			if ( '' != edd_get_product_notes( $item['id'] ) ) {
 				$download_list .= ' &mdash; <small>' . edd_get_product_notes( $item['id'] ) . '</small>';
+			}
+
 
 			if ( $show_names ) {
 				$download_list .= '</li>';
