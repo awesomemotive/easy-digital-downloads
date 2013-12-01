@@ -153,25 +153,38 @@ add_action( 'init', 'edd_load_email_tags' );
 /*
  * Add default EDD email template tags
  */
-function edd_setup_default_email_tags() {
-	edd_add_email_tag( 'download_list', __( 'A list of download links for each download purchased', 'edd' ), 'edd_email_tag_download_list' );
-	edd_add_email_tag( 'file_urls', __( 'A plain-text list of download URLs for each download purchased', 'edd' ), 'edd_email_tag_file_urls' );
-	edd_add_email_tag( 'name', __( "The buyer's first name", 'edd' ), 'edd_email_tag_name' );
-	edd_add_email_tag( 'fullname', __( "The buyer's full name, first and last", 'edd' ), 'edd_email_tag_fullname' );
-	edd_add_email_tag( 'username', __( "The buyer's user name on the site, if they registered an account", 'edd' ), 'edd_email_tag_username' );
-	edd_add_email_tag( 'user_email', __( "The buyer's email address", 'edd' ), 'edd_email_tag_user_email' );
-	edd_add_email_tag( 'date', __( 'The date of the purchase', 'edd' ), 'edd_email_tag_date' );
-	edd_add_email_tag( 'subtotal', __( 'The price of the purchase before taxes', 'edd' ), 'edd_email_tag_subtotal' );
-	edd_add_email_tag( 'tax', __( 'The taxed amount of the purchase', 'edd' ), 'edd_email_tag_tax' );
-	edd_add_email_tag( 'price', __( 'The total price of the purchase', 'edd' ), 'edd_email_tag_price' );
-	edd_add_email_tag( 'payment_id', __( 'The unique ID number for this purchase', 'edd' ), 'edd_email_tag_payment_id' );
-	edd_add_email_tag( 'receipt_id', __( 'The unique ID number for this purchase receipt', 'edd' ), 'edd_email_tag_receipt_id' );
-	edd_add_email_tag( 'payment_method', __( 'The method of payment used for this purchase', 'edd' ), 'edd_email_tag_payment_method' );
-	edd_add_email_tag( 'sitename', __( 'Your site name', 'edd' ), 'edd_email_tag_sitename' );
-	edd_add_email_tag( 'receipt_link', __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'edd' ), 'edd_email_tag_receipt_link' );
+function edd_setup_email_tags() {
+
+	// Setup default tags array
+	$email_tags = array(
+		array( 'tag' => 'download_list', 'description' => __( 'A list of download links for each download purchased', 'edd' ), 'function' => 'edd_email_tag_download_list' ),
+		array( 'tag' => 'file_urls', 'description' => __( 'A plain-text list of download URLs for each download purchased', 'edd' ), 'function' => 'edd_email_tag_file_urls' ),
+		array( 'tag' => 'name', 'description' => __( "The buyer's first name", 'edd' ), 'function' => 'edd_email_tag_name' ),
+		array( 'tag' => 'fullname', 'description' => __( "The buyer's full name, first and last", 'edd' ), 'function' => 'edd_email_tag_fullname' ),
+		array( 'tag' => 'username', 'description' => __( "The buyer's user name on the site, if they registered an account", 'edd' ), 'function' => 'edd_email_tag_username' ),
+		array( 'tag' => 'user_email', 'description' => __( "The buyer's email address", 'edd' ), 'function' => 'edd_email_tag_user_email' ),
+		array( 'tag' => 'date', 'description' => __( 'The date of the purchase', 'edd' ), 'function' => 'edd_email_tag_date' ),
+		array( 'tag' => 'subtotal', 'description' => __( 'The price of the purchase before taxes', 'edd' ), 'function' => 'edd_email_tag_subtotal' ),
+		array( 'tag' => 'tax', 'description' => __( 'The taxed amount of the purchase', 'edd' ), 'function' => 'edd_email_tag_tax' ),
+		array( 'tag' => 'price', 'description' => __( 'The total price of the purchase', 'edd' ), 'function' => 'edd_email_tag_price' ),
+		array( 'tag' => 'payment_id', 'description' => __( 'The unique ID number for this purchase', 'edd' ), 'function' => 'edd_email_tag_payment_id' ),
+		array( 'tag' => 'receipt_id', 'description' => __( 'The unique ID number for this purchase receipt', 'edd' ), 'function' => 'edd_email_tag_receipt_id' ),
+		array( 'tag' => 'payment_method', 'description' => __( 'The method of payment used for this purchase', 'edd' ), 'function' => 'edd_email_tag_payment_method' ),
+		array( 'tag' => 'sitename', 'description' => __( 'Your site name', 'edd' ), 'function' => 'edd_email_tag_sitename' ),
+		array( 'tag' => 'receipt_link', 'description' => __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'edd' ), 'function' => 'edd_email_tag_receipt_link' ),
+	);
+
+	// Apply edd_email_tags filter
+	$default_tags = apply_filters( 'edd_email_tags', $email_tags );
+
+	// Add email tags
+	foreach ( $email_tags as $email_tag ) {
+		edd_add_email_tag( $email_tag['tag'], $email_tag['description'], $email_tag['function'] );
+	}
+
 }
 
-add_action( 'edd_add_email_tags', 'edd_setup_default_email_tags' );
+add_action( 'edd_add_email_tags', 'edd_setup_email_tags' );
 
 /**
  * Email template tag: download_list
