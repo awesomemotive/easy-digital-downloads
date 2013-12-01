@@ -42,7 +42,7 @@ class EDD_Email_Template_Tags {
 	 *
 	 * @return EDD_Email_Template_Tags
 	 */
-	public function get() {
+	public static function get() {
 		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}
