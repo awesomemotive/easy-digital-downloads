@@ -91,6 +91,14 @@ final class Easy_Digital_Downloads {
 	public $html;
 
 	/**
+	 * EDD Email Template Tags Object
+	 *
+	 * @var object
+	 * @since 1.9
+	 */
+	public $email_tags;
+
+	/**
 	 * Main Easy_Digital_Downloads Instance
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
@@ -116,6 +124,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->api = new EDD_API();
 			self::$instance->session = new EDD_Session();
 			self::$instance->html = new EDD_HTML_Elements();
+			self::$instance->email_tags = new EDD_Email_Template_Tags();
 		}
 		return self::$instance;
 	}
