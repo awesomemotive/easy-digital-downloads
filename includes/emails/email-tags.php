@@ -59,7 +59,7 @@ class EDD_Email_Template_Tags {
 	 */
 	public function add( $tag, $description, $func ) {
 		if ( is_callable( $func ) )
-			$this->tags[$tag] = array(
+			$this->tags[ $tag ] = array(
 				'tag'         => $tag,
 				'description' => $description,
 				'func'        => $func
