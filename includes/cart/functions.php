@@ -20,7 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_cart_contents() {
 	$cart = EDD()->session->get( 'edd_cart' );
-	return ! empty( $cart ) ? apply_filters( 'edd_cart_contents', $cart ) : false;
+	$cart = ! empty( $cart ) ? array_values( $cart ) : false;
+	return apply_filters( 'edd_cart_contents', $cart );
 }
 
 /**
