@@ -28,26 +28,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class EDD_Email_Template_Tags {
 
-	// Instance
-	private static $instance = null;
-
 	// Container for storing all tags
 	private $tags;
 
 	// Payment ID
 	private $payment_id;
-
-	/**
-	 * Method to get instance
-	 *
-	 * @return EDD_Email_Template_Tags
-	 */
-	public static function get() {
-		if ( null === self::$instance ) {
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
 
 	/**
 	 * Add hook for email tag
