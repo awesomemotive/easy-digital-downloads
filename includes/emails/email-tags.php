@@ -44,7 +44,7 @@ class EDD_Email_Template_Tags {
 	 */
 	public function add( $tag, $description, $func ) {
 		if ( is_callable( $func ) ) {
-			$this->tags[ $tag ] = array(
+			$this->tags[$tag] = array(
 				'tag'         => $tag,
 				'description' => $description,
 				'func'        => $func
@@ -60,7 +60,7 @@ class EDD_Email_Template_Tags {
 	 * @param string $tag Email tag to remove hook from
 	 */
 	public function remove( $tag ) {
-		unset( $this->tags[ $tag ] );
+		unset( $this->tags[$tag] );
 	}
 
 	/**
@@ -157,21 +157,81 @@ function edd_setup_email_tags() {
 
 	// Setup default tags array
 	$email_tags = array(
-		array( 'tag' => 'download_list', 'description' => __( 'A list of download links for each download purchased', 'edd' ), 'function' => 'edd_email_tag_download_list' ),
-		array( 'tag' => 'file_urls', 'description' => __( 'A plain-text list of download URLs for each download purchased', 'edd' ), 'function' => 'edd_email_tag_file_urls' ),
-		array( 'tag' => 'name', 'description' => __( "The buyer's first name", 'edd' ), 'function' => 'edd_email_tag_name' ),
-		array( 'tag' => 'fullname', 'description' => __( "The buyer's full name, first and last", 'edd' ), 'function' => 'edd_email_tag_fullname' ),
-		array( 'tag' => 'username', 'description' => __( "The buyer's user name on the site, if they registered an account", 'edd' ), 'function' => 'edd_email_tag_username' ),
-		array( 'tag' => 'user_email', 'description' => __( "The buyer's email address", 'edd' ), 'function' => 'edd_email_tag_user_email' ),
-		array( 'tag' => 'date', 'description' => __( 'The date of the purchase', 'edd' ), 'function' => 'edd_email_tag_date' ),
-		array( 'tag' => 'subtotal', 'description' => __( 'The price of the purchase before taxes', 'edd' ), 'function' => 'edd_email_tag_subtotal' ),
-		array( 'tag' => 'tax', 'description' => __( 'The taxed amount of the purchase', 'edd' ), 'function' => 'edd_email_tag_tax' ),
-		array( 'tag' => 'price', 'description' => __( 'The total price of the purchase', 'edd' ), 'function' => 'edd_email_tag_price' ),
-		array( 'tag' => 'payment_id', 'description' => __( 'The unique ID number for this purchase', 'edd' ), 'function' => 'edd_email_tag_payment_id' ),
-		array( 'tag' => 'receipt_id', 'description' => __( 'The unique ID number for this purchase receipt', 'edd' ), 'function' => 'edd_email_tag_receipt_id' ),
-		array( 'tag' => 'payment_method', 'description' => __( 'The method of payment used for this purchase', 'edd' ), 'function' => 'edd_email_tag_payment_method' ),
-		array( 'tag' => 'sitename', 'description' => __( 'Your site name', 'edd' ), 'function' => 'edd_email_tag_sitename' ),
-		array( 'tag' => 'receipt_link', 'description' => __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'edd' ), 'function' => 'edd_email_tag_receipt_link' ),
+		array(
+			'tag'         => 'download_list',
+			'description' => __( 'A list of download links for each download purchased', 'edd' ),
+			'function'    => 'edd_email_tag_download_list'
+		),
+		array(
+			'tag'         => 'file_urls',
+			'description' => __( 'A plain-text list of download URLs for each download purchased', 'edd' ),
+			'function'    => 'edd_email_tag_file_urls'
+		),
+		array(
+			'tag'         => 'name',
+			'description' => __( "The buyer's first name", 'edd' ),
+			'function'    => 'edd_email_tag_name'
+		),
+		array(
+			'tag'         => 'fullname',
+			'description' => __( "The buyer's full name, first and last", 'edd' ),
+			'function'    => 'edd_email_tag_fullname'
+		),
+		array(
+			'tag'         => 'username',
+			'description' => __( "The buyer's user name on the site, if they registered an account", 'edd' ),
+			'function'    => 'edd_email_tag_username'
+		),
+		array(
+			'tag'         => 'user_email',
+			'description' => __( "The buyer's email address", 'edd' ),
+			'function'    => 'edd_email_tag_user_email'
+		),
+		array(
+			'tag'         => 'date',
+			'description' => __( 'The date of the purchase', 'edd' ),
+			'function'    => 'edd_email_tag_date'
+		),
+		array(
+			'tag'         => 'subtotal',
+			'description' => __( 'The price of the purchase before taxes', 'edd' ),
+			'function'    => 'edd_email_tag_subtotal'
+		),
+		array(
+			'tag'         => 'tax',
+			'description' => __( 'The taxed amount of the purchase', 'edd' ),
+			'function'    => 'edd_email_tag_tax'
+		),
+		array(
+			'tag'         => 'price',
+			'description' => __( 'The total price of the purchase', 'edd' ),
+			'function'    => 'edd_email_tag_price'
+		),
+		array(
+			'tag'         => 'payment_id',
+			'description' => __( 'The unique ID number for this purchase', 'edd' ),
+			'function'    => 'edd_email_tag_payment_id'
+		),
+		array(
+			'tag'         => 'receipt_id',
+			'description' => __( 'The unique ID number for this purchase receipt', 'edd' ),
+			'function'    => 'edd_email_tag_receipt_id'
+		),
+		array(
+			'tag'         => 'payment_method',
+			'description' => __( 'The method of payment used for this purchase', 'edd' ),
+			'function'    => 'edd_email_tag_payment_method'
+		),
+		array(
+			'tag'         => 'sitename',
+			'description' => __( 'Your site name', 'edd' ),
+			'function'    => 'edd_email_tag_sitename'
+		),
+		array(
+			'tag'         => 'receipt_link',
+			'description' => __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'edd' ),
+			'function'    => 'edd_email_tag_receipt_link'
+		),
 	);
 
 	// Apply edd_email_tags filter
