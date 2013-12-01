@@ -25,6 +25,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * @since 1.4
  */
 class EDD_File_Downloads_Log_Table extends WP_List_Table {
+	
 	/**
 	 * Number of items per page
 	 *
@@ -40,6 +41,14 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @since 1.4
 	 */
 	public $file_search = false;
+
+	/**
+	 * Store each unique product's files so they only need to be queried once
+	 *
+	 * @var array
+	 * @since 1.9
+	 */
+	private $queried_files = array();
 
 	/**
 	 * Get things started
@@ -324,13 +333,21 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
+
+
 				$meta        = get_post_custom( $log->ID );
 				$user_info 	 = maybe_unserialize( $meta[ '_edd_log_user_info' ][0] );
 				$payment_id  = $meta[ '_edd_log_payment_id' ][0];
 				$ip 		 = $meta[ '_edd_log_ip' ][0];
 				$user_id 	 = isset( $user_info['id'] ) ? $user_info['id'] : false;
-				//$files 		 = edd_get_download_files( $log->post_parent );
-				$files       = maybe_unserialize( $wpdb->get_var( $wpdb->prepare( "SELECT meta_value from $wpdb->postmeta WHERE post_id = '%d' and meta_key = 'edd_download_files'", $log->post_parent ) ) );
+
+				if( ! array_key_exists( $log->post_parent, $this->queried_files ) ) {
+					$files   = maybe_unserialize( $wpdb->get_var( $wpdb->prepare( "SELECT meta_value from $wpdb->postmeta WHERE post_id = %d and meta_key = 'edd_download_files'", $log->post_parent ) ) );
+					$this->queried_files[ $log->post_parent ] = $files;
+				} else {
+					$files   = $this->queried_files[ $log->post_parent ];
+				}
+
 				$file_id 	 = (int) $meta[ '_edd_log_file_id' ][0];
 				$file_id 	 = $file_id !== false ? $file_id : 0;
 				$file_name 	 = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
