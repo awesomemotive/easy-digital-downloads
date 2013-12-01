@@ -158,16 +158,15 @@ function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
 	$rate = edd_get_tax_rate( $country, $state );
 	$tax  = 0.00;
 
-	// Not using taxes
-	if ( ! edd_use_taxes() ) {
-		return $tax;
-	}
+	if ( edd_use_taxes() ) {
 
-	if ( edd_prices_include_tax() ) {
-		$pre_tax = ( $amount / ( 1 + $rate ) );
-		$tax     = $amount - $pre_tax;
-	} else {
-		$tax = $amount * $rate;
+		if ( edd_prices_include_tax() ) {
+			$pre_tax = ( $amount / ( 1 + $rate ) );
+			$tax     = $amount - $pre_tax;
+		} else {
+			$tax = $amount * $rate;
+		}
+
 	}
 
 	return apply_filters( 'edd_taxed_amount', round( $tax, 2 ), $rate, $country, $state );
