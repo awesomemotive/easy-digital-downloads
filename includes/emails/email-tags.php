@@ -175,7 +175,7 @@ function edd_setup_email_tags() {
 	);
 
 	// Apply edd_email_tags filter
-	$default_tags = apply_filters( 'edd_email_tags', $email_tags );
+	$email_tags = apply_filters( 'edd_email_tags', $email_tags );
 
 	// Add email tags
 	foreach ( $email_tags as $email_tag ) {
