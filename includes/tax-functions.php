@@ -193,30 +193,32 @@ function edd_sales_tax_for_year( $year = null ) {
  * @return float $tax Sales tax
  */
 function edd_get_sales_tax_for_year( $year = null ) {
-	if ( empty( $year ) )
-		return 0;
+	
+	if ( ! empty( $year ) ) {
 
-	// Start at zero
-	$tax = 0;
+		// Start at zero
+		$tax = 0;
 
-	$args = array(
-		'post_type' 		=> 'edd_payment',
-		'posts_per_page' 	=> -1,
-		'year' 				=> $year,
-		'meta_key' 			=> '_edd_payment_mode',
-		'meta_value' 		=> edd_is_test_mode() ? 'test' : 'live',
-		'fields'			=> 'ids'
-	);
+		$args = array(
+			'post_type' 		=> 'edd_payment',
+			'posts_per_page' 	=> -1,
+			'year' 				=> $year,
+			'meta_key' 			=> '_edd_payment_mode',
+			'meta_value' 		=> edd_is_test_mode() ? 'test' : 'live',
+			'fields'			=> 'ids'
+		);
 
-	$payments = get_posts( $args );
+		$payments = get_posts( $args );
 
-	if( $payments ) :
+		if( $payments ) {
 
-		foreach( $payments as $payment ) :
-			$tax += edd_get_payment_tax( $payment );
-		endforeach;
+			foreach( $payments as $payment ) {
+				$tax += edd_get_payment_tax( $payment );
+			}
 
-	endif;
+		}
+
+	}
 
 	return apply_filters( 'edd_get_sales_tax_for_year', $tax, $year );
 }
