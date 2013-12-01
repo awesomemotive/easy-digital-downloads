@@ -23,6 +23,7 @@ function edd_setup_default_email_tags() {
 	edd_add_email_tag( 'sitename', __( 'Your site name', 'edd' ), 'edd_email_tag_sitename' );
 	edd_add_email_tag( 'receipt_link', __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'edd' ), 'edd_email_tag_receipt_link' );
 }
+
 add_action( 'edd_add_email_tags', 'edd_setup_default_email_tags' );
 
 /**
@@ -34,9 +35,9 @@ add_action( 'edd_add_email_tags', 'edd_setup_default_email_tags' );
  * @return string download_list
  */
 function edd_email_tag_download_list( $payment_id ) {
-	$payment_data	 	= edd_get_payment_meta( $payment_id );
-	$download_list 	= '<ul>';
-	$cart_items     = edd_get_payment_meta_cart_details( $payment_id );
+	$payment_data  = edd_get_payment_meta( $payment_id );
+	$download_list = '<ul>';
+	$cart_items    = edd_get_payment_meta_cart_details( $payment_id );
 
 	if ( $cart_items ) {
 		$show_names = apply_filters( 'edd_email_show_names', true );
@@ -52,10 +53,10 @@ function edd_email_tag_download_list( $payment_id ) {
 
 				$title = get_the_title( $item['id'] );
 
-				if( ! empty( $sku ) )
+				if ( ! empty( $sku ) )
 					$title .= "&nbsp;&ndash;&nbsp;" . __( 'SKU', 'edd' ) . ': ' . $sku;
 
-				if( $price_id !== false )
+				if ( $price_id !== false )
 					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id );
 
 				$download_list .= '<li>' . apply_filters( 'edd_email_receipt_download_title', $title, $item['id'], $price_id ) . '<br/>';
@@ -71,11 +72,12 @@ function edd_email_tag_download_list( $payment_id ) {
 					$download_list .= '<a href="' . esc_url( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 					$download_list .= '</li>';
 				}
-			} elseif( edd_is_bundled_product( $item['id'] ) ) {
+			}
+			elseif ( edd_is_bundled_product( $item['id'] ) ) {
 
 				$bundled_products = edd_get_bundled_products( $item['id'] );
 
-				foreach( $bundled_products as $bundle_item ) {
+				foreach ( $bundled_products as $bundle_item ) {
 
 					$download_list .= '<li class="edd_bundled_product"><strong>' . get_the_title( $bundle_item ) . '</strong></li>';
 
@@ -118,13 +120,13 @@ function edd_email_tag_download_list( $payment_id ) {
 function edd_email_tag_file_urls( $payment_id ) {
 
 	$payment_data = edd_get_payment_meta( $payment_id );
-	$file_urls 		= '';
-	$cart_items 	= edd_get_payment_meta_cart_details( $payment_id );
+	$file_urls    = '';
+	$cart_items   = edd_get_payment_meta_cart_details( $payment_id );
 
 	foreach ( $cart_items as $item ) {
 
 		$price_id = edd_get_cart_item_price_id( $item );
-		$files 		= edd_get_download_files( $item['id'], $price_id );
+		$files    = edd_get_download_files( $item['id'], $price_id );
 
 		if ( $files ) {
 			foreach ( $files as $filekey => $file ) {
@@ -132,11 +134,12 @@ function edd_email_tag_file_urls( $payment_id ) {
 
 				$file_urls .= esc_html( $file_url ) . '<br/>';
 			}
-		} elseif( edd_is_bundled_product( $item['id'] ) ) {
+		}
+		elseif ( edd_is_bundled_product( $item['id'] ) ) {
 
 			$bundled_products = edd_get_bundled_products( $item['id'] );
 
-			foreach( $bundled_products as $bundle_item ) {
+			foreach ( $bundled_products as $bundle_item ) {
 
 				$files = edd_get_download_files( $bundle_item );
 				foreach ( $files as $filekey => $file ) {
@@ -162,8 +165,8 @@ function edd_email_tag_file_urls( $payment_id ) {
  */
 function edd_email_tag_name( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
-	$email_name 	= edd_get_email_names( $payment_data['user_info'] );
-	return $email_name[ 'name' ];
+	$email_name   = edd_get_email_names( $payment_data['user_info'] );
+	return $email_name['name'];
 }
 
 /**
@@ -176,8 +179,8 @@ function edd_email_tag_name( $payment_id ) {
  */
 function edd_email_tag_fullname( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
-	$email_name 	= edd_get_email_names( $payment_data['user_info'] );
-	return $email_name[ 'fullname' ];
+	$email_name   = edd_get_email_names( $payment_data['user_info'] );
+	return $email_name['fullname'];
 }
 
 /**
@@ -190,8 +193,8 @@ function edd_email_tag_fullname( $payment_id ) {
  */
 function edd_email_tag_username( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
-	$email_name 	= edd_get_email_names( $payment_data['user_info'] );
-	return $email_name[ 'username' ];
+	$email_name   = edd_get_email_names( $payment_data['user_info'] );
+	return $email_name['username'];
 }
 
 /**
@@ -216,7 +219,7 @@ function edd_email_tag_user_email( $payment_id ) {
  */
 function edd_email_tag_date( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
-	return date_i18n( get_option( 'date_format' ), strtotime( $payment_data[ 'date' ] ) );
+	return date_i18n( get_option( 'date_format' ), strtotime( $payment_data['date'] ) );
 }
 
 /**
@@ -277,7 +280,7 @@ function edd_email_tag_payment_id( $payment_id ) {
  */
 function edd_email_tag_receipt_id( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
-	return $payment_data[ 'key' ];
+	return $payment_data['key'];
 }
 
 /**
@@ -314,5 +317,5 @@ function edd_email_tag_sitename( $payment_id ) {
  */
 function edd_email_tag_receipt_link( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
-	return sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'payment_key' => $payment_data[ 'key' ], 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' );
+	return sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array( 'payment_key' => $payment_data['key'], 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' );
 }

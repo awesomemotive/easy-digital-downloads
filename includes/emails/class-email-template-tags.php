@@ -20,14 +20,13 @@
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.x
- * @author			Barry Kooij
+ * @author      Barry Kooij
  */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class EDD_Email_Template_Tags
-{
+class EDD_Email_Template_Tags {
 
 	// Instance
 	private static $instance = null;
@@ -44,7 +43,7 @@ class EDD_Email_Template_Tags
 	 * @return EDD_Email_Template_Tags
 	 */
 	public function get_instance() {
-		if( self::$instance === null ) {
+		if ( self::$instance === null ) {
 			self::$instance = new self();
 		}
 		return self::$instance;
@@ -55,15 +54,15 @@ class EDD_Email_Template_Tags
 	 *
 	 * @since 1.x
 	 *
-	 * @param string $tag Email tag to be replace in email
+	 * @param string   $tag  Email tag to be replace in email
 	 * @param callable $func Hook to run when email tag is found
 	 */
 	public function add( $tag, $description, $func ) {
-		if( is_callable( $func ) )
-			$this->tags[ $tag ] = array(
-				'tag' 				=> $tag,
+		if ( is_callable( $func ) )
+			$this->tags[$tag] = array(
+				'tag'         => $tag,
 				'description' => $description,
-				'func'				=> $func
+				'func'        => $func
 			);
 	}
 
@@ -75,7 +74,7 @@ class EDD_Email_Template_Tags
 	 * @param string $tag Email tag to remove hook from
 	 */
 	public function remove( $tag ) {
-		unset( $this->tags[ $tag ] );
+		unset( $this->tags[$tag] );
 	}
 
 	/**
@@ -99,7 +98,7 @@ class EDD_Email_Template_Tags
 	public function do_tags( $content, $payment_id ) {
 
 		// Check if there is atleast one tag added
-		if( empty( $this->tags ) || ! is_array( $this->tags ) )
+		if ( empty( $this->tags ) || ! is_array( $this->tags ) )
 			return $content;
 
 		$this->payment_id = $payment_id;
@@ -114,13 +113,13 @@ class EDD_Email_Template_Tags
 	public function do_tag( $m ) {
 
 		// Get tag
-		$tag = $m[ 1 ];
+		$tag = $m[1];
 
 		// Return tag if tag not set
-		if( ! self::email_tag_exists( $tag ) )
-			return $m[ 0 ];
+		if ( ! self::email_tag_exists( $tag ) )
+			return $m[0];
 
-		return call_user_func( $this->tags[ $tag ][ 'func' ], $this->payment_id, $tag );
+		return call_user_func( $this->tags[$tag]['func'], $this->payment_id, $tag );
 	}
 
 }
@@ -158,4 +157,5 @@ function edd_do_email_tags( $content, $payment_id ) {
 function edd_load_email_tags() {
 	do_action( 'edd_add_email_tags' );
 }
+
 add_action( 'init', 'edd_load_email_tags' );
