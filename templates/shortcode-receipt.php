@@ -114,7 +114,7 @@ $status    = edd_get_payment_status( $payment, true );
 			<?php if ( edd_use_skus() ) { ?>
 				<th><?php _e( 'SKU', 'edd' ); ?></th>
 			<?php } ?>
-			<?php if ( edd_item_quanities_enabled() ) { ?>
+			<?php if ( edd_item_quantities_enabled() ) { ?>
 				<th><?php _e( 'Quantity', 'edd' ); ?></th>
 			<?php } ?>
 			<th><?php _e( 'Price', 'edd' ); ?></th>
@@ -142,7 +142,8 @@ $status    = edd_get_payment_status( $payment, true );
 						<div class="edd_purchase_receipt_product_notes"><?php echo edd_get_product_notes( $item['id'] ); ?></div>
 					<?php endif; ?>
 
-					<?php if( edd_is_payment_complete( $payment->ID ) ) : ?>
+					<?php
+					if( edd_is_payment_complete( $payment->ID ) && edd_receipt_show_download_files( $item['id'] ) ) : ?>
 					<ul class="edd_purchase_receipt_files">
 						<?php
 						if ( $download_files && is_array( $download_files ) ) :
@@ -200,7 +201,7 @@ $status    = edd_get_payment_status( $payment, true );
 				<?php if ( edd_use_skus() ) : ?>
 					<td><?php echo edd_get_download_sku( $item['id'] ); ?></td>
 				<?php endif; ?>
-				<?php if ( edd_item_quanities_enabled() ) { ?>
+				<?php if ( edd_item_quantities_enabled() ) { ?>
 					<td><?php echo $item['quantity']; ?></td>
 				<?php } ?>
 				<td>
@@ -217,9 +218,9 @@ $status    = edd_get_payment_status( $payment, true );
 			<tr>
 				<?php
 				$colspan = '';
-				if( edd_use_skus() && edd_item_quanities_enabled() ) {
+				if( edd_use_skus() && edd_item_quantities_enabled() ) {
 					$colspan = ' colspan="3"';
-				} elseif( edd_use_skus() || edd_item_quanities_enabled() ) {
+				} elseif( edd_use_skus() || edd_item_quantities_enabled() ) {
 					$colspan = ' colspan="2"';
 				}
 				?>
