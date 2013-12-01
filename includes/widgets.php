@@ -268,8 +268,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
         	$download_id = $instance['download_id'];
 
         // Variables from widget settings
-        $title = apply_filters( 'widget_title', $instance['title'] );
-
+        $title              = apply_filters( 'widget_title', $instance['title'] );
       	$download_title 	= $instance['download_title'] ? apply_filters( 'edd_product_details_widget_download_title', '<h3>' . get_the_title( $download_id ) . '</h3>', $download_id ) : '';
        	$purchase_button 	= $instance['purchase_button'] ? apply_filters( 'edd_product_details_widget_purchase_button', edd_get_purchase_link( array( 'download_id' => $download_id ) ), $download_id ) : '';
     	$categories 		= $instance['categories'] ? $instance['categories'] : '';
