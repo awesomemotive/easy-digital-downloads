@@ -311,14 +311,14 @@ function edd_get_cart_item_quantity( $download_id = 0, $options = array() ) {
 function edd_cart_item_price( $item_id = 0, $options = array() ) {
 	global $edd_options;
 
-	$tax_on_prices = edd_prices_show_tax_on_checkout() && ! edd_prices_include_tax();
+	$tax_on_prices = edd_prices_show_tax_on_checkout();
 
 	$price = edd_get_cart_item_price( $item_id, $options, $tax_on_prices );
 	$price = edd_currency_filter( edd_format_amount( $price ) );
 	$label = '';
 	if( edd_display_tax_rate() ) {
 		$label = '&nbsp;&ndash;&nbsp;';
-		if( $tax_on_prices ) {
+		if( edd_prices_show_tax_on_checkout() ) {
 			$label .= sprintf( __( 'includes %s tax', 'edd' ), edd_get_formatted_tax_rate() );
 		} else {
 			$label .= sprintf( __( 'excludes %s tax', 'edd' ), edd_get_formatted_tax_rate() );
@@ -360,11 +360,15 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $include
 		$price = edd_get_download_price( $download_id );
 	}
 
-	if( edd_prices_include_tax() && ! edd_download_is_tax_exclusive( $download_id ) && ! $include_taxes ) {
-		// If price is entered with tax, we have to deduct the taxed amount from the price to determine the actual price
-		$price -= edd_calculate_tax( $price );
-	} elseif( ! edd_download_is_tax_exclusive( $download_id ) && $include_taxes ) {
-		$price += edd_calculate_tax( $price );
+	if( ! edd_download_is_tax_exclusive( $download_id ) ) {
+
+		if( edd_prices_include_tax() && ! $include_taxes ) {
+			// If price is entered with tax, we have to deduct the taxed amount from the price to determine the actual price
+			$price -= edd_calculate_tax( $price );
+		} elseif( ! edd_prices_include_tax() && $include_taxes ) {
+			$price += edd_calculate_tax( $price );
+		}
+
 	}
 
 	return apply_filters( 'edd_cart_item_price', $price, $download_id, $options, $deprecated );
