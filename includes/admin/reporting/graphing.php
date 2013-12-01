@@ -557,8 +557,9 @@ function edd_get_report_dates() {
  * Grabs all of the selected date info and then redirects appropriately
  *
  * @since 1.3
- * @return void
-*/
+ *
+ * @param $data
+ */
 function edd_parse_report_dates( $data ) {
 	$dates = edd_get_report_dates();
 

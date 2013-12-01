@@ -31,7 +31,7 @@ function edd_process_purchase_form() {
 		// Validate the form $_POST data
 		$valid_data = edd_purchase_form_validate_fields();
 
-		// Allow themes and plugins to hoook to errors
+		// Allow themes and plugins to hook to errors
 		do_action( 'edd_checkout_error_checks', $valid_data, $_POST );
 	}
 
@@ -62,6 +62,7 @@ function edd_process_purchase_form() {
 		'discount'   => $valid_data['discount'],
 		'address'    => $user['address']
 	);
+
 	// Setup purchase information
 	$purchase_data = array(
 		'downloads'    => edd_get_cart_contents(),
@@ -73,7 +74,7 @@ function edd_process_purchase_form() {
 		'purchase_key' => strtolower( md5( uniqid() ) ), 	// Random key
 		'user_email'   => $user['user_email'],
 		'date'         => date( 'Y-m-d H:i:s' ),
-		'user_info'    => $user_info,
+		'user_info'    => stripslashes_deep( $user_info ),
 		'post_data'    => $_POST,
 		'cart_details' => edd_get_cart_content_details(),
 		'gateway'      => $valid_data['gateway'],
@@ -151,7 +152,7 @@ function edd_purchase_form_validate_fields() {
 		// Collect logged in user data
 		$valid_data['logged_in_user'] = edd_purchase_form_validate_logged_in_user();
 	} else if ( isset( $_POST['edd-purchase-var'] ) && $_POST['edd-purchase-var'] == 'needs-to-register' ) {
-	   // Set new user registrarion as required
+	   // Set new user registration as required
 	  $valid_data['need_new_user'] = true;
 
 	   // Validate new user data
@@ -214,7 +215,7 @@ function edd_purchase_form_validate_discounts() {
 	$error     = false;
 
 	// Check for valid discount(s) is present
-	if ( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) ) {
+	if ( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) && __( 'Enter discount', 'edd' ) != $_POST['edd-discount'] ) {
 		// Check for a posted discount
 		$posted_discount = isset( $_POST['edd-discount'] ) ? trim( $_POST['edd-discount'] ) : false;
 
@@ -277,10 +278,6 @@ function edd_purchase_form_required_fields() {
 		'edd_first' => array(
 			'error_id' => 'invalid_first_name',
 			'error_message' => __( 'Please enter your first name', 'edd' )
-		),
-		'edd_email' => array(
-			'error_id' => 'invalid_email',
-			'error_message' => __( 'Please enter a valid email address', 'edd' )
 		)
 	);
 	return apply_filters( 'edd_purchase_form_required_fields', $required_fields );
@@ -551,7 +548,10 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 	if ( empty( $user_data ) )
 		return -1;
 
-	$user_args = array(
+	if( edd_get_errors() )
+		return -1;
+
+	$user_args = apply_filters( 'edd_insert_user_args', array(
 		'user_login'      => isset( $user_data['user_login'] ) ? $user_data['user_login'] : null,
 		'user_pass'       => isset( $user_data['user_pass'] ) ? $user_data['user_pass'] : null,
 		'user_email'      => $user_data['user_email'],
@@ -559,17 +559,20 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 		'last_name'       => $user_data['user_last'],
 		'user_registered' => date('Y-m-d H:i:s'),
 		'role'            => get_option( 'default_role' )
-	);
+	), $user_data );
 
 	// Insert new user
-	$user_id = wp_insert_user( apply_filters( 'edd_insert_user_args', $user_args ) );
+	$user_id = wp_insert_user( $user_args );
 
 	// Validate inserted user
 	if ( is_wp_error( $user_id ) )
 		return -1;
 
+	// Allow themes and plugins to filter the user data
+	$user_data = apply_filters( 'edd_insert_user_data', $user_data, $user_args );
+
 	// Allow themes and plugins to hook
-	do_action( 'edd_insert_user', $user_id );
+	do_action( 'edd_insert_user', $user_id, $user_data );
 
 	// Login new user
 	edd_log_user_in( $user_id, $user_data['user_login'], $user_data['user_pass'] );
@@ -704,11 +707,13 @@ function edd_get_purchase_cc_info() {
 
 /**
  * Validate zip code based on country code
- *
- * @access		private
  * @since		1.4.4
- * @return		bool
-*/
+ *
+ * @param int    $zip
+ * @param string $country_code
+ *
+ * @return bool|mixed|void
+ */
 function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 	$ret = false;
 

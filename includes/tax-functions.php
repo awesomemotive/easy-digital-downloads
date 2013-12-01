@@ -70,24 +70,40 @@ function edd_get_tax_rates() {
 	return apply_filters( 'edd_get_tax_rates', $rates );
 }
 
-
 /**
  * Get taxation rate
  *
  * @since 1.3.3
  * @global $edd_options
- * @return float $trate Taxation rate
+ *
+ * @param bool $country
+ * @param bool $state
+ * @return mixed|void
  */
 function edd_get_tax_rate( $country = false, $state = false ) {
 	global $edd_options;
 
 	$rate = isset( $edd_options['tax_rate'] ) ? (float) $edd_options['tax_rate'] : 0;
 
-	if( empty( $country ) )
-		$country = ! empty( $_POST['country'] ) ? $_POST['country'] : edd_get_shop_country();
+	$user_address = edd_get_customer_address();
 
-	if( empty( $state ) )
-		$state = ! empty( $_POST['state'] ) ? $_POST['state'] : edd_get_shop_state();
+	if( empty( $country ) ) {
+		if( ! empty( $_POST['country'] ) ) {
+			$country = $_POST['country'];
+		} elseif( is_user_logged_in() && ! empty( $user_address ) ) {
+			$country = $user_address['country'];
+		}
+		$country = ! empty( $country ) ? $country : edd_get_shop_country();
+	}
+
+	if( empty( $state ) ) {
+		if( ! empty( $_POST['state'] ) ) {
+			$state = $_POST['state'];
+		} elseif( is_user_logged_in() && ! empty( $user_address ) ) {
+			$state = $user_address['state'];
+		}
+		$state = ! empty( $state ) ? $state : edd_get_shop_state();
+	}
 
 	if( ! empty( $country ) ) {
 		$tax_rates   = edd_get_tax_rates();
@@ -136,25 +152,26 @@ function edd_calculate_tax( $amount, $sum = true, $country = false, $state = fal
 	global $edd_options;
 
 	// Not using taxes
-	if ( ! edd_use_taxes() ) return $amount;
-
+	if ( ! edd_use_taxes() ) {
+		return $amount;
+	}
 	$rate = edd_get_tax_rate( $country, $state );
-	$tax = 0.00;
-	$prices_include_tax = edd_prices_include_tax();
+	$tax  = 0.00;
 
 	if ( $sum ) {
 
-		if ( $prices_include_tax ) {
-			$tax = $amount - (($amount / (1+$rate)) * $rate);
+		if ( edd_prices_include_tax() ) {
+			$tax = $amount - ( ( $amount / ( 1 + $rate ) ) * $rate );
 		} else {
-			$tax = $amount + ($amount * $rate);
-				}
-		} else {
+			$tax = $amount + ( $amount * $rate );
+		}
 
-		if ( $prices_include_tax ) {
-			$tax = ($amount / (1+$rate)) * $rate;
+	} else {
+
+		if ( edd_prices_include_tax() ) {
+			$tax = ( $amount / ( 1 + $rate ) ) * $rate;
 		} else {
-			$tax = $amount * rate;
+			$tax = $amount * $rate;
 		}
 
 	}

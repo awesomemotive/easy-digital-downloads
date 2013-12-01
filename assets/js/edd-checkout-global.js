@@ -63,6 +63,10 @@ jQuery(document).ready(function($) {
             success: function (tax_response) {
                 $('#edd_checkout_cart').replaceWith(tax_response.html);
                 $('.edd_cart_amount').html(tax_response.total);
+                var tax_data = new Object();
+                tax_data.postdata = postData;
+                tax_data.response = tax_response;
+                $('body').trigger('edd_taxes_recalculated', [ tax_data ]);
             }
         }).fail(function (data) {
             console.log(data);
@@ -140,6 +144,7 @@ jQuery(document).ready(function($) {
                             $(this).text(discount_response.total);
                         });
                         $('#edd-discount', $checkout_form_wrap ).val('');
+                        recalculate_taxes();
 						$('body').trigger('edd_discount_applied', [ discount_response ]);
                     } else {
                         alert(discount_response.msg);
@@ -177,6 +182,7 @@ jQuery(document).ready(function($) {
                 $('.edd_cart_amount').each(function() {
                     $(this).text(discount_response.total);
                 });
+                recalculate_taxes();
 				$('body').trigger('edd_discount_removed', [ discount_response ]);
             }
         }).fail(function (data) {

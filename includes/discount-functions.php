@@ -34,8 +34,22 @@ function edd_get_discounts( $args = array() ) {
 
 	$discounts = get_posts( $args );
 
-	if ( $discounts )
+	if ( $discounts ) {
 		return $discounts;
+	}
+
+	if( ! $discounts && ! empty( $args['s'] ) ) {
+		// If no discounts are found and we are searching, re-query with a meta key to find discounts by code
+		$args['meta_key']     = '_edd_discount_code';
+		$args['meta_value']   = $args['s'];
+		$args['meta_compare'] = 'LIKE';
+		unset( $args['s'] );
+		$discounts = get_posts( $args );
+	}
+
+	if( $discounts ) {
+		return $discounts;
+	}
 
 	return false;
 }
@@ -159,7 +173,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 		do_action( 'edd_post_update_discount', $details, $discount_id );
 
 		// Discount code updated
-		return true;
+		return $discount_id;
 	} else {
 		// Add the discount
 
@@ -180,7 +194,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 		do_action( 'edd_post_insert_discount', $details, $discount_id );
 
 		// Discount code created
-		return true;
+		return $discount_id;
 	}
 }
 
@@ -749,6 +763,8 @@ function edd_increase_discount_usage( $code ) {
 
 	update_post_meta( $id, '_edd_discount_uses', $uses );
 
+	do_action( 'edd_discount_increase_use_count', $uses, $id, $code );
+
 	return $uses;
 
 }
@@ -863,8 +879,10 @@ function edd_cart_has_discounts() {
  * Retrieves the total discounted amount on the cart
  *
  * @since 1.4.1
- * @param array $discounts Discount codes
- * @return float $discounted_amount Total discounted amount
+ *
+ * @param bool $discounts Discount codes
+ *
+ * @return float|mixed|void Total discounted amount
  */
 function edd_get_cart_discounted_amount( $discounts = false ) {
 	if ( empty( $discounts ) )
@@ -885,7 +903,6 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 	if ( empty( $discounts ) || ! is_array( $discounts ) )
 		return 0.00;
 
-	$subtotal = edd_get_cart_subtotal( $tax = false );
 	$amounts  = array();
 	$discounted_items = array();
 
@@ -910,7 +927,7 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 			}
 		} else {
 			// This is a global cart discount
-			$subtotal  = edd_get_cart_subtotal();
+			$subtotal  = edd_get_cart_subtotal( ! edd_taxes_after_discounts() );
 			$amount    = edd_get_discounted_amount( $discount, $subtotal );
 			$amounts[] = $subtotal - $amount;
 		}
@@ -940,7 +957,9 @@ function edd_cart_discounts_html() {
  * Retrieves the HTML for all discounts applied to the cart
  *
  * @since 1.4.1
- * @return string
+ *
+ * @param bool $discounts
+ * @return mixed|void
  */
 function edd_get_cart_discounts_html( $discounts = false ) {
 	if ( ! $discounts )
@@ -1016,14 +1035,14 @@ function edd_remove_cart_discount() {
 }
 add_action( 'edd_remove_cart_discount', 'edd_remove_cart_discount' );
 
-
 /**
  * Checks whether discounts are still valid when removing items from the cart
  *
  * If a discount requires a certain product, and that product is no longer in the cart, the discount is removed
  *
  * @since 1.5.2
- * @return void
+ *
+ * @param int $cart_key
  */
 function edd_maybe_remove_cart_discount( $cart_key = 0 ) {
 

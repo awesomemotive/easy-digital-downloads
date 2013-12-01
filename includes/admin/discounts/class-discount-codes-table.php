@@ -62,11 +62,9 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	/**
 	 * Get things started
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @uses EDD_Discount_Codes_Table::get_discount_code_counts()
 	 * @see WP_List_Table::__construct()
-	 * @return void
 	 */
 	public function __construct() {
 		global $status, $page;
@@ -144,7 +142,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb'        => '<input type="checkbox" />',
-			'ID'     	=> __( 'ID', 'edd' ),
 			'name'  	=> __( 'Name', 'edd' ),
 			'code'  	=> __( 'Code', 'edd' ),
 			'amount'  	=> __( 'Amount', 'edd' ),
@@ -167,7 +164,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'ID'     => array( 'ID', true ),
 			'name'   => array( 'name', false )
 		);
 	}
@@ -214,7 +210,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $discount );
 
-		return $item['name'] . $this->row_actions( $row_actions );
+		return stripslashes( $item['name'] ) . $this->row_actions( $row_actions );
 	}
 
 	/**
@@ -311,8 +307,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	public function discount_codes_data() {
 		$discount_codes_data = array();
 
-		if ( isset( $_GET['paged'] ) ) $page = $_GET['paged']; else $page = 1;
-
 		$per_page = $this->per_page;
 
 		$mode = edd_is_test_mode() ? 'test' : 'live';
@@ -327,7 +321,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 		$discounts = edd_get_discounts( array(
 			'posts_per_page' => $per_page,
-			'page'           => isset( $_GET['paged'] ) ? $_GET['paged'] : null,
+			'paged'          => isset( $_GET['paged'] ) ? $_GET['paged'] : 1,
 			'orderby'        => $orderby,
 			'order'          => $order,
 			'post_status'    => $status,

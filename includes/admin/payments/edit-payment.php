@@ -56,8 +56,8 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 						<?php
 							$downloads = maybe_unserialize( $payment_data['downloads'] );
 							$cart_items = isset( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] ) : false;
-							if ( $downloads ) :
-								foreach ( $downloads as $download ) :
+							if ( $downloads ) {
+								foreach ( $downloads as $download ) {
 									$id = isset( $payment_data['cart_details'] ) ? $download['id'] : $download;
 
 									if ( isset( $download['options']['price_id'] ) ) {
@@ -71,8 +71,8 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 											<input type="hidden" name="edd-purchased-downloads[' . $id . ']" value="' . $id . '"/>
 											<strong>' . get_the_title( $id ) . ' ' . $variable_prices . '</strong> - <a href="#" class="edd-remove-purchased-download" data-action="remove_purchased_download" data-id="' . $id . '">'. __( 'Remove', 'edd' ) .'</a>
 										  </div>';
-								endforeach;
-							endif;
+								}
+							}
 						?>
 						<p id="edit-downloads"><a href="#TB_inline?width=640&amp;inlineId=available-downloads" class="thickbox" title="<?php printf( __( 'Add %s to purchase', 'edd' ), strtolower( edd_get_label_plural() ) ); ?>"><?php printf( __( 'Add %s to purchase', 'edd' ), strtolower( edd_get_label_plural() ) ); ?></a></p>
 					</td>
@@ -84,9 +84,9 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 					<td>
 						<?php
 							$notes = edd_get_payment_notes( $payment->ID );
-							if ( ! empty( $notes ) ) :
+							if ( ! empty( $notes ) ) {
 								echo '<ul id="payment-notes">';
-								foreach ( $notes as $note ):
+								foreach ( $notes as $note ) {
 									if ( ! empty( $note->user_id ) ) {
 										$user = get_userdata( $note->user_id );
 										$user = $user->display_name;
@@ -101,11 +101,11 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 										echo '<strong>' . $user . '</strong>&nbsp;<em>' . $note->comment_date . '</em>&nbsp;&mdash;&nbsp;' . $note->comment_content;
 										echo '&nbsp;&ndash;&nbsp;<a href="' . $delete_note_url . '" class="edd-delete-payment-note" title="' . __( 'Delete this payment note', 'edd' ) . '">' . __( 'Delete', 'edd' ) . '</a>';
 										echo '</li>';
-								endforeach;
+								}
 								echo '</ul>';
-							else :
+							} else {
 								echo '<p>' . __( 'No payment notes', 'edd' ) . '</p>';
-							endif;
+							}
 						?>
 						<label for="edd-payment-note"><?php _e( 'Add New Note', 'edd' ); ?></label><br/>
 						<textarea name="edd-payment-note" id="edd-payment-note" cols="30" rows="5"></textarea>
@@ -158,17 +158,7 @@ $payment_data = edd_get_payment_meta( $payment_id  );
 	<div id="available-downloads" style="display:none;">
 		<form id="edd-add-downloads-to-purchase">
 			<p>
-				<select name="downloads[0][id]" class="edd-downloads-list">
-				<?php
-				$downloads = get_posts( apply_filters( 'edd_add_downloads_to_purchase_query', array( 'post_type' => 'download', 'posts_per_page' => -1, 'orderby' => 'title', 'order' => 'ASC' ) ) );
-				echo '<option value="0">' . sprintf( __('Select a %s', 'edd'), esc_html( edd_get_label_singular() ) ) . '</option>';
-				foreach( $downloads as $download ) {
-					?>
-					<option value="<?php echo $download->ID; ?>"><?php echo get_the_title( $download->ID ) ?></option>
-					<?php
-				}
-				?>
-				</select>
+				<?php echo EDD()->html->product_dropdown( 'downloads[0][id]' ); ?>
 				&nbsp;<img src="<?php echo admin_url('/images/wpspin_light.gif'); ?>" class="hidden edd_add_download_to_purchase_waiting waiting" />
 			</p>
 			<p>
