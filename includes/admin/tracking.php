@@ -225,7 +225,7 @@ class EDD_Tracking {
 
 		if( ! get_option( 'edd_tracking_notice' ) && ! isset( $edd_options['allow_tracking'] ) ) {
 
-			if( stristr( network_site_url( '/' ), 'dev' ) === false || stristr( network_site_url( '/' ), 'localhost' ) === false ) {
+			if( stristr( network_site_url( '/' ), 'dev' ) !== false && stristr( network_site_url( '/' ), 'localhost' ) !== false ) {
 				update_option( 'edd_tracking_notice', '1' );
 			} else {
 				$optin_url  = add_query_arg( 'edd_action', 'opt_into_tracking' );
