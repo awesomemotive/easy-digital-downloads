@@ -42,7 +42,7 @@ class EDD_Email_Template_Tags {
 	 *
 	 * @return EDD_Email_Template_Tags
 	 */
-	public function get_instance() {
+	public function get() {
 		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}
@@ -128,21 +128,21 @@ class EDD_Email_Template_Tags {
  * Functions
  */
 function edd_add_email_tag( $tag, $description, $func ) {
-	EDD_Email_Template_Tags::get_instance()->add( $tag, $description, $func );
+	EDD_Email_Template_Tags::get()->add( $tag, $description, $func );
 }
 
 function edd_remove_email_tag( $tag ) {
-	EDD_Email_Template_Tags::get_instance()->remove( $tag );
+	EDD_Email_Template_Tags::get()->remove( $tag );
 }
 
 function edd_email_tag_exists( $tag ) {
-	return EDD_Email_Template_Tags::get_instance()->email_tag_exists( $tag );
+	return EDD_Email_Template_Tags::get()->email_tag_exists( $tag );
 }
 
 function edd_do_email_tags( $content, $payment_id ) {
 
 	// Replace all tags
-	$content = EDD_Email_Template_Tags::get_instance()->do_tags( $content, $payment_id );
+	$content = EDD_Email_Template_Tags::get()->do_tags( $content, $payment_id );
 
 	// Maintaining backwards compatibility
 	$content = apply_filters( 'edd_email_template_tags', $content, edd_get_payment_meta( $payment_id ), $payment_id );
