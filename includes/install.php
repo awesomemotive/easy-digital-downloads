@@ -107,7 +107,7 @@ function edd_install() {
 		update_option( 'edd_settings', $options );
 		update_option( 'edd_version', EDD_VERSION );
 
-		// Create wp-content/uploads/edd/ foloder and the .htaccess file
+		// Create wp-content/uploads/edd/ folder and the .htaccess file
 		edd_create_protection_files( true );
 
 		// Add a temporary option to note that EDD pages have been created
