@@ -44,13 +44,18 @@ foreach ( $edd_taxonomies as $taxonomy ) {
 }
 
 /** Delete the Plugin Pages */
-if ( isset( $edd_options['purchase_page'] ) )
+if ( isset( $edd_options['purchase_page'] ) ) {
 	wp_delete_post( $edd_options['purchase_page'], true );
-if ( isset( $edd_options['success_page'] ) )
-	wp_delete_post( $edd_options['success_page'], true );
-if ( isset( $edd_options['failure_page'] ) )
-	wp_delete_post( $edd_options['failure_page'], true );
+}
 
+if ( isset( $edd_options['success_page'] ) ) {
+	wp_delete_post( $edd_options['success_page'], true );
+}
+
+if ( isset( $edd_options['failure_page'] ) ) {
+	wp_delete_post( $edd_options['failure_page'], true );
+}
+	
 /** Delete all the Plugin Options */
 delete_option( 'edd_settings_general' );
 delete_option( 'edd_settings_gateways' );
