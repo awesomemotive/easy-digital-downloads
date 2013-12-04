@@ -56,7 +56,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 				),
 				'subtotal' => '10',
 				'discount' => '0',
-				'tax'      => '0.36'
+				'tax'      => '0.36',
 				'price'    => '10.36',
 				'quantity' => 1
 			)
@@ -157,7 +157,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 
 		// This needs to test with a payment created
 
-		$this->assertEquals( 0, edd_get_sales_tax_for_year( date( 'Y' ) ) );
+		$this->assertEquals( '0.36', edd_get_sales_tax_for_year( date( 'Y' ) ) );
 	}
 
 	public function test_prices_show_tax_on_checkout() {
