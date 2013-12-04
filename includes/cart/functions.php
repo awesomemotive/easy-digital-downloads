@@ -20,7 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_cart_contents() {
 	$cart = EDD()->session->get( 'edd_cart' );
-	return ! empty( $cart ) ? apply_filters( 'edd_cart_contents', $cart ) : false;
+	$cart = ! empty( $cart ) ? array_values( $cart ) : false;
+	return apply_filters( 'edd_cart_contents', $cart );
 }
 
 /**
@@ -252,7 +253,7 @@ function edd_get_item_position_in_cart( $download_id = 0, $options = array() ) {
  * @since 1.7
  * @return bool
  */
-function edd_item_quanities_enabled() {
+function edd_item_quantities_enabled() {
 	global $edd_options;
 	$ret = isset( $edd_options['item_quantities'] );
 	return apply_filters( 'edd_item_quantities_enabled', $ret );
@@ -293,7 +294,7 @@ function edd_set_cart_item_quantity( $download_id = 0, $quantity = 1, $options =
 function edd_get_cart_item_quantity( $download_id = 0, $options = array() ) {
 	$cart     = edd_get_cart_contents();
 	$key      = edd_get_item_position_in_cart( $download_id, $options );
-	$quantity = isset( $cart[ $key ]['quantity'] ) && edd_item_quanities_enabled() ? $cart[ $key ]['quantity'] : 1;
+	$quantity = isset( $cart[ $key ]['quantity'] ) && edd_item_quantities_enabled() ? $cart[ $key ]['quantity'] : 1;
 	if( $quantity < 1 )
 		$quantity = 1;
 	return apply_filters( 'edd_get_cart_item_quantity', $quantity, $download_id, $options );

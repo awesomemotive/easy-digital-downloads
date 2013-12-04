@@ -156,20 +156,24 @@ final class Easy_Digital_Downloads {
 	 */
 	private function setup_constants() {
 		// Plugin version
-		if ( ! defined( 'EDD_VERSION' ) )
+		if ( ! defined( 'EDD_VERSION' ) ) {
 			define( 'EDD_VERSION', '1.8.5' );
+		}
 
 		// Plugin Folder Path
-		if ( ! defined( 'EDD_PLUGIN_DIR' ) )
+		if ( ! defined( 'EDD_PLUGIN_DIR' ) ) {
 			define( 'EDD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+		}
 
 		// Plugin Folder URL
-		if ( ! defined( 'EDD_PLUGIN_URL' ) )
+		if ( ! defined( 'EDD_PLUGIN_URL' ) ) {
 			define( 'EDD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+		}
 
 		// Plugin Root File
-		if ( ! defined( 'EDD_PLUGIN_FILE' ) )
+		if ( ! defined( 'EDD_PLUGIN_FILE' ) ) {
 			define( 'EDD_PLUGIN_FILE', __FILE__ );
+		}
 	}
 
 	/**
@@ -233,6 +237,7 @@ final class Easy_Digital_Downloads {
 
 		if( is_admin() ) {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-footer.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-notices.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
