@@ -107,6 +107,10 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		$this->assertFalse( edd_taxes_after_discounts() );
 	}
 
+	public function test_get_tax_rates() {
+		$this->assertInternalType( 'array', edd_get_tax_rates() );
+	}
+
 	public function test_get_tax_rate() {
 		$this->assertInternalType( 'float', edd_get_tax_rate( 'US', 'AL' ) );
 		// Test the one state that has its own rate
@@ -132,6 +136,10 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		$this->assertEquals( '0.036', edd_get_tax_rate() );
 	}
 
+	public function test_get_formatted_tax_rate() {
+		$this->assertEquals( '3.6%', edd_get_formatted_tax_rate() );
+	}
+
 	public function test_calculate_tax() {
 		$this->assertEquals( '1.94', edd_calculate_tax( 54 ) );
 		$this->assertEquals( '1.97', edd_calculate_tax( 54.7 ) );
@@ -144,6 +152,19 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	public function test_get_sales_tax_for_year() {
 		$this->assertEquals( '0.36', edd_get_sales_tax_for_year( date( 'Y' ) ) );
 		$this->assertEquals( '0', edd_get_sales_tax_for_year( date( 'Y' ) - 1 ) );
+	}
+
+	public function test_sales_tax_for_year() {
+		ob_start();
+		edd_sales_tax_for_year( date( 'Y' ) );
+		$this_year = ob_get_clean();
+		
+		ob_start();
+		edd_sales_tax_for_year( date( 'Y' ) - 1 );
+		$last_year = ob_get_clean();
+
+		$this->assertEquals( '&#36;0.36', $this_year );
+		$this->assertEquals( '&#36;0.00', $last_year );
 	}
 
 	public function test_prices_show_tax_on_checkout() {
