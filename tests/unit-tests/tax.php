@@ -109,7 +109,19 @@ class Tests_Taxes extends EDD_UnitTestCase {
 
 	public function test_get_tax_rate() {
 		$this->assertInternalType( 'float', edd_get_tax_rate( 'US', 'AL' ) );
+		// Test the one state that has its own rate
 		$this->assertEquals( '0.15', edd_get_tax_rate( 'US', 'AL' ) );
+
+		// Test some other arbitrary states to ensure they fall back to default
+		$this->assertEquals( '0.036', edd_get_tax_rate( 'US', 'KS' ) );
+		$this->assertEquals( '0.036', edd_get_tax_rate( 'US', 'AK' ) );
+		$this->assertEquals( '0.036', edd_get_tax_rate( 'US', 'CA' ) );
+
+		// Test some other countries to ensure they fall back to default
+		$this->assertEquals( '0.036', edd_get_tax_rate( 'JP' ) );
+		$this->assertEquals( '0.036', edd_get_tax_rate( 'BR' ) );
+		$this->assertEquals( '0.036', edd_get_tax_rate( 'CN' ) );
+		$this->assertEquals( '0.036', edd_get_tax_rate( 'HK' ) );
 	}
 
 	public function test_get_global_tax_rate() {
@@ -131,6 +143,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 
 	public function test_get_sales_tax_for_year() {
 		$this->assertEquals( '0.36', edd_get_sales_tax_for_year( date( 'Y' ) ) );
+		$this->assertEquals( '0', edd_get_sales_tax_for_year( date( 'Y' ) - 1 ) );
 	}
 
 	public function test_prices_show_tax_on_checkout() {
