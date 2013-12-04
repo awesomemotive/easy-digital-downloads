@@ -94,7 +94,7 @@ function edd_currency_filter( $price ) {
 	$negative = $price < 0;
 
 	if( $negative ) {
-		$price *= -1; // Turn amount positive
+		$price = substr( $price, 1 ); // Remove proceeding "-" -
 	}
 
 	if ( $position == 'before' ):
