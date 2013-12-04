@@ -201,10 +201,9 @@ function edd_get_sales_tax_for_year( $year = null ) {
 
 		$args = array(
 			'post_type' 		=> 'edd_payment',
+			'post_status'       => array( 'publish', 'revoked' ),
 			'posts_per_page' 	=> -1,
 			'year' 				=> $year,
-			'meta_key' 			=> '_edd_payment_mode',
-			'meta_value' 		=> edd_is_test_mode() ? 'test' : 'live',
 			'fields'			=> 'ids'
 		);
 

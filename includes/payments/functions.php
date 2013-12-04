@@ -81,12 +81,16 @@ function edd_insert_payment( $payment_data = array() ) {
 	$payment = wp_insert_post( $args );
 
 	if ( $payment ) {
+
+		$taxes    = wp_list_pluck( $payment_data['cart_details'], 'tax' );
+		$cart_tax = array_sum( $taxes );
+
 		$payment_meta = array(
 			'currency'     => $payment_data['currency'],
 			'downloads'    => serialize( $payment_data['downloads'] ),
 			'user_info'    => serialize( $payment_data['user_info'] ),
 			'cart_details' => serialize( $payment_data['cart_details'] ),
-			'tax'          => edd_is_cart_taxed() ? edd_get_cart_tax() : 0,
+			'tax'          => $cart_tax,
 		);
 
 		$mode    = edd_is_test_mode() ? 'test' : 'live';
