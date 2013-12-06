@@ -107,6 +107,12 @@ jQuery(document).ready(function($) {
         }
     });
 
+    // Add a class to the currently selected gateway on click
+    $body.on('click', '#edd_payment_mode_select input', function() {
+        $('#edd_payment_mode_select label.edd-gateway-option-selected').removeClass( 'edd-gateway-option-selected' );
+        $('#edd_payment_mode_select input:checked').parent().addClass( 'edd-gateway-option-selected' );
+    });
+
     /* Discounts */
     var before_discount = $edd_cart_amount.text(),
         $checkout_form_wrap = $('#edd_checkout_form_wrap');
