@@ -48,14 +48,6 @@ final class Easy_Digital_Downloads {
 	private static $instance;
 
 	/**
-	 *  EDD User Roles and Capabilities Object
-	 *
-	 * @var object
-	 * @since 1.4.4
-	 */
-	public $roles;
-
-	/**
 	 * EDD Cart Fees Object
 	 *
 	 * @var object
@@ -111,11 +103,11 @@ final class Easy_Digital_Downloads {
 			self::$instance->setup_constants();
 			self::$instance->includes();
 			self::$instance->load_textdomain();
-			self::$instance->roles = new EDD_Roles();
-			self::$instance->fees = new EDD_Fees();
-			self::$instance->api = new EDD_API();
+			self::$instance->roles   = new EDD_Roles();
+			self::$instance->fees    = new EDD_Fees();
+			self::$instance->api     = new EDD_API();
 			self::$instance->session = new EDD_Session();
-			self::$instance->html = new EDD_HTML_Elements();
+			self::$instance->html    = new EDD_HTML_Elements();
 		}
 		return self::$instance;
 	}
