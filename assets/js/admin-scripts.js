@@ -245,6 +245,7 @@ jQuery(document).ready(function ($) {
 
 		updatePrices : function() {
 			$( '#edd_price_fields' ).on( 'keyup', '.edd_variable_prices_name', function() {
+
 				var key  = $(this).parents( 'tr' ).index(),
 				    name = $( this ).val();
 
