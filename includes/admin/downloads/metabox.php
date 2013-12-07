@@ -700,10 +700,11 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 			}
 
 			echo EDD()->html->select( array(
-				'name'     => 'edd_download_files[' . $key . '][condition]',
-				'class'    => 'edd_repeatable_condition_field',
-				'options'  => $options,
-				'selected' => $condition
+				'name'             => 'edd_download_files[' . $key . '][condition]',
+				'class'            => 'edd_repeatable_condition_field',
+				'options'          => $options,
+				'selected'         => $condition,
+				'show_option_none' => false
 			) ); 
 		?>
 	</td>
