@@ -196,12 +196,13 @@ class EDD_HTML_Elements {
 			'name'             => null,
 			'selected'         => 0,
 			'show_option_all'  => _x( 'All', 'all dropdown items', 'edd' ),
-			'show_option_none' => _x( 'None', 'no dropdown items', 'edd' )
+			'show_option_none' => _x( 'None', 'no dropdown items', 'edd' ),
+			'class'            => 'edd-select'
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="edd-select ' . esc_attr( $args[ 'name'] ) . '">';
+		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '">';
 
 		if ( ! empty( $args[ 'options' ] ) ) {
 			if ( $args[ 'show_option_all' ] )
@@ -233,7 +234,7 @@ class EDD_HTML_Elements {
 		$defaults = array(
 			'name'     => null,
 			'current'  => null,
-			'class'    => 'edd-select'
+			'class'    => 'edd-checkbox'
 		);
 
 		$args = wp_parse_args( $args, $defaults );
