@@ -333,7 +333,7 @@ function edd_render_price_field( $post_id ) {
 		<input type="hidden" id="edd_variable_prices" class="edd_variable_prices_name_field" value=""/>
 		<p>
 			<?php echo EDD()->html->checkbox( array( 'name' => '_edd_price_options_mode', 'current' => $single_option_mode ) ); ?>
-			<label for="_edd_price_options_mode"><?php apply_filters( 'edd_multi_option_purchase_text', _e( 'Enable multi option purchase mode. Leave unchecked to only permit a single price option to be purchased', 'edd' ) ); ?></label>
+			<label for="_edd_price_options_mode"><?php apply_filters( 'edd_multi_option_purchase_text', _e( 'Enable multi-option purchase mode. Allows multiple price options to be added to your cart at once', 'edd' ) ); ?></label>
 		</p>
 		<div id="edd_price_fields" class="edd_meta_table_wrap">
 			<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
@@ -498,7 +498,7 @@ function edd_render_products_field( $post_id ) {
 			<table class="widefat" width="100%" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
-						<th style="width: 20%"><?php printf( __( 'Select the %s to bundle with this %s', 'edd' ), edd_get_label_plural(), edd_get_label_singular() ); ?></th>
+						<th style="width: 97%"><?php printf( __( '%s Name', 'edd' ), edd_get_label_singular() ); ?></th>
 						<?php do_action( 'edd_download_products_table_head', $post_id ); ?>
 						<th style="width: 2%"></th>
 					</tr>
@@ -521,7 +521,7 @@ function edd_render_products_field( $post_id ) {
 				<?php endif; ?>
 					<tr>
 						<td class="submit" colspan="4" style="float: none; clear:both; background: #fff;">
-							<a class="button-secondary edd_add_repeatable" style="margin: 6px 0;"><?php _e( 'Add New', 'edd' ); ?></a>
+							<a class="button-secondary edd_add_repeatable" style="margin: 6px 0 10px;"><?php printf( __( 'Add %s', 'edd' ), edd_get_label_singular() ); ?></a>
 						</td>
 					</tr>
 				</tbody>
@@ -619,7 +619,7 @@ function edd_render_files_field( $post_id = 0 ) {
 				<?php endif; ?>
 					<tr>
 						<td class="submit" colspan="4" style="float: none; clear:both; background: #fff;">
-							<a class="button-secondary edd_add_repeatable" style="margin: 6px 0;"><?php _e( 'Add New File', 'edd' ); ?></a>
+							<a class="button-secondary edd_add_repeatable" style="margin: 6px 0 10px;"><?php _e( 'Add New File', 'edd' ); ?></a>
 						</td>
 					</tr>
 				</tbody>
@@ -743,7 +743,7 @@ function edd_render_download_limit_row( $post_id ) {
 			'value' => $edd_download_limit,
 			'class' => 'small-text'
 		) ); ?>
-		<?php _e( 'The maximum number of times a buyer can download each file. Leave blank or set to 0 for unlimited', 'edd' ); ?>
+		<?php _e( 'Blank or 0 for unlimited', 'edd' ); ?>
 	</label>
 <?php
 }
