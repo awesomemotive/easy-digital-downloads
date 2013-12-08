@@ -352,13 +352,17 @@ function edd_get_bundled_products( $download_id = 0 ) {
  * @return int $earnings Earnings for a certain download
  */
 function edd_get_download_earnings_stats( $download_id ) {
-	// If the current Download CPT has no earnings value associated with it, we need to initialize it.
-	// This is what enables us to sort it.
+
 	if ( '' == get_post_meta( $download_id, '_edd_download_earnings', true ) ) {
 		add_post_meta( $download_id, '_edd_download_earnings', 0 );
 	}
 
 	$earnings = get_post_meta( $download_id, '_edd_download_earnings', true );
+
+	if( $earnings < 0 ) {
+		// Never let earnings be less than zero
+		$earnings = 0;
+	}
 
 	return $earnings;
 }
@@ -371,13 +375,17 @@ function edd_get_download_earnings_stats( $download_id ) {
  * @return int $sales Amount of sales for a certain download
  */
 function edd_get_download_sales_stats( $download_id ) {
-	// If the current Download CPT has no sales value associated with it, we need to initialize it.
-	// This is what enables us to sort it.
+
 	if ( '' == get_post_meta( $download_id, '_edd_download_sales', true ) ) {
 		add_post_meta( $download_id, '_edd_download_sales', 0 );
 	} // End if
 
 	$sales = get_post_meta( $download_id, '_edd_download_sales', true );
+
+	if( $sales < 0 ) {
+		// Never let sales be less than zero
+		$sales = 0;
+	}
 
 	return $sales;
 }
@@ -557,10 +565,11 @@ function edd_get_average_monthly_download_earnings( $download_id ) {
 
     $months = floor( $diff / ( 30*60*60*24 ) ); // Number of months since publication
 
-	if ( $months > 0 )
-		return ( $earnings / $months );
+	if ( $months > 0 ) {
+		$earnings = ( $earnings / $months );
+	}
 
-	return $earnings;
+	return $earnings < 0 ? 0 : $earnings;
 }
 
 /**
@@ -579,7 +588,7 @@ function edd_get_average_monthly_download_sales( $download_id ) {
     $months = floor( $diff / ( 30*60*60*24 ) ); // Number of months since publication
 
     if ( $months > 0 )
-        return ( $sales / $months );
+        $sales = ( $sales / $months );
 
     return $sales;
 }
