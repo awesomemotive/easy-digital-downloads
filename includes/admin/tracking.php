@@ -182,13 +182,14 @@ class EDD_Tracking {
 	public function check_for_optout( $data ) {
 
 		global $edd_options;
-
 		if( isset( $edd_options['allow_tracking'] ) ) {
 			unset( $edd_options['allow_tracking'] );
 			update_option( 'edd_settings', $edd_options );
 		}
 
 		update_option( 'edd_tracking_notice', '1' );
+
+		wp_redirect( remove_query_arg( 'edd_action' ) ); exit;
 
 	}
 
@@ -222,23 +223,33 @@ class EDD_Tracking {
 	public function admin_notice() {
 
 		global $edd_options;
-		if( ! get_option( 'edd_tracking_notice' ) && ! isset( $edd_options['allow_tracking'] ) && current_user_can( 'manage_options' ) ) {
-			if( 
-				stristr( network_site_url( '/' ), 'dev'       ) !== false ||
-				stristr( network_site_url( '/' ), 'localhost' ) !== false ||
-				stristr( network_site_url( '/' ), ':8888'     ) !== false // This is common with MAMP on OS X
-			) {
-				update_option( 'edd_tracking_notice', '1' );
-			} else {
-				$optin_url  = add_query_arg( 'edd_action', 'opt_into_tracking' );
-				$optout_url = add_query_arg( 'edd_action', 'opt_out_of_tracking' );
 
-				echo '<div class="updated"><p>';
-					echo __( 'Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a 20% discount to the shop for <a href="https://easydigitaldownloads.com/extensions" target="_blank">Extensions and Themes</a>. No sensitive data is tracked.', 'edd' );
-					echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-secondary">' . __( 'Allow', 'edd' ) . '</a>';
-					echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow', 'edd' ) . '</a>';
-				echo '</p></div>';
-			}
+		$hide_notice = get_option( 'edd_tracking_notice' );
+
+		if( $hide_notice )
+			return;
+
+		if( isset( $edd_options['allow_tracking'] ) )
+			return;
+
+		if( ! current_user_can( 'manage_options' ) )
+			return;
+
+		if( 
+			stristr( network_site_url( '/' ), 'dev'       ) !== false ||
+			stristr( network_site_url( '/' ), 'localhost' ) !== false ||
+			stristr( network_site_url( '/' ), ':8888'     ) !== false // This is common with MAMP on OS X
+		) {
+			update_option( 'edd_tracking_notice', '1' );
+		} else {
+			$optin_url  = add_query_arg( 'edd_action', 'opt_into_tracking' );
+			$optout_url = add_query_arg( 'edd_action', 'opt_out_of_tracking' );
+
+			echo '<div class="updated"><p>';
+				echo __( 'Allow Easy Digital Downloads to track plugin usage? Opt-in to tracking and our newsletter and immediately be emailed a 20% discount to the shop for <a href="https://easydigitaldownloads.com/extensions" target="_blank">Extensions and Themes</a>. No sensitive data is tracked.', 'edd' );
+				echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-secondary">' . __( 'Allow', 'edd' ) . '</a>';
+				echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary">' . __( 'Do not allow', 'edd' ) . '</a>';
+			echo '</p></div>';
 		}
 	}
 
