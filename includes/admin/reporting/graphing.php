@@ -26,7 +26,6 @@ function edd_reports_graph() {
 	switch ( $dates['range'] ) :
 		case 'today' :
 			$time_format 	= '%d/%b';
-			$tick_size		= 'hour';
 			$day_by_day		= true;
 			break;
 		case 'last_year' :
@@ -36,39 +35,32 @@ function edd_reports_graph() {
 			break;
 		case 'this_year' :
 			$time_format 	= '%b';
-			$tick_size		= 'month';
 			$day_by_day		= false;
 			break;
 		case 'last_quarter' :
 			$time_format	= '%b';
-			$tick_size		= 'month';
 			$day_by_day 	= false;
 			break;
 		case 'this_quarter' :
 			$time_format	= '%b';
-			$tick_size		= 'month';
 			$day_by_day 	= false;
 			break;
 		case 'other' :
 			if( ( $dates['m_end'] - $dates['m_start'] ) >= 2 ) {
 				$time_format	= '%b';
-				$tick_size		= 'month';
 				$day_by_day 	= false;
 			} else {
 				$time_format 	= '%d/%b';
-				$tick_size		= 'day';
 				$day_by_day 	= true;
 			}
 			break;
 		default:
 			$time_format 	= '%d/%b'; 	// Show days by default
-			$tick_size		= 'day'; 	// Default graph interval
 			$day_by_day 	= true;
 			break;
 	endswitch;
 
 	$time_format 	= apply_filters( 'edd_graph_timeformat', $time_format );
-	$tick_size 		= apply_filters( 'edd_graph_ticksize', $tick_size );
 	$totals 		= (float) 0.00; // Total earnings for time period shown
 	$sales_totals   = 0;            // Total sales for time period shown
 
@@ -183,6 +175,8 @@ function edd_reports_graph() {
 				$graph = new EDD_Graph( $data );
 				$graph->set( 'x_mode', 'time' );
 				$graph->set( 'multiple_y_axes', true );
+				$graph->set( 'x_ticksize_unit', $tick_size );
+				$graph->set( 'x_ticksize', $tick_size );
 				$graph->display();
 				
 				$estimated = edd_estimated_monthly_stats();
