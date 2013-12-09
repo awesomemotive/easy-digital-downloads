@@ -82,6 +82,9 @@ class EDD_Graph {
 			'bordercolor'     => '#ccc',
 			'color'           => '#bbb',
 			'borderwidth'     => 2,
+			'bars'            => false,
+			'lines'           => true,
+			'points'          => true
 		);
 
 	}
@@ -107,10 +110,15 @@ class EDD_Graph {
 							// data format is: [ point on x, value on y ]
 							data: [<?php foreach( $data as $point ) { echo '[' . implode( ',', $point ) . '],'; } ?>],
 							points: {
-								show: true,
+								show: <?php echo $this->options['points'] ? 'true' : 'false'; ?>,
+							},
+							bars: {
+								show: <?php echo $this->options['bars'] ? 'true' : 'false'; ?>,
+								barWidth: 12,
+								horizontal: false
 							},
 							lines: {
-								show: true
+								show: <?php echo $this->options['lines'] ? 'true' : 'false'; ?>
 							},
 							<?php if( $this->options[ 'multiple_y_axes' ] ) : ?>
 							yaxis: <?php echo $yaxis_count; ?>
