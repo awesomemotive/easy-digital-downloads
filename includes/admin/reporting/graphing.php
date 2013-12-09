@@ -175,8 +175,6 @@ function edd_reports_graph() {
 				$graph = new EDD_Graph( $data );
 				$graph->set( 'x_mode', 'time' );
 				$graph->set( 'multiple_y_axes', true );
-				$graph->set( 'x_ticksize_unit', $tick_size );
-				$graph->set( 'x_ticksize', $tick_size );
 				$graph->display();
 				
 				$estimated = edd_estimated_monthly_stats();
