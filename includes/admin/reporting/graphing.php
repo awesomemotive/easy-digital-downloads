@@ -181,7 +181,8 @@ function edd_reports_graph() {
 				<?php
 				edd_reports_graph_controls();
 				$graph = new EDD_Graph( $data );
-				$graph->set( 'xmode', 'time' );
+				$graph->set( 'x_mode', 'time' );
+				$graph->set( 'multiple_y_axes', true );
 				$graph->display();
 				
 				$estimated = edd_estimated_monthly_stats();
