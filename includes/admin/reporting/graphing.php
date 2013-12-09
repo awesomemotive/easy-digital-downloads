@@ -72,253 +72,121 @@ function edd_reports_graph() {
 	$totals 		= (float) 0.00; // Total earnings for time period shown
 	$sales_totals   = 0;            // Total sales for time period shown
 
-	ob_start(); ?>
-	<script type="text/javascript">
-	   jQuery( document ).ready( function($) {
-	   		$.plot(
-	   			$("#edd_monthly_stats"),
-	   			[{
-   					data: [
-	   					<?php
 
-	   					if( $dates['range'] == 'today' ) {
-	   						// Hour by hour
-	   						$hour  = 1;
-	   						$month = date( 'n' );
-							while ( $hour <= 23 ) :
-								$sales = edd_get_sales_by_date( $dates['day'], $month, $dates['year'], $hour );
-								$sales_totals += $sales;
-								$date = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ); ?>
-								[<?php echo $date * 1000; ?>, <?php echo $sales; ?>],
-								<?php
-								$hour++;
-							endwhile;
+	$earnings_data = array();
+	$sales_data    = array();
 
-	   					} elseif( $dates['range'] == 'this_week' || $dates['range'] == 'last_week'  ) {
+	if( $dates['range'] == 'today' ) {
+		// Hour by hour
+		$hour  = 1;
+		$month = date( 'n' );
+		while ( $hour <= 23 ) :
 
-							//Day by day
-							$day     = $dates['day'];
-							$day_end = $dates['day_end'];
-	   						$month   = $dates['m_start'];
-							while ( $day <= $day_end ) :
-								$sales = edd_get_sales_by_date( $day, $month, $dates['year'] );
-								$sales_totals += $sales;
-								$date = mktime( 0, 0, 0, $month, $day, $dates['year'] ); ?>
-								[<?php echo $date * 1000; ?>, <?php echo $sales; ?>],
-								<?php
-								$day++;
-							endwhile;
+			$sales    = edd_get_sales_by_date( $dates['day'], $month, $dates['year'], $hour );
+			$earnings = edd_get_earnings_by_date( $dates['day'], $month, $dates['year'], $hour );
+			
+			$sales_totals += $sales;
+			$totals        += $earnings;
+			
+			$date            = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ) * 1000;
+			$sales_data[]    = array( $date, $sales );
+			$earnings_data[] = array( $date, $earnings );
+			
+			$hour++;
+		endwhile;
 
-						} else {
+	} elseif( $dates['range'] == 'this_week' || $dates['range'] == 'last_week'  ) {
 
-							$y = $dates['year'];
-							while( $y <= $dates['year_end'] ) :
+		//Day by day
+		$day     = $dates['day'];
+		$day_end = $dates['day_end'];
+			$month   = $dates['m_start'];
+		while ( $day <= $day_end ) :
+			$sales = edd_get_sales_by_date( $day, $month, $dates['year'] );
+			$sales_totals += $sales;
 
-								if( $dates['year'] == $dates['year_end'] ) {
-									$month_start = $dates['m_start'];
-									$month_end   = $dates['m_end'];
-								} elseif( $y == $dates['year'] ) {
-									$month_start = $dates['m_start'];
-									$month_end   = 12;
-								} else {
-									$month_start = 1;
-									$month_end   = 12;
-								}
+			$earnings = edd_get_earnings_by_date( $day, $month, $dates['year'] );
+			$totals += $earnings;
 
-								$i = $month_start;
-								while ( $i <= $month_end ) :
-									if ( $day_by_day ) :
-										$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
-										$d 				= 1;
-										while ( $d <= $num_of_days ) :
-											$sales = edd_get_sales_by_date( $d, $i, $y );
-											$sales_totals += $sales;
-											$date = mktime( 0, 0, 0, $i, $d, $y ); ?>
-											[<?php echo $date * 1000; ?>, <?php echo $sales; ?>],
-										<?php
-										$d++;
-										endwhile;
-									else :
-										$sales = edd_get_sales_by_date( null, $i, $y );
-										$sales_totals += $sales;
-										$date = mktime( 0, 0, 0, $i, 1, $y );
-										?>
-										[<?php echo $date * 1000; ?>, <?php echo $sales; ?>],
-									<?php
-									endif;
-									$i++;
-								endwhile;
+			$date = mktime( 0, 0, 0, $month, $day, $dates['year'] ) * 1000;
+			$sales_data[] = array( $date, $sales );
+			$earnings_data[] = array( $date, $earnings );
+			$day++;
+		endwhile;
 
-								$y++;
-							endwhile;
+	} else {
 
-	   					}
+		$y = $dates['year'];
+		while( $y <= $dates['year_end'] ) :
 
-	   					?>,
-	   				],
-	   				yaxis: 2,
-   					label: "<?php _e( 'Sales', 'edd' ); ?>",
-   					id: 'sales'
-   				},
-   				{
-   					data: [
-	   					<?php
+			if( $dates['year'] == $dates['year_end'] ) {
+				$month_start = $dates['m_start'];
+				$month_end   = $dates['m_end'];
+			} elseif( $y == $dates['year'] ) {
+				$month_start = $dates['m_start'];
+				$month_end   = 12;
+			} else {
+				$month_start = 1;
+				$month_end   = 12;
+			}
 
-	   					if( $dates['range'] == 'today' ) {
+			$i = $month_start;
+			while ( $i <= $month_end ) :
+				if ( $day_by_day ) :
+					$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
+					$d 				= 1;
+					while ( $d <= $num_of_days ) :
+						$sales = edd_get_sales_by_date( $d, $i, $y );
+						$sales_totals += $sales;
 
-	   						// Hour by hour
-	   						$hour  = 1;
-	   						$month = date( 'n' );
-							while ( $hour <= 23 ) :
-								$earnings = edd_get_earnings_by_date( $dates['day'], $month, $dates['year'], $hour );
-								$totals += $earnings;
-								$date = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ); ?>
-								[<?php echo $date * 1000; ?>, <?php echo $earnings; ?>],
-								<?php
-								$hour++;
-							endwhile;
+						$earnings = edd_get_earnings_by_date( $d, $i, $y );
+						$totals += $earnings;
 
-						} elseif( $dates['range'] == 'this_week' || $dates['range'] == 'last_week' ) {
+						$date = mktime( 0, 0, 0, $i, $d, $y ) * 1000;
+						$sales_data[] = array( $date, $sales );
+						$earnings_data[] = array( $date, $earnings );
+					$d++;
+					endwhile;
+				else :
+					$sales = edd_get_sales_by_date( null, $i, $y );
+					$sales_totals += $sales;
 
-							//Day by day
-							$day     = $dates['day'];
-							$day_end = $dates['day_end'];
-	   						$month   = $dates['m_start'];
-							while ( $day <= $day_end ) :
-								$earnings = edd_get_earnings_by_date( $day, $month, $dates['year'] );
-								$totals += $earnings;
-								$date = mktime( 0, 0, 0, $month, $day, $dates['year'] ); ?>
-								[<?php echo $date * 1000; ?>, <?php echo $earnings; ?>],
-								<?php
-								$day++;
-							endwhile;
+					$earnings = edd_get_earnings_by_date( null, $i, $y );
+					$totals += $earnings;
 
-	   					} else {
+					$date = mktime( 0, 0, 0, $i, 1, $y ) * 1000;
+					$sales_data[] = array( $date, $sales );
+					$earnings_data[] = array( $date, $earnings );
+				endif;
+				$i++;
+			endwhile;
 
-	   						$y = $dates['year'];
-							while( $y <= $dates['year_end'] ) :
+			$y++;
+		endwhile;
 
-								if( $dates['year'] == $dates['year_end'] ) {
-									$month_start = $dates['m_start'];
-									$month_end   = $dates['m_end'];
-								} elseif( $y == $dates['year'] ) {
-									$month_start = $dates['m_start'];
-									$month_end   = 12;
-								} else {
-									$month_start = 1;
-									$month_end   = 12;
-								}
+	}
 
-								$i = $month_start;
-								while ( $i <= $month_end ) :
-									if ( $day_by_day ) :
-										$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
-										$d 				= 1;
-										while ( $d <= $num_of_days ) :
-											$earnings = edd_get_earnings_by_date( $d, $i, $y );
-											$totals += $earnings;
-											$date = mktime( 0, 0, 0, $i, $d, $y ); ?>
-											[<?php echo $date * 1000; ?>, <?php echo $earnings; ?>],
-										<?php
-										$d++;
-										endwhile;
-									else :
-										$earnings = edd_get_earnings_by_date( null, $i, $y );
-										$totals += $earnings;
-										$date = mktime( 0, 0, 0, $i, 1, $y );
-										?>
-										[<?php echo $date * 1000; ?>, <?php echo $earnings; ?>],
-									<?php
-									endif;
-									$i++;
-								endwhile;
+	$data = array(
+		__( 'Earnings', 'edd' ) => $earnings_data,
+		__( 'Sales', 'edd' )    => $sales_data
+	);
 
-								$y++;
-							endwhile;
-
-						}
-
-	   					?>
-	   				],
-   					label: "<?php _e( 'Earnings', 'edd' ); ?>",
-   					id: 'earnings'
-	   			}],
-	   		{
-               	series: {
-                   lines: { show: true },
-                   points: { show: true }
-            	},
-            	grid: {
-           			show: true,
-					aboveData: false,
-					color: '#ccc',
-					backgroundColor: '#fff',
-					borderWidth: 2,
-					borderColor: '#ccc',
-					clickable: false,
-					hoverable: true
-           		},
-            	xaxis: {
-	   				mode: "time",
-	   				timeFormat: "<?php echo $time_format; ?>",
-	   				minTickSize: [1, "<?php echo $tick_size; ?>"]
-   				},
-   				yaxis: [
-   					{ min: 0, tickSize: 1, tickDecimals: 2 },
-   					{ min: 0, tickDecimals: 0 }
-   				]
-
-            });
-
-	   		function edd_flot_tooltip(x, y, contents) {
-		        $('<div id="edd-flot-tooltip">' + contents + '</div>').css( {
-		            position: 'absolute',
-		            display: 'none',
-		            top: y + 5,
-		            left: x + 5,
-		            border: '1px solid #fdd',
-		            padding: '2px',
-		            'background-color': '#fee',
-		            opacity: 0.80
-		        }).appendTo("body").fadeIn(200);
-		    }
-
-		    var previousPoint = null;
-		    $("#edd_monthly_stats").bind("plothover", function (event, pos, item) {
-		        $("#x").text(pos.x.toFixed(2));
-		        $("#y").text(pos.y.toFixed(2));
-	            if (item) {
-	                if (previousPoint != item.dataIndex) {
-	                    previousPoint = item.dataIndex;
-	                    $("#edd-flot-tooltip").remove();
-	                    var x = item.datapoint[0].toFixed(2),
-	                        y = item.datapoint[1].toFixed(2);
-	                    if( item.series.id == 'earnings' ) {
-	                    	if( edd_vars.currency_pos == 'before' ) {
-								edd_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + edd_vars.currency_sign + y );
-	                    	} else {
-								edd_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y + edd_vars.currency_sign );
-	                    	}
-	                    } else {
-		                    edd_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y.replace( '.00', '' ) );
-	                    }
-	                }
-	            } else {
-	                $("#edd-flot-tooltip").remove();
-	                previousPoint = null;
-	            }
-		    });
-	   });
-    </script>
+	?>
 
 	<div class="metabox-holder" style="padding-top: 0;">
 		<div class="postbox">
 			<h3><span><?php _e('Earnings Over Time', 'edd'); ?></span></h3>
 
 			<div class="inside">
-				<?php edd_reports_graph_controls(); ?>
-				<?php $estimated = edd_estimated_monthly_stats(); ?>
-				<div id="edd_monthly_stats" style="height: 300px;"></div>
+				<?php
+				edd_reports_graph_controls();
+				$graph = new EDD_Graph( $data );
+				$graph->set( 'xmode', 'time' );
+				$graph->display();
+				
+				$estimated = edd_estimated_monthly_stats();
+				?>
+				
 				<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $totals ) ); ?></strong></p>
 				<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo $sales_totals; ?></strong></p>
 				<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly earnings: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $estimated['earnings'] ) ); ?></strong></p>
