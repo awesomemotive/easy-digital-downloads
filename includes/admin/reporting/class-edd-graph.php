@@ -120,6 +120,25 @@ class EDD_Graph {
 	}
 
 	/**
+	 * Get an option
+	 *
+	 * @param $key The option key to get
+	 * @since 1.9
+	 */
+	public function get( $key ) {
+		return isset( $this->options[ $key ] ) ? $this->options[ $key ] : false;
+	}
+
+	/**
+	 * Get graph data
+	 *
+	 * @since 1.9
+	 */
+	public function get_data() {
+		return apply_filters( 'edd_get_graph_data', $this->data, $this );
+	}
+
+	/**
 	 * Build the graph and return it as a string
 	 *
 	 * @var array
@@ -136,7 +155,7 @@ class EDD_Graph {
 				$.plot(
 					$("#edd-graph-<?php echo $this->id; ?>"),
 					[
-						<?php foreach( $this->data as $label => $data ) : ?>
+						<?php foreach( $this->get_data() as $label => $data ) : ?>
 						{ 
 							label: "<?php echo esc_attr( $label ); ?>",
 							id: "<?php echo sanitize_key( $label ); ?>",
@@ -253,40 +272,3 @@ class EDD_Graph {
 	
 
 }
-
-// Just for simple testing
-
-function edd_test_graph_class() {
-
-	$data = array(
-
-		// Line one
-		'Foo' => array(
-			array( 1386048624, 3 ),
-			array( 1386307825, 5 ),
-			array( 1386394224, 8 ),
-			array( 1386480624, 2 )
-		),
-
-		// Line 2
-		'Bar' => array(
-			array( 1386048624, 1 ),
-			array( 1386307825, 2 ),
-			array( 1386394224, 10 ),
-			array( 1386480624, 3 )
-		),
-
-		// Line 3
-		'Puppy' => array(
-			array( 1386048624, 10 ),
-			array( 1386307825, 12 ),
-			array( 1386394224, 2 ),
-			array( 1386480624, 4 )
-		)
-	);
-
-	$graph = new EDD_Graph( $data );
-	$graph->set( 'x_mode', 'time' );
-	$graph->display();
-}
-//add_action( 'edd_reports_view_earnings', 'edd_test_graph_class', -1 );
