@@ -74,6 +74,7 @@ class EDD_Graph {
 			'x_mode'          => null,
 			'y_decimals'      => 0,
 			'x_decimals'      => 0,
+			'y_position'      => 'right',
 			'time_format'     => '%d/%b',
 			'ticksize_unit'   => 'day',
 			'ticksize_num'    => 1,
@@ -115,7 +116,7 @@ class EDD_Graph {
 							bars: {
 								show: <?php echo $this->options['bars'] ? 'true' : 'false'; ?>,
 								barWidth: 12,
-								horizontal: false
+								aling: 'center'
 							},
 							lines: {
 								show: <?php echo $this->options['lines'] ? 'true' : 'false'; ?>
@@ -147,6 +148,7 @@ class EDD_Graph {
 							<?php endif; ?>
 						},
 						yaxis: {
+							position: 'right',
 							min: 0,
 							mode: "<?php echo $this->options['y_mode']; ?>",
 							timeFormat: "<?php echo $this->options['y_mode'] == 'time' ? $this->options['time_format'] : ''; ?>",
