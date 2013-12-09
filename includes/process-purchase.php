@@ -210,7 +210,7 @@ function edd_purchase_form_validate_fields() {
 	}
 
 	// Return collected data
-	return $valid_data;
+	return apply_filters( 'edd_purchase_form_valid_data', $valid_data );
 }
 
 /**
