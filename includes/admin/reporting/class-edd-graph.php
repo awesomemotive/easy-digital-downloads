@@ -45,6 +45,20 @@ class EDD_Graph {
 	$graph = new EDD_Graph( $data );
 	$graph->display();
 
+    NOTE: If the graph is to be displayed on a page other than reporting, you
+        will have to enqueue the flot.js library. This can be accomplished by
+        adding the page you are displaying the graph on through adding a filter
+        to edd_load_scripts_for_reports.
+
+    Simple example:
+
+    function myplugin_add_page_to_reports( $reports ) {
+        $reports[] .= 'mypage.php';
+
+        return $reports;
+    }
+    add_filter( 'edd_load_scripts_for_reports', 'myplugin_add_page_to_reports', 1 );
+
 	*/
 
 	/**
