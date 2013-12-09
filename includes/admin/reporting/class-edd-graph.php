@@ -85,6 +85,7 @@ class EDD_Graph {
 
 	public function build_graph() {
 
+		$yaxis_count = 1;
 		ob_start();
 ?>
 		<script type="text/javascript">
@@ -96,6 +97,7 @@ class EDD_Graph {
 						{ 
 							// data format is: [ point on x, value on y ]
 							label: "<?php echo esc_attr( $label ); ?>",
+							id: "<?php echo sanitize_key( $label ); ?>",
 							//data: [[1, 2], [4, 5], [7, 8], [17, 0]],
 							data: [<?php foreach( $data as $point ) { echo '[' . implode( ',', $point ) . '],'; } ?>],
 							points: {
@@ -103,24 +105,77 @@ class EDD_Graph {
 							},
 							lines: {
 								show: true
-							}
+							},
+							yaxis: <?php echo $yaxis_count; ?>
 						},
-						<?php endforeach; ?>
+						<?php $yaxis_count++; endforeach; ?>
 					],
 					{
 						// Options
+						grid: {
+							show: true,
+							aboveData: false,
+							color: '#ccc',
+							backgroundColor: '#f9f9f9',
+							borderWidth: 2,
+							borderColor: '#ccc',
+							clickable: false,
+							hoverable: true
+						},
 						xaxis: {
 							mode: "<?php echo $this->options['xmode']; ?>",
 							timeFormat: "<?php echo $this->options['xmode'] == 'time' ? $this->options['time_format'] : ''; ?>",
 						},
 						yaxis: {
+							min: 0,
 							mode: "<?php echo $this->options['ymode']; ?>",
 							timeFormat: "<?php echo $this->options['ymode'] == 'time' ? $this->options['time_format'] : ''; ?>",
 						}
 					}
 
 				);
+			
+				function edd_flot_tooltip(x, y, contents) {
+					$('<div id="edd-flot-tooltip">' + contents + '</div>').css( {
+						position: 'absolute',
+						display: 'none',
+						top: y + 5,
+						left: x + 5,
+						border: '1px solid #fdd',
+						padding: '2px',
+						'background-color': '#fee',
+						opacity: 0.80
+					}).appendTo("body").fadeIn(200);
+				}
+
+				var previousPoint = null;
+				$("#edd-graph-<?php echo $this->id; ?>").bind("plothover", function (event, pos, item) {
+					$("#x").text(pos.x.toFixed(2));
+					$("#y").text(pos.y.toFixed(2));
+					if (item) {
+						if (previousPoint != item.dataIndex) {
+							previousPoint = item.dataIndex;
+							$("#edd-flot-tooltip").remove();
+							var x = item.datapoint[0].toFixed(2),
+							y = item.datapoint[1].toFixed(2);
+							if( item.series.id == 'earnings' ) {
+								if( edd_vars.currency_pos == 'before' ) {
+									edd_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + edd_vars.currency_sign + y );
+								} else {
+									edd_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y + edd_vars.currency_sign );
+								}
+							} else {
+								edd_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y.replace( '.00', '' ) );
+							}
+						}
+					} else {
+						$("#edd-flot-tooltip").remove();
+						previousPoint = null;
+					}
+				});
+
 			});
+
 		</script>
 		<div id="edd-graph-<?php echo $this->id; ?>" style="height: 300px;"></div>
 <?php
