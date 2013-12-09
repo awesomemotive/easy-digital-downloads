@@ -83,7 +83,9 @@ class EDD_Graph {
 		$this->options[ $key ] = $value;
 	}
 
-	public function display() {
+	public function build_graph() {
+
+		ob_start();
 ?>
 		<script type="text/javascript">
 			jQuery( document ).ready( function($) {
@@ -122,6 +124,12 @@ class EDD_Graph {
 		</script>
 		<div id="edd-graph-<?php echo $this->id; ?>" style="height: 300px;"></div>
 <?php
+		return ob_get_clean();
+	}
+
+
+	public function display() {
+		echo $this->build_graph();
 	}
 	
 
@@ -162,4 +170,4 @@ function edd_test_graph_class() {
 	$graph->set( 'xmode', 'time' );
 	$graph->display();
 }
-add_action( 'edd_reports_view_earnings', 'edd_test_graph_class', -1 );
+//add_action( 'edd_reports_view_earnings', 'edd_test_graph_class', -1 );
