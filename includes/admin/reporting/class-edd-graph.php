@@ -50,10 +50,28 @@ class EDD_Graph {
 
 	*/
 
+	/**
+	 * Data to graph
+	 *
+	 * @var array
+	 * @since 1.9
+	 */
 	private $data;
 
-	private $id;
+	/**
+	 * Unnique ID for the graph
+	 *
+	 * @var string
+	 * @since 1.9
+	 */
+	private $id = '';
 
+	/**
+	 * Graph options
+	 *
+	 * @var array
+	 * @since 1.9
+	 */
 	private $options = array();
 
 	/**
@@ -90,10 +108,24 @@ class EDD_Graph {
 
 	}
 
+	/**
+	 * Set an option
+	 *
+	 * @param $key The option key to set
+	 * @param $value The value to assign to the key
+	 * @since 1.9
+	 */
 	public function set( $key, $value ) {
 		$this->options[ $key ] = $value;
 	}
 
+	/**
+	 * Build the graph and return it as a string
+	 *
+	 * @var array
+	 * @since 1.9
+	 * @return string
+	 */
 	public function build_graph() {
 
 		$yaxis_count = 1;
@@ -208,9 +240,15 @@ class EDD_Graph {
 		return ob_get_clean();
 	}
 
-
+	/**
+	 * Output the final graph
+	 *
+	 * @since 1.9
+	 */
 	public function display() {
+		do_action( 'edd_before_graph', $this );
 		echo $this->build_graph();
+		do_action( 'edd_after_graph', $this );
 	}
 	
 
