@@ -69,13 +69,12 @@ function edd_has_active_discounts() {
 
 	if ( $discounts) {
 		foreach ( $discounts as $discount ) {
-			if ( $discount->post_status == 'active' && ! edd_is_discount_expired( edd_get_discount_code( $discount->ID ) ) ) {
+			if ( edd_is_discount_active( $discount->ID ) ) {
 				$has_active = true;
 				break;
 			}
 		}
 	}
-
 	return $has_active;
 }
 
@@ -92,8 +91,9 @@ function edd_has_active_discounts() {
 function edd_get_discount( $discount_id ) {
 	$discount = get_post( $discount_id );
 
-	if ( get_post_type( $discount_id ) != 'edd_discount' )
+	if ( get_post_type( $discount_id ) != 'edd_discount' ) {
 		return false;
+	}
 
 	return $discount;
 }
@@ -115,8 +115,9 @@ function edd_get_discount_by_code( $code ) {
 		'posts_per_page' => 1
 	) );
 
-	if ( $discounts )
+	if ( $discounts ) {
 		return $discounts[0];
+	}
 
 	return false;
 }
@@ -147,11 +148,13 @@ function edd_store_discount( $details, $discount_id = null ) {
 		'is_single_use'     => isset( $details['use_once'] )         ? $details['use_once']          : false,
 	);
 
-	if( $meta['start'] )
+	if( $meta['start'] ) {
 		$meta['start']      = date( 'm/d/Y H:i:s', strtotime( $meta['start'] ) );
+	}
 
-	if( $meta['expiration'] )
+	if( $meta['expiration'] ) {
 		$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime(  date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
+	}
 
 	if ( edd_discount_exists( $discount_id ) && ! empty( $discount_id ) ) {
 		// Update an existing discount
@@ -247,8 +250,9 @@ function edd_update_discount_status( $code_id = 0, $new_status = 'active' ) {
  * @return bool
  */
 function edd_discount_exists( $code_id ) {
-	if ( edd_get_discount( $code_id ) )
+	if ( edd_get_discount( $code_id ) ) {
 		return true;
+	}
 
 	return false;
 }
@@ -441,8 +445,9 @@ function edd_is_discount_expired( $code_id = null ) {
 		$expiration = edd_get_discount_expiration( $code_id );
 		if ( $expiration ) {
 			$expiration = strtotime( $expiration );
-			if ( $expiration < current_time( 'timestamp' ) - ( 24 * 60 * 60 ) ) {
+			if ( $expiration < current_time( 'timestamp' ) ) {
 				// Discount is expired
+				edd_update_discount_status( $code_id, 'inactive' );
 				$return = true;
 			}
 		}
@@ -561,8 +566,9 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 	$cart_items   = edd_get_cart_contents();
 	$ret          = false;
 
-	if ( empty( $product_reqs ) )
+	if ( empty( $product_reqs ) ) {
 		$ret = true;
+	}
 
 	// Ensure we have requirements before proceeding
 	if ( ! $ret ) :
@@ -613,8 +619,9 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 	$return     = false;
 	$user_found = true;
 
-	if ( empty( $code_id ) )
+	if ( empty( $code_id ) ) {
 		$code_id = edd_get_discount_id_by_code( $code );
+	}
 
 	if ( edd_discount_is_single_use( $code_id ) ) {
 		if ( is_email( $user ) ) {
@@ -705,8 +712,9 @@ function edd_is_discount_valid( $code = '', $user = '' ) {
  */
 function edd_get_discount_id_by_code( $code ) {
 	$discount = edd_get_discount_by_code( $code );
-	if( $discount )
+	if( $discount ) {
 		return $discount->ID;
+	}
 	return false;
 }
 
@@ -869,8 +877,9 @@ function edd_get_cart_discounts() {
 function edd_cart_has_discounts() {
 	$ret = false;
 
-	if ( edd_get_cart_discounts() )
+	if ( edd_get_cart_discounts() ) {
 		$ret = true;
+	}
 
 	return apply_filters( 'edd_cart_has_discounts', $ret );
 }
@@ -885,8 +894,9 @@ function edd_cart_has_discounts() {
  * @return float|mixed|void Total discounted amount
  */
 function edd_get_cart_discounted_amount( $discounts = false ) {
-	if ( empty( $discounts ) )
+	if ( empty( $discounts ) ) {
 		$discounts = edd_get_cart_discounts();
+	}
 
 	// Setup the array of discounts
 	if ( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) ) {
@@ -900,8 +910,9 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 	}
 
 	// Return 0.00 if no discounts present
-	if ( empty( $discounts ) || ! is_array( $discounts ) )
+	if ( empty( $discounts ) || ! is_array( $discounts ) ) {
 		return 0.00;
+	}
 
 	$amounts  = array();
 	$discounted_items = array();
@@ -962,11 +973,13 @@ function edd_cart_discounts_html() {
  * @return mixed|void
  */
 function edd_get_cart_discounts_html( $discounts = false ) {
-	if ( ! $discounts )
+	if ( ! $discounts ) {
 		$discounts = edd_get_cart_discounts();
+	}
 
-	if ( ! $discounts )
+	if ( ! $discounts ) {
 		return;
+	}
 
 	$html = '';
 
@@ -1003,14 +1016,16 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 function edd_display_cart_discount( $formatted = false, $echo = false ) {
 	$discounts = edd_get_cart_discounts();
 
-	if ( empty( $discounts ) )
+	if ( empty( $discounts ) ) {
 		return false;
+	}
 
 	$discount_id  = edd_get_discount_id_by_code( $discounts[0] );
 	$amount       = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
 
-	if ( $echo )
+	if ( $echo ) {
 		echo $amount;
+	}
 
 	return $amount;
 }
@@ -1022,8 +1037,9 @@ function edd_display_cart_discount( $formatted = false, $echo = false ) {
  * @return void
  */
 function edd_remove_cart_discount() {
-	if ( ! isset( $_GET['discount_id'] ) || ! isset( $_GET['discount_code'] ) )
+	if ( ! isset( $_GET['discount_id'] ) || ! isset( $_GET['discount_code'] ) ) {
 		return;
+	}
 
 	do_action( 'edd_pre_remove_cart_discount', absint( $_GET['discount_id'] ) );
 
@@ -1048,12 +1064,14 @@ function edd_maybe_remove_cart_discount( $cart_key = 0 ) {
 
 	$discounts = edd_get_cart_discounts();
 
-	if ( ! $discounts )
+	if ( ! $discounts ) {
 		return;
+	}
 
 	foreach ( $discounts as $discount ) {
-		if( ! edd_is_discount_valid( $discount ) )
+		if ( ! edd_is_discount_valid( $discount ) ) {
 			edd_unset_cart_discount( $discount );
+		}
 
 	}
 }
