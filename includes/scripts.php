@@ -234,10 +234,11 @@ add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
  *
  * @since 1.0
  * @global $post_type
+ * @global $wp_version
  * @return void
 */
 function edd_admin_downloads_icon() {
-	global $post_type;
+	global $post_type, $wp_version;
 
     $images_url  = EDD_PLUGIN_URL . 'assets/images/';
     $menu_icon   = '\f316';
@@ -247,17 +248,20 @@ function edd_admin_downloads_icon() {
 	$icon_cpt_2x_url = $images_url . 'edd-cpt-2x.png';
 	?>
     <style type="text/css" media="screen">
-        #adminmenu #menu-posts-download .wp-menu-image:before {
-            content: '<?php echo $menu_icon; ?>';
-        }
-        /** Fallback for outdated WP installations */
-		#adminmenu #menu-posts-download div.wp-menu-image {
-			background: url(<?php echo $icon_url; ?>) no-repeat 7px -17px;
-		}
-		#adminmenu #menu-posts-download:hover div.wp-menu-image,
-		#adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image {
-			background-position: 7px 6px;
-        }
+        <?php if( version_compare( $wp_version, '3.8-RC', '>=' ) || version_compare( $wp_version, '3.8', '>=' ) ) { ?>
+            #adminmenu #menu-posts-download .wp-menu-image:before {
+                content: '<?php echo $menu_icon; ?>';
+            }
+        <?php } else { ?>
+            /** Fallback for outdated WP installations */
+		    #adminmenu #menu-posts-download div.wp-menu-image {
+			    background: url(<?php echo $icon_url; ?>) no-repeat 7px -17px;
+            }
+	    	#adminmenu #menu-posts-download:hover div.wp-menu-image,
+		    #adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image {
+			    background-position: 7px 6px;
+            }
+        <?php } ?>
 		#icon-edit.icon32-posts-download {
 			background: url(<?php echo $icon_cpt_url; ?>) -7px -5px no-repeat;
 		}
@@ -271,15 +275,17 @@ function edd_admin_downloads_icon() {
 		only screen and (     -o-min-device-pixel-ratio: 3/2),
 		only screen and (        min-device-pixel-ratio: 1.5),
 		only screen and (        		 min-resolution: 1.5dppx) {
-			#adminmenu #menu-posts-download div.wp-menu-image {
-				background-image: url(<?php echo $icon_2x_url; ?>);
-				background-position: 7px -18px;
-				background-size: 16px 40px;
-			}
-			#adminmenu #menu-posts-download:hover div.wp-menu-image,
-			#adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image {
-				background-position: 7px 6px;
-			}
+            <?php if( version_compare( $wp_version, '3.7', '<=' ) ) { ?>
+	    		#adminmenu #menu-posts-download div.wp-menu-image {
+		    		background-image: url(<?php echo $icon_2x_url; ?>);
+			    	background-position: 7px -18px;
+				    background-size: 16px 40px;
+    			}
+	    		#adminmenu #menu-posts-download:hover div.wp-menu-image,
+		    	#adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image {
+			    	background-position: 7px 6px;
+                }
+            <?php } ?>
 			#icon-edit.icon32-posts-download {
 				background: url(<?php echo $icon_cpt_2x_url; ?>) no-repeat -7px -5px !important;
 				background-size: 55px 45px !important;
