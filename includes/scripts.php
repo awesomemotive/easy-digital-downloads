@@ -239,20 +239,25 @@ add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
 function edd_admin_downloads_icon() {
 	global $post_type;
 
-	$images_url  = EDD_PLUGIN_URL . 'assets/images/';
+    $images_url  = EDD_PLUGIN_URL . 'assets/images/';
+    $menu_icon   = '\f316';
 	$icon_url    = $images_url . 'edd-icon.png';
 	$icon_cpt_url = $images_url . 'edd-cpt.png';
 	$icon_2x_url = $images_url . 'edd-icon-2x.png';
 	$icon_cpt_2x_url = $images_url . 'edd-cpt-2x.png';
 	?>
-	<style type="text/css" media="screen">
+    <style type="text/css" media="screen">
+        #adminmenu #menu-posts-download .wp-menu-image:before {
+            content: '<?php echo $menu_icon; ?>';
+        }
+        /** Fallback for outdated WP installations */
 		#adminmenu #menu-posts-download div.wp-menu-image {
 			background: url(<?php echo $icon_url; ?>) no-repeat 7px -17px;
 		}
 		#adminmenu #menu-posts-download:hover div.wp-menu-image,
 		#adminmenu #menu-posts-download.wp-has-current-submenu div.wp-menu-image {
 			background-position: 7px 6px;
-		}
+        }
 		#icon-edit.icon32-posts-download {
 			background: url(<?php echo $icon_cpt_url; ?>) -7px -5px no-repeat;
 		}

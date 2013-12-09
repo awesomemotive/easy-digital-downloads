@@ -66,14 +66,7 @@ $status    = edd_get_payment_status( $payment, true );
 			<?php endif; ?>
 			<tr>
 				<td><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
-				<td><?php
-
-					echo edd_payment_amount( $payment->ID );
-
-					if ( edd_use_taxes() && $edd_options['checkout_include_tax'] == 'yes' ) :
-						printf( ' ' . __('(includes %s tax)', 'edd'), edd_payment_tax( $payment->ID ) );
-					endif; ?>
-				</td>
+				<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
 			</tr>
 		<?php endif; ?>
 
@@ -206,7 +199,7 @@ $status    = edd_get_payment_status( $payment, true );
 				<?php } ?>
 				<td>
 					<?php if( empty( $item['in_bundle'] ) ) : // Only show price when product is not part of a bundle ?>
-						<?php echo edd_currency_filter( edd_format_amount( $item[ 'price' ] ) ); ?>
+						<?php echo edd_currency_filter( edd_format_amount( $item[ 'subtotal' ] ) ); ?>
 					<?php endif; ?>
 				</td>
 			</tr>
@@ -225,16 +218,7 @@ $status    = edd_get_payment_status( $payment, true );
 				}
 				?>
 				<td<?php echo $colspan; ?>><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
-
-				<td>
-					<?php
-					echo edd_payment_amount( $payment->ID );
-					if ( edd_use_taxes() && ( ! edd_prices_show_tax_on_checkout() && $edd_options['prices_include_tax'] == 'yes' ) ) {
-						echo ' ' . __( '(incl. tax)', 'edd' );
-					} else if ( edd_use_taxes() && $edd_options['checkout_include_tax'] == 'yes' ) {
-						printf( ' ' . __( '(includes %s tax)', 'edd' ), edd_payment_tax( $payment->ID ) );
-					} ?>
-				</td>
+				<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
 			</tr>
 		</tfoot>
 

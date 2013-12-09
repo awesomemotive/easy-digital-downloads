@@ -173,17 +173,22 @@ class EDD_Stats {
 				case 'yesterday' :
 
 					$day = date( 'd', current_time( 'timestamp' ) ) - 1;
+					
+					// Check if Today is the first day of the month (meaning subtracting one will get us 0)
 					if( $day < 1 ) {
 
-						// Today is the first day of the month
+						// If current month is 1
 						if( 1 == $month ) {
 
 							$year -= 1; // Today is January 1, so skip back to December
 							$month -= 1;
+
+							// Get the last day of the month
 							$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 
 						} else {
 
+							// Get the last day of the month
 							$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 
 						}
