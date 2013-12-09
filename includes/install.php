@@ -114,6 +114,11 @@ function edd_install() {
 		// Add a temporary option to note that EDD pages have been created
 		$activation_pages = array_merge( $options, array( 'history_page' => $history ) );
 		set_transient( '_edd_activation_pages', $activation_pages, 30 );
+
+		// Create EDD shop roles
+		$roles = new EDD_Roles;
+		$roles->add_roles();
+		$roles->add_caps();
 	}
 
 	// Bail if activating from network, or bulk
