@@ -55,10 +55,19 @@ class EDD_Welcome {
 			array( $this, 'about_screen' )
 		);
 
+		// Getting Started Page
+		add_dashboard_page(
+			__( 'Getting started with Easy Digital Downloads', 'edd' ),
+			__( 'Getting started with Easy Digital Downloads', 'edd' ),
+			$this->minimum_capability,
+			'edd-getting-started',
+			array( $this, 'getting_started_screen' )
+		);
+
 		// Credits Page
 		add_dashboard_page(
-			__( 'Welcome to Easy Digital Downloads', 'edd' ),
-			__( 'Welcome to Easy Digital Downloads', 'edd' ),
+			__( 'The people that build Easy Digital Downloads', 'edd' ),
+			__( 'The people that build Easy Digital Downloads', 'edd' ),
 			$this->minimum_capability,
 			'edd-credits',
 			array( $this, 'credits_screen' )
@@ -74,6 +83,7 @@ class EDD_Welcome {
 	 */
 	public function admin_head() {
 		remove_submenu_page( 'index.php', 'edd-about' );
+		remove_submenu_page( 'index.php', 'edd-getting-started' );
 		remove_submenu_page( 'index.php', 'edd-credits' );
 
 		// Badge for welcome page
@@ -110,6 +120,30 @@ class EDD_Welcome {
 	}
 
 	/**
+	 * Navigation tabs
+	 *
+	 * @access public
+	 * @since 1.9
+	 * @return void
+	 */
+	public function tabs() {
+		$selected = isset( $_GET['page'] ) ? $_GET['page'] : 'edd-about';
+		?>
+		<h2 class="nav-tab-wrapper">
+			<a class="nav-tab <?php echo $selected == 'edd-about' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-about' ), 'index.php' ) ) ); ?>">
+				<?php _e( "What's New", 'edd' ); ?>
+			</a>
+			<a class="nav-tab <?php echo $selected == 'edd-getting-started' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-getting-started' ), 'index.php' ) ) ); ?>">
+				<?php _e( 'Getting Started', 'edd' ); ?>
+			</a>
+			<a class="nav-tab <?php echo $selected == 'edd-credits' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-credits' ), 'index.php' ) ) ); ?>">
+				<?php _e( 'Credits', 'edd' ); ?>
+			</a>
+		</h2>
+		<?php
+	}
+
+	/**
 	 * Render About Screen
 	 *
 	 * @access public
@@ -124,13 +158,7 @@ class EDD_Welcome {
 			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
 			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
 
-			<h2 class="nav-tab-wrapper">
-				<a class="nav-tab nav-tab-active" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-about' ), 'index.php' ) ) ); ?>">
-					<?php _e( "What's New", 'edd' ); ?>
-				</a><a class="nav-tab" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-credits' ), 'index.php' ) ) ); ?>">
-					<?php _e( 'Credits', 'edd' ); ?>
-				</a>
-			</h2>
+			<?php $this->tabs(); ?>
 
 			<div class="changelog">
 				<h3><?php _e( 'A Great Checkout Experience', 'edd' );?></h3>
@@ -234,6 +262,125 @@ class EDD_Welcome {
 	}
 
 	/**
+	 * Render Getting Started Screen
+	 *
+	 * @access public
+	 * @since 1.9
+	 * @return void
+	 */
+	public function getting_started_screen() {
+		list( $display_version ) = explode( '-', EDD_VERSION );
+		?>
+		<div class="wrap about-wrap">
+			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
+			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
+			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
+
+			<?php $this->tabs(); ?>
+
+			<p class="about-description"><?php _e( 'Use the tips below to get started using Easy Digital Downloads. You will be up and running in no time!', 'edd' ); ?></p>
+
+			<div class="changelog">
+				<h3><?php _e( 'Creating Your First Download Product', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/edit-download.png'; ?>" class="edd-welcome-screenshots"/>
+
+					<h4><?php printf( __( '<a href="%s">%s &rarr; Add New</a>', 'edd' ), admin_url( 'post-new.php?post_type=download' ), edd_get_label_plural() ); ?></h4>
+					<p><?php printf( __( 'The %s menu is your access point for all aspects of your Easy Digital Downloads product creation and setup. To create your first product, simply click Add New and then fill out the product details.', 'edd' ), edd_get_label_plural() ); ?></p>
+
+					<h4><?php _e( 'Product Price', 'edd' );?></h4>
+					<p><?php _e( 'Products can have simple prices or variable prices if you wish to have more than one price point for a product. For a single price, simply enter the price. For multiple price points, click <em>Enable variable pricing</em> and enter the options.', 'edd' );?></p>
+
+					<h4><?php _e( 'Download Files', 'edd' );?></h4>
+					<p><?php _e( 'Uploading the downloadable files is simple. Click <em>Upload File</em> in the Download Files section and choose your download file. To add more than one file, simply click the <em>Add New</em> button.', 'edd' );?></p>
+
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Display a Product Grid', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/grid.png'; ?>" class="edd-welcome-screenshots"/>
+
+					<h4><?php _e( 'Flexible Product Grids','edd' );?></h4>
+					<p><?php _e( 'The [downloads] short code will display a product grid that works with any theme, no matter the size. It is even responive!', 'edd' );?></p>
+
+					<h4><?php _e( 'Change the Number of Columns', 'edd' );?></h4>
+					<p><?php _e( 'You can easily change the number of columns by adding the columns="x" parameter:', 'edd' );?></p>
+					<p><pre>[downloads columns="4"]</pre></p>
+
+					<h4><?php _e( 'Additional Display Options', 'edd' ); ?></h4>
+					<p><?php printf( __( 'The product grids can be customized in any way you wish and there is <a href="%s">extensive documentation</a> to assist you.', 'edd' ), 'http://easydigitaldownloads.com/documentation' ); ?></p>
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Purchase Buttons Anywhere', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/purchase-link.png'; ?>" class="edd-welcome-screenshots"/>
+
+					<h4><?php _e( 'The <em>[purchase_link]</em> Short Code','edd' );?></h4>
+					<p><?php _e( 'With easily accessible short codes to display purchase buttons, you can add a Buy Now or Add to Cart button for any product anywhere on your site in seconds.', 'edd' );?></p>
+
+					<h4><?php _e( 'Buy Now Buttons', 'edd' );?></h4>
+					<p><?php _e( 'Purchase buttons can behave as either Add to Cart or Buy Now buttons. With Buy Now buttons customers are taken straight to PayPal, giving them the most frictionless purchasing experience possible.', 'edd' );?></p>
+
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Need Help?', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<h4><?php _e( 'Phenomenal Support','edd' );?></h4>
+					<p><?php _e( 'We do our best to provide the best support we can. If you encounter a problem or have a question, post a question in the <a href="https://easydigitaldownloads.com/support">support forums</a>.', 'edd' );?></p>
+
+					<h4><?php _e( 'Need Even Faster Support?', 'edd' );?></h4>
+					<p><?php _e( 'Our <a href="https://easydigitaldownloads.com/support/pricing/">Priority Support forums</a> are there for customers that need faster and/or more in-depth assistance.', 'edd' );?></p>
+
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Stay Up to Date', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<h4><?php _e( 'Get Notified of Extension Releases','edd' );?></h4>
+					<p><?php _e( 'New extensiosn that make Easy Digital Downloads even more powerful are released nearly every single week. Subscribe to the newsletter to stay up to date with our latest releases. <a href="http://eepurl.com/kaerz" target="_blank">Signup now</a> to ensure you do not miss a release!', 'edd' );?></p>
+
+					<h4><?php _e( 'Get Alerted About New Tutorials', 'edd' );?></h4>
+					<p><?php _e( '<a href="http://eepurl.com/kaerz" target="_blank">Signup now</a> to hear about the latest tutorial releases that explain how to take Easy Digital Downloads further.', 'edd' );?></p>
+
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Extensions for Everything', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<h4><?php _e( 'Over 190 Extensions','edd' );?></h4>
+					<p><?php _e( 'Add-on plugins are available that greatly extend the default functionality of Easy Digital Downloads. There are extensions for payment processors, such as Stripe and PayPal, extensions for newsletter integrations, and many, many more.', 'edd' );?></p>
+
+					<h4><?php _e( 'Visit the Extension Store', 'edd' );?></h4>
+					<p><?php _e( '<a href="https://easydigitaldownloads.com/extensions" target="_blank">The Extensions store</a> has a list of all available extensions, including convenient category filters so you can find exactly what you are looking for.', 'edd' );?></p>
+
+				</div>
+			</div>
+
+		</div>
+		<?php
+	}
+
+	/**
 	 * Render Credits Screen
 	 *
 	 * @access public
@@ -248,13 +395,7 @@ class EDD_Welcome {
 			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
 			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
 
-			<h2 class="nav-tab-wrapper">
-				<a class="nav-tab" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-about' ), 'index.php' ) ) ); ?>">
-					<?php _e( "What's New", 'edd' ); ?>
-				</a><a class="nav-tab nav-tab-active" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-credits' ), 'index.php' ) ) ); ?>">
-					<?php _e( 'Credits', 'edd' ); ?>
-				</a>
-			</h2>
+			<?php $this->tabs(); ?>
 
 			<p class="about-description"><?php _e( 'Easy Digital Downloads is created by a worldwide team of developers who aim to provide the #1 eCommerce platform for selling digital goods through WordPress.', 'edd' ); ?></p>
 
@@ -348,7 +489,13 @@ class EDD_Welcome {
 		if ( is_network_admin() || isset( $_GET['activate-multi'] ) )
 			return;
 
-		wp_safe_redirect( admin_url( 'index.php?page=edd-about' ) ); exit;
+		$upgrade = get_option( 'edd_version_upgraded_from' );
+
+		if( ! $upgrade ) { // First time install
+			wp_safe_redirect( admin_url( 'index.php?page=edd-getting-started' ) ); exit;
+		} else { // Update
+			wp_safe_redirect( admin_url( 'index.php?page=edd-about' ) ); exit;
+		}
 	}
 }
 new EDD_Welcome();

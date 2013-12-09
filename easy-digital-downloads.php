@@ -237,6 +237,7 @@ final class Easy_Digital_Downloads {
 
 		if( is_admin() ) {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-footer.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-notices.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
@@ -255,6 +256,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/contextual-help.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-graph.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';
