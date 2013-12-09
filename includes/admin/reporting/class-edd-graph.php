@@ -70,11 +70,18 @@ class EDD_Graph {
 
 		// Setup default options;
 		$this->options = array(
-			'ymode'         => null,
-			'xmode'         => null,
-			'time_format'   => '%d/%b',
-			'ticksize_unit' => 'day',
-			'ticksize_num'  => 1
+			'y_mode'          => null,
+			'x_mode'          => null,
+			'y_decimals'      => 0,
+			'x_decimals'      => 0,
+			'time_format'     => '%d/%b',
+			'ticksize_unit'   => 'day',
+			'ticksize_num'    => 1,
+			'multiple_y_axes' => false,
+			'bgcolor'         => '#f9f9f9',
+			'bordercolor'     => '#ccc',
+			'color'           => '#bbb',
+			'borderwidth'     => 2,
 		);
 
 	}
@@ -95,10 +102,9 @@ class EDD_Graph {
 					[
 						<?php foreach( $this->data as $label => $data ) : ?>
 						{ 
-							// data format is: [ point on x, value on y ]
 							label: "<?php echo esc_attr( $label ); ?>",
 							id: "<?php echo sanitize_key( $label ); ?>",
-							//data: [[1, 2], [4, 5], [7, 8], [17, 0]],
+							// data format is: [ point on x, value on y ]
 							data: [<?php foreach( $data as $point ) { echo '[' . implode( ',', $point ) . '],'; } ?>],
 							points: {
 								show: true,
@@ -106,7 +112,9 @@ class EDD_Graph {
 							lines: {
 								show: true
 							},
+							<?php if( $this->options[ 'multiple_y_axes' ] ) : ?>
 							yaxis: <?php echo $yaxis_count; ?>
+							<?php endif; ?>
 						},
 						<?php $yaxis_count++; endforeach; ?>
 					],
@@ -115,21 +123,29 @@ class EDD_Graph {
 						grid: {
 							show: true,
 							aboveData: false,
-							color: '#ccc',
-							backgroundColor: '#f9f9f9',
-							borderWidth: 2,
-							borderColor: '#ccc',
+							color: "<?php echo $this->options[ 'color' ]; ?>",
+							backgroundColor: "<?php echo $this->options[ 'bgcolor' ]; ?>",
+							borderColor: "<?php echo $this->options[ 'bordercolor' ]; ?>",
+							borderWidth: <?php echo absint( $this->options[ 'borderwidth' ] ); ?>,
 							clickable: false,
 							hoverable: true
 						},
 						xaxis: {
-							mode: "<?php echo $this->options['xmode']; ?>",
-							timeFormat: "<?php echo $this->options['xmode'] == 'time' ? $this->options['time_format'] : ''; ?>",
+							mode: "<?php echo $this->options['x_mode']; ?>",
+							timeFormat: "<?php echo $this->options['x_mode'] == 'time' ? $this->options['time_format'] : ''; ?>",
+							tickSize: "<?php echo $this->options['x_mode'] == 'time' ? '' : 1; ?>",
+							<?php if( $this->options['x_mode'] != 'time' ) : ?>
+							tickDecimals: <?php echo $this->options['x_decimals']; ?>
+							<?php endif; ?>
 						},
 						yaxis: {
 							min: 0,
-							mode: "<?php echo $this->options['ymode']; ?>",
-							timeFormat: "<?php echo $this->options['ymode'] == 'time' ? $this->options['time_format'] : ''; ?>",
+							mode: "<?php echo $this->options['y_mode']; ?>",
+							timeFormat: "<?php echo $this->options['y_mode'] == 'time' ? $this->options['time_format'] : ''; ?>",
+							tickSize: "<?php echo $this->options['y_mode'] == 'time' ? '' : 1; ?>",
+							<?php if( $this->options['y_mode'] != 'time' ) : ?>
+							tickDecimals: <?php echo $this->options['y_decimals']; ?>
+							<?php endif; ?>
 						}
 					}
 
@@ -222,7 +238,7 @@ function edd_test_graph_class() {
 	);
 
 	$graph = new EDD_Graph( $data );
-	$graph->set( 'xmode', 'time' );
+	$graph->set( 'x_mode', 'time' );
 	$graph->display();
 }
 //add_action( 'edd_reports_view_earnings', 'edd_test_graph_class', -1 );
