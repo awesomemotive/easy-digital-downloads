@@ -61,7 +61,7 @@ function edd_reports_graph() {
 	endswitch;
 
 	$time_format 	= apply_filters( 'edd_graph_timeformat', $time_format );
-	$totals 		= (float) 0.00; // Total earnings for time period shown
+	$earnings_totals 		= (float) 0.00; // Total earnings for time period shown
 	$sales_totals   = 0;            // Total sales for time period shown
 
 
@@ -78,7 +78,7 @@ function edd_reports_graph() {
 			$earnings = edd_get_earnings_by_date( $dates['day'], $month, $dates['year'], $hour );
 			
 			$sales_totals += $sales;
-			$totals        += $earnings;
+			$earnings_totals        += $earnings;
 			
 			$date            = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ) * 1000;
 			$sales_data[]    = array( $date, $sales );
@@ -98,7 +98,7 @@ function edd_reports_graph() {
 			$sales_totals += $sales;
 
 			$earnings = edd_get_earnings_by_date( $day, $month, $dates['year'] );
-			$totals += $earnings;
+			$earnings_totals += $earnings;
 
 			$date = mktime( 0, 0, 0, $month, $day, $dates['year'] ) * 1000;
 			$sales_data[] = array( $date, $sales );
@@ -132,7 +132,7 @@ function edd_reports_graph() {
 						$sales_totals += $sales;
 
 						$earnings = edd_get_earnings_by_date( $d, $i, $y );
-						$totals += $earnings;
+						$earnings_totals += $earnings;
 
 						$date = mktime( 0, 0, 0, $i, $d, $y ) * 1000;
 						$sales_data[] = array( $date, $sales );
@@ -144,7 +144,7 @@ function edd_reports_graph() {
 					$sales_totals += $sales;
 
 					$earnings = edd_get_earnings_by_date( null, $i, $y );
-					$totals += $earnings;
+					$earnings_totals += $earnings;
 
 					$date = mktime( 0, 0, 0, $i, 1, $y ) * 1000;
 					$sales_data[] = array( $date, $sales );
@@ -182,7 +182,7 @@ function edd_reports_graph() {
 				$estimated = edd_estimated_monthly_stats();
 				?>
 				
-				<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $totals ) ); ?></strong></p>
+				<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $earnings_totals ) ); ?></strong></p>
 				<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo $sales_totals; ?></strong></p>
 				<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly earnings: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $estimated['earnings'] ) ); ?></strong></p>
 				<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly sales: ', 'edd' ); echo $estimated['sales']; ?></strong></p>
