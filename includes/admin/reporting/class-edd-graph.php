@@ -22,20 +22,20 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class EDD_Graph {
 
 	/*
+	
+	Simple example:
 
-	Should look something like this:
+	data format for each point: array( location on x, location on y )
 
 	$data = array(
 
-		// X axis
-		array(
+		'Label' => array(
 			array( 1, 5 ),
 			array( 3, 8 ),
 			array( 10, 2 )
 		),
 
-		// Y axis
-		array(
+		'Second Label' => array(
 			array( 1, 7 ),
 			array( 4, 5 ),
 			array( 12, 8 )
@@ -43,9 +43,6 @@ class EDD_Graph {
 	);
 
 	$graph = new EDD_Graph( $data );
-
-	// Include optional methods for setting colors, sizes, etc
-
 	$graph->display();
 
 	*/
