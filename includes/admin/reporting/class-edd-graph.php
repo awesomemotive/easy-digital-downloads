@@ -200,7 +200,6 @@ class EDD_Graph {
 							min: 0,
 							mode: "<?php echo $this->options['y_mode']; ?>",
 							timeFormat: "<?php echo $this->options['y_mode'] == 'time' ? $this->options['time_format'] : ''; ?>",
-							tickSize: "<?php echo $this->options['y_ticksize']; ?>",
 							<?php if( $this->options['y_mode'] != 'time' ) : ?>
 							tickDecimals: <?php echo $this->options['y_decimals']; ?>
 							<?php endif; ?>
