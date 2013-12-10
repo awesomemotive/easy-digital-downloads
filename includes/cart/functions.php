@@ -565,12 +565,18 @@ function edd_cart_subtotal() {
 function edd_get_cart_subtotal() {
 	global $edd_options;
 
+	$subtotal = 0.00;
 	$items    = edd_get_cart_content_details();
-	$prices   = wp_list_pluck( $items, 'subtotal' );
-	$subtotal = array_sum( $prices );
 
-	if( $subtotal < 0 )
-		$subtotal = 0.00;
+	if( $items ) {
+
+		$prices   = wp_list_pluck( $items, 'subtotal' );
+		$subtotal = array_sum( $prices );
+
+		if( $subtotal < 0 )
+			$subtotal = 0.00;
+
+	}
 
 	return apply_filters( 'edd_get_cart_subtotal', $subtotal );
 }
