@@ -7,7 +7,7 @@
  * @since       1.1.4.0
 */
 
-class edd_pdf extends FPDF {
+class edd_pdf extends tFPDF {
 
 	var $widths;
 	var $aligns;
