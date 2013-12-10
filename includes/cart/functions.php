@@ -372,7 +372,7 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $include
 
 	}
 
-	return apply_filters( 'edd_cart_item_price', $price, $download_id, $options, $deprecated );
+	return apply_filters( 'edd_cart_item_price', $price, $download_id, $options, $include_taxes );
 }
 
 /**
