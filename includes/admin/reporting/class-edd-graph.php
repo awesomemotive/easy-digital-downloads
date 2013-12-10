@@ -56,7 +56,7 @@ class EDD_Graph {
 	private $data;
 
 	/**
-	 * Unnique ID for the graph
+	 * Unique ID for the graph
 	 *
 	 * @var string
 	 * @since 1.9
