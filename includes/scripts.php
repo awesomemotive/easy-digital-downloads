@@ -181,9 +181,6 @@ function edd_load_admin_scripts( $hook ) {
 	if ( is_object( $post ) && ! in_array( $post->post_type, $edd_cpt ) )
 		return;
 
-	if ( in_array( $hook, apply_filters( 'edd_load_scripts_for_reports', array( 'download_page_edd-reports' ) ) ) ) {
-		wp_enqueue_script( 'jquery-flot', $js_dir . 'jquery.flot' . $suffix . '.js' );
-	}
 	if ( in_array( $hook, apply_filters( 'edd_load_scripts_for_discounts', array( 'download_page_edd-discounts' ) ) ) ) {
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
