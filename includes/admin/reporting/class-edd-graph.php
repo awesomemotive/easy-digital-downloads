@@ -136,6 +136,17 @@ class EDD_Graph {
 	}
 
 	/**
+	 * Load the graphing library script
+	 *
+	 * @since 1.9
+	 */
+	public function load_scripts() {
+		// Use minified libraries if SCRIPT_DEBUG is turned off
+		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+		wp_enqueue_script( 'jquery-flot', EDD_PLUGIN_URL . 'assets/js/jquery.flot' . $suffix . '.js' );
+	}
+
+	/**
 	 * Build the graph and return it as a string
 	 *
 	 * @var array
@@ -145,7 +156,11 @@ class EDD_Graph {
 	public function build_graph() {
 
 		$yaxis_count = 1;
+		
+		$this->load_scripts();
+
 		ob_start();
+
 ?>
 		<script type="text/javascript">
 			jQuery( document ).ready( function($) {
