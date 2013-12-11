@@ -292,7 +292,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	$paypal_amount  = $data['mc_gross'];
 	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
-	$business_email = trim( $data['business'] );
+	$business_email = isset( $data['business'] ) ? trim( $data['business'] ) : trim( $data['receiver_email'] );
 
 	// Retrieve the total purchase amount (before PayPal)
 	$payment_amount = edd_get_payment_amount( $payment_id );
