@@ -25,45 +25,34 @@ function edd_reports_graph() {
 	// Determine graph options
 	switch ( $dates['range'] ) :
 		case 'today' :
-			$time_format 	= '%d/%b';
-			$day_by_day		= true;
+			$day_by_day	= true;
 			break;
 		case 'last_year' :
-			$time_format 	= '%b';
-			$tick_size		= 'month';
-			$day_by_day		= false;
+			$day_by_day	= false;
 			break;
 		case 'this_year' :
-			$time_format 	= '%b';
-			$day_by_day		= false;
+			$day_by_day	= false;
 			break;
 		case 'last_quarter' :
-			$time_format	= '%b';
-			$day_by_day 	= false;
+			$day_by_day = false;
 			break;
 		case 'this_quarter' :
-			$time_format	= '%b';
-			$day_by_day 	= false;
+			$day_by_day = false;
 			break;
 		case 'other' :
 			if( ( $dates['m_end'] - $dates['m_start'] ) >= 2 ) {
-				$time_format	= '%b';
-				$day_by_day 	= false;
+				$day_by_day = false;
 			} else {
-				$time_format 	= '%d/%b';
-				$day_by_day 	= true;
+				$day_by_day = true;
 			}
 			break;
 		default:
-			$time_format 	= '%d/%b'; 	// Show days by default
-			$day_by_day 	= true;
+			$day_by_day = true;
 			break;
 	endswitch;
 
-	$time_format 	= apply_filters( 'edd_graph_timeformat', $time_format );
-	$earnings_totals 		= (float) 0.00; // Total earnings for time period shown
-	$sales_totals   = 0;            // Total sales for time period shown
-
+	$earnings_totals = (float) 0.00; // Total earnings for time period shown
+	$sales_totals    = 0;            // Total sales for time period shown
 
 	$earnings_data = array();
 	$sales_data    = array();
@@ -78,7 +67,7 @@ function edd_reports_graph() {
 			$earnings = edd_get_earnings_by_date( $dates['day'], $month, $dates['year'], $hour );
 			
 			$sales_totals += $sales;
-			$earnings_totals        += $earnings;
+			$earnings_totals += $earnings;
 			
 			$date            = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ) * 1000;
 			$sales_data[]    = array( $date, $sales );
