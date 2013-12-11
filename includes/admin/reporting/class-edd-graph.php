@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class EDD_Graph {
 
 	/*
-	
+
 	Simple example:
 
 	data format for each point: array( location on x, location on y )
@@ -77,9 +77,9 @@ class EDD_Graph {
 	 * @since 1.9
 	 */
 	public function __construct( $_data ) {
-		
-		$this->data = $_data; 
-		
+
+		$this->data = $_data;
+
 		// Generate unique ID
 		$this->id   = md5( rand() );
 
@@ -156,7 +156,7 @@ class EDD_Graph {
 	public function build_graph() {
 
 		$yaxis_count = 1;
-		
+
 		$this->load_scripts();
 
 		ob_start();
@@ -168,7 +168,7 @@ class EDD_Graph {
 					$("#edd-graph-<?php echo $this->id; ?>"),
 					[
 						<?php foreach( $this->get_data() as $label => $data ) : ?>
-						{ 
+						{
 							label: "<?php echo esc_attr( $label ); ?>",
 							id: "<?php echo sanitize_key( $label ); ?>",
 							// data format is: [ point on x, value on y ]
@@ -222,7 +222,7 @@ class EDD_Graph {
 					}
 
 				);
-			
+
 				function edd_flot_tooltip(x, y, contents) {
 					$('<div id="edd-flot-tooltip">' + contents + '</div>').css( {
 						position: 'absolute',
@@ -280,6 +280,5 @@ class EDD_Graph {
 		echo $this->build_graph();
 		do_action( 'edd_after_graph', $this );
 	}
-	
 
 }
