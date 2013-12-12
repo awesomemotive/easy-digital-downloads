@@ -123,6 +123,7 @@ class EDD_Stats {
 	public function convert_date( $date, $end_date = false ) {
 
 		$timestamp   = false;
+		$second      = 0;
 		$minute      = 0;
 		$hour        = 0;
 		$day         = 1;
@@ -346,9 +347,13 @@ class EDD_Stats {
 				case 'this_year' :
 
 					if( ! $end_date ) {
-						$month = 1;
+						$month  = 1;
 					} else {
-						$month = 12;
+						$month  = 12;
+						$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+						$hour   = 11;
+						$minute = 59;
+						$second = 59;
 					}
 
 					break;
@@ -386,7 +391,7 @@ class EDD_Stats {
 		if( ! is_wp_error( $date ) && ! $timestamp ) {
 
 			// Create an exact timestamp
-			$date = mktime( $hour, $minute, 0, $month, $day, $year );
+			$date = mktime( $hour, $minute, $second, $month, $day, $year );
 
 		}
 
