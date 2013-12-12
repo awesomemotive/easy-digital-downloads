@@ -258,7 +258,7 @@ class EDD_Stats {
 
 						$day = date( 'd', current_time( 'timestamp' ) - $days_to_week_start ) - 8;
 						$day += get_option( 'start_of_week' ) + 6;
-
+						
 					}
 
 					break;
@@ -273,6 +273,10 @@ class EDD_Stats {
 							$month = 1;
 						} else {
 							$month = 3;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$hour   = 11;
+							$minute = 59;
+							$second = 59;
 						}
 
 					} else if ( $month_now <= 6 ) {
@@ -281,6 +285,10 @@ class EDD_Stats {
 							$month = 4;
 						} else {
 							$month = 6;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$hour   = 11;
+							$minute = 59;
+							$second = 59;
 						}
 
 					} else if ( $month_now <= 9 ) {
@@ -289,6 +297,10 @@ class EDD_Stats {
 							$month = 7;
 						} else {
 							$month = 9;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$hour   = 11;
+							$minute = 59;
+							$second = 59;
 						}
 
 					} else {
@@ -297,6 +309,10 @@ class EDD_Stats {
 							$month = 10;
 						} else {
 							$month = 12;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$hour   = 11;
+							$minute = 59;
+							$second = 59;
 						}
 
 					}
@@ -314,6 +330,10 @@ class EDD_Stats {
 						} else {
 							$year -= 1;
 							$month = 12;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$hour   = 11;
+							$minute = 59;
+							$second = 59;
 						}
 
 					} else if ( $month_now <= 6 ) {
@@ -322,6 +342,10 @@ class EDD_Stats {
 							$month = 1;
 						} else {
 							$month = 3;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$hour   = 11;
+							$minute = 59;
+							$second = 59;
 						}
 
 					} else if ( $month_now <= 9 ) {
@@ -330,6 +354,10 @@ class EDD_Stats {
 							$month = 4;
 						} else {
 							$month = 6;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$hour   = 11;
+							$minute = 59;
+							$second = 59;
 						}
 
 					} else {
@@ -338,6 +366,10 @@ class EDD_Stats {
 							$month = 7;
 						} else {
 							$month = 9;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$hour   = 11;
+							$minute = 59;
+							$second = 59;
 						}
 
 					}
