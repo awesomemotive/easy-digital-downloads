@@ -364,7 +364,11 @@ class EDD_Stats {
 					if( ! $end_date ) {
 						$month = 1;
 					} else {
-						$month = 12;
+						$month  = 12;
+						$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+						$hour   = 11;
+						$minute = 59;
+						$second = 59;
 					}
 
 				break;
