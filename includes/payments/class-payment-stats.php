@@ -66,11 +66,16 @@ class EDD_Payment_Stats extends EDD_Stats {
 			// Product specific stats
 			global $edd_logs;
 
-			add_filter( 'posts_where', array( $this, 'payments_where' ) );
+			$dates = array();
 
-			$count = $edd_logs->get_log_count( $download_id, 'sale' );
+			$dates['after']  = date( 'Y-n-d H:i:s', $this->start_date );
+			if( $this->end_date > $this->start_date ) {
+				$dates['before'] = date( 'Y-n-d H:i:s', $this->end_date );
+			}
 
-			remove_filter( 'posts_where', array( $this, 'payments_where' ) );
+			$date_query = array( $dates );
+
+			$count = $edd_logs->get_log_count( $download_id, 'sale', null, $date_query );
 
 		}
 
