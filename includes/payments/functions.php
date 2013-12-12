@@ -97,6 +97,11 @@ function edd_insert_payment( $payment_data = array() ) {
 		$gateway = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
 		$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
 
+		if( ! $payment_data['price'] ) {
+			// Ensures the _edd_payment_total meta key is created for purchases with an amount of 0
+			$payment_data['price'] = '0.00';
+		}
+
 		// Record the payment details
 		update_post_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
 		update_post_meta( $payment, '_edd_payment_user_id',      $payment_data['user_info']['id'] );
