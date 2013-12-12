@@ -228,10 +228,16 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 
 	if( $dates['range'] == 'today' ) {
 		// Hour by hour
-		$hour  = 1;
-		$month = date( 'n' );
+		$month  = date( 'n' );
+		$hour   = 1;
+		$minute = 0;
+		$second = 0;
 		while ( $hour <= 23 ) :
 			
+			if( $hour == 23 ) {
+				$minute = $second = 59;
+			}
+
 			$date = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] );
 			
 			$sales = $stats->get_sales( $download_id, $date );

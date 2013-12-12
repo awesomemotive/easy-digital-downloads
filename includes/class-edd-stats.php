@@ -488,6 +488,7 @@ class EDD_Stats {
 		}
 
 		$where .= "{$start_where}{$end_where}";
+		
 		return $where;
 	}
 
