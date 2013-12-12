@@ -10,7 +10,7 @@
 /* =Add Ons Styles
 -------------------------------------------------------------- */
 #edd-add-ons h2 { margin: 0 0 15px; }
-#edd-add-ons .edd-extension { float: left; margin: 0 30px 30px 0; background: #f0f0f0; border: 1px solid #ccc; width: 180px; padding: 8px; height: 315px; position: relative; }
+#edd-add-ons .edd-extension { float: left; margin: 0 15px 15px 0; background: #f0f0f0; border: 1px solid #ccc; width: 320px; padding: 8px; height: 315px; position: relative; }
 #edd-add-ons .edd-extension h3 { margin: 0 0 8px; font-size: 13px;  }
 #edd-add-ons .edd-extension .button-secondary { position: absolute; bottom: 8px; left: 8px; }
 #edd-add-ons .edd-browse-all { clear:both; width:100%; }
