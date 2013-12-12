@@ -174,7 +174,7 @@ class EDD_Stats {
 				case 'yesterday' :
 
 					$day = date( 'd', current_time( 'timestamp' ) ) - 1;
-					
+
 					// Check if Today is the first day of the month (meaning subtracting one will get us 0)
 					if( $day < 1 ) {
 
@@ -258,7 +258,7 @@ class EDD_Stats {
 
 						$day = date( 'd', current_time( 'timestamp' ) - $days_to_week_start ) - 8;
 						$day += get_option( 'start_of_week' ) + 6;
-						
+
 					}
 
 					break;
@@ -488,7 +488,6 @@ class EDD_Stats {
 		}
 
 		$where .= "{$start_where}{$end_where}";
-
 		return $where;
 	}
 
