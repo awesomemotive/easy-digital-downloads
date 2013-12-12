@@ -180,6 +180,24 @@ function edd_local_tax_opted_in() {
 }
 
 /**
+ * Show taxes on individual prices?
+ *
+ * @since 1.4
+ * @deprecated 1.9
+ * @global $edd_options
+ * @return bool Whether or not to show taxes on prices
+ */
+function edd_taxes_on_prices() {
+	global $edd_options;
+
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '1.9', 'no alternatives', $backtrace );
+
+	return apply_filters( 'edd_taxes_on_prices', isset( $edd_options['taxes_on_prices'] ) );
+}
+
+/**
  * Show Has Purchased Item Message
  *
  * Prints a notice when user has already purchased the item.
@@ -223,3 +241,48 @@ function edd_clear_earnings_cache( $payment, $payment_data ) {
 	delete_transient( 'edd_total_earnings' );
 }
 //add_action( 'edd_insert_payment', 'edd_clear_earnings_cache', 10, 2 );
+
+/**
+ * Get Cart Amount
+ *
+ * @since 1.0
+ * @deprecated 1.9
+ * @param bool $add_taxes Whether to apply taxes (if enabled) (default: true)
+ * @param bool $local_override Force the local opt-in param - used for when not reading $_POST (default: false)
+ * @return float Total amount
+*/
+function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
+
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '1.9', 'edd_get_cart_subtotal() or edd_get_cart_total()', $backtrace );
+
+	$amount = edd_get_cart_subtotal( false );
+	if ( ! empty( $_POST['edd-discount'] ) || edd_get_cart_discounts() !== false ) {
+		// Retrieve the discount stored in cookies
+		$discounts = edd_get_cart_discounts();
+
+		// Check for a posted discount
+		$posted_discount = isset( $_POST['edd-discount'] ) ? trim( $_POST['edd-discount'] ) : '';
+
+		if ( $posted_discount && ! in_array( $posted_discount, $discounts ) ) {
+			// This discount hasn't been applied, so apply it
+			$amount = edd_get_discounted_amount( $posted_discount, $amount );
+		}
+
+		if( ! empty( $discounts ) ) {
+			// Apply the discounted amount from discounts already applied
+			$amount -= edd_get_cart_discounted_amount();
+		}
+	}
+
+	if ( edd_use_taxes() && edd_is_cart_taxed() && $add_taxes ) {
+		$tax = edd_get_cart_tax();
+		$amount += $tax;
+	}
+
+	if( $amount < 0 )
+		$amount = 0.00;
+
+	return apply_filters( 'edd_get_cart_amount', $amount, $add_taxes, $local_override );
+}

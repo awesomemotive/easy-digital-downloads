@@ -121,7 +121,7 @@ function edd_process_purchase_form() {
 	edd_die();
 }
 add_action( 'edd_purchase', 'edd_process_purchase_form' );
-add_action( 'wp_ajax_edd_edd_process_checkout_login', 'edd_process_purchase_form' );
+add_action( 'wp_ajax_edd_process_checkout', 'edd_process_purchase_form' );
 add_action( 'wp_ajax_nopriv_edd_process_checkout', 'edd_process_purchase_form' );
 
 /**
@@ -228,7 +228,7 @@ function edd_purchase_form_validate_gateway() {
 		if ( edd_is_gateway_active( $gateway ) )
 			return $gateway;
 
-		if ( ! edd_get_cart_amount() )
+		if ( '0.00' == edd_get_cart_subtotal() )
 			return 'manual';
 
 		edd_set_error( 'invalid_gateway', __( 'The selected gateway is not active', 'edd' ) );
@@ -320,6 +320,29 @@ function edd_purchase_form_required_fields() {
 			'error_message' => __( 'Please enter your first name', 'edd' )
 		)
 	);
+
+	// Let payment gateways and other extensions determine if address fields should be required
+	$require_address = apply_filters( 'edd_require_billing_address', edd_use_taxes() );
+
+	if( $require_address ) {
+		$required_fields['card_zip'] = array(
+			'error_id' => 'invalid_zip_code',
+			'error_message' => __( 'Please enter your zip / postal code', 'edd' )
+		);
+		$required_fields['card_city'] = array(
+			'error_id' => 'invalid_city',
+			'error_message' => __( 'Please enter your billing city', 'edd' )
+		);
+		$required_fields['billing_country'] = array(
+			'error_id' => 'invalid_country',
+			'error_message' => __( 'Please select your billing country', 'edd' )
+		);
+		$required_fields['card_state'] = array(
+			'error_id' => 'invalid_state',
+			'error_message' => __( 'Please enter billing state / province', 'edd' )
+		);
+	}
+
 	return apply_filters( 'edd_purchase_form_required_fields', $required_fields );
 }
 
@@ -599,7 +622,7 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 	if( edd_get_errors() )
 		return -1;
 
-	$user_args = array(
+	$user_args = apply_filters( 'edd_insert_user_args', array(
 		'user_login'      => isset( $user_data['user_login'] ) ? $user_data['user_login'] : null,
 		'user_pass'       => isset( $user_data['user_pass'] ) ? $user_data['user_pass'] : null,
 		'user_email'      => $user_data['user_email'],
@@ -607,17 +630,20 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 		'last_name'       => $user_data['user_last'],
 		'user_registered' => date('Y-m-d H:i:s'),
 		'role'            => get_option( 'default_role' )
-	);
+	), $user_data );
 
 	// Insert new user
-	$user_id = wp_insert_user( apply_filters( 'edd_insert_user_args', $user_args ) );
+	$user_id = wp_insert_user( $user_args );
 
 	// Validate inserted user
 	if ( is_wp_error( $user_id ) )
 		return -1;
 
+	// Allow themes and plugins to filter the user data
+	$user_data = apply_filters( 'edd_insert_user_data', $user_data, $user_args );
+
 	// Allow themes and plugins to hook
-	do_action( 'edd_insert_user', $user_id );
+	do_action( 'edd_insert_user', $user_id, $user_data );
 
 	// Login new user
 	edd_log_user_in( $user_id, $user_data['user_login'], $user_data['user_pass'] );
@@ -728,8 +754,9 @@ function edd_purchase_form_validate_cc() {
 
 	// Validate the card zip
 	if ( ! empty( $card_data['card_zip'] ) ) {
-		if ( ! edd_purchase_form_validate_cc_zip( $card_data['card_zip'], $card_data['card_country'] ) )
+		if ( ! edd_purchase_form_validate_cc_zip( $card_data['card_zip'], $card_data['card_country'] ) ) {
 			edd_set_error( 'invalid_cc_zip', __( 'The zip code you entered for your credit card is invalid', 'edd' ) );
+		}
 	}
 
 	// This should validate card numbers at some point too

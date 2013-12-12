@@ -182,13 +182,14 @@ class EDD_Tracking {
 	public function check_for_optout( $data ) {
 
 		global $edd_options;
-
 		if( isset( $edd_options['allow_tracking'] ) ) {
 			unset( $edd_options['allow_tracking'] );
 			update_option( 'edd_settings', $edd_options );
 		}
 
 		update_option( 'edd_tracking_notice', '1' );
+
+		wp_redirect( remove_query_arg( 'edd_action' ) ); exit;
 
 	}
 
@@ -223,8 +224,24 @@ class EDD_Tracking {
 
 		global $edd_options;
 
-		if( ! get_option( 'edd_tracking_notice' ) && ! isset( $edd_options['allow_tracking'] ) ) {
+		$hide_notice = get_option( 'edd_tracking_notice' );
 
+		if( $hide_notice )
+			return;
+
+		if( isset( $edd_options['allow_tracking'] ) )
+			return;
+
+		if( ! current_user_can( 'manage_options' ) )
+			return;
+
+		if( 
+			stristr( network_site_url( '/' ), 'dev'       ) !== false ||
+			stristr( network_site_url( '/' ), 'localhost' ) !== false ||
+			stristr( network_site_url( '/' ), ':8888'     ) !== false // This is common with MAMP on OS X
+		) {
+			update_option( 'edd_tracking_notice', '1' );
+		} else {
 			$optin_url  = add_query_arg( 'edd_action', 'opt_into_tracking' );
 			$optout_url = add_query_arg( 'edd_action', 'opt_out_of_tracking' );
 
