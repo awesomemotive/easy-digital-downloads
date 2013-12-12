@@ -32,7 +32,7 @@
 					</td>
 					<td class="edd_cart_item_price"><?php echo edd_cart_item_price( $item['id'], $item['options'] ); ?></td>
 					<td class="edd_cart_actions">
-						<?php if( edd_item_quanities_enabled() ) : ?>
+						<?php if( edd_item_quantities_enabled() ) : ?>
 							<input type="number" min="1" step="1" name="edd-cart-download-<?php echo $key; ?>-quantity" class="edd-input edd-item-quantity" value="<?php echo edd_get_cart_item_quantity( $item['id'], $item['options'] ); ?>"/>
 							<input type="hidden" name="edd-cart-downloads[]" value="<?php echo $item['id']; ?>"/>
 							<input type="hidden" name="edd-cart-download-<?php echo $key; ?>-options" value="<?php esc_attr_e( serialize( $item['options'] ) ); ?>"/>
@@ -73,17 +73,13 @@
 				</th>
 				<?php do_action( 'edd_checkout_table_subtotal_last' ); ?>
 			</tr>
-			<?php if ( ! edd_prices_show_tax_on_checkout() ) : ?>
-
-				<tr class="edd_cart_footer_row edd_cart_tax_row"<?php if( ! edd_is_cart_taxed() ) echo ' style="display:none;"'; ?>>
-					<?php do_action( 'edd_checkout_table_tax_first' ); ?>
-					<th colspan="<?php echo edd_checkout_cart_columns(); ?>" class="edd_cart_tax">
-						<?php _e( 'Tax', 'edd' ); ?>:&nbsp;<span class="edd_cart_tax_amount" data-tax="<?php echo edd_get_cart_tax( false ); ?>"><?php echo esc_html( edd_cart_tax() ); ?></span>
-					</th>
-					<?php do_action( 'edd_checkout_table_tax_last' ); ?>
-				</tr>
-
-			<?php endif; ?>
+			<tr class="edd_cart_footer_row edd_cart_tax_row"<?php if( ! edd_is_cart_taxed() ) echo ' style="display:none;"'; ?>>
+				<?php do_action( 'edd_checkout_table_tax_first' ); ?>
+				<th colspan="<?php echo edd_checkout_cart_columns(); ?>" class="edd_cart_tax">
+					<?php _e( 'Tax', 'edd' ); ?>:&nbsp;<span class="edd_cart_tax_amount" data-tax="<?php echo edd_get_cart_tax( false ); ?>"><?php echo esc_html( edd_cart_tax() ); ?></span>
+				</th>
+				<?php do_action( 'edd_checkout_table_tax_last' ); ?>
+			</tr>
 
 		<?php endif; ?>
 

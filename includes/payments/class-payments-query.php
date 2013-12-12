@@ -370,9 +370,8 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return void
 	 */
 	public function mode() {
-		if ( $this->args[ 'mode' ] == 'all' ) {
+		if ( $this->args[ 'mode' ] == 'all' || empty( $this->args[ 'mode' ] ) ) {
 			$this->__unset( 'mode' );
-
 			return;
 		}
 

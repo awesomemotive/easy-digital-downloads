@@ -64,13 +64,15 @@ add_action( 'template_redirect', 'edd_process_cart_endpoints', 100 );
  * @param $data
  */
 function edd_process_add_to_cart( $data ) {
-	$download_id = $data['download_id'];
+	$download_id = absint( $data['download_id'] );
 	$options     = isset( $data['edd_options'] ) ? $data['edd_options'] : array();
 	$cart        = edd_add_to_cart( $download_id, $options );
 
 	if ( edd_straight_to_checkout() && ! edd_is_checkout() ) {
 		wp_redirect( edd_get_checkout_uri(), 303 );
 		edd_die();
+	} else {
+		wp_redirect( remove_query_arg( array( 'edd_action', 'download_id' ) ) ); edd_die();
 	}
 }
 add_action( 'edd_add_to_cart', 'edd_process_add_to_cart' );
@@ -83,8 +85,9 @@ add_action( 'edd_add_to_cart', 'edd_process_add_to_cart' );
  * @param $data
  */
 function edd_process_remove_from_cart( $data ) {
-	$cart_key = $_GET['cart_item'];
+	$cart_key = absint( $_GET['cart_item'] );
 	edd_remove_from_cart( $cart_key );
+	wp_redirect( remove_query_arg( array( 'edd_action', 'cart_item' ) ) ); edd_die();
 }
 add_action( 'edd_remove', 'edd_process_remove_from_cart' );
 
