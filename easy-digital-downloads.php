@@ -243,6 +243,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/contextual-help.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/contextual-help.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/contextual-help.php';
