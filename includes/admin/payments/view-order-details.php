@@ -32,7 +32,7 @@ $user_id      = edd_get_payment_user_id( $payment_id );
 $payment_date = strtotime( $item->post_date );
 ?>
 <div class="wrap">
-	<h2><?php printf( __( 'Payment #%d', 'edd' ), $payment_id ); ?> <a class="add-new-h2" href="<?php echo add_query_arg( 'action', 'edit' ); ?>"><?php _e( 'Edit Order', 'edd' ); ?></a></h2>
+	<h2><?php printf( __( 'Payment #%d', 'edd' ), $payment_id ); ?></h2>
 	<?php do_action( 'edd_view_order_details_before' ); ?>
 	<div id="poststuff">
 		<div id="post-body" class="metabox-holder columns-2">
