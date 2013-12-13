@@ -171,11 +171,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
 			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
 			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?><br/>
-			<span class="edd-advanced-search">
-				<?php _e( 'Search in:', 'edd' ); ?>
-				<input type="radio" name="edd_field" value="default" checked="checked"/>Default
-				<input type="radio" name="edd_field" value="notes"/>Notes
-			</span>
 		</p>
 <?php
 	}
