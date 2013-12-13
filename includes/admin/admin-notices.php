@@ -62,6 +62,10 @@ function edd_admin_messages() {
 		add_settings_error( 'edd-notices', 'edd-settings-imported', __( 'The settings have been imported.', 'edd' ), 'updated' );
 	}
 
+	if ( isset( $_GET['edd-message'] ) && 'note-added' == $_GET['edd-message'] && current_user_can( 'edit_shop_payments' ) ) {
+		add_settings_error( 'edd-notices', 'edd-note-added', __( 'The payment note has been added successfully.', 'edd' ), 'updated' );
+	}
+
     if( ! edd_htaccess_exists() && ! get_user_meta( get_current_user_id(), '_edd_htaccess_missing_dismissed', true ) ) {
         if( ! stristr( $_SERVER['SERVER_SOFTWARE'], 'apache' ) )
             return; // Bail if we aren't using Apache... nginx doesn't use htaccess!

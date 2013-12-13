@@ -24,9 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_payment_history_page() {
 	global $edd_options;
 
-	if ( isset( $_GET['view'] ) && 'edit-payment' == $_GET['view'] ) {
-		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/edit-payment.php';
-	} elseif ( isset( $_GET['view'] ) && 'view-order-details' == $_GET['view'] ) {
+	if ( isset( $_GET['view'] ) && 'view-order-details' == $_GET['view'] ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-order-details.php';
 	} else {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-payments-table.php';
