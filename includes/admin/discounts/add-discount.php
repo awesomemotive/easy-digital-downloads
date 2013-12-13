@@ -93,7 +93,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-start"><?php _e( 'Start date', 'edd' ); ?></label>
 				</th>
 				<td>
-					<input name="start" id="edd-start" type="text" value="" style="width: 120px;" class="edd_datepicker"/>
+					<input name="start" id="edd-start" type="text" value="" style="width: 300px;" class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'edd' ); ?></p>
 				</td>
 			</tr>
@@ -102,7 +102,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-expiration"><?php _e( 'Expiration date', 'edd' ); ?></label>
 				</th>
 				<td>
-					<input name="expiration" id="edd-expiration" type="text" style="width: 120px;" class="edd_datepicker"/>
+					<input name="expiration" id="edd-expiration" type="text" style="width: 300px;" class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank', 'edd' ); ?></p>
 				</td>
 			</tr>

@@ -102,7 +102,7 @@ $single_use   = edd_discount_is_single_use( $discount_id );
 					<label for="edd-start"><?php _e( 'Start date', 'edd' ); ?></label>
 				</th>
 				<td>
-					<input name="start" id="edd-start" type="text" value="<?php echo esc_attr( edd_get_discount_start_date( $discount_id ) ); ?>" style="width: 120px;" class="edd_datepicker"/>
+					<input name="start" id="edd-start" type="text" value="<?php echo esc_attr( edd_get_discount_start_date( $discount_id ) ); ?>" style="width: 300px;" class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'edd' ); ?></p>
 				</td>
 			</tr>
@@ -111,7 +111,7 @@ $single_use   = edd_discount_is_single_use( $discount_id );
 					<label for="edd-expiration"><?php _e( 'Expiration date', 'edd' ); ?></label>
 				</th>
 				<td>
-					<input name="expiration" id="edd-expiration" type="text" value="<?php echo esc_attr( edd_get_discount_expiration( $discount_id ) ); ?>" style="width: 120px;" class="edd_datepicker"/>
+					<input name="expiration" id="edd-expiration" type="text" value="<?php echo esc_attr( edd_get_discount_expiration( $discount_id ) ); ?>" style="width: 300px;" class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank', 'edd' ); ?></p>
 				</td>
 			</tr>
