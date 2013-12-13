@@ -402,12 +402,12 @@ class EDD_Stats {
 		$start_where = '';
 		$end_where   = '';
 
-		if( $this->start_date ) {
+		if( ! empty( $this->start_date ) && ! is_wp_error( $this->start_date ) ) {
 			$start_date  = date( 'Y-m-d 00:00:00', $this->start_date );
 			$start_where = " AND p.post_date >= '{$start_date}'";
 		}
 
-		if( $this->end_date ) {
+		if( ! empty( $this->end_date ) && ! is_wp_error( $this->end_date ) ) {
 			$end_date  = date( 'Y-m-d 23:59:59', $this->end_date );
 			$end_where = " AND p.post_date <= '{$end_date}'";
 		}
@@ -431,12 +431,12 @@ class EDD_Stats {
 		$start_where = '';
 		$end_where   = '';
 
-		if( $this->start_date ) {
+		if( ! empty( $this->start_date ) && ! is_wp_error( $this->start_date ) ) {
 			$start_date  = date( 'Y-m-d 00:00:00', $this->start_date );
 			$start_where = " AND $wpdb->posts.post_date >= '{$start_date}'";
 		}
 
-		if( $this->end_date ) {
+		if( ! empty( $this->end_date ) && ! is_wp_error( $this->end_date ) ) {
 			$end_date  = date( 'Y-m-d 23:59:59', $this->end_date );
 			$end_where = " AND $wpdb->posts.post_date <= '{$end_date}'";
 		}
