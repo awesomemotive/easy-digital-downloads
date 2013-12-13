@@ -176,7 +176,7 @@ $payment_date = strtotime( $item->post_date );
 					</div><!-- /#edd-order-data -->
 
 					<div id="edd-purchased-files" class="postbox">
-						<h3 class="hndle"><?php _e( 'Purchased Files', 'edd' ); ?> - <a href="<?php echo add_query_arg( 'action', 'edit' ); ?>"><?php _e( 'Edit Files', 'edd' ); ?></a></h3>
+						<h3 class="hndle"><?php printf( __( 'Purchased %s', 'edd' ), edd_get_label_plural() ); ?> - <a href="<?php echo add_query_arg( 'action', 'edit' ); ?>"><?php _e( 'Edit Files', 'edd' ); ?></a></h3>
 						<div class="inside">
 							<table class="wp-list-table widefat fixed" cellspacing="0">
 								<tbody id="the-list">
