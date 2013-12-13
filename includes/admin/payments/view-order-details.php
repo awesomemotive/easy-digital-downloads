@@ -40,7 +40,7 @@ $payment_date = strtotime( $item->post_date );
 				<div id="side-sortables" class="meta-box-sortables ui-sortable">
 					<?php do_action( 'edd_view_order_details_sidebar_before' ); ?>
 					<div id="edd-order-totals" class="postbox">
-						<h3 class="hndle"><span><?php _e( 'Order Totals', 'edd' ); ?></span></h3>
+						<h3 class="hndle"><span><?php _e( 'Order Totals', 'edd' ); ?></span> - <a href="<?php echo add_query_arg( 'action', 'edit' ); ?>"><?php _e( 'Edit Totals', 'edd' ); ?></a></h3>
 						<div class="inside">
 							<div class="edd-order-totals-box edd-admin-box">
 								<?php do_action( 'edd_view_order_details_totals_before', $payment_id ); ?>
@@ -111,25 +111,6 @@ $payment_date = strtotime( $item->post_date );
 						</div><!-- /.inside -->
 					</div><!-- /#edd-payment-notes -->
 
-					<?php if( ! empty( $user_info['address'] ) ) { ?>
-
-						<div id="edd-order-address" class="postbox">
-							<h3 class="hndle"><span><?php _e( 'Billing Address', 'edd' ); ?></span></h3>
-							<div class="inside">
-								<div class="order-data-address">
-									<p class="data">
-										<span class="order-data-address-line"><?php echo _x( 'Line 1:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['line1']; ?><br/>
-										<span class="order-data-address-line"><?php echo _x( 'Line 2:', 'Second address line', 'edd' ) . '</span> ' . $user_info['address']['line2']; ?><br/>
-										<span class="order-data-address-line"><?php echo _x( 'City:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['city']; ?><br/>
-										<span class="order-data-address-line"><?php echo _x( 'State / Province:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['state']; ?><br/>
-										<span class="order-data-address-line"><?php echo _x( 'Zip / Postal Code:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['zip']; ?><br/>
-										<span class="order-data-address-line"><?php echo _x( 'Country:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['country']; ?><br/>
-									</p>
-								</div>
-							</div><!-- /.inside -->
-						</div><!-- /#edd-order-address -->
-					<?php } ?>
-
 					<?php do_action( 'edd_view_order_details_sidebar_after', $payment_id ); ?>
 				</div><!-- /#side-sortables -->
 			</div><!-- /#postbox-container-1 -->
@@ -138,7 +119,7 @@ $payment_date = strtotime( $item->post_date );
 				<div id="normal-sortables" class="meta-box-sortables ui-sortable">
 					<?php do_action( 'edd_view_order_details_main_before' ); ?>
 					<div id="edd-order-data" class="postbox">
-						<h3 class="hndle"><?php _e( 'Order Details', 'edd'); ?></h3>
+						<h3 class="hndle"><?php _e( 'Order Details', 'edd'); ?> - <a href="<?php echo add_query_arg( 'action', 'edit' ); ?>"><?php _e( 'Edit Order Details', 'edd' ); ?></a></h3>
 						<div class="inside">
 							<div class="column-container">
 								<div class="order-data-column">
@@ -168,8 +149,25 @@ $payment_date = strtotime( $item->post_date );
 									?>
 									<p class="data"><span><?php _e( 'Gateway:', 'edd' ); ?></span> <?php echo edd_get_gateway_admin_label( $gateway ); ?></p>
 									<?php } ?>
-									<p class="data"><span><?php _e( 'Key:', 'edd' ); ?></span> <?php echo $payment_meta['key']; ?></p>
+									<p class="data data-payment-key"><span><?php _e( 'Key:', 'edd' ); ?></span> <?php echo $payment_meta['key']; ?></p>
 								</div>
+
+								<?php if( ! empty( $user_info['address'] ) ) { ?>
+									<div class="order-data-column" id="edd-order-address">
+
+										<h4><span><?php _e( 'Billing Address', 'edd' ); ?></span></h4>
+										<div class="order-data-address">
+											<p class="data">
+												<span class="order-data-address-line"><?php echo _x( 'Line 1:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['line1']; ?><br/>
+												<span class="order-data-address-line"><?php echo _x( 'Line 2:', 'Second address line', 'edd' ) . '</span> ' . $user_info['address']['line2']; ?><br/>
+												<span class="order-data-address-line"><?php echo _x( 'City:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['city']; ?><br/>
+												<span class="order-data-address-line"><?php echo _x( 'State / Province:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['state']; ?><br/>
+												<span class="order-data-address-line"><?php echo _x( 'Zip / Postal Code:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['zip']; ?><br/>
+												<span class="order-data-address-line"><?php echo _x( 'Country:', 'First address line', 'edd' ) . '</span> ' . $user_info['address']['country']; ?><br/>
+											</p>
+										</div>
+									</div><!-- /#edd-order-address -->
+								<?php } ?>
 
 								<?php do_action( 'edd_payment_view_details', $payment_id ); ?>
 
@@ -178,7 +176,7 @@ $payment_date = strtotime( $item->post_date );
 					</div><!-- /#edd-order-data -->
 
 					<div id="edd-purchased-files" class="postbox">
-						<h3 class="hndle"><?php _e( 'Purchased Files', 'edd' ); ?></h3>
+						<h3 class="hndle"><?php _e( 'Purchased Files', 'edd' ); ?> - <a href="<?php echo add_query_arg( 'action', 'edit' ); ?>"><?php _e( 'Edit Files', 'edd' ); ?></a></h3>
 						<div class="inside">
 							<table class="wp-list-table widefat fixed" cellspacing="0">
 								<tbody id="the-list">

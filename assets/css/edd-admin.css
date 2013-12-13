@@ -87,8 +87,9 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 .rtl .edd-admin-box .right { float: left; margin-left: 10px; }
 #edd-order-data .order-id { color: #666; font-size: 14px; }
 #edd-order-data .column-container { clear: both; overflow: hidden; }
-#edd-order-data .order-data-column { float: left; width: 31%; padding: 0 2% 0 0; }
+#edd-order-data .order-data-column { float: left; width: 23%; min-width: 250px; padding: 0 2% 0 0; }
 #edd-order-data .data span { color: #666; font-weight: 600; }
+#edd-order-data .data-payment-key { white-space: pre-line; }
 #edd-purchased-files .inside { margin: 0; padding: 0; }
 
 .edd-price-field { width: 80px; }
