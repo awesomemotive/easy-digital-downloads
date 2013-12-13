@@ -322,7 +322,7 @@ function edd_purchase_form_required_fields() {
 	);
 
 	// Let payment gateways and other extensions determine if address fields should be required
-	$require_address = apply_filters( 'edd_require_billing_address', edd_use_taxes() );
+	$require_address = apply_filters( 'edd_require_billing_address', edd_use_taxes() && edd_get_cart_total() );
 
 	if( $require_address ) {
 		$required_fields['card_zip'] = array(

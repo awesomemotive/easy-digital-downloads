@@ -121,6 +121,29 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$this->base_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history' );
 	}
 
+	public function advanced_filters() {
+		$start_date = isset( $_GET['start-date'] )  ? sanitize_text_field( $_GET['start-date'] ) : null;
+		$end_date   = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : null;
+		$status     = isset( $_GET['status'] )      ? $_GET['status'] : '';
+?>
+		<div id="edd-payment-filters">
+			<label for="start-date"><?php _e( 'Start Date:', 'edd' ); ?></label>
+			<input type="text" id="start-date" name="start-date" class="edd_datepicker" value="<?php echo $start_date; ?>" placeholder="mm/dd/yyyy"/>
+			<label for="end-date"><?php _e( 'End Date:', 'edd' ); ?></label>
+			<input type="text" id="end-date" name="end-date" class="edd_datepicker" value="<?php echo $end_date; ?>" placeholder="mm/dd/yyyy"/>
+			<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
+			<?php if( ! empty( $status ) ) : ?>
+				<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
+			<?php endif; ?>
+			<?php if( ! empty( $start_date || ! empty( $end_date ) ) ) : ?>
+				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>" class="button-secondary"><?php _e( 'Clear Filter', 'edd' ); ?></a>
+			<?php endif; ?>
+			<?php $this->search_box( __( 'Search', 'edd' ), 'edd-payments' ); ?>
+		</div>	
+
+<?php
+	}
+
 	/**
 	 * Show the search field
 	 *
@@ -147,7 +170,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			<?php do_action( 'edd_payment_history_search' ); ?>
 			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
 			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
-			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
+			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?><br/>
 		</p>
 <?php
 	}
@@ -450,21 +473,23 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public function payments_data() {
 		$payments_data = array();
 
-		if ( isset( $_GET['paged'] ) ) $page = $_GET['paged']; else $page = 1;
+		$page = isset( $_GET['paged'] ) ? $_GET['paged'] : 1;
 
 		$per_page       = $this->per_page;
-		$mode           = edd_is_test_mode()            ? 'test'                            : 'live';
-		$orderby 		= isset( $_GET['orderby'] )     ? $_GET['orderby']                  : 'ID';
-		$order 			= isset( $_GET['order'] )       ? $_GET['order']                    : 'DESC';
-		$order_inverse 	= $order == 'DESC'              ? 'ASC'                             : 'DESC';
+		$mode           = edd_is_test_mode()            ? 'test'                                     : 'live';
+		$orderby 		= isset( $_GET['orderby'] )     ? $_GET['orderby']                           : 'ID';
+		$order 			= isset( $_GET['order'] )       ? $_GET['order']                             : 'DESC';
+		$order_inverse 	= $order == 'DESC'              ? 'ASC'                                      : 'DESC';
 		$order_class 	= strtolower( $order_inverse );
-		$user 			= isset( $_GET['user'] )        ? $_GET['user']                     : null;
-		$status 		= isset( $_GET['status'] )      ? $_GET['status']                   : 'any';
-		$meta_key		= isset( $_GET['meta_key'] )    ? $_GET['meta_key']                 : null;
-		$year 			= isset( $_GET['year'] )        ? $_GET['year']                     : null;
-		$month 			= isset( $_GET['m'] )           ? $_GET['m']                        : null;
-		$day 			= isset( $_GET['day'] )         ? $_GET['day']                      : null;
-		$search         = isset( $_GET['s'] )           ? sanitize_text_field( $_GET['s'] ) : null;
+		$user 			= isset( $_GET['user'] )        ? $_GET['user']                              : null;
+		$status 		= isset( $_GET['status'] )      ? $_GET['status']                            : 'any';
+		$meta_key		= isset( $_GET['meta_key'] )    ? $_GET['meta_key']                          : null;
+		$year 			= isset( $_GET['year'] )        ? $_GET['year']                              : null;
+		$month 			= isset( $_GET['m'] )           ? $_GET['m']                                 : null;
+		$day 			= isset( $_GET['day'] )         ? $_GET['day']                               : null;
+		$search         = isset( $_GET['s'] )           ? sanitize_text_field( $_GET['s'] )          : null;
+		$start_date     = isset( $_GET['start-date'] )  ? sanitize_text_field( $_GET['start-date'] ) : null;
+		$end_date       = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
 
 		$args = array(
 			'output'   => 'payments',
@@ -479,7 +504,9 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			'year'	   => $year,
 			'month'    => $month,
 			'day' 	   => $day,
-			's'        => $search
+			's'        => $search,
+			'start_date' => $start_date,
+			'end_date'   => $end_date,
 		);
 
 		$p_query  = new EDD_Payments_Query( $args );
