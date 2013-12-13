@@ -33,7 +33,7 @@
 	border-color: #dfdfdf;
 	position: relative;
 	overflow: auto;
-	margin: 18px 0;
+	margin: 8px 0;
 	padding: 12px;
 	border-width: 1px;
 	border-style: solid;
@@ -41,18 +41,13 @@
 	font-size: 13px;
 	line-height: 2.1em;
 }
+#edd-payments-filter ul.subsubsub {
+	margin-bottom: 8px;
+}
 #edd-payment-filters p {
 	color: #777;
 }
-.edd-close-panel {
-	position: absolute;
-	top: 5px;
-	right: 10px;
-	padding: 8px 3px;
-	font-size: 13px;
-	text-decoration: none;
-	line-height: 1;
-}
+
 tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 .wp-list-table.downloads th#ID { width: 80px; }
 .wp-list-table.downloads th#details { width: 130px; }
