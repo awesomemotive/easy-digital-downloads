@@ -19,7 +19,7 @@
 /* Discount Code Styles
 -------------------------------------------------------------- */
 #edd-products { height: 100px; min-width: 200px; }
-#edd-add-discount input[type="checkbox"], #edd-edit-discount input[type="checkbox"] { width: 15px; display: inline; }
+#edd-add-discount input[type="checkbox"], #edd-edit-discount input[type="checkbox"] { width: 15px; }
 
 /* Payment History Styles
 -------------------------------------------------------------- */
