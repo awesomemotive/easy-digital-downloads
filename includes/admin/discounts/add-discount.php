@@ -11,6 +11,7 @@
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
+$downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
 ?>
 <h2><?php _e( 'Add New Discount', 'edd' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
 <form id="edd-add-discount" action="" method="POST">
@@ -70,7 +71,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					</p>
 					<select multiple id="edd-products" name="products[]" class="edd-select-chosen" data-placeholder="<?php printf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ); ?>">
 						<?php
-						$downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
 						if( $downloads ) :
 							foreach( $downloads as $download ) :
 								echo '<option value="' . esc_attr( $download->ID ) . '">' . esc_html( get_the_title( $download->ID ) ) . '</option>';
@@ -86,6 +86,23 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 							<?php printf( __( 'Apply discount only to selected %s?', 'edd' ), edd_get_label_plural() ); ?>
 						</label>
 					</p>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<label for="edd-excluded-products"><?php printf( __( 'Excluded %s', 'edd' ), edd_get_label_plural() ); ?></label>
+				</th>
+				<td>
+					<select multiple id="edd-excluded-products" name="excluded-products[]" class="edd-select-chosen" data-placeholder="<?php printf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ); ?>">
+						<?php
+						if( $downloads ) :
+							foreach( $downloads as $download ) :
+								echo '<option value="' . esc_attr( $download->ID ) . '">' . esc_html( get_the_title( $download->ID ) ) . '</option>';
+							endforeach;
+						endif;
+						?>
+					</select>
+					<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>
 			</tr>
 			<tr class="form-field">
