@@ -10,7 +10,7 @@
 /* =Add Ons Styles
 -------------------------------------------------------------- */
 #edd-add-ons h2 { margin: 0 0 15px; }
-#edd-add-ons .edd-extension { float: left; margin: 0 30px 30px 0; background: #f0f0f0; border: 1px solid #ccc; width: 180px; padding: 8px; height: 315px; position: relative; }
+#edd-add-ons .edd-extension { float: left; margin: 0 15px 15px 0; background: #f0f0f0; border: 1px solid #ccc; width: 320px; padding: 8px; height: 315px; position: relative; }
 #edd-add-ons .edd-extension h3 { margin: 0 0 8px; font-size: 13px;  }
 #edd-add-ons .edd-extension .button-secondary { position: absolute; bottom: 8px; left: 8px; }
 #edd-add-ons .edd-browse-all { clear:both; width:100%; }
@@ -19,10 +19,35 @@
 /* Discount Code Styles
 -------------------------------------------------------------- */
 #edd-products { height: 100px; min-width: 200px; }
-#edd-add-discount input[type="checkbox"], #edd-edit-discount input[type="checkbox"] { width: 15px; display: inline; }
+#edd-add-discount input[type="checkbox"], #edd-edit-discount input[type="checkbox"] { width: 15px; }
 
 /* Payment History Styles
 -------------------------------------------------------------- */
+#edd-payment-filters {
+	clear: both;	background: #f5f5f5;
+	background-image: -webkit-gradient(linear, left bottom, left top, from(#f5f5f5), to(#fafafa));
+	background-image: -webkit-linear-gradient(bottom, #f5f5f5, #fafafa);
+	background-image:    -moz-linear-gradient(bottom, #f5f5f5, #fafafa);
+	background-image:      -o-linear-gradient(bottom, #f5f5f5, #fafafa);
+	background-image: linear-gradient(to top, #f5f5f5, #fafafa);
+	border-color: #dfdfdf;
+	position: relative;
+	overflow: auto;
+	margin: 8px 0;
+	padding: 12px;
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 3px;
+	font-size: 13px;
+	line-height: 2.1em;
+}
+#edd-payments-filter ul.subsubsub {
+	margin-bottom: 8px;
+}
+#edd-payment-filters p {
+	color: #777;
+}
+
 tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 .wp-list-table.downloads th#ID { width: 80px; }
 .wp-list-table.downloads th#details { width: 130px; }
