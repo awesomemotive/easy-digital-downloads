@@ -128,7 +128,7 @@ jQuery(document).ready(function($) {
 	}
 
 	function onDiscountResponseReceived( discount_response ) {
-		$body.trigger( 'cart.discount.ajaxSuccess', discount_response, recalculate_taxes );
+		$body.trigger( 'cart.discounts.ajaxSuccess', discount_response, recalculate_taxes );
 	}
 
 	function processDiscountAJAX( discount_response, recalculate_taxes ) {
@@ -154,7 +154,7 @@ jQuery(document).ready(function($) {
 	}
 
 	function onDiscountResponseFailed( data ) {
-		$body.trigger( 'cart.discount.ajaxFail', data );
+		$body.trigger( 'cart.discounts.ajaxFail', data );
 		console.log(data);
 	}
 
@@ -181,7 +181,7 @@ jQuery(document).ready(function($) {
     // Validate and apply a discount
     $checkout_form_wrap.on('focusout', '#edd-discount', getDiscountCodeData );
 	$body.on( 'cart.discounts.submit', submitDiscountCode );
-	$body.on( 'cart.discount.ajaxSuccess', processDiscountAJAX );
+	$body.on( 'cart.discounts.ajaxSuccess', processDiscountAJAX );
 
     // Remove a discount
     $body.on('click', '.edd_discount_remove', function (event) {
