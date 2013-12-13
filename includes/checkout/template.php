@@ -792,6 +792,6 @@ function edd_checkout_hidden_fields() {
  * @since 1.8.6
  * @return boolean
 */
-function edd_receipt_show_download_files( $item_id ) {
-	return apply_filters( 'edd_receipt_show_download_files', true, $item_id );
+function edd_receipt_show_download_files( $item_id, $receipt_args ) {
+	return apply_filters( 'edd_receipt_show_download_files', true, $item_id, $receipt_args );
 }
