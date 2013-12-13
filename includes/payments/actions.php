@@ -57,7 +57,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 				}
 
-				do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type );
+				do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download );
 
 			}
 

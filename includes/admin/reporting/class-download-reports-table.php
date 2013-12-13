@@ -180,7 +180,9 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 */
 	public function category_filter() {
 		$current_view = isset( $_GET[ 'view' ] ) ? $_GET[ 'view' ] : 'earnings';
-		echo EDD()->html->category_dropdown( 'category', $this->get_category() );
+		if( get_terms( 'download_category' ) ) {
+			echo EDD()->html->category_dropdown( 'category', $this->get_category() );
+		}
 	}
 
 

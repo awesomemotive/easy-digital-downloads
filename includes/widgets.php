@@ -233,6 +233,166 @@ class edd_purchase_history_widget extends WP_Widget {
 	}
 }
 
+
+/**
+ * Product Details Widget
+ * 
+ * Displays a product's details in a widget
+ *
+ * @since 1.9
+ * @return void
+ */
+class EDD_Product_Details_Widget extends WP_Widget {
+    /** Constructor */
+	public function __construct() {
+		parent::__construct(
+			'edd_product_details',
+			sprintf( __( '%s Details', 'edd' ), edd_get_label_singular() ),
+			array( 
+				'description' => sprintf( __( 'Display the details of a specific %s', 'edd' ), edd_get_label_singular() ),
+			)
+		);
+	}
+
+    /** @see WP_Widget::widget */
+    public function widget( $args, $instance ) {
+        extract( $args );
+
+        if ( 'current' == $instance['download_id'] && ! is_singular( 'download' ) )
+        	return;
+
+       	// set correct download ID
+        if ( 'current' == $instance['download_id'] && is_singular( 'download' ) )
+        	$download_id = get_the_ID();
+        else
+        	$download_id = $instance['download_id'];
+
+        // Variables from widget settings
+        $title              = apply_filters( 'widget_title', $instance['title'] );
+      	$download_title 	= $instance['download_title'] ? apply_filters( 'edd_product_details_widget_download_title', '<h3>' . get_the_title( $download_id ) . '</h3>', $download_id ) : '';
+       	$purchase_button 	= $instance['purchase_button'] ? apply_filters( 'edd_product_details_widget_purchase_button', edd_get_purchase_link( array( 'download_id' => $download_id ) ), $download_id ) : '';
+    	$categories 		= $instance['categories'] ? $instance['categories'] : '';
+    	$tags 				= $instance['tags'] ? $instance['tags'] : '';
+
+        // Used by themes. Opens the widget
+        echo $before_widget;
+
+        // Display the widget title
+        if( $title )
+            echo $before_title . $title . $after_title;
+		
+     	// download title
+        echo $download_title;
+
+        // purchase button
+        echo $purchase_button;
+
+      	// categories and tags
+    	$category_list = $categories ? get_the_term_list( $download_id, 'download_category', '', ', ' ) : '';
+    	$tag_list = $tags ? get_the_term_list( $download_id, 'download_tag', '', ', ' ) : '';
+
+        $text = '';
+
+        if( $category_list || $tag_list ) {
+        	$text .= '<p class="edd-meta">';
+
+        	if( $category_list )
+	        	$text .= '<span class="categories">' . __( 'Categories: %1$s', 'edd' ). '</span><br/>';
+
+	        if ( $tag_list )
+	            $text .= '<span class="tags">' . __( 'Tags: %2$s', 'edd' ) . '</span>';
+
+        	$text .= '</p>';
+        }
+        
+        printf( $text, $category_list, $tag_list );
+
+        // Used by themes. Closes the widget
+        echo $after_widget;
+    }
+
+   	/** @see WP_Widget::form */
+    public function form( $instance ) {
+        // Set up some default widget settings.
+        $defaults = array(
+            'title' 			=> sprintf( __( '%s Details', 'edd' ), edd_get_label_singular() ),
+            'download_id' 		=> 'current',
+            'download_title' 	=> 'on',
+            'purchase_button' 	=> 'on',
+            'categories' 		=> 'on',
+            'tags' 				=> 'on'
+        );
+
+        $instance = wp_parse_args( (array) $instance, $defaults ); ?>
+        
+        <!-- Title -->
+        <p>
+            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'edd' ) ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $instance['title']; ?>" />
+        </p>
+
+			<!-- Download -->
+         <?php 
+            $args = array( 
+	            'post_type'      => 'download', 
+	            'posts_per_page' => -1, 
+	            'post_status'    => 'publish', 
+	        );
+	        $downloads = get_posts( $args );
+        ?>
+        <p>
+            <label for="<?php echo $this->get_field_id( 'download_id' ); ?>"><?php printf( __( '%s', 'edd' ), edd_get_label_singular() ); ?></label>
+            <select class="widefat" name="<?php echo $this->get_field_name( 'download_id' ); ?>" id="<?php echo $this->get_field_id( 'download_id' ); ?>">
+            	<option value="current"><?php _e( 'Use current', 'edd' ); ?></option>
+            <?php foreach ( $downloads as $download ) { ?>
+                <option <?php selected( $instance['download_id'], $download->ID ); ?> value="<?php echo $download->ID; ?>"><?php echo $download->post_title; ?></option>
+            <?php } ?>
+            </select>
+        </p>
+
+        <!-- Download title -->
+        <p>
+            <input <?php checked( $instance['download_title'], 'on' ); ?> id="<?php echo $this->get_field_id( 'download_title' ); ?>" name="<?php echo $this->get_field_name( 'download_title' ); ?>" type="checkbox" />
+            <label for="<?php echo $this->get_field_id( 'download_title' ); ?>"><?php _e( 'Show Title', 'edd' ); ?></label>
+        </p>
+
+        <!-- Show purchase button -->
+        <p>
+            <input <?php checked( $instance['purchase_button'], 'on' ); ?> id="<?php echo $this->get_field_id( 'purchase_button' ); ?>" name="<?php echo $this->get_field_name( 'purchase_button' ); ?>" type="checkbox" />
+            <label for="<?php echo $this->get_field_id( 'purchase_button' ); ?>"><?php _e( 'Show Purchase Button', 'edd' ); ?></label>
+        </p>
+
+        <!-- Show download categories -->
+        <p>
+            <input <?php checked( $instance['categories'], 'on' ); ?> id="<?php echo $this->get_field_id( 'categories' ); ?>" name="<?php echo $this->get_field_name( 'categories' ); ?>" type="checkbox" />
+            <label for="<?php echo $this->get_field_id( 'categories' ); ?>"><?php _e( 'Show Categories', 'edd' ); ?></label>
+        </p>
+
+        <!-- Show download tags -->
+        <p>
+            <input <?php checked( $instance['tags'], 'on' ); ?> id="<?php echo $this->get_field_id( 'tags' ); ?>" name="<?php echo $this->get_field_name( 'tags' ); ?>" type="checkbox" />
+            <label for="<?php echo $this->get_field_id( 'tags' ); ?>"><?php _e( 'Show Tags', 'edd' ); ?></label>
+        </p>
+    <?php }
+
+    /** @see WP_Widget::update */
+    public function update( $new_instance, $old_instance ) {
+        $instance = $old_instance;
+
+        $instance['title'] 				= strip_tags( $new_instance['title'] );
+        $instance['download_id']		= strip_tags( $new_instance['download_id'] );
+    	$instance['download_title']		= isset( $new_instance['download_title'] ) ? $new_instance['download_title'] : '';
+        $instance['purchase_button'] 	= isset( $new_instance['purchase_button'] ) ? $new_instance['purchase_button'] : '';
+        $instance['categories'] 		= isset( $new_instance['categories'] ) ? $new_instance['categories'] : '';
+        $instance['tags'] 				= isset( $new_instance['tags'] ) ? $new_instance['tags'] : '';
+
+        return $instance;
+    } 
+
+}
+
+
+
 /**
  * Register Widgets
  *
@@ -245,5 +405,6 @@ function edd_register_widgets() {
 	register_widget( 'edd_cart_widget' );
 	register_widget( 'edd_categories_tags_widget' );
 	register_widget( 'edd_purchase_history_widget' );
+	register_widget( 'edd_product_details_widget' );
 }
 add_action( 'widgets_init', 'edd_register_widgets' );

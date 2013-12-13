@@ -48,14 +48,6 @@ final class Easy_Digital_Downloads {
 	private static $instance;
 
 	/**
-	 *  EDD User Roles and Capabilities Object
-	 *
-	 * @var object
-	 * @since 1.4.4
-	 */
-	public $roles;
-
-	/**
 	 * EDD Cart Fees Object
 	 *
 	 * @var object
@@ -111,11 +103,11 @@ final class Easy_Digital_Downloads {
 			self::$instance->setup_constants();
 			self::$instance->includes();
 			self::$instance->load_textdomain();
-			self::$instance->roles = new EDD_Roles();
-			self::$instance->fees = new EDD_Fees();
-			self::$instance->api = new EDD_API();
+			self::$instance->roles   = new EDD_Roles();
+			self::$instance->fees    = new EDD_Fees();
+			self::$instance->api     = new EDD_API();
 			self::$instance->session = new EDD_Session();
-			self::$instance->html = new EDD_HTML_Elements();
+			self::$instance->html    = new EDD_HTML_Elements();
 		}
 		return self::$instance;
 	}
@@ -156,20 +148,24 @@ final class Easy_Digital_Downloads {
 	 */
 	private function setup_constants() {
 		// Plugin version
-		if ( ! defined( 'EDD_VERSION' ) )
+		if ( ! defined( 'EDD_VERSION' ) ) {
 			define( 'EDD_VERSION', '1.8.5' );
+		}
 
 		// Plugin Folder Path
-		if ( ! defined( 'EDD_PLUGIN_DIR' ) )
+		if ( ! defined( 'EDD_PLUGIN_DIR' ) ) {
 			define( 'EDD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+		}
 
 		// Plugin Folder URL
-		if ( ! defined( 'EDD_PLUGIN_URL' ) )
+		if ( ! defined( 'EDD_PLUGIN_URL' ) ) {
 			define( 'EDD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+		}
 
 		// Plugin Root File
-		if ( ! defined( 'EDD_PLUGIN_FILE' ) )
+		if ( ! defined( 'EDD_PLUGIN_FILE' ) ) {
 			define( 'EDD_PLUGIN_FILE', __FILE__ );
+		}
 	}
 
 	/**
@@ -233,6 +229,7 @@ final class Easy_Digital_Downloads {
 
 		if( is_admin() ) {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-footer.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-notices.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
@@ -251,6 +248,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/contextual-help.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-graph.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';

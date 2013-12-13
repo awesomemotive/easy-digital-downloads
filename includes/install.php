@@ -41,12 +41,13 @@ function edd_install() {
 
 	// Add Upgraded From Option
 	$current_version = get_option( 'edd_version' );
-	if ( $current_version )
+	if ( $current_version ) {
 		update_option( 'edd_version_upgraded_from', $current_version );
+	}
 
 	// Checks if the purchase page option exists
 	if ( ! isset( $edd_options['purchase_page'] ) ) {
-	    // Checkout Page
+	  // Checkout Page
 		$checkout = wp_insert_post(
 			array(
 				'post_title'     => __( 'Checkout', 'edd' ),
@@ -107,17 +108,23 @@ function edd_install() {
 		update_option( 'edd_settings', $options );
 		update_option( 'edd_version', EDD_VERSION );
 
-		// Create wp-content/uploads/edd/ foloder and the .htaccess file
+		// Create wp-content/uploads/edd/ folder and the .htaccess file
 		edd_create_protection_files( true );
 
 		// Add a temporary option to note that EDD pages have been created
 		$activation_pages = array_merge( $options, array( 'history_page' => $history ) );
 		set_transient( '_edd_activation_pages', $activation_pages, 30 );
+
+		// Create EDD shop roles
+		$roles = new EDD_Roles;
+		$roles->add_roles();
+		$roles->add_caps();
 	}
 
 	// Bail if activating from network, or bulk
-	if ( is_network_admin() || isset( $_GET['activate-multi'] ) )
+	if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
 		return;
+	}
 
 	// Add the transient to redirect
 	set_transient( '_edd_activation_redirect', true, 30 );
@@ -135,14 +142,16 @@ register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
  */
 function edd_after_install() {
 
-	if( ! is_admin() )
+	if ( ! is_admin() ) {
 		return;
+	}
 
 	$activation_pages = get_transient( '_edd_activation_pages' );
 
 	// Exit if not in admin or the transient doesn't exist
-	if ( false === $activation_pages )
+	if ( false === $activation_pages ) {
 		return;
+	}
 
 	// Delete the transient
 	delete_transient( '_edd_activation_pages' );

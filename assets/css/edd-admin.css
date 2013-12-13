@@ -10,7 +10,7 @@
 /* =Add Ons Styles
 -------------------------------------------------------------- */
 #edd-add-ons h2 { margin: 0 0 15px; }
-#edd-add-ons .edd-extension { float: left; margin: 0 30px 30px 0; background: #f0f0f0; border: 1px solid #ccc; width: 180px; padding: 8px; height: 315px; position: relative; }
+#edd-add-ons .edd-extension { float: left; margin: 0 15px 15px 0; background: #f0f0f0; border: 1px solid #ccc; width: 320px; padding: 8px; height: 315px; position: relative; }
 #edd-add-ons .edd-extension h3 { margin: 0 0 8px; font-size: 13px;  }
 #edd-add-ons .edd-extension .button-secondary { position: absolute; bottom: 8px; left: 8px; }
 #edd-add-ons .edd-browse-all { clear:both; width:100%; }
@@ -72,8 +72,8 @@ tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 #downloadinformation .edd_meta_table_wrap table textarea { margin: 4px 0; width: 100%; }
 #downloadinformation .edd_meta_table_wrap table .submit input { width: auto; }
 .edd_repeatable_upload_wrapper .edd_repeatable_upload_field_container { position: relative; }
-.edd_upload_file { position: absolute; top: 5px; right: 3px; padding: 2px 8px 2px; display: block; background: #fff; }
-.edd_remove_repeatable { margin: 11px 0 0 0; cursor: pointer; width: 10px; height: 10px; display: inline-block; text-indent: -9999px; overflow: hidden; }
+.edd_upload_file { position: absolute; top: 3px; right: 7px; padding: 2px 8px 2px; display: block; background: #fff; }
+.edd_remove_repeatable { margin: 8px 0 0 0; cursor: pointer; width: 10px; height: 10px; display: inline-block; text-indent: -9999px; overflow: hidden; }
 .edd_remove_repeatable:active, .edd_remove_repeatable:hover { background-position: -10px 0!important }
 .edd_draghandle { display: block; width: 20px; height: 20px; background: url(../images/edd-cross-hair.png); cursor: move; margin: 4px 0 0 0; }
 textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
@@ -92,6 +92,7 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 #edd-purchased-files .inside { margin: 0; padding: 0; }
 
 .edd-price-field { width: 80px; }
+.edd_repeatable_upload_wrapper .pricing select, .edd_repeatable_product_wrapper .edd-select { min-width: 100%; }
 
 /** Stats */
 #edd_product_stats .label { width: 70px; display: inline-block; }
