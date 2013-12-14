@@ -225,28 +225,44 @@ $payment_date = strtotime( $item->post_date );
 										</p>
 									</div>
 
-									<?php if( ! empty( $user_info['address'] ) ) { ?>
-										<div class="order-data-column" id="edd-order-address">
+									<div class="order-data-column" id="edd-order-address">
 
-											<h4><span><?php _e( 'Billing Address', 'edd' ); ?></span></h4>
-											<div class="order-data-address">
-												<p class="data">
+										<h4><span><?php _e( 'Billing Address', 'edd' ); ?></span></h4>
+										<div class="order-data-address">
+											<div class="data">
+												<div>
 													<span class="order-data-address-line"><?php echo _x( 'Line 1:', 'First address line', 'edd' ); ?></span>&nbsp;
 													<span class="edd-edit-toggles"><?php echo $user_info['address']['line1']; ?></span><br/>
+													<input type="text" name="edd-payment-address[0][line1]" value="<?php esc_attr_e( $user_info['address']['line1'] ); ?>" class="edd-edit-toggles medium-text" style="display:none;"/>
+												</div>
+												<div>
 													<span class="order-data-address-line"><?php echo _x( 'Line 2:', 'Second address line', 'edd' ); ?></span>&nbsp;
 													<span class="edd-edit-toggles"><?php echo $user_info['address']['line2']; ?></span><br/>
-													<span class="order-data-address-line"><?php echo _x( 'City:', 'First address line', 'edd' ); ?></span>&nbsp;
+													<input type="text" name="edd-payment-address[0][line2]" value="<?php esc_attr_e( $user_info['address']['line2'] ); ?>" class="edd-edit-toggles medium-text" style="display:none;"/>
+												</div>
+												<div>
+													<span class="order-data-address-line"><?php echo _x( 'City:', 'Address City', 'edd' ); ?></span>&nbsp;
 													<span class="edd-edit-toggles"><?php echo $user_info['address']['city']; ?></span><br/>
-													<span class="order-data-address-line"><?php echo _x( 'State / Province:', 'First address line', 'edd' ); ?></span>&nbsp;
+													<input type="text" name="edd-payment-address[0][city]" value="<?php esc_attr_e( $user_info['address']['city'] ); ?>" class="edd-edit-toggles medium-text" style="display:none;"/>
+												</div>
+												<div>
+													<span class="order-data-address-line"><?php echo _x( 'State / Province:', 'State / province of address', 'edd' ); ?></span>&nbsp;
 													<span class="edd-edit-toggles"><?php echo $user_info['address']['state']; ?></span><br/>
-													<span class="order-data-address-line"><?php echo _x( 'Zip / Postal Code:', 'First address line', 'edd' ); ?></span>&nbsp;
+													<input type="text" name="edd-payment-address[0][state]" value="<?php esc_attr_e( $user_info['address']['state'] ); ?>" class="edd-edit-toggles medium-text" style="display:none;"/>
+												</div>
+												<div>
+													<span class="order-data-address-line"><?php echo _x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'edd' ); ?></span>&nbsp;
 													<span class="edd-edit-toggles"><?php echo $user_info['address']['zip']; ?></span><br/>
-													<span class="order-data-address-line"><?php echo _x( 'Country:', 'First address line', 'edd' ); ?></span>&nbsp;
+													<input type="text" name="edd-payment-address[0][zip]" value="<?php esc_attr_e( $user_info['address']['zip'] ); ?>" class="edd-edit-toggles medium-text" style="display:none;"/>
+												</div>
+												<div>
+													<span class="order-data-address-line"><?php echo _x( 'Country:', 'Address country', 'edd' ); ?></span>&nbsp;
 													<span class="edd-edit-toggles"><?php echo $user_info['address']['country']; ?></span><br/>
-												</p>
+													<input type="text" name="edd-payment-address[0][country]" value="<?php esc_attr_e( $user_info['address']['country'] ); ?>" class="edd-edit-toggles medium-text" style="display:none;"/>
+												</div>
 											</div>
-										</div><!-- /#edd-order-address -->
-									<?php } ?>
+										</div>
+									</div><!-- /#edd-order-address -->
 
 									<?php do_action( 'edd_payment_view_details', $payment_id ); ?>
 

@@ -35,7 +35,8 @@ function edd_update_payment_details( $data ) {
 	$minute     = sanitize_text_field( $data['edd-payment-time-min'] );
 	$email      = sanitize_text_field( $data['edd-payment-user-email'] );
 	$names      = sanitize_text_field( $data['edd-payment-user-name'] );
-	
+	$address    = array_map( 'trim', $data['edd-payment-address'][0] );
+
 	// Setup date from input values
 	$date       = date( 'Y-m-d', strtotime( $date ) ) . ' ' . $hour . ':' . $minute . ':00';
 
@@ -61,6 +62,7 @@ function edd_update_payment_details( $data ) {
 	$user_info['id']         = $user_id;
 	$user_info['first_name'] = $first_name;
 	$user_info['last_name']  = $last_name;
+	$user_info['address']    = $address;
 	$meta['user_info']       = $user_info;
 
 	update_post_meta( $payment_id, '_edd_payment_user_id',    $user_id );
