@@ -161,14 +161,22 @@ $payment_date = strtotime( $item->post_date );
 										<p class="data">
 											<span><?php _e( 'Status:', 'edd' ); ?></span>&nbsp;
 											<span class="edd-edit-toggles"><?php echo edd_get_payment_status( $item, true ) ?></span>
+											<select name="edd-payment-status" class="edd-edit-toggles" style="display:none;">
+												<?php foreach( edd_get_payment_statuses() as $key => $status ) : ?>
+													<option value="<?php esc_attr_e( $key ); ?>"<?php selected( edd_get_payment_status( $item, true ), $status ); ?>><?php esc_html_e( $status ); ?></option>
+												<?php endforeach; ?>
+											</select>
 										</p>
 										<p class="data">
 											<span><?php _e( 'Date:', 'edd' ); ?></span>&nbsp;
 											<span class="edd-edit-toggles"><?php echo date_i18n( get_option( 'date_format' ), $payment_date ) ?></span>
+											<input type="text" name="edd-payment-date" value="<?php esc_attr_e( date( 'm/d/Y', $payment_date ) ); ?>" class="edd-edit-toggles medium-text edd_datepicker" style="display:none;"/>
 										</p>
 										<p class="data">
 											<span><?php _e( 'Time:', 'edd' ); ?></span>&nbsp;
 											<span class="edd-edit-toggles"><?php echo date_i18n( get_option( 'time_format' ), $payment_date ); ?></span>
+											<input type="number" step="1" max="24" name="edd-payment-time-hour" value="<?php esc_attr_e( date_i18n( 'H', $payment_date ) ); ?>" class="edd-edit-toggles small-text" style="display:none;"/>
+											<input type="number" step="1" max="59" name="edd-payment-time-min" value="<?php esc_attr_e( date( 'i', $payment_date ) ); ?>" class="edd-edit-toggles small-text" style="display:none;"/>
 										</p>
 									</div>
 
