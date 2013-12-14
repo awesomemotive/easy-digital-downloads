@@ -13,7 +13,49 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Process the "Add Note" submission from the edit payment screen
+ * Process the payment details edit
+ *
+ * @access      private
+ * @since       1.9
+ * @return      void
+*/
+function edd_update_payment_details( $data ) {
+
+	if( ! current_user_can( 'edit_shop_payment', $data['edd_payment_id' ] ) ) {
+		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ) );
+	}
+
+	check_admin_referer( 'edd_update_payment_details_nonce' );
+
+	$payment_id = absint( $data['edd_payment_id']      );
+	$user_id    = absint( $data['edd-payment-user-id'] );
+	$email      = sanitize_text_field( $data['edd-payment-user-email'] );
+	$names      = sanitize_text_field( $data['edd-payment-user-name'] );
+	$names      = explode( ' ', $names );
+	$first_name = ! empty( $names[0] ) ? $names[0] : '';
+	$last_name  = ! empty( $names[1] ) ? $names[1] : '';
+
+	// Retrieve meta
+	$meta       = edd_get_payment_meta( $payment_id );
+	$user_info  = edd_get_payment_meta_user_info( $payment_id );
+
+	// Set new meta values
+	$user_info['id']         = $user_id;
+	$user_info['first_name'] = $first_name;
+	$user_info['last_name']  = $last_name;
+	$meta['user_info']       = $user_info;
+
+	update_post_meta( $payment_id, '_edd_payment_user_id',    $user_id );
+	update_post_meta( $payment_id, '_edd_payment_user_email', $email   );
+	update_post_meta( $payment_id, '_edd_payment_meta',       $meta    );
+
+	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=details-updated&id=' . $payment_id ) );
+	exit;
+}
+add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
+
+/**
+ * Process the payment totals edit
  *
  * @access      private
  * @since       1.9
@@ -30,10 +72,15 @@ function edd_update_payment_totals( $data ) {
 	$payment_id = absint( $data['edd_payment_id'] );
 	$total      = edd_sanitize_amount( $_POST['edd-payment-total'] );
 	$tax        = edd_sanitize_amount( $_POST['edd-payment-tax'] );
+	$meta       = edd_get_payment_meta( $payment_id );
+
+	$meta['tax'] = $tax;
 
 	update_post_meta( $payment_id, '_edd_payment_total', $total );
+	update_post_meta( $payment_id, '_edd_payment_meta',  $meta  );
 
 	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=totals-updated&id=' . $payment_id ) );
+	exit;
 }
 add_action( 'edd_update_payment_totals', 'edd_update_payment_totals' );
 
@@ -51,10 +98,13 @@ function edd_add_payment_note( $data ) {
 	}
 
 	if ( ! empty( $data['edd-payment-note'] ) ) {
-		$note    = wp_kses( $data['edd-payment-note'], array() );
-		$note_id = edd_insert_payment_note( $_POST['edd_payment_id' ], $note );
 
-		wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=note-added&id=' . $_POST['edd_payment_id' ] ) );
+		$payment_id = absint( $data['edd_payment_id'] );
+		$note       = wp_kses( $data['edd-payment-note'], array() );
+		$note_id    = edd_insert_payment_note( $payment_id, $note );
+
+		wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=note-added&id=' . $payment_id ) );
+		exit;
 	}
 }
 add_action( 'edd_add_payment_note', 'edd_add_payment_note' );
