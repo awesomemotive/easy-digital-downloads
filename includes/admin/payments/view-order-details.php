@@ -43,34 +43,59 @@ $payment_date = strtotime( $item->post_date );
 						<h3 class="hndle"><span><?php _e( 'Order Totals', 'edd' ); ?></span> - <a href="<?php echo add_query_arg( 'action', 'edit' ); ?>"><?php _e( 'Edit Totals', 'edd' ); ?></a></h3>
 						<div class="inside">
 							<div class="edd-order-totals-box edd-admin-box">
-								<?php do_action( 'edd_view_order_details_totals_before', $payment_id ); ?>
-								<div class="edd-order-discounts edd-admin-box-inside">
-									<p><span class="label"><?php _e( 'Discount Code', 'edd' ); ?></span> <span class="right"><?php if ( isset( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) { echo '<code>' . $user_info['discount'] . '</code>'; } else { _e( 'None', 'edd' ); } ?></span></p>
-								</div>
-								<?php if ( edd_use_taxes() ) : ?>
-								<div class="edd-order-taxes edd-admin-box-inside">
-									<p><span class="label"><?php _e( 'Tax', 'edd' ); ?></span> <span class="right"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) ); ?></span></p>
-								</div>
-								<?php endif; ?>
-								<?php
-								$fees = edd_get_payment_fees( $payment_id );
-								if ( ! empty( $fees ) ) : ?>
-								<div class="edd-order-fees edd-admin-box-inside">
-									<p class="strong"><?php _e( 'Fees', 'edd' ); ?></p>
-									<ul class="edd-payment-fees">
-										<?php foreach( $fees as $fee ) : ?>
-										<li><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="right">' . edd_currency_filter( $fee['amount'] ); ?></span></li>
-										<?php endforeach; ?>
-									</ul>
-								</div>
-								<?php endif; ?>
-								<div class="edd-order-payment edd-admin-box-inside">
-									<p><span class="label"><?php _e( 'Total Price', 'edd' ); ?></span> <span class="right"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ); ?></span></p>
-								</div>
-								<div class="edd-order-resend-email edd-admin-box-inside">
-									<p><span class="label"><?php _e( 'Payment Receipt', 'edd' ); ?></span> <a href="<?php echo add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment_id ) ); ?>" class="right button-secondary"><?php _e( 'Resend', 'edd' ); ?></a></p>
-								</div>
-								<?php do_action( 'edd_view_order_details_totals_after', $payment_id ); ?>
+								<form id="edd-order-totals-form" method="post">
+									<?php do_action( 'edd_view_order_details_totals_before', $payment_id ); ?>
+									<div class="edd-order-discounts edd-admin-box-inside">
+										<p>
+											<span class="label"><?php _e( 'Discount Code', 'edd' ); ?></span>&nbsp;
+											<span class="right"><?php if ( isset( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) { echo '<code>' . $user_info['discount'] . '</code>'; } else { _e( 'None', 'edd' ); } ?></span>
+										</p>
+									</div>
+									<?php if ( edd_use_taxes() ) : ?>
+									<div class="edd-order-taxes edd-admin-box-inside">
+										<p>
+											<span class="label"><?php _e( 'Tax', 'edd' ); ?></span>&nbsp;
+											<span class="right"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) ); ?></span>
+											<input name="edd-payment-tax" type="number" class="small-text right" value="<?php echo esc_attr( edd_get_payment_tax( $payment_id ) ); ?>"/>
+										</p>
+									</div>
+									<?php endif; ?>
+									<?php
+									$fees = edd_get_payment_fees( $payment_id );
+									if ( ! empty( $fees ) ) : ?>
+									<div class="edd-order-fees edd-admin-box-inside">
+										<p class="strong"><?php _e( 'Fees', 'edd' ); ?></p>
+										<ul class="edd-payment-fees">
+											<?php foreach( $fees as $fee ) : ?>
+											<li><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="right">' . edd_currency_filter( $fee['amount'] ); ?></span></li>
+											<?php endforeach; ?>
+										</ul>
+									</div>
+									<?php endif; ?>
+									<div class="edd-order-payment edd-admin-box-inside">
+										<p>
+											<span class="label"><?php _e( 'Total Price', 'edd' ); ?></span>&nbsp;
+											<span class="right"><?php echo edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ); ?></span>
+											<input name="edd-payment-total" type="number" class="small-text right" value="<?php echo esc_attr( edd_get_payment_amount( $payment_id ) ); ?>"/>
+										</p>
+									</div>
+									<div class="edd-order-resend-email edd-admin-box-inside">
+										<p>
+											<span class="label"><?php _e( 'Payment Receipt', 'edd' ); ?></span>&nbsp;
+											<a href="<?php echo add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment_id ) ); ?>" class="right button-secondary"><?php _e( 'Resend', 'edd' ); ?></a>
+										</p>
+									</div>
+									<div class="edd-order-update edd-admin-box-inside">
+										<p>
+											<span class="label"><?php _e( 'Update Payment', 'edd' ); ?></span>&nbsp;
+											<input type="hidden" name="edd_payment_id" value="<?php echo esc_attr( $payment_id ); ?>"/>
+											<input type="hidden" name="edd_action" value="update_payment_totals"/>
+											<?php wp_nonce_field( 'edd_update_payment_totals_nonce' ); ?>
+											<input type="submit" class="button-primary right" value="<?php _e( 'Update', 'edd' ); ?>"/>
+										</p>
+									</div>
+									<?php do_action( 'edd_view_order_details_totals_after', $payment_id ); ?>
+								</form><!-- /#edd-order-totals-form -->
 							</div><!-- /.edd-order-totals-box -->
 						</div><!-- /.inside -->
 					</div><!-- /#edd-order-totals -->
