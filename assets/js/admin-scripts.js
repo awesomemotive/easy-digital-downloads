@@ -295,6 +295,14 @@ jQuery(document).ready(function ($) {
 			$('.edd-payment-edit').on('click', function(e) {
 				e.preventDefault();
 				$(this).parent().parent().find('.edd-edit-toggles').not(':input[type=button], :input[type=submit], :input[type=reset]').toggle();
+				$(this).parent().parent().find('input,select').each(function() {
+					var $this = $(this);
+					if( $this.attr('disabled') ) {
+						$this.removeAttr('disabled');
+           			} else {
+           			 	$this.attr('disabled', 'disabled');
+					}
+				});
 			});
 
 		},
