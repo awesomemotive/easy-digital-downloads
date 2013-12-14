@@ -44,13 +44,8 @@
 	font-size: 13px;
 	line-height: 2.1em;
 }
-#edd-payments-filter ul.subsubsub {
-	margin-bottom: 8px;
-}
-#edd-payment-filters p {
-	color: #777;
-}
-
+#edd-payments-filter ul.subsubsub { margin-bottom: 8px; }
+#edd-payment-filters p { color: #777; }
 tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 .wp-list-table.downloads th#ID { width: 80px; }
 .wp-list-table.downloads th#details { width: 130px; }
@@ -80,6 +75,11 @@ tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 .edd_remove_repeatable:active, .edd_remove_repeatable:hover { background-position: -10px 0!important }
 .edd_draghandle { display: block; width: 20px; height: 20px; background: url(../images/edd-cross-hair.png); cursor: move; margin: 4px 0 0 0; }
 textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
+.edd-price-field { width: 80px; }
+.edd_repeatable_upload_wrapper .pricing select, .edd_repeatable_product_wrapper .edd-select { min-width: 100%; }
+
+/* Payment Details
+-------------------------------------------------------------- */
 #edd-order-totals .inside { margin: 0; padding: 0; }
 .edd-admin-box .label { font-weight: 600; }
 .edd-admin-box-inside { margin: 0; padding: 5px 0 5px 10px; clear: both; border-bottom: 1px solid #ddd; }
@@ -94,8 +94,6 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 #edd-order-data .data span { color: #666; font-weight: 600; }
 /*#edd-order-data .data-payment-key { white-space: pre-line; }*/
 #edd-purchased-files .inside { margin: 0; padding: 0; }
-.edd-price-field { width: 80px; }
-.edd_repeatable_upload_wrapper .pricing select, .edd_repeatable_product_wrapper .edd-select { min-width: 100%; }
 
 /** Stats */
 #edd_product_stats .label { width: 70px; display: inline-block; }
