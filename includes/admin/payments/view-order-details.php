@@ -247,7 +247,7 @@ $payment_date = strtotime( $item->post_date );
 													<span class="edd-edit-toggles"><?php echo $user_info['address']['zip']; ?></span><br/>
 													<input type="text" name="edd-payment-address[0][zip]" value="<?php esc_attr_e( $user_info['address']['zip'] ); ?>" class="edd-edit-toggles medium-text" style="display:none;"/>
 												</div>
-												<div>
+												<div id="edd-order-address-state-wrap">
 													<span class="order-data-address-line"><?php echo _x( 'State / Province:', 'State / province of address', 'edd' ); ?></span>&nbsp;
 													<span class="edd-edit-toggles"><?php echo $user_info['address']['state']; ?></span><br/>
 													<?php
@@ -266,7 +266,7 @@ $payment_date = strtotime( $item->post_date );
 														<?php
 													} ?>
 												</div>
-												<div>
+												<div id="edd-order-address-country-wrap">
 													<span class="order-data-address-line"><?php echo _x( 'Country:', 'Address country', 'edd' ); ?></span>&nbsp;
 													<span class="edd-edit-toggles"><?php echo $user_info['address']['country']; ?></span><br/>
 													<?php

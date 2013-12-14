@@ -282,6 +282,7 @@ jQuery(document).ready(function ($) {
 
 		init : function() {
 			this.toggle_edit();
+			this.edit_address();
 			this.remove_download();
 			this.add_download();
 			this.variable_prices_check();
@@ -294,6 +295,29 @@ jQuery(document).ready(function ($) {
 			$('.edd-payment-edit').on('click', function(e) {
 				e.preventDefault();
 				$(this).parent().parent().find('.edd-edit-toggles').not(':input[type=button], :input[type=submit], :input[type=reset]').toggle();
+			});
+
+		},
+
+		edit_address : function() {
+
+			// Update base state field based on selected base country
+			$('select[name="edd-payment-address[0][country]"]').change(function() {
+				var $this = $(this);
+				data = {
+					action: 'edd_get_shop_states',
+					country: $this.val(),
+					field_name: 'edd-payment-address[0][state]'
+				};
+				$.post(ajaxurl, data, function (response) {
+					if( 'nostates' == response ) {
+						$('#edd-order-address-state-wrap select, #edd-order-address-state-wrap input').replaceWith( '<input type="text" name="edd-payment-address[0][state]" value="" class="edd-edit-toggles medium-text"/>' );
+					} else {
+						$('#edd-order-address-state-wrap select, #edd-order-address-state-wrap input').replaceWith( response );
+					}
+				});
+
+				return false;
 			});
 
 		},
