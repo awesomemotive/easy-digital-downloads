@@ -153,7 +153,7 @@ $payment_date = strtotime( $item->post_date );
 							<a href="" class="edd-payment-edit edd-edit-toggles" title="<?php esc_attr_e( 'Edit Order Details', 'edd' ); ?>"><?php _e( 'Edit Order Details', 'edd' ); ?></a>
 							<a href="" class="edd-payment-edit edd-edit-toggles" style="display:none;" title="<?php esc_attr_e( 'Cancel Edit', 'edd' ); ?>"><?php _e( 'Cancel Edit', 'edd' ); ?></a>
 						</h3>
-						<div class="inside">
+						<div class="inside edd-clearfix">
 							<form id="edd-payment-details-form" method="post">
 								<div class="column-container">
 									<div class="order-data-column">
@@ -286,13 +286,15 @@ $payment_date = strtotime( $item->post_date );
 
 									<?php do_action( 'edd_payment_view_details', $payment_id ); ?>
 
-									<div id="edd-payment-details-form-submit" class="edd-edit-toggles" style="display:none;">
-										<input type="hidden" name="edd_payment_id" value="<?php echo esc_attr( $payment_id ); ?>"/>
-										<input type="hidden" name="edd_action" value="update_payment_details"/>
-										<?php wp_nonce_field( 'edd_update_payment_details_nonce' ); ?>
-										<input type="submit" class="button-primary right" value="<?php _e( 'Update', 'edd' ); ?>"/>
-									</div><!-- /#edd-payment-details-form-submit -->
 								</div><!-- /.column-container -->
+
+								<div id="edd-payment-details-form-submit" class="edd-edit-toggles edd-clearfix" style="display:none;">
+									<input type="hidden" name="edd_payment_id" value="<?php echo esc_attr( $payment_id ); ?>"/>
+									<input type="hidden" name="edd_action" value="update_payment_details"/>
+									<?php wp_nonce_field( 'edd_update_payment_details_nonce' ); ?>
+									<input type="submit" class="button-primary right" value="<?php _e( 'Update', 'edd' ); ?>"/>
+								</div><!-- /#edd-payment-details-form-submit -->
+
 							</form>
 						</div><!-- /.inside -->
 					</div><!-- /#edd-order-data -->

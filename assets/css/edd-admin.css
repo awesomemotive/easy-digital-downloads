@@ -8,6 +8,7 @@
 */
 
 .edd-hidden { display: none; }
+.edd-clearfix:after { display: block; visibility: hidden; content: "."; text-indent: -9999px; }
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */
@@ -93,7 +94,6 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 #edd-order-data .data span { color: #666; font-weight: 600; }
 /*#edd-order-data .data-payment-key { white-space: pre-line; }*/
 #edd-purchased-files .inside { margin: 0; padding: 0; }
-
 .edd-price-field { width: 80px; }
 .edd_repeatable_upload_wrapper .pricing select, .edd_repeatable_product_wrapper .edd-select { min-width: 100%; }
 
