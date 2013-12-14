@@ -221,7 +221,7 @@ $payment_date = strtotime( $item->post_date );
 										<?php } ?>
 										<p class="data data-payment-key">
 											<span><?php _e( 'Key:', 'edd' ); ?></span>&nbsp;
-											<span class="edd-edit-toggles"><?php echo $payment_meta['key']; ?></span>
+											<span><?php echo edd_get_payment_key( $payment_id ); ?></span>
 										</p>
 									</div>
 
