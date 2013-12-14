@@ -281,11 +281,21 @@ jQuery(document).ready(function ($) {
 	var EDD_Edit_Payment = {
 
 		init : function() {
+			this.toggle_edit();
 			this.remove_download();
 			this.add_download();
 			this.variable_prices_check();
 			this.status_change();
 			this.notes();
+		},
+
+		toggle_edit : function () {
+
+			$('.edd-payment-edit').on('click', function(e) {
+				e.preventDefault();
+				$(this).parent().parent().find('.edd-edit-toggles').not(':input[type=button], :input[type=submit], :input[type=reset]').toggle();
+			});
+
 		},
 
 		remove_download : function() {
