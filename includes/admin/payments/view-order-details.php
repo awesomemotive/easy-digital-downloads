@@ -188,8 +188,7 @@ $payment_date = strtotime( $item->post_date );
 											<input type="text" name="edd-payment-user-name" value="<?php esc_attr_e( $user_info['first_name'] . ' ' . $user_info['last_name'] ); ?>" class="edd-edit-toggles medium-text" style="display:none;"/>
 										</p>
 										<p class="data">
-											<span class="edd-edit-toggles"><?php _e( 'User Status:', 'edd' ); ?></span>&nbsp;
-											<span class="edd-edit-toggles"><?php echo $user_id > 0 ? __( 'Registered User', 'edd' ) : __( 'Guest', 'edd' ); ?></span>
+											<span><?php _e( 'User Status:', 'edd' ); ?>&nbsp;<?php echo $user_id > 0 ? __( 'Registered User', 'edd' ) : __( 'Guest', 'edd' ); ?></span>
 										</p>
 										<?php if( $user_id > 0 ) : ?>
 											<p class="data">
@@ -204,8 +203,7 @@ $payment_date = strtotime( $item->post_date );
 											<input type="email" name="edd-payment-user-email" value="<?php esc_attr_e( edd_get_payment_user_email( $payment_id ) ); ?>" class="edd-edit-toggles medium-text" style="display:none;"/>
 										</p>
 										<p class="data">
-											<span><?php _e( 'IP:', 'edd' ); ?></span>&nbsp;
-											<span class="edd-edit-toggles"><?php echo edd_get_payment_user_ip( $payment_id ); ?></span>
+											<span><?php _e( 'IP:', 'edd' ); ?>&nbsp;<?php echo edd_get_payment_user_ip( $payment_id ); ?></span>
 										</p>
 										<ul><?php do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info ); ?></ul>
 									</div>
@@ -220,8 +218,7 @@ $payment_date = strtotime( $item->post_date );
 										</p>
 										<?php } ?>
 										<p class="data data-payment-key">
-											<span><?php _e( 'Key:', 'edd' ); ?></span>&nbsp;
-											<span><?php echo edd_get_payment_key( $payment_id ); ?></span>
+											<?php _e( 'Key:', 'edd' ); ?>&nbsp;<?php echo edd_get_payment_key( $payment_id ); ?>
 										</p>
 									</div>
 
@@ -246,19 +243,42 @@ $payment_date = strtotime( $item->post_date );
 													<input type="text" name="edd-payment-address[0][city]" value="<?php esc_attr_e( $user_info['address']['city'] ); ?>" class="edd-edit-toggles medium-text" style="display:none;"/>
 												</div>
 												<div>
-													<span class="order-data-address-line"><?php echo _x( 'State / Province:', 'State / province of address', 'edd' ); ?></span>&nbsp;
-													<span class="edd-edit-toggles"><?php echo $user_info['address']['state']; ?></span><br/>
-													<input type="text" name="edd-payment-address[0][state]" value="<?php esc_attr_e( $user_info['address']['state'] ); ?>" class="edd-edit-toggles medium-text" style="display:none;"/>
-												</div>
-												<div>
 													<span class="order-data-address-line"><?php echo _x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'edd' ); ?></span>&nbsp;
 													<span class="edd-edit-toggles"><?php echo $user_info['address']['zip']; ?></span><br/>
 													<input type="text" name="edd-payment-address[0][zip]" value="<?php esc_attr_e( $user_info['address']['zip'] ); ?>" class="edd-edit-toggles medium-text" style="display:none;"/>
 												</div>
 												<div>
+													<span class="order-data-address-line"><?php echo _x( 'State / Province:', 'State / province of address', 'edd' ); ?></span>&nbsp;
+													<span class="edd-edit-toggles"><?php echo $user_info['address']['state']; ?></span><br/>
+													<?php
+													$states = edd_get_shop_states( $user_info['address']['country'] );
+													if( ! empty( $states ) ) {
+														echo EDD()->html->select( array(
+															'options'          => $states,
+															'name'             => 'edd-payment-address[0][state]',
+															'selected'         => $user_info['address']['state'],
+															'show_option_all'  => false,
+															'show_option_none' => false,
+														'class'            => 'edd-edit-toggles edd-hidden'
+														) );
+													} else { ?>
+														<input type="text" name="edd-payment-address[0][state]" value="<?php esc_attr_e( $user_info['address']['state'] ); ?>" class="edd-edit-toggles medium-text" style="display:none;"/>
+														<?php
+													} ?>
+												</div>
+												<div>
 													<span class="order-data-address-line"><?php echo _x( 'Country:', 'Address country', 'edd' ); ?></span>&nbsp;
 													<span class="edd-edit-toggles"><?php echo $user_info['address']['country']; ?></span><br/>
-													<input type="text" name="edd-payment-address[0][country]" value="<?php esc_attr_e( $user_info['address']['country'] ); ?>" class="edd-edit-toggles medium-text" style="display:none;"/>
+													<?php
+													echo EDD()->html->select( array(
+														'options'          => edd_get_country_list(),
+														'name'             => 'edd-payment-address[0][country]',
+														'selected'         => $user_info['address']['country'],
+														'show_option_all'  => false,
+														'show_option_none' => false,
+														'class'            => 'edd-edit-toggles edd-hidden'
+													) );
+													?>
 												</div>
 											</div>
 										</div>
