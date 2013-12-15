@@ -73,7 +73,7 @@ add_shortcode( 'download_history', 'edd_download_history' );
 /**
  * Purchase History Shortcode
  *
- * Displays a user's purchsae history.
+ * Displays a user's purchase history.
  *
  * @since 1.0
  * @return string
