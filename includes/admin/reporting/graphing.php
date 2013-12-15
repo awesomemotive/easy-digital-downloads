@@ -438,7 +438,7 @@ function edd_get_report_dates() {
 		break;
 
 		case 'last_month' :
-			if( $dates['m_start'] == 12 ) {
+			if( $dates['m_start'] == 1 ) {
 				$dates['m_start'] = 12;
 				$dates['m_end']	  = 12;
 				$dates['year']    = date( 'Y' ) - 1;

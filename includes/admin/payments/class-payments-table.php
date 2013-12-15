@@ -331,15 +331,16 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'delete' => __( 'Delete', 'edd' ),
-			'set-status-publish'     => __( 'Set To Completed',   'edd' ),
-			'set-status-pending'     => __( 'Set To Pending',     'edd' ),
-			'set-status-refunded'    => __( 'Set To Refunded',    'edd' ),
-			'set-status-revoked'     => __( 'Set To Revoked',     'edd' ),
-			'set-status-failed'      => __( 'Set To Failed',      'edd' ),
-			'set-status-abandoned'   => __( 'Set To Abandoned',   'edd' ),
-			'set-status-preapproval' => __( 'Set To Preapproval', 'edd' ),
-			'set-status-cancelled'   => __( 'Set To Cancelled',   'edd' )
+			'delete'                 => __( 'Delete',                'edd' ),
+			'set-status-publish'     => __( 'Set To Completed',      'edd' ),
+			'set-status-pending'     => __( 'Set To Pending',        'edd' ),
+			'set-status-refunded'    => __( 'Set To Refunded',       'edd' ),
+			'set-status-revoked'     => __( 'Set To Revoked',        'edd' ),
+			'set-status-failed'      => __( 'Set To Failed',         'edd' ),
+			'set-status-abandoned'   => __( 'Set To Abandoned',      'edd' ),
+			'set-status-preapproval' => __( 'Set To Preapproval',    'edd' ),
+			'set-status-cancelled'   => __( 'Set To Cancelled',      'edd' ),
+			'resend-receipt'         => __( 'Resend Email Receipts', 'edd' )
 		);
 
 		return apply_filters( 'edd_payments_table_bulk_actions', $actions );
@@ -399,6 +400,10 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 			if ( 'set-status-cancelled' === $this->current_action() ) {
 				edd_update_payment_status( $id, 'cancelled' );
+			}
+
+			if( 'resend-receipt' === $this->current_action() ) {
+				edd_email_purchase_receipt( $id, false );
 			}
 
 			do_action( 'edd_payments_table_do_bulk_action', $id, $this->current_action() );
