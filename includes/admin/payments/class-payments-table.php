@@ -294,13 +294,19 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'view' => 'edit-payment', 'purchase_id' => $payment->ID ), $this->base_url ) . '">' . __( 'Edit', 'edd' ) . '</a>';
 
-		if ( edd_is_payment_complete( $payment->ID ) )
+		if ( edd_is_payment_complete( $payment->ID ) ){
 			$row_actions['email_links'] = '<a href="' . add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment->ID ), $this->base_url ) . '">' . __( 'Resend Purchase Receipt', 'edd' ) . '</a>';
 
+		}
+		
 		$row_actions['delete'] = '<a href="' . wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_payment', 'purchase_id' => $payment->ID ), $this->base_url ), 'edd_payment_nonce') . '">' . __( 'Delete', 'edd' ) . '</a>';
 
 		$row_actions = apply_filters( 'edd_payment_row_actions', $row_actions, $payment );
 
+		if ( !isset ( $payment->user_info['email'] ) ){
+			$payment->user_info['email'] = '(unknown)';
+		}
+		
 		$value = $payment->user_info['email'] . $this->row_actions( $row_actions );
 
 		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, 'email' );
