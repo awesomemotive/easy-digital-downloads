@@ -75,6 +75,17 @@ class EDD_Email_Template_Tags {
 	}
 
 	/**
+	 * Returns a list of all email tags
+	 *
+	 * @since 1.9
+	 *
+	 * @return array
+	 */
+	public function get_tags() {
+		return $this->tags;
+	}
+
+	/**
 	 * Search content for email tags and filter email tags through their hooks
 	 *
 	 * @param string $content Content to search for email tags
@@ -127,6 +138,10 @@ function edd_remove_email_tag( $tag ) {
 
 function edd_email_tag_exists( $tag ) {
 	EDD()->email_tags->email_tag_exists( $tag );
+}
+
+function edd_get_email_tags() {
+	return EDD()->email_tags->get_tags();
 }
 
 function edd_do_email_tags( $content, $payment_id ) {
