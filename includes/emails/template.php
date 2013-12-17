@@ -42,20 +42,6 @@ function edd_get_email_templates() {
  */
 function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_notice = false ) {
 	return edd_do_email_tags( $message, $payment_id );
-	$address = '';
-	if ( ! empty( $user_info['address'] ) ) {
-		$address .= $user_info['address']['line1'] . '<br/>';
-		$address .= $user_info['address']['line2'] . '<br/>';
-		$address .= $user_info['address']['city'] . ', ';
-		$address .= $user_info['address']['state'] . ' ';
-		$address .= $user_info['address']['zip'];
-
-		if( ! empty( $user_info['address']['country'] ) ) {
-			$address .= ', ' . $user_info['address']['country'];
-		}
-	}
-
-	$message = str_replace( '{billing_address}', $address, $message );
 }
 
 /**
