@@ -144,6 +144,30 @@ function edd_get_email_tags() {
 	return EDD()->email_tags->get_tags();
 }
 
+function edd_get_emails_tags_list() {
+	// The list
+	$list = '';
+
+	// Get all tags
+	$email_tags = edd_get_email_tags();
+
+	// Check
+	if ( count( $email_tags ) > 0 ) {
+
+		// Loop
+		foreach ( $email_tags as $email_tag ) {
+
+			// Add email tag to list
+			$list .= $email_tag['tag'] . ' - ' . $email_tag['description'] . '<br/>';
+
+		}
+
+	}
+
+	// Return the list
+	return $list;
+}
+
 function edd_do_email_tags( $content, $payment_id ) {
 
 	// Replace all tags
