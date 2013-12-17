@@ -516,7 +516,7 @@ function edd_email_tag_receipt_id( $payment_id ) {
  * @return string gateway
  */
 function edd_email_tag_payment_method( $payment_id ) {
-	return edd_get_gateway_checkout_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
+	return edd_get_gateway_checkout_label( edd_get_payment_gateway( $payment_id ) );
 }
 
 /**
