@@ -170,7 +170,7 @@ function edd_setup_email_tags() {
 		array(
 			'tag'         => 'name',
 			'description' => __( "The buyer's first name", 'edd' ),
-			'function'    => 'edd_email_tag_name'
+			'function'    => 'edd_email_tag_first_name'
 		),
 		array(
 			'tag'         => 'fullname',
@@ -388,7 +388,7 @@ function edd_email_tag_file_urls( $payment_id ) {
  *
  * @return string name
  */
-function edd_email_tag_name( $payment_id ) {
+function edd_email_tag_first_name( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
 	$email_name   = edd_get_email_names( $payment_data['user_info'] );
 	return $email_name['name'];
