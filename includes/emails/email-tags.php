@@ -137,7 +137,7 @@ function edd_remove_email_tag( $tag ) {
 }
 
 function edd_email_tag_exists( $tag ) {
-	EDD()->email_tags->email_tag_exists( $tag );
+	return EDD()->email_tags->email_tag_exists( $tag );
 }
 
 function edd_get_email_tags() {
