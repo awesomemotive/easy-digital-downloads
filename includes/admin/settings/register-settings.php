@@ -1297,3 +1297,14 @@ function edd_get_settings_tabs() {
 
 	return apply_filters( 'edd_settings_tabs', $tabs );
 }
+
+/**
+ * Set manage_shop_settings as the cap required to save EDD settings pages
+ *
+ * @since 1.9
+ * @return string capability required
+ */
+function edd_set_settings_cap() {
+	return 'manage_shop_settings';
+}
+add_filter( 'option_page_capability_edd_settings', 'edd_set_settings_cap' );
