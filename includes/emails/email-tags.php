@@ -35,7 +35,7 @@ class EDD_Email_Template_Tags {
 	private $payment_id;
 
 	/**
-	 * Add hook for email tag
+	 * Add an email tag
 	 *
 	 * @since 1.9
 	 *
@@ -53,7 +53,7 @@ class EDD_Email_Template_Tags {
 	}
 
 	/**
-	 * Remove hook for email tag
+	 * Remove an email tag
 	 *
 	 * @since 1.9
 	 *
@@ -64,11 +64,13 @@ class EDD_Email_Template_Tags {
 	}
 
 	/**
-	 * Whether a registered email tag exists names $tag
+	 * Check if $tag is a registered email tag
 	 *
 	 * @since 1.9
 	 *
 	 * @param string $tag Email tag that will be searched
+	 *
+	 * @return bool
 	 */
 	public function email_tag_exists( $tag ) {
 		return array_key_exists( $tag, $this->tags );
@@ -89,6 +91,7 @@ class EDD_Email_Template_Tags {
 	 * Search content for email tags and filter email tags through their hooks
 	 *
 	 * @param string $content Content to search for email tags
+	 * @param int $payment_id The payment id
 	 *
 	 * @since 1.9
 	 *
@@ -110,6 +113,15 @@ class EDD_Email_Template_Tags {
 		return $new_content;
 	}
 
+	/**
+	 * Do a specific tag, this function should not be used. Please use edd_do_email_tags instead.
+	 *
+	 * @since 1.9
+	 *
+	 * @param $m message
+	 *
+	 * @return mixed
+	 */
 	public function do_tag( $m ) {
 
 		// Get tag
@@ -126,24 +138,59 @@ class EDD_Email_Template_Tags {
 }
 
 /**
- * Functions
+ * Add an email tag
+ *
+ * @since 1.9
+ *
+ * @param string   $tag  Email tag to be replace in email
+ * @param callable $func Hook to run when email tag is found
  */
 function edd_add_email_tag( $tag, $description, $func ) {
 	EDD()->email_tags->add( $tag, $description, $func );
 }
 
+/**
+ * Remove an email tag
+ *
+ * @since 1.9
+ *
+ * @param string $tag Email tag to remove hook from
+ */
 function edd_remove_email_tag( $tag ) {
 	EDD()->email_tags->remove( $tag );
 }
 
+/**
+ * Check if $tag is a registered email tag
+ *
+ * @since 1.9
+ *
+ * @param string $tag Email tag that will be searched
+ *
+ * @return bool
+ */
 function edd_email_tag_exists( $tag ) {
 	return EDD()->email_tags->email_tag_exists( $tag );
 }
 
+/**
+ * Get all email tags
+ *
+ * @since 1.9
+ *
+ * @return array
+ */
 function edd_get_email_tags() {
 	return EDD()->email_tags->get_tags();
 }
 
+/**
+ * Get a formatted HTML list of all available email tags
+ *
+ * @since 1.9
+ *
+ * @return string
+ */
 function edd_get_emails_tags_list() {
 	// The list
 	$list = '';
@@ -168,6 +215,16 @@ function edd_get_emails_tags_list() {
 	return $list;
 }
 
+/**
+ * Search content for email tags and filter email tags through their hooks
+ *
+ * @param string $content Content to search for email tags
+ * @param int $payment_id The payment id
+ *
+ * @since 1.9
+ *
+ * @return string Content with email tags filtered out.
+ */
 function edd_do_email_tags( $content, $payment_id ) {
 
 	// Replace all tags
@@ -182,6 +239,8 @@ function edd_do_email_tags( $content, $payment_id ) {
 
 /**
  * Load email tags
+ *
+ * @since 1.9
  */
 function edd_load_email_tags() {
 	do_action( 'edd_add_email_tags' );
@@ -189,8 +248,10 @@ function edd_load_email_tags() {
 
 add_action( 'init', 'edd_load_email_tags' );
 
-/*
+/**
  * Add default EDD email template tags
+ *
+ * @since 1.9
  */
 function edd_setup_email_tags() {
 
