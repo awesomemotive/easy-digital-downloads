@@ -600,7 +600,7 @@ jQuery(document).ready(function ($) {
 			});
 
 			// Update tax rate state field based on selected rate country
-			$('body').on('change', '#edd_tax_rates select', function() {
+			$('body').on('change', '#edd_tax_rates select.edd-tax-country', function() {
 				var $this = $(this);
 				data = {
 					action: 'edd_get_shop_states',
