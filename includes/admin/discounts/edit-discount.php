@@ -16,11 +16,12 @@ if ( ! isset( $_GET['discount'] ) || ! is_numeric( $_GET['discount'] ) ) {
 	wp_die( __( 'Something went wrong.', 'edd' ), __( 'Error', 'edd' ) );
 }
 
-$discount_id  = absint( $_GET['discount'] );
-$discount     = edd_get_discount( $discount_id );
-$product_reqs = edd_get_discount_product_reqs( $discount_id );
-$condition    = edd_get_discount_product_condition( $discount_id );
-$single_use   = edd_discount_is_single_use( $discount_id );
+$discount_id       = absint( $_GET['discount'] );
+$discount          = edd_get_discount( $discount_id );
+$product_reqs      = edd_get_discount_product_reqs( $discount_id );
+$excluded_products = edd_get_discount_excluded_products( $discount_id );
+$condition         = edd_get_discount_product_condition( $discount_id );
+$single_use        = edd_discount_is_single_use( $discount_id );
 ?>
 <h2><?php _e( 'Edit Discount', 'edd' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
 <form id="edd-edit-discount" action="" method="post">
@@ -99,10 +100,27 @@ $single_use   = edd_discount_is_single_use( $discount_id );
 			</tr>
 			<tr class="form-field">
 				<th scope="row" valign="top">
+					<label for="edd-excluded-products"><?php printf( __( 'Excluded %s', 'edd' ), edd_get_label_plural() ); ?></label>
+				</th>
+				<td>
+					<select multiple id="edd-excluded-products" name="excluded-products[]" class="edd-select-chosen" data-placeholder="<?php printf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ); ?>">
+						<?php
+						if( $downloads ) :
+							foreach( $downloads as $download ) :
+								echo '<option value="' . esc_attr( $download->ID ) . '"' . selected( true, in_array( $download->ID, $excluded_products ), false ) . '>' . esc_html( get_the_title( $download->ID ) ) . '</option>';
+							endforeach;
+						endif;
+						?>
+					</select>
+					<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'edd' ), edd_get_label_plural() ); ?></p>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
 					<label for="edd-start"><?php _e( 'Start date', 'edd' ); ?></label>
 				</th>
 				<td>
-					<input name="start" id="edd-start" type="text" value="<?php echo esc_attr( edd_get_discount_start_date( $discount_id ) ); ?>" style="width: 120px;" class="edd_datepicker"/>
+					<input name="start" id="edd-start" type="text" value="<?php echo esc_attr( edd_get_discount_start_date( $discount_id ) ); ?>" style="width: 300px;" class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'edd' ); ?></p>
 				</td>
 			</tr>
@@ -111,7 +129,7 @@ $single_use   = edd_discount_is_single_use( $discount_id );
 					<label for="edd-expiration"><?php _e( 'Expiration date', 'edd' ); ?></label>
 				</th>
 				<td>
-					<input name="expiration" id="edd-expiration" type="text" value="<?php echo esc_attr( edd_get_discount_expiration( $discount_id ) ); ?>" style="width: 120px;" class="edd_datepicker"/>
+					<input name="expiration" id="edd-expiration" type="text" value="<?php echo esc_attr( edd_get_discount_expiration( $discount_id ) ); ?>" style="width: 300px;" class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank', 'edd' ); ?></p>
 				</td>
 			</tr>

@@ -113,28 +113,24 @@ jQuery(document).ready(function ($) {
 		type : function() {
 
 			$( 'body' ).on( 'change', '#_edd_product_type', function(e) {
-				$( '#edd_download_files' ).toggle();
-				$( '#edd_products' ).toggle();
-				$( '#edd_download_limit_wrap' ).toggle();
+				$( '#edd_download_files,#edd_products,#edd_download_limit_wrap' ).toggle();
 			});
 
 		},
 
 		prices : function() {
 			$( 'body' ).on( 'change', '#edd_variable_pricing', function(e) {
-				$( '.edd_pricing_fields' ).toggle();
-				$( '.edd_repeatable_condition_field' ).toggle();
-				$( '#edd_download_files table .pricing' ).toggle();
+				$( '.edd_pricing_fields,.edd_repeatable_table .pricing' ).toggle();
 			});
 		},
 
 		files : function() {
 			if( typeof wp == "undefined" || edd_vars.new_media_ui != '1' ){
 				//Old Thickbox uploader
-				if ( $( '.edd_upload_image_button' ).length > 0 ) {
+				if ( $( '.edd_upload_file_button' ).length > 0 ) {
 					window.formfield = '';
 
-					$('body').on('click', '.edd_upload_image_button', function(e) {
+					$('body').on('click', '.edd_upload_file_button', function(e) {
 						e.preventDefault();
 						window.formfield = $(this).parent().prev();
 						window.tbframe_interval = setInterval(function() {
@@ -166,7 +162,7 @@ jQuery(document).ready(function ($) {
 				var file_frame;
 				window.formfield = '';
 
-				$('body').on('click', '.edd_upload_image_button', function(e) {
+				$('body').on('click', '.edd_upload_file_button', function(e) {
 
 					e.preventDefault();
 
@@ -245,6 +241,7 @@ jQuery(document).ready(function ($) {
 
 		updatePrices : function() {
 			$( '#edd_price_fields' ).on( 'keyup', '.edd_variable_prices_name', function() {
+
 				var key  = $(this).parents( 'tr' ).index(),
 				    name = $( this ).val();
 
@@ -267,7 +264,7 @@ jQuery(document).ready(function ($) {
 	//$('#edit-slug-box').remove();
 
 	// Date picker
-	if ($('.form-table .edd_datepicker').length > 0) {
+	if ($('.edd_datepicker').length > 0) {
 		var dateFormat = 'mm/dd/yy';
 		$('.edd_datepicker').datepicker({
 			dateFormat: dateFormat
@@ -603,7 +600,7 @@ jQuery(document).ready(function ($) {
 			});
 
 			// Update tax rate state field based on selected rate country
-			$('body').on('change', '#edd_tax_rates select', function() {
+			$('body').on('change', '#edd_tax_rates select.edd-tax-country', function() {
 				var $this = $(this);
 				data = {
 					action: 'edd_get_shop_states',

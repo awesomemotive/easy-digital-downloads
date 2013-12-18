@@ -138,7 +138,7 @@ class EDD_Fees {
 
 		if ( $this->has_fees() ) {
 			foreach ( $fees as $fee ) {
-				$total += $fee['amount'];
+				$total += edd_sanitize_amount( $fee['amount'] );
 			}
 		}
 

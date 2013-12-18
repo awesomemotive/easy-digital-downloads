@@ -126,7 +126,7 @@ add_action( 'wp_ajax_nopriv_edd_add_to_cart', 'edd_ajax_add_to_cart' );
  */
 function edd_ajax_get_subtotal() {
   if (  check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
-    echo edd_currency_filter( edd_get_cart_amount( false ) );
+    echo edd_currency_filter( edd_get_cart_subtotal() );
   }
   edd_die();
 }

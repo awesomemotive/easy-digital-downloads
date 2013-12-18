@@ -47,6 +47,7 @@ function edd_plugin_row_meta( $input, $file ) {
 		return $input;
 
 	$links = array(
+		'<a href="' . admin_url( 'index.php?page=edd-getting-started' ) . '">' . esc_html__( 'Getting Started', 'edd' ) . '</a>',
 		'<a href="https://easydigitaldownloads.com/extensions/">' . esc_html__( 'Add Ons', 'edd' ) . '</a>',
 	);
 
