@@ -115,8 +115,12 @@ final class Easy_Digital_Downloads {
 			self::$instance->fees    = new EDD_Fees();
 			self::$instance->api     = new EDD_API();
 			self::$instance->session = new EDD_Session();
-			self::$instance->html    = new EDD_HTML_Elements();
+<<<<<<< HEAD
+			self::$instance->html = new EDD_HTML_Elements();
 			self::$instance->email_tags = new EDD_Email_Template_Tags();
+=======
+			self::$instance->html    = new EDD_HTML_Elements();
+>>>>>>> upstream/release/1.9
 		}
 		return self::$instance;
 	}
