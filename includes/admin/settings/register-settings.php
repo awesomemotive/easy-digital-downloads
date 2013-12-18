@@ -1047,7 +1047,8 @@ function edd_tax_rates_callback($args) {
 						'name'             => 'tax_rates[' . $key . '][country]',
 						'selected'         => $rate['country'],
 						'show_option_all'  => false,
-						'show_option_none' => false
+						'show_option_none' => false,
+						'class'            => 'edd-select edd-tax-country'
 					) );
 					?>
 				</td>
@@ -1083,7 +1084,8 @@ function edd_tax_rates_callback($args) {
 						'options'          => edd_get_country_list(),
 						'name'             => 'tax_rates[0][country]',
 						'show_option_all'  => false,
-						'show_option_none' => false
+						'show_option_none' => false,
+						'class'            => 'edd-select edd-tax-country'
 					) ); ?>
 				</td>
 				<td class="edd_tax_state">
