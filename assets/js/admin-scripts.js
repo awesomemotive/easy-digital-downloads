@@ -113,18 +113,14 @@ jQuery(document).ready(function ($) {
 		type : function() {
 
 			$( 'body' ).on( 'change', '#_edd_product_type', function(e) {
-				$( '#edd_download_files' ).toggle();
-				$( '#edd_products' ).toggle();
-				$( '#edd_download_limit_wrap' ).toggle();
+				$( '#edd_download_files,#edd_products,#edd_download_limit_wrap' ).toggle();
 			});
 
 		},
 
 		prices : function() {
 			$( 'body' ).on( 'change', '#edd_variable_pricing', function(e) {
-				$( '.edd_pricing_fields' ).toggle();
-				$( '.edd_repeatable_condition_field' ).toggle();
-				$( '#edd_download_files table .pricing' ).toggle();
+				$( '.edd_pricing_fields,.edd_repeatable_table .pricing' ).toggle();
 			});
 		},
 
