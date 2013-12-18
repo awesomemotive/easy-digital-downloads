@@ -321,7 +321,7 @@ function edd_get_registered_settings() {
 				'purchase_receipt' => array(
 					'id' => 'purchase_receipt',
 					'name' => __( 'Purchase Receipt', 'edd' ),
-					'desc' => edd_get_purchase_receipt_template_tags(),
+					'desc' => __('Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:', 'edd') . '<br/>' . edd_get_emails_tags_list(),
 					'type' => 'rich_editor'
 				),
 				'sale_notification_header' => array(
@@ -340,7 +340,7 @@ function edd_get_registered_settings() {
 				'sale_notification' => array(
 					'id' => 'sale_notification',
 					'name' => __( 'Sale Notification', 'edd' ),
-					'desc' => edd_get_sale_notification_template_tags(),
+					'desc' => __( 'Enter the email that is sent to sale notification emails after completion of a purchase. HTML is accepted. Available template tags:', 'edd' ) . '<br/>' . edd_get_emails_tags_list(),
 					'type' => 'rich_editor',
 					'std' => edd_get_default_sale_notification_email()
 				),
