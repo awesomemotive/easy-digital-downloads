@@ -668,7 +668,7 @@ function edd_settings_sanitize( $input = array() ) {
 				$key = $value['id'];
 			}
 
-			if( empty( $inpu[ $key ] ) ) {
+			if( empty( $input[ $key ] ) ) {
 				unset( $edd_options[ $key ] );
 			}
 
