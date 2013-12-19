@@ -13,7 +13,8 @@
  *
  * To replace tags in content, use: edd_do_email_tags( $content, payment_id );
  *
- * To add tags, use: edd_add_email_tag( $tag, $description, $func ). Be sure to hook into 'edd_email_tags'
+ * To add tags, use: edd_add_email_tag( $tag, $description, $func ). Be sure to wrap edd_add_email_tag()
+ * in a function hooked to the 'edd_email_tags' action
  *
  * @package     EDD
  * @subpackage  Emails
