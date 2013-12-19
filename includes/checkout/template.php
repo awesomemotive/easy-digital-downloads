@@ -381,7 +381,9 @@ function edd_get_register_fields() {
 	ob_start(); ?>
 	<fieldset id="edd_register_fields">
 		<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'edd' ); ?> <a href="<?php echo add_query_arg('login', 1); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e( 'Login', 'edd' ); ?></a></p>
+		<?php do_action('edd_register_fields_before'); ?>
 		<?php do_action( 'edd_purchase_form_after_user_info' ); ?>
+		<?php do_action('edd_register_fields_after'); ?>
 		<fieldset id="edd_register_account_fields">
 			<span><legend><?php _e( 'Create an account', 'edd' ); if( !edd_no_guest_checkout() ) { echo ' ' . __( '(optional)', 'edd' ); } ?></legend></span>
 			<?php do_action('edd_register_account_fields_before'); ?>
@@ -415,9 +417,7 @@ function edd_get_register_fields() {
 				<span class="edd-description"><?php _e( 'Confirm your password.', 'edd' ); ?></span>
 				<input name="edd_user_pass_confirm" id="edd_user_pass_confirm" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" placeholder="<?php _e( 'Confirm password', 'edd' ); ?>" type="password"/>
 			</p>
-			<?php do_action('edd_register_fields_before'); ?>
 			<?php do_action( 'edd_register_account_fields_after' ); ?>
-			<?php do_action('edd_register_fields_after'); ?>
 		</fieldset>
 		<input type="hidden" name="edd-purchase-var" value="needs-to-register"/>
 
