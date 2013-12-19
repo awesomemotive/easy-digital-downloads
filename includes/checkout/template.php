@@ -381,38 +381,7 @@ function edd_get_register_fields() {
 	ob_start(); ?>
 	<fieldset id="edd_register_fields">
 		<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'edd' ); ?> <a href="<?php echo add_query_arg('login', 1); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e( 'Login', 'edd' ); ?></a></p>
-		<?php do_action('edd_register_fields_before'); ?>
-		<p id="edd-user-email-wrap">
-			<label for="edd-email">
-				<?php _e( 'Email', 'edd' ); ?>
-				<?php if( edd_field_is_required( 'edd_email' ) ) { ?>
-					<span class="edd-required-indicator">*</span>
-				<?php } ?>
-			</label>
-			<span class="edd-description"><?php _e( 'We will send the purchase receipt to this address.', 'edd' ); ?></span>
-			<input name="edd_email" id="edd-email" class="required edd-input" type="email" placeholder="<?php _e( 'Email', 'edd' ); ?>" title="<?php _e( 'Email', 'edd' ); ?>"/>
-		</p>
-		<p id="edd-user-first-name-wrap">
-			<label class="edd-label" for="edd-first">
-				<?php _e( 'First Name', 'edd' ); ?>
-				<?php if( edd_field_is_required( 'edd_first' ) ) { ?>
-					<span class="edd-required-indicator">*</span>
-				<?php } ?>
-			</label>
-			<span class="edd-description"><?php _e( 'We will use this to personalize your account experience.', 'edd' ); ?></span>
-			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e( 'First Name', 'edd' ); ?>" id="edd-first" value="<?php echo is_user_logged_in() ? $user_data->user_firstname : ''; ?>"/>
-		</p>
-		<p id="edd-user-last-name-wrap">
-			<label class="edd-label" for="edd-last">
-				<?php _e( 'Last Name', 'edd' ); ?>
-				<?php if( edd_field_is_required( 'edd_last' ) ) { ?>
-				<span class="edd-required-indicator">*</span>
-				<?php } ?>
-			</label>
-			<span class="edd-description"><?php _e( 'We will use this as well to personalize your account experience.', 'edd' ); ?></span>
-			<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e( 'Last name', 'edd' ); ?>" value="<?php echo is_user_logged_in() ? $user_data->user_lastname : ''; ?>"/>
-		</p>
-		<?php do_action('edd_register_fields_after'); ?>
+		<?php do_action( 'edd_purchase_form_after_user_info' ); ?>
 		<fieldset id="edd_register_account_fields">
 			<span><legend><?php _e( 'Create an account', 'edd' ); if( !edd_no_guest_checkout() ) { echo ' ' . __( '(optional)', 'edd' ); } ?></legend></span>
 			<?php do_action('edd_register_account_fields_before'); ?>
