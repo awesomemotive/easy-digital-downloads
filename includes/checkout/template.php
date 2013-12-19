@@ -415,7 +415,9 @@ function edd_get_register_fields() {
 				<span class="edd-description"><?php _e( 'Confirm your password.', 'edd' ); ?></span>
 				<input name="edd_user_pass_confirm" id="edd_user_pass_confirm" class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" placeholder="<?php _e( 'Confirm password', 'edd' ); ?>" type="password"/>
 			</p>
+			<?php do_action('edd_register_fields_before'); ?>
 			<?php do_action( 'edd_register_account_fields_after' ); ?>
+			<?php do_action('edd_register_fields_after'); ?>
 		</fieldset>
 		<input type="hidden" name="edd-purchase-var" value="needs-to-register"/>
 
