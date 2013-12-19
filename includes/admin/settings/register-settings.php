@@ -304,25 +304,29 @@ function edd_get_registered_settings() {
 					'id' => 'from_name',
 					'name' => __( 'From Name', 'edd' ),
 					'desc' => __( 'The name purchase receipts are said to come from. This should probably be your site or shop name.', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std'  => get_bloginfo( 'name' )
 				),
 				'from_email' => array(
 					'id' => 'from_email',
 					'name' => __( 'From Email', 'edd' ),
 					'desc' => __( 'Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std'  => get_bloginfo( 'admin_email' )
 				),
 				'purchase_subject' => array(
 					'id' => 'purchase_subject',
 					'name' => __( 'Purchase Email Subject', 'edd' ),
 					'desc' => __( 'Enter the subject line for the purchase receipt email', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std'  => __( 'Purchase Receipt', 'edd' )
 				),
 				'purchase_receipt' => array(
 					'id' => 'purchase_receipt',
 					'name' => __( 'Purchase Receipt', 'edd' ),
 					'desc' => __('Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:', 'edd') . '<br/>' . edd_get_emails_tags_list(),
-					'type' => 'rich_editor'
+					'type' => 'rich_editor',
+					'std'  => __( "Dear", "edd" ) . " {name},\n\n" . __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "edd" ) . "\n\n{download_list}\n\n{sitename}"
 				),
 				'sale_notification_header' => array(
 					'id' => 'sale_notification_header',
