@@ -622,6 +622,152 @@ function edd_get_registered_settings() {
 }
 
 /**
+ * Settings Sanitization
+ *
+ * Adds a settings error (for the updated message)
+ * At some point this will validate input
+ *
+ * @since 1.0.8.2
+ * @param array $input The value inputted in the field
+ * @return string $input Sanitizied value
+ */
+function edd_settings_sanitize( $input = array() ) {
+
+	global $edd_options;
+
+	parse_str( $_POST['_wp_http_referer'], $referrer );
+
+	$output    = array();
+	$settings  = edd_get_registered_settings();
+	$tab       = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
+	$post_data = isset( $_POST[ 'edd_settings_' . $tab ] ) ? $_POST[ 'edd_settings_' . $tab ] : array();
+
+	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $post_data );
+
+	// Loop through each setting being saved and pass it through a sanitization filter
+	foreach( $input as $key => $value ) {
+
+		// Get the setting type (checkbox, select, etc)
+		$type = isset( $settings[ $tab ][ $key ][ 'type' ] ) ? $settings[ $tab ][ $key ][ 'type' ] : false;
+
+		if( $type ) {
+			// Field type specific filter
+			$output[ $key ] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
+		}
+
+		// General filter
+		$output[ $key ] = apply_filters( 'edd_settings_sanitize', $value, $key );
+	}
+
+
+	// Loop through the whitelist and unset any that are empty for the tab being saved
+	if( ! empty( $settings[ $tab ] ) ) {
+		foreach( $settings[ $tab ] as $key => $value ) {
+
+			// settings used to have numeric keys, now they have keys that match the option ID. This ensures both methods work
+			if( is_numeric( $key ) ) {
+				$key = $value['id'];
+			}
+
+			if( empty( $_POST[ 'edd_settings_' . $tab ][ $key ] ) ) {
+				unset( $edd_options[ $key ] );
+			}
+
+		}
+	}
+
+	// Merge our new settings with the existing
+	$output = array_merge( $edd_options, $output );
+
+	add_settings_error( 'edd-notices', '', __( 'Settings Updated', 'edd' ), 'updated' );
+
+	return $output;
+
+}
+
+/**
+ * Misc Settings Sanitization
+ *
+ * @since 1.6
+ * @param array $input The value inputted in the field
+ * @return string $input Sanitizied value
+ */
+function edd_settings_sanitize_misc( $input ) {
+
+	global $edd_options;
+
+	if( edd_get_file_download_method() != $input['download_method'] || ! edd_htaccess_exists() ) {
+		// Force the .htaccess files to be updated if the Download method was changed.
+		edd_create_protection_files( true, $input['download_method'] );
+	}
+
+	return $input;
+}
+add_filter( 'edd_settings_misc_sanitize', 'edd_settings_sanitize_misc' );
+
+/**
+ * Taxes Settings Sanitization
+ *
+ * Adds a settings error (for the updated message)
+ * This also saves the tax rates table
+ *
+ * @since 1.6
+ * @param array $input The value inputted in the field
+ * @return string $input Sanitizied value
+ */
+function edd_settings_sanitize_taxes( $input ) {
+
+	$new_rates = ! empty( $_POST['tax_rates'] ) ? array_values( $_POST['tax_rates'] ) : array();
+
+	update_option( 'edd_tax_rates', $new_rates );
+
+	return $input;
+}
+add_filter( 'edd_settings_taxes_sanitize', 'edd_settings_sanitize_taxes' );
+
+/**
+ * Sanitize text fields
+ *
+ * @since 1.8
+ * @param array $input The field value
+ * @return string $input Sanitizied value
+ */
+function edd_sanitize_text_field( $input ) {
+	return trim( $input );
+}
+add_filter( 'edd_settings_sanitize_text', 'edd_sanitize_text_field' );
+
+/**
+ * Retrieve settings tabs
+ *
+ * @since 1.8
+ * @param array $input The field value
+ * @return string $input Sanitizied value
+ */
+function edd_get_settings_tabs() {
+
+	$settings = edd_get_registered_settings();
+
+	$tabs             = array();
+	$tabs['general']  = __( 'General', 'edd' );
+	$tabs['gateways'] = __( 'Payment Gateways', 'edd' );
+	$tabs['emails']   = __( 'Emails', 'edd' );
+	$tabs['styles']   = __( 'Styles', 'edd' );
+	$tabs['taxes']    = __( 'Taxes', 'edd' );
+
+	if( ! empty( $settings['extensions'] ) ) {
+		$tabs['extensions'] = __( 'Extensions', 'edd' );
+	}
+	if( ! empty( $settings['licenses'] ) ) {
+		$tabs['licenses'] = __( 'Licenses', 'edd' );
+	}
+
+	$tabs['misc']      = __( 'Misc', 'edd' );
+
+	return apply_filters( 'edd_settings_tabs', $tabs );
+}
+
+/**
  * Header Callback
  *
  * Renders the header.
@@ -1148,150 +1294,4 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
  */
 function edd_hook_callback( $args ) {
 	do_action( 'edd_' . $args['id'] );
-}
-
-/**
- * Settings Sanitization
- *
- * Adds a settings error (for the updated message)
- * At some point this will validate input
- *
- * @since 1.0.8.2
- * @param array $input The value inputted in the field
- * @return string $input Sanitizied value
- */
-function edd_settings_sanitize( $input = array() ) {
-
-	global $edd_options;
-
-	parse_str( $_POST['_wp_http_referer'], $referrer );
-
-	$output    = array();
-	$settings  = edd_get_registered_settings();
-	$tab       = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
-	$post_data = isset( $_POST[ 'edd_settings_' . $tab ] ) ? $_POST[ 'edd_settings_' . $tab ] : array();
-
-	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $post_data );
-
-	// Loop through each setting being saved and pass it through a sanitization filter
-	foreach( $input as $key => $value ) {
-
-		// Get the setting type (checkbox, select, etc)
-		$type = isset( $settings[ $tab ][ $key ][ 'type' ] ) ? $settings[ $tab ][ $key ][ 'type' ] : false;
-
-		if( $type ) {
-			// Field type specific filter
-			$output[ $key ] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
-		}
-
-		// General filter
-		$output[ $key ] = apply_filters( 'edd_settings_sanitize', $value, $key );
-	}
-
-
-	// Loop through the whitelist and unset any that are empty for the tab being saved
-	if( ! empty( $settings[ $tab ] ) ) {
-		foreach( $settings[ $tab ] as $key => $value ) {
-
-			// settings used to have numeric keys, now they have keys that match the option ID. This ensures both methods work
-			if( is_numeric( $key ) ) {
-				$key = $value['id'];
-			}
-
-			if( empty( $_POST[ 'edd_settings_' . $tab ][ $key ] ) ) {
-				unset( $edd_options[ $key ] );
-			}
-
-		}
-	}
-
-	// Merge our new settings with the existing
-	$output = array_merge( $edd_options, $output );
-
-	add_settings_error( 'edd-notices', '', __( 'Settings Updated', 'edd' ), 'updated' );
-
-	return $output;
-
-}
-
-/**
- * Misc Settings Sanitization
- *
- * @since 1.6
- * @param array $input The value inputted in the field
- * @return string $input Sanitizied value
- */
-function edd_settings_sanitize_misc( $input ) {
-
-	global $edd_options;
-
-	if( edd_get_file_download_method() != $input['download_method'] || ! edd_htaccess_exists() ) {
-		// Force the .htaccess files to be updated if the Download method was changed.
-		edd_create_protection_files( true, $input['download_method'] );
-	}
-
-	return $input;
-}
-add_filter( 'edd_settings_misc_sanitize', 'edd_settings_sanitize_misc' );
-
-/**
- * Taxes Settings Sanitization
- *
- * Adds a settings error (for the updated message)
- * This also saves the tax rates table
- *
- * @since 1.6
- * @param array $input The value inputted in the field
- * @return string $input Sanitizied value
- */
-function edd_settings_sanitize_taxes( $input ) {
-
-	$new_rates = ! empty( $_POST['tax_rates'] ) ? array_values( $_POST['tax_rates'] ) : array();
-
-	update_option( 'edd_tax_rates', $new_rates );
-
-	return $input;
-}
-add_filter( 'edd_settings_taxes_sanitize', 'edd_settings_sanitize_taxes' );
-
-/**
- * Sanitize text fields
- *
- * @since 1.8
- * @param array $input The field value
- * @return string $input Sanitizied value
- */
-function edd_sanitize_text_field( $input ) {
-	return trim( $input );
-}
-add_filter( 'edd_settings_sanitize_text', 'edd_sanitize_text_field' );
-
-/**
- * Retrieve settings tabs
- *
- * @since 1.8
- * @param array $input The field value
- * @return string $input Sanitizied value
- */
-function edd_get_settings_tabs() {
-
-	$settings = edd_get_registered_settings();
-
-	$tabs             = array();
-	$tabs['general']  = __( 'General', 'edd' );
-	$tabs['gateways'] = __( 'Payment Gateways', 'edd' );
-	$tabs['emails']   = __( 'Emails', 'edd' );
-	$tabs['styles']   = __( 'Styles', 'edd' );
-	$tabs['taxes']    = __( 'Taxes', 'edd' );
-
-	if( ! empty( $settings['extensions'] ) ) {
-		$tabs['extensions'] = __( 'Extensions', 'edd' );
-	}
-	if( ! empty( $settings['licenses'] ) ) {
-		$tabs['licenses'] = __( 'Licenses', 'edd' );
-	}
-
-	$tabs['misc']      = __( 'Misc', 'edd' );
-
-	return apply_filters( 'edd_settings_tabs', $tabs );
 }
