@@ -637,7 +637,6 @@ function edd_settings_sanitize( $input = array() ) {
 
 	parse_str( $_POST['_wp_http_referer'], $referrer );
 
-	$output    = array();
 	$settings  = edd_get_registered_settings();
 	$tab       = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
 
@@ -651,11 +650,11 @@ function edd_settings_sanitize( $input = array() ) {
 
 		if( $type ) {
 			// Field type specific filter
-			$output[ $key ] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
+			$input[ $key ] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
 		}
 
 		// General filter
-		$output[ $key ] = apply_filters( 'edd_settings_sanitize', $value, $key );
+		$input[ $key ] = apply_filters( 'edd_settings_sanitize', $value, $key );
 	}
 
 
@@ -676,7 +675,7 @@ function edd_settings_sanitize( $input = array() ) {
 	}
 
 	// Merge our new settings with the existing
-	$output = array_merge( $edd_options, $output );
+	$output = array_merge( $edd_options, $input );
 
 	add_settings_error( 'edd-notices', '', __( 'Settings Updated', 'edd' ), 'updated' );
 
