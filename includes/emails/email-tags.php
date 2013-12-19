@@ -136,7 +136,7 @@ class EDD_Email_Template_Tags {
 		$tag = $m[1];
 
 		// Return tag if tag not set
-		if ( ! self::email_tag_exists( $tag ) ) {
+		if ( ! $this->email_tag_exists( $tag ) ) {
 			return $m[0];
 		}
 
