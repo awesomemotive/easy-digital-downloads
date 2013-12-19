@@ -28,10 +28,18 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class EDD_Email_Template_Tags {
 
-	// Container for storing all tags
+	/**
+	 * Container for storing all tags
+	 *
+	 * @since 1.9
+	 */
 	private $tags;
 
-	// Payment ID
+	/**
+	 * Payment ID
+	 *
+	 * @since 1.9
+	 */
 	private $payment_id;
 
 	/**
