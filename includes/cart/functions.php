@@ -575,10 +575,16 @@ function edd_get_cart_subtotal() {
 	if( $items ) {
 
 		$prices   = wp_list_pluck( $items, 'subtotal' );
-		$subtotal = array_sum( $prices );
 
-		if( $subtotal < 0 )
+		if( is_array( $prices ) ) {
+			$subtotal = array_sum( $prices );
+		} else {
 			$subtotal = 0.00;
+		}
+
+		if( $subtotal < 0 ) {
+			$subtotal = 0.00;
+		}
 
 	}
 
