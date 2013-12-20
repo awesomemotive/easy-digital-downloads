@@ -197,7 +197,7 @@ class EDD_HTML_Elements {
 			'selected'         => 0,
 			'show_option_all'  => _x( 'All', 'all dropdown items', 'edd' ),
 			'show_option_none' => _x( 'None', 'no dropdown items', 'edd' ),
-			'class'            => 'edd-select'
+			'class'            => ''
 		);
 
 		$args = wp_parse_args( $args, $defaults );
