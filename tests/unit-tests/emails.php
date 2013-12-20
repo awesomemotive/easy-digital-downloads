@@ -1,12 +1,17 @@
 <?php
 namespace EDD_Unit_Tests;
+use \EDD_Email_Template_Tags;
 
 /**
  * @group edd_emails
  */
 class Tests_Emails extends EDD_UnitTestCase {
+
+	protected $_tags;
+
 	public function setUp() {
 		parent::setUp();
+		$this->_tags = new EDD_Email_Template_Tags;
 	}
 
 	public function tearDown() {
@@ -244,21 +249,48 @@ DATA;
 		$this->assertEquals( $expected, edd_email_default_formatting($message) );
 	}
 
-
-	public function test_edd_get_purchase_receipt_template_tags() {
-		$this->markTestIncomplete('This needs to be rwritten once #1451 is completed');
-	}
-
-	public function test_edd_get_sale_notification_template_tags() {
-		$this->markTestIncomplete('This needs to be rwritten once #1451 is completed');
-	}
-
 	public function test_edd_get_default_sale_notification_email() {
 		$this->assertContains( 'Hello', edd_get_default_sale_notification_email() );
 		$this->assertContains( 'A Downloads purchase has been made', edd_get_default_sale_notification_email() );
 		$this->assertContains( 'Downloads sold:', edd_get_default_sale_notification_email() );
 		$this->assertContains( '{download_list}', edd_get_default_sale_notification_email() );
 		$this->assertContains( 'Amount:  {price}', edd_get_default_sale_notification_email() );
+	}
+
+	public function test_email_tags_get_tags() {
+		$this->assertInternalType( 'array', edd_get_email_tags() );
+		$this->assertarrayHasKey( 'download_list', edd_get_email_tags() );
+		$this->assertarrayHasKey( 'file_urls', edd_get_email_tags() );
+		$this->assertarrayHasKey( 'name', edd_get_email_tags() );
+		$this->assertarrayHasKey( 'fullname', edd_get_email_tags() );
+		$this->assertarrayHasKey( 'username', edd_get_email_tags() );
+		$this->assertarrayHasKey( 'user_email', edd_get_email_tags() );
+		$this->assertarrayHasKey( 'date', edd_get_email_tags() );
+		$this->assertarrayHasKey( 'subtotal', edd_get_email_tags() );
+		$this->assertarrayHasKey( 'tax', edd_get_email_tags() );
+		$this->assertarrayHasKey( 'price', edd_get_email_tags() );
+		$this->assertarrayHasKey( 'payment_id', edd_get_email_tags() );
+		$this->assertarrayHasKey( 'payment_method', edd_get_email_tags() );
+		$this->assertarrayHasKey( 'sitename', edd_get_email_tags() );
+		$this->assertarrayHasKey( 'receipt_link', edd_get_email_tags() );
+	}
+
+	public function test_email_tags_add() {
+		$this->_tags->add( 'sample_tag', 'A sample tag for the unit test', '__return_empty_array' );
+		$this->assertTrue( $this->_tags->email_tag_exists( 'sample_tag' ) );
+	}
+
+	public function test_email_tags_do_valid_tag() {
+		$this->assertInternalType( 'array', $this->_tags->do_tag( 'sample_tag' ) );
+	}
+
+	public function test_email_tags_remove() {
+		$this->_tags->remove( 'sample_tag' );
+		$this->assertFalse( $this->_tags->email_tag_exists( 'sample_tag' ) );
+	}
+
+	public function test_email_tags_do_invalid_tag() {
+		$this->assertEquals( 'sample_tag', $this->_tags->do_tag( 'sample_tag' ) );
 	}
 
 }
