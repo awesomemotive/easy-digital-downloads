@@ -9,45 +9,12 @@ class Tests_Emails extends EDD_UnitTestCase {
 
 	protected $_tags;
 
+	protected $payment_id;
+
 	public function setUp() {
 		parent::setUp();
 		$this->_tags = new EDD_Email_Template_Tags;
-	}
 
-	public function tearDown() {
-		parent::tearDown();
-	}
-
-	/**
-     * Test that each of the actions are added and each hooked in with the right priority
-     */
-	public function test_email_actions() {
-		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_admin_email_notice',       $wp_filter['edd_admin_sale_notice'][10]  );
-		$this->assertarrayHasKey( 'edd_trigger_purchase_receipt', $wp_filter['edd_complete_purchase'][999] );
-		$this->assertarrayHasKey( 'edd_resend_purchase_receipt',  $wp_filter['edd_email_links'][10]        );
-		$this->assertarrayHasKey( 'edd_send_test_email',          $wp_filter['edd_send_test_email'][10]    );
-	}
-
-	public function test_admin_notice_emails() {
-		$expected = array( 'admin@example.org' );
-		$this->assertEquals( $expected, edd_get_admin_notice_emails() );
-	}
-
-	public function test_admin_notice_disabled() {
-		$this->assertFalse( edd_admin_notices_disabled() );
-	}
-
-	public function test_email_templates() {
-		$expected = array(
-			'default' => 'Default Template',
-			'none' => 'No template, plain text only'
-		);
-
-		$this->assertEquals( $expected, edd_get_email_templates() );
-	}
-
-	public function test_template_tags() {
 		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
 		$_variable_pricing = array(
@@ -149,6 +116,7 @@ class Tests_Emails extends EDD_UnitTestCase {
 			'downloads' => $download_details,
 			'cart_details' => $cart_details,
 			'status' => 'pending',
+			'gateway' => 'manual',
 			'email' => 'admin@example.org',
 			'amount' => number_format( (float) $total, 2 ),
 		);
@@ -156,7 +124,44 @@ class Tests_Emails extends EDD_UnitTestCase {
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
 		$_SERVER['SERVER_NAME'] = 'edd_virtual';
 
-		$payment_id = edd_insert_payment( $purchase_data );
+		$this->_payment_id = edd_insert_payment( $purchase_data );
+
+	}
+
+	public function tearDown() {
+		parent::tearDown();
+	}
+
+	/**
+     * Test that each of the actions are added and each hooked in with the right priority
+     */
+	public function test_email_actions() {
+		global $wp_filter;
+		$this->assertarrayHasKey( 'edd_admin_email_notice',       $wp_filter['edd_admin_sale_notice'][10]  );
+		$this->assertarrayHasKey( 'edd_trigger_purchase_receipt', $wp_filter['edd_complete_purchase'][999] );
+		$this->assertarrayHasKey( 'edd_resend_purchase_receipt',  $wp_filter['edd_email_links'][10]        );
+		$this->assertarrayHasKey( 'edd_send_test_email',          $wp_filter['edd_send_test_email'][10]    );
+	}
+
+	public function test_admin_notice_emails() {
+		$expected = array( 'admin@example.org' );
+		$this->assertEquals( $expected, edd_get_admin_notice_emails() );
+	}
+
+	public function test_admin_notice_disabled() {
+		$this->assertFalse( edd_admin_notices_disabled() );
+	}
+
+	public function test_email_templates() {
+		$expected = array(
+			'default' => 'Default Template',
+			'none' => 'No template, plain text only'
+		);
+
+		$this->assertEquals( $expected, edd_get_email_templates() );
+	}
+
+	public function test_template_tags() {
 
 		$message = <<<DATA
 Hey {fullname},
@@ -176,15 +181,15 @@ Hey {fullname},
 {receipt_link}
 DATA;
 
-		$this->assertContains( 'Hey Network Administrator', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
-		$this->assertContains( '<ul><li>Test Download&nbsp;&ndash;&nbsp;Advanced<br/><ul><li>', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
+		$this->assertContains( 'Hey Network Administrator', edd_email_template_tags( $message, $purchase_data, $this->_payment_id ) );
+		$this->assertContains( '<ul><li>Test Download&nbsp;&ndash;&nbsp;Advanced<br/><ul><li>', edd_email_template_tags( $message, $purchase_data, $this->_payment_id ) );
 		$this->markTestIncomplete('This needs to be rewritten');
-		//$this->assertContains( 'File 1</a></li><li>', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
-		$this->assertContains( 'File 2</a></li></ul> &mdash; <small>Purchase Notes</small></li></ul>', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
-		$this->assertContains( 'http://example.org', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
-		$this->assertContains( 'Test Blog', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
-		$this->assertContains( '&#36;100.00', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
-		$this->assertContains( '&edd_action=view_receipt">View it in your browser.</a>', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
+		//$this->assertContains( 'File 1</a></li><li>', edd_email_template_tags( $message, $purchase_data, $this->_payment_id ) );
+		$this->assertContains( 'File 2</a></li></ul> &mdash; <small>Purchase Notes</small></li></ul>', edd_email_template_tags( $message, $purchase_data, $this->_payment_id ) );
+		$this->assertContains( 'http://example.org', edd_email_template_tags( $message, $purchase_data, $this->_payment_id ) );
+		$this->assertContains( 'Test Blog', edd_email_template_tags( $message, $purchase_data, $this->_payment_id ) );
+		$this->assertContains( '&#36;100.00', edd_email_template_tags( $message, $purchase_data, $this->_payment_id ) );
+		$this->assertContains( '&edd_action=view_receipt">View it in your browser.</a>', edd_email_template_tags( $message, $purchase_data, $this->_payment_id ) );
 	}
 
 	public function test_email_preview_template_tags() {
@@ -291,6 +296,58 @@ DATA;
 
 	public function test_email_tags_do_invalid_tag() {
 		$this->assertEquals( 'sample_tag', $this->_tags->do_tag( 'sample_tag' ) );
+	}
+	
+	public function test_email_tags_first_name() {
+		$this->assertEquals( 'Network', edd_email_tag_first_name( $this->_payment_id ) );
+	}
+
+	public function test_email_tags_fullname() {
+		$this->assertEquals( 'Network Administrator', edd_email_tag_fullname( $this->_payment_id ) );
+	}
+
+	public function test_email_tags_username() {
+		$this->assertEquals( 'admin', edd_email_tag_username( $this->_payment_id ) );
+	}
+
+	public function test_email_tags_email() {
+		$this->assertEquals( 'admin@example.org', edd_email_tag_user_email( $this->_payment_id ) );
+	}
+
+	public function test_email_tags_date() {
+		$this->assertEquals( date( 'F j, Y', strtotime( '-1 day' ) ), edd_email_tag_date( $this->_payment_id ) );
+	}
+
+	public function test_email_tags_subtotal() {
+		$this->assertEquals( 100, edd_email_tag_subtotal( $this->_payment_id ) );
+	}
+
+	public function test_email_tags_tax() {
+		$this->assertEquals( '0.00', edd_email_tag_tax( $this->_payment_id ) );
+	}
+
+	public function test_email_tags_price() {
+		$this->assertEquals( '100.00', edd_email_tag_price( $this->_payment_id ) );
+	}
+
+	public function test_email_tags_payment_id() {
+		$this->assertEquals( $this->_payment_id, edd_email_tag_payment_id( $this->_payment_id ) );
+	}
+
+	public function test_email_tags_receipt_id() {
+		$this->assertEquals( edd_get_payment_key( $this->_payment_id ), edd_email_tag_receipt_id( $this->_payment_id ) );
+	}
+
+	public function test_email_tags_payment_method() {
+		$this->assertEquals( 'Free Purchase', edd_email_tag_payment_method( $this->_payment_id ) );
+	}
+
+	public function test_email_tags_site_name() {
+		$this->assertEquals( get_bloginfo( 'name' ), edd_email_tag_sitename( $this->_payment_id ) );
+	}
+
+	public function test_email_tags_receipt_link() {
+		$this->assertContains( 'View it in your browser.', edd_email_tag_receipt_link( $this->_payment_id ) );
 	}
 
 }
