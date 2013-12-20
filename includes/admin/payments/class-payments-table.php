@@ -135,7 +135,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			<?php if( ! empty( $status ) ) : ?>
 				<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
 			<?php endif; ?>
-			<?php if( ! empty( $start_date || ! empty( $end_date ) ) ) : ?>
+			<?php if( ! empty( $start_date ) || ! empty( $end_date ) ) : ?>
 				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>" class="button-secondary"><?php _e( 'Clear Filter', 'edd' ); ?></a>
 			<?php endif; ?>
 			<?php $this->search_box( __( 'Search', 'edd' ), 'edd-payments' ); ?>
