@@ -88,7 +88,7 @@ class EDD_HTML_Elements {
 			'selected'         => $selected,
 			'options'          => $options,
 			'show_option_all'  => false,
-			'show_option_none' => false
+			'show_option_none' => false,
 		) );
 
 		return $output;
