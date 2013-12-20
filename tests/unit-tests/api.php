@@ -1,5 +1,6 @@
 <?php
 namespace EDD_Unit_Tests;
+use \EDD_Roles;
 
 /**
  * @group edd_api
@@ -24,6 +25,10 @@ class Tests_API extends EDD_UnitTestCase {
 		global $wp_rewrite, $wp_query;
 		$GLOBALS['wp_rewrite']->init();
 		flush_rewrite_rules();
+
+		$roles = new EDD_Roles;
+		$roles->add_roles();
+		$roles->add_caps();
 
 		EDD()->api->add_endpoint( $wp_rewrite );
 
