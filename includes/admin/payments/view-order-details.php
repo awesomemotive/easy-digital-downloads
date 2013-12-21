@@ -348,6 +348,7 @@ $payment_date = strtotime( $item->post_date );
 									<?php endif; ?>
 
 									<a href="" id="edd-order-add-download" class="button button-secondary"><?php printf( __( 'Add %s to Order', 'edd' ), edd_get_label_singular() ); ?></a>
+									<a href="" id="edd-order-recalc-total" class="button button-primary" style="display:none"><?php _e( 'Recalculate Payment Total', 'edd' ); ?></a>
 								
 									<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value=""/>
 

@@ -284,6 +284,7 @@ jQuery(document).ready(function ($) {
 			this.edit_address();
 			this.remove_download();
 			this.add_download();
+			this.recalculate_total();
 			this.variable_prices_check();
 			this.status_change();
 			this.notes();
@@ -321,11 +322,13 @@ jQuery(document).ready(function ($) {
 					$(this).parent().parent().remove();
 					// Flag the Downloads section as changed
 					$('#edd-payment-downloads-changed').val(1);
+					$('#edd-order-recalc-total').show();
 				}
 				return false;
 			});
 
 		},
+
 
 		add_download : function() {
 
@@ -383,8 +386,24 @@ jQuery(document).ready(function ($) {
 				$('#edd-payment-downloads-changed').val(1);
 
 				$(clone).insertAfter( '#edd-purchased-files tr:last' );
+				$('#edd-order-recalc-total').show();
 
 			});
+		},
+
+		recalculate_total : function() {
+
+			// Remove a download from a purchase
+			$('#edd-purchased-files').on('click', '#edd-order-recalc-total', function(e) {
+				e.preventDefault();
+				var total = 0;
+				$('#edd-purchased-files .edd-payment-details-download-amount').each(function() {
+					var quantity = $(this).next().val();
+					total += ( parseFloat( $(this).val() ) * parseInt( quantity ) );
+				});
+				$('input[name=edd-payment-total]').val( total );
+			});
+
 		},
 
 		variable_prices_check : function() {
