@@ -26,8 +26,15 @@ function edd_update_payment_details( $data ) {
 	}
 
 	check_admin_referer( 'edd_update_payment_details_nonce' );
-
+	//echo '<pre>'; print_r( $_POST['edd-payment-details-downloads'] ); echo '</pre>'; exit;
+	
+	// Retrieve the payment ID
 	$payment_id = absint( $data['edd_payment_id']      );
+	
+	// Retrieve existing payment meta
+	$meta       = edd_get_payment_meta( $payment_id );
+	$user_info  = edd_get_payment_meta_user_info( $payment_id );
+
 	$status     = $data['edd-payment-status'];
 	$user_id    = absint( $data['edd-payment-user-id'] );
 	$date       = sanitize_text_field( $data['edd-payment-date'] );
@@ -49,9 +56,45 @@ function edd_update_payment_details( $data ) {
 	$first_name = ! empty( $names[0] ) ? $names[0] : '';
 	$last_name  = ! empty( $names[1] ) ? $names[1] : '';
 
-	// Retrieve meta
-	$meta       = edd_get_payment_meta( $payment_id );
-	$user_info  = edd_get_payment_meta_user_info( $payment_id );
+	// Setup purchased Downloads and price options
+	$updated_downloads = isset( $_POST['edd-payment-details-downloads'] ) ? $_POST['edd-payment-details-downloads'] : false;
+	if( $updated_downloads ) {
+
+		$downloads    = array();
+		$cart_details = array();
+		$i = 0;
+		foreach( $updated_downloads as $download ) {
+			$item             = array();
+			$item['id']       = absint( $download['id'] );
+			$item['quantity'] = absint( $download['quantity'] );
+			$price_id         = (int) $download['price_id'];
+
+			if( $price_id !== false && edd_has_variable_prices( $item['id'] ) ) {
+				$item['options'] = array(
+					'price_id'   => $price_id
+				);
+			}
+			$downloads[] = $item;
+
+			$cart_item   = array();
+			$cart_item['item_number'] = $item;
+
+			$cart_details[$i] = array(
+				'name'        => get_the_title( $download['id'] ),
+				'id'          => $download['id'],
+				'item_number' => $item,
+				'price'       => $download['amount'],
+				'quantity'    => $download['quantity'],
+			);
+			$i++;
+		}
+
+		//echo '<pre>'; print_r( $downloads ); echo '</pre>';
+		//echo '<pre>'; print_r( $cart_details ); echo '</pre>';exit;
+
+		$meta['downloads']    = $downloads;
+		$meta['cart_details'] = $cart_details;
+	}
 
 	// Update main payment record
 	wp_update_post( array(
@@ -82,6 +125,7 @@ function edd_update_payment_details( $data ) {
 	update_post_meta( $payment_id, '_edd_payment_user_email', $email   );
 	update_post_meta( $payment_id, '_edd_payment_meta',       $meta    );
 	update_post_meta( $payment_id, '_edd_payment_total',      $total   );
+	update_post_meta( $payment_id, '_edd_payment_downloads',      $total   );
 
 	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=details-updated&id=' . $payment_id ) );
 	exit;

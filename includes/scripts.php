@@ -202,21 +202,22 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_script( 'thickbox' );
 	wp_enqueue_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, false );
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
-		'post_id'            => isset( $post->ID ) ? $post->ID : null,
-		'edd_version'        => EDD_VERSION,
-		'add_new_download'   => __( 'Add New Download', 'edd' ), 									// Thickbox title
-		'use_this_file'      => __( 'Use This File','edd' ), 										// "use this file" button
-		'quick_edit_warning' => __( 'Sorry, not available for variable priced products.', 'edd' ),
-		'delete_payment'     => __( 'Are you sure you wish to delete this payment?', 'edd' ),
-		'delete_payment_note'=> __( 'Are you sure you wish to delete this note?', 'edd' ),
-		'delete_tax_rate'    => __( 'Are you sure you wish to delete this tax rate?', 'edd' ),
-		'one_price_min'      => __( 'You must have at least one price', 'edd' ),
-		'one_file_min'       => __( 'You must have at least one file', 'edd' ),
-		'one_field_min'      => __( 'You must have at least one field', 'edd' ),
-		'currency_sign'      => edd_currency_filter(''),
-		'currency_pos'       => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
-		'new_media_ui'       => apply_filters( 'edd_use_35_media_ui', 1 ),
-		'remove_text'        => __( 'Remove', 'edd' ),
+		'post_id'                 => isset( $post->ID ) ? $post->ID : null,
+		'edd_version'             => EDD_VERSION,
+		'add_new_download'        => __( 'Add New Download', 'edd' ), 									// Thickbox title
+		'use_this_file'           => __( 'Use This File','edd' ), 										// "use this file" button
+		'quick_edit_warning'      => __( 'Sorry, not available for variable priced products.', 'edd' ),
+		'delete_payment'          => __( 'Are you sure you wish to delete this payment?', 'edd' ),
+		'delete_payment_download' => __( 'Are you sure you wish to delete this download?', 'edd' ),
+		'delete_payment_note'     => __( 'Are you sure you wish to delete this note?', 'edd' ),
+		'delete_tax_rate'         => __( 'Are you sure you wish to delete this tax rate?', 'edd' ),
+		'one_price_min'           => __( 'You must have at least one price', 'edd' ),
+		'one_file_min'            => __( 'You must have at least one file', 'edd' ),
+		'one_field_min'           => __( 'You must have at least one field', 'edd' ),
+		'currency_sign'           => edd_currency_filter(''),
+		'currency_pos'            => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
+		'new_media_ui'            => apply_filters( 'edd_use_35_media_ui', 1 ),
+		'remove_text'             => __( 'Remove', 'edd' ),
 	));
 	wp_enqueue_style( 'thickbox' );
 

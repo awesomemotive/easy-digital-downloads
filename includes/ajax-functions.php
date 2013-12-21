@@ -317,16 +317,14 @@ add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
  * @return void
  */
 function edd_check_for_download_price_variations() {
-	if ( ! check_ajax_referer( 'edd_add_downloads_to_purchase_nonce', 'nonce' ) )
-		return false;
 
 	$download_id = intval( $_POST['download_id'] );
 
 	if ( edd_has_variable_prices( $download_id ) ) {
-		$variable_prices = get_post_meta( $download_id, 'edd_variable_prices', true );
+		$variable_prices = edd_get_variable_prices( $download_id );
 
 		if ( $variable_prices ) {
-			$ajax_response = '<select name="downloads[' . intval( $_POST['array_key'] ) . '][options][price_id]" class="edd-variable-prices-select">';
+			$ajax_response = '<select class="edd_price_options_select edd-select">';
 				foreach ( $variable_prices as $key => $price ) {
 					$ajax_response .= '<option value="' . $key . '">' . $price['name']  . '</option>';
 				}
