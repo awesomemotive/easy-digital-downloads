@@ -134,6 +134,7 @@ $payment_date = strtotime( $item->post_date );
 								endif;
 								?>
 								<textarea name="edd-payment-note" id="edd-payment-note" class="large-text"></textarea>
+								<span><?php _e( 'Enter a note and click Save Payment to save the note', 'edd' ); ?></span>
 							</div><!-- /.inside -->
 						</div><!-- /#edd-payment-notes -->
 
