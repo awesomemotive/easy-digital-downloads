@@ -26,11 +26,10 @@ function edd_update_payment_details( $data ) {
 	}
 
 	check_admin_referer( 'edd_update_payment_details_nonce' );
-	//echo '<pre>'; print_r( $_POST['edd-payment-details-downloads'] ); echo '</pre>'; exit;
 	
 	// Retrieve the payment ID
-	$payment_id = absint( $data['edd_payment_id']      );
-	
+	$payment_id = absint( $data['edd_payment_id'] );
+
 	// Retrieve existing payment meta
 	$meta       = edd_get_payment_meta( $payment_id );
 	$user_info  = edd_get_payment_meta_user_info( $payment_id );
@@ -96,15 +95,6 @@ function edd_update_payment_details( $data ) {
 		$meta['cart_details'] = $cart_details;
 	}
 
-	// Update main payment record
-	wp_update_post( array(
-		'ID'        => $payment_id,
-		'post_date' => $date
-	) );
-
-	// Set new status
-	edd_update_payment_status( $payment_id, $status );
-
 	// Set new meta values
 	$user_info['id']         = $user_id;
 	$user_info['first_name'] = $first_name;
@@ -121,11 +111,24 @@ function edd_update_payment_details( $data ) {
 
 	}
 
+	do_action( 'edd_update_edited_purchase', $payment_id );
+
+	// Update main payment record
+	wp_update_post( array(
+		'ID'        => $payment_id,
+		'post_date' => $date
+	) );
+
+	// Set new status
+	edd_update_payment_status( $payment_id, $status );
+
 	update_post_meta( $payment_id, '_edd_payment_user_id',    $user_id );
 	update_post_meta( $payment_id, '_edd_payment_user_email', $email   );
 	update_post_meta( $payment_id, '_edd_payment_meta',       $meta    );
 	update_post_meta( $payment_id, '_edd_payment_total',      $total   );
-	update_post_meta( $payment_id, '_edd_payment_downloads',      $total   );
+	update_post_meta( $payment_id, '_edd_payment_downloads',  $total   );
+
+	do_action( 'edd_updated_edited_purchase', $payment_id );
 
 	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=details-updated&id=' . $payment_id ) );
 	exit;
