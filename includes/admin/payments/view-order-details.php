@@ -177,9 +177,6 @@ $payment_date = strtotime( $item->post_date );
 											<span><?php _e( 'Name:', 'edd' ); ?></span>&nbsp;
 											<input type="text" name="edd-payment-user-name" value="<?php esc_attr_e( $user_info['first_name'] . ' ' . $user_info['last_name'] ); ?>" class="medium-text"/>
 										</p>
-										<p class="data">
-											<span><?php _e( 'User Status:', 'edd' ); ?>&nbsp;<?php echo $user_id > 0 ? __( 'Registered User', 'edd' ) : __( 'Guest', 'edd' ); ?></span>
-										</p>
 										<?php if( $user_id > 0 ) : ?>
 											<p class="data">
 												<span><?php _e( 'User ID:', 'edd' ); ?></span>&nbsp;
