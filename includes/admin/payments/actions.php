@@ -130,7 +130,7 @@ function edd_update_payment_details( $data ) {
 
 	do_action( 'edd_updated_edited_purchase', $payment_id );
 
-	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=details-updated&id=' . $payment_id ) );
+	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=payment-updated&id=' . $payment_id ) );
 	exit;
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
