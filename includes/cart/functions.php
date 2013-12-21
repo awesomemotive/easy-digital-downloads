@@ -718,9 +718,18 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
  */
 function edd_get_cart_tax() {
 
+	$cart_tax = 0;
 	$items    = edd_get_cart_content_details();
-	$taxes    = wp_list_pluck( $items, 'tax' );
-	$cart_tax = array_sum( $taxes );
+
+	if( $items ) {
+
+		$taxes    = wp_list_pluck( $items, 'tax' );
+
+		if( is_array( $taxes ) ) {
+			$cart_tax = array_sum( $taxes );	
+		}
+		
+	}
 
 	return apply_filters( 'edd_get_cart_tax', $cart_tax );
 }
