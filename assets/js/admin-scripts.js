@@ -319,6 +319,8 @@ jQuery(document).ready(function ($) {
 			$('#edd-purchased-files').on('click', '.edd-order-remove-download', function() {
 				if( confirm( edd_vars.delete_payment_download ) ) {
 					$(this).parent().parent().remove();
+					// Flag the Downloads section as changed
+					$('#edd-payment-downloads-changed').val(1);
 				}
 				return false;
 			});
@@ -376,6 +378,9 @@ jQuery(document).ready(function ($) {
 
 					$( this ).attr( 'name', name ).attr( 'id', name );
 				});
+
+				// Flag the Downloads section as changed
+				$('#edd-payment-downloads-changed').val(1);
 
 				$(clone).insertAfter( '#edd-purchased-files tr:last' );
 
