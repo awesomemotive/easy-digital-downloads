@@ -61,6 +61,7 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$attachments = apply_filters( 'edd_receipt_attachments', array(), $payment_id, $payment_data );
 
 	if ( apply_filters( 'edd_email_purchase_receipt', true ) ) {
+		echo $message; exit;
 		wp_mail( $email, $subject, $message, $headers, $attachments );
 	}
 

@@ -254,7 +254,7 @@ function edd_do_email_tags( $content, $payment_id ) {
 function edd_load_email_tags() {
 	do_action( 'edd_add_email_tags' );
 }
-add_action( 'init', 'edd_load_email_tags' );
+add_action( 'init', 'edd_load_email_tags', -999 );
 
 /**
  * Add default EDD email template tags
