@@ -284,6 +284,7 @@ $payment_date = strtotime( $item->post_date );
 												$item_id  = isset( $cart_item['id']    ) ? $cart_item['id']    : $cart_item;
 												$price    = isset( $cart_item['price'] ) ? $cart_item['price'] : false;
 												$price_id = isset( $cart_item['item_number']['options'] ) ? $cart_item['item_number']['options']['price_id'] : null;
+												$quantity = isset( $cart_item['quantity'] ) && $cart_item['quantity'] > 0 ? $cart_item['quantity'] : 1;
 
 												if( ! $price ) {
 													// This function is only used on payments with near 1.0 cart data structure
@@ -292,10 +293,10 @@ $payment_date = strtotime( $item->post_date );
 												?>
 												<tr class="<?php if ( $i % 2 == 0 ) { echo 'alternate'; } ?>">
 													<td class="name column-name">
+														<span><?php echo get_the_title( $item_id ); ?></span>
 														<?php
-														echo '<a href="' . esc_url( admin_url( 'post.php?post=' . $item_id . '&action=edit' ) ) . '" target="_blank">' . get_the_title( $item_id ) . '</a>';
 
-														if ( isset( $cart_items[ $key ]['item_number'] ) ) {
+														if ( isset( $cart_items[ $key ]['item_number'] ) && isset( $cart_items[ $key ]['item_number']['options'] ) ) {
 															$price_options = $cart_items[ $key ]['item_number']['options'];
 
 															if ( isset( $price_id ) ) {
@@ -303,20 +304,21 @@ $payment_date = strtotime( $item->post_date );
 															}
 														}
 														?>
-														<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][id]" value="<?php echo esc_attr( $item_id ); ?>"/>
-														<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][price_id]" value="<?php echo esc_attr( $price_id ); ?>"/>
-														<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][amount]" value="<?php echo esc_attr( $price ); ?>"/>
+														<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][id]" class="edd-payment-details-download-id" value="<?php echo esc_attr( $item_id ); ?>"/>
+														<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][price_id]" class="edd-payment-details-download-price-id" value="<?php echo esc_attr( $price_id ); ?>"/>
+														<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][amount]" class="edd-payment-details-download-amount" value="<?php echo esc_attr( $price ); ?>"/>
+														<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][quantity]" class="edd-payment-details-download-quantity" value="<?php echo esc_attr( $quantity ); ?>"/>
 													</td>
 													<?php if( edd_item_quantities_enabled() ) : ?>
 													<td class="quantity column-quantity">
-														<?php echo __( 'Quantity:', 'edd' ) . '&nbsp;' . $cart_item['quantity']; ?>
+														<?php echo __( 'Quantity:', 'edd' ) . '&nbsp;<span>' . $quantity . '</span>'; ?>
 													</td>
 													<?php endif; ?>
 													<td class="price column-price">
 														<?php echo edd_currency_filter( edd_format_amount( $price ) ); ?>
 													</td>
 													<td>
-														<a href="" class=""><?php _e( 'Remove', 'edd' ); ?></a>
+														<a href="" class="edd-order-remove-download" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
 													</td>
 												</tr>
 												<?php
@@ -327,9 +329,25 @@ $payment_date = strtotime( $item->post_date );
 									</tbody>
 								</table>
 								<div class="inside ">
-									<?php echo EDD()->html->product_dropdown( 'edd-payment-details-downloads[' . $i . '][id]', 0, true ); ?>
-									<?php echo EDD()->html->text( array( 'name' => 'edd-payment-details-downloads[' . $i . '][amount]', 'label' => __( 'Enter amount', 'edd' ), 'class' => 'small-text' ) ); ?>
-								</div>
+									
+									<span><?php echo edd_get_label_singular(); ?></span>
+									<?php echo EDD()->html->product_dropdown( 'edd-order-download-select', 0 ); ?>
+									
+									<span><?php _e( 'Amount', 'edd' ); ?></span>
+									<?php
+									echo EDD()->html->text( array( 'name' => 'edd-order-download-amount',
+										'label' => __( 'Enter amount', 'edd' ),
+										'class' => 'small-text edd-order-download-price' 
+									) );
+									?>
+
+									<?php if( edd_item_quantities_enabled() ) : ?>
+										<span><?php _e( 'Quantity', 'edd' ); ?></span>
+										<input type="number" id="edd-order-download-quantity" class="small-text" min="1" step="1" value="1"/>
+									<?php endif; ?>
+
+									<a href="" id="edd-order-add-download" class="button button-secondary"><?php printf( __( 'Add %s to Order', 'edd' ), edd_get_label_singular() ); ?></a>
+								</div><!-- /.inside -->
 							</div><!-- /.inside -->
 						</div><!-- /#edd-purchased-files -->
 						<?php do_action( 'edd_view_order_details_main_after', $payment_id ); ?>
