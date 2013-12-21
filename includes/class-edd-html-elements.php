@@ -29,7 +29,7 @@ class EDD_HTML_Elements {
 	 * @param int $selected Download to select automatically
 	 * @return string $output Product dropdown
 	 */
-	public function product_dropdown( $name = 'edd_products', $selected = 0 ) {
+	public function product_dropdown( $name = 'edd_products', $selected = 0, $disabled = false ) {
 		$products = get_posts( array(
 			'post_type' => 'download',
 			'nopaging'  => true,
@@ -49,6 +49,7 @@ class EDD_HTML_Elements {
 			'name'             => $name,
 			'selected'         => $selected,
 			'options'          => $options,
+			'disabled'         => $disabled,
 			'show_option_all'  => false,
 			'show_option_none' => __( 'None', 'edd' )
 		) );
@@ -278,10 +279,16 @@ class EDD_HTML_Elements {
 			'label'       => isset( $label ) ? $label : null,
 			'desc'        => isset( $desc )  ? $desc  : null,
 			'placeholder' => '',
-			'class'       => 'regular-text'
+			'class'       => 'regular-text',
+			'disabled'    => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );
+
+		$disabled = '';
+		if( $args['disabled'] ) {
+			$disabled = ' disabled="disabled"';
+		}
 
 		$output = '<span id="edd-' . sanitize_key( $args[ 'name' ] ) . '-wrap">';
 			
@@ -291,7 +298,7 @@ class EDD_HTML_Elements {
 				$output .= '<span class="edd-description">' . esc_html( $args[ 'desc' ] ) . '</span>';
 			}
 
-			$output = '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" placeholder="' . esc_attr( $args[ 'placeholder' ] ) . '" class="' . $args[ 'class' ] . '"/>';
+			$output = '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" placeholder="' . esc_attr( $args[ 'placeholder' ] ) . '" class="' . $args[ 'class' ] . '"' . $disabled . '/>';
 
 		$output .= '</span>';
 
