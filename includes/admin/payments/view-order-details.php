@@ -33,8 +33,9 @@ $payment_date = strtotime( $item->post_date );
 ?>
 <div class="wrap">
 	<h2><?php printf( __( 'Payment #%d', 'edd' ), $payment_id ); ?></h2>
+	<?php do_action( 'edd_view_order_details_before' ); ?>
 	<form id="edd-edit-order-form" method="post">
-		<?php do_action( 'edd_view_order_details_before' ); ?>
+		<?php do_action( 'edd_view_order_details_form_top' ); ?>
 		<div id="poststuff">
 			<div id="post-body" class="metabox-holder columns-2">
 				<div id="postbox-container-1" class="postbox-container">
@@ -347,6 +348,9 @@ $payment_date = strtotime( $item->post_date );
 									<?php endif; ?>
 
 									<a href="" id="edd-order-add-download" class="button button-secondary"><?php printf( __( 'Add %s to Order', 'edd' ), edd_get_label_singular() ); ?></a>
+								
+									<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value=""/>
+
 								</div><!-- /.inside -->
 							</div><!-- /.inside -->
 						</div><!-- /#edd-purchased-files -->
@@ -355,9 +359,10 @@ $payment_date = strtotime( $item->post_date );
 				</div><!-- #postbox-container-2 -->
 			</div><!-- /#post-body -->
 		</div><!-- /#post-stuff -->
-		<?php do_action( 'edd_view_order_details_after' ); ?>
+		<?php do_action( 'edd_view_order_details_form_bottom', $payment_id ); ?>
 		<?php wp_nonce_field( 'edd_update_payment_details_nonce' ); ?>
 		<input type="hidden" name="edd_payment_id" value="<?php echo esc_attr( $payment_id ); ?>"/>
 		<input type="hidden" name="edd_action" value="update_payment_details"/>
 	</form>
+	<?php do_action( 'edd_view_order_details_after', $payment_id ); ?>
 </div><!-- /.wrap -->
