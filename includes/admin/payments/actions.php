@@ -37,6 +37,10 @@ function edd_update_payment_details( $data ) {
 	$names      = sanitize_text_field( $data['edd-payment-user-name'] );
 	$address    = array_map( 'trim', $data['edd-payment-address'][0] );
 
+	$total      = edd_sanitize_amount( $_POST['edd-payment-total'] );
+	$tax        = isset( $_POST['edd-payment-tax'] ) ? edd_sanitize_amount( $_POST['edd-payment-tax'] ) : 0;
+	$meta       = edd_get_payment_meta( $payment_id );
+
 	// Setup date from input values
 	$date       = date( 'Y-m-d', strtotime( $date ) ) . ' ' . $hour . ':' . $minute . ':00';
 
@@ -64,67 +68,22 @@ function edd_update_payment_details( $data ) {
 	$user_info['last_name']  = $last_name;
 	$user_info['address']    = $address;
 	$meta['user_info']       = $user_info;
+	$meta['tax']             = $tax;
+
+	// Check for payment notes
+	if ( ! empty( $data['edd-payment-note'] ) ) {
+
+		$note    = wp_kses( $data['edd-payment-note'], array() );
+		$note_id = edd_insert_payment_note( $payment_id, $note );
+
+	}
 
 	update_post_meta( $payment_id, '_edd_payment_user_id',    $user_id );
 	update_post_meta( $payment_id, '_edd_payment_user_email', $email   );
 	update_post_meta( $payment_id, '_edd_payment_meta',       $meta    );
+	update_post_meta( $payment_id, '_edd_payment_total',      $total   );
 
 	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=details-updated&id=' . $payment_id ) );
 	exit;
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
-
-/**
- * Process the payment totals edit
- *
- * @access      private
- * @since       1.9
- * @return      void
-*/
-function edd_update_payment_totals( $data ) {
-
-	if( ! current_user_can( 'edit_shop_payment', $data['edd_payment_id' ] ) ) {
-		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ) );
-	}
-
-	check_admin_referer( 'edd_update_payment_totals_nonce' );
-
-	$payment_id = absint( $data['edd_payment_id'] );
-	$total      = edd_sanitize_amount( $_POST['edd-payment-total'] );
-	$tax        = edd_sanitize_amount( $_POST['edd-payment-tax'] );
-	$meta       = edd_get_payment_meta( $payment_id );
-
-	$meta['tax'] = $tax;
-
-	update_post_meta( $payment_id, '_edd_payment_total', $total );
-	update_post_meta( $payment_id, '_edd_payment_meta',  $meta  );
-
-	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=totals-updated&id=' . $payment_id ) );
-	exit;
-}
-add_action( 'edd_update_payment_totals', 'edd_update_payment_totals' );
-
-/**
- * Process the "Add Note" submission from the edit payment screen
- *
- * @access      private
- * @since       1.9
- * @return      void
-*/
-function edd_add_payment_note( $data ) {
-
-	if( ! current_user_can( 'edit_shop_payment', $_POST['edd_payment_id' ] ) ) {
-		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ) );
-	}
-
-	if ( ! empty( $data['edd-payment-note'] ) ) {
-
-		$payment_id = absint( $data['edd_payment_id'] );
-		$note       = wp_kses( $data['edd-payment-note'], array() );
-		$note_id    = edd_insert_payment_note( $payment_id, $note );
-
-		wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=note-added&id=' . $payment_id ) );
-		exit;
-	}
-}
-add_action( 'edd_add_payment_note', 'edd_add_payment_note' );

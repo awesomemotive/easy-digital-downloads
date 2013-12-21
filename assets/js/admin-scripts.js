@@ -281,7 +281,6 @@ jQuery(document).ready(function ($) {
 	var EDD_Edit_Payment = {
 
 		init : function() {
-			this.toggle_edit();
 			this.edit_address();
 			this.remove_download();
 			this.add_download();
@@ -290,22 +289,6 @@ jQuery(document).ready(function ($) {
 			this.notes();
 		},
 
-		toggle_edit : function () {
-
-			$('.edd-payment-edit').on('click', function(e) {
-				e.preventDefault();
-				$(this).parent().parent().find('.edd-edit-toggles').not(':input[type=button], :input[type=submit], :input[type=reset]').toggle();
-				$(this).parent().parent().find('input,select').each(function() {
-					var $this = $(this);
-					if( $this.attr('disabled') ) {
-						$this.removeAttr('disabled');
-           			} else {
-           			 	$this.attr('disabled', 'disabled');
-					}
-				});
-			});
-
-		},
 
 		edit_address : function() {
 
