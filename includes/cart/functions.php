@@ -994,7 +994,7 @@ function edd_is_cart_saved() {
 			return false;
 
 		// Check that the saved cart is not the same as the current cart
-		if ( stripslashes( maybe_unserialize( $_COOKIE['edd_saved_cart'] ) ) === EDD()->session->get( 'edd_cart' ) )
+		if ( maybe_unserialize( stripslashes( $_COOKIE['edd_saved_cart'] ) ) === EDD()->session->get( 'edd_cart' ) )
 			return false;
 
 		return true;
