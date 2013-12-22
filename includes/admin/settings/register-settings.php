@@ -83,16 +83,19 @@ function edd_register_settings() {
 		);
 
 		foreach ( $settings as $option ) {
+
+			$name = isset( $option['name'] ) ? $option['name'] : '';
+
 			add_settings_field(
 				'edd_settings[' . $option['id'] . ']',
-				$option['name'],
+				$name,
 				function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
 				'edd_settings_' . $tab,
 				'edd_settings_' . $tab,
 				array(
-					'id'      => $option['id'],
+					'id'      => isset( $option['id'] ) ? $option['id'] : null,
 					'desc'    => ! empty( $option['desc'] ) ? $option['desc'] : '',
-					'name'    => $option['name'],
+					'name'    => isset( $option['name'] ) ? $option['name'] : null,
 					'section' => $tab,
 					'size'    => isset( $option['size'] ) ? $option['size'] : null,
 					'options' => isset( $option['options'] ) ? $option['options'] : '',
