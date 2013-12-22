@@ -11,6 +11,7 @@ jQuery(document).ready(function ($) {
 			this.type();
 			this.prices();
 			this.files();
+			this.updatePrices();
 		},
 		clone_repeatable : function(row) {
 
@@ -33,6 +34,7 @@ jQuery(document).ready(function ($) {
 
 				$( this ).attr( 'name', name ).attr( 'id', name );
 			});
+
 			return clone;
 		},
 
@@ -77,6 +79,9 @@ jQuery(document).ready(function ($) {
 					type  = $(this).data('type'),
 					repeatable = 'tr.edd_repeatable_' + type + 's';
 
+				/** remove from price condition */
+			    $( '.edd_repeatable_condition_field option[value=' + row.index() + ']' ).remove();
+
 				if( count > 1 ) {
 					$( 'input, select', row ).val( '' );
 					row.fadeOut( 'fast' ).remove();
@@ -102,13 +107,12 @@ jQuery(document).ready(function ($) {
 			        	$( this ).attr( 'name', name ).attr( 'id', name );
 			    	});
 			    });
-
 			});
 		},
 
 		type : function() {
 
-			$( 'body' ).on( 'change', '#edd_product_type', function(e) {
+			$( 'body' ).on( 'change', '#_edd_product_type', function(e) {
 				$( '#edd_download_files' ).toggle();
 				$( '#edd_products' ).toggle();
 				$( '#edd_download_limit_wrap' ).toggle();
@@ -237,6 +241,23 @@ jQuery(document).ready(function ($) {
 				window.formfield = '';
 			}
 
+		},
+
+		updatePrices : function() {
+			$( '#edd_price_fields' ).on( 'keyup', '.edd_variable_prices_name', function() {
+				var key  = $(this).parents( 'tr' ).index(),
+				    name = $( this ).val();
+
+				if ( $( '.edd_repeatable_condition_field option[value=' + key + ']' ).length > 0 ) {
+					$( '.edd_repeatable_condition_field option[value=' + key + ']' ).text( name );
+				} else {
+					$( '.edd_repeatable_condition_field' ).append(
+						$( '<option></option>' )
+						.attr( 'value', key )
+						.text( name )
+					);
+				}
+			});
 		}
 
 	}
@@ -296,9 +317,9 @@ jQuery(document).ready(function ($) {
 
 			// Add a New Download from the Add Downloads to Purchase Box
 			$('#edd-add-downloads-to-purchase').on('click', '.edd-add-another-download', function() {
-				var downloads_select_elem = $('#edd-add-downloads-to-purchase select.edd-downloads-list:last').parent().clone(),
-				    count = $('#edd-add-downloads-to-purchase select.edd-downloads-list').length,
-				    download_section = $('#edd-add-downloads-to-purchase select.edd-downloads-list:last').parent();
+				var downloads_select_elem = $('#edd-add-downloads-to-purchase select.edd-select:last').parent().clone(),
+				    count = $('#edd-add-downloads-to-purchase select.edd-select').length,
+				    download_section = $('#edd-add-downloads-to-purchase select.edd-select:last').parent();
 
 				if (downloads_select_elem.has('select.edd-variable-prices-select')) {
 					$('select.edd-variable-prices-select', downloads_select_elem).remove();
@@ -312,7 +333,7 @@ jQuery(document).ready(function ($) {
 
 			// When the Add Downloads button is clicked...
 			$('#edd-add-download').on('click', function() {
-				$('#edd-add-downloads-to-purchase select.edd-downloads-list').each(function() {
+				$('#edd-add-downloads-to-purchase select.edd-select').each(function() {
 					var id = $('option:selected', this).val();
 
 					if ($(this).next().hasClass('edd-variable-prices-select')) {
@@ -344,7 +365,7 @@ jQuery(document).ready(function ($) {
 		variable_prices_check : function() {
 
 			// On Download Select, Check if Variable Prices Exist
-			$('#edd-add-downloads-to-purchase').on('change', 'select.edd-downloads-list', function() {
+			$('#edd-add-downloads-to-purchase').on('change', 'select.edd-select', function() {
 				var $el = $(this),
 				    download_id = $('option:selected', $el).val(),
 				    array_key   = $('#edd-add-downloads-to-purchase select').length - 1;
@@ -360,7 +381,7 @@ jQuery(document).ready(function ($) {
 					$.post(ajaxurl, variable_price_check_ajax_data, function(response) {
 						$el.next('select').remove();
 						$el.after(response);
-						if( ! $('.edd-remove-download', $el.parent()).length && $('#edd-add-downloads-to-purchase select.edd-downloads-list').length > 1 ) {
+						if( ! $('.edd-remove-download', $el.parent()).length && $('#edd-add-downloads-to-purchase select.edd-select').length > 1 ) {
 							$el.parent().append('&nbsp;<a href="#" class="edd-remove-download">' + edd_vars.remove_text + '</a>');
 						}
 						$('.edd_add_download_to_purchase_waiting:last').addClass('hidden');
@@ -562,12 +583,12 @@ jQuery(document).ready(function ($) {
 		taxes : function() {
 
 			// Update base state field based on selected base country
-			$('select[name="edd_settings_taxes[base_country]"]').change(function() {
+			$('select[name="edd_settings[base_country]"]').change(function() {
 				var $this = $(this), $tr = $this.closest('tr');
 				data = {
 					action: 'edd_get_shop_states',
 					country: $(this).val(),
-					field_name: 'edd_settings_taxes[base_state]'
+					field_name: 'edd_settings[base_state]'
 				};
 				$.post(ajaxurl, data, function (response) {
 					if( 'nostates' == response ) {
@@ -630,9 +651,10 @@ jQuery(document).ready(function ($) {
 
 			// Show the email template previews
 			if( $('#email-preview-wrap').length ) {
+				var emailPreview = $('#email-preview');
 				$('#open-email-preview').colorbox({
 					inline: true,
-					href: '#email-preview',
+					href: emailPreview,
 					width: '80%',
 					height: 'auto'
 				});
@@ -643,12 +665,12 @@ jQuery(document).ready(function ($) {
 		misc : function() {
 
 			// Hide Symlink option if Download Method is set to Direct
-			if( $('select[name="edd_settings_misc[download_method]"]:selected').val() != 'direct' ) {
-				$('select[name="edd_settings_misc[download_method]"]').parent().parent().next().hide();
-				$('select[name="edd_settings_misc[download_method]"]').parent().parent().next().find('input').attr('checked', false);
+			if( $('select[name="edd_settings[download_method]"]:selected').val() != 'direct' ) {
+				$('select[name="edd_settings[download_method]"]').parent().parent().next().hide();
+				$('select[name="edd_settings[download_method]"]').parent().parent().next().find('input').attr('checked', false);
 			}
 			// Toggle download method option
-			$('select[name="edd_settings_misc[download_method]"]').on('change', function() {
+			$('select[name="edd_settings[download_method]"]').on('change', function() {
 				var symlink = $(this).parent().parent().next();
 				if( $(this).val() == 'direct' ) {
 					symlink.hide();

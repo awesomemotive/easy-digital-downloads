@@ -98,8 +98,8 @@ add_action( 'manage_posts_custom_column', 'edd_render_download_columns', 10, 2 )
  * @return array $columns Array of sortable columns
  */
 function edd_sortable_download_columns( $columns ) {
-	$columns['price'] = 'price';
-	$columns['sales'] = 'sales';
+	$columns['price']    = 'price';
+	$columns['sales']    = 'sales';
 	$columns['earnings'] = 'earnings';
 
 	return $columns;
@@ -133,7 +133,7 @@ function edd_sort_downloads( $vars ) {
 				$vars,
 				array(
 					'meta_key' => '_edd_download_earnings',
-					'orderby' => 'meta_value_num'
+					'orderby'  => 'meta_value_num'
 				)
 			);
 		}
@@ -144,7 +144,7 @@ function edd_sort_downloads( $vars ) {
 				$vars,
 				array(
 					'meta_key' => 'edd_price',
-					'orderby' => 'meta_value_num'
+					'orderby'  => 'meta_value_num'
 				)
 			);
 		}

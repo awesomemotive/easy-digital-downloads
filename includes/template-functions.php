@@ -150,13 +150,12 @@ function edd_get_purchase_link( $args = array() ) {
 					</span>
 				</span>
 			<?php endif; ?>
+			<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
+				echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), edd_get_tax_rate() * 100 ) . '</span>';
+			} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
+				echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'edd' ), edd_get_tax_rate() * 100 ) . '</span>';
+			} ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
-
-		<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
-			echo '<div class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), $edd_options['tax_rate'] ) . '</div>';
-		} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
-			echo '<div class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'edd' ), $edd_options['tax_rate'] ) . '</div>';
-		} ?>
 
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $args['download_id'] ); ?>">
 		<?php if( ! empty( $args['direct'] ) ) { ?>
@@ -237,13 +236,14 @@ add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10 );
  *
  * @since 1.0.8
  * @global $post
- * @param $content string The the_content field of the download object
- * @return $content string the content with any additional data attached
+ *
+ * @param $content The the_content field of the download object
+ * @return string the content with any additional data attached
  */
 function edd_before_download_content( $content ) {
 	global $post;
 
-	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() && !post_password_required() ) {
 		ob_start();
 		$content .= ob_get_clean();
 		do_action( 'edd_before_download_content', $post->ID );
@@ -261,13 +261,14 @@ add_filter( 'the_content', 'edd_before_download_content' );
  *
  * @since 1.0.8
  * @global $post
- * @param $content string The the_content field of the download object
- * @return $content string the content with any additional data attached
+ *
+ * @param $content The the_content field of the download object
+ * @return string the content with any additional data attached
  */
 function edd_after_download_content( $content ) {
 	global $post;
 
-	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() && !post_password_required() ) {
 		ob_start();
 		do_action( 'edd_after_download_content', $post->ID );
 		$content .= ob_get_clean();
@@ -309,12 +310,42 @@ add_filter( 'the_content', 'edd_filter_success_page_content' );
  */
 function edd_get_button_colors() {
 	$colors = array(
-		'gray'      => __( 'Gray', 'edd' ),
-		'blue'      => __( 'Blue', 'edd' ),
-		'green'     => __( 'Green', 'edd' ),
-		'yellow'    => __( 'Yellow', 'edd' ),
-		'dark-gray' => __( 'Dark Gray', 'edd' ),
-		'inherit'	=> __( 'Inherit', 'edd' ),
+		'white'     => array(
+			'label' => __( 'White', 'edd' ),
+			'hex'   => '#ffffff'
+		),
+		'gray'      => array(
+			'label' => __( 'Gray', 'edd' ),
+			'hex'   => '#f0f0f0'
+		),
+		'blue'      => array(
+			'label' => __( 'Blue', 'edd' ),
+			'hex'   => '#428bca'
+		),
+		'red'       => array(
+			'label' => __( 'Red', 'edd' ),
+			'hex'   => '#d9534f'
+		),
+		'green'     => array(
+			'label' => __( 'Green', 'edd' ),
+			'hex'   => '#5cb85c'
+		),
+		'yellow'    => array(
+			'label' => __( 'Yellow', 'edd' ),
+			'hex'   => '#f0ad4e'
+		),
+		'orange'    => array(
+			'label' => __( 'Orange', 'edd' ),
+			'hex'   => '#ed9c28'
+		),
+		'dark-gray' => array(
+			'label' => __( 'Dark Gray', 'edd' ),
+			'hex'   => '#363636'
+		),
+		'inherit'	=> array(
+			'label' => __( 'Inherit', 'edd' ),
+			'hex'   => ''
+		)
 	);
 
 	return apply_filters( 'edd_button_colors', $colors );
@@ -336,29 +367,6 @@ function edd_get_button_styles() {
 
 	return apply_filters( 'edd_button_styles', $styles );
 }
-
-/**
- * Show Has Purchased Item Message
- *
- * Prints a notice when user has already purchased the item.
- *
- * @since 1.0
- * @global $user_ID
- * @param int $download_id Download ID
- * @return void
- */
-function edd_show_has_purchased_item_message() {
-	global $user_ID, $post;
-
-	if( !isset( $post->ID ) )
-		return;
-
-	if ( edd_has_user_purchased( $user_ID, $post->ID ) ) {
-		$alert = '<p class="edd_has_purchased">' . __( 'You have already purchased this item, but you may purchase it again.', 'edd' ) . '</p>';
-		echo apply_filters( 'edd_show_has_purchased_item_message', $alert );
-	}
-}
-add_action( 'edd_after_download_content', 'edd_show_has_purchased_item_message' );
 
 /**
  * Default formatting for download excerpts
@@ -456,6 +464,9 @@ function edd_get_templates_url() {
  *
  * @param string $slug
  * @param string $name Optional. Default null
+ * @param bool   $load
+ *
+ * @return string
  *
  * @uses edd_locate_template()
  * @uses load_template()
@@ -509,20 +520,12 @@ function edd_locate_template( $template_names, $load = false, $require_once = tr
 		// Trim off any slashes from the template name
 		$template_name = ltrim( $template_name, '/' );
 
-		// Check child theme first
-		if ( file_exists( trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $template_name ) ) {
-			$located = trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $template_name;
-			break;
-
-		// Check parent theme next
-		} elseif ( file_exists( trailingslashit( get_template_directory() ) . 'edd_templates/' . $template_name ) ) {
-			$located = trailingslashit( get_template_directory() ) . 'edd_templates/' . $template_name;
-			break;
-
-		// Check theme compatibility last
-		} elseif ( file_exists( trailingslashit( edd_get_templates_dir() ) . $template_name ) ) {
-			$located = trailingslashit( edd_get_templates_dir() ) . $template_name;
-			break;
+		// try locating this template file by looping through the template paths
+		foreach( edd_get_theme_template_paths() as $template_path ) {
+			if( file_exists( $template_path . $template_name ) ) {
+				$located = $template_path . $template_name;
+				break;
+			}
 		}
 	}
 
@@ -530,6 +533,27 @@ function edd_locate_template( $template_names, $load = false, $require_once = tr
 		load_template( $located, $require_once );
 
 	return $located;
+}
+
+/**
+ * Returns a list of paths to check for template locations
+ *
+ * @since 1.8.5
+ * @return mixed|void
+ */
+function edd_get_theme_template_paths() {
+	$file_paths = array(
+		1 => trailingslashit( get_stylesheet_directory() ) . 'edd_templates/',
+		10 => trailingslashit( get_template_directory() ) . 'edd_templates/',
+		100 => edd_get_templates_dir()
+	);
+
+	$file_paths = apply_filters( 'edd_template_paths', $file_paths );
+
+	// sort the file paths based on priority
+	ksort( $file_paths, SORT_NUMERIC );
+
+	return array_map( 'trailingslashit', $file_paths );
 }
 
 /**
@@ -584,9 +608,9 @@ add_filter( 'the_title', 'edd_microdata_title', 10, 2 );
  *
  * @since 1.5
  * @author Sunny Ratilal
- * @param string $title Post Title
- * @param int $id Post ID
- * @return string $title New title
+ *
+ * @param $content
+ * @return mixed|void New title
  */
 function edd_microdata_wrapper( $content ) {
 	global $post;

@@ -176,12 +176,13 @@ function edd_get_admin_notice_emails() {
 	return apply_filters( 'edd_admin_notice_emails', $emails );
 }
 
-
 /**
  * Checks whether admin sale notices are disabled
  *
  * @since 1.5.2
- * @return bool
+ *
+ * @param int $payment_id
+ * @return mixed|void
  */
 function edd_admin_notices_disabled( $payment_id = 0 ) {
 	global $edd_options;
@@ -206,7 +207,8 @@ function edd_get_purchase_receipt_template_tags() {
 		'{name} - ' . __('The buyer\'s first name', 'edd') . '<br/>' .
 		'{fullname} - ' . __('The buyer\'s full name, first and last', 'edd') . '<br/>' .
 		'{username} - ' . __('The buyer\'s user name on the site, if they registered an account', 'edd') . '<br/>' .
-		'{user_email} - ' . __('The buyer\'s email address', 'edd') . '<br/>' .
+        '{user_email} - ' . __('The buyer\'s email address', 'edd') . '<br/>' .
+		'{billing_address} - ' . __('The buyer\'s billing address', 'edd') . '<br/>' .
 		'{date} - ' . __('The date of the purchase', 'edd') . '<br/>' .
 		'{subtotal} - ' . __('The price of the purchase before taxes', 'edd') . '<br/>' .
 		'{tax} - ' . __('The taxed amount of the purchase', 'edd') . '<br/>' .
@@ -238,6 +240,7 @@ function edd_get_sale_notification_template_tags() {
 		'{fullname} - ' . __('The buyer\'s full name, first and last', 'edd') . '<br/>' .
 		'{username} - ' . __('The buyer\'s user name on the site, if they registered an account', 'edd') . '<br/>' .
 		'{user_email} - ' . __('The buyer\'s email address', 'edd') . '<br/>' .
+		'{billing_address} - ' . __('The buyer\'s billing address', 'edd') . '<br/>' .
 		'{date} - ' . __('The date of the purchase', 'edd') . '<br/>' .
 		'{subtotal} - ' . __('The price of the purchase before taxes', 'edd') . '<br/>' .
 		'{tax} - ' . __('The taxed amount of the purchase', 'edd') . '<br/>' .

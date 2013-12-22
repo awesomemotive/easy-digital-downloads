@@ -48,6 +48,12 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_register_settings', $wp_filter['admin_init'][10] );
 	}
 
+	public function test_dashboard_widget() {
+		global $wp_filter;
+		$this->markTestIncomplete('This check kills phpunit');
+		$this->assertarrayHasKey( 'edd_register_dashboard_widgets', $wp_filter['wp_dashboard_setup'][10] );
+	}
+
 	public function test_delete_post() {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_remove_download_logs_on_delete', $wp_filter['delete_post'][10] );
@@ -97,7 +103,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 	public function test_edd_after_download_content() {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_append_purchase_link', $wp_filter['edd_after_download_content'][10] );
-		$this->assertarrayHasKey( 'edd_show_has_purchased_item_message', $wp_filter['edd_after_download_content'][10] );
 		$this->assertarrayHasKey( 'edd_show_added_to_cart_messages', $wp_filter['edd_after_download_content'][10] );
 	}
 
@@ -259,11 +264,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_trigger_purchase_delete', $wp_filter['edd_delete_payment'][10] );
 	}
 
-	public function test_edd_insert_payment() {
-		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_clear_earnings_cache', $wp_filter['edd_insert_payment'][10] );
-	}
-
 	public function test_edd_upgrade_payments() {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_update_old_payments_with_totals', $wp_filter['edd_upgrade_payments'][10] );
@@ -346,11 +346,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_send_test_email', $wp_filter['edd_send_test_email'][10] );
 	}
 
-	public function test_query_vars() {
-		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_query_vars', $wp_filter['query_vars'][10] );
-	}
-
 	public function test_edd_purchase() {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_process_purchase_form', $wp_filter['edd_purchase'][10] );
@@ -370,4 +365,5 @@ class Tests_Filters extends EDD_UnitTestCase {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_responsive_download_post_class', $wp_filter['post_class'][999] );
 	}
+
 }
