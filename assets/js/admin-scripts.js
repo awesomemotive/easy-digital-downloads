@@ -456,18 +456,28 @@ jQuery(document).ready(function ($) {
 					note : $('#edd-payment-note').val()
 				};
 				
-				$.ajax({
-					type: "POST",
-					data: postData,
-					url: ajaxurl,
-					success: function (response) {
-						$('#edd-payment-notes-inner').append( response );
-						$('.edd-no-payment-notes').hide();
-						$('#edd-payment-note').val('');
-					}
-				}).fail(function (data) {
-					console.log(data);
-				});
+				if( postData.note ) {
+
+					$.ajax({
+						type: "POST",
+						data: postData,
+						url: ajaxurl,
+						success: function (response) {
+							$('#edd-payment-notes-inner').append( response );
+							$('.edd-no-payment-notes').hide();
+							$('#edd-payment-note').val('');
+						}
+					}).fail(function (data) {
+						console.log(data);
+					});
+
+				} else {
+					var border_color = $('#edd-payment-note').css('border-color');
+					$('#edd-payment-note').css('border-color', 'red');
+					setTimeout( function() {
+						$('#edd-payment-note').css('border-color', border_color );
+					}, 500 );
+				}
 
 			});
 
