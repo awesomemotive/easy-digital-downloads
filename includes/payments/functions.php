@@ -81,17 +81,26 @@ function edd_insert_payment( $payment_data = array() ) {
 	$payment = wp_insert_post( $args );
 
 	if ( $payment ) {
+
+		$taxes    = wp_list_pluck( $payment_data['cart_details'], 'tax' );
+		$cart_tax = array_sum( $taxes );
+
 		$payment_meta = array(
 			'currency'     => $payment_data['currency'],
 			'downloads'    => serialize( $payment_data['downloads'] ),
 			'user_info'    => serialize( $payment_data['user_info'] ),
 			'cart_details' => serialize( $payment_data['cart_details'] ),
-			'tax'          => edd_is_cart_taxed() ? edd_get_cart_tax() : 0,
+			'tax'          => $cart_tax,
 		);
 
 		$mode    = edd_is_test_mode() ? 'test' : 'live';
 		$gateway = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
 		$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
+
+		if( ! $payment_data['price'] ) {
+			// Ensures the _edd_payment_total meta key is created for purchases with an amount of 0
+			$payment_data['price'] = '0.00';
+		}
 
 		// Record the payment details
 		update_post_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
@@ -530,7 +539,6 @@ function edd_get_total_sales() {
 function edd_get_total_earnings() {
 
 	$total = get_option( 'edd_earnings_total', 0 );
-
 	// If no total stored in DB, use old method of calculating total earnings
 	if( ! $total ) {
 
@@ -548,10 +556,25 @@ function edd_get_total_earnings() {
 				'fields' => 'ids'
 			) );
 
+
 			$payments = edd_get_payments( $args );
 			if ( $payments ) {
+
+				/*
+				 * If performing a purchase, we need to skip the very last payment in the database, since it calls
+				 * edd_increase_total_earnings() on completion, which results in duplicated earnings for the very
+				 * first purchase
+				 */
+				
+				$doing_purchase = did_action( 'edd_update_payment_status' );
+				$count = count( $payments );
+				$i = 1;
 				foreach ( $payments as $payment ) {
+					if( $i == $count && $doing_purchase ) {
+						break;
+					}
 					$total += edd_get_payment_amount( $payment );
+					$i++;
 				}
 			}
 

@@ -166,6 +166,13 @@ jQuery(document).ready(function($) {
 
         return false;
     });
+    
+    // Prevent the checkout form from submitting when hitting Enter in the discount field
+    $checkout_form_wrap.on('keypress', '#edd-discount', function (event) {
+        if (event.keyCode == '13') {
+            return false;
+        }
+    });
 
     // Remove a discount
     $body.on('click', '.edd_discount_remove', function (event) {
