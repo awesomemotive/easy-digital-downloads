@@ -288,7 +288,7 @@ $payment_date = strtotime( $item->post_date );
 												// Item ID is checked if isset due to the near-1.0 cart data
 												$item_id  = isset( $cart_item['id']    ) ? $cart_item['id']    : $cart_item;
 												$price    = isset( $cart_item['price'] ) ? $cart_item['price'] : false;
-												$price_id = isset( $cart_item['item_number']['options'] ) ? $cart_item['item_number']['options']['price_id'] : null;
+												$price_id = isset( $cart_item['item_number']['options']['price_id'] ) ? $cart_item['item_number']['options']['price_id'] : null;
 												$quantity = isset( $cart_item['quantity'] ) && $cart_item['quantity'] > 0 ? $cart_item['quantity'] : 1;
 
 												if( ! $price ) {
