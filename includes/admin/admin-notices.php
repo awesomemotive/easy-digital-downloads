@@ -46,7 +46,7 @@ function edd_admin_messages() {
 		add_settings_error( 'edd-notices', 'edd-payment-sent', __( 'The purchase receipt has been resent.', 'edd' ), 'updated' );
     }
 
-    if ( isset( $_GET['edd-message'] ) && 'payment_note_deleted' == $_GET['edd-message'] && current_user_can( 'view_shop_reports' ) ) {
+    if ( isset( $_GET['edd-message'] ) && 'payment-note-deleted' == $_GET['edd-message'] && current_user_can( 'view_shop_reports' ) ) {
         add_settings_error( 'edd-notices', 'edd-payment-note-deleted', __( 'The payment note has been deleted.', 'edd' ), 'updated' );
     }
 

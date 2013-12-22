@@ -111,31 +111,24 @@ $payment_date = strtotime( $item->post_date );
 						<div id="edd-payment-notes" class="postbox">
 							<h3 class="hndle"><span><?php _e( 'Payment Notes', 'edd' ); ?></span></h3>
 							<div class="inside">
-								<?php
-								$notes = edd_get_payment_notes( $payment_id );
-								if ( ! empty( $notes ) ) :
-									foreach ( $notes as $note ) :
-										if ( ! empty( $note->user_id ) ) {
-											$user = get_userdata( $note->user_id );
-											$user = $user->display_name;
-										} else {
-											$user = __( 'EDD Bot', 'edd' );
-										}
-										?>
-										<div class="edd-payment-note">
-											<p>
-												<strong><?php echo $user; ?></strong> <em><?php echo $note->comment_date; ?></em><br/>
-												<?php echo $note->comment_content; ?>
-											</p>
-										</div>
-										<?php
-									endforeach;
-								else :
-									echo '<p>'. __( 'No payment notes', 'edd' ) . '</p>';
-								endif;
-								?>
+								<div id="edd-payment-notes-inner">
+									<?php
+									$notes = edd_get_payment_notes( $payment_id );
+									if ( ! empty( $notes ) ) :
+										$no_notes_display = ' style="display:none;"';
+										foreach ( $notes as $note ) :
+											
+											echo edd_get_payment_note_html( $note, $payment_id );
+
+										endforeach;
+									else :
+										$no_notes_display = '';
+									endif;
+									echo '<p class="edd-no-payment-notes"' . $no_notes_display . '>'. __( 'No payment notes', 'edd' ) . '</p>';
+									?>
+								</div>
 								<textarea name="edd-payment-note" id="edd-payment-note" class="large-text"></textarea>
-								<span><?php _e( 'Enter a note and click Save Payment to save the note', 'edd' ); ?></span>
+								<button id="edd-add-payment-note" class="button button-secondary" data-payment-id="<?php echo absint( $payment_id ); ?>"><?php _e( 'Add Note', 'edd' ); ?></button>
 							</div><!-- /.inside -->
 						</div><!-- /#edd-payment-notes -->
 

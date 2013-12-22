@@ -996,7 +996,6 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 	return $note_id;
 }
 
-
 /**
  * Deletes a payment note
  *
@@ -1014,6 +1013,44 @@ function edd_delete_payment_note( $comment_id = 0, $payment_id = 0 ) {
 	do_action( 'edd_post_delete_payment_note', $comment_id, $payment_id );
 
 	return $ret;
+}
+
+/**
+ * Gets the payment note HTML
+ *
+ * @since 1.9
+ * @param object/int $note The comment object or ID
+ * @param int $payment_id The payment ID the note is connected to
+ * @return string
+ */
+function edd_get_payment_note_html( $note, $payment_id = 0 ) {
+
+	if( is_numeric( $note ) ) {
+		$note = get_comment( $note );
+	}
+
+	if ( ! empty( $note->user_id ) ) {
+		$user = get_userdata( $note->user_id );
+		$user = $user->display_name;
+	} else {
+		$user = __( 'EDD Bot', 'edd' );
+	}
+	$delete_note_url = wp_nonce_url( add_query_arg( array(
+		'edd-action' => 'delete_payment_note',
+		'note_id'    => $note->comment_ID,
+		'payment_id' => $payment_id
+	) ), 'edd_delete_payment_note_' . $note->comment_ID );
+
+	$note_html = '<div class="edd-payment-note" id="edd-payment-note-' . $note->comment_ID . '">';
+		$note_html .='<p>';
+			$note_html .= '<strong>' . $user . '</strong>&nbsp;<em>' . $note->comment_date . '</em><br/>';
+			$note_html .= $note->comment_content;
+			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->comment_ID ) . '" data-payment-id="' . absint( $payment_id ) . '" title="' . __( 'Delete this payment note', 'edd' ) . '">' . __( 'Delete', 'edd' ) . '</a>';
+		$note_html .= '</p>';
+	$note_html .= '</div>';
+
+	return $note_html;
+
 }
 
 /**
