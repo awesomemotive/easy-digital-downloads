@@ -65,12 +65,6 @@ $payment_date = strtotime( $item->post_date );
 							<div class="inside">
 								<div class="edd-order-totals-box edd-admin-box">
 									<?php do_action( 'edd_view_order_details_totals_before', $payment_id ); ?>
-									<div class="edd-order-discounts edd-admin-box-inside">
-										<p>
-											<span class="label"><?php _e( 'Discount Code', 'edd' ); ?></span>&nbsp;
-											<span class="right"><?php if ( isset( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) { echo '<code>' . $user_info['discount'] . '</code>'; } else { _e( 'None', 'edd' ); } ?></span>
-										</p>
-									</div>
 									<?php if ( edd_use_taxes() ) : ?>
 									<div class="edd-order-taxes edd-admin-box-inside">
 										<p>
@@ -128,7 +122,8 @@ $payment_date = strtotime( $item->post_date );
 									?>
 								</div>
 								<textarea name="edd-payment-note" id="edd-payment-note" class="large-text"></textarea>
-								<button id="edd-add-payment-note" class="button button-secondary" data-payment-id="<?php echo absint( $payment_id ); ?>"><?php _e( 'Add Note', 'edd' ); ?></button>
+								<button id="edd-add-payment-note" class="button button-secondary right" data-payment-id="<?php echo absint( $payment_id ); ?>"><?php _e( 'Add Note', 'edd' ); ?></button>
+								<div class="clear"></div>
 							</div><!-- /.inside -->
 						</div><!-- /#edd-payment-notes -->
 
@@ -146,7 +141,6 @@ $payment_date = strtotime( $item->post_date );
 							<div class="inside edd-clearfix">
 								<div class="column-container">
 									<div class="order-data-column">
-										<h4><?php _e( 'General Details', 'edd' ); ?></h4>
 										<p class="data">
 											<span><?php _e( 'Status:', 'edd' ); ?></span>&nbsp;
 											<select name="edd-payment-status">
@@ -155,6 +149,25 @@ $payment_date = strtotime( $item->post_date );
 												<?php endforeach; ?>
 											</select>
 										</p>
+										<?php
+										$gateway = edd_get_payment_gateway( $payment_id );
+										if ( $gateway ) { ?>
+										<p class="data">
+											<span><?php _e( 'Gateway:', 'edd' ); ?></span> <?php echo edd_get_gateway_admin_label( $gateway ); ?>
+										</p>
+										<?php } ?>
+									</div>
+
+									<div class="order-data-column">
+										<p class="data data-payment-key">
+											<?php _e( 'Key:', 'edd' ); ?>&nbsp;<?php echo edd_get_payment_key( $payment_id ); ?>
+										</p>
+										<p>
+											<span><?php _e( 'Discount Code', 'edd' ); ?>:</span>&nbsp;<?php if ( isset( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) { echo '<code>' . $user_info['discount'] . '</code>'; } else { _e( 'None', 'edd' ); } ?>
+										</p>
+									</div>
+
+									<div class="order-data-column">
 										<p class="data">
 											<span><?php _e( 'Date:', 'edd' ); ?></span>&nbsp;
 											<input type="text" name="edd-payment-date" value="<?php esc_attr_e( date( 'm/d/Y', $payment_date ) ); ?>" class="medium-text edd_datepicker"/>
@@ -166,11 +179,30 @@ $payment_date = strtotime( $item->post_date );
 										</p>
 									</div>
 
+
+									<?php do_action( 'edd_payment_view_details', $payment_id ); ?>
+
+								</div><!-- /.column-container -->
+
+							</div><!-- /.inside -->
+						</div><!-- /#edd-order-data -->
+
+						<div id="edd-order-data" class="postbox">
+							<h3 class="hndle">
+								<span><?php _e( 'Customer Details', 'edd' ); ?></span>
+							</h3>
+							<div class="inside edd-clearfix">
+								<div class="column-container">
+
 									<div class="order-data-column">
 										<h4><?php _e( 'Buyer\'s Personal Details', 'edd' ); ?></h4>
 										<p class="data">
 											<span><?php _e( 'Name:', 'edd' ); ?></span>&nbsp;
 											<input type="text" name="edd-payment-user-name" value="<?php esc_attr_e( $user_info['first_name'] . ' ' . $user_info['last_name'] ); ?>" class="medium-text"/>
+										</p>
+										<p class="data">
+											<span><?php _e( 'Email:', 'edd' ); ?></span>&nbsp;
+											<input type="email" name="edd-payment-user-email" value="<?php esc_attr_e( edd_get_payment_user_email( $payment_id ) ); ?>" class="medium-text"/>
 										</p>
 										<?php if( $user_id > 0 ) : ?>
 											<p class="data">
@@ -179,52 +211,31 @@ $payment_date = strtotime( $item->post_date );
 											</p>
 										<?php endif; ?>
 										<p class="data">
-											<span><?php _e( 'Email:', 'edd' ); ?></span>&nbsp;
-											<input type="email" name="edd-payment-user-email" value="<?php esc_attr_e( edd_get_payment_user_email( $payment_id ) ); ?>" class="medium-text"/>
-										</p>
-										<p class="data">
 											<span><?php _e( 'IP:', 'edd' ); ?>&nbsp;<?php echo edd_get_payment_user_ip( $payment_id ); ?></span>
 										</p>
 										<ul><?php do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info ); ?></ul>
 									</div>
 
-									<div class="order-data-column">
-										<h4><?php _e( 'Payment Details', 'edd' ); ?></h4>
-										<?php
-										$gateway = edd_get_payment_gateway( $payment_id );
-										if ( $gateway ) { ?>
-										<p class="data">
-											<span><?php _e( 'Gateway:', 'edd' ); ?></span> <?php echo edd_get_gateway_admin_label( $gateway ); ?>
-										</p>
-										<?php } ?>
-										<p class="data data-payment-key">
-											<?php _e( 'Key:', 'edd' ); ?>&nbsp;<?php echo edd_get_payment_key( $payment_id ); ?>
-										</p>
-									</div>
-
-									<div class="order-data-column" id="edd-order-address">
+									<div class="order-data-column order-data-column-wide" id="edd-order-address">
 
 										<h4><span><?php _e( 'Billing Address', 'edd' ); ?></span></h4>
 										<div class="order-data-address">
 											<div class="data">
 												<div>
-													<span class="order-data-address-line"><?php echo _x( 'Line 1:', 'First address line', 'edd' ); ?></span>&nbsp;
-													<input type="text" name="edd-payment-address[0][line1]" value="<?php esc_attr_e( $user_info['address']['line1'] ); ?>" class="medium-text"/>
+													<input type="text" name="edd-payment-address[0][line1]" value="<?php esc_attr_e( $user_info['address']['line1'] ); ?>" class="medium-text"/><br/>
+													<input type="text" name="edd-payment-address[0][line2]" value="<?php esc_attr_e( $user_info['address']['line2'] ); ?>" class="medium-text"/><br/>
+													<span class="order-data-address-line"><?php _e( 'Street Address', 'edd' ); ?></span>
 												</div>
 												<div>
-													<span class="order-data-address-line"><?php echo _x( 'Line 2:', 'Second address line', 'edd' ); ?></span>&nbsp;
-													<input type="text" name="edd-payment-address[0][line2]" value="<?php esc_attr_e( $user_info['address']['line2'] ); ?>" class="medium-text"/>
+													<input type="text" name="edd-payment-address[0][city]" value="<?php esc_attr_e( $user_info['address']['city'] ); ?>" class="medium-text"/><br/>
+													<span class="order-data-address-line"><?php echo _x( 'City:', 'Address City', 'edd' ); ?></span>
 												</div>
 												<div>
-													<span class="order-data-address-line"><?php echo _x( 'City:', 'Address City', 'edd' ); ?></span>&nbsp;
-													<input type="text" name="edd-payment-address[0][city]" value="<?php esc_attr_e( $user_info['address']['city'] ); ?>" class="medium-text"/>
-												</div>
-												<div>
-													<span class="order-data-address-line"><?php echo _x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'edd' ); ?></span>&nbsp;
-													<input type="text" name="edd-payment-address[0][zip]" value="<?php esc_attr_e( $user_info['address']['zip'] ); ?>" class="medium-text"/>
+													<input type="text" name="edd-payment-address[0][zip]" value="<?php esc_attr_e( $user_info['address']['zip'] ); ?>" class="medium-text"/><br/>
+													<span class="order-data-address-line"><?php echo _x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'edd' ); ?></span>
 												</div>
 												<div id="edd-order-address-state-wrap">
-													<span class="order-data-address-line"><?php echo _x( 'State / Province:', 'State / province of address', 'edd' ); ?></span>&nbsp;
+													<span class="order-data-address-line"><?php echo _x( 'State / Province:', 'State / province of address', 'edd' ); ?></span>
 													<?php
 													$states = edd_get_shop_states( $user_info['address']['country'] );
 													if( ! empty( $states ) ) {
