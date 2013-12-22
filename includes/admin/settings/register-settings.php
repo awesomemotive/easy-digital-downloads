@@ -610,13 +610,15 @@ function edd_get_registered_settings() {
 					'id' => 'checkout_label',
 					'name' => __( 'Complete Purchase Text', 'edd' ),
 					'desc' => __( 'The button label for completing a purchase.', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std' => __( 'Purchase', 'edd' )
 				),
 				'add_to_cart_text' => array(
 					'id' => 'add_to_cart_text',
 					'name' => __( 'Add to Cart Text', 'edd' ),
 					'desc' => __( 'Text shown on the Add to Cart Buttons', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std'  => __( 'Add to Cart', 'edd' )
 				)
 			)
 		)
