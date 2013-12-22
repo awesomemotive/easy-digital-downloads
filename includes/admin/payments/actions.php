@@ -134,3 +134,65 @@ function edd_update_payment_details( $data ) {
 	exit;
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
+
+function edd_ajax_store_payment_note() {
+
+	$payment_id = absint( $_POST['payment_id'] );
+	$note       = wp_kses( $_POST['note'], array() );
+
+	if( empty( $payment_id ) )
+		die( '-1' );
+
+	if( empty( $note ) )
+		die( '-1' );
+
+	$note_id = edd_insert_payment_note( $payment_id, $note );
+	die( edd_get_payment_note_html( $note_id ) );
+}
+add_action( 'wp_ajax_edd_insert_payment_note', 'edd_ajax_store_payment_note' );
+
+/**
+ * Triggers a payment note deletion without ajax
+ *
+ * @since 1.6
+ * @param array $data Arguments passed
+ * @return void
+*/
+function edd_trigger_payment_note_deletion( $data ) {
+
+	if( ! wp_verify_nonce( $data['_wpnonce'], 'edd_delete_payment_note_' . $data['note_id'] ) )
+		return;
+
+	if( ! current_user_can( 'edit_shop_payment', $data['payment_id' ] ) ) {
+		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ) );
+	}
+
+	$edit_order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=payment-note-deleted&id=' . absint( $data['payment_id'] ) );
+
+	edd_delete_payment_note( $data['note_id'], $data['payment_id'] );
+
+	wp_redirect( $edit_order_url );
+}
+add_action( 'edd_delete_payment_note', 'edd_trigger_payment_note_deletion' );
+
+/**
+ * Delete a payment note deletion with ajax
+ *
+ * @since 1.6
+ * @param array $data Arguments passed
+ * @return void
+*/
+function edd_ajax_delete_payment_note() {
+
+	if( ! current_user_can( 'edit_shop_payment', $_POST['payment_id' ] ) ) {
+		wp_die( __( 'You do not have permission to edit this payment record', 'edd' ), __( 'Error', 'edd' ) );
+	}
+
+	if( edd_delete_payment_note( $_POST['note_id'], $_POST['payment_id'] ) ) {
+		die( '1' );
+	} else {
+		die( '-1' );
+	}
+
+}
+add_action( 'wp_ajax_edd_delete_payment_note', 'edd_ajax_delete_payment_note' );

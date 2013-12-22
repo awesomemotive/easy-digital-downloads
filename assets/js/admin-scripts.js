@@ -283,7 +283,8 @@ jQuery(document).ready(function ($) {
 			this.recalculate_total();
 			this.variable_prices_check();
 			this.status_change();
-			this.notes();
+			this.add_note();
+			this.remove_note();
 		},
 
 
@@ -445,13 +446,64 @@ jQuery(document).ready(function ($) {
 
 		},
 
-		notes : function() {
+		add_note : function() {
 
-			$('.edd-delete-payment-note').on('click', function() {
+			$('#edd-add-payment-note').on('click', function(e) {
+				e.preventDefault();
+				var postData = {
+					action : 'edd_insert_payment_note',
+					payment_id : $(this).data('payment-id'),
+					note : $('#edd-payment-note').val()
+				};
+				
+				$.ajax({
+					type: "POST",
+					data: postData,
+					url: ajaxurl,
+					success: function (response) {
+						$('#edd-payment-notes-inner').append( response );
+						$('.edd-no-payment-notes').hide();
+						$('#edd-payment-note').val('');
+					}
+				}).fail(function (data) {
+					console.log(data);
+				});
+
+			});
+
+		},
+
+		remove_note : function() {
+
+			$('body').on('click', '.edd-delete-payment-note', function(e) {
+
+				e.preventDefault();
+
 				if( confirm( edd_vars.delete_payment_note) ) {
+					
+					var postData = {
+						action : 'edd_delete_payment_note',
+						payment_id : $(this).data('payment-id'),
+						note_id : $(this).data('note-id')
+					};
+					
+					$.ajax({
+						type: "POST",
+						data: postData,
+						url: ajaxurl,
+						success: function (response) {
+							$('#edd-payment-note-' + postData.note_id ).remove();
+							if( ! $('.edd-payment-note').length ) {
+								$('.edd-no-payment-notes').show();
+							}
+							return false;
+						}
+					}).fail(function (data) {
+						console.log(data);
+					});
 					return true;
 				}
-				return false;
+
 			});
 
 		}
