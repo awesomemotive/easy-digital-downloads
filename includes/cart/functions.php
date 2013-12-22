@@ -575,10 +575,16 @@ function edd_get_cart_subtotal() {
 	if( $items ) {
 
 		$prices   = wp_list_pluck( $items, 'subtotal' );
-		$subtotal = array_sum( $prices );
 
-		if( $subtotal < 0 )
+		if( is_array( $prices ) ) {
+			$subtotal = array_sum( $prices );
+		} else {
 			$subtotal = 0.00;
+		}
+
+		if( $subtotal < 0 ) {
+			$subtotal = 0.00;
+		}
 
 	}
 
@@ -712,9 +718,18 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
  */
 function edd_get_cart_tax() {
 
+	$cart_tax = 0;
 	$items    = edd_get_cart_content_details();
-	$taxes    = wp_list_pluck( $items, 'tax' );
-	$cart_tax = array_sum( $taxes );
+
+	if( $items ) {
+
+		$taxes    = wp_list_pluck( $items, 'tax' );
+
+		if( is_array( $taxes ) ) {
+			$cart_tax = array_sum( $taxes );	
+		}
+		
+	}
 
 	return apply_filters( 'edd_get_cart_tax', $cart_tax );
 }
@@ -988,7 +1003,7 @@ function edd_is_cart_saved() {
 			return false;
 
 		// Check that the saved cart is not the same as the current cart
-		if ( stripslashes( maybe_unserialize( $_COOKIE['edd_saved_cart'] ) ) === EDD()->session->get( 'edd_cart' ) )
+		if ( maybe_unserialize( stripslashes( $_COOKIE['edd_saved_cart'] ) ) === EDD()->session->get( 'edd_cart' ) )
 			return false;
 
 		return true;

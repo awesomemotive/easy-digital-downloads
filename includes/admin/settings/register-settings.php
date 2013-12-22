@@ -304,25 +304,29 @@ function edd_get_registered_settings() {
 					'id' => 'from_name',
 					'name' => __( 'From Name', 'edd' ),
 					'desc' => __( 'The name purchase receipts are said to come from. This should probably be your site or shop name.', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std'  => get_bloginfo( 'name' )
 				),
 				'from_email' => array(
 					'id' => 'from_email',
 					'name' => __( 'From Email', 'edd' ),
 					'desc' => __( 'Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std'  => get_bloginfo( 'admin_email' )
 				),
 				'purchase_subject' => array(
 					'id' => 'purchase_subject',
 					'name' => __( 'Purchase Email Subject', 'edd' ),
 					'desc' => __( 'Enter the subject line for the purchase receipt email', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std'  => __( 'Purchase Receipt', 'edd' )
 				),
 				'purchase_receipt' => array(
 					'id' => 'purchase_receipt',
 					'name' => __( 'Purchase Receipt', 'edd' ),
-					'desc' => edd_get_purchase_receipt_template_tags(),
-					'type' => 'rich_editor'
+					'desc' => __('Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:', 'edd') . '<br/>' . edd_get_emails_tags_list(),
+					'type' => 'rich_editor',
+					'std'  => __( "Dear", "edd" ) . " {name},\n\n" . __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "edd" ) . "\n\n{download_list}\n\n{sitename}"
 				),
 				'sale_notification_header' => array(
 					'id' => 'sale_notification_header',
@@ -340,7 +344,7 @@ function edd_get_registered_settings() {
 				'sale_notification' => array(
 					'id' => 'sale_notification',
 					'name' => __( 'Sale Notification', 'edd' ),
-					'desc' => edd_get_sale_notification_template_tags(),
+					'desc' => __( 'Enter the email that is sent to sale notification emails after completion of a purchase. HTML is accepted. Available template tags:', 'edd' ) . '<br/>' . edd_get_emails_tags_list(),
 					'type' => 'rich_editor',
 					'std' => edd_get_default_sale_notification_email()
 				),
@@ -1047,7 +1051,8 @@ function edd_tax_rates_callback($args) {
 						'name'             => 'tax_rates[' . $key . '][country]',
 						'selected'         => $rate['country'],
 						'show_option_all'  => false,
-						'show_option_none' => false
+						'show_option_none' => false,
+						'class'            => 'edd-select edd-tax-country'
 					) );
 					?>
 				</td>
@@ -1083,7 +1088,8 @@ function edd_tax_rates_callback($args) {
 						'options'          => edd_get_country_list(),
 						'name'             => 'tax_rates[0][country]',
 						'show_option_all'  => false,
-						'show_option_none' => false
+						'show_option_none' => false,
+						'class'            => 'edd-select edd-tax-country'
 					) ); ?>
 				</td>
 				<td class="edd_tax_state">
@@ -1295,3 +1301,14 @@ function edd_get_settings_tabs() {
 
 	return apply_filters( 'edd_settings_tabs', $tabs );
 }
+
+/**
+ * Set manage_shop_settings as the cap required to save EDD settings pages
+ *
+ * @since 1.9
+ * @return string capability required
+ */
+function edd_set_settings_cap() {
+	return 'manage_shop_settings';
+}
+add_filter( 'option_page_capability_edd_settings', 'edd_set_settings_cap' );

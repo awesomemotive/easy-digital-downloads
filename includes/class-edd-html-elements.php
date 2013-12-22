@@ -89,7 +89,7 @@ class EDD_HTML_Elements {
 			'selected'         => $selected,
 			'options'          => $options,
 			'show_option_all'  => false,
-			'show_option_none' => false
+			'show_option_none' => false,
 		) );
 
 		return $output;
@@ -213,7 +213,7 @@ class EDD_HTML_Elements {
 
 		if ( ! empty( $args[ 'options' ] ) ) {
 			if ( $args[ 'show_option_all' ] )
-				$output .= '<option value="0"' . selected( $args['selected'], 0, false ) . '>' . esc_html( $args[ 'show_option_all' ] ) . '</option>';
+				$output .= '<option value="all"' . selected( $args['selected'], 0, false ) . '>' . esc_html( $args[ 'show_option_all' ] ) . '</option>';
 
 			if ( $args[ 'show_option_none' ] )
 				$output .= '<option value="-1"' . selected( $args['selected'], -1, false ) . '>' . esc_html( $args[ 'show_option_none' ] ) . '</option>';
