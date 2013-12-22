@@ -173,17 +173,22 @@ class EDD_Stats {
 				case 'yesterday' :
 
 					$day = date( 'd', current_time( 'timestamp' ) ) - 1;
+					
+					// Check if Today is the first day of the month (meaning subtracting one will get us 0)
 					if( $day < 1 ) {
 
-						// Today is the first day of the month
+						// If current month is 1
 						if( 1 == $month ) {
 
 							$year -= 1; // Today is January 1, so skip back to December
 							$month -= 1;
+
+							// Get the last day of the month
 							$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 
 						} else {
 
+							// Get the last day of the month
 							$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 
 						}
@@ -402,12 +407,12 @@ class EDD_Stats {
 		$start_where = '';
 		$end_where   = '';
 
-		if( $this->start_date ) {
+		if( ! empty( $this->start_date ) && ! is_wp_error( $this->start_date ) ) {
 			$start_date  = date( 'Y-m-d 00:00:00', $this->start_date );
 			$start_where = " AND p.post_date >= '{$start_date}'";
 		}
 
-		if( $this->end_date ) {
+		if( ! empty( $this->end_date ) && ! is_wp_error( $this->end_date ) ) {
 			$end_date  = date( 'Y-m-d 23:59:59', $this->end_date );
 			$end_where = " AND p.post_date <= '{$end_date}'";
 		}
@@ -431,12 +436,12 @@ class EDD_Stats {
 		$start_where = '';
 		$end_where   = '';
 
-		if( $this->start_date ) {
+		if( ! empty( $this->start_date ) && ! is_wp_error( $this->start_date ) ) {
 			$start_date  = date( 'Y-m-d 00:00:00', $this->start_date );
 			$start_where = " AND $wpdb->posts.post_date >= '{$start_date}'";
 		}
 
-		if( $this->end_date ) {
+		if( ! empty( $this->end_date ) && ! is_wp_error( $this->end_date ) ) {
 			$end_date  = date( 'Y-m-d 23:59:59', $this->end_date );
 			$end_where = " AND $wpdb->posts.post_date <= '{$end_date}'";
 		}

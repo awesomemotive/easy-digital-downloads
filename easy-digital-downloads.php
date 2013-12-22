@@ -48,14 +48,6 @@ final class Easy_Digital_Downloads {
 	private static $instance;
 
 	/**
-	 *  EDD User Roles and Capabilities Object
-	 *
-	 * @var object
-	 * @since 1.4.4
-	 */
-	public $roles;
-
-	/**
 	 * EDD Cart Fees Object
 	 *
 	 * @var object
@@ -91,6 +83,14 @@ final class Easy_Digital_Downloads {
 	public $html;
 
 	/**
+	 * EDD Email Template Tags Object
+	 *
+	 * @var object
+	 * @since 1.9
+	 */
+	public $email_tags;
+
+	/**
 	 * Main Easy_Digital_Downloads Instance
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
@@ -111,11 +111,12 @@ final class Easy_Digital_Downloads {
 			self::$instance->setup_constants();
 			self::$instance->includes();
 			self::$instance->load_textdomain();
-			self::$instance->roles = new EDD_Roles();
-			self::$instance->fees = new EDD_Fees();
-			self::$instance->api = new EDD_API();
+			self::$instance->roles   = new EDD_Roles();
+			self::$instance->fees    = new EDD_Fees();
+			self::$instance->api     = new EDD_API();
 			self::$instance->session = new EDD_Session();
-			self::$instance->html = new EDD_HTML_Elements();
+			self::$instance->html    = new EDD_HTML_Elements();
+			self::$instance->email_tags = new EDD_Email_Template_Tags();
 		}
 		return self::$instance;
 	}
@@ -203,6 +204,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cron.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-license-handler.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-session.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-stats.php';
@@ -228,6 +230,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/emails/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/emails/actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/emails/email-tags.php';
 		require_once EDD_PLUGIN_DIR . 'includes/error-tracking.php';
 		require_once EDD_PLUGIN_DIR . 'includes/user-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
@@ -237,6 +240,7 @@ final class Easy_Digital_Downloads {
 
 		if( is_admin() ) {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-footer.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-notices.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
@@ -255,6 +259,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/contextual-help.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/pdf-reports.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-graph.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';

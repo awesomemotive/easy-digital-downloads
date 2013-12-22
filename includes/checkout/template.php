@@ -255,27 +255,49 @@ function edd_default_cc_address_fields() {
 		<span><legend><?php _e( 'Billing Details', 'edd' ); ?></legend></span>
 		<?php do_action( 'edd_cc_billing_top' ); ?>
 		<p id="edd-card-address-wrap">
-			<label for="card_address" class="edd-label"><?php _e( 'Billing Address', 'edd' ); ?></label>
+			<label for="card_address" class="edd-label">
+				<?php _e( 'Billing Address', 'edd' ); ?>
+				<?php if( edd_field_is_required( 'card_address' ) ) { ?>
+					<span class="edd-required-indicator">*</span>
+				<?php } ?>
+			</label>
 			<span class="edd-description"><?php _e( 'The primary billing address for your credit card.', 'edd' ); ?></span>
 			<input type="text" id="card_address" name="card_address" class="card-address edd-input required" placeholder="<?php _e( 'Address line 1', 'edd' ); ?>" value="<?php echo $line1; ?>"/>
 		</p>
 		<p id="edd-card-address-2-wrap">
-			<label for="card_address_2" class="edd-label"><?php _e( 'Billing Address Line 2 (optional)', 'edd' ); ?></label>
+			<label for="card_address_2" class="edd-label">
+				<?php _e( 'Billing Address Line 2 (optional)', 'edd' ); ?>
+			</label>
 			<span class="edd-description"><?php _e( 'The suite, apt no, PO box, etc, associated with your billing address.', 'edd' ); ?></span>
 			<input type="text" id="card_address_2" name="card_address_2" class="card-address-2 edd-input" placeholder="<?php _e( 'Address line 2', 'edd' ); ?>" value="<?php echo $line2; ?>"/>
 		</p>
 		<p id="edd-card-city-wrap">
-			<label for="card_city" class="edd-label"><?php _e( 'Billing City', 'edd' ); ?></label>
+			<label for="card_city" class="edd-label">
+				<?php _e( 'Billing City', 'edd' ); ?>
+				<?php if( edd_field_is_required( 'card_city' ) ) { ?>
+					<span class="edd-required-indicator">*</span>
+				<?php } ?>
+			</label>
 			<span class="edd-description"><?php _e( 'The city for your billing address.', 'edd' ); ?></span>
 			<input type="text" id="card_city" name="card_city" class="card-city edd-input required" placeholder="<?php _e( 'City', 'edd' ); ?>" value="<?php echo $city; ?>"/>
 		</p>
 		<p id="edd-card-zip-wrap">
-			<label for="card_zip" class="edd-label"><?php _e( 'Billing Zip / Postal Code', 'edd' ); ?></label>
+			<label for="card_zip" class="edd-label">
+				<?php _e( 'Billing Zip / Postal Code', 'edd' ); ?>
+				<?php if( edd_field_is_required( 'card_zip' ) ) { ?>
+					<span class="edd-required-indicator">*</span>
+				<?php } ?>
+			</label>
 			<span class="edd-description"><?php _e( 'The zip or postal code for your billing address.', 'edd' ); ?></span>
 			<input type="text" size="4" name="card_zip" class="card-zip edd-input required" placeholder="<?php _e( 'Zip / Postal code', 'edd' ); ?>" value="<?php echo $zip; ?>"/>
 		</p>
 		<p id="edd-card-country-wrap">
-			<label for="billing_country" class="edd-label"><?php _e( 'Billing Country', 'edd' ); ?></label>
+			<label for="billing_country" class="edd-label">
+				<?php _e( 'Billing Country', 'edd' ); ?>
+				<?php if( edd_field_is_required( 'billing_country' ) ) { ?>
+					<span class="edd-required-indicator">*</span>
+				<?php } ?>
+			</label>
 			<span class="edd-description"><?php _e( 'The country for your billing address.', 'edd' ); ?></span>
 			<select id="billing_country" name="billing_country" id="billing_country" class="billing_country edd-select required">
 				<?php
@@ -294,7 +316,12 @@ function edd_default_cc_address_fields() {
 			</select>
 		</p>
 		<p id="edd-card-state-wrap">
-			<label for="card_state" class="edd-label"><?php _e( 'Billing State / Province', 'edd' ); ?></label>
+			<label for="card_state" class="edd-label">
+				<?php _e( 'Billing State / Province', 'edd' ); ?>
+				<?php if( edd_field_is_required( 'card_state' ) ) { ?>
+					<span class="edd-required-indicator">*</span>
+				<?php } ?>
+			</label>
 			<span class="edd-description"><?php _e( 'The state or province for your billing address.', 'edd' ); ?></span>
             <?php
             $selected_state = edd_get_shop_state();
@@ -416,6 +443,12 @@ add_action( 'edd_purchase_form_register_fields', 'edd_get_register_fields' );
  * @return string
  */
 function edd_get_login_fields() {
+	global $edd_options;
+
+	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
+	$color = ( $color == 'inherit' ) ? '' : $color;
+	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
+
 	ob_start(); ?>
 		<fieldset id="edd_login_fields">
 			<p id="edd-new-account-wrap">
@@ -433,6 +466,9 @@ function edd_get_login_fields() {
 				<label class="edd-label" for="edd-password"><?php _e( 'Password', 'edd' ); ?></label>
 				<input class="<?php if(edd_no_guest_checkout()) { echo 'required '; } ?>edd-input" type="password" name="edd_user_pass" id="edd_user_pass" placeholder="<?php _e( 'Your password', 'edd' ); ?>"/>
 				<input type="hidden" name="edd-purchase-var" value="needs-to-login"/>
+			</p>
+			<p id="edd-user-login-submit">
+				<input type="submit" class="edd-submit button <?php echo $color; ?>" name="edd_login_submit" value="<?php _e( 'Login', 'edd' ); ?>"/>
 			</p>
 			<?php do_action('edd_checkout_login_fields_after'); ?>
 		</fieldset><!--end #edd_login_fields-->
@@ -601,7 +637,7 @@ function edd_checkout_final_total() {
 ?>
 <p id="edd_final_total_wrap">
 	<strong><?php _e( 'Purchase Total:', 'edd' ); ?></strong>
-	<span class="edd_cart_amount" data-subtotal="<?php echo edd_get_cart_amount( false ); ?>" data-total="<?php echo edd_get_cart_amount( true, true ); ?>"><?php edd_cart_total(); ?></span>
+	<span class="edd_cart_amount" data-subtotal="<?php echo edd_get_cart_subtotal(); ?>" data-total="<?php echo edd_get_cart_subtotal(); ?>"><?php edd_cart_total(); ?></span>
 </p>
 <?php
 }
@@ -733,6 +769,6 @@ function edd_checkout_hidden_fields() {
  * @since 1.8.6
  * @return boolean
 */
-function edd_receipt_show_download_files( $item_id ) {
-	return apply_filters( 'edd_receipt_show_download_files', true, $item_id );
+function edd_receipt_show_download_files( $item_id, $receipt_args ) {
+	return apply_filters( 'edd_receipt_show_download_files', true, $item_id, $receipt_args );
 }
