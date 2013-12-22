@@ -88,6 +88,8 @@ function edd_ajax_add_to_cart() {
 			}
 		}
 
+		$items = '';
+
 		foreach ( $to_add as $options ) {
 
 			if( $_POST['download_id'] == $options['price_id'] )
@@ -100,16 +102,17 @@ function edd_ajax_add_to_cart() {
 				'options' => $options
 			);
 
-			$item = apply_filters( 'edd_ajax_pre_cart_item_template', $item );
-
-			$return = array(
-				'subtotal'  => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
-				'cart_item' => html_entity_decode( edd_get_cart_item_template( $key, $item, true ), ENT_COMPAT, 'UTF-8' )
-			);
-
-			echo json_encode( $return );
+			$item   = apply_filters( 'edd_ajax_pre_cart_item_template', $item );
+			$items .= html_entity_decode( edd_get_cart_item_template( $key, $item, true ), ENT_COMPAT, 'UTF-8' );
 
 		}
+
+		$return = array(
+			'subtotal'  => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+			'cart_item' => $items
+		);
+
+		echo json_encode( $return );
 	}
 	edd_die();
 }

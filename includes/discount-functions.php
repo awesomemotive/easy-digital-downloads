@@ -921,9 +921,17 @@ function edd_cart_has_discounts() {
  */
 function edd_get_cart_discounted_amount( $discounts = false ) {
 	
-	$items     = edd_get_cart_content_details();
-	$discounts = wp_list_pluck( $items, 'discount' );
-	$amount    = array_sum( $discounts );
+	$amount = 0;
+	$items  = edd_get_cart_content_details();
+	if( $items ) {
+
+		$discounts = wp_list_pluck( $items, 'discount' );
+		
+		if( is_array( $discounts ) ) {
+			$amount = array_sum( $discounts );
+		}
+		
+	}
 
 	return apply_filters( 'edd_get_cart_discounted_amount', $amount );
 }

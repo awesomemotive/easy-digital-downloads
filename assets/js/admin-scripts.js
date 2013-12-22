@@ -113,18 +113,14 @@ jQuery(document).ready(function ($) {
 		type : function() {
 
 			$( 'body' ).on( 'change', '#_edd_product_type', function(e) {
-				$( '#edd_download_files' ).toggle();
-				$( '#edd_products' ).toggle();
-				$( '#edd_download_limit_wrap' ).toggle();
+				$( '#edd_download_files,#edd_products,#edd_download_limit_wrap' ).toggle();
 			});
 
 		},
 
 		prices : function() {
 			$( 'body' ).on( 'change', '#edd_variable_pricing', function(e) {
-				$( '.edd_pricing_fields' ).toggle();
-				$( '.edd_repeatable_condition_field' ).toggle();
-				$( '#edd_download_files table .pricing' ).toggle();
+				$( '.edd_pricing_fields,.edd_repeatable_table .pricing' ).toggle();
 			});
 		},
 
@@ -645,7 +641,7 @@ jQuery(document).ready(function ($) {
 			});
 
 			// Update tax rate state field based on selected rate country
-			$('body').on('change', '#edd_tax_rates select', function() {
+			$('body').on('change', '#edd_tax_rates select.edd-tax-country', function() {
 				var $this = $(this);
 				data = {
 					action: 'edd_get_shop_states',
