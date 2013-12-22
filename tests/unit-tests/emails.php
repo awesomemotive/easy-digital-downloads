@@ -13,9 +13,24 @@ class Tests_Emails extends EDD_UnitTestCase {
 		parent::tearDown();
 	}
 
+	/**
+     * Test that each of the actions are added and each hooked in with the right priority
+     */
+	public function test_email_actions() {
+		global $wp_filter;
+		$this->assertarrayHasKey( 'edd_admin_email_notice',       $wp_filter['edd_admin_sale_notice'][10]  );
+		$this->assertarrayHasKey( 'edd_trigger_purchase_receipt', $wp_filter['edd_complete_purchase'][999] );
+		$this->assertarrayHasKey( 'edd_resend_purchase_receipt',  $wp_filter['edd_email_links'][10]        );
+		$this->assertarrayHasKey( 'edd_send_test_email',          $wp_filter['edd_send_test_email'][10]    );
+	}
+
 	public function test_admin_notice_emails() {
 		$expected = array( 'admin@example.org' );
 		$this->assertEquals( $expected, edd_get_admin_notice_emails() );
+	}
+
+	public function test_admin_notice_disabled() {
+		$this->assertFalse( edd_admin_notices_disabled() );
 	}
 
 	public function test_email_templates() {
@@ -58,7 +73,7 @@ class Tests_Emails extends EDD_UnitTestCase {
 			'edd_price' => '0.00',
 			'_variable_pricing' => 1,
 			'_edd_price_options_mode' => 'on',
-			'edd_variable_prices' => array_values( $_variable_pricing ), 
+			'edd_variable_prices' => array_values( $_variable_pricing ),
 			'edd_download_files' => array_values( $_download_files ),
 			'_edd_download_limit' => 20,
 			'_edd_hide_purchase_link' => 1,
@@ -155,10 +170,10 @@ Hey {fullname},
 
 {receipt_link}
 DATA;
-		
+
 		$this->assertContains( 'Hey Network Administrator', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
 		$this->assertContains( '<ul><li>Test Download&nbsp;&ndash;&nbsp;Advanced<br/><ul><li>', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
-		$this->markTestIncomplete('This needs to be rewritten per #600');
+		$this->markTestIncomplete('This needs to be rewritten');
 		//$this->assertContains( 'File 1</a></li><li>', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
 		$this->assertContains( 'File 2</a></li></ul> &mdash; <small>Purchase Notes</small></li></ul>', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
 		$this->assertContains( 'http://example.org', edd_email_template_tags( $message, $purchase_data, $payment_id ) );
@@ -228,4 +243,22 @@ DATA;
 
 		$this->assertEquals( $expected, edd_email_default_formatting($message) );
 	}
+
+
+	public function test_edd_get_purchase_receipt_template_tags() {
+		$this->markTestIncomplete('This needs to be rwritten once #1451 is completed');
+	}
+
+	public function test_edd_get_sale_notification_template_tags() {
+		$this->markTestIncomplete('This needs to be rwritten once #1451 is completed');
+	}
+
+	public function test_edd_get_default_sale_notification_email() {
+		$this->assertContains( 'Hello', edd_get_default_sale_notification_email() );
+		$this->assertContains( 'A Downloads purchase has been made', edd_get_default_sale_notification_email() );
+		$this->assertContains( 'Downloads sold:', edd_get_default_sale_notification_email() );
+		$this->assertContains( '{download_list}', edd_get_default_sale_notification_email() );
+		$this->assertContains( 'Amount:  {price}', edd_get_default_sale_notification_email() );
+	}
+
 }

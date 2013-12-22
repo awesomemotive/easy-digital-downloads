@@ -44,7 +44,7 @@ class Test_Gateways extends EDD_UnitTestCase {
 
 	public function test_get_gateway_checkout_label() {
 		$this->assertEquals( 'paypal', edd_get_gateway_checkout_label( 'paypal' ) );
-		$this->assertEquals( 'manual', edd_get_gateway_checkout_label( 'manual' ) );
+		$this->assertEquals( 'Free Purchase', edd_get_gateway_checkout_label( 'manual' ) );
 	}
 
 	public function test_show_gateways() {

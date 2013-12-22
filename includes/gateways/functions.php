@@ -96,7 +96,16 @@ function edd_get_default_gateway() {
  */
 function edd_get_gateway_admin_label( $gateway ) {
 	$gateways = edd_get_enabled_payment_gateways();
-	return isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['admin_label'] : $gateway;
+	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['admin_label'] : $gateway;
+	$payment  = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : false;
+
+	if( $gateway == 'manual' && $payment ) {
+		if( edd_get_payment_amount( $payment ) == 0 ) {
+			$label = __( 'Free Purchase', 'edd' );
+		}
+	}
+
+	return apply_filters( 'edd_gateway_admin_label', $label, $gateway );
 }
 
 /**
@@ -108,7 +117,13 @@ function edd_get_gateway_admin_label( $gateway ) {
  */
 function edd_get_gateway_checkout_label( $gateway ) {
 	$gateways = edd_get_enabled_payment_gateways();
-	return isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['checkout_label'] : $gateway;
+	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['checkout_label'] : $gateway;
+
+	if( $gateway == 'manual' ) {
+		$label = __( 'Free Purchase', 'edd' );
+	}
+
+	return apply_filters( 'edd_gateway_checkout_label', $label, $gateway );
 }
 
 /**
@@ -162,22 +177,37 @@ function edd_shop_supports_buy_now() {
  * Build the purchase data for a straight-to-gateway purchase button
  *
  * @since 1.7
- * @return array
+ *
+ * @param int   $download_id
+ * @param array $options
+ * @return mixed|void
  */
 function edd_build_straight_to_gateway_data( $download_id = 0, $options = array() ) {
 
 	$price_options = array();
+
 	if( empty( $options ) || ! edd_has_variable_prices( $download_id ) ) {
 		$price = edd_get_download_price( $download_id );
 	} else {
-		foreach ( $options['price_id'] as $price_id ) {
-			$prices = edd_get_variable_prices( $download_id );
-			$price_options = array(
-				'price_id' => $price_id,
-				'amount'   => $prices[ $price_id ]['amount']
-			);
-			$price  = $prices[ $price_id ]['amount'];
+			
+		if( is_array( $options['price_id'] ) ) {
+			$price_id = $options['price_id'][0];
+		} else {
+			$price_id = $options['price_id'];
 		}
+
+		$prices = edd_get_variable_prices( $download_id );
+
+		// Make sure a valid price ID was supplied
+		if( ! isset( $prices[ $price_id ] ) ) {
+			wp_die( __( 'The requested price ID does not exist.', 'edd' ), __( 'Error', 'edd' ) );
+		}
+
+		$price_options = array(
+			'price_id' => $price_id,
+			'amount'   => $prices[ $price_id ]['amount']
+		);
+		$price  = $prices[ $price_id ]['amount'];
 	}
 
 	// Set up Downloads array
@@ -324,11 +354,13 @@ function edd_record_gateway_error( $title = '', $message = '', $parent = 0 ) {
 	return edd_record_log( $title, $message, $parent, 'gateway_error' );
 }
 
-
 /**
  * Counts the number of purchases made with a gateway
  *
  * @since 1.6
+ *
+ * @param string $gateway_id
+ * @param string $status
  * @return int
  */
 function edd_count_sales_by_gateway( $gateway_id = 'paypal', $status = 'publish' ) {

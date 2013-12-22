@@ -438,7 +438,7 @@ function edd_get_report_dates() {
 		break;
 
 		case 'last_month' :
-			if( $dates['m_start'] == 12 ) {
+			if( $dates['m_start'] == 1 ) {
 				$dates['m_start'] = 12;
 				$dates['m_end']	  = 12;
 				$dates['year']    = date( 'Y' ) - 1;
@@ -557,8 +557,9 @@ function edd_get_report_dates() {
  * Grabs all of the selected date info and then redirects appropriately
  *
  * @since 1.3
- * @return void
-*/
+ *
+ * @param $data
+ */
 function edd_parse_report_dates( $data ) {
 	$dates = edd_get_report_dates();
 

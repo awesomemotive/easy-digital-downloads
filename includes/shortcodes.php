@@ -73,7 +73,7 @@ add_shortcode( 'download_history', 'edd_download_history' );
 /**
  * Purchase History Shortcode
  *
- * Displays a user's purchsae history.
+ * Displays a user's purchase history.
  *
  * @since 1.0
  * @return string
@@ -349,10 +349,11 @@ function edd_downloads_query( $atts, $content = null ) {
 	$downloads = new WP_Query( $query );
 	if ( $downloads->have_posts() ) :
 		$i = 1;
+		$wrapper_class = 'edd_download_columns_' . $columns;
 		ob_start(); ?>
-		<div class="edd_downloads_list">
+		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_class, $atts ); ?>">
 			<?php while ( $downloads->have_posts() ) : $downloads->the_post(); ?>
-				<div itemscope itemtype="http://schema.org/Product" class="edd_download" id="edd_download_<?php echo get_the_ID(); ?>" style="width: <?php echo $column_width; ?>; float: left;">
+				<div itemscope itemtype="http://schema.org/Product" class="<?php echo apply_filters( 'edd_download_class', 'edd_download', get_the_ID(), $atts ); ?>" id="edd_download_<?php echo get_the_ID(); ?>" style="width: <?php echo $column_width; ?>; float: left;">
 					<div class="edd_download_inner">
 						<?php
 
@@ -510,10 +511,12 @@ add_shortcode( 'edd_receipt', 'edd_receipt_shortcode' );
  * templating system is used.
  *
  * @since 1.4
+ *
  * @author Sunny Ratilal
- * @param array $atts Shortcode attributes
- * @param string $content
- * @return $display Output generated from the profile editor
+ *
+ * @param      $atts Shortcode attributes
+ * @param null $content
+ * @return string Output generated from the profile editor
  */
 function edd_profile_editor_shortcode( $atts, $content = null ) {
 	ob_start();
@@ -547,11 +550,17 @@ function edd_process_profile_editor_updates( $data ) {
 
 	$user_id       = get_current_user_id();
 	$old_user_data = get_userdata( $user_id );
-	$display_name  = sanitize_text_field( $data['edd_display_name'] );
-	$first_name    = sanitize_text_field( $data['edd_first_name'] );
-	$last_name     = sanitize_text_field( $data['edd_last_name'] );
-	$email         = sanitize_email( $data['edd_email'] );
 
+	$display_name = sanitize_text_field( $data['edd_display_name'] );
+	$first_name   = sanitize_text_field( $data['edd_first_name'] );
+	$last_name    = sanitize_text_field( $data['edd_last_name'] );
+	$email        = sanitize_email( $data['edd_email'] );
+	$line1        = ( isset( $data['edd_address_line1'] ) ? sanitize_text_field( $data['edd_address_line1'] ) : '' );
+	$line2        = ( isset( $data['edd_address_line2'] ) ? sanitize_text_field( $data['edd_address_line2'] ) : '' );
+	$city         = ( isset( $data['edd_address_city'] ) ? sanitize_text_field( $data['edd_address_city'] ) : '' );
+	$state        = ( isset( $data['edd_address_state'] ) ? sanitize_text_field( $data['edd_address_state'] ) : '' );
+	$zip          = ( isset( $data['edd_address_zip'] ) ? sanitize_text_field( $data['edd_address_zip'] ) : '' );
+	$country      = ( isset( $data['edd_address_country'] ) ? sanitize_text_field( $data['edd_address_country'] ) : '' );
 
 	$userdata = array(
 		'ID'           => $user_id,
@@ -559,6 +568,16 @@ function edd_process_profile_editor_updates( $data ) {
 		'last_name'    => $last_name,
 		'display_name' => $display_name,
 		'user_email'   => $email
+	);
+
+
+	$address = array(
+		'line1'    => $line1,
+		'line2'    => $line2,
+		'city'     => $city,
+		'state'    => $state,
+		'zip'      => $zip,
+		'country'  => $country
 	);
 
 	do_action( 'edd_pre_update_user_profile', $user_id, $userdata );
@@ -589,6 +608,7 @@ function edd_process_profile_editor_updates( $data ) {
 	}
 
 	// Update the user
+	$meta    = update_user_meta( $user_id, '_edd_user_address', $address );
 	$updated = wp_update_user( $userdata );
 
 	if ( $updated ) {

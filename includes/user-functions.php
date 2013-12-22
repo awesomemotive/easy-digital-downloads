@@ -19,12 +19,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Retrieves a list of all purchases by a specific user.
  *
- * @access public
  * @since  1.0
- * @param  int|string $user   User ID or email address
- * @param  int $number        Number of purchases to retrieve
  *
- * @return array List of all user purchases
+ * @param int    $user User ID or email address
+ * @param int    $number Number of purchases to retrieve
+ * @param bool   $pagination
+ * @param string $status
+ *
+ * @return bool|object List of all user purchases
  */
 function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, $status = 'complete' ) {
 	if ( empty( $user ) ) {
@@ -290,7 +292,7 @@ function edd_validate_username( $username ) {
  */
 function edd_add_past_purchases_to_new_user( $user_id ) {
 
-	$email    = get_user_meta( $user_id, 'user_email', true );
+	$email    = get_the_author_meta( 'user_email', $user_id );
 	$mode     = edd_is_test_mode() ? 'test' : 'live';
 	$payments = edd_get_payments( array( 's' => $email, 'mode' => $mode ) );
 	if( $payments ) {
@@ -305,6 +307,7 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 
 			// Store the updated user ID in the payment meta
 			update_post_meta( $payment->ID, '_edd_payment_meta', $meta );
+			update_post_meta( $payment->ID, '_edd_payment_user_id', $user_id );
 		}
 	}
 
@@ -326,3 +329,51 @@ function edd_count_total_customers() {
 	$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
 	return $count[0];
 }
+
+
+/**
+ * Returns the saved address for a customer
+ *
+ * @access 		public
+ * @since 		1.8
+ * @return 		array - The customer's address, if any
+ */
+function edd_get_customer_address( $user_id = 0 ) {
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$address = get_user_meta( $user_id, '_edd_user_address', true );
+
+	if( ! isset( $address['line1'] ) )
+		$address['line1'] = '';
+
+	if( ! isset( $address['line2'] ) )
+		$address['line2'] = '';
+
+	if( ! isset( $address['city'] ) )
+		$address['city'] = '';
+
+	if( ! isset( $address['zip'] ) )
+		$address['zip'] = '';
+
+	if( ! isset( $address['country'] ) )
+		$address['country'] = '';
+
+	if( ! isset( $address['state'] ) )
+		$address['state'] = '';
+
+	return $address;
+}
+
+/**
+ * Sends the new user notification email when a user registers during checkout
+ *
+ * @access 		public
+ * @since 		1.8.8
+ * @return 		void
+ */
+function edd_new_user_notification( $user_id = 0, $userdata = array() ) {
+	wp_new_user_notification( $user_id, $user_data['user_pass'] );
+}
+add_action( 'edd_insert_user', 'edd_new_user_notification', 10, 2 );

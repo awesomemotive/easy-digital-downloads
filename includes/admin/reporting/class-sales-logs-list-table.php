@@ -35,10 +35,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 	/**
 	 * Get things started
 	 *
-	 * @access public
 	 * @since 1.4
 	 * @see WP_List_Table::__construct()
-	 * @return void
 	 */
 	public function __construct() {
 		global $status, $page;
@@ -76,6 +74,9 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 			case 'amount' :
 				return edd_currency_filter( edd_format_amount( $item['amount'] ) );
+
+			case 'payment_id' :
+				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item[ 'payment_id' ] ) . '">' . $item[ 'payment_id' ] . '</a>';
 
 			default:
 				return $item[ $column_name ];

@@ -32,7 +32,7 @@ $single_use   = edd_discount_is_single_use( $discount_id );
 					<label for="edd-name"><?php _e( 'Name', 'edd' ); ?></label>
 				</th>
 				<td>
-					<input name="name" id="edd-name" type="text" value="<?php echo esc_attr( $discount->post_title ); ?>" style="width: 300px;"/>
+					<input name="name" id="edd-name" type="text" value="<?php echo esc_attr( stripslashes( $discount->post_title ) ); ?>" style="width: 300px;"/>
 					<p class="description"><?php _e( 'The name of this discount', 'edd' ); ?></p>
 				</td>
 			</tr>
