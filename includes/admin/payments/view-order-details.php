@@ -200,11 +200,12 @@ $payment_date = strtotime( $item->post_date );
 										<?php if( $user_id > 0 ) : ?>
 											<p class="data">
 												<span><?php _e( 'User ID:', 'edd' ); ?></span>&nbsp;
-												<input type="number" step="1" min="0" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class=" small-text"/>
+												<input type="number" step="1" min="0" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>
 											</p>
 										<?php endif; ?>
 										<p class="data">
-											<span><?php _e( 'IP:', 'edd' ); ?>&nbsp;<?php echo edd_get_payment_user_ip( $payment_id ); ?></span>
+											<span><?php _e( 'IP:', 'edd' ); ?></span>&nbsp;
+											<input type="text" name="edd-payment-user-ip" value="<?php esc_attr_e( edd_get_payment_user_ip( $payment_id )); ?>" class="medium-text" disabled="disabled"/>
 										</p>
 										
 										<?php do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info ); ?>
