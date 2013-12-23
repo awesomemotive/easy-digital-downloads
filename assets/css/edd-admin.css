@@ -136,6 +136,12 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 	#edd-purchased-files.columns-4 .row li,
 	#edd-purchased-files.columns-4 .inside li { width: 23%; }
 
+	#edd-purchased-files.columns-4 .row li.name,
+	#edd-purchased-files.columns-4 .inside li.download { width:33%; }
+
+	#edd-purchased-files.columns-4 .row li.quantity,
+	#edd-purchased-files.columns-4 .inside li.quantity { width:13%; }
+
 	#edd-purchased-files .inside li.actions { margin-top: 0; }
 }
 
