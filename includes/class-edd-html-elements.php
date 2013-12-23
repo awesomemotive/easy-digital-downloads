@@ -30,7 +30,19 @@ class EDD_HTML_Elements {
 	 * @param int $selected Download to select automatically
 	 * @return string $output Product dropdown
 	 */
-	public function product_dropdown( $name = 'edd_products', $selected = 0, $multiple = false, $chosen = false ) {
+	public function product_dropdown( $args = array() ) {
+
+		$defaults = array(
+			'name'        => 'products',
+			'id'          => 'products',
+			'class'       => '',
+			'multiple'    => false,
+			'selected'    => 0,
+			'chosen'      => false
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
 		$products = get_posts( array(
 			'post_type'      => 'download',
 			'orderby'        => 'title',
@@ -47,24 +59,25 @@ class EDD_HTML_Elements {
 		}
 
 		// This ensures that any selected products are included in the drop down
-		if( is_array( $selected ) ) {
-			foreach( $selected as $item ) {
+		if( is_array( $args['selected'] ) ) {
+			foreach( $args['selected'] as $item ) {
 				if( ! in_array( $item, $options ) ) {
 					$options[$item] = get_the_title( $item );
 				}
 			}
 		} else {
-			if( ! in_array( $selected, $options ) ) {
-				$options[$selected] = get_the_title( $selected );
+			if( ! in_array( $args['selected'], $options ) ) {
+				$options[$args['selected']] = get_the_title( $args['selected'] );
 			}
 		}
 
 		$output = $this->select( array(
-			'name'             => $name,
-			'selected'         => $selected,
-			'class'            => $chosen ? 'edd-select-chosen' : '',
+			'name'             => $args['name'],
+			'selected'         => $args['selected'],
+			'id'               => $args['id'],
+			'class'            => $args['chosen'] ? 'edd-select-chosen' : '',
 			'options'          => $options,
-			'multiple'         => $multiple,
+			'multiple'         => $args['multiple'],
 			'show_option_all'  => false,
 			'show_option_none' => __( 'None', 'edd' )
 		) );
@@ -210,12 +223,12 @@ class EDD_HTML_Elements {
 		$defaults = array(
 			'options'          => array(),
 			'name'             => null,
-			'class'            => null,
+			'class'            => '',
+			'id'               => '',
 			'selected'         => 0,
 			'multiple'         => false,
 			'show_option_all'  => _x( 'All', 'all dropdown items', 'edd' ),
-			'show_option_none' => _x( 'None', 'no dropdown items', 'edd' ),
-			'class'            => ''
+			'show_option_none' => _x( 'None', 'no dropdown items', 'edd' )
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -226,7 +239,7 @@ class EDD_HTML_Elements {
 			$multiple = '';
 		}
 
-		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args[ 'name' ] ) ) ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . '>';
+		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args[ 'id' ] ) ) ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . '>';
 
 		if ( ! empty( $args[ 'options' ] ) ) {
 			if ( $args[ 'show_option_all' ] ) {
