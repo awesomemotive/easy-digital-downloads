@@ -131,6 +131,7 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 
 @media screen and ( min-width: 1280px ) {
 	#edd-edit-order-form .column { width: 32%; }
+	#edd-edit-order-form .columns-4 .column { width: 23%; }
 
 	#edd-purchased-files.columns-3 .row > ul > li,
 	#edd-purchased-files.columns-3 .inside > ul > li { width: 32%; }
