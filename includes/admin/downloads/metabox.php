@@ -543,7 +543,7 @@ function edd_render_product_row( $product_id = 0, $post_id ) {
 
 ?>
 	<td>
-		<?php echo EDD()->html->product_dropdown( '_edd_bundled_products[]', $product_id ); ?>
+		<?php echo EDD()->html->product_dropdown( '_edd_bundled_products[]', $product_id, false, true ); ?>
 	</td>
 
 	<?php do_action( 'edd_product_table_row', $product_id, $post_id ); ?>
