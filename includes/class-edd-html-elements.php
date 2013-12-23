@@ -35,7 +35,7 @@ class EDD_HTML_Elements {
 			'post_type'      => 'download',
 			'orderby'        => 'title',
 			'order'          => 'ASC',
-			'posts_per_page' => 5
+			'posts_per_page' => 20
 		) );
 
 		if ( $products ) {
