@@ -69,15 +69,13 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 						</select>
 						<label for="edd-product-condition"><?php _e( 'Condition', 'edd' ); ?></label>
 					</p>
-					<select multiple id="edd-products" name="products[]" class="edd-select-chosen" data-placeholder="<?php printf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ); ?>">
-						<?php
-						if( $downloads ) :
-							foreach( $downloads as $download ) :
-								echo '<option value="' . esc_attr( $download->ID ) . '">' . esc_html( get_the_title( $download->ID ) ) . '</option>';
-							endforeach;
-						endif;
-						?>
-					</select>
+
+					<?php echo EDD()->html->product_dropdown( array(
+						'name'     => 'products[]',
+						'selected' => array(),
+						'multiple' => true,
+						'chosen'   => true 
+					) ); ?><br/>
 					<p class="description"><?php printf( __( '%s required to be purchased for this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
 
 					<p>
@@ -93,15 +91,12 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 					<label for="edd-excluded-products"><?php printf( __( 'Excluded %s', 'edd' ), edd_get_label_plural() ); ?></label>
 				</th>
 				<td>
-					<select multiple id="edd-excluded-products" name="excluded-products[]" class="edd-select-chosen" data-placeholder="<?php printf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ); ?>">
-						<?php
-						if( $downloads ) :
-							foreach( $downloads as $download ) :
-								echo '<option value="' . esc_attr( $download->ID ) . '">' . esc_html( get_the_title( $download->ID ) ) . '</option>';
-							endforeach;
-						endif;
-						?>
-					</select>
+					<?php echo EDD()->html->product_dropdown( array(
+						'name'     => 'excluded-products[]',
+						'selected' => array(),
+						'multiple' => true,
+						'chosen'   => true 
+					) ); ?><br/>
 					<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>
 			</tr>

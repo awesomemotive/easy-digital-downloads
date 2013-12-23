@@ -686,12 +686,12 @@ jQuery(document).ready(function ($) {
 		taxes : function() {
 
 			// Update base state field based on selected base country
-			$('select[name="edd_settings_taxes[base_country]"]').change(function() {
+			$('select[name="edd_settings[base_country]"]').change(function() {
 				var $this = $(this), $tr = $this.closest('tr');
 				data = {
 					action: 'edd_get_shop_states',
 					country: $(this).val(),
-					field_name: 'edd_settings_taxes[base_state]'
+					field_name: 'edd_settings[base_state]'
 				};
 				$.post(ajaxurl, data, function (response) {
 					if( 'nostates' == response ) {
@@ -768,12 +768,12 @@ jQuery(document).ready(function ($) {
 		misc : function() {
 
 			// Hide Symlink option if Download Method is set to Direct
-			if( $('select[name="edd_settings_misc[download_method]"]:selected').val() != 'direct' ) {
-				$('select[name="edd_settings_misc[download_method]"]').parent().parent().next().hide();
-				$('select[name="edd_settings_misc[download_method]"]').parent().parent().next().find('input').attr('checked', false);
+			if( $('select[name="edd_settings[download_method]"]:selected').val() != 'direct' ) {
+				$('select[name="edd_settings[download_method]"]').parent().parent().next().hide();
+				$('select[name="edd_settings[download_method]"]').parent().parent().next().find('input').attr('checked', false);
 			}
 			// Toggle download method option
-			$('select[name="edd_settings_misc[download_method]"]').on('change', function() {
+			$('select[name="edd_settings[download_method]"]').on('change', function() {
 				var symlink = $(this).parent().parent().next();
 				if( $(this).val() == 'direct' ) {
 					symlink.hide();
@@ -844,6 +844,56 @@ jQuery(document).ready(function ($) {
 
 	});
 
-    $('.edd-select-chosen').chosen();
+    // Setup Chosen menus
+    $('.edd-select-chosen').chosen({
+    	inherit_select_classes: true,
+    	placeholder_text_single: edd_vars.one_option,
+    	placeholder_text_multiple: edd_vars.one_or_more_option,
+    });
+
+    // Replace options with search results
+	$('.edd-select.chosen-container .chosen-choices input').keyup(function(e) {
+
+		var val = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
+		var menu_id = container.attr('id').replace( '_chosen', '' );
+		
+		if( val.length <= 3 )
+			return;
+
+		$.ajax({
+			type: 'GET',
+			url: ajaxurl,
+			data: {
+				action: 'edd_download_search',
+				s: val,
+			},
+			dataType: "json",
+			beforeSend: function(){
+				$('ul.chosen-results').empty();
+			},
+			success: function( data ) {
+				 $.each( data, function( key, item ) {
+				 	// Remove all options but those that are selected
+				 	$('#' + menu_id + ' option:not(:selected)').remove();
+					
+				 	// Add any option that doesn't already exist
+					if( ! $('#' + menu_id + ' option[value="' + item.id + '"]').length ) {
+						$('#' + menu_id).append( '<option value="' + item.id + '">' + item.name + '</option>' );
+					}
+				});
+				 // Update the options
+				$('.edd-select-chosen').trigger('chosen:updated');
+			}
+		}).fail(function (response) {
+            console.log(response);
+        }).done(function (response) {
+
+        });
+	});
+
+	// This fixes the Chosen box being 0px wide when the thickbox is opened
+	$('.edd-thickbox').on('click', function() {
+		$('#choose-download .edd-select-chosen').css('width', '100%');
+	});
 
 });

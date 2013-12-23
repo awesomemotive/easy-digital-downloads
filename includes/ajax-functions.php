@@ -271,7 +271,6 @@ function edd_ajax_recalculate_taxes() {
 add_action( 'wp_ajax_edd_recalculate_taxes', 'edd_ajax_recalculate_taxes' );
 add_action( 'wp_ajax_nopriv_edd_recalculate_taxes', 'edd_ajax_recalculate_taxes' );
 
-
 /**
  * Retrieve a states drop down
  *
@@ -306,6 +305,44 @@ function edd_ajax_get_states_field() {
 }
 add_action( 'wp_ajax_edd_get_shop_states', 'edd_ajax_get_states_field' );
 add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
+
+/**
+ * Retrieve a states drop down
+ *
+ * @since 1.6
+ * @return void
+ */
+function edd_ajax_download_search() {
+
+	$search  = sanitize_text_field( $_GET['s'] );
+	$results = array();
+	$items   = get_posts( array( 'post_type' => 'download', 'posts_per_page' => 30, 's' => $search ) ); 
+
+	if( $items ) {
+
+		foreach( $items as $item ) {
+
+			$results[] = array(
+				'id'   => $item->ID,
+				'name' => $item->post_title
+			);
+		}
+
+	} else {
+		
+		$items[] = array(
+			'id'   => 0,
+			'name' => __( 'No results found', 'edd' )
+		);
+		
+	}
+
+	echo json_encode( $results );
+
+	edd_die();
+}
+add_action( 'wp_ajax_edd_download_search', 'edd_ajax_download_search' );
+add_action( 'wp_ajax_nopriv_edd_download_search', 'edd_ajax_download_search' );
 
 /**
  * Check for Download Price Variations via AJAX (this function can only be used
