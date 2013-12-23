@@ -304,12 +304,13 @@ $payment_date = strtotime( $item->post_date );
 								<span><?php printf( __( 'Purchased %s', 'edd' ), edd_get_label_plural() ); ?></span>
 							</h3>
 							
-							<div class="row">
-								<ul>
-								<?php
-								if ( $cart_items ) :
-									$i = 0;
-									foreach ( $cart_items as $key => $cart_item ) :
+							<?php
+							if ( $cart_items ) :
+								$i = 0;
+								foreach ( $cart_items as $key => $cart_item ) : ?>
+								<div class="row">
+									<ul>
+										<?php
 										// Item ID is checked if isset due to the near-1.0 cart data
 										$item_id  = isset( $cart_item['id']    ) ? $cart_item['id']    : $cart_item;
 										$price    = isset( $cart_item['price'] ) ? $cart_item['price'] : false;
@@ -322,66 +323,63 @@ $payment_date = strtotime( $item->post_date );
 										}
 										?>
 
-									<li class="name">
-										<span><?php echo get_the_title( $item_id ); ?></span>
-										<?php
+										<li class="name">
+											<span><?php echo get_the_title( $item_id ); ?></span>
+											<?php
 
-										if ( isset( $cart_items[ $key ]['item_number'] ) && isset( $cart_items[ $key ]['item_number']['options'] ) ) {
-											$price_options = $cart_items[ $key ]['item_number']['options'];
+											if ( isset( $cart_items[ $key ]['item_number'] ) && isset( $cart_items[ $key ]['item_number']['options'] ) ) {
+												$price_options = $cart_items[ $key ]['item_number']['options'];
 
-											if ( isset( $price_id ) ) {
-												echo ' - ' . edd_get_price_option_name( $item_id, $price_id, $payment_id );
+												if ( isset( $price_id ) ) {
+													echo ' - ' . edd_get_price_option_name( $item_id, $price_id, $payment_id );
+												}
 											}
-										}
-										?>
-										<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][id]" class="edd-payment-details-download-id" value="<?php echo esc_attr( $item_id ); ?>"/>
-										<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][price_id]" class="edd-payment-details-download-price-id" value="<?php echo esc_attr( $price_id ); ?>"/>
-										<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][amount]" class="edd-payment-details-download-amount" value="<?php echo esc_attr( $price ); ?>"/>
-										<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][quantity]" class="edd-payment-details-download-quantity" value="<?php echo esc_attr( $quantity ); ?>"/>
-										
-									</li>
+											?>
+											<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][id]" class="edd-payment-details-download-id" value="<?php echo esc_attr( $item_id ); ?>"/>
+											<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][price_id]" class="edd-payment-details-download-price-id" value="<?php echo esc_attr( $price_id ); ?>"/>
+											<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][amount]" class="edd-payment-details-download-amount" value="<?php echo esc_attr( $price ); ?>"/>
+											<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][quantity]" class="edd-payment-details-download-quantity" value="<?php echo esc_attr( $quantity ); ?>"/>
+											
+										</li>
 
-									<?php if( edd_item_quantities_enabled() ) : ?>
-									<li class="quantity">
-										<?php echo __( 'Quantity:', 'edd' ) . '&nbsp;<span>' . $quantity . '</span>'; ?>
-									</li>
-									<?php endif; ?>
+										<?php if( edd_item_quantities_enabled() ) : ?>
+										<li class="quantity">
+											<?php echo __( 'Quantity:', 'edd' ) . '&nbsp;<span>' . $quantity . '</span>'; ?>
+										</li>
+										<?php endif; ?>
 
-									<li class="price">
-										<?php echo edd_currency_filter( edd_format_amount( $price ) ); ?>
-									</li>
+										<li class="price">
+											<?php echo edd_currency_filter( edd_format_amount( $price ) ); ?>
+										</li>
 
-									<li class="remove">
-										<a href="" class="edd-order-remove-download" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
-									</li>
-
-									<?php
-										$i++;
-									endforeach;
-								endif;
-								?>
-
-								</ul>
-
-							</div>
+										<li class="remove">
+											<a href="" class="edd-order-remove-download" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
+										</li>
+									</ul>
+								</div>
+								<?php
+								$i++;
+								endforeach;
+							endif;
+							?>
 
 							<div class="inside">
 
 								<ul>
 									<li class="download">
 										
-										<?php echo EDD()->html->product_dropdown( 'edd-order-download-select', 0 ); ?>
+										<?php echo EDD()->html->product_dropdown( 'edd-order-download-select', 0, false, true ); ?>
 									</li>
 
 									<?php if( edd_item_quantities_enabled() ) : ?>
 									<li class="quantity">
-										<span><?php _e( 'Quantity', 'edd' ); ?></span>
+										<span><?php _e( 'Quantity', 'edd' ); ?>:&nbsp;</span>
 										<input type="number" id="edd-order-download-quantity" class="small-text" min="1" step="1" value="1" />
 									</li>
 									<?php endif; ?>
 
 									<li class="amount">
-										<span><?php _e( 'Amount', 'edd' ); ?></span>
+										<span><?php _e( 'Amount', 'edd' ); ?>:&nbsp;</span>
 
 										<?php
 										echo EDD()->html->text( array( 'name' => 'edd-order-download-amount',
