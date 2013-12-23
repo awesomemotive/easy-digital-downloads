@@ -179,31 +179,33 @@ $payment_date = strtotime( $item->post_date );
 
 						<?php do_action( 'edd_view_order_details_main_before' ); ?>
 
-						<div id="edd-customer-details" class="postbox">
+						<div id="edd-customer-details" class="postbox columns-4">
 							<h3 class="hndle">
 								<span><?php _e( 'Customer Details', 'edd' ); ?></span>
 							</h3>
 							<div class="inside edd-clearfix">
 
-								<p class="data">
-									<span><?php _e( 'Name:', 'edd' ); ?></span>&nbsp;
-									<input type="text" name="edd-payment-user-name" value="<?php esc_attr_e( $user_info['first_name'] . ' ' . $user_info['last_name'] ); ?>" class="medium-text"/>
-								</p>
-								<p class="data">
-									<span><?php _e( 'Email:', 'edd' ); ?></span>&nbsp;
-									<input type="email" name="edd-payment-user-email" value="<?php esc_attr_e( edd_get_payment_user_email( $payment_id ) ); ?>" class="medium-text"/>
-								</p>
-								<?php if( $user_id > 0 ) : ?>
-									<p class="data">
-										<span><?php _e( 'User ID:', 'edd' ); ?></span>&nbsp;
-										<input type="number" step="1" min="0" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>
-									</p>
-								<?php endif; ?>
-								<p class="data">
-									<span><?php _e( 'IP:', 'edd' ); ?></span>&nbsp;
-									<input type="text" name="edd-payment-user-ip" value="<?php esc_attr_e( edd_get_payment_user_ip( $payment_id )); ?>" class="medium-text" disabled="disabled"/>
-								</p>
-								
+								<div class="column-container">
+									<div class="column">
+										<span><?php _e( 'Name:', 'edd' ); ?></span>&nbsp;
+										<input type="text" name="edd-payment-user-name" value="<?php esc_attr_e( $user_info['first_name'] . ' ' . $user_info['last_name'] ); ?>" class="medium-text"/>
+									</div>
+									<div class="column">
+										<span><?php _e( 'Email:', 'edd' ); ?></span>&nbsp;
+										<input type="email" name="edd-payment-user-email" value="<?php esc_attr_e( edd_get_payment_user_email( $payment_id ) ); ?>" class="medium-text"/>
+									</div>
+									<?php if( $user_id > 0 ) : ?>
+										<div class="column">
+											<span><?php _e( 'User ID:', 'edd' ); ?></span>&nbsp;
+											<input type="number" step="1" min="0" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>
+										</div>
+									<?php endif; ?>
+									<div class="column">
+										<span><?php _e( 'IP:', 'edd' ); ?></span>&nbsp;
+										<input type="text" name="edd-payment-user-ip" value="<?php esc_attr_e( edd_get_payment_user_ip( $payment_id )); ?>" class="medium-text" disabled="disabled"/>
+									</div>
+								</div>
+
 								<?php do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info ); ?>
 
 
@@ -220,54 +222,59 @@ $payment_date = strtotime( $item->post_date );
 
 								<div id="edd-order-address">
 
-									<h4><span><?php _e( 'Billing Address', 'edd' ); ?></span></h4>
 									<div class="order-data-address">
-										<div class="data">
-											<p>
-												<span class="order-data-address-line"><?php _e( 'Street Address', 'edd' ); ?></span>
-												<input type="text" name="edd-payment-address[0][line1]" value="<?php esc_attr_e( $user_info['address']['line1'] ); ?>" class="medium-text" />
-												<input type="text" name="edd-payment-address[0][line2]" value="<?php esc_attr_e( $user_info['address']['line2'] ); ?>" class="medium-text" />
-												
-											</p>
-											<p>
-												<span class="order-data-address-line"><?php echo _x( 'City:', 'Address City', 'edd' ); ?></span>
-												<input type="text" name="edd-payment-address[0][city]" value="<?php esc_attr_e( $user_info['address']['city'] ); ?>" class="medium-text"/>
-												
-											</p>
-											<p>
-												<span class="order-data-address-line"><?php echo _x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'edd' ); ?></span>
-												<input type="text" name="edd-payment-address[0][zip]" value="<?php esc_attr_e( $user_info['address']['zip'] ); ?>" class="medium-text"/>
-												
-											</p>
-											<p id="edd-order-address-state-wrap">
-												<span class="order-data-address-line"><?php echo _x( 'State / Province:', 'State / province of address', 'edd' ); ?></span>
-												<?php
-												$states = edd_get_shop_states( $user_info['address']['country'] );
-												if( ! empty( $states ) ) {
+										<div class="data column-container">
+											<div class="column">
+												<p>
+													<strong class="order-data-address-line"><?php _e( 'Street Address:', 'edd' ); ?></strong><br/>
+													<input type="text" name="edd-payment-address[0][line1]" value="<?php esc_attr_e( $user_info['address']['line1'] ); ?>" class="medium-text" /><br/>
+													<input type="text" name="edd-payment-address[0][line2]" value="<?php esc_attr_e( $user_info['address']['line2'] ); ?>" class="medium-text" />
+													
+												</p>
+											</div>
+											<div class="column">
+												<p>
+													<strong class="order-data-address-line"><?php echo _x( 'City:', 'Address City', 'edd' ); ?></strong><br/>
+													<input type="text" name="edd-payment-address[0][city]" value="<?php esc_attr_e( $user_info['address']['city'] ); ?>" class="medium-text"/>
+													
+												</p>
+												<p>
+													<strong class="order-data-address-line"><?php echo _x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'edd' ); ?></strong><br/>
+													<input type="text" name="edd-payment-address[0][zip]" value="<?php esc_attr_e( $user_info['address']['zip'] ); ?>" class="medium-text"/>
+													
+												</p>
+											</div>
+											<div class="column">
+												<p id="edd-order-address-country-wrap">
+													<strong class="order-data-address-line"><?php echo _x( 'Country:', 'Address country', 'edd' ); ?></strong><br/>
+													<?php
 													echo EDD()->html->select( array(
-														'options'          => $states,
-														'name'             => 'edd-payment-address[0][state]',
-														'selected'         => $user_info['address']['state'],
+														'options'          => edd_get_country_list(),
+														'name'             => 'edd-payment-address[0][country]',
+														'selected'         => $user_info['address']['country'],
 														'show_option_all'  => false,
 														'show_option_none' => false
 													) );
-												} else { ?>
-													<input type="text" name="edd-payment-address[0][state]" value="<?php esc_attr_e( $user_info['address']['state'] ); ?>" class="medium-text"/>
+													?>
+												</p>
+												<p id="edd-order-address-state-wrap">
+													<strong class="order-data-address-line"><?php echo _x( 'State / Province:', 'State / province of address', 'edd' ); ?></strong><br/>
 													<?php
-												} ?>
-											</p>
-											<p id="edd-order-address-country-wrap">
-												<span class="order-data-address-line"><?php echo _x( 'Country:', 'Address country', 'edd' ); ?></span>&nbsp;
-												<?php
-												echo EDD()->html->select( array(
-													'options'          => edd_get_country_list(),
-													'name'             => 'edd-payment-address[0][country]',
-													'selected'         => $user_info['address']['country'],
-													'show_option_all'  => false,
-													'show_option_none' => false
-												) );
-												?>
-											</p>
+													$states = edd_get_shop_states( $user_info['address']['country'] );
+													if( ! empty( $states ) ) {
+														echo EDD()->html->select( array(
+															'options'          => $states,
+															'name'             => 'edd-payment-address[0][state]',
+															'selected'         => $user_info['address']['state'],
+															'show_option_all'  => false,
+															'show_option_none' => false
+														) );
+													} else { ?>
+														<input type="text" name="edd-payment-address[0][state]" value="<?php esc_attr_e( $user_info['address']['state'] ); ?>" class="medium-text"/>
+														<?php
+													} ?>
+												</p>
+											</div>
 										</div>
 									</div>
 								</div><!-- /#edd-order-address -->
@@ -410,7 +417,7 @@ $payment_date = strtotime( $item->post_date );
 								<div class="clear"></div>
 							</div><!-- /.inside -->
 						</div><!-- /#edd-payment-notes -->
-						
+
 						<?php do_action( 'edd_view_order_details_main_after', $payment_id ); ?>
 					</div><!-- /#normal-sortables -->
 				</div><!-- #postbox-container-2 -->
