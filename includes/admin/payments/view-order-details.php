@@ -198,7 +198,7 @@ $payment_date = strtotime( $item->post_date );
 									</div>
 									<div class="column">
 										<strong><?php _e( 'User ID:', 'edd' ); ?></strong>&nbsp;
-										<input type="number" step="1" min="0" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>
+										<input type="number" step="1" min="0" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>&nbsp;&nbsp;&nbsp;
 										<strong><?php _e( 'IP:', 'edd' ); ?></strong>&nbsp;
 										<span><?php esc_attr_e( edd_get_payment_user_ip( $payment_id )); ?></span>
 										<p class="description"><?php _e( 'User ID of the customer and IP they purchase was made from', 'edd' ); ?></p>
