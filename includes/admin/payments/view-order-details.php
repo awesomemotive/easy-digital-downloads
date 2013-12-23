@@ -52,7 +52,7 @@ $payment_date = strtotime( $item->post_date );
 									<?php if ( edd_use_taxes() ) : ?>
 									<div class="edd-order-taxes edd-admin-box-inside">
 										<p>
-											<span class="label"><?php _e( 'Tax', 'edd' ); ?></span>&nbsp;
+											<span class="label"><?php _e( 'Tax', 'edd' ); ?>:</span>&nbsp;
 											<input name="edd-payment-tax" type="number" class="small-text right " value="<?php echo esc_attr( edd_get_payment_tax( $payment_id ) ); ?>"/>
 										</p>
 									</div>
@@ -61,7 +61,7 @@ $payment_date = strtotime( $item->post_date );
 									$fees = edd_get_payment_fees( $payment_id );
 									if ( ! empty( $fees ) ) : ?>
 									<div class="edd-order-fees edd-admin-box-inside">
-										<p class="strong"><?php _e( 'Fees', 'edd' ); ?></p>
+										<p class="strong"><?php _e( 'Fees', 'edd' ); ?>:</p>
 										<ul class="edd-payment-fees">
 											<?php foreach( $fees as $fee ) : ?>
 											<li><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="right">' . edd_currency_filter( $fee['amount'] ); ?></span></li>
@@ -72,20 +72,21 @@ $payment_date = strtotime( $item->post_date );
 									
 									<div class="edd-order-discount edd-admin-box-inside">
 										<p>
-											<span class="label"><?php _e( 'Discount Code', 'edd' ); ?></span> <span class="right"><?php if ( isset( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) { echo '<code>' . $user_info['discount'] . '</code>'; } else { _e( 'None', 'edd' ); } ?></span>
+											<span class="label"><?php _e( 'Discount Code', 'edd' ); ?>:</span>&nbsp;
+											<span class="right"><?php if ( isset( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) { echo '<code>' . $user_info['discount'] . '</code>'; } else { _e( 'None', 'edd' ); } ?></span>
 										</p>
 									</div>
 
 									<div class="edd-order-payment edd-admin-box-inside">
 										<p>
-											<span class="label"><?php _e( 'Total Price', 'edd' ); ?></span>&nbsp;
+											<span class="label"><?php _e( 'Total Price', 'edd' ); ?>:</span>&nbsp;
 											<input name="edd-payment-total" type="number" class="small-text right" value="<?php echo esc_attr( edd_get_payment_amount( $payment_id ) ); ?>"/>
 										</p>
 									</div>
 
 									<div class="edd-order-resend-email edd-admin-box-inside">
 										<p>
-											<span class="label"><?php _e( 'Payment Receipt', 'edd' ); ?></span>&nbsp;
+											<span class="label"><?php _e( 'Payment Receipt', 'edd' ); ?>:</span>&nbsp;
 											<a href="<?php echo add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment_id ) ); ?>" class="right button-secondary"><?php _e( 'Resend', 'edd' ); ?></a>
 										</p>
 									</div>
