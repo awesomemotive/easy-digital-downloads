@@ -223,7 +223,7 @@ class EDD_HTML_Elements {
 		if( $args['multiple'] ) {
 			$multiple = ' MULTIPLE';
 		} else {
-			$miltiple = '';
+			$multiple = '';
 		}
 
 		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args[ 'name' ] ) ) ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . '>';
@@ -233,7 +233,7 @@ class EDD_HTML_Elements {
 				if( $args['multiple'] ) {
 					$selected = selected( true, in_array( 0, $args['selected'] ), false );
 				} else {
-					$selected = selected( $args['selected'], $key, false );
+					$selected = selected( $args['selected'], 0, false );
 				}
 				$output .= '<option value="all"' . $selected . '>' . esc_html( $args[ 'show_option_all' ] ) . '</option>';
 			}
@@ -242,7 +242,7 @@ class EDD_HTML_Elements {
 				if( $args['multiple'] ) {
 					$selected = selected( true, in_array( -1, $args['selected'] ), false );
 				} else {
-					$selected = selected( $args['selected'], $key, false );
+					$selected = selected( $args['selected'], -1, false );
 				}
 				$output .= '<option value="-1"' . $selected . '>' . esc_html( $args[ 'show_option_none' ] ) . '</option>';
 			}
