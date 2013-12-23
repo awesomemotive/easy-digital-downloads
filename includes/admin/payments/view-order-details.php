@@ -64,7 +64,7 @@ $payment_date = strtotime( $item->post_date );
 										<p class="strong"><?php _e( 'Fees', 'edd' ); ?>:</p>
 										<ul class="edd-payment-fees">
 											<?php foreach( $fees as $fee ) : ?>
-											<li><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="right">' . edd_currency_filter( $fee['amount'] ); ?></span></li>
+											<li><span class="fee-label"><?php echo $fee['label'] . ':</span> ' . '<span class="right fee-amount" data-fee="' . esc_attr( $fee['amount'] ) . '">' . edd_currency_filter( $fee['amount'] ); ?></span></li>
 											<?php endforeach; ?>
 										</ul>
 									</div>
