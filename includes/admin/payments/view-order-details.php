@@ -179,7 +179,7 @@ $payment_date = strtotime( $item->post_date );
 
 						<?php do_action( 'edd_view_order_details_main_before' ); ?>
 
-						<div id="edd-customer-details" class="postbox columns-4">
+						<div id="edd-customer-details" class="postbox">
 							<h3 class="hndle">
 								<span><?php _e( 'Customer Details', 'edd' ); ?></span>
 							</h3>
@@ -187,27 +187,25 @@ $payment_date = strtotime( $item->post_date );
 
 								<div class="column-container">
 									<div class="column">
-										<span><?php _e( 'Name:', 'edd' ); ?></span>&nbsp;
+										<strong><?php _e( 'Name:', 'edd' ); ?></strong>&nbsp;
 										<input type="text" name="edd-payment-user-name" value="<?php esc_attr_e( $user_info['first_name'] . ' ' . $user_info['last_name'] ); ?>" class="medium-text"/>
+										<p class="description"><?php _e( 'Customer name, as shown on purchase receipts', 'edd' ); ?></p>
 									</div>
 									<div class="column">
-										<span><?php _e( 'Email:', 'edd' ); ?></span>&nbsp;
+										<strong><?php _e( 'Email:', 'edd' ); ?></strong>&nbsp;
 										<input type="email" name="edd-payment-user-email" value="<?php esc_attr_e( edd_get_payment_user_email( $payment_id ) ); ?>" class="medium-text"/>
+										<p class="description"><?php _e( 'Customer email address that purchase receipts are sent to', 'edd' ); ?></p>
 									</div>
-									<?php if( $user_id > 0 ) : ?>
-										<div class="column">
-											<span><?php _e( 'User ID:', 'edd' ); ?></span>&nbsp;
-											<input type="number" step="1" min="0" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>
-										</div>
-									<?php endif; ?>
 									<div class="column">
-										<span><?php _e( 'IP:', 'edd' ); ?></span>&nbsp;
-										<input type="text" name="edd-payment-user-ip" value="<?php esc_attr_e( edd_get_payment_user_ip( $payment_id )); ?>" class="medium-text" disabled="disabled"/>
+										<strong><?php _e( 'User ID:', 'edd' ); ?></strong>&nbsp;
+										<input type="number" step="1" min="0" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>
+										<strong><?php _e( 'IP:', 'edd' ); ?></strong>&nbsp;
+										<span><?php esc_attr_e( edd_get_payment_user_ip( $payment_id )); ?></span>
+										<p class="description"><?php _e( 'User ID of the customer and IP they purchase was made from', 'edd' ); ?></p>
 									</div>
 								</div>
 
 								<?php do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info ); ?>
-
 
 								<?php do_action( 'edd_payment_view_details', $payment_id ); ?>
 
@@ -226,11 +224,14 @@ $payment_date = strtotime( $item->post_date );
 										<div class="data column-container">
 											<div class="column">
 												<p>
-													<strong class="order-data-address-line"><?php _e( 'Street Address:', 'edd' ); ?></strong><br/>
-													<input type="text" name="edd-payment-address[0][line1]" value="<?php esc_attr_e( $user_info['address']['line1'] ); ?>" class="medium-text" /><br/>
-													<input type="text" name="edd-payment-address[0][line2]" value="<?php esc_attr_e( $user_info['address']['line2'] ); ?>" class="medium-text" />
-													
+													<strong class="order-data-address-line"><?php _e( 'Street Address Line 1:', 'edd' ); ?></strong><br/>
+													<input type="text" name="edd-payment-address[0][line1]" value="<?php esc_attr_e( $user_info['address']['line1'] ); ?>" class="medium-text" />
 												</p>
+												<p>
+													<strong class="order-data-address-line"><?php _e( 'Street Address Line 2:', 'edd' ); ?></strong><br/>
+													<input type="text" name="edd-payment-address[0][line2]" value="<?php esc_attr_e( $user_info['address']['line2'] ); ?>" class="medium-text" />
+												</p>
+													
 											</div>
 											<div class="column">
 												<p>
