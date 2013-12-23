@@ -49,6 +49,12 @@ $payment_date = strtotime( $item->post_date );
 							<div class="inside">
 								<div class="edd-order-totals-box edd-admin-box">
 									<?php do_action( 'edd_view_order_details_totals_before', $payment_id ); ?>
+									<div class="edd-order-discount edd-admin-box-inside">
+										<p>
+											<span class="label"><?php _e( 'Discount Code', 'edd' ); ?>:</span>&nbsp;
+											<span class="right"><?php if ( isset( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) { echo '<code>' . $user_info['discount'] . '</code>'; } else { _e( 'None', 'edd' ); } ?></span>
+										</p>
+									</div>
 									<?php if ( edd_use_taxes() ) : ?>
 									<div class="edd-order-taxes edd-admin-box-inside">
 										<p>
@@ -69,28 +75,18 @@ $payment_date = strtotime( $item->post_date );
 										</ul>
 									</div>
 									<?php endif; ?>
-									
-									<div class="edd-order-discount edd-admin-box-inside">
-										<p>
-											<span class="label"><?php _e( 'Discount Code', 'edd' ); ?>:</span>&nbsp;
-											<span class="right"><?php if ( isset( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) { echo '<code>' . $user_info['discount'] . '</code>'; } else { _e( 'None', 'edd' ); } ?></span>
-										</p>
-									</div>
-
 									<div class="edd-order-payment edd-admin-box-inside">
 										<p>
 											<span class="label"><?php _e( 'Total Price', 'edd' ); ?>:</span>&nbsp;
 											<input name="edd-payment-total" type="number" class="small-text right" value="<?php echo esc_attr( edd_get_payment_amount( $payment_id ) ); ?>"/>
 										</p>
 									</div>
-
 									<div class="edd-order-payment-recalc-totals edd-admin-box-inside" style="display:none">
 										<p>
 											<span class="label"><?php _e( 'Recalculate Totals', 'edd' ); ?>:</span>&nbsp;
 											<a href="" id="edd-order-recalc-total" class="button button-secondary right"><?php _e( 'Recalculate', 'edd' ); ?></a>
 										</p>
 									</div>
-
 									<?php do_action( 'edd_view_order_details_totals_after', $payment_id ); ?>
 								</div><!-- /.edd-order-totals-box -->
 							</div><!-- /.inside -->
@@ -111,20 +107,23 @@ $payment_date = strtotime( $item->post_date );
 										if ( $gateway ) { ?>
 										<p>
 											<strong><?php _e( 'Gateway:', 'edd' ); ?></strong>&nbsp;
-											<?php echo edd_get_gateway_admin_label( $gateway ); ?>
+											<span><?php echo edd_get_gateway_admin_label( $gateway ); ?></span>
 										</p>
 										<?php } ?>
 
 										<p>
 											<strong><?php _e( 'Key:', 'edd' ); ?></strong>&nbsp;
-											<?php echo edd_get_payment_key( $payment_id ); ?>
+											<span><?php echo edd_get_payment_key( $payment_id ); ?></span>
+										</p>
+
+										<p>
+											<strong><?php _e( 'IP:', 'edd' ); ?></strong>&nbsp;
+											<span><?php esc_attr_e( edd_get_payment_user_ip( $payment_id )); ?></span>
 										</p>
 
 									</div>
 
 									<div class="edd-admin-box-inside">
-
-
 										<p>
 											<span class="label"><?php _e( 'Status:', 'edd' ); ?></span>&nbsp;
 											<select name="edd-payment-status" class="medium-text">
@@ -199,9 +198,7 @@ $payment_date = strtotime( $item->post_date );
 									<div class="column">
 										<strong><?php _e( 'User ID:', 'edd' ); ?></strong>&nbsp;
 										<input type="number" step="1" min="0" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>&nbsp;&nbsp;&nbsp;
-										<strong><?php _e( 'IP:', 'edd' ); ?></strong>&nbsp;
-										<span><?php esc_attr_e( edd_get_payment_user_ip( $payment_id )); ?></span>
-										<p class="description"><?php _e( 'User ID of the customer and IP they purchase was made from', 'edd' ); ?></p>
+										<p class="description"><?php _e( 'User ID of the customer', 'edd' ); ?></p>
 									</div>
 								</div>
 
