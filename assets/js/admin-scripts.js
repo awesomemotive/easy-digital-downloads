@@ -319,7 +319,7 @@ jQuery(document).ready(function ($) {
 					$(this).parent().parent().remove();
 					// Flag the Downloads section as changed
 					$('#edd-payment-downloads-changed').val(1);
-					$('#edd-order-recalc-total').show();
+					$('.edd-order-payment-recalc-totals').show();
 				}
 				return false;
 			});
@@ -335,7 +335,7 @@ jQuery(document).ready(function ($) {
 				e.preventDefault();
 
 				var download_id    = $('#edd-order-download-select').val();
-				var download_title = $('#edd-order-download-select option:selected').text();
+				var download_title = $('.chosen-single span').text();
 				var amount         = $('#edd-order-download-amount').val();
 				var price_id       = $('.edd_price_options_select option:selected').val();
 				var price_name     = $('.edd_price_options_select option:selected').text();
@@ -409,7 +409,7 @@ jQuery(document).ready(function ($) {
 		variable_prices_check : function() {
 
 			// On Download Select, Check if Variable Prices Exist
-			$('#edd-purchased-files').on('change', 'select#edd-order-download-select', function() {
+			$('#edd-purchased-files').on('change', 'select#edd_order_download_select', function() {
 
 				var $this = $(this), download_id = $this.val();
 
@@ -425,7 +425,7 @@ jQuery(document).ready(function ($) {
 						url: ajaxurl,
 						success: function (response) {
 							$('.edd_price_options_select').remove();
-							$(response).insertAfter( $this );
+							$(response).insertAfter( $this.next() );
 						}
 					}).fail(function (data) {
 						console.log(data);
