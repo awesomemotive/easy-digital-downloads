@@ -91,6 +91,7 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 
 #edd-order-totals .inside,
 #edd-order-update .inside { margin: 0; padding: 0; }
+.edd-admin-box-inside:last-child { border-bottom: 0; }
 #edd-edit-order-form .data-payment-key { word-break: break-all; }
 
 #edd-purchased-files ul,
