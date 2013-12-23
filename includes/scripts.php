@@ -180,23 +180,24 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 	wp_enqueue_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, false );
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
-		'post_id'            => isset( $post->ID ) ? $post->ID : null,
-		'edd_version'        => EDD_VERSION,
-		'add_new_download'   => __( 'Add New Download', 'edd' ), 									// Thickbox title
-		'use_this_file'      => __( 'Use This File','edd' ), 										// "use this file" button
-		'quick_edit_warning' => __( 'Sorry, not available for variable priced products.', 'edd' ),
-		'delete_payment'     => __( 'Are you sure you wish to delete this payment?', 'edd' ),
-		'delete_payment_note'=> __( 'Are you sure you wish to delete this note?', 'edd' ),
-		'delete_tax_rate'    => __( 'Are you sure you wish to delete this tax rate?', 'edd' ),
-		'one_price_min'      => __( 'You must have at least one price', 'edd' ),
-		'one_file_min'       => __( 'You must have at least one file', 'edd' ),
-		'one_field_min'      => __( 'You must have at least one field', 'edd' ),
-		'one_option'         => sprintf( __( 'Choose a %s', 'edd' ), edd_get_label_singular() ),
-		'one_or_more_option' => sprintf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ),
-		'currency_sign'      => edd_currency_filter(''),
-		'currency_pos'       => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
-		'new_media_ui'       => apply_filters( 'edd_use_35_media_ui', 1 ),
-		'remove_text'        => __( 'Remove', 'edd' ),
+		'post_id'                 => isset( $post->ID ) ? $post->ID : null,
+		'edd_version'             => EDD_VERSION,
+		'add_new_download'        => __( 'Add New Download', 'edd' ), 									// Thickbox title
+		'use_this_file'           => __( 'Use This File','edd' ), 										// "use this file" button
+		'quick_edit_warning'      => __( 'Sorry, not available for variable priced products.', 'edd' ),
+		'delete_payment'          => __( 'Are you sure you wish to delete this payment?', 'edd' ),
+		'delete_payment_note'     => __( 'Are you sure you wish to delete this note?', 'edd' ),
+		'delete_tax_rate'         => __( 'Are you sure you wish to delete this tax rate?', 'edd' ),
+		'delete_payment_download' => sprintf( __( 'Are you sure you wish to delete this %s?', 'edd' ), edd_get_label_singular() ),
+		'one_price_min'           => __( 'You must have at least one price', 'edd' ),
+		'one_file_min'            => __( 'You must have at least one file', 'edd' ),
+		'one_field_min'           => __( 'You must have at least one field', 'edd' ),
+		'one_option'              => sprintf( __( 'Choose a %s', 'edd' ), edd_get_label_singular() ),
+		'one_or_more_option'      => sprintf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ),
+		'currency_sign'           => edd_currency_filter(''),
+		'currency_pos'            => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
+		'new_media_ui'            => apply_filters( 'edd_use_35_media_ui', 1 ),
+		'remove_text'             => __( 'Remove', 'edd' ),
 	));
 
 	if ( ! in_array( $hook, $edd_pages ) && ! is_object( $post ) )
