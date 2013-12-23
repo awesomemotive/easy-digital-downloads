@@ -87,7 +87,7 @@ function edd_admin_footer_for_thickbox() {
             });
 		</script>
 
-		<div id="choose-download">
+		<div id="choose-download" style="display: none;">
 			<div class="wrap" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
 				<p><?php echo sprintf( __( 'Use the form below to insert the short code for purchasing a %s', 'edd' ), edd_get_label_singular() ); ?></p>
 				<div>
