@@ -175,6 +175,10 @@ function edd_load_admin_scripts( $hook ) {
 
 	$edd_cpt   = apply_filters( 'edd_load_scripts_for_these_types', array( 'download', 'edd_payment', ) );
 
+	// These have to be global
+	wp_enqueue_style( 'jquery-chosen', $css_dir . 'chosen' . $suffix . '.css', array(), EDD_VERSION );
+	wp_enqueue_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
+
 	if ( ! in_array( $hook, $edd_pages ) && ! is_object( $post ) )
 		return;
 
@@ -196,8 +200,6 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 	$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
 	wp_enqueue_style( 'jquery-ui-css', $css_dir . 'jquery-ui-' . $ui_style . $suffix . '.css' );
-	wp_enqueue_style( 'jquery-chosen', $css_dir . 'chosen' . $suffix . '.css', array(), EDD_VERSION );
-	wp_enqueue_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 	wp_enqueue_script( 'media-upload' );
 	wp_enqueue_script( 'thickbox' );
 	wp_enqueue_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $suffix . '.js', array( 'jquery' ), EDD_VERSION, false );
@@ -213,6 +215,8 @@ function edd_load_admin_scripts( $hook ) {
 		'one_price_min'      => __( 'You must have at least one price', 'edd' ),
 		'one_file_min'       => __( 'You must have at least one file', 'edd' ),
 		'one_field_min'      => __( 'You must have at least one field', 'edd' ),
+		'one_option'         => sprintf( __( 'Choose a %s', 'edd' ), edd_get_label_singular() ),
+		'one_or_more_option' => sprintf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ),
 		'currency_sign'      => edd_currency_filter(''),
 		'currency_pos'       => isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before',
 		'new_media_ui'       => apply_filters( 'edd_use_35_media_ui', 1 ),
