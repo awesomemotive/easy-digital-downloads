@@ -80,7 +80,7 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 
 /* Payment Details
 -------------------------------------------------------------- */
-#edd-order-totals .inside { margin: 0; padding: 0; }
+
 .edd-admin-box .label { font-weight: 600; }
 .edd-admin-box-inside { margin: 0; padding: 5px 0 5px 10px; clear: both; border-bottom: 1px solid #ddd; }
 .rtl .edd-admin-box-inside { padding: 5px 10px 5px 0; }
@@ -88,14 +88,61 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 .edd-payment-fees .fee-label { font-weight: normal; color: #666; }
 .edd-admin-box .right { float: right; margin-right: 10px; }
 .rtl .edd-admin-box .right { float: left; margin-left: 10px; }
-#edd-order-data .order-id { color: #666; font-size: 14px; }
-#edd-order-data .column-container { clear: both; overflow: hidden; }
-#edd-order-data .order-data-column { float: left; width: 31%; min-width: 250px; padding: 0 2% 0 0; }
-#edd-order-data .order-data-column-wide { width: 62%; }
+
+#edd-order-totals .inside,
+#edd-order-update .inside { margin: 0; padding: 0; }
+
+#edd-edit-order-form .data-payment-key { word-break: break-all; }
+
+#edd-purchased-files ul,
+#edd-customer-details .column-container { text-align: justify; }
+
+#edd-order-address-country-wrap select,
+#edd-customer-details .order-data-address input,
+#edd-customer-details .order-data-column p.data input { clear: both; display: block; }
+
+.edd-order-data input.small-text { margin: 0; }
+
+#edd-order-update span.label { display: inline-block; width: 50px; }
+
+#edd-customer-details .column-container:after,
+#edd-purchased-files ul:after { content: ''; display: inline-block; width: 100%; }
+
+#edd-edit-order-form .column,
+#edd-purchased-files .row li,
+#edd-purchased-files .inside li { display: inline-block; position: relative; vertical-align: top; }
+
+#edd-purchased-files .inside li.actions { margin-top: 14px; text-align: right; }
+
+#edd-purchased-files ul li.remove { text-align: right; }
+
+#edd-purchased-files .row { padding: 12px; border-bottom: 1px solid #DDDDDD; }
+
+#edd-purchased-files ul { font-size: 0; }
+
+#edd-purchased-files ul li { font-size: 13px; margin-bottom: 0; }
+
+@media screen and ( max-width: 782px ) { .order-data-column input[type="email"] { padding: 6px 10px; } }
+@media screen and ( max-width: 1280px ) { #edd-purchased-files .inside li.actions { width: 100%; } }
+@media screen and ( min-width: 851px ) { #edd-purchased-files .inside li.actions { text-align: right; } }
+
+@media screen and ( min-width: 1280px ) {
+	#edd-edit-order-form .column { width: 32%; }
+
+	#edd-purchased-files.columns-3 .row li,
+	#edd-purchased-files.columns-3 .inside li { width: 32%; }
+
+	#edd-purchased-files.columns-4 .row li,
+	#edd-purchased-files.columns-4 .inside li { width: 23%; }
+
+	#edd-purchased-files .inside li.actions { margin-top: 0; }
+}
+
 #edd-order-data .data span { color: #666; font-weight: 600; }
+#edd-purchased-files .inside { padding: 12px; }
+#edd-order-recalc-total { float: right; }
+
 /*#edd-order-data .data-payment-key { white-space: pre-line; }*/
-#edd-purchased-files .inside { margin: 0; padding: 0; }
-#edd-purchased-files .inside .inside { margin: 6px 0 0 0; padding: 0 12px 12px; }
 
 /** Stats */
 #edd_product_stats .label { width: 70px; display: inline-block; }
