@@ -324,17 +324,18 @@ $payment_date = strtotime( $item->post_date );
 										?>
 
 										<li class="name">
-											<span><?php echo get_the_title( $item_id ); ?></span>
-											<?php
+											<span>
+												<?php echo get_the_title( $item_id );
 
-											if ( isset( $cart_items[ $key ]['item_number'] ) && isset( $cart_items[ $key ]['item_number']['options'] ) ) {
-												$price_options = $cart_items[ $key ]['item_number']['options'];
+												if ( isset( $cart_items[ $key ]['item_number'] ) && isset( $cart_items[ $key ]['item_number']['options'] ) ) {
+													$price_options = $cart_items[ $key ]['item_number']['options'];
 
-												if ( isset( $price_id ) ) {
-													echo ' - ' . edd_get_price_option_name( $item_id, $price_id, $payment_id );
+													if ( isset( $price_id ) ) {
+														echo ' - ' . edd_get_price_option_name( $item_id, $price_id, $payment_id );
+													}
 												}
-											}
-											?>
+												?>
+											</span>
 											<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][id]" class="edd-payment-details-download-id" value="<?php echo esc_attr( $item_id ); ?>"/>
 											<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][price_id]" class="edd-payment-details-download-price-id" value="<?php echo esc_attr( $price_id ); ?>"/>
 											<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][amount]" class="edd-payment-details-download-amount" value="<?php echo esc_attr( $price ); ?>"/>
