@@ -84,12 +84,6 @@ $payment_date = strtotime( $item->post_date );
 										</p>
 									</div>
 
-									<div class="edd-order-resend-email edd-admin-box-inside">
-										<p>
-											<span class="label"><?php _e( 'Payment Receipt', 'edd' ); ?>:</span>&nbsp;
-											<a href="<?php echo add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment_id ) ); ?>" class="right button-secondary"><?php _e( 'Resend', 'edd' ); ?></a>
-										</p>
-									</div>
 									<?php do_action( 'edd_view_order_details_totals_after', $payment_id ); ?>
 								</div><!-- /.edd-order-totals-box -->
 							</div><!-- /.inside -->
@@ -139,7 +133,8 @@ $payment_date = strtotime( $item->post_date );
 								<?php do_action( 'edd_view_order_details_update_before', $payment_id ); ?>
 								<div id="major-publishing-actions">
 									<div id="publishing-action">
-										<input type="submit" class="button button-primary button-large" value="<?php esc_attr_e( 'Save Payment', 'edd' ); ?>"/>
+										<input type="submit" class="button button-primary right" value="<?php esc_attr_e( 'Save Payment', 'edd' ); ?>"/>
+										<a href="<?php echo add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment_id ) ); ?>" class="right button-secondary right"><?php _e( 'Resend Receipt', 'edd' ); ?></a>
 									</div>
 									<div class="clear"></div>
 								</div>
