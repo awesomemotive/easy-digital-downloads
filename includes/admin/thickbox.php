@@ -30,7 +30,7 @@ function edd_media_button() {
 			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox" title="' . __( 'Insert Download', 'edd' ) . '">' . $img . '</a>';
 		} else {
 			$img = '<span class="wp-media-buttons-icon" id="edd-media-button"></span>';
-			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button" title="' . sprintf( __( 'Insert %s', 'edd' ), strtolower ( edd_get_label_singular() ) ) . '" style="padding-left: .4em;">' . $img . sprintf( __( 'Insert %s', 'edd' ), strtolower( edd_get_label_singular() ) ) . '</a>';
+			$output = '<a href="#TB_inline?width=640&inlineId=choose-download" class="thickbox button edd-thickbox" title="' . sprintf( __( 'Insert %s', 'edd' ), strtolower ( edd_get_label_singular() ) ) . '" style="padding-left: .4em;">' . $img . sprintf( __( 'Insert %s', 'edd' ), strtolower( edd_get_label_singular() ) ) . '</a>';
 		}
 	}
 	echo $output;
@@ -87,11 +87,11 @@ function edd_admin_footer_for_thickbox() {
             });
 		</script>
 
-		<div id="choose-download" style="display: none;">
+		<div id="choose-download">
 			<div class="wrap" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
 				<p><?php echo sprintf( __( 'Use the form below to insert the short code for purchasing a %s', 'edd' ), edd_get_label_singular() ); ?></p>
 				<div>
-					<?php echo EDD()->html->product_dropdown(); ?>
+					<?php echo EDD()->html->product_dropdown( array( 'chosen' => true )); ?>
 				</div>
 				<?php if( edd_shop_supports_buy_now() ) : ?>
 					<div>
@@ -120,8 +120,9 @@ function edd_admin_footer_for_thickbox() {
 					<select id="select-edd-color" style="clear: both; display: block; margin-bottom: 1em;">
 						<option value=""><?php _e('Choose a button color', 'edd'); ?></option>
 						<?php
-							foreach ( $colors as $key => $color )
+							foreach ( $colors as $key => $color ) {
 								echo '<option value="' . str_replace( ' ', '_', $key ) . '">' . $color['label'] . '</option>';
+							}
 						?>
 					</select>
 				</div>

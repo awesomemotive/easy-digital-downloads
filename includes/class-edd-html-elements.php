@@ -75,9 +75,10 @@ class EDD_HTML_Elements {
 			'name'             => $args['name'],
 			'selected'         => $args['selected'],
 			'id'               => $args['id'],
-			'class'            => $args['chosen'] ? 'edd-select-chosen' : '',
+			'class'            => $args['class'],
 			'options'          => $options,
 			'multiple'         => $args['multiple'],
+			'chosen'           => $args['chosen'],
 			'show_option_all'  => false,
 			'show_option_none' => __( 'None', 'edd' )
 		) );
@@ -226,6 +227,7 @@ class EDD_HTML_Elements {
 			'class'            => '',
 			'id'               => '',
 			'selected'         => 0,
+			'chosen'           => false,
 			'multiple'         => false,
 			'show_option_all'  => _x( 'All', 'all dropdown items', 'edd' ),
 			'show_option_none' => _x( 'None', 'no dropdown items', 'edd' )
@@ -237,6 +239,10 @@ class EDD_HTML_Elements {
 			$multiple = ' MULTIPLE';
 		} else {
 			$multiple = '';
+		}
+
+		if( $args['chosen'] ) {
+			$args['class'] .= ' edd-select-chosen';
 		}
 
 		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args[ 'id' ] ) ) ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . '>';
