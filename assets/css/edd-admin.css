@@ -82,7 +82,7 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 -------------------------------------------------------------- */
 
 .edd-admin-box .label { font-weight: 600; }
-.edd-admin-box-inside { margin: 0; padding: 3px 12px; clear: both; border-bottom: 1px solid #ddd; }
+.edd-admin-box-inside { margin: 0; padding: 3px 12px; clear: both; border-bottom: 1px solid #eee; }
 .rtl .edd-admin-box-inside { padding: 5px 10px 5px 0; }
 .edd-admin-box-inside .strong { font-weight: 600; }
 .edd-payment-fees .fee-label { font-weight: normal; color: #666; }
@@ -119,7 +119,7 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 
 #edd-purchased-files ul li.remove { text-align: right; }
 
-#edd-purchased-files .row { padding: 12px; border-bottom: 1px solid #DDDDDD; }
+#edd-purchased-files .row { padding: 12px; border-bottom: 1px solid #eee; }
 
 #edd-purchased-files ul { font-size: 0; }
 
