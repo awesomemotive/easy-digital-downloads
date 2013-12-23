@@ -785,4 +785,9 @@ jQuery(document).ready(function ($) {
         });
 	});
 
+	// This fixes the Chosen box being 0px wide when the thickbox is opened
+	$('.edd-thickbox').on('click', function() {
+		$('#choose-download .edd-select-chosen').css('width', '100%');
+	});
+
 });
