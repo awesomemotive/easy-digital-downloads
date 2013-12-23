@@ -346,7 +346,7 @@ jQuery(document).ready(function ($) {
 				}
 
 				if( ! amount ) {
-					amount = 0;
+					amount = '0.00';
 				}
 
 				if( edd_vars.currency_pos == 'before' ) {
