@@ -398,6 +398,9 @@ jQuery(document).ready(function ($) {
 					var quantity = $(this).next().val();
 					total += ( parseFloat( $(this).val() ) * parseInt( quantity ) );
 				});
+				$('.edd-payment-fees span.fee-amount').each(function() {
+					total += parseFloat( $(this).data('fee') );
+				});
 				$('input[name=edd-payment-total]').val( total );
 			});
 
