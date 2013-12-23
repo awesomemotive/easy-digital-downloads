@@ -60,7 +60,7 @@ function edd_payments_contextual_help() {
 
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-payments-details',
-		'title'	    => __( 'Order Details', 'edd' ),
+		'title'	    => __( 'Payment Details', 'edd' ),
 		'content'	=>
 			'<p>' . __( 'Each payment can be further inspected by clicking the corresponding <em>View Order Details</em> link. This will provide more information including:', 'edd' ) . '</p>' . 
 
