@@ -94,15 +94,7 @@ $single_use        = edd_discount_is_single_use( $discount_id );
 					<label for="edd-excluded-products"><?php printf( __( 'Excluded %s', 'edd' ), edd_get_label_plural() ); ?></label>
 				</th>
 				<td>
-					<select multiple id="edd-excluded-products" name="excluded-products[]" class="edd-select-chosen" data-placeholder="<?php printf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ); ?>">
-						<?php
-						if( $downloads ) :
-							foreach( $downloads as $download ) :
-								echo '<option value="' . esc_attr( $download->ID ) . '"' . selected( true, in_array( $download->ID, $excluded_products ), false ) . '>' . esc_html( get_the_title( $download->ID ) ) . '</option>';
-							endforeach;
-						endif;
-						?>
-					</select>
+					<?php echo EDD()->html->product_dropdown( 'excluded-products[]', $excluded_products, true, true ); ?><br/>
 					<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>
 			</tr>
