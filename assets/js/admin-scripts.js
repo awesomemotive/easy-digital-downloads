@@ -360,7 +360,7 @@ jQuery(document).ready(function ($) {
 				}
 
 				var count = $('#edd-purchased-files div.row').length;
-				var clone = $('#edd-purchased-files div.rowlast').clone();
+				var clone = $('#edd-purchased-files div.row:last').clone();
 
 				clone.find( '.name span' ).text( download_title );
 				clone.find( '.price' ).text( formatted_amount );
