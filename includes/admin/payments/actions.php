@@ -88,9 +88,6 @@ function edd_update_payment_details( $data ) {
 			$i++;
 		}
 
-		//echo '<pre>'; print_r( $downloads ); echo '</pre>';
-		//echo '<pre>'; print_r( $cart_details ); echo '</pre>';exit;
-
 		$meta['downloads']    = $downloads;
 		$meta['cart_details'] = $cart_details;
 	}
