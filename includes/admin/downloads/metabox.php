@@ -468,6 +468,7 @@ function edd_render_product_type_field( $post_id = 0 ) {
 		<?php echo EDD()->html->select( array( 
 			'options'          => $types, 
 			'name'             => '_edd_product_type', 
+			'id'               => '_edd_product_type', 
 			'selected'         => $type, 
 			'show_option_all'  => false, 
 			'show_option_none' => false 
@@ -490,39 +491,28 @@ function edd_render_products_field( $post_id ) {
 	$products = edd_get_bundled_products( $post_id );
 ?>
 	<div id="edd_products"<?php echo $display; ?>>
-		<p>
-			<strong><?php printf( __( 'Bundled %s:', 'edd' ), edd_get_label_plural() ); ?></strong>
-		</p>
-
 		<div id="edd_file_fields" class="edd_meta_table_wrap">
 			<table class="widefat" width="100%" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
-						<th style="width: 97%"><?php printf( __( '%s Name', 'edd' ), edd_get_label_singular() ); ?></th>
+						<th><?php printf( __( 'Bundled %s:', 'edd' ), edd_get_label_plural() ); ?></th>
 						<?php do_action( 'edd_download_products_table_head', $post_id ); ?>
-						<th style="width: 2%"></th>
 					</tr>
 				</thead>
 				<tbody>
-				<?php
-					if ( ! empty( $products ) ) :
-						foreach ( $products as $product ) :
-				?>
-							<tr class="edd_repeatable_product_wrapper">
-								<?php do_action( 'edd_render_product_row', $product, $post_id ); ?>
-							</tr>
-				<?php
-						endforeach;
-					else :
-				?>
 					<tr class="edd_repeatable_product_wrapper">
-						<?php do_action( 'edd_render_product_row', 0, $post_id ); ?>
-					</tr>
-				<?php endif; ?>
-					<tr>
-						<td class="submit" colspan="4" style="float: none; clear:both; background: #fff;">
-							<a class="button-secondary edd_add_repeatable" style="margin: 6px 0 10px;"><?php printf( __( 'Add %s', 'edd' ), edd_get_label_singular() ); ?></a>
+						<td>
+							<?php
+							echo EDD()->html->product_dropdown( array(
+								'name'     => '_edd_bundled_products[]',
+								'id'       => 'edd_bundled_products',
+								'selected' => $products,
+								'multiple' => true,
+								'chosen'   => true 
+							) );
+							?>
 						</td>
+						<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 					</tr>
 				</tbody>
 			</table>
@@ -531,30 +521,6 @@ function edd_render_products_field( $post_id ) {
 <?php
 }
 add_action( 'edd_meta_box_files_fields', 'edd_render_products_field', 10 );
-
-/**
- * TODO Update doc
- *
- * @since       1.6
- * @param int $product_id
- * @param     $post_id
- */
-function edd_render_product_row( $product_id = 0, $post_id ) {
-
-?>
-	<td>
-		<?php echo EDD()->html->product_dropdown( '_edd_bundled_products[]', $product_id, false, true ); ?>
-	</td>
-
-	<?php do_action( 'edd_product_table_row', $product_id, $post_id ); ?>
-
-	<td>
-		<a href="#" class="edd_remove_repeatable" data-type="file" style="background: url(<?php echo admin_url('/images/xit.gif'); ?>) no-repeat;">&times;</a>
-	</td>
-<?php
-}
-add_action( 'edd_render_product_row', 'edd_render_product_row', 10, 2 );
-
 
 /**
  * File Downloads section.
