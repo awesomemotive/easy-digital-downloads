@@ -82,17 +82,18 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 -------------------------------------------------------------- */
 
 .edd-admin-box .label { font-weight: 600; }
-.edd-admin-box-inside { margin: 0; padding: 5px 0 5px 10px; clear: both; border-bottom: 1px solid #ddd; }
+.edd-admin-box-inside { margin: 0; padding: 3px 12px; clear: both; border-bottom: 1px solid #ddd; }
 .rtl .edd-admin-box-inside { padding: 5px 10px 5px 0; }
 .edd-admin-box-inside .strong { font-weight: 600; }
 .edd-payment-fees .fee-label { font-weight: normal; color: #666; }
-.edd-admin-box .right { float: right; margin-right: 10px; }
+.edd-admin-box .right { float: right; }
 .rtl .edd-admin-box .right { float: left; margin-left: 10px; }
 
 #edd-order-totals .inside,
 #edd-order-update .inside { margin: 0; padding: 0; }
 .edd-admin-box-inside:last-child { border-bottom: 0; }
 #edd-edit-order-form .data-payment-key { word-break: break-all; }
+.edd-order-update-box #major-publishing-actions .button-secondary { margin-right: 10px; }
 
 #edd-purchased-files ul,
 #edd-customer-details .column-container { text-align: justify; }
