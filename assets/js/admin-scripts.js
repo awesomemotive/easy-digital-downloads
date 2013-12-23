@@ -359,12 +359,12 @@ jQuery(document).ready(function ($) {
 					download_title = download_title + ' - ' + price_name;
 				}
 
-				var count = $('#edd-purchased-files tr').length;
-				var clone = $('#edd-purchased-files tr:last').clone();
+				var count = $('#edd-purchased-files div.row').length;
+				var clone = $('#edd-purchased-files div.rowlast').clone();
 
-				clone.find( 'td.name span' ).text( download_title );
-				clone.find( 'td.price' ).text( formatted_amount );
-				clone.find( 'td.quantity span' ).text( quantity );
+				clone.find( '.name span' ).text( download_title );
+				clone.find( '.price' ).text( formatted_amount );
+				clone.find( '.quantity span' ).text( quantity );
 				clone.find( 'input.edd-payment-details-download-id' ).val( download_id );
 				clone.find( 'input.edd-payment-details-download-price-id' ).val( price_id );
 				clone.find( 'input.edd-payment-details-download-amount' ).val( amount );
@@ -382,8 +382,8 @@ jQuery(document).ready(function ($) {
 				// Flag the Downloads section as changed
 				$('#edd-payment-downloads-changed').val(1);
 
-				$(clone).insertAfter( '#edd-purchased-files tr:last' );
-				$('#edd-order-recalc-total').show();
+				$(clone).insertAfter( '#edd-purchased-files div.row:last' );
+				$('.edd-order-payment-recalc-totals').show();
 
 			});
 		},
@@ -391,7 +391,7 @@ jQuery(document).ready(function ($) {
 		recalculate_total : function() {
 
 			// Remove a download from a purchase
-			$('#edd-purchased-files').on('click', '#edd-order-recalc-total', function(e) {
+			$('#edd-order-recalc-total').on('click', function(e) {
 				e.preventDefault();
 				var total = 0;
 				$('#edd-purchased-files .edd-payment-details-download-amount').each(function() {

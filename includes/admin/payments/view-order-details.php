@@ -84,6 +84,13 @@ $payment_date = strtotime( $item->post_date );
 										</p>
 									</div>
 
+									<div class="edd-order-payment-recalc-totals edd-admin-box-inside" style="display:none">
+										<p>
+											<span class="label"><?php _e( 'Recalculate Totals', 'edd' ); ?>:</span>&nbsp;
+											<a href="" id="edd-order-recalc-total" class="button button-secondary right"><?php _e( 'Recalculate', 'edd' ); ?></a>
+										</p>
+									</div>
+
 									<?php do_action( 'edd_view_order_details_totals_after', $payment_id ); ?>
 								</div><!-- /.edd-order-totals-box -->
 							</div><!-- /.inside -->
@@ -360,39 +367,37 @@ $payment_date = strtotime( $item->post_date );
 
 							<div class="inside">
 
-									<ul>
-										<li class="download">
-											
-											<?php echo EDD()->html->product_dropdown( 'edd-order-download-select', 0 ); ?>
-										</li>
+								<ul>
+									<li class="download">
+										
+										<?php echo EDD()->html->product_dropdown( 'edd-order-download-select', 0 ); ?>
+									</li>
 
-										<?php if( edd_item_quantities_enabled() ) : ?>
-										<li class="quantity">
-											<span><?php _e( 'Quantity', 'edd' ); ?></span>
-											<input type="number" id="edd-order-download-quantity" class="small-text" min="1" step="1" value="1" />
-										</li>
-										<?php endif; ?>
+									<?php if( edd_item_quantities_enabled() ) : ?>
+									<li class="quantity">
+										<span><?php _e( 'Quantity', 'edd' ); ?></span>
+										<input type="number" id="edd-order-download-quantity" class="small-text" min="1" step="1" value="1" />
+									</li>
+									<?php endif; ?>
 
-										<li class="amount">
-											<span><?php _e( 'Amount', 'edd' ); ?></span>
+									<li class="amount">
+										<span><?php _e( 'Amount', 'edd' ); ?></span>
 
-											<?php
-											echo EDD()->html->text( array( 'name' => 'edd-order-download-amount',
-												'label' => __( 'Enter amount', 'edd' ),
-												'class' => 'small-text edd-order-download-price' 
-											) );
-											?>
-										</li>
+										<?php
+										echo EDD()->html->text( array( 'name' => 'edd-order-download-amount',
+											'label' => __( 'Enter amount', 'edd' ),
+											'class' => 'small-text edd-order-download-price' 
+										) );
+										?>
+									</li>
 
-										<li class="actions">
-											<a href="" id="edd-order-add-download" class="button button-secondary"><?php printf( __( 'Add %s to Payment', 'edd' ), edd_get_label_singular() ); ?></a>
-										</li>
+									<li class="actions">
+										<a href="" id="edd-order-add-download" class="button button-secondary"><?php printf( __( 'Add %s to Payment', 'edd' ), edd_get_label_singular() ); ?></a>
+									</li>
 
-									</ul>
-									<a href="" id="edd-order-recalc-total" class="button button-primary" style="display:none"><?php _e( 'Recalculate Payment Total', 'edd' ); ?></a>
-									<div class="clear"></div>
-								
-									<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value=""/>
+								</ul>
+							
+								<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value=""/>
 
 							</div><!-- /.inside -->
 						</div><!-- /#edd-purchased-files -->
