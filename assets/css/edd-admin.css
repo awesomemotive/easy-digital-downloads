@@ -8,7 +8,7 @@
 */
 
 .edd-hidden { display: none; }
-.edd-clearfix:after { display: block; visibility: hidden; content: "."; text-indent: -9999px; }
+.edd-clearfix:after { display: block; visibility: hidden; content: "."; text-indent: -9999px; height: 0; }
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */
@@ -109,7 +109,7 @@ textarea#edd_product_notes { width: 100%; height: 4em; margin: 0; }
 .edd-order-update-box .button-primary { margin-right: 0; }
 
 #edd-customer-details .column-container:after,
-#edd-purchased-files ul:after { content: ''; display: inline-block; width: 100%; }
+#edd-purchased-files ul:after { content: ''; display: inline-block; width: 100%; height: 0; }
 
 #edd-edit-order-form .column,
 #edd-purchased-files .row > ul > li,
