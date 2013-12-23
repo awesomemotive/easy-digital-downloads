@@ -368,7 +368,11 @@ $payment_date = strtotime( $item->post_date );
 								<ul>
 									<li class="download">
 										
-										<?php echo EDD()->html->product_dropdown( 'edd-order-download-select', 0, false, true ); ?>
+										<?php echo EDD()->html->product_dropdown( array(
+											'name'   => 'edd-order-download-select',
+											'id'     => 'edd-order-download-select',
+											'chosen' => true
+										) ); ?>
 									</li>
 
 									<?php if( edd_item_quantities_enabled() ) : ?>
