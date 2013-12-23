@@ -170,35 +170,6 @@ $payment_date = strtotime( $item->post_date );
 
 						</div><!-- /#edd-order-data -->
 
-						<div id="edd-payment-notes" class="postbox">
-							<h3 class="hndle"><span><?php _e( 'Payment Notes', 'edd' ); ?></span></h3>
-							<div class="inside">
-								<div id="edd-payment-notes-inner">
-									<?php
-									$notes = edd_get_payment_notes( $payment_id );
-									if ( ! empty( $notes ) ) :
-										$no_notes_display = ' style="display:none;"';
-										foreach ( $notes as $note ) :
-											
-											echo edd_get_payment_note_html( $note, $payment_id );
-
-										endforeach;
-									else :
-										$no_notes_display = '';
-									endif;
-									echo '<p class="edd-no-payment-notes"' . $no_notes_display . '>'. __( 'No payment notes', 'edd' ) . '</p>';
-									?>
-								</div>
-								<textarea name="edd-payment-note" id="edd-payment-note" class="large-text"></textarea>
-								
-								<p>
-									<button id="edd-add-payment-note" class="button button-secondary right" data-payment-id="<?php echo absint( $payment_id ); ?>"><?php _e( 'Add Note', 'edd' ); ?></button>
-								</p>
-								
-								<div class="clear"></div>
-							</div><!-- /.inside -->
-						</div><!-- /#edd-payment-notes -->
-
 						<?php do_action( 'edd_view_order_details_sidebar_after', $payment_id ); ?>
 					</div><!-- /#side-sortables -->
 				</div><!-- /#postbox-container-1 -->
@@ -410,6 +381,36 @@ $payment_date = strtotime( $item->post_date );
 
 							</div><!-- /.inside -->
 						</div><!-- /#edd-purchased-files -->
+
+						<div id="edd-payment-notes" class="postbox">
+							<h3 class="hndle"><span><?php _e( 'Payment Notes', 'edd' ); ?></span></h3>
+							<div class="inside">
+								<div id="edd-payment-notes-inner">
+									<?php
+									$notes = edd_get_payment_notes( $payment_id );
+									if ( ! empty( $notes ) ) :
+										$no_notes_display = ' style="display:none;"';
+										foreach ( $notes as $note ) :
+											
+											echo edd_get_payment_note_html( $note, $payment_id );
+
+										endforeach;
+									else :
+										$no_notes_display = '';
+									endif;
+									echo '<p class="edd-no-payment-notes"' . $no_notes_display . '>'. __( 'No payment notes', 'edd' ) . '</p>';
+									?>
+								</div>
+								<textarea name="edd-payment-note" id="edd-payment-note" class="large-text"></textarea>
+								
+								<p>
+									<button id="edd-add-payment-note" class="button button-secondary right" data-payment-id="<?php echo absint( $payment_id ); ?>"><?php _e( 'Add Note', 'edd' ); ?></button>
+								</p>
+								
+								<div class="clear"></div>
+							</div><!-- /.inside -->
+						</div><!-- /#edd-payment-notes -->
+						
 						<?php do_action( 'edd_view_order_details_main_after', $payment_id ); ?>
 					</div><!-- /#normal-sortables -->
 				</div><!-- #postbox-container-2 -->
