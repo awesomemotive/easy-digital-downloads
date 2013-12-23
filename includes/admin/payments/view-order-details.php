@@ -149,7 +149,7 @@ $payment_date = strtotime( $item->post_date );
 										</p>
 									</div>
 
-									<?php do_action( 'edd_payment_view_details', $payment_id ); ?>
+									<?php do_action( 'edd_view_order_details_update_inner', $payment_id ); ?>
 
 								</div><!-- /.column-container -->
 
