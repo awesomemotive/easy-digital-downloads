@@ -44,7 +44,7 @@ $payment_date = strtotime( $item->post_date );
 						
 						<div id="edd-order-totals" class="postbox">
 							<h3 class="hndle">
-								<span><?php _e( 'Order Totals', 'edd' ); ?></span>
+								<span><?php _e( 'Payment Totals', 'edd' ); ?></span>
 							</h3>
 							<div class="inside">
 								<div class="edd-order-totals-box edd-admin-box">
@@ -97,7 +97,7 @@ $payment_date = strtotime( $item->post_date );
 						<div id="edd-order-update" class="postbox edd-order-data">
 							
 							<h3 class="hndle">
-								<span><?php _e( 'Update Order', 'edd' ); ?></span>
+								<span><?php _e( 'Update Payment', 'edd' ); ?></span>
 							</h3>
 							<div class="inside">
 								<div class="edd-admin-box">
@@ -388,7 +388,7 @@ $payment_date = strtotime( $item->post_date );
 										</li>
 
 										<li class="actions">
-											<a href="" id="edd-order-add-download" class="button button-secondary"><?php printf( __( 'Add %s to Order', 'edd' ), edd_get_label_singular() ); ?></a>
+											<a href="" id="edd-order-add-download" class="button button-secondary"><?php printf( __( 'Add %s to Payment', 'edd' ), edd_get_label_singular() ); ?></a>
 										</li>
 
 									</ul>
