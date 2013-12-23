@@ -105,6 +105,26 @@ $payment_date = strtotime( $item->post_date );
 								<div class="edd-admin-box">
 
 									<div class="edd-admin-box-inside">
+
+										<?php
+										$gateway = edd_get_payment_gateway( $payment_id );
+										if ( $gateway ) { ?>
+										<p>
+											<strong><?php _e( 'Gateway:', 'edd' ); ?></strong>&nbsp;
+											<?php echo edd_get_gateway_admin_label( $gateway ); ?>
+										</p>
+										<?php } ?>
+
+										<p>
+											<strong><?php _e( 'Key:', 'edd' ); ?></strong>&nbsp;
+											<?php echo edd_get_payment_key( $payment_id ); ?>
+										</p>
+
+									</div>
+
+									<div class="edd-admin-box-inside">
+
+
 										<p>
 											<span class="label"><?php _e( 'Status:', 'edd' ); ?></span>&nbsp;
 											<select name="edd-payment-status" class="medium-text">
@@ -272,22 +292,6 @@ $payment_date = strtotime( $item->post_date );
 											</div>
 										</div>
 									</div><!-- /#edd-order-address -->
-
-									<div class="order-data-column column">
-
-									<?php
-										$gateway = edd_get_payment_gateway( $payment_id );
-										if ( $gateway ) { ?>
-										<p class="data">
-											<span><?php _e( 'Gateway:', 'edd' ); ?></span> <?php echo edd_get_gateway_admin_label( $gateway ); ?>
-										</p>
-										<?php } ?>
-
-										<p class="data data-payment-key">
-											<?php _e( 'Key:', 'edd' ); ?>&nbsp;<?php echo edd_get_payment_key( $payment_id ); ?>
-										</p>
-
-									</div>
 
 									<?php do_action( 'edd_payment_view_details', $payment_id ); ?>
 
