@@ -87,15 +87,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 					<label for="edd-excluded-products"><?php printf( __( 'Excluded %s', 'edd' ), edd_get_label_plural() ); ?></label>
 				</th>
 				<td>
-					<select multiple id="edd-excluded-products" name="excluded-products[]" class="edd-select-chosen" data-placeholder="<?php printf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ); ?>">
-						<?php
-						if( $downloads ) :
-							foreach( $downloads as $download ) :
-								echo '<option value="' . esc_attr( $download->ID ) . '">' . esc_html( get_the_title( $download->ID ) ) . '</option>';
-							endforeach;
-						endif;
-						?>
-					</select>
+					<?php echo EDD()->html->product_dropdown( 'excluded-products[]', array(), true, true ); ?><br/>
 					<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>
 			</tr>

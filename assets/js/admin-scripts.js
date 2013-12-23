@@ -738,6 +738,49 @@ jQuery(document).ready(function ($) {
 
 	});
 
-    $('.edd-select-chosen').chosen();
+    // Setup Chosen menus
+    $('.edd-select-chosen').chosen({
+    	inherit_select_classes: true
+    });
+
+    // Replace options with search results
+	$('.edd-select.chosen-container .chosen-choices input').keyup(function(e) {
+
+		var val = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
+		var menu_id = container.attr('id').replace( '_chosen', '' );
+		
+		if( val.length <= 3 )
+			return;
+
+		$.ajax({
+			type: 'GET',
+			url: ajaxurl,
+			data: {
+				action: 'edd_download_search',
+				s: val,
+			},
+			dataType: "json",
+			beforeSend: function(){
+				$('ul.chosen-results').empty();
+			},
+			success: function( data ) {
+				 $.each( data, function( key, item ) {
+				 	// Remove all options but those that are selected
+				 	$('#' + menu_id + ' option:not(:selected)').remove();
+					
+				 	// Add any option that doesn't already exist
+					if( ! $('#' + menu_id + ' option[value="' + item.id + '"]').length ) {
+						$('#' + menu_id).append( '<option value="' + item.id + '">' + item.name + '</option>' );
+					}
+				});
+				 // Update the options
+				$('.edd-select-chosen').trigger('chosen:updated');
+			}
+		}).fail(function (response) {
+            console.log(response);
+        }).done(function (response) {
+
+        });
+	});
 
 });

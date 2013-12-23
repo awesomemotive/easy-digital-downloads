@@ -35,15 +35,28 @@ class EDD_HTML_Elements {
 			'post_type'      => 'download',
 			'orderby'        => 'title',
 			'order'          => 'ASC',
-			'posts_per_page' => 30
+			'posts_per_page' => 5
 		) );
 
 		if ( $products ) {
 			foreach ( $products as $product ) {
-				$options[ absint( $product->ID ) ] = esc_html( get_the_title( $product->ID ) );
+				$options[ absint( $product->ID ) ] = esc_html( $product->post_title );
 			}
 		} else {
 			$options[0] = __( 'No products found', 'edd' );
+		}
+
+		// This ensures that any selected products are included in the drop down
+		if( is_array( $selected ) ) {
+			foreach( $selected as $item ) {
+				if( ! in_array( $item, $options ) ) {
+					$options[$item] = get_the_title( $item );
+				}
+			}
+		} else {
+			if( ! in_array( $selected, $options ) ) {
+				$options[$selected] = get_the_title( $selected );
+			}
 		}
 
 		$output = $this->select( array(
@@ -213,14 +226,26 @@ class EDD_HTML_Elements {
 			$miltiple = '';
 		}
 
-		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . '>';
+		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args[ 'name' ] ) ) ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . '>';
 
 		if ( ! empty( $args[ 'options' ] ) ) {
-			if ( $args[ 'show_option_all' ] )
-				$output .= '<option value="all"' . selected( $args['selected'], 0, false ) . '>' . esc_html( $args[ 'show_option_all' ] ) . '</option>';
+			if ( $args[ 'show_option_all' ] ) {
+				if( $args['multiple'] ) {
+					$selected = selected( true, in_array( 0, $args['selected'] ), false );
+				} else {
+					$selected = selected( $args['selected'], $key, false );
+				}
+				$output .= '<option value="all"' . $selected . '>' . esc_html( $args[ 'show_option_all' ] ) . '</option>';
+			}
 
-			if ( $args[ 'show_option_none' ] )
-				$output .= '<option value="-1"' . selected( $args['selected'], -1, false ) . '>' . esc_html( $args[ 'show_option_none' ] ) . '</option>';
+			if ( $args[ 'show_option_none' ] ) {
+				if( $args['multiple'] ) {
+					$selected = selected( true, in_array( -1, $args['selected'] ), false );
+				} else {
+					$selected = selected( $args['selected'], $key, false );
+				}
+				$output .= '<option value="-1"' . $selected . '>' . esc_html( $args[ 'show_option_none' ] ) . '</option>';
+			}
 
 			foreach( $args[ 'options' ] as $key => $option ) {
 
