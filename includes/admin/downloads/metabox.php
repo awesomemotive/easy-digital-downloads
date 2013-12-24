@@ -920,7 +920,10 @@ function edd_render_stats_meta_box() {
 	<hr />
 
 	<p>
-		<span><a href="<?php echo admin_url( '/edit.php?page=edd-reports&view=file_downloads&post_type=download&tab=logs&download=' . $post->ID ); ?>"><?php _e( 'View File Download Log', 'edd' ); ?></a></span>
+		<span><a href="<?php echo admin_url( 'edit.php?page=edd-reports&view=file_downloads&post_type=download&tab=logs&download=' . $post->ID ); ?>"><?php _e( 'View File Download Log', 'edd' ); ?></a></span><br/>
+	</p>
+	<p>
+		<span><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $post->ID ); ?>"><?php _e( 'View Detailed Earnings Report', 'edd' ); ?></a></span>
 	</p>
 <?php
 	do_action('edd_stats_meta_box');
