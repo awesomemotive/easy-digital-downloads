@@ -482,6 +482,7 @@ class EDD_Stats {
 			}
 
 			$end_date  = date( $format, $this->end_date );
+
 			$end_where = " AND p.post_date <= '{$end_date}'";
 		}
 
@@ -525,6 +526,7 @@ class EDD_Stats {
 			}
 
 			$end_date  = date( $format, $this->end_date );
+
 			$end_where = " AND $wpdb->posts.post_date <= '{$end_date}'";
 		}
 

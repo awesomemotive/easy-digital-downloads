@@ -125,6 +125,8 @@ jQuery(document).ready(function ($) {
             url: edd_scripts.ajaxurl,
             success: function (response) {
 
+                //console.log(response);
+
             	if( edd_scripts.redirect_to_checkout == '1' ) {
 
 	                window.location = edd_scripts.checkout_page;

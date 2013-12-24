@@ -144,6 +144,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 		'min_price'         => isset( $details['min_price'] )        ? $details['min_price']         : '',
 		'product_reqs'      => isset( $details['products'] )         ? $details['products']          : array(),
 		'product_condition' => isset( $details['product_condition'] )? $details['product_condition'] : '',
+		'excluded_products' => isset( $details['excluded-products'] )? $details['excluded-products'] : array(),
 		'is_not_global'     => isset( $details['not_global'] )       ? $details['not_global']        : false,
 		'is_single_use'     => isset( $details['use_once'] )         ? $details['use_once']          : false,
 	);
@@ -384,6 +385,23 @@ function edd_get_discount_type( $code_id = null ) {
 }
 
 /**
+ * Retrieve the products the discount canot be applied to
+ *
+ * @since 1.9
+ * @param int $code_id Discount ID
+ * @return array $excluded_products IDs of the required products
+ */
+function edd_get_discount_excluded_products( $code_id = null ) {
+	$excluded_products = get_post_meta( $code_id, '_edd_discount_excluded_products', true );
+
+	if ( empty( $excluded_products ) || ! is_array( $excluded_products ) ) {
+		$excluded_products = array();
+	}
+
+	return (array) apply_filters( 'edd_get_discount_excluded_products', $excluded_products, $code_id );
+}
+
+/**
  * Retrieve the discount product requirements
  *
  * @since 1.5
@@ -563,7 +581,9 @@ function edd_discount_is_single_use( $code_id = 0 ) {
 function edd_discount_product_reqs_met( $code_id = null ) {
 	$product_reqs = edd_get_discount_product_reqs( $code_id );
 	$condition    = edd_get_discount_product_condition( $code_id );
+	$excluded_ps  = edd_get_discount_excluded_products( $code_id );
 	$cart_items   = edd_get_cart_contents();
+	$cart_ids     = wp_list_pluck( $cart_items, 'id' );
 	$ret          = false;
 
 	if ( empty( $product_reqs ) ) {
@@ -571,8 +591,8 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 	}
 
 	// Ensure we have requirements before proceeding
-	if ( ! $ret ) :
-		switch( $condition ) :
+	if ( ! $ret ) {
+		switch( $condition ) {
 			case 'all' :
 				// Default back to true
 				$ret = true;
@@ -595,9 +615,15 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 				}
 
 				break;
+		}
+	}
 
-		endswitch;
-	endif;
+	if( $excluded_ps ) {
+		// Check that there are products other than excluded ones in the cart
+		if( $cart_ids == $excluded_ps ) {
+			$ret = false;
+		}
+	}
 
 	return (bool) apply_filters( 'edd_is_discount_products_req_met', $ret, $code_id, $condition );
 }
@@ -895,9 +921,17 @@ function edd_cart_has_discounts() {
  */
 function edd_get_cart_discounted_amount( $discounts = false ) {
 	
-	$items     = edd_get_cart_content_details();
-	$discounts = wp_list_pluck( $items, 'discount' );
-	$amount    = array_sum( $discounts );
+	$amount = 0;
+	$items  = edd_get_cart_content_details();
+	if( $items ) {
+
+		$discounts = wp_list_pluck( $items, 'discount' );
+		
+		if( is_array( $discounts ) ) {
+			$amount = array_sum( $discounts );
+		}
+		
+	}
 
 	return apply_filters( 'edd_get_cart_discounted_amount', $amount );
 }

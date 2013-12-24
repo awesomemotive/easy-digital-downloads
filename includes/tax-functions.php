@@ -109,7 +109,7 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 					}
 				} else {
 
-					if( strtolower( $state ) != strtolower( $tax_rate['state'] ) )
+					if( empty( $tax_rate['state'] ) || strtolower( $state ) != strtolower( $tax_rate['state'] ) )
 						continue;
 
 					$state_rate = $tax_rate['rate'];

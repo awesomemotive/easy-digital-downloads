@@ -97,6 +97,11 @@ function edd_insert_payment( $payment_data = array() ) {
 		$gateway = ! empty( $payment_data['gateway'] ) ? $payment_data['gateway'] : '';
 		$gateway = empty( $gateway ) && isset( $_POST['edd-gateway'] ) ? $_POST['edd-gateway'] : $gateway;
 
+		if( ! $payment_data['price'] ) {
+			// Ensures the _edd_payment_total meta key is created for purchases with an amount of 0
+			$payment_data['price'] = '0.00';
+		}
+
 		// Record the payment details
 		update_post_meta( $payment, '_edd_payment_meta',         apply_filters( 'edd_payment_meta', $payment_meta, $payment_data ) );
 		update_post_meta( $payment, '_edd_payment_user_id',      $payment_data['user_info']['id'] );
@@ -682,9 +687,15 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 	$payment_meta = edd_get_payment_meta( $payment_id );
 	$cart_details = (array) maybe_unserialize( $payment_meta['cart_details'] );
 
-	if( $include_bundle_files ) {
 
-		foreach( $cart_details as $cart_item ) {
+	foreach( $cart_details as $key => $cart_item ) {
+
+		// Ensure subtotal is set, for pre-1.9 orders
+		if( ! isset( $cart_item['subtotal'] ) ) {
+			$cart_details[$key]['subtotal'] = $cart_item['price'];
+		}
+
+		if( $include_bundle_files ) {
 
 			if( 'bundle' != edd_get_download_type( $cart_item['id'] ) )
 				continue;
@@ -702,6 +713,7 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 						'options' => array(),
 					),
 					'price'       => 0,
+					'subtotal'    => 0,
 					'quantity'    => 1,
 					'tax'         => 0,
 					'in_bundle'   => 1
@@ -984,7 +996,6 @@ function edd_insert_payment_note( $payment_id = 0, $note = '' ) {
 	return $note_id;
 }
 
-
 /**
  * Deletes a payment note
  *
@@ -1002,6 +1013,44 @@ function edd_delete_payment_note( $comment_id = 0, $payment_id = 0 ) {
 	do_action( 'edd_post_delete_payment_note', $comment_id, $payment_id );
 
 	return $ret;
+}
+
+/**
+ * Gets the payment note HTML
+ *
+ * @since 1.9
+ * @param object/int $note The comment object or ID
+ * @param int $payment_id The payment ID the note is connected to
+ * @return string
+ */
+function edd_get_payment_note_html( $note, $payment_id = 0 ) {
+
+	if( is_numeric( $note ) ) {
+		$note = get_comment( $note );
+	}
+
+	if ( ! empty( $note->user_id ) ) {
+		$user = get_userdata( $note->user_id );
+		$user = $user->display_name;
+	} else {
+		$user = __( 'EDD Bot', 'edd' );
+	}
+	$delete_note_url = wp_nonce_url( add_query_arg( array(
+		'edd-action' => 'delete_payment_note',
+		'note_id'    => $note->comment_ID,
+		'payment_id' => $payment_id
+	) ), 'edd_delete_payment_note_' . $note->comment_ID );
+
+	$note_html = '<div class="edd-payment-note" id="edd-payment-note-' . $note->comment_ID . '">';
+		$note_html .='<p>';
+			$note_html .= '<strong>' . $user . '</strong>&nbsp;<em>' . $note->comment_date . '</em><br/>';
+			$note_html .= $note->comment_content;
+			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->comment_ID ) . '" data-payment-id="' . absint( $payment_id ) . '" title="' . __( 'Delete this payment note', 'edd' ) . '">' . __( 'Delete', 'edd' ) . '</a>';
+		$note_html .= '</p>';
+	$note_html .= '</div>';
+
+	return $note_html;
+
 }
 
 /**
