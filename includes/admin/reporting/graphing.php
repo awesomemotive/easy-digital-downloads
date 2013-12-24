@@ -238,12 +238,15 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 				$minute = $second = 59;
 			}
 
-			$date = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] );
+			$date = mktime( $hour, $minute, $second, $month, $dates['day'], $dates['year'] );
+			$date_end = mktime( $hour + 1, $minute, $second, $month, $dates['day'], $dates['year'] );
 			
-			$sales = $stats->get_sales( $download_id, $date );
+			//echo $date . ' ' . $date_end . '<br/>';
+
+			$sales = $stats->get_sales( $download_id, $date, $date_end );
 			$sales_totals += $sales;
 			
-			$earnings = $stats->get_earnings( $download_id, $date );
+			$earnings = $stats->get_earnings( $download_id, $date, $date_end );
 			$earnings_totals += $earnings;
 			
 			$sales_data[] = array( $date * 1000, $sales );
