@@ -80,7 +80,7 @@ class EDD_HTML_Elements {
 			'multiple'         => $args['multiple'],
 			'chosen'           => $args['chosen'],
 			'show_option_all'  => false,
-			'show_option_none' => __( 'None', 'edd' )
+			'show_option_none' => false
 		) );
 
 		return $output;
