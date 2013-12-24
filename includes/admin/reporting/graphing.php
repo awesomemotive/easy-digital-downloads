@@ -241,8 +241,6 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 			$date = mktime( $hour, $minute, $second, $month, $dates['day'], $dates['year'] );
 			$date_end = mktime( $hour + 1, $minute, $second, $month, $dates['day'], $dates['year'] );
 			
-			//echo $date . ' ' . $date_end . '<br/>';
-
 			$sales = $stats->get_sales( $download_id, $date, $date_end );
 			$sales_totals += $sales;
 			
@@ -262,12 +260,13 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 		$day_end = $dates['day_end'];
 		$month   = $dates['m_start'];
 		while ( $day <= $day_end ) :
-			$date  = mktime( 0, 0, 0, $month, $day, $dates['year'] );
 			
-			$sales = $stats->get_sales( $download_id, $date );
+			$date  = mktime( 0, 0, 0, $month, $day, $dates['year'] );
+			$date_end = mktime( 0, 0, 0, $month, $day + 1, $dates['year'] );
+			$sales = $stats->get_sales( $download_id, $date, $date_end );
 			$sales_totals += $sales;
 			
-			$earnings = $stats->get_earnings( $download_id, $date );
+			$earnings = $stats->get_earnings( $download_id, $date, $date_end );
 			$earnings_totals += $earnings;
 			
 			$sales_data[] = array( $date * 1000, $sales );
@@ -298,12 +297,13 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 					$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
 					$d 				= 1;
 					while ( $d <= $num_of_days ) :
-						$date  = mktime( 0, 0, 0, $i, $d, $y );
+						$date      = mktime( 0, 0, 0, $i, $d, $y );
+						$end_date  = mktime( 0, 0, 0, $i, $d + 1, $y );
 			
-						$sales = $stats->get_sales( $download_id, $date );
+						$sales = $stats->get_sales( $download_id, $date, $end_date );
 						$sales_totals += $sales;
 			
-						$earnings = $stats->get_earnings( $download_id, $date );
+						$earnings = $stats->get_earnings( $download_id, $date, $end_date );
 						$earnings_totals += $earnings;
 			
 						$sales_data[] = array( $date * 1000, $sales );
@@ -311,12 +311,13 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 					$d++;
 					endwhile;
 				else :
-					$date  = mktime( 0, 0, 0, $i, 1, $y );
+					$date      = mktime( 0, 0, 0, $i, 1, $y );
+					$end_date  = mktime( 0, 0, 0, $i+1, 1, $y );
 			
-					$sales = $stats->get_sales( $download_id, $date );
+					$sales = $stats->get_sales( $download_id, $date, $end_date );
 					$sales_totals += $sales;
 			
-					$earnings = $stats->get_earnings( $download_id, $date );
+					$earnings = $stats->get_earnings( $download_id, $date, $end_date );
 					$earnings_totals += $earnings;
 			
 					$sales_data[] = array( $date * 1000, $sales );
