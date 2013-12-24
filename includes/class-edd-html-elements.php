@@ -221,6 +221,29 @@ class EDD_HTML_Elements {
 	}
 
 	/**
+	 * Renders an HTML Checkbox
+	 *
+	 * @since 1.9
+	 *
+	 * @param array $args
+	 *
+	 * @return string
+	 */
+	public function checkbox( $args = array() ) {
+		$defaults = array(
+			'name'     => null,
+			'current'  => null,
+			'class'    => 'edd-select'
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$output = '<input type="checkbox" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="edd-select ' . esc_attr( $args[ 'name'] ) . '" ' . checked( 1, $args[ 'current' ], false ) . '" class="' . $args[ 'class' ] .'"  />';
+
+		return $output;
+	}
+
+	/**
 	 * Renders an HTML Text field
 	 *
 	 * @since 1.5.2
@@ -231,12 +254,37 @@ class EDD_HTML_Elements {
 	 * @param string $desc
 	 * @return string Text field
 	 */
-	public function text( $name = 'text', $value = '', $label = '', $desc = '' ) {
-		$output = '<span id="edd-' . sanitize_key( $name ) . '-wrap">';
-			$output .= '<label class="edd-label" for="edd-' . sanitize_key( $name ) . '">' . esc_html( $label ) . '</label>';
-			if ( ! empty( $desc ) )
-				$output .= '<span class="edd-description">' . esc_html( $desc ) . '</span>';
-			$output = '<input type="text" name="' . esc_attr( $name ) . '" id="' . esc_attr( $name )  . '" value="' . esc_attr( $value ) . '"/>';
+	public function text( $args = array() ) {
+		// Backwards compatabliity
+		if ( func_num_args() > 1 ) {
+			$args = func_get_args();
+
+			$name  = $args[0];
+			$value = isset( $args[1] ) ? $args[1] : '';
+			$label = isset( $args[2] ) ? $args[2] : '';
+			$desc  = isset( $args[3] ) ? $args[3] : '';
+		}
+
+		$defaults = array(
+			'name'  => isset( $name )  ? $name  : 'text',
+			'value' => isset( $value ) ? $value : null,
+			'label' => isset( $label ) ? $label : null,
+			'desc'  => isset( $desc )  ? $desc  : null,
+			'class' => 'regular-text'
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$output = '<span id="edd-' . sanitize_key( $args[ 'name' ] ) . '-wrap">';
+			
+			$output .= '<label class="edd-label" for="edd-' . sanitize_key( $args[ 'name' ] ) . '">' . esc_html( $args[ 'label' ] ) . '</label>';
+
+			if ( ! empty( $args[ 'desc' ] ) ) {
+				$output .= '<span class="edd-description">' . esc_html( $args[ 'desc' ] ) . '</span>';
+			}
+
+			$output = '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" class="' . $args[ 'class' ] . '"/>';
+
 		$output .= '</span>';
 
 		return $output;

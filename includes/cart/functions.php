@@ -20,7 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_cart_contents() {
 	$cart = EDD()->session->get( 'edd_cart' );
-	return ! empty( $cart ) ? apply_filters( 'edd_cart_contents', $cart ) : false;
+	$cart = ! empty( $cart ) ? array_values( $cart ) : false;
+	return apply_filters( 'edd_cart_contents', $cart );
 }
 
 /**
@@ -64,15 +65,22 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 
 	$to_add = array();
 
+	if( isset( $options['quantity'] ) ) {
+		$quantity = absint( $options['quantity'] );
+		unset( $options['quantity'] );
+	} else {
+		$quantity = 1;
+	}
+
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
 		// Process multiple price options at once
 		foreach ( $options['price_id'] as $price ) {
 			$price_options = array( 'price_id' => $price );
-			$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $price_options, 'quantity' => 1 ) );
+			$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $price_options, 'quantity' => $quantity ) );
 		}
 	} else {
 		// Add a single item
-		$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $options, 'quantity' => 1 ) );
+		$to_add[] = apply_filters( 'edd_add_to_cart_item', array( 'id' => $download_id, 'options' => $options, 'quantity' => $quantity ) );
 	}
 
 	if ( is_array( $cart ) ) {
@@ -81,7 +89,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		$cart = $to_add;
 	}
 
-	$cart = EDD()->session->set( 'edd_cart', $cart );
+	EDD()->session->set( 'edd_cart', $cart );
 
 	do_action( 'edd_post_add_to_cart', $download_id, $options );
 
@@ -95,7 +103,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
  * Removes a Download from the Cart
  *
  * @since 1.0
- * @param int $cart_key the cart key to remove
+ * @param int $cart_key the cart key to remove. This key is the numerical index of the item contained within the cart array.
  * @return array Updated cart items
  */
 function edd_remove_from_cart( $cart_key ) {
@@ -121,7 +129,7 @@ function edd_remove_from_cart( $cart_key ) {
 }
 
 /**
- * Checks the see if an item is already in the cart and returns a boolean
+ * Checks to see if an item is already in the cart and returns a boolean
  *
  * @since 1.0
  *
@@ -189,7 +197,7 @@ function edd_get_item_position_in_cart( $download_id = 0, $options = array() ) {
  * @since 1.7
  * @return bool
  */
-function edd_item_quanities_enabled() {
+function edd_item_quantities_enabled() {
 	global $edd_options;
 	$ret = isset( $edd_options['item_quantities'] );
 	return apply_filters( 'edd_item_quantities_enabled', $ret );
@@ -230,7 +238,7 @@ function edd_set_cart_item_quantity( $download_id = 0, $quantity = 1, $options =
 function edd_get_cart_item_quantity( $download_id = 0, $options = array() ) {
 	$cart     = edd_get_cart_contents();
 	$key      = edd_get_item_position_in_cart( $download_id, $options );
-	$quantity = isset( $cart[ $key ]['quantity'] ) && edd_item_quanities_enabled() ? $cart[ $key ]['quantity'] : 1;
+	$quantity = isset( $cart[ $key ]['quantity'] ) && edd_item_quantities_enabled() ? $cart[ $key ]['quantity'] : 1;
 	if( $quantity < 1 )
 		$quantity = 1;
 	return apply_filters( 'edd_get_cart_item_quantity', $quantity, $download_id, $options );

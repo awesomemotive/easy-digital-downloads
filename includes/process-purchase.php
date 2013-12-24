@@ -215,7 +215,7 @@ function edd_purchase_form_validate_discounts() {
 	$error     = false;
 
 	// Check for valid discount(s) is present
-	if ( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) ) {
+	if ( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) && __( 'Enter discount', 'edd' ) != $_POST['edd-discount'] ) {
 		// Check for a posted discount
 		$posted_discount = isset( $_POST['edd-discount'] ) ? trim( $_POST['edd-discount'] ) : false;
 
@@ -548,7 +548,10 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 	if ( empty( $user_data ) )
 		return -1;
 
-	$user_args = array(
+	if( edd_get_errors() )
+		return -1;
+
+	$user_args = apply_filters( 'edd_insert_user_args', array(
 		'user_login'      => isset( $user_data['user_login'] ) ? $user_data['user_login'] : null,
 		'user_pass'       => isset( $user_data['user_pass'] ) ? $user_data['user_pass'] : null,
 		'user_email'      => $user_data['user_email'],
@@ -556,17 +559,20 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 		'last_name'       => $user_data['user_last'],
 		'user_registered' => date('Y-m-d H:i:s'),
 		'role'            => get_option( 'default_role' )
-	);
+	), $user_data );
 
 	// Insert new user
-	$user_id = wp_insert_user( apply_filters( 'edd_insert_user_args', $user_args ) );
+	$user_id = wp_insert_user( $user_args );
 
 	// Validate inserted user
 	if ( is_wp_error( $user_id ) )
 		return -1;
 
+	// Allow themes and plugins to filter the user data
+	$user_data = apply_filters( 'edd_insert_user_data', $user_data, $user_args );
+
 	// Allow themes and plugins to hook
-	do_action( 'edd_insert_user', $user_id );
+	do_action( 'edd_insert_user', $user_id, $user_data );
 
 	// Login new user
 	edd_log_user_in( $user_id, $user_data['user_login'], $user_data['user_pass'] );

@@ -91,6 +91,12 @@ function edd_currency_filter( $price ) {
 	$currency = edd_get_currency();
 	$position = isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before';
 
+	$negative = $price < 0;
+
+	if( $negative ) {
+		$price = substr( $price, 1 ); // Remove proceeding "-" -
+	}
+
 	if ( $position == 'before' ):
 		switch ( $currency ):
 			case "GBP" :
@@ -117,7 +123,7 @@ function edd_currency_filter( $price ) {
 			    $formatted = $currency . ' ' . $price;
 				break;
 		endswitch;
-		return apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
+		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
 	else :
 		switch ( $currency ) :
 			case "GBP" :
@@ -144,8 +150,15 @@ function edd_currency_filter( $price ) {
 			    $formatted = $price . ' ' . $currency;
 				break;
 		endswitch;
-		return apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
+		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
 	endif;
+
+	if( $negative ) {
+		// Prepend the mins sign before the currency sign
+		$formatted = '-' . $formatted;
+	}
+
+	return $formatted;
 }
 
 /**

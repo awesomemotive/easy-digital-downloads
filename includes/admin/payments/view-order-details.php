@@ -149,6 +149,7 @@ $payment_date = strtotime( $item->post_date );
 										<p class="data"><span><?php _e( 'User ID:', 'edd' ); ?></span> <?php echo $user_id; ?></p>
 									<?php endif; ?>
 									<p class="data"><span><?php _e( 'Email:', 'edd' ); ?></span> <a href="mailto:<?php echo $payment_meta['email']; ?>"><?php echo $payment_meta['email']; ?></a></p>
+									<p class="data"><span><?php _e( 'IP:', 'edd' ); ?></span> <?php echo edd_get_payment_user_ip( $payment_id ); ?></p>
 									<ul><?php do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info ); ?></ul>
 								</div>
 
@@ -178,25 +179,29 @@ $payment_date = strtotime( $item->post_date );
 									if ( $cart_items ) :
 										$i = 0;
 										foreach ( $cart_items as $key => $cart_item ) :
-											$id = isset( $payment_meta['cart_details'] ) ? $cart_item['id'] : $cart_item;
-											$price_override = isset( $payment_meta['cart_details'] ) ? $cart_item['price'] : null;
-											$price = edd_get_download_final_price( $id, $user_info, $price_override );
+											// Item ID is checked if isset due to the near-1.0 cart data
+											$item_id = isset( $cart_item['id']    ) ? $cart_item['id']    : $cart_item;
+											$price   = isset( $cart_item['price'] ) ? $cart_item['price'] : false;
+											if( ! $price ) {
+												// This function is only used on payments with near 1.0 cart data structure
+												$price = edd_get_download_final_price( $item_id, $user_info, null );
+											}
 											?>
 											<tr class="<?php if ( $i % 2 == 0 ) { echo 'alternate'; } ?>">
 												<td class="name column-name">
 													<?php
-													echo '<a href="' . admin_url( 'post.php?post=' . $id . '&action=edit' ) . '">' . get_the_title( $id ) . '</a>';
+													echo '<a href="' . admin_url( 'post.php?post=' . $item_id . '&action=edit' ) . '">' . get_the_title( $item_id ) . '</a>';
 
 													if ( isset( $cart_items[ $key ]['item_number'] ) ) {
 														$price_options = $cart_items[ $key ]['item_number']['options'];
 
 														if ( isset( $price_options['price_id'] ) ) {
-															echo ' - ' . edd_get_price_option_name( $id, $price_options['price_id'], $payment_id );
+															echo ' - ' . edd_get_price_option_name( $item_id, $price_options['price_id'], $payment_id );
 														}
 													}
 													?>
 												</td>
-												<?php if( edd_item_quanities_enabled() ) : ?>
+												<?php if( edd_item_quantities_enabled() ) : ?>
 												<td class="quantity column-quantity">
 													<?php echo __( 'Quantity:', 'edd' ) . '&nbsp;' . $cart_item['quantity']; ?>
 												</td>

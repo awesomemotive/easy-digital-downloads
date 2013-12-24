@@ -22,8 +22,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return      void
  */
 function edd_process_download() {
+
+	if( ! isset( $_GET['download_id'] ) && isset( $_GET['download'] ) ) {
+		$_GET['download_id'] = $_GET['download'];
+	}
+
 	$args = apply_filters( 'edd_process_download_args', array(
-		'download' => ( isset( $_GET['download'] ) )     ? (int) $_GET['download']                          : '',
+		'download' => ( isset( $_GET['download_id'] ) )  ? (int) $_GET['download_id']                    : '',
 		'email'    => ( isset( $_GET['email'] ) )        ? rawurldecode( $_GET['email'] )                   : '',
 		'expire'   => ( isset( $_GET['expire'] ) )       ? base64_decode( rawurldecode( $_GET['expire'] ) ) : '',
 		'file_key' => ( isset( $_GET['file'] ) )         ? (int) $_GET['file']                              : '',
@@ -59,7 +64,7 @@ function edd_process_download() {
 			$user_info['name'] 	= $user_data->display_name;
 		}
 
-		edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip(), $payment );
+		edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip(), $payment, $args['price_id'] );
 
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );

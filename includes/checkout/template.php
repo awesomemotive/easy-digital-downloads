@@ -162,6 +162,7 @@ function edd_user_info_fields() {
 	<?php
 }
 add_action( 'edd_purchase_form_after_user_info', 'edd_user_info_fields' );
+add_action( 'edd_register_fields_before', 'edd_user_info_fields' );
 
 /**
  * Renders the credit card info form.
@@ -281,7 +282,7 @@ function edd_default_cc_address_fields() {
 
 				$selected_country = edd_get_shop_country();
 
-				if( $logged_in && ! empty( $user_address['country'] ) ) {
+				if( $logged_in && ! empty( $user_address['country'] ) && '*' !== $user_address['country'] ) {
 					$selected_country = $user_address['country'];
 				}
 
@@ -353,39 +354,11 @@ function edd_get_register_fields() {
 
 	ob_start(); ?>
 	<fieldset id="edd_register_fields">
+		
 		<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'edd' ); ?> <a href="<?php echo add_query_arg('login', 1); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e( 'Login', 'edd' ); ?></a></p>
+		
 		<?php do_action('edd_register_fields_before'); ?>
-		<p id="edd-user-email-wrap">
-			<label for="edd-email">
-				<?php _e( 'Email', 'edd' ); ?>
-				<?php if( edd_field_is_required( 'edd_email' ) ) { ?>
-					<span class="edd-required-indicator">*</span>
-				<?php } ?>
-			</label>
-			<span class="edd-description"><?php _e( 'We will send the purchase receipt to this address.', 'edd' ); ?></span>
-			<input name="edd_email" id="edd-email" class="required edd-input" type="email" placeholder="<?php _e( 'Email', 'edd' ); ?>" title="<?php _e( 'Email', 'edd' ); ?>"/>
-		</p>
-		<p id="edd-user-first-name-wrap">
-			<label class="edd-label" for="edd-first">
-				<?php _e( 'First Name', 'edd' ); ?>
-				<?php if( edd_field_is_required( 'edd_first' ) ) { ?>
-					<span class="edd-required-indicator">*</span>
-				<?php } ?>
-			</label>
-			<span class="edd-description"><?php _e( 'We will use this to personalize your account experience.', 'edd' ); ?></span>
-			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php _e( 'First Name', 'edd' ); ?>" id="edd-first" value="<?php echo is_user_logged_in() ? $user_data->user_firstname : ''; ?>"/>
-		</p>
-		<p id="edd-user-last-name-wrap">
-			<label class="edd-label" for="edd-last">
-				<?php _e( 'Last Name', 'edd' ); ?>
-				<?php if( edd_field_is_required( 'edd_last' ) ) { ?>
-				<span class="edd-required-indicator">*</span>
-				<?php } ?>
-			</label>
-			<span class="edd-description"><?php _e( 'We will use this as well to personalize your account experience.', 'edd' ); ?></span>
-			<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="<?php _e( 'Last name', 'edd' ); ?>" value="<?php echo is_user_logged_in() ? $user_data->user_lastname : ''; ?>"/>
-		</p>
-		<?php do_action('edd_register_fields_after'); ?>
+	
 		<fieldset id="edd_register_account_fields">
 			<span><legend><?php _e( 'Create an account', 'edd' ); if( !edd_no_guest_checkout() ) { echo ' ' . __( '(optional)', 'edd' ); } ?></legend></span>
 			<?php do_action('edd_register_account_fields_before'); ?>
@@ -421,9 +394,13 @@ function edd_get_register_fields() {
 			</p>
 			<?php do_action( 'edd_register_account_fields_after' ); ?>
 		</fieldset>
+		
+		<?php do_action('edd_register_fields_after'); ?>
+		
 		<input type="hidden" name="edd-purchase-var" value="needs-to-register"/>
 
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
+		
 	</fieldset>
 	<?php
 	echo ob_get_clean();
@@ -490,8 +467,9 @@ function edd_payment_mode_select() {
 
 				foreach ( $gateways as $gateway_id => $gateway ) :
 					$checked = checked( $gateway_id, edd_get_default_gateway(), false );
-					echo '<label for="edd-gateway-' . esc_attr( $gateway_id ) . '" class="edd-gateway-option" id="edd-gateway-option-' . esc_attr( $gateway_id ) . '">';
-						echo '<input type="radio" name="payment-mode" class="edd-gateway" id="edd-gateway-' . esc_attr( $gateway_id ) . '" value="' . esc_attr( $gateway_id ) . '"' . $checked . '>' . esc_html( $gateway['checkout_label'] ) . '</option>';
+					$checked_class = $checked ? ' edd-gateway-option-selected' : '';
+					echo '<label for="edd-gateway-' . esc_attr( $gateway_id ) . '" class="edd-gateway-option' . $checked_class . '" id="edd-gateway-option-' . esc_attr( $gateway_id ) . '">';
+						echo '<input type="radio" name="payment-mode" class="edd-gateway" id="edd-gateway-' . esc_attr( $gateway_id ) . '" value="' . esc_attr( $gateway_id ) . '"' . $checked . '>' . esc_html( $gateway['checkout_label'] );
 					echo '</label>';
 				endforeach;
 
@@ -535,8 +513,8 @@ function edd_show_payment_icons() {
 			if( edd_string_is_image_url( $key ) ) {
 				echo '<img class="payment-icon" src="' . $key . '"/>';
 			} else {
-				$image = edd_locate_template( 'images/icons/' . strtolower( str_replace( ' ', '', $card ) ) . '.gif', false );
-				$image = str_replace( ABSPATH, home_url( '/' ), $image );
+                $image = edd_locate_template( 'images/icons/' . strtolower( str_replace( ' ', '', $card ) ) . '.gif', false );
+				$image = str_replace( ABSPATH, network_site_url( '/' ), $image );
 				echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
 			}
 		}
@@ -747,4 +725,14 @@ function edd_checkout_hidden_fields() {
 	<input type="hidden" name="edd_action" value="purchase"/>
 	<input type="hidden" name="edd-gateway" value="<?php echo edd_get_chosen_gateway(); ?>" />
 <?php
+}
+
+/**
+ * Show a download's files in the purchase receipt
+ *
+ * @since 1.8.6
+ * @return boolean
+*/
+function edd_receipt_show_download_files( $item_id ) {
+	return apply_filters( 'edd_receipt_show_download_files', true, $item_id );
 }

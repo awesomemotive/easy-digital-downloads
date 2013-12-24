@@ -151,9 +151,9 @@ function edd_get_purchase_link( $args = array() ) {
 				</span>
 			<?php endif; ?>
 			<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
-				echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), edd_get_tax_rate() ) . '</span>';
+				echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), edd_get_tax_rate() * 100 ) . '</span>';
 			} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
-				echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'edd' ), edd_get_tax_rate() ) . '</span>';
+				echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'edd' ), edd_get_tax_rate() * 100 ) . '</span>';
 			} ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
 
@@ -243,7 +243,7 @@ add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10 );
 function edd_before_download_content( $content ) {
 	global $post;
 
-	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() && !post_password_required() ) {
 		ob_start();
 		$content .= ob_get_clean();
 		do_action( 'edd_before_download_content', $post->ID );
@@ -268,7 +268,7 @@ add_filter( 'the_content', 'edd_before_download_content' );
 function edd_after_download_content( $content ) {
 	global $post;
 
-	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() && !post_password_required() ) {
 		ob_start();
 		do_action( 'edd_after_download_content', $post->ID );
 		$content .= ob_get_clean();
@@ -520,20 +520,12 @@ function edd_locate_template( $template_names, $load = false, $require_once = tr
 		// Trim off any slashes from the template name
 		$template_name = ltrim( $template_name, '/' );
 
-		// Check child theme first
-		if ( file_exists( trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $template_name ) ) {
-			$located = trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $template_name;
-			break;
-
-		// Check parent theme next
-		} elseif ( file_exists( trailingslashit( get_template_directory() ) . 'edd_templates/' . $template_name ) ) {
-			$located = trailingslashit( get_template_directory() ) . 'edd_templates/' . $template_name;
-			break;
-
-		// Check theme compatibility last
-		} elseif ( file_exists( trailingslashit( edd_get_templates_dir() ) . $template_name ) ) {
-			$located = trailingslashit( edd_get_templates_dir() ) . $template_name;
-			break;
+		// try locating this template file by looping through the template paths
+		foreach( edd_get_theme_template_paths() as $template_path ) {
+			if( file_exists( $template_path . $template_name ) ) {
+				$located = $template_path . $template_name;
+				break;
+			}
 		}
 	}
 
@@ -541,6 +533,27 @@ function edd_locate_template( $template_names, $load = false, $require_once = tr
 		load_template( $located, $require_once );
 
 	return $located;
+}
+
+/**
+ * Returns a list of paths to check for template locations
+ *
+ * @since 1.8.5
+ * @return mixed|void
+ */
+function edd_get_theme_template_paths() {
+	$file_paths = array(
+		1 => trailingslashit( get_stylesheet_directory() ) . 'edd_templates/',
+		10 => trailingslashit( get_template_directory() ) . 'edd_templates/',
+		100 => edd_get_templates_dir()
+	);
+
+	$file_paths = apply_filters( 'edd_template_paths', $file_paths );
+
+	// sort the file paths based on priority
+	ksort( $file_paths, SORT_NUMERIC );
+
+	return array_map( 'trailingslashit', $file_paths );
 }
 
 /**
