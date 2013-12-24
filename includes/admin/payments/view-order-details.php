@@ -307,7 +307,7 @@ $payment_date = strtotime( $item->post_date );
 										}
 										?>
 
-										<li class="name">
+										<li class="download">
 											<span>
 												<?php echo get_the_title( $item_id );
 
@@ -337,7 +337,7 @@ $payment_date = strtotime( $item->post_date );
 											<?php echo edd_currency_filter( edd_format_amount( $price ) ); ?>
 										</li>
 
-										<li class="remove">
+										<li class="actions">
 											<a href="" class="edd-order-remove-download" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
 										</li>
 									</ul>
@@ -366,7 +366,7 @@ $payment_date = strtotime( $item->post_date );
 									</li>
 									<?php endif; ?>
 
-									<li class="amount">
+									<li class="price">
 										<span><?php _e( 'Amount', 'edd' ); ?>:&nbsp;</span>
 										<?php
 										echo EDD()->html->text( array( 'name' => 'edd-order-download-amount',

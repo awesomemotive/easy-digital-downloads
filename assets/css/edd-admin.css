@@ -119,12 +119,9 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 	#edd-purchased-files.columns-4 .inside > ul > li { width: 23%; margin-right: 2%; }
 	#edd-edit-order-form .columns-4 .column:nth-child(3n+1),
 	#edd-edit-order-form .column:nth-child(2n+1) { margin-right: 0; }
-	#edd-purchased-files.columns-4 .row li.name,
-	#edd-purchased-files.columns-4 .inside li.download { width:33%; }
-	#edd-purchased-files.columns-4 .row li.price,
-	#edd-purchased-files.columns-4 .inside li.amount { width:13%; }
-	#edd-purchased-files.columns-4 .row li.remove,
-	#edd-purchased-files.columns-4 .inside li.actions { width: 25%; margin-top: 0; margin-right: 0; }
+	#edd-purchased-files.columns-4 li.download { width:33%; }
+	#edd-purchased-files.columns-4 li.price{ width:13%; }
+	#edd-purchased-files.columns-4 li.actions { width: 25%; margin-top: 0; margin-right: 0; }
 }
 #edd-order-data .data span { color: #666; font-weight: 600; }
 #edd-purchased-files .inside { padding: 12px; }
