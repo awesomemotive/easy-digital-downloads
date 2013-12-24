@@ -378,15 +378,15 @@ function edd_let_to_num( $v ) {
 	$ret = substr( $v, 0, -1 );
 
 	switch ( strtoupper( $l ) ) {
-	case 'P': // fall-through
-	case 'T': // fall-through
-	case 'G': // fall-through
-	case 'M': // fall-through
-	case 'K': // fall-through
-		$ret *= 1024;
-		break;
-	default:
-		break;
+		case 'P': // fall-through
+		case 'T': // fall-through
+		case 'G': // fall-through
+		case 'M': // fall-through
+		case 'K': // fall-through
+			$ret *= 1024;
+			break;
+		default:
+			break;
 	}
 
 	return $ret;
@@ -553,7 +553,7 @@ function edd_set_upload_dir( $upload ) {
 
 	$upload['subdir'] = '/edd' . $upload['subdir'];
 	$upload['path']   = $upload['basedir'] . $upload['subdir'];
-	$upload['url']   = $upload['baseurl'] . $upload['subdir'];
+	$upload['url']    = $upload['baseurl'] . $upload['subdir'];
 	return $upload;
 }
 
