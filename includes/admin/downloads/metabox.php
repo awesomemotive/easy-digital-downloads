@@ -739,7 +739,7 @@ function edd_render_dowwn_tax_options( $post_id = 0 ) {
 			'name'    => '_edd_download_tax_exclusive',
 			'current' => $exclusive
 		) ); ?>
-		<?php _e( 'Check this box if this product should be exclusive of tax', 'edd' ); ?>
+		<?php _e( 'Mark this product as exclusive of tax', 'edd' ); ?>
 	</label>
 <?php
 }
