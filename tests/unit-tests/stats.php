@@ -138,39 +138,39 @@ class Tests_Stats extends EDD_UnitTestCase {
 
 		// Set start date only
 		$this->_stats->setup_dates( 'yesterday' );
-		$this->assertInternalType( 'int', $this->_stats->start_date );
+		$this->assertInternalType( 'numeric', $this->_stats->start_date );
 		$this->assertEquals( $this->_stats->start_date, $this->_stats->end_date );
 
 		// Set some valid predefined date ranges
 		$this->_stats->setup_dates( 'yesterday', 'today' );
-		$this->assertInternalType( 'int', $this->_stats->start_date );
-		$this->assertInternalType( 'int', $this->_stats->end_date );
+		$this->assertInternalType( 'numeric', $this->_stats->start_date );
+		$this->assertInternalType( 'numeric', $this->_stats->end_date );
 		$this->assertGreaterThan( $this->_stats->start_date, $this->_stats->end_date );
 
 		// Set some valid dates
 		$this->_stats->setup_dates( '2012-01-12', '2012-04-15' );
-		$this->assertInternalType( 'int', $this->_stats->start_date );
-		$this->assertInternalType( 'int', $this->_stats->end_date );
+		$this->assertInternalType( 'numeric', $this->_stats->start_date );
+		$this->assertInternalType( 'numeric', $this->_stats->end_date );
 		$this->assertGreaterThan( $this->_stats->start_date, $this->_stats->end_date );
 
 		// Set some valid date strings
 		$this->_stats->setup_dates( 'January 15, 2013', 'February 24, 2013' );
-		$this->assertInternalType( 'int', $this->_stats->start_date );
-		$this->assertInternalType( 'int', $this->_stats->end_date );
+		$this->assertInternalType( 'numeric', $this->_stats->start_date );
+		$this->assertInternalType( 'numeric', $this->_stats->end_date );
 		$this->assertGreaterThan( $this->_stats->start_date, $this->_stats->end_date );
 
-		/*
+		
 		// Set some valid timestamps
 		$this->_stats->setup_dates( '1379635200', '1379645200' );
-		$this->assertInternalType( 'int', $this->_stats->start_date );
-		$this->assertInternalType( 'int', $this->_stats->end_date );
+		$this->assertInternalType( 'numeric', $this->_stats->start_date );
+		$this->assertInternalType( 'numeric', $this->_stats->end_date );
 		$this->assertGreaterThan( $this->_stats->start_date, $this->_stats->end_date );
 
 		// Set some invalid dates
 		$this->_stats->setup_dates( 'nonvaliddatestring', 'nonvaliddatestring' );
 		$this->assertInstanceOf( 'WP_Error', $this->_stats->start_date );
 		$this->assertInstanceOf( 'WP_Error', $this->_stats->end_date );
-		*/
+		
 	}
 
 

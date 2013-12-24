@@ -47,18 +47,28 @@ function edd_payment_history_page() {
 			<?php $payments_table->display() ?>
 		</form>
 		<?php do_action( 'edd_payments_page_bottom' ); ?>
-
-		<p class="edd-mobile-link">
-			<a href="https://easydigitaldownloads.com/extension/ios-sales-earnings-tracker/" target="_blank">
-				<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/icons/iphone.png'; ?>"/>
-				<?php _e( 'Get the EDD Sales / Earnings tracker for iOS', 'edd' ); ?>
-			</a>
-		</p>
-
 	</div>
 <?php
 	}
 }
+
+/**
+ * Renders the mobile link at the bottom of the payment history page
+ *
+ * @since 1.8.4
+ * @return void
+*/
+function edd_payment_history_mobile_link() { 
+	?>
+	<p class="edd-mobile-link">
+		<a href="https://easydigitaldownloads.com/extension/ios-sales-earnings-tracker/" target="_blank">
+			<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/icons/iphone.png'; ?>"/>
+			<?php _e( 'Get the EDD Sales / Earnings tracker for iOS', 'edd' ); ?>
+		</a>
+	</p>
+	<?php 
+}
+add_action( 'edd_payments_page_bottom', 'edd_payment_history_mobile_link' );
 
 /**
  * Payment History admin titles
@@ -92,3 +102,28 @@ function edd_view_order_details_title( $admin_title, $title ) {
 	return $title;
 }
 add_filter( 'admin_title', 'edd_view_order_details_title', 10, 2 );
+
+/**
+ * Intercept default Edit post links for EDD payments and rewrite them to the View Order Details screen
+ *
+ * @since 1.8.3
+ *
+ * @param $url
+ * @param $post_id
+ * @param $context
+ * @return string
+ */
+function edd_override_edit_post_for_payment_link( $url, $post_id = 0, $context ) {
+
+	$post = get_post( $post_id );
+	if( ! $post )
+		return $url;
+
+	if( 'edd_payment' != $post->post_type )
+		return $url;
+
+	$url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $post_id );
+
+	return $url;
+}
+add_filter( 'get_edit_post_link', 'edd_override_edit_post_for_payment_link', 10, 3 );

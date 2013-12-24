@@ -174,23 +174,28 @@ class EDD_API {
 
 		$this->override = false;
 
-		// Make sure we have both user and api key
-		if ( empty( $wp_query->query_vars['token'] ) || empty( $wp_query->query_vars['key'] ) )
-			$this->missing_auth();
+        // Make sure we have both user and api key
+		if ( ! empty( $wp_query->query_vars['edd-api'] ) && ( $wp_query->query_vars['edd-api'] != 'products' || ! empty( $wp_query->query_vars['token'] ) ) ) {
+			if ( empty( $wp_query->query_vars['token'] ) || empty( $wp_query->query_vars['key'] ) )
+				$this->missing_auth();
 
-		// Retrieve the user by public API key and ensure they exist
-		if ( ! ( $user = $this->get_user( $wp_query->query_vars['key'] ) ) ) :
-			$this->invalid_key();
-		else :
-			$token  = urldecode( $wp_query->query_vars['token'] );
-			$secret = get_user_meta( $user, 'edd_user_secret_key', true );
-			$public = urldecode( $wp_query->query_vars['key'] );
+			// Retrieve the user by public API key and ensure they exist
+			if ( ! ( $user = $this->get_user( $wp_query->query_vars['key'] ) ) ) :
+				$this->invalid_key();
+			else :
+				$token  = urldecode( $wp_query->query_vars['token'] );
+				$secret = get_user_meta( $user, 'edd_user_secret_key', true );
+				$public = urldecode( $wp_query->query_vars['key'] );
 
-			if ( hash( 'md5', $secret . $public ) === $token )
-				$this->is_valid_request = true;
-			else
-				$this->invalid_auth();
-		endif;
+				if ( hash( 'md5', $secret . $public ) === $token )
+					$this->is_valid_request = true;
+				else
+					$this->invalid_auth();
+			endif;
+		} elseif ( !empty( $wp_query->query_vars['edd-api'] ) && $wp_query->query_vars['edd-api'] == 'products' ) {
+			$this->is_valid_request = true;
+			$wp_query->set( 'key', 'public' );
+		}
 	}
 
 	/**
@@ -701,6 +706,8 @@ class EDD_API {
 					$products['products'][$i]['info']['link']                         = html_entity_decode( $product_info->guid );
 					$products['products'][$i]['info']['content']                      = $product_info->post_content;
 					$products['products'][$i]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
+					$products['products'][$i]['info']['category']                     = get_the_terms( $product_info, 'download_category' );
+					$products['products'][$i]['info']['tags']                         = get_the_terms( $product_info, 'download_tag' );
 
 					if( user_can( $this->user_id, 'view_shop_reports' ) || $this->override) {
 						$products['products'][$i]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
@@ -740,6 +747,8 @@ class EDD_API {
 				$products['products'][0]['info']['link']                         = html_entity_decode( $product_info->guid );
 				$products['products'][0]['info']['content']                      = $product_info->post_content;
 				$products['products'][0]['info']['thumbnail']                    = wp_get_attachment_url( get_post_thumbnail_id( $product_info->ID ) );
+				$products['products'][0]['info']['category']                     = get_the_terms( $product_info, 'download_category' );
+				$products['products'][0]['info']['tags']                         = get_the_terms( $product_info, 'download_tag' );
 
 				if( user_can( $this->user_id, 'view_shop_reports' ) || $this->override ) {
 					$products['products'][0]['stats']['total']['sales']              = edd_get_download_sales_stats( $product_info->ID );
@@ -1289,7 +1298,7 @@ class EDD_API {
 	function user_key_field( $user ) {
 		global $edd_options;
 
-		if ( ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'view_shop_reports' ) ) {
+		if ( ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'edit_user', $user->ID ) ) {
 			$user = get_userdata( $user->ID );
 			?>
 			<table class="form-table">

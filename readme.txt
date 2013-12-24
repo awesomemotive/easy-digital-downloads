@@ -4,10 +4,10 @@ Plugin URI: http://easydigitaldownloads.com
 Contributors: mordauk, sunnyratilal, chriscct7, SpencerFinnell, sksmatt, ghost1227
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
-Requires at least: 3.3
+Requires at least: 3.4.2
 Tested up to: 3.7
 
-Stable Tag: 1.8.2.1
+Stable Tag: 1.8.5
 License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -75,7 +75,7 @@ Easy Digital Downloads as been translated into the following languages:
 15. Farsi
 16. Finnish
 
-Would you like to help translate the plugin into more languages? [Contact Pippin](http://easydigitaldownloads.com/contact-developer/).
+Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](https://www.transifex.com/projects/p/easy-digital-downloads/).
 
 == Installation ==
 
@@ -185,6 +185,61 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 1.8.5: November 18, 2013 =
+
+* Fix: revert accidental introduction of new meta box UI that broke file URL saving
+
+= 1.8.4: November 17, 2013 =
+
+* Fix: discounts cannot be searched by discount code
+* Fix: file download limit not honored when files are assigned to price IDs
+* Fix: ajax cart item remove URL always set to key of 0
+* Fix: bug with price IDs and the straight to gateway action
+* Fix: do not execute before/after download contnet hooks if download requires a password
+* Fix: bug with styling of first P tag in purchase receipts
+* Fix: email preview could only be shown once per page load
+* Fix: API keygen option not shown to users even when enabled
+* Fix: I18N error
+
+* Tweak: MP6 UI compatibility
+* Tweak: add edd_get_option() helper function
+* Tweak: enable mobile app link to be removed
+* Tweak: pass $item along with edd_email_receipt_download_title filter 
+* Tweak: map lowest price option amount to edd_price
+* Tweak: add new user notification on checkout user registration
+* Tweak: check the address is not equal to * when selecting country
+* Tweak: show manual payment gateway as "Free Purchase" on payment receipt
+* Tweak: store total shop earnings in database to improve performance
+* Tweak: enable access to products API end point wiithout API keys
+
+= 1.8.3.1: November 5, 2014 =
+
+* Fix: a bug that prevented EDD cron events from firing
+* Fix: incorrect display of negative amounts for EDD_Fees
+
+= 1.8.3: November 4, 2014 =
+
+* New: added edd_payment_receipt_after_table hook
+
+* Fix: account for themes that set form input values to the value of the placeholder (caused a bug with discount codes)
+* Fix: show tax as whole number, not as decimal on prices
+* Fix: incorrect user assigned to purchases made when registering an account
+* Fix: 404 error due to "download" parameter in file download URLs on some hosts
+* Fix: fatal error in payment history column
+* Fix: payment method icons not respecting WP in its own directory
+* Fix: invalid UTF8 sequence in heartbeat API response
+* Fix: illegal offset with user address in profile editor short code
+* Fix: empty paragraph tag after tax rates in tax settings
+* Fix: undefined notices when saving Extensions tab with only one checkbox
+* Fix: double subtotal when two cart widgets are displayed on the same page
+* Fix: security flaw with user registration process during checkout
+* Fix: rich editor escaping issue in admin sale notification email
+
+* Tweak: improved .htaccess missing error message
+* Tweak: increased width of default email receipt template
+* Tweak: display EURO with symbol, not as EUR
+* Tweak: updated many translation files
 
 = 1.8.2.1: October 20, 2013 =
 

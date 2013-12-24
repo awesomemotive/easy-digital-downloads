@@ -42,13 +42,12 @@ class EDD_Payments_Query extends EDD_Stats {
 	/**
 	 * Default query arguments.
 	 *
-	 * Not all of these are valid arguments that can be passed to WP_Query.
-	 * The ones that are not, are modified before the query is run to convert
-	 * them to the proper syntax.
+	 * Not all of these are valid arguments that can be passed to WP_Query. The ones that are not, are modified before
+	 * the query is run to convert them to the proper syntax.
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @return void
+	 * @param $args array The array of arguments that can be passed in and used for setting up this payment query.
 	 */
 	public function __construct( $args = array() ) {
 		$defaults = array(
@@ -83,7 +82,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @return void
 	 */
 	public function __set( $query_var, $value ) {
 		if ( in_array( $query_var, array( 'meta_query', 'tax_query' ) ) )
@@ -97,7 +95,6 @@ class EDD_Payments_Query extends EDD_Stats {
 	 *
 	 * @access public
 	 * @since 1.8
-	 * @return void
 	 */
 	public function __unset( $query_var ) {
 		unset( $this->args[ $query_var ] );
@@ -167,7 +164,7 @@ class EDD_Payments_Query extends EDD_Stats {
 				$details->user_info    = edd_get_payment_meta_user_info( $payment_id );
 				$details->cart_details = edd_get_payment_meta_cart_details( $payment_id, true );
 
-				$this->payments[] = apply_filters( 'edd_payment', $details, get_post(), $this );
+				$this->payments[] = apply_filters( 'edd_payment', $details, $payment_id, $this );
 			}
 		}
 
@@ -325,13 +322,18 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		$search = trim( $this->args[ 's' ] );
 
-		if ( is_email( $search ) || strlen( $search ) == 32 ) {
+		if( empty( $search ) )
+			return;
 
-			$key = is_email( $search ) ? '_edd_payment_user_email' : '_edd_payment_purchase_key';
+		$is_email = is_email( $search ) || strpos( $search, '@' ) !== false;
 
+		if ( $is_email || strlen( $search ) == 32 ) {
+
+			$key = $is_email ? '_edd_payment_user_email' : '_edd_payment_purchase_key';
 			$search_meta = array(
-				'key'   => $key,
-				'value' => $search
+				'key'     => $key,
+				'value'   => $search,
+				'compare' => 'LIKE'
 			);
 
 			$this->__set( 'meta_query', $search_meta );
@@ -368,9 +370,8 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return void
 	 */
 	public function mode() {
-		if ( $this->args[ 'mode' ] == 'all' ) {
+		if ( $this->args[ 'mode' ] == 'all' || empty( $this->args[ 'mode' ] ) ) {
 			$this->__unset( 'mode' );
-
 			return;
 		}
 
