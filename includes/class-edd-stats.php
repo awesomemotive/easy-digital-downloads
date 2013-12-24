@@ -54,6 +54,14 @@ class EDD_Stats {
 	public $end_date;
 
 	/**
+	 * Flag to determine if current query is based on timestamps
+	 *
+	 * @access public
+	 * @since 1.9
+	 */
+	public $timestamp;
+
+	/**
 	 *
 	 * @access public
 	 * @since 1.8
@@ -133,7 +141,6 @@ class EDD_Stats {
 		if ( array_key_exists( $date, $this->get_predefined_dates() ) ) {
 
 			// This is a predefined date rate, such as last_week
-
 			switch( $date ) {
 
 				case 'this_month' :
@@ -168,6 +175,12 @@ class EDD_Stats {
 				case 'today' :
 
 					$day = date( 'd', current_time( 'timestamp' ) );
+
+					if( $end_date ) {
+						$hour   = 11;
+						$minute = 59;
+						$second = 59;
+					}
 
 					break;
 
@@ -411,12 +424,12 @@ class EDD_Stats {
 		} else if( is_numeric( $date ) ) {
 
 			// return $date unchanged since it is a timestamp
-			$timestamp = true;
+			$this->timestamp = true;
 
 		} else if( false !== strtotime( $date ) ) {
 
-			$timestamp = true;
-			$date      = strtotime( $date, current_time( 'timestamp' ) );
+			$this->timestamp = true;
+			$date = strtotime( $date, current_time( 'timestamp' ) );
 
 		} else {
 
@@ -424,7 +437,7 @@ class EDD_Stats {
 
 		}
 
-		if( ! is_wp_error( $date ) && ! $timestamp ) {
+		if( ! is_wp_error( $date ) && ! $this->timestamp ) {
 
 			// Create an exact timestamp
 			$date = mktime( $hour, $minute, $second, $month, $day, $year );
@@ -449,12 +462,26 @@ class EDD_Stats {
 		$end_where   = '';
 
 		if( $this->start_date ) {
-			$start_date  = date( 'Y-m-d 00:00:00', $this->start_date );
+
+			if( $this->timestamp ) {
+				$format = 'Y-m-d H:i:s';
+			} else {
+				$format = 'Y-m-d 00:00:00';
+			}
+
+			$start_date  = date( $format, $this->start_date );
 			$start_where = " AND p.post_date >= '{$start_date}'";
 		}
 
 		if( $this->end_date ) {
-			$end_date  = date( 'Y-m-d 23:59:59', $this->end_date );
+
+			if( $this->timestamp ) {
+				$format = 'Y-m-d H:i:s';
+			} else {
+				$format = 'Y-m-d 23:59:59';
+			}
+
+			$end_date  = date( $format, $this->end_date );
 			$end_where = " AND p.post_date <= '{$end_date}'";
 		}
 
@@ -478,17 +505,31 @@ class EDD_Stats {
 		$end_where   = '';
 
 		if( $this->start_date ) {
-			$start_date  = date( 'Y-m-d 00:00:00', $this->start_date );
+
+			if( $this->timestamp ) {
+				$format = 'Y-m-d H:i:s';
+			} else {
+				$format = 'Y-m-d 00:00:00';
+			}
+
+			$start_date  = date( $format, $this->start_date );
 			$start_where = " AND $wpdb->posts.post_date >= '{$start_date}'";
 		}
 
 		if( $this->end_date ) {
-			$end_date  = date( 'Y-m-d 23:59:59', $this->end_date );
+
+			if( $this->timestamp ) {
+				$format = 'Y-m-d H:i:s';
+			} else {
+				$format = 'Y-m-d 23:59:59';
+			}
+
+			$end_date  = date( $format, $this->end_date );
 			$end_where = " AND $wpdb->posts.post_date <= '{$end_date}'";
 		}
 
 		$where .= "{$start_where}{$end_where}";
-		
+
 		return $where;
 	}
 
