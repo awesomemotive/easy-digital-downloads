@@ -24,9 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_payment_history_page() {
 	global $edd_options;
 
-	if ( isset( $_GET['view'] ) && 'edit-payment' == $_GET['view'] ) {
-		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/edit-payment.php';
-	} elseif ( isset( $_GET['view'] ) && 'view-order-details' == $_GET['view'] ) {
+	if ( isset( $_GET['view'] ) && 'view-order-details' == $_GET['view'] ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-order-details.php';
 	} else {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-payments-table.php';
@@ -37,13 +35,13 @@ function edd_payment_history_page() {
 		<h2><?php _e( 'Payment History', 'edd' ); ?></h2>
 		<?php do_action( 'edd_payments_page_top' ); ?>
 		<form id="edd-payments-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">
-			<?php $payments_table->search_box( __( 'Search', 'edd' ), 'edd-payments' ); ?>
-
 			<input type="hidden" name="post_type" value="download" />
 			<input type="hidden" name="page" value="edd-payment-history" />
 
 			<?php $payments_table->views() ?>
 
+			<?php $payments_table->advanced_filters(); ?>
+			
 			<?php $payments_table->display() ?>
 		</form>
 		<?php do_action( 'edd_payments_page_bottom' ); ?>

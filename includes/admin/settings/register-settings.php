@@ -83,16 +83,19 @@ function edd_register_settings() {
 		);
 
 		foreach ( $settings as $option ) {
+
+			$name = isset( $option['name'] ) ? $option['name'] : '';
+
 			add_settings_field(
 				'edd_settings[' . $option['id'] . ']',
-				$option['name'],
+				$name,
 				function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
 				'edd_settings_' . $tab,
 				'edd_settings_' . $tab,
 				array(
-					'id'      => $option['id'],
+					'id'      => isset( $option['id'] ) ? $option['id'] : null,
 					'desc'    => ! empty( $option['desc'] ) ? $option['desc'] : '',
-					'name'    => $option['name'],
+					'name'    => isset( $option['name'] ) ? $option['name'] : null,
 					'section' => $tab,
 					'size'    => isset( $option['size'] ) ? $option['size'] : null,
 					'options' => isset( $option['options'] ) ? $option['options'] : '',
@@ -304,25 +307,29 @@ function edd_get_registered_settings() {
 					'id' => 'from_name',
 					'name' => __( 'From Name', 'edd' ),
 					'desc' => __( 'The name purchase receipts are said to come from. This should probably be your site or shop name.', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std'  => get_bloginfo( 'name' )
 				),
 				'from_email' => array(
 					'id' => 'from_email',
 					'name' => __( 'From Email', 'edd' ),
 					'desc' => __( 'Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std'  => get_bloginfo( 'admin_email' )
 				),
 				'purchase_subject' => array(
 					'id' => 'purchase_subject',
 					'name' => __( 'Purchase Email Subject', 'edd' ),
 					'desc' => __( 'Enter the subject line for the purchase receipt email', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std'  => __( 'Purchase Receipt', 'edd' )
 				),
 				'purchase_receipt' => array(
 					'id' => 'purchase_receipt',
 					'name' => __( 'Purchase Receipt', 'edd' ),
-					'desc' => edd_get_purchase_receipt_template_tags(),
-					'type' => 'rich_editor'
+					'desc' => __('Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:', 'edd') . '<br/>' . edd_get_emails_tags_list(),
+					'type' => 'rich_editor',
+					'std'  => __( "Dear", "edd" ) . " {name},\n\n" . __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "edd" ) . "\n\n{download_list}\n\n{sitename}"
 				),
 				'sale_notification_header' => array(
 					'id' => 'sale_notification_header',
@@ -340,7 +347,7 @@ function edd_get_registered_settings() {
 				'sale_notification' => array(
 					'id' => 'sale_notification',
 					'name' => __( 'Sale Notification', 'edd' ),
-					'desc' => edd_get_sale_notification_template_tags(),
+					'desc' => __( 'Enter the email that is sent to sale notification emails after completion of a purchase. HTML is accepted. Available template tags:', 'edd' ) . '<br/>' . edd_get_emails_tags_list(),
 					'type' => 'rich_editor',
 					'std' => edd_get_default_sale_notification_email()
 				),
@@ -548,14 +555,14 @@ function edd_get_registered_settings() {
 					'id' => 'file_download_limit',
 					'name' => __( 'File Download Limit', 'edd' ),
 					'desc' => sprintf( __( 'The maximum number of times files can be downloaded for purchases. Can be overwritten for each %s.', 'edd' ), edd_get_label_singular() ),
-					'type' => 'text',
+					'type' => 'number',
 					'size' => 'small'
 				),
 				'download_link_expiration' => array(
 					'id' => 'download_link_expiration',
 					'name' => __( 'Download Link Expiration', 'edd' ),
 					'desc' => __( 'How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours.', 'edd' ),
-					'type' => 'text',
+					'type' => 'number',
 					'size' => 'small',
 					'std'  => '24'
 				),
@@ -606,548 +613,21 @@ function edd_get_registered_settings() {
 					'id' => 'checkout_label',
 					'name' => __( 'Complete Purchase Text', 'edd' ),
 					'desc' => __( 'The button label for completing a purchase.', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std' => __( 'Purchase', 'edd' )
 				),
 				'add_to_cart_text' => array(
 					'id' => 'add_to_cart_text',
 					'name' => __( 'Add to Cart Text', 'edd' ),
 					'desc' => __( 'Text shown on the Add to Cart Buttons', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std'  => __( 'Add to Cart', 'edd' )
 				)
 			)
 		)
 	);
 
 	return $edd_settings;
-}
-
-/**
- * Header Callback
- *
- * Renders the header.
- *
- * @since 1.0
- * @param array $args Arguments passed by the setting
- * @return void
- */
-function edd_header_callback( $args ) {
-	echo '';
-}
-
-/**
- * Checkbox Callback
- *
- * Renders checkboxes.
- *
- * @since 1.0
- * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-function edd_checkbox_callback( $args ) {
-	global $edd_options;
-
-	$checked = isset($edd_options[$args['id']]) ? checked(1, $edd_options[$args['id']], false) : '';
-	$html = '<input type="checkbox" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="1" ' . $checked . '/>';
-	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
-
-	echo $html;
-}
-
-/**
- * Multicheck Callback
- *
- * Renders multiple checkboxes.
- *
- * @since 1.0
- * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-function edd_multicheck_callback( $args ) {
-	global $edd_options;
-
-	foreach( $args['options'] as $key => $option ):
-		if( isset( $edd_options[$args['id']][$key] ) ) { $enabled = $option; } else { $enabled = NULL; }
-		echo '<input name="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" id="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
-		echo '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
-	endforeach;
-	echo '<p class="description">' . $args['desc'] . '</p>';
-}
-
-/**
- * Radio Callback
- *
- * Renders radio boxes.
- *
- * @since 1.3.3
- * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-function edd_radio_callback( $args ) {
-	global $edd_options;
-
-	foreach ( $args['options'] as $key => $option ) :
-		$checked = false;
-
-		if ( isset( $edd_options[ $args['id'] ] ) && $edd_options[ $args['id'] ] == $key )
-			$checked = true;
-		elseif( isset( $args['std'] ) && $args['std'] == $key && ! isset( $edd_options[ $args['id'] ] ) )
-			$checked = true;
-
-		echo '<input name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" type="radio" value="' . $key . '" ' . checked(true, $checked, false) . '/>&nbsp;';
-		echo '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
-	endforeach;
-
-	echo '<p class="description">' . $args['desc'] . '</p>';
-}
-
-/**
- * Gateways Callback
- *
- * Renders gateways fields.
- *
- * @since 1.0
- * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-function edd_gateways_callback( $args ) {
-	global $edd_options;
-
-	foreach ( $args['options'] as $key => $option ) :
-		if ( isset( $edd_options['gateways'][ $key ] ) )
-			$enabled = '1';
-		else
-			$enabled = null;
-
-		echo '<input name="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
-		echo '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . '][' . $key . ']">' . $option['admin_label'] . '</label><br/>';
-	endforeach;
-}
-
-/**
- * Gateways Callback (drop down)
- *
- * Renders gateways select menu
- *
- * @since 1.5
- * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-function edd_gateway_select_callback($args) {
-	global $edd_options;
-
-	echo '<select name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']">';
-
-	foreach ( $args['options'] as $key => $option ) :
-		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $key, $edd_options[$args['id']], false ) : '';
-		echo '<option value="' . esc_attr( $key ) . '"' . $selected . '>' . esc_html( $option['admin_label'] ) . '</option>';
-	endforeach;
-
-	echo '</select>';
-	echo '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
-}
-
-/**
- * Text Callback
- *
- * Renders text fields.
- *
- * @since 1.0
- * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-function edd_text_callback( $args ) {
-	global $edd_options;
-
-	if ( isset( $edd_options[ $args['id'] ] ) )
-		$value = $edd_options[ $args['id'] ];
-	else
-		$value = isset( $args['std'] ) ? $args['std'] : '';
-
-	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="text" class="' . $size . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
-	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
-
-	echo $html;
-}
-
-/**
- * Textarea Callback
- *
- * Renders textarea fields.
- *
- * @since 1.0
- * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-function edd_textarea_callback( $args ) {
-	global $edd_options;
-
-	if ( isset( $edd_options[ $args['id'] ] ) )
-		$value = $edd_options[ $args['id'] ];
-	else
-		$value = isset( $args['std'] ) ? $args['std'] : '';
-
-	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<textarea class="large-text" cols="50" rows="5" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
-	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
-
-	echo $html;
-}
-
-/**
- * Password Callback
- *
- * Renders password fields.
- *
- * @since 1.3
- * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-function edd_password_callback( $args ) {
-	global $edd_options;
-
-	if ( isset( $edd_options[ $args['id'] ] ) )
-		$value = $edd_options[ $args['id'] ];
-	else
-		$value = isset( $args['std'] ) ? $args['std'] : '';
-
-	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="password" class="' . $size . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
-	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
-
-	echo $html;
-}
-
-/**
- * Missing Callback
- *
- * If a function is missing for settings callbacks alert the user.
- *
- * @since 1.3.1
- * @param array $args Arguments passed by the setting
- * @return void
- */
-function edd_missing_callback($args) {
-	printf( __( 'The callback function used for the <strong>%s</strong> setting is missing.', 'edd' ), $args['id'] );
-}
-
-/**
- * Select Callback
- *
- * Renders select fields.
- *
- * @since 1.0
- * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-function edd_select_callback($args) {
-	global $edd_options;
-
-	if ( isset( $edd_options[ $args['id'] ] ) )
-		$value = $edd_options[ $args['id'] ];
-	else
-		$value = isset( $args['std'] ) ? $args['std'] : '';
-
-	$html = '<select id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"/>';
-
-	foreach ( $args['options'] as $option => $name ) :
-		$selected = selected( $option, $value, false );
-		$html .= '<option value="' . $option . '" ' . $selected . '>' . $name . '</option>';
-	endforeach;
-
-	$html .= '</select>';
-	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
-
-	echo $html;
-}
-
-/**
- * Color select Callback
- *
- * Renders color select fields.
- *
- * @since 1.8
- * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-function edd_color_select_callback( $args ) {
-	global $edd_options;
-
-	if ( isset( $edd_options[ $args['id'] ] ) )
-		$value = $edd_options[ $args['id'] ];
-	else
-		$value = isset( $args['std'] ) ? $args['std'] : '';
-
-	$html = '<select id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"/>';
-
-	foreach ( $args['options'] as $option => $color ) :
-		$selected = selected( $option, $value, false );
-		$html .= '<option value="' . $option . '" ' . $selected . '>' . $color['label'] . '</option>';
-	endforeach;
-
-	$html .= '</select>';
-	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
-
-	echo $html;
-}
-
-/**
- * Rich Editor Callback
- *
- * Renders rich editor fields.
- *
- * @since 1.0
- * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @global $wp_version WordPress Version
- */
-function edd_rich_editor_callback( $args ) {
-	global $edd_options, $wp_version;
-
-	if ( isset( $edd_options[ $args['id'] ] ) )
-		$value = $edd_options[ $args['id'] ];
-	else
-		$value = isset( $args['std'] ) ? $args['std'] : '';
-
-	if ( $wp_version >= 3.3 && function_exists( 'wp_editor' ) ) {
-		$html = wp_editor( stripslashes( $value ), 'edd_settings_' . $args['section'] . '[' . $args['id'] . ']', array( 'textarea_name' => 'edd_settings_' . $args['section'] . '[' . $args['id'] . ']' ) );
-	} else {
-		$html = '<textarea class="large-text" rows="10" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
-	}
-
-	$html .= '<br/><label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
-
-	echo $html;
-}
-
-/**
- * Upload Callback
- *
- * Renders upload fields.
- *
- * @since 1.0
- * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-function edd_upload_callback( $args ) {
-	global $edd_options;
-
-	if ( isset( $edd_options[ $args['id'] ] ) )
-		$value = $edd_options[$args['id']];
-	else
-		$value = isset($args['std']) ? $args['std'] : '';
-
-	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="text" class="' . $size . '-text edd_upload_field" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
-	$html .= '<span>&nbsp;<input type="button" class="edd_settings_upload_button button-secondary" value="' . __( 'Upload File', 'edd' ) . '"/></span>';
-	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
-
-	echo $html;
-}
-
-
-/**
- * Color picker Callback
- *
- * Renders color picker fields.
- *
- * @since 1.6
- * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-function edd_color_callback( $args ) {
-	global $edd_options;
-
-	if ( isset( $edd_options[ $args['id'] ] ) )
-		$value = $edd_options[ $args['id'] ];
-	else
-		$value = isset( $args['std'] ) ? $args['std'] : '';
-
-	$default = isset( $args['std'] ) ? $args['std'] : '';
-
-	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="text" class="edd-color-picker" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( $value ) . '" data-default-color="' . esc_attr( $default ) . '" />';
-	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
-
-	echo $html;
-}
-
-/**
- * Shop States Callback
- *
- * Renders states drop down based on the currently selected country
- *
- * @since 1.6
- * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-function edd_shop_states_callback($args) {
-	global $edd_options;
-
-	$html = '<select id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"/>';
-
-	$states = edd_get_shop_states();
-
-	foreach ( $states as $option => $name ) :
-		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $option, $edd_options[$args['id']], false ) : '';
-		$html .= '<option value="' . $option . '" ' . $selected . '>' . $name . '</option>';
-	endforeach;
-
-	$html .= '</select>';
-	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
-
-	echo $html;
-}
-
-/**
- * Tax Rates Callback
- *
- * Renders tax rates table
- *
- * @since 1.6
- * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-function edd_tax_rates_callback($args) {
-	global $edd_options;
-	$rates = edd_get_tax_rates();
-	ob_start(); ?>
-	<p><?php echo $args['desc']; ?></p>
-	<table id="edd_tax_rates" class="wp-list-table widefat fixed posts">
-		<thead>
-			<tr>
-				<th scope="col" class="edd_tax_country"><?php _e( 'Country', 'edd' ); ?></th>
-				<th scope="col" class="edd_tax_state"><?php _e( 'State / Province', 'edd' ); ?></th>
-				<th scope="col" class="edd_tax_global" title="<?php _e( 'Apply rate to whole country, regardless of state / province', 'edd' ); ?>"><?php _e( 'Country Wide', 'edd' ); ?></th>
-				<th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'edd' ); ?></th>
-				<th scope="col"><?php _e( 'Remove', 'edd' ); ?></th>
-			</tr>
-		</thead>
-		<?php if( ! empty( $rates ) ) : ?>
-			<?php foreach( $rates as $key => $rate ) : ?>
-			<tr>
-				<td class="edd_tax_country">
-					<?php
-					echo EDD()->html->select( array(
-						'options'          => edd_get_country_list(),
-						'name'             => 'tax_rates[' . $key . '][country]',
-						'selected'         => $rate['country'],
-						'show_option_all'  => false,
-						'show_option_none' => false
-					) );
-					?>
-				</td>
-				<td class="edd_tax_state">
-					<?php
-					$states = edd_get_shop_states( $rate['country'] );
-					if( ! empty( $states ) ) {
-						echo EDD()->html->select( array(
-							'options'          => $states,
-							'name'             => 'tax_rates[' . $key . '][state]',
-							'selected'         => $rate['state'],
-							'show_option_all'  => false,
-							'show_option_none' => false
-						) );
-					} else {
-						echo EDD()->html->text( 'tax_rates[' . $key . '][state]', $rate['state'] );
-					}
-					?>
-				</td>
-				<td class="edd_tax_global">
-					<input type="checkbox" name="tax_rates[<?php echo $key; ?>][global]" id="tax_rates[<?php echo $key; ?>][global]" value="1"<?php checked( true, ! empty( $rate['global'] ) ); ?>/>
-					<label for="tax_rates[<?php echo $key; ?>][global]"><?php _e( 'Apply to whole country', 'edd' ); ?></label>
-				</td>
-				<td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[<?php echo $key; ?>][rate]" value="<?php echo $rate['rate']; ?>"/></td>
-				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'edd' ); ?></span></td>
-			</tr>
-			<?php endforeach; ?>
-		<?php else : ?>
-			<tr>
-				<td class="edd_tax_country">
-					<?php
-					echo EDD()->html->select( array(
-						'options'          => edd_get_country_list(),
-						'name'             => 'tax_rates[0][country]',
-						'show_option_all'  => false,
-						'show_option_none' => false
-					) ); ?>
-				</td>
-				<td class="edd_tax_state">
-					<?php echo EDD()->html->text( 'tax_rates[0][state]' ); ?>
-				</td>
-				<td class="edd_tax_global">
-					<input type="checkbox" name="tax_rates[0][global]" value="1"/>
-					<label for="tax_rates[0][global]"><?php _e( 'Apply to whole country', 'edd' ); ?></label>
-				</td>
-				<td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0" name="tax_rates[0][rate]" value=""/></td>
-				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'edd' ); ?></span></td>
-			</tr>
-		<?php endif; ?>
-	</table>
-	<p>
-		<span class="button-secondary" id="edd_add_tax_rate"><?php _e( 'Add Tax Rate', 'edd' ); ?></span>
-	</p>
-	<?php
-	echo ob_get_clean();
-}
-
-
-/**
- * Registers the license field callback for Software Licensing
- *
- * @since 1.5
- * @param array $args Arguments passed by the setting
- * @global $edd_options Array of all the EDD Options
- * @return void
- */
-if ( ! function_exists( 'edd_license_key_callback' ) ) {
-	function edd_license_key_callback( $args ) {
-		global $edd_options;
-
-		if ( isset( $edd_options[ $args['id'] ] ) )
-			$value = $edd_options[ $args['id'] ];
-		else
-			$value = isset( $args['std'] ) ? $args['std'] : '';
-
-		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-		$html = '<input type="text" class="' . $size . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
-
-		if ( 'valid' == get_option( $args['options']['is_valid_license_option'] ) ) {
-			$html .= wp_nonce_field( $args['id'] . '_nonce', $args['id'] . '_nonce', false );
-			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License',  'edd' ) . '"/>';
-		}
-
-		$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
-
-		echo $html;
-	}
-}
-
-/**
- * Hook Callback
- *
- * Adds a do_action() hook in place of the field
- *
- * @since 1.0.8.2
- * @param array $args Arguments passed by the setting
- * @return void
- */
-function edd_hook_callback( $args ) {
-	do_action( 'edd_' . $args['id'] );
 }
 
 /**
@@ -1166,12 +646,10 @@ function edd_settings_sanitize( $input = array() ) {
 
 	parse_str( $_POST['_wp_http_referer'], $referrer );
 
-	$output    = array();
 	$settings  = edd_get_registered_settings();
 	$tab       = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
-	$post_data = isset( $_POST[ 'edd_settings_' . $tab ] ) ? $_POST[ 'edd_settings_' . $tab ] : array();
 
-	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $post_data );
+	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
 
 	// Loop through each setting being saved and pass it through a sanitization filter
 	foreach( $input as $key => $value ) {
@@ -1181,11 +659,11 @@ function edd_settings_sanitize( $input = array() ) {
 
 		if( $type ) {
 			// Field type specific filter
-			$output[ $key ] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
+			$input[ $key ] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
 		}
 
 		// General filter
-		$output[ $key ] = apply_filters( 'edd_settings_sanitize', $value, $key );
+		$input[ $key ] = apply_filters( 'edd_settings_sanitize', $value, $key );
 	}
 
 
@@ -1198,7 +676,7 @@ function edd_settings_sanitize( $input = array() ) {
 				$key = $value['id'];
 			}
 
-			if( empty( $_POST[ 'edd_settings_' . $tab ][ $key ] ) ) {
+			if( empty( $input[ $key ] ) ) {
 				unset( $edd_options[ $key ] );
 			}
 
@@ -1206,7 +684,7 @@ function edd_settings_sanitize( $input = array() ) {
 	}
 
 	// Merge our new settings with the existing
-	$output = array_merge( $edd_options, $output );
+	$output = array_merge( $edd_options, $input );
 
 	add_settings_error( 'edd-notices', '', __( 'Settings Updated', 'edd' ), 'updated' );
 
@@ -1295,3 +773,573 @@ function edd_get_settings_tabs() {
 
 	return apply_filters( 'edd_settings_tabs', $tabs );
 }
+
+/**
+ * Header Callback
+ *
+ * Renders the header.
+ *
+ * @since 1.0
+ * @param array $args Arguments passed by the setting
+ * @return void
+ */
+function edd_header_callback( $args ) {
+	echo '';
+}
+
+/**
+ * Checkbox Callback
+ *
+ * Renders checkboxes.
+ *
+ * @since 1.0
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_checkbox_callback( $args ) {
+	global $edd_options;
+
+	$checked = isset($edd_options[$args['id']]) ? checked(1, $edd_options[$args['id']], false) : '';
+	$html = '<input type="checkbox" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="1" ' . $checked . '/>';
+	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+	echo $html;
+}
+
+/**
+ * Multicheck Callback
+ *
+ * Renders multiple checkboxes.
+ *
+ * @since 1.0
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_multicheck_callback( $args ) {
+	global $edd_options;
+
+	foreach( $args['options'] as $key => $option ):
+		if( isset( $edd_options[$args['id']][$key] ) ) { $enabled = $option; } else { $enabled = NULL; }
+		echo '<input name="edd_settings[' . $args['id'] . '][' . $key . ']" id="edd_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
+		echo '<label for="edd_settings[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
+	endforeach;
+	echo '<p class="description">' . $args['desc'] . '</p>';
+}
+
+/**
+ * Radio Callback
+ *
+ * Renders radio boxes.
+ *
+ * @since 1.3.3
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_radio_callback( $args ) {
+	global $edd_options;
+
+	foreach ( $args['options'] as $key => $option ) :
+		$checked = false;
+
+		if ( isset( $edd_options[ $args['id'] ] ) && $edd_options[ $args['id'] ] == $key )
+			$checked = true;
+		elseif( isset( $args['std'] ) && $args['std'] == $key && ! isset( $edd_options[ $args['id'] ] ) )
+			$checked = true;
+
+		echo '<input name="edd_settings[' . $args['id'] . ']"" id="edd_settings[' . $args['id'] . '][' . $key . ']" type="radio" value="' . $key . '" ' . checked(true, $checked, false) . '/>&nbsp;';
+		echo '<label for="edd_settings[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
+	endforeach;
+
+	echo '<p class="description">' . $args['desc'] . '</p>';
+}
+
+/**
+ * Gateways Callback
+ *
+ * Renders gateways fields.
+ *
+ * @since 1.0
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_gateways_callback( $args ) {
+	global $edd_options;
+
+	foreach ( $args['options'] as $key => $option ) :
+		if ( isset( $edd_options['gateways'][ $key ] ) )
+			$enabled = '1';
+		else
+			$enabled = null;
+
+		echo '<input name="edd_settings[' . $args['id'] . '][' . $key . ']"" id="edd_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
+		echo '<label for="edd_settings[' . $args['id'] . '][' . $key . ']">' . $option['admin_label'] . '</label><br/>';
+	endforeach;
+}
+
+/**
+ * Gateways Callback (drop down)
+ *
+ * Renders gateways select menu
+ *
+ * @since 1.5
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_gateway_select_callback($args) {
+	global $edd_options;
+
+	echo '<select name="edd_settings[' . $args['id'] . ']"" id="edd_settings[' . $args['id'] . ']">';
+
+	foreach ( $args['options'] as $key => $option ) :
+		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $key, $edd_options[$args['id']], false ) : '';
+		echo '<option value="' . esc_attr( $key ) . '"' . $selected . '>' . esc_html( $option['admin_label'] ) . '</option>';
+	endforeach;
+
+	echo '</select>';
+	echo '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+}
+
+/**
+ * Text Callback
+ *
+ * Renders text fields.
+ *
+ * @since 1.0
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_text_callback( $args ) {
+	global $edd_options;
+
+	if ( isset( $edd_options[ $args['id'] ] ) )
+		$value = $edd_options[ $args['id'] ];
+	else
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+
+	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+	$html = '<input type="text" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+	echo $html;
+}
+
+/**
+ * Number Callback
+ *
+ * Renders number fields.
+ *
+ * @since 1.9
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_number_callback( $args ) {
+	global $edd_options;
+
+	if ( isset( $edd_options[ $args['id'] ] ) )
+		$value = $edd_options[ $args['id'] ];
+	else
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+
+	$max  = isset( $args['max'] ) ? $args['max'] : 999999;
+	$step = isset( $args['step'] ) ? $args['step'] : 1;
+
+	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+	$html = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" class="' . $size . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+	echo $html;
+}
+
+/**
+ * Textarea Callback
+ *
+ * Renders textarea fields.
+ *
+ * @since 1.0
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_textarea_callback( $args ) {
+	global $edd_options;
+
+	if ( isset( $edd_options[ $args['id'] ] ) )
+		$value = $edd_options[ $args['id'] ];
+	else
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+
+	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+	$html = '<textarea class="large-text" cols="50" rows="5" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
+	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+	echo $html;
+}
+
+/**
+ * Password Callback
+ *
+ * Renders password fields.
+ *
+ * @since 1.3
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_password_callback( $args ) {
+	global $edd_options;
+
+	if ( isset( $edd_options[ $args['id'] ] ) )
+		$value = $edd_options[ $args['id'] ];
+	else
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+
+	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+	$html = '<input type="password" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
+	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+	echo $html;
+}
+
+/**
+ * Missing Callback
+ *
+ * If a function is missing for settings callbacks alert the user.
+ *
+ * @since 1.3.1
+ * @param array $args Arguments passed by the setting
+ * @return void
+ */
+function edd_missing_callback($args) {
+	printf( __( 'The callback function used for the <strong>%s</strong> setting is missing.', 'edd' ), $args['id'] );
+}
+
+/**
+ * Select Callback
+ *
+ * Renders select fields.
+ *
+ * @since 1.0
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_select_callback($args) {
+	global $edd_options;
+
+	if ( isset( $edd_options[ $args['id'] ] ) )
+		$value = $edd_options[ $args['id'] ];
+	else
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+
+	$html = '<select id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']"/>';
+
+	foreach ( $args['options'] as $option => $name ) :
+		$selected = selected( $option, $value, false );
+		$html .= '<option value="' . $option . '" ' . $selected . '>' . $name . '</option>';
+	endforeach;
+
+	$html .= '</select>';
+	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+	echo $html;
+}
+
+/**
+ * Color select Callback
+ *
+ * Renders color select fields.
+ *
+ * @since 1.8
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_color_select_callback( $args ) {
+	global $edd_options;
+
+	if ( isset( $edd_options[ $args['id'] ] ) )
+		$value = $edd_options[ $args['id'] ];
+	else
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+
+	$html = '<select id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']"/>';
+
+	foreach ( $args['options'] as $option => $color ) :
+		$selected = selected( $option, $value, false );
+		$html .= '<option value="' . $option . '" ' . $selected . '>' . $color['label'] . '</option>';
+	endforeach;
+
+	$html .= '</select>';
+	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+	echo $html;
+}
+
+/**
+ * Rich Editor Callback
+ *
+ * Renders rich editor fields.
+ *
+ * @since 1.0
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @global $wp_version WordPress Version
+ */
+function edd_rich_editor_callback( $args ) {
+	global $edd_options, $wp_version;
+
+	if ( isset( $edd_options[ $args['id'] ] ) )
+		$value = $edd_options[ $args['id'] ];
+	else
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+
+	if ( $wp_version >= 3.3 && function_exists( 'wp_editor' ) ) {
+		$html = wp_editor( stripslashes( $value ), 'edd_settings[' . $args['id'] . ']', array( 'textarea_name' => 'edd_settings[' . $args['id'] . ']' ) );
+	} else {
+		$html = '<textarea class="large-text" rows="10" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
+	}
+
+	$html .= '<br/><label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+	echo $html;
+}
+
+/**
+ * Upload Callback
+ *
+ * Renders upload fields.
+ *
+ * @since 1.0
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_upload_callback( $args ) {
+	global $edd_options;
+
+	if ( isset( $edd_options[ $args['id'] ] ) )
+		$value = $edd_options[$args['id']];
+	else
+		$value = isset($args['std']) ? $args['std'] : '';
+
+	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+	$html = '<input type="text" class="' . $size . '-text edd_upload_field" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html .= '<span>&nbsp;<input type="button" class="edd_settings_upload_button button-secondary" value="' . __( 'Upload File', 'edd' ) . '"/></span>';
+	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+	echo $html;
+}
+
+
+/**
+ * Color picker Callback
+ *
+ * Renders color picker fields.
+ *
+ * @since 1.6
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_color_callback( $args ) {
+	global $edd_options;
+
+	if ( isset( $edd_options[ $args['id'] ] ) )
+		$value = $edd_options[ $args['id'] ];
+	else
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+
+	$default = isset( $args['std'] ) ? $args['std'] : '';
+
+	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+	$html = '<input type="text" class="edd-color-picker" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '" data-default-color="' . esc_attr( $default ) . '" />';
+	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+	echo $html;
+}
+
+/**
+ * Shop States Callback
+ *
+ * Renders states drop down based on the currently selected country
+ *
+ * @since 1.6
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_shop_states_callback($args) {
+	global $edd_options;
+
+	$html = '<select id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']"/>';
+
+	$states = edd_get_shop_states();
+
+	foreach ( $states as $option => $name ) :
+		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $option, $edd_options[$args['id']], false ) : '';
+		$html .= '<option value="' . $option . '" ' . $selected . '>' . $name . '</option>';
+	endforeach;
+
+	$html .= '</select>';
+	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+	echo $html;
+}
+
+/**
+ * Tax Rates Callback
+ *
+ * Renders tax rates table
+ *
+ * @since 1.6
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_tax_rates_callback($args) {
+	global $edd_options;
+	$rates = edd_get_tax_rates();
+	ob_start(); ?>
+	<p><?php echo $args['desc']; ?></p>
+	<table id="edd_tax_rates" class="wp-list-table widefat fixed posts">
+		<thead>
+			<tr>
+				<th scope="col" class="edd_tax_country"><?php _e( 'Country', 'edd' ); ?></th>
+				<th scope="col" class="edd_tax_state"><?php _e( 'State / Province', 'edd' ); ?></th>
+				<th scope="col" class="edd_tax_global" title="<?php _e( 'Apply rate to whole country, regardless of state / province', 'edd' ); ?>"><?php _e( 'Country Wide', 'edd' ); ?></th>
+				<th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'edd' ); ?></th>
+				<th scope="col"><?php _e( 'Remove', 'edd' ); ?></th>
+			</tr>
+		</thead>
+		<?php if( ! empty( $rates ) ) : ?>
+			<?php foreach( $rates as $key => $rate ) : ?>
+			<tr>
+				<td class="edd_tax_country">
+					<?php
+					echo EDD()->html->select( array(
+						'options'          => edd_get_country_list(),
+						'name'             => 'tax_rates[' . $key . '][country]',
+						'selected'         => $rate['country'],
+						'show_option_all'  => false,
+						'show_option_none' => false,
+						'class'            => 'edd-select edd-tax-country'
+					) );
+					?>
+				</td>
+				<td class="edd_tax_state">
+					<?php
+					$states = edd_get_shop_states( $rate['country'] );
+					if( ! empty( $states ) ) {
+						echo EDD()->html->select( array(
+							'options'          => $states,
+							'name'             => 'tax_rates[' . $key . '][state]',
+							'selected'         => $rate['state'],
+							'show_option_all'  => false,
+							'show_option_none' => false
+						) );
+					} else {
+						echo EDD()->html->text( 'tax_rates[' . $key . '][state]', $rate['state'] );
+					}
+					?>
+				</td>
+				<td class="edd_tax_global">
+					<input type="checkbox" name="tax_rates[<?php echo $key; ?>][global]" id="tax_rates[<?php echo $key; ?>][global]" value="1"<?php checked( true, ! empty( $rate['global'] ) ); ?>/>
+					<label for="tax_rates[<?php echo $key; ?>][global]"><?php _e( 'Apply to whole country', 'edd' ); ?></label>
+				</td>
+				<td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0" max="99" name="tax_rates[<?php echo $key; ?>][rate]" value="<?php echo $rate['rate']; ?>"/></td>
+				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'edd' ); ?></span></td>
+			</tr>
+			<?php endforeach; ?>
+		<?php else : ?>
+			<tr>
+				<td class="edd_tax_country">
+					<?php
+					echo EDD()->html->select( array(
+						'options'          => edd_get_country_list(),
+						'name'             => 'tax_rates[0][country]',
+						'show_option_all'  => false,
+						'show_option_none' => false,
+						'class'            => 'edd-select edd-tax-country'
+					) ); ?>
+				</td>
+				<td class="edd_tax_state">
+					<?php echo EDD()->html->text( 'tax_rates[0][state]' ); ?>
+				</td>
+				<td class="edd_tax_global">
+					<input type="checkbox" name="tax_rates[0][global]" value="1"/>
+					<label for="tax_rates[0][global]"><?php _e( 'Apply to whole country', 'edd' ); ?></label>
+				</td>
+				<td class="edd_tax_rate"><input type="number" class="small-text" step="0.0001" min="0.0" name="tax_rates[0][rate]" value=""/></td>
+				<td><span class="edd_remove_tax_rate button-secondary"><?php _e( 'Remove Rate', 'edd' ); ?></span></td>
+			</tr>
+		<?php endif; ?>
+	</table>
+	<p>
+		<span class="button-secondary" id="edd_add_tax_rate"><?php _e( 'Add Tax Rate', 'edd' ); ?></span>
+	</p>
+	<?php
+	echo ob_get_clean();
+}
+
+
+/**
+ * Registers the license field callback for Software Licensing
+ *
+ * @since 1.5
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+if ( ! function_exists( 'edd_license_key_callback' ) ) {
+	function edd_license_key_callback( $args ) {
+		global $edd_options;
+
+		if ( isset( $edd_options[ $args['id'] ] ) )
+			$value = $edd_options[ $args['id'] ];
+		else
+			$value = isset( $args['std'] ) ? $args['std'] : '';
+
+		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+		$html = '<input type="text" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
+
+		if ( 'valid' == get_option( $args['options']['is_valid_license_option'] ) ) {
+			$html .= wp_nonce_field( $args['id'] . '_nonce', $args['id'] . '_nonce', false );
+			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License',  'edd' ) . '"/>';
+		}
+
+		$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+		echo $html;
+	}
+}
+
+/**
+ * Hook Callback
+ *
+ * Adds a do_action() hook in place of the field
+ *
+ * @since 1.0.8.2
+ * @param array $args Arguments passed by the setting
+ * @return void
+ */
+function edd_hook_callback( $args ) {
+	do_action( 'edd_' . $args['id'] );
+}
+
+/**
+ * Set manage_shop_settings as the cap required to save EDD settings pages
+ *
+ * @since 1.9
+ * @return string capability required
+ */
+function edd_set_settings_cap() {
+	return 'manage_shop_settings';
+}
+add_filter( 'option_page_capability_edd_settings', 'edd_set_settings_cap' );

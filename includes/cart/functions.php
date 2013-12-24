@@ -384,17 +384,20 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $include
  */
 function edd_get_cart_item_discount_amount( $item = array() ) {
 
-	$amount = 0;
-	$price  = edd_get_cart_item_price( $item['id'], $item['options'], edd_prices_include_tax() );
+	$amount           = 0;
+	$price            = edd_get_cart_item_price( $item['id'], $item['options'], edd_prices_include_tax() );
+	$discounted_price = $price;
 
 	// Retrieve all discounts applied to the cart
 	$discounts = edd_get_cart_discounts();
 
 	if( $discounts ) {
+
 		foreach ( $discounts as $discount ) {
 
-			$code_id = edd_get_discount_id_by_code( $discount );
-			$reqs    = edd_get_discount_product_reqs( $code_id );
+			$code_id           = edd_get_discount_id_by_code( $discount );
+			$reqs              = edd_get_discount_product_reqs( $code_id );
+			$excluded_products = edd_get_discount_excluded_products( $code_id );
 
 			// Make sure requirements are set and that this discount shouldn't apply to the whole cart
 			if ( ! empty( $reqs ) && edd_is_discount_not_global( $code_id ) ) {
@@ -402,18 +405,19 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 				// This is a product(s) specific discount
 
 				foreach ( $reqs as $download_id ) {
-					if ( $download_id == $item['id'] ) {
-
+					
+					if ( $download_id == $item['id'] && ! in_array( $item['id'], $excluded_products ) ) {
 						$discounted_price = edd_get_discounted_amount( $discount, $price );
-
 					}
+					
 				}
 
 			} else {
 
 				// This is a global cart discount
-				$discounted_price = edd_get_discounted_amount( $discount, $price );
-
+				if( ! in_array( $item['id'], $excluded_products ) ) {
+					$discounted_price = edd_get_discounted_amount( $discount, $price );
+				}
 			}
 		}
 
@@ -571,10 +575,16 @@ function edd_get_cart_subtotal() {
 	if( $items ) {
 
 		$prices   = wp_list_pluck( $items, 'subtotal' );
-		$subtotal = array_sum( $prices );
 
-		if( $subtotal < 0 )
+		if( is_array( $prices ) ) {
+			$subtotal = array_sum( $prices );
+		} else {
 			$subtotal = 0.00;
+		}
+
+		if( $subtotal < 0 ) {
+			$subtotal = 0.00;
+		}
 
 	}
 
@@ -708,9 +718,18 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
  */
 function edd_get_cart_tax() {
 
+	$cart_tax = 0;
 	$items    = edd_get_cart_content_details();
-	$taxes    = wp_list_pluck( $items, 'tax' );
-	$cart_tax = array_sum( $taxes );
+
+	if( $items ) {
+
+		$taxes    = wp_list_pluck( $items, 'tax' );
+
+		if( is_array( $taxes ) ) {
+			$cart_tax = array_sum( $taxes );	
+		}
+		
+	}
 
 	return apply_filters( 'edd_get_cart_tax', $cart_tax );
 }
@@ -984,7 +1003,7 @@ function edd_is_cart_saved() {
 			return false;
 
 		// Check that the saved cart is not the same as the current cart
-		if ( stripslashes( maybe_unserialize( $_COOKIE['edd_saved_cart'] ) ) === EDD()->session->get( 'edd_cart' ) )
+		if ( maybe_unserialize( stripslashes( $_COOKIE['edd_saved_cart'] ) ) === EDD()->session->get( 'edd_cart' ) )
 			return false;
 
 		return true;

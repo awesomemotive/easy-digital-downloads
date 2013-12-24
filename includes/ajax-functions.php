@@ -88,6 +88,8 @@ function edd_ajax_add_to_cart() {
 			}
 		}
 
+		$items = '';
+
 		foreach ( $to_add as $options ) {
 
 			if( $_POST['download_id'] == $options['price_id'] )
@@ -100,16 +102,17 @@ function edd_ajax_add_to_cart() {
 				'options' => $options
 			);
 
-			$item = apply_filters( 'edd_ajax_pre_cart_item_template', $item );
-
-			$return = array(
-				'subtotal'  => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
-				'cart_item' => html_entity_decode( edd_get_cart_item_template( $key, $item, true ), ENT_COMPAT, 'UTF-8' )
-			);
-
-			echo json_encode( $return );
+			$item   = apply_filters( 'edd_ajax_pre_cart_item_template', $item );
+			$items .= html_entity_decode( edd_get_cart_item_template( $key, $item, true ), ENT_COMPAT, 'UTF-8' );
 
 		}
+
+		$return = array(
+			'subtotal'  => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+			'cart_item' => $items
+		);
+
+		echo json_encode( $return );
 	}
 	edd_die();
 }
@@ -268,7 +271,6 @@ function edd_ajax_recalculate_taxes() {
 add_action( 'wp_ajax_edd_recalculate_taxes', 'edd_ajax_recalculate_taxes' );
 add_action( 'wp_ajax_nopriv_edd_recalculate_taxes', 'edd_ajax_recalculate_taxes' );
 
-
 /**
  * Retrieve a states drop down
  *
@@ -305,6 +307,44 @@ add_action( 'wp_ajax_edd_get_shop_states', 'edd_ajax_get_states_field' );
 add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
 
 /**
+ * Retrieve a states drop down
+ *
+ * @since 1.6
+ * @return void
+ */
+function edd_ajax_download_search() {
+
+	$search  = sanitize_text_field( $_GET['s'] );
+	$results = array();
+	$items   = get_posts( array( 'post_type' => 'download', 'posts_per_page' => 30, 's' => $search ) ); 
+
+	if( $items ) {
+
+		foreach( $items as $item ) {
+
+			$results[] = array(
+				'id'   => $item->ID,
+				'name' => $item->post_title
+			);
+		}
+
+	} else {
+		
+		$items[] = array(
+			'id'   => 0,
+			'name' => __( 'No results found', 'edd' )
+		);
+		
+	}
+
+	echo json_encode( $results );
+
+	edd_die();
+}
+add_action( 'wp_ajax_edd_download_search', 'edd_ajax_download_search' );
+add_action( 'wp_ajax_nopriv_edd_download_search', 'edd_ajax_download_search' );
+
+/**
  * Check for Download Price Variations via AJAX (this function can only be used
  * in WordPress Admin). This function is used for the Edit Payment screen when downloads
  * are added to the purchase. When each download is chosen, an AJAX call is fired
@@ -317,16 +357,14 @@ add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
  * @return void
  */
 function edd_check_for_download_price_variations() {
-	if ( ! check_ajax_referer( 'edd_add_downloads_to_purchase_nonce', 'nonce' ) )
-		return false;
 
 	$download_id = intval( $_POST['download_id'] );
 
 	if ( edd_has_variable_prices( $download_id ) ) {
-		$variable_prices = get_post_meta( $download_id, 'edd_variable_prices', true );
+		$variable_prices = edd_get_variable_prices( $download_id );
 
 		if ( $variable_prices ) {
-			$ajax_response = '<select name="downloads[' . intval( $_POST['array_key'] ) . '][options][price_id]" class="edd-variable-prices-select">';
+			$ajax_response = '<select class="edd_price_options_select edd-select edd-select">';
 				foreach ( $variable_prices as $key => $price ) {
 					$ajax_response .= '<option value="' . $key . '">' . $price['name']  . '</option>';
 				}

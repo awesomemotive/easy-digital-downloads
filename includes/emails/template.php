@@ -41,146 +41,7 @@ function edd_get_email_templates() {
  * @return string $message Fully formatted message
  */
 function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_notice = false ) {
-	global $edd_options;
-
-	$has_tags = ( strpos($message, '{' ) !== false );
-	if ( ! $has_tags ) return $message;
-
-	$user_info = maybe_unserialize( $payment_data['user_info'] );
-
-	$fullname = '';
-	if ( isset( $user_info['id'] ) && $user_info['id'] > 0 && isset( $user_info['first_name'] ) ) {
-		$user_data = get_userdata( $user_info['id'] );
-		$name      = $user_info['first_name'];
-		$fullname  = $user_info['first_name'] . ' ' . $user_info['last_name'];
-		$username  = $user_data->user_login;
-	} elseif ( isset( $user_info['first_name'] ) ) {
-		$name     = $user_info['first_name'];
-		$fullname = $user_info['first_name'] . ' ' . $user_info['last_name'];
-		$username = $user_info['first_name'];
-	} else {
-		$name     = $user_info['email'];
-		$username = $user_info['email'];
-	}
-
-	$address = '';
-	if ( ! empty( $user_info['address'] ) ) {
-		$address .= $user_info['address']['line1'] . '<br/>';
-		$address .= $user_info['address']['line2'] . '<br/>';
-		$address .= $user_info['address']['city'] . ', ';
-		$address .= $user_info['address']['state'] . ' ';
-		$address .= $user_info['address']['zip'];
-
-		if( ! empty( $user_info['address']['country'] ) ) {
-			$address .= ', ' . $user_info['address']['country'];
-		}
-	}
-
-	$file_urls     = '';
-	$download_list = '<ul>';
-	$cart_items     = edd_get_payment_meta_cart_details( $payment_id );
-
-	if ( $cart_items ) {
-		$show_names = apply_filters( 'edd_email_show_names', true );
-
-		foreach ( $cart_items as $item ) {
-
-			if ( edd_use_skus() )
-				$sku = edd_get_download_sku( $item['id'] );
-
-			$price_id = edd_get_cart_item_price_id( $item );
-
-			if ( $show_names ) {
-
-				$title = get_the_title( $item['id'] );
-
-				if( ! empty( $sku ) )
-					$title .= "&nbsp;&ndash;&nbsp;" . __( 'SKU', 'edd' ) . ': ' . $sku;
-
-				if( $price_id !== false )
-					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id );
-
-				$download_list .= '<li>' . apply_filters( 'edd_email_receipt_download_title', $title, $item, $item['id'], $price_id ) . '<br/>';
-				$download_list .= '<ul>';
-			}
-
-
-			$files = edd_get_download_files( $item['id'], $price_id );
-
-			if ( $files ) {
-				foreach ( $files as $filekey => $file ) {
-					$download_list .= '<li>';
-					$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $item['id'], $price_id );
-					$download_list .= '<a href="' . esc_url( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
-					$download_list .= '</li>';
-
-					$file_urls .= esc_html( $file_url ) . '<br/>';
-				}
-			} elseif( edd_is_bundled_product( $item['id'] ) ) {
-
-				$bundled_products = edd_get_bundled_products( $item['id'] );
-
-				foreach( $bundled_products as $bundle_item ) {
-
-					$download_list .= '<li class="edd_bundled_product"><strong>' . get_the_title( $bundle_item ) . '</strong></li>';
-
-					$files = edd_get_download_files( $bundle_item );
-
-					foreach ( $files as $filekey => $file ) {
-						$download_list .= '<li>';
-						$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $bundle_item, $price_id );
-						$download_list .= '<a href="' . esc_url( $file_url ) . '">' . $file['name'] . '</a>';
-						$download_list .= '</li>';
-
-						$file_urls .= esc_html( $file_url ) . '<br/>';
-					}
-				}
-			}
-
-			if ( $show_names ) {
-				$download_list .= '</ul>';
-			}
-
-			if ( '' != edd_get_product_notes( $item['id'] ) )
-				$download_list .= ' &mdash; <small>' . edd_get_product_notes( $item['id'] ) . '</small>';
-
-			if ( $show_names ) {
-				$download_list .= '</li>';
-			}
-		}
-	}
-	$download_list .= '</ul>';
-
-	$subtotal   = edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
-	$tax        = edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) );
-	$price      = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) );
-	$gateway    = edd_get_gateway_checkout_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
-	$receipt_id = $payment_data['key'];
-	$email		= edd_get_payment_user_email( $payment_id );
-
-	$message = str_replace( '{name}', $name, $message );
-	$message = str_replace( '{fullname}', $fullname, $message );
-	$message = str_replace( '{username}', $username, $message );
-	$message = str_replace( '{download_list}', $download_list, $message );
-	$message = str_replace( '{file_urls}', $file_urls, $message );
-	$message = str_replace( '{date}', date_i18n( get_option( 'date_format' ), strtotime( $payment_data['date'] ) ), $message );
-	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
-	$message = str_replace( '{subtotal}', $subtotal, $message );
-	$message = str_replace( '{tax}', $tax, $message );
-	$message = str_replace( '{price}', $price, $message );
-	$message = str_replace( '{payment_method}', $gateway, $message );
-	$message = str_replace( '{receipt_id}', $receipt_id, $message );
-	$message = str_replace( '{payment_id}', $payment_id, $message );
-    $message = str_replace( '{user_email}', $email, $message );
-	$message = str_replace( '{billing_address}', $address, $message );
-
-	if( ! $admin_notice ) {
-		$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'payment_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' ), $message );
-	}
-
-	$message = apply_filters( 'edd_email_template_tags', $message, $payment_data, $payment_id, $admin_notice );
-
-	return $message;
+	return edd_do_email_tags( $message, $payment_id );
 }
 
 /**
@@ -319,7 +180,7 @@ function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) 
 
 	$email = isset( $edd_options['purchase_receipt'] ) ? stripslashes( $edd_options['purchase_receipt'] ) : $default_email_body;
 
-	$email_body = edd_email_template_tags( $email, $payment_data, $payment_id );
+	$email_body = edd_do_email_tags( $email, $payment_id );
 
 	return apply_filters( 'edd_purchase_receipt', $email_body, $payment_id, $payment_data );
 }
@@ -376,7 +237,8 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 
 	$email = isset( $edd_options['sale_notification'] ) ? stripslashes( $edd_options['sale_notification'] ) : $default_email_body;
 
-	$email_body = nl2br( edd_email_template_tags( $email, $payment_data, $payment_id, true ) );
+	//$email_body = edd_email_template_tags( $email, $payment_data, $payment_id, true );
+	$email_body = edd_do_email_tags( $email, $payment_id );
 
 	return apply_filters( 'edd_sale_notification', $email_body, $payment_id, $payment_data );
 }
