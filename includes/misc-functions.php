@@ -158,18 +158,18 @@ function edd_string_is_image_url( $str ) {
 	$ext = edd_get_file_extension( $str );
 
 	switch ( strtolower( $ext ) ) {
-	case 'jpg';
-		$return = true;
-		break;
-	case 'png';
-		$return = true;
-		break;
-	case 'gif';
-		$return = true;
-		break;
-	default:
-		$return = false;
-		break;
+		case 'jpg';
+			$return = true;
+			break;
+		case 'png';
+			$return = true;
+			break;
+		case 'gif';
+			$return = true;
+			break;
+		default:
+			$return = false;
+			break;
 	}
 
 	return (bool) apply_filters( 'edd_string_is_image', $return, $str );
