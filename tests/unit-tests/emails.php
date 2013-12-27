@@ -281,21 +281,13 @@ DATA;
 	}
 
 	public function test_email_tags_add() {
-		$this->_tags->add( 'sample_tag', 'A sample tag for the unit test', '__return_empty_array' );
-		$this->assertTrue( $this->_tags->email_tag_exists( 'sample_tag' ) );
-	}
-
-	public function test_email_tags_do_valid_tag() {
-		$this->assertInternalType( 'array', $this->_tags->do_tag( 'sample_tag' ) );
+		edd_add_email_tag( 'sample_tag', 'A sample tag for the unit test', '__return_empty_array' );
+		$this->assertTrue( edd_email_tag_exists( 'sample_tag' ) );
 	}
 
 	public function test_email_tags_remove() {
-		$this->_tags->remove( 'sample_tag' );
-		$this->assertFalse( $this->_tags->email_tag_exists( 'sample_tag' ) );
-	}
-
-	public function test_email_tags_do_invalid_tag() {
-		$this->assertEquals( 'sample_tag', $this->_tags->do_tag( 'sample_tag' ) );
+		edd_remove_email_tag( 'sample_tag' );
+		$this->assertFalse( edd_email_tag_exists( 'sample_tag' ) );
 	}
 	
 	public function test_email_tags_first_name() {
