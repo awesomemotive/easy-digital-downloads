@@ -84,6 +84,8 @@ class EDD_Session {
 		} else {
 			add_action( 'init', array( $this, 'init' ), -1 );
 		}
+
+		add_filter( 'wp_session_expiration', array( $this, 'set_expiration_time' ), 99999 );
 	}
 
 
@@ -180,5 +182,17 @@ class EDD_Session {
 				setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, false );
 			}
 		}
+	}
+
+	/**
+	 * Force the cookie expiration time to 24 hours
+	 *
+	 * @access public
+	 * @since 1.9
+	 * @param int $exp Default expiration (1 hour)
+	 * @return int
+	 */
+	public function set_expiration_time( $exp ) {
+		return current_time( 'timestamp' ) + ( 30 * 60 * 24 );
 	}
 }
