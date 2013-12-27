@@ -161,7 +161,7 @@ class EDD_Welcome {
 			<?php $this->tabs(); ?>
 
 			<div class="changelog">
-				<h3><?php _e( 'A Great Checkout Experience', 'edd' );?></h3>
+				<h3><?php _e( 'Improved Order Editing', 'edd' );?></h3>
 
 				<div class="feature-section">
 
@@ -177,7 +177,7 @@ class EDD_Welcome {
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Cart Saving', 'edd' );?></h3>
+				<h3><?php _e( 'Per-Products Sales and Earnings Graphs', 'edd' );?></h3>
 
 				<div class="feature-section">
 
@@ -194,7 +194,7 @@ class EDD_Welcome {
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Better Purchase Button Colors', 'edd' );?></h3>
+				<h3><?php _e( 'Payment Date Filters', 'edd' );?></h3>
 
 				<div class="feature-section">
 
@@ -211,7 +211,7 @@ class EDD_Welcome {
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Better APIs for Developers', 'edd' );?></h3>
+				<h3><?php _e( 'Better Support for Large Stores', 'edd' );?></h3>
 
 				<div class="feature-section">
 
@@ -229,26 +229,26 @@ class EDD_Welcome {
 
 				<div class="feature-section col three-col">
 					<div>
-						<h4><?php _e( 'Retina Ready Checkout', 'edd' );?></h4>
+						<h4><?php _e( 'Improved Product Creation / Editing', 'edd' );?></h4>
 						<p><?php _e( 'Every icon and image asset used by the Easy Digital Downloads checkout is now fully retina ready to ensure your most important page always looks great.', 'edd' );?></p>
 
-						<h4><?php _e( 'Improved Settings API', 'edd' );?></h4>
+						<h4><?php _e( 'EDD_Graph Class', 'edd' );?></h4>
 						<p><?php _e( 'The EDD settings API has been dramatically simplified to be more performant, provide better filters, and even support custom settings tabs.', 'edd' );?></p>
 					</div>
 
 					<div>
-						<h4><?php _e( 'Live Dashboard Updates', 'edd' );?></h4>
+						<h4><?php _e( 'Dramatically Improved Taxes', 'edd' );?></h4>
 						<p><?php _e( 'The Dashboard summary widget now updates live with the WP Heartbeat API, meaning you can literally watch your stats update live as sales come in.', 'edd' );?></p>
 
-						<h4><?php _e( 'Category Filters for Downloads Reports', 'edd' );?></h4>
+						<h4><?php _e( 'Mark Products Exclusive of Tax', 'edd' );?></h4>
 						<p><?php _e( 'The Downloads Reports view now supports filtering Downloads by category, making it easier to see earnings and sales based on product categories.', 'edd' );?></p>
 					</div>
 
 					<div class="last-feature">
-						<h4><?php _e( 'Tools Menu', 'edd' );?></h4>
+						<h4><?php _e( 'EDD_Email_Template_Tags Class', 'edd' );?></h4>
 						<p><?php _e( 'A new Tools submenu has been added to the main Downloads menu that houses settings import / export, as well as other utilities added by extensions.' ,'edd' );?></p>
 
-						<h4><?php _e( 'Bulk Payment History Update','edd' );?></h4>
+						<h4><?php _e( 'Exclude Products from Discounts','edd' );?></h4>
 						<p><?php _e( 'The bulk update options for Payments have been updated to include all payment status options, making it easier to manage payment updates in bulk.', 'edd' );?></p>
 					</div>
 				</div>
