@@ -37,7 +37,8 @@ function edd_setup_edd_post_types() {
 		'not_found' 		=> __( 'No %2$s found', 'edd' ),
 		'not_found_in_trash'=> __( 'No %2$s found in Trash', 'edd' ),
 		'parent_item_colon' => '',
-		'menu_name' 		=> __( '%2$s', 'edd' )
+		'menu_name' 		=> __( '%2$s', 'edd' ),
+		'menu_icon' => 'dashicons-download'
 	) );
 
 	foreach ( $download_labels as $key => $value ) {
