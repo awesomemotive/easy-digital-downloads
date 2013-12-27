@@ -315,19 +315,19 @@ DATA;
 	}
 
 	public function test_email_tags_date() {
-		$this->assertEquals( date( 'F j, Y', strtotime( '-1 day' ) ), edd_email_tag_date( $this->_payment_id ) );
+		$this->assertEquals( date( 'F j, Y', strtotime( 'today' ) ), edd_email_tag_date( $this->_payment_id ) );
 	}
 
 	public function test_email_tags_subtotal() {
-		$this->assertEquals( 100, edd_email_tag_subtotal( $this->_payment_id ) );
+		$this->assertEquals( '&#36;100.00', edd_email_tag_subtotal( $this->_payment_id ) );
 	}
 
 	public function test_email_tags_tax() {
-		$this->assertEquals( '0.00', edd_email_tag_tax( $this->_payment_id ) );
+		$this->assertEquals( '&#36;0.00', edd_email_tag_tax( $this->_payment_id ) );
 	}
 
 	public function test_email_tags_price() {
-		$this->assertEquals( '100.00', edd_email_tag_price( $this->_payment_id ) );
+		$this->assertEquals( '&#36;100.00', edd_email_tag_price( $this->_payment_id ) );
 	}
 
 	public function test_email_tags_payment_id() {
