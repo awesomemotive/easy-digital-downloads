@@ -167,10 +167,10 @@ class EDD_Welcome {
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/17checkout.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Simple, Beautiful Checkout', 'edd' );?></h4>
+					<h4><?php _e( 'Mark Products Exclusive of Tax', 'edd' );?></h4>
 					<p><?php _e( 'We have worked tirelessly to continually improve the checkout experience of Easy Digital Downloads, and with just a few subtle tweaks, we have made the experience in Easy Digital Downloads version 1.8 even better than before.', 'edd' );?></p>
 
-					<h4><?php _e( 'Better Checkout Layout', 'edd' );?></h4>
+					<h4><?php _e( 'Re-written Tax API', 'edd' );?></h4>
 					<p><?php _e( 'The position of each field on the checkout has been carefully reconsidered to ensure it is in the proper location so as to best create high conversion rates.', 'edd' );?></p>
 
 				</div>
@@ -194,7 +194,7 @@ class EDD_Welcome {
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Payment Date Filters', 'edd' );?></h3>
+				<h3><?php _e( 'Dramatically Improved Taxes', 'edd' );?></h3>
 
 				<div class="feature-section">
 
@@ -237,10 +237,10 @@ class EDD_Welcome {
 					</div>
 
 					<div>
-						<h4><?php _e( 'Dramatically Improved Taxes', 'edd' );?></h4>
+						<h4><?php _e( 'Payment Date Filters', 'edd' );?></h4>
 						<p><?php _e( 'The Dashboard summary widget now updates live with the WP Heartbeat API, meaning you can literally watch your stats update live as sales come in.', 'edd' );?></p>
 
-						<h4><?php _e( 'Mark Products Exclusive of Tax', 'edd' );?></h4>
+						<h4><?php _e( 'Something Here', 'edd' );?></h4>
 						<p><?php _e( 'The Downloads Reports view now supports filtering Downloads by category, making it easier to see earnings and sales based on product categories.', 'edd' );?></p>
 					</div>
 
