@@ -285,6 +285,7 @@ jQuery(document).ready(function ($) {
 			this.status_change();
 			this.add_note();
 			this.remove_note();
+			this.resend_receipt();
 		},
 
 
@@ -516,6 +517,21 @@ jQuery(document).ready(function ($) {
 					});
 					return true;
 				}
+
+			});
+
+		},
+
+		resend_receipt : function() {
+
+			$('body').on('click', '#edd-resend-receipt', function(e) {
+
+				if( confirm( edd_vars.resend_receipt ) ) {
+					
+					return true;
+				}
+
+				return false;
 
 			});
 

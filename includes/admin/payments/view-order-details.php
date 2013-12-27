@@ -160,7 +160,7 @@ $payment_date = strtotime( $item->post_date );
 								<div id="major-publishing-actions">
 									<div id="publishing-action">
 										<input type="submit" class="button button-primary right" value="<?php esc_attr_e( 'Save Payment', 'edd' ); ?>"/>
-										<a href="<?php echo add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment_id ) ); ?>" class="right button-secondary right"><?php _e( 'Resend Receipt', 'edd' ); ?></a>
+										<a href="<?php echo add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment_id ) ); ?>" id="edd-resend-receipt" class="button-secondary right"><?php _e( 'Resend Receipt', 'edd' ); ?></a>
 									</div>
 									<div class="clear"></div>
 								</div>
