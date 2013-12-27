@@ -165,13 +165,14 @@ class EDD_Welcome {
 
 				<div class="feature-section">
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/17checkout.png'; ?>" class="edd-welcome-screenshots"/>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/order-details.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Something here', 'edd' );?></h4>
-					<p><?php _e( 'We have worked tirelessly to continually improve the checkout experience of Easy Digital Downloads, and with just a few subtle tweaks, we have made the experience in Easy Digital Downloads version 1.8 even better than before.', 'edd' );?></p>
+					<h4><?php _e( 'Combined View and Edit Screens', 'edd' );?></h4>
+					<p><?php _e( 'The View and Edit payment screens have been combined into a single, more efficient, user-friendly screen. Add or remove products to an order, adjust amounts, add notes, or resend purchase receipts all at one time from the same screen.', 'edd' );?></p>
+					<p><?php _e( 'All data associated with a payment can now be edited as well, including the customer\'s billing address.', 'edd' );?></p>
 
-					<h4><?php _e( 'Something here', 'edd' );?></h4>
-					<p><?php _e( 'The position of each field on the checkout has been carefully reconsidered to ensure it is in the proper location so as to best create high conversion rates.', 'edd' );?></p>
+					<h4><?php _e( 'Responsive and Mobile Friendly', 'edd' );?></h4>
+					<p><?php _e( 'We have followed the introduction of a responsive Dashboard in WordPress 3.8 and made our own view/edit screen for orders fully responsive and easy to use on mobile devices.', 'edd' );?></p>
 
 				</div>
 			</div>
@@ -181,13 +182,13 @@ class EDD_Welcome {
 
 				<div class="feature-section">
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/18cart-saving.png'; ?>" class="edd-welcome-screenshots"/>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/product-earnings.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Allow Customers to Save Their Carts for Later','edd' );?></h4>
-					<p><?php _e( 'With Cart Saving, customers can save their shopping carts and then come back and restore them at a later point.', 'edd' );?></p>
+					<h4><?php _e( 'See Earnings and Sales for Any Time Period','edd' );?></h4>
+					<p><?php _e( 'With 1.9 we have introduced beautiful graphs for individual products that allows you earnings and sales over any time period. Easily see earnings / sales for monthly, yearly, quarterly, or any other date range for any product in your store.', 'edd' );?></p>
 
-					<h4><?php _e( 'Encourage Customers to Come Back', 'edd' );?></h4>
-					<p><?php _e( 'By making it easier for customers to save their cart and return later, you can increase the conversion rate of the customers that need time to think about their purchase.', 'edd' );?></p>
+					<h4><?php _e( 'Easily Access Reports', 'edd' );?></h4>
+					<p><?php printf( __( 'Per-product earnings / sales graphs can be accessed from <em>%s &rarr; Reports &rarr; %s</em> or from the Stats section of the Edit screen for any %s.', 'edd' ), edd_get_label_plural(), edd_get_label_plural(), edd_get_label_singular() );?></p>
 
 
 				</div>
@@ -198,14 +199,14 @@ class EDD_Welcome {
 
 				<div class="feature-section">
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/18-button-colors.png'; ?>" class="edd-welcome-screenshots"/>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/product-tax.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4><?php _e( 'Mark Products Exclusive of Tax', 'edd' );?></h4>
-					<p><?php _e( 'With eight beautifully button colors to choose from, you will almost certainly find the color to match your site.', 'edd' );?></p>
+					<p><?php _e( 'Products in your store can now be marked as exclusive of tax, meaning customers will never have to pay tax on these products during checkout.', 'edd' );?></p>
 
 					<h4><?php _e( 'Re-written Tax API', 'edd' );?></h4>
-					<p><?php _e( 'Purchase buttons are cleaner, simpler, and just all around better with Easy Digital Downloads 1.8.', 'edd' );?></p>
-					<p><?php _e( 'By simplifying one of the most important aspects of your digital store, we ensure better compatibility with more themes and easier customization for advanced users and developers.', 'edd' );?></p>
+					<p><?php _e( 'The tax system in EDD has been plagued with bugs since it was first introduced. In 1.9 we have completely rewritten the entire system from the ground up to ensure it is reliable and bug free.', 'edd' );?></p>
+					<p><?php _e( 'It can be difficult to completely delete an entire section of old code, but we are confident the rewrite will be worth every minute of the time spent on it.', 'edd' );?></p>
 
 				</div>
 			</div>
@@ -215,11 +216,11 @@ class EDD_Welcome {
 
 				<div class="feature-section">
 
-					<h4><?php _e( 'EDD_Payment_Stats','edd' );?></h4>
-					<p><?php _e( 'The new EDD_Payment_Stats class provides a simple way to retrieve earnings and sales stats for the store, or any specific Download product, for any date range. Get sales or earnings for this month, last month, this year, or even any custom date range.', 'edd' );?></p>
+					<h4><?php _e( 'Live Search Product Drop Downs','edd' );?></h4>
+					<p><?php _e( 'Every product drop down menu used in the Easy Digital Downloads has been replaced with a much more performant version that includes a live Ajax search, meaning stores that have a large number of products will see a significant improvement for page load times in the WordPress Dashboard.', 'edd' );?></p>
 
-					<h4><?php _e( 'EDD_Payments_Query', 'edd' ); ?></h4>
-					<p><?php _e( 'Easily retrieve payment data for any Download product or the entire store. EDD_Payments_Query even allows you to pass in any date range to retrieve payments for a specific period. EDD_Payments_Query works nearly identical to WP_Query, so it is simple and familiar.', 'edd' ); ?></p>
+					<h4><?php _e( 'Less Memory Intensive Log Pages', 'edd' ); ?></h4>
+					<p><?php _e( 'The File Download log pages have long been memory intensive to load. By putting them through intensive memory load tests and query optimization, we were able to reduce the number of queries and amount of memory used by a huge degree, making these pages much, much faster..', 'edd' ); ?></p>
 
 				</div>
 			</div>
@@ -230,26 +231,26 @@ class EDD_Welcome {
 				<div class="feature-section col three-col">
 					<div>
 						<h4><?php _e( 'Improved Product Creation / Editing', 'edd' );?></h4>
-						<p><?php _e( 'Every icon and image asset used by the Easy Digital Downloads checkout is now fully retina ready to ensure your most important page always looks great.', 'edd' );?></p>
+						<p><?php _e( 'The interface for creating / editing Download products has been dramatically improved by separating the UI out into sections that are easier to use and less cluttered.', 'edd' );?></p>
 
 						<h4><?php _e( 'EDD_Graph Class', 'edd' );?></h4>
-						<p><?php _e( 'The EDD settings API has been dramatically simplified to be more performant, provide better filters, and even support custom settings tabs.', 'edd' );?></p>
+						<p><?php _e( 'Along with per-product earnings / sales graphs, we have introduced an EDD_Graph class that makes it exceptionally simple to generate your own custom graphs. Simply build an array of data and let the class work its magic.', 'edd' );?></p>
 					</div>
 
 					<div>
 						<h4><?php _e( 'Payment Date Filters', 'edd' );?></h4>
-						<p><?php _e( 'The Dashboard summary widget now updates live with the WP Heartbeat API, meaning you can literally watch your stats update live as sales come in.', 'edd' );?></p>
+						<p><?php _e( 'A new section has been added to the Payment History screen that allows you to filter payments by date, making it much easier to locate payments for a particular period.', 'edd' );?></p>
 
-						<h4><?php _e( 'Something Here', 'edd' );?></h4>
-						<p><?php _e( 'The Downloads Reports view now supports filtering Downloads by category, making it easier to see earnings and sales based on product categories.', 'edd' );?></p>
+						<h4><?php _e( 'EDD_Email_Template_Tags Classe', 'edd' );?></h4>
+						<p><?php _e( 'A new API has been introduced for easily adding new template tags to purchase receipts and admin sale notifications.', 'edd' );?></p>
 					</div>
 
 					<div class="last-feature">
-						<h4><?php _e( 'EDD_Email_Template_Tags Class', 'edd' );?></h4>
-						<p><?php _e( 'A new Tools submenu has been added to the main Downloads menu that houses settings import / export, as well as other utilities added by extensions.' ,'edd' );?></p>
+						<h4><?php _e( 'Resend Purchase Receipts in Bulk', 'edd' );?></h4>
+						<p><?php _e( 'A new action has been added to the Bulk Actions menu in the Payment History screen that allows you to resend purchase receipt emails in bulk.' ,'edd' );?></p>
 
 						<h4><?php _e( 'Exclude Products from Discounts','edd' );?></h4>
-						<p><?php _e( 'The bulk update options for Payments have been updated to include all payment status options, making it easier to manage payment updates in bulk.', 'edd' );?></p>
+						<p><?php _e( 'Along with being able to assign discounts to specific products, you can also now exclude products from discount codes.', 'edd' );?></p>
 					</div>
 				</div>
 			</div>
