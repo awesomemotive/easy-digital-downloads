@@ -1035,6 +1035,9 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 	} else {
 		$user = __( 'EDD Bot', 'edd' );
 	}
+
+	$date_format = get_option( 'date_format' ) . ', ' . get_option( 'time_format' ); 
+
 	$delete_note_url = wp_nonce_url( add_query_arg( array(
 		'edd-action' => 'delete_payment_note',
 		'note_id'    => $note->comment_ID,
@@ -1043,7 +1046,7 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 
 	$note_html = '<div class="edd-payment-note" id="edd-payment-note-' . $note->comment_ID . '">';
 		$note_html .='<p>';
-			$note_html .= '<strong>' . $user . '</strong>&nbsp;<em>' . $note->comment_date . '</em><br/>';
+			$note_html .= '<strong>' . $user . '</strong>&nbsp;&ndash;&nbsp;' . date_i18n( $date_format, strtotime( $note->comment_date ) ) . '<br/>';
 			$note_html .= $note->comment_content;
 			$note_html .= '&nbsp;&ndash;&nbsp;<a href="' . esc_url( $delete_note_url ) . '" class="edd-delete-payment-note" data-note-id="' . absint( $note->comment_ID ) . '" data-payment-id="' . absint( $payment_id ) . '" title="' . __( 'Delete this payment note', 'edd' ) . '">' . __( 'Delete', 'edd' ) . '</a>';
 		$note_html .= '</p>';
