@@ -144,8 +144,8 @@ $payment_date = strtotime( $item->post_date );
 									<div class="edd-admin-box-inside">
 										<p>
 											<span class="label"><?php _e( 'Time:', 'edd' ); ?></span>&nbsp;
-											<input type="number" step="1" max="24" name="edd-payment-time-hour" value="<?php esc_attr_e( date_i18n( 'H', $payment_date ) ); ?>" class="small-text"/>&nbsp;:&nbsp;
-											<input type="number" step="1" max="59" name="edd-payment-time-min" value="<?php esc_attr_e( date( 'i', $payment_date ) ); ?>" class="small-text"/>
+											<input type="number" step="1" max="24" name="edd-payment-time-hour" value="<?php esc_attr_e( date_i18n( 'H', $payment_date ) ); ?>" class="small-text edd-payment-time-hour"/>&nbsp;:&nbsp;
+											<input type="number" step="1" max="59" name="edd-payment-time-min" value="<?php esc_attr_e( date( 'i', $payment_date ) ); ?>" class="small-text edd-payment-time-min"/>
 										</p>
 									</div>
 
