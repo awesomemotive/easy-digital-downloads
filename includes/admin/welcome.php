@@ -167,10 +167,10 @@ class EDD_Welcome {
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/17checkout.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Mark Products Exclusive of Tax', 'edd' );?></h4>
+					<h4><?php _e( 'Something here', 'edd' );?></h4>
 					<p><?php _e( 'We have worked tirelessly to continually improve the checkout experience of Easy Digital Downloads, and with just a few subtle tweaks, we have made the experience in Easy Digital Downloads version 1.8 even better than before.', 'edd' );?></p>
 
-					<h4><?php _e( 'Re-written Tax API', 'edd' );?></h4>
+					<h4><?php _e( 'Something here', 'edd' );?></h4>
 					<p><?php _e( 'The position of each field on the checkout has been carefully reconsidered to ensure it is in the proper location so as to best create high conversion rates.', 'edd' );?></p>
 
 				</div>
@@ -200,10 +200,10 @@ class EDD_Welcome {
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/18-button-colors.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Eight Button Colors', 'edd' );?></h4>
+					<h4><?php _e( 'Mark Products Exclusive of Tax', 'edd' );?></h4>
 					<p><?php _e( 'With eight beautifully button colors to choose from, you will almost certainly find the color to match your site.', 'edd' );?></p>
 
-					<h4><?php _e( 'Simpler; Cleaner', 'edd' );?></h4>
+					<h4><?php _e( 'Re-written Tax API', 'edd' );?></h4>
 					<p><?php _e( 'Purchase buttons are cleaner, simpler, and just all around better with Easy Digital Downloads 1.8.', 'edd' );?></p>
 					<p><?php _e( 'By simplifying one of the most important aspects of your digital store, we ensure better compatibility with more themes and easier customization for advanced users and developers.', 'edd' );?></p>
 
