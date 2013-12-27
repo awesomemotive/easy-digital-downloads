@@ -108,6 +108,12 @@ function edd_generate_pdf( $data ) {
 				$link = get_permalink( $download->ID );
 				$earnings = html_entity_decode ( edd_currency_filter( edd_get_download_earnings_stats( $download->ID ) ) );
 
+				if( function_exists( 'iconv' ) ) {
+					// Ensure characters like euro; are properly converted. See GithuB issue #472 and #1570
+					$price    = iconv('UTF-8', 'windows-1252', $price );
+					$earnings = iconv('UTF-8', 'windows-1252', $earnings );
+				}
+
 				$pdf->Row( array( $title, $price, $categories, $tags, $sales, $earnings ) );
 			endforeach;
 		else:
