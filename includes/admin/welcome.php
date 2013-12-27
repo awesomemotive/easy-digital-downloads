@@ -185,10 +185,10 @@ class EDD_Welcome {
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/product-earnings.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4><?php _e( 'See Earnings and Sales for Any Time Period','edd' );?></h4>
-					<p><?php _e( 'With 1.9 we have introduced beautiful graphs for individual products that allows you earnings and sales over any time period. Easily see earnings / sales for monthly, yearly, quarterly, or any other date range for any product in your store.', 'edd' );?></p>
+					<p><?php _e( 'With 1.9 we have introduced beautiful graphs for individual products that allows you to view earnings and sales over any time period. Easily see earnings / sales for monthly, yearly, quarterly, or any other date range for any product in your store.', 'edd' );?></p>
 
 					<h4><?php _e( 'Easily Access Reports', 'edd' );?></h4>
-					<p><?php printf( __( 'Per-product earnings / sales graphs can be accessed from <em>%s &rarr; Reports &rarr; %s</em> or from the Stats section of the Edit screen for any %s.', 'edd' ), edd_get_label_plural(), edd_get_label_plural(), edd_get_label_singular() );?></p>
+					<p><?php printf( __( 'Per-product earnings / sales graphs can be accessed from <em>%s &rarr; Reports &rarr; %s</em> or from the <em>Stats</em> section of the Edit screen for any %s.', 'edd' ), edd_get_label_plural(), edd_get_label_plural(), edd_get_label_singular() );?></p>
 
 
 				</div>
@@ -205,8 +205,9 @@ class EDD_Welcome {
 					<p><?php _e( 'Products in your store can now be marked as exclusive of tax, meaning customers will never have to pay tax on these products during checkout.', 'edd' );?></p>
 
 					<h4><?php _e( 'Re-written Tax API', 'edd' );?></h4>
-					<p><?php _e( 'The tax system in EDD has been plagued with bugs since it was first introduced. In 1.9 we have completely rewritten the entire system from the ground up to ensure it is reliable and bug free.', 'edd' );?></p>
+					<p><?php _e( 'The tax system in EDD has been plagued with bugs since it was first introduced, so in 1.9 we have completely rewritten the entire system from the ground up to ensure it is reliable and bug free.', 'edd' );?></p>
 					<p><?php _e( 'It can be difficult to completely delete an entire section of old code, but we are confident the rewrite will be worth every minute of the time spent on it.', 'edd' );?></p>
+					<p><?php _e( 'We are determined to continue to provide you a reliable, easy system to sell your digital products. In order to do that, sometimes we just have to swallow our pride and start over.', 'edd' );?></p>
 
 				</div>
 			</div>
@@ -217,7 +218,7 @@ class EDD_Welcome {
 				<div class="feature-section">
 
 					<h4><?php _e( 'Live Search Product Drop Downs','edd' );?></h4>
-					<p><?php _e( 'Every product drop down menu used in the Easy Digital Downloads has been replaced with a much more performant version that includes a live Ajax search, meaning stores that have a large number of products will see a significant improvement for page load times in the WordPress Dashboard.', 'edd' );?></p>
+					<p><?php _e( 'Every product drop down menu used in Easy Digital Downloads has been replaced with a much more performant version that includes a live Ajax search, meaning stores that have a large number of products will see a significant improvement for page load times in the WordPress Dashboard.', 'edd' );?></p>
 
 					<h4><?php _e( 'Less Memory Intensive Log Pages', 'edd' ); ?></h4>
 					<p><?php _e( 'The File Download log pages have long been memory intensive to load. By putting them through intensive memory load tests and query optimization, we were able to reduce the number of queries and amount of memory used by a huge degree, making these pages much, much faster..', 'edd' ); ?></p>
@@ -241,7 +242,7 @@ class EDD_Welcome {
 						<h4><?php _e( 'Payment Date Filters', 'edd' );?></h4>
 						<p><?php _e( 'A new section has been added to the Payment History screen that allows you to filter payments by date, making it much easier to locate payments for a particular period.', 'edd' );?></p>
 
-						<h4><?php _e( 'EDD_Email_Template_Tags Classe', 'edd' );?></h4>
+						<h4><?php _e( 'EDD_Email_Template_Tags Class', 'edd' );?></h4>
 						<p><?php _e( 'A new API has been introduced for easily adding new template tags to purchase receipts and admin sale notifications.', 'edd' );?></p>
 					</div>
 
