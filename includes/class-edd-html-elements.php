@@ -50,6 +50,8 @@ class EDD_HTML_Elements {
 			'posts_per_page' => 20
 		) );
 
+		$options = array();
+
 		if ( $products ) {
 			foreach ( $products as $product ) {
 				$options[ absint( $product->ID ) ] = esc_html( $product->post_title );
