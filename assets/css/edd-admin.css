@@ -74,9 +74,11 @@ tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 .edd_remove_repeatable { margin: 8px 0 0 0; cursor: pointer; width: 10px; height: 10px; display: inline-block; text-indent: -9999px; overflow: hidden; }
 .edd_remove_repeatable:active, .edd_remove_repeatable:hover { background-position: -10px 0!important }
 .edd_draghandle { display: block; width: 20px; height: 20px; background: url(../images/edd-cross-hair.png); cursor: move; margin: 4px 0 0 0; }
-textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
+textarea.large-text, input.large-text { width: 100%; }
+textarea.large-text { height: 4em; margin: 0; }
 .edd-price-field { width: 80px; }
 .edd_repeatable_upload_wrapper .pricing select, .edd_repeatable_product_wrapper .edd-select { min-width: 100%; }
+
 
 /* Payment Details
 -------------------------------------------------------------- */

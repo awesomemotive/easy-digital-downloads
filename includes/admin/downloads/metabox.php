@@ -850,7 +850,7 @@ function edd_render_product_notes_field( $post_id ) {
 
 	$product_notes = edd_get_product_notes( $post_id );
 ?>
-	<textarea rows="1" cols="40" class="large-texarea" name="edd_product_notes" id="edd_product_notes"><?php echo esc_textarea( $product_notes ); ?></textarea>
+	<textarea rows="1" cols="40" class="large-text" name="edd_product_notes" id="edd_product_notes"><?php echo esc_textarea( $product_notes ); ?></textarea>
 	<p><?php _e( 'Special notes or instructions for this product. These notes will be added to the purchase receipt.', 'edd' ); ?></p>
 <?php
 }
