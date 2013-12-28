@@ -644,6 +644,9 @@ function edd_settings_sanitize( $input = array() ) {
 
 	global $edd_options;
 
+	if( empty( $_POST['_wp_http_referer'] ) )
+		return $input;
+
 	parse_str( $_POST['_wp_http_referer'], $referrer );
 
 	$settings  = edd_get_registered_settings();
