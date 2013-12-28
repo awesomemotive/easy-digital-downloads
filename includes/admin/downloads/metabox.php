@@ -96,6 +96,7 @@ function edd_download_meta_box_save( $post_id) {
 		$fields[] = 'edd_sku';
 	}
 
+
 	foreach ( $fields as $field ) {
         if ( ! empty( $_POST[ $field ] ) ) {
 			$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
@@ -850,7 +851,7 @@ function edd_render_product_notes_field( $post_id ) {
 
 	$product_notes = edd_get_product_notes( $post_id );
 ?>
-	<textarea rows="1" cols="40" class="large-texarea" name="edd_product_notes" id="edd_product_notes"><?php echo esc_textarea( $product_notes ); ?></textarea>
+	<textarea rows="1" cols="40" class="large-texarea" name="edd_product_notes" id="edd_product_notes_field"><?php echo esc_textarea( $product_notes ); ?></textarea>
 	<p><?php _e( 'Special notes or instructions for this product. These notes will be added to the purchase receipt.', 'edd' ); ?></p>
 <?php
 }
