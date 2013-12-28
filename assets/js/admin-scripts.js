@@ -583,12 +583,12 @@ jQuery(document).ready(function ($) {
 		taxes : function() {
 
 			// Update base state field based on selected base country
-			$('select[name="edd_settings_taxes[base_country]"]').change(function() {
+			$('select[name="edd_settings[base_country]"]').change(function() {
 				var $this = $(this), $tr = $this.closest('tr');
 				data = {
 					action: 'edd_get_shop_states',
 					country: $(this).val(),
-					field_name: 'edd_settings_taxes[base_state]'
+					field_name: 'edd_settings[base_state]'
 				};
 				$.post(ajaxurl, data, function (response) {
 					if( 'nostates' == response ) {
@@ -665,12 +665,12 @@ jQuery(document).ready(function ($) {
 		misc : function() {
 
 			// Hide Symlink option if Download Method is set to Direct
-			if( $('select[name="edd_settings_misc[download_method]"]:selected').val() != 'direct' ) {
-				$('select[name="edd_settings_misc[download_method]"]').parent().parent().next().hide();
-				$('select[name="edd_settings_misc[download_method]"]').parent().parent().next().find('input').attr('checked', false);
+			if( $('select[name="edd_settings[download_method]"]:selected').val() != 'direct' ) {
+				$('select[name="edd_settings[download_method]"]').parent().parent().next().hide();
+				$('select[name="edd_settings[download_method]"]').parent().parent().next().find('input').attr('checked', false);
 			}
 			// Toggle download method option
-			$('select[name="edd_settings_misc[download_method]"]').on('change', function() {
+			$('select[name="edd_settings[download_method]"]').on('change', function() {
 				var symlink = $(this).parent().parent().next();
 				if( $(this).val() == 'direct' ) {
 					symlink.hide();
