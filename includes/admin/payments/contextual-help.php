@@ -54,8 +54,8 @@ function edd_payments_contextual_help() {
 			'<ul>
 				<li>' . __( 'You can enter the customer\'s email address', 'edd' ) . '</li>
 				<li>' . __( 'You can enter the customer\'s name or ID prefexed by \'user:\'', 'edd' ) . '</li>
-                <li>' . __( 'You can enter the 32-character purchase key', 'edd' ) . '</li>
-                <li>' . __( 'You can enter the purchase ID', 'edd' ) . '</li>
+				<li>' . __( 'You can enter the 32-character purchase key', 'edd' ) . '</li>
+				<li>' . __( 'You can enter the purchase ID', 'edd' ) . '</li>
 			</ul>'
 	) );
 
