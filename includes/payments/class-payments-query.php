@@ -326,7 +326,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			return;
 
         $is_email = is_email( $search ) || strpos( $search, '@' ) !== false;
-        $is_user  = strpos( $search, strtolower( 'user:' ) ) !== false;
+		$is_user  = strpos( $search, strtolower( 'user:' ) ) !== false;
 
 		if ( $is_email || strlen( $search ) == 32 ) {
 
@@ -344,19 +344,19 @@ class EDD_Payments_Query extends EDD_Stats {
 
 			$search_meta = array(
 				'key'   => '_edd_payment_user_id',
-				'value' => trim( str_replace( strtolower( 'user:' ), '', $search ) )
+				'value' => trim( str_replace( 'user:', '', strtolower( $search ) ) )
 			);
 
 			$this->__set( 'meta_query', $search_meta );
 			$this->__unset( 's' );
 
-        } elseif ( is_numeric( $search ) ) {
-            $post = get_post( $search );
+		} elseif ( is_numeric( $search ) ) {
+			$post = get_post( $search );
 
-            if( is_object( $post ) && $post->post_type == 'edd_payment' ) {
-                wp_redirect( add_query_arg( array( 'view' => 'view-order-details', 'id' => $search ) ) );
-                exit;
-            }
+			if( is_object( $post ) && $post->post_type == 'edd_payment' ) {
+				wp_redirect( add_query_arg( array( 'view' => 'view-order-details', 'id' => $search ) ) );
+				exit;
+			}
 		} elseif ( '#' == substr( $search, 0, 1 ) ) {
 
 			$this->__set( 'download', str_replace( '#', '', $search ) );
