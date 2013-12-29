@@ -217,10 +217,10 @@ function edd_undo_purchase( $download_id, $payment_id ) {
  
 	if ( is_array( $cart_details ) ) {
  
-		foreach ( $cart_details as $download ) {
+		foreach ( $cart_details as $item ) {
  
 			// Decrease earnings/sales and fire action once per quantity number
-			for( $i = 0; $i < $download['quantity']; $i++ ) {
+			for( $i = 0; $i < $item['quantity']; $i++ ) {
  
 				$user_info = edd_get_payment_meta_user_info( $payment_id );
  
@@ -230,7 +230,7 @@ function edd_undo_purchase( $download_id, $payment_id ) {
 				$amount = null;
  
 				if ( edd_has_variable_prices( $download_id ) ) {
-					$price_id 	= isset( $download['item_number']['options']['price_id'] ) ? $download['item_number']['options']['price_id'] : null;
+					$price_id 	= isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
 					$amount 	= edd_get_price_option_amount( $download_id, $price_id );
 				}
  
