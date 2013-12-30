@@ -231,7 +231,7 @@ function edd_undo_purchase( $download_id, $payment_id ) {
  
 				if ( edd_has_variable_prices( $download_id ) ) {
 					$price_id 	= isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
-					$amount 	= edd_get_price_option_amount( $download_id, $price_id );
+					$amount 	= isset( $item['price'] ) ? $item['price'] : edd_get_price_option_amount( $download_id, $price_id );
 				}
  
 				$amount = edd_get_download_final_price( $download_id, $user_info, $amount );
