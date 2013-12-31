@@ -281,11 +281,11 @@ class EDD_Product_Details_Widget extends WP_Widget {
         if( $title )
             echo $before_title . $title . $after_title;
 		
-	do_action( 'edd_product_details_widget_before_title' , $instance , $download_id );
+        do_action( 'edd_product_details_widget_before_title' , $instance , $download_id );
      	// download title
         echo $download_title;
 
-	do_action( 'edd_product_details_widget_before_purchase_button' , $instance , $download_id );
+        do_action( 'edd_product_details_widget_before_purchase_button' , $instance , $download_id );
         // purchase button
         echo $purchase_button;
 
