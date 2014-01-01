@@ -273,7 +273,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
        	$purchase_button 	= $instance['purchase_button'] ? apply_filters( 'edd_product_details_widget_purchase_button', edd_get_purchase_link( array( 'download_id' => $download_id ) ), $download_id ) : '';
     	$categories 		= $instance['categories'] ? $instance['categories'] : '';
     	$tags 				= $instance['tags'] ? $instance['tags'] : '';
-
+	
         // Used by themes. Opens the widget
         echo $before_widget;
 
@@ -281,9 +281,11 @@ class EDD_Product_Details_Widget extends WP_Widget {
         if( $title )
             echo $before_title . $title . $after_title;
 		
+        do_action( 'edd_product_details_widget_before_title' , $instance , $download_id );
      	// download title
         echo $download_title;
 
+        do_action( 'edd_product_details_widget_before_purchase_button' , $instance , $download_id );
         // purchase button
         echo $purchase_button;
 
@@ -305,7 +307,10 @@ class EDD_Product_Details_Widget extends WP_Widget {
         	$text .= '</p>';
         }
         
+        do_action( 'edd_product_details_widget_before_categories_and_tags' , $instance , $download_id );
         printf( $text, $category_list, $tag_list );
+        
+        do_action( 'edd_product_details_widget_before_end' , $instance , $download_id );
 
         // Used by themes. Closes the widget
         echo $after_widget;
@@ -373,6 +378,8 @@ class EDD_Product_Details_Widget extends WP_Widget {
             <input <?php checked( $instance['tags'], 'on' ); ?> id="<?php echo $this->get_field_id( 'tags' ); ?>" name="<?php echo $this->get_field_name( 'tags' ); ?>" type="checkbox" />
             <label for="<?php echo $this->get_field_id( 'tags' ); ?>"><?php _e( 'Show Tags', 'edd' ); ?></label>
         </p>
+        
+        <?php do_action( 'edd_product_details_widget_form' , $instance ); ?>
     <?php }
 
     /** @see WP_Widget::update */
@@ -386,6 +393,8 @@ class EDD_Product_Details_Widget extends WP_Widget {
         $instance['categories'] 		= isset( $new_instance['categories'] ) ? $new_instance['categories'] : '';
         $instance['tags'] 				= isset( $new_instance['tags'] ) ? $new_instance['tags'] : '';
 
+        do_action( 'edd_product_details_widget_update' , $instance );
+        
         return $instance;
     } 
 
