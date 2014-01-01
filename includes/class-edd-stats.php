@@ -149,9 +149,10 @@ class EDD_Stats {
 
 					if( $month == 1 && ! $end_date ) {
 
+						$year--;
 						$month = 12;
 
-					} else {
+					} elseif( ! $end_date ) {
 
 						$month = date( 'n', current_time( 'timestamp' ) ) - 1;
 					}
@@ -165,7 +166,6 @@ class EDD_Stats {
 					break;
 
 				case 'today' :
-
 					$day = date( 'd', current_time( 'timestamp' ) );
 
 					break;
