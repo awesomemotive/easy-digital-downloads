@@ -41,6 +41,7 @@ function edd_get_email_templates() {
  * @return string $message Fully formatted message
  */
 function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_notice = false ) {
+
 	return edd_do_email_tags( $message, $payment_id );
 }
 
