@@ -59,7 +59,7 @@ $payment_date = strtotime( $item->post_date );
 									<div class="edd-order-taxes edd-admin-box-inside">
 										<p>
 											<span class="label"><?php _e( 'Tax', 'edd' ); ?>:</span>&nbsp;
-											<input name="edd-payment-tax" type="number" class="small-text right " value="<?php echo esc_attr( edd_get_payment_tax( $payment_id ) ); ?>"/>
+											<input name="edd-payment-tax" type="number" step="0.01" class="small-text right " value="<?php echo esc_attr( edd_get_payment_tax( $payment_id ) ); ?>"/>
 										</p>
 									</div>
 									<?php endif; ?>
@@ -78,7 +78,7 @@ $payment_date = strtotime( $item->post_date );
 									<div class="edd-order-payment edd-admin-box-inside">
 										<p>
 											<span class="label"><?php _e( 'Total Price', 'edd' ); ?>:</span>&nbsp;
-											<input name="edd-payment-total" type="number" class="small-text right" value="<?php echo esc_attr( edd_get_payment_amount( $payment_id ) ); ?>"/>
+											<input name="edd-payment-total" type="number" step="0.01" class="small-text right" value="<?php echo esc_attr( edd_get_payment_amount( $payment_id ) ); ?>"/>
 										</p>
 									</div>
 									<div class="edd-order-payment-recalc-totals edd-admin-box-inside" style="display:none">
