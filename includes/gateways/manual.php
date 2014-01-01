@@ -10,16 +10,12 @@
  */
 
 /**
- * Manual Gateway does not need a CC form, so remove it. This function is only
- * defined so that the credit card form isn't shown.
+ * Manual Gateway does not need a CC form, so remove it.
  *
  * @since 1.0
  * @return void
  */
-function edd_manual_remove_cc_form() {
-	/** We only register the action so that the default CC form is not shown */
-}
-add_action( 'edd_manual_cc_form', 'edd_manual_remove_cc_form' );
+add_action( 'edd_manual_cc_form', '__return_false' );
 
 /**
  * Processes the purchase data and uses the Manual Payment gateway to record
