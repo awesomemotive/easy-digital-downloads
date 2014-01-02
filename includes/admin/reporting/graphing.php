@@ -444,9 +444,9 @@ function edd_get_report_dates() {
 				$dates['year']    = date( 'Y' ) - 1;
 				$dates['year_end']= date( 'Y' ) - 1;
 			} else {
-				$dates['m_start'] = date( 'n' ) - 1;
-				$dates['m_end']	  = date( 'n' ) - 1;
-				$dates['year']    = date( 'Y' );
+				//$dates['m_start'] = date( 'n' ) - 1;
+				//$dates['m_end']	  = date( 'n' ) - 1;
+				$dates['year_end']= $dates['year'];
 			}
 		break;
 
@@ -470,9 +470,19 @@ function edd_get_report_dates() {
 			$dates['day']       = date( 'd', current_time( 'timestamp' ) - ( date( 'w' ) - 1 ) *60*60*24 ) - 8;
 			$dates['day']      += get_option( 'start_of_week' );
 			$dates['day_end']   = $dates['day'] + 6;
-			$dates['m_start'] 	= date( 'n' );
-			$dates['m_end']		= date( 'n' );
 			$dates['year']		= date( 'Y' );
+
+			if( date( 'j', current_time( 'timestamp' ) ) <= 7 ) {
+				$dates['m_start'] 	= date( 'n' ) - 1;
+				$dates['m_end']		= date( 'n' ) - 1;
+				if( $dates['m_start'] <= 1 ) {
+					$dates['year'] = date( 'Y' ) - 1;
+					$dates['year_end'] = date( 'Y' ) - 1;
+				}
+			} else {
+				$dates['m_start'] 	= date( 'n' );
+				$dates['m_end']		= date( 'n' );
+			}
 		break;
 
 		case 'this_quarter' :
