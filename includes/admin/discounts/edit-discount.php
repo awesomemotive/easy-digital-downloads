@@ -81,7 +81,7 @@ $single_use        = edd_discount_is_single_use( $discount_id );
 					</p>
 					<?php echo EDD()->html->product_dropdown( array(
 						'name'     => 'products[]',
-						'selected' => $excluded_products,
+						'selected' => $product_reqs,
 						'multiple' => true,
 						'chosen'   => true 
 					) ); ?><br/>
@@ -101,6 +101,7 @@ $single_use        = edd_discount_is_single_use( $discount_id );
 				<td>
 					<?php echo EDD()->html->product_dropdown( array(
 						'name'     => 'excluded-products[]',
+						'id'       => 'excluded-products',
 						'selected' => $excluded_products,
 						'multiple' => true,
 						'chosen'   => true 
