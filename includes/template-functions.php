@@ -81,10 +81,12 @@ function edd_get_purchase_link( $args = array() ) {
 	if ( $args['price'] && $args['price'] !== 'no' && ! $variable_pricing ) {
 		$price = edd_get_download_price( $args['download_id'] );
 
+		$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
+
 		if ( 0 == $price ) {
-			$args['text'] = __( 'Free', 'edd' ) . '&nbsp;&ndash;&nbsp;' . $args['text'];
+			$args['text'] = __( 'Free', 'edd' ) . $button_text;
 		} else {
-			$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . '&nbsp;&ndash;&nbsp;' . $args['text'];
+			$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . $button_text;
 		}
 	}
 
