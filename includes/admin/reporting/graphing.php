@@ -413,7 +413,7 @@ function edd_reports_graph_controls() {
 				       	<?php endfor; ?>
 			       	</select>
 			       	<select id="edd-graphs-year" name="year">
-			       		<?php for ( $i = 2007; $i <= $dates['year_end']; $i++ ) : ?>
+			       		<?php for ( $i = 2007; $i <= date( 'Y' ); $i++ ) : ?>
 			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year'] ); ?>><?php echo $i; ?></option>
 				       	<?php endfor; ?>
 			       	</select>
@@ -424,7 +424,7 @@ function edd_reports_graph_controls() {
 				       	<?php endfor; ?>
 			       	</select>
 			       	<select id="edd-graphs-year" name="year_end">
-			       		<?php for ( $i = 2007; $i <= $dates['year_end']; $i++ ) : ?>
+			       		<?php for ( $i = 2007; $i <= date( 'Y' ); $i++ ) : ?>
 			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year_end'] ); ?>><?php echo $i; ?></option>
 				       	<?php endfor; ?>
 			       	</select>
@@ -458,7 +458,7 @@ function edd_get_report_dates() {
 	$dates['m_start']    = isset( $_GET['m_start'] ) ? $_GET['m_start'] : 1;
 	$dates['m_end']      = isset( $_GET['m_end'] )   ? $_GET['m_end']   : 12;
 	$dates['year']       = isset( $_GET['year'] )    ? $_GET['year']    : date( 'Y' );
-	$dates['year_end']   = isset( $_GET['y_end'] )   ? $_GET['y_end']   : date( 'Y' );
+	$dates['year_end']   = isset( $_GET['year_end'] )? $_GET['year_end']: date( 'Y' );
 
 	// Modify dates based on predefined ranges
 	switch ( $dates['range'] ) :
