@@ -463,7 +463,7 @@ function edd_render_product_type_field( $post_id = 0 ) {
 	$type  = edd_get_download_type( $post_id );
 ?>
 	<p>
-		<strong><?php apply_filters( 'edd_product_type_options_heading', _e( 'Product Type Options:', 'edd' ) ); ?></strong>
+		<strong><?php echo apply_filters( 'edd_product_type_options_heading', __( 'Product Type Options:', 'edd' ) ); ?></strong>
 	</p>
 	<p>
 		<?php echo EDD()->html->select( array( 
