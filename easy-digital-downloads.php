@@ -156,6 +156,7 @@ final class Easy_Digital_Downloads {
 	 * @return void
 	 */
 	private function setup_constants() {
+		
 		// Plugin version
 		if ( ! defined( 'EDD_VERSION' ) ) {
 			define( 'EDD_VERSION', '1.9-beta' );
