@@ -699,20 +699,23 @@ add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
 function edd_render_download_limit_row( $post_id ) {
     global $edd_options;
 
-    if( !current_user_can( 'manage_shop_settings' ) )
+    if( ! current_user_can( 'manage_shop_settings' ) )
         return;
 
 	$edd_download_limit = edd_get_file_download_limit( $post_id );
+	$display = 'bundle' == edd_get_download_type( $post_id ) ? ' style="display: none;"' : '';
 ?>
-	<p><strong><?php _e( 'File Download Limit:', 'edd' ); ?></strong></p>
-	<label for="edd_download_limit">
-		<?php echo EDD()->html->text( array(
-			'name'  => '_edd_download_limit',
-			'value' => $edd_download_limit,
-			'class' => 'small-text'
-		) ); ?>
-		<?php _e( 'Blank or 0 for unlimited', 'edd' ); ?>
-	</label>
+	<div id="edd_download_limit_wrap"<?php echo $display; ?>>
+		<p><strong><?php _e( 'File Download Limit:', 'edd' ); ?></strong></p>
+		<label for="edd_download_limit">
+			<?php echo EDD()->html->text( array(
+				'name'  => '_edd_download_limit',
+				'value' => $edd_download_limit,
+				'class' => 'small-text'
+			) ); ?>
+			<?php _e( 'Blank or 0 for unlimited', 'edd' ); ?>
+		</label>
+	</div>
 <?php
 }
 add_action( 'edd_meta_box_settings_fields', 'edd_render_download_limit_row', 20 );
