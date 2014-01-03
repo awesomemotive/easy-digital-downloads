@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.3
 Tested up to: 3.7
 
-Stable Tag: 1.8.5
+Stable Tag: 1.8.6
 License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -186,11 +186,15 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
-= 1.8.5: November 18, 2014 =
+= 1.8.6: January 3, 2014 =
+
+* Fix: invalid date error in Dashboard Sales Summary widget
+
+= 1.8.5: November 18, 2013 =
 
 * Fix: revert accidental introduction of new meta box UI that broke file URL saving
 
-= 1.8.4: November 17, 2014 =
+= 1.8.4: November 17, 2013 =
 
 * Fix: discounts cannot be searched by discount code
 * Fix: file download limit not honored when files are assigned to price IDs
@@ -213,12 +217,12 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: store total shop earnings in database to improve performance
 * Tweak: enable access to products API end point wiithout API keys
 
-= 1.8.3.1: November 5, 2014 =
+= 1.8.3.1: November 5, 2013 =
 
 * Fix: a bug that prevented EDD cron events from firing
 * Fix: incorrect display of negative amounts for EDD_Fees
 
-= 1.8.3: November 4, 2014 =
+= 1.8.3: November 4, 2013 =
 
 * New: added edd_payment_receipt_after_table hook
 
