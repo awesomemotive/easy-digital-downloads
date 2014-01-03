@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Settings
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -83,16 +83,19 @@ function edd_register_settings() {
 		);
 
 		foreach ( $settings as $option ) {
+
+			$name = isset( $option['name'] ) ? $option['name'] : '';
+
 			add_settings_field(
 				'edd_settings[' . $option['id'] . ']',
-				$option['name'],
+				$name,
 				function_exists( 'edd_' . $option['type'] . '_callback' ) ? 'edd_' . $option['type'] . '_callback' : 'edd_missing_callback',
 				'edd_settings_' . $tab,
 				'edd_settings_' . $tab,
 				array(
-					'id'      => $option['id'],
+					'id'      => isset( $option['id'] ) ? $option['id'] : null,
 					'desc'    => ! empty( $option['desc'] ) ? $option['desc'] : '',
-					'name'    => $option['name'],
+					'name'    => isset( $option['name'] ) ? $option['name'] : null,
 					'section' => $tab,
 					'size'    => isset( $option['size'] ) ? $option['size'] : null,
 					'options' => isset( $option['options'] ) ? $option['options'] : '',
@@ -222,6 +225,12 @@ function edd_get_registered_settings() {
 					'name' => __( 'Allow Usage Tracking?', 'edd' ),
 					'desc' => __( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in and receive a 20% discount code for any purchase from the <a href="https://easydigitaldownloads.com/extensions" target="_blank">Easy Digital Downloads store</a>. Your discount code will be emailed to you.', 'edd' ),
 					'type' => 'checkbox'
+				),
+				'uninstall_on_delete' => array(
+					'id' => 'uninstall_on_delete',
+					'name' => __( 'Remove Data on Uninstall?', 'edd' ),
+					'desc' => __( 'Check this box if you would like EDD to completely remove all of its data when the plugin is deleted.', 'edd' ),
+					'type' => 'checkbox'
 				)
 			)
 		),
@@ -304,25 +313,29 @@ function edd_get_registered_settings() {
 					'id' => 'from_name',
 					'name' => __( 'From Name', 'edd' ),
 					'desc' => __( 'The name purchase receipts are said to come from. This should probably be your site or shop name.', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std'  => get_bloginfo( 'name' )
 				),
 				'from_email' => array(
 					'id' => 'from_email',
 					'name' => __( 'From Email', 'edd' ),
 					'desc' => __( 'Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std'  => get_bloginfo( 'admin_email' )
 				),
 				'purchase_subject' => array(
 					'id' => 'purchase_subject',
 					'name' => __( 'Purchase Email Subject', 'edd' ),
 					'desc' => __( 'Enter the subject line for the purchase receipt email', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std'  => __( 'Purchase Receipt', 'edd' )
 				),
 				'purchase_receipt' => array(
 					'id' => 'purchase_receipt',
 					'name' => __( 'Purchase Receipt', 'edd' ),
-					'desc' => edd_get_purchase_receipt_template_tags(),
-					'type' => 'rich_editor'
+					'desc' => __('Enter the email that is sent to users after completing a successful purchase. HTML is accepted. Available template tags:', 'edd') . '<br/>' . edd_get_emails_tags_list(),
+					'type' => 'rich_editor',
+					'std'  => __( "Dear", "edd" ) . " {name},\n\n" . __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "edd" ) . "\n\n{download_list}\n\n{sitename}"
 				),
 				'sale_notification_header' => array(
 					'id' => 'sale_notification_header',
@@ -340,7 +353,7 @@ function edd_get_registered_settings() {
 				'sale_notification' => array(
 					'id' => 'sale_notification',
 					'name' => __( 'Sale Notification', 'edd' ),
-					'desc' => edd_get_sale_notification_template_tags(),
+					'desc' => __( 'Enter the email that is sent to sale notification emails after completion of a purchase. HTML is accepted. Available template tags:', 'edd' ) . '<br/>' . edd_get_emails_tags_list(),
 					'type' => 'rich_editor',
 					'std' => edd_get_default_sale_notification_email()
 				),
@@ -548,14 +561,14 @@ function edd_get_registered_settings() {
 					'id' => 'file_download_limit',
 					'name' => __( 'File Download Limit', 'edd' ),
 					'desc' => sprintf( __( 'The maximum number of times files can be downloaded for purchases. Can be overwritten for each %s.', 'edd' ), edd_get_label_singular() ),
-					'type' => 'text',
+					'type' => 'number',
 					'size' => 'small'
 				),
 				'download_link_expiration' => array(
 					'id' => 'download_link_expiration',
 					'name' => __( 'Download Link Expiration', 'edd' ),
 					'desc' => __( 'How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours.', 'edd' ),
-					'type' => 'text',
+					'type' => 'number',
 					'size' => 'small',
 					'std'  => '24'
 				),
@@ -606,13 +619,15 @@ function edd_get_registered_settings() {
 					'id' => 'checkout_label',
 					'name' => __( 'Complete Purchase Text', 'edd' ),
 					'desc' => __( 'The button label for completing a purchase.', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std' => __( 'Purchase', 'edd' )
 				),
 				'add_to_cart_text' => array(
 					'id' => 'add_to_cart_text',
 					'name' => __( 'Add to Cart Text', 'edd' ),
 					'desc' => __( 'Text shown on the Add to Cart Buttons', 'edd' ),
-					'type' => 'text'
+					'type' => 'text',
+					'std'  => __( 'Add to Cart', 'edd' )
 				)
 			)
 		)
@@ -634,6 +649,9 @@ function edd_get_registered_settings() {
 function edd_settings_sanitize( $input = array() ) {
 
 	global $edd_options;
+
+	if( empty( $_POST['_wp_http_referer'] ) )
+		return $input;
 
 	parse_str( $_POST['_wp_http_referer'], $referrer );
 
@@ -921,6 +939,34 @@ function edd_text_callback( $args ) {
 }
 
 /**
+ * Number Callback
+ *
+ * Renders number fields.
+ *
+ * @since 1.9
+ * @param array $args Arguments passed by the setting
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_number_callback( $args ) {
+	global $edd_options;
+
+	if ( isset( $edd_options[ $args['id'] ] ) )
+		$value = $edd_options[ $args['id'] ];
+	else
+		$value = isset( $args['std'] ) ? $args['std'] : '';
+
+	$max  = isset( $args['max'] ) ? $args['max'] : 999999;
+	$step = isset( $args['step'] ) ? $args['step'] : 1;
+
+	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+	$html = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" class="' . $size . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+
+	echo $html;
+}
+
+/**
  * Textarea Callback
  *
  * Renders textarea fields.
@@ -1191,7 +1237,8 @@ function edd_tax_rates_callback($args) {
 						'name'             => 'tax_rates[' . $key . '][country]',
 						'selected'         => $rate['country'],
 						'show_option_all'  => false,
-						'show_option_none' => false
+						'show_option_none' => false,
+						'class'            => 'edd-select edd-tax-country'
 					) );
 					?>
 				</td>
@@ -1227,7 +1274,8 @@ function edd_tax_rates_callback($args) {
 						'options'          => edd_get_country_list(),
 						'name'             => 'tax_rates[0][country]',
 						'show_option_all'  => false,
-						'show_option_none' => false
+						'show_option_none' => false,
+						'class'            => 'edd-select edd-tax-country'
 					) ); ?>
 				</td>
 				<td class="edd_tax_state">
@@ -1293,3 +1341,14 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 function edd_hook_callback( $args ) {
 	do_action( 'edd_' . $args['id'] );
 }
+
+/**
+ * Set manage_shop_settings as the cap required to save EDD settings pages
+ *
+ * @since 1.9
+ * @return string capability required
+ */
+function edd_set_settings_cap() {
+	return 'manage_shop_settings';
+}
+add_filter( 'option_page_capability_edd_settings', 'edd_set_settings_cap' );

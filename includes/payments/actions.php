@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Payments
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -299,28 +299,6 @@ function edd_update_old_payments_with_totals( $data ) {
 	add_option( 'edd_payment_totals_upgraded', 1 );
 }
 add_action( 'edd_upgrade_payments', 'edd_update_old_payments_with_totals' );
-
-
-/**
- * Triggers a payment note deletion
- *
- * @since 1.6
- * @param array $data Arguments passed
- * @return void
-*/
-function edd_trigger_payment_note_deletion( $data ) {
-
-	if( ! wp_verify_nonce( $data['_wpnonce'], 'edd_delete_payment_note' ) )
-		return;
-
-	$edit_order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=edit-payment&edd-message=payment_note_deleted&purchase_id=' . absint( $data['purchase_id'] ) );
-
-	edd_delete_payment_note( $data['note_id'], $data['purchase_id'] );
-
-	wp_redirect( $edit_order_url );
-}
-add_action( 'edd_delete_payment_note', 'edd_trigger_payment_note_deletion' );
-
 
 /**
  * Updates week-old+ 'pending' orders to 'abandoned'

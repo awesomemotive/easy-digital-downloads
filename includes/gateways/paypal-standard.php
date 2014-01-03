@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Gateways
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -29,26 +29,6 @@ add_action( 'edd_paypal_cc_form', '__return_false' );
  */
 function edd_process_paypal_purchase( $purchase_data ) {
     global $edd_options;
-
-   	//echo '<pre>'; print_r( $purchase_data ); echo '</pre>'; exit;
-
-    /*
-    Purchase data comes in like this:
-
-    $purchase_data = array(
-        'downloads'     => array of download IDs,
-        'tax' 			=> taxed amount on shopping cart
-        'subtotal'		=> total price before tax
-        'price'         => total price of cart contents after taxes,
-        'purchase_key'  =>  // Random key
-        'user_email'    => $user_email,
-        'date'          => date( 'Y-m-d H:i:s' ),
-        'user_id'       => $user_id,
-        'post_data'     => $_POST,
-        'user_info'     => array of user's information and used discount code
-        'cart_details'  => array of cart details,
-     );
-    */
 
     // Collect payment data
     $payment_data = array(
@@ -83,11 +63,6 @@ function edd_process_paypal_purchase( $purchase_data ) {
         // Get the PayPal redirect uri
         $paypal_redirect = trailingslashit( edd_get_paypal_redirect() ) . '?';
 
-		// Do we have too many items to itemize?
-		//$itemize = ( count( $purchase_data['cart_details'] ) > 9 ? false : true );
-
-        $itemize = false;
-
         // Setup PayPal arguments
         $paypal_args = array(
             'business'      => $edd_options['paypal_email'],
@@ -107,43 +82,30 @@ function edd_process_paypal_purchase( $purchase_data ) {
             'cbt'			=> get_bloginfo( 'name' )
         );
 
-		// Add required content depending on number of items
-		if( $itemize ) {
-			$paypal_extra_args = array(
-				'cmd'			=> '_cart',
-				'upload'		=> '1'
-			);
-		} else {
-			// Get the complete cart cart_summary
-			$summary = edd_get_purchase_summary( $purchase_data, false );
-			$paypal_extra_args = array(
-				'cmd'			=> '_xclick',
-				'amount'		=> round( $purchase_data['price'] - $purchase_data['tax'], 2 ),
-				'item_name'		=> stripslashes( html_entity_decode( wp_strip_all_tags( $summary ), ENT_COMPAT, 'UTF-8' ) )
-			);
-		}
+		$paypal_extra_args = array(
+			'cmd'			=> '_cart',
+			'upload'		=> '1'
+		);
+		
 		$paypal_args = array_merge( $paypal_extra_args, $paypal_args );
 
-		if( $itemize ) {
-	        // Add cart items
-    	    $i = 1;
-        	foreach( $purchase_data['cart_details'] as $item ) {
+		// Add cart items
+		$i = 1;
+		foreach( $purchase_data['cart_details'] as $item ) {
 
-        		$price = $item['price'] - $item['tax'];
+			if( edd_has_variable_prices( $item['id'] ) && edd_get_cart_item_price_id( $item ) !== false ) {
 
-	        	if( edd_has_variable_prices( $item['id'] ) && edd_get_cart_item_price_id( $item ) !== false ) {
+				$item['name'] .= ' - ' . edd_get_cart_item_price_name( $item );
+			}
 
-	        		$item['name'] .= ' - ' . edd_get_cart_item_price_name( $item );
-	        	}
+			$paypal_args['item_name_' . $i ]       = stripslashes_deep( html_entity_decode( wp_strip_all_tags( $item['name'] ), ENT_COMPAT, 'UTF-8' ) );
+			if( edd_use_skus() ) {
+				$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
+			}
+			$paypal_args['quantity_' . $i ]        = $item['quantity'];
+			$paypal_args['amount_' . $i ]          = $item['subtotal'] - $item['discount'];
+			$i++;
 
-    	    	$paypal_args['item_name_' . $i ]       = stripslashes_deep( html_entity_decode( wp_strip_all_tags( $item['name'] ), ENT_COMPAT, 'UTF-8' ) );
-        		if( edd_use_skus() ) {
-	        		$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
-	    		}
-    	    	$paypal_args['quantity_' . $i ]        = $item['quantity'];
-        		$paypal_args['amount_' . $i ]          = $price;
-        		$i++;
-	        }
 		}
 
 
@@ -165,14 +127,14 @@ function edd_process_paypal_purchase( $purchase_data ) {
 	        }
 	    }
 
-	   // if( $discounted_amount > '0' )
-		//	$paypal_args['discount_amount_cart'] = $discounted_amount;
+		if( $discounted_amount > '0' ) {
+			$paypal_args['discount_amount_cart'] = $discounted_amount;
+		}
 
 		// Add taxes to the cart
-        if ( edd_use_taxes() && $itemize )
+        if ( edd_use_taxes() ) {
 			$paypal_args['tax_cart'] = $purchase_data['tax'];
-		elseif ( edd_use_taxes() && ! $itemize )
-			$paypal_args['tax'] = $purchase_data['tax'];
+		}
 
         $paypal_args = apply_filters('edd_paypal_redirect_args', $paypal_args, $purchase_data );
 
@@ -330,7 +292,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	$paypal_amount  = $data['mc_gross'];
 	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
-	$business_email = trim( $data['business'] );
+	$business_email = isset( $data['business'] ) ? trim( $data['business'] ) : trim( $data['receiver_email'] );
 
 	// Retrieve the total purchase amount (before PayPal)
 	$payment_amount = edd_get_payment_amount( $payment_id );
