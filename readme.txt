@@ -230,6 +230,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Item price incorrect when item prices are entered inclusive of tax
 * Fix: Ajax animation doesn't stop when adding an item to the cart that has Multi-Option Purchase Mode enabled
 * Fix: Incorrect echo statement inside of an apply_filters() call (twice)
+* Fix: Selecting the same month for start and end in Report date filters resulted in a 12 month spread
 
 * Tweak: Better support for responsive columns in the [downloads] short code
 * Tweak: Improved the sample product import file
