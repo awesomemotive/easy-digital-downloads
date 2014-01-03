@@ -113,9 +113,16 @@ jQuery(document).ready(function ($) {
 		type : function() {
 
 			$( 'body' ).on( 'change', '#_edd_product_type', function(e) {
-				$( '#edd_download_files' ).toggle();
-				$( '#edd_products' ).toggle();
-				$( '#edd_download_limit_wrap' ).toggle();
+				if ( 'bundle' === $( this ).val() ) {
+					$( '#edd_products' ).show();
+					$( '#edd_download_files' ).hide();
+					$( '#edd_download_limit_wrap' ).hide();
+				} else {
+					$( '#edd_products' ).hide();
+					$( '#edd_download_files' ).show();
+					$( '#edd_download_limit_wrap' ).show();
+				}
+				
 			});
 
 		},
