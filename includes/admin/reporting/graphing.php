@@ -25,6 +25,7 @@ function edd_reports_graph() {
 	// Determine graph options
 	switch ( $dates['range'] ) :
 		case 'today' :
+		case 'yesterday' :
 			$day_by_day	= true;
 			break;
 		case 'last_year' :
@@ -57,7 +58,7 @@ function edd_reports_graph() {
 	$earnings_data = array();
 	$sales_data    = array();
 
-	if( $dates['range'] == 'today' ) {
+	if( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
 		// Hour by hour
 		$hour  = 1;
 		$month = date( 'n' );
@@ -193,6 +194,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 	// Determine graph options
 	switch ( $dates['range'] ) :
 		case 'today' :
+		case 'yesterday' :
 			$day_by_day	= true;
 			break;
 		case 'last_year' :
@@ -226,7 +228,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 	$sales_data    = array();
 	$stats          = new EDD_Payment_stats;
 
-	if( $dates['range'] == 'today' ) {
+	if( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
 		// Hour by hour
 		$month  = date( 'n' );
 		$hour   = 1;
@@ -367,6 +369,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 function edd_reports_graph_controls() {
 	$date_options = apply_filters( 'edd_report_date_options', array(
 		'today' 	    => __( 'Today', 'edd' ),
+		'yesterday'     => __( 'Yesterday', 'edd' ),
 		'this_week' 	=> __( 'This Week', 'edd' ),
 		'last_week' 	=> __( 'Last Week', 'edd' ),
 		'this_month' 	=> __( 'This Month', 'edd' ),
@@ -487,6 +490,16 @@ function edd_get_report_dates() {
 			$dates['m_start'] 	= date( 'n' );
 			$dates['m_end']		= date( 'n' );
 			$dates['year']		= date( 'Y' );
+		break;
+
+		case 'yesterday' :
+			$month              = date( 'n' ) == 1 ? 12 : date( 'n' );
+			$days_in_month      = cal_days_in_month( CAL_GREGORIAN, $month, date( 'Y' ) );
+			$yesterday          = date( 'd' ) == 1 ? $days_in_month : date( 'd' ) - 1;
+			$dates['day']		= $yesterday;
+			$dates['m_start'] 	= $month;
+			$dates['m_end'] 	= $month;
+			$dates['year']		= $month == 1 && date( 'd' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
 		break;
 
 		case 'this_week' :
