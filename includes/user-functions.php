@@ -373,7 +373,7 @@ function edd_get_customer_address( $user_id = 0 ) {
  * @since 		1.8.8
  * @return 		void
  */
-function edd_new_user_notification( $user_id = 0, $userdata = array() ) {
+function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 	wp_new_user_notification( $user_id, $user_data['user_pass'] );
 }
 add_action( 'edd_insert_user', 'edd_new_user_notification', 10, 2 );
