@@ -803,7 +803,7 @@ function edd_paypal_success_page_content( $content ) {
 
 	if( ! $payment_id ) {
 		$session    = edd_get_purchase_session();
-		$payment_id = edd_get_purchase_id_by_key( $session['key'] );
+		$payment_id = edd_get_purchase_id_by_key( $session['purchase_key'] );
 	}
 
 	$payment = get_post( $payment_id );
