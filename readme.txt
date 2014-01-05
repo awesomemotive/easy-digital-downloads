@@ -189,6 +189,8 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 = 1.9: January 8, 2014 =
 
+_REQUIRES WordPress 3.7 or later_
+
 * New: Added a new Getting Started page for first time installs
 * New: Rebuilt the View / Edit Details screen for payments, adding the ability to edit almost all data associated with a payment and dramatically improving the edit payment interface 
 * New: Added per-products earnings and sales graphs
