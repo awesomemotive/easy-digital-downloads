@@ -58,7 +58,11 @@ function edd_process_paypal_purchase( $purchase_data ) {
         $listener_url = trailingslashit( home_url( 'index.php' ) ).'?edd-listener=IPN';
 
          // Get the success url
-        $return_url = add_query_arg( 'payment-confirmation', 'paypal', get_permalink( $edd_options['success_page'] ) );
+        $return_url = add_query_arg( array(
+        	'payment-confirmation' => 'paypal',
+        	'payment-id' => $payment
+
+        ), get_permalink( $edd_options['success_page'] ) );
 
         // Get the PayPal redirect uri
         $paypal_redirect = trailingslashit( edd_get_paypal_redirect() ) . '?';
