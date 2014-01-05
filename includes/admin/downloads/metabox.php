@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Downloads
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -47,7 +47,7 @@ function edd_add_download_meta_box() {
 add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
 
 /**
- * Sabe post meta when the save_post action is called
+ * Save post meta when the save_post action is called
  *
  * @since 1.0
  * @param int $post_id Download (Post) ID
