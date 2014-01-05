@@ -94,6 +94,7 @@ function edd_update_payment_details( $data ) {
 
 	// Set new meta values
 	$user_info['id']         = $user_id;
+	$user_info['email']      = $email;
 	$user_info['first_name'] = $first_name;
 	$user_info['last_name']  = $last_name;
 	$user_info['address']    = $address;
