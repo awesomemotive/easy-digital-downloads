@@ -439,7 +439,9 @@ jQuery(document).ready(function ($) {
 							$(response).insertAfter( $this.next() );
 						}
 					}).fail(function (data) {
-						console.log(data);
+						if ( window.console && window.console.log ) {
+							console.log( data );
+						}
 					});
 
 				}
@@ -482,7 +484,9 @@ jQuery(document).ready(function ($) {
 							$('#edd-payment-note').val('');
 						}
 					}).fail(function (data) {
-						console.log(data);
+						if ( window.console && window.console.log ) {
+							console.log( data );
+						}
 					});
 
 				} else {
@@ -523,7 +527,9 @@ jQuery(document).ready(function ($) {
 							return false;
 						}
 					}).fail(function (data) {
-						console.log(data);
+						if ( window.console && window.console.log ) {
+							console.log( data );
+						}
 					});
 					return true;
 				}
@@ -912,8 +918,10 @@ jQuery(document).ready(function ($) {
 				$('#' + menu_id).next().find('input').val(val);
 			}
 		}).fail(function (response) {
-            console.log(response);
-        }).done(function (response) {
+			if ( window.console && window.console.log ) {
+				console.log( data );
+			}
+		}).done(function (response) {
 
         });
 	});
