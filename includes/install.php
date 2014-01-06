@@ -159,3 +159,31 @@ function edd_after_install() {
 	do_action( 'edd_after_install', $activation_pages );
 }
 add_action( 'admin_init', 'edd_after_install' );
+
+/**
+ * Install user roles on sub-sites of a network
+ *
+ * Roles do not get created when EDD is network activation so we need to create them during admin_init
+ *
+ * @since 1.9
+ * @return void
+ */
+function edd_install_roles_on_network() {
+
+	global $wp_roles;
+
+	if( ! is_object( $wp_roles ) ) {
+		return;
+	}
+
+	if( ! in_array( 'shop_manager', $wp_roles->roles ) ) {
+
+		// Create EDD shop roles
+		$roles = new EDD_Roles;
+		$roles->add_roles();
+		$roles->add_caps();
+
+	}
+
+}
+add_action( 'admin_init', 'edd_install_roles_on_network' );
