@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions/Templates
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -279,28 +279,6 @@ function edd_after_download_content( $content ) {
 	return $content;
 }
 add_filter( 'the_content', 'edd_after_download_content' );
-
-/**
- * Filter Success Page Content
- *
- * Applies filters to the success page content.
- *
- * @since 1.0
- * @param string $content Content before filters
- * @return string $content Filtered content
- */
-function edd_filter_success_page_content( $content ) {
-	global $edd_options;
-
-	if ( isset( $edd_options['success_page'] ) && isset( $_GET['payment-confirmation'] ) && is_page( $edd_options['success_page'] ) ) {
-		if ( has_filter( 'edd_payment_confirm_' . $_GET['payment-confirmation'] ) ) {
-			$content = apply_filters( 'edd_payment_confirm_' . $_GET['payment-confirmation'], $content );
-		}
-	}
-
-	return $content;
-}
-add_filter( 'the_content', 'edd_filter_success_page_content' );
 
 /**
  * Get Button Colors

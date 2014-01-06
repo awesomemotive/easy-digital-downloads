@@ -189,6 +189,8 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 = 1.9: January 8, 2014 =
 
+_REQUIRES WordPress 3.7 or later_
+
 * New: Added a new Getting Started page for first time installs
 * New: Rebuilt the View / Edit Details screen for payments, adding the ability to edit almost all data associated with a payment and dramatically improving the edit payment interface 
 * New: Added per-products earnings and sales graphs
@@ -208,6 +210,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * New: Added EDD_Graph class to allow developers to easily display custom graphs in add-ons and themes
 * New: Added live ajax search to all product drop-downs in the admin to dramatically improve performance of EDD on stores with a lot of products
 * New: Add dashicon for Downloads menu and WP 3.8+
+* New: Added new Payment Processing template file that is displayed when returning from PayPal to ensure the IPN has enough time to be processed before showing the customer the payment receipt
 
 * Fix: Rewrote the tax API to fix numerous bugs
 * Fix: A bug with payment item amounts getting zeroed out when modifying an existing payment
