@@ -121,8 +121,7 @@
 #edd_checkout_form_wrap #edd_purchase_submit,
 #edd_checkout_form_wrap #edd_discount_code,
 #edd_checkout_form_wrap #edd_register_account_fields { padding: 0; border: none; }
-
-#edd_checkout_form_wrap fieldset fieldset { margin: 0; }
+#edd_checkout_form_wrap fieldset fieldset { margin: 0; border: none; padding: 0; }
 #edd_checkout_form_wrap #edd-login-account-wrap,
 #edd_checkout_form_wrap #edd-new-account-wrap,
 #edd_checkout_form_wrap #edd_show_discount,
@@ -132,6 +131,7 @@
 #edd_checkout_form_wrap #edd-new-account-wrap,
 #edd_checkout_form_wrap #edd-login-account-wrap { margin: -1.387em -1.387em 21px -1.387em; border-left: none; border-right: none; border-top: none; }
 #edd_checkout_form_wrap #edd_payment_mode_select { margin-bottom: 21px; }
+#edd_checkout_form_wrap fieldset#edd_register_fields #edd_checkout_user_info { margin-bottom: 21px; }
 #edd_checkout_form_wrap fieldset#edd_register_account_fields legend { padding-top: 11px; }
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_register_password,
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_login_password { margin: 0; }

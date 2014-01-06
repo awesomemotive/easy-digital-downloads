@@ -5,7 +5,7 @@
  * Description: Serve Digital Downloads Through WordPress
  * Author: Pippin Williamson
  * Author URI: http://pippinsplugins.com
- * Version: 1.8.5
+ * Version: 1.8.6
  * Text Domain: edd
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 1.8.5
+ * @version 1.8.6
  */
 
 // Exit if accessed directly
@@ -156,8 +156,9 @@ final class Easy_Digital_Downloads {
 	 */
 	private function setup_constants() {
 		// Plugin version
+
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '1.8.5' );
+			define( 'EDD_VERSION', '1.8.6' );
 		}
 
 		// Plugin Folder Path
@@ -184,7 +185,7 @@ final class Easy_Digital_Downloads {
 	 * @return void
 	 */
 	private function includes() {
-		global $edd_options, $wp_version;
+		global $edd_options;
 
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php';
 		$edd_options = edd_get_settings();
@@ -235,7 +236,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/process-purchase.php';
 		require_once EDD_PLUGIN_DIR . 'includes/login-register.php';
 
-		if( is_admin() ) {
+		if ( is_admin() ) {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-notices.php';
@@ -264,9 +265,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/welcome.php';
-			if( version_compare( $wp_version, '3.6', '>=' ) ) {
-				require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
-			}
+			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
 		} else {
 			require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
 			require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';

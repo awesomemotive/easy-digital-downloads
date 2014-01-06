@@ -113,9 +113,16 @@ jQuery(document).ready(function ($) {
 		type : function() {
 
 			$( 'body' ).on( 'change', '#_edd_product_type', function(e) {
-				$( '#edd_download_files' ).toggle();
-				$( '#edd_products' ).toggle();
-				$( '#edd_download_limit_wrap' ).toggle();
+				if ( 'bundle' === $( this ).val() ) {
+					$( '#edd_products' ).show();
+					$( '#edd_download_files' ).hide();
+					$( '#edd_download_limit_wrap' ).hide();
+				} else {
+					$( '#edd_products' ).hide();
+					$( '#edd_download_files' ).show();
+					$( '#edd_download_limit_wrap' ).show();
+				}
+				
 			});
 
 		},
@@ -583,12 +590,12 @@ jQuery(document).ready(function ($) {
 		taxes : function() {
 
 			// Update base state field based on selected base country
-			$('select[name="edd_settings_taxes[base_country]"]').change(function() {
+			$('select[name="edd_settings[base_country]"]').change(function() {
 				var $this = $(this), $tr = $this.closest('tr');
 				data = {
 					action: 'edd_get_shop_states',
 					country: $(this).val(),
-					field_name: 'edd_settings_taxes[base_state]'
+					field_name: 'edd_settings[base_state]'
 				};
 				$.post(ajaxurl, data, function (response) {
 					if( 'nostates' == response ) {
@@ -665,12 +672,12 @@ jQuery(document).ready(function ($) {
 		misc : function() {
 
 			// Hide Symlink option if Download Method is set to Direct
-			if( $('select[name="edd_settings_misc[download_method]"]:selected').val() != 'direct' ) {
-				$('select[name="edd_settings_misc[download_method]"]').parent().parent().next().hide();
-				$('select[name="edd_settings_misc[download_method]"]').parent().parent().next().find('input').attr('checked', false);
+			if( $('select[name="edd_settings[download_method]"]:selected').val() != 'direct' ) {
+				$('select[name="edd_settings[download_method]"]').parent().parent().next().hide();
+				$('select[name="edd_settings[download_method]"]').parent().parent().next().find('input').attr('checked', false);
 			}
 			// Toggle download method option
-			$('select[name="edd_settings_misc[download_method]"]').on('change', function() {
+			$('select[name="edd_settings[download_method]"]').on('change', function() {
 				var symlink = $(this).parent().parent().next();
 				if( $(this).val() == 'direct' ) {
 					symlink.hide();
