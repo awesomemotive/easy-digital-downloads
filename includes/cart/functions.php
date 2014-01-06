@@ -473,6 +473,10 @@ function edd_get_cart_item_tax( $item = array() ) {
 			$price -= edd_get_cart_item_discount_amount( $item );
 		}
 
+		$quantity = edd_item_quantities_enabled() ? $item['quantity'] : 1;
+
+		$price *= $quantity;
+
 		$tax = edd_calculate_tax( $price );
 
 	}
