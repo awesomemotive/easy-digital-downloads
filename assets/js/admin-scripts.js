@@ -884,7 +884,7 @@ jQuery(document).ready(function ($) {
     });
 
     // Replace options with search results
-	$('.edd-select.chosen-container .chosen-choices input').keyup(function(e) {
+	$('.edd-select.chosen-container .chosen-drop input').keyup(function(e) {
 
 		var val = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
 		var menu_id = container.attr('id').replace( '_chosen', '' );
