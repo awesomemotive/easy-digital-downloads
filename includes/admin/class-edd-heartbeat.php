@@ -31,10 +31,6 @@ class EDD_Heartbeat {
 	 */
 	public static function init() {
 
-		if( ! current_user_can( 'view_shop_reports' ) ) {
-			return; // Only trigger heartbeat if current user can view show reports
-		}
-
 		add_filter( 'heartbeat_received', array( 'EDD_Heartbeat', 'heartbeat_received' ), 10, 2 );
 		add_action( 'admin_enqueue_scripts', array( 'EDD_Heartbeat', 'enqueue_scripts' ) );
 	}
@@ -48,8 +44,12 @@ class EDD_Heartbeat {
 	 */
 	public static function heartbeat_received( $response, $data ) {
 
-		  // Make sure we only run our query if the edd_heartbeat key is present
-		 if( ( isset( $data['edd_heartbeat'] ) ) && ( $data['edd_heartbeat'] == 'dashboard_summary' ) ) {
+		if( ! current_user_can( 'view_shop_reports' ) ) {
+			return $response; // Only modify heartbeat if current user can view show reports
+		}
+
+		// Make sure we only run our query if the edd_heartbeat key is present
+		if( ( isset( $data['edd_heartbeat'] ) ) && ( $data['edd_heartbeat'] == 'dashboard_summary' ) ) {
 
 			// Instantiate the stats class
 			$stats = new EDD_Payment_Stats;
@@ -76,6 +76,11 @@ class EDD_Heartbeat {
 	 * @return array
 	 */
 	public static function enqueue_scripts() {
+
+		if( ! current_user_can( 'view_shop_reports' ) ) {
+			return; // Only load heartbeat if current user can view show reports
+		}
+
 		// Make sure the JS part of the Heartbeat API is loaded.
 		wp_enqueue_script( 'heartbeat' );
 		add_action( 'admin_print_footer_scripts', array( 'EDD_Heartbeat', 'footer_js' ), 20 );
