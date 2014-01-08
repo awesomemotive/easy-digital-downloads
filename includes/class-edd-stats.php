@@ -54,6 +54,14 @@ class EDD_Stats {
 	public $end_date;
 
 	/**
+	 * Flag to determine if current query is based on timestamps
+	 *
+	 * @access public
+	 * @since 1.9
+	 */
+	public $timestamp;
+
+	/**
 	 *
 	 * @access public
 	 * @since 1.8
@@ -123,6 +131,7 @@ class EDD_Stats {
 	public function convert_date( $date, $end_date = false ) {
 
 		$timestamp   = false;
+		$second      = 0;
 		$minute      = 0;
 		$hour        = 0;
 		$day         = 1;
@@ -132,7 +141,6 @@ class EDD_Stats {
 		if ( array_key_exists( $date, $this->get_predefined_dates() ) ) {
 
 			// This is a predefined date rate, such as last_week
-
 			switch( $date ) {
 
 				case 'this_month' :
@@ -149,9 +157,10 @@ class EDD_Stats {
 
 					if( $month == 1 && ! $end_date ) {
 
+						$year--;
 						$month = 12;
 
-					} else {
+					} elseif( ! $end_date ) {
 
 						$month = date( 'n', current_time( 'timestamp' ) ) - 1;
 					}
@@ -165,25 +174,35 @@ class EDD_Stats {
 					break;
 
 				case 'today' :
-
 					$day = date( 'd', current_time( 'timestamp' ) );
+
+					if( $end_date ) {
+						$hour   = 11;
+						$minute = 59;
+						$second = 59;
+					}
 
 					break;
 
 				case 'yesterday' :
 
 					$day = date( 'd', current_time( 'timestamp' ) ) - 1;
+
+					// Check if Today is the first day of the month (meaning subtracting one will get us 0)
 					if( $day < 1 ) {
 
-						// Today is the first day of the month
+						// If current month is 1
 						if( 1 == $month ) {
 
 							$year -= 1; // Today is January 1, so skip back to December
 							$month -= 1;
+
+							// Get the last day of the month
 							$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 
 						} else {
 
+							// Get the last day of the month
 							$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 
 						}
@@ -267,6 +286,10 @@ class EDD_Stats {
 							$month = 1;
 						} else {
 							$month = 3;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$hour   = 11;
+							$minute = 59;
+							$second = 59;
 						}
 
 					} else if ( $month_now <= 6 ) {
@@ -275,6 +298,10 @@ class EDD_Stats {
 							$month = 4;
 						} else {
 							$month = 6;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$hour   = 11;
+							$minute = 59;
+							$second = 59;
 						}
 
 					} else if ( $month_now <= 9 ) {
@@ -283,6 +310,10 @@ class EDD_Stats {
 							$month = 7;
 						} else {
 							$month = 9;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$hour   = 11;
+							$minute = 59;
+							$second = 59;
 						}
 
 					} else {
@@ -291,6 +322,10 @@ class EDD_Stats {
 							$month = 10;
 						} else {
 							$month = 12;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$hour   = 11;
+							$minute = 59;
+							$second = 59;
 						}
 
 					}
@@ -308,6 +343,10 @@ class EDD_Stats {
 						} else {
 							$year -= 1;
 							$month = 12;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$hour   = 11;
+							$minute = 59;
+							$second = 59;
 						}
 
 					} else if ( $month_now <= 6 ) {
@@ -316,6 +355,10 @@ class EDD_Stats {
 							$month = 1;
 						} else {
 							$month = 3;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$hour   = 11;
+							$minute = 59;
+							$second = 59;
 						}
 
 					} else if ( $month_now <= 9 ) {
@@ -324,6 +367,10 @@ class EDD_Stats {
 							$month = 4;
 						} else {
 							$month = 6;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$hour   = 11;
+							$minute = 59;
+							$second = 59;
 						}
 
 					} else {
@@ -332,6 +379,10 @@ class EDD_Stats {
 							$month = 7;
 						} else {
 							$month = 9;
+							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+							$hour   = 11;
+							$minute = 59;
+							$second = 59;
 						}
 
 					}
@@ -341,9 +392,13 @@ class EDD_Stats {
 				case 'this_year' :
 
 					if( ! $end_date ) {
-						$month = 1;
+						$month  = 1;
 					} else {
-						$month = 12;
+						$month  = 12;
+						$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+						$hour   = 11;
+						$minute = 59;
+						$second = 59;
 					}
 
 					break;
@@ -354,7 +409,11 @@ class EDD_Stats {
 					if( ! $end_date ) {
 						$month = 1;
 					} else {
-						$month = 12;
+						$month  = 12;
+						$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+						$hour   = 11;
+						$minute = 59;
+						$second = 59;
 					}
 
 				break;
@@ -365,12 +424,12 @@ class EDD_Stats {
 		} else if( is_numeric( $date ) ) {
 
 			// return $date unchanged since it is a timestamp
-			$timestamp = true;
+			$this->timestamp = true;
 
 		} else if( false !== strtotime( $date ) ) {
 
-			$timestamp = true;
-			$date      = strtotime( $date, current_time( 'timestamp' ) );
+			$this->timestamp = true;
+			$date = strtotime( $date, current_time( 'timestamp' ) );
 
 		} else {
 
@@ -378,10 +437,10 @@ class EDD_Stats {
 
 		}
 
-		if( ! is_wp_error( $date ) && ! $timestamp ) {
+		if( ! is_wp_error( $date ) && ! $this->timestamp ) {
 
 			// Create an exact timestamp
-			$date = mktime( $hour, $minute, 0, $month, $day, $year );
+			$date = mktime( $hour, $minute, $second, $month, $day, $year );
 
 		}
 
@@ -403,12 +462,27 @@ class EDD_Stats {
 		$end_where   = '';
 
 		if( $this->start_date ) {
-			$start_date  = date( 'Y-m-d 00:00:00', $this->start_date );
+
+			if( $this->timestamp ) {
+				$format = 'Y-m-d H:i:s';
+			} else {
+				$format = 'Y-m-d 00:00:00';
+			}
+
+			$start_date  = date( $format, $this->start_date );
 			$start_where = " AND p.post_date >= '{$start_date}'";
 		}
 
 		if( $this->end_date ) {
-			$end_date  = date( 'Y-m-d 23:59:59', $this->end_date );
+
+			if( $this->timestamp ) {
+				$format = 'Y-m-d H:i:s';
+			} else {
+				$format = 'Y-m-d 23:59:59';
+			}
+
+			$end_date  = date( $format, $this->end_date );
+
 			$end_where = " AND p.post_date <= '{$end_date}'";
 		}
 
@@ -432,12 +506,27 @@ class EDD_Stats {
 		$end_where   = '';
 
 		if( $this->start_date ) {
-			$start_date  = date( 'Y-m-d 00:00:00', $this->start_date );
+
+			if( $this->timestamp ) {
+				$format = 'Y-m-d H:i:s';
+			} else {
+				$format = 'Y-m-d 00:00:00';
+			}
+
+			$start_date  = date( $format, $this->start_date );
 			$start_where = " AND $wpdb->posts.post_date >= '{$start_date}'";
 		}
 
 		if( $this->end_date ) {
-			$end_date  = date( 'Y-m-d 23:59:59', $this->end_date );
+
+			if( $this->timestamp ) {
+				$format = 'Y-m-d H:i:s';
+			} else {
+				$format = 'Y-m-d 23:59:59';
+			}
+
+			$end_date  = date( $format, $this->end_date );
+
 			$end_where = " AND $wpdb->posts.post_date <= '{$end_date}'";
 		}
 

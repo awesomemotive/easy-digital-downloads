@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0.8.6
  */
@@ -373,7 +373,7 @@ function edd_get_customer_address( $user_id = 0 ) {
  * @since 		1.8.8
  * @return 		void
  */
-function edd_new_user_notification( $user_id = 0, $userdata = array() ) {
+function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 	wp_new_user_notification( $user_id, $user_data['user_pass'] );
 }
 add_action( 'edd_insert_user', 'edd_new_user_notification', 10, 2 );
