@@ -31,6 +31,10 @@ class EDD_Heartbeat {
 	 */
 	public static function init() {
 
+		if( ! current_user_can( 'view_shop_reports' ) ) {
+			return; // Only trigger heartbeat if current user can view show reports
+		}
+
 		add_filter( 'heartbeat_received', array( 'EDD_Heartbeat', 'heartbeat_received' ), 10, 2 );
 		add_action( 'admin_enqueue_scripts', array( 'EDD_Heartbeat', 'enqueue_scripts' ) );
 	}
