@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Notices
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -46,7 +46,7 @@ function edd_admin_messages() {
 		add_settings_error( 'edd-notices', 'edd-payment-sent', __( 'The purchase receipt has been resent.', 'edd' ), 'updated' );
     }
 
-    if ( isset( $_GET['edd-message'] ) && 'payment_note_deleted' == $_GET['edd-message'] && current_user_can( 'view_shop_reports' ) ) {
+    if ( isset( $_GET['edd-message'] ) && 'payment-note-deleted' == $_GET['edd-message'] && current_user_can( 'view_shop_reports' ) ) {
         add_settings_error( 'edd-notices', 'edd-payment-note-deleted', __( 'The payment note has been deleted.', 'edd' ), 'updated' );
     }
 
@@ -60,6 +60,14 @@ function edd_admin_messages() {
 
 	if ( isset( $_GET['edd-message'] ) && 'settings-imported' == $_GET['edd-message'] && current_user_can( 'manage_shop_settings' ) ) {
 		add_settings_error( 'edd-notices', 'edd-settings-imported', __( 'The settings have been imported.', 'edd' ), 'updated' );
+	}
+
+	if ( isset( $_GET['edd-message'] ) && 'note-added' == $_GET['edd-message'] && current_user_can( 'edit_shop_payments' ) ) {
+		add_settings_error( 'edd-notices', 'edd-note-added', __( 'The payment note has been added successfully.', 'edd' ), 'updated' );
+	}
+
+	if ( isset( $_GET['edd-message'] ) && 'payment-updated' == $_GET['edd-message'] && current_user_can( 'edit_shop_payments' ) ) {
+		add_settings_error( 'edd-notices', 'edd-payment-updated', __( 'The payment has been successfully updated.', 'edd' ), 'updated' );
 	}
 
     if( ! edd_htaccess_exists() && ! get_user_meta( get_current_user_id(), '_edd_htaccess_missing_dismissed', true ) ) {

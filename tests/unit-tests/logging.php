@@ -51,14 +51,6 @@ class Tests_Logging extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'edd_log_type', $wp_taxonomies );
 	}
 
-	public function test_terms_exist() {
-		$types = $this->_object->log_types();
-		foreach ( $types as $type ) {
-			$this->assertArrayHasKey( 'term_id', term_exists( $type, 'edd_log_type' ) );
-			$this->assertArrayHasKey( 'term_taxonomy_id', term_exists( $type, 'edd_log_type' ) );
-		}
-	}
-
 	public function test_log_types() {
 		$types = $this->_object->log_types();
 		$this->assertEquals( 'sale', $types[0] );

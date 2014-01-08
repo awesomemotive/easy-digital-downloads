@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Gateways
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -298,7 +298,7 @@ function edd_show_gateways() {
 
 	if ( count( $gateways ) > 1 && ! isset( $_GET['payment-mode'] ) ) {
 		$show_gateways = true;
-		if ( edd_get_cart_amount() <= 0 ) {
+		if ( edd_get_cart_subtotal() <= 0 ) {
 			$show_gateways = false;
 		}
 	}
@@ -325,11 +325,11 @@ function edd_get_chosen_gateway() {
 	} else if( count( $gateways ) >= 1 && ! $chosen ) {
 		foreach ( $gateways as $gateway_id => $gateway ):
 			$enabled_gateway = $gateway_id;
-			if ( edd_get_cart_amount() <= 0 ) {
+			if ( edd_get_cart_subtotal() <= 0 ) {
 				$enabled_gateway = 'manual'; // This allows a free download by filling in the info
 			}
 		endforeach;
-	} else if ( edd_get_cart_amount() <= 0 ) {
+	} else if ( edd_get_cart_subtotal() <= 0 ) {
 		$enabled_gateway = 'manual';
 	} else {
 		$enabled_gateway = 'none';

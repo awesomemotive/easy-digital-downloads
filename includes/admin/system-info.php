@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/System
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
 */
 
@@ -51,7 +51,7 @@ function edd_system_info() {
 	}
 ?>
 	<div class="wrap">
-		<h2><?php _e( 'System Information', 'edd' ) ?></h2><br/>
+		<h2><?php _e( 'System Information', 'edd' ); ?></h2><br/>
 		<form action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-system-info' ) ); ?>" method="post" dir="ltr">
 			<textarea readonly="readonly" onclick="this.focus();this.select()" id="system-info-textarea" name="edd-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
 ### Begin System Info ###
@@ -136,9 +136,9 @@ $params = array(
 $response = wp_remote_post( 'https://www.paypal.com/cgi-bin/webscr', $params );
 
 if ( ! is_wp_error( $response ) && $response['response']['code'] >= 200 && $response['response']['code'] < 300 ) {
-	$WP_REMOTE_POST =  __( 'wp_remote_post() works', 'edd' ) . "\n";
+	$WP_REMOTE_POST =  'wp_remote_post() works' . "\n";
 } else {
-	$WP_REMOTE_POST =  __( 'wp_remote_post() does not work', 'edd' ) . "\n";
+	$WP_REMOTE_POST =  'wp_remote_post() does not work' . "\n";
 }
 ?>
 WP Remote Post:           <?php echo $WP_REMOTE_POST; ?>
@@ -151,10 +151,10 @@ Use Cookies:              <?php echo ini_get( 'session.use_cookies' ) ? 'On' : '
 Use Only Cookies:         <?php echo ini_get( 'session.use_only_cookies' ) ? 'On' : 'Off'; ?><?php echo "\n"; ?>
 
 DISPLAY ERRORS:           <?php echo ( ini_get( 'display_errors' ) ) ? 'On (' . ini_get( 'display_errors' ) . ')' : 'N/A'; ?><?php echo "\n"; ?>
-FSOCKOPEN:                <?php echo ( function_exists( 'fsockopen' ) ) ? __( 'Your server supports fsockopen.', 'edd' ) : __( 'Your server does not support fsockopen.', 'edd' ); ?><?php echo "\n"; ?>
-cURL:                     <?php echo ( function_exists( 'curl_init' ) ) ? __( 'Your server supports cURL.', 'edd' ) : __( 'Your server does not support cURL.', 'edd' ); ?><?php echo "\n"; ?>
-SOAP Client:              <?php echo ( class_exists( 'SoapClient' ) ) ? __( 'Your server has the SOAP Client enabled.', 'edd' ) : __( 'Your server does not have the SOAP Client enabled.', 'edd' ); ?><?php echo "\n"; ?>
-SUHOSIN:                  <?php echo ( extension_loaded( 'suhosin' ) ) ? __( 'Your server has SUHOSIN installed.', 'edd' ) : __( 'Your server does not have SUHOSIN installed.', 'edd' ); ?><?php echo "\n"; ?>
+FSOCKOPEN:                <?php echo ( function_exists( 'fsockopen' ) ) ? 'Your server supports fsockopen.' : 'Your server does not support fsockopen.'; ?><?php echo "\n"; ?>
+cURL:                     <?php echo ( function_exists( 'curl_init' ) ) ? 'Your server supports cURL.' : 'Your server does not support cURL.'; ?><?php echo "\n"; ?>
+SOAP Client:              <?php echo ( class_exists( 'SoapClient' ) ) ? 'Your server has the SOAP Client enabled.' : 'Your server does not have the SOAP Client enabled.'; ?><?php echo "\n"; ?>
+SUHOSIN:                  <?php echo ( extension_loaded( 'suhosin' ) ) ? 'Your server has SUHOSIN installed.' : 'Your server does not have SUHOSIN installed.'; ?><?php echo "\n"; ?>
 
 TEMPLATES:
 
@@ -213,7 +213,7 @@ do_action( 'edd_system_info_after' );
 ### End System Info ###</textarea>
 			<p class="submit">
 				<input type="hidden" name="edd-action" value="download_sysinfo" />
-				<?php submit_button( __( 'Download System Info File', 'edd' ), 'primary', 'edd-download-sysinfo', false ); ?>
+				<?php submit_button( 'Download System Info File', 'primary', 'edd-download-sysinfo', false ); ?>
 			</p>
 		</form>
 		</div>

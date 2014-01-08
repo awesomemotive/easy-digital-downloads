@@ -27,7 +27,9 @@ jQuery(document).ready(function($) {
                     }
                 }
             }).fail(function (data) {
-                console.log(data);
+                if ( window.console && window.console.log ) {
+                    console.log( data );
+                }
             }).done(function (data) {
                 recalculate_taxes();
             });
@@ -69,7 +71,9 @@ jQuery(document).ready(function($) {
                 $('body').trigger('edd_taxes_recalculated', [ tax_data ]);
             }
         }).fail(function (data) {
-            console.log(data);
+            if ( window.console && window.console.log ) {
+              console.log( data );
+            }
         });
     }
 
@@ -156,15 +160,26 @@ jQuery(document).ready(function($) {
                         alert(discount_response.msg);
                     }
                 } else {
-                    console.log( discount_response );
+                    if ( window.console && window.console.log ) {
+                        console.log( discount_response );
+                    }
                 }
                 edd_discount_loader.hide();
             }
         }).fail(function (data) {
-            console.log(data);
+            if ( window.console && window.console.log ) {
+                console.log( data );
+            }
         });
 
         return false;
+    });
+
+    // Prevent the checkout form from submitting when hitting Enter in the discount field
+    $checkout_form_wrap.on('keypress', '#edd-discount', function (event) {
+        if (event.keyCode == '13') {
+            return false;
+        }
     });
 
     // Remove a discount
@@ -192,7 +207,9 @@ jQuery(document).ready(function($) {
 				$('body').trigger('edd_discount_removed', [ discount_response ]);
             }
         }).fail(function (data) {
-            console.log(data);
+            if ( window.console && window.console.log ) {
+                console.log( data );
+            }
         });
 
         return false;

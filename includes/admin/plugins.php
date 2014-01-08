@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Plugins
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.8
  */
@@ -47,6 +47,7 @@ function edd_plugin_row_meta( $input, $file ) {
 		return $input;
 
 	$links = array(
+		'<a href="' . admin_url( 'index.php?page=edd-getting-started' ) . '">' . esc_html__( 'Getting Started', 'edd' ) . '</a>',
 		'<a href="https://easydigitaldownloads.com/extensions/">' . esc_html__( 'Add Ons', 'edd' ) . '</a>',
 	);
 
