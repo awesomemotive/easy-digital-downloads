@@ -169,7 +169,7 @@ function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
 
 	}
 
-	return apply_filters( 'edd_taxed_amount', round( $tax, 2 ), $rate, $country, $state );
+	return apply_filters( 'edd_taxed_amount', $tax, $rate, $country, $state );
 }
 
 /**
