@@ -570,7 +570,8 @@ function edd_get_registered_settings() {
 					'desc' => __( 'How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours.', 'edd' ),
 					'type' => 'number',
 					'size' => 'small',
-					'std'  => '24'
+					'std'  => '24',
+					'min'  => '0'
 				),
 				'disable_redownload' => array(
 					'id' => 'disable_redownload',
@@ -957,10 +958,11 @@ function edd_number_callback( $args ) {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 
 	$max  = isset( $args['max'] ) ? $args['max'] : 999999;
+	$min  = isset( $args['min'] ) ? $args['min'] : 0;
 	$step = isset( $args['step'] ) ? $args['step'] : 1;
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" class="' . $size . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" min="' . esc_attr( $min ) . '" class="' . $size . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
 	echo $html;
