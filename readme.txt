@@ -187,7 +187,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
-= 1.9: January 9, 2014 =
+= 1.9.1: January 9, 2014 =
 
 * Fix: Rounding issue with taxes when item quantities are greater than 1
 * Fix: Customer's State / Province field not showing on checkout, even when stored
