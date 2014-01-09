@@ -830,7 +830,7 @@ function edd_checkbox_callback( $args ) {
 function edd_multicheck_callback( $args ) {
 	global $edd_options;
 
-	if ( $args['options'] ) {
+	if ( ! empty( $args['options'] ) ) {
 		foreach( $args['options'] as $key => $option ):
 			if( isset( $edd_options[$args['id']][$key] ) ) { $enabled = $option; } else { $enabled = NULL; }
 			echo '<input name="edd_settings[' . $args['id'] . '][' . $key . ']" id="edd_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
