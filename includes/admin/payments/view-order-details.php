@@ -210,6 +210,8 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 							</div><!-- /.inside -->
 						</div><!-- /#edd-customer-details -->
 
+						<?php do_action( 'edd_view_order_details_billing_before', $payment_id ); ?>
+
 						<div id="edd-billing-details" class="postbox">
 							<h3 class="hndle">
 								<span><?php _e( 'Billing Address', 'edd' ); ?></span>
@@ -282,6 +284,8 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 
 							</div><!-- /.inside -->
 						</div><!-- /#edd-billing-details -->
+
+						<?php do_action( 'edd_view_order_details_billing_after', $payment_id ); ?>
 
 						<?php $column_count = edd_item_quantities_enabled() ? 'columns-4' : 'columns-3'; ?>
 						<div id="edd-purchased-files" class="postbox <?php echo $column_count; ?>">
@@ -387,6 +391,8 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 
 							</div><!-- /.inside -->
 						</div><!-- /#edd-purchased-files -->
+
+						<?php do_action( 'edd_view_order_details_files_after', $payment_id ); ?>
 
 						<div id="edd-payment-notes" class="postbox">
 							<h3 class="hndle"><span><?php _e( 'Payment Notes', 'edd' ); ?></span></h3>
