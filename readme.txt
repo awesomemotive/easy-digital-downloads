@@ -194,6 +194,8 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: File Download Limit and Download Link Expiration settings not able to be changed
 * Fix: Buy Now buttons set price to 0.00 at PayPal
 
+* Tweak: Updated all language files for EDD 1.9+
+
 = 1.9: January 7, 2014 =
 
 _REQUIRES WordPress 3.7 or later_
