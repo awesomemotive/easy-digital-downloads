@@ -52,15 +52,16 @@ function edd_get_cart_content_details() {
 		// Amount before taxes
 		$subtotal   = round( $item_price * $quantity, 2 );
 
-		$total      = round( $item_price - $discount + $tax, 2 );
+		$total      = round( ( $item_price - $discount + $tax ) * $quantity, 2 );
 
 		$details[ $key ]  = array(
 			'name'        => get_the_title( $item['id'] ),
 			'id'          => $item['id'],
 			'item_number' => $item,
+			'item_price'  => $item_price,
 			'quantity'    => $quantity,
-			'subtotal'    => $subtotal,
 			'discount'    => $discount,
+			'subtotal'    => $subtotal,
 			'tax'         => $tax,
 			'price'       => $total,
 		);
