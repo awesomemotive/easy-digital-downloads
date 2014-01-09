@@ -325,7 +325,7 @@ function edd_default_cc_address_fields() {
 			<span class="edd-description"><?php _e( 'The state or province for your billing address.', 'edd' ); ?></span>
             <?php
             $selected_state = edd_get_shop_state();
-            $states         = edd_get_shop_states();
+            $states         = edd_get_shop_states( $selected_country );
 
             if( $logged_in && ! empty( $user_address['state'] ) ) {
 				$selected_state = $user_address['state'];
