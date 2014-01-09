@@ -177,7 +177,7 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 				<div id="postbox-container-2" class="postbox-container">
 					<div id="normal-sortables" class="meta-box-sortables ui-sortable">
 
-						<?php do_action( 'edd_view_order_details_main_before' ); ?>
+						<?php do_action( 'edd_view_order_details_main_before', $payment_id ); ?>
 
 						<div id="edd-customer-details" class="postbox">
 							<h3 class="hndle">
