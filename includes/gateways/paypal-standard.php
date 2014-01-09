@@ -107,7 +107,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 				$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
 			}
 			$paypal_args['quantity_' . $i ]        = $item['quantity'];
-			$paypal_args['amount_' . $i ]          = $item['subtotal'] - $item['discount'];
+			$paypal_args['amount_' . $i ]          = $item['item_price'] - $item['discount'];
 			$i++;
 
 		}
