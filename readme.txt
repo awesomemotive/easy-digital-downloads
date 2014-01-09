@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.7
 Tested up to: 3.9
 
-Stable Tag: 1.9
+Stable Tag: 1.9.1
 
 License: GNU Version 2 or Any Later Version
 
@@ -187,7 +187,14 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
-= 1.9: January 8, 2014 =
+= 1.9: January 9, 2014 =
+
+* Fix: Rounding issue with taxes when item quantities are greater than 1
+* Fix: Customer's State / Province field not showing on checkout, even when stored
+* Fix: File Download Limit and Download Link Expiration settings not able to be changed
+* Fix: Buy Now buttons set price to 0.00 at PayPal
+
+= 1.9: January 7, 2014 =
 
 _REQUIRES WordPress 3.7 or later_
 
