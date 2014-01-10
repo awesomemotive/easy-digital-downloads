@@ -659,7 +659,7 @@ function edd_settings_sanitize( $input = array() ) {
 	$settings  = edd_get_registered_settings();
 	$tab       = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
 
-	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+	$input = $input ? apply_filters( 'edd_settings_' . $tab . '_sanitize', $input ) : array();
 
 	// Loop through each setting being saved and pass it through a sanitization filter
 	foreach( $input as $key => $value ) {
