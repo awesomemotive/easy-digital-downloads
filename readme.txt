@@ -187,6 +187,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 1.9.2: January 10, 2014 =
+
+* Fix: Bug with add-on and theme license key activation
+* Fix: Bug with invalid foreach() in small number of cases
+
 = 1.9.1: January 9, 2014 =
 
 * Fix: Rounding issue with taxes when item quantities are greater than 1
@@ -1576,8 +1581,3 @@ _REQUIRES WordPress 3.7 or later_
 = 1.0: Early April =
 
 * First offical release!
-
-
-== Upgrade Notice ==
-
-Fixed a very important bug with prices over 1000. Added new views the reports page. Improved the purchase confirmation page. Fixed a large number of other small bugs and made a significant number of minor improvements throughout the plugin.
