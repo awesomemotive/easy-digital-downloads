@@ -296,6 +296,11 @@ function edd_setup_email_tags() {
 			'function'    => 'edd_email_tag_user_email'
 		),
 		array(
+			'tag'         => 'billing_address',
+			'description' => __( 'The buyer\'s billing address', 'edd' ),
+			'function'    => 'edd_email_tag_billing_address'
+		),
+		array(
 			'tag'         => 'date',
 			'description' => __( 'The date of the purchase', 'edd' ),
 			'function'    => 'edd_email_tag_date'
@@ -539,6 +544,29 @@ function edd_email_tag_username( $payment_id ) {
  */
 function edd_email_tag_user_email( $payment_id ) {
 	return edd_get_payment_user_email( $payment_id );
+}
+
+/**
+ * Email template tag: billing_address
+ * The buyer's billing address
+ *
+ * @param int $payment_id
+ *
+ * @return string billing_address
+ */
+function edd_email_tag_billing_address( $payment_id ) {
+
+	$user_info    = edd_get_payment_meta_user_info( $payment_id );
+	$user_address = ! empty( $user_info['address'] ) ? $user_info['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
+
+	$return = $user_address['line1'] . "\n";
+	if( ! empty( $user_address['line2'] ) ) {
+		$return .= $user_address['line2'] . "\n";
+	}
+	$return = $user_address['city'] . ' ' . $user_address['zip'] . ' ' . $user_address['state'] . "\n";
+	$return = $user_address['country'];
+
+	return $address;
 }
 
 /**
