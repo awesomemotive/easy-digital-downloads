@@ -656,10 +656,11 @@ function edd_settings_sanitize( $input = array() ) {
 
 	parse_str( $_POST['_wp_http_referer'], $referrer );
 
-	$settings  = edd_get_registered_settings();
-	$tab       = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
+	$settings  	= edd_get_registered_settings();
+	$tab       	= isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
 
-	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+	$input 		= $input ? $input : array();
+	$input 		= apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
 
 	// Loop through each setting being saved and pass it through a sanitization filter
 	foreach( $input as $key => $value ) {

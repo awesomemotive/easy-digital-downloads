@@ -27,7 +27,7 @@ function edd_add_rewrite_endpoints( $rewrite_rules ) {
 add_action( 'init', 'edd_add_rewrite_endpoints' );
 
 /**
- * Process Cart Endpointss
+ * Process Cart Endpoints
  *
  * Listens for add/remove requests sent from the cart
  *
