@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.7
 Tested up to: 3.9
 
-Stable Tag: 1.9.2
+Stable Tag: 1.9.3
 
 License: GNU Version 2 or Any Later Version
 
@@ -186,6 +186,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 1.9.3: January 13, 2014 =
+
+* Fix: Bug with tax amounts not being rounded resulting in an error when going to PayPal
+* Fix: Invalid foreach error message when saving the extensions tab
 
 = 1.9.2: January 10, 2014 =
 
