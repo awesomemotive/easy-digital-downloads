@@ -736,7 +736,7 @@ function edd_get_cart_tax() {
 		
 	}
 
-	return apply_filters( 'edd_get_cart_tax', $cart_tax );
+	return apply_filters( 'edd_get_cart_tax', round( $cart_tax, 2 ) );
 }
 
 /**
