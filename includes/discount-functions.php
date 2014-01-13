@@ -933,7 +933,7 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 		
 	}
 
-	return apply_filters( 'edd_get_cart_discounted_amount', $amount );
+	return apply_filters( 'edd_get_cart_discounted_amount', round( $amount, 2 ) );
 }
 
 /**
