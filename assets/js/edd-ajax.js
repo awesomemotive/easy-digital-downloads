@@ -165,7 +165,13 @@ jQuery(document).ready(function ($) {
 	                    // remove spinner for multi
 	                    $this.removeAttr( 'data-edd-loading' );
 	                }
-
+			
+			// Update all buttons for same download
+			if( $( '#edd_purchase_' + download ).length ) {
+				$( '#edd_purchase_' + download + ' a.edd-add-to-cart' ).hide();
+	                   	$( '#edd_purchase_' + download + ' .edd_go_to_checkout' ).show().removeAttr( 'data-edd-loading' );
+	                }
+	                
 	                if( response != 'incart' ) {
 	                    // Show the added message
 	                    $('.edd-cart-added-alert', container).fadeIn();
