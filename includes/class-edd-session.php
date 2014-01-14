@@ -53,7 +53,7 @@ class EDD_Session {
 	 */
 	public function __construct() {
 
-		if( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+		if( is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 			return; // Don't load sessions in the admin, that's silly
 		}
 
