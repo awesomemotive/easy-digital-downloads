@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.7
 Tested up to: 3.9
 
-Stable Tag: 1.9.3
+Stable Tag: 1.9.4
 
 License: GNU Version 2 or Any Later Version
 
@@ -186,6 +186,11 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 1.9.4: January 13, 2014 =
+
+* Fix: Bug with Last Month stats showing a combined total of this month and last month
+* Fix: Bug with item amounts that could result in a PayPal error
 
 = 1.9.3: January 13, 2014 =
 
