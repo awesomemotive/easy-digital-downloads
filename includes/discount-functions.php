@@ -583,7 +583,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 	$condition    = edd_get_discount_product_condition( $code_id );
 	$excluded_ps  = edd_get_discount_excluded_products( $code_id );
 	$cart_items   = edd_get_cart_contents();
-	$cart_ids     = wp_list_pluck( $cart_items, 'id' );
+	$cart_ids     = $cart_items ? wp_list_pluck( $cart_items, 'id' ) : null;
 	$ret          = false;
 
 	if ( empty( $product_reqs ) ) {
