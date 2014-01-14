@@ -53,6 +53,10 @@ class EDD_Session {
 	 */
 	public function __construct() {
 
+		if( is_admin() && ! defined( 'DOING_AJAX' ) ) {
+			return; // Don't load sessions in the admin, that's silly
+		}
+
 		$this->use_php_sessions = defined( 'EDD_USE_PHP_SESSIONS' ) && EDD_USE_PHP_SESSIONS;
 
 		if( $this->use_php_sessions ) {
