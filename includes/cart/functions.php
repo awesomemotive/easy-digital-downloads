@@ -49,9 +49,8 @@ function edd_get_cart_content_details() {
 		$tax        = edd_get_cart_item_tax( $item );
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
 
-		// Amount before taxes
+		$item_price = round( $item_price, 2 );
 		$subtotal   = round( $item_price * $quantity, 2 );
-
 		$total      = round( ( $item_price - $discount + $tax ) * $quantity, 2 );
 
 		$details[ $key ]  = array(
