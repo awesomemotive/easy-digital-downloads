@@ -120,14 +120,6 @@ add_action('admin_init', 'edd_register_settings');
 */
 function edd_get_registered_settings() {
 
-	$pages = get_pages();
-	$pages_options = array( 0 => '' ); // Blank option
-	if ( $pages ) {
-		foreach ( $pages as $page ) {
-			$pages_options[ $page->ID ] = $page->post_title;
-		}
-	}
-
 	/**
 	 * 'Whitelisted' EDD settings, filters are provided for each settings
 	 * section to allow extensions and other plugins to add their own settings
@@ -147,21 +139,21 @@ function edd_get_registered_settings() {
 					'name' => __( 'Checkout Page', 'edd' ),
 					'desc' => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] short code must be on this page.', 'edd' ),
 					'type' => 'select',
-					'options' => $pages_options
+					'options' => edd_get_pages()
 				),
 				'success_page' => array(
 					'id' => 'success_page',
 					'name' => __( 'Success Page', 'edd' ),
 					'desc' => __( 'This is the page buyers are sent to after completing their purchases. The [edd_receipt] short code should be on this page.', 'edd' ),
 					'type' => 'select',
-					'options' => $pages_options
+					'options' => edd_get_pages()
 				),
 				'failure_page' => array(
 					'id' => 'failure_page',
 					'name' => __( 'Failed Transaction Page', 'edd' ),
 					'desc' => __( 'This is the page buyers are sent to if their transaction is cancelled or fails', 'edd' ),
 					'type' => 'select',
-					'options' => $pages_options
+					'options' => edd_get_pages()
 				),
 				'currency_settings' => array(
 					'id' => 'currency_settings',
@@ -656,10 +648,11 @@ function edd_settings_sanitize( $input = array() ) {
 
 	parse_str( $_POST['_wp_http_referer'], $referrer );
 
-	$settings  = edd_get_registered_settings();
-	$tab       = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
+	$settings  	= edd_get_registered_settings();
+	$tab       	= isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
 
-	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+	$input 		= $input ? $input : array();
+	$input 		= apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
 
 	// Loop through each setting being saved and pass it through a sanitization filter
 	foreach( $input as $key => $value ) {
@@ -785,6 +778,33 @@ function edd_get_settings_tabs() {
 }
 
 /**
+ * Retrieve a list of all published pages
+ *
+ * On large sites this can be expensive, so only load if on the settings page or $force is set to true
+ *
+ * @since 1.9.5
+ * @param bool $force Force the pages to be loaded even if not on settings 
+ * @return array $pages_options An array of the pages
+ */
+function edd_get_pages( $force = false ) {
+
+	$pages_options = array( 0 => '' ); // Blank option
+
+	if( ( ! isset( $_GET['page'] ) || 'edd-settings' != $_GET['page'] ) && ! $force ) {
+		return $pages_options;
+	}
+
+	$pages = get_pages();
+	if ( $pages ) {
+		foreach ( $pages as $page ) {
+			$pages_options[ $page->ID ] = $page->post_title;
+		}
+	}
+
+	return $pages_options;
+}
+
+/**
  * Header Callback
  *
  * Renders the header.
@@ -830,12 +850,14 @@ function edd_checkbox_callback( $args ) {
 function edd_multicheck_callback( $args ) {
 	global $edd_options;
 
-	foreach( $args['options'] as $key => $option ):
-		if( isset( $edd_options[$args['id']][$key] ) ) { $enabled = $option; } else { $enabled = NULL; }
-		echo '<input name="edd_settings[' . $args['id'] . '][' . $key . ']" id="edd_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
-		echo '<label for="edd_settings[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
-	endforeach;
-	echo '<p class="description">' . $args['desc'] . '</p>';
+	if ( ! empty( $args['options'] ) ) {
+		foreach( $args['options'] as $key => $option ):
+			if( isset( $edd_options[$args['id']][$key] ) ) { $enabled = $option; } else { $enabled = NULL; }
+			echo '<input name="edd_settings[' . $args['id'] . '][' . $key . ']" id="edd_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
+			echo '<label for="edd_settings[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
+		endforeach;
+		echo '<p class="description">' . $args['desc'] . '</p>';
+	}
 }
 
 /**
