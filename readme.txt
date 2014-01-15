@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.7
 Tested up to: 3.9
 
-Stable Tag: 1.9.1
+Stable Tag: 1.9.4
 
 License: GNU Version 2 or Any Later Version
 
@@ -187,7 +187,22 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
-= 1.9: January 9, 2014 =
+= 1.9.4: January 13, 2014 =
+
+* Fix: Bug with Last Month stats showing a combined total of this month and last month
+* Fix: Bug with item amounts that could result in a PayPal error
+
+= 1.9.3: January 13, 2014 =
+
+* Fix: Bug with tax amounts not being rounded resulting in an error when going to PayPal
+* Fix: Invalid foreach error message when saving the extensions tab
+
+= 1.9.2: January 10, 2014 =
+
+* Fix: Bug with add-on and theme license key activation
+* Fix: Bug with invalid foreach() in small number of cases
+
+= 1.9.1: January 9, 2014 =
 
 * Fix: Rounding issue with taxes when item quantities are greater than 1
 * Fix: Customer's State / Province field not showing on checkout, even when stored
@@ -1576,8 +1591,3 @@ _REQUIRES WordPress 3.7 or later_
 = 1.0: Early April =
 
 * First offical release!
-
-
-== Upgrade Notice ==
-
-Fixed a very important bug with prices over 1000. Added new views the reports page. Improved the purchase confirmation page. Fixed a large number of other small bugs and made a significant number of minor improvements throughout the plugin.

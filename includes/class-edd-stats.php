@@ -155,25 +155,25 @@ class EDD_Stats {
 
 				case 'last_month' :
 
-					if( $month == 1 && ! $end_date ) {
+					if( $month == 1 ) {
 
-						$year--;
 						$month = 12;
+						$year--;
+				
+					} else {
 
-					} elseif( ! $end_date ) {
+						$month--;
 
-						$month = date( 'n', current_time( 'timestamp' ) ) - 1;
 					}
 
 					if( $end_date ) {
-
 						$day = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-
 					}
 
 					break;
 
 				case 'today' :
+				
 					$day = date( 'd', current_time( 'timestamp' ) );
 
 					if( $end_date ) {
