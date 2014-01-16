@@ -47,6 +47,42 @@ function edd_add_download_meta_box() {
 add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
 
 /**
+ * Returns default EDD Download meta fields.
+ *
+ * @since 1.9.5
+ * @return array $fields Array of fields.
+ */
+function edd_download_metabox_fields() {
+	
+	$fields = array(
+			'_edd_product_type',
+			'edd_price',
+			'_variable_pricing',
+			'_edd_price_options_mode',
+			'edd_variable_prices',
+			'edd_download_files',
+			'_edd_purchase_text',
+			'_edd_purchase_style',
+			'_edd_purchase_color',
+			'_edd_bundled_products',
+			'_edd_hide_purchase_link',
+			'_edd_download_tax_exclusive',
+			'_edd_button_behavior',
+			'edd_product_notes'
+		);
+
+	if ( current_user_can( 'manage_shop_settings' ) ) {
+		$fields[] = '_edd_download_limit';
+	}
+
+	if ( edd_use_skus() ) {
+		$fields[] = 'edd_sku';
+	}
+	
+	return apply_filters( 'edd_metabox_fields_save', $fields );
+}
+
+/**
  * Save post meta when the save_post action is called
  *
  * @since 1.0
@@ -54,7 +90,7 @@ add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
  * @global array $post All the data of the the current post
  * @return void
  */
-function edd_download_meta_box_save( $post_id) {
+function edd_download_meta_box_save( $post_id ) {
 	global $post, $edd_options;
 
 	if ( ! isset( $_POST['edd_download_meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['edd_download_meta_box_nonce'], basename( __FILE__ ) ) )
@@ -70,33 +106,8 @@ function edd_download_meta_box_save( $post_id) {
 		return $post_id;
 
 	// The default fields that get saved
-	$fields = apply_filters( 'edd_metabox_fields_save', array(
-			'_edd_product_type',
-			'edd_price',
-			'_variable_pricing',
-			'_edd_price_options_mode',
-			'edd_variable_prices',
-			'edd_download_files',
-			'_edd_purchase_text',
-			'_edd_purchase_style',
-			'_edd_purchase_color',
-			'_edd_bundled_products',
-			'_edd_hide_purchase_link',
-			'_edd_download_tax_exclusive',
-			'_edd_button_behavior',
-			'edd_product_notes'
-		)
-	);
-
-	if ( current_user_can( 'manage_shop_settings' ) ) {
-		$fields[] = '_edd_download_limit';
-	}
-
-	if ( edd_use_skus() ) {
-		$fields[] = 'edd_sku';
-	}
-
-
+	$fields = edd_download_metabox_fields();
+	
 	foreach ( $fields as $field ) {
         if ( ! empty( $_POST[ $field ] ) ) {
 			$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
