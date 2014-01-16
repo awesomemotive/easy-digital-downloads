@@ -25,6 +25,12 @@ if ( ! isset( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
 // Setup the variables
 $payment_id   = absint( $_GET['id'] );
 $item         = get_post( $payment_id );
+
+// Sanity check... fail if purchase ID is invalid
+if ( !is_object( $item ) || $item->post_type != 'edd_payment' ) {
+    wp_die( __( 'The specified ID does not belong to a payment. Please try again', 'edd' ), __( 'Error', 'edd' ) );
+}
+
 $payment_meta = edd_get_payment_meta( $payment_id );
 $cart_items   = edd_get_payment_meta_cart_details( $payment_id );
 $user_id      = edd_get_payment_user_id( $payment_id );
