@@ -69,8 +69,7 @@ function edd_download_metabox_fields() {
 			'_edd_download_tax_exclusive',
 			'_edd_button_behavior',
 			'edd_product_notes'
-		)
-	);
+		);
 
 	if ( current_user_can( 'manage_shop_settings' ) ) {
 		$fields[] = '_edd_download_limit';
