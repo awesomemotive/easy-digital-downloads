@@ -47,30 +47,14 @@ function edd_add_download_meta_box() {
 add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
 
 /**
- * Save post meta when the save_post action is called
+ * Returns default EDD Download meta fields.
  *
- * @since 1.0
- * @param int $post_id Download (Post) ID
- * @global array $post All the data of the the current post
- * @return void
+ * @since 1.9.5
+ * @return array $fields Array of fields.
  */
-function edd_download_meta_box_save( $post_id) {
-	global $post, $edd_options;
-
-	if ( ! isset( $_POST['edd_download_meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['edd_download_meta_box_nonce'], basename( __FILE__ ) ) )
-		return $post_id;
-
-	if ( ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) || ( defined( 'DOING_AJAX') && DOING_AJAX ) || isset( $_REQUEST['bulk_edit'] ) )
-		return $post_id;
-
-	if ( isset( $post->post_type ) && $post->post_type == 'revision' )
-		return $post_id;
-
-	if ( ! current_user_can( 'edit_product', $post_id ) )
-		return $post_id;
-
-	// The default fields that get saved
-	$fields = apply_filters( 'edd_metabox_fields_save', array(
+function edd_download_metabox_fields() {
+	
+	$fields = array(
 			'_edd_product_type',
 			'edd_price',
 			'_variable_pricing',
@@ -95,8 +79,36 @@ function edd_download_meta_box_save( $post_id) {
 	if ( edd_use_skus() ) {
 		$fields[] = 'edd_sku';
 	}
+	
+	return apply_filters( 'edd_metabox_fields_save', $fields );
+}
 
+/**
+ * Save post meta when the save_post action is called
+ *
+ * @since 1.0
+ * @param int $post_id Download (Post) ID
+ * @global array $post All the data of the the current post
+ * @return void
+ */
+function edd_download_meta_box_save( $post_id ) {
+	global $post, $edd_options;
 
+	if ( ! isset( $_POST['edd_download_meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['edd_download_meta_box_nonce'], basename( __FILE__ ) ) )
+		return $post_id;
+
+	if ( ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) || ( defined( 'DOING_AJAX') && DOING_AJAX ) || isset( $_REQUEST['bulk_edit'] ) )
+		return $post_id;
+
+	if ( isset( $post->post_type ) && $post->post_type == 'revision' )
+		return $post_id;
+
+	if ( ! current_user_can( 'edit_product', $post_id ) )
+		return $post_id;
+
+	// The default fields that get saved
+	$fields = edd_download_metabox_fields();
+	
 	foreach ( $fields as $field ) {
         if ( ! empty( $_POST[ $field ] ) ) {
 			$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
