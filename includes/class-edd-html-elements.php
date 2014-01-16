@@ -356,7 +356,50 @@ class EDD_HTML_Elements {
 				$output .= '<span class="edd-description">' . esc_html( $args[ 'desc' ] ) . '</span>';
 			}
 
-			$output = '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" placeholder="' . esc_attr( $args[ 'placeholder' ] ) . '" class="' . $args[ 'class' ] . '"' . $disabled . '/>';
+			$output .= '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" placeholder="' . esc_attr( $args[ 'placeholder' ] ) . '" class="' . $args[ 'class' ] . '"' . $disabled . '/>';
+
+		$output .= '</span>';
+
+		return $output;
+	}
+
+	/**
+	 * Renders an HTML textarea
+	 *
+	 * @since 1.9
+	 *
+	 * @param string $name Name attribute of the textarea
+	 * @param string $value The value to prepopulate the field with
+	 * @param string $label
+	 * @param string $desc
+	 * @return string textarea
+	 */
+	public function textarea( $args = array() ) {
+		$defaults = array(
+			'name'        => 'textarea',
+			'value'       => null,
+			'label'       => null,
+			'desc'        => null,
+            'class'       => 'large-text',
+			'disabled'    => false
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$disabled = '';
+		if( $args['disabled'] ) {
+			$disabled = ' disabled="disabled"';
+		}
+
+		$output = '<span id="edd-' . sanitize_key( $args[ 'name' ] ) . '-wrap">';
+
+			$output .= '<label class="edd-label" for="edd-' . sanitize_key( $args[ 'name' ] ) . '">' . esc_html( $args[ 'label' ] ) . '</label>';
+
+			$output .= '<textarea name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="' . $args[ 'class' ] . '"' . $disabled . '>' . esc_attr( $args[ 'value' ] ) . '</textarea>';
+
+			if ( ! empty( $args[ 'desc' ] ) ) {
+				$output .= '<span class="edd-description">' . esc_html( $args[ 'desc' ] ) . '</span>';
+			}
 
 		$output .= '</span>';
 
