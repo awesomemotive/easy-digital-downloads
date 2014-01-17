@@ -90,26 +90,30 @@ function edd_download_metabox_fields() {
  * @global array $post All the data of the the current post
  * @return void
  */
-function edd_download_meta_box_save( $post_id ) {
-	global $post, $edd_options;
+function edd_download_meta_box_save( $post_id, $post ) {
 
-	if ( ! isset( $_POST['edd_download_meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['edd_download_meta_box_nonce'], basename( __FILE__ ) ) )
-		return $post_id;
-
-	if ( ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) || ( defined( 'DOING_AJAX') && DOING_AJAX ) || isset( $_REQUEST['bulk_edit'] ) )
-		return $post_id;
-
-	if ( isset( $post->post_type ) && $post->post_type == 'revision' )
-		return $post_id;
-
-	if ( ! current_user_can( 'edit_product', $post_id ) )
-		return $post_id;
-
+	if ( ! isset( $_POST['edd_download_meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['edd_download_meta_box_nonce'], basename( __FILE__ ) ) ) {
+		return;
+	}
+	
+	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ( defined( 'DOING_AJAX') && DOING_AJAX ) || isset( $_REQUEST['bulk_edit'] ) ) {
+		return;
+	}
+	
+	if ( isset( $post->post_type ) && 'revision' == $post->post_type ) {
+		return;
+	} 
+	
+	if ( ! current_user_can( 'edit_product', $post_id ) ) {
+		return;
+	}
+	
 	// The default fields that get saved
 	$fields = edd_download_metabox_fields();
 	
 	foreach ( $fields as $field ) {
-        if ( ! empty( $_POST[ $field ] ) ) {
+		
+        	if ( ! empty( $_POST[ $field ] ) ) {
 			$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
 			update_post_meta( $post_id, $field, $new );
 		} else {
@@ -117,12 +121,15 @@ function edd_download_meta_box_save( $post_id ) {
 		}
 	}
 
-	if( edd_has_variable_prices( $post_id ) ) {
+	if ( edd_has_variable_prices( $post_id ) ) {
 		$lowest = edd_get_lowest_price_option( $post_id );
 		update_post_meta( $post_id, 'edd_price', $lowest );
 	}
+	
+	do_action( 'edd_save_download', $post_id, $post );
 }
-add_action( 'save_post', 'edd_download_meta_box_save' );
+
+add_action( 'save_post', 'edd_download_meta_box_save', 10, 2 );
 
 /**
  * Sanitize the price before it is saved
