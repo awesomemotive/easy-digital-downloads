@@ -57,7 +57,6 @@ class EDD_Payments_Query extends EDD_Stats {
 			'end_date'   => false,
 			'number'     => 20,
 			'page'       => null,
-			'mode'       => 'live',
 			'orderby'    => 'ID',
 			'order'      => 'DESC',
 			'user'       => null,
@@ -378,7 +377,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @return void
 	 */
 	public function mode() {
-		if ( $this->args[ 'mode' ] == 'all' || empty( $this->args[ 'mode' ] ) ) {
+		if ( empty( $this->args[ 'mode' ] ) || $this->args[ 'mode' ] == 'all' ) {
 			$this->__unset( 'mode' );
 			return;
 		}

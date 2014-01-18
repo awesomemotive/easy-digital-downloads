@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Payments
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.9
 */
@@ -35,7 +35,7 @@ function edd_update_payment_details( $data ) {
 	$user_info  = edd_get_payment_meta_user_info( $payment_id );
 
 	$status     = $data['edd-payment-status'];
-	$user_id    = absint( $data['edd-payment-user-id'] );
+	$user_id    = intval( $data['edd-payment-user-id'] );
 	$date       = sanitize_text_field( $data['edd-payment-date'] );
 	$hour       = sanitize_text_field( $data['edd-payment-time-hour'] );
 	$minute     = sanitize_text_field( $data['edd-payment-time-min'] );
@@ -94,6 +94,7 @@ function edd_update_payment_details( $data ) {
 
 	// Set new meta values
 	$user_info['id']         = $user_id;
+	$user_info['email']      = $email;
 	$user_info['first_name'] = $first_name;
 	$user_info['last_name']  = $last_name;
 	$user_info['address']    = $address;

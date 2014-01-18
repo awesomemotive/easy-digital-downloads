@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Discounts
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -81,7 +81,7 @@ $single_use        = edd_discount_is_single_use( $discount_id );
 					</p>
 					<?php echo EDD()->html->product_dropdown( array(
 						'name'     => 'products[]',
-						'selected' => $excluded_products,
+						'selected' => $product_reqs,
 						'multiple' => true,
 						'chosen'   => true 
 					) ); ?><br/>
@@ -101,6 +101,7 @@ $single_use        = edd_discount_is_single_use( $discount_id );
 				<td>
 					<?php echo EDD()->html->product_dropdown( array(
 						'name'     => 'excluded-products[]',
+						'id'       => 'excluded-products',
 						'selected' => $excluded_products,
 						'multiple' => true,
 						'chosen'   => true 

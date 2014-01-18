@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Payments
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.6
 */
@@ -33,9 +33,10 @@ if ( !is_object( $item ) || $item->post_type != 'edd_payment' ) {
 
 $payment_meta = edd_get_payment_meta( $payment_id );
 $cart_items   = edd_get_payment_meta_cart_details( $payment_id );
-$user_info    = edd_get_payment_meta_user_info( $payment_id );
 $user_id      = edd_get_payment_user_id( $payment_id );
 $payment_date = strtotime( $item->post_date );
+$user_info    = edd_get_payment_meta_user_info( $payment_id );
+$address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
 ?>
 <div class="wrap">
 	<h2><?php printf( __( 'Payment #%d', 'edd' ), $payment_id ); ?></h2>
@@ -65,7 +66,7 @@ $payment_date = strtotime( $item->post_date );
 									<div class="edd-order-taxes edd-admin-box-inside">
 										<p>
 											<span class="label"><?php _e( 'Tax', 'edd' ); ?>:</span>&nbsp;
-											<input name="edd-payment-tax" type="number" class="small-text right " value="<?php echo esc_attr( edd_get_payment_tax( $payment_id ) ); ?>"/>
+											<input name="edd-payment-tax" type="number" step="0.01" class="small-text right " value="<?php echo esc_attr( edd_get_payment_tax( $payment_id ) ); ?>"/>
 										</p>
 									</div>
 									<?php endif; ?>
@@ -84,7 +85,7 @@ $payment_date = strtotime( $item->post_date );
 									<div class="edd-order-payment edd-admin-box-inside">
 										<p>
 											<span class="label"><?php _e( 'Total Price', 'edd' ); ?>:</span>&nbsp;
-											<input name="edd-payment-total" type="number" class="small-text right" value="<?php echo esc_attr( edd_get_payment_amount( $payment_id ) ); ?>"/>
+											<input name="edd-payment-total" type="number" step="0.01" class="small-text right" value="<?php echo esc_attr( edd_get_payment_amount( $payment_id ) ); ?>"/>
 										</p>
 									</div>
 									<div class="edd-order-payment-recalc-totals edd-admin-box-inside" style="display:none">
@@ -182,7 +183,7 @@ $payment_date = strtotime( $item->post_date );
 				<div id="postbox-container-2" class="postbox-container">
 					<div id="normal-sortables" class="meta-box-sortables ui-sortable">
 
-						<?php do_action( 'edd_view_order_details_main_before' ); ?>
+						<?php do_action( 'edd_view_order_details_main_before', $payment_id ); ?>
 
 						<div id="edd-customer-details" class="postbox">
 							<h3 class="hndle">
@@ -203,7 +204,7 @@ $payment_date = strtotime( $item->post_date );
 									</div>
 									<div class="column">
 										<strong><?php _e( 'User ID:', 'edd' ); ?></strong>&nbsp;
-										<input type="number" step="1" min="0" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>&nbsp;&nbsp;&nbsp;
+										<input type="number" step="1" min="-1" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>&nbsp;&nbsp;&nbsp;
 										<p class="description"><?php _e( 'User ID of the customer', 'edd' ); ?></p>
 									</div>
 								</div>
@@ -214,6 +215,8 @@ $payment_date = strtotime( $item->post_date );
 
 							</div><!-- /.inside -->
 						</div><!-- /#edd-customer-details -->
+
+						<?php do_action( 'edd_view_order_details_billing_before', $payment_id ); ?>
 
 						<div id="edd-billing-details" class="postbox">
 							<h3 class="hndle">
@@ -228,23 +231,23 @@ $payment_date = strtotime( $item->post_date );
 											<div class="column">
 												<p>
 													<strong class="order-data-address-line"><?php _e( 'Street Address Line 1:', 'edd' ); ?></strong><br/>
-													<input type="text" name="edd-payment-address[0][line1]" value="<?php esc_attr_e( $user_info['address']['line1'] ); ?>" class="medium-text" />
+													<input type="text" name="edd-payment-address[0][line1]" value="<?php esc_attr_e( $address['line1'] ); ?>" class="medium-text" />
 												</p>
 												<p>
 													<strong class="order-data-address-line"><?php _e( 'Street Address Line 2:', 'edd' ); ?></strong><br/>
-													<input type="text" name="edd-payment-address[0][line2]" value="<?php esc_attr_e( $user_info['address']['line2'] ); ?>" class="medium-text" />
+													<input type="text" name="edd-payment-address[0][line2]" value="<?php esc_attr_e( $address['line2'] ); ?>" class="medium-text" />
 												</p>
 													
 											</div>
 											<div class="column">
 												<p>
 													<strong class="order-data-address-line"><?php echo _x( 'City:', 'Address City', 'edd' ); ?></strong><br/>
-													<input type="text" name="edd-payment-address[0][city]" value="<?php esc_attr_e( $user_info['address']['city'] ); ?>" class="medium-text"/>
+													<input type="text" name="edd-payment-address[0][city]" value="<?php esc_attr_e( $address['city'] ); ?>" class="medium-text"/>
 													
 												</p>
 												<p>
 													<strong class="order-data-address-line"><?php echo _x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'edd' ); ?></strong><br/>
-													<input type="text" name="edd-payment-address[0][zip]" value="<?php esc_attr_e( $user_info['address']['zip'] ); ?>" class="medium-text"/>
+													<input type="text" name="edd-payment-address[0][zip]" value="<?php esc_attr_e( $address['zip'] ); ?>" class="medium-text"/>
 													
 												</p>
 											</div>
@@ -255,7 +258,7 @@ $payment_date = strtotime( $item->post_date );
 													echo EDD()->html->select( array(
 														'options'          => edd_get_country_list(),
 														'name'             => 'edd-payment-address[0][country]',
-														'selected'         => $user_info['address']['country'],
+														'selected'         => $address['country'],
 														'show_option_all'  => false,
 														'show_option_none' => false
 													) );
@@ -264,17 +267,17 @@ $payment_date = strtotime( $item->post_date );
 												<p id="edd-order-address-state-wrap">
 													<strong class="order-data-address-line"><?php echo _x( 'State / Province:', 'State / province of address', 'edd' ); ?></strong><br/>
 													<?php
-													$states = edd_get_shop_states( $user_info['address']['country'] );
+													$states = edd_get_shop_states( $address['country'] );
 													if( ! empty( $states ) ) {
 														echo EDD()->html->select( array(
 															'options'          => $states,
 															'name'             => 'edd-payment-address[0][state]',
-															'selected'         => $user_info['address']['state'],
+															'selected'         => $address['state'],
 															'show_option_all'  => false,
 															'show_option_none' => false
 														) );
 													} else { ?>
-														<input type="text" name="edd-payment-address[0][state]" value="<?php esc_attr_e( $user_info['address']['state'] ); ?>" class="medium-text"/>
+														<input type="text" name="edd-payment-address[0][state]" value="<?php esc_attr_e( $address['state'] ); ?>" class="medium-text"/>
 														<?php
 													} ?>
 												</p>
@@ -287,6 +290,8 @@ $payment_date = strtotime( $item->post_date );
 
 							</div><!-- /.inside -->
 						</div><!-- /#edd-billing-details -->
+
+						<?php do_action( 'edd_view_order_details_billing_after', $payment_id ); ?>
 
 						<?php $column_count = edd_item_quantities_enabled() ? 'columns-4' : 'columns-3'; ?>
 						<div id="edd-purchased-files" class="postbox <?php echo $column_count; ?>">
@@ -392,6 +397,8 @@ $payment_date = strtotime( $item->post_date );
 
 							</div><!-- /.inside -->
 						</div><!-- /#edd-purchased-files -->
+
+						<?php do_action( 'edd_view_order_details_files_after', $payment_id ); ?>
 
 						<div id="edd-payment-notes" class="postbox">
 							<h3 class="hndle"><span><?php _e( 'Payment Notes', 'edd' ); ?></span></h3>

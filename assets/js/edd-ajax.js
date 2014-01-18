@@ -52,7 +52,9 @@ jQuery(document).ready(function ($) {
 	            }
 	        }
         }).fail(function (response) {
-            console.log(response);
+            if ( window.console && window.console.log ) {
+                console.log( response );
+            }
         }).done(function (response) {
 
         });
@@ -125,8 +127,6 @@ jQuery(document).ready(function ($) {
             url: edd_scripts.ajaxurl,
             success: function (response) {
 
-                //console.log(response);
-
             	if( edd_scripts.redirect_to_checkout == '1' ) {
 
 	                window.location = edd_scripts.checkout_page;
@@ -176,7 +176,9 @@ jQuery(document).ready(function ($) {
 	            }
 	        }
         }).fail(function (response) {
-            console.log(response);
+            if ( window.console && window.console.log ) {
+                console.log( response );
+            }
         }).done(function (response) {
 
         });

@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Settings
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -120,14 +120,6 @@ add_action('admin_init', 'edd_register_settings');
 */
 function edd_get_registered_settings() {
 
-	$pages = get_pages();
-	$pages_options = array( 0 => '' ); // Blank option
-	if ( $pages ) {
-		foreach ( $pages as $page ) {
-			$pages_options[ $page->ID ] = $page->post_title;
-		}
-	}
-
 	/**
 	 * 'Whitelisted' EDD settings, filters are provided for each settings
 	 * section to allow extensions and other plugins to add their own settings
@@ -147,21 +139,21 @@ function edd_get_registered_settings() {
 					'name' => __( 'Checkout Page', 'edd' ),
 					'desc' => __( 'This is the checkout page where buyers will complete their purchases. The [download_checkout] short code must be on this page.', 'edd' ),
 					'type' => 'select',
-					'options' => $pages_options
+					'options' => edd_get_pages()
 				),
 				'success_page' => array(
 					'id' => 'success_page',
 					'name' => __( 'Success Page', 'edd' ),
 					'desc' => __( 'This is the page buyers are sent to after completing their purchases. The [edd_receipt] short code should be on this page.', 'edd' ),
 					'type' => 'select',
-					'options' => $pages_options
+					'options' => edd_get_pages()
 				),
 				'failure_page' => array(
 					'id' => 'failure_page',
 					'name' => __( 'Failed Transaction Page', 'edd' ),
 					'desc' => __( 'This is the page buyers are sent to if their transaction is cancelled or fails', 'edd' ),
 					'type' => 'select',
-					'options' => $pages_options
+					'options' => edd_get_pages()
 				),
 				'currency_settings' => array(
 					'id' => 'currency_settings',
@@ -224,6 +216,12 @@ function edd_get_registered_settings() {
 					'id' => 'allow_tracking',
 					'name' => __( 'Allow Usage Tracking?', 'edd' ),
 					'desc' => __( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in and receive a 20% discount code for any purchase from the <a href="https://easydigitaldownloads.com/extensions" target="_blank">Easy Digital Downloads store</a>. Your discount code will be emailed to you.', 'edd' ),
+					'type' => 'checkbox'
+				),
+				'uninstall_on_delete' => array(
+					'id' => 'uninstall_on_delete',
+					'name' => __( 'Remove Data on Uninstall?', 'edd' ),
+					'desc' => __( 'Check this box if you would like EDD to completely remove all of its data when the plugin is deleted.', 'edd' ),
 					'type' => 'checkbox'
 				)
 			)
@@ -564,7 +562,8 @@ function edd_get_registered_settings() {
 					'desc' => __( 'How long should download links be valid for? Default is 24 hours from the time they are generated. Enter a time in hours.', 'edd' ),
 					'type' => 'number',
 					'size' => 'small',
-					'std'  => '24'
+					'std'  => '24',
+					'min'  => '0'
 				),
 				'disable_redownload' => array(
 					'id' => 'disable_redownload',
@@ -649,10 +648,11 @@ function edd_settings_sanitize( $input = array() ) {
 
 	parse_str( $_POST['_wp_http_referer'], $referrer );
 
-	$settings  = edd_get_registered_settings();
-	$tab       = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
+	$settings  	= edd_get_registered_settings();
+	$tab       	= isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
 
-	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+	$input 		= $input ? $input : array();
+	$input 		= apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
 
 	// Loop through each setting being saved and pass it through a sanitization filter
 	foreach( $input as $key => $value ) {
@@ -778,6 +778,33 @@ function edd_get_settings_tabs() {
 }
 
 /**
+ * Retrieve a list of all published pages
+ *
+ * On large sites this can be expensive, so only load if on the settings page or $force is set to true
+ *
+ * @since 1.9.5
+ * @param bool $force Force the pages to be loaded even if not on settings 
+ * @return array $pages_options An array of the pages
+ */
+function edd_get_pages( $force = false ) {
+
+	$pages_options = array( 0 => '' ); // Blank option
+
+	if( ( ! isset( $_GET['page'] ) || 'edd-settings' != $_GET['page'] ) && ! $force ) {
+		return $pages_options;
+	}
+
+	$pages = get_pages();
+	if ( $pages ) {
+		foreach ( $pages as $page ) {
+			$pages_options[ $page->ID ] = $page->post_title;
+		}
+	}
+
+	return $pages_options;
+}
+
+/**
  * Header Callback
  *
  * Renders the header.
@@ -823,12 +850,14 @@ function edd_checkbox_callback( $args ) {
 function edd_multicheck_callback( $args ) {
 	global $edd_options;
 
-	foreach( $args['options'] as $key => $option ):
-		if( isset( $edd_options[$args['id']][$key] ) ) { $enabled = $option; } else { $enabled = NULL; }
-		echo '<input name="edd_settings[' . $args['id'] . '][' . $key . ']" id="edd_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
-		echo '<label for="edd_settings[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
-	endforeach;
-	echo '<p class="description">' . $args['desc'] . '</p>';
+	if ( ! empty( $args['options'] ) ) {
+		foreach( $args['options'] as $key => $option ):
+			if( isset( $edd_options[$args['id']][$key] ) ) { $enabled = $option; } else { $enabled = NULL; }
+			echo '<input name="edd_settings[' . $args['id'] . '][' . $key . ']" id="edd_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
+			echo '<label for="edd_settings[' . $args['id'] . '][' . $key . ']">' . $option . '</label><br/>';
+		endforeach;
+		echo '<p class="description">' . $args['desc'] . '</p>';
+	}
 }
 
 /**
@@ -951,11 +980,12 @@ function edd_number_callback( $args ) {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 
 	$max  = isset( $args['max'] ) ? $args['max'] : 999999;
+	$min  = isset( $args['min'] ) ? $args['min'] : 0;
 	$step = isset( $args['step'] ) ? $args['step'] : 1;
 
 	$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" class="' . $size . '-text" id="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" name="edd_settings_' . $args['section'] . '[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
-	$html .= '<label for="edd_settings_' . $args['section'] . '[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
+	$html = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" min="' . esc_attr( $min ) . '" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
 	echo $html;
 }

@@ -113,7 +113,17 @@ jQuery(document).ready(function ($) {
 		type : function() {
 
 			$( 'body' ).on( 'change', '#_edd_product_type', function(e) {
-				$( '#edd_download_files,#edd_products,#edd_download_limit_wrap' ).toggle();
+
+				if ( 'bundle' === $( this ).val() ) {
+					$( '#edd_products' ).show();
+					$( '#edd_download_files' ).hide();
+					$( '#edd_download_limit_wrap' ).hide();
+				} else {
+					$( '#edd_products' ).hide();
+					$( '#edd_download_files' ).show();
+					$( '#edd_download_limit_wrap' ).show();
+				}
+
 			});
 
 		},
@@ -429,7 +439,9 @@ jQuery(document).ready(function ($) {
 							$(response).insertAfter( $this.next() );
 						}
 					}).fail(function (data) {
-						console.log(data);
+						if ( window.console && window.console.log ) {
+							console.log( data );
+						}
 					});
 
 				}
@@ -472,7 +484,9 @@ jQuery(document).ready(function ($) {
 							$('#edd-payment-note').val('');
 						}
 					}).fail(function (data) {
-						console.log(data);
+						if ( window.console && window.console.log ) {
+							console.log( data );
+						}
 					});
 
 				} else {
@@ -513,7 +527,9 @@ jQuery(document).ready(function ($) {
 							return false;
 						}
 					}).fail(function (data) {
-						console.log(data);
+						if ( window.console && window.console.log ) {
+							console.log( data );
+						}
 					});
 					return true;
 				}
@@ -868,7 +884,7 @@ jQuery(document).ready(function ($) {
     });
 
     // Replace options with search results
-	$('.edd-select.chosen-container .chosen-choices input').keyup(function(e) {
+	$('.edd-select.chosen-container .chosen-drop input').keyup(function(e) {
 
 		var val = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
 		var menu_id = container.attr('id').replace( '_chosen', '' );
@@ -899,10 +915,13 @@ jQuery(document).ready(function ($) {
 				});
 				 // Update the options
 				$('.edd-select-chosen').trigger('chosen:updated');
+				$('#' + menu_id).next().find('input').val(val);
 			}
 		}).fail(function (response) {
-            console.log(response);
-        }).done(function (response) {
+			if ( window.console && window.console.log ) {
+				console.log( data );
+			}
+		}).done(function (response) {
 
         });
 	});

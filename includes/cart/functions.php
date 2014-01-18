@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Cart
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -49,18 +49,18 @@ function edd_get_cart_content_details() {
 		$tax        = edd_get_cart_item_tax( $item );
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
 
-		// Amount before taxes
+		$item_price = round( $item_price, 2 );
 		$subtotal   = round( $item_price * $quantity, 2 );
-
-		$total      = round( $item_price - $discount + $tax, 2 );
+		$total      = round( ( $item_price - $discount + $tax ) * $quantity, 2 );
 
 		$details[ $key ]  = array(
 			'name'        => get_the_title( $item['id'] ),
 			'id'          => $item['id'],
 			'item_number' => $item,
+			'item_price'  => $item_price,
 			'quantity'    => $quantity,
-			'subtotal'    => $subtotal,
 			'discount'    => $discount,
+			'subtotal'    => $subtotal,
 			'tax'         => $tax,
 			'price'       => $total,
 		);
@@ -473,6 +473,10 @@ function edd_get_cart_item_tax( $item = array() ) {
 			$price -= edd_get_cart_item_discount_amount( $item );
 		}
 
+		$quantity = edd_item_quantities_enabled() ? $item['quantity'] : 1;
+
+		$price *= $quantity;
+
 		$tax = edd_calculate_tax( $price );
 
 	}
@@ -731,7 +735,7 @@ function edd_get_cart_tax() {
 		
 	}
 
-	return apply_filters( 'edd_get_cart_tax', $cart_tax );
+	return apply_filters( 'edd_get_cart_tax', round( $cart_tax, 2 ) );
 }
 
 /**

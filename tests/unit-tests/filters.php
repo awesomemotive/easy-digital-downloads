@@ -229,7 +229,7 @@ class Tests_Filters extends EDD_UnitTestCase {
 
 	public function test_edd_manual_cc_form() {
 		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_manual_remove_cc_form', $wp_filter['edd_manual_cc_form'][10] );
+		$this->assertarrayHasKey( '__return_false', $wp_filter['edd_manual_cc_form'][10] );
 	}
 
 	public function test_edd_gateway_manual() {

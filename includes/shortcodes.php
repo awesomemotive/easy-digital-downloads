@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Shortcodes
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -329,6 +329,8 @@ function edd_downloads_query( $atts, $content = null ) {
 		$query['paged'] = 1;
 
 	switch( intval( $columns ) ) :
+	    case 0:
+	        $column_width = 'inherit'; break;
 		case 1:
 			$column_width = '100%'; break;
 		case 2:
@@ -381,7 +383,7 @@ function edd_downloads_query( $atts, $content = null ) {
 						?>
 					</div>
 				</div>
-				<?php if ( $i % $columns == 0 ) { ?><div style="clear:both;"></div><?php } ?>
+				<?php if ( $columns != 0 && $i % $columns == 0 ) { ?><div style="clear:both;"></div><?php } ?>
 			<?php $i++; endwhile; ?>
 
 			<div style="clear:both;"></div>

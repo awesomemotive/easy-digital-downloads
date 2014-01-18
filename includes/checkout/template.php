@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Checkout
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -325,7 +325,7 @@ function edd_default_cc_address_fields() {
 			<span class="edd-description"><?php _e( 'The state or province for your billing address.', 'edd' ); ?></span>
             <?php
             $selected_state = edd_get_shop_state();
-            $states         = edd_get_shop_states();
+            $states         = edd_get_shop_states( $selected_country );
 
             if( $logged_in && ! empty( $user_address['state'] ) ) {
 				$selected_state = $user_address['state'];
@@ -550,7 +550,7 @@ function edd_show_payment_icons() {
 				echo '<img class="payment-icon" src="' . $key . '"/>';
 			} else {
                 $image = edd_locate_template( 'images/icons/' . strtolower( str_replace( ' ', '', $card ) ) . '.gif', false );
-				$image = str_replace( ABSPATH, network_site_url( '/' ), $image );
+				$image = str_replace( ABSPATH, site_url( '/' ), $image );
 				echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
 			}
 		}
@@ -762,6 +762,67 @@ function edd_checkout_hidden_fields() {
 	<input type="hidden" name="edd-gateway" value="<?php echo edd_get_chosen_gateway(); ?>" />
 <?php
 }
+
+/**
+ * Filter Success Page Content
+ *
+ * Applies filters to the success page content.
+ *
+ * @since 1.0
+ * @param string $content Content before filters
+ * @return string $content Filtered content
+ */
+function edd_filter_success_page_content( $content ) {
+	global $edd_options;
+
+	if ( isset( $edd_options['success_page'] ) && isset( $_GET['payment-confirmation'] ) && is_page( $edd_options['success_page'] ) ) {
+		if ( has_filter( 'edd_payment_confirm_' . $_GET['payment-confirmation'] ) ) {
+			$content = apply_filters( 'edd_payment_confirm_' . $_GET['payment-confirmation'], $content );
+		}
+	}
+
+	return $content;
+}
+add_filter( 'the_content', 'edd_filter_success_page_content' );
+
+/**
+ * Shows "Purchase Processing" message for PayPal payments are still pending on site return
+ *
+ * This helps address the Race Condition, as detailed in issue #1839
+ *
+ * @since 1.9
+ * @return string
+*/
+function edd_paypal_success_page_content( $content ) {
+
+	if( ! isset( $_GET['payment-id'] ) && ! edd_get_purchase_session() ) {
+		return $content;
+	}
+
+	$payment_id = isset( $_GET['payment-id'] ) ? absint( $_GET['payment-id'] ) : false;
+
+	if( ! $payment_id ) {
+		$session    = edd_get_purchase_session();
+		$payment_id = edd_get_purchase_id_by_key( $session['purchase_key'] );
+	}
+
+	$payment = get_post( $payment_id );
+
+	if( $payment && 'pending' == $payment->post_status ) {
+
+		// Payment is still pending so show processing indicator to fix the Race Condition, issue #
+		ob_start();
+
+		edd_get_template_part( 'payment', 'processing' );
+
+		$content = ob_get_clean();
+
+	}
+
+	return $content;
+
+}
+add_filter( 'edd_payment_confirm_paypal', 'edd_paypal_success_page_content' );
 
 /**
  * Show a download's files in the purchase receipt

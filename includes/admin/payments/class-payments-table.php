@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Payments
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
  */
@@ -127,11 +127,13 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$status     = isset( $_GET['status'] )      ? $_GET['status'] : '';
 ?>
 		<div id="edd-payment-filters">
-			<label for="start-date"><?php _e( 'Start Date:', 'edd' ); ?></label>
-			<input type="text" id="start-date" name="start-date" class="edd_datepicker" value="<?php echo $start_date; ?>" placeholder="mm/dd/yyyy"/>
-			<label for="end-date"><?php _e( 'End Date:', 'edd' ); ?></label>
-			<input type="text" id="end-date" name="end-date" class="edd_datepicker" value="<?php echo $end_date; ?>" placeholder="mm/dd/yyyy"/>
-			<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
+			<span id="edd-payment-date-filters">
+				<label for="start-date"><?php _e( 'Start Date:', 'edd' ); ?></label>
+				<input type="text" id="start-date" name="start-date" class="edd_datepicker" value="<?php echo $start_date; ?>" placeholder="mm/dd/yyyy"/>
+				<label for="end-date"><?php _e( 'End Date:', 'edd' ); ?></label>
+				<input type="text" id="end-date" name="end-date" class="edd_datepicker" value="<?php echo $end_date; ?>" placeholder="mm/dd/yyyy"/>
+				<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'edd' ); ?>"/>
+			</span>
 			<?php if( ! empty( $status ) ) : ?>
 				<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
 			<?php endif; ?>

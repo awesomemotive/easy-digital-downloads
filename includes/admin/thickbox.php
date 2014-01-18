@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -55,7 +55,7 @@ function edd_admin_footer_for_thickbox() {
 	if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) && $typenow != 'download' ) { ?>
 		<script type="text/javascript">
             function insertDownload() {
-                var id = jQuery('#edd_products').val(),
+                var id = jQuery('#products').val(),
                     direct = jQuery('#select-edd-direct').val(),
                     style = jQuery('#select-edd-style').val(),
                     color = jQuery('#select-edd-color').is(':visible') ? jQuery('#select-edd-color').val() : '',

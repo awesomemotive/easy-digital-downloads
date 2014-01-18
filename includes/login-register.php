@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions/Login
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -77,6 +77,9 @@ function edd_login_form( $redirect = '' ) {
 function edd_process_login_form( $data ) {
 	if ( wp_verify_nonce( $data['edd_login_nonce'], 'edd-login-nonce' ) ) {
 		$user_data = get_user_by( 'login', $data['edd_user_login'] );
+		if ( ! $user_data ) {
+			$user_data = get_user_by( 'email', $data['edd_user_login'] );
+		}
 		if ( $user_data ) {
 			$user_ID = $user_data->ID;
 			$user_email = $user_data->user_email;
