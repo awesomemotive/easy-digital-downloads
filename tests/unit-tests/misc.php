@@ -332,7 +332,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'ZA' => 'South Africa',
 			'ZM' => 'Zambia',
 			'ZW' => 'Zimbabwe',
-			'*'  => 'Choose'
+			'0'  => 'Choose'
 		);
 
 		$this->assertEquals( $expected, edd_get_country_list() );
