@@ -394,7 +394,7 @@ function edd_email_tag_download_list( $payment_id ) {
 					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id );
 				}
 
-				$download_list .= '<li>' . apply_filters( 'edd_email_receipt_download_title', $title, $item['id'], $price_id ) . '<br/>';
+				$download_list .= '<li>' . apply_filters( 'edd_email_receipt_download_title', $title, $item, $price_id ) . '<br/>';
 				$download_list .= '<ul>';
 			}
 
@@ -563,10 +563,10 @@ function edd_email_tag_billing_address( $payment_id ) {
 	if( ! empty( $user_address['line2'] ) ) {
 		$return .= $user_address['line2'] . "\n";
 	}
-	$return = $user_address['city'] . ' ' . $user_address['zip'] . ' ' . $user_address['state'] . "\n";
-	$return = $user_address['country'];
+	$return .= $user_address['city'] . ' ' . $user_address['zip'] . ' ' . $user_address['state'] . "\n";
+	$return .= $user_address['country'];
 
-	return $address;
+	return $return;
 }
 
 /**
