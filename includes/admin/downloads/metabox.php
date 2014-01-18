@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Downloads
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -47,30 +47,14 @@ function edd_add_download_meta_box() {
 add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
 
 /**
- * Sabe post meta when the save_post action is called
+ * Returns default EDD Download meta fields.
  *
- * @since 1.0
- * @param int $post_id Download (Post) ID
- * @global array $post All the data of the the current post
- * @return void
+ * @since 1.9.5
+ * @return array $fields Array of fields.
  */
-function edd_download_meta_box_save( $post_id) {
-	global $post, $edd_options;
-
-	if ( ! isset( $_POST['edd_download_meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['edd_download_meta_box_nonce'], basename( __FILE__ ) ) )
-		return $post_id;
-
-	if ( ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) || ( defined( 'DOING_AJAX') && DOING_AJAX ) || isset( $_REQUEST['bulk_edit'] ) )
-		return $post_id;
-
-	if ( isset( $post->post_type ) && $post->post_type == 'revision' )
-		return $post_id;
-
-	if ( ! current_user_can( 'edit_product', $post_id ) )
-		return $post_id;
-
-	// The default fields that get saved
-	$fields = apply_filters( 'edd_metabox_fields_save', array(
+function edd_download_metabox_fields() {
+	
+	$fields = array(
 			'_edd_product_type',
 			'edd_price',
 			'_variable_pricing',
@@ -85,8 +69,7 @@ function edd_download_meta_box_save( $post_id) {
 			'_edd_download_tax_exclusive',
 			'_edd_button_behavior',
 			'edd_product_notes'
-		)
-	);
+		);
 
 	if ( current_user_can( 'manage_shop_settings' ) ) {
 		$fields[] = '_edd_download_limit';
@@ -95,10 +78,42 @@ function edd_download_meta_box_save( $post_id) {
 	if ( edd_use_skus() ) {
 		$fields[] = 'edd_sku';
 	}
+	
+	return apply_filters( 'edd_metabox_fields_save', $fields );
+}
 
+/**
+ * Save post meta when the save_post action is called
+ *
+ * @since 1.0
+ * @param int $post_id Download (Post) ID
+ * @global array $post All the data of the the current post
+ * @return void
+ */
+function edd_download_meta_box_save( $post_id, $post ) {
 
+	if ( ! isset( $_POST['edd_download_meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['edd_download_meta_box_nonce'], basename( __FILE__ ) ) ) {
+		return;
+	}
+	
+	if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ( defined( 'DOING_AJAX') && DOING_AJAX ) || isset( $_REQUEST['bulk_edit'] ) ) {
+		return;
+	}
+	
+	if ( isset( $post->post_type ) && 'revision' == $post->post_type ) {
+		return;
+	} 
+	
+	if ( ! current_user_can( 'edit_product', $post_id ) ) {
+		return;
+	}
+	
+	// The default fields that get saved
+	$fields = edd_download_metabox_fields();
+	
 	foreach ( $fields as $field ) {
-        if ( ! empty( $_POST[ $field ] ) ) {
+		
+        	if ( ! empty( $_POST[ $field ] ) ) {
 			$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
 			update_post_meta( $post_id, $field, $new );
 		} else {
@@ -106,12 +121,15 @@ function edd_download_meta_box_save( $post_id) {
 		}
 	}
 
-	if( edd_has_variable_prices( $post_id ) ) {
+	if ( edd_has_variable_prices( $post_id ) ) {
 		$lowest = edd_get_lowest_price_option( $post_id );
 		update_post_meta( $post_id, 'edd_price', $lowest );
 	}
+	
+	do_action( 'edd_save_download', $post_id, $post );
 }
-add_action( 'save_post', 'edd_download_meta_box_save' );
+
+add_action( 'save_post', 'edd_download_meta_box_save', 10, 2 );
 
 /**
  * Sanitize the price before it is saved
@@ -463,7 +481,7 @@ function edd_render_product_type_field( $post_id = 0 ) {
 	$type  = edd_get_download_type( $post_id );
 ?>
 	<p>
-		<strong><?php apply_filters( 'edd_product_type_options_heading', _e( 'Product Type Options:', 'edd' ) ); ?></strong>
+		<strong><?php echo apply_filters( 'edd_product_type_options_heading', __( 'Product Type Options:', 'edd' ) ); ?></strong>
 	</p>
 	<p>
 		<?php echo EDD()->html->select( array( 
@@ -699,20 +717,23 @@ add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
 function edd_render_download_limit_row( $post_id ) {
     global $edd_options;
 
-    if( !current_user_can( 'manage_shop_settings' ) )
+    if( ! current_user_can( 'manage_shop_settings' ) )
         return;
 
 	$edd_download_limit = edd_get_file_download_limit( $post_id );
+	$display = 'bundle' == edd_get_download_type( $post_id ) ? ' style="display: none;"' : '';
 ?>
-	<p><strong><?php _e( 'File Download Limit:', 'edd' ); ?></strong></p>
-	<label for="edd_download_limit">
-		<?php echo EDD()->html->text( array(
-			'name'  => '_edd_download_limit',
-			'value' => $edd_download_limit,
-			'class' => 'small-text'
-		) ); ?>
-		<?php _e( 'Blank or 0 for unlimited', 'edd' ); ?>
-	</label>
+	<div id="edd_download_limit_wrap"<?php echo $display; ?>>
+		<p><strong><?php _e( 'File Download Limit:', 'edd' ); ?></strong></p>
+		<label for="edd_download_limit">
+			<?php echo EDD()->html->text( array(
+				'name'  => '_edd_download_limit',
+				'value' => $edd_download_limit,
+				'class' => 'small-text'
+			) ); ?>
+			<?php _e( 'Blank or 0 for unlimited', 'edd' ); ?>
+		</label>
+	</div>
 <?php
 }
 add_action( 'edd_meta_box_settings_fields', 'edd_render_download_limit_row', 20 );

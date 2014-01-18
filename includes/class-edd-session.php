@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Classes/Session
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
@@ -52,6 +52,10 @@ class EDD_Session {
 	 * @since 1.5
 	 */
 	public function __construct() {
+
+		if( is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+			return; // Don't load sessions in the admin, that's silly
+		}
 
 		$this->use_php_sessions = defined( 'EDD_USE_PHP_SESSIONS' ) && EDD_USE_PHP_SESSIONS;
 

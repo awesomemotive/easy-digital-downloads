@@ -40,7 +40,7 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 	}
 
 	public function test_year_dropdown() {
-		$expected = '<select name="year" id="" class="edd-select "><option value="2008">2008</option><option value="2009">2009</option><option value="2010">2010</option><option value="2011">2011</option><option value="2012">2012</option><option value="2013" selected=\'selected\'>2013</option></select>';
+		$expected = '<select name="year" id="" class="edd-select "><option value="2009">2009</option><option value="2010">2010</option><option value="2011">2011</option><option value="2012">2012</option><option value="2013">2013</option><option value="2014" selected=\'selected\'>2014</option></select>';
 		$this->assertEquals( $expected, EDD()->html->year_dropdown() );
 	}
 

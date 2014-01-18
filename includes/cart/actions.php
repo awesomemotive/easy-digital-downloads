@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Cart
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -27,7 +27,7 @@ function edd_add_rewrite_endpoints( $rewrite_rules ) {
 add_action( 'init', 'edd_add_rewrite_endpoints' );
 
 /**
- * Process Cart Endpointss
+ * Process Cart Endpoints
  *
  * Listens for add/remove requests sent from the cart
  *

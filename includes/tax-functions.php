@@ -8,7 +8,7 @@
  *
  * @package     EDD
  * @subpackage  Functions/Taxes
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.3
 */
@@ -169,7 +169,7 @@ function edd_calculate_tax( $amount = 0, $country = false, $state = false ) {
 
 	}
 
-	return apply_filters( 'edd_taxed_amount', round( $tax, 2 ), $rate, $country, $state );
+	return apply_filters( 'edd_taxed_amount', $tax, $rate, $country, $state );
 }
 
 /**

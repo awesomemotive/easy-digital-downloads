@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Gateways
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -227,6 +227,10 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 				'id'      => $download_id,
 				'options' => $price_options
 			),
+			'tax'         => 0,
+			'discount'    => 0,
+			'item_price'  => $price,
+			'subtotal'    => $price,
 			'price'       => $price,
 			'quantity'    => 1,
 		)

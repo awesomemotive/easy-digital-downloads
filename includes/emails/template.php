@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Emails
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -41,6 +41,7 @@ function edd_get_email_templates() {
  * @return string $message Fully formatted message
  */
 function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_notice = false ) {
+
 	return edd_do_email_tags( $message, $payment_id );
 }
 
