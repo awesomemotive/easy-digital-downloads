@@ -379,7 +379,7 @@ function edd_get_discount_amount( $code_id = null ) {
  * @return float
  */
 function edd_get_discount_type( $code_id = null ) {
-	$type = get_post_meta( $code_id, '_edd_discount_type', true );
+	$type = strtolower( get_post_meta( $code_id, '_edd_discount_type', true ) );
 
 	return apply_filters( 'edd_get_discount_type', $type, $code_id );
 }
@@ -936,7 +936,7 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 	$cart_discounts = edd_get_cart_discounts();
 	foreach ( $cart_discounts as $discount ) {
 		$discount_id = edd_get_discount_id_by_code( $discount );
-		if ( 'flat' === strtolower( edd_get_discount_type( $discount_id ) ) ) {
+		if ( 'flat' === edd_get_discount_type( $discount_id ) ) {
 			$amount += edd_get_discount_amount( $discount_id )	;
 		}
 	}

@@ -406,7 +406,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 
 				foreach ( $reqs as $download_id ) {
 					
-					if ( $download_id == $item['id'] && ! in_array( $item['id'], $excluded_products ) && 'flat' !== strtolower( edd_get_discount_type( $code_id ) ) ) {
+					if ( $download_id == $item['id'] && ! in_array( $item['id'], $excluded_products ) && 'flat' !== edd_get_discount_type( $code_id ) ) {
 						$discounted_price = edd_get_discounted_amount( $discount, $price );
 					}
 					
@@ -415,7 +415,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 			} else {
 
 				// This is a global cart discount
-				if( ! in_array( $item['id'], $excluded_products ) && 'flat' === strtolower( edd_get_discount_type( $discount ) ) ) {
+				if( ! in_array( $item['id'], $excluded_products ) && 'flat' === edd_get_discount_type( $discount ) ) {
 					$discounted_price = edd_get_discounted_amount( $discount, $price );
 				}
 			}
