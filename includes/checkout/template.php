@@ -702,7 +702,7 @@ function edd_checkout_button_next() {
 function edd_checkout_button_purchase() {
 	global $edd_options;
 
-	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
+	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'blue';
 	$color = ( $color == 'inherit' ) ? '' : $color;
 	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
 
