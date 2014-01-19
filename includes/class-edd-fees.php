@@ -90,6 +90,12 @@ class EDD_Fees {
 	 */
 	public function has_fees() {
 		$fees = $this->get_fees();
+
+		if( ! empty( $fees ) && ! edd_get_cart_contents() ) {
+			// Remove all fees if cart is empty
+			EDD()->session->set( 'edd_cart_fees', null );
+		}
+
 		return ! empty( $fees ) && is_array( $fees );
 	}
 
