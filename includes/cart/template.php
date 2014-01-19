@@ -180,7 +180,7 @@ function edd_save_cart_button() {
 	if ( edd_is_cart_saving_disabled() )
 		return;
 
-	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
+	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'blue';
 	$color = ( $color == 'inherit' ) ? '' : $color;
 
 	if ( edd_is_cart_saved() ) : ?>
@@ -220,7 +220,7 @@ function edd_update_cart_button() {
 	if ( ! edd_item_quantities_enabled() )
 		return;
 
-	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
+	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'blue';
 	$color = ( $color == 'inherit' ) ? '' : $color;
 ?>
 	<input type="submit" name="edd_update_cart_submit" class="edd-submit button<?php echo ' ' . $color; ?>" value="<?php _e( 'Update Cart', 'edd' ); ?>"/>
