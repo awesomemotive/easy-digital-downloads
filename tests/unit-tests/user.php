@@ -136,7 +136,7 @@ class Tests_User extends EDD_UnitTestCase {
 		$this->assertInternalType( 'object', $prods[0] );
 		$this->assertInternalType( 'int', $prods[0]->ID );
 		$this->assertEquals( $this->_post->ID, $prods[0]->ID );
-		$this->assertEquals( 'post_type', $prods[0]->post_type );
+		$this->assertEquals( 'download', $prods[0]->post_type );
 
 	}
 
