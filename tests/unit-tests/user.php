@@ -127,7 +127,17 @@ class Tests_User extends EDD_UnitTestCase {
 		$this->assertInternalType( 'object', $out[0] );
 		$this->assertEquals( 'edd_payment', $out[0]->post_type );
 		$this->assertTrue( edd_has_purchases( $user_id ) );
-		$this->assertEquals( 1, edd_count_purchases_of_customer( $user_id ) );		
+		$this->assertEquals( 1, edd_count_purchases_of_customer( $user_id ) );
+
+		$prods = edd_get_users_purchased_products( $user_id );
+
+		$this->assertInternalType( 'array', $prods );
+		$this->assertEquals( 1, count( $prods ) );
+		$this->assertInternalType( 'object', $prods[0] );
+		$this->assertInternalType( 'int', $prods[0]->ID );
+		$this->assertEquals( $this->_post->ID, $prods[0]->ID );
+		$this->assertEquals( 'post_type', $prods[0]->post_type );
+
 	}
 
 	public function test_validate_username() {
