@@ -167,10 +167,11 @@ jQuery(document).ready(function ($) {
 	                }
 	                
 	                // Update all buttons for same download
-	                if( $( '#edd_purchase_' + download ).length ) {
-	                	  $( '#edd_purchase_' + download + ' a.edd-add-to-cart' ).hide();
-	                	  $( '#edd_purchase_' + download + ' .edd_go_to_checkout' ).show().removeAttr( 'data-edd-loading' );
-	                }
+									if( $( '.edd_download_purchase_form' ).length ) {
+										var parent_form = $('.edd_download_purchase_form *[data-download-id="' + download + '"]').parents('form');
+										$( 'a.edd-add-to-cart', parent_form ).hide();
+	                	$( '.edd_go_to_checkout', parent_form ).show().removeAttr( 'data-edd-loading' );
+	               	}
 
 	                if( response != 'incart' ) {
 	                    // Show the added message
