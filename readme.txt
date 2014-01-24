@@ -1,13 +1,14 @@
 === Easy Digital Downloads ===
 Author URI: http://pippinsplugins.com
 Plugin URI: http://easydigitaldownloads.com
-Contributors: mordauk, sunnyratilal, chriscct7, SpencerFinnell, sksmatt, ghost1227
+Contributors: mordauk, sunnyratilal, chriscct7, ghost1227, sumobi, sksmatt, SpencerFinnell
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
-Requires at least: 3.4.2
-Tested up to: 3.7
+Requires at least: 3.7
+Tested up to: 3.9
 
-Stable Tag: 1.8.6
+Stable Tag: 1.9.4
+
 License: GNU Version 2 or Any Later Version
 
 Sell digital downloads through WordPress with this complete digital downloads management plugin
@@ -185,6 +186,89 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 1.9.4: January 13, 2014 =
+
+* Fix: Bug with Last Month stats showing a combined total of this month and last month
+* Fix: Bug with item amounts that could result in a PayPal error
+
+= 1.9.3: January 13, 2014 =
+
+* Fix: Bug with tax amounts not being rounded resulting in an error when going to PayPal
+* Fix: Invalid foreach error message when saving the extensions tab
+
+= 1.9.2: January 10, 2014 =
+
+* Fix: Bug with add-on and theme license key activation
+* Fix: Bug with invalid foreach() in small number of cases
+
+= 1.9.1: January 9, 2014 =
+
+* Fix: Rounding issue with taxes when item quantities are greater than 1
+* Fix: Customer's State / Province field not showing on checkout, even when stored
+* Fix: File Download Limit and Download Link Expiration settings not able to be changed
+* Fix: Buy Now buttons set price to 0.00 at PayPal
+
+* Tweak: Updated all language files for EDD 1.9+
+
+= 1.9: January 7, 2014 =
+
+_REQUIRES WordPress 3.7 or later_
+
+* New: Added a new Getting Started page for first time installs
+* New: Rebuilt the View / Edit Details screen for payments, adding the ability to edit almost all data associated with a payment and dramatically improving the edit payment interface 
+* New: Added per-products earnings and sales graphs
+* New: Allow purchase buttons to show only the price, no text
+* New: Added an option to enable/disable data deletion during plugin uninstall
+* New: Allow users to login with their email address
+* New: HTML and Number field callbacks for settings field types
+* New: Added an option to be able to exclude products from discount codes
+* New: Allow the EDD templates directory to be modified via plugins or themes
+* New: Added start/end date filters to the Payment History screen
+* New: Added a Product Details widget to show the purchase options and details of a product in any widget area
+* New: Added betters hooks for the loging process
+* New: Added a "edd-payment-type-selected" class to the chosen payment gateway during checkout
+* New: Allow shop vendors to see earnings / sales for their own products in main Downloads screen
+* New: Dramatically improved the Edit product screen by splitting up the product options into multiple meta boxes to reduce clutter
+* New: Added EDD_Email_Template_Tags class and helper functions give developers a simple way to register new email tempalte tags
+* New: Added EDD_Graph class to allow developers to easily display custom graphs in add-ons and themes
+* New: Added live ajax search to all product drop-downs in the admin to dramatically improve performance of EDD on stores with a lot of products
+* New: Add dashicon for Downloads menu and WP 3.8+
+* New: Added new Payment Processing template file that is displayed when returning from PayPal to ensure the IPN has enough time to be processed before showing the customer the payment receipt
+
+* Fix: Rewrote the tax API to fix numerous bugs
+* Fix: A bug with payment item amounts getting zeroed out when modifying an existing payment
+* Fix: A bug that caused Euro and other currency signs to get encoded improperly in the PDF report
+* Fix: A memory leak in the File Downloads log page
+* Fix: A bug that caused discounted amounts to show as twice the amount they should
+* Fix: A bug with the subtotal being incorrect when item prices are entered inclusive of tax
+* Fix: A bug that caused custom add to cart links to add items to the cart twice
+* Fix: Undefined index when using edd_action=straight_to_gateway and variable prices
+* Fix: Purchasing a free product doesn't increase purchase count
+* Fix: Access denied error when viewing single pages of attachments connected to a Download
+* Fix: EDD_Fees doesn't properly sanitizes amounts before adding up the total
+* Fix: Undefined index when restoring a saved cart and logged-out
+* Fix: Don't allow the checkout form to submit when hitting Enter after entering a discount
+* Fix: Shop Manager user role cannot save shop settings
+* Fix: Estimated earnings could go negative, which they should not be allowed to do
+* Fix: Item earnings / sales not properly adjusted when item quantity is greater than 1
+* Fix: edd_settings_sanitize prevents EDD settings from being modified via update_option()
+* Fix: Very first purchase in shop causes total store earnings to be doubled
+* Fix: Item price incorrect when item prices are entered inclusive of tax
+* Fix: Ajax animation doesn't stop when adding an item to the cart that has Multi-Option Purchase Mode enabled
+* Fix: Incorrect echo statement inside of an apply_filters() call (twice)
+* Fix: Selecting the same month for start and end in Report date filters resulted in a 12 month spread
+* Fix: A bug that caused the Yesterday report view to show 0 earnings and sales when the current month is January
+
+* Tweak: Better support for responsive columns in the [downloads] short code
+* Tweak: Improved the sample product import file
+* Tweak: Better setup EDD_Roles during initial installation
+* Tweak: Improved the checkout_cart.php template file
+* Tweak: Automatically map the lowest price option for variably-priced products to the standard price field, allowing sort by price
+* Tweak: Improved the Downloads > Add Ons page
+* Tweak: Improved the checkout login form to include an actual "Login" button
+* Tweak: Add id attributes to fields in profile editor
+* Tweak: Set minimum WordPress version required to 3.7
 
 = 1.8.6: January 3, 2014 =
 
@@ -1507,8 +1591,3 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 = 1.0: Early April =
 
 * First offical release!
-
-
-== Upgrade Notice ==
-
-Fixed a very important bug with prices over 1000. Added new views the reports page. Improved the purchase confirmation page. Fixed a large number of other small bugs and made a significant number of minor improvements throughout the plugin.

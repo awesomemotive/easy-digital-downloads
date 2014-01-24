@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions/Templates
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -81,10 +81,12 @@ function edd_get_purchase_link( $args = array() ) {
 	if ( $args['price'] && $args['price'] !== 'no' && ! $variable_pricing ) {
 		$price = edd_get_download_price( $args['download_id'] );
 
+		$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
+
 		if ( 0 == $price ) {
-			$args['text'] = __( 'Free', 'edd' ) . '&nbsp;&ndash;&nbsp;' . $args['text'];
+			$args['text'] = __( 'Free', 'edd' ) . $button_text;
 		} else {
-			$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . '&nbsp;&ndash;&nbsp;' . $args['text'];
+			$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . $button_text;
 		}
 	}
 
@@ -277,28 +279,6 @@ function edd_after_download_content( $content ) {
 	return $content;
 }
 add_filter( 'the_content', 'edd_after_download_content' );
-
-/**
- * Filter Success Page Content
- *
- * Applies filters to the success page content.
- *
- * @since 1.0
- * @param string $content Content before filters
- * @return string $content Filtered content
- */
-function edd_filter_success_page_content( $content ) {
-	global $edd_options;
-
-	if ( isset( $edd_options['success_page'] ) && isset( $_GET['payment-confirmation'] ) && is_page( $edd_options['success_page'] ) ) {
-		if ( has_filter( 'edd_payment_confirm_' . $_GET['payment-confirmation'] ) ) {
-			$content = apply_filters( 'edd_payment_confirm_' . $_GET['payment-confirmation'], $content );
-		}
-	}
-
-	return $content;
-}
-add_filter( 'the_content', 'edd_filter_success_page_content' );
 
 /**
  * Get Button Colors
@@ -542,9 +522,12 @@ function edd_locate_template( $template_names, $load = false, $require_once = tr
  * @return mixed|void
  */
 function edd_get_theme_template_paths() {
+
+	$template_dir = edd_get_theme_template_dir_name();
+
 	$file_paths = array(
-		1 => trailingslashit( get_stylesheet_directory() ) . 'edd_templates/',
-		10 => trailingslashit( get_template_directory() ) . 'edd_templates/',
+		1 => trailingslashit( get_stylesheet_directory() ) . $template_dir,
+		10 => trailingslashit( get_template_directory() ) . $template_dir,
 		100 => edd_get_templates_dir()
 	);
 

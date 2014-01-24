@@ -10,7 +10,7 @@
  *
  * @package     EDD
  * @subpackage  Classes/API
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
@@ -464,7 +464,7 @@ class EDD_API {
 
 		$args = wp_parse_args( $args, $defaults );
 
-		date_default_timezone_set( edd_get_timezone_id() );
+		$current_time = current_time( 'timestamp' );
 
 		if ( 'range' === $args['date'] ) {
 			$startdate          = strtotime( $args['startdate'] );
@@ -481,37 +481,37 @@ class EDD_API {
 
 				case 'this_month' :
 					$dates['day'] 	    = null;
-					$dates['m_start'] 	= date( 'n' );
-					$dates['m_end']		= date( 'n' );
-					$dates['year']		= date( 'Y' );
+					$dates['m_start'] 	= date( 'n', $current_time );
+					$dates['m_end']		= date( 'n', $current_time );
+					$dates['year']		= date( 'Y', $current_time );
 				break;
 
 				case 'last_month' :
 					$dates['day'] 	  = null;
-					$dates['m_start'] = date( 'n' ) == 1 ? 12 : date( 'n' ) - 1;
+					$dates['m_start'] = date( 'n', $current_time ) == 1 ? 12 : date( 'n', $current_time ) - 1;
 					$dates['m_end']	  = $dates['m_start'];
-					$dates['year']    = date( 'n' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
+					$dates['year']    = date( 'n', $current_time ) == 1 ? date( 'Y', $current_time ) - 1 : date( 'Y', $current_time );
 				break;
 
 				case 'today' :
-					$dates['day']		= date( 'd' );
-					$dates['m_start'] 	= date( 'n' );
-					$dates['m_end']		= date( 'n' );
-					$dates['year']		= date( 'Y' );
+					$dates['day']		= date( 'd', $current_time );
+					$dates['m_start'] 	= date( 'n', $current_time );
+					$dates['m_end']		= date( 'n', $current_time );
+					$dates['year']		= date( 'Y', $current_time );
 				break;
 
 				case 'yesterday' :
-					$month              = date( 'n' ) == 1 ? 12 : date( 'n' );
-					$days_in_month      = cal_days_in_month( CAL_GREGORIAN, $month, date( 'Y' ) );
-					$yesterday          = date( 'd' ) == 1 ? $days_in_month : date( 'd' ) - 1;
+					$month              = date( 'n', $current_time ) == 1 && date( 'd', $current_time ) == 1 ? 12 : date( 'n', $current_time );
+					$days_in_month      = cal_days_in_month( CAL_GREGORIAN, $month, date( 'Y', $current_time ) );
+					$yesterday          = date( 'd', $current_time ) == 1 ? $days_in_month : date( 'd', $current_time ) - 1;
 					$dates['day']		= $yesterday;
 					$dates['m_start'] 	= $month;
 					$dates['m_end'] 	= $month;
-					$dates['year']		= $month == 1 && date( 'd' ) == 1 ? date( 'Y' ) - 1 : date( 'Y' );
+					$dates['year']		= $month == 1 && date( 'd', $current_time ) == 1 ? date( 'Y', $current_time ) - 1 : date( 'Y', $current_time );
 				break;
 
 				case 'this_quarter' :
-					$month_now = date( 'n' );
+					$month_now = date( 'n', $current_time );
 
 					$dates['day'] 	        = null;
 
@@ -519,31 +519,31 @@ class EDD_API {
 
 						$dates['m_start'] 	= 1;
 						$dates['m_end']		= 3;
-						$dates['year']		= date( 'Y' );
+						$dates['year']		= date( 'Y', $current_time );
 
 					} else if ( $month_now <= 6 ) {
 
 						$dates['m_start'] 	= 4;
 						$dates['m_end']		= 6;
-						$dates['year']		= date( 'Y' );
+						$dates['year']		= date( 'Y', $current_time );
 
 					} else if ( $month_now <= 9 ) {
 
 						$dates['m_start'] 	= 7;
 						$dates['m_end']		= 9;
-						$dates['year']		= date( 'Y' );
+						$dates['year']		= date( 'Y', $current_time );
 
 					} else {
 
 						$dates['m_start'] 	= 10;
 						$dates['m_end']		= 12;
-						$dates['year']		= date( 'Y' );
+						$dates['year']		= date( 'Y', $current_time );
 
 					}
 				break;
 
 				case 'last_quarter' :
-					$month_now = date( 'n' );
+					$month_now = date( 'n', $current_time );
 
 					$dates['day'] 	        = null;
 
@@ -551,25 +551,25 @@ class EDD_API {
 
 						$dates['m_start'] 	= 10;
 						$dates['m_end']		= 12;
-						$dates['year']		= date( 'Y' ) - 1; // Previous year
+						$dates['year']		= date( 'Y', $current_time ) - 1; // Previous year
 
 					} else if ( $month_now <= 6 ) {
 
 						$dates['m_start'] 	= 1;
 						$dates['m_end']		= 3;
-						$dates['year']		= date( 'Y' );
+						$dates['year']		= date( 'Y', $current_time );
 
 					} else if ( $month_now <= 9 ) {
 
 						$dates['m_start'] 	= 4;
 						$dates['m_end']		= 6;
-						$dates['year']		= date( 'Y' );
+						$dates['year']		= date( 'Y', $current_time );
 
 					} else {
 
 						$dates['m_start'] 	= 7;
 						$dates['m_end']		= 9;
-						$dates['year']		= date( 'Y' );
+						$dates['year']		= date( 'Y', $current_time );
 
 					}
 				break;
@@ -578,14 +578,14 @@ class EDD_API {
 					$dates['day'] 	    = null;
 					$dates['m_start'] 	= null;
 					$dates['m_end']		= null;
-					$dates['year']		= date( 'Y' );
+					$dates['year']		= date( 'Y', $current_time );
 				break;
 
 				case 'last_year' :
 					$dates['day'] 	    = null;
 					$dates['m_start'] 	= null;
 					$dates['m_end']		= null;
-					$dates['year']		= date( 'Y' ) - 1;
+					$dates['year']		= date( 'Y', $current_time ) - 1;
 				break;
 
 			endswitch;

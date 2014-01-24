@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -120,6 +120,10 @@ function edd_report_views() {
  * @return void
  */
 function edd_reports_downloads_table() {
+	
+	if( isset( $_GET['download-id'] ) )
+		return;
+
 	include( dirname( __FILE__ ) . '/class-download-reports-table.php' );
 
 	$downloads_table = new EDD_Download_Reports_Table();
@@ -127,6 +131,29 @@ function edd_reports_downloads_table() {
 	$downloads_table->display();
 }
 add_action( 'edd_reports_view_downloads', 'edd_reports_downloads_table' );
+
+/**
+ * Renders the detailed report for a specific product
+ *
+ * @since 1.9
+ * @return void
+ */
+function edd_reports_download_details() {
+	if( ! isset( $_GET['download-id'] ) )
+		return;
+?>
+	<div class="tablenav top">
+		<div class="actions bulkactions">
+			<div class="alignleft">
+				<?php edd_report_views(); ?>
+			</div>&nbsp;
+			<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></button>
+		</div>
+	</div>
+<?php
+	edd_reports_graph_of_download( absint( $_GET['download-id'] ) );
+}
+add_action( 'edd_reports_view_downloads', 'edd_reports_download_details' );
 
 /**
  * Renders the Reports Customers Table

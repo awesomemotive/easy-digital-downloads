@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.5
  */
 class EDD_HTML_Elements {
+
 	/**
 	 * Renders an HTML Dropdown of all the Products (Downloads)
 	 *
@@ -29,28 +30,59 @@ class EDD_HTML_Elements {
 	 * @param int $selected Download to select automatically
 	 * @return string $output Product dropdown
 	 */
-	public function product_dropdown( $name = 'edd_products', $selected = 0 ) {
+	public function product_dropdown( $args = array() ) {
+
+		$defaults = array(
+			'name'        => 'products',
+			'id'          => 'products',
+			'class'       => '',
+			'multiple'    => false,
+			'selected'    => 0,
+			'chosen'      => false
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
 		$products = get_posts( array(
-			'post_type' => 'download',
-			'nopaging'  => true,
-			'orderby'   => 'title',
-			'order'     => 'ASC'
+			'post_type'      => 'download',
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+			'posts_per_page' => 30
 		) );
+
+		$options = array();
 
 		if ( $products ) {
 			foreach ( $products as $product ) {
-				$options[ absint( $product->ID ) ] = esc_html( get_the_title( $product->ID ) );
+				$options[ absint( $product->ID ) ] = esc_html( $product->post_title );
 			}
 		} else {
 			$options[0] = __( 'No products found', 'edd' );
 		}
 
+		// This ensures that any selected products are included in the drop down
+		if( is_array( $args['selected'] ) ) {
+			foreach( $args['selected'] as $item ) {
+				if( ! in_array( $item, $options ) ) {
+					$options[$item] = get_the_title( $item );
+				}
+			}
+		} else {
+			if( ! in_array( $args['selected'], $options ) ) {
+				$options[$args['selected']] = get_the_title( $args['selected'] );
+			}
+		}
+
 		$output = $this->select( array(
-			'name'             => $name,
-			'selected'         => $selected,
+			'name'             => $args['name'],
+			'selected'         => $args['selected'],
+			'id'               => $args['id'],
+			'class'            => $args['class'],
 			'options'          => $options,
+			'multiple'         => $args['multiple'],
+			'chosen'           => $args['chosen'],
 			'show_option_all'  => false,
-			'show_option_none' => __( 'None', 'edd' )
+			'show_option_none' => false
 		) );
 
 		return $output;
@@ -88,7 +120,7 @@ class EDD_HTML_Elements {
 			'selected'         => $selected,
 			'options'          => $options,
 			'show_option_all'  => false,
-			'show_option_none' => false
+			'show_option_none' => false,
 		) );
 
 		return $output;
@@ -116,7 +148,7 @@ class EDD_HTML_Elements {
 			'selected'         => $selected,
 			'options'          => $options,
 			'show_option_all'  => __( 'All Categories', 'edd' ),
-			'show_option_none' => __( 'No categories found', 'edd' )
+			'show_option_none' => false
 		) );
 
 		return $output;
@@ -194,24 +226,58 @@ class EDD_HTML_Elements {
 		$defaults = array(
 			'options'          => array(),
 			'name'             => null,
+			'class'            => '',
+			'id'               => '',
 			'selected'         => 0,
+			'chosen'           => false,
+			'multiple'         => false,
 			'show_option_all'  => _x( 'All', 'all dropdown items', 'edd' ),
 			'show_option_none' => _x( 'None', 'no dropdown items', 'edd' )
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="edd-select ' . esc_attr( $args[ 'name'] ) . '">';
+
+		if( $args['multiple'] ) {
+			$multiple = ' MULTIPLE';
+		} else {
+			$multiple = '';
+		}
+
+		if( $args['chosen'] ) {
+			$args['class'] .= ' edd-select-chosen';
+		}
+
+		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args[ 'id' ] ) ) ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . '>';
 
 		if ( ! empty( $args[ 'options' ] ) ) {
-			if ( $args[ 'show_option_all' ] )
-				$output .= '<option value="0"' . selected( $args['selected'], 0, false ) . '>' . esc_html( $args[ 'show_option_all' ] ) . '</option>';
+			if ( $args[ 'show_option_all' ] ) {
+				if( $args['multiple'] ) {
+					$selected = selected( true, in_array( 0, $args['selected'] ), false );
+				} else {
+					$selected = selected( $args['selected'], 0, false );
+				}
+				$output .= '<option value="all"' . $selected . '>' . esc_html( $args[ 'show_option_all' ] ) . '</option>';
+			}
 
-			if ( $args[ 'show_option_none' ] )
-				$output .= '<option value="-1"' . selected( $args['selected'], -1, false ) . '>' . esc_html( $args[ 'show_option_none' ] ) . '</option>';
+			if ( $args[ 'show_option_none' ] ) {
+				if( $args['multiple'] ) {
+					$selected = selected( true, in_array( -1, $args['selected'] ), false );
+				} else {
+					$selected = selected( $args['selected'], -1, false );
+				}
+				$output .= '<option value="-1"' . $selected . '>' . esc_html( $args[ 'show_option_none' ] ) . '</option>';
+			}
 
 			foreach( $args[ 'options' ] as $key => $option ) {
-				$output .= '<option value="' . esc_attr( $key ) . '"' . selected( $args['selected'], $key, false ) . '>' . esc_html( $option ) . '</option>';
+
+				if( $args['multiple'] && is_array( $args['selected'] ) ) {
+					$selected = selected( true, in_array( $key, $args['selected'] ), false );
+				} else {
+					$selected = selected( $args['selected'], $key, false );
+				}
+
+				$output .= '<option value="' . esc_attr( $key ) . '"' . $selected . '>' . esc_html( $option ) . '</option>';
 			}
 		}
 
@@ -233,12 +299,12 @@ class EDD_HTML_Elements {
 		$defaults = array(
 			'name'     => null,
 			'current'  => null,
-			'class'    => 'edd-select'
+			'class'    => 'edd-checkbox'
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$output = '<input type="checkbox" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="edd-select ' . esc_attr( $args[ 'name'] ) . '" ' . checked( 1, $args[ 'current' ], false ) . '" class="' . $args[ 'class' ] .'"  />';
+		$output = '<input type="checkbox" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="edd-checkbox ' . esc_attr( $args[ 'name'] ) . '" ' . checked( 1, $args[ 'current' ], false ) . '" class="' . $args[ 'class' ] .'"  />';
 
 		return $output;
 	}
@@ -266,14 +332,21 @@ class EDD_HTML_Elements {
 		}
 
 		$defaults = array(
-			'name'  => isset( $name )  ? $name  : 'text',
-			'value' => isset( $value ) ? $value : null,
-			'label' => isset( $label ) ? $label : null,
-			'desc'  => isset( $desc )  ? $desc  : null,
-			'class' => 'regular-text'
+			'name'        => isset( $name )  ? $name  : 'text',
+			'value'       => isset( $value ) ? $value : null,
+			'label'       => isset( $label ) ? $label : null,
+			'desc'        => isset( $desc )  ? $desc  : null,
+			'placeholder' => '',
+			'class'       => 'regular-text',
+			'disabled'    => false
 		);
 
 		$args = wp_parse_args( $args, $defaults );
+
+		$disabled = '';
+		if( $args['disabled'] ) {
+			$disabled = ' disabled="disabled"';
+		}
 
 		$output = '<span id="edd-' . sanitize_key( $args[ 'name' ] ) . '-wrap">';
 			
@@ -283,7 +356,7 @@ class EDD_HTML_Elements {
 				$output .= '<span class="edd-description">' . esc_html( $args[ 'desc' ] ) . '</span>';
 			}
 
-			$output = '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" class="' . $args[ 'class' ] . '"/>';
+			$output = '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" placeholder="' . esc_attr( $args[ 'placeholder' ] ) . '" class="' . $args[ 'class' ] . '"' . $disabled . '/>';
 
 		$output .= '</span>';
 

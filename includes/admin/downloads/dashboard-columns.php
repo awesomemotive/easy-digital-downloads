@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Downloads
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -34,11 +34,6 @@ function edd_download_columns( $download_columns ) {
 		'shortcode'         => __( 'Purchase Short Code', 'edd' ),
 		'date'              => __( 'Date', 'edd' )
 	);
-
-	if ( ! current_user_can( 'view_shop_reports' ) ) {
-		unset( $download_columns['sales'] );
-		unset( $download_columns['earnings'] );
-	}
 
 	return apply_filters( 'edd_download_columns', $download_columns );
 }
@@ -77,10 +72,18 @@ function edd_render_download_columns( $column_name, $post_id ) {
 				}
 				break;
 			case 'sales':
-				echo edd_get_download_sales_stats( $post_id );
+				if ( current_user_can( 'edit_product', $post_id ) || current_user_can( 'view_shop_reports' ) ) {
+					echo edd_get_download_sales_stats( $post_id );
+				} else {
+					echo '-';
+				}
 				break;
 			case 'earnings':
-				echo edd_currency_filter( edd_format_amount( edd_get_download_earnings_stats( $post_id ) ) );
+				if ( current_user_can( 'edit_product', $post_id ) || current_user_can( 'view_shop_reports' ) ) {
+					echo edd_currency_filter( edd_format_amount( edd_get_download_earnings_stats( $post_id ) ) );
+				} else {
+					echo '-';
+				}
 				break;
 			case 'shortcode':
 				echo '[purchase_link id="' . absint( $post_id ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]';

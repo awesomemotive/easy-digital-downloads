@@ -71,6 +71,6 @@ class Tests_Checkout extends EDD_UnitTestCase {
      */
 	public function test_checkout_button_purchase() {
 		$this->assertInternalType( 'string', edd_checkout_button_purchase() );
-		$this->assertContains( '<input type="submit" class="edd-submit gray button" id="edd-purchase-button" name="edd-purchase" value="Purchase"/>', edd_checkout_button_purchase() );
+		$this->assertContains( '<input type="submit" class="edd-submit blue button" id="edd-purchase-button" name="edd-purchase" value="Purchase"/>', edd_checkout_button_purchase() );
 	}
 }

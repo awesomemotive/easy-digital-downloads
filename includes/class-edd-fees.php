@@ -49,6 +49,8 @@ class EDD_Fees {
 
 		$key = empty( $id ) ? sanitize_key( $label ) : sanitize_key( $id );
 
+		$amount = edd_sanitize_amount( $amount );
+
 		$fees[ $key ] = array( 'amount' => $amount, 'label' => $label );
 
 		EDD()->session->set( 'edd_cart_fees', $fees );
@@ -138,11 +140,11 @@ class EDD_Fees {
 
 		if ( $this->has_fees() ) {
 			foreach ( $fees as $fee ) {
-				$total += $fee['amount'];
+				$total += edd_sanitize_amount( $fee['amount'] );
 			}
 		}
 
-		return edd_sanitize_amount( $total );
+		return round( $total, 2 );
 	}
 
 	/**

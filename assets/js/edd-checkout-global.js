@@ -27,7 +27,9 @@ jQuery(document).ready(function($) {
                     }
                 }
             }).fail(function (data) {
-                console.log(data);
+                if ( window.console && window.console.log ) {
+                    console.log( data );
+                }
             }).done(function (data) {
                 recalculate_taxes();
             });
@@ -69,7 +71,9 @@ jQuery(document).ready(function($) {
                 $('body').trigger('edd_taxes_recalculated', [ tax_data ]);
             }
         }).fail(function (data) {
-            console.log(data);
+            if ( window.console && window.console.log ) {
+              console.log( data );
+            }
         });
     }
 
@@ -178,10 +182,47 @@ jQuery(document).ready(function($) {
 		return false;
 	}
 
-    // Validate and apply a discount
-    $checkout_form_wrap.on('focusout', '#edd-discount', getDiscountCodeData );
-	$body.on( 'cart.discounts.submit', submitDiscountCode );
-	$body.on( 'cart.discounts.ajaxSuccess', processDiscountAJAX );
+        $.ajax({
+            type: "POST",
+            data: postData,
+            dataType: "json",
+            url: edd_global_vars.ajaxurl,
+            success: function (discount_response) {
+                if( discount_response ) {
+                    if (discount_response.msg == 'valid') {
+                        $('.edd_cart_discount').html(discount_response.html);
+                        $('.edd_cart_discount_row').show();
+                        $('.edd_cart_amount').each(function() {
+                            $(this).text(discount_response.total);
+                        });
+                        $('#edd-discount', $checkout_form_wrap ).val('');
+                        recalculate_taxes();
+						$('body').trigger('edd_discount_applied', [ discount_response ]);
+                    } else {
+                        alert(discount_response.msg);
+                    }
+                } else {
+                    if ( window.console && window.console.log ) {
+                        console.log( discount_response );
+                    }
+                }
+                edd_discount_loader.hide();
+            }
+        }).fail(function (data) {
+            if ( window.console && window.console.log ) {
+                console.log( data );
+            }
+        });
+
+        return false;
+    });
+
+    // Prevent the checkout form from submitting when hitting Enter in the discount field
+    $checkout_form_wrap.on('keypress', '#edd-discount', function (event) {
+        if (event.keyCode == '13') {
+            return false;
+        }
+    });
 
     // Remove a discount
     $body.on('click', '.edd_discount_remove', function (event) {
@@ -208,7 +249,9 @@ jQuery(document).ready(function($) {
 				$('body').trigger('edd_discount_removed', [ discount_response ]);
             }
         }).fail(function (data) {
-            console.log(data);
+            if ( window.console && window.console.log ) {
+                console.log( data );
+            }
         });
 
         return false;
