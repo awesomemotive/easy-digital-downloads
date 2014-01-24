@@ -144,7 +144,7 @@ class EDD_Fees {
 			}
 		}
 
-		return edd_sanitize_amount( $total );
+		return round( $total, 2 );
 	}
 
 	/**
