@@ -285,9 +285,9 @@ function edd_count_payments( $args = array() ) {
 			$field = 'email';
 		elseif( is_numeric( $args['user'] ) )
 			$field = 'id';
-		else
+		elseif( ! empty( $field ) )
 			$field = '';
-		
+
 		$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
 		$where .= "
 			AND m.meta_key = '_edd_payment_user_{$field}'
