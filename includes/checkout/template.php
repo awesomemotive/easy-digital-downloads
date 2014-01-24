@@ -679,7 +679,7 @@ add_action( 'edd_purchase_form_after_cc_form', 'edd_checkout_submit', 9999 );
 function edd_checkout_button_next() {
 	global $edd_options;
 
-	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
+	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'blue';
 	$color = ( $color == 'inherit' ) ? '' : $color;
 	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
 
@@ -702,7 +702,7 @@ function edd_checkout_button_next() {
 function edd_checkout_button_purchase() {
 	global $edd_options;
 
-	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'gray';
+	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'blue';
 	$color = ( $color == 'inherit' ) ? '' : $color;
 	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
 
