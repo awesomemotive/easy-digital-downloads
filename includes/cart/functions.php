@@ -21,6 +21,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_get_cart_contents() {
 	$cart = EDD()->session->get( 'edd_cart' );
 	$cart = ! empty( $cart ) ? array_values( $cart ) : false;
+
+	if( empty( $cart ) ) {
+		// Remove all fees if cart is empty
+		EDD()->session->set( 'edd_cart_fees', null );
+	}
+
 	return apply_filters( 'edd_cart_contents', $cart );
 }
 
@@ -51,7 +57,8 @@ function edd_get_cart_content_details() {
 
 		$item_price = round( $item_price, 2 );
 		$subtotal   = round( $item_price * $quantity, 2 );
-		$total      = round( ( $item_price - $discount + $tax ) * $quantity, 2 );
+		$tax        = round( $tax * $quantity, 2 );
+		$total      = round( ( $subtotal - $discount + $tax ), 2 );
 
 		$details[ $key ]  = array(
 			'name'        => get_the_title( $item['id'] ),
@@ -64,6 +71,7 @@ function edd_get_cart_content_details() {
 			'tax'         => $tax,
 			'price'       => $total,
 		);
+
 	}
 
 	return $details;
@@ -472,10 +480,6 @@ function edd_get_cart_item_tax( $item = array() ) {
 		if( edd_taxes_after_discounts() ) {
 			$price -= edd_get_cart_item_discount_amount( $item );
 		}
-
-		$quantity = edd_item_quantities_enabled() ? $item['quantity'] : 1;
-
-		$price *= $quantity;
 
 		$tax = edd_calculate_tax( $price );
 
