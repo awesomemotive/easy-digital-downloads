@@ -439,7 +439,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
  */
 function edd_get_cart_item_final_price( $item_key = 0 ) {
 	$items = edd_get_cart_content_details();
-	$final = $cart_items[ $item_key ]['price'];
+	$final = $items[ $item_key ]['price'];
 	return apply_filters( 'edd_cart_item_final_price', $final, $item_key );
 }
 
