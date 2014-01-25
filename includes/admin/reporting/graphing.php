@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_reports_graph() {
 	// Retrieve the queried dates
 	$dates = edd_get_report_dates();
-	echo '<pre>';print_r( $dates ); echo '</pre>';
+
 	// Determine graph options
 	switch ( $dates['range'] ) :
 		case 'today' :
