@@ -285,12 +285,17 @@ function edd_count_payments( $args = array() ) {
 			$field = 'email';
 		elseif( is_numeric( $args['user'] ) )
 			$field = 'id';
+		else
+			$field = '';
 
 		$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
-		$where .= "
-			AND m.meta_key = '_edd_payment_user_{$field}'
-			AND m.meta_value = '{$args['user']}'";
 
+		if ( ! empty( $field ) ) {
+			$where .= "
+				AND m.meta_key = '_edd_payment_user_{$field}'
+				AND m.meta_value = '{$args['user']}'";
+		}
+		
 	// Count payments for a search
 	} elseif( ! empty( $args['s'] ) ) {
 

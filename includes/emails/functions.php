@@ -59,7 +59,6 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 
 	// Allow add-ons to add file attachments
 	$attachments = apply_filters( 'edd_receipt_attachments', array(), $payment_id, $payment_data );
-
 	if ( apply_filters( 'edd_email_purchase_receipt', true ) ) {
 		wp_mail( $email, $subject, $message, $headers, $attachments );
 	}
