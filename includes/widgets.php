@@ -19,7 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 |
 | - Cart Widget
 | - Categories / Tags Widget
-| - Purchase History Widget
 |
 */
 
@@ -329,7 +328,6 @@ class EDD_Product_Details_Widget extends WP_Widget {
 function edd_register_widgets() {
 	register_widget( 'edd_cart_widget' );
 	register_widget( 'edd_categories_tags_widget' );
-	register_widget( 'edd_purchase_history_widget' );
 	register_widget( 'edd_product_details_widget' );
 }
 add_action( 'widgets_init', 'edd_register_widgets' );
