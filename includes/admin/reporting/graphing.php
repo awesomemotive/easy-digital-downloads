@@ -101,7 +101,7 @@ function edd_reports_graph() {
 		$y = $dates['year'];
 		while( $y <= $dates['year_end'] ) :
 
-			if( $dates['year'] == $dates['year_end'] ) {
+			if( $y == $dates['year_end'] ) {
 				$month_start = $dates['m_start'];
 				$month_end   = $dates['m_end'];
 			} elseif( $y == $dates['year'] ) {
