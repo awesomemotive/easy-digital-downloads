@@ -74,7 +74,7 @@ class Tests_User extends EDD_UnitTestCase {
 
 		$download_details = array(
 			array(
-				'id' => $this->_post->ID,
+				'id' => $post_id,
 				'options' => array(
 					'price_id' => 1
 				)
@@ -128,6 +128,13 @@ class Tests_User extends EDD_UnitTestCase {
 		$this->assertEquals( 'edd_payment', $out[0]->post_type );
 		$this->assertTrue( edd_has_purchases( $user_id ) );
 		$this->assertEquals( 1, edd_count_purchases_of_customer( $user_id ) );
+
+		$out2 = edd_get_users_purchased_products( $user_id );
+		
+		$this->assertInternalType( 'array', $out2 );
+		$this->assertEquals( 1, count( $out2 ) );
+		$this->assertInternalType( 'object', $out2[0] );
+		$this->assertEquals( $out2[0]->post_type, 'download' );
 	}
 
 	public function test_validate_username() {
