@@ -74,7 +74,7 @@ class Tests_User extends EDD_UnitTestCase {
 
 		$download_details = array(
 			array(
-				'id' => $this->_post->ID,
+				'id' => $post_id,
 				'options' => array(
 					'price_id' => 1
 				)
