@@ -121,24 +121,66 @@ jQuery(document).ready(function($) {
     var before_discount = $edd_cart_amount.text(),
         $checkout_form_wrap = $('#edd_checkout_form_wrap');
 
-    // Validate and apply a discount
-    $checkout_form_wrap.on('focusout', '#edd-discount', function (event) {
+	function getDiscountCodeData( event ) {
+		var discount_code = $( this ).val();
 
-        var $this = $(this),
-            discount_code = $this.val(),
-            edd_discount_loader = $('#edd-discount-loader');
+		if (discount_code == '' || discount_code == edd_global_vars.enter_discount ) {
+			return;
+		}
 
-        if (discount_code == '' || discount_code == edd_global_vars.enter_discount ) {
-            return false;
-        }
+		$body.trigger( 'cart.discounts.submit', discount_code, this );
+	}
 
-        var postData = {
-            action: 'edd_apply_discount',
-            code: discount_code,
-            nonce: edd_global_vars.checkout_nonce
-        };
+	function onDiscountResponseReceived( discount_response ) {
+		$body.trigger( 'cart.discounts.ajaxSuccess', discount_response, recalculate_taxes );
+	}
 
-        edd_discount_loader.show();
+	function processDiscountAJAX( discount_response, recalculate_taxes ) {
+		var edd_discount_loader = $('#edd-discount-loader');
+
+		if( discount_response ) {
+			if (discount_response.msg == 'valid') {
+				$('.edd_cart_discount').html(discount_response.html);
+				$('.edd_cart_discount_row').show();
+				$('.edd_cart_amount').each(function() {
+					$(this).text(discount_response.total);
+				});
+				$('#edd-discount', $checkout_form_wrap ).val('');
+				recalculate_taxes();
+				$body.trigger('edd_discount_applied', [ discount_response ]);
+			} else {
+				alert(discount_response.msg);
+			}
+		} else {
+			console.log( discount_response );
+		}
+		edd_discount_loader.hide();
+	}
+
+	function onDiscountResponseFailed( data ) {
+		$body.trigger( 'cart.discounts.ajaxFail', data );
+		console.log(data);
+	}
+
+	function submitDiscountCode( event, discount_code, element ) {
+		var postData = {
+			action: 'edd_apply_discount',
+			code: discount_code,
+			nonce: edd_global_vars.checkout_nonce
+		};
+
+		$('#edd-discount-loader').show();
+
+		$.ajax({
+			type: "POST",
+			data: postData,
+			dataType: "json",
+			url: edd_global_vars.ajaxurl,
+			success: onDiscountResponseReceived
+		}).fail( onDiscountResponseFailed );
+
+		return false;
+	}
 
         $.ajax({
             type: "POST",
