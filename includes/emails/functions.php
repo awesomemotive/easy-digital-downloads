@@ -98,7 +98,7 @@ function edd_email_test_purchase_receipt() {
 
 	$headers = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
 	$headers .= "Reply-To: ". $from_email . "\r\n";
-//	$headers .= "MIME-Version: 1.0\r\n";
+	//$headers .= "MIME-Version: 1.0\r\n";
 	$headers .= "Content-Type: text/html; charset=utf-8\r\n";
 	$headers = apply_filters( 'edd_test_purchase_headers', $headers );
 
@@ -148,7 +148,7 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 
 	$admin_headers = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
 	$admin_headers .= "Reply-To: ". $from_email . "\r\n";
-//	$admin_headers .= "MIME-Version: 1.0\r\n";
+	//$admin_headers .= "MIME-Version: 1.0\r\n";
 	$admin_headers .= "Content-Type: text/html; charset=utf-8\r\n";
 	$admin_headers .= apply_filters( 'edd_admin_sale_notification_headers', $admin_headers, $payment_id, $payment_data );
 
