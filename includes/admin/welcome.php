@@ -309,7 +309,7 @@ class EDD_Welcome {
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/grid.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4><?php _e( 'Flexible Product Grids','edd' );?></h4>
-					<p><?php _e( 'The [downloads] short code will display a product grid that works with any theme, no matter the size. It is even responive!', 'edd' );?></p>
+					<p><?php _e( 'The [downloads] short code will display a product grid that works with any theme, no matter the size. It is even responsive!', 'edd' );?></p>
 
 					<h4><?php _e( 'Change the Number of Columns', 'edd' );?></h4>
 					<p><?php _e( 'You can easily change the number of columns by adding the columns="x" parameter:', 'edd' );?></p>
@@ -356,7 +356,7 @@ class EDD_Welcome {
 				<div class="feature-section">
 
 					<h4><?php _e( 'Get Notified of Extension Releases','edd' );?></h4>
-					<p><?php _e( 'New extensiosn that make Easy Digital Downloads even more powerful are released nearly every single week. Subscribe to the newsletter to stay up to date with our latest releases. <a href="http://eepurl.com/kaerz" target="_blank">Signup now</a> to ensure you do not miss a release!', 'edd' );?></p>
+					<p><?php _e( 'New extensions that make Easy Digital Downloads even more powerful are released nearly every single week. Subscribe to the newsletter to stay up to date with our latest releases. <a href="http://eepurl.com/kaerz" target="_blank">Signup now</a> to ensure you do not miss a release!', 'edd' );?></p>
 
 					<h4><?php _e( 'Get Alerted About New Tutorials', 'edd' );?></h4>
 					<p><?php _e( '<a href="http://eepurl.com/kaerz" target="_blank">Signup now</a> to hear about the latest tutorial releases that explain how to take Easy Digital Downloads further.', 'edd' );?></p>
