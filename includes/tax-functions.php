@@ -75,8 +75,8 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 	$user_address = edd_get_customer_address();
 
 	if( empty( $country ) ) {
-		if( ! empty( $_POST['country'] ) ) {
-			$country = $_POST['country'];
+		if( ! empty( $_POST['billing_country'] ) ) {
+			$country = $_POST['billing_country'];
 		} elseif( is_user_logged_in() && ! empty( $user_address ) ) {
 			$country = $user_address['country'];
 		}
