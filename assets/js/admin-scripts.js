@@ -915,7 +915,7 @@ jQuery(document).ready(function ($) {
 				});
 				 // Update the options
 				$('.edd-select-chosen').trigger('chosen:updated');
-				$('#' + menu_id).next().find('input').val(val);
+				//$('#' + menu_id).next().find('input').val(val);
 			}
 		}).fail(function (response) {
 			if ( window.console && window.console.log ) {

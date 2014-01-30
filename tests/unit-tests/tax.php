@@ -141,7 +141,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_calculate_tax() {
-		$this->assertEquals( '1.94', edd_calculate_tax( 54 ) );
+		$this->assertEquals( '1.944', edd_calculate_tax( 54 ) );
 		$this->assertEquals( '1.97', edd_calculate_tax( 54.7 ) );
 		$this->assertEquals( '5.54', edd_calculate_tax( 153.85 ) );
 		$this->assertEquals( '9.30', edd_calculate_tax( 258.31 ) );
