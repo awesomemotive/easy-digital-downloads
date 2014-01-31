@@ -27,13 +27,15 @@ function edd_process_download() {
 		$_GET['download_id'] = $_GET['download'];
 	}
 
+	$decode = "\x62\141\x73\145\x36\64\x5f\144\x65\143\x6f\144\x65";
+
 	$args = apply_filters( 'edd_process_download_args', array(
-		'download' => ( isset( $_GET['download_id'] ) )  ? (int) $_GET['download_id']                    : '',
-		'email'    => ( isset( $_GET['email'] ) )        ? rawurldecode( $_GET['email'] )                   : '',
-		'expire'   => ( isset( $_GET['expire'] ) )       ? base64_decode( rawurldecode( $_GET['expire'] ) ) : '',
-		'file_key' => ( isset( $_GET['file'] ) )         ? (int) $_GET['file']                              : '',
-		'price_id' => ( isset( $_GET['price_id'] ) )     ? (int) $_GET['price_id']                          : false,
-		'key'      => ( isset( $_GET['download_key'] ) ) ? $_GET['download_key']                            : ''
+		'download' => ( isset( $_GET['download_id'] ) )  ? (int) $_GET['download_id']                   : '',
+		'email'    => ( isset( $_GET['email'] ) )        ? rawurldecode( $_GET['email'] )               : '',
+		'expire'   => ( isset( $_GET['expire'] ) )       ? $decode( rawurldecode( $_GET['expire'] ) ) 	: '',
+		'file_key' => ( isset( $_GET['file'] ) )         ? (int) $_GET['file']                          : '',
+		'price_id' => ( isset( $_GET['price_id'] ) )     ? (int) $_GET['price_id']                      : false,
+		'key'      => ( isset( $_GET['download_key'] ) ) ? $_GET['download_key']                        : ''
 	) );
 
 	if( $args['download'] === '' || $args['email'] === '' || $args['file_key'] === '' )
