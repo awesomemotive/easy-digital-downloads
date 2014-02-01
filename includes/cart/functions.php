@@ -20,9 +20,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_cart_contents() {
 	$cart = EDD()->session->get( 'edd_cart' );
+	$fees = EDD()->session->get( 'edd_cart_fees' );
 	$cart = ! empty( $cart ) ? array_values( $cart ) : false;
 
-	if( empty( $cart ) ) {
+	if( empty( $cart ) && ! empty( $fees ) ) {
 		// Remove all fees if cart is empty
 		EDD()->session->set( 'edd_cart_fees', null );
 	}
