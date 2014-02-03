@@ -23,7 +23,7 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	$edd_post_types = array( 'download', 'edd_payment', 'edd_discount', 'edd_log' );
 	foreach ( $edd_post_types as $post_type ) {
 
-		$items = get_posts( array( 'post_type' => $post_type, 'numberposts' => -1, 'fields' => 'ids' ) );
+		$items = get_posts( array( 'post_type' => $post_type, 'post_status' => 'any', 'numberposts' => -1, 'fields' => 'ids' ) );
 
 		if ( $items ) {
 			foreach ( $items as $item ) {
