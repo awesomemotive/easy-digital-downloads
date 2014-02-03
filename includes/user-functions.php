@@ -162,29 +162,35 @@ function edd_get_purchase_stats_by_user( $user = '' ) {
 	else
 		return $stats;
 
-	$query = "SELECT {$wpdb->prefix}meta_1.meta_value AS payment_total
-		FROM {$wpdb->prefix}postmeta {$wpdb->prefix}meta_1
-		LEFT JOIN {$wpdb->prefix}postmeta {$wpdb->prefix}meta_2
-			ON {$wpdb->prefix}meta_1.post_id = {$wpdb->prefix}meta_2.post_id
-			AND {$wpdb->prefix}meta_1.meta_key = '_edd_payment_total'
-		INNER JOIN {$wpdb->prefix}posts
-			ON {$wpdb->prefix}posts.ID = {$wpdb->prefix}meta_2.post_id
-			AND {$wpdb->prefix}posts.post_status = 'publish'
-		WHERE {$wpdb->prefix}meta_2.meta_key = '_edd_payment_user_{$field}'
-		AND {$wpdb->prefix}meta_2.meta_value = '%s'";
+	$stats = wp_cache_get( $user, 'customers' );
 
-	$purchases = $wpdb->get_col( $wpdb->prepare( $query, $user ) );
+	if( false == $stats ) {
 
-	$purchases = array_filter( $purchases );
+		$query = "SELECT {$wpdb->prefix}meta_1.meta_value AS payment_total
+			FROM {$wpdb->prefix}postmeta {$wpdb->prefix}meta_1
+			LEFT JOIN {$wpdb->prefix}postmeta {$wpdb->prefix}meta_2
+				ON {$wpdb->prefix}meta_1.post_id = {$wpdb->prefix}meta_2.post_id
+				AND {$wpdb->prefix}meta_1.meta_key = '_edd_payment_total'
+			INNER JOIN {$wpdb->prefix}posts
+				ON {$wpdb->prefix}posts.ID = {$wpdb->prefix}meta_2.post_id
+				AND {$wpdb->prefix}posts.post_status = 'publish'
+			WHERE {$wpdb->prefix}meta_2.meta_key = '_edd_payment_user_{$field}'
+			AND {$wpdb->prefix}meta_2.meta_value = '%s'";
 
-	if( $purchases ) {
-		$stats['purchases']   = count( $purchases );
-		$stats['total_spent'] = round( array_sum( $purchases ), 2 );
+		$purchases = $wpdb->get_col( $wpdb->prepare( $query, $user ) );
+
+		$purchases = array_filter( $purchases );
+
+		if( $purchases ) {
+			$stats['purchases']   = count( $purchases );
+			$stats['total_spent'] = round( array_sum( $purchases ), 2 );
+		}
+
+		wp_cache_set( $user, $stats, 'customers' );
+
 	}
 
-
-
-	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user, $mode );
+	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user );
 }
 
 
