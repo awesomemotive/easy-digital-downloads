@@ -374,6 +374,6 @@ function edd_get_customer_address( $user_id = 0 ) {
  * @return 		void
  */
 function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
-	wp_new_user_notification( $user_id, $user_data['user_pass'] );
+	wp_new_user_notification( $user_id, __( '[Password entered at checkout]', 'edd' ) );
 }
 add_action( 'edd_insert_user', 'edd_new_user_notification', 10, 2 );
