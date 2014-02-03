@@ -230,8 +230,7 @@ function edd_update_old_payments_with_totals( $data ) {
 
 	$payments = edd_get_payments( array(
 		'offset' => 0, 
-		'number' => -1, 
-		'mode'   => 'all' 
+		'number' => -1
 	) );
 
 	if( $payments ) {

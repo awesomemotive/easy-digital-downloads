@@ -330,9 +330,7 @@ function edd_get_earnings_by_date($day = null, $month_num, $year) {
 		'post_type' => 'edd_payment', 
 		'posts_per_page' => -1, 
 		'year' => $year, 
-		'monthnum' => $month_num, 
-		'meta_key' => '_edd_payment_mode',
-		'meta_value' => 'live'
+		'monthnum' => $month_num,
 	);
 	if( $day )
 		$args['day'] = $day;
@@ -363,9 +361,7 @@ function edd_get_sales_by_date( $day = null, $month_num, $year ) {
 		'post_type' => 'edd_payment', 
 		'posts_per_page' => -1, 
 		'year' => $year, 
-		'monthnum' => $month_num, 
-		'meta_key' => '_edd_payment_mode',
-		'meta_value' => 'live'
+		'monthnum' => $month_num
 	);
 	if( $day )
 		$args['day'] = $day;
@@ -435,9 +431,7 @@ function edd_get_total_sales() {
 	$sales = get_posts(
 		array(
 			'post_type' => 'edd_payment', 
-			'posts_per_page' => -1,
-			'meta_key' => '_edd_payment_mode',
-			'meta_value' => 'live'
+			'posts_per_page' => -1
 		)
 	);
 	$total = 0;
@@ -462,8 +456,7 @@ function edd_get_total_earnings() {
 	if( false === $payments || '' === $payments ) {
 		$payments = edd_get_payments( array(
 			'offset' 	=> 0, 
-			'number' 	=> -1, 
-			'mode'   	=> 'live', 
+			'number' 	=> -1,
 			'orderby' 	=> 'ID', 
 			'order'   	=> 'DESC', 
 			'user'    	=> null, 

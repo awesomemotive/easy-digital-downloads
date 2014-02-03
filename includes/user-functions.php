@@ -30,16 +30,12 @@ function edd_get_users_purchases( $user_id = 0, $number = -1 ) {
 	}
 
 	$purchases = get_transient( 'edd_user_' . $user_id . '_purchases' );
+
 	if( false === $purchases || edd_is_test_mode() ) {
-		$mode = edd_is_test_mode() ? 'test' : 'live';
+
 		$purchases = get_posts(
 			array(
 				'meta_query'   => array(
-					'relation' => 'AND',
-					array(
-						'key'   => '_edd_payment_mode',
-						'value' => $mode
-					),
 					array(
 						'key'   => '_edd_payment_user_id',
 						'value' => $user_id
@@ -51,7 +47,7 @@ function edd_get_users_purchases( $user_id = 0, $number = -1 ) {
 		);
 		set_transient( 'edd_user_' . $user_id . '_purchases', $purchases, 7200 );
 	}
-	if( $purchases ) {
+	if ( $purchases ) {
 	    // return the download list
 		return $purchases;
 	}
@@ -163,7 +159,6 @@ function edd_has_purchases( $user_id = null ) {
 function edd_count_purchases_of_customer( $user = null ) {
 	$args = array(
 		'number'   => -1,
-		'mode'     => 'live',
 		'user'     => $user,
 		'status'   => 'publish'
 	);
@@ -187,7 +182,6 @@ function edd_count_purchases_of_customer( $user = null ) {
 function edd_purchase_total_of_user( $user = null ) {
 	$args = array(
 		'number'   => -1,
-		'mode'     => 'live',
 		'user'     => $user,
 		'status'   => 'publish'
 	);

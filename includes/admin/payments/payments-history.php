@@ -49,16 +49,21 @@ function edd_payment_history_page() {
 			$status 		= isset( $_GET['status'] ) ? $_GET['status'] : 'any';
 			$meta_key		= isset( $_GET['meta_key'] ) ? $_GET['meta_key'] : null;
 
-			$payments 		= edd_get_payments( array(
+			$payment_args = array(
 					'offset'   => $offset,
 					'number'   => $per_page, 
-					'mode'     => $mode, 
 					'orderby'  => $orderby, 
 					'order'    => $order, 
 					'user'     => $user, 
 					'status'   => $status, 
 					'meta_key' => $meta_key 
-			) );
+			);
+			
+			if ( isset( $_GET['mode'] ) ) {
+				$payment_args['mode'] = $mode, 
+			}
+
+			$payments 		= edd_get_payments( $payment_args );
 			$payment_count 	= wp_count_posts( 'edd_payment' );
 
 			$total_count 	= $payment_count->publish + $payment_count->pending + $payment_count->refunded + $payment_count->trash;

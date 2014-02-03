@@ -5,9 +5,6 @@ function edd_export_payment_history() {
 
 	if( !isset( $_GET['export'] ) )
 		return; // get out quick if not required.
-
-	$mode = isset( $_GET['mode'] ) ? $_GET['mode'] : 'live';
-	if( edd_is_test_mode() && !isset( $_GET['mode'] ) ) $mode = 'test';
 	
 	$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'ID';
 	$order = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
@@ -28,12 +25,12 @@ function edd_export_payment_history() {
 		$payments = edd_get_payments( array(
 			'offset'  => 0, 
 			'number'  => -1, 
-			'mode'    => $mode, 
 			'orderby' => $orderby, 
 			'order'   => $order, 
 			'user'    => $user, 
 			'status'  => $status
 		) );
+		
 		if($payments){
 			$i = 0;
 			echo '"' . __( 'ID', 'edd' ) .  '",';
