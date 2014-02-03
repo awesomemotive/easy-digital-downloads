@@ -440,8 +440,6 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		'nopaging'       => true,
 		'year'           => $year,
 		'monthnum'       => $month_num,
-		'meta_key'       => '_edd_payment_mode',
-		'meta_value'     => 'live',
 		'post_status'    => array( 'publish', 'revoked' ),
 		'fields'         => 'ids',
 		'update_post_term_cache' => false
@@ -491,8 +489,6 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 		'post_type'      => 'edd_payment',
 		'nopaging'       => true,
 		'year'           => $year,
-		'meta_key'       => '_edd_payment_mode',
-		'meta_value'     => 'live',
 		'fields'         => 'ids',
 		'post_status'    => array( 'publish', 'revoked' ),
 		'update_post_meta_cache' => false,
