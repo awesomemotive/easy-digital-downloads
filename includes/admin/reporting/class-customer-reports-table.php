@@ -109,7 +109,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
 
 			case 'file_downloads' :
-					return '<a href="' . admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( ! empty( $item['ID'] ) ? $item['ID'] : $item['email'] ) ) . '" target="_blank">' . $item['file_downloads'] . '</a>';
+					return '<a href="' . admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( ! empty( $item['ID'] ) ? $item['ID'] : $item['email'] ) ) . '" target="_blank">' . __( 'View download log', 'edd' ) . '</a>';
 
 			default:
 				$value = isset( $item[ $column_name ] ) ? $item[ $column_name ] : null;
@@ -223,8 +223,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 					'name' 			=> $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' ),
 					'email' 		=> $customer_email,
 					'num_purchases'	=> $stats['purchases'],
-					'amount_spent'	=> $stats['total_spent'],
-					'file_downloads'=> edd_count_file_downloads_of_user( ! empty( $user_id ) ? $user_id : $customer_email )
+					'amount_spent'	=> $stats['total_spent']
 				);
 			}
 		}
