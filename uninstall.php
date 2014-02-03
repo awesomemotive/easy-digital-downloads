@@ -46,16 +46,11 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	}
 
 	/** Delete the Plugin Pages */
-	if ( isset( $edd_options['purchase_page'] ) ) {
-		wp_delete_post( $edd_options['purchase_page'], true );
-	}
-
-	if ( isset( $edd_options['success_page'] ) ) {
-		wp_delete_post( $edd_options['success_page'], true );
-	}
-
-	if ( isset( $edd_options['failure_page'] ) ) {
-		wp_delete_post( $edd_options['failure_page'], true );
+	$edd_created_pages = array( 'purchase_page', 'success_page', 'failure_page', 'purchase_history_page' );
+	foreach ( $edd_created_pages as $p ) {
+		if ( isset( $edd_options[ $p ] ) ) {
+			wp_delete_post( $edd_options[ $p ], true );
+		}
 	}
 
 	/** Delete all the Plugin Options */
