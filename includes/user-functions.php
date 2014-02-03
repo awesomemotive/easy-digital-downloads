@@ -35,8 +35,6 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 
 	$status = $status === 'complete' ? 'publish' : $status;
 
-	$mode = edd_is_test_mode() ? 'test' : 'live';
-
 	if ( $pagination ) {
 		if ( get_query_var( 'paged' ) )
 			$paged = get_query_var('paged');
@@ -47,7 +45,6 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 	}
 
 	$args = apply_filters( 'edd_get_users_purchases_args', array(
-		'mode'   => $mode,
 		'user'   => $user,
 		'number' => $number,
 		'status' => $status
@@ -149,7 +146,7 @@ function edd_has_purchases( $user_id = null ) {
  * @param       $mode string - "test" or "live"
  * @return      array
  */
-function edd_get_purchase_stats_by_user( $user = '', $mode = 'live' ) {
+function edd_get_purchase_stats_by_user( $user = '', $mode = '' ) {
 
 	global $wpdb;
 
@@ -176,11 +173,9 @@ function edd_get_purchase_stats_by_user( $user = '', $mode = 'live' ) {
 			AND {$wpdb->prefix}mb.meta_key = '_edd_payment_total'
 		INNER JOIN {$wpdb->prefix}posts {$wpdb->prefix}
 			ON {$wpdb->prefix}.id = {$wpdb->prefix}m.post_id
-			AND {$wpdb->prefix}.post_status = 'publish'
-		WHERE {$wpdb->prefix}m.meta_key = '_edd_payment_mode'
-		AND {$wpdb->prefix}m.meta_value = '%s'";
+			AND {$wpdb->prefix}.post_status = 'publish' WHERE 1=1";
 
-	$purchases = $wpdb->get_col( $wpdb->prepare( $query, $user, $mode ) );
+	$purchases = $wpdb->get_col( $wpdb->prepare( $query, $user ) );
 
 	$purchases = array_filter( $purchases );
 
@@ -207,9 +202,7 @@ function edd_count_purchases_of_customer( $user = null ) {
 	if ( empty( $user ) )
 		$user = get_current_user_id();
 
-	$mode  = edd_is_test_mode() ? 'test' : 'live';
-
-	$stats = edd_get_purchase_stats_by_user( $user, $mode );
+	$stats = edd_get_purchase_stats_by_user( $user );
 
 	return $stats['purchases'];
 }
@@ -224,11 +217,7 @@ function edd_count_purchases_of_customer( $user = null ) {
  */
 function edd_purchase_total_of_user( $user = null ) {
 
-	global $wpdb;
-
-	$mode  = edd_is_test_mode() ? 'test' : 'live';
-
-	$stats = edd_get_purchase_stats_by_user( $user, $mode );
+	$stats = edd_get_purchase_stats_by_user( $user );
 
 	return $stats['total_spent'];
 }
@@ -293,8 +282,9 @@ function edd_validate_username( $username ) {
 function edd_add_past_purchases_to_new_user( $user_id ) {
 
 	$email    = get_the_author_meta( 'user_email', $user_id );
-	$mode     = edd_is_test_mode() ? 'test' : 'live';
-	$payments = edd_get_payments( array( 's' => $email, 'mode' => $mode ) );
+
+	$payments = edd_get_payments( array( 's' => $email ) );
+	
 	if( $payments ) {
 		foreach( $payments as $payment ) {
 			if( intval( edd_get_payment_user_id( $payment->ID ) ) > 0 )
