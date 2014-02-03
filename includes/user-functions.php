@@ -146,34 +146,32 @@ function edd_has_purchases( $user_id = null ) {
  * @param       $mode string - "test" or "live"
  * @return      array
  */
-function edd_get_purchase_stats_by_user( $user = '', $mode = '' ) {
+function edd_get_purchase_stats_by_user( $user = '' ) {
 
 	global $wpdb;
-
-	if( is_email( $user ) )
-		$field = 'email';
-	elseif( is_numeric( $user ) )
-		$field = 'id';
-	else
-		return false;
 
 	$stats = array(
 		'purchases'   => 0,
 		'total_spent' => 0
 	);
 
-	$query = "SELECT {$wpdb->prefix}mb.meta_value AS payment_total
-		FROM {$wpdb->prefix}postmeta {$wpdb->prefix}m
-		LEFT JOIN {$wpdb->prefix}postmeta {$wpdb->prefix}ma
-			ON {$wpdb->prefix}ma.post_id = {$wpdb->prefix}m.post_id
-			AND {$wpdb->prefix}ma.meta_key = '_edd_payment_user_{$field}'
-			AND {$wpdb->prefix}ma.meta_value = '%s'
-		LEFT JOIN {$wpdb->prefix}postmeta {$wpdb->prefix}mb
-			ON {$wpdb->prefix}mb.post_id = {$wpdb->prefix}ma.post_id
-			AND {$wpdb->prefix}mb.meta_key = '_edd_payment_total'
-		INNER JOIN {$wpdb->prefix}posts {$wpdb->prefix}
-			ON {$wpdb->prefix}.id = {$wpdb->prefix}m.post_id
-			AND {$wpdb->prefix}.post_status = 'publish' WHERE 1=1";
+	if( is_email( $user ) )
+		$field = 'email';
+	elseif( is_numeric( $user ) )
+		$field = 'id';
+	else
+		return $stats;
+
+	$query = "SELECT {$wpdb->prefix}meta_1.meta_value AS payment_total
+		FROM {$wpdb->prefix}postmeta {$wpdb->prefix}meta_1
+		LEFT JOIN {$wpdb->prefix}postmeta {$wpdb->prefix}meta_2
+			ON {$wpdb->prefix}meta_1.post_id = {$wpdb->prefix}meta_2.post_id
+			AND {$wpdb->prefix}meta_1.meta_key = '_edd_payment_total'
+		INNER JOIN {$wpdb->prefix}posts
+			ON {$wpdb->prefix}posts.ID = {$wpdb->prefix}meta_2.post_id
+			AND {$wpdb->prefix}posts.post_status = 'publish'
+		WHERE {$wpdb->prefix}meta_2.meta_key = '_edd_payment_user_{$field}'
+		AND {$wpdb->prefix}meta_2.meta_value = '%s'";
 
 	$purchases = $wpdb->get_col( $wpdb->prepare( $query, $user ) );
 
@@ -183,6 +181,8 @@ function edd_get_purchase_stats_by_user( $user = '', $mode = '' ) {
 		$stats['purchases']   = count( $purchases );
 		$stats['total_spent'] = round( array_sum( $purchases ), 2 );
 	}
+
+
 
 	return (array) apply_filters( 'edd_purchase_stats_by_user', $stats, $user, $mode );
 }
