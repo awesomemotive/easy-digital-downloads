@@ -216,7 +216,13 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 				$user_id = $wp_user ? $wp_user->ID : 0;
 
-				$stats   = edd_get_purchase_stats_by_user( $customer_email );
+				if( $wp_user ) {
+					$user = $user_id;
+				} else {
+					$user = $customer_email;
+				}
+
+				$stats   = edd_get_purchase_stats_by_user( $user );
 
 				$data[] = array(
 					'ID' 			=> $user_id,
