@@ -1116,17 +1116,21 @@ add_filter( 'comment_feed_where', 'edd_hide_payment_notes_from_feeds', 10, 2 );
  * @return array Array of comment counts
 */
 function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
-	global $wpdb;
+	global $wpdb, $pagenow;
+
+	if( 'index.php' != $pagenow ) {
+		return $stats;
+	}
 
 	$post_id = (int) $post_id;
 
 	if ( apply_filters( 'edd_count_payment_notes_in_comments', false ) )
-		return array();
+		return $stats;
 
-	$count = wp_cache_get( "comments-{$post_id}", 'counts' );
+	$stats = wp_cache_get( "comments-{$post_id}", 'counts' );
 
-	if ( false !== $count )
-		return $count;
+	if ( false !== $stats )
+		return $stats;
 
 	$where = 'WHERE comment_type != "edd_payment_note"';
 
