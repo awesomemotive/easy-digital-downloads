@@ -43,6 +43,14 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public $count = 0;
 
 	/**
+	 * Total customers
+	 *
+	 * @var int
+	 * @since 1.95
+	 */
+	public $total = 0;
+
+	/**
 	 * Get things started
 	 *
 	 * @since 1.5
@@ -160,19 +168,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Retrieve the total customers from the database
-	 *
-	 * @access public
-	 * @since 1.5
-	 * @global object $wpdb Used to query the database using the WordPress
-	 *   Database API
-	 * @return int $count The number of customers from the database
-	 */
-	public function get_total_customers() {
-		return $this->count;
-	}
-
-	/**
 	 * Retrieves the search query string
 	 *
 	 * @access public
@@ -261,10 +256,12 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		$this->items = $this->reports_data();
 
+		$this->total = edd_count_total_customers();
+
 		$this->set_pagination_args( array(
 			'total_items' => $this->count,                  	// WE have to calculate the total number of items
 			'per_page'    => $this->per_page,                     	// WE have to determine how many items to show on a page
-			'total_pages' => ceil( $this->count / $this->per_page )   // WE have to calculate the total number of pages
+			'total_pages' => ceil( $this->total / $this->per_page )   // WE have to calculate the total number of pages
 		) );
 	}
 }
