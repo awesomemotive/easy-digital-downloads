@@ -41,7 +41,7 @@ function edd_reports_graph() {
 			$day_by_day = false;
 			break;
 		case 'other' :
-			if( ( $dates['m_end'] - $dates['m_start'] ) >= 2 ) {
+			if( $dates['m_end'] - $dates['m_start'] >= 2 || $dates['year_end'] > $dates['year'] ) {
 				$day_by_day = false;
 			} else {
 				$day_by_day = true;
@@ -79,7 +79,7 @@ function edd_reports_graph() {
 
 	} elseif( $dates['range'] == 'this_week' || $dates['range'] == 'last_week'  ) {
 
-		//Day by day
+		// Day by day
 		$day     = $dates['day'];
 		$day_end = $dates['day_end'];
 			$month   = $dates['m_start'];
