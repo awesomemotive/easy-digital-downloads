@@ -843,15 +843,13 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price
 	if ( ! ( $date = strtotime( '+' . $hours . 'hours', current_time( 'timestamp') ) ) )
 		$date = 2147472000; // Highest possible date, January 19, 2038
 
-	$encode = "\x62\141\x73\145\x36\64\x5f\145\x6e\143\x6f\144\x65";
-
 	$params = array(
 		'download_key' 	=> $key,
 		'email' 		=> rawurlencode( $email ),
 		'file' 			=> $filekey,
 		'price_id'      => (int) $price_id,
 		'download_id' 	=> $download_id,
-		'expire' 		=> rawurlencode( $encode( $date ) )
+		'expire' 		=> rawurlencode( base64_encode( $date ) )
 	);
 
 	$params = apply_filters( 'edd_download_file_url_args', $params );
