@@ -435,6 +435,8 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 
 	// This is getting deprecated soon. Use EDD_Payment_Stats with the get_earnings() method instead
 
+	global $wpdb;
+
 	$args = array(
 		'post_type'      => 'edd_payment',
 		'nopaging'       => true,
@@ -458,10 +460,9 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		$sales = get_posts( $args );
 		$earnings = 0;
 		if ( $sales ) {
-			foreach ( $sales as $sale ) {
-				$amount    = edd_get_payment_amount( $sale );
-				$earnings  = $earnings + $amount;
-			}
+			$sales = implode( ',', $sales );
+			$earnings += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN({$sales})" );
+
 		}
 		// Cache the results for one hour
 		set_transient( $key, $earnings, 60*60 );
