@@ -385,7 +385,7 @@ function edd_reports_graph_controls() {
 
 	$display = $dates['range'] == 'other' ? '' : 'style="display:none;"';
 
-	$view = isset( $_GET['view'] ) ? $_GET['view'] : 'earnings';
+	$view = edd_get_reporting_view();
 
 	?>
 	<form id="edd-graphs-filter" method="get">
@@ -394,7 +394,7 @@ function edd_reports_graph_controls() {
 
 		       	<input type="hidden" name="post_type" value="download"/>
 		       	<input type="hidden" name="page" value="edd-reports"/>
-		       	<input type="hidden" name="view" value="<?php echo $view; ?>"/>
+		       	<input type="hidden" name="view" value="<?php echo esc_attr( $view ); ?>"/>
 
 		       	<?php if( isset( $_GET['download-id'] ) ) : ?>
 		       		<input type="hidden" name="download-id" value="<?php echo absint( $_GET['download-id'] ); ?>"/>
@@ -618,9 +618,9 @@ function edd_get_report_dates() {
 function edd_parse_report_dates( $data ) {
 	$dates = edd_get_report_dates();
 
-	$view = isset( $_GET['view'] )        ? $_GET['view']        : 'earnings';
+	$view = edd_get_reporting_view();
 	$id   = isset( $_GET['download-id'] ) ? $_GET['download-id'] : null;
 
-	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=' . $view . '&download-id=' . $id ) ) ); edd_die();
+	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=' . esc_attr( $view ) . '&download-id=' . absint( $id ) ) ) ); edd_die();
 }
 add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
