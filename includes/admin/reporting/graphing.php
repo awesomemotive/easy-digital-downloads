@@ -52,7 +52,7 @@ function edd_reports_graph() {
 			break;
 	endswitch;
 
-	$earnings_totals = (float) 0.00; // Total earnings for time period shown
+	$earnings_totals = 0.00; // Total earnings for time period shown
 	$sales_totals    = 0;            // Total sales for time period shown
 
 	$earnings_data = array();
