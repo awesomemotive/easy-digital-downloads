@@ -226,7 +226,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 
 	$earnings_data = array();
 	$sales_data    = array();
-	$stats          = new EDD_Payment_stats;
+	$stats          = new EDD_Payment_Stats;
 
 	if( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
 		// Hour by hour
