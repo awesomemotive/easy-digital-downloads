@@ -210,7 +210,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 			$day_by_day = false;
 			break;
 		case 'other' :
-			if( ( $dates['m_end'] - $dates['m_start'] ) >= 2 ) {
+			if( $dates['m_end'] - $dates['m_start'] >= 2 || $dates['year_end'] > $dates['year'] ) {
 				$day_by_day = false;
 			} else {
 				$day_by_day = true;
