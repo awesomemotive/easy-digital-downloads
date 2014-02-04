@@ -461,9 +461,7 @@ function edd_get_report_dates() {
 	$dates['m_end']      = isset( $_GET['m_end'] )   ? $_GET['m_end']   : 12;
 	$dates['year']       = isset( $_GET['year'] )    ? $_GET['year']    : date( 'Y' );
 	$dates['year_end']   = isset( $_GET['year_end'] )? $_GET['year_end']: date( 'Y' );
-	
-	wp_reset_vars( array( 'range', 'day', 'm_start', 'm_end', 'year', 'year_end' ) );
-	
+		
 	// Modify dates based on predefined ranges
 	switch ( $dates['range'] ) :
 
