@@ -385,7 +385,7 @@ function edd_reports_graph_controls() {
 
 	$display = $dates['range'] == 'other' ? '' : 'style="display:none;"';
 
-	$view = isset( $_GET['view'] ) ? $_GET['view'] : 'earnings';
+	$view = edd_get_reporting_view();
 
 	?>
 	<form id="edd-graphs-filter" method="get">
@@ -620,7 +620,7 @@ function edd_get_report_dates() {
 function edd_parse_report_dates( $data ) {
 	$dates = edd_get_report_dates();
 
-	$view = isset( $_GET['view'] )        ? $_GET['view']        : 'earnings';
+	$view = edd_get_reporting_view();
 	$id   = isset( $_GET['download-id'] ) ? $_GET['download-id'] : null;
 
 	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=' . $view . '&download-id=' . $id ) ) ); edd_die();

@@ -67,6 +67,28 @@ function edd_reports_default_views() {
 }
 
 /**
+ * Default Report Views
+ *
+ * Checks the $_GET['view'] parameter to ensure it exists within the default allowed views.
+ * 
+ * @param string $default Default view to use.
+ * 
+ * @since 1.9.5.1
+ * @return string $view Report View
+ * 
+ */
+function edd_get_reporting_view( $default = 'earnings' ) {
+	
+	if ( ! isset( $_GET['view'] ) || ! in_array( $_GET['view'], array_keys( edd_reports_default_views() ) ) ) {
+		$view = $default;
+	} else {
+		$view = $_GET['view'];
+	}
+
+	return apply_filters( 'edd_get_reporting_view', $view );
+}
+
+/**
  * Renders the Reports page
  *
  * @since 1.3
