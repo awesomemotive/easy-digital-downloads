@@ -77,12 +77,12 @@ function edd_reports_graph() {
 			$hour++;
 		endwhile;
 
-	} elseif( $dates['range'] == 'this_week' || $dates['range'] == 'last_week'  ) {
+	} elseif( $dates['range'] == 'this_week' || $dates['range'] == 'last_week' ) {
 
 		// Day by day
 		$day     = $dates['day'];
 		$day_end = $dates['day_end'];
-			$month   = $dates['m_start'];
+		$month   = $dates['m_start'];
 		while ( $day <= $day_end ) :
 			$sales = edd_get_sales_by_date( $day, $month, $dates['year'] );
 			$sales_totals += $sales;
@@ -472,14 +472,14 @@ function edd_get_report_dates() {
 		break;
 
 		case 'last_month' :
-			if( $dates['m_start'] == 1 ) {
+			if( date( 'n' ) == 1 ) {
 				$dates['m_start'] = 12;
 				$dates['m_end']	  = 12;
 				$dates['year']    = date( 'Y', $current_time ) - 1;
 				$dates['year_end']= date( 'Y', $current_time ) - 1;
 			} else {
-				//$dates['m_start'] = date( 'n' ) - 1;
-				//$dates['m_end']	  = date( 'n' ) - 1;
+				$dates['m_start'] = date( 'n' ) - 1;
+				$dates['m_end']	  = date( 'n' ) - 1;
 				$dates['year_end']= $dates['year'];
 			}
 		break;
