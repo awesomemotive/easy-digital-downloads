@@ -171,9 +171,9 @@ function edd_reports_graph() {
 				?>
 				
 				<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $earnings_totals ) ); ?></strong></p>
-				<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo $sales_totals; ?></strong></p>
+				<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo edd_format_amount( $sales_totals ); ?></strong></p>
 				<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly earnings: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $estimated['earnings'] ) ); ?></strong></p>
-				<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly sales: ', 'edd' ); echo $estimated['sales']; ?></strong></p>
+				<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly sales: ', 'edd' ); echo edd_format_amount( $estimated['sales'] ); ?></strong></p>
 			</div>
 		</div>
 	</div>
@@ -461,7 +461,9 @@ function edd_get_report_dates() {
 	$dates['m_end']      = isset( $_GET['m_end'] )   ? $_GET['m_end']   : 12;
 	$dates['year']       = isset( $_GET['year'] )    ? $_GET['year']    : date( 'Y' );
 	$dates['year_end']   = isset( $_GET['year_end'] )? $_GET['year_end']: date( 'Y' );
-
+	
+	wp_reset_vars( array( 'range', 'day', 'm_start', 'm_end', 'year', 'year_end' ) );
+	
 	// Modify dates based on predefined ranges
 	switch ( $dates['range'] ) :
 
