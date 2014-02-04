@@ -73,7 +73,7 @@ function edd_reports_default_views() {
  * 
  * @param string $default Default view to use.
  * 
- * @since 1.9.5.1
+ * @since 1.9.6
  * @return string $view Report View
  * 
  */
