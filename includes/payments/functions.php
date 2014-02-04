@@ -555,8 +555,11 @@ function edd_get_total_sales() {
 function edd_get_total_earnings() {
 
 	$total = get_option( 'edd_earnings_total', 0 );
+	
 	// If no total stored in DB, use old method of calculating total earnings
 	if( ! $total ) {
+
+		global $wpdb;
 
 		$total = get_transient( 'edd_earnings_total' );
 
@@ -567,7 +570,6 @@ function edd_get_total_earnings() {
 			$args = apply_filters( 'edd_get_total_earnings_args', array(
 				'offset' => 0,
 				'number' => -1,
-				'mode'   => 'live',
 				'status' => array( 'publish', 'revoked' ),
 				'fields' => 'ids'
 			) );
@@ -582,16 +584,13 @@ function edd_get_total_earnings() {
 				 * first purchase
 				 */
 				
-				$doing_purchase = did_action( 'edd_update_payment_status' );
-				$count = count( $payments );
-				$i = 1;
-				foreach ( $payments as $payment ) {
-					if( $i == $count && $doing_purchase ) {
-						break;
-					}
-					$total += edd_get_payment_amount( $payment );
-					$i++;
+				if( did_action( 'edd_update_payment_status' ) ) {
+					array_pop( $payments );
 				}
+
+				$payments = implode( ',', $payments );
+				$total += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN({$payments})" );
+
 			}
 
 			// Cache results for 1 day. This cache is cleared automatically when a payment is made
