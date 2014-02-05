@@ -140,7 +140,7 @@ function edd_log_default_views() {
 */
 function edd_log_views() {
 	$views        = edd_log_default_views();
-	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'file_downloads';
+	$current_view = edd_get_reporting_view( 'file_downloads' );
 	?>
 	<form id="edd-logs-filter" method="get" action="edit.php">
 		<select id="edd-logs-view" name="view">

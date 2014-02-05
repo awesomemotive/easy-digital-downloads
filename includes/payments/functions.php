@@ -435,13 +435,13 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 
 	// This is getting deprecated soon. Use EDD_Payment_Stats with the get_earnings() method instead
 
+	global $wpdb;
+
 	$args = array(
 		'post_type'      => 'edd_payment',
 		'nopaging'       => true,
 		'year'           => $year,
 		'monthnum'       => $month_num,
-		'meta_key'       => '_edd_payment_mode',
-		'meta_value'     => 'live',
 		'post_status'    => array( 'publish', 'revoked' ),
 		'fields'         => 'ids',
 		'update_post_term_cache' => false
@@ -460,10 +460,9 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		$sales = get_posts( $args );
 		$earnings = 0;
 		if ( $sales ) {
-			foreach ( $sales as $sale ) {
-				$amount    = edd_get_payment_amount( $sale );
-				$earnings  = $earnings + $amount;
-			}
+			$sales = implode( ',', $sales );
+			$earnings += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN({$sales})" );
+
 		}
 		// Cache the results for one hour
 		set_transient( $key, $earnings, 60*60 );
@@ -491,8 +490,6 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 		'post_type'      => 'edd_payment',
 		'nopaging'       => true,
 		'year'           => $year,
-		'meta_key'       => '_edd_payment_mode',
-		'meta_value'     => 'live',
 		'fields'         => 'ids',
 		'post_status'    => array( 'publish', 'revoked' ),
 		'update_post_meta_cache' => false,
@@ -558,8 +555,11 @@ function edd_get_total_sales() {
 function edd_get_total_earnings() {
 
 	$total = get_option( 'edd_earnings_total', 0 );
+	
 	// If no total stored in DB, use old method of calculating total earnings
 	if( ! $total ) {
+
+		global $wpdb;
 
 		$total = get_transient( 'edd_earnings_total' );
 
@@ -570,7 +570,6 @@ function edd_get_total_earnings() {
 			$args = apply_filters( 'edd_get_total_earnings_args', array(
 				'offset' => 0,
 				'number' => -1,
-				'mode'   => 'live',
 				'status' => array( 'publish', 'revoked' ),
 				'fields' => 'ids'
 			) );
@@ -585,16 +584,13 @@ function edd_get_total_earnings() {
 				 * first purchase
 				 */
 				
-				$doing_purchase = did_action( 'edd_update_payment_status' );
-				$count = count( $payments );
-				$i = 1;
-				foreach ( $payments as $payment ) {
-					if( $i == $count && $doing_purchase ) {
-						break;
-					}
-					$total += edd_get_payment_amount( $payment );
-					$i++;
+				if( did_action( 'edd_update_payment_status' ) ) {
+					array_pop( $payments );
 				}
+
+				$payments = implode( ',', $payments );
+				$total += $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_total' AND post_id IN({$payments})" );
+
 			}
 
 			// Cache results for 1 day. This cache is cleared automatically when a payment is made
@@ -1120,17 +1116,21 @@ add_filter( 'comment_feed_where', 'edd_hide_payment_notes_from_feeds', 10, 2 );
  * @return array Array of comment counts
 */
 function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
-	global $wpdb;
+	global $wpdb, $pagenow;
+
+	if( 'index.php' != $pagenow ) {
+		return $stats;
+	}
 
 	$post_id = (int) $post_id;
 
 	if ( apply_filters( 'edd_count_payment_notes_in_comments', false ) )
-		return array();
+		return $stats;
 
-	$count = wp_cache_get( "comments-{$post_id}", 'counts' );
+	$stats = wp_cache_get( "comments-{$post_id}", 'counts' );
 
-	if ( false !== $count )
-		return $count;
+	if ( false !== $stats )
+		return $stats;
 
 	$where = 'WHERE comment_type != "edd_payment_note"';
 

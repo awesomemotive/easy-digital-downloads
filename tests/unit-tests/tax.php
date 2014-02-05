@@ -142,11 +142,11 @@ class Tests_Taxes extends EDD_UnitTestCase {
 
 	public function test_calculate_tax() {
 		$this->assertEquals( '1.944', edd_calculate_tax( 54 ) );
-		$this->assertEquals( '1.97', edd_calculate_tax( 54.7 ) );
-		$this->assertEquals( '5.54', edd_calculate_tax( 153.85 ) );
-		$this->assertEquals( '9.30', edd_calculate_tax( 258.31 ) );
-		$this->assertEquals( '37.42', edd_calculate_tax( 1039.32 ) );
-		$this->assertEquals( '361.59', edd_calculate_tax( 10044.09 ) );
+		$this->assertEquals( '1.9692', edd_calculate_tax( 54.7 ) );
+		$this->assertEquals( '5.5386', edd_calculate_tax( 153.85 ) );
+		$this->assertEquals( '9.29916', edd_calculate_tax( 258.31 ) );
+		$this->assertEquals( '37.41552', edd_calculate_tax( 1039.32 ) );
+		$this->assertEquals( '361.58724', edd_calculate_tax( 10044.09 ) );
 	}
 
 	public function test_get_sales_tax_for_year() {

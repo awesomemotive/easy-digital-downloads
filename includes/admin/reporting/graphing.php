@@ -41,7 +41,7 @@ function edd_reports_graph() {
 			$day_by_day = false;
 			break;
 		case 'other' :
-			if( ( $dates['m_end'] - $dates['m_start'] ) >= 2 ) {
+			if( $dates['m_end'] - $dates['m_start'] >= 2 || $dates['year_end'] > $dates['year'] ) {
 				$day_by_day = false;
 			} else {
 				$day_by_day = true;
@@ -52,7 +52,7 @@ function edd_reports_graph() {
 			break;
 	endswitch;
 
-	$earnings_totals = (float) 0.00; // Total earnings for time period shown
+	$earnings_totals = 0.00; // Total earnings for time period shown
 	$sales_totals    = 0;            // Total sales for time period shown
 
 	$earnings_data = array();
@@ -77,12 +77,12 @@ function edd_reports_graph() {
 			$hour++;
 		endwhile;
 
-	} elseif( $dates['range'] == 'this_week' || $dates['range'] == 'last_week'  ) {
+	} elseif( $dates['range'] == 'this_week' || $dates['range'] == 'last_week' ) {
 
-		//Day by day
+		// Day by day
 		$day     = $dates['day'];
 		$day_end = $dates['day_end'];
-			$month   = $dates['m_start'];
+		$month   = $dates['m_start'];
 		while ( $day <= $day_end ) :
 			$sales = edd_get_sales_by_date( $day, $month, $dates['year'] );
 			$sales_totals += $sales;
@@ -171,9 +171,9 @@ function edd_reports_graph() {
 				?>
 				
 				<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $earnings_totals ) ); ?></strong></p>
-				<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo $sales_totals; ?></strong></p>
+				<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo edd_format_amount( $sales_totals ); ?></strong></p>
 				<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly earnings: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $estimated['earnings'] ) ); ?></strong></p>
-				<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly sales: ', 'edd' ); echo $estimated['sales']; ?></strong></p>
+				<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly sales: ', 'edd' ); echo edd_format_amount( $estimated['sales'] ); ?></strong></p>
 			</div>
 		</div>
 	</div>
@@ -210,7 +210,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 			$day_by_day = false;
 			break;
 		case 'other' :
-			if( ( $dates['m_end'] - $dates['m_start'] ) >= 2 ) {
+			if( $dates['m_end'] - $dates['m_start'] >= 2 || $dates['year_end'] > $dates['year'] ) {
 				$day_by_day = false;
 			} else {
 				$day_by_day = true;
@@ -226,7 +226,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 
 	$earnings_data = array();
 	$sales_data    = array();
-	$stats          = new EDD_Payment_stats;
+	$stats          = new EDD_Payment_Stats;
 
 	if( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
 		// Hour by hour
@@ -385,7 +385,7 @@ function edd_reports_graph_controls() {
 
 	$display = $dates['range'] == 'other' ? '' : 'style="display:none;"';
 
-	$view = isset( $_GET['view'] ) ? $_GET['view'] : 'earnings';
+	$view = edd_get_reporting_view();
 
 	?>
 	<form id="edd-graphs-filter" method="get">
@@ -394,7 +394,7 @@ function edd_reports_graph_controls() {
 
 		       	<input type="hidden" name="post_type" value="download"/>
 		       	<input type="hidden" name="page" value="edd-reports"/>
-		       	<input type="hidden" name="view" value="<?php echo $view; ?>"/>
+		       	<input type="hidden" name="view" value="<?php echo esc_attr( $view ); ?>"/>
 
 		       	<?php if( isset( $_GET['download-id'] ) ) : ?>
 		       		<input type="hidden" name="download-id" value="<?php echo absint( $_GET['download-id'] ); ?>"/>
@@ -461,7 +461,7 @@ function edd_get_report_dates() {
 	$dates['m_end']      = isset( $_GET['m_end'] )   ? $_GET['m_end']   : 12;
 	$dates['year']       = isset( $_GET['year'] )    ? $_GET['year']    : date( 'Y' );
 	$dates['year_end']   = isset( $_GET['year_end'] )? $_GET['year_end']: date( 'Y' );
-
+		
 	// Modify dates based on predefined ranges
 	switch ( $dates['range'] ) :
 
@@ -472,14 +472,14 @@ function edd_get_report_dates() {
 		break;
 
 		case 'last_month' :
-			if( $dates['m_start'] == 1 ) {
+			if( date( 'n' ) == 1 ) {
 				$dates['m_start'] = 12;
 				$dates['m_end']	  = 12;
 				$dates['year']    = date( 'Y', $current_time ) - 1;
 				$dates['year_end']= date( 'Y', $current_time ) - 1;
 			} else {
-				//$dates['m_start'] = date( 'n' ) - 1;
-				//$dates['m_end']	  = date( 'n' ) - 1;
+				$dates['m_start'] = date( 'n' ) - 1;
+				$dates['m_end']	  = date( 'n' ) - 1;
 				$dates['year_end']= $dates['year'];
 			}
 		break;
@@ -535,26 +535,27 @@ function edd_get_report_dates() {
 			if ( $month_now <= 3 ) {
 
 				$dates['m_start'] 	= 1;
-				$dates['m_end']		= 3;
+				$dates['m_end']		= 4;
 				$dates['year']		= date( 'Y', $current_time );
 
 			} else if ( $month_now <= 6 ) {
 
 				$dates['m_start'] 	= 4;
-				$dates['m_end']		= 6;
+				$dates['m_end']		= 7;
 				$dates['year']		= date( 'Y', $current_time );
 
 			} else if ( $month_now <= 9 ) {
 
 				$dates['m_start'] 	= 7;
-				$dates['m_end']		= 9;
+				$dates['m_end']		= 10;
 				$dates['year']		= date( 'Y', $current_time );
 
 			} else {
 
 				$dates['m_start'] 	= 10;
-				$dates['m_end']		= 12;
-				$dates['year']		= date( 'Y', $current_time, $current_time );
+				$dates['m_end']		= 1;
+				$dates['year']		= date( 'Y', $current_time );
+				$dates['year_end']  = date( 'Y', $current_time ) + 1;
 
 			}
 		break;
@@ -564,9 +565,9 @@ function edd_get_report_dates() {
 
 			if ( $month_now <= 3 ) {
 
-				$dates['m_start'] 	= 10;
-				$dates['m_end']		= 12;
-				$dates['year']		= date( 'Y', $current_time ) - 1; // Previous year
+				$dates['m_start']   = 10;
+				$dates['m_end']     = 12;
+				$dates['year']      = date( 'Y', $current_time ) - 1; // Previous year
 
 			} else if ( $month_now <= 6 ) {
 
@@ -617,9 +618,9 @@ function edd_get_report_dates() {
 function edd_parse_report_dates( $data ) {
 	$dates = edd_get_report_dates();
 
-	$view = isset( $_GET['view'] )        ? $_GET['view']        : 'earnings';
+	$view = edd_get_reporting_view();
 	$id   = isset( $_GET['download-id'] ) ? $_GET['download-id'] : null;
 
-	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=' . $view . '&download-id=' . $id ) ) ); edd_die();
+	wp_redirect( add_query_arg( $dates, admin_url( 'edit.php?post_type=download&page=edd-reports&view=' . esc_attr( $view ) . '&download-id=' . absint( $id ) ) ) ); edd_die();
 }
 add_action( 'edd_filter_reports', 'edd_parse_report_dates' );

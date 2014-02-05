@@ -884,7 +884,7 @@ jQuery(document).ready(function ($) {
     });
 
     // Replace options with search results
-	$('.edd-select.chosen-container .chosen-drop input').keyup(function(e) {
+	$('.edd-select.chosen-container .chosen-search input, .edd-select.chosen-container .search-field input').keyup(function(e) {
 
 		var val = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
 		var menu_id = container.attr('id').replace( '_chosen', '' );
@@ -915,7 +915,7 @@ jQuery(document).ready(function ($) {
 				});
 				 // Update the options
 				$('.edd-select-chosen').trigger('chosen:updated');
-				//$('#' + menu_id).next().find('input').val(val);
+				$('#' + menu_id).next().find('input').val(val);
 			}
 		}).fail(function (response) {
 			if ( window.console && window.console.log ) {
