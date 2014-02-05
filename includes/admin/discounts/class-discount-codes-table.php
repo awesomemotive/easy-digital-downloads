@@ -309,8 +309,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 		$per_page = $this->per_page;
 
-		$mode = edd_is_test_mode() ? 'test' : 'live';
-
 		$orderby 		= isset( $_GET['orderby'] )  ? $_GET['orderby']                  : 'ID';
 		$order 			= isset( $_GET['order'] )    ? $_GET['order']                    : 'DESC';
 		$order_inverse 	= $order == 'DESC'           ? 'ASC'                             : 'DESC';

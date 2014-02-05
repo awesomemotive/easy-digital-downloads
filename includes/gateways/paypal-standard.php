@@ -305,8 +305,6 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	$currency_code  = strtolower( $data['mc_currency'] );
 	$business_email = isset( $data['business'] ) ? trim( $data['business'] ) : trim( $data['receiver_email'] );
 
-	// Retrieve the total purchase amount (before PayPal)
-	$payment_amount = edd_get_payment_amount( $payment_id );
 
 	if( get_post_status( $payment_id ) == 'publish' )
 		return; // Only complete payments once
@@ -361,6 +359,10 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 		// Process a refund
 		edd_process_paypal_refund( $data );
 	} else {
+
+		// Retrieve the total purchase amount (before PayPal)
+		$payment_amount = edd_get_payment_amount( $payment_id );
+
 		if ( number_format( (float) $paypal_amount, 2 ) < number_format( (float) $payment_amount, 2 ) ) {
 			// The prices don't match
 			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid payment amount in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
