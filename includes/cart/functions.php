@@ -20,9 +20,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_cart_contents() {
 	$cart = EDD()->session->get( 'edd_cart' );
+	$fees = EDD()->session->get( 'edd_cart_fees' );
 	$cart = ! empty( $cart ) ? array_values( $cart ) : false;
 
-	if( empty( $cart ) ) {
+	if( empty( $cart ) && ! empty( $fees ) ) {
 		// Remove all fees if cart is empty
 		EDD()->session->set( 'edd_cart_fees', null );
 	}
@@ -381,59 +382,6 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $include
 	}
 
 	return apply_filters( 'edd_cart_item_price', $price, $download_id, $options, $include_taxes );
-}
-
-/**
- * Get the discounted amount on a price
- *
- * @since 1.9
- * @param array $item Cart item array
- * @return float The discounted amount
- */
-function edd_get_cart_item_discount_amount( $item = array() ) {
-
-	$amount           = 0;
-	$price            = edd_get_cart_item_price( $item['id'], $item['options'], edd_prices_include_tax() );
-	$discounted_price = $price;
-
-	// Retrieve all discounts applied to the cart
-	$discounts = edd_get_cart_discounts();
-
-	if( $discounts ) {
-
-		foreach ( $discounts as $discount ) {
-
-			$code_id           = edd_get_discount_id_by_code( $discount );
-			$reqs              = edd_get_discount_product_reqs( $code_id );
-			$excluded_products = edd_get_discount_excluded_products( $code_id );
-
-			// Make sure requirements are set and that this discount shouldn't apply to the whole cart
-			if ( ! empty( $reqs ) && edd_is_discount_not_global( $code_id ) ) {
-
-				// This is a product(s) specific discount
-
-				foreach ( $reqs as $download_id ) {
-					
-					if ( $download_id == $item['id'] && ! in_array( $item['id'], $excluded_products ) && 'flat' !== edd_get_discount_type( $code_id ) ) {
-						$discounted_price = edd_get_discounted_amount( $discount, $price );
-					}
-					
-				}
-
-			} else {
-
-				// This is a global cart discount
-				if( ! in_array( $item['id'], $excluded_products ) && 'flat' === edd_get_discount_type( $discount ) ) {
-					$discounted_price = edd_get_discounted_amount( $discount, $price );
-				}
-			}
-		}
-
-		$amount = round( $price - $discounted_price, 2 );
-	}
-
-	return $amount;
-
 }
 
 /**

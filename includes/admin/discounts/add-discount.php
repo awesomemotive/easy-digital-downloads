@@ -72,6 +72,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 
 					<?php echo EDD()->html->product_dropdown( array(
 						'name'     => 'products[]',
+						'id'       => 'products',
 						'selected' => array(),
 						'multiple' => true,
 						'chosen'   => true 
@@ -93,6 +94,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 				<td>
 					<?php echo EDD()->html->product_dropdown( array(
 						'name'     => 'excluded-products[]',
+						'id'       => 'excluded-products',
 						'selected' => array(),
 						'multiple' => true,
 						'chosen'   => true 
