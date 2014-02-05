@@ -83,8 +83,15 @@ function edd_process_paypal_purchase( $purchase_data ) {
             'cancel_return' => edd_get_failed_transaction_uri(),
             'notify_url'    => $listener_url,
             'page_style'    => edd_get_paypal_page_style(),
-            'cbt'			=> get_bloginfo( 'name' )
+            'cbt'			=> get_bloginfo( 'name' ),
         );
+
+        if( ! empty( $purchase_data['user_info']['address'] ) ) {
+        	$paypal_args['address1'] = $purchase_data['user_info']['address']['line1'];
+            $paypal_args['address2'] = $purchase_data['user_info']['address']['line2'];
+            $paypal_args['city']     = $purchase_data['user_info']['address']['city'];
+            $paypal_args['country']  = $purchase_data['user_info']['address']['country'];
+        }
 
 		$paypal_extra_args = array(
 			'cmd'			=> '_cart',
@@ -298,8 +305,6 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	$currency_code  = strtolower( $data['mc_currency'] );
 	$business_email = isset( $data['business'] ) ? trim( $data['business'] ) : trim( $data['receiver_email'] );
 
-	// Retrieve the total purchase amount (before PayPal)
-	$payment_amount = edd_get_payment_amount( $payment_id );
 
 	if( get_post_status( $payment_id ) == 'publish' )
 		return; // Only complete payments once
@@ -354,6 +359,10 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 		// Process a refund
 		edd_process_paypal_refund( $data );
 	} else {
+
+		// Retrieve the total purchase amount (before PayPal)
+		$payment_amount = edd_get_payment_amount( $payment_id );
+
 		if ( number_format( (float) $paypal_amount, 2 ) < number_format( (float) $payment_amount, 2 ) ) {
 			// The prices don't match
 			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid payment amount in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );

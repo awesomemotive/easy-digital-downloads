@@ -933,16 +933,80 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 		
 	}
 
-	$cart_discounts = edd_get_cart_discounts();
-	if ( ! empty( $cart_discounts ) ) {
-		foreach ( $cart_discounts as $discount ) {
-			$discount_id = edd_get_discount_id_by_code( $discount );
-			if ( 'flat' === edd_get_discount_type( $discount_id ) )
-				$amount += edd_get_discount_amount( $discount_id );
+	return apply_filters( 'edd_get_cart_discounted_amount', round( $amount, 2 ) );
+}
+
+/**
+ * Get the discounted amount on a price
+ *
+ * @since 1.9
+ * @param array $item Cart item array
+ * @return float The discounted amount
+ */
+function edd_get_cart_item_discount_amount( $item = array() ) {
+
+	$amount           = 0;
+	$price            = edd_get_cart_item_price( $item['id'], $item['options'], edd_prices_include_tax() );
+	$price           *= $item['quantity'];
+	$discounted_price = $price;
+
+	// Retrieve all discounts applied to the cart
+	$discounts = edd_get_cart_discounts();
+
+	if( $discounts ) {
+
+		foreach ( $discounts as $discount ) {
+
+			$code_id           = edd_get_discount_id_by_code( $discount );
+			$reqs              = edd_get_discount_product_reqs( $code_id );
+			$excluded_products = edd_get_discount_excluded_products( $code_id );
+
+			// Make sure requirements are set and that this discount shouldn't apply to the whole cart
+			if ( ! empty( $reqs ) && edd_is_discount_not_global( $code_id ) ) {
+
+				// This is a product(s) specific discount
+
+				foreach ( $reqs as $download_id ) {
+					
+					if ( $download_id == $item['id'] && ! in_array( $item['id'], $excluded_products ) ) {
+						$discounted_price = edd_get_discounted_amount( $discount, $price );
+					}
+					
+				}
+
+			} else {
+
+				// This is a global cart discount
+				if( ! in_array( $item['id'], $excluded_products ) ) {
+
+					if( 'flat' === edd_get_discount_type( $code_id ) ) {
+						
+						/* *
+						 * In order to correctly record individual item amounts, global flat rate discounts
+						 * are distributed across all cart items. The discount amount is divided by the number
+						 * of items in the cart and then a portion is evenly applied to each cart item
+						 */
+
+						$discounted_amount = edd_get_discount_amount( $code_id );
+						$discounted_amount = round( ( $discounted_amount / edd_get_cart_quantity() ), 2 );
+						$discounted_price -= $discounted_amount;
+					} else {
+					
+						$discounted_price = edd_get_discounted_amount( $discount, $price );
+					
+					}
+
+				}
+
+			}
+
 		}
+
+		$amount = round( $price - $discounted_price, 2 );
 	}
 
-	return apply_filters( 'edd_get_cart_discounted_amount', round( $amount, 2 ) );
+	return $amount;
+
 }
 
 /**

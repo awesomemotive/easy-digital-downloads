@@ -814,7 +814,7 @@ function edd_get_pages( $force = false ) {
  * @return void
  */
 function edd_header_callback( $args ) {
-	echo '';
+	echo '<hr/>';
 }
 
 /**
