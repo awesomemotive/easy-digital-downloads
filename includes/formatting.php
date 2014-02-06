@@ -181,8 +181,17 @@ function edd_currency_decimal_filter( $decimals = 2 ) {
 		case 'JPY' :
 			$decimals = 0;
 			break;
+
+		case 'HUF' :
+			$decimals = 0;
+			break;
+
+		case 'TWD' :
+			$decimals = 0;
+			break;
 	}
 
 	return $decimals;
 }
 add_filter( 'edd_format_amount_decimals', 'edd_currency_decimal_filter' );
+add_filter( 'edd_sanitize_amount', 'edd_currency_decimal_filter' );
