@@ -210,13 +210,13 @@ function edd_deliver_download( $file = '' ) {
 			// Send the browser to the file
 			header( 'Location: ' . $url );
 		} else {
-			@edd_readfile_chunked( $file );
+			edd_readfile_chunked( $file );
 		}
 
 	} else {
 
 		// Read the file and deliver it in chunks
-		@edd_readfile_chunked( $file );
+		edd_readfile_chunked( $file );
 
 	}
 
@@ -535,31 +535,37 @@ function edd_get_file_ctype( $extension ) {
  * @access   public
  * @param    string  $file      The file
  * @param    boolean $retbytes  Return the bytes of file
- * @return   bool|string - If string, $status || $cnt
+ * @return   bool|string        If string, $status || $cnt
  */
-function edd_readfile_chunked( $file, $retbytes = TRUE ) {
+function edd_readfile_chunked( $file, $retbytes = true ) {
 
-	$chunksize = 1 * (1024 * 1024);
+	$chunksize = 1024 * 1024;
 	$buffer    = '';
 	$cnt       = 0;
-	$handle    = fopen( $file, 'r' );
+	$handle    = @fopen( $file, 'r' );
 
-	if( $size = @filesize( $file ) ) header("Content-Length: " . $size );
+	if ( $size = @filesize( $file ) ) {
+		header("Content-Length: " . $size );
+	}
 
-	if ( $handle === FALSE ) return FALSE;
+	if ( false === $handle ) {
+		return false; 
+	}
 
-	while ( ! feof( $handle ) ) :
-	   $buffer = fread( $handle, $chunksize );
-	   echo $buffer;
-	   //ob_flush();
-	   //flush();
+	while ( ! @feof( $handle ) ) {
+		$buffer = @fread( $handle, $chunksize );
+		echo $buffer;
 
-	   if ( $retbytes ) $cnt += strlen( $buffer );
-	endwhile;
+		if ( $retbytes ) {
+	   		$cnt += strlen( $buffer ); 
+   		}
+	}
+	
+	$status = @fclose( $handle );
 
-	$status = fclose( $handle );
-
-	if ( $retbytes AND $status ) return $cnt;
+	if ( $retbytes && $status ) {
+		return $cnt;
+	}
 
 	return $status;
 }
