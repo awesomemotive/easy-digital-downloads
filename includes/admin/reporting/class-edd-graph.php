@@ -160,21 +160,7 @@ class EDD_Graph {
 		$this->load_scripts();
 
 		ob_start();
-
-		/* The Flot API is...interesting.  It lacks coherent capacity to easily modify axis label colors. */
-		if ( $this->options[ 'multiple_y_axes' ] ) : 
 ?>
-			<style type="text/css">
-				.y1Axis { 
-					color: rgb( 237,194,64 ); 
-				}
-				.y2Axis { 
-					color: rgb( 175,216,248 ); 
-				}
-			</style>
-		<?php
-			endif;
-		?>		
 		<script type="text/javascript">
 			jQuery( document ).ready( function($) {
 				$.plot(
