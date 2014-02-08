@@ -160,7 +160,6 @@ class EDD_Graph {
 		$this->load_scripts();
 
 		ob_start();
-
 ?>
 		<script type="text/javascript">
 			jQuery( document ).ready( function($) {
