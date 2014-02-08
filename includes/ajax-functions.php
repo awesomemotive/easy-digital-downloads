@@ -165,7 +165,9 @@ function edd_ajax_apply_discount() {
 				'html'   => edd_get_cart_discounts_html( $discounts )
 			);
 		} else {
-			$return['msg']  = __('The discount you entered is invalid', 'edd');
+			$errors = edd_get_errors();
+			$return['msg']  = $errors['edd-discount-error'];
+			edd_unset_error( 'edd-discount-error' );
 		}
 		echo json_encode($return);
 	}

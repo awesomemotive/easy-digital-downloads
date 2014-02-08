@@ -138,6 +138,7 @@ jQuery(document).ready(function($) {
             nonce: edd_global_vars.checkout_nonce
         };
 
+        $('#edd-discount-error-wrap').html('').hide();
         edd_discount_loader.show();
 
         $.ajax({
@@ -155,9 +156,9 @@ jQuery(document).ready(function($) {
                         });
                         $('#edd-discount', $checkout_form_wrap ).val('');
                         recalculate_taxes();
-						$('body').trigger('edd_discount_applied', [ discount_response ]);
+                        $('body').trigger('edd_discount_applied', [ discount_response ]);
                     } else {
-                        alert(discount_response.msg);
+                        $('#edd-discount-error-wrap').html(discount_response.msg).show();
                     }
                 } else {
                     if ( window.console && window.console.log ) {
@@ -204,7 +205,7 @@ jQuery(document).ready(function($) {
                     $(this).text(discount_response.total);
                 });
                 recalculate_taxes();
-				$('body').trigger('edd_discount_removed', [ discount_response ]);
+                $('body').trigger('edd_discount_removed', [ discount_response ]);
             }
         }).fail(function (data) {
             if ( window.console && window.console.log ) {

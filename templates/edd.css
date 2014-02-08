@@ -98,6 +98,7 @@
 #edd_checkout_cart a.edd-cart-saving-button { font-weight: normal; text-decoration: none; }
 
 /* Checkout Fields */
+.edd-discount-error { color: #F33; }
 #edd_checkout_form_wrap legend { display:block; font-size: 120%; line-height: 1; font-weight: bold; width: 100%; margin: 0 0 21px 0; padding: 0; }
 #edd_checkout_form_wrap label { font-weight: bold; display:block; position: relative; line-height: 100%; font-size: 95%; margin: 0 0 5px; }
 #edd_checkout_form_wrap label:after { display: block; visibility: hidden; float: none; clear: both; height: 0; text-indent: -9999px; content: "."; }
