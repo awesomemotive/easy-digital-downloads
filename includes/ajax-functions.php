@@ -165,7 +165,9 @@ function edd_ajax_apply_discount() {
 				'html'   => edd_get_cart_discounts_html( $discounts )
 			);
 		} else {
-			$return['msg']  = __('The discount you entered is invalid', 'edd');
+			$errors = edd_get_errors();
+			$return['msg']  = $errors['edd-discount-error'];
+			edd_unset_error( 'edd-discount-error' );
 		}
 		echo json_encode($return);
 	}
@@ -287,6 +289,7 @@ function edd_ajax_get_states_field() {
 
 		$args = array(
 			'name'    => $_POST['field_name'],
+			'id'      => $_POST['field_name'],
 			'options' => edd_get_shop_states( $_POST['country'] ),
 			'show_option_all'  => false,
 			'show_option_none' => false

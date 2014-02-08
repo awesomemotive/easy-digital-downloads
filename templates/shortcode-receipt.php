@@ -8,6 +8,7 @@ $payment   = get_post( $edd_receipt_args['id'] );
 $meta      = edd_get_payment_meta( $payment->ID );
 $cart      = edd_get_payment_meta_cart_details( $payment->ID, true );
 $user      = edd_get_payment_meta_user_info( $payment->ID );
+$email     = edd_get_payment_user_email( $payment->ID );
 $status    = edd_get_payment_status( $payment, true );
 ?>
 <table id="edd_purchase_receipt">
@@ -143,7 +144,7 @@ $status    = edd_get_payment_status( $payment, true );
 
 							foreach ( $download_files as $filekey => $file ) :
 
-								$download_url = edd_get_download_file_url( $meta['key'], $meta['email'], $filekey, $item['id'], $price_id );
+								$download_url = edd_get_download_file_url( $meta['key'], $email, $filekey, $item['id'], $price_id );
 								?>
 								<li class="edd_download_file">
 									<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo edd_get_file_name( $file ); ?></a>
@@ -167,7 +168,7 @@ $status    = edd_get_payment_status( $payment, true );
 
 											foreach ( $download_files as $filekey => $file ) :
 
-												$download_url = edd_get_download_file_url( $meta['key'], $meta['email'], $filekey, $bundle_item ); ?>
+												$download_url = edd_get_download_file_url( $meta['key'], $email, $filekey, $bundle_item ); ?>
 												<li class="edd_download_file">
 													<a href="<?php echo esc_url( $download_url ); ?>" class="edd_download_file_link"><?php echo esc_html( $file['name'] ); ?></a>
 												</li>
@@ -199,7 +200,7 @@ $status    = edd_get_payment_status( $payment, true );
 				<?php } ?>
 				<td>
 					<?php if( empty( $item['in_bundle'] ) ) : // Only show price when product is not part of a bundle ?>
-						<?php echo edd_currency_filter( edd_format_amount( $item[ 'subtotal' ] ) ); ?>
+						<?php echo edd_currency_filter( edd_format_amount( $item[ 'price' ] ) ); ?>
 					<?php endif; ?>
 				</td>
 			</tr>
