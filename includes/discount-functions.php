@@ -732,6 +732,8 @@ function edd_is_discount_valid( $code = '', $user = '' ) {
 		) {
 			$return = true;
 		}
+	} else {
+		edd_set_error( 'edd-discount-error', __( 'This discount is invalid.', 'edd' ) );
 	}
 
 	return apply_filters( 'edd_is_discount_valid', $return, $discount_id, $code, $user );
