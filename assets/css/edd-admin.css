@@ -196,5 +196,5 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 
 /* Global Graph Styles
 -------------------------------------------------------------- */
-.y1Axis { color: rgb( 237, 194, 64 ); }
-.y2Axis { color: rgb( 175, 216, 248 ); }
+.edd-graph .y1Axis { color: rgb( 237, 194, 64 )!important; }
+.edd-graph .y2Axis { color: rgb( 175, 216, 248 )!important; }
