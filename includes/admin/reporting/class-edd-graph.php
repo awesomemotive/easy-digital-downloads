@@ -264,7 +264,7 @@ class EDD_Graph {
 			});
 
 		</script>
-		<div id="edd-graph-<?php echo $this->id; ?>" style="height: 300px;"></div>
+		<div id="edd-graph-<?php echo $this->id; ?>" class="edd-graph" style="height: 300px;"></div>
 <?php
 		return ob_get_clean();
 	}
