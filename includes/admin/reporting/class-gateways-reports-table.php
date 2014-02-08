@@ -133,9 +133,9 @@ class EDD_Gateawy_Reports_Table extends WP_List_Table {
 			$reports_data[] = array(
 				'ID'             => $gateway_id,
 				'label'          => $gateway['admin_label'],
-				'complete_sales' => $complete_count,
-				'pending_sales'  => $pending_count,
-				'total_sales'    => $complete_count + $pending_count
+				'complete_sales' => edd_format_amount( $complete_count ),
+				'pending_sales'  => edd_format_amount( $pending_count ),
+				'total_sales'    => edd_format_amount( $complete_count + $pending_count )
 			);
 		}
 
