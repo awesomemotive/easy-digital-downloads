@@ -590,6 +590,7 @@ function edd_discount_field() {
 			</label>
 			<span class="edd-description"><?php _e( 'Enter a coupon code if you have one.', 'edd' ); ?></span>
 			<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e( 'Enter discount', 'edd' ); ?>"/>
+			<span id="edd-discount-error-wrap" class="edd-discount-error" style="display:none;"></span>
 		</p>
 	</fieldset>
 	<?php

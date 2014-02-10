@@ -138,6 +138,7 @@ jQuery(document).ready(function($) {
             nonce: edd_global_vars.checkout_nonce
         };
 
+        $('#edd-discount-error-wrap').html('').hide();
         edd_discount_loader.show();
 
         $.ajax({
@@ -157,7 +158,7 @@ jQuery(document).ready(function($) {
                         recalculate_taxes();
 						$('body').trigger('edd_discount_applied', [ discount_response ]);
                     } else {
-                        alert(discount_response.msg);
+                        $('#edd-discount-error-wrap').html(discount_response.msg).show();
                     }
                 } else {
                     if ( window.console && window.console.log ) {
