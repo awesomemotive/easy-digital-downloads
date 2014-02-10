@@ -390,11 +390,12 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 								</ul>
 							
 								<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value=""/>
+								
+								<?php do_action( 'edd_view_order_details_files_after', $payment_id ); ?>
 
 							</div><!-- /.inside -->
 						</div><!-- /#edd-purchased-files -->
 
-						<?php do_action( 'edd_view_order_details_files_after', $payment_id ); ?>
 
 						<div id="edd-payment-notes" class="postbox">
 							<h3 class="hndle"><span><?php _e( 'Payment Notes', 'edd' ); ?></span></h3>
