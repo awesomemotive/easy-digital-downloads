@@ -731,7 +731,11 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 					'subtotal'    => 0,
 					'quantity'    => 1,
 					'tax'         => 0,
-					'in_bundle'   => 1
+					'in_bundle'   => 1,
+					'parent'		=> array(
+							'id' 			=> $cart_item['id'],
+							'options' 		=> isset( $cart_item['item_number']['options'] ) ? $cart_item['item_number']['options'] : array()
+						)
 				);
 			}
 		}
@@ -822,17 +826,21 @@ function edd_payment_amount( $payment_id = 0 ) {
  * @access public
  * @since 1.2
  * @param int $payment_id Payment ID
- * @return string $amount Payment amount
  */
 function edd_get_payment_amount( $payment_id ) {
+	
 	$amount = get_post_meta( $payment_id, '_edd_payment_total', true );
-	if( empty( $amount ) && '0.00' != $amount ) {
+	
+	if ( empty( $amount ) && '0.00' != $amount ) {
 		$meta   = get_post_meta( $payment_id, '_edd_payment_meta', true );
 		$meta   = maybe_unserialize( $meta );
-		if( isset( $meta['amount'] ) )
+
+		if ( isset( $meta['amount'] ) ) {
 			$amount = $meta['amount'];
+		}
 	}
-	return apply_filters( 'edd_payment_amount', $amount );
+
+	return apply_filters( 'edd_payment_amount', floatval( $amount ) );
 }
 
 /**
