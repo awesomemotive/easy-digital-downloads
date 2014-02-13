@@ -34,11 +34,10 @@ function edd_tools_page() {
 			foreach( edd_get_tools_tabs() as $tab_id => $tab_name ) {
 
 				$tab_url = add_query_arg( array(
-					'tab'	=> $tab_id
+					'tab' => $tab_id
 				) );
 
 				$active = $active_tab == $tab_id ? ' nav-tab-active' : '';
-
 				echo '<a href="' . esc_url( $tab_url ) . '" title="' . esc_attr( $tab_name ) . '" class="nav-tab' . $active . '">' . esc_html( $tab_name ) . '</a>';
 
 			}
