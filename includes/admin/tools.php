@@ -24,48 +24,107 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return      void
  */
 function edd_tools_page() {
+
+	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'system-info';
 ?>
 	<div class="wrap">
 		<?php screen_icon(); ?>
-		<h2><?php _e( 'Tools', 'edd' ) ?></h2>
-		<div class="metabox-holder">
-			<?php do_action( 'edd_tools_before' ); ?>
-			<div class="postbox">
-				<h3><span><?php _e( 'Export Settings', 'edd' ); ?></span></h3>
-				<div class="inside">
-					<p><?php _e( 'Export the Easy Digital Downloads settings for this site as a .json file. This allows you to easily import the configuration into another site.', 'edd' ); ?></p>
-					<p><?php printf( __( 'To export shop data (purchases, customers, etc), visit the <a href="%s">Reports</a> page.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-reports&tab=export' ) ); ?>
-					<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools' ); ?>">
-						<p><input type="hidden" name="edd_action" value="export_settings" /></p>
-						<p>
-							<?php wp_nonce_field( 'edd_export_nonce', 'edd_export_nonce' ); ?>
-							<?php submit_button( __( 'Export', 'edd' ), 'secondary', 'submit', false ); ?>
-						</p>
-					</form>
-				</div><!-- .inside -->
-			</div><!-- .postbox -->
+		<h2 class="nav-tab-wrapper">
+			<?php
+			foreach( edd_get_tools_tabs() as $tab_id => $tab_name ) {
 
-			<div class="postbox">
-				<h3><span><?php _e( 'Import Settings', 'edd' ); ?></span></h3>
-				<div class="inside">
-					<p><?php _e( 'Import the Easy Digital Downloads settings from a .json file. This file can be obtained by exporting the settings on another site using the form above.', 'edd' ); ?></p>
-					<form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools' ); ?>">
-						<p>
-							<input type="file" name="import_file"/>
-						</p>
-						<p>
-							<input type="hidden" name="edd_action" value="import_settings" />
-							<?php wp_nonce_field( 'edd_import_nonce', 'edd_import_nonce' ); ?>
-							<?php submit_button( __( 'Import', 'edd' ), 'secondary', 'submit', false ); ?>
-						</p>
-					</form>
-				</div><!-- .inside -->
-			</div><!-- .postbox -->
-			<?php do_action( 'edd_tools_after' ); ?>
+				$tab_url = add_query_arg( array(
+					'tab'	=> $tab_id
+				) );
+
+				$active = $active_tab == $tab_id ? ' nav-tab-active' : '';
+
+				echo '<a href="' . esc_url( $tab_url ) . '" title="' . esc_attr( $tab_name ) . '" class="nav-tab' . $active . '">';
+				echo esc_html( $tab_name );
+				echo '</a>';
+
+			}
+			?>
+		</h2>
+		<div class="metabox-holder">
+			<?php
+			do_action( 'edd_tools_before' );
+			do_action( 'edd_tools_tab_' . $active_tab );
+			do_action( 'edd_tools_after' );
+			?>
 		</div><!-- .metabox-holder -->
 	</div><!-- .wrap -->
 <?php
 }
+
+
+/**
+ * Retrieve tools tabs
+ *
+ * @since       2.0
+ * @return      array
+ */
+function edd_get_tools_tabs() {
+
+	$tabs                  = array();
+	$tabs['system_info']   = __( 'System Info', 'edd' );
+	$tabs['import_export'] = __( 'Import/Export', 'edd' );
+
+	return apply_filters( 'edd_tools_tabs', $tabs );
+}
+
+
+/**
+ * Display the tools import/export tab
+ *
+ * @since       2.0
+ * @return      void
+ */
+function edd_tools_tab_import_export() {
+?>
+<div class="postbox">
+	<h3><span><?php _e( 'Export Settings', 'edd' ); ?></span></h3>
+	<div class="inside">
+		<p><?php _e( 'Export the Easy Digital Downloads settings for this site as a .json file. This allows you to easily import the configuration into another site.', 'edd' ); ?></p>
+		<p><?php printf( __( 'To export shop data (purchases, customers, etc), visit the <a href="%s">Reports</a> page.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-reports&tab=export' ) ); ?></p>
+		<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools' ); ?>">
+			<p><input type="hidden" name="edd_action" value="export_settings" /></p>
+			<p>
+				<?php wp_nonce_field( 'edd_export_nonce', 'edd_export_nonce' ); ?>
+				<?php submit_button( __( 'Export', 'edd' ), 'secondary', 'submit', false ); ?>
+			</p>
+		</form>
+	</div><!-- .inside -->
+</div><!-- .postbox -->
+
+<div class="postbox">
+	<h3><span><?php _e( 'Import Settings', 'edd' ); ?></span></h3>
+	<div class="inside">
+		<p><?php _e( 'Import the Easy Digital Downloads settings from a .json file. This file can be obtained by exporting the settings on another site using the form above.', 'edd' ); ?></p>
+		<form method="post" enctype="multipart/form-data" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools' ); ?>">
+			<p>
+				<input type="file" name="import_file"/>
+			</p>
+			<p>
+				<input type="hidden" name="edd_action" value="import_settings" />
+				<?php wp_nonce_field( 'edd_import_nonce', 'edd_import_nonce' ); ?>
+				<?php submit_button( __( 'Import', 'edd' ), 'secondary', 'submit', false ); ?>
+			</p>
+		</form>
+	</div><!-- .inside -->
+</div><!-- .postbox -->
+<?php
+}
+add_action( 'edd_tools_tab_import_export', 'edd_tools_tab_import_export' );
+
+
+/**
+ * Display the tools system info tab
+ *
+ * @since       2.0
+ * @return      void
+ */
+add_action( 'edd_tools_tab_system_info', 'edd_system_info' );
 
 
 /**

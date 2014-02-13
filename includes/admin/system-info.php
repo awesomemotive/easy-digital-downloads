@@ -50,10 +50,8 @@ function edd_system_info() {
 		$host = 'Pagely';
 	}
 ?>
-	<div class="wrap">
-		<h2><?php _e( 'System Information', 'edd' ); ?></h2><br/>
-		<form action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-system-info' ) ); ?>" method="post" dir="ltr">
-			<textarea readonly="readonly" onclick="this.focus();this.select()" id="system-info-textarea" name="edd-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
+	<form action="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-system-info' ) ); ?>" method="post" dir="ltr">
+		<textarea readonly="readonly" onclick="this.focus();this.select()" id="system-info-textarea" name="edd-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
 ### Begin System Info ###
 
 ## Please include this information when posting support requests ##
@@ -211,13 +209,11 @@ endif;
 do_action( 'edd_system_info_after' );
 ?>
 ### End System Info ###</textarea>
-			<p class="submit">
-				<input type="hidden" name="edd-action" value="download_sysinfo" />
-				<?php submit_button( 'Download System Info File', 'primary', 'edd-download-sysinfo', false ); ?>
-			</p>
-		</form>
-		</div>
-	</div>
+		<p class="submit">
+			<input type="hidden" name="edd-action" value="download_sysinfo" />
+			<?php submit_button( 'Download System Info File', 'primary', 'edd-download-sysinfo', false ); ?>
+		</p>
+	</form>
 <?php
 }
 

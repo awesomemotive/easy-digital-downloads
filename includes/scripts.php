@@ -144,7 +144,6 @@ add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
  * @global $edd_payments_page
  * @global $edd_settings_page
  * @global $edd_reports_page
- * @global $edd_system_info_page
  * @global $edd_add_ons_page
  * @global $edd_options
  * @global $edd_upgrades_screen
@@ -158,7 +157,7 @@ function edd_load_admin_scripts( $hook ) {
 	$edd_payments_page,
 	$edd_settings_page,
 	$edd_reports_page,
-	$edd_system_info_page,
+	$edd_tools_page,
 	$edd_add_ons_page,
 	$edd_options,
 	$edd_upgrades_screen,
@@ -170,7 +169,7 @@ function edd_load_admin_scripts( $hook ) {
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-	$edd_pages = array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_upgrades_screen, 'index.php', );
+	$edd_pages = array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_tools_page, $edd_add_ons_page, $edd_upgrades_screen, 'index.php', );
 	$edd_pages = apply_filters( 'edd_load_scripts_for_these_pages', $edd_pages );
 
 	$edd_cpt   = apply_filters( 'edd_load_scripts_for_these_types', array( 'download', 'edd_payment', ) );
