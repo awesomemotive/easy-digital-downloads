@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_tools_page() {
 
-	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'system-info';
+	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'system_info';
 ?>
 	<div class="wrap">
 		<?php screen_icon(); ?>
