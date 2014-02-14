@@ -117,7 +117,9 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		$options['price_id'] = '0';
 	}
 
-	$to_add = array();
+	$item     = array();
+	$to_add   = array();
+	$new_item = array();
 
 	if( isset( $options['quantity'] ) ) {
 		$quantity = absint( $options['quantity'] );
@@ -136,7 +138,6 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 				),
 				'quantity'     => $quantity
 			);
-			$to_add[] = apply_filters( 'edd_add_to_cart_item', $item  );
 		}
 	} else {
 		// Add a single item
@@ -145,13 +146,22 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 			'options'  => $options,
 			'quantity' => $quantity
 		);
-		$to_add[] = apply_filters( 'edd_add_to_cart_item', $item );
 	}
 
+	$to_add = apply_filters( 'edd_add_to_cart_item', $item );
+
+	if ( ! is_array( $to_add ) )
+		return;
+
+	if ( ! isset( $to_add['id'] ) || empty( $to_add['id'] ) )
+		return;
+
+	$new_item[] = $to_add;
+
 	if ( is_array( $cart ) ) {
-		$cart = array_merge( $cart, $to_add );
+		$cart = array_merge( $cart, $new_item );
 	} else {
-		$cart = $to_add;
+		$cart = $new_item;
 	}
 
 	EDD()->session->set( 'edd_cart', $cart );
