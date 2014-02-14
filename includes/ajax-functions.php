@@ -256,7 +256,7 @@ function edd_ajax_recalculate_taxes() {
 		return false;
 	}
 
-	if( empty( $_POST['billing_country'] ) ) {
+	if ( empty( $_POST['billing_country'] ) ) {
 		$_POST['billing_country'] = edd_get_shop_country();
 	}
 
