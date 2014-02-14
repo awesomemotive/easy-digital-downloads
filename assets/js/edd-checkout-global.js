@@ -53,7 +53,7 @@ jQuery(document).ready(function($) {
         var postData = {
             action: 'edd_recalculate_taxes',
             nonce: edd_global_vars.checkout_nonce,
-            country: $edd_cc_address.find('#billing_country').val(),
+            billing_country: $edd_cc_address.find('#billing_country').val(),
             state: state
         };
 
