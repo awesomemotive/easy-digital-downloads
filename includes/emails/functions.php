@@ -43,7 +43,10 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$message .= edd_get_email_body_footer();
 
 	$from_name = isset( $edd_options['from_name'] ) ? $edd_options['from_name'] : get_bloginfo('name');
+	$from_name = apply_filters( 'edd_purchase_from_name', $from_name, $payment_id, $payment_data );
+
 	$from_email = isset( $edd_options['from_email'] ) ? $edd_options['from_email'] : get_option('admin_email');
+	$from_email = apply_filters( 'edd_purchase_from_address', $from_email, $payment_id, $payment_data );
 
 	$subject = apply_filters( 'edd_purchase_subject', ! empty( $edd_options['purchase_subject'] )
 		? wp_strip_all_tags( $edd_options['purchase_subject'], true )
