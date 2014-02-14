@@ -252,8 +252,13 @@ add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_titl
  * @return void
  */
 function edd_ajax_recalculate_taxes() {
-	if ( ! check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) )
+	if ( ! check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) ) {
 		return false;
+	}
+
+	if ( empty( $_POST['billing_country'] ) ) {
+		$_POST['billing_country'] = edd_get_shop_country();
+	}
 
 	ob_start();
 	edd_checkout_cart();
