@@ -78,6 +78,7 @@ function edd_get_tools_tabs() {
  * @return      void
  */
 function edd_tools_tab_import_export() {
+	do_action( 'edd_import_export_before' );
 ?>
 	<div class="postbox">
 		<h3><span><?php _e( 'Export Settings', 'edd' ); ?></span></h3>
@@ -111,6 +112,7 @@ function edd_tools_tab_import_export() {
 		</div><!-- .inside -->
 	</div><!-- .postbox -->
 <?php
+	do_action( 'edd_import_export_after' );
 }
 add_action( 'edd_tools_tab_import_export', 'edd_tools_tab_import_export' );
 
