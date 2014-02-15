@@ -34,11 +34,16 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 
 	/** Delete All the Taxonomies */
 	$edd_taxonomies = array( 'download_tag', 'download_category', 'edd_log_type' );
-		$terms = get_terms( $edd_taxonomies );
-		
+	foreach ( $edd_taxonomies as $taxonomy ) {
+		global $wp_taxonomies;
+		$terms = get_terms( $taxonomy );
+		if ( $terms ) {
 			foreach ( $terms as $term ) {
-				wp_delete_term( $term->term_id, $edd_taxonomies );
+				wp_delete_term( $term->term_id, $taxonomy );
 			}
+		}
+		unset( $wp_taxonomies[ $taxonomy ] );
+	}
 
 	/** Delete the Plugin Pages */
 	$edd_created_pages = array( 'purchase_page', 'success_page', 'failure_page', 'purchase_history_page' );
