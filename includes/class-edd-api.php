@@ -591,6 +591,13 @@ class EDD_API {
 			endswitch;
 		}
 
+		/**
+		 * Returns the dates for retreiving earnings/sales
+		 * 
+		 * @since 1.5.1
+		 * @param object $dates Retreives the array for retreiving dates dates for earnings/sales
+		 */
+
 		return apply_filters( 'edd_api_stat_dates', $dates );
 	}
 
