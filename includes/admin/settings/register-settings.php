@@ -608,15 +608,13 @@ function edd_get_registered_settings() {
 					'id' => 'sequential_prefix',
 					'name' => __( 'Sequential Number Prefix', 'edd' ),
 					'desc' => __( 'A prefix to prepend to all sequential order numbers.', 'edd' ),
-					'type' => 'text',
-					'size' => 'small'
+					'type' => 'text'
 				),
 				'sequential_postfix' => array(
 					'id' => 'sequential_postfix',
 					'name' => __( 'Sequential Number Postfix', 'edd' ),
 					'desc' => __( 'A postfix to append to all sequential order numbers.', 'edd' ),
 					'type' => 'text',
-					'size' => 'small'
 				),
 				'terms' => array(
 					'id' => 'terms',
