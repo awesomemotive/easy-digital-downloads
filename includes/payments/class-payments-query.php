@@ -163,6 +163,10 @@ class EDD_Payments_Query extends EDD_Stats {
 				$details->user_info    = edd_get_payment_meta_user_info( $payment_id );
 				$details->cart_details = edd_get_payment_meta_cart_details( $payment_id, true );
 
+				if( edd_get_option( 'enable_sequential' ) ) {
+					$details->payment_number = edd_get_payment_number( $payment_id );
+				}
+
 				$this->payments[] = apply_filters( 'edd_payment', $details, $payment_id, $this );
 			}
 		}

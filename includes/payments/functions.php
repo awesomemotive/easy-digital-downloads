@@ -808,6 +808,78 @@ function edd_get_payment_key( $payment_id = 0 ) {
 }
 
 /**
+ * Get the payment order number
+ *
+ * This will return the payment ID if sequential order numbers are not enabled or the order number does not exist
+ *
+ * @since 2.0
+ * @param int $payment_id Payment ID
+ * @return string $number Payment order number
+ */
+function edd_get_payment_number( $payment_id = 0 ) {
+
+	$number = $payment_id;
+
+	if( edd_get_option( 'enable_sequential' ) ) {
+
+		$number = get_post_meta( $payment_id, '_edd_payment_number', true );
+		
+		if( ! $number ) {
+
+			$number = $payment_id;
+
+		}
+
+	}
+	return apply_filters( 'edd_payment_number', $number, $payment_id );
+}
+
+/**
+ * Gets the next available order number
+ *
+ * This is used when inserting a new payment
+ *
+ * @since 2.0
+ * @return string $number The next available payment number
+ */
+function edd_get_next_payment_number() {
+
+	if( ! edd_get_option( 'enable_sequential' ) ) {
+		return false;
+	}
+
+	$prefix  = edd_get_option( 'sequential_prefix' );
+	$postfix = edd_get_option( 'sequential_postfix' );
+	$start   = edd_get_option( 'sequential_start', 1 );
+
+	$payments     = new EDD_Payments_Query;
+	$last_payment = $payments->query( array( 'number' => 1, 'fields' => 'ids' ) ); 
+
+	if( $last_payment ) {
+		
+		// Remove prefix and postfix
+		$number = str_replace( $prefix, '', $last_payment->payment_number );
+		$number = str_replace( $postfix, '', $number );
+
+		// Ensure it's a whole number
+		$number = absint( $number );
+
+		// Increment the payment number
+		$number++;
+
+		// Re-add the prefix and postfix
+		$number = $prefix . $number . $postfix;
+
+	} else {
+
+		$number = $prefix . $start . $postfix;
+
+	}
+
+	return apply_filters( 'edd_get_next_payment_number', $number );
+}
+
+/**
  * Get the fully formatted payment amount. The payment amount is retrieved using
  * edd_get_payment_amount() and is then sent through edd_currency_filter() and
  * edd_format_amount() to format the amount correctly.
