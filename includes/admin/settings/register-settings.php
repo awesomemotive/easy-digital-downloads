@@ -590,6 +590,34 @@ function edd_get_registered_settings() {
 					'desc' => __( 'Check this box to allow entry of product SKUs. SKUs will be shown on purchase receipt and exported purchase histories.', 'edd' ),
 					'type' => 'checkbox'
 				),
+				'enable_sequential' => array(
+					'id' => 'enable_sequential',
+					'name' => __( 'Sequential Order Numbers', 'edd' ),
+					'desc' => __( 'Check this box to sequential order numbers.', 'edd' ),
+					'type' => 'checkbox'
+				),
+				'sequential_start' => array(
+					'id' => 'sequential_start',
+					'name' => __( 'Sequential Starting Number', 'edd' ),
+					'desc' => __( 'The number that sequential order numbers should start at.', 'edd' ),
+					'type' => 'number',
+					'size' => 'small',
+					'std'  => '1'
+				),
+				'sequential_prefix' => array(
+					'id' => 'sequential_prefix',
+					'name' => __( 'Sequential Number Prefix', 'edd' ),
+					'desc' => __( 'A prefix to prepend to all sequential order numbers.', 'edd' ),
+					'type' => 'text',
+					'size' => 'small'
+				),
+				'sequential_postfix' => array(
+					'id' => 'sequential_postfix',
+					'name' => __( 'Sequential Number Postfix', 'edd' ),
+					'desc' => __( 'A postfix to append to all sequential order numbers.', 'edd' ),
+					'type' => 'text',
+					'size' => 'small'
+				),
 				'terms' => array(
 					'id' => 'terms',
 					'name' => '<strong>' . __( 'Terms of Agreement', 'edd' ) . '</strong>',
