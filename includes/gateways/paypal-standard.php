@@ -347,7 +347,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 
 	// Verify payment recipient
 	if ( strcasecmp( $business_email, trim( $edd_options['paypal_email'] ) ) != 0 ) {
-		echo 'test'; exit;
+		
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid business email in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 		edd_update_payment_status( $payment_id, 'failed' );
 		return;
