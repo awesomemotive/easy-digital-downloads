@@ -68,6 +68,11 @@ function edd_insert_payment( $payment_data = array() ) {
 		$discount = edd_get_discount_by_code( $payment_data['user_info']['discount'] );
 	}
 
+	// Find the next payment number, if enabled 
+	if( edd_get_option( 'enable_sequential' ) ) {
+		$number = edd_get_next_payment_number();
+	}
+
 	$args = apply_filters( 'edd_insert_payment_args', array(
 		'post_title'    => $payment_title,
 		'post_status'   => isset( $payment_data['status'] ) ? $payment_data['status'] : 'pending',
@@ -111,8 +116,13 @@ function edd_insert_payment( $payment_data = array() ) {
 		update_post_meta( $payment, '_edd_payment_total',        $payment_data['price'] );
 		update_post_meta( $payment, '_edd_payment_mode',         $mode );
 		update_post_meta( $payment, '_edd_payment_gateway',      $gateway );
-		if ( ! empty( $discount ) )
+		if ( ! empty( $discount ) ) {
 			update_post_meta( $payment, '_edd_payment_discount_id',  $discount->ID );
+		}
+
+		if( edd_get_option( 'enable_sequential' ) ) {
+			update_post_meta( $payment, '_edd_payment_number', $number );
+		}
 
 		// Clear the user's purchased cache
 		delete_transient( 'edd_user_' . $payment_data['user_info']['id'] . '_purchases' );
@@ -810,7 +820,7 @@ function edd_get_payment_key( $payment_id = 0 ) {
 /**
  * Get the payment order number
  *
- * This will return the payment ID if sequential order numbers are not enabled or the order number does not exist
+ * This will return false if sequential order numbers are not enabled or the order number does not exist
  *
  * @since 2.0
  * @param int $payment_id Payment ID
@@ -823,12 +833,6 @@ function edd_get_payment_number( $payment_id = 0 ) {
 	if( edd_get_option( 'enable_sequential' ) ) {
 
 		$number = get_post_meta( $payment_id, '_edd_payment_number', true );
-		
-		if( ! $number ) {
-
-			$number = $payment_id;
-
-		}
 
 	}
 	return apply_filters( 'edd_payment_number', $number, $payment_id );
@@ -852,23 +856,34 @@ function edd_get_next_payment_number() {
 	$postfix = edd_get_option( 'sequential_postfix' );
 	$start   = edd_get_option( 'sequential_start', 1 );
 
-	$payments     = new EDD_Payments_Query;
-	$last_payment = $payments->query( array( 'number' => 1, 'fields' => 'ids' ) ); 
+	$payments     = new EDD_Payments_Query( array( 'number' => 1, 'order' => 'DESC', 'orderby' => 'ID', 'output' => 'posts', 'fields' => 'ids' ) );
+
+	$last_payment = $payments->get_payments(); 
 
 	if( $last_payment ) {
 		
-		// Remove prefix and postfix
-		$number = str_replace( $prefix, '', $last_payment->payment_number );
-		$number = str_replace( $postfix, '', $number );
+		$number = edd_get_payment_number( $last_payment[0] );
 
-		// Ensure it's a whole number
-		$number = absint( $number );
+		if( empty( $number ) ) {
 
-		// Increment the payment number
-		$number++;
+			$number = $prefix . $start . $postfix;
 
-		// Re-add the prefix and postfix
-		$number = $prefix . $number . $postfix;
+		} else {
+
+			// Remove prefix and postfix
+			$number = str_replace( $prefix, '', $number );
+			$number = str_replace( $postfix, '', $number );
+
+			// Ensure it's a whole number
+			$number = intval( $number );
+
+			// Increment the payment number
+			$number++;
+
+			// Re-add the prefix and postfix
+			$number = $prefix . $number . $postfix;
+
+		}
 
 	} else {
 
