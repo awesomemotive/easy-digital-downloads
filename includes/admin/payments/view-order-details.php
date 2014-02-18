@@ -24,6 +24,7 @@ if ( ! isset( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
 
 // Setup the variables
 $payment_id   = absint( $_GET['id'] );
+$number       = edd_get_option( 'enable_sequential' ) ? edd_get_payment_number( $payment_id ) : '#' . $payment_id;
 $item         = get_post( $payment_id );
 $payment_meta = edd_get_payment_meta( $payment_id );
 $cart_items   = edd_get_payment_meta_cart_details( $payment_id );
@@ -33,7 +34,7 @@ $user_info    = edd_get_payment_meta_user_info( $payment_id );
 $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
 ?>
 <div class="wrap">
-	<h2><?php printf( __( 'Payment #%d', 'edd' ), $payment_id ); ?></h2>
+	<h2><?php printf( __( 'Payment %s', 'edd' ), $number ); ?></h2>
 	<?php do_action( 'edd_view_order_details_before' ); ?>
 	<form id="edd-edit-order-form" method="post">
 		<?php do_action( 'edd_view_order_details_form_top' ); ?>
