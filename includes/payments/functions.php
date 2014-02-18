@@ -820,7 +820,7 @@ function edd_get_payment_key( $payment_id = 0 ) {
 /**
  * Get the payment order number
  *
- * This will return false if sequential order numbers are not enabled or the order number does not exist
+ * This will return the payment ID if sequential order numbers are not enabled or the order number does not exist
  *
  * @since 2.0
  * @param int $payment_id Payment ID
@@ -828,11 +828,20 @@ function edd_get_payment_key( $payment_id = 0 ) {
  */
 function edd_get_payment_number( $payment_id = 0 ) {
 
+	$number = $payment_id;
+
 	if( edd_get_option( 'enable_sequential' ) ) {
 
 		$number = get_post_meta( $payment_id, '_edd_payment_number', true );
 
+		if( ! $number ) {
+		
+			$number = $payment_id;
+	
+		}
+	
 	}
+	
 	return apply_filters( 'edd_payment_number', $number, $payment_id );
 }
 

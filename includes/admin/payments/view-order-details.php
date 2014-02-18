@@ -24,7 +24,7 @@ if ( ! isset( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
 
 // Setup the variables
 $payment_id   = absint( $_GET['id'] );
-$number       = edd_get_option( 'enable_sequential' ) ? edd_get_payment_number( $payment_id ) : '#' . $payment_id;
+$number       = edd_get_payment_number( $payment_id );
 $item         = get_post( $payment_id );
 $payment_meta = edd_get_payment_meta( $payment_id );
 $cart_items   = edd_get_payment_meta_cart_details( $payment_id );

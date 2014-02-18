@@ -339,11 +339,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return string Displays a checkbox
 	 */
 	public function column_ID( $payment ) {
-		if( edd_get_option( 'enable_sequential' ) ) {
-			return edd_get_payment_number( $payment->ID );
-		} else {
-			return $payment->ID;
-		}
+		return edd_get_payment_number( $payment->ID );
 	}
 
 	/**
