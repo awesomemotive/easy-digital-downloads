@@ -828,8 +828,6 @@ function edd_get_payment_key( $payment_id = 0 ) {
  */
 function edd_get_payment_number( $payment_id = 0 ) {
 
-	$number = $payment_id;
-
 	if( edd_get_option( 'enable_sequential' ) ) {
 
 		$number = get_post_meta( $payment_id, '_edd_payment_number', true );

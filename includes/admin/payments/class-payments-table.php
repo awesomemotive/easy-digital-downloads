@@ -331,6 +331,22 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Render the ID column
+	 *
+	 * @access public
+	 * @since 2.0
+	 * @param array $payment Contains all the data for the checkbox column
+	 * @return string Displays a checkbox
+	 */
+	public function column_ID( $payment ) {
+		if( edd_get_option( 'enable_sequential' ) ) {
+			return edd_get_payment_number( $payment->ID );
+		} else {
+			return $payment->ID;
+		}
+	}
+
+	/**
 	 * Render the User Column
 	 *
 	 * @access public
