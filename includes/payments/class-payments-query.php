@@ -343,10 +343,41 @@ class EDD_Payments_Query extends EDD_Stats {
 			$this->__unset( 's' );
 
 		} elseif ( is_numeric( $search ) ) {
-
 			$search_meta = array(
 				'key'   => '_edd_payment_user_id',
 				'value' => $search
+			);
+
+			$this->__set( 'meta_query', $search_meta );
+
+			if( edd_get_option( 'enable_sequential' ) ) {
+
+				$search_meta = array(
+					'key'     => '_edd_payment_number',
+					'value'   => $search,
+					'compare' => 'LIKE'
+				);
+
+				$this->__set( 'meta_query', $search_meta );
+
+				$this->args['meta_query']['relation'] = 'OR';
+
+			}
+
+			$this->__unset( 's' );
+
+		} elseif ( 
+			edd_get_option( 'enable_sequential' ) && 
+			(
+				false !== strpos( $search, edd_get_option( 'sequential_prefix' ) ) ||
+				false !== strpos( $search, edd_get_option( 'sequential_postfix' ) ) 
+			)
+		) {
+
+			$search_meta = array(
+				'key'     => '_edd_payment_number',
+				'value'   => $search,
+				'compare' => 'LIKE'
 			);
 
 			$this->__set( 'meta_query', $search_meta );
@@ -358,7 +389,6 @@ class EDD_Payments_Query extends EDD_Stats {
 			$this->__unset( 's' );
 
 		} else {
-
 			$this->__set( 's', $search );
 
 		}
