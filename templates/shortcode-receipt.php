@@ -18,7 +18,7 @@ $status    = edd_get_payment_status( $payment, true );
 		<?php if ( $edd_receipt_args['payment_id'] ) : ?>
 		<tr>
 			<th><strong><?php _e( 'Payment', 'edd' ); ?>:</strong></th>
-			<th>#<?php echo $payment->ID; ?></th>
+			<th><?php echo edd_get_payment_number( $payment->ID ); ?></th>
 		</tr>
 		<?php endif; ?>
 	</thead>
