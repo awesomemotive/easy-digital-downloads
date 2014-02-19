@@ -94,7 +94,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 		$columns = array(
 			'ID'		=> __( 'Log ID', 'edd' ),
 			'user_id'  	=> __( 'User', 'edd' ),
-			'download'  => __( 'Download', 'edd' ),
+			'download'  => edd_get_label_singular(),
 			'amount'    => __( 'Item Amount', 'edd' ),
 			'payment_id'=> __( 'Payment ID', 'edd' ),
 			'date'  	=> __( 'Date', 'edd' )
