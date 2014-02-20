@@ -554,7 +554,7 @@ function edd_get_cart_subtotal() {
 
 	}
 
-	return apply_filters( 'edd_get_cart_subtotal', $subtotal );
+	return apply_filters( 'edd_get_cart_subtotal', edd_sanitize_amount( $subtotal ) );
 }
 
 /**
@@ -579,7 +579,7 @@ function edd_get_cart_total( $discounts = false ) {
 	if( $total < 0 )
 		$total = 0.00;
 
-	return (float) apply_filters( 'edd_get_cart_total', $total );
+	return (float) apply_filters( 'edd_get_cart_total', edd_sanitize_amount( $total ) );
 }
 
 
@@ -697,7 +697,7 @@ function edd_get_cart_tax() {
 		
 	}
 
-	return apply_filters( 'edd_get_cart_tax', round( $cart_tax, 2 ) );
+	return apply_filters( 'edd_get_cart_tax', edd_sanitize_amount( $cart_tax ) );
 }
 
 /**
