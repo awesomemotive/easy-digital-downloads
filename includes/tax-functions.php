@@ -113,7 +113,7 @@ function edd_get_tax_rate( $country = false, $state = false ) {
 						continue;
 
 					$state_rate = $tax_rate['rate'];
-					if( ! empty( $state_rate ) ) {
+					if( 0 !== $state_rate || ! empty( $state_rate ) ) {
 						$rate = number_format( $state_rate, 4 );
 					}
 				}
