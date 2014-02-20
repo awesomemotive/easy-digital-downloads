@@ -80,7 +80,7 @@ function edd_price( $download_id, $echo = true ) {
 		$price = edd_get_download_price( $download_id );
 	}
 
-	$price = apply_filters( 'edd_download_price', $price, $download_id );
+	$price = apply_filters( 'edd_download_price', edd_sanitize_amount( $price ), $download_id );
 
 	$price = '<span class="edd_price" id="edd_price_' . $download_id . '">' . $price . '</span>';
 
@@ -185,7 +185,7 @@ function edd_get_price_option_amount( $download_id, $price_id = 0 ) {
 			$amount = $prices[ $price_id ]['amount'];
 	}
 
-	return apply_filters( 'edd_get_price_option_amount', $amount, $download_id );
+	return apply_filters( 'edd_get_price_option_amount', edd_sanitize_amount( $amount ), $download_id );
 }
 
 /**
@@ -219,7 +219,7 @@ function edd_get_lowest_price_option( $download_id = 0 ) {
 		$low = $prices[ $min ]['amount'];
 	}
 
-	return $low;
+	return edd_sanitize_amount( $low );
 }
 
 /**
@@ -254,7 +254,7 @@ function edd_get_highest_price_option( $download_id = 0 ) {
 		$high = $prices[ $max ]['amount'];
 	}
 
-	return $high;
+	return edd_sanitize_amount( $high );
 }
 
 /**
@@ -267,9 +267,9 @@ function edd_get_highest_price_option( $download_id = 0 ) {
 function edd_price_range( $download_id = 0 ) {
 	$low   = edd_get_lowest_price_option( $download_id );
 	$high  = edd_get_highest_price_option( $download_id );
-	$range = '<span class="edd_price_range_low">' . edd_currency_filter( $low ) . '</span>';
+	$range = '<span class="edd_price_range_low">' . edd_currency_filter( edd_format_amount( $low ) ) . '</span>';
 	$range .= '<span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span>';
-	$range .= '<span class="edd_price_range_high">' . edd_currency_filter( $high ) . '</span>';
+	$range .= '<span class="edd_price_range_high">' . edd_currency_filter( edd_format_amount( $high ) ) . '</span>';
 
 	return apply_filters( 'edd_price_range', $range, $download_id, $low, $high );
 }
