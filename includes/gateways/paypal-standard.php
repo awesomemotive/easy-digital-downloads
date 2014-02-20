@@ -311,14 +311,29 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	$currency_code  = strtolower( $data['mc_currency'] );
 	$business_email = isset( $data['business'] ) ? trim( $data['business'] ) : trim( $data['receiver_email'] );
 
-
-	if( get_post_status( $payment_id ) == 'publish' )
-		return; // Only complete payments once
-
-	if ( edd_get_payment_gateway( $payment_id ) != 'paypal' )
+	if ( edd_get_payment_gateway( $payment_id ) != 'paypal' ) {
 		return; // this isn't a PayPal standard IPN
+	}
 
+	// Verify payment recipient
+	if ( strcasecmp( $business_email, trim( $edd_options['paypal_email'] ) ) != 0 ) {
+		
+		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid business email in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
+		edd_update_payment_status( $payment_id, 'failed' );
+		return;
+	}
+
+	// Verify payment currency
+	if ( $currency_code != strtolower( edd_get_currency() ) ) {
+
+		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid currency in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
+		edd_update_payment_status( $payment_id, 'failed' );
+		return;
+	}
+	
 	if( ! edd_get_payment_user_email( $payment_id ) ) {
+
+		// This runs when a Buy Now purchase was made. It bypasses checkout so no personal info is collected until PayPal
 
 		// No email associated with purchase, so store from PayPal
 		update_post_meta( $payment_id, '_edd_payment_user_email', $data['payer_email'] );
@@ -345,26 +360,16 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 		update_post_meta( $payment_id, '_edd_payment_meta', $payment_meta );
 	}
 
-	// Verify payment recipient
-	if ( strcasecmp( $business_email, trim( $edd_options['paypal_email'] ) ) != 0 ) {
-		
-		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid business email in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
-		edd_update_payment_status( $payment_id, 'failed' );
-		return;
-	}
-
-	// Verify payment currency
-	if ( $currency_code != strtolower( edd_get_currency() ) ) {
-
-		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid currency in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
-		edd_update_payment_status( $payment_id, 'failed' );
-		return;
-	}
-
 	if ( $payment_status == 'refunded' ) {
+
 		// Process a refund
 		edd_process_paypal_refund( $data );
+
 	} else {
+
+		if( get_post_status( $payment_id ) == 'publish' ) {
+			return; // Only complete payments once
+		}
 
 		// Retrieve the total purchase amount (before PayPal)
 		$payment_amount = edd_get_payment_amount( $payment_id );
@@ -372,6 +377,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 		if ( number_format( (float) $paypal_amount, 2 ) < number_format( (float) $payment_amount, 2 ) ) {
 			// The prices don't match
 			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid payment amount in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
+		   	edd_update_payment_status( $payment_id, 'failed' );
 		   return;
 		}
 		if ( $purchase_key != edd_get_payment_key( $payment_id ) ) {
@@ -402,6 +408,10 @@ function edd_process_paypal_refund( $data ) {
 
 	// Collect payment details
 	$payment_id = intval( $data['custom'] );
+
+	if( get_post_status( $payment_id ) == 'refunded' ) {
+		return; // Only refund payments once
+	}
 
 	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Payment #%s Refunded', 'edd' ) , $data['parent_txn_id'] ) );
 	edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Refund Transaction ID: %s', 'edd' ) , $data['txn_id'] ) );
