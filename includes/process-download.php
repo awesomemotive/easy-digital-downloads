@@ -171,7 +171,6 @@ function edd_process_download() {
 }
 add_action( 'init', 'edd_process_download', 100 );
 
-
 /**
  * Deliver the download file
  *
