@@ -947,7 +947,6 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 
 	$amount           = 0;
 	$price            = edd_get_cart_item_price( $item['id'], $item['options'], edd_prices_include_tax() );
-	$price           *= $item['quantity'];
 	$discounted_price = $price;
 
 	// Retrieve all discounts applied to the cart
