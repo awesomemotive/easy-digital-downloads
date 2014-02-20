@@ -180,7 +180,7 @@ add_action( 'init', 'edd_process_download', 100 );
  */
 function edd_option_siteurl( $value ) {
 	if ( is_ssl() ) {
-		return str_replace( 'http', 'https', $url, 1 );
+		return str_replace( 'http', 'https', $value );
 	} else {
 		return $value;
 	}
