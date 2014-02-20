@@ -113,6 +113,17 @@ function edd_process_download() {
 					$direct    = true;
 					$file_path = $requested_file;
 
+				} else if( defined( 'UPLOADS' ) && strpos( $requested_file, UPLOADS ) !== false ) {
+
+					/** 
+					 * This is a local file given by URL so we need to figure out the path
+					 * UPLOADS is always relative to ABSPATH
+					 * site_url() is the URL to where WordPress is installed
+					 */
+					$file_path  = str_replace( site_url(), '', $requested_file );
+					$file_path  = realpath( ABSPATH . $file_path );
+					$direct     = true;
+					
 				} else if( strpos( $requested_file, WP_CONTENT_URL ) !== false ) {
 
 					/** This is a local file given by URL so we need to figure out the path */
