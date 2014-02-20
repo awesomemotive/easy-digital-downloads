@@ -241,7 +241,7 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 	//$email_body = edd_email_template_tags( $email, $payment_data, $payment_id, true );
 	$email_body = edd_do_email_tags( $email, $payment_id );
 
-	return apply_filters( 'edd_sale_notification', $email_body, $payment_id, $payment_data );
+	return apply_filters( 'edd_sale_notification', wpautop( $email_body ), $payment_id, $payment_data );
 }
 
 /**
