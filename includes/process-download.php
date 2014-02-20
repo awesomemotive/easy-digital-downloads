@@ -171,6 +171,21 @@ function edd_process_download() {
 }
 add_action( 'init', 'edd_process_download', 100 );
 
+/**
+ * Add SSL support to get_option( 'siteurl' ).
+ *
+ * @access   public
+ * @param    string    default url string
+ * @return   string    Maybe https url string
+ */
+function edd_option_siteurl( $value ) {
+	if ( is_ssl() ) {
+		return str_replace( 'http', 'https', $url, 1 );
+	} else {
+		return $value;
+	}
+}
+add_action( 'option_siteurl', 'edd_option_siteurl' );
 
 /**
  * Deliver the download file
