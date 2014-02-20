@@ -156,7 +156,8 @@ class EDD_License {
 		$api_params = array(
 			'edd_action' => 'activate_license',
 			'license'    => $license,
-			'item_name'  => urlencode( $this->item_name )
+			'item_name'  => urlencode( $this->item_name ),
+			'url'        => home_url()
 		);
 
 		// Call the API
@@ -200,7 +201,8 @@ class EDD_License {
 			$api_params = array(
 				'edd_action' => 'deactivate_license',
 				'license'    => $this->license,
-				'item_name'  => urlencode( $this->item_name )
+				'item_name'  => urlencode( $this->item_name ),
+				'url'        => home_url()
 			);
 
 			// Call the API

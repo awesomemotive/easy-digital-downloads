@@ -102,7 +102,8 @@ function edd_install() {
 		$options = array(
 			'purchase_page' => $checkout,
 			'success_page'  => $success,
-			'failure_page'  => $failed
+			'failure_page'  => $failed,
+			'purchase_history_page'  => $history
 		);
 
 		update_option( 'edd_settings', $options );

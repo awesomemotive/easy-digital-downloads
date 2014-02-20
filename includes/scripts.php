@@ -139,40 +139,18 @@ add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
  *
  * @since 1.0
  * @global $post
- * @global $pagenow
- * @global $edd_discounts_page
- * @global $edd_payments_page
- * @global $edd_settings_page
- * @global $edd_reports_page
- * @global $edd_add_ons_page
- * @global $edd_options
- * @global $edd_upgrades_screen
  * @param string $hook Page hook
  * @return void
  */
 function edd_load_admin_scripts( $hook ) {
-	global $post,
-	$pagenow,
-	$edd_discounts_page,
-	$edd_payments_page,
-	$edd_settings_page,
-	$edd_reports_page,
-	$edd_tools_page,
-	$edd_add_ons_page,
-	$edd_options,
-	$edd_upgrades_screen,
-	$wp_version;
 
-	$js_dir = EDD_PLUGIN_URL . 'assets/js/';
+	global $wp_version;
+
+	$js_dir  = EDD_PLUGIN_URL . 'assets/js/';
 	$css_dir = EDD_PLUGIN_URL . 'assets/css/';
 
 	// Use minified libraries if SCRIPT_DEBUG is turned off
-	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-
-	$edd_pages = array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_tools_page, $edd_add_ons_page, $edd_upgrades_screen, 'index.php', );
-	$edd_pages = apply_filters( 'edd_load_scripts_for_these_pages', $edd_pages );
-
-	$edd_cpt   = apply_filters( 'edd_load_scripts_for_these_types', array( 'download', 'edd_payment', ) );
+	$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
 	// These have to be global
 	wp_enqueue_style( 'jquery-chosen', $css_dir . 'chosen' . $suffix . '.css', array(), EDD_VERSION );
@@ -200,23 +178,14 @@ function edd_load_admin_scripts( $hook ) {
 		'remove_text'             => __( 'Remove', 'edd' ),
 	));
 
-	if ( ! in_array( $hook, $edd_pages ) && ! is_object( $post ) )
-		return;
-
-	if ( is_object( $post ) && ! in_array( $post->post_type, $edd_cpt ) )
-		return;
-
-	if ( $hook == $edd_settings_page ) {
-		wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_style( 'colorbox', $css_dir . 'colorbox' . $suffix . '.css', array(), '1.3.20' );
-		wp_enqueue_script( 'colorbox', $js_dir . 'jquery.colorbox-min.js', array( 'jquery' ), '1.3.20' );
-		if( function_exists( 'wp_enqueue_media' ) && version_compare( $wp_version, '3.5', '>=' ) ) {
-			//call for new media manager
-			wp_enqueue_media();
-		}
+	wp_enqueue_style( 'wp-color-picker' );
+	wp_enqueue_script( 'wp-color-picker' );
+	wp_enqueue_style( 'colorbox', $css_dir . 'colorbox' . $suffix . '.css', array(), '1.3.20' );
+	wp_enqueue_script( 'colorbox', $js_dir . 'jquery.colorbox-min.js', array( 'jquery' ), '1.3.20' );
+	if( function_exists( 'wp_enqueue_media' ) && version_compare( $wp_version, '3.5', '>=' ) ) {
+		//call for new media manager
+		wp_enqueue_media();
 	}
-
 	wp_enqueue_script( 'jquery-flot', $js_dir . 'jquery.flot' . $suffix . '.js' );
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 	$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
@@ -241,11 +210,11 @@ add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
 function edd_admin_downloads_icon() {
 	global $post_type, $wp_version;
 
-    $images_url  = EDD_PLUGIN_URL . 'assets/images/';
-    $menu_icon   = '\f316';
-	$icon_url    = $images_url . 'edd-icon.png';
-	$icon_cpt_url = $images_url . 'edd-cpt.png';
-	$icon_2x_url = $images_url . 'edd-icon-2x.png';
+    $images_url      = EDD_PLUGIN_URL . 'assets/images/';
+    $menu_icon       = '\f316';
+	$icon_url        = $images_url . 'edd-icon.png';
+	$icon_cpt_url    = $images_url . 'edd-cpt.png';
+	$icon_2x_url     = $images_url . 'edd-icon-2x.png';
 	$icon_cpt_2x_url = $images_url . 'edd-cpt-2x.png';
 	?>
     <style type="text/css" media="screen">

@@ -20,7 +20,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_cart_contents() {
 	$cart = EDD()->session->get( 'edd_cart' );
+	$fees = EDD()->session->get( 'edd_cart_fees' );
 	$cart = ! empty( $cart ) ? array_values( $cart ) : false;
+
+	if( empty( $cart ) && ! empty( $fees ) ) {
+		// Remove all fees if cart is empty
+		EDD()->session->set( 'edd_cart_fees', null );
+	}
+
 	return apply_filters( 'edd_cart_contents', $cart );
 }
 
@@ -51,7 +58,8 @@ function edd_get_cart_content_details() {
 
 		$item_price = round( $item_price, 2 );
 		$subtotal   = round( $item_price * $quantity, 2 );
-		$total      = round( ( $item_price - $discount + $tax ) * $quantity, 2 );
+		$tax        = round( $tax * $quantity, 2 );
+		$total      = round( ( $subtotal - $discount + $tax ), 2 );
 
 		$details[ $key ]  = array(
 			'name'        => get_the_title( $item['id'] ),
@@ -64,6 +72,7 @@ function edd_get_cart_content_details() {
 			'tax'         => $tax,
 			'price'       => $total,
 		);
+
 	}
 
 	return $details;
@@ -92,7 +101,7 @@ function edd_get_cart_quantity() {
  * @return string Cart key of the new item
  */
 function edd_add_to_cart( $download_id, $options = array() ) {
-	$cart = edd_get_cart_contents();
+	$cart = apply_filters( 'edd_pre_add_to_cart_contents', edd_get_cart_contents() );
 	$download = get_post( $download_id );
 
 	if( 'download' != $download->post_type )
@@ -108,7 +117,9 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		$options['price_id'] = '0';
 	}
 
-	$to_add = array();
+	$item     = array();
+	$to_add   = array();
+	$new_item = array();
 
 	if( isset( $options['quantity'] ) ) {
 		$quantity = absint( $options['quantity'] );
@@ -127,7 +138,6 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 				),
 				'quantity'     => $quantity
 			);
-			$to_add[] = apply_filters( 'edd_add_to_cart_item', $item  );
 		}
 	} else {
 		// Add a single item
@@ -136,13 +146,22 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 			'options'  => $options,
 			'quantity' => $quantity
 		);
-		$to_add[] = apply_filters( 'edd_add_to_cart_item', $item );
 	}
 
+	$to_add = apply_filters( 'edd_add_to_cart_item', $item );
+
+	if ( ! is_array( $to_add ) )
+		return;
+
+	if ( ! isset( $to_add['id'] ) || empty( $to_add['id'] ) )
+		return;
+
+	$new_item[] = $to_add;
+
 	if ( is_array( $cart ) ) {
-		$cart = array_merge( $cart, $to_add );
+		$cart = array_merge( $cart, $new_item );
 	} else {
-		$cart = $to_add;
+		$cart = $new_item;
 	}
 
 	EDD()->session->set( 'edd_cart', $cart );
@@ -376,59 +395,6 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $include
 }
 
 /**
- * Get the discounted amount on a price
- *
- * @since 1.9
- * @param array $item Cart item array
- * @return float The discounted amount
- */
-function edd_get_cart_item_discount_amount( $item = array() ) {
-
-	$amount           = 0;
-	$price            = edd_get_cart_item_price( $item['id'], $item['options'], edd_prices_include_tax() );
-	$discounted_price = $price;
-
-	// Retrieve all discounts applied to the cart
-	$discounts = edd_get_cart_discounts();
-
-	if( $discounts ) {
-
-		foreach ( $discounts as $discount ) {
-
-			$code_id           = edd_get_discount_id_by_code( $discount );
-			$reqs              = edd_get_discount_product_reqs( $code_id );
-			$excluded_products = edd_get_discount_excluded_products( $code_id );
-
-			// Make sure requirements are set and that this discount shouldn't apply to the whole cart
-			if ( ! empty( $reqs ) && edd_is_discount_not_global( $code_id ) ) {
-
-				// This is a product(s) specific discount
-
-				foreach ( $reqs as $download_id ) {
-					
-					if ( $download_id == $item['id'] && ! in_array( $item['id'], $excluded_products ) ) {
-						$discounted_price = edd_get_discounted_amount( $discount, $price );
-					}
-					
-				}
-
-			} else {
-
-				// This is a global cart discount
-				if( ! in_array( $item['id'], $excluded_products ) ) {
-					$discounted_price = edd_get_discounted_amount( $discount, $price );
-				}
-			}
-		}
-
-		$amount = round( $price - $discounted_price, 2 );
-	}
-
-	return $amount;
-
-}
-
-/**
  * Get cart item's final price
  *
  * Gets the amount after taxes and discounts
@@ -472,10 +438,6 @@ function edd_get_cart_item_tax( $item = array() ) {
 		if( edd_taxes_after_discounts() ) {
 			$price -= edd_get_cart_item_discount_amount( $item );
 		}
-
-		$quantity = edd_item_quantities_enabled() ? $item['quantity'] : 1;
-
-		$price *= $quantity;
 
 		$tax = edd_calculate_tax( $price );
 

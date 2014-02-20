@@ -155,6 +155,13 @@ function edd_get_registered_settings() {
 					'type' => 'select',
 					'options' => edd_get_pages()
 				),
+				'purchase_history_page' => array(
+					'id' => 'purchase_history_page',
+					'name' => __( 'Purchase History Page', 'edd' ),
+					'desc' => __( 'This page shows a complete purchase history for the current user, including download links', 'edd' ),
+					'type' => 'select',
+					'options' => edd_get_pages()
+				),
 				'currency_settings' => array(
 					'id' => 'currency_settings',
 					'name' => '<strong>' . __( 'Currency Settings', 'edd' ) . '</strong>',
@@ -814,7 +821,7 @@ function edd_get_pages( $force = false ) {
  * @return void
  */
 function edd_header_callback( $args ) {
-	echo '';
+	echo '<hr/>';
 }
 
 /**

@@ -52,11 +52,7 @@ class EDD_Session {
 	 * @since 1.5
 	 */
 	public function __construct() {
-
-		if( is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-			return; // Don't load sessions in the admin, that's silly
-		}
-
+		
 		$this->use_php_sessions = defined( 'EDD_USE_PHP_SESSIONS' ) && EDD_USE_PHP_SESSIONS;
 
 		if( $this->use_php_sessions ) {
@@ -80,6 +76,8 @@ class EDD_Session {
 				require_once EDD_PLUGIN_DIR . 'includes/libraries/class-wp-session.php';
 				require_once EDD_PLUGIN_DIR . 'includes/libraries/wp-session.php';
 			}
+	
+			add_filter( 'wp_session_expiration', array( $this, 'set_expiration_time' ), 99999 );
 
 		}
 
@@ -89,7 +87,6 @@ class EDD_Session {
 			add_action( 'init', array( $this, 'init' ), -1 );
 		}
 
-		add_filter( 'wp_session_expiration', array( $this, 'set_expiration_time' ), 99999 );
 	}
 
 

@@ -591,6 +591,13 @@ class EDD_API {
 			endswitch;
 		}
 
+		/**
+		 * Returns the filters for the dates used to retreive earnings/sales
+		 * 
+		 * @since 1.5.1
+		 * @param object $dates The dates used for retreiving earnings/sales
+		 */
+
 		return apply_filters( 'edd_api_stat_dates', $dates );
 	}
 

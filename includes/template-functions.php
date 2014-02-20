@@ -381,24 +381,25 @@ add_filter( 'edd_downloads_content', 'edd_downloads_default_content' );
  * Gets the download links for each item purchased
  *
  * @since 1.1.5
- * @param array $purchase_data Purchase data
+ * @param int $payment_id The ID of the payment to retrieve download links for
  * @return string
  */
-function edd_get_purchase_download_links( $purchase_data ) {
-	if ( ! is_array( $purchase_data['downloads'] ) )
-		return '<div class="edd-error">' . __( 'No downloads found', 'edd' ) . '</div>';
+function edd_get_purchase_download_links( $payment_id = 0 ) {
 
-	$links = '<ul class="edd_download_links">';
+	$downloads   = edd_get_payment_meta_cart_details( $payment_id, true );
+	$payment_key = edd_get_payment_key( $payment_id );
+	$email       = edd_get_payment_user_email( $payment_id );
+	$links       = '<ul class="edd_download_links">';
 
-	foreach ( $purchase_data['downloads'] as $download ) {
+	foreach ( $downloads as $download ) {
 		$links .= '<li>';
 			$links .= '<h3 class="edd_download_link_title">' . esc_html( get_the_title( $download['id'] ) ) . '</h3>';
 			$price_id = isset( $download['options'] ) && isset( $download['options']['price_id'] ) ? $download['options']['price_id'] : null;
-			$files = edd_get_download_files( $download['id'], $price_id );
+			$files    = edd_get_download_files( $download['id'], $price_id );
 			if ( is_array( $files ) ) {
 				foreach ( $files as $filekey => $file ) {
 					$links .= '<div class="edd_download_link_file">';
-						$links .= '<a href="' . esc_url( edd_get_download_file_url( $purchase_data['purchase_key'], $purchase_data['user_email'], $filekey, $download['id'], $price_id ) ) . '">';
+						$links .= '<a href="' . esc_url( edd_get_download_file_url( $payment_key, $email, $filekey, $download['id'], $price_id ) ) . '">';
 							if ( isset( $file['name'] ) )
 								$links .= esc_html( $file['name'] );
 							else

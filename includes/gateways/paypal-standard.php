@@ -83,8 +83,15 @@ function edd_process_paypal_purchase( $purchase_data ) {
             'cancel_return' => edd_get_failed_transaction_uri(),
             'notify_url'    => $listener_url,
             'page_style'    => edd_get_paypal_page_style(),
-            'cbt'			=> get_bloginfo( 'name' )
+            'cbt'			=> get_bloginfo( 'name' ),
         );
+
+        if( ! empty( $purchase_data['user_info']['address'] ) ) {
+        	$paypal_args['address1'] = $purchase_data['user_info']['address']['line1'];
+            $paypal_args['address2'] = $purchase_data['user_info']['address']['line2'];
+            $paypal_args['city']     = $purchase_data['user_info']['address']['city'];
+            $paypal_args['country']  = $purchase_data['user_info']['address']['country'];
+        }
 
 		$paypal_extra_args = array(
 			'cmd'			=> '_cart',
@@ -231,34 +238,40 @@ function edd_process_paypal_ipn() {
 	// Get the PayPal redirect uri
 	$paypal_redirect = edd_get_paypal_redirect(true);
 
-	$remote_post_vars      = array(
-		'method'           => 'POST',
-		'timeout'          => 45,
-		'redirection'      => 5,
-		'httpversion'      => '1.0',
-		'blocking'         => true,
-		'headers'          => array(
-			'host'         => 'www.paypal.com',
-			'connection'   => 'close',
-			'content-type' => 'application/x-www-form-urlencoded',
-			'post'         => '/cgi-bin/webscr HTTP/1.1',
+	if( ! edd_get_option( 'disable_paypal_verification' ) ) {
 
-		),
-		'sslverify'        => false,
-		'body'             => $encoded_data_array
-	);
+		// Validate the IPN
 
-	// Get response
-	$api_response = wp_remote_post( edd_get_paypal_redirect(), $remote_post_vars );
+		$remote_post_vars      = array(
+			'method'           => 'POST',
+			'timeout'          => 45,
+			'redirection'      => 5,
+			'httpversion'      => '1.0',
+			'blocking'         => true,
+			'headers'          => array(
+				'host'         => 'www.paypal.com',
+				'connection'   => 'close',
+				'content-type' => 'application/x-www-form-urlencoded',
+				'post'         => '/cgi-bin/webscr HTTP/1.1',
 
-	if ( is_wp_error( $api_response ) ) {
-		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'edd' ), json_encode( $api_response ) ) );
-		return; // Something went wrong
-	}
+			),
+			'sslverify'        => false,
+			'body'             => $encoded_data_array
+		);
 
-	if ( $api_response['body'] !== 'VERIFIED' && !isset( $edd_options['disable_paypal_verification'] ) ) {
-		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'edd' ), json_encode( $api_response ) ) );
-		return; // Response not okay
+		// Get response
+		$api_response = wp_remote_post( edd_get_paypal_redirect(), $remote_post_vars );
+
+		if ( is_wp_error( $api_response ) ) {
+			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'edd' ), json_encode( $api_response ) ) );
+			return; // Something went wrong
+		}
+
+		if ( $api_response['body'] !== 'VERIFIED' && !isset( $edd_options['disable_paypal_verification'] ) ) {
+			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'edd' ), json_encode( $api_response ) ) );
+			return; // Response not okay
+		}
+
 	}
 
 	// Check if $post_data_array has been populated
@@ -298,8 +311,6 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	$currency_code  = strtolower( $data['mc_currency'] );
 	$business_email = isset( $data['business'] ) ? trim( $data['business'] ) : trim( $data['receiver_email'] );
 
-	// Retrieve the total purchase amount (before PayPal)
-	$payment_amount = edd_get_payment_amount( $payment_id );
 
 	if( get_post_status( $payment_id ) == 'publish' )
 		return; // Only complete payments once
@@ -336,7 +347,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 
 	// Verify payment recipient
 	if ( strcasecmp( $business_email, trim( $edd_options['paypal_email'] ) ) != 0 ) {
-
+		
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid business email in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 		edd_update_payment_status( $payment_id, 'failed' );
 		return;
@@ -354,6 +365,10 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 		// Process a refund
 		edd_process_paypal_refund( $data );
 	} else {
+
+		// Retrieve the total purchase amount (before PayPal)
+		$payment_amount = edd_get_payment_amount( $payment_id );
+
 		if ( number_format( (float) $paypal_amount, 2 ) < number_format( (float) $payment_amount, 2 ) ) {
 			// The prices don't match
 			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid payment amount in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
