@@ -643,51 +643,53 @@ function edd_get_registered_settings() {
  * At some point this will validate input
  *
  * @since 1.0.8.2
+ *
  * @param array $input The value inputted in the field
+ *
  * @return string $input Sanitizied value
  */
 function edd_settings_sanitize( $input = array() ) {
 
 	global $edd_options;
 
-	if( empty( $_POST['_wp_http_referer'] ) )
+	if ( empty( $_POST['_wp_http_referer'] ) ) {
 		return $input;
+	}
 
 	parse_str( $_POST['_wp_http_referer'], $referrer );
 
-	$settings  	= edd_get_registered_settings();
-	$tab       	= isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
+	$settings = edd_get_registered_settings();
+	$tab      = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
 
-	$input 		= $input ? $input : array();
-	$input 		= apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+	$input = $input ? $input : array();
+	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
 
 	// Loop through each setting being saved and pass it through a sanitization filter
-	foreach( $input as $key => $value ) {
+	foreach ( $input as $key => $value ) {
 
 		// Get the setting type (checkbox, select, etc)
-		$type = isset( $settings[ $tab ][ $key ][ 'type' ] ) ? $settings[ $tab ][ $key ][ 'type' ] : false;
+		$type = isset( $settings[$tab][$key]['type'] ) ? $settings[$tab][$key]['type'] : false;
 
-		if( $type ) {
+		if ( $type ) {
 			// Field type specific filter
-			$input[ $key ] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
+			$input[$key] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
 		}
 
 		// General filter
-		$input[ $key ] = apply_filters( 'edd_settings_sanitize', $value, $key );
+		$input[$key] = apply_filters( 'edd_settings_sanitize', $value, $key );
 	}
 
-
 	// Loop through the whitelist and unset any that are empty for the tab being saved
-	if( ! empty( $settings[ $tab ] ) ) {
-		foreach( $settings[ $tab ] as $key => $value ) {
+	if ( ! empty( $settings[$tab] ) ) {
+		foreach ( $settings[$tab] as $key => $value ) {
 
 			// settings used to have numeric keys, now they have keys that match the option ID. This ensures both methods work
-			if( is_numeric( $key ) ) {
+			if ( is_numeric( $key ) ) {
 				$key = $value['id'];
 			}
 
-			if( empty( $input[ $key ] ) ) {
-				unset( $edd_options[ $key ] );
+			if ( empty( $input[$key] ) ) {
+				unset( $edd_options[$key] );
 			}
 
 		}
@@ -696,10 +698,9 @@ function edd_settings_sanitize( $input = array() ) {
 	// Merge our new settings with the existing
 	$output = array_merge( $edd_options, $input );
 
-	add_settings_error( 'edd-notices', '', __( 'Settings Updated', 'edd' ), 'updated' );
+	add_settings_error( 'edd-notices', '', __( 'Settings updated.', 'edd' ), 'updated' );
 
 	return $output;
-
 }
 
 /**
@@ -790,7 +791,7 @@ function edd_get_settings_tabs() {
  * On large sites this can be expensive, so only load if on the settings page or $force is set to true
  *
  * @since 1.9.5
- * @param bool $force Force the pages to be loaded even if not on settings 
+ * @param bool $force Force the pages to be loaded even if not on settings
  * @return array $pages_options An array of the pages
  */
 function edd_get_pages( $force = false ) {
