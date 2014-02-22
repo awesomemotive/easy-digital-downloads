@@ -565,6 +565,8 @@ function edd_readfile_chunked( $file, $retbytes = true ) {
 	while ( ! @feof( $handle ) ) {
 		$buffer = @fread( $handle, $chunksize );
 		echo $buffer;
+		ob_flush();
+		flush();
 
 		if ( $retbytes ) {
 	   		$cnt += strlen( $buffer ); 
