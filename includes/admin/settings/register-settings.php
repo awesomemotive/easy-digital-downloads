@@ -501,7 +501,7 @@ function edd_get_registered_settings() {
 				'live_cc_validation' => array(
 					'id' => 'live_cc_validation',
 					'name' => __( 'Disable Live Credit Card Validation', 'edd' ),
-					'desc' => __( 'Live credit card validation means that that card type and number will be validated as the customer enters the number.', 'edd' ),
+					'desc' => __( 'Live credit card validation means that the card type and number will be validated as the customer enters the number.', 'edd' ),
 					'type' => 'checkbox'
 				),
 				'logged_in_only' => array(
