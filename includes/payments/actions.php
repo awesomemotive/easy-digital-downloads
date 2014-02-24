@@ -211,7 +211,7 @@ add_action( 'edd_edit_payment', 'edd_update_edited_purchase' );
  */
 function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 
-	if( 'publish' != $old_status )
+	if( 'publish' != $old_status && 'revoked' != $old_status )
 		return;
 
 	if( 'refunded' != $new_status )
