@@ -36,63 +36,71 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	$amount       = edd_get_payment_amount( $payment_id );
 	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
 
-	do_action( 'edd_pre_complete_purchase', $payment_id );
 
-	if ( is_array( $cart_details ) ) {
+	$do_complete = apply_filters( 'edd_should_complete_purchase', true, $payment_id );
 
-		// Increase purchase count and earnings
-		foreach ( $cart_details as $download ) {
+	if( $do_complete ) {
 
-			// "bundle" or "default"
-			$download_type = edd_get_download_type( $download['id'] );
+		do_action( 'edd_pre_complete_purchase', $payment_id );
+	
+		if ( is_array( $cart_details ) ) {
 
-			$price_id      = isset( $download['options']['price_id'] ) ? (int) $download['options']['price_id'] : false;
+			// Increase purchase count and earnings
+			foreach ( $cart_details as $download ) {
 
-			// Increase earnings and fire actions once per quantity number
-			for( $i = 0; $i < $download['quantity']; $i++ ) {
+				// "bundle" or "default"
+				$download_type = edd_get_download_type( $download['id'] );
 
-				if ( ! edd_is_test_mode() || apply_filters( 'edd_log_test_payment_stats', false ) ) {
+				$price_id      = isset( $download['options']['price_id'] ) ? (int) $download['options']['price_id'] : false;
 
-					edd_record_sale_in_log( $download['id'], $payment_id, $price_id );
-					edd_increase_purchase_count( $download['id'] );
-					edd_increase_earnings( $download['id'], $download['price'] );
+				// Increase earnings and fire actions once per quantity number
+				for( $i = 0; $i < $download['quantity']; $i++ ) {
+
+					if ( ! edd_is_test_mode() || apply_filters( 'edd_log_test_payment_stats', false ) ) {
+
+						edd_record_sale_in_log( $download['id'], $payment_id, $price_id );
+						edd_increase_purchase_count( $download['id'] );
+						edd_increase_earnings( $download['id'], $download['price'] );
+
+					}
+
+					do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download );
 
 				}
 
-				do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download );
-
 			}
 
+			// Clear the total earnings cache
+			delete_transient( 'edd_earnings_total' );
+			// Clear the This Month earnings (this_monththis_month is NOT a typo)
+			delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 		}
 
-		// Clear the total earnings cache
-		delete_transient( 'edd_earnings_total' );
-		// Clear the This Month earnings (this_monththis_month is NOT a typo)
-		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
-	}
+		// Check for discount codes and increment their use counts
+		if ( isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ) {
 
-	// Check for discount codes and increment their use counts
-	if ( isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ) {
+			$discounts = array_map( 'trim', explode( ',', $user_info['discount'] ) );
 
-		$discounts = array_map( 'trim', explode( ',', $user_info['discount'] ) );
+			if( ! empty( $discounts ) ) {
 
-		if( ! empty( $discounts ) ) {
+				foreach( $discounts as $code ) {
 
-			foreach( $discounts as $code ) {
+					edd_increase_discount_usage( $code );
 
-				edd_increase_discount_usage( $code );
+				}
 
 			}
-
 		}
+
+		edd_increase_total_earnings( $amount );
+
+		do_action( 'edd_complete_purchase', $payment_id );
+
 	}
-
-	edd_increase_total_earnings( $amount );
-
-	do_action( 'edd_complete_purchase', $payment_id );
-
+	
 	// Empty the shopping cart
 	edd_empty_cart();
+
 }
 add_action( 'edd_update_payment_status', 'edd_complete_purchase', 100, 3 );
 
