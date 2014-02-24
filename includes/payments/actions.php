@@ -36,6 +36,8 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	$amount       = edd_get_payment_amount( $payment_id );
 	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
 
+	do_action( 'edd_pre_complete_purchase', $payment_id );
+
 	if ( is_array( $cart_details ) ) {
 
 		// Increase purchase count and earnings
