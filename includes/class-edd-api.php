@@ -1090,9 +1090,9 @@ class EDD_API {
 						$price = edd_get_download_final_price( $item_id, $user_info, null );
 					}
 
-					if ( isset( $cart_items[ $key ]['item_number'] ) && isset( $cart_items[ $key ]['item_number']['options'] ) ) {
+					if ( isset( $item['item_number'] ) && isset( $item['item_number']['options'] ) ) {
 						$price_name     = '';
-						$price_options  = $cart_items[ $key ]['item_number']['options'];
+						$price_options  = $item['item_number']['options'];
 						if ( isset( $price_options['price_id'] ) ) {
 							$price_name = edd_get_price_option_name( $item['id'], $price_options['price_id'], $payment->ID );
 						}
