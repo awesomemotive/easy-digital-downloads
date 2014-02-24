@@ -108,7 +108,7 @@ function edd_insert_payment( $payment_data = array() ) {
 		update_post_meta( $payment, '_edd_payment_user_email',   $payment_data['user_email'] );
 		update_post_meta( $payment, '_edd_payment_user_ip',      edd_get_ip() );
 		update_post_meta( $payment, '_edd_payment_purchase_key', $payment_data['purchase_key'] );
-		update_post_meta( $payment, '_edd_payment_total',        $payment_data['price'] );
+		update_post_meta( $payment, '_edd_payment_total',        apply_filters( 'edd_payment_total', $payment_data['price'], $payment_data ) );
 		update_post_meta( $payment, '_edd_payment_mode',         $mode );
 		update_post_meta( $payment, '_edd_payment_gateway',      $gateway );
 		if ( ! empty( $discount ) )
