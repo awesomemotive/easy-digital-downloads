@@ -772,7 +772,7 @@ function edd_get_discounted_amount( $code, $base_price ) {
 		$discounted_price = $base_price - ( $base_price * ( $rate / 100 ) );
 	}
 
-	return apply_filters( 'edd_discounted_amount', round( $discounted_price, 2 ) );
+	return apply_filters( 'edd_discounted_amount', $discounted_price );
 }
 
 /**
@@ -933,7 +933,7 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
 		
 	}
 
-	return apply_filters( 'edd_get_cart_discounted_amount', round( $amount, 2 ) );
+	return apply_filters( 'edd_get_cart_discounted_amount', $amount );
 }
 
 /**
@@ -987,7 +987,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 						 */
 
 						$discounted_amount = edd_get_discount_amount( $code_id );
-						$discounted_amount = round( ( $discounted_amount / edd_get_cart_quantity() ), 2 );
+						$discounted_amount = ( $discounted_amount / edd_get_cart_quantity() );
 						$discounted_price -= $discounted_amount;
 					} else {
 					
@@ -1001,7 +1001,7 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 
 		}
 
-		$amount = round( $price - $discounted_price, 2 );
+		$amount = ( $price - $discounted_price );
 	}
 
 	return $amount;
