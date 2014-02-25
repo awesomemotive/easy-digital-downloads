@@ -112,7 +112,7 @@ class Tests_Downloads extends EDD_UnitTestCase {
 
 	public function test_price_range() {
 		$range = edd_price_range( $this->_post->ID );
-		$expected = '<span class="edd_price_range_low">&#36;20</span><span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_range_high">&#36;100</span>';
+		$expected = '<span class="edd_price_range_low">&#36;20.20</span><span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_range_high">&#36;100.00</span>';
 		$this->assertInternalType( 'string', $range );
 		$this->assertEquals( $expected, $range );
 	}
