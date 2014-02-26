@@ -353,7 +353,7 @@ function edd_get_bundled_products( $download_id = 0 ) {
  */
 function edd_get_download_earnings_stats( $download_id ) {
 
-	if ( '' === get_post_meta( $download_id, '_edd_download_earnings', true ) ) {
+	if ( '' == get_post_meta( $download_id, '_edd_download_earnings', true ) ) {
 		add_post_meta( $download_id, '_edd_download_earnings', 0 );
 	}
 
@@ -375,8 +375,8 @@ function edd_get_download_earnings_stats( $download_id ) {
  * @return int $sales Amount of sales for a certain download
  */
 function edd_get_download_sales_stats( $download_id ) {
-
-	if ( '' === get_post_meta( $download_id, '_edd_download_sales', true ) ) {
+	
+	if ( '' == get_post_meta( $download_id, '_edd_download_sales', true ) ) {
 		add_post_meta( $download_id, '_edd_download_sales', 0 );
 	} // End if
 
