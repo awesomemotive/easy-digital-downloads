@@ -294,8 +294,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 
 		$row_actions = array();
 
-		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'view' => 'view-order-details', 'id' => $payment->ID, 'action' => 'edit' ), $this->base_url ) . '">' . __( 'Edit', 'edd' ) . '</a>';
-
 		if ( edd_is_payment_complete( $payment->ID ) ) {
 			$row_actions['email_links'] = '<a href="' . add_query_arg( array( 'edd-action' => 'email_links', 'purchase_id' => $payment->ID ), $this->base_url ) . '">' . __( 'Resend Purchase Receipt', 'edd' ) . '</a>';
 
