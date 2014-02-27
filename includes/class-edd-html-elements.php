@@ -47,7 +47,7 @@ class EDD_HTML_Elements {
 			'post_type'      => 'download',
 			'orderby'        => 'title',
 			'order'          => 'ASC',
-			'posts_per_page' => 30
+			'posts_per_page' => -1
 		) );
 
 		$options = array();
