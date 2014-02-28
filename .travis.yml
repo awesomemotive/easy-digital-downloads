@@ -31,7 +31,7 @@ script:
     - phpunit -c phpunit.xml
 
 after_script:
-    - php vendor/bin/coveralls --config tests/framework/.coveralls.yml -v
+    - php vendor/bin/coveralls --config tests/framework/.coveralls.yml -v --exclude-no-stmt
 
 notifications:
     irc:
