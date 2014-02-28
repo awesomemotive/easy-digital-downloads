@@ -469,6 +469,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$this->revoked_count  = $payment_count->revoked;
 		$this->abandoned_count= $payment_count->abandoned;
 		$this->total_count    = $payment_count->publish + $payment_count->pending + $payment_count->refunded + $payment_count->failed + $payment_count->abandoned + $payment_count->trash;
+		$this->total_count    = apply_filters( 'edd_total_payment_count', $this->total_count, $payment_count );
 	}
 
 	/**
