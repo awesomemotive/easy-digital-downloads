@@ -99,6 +99,8 @@ function edd_get_purchase_link( $args = array() ) {
 	}
 
 	$form_id = ! empty( $args['form_id'] ) ? $args['form_id'] : 'edd_purchase_' . $args['download_id'];
+	
+	$args = apply_filters( 'edd_purchase_link_args', $args );
 
 	ob_start();
 ?>
