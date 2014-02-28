@@ -472,7 +472,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		foreach( $payment_count as $count ) {
 			$this->total_count += $count;
 		}
-		$this->total_count    = apply_filters( 'edd_total_payment_count', $this->total_count, $payment_count );
 	}
 
 	/**
