@@ -30,7 +30,7 @@ class EDD_API {
 	/**
 	 * API Version
 	 */
-	const VERSION = '1.1';
+	const VERSION = '1.2';
 
 	/**
 	 * Pretty Print?
@@ -1066,7 +1066,7 @@ class EDD_API {
 
 				$sales['sales'][ $i ]['ID']       = $payment->ID;
 				$sales['sales'][ $i ]['key']      = edd_get_payment_key( $payment->ID );
-				$sales['sales'][ $i ]['discount'] = isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? explode( ',', $user_info['discount'] ) : null;
+				$sales['sales'][ $i ]['discount'] = isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? explode( ',', $user_info['discount'] ) : array();
 				$sales['sales'][ $i ]['subtotal'] = edd_get_payment_subtotal( $payment->ID );
 				$sales['sales'][ $i ]['tax']      = edd_get_payment_tax( $payment->ID );
 				$sales['sales'][ $i ]['fees']     = edd_get_payment_fees( $payment->ID );
