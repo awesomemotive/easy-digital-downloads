@@ -22,6 +22,7 @@ jQuery(document).ready(function($) {
                     if( 'nostates' == response ) {
                         var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
                         $this.parent().next().find('input,select').replaceWith( text_field );
+                        $this.parent().next().hide();
                     } else {
                         $this.parent().next().find('input,select').replaceWith( response );
                     }
