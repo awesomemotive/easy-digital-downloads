@@ -18,11 +18,12 @@ include_once( 'easy-digital-downloads.php' );
 global $wpdb, $edd_options, $wp_roles;
 
 if( edd_get_option( 'uninstall_on_delete' ) ) {
-	$edd_taxonomies = array();
-	
+
 	/** Delete All the Custom Post Types */
+	$edd_taxonomies = array();
 	$edd_post_types = array( 'download', 'edd_payment', 'edd_discount', 'edd_log' );
 	foreach ( $edd_post_types as $post_type ) {
+	
 		$edd_taxonomies = array_merge( $edd_taxonomies, get_object_taxonomies( $post_type ) );
 		$items = get_posts( array( 'post_type' => $post_type, 'post_status' => 'any', 'numberposts' => -1, 'fields' => 'ids' ) );
 
@@ -43,6 +44,7 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 			}
 		}
 		unset( $wp_taxonomies[ $taxonomy ] );
+		$result = $wpdb->delete( $wpdb->term_taxonomy, array( 'taxonomy' => $taxonomy ), array( '%s' ) );
 	}
 
 	/** Delete the Plugin Pages */
