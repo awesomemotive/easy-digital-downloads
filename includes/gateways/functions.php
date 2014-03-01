@@ -322,7 +322,7 @@ function edd_show_gateways() {
  */
 function edd_get_chosen_gateway() {
 	$gateways = edd_get_enabled_payment_gateways();
-	$chosen   = isset( $_REQUEST['payment-mode'] ) ? $_REQUEST['payment-mode'] : edd_get_default_gateway();
+	$chosen   = isset( $_REQUEST['payment-mode'] ) ? $_REQUEST['payment-mode'] : false;
 
 	if ( $chosen ) {
 		$enabled_gateway = urldecode( $chosen );
@@ -336,7 +336,7 @@ function edd_get_chosen_gateway() {
 	} else if ( edd_get_cart_subtotal() <= 0 ) {
 		$enabled_gateway = 'manual';
 	} else {
-		$enabled_gateway = 'none';
+		$enabled_gateway = edd_get_default_gateway();
 	}
 
 	return apply_filters( 'edd_chosen_gateway', $enabled_gateway );
