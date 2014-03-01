@@ -20,7 +20,7 @@ global $wpdb, $edd_options, $wp_roles;
 if( edd_get_option( 'uninstall_on_delete' ) ) {
 
 	/** Delete All the Custom Post Types */
-	$edd_taxonomies = array();
+	$edd_taxonomies = array( 'download_category', 'download_tag', 'edd_log_type', );
 	$edd_post_types = array( 'download', 'edd_payment', 'edd_discount', 'edd_log' );
 	foreach ( $edd_post_types as $post_type ) {
 	
@@ -34,17 +34,21 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 		}
 	}
 
-	/** Delete All the Taxonomies */
+	/** Delete All the Terms & Taxonomies */
 	foreach ( array_unique( array_filter( $edd_taxonomies ) ) as $taxonomy ) {
-		global $wp_taxonomies;
-		$terms = get_terms( $taxonomy );
+		
+		$terms = $wpdb->get_results( $wpdb->prepare( "SELECT t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('%s') ORDER BY t.name ASC", $taxonomy ) );
+		
+		// Delete Terms
 		if ( $terms ) {
 			foreach ( $terms as $term ) {
-				wp_delete_term( $term->term_id, $taxonomy );
+				$wpdb->delete( $wpdb->term_taxonomy, array( 'term_taxonomy_id' => $term->term_taxonomy_id ) );
+				$wpdb->delete( $wpdb->terms, array( 'term_id' => $term->term_id ) );
 			}
 		}
-		unset( $wp_taxonomies[ $taxonomy ] );
-		$result = $wpdb->delete( $wpdb->term_taxonomy, array( 'taxonomy' => $taxonomy ), array( '%s' ) );
+		
+		// Delete Taxonomies
+		$wpdb->delete( $wpdb->term_taxonomy, array( 'taxonomy' => $taxonomy ), array( '%s' ) );
 	}
 
 	/** Delete the Plugin Pages */
