@@ -94,6 +94,7 @@ class edd_categories_tags_widget extends WP_Widget {
 		extract( $args );
 		$title = apply_filters('widget_title', $instance['title']);
 		$tax = $instance['taxonomy'];
+		$args = apply_filters( 'edd_categories_tags_widget_args', array(), $instance );
 
 		global $post, $edd_options;
 
@@ -103,7 +104,7 @@ class edd_categories_tags_widget extends WP_Widget {
 		}
 
 		do_action( 'edd_before_taxonomy_widget' );
-		$terms = get_terms( $tax );
+		$terms = get_terms( $tax, $args );
 
 		if ( is_wp_error( $terms ) ) {
 			return;
