@@ -129,7 +129,7 @@ add_action( 'edd_tools_tab_import_export', 'edd_tools_tab_import_export' );
  * @author Chris Christoff
  * @return void
  */
-function edd_system_info() {
+function edd_tools_tab_system_info() {
 	global $wpdb, $edd_options;
 
 	if ( ! class_exists( 'Browser' ) )
@@ -318,7 +318,7 @@ do_action( 'edd_system_info_after' );
 	</form>
 <?php
 }
-add_action( 'edd_tools_tab_system_info', 'edd_system_info' );
+add_action( 'edd_tools_tab_system_info', 'edd_tools_tab_system_info' );
 
 /**
  * Process a settings export that generates a .json file of the shop settings
