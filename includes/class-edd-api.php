@@ -30,7 +30,7 @@ class EDD_API {
 	/**
 	 * API Version
 	 */
-	const VERSION = '1.1';
+	const VERSION = '1.2';
 
 	/**
 	 * Pretty Print?
@@ -1066,6 +1066,7 @@ class EDD_API {
 
 				$sales['sales'][ $i ]['ID']       = $payment->ID;
 				$sales['sales'][ $i ]['key']      = edd_get_payment_key( $payment->ID );
+				$sales['sales'][ $i ]['discount'] = isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? explode( ',', $user_info['discount'] ) : array();
 				$sales['sales'][ $i ]['subtotal'] = edd_get_payment_subtotal( $payment->ID );
 				$sales['sales'][ $i ]['tax']      = edd_get_payment_tax( $payment->ID );
 				$sales['sales'][ $i ]['fees']     = edd_get_payment_fees( $payment->ID );
@@ -1078,17 +1079,26 @@ class EDD_API {
 				$c = 0;
 
 				foreach ( $cart_items as $key => $item ) {
-					$price_override = isset( $payment_meta['cart_details'] ) ? $item['price'] : null;
-					$price          = edd_get_download_final_price( $item['id'], $user_info, $price_override );
+					
+					$item_id  = isset( $item['id']    ) ? $item['id']    : $item;
+					$price    = isset( $item['price'] ) ? $item['price'] : false;
+					$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
+					$quantity = isset( $item['quantity'] ) && $item['quantity'] > 0 ? $item['quantity'] : 1;
 
-					if ( isset( $cart_items[ $key ]['item_number'] ) ) {
+					if( ! $price ) {
+						// This function is only used on payments with near 1.0 cart data structure
+						$price = edd_get_download_final_price( $item_id, $user_info, null );
+					}
+
+					if ( isset( $item['item_number'] ) && isset( $item['item_number']['options'] ) ) {
 						$price_name     = '';
-						$price_options  = $cart_items[ $key ]['item_number']['options'];
+						$price_options  = $item['item_number']['options'];
 						if ( isset( $price_options['price_id'] ) ) {
 							$price_name = edd_get_price_option_name( $item['id'], $price_options['price_id'], $payment->ID );
 						}
 					}
 
+					$sales['sales'][ $i ]['products'][ $c ]['quantity']   = $quantity;
 					$sales['sales'][ $i ]['products'][ $c ]['name']       = get_the_title( $item['id'] );
 					$sales['sales'][ $i ]['products'][ $c ]['price']      = $price;
 					$sales['sales'][ $i ]['products'][ $c ]['price_name'] = $price_name;

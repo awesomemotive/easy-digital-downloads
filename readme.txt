@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.7
 Tested up to: 3.9
 
-Stable Tag: 1.9.5
+Stable Tag: 1.9.6
 
 License: GNU Version 2 or Any Later Version
 
@@ -186,6 +186,41 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 1.9.6: February 26, 2014 =
+
+* Fix: Purchase stats not undone when changing a payment from Revoked to Refunded
+* Fix: Typo on the settings for the Disable Live Credt Card Validation settings
+* Fix: Tax calculation after discounts is incorrect
+* Fix: UPLOADS constant not respected for file downloads
+* Fix: wp_session garbage collection not always working
+* Fix: PayPal IPN gets validated even when validation is disabled
+* Fix: State tax rates can't be set to 0 when default rate is greater than 0
+* Fix: Cart items not properly sanitized when adding them to the  cart
+* Fix: SQL error on very first purchase
+* Fix: PayPal business email comparison sometimes fails when it shouldn't
+* Fix: Decimals shown on currencies that don't support decimals
+* Fix: Custom date ranges for reports greater than 3 months should query by month, not day
+* Fix: Several small typos and capitalization issues
+* Fix: Purchase History page not deleted on uninstall
+* Fix: Refunds not detected by PayPal IPN
+* Fix: Detect when user is done typing in product drop down and only trigger ajax search once done
+
+* Tweak: Some improved coding standards and PHPDoc
+* Tweak: Added discount codes used to sales API response
+* Tweak: Added ini_get( 'arg_separator.output' ) and allow_url_fopen status to System Info
+* Tweak: Improve _edd_deprecated_function() to actually pass the backtrace
+* Tweak: Inline documentation for filters
+* Tweak: Allow the From Name and From Email to be filtered for sale notifications
+* Tweak: Allow the cart contents to be filtered when adding items to the cart
+* Tweak: All receipt visibility to be filtered
+* Tweak: Allow array of download IDs to be passed to EDD_Payments_Query
+* Tweak: Added floatval() to edd_get_payment_amount()
+* Tweak: Properly format number in Sales column
+* Tweak: Color code axes on graphs when there are multiple axes
+* Tweak: Removed error suppression from edd_readfile_chunked()
+* TweaK: Added helper function for reporting views
+
 
 = 1.9.5: February 4, 2014 =
 
