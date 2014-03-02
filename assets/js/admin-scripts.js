@@ -883,47 +883,59 @@ jQuery(document).ready(function ($) {
     	placeholder_text_multiple: edd_vars.one_or_more_option,
     });
 
+	// Variables for setting up the typing timer
+	var typingTimer;               // Timer identifier
+	var doneTypingInterval = 342;  // Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
+
     // Replace options with search results
 	$('.edd-select.chosen-container .chosen-search input, .edd-select.chosen-container .search-field input').keyup(function(e) {
 
 		var val = $(this).val(), container = $(this).closest( '.edd-select-chosen' );
 		var menu_id = container.attr('id').replace( '_chosen', '' );
-		
-		if( val.length <= 3 )
+		var lastKey = e.which;
+
+		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
+		if(val.length <= 3 || (e.which == 16 || e.which == 13 || e.which == 91 || e.which == 17 || 
+			                   e.which == 37 || e.which == 38 || e.which == 39 || e.which == 40))
 			return;
-
-		$.ajax({
-			type: 'GET',
-			url: ajaxurl,
-			data: {
-				action: 'edd_download_search',
-				s: val,
-			},
-			dataType: "json",
-			beforeSend: function(){
-				$('ul.chosen-results').empty();
-			},
-			success: function( data ) {
-				 $.each( data, function( key, item ) {
-				 	// Remove all options but those that are selected
-				 	$('#' + menu_id + ' option:not(:selected)').remove();
-					
-				 	// Add any option that doesn't already exist
-					if( ! $('#' + menu_id + ' option[value="' + item.id + '"]').length ) {
-						$('#' + menu_id).append( '<option value="' + item.id + '">' + item.name + '</option>' );
+		
+		clearTimeout(typingTimer);
+		typingTimer = setTimeout(
+			function(){
+				$.ajax({
+					type: 'GET',
+					url: ajaxurl,
+					data: {
+						action: 'edd_download_search',
+						s: val,
+					},
+					dataType: "json",
+					beforeSend: function(){
+						$('ul.chosen-results').empty();
+					},
+					success: function( data ) {
+						 $.each( data, function( key, item ) {
+						 	// Remove all options but those that are selected
+						 	$('#' + menu_id + ' option:not(:selected)').remove();
+							
+						 	// Add any option that doesn't already exist
+							if( ! $('#' + menu_id + ' option[value="' + item.id + '"]').length ) {
+								$('#' + menu_id).append( '<option value="' + item.id + '">' + item.name + '</option>' );
+							}
+						});
+						 // Update the options
+						$('.edd-select-chosen').trigger('chosen:updated');
+						$('#' + menu_id).next().find('input').val(val);
 					}
-				});
-				 // Update the options
-				$('.edd-select-chosen').trigger('chosen:updated');
-				$('#' + menu_id).next().find('input').val(val);
-			}
-		}).fail(function (response) {
-			if ( window.console && window.console.log ) {
-				console.log( data );
-			}
-		}).done(function (response) {
+				}).fail(function (response) {
+					if ( window.console && window.console.log ) {
+						console.log( data );
+					}
+				}).done(function (response) {
 
-        });
+		        });
+			},
+			doneTypingInterval);
 	});
 
 	// This fixes the Chosen box being 0px wide when the thickbox is opened
