@@ -119,7 +119,6 @@ function edd_download_meta_box_save( $post_id, $post ) {
 				$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
 				update_post_meta( $post_id, $field, $new );
 			}
-			continue;
 		} else {
 			if ( ! empty( $_POST[ $field ] ) ) {
 				$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
