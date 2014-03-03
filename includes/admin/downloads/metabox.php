@@ -112,13 +112,25 @@ function edd_download_meta_box_save( $post_id, $post ) {
 	$fields = edd_download_metabox_fields();
 	
 	foreach ( $fields as $field ) {
-		
-        	if ( ! empty( $_POST[ $field ] ) ) {
-			$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
+
+		// Accept blank or "0"
+		if ( '_edd_download_limit' == $field ) {
+			if ( strlen( $_POST[$field] ) === 0 || "0" === $_POST[$field] )
+				$new = 0;
+			else
+				$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
 			update_post_meta( $post_id, $field, $new );
+			continue;
 		} else {
-			delete_post_meta( $post_id, $field );
+			if ( ! empty( $_POST[ $field ] ) ) {
+				$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
+				update_post_meta( $post_id, $field, $new );
+			} else {
+				delete_post_meta( $post_id, $field );
+			}
 		}
+
+
 	}
 
 	if ( edd_has_variable_prices( $post_id ) ) {
