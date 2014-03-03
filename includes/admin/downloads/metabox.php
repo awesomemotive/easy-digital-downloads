@@ -115,11 +115,10 @@ function edd_download_meta_box_save( $post_id, $post ) {
 
 		// Accept blank or "0"
 		if ( '_edd_download_limit' == $field ) {
-			if ( strlen( $_POST[$field] ) === 0 || "0" === $_POST[$field] )
-				$new = 0;
-			else
+			if ( ! empty( $_POST[$field] ) || strlen( $_POST[$field] ) === 0 || "0" === $_POST[$field] ) {
 				$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
-			update_post_meta( $post_id, $field, $new );
+				update_post_meta( $post_id, $field, $new );
+			}
 			continue;
 		} else {
 			if ( ! empty( $_POST[ $field ] ) ) {
@@ -743,7 +742,7 @@ function edd_render_download_limit_row( $post_id ) {
 				'value' => $edd_download_limit,
 				'class' => 'small-text'
 			) ); ?>
-			<?php _e( 'Blank or 0 for unlimited', 'edd' ); ?>
+			<?php _e( 'Leave blank for global setting or 0 for unlimited', 'edd' ); ?>
 		</label>
 	</div>
 <?php
