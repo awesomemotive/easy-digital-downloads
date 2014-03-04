@@ -63,7 +63,6 @@ function edd_tools_banned_emails_get() {
  * @return      void
  */
 function edd_tools_banned_emails_save() {
-	print_r($_POST);die;
 	if( !wp_verify_nonce( $_POST['edd_banned_emails_nonce'], 'edd_banned_emails_nonce' ) )
 		return;
 

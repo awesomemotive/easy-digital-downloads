@@ -29,10 +29,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_add_options_link() {
 	global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen, $edd_tools_page;
 
-	require_once EDD_PLUGIN_DIR . 'includes/admin/tools/sysinfo.php';
-	require_once EDD_PLUGIN_DIR . 'includes/admin/tools/banned-emails.php';
-	require_once EDD_PLUGIN_DIR . 'includes/admin/tools/import-export.php';
-
 	$edd_payments_page   	= add_submenu_page( 'edit.php?post_type=download', __( 'Payment History', 'edd' ), __( 'Payment History', 'edd' ), 'edit_shop_payments', 'edd-payment-history', 'edd_payment_history_page' );
 	$edd_discounts_page     = add_submenu_page( 'edit.php?post_type=download', __( 'Discount Codes', 'edd' ), __( 'Discount Codes', 'edd' ), 'manage_shop_discounts', 'edd-discounts', 'edd_discounts_page' );
 	$edd_reports_page 	    = add_submenu_page( 'edit.php?post_type=download', __( 'Earnings and Sales Reports', 'edd' ), __( 'Reports', 'edd' ), 'view_shop_reports', 'edd-reports', 'edd_reports_page' );
