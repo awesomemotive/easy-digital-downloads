@@ -195,7 +195,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Fix: Currency sign added to monthly estimated sale count
 * Fix: Not all payment statuses taken into account  for payment counts
 
-* Tweak: Allow get_germs() arguments to be filtered in categories / tags widget
+* Tweak: Allow get_terms() arguments to be filtered in categories / tags widget
 * Tweak: Add arguments to purchase link filter
 
 * New: Added Hebrew translation
