@@ -652,7 +652,7 @@ _REQUIRES WordPress 3.7 or later_
 * New: Improved Order Details screen
 * New: SKU fields for Downloads
 * New: Itemized purchase details for PayPal Standard
-* New: Introduced state / provice fields for 12 additional countries
+* New: Introduced state / province fields for 12 additional countries
 * New: Introduced EDD_Cron class for scheduling routine events
 
 * Tweak: File Name field not set by default
