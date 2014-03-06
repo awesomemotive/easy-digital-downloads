@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.7
 Tested up to: 3.9
 
-Stable Tag: 1.9.7
+Stable Tag: 1.9.8
 
 License: GNU Version 2 or Any Later Version
 
@@ -187,6 +187,13 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 1.9.8: March 6, 2014 =
+
+* Fix: Problem with guest customers not being able to view purchase receipts
+* Fix: Problem with field alignment in the View Order Details screen on small screens
+* Tweak: Added an option to dismiss the "No Checkout Page" notice
+
 
 = 1.9.7: March 4, 2014 =
 
