@@ -143,7 +143,10 @@ add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
  * @return void
  */
 function edd_load_admin_scripts( $hook ) {
-	global $wp_version;
+	global $wp_version,$typenow,$plugin_page;
+
+	// Make sure we're on an EDD page: either "download" post type, or `?page=edd-*`
+	if($typenow !== 'download' && strpos($plugin_page, 'edd-') === false && apply_filters( 'edd_force_load_scripts', false ) === false) { return; }
 
 	$js_dir  = EDD_PLUGIN_URL . 'assets/js/';
 	$css_dir = EDD_PLUGIN_URL . 'assets/css/';
