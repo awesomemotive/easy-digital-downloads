@@ -152,6 +152,22 @@ function edd_tools_sysinfo_get() {
 
 	$return  = apply_filters( 'edd_sysinfo_after_edd_pages', $return );
 
+	// EDD gateways
+	$return .= "\n" . '-- EDD Gateway Configuration' . "\n\n";
+
+	$active_gateways = edd_get_enabled_payment_gateways();
+	$default_gateway = $active_gateways[edd_get_default_gateway()]['admin_label'];
+	$gateways        = array();
+	foreach( $active_gateways as $gateway ) {
+		$gateways[] = $gateway['admin_label'];
+	}
+
+	$return .= 'Enabled Gateways:         ' . implode( ', ', $gateways ) . "\n";
+	$return .= 'Default Gateway:          ' . $default_gateway . "\n";
+
+	$return  = apply_filters( 'edd_sysinfo_after_edd_gateways', $return );
+
+
 	// EDD Taxes
 	$return .= "\n" . '-- EDD Tax Configuration' . "\n\n";
 	$return .= 'Taxes:                    ' . ( edd_use_taxes() ? "Enabled\n" : "Disabled\n" );
