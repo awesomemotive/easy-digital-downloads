@@ -139,6 +139,7 @@ function edd_tools_sysinfo_get() {
 	$return .= 'Ajax:                     ' . ( edd_is_ajax_enabled() ? "Enabled\n" : "Disabled\n" );
 	$return .= 'Guest Checkout:           ' . ( edd_no_guest_checkout() ? "Disabled\n" : "Enabled\n" );
 	$return .= 'Symlinks:                 ' . ( apply_filters( 'edd_symlink_file_downloads', isset( $edd_options['symlink_file_downloads'] ) ) && function_exists( 'symlink' ) ? "Enabled\n" : "Disabled\n" );
+	$return .= 'Download Method:          ' . ucfirst( edd_get_file_download_method() ) . "\n";
 
 	$return  = apply_filters( 'edd_sysinfo_after_edd_config', $return );
 
