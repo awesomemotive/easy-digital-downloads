@@ -364,7 +364,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 					'max_uses' 		=> $max_uses,
 					'start_date' 	=> $discount_start_date,
 					'expiration'	=> $expiration,
-					'status'		=> edd_is_discount_expired( $discount->ID ) ? __( 'Expired', 'edd' ) : ucwords( $discount->post_status ),
+					'status'		=> edd_is_discount_expired( $discount->ID ) ? __( 'Expired', 'edd' ) : __( ucwords( $discount->post_status ), 'edd' ),
 				);
 			}
 		}
