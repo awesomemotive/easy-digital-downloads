@@ -92,8 +92,10 @@ class edd_categories_tags_widget extends WP_Widget {
 	/** @see WP_Widget::widget */
 	function widget( $args, $instance ) {
 		extract( $args );
-		$title = apply_filters('widget_title', $instance['title']);
-		$tax = $instance['taxonomy'];
+		$title      = apply_filters('widget_title', $instance['title']);
+		$tax        = $instance['taxonomy'];
+		$count      = $instance['count'] == 'on' ? 1 : 0;
+		$hide_empty = $instance['hide_empty'] == 'on' ? 1 : 0;
 
 		global $post, $edd_options;
 
@@ -103,17 +105,10 @@ class edd_categories_tags_widget extends WP_Widget {
 		}
 
 		do_action( 'edd_before_taxonomy_widget' );
-		$terms = get_terms( $tax );
 
-		if ( is_wp_error( $terms ) ) {
-			return;
-		} else {
-			echo "<ul class=\"edd-taxonomy-widget\">\n";
-			foreach ( $terms as $term ) {
-				echo '<li><a href="' . get_term_link( $term ) . '" title="' . esc_attr( $term->name ) . '" rel="bookmark">' . $term->name . '</a></li>'."\n";
-			}
-			echo "</ul>\n";
-		}
+		echo "<ul class=\"edd-taxonomy-widget\">\n";
+		wp_list_categories('title_li=&taxonomy=' . $tax . '&show_count=' . $count . '&hide_empty=' . $hide_empty);
+		echo "</ul>\n";
 
 		do_action( 'edd_after_taxonomy_widget' );
 		echo $after_widget;
@@ -124,25 +119,41 @@ class edd_categories_tags_widget extends WP_Widget {
 		$instance = $old_instance;
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		$instance['taxonomy'] = strip_tags( $new_instance['taxonomy'] );
+		$instance['count'] = isset( $new_instance['count'] ) ? $new_instance['count'] : '';
+		$instance['hide_empty'] = isset( $new_instance['hide_empty'] ) ? $new_instance['hide_empty'] : '';
 		return $instance;
 	}
 
 	/** @see WP_Widget::form */
 	function form( $instance ) {
-		$title = isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
-		$taxonomy = isset( $instance['taxonomy'] ) ? esc_attr( $instance['taxonomy'] ) : 'download_category';
-		?>
+        // Set up some default widget settings.
+        $defaults = array(
+			'title'         => '',
+			'taxonomy'      => 'download_category',
+			'count'         => 'off',
+			'hide_empty'    => 'off'
+        );
+
+        $instance = wp_parse_args( (array) $instance, $defaults ); ?>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'edd' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>"
-				   name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>"/>
+				   name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $instance['title']; ?>"/>
 		</p>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'taxonomy' ); ?>"><?php _e( 'Taxonomy:', 'edd' ); ?></label>
 			<select name="<?php echo $this->get_field_name( 'taxonomy' ); ?>" id="<?php echo $this->get_field_id( 'taxonomy' ); ?>">
-				<option value="download_category" <?php selected( 'download_category', $taxonomy ); ?>><?php _e( 'Categories', 'edd' ); ?></option>
-				<option value="download_tag" <?php selected( 'download_tag', $taxonomy ); ?>><?php _e( 'Tags', 'edd' ); ?></option>
+				<option value="download_category" <?php selected( 'download_category', $instance['taxonomy'] ); ?>><?php _e( 'Categories', 'edd' ); ?></option>
+				<option value="download_tag" <?php selected( 'download_tag', $instance['taxonomy'] ); ?>><?php _e( 'Tags', 'edd' ); ?></option>
 			</select>
+		</p>
+		<p>
+			<label for="<?php echo $this->get_field_id( 'count' ); ?>"><?php _e( 'Show Count:', 'edd' ); ?></label>
+			<input <?php checked( $instance['count'], 'on' ); ?> id="<?php echo $this->get_field_id( 'count' ); ?>" name="<?php echo $this->get_field_name( 'count' ); ?>" type="checkbox" />
+		</p>
+		<p>
+			<label for="<?php echo $this->get_field_id( 'hide_empty' ); ?>"><?php _e( 'Hide Empty Categories:', 'edd' ); ?></label>
+			<input <?php checked( $instance['hide_empty'], 'on' ); ?> id="<?php echo $this->get_field_id( 'hide_empty' ); ?>" name="<?php echo $this->get_field_name( 'hide_empty' ); ?>" type="checkbox" />
 		</p>
 	<?php
 	}
