@@ -201,7 +201,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 
 		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Edit', 'edd' ) . '</a>';
 
-		if( strtolower( $item['status'] ) == 'active' )
+		if( strtolower( $item['status'] ) == __( 'active', 'edd' ) )
 			$row_actions['deactivate'] = '<a href="' . add_query_arg( array( 'edd-action' => 'deactivate_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Deactivate', 'edd' ) . '</a>';
 		else
 			$row_actions['activate'] = '<a href="' . add_query_arg( array( 'edd-action' => 'activate_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Activate', 'edd' ) . '</a>';
@@ -354,6 +354,8 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 				} else {
 					$expiration = __( 'No expiration', 'edd' );
 				}
+				
+				$status_label = $discount->post_status == 'active' ? __( 'Active', 'edd' ) : __( 'Inactive', 'edd' );
 
 				$discount_codes_data[] = array(
 					'ID' 			=> $discount->ID,
@@ -364,7 +366,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 					'max_uses' 		=> $max_uses,
 					'start_date' 	=> $discount_start_date,
 					'expiration'	=> $expiration,
-					'status'		=> edd_is_discount_expired( $discount->ID ) ? __( 'Expired', 'edd' ) : __( ucwords( $discount->post_status ), 'edd' ),
+					'status'		=> edd_is_discount_expired( $discount->ID ) ? __( 'Expired', 'edd' ) : $status_label,
 				);
 			}
 		}
