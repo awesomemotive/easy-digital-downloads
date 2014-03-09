@@ -131,7 +131,7 @@ class edd_categories_tags_widget extends WP_Widget {
 			'title' 		=> '',
 			'taxonomy'		=> 'download_category',
 			'count'			=> 'off',
-			'hide_empty'	=> 'off'
+			'hide_empty'    => 'off'
         );
 
         $instance = wp_parse_args( (array) $instance, $defaults ); ?>
