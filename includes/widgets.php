@@ -126,15 +126,15 @@ class edd_categories_tags_widget extends WP_Widget {
 
 	/** @see WP_Widget::form */
 	function form( $instance ) {
-        // Set up some default widget settings.
-        $defaults = array(
+		// Set up some default widget settings.
+		$defaults = array(
 			'title'         => '',
 			'taxonomy'      => 'download_category',
 			'count'         => 'off',
 			'hide_empty'    => 'off'
-        );
+		);
 
-        $instance = wp_parse_args( (array) $instance, $defaults ); ?>
+		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'edd' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>"
