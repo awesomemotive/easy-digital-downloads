@@ -350,12 +350,17 @@ class EDD_Payments_Query extends EDD_Stats {
 			$this->__unset( 's' );
 
 		} elseif ( is_numeric( $search ) ) {
+
 			$post = get_post( $search );
 
 			if( is_object( $post ) && $post->post_type == 'edd_payment' ) {
-				wp_redirect( add_query_arg( array( 'view' => 'view-order-details', 'id' => $search ) ) );
-				exit;
+				
+				$arr   = array();
+				$arr[] = str_replace( '#', '', $search );
+				$this->__set( 'post__in', $arr );
+				$this->__unset( 's' );
 			}
+
 		} elseif ( '#' == substr( $search, 0, 1 ) ) {
 
 			$this->__set( 'download', str_replace( '#', '', $search ) );
