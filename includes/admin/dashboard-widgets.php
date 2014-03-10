@@ -104,7 +104,10 @@ function edd_dashboard_sales_widget() {
 					foreach ( $payments as $payment ) { ?>
 						<tr>
 							<td>
-								<?php echo get_the_title( $payment->ID ) ?> - (<?php echo $payment->user_info['email'] ?>) - <span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( $payment->total ) ); ?></span> - <a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> "><?php _e( 'View Order Details', 'edd' ); ?></a>
+								<span class="edd-recent-title"><?php echo get_the_title( $payment->ID ) ?></span>
+								<span class="edd-recent-email">&nbsp;&ndash;&nbsp;(<?php echo $payment->user_info['email'] ?>)&nbsp;&ndash;&nbsp;</span>
+								<span class="edd-recent-amount"><?php echo edd_currency_filter( edd_format_amount( $payment->total ) ); ?></span>
+								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> "><?php _e( 'View Order Details', 'edd' ); ?></a>
 							</td>
 						</tr>
 						<?php
