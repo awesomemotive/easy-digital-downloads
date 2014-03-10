@@ -196,6 +196,7 @@ class EDD_HTML_Elements {
 	public function month_dropdown( $name = 'month', $selected = 0 ) {
 		$month   = 1;
 		$options = array();
+		$selected = empty( $selected ) ? date( 'n' ) : $selected;
 
 		while ( $month <= 12 ) {
 			$options[ absint( $month ) ] = edd_month_num_to_name( $month );
