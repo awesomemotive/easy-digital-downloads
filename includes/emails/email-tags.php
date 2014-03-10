@@ -691,7 +691,7 @@ function edd_email_tag_receipt_link( $payment_id ) {
  * Adds a list of any discount codes applied to this purchase
  *
  * @param $int payment_id
- *
+ * @since 2.0
  * @return string $discount_codes
  */
 function edd_email_tag_discount_codes( $payment_id ) {
