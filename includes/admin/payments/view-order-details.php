@@ -34,15 +34,17 @@ $user_info    = edd_get_payment_meta_user_info( $payment_id );
 $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
 ?>
 <div class="wrap">
+
 	<h2><?php printf( __( 'Payment %s', 'edd' ), $number ); ?></h2>
 	<?php do_action( 'edd_view_order_details_before' ); ?>
+
 	<form id="edd-edit-order-form" method="post">
 		<?php do_action( 'edd_view_order_details_form_top' ); ?>
 		<div id="poststuff">
 			<div id="post-body" class="metabox-holder columns-2">
 				<div id="postbox-container-1" class="postbox-container">
 					<div id="side-sortables" class="meta-box-sortables ui-sortable">
-						<?php do_action( 'edd_view_order_details_sidebar_before' ); ?>
+						<?php do_action( 'edd_view_order_details_sidebar_before', $payment_id ); ?>
 						
 						<div id="edd-order-totals" class="postbox">
 							<h3 class="hndle">
