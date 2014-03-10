@@ -356,7 +356,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			if( is_object( $post ) && $post->post_type == 'edd_payment' ) {
 				
 				$arr   = array();
-				$arr[] = str_replace( '#', '', $search );
+				$arr[] = $search;
 				$this->__set( 'post__in', $arr );
 				$this->__unset( 's' );
 			}
