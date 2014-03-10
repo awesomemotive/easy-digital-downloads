@@ -13,6 +13,18 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
+ * Determines if we're currently on the Checkout page
+ *
+ * @since 1.1.2
+ * @return bool True if on the Checkout page, false otherwise
+ */
+function edd_is_checkout() {
+	global $edd_options;
+	$is_checkout = isset( $edd_options['purchase_page'] ) ? is_page( $edd_options['purchase_page'] ) : false;
+	return apply_filters( 'edd_is_checkout', $is_checkout );
+}
+
+/**
  * Determines if a user can checkout or not
  *
  * @since 1.3.3
@@ -62,6 +74,62 @@ function edd_send_to_success_page( $query_string = null ) {
 
 	wp_redirect( apply_filters('edd_success_page_redirect', $redirect, $_POST['edd-gateway'], $query_string) );
 	edd_die();
+}
+
+/**
+ * Get the URL of the Checkout page
+ *
+ * @since 1.0.8
+ * @global $edd_options Array of all the EDD Options
+ * @param array $args Extra query args to add to the URI
+ * @return mixed Full URL to the checkout page, if present | null if it doesn't exist
+ */
+function edd_get_checkout_uri( $args = array() ) {
+	global $edd_options;
+
+	$uri = isset( $edd_options['purchase_page'] ) ? get_permalink( $edd_options['purchase_page'] ) : NULL;
+
+	if ( ! empty( $args ) ) {
+		// Check for backward compatibility
+		if ( is_string( $args ) )
+			$args = str_replace( '?', '', $args );
+
+		$args = wp_parse_args( $args );
+
+		$uri = add_query_arg( $args, $uri );
+	}
+
+	$scheme = defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https' : 'admin';
+
+	$ajax_url = admin_url( 'admin-ajax.php', $scheme );
+
+	if ( ! preg_match( '/^https/', $uri ) && preg_match( '/^https/', $ajax_url ) ) {
+		$uri = preg_replace( '/^http/', 'https', $uri );
+	}
+
+	if ( isset( $edd_options['no_cache_checkout'] ) && edd_is_caching_plugin_active() )
+		$uri = add_query_arg( 'nocache', 'true', $uri );
+
+	return apply_filters( 'edd_get_checkout_uri', $uri );
+}
+
+/**
+ * Get the URL of the Transaction Failed page
+ *
+ * @since 1.3.4
+ * @global $edd_options Array of all the EDD Options
+ *
+ * @param bool $extras Extras to append to the URL
+ * @return mixed|void Full URL to the Transaction Failed page, if present, home page if it doesn't exist
+ */
+function edd_get_failed_transaction_uri( $extras = false ) {
+	global $edd_options;
+
+	$uri = isset( $edd_options['failure_page'] ) ? trailingslashit( get_permalink( $edd_options['failure_page'] ) ) : home_url();
+	if ( $extras )
+		$uri .= $extras;
+
+	return apply_filters( 'edd_get_failed_transaction_uri', $uri );
 }
 
 /**
