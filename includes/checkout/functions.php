@@ -114,25 +114,6 @@ function edd_get_checkout_uri( $args = array() ) {
 }
 
 /**
- * Get the URL of the Transaction Failed page
- *
- * @since 1.3.4
- * @global $edd_options Array of all the EDD Options
- *
- * @param bool $extras Extras to append to the URL
- * @return mixed|void Full URL to the Transaction Failed page, if present, home page if it doesn't exist
- */
-function edd_get_failed_transaction_uri( $extras = false ) {
-	global $edd_options;
-
-	$uri = isset( $edd_options['failure_page'] ) ? trailingslashit( get_permalink( $edd_options['failure_page'] ) ) : home_url();
-	if ( $extras )
-		$uri .= $extras;
-
-	return apply_filters( 'edd_get_failed_transaction_uri', $uri );
-}
-
-/**
  * Send back to checkout.
  *
  * Used to redirect a user back to the purchase
@@ -179,6 +160,44 @@ function edd_get_success_page_url( $query_string = null ) {
 
 	return apply_filters( 'edd_success_page_url', $success_page );
 }
+
+/**
+ * Get the URL of the Transaction Failed page
+ *
+ * @since 1.3.4
+ * @global $edd_options Array of all the EDD Options
+ *
+ * @param bool $extras Extras to append to the URL
+ * @return mixed|void Full URL to the Transaction Failed page, if present, home page if it doesn't exist
+ */
+function edd_get_failed_transaction_uri( $extras = false ) {
+	global $edd_options;
+
+	$uri = isset( $edd_options['failure_page'] ) ? trailingslashit( get_permalink( $edd_options['failure_page'] ) ) : home_url();
+	if ( $extras )
+		$uri .= $extras;
+
+	return apply_filters( 'edd_get_failed_transaction_uri', $uri );
+}
+
+/**
+ * Mark payments as Failed when returning to the Failed Transaction page
+ *
+ * @access      public
+ * @since       1.9.9
+ * @return      void
+*/
+function edd_listen_for_failed_payments() {
+	
+	if( is_page( edd_get_option( 'failure_page', 0 ) ) && ! empty( $_GET['payment-id'] ) ) {
+
+		$payment_id = absint( $_GET['payment-id'] );
+		edd_update_payment_status( $payment_id, 'failed' );
+
+	}
+
+}
+add_action( 'template_redirect', 'edd_listen_for_failed_payments' );
 
 /**
  * Check if a field is required
