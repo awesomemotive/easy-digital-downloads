@@ -96,7 +96,10 @@ function edd_dashboard_sales_widget() {
 		$payments = $p_query->get_payments();
 
 		if ( $payments ) { ?>
-		<p class="edd_dashboard_widget_subheading"><?php _e( 'Recent Purchases', 'edd' ); ?></p>
+		<p class="edd_dashboard_widget_subheading">
+			<?php _e( 'Recent Purchases', 'edd' ); ?>
+			<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">&nbsp;&ndash;&nbsp;<?php _e( 'View All', 'edd' ); ?></a>
+		</p>
 		<div class="table recent_purchases">
 			<table>
 				<tbody>
