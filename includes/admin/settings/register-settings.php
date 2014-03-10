@@ -23,7 +23,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_option( $key = '', $default = false ) {
 	global $edd_options;
-	$value = isset( $edd_options[ $key ] ) ? $edd_options[ $key ] : $default;
+	$value = ! empty( $edd_options[ $key ] ) ? $edd_options[ $key ] : $default;
 	$value = apply_filters( 'edd_get_option', $value, $key, $default );
 	return apply_filters( 'edd_get_option_' . $key, $value, $key, $default );
 }
@@ -429,7 +429,7 @@ function edd_get_registered_settings() {
 				'base_state' => array(
 					'id' => 'base_state',
 					'name' => __( 'Base State / Province', 'edd' ),
-					'desc' => __( 'What state / provice does your store operate from?', 'edd' ),
+					'desc' => __( 'What state / province does your store operate from?', 'edd' ),
 					'type' => 'shop_states'
 				),
 				'prices_include_tax' => array(

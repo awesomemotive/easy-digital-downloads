@@ -92,10 +92,12 @@ class edd_categories_tags_widget extends WP_Widget {
 	/** @see WP_Widget::widget */
 	function widget( $args, $instance ) {
 		extract( $args );
+
 		$title      = apply_filters('widget_title', $instance['title']);
 		$tax        = $instance['taxonomy'];
 		$count      = $instance['count'] == 'on' ? 1 : 0;
 		$hide_empty = $instance['hide_empty'] == 'on' ? 1 : 0;
+
 
 		global $post, $edd_options;
 

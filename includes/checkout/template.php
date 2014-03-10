@@ -789,45 +789,6 @@ function edd_filter_success_page_content( $content ) {
 add_filter( 'the_content', 'edd_filter_success_page_content' );
 
 /**
- * Shows "Purchase Processing" message for PayPal payments are still pending on site return
- *
- * This helps address the Race Condition, as detailed in issue #1839
- *
- * @since 1.9
- * @return string
-*/
-function edd_paypal_success_page_content( $content ) {
-
-	if( ! isset( $_GET['payment-id'] ) && ! edd_get_purchase_session() ) {
-		return $content;
-	}
-
-	$payment_id = isset( $_GET['payment-id'] ) ? absint( $_GET['payment-id'] ) : false;
-
-	if( ! $payment_id ) {
-		$session    = edd_get_purchase_session();
-		$payment_id = edd_get_purchase_id_by_key( $session['purchase_key'] );
-	}
-
-	$payment = get_post( $payment_id );
-
-	if( $payment && 'pending' == $payment->post_status ) {
-
-		// Payment is still pending so show processing indicator to fix the Race Condition, issue #
-		ob_start();
-
-		edd_get_template_part( 'payment', 'processing' );
-
-		$content = ob_get_clean();
-
-	}
-
-	return $content;
-
-}
-add_filter( 'edd_payment_confirm_paypal', 'edd_paypal_success_page_content' );
-
-/**
  * Show a download's files in the purchase receipt
  *
  * @since 1.8.6
