@@ -3239,7 +3239,7 @@ msgstr ""
 #: includes/admin/welcome.php:312
 msgid ""
 "The [downloads] short code will display a product grid that works with any "
-"theme, no matter the size. It is even responive!"
+"theme, no matter the size. It is even responsive!"
 msgstr ""
 
 #: includes/admin/welcome.php:314

@@ -23,7 +23,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_option( $key = '', $default = false ) {
 	global $edd_options;
-	$value = isset( $edd_options[ $key ] ) ? $edd_options[ $key ] : $default;
+	$value = ! empty( $edd_options[ $key ] ) ? $edd_options[ $key ] : $default;
 	$value = apply_filters( 'edd_get_option', $value, $key, $default );
 	return apply_filters( 'edd_get_option_' . $key, $value, $key, $default );
 }
@@ -429,7 +429,7 @@ function edd_get_registered_settings() {
 				'base_state' => array(
 					'id' => 'base_state',
 					'name' => __( 'Base State / Province', 'edd' ),
-					'desc' => __( 'What state / provice does your store operate from?', 'edd' ),
+					'desc' => __( 'What state / province does your store operate from?', 'edd' ),
 					'type' => 'shop_states'
 				),
 				'prices_include_tax' => array(
@@ -501,7 +501,7 @@ function edd_get_registered_settings() {
 				'live_cc_validation' => array(
 					'id' => 'live_cc_validation',
 					'name' => __( 'Disable Live Credit Card Validation', 'edd' ),
-					'desc' => __( 'Live credit card validation means that that card type and number will be validated as the customer enters the number.', 'edd' ),
+					'desc' => __( 'Live credit card validation means that the card type and number will be validated as the customer enters the number.', 'edd' ),
 					'type' => 'checkbox'
 				),
 				'logged_in_only' => array(
@@ -669,51 +669,53 @@ function edd_get_registered_settings() {
  * At some point this will validate input
  *
  * @since 1.0.8.2
+ *
  * @param array $input The value inputted in the field
+ *
  * @return string $input Sanitizied value
  */
 function edd_settings_sanitize( $input = array() ) {
 
 	global $edd_options;
 
-	if( empty( $_POST['_wp_http_referer'] ) )
+	if ( empty( $_POST['_wp_http_referer'] ) ) {
 		return $input;
+	}
 
 	parse_str( $_POST['_wp_http_referer'], $referrer );
 
-	$settings  	= edd_get_registered_settings();
-	$tab       	= isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
+	$settings = edd_get_registered_settings();
+	$tab      = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
 
-	$input 		= $input ? $input : array();
-	$input 		= apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+	$input = $input ? $input : array();
+	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
 
 	// Loop through each setting being saved and pass it through a sanitization filter
-	foreach( $input as $key => $value ) {
+	foreach ( $input as $key => $value ) {
 
 		// Get the setting type (checkbox, select, etc)
-		$type = isset( $settings[ $tab ][ $key ][ 'type' ] ) ? $settings[ $tab ][ $key ][ 'type' ] : false;
+		$type = isset( $settings[$tab][$key]['type'] ) ? $settings[$tab][$key]['type'] : false;
 
-		if( $type ) {
+		if ( $type ) {
 			// Field type specific filter
-			$input[ $key ] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
+			$input[$key] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
 		}
 
 		// General filter
-		$input[ $key ] = apply_filters( 'edd_settings_sanitize', $value, $key );
+		$input[$key] = apply_filters( 'edd_settings_sanitize', $value, $key );
 	}
 
-
 	// Loop through the whitelist and unset any that are empty for the tab being saved
-	if( ! empty( $settings[ $tab ] ) ) {
-		foreach( $settings[ $tab ] as $key => $value ) {
+	if ( ! empty( $settings[$tab] ) ) {
+		foreach ( $settings[$tab] as $key => $value ) {
 
 			// settings used to have numeric keys, now they have keys that match the option ID. This ensures both methods work
-			if( is_numeric( $key ) ) {
+			if ( is_numeric( $key ) ) {
 				$key = $value['id'];
 			}
 
-			if( empty( $input[ $key ] ) ) {
-				unset( $edd_options[ $key ] );
+			if ( empty( $input[$key] ) ) {
+				unset( $edd_options[$key] );
 			}
 
 		}
@@ -722,10 +724,9 @@ function edd_settings_sanitize( $input = array() ) {
 	// Merge our new settings with the existing
 	$output = array_merge( $edd_options, $input );
 
-	add_settings_error( 'edd-notices', '', __( 'Settings Updated', 'edd' ), 'updated' );
+	add_settings_error( 'edd-notices', '', __( 'Settings updated.', 'edd' ), 'updated' );
 
 	return $output;
-
 }
 
 /**
@@ -816,7 +817,7 @@ function edd_get_settings_tabs() {
  * On large sites this can be expensive, so only load if on the settings page or $force is set to true
  *
  * @since 1.9.5
- * @param bool $force Force the pages to be loaded even if not on settings 
+ * @param bool $force Force the pages to be loaded even if not on settings
  * @return array $pages_options An array of the pages
  */
 function edd_get_pages( $force = false ) {
@@ -1167,7 +1168,9 @@ function edd_rich_editor_callback( $args ) {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 
 	if ( $wp_version >= 3.3 && function_exists( 'wp_editor' ) ) {
-		$html = wp_editor( stripslashes( $value ), 'edd_settings[' . $args['id'] . ']', array( 'textarea_name' => 'edd_settings[' . $args['id'] . ']' ) );
+		ob_start();
+		wp_editor( stripslashes( $value ), 'edd_settings[' . $args['id'] . ']', array( 'textarea_name' => 'edd_settings[' . $args['id'] . ']' ) );
+		$html = ob_get_clean();
 	} else {
 		$html = '<textarea class="large-text" rows="10" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 	}
