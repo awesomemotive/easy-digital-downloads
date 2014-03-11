@@ -13,72 +13,6 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Retrieve a download by a given field
- *
- * @since       2.0
- * @param       string $field The field to retrieve the discount with
- * @param       mixed $value The value for field
- * @return      mixed
- */
-function edd_get_download_by( $field = '', $value = '' ) {
-
-	if( empty( $field ) || empty( $value ) ) {
-		return false;
-	}
-
-	switch( strtolower( $field ) ) {
-
-		case 'id':
-			$download = get_post( $value );
-
-			if( get_post_type( $download ) != 'download' ) {
-				return false;
-			}
-
-			break;
-
-		case 'slug':
-		case 'name':
-			$download = query_posts( array(
-				'post_type'      => 'download',
-				'name'           => sanitize_title_for_query( $value ),
-				'posts_per_page' => 1,
-				'post_status'    => 'any'
-			) );
-
-			if( $download ) {
-				$download = $download[0];
-			}
-
-			break;
-
-		case 'sku':
-			$download = query_posts( array(
-				'post_type'      => 'download',
-				'meta_key'       => 'edd_sku',
-				'meta_value'     => $value,
-				'posts_per_page' => 1,
-				'post_status'    => 'any'
-			) );
-
-			if( $download ) {
-				$download = $download[0];
-			}
-
-			break;
-
-		default:
-			return false;
-	}
-
-	if( $download ) {
-		return $download;
-	}
-
-	return false;
-}
-
-/**
  * Retrieves a download post object by ID or slug.
  *
  * @since 1.0
@@ -92,19 +26,19 @@ function edd_get_download( $download ) {
 			return null;
 		return $download;
 	}
-
+	
 	$args = array(
 		'post_type'   => 'download',
 		'name'        => $download,
 		'numberposts' => 1
 	);
-
+	
 	$download = get_posts($args);
-
+	
 	if ( $download ) {
 		return $download[0];
 	}
-
+	
 	return null;
 }
 
@@ -193,9 +127,23 @@ function edd_get_download_final_price( $download_id, $user_purchase_info, $amoun
  * @param int $download_id ID of the download
  * @return array Variable prices
  */
-function edd_get_variable_prices( $download_id ) {
-	$variable_prices = get_post_meta( $download_id, 'edd_variable_prices', true );
-	return apply_filters( 'edd_get_variable_prices', $variable_prices, $download_id );
+function edd_get_variable_prices( $download_id = 0 ) {
+
+	$prices = get_post_meta( $download_id, 'edd_variable_prices', true );
+	$sorted = array();
+
+	foreach( $prices as $key => $price ) {
+		$index = isset( $price['index'] ) ? absint( $price['index'] ) : $key;
+		if( isset( $sorted[ $index ] ) ) {
+			$sorted[ $index++ ] = $price;
+		} else {
+			$sorted[ $index ] = $price;
+		}
+	}
+
+	$prices = $sorted;
+
+	return apply_filters( 'edd_get_variable_prices', $prices, $download_id );
 }
 
 /**
@@ -266,35 +214,24 @@ function edd_get_lowest_price_option( $download_id = 0 ) {
 	if ( empty( $download_id ) )
 		$download_id = get_the_ID();
 
-	if ( ! edd_has_variable_prices( $download_id ) ) {
+	if ( ! edd_has_variable_prices( $download_id ) )
 		return edd_get_download_price( $download_id );
-	}
 
 	$prices = edd_get_variable_prices( $download_id );
 
 	$low = 0.00;
 
 	if ( ! empty( $prices ) ) {
+		$min = 0;
 
 		foreach ( $prices as $key => $price ) {
-
-			if ( empty( $price['amount'] ) ) {
+			if ( empty( $price['amount'] ) )
 				continue;
-			}
-
-			if ( ! isset( $min ) ) {
-				$min = $price['amount'];
-			} else {
-				$min = min( $min, $price['amount'] );
-			}
-
-			if ( $price['amount'] == $min ) {
-				$min_id = $key;
-			}
+			if ( $prices[ $min ]['amount'] > $price['amount'] )
+				$min = $key;
 		}
 
-		$low = $prices[ $min_id ]['amount'];
-
+		$low = $prices[ $min ]['amount'];
 	}
 
 	return edd_sanitize_amount( $low );
@@ -308,37 +245,28 @@ function edd_get_lowest_price_option( $download_id = 0 ) {
  * @return float Amount of the highest price
  */
 function edd_get_highest_price_option( $download_id = 0 ) {
-
-	if ( empty( $download_id ) ) {
+	if ( empty( $download_id ) )
 		$download_id = get_the_ID();
-	}
 
-	if ( ! edd_has_variable_prices( $download_id ) ) {
+	if ( ! edd_has_variable_prices( $download_id ) )
 		return edd_get_download_price( $download_id );
-	}
 
 	$prices = edd_get_variable_prices( $download_id );
 
 	$high = 0.00;
 
 	if ( ! empty( $prices ) ) {
-
 		$max = 0;
 
 		foreach ( $prices as $key => $price ) {
-
-			if ( empty( $price['amount'] ) ) {
+			if ( empty( $price['amount'] ) )
 				continue;
-			}
 
-			$max = max( $max, $price['amount'] );
-
-			if ( $price['amount'] == $max ) {
-				$max_id = $key;
-			}
+			if ( $prices[ $max ]['amount'] < $price['amount'] )
+				$max = $key;
 		}
 
-		$high = $prices[ $max_id ]['amount'];
+		$high = $prices[ $max ]['amount'];
 	}
 
 	return edd_sanitize_amount( $high );
@@ -462,7 +390,7 @@ function edd_get_download_earnings_stats( $download_id ) {
  * @return int $sales Amount of sales for a certain download
  */
 function edd_get_download_sales_stats( $download_id ) {
-
+	
 	if ( '' == get_post_meta( $download_id, '_edd_download_sales', true ) ) {
 		add_post_meta( $download_id, '_edd_download_sales', 0 );
 	} // End if
@@ -529,7 +457,7 @@ function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip, $p
 	);
 
 	$user_id = isset( $user_info['id'] ) ? $user_info['id'] : (int) -1;
-
+	
 	$log_meta = array(
 		'user_info'	=> $user_info,
 		'user_id'	=> $user_id,
@@ -700,7 +628,7 @@ function edd_get_download_files( $download_id = 0, $variable_price_id = null ) {
 	$download_files = get_post_meta( $download_id, 'edd_download_files', true );
 
 	if ( $download_files ) {
-		if ( ! is_null( $variable_price_id ) && edd_has_variable_prices( $download_id ) ) {
+		if ( ! is_null( $variable_price_id ) ) {
 			foreach ( $download_files as $key => $file_info ) {
 				if ( isset( $file_info['condition'] ) ) {
 					if ( $file_info['condition'] == $variable_price_id || 'all' === $file_info['condition'] ) {
@@ -774,16 +702,15 @@ function edd_get_file_downloaded_count( $download_id = 0, $file_key = 0, $paymen
 function edd_get_file_download_limit( $download_id = 0 ) {
 	global $edd_options;
 
-	$ret    = 0;
-	$limit  = get_post_meta( $download_id, '_edd_download_limit', true );
-	$global = edd_get_option( 'file_download_limit', 0 );
+	$ret   = 0;
+	$limit = get_post_meta( $download_id, '_edd_download_limit', true );
 
-	if ( ! empty( $limit ) || ( is_numeric( $limit ) && (int)$limit == 0 ) ) {
+	if ( ! empty( $limit ) ) {
 		// Download specific limit
 		$ret = absint( $limit );
 	} else {
 		// Global limit
-		$ret = strlen( $limit ) == 0  || $global ? $global : 0;
+		$ret = ! empty( $edd_options['file_download_limit'] ) ? absint( $edd_options['file_download_limit'] ) : 0;
 	}
 	return apply_filters( 'edd_file_download_limit', $ret, $download_id );
 }
@@ -819,7 +746,7 @@ function edd_get_file_download_limit_override( $download_id = 0, $payment_id = 0
  * @return void
  */
 function edd_set_file_download_limit_override( $download_id = 0, $payment_id = 0 ) {
-	$override 	= edd_get_file_download_limit_override( $download_id, $payment_id );
+	$override 	= edd_get_file_download_limit_override( $download_id );
 	$limit 		= edd_get_file_download_limit( $download_id );
 
 	if ( ! empty( $override ) ) {
@@ -827,7 +754,6 @@ function edd_set_file_download_limit_override( $download_id = 0, $payment_id = 0
 	} else {
 		$override = $limit += 1;
 	}
-
 	update_post_meta( $download_id, '_edd_download_limit_override_' . $payment_id, $override );
 }
 
@@ -870,7 +796,7 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
 	$download_count     = $logs->get_log_count( $download_id, 'file_download', $meta_query );
 
 	$download_limit     = edd_get_file_download_limit( $download_id );
-	$unlimited_purchase = edd_payment_has_unlimited_downloads( $payment_id );
+	$unlimited_purchase = get_post_meta( $payment_id, '_unlimited_file_downloads', true );
 
 	if ( ! empty( $download_limit ) && empty( $unlimited_purchase ) ) {
 		if ( $download_count >= $download_limit ) {
