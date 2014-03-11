@@ -29,14 +29,8 @@ function edd_reports_graph() {
 			$day_by_day	= true;
 			break;
 		case 'last_year' :
-			$day_by_day	= false;
-			break;
 		case 'this_year' :
-			$day_by_day	= false;
-			break;
 		case 'last_quarter' :
-			$day_by_day = false;
-			break;
 		case 'this_quarter' :
 			$day_by_day = false;
 			break;
@@ -568,6 +562,7 @@ function edd_get_report_dates() {
 				$dates['m_start']   = 10;
 				$dates['m_end']     = 12;
 				$dates['year']      = date( 'Y', $current_time ) - 1; // Previous year
+				$dates['year_end']  = date( 'Y', $current_time ) - 1; // Previous year
 
 			} else if ( $month_now <= 6 ) {
 
