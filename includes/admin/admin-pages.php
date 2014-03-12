@@ -52,7 +52,7 @@ add_action( 'admin_menu', 'edd_add_options_link', 10 );
  *  @since 1.9.6
  *  @return bool True if EDD admin page.
  */
-function edd_is_edd_admin_page() {
+function edd_is_admin_page() {
 
 	if ( !is_admin() || !did_action( 'wp_loaded' ) ) {
 		return false;
