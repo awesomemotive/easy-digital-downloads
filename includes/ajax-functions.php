@@ -146,22 +146,24 @@ add_action( 'wp_ajax_nopriv_edd_get_subtotal', 'edd_ajax_get_subtotal' );
 function edd_ajax_apply_discount() {
 	if ( isset( $_POST['code'] ) && check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) ) {
 
+		$discount_code = apply_filters( 'edd_discount_code', $_POST['code'] );
+
 		$return = array(
 			'msg'  => '',
-			'code' => $_POST['code']
+			'code' => $discount_code
 		);
 
-		if ( edd_is_discount_valid( $_POST['code'] ) ) {
-			$discount  = edd_get_discount_by_code( $_POST['code'] );
+		if ( edd_is_discount_valid( $discount_code ) ) {
+			$discount  = edd_get_discount_by_code( $discount_code );
 			$amount    = edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) );
-			$discounts = edd_set_cart_discount( $_POST['code'] );
+			$discounts = edd_set_cart_discount( $discount_code );
 			$total     = edd_get_cart_total( $discounts );
 
 			$return = array(
 				'msg'    => 'valid',
 				'amount' => $amount,
 				'total'  => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
-				'code'   => $_POST['code'],
+				'code'   => $discount_code,
 				'html'   => edd_get_cart_discounts_html( $discounts )
 			);
 		} else {
