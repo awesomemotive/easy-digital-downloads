@@ -54,7 +54,7 @@ add_action( 'admin_menu', 'edd_add_options_link', 10 );
  */
 function edd_is_admin_page() {
 
-	if ( !is_admin() || !did_action( 'wp_loaded' ) ) {
+	if ( ! is_admin() || ! did_action( 'wp_loaded' ) ) {
 		return false;
 	}
 	
