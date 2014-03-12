@@ -169,6 +169,9 @@ function edd_ajax_apply_discount() {
 		} else {
 			$return['msg']  = __('The discount you entered is invalid', 'edd');
 		}
+
+		$return = apply_filters( 'edd_discount_response', $return );
+
 		echo json_encode($return);
 	}
 	edd_die();
