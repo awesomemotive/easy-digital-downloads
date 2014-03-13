@@ -308,7 +308,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 					endwhile;
 				else :
 					$date      = mktime( 0, 0, 0, $i, 1, $y );
-					$end_date  = mktime( 0, 0, 0, $i+1, 1, $y );
+					$end_date  = mktime( 0, 0, 0, $i + 1, 1, $y );
 			
 					$sales = $stats->get_sales( $download_id, $date, $end_date );
 					$sales_totals += $sales;
