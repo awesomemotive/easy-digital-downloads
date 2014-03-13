@@ -1001,7 +1001,8 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 
 		}
 
-		$amount = ( $price - $discounted_price );
+	//	$amount = ( $price - $discounted_price );
+		$amount = ( $price - apply_filters( 'edd_get_cart_item_discount_amount', $discounted_price, $discounts, $item, $price ) );
 	}
 
 	return $amount;
