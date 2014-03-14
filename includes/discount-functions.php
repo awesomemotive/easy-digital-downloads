@@ -253,7 +253,7 @@ function edd_remove_discount( $discount_id = 0 ) {
  * @return bool
  */
 function edd_update_discount_status( $code_id = 0, $new_status = 'active' ) {
-	$discount = edd_get_discount( $code_id );
+	$discount = edd_get_discount_by( 'id', $code_id );
 
 	if ( $discount ) {
 		do_action( 'edd_pre_update_discount_status', $code_id, $new_status, $discount->post_status );
@@ -276,7 +276,7 @@ function edd_update_discount_status( $code_id = 0, $new_status = 'active' ) {
  * @return bool
  */
 function edd_discount_exists( $code_id ) {
-	if ( edd_get_discount( $code_id ) ) {
+	if ( edd_get_discount_by( 'id', $code_id ) ) {
 		return true;
 	}
 
@@ -291,7 +291,7 @@ function edd_discount_exists( $code_id ) {
  * @return bool
  */
 function edd_is_discount_active( $code_id = null ) {
-	$discount = edd_get_discount( $code_id );
+	$discount = edd_get_discount_by( 'id', $code_id );
 	$return   = false;
 
 	if ( $discount ) {
@@ -481,7 +481,7 @@ function edd_is_discount_not_global( $code_id = 0 ) {
  * @return      bool
  */
 function edd_is_discount_expired( $code_id = null ) {
-	$discount = edd_get_discount( $code_id );
+	$discount = edd_get_discount_by( 'id', $code_id );
 	$return   = false;
 
 	if ( $discount ) {
@@ -509,7 +509,7 @@ function edd_is_discount_expired( $code_id = null ) {
  * @return bool Is discount started?
  */
 function edd_is_discount_started( $code_id = null ) {
-	$discount = edd_get_discount( $code_id );
+	$discount = edd_get_discount_by( 'id', $code_id );
 	$return   = false;
 
 	if ( $discount ) {
@@ -541,7 +541,7 @@ function edd_is_discount_started( $code_id = null ) {
  * @return bool Is discount maxed out?
  */
 function edd_is_discount_maxed_out( $code_id = null ) {
-	$discount = edd_get_discount( $code_id );
+	$discount = edd_get_discount_by( 'id', $code_id );
 	$return   = false;
 
 	if ( $discount ) {
@@ -568,7 +568,7 @@ function edd_is_discount_maxed_out( $code_id = null ) {
  * @return bool $return
  */
 function edd_discount_is_min_met( $code_id = null ) {
-	$discount = edd_get_discount( $code_id );
+	$discount = edd_get_discount_by( 'id', $code_id );
 	$return   = false;
 
 	if ( $discount ) {
@@ -762,7 +762,7 @@ function edd_is_discount_valid( $code = '', $user = '' ) {
  * @return      int
  */
 function edd_get_discount_id_by_code( $code ) {
-	$discount = edd_get_discount( 'code', $code );
+	$discount = edd_get_discount_by( 'code', $code );
 	if( $discount ) {
 		return $discount->ID;
 	}
