@@ -110,22 +110,38 @@ function edd_get_discount_by( $field, $value ) {
 	if( !$field || !$value )
 		return false;
 
-	switch( $field ) {
-		case 'code':
-			$meta_key   = '_edd_discount_code';
-			break;
-		default:
+	if( $field == 'code' ) {
+		$discount = edd_get_discounts( array(
+			'meta_key'       => '_edd_discount_code',
+			'meta_value'     => $value,
+			'posts_per_page' => 1
+		) );
+
+		if( $discount ) {
+			$discount = $discount[0];
+		}
+	} elseif( $field == 'id' ) {
+		$discount = get_post( $value );
+
+		if( get_post_type( $discount ) != 'edd_discount' ) {
 			return false;
+		}
+	} elseif( $field == 'name' ) {
+		$discount = query_posts( array(
+			'post_type'      => 'edd_discount',
+			'post_name'      => $value,
+			'posts_per_page' => 1
+		) );
+
+		if( $discount ) {
+			$discount = $discount[0];
+		}
+	} else {
+		return false;
 	}
 
-	$discount = edd_get_discount( array(
-		'meta_key'       => $meta_key,
-		'meta_value'     => $value,
-		'posts_per_page' => 1
-	) );
-
 	if( $discount ) {
-		return $discount[0];
+		return $discount;
 	}
 
 	return false;
