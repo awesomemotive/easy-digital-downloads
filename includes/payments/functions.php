@@ -65,7 +65,7 @@ function edd_insert_payment( $payment_data = array() ) {
 
 	// Retrieve the ID of the discount used, if any
 	if ( $payment_data['user_info']['discount'] != 'none' ) {
-		$discount = edd_get_discount_by_code( $payment_data['user_info']['discount'] );
+		$discount = edd_get_discount_by( 'code', $payment_data['user_info']['discount'] );
 	}
 
 	$args = apply_filters( 'edd_insert_payment_args', array(

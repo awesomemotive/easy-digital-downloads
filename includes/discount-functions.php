@@ -99,24 +99,33 @@ function edd_get_discount( $discount_id ) {
 }
 
 /**
- * Get Discount By Code
+ * Retrieve discount by a given field
  *
- * Retrieves all details for a discount by its code.
- *
- * @param string $code
- *
- * @since       1.0
- * @return      int
+ * @param       string $field The field to retrieve the discount with
+ * @param       mixed $value The value for $field
+ * @return      mixed
  */
-function edd_get_discount_by_code( $code ) {
-	$discounts = edd_get_discounts( array(
-		'meta_key'       => '_edd_discount_code',
-		'meta_value'     => $code,
+function edd_get_discount_by( $field, $value ) {
+
+	if( !$field || !$value )
+		return false;
+
+	switch( $field ) {
+		case 'code':
+			$meta_key   = '_edd_discount_code';
+			break;
+		default:
+			return false;
+	}
+
+	$discount = edd_get_discount( array(
+		'meta_key'       => $meta_key,
+		'meta_value'     => $value,
 		'posts_per_page' => 1
 	) );
 
-	if ( $discounts ) {
-		return $discounts[0];
+	if( $discount ) {
+		return $discount[0];
 	}
 
 	return false;
@@ -737,7 +746,7 @@ function edd_is_discount_valid( $code = '', $user = '' ) {
  * @return      int
  */
 function edd_get_discount_id_by_code( $code ) {
-	$discount = edd_get_discount_by_code( $code );
+	$discount = edd_get_discount( 'code', $code );
 	if( $discount ) {
 		return $discount->ID;
 	}
