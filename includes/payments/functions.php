@@ -55,7 +55,7 @@ function edd_get_payment_by( $field, $value ) {
 		return false;
 	}
 
-	switch( $field ) {
+	switch( strtolower( $field ) ) {
 		case 'id':
 			$payment = get_post( $value );
 

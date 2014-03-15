@@ -25,7 +25,7 @@ function edd_get_download_by( $field, $value ) {
 		return false;
 	}
 
-	switch( $field ) {
+	switch( strtolower( $field ) ) {
 		case 'id':
 			$download = get_post( $value );
 
