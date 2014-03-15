@@ -43,6 +43,51 @@ function edd_get_payments( $args = array() ) {
 }
 
 /**
+ * Retrieve payment by a given field
+ *
+ * @param       string $field The field to retrieve the payment with
+ * @param       mixed $value The value for $field
+ * @return      mixed
+ */
+function edd_get_payment_by( $field, $value ) {
+
+	if( !$field || !$value ) {
+		return false;
+	}
+
+	switch( $field ) {
+		case 'id':
+			$payment = get_post( $value );
+
+			if( get_post_type( $payment ) != 'edd_payment' ) {
+				return false;
+			}
+
+			break;
+		case 'key':
+			$payment = edd_get_payments( array(
+				'meta_key'       => '_edd_payment_purchase_key',
+				'meta_value'     => $value,
+				'posts_per_page' => 1
+			) );
+
+			if( $payment ) {
+				$payment = $payment[0];
+			}
+
+			break;
+		default:
+			return false;
+	}
+
+	if( $payment ) {
+		return $payment;
+	}
+
+	return false;
+}
+
+/**
  * Insert Payment
  *
  * @since 1.0
