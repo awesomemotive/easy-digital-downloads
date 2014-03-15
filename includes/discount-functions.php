@@ -136,7 +136,7 @@ function edd_get_discount_by( $field, $value ) {
 		return false;
 	}
 
-	switch( $field ) {
+	switch( strtolower( $field ) ) {
 		case 'code':
 			$discount = edd_get_discounts( array(
 				'meta_key'       => '_edd_discount_code',
