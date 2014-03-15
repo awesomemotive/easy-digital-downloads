@@ -84,7 +84,7 @@ function edd_process_download() {
 		header("Robots: none");
 		header("Content-Type: " . $ctype . "");
 		header("Content-Description: File Transfer");
-		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\";");
+		header("Content-Disposition: attachment; filename=\"" . apply_filters( 'edd_requested_file_name', basename( $requested_file ) ) . "\"");
 		header("Content-Transfer-Encoding: binary");
 
 		$method = edd_get_file_download_method();
@@ -534,6 +534,10 @@ function edd_get_file_ctype( $extension ) {
 		case 'zip'      : $ctype = "application/zip"; break;
 		default         : $ctype = "application/force-download";
 	endswitch;
+
+	if( wp_is_mobile() ) {
+		$ctype = 'application/octet-stream';
+	}
 
 	return apply_filters( 'edd_file_ctype', $ctype );
 }
