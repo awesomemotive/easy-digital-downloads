@@ -13,6 +13,63 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
+ * Retrieve a download by a given field
+ *
+ * @param       string $field The field to retrieve the discount with
+ * @param       mixed $value The value for field
+ * @return      mixed
+ */
+function edd_get_download_by( $field, $value ) {
+
+	if( !$field || !$value ) {
+		return false;
+	}
+
+	switch( $field ) {
+		case 'id':
+			$download = get_post( $value );
+
+			if( get_post_type( $download ) != 'download' ) {
+				return false;
+			}
+
+			break;
+		case 'slug':
+			$download = query_posts( array(
+				'post_type'      => 'download',
+				'slug'           => $value,
+				'posts_per_page' => 1
+			) );
+
+			if( $download ) {
+				$download = $download[0];
+			}
+
+			break;
+		case 'name':
+			$download = query_posts( array(
+				'post_type'      => 'download',
+				'post_name'      => $value,
+				'posts_per_page' => 1
+			) );
+
+			if( $download ) {
+				$download = $download[0];
+			}
+
+			break;
+		default:
+			return false;
+	}
+
+	if( $download ) {
+		return $download;
+	}
+
+	return false;
+}
+
+/**
  * Retrieves a download post object by ID or slug.
  *
  * @since 1.0
