@@ -58,6 +58,19 @@ function edd_get_download_by( $field, $value ) {
 			}
 
 			break;
+		case 'sku':
+			$download = query_posts( array(
+				'post_type'      => 'download',
+				'meta_key'       => 'edd_sku',
+				'meta_value'     => $value,
+				'posts_per_page' => 1
+			) );
+
+			if( $download ) {
+				$download = $download[0];
+			}
+
+			break;
 		default:
 			return false;
 	}
