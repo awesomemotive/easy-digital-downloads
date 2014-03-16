@@ -237,7 +237,7 @@ function edd_setup_download_taxonomies() {
 		'add_new_item' 		=> __( 'Add New Tag', 'edd'  ),
 		'new_item_name' 	=> __( 'New Tag Name', 'edd'  ),
 		'menu_name' 		=> __( 'Tags', 'edd'  ),
-		'choose_from_most_used' => __( 'Choose from most used download tags', 'edd'  ),
+		'choose_from_most_used' => sprintf(_x( 'Choose from most used %s tags', 'edd'  ), edd_get_label_singular() ),
 	);
 
 	$tag_args = apply_filters( 'edd_download_tag_args', array(
