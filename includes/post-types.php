@@ -210,6 +210,7 @@ function edd_setup_download_taxonomies() {
 		'add_new_item' 		=> __( 'Add New Category', 'edd'  ),
 		'new_item_name' 	=> __( 'New Category Name', 'edd'  ),
 		'menu_name' 		=> __( 'Categories', 'edd'  ),
+		'choose_from_most_used' => sprintf( __( 'Choose from most used %s categories', 'edd'  ), edd_get_label_singular() ),
 	);
 
 	$category_args = apply_filters( 'edd_download_category_args', array(
