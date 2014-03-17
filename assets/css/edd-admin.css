@@ -147,7 +147,11 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 .edd_dashboard_widget .table { margin: 20px 0 0 0; padding: 0; position: relative; border-top: 1px solid #ececec; }
 .edd_dashboard_widget .table_left { float: left; width: 45%;  }
 .edd_dashboard_widget .table_right { float: right; width: 45%;  }
-.edd_dashboard_widget .sub { margin: 0 0 8px 12px; padding: 12px 0 0 0; color: #8f8f8f; font-size: 14px; position: absolute; top: -40px; left: 0; }
+.edd_dashboard_widget .sub { margin: 0 0 8px 12px; padding: 12px 0 0 0; color: #8f8f8f; font-size: 14px; }
+.edd_dashboard_widget .table_right .sub,
+.edd_dashboard_widget .table_left .sub { position: absolute; top: -40px; left: 0; }
+.edd_dashboard_widget .table_totals { border-bottom: 1px solid #ececec; }
+.edd_dashboard_widget .table_totals table { border-top: 1px solid #ececec; }
 .edd_dashboard_widget .table table, .edd_dashboard_widget .table div { margin: 0 0 0 12px; }
 .edd_dashboard_widget .inside { font-size: 12px; }
 .edd_dashboard_widget td { padding: 3px 0; }
@@ -156,7 +160,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 .edd_dashboard_widget .lifetime_best_selling_label,
 .edd_dashboard_widget .best_selling_30_days_label { background: rgb(0, 118, 156); padding: 2px 4px; border-radius: 3px; color: white; margin-right: 2px; }
 .edd_dashboard_widget .label_heading { margin: 0 0 8px 12px; display: block; font-size: 12px; font-family: Helvetica, Arial, sans-serif; color: #8f8f8f; font-weight: normal; padding-top: 10px; border-top: 1px solid #ececec; }
-.edd_dashboard_widget .edd_dashboard_widget_subheading { margin: 1em 0 0 12px; border-top: 1px solid #ececec; padding-top: 10px; color: #8f8f8f; font-size: 14px; }
+.edd_dashboard_widget .edd_dashboard_widget_subheading { margin: 1em 0 0 12px; color: #8f8f8f; font-size: 14px; }
 .edd_dashboard_widget .edd_dashboard_widget_subheading + .table { margin: 8px 0 0 0; }
 .edd_dashboard_widget .edd-recent-amount { background: rgb(0, 118, 156); padding: 2px 4px; border-radius: 3px; color: white; margin-right: 2px; font-size: 10px; }
 @media handheld, only screen and (max-width: 1000px) {

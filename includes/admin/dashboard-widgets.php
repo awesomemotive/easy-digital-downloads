@@ -40,9 +40,9 @@ add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets', 10 );
 function edd_dashboard_sales_widget() {
 	$stats = new EDD_Payment_Stats; ?>
 	<div class="edd_dashboard_widget">
-		<div class="table table_left table_current_month">
+		<div class="table table_left table_monthly">
 			<p class="sub"><?php _e( 'Current Month', 'edd' ) ?></p>
-			<table>
+			<table class="table_current_month">
 				<tbody>
 					<tr class="first">
 						<td class="first b b-earnings"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'this_month' ) ) ); ?></td>
@@ -55,26 +55,34 @@ function edd_dashboard_sales_widget() {
 					</tr>
 				</tbody>
 			</table>
-			<p class="label_heading"><?php _e( 'Last Month', 'edd' ) ?></p>
-			<div>
-				<?php echo __( 'Earnings', 'edd' ) . ':&nbsp;<span class="edd_price_label">' . edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'last_month' ) ) ) . '</span>'; ?>
-			</div>
-			<div>
-				<?php $last_month_sales = $stats->get_sales( 0, 'last_month', false, array( 'publish', 'revoked' ) ); ?>
-				<?php echo _n( 'Sale', 'Sales', $last_month_sales, 'edd' ) . ':&nbsp;' . '<span class="edd_price_label">' . $last_month_sales . '</span>'; ?>
-			</div>
-		</div>
-		<div class="table table_right table_totals">
-			<p class="sub"><?php _e( 'Totals', 'edd' ) ?></p>
+			<p class="label_heading table_left table_last_month"><?php _e( 'Last Month', 'edd' ) ?></p>
 			<table>
 				<tbody>
 					<tr class="first">
-						<td class="b b-earnings"><?php echo edd_currency_filter( edd_format_amount( edd_get_total_earnings() ) ); ?></td>
-						<td class="last t earnings"><?php _e( 'Total Earnings', 'edd' ); ?></td>
+						<td class="first b b-earnings"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'last_month' ) ) ); ?></td>
+						<td class="t monthly_earnings"><?php _e( 'Earnings', 'edd' ); ?></td>
 					</tr>
 					<tr>
-						<td class="b b-sales"><?php echo edd_get_total_sales(); ?></td>
-						<td class="last t sales"><?php _e( 'Total Sales', 'edd' ); ?></td>
+						<?php $monthly_sales = $stats->get_sales( 0, 'last_month', false, array( 'publish', 'revoked' ) ); ?>
+						<td class="first b b-sales"><?php echo $monthly_sales; ?></td>
+						<td class="t monthly_sales"><?php echo _n( 'Sale', 'Sales', $monthly_sales, 'edd' ); ?></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="table table_right table_today">
+			<p class="sub"><?php _e( 'Today', 'edd' ) ?></p>
+			<table>
+				<tbody>
+					<tr class="first">
+						<?php $today_earnings = $stats->get_earnings( 0, 'today', false, array( 'publish', 'revoked' ) ); ?>
+						<td class="b b-earnings"><?php echo edd_currency_filter( edd_format_amount( $today_earnings ) ); ?></td>
+						<td class="last t earnings"><?php _e( 'Earnings', 'edd' ); ?></td>
+					</tr>
+					<tr>
+						<?php $today_sales = $stats->get_sales( 0, 'today', false, array( 'publish', 'revoked' ) ); ?>
+						<td class="b b-sales"><?php echo $today_sales; ?></td>
+						<td class="last t sales"><?php _e( 'Sales', 'edd' ); ?></td>
 					</tr>
 				</tbody>
 			</table>
@@ -85,6 +93,24 @@ function edd_dashboard_sales_widget() {
 					<p class="lifetime_best_selling label_heading"><?php _e('Lifetime Best Selling', 'edd') ?></p>
 					<p><span class="lifetime_best_selling_label"><?php echo $top_seller->sales; ?></span> <a href="<?php echo get_permalink( $top_seller->download_id ); ?>"><?php echo get_the_title( $top_seller->download_id ); ?></a></p>
 			<?php } } ?>
+		</div>
+		<div style="clear: both"></div>
+		<div class="table table_totals">
+			<p class="sub"><?php _e( 'Totals', 'edd' ) ?></p>
+			<table>
+				<tbody>
+					<tr class="first">
+						<td>
+							<span class="b b-earnings"><?php echo edd_currency_filter( edd_format_amount( edd_get_total_earnings() ) ); ?></span>
+							<span class="last t earnings"><?php _e( 'Total Earnings', 'edd' ); ?></span>
+						</td>
+						<td>
+							<span class="b b-sales"><?php echo edd_get_total_sales(); ?></span>
+							<span class="last t sales"><?php _e( 'Total Sales', 'edd' ); ?></span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 		<div style="clear: both"></div>
 		<?php

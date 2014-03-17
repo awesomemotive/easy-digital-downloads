@@ -69,6 +69,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		delete_transient( 'edd_earnings_total' );
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
+		delete_transient( md5( 'edd_earnings_todaytoday' ) );
 	}
 
 	// Check for discount codes and increment their use counts
