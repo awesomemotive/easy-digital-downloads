@@ -53,7 +53,10 @@ function edd_update_payment_details( $data ) {
 	// Setup first and last name from input values
 	$names      = explode( ' ', $names );
 	$first_name = ! empty( $names[0] ) ? $names[0] : '';
-	$last_name  = ! empty( $names[1] ) ? $names[1] : '';
+	if( ! empty( $names[1] ) ) {
+		unset( $names[0] );
+		$last_name = implode( ' ', $names );
+	}
 
 	// Setup purchased Downloads and price options
 	$updated_downloads = isset( $_POST['edd-payment-details-downloads'] ) ? $_POST['edd-payment-details-downloads'] : false;
