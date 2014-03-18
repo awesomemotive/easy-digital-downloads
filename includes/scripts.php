@@ -143,6 +143,11 @@ add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
  * @return void
  */
 function edd_load_admin_scripts( $hook ) {
+
+	if ( ! apply_filters( 'edd_load_admin_scripts', edd_is_admin_page(), $hook ) ) {
+		return;
+	}
+	
 	global $wp_version;
 
 	$js_dir  = EDD_PLUGIN_URL . 'assets/js/';

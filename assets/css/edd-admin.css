@@ -180,6 +180,13 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 #edd_tax_rates .edd_tax_rate { width: 80px; }
 #edd_tax_rates th { padding: 15px 10px; }
 
+/* Taxonomy styles
+-------------------------------------------------------------- */
+.post-type-download .fixed .column-name { width: 27%; }
+.post-type-download .fixed .column-description { width: 30%; }
+.post-type-download .fixed .column-slug { width: 23%; }
+.post-type-download .fixed .column-posts { text-align: left; width: 17%; }
+
 /* System Info page styles
 -------------------------------------------------------------- */
 #system-info-textarea { width: 800px; height: 400px; font-family: Menlo, Monaco, monospace; background: none; white-space: pre; overflow: auto; display: block; }

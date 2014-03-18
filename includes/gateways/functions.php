@@ -336,7 +336,7 @@ function edd_get_chosen_gateway() {
 	} else if ( edd_get_cart_subtotal() <= 0 ) {
 		$enabled_gateway = 'manual';
 	} else {
-		$enabled_gateway = 'none';
+		$enabled_gateway = edd_get_default_gateway();
 	}
 
 	return apply_filters( 'edd_chosen_gateway', $enabled_gateway );
