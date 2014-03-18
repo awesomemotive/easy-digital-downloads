@@ -55,7 +55,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
         edd_send_back_to_checkout( '?payment-mode=' . $purchase_data['post_data']['edd-gateway'] );
     } else {
         // Only send to PayPal if the pending payment is created successfully
-        $listener_url = trailingslashit( home_url( 'index.php' ) ).'?edd-listener=IPN';
+        $listener_url = trailingslashit( home_url( 'index.php' ) ) . '?edd-listener=IPN';
 
          // Get the success url
         $return_url = add_query_arg( array(
@@ -80,7 +80,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
             'custom'        => $payment,
             'rm'            => '2',
             'return'        => $return_url,
-            'cancel_return' => edd_get_failed_transaction_uri(),
+            'cancel_return' => edd_get_failed_transaction_uri( '?payment-id=' . $payment ),
             'notify_url'    => $listener_url,
             'page_style'    => edd_get_paypal_page_style(),
             'cbt'			=> get_bloginfo( 'name' ),
@@ -464,3 +464,42 @@ function edd_get_paypal_page_style() {
 
 	return apply_filters( 'edd_paypal_page_style', $page_style );
 }
+
+/**
+ * Shows "Purchase Processing" message for PayPal payments are still pending on site return
+ *
+ * This helps address the Race Condition, as detailed in issue #1839
+ *
+ * @since 1.9
+ * @return string
+*/
+function edd_paypal_success_page_content( $content ) {
+
+	if( ! isset( $_GET['payment-id'] ) && ! edd_get_purchase_session() ) {
+		return $content;
+	}
+
+	$payment_id = isset( $_GET['payment-id'] ) ? absint( $_GET['payment-id'] ) : false;
+
+	if( ! $payment_id ) {
+		$session    = edd_get_purchase_session();
+		$payment_id = edd_get_purchase_id_by_key( $session['purchase_key'] );
+	}
+
+	$payment = get_post( $payment_id );
+
+	if( $payment && 'pending' == $payment->post_status ) {
+
+		// Payment is still pending so show processing indicator to fix the Race Condition, issue #
+		ob_start();
+
+		edd_get_template_part( 'payment', 'processing' );
+
+		$content = ob_get_clean();
+
+	}
+
+	return $content;
+
+}
+add_filter( 'edd_payment_confirm_paypal', 'edd_paypal_success_page_content' );
