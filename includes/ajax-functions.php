@@ -146,7 +146,7 @@ add_action( 'wp_ajax_nopriv_edd_get_subtotal', 'edd_ajax_get_subtotal' );
 function edd_ajax_apply_discount() {
 	if ( isset( $_POST['code'] ) && check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) ) {
 
-		$discount_code = apply_filters( 'edd_discount_code', $_POST['code'] );
+		$discount_code = $_POST['code'];
 
 		$return = array(
 			'msg'  => '',
@@ -170,6 +170,7 @@ function edd_ajax_apply_discount() {
 			$return['msg']  = __('The discount you entered is invalid', 'edd');
 		}
 
+		// Allow for custom discount code handling
 		$return = apply_filters( 'edd_discount_response', $return );
 
 		echo json_encode($return);
