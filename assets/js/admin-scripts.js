@@ -920,7 +920,7 @@ jQuery(document).ready(function ($) {
 							
 						 	// Add any option that doesn't already exist
 							if( ! $('#' + menu_id + ' option[value="' + item.id + '"]').length ) {
-								$('#' + menu_id).append( '<option value="' + item.id + '">' + item.name + '</option>' );
+								$('#' + menu_id).prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
 							}
 						});
 						 // Update the options
