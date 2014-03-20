@@ -320,9 +320,11 @@ add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
  */
 function edd_ajax_download_search() {
 
-	$search  = sanitize_text_field( $_GET['s'] );
+	global $wpdb;
+
+	$search  = $wpdb->escape( sanitize_text_field( $_GET['s'] ) );
 	$results = array();
-	$items   = get_posts( array( 'post_type' => 'download', 'posts_per_page' => 30, 's' => $search ) ); 
+	$items   = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_title` LIKE '%$search%'" );
 
 	if( $items ) {
 
