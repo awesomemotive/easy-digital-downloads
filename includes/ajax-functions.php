@@ -171,7 +171,7 @@ function edd_ajax_apply_discount() {
 		}
 
 		// Allow for custom discount code handling
-		$return = apply_filters( 'edd_discount_response', $return );
+		$return = apply_filters( 'edd_ajax_discount_response', $return );
 
 		echo json_encode($return);
 	}
