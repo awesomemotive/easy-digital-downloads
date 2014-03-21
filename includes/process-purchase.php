@@ -228,7 +228,7 @@ function edd_purchase_form_validate_gateway() {
 		if ( edd_is_gateway_active( $gateway ) )
 			return $gateway;
 
-		if ( '0.00' == edd_get_cart_subtotal() )
+		if ( '0.00' == edd_get_cart_total() )
 			return 'manual';
 
 		edd_set_error( 'invalid_gateway', __( 'The selected gateway is not active', 'edd' ) );
