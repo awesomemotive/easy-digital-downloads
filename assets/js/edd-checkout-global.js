@@ -154,8 +154,25 @@ jQuery(document).ready(function($) {
                             $(this).text(discount_response.total);
                         });
                         $('#edd-discount', $checkout_form_wrap ).val('');
+                      
                         recalculate_taxes();
+
+                    	if( '100%' == discount_response.amount ) {
+
+                    		$('#edd_cc_fields,#edd_cc_address').slideUp();
+                    		$('input[name="edd-gateway"]').val( 'manual' );
+
+                    	} else {
+
+                    		$('#edd_cc_fields,#edd_cc_address').slideDown();
+                    		$('input[name="edd-gateway"]').val( 'manual' );
+
+                    	}
+
 						$('body').trigger('edd_discount_applied', [ discount_response ]);
+
+                        console.log( discount_response );
+                    
                     } else {
                         alert(discount_response.msg);
                     }
@@ -196,14 +213,26 @@ jQuery(document).ready(function($) {
             dataType: "json",
             url: edd_global_vars.ajaxurl,
             success: function (discount_response) {
+               
+                $('.edd_cart_amount').each(function() {
+                	if( edd_global_vars.currency_sign + '0.00' == $(this).text() || '0.00' + edd_global_vars.currency_sign == $(this).text() ) {
+                		// We're removing a 100% discount code so we need to force the payment gateway to reload
+                		window.location.reload();
+                	}
+                    $(this).text(discount_response.total);
+                });
+
                 $('.edd_cart_discount').html(discount_response.html);
+
                 if( ! discount_response.discounts ) {
                    $('.edd_cart_discount_row').hide();
                 }
-                $('.edd_cart_amount').each(function() {
-                    $(this).text(discount_response.total);
-                });
+
+
                 recalculate_taxes();
+
+                $('#edd_cc_fields,#edd_cc_address').slideDown();
+
 				$('body').trigger('edd_discount_removed', [ discount_response ]);
             }
         }).fail(function (data) {
