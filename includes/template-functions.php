@@ -28,6 +28,7 @@ function edd_append_purchase_link( $download_id ) {
 	}
 }
 add_action( 'edd_after_download_content', 'edd_append_purchase_link' );
+add_action( 'edd_before_download_content', 'edd_append_purchase_link' );
 
 
 /**
@@ -247,8 +248,8 @@ function edd_before_download_content( $content ) {
 
 	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() && !post_password_required() ) {
 		ob_start();
-		$content .= ob_get_clean();
 		do_action( 'edd_before_download_content', $post->ID );
+		$content .= ob_get_clean();
 	}
 
 	return $content;
