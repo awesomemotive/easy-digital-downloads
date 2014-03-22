@@ -52,7 +52,8 @@ class Tests_Downloads extends EDD_UnitTestCase {
 			'_edd_product_type' => 'default',
 			'_edd_download_earnings' => 129.43,
 			'_edd_download_sales' => 59,
-			'_edd_download_limit_override_1' => 1
+			'_edd_download_limit_override_1' => 1,
+			'edd_sku' => 'sku_001'
 		);
 		foreach( $meta as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
@@ -69,6 +70,12 @@ class Tests_Downloads extends EDD_UnitTestCase {
 		$this->assertObjectHasAttribute( 'post_type', $out );
 
 		$this->assertEquals( $out->post_type, $this->_post->post_type );
+	}
+
+	public function test_edd_get_download_by() {
+		$this->assertSame( $this->_post, edd_get_download_by( 'id', $this->_post->ID ) );
+		$this->assertSame( $this->_post, edd_get_download_by( 'sku', 'sku_001' ) );
+		$this->assertSame( $this->_post, edd_get_download_by( 'name', 'Test Download' ) );
 	}
 
 	public function test_download_price() {
