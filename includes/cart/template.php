@@ -31,13 +31,11 @@ function edd_checkout_cart() {
 	}
 
 	do_action( 'edd_before_checkout_cart' );
-	echo '<!--dynamic-cached-content-->';
 	echo '<form id="edd_checkout_cart_form" method="post">';
 		echo '<div id="edd_checkout_cart_wrap">';
 			edd_get_template_part( 'checkout_cart' );
 		echo '</div>';
 	echo '</form>';
-	echo '<!--/dynamic-cached-content-->';
 	do_action( 'edd_after_checkout_cart' );
 }
 
@@ -65,7 +63,6 @@ function edd_shopping_cart( $echo = false ) {
  	?>
 
 	<ul class="edd-cart">
-	<!--dynamic-cached-content-->
 	<?php
 		$cart_items = edd_get_cart_contents();
 		if($cart_items) :
@@ -77,7 +74,6 @@ function edd_shopping_cart( $echo = false ) {
 			edd_get_template_part( 'widget', 'cart-empty' );
 		endif;
 	?>
-	<!--/dynamic-cached-content-->
 	</ul>
 	<?php
 
