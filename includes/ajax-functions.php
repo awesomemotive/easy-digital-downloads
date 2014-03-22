@@ -175,6 +175,33 @@ add_action( 'wp_ajax_edd_apply_discount', 'edd_ajax_apply_discount' );
 add_action( 'wp_ajax_nopriv_edd_apply_discount', 'edd_ajax_apply_discount' );
 
 /**
+ * Validates the supplied discount sent via AJAX.
+ *
+ * @since 1.0
+ * @return void
+ */
+function edd_ajax_update_cart_item_quantity() {
+	if ( ! empty( $_POST['quantity'] ) && ! empty( $_POST['download_id'] ) ) {
+
+		$download_id = absint( $_POST['download_id'] );
+		$quantity    = absint( $_POST['quantity'] );
+
+		edd_set_cart_item_quantity( $download_id, absint( $_POST['quantity'] ) );
+		$total = edd_get_cart_total();
+
+		$return = array(
+			'download_id' => $download_id,
+			'quantity'    => $quantity,
+			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' )
+		);
+		echo json_encode($return);
+	}
+	edd_die();
+}
+add_action( 'wp_ajax_edd_update_quantity', 'edd_ajax_update_cart_item_quantity' );
+add_action( 'wp_ajax_nopriv_edd_update_quantity', 'edd_ajax_update_cart_item_quantity' );
+
+/**
  * Removes a discount code from the cart via ajax
  *
  * @since 1.7
