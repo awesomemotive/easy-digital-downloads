@@ -58,10 +58,10 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_retrieved_from_database() {
-		$this->assertObjectHasAttribute( 'ID', edd_get_discount( $this->_post->ID ) );
-		$this->assertObjectHasAttribute( 'post_title', edd_get_discount( $this->_post->ID ) );
-		$this->assertObjectHasAttribute( 'post_status', edd_get_discount( $this->_post->ID ) );
-		$this->assertObjectHasAttribute( 'post_type', edd_get_discount( $this->_post->ID ) );
+		$this->assertObjectHasAttribute( 'ID', edd_get_discount(  $this->_post->ID ) );
+		$this->assertObjectHasAttribute( 'post_title', edd_get_discount(  $this->_post->ID ) );
+		$this->assertObjectHasAttribute( 'post_status', edd_get_discount(  $this->_post->ID ) );
+		$this->assertObjectHasAttribute( 'post_type', edd_get_discount(  $this->_post->ID ) );
 	}
 
 	public function test_get_discount_code() {
