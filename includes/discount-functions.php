@@ -135,7 +135,8 @@ function edd_get_discount_by( $field = '', $value = '' ) {
 			$discount = edd_get_discounts( array(
 				'meta_key'       => '_edd_discount_code',
 				'meta_value'     => $value,
-				'posts_per_page' => 1
+				'posts_per_page' => 1,
+				'post_status'    => 'any'
 			) );
 
 			if( $discount ) {
@@ -153,7 +154,8 @@ function edd_get_discount_by( $field = '', $value = '' ) {
 			$discount = query_posts( array(
 				'post_type'      => 'edd_discount',
 				'name'           => sanitize_title( $value ),
-				'posts_per_page' => 1
+				'posts_per_page' => 1,
+				'post_status'    => 'any'
 			) );
 
 			if( $discount ) {

@@ -42,7 +42,8 @@ function edd_get_download_by( $field = '', $value = '' ) {
 			$download = query_posts( array(
 				'post_type'      => 'download',
 				'name'           => sanitize_title( $value ),
-				'posts_per_page' => 1
+				'posts_per_page' => 1,
+				'post_status'    => 'any'
 			) );
 
 			if( $download ) {
@@ -56,7 +57,8 @@ function edd_get_download_by( $field = '', $value = '' ) {
 				'post_type'      => 'download',
 				'meta_key'       => 'edd_sku',
 				'meta_value'     => $value,
-				'posts_per_page' => 1
+				'posts_per_page' => 1,
+				'post_status'    => 'any'
 			) );
 
 			if( $download ) {
