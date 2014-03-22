@@ -150,6 +150,12 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$this->assertSame( '20%', edd_format_discount_rate( 'percent', get_post_meta( $this->_post->ID, '_edd_discount_amount', true ) ) );
 	}
 
+	public function test_edd_get_discount_by() {
+		$this->assertSame( $this->_post, edd_get_discount_by( 'id', $this->_post->ID ) );
+		$this->assertSame( $this->_post, edd_get_discount_by( 'code', '20OFF' ) );
+		$this->assertSame( $this->_post, edd_get_discount_by( 'name', '20 Percent Off' ) );
+	}
+
 	public function test_deletion_of_discount() {
 		edd_remove_discount( $this->_post->ID );
 		$this->assertFalse( wp_cache_get( $this->_post->ID, 'posts' ) );
