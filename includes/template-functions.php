@@ -28,7 +28,6 @@ function edd_append_purchase_link( $download_id ) {
 	}
 }
 add_action( 'edd_after_download_content', 'edd_append_purchase_link' );
-add_action( 'edd_before_download_content', 'edd_append_purchase_link' );
 
 
 /**
