@@ -383,6 +383,11 @@ function edd_purchase_form_validate_logged_in_user() {
 				'user_first'  => ! empty( $_POST['edd_first'] ) ? sanitize_text_field( $_POST['edd_first'] ) : '',
 				'user_last'  => ! empty( $_POST['edd_last']  ) ? sanitize_text_field( $_POST['edd_last']  ) : '',
 			);
+
+			if ( ! is_email( $valid_user_data['user_email'] ) ) {
+				edd_set_error( 'email_invalid', __( 'Invalid email', 'edd' ) );
+			}
+
 		} else {
 			// Set invalid user error
 			edd_set_error( 'invalid_user', __( 'The user information is invalid', 'edd' ) );
