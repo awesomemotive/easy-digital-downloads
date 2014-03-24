@@ -932,7 +932,7 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 		"PY" => "\d{4}",
 		"RE" => "9[78]4\d{2}",
 		"RO" => "\d{6}",
-		"RS" => "\d{6}",
+		"RS" => "\d{5}",
 		"RU" => "\d{6}",
 		"SA" => "\d{5}",
 		"SE" => "^(s-|S-){0,1}[0-9]{3}\s?[0-9]{2}$",
