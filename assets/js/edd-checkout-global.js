@@ -252,4 +252,39 @@ jQuery(document).ready(function($) {
     $body.find('#edd-discount-code-wrap').hide();
     $body.find('#edd_show_discount').show();
 
+    // Update the checkout when item quantities are updated
+    $('#edd_checkout_cart').on('change', '.edd-item-quantity', function (event) {
+
+        var $this = $(this),
+            quantity = $this.val(),
+            download_id = $this.closest('tr.edd_cart_item').data('download-id');
+
+        var postData = {
+            action: 'edd_update_quantity',
+            quantity: quantity,
+            download_id: download_id
+        };
+
+        //edd_discount_loader.show();
+
+        $.ajax({
+            type: "POST",
+            data: postData,
+            dataType: "json",
+            url: edd_global_vars.ajaxurl,
+            success: function (response) {
+                 $('.edd_cart_amount').each(function() {
+                    $(this).text(response.total);
+                    $('body').trigger('edd_quantity_updated', [ response ]);
+                });
+            }
+        }).fail(function (data) {
+            if ( window.console && window.console.log ) {
+                console.log( data );
+            }
+        });
+
+        return false;
+    });
+
 });

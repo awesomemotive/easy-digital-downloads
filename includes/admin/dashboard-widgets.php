@@ -96,7 +96,6 @@ function edd_dashboard_sales_widget() {
 		</div>
 		<div style="clear: both"></div>
 		<div class="table table_totals">
-			<p class="sub"><?php _e( 'Totals', 'edd' ) ?></p>
 			<table>
 				<tbody>
 					<tr class="first">

@@ -5,8 +5,9 @@ use \EDD_Payments_Query;
  * @group edd_payments
  */
 class Tests_Payments extends EDD_UnitTestCase {
-	protected $_payment_id = null;
 
+	protected $_payment_id = null;
+	protected $_key = null;
 	protected $_post = null;
 
 	public function setUp() {
@@ -120,6 +121,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$payment_id = edd_insert_payment( $purchase_data );
 
 		$this->_payment_id = $payment_id;
+		$this->_key = $purchase_data['purchase_key'];
 	}
 
 	public function test_get_payments() {
@@ -139,6 +141,10 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'user_info', (array) $out[0] );
 	}
 
+	public function test_edd_get_payment_by() {
+		$this->assertObjectHasAttribute( 'ID', edd_get_payment_by( 'id', $this->_payment_id ) );
+		$this->assertObjectHasAttribute( 'ID', edd_get_payment_by( 'key', $this->_key ) );
+	}
 
 	public function test_fake_insert_payment() {
 		$this->assertFalse( edd_insert_payment() );
