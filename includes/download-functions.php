@@ -13,6 +13,72 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
+ * Retrieve a download by a given field
+ *
+ * @since       2.0
+ * @param       string $field The field to retrieve the discount with
+ * @param       mixed $value The value for field
+ * @return      mixed
+ */
+function edd_get_download_by( $field = '', $value = '' ) {
+
+	if( empty( $field ) || empty( $value ) ) {
+		return false;
+	}
+
+	switch( strtolower( $field ) ) {
+
+		case 'id':
+			$download = get_post( $value );
+
+			if( get_post_type( $download ) != 'download' ) {
+				return false;
+			}
+
+			break;
+
+		case 'slug':
+		case 'name':
+			$download = query_posts( array(
+				'post_type'      => 'download',
+				'name'           => sanitize_title( $value ),
+				'posts_per_page' => 1,
+				'post_status'    => 'any'
+			) );
+
+			if( $download ) {
+				$download = $download[0];
+			}
+
+			break;
+
+		case 'sku':
+			$download = query_posts( array(
+				'post_type'      => 'download',
+				'meta_key'       => 'edd_sku',
+				'meta_value'     => $value,
+				'posts_per_page' => 1,
+				'post_status'    => 'any'
+			) );
+
+			if( $download ) {
+				$download = $download[0];
+			}
+
+			break;
+
+		default:
+			return false;
+	}
+
+	if( $download ) {
+		return $download;
+	}
+
+	return false;
+}
+
+/**
  * Retrieves a download post object by ID or slug.
  *
  * @since 1.0
@@ -26,19 +92,19 @@ function edd_get_download( $download ) {
 			return null;
 		return $download;
 	}
-	
+
 	$args = array(
 		'post_type'   => 'download',
 		'name'        => $download,
 		'numberposts' => 1
 	);
-	
+
 	$download = get_posts($args);
-	
+
 	if ( $download ) {
 		return $download[0];
 	}
-	
+
 	return null;
 }
 
@@ -375,7 +441,7 @@ function edd_get_download_earnings_stats( $download_id ) {
  * @return int $sales Amount of sales for a certain download
  */
 function edd_get_download_sales_stats( $download_id ) {
-	
+
 	if ( '' == get_post_meta( $download_id, '_edd_download_sales', true ) ) {
 		add_post_meta( $download_id, '_edd_download_sales', 0 );
 	} // End if
@@ -442,7 +508,7 @@ function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip, $p
 	);
 
 	$user_id = isset( $user_info['id'] ) ? $user_info['id'] : (int) -1;
-	
+
 	$log_meta = array(
 		'user_info'	=> $user_info,
 		'user_id'	=> $user_id,
