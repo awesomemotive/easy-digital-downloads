@@ -157,7 +157,7 @@ jQuery(document).ready(function($) {
                       
                         recalculate_taxes();
 
-                    	if( '100%' == discount_response.amount ) {
+                    	if( '0.00' == discount_response.total_plain ) {
 
                     		$('#edd_cc_fields,#edd_cc_address').slideUp();
                     		$('input[name="edd-gateway"]').val( 'manual' );
@@ -170,8 +170,6 @@ jQuery(document).ready(function($) {
                     	}
 
 						$('body').trigger('edd_discount_applied', [ discount_response ]);
-
-                        console.log( discount_response );
                     
                     } else {
                         alert(discount_response.msg);
