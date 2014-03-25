@@ -1002,6 +1002,13 @@ function edd_get_cart_item_discount_amount( $item = array() ) {
 		}
 
 		$amount = ( $price - $discounted_price );
+
+		if( 'flat' !== edd_get_discount_type( $code_id ) ) {
+
+			$amount = $amount * $item['quantity'];
+
+		}
+
 	}
 
 	return $amount;
