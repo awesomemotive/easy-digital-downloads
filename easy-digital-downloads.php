@@ -99,9 +99,9 @@ final class Easy_Digital_Downloads {
 	 * @since 1.4
 	 * @static
 	 * @staticvar array $instance
-	 * @uses Easy_Digital_Downloads::setup_globals() Setup the globals needed
+	 * @uses Easy_Digital_Downloads::setup_constants() Setup the constants needed
 	 * @uses Easy_Digital_Downloads::includes() Include the required files
-	 * @uses Easy_Digital_Downloads::setup_actions() Setup the hooks and actions
+	 * @uses Easy_Digital_Downloads::load_textdomain() load the language files
 	 * @see EDD()
 	 * @return The one true Easy_Digital_Downloads
 	 */
