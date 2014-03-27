@@ -531,7 +531,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @since 1.4
 	 * @uses EDD_Payment_History_Table::get_columns()
 	 * @uses EDD_Payment_History_Table::get_sortable_columns()
-	 * @uses EDD_Payment_History_Table::process_bulk_action()
 	 * @uses EDD_Payment_History_Table::payments_data()
 	 * @uses WP_List_Table::get_pagenum()
 	 * @uses WP_List_Table::set_pagination_args()
