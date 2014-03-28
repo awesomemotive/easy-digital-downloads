@@ -840,6 +840,26 @@ function edd_get_payment_user_ip( $payment_id ) {
 }
 
 /**
+ * Get the date a payment was completed
+ *
+ * @since 2.0
+ * @param int $payment_id Payment ID
+ * @return string $date The date the payment was completed
+ */
+function edd_get_payment_completed_date( $payment_id = 0 ) {
+
+	$payment = get_post( $payment_id );
+
+	if( 'pending' == $payment->post_status || 'preapproved' == $payment->post_status ) {
+		return false; // This payment was never completed
+	}
+
+	$date = ( $date = get_post_meta( $payment_id, '_edd_completed_date', true ) ) ? $date : $payment->modified_date;
+
+	return apply_filters( 'edd_payment_completed_date', $date, $payment_id );
+}
+
+/**
  * Get the gateway associated with a payment
  *
  * @since 1.2
