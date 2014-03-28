@@ -228,8 +228,8 @@ jQuery(document).ready(function ($) {
             action : 'edd_process_checkout_login',
             edd_ajax : 1,
             edd_user_login : $('#edd_login_fields #edd_user_login').val(),
-            edd_user_pass : $('#edd_login_fields #edd_user_pass').val(),
-        }
+            edd_user_pass : $('#edd_login_fields #edd_user_pass').val()
+        };
 
         $.post(edd_global_vars.ajaxurl, data, function(data) {
 
