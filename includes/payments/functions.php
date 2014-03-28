@@ -1,4 +1,4 @@
-<?php
+<?phpedd_get_sales_by_date
 /**
  * Payment Functions
  *
@@ -510,7 +510,9 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 
 	if ( ! empty( $hour ) )
 		$args['hour'] = $hour;
-
+	
+	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
+	
 	$key   = md5( serialize( $args ) );
 	$count = get_transient( $key, 'edd' );
 
