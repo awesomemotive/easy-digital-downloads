@@ -1,4 +1,4 @@
-<?phpedd_get_sales_by_date
+<?php
 /**
  * Payment Functions
  *
