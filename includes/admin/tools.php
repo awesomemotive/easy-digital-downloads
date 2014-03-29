@@ -290,12 +290,28 @@ function edd_tools_sysinfo_get() {
 	}
 
 	// Try to identify the hosting provider
-	$host = false;
+    $host = false;
 	if( defined( 'WPE_APIKEY' ) ) {
 		$host = 'WP Engine';
 	} elseif( defined( 'PAGELYBIN' ) ) {
 		$host = 'Pagely';
-	}
+    } elseif( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
+        $host = 'ICDSoft';
+    } elseif( DB_HOST == 'mysqlv5' ) {
+        $host = 'NetworkSolutions';
+    } elseif( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
+        $host = 'iPage';
+    } elseif( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
+        $host = 'IPower';
+    } elseif( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
+        $host = 'MediaTemple Grid';
+    } elseif( strpos( DB_HOST, '.pair.com' ) !== false ) {
+        $host = 'pair Networks';
+    } elseif( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
+        $host = 'Rackspace Cloud';
+    } elseif( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
+        $host = 'SysFix.eu Power Hosting';
+    }
 
 	$return  = '### Begin System Info ###' . "\n\n";
 
