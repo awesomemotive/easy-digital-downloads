@@ -124,3 +124,16 @@ function edd_field_is_required( $field = '' ) {
 	$required_fields = edd_purchase_form_required_fields();
 	return array_key_exists( $field, $required_fields );
 }
+
+
+/**
+ * Retrieve an array of banned_emails
+ *
+ * @since       2.0
+ * @return      array
+ */
+function edd_tools_banned_emails_get() {
+	$emails = edd_get_option( 'banned_emails', array() );
+
+	return apply_filters( 'edd_get_banned_emails', $emails );
+}
