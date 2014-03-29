@@ -237,6 +237,8 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 				break;
 		endswitch;
 
+		$args = apply_filters( 'edd_download_reports_prepare_items_args', $args, $this );
+
 		$this->products = new WP_Query( $args );
 
 	}
