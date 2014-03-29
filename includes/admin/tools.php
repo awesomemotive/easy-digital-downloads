@@ -102,19 +102,6 @@ add_action( 'edd_tools_tab_tools', 'edd_tools_banned_emails_display' );
 
 
 /**
- * Retrieve an array of banned_emails
- *
- * @since       2.0
- * @return      array
- */
-function edd_tools_banned_emails_get() {
-	$emails = edd_get_option( 'banned_emails', array() );
-
-	return apply_filters( 'edd_get_banned_emails', $emails );
-}
-
-
-/**
  * Save banned emails
  *
  * @since       2.0
