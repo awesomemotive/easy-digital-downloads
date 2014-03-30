@@ -322,6 +322,7 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 
 										<li class="download">
 											<span>
+											<a href="<?php echo admin_url( 'post.php?post=' . $item_id . '&action=edit' ); ?>">
 												<?php echo get_the_title( $item_id );
 
 												if ( isset( $cart_items[ $key ]['item_number'] ) && isset( $cart_items[ $key ]['item_number']['options'] ) ) {
@@ -332,6 +333,7 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 													}
 												}
 												?>
+											</a>
 											</span>
 											<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][id]" class="edd-payment-details-download-id" value="<?php echo esc_attr( $item_id ); ?>"/>
 											<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][price_id]" class="edd-payment-details-download-price-id" value="<?php echo esc_attr( $price_id ); ?>"/>
