@@ -991,7 +991,7 @@ add_action( 'edd_straight_to_gateway', 'edd_process_straight_to_gateway' );
  */
 function edd_check_purchase_email( $valid_data, $posted ) {
 	$is_banned = false;
-	$banned    = edd_tools_banned_emails_get();
+	$banned    = edd_get_banned_emails();
 
 	if( empty( $banned ) )
 		return;
