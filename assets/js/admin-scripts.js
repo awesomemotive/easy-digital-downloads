@@ -373,7 +373,8 @@ jQuery(document).ready(function ($) {
 				var count = $('#edd-purchased-files div.row').length;
 				var clone = $('#edd-purchased-files div.row:last').clone();
 
-				clone.find( '.download span' ).text( download_title );
+				clone.find( '.download span' ).html( '<a href="post.php?post=' + download_id + '&action=edit"></a>' );
+				clone.find( '.download span a' ).text( download_title );
 				clone.find( '.price' ).text( formatted_amount );
 				clone.find( '.quantity span' ).text( quantity );
 				clone.find( 'input.edd-payment-details-download-id' ).val( download_id );
