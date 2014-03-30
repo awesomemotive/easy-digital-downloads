@@ -73,7 +73,7 @@ function edd_dashboard_sales_widget() {
 						<td class="last t earnings"><?php _e( 'Total Earnings', 'edd' ); ?></td>
 					</tr>
 					<tr>
-						<td class="b b-sales"><?php echo edd_get_total_sales(); ?></td>
+						<td class="b b-sales"><?php echo edd_format_amount( edd_get_total_sales(), false ); ?></td>
 						<td class="last t sales"><?php _e( 'Total Sales', 'edd' ); ?></td>
 					</tr>
 				</tbody>
