@@ -132,7 +132,7 @@ function edd_field_is_required( $field = '' ) {
  * @since       2.0
  * @return      array
  */
-function edd_tools_banned_emails_get() {
+function edd_get_banned_emails() {
 	$emails = edd_get_option( 'banned_emails', array() );
 
 	return apply_filters( 'edd_get_banned_emails', $emails );
