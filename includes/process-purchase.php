@@ -967,6 +967,51 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 	return apply_filters( 'edd_is_zip_valid', $ret, $zip, $country_code );
 }
 
+
+/**
+ * Check the purchase to ensure a banned email is not allowed through
+ *
+ * @since       2.0
+ * @return      void
+ */
+function edd_check_purchase_email( $valid_data, $posted ) {
+	$is_banned = false;
+	$banned    = edd_get_banned_emails();
+
+	if( empty( $banned ) )
+		return;
+
+	if( is_user_logged_in() ) {
+		// The user is logged in, check that their account email is not banned
+		$user_data = get_userdata( get_current_user_id() );
+		if( in_array( $user_data->user_email, $banned ) ) {
+			$is_banned = true;
+		}
+
+		if( in_array( $posted['edd_email'], $banned ) ) {
+			$is_banned = true;
+		}
+	} elseif( isset( $posted['edd-purchase-var'] ) && $posted['edd-purchase-var'] == 'needs-to-login' ) {
+		// The user is logging in, check that their email is not banned
+		$user_data = get_user_by( 'login', $posted['edd_user_login'] );
+		if( $user_data && in_array( $user_data->user_email, $banned ) ) {
+			$is_banned = true;
+		}
+	} else {
+		// Guest purchase, check that the email is not banned
+		if( in_array( $posted['edd_email'], $banned ) ) {
+			$is_banned = true;
+		}
+	}
+
+	if( $is_banned ) {
+		// Set an error and give the customer a general error (don't alert them that they were banned)
+		edd_set_error( 'email_banned', __( 'An internal error has occurred, please try again or contact support.', 'edd' ) );
+	}
+}
+add_action( 'edd_checkout_error_checks', 'edd_check_purchase_email', 10, 2 );
+
+
 /**
  * Process a straight-to-gateway purchase
  *
