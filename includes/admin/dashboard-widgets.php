@@ -106,7 +106,7 @@ function edd_dashboard_sales_widget() {
 				<table>
 					<thead>
 						<tr>
-							<td>
+							<td colspan="2">
 								<?php _e('Lifetime Best Selling', 'edd') ?>
 							</td>
 						</tr>
