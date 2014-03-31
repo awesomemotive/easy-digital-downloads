@@ -76,7 +76,7 @@ function edd_dashboard_sales_widget() {
 							<?php echo $last_month_sales; ?>
 						</td>
 						<td class="t sales">
-							<?php echo _n( 'Sale', 'Sales', $last_month_sales, 'edd' ) . ':&nbsp;'; ?>
+							<?php echo _n( 'Sale', 'Sales', $last_month_sales, 'edd' ); ?>
 						</td>
 					</tr>
 				</tbody>
