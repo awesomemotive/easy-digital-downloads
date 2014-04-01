@@ -111,7 +111,12 @@ class edd_categories_tags_widget extends WP_Widget {
 		} else {
 			echo "<ul class=\"edd-taxonomy-widget\">\n";
 			foreach ( $terms as $term ) {
-				echo '<li><a href="' . get_term_link( $term ) . '" title="' . esc_attr( $term->name ) . '" rel="bookmark">' . $term->name . '</a></li>'."\n";
+				$classes = array( 'cat-item' );
+		                $classes[] = 'cat-item-'.$term->term_id;
+		                if( is_tax( $instance['taxonomy'], $term->term_id ) ) {
+		                    $classes[] = 'current-cat';
+		                }
+				echo '<li class="' . implode( $classes, ' ' ) . '"><a href="' . get_term_link( $term ) . '" title="' . esc_attr( $term->name ) . '" rel="bookmark">' . $term->name . '</a></li>'."\n";
 			}
 			echo "</ul>\n";
 		}
