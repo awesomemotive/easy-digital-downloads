@@ -210,7 +210,7 @@ function edd_count_purchases_of_customer( $user = null ) {
 
 	$stats = edd_get_purchase_stats_by_user( $user );
 
-	return $stats['purchases'];
+	return isset( $stats['purchases'] ) ? $stats['purchases'] : 0;
 }
 
 /**
