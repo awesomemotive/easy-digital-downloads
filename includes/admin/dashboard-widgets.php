@@ -49,13 +49,13 @@ function edd_dashboard_sales_widget() {
 				</thead>
 				<tbody>
 					<tr>
-						<td class="first b b-earnings"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'this_month' ) ) ); ?></td>
-						<td class="t monthly_earnings"><?php _e( 'Earnings', 'edd' ); ?></td>
+						<td class="first t monthly_earnings"><?php _e( 'Earnings', 'edd' ); ?></td>
+						<td class="b b-earnings"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'this_month' ) ) ); ?></td>
 					</tr>
 					<tr>
 						<?php $monthly_sales = $stats->get_sales( 0, 'this_month', false, array( 'publish', 'revoked' ) ); ?>
-						<td class="first b b-sales"><?php echo $monthly_sales; ?></td>
-						<td class="t monthly_sales"><?php echo _n( 'Sale', 'Sales', $monthly_sales, 'edd' ); ?></td>
+						<td class="first t monthly_sales"><?php echo _n( 'Sale', 'Sales', $monthly_sales, 'edd' ); ?></td>
+						<td class="b b-sales"><?php echo $monthly_sales; ?></td>
 					</tr>
 				</tbody>
 			</table>
@@ -67,16 +67,16 @@ function edd_dashboard_sales_widget() {
 				</thead>
 				<tbody>
 					<tr>
-						<td class="first b b-last-month-earnings"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'last_month' ) ) ); ?></td>
-						<td class="t earnings"><?php echo __( 'Earnings', 'edd' ); ?></td>
+						<td class="first t earnings"><?php echo __( 'Earnings', 'edd' ); ?></td>
+						<td class="b b-last-month-earnings"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'last_month' ) ) ); ?></td>
 					</tr>
 					<tr>
-						<td class="first b b-last-month-sales">
+						<td class="first t sales">
 							<?php $last_month_sales = $stats->get_sales( 0, 'last_month', false, array( 'publish', 'revoked' ) ); ?>
-							<?php echo $last_month_sales; ?>
-						</td>
-						<td class="t sales">
 							<?php echo _n( 'Sale', 'Sales', $last_month_sales, 'edd' ); ?>
+						</td>
+						<td class="b b-last-month-sales">
+							<?php echo $last_month_sales; ?>
 						</td>
 					</tr>
 				</tbody>
@@ -91,12 +91,12 @@ function edd_dashboard_sales_widget() {
 				</thead>
 				<tbody>
 					<tr>
-						<td class="b b-earnings"><?php echo edd_currency_filter( edd_format_amount( edd_get_total_earnings() ) ); ?></td>
-						<td class="last t earnings"><?php _e( 'Total Earnings', 'edd' ); ?></td>
+						<td class="t earnings"><?php _e( 'Total Earnings', 'edd' ); ?></td>
+						<td class="last b b-earnings"><?php echo edd_currency_filter( edd_format_amount( edd_get_total_earnings() ) ); ?></td>
 					</tr>
 					<tr>
-						<td class="b b-sales"><?php echo edd_format_amount( edd_get_total_sales(), false ); ?></td>
-						<td class="last t sales"><?php _e( 'Total Sales', 'edd' ); ?></td>
+						<td class="t sales"><?php _e( 'Total Sales', 'edd' ); ?></td>
+						<td class="last b b-sales"><?php echo edd_format_amount( edd_get_total_sales(), false ); ?></td>
 					</tr>
 				</tbody>
 			</table>
@@ -151,8 +151,13 @@ function edd_dashboard_sales_widget() {
 						<tr>
 							<td class="edd_order_label">
 								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> ">
-									<?php echo get_the_title( $payment->ID ) ?> - (<?php echo $payment->user_info['email'] ?>)
+									<?php echo get_the_title( $payment->ID ) ?>
+									&mdash; <?php echo $payment->user_info['email'] ?>
 								</a>
+								<?php if ( $payment->user_info['id'] ) {
+									$user = get_user_by( 'id', $payment->user_info['id'] );
+									echo "(" . $user->data->user_login . ")";
+								} ?>
 							</td>
 							<td class="edd_order_price">
 								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'edd' ), $payment->ID ); ?> ">
