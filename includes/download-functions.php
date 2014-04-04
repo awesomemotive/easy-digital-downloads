@@ -690,7 +690,7 @@ function edd_get_file_download_limit( $download_id = 0 ) {
 	$ret   = 0;
 	$limit = get_post_meta( $download_id, '_edd_download_limit', true );
 
-	if ( ! empty( $limit ) ||  ( is_numeric( $limit ) && $limit == 0 ) ) {
+	if ( ! empty( $limit ) || ( is_numeric( $limit ) && (int)$limit == 0 ) ) {
 		// Download specific limit
 		$ret = absint( $limit );
 	} else {
