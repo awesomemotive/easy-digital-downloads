@@ -34,8 +34,7 @@ function edd_is_ajax_enabled() {
  * @return string
 */
 function edd_get_ajax_url() {
-	$scheme = defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https' : 'admin';
-
+	$scheme      = force_ssl_admin() && is_ssl() ? 'https' : 'http';
 	$current_url = edd_get_current_page_url();
 	$ajax_url    = admin_url( 'admin-ajax.php', $scheme );
 
