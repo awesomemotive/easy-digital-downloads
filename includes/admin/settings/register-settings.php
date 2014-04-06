@@ -514,7 +514,14 @@ function edd_get_registered_settings() {
 					'id' => 'show_register_form',
 					'name' => __( 'Show Register / Login Form?', 'edd' ),
 					'desc' => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'edd' ),
-					'type' => 'checkbox'
+					'type' => 'select',
+					'options' => array(
+						'both' => __( 'Registration and Login Forms', 'edd' ),
+						'registration' => __( 'Registration Form Only', 'edd' ),
+						'login' => __( 'Login Form Only', 'edd' ),
+						'none' => __( 'None', 'edd' )
+					),
+					'std' => 'none'
 				),
 				'item_quantities' => array(
 					'id' => 'item_quantities',
