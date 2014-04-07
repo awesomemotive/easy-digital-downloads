@@ -267,8 +267,7 @@ function edd_ajax_recalculate_taxes() {
 
 	ob_start();
 	edd_checkout_cart();
-	$cart = ob_get_contents();
-	ob_end_clean();
+	$cart = ob_get_clean();
 	$response = array(
 		'html'  => $cart,
 		'total' => html_entity_decode( edd_cart_total( false ), ENT_COMPAT, 'UTF-8' ),
