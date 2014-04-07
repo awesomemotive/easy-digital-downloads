@@ -120,6 +120,7 @@ function edd_currency_filter( $price ) {
 			case "CAD" :
 			case "HKD" :
 			case "MXN" :
+			case "NZD" :
 			case "SGD" :
 				$formatted = '&#36;' . $price;
 				break;

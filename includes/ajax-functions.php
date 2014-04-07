@@ -34,8 +34,7 @@ function edd_is_ajax_enabled() {
  * @return string
 */
 function edd_get_ajax_url() {
-	$scheme = defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https' : 'admin';
-
+	$scheme      = force_ssl_admin() && is_ssl() ? 'https' : 'http';
 	$current_url = edd_get_current_page_url();
 	$ajax_url    = admin_url( 'admin-ajax.php', $scheme );
 
@@ -146,27 +145,33 @@ add_action( 'wp_ajax_nopriv_edd_get_subtotal', 'edd_ajax_get_subtotal' );
 function edd_ajax_apply_discount() {
 	if ( isset( $_POST['code'] ) && check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) ) {
 
+		$discount_code = $_POST['code'];
+
 		$return = array(
 			'msg'  => '',
-			'code' => $_POST['code']
+			'code' => $discount_code
 		);
 
-		if ( edd_is_discount_valid( $_POST['code'] ) ) {
-			$discount  = edd_get_discount_by_code( $_POST['code'] );
+		if ( edd_is_discount_valid( $discount_code ) ) {
+			$discount  = edd_get_discount_by_code( $discount_code );
 			$amount    = edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) );
-			$discounts = edd_set_cart_discount( $_POST['code'] );
+			$discounts = edd_set_cart_discount( $discount_code );
 			$total     = edd_get_cart_total( $discounts );
 
 			$return = array(
 				'msg'    => 'valid',
 				'amount' => $amount,
 				'total'  => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
-				'code'   => $_POST['code'],
+				'code'   => $discount_code,
 				'html'   => edd_get_cart_discounts_html( $discounts )
 			);
 		} else {
 			$return['msg']  = __('The discount you entered is invalid', 'edd');
 		}
+
+		// Allow for custom discount code handling
+		$return = apply_filters( 'edd_ajax_discount_response', $return );
+
 		echo json_encode($return);
 	}
 	edd_die();
@@ -320,9 +325,11 @@ add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
  */
 function edd_ajax_download_search() {
 
-	$search  = sanitize_text_field( $_GET['s'] );
+	global $wpdb;
+
+	$search  = $wpdb->escape( sanitize_text_field( $_GET['s'] ) );
 	$results = array();
-	$items   = get_posts( array( 'post_type' => 'download', 'posts_per_page' => 30, 's' => $search ) ); 
+	$items   = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_title` LIKE '%$search%'" );
 
 	if( $items ) {
 
