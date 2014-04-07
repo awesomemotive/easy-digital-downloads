@@ -216,6 +216,10 @@ class EDD_API {
 		if( empty( $key ) )
 			$key = urldecode( $wp_query->query_vars['key'] );
 
+		if ( empty( $key ) ) {
+			return false;
+		}
+
 		$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' AND meta_value = %s LIMIT 1", $key ) );
 
 		if ( $user != NULL ) {
