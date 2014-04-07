@@ -238,7 +238,7 @@ function edd_get_country_list() {
 		'LY' => 'Libyan Arab Jamahiriya',
 		'LI' => 'Liechtenstein',
 		'LT' => 'Lithuania',
-		'LU' => 'Luxembourgh',
+		'LU' => 'Luxembourg',
 		'MO' => 'Macau',
 		'MK' => 'Macedonia',
 		'MG' => 'Madagascar',
