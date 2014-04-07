@@ -326,7 +326,7 @@ function edd_ajax_download_search() {
 
 	global $wpdb;
 
-	$search  = $wpdb->escape( sanitize_text_field( $_GET['s'] ) );
+	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
 	$results = array();
 	$items   = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_title` LIKE '%$search%'" );
 
