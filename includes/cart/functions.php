@@ -57,7 +57,7 @@ function edd_get_cart_content_details() {
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
 
 		$item_price = round( $item_price, 2 );
-		$discount   = round( $discount * $quantity, 2 );
+		$discount   = round( $discount, 2 );
 		$subtotal   = round( $item_price * $quantity, 2 );
 		$tax        = round( $tax * $quantity, 2 );
 		$total      = round( ( $subtotal - $discount + $tax ), 2 );
