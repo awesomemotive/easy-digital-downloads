@@ -121,7 +121,7 @@ add_action( 'wp_ajax_nopriv_edd_add_to_cart', 'edd_ajax_add_to_cart' );
 
 
 /**
- * Adds item to the cart via AJAX.
+ * Gets the cart's subtotal via AJAX.
  *
  * @since 1.0
  * @return void
