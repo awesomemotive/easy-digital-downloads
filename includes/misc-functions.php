@@ -243,10 +243,10 @@ function edd_get_host() {
  */
 function edd_is_host( $host = false ) {
 	if( $host ) {
-		$host = strtolower( $host );
+		$host = str_replace( ' ', '', strtolower( $host ) );
 
 		switch( $host ) {
-			case 'wp engine':
+			case 'wpengine':
 				if( defined( 'WPE_APIKEY' ) )
 					$return = true;
 				break;
@@ -270,20 +270,20 @@ function edd_is_host( $host = false ) {
 				if( strpos( DB_HOST, 'ipowermysql.com' ) !== false )
 					$return = true;
 				break;
-			case 'mediatemple grid':
+			case 'mediatemplegrid':
 				if( strpos( DB_HOST, '.gridserver.com' ) !== false )
 					$return = true;
 				break;
-			case 'pair networks':
+			case 'pairnetworks':
 				if( strpos( DB_HOST, '.pair.com' ) !== false )
 					$return = true;
 				break;
-			case 'rackspace cloud':
+			case 'rackspacecloud':
 				if( strpos( DB_HOST, '.stabletransit.com' ) !== false )
 					$return = true;
 				break;
 			case 'sysfix.eu':
-			case 'sysfix.eu power hosting':
+			case 'sysfix.eupowerhosting':
 				if( strpos( DB_HOST, '.sysfix.eu' ) !== false )
 					$return = true;
 				break;
