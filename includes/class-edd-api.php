@@ -302,6 +302,10 @@ class EDD_API {
 		if( ! $this->is_valid_request )
 			return;
 
+		if( ! defined( 'EDD_DOING_API' ) ) {
+			define( 'EDD_DOING_API', true );
+		}
+
 		// Determine the kind of query
 		$query_mode = $this->get_query_mode();
 
