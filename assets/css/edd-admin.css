@@ -163,6 +163,7 @@ td.edd_order_price { text-align: right; }
 
 /* Reports Styles
 -------------------------------------------------------------- */
+#edd-dashboard-widgets-wrap .postbox h3 { cursor: default; }
 #edd-graphs-date-options,
 #edd-date-range-options { float: left; }
 #edd-date-range-options span { float: left; margin-right: 6px; height: 24px; line-height: 24px; }
