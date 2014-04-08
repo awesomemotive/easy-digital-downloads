@@ -601,7 +601,7 @@ class EDD_API {
 
 		/**
 		 * Returns the filters for the dates used to retreive earnings/sales
-		 * 
+		 *
 		 * @since 1.5.1
 		 * @param object $dates The dates used for retreiving earnings/sales
 		 */
@@ -708,10 +708,10 @@ class EDD_API {
 			$products['products'] = array();
 
 			$product_list = get_posts( array(
-				'post_type'        => 'download', 
+				'post_type'        => 'download',
 				'posts_per_page'   => $this->per_page(),
 				'suppress_filters' => true,
-				'paged'            => $this->get_paged() 
+				'paged'            => $this->get_paged()
 			) );
 
 			if ( $product_list ) {
@@ -1092,7 +1092,7 @@ class EDD_API {
 				$c = 0;
 
 				foreach ( $cart_items as $key => $item ) {
-					
+
 					$item_id  = isset( $item['id']    ) ? $item['id']    : $item;
 					$price    = isset( $item['price'] ) ? $item['price'] : false;
 					$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;
