@@ -108,7 +108,7 @@ function edd_unset_error( $error_id ) {
  *
  * @author Sunny Ratilal
  * @since 1.6
- * @return void
+ * @return string|null
  */
 function _edd_die_handler() {
 	if ( defined( 'EDD_UNIT_TESTS' ) )

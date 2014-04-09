@@ -172,7 +172,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.7
-	 * @return mixed string If search is present, false otherwise
+	 * @return string|false string If search is present, false otherwise
 	 */
 	public function get_search() {
 		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;

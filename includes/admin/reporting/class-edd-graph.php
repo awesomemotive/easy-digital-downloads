@@ -108,8 +108,8 @@ class EDD_Graph {
 	/**
 	 * Set an option
 	 *
-	 * @param $key The option key to set
-	 * @param $value The value to assign to the key
+	 * @param string $key The option key to set
+	 * @param string|boolean $value The value to assign to the key
 	 * @since 1.9
 	 */
 	public function set( $key, $value ) {

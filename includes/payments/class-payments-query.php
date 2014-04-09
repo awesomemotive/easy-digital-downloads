@@ -81,6 +81,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 *
 	 * @access public
 	 * @since 1.8
+	 * @param string $query_var
 	 */
 	public function __set( $query_var, $value ) {
 		if ( in_array( $query_var, array( 'meta_query', 'tax_query' ) ) )
@@ -94,6 +95,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 *
 	 * @access public
 	 * @since 1.8
+	 * @param string $query_var
 	 */
 	public function __unset( $query_var ) {
 		unset( $this->args[ $query_var ] );

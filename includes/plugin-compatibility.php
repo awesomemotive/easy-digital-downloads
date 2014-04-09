@@ -35,7 +35,7 @@ add_action( 'load-edit.php', 'edd_remove_post_types_order' );
  * when the Jetpack opengraph tags are displayed
  *
  * @since 1.3.3.1
- * @return bool
+ * @return boolean|null
  */
 function edd_disable_jetpack_og_on_checkout() {
 	if ( edd_is_checkout() ) {

@@ -196,7 +196,7 @@ class EDD_Logging {
 	 * @since 1.3.1
 	 * @param array $log_data Log entry data
 	 * @param array $log_meta Log entry meta
-	 * @return bool True if successful, false otherwise
+	 * @return boolean|null True if successful, false otherwise
 	 */
 	public function update_log( $log_data = array(), $log_meta = array() ) {
 		do_action( 'edd_pre_update_log', $log_id, $log_data, $log_meta );
@@ -366,7 +366,7 @@ $GLOBALS['edd_logs'] = new EDD_Logging();
  * @param string $title
  * @param string $message
  * @param int    $parent
- * @param null   $type
+ * @param string   $type
  *
  * @global $edd_logs EDD Logs Object
  *

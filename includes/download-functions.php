@@ -65,7 +65,7 @@ function edd_get_download_price( $download_id = 0 ) {
  * @since 1.0
  * @param int $download_id ID of the download price to show
  * @param bool $echo Whether to echo or return the results
- * @return void
+ * @return null|string
  */
 function edd_price( $download_id, $echo = true ) {
 	if ( edd_has_variable_prices( $download_id ) ) {

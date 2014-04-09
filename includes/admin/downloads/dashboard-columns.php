@@ -241,7 +241,7 @@ add_action( 'bulk_edit_custom_box', 'edd_price_field_quick_edit', 10, 2 );
  *
  * @since 1.1.3.4
  * @param int $post_id Download (Post) ID
- * @return void
+ * @return null|integer
  */
 function edd_price_save_quick_edit( $post_id ) {
 	if ( ! isset( $_POST['post_type']) || 'download' !== $_POST['post_type'] ) return;
