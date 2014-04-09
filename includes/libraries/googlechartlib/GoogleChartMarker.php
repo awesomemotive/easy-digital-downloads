@@ -52,7 +52,7 @@ abstract class GoogleChartMarker
 	/**
 	 * Set the color of the marker.
 	 *
-	 * @param $color (string)
+	 * @param string $color (string)
 	 */
 	public function setColor($color)
 	{

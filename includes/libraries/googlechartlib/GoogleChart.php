@@ -132,10 +132,10 @@ class GoogleChart extends GoogleChartApi
 	/**
 	 * Create a new chart.
 	 *
-	 * @param $type (string)
+	 * @param string $type (string)
 	 *   Google chart type.
-	 * @param $width (int)
-	 * @param $height (int)
+	 * @param integer $width (int)
+	 * @param integer $height (int)
 	 *
 	 * @see http://code.google.com/apis/chart/docs/gallery/chart_gall.html
 	 */
@@ -237,7 +237,7 @@ class GoogleChart extends GoogleChartApi
 	 *
 	 * @see http://code.google.com/apis/chart/docs/data_formats.html#data_scaling
 	 *
-	 * @param $autoscale (bool)
+	 * @param boolean $autoscale (bool)
 	 * @return $this
 	 */
 	public function setAutoscale($autoscale)
@@ -254,7 +254,7 @@ class GoogleChart extends GoogleChartApi
 	 * Set a global scale for the chart.
 	 * Turns off autoscaling.
 	 * @since 0.5
-	 * @param $min (int)
+	 * @param integer $min (int)
 	 * @param $max (int)
 	 * @return $this
 	 */

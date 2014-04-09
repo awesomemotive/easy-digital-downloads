@@ -50,6 +50,9 @@ class GoogleChartIconNote extends GoogleChartIcon
 		return $this;
 	}
 
+	/**
+	 * @param string $note_type
+	 */
 	public function setType($note_type)
 	{
 		$this->type = $note_type;

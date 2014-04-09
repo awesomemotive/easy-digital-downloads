@@ -133,7 +133,7 @@ class GoogleChartShapeMarker extends GoogleChartMarker
 	/**
 	 * Set the size of the shape.
 	 *
-	 * @param $size (int)
+	 * @param integer $size (int)
 	 * @return $this
 	 */
 	public function setSize($size)
