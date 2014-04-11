@@ -319,10 +319,15 @@ class EDD_Payments_Query extends EDD_Stats {
 	 */
 	public function search() {
 
+		if( ! isset( $this->args[ 's' ] ) ) {
+			return;
+		}
+		
 		$search = trim( $this->args[ 's' ] );
 
-		if( empty( $search ) )
+		if( empty( $search ) ) {
 			return;
+		}
 
 		$is_email = is_email( $search ) || strpos( $search, '@' ) !== false;
 
