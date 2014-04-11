@@ -148,26 +148,27 @@ function edd_reports_graph() {
 	);
 
 	?>
-
-	<div class="metabox-holder" style="padding-top: 0;">
-		<div class="postbox">
-			<h3><span><?php _e('Earnings Over Time', 'edd'); ?></span></h3>
-
-			<div class="inside">
-				<?php
-				edd_reports_graph_controls();
-				$graph = new EDD_Graph( $data );
-				$graph->set( 'x_mode', 'time' );
-				$graph->set( 'multiple_y_axes', true );
-				$graph->display();
-				
-				$estimated = edd_estimated_monthly_stats();
-				?>
-				
-				<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $earnings_totals ) ); ?></strong></p>
-				<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo edd_format_amount( $sales_totals, false ); ?></strong></p>
-				<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly earnings: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $estimated['earnings'] ) ); ?></strong></p>
-				<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly sales: ', 'edd' ); echo edd_format_amount( $estimated['sales'], false ); ?></strong></p>
+	<div id="edd-dashboard-widgets-wrap">
+		<div class="metabox-holder" style="padding-top: 0;">
+			<div class="postbox">
+				<h3><span><?php _e('Earnings Over Time', 'edd'); ?></span></h3>
+	
+				<div class="inside">
+					<?php
+					edd_reports_graph_controls();
+					$graph = new EDD_Graph( $data );
+					$graph->set( 'x_mode', 'time' );
+					$graph->set( 'multiple_y_axes', true );
+					$graph->display();
+					
+					$estimated = edd_estimated_monthly_stats();
+					?>
+					
+					<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $earnings_totals ) ); ?></strong></p>
+					<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo edd_format_amount( $sales_totals, false ); ?></strong></p>
+					<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly earnings: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $estimated['earnings'] ) ); ?></strong></p>
+					<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly sales: ', 'edd' ); echo edd_format_amount( $estimated['sales'], false ); ?></strong></p>
+				</div>
 			</div>
 		</div>
 	</div>
