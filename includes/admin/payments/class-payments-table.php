@@ -347,7 +347,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			$display_name = __( 'guest', 'edd' );
 		}
 
-		$value = '<a href="' . esc_url( add_query_arg( array( 'user' => $payment->user_info['email'], 'paged' => false ) ) ) . '">' . $display_name . '</a>';
+		$value = '<a href="' . esc_url( add_query_arg( array( 'user' => urlencode( $payment->user_info['email'] ), 'paged' => false ) ) ) . '">' . $display_name . '</a>';
 		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, 'user' );
 	}
 
@@ -485,7 +485,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$page = isset( $_GET['paged'] ) ? $_GET['paged'] : 1;
 
 		$per_page       = $this->per_page;
-		$orderby 		= isset( $_GET['orderby'] )     ? $_GET['orderby']                           : 'ID';
+		$orderby 		= isset( $_GET['orderby'] )     ? urldecode( $_GET['orderby'] )              : 'ID';
 		$order 			= isset( $_GET['order'] )       ? $_GET['order']                             : 'DESC';
 		$order_inverse 	= $order == 'DESC'              ? 'ASC'                                      : 'DESC';
 		$order_class 	= strtolower( $order_inverse );
