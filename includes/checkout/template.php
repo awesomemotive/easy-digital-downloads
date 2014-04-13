@@ -553,7 +553,12 @@ function edd_show_payment_icons() {
 				echo '<img class="payment-icon" src="' . esc_url( $key ) . '"/>';
 			} else {
                 $image = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . strtolower( str_replace( ' ', '', $card ) ) . '.gif', false );
+				if( function_exists( 'wp_normalize_path' ) ) {
+					// Replaces backslashes with forward slashes for Windows systems
+					$image = wp_normalize_path( $image );
+				}
 				$image = str_replace( WP_CONTENT_DIR, WP_CONTENT_URL, $image );
+				
 				echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
 			}
 		}
