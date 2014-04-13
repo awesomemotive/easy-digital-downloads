@@ -121,7 +121,7 @@ add_action( 'wp_ajax_nopriv_edd_add_to_cart', 'edd_ajax_add_to_cart' );
 
 
 /**
- * Adds item to the cart via AJAX.
+ * Gets the cart's subtotal via AJAX.
  *
  * @since 1.0
  * @return void
@@ -267,8 +267,7 @@ function edd_ajax_recalculate_taxes() {
 
 	ob_start();
 	edd_checkout_cart();
-	$cart = ob_get_contents();
-	ob_end_clean();
+	$cart = ob_get_clean();
 	$response = array(
 		'html'  => $cart,
 		'total' => html_entity_decode( edd_cart_total( false ), ENT_COMPAT, 'UTF-8' ),
@@ -327,9 +326,13 @@ function edd_ajax_download_search() {
 
 	global $wpdb;
 
-	$search  = $wpdb->escape( sanitize_text_field( $_GET['s'] ) );
+	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
 	$results = array();
-	$items   = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_title` LIKE '%$search%'" );
+	if ( current_user_can( 'manage_shop_products' ) ) {
+		$items   = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_title` LIKE '%$search%'" );
+	} else {
+		$items   = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_status` = 'publish' AND `post_title` LIKE '%$search%'" );
+	}
 
 	if( $items ) {
 

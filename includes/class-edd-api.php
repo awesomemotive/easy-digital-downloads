@@ -216,6 +216,10 @@ class EDD_API {
 		if( empty( $key ) )
 			$key = urldecode( $wp_query->query_vars['key'] );
 
+		if ( empty( $key ) ) {
+			return false;
+		}
+
 		$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'edd_user_public_key' AND meta_value = %s LIMIT 1", $key ) );
 
 		if ( $user != NULL ) {
@@ -297,6 +301,10 @@ class EDD_API {
 		// Only proceed if no errors have been noted
 		if( ! $this->is_valid_request )
 			return;
+
+		if( ! defined( 'EDD_DOING_API' ) ) {
+			define( 'EDD_DOING_API', true );
+		}
 
 		// Determine the kind of query
 		$query_mode = $this->get_query_mode();
@@ -593,7 +601,7 @@ class EDD_API {
 
 		/**
 		 * Returns the filters for the dates used to retreive earnings/sales
-		 * 
+		 *
 		 * @since 1.5.1
 		 * @param object $dates The dates used for retreiving earnings/sales
 		 */
@@ -699,7 +707,12 @@ class EDD_API {
 		if ( $product == null ) {
 			$products['products'] = array();
 
-			$product_list = get_posts( array( 'post_type' => 'download', 'posts_per_page' => $this->per_page(), 'paged' => $this->get_paged() ) );
+			$product_list = get_posts( array(
+				'post_type'        => 'download',
+				'posts_per_page'   => $this->per_page(),
+				'suppress_filters' => true,
+				'paged'            => $this->get_paged()
+			) );
 
 			if ( $product_list ) {
 				$i = 0;
@@ -1079,7 +1092,7 @@ class EDD_API {
 				$c = 0;
 
 				foreach ( $cart_items as $key => $item ) {
-					
+
 					$item_id  = isset( $item['id']    ) ? $item['id']    : $item;
 					$price    = isset( $item['price'] ) ? $item['price'] : false;
 					$price_id = isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : null;

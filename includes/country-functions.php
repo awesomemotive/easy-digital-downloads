@@ -60,7 +60,7 @@ function edd_get_shop_states( $country = null ) {
 			$states = edd_get_provinces_list();
 			break;
 		case 'AU' :
-			$states = edd_get_austrailian_states_list();
+			$states = edd_get_australian_states_list();
 			break;
 		case 'BR' :
 			$states = edd_get_brazil_states_list();
@@ -238,7 +238,7 @@ function edd_get_country_list() {
 		'LY' => 'Libyan Arab Jamahiriya',
 		'LI' => 'Liechtenstein',
 		'LT' => 'Lithuania',
-		'LU' => 'Luxembourgh',
+		'LU' => 'Luxembourg',
 		'MO' => 'Macau',
 		'MK' => 'Macedonia',
 		'MG' => 'Madagascar',
@@ -473,7 +473,7 @@ function edd_get_provinces_list() {
  * @since 1.6
  * @return array $states A list of states
  */
-function edd_get_austrailian_states_list() {
+function edd_get_australian_states_list() {
 	$states = array(
 		'ACT' => 'Australian Capital Territory',
 		'NSW' => 'New South Wales',
