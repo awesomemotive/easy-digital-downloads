@@ -1143,7 +1143,7 @@ function edd_rich_editor_callback( $args ) {
 
 	if ( $wp_version >= 3.3 && function_exists( 'wp_editor' ) ) {
 		ob_start();
-		wp_editor( stripslashes( $value ), 'edd_settings[' . $args['id'] . ']', array( 'textarea_name' => 'edd_settings[' . $args['id'] . ']' ) );
+		wp_editor( stripslashes( $value ), 'edd_settings_' . $args['id'], array( 'textarea_name' => 'edd_settings[' . $args['id'] . ']' ) );
 		$html = ob_get_clean();
 	} else {
 		$html = '<textarea class="large-text" rows="10" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
