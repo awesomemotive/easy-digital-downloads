@@ -140,6 +140,10 @@ class EDD_SL_Plugin_Updater {
 		if( empty( $data['license'] ) )
 			return;
 
+		if( $this->api_url == home_url() ) {
+			return; // Don't allow a plugin to ping itself
+		}
+
 		$api_params = array(
 			'edd_action' 	=> 'get_version',
 			'license' 		=> $data['license'],

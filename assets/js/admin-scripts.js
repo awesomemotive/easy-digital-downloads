@@ -193,7 +193,7 @@ jQuery(document).ready(function ($) {
 						state: 'insert',
 						title: button.data( 'uploader_title' ),
 						button: {
-							text: button.data( 'uploader_button_text' ),
+							text: button.data( 'uploader_button_text' )
 						},
 						multiple: $( this ).data( 'multiple' ) == '0' ? false : true  // Set to true to allow multiple files to be selected
 					} );
