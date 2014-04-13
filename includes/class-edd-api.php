@@ -1061,9 +1061,11 @@ class EDD_API {
 		}
 
 		if( isset( $wp_query->query_vars['id'] ) ) {
-			$query = array( edd_get_payment_by( 'id', $wp_query->query_vars['id'] ) );
+			$query = array();
+			$query[] = edd_get_payment_by( 'id', $wp_query->query_vars['id'] );
 		} elseif( isset( $wp_query->query_vars['purchasekey'] ) ) {
-			$query = array( edd_get_payment_by( 'key', $wp_query->query_vars['purchasekey'] ) );
+			$query = array();
+			$query[] = edd_get_payment_by( 'key', $wp_query->query_vars['purchasekey'] );
 		} elseif( isset( $wp_query->query_vars['email'] ) ) {
 			$query = edd_get_payments( array( 'meta_key' => '_edd_payment_user_email', 'meta_value' => $wp_query->query_vars['email'] ) );
 		} else {
