@@ -201,7 +201,7 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 										</div>
 										<div class="column">
 											<strong><?php _e( 'User ID:', 'edd' ); ?></strong>&nbsp;
-											<input type="number" step="1" min="-1" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>&nbsp;&nbsp;&nbsp;
+											<input type="number" step="1" min="-1" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>
 											<p class="description"><?php _e( 'User ID of the customer', 'edd' ); ?></p>
 										</div>
 									</div>
