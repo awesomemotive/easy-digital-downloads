@@ -374,10 +374,10 @@ add_action( 'wp_ajax_nopriv_edd_download_search', 'edd_ajax_download_search' );
  * @return void
  */
 function edd_check_for_download_price_variations() {
-
 	$download_id = intval( $_POST['download_id'] );
 
 	if ( edd_has_variable_prices( $download_id ) ) {
+		$ajax_response = '';
 		$variable_prices = edd_get_variable_prices( $download_id );
 
 		if ( $variable_prices ) {
