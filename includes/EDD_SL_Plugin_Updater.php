@@ -128,8 +128,6 @@ class EDD_SL_Plugin_Updater {
 	 * @return false|object
 	 */
 	private function api_request( $_action, $_data ) {
-		global $wp_version;
-
 		$data = array_merge( $this->api_data, $_data );
 
 		if( $data['slug'] != $this->slug )
