@@ -9,8 +9,7 @@
  * @since       1.3.1
  */
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
  * EDD_Logging Class

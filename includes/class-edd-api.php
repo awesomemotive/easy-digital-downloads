@@ -15,8 +15,7 @@
  * @since       1.5
  */
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
  * EDD_API Class

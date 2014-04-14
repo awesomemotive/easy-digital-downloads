@@ -9,8 +9,7 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 
 /**
@@ -108,7 +107,7 @@ function edd_unset_error( $error_id ) {
  *
  * @author Sunny Ratilal
  * @since 1.6
- * @return void
+ * @return string
  */
 function _edd_die_handler() {
 	if ( defined( 'EDD_UNIT_TESTS' ) )
@@ -129,5 +128,5 @@ function _edd_die_handler() {
 function edd_die() {
 	add_filter( 'wp_die_ajax_handler', '_edd_die_handler', 10, 3 );
 	add_filter( 'wp_die_handler', '_edd_die_handler', 10, 3 );
-	wp_die('');
+	wp_die( '' );
 }
