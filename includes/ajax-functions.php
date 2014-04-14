@@ -323,16 +323,17 @@ add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
  * @return void
  */
 function edd_ajax_download_search() {
-
 	global $wpdb;
 
-	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
+	$search  = isset( $_GET['s'] ) ? $_GET['s'] : '';
 	$results = array();
 	if ( current_user_can( 'manage_shop_products' ) ) {
-		$items = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_title` LIKE '%$search%' LIMIT 50" );
+		$query = $wpdb->prepare( 'SELECT `ID`, `post_title` FROM %1$s WHERE `post_type` = \'download\' AND `post_title` LIKE \'%2$s\' LIMIT 50', $wpdb->posts, '%' . $search . '%' );
 	} else {
-		$items = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_status` = 'publish' AND `post_title` LIKE '%$search%' LIMIT 50" );
+		$query = $wpdb->prepare( 'SELECT `ID`, `post_title` FROM %1$s WHERE `post_type` = \'download\' AND `post_status` = \'publish\' AND `post_title` LIKE \'%2$s\' LIMIT 50', $wpdb->posts, '%' . $search . '%' );
 	}
+	
+	$items = $wpdb->get_results( $query );
 
 	if( $items ) {
 
