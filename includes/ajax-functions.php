@@ -258,7 +258,7 @@ add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_titl
  */
 function edd_ajax_recalculate_taxes() {
 	if ( ! check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) ) {
-		return false;
+		return;
 	}
 
 	if ( empty( $_POST['billing_country'] ) ) {
