@@ -1061,13 +1061,13 @@ class EDD_API {
 		}
 
 		if( isset( $wp_query->query_vars['id'] ) ) {
-			$query = array();
+			$query   = array();
 			$query[] = edd_get_payment_by( 'id', $wp_query->query_vars['id'] );
 		} elseif( isset( $wp_query->query_vars['purchasekey'] ) ) {
-			$query = array();
+			$query   = array();
 			$query[] = edd_get_payment_by( 'key', $wp_query->query_vars['purchasekey'] );
 		} elseif( isset( $wp_query->query_vars['email'] ) ) {
-			$query = edd_get_payments( array( 'meta_key' => '_edd_payment_user_email', 'meta_value' => $wp_query->query_vars['email'] ) );
+			$query = edd_get_payments( array( 'meta_key' => '_edd_payment_user_email', 'meta_value' => $wp_query->query_vars['email'], 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
 		} else {
 			$query = edd_get_payments( array( 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
 		}
@@ -1075,9 +1075,9 @@ class EDD_API {
 		if ( $query ) {
 			$i = 0;
 			foreach ( $query as $payment ) {
-				$payment_meta          = edd_get_payment_meta( $payment->ID );
-				$user_info             = edd_get_payment_meta_user_info( $payment->ID );
-				$cart_items            = edd_get_payment_meta_cart_details( $payment->ID );
+				$payment_meta = edd_get_payment_meta( $payment->ID );
+				$user_info    = edd_get_payment_meta_user_info( $payment->ID );
+				$cart_items   = edd_get_payment_meta_cart_details( $payment->ID );
 
 				$sales['sales'][ $i ]['ID']       = $payment->ID;
 				$sales['sales'][ $i ]['key']      = edd_get_payment_key( $payment->ID );
