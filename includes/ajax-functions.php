@@ -11,8 +11,7 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) die();
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 /**
  * Checks whether AJAX is enabled.
@@ -77,8 +76,6 @@ add_action( 'wp_ajax_nopriv_edd_remove_from_cart', 'edd_ajax_remove_from_cart' )
  */
 function edd_ajax_add_to_cart() {
 	if ( isset( $_POST['download_id'] ) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
-		global $post;
-
 		$to_add = array();
 
 		if ( isset( $_POST['price_ids'] ) && is_array( $_POST['price_ids'] ) ) {
@@ -258,7 +255,7 @@ add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_titl
  */
 function edd_ajax_recalculate_taxes() {
 	if ( ! check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) ) {
-		return false;
+		return;
 	}
 
 	if ( empty( $_POST['billing_country'] ) ) {
@@ -323,7 +320,6 @@ add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
  * @return void
  */
 function edd_ajax_download_search() {
-
 	global $wpdb;
 
 	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
@@ -373,10 +369,10 @@ add_action( 'wp_ajax_nopriv_edd_download_search', 'edd_ajax_download_search' );
  * @return void
  */
 function edd_check_for_download_price_variations() {
-
 	$download_id = intval( $_POST['download_id'] );
 
 	if ( edd_has_variable_prices( $download_id ) ) {
+		$ajax_response = '';
 		$variable_prices = edd_get_variable_prices( $download_id );
 
 		if ( $variable_prices ) {
