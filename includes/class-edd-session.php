@@ -62,6 +62,7 @@ class EDD_Session {
 			if( ! session_id() ) {
 				add_action( 'init', 'session_start', -2 );
 			}
+
 		} else {
 
 			// Use WP_Session (default)
@@ -101,10 +102,11 @@ class EDD_Session {
 	 */
 	public function init() {
 
-		if( $this->use_php_sessions )
+		if( $this->use_php_sessions ) {
 			$this->session = isset( $_SESSION['edd'] ) && is_array( $_SESSION['edd'] ) ? $_SESSION['edd'] : array();
-		else
+		} else {
 			$this->session = WP_Session::get_instance();
+		}
 
 		$cart     = $this->get( 'edd_cart' );
 		$purchase = $this->get( 'edd_purchase' );
