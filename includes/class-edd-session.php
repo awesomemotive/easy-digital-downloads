@@ -59,9 +59,9 @@ class EDD_Session {
 
 			// Use PHP SESSION (must be enabled via the EDD_USE_PHP_SESSIONS constant)
 
-			if( ! session_id() )
+			if( ! session_id() ) {
 				add_action( 'init', 'session_start', -2 );
-
+			}
 		} else {
 
 			// Use WP_Session (default)
