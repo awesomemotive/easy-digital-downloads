@@ -147,6 +147,10 @@ class EDD_License {
 		if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] ) )
 			return;
 
+		if( ! current_user_can( 'manage_shop_settings' ) ) {
+			return;
+		}
+
 		if ( 'valid' == get_option( $this->item_shortname . '_license_active' ) )
 			return;
 
@@ -188,11 +192,16 @@ class EDD_License {
 	 * @return  void
 	 */
 	public function deactivate_license() {
+
 		if ( ! isset( $_POST['edd_settings'] ) )
 			return;
 
 		if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] ) )
 			return;
+
+		if( ! current_user_can( 'manage_shop_settings' ) ) {
+			return;
+		}
 
 		// Run on deactivate button press
 		if ( isset( $_POST[ $this->item_shortname . '_license_key_deactivate' ] ) ) {
@@ -228,33 +237,3 @@ class EDD_License {
 }
 
 endif; // end class_exists check
-
-
-/**
- * Register the new license field type
- *
- * This has been included in core, but is maintained for backwards compatibility
- *
- * @return  void
- */
-if ( ! function_exists( 'edd_license_key_callback' ) ) {
-	function edd_license_key_callback( $args ) {
-		global $edd_options;
-
-		if ( isset( $edd_options[ $args['id'] ] ) )
-			$value = $edd_options[ $args['id'] ];
-		else
-			$value = isset( $args['std'] ) ? $args['std'] : '';
-
-		$size = isset( $args['size'] ) && ! is_null( $args['size'] ) ? $args['size'] : 'regular';
-		$html = '<input type="text" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
-
-		if ( 'valid' == get_option( $args['options']['is_valid_license_option'] ) ) {
-			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License',  'edd-recurring' ) . '"/>';
-		}
-
-		$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
-
-		echo $html;
-	}
-}
