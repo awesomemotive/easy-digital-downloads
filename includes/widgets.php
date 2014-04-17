@@ -66,10 +66,9 @@ class edd_cart_widget extends WP_Widget {
 		$title = isset( $instance[ 'title' ] ) ? esc_attr( $instance[ 'title' ] ) : '';
 		?>
 		<p>
-       		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'edd' ); ?></label>
-     		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>"
-          	 name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>"/>
-    		</p>
+       		<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'edd' ); ?></label>
+     		<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo $title; ?>"/>
+    	</p>
     
    		 <?php
 	}
@@ -111,7 +110,7 @@ class edd_categories_tags_widget extends WP_Widget {
 		} else {
 			echo "<ul class=\"edd-taxonomy-widget\">\n";
 			foreach ( $terms as $term ) {
-				echo '<li><a href="' . get_term_link( $term ) . '" title="' . esc_attr( $term->name ) . '" rel="bookmark">' . $term->name . '</a></li>'."\n";
+				echo '<li><a href="' . esc_url( get_term_link( $term ) ) . '" title="' . esc_attr( $term->name ) . '" rel="bookmark">' . $term->name . '</a></li>'."\n";
 			}
 			echo "</ul>\n";
 		}
@@ -134,13 +133,13 @@ class edd_categories_tags_widget extends WP_Widget {
 		$taxonomy = isset( $instance['taxonomy'] ) ? esc_attr( $instance['taxonomy'] ) : 'download_category';
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'edd' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>"
-				   name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>"/>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'edd' ); ?></label>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
+				   name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo $title; ?>"/>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'taxonomy' ); ?>"><?php _e( 'Taxonomy:', 'edd' ); ?></label>
-			<select name="<?php echo $this->get_field_name( 'taxonomy' ); ?>" id="<?php echo $this->get_field_id( 'taxonomy' ); ?>">
+			<label for="<?php echo esc_attr( $this->get_field_id( 'taxonomy' ) ); ?>"><?php _e( 'Taxonomy:', 'edd' ); ?></label>
+			<select name="<?php echo esc_attr( $this->get_field_name( 'taxonomy' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'taxonomy' ) ); ?>">
 				<option value="download_category" <?php selected( 'download_category', $taxonomy ); ?>><?php _e( 'Categories', 'edd' ); ?></option>
 				<option value="download_tag" <?php selected( 'download_tag', $taxonomy ); ?>><?php _e( 'Tags', 'edd' ); ?></option>
 			</select>
@@ -183,7 +182,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
         if ( 'current' == $instance['download_id'] && is_singular( 'download' ) ) {
         	$download_id = get_the_ID();
         } else {
-        	$download_id = $instance['download_id'];
+        	$download_id = absint( $instance['download_id'] );
         }
 
         // Variables from widget settings
@@ -254,8 +253,8 @@ class EDD_Product_Details_Widget extends WP_Widget {
         
         <!-- Title -->
         <p>
-            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'edd' ) ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $instance['title']; ?>" />
+            <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'edd' ) ?></label>
+            <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo $instance['title']; ?>" />
         </p>
 
 			<!-- Download -->
