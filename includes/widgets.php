@@ -159,6 +159,7 @@ class edd_categories_tags_widget extends WP_Widget {
  * @return void
  */
 class EDD_Product_Details_Widget extends WP_Widget {
+
     /** Constructor */
 	public function __construct() {
 		parent::__construct(
@@ -174,14 +175,16 @@ class EDD_Product_Details_Widget extends WP_Widget {
     public function widget( $args, $instance ) {
         extract( $args );
 
-        if ( 'current' == $instance['download_id'] && ! is_singular( 'download' ) )
+        if ( 'current' == $instance['download_id'] && ! is_singular( 'download' ) ) {
         	return;
+        }
 
        	// set correct download ID
-        if ( 'current' == $instance['download_id'] && is_singular( 'download' ) )
+        if ( 'current' == $instance['download_id'] && is_singular( 'download' ) ) {
         	$download_id = get_the_ID();
-        else
+        } else {
         	$download_id = $instance['download_id'];
+        }
 
         // Variables from widget settings
         $title              = apply_filters( 'widget_title', $instance['title'] );
@@ -194,10 +197,12 @@ class EDD_Product_Details_Widget extends WP_Widget {
         echo $before_widget;
 
         // Display the widget title
-        if( $title )
+        if( $title ) {
             echo $before_title . $title . $after_title;
-		
+		}
+
         do_action( 'edd_product_details_widget_before_title' , $instance , $download_id );
+
      	// download title
         echo $download_title;
 
@@ -224,6 +229,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
         }
         
         do_action( 'edd_product_details_widget_before_categories_and_tags' , $instance , $download_id );
+
         printf( $text, $category_list, $tag_list );
         
         do_action( 'edd_product_details_widget_before_end' , $instance , $download_id );
