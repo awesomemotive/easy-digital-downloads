@@ -69,6 +69,8 @@ function edd_process_purchase_form() {
 		'address'    => $user['address']
 	);
 
+	$auth_key = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
+
 	// Setup purchase information
 	$purchase_data = array(
 		'downloads'    => edd_get_cart_contents(),
@@ -77,7 +79,7 @@ function edd_process_purchase_form() {
 		'discount'     => edd_get_cart_discounted_amount(), // Discounted amount
 		'tax'          => edd_get_cart_tax(),               // Taxed amount
 		'price'        => edd_get_cart_total(),    // Amount after taxes
-		'purchase_key' => strtolower( md5( $user['user_email'] . date( 'Y-m-d H:i:s' ) . uniqid( 'edd', true ) ) ),  // Unique key
+		'purchase_key' => strtolower( md5( $user['user_email'] . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) ),  // Unique key
 		'user_email'   => $user['user_email'],
 		'date'         => date( 'Y-m-d H:i:s' ),
 		'user_info'    => stripslashes_deep( $user_info ),
