@@ -379,6 +379,11 @@ function edd_check_for_download_price_variations() {
 	}
 
 	$download_id = intval( $_POST['download_id'] );
+	$download    = get_post( $download_id );
+
+	if( 'download' != $download->post_type ) {
+		die( '-2' );
+	}
 
 	if ( edd_has_variable_prices( $download_id ) ) {
 		$variable_prices = edd_get_variable_prices( $download_id );
