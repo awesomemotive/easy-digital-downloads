@@ -97,6 +97,10 @@ class EDD_License {
 	 * @return  void
 	 */
 	private function auto_updater() {
+
+		if ( 'valid' !== get_option( $this->item_shortname . '_license_active' ) )
+			return;
+
 		// Setup the updater
 		$edd_updater = new EDD_SL_Plugin_Updater(
 			$this->api_url,
@@ -230,8 +234,7 @@ class EDD_License {
 			// Decode the license data
 			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-			if ( $license_data->license == 'deactivated' )
-				delete_option( $this->item_shortname . '_license_active' );
+			delete_option( $this->item_shortname . '_license_active' );
 		}
 	}
 }
