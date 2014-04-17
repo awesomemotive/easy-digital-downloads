@@ -374,6 +374,10 @@ add_action( 'wp_ajax_nopriv_edd_download_search', 'edd_ajax_download_search' );
  */
 function edd_check_for_download_price_variations() {
 
+	if( ! current_user_can( 'manage_shop_products' ) ) {
+		die( '-1' );
+	}
+
 	$download_id = intval( $_POST['download_id'] );
 
 	if ( edd_has_variable_prices( $download_id ) ) {
@@ -382,7 +386,7 @@ function edd_check_for_download_price_variations() {
 		if ( $variable_prices ) {
 			$ajax_response = '<select class="edd_price_options_select edd-select edd-select">';
 				foreach ( $variable_prices as $key => $price ) {
-					$ajax_response .= '<option value="' . $key . '">' . $price['name']  . '</option>';
+					$ajax_response .= '<option value="' . esc_attr( $key ) . '">' . esc_html( $price['name'] )  . '</option>';
 				}
 			$ajax_response .= '</select>';
 		}
