@@ -242,6 +242,9 @@ function edd_get_host() {
  * @return bool true if host matches, false if not
  */
 function edd_is_host( $host = false ) {
+
+	$return = false;
+
 	if( $host ) {
 		$host = str_replace( ' ', '', strtolower( $host ) );
 
@@ -290,8 +293,6 @@ function edd_is_host( $host = false ) {
 			default:
 				$return = false;
 		}
-	} else {
-		$return = false;
 	}
 
 	return $return;

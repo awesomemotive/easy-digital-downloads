@@ -41,7 +41,7 @@ function edd_get_download_by( $field = '', $value = '' ) {
 		case 'name':
 			$download = query_posts( array(
 				'post_type'      => 'download',
-				'name'           => sanitize_title( $value ),
+				'name'           => sanitize_title_for_query( $value ),
 				'posts_per_page' => 1,
 				'post_status'    => 'any'
 			) );
