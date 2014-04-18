@@ -477,7 +477,7 @@ function edd_tools_sysinfo_get() {
 	// Server configuration (really just versioning)
 	$return .= "\n" . '-- Webserver Configuration' . "\n\n";
 	$return .= 'PHP Version:              ' . PHP_VERSION . "\n";
-	$return .= 'MySQL Version:            ' . mysql_get_server_info() . "\n";
+	$return .= 'MySQL Version:            ' . mysqli_get_client_version() . "\n";
 	$return .= 'Webserver Info:           ' . $_SERVER['SERVER_SOFTWARE'] . "\n";
 
 	$return  = apply_filters( 'edd_sysinfo_after_webserver_config', $return );
@@ -506,6 +506,7 @@ function edd_tools_sysinfo_get() {
 
 	// Session stuff
 	$return .= "\n" . '-- Session Configuration' . "\n\n";
+	$return .= 'EDD Use Sessions:         ' . ( defined( 'EDD_USE_PHP_SESSIONS' ) ? 'Enabled' : 'Disabled' ) . "\n";
 	$return .= 'Session:                  ' . ( isset( $_SESSION ) ? 'Enabled' : 'Disabled' ) . "\n";
 
 	// The rest of this is only relevant is session is enabled
