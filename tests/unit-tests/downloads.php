@@ -14,7 +14,7 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'draft' ) );
+		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_name' => 'test-download', 'post_type' => 'download', 'post_status' => 'draft' ) );
 
 		$_variable_pricing = array(
 			array(
