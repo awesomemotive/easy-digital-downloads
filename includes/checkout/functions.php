@@ -212,7 +212,6 @@ function edd_field_is_required( $field = '' ) {
 	return array_key_exists( $field, $required_fields );
 }
 
-
 /**
  * Retrieve an array of banned_emails
  *
@@ -220,7 +219,24 @@ function edd_field_is_required( $field = '' ) {
  * @return      array
  */
 function edd_get_banned_emails() {
-	$emails = edd_get_option( 'banned_emails', array() );
+	$emails = array_map( 'trim', edd_get_option( 'banned_emails', array() ) );
 
 	return apply_filters( 'edd_get_banned_emails', $emails );
+}
+
+/**
+ * Determines if an email is banned
+ *
+ * @since       2.0
+ * @return      bool
+ */
+function edd_is_email_banned( $email = '' ) {
+
+	if( empty( $email ) ) {
+		return false;
+	}
+
+	$ret = in_array( trim( $email ), edd_get_banned_emails() );
+
+	return apply_filters( 'edd_is_email_banned', $ret, $email );
 }
