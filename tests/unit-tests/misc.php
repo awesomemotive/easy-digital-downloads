@@ -460,7 +460,7 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->assertFalse( edd_is_host( 'WP Engine' ) );
 		$this->assertFalse( edd_is_host( 'WPEngine' ) );
 
-		define( 'WPE_APIKEY', 'testkey' )
+		define( 'WPE_APIKEY', 'testkey' );
 
 		$this->assertTrue( edd_is_host( 'wpengine' ) );
 		$this->assertTrue( edd_is_host( 'wp engine' ) );
