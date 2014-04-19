@@ -290,7 +290,7 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 	
 							<?php do_action( 'edd_view_order_details_billing_after', $payment_id ); ?>
 	
-							<?php $column_count = edd_item_quantities_enabled() ? 'columns-4' : 'columns-3'; ?>
+							<?php $column_count = apply_filters('edd_view_order_details_column_count', edd_item_quantities_enabled() ? 'columns-4' : 'columns-3'); ?>
 							<div id="edd-purchased-files" class="postbox <?php echo $column_count; ?>">
 								<h3 class="hndle">
 									<span><?php printf( __( 'Purchased %s', 'edd' ), edd_get_label_plural() ); ?></span>
@@ -344,7 +344,9 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 											<li class="price">
 												<?php echo edd_currency_filter( edd_format_amount( $price ) ); ?>
 											</li>
-	
+
+											<?php do_action('view_order_details_downloads_extra_columns', $item_id, $price, $price_id, $quantity); ?>
+
 											<li class="actions">
 												<a href="" class="edd-order-remove-download" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
 											</li>
@@ -383,7 +385,9 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 											) );
 											?>
 										</li>
-	
+
+										<?php do_action('edd_view_order_details_add_download_extra_columns'); ?>
+
 										<li class="actions">
 											<a href="" id="edd-order-add-download" class="button button-secondary"><?php printf( __( 'Add %s to Payment', 'edd' ), edd_get_label_singular() ); ?></a>
 										</li>
