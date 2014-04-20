@@ -410,7 +410,6 @@ function edd_get_registered_settings() {
 					'name' => __( 'Enable Taxes', 'edd' ),
 					'desc' => __( 'Check this to enable taxes on purchases.', 'edd' ),
 					'type' => 'checkbox',
-					'std' => 'no'
 				),
 				'tax_rate' => array(
 					'id' => 'tax_rate',
@@ -448,7 +447,6 @@ function edd_get_registered_settings() {
 					'name' => __( 'Display Tax Rate on Prices', 'edd' ),
 					'desc' => __( 'Some countries require a notice when product prices include tax.', 'edd' ),
 					'type' => 'checkbox',
-					'std' => 'no'
 				),
 				'checkout_include_tax' => array(
 					'id' => 'checkout_include_tax',
@@ -465,7 +463,6 @@ function edd_get_registered_settings() {
 					'id' => 'taxes_after_discounts',
 					'name' => __( 'Calculate Tax After Discounts?', 'edd' ),
 					'desc' => __( 'Check this if you would like taxes calculated after discounts. By default taxes are calculated before discounts are applied.', 'edd' ),
-					'std' => 'no',
 					'type' => 'checkbox'
 				),
 				'tax_rates' => array(
@@ -509,7 +506,8 @@ function edd_get_registered_settings() {
 					'id' => 'show_register_form',
 					'name' => __( 'Show Register / Login Form?', 'edd' ),
 					'desc' => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'edd' ),
-					'type' => 'checkbox'
+					'type' => 'checkbox',
+					'std'  => '1'
 				),
 				'item_quantities' => array(
 					'id' => 'item_quantities',
