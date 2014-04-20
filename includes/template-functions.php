@@ -609,3 +609,36 @@ function edd_microdata_wrapper( $content ) {
 	return $content;
 }
 add_filter( 'the_content', 'edd_microdata_wrapper', 10 );
+
+/**
+ * Add no-index and no-follow to EDD checkout and purchase confirmation pages
+ *
+ * @since 2.0
+ *
+ * @return void
+ */
+function edd_checkout_meta_tags() {
+
+	$pages   = array();
+	$pages[] = edd_get_option( 'success_page' );
+	$pages[] = edd_get_option( 'failure_page' );
+	$pages[] = edd_get_option( 'purchase_history_page' );
+
+	if( ! edd_is_checkout() && ! is_page( $pages ) ) {
+		return;
+	}
+
+	echo '<meta name="robots" content="noindex,nofollow" />' . "\n";
+}
+add_action( 'wp_head', 'edd_checkout_meta_tags' );
+
+/**
+ * Adds EDD Version to the <head> tag
+ *
+ * @since 1.4.2
+ * @return void
+*/
+function edd_version_in_header(){
+	echo '<meta name="generator" content="Easy Digital Downloads v' . EDD_VERSION . '" />' . "\n";
+}
+add_action( 'wp_head', 'edd_version_in_header' );
