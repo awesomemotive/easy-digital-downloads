@@ -523,10 +523,10 @@ function edd_get_registered_settings() {
 					'desc' => __('Allow customers to use multiple discounts on the same purchase?', 'edd'),
 					'type' => 'checkbox'
 				),
-				'disable_cart_saving' => array(
-					'id' => 'disable_cart_saving',
-					'name' => __( 'Disable Cart Saving', 'edd' ),
-					'desc' => __( 'Check this to disable cart saving on the checkout', 'edd' ),
+				'enable_cart_saving' => array(
+					'id' => 'enable_cart_saving',
+					'name' => __( 'Enable Cart Saving', 'edd' ),
+					'desc' => __( 'Check this to enable cart saving on the checkout', 'edd' ),
 					'type' => 'checkbox'
 				),
 				'field_downloads' => array(
