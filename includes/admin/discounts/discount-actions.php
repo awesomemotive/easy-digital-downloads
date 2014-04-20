@@ -107,7 +107,7 @@ add_action( 'edd_delete_discount', 'edd_delete_discount' );
  * @return void
  */
 function edd_activate_discount( $data ) {
-	$id = $data['discount'];
+	$id = absint( $data['discount'] );
 	edd_update_discount_status( $id, 'active' );
 }
 add_action( 'edd_activate_discount', 'edd_activate_discount' );
@@ -123,7 +123,7 @@ add_action( 'edd_activate_discount', 'edd_activate_discount' );
  * @return void
 */
 function edd_deactivate_discount( $data) {
-	$id = $data['discount'];
+	$id = absint( $data['discount'] );
 	edd_update_discount_status( $id, 'inactive' );
 }
 add_action( 'edd_deactivate_discount', 'edd_deactivate_discount' );
