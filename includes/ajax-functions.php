@@ -65,9 +65,9 @@ function edd_get_ajax_url() {
  */
 function edd_ajax_remove_from_cart() {
 	if ( isset( $_POST['cart_item'] ) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
-		
+
 		edd_remove_from_cart( $_POST['cart_item'] );
-		
+
 		$return = array(
 			'removed'  => 1,
 			'subtotal' => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
@@ -179,7 +179,9 @@ function edd_ajax_apply_discount() {
 				'html'        => edd_get_cart_discounts_html( $discounts )
 			);
 		} else {
-			$return['msg']  = __('The discount you entered is invalid', 'edd');
+			$errors = edd_get_errors();
+			$return['msg']  = $errors['edd-discount-error'];
+			edd_unset_error( 'edd-discount-error' );
 		}
 
 		// Allow for custom discount code handling
@@ -385,12 +387,12 @@ function edd_ajax_download_search() {
 		}
 
 	} else {
-		
+
 		$items[] = array(
 			'id'   => 0,
 			'name' => __( 'No results found', 'edd' )
 		);
-		
+
 	}
 
 	echo json_encode( $results );
