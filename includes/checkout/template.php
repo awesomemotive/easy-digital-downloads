@@ -498,7 +498,7 @@ function edd_payment_mode_select() {
 	$gateways = edd_get_enabled_payment_gateways();
 	$page_URL = edd_get_current_page_url();
 	do_action('edd_payment_mode_top'); ?>
-	<?php if( ! edd_is_ajax_enabled() ) { ?>
+	<?php if( edd_is_ajax_disabled() ) { ?>
 	<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
 	<?php } ?>
 		<fieldset id="edd_payment_mode_select">
@@ -528,7 +528,7 @@ function edd_payment_mode_select() {
 				<?php echo edd_checkout_button_next(); ?>
 			</p>
 		</fieldset>
-	<?php if( ! edd_is_ajax_enabled() ) { ?>
+	<?php if( edd_is_ajax_disabled() ) { ?>
 	</form>
 	<?php } ?>
 	<div id="edd_purchase_form_wrap"></div><!-- the checkout fields are loaded into this-->
@@ -584,7 +584,7 @@ add_action( 'edd_checkout_form_top', 'edd_show_payment_icons' );
 */
 function edd_discount_field() {
 
-	if( ! isset( $_GET['payment-mode'] ) && count( edd_get_enabled_payment_gateways() ) > 1 && ! edd_is_ajax_enabled() )
+	if( ! isset( $_GET['payment-mode'] ) && count( edd_get_enabled_payment_gateways() ) > 1 && edd_is_ajax_disabled() )
 		return; // Only show once a payment method has been selected if ajax is disabled
 
 	if ( edd_has_active_discounts() && edd_get_cart_total() ) {
@@ -674,7 +674,7 @@ function edd_checkout_submit() {
 
 		<?php do_action( 'edd_purchase_form_after_submit' ); ?>
 
-		<?php if ( ! edd_is_ajax_enabled() ) { ?>
+		<?php if ( edd_is_ajax_disabled() ) { ?>
 			<p class="edd-cancel"><a href="javascript:history.go(-1)"><?php _e( 'Go back', 'edd' ); ?></a></p>
 		<?php } ?>
 	</fieldset>

@@ -59,7 +59,7 @@ function edd_load_scripts() {
 	}
 
 	// Load AJAX scripts, if enabled
-	if ( edd_is_ajax_enabled() ) {
+	if ( ! edd_is_ajax_disabled() ) {
 		wp_enqueue_script( 'edd-ajax', $js_dir . 'edd-ajax' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 		wp_localize_script( 'edd-ajax', 'edd_scripts', array(
 				'ajaxurl'                 => edd_get_ajax_url(),

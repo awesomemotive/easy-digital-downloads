@@ -112,7 +112,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 		<div class="edd_purchase_submit_wrapper">
 			<?php
-			 if ( edd_is_ajax_enabled() ) {
+			 if ( ! edd_is_ajax_disabled() ) {
 				printf(
 					'<a href="#" class="edd-add-to-cart %1$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s %6$s><span class="edd-add-to-cart-label">%2$s</span> <span class="edd-loading"><i class="edd-icon-spinner edd-icon-spin"></i></span></a>',
 					implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
@@ -143,7 +143,7 @@ function edd_get_purchase_link( $args = array() ) {
 			);
 			?>
 
-			<?php if ( edd_is_ajax_enabled() ) : ?>
+			<?php if ( ! edd_is_ajax_disabled() ) : ?>
 				<span class="edd-cart-ajax-alert">
 					<span class="edd-cart-added-alert" style="display: none;">
 						<?php printf(

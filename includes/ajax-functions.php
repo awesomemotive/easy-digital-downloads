@@ -17,13 +17,25 @@ if ( ! defined( 'ABSPATH' ) ) die();
 /**
  * Checks whether AJAX is enabled.
  *
+ * This will be deprecated soon in favor of edd_is_ajax_disabled()
+ *
  * @since 1.0
  * @return bool
  */
 function edd_is_ajax_enabled() {
-	global $edd_options;
-	$retval = ! isset( $edd_options['disable_ajax_cart'] );
+	$retval = ! edd_is_ajax_disabled();
 	return apply_filters( 'edd_is_ajax_enabled', $retval );
+}
+
+/**
+ * Checks whether AJAX is disabled.
+ *
+ * @since 2.0
+ * @return bool
+ */
+function edd_is_ajax_disabled() {
+	$retval = ! edd_get_option( 'enable_ajax_cart' );
+	return apply_filters( 'edd_is_ajax_disabled', $retval );
 }
 
 
