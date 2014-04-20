@@ -499,12 +499,6 @@ function edd_get_registered_settings() {
 					'desc' => __( 'Immediately redirect to checkout after adding an item to the cart?', 'edd' ),
 					'type' => 'checkbox'
 				),
-				'live_cc_validation' => array(
-					'id' => 'live_cc_validation',
-					'name' => __( 'Disable Live Credit Card Validation', 'edd' ),
-					'desc' => __( 'Live credit card validation means that the card type and number will be validated as the customer enters the number.', 'edd' ),
-					'type' => 'checkbox'
-				),
 				'logged_in_only' => array(
 					'id' => 'logged_in_only',
 					'name' => __( 'Disable Guest Checkout', 'edd' ),

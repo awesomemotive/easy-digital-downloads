@@ -112,9 +112,6 @@ function edd_is_cc_verify_enabled() {
 		$ret = false;
 	}
 
-	if ( isset( $edd_options['edd_is_cc_verify_enabled'] ) )
-		$ret = false; // Global override
-
 	return (bool) apply_filters( 'edd_verify_credit_cards', $ret );
 }
 
