@@ -324,8 +324,10 @@ function edd_count_payments( $args = array() ) {
 	global $wpdb;
 
 	$defaults = array(
-		'user' => null,
-		's'    => null
+		'user'       => null,
+		's'          => null,
+		'start-date' => null,
+		'end-date'   => null,
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -378,6 +380,19 @@ function edd_count_payments( $args = array() ) {
 			$where .= "AND ((p.post_title LIKE '%{$args['s']}%') OR (p.post_content LIKE '%{$args['s']}%'))";
 		}
 
+	}
+
+	// Limit payments count by date
+	if ( ! empty( $args['start-date'] ) ) {
+		$date = new DateTime( $args['start-date'] );
+		$where .= "
+			AND p.post_date >= '" . $date->format( 'Y-m-d' ) . "'";
+	}
+
+	if ( ! empty ( $args['end-date'] ) ) {
+		$date = new DateTime( $args['end-date'] );
+		$where .= "
+			AND p.post_date <= '" . $date->format( 'Y-m-d' ) . "'";
 	}
 
 	$where = apply_filters( 'edd_count_payments_where', $where );
@@ -559,7 +574,9 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 
 	if ( ! empty( $hour ) )
 		$args['hour'] = $hour;
-
+	
+	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
+	
 	$key   = md5( serialize( $args ) );
 	$count = get_transient( $key, 'edd' );
 

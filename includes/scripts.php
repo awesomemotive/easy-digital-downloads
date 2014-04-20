@@ -27,8 +27,6 @@ function edd_load_scripts() {
 
 	$js_dir = EDD_PLUGIN_URL . 'assets/js/';
 
-	wp_enqueue_script( 'jquery' );
-
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 

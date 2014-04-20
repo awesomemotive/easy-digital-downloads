@@ -41,7 +41,6 @@ function edd_get_email_templates() {
  * @return string $message Fully formatted message
  */
 function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_notice = false ) {
-
 	return edd_do_email_tags( $message, $payment_id );
 }
 
@@ -157,7 +156,7 @@ function edd_get_email_body_header() {
 	<head>
 		<style type="text/css">#outlook a { padding: 0; }</style>
 	</head>
-	<body>
+	<body dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>">
 	<?php
 	do_action( 'edd_email_body_header' );
 	return ob_get_clean();
@@ -306,9 +305,10 @@ add_filter( 'edd_purchase_receipt', 'edd_apply_email_template', 20, 3 );
  * @since 1.0.8.2
  */
 function edd_default_email_template() {
+	$text_align = is_rtl() ? 'right' : 'left';
 	echo '<div style="margin: 0; background-color: #fafafa; width: auto; padding: 30px;"><center>';
 		echo '<div style="border: 1px solid #ddd; width: 660px; background: #f0f0f0; padding: 8px; margin: 0;">';
-			echo '<div id="edd-email-content" style="background: #fff; border: 1px solid #ddd; padding: 15px; text-align: left !important;">';
+			echo '<div id="edd-email-content" style="background: #fff; border: 1px solid #ddd; padding: 15px; text-align: ' . $text_align . ' !important;">';
 				echo '{email}'; // This tag is required in order for the contents of the email to be shown
 			echo '</div>';
 		echo '</div>';

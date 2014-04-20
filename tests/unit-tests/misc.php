@@ -219,7 +219,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'LR' => 'Liberia',
 			'LS' => 'Lesotho',
 			'LT' => 'Lithuania',
-			'LU' => 'Luxembourgh',
+			'LU' => 'Luxembourg',
 			'LV' => 'Latvia',
 			'LY' => 'Libyan Arab Jamahiriya',
 			'MA' => 'Morocco',
