@@ -55,6 +55,18 @@ function edd_get_success_page_uri() {
 }
 
 /**
+ * Determines if we're currently on the Success page.
+ *
+ * @since 1.9.9
+ * @return bool True if on the Success page, false otherwise.
+ */
+function edd_is_success_page() {
+	global $edd_options;
+	$is_success_page = isset( $edd_options['success_page'] ) ? is_page( $edd_options['success_page'] ) : false;
+	return apply_filters( 'edd_is_success_page', $is_success_page );
+}
+
+/**
  * Send To Success Page
  *
  * Sends the user to the succes page.
