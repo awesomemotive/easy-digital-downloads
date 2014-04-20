@@ -211,7 +211,7 @@ function edd_store_discount( $details, $discount_id = null ) {
 		if( ! empty( $meta['start'] ) && $meta['start'] > $meta['expiration'] ) {
 			// Set the expiration date to the start date if start is later than expiration
 			$meta['expiration'] = $meta['start'];
-		} 
+		}
 	}
 
 	if ( edd_discount_exists( $discount_id ) && ! empty( $discount_id ) ) {
@@ -329,6 +329,8 @@ function edd_is_discount_active( $code_id = null ) {
 	if ( $discount ) {
 		if ( $discount->post_status == 'active' && ! edd_is_discount_expired( $code_id ) ) {
 			$return = true;
+		} else {
+			edd_set_error( 'edd-discount-error', __( 'This discount is not active.', 'edd' ) );
 		}
 	}
 
@@ -553,6 +555,8 @@ function edd_is_discount_started( $code_id = null ) {
 			if ( $start_date < current_time( 'timestamp' ) ) {
 				// Discount has pased the start date
 				$return = true;
+			} else {
+				edd_set_error( 'edd-discount-error', __( 'This discount is not active yet.', 'edd' ) );
 			}
 		} else {
 			// No start date for this discount, so has to be true
@@ -583,6 +587,7 @@ function edd_is_discount_maxed_out( $code_id = null ) {
 		// Should never be greater than, but just in case
 		if ( $uses >= $max_uses && ! empty( $max_uses ) ) {
 			// Discount is maxed out
+			edd_set_error( 'edd-discount-error', __( 'This discount has reached it\'s maximum usage.', 'edd' ) );
 			$return = true;
 		}
 	}
@@ -610,6 +615,8 @@ function edd_discount_is_min_met( $code_id = null ) {
 		if ( (float) $cart_amount >= (float) $min ) {
 			// Minimum has been met
 			$return = true;
+		} else {
+			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'edd' ), edd_currency_filter( edd_format_amount( $min ) ) ) );
 		}
 	}
 
@@ -656,6 +663,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 
 				foreach ( $product_reqs as $download_id ) {
 					if ( ! edd_item_in_cart( $download_id ) ) {
+						edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'edd' ) );
 						$ret = false;
 						break;
 					}
@@ -668,6 +676,8 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 					if ( edd_item_in_cart( $download_id ) ) {
 						$ret = true;
 						break;
+					} else {
+						edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'edd' ) );
 					}
 				}
 
@@ -678,6 +688,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 	if( $excluded_ps ) {
 		// Check that there are products other than excluded ones in the cart
 		if( $cart_ids == $excluded_ps ) {
+			edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'edd' ) );
 			$ret = false;
 		}
 	}
@@ -718,6 +729,7 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 				$key   = '_edd_payment_user_id';
 				$value = $user_data->ID;
 			} else {
+				edd_set_error( 'edd-discount-error', __( 'This discount code is invalid.', 'edd' ) );
 				$user_found = false; // Bail, no user found
 			}
 		}
@@ -743,6 +755,7 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 					$payment_meta = edd_get_payment_meta( $payment );
 					$user_info    = maybe_unserialize( $payment_meta['user_info'] );
 					if ( $user_info['discount'] == $code ) {
+						edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'edd' ) );
 						$return = true;
 					}
 				}
