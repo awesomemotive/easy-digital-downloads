@@ -1362,7 +1362,7 @@ class EDD_API {
 							<?php } else { ?>
 								<strong><?php _e( 'Public key:', 'edd' ); ?>&nbsp;</strong><span id="publickey"><?php echo $user->edd_user_public_key; ?></span><br/>
 								<strong><?php _e( 'Secret key:', 'edd' ); ?>&nbsp;</strong><span id="privatekey"><?php echo $user->edd_user_secret_key; ?></span><br/>
-								<strong><?php _e( 'Token:', 'edd' ); ?>&nbsp;</strong><span id="token"><?php echo hash( 'md5', $user->edd_user_secret_key . $user->edd_user_public_key ); ?></span><br/>
+								<strong><?php _e( 'Token:', 'edd' ); ?>&nbsp;</strong><span id="token"><?php echo $this->get_token( $user->ID ); ?></span><br/>
 								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
 								<span class="description"><?php _e( 'Revoke API Keys', 'edd' ); ?></span>
 							<?php } ?>
@@ -1386,22 +1386,62 @@ class EDD_API {
 	 */
 	public function update_key( $user_id ) {
 		if ( current_user_can( 'edit_user', $user_id ) && isset( $_POST['edd_set_api_key'] ) ) {
+
 			$user = get_userdata( $user_id );
 
 			if ( empty( $user->edd_user_public_key ) ) {
-				$public = hash( 'md5', $user->user_email . date( 'U' ) );
-				update_user_meta( $user_id, 'edd_user_public_key', $public );
+				update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
 			} else {
 				delete_user_meta( $user_id, 'edd_user_public_key' );
 			}
 
 			if ( empty( $user->edd_user_secret_key ) ) {
-				$secret = hash( 'md5', $user->ID . date( 'U' ) );
-				update_user_meta( $user_id, 'edd_user_secret_key', $secret );
+				update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
 			} else {
 				delete_user_meta( $user_id, 'edd_user_secret_key' );
 			}
 		}
+	}
+
+	/**
+	 * Generate the public key for a user
+	 *
+	 * @access private
+	 * @since 1.9.9
+	 * @param string $user_email
+	 * @return string
+	 */
+	private function generate_public_key( $user_email = '' ) {
+		$auth_key = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
+		$public   = hash( 'md5', $user_email . $auth_key . date( 'U' ) );
+		return $public;
+	}
+
+	/**
+	 * Generate the secret key for a user
+	 *
+	 * @access private
+	 * @since 1.9.9
+	 * @param int $user_id
+	 * @return string
+	 */
+	private function generate_private_key( $user_id = 0 ) {
+		$auth_key = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
+		$secret   = hash( 'md5', $user_id . $auth_key . date( 'U' ) );
+		return $secret;
+	}
+
+	/**
+	 * Retrieve the user's token
+	 *
+	 * @access private
+	 * @since 1.9.9
+	 * @param int $user_id
+	 * @return string
+	 */
+	private function get_token( $user_id = 0 ) {
+		$user = get_userdata( $user_id );
+		return hash( 'md5', $user->edd_user_secret_key . $user->edd_user_public_key );
 	}
 
 	/**

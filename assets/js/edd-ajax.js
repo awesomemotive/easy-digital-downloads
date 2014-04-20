@@ -39,8 +39,11 @@ jQuery(document).ready(function ($) {
 	                }
 
 	                $('span.edd-cart-quantity').each(function() {
-	                    var quantity = parseInt($(this).text(), 10) - 1;
-	                    $(this).text(quantity);
+	                    var quantity = parseInt( $(this).text(), 10 ) - 1;
+	                    if( quantity < 1 ) {
+	                    	quantity = 0;
+	                    }
+	                    $(this).text( quantity );
 	                });
 
 	                $('.cart_item.edd_subtotal span').html( response.subtotal );

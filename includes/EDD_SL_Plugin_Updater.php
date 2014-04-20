@@ -66,15 +66,18 @@ class EDD_SL_Plugin_Updater {
 	function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
 
 
-		if( empty( $_transient_data ) ) return $_transient_data;
+		if( empty( $_transient_data ) ) {
+			return $_transient_data;
+		}
 
 		$to_send = array( 'slug' => $this->slug );
 
 		$api_response = $this->api_request( 'plugin_latest_version', $to_send );
 
 		if( false !== $api_response && is_object( $api_response ) && isset( $api_response->new_version ) ) {
-			if( version_compare( $this->version, $api_response->new_version, '<' ) )
+			if( version_compare( $this->version, $api_response->new_version, '<' ) ) {
 				$_transient_data->response[$this->name] = $api_response;
+			}
 		}
 		return $_transient_data;
 	}
@@ -91,13 +94,16 @@ class EDD_SL_Plugin_Updater {
 	 * @return object $_data
 	 */
 	function plugins_api_filter( $_data, $_action = '', $_args = null ) {
-		if ( ( $_action != 'plugin_information' ) || !isset( $_args->slug ) || ( $_args->slug != $this->slug ) ) return $_data;
+		if ( ( $_action != 'plugin_information' ) || !isset( $_args->slug ) || ( $_args->slug != $this->slug ) ) {
+			return $_data;
+		}
 
 		$to_send = array( 'slug' => $this->slug );
 
 		$api_response = $this->api_request( 'plugin_information', $to_send );
-		if ( false !== $api_response ) $_data = $api_response;
-
+		if ( false !== $api_response ) {
+			$_data = $api_response;
+		}
 		return $_data;
 	}
 
@@ -134,14 +140,16 @@ class EDD_SL_Plugin_Updater {
 
 		$data = array_merge( $this->api_data, $_data );
 
-		if( $data['slug'] != $this->slug )
-			return;
+		if( $data['slug'] != $this->slug ) {
+			return false;
+		}
 
-		if( empty( $data['license'] ) )
-			return;
+		if( empty( $data['license'] ) ) {
+			return false;
+		}
 
 		if( $this->api_url == home_url() ) {
-			return; // Don't allow a plugin to ping itself
+			return false; // Don't allow a plugin to ping itself
 		}
 
 		$api_params = array(
@@ -154,13 +162,14 @@ class EDD_SL_Plugin_Updater {
 		);
 		$request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
-		if ( ! is_wp_error( $request ) ):
+		if ( ! is_wp_error( $request ) ) {
 			$request = json_decode( wp_remote_retrieve_body( $request ) );
-			if( $request && isset( $request->sections ) )
+			if( $request && isset( $request->sections ) ) {
 				$request->sections = maybe_unserialize( $request->sections );
+			}
 			return $request;
-		else:
+		} else {
 			return false;
-		endif;
+		}
 	}
 }

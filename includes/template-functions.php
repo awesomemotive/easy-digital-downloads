@@ -54,11 +54,13 @@ function edd_get_purchase_link( $args = array() ) {
 		edd_print_errors();
 		return false;
 	}
+	
+	$post_id = is_object( $post ) ? $post->ID : 0;
 
 	$defaults = apply_filters( 'edd_purchase_link_defaults', array(
-		'download_id' => $post->ID,
+		'download_id' => $post_id,
 		'price'       => (bool) true,
-		'direct'      => edd_get_download_button_behavior( $post->ID ) == 'direct' ? true : false,
+		'direct'      => edd_get_download_button_behavior( $post_id ) == 'direct' ? true : false,
 		'text'        => ! empty( $edd_options[ 'add_to_cart_text' ] ) ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
 		'style'       => isset( $edd_options[ 'button_style' ] ) 	   ? $edd_options[ 'button_style' ]     : 'button',
 		'color'       => isset( $edd_options[ 'checkout_color' ] ) 	   ? $edd_options[ 'checkout_color' ] 	: 'blue',
