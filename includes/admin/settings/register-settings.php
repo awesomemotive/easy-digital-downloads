@@ -833,7 +833,7 @@ function edd_header_callback( $args ) {
 function edd_checkbox_callback( $args ) {
 	global $edd_options;
 
-	$checked = isset($edd_options[$args['id']]) ? checked(1, $edd_options[$args['id']], false) : '';
+	$checked = isset( $edd_options[ $args[ 'id' ] ] ) ? checked( 1, $edd_options[ $args[ 'id' ] ], false ) : '';
 	$html = '<input type="checkbox" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="1" ' . $checked . '/>';
 	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
