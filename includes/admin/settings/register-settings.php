@@ -486,11 +486,12 @@ function edd_get_registered_settings() {
 		/** Misc Settings */
 		'misc' => apply_filters('edd_settings_misc',
 			array(
-				'disable_ajax_cart' => array(
-					'id' => 'disable_ajax_cart',
-					'name' => __( 'Disable Ajax', 'edd' ),
-					'desc' => __( 'Check this to disable AJAX for the shopping cart.', 'edd' ),
-					'type' => 'checkbox'
+				'enable_ajax_cart' => array(
+					'id' => 'enable_ajax_cart',
+					'name' => __( 'Enable Ajax', 'edd' ),
+					'desc' => __( 'Check this to enable AJAX for the shopping cart.', 'edd' ),
+					'type' => 'checkbox',
+					'std'  => '1'
 				),
 				'redirect_on_add' => array(
 					'id' => 'redirect_on_add',
