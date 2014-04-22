@@ -9,6 +9,9 @@
 
 .edd-hidden { display: none; }
 .edd-clearfix:after { display: block; visibility: hidden; content: "."; text-indent: -9999px; height: 0; }
+.edd-wrap a { text-decoration: none; }
+a.edd-delete { color: #a00; }
+a.edd-delete:hover { color: #f00; }
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */

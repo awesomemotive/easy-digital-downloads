@@ -168,6 +168,7 @@ function edd_load_admin_scripts( $hook ) {
 		'delete_payment_note'     => __( 'Are you sure you wish to delete this note?', 'edd' ),
 		'delete_tax_rate'         => __( 'Are you sure you wish to delete this tax rate?', 'edd' ),
 		'resend_receipt'          => __( 'Are you sure you wish to resend the purchase receipt?', 'edd' ),
+		'copy_download_link_text' => __( 'Copy this link to your clip board and give it to your customer', 'edd' ),
 		'delete_payment_download' => sprintf( __( 'Are you sure you wish to delete this %s?', 'edd' ), edd_get_label_singular() ),
 		'one_price_min'           => __( 'You must have at least one price', 'edd' ),
 		'one_file_min'            => __( 'You must have at least one file', 'edd' ),

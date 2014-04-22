@@ -197,3 +197,34 @@ function edd_ajax_delete_payment_note() {
 
 }
 add_action( 'wp_ajax_edd_delete_payment_note', 'edd_ajax_delete_payment_note' );
+
+/**
+ * Retrieves a new download link for a purchased file
+ *
+ * @since 2.0
+ * @return string
+*/
+function edd_ajax_generate_file_download_link() {
+
+	if( ! current_user_can( 'view_shop_reports' ) ) {
+		die( '-1' );
+	}
+
+	$payment_id  = absint( $_POST['payment_id'] );
+	$download_id = absint( $_POST['download_id'] );
+	$file_key    = absint( $_POST['file_key'] );
+	$price_id    = $_POST['file_key'];
+
+	if( empty( $payment_id ) )
+		die( '-2' );
+
+	if( empty( $download_id ) )
+		die( '-3' );
+
+	$payment_key = edd_get_payment_key( $payment_id );
+	$email       = edd_get_payment_user_email( $payment_id );
+
+	die( edd_get_download_file_url( $payment_key, $email, $file_key, $download_id, $price_id ) );
+	
+}
+add_action( 'wp_ajax_edd_get_file_download_link', 'edd_ajax_generate_file_download_link' );
