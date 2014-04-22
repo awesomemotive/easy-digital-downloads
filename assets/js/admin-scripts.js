@@ -554,8 +554,7 @@ jQuery(document).ready(function ($) {
 					action      : 'edd_get_file_download_link',
 					payment_id  : $('input[name="edd_payment_id"]').val(),
 					download_id : $this.data('download-id'),
-					price_id    : $this.data('price-id'),
-					file_key    : $this.data('file-key')
+					price_id    : $this.data('price-id')
 				};
 				
 				$.ajax({

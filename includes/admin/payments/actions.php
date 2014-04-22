@@ -212,8 +212,7 @@ function edd_ajax_generate_file_download_link() {
 
 	$payment_id  = absint( $_POST['payment_id'] );
 	$download_id = absint( $_POST['download_id'] );
-	$file_key    = absint( $_POST['file_key'] );
-	$price_id    = $_POST['file_key'];
+	$price_id    = absint( $_POST['price_id'] );
 
 	if( empty( $payment_id ) )
 		die( '-2' );
@@ -230,7 +229,21 @@ function edd_ajax_generate_file_download_link() {
 		edd_set_file_download_limit_override( $download_id, $payment_id );
 	}
 
-	die( edd_get_download_file_url( $payment_key, $email, $file_key, $download_id, $price_id ) );
+	$files = edd_get_download_files( $download_id, $price_id );
+	if( ! $files ) {
+		die( '-4' );
+	}
+
+	$file_urls = '';
+
+	foreach( $files as $file_key => $file ) {
+
+		$file_urls .= edd_get_download_file_url( $payment_key, $email, $file_key, $download_id, $price_id );
+		$file_urls .= "\n\n";
+
+	}
+
+	die( $file_urls );
 	
 }
 add_action( 'wp_ajax_edd_get_file_download_link', 'edd_ajax_generate_file_download_link' );

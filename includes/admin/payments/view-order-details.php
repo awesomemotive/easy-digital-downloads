@@ -355,7 +355,7 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 	
 											<li class="actions">
 												<?php if( edd_get_download_files( $item_id, $price_id ) ) : ?>
-													<a href="" class="edd-copy-download-link" data-file-key="<?php echo esc_attr( $key ); ?>" data-download-id="<?php echo esc_attr( $item_id ); ?>" data-price-id="<?php echo esc_attr( $price_id ); ?>"><?php _e( 'Copy Download Link', 'edd' ); ?></a> | 
+													<a href="" class="edd-copy-download-link" data-download-id="<?php echo esc_attr( $item_id ); ?>" data-price-id="<?php echo esc_attr( $price_id ); ?>"><?php _e( 'Copy Download Link(s)', 'edd' ); ?></a> | 
 												<?php endif; ?>
 												<a href="" class="edd-order-remove-download edd-delete" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
 											</li>
