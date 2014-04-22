@@ -354,6 +354,7 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 											</li>
 	
 											<li class="actions">
+												<a href="" class="edd-copy-download-link" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Copy Download Link', 'edd' ); ?></a> | 
 												<a href="" class="edd-order-remove-download" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
 											</li>
 										</ul>
