@@ -546,7 +546,30 @@ jQuery(document).ready(function ($) {
 		}
 
 	};
-	EDD_Edit_Payment.init();
+
+
+	/**
+	 * Discount add / edit screen JS
+	 */
+	var EDD_Discount = {
+
+		init : function() {
+			this.type_select();
+		},
+
+
+		type_select : function() {
+
+			$('#edd-edit-discount #edd-type, #edd-add-discount #edd-type').change(function() {
+
+				$('.edd-amount-description').toggle();			
+
+			});
+
+		},
+
+	};
+	EDD_Discount.init();
 
 
 	/**
