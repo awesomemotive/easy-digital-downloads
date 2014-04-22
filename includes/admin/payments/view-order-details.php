@@ -38,7 +38,7 @@ $payment_date = strtotime( $item->post_date );
 $user_info    = edd_get_payment_meta_user_info( $payment_id );
 $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
 ?>
-<div class="wrap">
+<div class="wrap edd-wrap">
 	<h2><?php printf( __( 'Payment #%d', 'edd' ), $payment_id ); ?></h2>
 	<?php do_action( 'edd_view_order_details_before', $payment_id ); ?>
 	<form id="edd-edit-order-form" method="post">
@@ -354,8 +354,10 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 											</li>
 	
 											<li class="actions">
-												<a href="" class="edd-copy-download-link" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Copy Download Link', 'edd' ); ?></a> | 
-												<a href="" class="edd-order-remove-download" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
+												<?php if( edd_get_download_files( $item_id, $price_id ) ) : ?>
+													<a href="" class="edd-copy-download-link" data-file-key="<?php echo esc_attr( $key ); ?>" data-download-id="<?php echo esc_attr( $item_id ); ?>" data-price-id="<?php echo esc_attr( $price_id ); ?>"><?php _e( 'Copy Download Link', 'edd' ); ?></a> | 
+												<?php endif; ?>
+												<a href="" class="edd-order-remove-download edd-delete" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
 											</li>
 										</ul>
 									</div>

@@ -297,6 +297,7 @@ jQuery(document).ready(function ($) {
 			this.add_note();
 			this.remove_note();
 			this.resend_receipt();
+			this.copy_download_link();
 		},
 
 
@@ -543,9 +544,41 @@ jQuery(document).ready(function ($) {
 			$( 'body' ).on( 'click', '#edd-resend-receipt', function( e ) {
 				return confirm( edd_vars.resend_receipt );
 			} );
+		},
+
+		copy_download_link : function() {
+			$( 'body' ).on( 'click', '.edd-copy-download-link', function( e ) {
+				e.preventDefault();
+				var $this    = $(this);
+				var postData = {
+					action      : 'edd_get_file_download_link',
+					payment_id  : $('input[name="edd_payment_id"]').val(),
+					download_id : $this.data('download-id'),
+					price_id    : $this.data('price-id'),
+					file_key    : $this.data('file-key')
+				};
+				
+				$.ajax({
+					type: "POST",
+					data: postData,
+					url: ajaxurl,
+					success: function (link) {
+						
+						alert( edd_vars.copy_download_link_text + "\n\n" + link );
+
+						return false;
+					}
+				}).fail(function (data) {
+					if ( window.console && window.console.log ) {
+						console.log( data );
+					}
+				});
+
+			} );
 		}
 
 	};
+	EDD_Edit_Payment.init();
 
 
 	/**
