@@ -224,6 +224,12 @@ function edd_ajax_generate_file_download_link() {
 	$payment_key = edd_get_payment_key( $payment_id );
 	$email       = edd_get_payment_user_email( $payment_id );
 
+	$limit = edd_get_file_download_limit( $download_id );
+	if ( ! empty( $limit ) ) {
+		// Increase the file download limit when generating new links
+		edd_set_file_download_limit_override( $download_id, $payment_id );
+	}
+
 	die( edd_get_download_file_url( $payment_key, $email, $file_key, $download_id, $price_id ) );
 	
 }
