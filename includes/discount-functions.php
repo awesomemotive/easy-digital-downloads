@@ -526,6 +526,8 @@ function edd_is_discount_expired( $code_id = null ) {
 				// Discount is expired
 				edd_update_discount_status( $code_id, 'inactive' );
 				$return = true;
+			} else {
+				edd_set_error( 'edd-discount-error', __( 'This discount has expired.', 'edd' ) );
 			}
 		}
 	}
