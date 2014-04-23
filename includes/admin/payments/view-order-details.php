@@ -34,6 +34,7 @@ if ( !is_object( $item ) || $item->post_type != 'edd_payment' ) {
 $payment_meta = edd_get_payment_meta( $payment_id );
 $cart_items   = edd_get_payment_meta_cart_details( $payment_id );
 $user_id      = edd_get_payment_user_id( $payment_id );
+$unlimited    = edd_get_payment_unlimited_downloads( $payment_id );
 $payment_date = strtotime( $item->post_date );
 $user_info    = edd_get_payment_meta_user_info( $payment_id );
 $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
@@ -138,6 +139,11 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 													<option value="<?php esc_attr_e( $key ); ?>"<?php selected( edd_get_payment_status( $item, true ), $status ); ?>><?php esc_html_e( $status ); ?></option>
 												<?php endforeach; ?>
 											</select>
+										</p>
+										<p>
+											<span class="label"><?php _e( 'Flags:', 'edd' ); ?></span>&nbsp;
+											<input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" value="1"<?php checked( true, $unlimited, true ); ?>/>
+											<label class="description" for="edd_unlimited_downloads"><?php _e( 'Unlimited downloads', 'edd' ); ?></label>
 										</p>
 									</div>
 

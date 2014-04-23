@@ -33,8 +33,8 @@ function edd_update_payment_details( $data ) {
 	// Retrieve existing payment meta
 	$meta       = edd_get_payment_meta( $payment_id );
 	$user_info  = edd_get_payment_meta_user_info( $payment_id );
-
 	$status     = $data['edd-payment-status'];
+	$unlimited  = isset( $data['edd-unlimited-downloads'] ) ? $data['edd-unlimited-downloads'] : '';
 	$user_id    = intval( $data['edd-payment-user-id'] );
 	$date       = sanitize_text_field( $data['edd-payment-date'] );
 	$hour       = sanitize_text_field( $data['edd-payment-time-hour'] );
@@ -123,11 +123,12 @@ function edd_update_payment_details( $data ) {
 	// Set new status
 	edd_update_payment_status( $payment_id, $status );
 
-	update_post_meta( $payment_id, '_edd_payment_user_id',    $user_id );
-	update_post_meta( $payment_id, '_edd_payment_user_email', $email   );
-	update_post_meta( $payment_id, '_edd_payment_meta',       $meta    );
-	update_post_meta( $payment_id, '_edd_payment_total',      $total   );
-	update_post_meta( $payment_id, '_edd_payment_downloads',  $total   );
+	update_post_meta( $payment_id, '_edd_payment_user_id',             $user_id   );
+	update_post_meta( $payment_id, '_edd_payment_user_email',          $email     );
+	update_post_meta( $payment_id, '_edd_payment_meta',                $meta      );
+	update_post_meta( $payment_id, '_edd_payment_total',               $total     );
+	update_post_meta( $payment_id, '_edd_payment_downloads',           $total     );
+	update_post_meta( $payment_id, '_edd_payment_unlimited_downloads', $unlimited );
 
 	do_action( 'edd_updated_edited_purchase', $payment_id );
 

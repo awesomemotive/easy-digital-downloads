@@ -847,7 +847,7 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
 	$download_count     = $logs->get_log_count( $download_id, 'file_download', $meta_query );
 
 	$download_limit     = edd_get_file_download_limit( $download_id );
-	$unlimited_purchase = get_post_meta( $payment_id, '_unlimited_file_downloads', true );
+	$unlimited_purchase = get_post_meta( $payment_id, '_edd_payment_unlimited_downloads', true );
 
 	if ( ! empty( $download_limit ) && empty( $unlimited_purchase ) ) {
 		if ( $download_count >= $download_limit ) {
