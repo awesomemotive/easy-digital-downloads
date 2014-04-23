@@ -847,7 +847,7 @@ function edd_get_payment_user_ip( $payment_id ) {
  * @return bool $unlimited
  */
 function edd_get_payment_unlimited_downloads( $payment_id ) {
-	$unlimited = get_post_meta( $payment_id, '_edd_payment_unlimited_downloads', true );
+	$unlimited = (bool) get_post_meta( $payment_id, '_edd_payment_unlimited_downloads', true );
 
 	return apply_filters( 'edd_payment_unlimited_downloads', $unlimited );
 }
