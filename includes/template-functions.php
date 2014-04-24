@@ -54,7 +54,7 @@ function edd_get_purchase_link( $args = array() ) {
 		edd_print_errors();
 		return false;
 	}
-	
+
 	$post_id = is_object( $post ) ? $post->ID : 0;
 
 	$defaults = apply_filters( 'edd_purchase_link_defaults', array(
@@ -100,8 +100,21 @@ function edd_get_purchase_link( $args = array() ) {
 		$checkout_display = 'style="display:none;"';
 	}
 
+	global $edd_displayed_form_ids;
+	// Collect any form IDs we've displayed already so we can avoid duplicate IDs
+	if ( isset( $edd_displayed_form_ids[$args['download_id']] ) ) {
+		$edd_displayed_form_ids[$args['download_id']]++;
+	} else {
+		$edd_displayed_form_ids[$args['download_id']] = 1;
+	}
+
 	$form_id = ! empty( $args['form_id'] ) ? $args['form_id'] : 'edd_purchase_' . $args['download_id'];
-	
+
+	// If we've already generated a form ID for this download ID, apped -#
+	if ( $edd_displayed_form_ids[$args['download_id']] > 1 ) {
+		$form_id .= '-' . $edd_displayed_form_ids[$args['download_id']];
+	}
+
 	$args = apply_filters( 'edd_purchase_link_args', $args );
 
 	ob_start();
@@ -171,7 +184,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 		<?php do_action( 'edd_purchase_link_end', $args['download_id'] ); ?>
 
-	</form><!--end #edd_purchase_<?php echo esc_attr( $args['download_id'] ); ?>-->
+	</form><!--end <?php echo esc_attr( $form_id ); ?>-->
 <?php
 	$purchase_form = ob_get_clean();
 
