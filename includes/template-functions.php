@@ -184,7 +184,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 		<?php do_action( 'edd_purchase_link_end', $args['download_id'] ); ?>
 
-	</form><!--end <?php echo esc_attr( $form_id ); ?>-->
+	</form><!--end #<?php echo esc_attr( $form_id ); ?>-->
 <?php
 	$purchase_form = ob_get_clean();
 
