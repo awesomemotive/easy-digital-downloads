@@ -62,6 +62,7 @@ function edd_get_tools_tabs() {
 
 	$tabs                  = array();
 	$tabs['tools']         = __( 'Tools', 'edd' );
+	$tabs['api_keys']      = __( 'API Keys', 'edd' );
 	$tabs['system_info']   = __( 'System Info', 'edd' );
 	$tabs['import_export'] = __( 'Import/Export', 'edd' );
 
@@ -99,6 +100,32 @@ function edd_tools_banned_emails_display() {
 	do_action( 'edd_tools_banned_emails_after' );
 }
 add_action( 'edd_tools_tab_tools', 'edd_tools_banned_emails_display' );
+
+
+/**
+ * Display the API Keys
+ *
+ * @since       2.0
+ * @return      void
+ */
+function edd_tools_api_keys_display() {
+	do_action( 'edd_tools_api_keys_before' );
+
+	require_once EDD_PLUGIN_DIR . 'includes/admin/class-api-keys-table.php';
+
+	$api_keys_table = new EDD_API_Keys_Table();
+	$api_keys_table->prepare_items();
+	$api_keys_table->display();
+?>
+	<div class="postbox">
+		<h3><span><?php _e( 'API Keys', 'edd' ); ?></span></h3>
+		<div class="inside">
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
+<?php
+	do_action( 'edd_tools_api_keys_after' );
+}
+add_action( 'edd_tools_tab_api_keys', 'edd_tools_api_keys_display' );
 
 
 /**
