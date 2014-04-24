@@ -774,7 +774,9 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
 function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
 	global $post;
 
-	if( is_page() ) {
+	if ( defined('DOING_AJAX') ){	
+		$current_page = edd_get_checkout_uri();
+	} else if( is_page() ) {
 		$current_page = add_query_arg( 'page_id', $post->ID, home_url( 'index.php' ) );
 	} else if( is_singular() ) {
 		$current_page = add_query_arg( 'p', $post->ID, home_url( 'index.php' ) );
