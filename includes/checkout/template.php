@@ -584,11 +584,11 @@ add_action( 'edd_checkout_form_top', 'edd_show_payment_icons' );
 */
 function edd_discount_field() {
 
-	if( isset( $_GET['payment-mode'] ) && edd_is_ajax_disabled() )
-		return; // Only show once a payment method has been selected if ajax is disabled
+	if( isset( $_GET['payment-mode'] ) && edd_is_ajax_disabled() ) {
+		return; // Only show before a payment method has been selected if ajax is disabled
+	}
 
-	if ( edd_has_active_discounts() && edd_get_cart_total() ) {
-	?>
+	if ( edd_has_active_discounts() && edd_get_cart_total() ) { ?>
 	<fieldset id="edd_discount_code">
 		<p id="edd_show_discount" style="display:none;">
 			<?php _e( 'Have a discount code?', 'edd' ); ?> <a href="#" class="edd_discount_link"><?php echo _x( 'Click to enter it', 'Entering a discount code', 'edd' ); ?></a>
