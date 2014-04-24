@@ -584,7 +584,7 @@ add_action( 'edd_checkout_form_top', 'edd_show_payment_icons' );
 */
 function edd_discount_field() {
 
-	if( ! isset( $_GET['payment-mode'] ) && count( edd_get_enabled_payment_gateways() ) > 1 && edd_is_ajax_disabled() )
+	if( isset( $_GET['payment-mode'] ) && edd_is_ajax_disabled() )
 		return; // Only show once a payment method has been selected if ajax is disabled
 
 	if ( edd_has_active_discounts() && edd_get_cart_total() ) {
