@@ -34,7 +34,7 @@ if ( !is_object( $item ) || $item->post_type != 'edd_payment' ) {
 $payment_meta = edd_get_payment_meta( $payment_id );
 $cart_items   = edd_get_payment_meta_cart_details( $payment_id );
 $user_id      = edd_get_payment_user_id( $payment_id );
-$unlimited    = edd_get_payment_unlimited_downloads( $payment_id );
+$unlimited    = edd_get_payment_has_unlimited_downloads( $payment_id );
 $payment_date = strtotime( $item->post_date );
 $user_info    = edd_get_payment_meta_user_info( $payment_id );
 $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
