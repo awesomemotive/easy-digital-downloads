@@ -327,7 +327,10 @@ function edd_is_discount_active( $code_id = null ) {
 	$return   = false;
 
 	if ( $discount ) {
-		if ( $discount->post_status == 'active' && ! edd_is_discount_expired( $code_id ) ) {
+
+		if ( edd_is_discount_expired( $code_id ) ) {
+			edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'edd' ) );
+		} elseif ( $discount->post_status == 'active' ) {
 			$return = true;
 		} else {
 			edd_set_error( 'edd-discount-error', __( 'This discount is not active.', 'edd' ) );
@@ -525,7 +528,6 @@ function edd_is_discount_expired( $code_id = null ) {
 			if ( $expiration < current_time( 'timestamp' ) ) {
 				// Discount is expired
 				edd_update_discount_status( $code_id, 'inactive' );
-				edd_set_error( 'edd-discount-error', __( 'This discount has expired.', 'edd' ) );
 				$return = true;
 			}
 		}
