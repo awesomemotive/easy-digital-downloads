@@ -35,7 +35,7 @@ function edd_update_payment_details( $data ) {
 	$user_info  = edd_get_payment_meta_user_info( $payment_id );
 
 	$status     = $data['edd-payment-status'];
-	$unlimited  = isset( $data['edd-unlimited-downloads'] ) ? $data['edd-unlimited-downloads'] : '';
+	$unlimited  = isset( $data['edd-unlimited-downloads'] ) ? '1' : '';
 	$user_id    = intval( $data['edd-payment-user-id'] );
 	$date       = sanitize_text_field( $data['edd-payment-date'] );
 	$hour       = sanitize_text_field( $data['edd-payment-time-hour'] );
