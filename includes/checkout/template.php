@@ -93,7 +93,7 @@ function edd_show_purchase_form() {
 		}
 
 		do_action( 'edd_purchase_form_before_cc_form' );
-		
+
 		if( edd_get_cart_total() > 0 ) {
 
 			// Load the credit card form and allow gateways to load their own if they wish
@@ -104,7 +104,7 @@ function edd_show_purchase_form() {
 			}
 
 		}
-		
+
 		do_action( 'edd_purchase_form_after_cc_form' );
 
 	} else {
@@ -389,11 +389,11 @@ function edd_get_register_fields() {
 
 	ob_start(); ?>
 	<fieldset id="edd_register_fields">
-		
+
 		<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'edd' ); ?> <a href="<?php echo add_query_arg('login', 1); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e( 'Login', 'edd' ); ?></a></p>
-		
+
 		<?php do_action('edd_register_fields_before'); ?>
-	
+
 		<fieldset id="edd_register_account_fields">
 			<span><legend><?php _e( 'Create an account', 'edd' ); if( !edd_no_guest_checkout() ) { echo ' ' . __( '(optional)', 'edd' ); } ?></legend></span>
 			<?php do_action('edd_register_account_fields_before'); ?>
@@ -429,13 +429,13 @@ function edd_get_register_fields() {
 			</p>
 			<?php do_action( 'edd_register_account_fields_after' ); ?>
 		</fieldset>
-		
+
 		<?php do_action('edd_register_fields_after'); ?>
-		
+
 		<input type="hidden" name="edd-purchase-var" value="needs-to-register"/>
 
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
-		
+
 	</fieldset>
 	<?php
 	echo ob_get_clean();
@@ -563,7 +563,7 @@ function edd_show_payment_icons() {
 					$image = wp_normalize_path( $image );
 				}
 				$image = str_replace( WP_CONTENT_DIR, WP_CONTENT_URL, $image );
-				
+
 				echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
 			}
 		}
@@ -600,6 +600,7 @@ function edd_discount_field() {
 			</label>
 			<span class="edd-description"><?php _e( 'Enter a coupon code if you have one.', 'edd' ); ?></span>
 			<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e( 'Enter discount', 'edd' ); ?>"/>
+			<span id="edd-discount-error-wrap" class="edd-discount-error" style="display:none;"></span>
 		</p>
 	</fieldset>
 	<?php
