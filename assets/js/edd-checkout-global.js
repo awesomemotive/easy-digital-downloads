@@ -173,7 +173,8 @@ jQuery(document).ready(function($) {
 						$('body').trigger('edd_discount_applied', [ discount_response ]);
 
                     } else {
-                        $('#edd-discount-error-wrap').html(discount_response.msg).show();
+                        $('#edd-discount-error-wrap').html( '<span class="edd_error">' + discount_response.msg + '</span>' );
+                        $('#edd-discount-error-wrap').show();
                     }
                 } else {
                     if ( window.console && window.console.log ) {
