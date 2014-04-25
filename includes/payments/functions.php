@@ -845,6 +845,19 @@ function edd_get_payment_user_id( $payment_id ) {
 }
 
 /**
+ * Get the status of the unlimited downloads flag
+ *
+ * @since 2.0
+ * @param int $payment_id Payment ID
+ * @return bool $unlimited
+ */
+function edd_payment_has_unlimited_downloads( $payment_id ) {
+	$unlimited = (bool) get_post_meta( $payment_id, '_edd_payment_unlimited_downloads', true );
+
+	return apply_filters( 'edd_payment_unlimited_downloads', $unlimited );
+}
+
+/**
  * Get the IP address used to make a purchase
  *
  * @since 1.9
