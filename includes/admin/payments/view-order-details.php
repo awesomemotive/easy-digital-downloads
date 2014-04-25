@@ -141,13 +141,8 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 													<?php endforeach; ?>
 												</select>
 											</p>
-											<p>
-												<span class="label"><?php _e( 'Flags:', 'edd' ); ?></span>&nbsp;
-												<input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" value="1"<?php checked( true, $unlimited, true ); ?>/>
-												<label class="description" for="edd_unlimited_downloads"><?php _e( 'Unlimited downloads', 'edd' ); ?></label>
-											</p>
 										</div>
-	
+										
 										<div class="edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Date:', 'edd' ); ?></span>&nbsp;
@@ -163,6 +158,14 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 											</p>
 										</div>
 	
+										<div class="edd-admin-box-inside">
+											<p>
+												<span class="label"><i data-code="f316" class="dashicons dashicons-download"></i></span>&nbsp;
+												<input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" value="1"<?php checked( true, $unlimited, true ); ?>/>
+												<label class="description" for="edd_unlimited_downloads"><?php _e( 'Unlimited downloads', 'edd' ); ?></label>
+											</p>
+										</div>
+
 										<?php do_action( 'edd_view_order_details_update_inner', $payment_id ); ?>
 	
 									</div><!-- /.column-container -->
