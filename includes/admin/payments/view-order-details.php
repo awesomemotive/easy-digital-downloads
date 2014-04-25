@@ -160,9 +160,9 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 	
 										<div class="edd-admin-box-inside">
 											<p>
-												<span class="label"><i data-code="f316" class="dashicons dashicons-download"></i></span>&nbsp;
+												<span class="label" title="<?php _e( 'Grants the customer unlimited file downloads for this purchase, regardless of other limits set.', 'edd' ); ?>"><i data-code="f316" class="dashicons dashicons-download"></i></span>&nbsp;
 												<input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" value="1"<?php checked( true, $unlimited, true ); ?>/>
-												<label class="description" for="edd_unlimited_downloads"><?php _e( 'Unlimited downloads', 'edd' ); ?></label>
+												<label class="description" for="edd_unlimited_downloads"><?php _e( 'Unlimited file downloads', 'edd' ); ?></label>
 											</p>
 										</div>
 
