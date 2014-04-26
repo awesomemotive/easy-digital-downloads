@@ -52,9 +52,23 @@ function edd_process_download() {
 
 		// Payment has been verified, setup the download
 		$download_files = edd_get_download_files( $download );
+		$attachment_id  = ! empty( $download_files[ $file_key ]['attachment_id'] ) ? absint( $download_files[ $file_key ]['attachment_id'] ) : false;
 
+		/*
+		 * If we have an attachment ID stored, use get_attached_file() to retrieve absolute URL
+		 * If this fails or returns a relative path, we fail back to our own absolute URL detection
+		 */
+		if( 'attachment' == get_post_type( $attachment_id ) ) {
+			$attached_file = get_attached_file( $attachment_id, false );
+			if( $attached_file ) {
+				$requested_file = $attached_file;
+			}
+		}
+
+		// Allow the file to be altered before any headers are sent
 		$requested_file = apply_filters( 'edd_requested_file', $download_files[ $file_key ]['file'], $download_files, $file_key );
 
+		// Record this file download in the log
 		$user_info = array();
 		$user_info['email'] = $email;
 		if ( is_user_logged_in() ) {
@@ -63,7 +77,6 @@ function edd_process_download() {
 			$user_info['id'] 	= $user_ID;
 			$user_info['name'] 	= $user_data->display_name;
 		}
-
 		edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip(), $payment, $args['price_id'] );
 
 		$file_extension = edd_get_file_extension( $requested_file );
