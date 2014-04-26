@@ -219,14 +219,18 @@ jQuery(document).ready(function ($) {
 						selection.each( function( attachment, index ) {
 							attachment = attachment.toJSON();
 							if ( 0 === index ) {
+								console.log( attachment );
 								// place first attachment in field
+								window.formfield.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
 								window.formfield.find( '.edd_repeatable_upload_field' ).val( attachment.url );
 								window.formfield.find( '.edd_repeatable_name_field' ).val( attachment.title );
 							} else {
 								// Create a new row for all additional attachments
 								var row = window.formfield,
 									clone = EDD_Download_Configuration.clone_repeatable( row );
+
 								clone.find( '.edd_repeatable_upload_field' ).val( attachment.url );
+								clone.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
 								if ( attachment.title.length > 0 ) {
 									clone.find( '.edd_repeatable_name_field' ).val( attachment.title );
 								} else {
@@ -269,7 +273,7 @@ jQuery(document).ready(function ($) {
 		}
 
 	};
-	
+
 	EDD_Download_Configuration.init();
 
 	//$('#edit-slug-box').remove();
@@ -429,7 +433,7 @@ jQuery(document).ready(function ($) {
 						action : 'edd_check_for_download_price_variations',
 						download_id: download_id
 					};
-					
+
 					$.ajax({
 						type: "POST",
 						data: postData,
@@ -471,7 +475,7 @@ jQuery(document).ready(function ($) {
 					payment_id : $(this).data('payment-id'),
 					note : $('#edd-payment-note').val()
 				};
-				
+
 				if( postData.note ) {
 
 					$.ajax({
@@ -508,13 +512,13 @@ jQuery(document).ready(function ($) {
 				e.preventDefault();
 
 				if( confirm( edd_vars.delete_payment_note) ) {
-					
+
 					var postData = {
 						action : 'edd_delete_payment_note',
 						payment_id : $(this).data('payment-id'),
 						note_id : $(this).data('note-id')
 					};
-					
+
 					$.ajax({
 						type: "POST",
 						data: postData,
@@ -886,10 +890,10 @@ jQuery(document).ready(function ($) {
 		var lastKey = e.which;
 
 		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
-		if(val.length <= 3 || (e.which == 16 || e.which == 13 || e.which == 91 || e.which == 17 || 
+		if(val.length <= 3 || (e.which == 16 || e.which == 13 || e.which == 91 || e.which == 17 ||
 			                   e.which == 37 || e.which == 38 || e.which == 39 || e.which == 40))
 			return;
-		
+
 		clearTimeout(typingTimer);
 		typingTimer = setTimeout(
 			function(){
@@ -908,7 +912,7 @@ jQuery(document).ready(function ($) {
 						 $.each( data, function( key, item ) {
 						 	// Remove all options but those that are selected
 						 	$('#' + menu_id + ' option:not(:selected)').remove();
-							
+
 						 	// Add any option that doesn't already exist
 							if( ! $('#' + menu_id + ' option[value="' + item.id + '"]').length ) {
 								$('#' + menu_id).prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
