@@ -327,13 +327,16 @@ function edd_is_discount_active( $code_id = null ) {
 	$return   = false;
 
 	if ( $discount ) {
-
 		if ( edd_is_discount_expired( $code_id ) ) {
-			edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'edd' ) );
+			if( defined( 'DOING_AJAX' ) ) {
+				edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'edd' ) );
+			}
 		} elseif ( $discount->post_status == 'active' ) {
 			$return = true;
 		} else {
-			edd_set_error( 'edd-discount-error', __( 'This discount is not active.', 'edd' ) );
+			if( defined( 'DOING_AJAX' ) ) {
+				edd_set_error( 'edd-discount-error', __( 'This discount is not active.', 'edd' ) );
+			}
 		}
 	}
 
