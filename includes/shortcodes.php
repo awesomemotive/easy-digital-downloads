@@ -296,16 +296,18 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			foreach( $tag_list as $tag ) {
 				if( is_numeric( $tag ) ) {
-					$term = get_term_by( 'ID', $tag, 'download_tag' );
+					$term_id = $tag;
 				} else {
-					$term = get_term_by( 'slug', $tag, 'download_tag' );
+					$term    = get_term_by( 'slug', $tag, 'download_tag' );
+
+					if( !$term ) {
+						continue;
+					}
+
+					$term_id = $term->term_id;
 				}
 
-				if( !$term ) {
-					continue;
-				}
-
-				$_tax_cats[] = $term->term_id;
+				$_tax_cats[] = $term_id;
 			}
 
 			$query['tax_query'][] = array(
@@ -321,16 +323,18 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			foreach( $categories as $category ) {
 				if( is_numeric( $category ) ) {
-					$term = get_term_by( 'ID', $category, 'download_category' );
+					$term_id = $category;
 				} else {
 					$term = get_term_by( 'slug', $category, 'download_category' );
+
+					if( !$term ) {
+						continue;
+					}
+
+					$term_id = $term->term_id;
 				}
 
-				if( !$term ) {
-					continue;
-				}
-
-				$_tax_cats[] = $term->term_id;
+				$_tax_cats[] = $term_id;
 			}
 
 			$query['tax_query'][] = array(
@@ -346,16 +350,18 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			foreach( $categories as $category ) {
 				if( is_numeric( $category ) ) {
-					$term = get_term_by( 'ID', $category, 'download_category' );
+					$term_id = $category;
 				} else {
 					$term = get_term_by( 'slug', $category, 'download_category' );
+
+					if( !$term ) {
+						continue;
+					}
+
+					$term_id = $term->term_id;
 				}
 
-				if( !$term ) {
-					continue;
-				}
-
-				$_tax_cats[] = $term->term_id;
+				$_tax_cats[] = $term_id;
 			}
 
 			$query['tax_query'][] = array(
@@ -372,16 +378,18 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			foreach( $tag_list as $tag ) {
 				if( is_numeric( $tag ) ) {
-					$term = get_term_by( 'ID', $tag, 'download_tag' );
+					$term_id = $tag;
 				} else {
 					$term = get_term_by( 'slug', $tag, 'download_tag' );
+
+					if( !$term ) {
+						continue;
+					}
+
+					$term_id = $term->term_id;
 				}
 
-				if( !$term ) {
-					continue;
-				}
-
-				$_tax_cats[] = $term->term_id;
+				$_tax_cats[] = $term_id;
 			}
 
 			$query['tax_query'][] = array(
