@@ -115,7 +115,7 @@ function edd_get_checkout_uri( $args = array() ) {
 
 	$ajax_url = admin_url( 'admin-ajax.php', $scheme );
 
-	if ( ! preg_match( '/^https/', $uri ) && preg_match( '/^https/', $ajax_url ) ) {
+	if ( ( ! preg_match( '/^https/', $uri ) && preg_match( '/^https/', $ajax_url ) ) || edd_is_ssl_enforced() ) {
 		$uri = preg_replace( '/^http/', 'https', $uri );
 	}
 
@@ -251,4 +251,16 @@ function edd_is_email_banned( $email = '' ) {
 	$ret = in_array( trim( $email ), edd_get_banned_emails() );
 
 	return apply_filters( 'edd_is_email_banned', $ret, $email );
+}
+
+/** 
+ * Determines if secure checkout pages are enforced
+ *
+ * @since       2.0
+ * @return      bool True if enforce SSL is enabled, false otherwise
+ */
+function edd_is_ssl_enforced() {
+	global $edd_options;
+	$ret = isset( $edd_options['enforce_ssl'] );
+	return (bool) $ret;
 }

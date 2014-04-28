@@ -496,6 +496,12 @@ function edd_get_registered_settings() {
 					'desc' => __( 'Immediately redirect to checkout after adding an item to the cart?', 'edd' ),
 					'type' => 'checkbox'
 				),
+				'enforce_ssl' => array(
+					'id' => 'enforce_ssl',
+					'name' => __( 'Enforce SSL on Checkout', 'edd' ),
+					'desc' => __( 'Check this to force users to be redirected to the secure checkout page.', 'edd' ),
+					'type' => 'checkbox'
+				),
 				'logged_in_only' => array(
 					'id' => 'logged_in_only',
 					'name' => __( 'Disable Guest Checkout', 'edd' ),
