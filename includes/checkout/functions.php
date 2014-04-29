@@ -260,9 +260,8 @@ function edd_is_email_banned( $email = '' ) {
  * @return      bool True if enforce SSL is enabled, false otherwise
  */
 function edd_is_ssl_enforced() {
-	global $edd_options;
-	$ret = isset( $edd_options['enforce_ssl'] );
-	return (bool) $ret;
+	$ssl_enforced = isset( edd_get_option( 'enforce_ssl', false ) );
+	return apply_filters( 'edd_is_ssl_enforced', (bool) $ssl_enforced );
 }
 
 /**
@@ -273,7 +272,7 @@ function edd_is_ssl_enforced() {
  * @return void
  */
 function edd_enforced_ssl_redirect_handler() {
-	if ( !edd_is_ssl_enforced() || !edd_is_checkout() || is_admin() ) {
+	if ( ! edd_is_ssl_enforced() || ! edd_is_checkout() || is_admin() ) {
 		return;
 	}
  
