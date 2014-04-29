@@ -261,7 +261,7 @@ function edd_is_email_banned( $email = '' ) {
  */
 function edd_is_ssl_enforced() {
 	$ssl_enforced = isset( edd_get_option( 'enforce_ssl', false ) );
-	return apply_filters( 'edd_is_ssl_enforced', (bool) $ssl_enforced );
+	return (bool) apply_filters( 'edd_is_ssl_enforced', $ssl_enforced );
 }
 
 /**
