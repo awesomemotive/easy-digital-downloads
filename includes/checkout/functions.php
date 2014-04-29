@@ -264,3 +264,22 @@ function edd_is_ssl_enforced() {
 	$ret = isset( $edd_options['enforce_ssl'] );
 	return (bool) $ret;
 }
+
+/**
+ * Handle redirections for SSL enforced checkouts
+ *
+ * @since 2.0
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_enforced_ssl_redirect_handler() {
+	if ( !edd_is_ssl_enforced() || !edd_is_checkout() || is_admin() ) {
+		return;
+	}
+ 
+	$uri = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+	wp_safe_redirect( $uri );
+	exit;
+}
+add_action( 'template_redirect', 'edd_enforced_ssl_redirect_handler' );
