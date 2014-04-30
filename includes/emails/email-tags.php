@@ -566,7 +566,7 @@ function edd_email_tag_billing_address( $payment_id ) {
 	if( ! empty( $user_address['line2'] ) ) {
 		$return .= $user_address['line2'] . "\n";
 	}
-	$return .= $user_address['city'] . ' ' . $user_address['zip'] . ' ' . $user_address['state'] . "\n";
+	$return .= $user_address['city'] . "\n" . $user_address['zip'] . "\n" . $user_address['state'] . "\n";
 	$return .= $user_address['country'];
 
 	return $return;
