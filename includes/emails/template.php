@@ -156,7 +156,7 @@ function edd_get_email_body_header() {
 	<head>
 		<style type="text/css">#outlook a { padding: 0; }</style>
 	</head>
-	<body dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>">
+	<body dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>" style="margin: 0; padding: 0;">
 	<?php
 	do_action( 'edd_email_body_header' );
 	return ob_get_clean();
