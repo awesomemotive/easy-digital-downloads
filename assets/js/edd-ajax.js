@@ -44,6 +44,7 @@ jQuery(document).ready(function ($) {
 	                    	quantity = 0;
 	                    }
 	                    $(this).text( quantity );
+	                    $('body').trigger('edd_quantity_updated', [ quantity ]);
 	                });
 
 	                $('.cart_item.edd_subtotal span').html( response.subtotal );
@@ -151,6 +152,7 @@ jQuery(document).ready(function ($) {
 	                $('span.edd-cart-quantity').each(function() {
 	                    var quantity = parseInt($(this).text(), 10) + 1;
 	                    $(this).text(quantity);
+	                    $('body').trigger('edd_quantity_updated', [ quantity ]);
 	                });
 
 	                // Show the "number of items in cart" message
