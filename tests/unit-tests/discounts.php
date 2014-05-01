@@ -40,7 +40,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 			'type' => 'percent',
 			'amount' => '-100',
 			'code' => 'DOUBLE',
-			'production_condition' => 'all',
+			'product_condition' => 'all',
 			'max' => 10,
 			'uses' => 54,
 			'min_price' => 0
