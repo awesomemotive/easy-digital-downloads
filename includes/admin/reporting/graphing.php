@@ -378,11 +378,15 @@ function edd_reports_graph_controls() {
 		'other'			=> __( 'Custom', 'edd' )
 	) );
 
-	$dates = edd_get_report_dates();
-
+	$dates   = edd_get_report_dates();
 	$display = $dates['range'] == 'other' ? '' : 'style="display:none;"';
+	$view    = edd_get_reporting_view();
 
-	$view = edd_get_reporting_view();
+	if( empty( $dates['day_end'] ) ) {
+		$dates['day_end'] = cal_days_in_month( CAL_GREGORIAN, date( 'n' ), date( 'Y' ) );
+	}
+
+	//echo '<pre>'; print_r( $dates ); echo '</pre>';
 
 	?>
 	<form id="edd-graphs-filter" method="get">
@@ -398,18 +402,20 @@ function edd_reports_graph_controls() {
 				<?php endif; ?>
 
 				<select id="edd-graphs-date-options" name="range">
-				<?php
-					foreach ( $date_options as $key => $option ) {
-						echo '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $dates['range'] ) . '>' . esc_html( $option ) . '</option>';
-					}
-				?>
+				<?php foreach ( $date_options as $key => $option ) : ?>
+						<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $dates['range'] ); ?>><?php echo esc_html( $option ); ?></option>
+					<?php endforeach; ?>
 				</select>
-
 				<div id="edd-date-range-options" <?php echo $display; ?>>
 					<span><?php _e( 'From', 'edd' ); ?>&nbsp;</span>
 					<select id="edd-graphs-month-start" name="m_start">
 						<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
 							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_start'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
+						<?php endfor; ?>
+					</select>
+					<select id="edd-graphs-day-start" name="day">
+						<?php for ( $i = 1; $i <= 31; $i++ ) : ?>
+							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['day'] ); ?>><?php echo $i; ?></option>
 						<?php endfor; ?>
 					</select>
 					<select id="edd-graphs-year-start" name="year">
@@ -421,6 +427,11 @@ function edd_reports_graph_controls() {
 					<select id="edd-graphs-month-end" name="m_end">
 						<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
 							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_end'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
+						<?php endfor; ?>
+					</select>
+					<select id="edd-graphs-day-end" name="day_end">
+						<?php for ( $i = 1; $i <= 31; $i++ ) : ?>
+							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['day_end'] ); ?>><?php echo $i; ?></option>
 						<?php endfor; ?>
 					</select>
 					<select id="edd-graphs-year-end" name="year_end">
@@ -454,6 +465,7 @@ function edd_get_report_dates() {
 
 	$dates['range']      = isset( $_GET['range'] )   ? $_GET['range']   : 'this_month';
 	$dates['day']        = isset( $_GET['day'] )     ? $_GET['day']     : null;
+	$dates['day_end']    = isset( $_GET['day_end'] ) ? $_GET['day_end'] : null;
 	$dates['m_start']    = isset( $_GET['m_start'] ) ? $_GET['m_start'] : 1;
 	$dates['m_end']      = isset( $_GET['m_end'] )   ? $_GET['m_end']   : 12;
 	$dates['year']       = isset( $_GET['year'] )    ? $_GET['year']    : date( 'Y' );
