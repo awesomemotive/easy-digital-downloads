@@ -185,7 +185,7 @@ function edd_get_success_page_url( $query_string = null ) {
 function edd_get_failed_transaction_uri( $extras = false ) {
 	global $edd_options;
 
-	$uri = isset( $edd_options['failure_page'] ) ? trailingslashit( get_permalink( $edd_options['failure_page'] ) ) : home_url();
+	$uri = ! empty( $edd_options['failure_page'] ) ? trailingslashit( get_permalink( $edd_options['failure_page'] ) ) : home_url();
 	if ( $extras )
 		$uri .= $extras;
 
