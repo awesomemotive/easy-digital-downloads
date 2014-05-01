@@ -389,49 +389,49 @@ function edd_reports_graph_controls() {
 		<div class="tablenav top">
 			<div class="alignleft actions">
 
-		       	<input type="hidden" name="post_type" value="download"/>
-		       	<input type="hidden" name="page" value="edd-reports"/>
-		       	<input type="hidden" name="view" value="<?php echo esc_attr( $view ); ?>"/>
+				<input type="hidden" name="post_type" value="download"/>
+				<input type="hidden" name="page" value="edd-reports"/>
+				<input type="hidden" name="view" value="<?php echo esc_attr( $view ); ?>"/>
 
-		       	<?php if( isset( $_GET['download-id'] ) ) : ?>
-		       		<input type="hidden" name="download-id" value="<?php echo absint( $_GET['download-id'] ); ?>"/>
-		       	<?php endif; ?>
+				<?php if( isset( $_GET['download-id'] ) ) : ?>
+					<input type="hidden" name="download-id" value="<?php echo absint( $_GET['download-id'] ); ?>"/>
+				<?php endif; ?>
 
-		       	<select id="edd-graphs-date-options" name="range">
-		       		<?php
-		       		foreach ( $date_options as $key => $option ) {
-		       			echo '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $dates['range'] ) . '>' . esc_html( $option ) . '</option>';
-		       		}
-		       		?>
-		       	</select>
+				<select id="edd-graphs-date-options" name="range">
+				<?php
+					foreach ( $date_options as $key => $option ) {
+						echo '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $dates['range'] ) . '>' . esc_html( $option ) . '</option>';
+					}
+				?>
+				</select>
 
-		       	<div id="edd-date-range-options" <?php echo $display; ?>>
+				<div id="edd-date-range-options" <?php echo $display; ?>>
 					<span><?php _e( 'From', 'edd' ); ?>&nbsp;</span>
-			       	<select id="edd-graphs-month-start" name="m_start">
-			       		<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
-			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_start'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
-				       	<?php endfor; ?>
-			       	</select>
-			       	<select id="edd-graphs-year" name="year">
-			       		<?php for ( $i = 2007; $i <= date( 'Y' ); $i++ ) : ?>
-			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year'] ); ?>><?php echo $i; ?></option>
-				       	<?php endfor; ?>
-			       	</select>
-			       	<span><?php _e( 'To', 'edd' ); ?>&nbsp;</span>
-			       	<select id="edd-graphs-month-start" name="m_end">
-			       		<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
-			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_end'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
-				       	<?php endfor; ?>
-			       	</select>
-			       	<select id="edd-graphs-year" name="year_end">
-			       		<?php for ( $i = 2007; $i <= date( 'Y' ); $i++ ) : ?>
-			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year_end'] ); ?>><?php echo $i; ?></option>
-				       	<?php endfor; ?>
-			       	</select>
-			    </div>
+					<select id="edd-graphs-month-start" name="m_start">
+						<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
+							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_start'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
+						<?php endfor; ?>
+					</select>
+					<select id="edd-graphs-year-start" name="year">
+						<?php for ( $i = 2007; $i <= date( 'Y' ); $i++ ) : ?>
+							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year'] ); ?>><?php echo $i; ?></option>
+						<?php endfor; ?>
+					</select>
+					<span><?php _e( 'To', 'edd' ); ?>&nbsp;</span>
+					<select id="edd-graphs-month-end" name="m_end">
+						<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
+							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_end'] ); ?>><?php echo edd_month_num_to_name( $i ); ?></option>
+						<?php endfor; ?>
+					</select>
+					<select id="edd-graphs-year-end" name="year_end">
+						<?php for ( $i = 2007; $i <= date( 'Y' ); $i++ ) : ?>
+						<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year_end'] ); ?>><?php echo $i; ?></option>
+						<?php endfor; ?>
+					</select>
+				</div>
 
-			    <input type="hidden" name="edd_action" value="filter_reports" />
-		       	<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'edd' ); ?>"/>
+				<input type="hidden" name="edd_action" value="filter_reports" />
+				<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'edd' ); ?>"/>
 			</div>
 		</div>
 	</form>
