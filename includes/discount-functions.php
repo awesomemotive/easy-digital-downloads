@@ -1216,7 +1216,6 @@ function edd_maybe_remove_cart_discount( $cart_key = 0 ) {
 }
 add_action( 'edd_post_remove_from_cart', 'edd_maybe_remove_cart_discount' );
 
-
 /**
  * Checks whether multiple discounts can be applied to the same purchase
  *
@@ -1228,3 +1227,30 @@ function edd_multiple_discounts_allowed() {
 	$ret = isset( $edd_options['allow_multiple_discounts'] );
 	return apply_filters( 'edd_multiple_discounts_allowed', $ret );
 }
+
+/**
+ * Listens for a discount and automatically applies it if present and valid
+ *
+ * @since 2.0
+ * @return void
+ */
+function edd_listen_for_cart_discount() {
+
+	if( ! edd_is_checkout() ) {
+		return;
+	}
+
+	if( empty( $_REQUEST['discount'] ) ) {
+		return;
+	}
+
+	$code = sanitize_text_field( $_REQUEST['discount'] );
+
+	if( ! edd_is_discount_valid( $code ) ) {
+		return;
+	}
+
+	edd_set_cart_discount( $code );
+
+}
+add_action( 'template_redirect', 'edd_listen_for_cart_discount', 500 );
