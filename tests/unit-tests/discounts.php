@@ -47,7 +47,6 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		);
 
 		$this->_negative_post->ID = edd_store_discount( $negative_meta );
-
 		$this->assertInternalType( 'int', $this->_negative_post->ID );
 	}
 
