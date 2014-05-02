@@ -886,9 +886,21 @@ jQuery(document).ready(function ($) {
 		var lastKey = e.which;
 
 		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
-		if(val.length <= 3 || (e.which == 16 || e.which == 13 || e.which == 91 || e.which == 17 || 
-			                   e.which == 37 || e.which == 38 || e.which == 39 || e.which == 40))
+		if(
+			val.length <= 3 ||
+			(
+				e.which == 16 || 
+				e.which == 13 || 
+				e.which == 91 || 
+				e.which == 17 || 
+				e.which == 37 || 
+				e.which == 38 || 
+				e.which == 39 || 
+				e.which == 40
+			)
+		) {
 			return;
+		}
 		
 		clearTimeout(typingTimer);
 		typingTimer = setTimeout(
