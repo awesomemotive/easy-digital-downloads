@@ -71,7 +71,7 @@ Easy Digital Downloads as been translated into the following languages:
 14. Japanese
 15. Farsi
 16. Finnish
-16. Hebrew
+17. Hebrew
 
 Would you like to help translate the plugin into more languages? [Join our WP-Translations Community](https://www.transifex.com/projects/p/easy-digital-downloads/).
 
