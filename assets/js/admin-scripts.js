@@ -917,10 +917,9 @@ jQuery(document).ready(function ($) {
 						$('ul.chosen-results').empty();
 					},
 					success: function( data ) {
-						 $.each( data, function( key, item ) {
-						 	// Remove all options but those that are selected
-						 	$('#' + menu_id + ' option:not(:selected)').remove();
-							
+						// Remove all options but those that are selected
+					 	$('#' + menu_id + ' option:not(:selected)').remove();
+						$.each( data, function( key, item ) {
 						 	// Add any option that doesn't already exist
 							if( ! $('#' + menu_id + ' option[value="' + item.id + '"]').length ) {
 								$('#' + menu_id).prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
@@ -938,7 +937,8 @@ jQuery(document).ready(function ($) {
 
 		        });
 			},
-			doneTypingInterval);
+			doneTypingInterval
+		);
 	});
 
 	// This fixes the Chosen box being 0px wide when the thickbox is opened
