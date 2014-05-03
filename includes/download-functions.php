@@ -129,7 +129,7 @@ function edd_get_download_final_price( $download_id, $user_purchase_info, $amoun
  */
 function edd_get_variable_prices( $download_id ) {
 	$variable_prices = get_post_meta( $download_id, 'edd_variable_prices', true );
-	return apply_filters( 'edd_get_variable_prices', $variable_prices );
+	return apply_filters( 'edd_get_variable_prices', $variable_prices, $download_id );
 }
 
 /**
