@@ -184,6 +184,60 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 1.9.9: May 3, 2014 =
+
+* New: Added a JS trigger for when the cart quantity is updated
+* New: Added a CSS class name to the download file URL on purchase confirmation
+* New: Introduced an edd_is_success_page() function
+* New: Introduced a filter on the edd_get_variable_prices() function
+* New: Added Offer schema.org markup
+* New: Added edd_get_sales_args filter
+* New: Added edd_get_cart_content_details_item_discount_amount filter
+* New: Added edd_get_cart_item_tax_item_discount_amount filter
+
+* Tweak: Added $payment_id to the edd_email_receipt_download_title filter
+* Tweak: Added a break after the country select field on checkout
+* Tweak: Removed direct call to wp_enqueu_script( 'jquery' ) since it is loaded as a dependency
+* Tweak: Improved the Dashboard summary widget layout
+* Tweak: Improve column width of the Downloads table
+* Tweak: Updated language files
+* Tweak: Limit payment counts by start and end date
+* Tweak: Improved spacing in payment history
+
+* Fix: Allow remove from cart button to work within ajax calls
+* Fix: Properly format sale numbers for Total Sales stats
+* Fix: Remove all custom taxonomies and terms during uninstall
+* Fix: Improper HTML for text fields through EDD_HTML_Elements class
+* Fix: Improper HTML for checkbox fields through EDD_HTML_Elements class
+* Fix: Broken cache key in EDD_Payment_Stats
+* Fix: Properly account for when global $post isn't available in edd_get_purchase_link()
+* Fix: Cart quantity could go negative, that's silly
+* Fix: Deprecated notices from usage of wp_editor() with WordPress 3.9
+* Fix: Improper cursor behavior on Dashboard widgets
+* Fix: Broken payment method icons on checkout
+* Fix: Deprecated notice with $wpdb->escape()
+* Fix: Do not retrieve user if no key is set in EDD_API
+* Fix: Fatal error when installing EDD via WP CLI
+* Fix: Typo in Australian states function
+* Fix: Undefined index in edd_count_purchases_of_customer()
+* Fix: InlineEditPost JS error
+* Fix: JS error in IE
+* Fix: Improper formatting of New Zealand currency
+* Fix: Improper verification of Serbian zip codes
+* Fix: No validation on logged-in user's email addresses during checkout
+* Fix: Improper slash in PayPal IPN URL
+* Fix: Ajax product drop down search doesn't return all found products
+* Fix: File downloads get named as "index.php" on Android devices
+* Fix: Duplicate field ID in card state and card country fields
+* Fix: Strings in Discounts admin not able to be translated
+* Fix: Empty carts with FORCE_SSL_ADMIN set to true
+* Fix: Tax improperly applied to countries not included in tax rules
+* Fix: Unable to override global file download limit option
+* Fix: Don't load scripts in admin except when needed
+* Fix: Payment method icons fail on Microsoft-IIS servers
+* Fix: Incorrect stats with Custom date ranges on reports
+* Fix: edd_get_chosen_gateway() doesn't respect default gateway
+
 = 1.9.8: March 6, 2014 =
 
 * Fix: Problem with guest customers not being able to view purchase receipts
