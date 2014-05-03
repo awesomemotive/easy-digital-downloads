@@ -203,6 +203,7 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 * Tweak: Updated language files
 * Tweak: Limit payment counts by start and end date
 * Tweak: Improved spacing in payment history
+* Tweak: Removed nonce fields from front-end ajax requests
 
 * Fix: Allow remove from cart button to work within ajax calls
 * Fix: Properly format sale numbers for Total Sales stats
