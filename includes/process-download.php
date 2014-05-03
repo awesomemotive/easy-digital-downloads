@@ -110,6 +110,7 @@ function edd_process_download() {
 				$direct       = false;
 				$file_details = parse_url( $requested_file );
 				$schemes      = array( 'http', 'https' ); // Direct URL schemes
+
 				if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
 
 					/** This is an absolute path */
@@ -151,7 +152,7 @@ function edd_process_download() {
 					$file_path = str_ireplace( $_SERVER[ 'DOCUMENT_ROOT' ], '', $file_path );
 					header( "X-Accel-Redirect: /$file_path" );
 
-				} else
+				}
 
 				if( $direct ) {
 					edd_deliver_download( $file_path );
@@ -167,7 +168,7 @@ function edd_process_download() {
 		edd_die();
 	} else {
 		$error_message = __( 'You do not have permission to download this file', 'edd' );
-		wp_die( apply_filters( ' edd_deny_download_message', $error_message, __( 'Purchase Verification Failed', 'edd' ) ) );
+		wp_die( apply_filters( 'edd_deny_download_message', $error_message, __( 'Purchase Verification Failed', 'edd' ) ) );
 	}
 
 	exit;

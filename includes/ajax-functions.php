@@ -64,8 +64,8 @@ function edd_get_ajax_url() {
  * @return void
  */
 function edd_ajax_remove_from_cart() {
-	if ( isset( $_POST['cart_item'] ) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
-
+	if ( isset( $_POST['cart_item'] ) ) {
+		
 		edd_remove_from_cart( $_POST['cart_item'] );
 
 		$return = array(
@@ -88,7 +88,7 @@ add_action( 'wp_ajax_nopriv_edd_remove_from_cart', 'edd_ajax_remove_from_cart' )
  * @return void
  */
 function edd_ajax_add_to_cart() {
-	if ( isset( $_POST['download_id'] ) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
+	if ( isset( $_POST['download_id'] ) ) {
 		global $post;
 
 		$to_add = array();
@@ -139,10 +139,8 @@ add_action( 'wp_ajax_nopriv_edd_add_to_cart', 'edd_ajax_add_to_cart' );
  * @return void
  */
 function edd_ajax_get_subtotal() {
-  if (  check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
-    echo edd_currency_filter( edd_get_cart_subtotal() );
-  }
-  edd_die();
+	echo edd_currency_filter( edd_get_cart_subtotal() );
+	edd_die();
 }
 
 add_action( 'wp_ajax_edd_get_subtotal', 'edd_ajax_get_subtotal' );
@@ -155,7 +153,7 @@ add_action( 'wp_ajax_nopriv_edd_get_subtotal', 'edd_ajax_get_subtotal' );
  * @return void
  */
 function edd_ajax_apply_discount() {
-	if ( isset( $_POST['code'] ) && check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) ) {
+	if ( isset( $_POST['code'] ) ) {
 
 		$discount_code = $_POST['code'];
 
@@ -299,7 +297,7 @@ add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_titl
  * @return void
  */
 function edd_ajax_recalculate_taxes() {
-	if ( ! check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) ) {
+	if ( ! edd_get_cart_contents() ) {
 		return false;
 	}
 
