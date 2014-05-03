@@ -63,7 +63,6 @@ function edd_load_scripts() {
 		wp_enqueue_script( 'edd-ajax', $js_dir . 'edd-ajax' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 		wp_localize_script( 'edd-ajax', 'edd_scripts', array(
 				'ajaxurl'                 => edd_get_ajax_url(),
-				'ajax_nonce'              => wp_create_nonce( 'edd_ajax_nonce' ),
 				'position_in_cart'        => isset( $position ) ? $position : -1,
 				'already_in_cart_message' => __('You have already added this item to your cart', 'edd'), // Item already in the cart message
 				'empty_cart_message'      => __('Your cart is empty', 'edd'), // Item already in the cart message
