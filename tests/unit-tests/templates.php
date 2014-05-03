@@ -72,7 +72,7 @@ class Tests_Templates extends EDD_UnitTestCase {
 		
 		// The product we created has variable pricing, so ensure the price options render
 		$this->assertContains( '<div class="edd_price_options">', $link );
-		$this->assertContains( '<span class="edd_price_option_name">', $link );
+		$this->assertContains( '<span class="edd_price_option_name" itemprop="description">', $link );
 	}
 
 	public function test_button_colors() {

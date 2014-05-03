@@ -210,7 +210,7 @@ function edd_purchase_variable_pricing( $download_id = 0 ) {
 			<?php
 			if ( $prices ) :
 				foreach ( $prices as $key => $price ) :
-					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '">';
+					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '" itemprop="offers" itemscope itemtype="http://schema.org/Offer">';
 					printf(
 						'<label for="%3$s"><input type="%2$s" %1$s name="edd_options[price_id][]" id="%3$s" class="%4$s" value="%5$s" %7$s/> %6$s</label>',
 						checked( apply_filters( 'edd_price_option_checked', 0, $download_id, $key ), $key, false ),
@@ -218,7 +218,7 @@ function edd_purchase_variable_pricing( $download_id = 0 ) {
 						esc_attr( 'edd_price_option_' . $download_id . '_' . $key ),
 						esc_attr( 'edd_price_option_' . $download_id ),
 						esc_attr( $key ),
-						'<span class="edd_price_option_name">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price[ 'amount' ] ) ) . '</span>',
+						'<span class="edd_price_option_name" itemprop="description">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price" itemprop="price">' . edd_currency_filter( edd_format_amount( $price[ 'amount' ] ) ) . '</span>',
 						checked( isset( $_GET['price_option'] ), $key, false )
 					);
 					do_action( 'edd_after_price_option', $key, $price, $download_id );
