@@ -133,7 +133,8 @@ function edd_get_gateway_checkout_label( $gateway ) {
  */
 function edd_get_gateway_supports( $gateway ) {
 	$gateways = edd_get_enabled_payment_gateways();
-	return isset( $gateways[ $gateway ]['supports'] ) ? $gateways[ $gateway ]['supports'] : array();
+	$supports = isset( $gateways[ $gateway ]['supports'] ) ? $gateways[ $gateway ]['supports'] : array();
+	return apply_filters( 'edd_gateway_supports', $supports, $gateway );
 }
 
 /**
