@@ -24,7 +24,7 @@ before_script:
     - sed -i "s/yourpasswordhere//" tmp/wordpress-tests/wp-tests-config.php
     - mysql -e 'CREATE DATABASE wordpress_test;' -uroot
     - pear channel-discover pear.phpunit.de
-    - wget https://getcomposer.org/download/1.0.0-alpha7/composer.phar
+    - wget https://getcomposer.org/download/1.0.0-alpha1/composer.phar
     - php composer.phar install --dev --no-interaction
     - phpenv rehash
 
