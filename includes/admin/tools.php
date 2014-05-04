@@ -384,14 +384,25 @@ function edd_tools_sysinfo_get() {
 	$return .= "\n" . '-- EDD Gateway Configuration' . "\n\n";
 
 	$active_gateways = edd_get_enabled_payment_gateways();
-	$default_gateway = $active_gateways[edd_get_default_gateway()]['admin_label'];
-	$gateways        = array();
-	foreach( $active_gateways as $gateway ) {
-		$gateways[] = $gateway['admin_label'];
-	}
+	if( $active_gateways ) {
+		$default_gateway_is_active = edd_is_gateway_active( edd_get_default_gateway() );
+		if( $default_gateway_is_active ) {
+			$default_gateway = edd_get_default_gateway();
+			$default_gateway = $active_gateways[$default_geteway]['admin_label'];
+		} else {
+			$default_gateway = 'Test Payment';
+		}
 
-	$return .= 'Enabled Gateways:         ' . implode( ', ', $gateways ) . "\n";
-	$return .= 'Default Gateway:          ' . $default_gateway . "\n";
+		$gateways        = array();
+		foreach( $active_gateways as $gateway ) {
+			$gateways[] = $gateway['admin_label'];
+		}
+
+		$return .= 'Enabled Gateways:         ' . implode( ', ', $gateways ) . "\n";
+		$return .= 'Default Gateway:          ' . $default_gateway . "\n";
+	} else {
+		$return .= 'Enabled Gateways:         None' . "\n";
+	}
 
 	$return  = apply_filters( 'edd_sysinfo_after_edd_gateways', $return );
 
