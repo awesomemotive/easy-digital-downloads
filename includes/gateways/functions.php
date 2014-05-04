@@ -49,11 +49,11 @@ function edd_get_enabled_payment_gateways() {
 
 	$gateway_list = array();
 
-	foreach ( $gateways as $key => $gateway ) :
-		if ( isset( $enabled[ $key ] ) && $enabled[ $key ] == 1 ) :
+	foreach ( $gateways as $key => $gateway ) {
+		if ( isset( $enabled[ $key ] ) && $enabled[ $key ] == 1 ) {
 			$gateway_list[ $key ] = $gateway;
-		endif;
-	endforeach;
+		}
+	}
 
 	return apply_filters( 'edd_enabled_payment_gateways', $gateway_list );
 }
