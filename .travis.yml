@@ -23,8 +23,10 @@ before_script:
     - sed -i "s/yourusernamehere/root/" tmp/wordpress-tests/wp-tests-config.php
     - sed -i "s/yourpasswordhere//" tmp/wordpress-tests/wp-tests-config.php
     - mysql -e 'CREATE DATABASE wordpress_test;' -uroot
+    - pear channel-discover pear.phpunit.de
     - wget http://getcomposer.org/composer.phar
     - php composer.phar install --dev --no-interaction
+    - phpenv rehash
 
 script:
     - mkdir -p build/logs
