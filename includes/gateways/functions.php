@@ -68,11 +68,8 @@ function edd_get_enabled_payment_gateways() {
 function edd_is_gateway_active( $gateway ) {
 	$gateways = edd_get_enabled_payment_gateways();
 
-	if ( array_key_exists( $gateway, $gateways ) ) {
-		return true;
-	}
-
-	return false;
+	$ret = array_key_exists( $gateway, $gateways );
+	return apply_filters( 'edd_is_gateway_active', $ret, $gateway, $gateways );
 }
 
 /**
