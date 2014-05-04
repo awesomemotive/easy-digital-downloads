@@ -187,6 +187,29 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 								</div><!-- /.edd-order-update-box -->
 	
 							</div><!-- /#edd-order-data -->
+
+							<div id="edd-order-logs" class="postbox edd-order-logs">
+								
+								<h3 class="hndle">
+									<span><?php _e( 'Logs', 'edd' ); ?></span>
+								</h3>
+								<div class="inside">
+									<div class="edd-admin-box">
+	
+										<div class="edd-admin-box-inside">
+
+											<p><a href="<?php echo admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&payment=' . $payment_id ); ?>"><?php _e( 'View file download log for purchase', 'edd' ); ?></a></p>
+	
+										</div>
+
+										<?php do_action( 'edd_view_order_details_logs_inner', $payment_id ); ?>
+	
+									</div><!-- /.column-container -->
+	
+								</div><!-- /.inside -->
+
+	
+							</div><!-- /#edd-order-logs -->
 	
 							<?php do_action( 'edd_view_order_details_sidebar_after', $payment_id ); ?>
 						</div><!-- /#side-sortables -->
