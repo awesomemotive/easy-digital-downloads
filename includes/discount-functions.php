@@ -669,7 +669,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 
 				foreach ( $product_reqs as $download_id ) {
 					if ( ! edd_item_in_cart( $download_id ) ) {
-						edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'edd' ) );
+						edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'edd' ) );
 						$ret = false;
 						break;
 					}
@@ -683,7 +683,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 						$ret = true;
 						break;
 					} else {
-						edd_set_error( 'edd-discount-error', __( 'This discount is not valid for the cart contents.', 'edd' ) );
+						edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'edd' ) );
 					}
 				}
 
