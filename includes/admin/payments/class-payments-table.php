@@ -508,21 +508,28 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$end_date       = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
 
 		$args = array(
-			'output'   => 'payments',
-			'number'   => $per_page,
-			'page'     => isset( $_GET['paged'] ) ? $_GET['paged'] : null,
-			'orderby'  => $orderby,
-			'order'    => $order,
-			'user'     => $user,
-			'status'   => $status,
-			'meta_key' => $meta_key,
-			'year'	   => $year,
-			'month'    => $month,
-			'day' 	   => $day,
-			's'        => $search,
+			'output'     => 'payments',
+			'number'     => $per_page,
+			'page'       => isset( $_GET['paged'] ) ? $_GET['paged'] : null,
+			'orderby'    => $orderby,
+			'order'      => $order,
+			'user'       => $user,
+			'status'     => $status,
+			'meta_key'   => $meta_key,
+			'year'	     => $year,
+			'month'      => $month,
+			'day' 	     => $day,
+			's'          => $search,
 			'start_date' => $start_date,
 			'end_date'   => $end_date,
 		);
+
+		if( is_string( $search ) && false !== strpos( $search, 'txn:' ) ) {
+
+			$args['search_in_notes'] = true;
+			$args['s'] = trim( str_replace( 'txn:', '', $args['s'] ) );
+
+		}
 
 		$p_query  = new EDD_Payments_Query( $args );
 
