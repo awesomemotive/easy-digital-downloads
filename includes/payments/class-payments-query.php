@@ -51,24 +51,25 @@ class EDD_Payments_Query extends EDD_Stats {
 	 */
 	public function __construct( $args = array() ) {
 		$defaults = array(
-			'output'     => 'payments', // Use 'posts' to get standard post objects
-			'post_type'  => array( 'edd_payment' ),
-			'start_date' => false,
-			'end_date'   => false,
-			'number'     => 20,
-			'page'       => null,
-			'orderby'    => 'ID',
-			'order'      => 'DESC',
-			'user'       => null,
-			'status'     => 'any',
-			'meta_key'   => null,
-			'year'       => null,
-			'month'      => null,
-			'day'        => null,
-			's'          => null,
-			'children'   => false,
-			'fields'     => null,
-			'download'   => null
+			'output'          => 'payments', // Use 'posts' to get standard post objects
+			'post_type'       => array( 'edd_payment' ),
+			'start_date'      => false,
+			'end_date'        => false,
+			'number'          => 20,
+			'page'            => null,
+			'orderby'         => 'ID',
+			'order'           => 'DESC',
+			'user'            => null,
+			'status'          => 'any',
+			'meta_key'        => null,
+			'year'            => null,
+			'month'           => null,
+			'day'             => null,
+			's'               => null,
+			'search_in_notes' => false,
+			'children'        => false,
+			'fields'          => null,
+			'download'        => null
 		);
 
 		$this->args = wp_parse_args( $args, $defaults );
@@ -342,7 +343,20 @@ class EDD_Payments_Query extends EDD_Stats {
         $is_email = is_email( $search ) || strpos( $search, '@' ) !== false;
 		$is_user  = strpos( $search, strtolower( 'user:' ) ) !== false;
 
-		if ( $is_email || strlen( $search ) == 32 ) {
+		if ( ! empty( $this->args[ 'search_in_notes' ] ) ) {
+
+			$notes = edd_get_payment_notes( 0, $search );
+
+			if( ! empty( $notes ) ) {
+
+				$payment_ids = wp_list_pluck( (array) $notes, 'comment_post_ID' );
+
+				$this->__set( 'post__in', $payment_ids );
+			}
+
+			$this->__unset( 's' );
+
+		} elseif ( $is_email || strlen( $search ) == 32 ) {
 
 			$key = $is_email ? '_edd_payment_user_email' : '_edd_payment_purchase_key';
 			$search_meta = array(
