@@ -774,45 +774,48 @@ function edd_get_payment_meta_downloads( $payment_id ) {
  */
 function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files = false ) {
 	$payment_meta = edd_get_payment_meta( $payment_id );
-	$cart_details = (array) maybe_unserialize( $payment_meta['cart_details'] );
+	$cart_details = ! empty( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] ) : array();
 
+	if( ! empty( $cart_details ) ) {
 
-	foreach( $cart_details as $key => $cart_item ) {
+		foreach( $cart_details as $key => $cart_item ) {
 
-		// Ensure subtotal is set, for pre-1.9 orders
-		if( ! isset( $cart_item['subtotal'] ) ) {
-			$cart_details[$key]['subtotal'] = $cart_item['price'];
-		}
+			// Ensure subtotal is set, for pre-1.9 orders
+			if( ! isset( $cart_item['subtotal'] ) ) {
+				$cart_details[$key]['subtotal'] = $cart_item['price'];
+			}
 
-		if( $include_bundle_files ) {
+			if( $include_bundle_files ) {
 
-			if( 'bundle' != edd_get_download_type( $cart_item['id'] ) )
-				continue;
+				if( 'bundle' != edd_get_download_type( $cart_item['id'] ) )
+					continue;
 
-			$products = edd_get_bundled_products( $cart_item['id'] );
-			if( empty( $products ) )
-				continue;
+				$products = edd_get_bundled_products( $cart_item['id'] );
+				if( empty( $products ) )
+					continue;
 
-			foreach( $products as $product_id ) {
-				$cart_details[]   = array(
-					'id'          => $product_id,
-					'name'        => get_the_title( $product_id ),
-					'item_number' => array(
-						'id'      => $product_id,
-						'options' => array(),
-					),
-					'price'       => 0,
-					'subtotal'    => 0,
-					'quantity'    => 1,
-					'tax'         => 0,
-					'in_bundle'   => 1,
-					'parent'		=> array(
-							'id' 			=> $cart_item['id'],
-							'options' 		=> isset( $cart_item['item_number']['options'] ) ? $cart_item['item_number']['options'] : array()
-						)
-				);
+				foreach( $products as $product_id ) {
+					$cart_details[]   = array(
+						'id'          => $product_id,
+						'name'        => get_the_title( $product_id ),
+						'item_number' => array(
+							'id'      => $product_id,
+							'options' => array(),
+						),
+						'price'       => 0,
+						'subtotal'    => 0,
+						'quantity'    => 1,
+						'tax'         => 0,
+						'in_bundle'   => 1,
+						'parent'		=> array(
+								'id' 			=> $cart_item['id'],
+								'options' 		=> isset( $cart_item['item_number']['options'] ) ? $cart_item['item_number']['options'] : array()
+							)
+					);
+				}
 			}
 		}
+
 	}
 
 	return apply_filters( 'edd_payment_meta_cart_details', $cart_details );
