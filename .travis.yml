@@ -30,7 +30,7 @@ before_script:
 
 script:
     - mkdir -p build/logs
-    - phpunit -c phpunit.xml --stderr
+    - phpunit -c phpunit.xml --stderr --group ajax
 
 after_script:
     - php vendor/bin/coveralls --config tests/framework/.coveralls.yml -v --exclude-no-stmt
