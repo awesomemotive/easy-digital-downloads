@@ -368,7 +368,7 @@ function edd_ajax_download_search() {
 
 	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
 	$results = array();
-	if ( current_user_can( 'manage_shop_products' ) ) {
+	if ( current_user_can( 'edit_products' ) ) {
 		$items = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_title` LIKE '%$search%' LIMIT 50" );
 	} else {
 		$items = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_status` = 'publish' AND `post_title` LIKE '%$search%' LIMIT 50" );
@@ -414,7 +414,7 @@ add_action( 'wp_ajax_nopriv_edd_download_search', 'edd_ajax_download_search' );
  */
 function edd_check_for_download_price_variations() {
 
-	if( ! current_user_can( 'manage_shop_products' ) ) {
+	if( ! current_user_can( 'edit_products' ) ) {
 		die( '-1' );
 	}
 
