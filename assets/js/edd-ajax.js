@@ -52,6 +52,8 @@ jQuery(document).ready(function ($) {
 	                    $('.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout').hide();
 	                    $('.edd-cart').append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
 	                }
+
+                    $('body').trigger('edd_cart_item_removed', [ response ]);
 	            }
 	        }
         }).fail(function (response) {
@@ -170,9 +172,9 @@ jQuery(document).ready(function ($) {
 	                }
 	                
 	                // Update all buttons for same download
-									if( $( '.edd_download_purchase_form' ).length ) {
-										var parent_form = $('.edd_download_purchase_form *[data-download-id="' + download + '"]').parents('form');
-										$( 'a.edd-add-to-cart', parent_form ).hide();
+					if( $( '.edd_download_purchase_form' ).length ) {
+						var parent_form = $('.edd_download_purchase_form *[data-download-id="' + download + '"]').parents('form');
+						$( 'a.edd-add-to-cart', parent_form ).hide();
 	                	$( '.edd_go_to_checkout', parent_form ).show().removeAttr( 'data-edd-loading' );
 	               	}
 
@@ -183,6 +185,9 @@ jQuery(document).ready(function ($) {
 	                        $('.edd-cart-added-alert', container).fadeOut();
 	                    }, 3000);
 	                }
+
+                    $('body').trigger('edd_cart_item_added', [ response ]);
+
 	            }
 	        }
         }).fail(function (response) {

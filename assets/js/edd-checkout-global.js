@@ -25,6 +25,7 @@ jQuery(document).ready(function($) {
                     } else {
                         $this.parent().next().find('input,select').replaceWith( response );
                     }
+                    $('body').trigger('edd_cart_billing_address_updated', [ response ]);
                 }
             }).fail(function (data) {
                 if ( window.console && window.console.log ) {
