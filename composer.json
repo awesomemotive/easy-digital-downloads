@@ -10,6 +10,7 @@
     },
 	"require-dev": {
 		"satooshi/php-coveralls": "dev-master",
-		"phpunit/phpunit": "3.7.31"
+		"phpunit/phpunit": "3.7.31",
+		"phpunit/php-invoker": "1.1.0"
 	}
 }
