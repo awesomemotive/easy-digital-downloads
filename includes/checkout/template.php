@@ -78,11 +78,12 @@ function edd_show_purchase_form() {
 
 		do_action( 'edd_purchase_form_before_register_login' );
 
-		if( isset( $edd_options['show_register_form'] ) && ! is_user_logged_in() && ! isset( $_GET['login'] ) ) : ?>
+		$show_register_form = edd_get_option( 'show_register_form', 'none' ) ;
+		if( ( $show_register_form == 'registration' || ( $show_register_form == 'both' && ! isset( $_GET['login'] ) ) ) && ! is_user_logged_in() ) : ?>
 			<div id="edd_checkout_login_register">
 				<?php do_action( 'edd_purchase_form_register_fields' ); ?>
 			</div>
-		<?php elseif( isset( $edd_options['show_register_form'] ) && ! is_user_logged_in() && isset( $_GET['login'] ) ) : ?>
+		<?php elseif( ( $show_register_form == 'login' || ( $show_register_form == 'both' && isset( $_GET['login'] ) ) ) && ! is_user_logged_in() ) : ?>
 			<div id="edd_checkout_login_register">
 				<?php do_action( 'edd_purchase_form_login_fields' ); ?>
 			</div>
@@ -385,13 +386,22 @@ function edd_get_register_fields() {
 	global $user_ID;
 
 	if ( is_user_logged_in() )
-	$user_data = get_userdata( $user_ID );
+		$user_data = get_userdata( $user_ID );
+
+	$show_register_form = edd_get_option( 'show_register_form', 'none' );
 
 	ob_start(); ?>
 	<fieldset id="edd_register_fields">
 
+<<<<<<< HEAD
 		<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'edd' ); ?> <a href="<?php echo add_query_arg('login', 1); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e( 'Login', 'edd' ); ?></a></p>
 
+=======
+		<?php if( $show_register_form == 'both' ) { ?>
+			<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'edd' ); ?> <a href="<?php echo add_query_arg('login', 1); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e( 'Login', 'edd' ); ?></a></p>
+		<?php } ?>
+		
+>>>>>>> b0a517e340ce107f68ab90a0e80e5b47f0bfcccb
 		<?php do_action('edd_register_fields_before'); ?>
 
 		<fieldset id="edd_register_account_fields">
@@ -457,14 +467,18 @@ function edd_get_login_fields() {
 	$color = ( $color == 'inherit' ) ? '' : $color;
 	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
 
+	$show_register_form = edd_get_option( 'show_register_form', 'none' );
+
 	ob_start(); ?>
 		<fieldset id="edd_login_fields">
-			<p id="edd-new-account-wrap">
-				<?php _e( 'Need to create an account?', 'edd' ); ?>
-				<a href="<?php echo remove_query_arg('login'); ?>" class="edd_checkout_register_login" data-action="checkout_register">
-					<?php _e( 'Register', 'edd' ); if(!edd_no_guest_checkout()) { echo ' ' . __( 'or checkout as a guest.', 'edd' ); } ?>
-				</a>
-			</p>
+			<?php if( $show_register_form == 'both' ) { ?>
+				<p id="edd-new-account-wrap">
+					<?php _e( 'Need to create an account?', 'edd' ); ?>
+					<a href="<?php echo remove_query_arg('login'); ?>" class="edd_checkout_register_login" data-action="checkout_register">
+						<?php _e( 'Register', 'edd' ); if(!edd_no_guest_checkout()) { echo ' ' . __( 'or checkout as a guest.', 'edd' ); } ?>
+					</a>
+				</p>
+			<?php } ?>
 			<?php do_action('edd_checkout_login_fields_before'); ?>
 			<p id="edd-user-login-wrap">
 				<label class="edd-label" for="edd-username"><?php _e( 'Username', 'edd' ); ?></label>
