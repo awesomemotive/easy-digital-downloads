@@ -1075,15 +1075,18 @@ function edd_get_purchase_id_by_key( $key ) {
  *
  * @since 1.4
  * @param int $payment_id The payment ID to retrieve notes for
+ * @param string $search Search for notes that contain a search term
  * @return array $notes Payment Notes
  */
-function edd_get_payment_notes( $payment_id = 0 ) {
-	if ( empty( $payment_id ) )
+function edd_get_payment_notes( $payment_id = 0, $search = '' ) {
+
+	if ( empty( $payment_id ) && empty( $search ) ) {
 		return false;
+	}
 
 	remove_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
 
-	$notes = get_comments( array( 'post_id' => $payment_id, 'order' => 'ASC' ) );
+	$notes = get_comments( array( 'post_id' => $payment_id, 'order' => 'ASC', 'search' => $search ) );
 
 	add_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
 
