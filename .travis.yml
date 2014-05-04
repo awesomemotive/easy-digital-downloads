@@ -18,13 +18,13 @@ before_script:
     - svn co --ignore-externals http://core.svn.wordpress.org/trunk/ tmp/wordpress/
     - svn co --ignore-externals http://unit-tests.svn.wordpress.org/trunk/ tmp/wordpress-tests/
     - cp tmp/wordpress-tests/wp-tests-config-sample.php tmp/wordpress-tests/wp-tests-config.php
+    - cp -Xv tests/bootstrap.php tmp/wordpress-tests/includes/bootstrap.php
     - sed -i "s:dirname( __FILE__ ) . '/wordpress/':'$WP_CORE_DIR':" tmp/wordpress-tests/wp-tests-config.php
     - sed -i "s/yourdbnamehere/wordpress_test/" tmp/wordpress-tests/wp-tests-config.php
     - sed -i "s/yourusernamehere/root/" tmp/wordpress-tests/wp-tests-config.php
     - sed -i "s/yourpasswordhere//" tmp/wordpress-tests/wp-tests-config.php
     - mysql -e 'CREATE DATABASE wordpress_test;' -uroot
-    - pear channel-discover pear.phpunit.de
-    - wget https://getcomposer.org/download/1.0.0-alpha1/composer.phar
+    - wget https://getcomposer.org/composer.phar
     - php composer.phar install --dev --no-interaction
     - phpenv rehash
 
