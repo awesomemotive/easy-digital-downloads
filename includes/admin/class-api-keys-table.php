@@ -69,18 +69,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
-		switch( $column_name ){
-			case 'earnings' :
-				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
-			case 'average_sales' :
-				return round( $item[ $column_name ] );
-			case 'average_earnings' :
-				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
-			case 'details' :
-				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $item[ 'ID' ] ) . '">' . __( 'View Detailed Report', 'edd' ) . '</a>';
-			default:
-				return $item[ $column_name ];
-		}
+		return $item[ $column_name ];
 	}
 
 	/**
