@@ -73,6 +73,18 @@ function edd_admin_messages() {
 		add_settings_error( 'edd-notices', 'edd-payment-updated', __( 'The payment has been successfully updated.', 'edd' ), 'updated' );
 	}
 
+	if ( isset( $_GET['edd-message'] ) && 'api-key-generated' == $_GET['edd-message'] && current_user_can( 'manage_shop_settings' ) ) {
+		add_settings_error( 'edd-notices', 'edd-api-key-generated', __( 'API key has been successfully generated.', 'edd' ), 'updated' );
+	}
+
+	if ( isset( $_GET['edd-message'] ) && 'api-key-regenerated' == $_GET['edd-message'] && current_user_can( 'manage_shop_settings' ) ) {
+		add_settings_error( 'edd-notices', 'edd-api-key-regenerated', __( 'API key has been successfully regenerated.', 'edd' ), 'updated' );
+	}
+
+	if ( isset( $_GET['edd-message'] ) && 'api-key-revoked' == $_GET['edd-message'] && current_user_can( 'manage_shop_settings' ) ) {
+		add_settings_error( 'edd-notices', 'edd-api-key-revoked', __( 'API key has been successfully revoked.', 'edd' ), 'updated' );
+	}
+
     if( ! edd_htaccess_exists() && ! get_user_meta( get_current_user_id(), '_edd_htaccess_missing_dismissed', true ) ) {
         if( ! stristr( $_SERVER['SERVER_SOFTWARE'], 'apache' ) )
             return; // Bail if we aren't using Apache... nginx doesn't use htaccess!
