@@ -1391,15 +1391,18 @@ class EDD_API {
 		switch( $process ) {
 			case 'generate':
 				$this->generate_api_key( $user_id );
-				wp_redirect( esc_url( add_query_arg( 'edd-message', 'api-key-generated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ) ); exit();
+				if( get_transient( 'edd-total-api-keys' ) ) delete_transient( 'edd-total-api-keys' );
+				wp_redirect( add_query_arg( 'edd-message', 'api-key-generated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
 				break;
 			case 'regenerate':
 				$this->generate_api_key( $user_id, true );
-				wp_redirect( esc_url( add_query_arg( 'edd-message', 'api-key-regenerated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ) ); exit();
+				if( get_transient( 'edd-total-api-keys' ) ) delete_transient( 'edd-total-api-keys' );
+				wp_redirect( add_query_arg( 'edd-message', 'api-key-regenerated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
 				break;
 			case 'revoke':
 				$this->revoke_api_key( $user_id );
-				wp_redirect( esc_url( add_query_arg( 'edd-message', 'api-key-revoked', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ) ); exit();
+				if( get_transient( 'edd-total-api-keys' ) ) delete_transient( 'edd-total-api-keys' );
+				wp_redirect( add_query_arg( 'edd-message', 'api-key-revoked', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
 				break;
 			default;
 				break;

@@ -30,7 +30,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 * @var int Number of items per page
 	 * @since 2.0
 	 */
-	public $per_page = 30;
+	public $per_page = 1;
 
 	/**
 	 * @var object Query results
@@ -110,7 +110,11 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function query() {
-		$users    = get_users( array( 'meta_key' => 'edd_user_secret_key' ) );
+		$users    = get_users( array( 
+			'meta_key' => 'edd_user_secret_key',
+			'number'   => $this->per_page,
+			'offset'   => $this->per_page * ( $this->get_paged() - 1 ) 
+		) );
 		$keys     = array();
 
 		foreach( $users as $user ) {
@@ -118,10 +122,29 @@ class EDD_API_Keys_Table extends WP_List_Table {
 			$keys[$user->ID]['key']    = get_user_meta( $user->ID, 'edd_user_public_key', true );
 			$keys[$user->ID]['secret'] = get_user_meta( $user->ID, 'edd_user_secret_key', true );
 			$keys[$user->ID]['token']  = hash( 'md5', get_user_meta( $user->ID, 'edd_user_secret_key', true ) . get_user_meta( $user->ID, 'edd_user_public_key', true ) );
-			$keys[$user->ID]['action'] = '<a href="' . add_query_arg( array( 'user_id' => $user->ID, 'edd_action' => 'process_api_key', 'edd_api_process' => 'revoke' ) )  . '" title="' . __( 'Revoke', 'edd' ) . '" class="edd-revoke-api-key"><i class="dashicons dashicons-no"></i></a> <a href="' . add_query_arg( array( 'user_id' => $user->ID, 'edd_action' => 'process_api_key', 'edd_api_process' => 'regenerate' ) )  . '" title="' . __( 'Regenerate', 'edd' ) . '" class="edd-regenerate-api-key"><i class="dashicons dashicons-update"></i></a>';
+			$keys[$user->ID]['action'] = '<a href="' . esc_url( add_query_arg( array( 'user_id' => $user->ID, 'edd_action' => 'process_api_key', 'edd_api_process' => 'revoke' ) ) )  . '" title="' . __( 'Revoke', 'edd' ) . '" class="edd-revoke-api-key"><i class="dashicons dashicons-no"></i></a> <a href="' . esc_url( add_query_arg( array( 'user_id' => $user->ID, 'edd_action' => 'process_api_key', 'edd_api_process' => 'regenerate' ) ) ) . '" title="' . __( 'Regenerate', 'edd' ) . '" class="edd-regenerate-api-key"><i class="dashicons dashicons-update"></i></a>';
 		}
 
 		return $keys;
+	}
+
+	/**
+	 * Retrieve count of total users with keys
+	 *
+	 * @access public
+	 * @since 2.0
+	 * @return int
+	 */
+	public function total_items() {
+		global $wpdb;
+
+		if( ! get_transient( 'edd-total-api-keys' ) ) {
+			$total_items = $wpdb->get_var( "SELECT count(user_id) FROM $wpdb->usermeta WHERE meta_key='edd_user_secret_key'" );
+
+			set_transient( 'edd-total-api-keys', $total_items, 60 * 60 );
+		}
+
+		return get_transient( 'edd-total-api-keys' );
 	}
 
 	/**
@@ -143,7 +166,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 
 		$current_page = $this->get_pagenum();
 
-		$total_items = count( $data );
+		$total_items = $this->total_items();
 
 		$this->items = $data;
 
