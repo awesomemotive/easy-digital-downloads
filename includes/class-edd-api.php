@@ -105,7 +105,9 @@ class EDD_API {
 		add_action( 'template_redirect',       array( $this, 'process_query'  ), -1 );
 		add_filter( 'query_vars',              array( $this, 'query_vars'     ) );
 		add_action( 'show_user_profile',       array( $this, 'user_key_field' ) );
+		add_action( 'edit_user_profile',       array( $this, 'user_key_field' ) );
 		add_action( 'personal_options_update', array( $this, 'update_key'     ) );
+		add_action( 'edit_user_profile_update',array( $this, 'update_key'     ) );
 
 		// Determine if JSON_PRETTY_PRINT is available
 		$this->pretty_print = defined( 'JSON_PRETTY_PRINT' ) ? JSON_PRETTY_PRINT : null;
@@ -1346,7 +1348,7 @@ class EDD_API {
 	function user_key_field( $user ) {
 		global $edd_options;
 
-		if ( ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'edit_user', $user->ID ) ) {
+		if ( ( edd_get_option( 'api_allow_user_keys', false ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'edit_user', $user->ID ) ) {
 			$user = get_userdata( $user->ID );
 			?>
 			<table class="form-table">
