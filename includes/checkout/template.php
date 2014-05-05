@@ -78,22 +78,23 @@ function edd_show_purchase_form() {
 
 		do_action( 'edd_purchase_form_before_register_login' );
 
-		if( isset( $edd_options['show_register_form'] ) && ! is_user_logged_in() && ! isset( $_GET['login'] ) ) : ?>
+		$show_register_form = edd_get_option( 'show_register_form', 'none' ) ;
+		if( ( $show_register_form == 'registration' || ( $show_register_form == 'both' && ! isset( $_GET['login'] ) ) ) && ! is_user_logged_in() ) : ?>
 			<div id="edd_checkout_login_register">
 				<?php do_action( 'edd_purchase_form_register_fields' ); ?>
 			</div>
-		<?php elseif( isset( $edd_options['show_register_form'] ) && ! is_user_logged_in() && isset( $_GET['login'] ) ) : ?>
+		<?php elseif( ( $show_register_form == 'login' || ( $show_register_form == 'both' && isset( $_GET['login'] ) ) ) && ! is_user_logged_in() ) : ?>
 			<div id="edd_checkout_login_register">
 				<?php do_action( 'edd_purchase_form_login_fields' ); ?>
 			</div>
 		<?php endif; ?>
 
-		<?php if( ( !isset( $_GET['login'] ) && is_user_logged_in() ) || !isset( $edd_options['show_register_form'] ) ) {
+		<?php if( ( !isset( $_GET['login'] ) && is_user_logged_in() ) || ! isset( $edd_options['show_register_form'] ) || 'none' == $show_register_form ) {
 			do_action( 'edd_purchase_form_after_user_info' );
 		}
 
 		do_action( 'edd_purchase_form_before_cc_form' );
-		
+
 		if( edd_get_cart_total() > 0 ) {
 
 			// Load the credit card form and allow gateways to load their own if they wish
@@ -104,7 +105,7 @@ function edd_show_purchase_form() {
 			}
 
 		}
-		
+
 		do_action( 'edd_purchase_form_after_cc_form' );
 
 	} else {
@@ -385,15 +386,19 @@ function edd_get_register_fields() {
 	global $user_ID;
 
 	if ( is_user_logged_in() )
-	$user_data = get_userdata( $user_ID );
+		$user_data = get_userdata( $user_ID );
+
+	$show_register_form = edd_get_option( 'show_register_form', 'none' );
 
 	ob_start(); ?>
 	<fieldset id="edd_register_fields">
-		
-		<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'edd' ); ?> <a href="<?php echo add_query_arg('login', 1); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e( 'Login', 'edd' ); ?></a></p>
+
+		<?php if( $show_register_form == 'both' ) { ?>
+			<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'edd' ); ?> <a href="<?php echo add_query_arg('login', 1); ?>" class="edd_checkout_register_login" data-action="checkout_login"><?php _e( 'Login', 'edd' ); ?></a></p>
+		<?php } ?>
 		
 		<?php do_action('edd_register_fields_before'); ?>
-	
+
 		<fieldset id="edd_register_account_fields">
 			<span><legend><?php _e( 'Create an account', 'edd' ); if( !edd_no_guest_checkout() ) { echo ' ' . __( '(optional)', 'edd' ); } ?></legend></span>
 			<?php do_action('edd_register_account_fields_before'); ?>
@@ -429,13 +434,13 @@ function edd_get_register_fields() {
 			</p>
 			<?php do_action( 'edd_register_account_fields_after' ); ?>
 		</fieldset>
-		
+
 		<?php do_action('edd_register_fields_after'); ?>
-		
+
 		<input type="hidden" name="edd-purchase-var" value="needs-to-register"/>
 
 		<?php do_action( 'edd_purchase_form_user_info' ); ?>
-		
+
 	</fieldset>
 	<?php
 	echo ob_get_clean();
@@ -457,14 +462,18 @@ function edd_get_login_fields() {
 	$color = ( $color == 'inherit' ) ? '' : $color;
 	$style = isset( $edd_options[ 'button_style' ] ) ? $edd_options[ 'button_style' ] : 'button';
 
+	$show_register_form = edd_get_option( 'show_register_form', 'none' );
+
 	ob_start(); ?>
 		<fieldset id="edd_login_fields">
-			<p id="edd-new-account-wrap">
-				<?php _e( 'Need to create an account?', 'edd' ); ?>
-				<a href="<?php echo remove_query_arg('login'); ?>" class="edd_checkout_register_login" data-action="checkout_register">
-					<?php _e( 'Register', 'edd' ); if(!edd_no_guest_checkout()) { echo ' ' . __( 'or checkout as a guest.', 'edd' ); } ?>
-				</a>
-			</p>
+			<?php if( $show_register_form == 'both' ) { ?>
+				<p id="edd-new-account-wrap">
+					<?php _e( 'Need to create an account?', 'edd' ); ?>
+					<a href="<?php echo remove_query_arg('login'); ?>" class="edd_checkout_register_login" data-action="checkout_register">
+						<?php _e( 'Register', 'edd' ); if(!edd_no_guest_checkout()) { echo ' ' . __( 'or checkout as a guest.', 'edd' ); } ?>
+					</a>
+				</p>
+			<?php } ?>
 			<?php do_action('edd_checkout_login_fields_before'); ?>
 			<p id="edd-user-login-wrap">
 				<label class="edd-label" for="edd-username"><?php _e( 'Username', 'edd' ); ?></label>
@@ -498,7 +507,7 @@ function edd_payment_mode_select() {
 	$gateways = edd_get_enabled_payment_gateways();
 	$page_URL = edd_get_current_page_url();
 	do_action('edd_payment_mode_top'); ?>
-	<?php if( ! edd_is_ajax_enabled() ) { ?>
+	<?php if( edd_is_ajax_disabled() ) { ?>
 	<form id="edd_payment_mode" action="<?php echo $page_URL; ?>" method="GET">
 	<?php } ?>
 		<fieldset id="edd_payment_mode_select">
@@ -528,7 +537,7 @@ function edd_payment_mode_select() {
 				<?php echo edd_checkout_button_next(); ?>
 			</p>
 		</fieldset>
-	<?php if( ! edd_is_ajax_enabled() ) { ?>
+	<?php if( edd_is_ajax_disabled() ) { ?>
 	</form>
 	<?php } ?>
 	<div id="edd_purchase_form_wrap"></div><!-- the checkout fields are loaded into this-->
@@ -555,10 +564,15 @@ function edd_show_payment_icons() {
 		echo '<div class="edd-payment-icons">';
 		foreach( $edd_options['accepted_cards'] as $key => $card ) {
 			if( edd_string_is_image_url( $key ) ) {
-				echo '<img class="payment-icon" src="' . $key . '"/>';
+				echo '<img class="payment-icon" src="' . esc_url( $key ) . '"/>';
 			} else {
-                $image = edd_locate_template( 'images/icons/' . strtolower( str_replace( ' ', '', $card ) ) . '.gif', false );
-				$image = str_replace( ABSPATH, site_url( '/' ), $image );
+                $image = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . strtolower( str_replace( ' ', '', $card ) ) . '.gif', false );
+				if( function_exists( 'wp_normalize_path' ) ) {
+					// Replaces backslashes with forward slashes for Windows systems
+					$image = wp_normalize_path( $image );
+				}
+				$image = str_replace( WP_CONTENT_DIR, WP_CONTENT_URL, $image );
+
 				echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
 			}
 		}
@@ -579,11 +593,11 @@ add_action( 'edd_checkout_form_top', 'edd_show_payment_icons' );
 */
 function edd_discount_field() {
 
-	if( ! isset( $_GET['payment-mode'] ) && count( edd_get_enabled_payment_gateways() ) > 1 && ! edd_is_ajax_enabled() )
-		return; // Only show once a payment method has been selected if ajax is disabled
+	if( isset( $_GET['payment-mode'] ) && edd_is_ajax_disabled() ) {
+		return; // Only show before a payment method has been selected if ajax is disabled
+	}
 
-	if ( edd_has_active_discounts() && edd_get_cart_total() ) {
-	?>
+	if ( edd_has_active_discounts() && edd_get_cart_total() ) { ?>
 	<fieldset id="edd_discount_code">
 		<p id="edd_show_discount" style="display:none;">
 			<?php _e( 'Have a discount code?', 'edd' ); ?> <a href="#" class="edd_discount_link"><?php echo _x( 'Click to enter it', 'Entering a discount code', 'edd' ); ?></a>
@@ -595,6 +609,7 @@ function edd_discount_field() {
 			</label>
 			<span class="edd-description"><?php _e( 'Enter a coupon code if you have one.', 'edd' ); ?></span>
 			<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e( 'Enter discount', 'edd' ); ?>"/>
+			<span id="edd-discount-error-wrap" class="edd_errors" style="display:none;"></span>
 		</p>
 	</fieldset>
 	<?php
@@ -669,7 +684,7 @@ function edd_checkout_submit() {
 
 		<?php do_action( 'edd_purchase_form_after_submit' ); ?>
 
-		<?php if ( ! edd_is_ajax_enabled() ) { ?>
+		<?php if ( edd_is_ajax_disabled() ) { ?>
 			<p class="edd-cancel"><a href="javascript:history.go(-1)"><?php _e( 'Go back', 'edd' ); ?></a></p>
 		<?php } ?>
 	</fieldset>

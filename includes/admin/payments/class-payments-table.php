@@ -347,7 +347,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			$display_name = __( 'guest', 'edd' );
 		}
 
-		$value = '<a href="' . esc_url( add_query_arg( array( 'user' => $payment->user_info['email'], 'paged' => false ) ) ) . '">' . $display_name . '</a>';
+		$value = '<a href="' . esc_url( add_query_arg( array( 'user' => urlencode( $payment->user_info['email'] ), 'paged' => false ) ) ) . '">' . $display_name . '</a>';
 		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, 'user' );
 	}
 
@@ -459,6 +459,14 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			$args['s'] = urldecode( $_GET['s'] );
 		}
 
+		if ( ! empty( $_GET['start-date'] ) ) {
+			$args['start-date'] = urldecode( $_GET['start-date'] );
+		}
+
+		if ( ! empty( $_GET['end-date'] ) ) {
+			$args['end-date'] = urldecode( $_GET['end-date'] );
+		}
+
 		$payment_count        = edd_count_payments( $args );
 		$this->complete_count = $payment_count->publish;
 		$this->pending_count  = $payment_count->pending;
@@ -485,7 +493,7 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$page = isset( $_GET['paged'] ) ? $_GET['paged'] : 1;
 
 		$per_page       = $this->per_page;
-		$orderby 		= isset( $_GET['orderby'] )     ? $_GET['orderby']                           : 'ID';
+		$orderby 		= isset( $_GET['orderby'] )     ? urldecode( $_GET['orderby'] )              : 'ID';
 		$order 			= isset( $_GET['order'] )       ? $_GET['order']                             : 'DESC';
 		$order_inverse 	= $order == 'DESC'              ? 'ASC'                                      : 'DESC';
 		$order_class 	= strtolower( $order_inverse );
@@ -500,21 +508,28 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$end_date       = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
 
 		$args = array(
-			'output'   => 'payments',
-			'number'   => $per_page,
-			'page'     => isset( $_GET['paged'] ) ? $_GET['paged'] : null,
-			'orderby'  => $orderby,
-			'order'    => $order,
-			'user'     => $user,
-			'status'   => $status,
-			'meta_key' => $meta_key,
-			'year'	   => $year,
-			'month'    => $month,
-			'day' 	   => $day,
-			's'        => $search,
+			'output'     => 'payments',
+			'number'     => $per_page,
+			'page'       => isset( $_GET['paged'] ) ? $_GET['paged'] : null,
+			'orderby'    => $orderby,
+			'order'      => $order,
+			'user'       => $user,
+			'status'     => $status,
+			'meta_key'   => $meta_key,
+			'year'	     => $year,
+			'month'      => $month,
+			'day' 	     => $day,
+			's'          => $search,
 			'start_date' => $start_date,
 			'end_date'   => $end_date,
 		);
+
+		if( is_string( $search ) && false !== strpos( $search, 'txn:' ) ) {
+
+			$args['search_in_notes'] = true;
+			$args['s'] = trim( str_replace( 'txn:', '', $args['s'] ) );
+
+		}
 
 		$p_query  = new EDD_Payments_Query( $args );
 
@@ -529,7 +544,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @since 1.4
 	 * @uses EDD_Payment_History_Table::get_columns()
 	 * @uses EDD_Payment_History_Table::get_sortable_columns()
-	 * @uses EDD_Payment_History_Table::process_bulk_action()
 	 * @uses EDD_Payment_History_Table::payments_data()
 	 * @uses WP_List_Table::get_pagenum()
 	 * @uses WP_List_Table::set_pagination_args()

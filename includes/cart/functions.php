@@ -52,12 +52,12 @@ function edd_get_cart_content_details() {
 	foreach( $cart_items as $key => $item ) {
 
 		$item_price = edd_get_cart_item_price( $item['id'], $item['options'] );
-		$discount   = edd_get_cart_item_discount_amount( $item );
+		$discount   = apply_filters( 'edd_get_cart_content_details_item_discount_amount', edd_get_cart_item_discount_amount( $item ), $item );
 		$tax        = edd_get_cart_item_tax( $item );
 		$quantity   = edd_get_cart_item_quantity( $item['id'], $item['options'] );
 
 		$item_price = round( $item_price, 2 );
-		$discount   = round( $discount * $quantity, 2 );
+		$discount   = round( $discount, 2 );
 		$subtotal   = round( $item_price * $quantity, 2 );
 		$tax        = round( $tax * $quantity, 2 );
 		$total      = round( ( $subtotal - $discount + $tax ), 2 );
@@ -437,7 +437,7 @@ function edd_get_cart_item_tax( $item = array() ) {
 		}
 
 		if( edd_taxes_after_discounts() ) {
-			$price -= edd_get_cart_item_discount_amount( $item );
+			$price -= apply_filters( 'edd_get_cart_item_tax_item_discount_amount', edd_get_cart_item_discount_amount( $item ), $item );
 		}
 
 		$tax = edd_calculate_tax( $price );
@@ -774,7 +774,9 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
 function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
 	global $post;
 
-	if( is_page() ) {
+	if ( defined('DOING_AJAX') ){	
+		$current_page = edd_get_checkout_uri();
+	} else if( is_page() ) {
 		$current_page = add_query_arg( 'page_id', $post->ID, home_url( 'index.php' ) );
 	} else if( is_singular() ) {
 		$current_page = add_query_arg( 'p', $post->ID, home_url( 'index.php' ) );
@@ -867,7 +869,7 @@ function edd_get_purchase_session() {
 function edd_is_cart_saving_disabled() {
 	global $edd_options;
 
-	return apply_filters( 'edd_cart_saving_disabled', isset( $edd_options['disable_cart_saving'] ) );
+	return apply_filters( 'edd_cart_saving_disabled', ! isset( $edd_options['enable_cart_saving'] ) );
 }
 
 /**

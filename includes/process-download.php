@@ -48,7 +48,7 @@ function edd_process_download() {
 
 	//$has_access = ( edd_logged_in_only() && is_user_logged_in() ) || !edd_logged_in_only() ? true : false;
 	if ( $payment && $has_access ) {
-		do_action( 'edd_process_verified_download', $download, $email );
+		do_action( 'edd_process_verified_download', $download, $email, $payment );
 
 		// Payment has been verified, setup the download
 		$download_files = edd_get_download_files( $download );
@@ -69,6 +69,7 @@ function edd_process_download() {
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );
 
+
 		if ( !edd_is_func_disabled( 'set_time_limit' ) && !ini_get('safe_mode') ) {
 			set_time_limit(0);
 		}
@@ -79,6 +80,8 @@ function edd_process_download() {
 		@session_write_close();
 		if( function_exists( 'apache_setenv' ) ) @apache_setenv('no-gzip', 1);
 		@ini_set( 'zlib.output_compression', 'Off' );
+
+		do_action( 'edd_process_download_headers', $requested_file, $download, $email, $payment );
 
 		nocache_headers();
 		header("Robots: none");
@@ -107,6 +110,7 @@ function edd_process_download() {
 				$direct       = false;
 				$file_details = parse_url( $requested_file );
 				$schemes      = array( 'http', 'https' ); // Direct URL schemes
+
 				if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
 
 					/** This is an absolute path */
@@ -148,7 +152,7 @@ function edd_process_download() {
 					$file_path = str_ireplace( $_SERVER[ 'DOCUMENT_ROOT' ], '', $file_path );
 					header( "X-Accel-Redirect: /$file_path" );
 
-				} else
+				}
 
 				if( $direct ) {
 					edd_deliver_download( $file_path );
@@ -164,7 +168,7 @@ function edd_process_download() {
 		edd_die();
 	} else {
 		$error_message = __( 'You do not have permission to download this file', 'edd' );
-		wp_die( apply_filters( ' edd_deny_download_message', $error_message, __( 'Purchase Verification Failed', 'edd' ) ) );
+		wp_die( apply_filters( 'edd_deny_download_message', $error_message, __( 'Purchase Verification Failed', 'edd' ) ) );
 	}
 
 	exit;

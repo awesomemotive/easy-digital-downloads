@@ -317,28 +317,7 @@ function edd_tools_sysinfo_get() {
 	}
 
 	// Try to identify the hosting provider
-	$host = false;
-	if( defined( 'WPE_APIKEY' ) ) {
-		$host = 'WP Engine';
-	} elseif( defined( 'PAGELYBIN' ) ) {
-		$host = 'Pagely';
-	} elseif( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
-		$host = 'ICDSoft';
-	} elseif( DB_HOST == 'mysqlv5' ) {
-		$host = 'NetworkSolutions';
-	} elseif( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
-		$host = 'iPage';
-	} elseif( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
-		$host = 'IPower';
-	} elseif( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
-		$host = 'MediaTemple Grid';
-	} elseif( strpos( DB_HOST, '.pair.com' ) !== false ) {
-		$host = 'pair Networks';
-	} elseif( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
-		$host = 'Rackspace Cloud';
-	} elseif( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
-		$host = 'SysFix.eu Power Hosting';
-	}
+	$host = edd_get_host();
 
 	$return  = '### Begin System Info ###' . "\n\n";
 
@@ -411,7 +390,7 @@ function edd_tools_sysinfo_get() {
 	$return .= 'Version:                  ' . EDD_VERSION . "\n";
 	$return .= 'Upgraded From:            ' . get_option( 'edd_version_upgraded_from', 'None' ) . "\n";
 	$return .= 'Test Mode:                ' . ( edd_is_test_mode() ? "Enabled\n" : "Disabled\n" );
-	$return .= 'Ajax:                     ' . ( edd_is_ajax_enabled() ? "Enabled\n" : "Disabled\n" );
+	$return .= 'Ajax:                     ' . ( ! edd_is_ajax_disabled() ? "Enabled\n" : "Disabled\n" );
 	$return .= 'Guest Checkout:           ' . ( edd_no_guest_checkout() ? "Disabled\n" : "Enabled\n" );
 	$return .= 'Symlinks:                 ' . ( apply_filters( 'edd_symlink_file_downloads', isset( $edd_options['symlink_file_downloads'] ) ) && function_exists( 'symlink' ) ? "Enabled\n" : "Disabled\n" );
 	$return .= 'Download Method:          ' . ucfirst( edd_get_file_download_method() ) . "\n";
@@ -432,14 +411,25 @@ function edd_tools_sysinfo_get() {
 	$return .= "\n" . '-- EDD Gateway Configuration' . "\n\n";
 
 	$active_gateways = edd_get_enabled_payment_gateways();
-	$default_gateway = $active_gateways[edd_get_default_gateway()]['admin_label'];
-	$gateways        = array();
-	foreach( $active_gateways as $gateway ) {
-		$gateways[] = $gateway['admin_label'];
-	}
+	if( $active_gateways ) {
+		$default_gateway_is_active = edd_is_gateway_active( edd_get_default_gateway() );
+		if( $default_gateway_is_active ) {
+			$default_gateway = edd_get_default_gateway();
+			$default_gateway = $active_gateways[$default_geteway]['admin_label'];
+		} else {
+			$default_gateway = 'Test Payment';
+		}
 
-	$return .= 'Enabled Gateways:         ' . implode( ', ', $gateways ) . "\n";
-	$return .= 'Default Gateway:          ' . $default_gateway . "\n";
+		$gateways        = array();
+		foreach( $active_gateways as $gateway ) {
+			$gateways[] = $gateway['admin_label'];
+		}
+
+		$return .= 'Enabled Gateways:         ' . implode( ', ', $gateways ) . "\n";
+		$return .= 'Default Gateway:          ' . $default_gateway . "\n";
+	} else {
+		$return .= 'Enabled Gateways:         None' . "\n";
+	}
 
 	$return  = apply_filters( 'edd_sysinfo_after_edd_gateways', $return );
 
@@ -525,7 +515,7 @@ function edd_tools_sysinfo_get() {
 	// Server configuration (really just versioning)
 	$return .= "\n" . '-- Webserver Configuration' . "\n\n";
 	$return .= 'PHP Version:              ' . PHP_VERSION . "\n";
-	$return .= 'MySQL Version:            ' . mysql_get_server_info() . "\n";
+	$return .= 'MySQL Version:            ' . mysqli_get_client_version() . "\n";
 	$return .= 'Webserver Info:           ' . $_SERVER['SERVER_SOFTWARE'] . "\n";
 
 	$return  = apply_filters( 'edd_sysinfo_after_webserver_config', $return );
@@ -554,6 +544,7 @@ function edd_tools_sysinfo_get() {
 
 	// Session stuff
 	$return .= "\n" . '-- Session Configuration' . "\n\n";
+	$return .= 'EDD Use Sessions:         ' . ( defined( 'EDD_USE_PHP_SESSIONS' ) ? 'Enabled' : 'Disabled' ) . "\n";
 	$return .= 'Session:                  ' . ( isset( $_SESSION ) ? 'Enabled' : 'Disabled' ) . "\n";
 
 	// The rest of this is only relevant is session is enabled

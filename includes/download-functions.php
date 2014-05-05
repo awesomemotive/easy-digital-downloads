@@ -41,7 +41,7 @@ function edd_get_download_by( $field = '', $value = '' ) {
 		case 'name':
 			$download = query_posts( array(
 				'post_type'      => 'download',
-				'name'           => sanitize_title( $value ),
+				'name'           => sanitize_title_for_query( $value ),
 				'posts_per_page' => 1,
 				'post_status'    => 'any'
 			) );
@@ -194,7 +194,8 @@ function edd_get_download_final_price( $download_id, $user_purchase_info, $amoun
  * @return array Variable prices
  */
 function edd_get_variable_prices( $download_id ) {
-	return get_post_meta( $download_id, 'edd_variable_prices', true );
+	$variable_prices = get_post_meta( $download_id, 'edd_variable_prices', true );
+	return apply_filters( 'edd_get_variable_prices', $variable_prices, $download_id );
 }
 
 /**
@@ -753,15 +754,16 @@ function edd_get_file_downloaded_count( $download_id = 0, $file_key = 0, $paymen
 function edd_get_file_download_limit( $download_id = 0 ) {
 	global $edd_options;
 
-	$ret   = 0;
-	$limit = get_post_meta( $download_id, '_edd_download_limit', true );
+	$ret    = 0;
+	$limit  = get_post_meta( $download_id, '_edd_download_limit', true );
+	$global = edd_get_option( 'file_download_limit', 0 );
 
-	if ( ! empty( $limit ) ) {
+	if ( ! empty( $limit ) || ( is_numeric( $limit ) && (int)$limit == 0 ) ) {
 		// Download specific limit
 		$ret = absint( $limit );
 	} else {
 		// Global limit
-		$ret = ! empty( $edd_options['file_download_limit'] ) ? absint( $edd_options['file_download_limit'] ) : 0;
+		$ret = strlen( $limit ) == 0  || $global ? $global : 0;
 	}
 	return apply_filters( 'edd_file_download_limit', $ret, $download_id );
 }
@@ -847,7 +849,7 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
 	$download_count     = $logs->get_log_count( $download_id, 'file_download', $meta_query );
 
 	$download_limit     = edd_get_file_download_limit( $download_id );
-	$unlimited_purchase = get_post_meta( $payment_id, '_unlimited_file_downloads', true );
+	$unlimited_purchase = edd_payment_has_unlimited_downloads( $payment_id );
 
 	if ( ! empty( $download_limit ) && empty( $unlimited_purchase ) ) {
 		if ( $download_count >= $download_limit ) {
