@@ -26,7 +26,10 @@ class EDD_Roles {
 	 *
 	 * @since 1.4.4
 	 */
-	public function __construct() { /* Do nothing here */ }
+	public function __construct() {
+
+		add_filter( 'map_meta_cap', array( $this, 'meta_caps' ), 10, 4 );
+	}
 
 	/**
 	 * Add new shop roles with default WP caps
@@ -184,6 +187,35 @@ class EDD_Roles {
 		}
 
 		return $capabilities;
+	}
+
+	/**
+	 * Map meta caps to primitive caps
+	 *
+	 * @access public
+	 * @since  2.0
+	 * @return array $caps
+	 */
+	public function meta_caps( $caps, $cap, $user_id, $args ) {
+
+		switch( $cap ) {
+
+			case 'view_product_stats' :
+
+				$download = get_post( $args[0] );
+				if ( empty( $download ) ) {
+					break;
+				}
+
+				if( user_can( $user_id, 'view_shop_reports' ) || $user_id == $download->post_author ) {
+					$caps = array();
+				}
+
+				break;
+		}
+
+		return $caps;
+
 	}
 
 	/**
