@@ -1481,13 +1481,9 @@ class EDD_API {
 
 			if ( empty( $user->edd_user_public_key ) ) {
 				update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
-			} else {
-				delete_user_meta( $user_id, 'edd_user_public_key' );
-			}
-
-			if ( empty( $user->edd_user_secret_key ) ) {
 				update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
 			} else {
+				delete_user_meta( $user_id, 'edd_user_public_key' );
 				delete_user_meta( $user_id, 'edd_user_secret_key' );
 			}
 		}
