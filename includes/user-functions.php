@@ -45,9 +45,10 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 	}
 
 	$args = apply_filters( 'edd_get_users_purchases_args', array(
-		'user'   => $user,
-		'number' => $number,
-		'status' => $status
+		'user'    => $user,
+		'number'  => $number,
+		'status'  => $status,
+		'orderby' => 'date'
 	) );
 
 	if ( $pagination )
@@ -274,7 +275,7 @@ function edd_count_purchases_of_customer( $user = null ) {
 
 	$stats = edd_get_purchase_stats_by_user( $user );
 
-	return $stats['purchases'];
+	return isset( $stats['purchases'] ) ? $stats['purchases'] : 0;
 }
 
 /**

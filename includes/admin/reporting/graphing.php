@@ -29,14 +29,8 @@ function edd_reports_graph() {
 			$day_by_day	= true;
 			break;
 		case 'last_year' :
-			$day_by_day	= false;
-			break;
 		case 'this_year' :
-			$day_by_day	= false;
-			break;
 		case 'last_quarter' :
-			$day_by_day = false;
-			break;
 		case 'this_quarter' :
 			$day_by_day = false;
 			break;
@@ -101,7 +95,7 @@ function edd_reports_graph() {
 		$y = $dates['year'];
 		while( $y <= $dates['year_end'] ) :
 
-			if( $y == $dates['year_end'] ) {
+			if( $dates['year'] == $dates['year_end'] ) {
 				$month_start = $dates['m_start'];
 				$month_end   = $dates['m_end'];
 			} elseif( $y == $dates['year'] ) {
@@ -154,26 +148,27 @@ function edd_reports_graph() {
 	);
 
 	?>
-
-	<div class="metabox-holder" style="padding-top: 0;">
-		<div class="postbox">
-			<h3><span><?php _e('Earnings Over Time', 'edd'); ?></span></h3>
-
-			<div class="inside">
-				<?php
-				edd_reports_graph_controls();
-				$graph = new EDD_Graph( $data );
-				$graph->set( 'x_mode', 'time' );
-				$graph->set( 'multiple_y_axes', true );
-				$graph->display();
-				
-				$estimated = edd_estimated_monthly_stats();
-				?>
-				
-				<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $earnings_totals ) ); ?></strong></p>
-				<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo edd_format_amount( $sales_totals, false ); ?></strong></p>
-				<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly earnings: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $estimated['earnings'] ) ); ?></strong></p>
-				<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly sales: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $estimated['sales'] ) ); ?></strong></p>
+	<div id="edd-dashboard-widgets-wrap">
+		<div class="metabox-holder" style="padding-top: 0;">
+			<div class="postbox">
+				<h3><span><?php _e('Earnings Over Time', 'edd'); ?></span></h3>
+	
+				<div class="inside">
+					<?php
+					edd_reports_graph_controls();
+					$graph = new EDD_Graph( $data );
+					$graph->set( 'x_mode', 'time' );
+					$graph->set( 'multiple_y_axes', true );
+					$graph->display();
+					
+					$estimated = edd_estimated_monthly_stats();
+					?>
+					
+					<p class="edd_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $earnings_totals ) ); ?></strong></p>
+					<p class="edd_graph_totals"><strong><?php _e( 'Total sales for period shown: ', 'edd' ); echo edd_format_amount( $sales_totals, false ); ?></strong></p>
+					<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly earnings: ', 'edd' ); echo edd_currency_filter( edd_format_amount( $estimated['earnings'] ) ); ?></strong></p>
+					<p class="edd_graph_totals"><strong><?php _e( 'Estimated monthly sales: ', 'edd' ); echo edd_format_amount( $estimated['sales'], false ); ?></strong></p>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -314,7 +309,7 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 					endwhile;
 				else :
 					$date      = mktime( 0, 0, 0, $i, 1, $y );
-					$end_date  = mktime( 0, 0, 0, $i+1, 1, $y );
+					$end_date  = mktime( 0, 0, 0, $i + 1, 1, $y );
 			
 					$sales = $stats->get_sales( $download_id, $date, $end_date );
 					$sales_totals += $sales;
@@ -568,6 +563,7 @@ function edd_get_report_dates() {
 				$dates['m_start']   = 10;
 				$dates['m_end']     = 12;
 				$dates['year']      = date( 'Y', $current_time ) - 1; // Previous year
+				$dates['year_end']  = date( 'Y', $current_time ) - 1; // Previous year
 
 			} else if ( $month_now <= 6 ) {
 
