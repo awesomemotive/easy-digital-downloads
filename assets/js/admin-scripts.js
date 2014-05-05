@@ -1002,4 +1002,27 @@ jQuery(document).ready(function ($) {
 		$('#choose-download .edd-select-chosen').css('width', '100%');
 	});
 
+	/**
+	 * Tools screen JS
+	 */
+	var EDD_Tools = {
+
+		init : function() {
+			this.revoke_api_key();
+			this.regenerate_api_key();
+		},
+
+		revoke_api_key : function() {
+			$( 'body' ).on( 'click', '.edd-revoke-api-key', function( e ) {
+				return confirm( edd_vars.revoke_api_key );
+			} );
+		},
+		regenerate_api_key : function() {
+			$( 'body' ).on( 'click', '.edd-regenerate-api-key', function( e ) {
+				return confirm( edd_vars.regenerate_api_key );
+			} );
+		},
+	};
+	EDD_Tools.init();
+
 });
