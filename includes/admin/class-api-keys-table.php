@@ -110,22 +110,15 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function query() {
-
-		$orderby  = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'title';
-		$order    = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$users    = get_users();
+		$users    = get_users( array( 'meta_key' => 'edd_user_secret_key' ) );
 		$keys     = array();
 
 		foreach( $users as $user ) {
-			$user_meta = get_user_meta( $user->ID, 'edd_user_secret_key', true );
-
-			if( !empty( $user->edd_user_public_key ) ) {
-				$keys[$user->ID]['user']   = '<a href="' . add_query_arg( 'user_id', $user->ID, 'user-edit.php' ) . '">' . $user->user_login . '</a>';
-				$keys[$user->ID]['key']    = $user->edd_user_public_key;
-				$keys[$user->ID]['secret'] = $user->edd_user_secret_key;
-				$keys[$user->ID]['token']  = hash( 'md5', $user->edd_user_secret_key . $user->edd_user_public_key );
-				$keys[$user->ID]['action'] = '<a href="' . add_query_arg( array( 'user_id' => $user->ID, 'edd_action' => 'process_api_key', 'edd_api_process' => 'revoke' ) )  . '" title="' . __( 'Revoke', 'edd' ) . '" class="edd-revoke-api-key"><i class="dashicons dashicons-no"></i></a> <a href="' . add_query_arg( array( 'user_id' => $user->ID, 'edd_action' => 'process_api_key', 'edd_api_process' => 'regenerate' ) )  . '" title="' . __( 'Regenerate', 'edd' ) . '" class="edd-regenerate-api-key"><i class="dashicons dashicons-update"></i></a>';
-			}
+			$keys[$user->ID]['user']   = '<a href="' . add_query_arg( 'user_id', $user->ID, 'user-edit.php' ) . '">' . $user->user_login . '</a>';
+			$keys[$user->ID]['key']    = get_user_meta( $user->ID, 'edd_user_public_key', true );
+			$keys[$user->ID]['secret'] = get_user_meta( $user->ID, 'edd_user_secret_key', true );
+			$keys[$user->ID]['token']  = hash( 'md5', get_user_meta( $user->ID, 'edd_user_secret_key', true ) . get_user_meta( $user->ID, 'edd_user_public_key', true ) );
+			$keys[$user->ID]['action'] = '<a href="' . add_query_arg( array( 'user_id' => $user->ID, 'edd_action' => 'process_api_key', 'edd_api_process' => 'revoke' ) )  . '" title="' . __( 'Revoke', 'edd' ) . '" class="edd-revoke-api-key"><i class="dashicons dashicons-no"></i></a> <a href="' . add_query_arg( array( 'user_id' => $user->ID, 'edd_action' => 'process_api_key', 'edd_api_process' => 'regenerate' ) )  . '" title="' . __( 'Regenerate', 'edd' ) . '" class="edd-regenerate-api-key"><i class="dashicons dashicons-update"></i></a>';
 		}
 
 		return $keys;

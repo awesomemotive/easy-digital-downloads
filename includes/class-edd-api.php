@@ -1385,7 +1385,7 @@ class EDD_API {
 	 * @return void
 	 */
 	public function process_api_key( $args ) {
-		$user_id	= isset( $args['user_id'] ) ? $args['user_id'] : get_current_user_id();
+		$user_id	= isset( $args['user_id'] ) ? absint( $args['user_id'] ) : get_current_user_id();
 		$process    = isset( $args['edd_api_process'] ) ? strtolower( $args['edd_api_process'] ) : false;
 
 		switch( $process ) {
