@@ -914,6 +914,10 @@ add_action( 'edd_product_notes_meta_box_fields', 'edd_render_product_notes_field
 function edd_render_stats_meta_box() {
 	global $post;
 
+	if( ! current_user_can( 'view_product_stats', $post->ID ) ) {
+		return;
+	}
+
 	$earnings = edd_get_download_earnings_stats( $post->ID );
 	$sales    = edd_get_download_sales_stats( $post->ID );
 ?>
