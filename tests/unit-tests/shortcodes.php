@@ -170,7 +170,7 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 
 	public function test_login_form() {
 		$this->assertInternalType( 'string', edd_login_form_shortcode() );
-		$this->assertEquals( '<p class="edd-logged-in">You are already logged in</p>', edd_login_form_shortcode() );
+		$this->assertContains( '<p class="edd-logged-in">You are already logged in</p>', edd_login_form_shortcode() );
 	}
 
 	public function test_discounts_shortcode() {

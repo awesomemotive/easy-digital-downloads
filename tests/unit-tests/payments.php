@@ -150,6 +150,13 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$this->assertFalse( edd_insert_payment() );
 	}
 
+	public function test_payment_completd_flag_not_exists() {
+
+		$completed_date = edd_get_payment_completed_date( $this->_payment_id );
+		$this->assertEmpty( $completed_date );
+
+	}
+
 	public function test_update_payment_status() {
 		edd_update_payment_status( $this->_payment_id );
 
@@ -187,4 +194,13 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$cart = edd_get_payments();
 		$this->assertTrue( empty( $cart ) );
 	}
+
+	public function test_get_payment_completed_date() {
+
+		$completed_date = edd_get_payment_completed_date( $this->_payment_id );
+		$this->assertInternalType( 'string', $completed_date );
+		$this->assertEquals( date( 'Y-m-d' ), date( 'Y-m-d', strtotime( $completed_date ) ) );
+
+	}
+
 }

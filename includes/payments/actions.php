@@ -60,7 +60,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 				}
 
-				if( false === $completed_date ) {
+				if( empty( $completed_date ) ) {
 					// Ensure this action only runs once ever
 					do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download );
 				}
@@ -94,9 +94,8 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 	edd_increase_total_earnings( $amount );
 
-
 	// Ensure this action only runs once ever
-	if( false === $completed_date ) {
+	if( empty( $completed_date ) ) {
 
 		// Save the completed date
 		update_post_meta( $payment_id, '_edd_completed_date', current_time( 'mysql' ) );

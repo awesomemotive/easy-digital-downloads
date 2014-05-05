@@ -51,31 +51,10 @@ function edd_shopping_cart( $echo = false ) {
 	global $edd_options;
 
 	ob_start();
-	do_action('edd_before_cart');
-	$display = 'style="display:none;"';
-  	$cart_quantity = edd_get_cart_quantity();
 
-  	if ( $cart_quantity > 0 ){
-  	  $display = "";
-  	}
+	do_action( 'edd_before_cart' );
 
-  	echo "<p class='edd-cart-number-of-items' {$display}>" . __( 'Number of items in cart', 'edd' ) . ': <span class="edd-cart-quantity">' . $cart_quantity . '</span></p>';
- 	?>
-
-	<ul class="edd-cart">
-	<?php
-		$cart_items = edd_get_cart_contents();
-		if($cart_items) :
-			foreach( $cart_items as $key => $item ) :
-				echo edd_get_cart_item_template( $key, $item, false );
-			endforeach;
-			edd_get_template_part( 'widget', 'cart-checkout' );
-		else :
-			edd_get_template_part( 'widget', 'cart-empty' );
-		endif;
-	?>
-	</ul>
-	<?php
+	edd_get_template_part( 'widget', 'cart' );
 
 	do_action( 'edd_after_cart' );
 
