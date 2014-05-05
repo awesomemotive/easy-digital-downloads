@@ -82,9 +82,9 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'user'         => __( 'User', 'edd' ),
-			'key'          => __( 'API Key', 'edd' ),
-			'secret'       => __( 'API Secret', 'edd' ),
-			'token'        => __( 'API Token', 'edd' ),
+			'key'          => __( 'Public Key', 'edd' ),
+			'secret'       => __( 'Secret Key', 'edd' ),
+			'token'        => __( 'Token', 'edd' ),
 			'action'       => __( 'Actions', 'edd' )
 		);
 
