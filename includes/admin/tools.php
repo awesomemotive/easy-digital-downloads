@@ -116,13 +116,7 @@ function edd_tools_api_keys_display() {
 	$api_keys_table = new EDD_API_Keys_Table();
 	$api_keys_table->prepare_items();
 	$api_keys_table->display();
-?>
-	<div class="postbox">
-		<h3><span><?php _e( 'API Keys', 'edd' ); ?></span></h3>
-		<div class="inside">
-		</div><!-- .inside -->
-	</div><!-- .postbox -->
-<?php
+
 	do_action( 'edd_tools_api_keys_after' );
 }
 add_action( 'edd_tools_tab_api_keys', 'edd_tools_api_keys_display' );
