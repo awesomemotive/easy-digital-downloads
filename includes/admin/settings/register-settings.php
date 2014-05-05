@@ -23,7 +23,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_option( $key = '', $default = false ) {
 	global $edd_options;
-	$value = isset( $edd_options[ $key ] ) ? $edd_options[ $key ] : $default;
+	$value = ! empty( $edd_options[ $key ] ) ? $edd_options[ $key ] : $default;
 	$value = apply_filters( 'edd_get_option', $value, $key, $default );
 	return apply_filters( 'edd_get_option_' . $key, $value, $key, $default );
 }
@@ -410,7 +410,6 @@ function edd_get_registered_settings() {
 					'name' => __( 'Enable Taxes', 'edd' ),
 					'desc' => __( 'Check this to enable taxes on purchases.', 'edd' ),
 					'type' => 'checkbox',
-					'std' => 'no'
 				),
 				'tax_rate' => array(
 					'id' => 'tax_rate',
@@ -429,7 +428,7 @@ function edd_get_registered_settings() {
 				'base_state' => array(
 					'id' => 'base_state',
 					'name' => __( 'Base State / Province', 'edd' ),
-					'desc' => __( 'What state / provice does your store operate from?', 'edd' ),
+					'desc' => __( 'What state / province does your store operate from?', 'edd' ),
 					'type' => 'shop_states'
 				),
 				'prices_include_tax' => array(
@@ -448,7 +447,6 @@ function edd_get_registered_settings() {
 					'name' => __( 'Display Tax Rate on Prices', 'edd' ),
 					'desc' => __( 'Some countries require a notice when product prices include tax.', 'edd' ),
 					'type' => 'checkbox',
-					'std' => 'no'
 				),
 				'checkout_include_tax' => array(
 					'id' => 'checkout_include_tax',
@@ -465,7 +463,6 @@ function edd_get_registered_settings() {
 					'id' => 'taxes_after_discounts',
 					'name' => __( 'Calculate Tax After Discounts?', 'edd' ),
 					'desc' => __( 'Check this if you would like taxes calculated after discounts. By default taxes are calculated before discounts are applied.', 'edd' ),
-					'std' => 'no',
 					'type' => 'checkbox'
 				),
 				'tax_rates' => array(
@@ -486,22 +483,17 @@ function edd_get_registered_settings() {
 		/** Misc Settings */
 		'misc' => apply_filters('edd_settings_misc',
 			array(
-				'disable_ajax_cart' => array(
-					'id' => 'disable_ajax_cart',
-					'name' => __( 'Disable Ajax', 'edd' ),
-					'desc' => __( 'Check this to disable AJAX for the shopping cart.', 'edd' ),
-					'type' => 'checkbox'
+				'enable_ajax_cart' => array(
+					'id' => 'enable_ajax_cart',
+					'name' => __( 'Enable Ajax', 'edd' ),
+					'desc' => __( 'Check this to enable AJAX for the shopping cart.', 'edd' ),
+					'type' => 'checkbox',
+					'std'  => '1'
 				),
 				'redirect_on_add' => array(
 					'id' => 'redirect_on_add',
 					'name' => __( 'Redirect to Checkout', 'edd' ),
 					'desc' => __( 'Immediately redirect to checkout after adding an item to the cart?', 'edd' ),
-					'type' => 'checkbox'
-				),
-				'live_cc_validation' => array(
-					'id' => 'live_cc_validation',
-					'name' => __( 'Disable Live Credit Card Validation', 'edd' ),
-					'desc' => __( 'Live credit card validation means that that card type and number will be validated as the customer enters the number.', 'edd' ),
 					'type' => 'checkbox'
 				),
 				'logged_in_only' => array(
@@ -514,7 +506,14 @@ function edd_get_registered_settings() {
 					'id' => 'show_register_form',
 					'name' => __( 'Show Register / Login Form?', 'edd' ),
 					'desc' => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'edd' ),
-					'type' => 'checkbox'
+					'type' => 'select',
+					'options' => array(
+						'both' => __( 'Registration and Login Forms', 'edd' ),
+						'registration' => __( 'Registration Form Only', 'edd' ),
+						'login' => __( 'Login Form Only', 'edd' ),
+						'none' => __( 'None', 'edd' )
+					),
+					'std' => 'none'
 				),
 				'item_quantities' => array(
 					'id' => 'item_quantities',
@@ -528,10 +527,10 @@ function edd_get_registered_settings() {
 					'desc' => __('Allow customers to use multiple discounts on the same purchase?', 'edd'),
 					'type' => 'checkbox'
 				),
-				'disable_cart_saving' => array(
-					'id' => 'disable_cart_saving',
-					'name' => __( 'Disable Cart Saving', 'edd' ),
-					'desc' => __( 'Check this to disable cart saving on the checkout', 'edd' ),
+				'enable_cart_saving' => array(
+					'id' => 'enable_cart_saving',
+					'name' => __( 'Enable Cart Saving', 'edd' ),
+					'desc' => __( 'Check this to enable cart saving on the checkout', 'edd' ),
 					'type' => 'checkbox'
 				),
 				'field_downloads' => array(
@@ -643,51 +642,53 @@ function edd_get_registered_settings() {
  * At some point this will validate input
  *
  * @since 1.0.8.2
+ *
  * @param array $input The value inputted in the field
+ *
  * @return string $input Sanitizied value
  */
 function edd_settings_sanitize( $input = array() ) {
 
 	global $edd_options;
 
-	if( empty( $_POST['_wp_http_referer'] ) )
+	if ( empty( $_POST['_wp_http_referer'] ) ) {
 		return $input;
+	}
 
 	parse_str( $_POST['_wp_http_referer'], $referrer );
 
-	$settings  	= edd_get_registered_settings();
-	$tab       	= isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
+	$settings = edd_get_registered_settings();
+	$tab      = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
 
-	$input 		= $input ? $input : array();
-	$input 		= apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+	$input = $input ? $input : array();
+	$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
 
 	// Loop through each setting being saved and pass it through a sanitization filter
-	foreach( $input as $key => $value ) {
+	foreach ( $input as $key => $value ) {
 
 		// Get the setting type (checkbox, select, etc)
-		$type = isset( $settings[ $tab ][ $key ][ 'type' ] ) ? $settings[ $tab ][ $key ][ 'type' ] : false;
+		$type = isset( $settings[$tab][$key]['type'] ) ? $settings[$tab][$key]['type'] : false;
 
-		if( $type ) {
+		if ( $type ) {
 			// Field type specific filter
-			$input[ $key ] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
+			$input[$key] = apply_filters( 'edd_settings_sanitize_' . $type, $value, $key );
 		}
 
 		// General filter
-		$input[ $key ] = apply_filters( 'edd_settings_sanitize', $value, $key );
+		$input[$key] = apply_filters( 'edd_settings_sanitize', $value, $key );
 	}
 
-
 	// Loop through the whitelist and unset any that are empty for the tab being saved
-	if( ! empty( $settings[ $tab ] ) ) {
-		foreach( $settings[ $tab ] as $key => $value ) {
+	if ( ! empty( $settings[$tab] ) ) {
+		foreach ( $settings[$tab] as $key => $value ) {
 
 			// settings used to have numeric keys, now they have keys that match the option ID. This ensures both methods work
-			if( is_numeric( $key ) ) {
+			if ( is_numeric( $key ) ) {
 				$key = $value['id'];
 			}
 
-			if( empty( $input[ $key ] ) ) {
-				unset( $edd_options[ $key ] );
+			if ( empty( $input[$key] ) ) {
+				unset( $edd_options[$key] );
 			}
 
 		}
@@ -696,10 +697,9 @@ function edd_settings_sanitize( $input = array() ) {
 	// Merge our new settings with the existing
 	$output = array_merge( $edd_options, $input );
 
-	add_settings_error( 'edd-notices', '', __( 'Settings Updated', 'edd' ), 'updated' );
+	add_settings_error( 'edd-notices', '', __( 'Settings updated.', 'edd' ), 'updated' );
 
 	return $output;
-
 }
 
 /**
@@ -790,7 +790,7 @@ function edd_get_settings_tabs() {
  * On large sites this can be expensive, so only load if on the settings page or $force is set to true
  *
  * @since 1.9.5
- * @param bool $force Force the pages to be loaded even if not on settings 
+ * @param bool $force Force the pages to be loaded even if not on settings
  * @return array $pages_options An array of the pages
  */
 function edd_get_pages( $force = false ) {
@@ -837,7 +837,7 @@ function edd_header_callback( $args ) {
 function edd_checkbox_callback( $args ) {
 	global $edd_options;
 
-	$checked = isset($edd_options[$args['id']]) ? checked(1, $edd_options[$args['id']], false) : '';
+	$checked = isset( $edd_options[ $args[ 'id' ] ] ) ? checked( 1, $edd_options[ $args[ 'id' ] ], false ) : '';
 	$html = '<input type="checkbox" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="1" ' . $checked . '/>';
 	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
@@ -1141,7 +1141,9 @@ function edd_rich_editor_callback( $args ) {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
 
 	if ( $wp_version >= 3.3 && function_exists( 'wp_editor' ) ) {
-		$html = wp_editor( stripslashes( $value ), 'edd_settings[' . $args['id'] . ']', array( 'textarea_name' => 'edd_settings[' . $args['id'] . ']' ) );
+		ob_start();
+		wp_editor( stripslashes( $value ), 'edd_settings_' . $args['id'], array( 'textarea_name' => 'edd_settings[' . $args['id'] . ']' ) );
+		$html = ob_get_clean();
 	} else {
 		$html = '<textarea class="large-text" rows="10" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 	}
@@ -1350,10 +1352,8 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		$html = '<input type="text" class="' . $size . '-text" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
 
 		if ( 'valid' == get_option( $args['options']['is_valid_license_option'] ) ) {
-			$html .= wp_nonce_field( $args['id'] . '_nonce', $args['id'] . '_nonce', false );
 			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License',  'edd' ) . '"/>';
 		}
-
 		$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
 		echo $html;
