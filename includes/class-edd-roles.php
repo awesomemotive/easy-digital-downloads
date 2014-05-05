@@ -176,7 +176,10 @@ class EDD_Roles {
 				"manage_{$capability_type}_terms",
 				"edit_{$capability_type}_terms",
 				"delete_{$capability_type}_terms",
-				"assign_{$capability_type}_terms"
+				"assign_{$capability_type}_terms",
+
+				// Custom
+				"view_{$capability_type}_stats"
 			);
 		}
 
