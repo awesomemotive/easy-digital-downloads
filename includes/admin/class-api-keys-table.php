@@ -124,7 +124,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 				$keys[$user->ID]['key']    = $user->edd_user_public_key;
 				$keys[$user->ID]['secret'] = $user->edd_user_secret_key;
 				$keys[$user->ID]['token']  = hash( 'md5', $user->edd_user_secret_key . $user->edd_user_public_key );
-				$keys[$user->ID]['action'] = '<a href="' . add_query_arg( array( 'user_id' => $user->ID, 'edd_action' => 'revoke_api_key' ) )  . '">' . __( 'Revoke', 'edd' ) . '</a> / <a href="' . add_query_arg( array( 'user_id' => $user->ID, 'edd_action' => 'regenerate_api_key' ) )  . '">' . __( 'Regenerate', 'edd' ) . '</a>';
+				$keys[$user->ID]['action'] = '<a href="' . add_query_arg( array( 'user_id' => $user->ID, 'edd_action' => 'revoke_api_key' ) )  . '" title="' . __( 'Revoke', 'edd' ) . '"><i class="dashicons dashicons-no"></i></a> <a href="' . add_query_arg( array( 'user_id' => $user->ID, 'edd_action' => 'regenerate_api_key' ) )  . '" title="' . __( 'Regenerate', 'edd' ) . '"><i class="dashicons dashicons-update"></i></a>';
 			}
 		}
 
