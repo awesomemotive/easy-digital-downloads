@@ -1388,23 +1388,41 @@ class EDD_API {
 	 * @return void
 	 */
 	public function process_api_key( $args ) {
-		$user_id	= isset( $args['user_id'] ) ? absint( $args['user_id'] ) : get_current_user_id();
+
+		if( is_numeric( $args['user_id'] ) ) {
+			$user_id	= isset( $args['user_id'] ) ? absint( $args['user_id'] ) : get_current_user_id();
+		} else {
+			$userdata   = get_user_by( 'login', $args['user_id'] );
+			$user_id    = $userdata->ID;
+		}
 		$process    = isset( $args['edd_api_process'] ) ? strtolower( $args['edd_api_process'] ) : false;
+
+		if( $user_id == get_current_user_id() && ! edd_get_option( 'allow_user_api_keys' ) && ! current_user_can( 'manage_shop_settings' ) ) {
+			die();
+		} elseif( ! current_user_can( 'manage_shop_settings' ) ) {
+			die();
+		}
 
 		switch( $process ) {
 			case 'generate':
 				$this->generate_api_key( $user_id );
-				if( get_transient( 'edd-total-api-keys' ) ) delete_transient( 'edd-total-api-keys' );
+				if( get_transient( 'edd-total-api-keys' ) ) {
+					delete_transient( 'edd-total-api-keys' );
+				}
 				wp_redirect( add_query_arg( 'edd-message', 'api-key-generated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
 				break;
 			case 'regenerate':
 				$this->generate_api_key( $user_id, true );
-				if( get_transient( 'edd-total-api-keys' ) ) delete_transient( 'edd-total-api-keys' );
+				if( get_transient( 'edd-total-api-keys' ) ) {
+					delete_transient( 'edd-total-api-keys' );
+				}
 				wp_redirect( add_query_arg( 'edd-message', 'api-key-regenerated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
 				break;
 			case 'revoke':
 				$this->revoke_api_key( $user_id );
-				if( get_transient( 'edd-total-api-keys' ) ) delete_transient( 'edd-total-api-keys' );
+				if( get_transient( 'edd-total-api-keys' ) ) {
+					delete_transient( 'edd-total-api-keys' );
+				}
 				wp_redirect( add_query_arg( 'edd-message', 'api-key-revoked', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
 				break;
 			default;
@@ -1421,25 +1439,20 @@ class EDD_API {
 	 * @return string
 	 */
 	public function generate_api_key( $user_id, $regenerate = false ) {
-		if ( current_user_can( 'edit_user', $user_id ) ) {
+		$user = get_userdata( $user_id );
 
-			$user = get_userdata( $user_id );
-
-			if ( empty( $user->edd_user_public_key ) ) {
-				update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
-				update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
-			} elseif( $regenerate == true ) {
-				$this->revoke_api_key( $user->ID );
-				update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
-				update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
-			} else {
-				return false;
-			}
-
-			return true;
+		if ( empty( $user->edd_user_public_key ) ) {
+			update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
+			update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
+		} elseif( $regenerate == true ) {
+			$this->revoke_api_key( $user->ID );
+			update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
+			update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
+		} else {
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 	/**
@@ -1451,21 +1464,16 @@ class EDD_API {
 	 * @return string
 	 */
 	public function revoke_api_key( $user_id ) {
-		if ( current_user_can( 'edit_user', $user_id ) ) {
+		$user = get_userdata( $user_id );
 
-			$user = get_userdata( $user_id );
-
-			if ( ! empty( $user->edd_user_public_key ) ) {
-				delete_user_meta( $user_id, 'edd_user_public_key' );
-				delete_user_meta( $user_id, 'edd_user_secret_key' );
-			} else {
-				return false;
-			}
-
-			return true;
+		if ( ! empty( $user->edd_user_public_key ) ) {
+			delete_user_meta( $user_id, 'edd_user_public_key' );
+			delete_user_meta( $user_id, 'edd_user_secret_key' );
+		} else {
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 
