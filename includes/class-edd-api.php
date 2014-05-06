@@ -1240,7 +1240,9 @@ class EDD_API {
 		global $edd_logs, $wp_query;
 
 		$query = array(
+			'edd-api'     => $wp_query->query_vars['edd-api'],
 			'key'         => $wp_query->query_vars['key'],
+			'token'       => $wp_query->query_vars['token'],
 			'query'       => isset( $wp_query->query_vars['query'] )       ? $wp_query->query_vars['query']       : null,
 			'type'        => isset( $wp_query->query_vars['type'] )        ? $wp_query->query_vars['type']        : null,
 			'product'     => isset( $wp_query->query_vars['product'] )     ? $wp_query->query_vars['product']     : null,
