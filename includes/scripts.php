@@ -166,6 +166,8 @@ function edd_load_admin_scripts( $hook ) {
 		'delete_payment'          => __( 'Are you sure you wish to delete this payment?', 'edd' ),
 		'delete_payment_note'     => __( 'Are you sure you wish to delete this note?', 'edd' ),
 		'delete_tax_rate'         => __( 'Are you sure you wish to delete this tax rate?', 'edd' ),
+		'revoke_api_key'          => __( 'Are you sure you wish to revoke this API key?', 'edd' ),
+		'regenerate_api_key'      => __( 'Are you sure you wish to regenerate this API key?', 'edd' ),
 		'resend_receipt'          => __( 'Are you sure you wish to resend the purchase receipt?', 'edd' ),
 		'copy_download_link_text' => __( 'Copy these links to your clip board and give them to your customer', 'edd' ),
 		'delete_payment_download' => sprintf( __( 'Are you sure you wish to delete this %s?', 'edd' ), edd_get_label_singular() ),

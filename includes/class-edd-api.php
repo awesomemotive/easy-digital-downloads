@@ -101,11 +101,14 @@ class EDD_API {
 	 * @since 1.5
 	 */
 	public function __construct() {
-		add_action( 'init',                    array( $this, 'add_endpoint'   ) );
-		add_action( 'template_redirect',       array( $this, 'process_query'  ), -1 );
-		add_filter( 'query_vars',              array( $this, 'query_vars'     ) );
-		add_action( 'show_user_profile',       array( $this, 'user_key_field' ) );
-		add_action( 'personal_options_update', array( $this, 'update_key'     ) );
+		add_action( 'init',                     array( $this, 'add_endpoint'     ) );
+		add_action( 'template_redirect',        array( $this, 'process_query'    ), -1 );
+		add_filter( 'query_vars',               array( $this, 'query_vars'       ) );
+		add_action( 'show_user_profile',        array( $this, 'user_key_field'   ) );
+		add_action( 'edit_user_profile',        array( $this, 'user_key_field'   ) );
+		add_action( 'personal_options_update',  array( $this, 'update_key'       ) );
+		add_action( 'edit_user_profile_update', array( $this, 'update_key'       ) );
+		add_action( 'edd_process_api_key',      array( $this, 'process_api_key'  ) );
 
 		// Determine if JSON_PRETTY_PRINT is available
 		$this->pretty_print = defined( 'JSON_PRETTY_PRINT' ) ? JSON_PRETTY_PRINT : null;
@@ -1346,7 +1349,7 @@ class EDD_API {
 	function user_key_field( $user ) {
 		global $edd_options;
 
-		if ( ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'edit_user', $user->ID ) ) {
+		if ( ( edd_get_option( 'api_allow_user_keys', false ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'edit_user', $user->ID ) ) {
 			$user = get_userdata( $user->ID );
 			?>
 			<table class="form-table">
@@ -1374,6 +1377,96 @@ class EDD_API {
 	}
 
 	/**
+	 * Process an API key generation/revocation
+	 *
+	 * @access public
+	 * @since 2.0.0
+	 * @param array $args
+	 * @return void
+	 */
+	public function process_api_key( $args ) {
+		$user_id	= isset( $args['user_id'] ) ? absint( $args['user_id'] ) : get_current_user_id();
+		$process    = isset( $args['edd_api_process'] ) ? strtolower( $args['edd_api_process'] ) : false;
+
+		switch( $process ) {
+			case 'generate':
+				$this->generate_api_key( $user_id );
+				if( get_transient( 'edd-total-api-keys' ) ) delete_transient( 'edd-total-api-keys' );
+				wp_redirect( add_query_arg( 'edd-message', 'api-key-generated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
+				break;
+			case 'regenerate':
+				$this->generate_api_key( $user_id, true );
+				if( get_transient( 'edd-total-api-keys' ) ) delete_transient( 'edd-total-api-keys' );
+				wp_redirect( add_query_arg( 'edd-message', 'api-key-regenerated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
+				break;
+			case 'revoke':
+				$this->revoke_api_key( $user_id );
+				if( get_transient( 'edd-total-api-keys' ) ) delete_transient( 'edd-total-api-keys' );
+				wp_redirect( add_query_arg( 'edd-message', 'api-key-revoked', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
+				break;
+			default;
+				break;
+		}
+	}
+
+	/**
+	 * Generate new API keys for a user
+	 *
+	 * @access public
+	 * @since 2.0.0
+	 * @param array $args
+	 * @return string
+	 */
+	public function generate_api_key( $user_id, $regenerate = false ) {
+		if ( current_user_can( 'edit_user', $user_id ) ) {
+
+			$user = get_userdata( $user_id );
+
+			if ( empty( $user->edd_user_public_key ) ) {
+				update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
+				update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
+			} elseif( $regenerate == true ) {
+				$this->revoke_api_key( $user->ID );
+				update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
+				update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
+			} else {
+				return false;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Revoke a users API keys
+	 *
+	 * @access public
+	 * @since 2.0.0
+	 * @param int $args
+	 * @return string
+	 */
+	public function revoke_api_key( $user_id ) {
+		if ( current_user_can( 'edit_user', $user_id ) ) {
+
+			$user = get_userdata( $user_id );
+
+			if ( ! empty( $user->edd_user_public_key ) ) {
+				delete_user_meta( $user_id, 'edd_user_public_key' );
+				delete_user_meta( $user_id, 'edd_user_secret_key' );
+			} else {
+				return false;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+
+	/**
 	 * Generate and Save API key
 	 *
 	 * Generates the key requested by user_key_field and stores it in the database
@@ -1391,13 +1484,9 @@ class EDD_API {
 
 			if ( empty( $user->edd_user_public_key ) ) {
 				update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
-			} else {
-				delete_user_meta( $user_id, 'edd_user_public_key' );
-			}
-
-			if ( empty( $user->edd_user_secret_key ) ) {
 				update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
 			} else {
+				delete_user_meta( $user_id, 'edd_user_public_key' );
 				delete_user_meta( $user_id, 'edd_user_secret_key' );
 			}
 		}
