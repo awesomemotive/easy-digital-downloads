@@ -110,8 +110,8 @@ function edd_generate_pdf( $data ) {
 
 				if( function_exists( 'iconv' ) ) {
 					// Ensure characters like euro; are properly converted. See GithuB issue #472 and #1570
-					$price    = iconv('UTF-8', 'windows-1252', $price );
-					$earnings = iconv('UTF-8', 'windows-1252', $earnings );
+					$price    = iconv('UTF-8', 'windows-1252', utf8_encode( $price ) );
+					$earnings = iconv('UTF-8', 'windows-1252', utf8_encode( $earnings ) );
 				}
 
 				$pdf->Row( array( $title, $price, $categories, $tags, $sales, $earnings ) );
