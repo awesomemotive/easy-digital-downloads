@@ -115,7 +115,7 @@ function edd_get_checkout_uri( $args = array() ) {
 
 	$ajax_url = admin_url( 'admin-ajax.php', $scheme );
 
-	if ( ! preg_match( '/^https/', $uri ) && preg_match( '/^https/', $ajax_url ) ) {
+	if ( ( ! preg_match( '/^https/', $uri ) && preg_match( '/^https/', $ajax_url ) ) || edd_is_ssl_enforced() ) {
 		$uri = preg_replace( '/^http/', 'https', $uri );
 	}
 
@@ -252,3 +252,33 @@ function edd_is_email_banned( $email = '' ) {
 
 	return apply_filters( 'edd_is_email_banned', $ret, $email );
 }
+
+/** 
+ * Determines if secure checkout pages are enforced
+ *
+ * @since       2.0
+ * @return      bool True if enforce SSL is enabled, false otherwise
+ */
+function edd_is_ssl_enforced() {
+	$ssl_enforced = isset( edd_get_option( 'enforce_ssl', false ) );
+	return (bool) apply_filters( 'edd_is_ssl_enforced', $ssl_enforced );
+}
+
+/**
+ * Handle redirections for SSL enforced checkouts
+ *
+ * @since 2.0
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_enforced_ssl_redirect_handler() {
+	if ( ! edd_is_ssl_enforced() || ! edd_is_checkout() || is_admin() ) {
+		return;
+	}
+ 
+	$uri = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+	wp_safe_redirect( $uri );
+	exit;
+}
+add_action( 'template_redirect', 'edd_enforced_ssl_redirect_handler' );
