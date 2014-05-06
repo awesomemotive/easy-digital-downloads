@@ -135,8 +135,7 @@ jQuery(document).ready(function($) {
 
         var postData = {
             action: 'edd_apply_discount',
-            code: discount_code,
-            nonce: edd_global_vars.checkout_nonce
+            code: discount_code
         };
 
         $('#edd-discount-error-wrap').html('').hide();
