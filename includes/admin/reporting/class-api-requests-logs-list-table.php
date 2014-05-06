@@ -191,7 +191,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 			// Setup the meta query
 			$meta_query[] = array(
 				'key'     => $key,
-				'value'   => 1, $search,
+				'value'   => $search,
 				'compare' => '='
 			);
 		}
