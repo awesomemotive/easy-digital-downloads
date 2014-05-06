@@ -61,7 +61,7 @@ function edd_tools_page() {
 function edd_get_tools_tabs() {
 
 	$tabs                  = array();
-	$tabs['tools']         = __( 'Tools', 'edd' );
+	$tabs['general']       = __( 'General', 'edd' );
 	$tabs['api_keys']      = __( 'API Keys', 'edd' );
 	$tabs['system_info']   = __( 'System Info', 'edd' );
 	$tabs['import_export'] = __( 'Import/Export', 'edd' );
@@ -99,7 +99,7 @@ function edd_tools_banned_emails_display() {
 <?php
 	do_action( 'edd_tools_banned_emails_after' );
 }
-add_action( 'edd_tools_tab_tools', 'edd_tools_banned_emails_display' );
+add_action( 'edd_tools_tab_general', 'edd_tools_banned_emails_display' );
 
 
 /**
