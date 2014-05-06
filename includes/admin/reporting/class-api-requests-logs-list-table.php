@@ -177,6 +177,11 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 				$key = '_edd_log_request_ip';
 			} else if ( is_email( $search ) ) {
 				// This is an email search
+				$search = get_user_by( 'email', $search );
+				
+				if( $search ) { 
+					$search = $search->ID;
+				}
 				$key = '_edd_log_user';
 			} else {
 				// Look for an API key
@@ -186,7 +191,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 			// Setup the meta query
 			$meta_query[] = array(
 				'key'     => $key,
-				'value'   => $search,
+				'value'   => 1, $search,
 				'compare' => '='
 			);
 		}
