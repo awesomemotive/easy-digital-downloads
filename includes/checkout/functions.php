@@ -282,3 +282,51 @@ function edd_enforced_ssl_redirect_handler() {
 	exit;
 }
 add_action( 'template_redirect', 'edd_enforced_ssl_redirect_handler' );
+
+/**
+ * Handle rewriting asset URLs for SSL enforced checkouts
+ *
+ * @since 2.0
+ * @return void
+ */
+function edd_enforced_ssl_asset_handler() {
+	if ( ! edd_is_ssl_enforced() || ! edd_is_checkout() || is_admin() ) {
+		return;
+	}
+
+	$filters = array(
+		'post_thumbnail_html',
+		'wp_get_attachment_url',
+		'wp_get_attachment_image_attributes',
+		'wp_get_attachment_url',
+		'option_stylesheet_url',
+		'option_template_url',
+		'script_loader_src',
+		'style_loader_src',
+		'template_directory_uri',
+		'stylesheet_directory_uri',
+		'site_url'
+	);
+	
+	$filters = apply_filters( 'edd_enforced_ssl_assets', $filters );
+
+	foreach ( $filters as $filter ) {
+		add_filter( $filter, 'edd_enforced_ssl_asset_filter', 1 );
+	}
+}
+add_action( 'template_redirect', 'edd_enforced_ssl_asset_handler' );
+
+/**
+ * Filter filters and convert http to https
+ * @param  mixed $content
+ * @return mixed
+ */
+function edd_enforced_ssl_asset_filter( $content ) {
+	if ( is_array( $content ) ) {
+		$content = array_map( 'edd_enforced_ssl_asset_filter', $content );
+	} else {
+		$content = str_replace( 'http:', 'https:', $content );
+	}
+
+	return $content;
+}
