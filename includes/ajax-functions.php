@@ -34,7 +34,8 @@ function edd_is_ajax_enabled() {
  * @return string
 */
 function edd_get_ajax_url() {
-	$scheme      = force_ssl_admin() && is_ssl() ? 'https' : 'http';
+	$scheme = defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https' : 'admin';
+
 	$current_url = edd_get_current_page_url();
 	$ajax_url    = admin_url( 'admin-ajax.php', $scheme );
 
@@ -52,7 +53,7 @@ function edd_get_ajax_url() {
  * @return void
  */
 function edd_ajax_remove_from_cart() {
-	if ( isset( $_POST['cart_item'] ) ) {
+	if ( isset( $_POST['cart_item'] ) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
 		
 		edd_remove_from_cart( $_POST['cart_item'] );
 		
@@ -76,7 +77,7 @@ add_action( 'wp_ajax_nopriv_edd_remove_from_cart', 'edd_ajax_remove_from_cart' )
  * @return void
  */
 function edd_ajax_add_to_cart() {
-	if ( isset( $_POST['download_id'] ) ) {
+	if ( isset( $_POST['download_id'] ) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
 		global $post;
 
 		$to_add = array();
@@ -121,14 +122,16 @@ add_action( 'wp_ajax_nopriv_edd_add_to_cart', 'edd_ajax_add_to_cart' );
 
 
 /**
- * Gets the cart's subtotal via AJAX.
+ * Adds item to the cart via AJAX.
  *
  * @since 1.0
  * @return void
  */
 function edd_ajax_get_subtotal() {
-	echo edd_currency_filter( edd_get_cart_subtotal() );
-	edd_die();
+  if (  check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
+    echo edd_currency_filter( edd_get_cart_subtotal() );
+  }
+  edd_die();
 }
 
 add_action( 'wp_ajax_edd_get_subtotal', 'edd_ajax_get_subtotal' );
@@ -141,35 +144,29 @@ add_action( 'wp_ajax_nopriv_edd_get_subtotal', 'edd_ajax_get_subtotal' );
  * @return void
  */
 function edd_ajax_apply_discount() {
-	if ( isset( $_POST['code'] ) ) {
-
-		$discount_code = $_POST['code'];
+	if ( isset( $_POST['code'] ) && check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) ) {
 
 		$return = array(
 			'msg'  => '',
-			'code' => $discount_code
+			'code' => $_POST['code']
 		);
 
-		if ( edd_is_discount_valid( $discount_code ) ) {
-			$discount  = edd_get_discount_by_code( $discount_code );
+		if ( edd_is_discount_valid( $_POST['code'] ) ) {
+			$discount  = edd_get_discount_by_code( $_POST['code'] );
 			$amount    = edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) );
-			$discounts = edd_set_cart_discount( $discount_code );
+			$discounts = edd_set_cart_discount( $_POST['code'] );
 			$total     = edd_get_cart_total( $discounts );
 
 			$return = array(
 				'msg'    => 'valid',
 				'amount' => $amount,
 				'total'  => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
-				'code'   => $discount_code,
+				'code'   => $_POST['code'],
 				'html'   => edd_get_cart_discounts_html( $discounts )
 			);
 		} else {
 			$return['msg']  = __('The discount you entered is invalid', 'edd');
 		}
-
-		// Allow for custom discount code handling
-		$return = apply_filters( 'edd_ajax_discount_response', $return );
-
 		echo json_encode($return);
 	}
 	edd_die();
@@ -255,7 +252,7 @@ add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_titl
  * @return void
  */
 function edd_ajax_recalculate_taxes() {
-	if ( ! edd_get_cart_contents() ) {
+	if ( ! check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) ) {
 		return false;
 	}
 
@@ -265,7 +262,8 @@ function edd_ajax_recalculate_taxes() {
 
 	ob_start();
 	edd_checkout_cart();
-	$cart = ob_get_clean();
+	$cart = ob_get_contents();
+	ob_end_clean();
 	$response = array(
 		'html'  => $cart,
 		'total' => html_entity_decode( edd_cart_total( false ), ENT_COMPAT, 'UTF-8' ),
@@ -322,15 +320,9 @@ add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
  */
 function edd_ajax_download_search() {
 
-	global $wpdb;
-
-	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
+	$search  = sanitize_text_field( $_GET['s'] );
 	$results = array();
-	if ( current_user_can( 'manage_shop_products' ) ) {
-		$items = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_title` LIKE '%$search%' LIMIT 50" );
-	} else {
-		$items = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_status` = 'publish' AND `post_title` LIKE '%$search%' LIMIT 50" );
-	}
+	$items   = get_posts( array( 'post_type' => 'download', 'posts_per_page' => 30, 's' => $search ) ); 
 
 	if( $items ) {
 
@@ -372,16 +364,7 @@ add_action( 'wp_ajax_nopriv_edd_download_search', 'edd_ajax_download_search' );
  */
 function edd_check_for_download_price_variations() {
 
-	if( ! current_user_can( 'manage_shop_products' ) ) {
-		die( '-1' );
-	}
-
 	$download_id = intval( $_POST['download_id'] );
-	$download    = get_post( $download_id );
-
-	if( 'download' != $download->post_type ) {
-		die( '-2' );
-	}
 
 	if ( edd_has_variable_prices( $download_id ) ) {
 		$variable_prices = edd_get_variable_prices( $download_id );
@@ -389,7 +372,7 @@ function edd_check_for_download_price_variations() {
 		if ( $variable_prices ) {
 			$ajax_response = '<select class="edd_price_options_select edd-select edd-select">';
 				foreach ( $variable_prices as $key => $price ) {
-					$ajax_response .= '<option value="' . esc_attr( $key ) . '">' . esc_html( $price['name'] )  . '</option>';
+					$ajax_response .= '<option value="' . $key . '">' . $price['name']  . '</option>';
 				}
 			$ajax_response .= '</select>';
 		}
