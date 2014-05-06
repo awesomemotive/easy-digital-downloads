@@ -1264,7 +1264,8 @@ class EDD_API {
 		$log_meta = array(
 			'request_ip' => edd_get_ip(),
 			'user'       => $this->user_id,
-			'key'        => $wp_query->query_vars['key']
+			'key'        => $wp_query->query_vars['key'],
+			'token'      => $wp_query->query_vars['token']
 		);
 
 		$edd_logs->insert_log( $log_data, $log_meta );
