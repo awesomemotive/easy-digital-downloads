@@ -123,6 +123,25 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Outputs the log views
+	 *
+	 * @access public
+	 * @since 1.5
+	 * @return void
+	 */
+	function bulk_actions() {
+		// These aren't really bulk actions but this outputs the markup in the right place
+		?>
+		<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ); ?>">
+			<input type="hidden" name="edd_action" value="process_api_key" />
+			<input type="hidden" name="edd_api_process" value="generate" />
+			<input type="text" name="user_id" placeholder="<?php _e( 'Enter username', 'edd' ); ?>" />
+			<?php submit_button( __( 'Generate', 'edd' ), 'secondary', 'submit', false ); ?>
+		</form>
+		<?php
+	}
+
+	/**
 	 * Retrieve the current page number
 	 *
 	 * @access public

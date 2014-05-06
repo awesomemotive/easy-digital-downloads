@@ -121,8 +121,6 @@ function edd_tools_api_keys_display() {
 	$api_keys_table->prepare_items();
 	$api_keys_table->display();
 
-	echo '<p class="description">' . __( 'To generate new API keys, visit the Edit Profile page for a given user.', 'edd' ) . '</p>';
-
 	do_action( 'edd_tools_api_keys_after' );
 }
 add_action( 'edd_tools_tab_api_keys', 'edd_tools_api_keys_display' );
