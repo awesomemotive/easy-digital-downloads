@@ -36,6 +36,10 @@ function edd_tools_page() {
 					'tab' => $tab_id
 				) );
 
+				$tab_url = remove_query_arg( array(
+					'edd-message'
+				), $tab_url );
+
 				$active = $active_tab == $tab_id ? ' nav-tab-active' : '';
 				echo '<a href="' . esc_url( $tab_url ) . '" title="' . esc_attr( $tab_name ) . '" class="nav-tab' . $active . '">' . esc_html( $tab_name ) . '</a>';
 

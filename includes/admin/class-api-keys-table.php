@@ -73,6 +73,38 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Renders the column for the user field
+	 *
+	 * @access public 
+	 * @since 2.0
+	 * @return void
+	 */
+	public function column_user( $item ) {
+		if( apply_filters( 'edd_api_log_requests', true ) ) {
+			$actions['view'] = sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( add_query_arg( array( 'view' => 'api_requests', 'post_type' => 'download', 'page' => 'edd-reports', 'tab' => 'logs', 's' => $item['email'] ), 'edit.php' ) ),
+				__( 'View API Log', 'edd' )
+			);
+		}
+
+		$actions['reissue'] = sprintf(
+			'<a href="%s" class="edd-regenerate-api-key">%s</a>',
+			esc_url( add_query_arg( array( 'user_id' => $item['id'], 'edd_action' => 'process_api_key', 'edd_api_process' => 'regenerate' ) ) ),
+			__( 'Reissue', 'edd' )
+		);
+		$actions['revoke'] = sprintf(
+			'<a href="%s" class="edd-revoke-api-key edd-delete">%s</a>',
+			esc_url( add_query_arg( array( 'user_id' => $item['id'], 'edd_action' => 'process_api_key', 'edd_api_process' => 'revoke' ) ) ),
+			__( 'Revoke', 'edd' )
+		);
+
+		$actions = apply_filters( 'edd_api_row_actions', array_filter( $actions ) );
+
+		return sprintf('%1$s %2$s', $item['user'], $this->row_actions( $actions ) );
+	}
+
+	/**
 	 * Retrieve the table columns
 	 *
 	 * @access public
@@ -81,11 +113,10 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'user'         => __( 'User', 'edd' ),
+			'user'         => __( 'Username', 'edd' ),
 			'key'          => __( 'Public Key', 'edd' ),
 			'secret'       => __( 'Secret Key', 'edd' ),
-			'token'        => __( 'Token', 'edd' ),
-			'action'       => __( 'Actions', 'edd' )
+			'token'        => __( 'Token', 'edd' )
 		);
 
 		return $columns;
@@ -118,15 +149,19 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		$keys     = array();
 
 		foreach( $users as $user ) {
-			$keys[$user->ID]['user']   = '<a href="' . add_query_arg( 'user_id', $user->ID, 'user-edit.php' ) . '">' . $user->user_login . '</a>';
+			$keys[$user->ID]['id']     = $user->ID;
+			$keys[$user->ID]['email']  = $user->user_email;
+			$keys[$user->ID]['user']   = '<a href="' . add_query_arg( 'user_id', $user->ID, 'user-edit.php' ) . '"><strong>' . $user->user_login . '</strong></a>';
+
 			$keys[$user->ID]['key']    = get_user_meta( $user->ID, 'edd_user_public_key', true );
 			$keys[$user->ID]['secret'] = get_user_meta( $user->ID, 'edd_user_secret_key', true );
 			$keys[$user->ID]['token']  = hash( 'md5', get_user_meta( $user->ID, 'edd_user_secret_key', true ) . get_user_meta( $user->ID, 'edd_user_public_key', true ) );
-			$keys[$user->ID]['action'] = '<a href="' . esc_url( add_query_arg( array( 'user_id' => $user->ID, 'edd_action' => 'process_api_key', 'edd_api_process' => 'revoke' ) ) )  . '" title="' . __( 'Revoke', 'edd' ) . '" class="edd-revoke-api-key"><i class="dashicons dashicons-no"></i></a> <a href="' . esc_url( add_query_arg( array( 'user_id' => $user->ID, 'edd_action' => 'process_api_key', 'edd_api_process' => 'regenerate' ) ) ) . '" title="' . __( 'Regenerate', 'edd' ) . '" class="edd-regenerate-api-key"><i class="dashicons dashicons-update"></i></a>';
 		}
 
 		return $keys;
 	}
+
+
 
 	/**
 	 * Retrieve count of total users with keys
