@@ -83,7 +83,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		if( apply_filters( 'edd_api_log_requests', true ) ) {
 			$actions['view'] = sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( array( 'user_id' => $item['id'], 'edd_action' => 'view_api_log' ) ) ),
+				esc_url( add_query_arg( array( 'view' => 'api_requests', 'post_type' => 'download', 'page' => 'edd-reports', 'tab' => 'logs', 's' => $item['email'] ), 'edit.php' ) ),
 				__( 'View API Log', 'edd' )
 			);
 		}
@@ -150,6 +150,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 
 		foreach( $users as $user ) {
 			$keys[$user->ID]['id']     = $user->ID;
+			$keys[$user->ID]['email']  = $user->user_email;
 			$keys[$user->ID]['user']   = '<a href="' . add_query_arg( 'user_id', $user->ID, 'user-edit.php' ) . '"><strong>' . $user->user_login . '</strong></a>';
 
 			$keys[$user->ID]['key']    = get_user_meta( $user->ID, 'edd_user_public_key', true );
