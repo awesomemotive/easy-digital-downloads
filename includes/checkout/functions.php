@@ -308,7 +308,7 @@ function edd_enforced_ssl_asset_handler() {
 		'site_url'
 	);
 	
-	$filters = apply_filters( 'edd_enforced_ssl_assets', $filters );
+	$filters = apply_filters( 'edd_enforced_ssl_asset_filters', $filters );
 
 	foreach ( $filters as $filter ) {
 		add_filter( $filter, 'edd_enforced_ssl_asset_filter', 1 );
@@ -318,7 +318,9 @@ add_action( 'template_redirect', 'edd_enforced_ssl_asset_handler' );
 
 /**
  * Filter filters and convert http to https
- * @param  mixed $content
+ *
+ * @since 2.0
+ * @param mixed $content
  * @return mixed
  */
 function edd_enforced_ssl_asset_filter( $content ) {
