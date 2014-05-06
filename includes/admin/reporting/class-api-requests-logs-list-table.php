@@ -177,21 +177,35 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 				$key = '_edd_log_request_ip';
 			} else if ( is_email( $search ) ) {
 				// This is an email search
-				$search = get_user_by( 'email', $search );
+				$userdata = get_user_by( 'email', $search );
 				
-				if( $search ) { 
-					$search = $search->ID;
+				if( $userdata ) { 
+					$search = $userdata->ID;
 				}
+
 				$key = '_edd_log_user';
-			} else {
+			} elseif( strlen( $search ) == 32 ) {
 				// Look for an API key
 				$key = '_edd_log_key';
+			} elseif( stristr( $search, 'token:' ) ) {
+				// Look for an API token
+				$search = str_ireplace( 'token:', '', $search );
+				$key = '_edd_log_token';
+			} else {
+				// This is (probably) a user ID search
+				$userdata = get_userdata( $search );
+
+				if( $userdata ) {
+					$search = $userdata->ID;
+				}
+
+				$key = '_edd_log_user';
 			}
 
 			// Setup the meta query
 			$meta_query[] = array(
 				'key'     => $key,
-				'value'   => 1, $search,
+				'value'   => $search,
 				'compare' => '='
 			);
 		}
