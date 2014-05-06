@@ -138,7 +138,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 			echo '<p><strong>' . __( 'API User:', 'edd' ) . '</strong></p>';
 			echo '<div>' . get_post_meta( $item['ID'], '_edd_log_user', true ) . '</div>';
 			echo '<p><strong>' . __( 'API Key:', 'edd' ) . '</strong></p>';
-			echo '<div>' . get_post_meta( $item['ID'], '_edd_log_api_key', true ) . '</div>';
+			echo '<div>' . get_post_meta( $item['ID'], '_edd_log_key', true ) . '</div>';
 			echo '<p><strong>' . __( 'Request Date:', 'edd' ) . '</strong></p>';
 			echo '<div>' . get_post_field( 'post_date', $item['ID'] ) . '</div>';
 			?>
@@ -185,7 +185,7 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 				$key = '_edd_log_user';
 			} else {
 				// Look for an API key
-				$key = '_edd_log_api_key';
+				$key = '_edd_log_key';
 			}
 
 			// Setup the meta query
