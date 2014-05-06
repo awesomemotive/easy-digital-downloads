@@ -138,13 +138,13 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	public function total_items() {
 		global $wpdb;
 
-		if( ! get_transient( 'edd-total-api-keys' ) ) {
+		if( ! get_transient( 'edd_total_api_keys' ) ) {
 			$total_items = $wpdb->get_var( "SELECT count(user_id) FROM $wpdb->usermeta WHERE meta_key='edd_user_secret_key'" );
 
-			set_transient( 'edd-total-api-keys', $total_items, 60 * 60 );
+			set_transient( 'edd_total_api_keys', $total_items, 60 * 60 );
 		}
 
-		return get_transient( 'edd-total-api-keys' );
+		return get_transient( 'edd_total_api_keys' );
 	}
 
 	/**
