@@ -251,3 +251,8 @@ td.edd_order_price { text-align: right; }
 -------------------------------------------------------------- */
 .edd-graph .y1Axis { color: rgb( 237, 194, 64 )!important; }
 .edd-graph .y2Axis { color: rgb( 175, 216, 248 )!important; }
+
+/* API Table Styles
+-------------------------------------------------------------- */
+.download_page_edd-tools .apikeys .column-user { width: 115px; }
+.download_page_edd-tools .apikeys .column-action { width: 55px; }
