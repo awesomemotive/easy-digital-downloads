@@ -350,3 +350,94 @@ function edd_get_sale_notification_template_tags() {
 
 	return apply_filters( 'edd_sale_notification_template_tags_description', $tags );
 }
+
+
+/**
+ * Email Template Header
+ *
+ * @access private
+ * @since 1.0.8.2
+ * @deprecated 2.0
+ * @return string Email template header
+ */
+function edd_get_email_body_header() {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '2.0', '', $backtrace );
+
+	ob_start();
+	?>
+	<html>
+	<head>
+		<style type="text/css">#outlook a { padding: 0; }</style>
+	</head>
+	<body dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>">
+	<?php
+	do_action( 'edd_email_body_header' );
+	return ob_get_clean();
+}
+
+/**
+ * Email Template Footer
+ *
+ * @since 1.0.8.2
+ * @deprecated 2.0
+ * @return string Email template footer
+ */
+function edd_get_email_body_footer() {
+
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '2.0', '', $backtrace );
+
+	ob_start();
+	do_action( 'edd_email_body_footer' );
+	?>
+	</body>
+	</html>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * Applies the Chosen Email Template
+ *
+ * @since 1.0.8.2
+ * @deprecated 2.0
+ * @param string $body The contents of the receipt email
+ * @param int $payment_id The ID of the payment we are sending a receipt for
+ * @param array $payment_data An array of meta information for the payment
+ * @return string $email Formatted email with the template applied
+ */
+function edd_apply_email_template( $body, $payment_id, $payment_data=array() ) {
+	global $edd_options;
+
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '2.0', '', $backtrace );
+
+	$template_name = isset( $edd_options['email_template'] ) ? $edd_options['email_template'] : 'default';
+	$template_name = apply_filters( 'edd_email_template', $template_name, $payment_id );
+
+	if ( $template_name == 'none' ) {
+		if ( is_admin() )
+			$body = edd_email_preview_template_tags( $body );
+
+		return $body; // Return the plain email with no template
+	}
+
+	ob_start();
+
+	do_action( 'edd_email_template_' . $template_name );
+
+	$template = ob_get_clean();
+
+	if ( is_admin() )
+		$body = edd_email_preview_template_tags( $body );
+
+	$body = apply_filters( 'edd_purchase_receipt_' . $template_name, $body );
+
+	$email = str_replace( '{email}', $body, $template );
+
+	return $email;
+}

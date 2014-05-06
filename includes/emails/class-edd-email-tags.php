@@ -510,6 +510,9 @@ function edd_email_tag_file_urls( $payment_id ) {
  */
 function edd_email_tag_first_name( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
+	if( empty( $payment_data['user_info'] ) ) {
+		return '';
+	}
 	$email_name   = edd_get_email_names( $payment_data['user_info'] );
 	return $email_name['name'];
 }
@@ -524,6 +527,9 @@ function edd_email_tag_first_name( $payment_id ) {
  */
 function edd_email_tag_fullname( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
+	if( empty( $payment_data['user_info'] ) ) {
+		return '';
+	}
 	$email_name   = edd_get_email_names( $payment_data['user_info'] );
 	return $email_name['fullname'];
 }
@@ -538,6 +544,9 @@ function edd_email_tag_fullname( $payment_id ) {
  */
 function edd_email_tag_username( $payment_id ) {
 	$payment_data = edd_get_payment_meta( $payment_id );
+	if( empty( $payment_data['user_info'] ) ) {
+		return '';
+	}
 	$email_name   = edd_get_email_names( $payment_data['user_info'] );
 	return $email_name['username'];
 }

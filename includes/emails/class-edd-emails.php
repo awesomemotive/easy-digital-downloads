@@ -43,18 +43,11 @@ class EDD_Emails {
 	private $content_type;
 
 	/**
-	 * Holds the email subject
+	 * Holds the email headers
 	 *
 	 * @since 2.0
 	 */
-	private $subject;
-
-	/**
-	 * Holds the email message
-	 *
-	 * @since 2.0
-	 */
-	private $message;
+	private $headers;
 
 	/**
 	 * Whether to send email in HTML
@@ -62,6 +55,13 @@ class EDD_Emails {
 	 * @since 2.0
 	 */
 	private $html = true;
+
+	/**
+	 * The email template to use
+	 *
+	 * @since 2.0
+	 */
+	private $template;
 
 	/**
 	 * Get things going
@@ -130,7 +130,11 @@ class EDD_Emails {
 	 */
 	public function get_headers() {
 		if ( ! $this->headers ) {
-			$this->headers = apply_filters( 'edd_email_default_headers', '', $this );
+			
+			$this->headers  = "From: {$this->get_from_name()} <{$this->get_from_address()}>\r\n";
+			$this->headers .= "Reply-To: {$this->get_from_address()}\r\n";
+			$this->headers .= "Content-Type: {$this->get_content_type()}; charset=utf-8\r\n";
+
 		}
 
 		return apply_filters( 'edd_email_headers', $this->headers, $this );
@@ -147,6 +151,32 @@ class EDD_Emails {
 		}
 
 		return apply_filters( 'edd_email_attachments', $this->attachments, $this );
+	}
+
+	/**
+	 * Retrieve email templates
+	 *
+	 * @since 2.0
+	 */
+	public function get_templates() {
+		$templates = array(
+			'default' => __( 'Default Template', 'edd' ),
+			'none'    => __( 'No template, plain text only', 'edd' )
+		);
+ 
+		return apply_filters( 'edd_email_templates', $templates );
+	}
+
+	/**
+	 * Get the enabled email template
+	 *
+	 * @since 2.0
+	 */
+	public function get_template() {
+		if ( ! $this->template ) {
+			$this->template = edd_get_option( 'email_template', 'default' );
+		}
+		return apply_filters( 'edd_email_template', $this->template );
 	}
 
 	/**
@@ -169,13 +199,19 @@ class EDD_Emails {
 
 		ob_start();
 
+		edd_get_template_part( 'emails/header.php' );
 		do_action( 'edd_email_header', $this );
 
-		echo wpautop( wptexturize( $message ) );
+		edd_get_template_part( sprintf( 'emails/%s-body.php', $this->template ) );
+		do_action( 'edd_email_body', $this );
 
+		edd_get_template_part( 'emails/footer.php' );
 		do_action( 'edd_email_footer', $this );
 
-		$message = ob_get_clean();
+		$body    = ob_get_clean();
+
+		$message = str_replace( '{email}', $body, $message );
+		$message = apply_filters( 'edd_purchase_receipt_' . $this->template, wpautop( wptexturize( $message ) ) );
 
 		return $message;
 	}
