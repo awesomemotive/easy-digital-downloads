@@ -1390,7 +1390,7 @@ class EDD_API {
 	public function process_api_key( $args ) {
 
 		if( is_numeric( $args['user_id'] ) ) {
-			$user_id	= isset( $args['user_id'] ) ? absint( $args['user_id'] ) : get_current_user_id();
+			$user_id    = isset( $args['user_id'] ) ? absint( $args['user_id'] ) : get_current_user_id();
 		} else {
 			$userdata   = get_user_by( 'login', $args['user_id'] );
 			$user_id    = $userdata->ID;
@@ -1398,9 +1398,9 @@ class EDD_API {
 		$process    = isset( $args['edd_api_process'] ) ? strtolower( $args['edd_api_process'] ) : false;
 
 		if( $user_id == get_current_user_id() && ! edd_get_option( 'allow_user_api_keys' ) && ! current_user_can( 'manage_shop_settings' ) ) {
-			die();
+			wp_die( sprintf( __( 'You do not have permission to %s API keys for this user', 'edd' ), $process ) );
 		} elseif( ! current_user_can( 'manage_shop_settings' ) ) {
-			die();
+			wp_die( sprintf( __( 'You do not have permission to %s API keys for this user', 'edd' ), $process ) );
 		}
 
 		switch( $process ) {

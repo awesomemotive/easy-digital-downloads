@@ -123,7 +123,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Outputs the log views
+	 * Display the key generation form
 	 *
 	 * @access public
 	 * @since 1.5
