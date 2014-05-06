@@ -254,5 +254,4 @@ td.edd_order_price { text-align: right; }
 
 /* API Table Styles
 -------------------------------------------------------------- */
-.download_page_edd-tools .apikeys .column-user { width: 115px; }
-.download_page_edd-tools .apikeys .column-action { width: 55px; }
+.download_page_edd-tools .apikeys .column-user { width: 192px; }
