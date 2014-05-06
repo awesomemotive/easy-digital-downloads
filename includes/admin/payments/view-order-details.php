@@ -36,7 +36,7 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 	<h2><?php printf( __( 'Payment #%d', 'edd' ), $payment_id ); ?></h2>
 	<?php do_action( 'edd_view_order_details_before', $payment_id ); ?>
 	<form id="edd-edit-order-form" method="post">
-		<?php do_action( 'edd_view_order_details_form_top' ); ?>
+		<?php do_action( 'edd_view_order_details_form_top', $payment_id ); ?>
 		<div id="poststuff">
 			<div id="edd-dashboard-widgets-wrap">
 				<div id="post-body" class="metabox-holder columns-2">
