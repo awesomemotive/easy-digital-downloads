@@ -594,7 +594,7 @@ jQuery(document).ready(function ($) {
 
 			$('#edd-edit-discount #edd-type, #edd-add-discount #edd-type').change(function() {
 
-				$('.edd-amount-description').toggle();			
+				$('.edd-amount-description').toggle();
 
 			});
 
@@ -1024,5 +1024,37 @@ jQuery(document).ready(function ($) {
 		},
 	};
 	EDD_Tools.init();
+
+	// Ajax user search
+	$('.edd-ajax-user-search').keyup(function() {
+		var user_search = $(this).val();
+		$('.edd-ajax').show();
+		data = {
+			action: 'edd_search_users',
+			user_name: user_search
+		};
+		
+		document.body.style.cursor = 'wait';
+
+		$.ajax({
+			type: "POST",
+			data: data,
+			dataType: "json",
+			url: ajaxurl,
+			success: function (search_response) {
+
+				$('.edd-ajax').hide();
+				$('.edd_user_search_results').html('');
+				$(search_response.results).appendTo('.edd_user_search_results');
+				document.body.style.cursor = 'default';
+			}
+		});
+	});
+	$('body').on('click.eddSelectUser', '.edd_user_search_results a', function(e) {
+		e.preventDefault();
+		var login = $(this).data('login');
+		$('.edd-ajax-user-search').val(login);
+		$('.edd_user_search_results').html('');
+	});
 
 });
