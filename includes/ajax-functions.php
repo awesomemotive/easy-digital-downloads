@@ -443,3 +443,39 @@ function edd_check_for_download_price_variations() {
 	edd_die();
 }
 add_action( 'wp_ajax_edd_check_for_download_price_variations', 'edd_check_for_download_price_variations' );
+
+
+/**
+ * Searches for users via ajax and returns a list of results
+ *
+ * @since 2.0
+ * @return void
+ */
+function edd_ajax_search_users() {
+
+	if( current_user_can( 'manage_shop_settings' ) ) {
+
+		$search_query = trim( $_POST['user_name'] );
+
+		$found_users = get_users( array(
+				'number' => 9999,
+				'search' => $search_query . '*'
+			)
+		);
+
+		$user_list = '<ul>';
+		if( $found_users ) {
+			foreach( $found_users as $user ) {
+				$user_list .= '<li><a href="#" data-login="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->user_login ) . '</a></li>';
+			}
+		} else {
+			$user_list .= '<li>' . __( 'No users found', 'edd' ) . '</li>';
+		}
+		$user_list .= '</ul>';
+
+		echo json_encode( array( 'results' => $user_list ) );
+
+	}
+	die();
+}
+add_action( 'wp_ajax_edd_search_users', 'edd_ajax_search_users' );
