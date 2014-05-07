@@ -333,13 +333,14 @@ class EDD_HTML_Elements {
 		}
 
 		$defaults = array(
-			'name'        => isset( $name )  ? $name  : 'text',
-			'value'       => isset( $value ) ? $value : null,
-			'label'       => isset( $label ) ? $label : null,
-			'desc'        => isset( $desc )  ? $desc  : null,
-			'placeholder' => '',
-			'class'       => 'regular-text',
-			'disabled'    => false
+			'name'         => isset( $name )  ? $name  : 'text',
+			'value'        => isset( $value ) ? $value : null,
+			'label'        => isset( $label ) ? $label : null,
+			'desc'         => isset( $desc )  ? $desc  : null,
+			'placeholder'  => '',
+			'class'        => 'regular-text',
+			'disabled'     => false,
+			'autocomplete' => ''
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -357,7 +358,7 @@ class EDD_HTML_Elements {
 				$output .= '<span class="edd-description">' . esc_html( $args[ 'desc' ] ) . '</span>';
 			}
 
-			$output .= '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" placeholder="' . esc_attr( $args[ 'placeholder' ] ) . '" class="' . $args[ 'class' ] . '"' . $disabled . '/>';
+			$output .= '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" autocomplete="' . esc_attr( $args[ 'autocomplete' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" placeholder="' . esc_attr( $args[ 'placeholder' ] ) . '" class="' . $args[ 'class' ] . '"' . $disabled . '/>';
 
 		$output .= '</span>';
 
@@ -402,6 +403,39 @@ class EDD_HTML_Elements {
 				$output .= '<span class="edd-description">' . esc_html( $args[ 'desc' ] ) . '</span>';
 			}
 
+		$output .= '</span>';
+
+		return $output;
+	}
+
+	/**
+	 * Renders an ajax user search field
+	 *
+	 * @since 2.0
+	 *
+	 * @param array $args
+	 * @return string text field with ajax search
+	 */
+	public function ajax_user_search( $args = array() ) {
+
+		$defaults = array(
+			'name'        => 'user_id',
+			'value'       => null,
+			'placeholder' => __( 'Enter username', 'edd' ),
+			'label'       => null,
+			'desc'        => null,
+            'class'       => '',
+			'disabled'    => false,
+			'autocomplete'=> 'off'
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$args['class'] = 'edd-ajax-user-search ' . $args['class'];
+
+		$output  = '<span class="edd_user_search_wrap">'; 
+			$output .= $this->text( $args );
+			$output .= '<span class="edd_user_search_results"></span>';
 		$output .= '</span>';
 
 		return $output;
