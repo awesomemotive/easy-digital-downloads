@@ -950,7 +950,7 @@ function edd_get_payment_amount( $payment_id ) {
 		}
 	}
 
-	return apply_filters( 'edd_payment_amount', floatval( $amount ) );
+	return apply_filters( 'edd_payment_amount', floatval( $amount ), $payment_id );
 }
 
 /**

@@ -1,13 +1,13 @@
 === Easy Digital Downloads ===
 Author URI: http://pippinsplugins.com
 Plugin URI: http://easydigitaldownloads.com
-Contributors: mordauk, sunnyratilal, chriscct7, ghost1227, sumobi, sksmatt, SpencerFinnell
+Contributors: mordauk, sunnyratilal, chriscct7, section214, sumobi, sksmatt, SpencerFinnell
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.7
 Tested up to: 3.9
 
-Stable Tag: 1.9.9
+Stable Tag: 1.9.9.2
 
 License: GNU Version 2 or Any Later Version
 
@@ -183,6 +183,17 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 1.9.9.2: May 6, 2014 =
+
+* Fix: Critical error with ajax actions
+
+= 1.9.9.1: May 6, 2014 =
+
+* Fix: Reverted a change in the ajax URL determination that caused some issues with HTTPS checkouts
+* Tweak: Added $payment_id to edd_payment_amount filter
+* Tweak: Added $payment_id to edd_view_order_details_form_top filter
+* Tweak: Removed nonces from ajax frontend requests
 
 = 1.9.9: May 3, 2014 =
 

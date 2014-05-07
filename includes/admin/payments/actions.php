@@ -46,7 +46,6 @@ function edd_update_payment_details( $data ) {
 
 	$total      = edd_sanitize_amount( $_POST['edd-payment-total'] );
 	$tax        = isset( $_POST['edd-payment-tax'] ) ? edd_sanitize_amount( $_POST['edd-payment-tax'] ) : 0;
-	$meta       = edd_get_payment_meta( $payment_id );
 
 	// Setup date from input values
 	$date       = date( 'Y-m-d', strtotime( $date ) ) . ' ' . $hour . ':' . $minute . ':00';
