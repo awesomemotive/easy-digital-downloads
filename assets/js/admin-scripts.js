@@ -353,6 +353,8 @@ jQuery(document).ready(function ($) {
 				var price_name     = $('.edd_price_options_select option:selected').text();
 				var quantity       = $('#edd-order-download-quantity').val();
 
+				var extra_columns = $('.extra-column input');
+
 				if( download_id < 1 ) {
 					return false;
 				}
@@ -381,10 +383,18 @@ jQuery(document).ready(function ($) {
 				clone.find( 'input.edd-payment-details-download-amount' ).val( amount );
 				clone.find( 'input.edd-payment-details-download-quantity' ).val( quantity );
 
+				// Process the extra columns so the input value is copied into the item row
+				extra_columns.each(function() {
+					var name = $( this ).attr( 'name' );
+					var value = $( this ).val();
+					name = name.replace("edd-order-download-", "");
+					clone.find( 'input.edd-payment-details-download-' + name ).val( value );
+					clone.find( '.currency' ).text( value );
+				});
+
 				// Replace the name / id attributes
 				clone.find( 'input' ).each(function() {
 					var name = $( this ).attr( 'name' );
-
 					name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
 
 					$( this ).attr( 'name', name ).attr( 'id', name );
@@ -886,9 +896,21 @@ jQuery(document).ready(function ($) {
 		var lastKey = e.which;
 
 		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
-		if(val.length <= 3 || (e.which == 16 || e.which == 13 || e.which == 91 || e.which == 17 || 
-			                   e.which == 37 || e.which == 38 || e.which == 39 || e.which == 40))
+		if(
+			val.length <= 3 ||
+			(
+				e.which == 16 || 
+				e.which == 13 || 
+				e.which == 91 || 
+				e.which == 17 || 
+				e.which == 37 || 
+				e.which == 38 || 
+				e.which == 39 || 
+				e.which == 40
+			)
+		) {
 			return;
+		}
 		
 		clearTimeout(typingTimer);
 		typingTimer = setTimeout(
@@ -905,10 +927,9 @@ jQuery(document).ready(function ($) {
 						$('ul.chosen-results').empty();
 					},
 					success: function( data ) {
-						 $.each( data, function( key, item ) {
-						 	// Remove all options but those that are selected
-						 	$('#' + menu_id + ' option:not(:selected)').remove();
-							
+						// Remove all options but those that are selected
+					 	$('#' + menu_id + ' option:not(:selected)').remove();
+						$.each( data, function( key, item ) {
 						 	// Add any option that doesn't already exist
 							if( ! $('#' + menu_id + ' option[value="' + item.id + '"]').length ) {
 								$('#' + menu_id).prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
@@ -926,7 +947,8 @@ jQuery(document).ready(function ($) {
 
 		        });
 			},
-			doneTypingInterval);
+			doneTypingInterval
+		);
 	});
 
 	// This fixes the Chosen box being 0px wide when the thickbox is opened
