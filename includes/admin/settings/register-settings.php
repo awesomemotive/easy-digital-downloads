@@ -1293,7 +1293,9 @@ function edd_tax_rates_callback($args) {
 							'show_option_none' => false
 						) );
 					} else {
-						echo EDD()->html->text( 'tax_rates[' . $key . '][state]', $rate['state'] );
+						echo EDD()->html->text( array(
+							'name'             => 'tax_rates[' . $key . '][state]', $rate['state']
+						) );
 					}
 					?>
 				</td>
@@ -1318,7 +1320,9 @@ function edd_tax_rates_callback($args) {
 					) ); ?>
 				</td>
 				<td class="edd_tax_state">
-					<?php echo EDD()->html->text( 'tax_rates[0][state]' ); ?>
+					<?php echo EDD()->html->text( array(
+						'name'             => 'tax_rates[0][state]'
+					) ); ?>
 				</td>
 				<td class="edd_tax_global">
 					<input type="checkbox" name="tax_rates[0][global]" value="1"/>
