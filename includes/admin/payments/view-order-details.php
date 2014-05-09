@@ -421,10 +421,9 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 										<?php endif; ?>
 	
 										<li class="price">
-											<span><?php _e( 'Amount', 'edd' ); ?>:&nbsp;</span>
 											<?php
 											echo EDD()->html->text( array( 'name' => 'edd-order-download-amount',
-												'label' => '',
+												'label' => __( 'Amount: ', 'edd' ),
 												'class' => 'small-text edd-order-download-price' 
 											) );
 											?>
