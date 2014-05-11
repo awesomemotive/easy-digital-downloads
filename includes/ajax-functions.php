@@ -17,13 +17,25 @@ if ( ! defined( 'ABSPATH' ) ) die();
 /**
  * Checks whether AJAX is enabled.
  *
+ * This will be deprecated soon in favor of edd_is_ajax_disabled()
+ *
  * @since 1.0
  * @return bool
  */
 function edd_is_ajax_enabled() {
-	global $edd_options;
-	$retval = ! isset( $edd_options['disable_ajax_cart'] );
+	$retval = ! edd_is_ajax_disabled();
 	return apply_filters( 'edd_is_ajax_enabled', $retval );
+}
+
+/**
+ * Checks whether AJAX is disabled.
+ *
+ * @since 2.0
+ * @return bool
+ */
+function edd_is_ajax_disabled() {
+	$retval = ! edd_get_option( 'enable_ajax_cart' );
+	return apply_filters( 'edd_is_ajax_disabled', $retval );
 }
 
 
@@ -53,10 +65,10 @@ function edd_get_ajax_url() {
  * @return void
  */
 function edd_ajax_remove_from_cart() {
-	if ( isset( $_POST['cart_item'] ) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
+	if ( isset( $_POST['cart_item'] ) ) {
 		
 		edd_remove_from_cart( $_POST['cart_item'] );
-		
+
 		$return = array(
 			'removed'  => 1,
 			'subtotal' => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
@@ -77,7 +89,7 @@ add_action( 'wp_ajax_nopriv_edd_remove_from_cart', 'edd_ajax_remove_from_cart' )
  * @return void
  */
 function edd_ajax_add_to_cart() {
-	if ( isset( $_POST['download_id'] ) && check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
+	if ( isset( $_POST['download_id'] ) ) {
 		global $post;
 
 		$to_add = array();
@@ -122,16 +134,14 @@ add_action( 'wp_ajax_nopriv_edd_add_to_cart', 'edd_ajax_add_to_cart' );
 
 
 /**
- * Adds item to the cart via AJAX.
+ * Gets the cart's subtotal via AJAX.
  *
  * @since 1.0
  * @return void
  */
 function edd_ajax_get_subtotal() {
-  if (  check_ajax_referer( 'edd_ajax_nonce', 'nonce' ) ) {
-    echo edd_currency_filter( edd_get_cart_subtotal() );
-  }
-  edd_die();
+	echo edd_currency_filter( edd_get_cart_subtotal() );
+	edd_die();
 }
 
 add_action( 'wp_ajax_edd_get_subtotal', 'edd_ajax_get_subtotal' );
@@ -144,35 +154,71 @@ add_action( 'wp_ajax_nopriv_edd_get_subtotal', 'edd_ajax_get_subtotal' );
  * @return void
  */
 function edd_ajax_apply_discount() {
-	if ( isset( $_POST['code'] ) && check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) ) {
+	if ( isset( $_POST['code'] ) ) {
+
+		$discount_code = $_POST['code'];
 
 		$return = array(
 			'msg'  => '',
-			'code' => $_POST['code']
+			'code' => $discount_code
 		);
 
-		if ( edd_is_discount_valid( $_POST['code'] ) ) {
-			$discount  = edd_get_discount_by_code( $_POST['code'] );
+		if ( edd_is_discount_valid( $discount_code ) ) {
+			$discount  = edd_get_discount_by_code( $discount_code );
 			$amount    = edd_format_discount_rate( edd_get_discount_type( $discount->ID ), edd_get_discount_amount( $discount->ID ) );
-			$discounts = edd_set_cart_discount( $_POST['code'] );
+			$discounts = edd_set_cart_discount( $discount_code );
 			$total     = edd_get_cart_total( $discounts );
 
 			$return = array(
-				'msg'    => 'valid',
-				'amount' => $amount,
-				'total'  => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
-				'code'   => $_POST['code'],
-				'html'   => edd_get_cart_discounts_html( $discounts )
+				'msg'         => 'valid',
+				'amount'      => $amount,
+				'total_plain' => $total,
+				'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
+				'code'        => $_POST['code'],
+				'html'        => edd_get_cart_discounts_html( $discounts )
 			);
 		} else {
-			$return['msg']  = __('The discount you entered is invalid', 'edd');
+			$errors = edd_get_errors();
+			$return['msg']  = $errors['edd-discount-error'];
+			edd_unset_error( 'edd-discount-error' );
 		}
+
+		// Allow for custom discount code handling
+		$return = apply_filters( 'edd_ajax_discount_response', $return );
+
 		echo json_encode($return);
 	}
 	edd_die();
 }
 add_action( 'wp_ajax_edd_apply_discount', 'edd_ajax_apply_discount' );
 add_action( 'wp_ajax_nopriv_edd_apply_discount', 'edd_ajax_apply_discount' );
+
+/**
+ * Validates the supplied discount sent via AJAX.
+ *
+ * @since 1.0
+ * @return void
+ */
+function edd_ajax_update_cart_item_quantity() {
+	if ( ! empty( $_POST['quantity'] ) && ! empty( $_POST['download_id'] ) ) {
+
+		$download_id = absint( $_POST['download_id'] );
+		$quantity    = absint( $_POST['quantity'] );
+
+		edd_set_cart_item_quantity( $download_id, absint( $_POST['quantity'] ) );
+		$total = edd_get_cart_total();
+
+		$return = array(
+			'download_id' => $download_id,
+			'quantity'    => $quantity,
+			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' )
+		);
+		echo json_encode($return);
+	}
+	edd_die();
+}
+add_action( 'wp_ajax_edd_update_quantity', 'edd_ajax_update_cart_item_quantity' );
+add_action( 'wp_ajax_nopriv_edd_update_quantity', 'edd_ajax_update_cart_item_quantity' );
 
 /**
  * Removes a discount code from the cart via ajax
@@ -252,7 +298,7 @@ add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_titl
  * @return void
  */
 function edd_ajax_recalculate_taxes() {
-	if ( ! check_ajax_referer( 'edd_checkout_nonce', 'nonce' ) ) {
+	if ( ! edd_get_cart_contents() ) {
 		return false;
 	}
 
@@ -262,8 +308,7 @@ function edd_ajax_recalculate_taxes() {
 
 	ob_start();
 	edd_checkout_cart();
-	$cart = ob_get_contents();
-	ob_end_clean();
+	$cart = ob_get_clean();
 	$response = array(
 		'html'  => $cart,
 		'total' => html_entity_decode( edd_cart_total( false ), ENT_COMPAT, 'UTF-8' ),
@@ -320,9 +365,15 @@ add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
  */
 function edd_ajax_download_search() {
 
-	$search  = sanitize_text_field( $_GET['s'] );
+	global $wpdb;
+
+	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
 	$results = array();
-	$items   = get_posts( array( 'post_type' => 'download', 'posts_per_page' => 30, 's' => $search ) ); 
+	if ( current_user_can( 'edit_products' ) ) {
+		$items = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_title` LIKE '%$search%' LIMIT 50" );
+	} else {
+		$items = $wpdb->get_results( "SELECT ID,post_title FROM $wpdb->posts WHERE `post_type` = 'download' AND `post_status` = 'publish' AND `post_title` LIKE '%$search%' LIMIT 50" );
+	}
 
 	if( $items ) {
 
@@ -335,12 +386,12 @@ function edd_ajax_download_search() {
 		}
 
 	} else {
-		
+
 		$items[] = array(
 			'id'   => 0,
 			'name' => __( 'No results found', 'edd' )
 		);
-		
+
 	}
 
 	echo json_encode( $results );
@@ -364,7 +415,16 @@ add_action( 'wp_ajax_nopriv_edd_download_search', 'edd_ajax_download_search' );
  */
 function edd_check_for_download_price_variations() {
 
+	if( ! current_user_can( 'edit_products' ) ) {
+		die( '-1' );
+	}
+
 	$download_id = intval( $_POST['download_id'] );
+	$download    = get_post( $download_id );
+
+	if( 'download' != $download->post_type ) {
+		die( '-2' );
+	}
 
 	if ( edd_has_variable_prices( $download_id ) ) {
 		$variable_prices = edd_get_variable_prices( $download_id );
@@ -372,7 +432,7 @@ function edd_check_for_download_price_variations() {
 		if ( $variable_prices ) {
 			$ajax_response = '<select class="edd_price_options_select edd-select edd-select">';
 				foreach ( $variable_prices as $key => $price ) {
-					$ajax_response .= '<option value="' . $key . '">' . $price['name']  . '</option>';
+					$ajax_response .= '<option value="' . esc_attr( $key ) . '">' . esc_html( $price['name'] )  . '</option>';
 				}
 			$ajax_response .= '</select>';
 		}
@@ -383,3 +443,39 @@ function edd_check_for_download_price_variations() {
 	edd_die();
 }
 add_action( 'wp_ajax_edd_check_for_download_price_variations', 'edd_check_for_download_price_variations' );
+
+
+/**
+ * Searches for users via ajax and returns a list of results
+ *
+ * @since 2.0
+ * @return void
+ */
+function edd_ajax_search_users() {
+
+	if( current_user_can( 'manage_shop_settings' ) ) {
+
+		$search_query = trim( $_POST['user_name'] );
+
+		$found_users = get_users( array(
+				'number' => 9999,
+				'search' => $search_query . '*'
+			)
+		);
+
+		$user_list = '<ul>';
+		if( $found_users ) {
+			foreach( $found_users as $user ) {
+				$user_list .= '<li><a href="#" data-login="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->user_login ) . '</a></li>';
+			}
+		} else {
+			$user_list .= '<li>' . __( 'No users found', 'edd' ) . '</li>';
+		}
+		$user_list .= '</ul>';
+
+		echo json_encode( array( 'results' => $user_list ) );
+
+	}
+	die();
+}
+add_action( 'wp_ajax_edd_search_users', 'edd_ajax_search_users' );

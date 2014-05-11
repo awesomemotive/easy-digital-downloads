@@ -22,6 +22,8 @@ $product_reqs      = edd_get_discount_product_reqs( $discount_id );
 $excluded_products = edd_get_discount_excluded_products( $discount_id );
 $condition         = edd_get_discount_product_condition( $discount_id );
 $single_use        = edd_discount_is_single_use( $discount_id );
+$flat_display      = edd_get_discount_type( $discount_id ) == 'percentage' ? '' : ' style="display:none;"';
+$percent_display   = edd_get_discount_type( $discount_id ) == 'percentage' ? ' style="display:none;"' : '';
 ?>
 <h2><?php _e( 'Edit Discount', 'edd' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
 <form id="edd-edit-discount" action="" method="post">
@@ -64,7 +66,8 @@ $single_use        = edd_discount_is_single_use( $discount_id );
 				</th>
 				<td>
 					<input type="text" id="edd-amount" name="amount" value="<?php echo esc_attr( edd_get_discount_amount( $discount_id ) ); ?>" style="width: 40px;"/>
-					<p class="description"><?php _e( 'The amount of this discount code.', 'edd' ); ?></p>
+					<p class="description edd-amount-description"<?php echo $flat_display; ?>><?php printf( __( 'Enter the discount amount in %s', 'edd' ), edd_get_currency() ); ?></p>
+					<p class="description edd-amount-description"<?php echo $percent_display; ?>><?php _e( 'Enter the discount percentage. 10 = 10%', 'edd' ); ?></p>
 				</td>
 			</tr>
 			<tr class="form-field">

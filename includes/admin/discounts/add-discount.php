@@ -54,7 +54,8 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 				</th>
 				<td>
 					<input type="text" id="edd-amount" name="amount" value="" style="width: 40px;"/>
-					<p class="description"><?php _e( 'The amount of this discount code.', 'edd' ); ?></p>
+					<p class="description edd-amount-description" style="display:none;"><?php printf( __( 'Enter the discount amount in %s', 'edd' ), edd_get_currency() ); ?></p>
+					<p class="description edd-amount-description"><?php _e( 'Enter the discount percentage. 10 = 10%', 'edd' ); ?></p>
 				</td>
 			</tr>
 			<tr class="form-field">

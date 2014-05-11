@@ -59,18 +59,21 @@ class EDD_Session {
 
 			// Use PHP SESSION (must be enabled via the EDD_USE_PHP_SESSIONS constant)
 
-			if( ! session_id() )
+			if( ! session_id() ) {
 				add_action( 'init', 'session_start', -2 );
+			}
 
 		} else {
 
 			// Use WP_Session (default)
 
-			if ( ! defined( 'WP_SESSION_COOKIE' ) )
+			if ( ! defined( 'WP_SESSION_COOKIE' ) ) {
 				define( 'WP_SESSION_COOKIE', 'edd_wp_session' );
+			}
 
-			if ( ! class_exists( 'Recursive_ArrayAccess' ) )
+			if ( ! class_exists( 'Recursive_ArrayAccess' ) ) {
 				require_once EDD_PLUGIN_DIR . 'includes/libraries/class-recursive-arrayaccess.php';
+			}
 
 			if ( ! class_exists( 'WP_Session' ) ) {
 				require_once EDD_PLUGIN_DIR . 'includes/libraries/class-wp-session.php';
@@ -99,10 +102,11 @@ class EDD_Session {
 	 */
 	public function init() {
 
-		if( $this->use_php_sessions )
+		if( $this->use_php_sessions ) {
 			$this->session = isset( $_SESSION['edd'] ) && is_array( $_SESSION['edd'] ) ? $_SESSION['edd'] : array();
-		else
+		} else {
 			$this->session = WP_Session::get_instance();
+		}
 
 		$cart     = $this->get( 'edd_cart' );
 		$purchase = $this->get( 'edd_purchase' );

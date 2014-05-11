@@ -131,8 +131,7 @@ class Tests_AJAX extends EDD_UnitTestCase {
 			'price_mode' => 'single',
 			'price_ids' => array(
 				1
-			),
-			'nonce' => wp_create_nonce( 'edd_ajax_nonce' ),
+			)
 		);
 
 		$out = $this->_handleAjax( 'edd_add_to_cart' );
@@ -143,8 +142,7 @@ class Tests_AJAX extends EDD_UnitTestCase {
 		$this->_setRole( 'administrator' );
 
 		$_POST = array(
-			'cart_item' => 0,
-			'nonce' => wp_create_nonce( 'edd_ajax_nonce' ),
+			'cart_item' => 0
 		);
 
 		$this->assertEquals( '{"removed":1,"subtotal":"$0.00"}', $this->_handleAjax( 'edd_remove_from_cart' ) );
@@ -210,7 +208,6 @@ class Tests_AJAX extends EDD_UnitTestCase {
 		}
 
 		$_POST = array(
-			'nonce' => wp_create_nonce( 'edd_add_downloads_to_purchase_nonce' ),
 			'download_id' => $post_id
 		);
 		$this->_handleAjax( 'edd_check_for_download_price_variations' );
