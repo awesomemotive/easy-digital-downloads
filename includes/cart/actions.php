@@ -92,6 +92,20 @@ function edd_process_remove_from_cart( $data ) {
 add_action( 'edd_remove', 'edd_process_remove_from_cart' );
 
 /**
+ * Process the Remove fee from Cart request
+ *
+ * @since 2.0
+ *
+ * @param $data
+ */
+function edd_process_remove_fee_from_cart( $data ) {
+	$fee = sanitize_text_field( $data['fee'] );
+	EDD()->fees->remove_fee( $fee );
+	wp_redirect( remove_query_arg( array( 'edd_action', 'fee' ) ) ); edd_die();
+}
+add_action( 'edd_remove_fee', 'edd_process_remove_fee_from_cart' );
+
+/**
  * Process the Collection Purchase request
  *
  * @since 1.0
