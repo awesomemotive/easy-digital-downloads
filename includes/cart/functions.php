@@ -686,9 +686,9 @@ function edd_get_cart_tax() {
 		$taxes    = wp_list_pluck( $items, 'tax' );
 
 		if( is_array( $taxes ) ) {
-			$cart_tax = array_sum( $taxes );	
+			$cart_tax = array_sum( $taxes );
 		}
-		
+
 	}
 
 	return apply_filters( 'edd_get_cart_tax', $cart_tax );
@@ -767,7 +767,7 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
 function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
 	global $post;
 
-	if ( defined('DOING_AJAX') ){	
+	if ( defined('DOING_AJAX') ){
 		$current_page = edd_get_checkout_uri();
 	} else if( is_page() ) {
 		$current_page = add_query_arg( 'page_id', $post->ID, home_url( 'index.php' ) );
