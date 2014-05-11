@@ -65,9 +65,8 @@ function edd_show_upgrade_notices() {
 
 	if ( EDD()->session->get( 'upgrade_sequential' ) && edd_get_payments() ) {
 		printf(
-			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade past order numbers to make them sequential, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
-			'<a href="' . esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_sequential_payment_numbers' ) ) . '">',
-			'</a>'
+			'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade past order numbers to make them sequential, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
+			admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_sequential_payment_numbers' )
 		);
 	}
 
