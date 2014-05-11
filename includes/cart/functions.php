@@ -782,6 +782,31 @@ function edd_remove_item_url( $cart_key, $post, $ajax = false ) {
 }
 
 /**
+ * Returns the URL to remove an item from the cart
+ *
+ * @since 1.0
+ * @global $post
+ * @param string $fee_id Fee ID
+ * @return string $remove_url URL to remove the cart item
+ */
+function edd_remove_cart_fee_url( $fee_id = '') {
+	global $post;
+
+	if ( defined('DOING_AJAX') ){
+		$current_page = edd_get_checkout_uri();
+	} else if( is_page() ) {
+		$current_page = add_query_arg( 'page_id', $post->ID, home_url( 'index.php' ) );
+	} else if( is_singular() ) {
+		$current_page = add_query_arg( 'p', $post->ID, home_url( 'index.php' ) );
+	} else {
+		$current_page = edd_get_current_page_url();
+	}
+	$remove_url = add_query_arg( array( 'fee' => $fee_id, 'edd_action' => 'remove_fee' ), $current_page );
+
+	return apply_filters( 'edd_remove_fee_url', $remove_url );
+}
+
+/**
  * Show Added To Cart Messages
  *
  * @since 1.0
