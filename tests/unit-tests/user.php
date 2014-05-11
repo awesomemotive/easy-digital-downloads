@@ -74,7 +74,7 @@ class Tests_User extends EDD_UnitTestCase {
 
 		$download_details = array(
 			array(
-				'id' => $this->_post->ID,
+				'id' => $post_id,
 				'options' => array(
 					'price_id' => 1
 				)
@@ -127,7 +127,34 @@ class Tests_User extends EDD_UnitTestCase {
 		$this->assertInternalType( 'object', $out[0] );
 		$this->assertEquals( 'edd_payment', $out[0]->post_type );
 		$this->assertTrue( edd_has_purchases( $user_id ) );
-		$this->assertEquals( 1, edd_count_purchases_of_customer( $user_id ) );		
+		$this->assertEquals( 1, edd_count_purchases_of_customer( $user_id ) );
+
+		
+		$out2 = edd_get_users_purchased_products( $user_id );
+		
+		$this->assertInternalType( 'array', $out2 );
+		$this->assertEquals( 1, count( $out2 ) );
+		$this->assertInternalType( 'object', $out2[0] );
+		$this->assertEquals( $out2[0]->post_type, 'download' );
+
+		
+		$this->assertTrue( edd_has_user_purchased( $user_id, array( $post_id ), 1 ) );
+		$this->assertFalse( edd_has_user_purchased( $user_id, array( 99 ), 1 ) );
+
+		
+		$purchase_stats = edd_get_purchase_stats_by_user( $user_id );
+		
+		$this->assertInternalType( 'array', $purchase_stats );
+		$this->assertEquals( 2, count( $purchase_stats ) );
+		$this->assertTrue( isset( $purchase_stats['purchases'] ) );
+		$this->assertTrue( isset( $purchase_stats['total_spent'] ) );
+		$this->assertInternalType( 'float', $purchase_stats['total_spent'] );
+
+		
+		$purchase_total = edd_purchase_total_of_user( $user_id );
+		
+		$this->assertInternalType( 'float', $purchase_total );
+		$this->assertEquals( 100, $purchase_total );
 	}
 
 	public function test_validate_username() {

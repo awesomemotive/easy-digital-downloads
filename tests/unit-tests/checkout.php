@@ -73,4 +73,55 @@ class Tests_Checkout extends EDD_UnitTestCase {
 		$this->assertInternalType( 'string', edd_checkout_button_purchase() );
 		$this->assertContains( '<input type="submit" class="edd-submit blue button" id="edd-purchase-button" name="edd-purchase" value="Purchase"/>', edd_checkout_button_purchase() );
 	}
+
+	/**
+	 * Test for retrieving banned emails
+	 */
+	public function test_edd_get_banned_emails() {
+		$this->assertInternalType( 'array', edd_get_banned_emails() );
+		$this->assertEmpty( edd_get_banned_emails() );
+	}
+
+	/**
+	 * Test that a specific email is banned
+	 */
+	public function test_edd_is_email_banned() {
+
+		global $edd_options;
+
+		$emails = array();
+		$emails[] = 'john@test.com';
+		$edd_options['banned_emails'] = $emails;
+		update_option( 'edd_settings', $edd_options );
+
+		$this->assertTrue( edd_is_email_banned( 'john@test.com' ) );
+		$this->assertFalse( edd_is_email_banned( 'john2@test.com' ) );
+	}
+
+	/**
+	 * Test SSL enforced checkout
+	 */
+	public function test_edd_is_ssl_enforced() {
+		global $edd_options;
+
+		$this->assertFalse( edd_is_ssl_enforced() );
+
+		$edd_options['enforce_ssl'] = true;
+		update_option( 'edd_settings', $edd_options );
+
+		$this->assertTrue( edd_is_ssl_enforced() );
+	}
+
+	/**
+	 * Test SSL asset filter
+	 */
+	public function test_edd_enforced_ssl_asset_filter() {
+		$content = 'http://local.dev/';
+
+		$this->assertSame( 'https://local.dev/', edd_enforced_ssl_asset_filter( $content ) );
+
+		$content = array( 'http://local.dev/' );
+
+		$this->assertSame( 'https://local.dev/', edd_enforced_ssl_asset_filter( $content ) );	
+	}
 }

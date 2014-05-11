@@ -5,7 +5,7 @@
  * Description: Serve Digital Downloads Through WordPress
  * Author: Pippin Williamson
  * Author URI: http://pippinsplugins.com
- * Version: 1.9.8
+ * Version: 1.9.9.2
  * Text Domain: edd
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 1.9.8
+ * @version 1.9.9.2
  */
 
 // Exit if accessed directly
@@ -99,9 +99,9 @@ final class Easy_Digital_Downloads {
 	 * @since 1.4
 	 * @static
 	 * @staticvar array $instance
-	 * @uses Easy_Digital_Downloads::setup_globals() Setup the globals needed
+	 * @uses Easy_Digital_Downloads::setup_constants() Setup the constants needed
 	 * @uses Easy_Digital_Downloads::includes() Include the required files
-	 * @uses Easy_Digital_Downloads::setup_actions() Setup the hooks and actions
+	 * @uses Easy_Digital_Downloads::load_textdomain() load the language files
 	 * @see EDD()
 	 * @return The one true Easy_Digital_Downloads
 	 */
@@ -111,11 +111,11 @@ final class Easy_Digital_Downloads {
 			self::$instance->setup_constants();
 			self::$instance->includes();
 			self::$instance->load_textdomain();
-			self::$instance->roles   = new EDD_Roles();
-			self::$instance->fees    = new EDD_Fees();
-			self::$instance->api     = new EDD_API();
-			self::$instance->session = new EDD_Session();
-			self::$instance->html    = new EDD_HTML_Elements();
+			self::$instance->roles      = new EDD_Roles();
+			self::$instance->fees       = new EDD_Fees();
+			self::$instance->api        = new EDD_API();
+			self::$instance->session    = new EDD_Session();
+			self::$instance->html       = new EDD_HTML_Elements();
 			self::$instance->email_tags = new EDD_Email_Template_Tags();
 		}
 		return self::$instance;
@@ -159,7 +159,7 @@ final class Easy_Digital_Downloads {
 		
 		// Plugin version
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '1.9.8' );
+			define( 'EDD_VERSION', '1.9.9.2' );
 		}
 
 		// Plugin Folder Path
@@ -239,7 +239,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/process-purchase.php';
 		require_once EDD_PLUGIN_DIR . 'includes/login-register.php';
 
-		if ( is_admin() ) {
+		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-footer.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
