@@ -78,7 +78,7 @@ function edd_process_add_to_cart( $data ) {
 add_action( 'edd_add_to_cart', 'edd_process_add_to_cart' );
 
 /**
- * Process the Remove form Cart request
+ * Process the Remove from Cart request
  *
  * @since 1.0
  *
