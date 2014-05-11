@@ -50,7 +50,9 @@
 				<tr class="edd_cart_fee" id="edd_cart_fee_<?php echo $fee_id; ?>">
 					<td class="edd_cart_fee_label"><?php echo esc_html( $fee['label'] ); ?></td>
 					<td class="edd_cart_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee['amount'] ) ) ); ?></td>
-					<td></td>
+					<td>
+						<a href="<?php echo esc_url( edd_remove_cart_fee_url( $fee_id ) ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
+					</td>
 				</tr>
 			<?php endforeach; ?>
 		<?php endif; ?>
