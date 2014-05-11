@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_process_purchase_form() {
 
 	// Make sure the cart isn't empty
-	if ( ! edd_get_cart_contents() ) {
+	if ( ! edd_get_cart_contents() && ! edd_cart_has_fees() ) {
 		$valid_data = array();
 		edd_set_error( 'empty_cart', __( 'Your cart is empty', 'edd' ) );
 	} else {

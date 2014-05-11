@@ -29,9 +29,10 @@ function edd_checkout_form() {
 
 	ob_start();
 		echo '<div id="edd_checkout_wrap">';
-		if ( edd_get_cart_contents() ) :
+		if ( edd_get_cart_contents() || edd_get_cart_fees() ) :
+
 			edd_checkout_cart();
-		?>
+?>
 			<div id="edd_checkout_form_wrap" class="edd_clearfix">
 				<?php do_action( 'edd_before_purchase_form' ); ?>
 				<form id="edd_purchase_form" action="<?php echo $form_action; ?>" method="POST">
