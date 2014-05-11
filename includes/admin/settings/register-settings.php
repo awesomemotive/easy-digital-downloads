@@ -745,6 +745,13 @@ function edd_settings_sanitize_misc( $input ) {
 		edd_create_protection_files( true, $input['download_method'] );
 	}
 
+	if( ! empty( $input['enable_sequential'] ) && ! edd_get_option( 'enable_sequential' ) ) {
+
+		// Shows an admin notice about upgrading previous order numbers
+		EDD()->session->set( 'upgrade_sequential', '1' );
+
+	}
+
 	return $input;
 }
 add_filter( 'edd_settings_misc_sanitize', 'edd_settings_sanitize_misc' );
