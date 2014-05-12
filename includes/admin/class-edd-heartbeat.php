@@ -99,8 +99,14 @@ class EDD_Heartbeat {
 		global $pagenow;
 
 		// Only proceed if on the dashboard
-		if( 'index.php' != $pagenow )
+		if( 'index.php' != $pagenow ) {
 			return;
+		}
+
+		if( ! current_user_can( 'view_shop_reports' ) ) {
+			return; // Only load heartbeat if current user can view show reports
+		}
+
 		?>
 		<script>
 			(function($){
