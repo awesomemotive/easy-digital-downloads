@@ -94,7 +94,7 @@ $status    = edd_get_payment_status( $payment, true );
 			<?php } ?>
 			<?php if ( edd_item_quantities_enabled() ) : ?>
 				<th><?php _e( 'Quantity', 'edd' ); ?></th>
-			<?php : ?>
+			<?php endif; ?>
 			<th><?php _e( 'Price', 'edd' ); ?></th>
 		</thead>
 
