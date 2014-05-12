@@ -335,8 +335,7 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 									<span><?php printf( __( 'Purchased %s', 'edd' ), edd_get_label_plural() ); ?></span>
 								</h3>
 								
-								<?php
-								if ( $cart_items ) :
+								<?php if ( $cart_items ) :
 									$i = 0;
 									foreach ( $cart_items as $key => $cart_item ) : ?>
 									<div class="row">
@@ -396,49 +395,51 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 									</div>
 									<?php
 									$i++;
-									endforeach;
-								endif;
-								?>
-	
-								<div class="inside">
-									<ul>
-										<li class="download">
-											<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][id]" class="edd-payment-details-download-id" value="<?php echo esc_attr( $item_id ); ?>"/>
-											<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][price_id]" class="edd-payment-details-download-price-id" value="<?php echo esc_attr( $price_id ); ?>"/>
-											<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][amount]" class="edd-payment-details-download-amount" value="<?php echo esc_attr( $price ); ?>"/>
-											<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][quantity]" class="edd-payment-details-download-quantity" value="<?php echo esc_attr( $quantity ); ?>"/>
-											<?php echo EDD()->html->product_dropdown( array(
-												'name'   => 'edd-order-download-select',
-												'id'     => 'edd-order-download-select',
-												'chosen' => true
-											) ); ?>
-										</li>
-	
-										<?php if( edd_item_quantities_enabled() ) : ?>
-										<li class="quantity">
-											<span><?php _e( 'Quantity', 'edd' ); ?>:&nbsp;</span>
-											<input type="number" id="edd-order-download-quantity" class="small-text" min="1" step="1" value="1" />
-										</li>
-										<?php endif; ?>
-	
-										<li class="price">
-											<?php
-											echo EDD()->html->text( array( 'name' => 'edd-order-download-amount',
-												'label' => __( 'Amount: ', 'edd' ),
-												'class' => 'small-text edd-order-download-price' 
-											) );
-											?>
-										</li>
-	
-										<li class="actions">
-											<a href="" id="edd-order-add-download" class="button button-secondary"><?php printf( __( 'Add %s to Payment', 'edd' ), edd_get_label_singular() ); ?></a>
-										</li>
-	
-									</ul>
-								
-									<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value=""/>
-	
-								</div><!-- /.inside -->
+									endforeach; ?>
+									<div class="inside">
+										<ul>
+											<li class="download">
+												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][id]" class="edd-payment-details-download-id" value="<?php echo esc_attr( $item_id ); ?>"/>
+												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][price_id]" class="edd-payment-details-download-price-id" value="<?php echo esc_attr( $price_id ); ?>"/>
+												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][amount]" class="edd-payment-details-download-amount" value="<?php echo esc_attr( $price ); ?>"/>
+												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][quantity]" class="edd-payment-details-download-quantity" value="<?php echo esc_attr( $quantity ); ?>"/>
+												<?php echo EDD()->html->product_dropdown( array(
+													'name'   => 'edd-order-download-select',
+													'id'     => 'edd-order-download-select',
+													'chosen' => true
+												) ); ?>
+											</li>
+		
+											<?php if( edd_item_quantities_enabled() ) : ?>
+											<li class="quantity">
+												<span><?php _e( 'Quantity', 'edd' ); ?>:&nbsp;</span>
+												<input type="number" id="edd-order-download-quantity" class="small-text" min="1" step="1" value="1" />
+											</li>
+											<?php endif; ?>
+		
+											<li class="price">
+												<?php
+												echo EDD()->html->text( array( 'name' => 'edd-order-download-amount',
+													'label' => __( 'Amount: ', 'edd' ),
+													'class' => 'small-text edd-order-download-price' 
+												) );
+												?>
+											</li>
+		
+											<li class="actions">
+												<a href="" id="edd-order-add-download" class="button button-secondary"><?php printf( __( 'Add %s to Payment', 'edd' ), edd_get_label_singular() ); ?></a>
+											</li>
+		
+										</ul>
+									
+										<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value=""/>
+		
+									</div><!-- /.inside -->
+								<?php else : $key = 0; ?>
+								<div class="row">
+									<p><?php printf( __( 'No %s included with this purchase', 'edd' ), edd_get_label_plural() ); ?></p>
+								</div>
+								<?php endif; ?>
 							</div><!-- /#edd-purchased-files -->
 	
 							<?php do_action( 'edd_view_order_details_files_after', $payment_id ); ?>

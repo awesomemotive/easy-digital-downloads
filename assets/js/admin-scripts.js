@@ -293,7 +293,6 @@ jQuery(document).ready(function ($) {
 			this.add_download();
 			this.recalculate_total();
 			this.variable_prices_check();
-			this.status_change();
 			this.add_note();
 			this.remove_note();
 			this.resend_receipt();
@@ -446,19 +445,6 @@ jQuery(document).ready(function ($) {
 						}
 					});
 
-				}
-			});
-
-		},
-
-		status_change : function() {
-
-			// Show / hide the send purchase receipt check box on the Edit payment screen
-			$('#edd_payment_status').change(function() {
-				if ( 'publish' === $( '#edd_payment_status option:selected' ).val() ) {
-					$( '#edd_payment_notification' ).slideDown();
-				} else {
-					$( '#edd_payment_notification' ).slideUp();
 				}
 			});
 
