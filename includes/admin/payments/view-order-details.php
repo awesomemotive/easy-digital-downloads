@@ -242,9 +242,11 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 										</div>
 									</div>
 	
-									<?php do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info ); ?>
-	
-									<?php do_action( 'edd_payment_view_details', $payment_id ); ?>
+									<?php 
+									// The edd_payment_personal_details_list hook is left here for backwards compatibility
+									do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info );
+									do_action( 'edd_payment_view_details', $payment_id );
+									?>
 	
 								</div><!-- /.inside -->
 							</div><!-- /#edd-customer-details -->
