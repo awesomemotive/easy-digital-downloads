@@ -689,21 +689,21 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 				// User login
 			} else if ( $valid_data['need_user_login'] === true  && ! $is_ajax ) {
 
-					/*
-			 * The login form is now processed in the edd_process_purchase_login() function.
-			 * This is still here for backwards compatibility.
-			 * This also allows the old login process to still work if a user removes the
-			 * checkout login submit button.
-			 *
-			 * This also ensures that the customer is logged in correctly if they click "Purchase"
-			 * instead of submitting the login form, meaning the customer is logged in during the purchase process.
-			 */
+				/*
+				 * The login form is now processed in the edd_process_purchase_login() function.
+				 * This is still here for backwards compatibility.
+				 * This also allows the old login process to still work if a user removes the
+				 * checkout login submit button.
+				 *
+				 * This also ensures that the customer is logged in correctly if they click "Purchase"
+				 * instead of submitting the login form, meaning the customer is logged in during the purchase process.
+				 */
 
-					// Set user
-					$user = $valid_data['login_user_data'];
-					// Login user
-					edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
-				}
+				// Set user
+				$user = $valid_data['login_user_data'];
+				// Login user
+				edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
+			}
 		}
 
 	// Check guest checkout
