@@ -136,7 +136,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 			<input type="hidden" name="edd_action" value="process_api_key" />
 			<input type="hidden" name="edd_api_process" value="generate" />
 			<?php echo EDD()->html->ajax_user_search(); ?>
-			<?php submit_button( __( 'Generate', 'edd' ), 'secondary', 'submit', false ); ?>
+			<?php submit_button( __( 'Generate New API Keys', 'edd' ), 'secondary', 'submit', false ); ?>
 		</form>
 		<?php
 	}
