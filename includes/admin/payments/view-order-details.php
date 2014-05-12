@@ -231,17 +231,14 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 										<div class="column">
 											<strong><?php _e( 'Name:', 'edd' ); ?></strong>&nbsp;
 											<input type="text" name="edd-payment-user-name" value="<?php esc_attr_e( $user_info['first_name'] . ' ' . $user_info['last_name'] ); ?>" class="medium-text"/>
-											<p class="description"><?php _e( 'Customer name, as shown on purchase receipts', 'edd' ); ?></p>
 										</div>
 										<div class="column">
 											<strong><?php _e( 'Email:', 'edd' ); ?></strong>&nbsp;
 											<input type="email" name="edd-payment-user-email" value="<?php esc_attr_e( edd_get_payment_user_email( $payment_id ) ); ?>" class="medium-text"/>
-											<p class="description"><?php _e( 'Customer email address that purchase receipts are sent to', 'edd' ); ?></p>
 										</div>
 										<div class="column">
 											<strong><?php _e( 'User ID:', 'edd' ); ?></strong>&nbsp;
 											<input type="number" step="1" min="-1" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>
-											<p class="description"><?php _e( 'User ID of the customer', 'edd' ); ?></p>
 										</div>
 									</div>
 	
