@@ -131,6 +131,11 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 */
 	function bulk_actions() {
 		// These aren't really bulk actions but this outputs the markup in the right place
+		static $edd_api_is_bottom;
+
+		if( $edd_api_is_bottom ) {
+			return;
+		}
 		?>
 		<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ); ?>">
 			<input type="hidden" name="edd_action" value="process_api_key" />
@@ -139,6 +144,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 			<?php submit_button( __( 'Generate New API Keys', 'edd' ), 'secondary', 'submit', false ); ?>
 		</form>
 		<?php
+		$edd_api_is_bottom = true;
 	}
 
 	/**
