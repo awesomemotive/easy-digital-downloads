@@ -92,9 +92,9 @@ $status    = edd_get_payment_status( $payment, true );
 			<?php if ( edd_use_skus() ) { ?>
 				<th><?php _e( 'SKU', 'edd' ); ?></th>
 			<?php } ?>
-			<?php if ( edd_item_quantities_enabled() ) { ?>
+			<?php if ( edd_item_quantities_enabled() ) : ?>
 				<th><?php _e( 'Quantity', 'edd' ); ?></th>
-			<?php } ?>
+			<?php : ?>
 			<th><?php _e( 'Price', 'edd' ); ?></th>
 		</thead>
 
@@ -197,7 +197,6 @@ $status    = edd_get_payment_status( $payment, true );
 				<tr>
 					<td class="edd_fee_label"><?php echo esc_html( $fee['label'] ); ?></td>
 					<td class="edd_fee_amount"><?php echo edd_currency_filter( edd_format_amount( $fee['amount'] ) ); ?></td>
-				
 				</tr>
 			<?php endforeach; ?>
 		<?php endif; ?>
