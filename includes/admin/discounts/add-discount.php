@@ -60,30 +60,28 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 			</tr>
 			<tr class="form-field">
 				<th scope="row" valign="top">
-					<label for="edd-products"><?php printf( __( '%s Requirements', 'edd' ), edd_get_label_plural() ); ?></label>
+					<label for="edd-products"><?php printf( __( '%s Requirements', 'edd' ), edd_get_label_singular() ); ?></label>
 				</th>
 				<td>
 					<p>
-						<select id="edd-product-condition" name="product_condition">
-							<option value="all"><?php printf( __( 'All Selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
-							<option value="any"><?php printf( __( 'Any Selected %s', 'edd' ), edd_get_label_singular() ); ?></option>
-						</select>
-						<label for="edd-product-condition"><?php _e( 'Condition', 'edd' ); ?></label>
-					</p>
-
+						<?php printf( __( 'Select %s that must be purchased for this discount to be valid.', 'edd' ), edd_get_label_plural() ); ?><br/>
 					<?php echo EDD()->html->product_dropdown( array(
-						'name'     => 'products[]',
-						'id'       => 'products',
-						'selected' => array(),
-						'multiple' => true,
-						'chosen'   => true 
+						'name'        => 'products[]',
+						'id'          => 'products',
+						'multiple'    => true,
+						'chosen'      => true 
 					) ); ?><br/>
-					<p class="description"><?php printf( __( '%s required to be purchased for this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
-
+					</p>
+					<p>
+						<select id="edd-product-condition" name="product_condition">
+							<option value="all"><?php printf( __( 'Cart must contain all selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
+							<option value="any"><?php printf( __( 'Cart needs one or more of the selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
+						</select>
+					</p>
 					<p>
 						<label for="edd-non-global-discount">
-							<input type="checkbox" id="edd-non-global-discount" name="not_global" value="1"/>
-							<?php printf( __( 'Apply discount only to selected %s?', 'edd' ), edd_get_label_plural() ); ?>
+							<input type="checkbox" id="edd-non-global-discount" name="not_global" value="1" />
+							<?php printf( __( 'Apply discount only to selected %s? Leave unchecked to discount entire purchase.', 'edd' ), edd_get_label_plural() ); ?>
 						</label>
 					</p>
 				</td>
