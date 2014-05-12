@@ -406,13 +406,21 @@ jQuery(document).ready(function ($) {
 			$('#edd-order-recalc-total').on('click', function(e) {
 				e.preventDefault();
 				var total = 0;
-				$('#edd-purchased-files .edd-payment-details-download-amount').each(function() {
-					var quantity = $(this).next().val();
-					total += ( parseFloat( $(this).val() ) * parseInt( quantity ) );
-				});
-				$('.edd-payment-fees span.fee-amount').each(function() {
-					total += parseFloat( $(this).data('fee') );
-				});
+				if( $('#edd-purchased-files .row .edd-payment-details-download-amount').length ) {
+					$('#edd-purchased-files .row .edd-payment-details-download-amount').each(function() {
+						var quantity = $(this).next().val();
+						if( quantity ) {
+							total += ( parseFloat( $(this).val() ) * parseInt( quantity ) );
+						} else {
+							total += parseFloat( $(this).val() );
+						}
+					});
+				}
+				if( $('.edd-payment-fees').length ) {
+					$('.edd-payment-fees span.fee-amount').each(function() {
+						total += parseFloat( $(this).data('fee') );
+					});
+				}
 				$('input[name=edd-payment-total]').val( total );
 			});
 
