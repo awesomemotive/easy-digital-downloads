@@ -87,7 +87,7 @@ function edd_tools_banned_emails_display() {
 		<h3><span><?php _e( 'Banned Emails', 'edd' ); ?></span></h3>
 		<div class="inside">
 			<p><?php _e( 'Emails placed in the box below will not be allowed to make purchases.', 'edd' ); ?></p>
-			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=tools' ); ?>">
+			<form method="post" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
 				<p>
 					<textarea name="banned_emails" rows="10" class="large-text"><?php echo implode( "\n", edd_get_banned_emails() ); ?></textarea>
 					<span class="description"><?php _e( 'Enter emails to disallow, one per line', 'edd' ); ?></span>
