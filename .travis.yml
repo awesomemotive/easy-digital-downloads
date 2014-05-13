@@ -44,6 +44,7 @@ after_script:
     - php vendor/bin/coveralls --config tests/framework/.coveralls.yml -v --exclude-no-stmt
 
 notifications:
+    slack: chriscct7:yd20WubfRqEZM1vlsEhN7E7N
     irc:
         channels:
             - "irc.freenode.net#eddwp"
