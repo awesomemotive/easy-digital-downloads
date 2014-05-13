@@ -57,11 +57,11 @@ class EDD_Heartbeat {
 			$earnings = edd_get_total_earnings();
 
 			// Send back the number of complete payments
-			$response['edd-total-payments'] = edd_format_amount( edd_get_total_sales() );
+			$response['edd-total-payments'] = edd_format_amount( edd_get_total_sales(), false );
 			$response['edd-total-earnings'] = html_entity_decode( edd_currency_filter( edd_format_amount( $earnings ) ), ENT_COMPAT, 'UTF-8' );
-			$response['edd-payments-month'] = edd_format_amount( $stats->get_sales( 0, 'this_month', false, array( 'publish', 'revoked' ) ) );
+			$response['edd-payments-month'] = edd_format_amount( $stats->get_sales( 0, 'this_month', false, array( 'publish', 'revoked' ) ), false );
 			$response['edd-earnings-month'] = html_entity_decode( edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'this_month' ) ) ), ENT_COMPAT, 'UTF-8' );
-			$response['edd-payments-today'] = edd_format_amount( $stats->get_sales( 0, 'today', false, array( 'publish', 'revoked' ) ) );
+			$response['edd-payments-today'] = edd_format_amount( $stats->get_sales( 0, 'today', false, array( 'publish', 'revoked' ) ), false );
 			$response['edd-earnings-today'] = html_entity_decode( edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'today' ) ) ), ENT_COMPAT, 'UTF-8' );
 
 		}
