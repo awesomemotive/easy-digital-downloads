@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.6
  */
@@ -41,7 +41,9 @@ function edd_get_shop_state() {
  * Get Shop States
  *
  * @since 1.6
- * @return array $states A list of states for the shop's base country
+ *
+ * @param null $country
+ * @return mixed|void  A list of states for the shop's base country
  */
 function edd_get_shop_states( $country = null ) {
 	global $edd_options;
@@ -58,7 +60,7 @@ function edd_get_shop_states( $country = null ) {
 			$states = edd_get_provinces_list();
 			break;
 		case 'AU' :
-			$states = edd_get_austrailian_states_list();
+			$states = edd_get_australian_states_list();
 			break;
 		case 'BR' :
 			$states = edd_get_brazil_states_list();
@@ -73,7 +75,7 @@ function edd_get_shop_states( $country = null ) {
 			$states = edd_get_hungary_states_list();
 			break;
 		case 'ID' :
-			$states = edd_get_indonesia_states_list();
+			$states = edd_get_indonesian_states_list();
 			break;
 		case 'IN' :
 			$states = edd_get_indian_states_list();
@@ -108,7 +110,7 @@ function edd_get_shop_states( $country = null ) {
  */
 function edd_get_country_list() {
 	$countries = array(
-		'*'  => __( 'Choose', 'edd' ),
+		'0'  => __( 'Choose', 'edd' ),
 		'US' => 'United States',
 		'CA' => 'Canada',
 		'GB' => 'United Kingdom',
@@ -236,7 +238,7 @@ function edd_get_country_list() {
 		'LY' => 'Libyan Arab Jamahiriya',
 		'LI' => 'Liechtenstein',
 		'LT' => 'Lithuania',
-		'LU' => 'Luxembourgh',
+		'LU' => 'Luxembourg',
 		'MO' => 'Macau',
 		'MK' => 'Macedonia',
 		'MG' => 'Madagascar',
@@ -471,7 +473,7 @@ function edd_get_provinces_list() {
  * @since 1.6
  * @return array $states A list of states
  */
-function edd_get_austrailian_states_list() {
+function edd_get_australian_states_list() {
 	$states = array(
 		'ACT' => 'Australian Capital Territory',
 		'NSW' => 'New South Wales',
@@ -655,7 +657,7 @@ function edd_get_new_zealand_states_list() {
  * @return array $states A list of states
  */
 function edd_get_indonesian_states_list() {
-	$states = array(
+	$states  = array(
 		'AC' => 'Daerah Istimewa Aceh',
 	    'SU' => 'Sumatera Utara',
 	    'SB' => 'Sumatera Barat',
@@ -692,7 +694,7 @@ function edd_get_indonesian_states_list() {
 	    'PB' => 'Papua Barat'
 	);
 
-	return apply_filters( 'edd_indonesian_states', $states );
+	return apply_filters( 'edd_indonesia_states', $states );
 }
 
 /**

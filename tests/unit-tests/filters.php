@@ -48,6 +48,12 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_register_settings', $wp_filter['admin_init'][10] );
 	}
 
+	public function test_dashboard_widget() {
+		global $wp_filter;
+		$this->markTestIncomplete('This check kills phpunit');
+		$this->assertarrayHasKey( 'edd_register_dashboard_widgets', $wp_filter['wp_dashboard_setup'][10] );
+	}
+
 	public function test_delete_post() {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_remove_download_logs_on_delete', $wp_filter['delete_post'][10] );
@@ -86,10 +92,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_load_checkout_register_fields', $wp_filter['wp_ajax_nopriv_checkout_register'][10] );
 		$this->assertarrayHasKey( 'edd_ajax_get_download_title', $wp_filter['wp_ajax_edd_get_download_title'][10] );
 		$this->assertarrayHasKey( 'edd_ajax_get_download_title', $wp_filter['wp_ajax_nopriv_edd_get_download_title'][10] );
-		$this->assertarrayHasKey( 'edd_ajax_opt_into_local_taxes', $wp_filter['wp_ajax_edd_local_tax_opt_in'][10] );
-		$this->assertarrayHasKey( 'edd_ajax_opt_into_local_taxes', $wp_filter['wp_ajax_nopriv_edd_local_tax_opt_in'][10] );
-		$this->assertarrayHasKey( 'edd_ajax_opt_out_local_taxes', $wp_filter['wp_ajax_edd_local_tax_opt_out'][10] );
-		$this->assertarrayHasKey( 'edd_ajax_opt_out_local_taxes', $wp_filter['wp_ajax_nopriv_edd_local_tax_opt_out'][10] );
 		$this->assertarrayHasKey( 'edd_check_for_download_price_variations', $wp_filter['wp_ajax_edd_check_for_download_price_variations'][10] );
 		$this->assertarrayHasKey( 'edd_load_ajax_gateway', $wp_filter['wp_ajax_edd_load_gateway'][10] );
 		$this->assertarrayHasKey( 'edd_load_ajax_gateway', $wp_filter['wp_ajax_nopriv_edd_load_gateway'][10] );
@@ -101,7 +103,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 	public function test_edd_after_download_content() {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_append_purchase_link', $wp_filter['edd_after_download_content'][10] );
-		$this->assertarrayHasKey( 'edd_show_has_purchased_item_message', $wp_filter['edd_after_download_content'][10] );
 		$this->assertarrayHasKey( 'edd_show_added_to_cart_messages', $wp_filter['edd_after_download_content'][10] );
 	}
 
@@ -150,38 +151,40 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_get_login_fields', $wp_filter['edd_purchase_form_login_fields'][10] );
 	}
 
-	public function test_edd_payment_payment_mode_select() {
+	public function test_edd_payment_mode_select() {
 		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_payment_mode_select', $wp_filter['edd_payment_payment_mode_select'][10] );
+		$this->assertarrayHasKey( 'edd_payment_mode_select', $wp_filter['edd_payment_mode_select'][10] );
 	}
 
 	public function test_edd_purchase_form_before_cc_form() {
 		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_discount_field', $wp_filter['edd_purchase_form_before_cc_form'][10] );
+		// No actions connected to edd_purchase_form_before_cc_form by default
+		$this->assertTrue( true );
+		//$this->assertarrayHasKey( 'edd_discount_field', $wp_filter['edd_purchase_form_before_cc_form'][10] );
 	}
 
 	public function test_edd_purchase_form_after_cc_form() {
 		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_terms_agreement', $wp_filter['edd_purchase_form_after_cc_form'][10] );
+		$this->assertarrayHasKey( 'edd_checkout_tax_fields', $wp_filter['edd_purchase_form_after_cc_form'][999] );
 		$this->assertarrayHasKey( 'edd_checkout_submit', $wp_filter['edd_purchase_form_after_cc_form'][9999] );
 	}
 
 	public function test_edd_purchase_form_before_submit() {
 		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_show_local_tax_opt_in', $wp_filter['edd_purchase_form_before_submit'][10] );
 		$this->assertarrayHasKey( 'edd_print_errors', $wp_filter['edd_purchase_form_before_submit'][10] );
 		$this->assertarrayHasKey( 'edd_checkout_final_total', $wp_filter['edd_purchase_form_before_submit'][999] );
 	}
 
 	public function test_edd_checkout_form_top() {
 		global $wp_filter;
+		$this->assertarrayHasKey( 'edd_discount_field', $wp_filter['edd_checkout_form_top'][-1] );
 		$this->assertarrayHasKey( 'edd_show_payment_icons', $wp_filter['edd_checkout_form_top'][10] );
 		$this->assertarrayHasKey( 'edd_agree_to_terms_js', $wp_filter['edd_checkout_form_top'][10] );
 	}
 
 	public function test_edd_empty_cart() {
 		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_empty_checkout_cart', $wp_filter['edd_empty_cart'][10] );
+		$this->assertarrayHasKey( 'edd_empty_checkout_cart', $wp_filter['edd_cart_empty'][10] );
 	}
 
 	public function test_edd_add_to_cart() {
@@ -226,7 +229,7 @@ class Tests_Filters extends EDD_UnitTestCase {
 
 	public function test_edd_manual_cc_form() {
 		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_manual_remove_cc_form', $wp_filter['edd_manual_cc_form'][10] );
+		$this->assertarrayHasKey( '__return_false', $wp_filter['edd_manual_cc_form'][10] );
 	}
 
 	public function test_edd_gateway_manual() {
@@ -249,22 +252,11 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_complete_purchase', $wp_filter['edd_update_payment_status'][100] );
 		$this->assertarrayHasKey( 'edd_record_status_change', $wp_filter['edd_update_payment_status'][100] );
 		$this->assertarrayHasKey( 'edd_clear_user_history_cache', $wp_filter['edd_update_payment_status'][10] );
-		$this->assertarrayHasKey( 'edd_trigger_purchase_receipt', $wp_filter['edd_update_payment_status'][10] );
-	}
-
-	public function test_edd_edit_payment() {
-		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_update_edited_purchase', $wp_filter['edd_edit_payment'][10] );
 	}
 
 	public function test_edd_delete_payment() {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_trigger_purchase_delete', $wp_filter['edd_delete_payment'][10] );
-	}
-
-	public function test_edd_insert_payment() {
-		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_clear_earnings_cache', $wp_filter['edd_insert_payment'][10] );
 	}
 
 	public function test_edd_upgrade_payments() {
@@ -349,11 +341,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 		$this->assertarrayHasKey( 'edd_send_test_email', $wp_filter['edd_send_test_email'][10] );
 	}
 
-	public function test_query_vars() {
-		global $wp_filter;
-		$this->assertarrayHasKey( 'edd_query_vars', $wp_filter['query_vars'][10] );
-	}
-
 	public function test_edd_purchase() {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_process_purchase_form', $wp_filter['edd_purchase'][10] );
@@ -373,4 +360,5 @@ class Tests_Filters extends EDD_UnitTestCase {
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_responsive_download_post_class', $wp_filter['post_class'][999] );
 	}
+
 }

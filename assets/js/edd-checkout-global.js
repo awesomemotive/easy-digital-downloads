@@ -7,7 +7,7 @@ jQuery(document).ready(function($) {
         var $this = $(this);
         if( 'card_state' != $this.attr('id') ) {
 
-            // If the country field has changed, we need to update the state/provice field
+            // If the country field has changed, we need to update the state/province field
             var postData = {
                 action: 'edd_get_shop_states',
                 country: $this.val(),
@@ -25,9 +25,12 @@ jQuery(document).ready(function($) {
                     } else {
                         $this.parent().next().find('input,select').replaceWith( response );
                     }
+                    $('body').trigger('edd_cart_billing_address_updated', [ response ]);
                 }
             }).fail(function (data) {
-                console.log(data);
+                if ( window.console && window.console.log ) {
+                    console.log( data );
+                }
             }).done(function (data) {
                 recalculate_taxes();
             });
@@ -51,7 +54,7 @@ jQuery(document).ready(function($) {
         var postData = {
             action: 'edd_recalculate_taxes',
             nonce: edd_global_vars.checkout_nonce,
-            country: $edd_cc_address.find('#billing_country').val(),
+            billing_country: $edd_cc_address.find('#billing_country').val(),
             state: state
         };
 
@@ -63,9 +66,15 @@ jQuery(document).ready(function($) {
             success: function (tax_response) {
                 $('#edd_checkout_cart').replaceWith(tax_response.html);
                 $('.edd_cart_amount').html(tax_response.total);
+                var tax_data = new Object();
+                tax_data.postdata = postData;
+                tax_data.response = tax_response;
+                $('body').trigger('edd_taxes_recalculated', [ tax_data ]);
             }
         }).fail(function (data) {
-            console.log(data);
+            if ( window.console && window.console.log ) {
+              console.log( data );
+            }
         });
     }
 
@@ -103,45 +112,35 @@ jQuery(document).ready(function($) {
         }
     });
 
+    // Add a class to the currently selected gateway on click
+    $body.on('click', '#edd_payment_mode_select input', function() {
+        $('#edd_payment_mode_select label.edd-gateway-option-selected').removeClass( 'edd-gateway-option-selected' );
+        $('#edd_payment_mode_select input:checked').parent().addClass( 'edd-gateway-option-selected' );
+    });
+
     /* Discounts */
     var before_discount = $edd_cart_amount.text(),
         $checkout_form_wrap = $('#edd_checkout_form_wrap');
 
-    $checkout_form_wrap.on('change', '#edd-email', function (event) {
-        $('#edd-discount').val('');
-    });
-
     // Validate and apply a discount
-    $checkout_form_wrap.on('focusout', '#edd-discount', function (event) {
+    $checkout_form_wrap.on('click', '.edd-apply-discount', function (event) {
+
+    	event.preventDefault();
 
         var $this = $(this),
-            discount_code = $this.val(),
-            edd_email = $('#edd-email').val(),
-            edd_user = $('#edd_user_login').val(),
+            discount_code = $('#edd-discount').val(),
             edd_discount_loader = $('#edd-discount-loader');
 
         if (discount_code == '' || discount_code == edd_global_vars.enter_discount ) {
             return false;
         }
 
-        if (edd_email == '' && edd_email != 'undefined') {
-            alert(edd_global_vars.no_email);
-            return false;
-        }
-
-        if(edd_email == 'undefined' && edd_user == '') {
-            alert(edd_global_vars.no_username);
-            return false;
-        }
-
         var postData = {
             action: 'edd_apply_discount',
-            code: discount_code,
-            email: edd_email,
-            user: edd_user,
-            nonce: edd_global_vars.checkout_nonce
+            code: discount_code
         };
 
+        $('#edd-discount-error-wrap').html('').hide();
         edd_discount_loader.show();
 
         $.ajax({
@@ -157,16 +156,136 @@ jQuery(document).ready(function($) {
                         $('.edd_cart_amount').each(function() {
                             $(this).text(discount_response.total);
                         });
+                        $('#edd-discount', $checkout_form_wrap ).val('');
+
+                        recalculate_taxes();
+
+                    	if( '0.00' == discount_response.total_plain ) {
+
+                    		$('#edd_cc_fields,#edd_cc_address').slideUp();
+                    		$('input[name="edd-gateway"]').val( 'manual' );
+
+                    	} else {
+
+                    		$('#edd_cc_fields,#edd_cc_address').slideDown();
+                    		$('input[name="edd-gateway"]').val( 'manual' );
+
+                    	}
+
+						$('body').trigger('edd_discount_applied', [ discount_response ]);
+
                     } else {
-                        alert(discount_response.msg);
+                        $('#edd-discount-error-wrap').html( '<span class="edd_error">' + discount_response.msg + '</span>' );
+                        $('#edd-discount-error-wrap').show();
                     }
                 } else {
-                    console.log( discount_response );
+                    if ( window.console && window.console.log ) {
+                        console.log( discount_response );
+                    }
                 }
                 edd_discount_loader.hide();
             }
         }).fail(function (data) {
-            console.log(data);
+            if ( window.console && window.console.log ) {
+                console.log( data );
+            }
+        });
+
+        return false;
+    });
+
+    // Prevent the checkout form from submitting when hitting Enter in the discount field
+    $checkout_form_wrap.on('keypress', '#edd-discount', function (event) {
+        if (event.keyCode == '13') {
+            return false;
+        }
+    });
+
+    // Remove a discount
+    $body.on('click', '.edd_discount_remove', function (event) {
+
+        var $this = $(this), postData = {
+            action: 'edd_remove_discount',
+            code: $this.data('code')
+        };
+
+        $.ajax({
+            type: "POST",
+            data: postData,
+            dataType: "json",
+            url: edd_global_vars.ajaxurl,
+            success: function (discount_response) {
+
+                $('.edd_cart_amount').each(function() {
+                	if( edd_global_vars.currency_sign + '0.00' == $(this).text() || '0.00' + edd_global_vars.currency_sign == $(this).text() ) {
+                		// We're removing a 100% discount code so we need to force the payment gateway to reload
+                		window.location.reload();
+                	}
+                    $(this).text(discount_response.total);
+                });
+
+                $('.edd_cart_discount').html(discount_response.html);
+
+                if( ! discount_response.discounts ) {
+                   $('.edd_cart_discount_row').hide();
+                }
+
+
+                recalculate_taxes();
+
+                $('#edd_cc_fields,#edd_cc_address').slideDown();
+
+				$('body').trigger('edd_discount_removed', [ discount_response ]);
+            }
+        }).fail(function (data) {
+            if ( window.console && window.console.log ) {
+                console.log( data );
+            }
+        });
+
+        return false;
+    });
+
+    $body.on('click', '.edd_discount_link', function(e) {
+        e.preventDefault();
+        $('.edd_discount_link').parent().hide();
+        $('#edd-discount-code-wrap').show();
+    });
+
+    // Hide / show discount fields for browsers without javascript enabled
+    $body.find('#edd-discount-code-wrap').hide();
+    $body.find('#edd_show_discount').show();
+
+    // Update the checkout when item quantities are updated
+    $('#edd_checkout_cart').on('change', '.edd-item-quantity', function (event) {
+
+        var $this = $(this),
+            quantity = $this.val(),
+            download_id = $this.closest('tr.edd_cart_item').data('download-id');
+
+        var postData = {
+            action: 'edd_update_quantity',
+            quantity: quantity,
+            download_id: download_id
+        };
+
+        //edd_discount_loader.show();
+
+        $.ajax({
+            type: "POST",
+            data: postData,
+            dataType: "json",
+            url: edd_global_vars.ajaxurl,
+            success: function (response) {
+                 $('.edd_cart_amount').each(function() {
+                    $(this).text(response.total);
+                    $('body').trigger('edd_quantity_updated', [ response ]);
+                });
+            }
+        }).fail(function (data) {
+            if ( window.console && window.console.log ) {
+                console.log( data );
+            }
         });
 
         return false;

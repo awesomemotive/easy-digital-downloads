@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Welcome
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
  */
@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.4
  */
 class EDD_Welcome {
+
 	/**
 	 * @var string The capability users should have to view the page
 	 */
@@ -28,9 +29,7 @@ class EDD_Welcome {
 	/**
 	 * Get things started
 	 *
-	 * @access  public
 	 * @since 1.4
-	 * @return void
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menus') );
@@ -56,10 +55,19 @@ class EDD_Welcome {
 			array( $this, 'about_screen' )
 		);
 
+		// Getting Started Page
+		add_dashboard_page(
+			__( 'Getting started with Easy Digital Downloads', 'edd' ),
+			__( 'Getting started with Easy Digital Downloads', 'edd' ),
+			$this->minimum_capability,
+			'edd-getting-started',
+			array( $this, 'getting_started_screen' )
+		);
+
 		// Credits Page
 		add_dashboard_page(
-			__( 'Welcome to Easy Digital Downloads', 'edd' ),
-			__( 'Welcome to Easy Digital Downloads', 'edd' ),
+			__( 'The people that build Easy Digital Downloads', 'edd' ),
+			__( 'The people that build Easy Digital Downloads', 'edd' ),
 			$this->minimum_capability,
 			'edd-credits',
 			array( $this, 'credits_screen' )
@@ -75,6 +83,7 @@ class EDD_Welcome {
 	 */
 	public function admin_head() {
 		remove_submenu_page( 'index.php', 'edd-about' );
+		remove_submenu_page( 'index.php', 'edd-getting-started' );
 		remove_submenu_page( 'index.php', 'edd-credits' );
 
 		// Badge for welcome page
@@ -111,6 +120,30 @@ class EDD_Welcome {
 	}
 
 	/**
+	 * Navigation tabs
+	 *
+	 * @access public
+	 * @since 1.9
+	 * @return void
+	 */
+	public function tabs() {
+		$selected = isset( $_GET['page'] ) ? $_GET['page'] : 'edd-about';
+		?>
+		<h2 class="nav-tab-wrapper">
+			<a class="nav-tab <?php echo $selected == 'edd-about' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-about' ), 'index.php' ) ) ); ?>">
+				<?php _e( "What's New", 'edd' ); ?>
+			</a>
+			<a class="nav-tab <?php echo $selected == 'edd-getting-started' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-getting-started' ), 'index.php' ) ) ); ?>">
+				<?php _e( 'Getting Started', 'edd' ); ?>
+			</a>
+			<a class="nav-tab <?php echo $selected == 'edd-credits' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-credits' ), 'index.php' ) ) ); ?>">
+				<?php _e( 'Credits', 'edd' ); ?>
+			</a>
+		</h2>
+		<?php
+	}
+
+	/**
 	 * Render About Screen
 	 *
 	 * @access public
@@ -125,112 +158,100 @@ class EDD_Welcome {
 			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
 			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
 
-			<h2 class="nav-tab-wrapper">
-				<a class="nav-tab nav-tab-active" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-about' ), 'index.php' ) ) ); ?>">
-					<?php _e( "What's New", 'edd' ); ?>
-				</a><a class="nav-tab" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-credits' ), 'index.php' ) ) ); ?>">
-					<?php _e( 'Credits', 'edd' ); ?>
-				</a>
-			</h2>
+			<?php $this->tabs(); ?>
 
 			<div class="changelog">
-				<h3><?php _e( 'Bundled Products', 'edd' ); ?></h3>
-
-				<div class="feature-section">
-
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/bundles.png'; ?>" class="edd-welcome-screenshots"/>
-
-					<h4><?php _e( 'Combine Multiple Products into Bundles', 'edd' ); ?></h4>
-					<p><?php _e( 'A bundled product is a group of other Downloads in your store that are purchased as a single item, usually at a discount.', 'edd' ); ?></p>
-
-					<h4><?php _e( 'Simplify Your Admin Tasks', 'edd' ); ?></h4>
-					<p><?php _e( 'Prior to Bundles, you were forced to create a new product and then manually add all of the necessary files from the other Downloads to it. No longer! Bundled products automatically grab the file downloads from products included in the bundle.', 'edd' ); ?></p>
-
-				</div>
-			</div>
-
-			<div class="changelog">
-				<h3><?php _e( 'Improved Order Details Interface', 'edd' ); ?></h3>
+				<h3><?php _e( 'Improved Order Editing', 'edd' );?></h3>
 
 				<div class="feature-section">
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/order-details.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Better Order Detail Display', 'edd' ); ?></h4>
-					<p><?php _e( 'By doing away with the View Order Details pop up, we\'ve made it possible to present the order details in a much more clear manner.', 'edd' ); ?></p>
+					<h4><?php _e( 'Combined View and Edit Screens', 'edd' );?></h4>
+					<p><?php _e( 'The View and Edit payment screens have been combined into a single, more efficient, user-friendly screen. Add or remove products to an order, adjust amounts, add notes, or resend purchase receipts all at one time from the same screen.', 'edd' );?></p>
+					<p><?php _e( 'All data associated with a payment can now be edited as well, including the customer\'s billing address.', 'edd' );?></p>
 
-					<h4><?php _e( 'More Developer Friendly', 'edd' ); ?></h4>
-					<p><?php _e( 'The new Order Details display is much more developer friendly with several hooks that make it possible to easily add additional data about the order via extensions.', 'edd' ); ?></p>
-
+					<h4><?php _e( 'Responsive and Mobile Friendly', 'edd' );?></h4>
+					<p><?php _e( 'We have followed the introduction of a responsive Dashboard in WordPress 3.8 and made our own view/edit screen for orders fully responsive and easy to use on mobile devices.', 'edd' );?></p>
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Multiple Tax Rates', 'edd' ); ?></h3>
+				<h3><?php _e( 'Per-Products Sales and Earnings Graphs', 'edd' );?></h3>
 
 				<div class="feature-section">
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/tax-rates.png'; ?>" class="edd-welcome-screenshots"/>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/product-earnings.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Define Rates for Specific Countries and States / Provinces', 'edd' ); ?></h4>
-					<p><?php _e( 'You can now setup tax rates for specific countries and states / provinces in those countries.', 'edd' );  ?></p>
+					<h4><?php _e( 'See Earnings and Sales for Any Time Period','edd' );?></h4>
+					<p><?php _e( 'With 1.9 we have introduced beautiful graphs for individual products that allows you to view earnings and sales over any time period. Easily see earnings / sales for monthly, yearly, quarterly, or any other date range for any product in your store.', 'edd' );?></p>
 
-					<h4><?php _e( 'No More Local-Tax Opt-In', 'edd' ); ?></h4>
-					<p><?php _e( 'Taxes are now automatically calculated based on the customer\'s billing address. If you have taxes enabled, billing detail fields will be automatically added to the checkout form.', 'edd' );  ?></p>
+					<h4><?php _e( 'Easily Access Reports', 'edd' );?></h4>
+					<p><?php printf( __( 'Per-product earnings / sales graphs can be accessed from <em>%s &rarr; Reports &rarr; %s</em> or from the <em>Stats</em> section of the Edit screen for any %s.', 'edd' ), edd_get_label_plural(), edd_get_label_plural(), edd_get_label_singular() );?></p>
+
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Improved Developer Documentation', 'edd' ); ?></h3>
+				<h3><?php _e( 'Dramatically Improved Taxes', 'edd' );?></h3>
 
 				<div class="feature-section">
 
-					<h4><?php _e( 'Code Reference', 'edd' ); ?></h4>
-					<p><?php _e( 'A complete code reference has been made available for developers at <a href="https://easydigitaldownloads.com/codex/index.html">/codex</a> on the Easy Digital Downloads website.', 'edd' );  ?></p>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/product-tax.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'Action Hooks', 'edd' ); ?></h4>
-					<p><?php _e( 'Along with the complete code reference, we have been working to bring the <a href="https://easydigitaldownloads.com/docs/section/actions/">Actions reference</a> up to date with all of the action hooks available in Easy Digital Downloads.', 'edd' );  ?></p>
+					<h4><?php _e( 'Mark Products Exclusive of Tax', 'edd' );?></h4>
+					<p><?php _e( 'Products in your store can now be marked as exclusive of tax, meaning customers will never have to pay tax on these products during checkout.', 'edd' );?></p>
+
+					<h4><?php _e( 'Re-written Tax API', 'edd' );?></h4>
+					<p><?php _e( 'The tax system in EDD has been plagued with bugs since it was first introduced, so in 1.9 we have completely rewritten the entire system from the ground up to ensure it is reliable and bug free.', 'edd' );?></p>
+					<p><?php _e( 'It can be difficult to completely delete an entire section of old code, but we are confident the rewrite will be worth every minute of the time spent on it.', 'edd' );?></p>
+					<p><?php _e( 'We are determined to continue to provide you a reliable, easy system to sell your digital products. In order to do that, sometimes we just have to swallow our pride and start over.', 'edd' );?></p>
 
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Discounts API Endpoint', 'edd' ); ?></h3>
+				<h3><?php _e( 'Better Support for Large Stores', 'edd' );?></h3>
 
 				<div class="feature-section">
-					<h4><?php _e( 'Retrieve Available Discounts', 'edd' ); ?></h4>
-					<p><?php _e( 'The EDD RESTful API now includes a /discounts endpoint that can be used for retrieving details about the available discounts in your store. Want to create a feed on another website of the discounts available? You can now do that.', 'edd' );  ?></p>
+
+					<h4><?php _e( 'Live Search Product Drop Downs','edd' );?></h4>
+					<p><?php _e( 'Every product drop down menu used in Easy Digital Downloads has been replaced with a much more performant version that includes a live Ajax search, meaning stores that have a large number of products will see a significant improvement for page load times in the WordPress Dashboard.', 'edd' );?></p>
+
+					<h4><?php _e( 'Less Memory Intensive Log Pages', 'edd' ); ?></h4>
+					<p><?php _e( 'The File Download log pages have long been memory intensive to load. By putting them through intensive memory load tests and query optimization, we were able to reduce the number of queries and amount of memory used by a huge degree, making these pages much, much faster..', 'edd' ); ?></p>
+
 				</div>
 			</div>
 
 			<div class="changelog">
-				<h3><?php _e( 'Additional Updates', 'edd' ); ?></h3>
+				<h3><?php _e( 'Additional Updates', 'edd' );?></h3>
 
 				<div class="feature-section col three-col">
 					<div>
-						<h4><?php _e( 'EDD_Cron Class', 'edd' ); ?></h4>
-						<p><?php printf( __( 'The new %sEDD_Cron class%s provides a simple way to hook into routinely scheduled events in Easy Digital Downloads.', 'edd' ), '<a href="https://github.com/easydigitaldownloads/Easy-Digital-Downloads/blob/master/includes/class-edd-cron.php" target="_blank">', '</a>' ); ?></p>
+						<h4><?php _e( 'Improved Product Creation / Editing', 'edd' );?></h4>
+						<p><?php _e( 'The interface for creating / editing Download products has been dramatically improved by separating the UI out into sections that are easier to use and less cluttered.', 'edd' );?></p>
 
-						<h4><?php _e( 'Improved Country and State / Province Fields ', 'edd' ); ?></h4>
-						<p><?php _e( 'We have added drop down fields for the states / provinces of 12 additional countries, providing customers in those countries a much better checkout experience.', 'edd' ); ?></p>
+						<h4><?php _e( 'EDD_Graph Class', 'edd' );?></h4>
+						<p><?php _e( 'Along with per-product earnings / sales graphs, we have introduced an EDD_Graph class that makes it exceptionally simple to generate your own custom graphs. Simply build an array of data and let the class work its magic.', 'edd' );?></p>
 					</div>
 
 					<div>
-						<h4><?php _e( 'More Reliable File Download Methods', 'edd' ); ?></h4>
-						<p><?php _e( 'EDD now supports delivering file downloads via X-Sendfile, X-Lighttpd-Sendfile, and X-Accel-Redirect depending on your server config.', 'edd' ); ?></p>
+						<h4><?php _e( 'Payment Date Filters', 'edd' );?></h4>
+						<p><?php _e( 'A new section has been added to the Payment History screen that allows you to filter payments by date, making it much easier to locate payments for a particular period.', 'edd' );?></p>
 
-						<h4><?php _e( 'Lookup Previous Guest Purchases on User Registration', 'edd' ); ?></h4>
-						<p><?php _e( 'Anytime a new user is added, EDD will look up any purchases the user may have made as a guest and attribute them to the newly created account.', 'edd' ); ?></p>
+						<h4><?php _e( 'EDD_Email_Template_Tags Class', 'edd' );?></h4>
+						<p><?php _e( 'A new API has been introduced for easily adding new template tags to purchase receipts and admin sale notifications.', 'edd' );?></p>
 					</div>
 
 					<div class="last-feature">
-						<h4><?php _e( 'Itemized PayPal Purchases', 'edd' ); ?></h4>
-						<p><?php _e( 'Purchases made through PayPal will now show itemized details in the PayPal order summary box.', 'edd' ); ?></p>
+						<h4><?php _e( 'Resend Purchase Receipts in Bulk', 'edd' );?></h4>
+						<p><?php _e( 'A new action has been added to the Bulk Actions menu in the Payment History screen that allows you to resend purchase receipt emails in bulk.' ,'edd' );?></p>
 
-						<h4><?php _e( 'SKU Support', 'edd' ); ?></h4>
-						<p><?php _e( 'Adding product SKUs to Downloads is now supported and can be enabled in Downloads > Settings > Misc.', 'edd' ); ?></p>
+						<h4><?php _e( 'Exclude Products from Discounts','edd' );?></h4>
+						<p><?php _e( 'Along with being able to assign discounts to specific products, you can also now exclude products from discount codes.', 'edd' );?></p>
 					</div>
 				</div>
 			</div>
@@ -238,6 +259,125 @@ class EDD_Welcome {
 			<div class="return-to-dashboard">
 				<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'post_type' => 'download', 'page' => 'edd-settings' ), 'edit.php' ) ) ); ?>"><?php _e( 'Go to Easy Digital Downloads Settings', 'edd' ); ?></a>
 			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render Getting Started Screen
+	 *
+	 * @access public
+	 * @since 1.9
+	 * @return void
+	 */
+	public function getting_started_screen() {
+		list( $display_version ) = explode( '-', EDD_VERSION );
+		?>
+		<div class="wrap about-wrap">
+			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
+			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
+			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
+
+			<?php $this->tabs(); ?>
+
+			<p class="about-description"><?php _e( 'Use the tips below to get started using Easy Digital Downloads. You will be up and running in no time!', 'edd' ); ?></p>
+
+			<div class="changelog">
+				<h3><?php _e( 'Creating Your First Download Product', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/edit-download.png'; ?>" class="edd-welcome-screenshots"/>
+
+					<h4><?php printf( __( '<a href="%s">%s &rarr; Add New</a>', 'edd' ), admin_url( 'post-new.php?post_type=download' ), edd_get_label_plural() ); ?></h4>
+					<p><?php printf( __( 'The %s menu is your access point for all aspects of your Easy Digital Downloads product creation and setup. To create your first product, simply click Add New and then fill out the product details.', 'edd' ), edd_get_label_plural() ); ?></p>
+
+					<h4><?php _e( 'Product Price', 'edd' );?></h4>
+					<p><?php _e( 'Products can have simple prices or variable prices if you wish to have more than one price point for a product. For a single price, simply enter the price. For multiple price points, click <em>Enable variable pricing</em> and enter the options.', 'edd' );?></p>
+
+					<h4><?php _e( 'Download Files', 'edd' );?></h4>
+					<p><?php _e( 'Uploading the downloadable files is simple. Click <em>Upload File</em> in the Download Files section and choose your download file. To add more than one file, simply click the <em>Add New</em> button.', 'edd' );?></p>
+
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Display a Product Grid', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/grid.png'; ?>" class="edd-welcome-screenshots"/>
+
+					<h4><?php _e( 'Flexible Product Grids','edd' );?></h4>
+					<p><?php _e( 'The [downloads] short code will display a product grid that works with any theme, no matter the size. It is even responsive!', 'edd' );?></p>
+
+					<h4><?php _e( 'Change the Number of Columns', 'edd' );?></h4>
+					<p><?php _e( 'You can easily change the number of columns by adding the columns="x" parameter:', 'edd' );?></p>
+					<p><pre>[downloads columns="4"]</pre></p>
+
+					<h4><?php _e( 'Additional Display Options', 'edd' ); ?></h4>
+					<p><?php printf( __( 'The product grids can be customized in any way you wish and there is <a href="%s">extensive documentation</a> to assist you.', 'edd' ), 'http://easydigitaldownloads.com/documentation' ); ?></p>
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Purchase Buttons Anywhere', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/purchase-link.png'; ?>" class="edd-welcome-screenshots"/>
+
+					<h4><?php _e( 'The <em>[purchase_link]</em> Short Code','edd' );?></h4>
+					<p><?php _e( 'With easily accessible short codes to display purchase buttons, you can add a Buy Now or Add to Cart button for any product anywhere on your site in seconds.', 'edd' );?></p>
+
+					<h4><?php _e( 'Buy Now Buttons', 'edd' );?></h4>
+					<p><?php _e( 'Purchase buttons can behave as either Add to Cart or Buy Now buttons. With Buy Now buttons customers are taken straight to PayPal, giving them the most frictionless purchasing experience possible.', 'edd' );?></p>
+
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Need Help?', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<h4><?php _e( 'Phenomenal Support','edd' );?></h4>
+					<p><?php _e( 'We do our best to provide the best support we can. If you encounter a problem or have a question, post a question in the <a href="https://easydigitaldownloads.com/support">support forums</a>.', 'edd' );?></p>
+
+					<h4><?php _e( 'Need Even Faster Support?', 'edd' );?></h4>
+					<p><?php _e( 'Our <a href="https://easydigitaldownloads.com/support/pricing/">Priority Support forums</a> are there for customers that need faster and/or more in-depth assistance.', 'edd' );?></p>
+
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Stay Up to Date', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<h4><?php _e( 'Get Notified of Extension Releases','edd' );?></h4>
+					<p><?php _e( 'New extensions that make Easy Digital Downloads even more powerful are released nearly every single week. Subscribe to the newsletter to stay up to date with our latest releases. <a href="http://eepurl.com/kaerz" target="_blank">Signup now</a> to ensure you do not miss a release!', 'edd' );?></p>
+
+					<h4><?php _e( 'Get Alerted About New Tutorials', 'edd' );?></h4>
+					<p><?php _e( '<a href="http://eepurl.com/kaerz" target="_blank">Signup now</a> to hear about the latest tutorial releases that explain how to take Easy Digital Downloads further.', 'edd' );?></p>
+
+				</div>
+			</div>
+
+			<div class="changelog">
+				<h3><?php _e( 'Extensions for Everything', 'edd' );?></h3>
+
+				<div class="feature-section">
+
+					<h4><?php _e( 'Over 190 Extensions','edd' );?></h4>
+					<p><?php _e( 'Add-on plugins are available that greatly extend the default functionality of Easy Digital Downloads. There are extensions for payment processors, such as Stripe and PayPal, extensions for newsletter integrations, and many, many more.', 'edd' );?></p>
+
+					<h4><?php _e( 'Visit the Extension Store', 'edd' );?></h4>
+					<p><?php _e( '<a href="https://easydigitaldownloads.com/extensions" target="_blank">The Extensions store</a> has a list of all available extensions, including convenient category filters so you can find exactly what you are looking for.', 'edd' );?></p>
+
+				</div>
+			</div>
+
 		</div>
 		<?php
 	}
@@ -257,13 +397,7 @@ class EDD_Welcome {
 			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
 			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
 
-			<h2 class="nav-tab-wrapper">
-				<a class="nav-tab" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-about' ), 'index.php' ) ) ); ?>">
-					<?php _e( "What's New", 'edd' ); ?>
-				</a><a class="nav-tab nav-tab-active" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-credits' ), 'index.php' ) ) ); ?>">
-					<?php _e( 'Credits', 'edd' ); ?>
-				</a>
-			</h2>
+			<?php $this->tabs(); ?>
 
 			<p class="about-description"><?php _e( 'Easy Digital Downloads is created by a worldwide team of developers who aim to provide the #1 eCommerce platform for selling digital goods through WordPress.', 'edd' ); ?></p>
 
@@ -357,7 +491,13 @@ class EDD_Welcome {
 		if ( is_network_admin() || isset( $_GET['activate-multi'] ) )
 			return;
 
-		wp_safe_redirect( admin_url( 'index.php?page=edd-about' ) ); exit;
+		$upgrade = get_option( 'edd_version_upgraded_from' );
+
+		if( ! $upgrade ) { // First time install
+			wp_safe_redirect( admin_url( 'index.php?page=edd-getting-started' ) ); exit;
+		} else { // Update
+			wp_safe_redirect( admin_url( 'index.php?page=edd-about' ) ); exit;
+		}
 	}
 }
 new EDD_Welcome();

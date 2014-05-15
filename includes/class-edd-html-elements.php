@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.5
  */
 class EDD_HTML_Elements {
+
 	/**
 	 * Renders an HTML Dropdown of all the Products (Downloads)
 	 *
@@ -29,20 +30,60 @@ class EDD_HTML_Elements {
 	 * @param int $selected Download to select automatically
 	 * @return string $output Product dropdown
 	 */
-	public function product_dropdown( $name = 'edd_products', $selected = 0 ) {
-		$products = get_posts( array( 'post_type' => 'download', 'nopaging' => true, 'orderby' => 'title', 'order' => 'ASC' ) );
+	public function product_dropdown( $args = array() ) {
 
-		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
+		$defaults = array(
+			'name'        => 'products',
+			'id'          => 'products',
+			'class'       => '',
+			'multiple'    => false,
+			'selected'    => 0,
+			'chosen'      => false
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$products = get_posts( array(
+			'post_type'      => 'download',
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+			'posts_per_page' => 30
+		) );
+
+		$options = array();
 
 		if ( $products ) {
 			foreach ( $products as $product ) {
-				$output .= '<option value="' . absint( $product->ID ) . '"' . selected( $selected, $product->ID, false ) . '>' . esc_html( get_the_title( $product->ID ) ) . '</option>';
+				$options[ absint( $product->ID ) ] = esc_html( $product->post_title );
 			}
 		} else {
-			$output .= '<option value="0">' . __( 'No products found', 'edd' ) . '</option>';
+			$options[0] = __( 'No products found', 'edd' );
 		}
 
-		$output .= '</select>';
+		// This ensures that any selected products are included in the drop down
+		if( is_array( $args['selected'] ) ) {
+			foreach( $args['selected'] as $item ) {
+				if( ! in_array( $item, $options ) ) {
+					$options[$item] = get_the_title( $item );
+				}
+			}
+		} else {
+			if( ! in_array( $args['selected'], $options ) ) {
+				$options[$args['selected']] = get_the_title( $args['selected'] );
+			}
+		}
+
+		$output = $this->select( array(
+			'name'             => $args['name'],
+			'selected'         => $args['selected'],
+			'id'               => $args['id'],
+			'class'            => $args['class'],
+			'options'          => $options,
+			'multiple'         => $args['multiple'],
+			'chosen'           => $args['chosen'],
+			'show_option_all'  => false,
+			'show_option_none' => false
+		) );
 
 		return $output;
 	}
@@ -61,21 +102,26 @@ class EDD_HTML_Elements {
 		$args = array( 'nopaging' => true );
 
 		if ( ! empty( $status ) )
-			$args['post_status'] = $status;
+			$args[ 'post_status' ] = $status;
 
 		$discounts = edd_get_discounts( $args );
-
-		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
+		$options   = array();
 
 		if ( $discounts ) {
 			foreach ( $discounts as $discount ) {
-				$output .= '<option value="' . absint( $discount->ID ) . '"' . selected( $selected, $discount->ID, false ) . '>' . esc_html( get_the_title( $discount->ID ) ) . '</option>';
+				$options[ absint( $discount->ID ) ] = esc_html( get_the_title( $discount->ID ) );
 			}
 		} else {
-			$output .= '<option value="0">' . __( 'No discounts found', 'edd' ) . '</option>';
+			$options[0] = __( 'No discounts found', 'edd' );
 		}
 
-		$output .= '</select>';
+		$output = $this->select( array(
+			'name'             => $name,
+			'selected'         => $selected,
+			'options'          => $options,
+			'show_option_all'  => false,
+			'show_option_none' => false,
+		) );
 
 		return $output;
 	}
@@ -90,20 +136,20 @@ class EDD_HTML_Elements {
 	 * @return string $output Category dropdown
 	 */
 	public function category_dropdown( $name = 'edd_categories', $selected = 0 ) {
-		$categories = get_terms( 'download_category' );
+		$categories = get_terms( 'download_category', apply_filters( 'edd_category_dropdown', array() ) );
+		$options    = array();
 
-		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
-
-		$output .= '<option value="0">' . __( 'All Categories', 'edd' ) . '</option>';
-		if ( $categories ) {
-			foreach ( $categories as $category ) {
-				$output .= '<option value="' . absint( $category->term_id ) . '"' . selected( $selected, $category->term_id, false ) . '>' . esc_html( $category->name ) . '</option>';
-			}
-		} else {
-			$output .= '<option value="0">' . __( 'No categories found', 'edd' ) . '</option>';
+		foreach ( $categories as $category ) {
+			$options[ absint( $category->term_id ) ] = esc_html( $category->name );
 		}
 
-		$output .= '</select>';
+		$output = $this->select( array(
+			'name'             => $name,
+			'selected'         => $selected,
+			'options'          => $options,
+			'show_option_all'  => __( 'All Categories', 'edd' ),
+			'show_option_none' => false
+		) );
 
 		return $output;
 	}
@@ -122,14 +168,18 @@ class EDD_HTML_Elements {
 		$year     = $current - 5;
 		$selected = empty( $selected ) ? date( 'Y' ) : $selected;
 
-		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
-
 		while ( $year <= $current ) {
-			$output .= '<option value="' . absint( $year ) . '"' . selected( $selected, $year, false ) . '>' . $year . '</option>';
+			$options[ absint( $year ) ] = $year;
 			$year++;
 		}
 
-		$output .= '</select>';
+		$output = $this->select( array(
+			'name'             => $name,
+			'selected'         => $selected,
+			'options'          => $options,
+			'show_option_all'  => false,
+			'show_option_none' => false
+		) );
 
 		return $output;
 	}
@@ -145,14 +195,21 @@ class EDD_HTML_Elements {
 	 */
 	public function month_dropdown( $name = 'month', $selected = 0 ) {
 		$month   = 1;
-		$output  = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '">';
+		$options = array();
+		$selected = empty( $selected ) ? date( 'n' ) : $selected;
 
 		while ( $month <= 12 ) {
-			$output .= '<option value="' . absint( $month ) . '"' . selected( $selected, $month, false ) . '>' . edd_month_num_to_name( $month ) . '</option>';
+			$options[ absint( $month ) ] = edd_month_num_to_name( $month );
 			$month++;
 		}
 
-		$output .= '</select>';
+		$output = $this->select( array(
+			'name'             => $name,
+			'selected'         => $selected,
+			'options'          => $options,
+			'show_option_all'  => false,
+			'show_option_none' => false
+		) );
 
 		return $output;
 	}
@@ -160,18 +217,69 @@ class EDD_HTML_Elements {
 	/**
 	 * Renders an HTML Dropdown
 	 *
-	 * @access public
 	 * @since 1.6
-	 * @param string $options Options of the dropdown
-	 * @param string $name Name attribute of the dropdown
-	 * @param int    $selected Option key to select by default
-	 * @return string $output The dropdown
+	 *
+	 * @param array $args
+	 *
+	 * @return string
 	 */
-	public function select( $options = array(), $name = 'year', $selected = 0 ) {
-		$output = '<select name="' . esc_attr( $name ) . '" id="' . esc_attr( $name ) . '" class="edd-select ' . esc_attr( $name ) . '">';
+	public function select( $args = array() ) {
+		$defaults = array(
+			'options'          => array(),
+			'name'             => null,
+			'class'            => '',
+			'id'               => '',
+			'selected'         => 0,
+			'chosen'           => false,
+			'multiple'         => false,
+			'show_option_all'  => _x( 'All', 'all dropdown items', 'edd' ),
+			'show_option_none' => _x( 'None', 'no dropdown items', 'edd' )
+		);
 
-		foreach ( $options as $key => $option ) {
-			$output .= '<option value="' . esc_attr( $key ) . '"' . selected( $selected, $key, false ) . '>' . esc_html( $option ) . '</option>';
+		$args = wp_parse_args( $args, $defaults );
+
+
+		if( $args['multiple'] ) {
+			$multiple = ' MULTIPLE';
+		} else {
+			$multiple = '';
+		}
+
+		if( $args['chosen'] ) {
+			$args['class'] .= ' edd-select-chosen';
+		}
+
+		$output = '<select name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( sanitize_key( str_replace( '-', '_', $args[ 'id' ] ) ) ) . '" class="edd-select ' . esc_attr( $args[ 'class'] ) . '"' . $multiple . '>';
+
+		if ( ! empty( $args[ 'options' ] ) ) {
+			if ( $args[ 'show_option_all' ] ) {
+				if( $args['multiple'] ) {
+					$selected = selected( true, in_array( 0, $args['selected'] ), false );
+				} else {
+					$selected = selected( $args['selected'], 0, false );
+				}
+				$output .= '<option value="all"' . $selected . '>' . esc_html( $args[ 'show_option_all' ] ) . '</option>';
+			}
+
+			if ( $args[ 'show_option_none' ] ) {
+				if( $args['multiple'] ) {
+					$selected = selected( true, in_array( -1, $args['selected'] ), false );
+				} else {
+					$selected = selected( $args['selected'], -1, false );
+				}
+				$output .= '<option value="-1"' . $selected . '>' . esc_html( $args[ 'show_option_none' ] ) . '</option>';
+			}
+
+			foreach( $args[ 'options' ] as $key => $option ) {
+
+				if( $args['multiple'] && is_array( $args['selected'] ) ) {
+					$selected = selected( true, in_array( $key, $args['selected'] ), false );
+				} else {
+					$selected = selected( $args['selected'], $key, false );
+				}
+
+				$output .= '<option value="' . esc_attr( $key ) . '"' . $selected . '>' . esc_html( $option ) . '</option>';
+			}
 		}
 
 		$output .= '</select>';
@@ -180,21 +288,155 @@ class EDD_HTML_Elements {
 	}
 
 	/**
+	 * Renders an HTML Checkbox
+	 *
+	 * @since 1.9
+	 *
+	 * @param array $args
+	 *
+	 * @return string
+	 */
+	public function checkbox( $args = array() ) {
+		$defaults = array(
+			'name'     => null,
+			'current'  => null,
+			'class'    => 'edd-checkbox'
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$output = '<input type="checkbox" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="' . $args[ 'class' ] . ' ' . esc_attr( $args[ 'name'] ) . '" ' . checked( 1, $args[ 'current' ], false ) . ' />';
+
+		return $output;
+	}
+
+	/**
 	 * Renders an HTML Text field
 	 *
-	 * @access public
 	 * @since 1.5.2
+	 *
 	 * @param string $name Name attribute of the text field
 	 * @param string $value The value to prepopulate the field with
-	 * @return string $output Text field
+	 * @param string $label
+	 * @param string $desc
+	 * @return string Text field
 	 */
-	public function text( $name = 'text', $value = '', $label = '', $desc = '' ) {
-		$output = '<p id="edd-' . sanitize_key( $name ) . '-wrap">';
-			$output .= '<label class="edd-label" for="edd-' . sanitize_key( $name ) . '">' . esc_html( $label ) . '</label>';
-			if ( ! empty( $desc ) )
-				$output .= '<span class="edd-description">' . esc_html( $desc ) . '</span>';
-			$output = '<input type="text" name="' . esc_attr( $name ) . '" id="' . esc_attr( $name )  . '" value="' . esc_attr( $value ) . '"/>';
-		$output .= '</p>';
+	public function text( $args = array() ) {
+		// Backwards compatabliity
+		if ( func_num_args() > 1 ) {
+			$args = func_get_args();
+
+			$name  = $args[0];
+			$value = isset( $args[1] ) ? $args[1] : '';
+			$label = isset( $args[2] ) ? $args[2] : '';
+			$desc  = isset( $args[3] ) ? $args[3] : '';
+		}
+
+		$defaults = array(
+			'name'         => isset( $name )  ? $name  : 'text',
+			'value'        => isset( $value ) ? $value : null,
+			'label'        => isset( $label ) ? $label : null,
+			'desc'         => isset( $desc )  ? $desc  : null,
+			'placeholder'  => '',
+			'class'        => 'regular-text',
+			'disabled'     => false,
+			'autocomplete' => ''
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$disabled = '';
+		if( $args['disabled'] ) {
+			$disabled = ' disabled="disabled"';
+		}
+
+		$output = '<span id="edd-' . sanitize_key( $args[ 'name' ] ) . '-wrap">';
+			
+			$output .= '<label class="edd-label" for="edd-' . sanitize_key( $args[ 'name' ] ) . '">' . esc_html( $args[ 'label' ] ) . '</label>';
+
+			if ( ! empty( $args[ 'desc' ] ) ) {
+				$output .= '<span class="edd-description">' . esc_html( $args[ 'desc' ] ) . '</span>';
+			}
+
+			$output .= '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" autocomplete="' . esc_attr( $args[ 'autocomplete' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" placeholder="' . esc_attr( $args[ 'placeholder' ] ) . '" class="' . $args[ 'class' ] . '"' . $disabled . '/>';
+
+		$output .= '</span>';
+
+		return $output;
+	}
+
+	/**
+	 * Renders an HTML textarea
+	 *
+	 * @since 1.9
+	 *
+	 * @param string $name Name attribute of the textarea
+	 * @param string $value The value to prepopulate the field with
+	 * @param string $label
+	 * @param string $desc
+	 * @return string textarea
+	 */
+	public function textarea( $args = array() ) {
+		$defaults = array(
+			'name'        => 'textarea',
+			'value'       => null,
+			'label'       => null,
+			'desc'        => null,
+            'class'       => 'large-text',
+			'disabled'    => false
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$disabled = '';
+		if( $args['disabled'] ) {
+			$disabled = ' disabled="disabled"';
+		}
+
+		$output = '<span id="edd-' . sanitize_key( $args[ 'name' ] ) . '-wrap">';
+
+			$output .= '<label class="edd-label" for="edd-' . sanitize_key( $args[ 'name' ] ) . '">' . esc_html( $args[ 'label' ] ) . '</label>';
+
+			$output .= '<textarea name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="' . $args[ 'class' ] . '"' . $disabled . '>' . esc_attr( $args[ 'value' ] ) . '</textarea>';
+
+			if ( ! empty( $args[ 'desc' ] ) ) {
+				$output .= '<span class="edd-description">' . esc_html( $args[ 'desc' ] ) . '</span>';
+			}
+
+		$output .= '</span>';
+
+		return $output;
+	}
+
+	/**
+	 * Renders an ajax user search field
+	 *
+	 * @since 2.0
+	 *
+	 * @param array $args
+	 * @return string text field with ajax search
+	 */
+	public function ajax_user_search( $args = array() ) {
+
+		$defaults = array(
+			'name'        => 'user_id',
+			'value'       => null,
+			'placeholder' => __( 'Enter username', 'edd' ),
+			'label'       => null,
+			'desc'        => null,
+            'class'       => '',
+			'disabled'    => false,
+			'autocomplete'=> 'off'
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$args['class'] = 'edd-ajax-user-search ' . $args['class'];
+
+		$output  = '<span class="edd_user_search_wrap">'; 
+			$output .= $this->text( $args );
+			$output .= '<span class="edd_user_search_results"></span>';
+		$output .= '</span>';
 
 		return $output;
 	}

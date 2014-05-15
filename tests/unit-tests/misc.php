@@ -65,7 +65,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'HUF'  => __( 'Hungarian Forint', 'edd' ),
 			'ILS'  => __( 'Israeli Shekel (&#8362;)', 'edd' ),
 			'JPY'  => __( 'Japanese Yen (&yen;)', 'edd' ),
-			'RM'   => __( 'Malaysian Ringgits', 'edd' ),
+			'MYR'  => __( 'Malaysian Ringgits', 'edd' ),
 			'MXN'  => __( 'Mexican Peso (&#36;)', 'edd' ),
 			'NZD'  => __( 'New Zealand Dollar (&#36;)', 'edd' ),
 			'NOK'  => __( 'Norwegian Krone', 'edd' ),
@@ -78,7 +78,8 @@ class Test_Misc extends EDD_UnitTestCase {
 			'THB'  => __( 'Thai Baht (&#3647;)', 'edd' ),
 			'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
 			'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
-			'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' )
+			'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
+			'RUB'  => __( 'Russian Rubles', 'edd' )
 		);
 
 		$this->assertEquals( $expected, edd_get_currencies() );
@@ -138,7 +139,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'CO' => 'Colombia',
 			'CR' => 'Costa Rica',
 			'CU' => 'Cuba',
-			'CV' => 'Cap Verde',
+			'CV' => 'Cape Verde',
 			'CX' => 'Christmas Island',
 			'CY' => 'Cyprus Island',
 			'CZ' => 'Czech Republic',
@@ -218,7 +219,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'LR' => 'Liberia',
 			'LS' => 'Lesotho',
 			'LT' => 'Lithuania',
-			'LU' => 'Luxembourgh',
+			'LU' => 'Luxembourg',
 			'LV' => 'Latvia',
 			'LY' => 'Libyan Arab Jamahiriya',
 			'MA' => 'Morocco',
@@ -239,7 +240,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'MT' => 'Malta',
 			'MU' => 'Mauritius',
 			'Mv' => 'Maldives',
-			'MW' => 'malawi',
+			'MW' => 'Malawi',
 			'MX' => 'Mexico',
 			'MY' => 'Malaysia',
 			'MZ' => 'Mozambique',
@@ -259,11 +260,11 @@ class Test_Misc extends EDD_UnitTestCase {
 			'PA' => 'Panama',
 			'PE' => 'Peru',
 			'PF' => 'French Polynesia',
-			'PG' => 'papua New Guinea',
+			'PG' => 'Papua New Guinea',
 			'PH' => 'Phillipines',
 			'PK' => 'Pakistan',
 			'PL' => 'Poland',
-			'PM' => 'St. Pierre and Miquelon',
+			'PM' => 'Saint Pierre and Miquelon',
 			'PN' => 'Pitcairn Island',
 			'PR' => 'Puerto Rico',
 			'PS' => 'Palestinian Territories',
@@ -282,7 +283,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'SD' => 'Sudan',
 			'SE' => 'Sweden',
 			'SG' => 'Singapore',
-			'SH' => 'St. Helena',
+			'SH' => 'Saint Helena',
 			'SI' => 'Slovenia',
 			'SJ' => 'Svalbard and Jan Mayen Islands',
 			'SK' => 'Slovak Republic',
@@ -330,7 +331,8 @@ class Test_Misc extends EDD_UnitTestCase {
 			'YU' => 'Yugoslavia',
 			'ZA' => 'South Africa',
 			'ZM' => 'Zambia',
-			'ZW' => 'Zimbabwe'
+			'ZW' => 'Zimbabwe',
+			'0'  => 'Choose'
 		);
 
 		$this->assertEquals( $expected, edd_get_country_list() );
@@ -446,5 +448,23 @@ class Test_Misc extends EDD_UnitTestCase {
 	 */
 	public function test_get_symlink_url() {
 		$this->assertEquals( 'http://example.org/wp-content/uploads/edd/symlinks', edd_get_symlink_url() );
+	}
+
+	public function test_use_skus() {
+		$this->assertFalse( edd_use_skus() );
+	}
+
+	public function test_edd_is_host() {
+		$this->assertFalse( edd_is_host( 'wpengine' ) );
+		$this->assertFalse( edd_is_host( 'wp engine' ) );
+		$this->assertFalse( edd_is_host( 'WP Engine' ) );
+		$this->assertFalse( edd_is_host( 'WPEngine' ) );
+
+		define( 'WPE_APIKEY', 'testkey' );
+
+		$this->assertTrue( edd_is_host( 'wpengine' ) );
+		$this->assertTrue( edd_is_host( 'wp engine' ) );
+		$this->assertTrue( edd_is_host( 'WP Engine' ) );
+		$this->assertTrue( edd_is_host( 'WPEngine' ) );
 	}
 }

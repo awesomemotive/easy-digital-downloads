@@ -1,12 +1,13 @@
 <?php
 namespace EDD_Unit_Tests;
-
+use \EDD_Payments_Query;
 /**
  * @group edd_payments
  */
 class Tests_Payments extends EDD_UnitTestCase {
-	protected $_payment_id = null;
 
+	protected $_payment_id = null;
+	protected $_key = null;
 	protected $_post = null;
 
 	public function setUp() {
@@ -42,7 +43,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 			'edd_price' => '0.00',
 			'_variable_pricing' => 1,
 			'_edd_price_options_mode' => 'on',
-			'edd_variable_prices' => array_values( $_variable_pricing ), 
+			'edd_variable_prices' => array_values( $_variable_pricing ),
 			'edd_download_files' => array_values( $_download_files ),
 			'_edd_download_limit' => 20,
 			'_edd_hide_purchase_link' => 1,
@@ -118,7 +119,9 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$_SERVER['SERVER_NAME'] = 'edd_virtual';
 
 		$payment_id = edd_insert_payment( $purchase_data );
+
 		$this->_payment_id = $payment_id;
+		$this->_key = $purchase_data['purchase_key'];
 	}
 
 	public function test_get_payments() {
@@ -129,8 +132,29 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$this->assertEquals( 'edd_payment', $out[0]->post_type );
 	}
 
+	public function test_payments_query() {
+		$payments = new EDD_Payments_Query;
+		$out = $payments->get_payments();
+		$this->assertTrue( is_array( (array) $out[0] ) );
+		$this->assertArrayHasKey( 'ID', (array) $out[0] );
+		$this->assertArrayHasKey( 'cart_details', (array) $out[0] );
+		$this->assertArrayHasKey( 'user_info', (array) $out[0] );
+	}
+
+	public function test_edd_get_payment_by() {
+		$this->assertObjectHasAttribute( 'ID', edd_get_payment_by( 'id', $this->_payment_id ) );
+		$this->assertObjectHasAttribute( 'ID', edd_get_payment_by( 'key', $this->_key ) );
+	}
+
 	public function test_fake_insert_payment() {
 		$this->assertFalse( edd_insert_payment() );
+	}
+
+	public function test_payment_completd_flag_not_exists() {
+
+		$completed_date = edd_get_payment_completed_date( $this->_payment_id );
+		$this->assertEmpty( $completed_date );
+
 	}
 
 	public function test_update_payment_status() {
@@ -152,22 +176,11 @@ class Tests_Payments extends EDD_UnitTestCase {
 			'publish' => 'Complete',
 			'refunded' => 'Refunded',
 			'failed' => 'Failed',
-			'revoked' => 'Revoked'
+			'revoked' => 'Revoked',
+			'abandoned' => 'Abandoned'
 		);
 
 		$this->assertEquals( $expected, $out );
-	}
-
-	public function test_get_earnings_by_date() {
-		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Payment', 'post_type' => 'edd_payment', 'post_status' => 'publish' ) );
-		$meta = array(
-			'_edd_payment_total' => '120.00',
-			'_edd_payment_mode' => 'live'
-		);
-		foreach( $meta as $key => $value ) {
-			update_post_meta( $post_id, $key, $value );
-		}
-		$this->assertEquals( 120, edd_get_earnings_by_date( null, date( 'n' ), date( 'Y' ) ) );
 	}
 
 	public function test_undo_purchase() {
@@ -177,6 +190,17 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 	public function test_delete_purchase() {
 		edd_delete_purchase( $this->_payment_id );
-		$this->assertFalse( edd_get_payments() );
+		// This returns an empty array(), so empty makes it false
+		$cart = edd_get_payments();
+		$this->assertTrue( empty( $cart ) );
 	}
+
+	public function test_get_payment_completed_date() {
+
+		$completed_date = edd_get_payment_completed_date( $this->_payment_id );
+		$this->assertInternalType( 'string', $completed_date );
+		$this->assertEquals( date( 'Y-m-d' ), date( 'Y-m-d', strtotime( $completed_date ) ) );
+
+	}
+
 }

@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Logging
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.3.1
  */
@@ -20,12 +20,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.3.1
  */
 class EDD_Logging {
+
 	/**
 	 * Set up the EDD Logging Class
 	 *
-	 * @access public
 	 * @since 1.3.1
-	 * @return void
 	 */
 	public function __construct() {
 		// Create the log post type
@@ -72,14 +71,6 @@ class EDD_Logging {
 	*/
 	public function register_taxonomy() {
 		register_taxonomy( 'edd_log_type', 'edd_log', array( 'public' => false ) );
-
-		$types = $this->log_types();
-
-		foreach ( $types as $type ) {
-			if ( ! term_exists( $type, 'edd_log_type' ) ) {
-				wp_insert_term( $type, 'edd_log_type' );
-			}
-		}
 	}
 
 	/**
@@ -279,14 +270,19 @@ class EDD_Logging {
 	 * @param int $object_id (default: 0)
 	 * @param string $type Log type (default: null)
 	 * @param array $meta_query Log meta query (default: null)
+	 * @param array $date_query Log data query (default: null) (since 1.9)
 	 * @return int Log count
 	 */
-	public function get_log_count( $object_id = 0, $type = null, $meta_query = null ) {
+	public function get_log_count( $object_id = 0, $type = null, $meta_query = null, $date_query = null ) {
+		
+		global $pagenow, $typenow;
+
 		$query_args = array(
-			'post_parent' 	=> $object_id,
-			'post_type'		=> 'edd_log',
-			'posts_per_page'=> -1,
-			'post_status'	=> 'publish'
+			'post_parent' 	   => $object_id,
+			'post_type'		   => 'edd_log',
+			'posts_per_page'   => -1,
+			'post_status'	   => 'publish',
+			'fields'           => 'ids',
 		);
 
 		if ( ! empty( $type ) && $this->valid_type( $type ) ) {
@@ -301,6 +297,10 @@ class EDD_Logging {
 
 		if ( ! empty( $meta_query ) ) {
 			$query_args['meta_query'] = $meta_query;
+		}
+
+		if ( ! empty( $date_query ) ) {
+			$query_args['date_query'] = $date_query;
 		}
 
 		$logs = new WP_Query( $query_args );
@@ -362,9 +362,17 @@ $GLOBALS['edd_logs'] = new EDD_Logging();
  * This is just a simple wrapper function for the log class add() function
  *
  * @since 1.3.3
+ *
+ * @param string $title
+ * @param string $message
+ * @param int    $parent
+ * @param null   $type
+ *
  * @global $edd_logs EDD Logs Object
+ *
  * @uses EDD_Logging::add()
- * @return int $log ID of the new log entry
+ *
+ * @return mixed ID of the new log entry
  */
 function edd_record_log( $title = '', $message = '', $parent = 0, $type = null ) {
 	global $edd_logs;

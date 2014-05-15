@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Settings
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
@@ -24,53 +24,37 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_options_page() {
 	global $edd_options;
 
-	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'general';
+	$active_tab = isset( $_GET[ 'tab' ] ) && array_key_exists( $_GET['tab'], edd_get_settings_tabs() ) ? $_GET[ 'tab' ] : 'general';
 
 	ob_start();
 	?>
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper">
-			<a href="<?php echo add_query_arg('tab', 'general', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>"><?php _e('General', 'edd'); ?></a>
-			<a href="<?php echo add_query_arg('tab', 'gateways', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'gateways' ? 'nav-tab-active' : ''; ?>"><?php _e('Payment Gateways', 'edd'); ?></a>
-			<a href="<?php echo add_query_arg('tab', 'emails', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'emails' ? 'nav-tab-active' : ''; ?>"><?php _e('Emails', 'edd'); ?></a>
-			<a href="<?php echo add_query_arg('tab', 'styles', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'styles' ? 'nav-tab-active' : ''; ?>"><?php _e('Styles', 'edd'); ?></a>
-			<a href="<?php echo add_query_arg('tab', 'taxes', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'taxes' ? 'nav-tab-active' : ''; ?>"><?php _e('Taxes', 'edd'); ?></a>
-			<?php if( has_filter( 'edd_settings_extensions' ) ) { ?>
-				<a href="<?php echo add_query_arg('tab', 'extensions', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'extensions' ? 'nav-tab-active' : ''; ?>"><?php _e('Extensions', 'edd'); ?></a>
-			<?php } ?>
-			<a href="<?php echo add_query_arg('tab', 'misc', remove_query_arg('settings-updated')); ?>" class="nav-tab <?php echo $active_tab == 'misc' ? 'nav-tab-active' : ''; ?>"><?php _e('Misc', 'edd'); ?></a>
+			<?php
+			foreach( edd_get_settings_tabs() as $tab_id => $tab_name ) {
+
+				$tab_url = add_query_arg( array(
+					'settings-updated' => false,
+					'tab' => $tab_id
+				) );
+
+				$active = $active_tab == $tab_id ? ' nav-tab-active' : '';
+
+				echo '<a href="' . esc_url( $tab_url ) . '" title="' . esc_attr( $tab_name ) . '" class="nav-tab' . $active . '">';
+					echo esc_html( $tab_name );
+				echo '</a>';
+			}
+			?>
 		</h2>
-
 		<div id="tab_container">
-			<?php //settings_errors( 'edd-notices' ); ?>
-
 			<form method="post" action="options.php">
+				<table class="form-table">
 				<?php
-				if ( $active_tab == 'general' ) {
-					settings_fields( 'edd_settings_general' );
-					do_settings_sections( 'edd_settings_general' );
-				} elseif ( $active_tab == 'gateways' ) {
-					settings_fields( 'edd_settings_gateways' );
-					do_settings_sections( 'edd_settings_gateways' );
-				} elseif ( $active_tab == 'emails' ) {
-					settings_fields( 'edd_settings_emails' );
-					do_settings_sections( 'edd_settings_emails' );
-				} elseif ( $active_tab == 'styles' ) {
-					settings_fields('edd_settings_styles' );
-					do_settings_sections('edd_settings_styles' );
-				} elseif ($active_tab == 'taxes' ) {
-					settings_fields('edd_settings_taxes' );
-					do_settings_sections('edd_settings_taxes' );
-				} elseif ($active_tab == 'extensions' ) {
-					settings_fields( 'edd_settings_extensions' );
-					do_settings_sections( 'edd_settings_extensions' );
-				} else {
-					settings_fields( 'edd_settings_misc' );
-					do_settings_sections( 'edd_settings_misc' );
-				}
-
-				submit_button();
+				settings_fields( 'edd_settings' );
+				do_settings_fields( 'edd_settings_' . $active_tab, 'edd_settings_' . $active_tab );
 				?>
+				</table>
+				<?php submit_button(); ?>
 			</form>
 		</div><!-- #tab_container-->
 	</div><!-- .wrap -->

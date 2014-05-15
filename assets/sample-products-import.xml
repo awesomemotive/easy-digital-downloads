@@ -36,8 +36,6 @@
 	<wp:base_blog_url>http://easydigitaldownloads.com/demo</wp:base_blog_url>
 
 	<wp:author><wp:author_id>1</wp:author_id><wp:author_login>pippin</wp:author_login><wp:author_email>pippin@pippinsplugins.com</wp:author_email><wp:author_display_name><![CDATA[Pippin Williamson]]></wp:author_display_name><wp:author_first_name><![CDATA[Pippin]]></wp:author_first_name><wp:author_last_name><![CDATA[Williamson]]></wp:author_last_name></wp:author>
-	<wp:author><wp:author_id>638</wp:author_id><wp:author_login>lamininit</wp:author_login><wp:author_email>david@lamininit.com</wp:author_email><wp:author_display_name><![CDATA[David]]></wp:author_display_name><wp:author_first_name><![CDATA[David]]></wp:author_first_name><wp:author_last_name><![CDATA[Rojas]]></wp:author_last_name></wp:author>
-	<wp:author><wp:author_id>707</wp:author_id><wp:author_login>justinsainton</wp:author_login><wp:author_email>justinsainton@gmail.com</wp:author_email><wp:author_display_name><![CDATA[justinsainton]]></wp:author_display_name><wp:author_first_name><![CDATA[]]></wp:author_first_name><wp:author_last_name><![CDATA[]]></wp:author_last_name></wp:author>
 
 	<wp:category><wp:term_id>1</wp:term_id><wp:category_nicename>uncategorized</wp:category_nicename><wp:category_parent></wp:category_parent><wp:cat_name><![CDATA[Uncategorized]]></wp:cat_name></wp:category>
 	<wp:term><wp:term_id>3</wp:term_id><wp:term_taxonomy>download_category</wp:term_taxonomy><wp:term_slug>category-1</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[Category 1]]></wp:term_name></wp:term>
@@ -104,22 +102,6 @@
 		<wp:postmeta>
 			<wp:meta_key>_edd_purchase_color</wp:meta_key>
 			<wp:meta_value><![CDATA[blue]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_sales_log</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:10:"payment_id";s:2:"19";s:9:"user_info";a:5:{s:2:"id";s:1:"1";s:5:"email";s:25:"pippin@pippinsplugins.com";s:10:"first_name";s:6:"Pippin";s:9:"last_name";s:10:"Williamson";s:8:"discount";s:4:"none";}s:4:"date";s:19:"2012-05-21 16:27:42";}}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_download_sales</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_download_earnings</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_file_download_log</wp:meta_key>
-			<wp:meta_value><![CDATA[a:36:{i:0;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:14:"ali@ledsoft.eu";s:2:"id";s:3:"101";s:4:"name";s:3:"ali";}s:2:"ip";s:14:"176.33.232.124";s:4:"date";s:19:"2012-05-29 13:27:17";}i:1;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:14:"ali@ledsoft.eu";s:2:"id";s:3:"101";s:4:"name";s:3:"ali";}s:2:"ip";s:14:"176.33.232.124";s:4:"date";s:19:"2012-05-29 13:38:23";}i:2;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:14:"ali@ledsoft.eu";s:2:"id";s:3:"101";s:4:"name";s:3:"ali";}s:2:"ip";s:14:"176.33.232.124";s:4:"date";s:19:"2012-05-29 13:38:29";}i:3;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:14:"ali@ledsoft.eu";s:2:"id";s:3:"101";s:4:"name";s:3:"ali";}s:2:"ip";s:14:"176.33.232.124";s:4:"date";s:19:"2012-05-29 15:50:12";}i:4;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:20:"mizzantrop@gmail.com";s:2:"id";s:3:"106";s:4:"name";s:1:"q";}s:2:"ip";s:12:"89.179.157.8";s:4:"date";s:19:"2012-05-31 07:58:32";}i:5;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:17:"terersa@gmail.com";s:2:"id";s:3:"123";s:4:"name";s:6:"443344";}s:2:"ip";s:13:"24.100.105.91";s:4:"date";s:19:"2012-06-08 13:58:06";}i:6;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:17:"terersa@gmail.com";s:2:"id";s:3:"123";s:4:"name";s:6:"443344";}s:2:"ip";s:13:"24.100.105.91";s:4:"date";s:19:"2012-06-08 13:58:16";}i:7;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:24:"daysleeper@webmail.co.za";s:2:"id";s:3:"128";s:4:"name";s:10:"daysleeper";}s:2:"ip";s:11:"41.75.100.4";s:4:"date";s:19:"2012-06-13 07:20:54";}i:8;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-06-29 01:55:43";}i:9;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-06-29 01:56:03";}i:10;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-06-29 13:55:09";}i:11;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-06-29 14:24:52";}i:12;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:25:"pippin@pippinsplugins.com";s:2:"id";s:1:"1";s:4:"name";s:17:"Pippin Williamson";}s:2:"ip";s:12:"24.143.47.94";s:4:"date";s:19:"2012-06-30 01:40:00";}i:13;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-06-30 09:20:37";}i:14;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-06-30 09:20:50";}i:15;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-06-30 09:20:59";}i:16;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-06-30 16:26:03";}i:17;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-06-30 19:04:12";}i:18;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:24:"dimaswijanarko@gmail.com";s:2:"id";s:3:"177";s:4:"name";s:5:"dimas";}s:2:"ip";s:14:"180.246.177.48";s:4:"date";s:19:"2012-07-03 07:57:56";}i:19;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-07-06 11:18:33";}i:20;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-07-06 11:18:39";}i:21;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-07-06 11:19:14";}i:22;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-07-06 11:20:09";}i:23;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-07-06 11:20:12";}i:24;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:25:"pippin@pippinsplugins.com";s:2:"id";s:1:"1";s:4:"name";s:17:"Pippin Williamson";}s:2:"ip";s:12:"24.143.47.94";s:4:"date";s:19:"2012-07-08 14:20:23";}i:25;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:24:"applenaveen123@gmail.com";s:2:"id";s:3:"203";s:4:"name";s:11:"applenaveen";}s:2:"ip";s:12:"202.53.11.58";s:4:"date";s:19:"2012-07-11 11:21:19";}i:26;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:24:"applenaveen123@gmail.com";s:2:"id";s:3:"203";s:4:"name";s:11:"applenaveen";}s:2:"ip";s:12:"202.53.11.58";s:4:"date";s:19:"2012-07-11 11:24:10";}i:27;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:24:"applenaveen123@gmail.com";s:2:"id";s:3:"203";s:4:"name";s:11:"applenaveen";}s:2:"ip";s:12:"202.53.11.58";s:4:"date";s:19:"2012-07-11 11:41:45";}i:28;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:14:"email@test.com";s:2:"id";s:3:"302";s:4:"name";s:7:"test123";}s:2:"ip";s:14:"117.206.157.74";s:4:"date";s:19:"2012-08-04 14:50:01";}i:29;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:17:"rossdev@gmail.com";s:2:"id";s:3:"369";s:4:"name";s:7:"rossdev";}s:2:"ip";s:13:"130.76.32.213";s:4:"date";s:19:"2012-08-17 19:13:38";}i:30;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:14:"matt@enpho.com";s:2:"id";s:3:"523";s:4:"name";s:5:"fredl";}s:2:"ip";s:13:"99.32.184.119";s:4:"date";s:19:"2012-09-18 13:08:51";}i:31;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:17:"asdasas@sadas.com";s:2:"id";s:3:"586";s:4:"name";s:6:"asdasd";}s:2:"ip";s:12:"31.223.64.63";s:4:"date";s:19:"2012-09-27 18:51:36";}i:32;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:17:"asdasas@sadas.com";s:2:"id";s:3:"586";s:4:"name";s:6:"asdasd";}s:2:"ip";s:12:"31.223.64.63";s:4:"date";s:19:"2012-09-27 18:51:41";}i:33;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:11:"abc@def.com";s:2:"id";s:3:"591";s:4:"name";s:11:"abc@def.com";}s:2:"ip";s:13:"182.55.248.54";s:4:"date";s:19:"2012-09-28 04:31:31";}i:34;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:20:"mingkangba@gmail.com";s:2:"id";s:3:"710";s:4:"name";s:8:"mingkang";}s:2:"ip";s:13:"58.186.10.236";s:4:"date";s:19:"2012-10-18 16:44:02";}i:35;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:20:"mingkangba@gmail.com";s:2:"id";s:3:"710";s:4:"name";s:8:"mingkang";}s:2:"ip";s:13:"58.186.10.236";s:4:"date";s:19:"2012-10-18 16:44:21";}}]]></wp:meta_value>
 		</wp:postmeta>
 	</item>
 	<item>
@@ -196,22 +178,6 @@
 			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:4:"name";s:5:"Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
 		</wp:postmeta>
 		<wp:postmeta>
-			<wp:meta_key>_edd_sales_log</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:10:"payment_id";s:2:"18";s:9:"user_info";a:5:{s:2:"id";s:1:"1";s:5:"email";s:25:"pippin@pippinsplugins.com";s:10:"first_name";s:6:"Pippin";s:9:"last_name";s:10:"Williamson";s:8:"discount";s:4:"none";}s:4:"date";s:19:"2012-05-21 16:27:26";}}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_download_sales</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_download_earnings</wp:meta_key>
-			<wp:meta_value><![CDATA[-6]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_file_download_log</wp:meta_key>
-			<wp:meta_value><![CDATA[a:5:{i:0;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:25:"pippin@pippinsplugins.com";s:2:"id";s:1:"1";s:4:"name";s:17:"Pippin Williamson";}s:2:"ip";s:12:"24.143.47.94";s:4:"date";s:19:"2012-05-21 16:27:58";}i:1;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:14:"ali@ledsoft.eu";s:2:"id";s:3:"101";s:4:"name";s:3:"ali";}s:2:"ip";s:14:"176.33.232.124";s:4:"date";s:19:"2012-05-29 13:39:51";}i:2;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:25:"pippin@pippinsplugins.com";s:2:"id";s:1:"1";s:4:"name";s:17:"Pippin Williamson";}s:2:"ip";s:12:"24.143.47.94";s:4:"date";s:19:"2012-06-30 01:39:52";}i:3;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:25:"pippin@pippinsplugins.com";s:2:"id";s:1:"1";s:4:"name";s:17:"Pippin Williamson";}s:2:"ip";s:12:"24.143.47.94";s:4:"date";s:19:"2012-07-08 14:21:00";}i:4;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:20:"piyushn.88@gmail.com";s:2:"id";s:3:"202";s:4:"name";s:5:"hello";}s:2:"ip";s:39:"172.18.100.57, 172.18.100.57, 127.0.0.1";s:4:"date";s:19:"2012-07-11 05:11:41";}}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
 			<wp:meta_key>_thumbnail_id</wp:meta_key>
 			<wp:meta_value><![CDATA[688]]></wp:meta_value>
 		</wp:postmeta>
@@ -234,10 +200,6 @@
 		<wp:postmeta>
 			<wp:meta_key>edd_preview_files</wp:meta_key>
 			<wp:meta_value><![CDATA[a:1:{i:0;a:2:{s:4:"name";s:0:"";s:4:"file";s:0:"";}}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_ap_theme</wp:meta_key>
-			<wp:meta_value><![CDATA[premium_pixels]]></wp:meta_value>
 		</wp:postmeta>
 	</item>
 	<item>
@@ -376,26 +338,6 @@
 			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:4:"name";s:5:"Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
 		</wp:postmeta>
 		<wp:postmeta>
-			<wp:meta_key>_edd_sales_log</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:10:"payment_id";s:2:"18";s:9:"user_info";a:5:{s:2:"id";s:1:"1";s:5:"email";s:25:"pippin@pippinsplugins.com";s:10:"first_name";s:6:"Pippin";s:9:"last_name";s:10:"Williamson";s:8:"discount";s:4:"none";}s:4:"date";s:19:"2012-05-21 16:27:26";}}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_download_sales</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_download_earnings</wp:meta_key>
-			<wp:meta_value><![CDATA[-3]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_file_download_log</wp:meta_key>
-			<wp:meta_value><![CDATA[a:3:{i:0;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:25:"pippin@pippinsplugins.com";s:2:"id";s:1:"1";s:4:"name";s:17:"Pippin Williamson";}s:2:"ip";s:12:"24.143.47.94";s:4:"date";s:19:"2012-05-21 16:27:58";}i:1;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:14:"ali@ledsoft.eu";s:2:"id";s:3:"101";s:4:"name";s:3:"ali";}s:2:"ip";s:14:"176.33.232.124";s:4:"date";s:19:"2012-05-29 13:39:51";}i:2;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:25:"abner.thefamily@gmail.com";s:2:"id";s:3:"592";s:4:"name";s:5:"zarka";}s:2:"ip";s:14:"171.98.172.199";s:4:"date";s:19:"2012-09-28 17:35:07";}}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_dp_original</wp:meta_key>
-			<wp:meta_value><![CDATA[16]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
 			<wp:meta_key>edd_price</wp:meta_key>
 			<wp:meta_value><![CDATA[0.00]]></wp:meta_value>
 		</wp:postmeta>
@@ -404,36 +346,12 @@
 			<wp:meta_value><![CDATA[]]></wp:meta_value>
 		</wp:postmeta>
 		<wp:postmeta>
-			<wp:meta_key>_edd_commisions_enabled</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_commission_settings</wp:meta_key>
-			<wp:meta_value><![CDATA[a:2:{s:7:"user_id";s:1:"1";s:6:"amount";i:50;}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_has_commission</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
 			<wp:meta_key>_thumbnail_id</wp:meta_key>
 			<wp:meta_value><![CDATA[687]]></wp:meta_value>
 		</wp:postmeta>
 		<wp:postmeta>
 			<wp:meta_key>_edd_download_limit</wp:meta_key>
 			<wp:meta_value><![CDATA[0]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_ap_placement</wp:meta_key>
-			<wp:meta_value><![CDATA[top]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_preview_files</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:2:{s:4:"name";s:0:"";s:4:"file";s:0:"";}}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_ap_theme</wp:meta_key>
-			<wp:meta_value><![CDATA[premium_pixels]]></wp:meta_value>
 		</wp:postmeta>
 	</item>
 	<item>
@@ -474,44 +392,12 @@
 			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:4:"name";s:5:"Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
 		</wp:postmeta>
 		<wp:postmeta>
-			<wp:meta_key>_edd_sales_log</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:10:"payment_id";s:2:"18";s:9:"user_info";a:5:{s:2:"id";s:1:"1";s:5:"email";s:25:"pippin@pippinsplugins.com";s:10:"first_name";s:6:"Pippin";s:9:"last_name";s:10:"Williamson";s:8:"discount";s:4:"none";}s:4:"date";s:19:"2012-05-21 16:27:26";}}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_download_sales</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_download_earnings</wp:meta_key>
-			<wp:meta_value><![CDATA[-14]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_file_download_log</wp:meta_key>
-			<wp:meta_value><![CDATA[a:28:{i:0;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:25:"pippin@pippinsplugins.com";s:2:"id";s:1:"1";s:4:"name";s:17:"Pippin Williamson";}s:2:"ip";s:12:"24.143.47.94";s:4:"date";s:19:"2012-05-21 16:27:58";}i:1;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:14:"ali@ledsoft.eu";s:2:"id";s:3:"101";s:4:"name";s:3:"ali";}s:2:"ip";s:14:"176.33.232.124";s:4:"date";s:19:"2012-05-29 13:39:51";}i:2;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:20:"ledsoft.eu@gmail.com";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-06-29 01:52:02";}i:3;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-06-30 09:20:09";}i:4;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-06-30 09:20:17";}i:5;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-06-30 09:34:17";}i:6;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:24:"dimaswijanarko@gmail.com";s:2:"id";s:3:"177";s:4:"name";s:5:"dimas";}s:2:"ip";s:14:"180.246.177.48";s:4:"date";s:19:"2012-07-03 07:58:08";}i:7;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:20:"ledsoft.eu@gmail.com";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-07-06 11:19:01";}i:8;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:26:"facebook@islamieserler.net";s:2:"id";s:3:"120";s:4:"name";s:7:"ledsoft";}s:2:"ip";s:14:"176.33.249.248";s:4:"date";s:19:"2012-07-06 11:19:05";}i:9;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:20:"piyushn.88@gmail.com";s:2:"id";s:3:"202";s:4:"name";s:5:"hello";}s:2:"ip";s:39:"172.18.100.57, 172.18.100.57, 127.0.0.1";s:4:"date";s:19:"2012-07-11 05:11:39";}i:10;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:24:"applenaveen123@gmail.com";s:2:"id";s:3:"203";s:4:"name";s:11:"applenaveen";}s:2:"ip";s:12:"202.53.11.58";s:4:"date";s:19:"2012-07-13 06:40:49";}i:11;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:1:{s:5:"email";s:24:"applenaveen123@gmail.com";}s:2:"ip";s:12:"202.53.11.58";s:4:"date";s:19:"2012-07-13 06:41:03";}i:12;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:1:{s:5:"email";s:24:"applenaveen123@gmail.com";}s:2:"ip";s:12:"202.53.11.58";s:4:"date";s:19:"2012-07-13 06:41:17";}i:13;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:1:{s:5:"email";s:24:"applenaveen123@gmail.com";}s:2:"ip";s:12:"202.53.11.58";s:4:"date";s:19:"2012-07-13 06:41:18";}i:14;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:14:"email@test.com";s:2:"id";s:3:"302";s:4:"name";s:7:"test123";}s:2:"ip";s:14:"117.206.157.74";s:4:"date";s:19:"2012-08-04 14:49:51";}i:15;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:14:"email@test.com";s:2:"id";s:3:"302";s:4:"name";s:7:"test123";}s:2:"ip";s:14:"117.206.157.74";s:4:"date";s:19:"2012-08-04 14:50:19";}i:16;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:17:"rossdev@gmail.com";s:2:"id";s:3:"369";s:4:"name";s:7:"rossdev";}s:2:"ip";s:13:"130.76.32.213";s:4:"date";s:19:"2012-08-17 19:13:32";}i:17;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:13:"asd@sadas.com";s:2:"id";s:3:"445";s:4:"name";s:5:"asdas";}s:2:"ip";s:14:"31.223.112.140";s:4:"date";s:19:"2012-09-03 23:14:28";}i:18;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:13:"asd@sadas.com";s:2:"id";s:3:"445";s:4:"name";s:5:"asdas";}s:2:"ip";s:14:"31.223.112.140";s:4:"date";s:19:"2012-09-03 23:14:34";}i:19;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:13:"asd@sadas.com";s:2:"id";s:3:"445";s:4:"name";s:5:"asdas";}s:2:"ip";s:14:"31.223.112.140";s:4:"date";s:19:"2012-09-03 23:14:38";}i:20;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:6:"a@a.co";s:2:"id";s:3:"447";s:4:"name";s:1:"a";}s:2:"ip";s:11:"59.98.16.43";s:4:"date";s:19:"2012-09-04 12:05:30";}i:21;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:17:"tzeldin@gmail.com";s:2:"id";s:3:"456";s:4:"name";s:7:"tztest1";}s:2:"ip";s:14:"173.245.83.243";s:4:"date";s:19:"2012-09-05 23:14:47";}i:22;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:27:"payel.chatterjee@laqzya.com";s:2:"id";s:3:"489";s:4:"name";s:3:"tkg";}s:2:"ip";s:14:"115.119.74.170";s:4:"date";s:19:"2012-09-12 05:55:05";}i:23;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:11:"asd@sdsa.co";s:2:"id";s:3:"585";s:4:"name";s:9:"asdasdasd";}s:2:"ip";s:12:"31.223.64.63";s:4:"date";s:19:"2012-09-27 18:50:32";}i:24;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:11:"asd@sdsa.co";s:2:"id";s:3:"585";s:4:"name";s:9:"asdasdasd";}s:2:"ip";s:12:"31.223.64.63";s:4:"date";s:19:"2012-09-27 18:50:41";}i:25;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:1:{s:5:"email";s:11:"asd@sdsa.co";}s:2:"ip";s:12:"31.223.64.63";s:4:"date";s:19:"2012-09-27 18:50:55";}i:26;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:22:"dtardencilla@yahoo.com";s:2:"id";s:3:"699";s:4:"name";s:4:"demo";}s:2:"ip";s:13:"190.212.240.4";s:4:"date";s:19:"2012-10-17 03:59:28";}i:27;a:4:{s:7:"file_id";s:1:"0";s:9:"user_info";a:3:{s:5:"email";s:20:"mingkangba@gmail.com";s:2:"id";s:3:"710";s:4:"name";s:8:"mingkang";}s:2:"ip";s:13:"58.186.10.236";s:4:"date";s:19:"2012-10-18 16:45:05";}}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_dp_original</wp:meta_key>
-			<wp:meta_value><![CDATA[67]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
 			<wp:meta_key>edd_price</wp:meta_key>
 			<wp:meta_value><![CDATA[30.00]]></wp:meta_value>
 		</wp:postmeta>
 		<wp:postmeta>
 			<wp:meta_key>edd_product_notes</wp:meta_key>
 			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_commisions_enabled</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_commission_settings</wp:meta_key>
-			<wp:meta_value><![CDATA[a:2:{s:7:"user_id";s:1:"1";s:6:"amount";s:2:"70";}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_has_commission</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
 		</wp:postmeta>
 	</item>
 	<item>
@@ -549,7 +435,7 @@
 		<title>Sample FREE Product</title>
 		<link>http://easydigitaldownloads.com/demo/downloads/sample-free-product/</link>
 		<pubDate>Tue, 27 Nov 2012 23:57:34 +0000</pubDate>
-		<dc:creator>lamininit</dc:creator>
+		<dc:creator>pippin</dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=476</guid>
 		<description></description>
 		<content:encoded><![CDATA[Lundium, montes augue tristique augue? Ac! Vel mattis, nisi pulvinar? Ultrices rhoncus integer, scelerisque phasellus egestas. Sit aenean est nisi nisi aenean pid elit, mid duis? Lectus, lundium duis pulvinar nunc urna rhoncus pid in nisi. Magna? Lectus, nisi ultricies nascetur urna in phasellus cras, urna a massa rhoncus sed facilisis habitasse! Duis? Dapibus vel vel, risus? Cras amet ac, aliquet scelerisque habitasse tempor integer natoque egestas? Urna, lacus nunc? Ultrices cum, scelerisque eros eros urna! Cras cursus dolor etiam tincidunt ac magna porta ut augue, magna eu integer et, magna et duis sit? Dolor, augue pulvinar aliquet magna facilisis. Nisi odio, tincidunt eu, nec pulvinar scelerisque dis penatibus mus turpis, lundium elementum tristique montes mus etiam dolor, hac. Phasellus.]]></content:encoded>
@@ -567,22 +453,6 @@
 		<wp:post_password></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
 		<category domain="download_category" nicename="category-1"><![CDATA[Category 1]]></category>
-		<wp:postmeta>
-			<wp:meta_key>_edd_download_earnings</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_download_sales</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edit_last</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wpas_done_all</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
-		</wp:postmeta>
 		<wp:postmeta>
 			<wp:meta_key>edd_price</wp:meta_key>
 			<wp:meta_value><![CDATA[0.00]]></wp:meta_value>
@@ -607,24 +477,12 @@
 			<wp:meta_key>_thumbnail_id</wp:meta_key>
 			<wp:meta_value><![CDATA[686]]></wp:meta_value>
 		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_ap_placement</wp:meta_key>
-			<wp:meta_value><![CDATA[top]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_preview_files</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:2:{s:4:"name";s:0:"";s:4:"file";s:0:"";}}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_ap_theme</wp:meta_key>
-			<wp:meta_value><![CDATA[premium_pixels]]></wp:meta_value>
-		</wp:postmeta>
 	</item>
 	<item>
 		<title>Free</title>
 		<link>http://easydigitaldownloads.com/demo/downloads/sample-free-product/free/</link>
 		<pubDate>Tue, 27 Nov 2012 23:57:04 +0000</pubDate>
-		<dc:creator>lamininit</dc:creator>
+		<dc:creator>pippin</dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/11/free.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
@@ -677,22 +535,6 @@ You can easily setup price options to purchase individual songs or the entire al
 		<category domain="download_category" nicename="category-1"><![CDATA[Category 1]]></category>
 		<category domain="download_category" nicename="category-ii"><![CDATA[Category II]]></category>
 		<wp:postmeta>
-			<wp:meta_key>_edd_download_earnings</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_download_sales</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edit_last</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wpas_done_all</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
 			<wp:meta_key>edd_price</wp:meta_key>
 			<wp:meta_value><![CDATA[0.00]]></wp:meta_value>
 		</wp:postmeta>
@@ -717,148 +559,8 @@ You can easily setup price options to purchase individual songs or the entire al
 			<wp:meta_value><![CDATA[]]></wp:meta_value>
 		</wp:postmeta>
 		<wp:postmeta>
-			<wp:meta_key>_edd_ap_placement</wp:meta_key>
-			<wp:meta_value><![CDATA[top]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>edd_preview_files</wp:meta_key>
-			<wp:meta_value><![CDATA[a:3:{i:0;a:2:{s:4:"name";s:6:"Song 1";s:4:"file";s:71:"http://easydigitaldownloads.com/demo/files/edd/2012/12/12-Dead-Love.mp3";}i:1;a:2:{s:4:"name";s:6:"Song 2";s:4:"file";s:82:"http://easydigitaldownloads.com/demo/files/edd/2012/12/So-I-Need-You-Acoustic1.mp3";}i:2;a:2:{s:4:"name";s:6:"Song 3";s:4:"file";s:71:"http://easydigitaldownloads.com/demo/files/edd/2012/12/14-Wasted-Me.mp3";}}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_ap_theme</wp:meta_key>
-			<wp:meta_value><![CDATA[premium_pixels]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_show_audio_player</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
 			<wp:meta_key>_thumbnail_id</wp:meta_key>
 			<wp:meta_value><![CDATA[685]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
-		<title>12 Dead Love</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/a-music-album/12-dead-love/</link>
-		<pubDate>Wed, 05 Dec 2012 17:14:15 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/12/12-Dead-Love.mp3</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>515</wp:post_id>
-		<wp:post_date>2012-12-05 17:14:15</wp:post_date>
-		<wp:post_date_gmt>2012-12-05 17:14:15</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>12-dead-love</wp:post_name>
-		<wp:status>inherit</wp:status>
-		<wp:post_parent>514</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>attachment</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/12/12-Dead-Love.mp3</wp:attachment_url>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attached_file</wp:meta_key>
-			<wp:meta_value><![CDATA[edd/2012/12/12-Dead-Love.mp3]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attachment_metadata</wp:meta_key>
-			<wp:meta_value><![CDATA[a:0:{}]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
-		<title>So I Need You (Acoustic)</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/a-music-album/so-i-need-you-acoustic/</link>
-		<pubDate>Wed, 05 Dec 2012 17:15:09 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/12/So-I-Need-You-Acoustic.mp3</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>516</wp:post_id>
-		<wp:post_date>2012-12-05 17:15:09</wp:post_date>
-		<wp:post_date_gmt>2012-12-05 17:15:09</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>so-i-need-you-acoustic</wp:post_name>
-		<wp:status>inherit</wp:status>
-		<wp:post_parent>514</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>attachment</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/12/So-I-Need-You-Acoustic.mp3</wp:attachment_url>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attached_file</wp:meta_key>
-			<wp:meta_value><![CDATA[edd/2012/12/So-I-Need-You-Acoustic.mp3]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attachment_metadata</wp:meta_key>
-			<wp:meta_value><![CDATA[a:0:{}]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
-		<title>So I Need You (Acoustic)</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/a-music-album/so-i-need-you-acoustic-2/</link>
-		<pubDate>Wed, 05 Dec 2012 17:15:21 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/12/So-I-Need-You-Acoustic1.mp3</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>517</wp:post_id>
-		<wp:post_date>2012-12-05 17:15:21</wp:post_date>
-		<wp:post_date_gmt>2012-12-05 17:15:21</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>so-i-need-you-acoustic-2</wp:post_name>
-		<wp:status>inherit</wp:status>
-		<wp:post_parent>514</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>attachment</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/12/So-I-Need-You-Acoustic1.mp3</wp:attachment_url>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attached_file</wp:meta_key>
-			<wp:meta_value><![CDATA[edd/2012/12/So-I-Need-You-Acoustic1.mp3]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attachment_metadata</wp:meta_key>
-			<wp:meta_value><![CDATA[a:0:{}]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
-		<title>14 Wasted Me</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/a-music-album/14-wasted-me/</link>
-		<pubDate>Wed, 05 Dec 2012 17:15:28 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/12/14-Wasted-Me.mp3</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>518</wp:post_id>
-		<wp:post_date>2012-12-05 17:15:28</wp:post_date>
-		<wp:post_date_gmt>2012-12-05 17:15:28</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>14-wasted-me</wp:post_name>
-		<wp:status>inherit</wp:status>
-		<wp:post_parent>514</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>attachment</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/12/14-Wasted-Me.mp3</wp:attachment_url>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attached_file</wp:meta_key>
-			<wp:meta_value><![CDATA[edd/2012/12/14-Wasted-Me.mp3]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_attachment_metadata</wp:meta_key>
-			<wp:meta_value><![CDATA[a:0:{}]]></wp:meta_value>
 		</wp:postmeta>
 	</item>
 	<item>
@@ -986,29 +688,6 @@ You can easily setup price options to purchase individual songs or the entire al
 		</wp:postmeta>
 	</item>
 	<item>
-		<title>Hello world!</title>
-		<link>http://easydigitaldownloads.com/demo/2012/05/21/hello-world/</link>
-		<pubDate>Mon, 21 May 2012 15:58:52 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?p=1</guid>
-		<description></description>
-		<content:encoded><![CDATA[Welcome to <a href="http://easydigitaldownloads.com/">Easy Digital Downloads Sites</a>. This is your first post. Edit or delete it, then start blogging!]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>1</wp:post_id>
-		<wp:post_date>2012-05-21 15:58:52</wp:post_date>
-		<wp:post_date_gmt>2012-05-21 15:58:52</wp:post_date_gmt>
-		<wp:comment_status>open</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>hello-world</wp:post_name>
-		<wp:status>publish</wp:status>
-		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>post</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="category" nicename="uncategorized"><![CDATA[Uncategorized]]></category>
-	</item>
-	<item>
 		<title>Checkout</title>
 		<link>http://easydigitaldownloads.com/demo/checkout/</link>
 		<pubDate>Mon, 21 May 2012 15:59:39 +0000</pubDate>
@@ -1076,260 +755,6 @@ You can easily setup price options to purchase individual songs or the entire al
 		<wp:is_sticky>0</wp:is_sticky>
 	</item>
 	<item>
-		<title></title>
-		<link>http://easydigitaldownloads.com/demo/2012/05/21/10/</link>
-		<pubDate>Mon, 21 May 2012 16:21:09 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?p=10</guid>
-		<description></description>
-		<content:encoded><![CDATA[ ]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>10</wp:post_id>
-		<wp:post_date>2012-05-21 16:21:09</wp:post_date>
-		<wp:post_date_gmt>2012-05-21 16:21:09</wp:post_date_gmt>
-		<wp:comment_status>open</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>10</wp:post_name>
-		<wp:status>publish</wp:status>
-		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>5</wp:menu_order>
-		<wp:post_type>nav_menu_item</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="nav_menu" nicename="main-nav"><![CDATA[Main Nav]]></category>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_type</wp:meta_key>
-			<wp:meta_value><![CDATA[post_type]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_menu_item_parent</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_object_id</wp:meta_key>
-			<wp:meta_value><![CDATA[6]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_object</wp:meta_key>
-			<wp:meta_value><![CDATA[page]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_target</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_classes</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;s:0:"";}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_xfn</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_url</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
-		<title></title>
-		<link>http://easydigitaldownloads.com/demo/2012/05/21/12/</link>
-		<pubDate>Mon, 21 May 2012 16:21:09 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?p=12</guid>
-		<description></description>
-		<content:encoded><![CDATA[ ]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>12</wp:post_id>
-		<wp:post_date>2012-05-21 16:21:09</wp:post_date>
-		<wp:post_date_gmt>2012-05-21 16:21:09</wp:post_date_gmt>
-		<wp:comment_status>open</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>12</wp:post_name>
-		<wp:status>publish</wp:status>
-		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>6</wp:menu_order>
-		<wp:post_type>nav_menu_item</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="nav_menu" nicename="main-nav"><![CDATA[Main Nav]]></category>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_type</wp:meta_key>
-			<wp:meta_value><![CDATA[post_type]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_menu_item_parent</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_object_id</wp:meta_key>
-			<wp:meta_value><![CDATA[4]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_object</wp:meta_key>
-			<wp:meta_value><![CDATA[page]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_target</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_classes</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;s:0:"";}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_xfn</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_url</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
-		<title>Product Archive</title>
-		<link>http://easydigitaldownloads.com/demo/2012/05/21/products/</link>
-		<pubDate>Mon, 21 May 2012 16:21:09 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?p=13</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>13</wp:post_id>
-		<wp:post_date>2012-05-21 16:21:09</wp:post_date>
-		<wp:post_date_gmt>2012-05-21 16:21:09</wp:post_date_gmt>
-		<wp:comment_status>open</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>products</wp:post_name>
-		<wp:status>publish</wp:status>
-		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>4</wp:menu_order>
-		<wp:post_type>nav_menu_item</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="nav_menu" nicename="main-nav"><![CDATA[Main Nav]]></category>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_type</wp:meta_key>
-			<wp:meta_value><![CDATA[custom]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_menu_item_parent</wp:meta_key>
-			<wp:meta_value><![CDATA[511]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_object_id</wp:meta_key>
-			<wp:meta_value><![CDATA[13]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_object</wp:meta_key>
-			<wp:meta_value><![CDATA[custom]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_target</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_classes</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;s:0:"";}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_xfn</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_url</wp:meta_key>
-			<wp:meta_value><![CDATA[http://easydigitaldownloads.com/demo/downloads]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
-		<title>Home</title>
-		<link>http://easydigitaldownloads.com/demo/2012/05/21/home/</link>
-		<pubDate>Mon, 21 May 2012 16:25:29 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?p=15</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>15</wp:post_id>
-		<wp:post_date>2012-05-21 16:25:29</wp:post_date>
-		<wp:post_date_gmt>2012-05-21 16:25:29</wp:post_date_gmt>
-		<wp:comment_status>open</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>home</wp:post_name>
-		<wp:status>publish</wp:status>
-		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>1</wp:menu_order>
-		<wp:post_type>nav_menu_item</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="nav_menu" nicename="main-nav"><![CDATA[Main Nav]]></category>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_type</wp:meta_key>
-			<wp:meta_value><![CDATA[custom]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_menu_item_parent</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_object_id</wp:meta_key>
-			<wp:meta_value><![CDATA[15]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_object</wp:meta_key>
-			<wp:meta_value><![CDATA[custom]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_target</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_classes</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;s:0:"";}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_xfn</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_url</wp:meta_key>
-			<wp:meta_value><![CDATA[http://easydigitaldownloads.com/demo/]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
-		<title>Home</title>
-		<link>http://easydigitaldownloads.com/demo/</link>
-		<pubDate>Mon, 21 May 2012 16:31:42 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?page_id=20</guid>
-		<description></description>
-		<content:encoded><![CDATA[This is the demonstration site for <a href="http://easydigitaldownloads.com/" target="_blank">Easy Digital Downloads</a>. The plugin is shown here with default configuration (no customization) and a few of the add-on plugins available from the <a href="http://easydigitaldownloads.com/extensions/" target="_blank">Extensions</a> page.
-
-Visit the <a title="Product Grid" href="http://easydigitaldownloads.com/demo/product-grid/">Products Grid</a> page to view the a sample products page.
-
-[downloads columns=2 excerpt_length=20 number=4]]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>20</wp:post_id>
-		<wp:post_date>2012-05-21 16:31:42</wp:post_date>
-		<wp:post_date_gmt>2012-05-21 16:31:42</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>closed</wp:ping_status>
-		<wp:post_name>home</wp:post_name>
-		<wp:status>publish</wp:status>
-		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>page</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:postmeta>
-			<wp:meta_key>_edit_last</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wp_page_template</wp:meta_key>
-			<wp:meta_value><![CDATA[sidebar-page.php]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
 		<title>Product Grid</title>
 		<link>http://easydigitaldownloads.com/demo/product-grid/</link>
 		<pubDate>Wed, 05 Dec 2012 17:06:25 +0000</pubDate>
@@ -1390,65 +815,6 @@ Visit the <a title="Product Grid" href="http://easydigitaldownloads.com/demo/pro
 		</wp:postmeta>
 	</item>
 	<item>
-		<title></title>
-		<link>http://easydigitaldownloads.com/demo/2012/12/05/511/</link>
-		<pubDate>Wed, 05 Dec 2012 17:06:58 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?p=511</guid>
-		<description></description>
-		<content:encoded><![CDATA[ ]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>511</wp:post_id>
-		<wp:post_date>2012-12-05 17:06:58</wp:post_date>
-		<wp:post_date_gmt>2012-12-05 17:06:58</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>511</wp:post_name>
-		<wp:status>publish</wp:status>
-		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>2</wp:menu_order>
-		<wp:post_type>nav_menu_item</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="nav_menu" nicename="main-nav"><![CDATA[Main Nav]]></category>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_type</wp:meta_key>
-			<wp:meta_value><![CDATA[post_type]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_menu_item_parent</wp:meta_key>
-			<wp:meta_value><![CDATA[0]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_object_id</wp:meta_key>
-			<wp:meta_value><![CDATA[509]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_object</wp:meta_key>
-			<wp:meta_value><![CDATA[page]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_target</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_classes</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;s:0:"";}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_xfn</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_url</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wpas_done_all</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
 		<title>Product List</title>
 		<link>http://easydigitaldownloads.com/demo/product-list/</link>
 		<pubDate>Wed, 05 Dec 2012 17:08:28 +0000</pubDate>
@@ -1480,119 +846,6 @@ Visit the <a title="Product Grid" href="http://easydigitaldownloads.com/demo/pro
 		<wp:postmeta>
 			<wp:meta_key>_wpas_done_all</wp:meta_key>
 			<wp:meta_value><![CDATA[1]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
-		<title></title>
-		<link>http://easydigitaldownloads.com/demo/2012/12/05/513/</link>
-		<pubDate>Wed, 05 Dec 2012 17:09:10 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?p=513</guid>
-		<description></description>
-		<content:encoded><![CDATA[ ]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>513</wp:post_id>
-		<wp:post_date>2012-12-05 17:09:10</wp:post_date>
-		<wp:post_date_gmt>2012-12-05 17:09:10</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>513</wp:post_name>
-		<wp:status>publish</wp:status>
-		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>3</wp:menu_order>
-		<wp:post_type>nav_menu_item</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<category domain="nav_menu" nicename="main-nav"><![CDATA[Main Nav]]></category>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_type</wp:meta_key>
-			<wp:meta_value><![CDATA[post_type]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_menu_item_parent</wp:meta_key>
-			<wp:meta_value><![CDATA[511]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_object_id</wp:meta_key>
-			<wp:meta_value><![CDATA[512]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_object</wp:meta_key>
-			<wp:meta_value><![CDATA[page]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_target</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_classes</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;s:0:"";}]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_xfn</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_menu_item_url</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_wpas_done_all</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
-		<title></title>
-		<link>http://easydigitaldownloads.com/demo/?post_type=edd_discount&#038;p=684</link>
-		<pubDate>Fri, 25 Jan 2013 17:39:47 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=edd_discount&#038;p=684</guid>
-		<description></description>
-		<content:encoded><![CDATA[]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>684</wp:post_id>
-		<wp:post_date>2013-01-25 17:39:47</wp:post_date>
-		<wp:post_date_gmt>2013-01-25 17:39:47</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>684</wp:post_name>
-		<wp:status>active</wp:status>
-		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>edd_discount</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:postmeta>
-			<wp:meta_key>_edd_discount_code</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_discount_uses</wp:meta_key>
-			<wp:meta_value><![CDATA[2]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_discount_max_uses</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_discount_amount</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_discount_start</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_discount_expiration</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_discount_type</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
-		</wp:postmeta>
-		<wp:postmeta>
-			<wp:meta_key>_edd_discount_min_price</wp:meta_key>
-			<wp:meta_value><![CDATA[]]></wp:meta_value>
 		</wp:postmeta>
 	</item>
 </channel>

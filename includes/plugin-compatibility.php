@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Functions/Compatibility
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -78,3 +78,18 @@ function edd_append_no_cache_param( $settings ) {
 	return $settings;
 }
 add_filter( 'edd_settings_misc', 'edd_append_no_cache_param', -1 );
+
+/**
+ * Show the correct language on the [downloads] short code if qTranslate is active
+  *
+ * @since 1.7
+ * @param string $content Download content
+ * @return string $content Download content
+ */
+function edd_qtranslate_content( $content ) {
+	if( defined( 'QT_LANGUAGE' ) )
+		$content = qtrans_useCurrentLanguageIfNotFoundShowAvailable( $content );
+	return $content;
+}
+add_filter( 'edd_downloads_content', 'edd_qtranslate_content' );
+add_filter( 'edd_downloads_excerpt', 'edd_qtranslate_content' );

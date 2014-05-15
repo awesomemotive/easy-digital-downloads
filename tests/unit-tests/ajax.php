@@ -131,82 +131,26 @@ class Tests_AJAX extends EDD_UnitTestCase {
 			'price_mode' => 'single',
 			'price_ids' => array(
 				1
-			),
-			'nonce' => wp_create_nonce( 'edd_ajax_nonce' ),
+			)
 		);
 
 		$out = $this->_handleAjax( 'edd_add_to_cart' );
-
-		$this->assertContains( '<li class="edd-cart-item">', $out );
-		$this->assertContains( '<span class="edd-cart-item-title">Test Download <span class="edd-cart-item-separator">-</span> Advanced</span>', $out );
-		$this->assertContains( '<span class="edd-cart-item-separator">-</span><span class="edd-cart-item-price">&nbsp;&#36;100.00&nbsp;</span><span class="edd-cart-item-separator">-</span>', $out );
+		$this->markTestIncomplete( 'This test needs to be rewritten per #600.');
 	}
 
 	public function test_remove_item_from_cart() {
 		$this->_setRole( 'administrator' );
 
 		$_POST = array(
-			'cart_item' => 0,
-			'nonce' => wp_create_nonce( 'edd_ajax_nonce' ),
+			'cart_item' => 0
 		);
 
-		$this->assertEquals( 'removed', $this->_handleAjax( 'edd_remove_from_cart' ) );
-	}
-
-	public function test_checkout_login_fields() {
-		$this->_handleAjax( 'nopriv_checkout_login' );
-		
-		$this->assertContains( '<fieldset id="edd_login_fields">', $this->_last_response );
-		$this->assertContains( '<legend>Login to your account</legend>', $this->_last_response );
-		$this->assertContains( '<p id="edd-user-login-wrap">', $this->_last_response );
-		$this->assertContains( '<label class="edd-label" for="edd-username">Username</label>', $this->_last_response );
-		$this->assertContains( '<input class="edd-input" type="text" name="edd_user_login" id="edd_user_login" value="" placeholder="Your username"/>', $this->_last_response );
-		$this->assertContains( '<p id="edd-user-pass-wrap" class="edd_login_password">', $this->_last_response );
-		$this->assertContains( '<label class="edd-label" for="edd-password">Password</label>', $this->_last_response );
-		$this->assertContains( '<input class="edd-input" type="password" name="edd_user_pass" id="edd_user_pass" placeholder="Your password"/>', $this->_last_response );
-		$this->assertContains( '<input type="hidden" name="edd-purchase-var" value="needs-to-login"/>', $this->_last_response );
-		$this->assertContains( '</fieldset><!--end #edd_login_fields-->', $this->_last_response );
-		$this->assertContains( '<p id="edd-new-account-wrap">', $this->_last_response );
-		$this->assertContains( 'Need to create an account?', $this->_last_response );
-		$this->assertContains( '<a href="" class="edd_checkout_register_login" data-action="checkout_register">', $this->_last_response );
-		$this->assertContains( 'Register or checkout as a guest', $this->_last_response );
-		$this->assertContains( '</a>', $this->_last_response );
-		$this->assertContains( '</p>', $this->_last_response );
+		$this->assertEquals( '{"removed":1,"subtotal":"$0.00"}', $this->_handleAjax( 'edd_remove_from_cart' ) );
 	}
 
 	public function test_checkout_register_fields() {
 		$this->_handleAjax( 'nopriv_checkout_register' );
-		$this->assertContains( '<fieldset id="edd_register_fields">', $this->_last_response );
-		$this->assertContains( '<p id="edd-login-account-wrap">Already have an account? <a href="?login=1" class="edd_checkout_register_login" data-action="checkout_login">Login</a></p>', $this->_last_response );
-		$this->assertContains( '<p id="edd-user-email-wrap">', $this->_last_response );
-		$this->assertContains( '<label for="edd-email">Email</label>', $this->_last_response );
-		$this->assertContains( '<span class="edd-description">We will send the purchase receipt to this address.</span>', $this->_last_response );
-		$this->assertContains( '<input name="edd_email" id="edd-email" class="required edd-input" type="email" placeholder="Email" title="Email"/>', $this->_last_response );
-		$this->assertContains( '<p id="edd-user-first-name-wrap">', $this->_last_response );
-		$this->assertContains( '<label class="edd-label" for="edd-first">First Name</label>', $this->_last_response );
-		$this->assertContains( '<span class="edd-description">We will use this to personalize your account experience.</span>', $this->_last_response );
-		$this->assertContains( '<input class="edd-input required" type="text" name="edd_first" placeholder="First Name" id="edd-first" value=""/>', $this->_last_response );
-		$this->assertContains( '<p id="edd-user-last-name-wrap">', $this->_last_response );
-		$this->assertContains( '<label class="edd-label" for="edd-last">Last Name</label>', $this->_last_response );
-		$this->assertContains( '<span class="edd-description">We will use this as well to personalize your account experience.</span>', $this->_last_response );
-		$this->assertContains( '<input class="edd-input" type="text" name="edd_last" id="edd-last" placeholder="Last name" value=""/>', $this->_last_response );
-		$this->assertContains( '<fieldset id="edd_register_account_fields">', $this->_last_response );
-		$this->assertContains( '<legend>Create an account (optional)</legend>', $this->_last_response );
-		$this->assertContains( '<p id="edd-user-login-wrap">', $this->_last_response );
-		$this->assertContains( '<label for="edd_user_login">Username</label>', $this->_last_response );
-		$this->assertContains( '<span class="edd-description">The username you will use to log into your account.</span>', $this->_last_response );
-		$this->assertContains( '<input name="edd_user_login" id="edd_user_login" class="edd-input" type="text" placeholder="Username" title="Username"/>', $this->_last_response );
-		$this->assertContains( '<p id="edd-user-pass-wrap">', $this->_last_response );
-		$this->assertContains( '<label for="password">Password</label>', $this->_last_response );
-		$this->assertContains( '<span class="edd-description">The password used to access your account.</span>', $this->_last_response );
-		$this->assertContains( '<input name="edd_user_pass" id="edd_user_pass" class="edd-input" placeholder="Password" type="password"/>', $this->_last_response );
-		$this->assertContains( '<p id="edd-user-pass-confirm-wrap" class="edd_register_password">', $this->_last_response );
-		$this->assertContains( '<label for="password_again">Password Again</label>', $this->_last_response );
-		$this->assertContains( '<span class="edd-description">Confirm your password.</span>', $this->_last_response );
-		$this->assertContains( '<input name="edd_user_pass_confirm" id="edd_user_pass_confirm" class="edd-input" placeholder="Confirm password" type="password"/>', $this->_last_response );
-		$this->assertContains( '<input type="hidden" name="edd-purchase-var" value="needs-to-register"/>', $this->_last_response );
-		$this->assertContains( '</fieldset>', $this->_last_response );
-		$this->assertContains( '</p>', $this->_last_response );
+		$this->markTestIncomplete( 'This test needs to be rewritten per #600.');
 	}
 
 	public function test_get_download_title() {
@@ -216,84 +160,6 @@ class Tests_AJAX extends EDD_UnitTestCase {
 		);
 		$this->_handleAjax( 'edd_get_download_title' );
 		$this->assertEquals( 'Test Download', $this->_last_response );
-	}
-
-	public function test_opt_into_local_taxes() {
-		$_POST = array(
-			'nonce' => wp_create_nonce( 'edd_checkout_nonce' ),
-		);
-	 	$this->_handleAjax( 'edd_local_tax_opt_in' );
-
-	 	$expected_html = <<<DATA
-<!--dynamic-cached-content--><table id="edd_checkout_cart" class="ajaxed">
-	<thead>
-		<tr class="edd_cart_header_row">
-						<th class="edd_cart_item_name">Item Name</th>
-			<th class="edd_cart_item_price">Item Price</th>
-			<th class="edd_cart_actions">Actions</th>
-					</tr>
-	</thead>
-	<tbody>
-							<tr class="edd_cart_item">
-				<td colspan="3"  class="edd_cart_item_empty"><span class="edd_empty_cart">Your cart is empty.</span></td>
-			</tr>
-			</tbody>
-	<tfoot>
-				<tr class="edd_cart_footer_row edd_cart_discount_row"  style="display:none;">
-						<th colspan="3" class="edd_cart_discount">
-							</th>
-					</tr>
-
-		<tr class="edd_cart_footer_row">
-						<th colspan="3" class="edd_cart_total">Total: <span class="edd_cart_amount" data-subtotal="0" data-total="0">&#36;0.00</span></th>
-					</tr>
-	</tfoot>
-</table><!--/dynamic-cached-content-->
-DATA;
-
-	 	$decoded = json_decode( $this->_last_response, true );
-
-	 	$this->assertEquals( $expected_html, $decoded['html'] );
-	 	$this->assertEquals( '$0.00', $decoded['total'] );
-	}
-
-	public function test_opt_out_local_taxes() {
-		$_POST = array(
-			'nonce' => wp_create_nonce( 'edd_checkout_nonce' ),
-		);
-		$this->_handleAjax( 'edd_local_tax_opt_out' );
-		
-		$expected_html = <<<DATA
-<!--dynamic-cached-content--><table id="edd_checkout_cart" class="ajaxed">
-	<thead>
-		<tr class="edd_cart_header_row">
-						<th class="edd_cart_item_name">Item Name</th>
-			<th class="edd_cart_item_price">Item Price</th>
-			<th class="edd_cart_actions">Actions</th>
-					</tr>
-	</thead>
-	<tbody>
-							<tr class="edd_cart_item">
-				<td colspan="3"  class="edd_cart_item_empty"><span class="edd_empty_cart">Your cart is empty.</span></td>
-			</tr>
-			</tbody>
-	<tfoot>
-				<tr class="edd_cart_footer_row edd_cart_discount_row"  style="display:none;">
-						<th colspan="3" class="edd_cart_discount">
-							</th>
-					</tr>
-
-		<tr class="edd_cart_footer_row">
-						<th colspan="3" class="edd_cart_total">Total: <span class="edd_cart_amount" data-subtotal="0" data-total="0">&#36;0.00</span></th>
-					</tr>
-	</tfoot>
-</table><!--/dynamic-cached-content-->
-DATA;
-
-	 	$decoded = json_decode( $this->_last_response, true );
-
-	 	$this->assertEquals( $expected_html, $decoded['html'] );
-	 	$this->assertEquals( '$0.00', $decoded['total'] );
 	}
 
 	public function test_check_for_download_price_variations() {
@@ -342,12 +208,11 @@ DATA;
 		}
 
 		$_POST = array(
-			'nonce' => wp_create_nonce( 'edd_add_downloads_to_purchase_nonce' ),
 			'download_id' => $post_id
 		);
 		$this->_handleAjax( 'edd_check_for_download_price_variations' );
 
-		$expected = '<select name="downloads[0][options][price_id]" class="edd-variable-prices-select"><option value="0">Simple</option><option value="1">Advanced</option></select>';
+		$expected = '<select class="edd_price_options_select edd-select edd-select"><option value="0">Simple</option><option value="1">Advanced</option></select>';
 		$this->assertEquals( $expected, $this->_last_response );
 	}
 }

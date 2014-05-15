@@ -68,9 +68,9 @@ class Recursive_ArrayAccess implements ArrayAccess {
 		return $data;
 	}
 
-	/*****************************************************************/
-	/*                   ArrayAccess Implementation                  */
-	/*****************************************************************/
+	/**
+	* ArrayAccess Implementation                  
+	**/
 
 	/**
 	 * Whether a offset exists
@@ -134,4 +134,3 @@ class Recursive_ArrayAccess implements ArrayAccess {
 		unset( $this->container[ $offset ] );
 	}
 }
-?>
