@@ -581,14 +581,32 @@ jQuery(document).ready(function ($) {
 
 		init : function() {
 			this.type_select();
+			this.product_requirements();
 		},
-
 
 		type_select : function() {
 
 			$('#edd-edit-discount #edd-type, #edd-add-discount #edd-type').change(function() {
 
 				$('.edd-amount-description').toggle();
+
+			});
+
+		},
+
+		product_requirements : function() {
+
+			$('#products').change(function() {
+
+				if( $(this).val() ) {
+
+					$('#edd-discount-product-conditions').show();
+
+				} else {
+
+					$('#edd-discount-product-conditions').hide();
+					
+				}
 
 			});
 
