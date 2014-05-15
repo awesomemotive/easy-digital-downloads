@@ -21,23 +21,21 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @global $edd_payments_page
  * @global $edd_settings_page
  * @global $edd_reports_page
- * @global $edd_system_info_page
  * @global $edd_add_ons_page
  * @global $edd_settings_export
  * @global $edd_upgrades_screen
  * @return void
  */
 function edd_add_options_link() {
-	global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen;
+	global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen, $edd_tools_page;
 
-	require_once 'system-info.php';
+	$edd_payment            = get_post_type_object( 'edd_payment' );
 
-	$edd_payments_page   	= add_submenu_page( 'edit.php?post_type=download', __( 'Payment History', 'edd' ), __( 'Payment History', 'edd' ), 'edit_shop_payments', 'edd-payment-history', 'edd_payment_history_page' );
+	$edd_payments_page      = add_submenu_page( 'edit.php?post_type=download', $edd_payment->labels->name, $edd_payment->labels->menu_name, 'edit_shop_payments', 'edd-payment-history', 'edd_payment_history_page' );
 	$edd_discounts_page     = add_submenu_page( 'edit.php?post_type=download', __( 'Discount Codes', 'edd' ), __( 'Discount Codes', 'edd' ), 'manage_shop_discounts', 'edd-discounts', 'edd_discounts_page' );
 	$edd_reports_page 	    = add_submenu_page( 'edit.php?post_type=download', __( 'Earnings and Sales Reports', 'edd' ), __( 'Reports', 'edd' ), 'view_shop_reports', 'edd-reports', 'edd_reports_page' );
 	$edd_settings_page 	    = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download Settings', 'edd' ), __( 'Settings', 'edd' ), 'manage_shop_settings', 'edd-settings', 'edd_options_page' );
-	$edd_tools_page         = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download Tools', 'edd' ), __( 'Tools', 'edd' ), 'install_plugins', 'edd-tools', 'edd_tools_page' );
-	$edd_system_info_page 	= add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download System Info', 'edd' ), __( 'System Info', 'edd' ), 'install_plugins', 'edd-system-info', 'edd_system_info' );
+	$edd_tools_page         = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download Info and Tools', 'edd' ), __( 'Tools', 'edd' ), 'install_plugins', 'edd-tools', 'edd_tools_page' );
 	$edd_add_ons_page 	    = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download Add Ons', 'edd' ), __( 'Add Ons', 'edd' ), 'install_plugins', 'edd-addons', 'edd_add_ons_page' );
 	$edd_upgrades_screen    = add_submenu_page( null, __( 'EDD Upgrades', 'edd' ), __( 'EDD Upgrades', 'edd' ), 'install_plugins', 'edd-upgrades', 'edd_upgrades_screen' );
 }

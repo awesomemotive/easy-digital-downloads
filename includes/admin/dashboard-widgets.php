@@ -82,6 +82,35 @@ function edd_dashboard_sales_widget() {
 				</tbody>
 			</table>
 		</div>
+		<div class="table table_right table_today">
+			<table>
+				<thead>
+					<tr>
+						<td colspan="2">
+							<?php _e( 'Today', 'edd' ); ?>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="t sales"><?php _e( 'Earnings', 'edd' ); ?></td>
+						<td class="last b b-earnings">
+							<?php $earnings_today = $stats->get_earnings( 0, 'today', false, array( 'publish', 'revoked' ) ); ?>
+							<?php echo edd_currency_filter( edd_format_amount( $earnings_today ) ); ?>
+						</td>
+					</tr>
+					<tr>
+						<td class="t sales">
+							<?php _e( 'Sales', 'edd' ); ?>
+						</td>
+						<td class="last b b-sales">
+							<?php $sales_today = $stats->get_sales( 0, 'today', false, array( 'publish', 'revoked' ) ); ?>
+							<?php echo edd_format_amount( $sales_today, false ); ?>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		<div class="table table_right table_totals">
 			<table>
 				<thead>
@@ -100,31 +129,6 @@ function edd_dashboard_sales_widget() {
 					</tr>
 				</tbody>
 			</table>
-			<?php
-			$best_selling = $stats->get_best_selling( 1 );
-			if ( ! empty( $best_selling ) ) : ?>
-				<table>
-					<thead>
-						<tr>
-							<td colspan="2">
-								<?php _e('Lifetime Best Selling', 'edd') ?>
-							</td>
-						</tr>
-					</thead>
-					<tbody>
-					<?php foreach( $best_selling as $top_seller ) : ?>
-						<tr>
-							<td class="edd_order_label">
-								<a href="<?php echo get_permalink( $top_seller->download_id ); ?>"><?php echo get_the_title( $top_seller->download_id ); ?></a>
-							</td>
-							<td class="edd_order_price">
-								<span class="edd_price_label"><?php echo $top_seller->sales; ?></span>
-							</td>
-						</tr>
-					<?php endforeach; ?>
-					</tbody>
-				</table>
-			<?php endif; ?>
 		</div>
 		<div style="clear: both"></div>
 		<?php
@@ -142,6 +146,7 @@ function edd_dashboard_sales_widget() {
 					<tr>
 						<td colspan="2">
 							<?php _e( 'Recent Purchases', 'edd' ); ?>
+							<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">&nbsp;&ndash;&nbsp;<?php _e( 'View All', 'edd' ); ?></a>
 						</td>
 					</tr>
 				</thead>

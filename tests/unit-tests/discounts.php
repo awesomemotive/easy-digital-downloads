@@ -102,10 +102,10 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_retrieved_from_database() {
-		$this->assertObjectHasAttribute( 'ID', edd_get_discount( $this->_post->ID ) );
-		$this->assertObjectHasAttribute( 'post_title', edd_get_discount( $this->_post->ID ) );
-		$this->assertObjectHasAttribute( 'post_status', edd_get_discount( $this->_post->ID ) );
-		$this->assertObjectHasAttribute( 'post_type', edd_get_discount( $this->_post->ID ) );
+		$this->assertObjectHasAttribute( 'ID', edd_get_discount(  $this->_post->ID ) );
+		$this->assertObjectHasAttribute( 'post_title', edd_get_discount(  $this->_post->ID ) );
+		$this->assertObjectHasAttribute( 'post_status', edd_get_discount(  $this->_post->ID ) );
+		$this->assertObjectHasAttribute( 'post_type', edd_get_discount(  $this->_post->ID ) );
 	}
 
 	public function test_get_discount_code() {
@@ -204,6 +204,15 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 	public function test_formatted_discount_amount() {
 		$this->assertSame( '20%', edd_format_discount_rate( 'percent', get_post_meta( $this->_post->ID, '_edd_discount_amount', true ) ) );
+	}
+
+	public function test_edd_get_discount_by() {
+		$this->assertObjectHasAttribute( 'ID', edd_get_discount_by( 'id', $this->_post->ID ) );
+		$this->assertSame( $this->_post->ID, edd_get_discount_by( 'id', $this->_post->ID )->ID );
+		$this->assertObjectHasAttribute( 'post_title', edd_get_discount_by( 'code', '20OFF' ) );
+		$this->assertSame( $this->_post->ID, edd_get_discount_by( 'code', '20OFF' )->ID );
+		$this->assertObjectHasAttribute( 'post_name', edd_get_discount_by( 'name', '20 Percent Off' ) );
+		$this->assertSame( $this->_post->ID, edd_get_discount_by( 'name', '20 Percent Off' )->ID );
 	}
 
 	public function test_formatted_discount_amount_negative() {

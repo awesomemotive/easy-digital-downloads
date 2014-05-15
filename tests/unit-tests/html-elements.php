@@ -47,17 +47,17 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 	public function test_month_dropdown() {
 		$out = EDD()->html->month_dropdown();
 		$this->assertContains( '<select name="month" id="" class="edd-select ">', $out );
-		$this->assertContains( '<option value="1">', $out );
-		$this->assertContains( '<option value="2">', $out );
-		$this->assertContains( '<option value="3">', $out );
-		$this->assertContains( '<option value="4">', $out );
-		$this->assertContains( '<option value="5">', $out );
-		$this->assertContains( '<option value="6">', $out );
-		$this->assertContains( '<option value="7">', $out );
-		$this->assertContains( '<option value="8">', $out );
-		$this->assertContains( '<option value="9">', $out );
-		$this->assertContains( '<option value="10">', $out );
-		$this->assertContains( '<option value="11">', $out );
-		$this->assertContains( '<option value="12">', $out );
+		$this->assertContains( '<option value="1"', $out );
+		$this->assertContains( '<option value="2"', $out );
+		$this->assertContains( '<option value="3"', $out );
+		$this->assertContains( '<option value="4"', $out );
+		$this->assertContains( '<option value="5"', $out );
+		$this->assertContains( '<option value="6"', $out );
+		$this->assertContains( '<option value="7"', $out );
+		$this->assertContains( '<option value="8"', $out );
+		$this->assertContains( '<option value="9"', $out );
+		$this->assertContains( '<option value="10"', $out );
+		$this->assertContains( '<option value="11"', $out );
+		$this->assertContains( '<option value="12"', $out );
 	}
 }

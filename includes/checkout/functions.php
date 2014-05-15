@@ -115,7 +115,7 @@ function edd_get_checkout_uri( $args = array() ) {
 
 	$ajax_url = admin_url( 'admin-ajax.php', $scheme );
 
-	if ( ! preg_match( '/^https/', $uri ) && preg_match( '/^https/', $ajax_url ) ) {
+	if ( ( ! preg_match( '/^https/', $uri ) && preg_match( '/^https/', $ajax_url ) ) || edd_is_ssl_enforced() ) {
 		$uri = preg_replace( '/^http/', 'https', $uri );
 	}
 
@@ -185,7 +185,7 @@ function edd_get_success_page_url( $query_string = null ) {
 function edd_get_failed_transaction_uri( $extras = false ) {
 	global $edd_options;
 
-	$uri = isset( $edd_options['failure_page'] ) ? trailingslashit( get_permalink( $edd_options['failure_page'] ) ) : home_url();
+	$uri = ! empty( $edd_options['failure_page'] ) ? trailingslashit( get_permalink( $edd_options['failure_page'] ) ) : home_url();
 	if ( $extras )
 		$uri .= $extras;
 
@@ -222,4 +222,117 @@ add_action( 'template_redirect', 'edd_listen_for_failed_payments' );
 function edd_field_is_required( $field = '' ) {
 	$required_fields = edd_purchase_form_required_fields();
 	return array_key_exists( $field, $required_fields );
+}
+
+/**
+ * Retrieve an array of banned_emails
+ *
+ * @since       2.0
+ * @return      array
+ */
+function edd_get_banned_emails() {
+	$emails = array_map( 'trim', edd_get_option( 'banned_emails', array() ) );
+
+	return apply_filters( 'edd_get_banned_emails', $emails );
+}
+
+/**
+ * Determines if an email is banned
+ *
+ * @since       2.0
+ * @return      bool
+ */
+function edd_is_email_banned( $email = '' ) {
+
+	if( empty( $email ) ) {
+		return false;
+	}
+
+	$ret = in_array( trim( $email ), edd_get_banned_emails() );
+
+	return apply_filters( 'edd_is_email_banned', $ret, $email );
+}
+
+/** 
+ * Determines if secure checkout pages are enforced
+ *
+ * @since       2.0
+ * @return      bool True if enforce SSL is enabled, false otherwise
+ */
+function edd_is_ssl_enforced() {
+	$ssl_enforced = edd_get_option( 'enforce_ssl', false );
+	return (bool) apply_filters( 'edd_is_ssl_enforced', $ssl_enforced );
+}
+
+/**
+ * Handle redirections for SSL enforced checkouts
+ *
+ * @since 2.0
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_enforced_ssl_redirect_handler() {
+	if ( ! edd_is_ssl_enforced() || ! edd_is_checkout() || is_admin() || is_ssl() ) {
+		return;
+	}
+ 
+	if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
+		return;
+	}
+
+	$uri = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+	wp_safe_redirect( $uri );
+	exit;
+}
+add_action( 'template_redirect', 'edd_enforced_ssl_redirect_handler' );
+
+/**
+ * Handle rewriting asset URLs for SSL enforced checkouts
+ *
+ * @since 2.0
+ * @return void
+ */
+function edd_enforced_ssl_asset_handler() {
+	if ( ! edd_is_ssl_enforced() || ! edd_is_checkout() || is_admin() ) {
+		return;
+	}
+
+	$filters = array(
+		'post_thumbnail_html',
+		'wp_get_attachment_url',
+		'wp_get_attachment_image_attributes',
+		'wp_get_attachment_url',
+		'option_stylesheet_url',
+		'option_template_url',
+		'script_loader_src',
+		'style_loader_src',
+		'template_directory_uri',
+		'stylesheet_directory_uri',
+		'site_url'
+	);
+	
+	$filters = apply_filters( 'edd_enforced_ssl_asset_filters', $filters );
+
+	foreach ( $filters as $filter ) {
+		add_filter( $filter, 'edd_enforced_ssl_asset_filter', 1 );
+	}
+}
+add_action( 'template_redirect', 'edd_enforced_ssl_asset_handler' );
+
+/**
+ * Filter filters and convert http to https
+ *
+ * @since 2.0
+ * @param mixed $content
+ * @return mixed
+ */
+function edd_enforced_ssl_asset_filter( $content ) {
+	if ( is_array( $content ) ) {
+		$content = array_map( 'edd_enforced_ssl_asset_filter', $content );
+	} else {
+		$content = str_replace( 'http:', 'https:', $content );
+	}
+
+	return $content;
 }

@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_process_purchase_form() {
 
 	// Make sure the cart isn't empty
-	if ( ! edd_get_cart_contents() ) {
+	if ( ! edd_get_cart_contents() && ! edd_cart_has_fees() ) {
 		$valid_data = array();
 		edd_set_error( 'empty_cart', __( 'Your cart is empty', 'edd' ) );
 	} else {
@@ -230,7 +230,7 @@ function edd_purchase_form_validate_gateway() {
 		if ( edd_is_gateway_active( $gateway ) )
 			return $gateway;
 
-		if ( '0.00' == edd_get_cart_subtotal() )
+		if ( '0.00' == edd_get_cart_total() )
 			return 'manual';
 
 		edd_set_error( 'invalid_gateway', __( 'The selected gateway is not active', 'edd' ) );
@@ -689,21 +689,21 @@ function edd_get_purchase_form_user( $valid_data = array() ) {
 				// User login
 			} else if ( $valid_data['need_user_login'] === true  && ! $is_ajax ) {
 
-					/*
-			 * The login form is now processed in the edd_process_purchase_login() function.
-			 * This is still here for backwards compatibility.
-			 * This also allows the old login process to still work if a user removes the
-			 * checkout login submit button.
-			 *
-			 * This also ensures that the customer is logged in correctly if they click "Purchase"
-			 * instead of submitting the login form, meaning the customer is logged in during the purchase process.
-			 */
+				/*
+				 * The login form is now processed in the edd_process_purchase_login() function.
+				 * This is still here for backwards compatibility.
+				 * This also allows the old login process to still work if a user removes the
+				 * checkout login submit button.
+				 *
+				 * This also ensures that the customer is logged in correctly if they click "Purchase"
+				 * instead of submitting the login form, meaning the customer is logged in during the purchase process.
+				 */
 
-					// Set user
-					$user = $valid_data['login_user_data'];
-					// Login user
-					edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
-				}
+				// Set user
+				$user = $valid_data['login_user_data'];
+				// Login user
+				edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
+			}
 		}
 
 	// Check guest checkout
@@ -974,6 +974,59 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 
 	return apply_filters( 'edd_is_zip_valid', $ret, $zip, $country_code );
 }
+
+
+/**
+ * Check the purchase to ensure a banned email is not allowed through
+ *
+ * @since       2.0
+ * @return      void
+ */
+function edd_check_purchase_email( $valid_data, $posted ) {
+	$is_banned = false;
+	$banned    = edd_get_banned_emails();
+
+	if( empty( $banned ) ) {
+		return;
+	}
+
+	if( is_user_logged_in() ) {
+
+		// The user is logged in, check that their account email is not banned
+		$user_data = get_userdata( get_current_user_id() );
+		if( edd_is_email_banned( $user_data->user_email ) ) {
+
+			$is_banned = true;
+		}
+
+		if( edd_is_email_banned( $posted['edd_email'] ) ) {
+			$is_banned = true;
+		}
+
+	} elseif( isset( $posted['edd-purchase-var'] ) && $posted['edd-purchase-var'] == 'needs-to-login' ) {
+		
+		// The user is logging in, check that their email is not banned
+		$user_data = get_user_by( 'login', $posted['edd_user_login'] );
+		if( $user_data && edd_is_email_banned( $user_data->user_email ) ) {
+			$is_banned = true;
+		}
+
+	} else {
+		
+		// Guest purchase, check that the email is not banned
+		if( edd_is_email_banned( $posted['edd_email'] ) ) {
+			$is_banned = true;
+		}
+
+	}
+
+	if( $is_banned ) {
+		// Set an error and give the customer a general error (don't alert them that they were banned)
+		edd_set_error( 'email_banned', __( 'An internal error has occurred, please try again or contact support.', 'edd' ) );
+	}
+}
+add_action( 'edd_checkout_error_checks', 'edd_check_purchase_email', 10, 2 );
+
 
 /**
  * Process a straight-to-gateway purchase
