@@ -114,11 +114,11 @@ class EDD_Customers_Export extends EDD_Export {
 				'nopaging'    => true
 			);
 
-			if( isset( $_POST['edd_export_download_price_id'] ) ) {
+			if( isset( $_POST['edd_price_option'] ) ) {
 				$args['meta_query'] = array(
 					array(
 						'key'   => '_edd_log_price_id',
-						'value' => (int) $_POST['edd_export_download_price_id']
+						'value' => (int) $_POST['edd_price_option']
 					)
 				);
 			}
