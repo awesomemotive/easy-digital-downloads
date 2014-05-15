@@ -499,7 +499,7 @@ function edd_get_registered_settings() {
 				'enforce_ssl' => array(
 					'id' => 'enforce_ssl',
 					'name' => __( 'Enforce SSL on Checkout', 'edd' ),
-					'desc' => __( 'Check this to force users to be redirected to the secure checkout page.', 'edd' ),
+					'desc' => __( 'Check this to force users to be redirected to the secure checkout page. You must have an SSL certificate installed to use this option.', 'edd' ),
 					'type' => 'checkbox'
 				),
 				'logged_in_only' => array(

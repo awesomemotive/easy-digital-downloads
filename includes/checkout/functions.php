@@ -272,10 +272,14 @@ function edd_is_ssl_enforced() {
  * @return void
  */
 function edd_enforced_ssl_redirect_handler() {
-	if ( ! edd_is_ssl_enforced() || ! edd_is_checkout() || is_admin() ) {
+	if ( ! edd_is_ssl_enforced() || ! edd_is_checkout() || is_admin() || is_ssl() ) {
 		return;
 	}
  
+	if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) {
+		return;
+	}
+
 	$uri = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 	wp_safe_redirect( $uri );
