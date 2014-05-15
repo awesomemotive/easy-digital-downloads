@@ -141,9 +141,9 @@ function edd_insert_payment( $payment_data = array() ) {
 
 		$payment_meta = array(
 			'currency'     => $payment_data['currency'],
-			'downloads'    => serialize( $payment_data['downloads'] ),
-			'user_info'    => serialize( $payment_data['user_info'] ),
-			'cart_details' => serialize( $payment_data['cart_details'] ),
+			'downloads'    => $payment_data['downloads'],
+			'user_info'    => $payment_data['user_info'],
+			'cart_details' => $payment_data['cart_details'],
 			'tax'          => $cart_tax,
 		);
 
