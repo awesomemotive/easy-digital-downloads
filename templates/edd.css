@@ -128,6 +128,9 @@
 #edd_checkout_form_wrap #edd-discount-code-wrap,
 #edd_checkout_form_wrap #edd_final_total_wrap { background: #fafafa; border: 1px solid #eee; color: #666; padding: 0.5em 1.387em; }
 #edd_checkout_form_wrap #edd-discount-code-wrap { padding: 1.387em; }
+#edd_checkout_form_wrap #edd-discount-code-wrap input.edd-input,
+#edd_checkout_form_wrap #edd-discount-code-wrap input.edd-submit { display: inline-block; }
+#edd_checkout_form_wrap #edd-discount-code-wrap input.edd-submit { padding: 3px 12px; margin-bottom: 2px; }
 #edd_checkout_form_wrap #edd-discount-error-wrap { width: 100%; display: inline-block; margin: 1em 0 0; }
 #edd_checkout_form_wrap #edd-new-account-wrap,
 #edd_checkout_form_wrap #edd-login-account-wrap { margin: -1.387em -1.387em 21px -1.387em; border-left: none; border-right: none; border-top: none; }
