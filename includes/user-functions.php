@@ -364,7 +364,7 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 			$meta                    = edd_get_payment_meta( $payment->ID );
 			$meta['user_info']       = maybe_unserialize( $meta['user_info'] );
 			$meta['user_info']['id'] = $user_id;
-			$meta['user_info']       = serialize( $meta['user_info'] );
+			$meta['user_info']       = $meta['user_info'];
 
 			// Store the updated user ID in the payment meta
 			update_post_meta( $payment->ID, '_edd_payment_meta', $meta );
