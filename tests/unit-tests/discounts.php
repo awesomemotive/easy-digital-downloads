@@ -88,8 +88,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$this->assertTrue( edd_update_discount_status( $this->_post->ID ) );
 	}
 
-	public function test_discount_status_udpate_fail() {
-		$this->assertFalse( edd_udpate_discount_status( -1 ) );
+	public function test_discount_status_update_fail() {
+		$this->assertFalse( edd_update_discount_status( -1 ) );
 	}
 
 	public function test_discounts_exists() {
