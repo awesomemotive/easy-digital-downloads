@@ -24,6 +24,7 @@ $condition         = edd_get_discount_product_condition( $discount_id );
 $single_use        = edd_discount_is_single_use( $discount_id );
 $flat_display      = edd_get_discount_type( $discount_id ) == 'percentage' ? '' : ' style="display:none;"';
 $percent_display   = edd_get_discount_type( $discount_id ) == 'percentage' ? ' style="display:none;"' : '';
+$condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 ?>
 <h2><?php _e( 'Edit Discount', 'edd' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
 <form id="edd-edit-discount" action="" method="post">
@@ -76,27 +77,29 @@ $percent_display   = edd_get_discount_type( $discount_id ) == 'percentage' ? ' s
 				</th>
 				<td>
 					<p>
-						<?php printf( __( 'Select %s that must be purchased for this discount to be valid.', 'edd' ), edd_get_label_plural() ); ?><br/>
-					<?php echo EDD()->html->product_dropdown( array(
-						'name'        => 'products[]',
-						'id'          => 'products',
-						'selected'    => $product_reqs,
-						'multiple'    => true,
-						'chosen'      => true 
-					) ); ?><br/>
+						<?php echo EDD()->html->product_dropdown( array(
+							'name'        => 'products[]',
+							'id'          => 'products',
+							'selected'    => $product_reqs,
+							'multiple'    => true,
+							'chosen'      => true 
+						) ); ?><br/>
 					</p>
-					<p>
-						<select id="edd-product-condition" name="product_condition">
-							<option value="all"<?php selected( 'all', $condition ); ?>><?php printf( __( 'Cart must contain all selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
-							<option value="any"<?php selected( 'any', $condition ); ?>><?php printf( __( 'Cart needs one or more of the selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
-						</select>
-					</p>
-					<p>
-						<label for="edd-non-global-discount">
-							<input type="checkbox" id="edd-non-global-discount" name="not_global" value="1"<?php checked( true, edd_is_discount_not_global( $discount_id ) ); ?>/>
-							<?php printf( __( 'Apply discount only to selected %s? Leave unchecked to discount entire purchase.', 'edd' ), edd_get_label_plural() ); ?>
-						</label>
-					</p>
+					<div id="edd-discount-product-conditions"<?php echo $condition_display; ?>>
+						<p>
+							<select id="edd-product-condition" name="product_condition">
+								<option value="all"<?php selected( 'all', $condition ); ?>><?php printf( __( 'Cart must contain all selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
+								<option value="any"<?php selected( 'any', $condition ); ?>><?php printf( __( 'Cart needs one or more of the selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
+							</select>
+						</p>
+						<p>
+							<label for="edd-non-global-discount">
+								<input type="checkbox" id="edd-non-global-discount" name="not_global" value="1"<?php checked( true, edd_is_discount_not_global( $discount_id ) ); ?>/>
+								<?php printf( __( 'Apply discount only to selected %s? Leave unchecked to discount entire purchase.', 'edd' ), edd_get_label_plural() ); ?>
+							</label>
+						</p>
+					</div>
+					<p class="description"><?php printf( __( 'Select %s that must be purchased for this discount to be valid.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>
 			</tr>
 			<tr class="form-field">
