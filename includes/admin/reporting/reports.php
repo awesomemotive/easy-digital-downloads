@@ -429,30 +429,3 @@ function edd_estimated_monthly_stats() {
 
 	return maybe_unserialize( $estimated );
 }
-
-/**
- * Retrieves variable prices (if any) for the Customer Export option
- *
- * @since 1.7
- */
-function edd_reports_ajax_get_price_options() {
-
-	$download_id = intval( $_POST['download_id'] );
-
-	if ( edd_has_variable_prices( $download_id ) ) {
-		$variable_prices = edd_get_variable_prices( $download_id );
-
-		if ( $variable_prices ) {
-			$ajax_response = '<select name="edd_export_download_price_id" class="edd-variable-prices-select">';
-				foreach ( $variable_prices as $key => $price ) {
-					$ajax_response .= '<option value="' . $key . '">' . $price['name']  . '</option>';
-				}
-			$ajax_response .= '</select>';
-		}
-
-		echo $ajax_response;
-	}
-
-	edd_die();
-}
-add_action( 'wp_ajax_edd_get_customer_export_price_options', 'edd_reports_ajax_get_price_options' );
