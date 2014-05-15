@@ -598,23 +598,29 @@ function edd_discount_field() {
 		return; // Only show before a payment method has been selected if ajax is disabled
 	}
 
-	if ( edd_has_active_discounts() && edd_get_cart_total() ) { ?>
-	<fieldset id="edd_discount_code">
-		<p id="edd_show_discount" style="display:none;">
-			<?php _e( 'Have a discount code?', 'edd' ); ?> <a href="#" class="edd_discount_link"><?php echo _x( 'Click to enter it', 'Entering a discount code', 'edd' ); ?></a>
-		</p>
-		<p id="edd-discount-code-wrap">
-			<label class="edd-label" for="edd-discount">
-				<?php _e( 'Discount', 'edd' ); ?>
-				<img src="<?php echo EDD_PLUGIN_URL; ?>assets/images/loading.gif" id="edd-discount-loader" style="display:none;"/>
-			</label>
-			<span class="edd-description"><?php _e( 'Enter a coupon code if you have one.', 'edd' ); ?></span>
-			<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e( 'Enter discount', 'edd' ); ?>"/>
-			<span id="edd-discount-error-wrap" class="edd_errors" style="display:none;"></span>
-		</p>
-	</fieldset>
-	<?php
-	}
+	if ( edd_has_active_discounts() && edd_get_cart_total() ) :
+
+		$color = edd_get_option( 'checkout_color', 'blue' );
+		$color = ( $color == 'inherit' ) ? '' : $color;
+		$style = edd_get_option( 'button_style', 'button' );
+?>
+		<fieldset id="edd_discount_code">
+			<p id="edd_show_discount" style="display:none;">
+				<?php _e( 'Have a discount code?', 'edd' ); ?> <a href="#" class="edd_discount_link"><?php echo _x( 'Click to enter it', 'Entering a discount code', 'edd' ); ?></a>
+			</p>
+			<p id="edd-discount-code-wrap">
+				<label class="edd-label" for="edd-discount">
+					<?php _e( 'Discount', 'edd' ); ?>
+					<img src="<?php echo EDD_PLUGIN_URL; ?>assets/images/loading.gif" id="edd-discount-loader" style="display:none;"/>
+				</label>
+				<span class="edd-description"><?php _e( 'Enter a coupon code if you have one.', 'edd' ); ?></span>
+				<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e( 'Enter discount', 'edd' ); ?>"/>
+				<input type="submit" class="edd-apply-discount edd-submit button <?php echo $color . ' ' . $style; ?>" value="<?php echo _x( 'Apply', 'Apply discount at checkout', 'edd' ); ?>"/>
+				<span id="edd-discount-error-wrap" class="edd_errors" style="display:none;"></span>
+			</p>
+		</fieldset>
+<?php
+	endif;
 }
 add_action( 'edd_checkout_form_top', 'edd_discount_field', -1 );
 
