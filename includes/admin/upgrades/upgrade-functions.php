@@ -320,8 +320,16 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 		set_time_limit( 0 );
 	}
 
-	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
-	$total  = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : 1;
+	$step   = isset( $_GET['step'] )  ? absint( $_GET['step'] )  : 1;
+	$total  = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
+
+	if( empty( $total ) || $total <= 1 ) {
+		$payments = edd_count_payments();
+		foreach( $payments as $status ) {
+			$total += $status;
+		}
+	}
+
 	$args   = array(
 		'number' => 100,
 		'page'   => $step,
