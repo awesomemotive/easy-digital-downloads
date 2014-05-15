@@ -123,10 +123,12 @@ jQuery(document).ready(function($) {
         $checkout_form_wrap = $('#edd_checkout_form_wrap');
 
     // Validate and apply a discount
-    $checkout_form_wrap.on('focusout', '#edd-discount', function (event) {
+    $checkout_form_wrap.on('click', '.edd-apply-discount', function (event) {
+
+    	event.preventDefault();
 
         var $this = $(this),
-            discount_code = $this.val(),
+            discount_code = $('#edd-discount').val(),
             edd_discount_loader = $('#edd-discount-loader');
 
         if (discount_code == '' || discount_code == edd_global_vars.enter_discount ) {
