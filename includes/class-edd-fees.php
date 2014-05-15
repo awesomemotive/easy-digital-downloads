@@ -20,11 +20,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.5
  */
 class EDD_Fees {
+
 	/**
 	 * Setup the EDD Fees
 	 *
 	 * @since 1.5
-	 * @return void
 	 */
 	public function __construct() {
 		add_filter( 'edd_payment_meta', array( $this, 'record_fees' ), 10, 2 );
@@ -33,19 +33,23 @@ class EDD_Fees {
 	/**
 	 * Adds a new Fee
 	 *
-	 * @access public
 	 * @since 1.5
-	 * @param int $amount Fee Amount
+	 *
+	 * @param string $amount Fee Amount
 	 * @param string $label Fee label
-	 * @param string $id Fee ID
+	 * @param string $id
+	 *
 	 * @uses EDD_Fees::get_fees()
 	 * @uses EDD_Session::set()
-	 * @return array $fees
+	 *
+	 * @return mixed
 	 */
 	public function add_fee( $amount = '', $label = '', $id = '' ) {
 		$fees = $this->get_fees();
 
 		$key = empty( $id ) ? sanitize_key( $label ) : sanitize_key( $id );
+
+		$amount = edd_sanitize_amount( $amount );
 
 		$fees[ $key ] = array( 'amount' => $amount, 'label' => $label );
 
@@ -105,10 +109,10 @@ class EDD_Fees {
 	/**
 	 * Retrieve a specific fee
 	 *
-	 * @access public
 	 * @since 1.5
-	 * @uses EDD_Fees::get_fees()
-	 * @return mixed array|bool
+	 *
+	 * @param string $id
+	 * @return bool
 	 */
 	public function get_fee( $id = '' ) {
 		$fees = $this->get_fees();
@@ -136,7 +140,7 @@ class EDD_Fees {
 
 		if ( $this->has_fees() ) {
 			foreach ( $fees as $fee ) {
-				$total += $fee['amount'];
+				$total += edd_sanitize_amount( $fee['amount'] );
 			}
 		}
 

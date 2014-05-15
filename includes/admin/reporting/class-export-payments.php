@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
  */
@@ -64,10 +64,17 @@ class EDD_Payments_Export extends EDD_Export {
 			'email'    => __( 'Email', 'edd' ),
 			'first'    => __( 'First Name', 'edd' ),
 			'last'     => __( 'Last Name', 'edd' ),
+			'address1' => __( 'Address', 'edd' ),
+			'address2' => __( 'Address (Line 2)', 'edd' ),
+			'city'     => __( 'City', 'edd' ),
+			'state'    => __( 'State', 'edd' ),
+			'country'  => __( 'Country', 'edd' ),
+			'zip'      => __( 'Zip Code', 'edd' ),
 			'products' => __( 'Products', 'edd' ),
 			'skus'     => __( 'SKUs', 'edd' ),
 			'amount'   => __( 'Amount', 'edd' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
 			'tax'      => __( 'Tax', 'edd' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
+			'discount' => __( 'Discount Code', 'edd' ),
 			'gateway'  => __( 'Payment Method', 'edd' ),
 			'key'      => __( 'Purchase Key', 'edd' ),
 			'date'     => __( 'Date', 'edd' ),
@@ -105,13 +112,13 @@ class EDD_Payments_Export extends EDD_Export {
 		) );
 
 		foreach ( $payments as $payment ) {
-			$payment_meta 	= edd_get_payment_meta( $payment->ID );
-			$user_info 		= edd_get_payment_meta_user_info( $payment->ID );
+			$payment_meta   = edd_get_payment_meta( $payment->ID );
+			$user_info      = edd_get_payment_meta_user_info( $payment->ID );
 			$downloads      = edd_get_payment_meta_cart_details( $payment->ID );
-			$total          = isset( $payment_meta['amount'] ) ? $payment_meta['amount'] : 0.00;
+			$total          = edd_get_payment_amount( $payment->ID );
 			$user_id        = isset( $user_info['id'] ) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email'];
 			$products       = '';
-			$skus			= '';
+			$skus           = '';
 
 			if ( $downloads ) {
 				foreach ( $downloads as $key => $download ) {
@@ -158,10 +165,16 @@ class EDD_Payments_Export extends EDD_Export {
 			}
 
 			$data[] = array(
-				'id'       => $payment->ID,
+				'id'       => edd_get_payment_number( $payment->ID ),
 				'email'    => $payment_meta['email'],
 				'first'    => $user_info['first_name'],
-				'last'     => $user_info['last_name'],
+                'last'     => $user_info['last_name'],
+				'address1' => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
+				'address2' => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
+				'city'     => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
+				'state'    => isset( $user_info['address']['state'] )   ? $user_info['address']['state']   : '',
+				'country'  => isset( $user_info['address']['country'] ) ? $user_info['address']['country'] : '',
+				'zip'      => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
 				'products' => $products,
 				'skus'     => $skus,
 				'amount'   => html_entity_decode( edd_format_amount( $total ) ),
@@ -174,9 +187,9 @@ class EDD_Payments_Export extends EDD_Export {
 				'status'   => edd_get_payment_status( $payment, true )
 			);
 
-			if( !edd_use_skus() )
+			if( !edd_use_skus() ) {
 				unset( $data['skus'] );
-
+			}
 		}
 
 		$data = apply_filters( 'edd_export_get_data', $data );

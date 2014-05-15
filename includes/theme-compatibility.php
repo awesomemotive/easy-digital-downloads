@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Functions/Compatibility
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.3
  */
@@ -26,7 +26,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return array
  */
 function edd_responsive_download_post_class( $classes = array(), $class = '', $post_id = 0 ) {
-	if ( ! is_singular( 'download' ) )
+	if (
+		! is_singular( 'download' ) &&
+		! is_post_type_archive( 'download' ) &&
+		! is_tax( 'download_category' ) &&
+		! is_tax( 'download_tag' )
+	)
 		return $classes;
 
 	if ( ( $key = array_search( 'download', $classes ) ) )

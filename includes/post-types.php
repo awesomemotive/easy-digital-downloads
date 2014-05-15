@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -56,7 +56,7 @@ function edd_setup_edd_post_types() {
 		'map_meta_cap'      => true,
 		'has_archive' 		=> $archives,
 		'hierarchical' 		=> false,
-		'supports' 			=> apply_filters( 'edd_download_supports', array( 'title', 'editor', 'thumbnail', 'excerpt' ) ),
+		'supports' 			=> apply_filters( 'edd_download_supports', array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions' ) ),
 	);
 	register_post_type( 'download', apply_filters( 'edd_download_post_type_args', $download_args ) );
 
@@ -141,6 +141,8 @@ function edd_get_default_labels() {
  * Get Singular Label
  *
  * @since 1.0.8.3
+ *
+ * @param bool $lowercase
  * @return string $defaults['singular'] Singular label
  */
 function edd_get_label_singular( $lowercase = false ) {
@@ -167,6 +169,13 @@ function edd_get_label_plural( $lowercase = false ) {
  * @return string $title New placeholder text
  */
 function edd_change_default_title( $title ) {
+     // If a frontend plugin uses this filter (check extensions before changing this function)
+     if ( !is_admin() ) {
+     	$label = edd_get_label_singular();
+        $title = sprintf( __( 'Enter %s title here', 'edd' ), $label );
+     	return $title;
+     }
+     
      $screen = get_current_screen();
 
      if  ( 'download' == $screen->post_type ) {
@@ -201,6 +210,7 @@ function edd_setup_download_taxonomies() {
 		'add_new_item' 		=> __( 'Add New Category', 'edd'  ),
 		'new_item_name' 	=> __( 'New Category Name', 'edd'  ),
 		'menu_name' 		=> __( 'Categories', 'edd'  ),
+		'choose_from_most_used' => sprintf( __( 'Choose from most used %s categories', 'edd'  ), edd_get_label_singular() ),
 	);
 
 	$category_args = apply_filters( 'edd_download_category_args', array(
@@ -228,6 +238,7 @@ function edd_setup_download_taxonomies() {
 		'add_new_item' 		=> __( 'Add New Tag', 'edd'  ),
 		'new_item_name' 	=> __( 'New Tag Name', 'edd'  ),
 		'menu_name' 		=> __( 'Tags', 'edd'  ),
+		'choose_from_most_used' => sprintf( __( 'Choose from most used %s tags', 'edd'  ), edd_get_label_singular() ),
 	);
 
 	$tag_args = apply_filters( 'edd_download_tag_args', array(

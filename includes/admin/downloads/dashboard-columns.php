@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Downloads
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -35,11 +35,6 @@ function edd_download_columns( $download_columns ) {
 		'date'              => __( 'Date', 'edd' )
 	);
 
-	if ( ! current_user_can( 'view_shop_reports' ) ) {
-		unset( $download_columns['sales'] );
-		unset( $download_columns['earnings'] );
-	}
-
 	return apply_filters( 'edd_download_columns', $download_columns );
 }
 add_filter( 'manage_edit-download_columns', 'edd_download_columns' );
@@ -58,6 +53,7 @@ function edd_render_download_columns( $column_name, $post_id ) {
 
 		$style 			= isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button';
 		$color 			= isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue';
+		$color			= ( $color == 'inherit' ) ? '' : $color;
 		$purchase_text 	= ! empty( $edd_options['add_to_cart_text'] ) ? $edd_options['add_to_cart_text'] : __( 'Purchase', 'edd' );
 
 		switch ( $column_name ) {
@@ -76,10 +72,18 @@ function edd_render_download_columns( $column_name, $post_id ) {
 				}
 				break;
 			case 'sales':
-				echo edd_get_download_sales_stats( $post_id );
+				if ( current_user_can( 'view_product_stats', $post_id ) ) {
+					echo edd_get_download_sales_stats( $post_id );
+				} else {
+					echo '-';
+				}
 				break;
 			case 'earnings':
-				echo edd_currency_filter( edd_format_amount( edd_get_download_earnings_stats( $post_id ) ) );
+				if ( current_user_can( 'view_product_stats', $post_id ) ) {
+					echo edd_currency_filter( edd_format_amount( edd_get_download_earnings_stats( $post_id ) ) );
+				} else {
+					echo '-';
+				}
 				break;
 			case 'shortcode':
 				echo '[purchase_link id="' . absint( $post_id ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]';
@@ -97,8 +101,8 @@ add_action( 'manage_posts_custom_column', 'edd_render_download_columns', 10, 2 )
  * @return array $columns Array of sortable columns
  */
 function edd_sortable_download_columns( $columns ) {
-	$columns['price'] = 'price';
-	$columns['sales'] = 'sales';
+	$columns['price']    = 'price';
+	$columns['sales']    = 'sales';
 	$columns['earnings'] = 'earnings';
 
 	return $columns;
@@ -132,7 +136,7 @@ function edd_sort_downloads( $vars ) {
 				$vars,
 				array(
 					'meta_key' => '_edd_download_earnings',
-					'orderby' => 'meta_value_num'
+					'orderby'  => 'meta_value_num'
 				)
 			);
 		}
@@ -143,7 +147,7 @@ function edd_sort_downloads( $vars ) {
 				$vars,
 				array(
 					'meta_key' => 'edd_price',
-					'orderby' => 'meta_value_num'
+					'orderby'  => 'meta_value_num'
 				)
 			);
 		}

@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions/Errors
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -32,8 +32,8 @@ function edd_print_errors() {
 		) );
 		echo '<div class="' . implode( ' ', $classes ) . '">';
 		    // Loop error codes and display errors
-		   foreach ( $errors as $error_id => $error ){
-		        echo '<p class="edd_error" id="edd_error_' . $error_id . '"><strong>' . __('Error', 'edd') . '</strong>: ' . $error . '</p>';
+		   foreach ( $errors as $error_id => $error ) {
+		        echo '<p class="edd_error" id="edd_error_' . $error_id . '"><strong>' . __( 'Error', 'edd' ) . '</strong>: ' . $error . '</p>';
 		   }
 		echo '</div>';
 		edd_clear_errors();

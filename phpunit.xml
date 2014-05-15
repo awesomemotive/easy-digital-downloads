@@ -3,45 +3,33 @@
 		 backupGlobals="false"
 		 backupStaticAttributes="false"
 		 colors="true"
+		 processIsolation="false"
 		 convertErrorsToExceptions="true"
 		 convertNoticesToExceptions="true"
 		 convertWarningsToExceptions="true"
-		 processIsolation="false"
 		 stopOnError="false"
 		 stopOnFailure="false"
 		 stopOnIncomplete="false"
 		 stopOnSkipped="false"
 		 syntaxCheck="false"
 		 verbose="true"
-		 strict="true"
+		 strict="false"
 		 bootstrap="tests/bootstrap.php">
 	<testsuites>
 		<testsuite name="Easy Digital Downloads Test Suite">
 			<directory suffix=".php">./tests/unit-tests</directory>
 		</testsuite>
 	</testsuites>
-	<logging>
-		<log type="coverage-clover" target="./tests/clover.xml"/>
-	</logging>
 	<filter>
 		<blacklist>
 			<directory suffix=".php">./tmp/</directory>
 			<directory suffix=".php">./tests/</directory>
-			<directory suffix=".php">./includes/admin/</directory>
-			<directory suffix=".php">./includes/gateways/</directory>
 			<directory suffix=".php">./includes/libraries/</directory>
 			<directory suffix=".php">./templates/</directory>
 			<directory suffix=".php">./languages/</directory>
-			<!-- Need to exclude the main plugin file because the assertions are already made in tests/unit-tests/easy-digital-downloads.php -->
-			<file>./easy-digital-downloads.php</file>
-			<file>./includes/deprecated-functions.php</file>
-			<file>./includes/cart/actions.php</file>
-			<file>./includes/emails/actions.php</file>
-			<file>./includes/plugin-compatibility.php</file>
-			<file>./includes/process-download.php</file>
-			<file>./includes/scripts.php</file>
-			<file>./includes/theme-compatibility.php</file>
-			<file>./includes/widgets.php</file>
 		</blacklist>
 	</filter>
+	<logging>
+		<log type="coverage-clover" target="build/logs/clover.xml"/>
+	</logging>
 </phpunit>

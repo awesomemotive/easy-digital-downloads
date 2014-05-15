@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Export
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 

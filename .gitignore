@@ -23,5 +23,6 @@ $RECYCLE.BIN/
 .project
 .metadata
 bin/
+build/
 tmp/
 tests/clover.xml

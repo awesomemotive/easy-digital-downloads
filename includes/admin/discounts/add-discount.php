@@ -1,18 +1,19 @@
 <?php
 /**
- * Add Discount Template
+ * Add Discount Page
  *
  * @package     EDD
  * @subpackage  Admin/Discounts
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
+$downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
 ?>
-<h3><?php _e( 'Add New Discount', 'edd' ); ?></h3>
+<h2><?php _e( 'Add New Discount', 'edd' ); ?> - <a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>" class="button-secondary"><?php _e( 'Go Back', 'edd' ); ?></a></h2>
 <form id="edd-add-discount" action="" method="POST">
 	<?php do_action( 'edd_add_discount_form_top' ); ?>
 	<table class="form-table">
@@ -53,39 +54,51 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				</th>
 				<td>
 					<input type="text" id="edd-amount" name="amount" value="" style="width: 40px;"/>
-					<p class="description"><?php _e( 'The amount of this discount code.', 'edd' ); ?></p>
+					<p class="description edd-amount-description" style="display:none;"><?php printf( __( 'Enter the discount amount in %s', 'edd' ), edd_get_currency() ); ?></p>
+					<p class="description edd-amount-description"><?php _e( 'Enter the discount percentage. 10 = 10%', 'edd' ); ?></p>
 				</td>
 			</tr>
 			<tr class="form-field">
 				<th scope="row" valign="top">
-					<label for="edd-products"><?php printf( __( '%s Requirements', 'edd' ), edd_get_label_plural() ); ?></label>
+					<label for="edd-products"><?php printf( __( '%s Requirements', 'edd' ), edd_get_label_singular() ); ?></label>
 				</th>
 				<td>
 					<p>
-						<select id="edd-product-condition" name="product_condition">
-							<option value="all"><?php printf( __( 'All Selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
-							<option value="any"><?php printf( __( 'Any Selected %s', 'edd' ), edd_get_label_singular() ); ?></option>
-						</select>
-						<label for="edd-product-condition"><?php _e( 'Condition', 'edd' ); ?></label>
+						<?php printf( __( 'Select %s that must be purchased for this discount to be valid.', 'edd' ), edd_get_label_plural() ); ?><br/>
+					<?php echo EDD()->html->product_dropdown( array(
+						'name'        => 'products[]',
+						'id'          => 'products',
+						'multiple'    => true,
+						'chosen'      => true 
+					) ); ?><br/>
 					</p>
-					<select multiple id="edd-products" name="products[]" class="edd-select-chosen" data-placeholder="<?php printf( __( 'Choose one or more %s', 'edd' ), edd_get_label_plural() ); ?>">
-						<?php
-						$downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) );
-						if( $downloads ) :
-							foreach( $downloads as $download ) :
-								echo '<option value="' . esc_attr( $download->ID ) . '">' . esc_html( get_the_title( $download->ID ) ) . '</option>';
-							endforeach;
-						endif;
-						?>
-					</select>
-					<p class="description"><?php printf( __( '%s required to be purchased for this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
-
+					<p>
+						<select id="edd-product-condition" name="product_condition">
+							<option value="all"><?php printf( __( 'Cart must contain all selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
+							<option value="any"><?php printf( __( 'Cart needs one or more of the selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
+						</select>
+					</p>
 					<p>
 						<label for="edd-non-global-discount">
-							<input type="checkbox" id="edd-non-global-discount" name="not_global" value="1"/>
-							<?php printf( __( 'Apply discount only to selected %s?', 'edd' ), edd_get_label_plural() ); ?>
+							<input type="checkbox" id="edd-non-global-discount" name="not_global" value="1" />
+							<?php printf( __( 'Apply discount only to selected %s? Leave unchecked to discount entire purchase.', 'edd' ), edd_get_label_plural() ); ?>
 						</label>
 					</p>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<label for="edd-excluded-products"><?php printf( __( 'Excluded %s', 'edd' ), edd_get_label_plural() ); ?></label>
+				</th>
+				<td>
+					<?php echo EDD()->html->product_dropdown( array(
+						'name'     => 'excluded-products[]',
+						'id'       => 'excluded-products',
+						'selected' => array(),
+						'multiple' => true,
+						'chosen'   => true 
+					) ); ?><br/>
+					<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>
 			</tr>
 			<tr class="form-field">
@@ -93,7 +106,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-start"><?php _e( 'Start date', 'edd' ); ?></label>
 				</th>
 				<td>
-					<input name="start" id="edd-start" type="text" value="" style="width: 120px;" class="edd_datepicker"/>
+					<input name="start" id="edd-start" type="text" value="" style="width: 300px;" class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the start date for this discount code in the format of mm/dd/yyyy. For no start date, leave blank. If entered, the discount can only be used after or on this date.', 'edd' ); ?></p>
 				</td>
 			</tr>
@@ -102,7 +115,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 					<label for="edd-expiration"><?php _e( 'Expiration date', 'edd' ); ?></label>
 				</th>
 				<td>
-					<input name="expiration" id="edd-expiration" type="text" style="width: 120px;" class="edd_datepicker"/>
+					<input name="expiration" id="edd-expiration" type="text" style="width: 300px;" class="edd_datepicker"/>
 					<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of mm/dd/yyyy. For no expiration, leave blank', 'edd' ); ?></p>
 				</td>
 			</tr>
@@ -138,6 +151,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<?php do_action( 'edd_add_discount_form_bottom' ); ?>
 	<p class="submit">
 		<input type="hidden" name="edd-action" value="add_discount"/>
+		<input type="hidden" name="edd-redirect" value="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ); ?>"/>
 		<input type="hidden" name="edd-discount-nonce" value="<?php echo wp_create_nonce( 'edd_discount_nonce' ); ?>"/>
 		<input type="submit" value="<?php _e( 'Add Discount Code', 'edd' ); ?>" class="button-primary"/>
 	</p>
