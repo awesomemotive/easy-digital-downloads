@@ -577,6 +577,10 @@ function edd_show_payment_icons() {
 				}
 				$image = str_replace( $content_dir, WP_CONTENT_URL, $image );
 
+				if( edd_is_ssl_enforced() ) {
+					$image = str_replace( 'http://', 'https://', $image );
+				}
+
 				echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
 			}
 		}
