@@ -410,7 +410,6 @@ function edd_get_registered_settings() {
 					'name' => __( 'Enable Taxes', 'edd' ),
 					'desc' => __( 'Check this to enable taxes on purchases.', 'edd' ),
 					'type' => 'checkbox',
-					'std' => 'no'
 				),
 				'tax_rate' => array(
 					'id' => 'tax_rate',
@@ -448,7 +447,6 @@ function edd_get_registered_settings() {
 					'name' => __( 'Display Tax Rate on Prices', 'edd' ),
 					'desc' => __( 'Some countries require a notice when product prices include tax.', 'edd' ),
 					'type' => 'checkbox',
-					'std' => 'no'
 				),
 				'checkout_include_tax' => array(
 					'id' => 'checkout_include_tax',
@@ -465,7 +463,6 @@ function edd_get_registered_settings() {
 					'id' => 'taxes_after_discounts',
 					'name' => __( 'Calculate Tax After Discounts?', 'edd' ),
 					'desc' => __( 'Check this if you would like taxes calculated after discounts. By default taxes are calculated before discounts are applied.', 'edd' ),
-					'std' => 'no',
 					'type' => 'checkbox'
 				),
 				'tax_rates' => array(
@@ -486,11 +483,12 @@ function edd_get_registered_settings() {
 		/** Misc Settings */
 		'misc' => apply_filters('edd_settings_misc',
 			array(
-				'disable_ajax_cart' => array(
-					'id' => 'disable_ajax_cart',
-					'name' => __( 'Disable Ajax', 'edd' ),
-					'desc' => __( 'Check this to disable AJAX for the shopping cart.', 'edd' ),
-					'type' => 'checkbox'
+				'enable_ajax_cart' => array(
+					'id' => 'enable_ajax_cart',
+					'name' => __( 'Enable Ajax', 'edd' ),
+					'desc' => __( 'Check this to enable AJAX for the shopping cart.', 'edd' ),
+					'type' => 'checkbox',
+					'std'  => '1'
 				),
 				'redirect_on_add' => array(
 					'id' => 'redirect_on_add',
@@ -498,10 +496,10 @@ function edd_get_registered_settings() {
 					'desc' => __( 'Immediately redirect to checkout after adding an item to the cart?', 'edd' ),
 					'type' => 'checkbox'
 				),
-				'live_cc_validation' => array(
-					'id' => 'live_cc_validation',
-					'name' => __( 'Disable Live Credit Card Validation', 'edd' ),
-					'desc' => __( 'Live credit card validation means that the card type and number will be validated as the customer enters the number.', 'edd' ),
+				'enforce_ssl' => array(
+					'id' => 'enforce_ssl',
+					'name' => __( 'Enforce SSL on Checkout', 'edd' ),
+					'desc' => __( 'Check this to force users to be redirected to the secure checkout page. You must have an SSL certificate installed to use this option.', 'edd' ),
 					'type' => 'checkbox'
 				),
 				'logged_in_only' => array(
@@ -514,7 +512,14 @@ function edd_get_registered_settings() {
 					'id' => 'show_register_form',
 					'name' => __( 'Show Register / Login Form?', 'edd' ),
 					'desc' => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'edd' ),
-					'type' => 'checkbox'
+					'type' => 'select',
+					'options' => array(
+						'both' => __( 'Registration and Login Forms', 'edd' ),
+						'registration' => __( 'Registration Form Only', 'edd' ),
+						'login' => __( 'Login Form Only', 'edd' ),
+						'none' => __( 'None', 'edd' )
+					),
+					'std' => 'none'
 				),
 				'item_quantities' => array(
 					'id' => 'item_quantities',
@@ -528,10 +533,10 @@ function edd_get_registered_settings() {
 					'desc' => __('Allow customers to use multiple discounts on the same purchase?', 'edd'),
 					'type' => 'checkbox'
 				),
-				'disable_cart_saving' => array(
-					'id' => 'disable_cart_saving',
-					'name' => __( 'Disable Cart Saving', 'edd' ),
-					'desc' => __( 'Check this to disable cart saving on the checkout', 'edd' ),
+				'enable_cart_saving' => array(
+					'id' => 'enable_cart_saving',
+					'name' => __( 'Enable Cart Saving', 'edd' ),
+					'desc' => __( 'Check this to enable cart saving on the checkout', 'edd' ),
 					'type' => 'checkbox'
 				),
 				'field_downloads' => array(
@@ -589,6 +594,32 @@ function edd_get_registered_settings() {
 					'name' => __( 'Enable SKU Entry', 'edd' ),
 					'desc' => __( 'Check this box to allow entry of product SKUs. SKUs will be shown on purchase receipt and exported purchase histories.', 'edd' ),
 					'type' => 'checkbox'
+				),
+				'enable_sequential' => array(
+					'id' => 'enable_sequential',
+					'name' => __( 'Sequential Order Numbers', 'edd' ),
+					'desc' => __( 'Check this box to sequential order numbers.', 'edd' ),
+					'type' => 'checkbox'
+				),
+				'sequential_start' => array(
+					'id' => 'sequential_start',
+					'name' => __( 'Sequential Starting Number', 'edd' ),
+					'desc' => __( 'The number that sequential order numbers should start at.', 'edd' ),
+					'type' => 'number',
+					'size' => 'small',
+					'std'  => '1'
+				),
+				'sequential_prefix' => array(
+					'id' => 'sequential_prefix',
+					'name' => __( 'Sequential Number Prefix', 'edd' ),
+					'desc' => __( 'A prefix to prepend to all sequential order numbers.', 'edd' ),
+					'type' => 'text'
+				),
+				'sequential_postfix' => array(
+					'id' => 'sequential_postfix',
+					'name' => __( 'Sequential Number Postfix', 'edd' ),
+					'desc' => __( 'A postfix to append to all sequential order numbers.', 'edd' ),
+					'type' => 'text',
 				),
 				'terms' => array(
 					'id' => 'terms',
@@ -719,6 +750,13 @@ function edd_settings_sanitize_misc( $input ) {
 		edd_create_protection_files( true, $input['download_method'] );
 	}
 
+	if( ! empty( $input['enable_sequential'] ) && ! edd_get_option( 'enable_sequential' ) ) {
+
+		// Shows an admin notice about upgrading previous order numbers
+		EDD()->session->set( 'upgrade_sequential', '1' );
+
+	}
+
 	return $input;
 }
 add_filter( 'edd_settings_misc_sanitize', 'edd_settings_sanitize_misc' );
@@ -838,7 +876,7 @@ function edd_header_callback( $args ) {
 function edd_checkbox_callback( $args ) {
 	global $edd_options;
 
-	$checked = isset($edd_options[$args['id']]) ? checked(1, $edd_options[$args['id']], false) : '';
+	$checked = isset( $edd_options[ $args[ 'id' ] ] ) ? checked( 1, $edd_options[ $args[ 'id' ] ], false ) : '';
 	$html = '<input type="checkbox" id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']" value="1" ' . $checked . '/>';
 	$html .= '<label for="edd_settings[' . $args['id'] . ']"> '  . $args['desc'] . '</label>';
 
@@ -1288,7 +1326,9 @@ function edd_tax_rates_callback($args) {
 							'show_option_none' => false
 						) );
 					} else {
-						echo EDD()->html->text( 'tax_rates[' . $key . '][state]', $rate['state'] );
+						echo EDD()->html->text( array(
+							'name'             => 'tax_rates[' . $key . '][state]', $rate['state']
+						) );
 					}
 					?>
 				</td>
@@ -1313,7 +1353,9 @@ function edd_tax_rates_callback($args) {
 					) ); ?>
 				</td>
 				<td class="edd_tax_state">
-					<?php echo EDD()->html->text( 'tax_rates[0][state]' ); ?>
+					<?php echo EDD()->html->text( array(
+						'name'             => 'tax_rates[0][state]'
+					) ); ?>
 				</td>
 				<td class="edd_tax_global">
 					<input type="checkbox" name="tax_rates[0][global]" value="1"/>

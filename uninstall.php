@@ -70,4 +70,9 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	foreach ( $edd_roles as $role ) {
 		remove_role( $role );
 	}
+
+	/** Cleanup Cron Events */
+	wp_clear_scheduled_hook( 'edd_daily_scheduled_events' );
+	wp_clear_scheduled_hook( 'edd_daily_cron' );
+	wp_clear_scheduled_hook( 'edd_weekly_cron' );
 }

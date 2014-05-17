@@ -113,6 +113,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				return '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . get_the_title( $item[ $column_name ] ) . '</a>';
 			case 'user_id' :
 				return '<a href="' . add_query_arg( 'user', $item[ $column_name ] ) . '">' . $item[ 'user_name' ] . '</a>';
+			case 'payment_id' :
+				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item[ 'payment_id' ] ) . '">' . edd_get_payment_number( $item[ 'payment_id' ] ) . '</a>';
 			default:
 				return $item[ $column_name ];
 		}
@@ -161,6 +163,17 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Retrieves the ID of the payment we're filtering logs by
+	 *
+	 * @access public
+	 * @since 2.0
+	 * @return int Payment ID
+	 */
+	public function get_filtered_payment() {
+		return ! empty( $_GET['payment'] ) ? absint( $_GET['payment'] ) : false;
+	}
+
+	/**
 	 * Retrieves the search query string
 	 *
 	 * @access public
@@ -181,8 +194,8 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @return array $meta_query
 	 */
 	public function get_meta_query() {
-		$user = $this->get_filtered_user();
-
+		$user       = $this->get_filtered_user();
+		$payment    = $this->get_filtered_payment();
 		$meta_query = array();
 
 		if ( $user ) {
@@ -190,6 +203,14 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			$meta_query[] = array(
 				'key'   => '_edd_log_user_id',
 				'value' => $user
+			);
+		}
+
+		if ( $payment ) {
+			// Show only logs from a specific payment
+			$meta_query[] = array(
+				'key'   => '_edd_log_payment_id',
+				'value' => $payment
 			);
 		}
 

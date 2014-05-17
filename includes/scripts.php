@@ -59,7 +59,7 @@ function edd_load_scripts() {
 	}
 
 	// Load AJAX scripts, if enabled
-	if ( edd_is_ajax_enabled() ) {
+	if ( ! edd_is_ajax_disabled() ) {
 		wp_enqueue_script( 'edd-ajax', $js_dir . 'edd-ajax' . $suffix . '.js', array( 'jquery' ), EDD_VERSION );
 		wp_localize_script( 'edd-ajax', 'edd_scripts', array(
 				'ajaxurl'                 => edd_get_ajax_url(),
@@ -144,7 +144,7 @@ function edd_load_admin_scripts( $hook ) {
 	if ( ! apply_filters( 'edd_load_admin_scripts', edd_is_admin_page(), $hook ) ) {
 		return;
 	}
-	
+
 	global $wp_version;
 
 	$js_dir  = EDD_PLUGIN_URL . 'assets/js/';
@@ -166,7 +166,10 @@ function edd_load_admin_scripts( $hook ) {
 		'delete_payment'          => __( 'Are you sure you wish to delete this payment?', 'edd' ),
 		'delete_payment_note'     => __( 'Are you sure you wish to delete this note?', 'edd' ),
 		'delete_tax_rate'         => __( 'Are you sure you wish to delete this tax rate?', 'edd' ),
+		'revoke_api_key'          => __( 'Are you sure you wish to revoke this API key?', 'edd' ),
+		'regenerate_api_key'      => __( 'Are you sure you wish to regenerate this API key?', 'edd' ),
 		'resend_receipt'          => __( 'Are you sure you wish to resend the purchase receipt?', 'edd' ),
+		'copy_download_link_text' => __( 'Copy these links to your clip board and give them to your customer', 'edd' ),
 		'delete_payment_download' => sprintf( __( 'Are you sure you wish to delete this %s?', 'edd' ), edd_get_label_singular() ),
 		'one_price_min'           => __( 'You must have at least one price', 'edd' ),
 		'one_file_min'            => __( 'You must have at least one file', 'edd' ),
@@ -270,15 +273,3 @@ function edd_admin_downloads_icon() {
 	<?php
 }
 add_action( 'admin_head','edd_admin_downloads_icon' );
-
-/**
- * Adds EDD Version to the <head> tag
- *
- * @since 1.4.2
- * @return void
-*/
-function edd_version_in_header(){
-	// Newline on both sides to avoid being in a blob
-	echo '<meta name="generator" content="Easy Digital Downloads v' . EDD_VERSION . '" />' . "\n";
-}
-add_action( 'wp_head', 'edd_version_in_header' );
