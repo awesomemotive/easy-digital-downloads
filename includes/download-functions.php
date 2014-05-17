@@ -799,7 +799,7 @@ function edd_get_file_download_limit_override( $download_id = 0, $payment_id = 0
  * @return void
  */
 function edd_set_file_download_limit_override( $download_id = 0, $payment_id = 0 ) {
-	$override 	= edd_get_file_download_limit_override( $download_id );
+	$override 	= edd_get_file_download_limit_override( $download_id, $payment_id );
 	$limit 		= edd_get_file_download_limit( $download_id );
 
 	if ( ! empty( $override ) ) {
@@ -807,6 +807,7 @@ function edd_set_file_download_limit_override( $download_id = 0, $payment_id = 0
 	} else {
 		$override = $limit += 1;
 	}
+
 	update_post_meta( $download_id, '_edd_download_limit_override_' . $payment_id, $override );
 }
 
