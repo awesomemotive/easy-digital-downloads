@@ -46,6 +46,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 			// "bundle" or "default"
 			$download_type = edd_get_download_type( $download['id'] );
+			$price_id      = isset( $download['options']['price_id'] ) ? (int) $download['options']['price_id'] : false;
 
 			$price_id      = isset( $download['options']['price_id'] ) ? (int) $download['options']['price_id'] : false;
 

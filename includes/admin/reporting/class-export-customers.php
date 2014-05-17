@@ -63,9 +63,10 @@ class EDD_Customers_Export extends EDD_Export {
 	public function csv_cols() {
 		if ( ! empty( $_POST['edd_export_download'] ) ) {
 			$cols = array(
-				'name'      => __( 'Name',   'edd' ),
-				'email'     => __( 'Email', 'edd' ),
-				'date'      => __( 'Date Purchased', 'edd' )
+				'first_name' => __( 'First Name',   'edd' ),
+				'last_name'  => __( 'Last Name',   'edd' ),
+				'email'      => __( 'Email', 'edd' ),
+				'date'       => __( 'Date Purchased', 'edd' )
 			);
 		} else {
 
@@ -103,28 +104,36 @@ class EDD_Customers_Export extends EDD_Export {
 		$data = array();
 
 		if ( ! empty( $_POST['edd_export_download'] ) ) {
+
 			// Export customers of a specific product
 			global $edd_logs;
 
 			$args = array(
-				'post_parent'  => absint( $_POST['edd_export_download'] ),
-				'log_type'     => 'sale',
+				'post_parent' => absint( $_POST['edd_export_download'] ),
+				'log_type'    => 'sale',
 				'nopaging'    => true
 			);
+
+			if( isset( $_POST['edd_price_option'] ) ) {
+				$args['meta_query'] = array(
+					array(
+						'key'   => '_edd_log_price_id',
+						'value' => (int) $_POST['edd_price_option']
+					)
+				);
+			}
 
 			$logs = $edd_logs->get_connected_logs( $args );
 
 			if ( $logs ) {
 				foreach ( $logs as $log ) {
 					$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
-					$email      = edd_get_payment_user_email( $payment_id );
-
-					$wp_user = get_user_by( 'email', $email );
-
+					$user_info  = edd_get_payment_meta_user_info( $payment_id );
 					$data[] = array(
-						'name'      => $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' ),
-						'email'     => $email,
-						'date'      => $log->post_date
+						'first_name' => $user_info['first_name'],
+						'last_name'  => $user_info['last_name'],
+						'email'      => $user_info['email'],
+						'date'       => $log->post_date
 					);
 				}
 			}
