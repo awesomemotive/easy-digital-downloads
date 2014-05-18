@@ -80,6 +80,7 @@ class EDD_Session {
 				require_once EDD_PLUGIN_DIR . 'includes/libraries/wp-session.php';
 			}
 	
+			add_filter( 'wp_session_expiration_variant', array( $this, 'set_expiration_variant_time' ), 99999 );
 			add_filter( 'wp_session_expiration', array( $this, 'set_expiration_time' ), 99999 );
 
 		}
@@ -187,6 +188,18 @@ class EDD_Session {
 				setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, false );
 			}
 		}
+	}
+
+	/**
+	 * Force the cookie expiration variant time to 23 hours
+	 *
+	 * @access public
+	 * @since 2.0
+	 * @param int $exp Default expiration (1 hour)
+	 * @return int
+	 */
+	public function set_expiration_variant_time( $exp ) {
+		return current_time( 'timestamp' ) + ( 30 * 60 * 23 );
 	}
 
 	/**
