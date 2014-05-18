@@ -94,12 +94,12 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 						</p>
 						<p>
 							<label>
-								<input type="radio" class="tog" name="not_global" value="1"<?php checked( true, edd_is_discount_not_global( $discount_id ) ); ?>/>
-								<?php printf( __( 'Apply discount only to selected %s.', 'edd' ), edd_get_label_plural() ); ?>
-							</label><br/>
-							<label>
 								<input type="radio" class="tog" name="not_global" value="0"<?php checked( false, edd_is_discount_not_global( $discount_id ) ); ?>/>
 								<?php _e( 'Apply discount to entire purchase.', 'edd' ); ?>
+							</label><br/>
+							<label>
+								<input type="radio" class="tog" name="not_global" value="1"<?php checked( true, edd_is_discount_not_global( $discount_id ) ); ?>/>
+								<?php printf( __( 'Apply discount only to selected %s.', 'edd' ), edd_get_label_plural() ); ?>
 							</label>
 						</p>
 					</div>
