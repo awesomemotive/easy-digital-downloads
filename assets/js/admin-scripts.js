@@ -645,11 +645,27 @@ jQuery(document).ready(function ($) {
 			// Show / hide Download option when exporting customers
 
 			$( '#edd_customer_export_download' ).change( function() {
-				var $this = $(this);
+
+				var $this = $(this), download_id = $('option:selected', $this).val();
+
 				if ( '0' === $this.val() ) {
 					$( '#edd_customer_export_option' ).show();
 				} else {
 					$( '#edd_customer_export_option' ).hide();
+				}
+
+				// On Download Select, Check if Variable Prices Exist
+				if ( parseInt( download_id ) != 0 ) {
+					var data = {
+						action : 'edd_check_for_download_price_variations',
+						download_id: download_id
+					};
+					$.post(ajaxurl, data, function(response) {
+						$('.edd_price_options_select').remove();
+						$this.after( response );
+					});
+				} else {
+					$('.edd_price_options_select').remove();
 				}
 			});
 
