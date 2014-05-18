@@ -89,6 +89,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 							</label>
 						</p>
 					</div>
+					<p class="description"><?php printf( __( 'Select %s relevant to this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>
 			</tr>
 			<tr>
@@ -103,7 +104,7 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 						'multiple' => true,
 						'chosen'   => true 
 					) ); ?><br/>
-					<p class="description"><?php printf( __( 'Select %s relevant to this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
+					<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>
 			</tr>
 			<tr>
