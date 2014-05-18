@@ -110,13 +110,13 @@ class EDD_Earnings_Export extends EDD_Export {
 
 			while( $m1 <= $m2 ) {
 
-				$date1 = mktime( 0, 0, 0, $m1, 0, $year );
+				$date1 = mktime( 0, 0, 0, $m1, 1, $year );
 				$date2 = mktime( 0, 0, 0, $m1, cal_days_in_month( CAL_GREGORIAN, $m1, $year ), $year );
 
 				$data[] = array(
 					'date'     => date_i18n( 'F Y', $date1 ),
 					'sales'    => $stats->get_sales( 0, $date1, $date2, array( 'publish', 'revoked' ) ),
-					'earnings' => $stats->get_earnings( 0, $date1, $date2 ),
+					'earnings' => edd_format_amount( $stats->get_earnings( 0, $date1, $date2 ) ),
 				);
 
 				$m1++;
