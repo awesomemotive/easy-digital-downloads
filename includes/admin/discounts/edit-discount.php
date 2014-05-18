@@ -93,16 +93,20 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 							</select>
 						</p>
 						<p>
-							<label for="edd-non-global-discount">
-								<input type="checkbox" id="edd-non-global-discount" name="not_global" value="1"<?php checked( true, edd_is_discount_not_global( $discount_id ) ); ?>/>
-								<?php printf( __( 'Apply discount only to selected %s? Leave unchecked to discount entire purchase.', 'edd' ), edd_get_label_plural() ); ?>
+							<label>
+								<input type="radio" class="tog" name="not_global" value="1"<?php checked( true, edd_is_discount_not_global( $discount_id ) ); ?>/>
+								<?php printf( __( 'Apply discount only to selected %s.', 'edd' ), edd_get_label_plural() ); ?>
+							</label><br/>
+							<label>
+								<input type="radio" class="tog" name="not_global" value="0"<?php checked( false, edd_is_discount_not_global( $discount_id ) ); ?>/>
+								<?php _e( 'Apply discount to entire purchase.', 'edd' ); ?>
 							</label>
 						</p>
 					</div>
 					<p class="description"><?php printf( __( 'Select %s relevant to this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>
 			</tr>
-			<tr class="form-field">
+			<tr>
 				<th scope="row" valign="top">
 					<label for="edd-excluded-products"><?php printf( __( 'Excluded %s', 'edd' ), edd_get_label_plural() ); ?></label>
 				</th>
