@@ -58,35 +58,40 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 					<p class="description edd-amount-description"><?php _e( 'Enter the discount percentage. 10 = 10%', 'edd' ); ?></p>
 				</td>
 			</tr>
-			<tr class="form-field">
+			<tr>
 				<th scope="row" valign="top">
 					<label for="edd-products"><?php printf( __( '%s Requirements', 'edd' ), edd_get_label_singular() ); ?></label>
 				</th>
 				<td>
 					<p>
-						<?php printf( __( 'Select %s that must be purchased for this discount to be valid.', 'edd' ), edd_get_label_plural() ); ?><br/>
-					<?php echo EDD()->html->product_dropdown( array(
-						'name'        => 'products[]',
-						'id'          => 'products',
-						'multiple'    => true,
-						'chosen'      => true 
-					) ); ?><br/>
+						<?php echo EDD()->html->product_dropdown( array(
+							'name'        => 'products[]',
+							'id'          => 'products',
+							'multiple'    => true,
+							'chosen'      => true 
+						) ); ?><br/>
 					</p>
-					<p>
-						<select id="edd-product-condition" name="product_condition">
-							<option value="all"><?php printf( __( 'Cart must contain all selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
-							<option value="any"><?php printf( __( 'Cart needs one or more of the selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
-						</select>
-					</p>
-					<p>
-						<label for="edd-non-global-discount">
-							<input type="checkbox" id="edd-non-global-discount" name="not_global" value="1" />
-							<?php printf( __( 'Apply discount only to selected %s? Leave unchecked to discount entire purchase.', 'edd' ), edd_get_label_plural() ); ?>
-						</label>
-					</p>
+					<div id="edd-discount-product-conditions" style="display:none;">
+						<p>
+							<select id="edd-product-condition" name="product_condition">
+								<option value="all"><?php printf( __( 'Cart must contain all selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
+								<option value="any"><?php printf( __( 'Cart needs one or more of the selected %s', 'edd' ), edd_get_label_plural() ); ?></option>
+							</select>
+						</p>
+						<p>
+							<label>
+								<input type="radio" class="tog" name="not_global" value="1"/>
+								<?php printf( __( 'Apply discount only to selected %s.', 'edd' ), edd_get_label_plural() ); ?>
+							</label><br/>
+							<label>
+								<input type="radio" class="tog" name="not_global" value="0" checked="checked"/>
+								<?php _e( 'Apply discount to entire purchase.', 'edd' ); ?>
+							</label>
+						</p>
+					</div>
 				</td>
 			</tr>
-			<tr class="form-field">
+			<tr>
 				<th scope="row" valign="top">
 					<label for="edd-excluded-products"><?php printf( __( 'Excluded %s', 'edd' ), edd_get_label_plural() ); ?></label>
 				</th>
@@ -98,10 +103,10 @@ $downloads = get_posts( array( 'post_type' => 'download', 'nopaging' => true ) )
 						'multiple' => true,
 						'chosen'   => true 
 					) ); ?><br/>
-					<p class="description"><?php printf( __( '%s that this discount code cannot be applied to.', 'edd' ), edd_get_label_plural() ); ?></p>
+					<p class="description"><?php printf( __( 'Select %s relevant to this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>
 			</tr>
-			<tr class="form-field">
+			<tr>
 				<th scope="row" valign="top">
 					<label for="edd-start"><?php _e( 'Start date', 'edd' ); ?></label>
 				</th>
