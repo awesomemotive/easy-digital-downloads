@@ -99,7 +99,7 @@ $condition_display = empty( $product_reqs ) ? ' style="display:none;"' : '';
 							</label>
 						</p>
 					</div>
-					<p class="description"><?php printf( __( 'Select %s that must be purchased for this discount to be valid.', 'edd' ), edd_get_label_plural() ); ?></p>
+					<p class="description"><?php printf( __( 'Select %s relevant to this discount.', 'edd' ), edd_get_label_plural() ); ?></p>
 				</td>
 			</tr>
 			<tr class="form-field">
