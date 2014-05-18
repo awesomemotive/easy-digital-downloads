@@ -776,6 +776,10 @@ jQuery(document).ready(function ($) {
 
 		taxes : function() {
 
+			if( $('select.edd-no-states').length ) {
+				$('select.edd-no-states').closest('tr').hide();
+			}
+
 			// Update base state field based on selected base country
 			$('select[name="edd_settings[base_country]"]').change(function() {
 				var $this = $(this), $tr = $this.closest('tr');
