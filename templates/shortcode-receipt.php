@@ -35,6 +35,22 @@ $status    = edd_get_payment_status( $payment, true );
 			<td class="edd_receipt_payment_status"><strong><?php _e( 'Payment Status', 'edd' ); ?>:</strong></td>
 			<td class="edd_receipt_payment_status <?php echo strtolower( $status ); ?>"><?php echo $status; ?></td>
 		</tr>
+		<?php if ( ( $fees = edd_get_payment_fees( $payment->ID, 'fee' ) ) ) : ?>
+		<tr>
+			<td><strong><?php _e( 'Fees', 'edd' ); ?>:</strong></td>
+			<td>
+				<ul class="edd_receipt_fees">
+				<?php foreach( $fees as $fee ) : ?>
+					<li>
+						<span class="edd_fee_label"><?php echo esc_html( $fee['label'] ); ?></span>
+						<span class="edd_fee_sep">&nbsp;&ndash;&nbsp;</span>
+						<span class="edd_fee_amount"><?php echo edd_currency_filter( edd_format_amount( $fee['amount'] ) ); ?></span>
+					</li>
+				<?php endforeach; ?>
+				</ul>
+			</td>
+		</tr>
+		<?php endif; ?>
 		<?php if ( $edd_receipt_args[ 'price' ] ) : ?>
 
 			<tr>
@@ -192,7 +208,7 @@ $status    = edd_get_payment_status( $payment, true );
 				<?php endif; ?>
 			<?php endforeach; ?>
 		<?php endif; ?>
-		<?php if ( ( $fees = edd_get_payment_fees( $payment->ID, $meta ) ) ) : ?>
+		<?php if ( ( $fees = edd_get_payment_fees( $payment->ID, 'item' ) ) ) : ?>
 			<?php foreach( $fees as $fee ) : ?>
 				<tr>
 					<td class="edd_fee_label"><?php echo esc_html( $fee['label'] ); ?></td>
