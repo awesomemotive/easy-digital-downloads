@@ -51,11 +51,14 @@
 					<td class="edd_cart_fee_label"><?php echo esc_html( $fee['label'] ); ?></td>
 					<td class="edd_cart_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee['amount'] ) ) ); ?></td>
 					<td>
-						<a href="<?php echo esc_url( edd_remove_cart_fee_url( $fee_id ) ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
+						<?php if( ! empty( $fee['type'] ) && 'item' == $fee['type'] ) : ?>
+							<a href="<?php echo esc_url( edd_remove_cart_fee_url( $fee_id ) ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
+						<?php endif; ?>
 					</td>
 				</tr>
 			<?php endforeach; ?>
 		<?php endif; ?>
+
 		<?php do_action( 'edd_cart_items_after' ); ?>
 	</tbody>
 	<tfoot>
