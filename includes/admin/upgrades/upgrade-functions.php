@@ -63,6 +63,14 @@ function edd_show_upgrade_notices() {
 		);
 	}
 
+	if ( version_compare( $edd_version, '2.0', '<' ) ) {
+		printf(
+			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the database, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
+			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
+			'</a>'
+		);
+	}
+
 	if ( EDD()->session->get( 'upgrade_sequential' ) && edd_get_payments() ) {
 		printf(
 			'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade past order numbers to make them sequential, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
@@ -104,6 +112,10 @@ function edd_trigger_upgrades() {
 
 	if ( version_compare( $edd_version, '1.5', '<' ) ) {
 		edd_v15_upgrades();
+	}
+
+	if ( version_compare( $edd_version, '2.0', '<' ) ) {
+		edd_v20_upgrades();
 	}
 
 	update_option( 'edd_version', EDD_VERSION );
@@ -303,9 +315,40 @@ function edd_v15_upgrades() {
 }
 
 /**
+ * Upgrades for EDD v2.0
+ *
+ * @since 2.0
+ * @return void
+ */
+function edd_v20_upgrades() {
+
+	global $edd_options;
+
+	// Upgrade for the anti-behavior fix - #2188
+	if( empty( $edd_options['disable_ajax_cart'] ) ) {
+		$edd_options['enable_ajax_cart'] = '1';
+	}
+
+	// Upgrade for the anti-behavior fix - #2188
+	if( empty( $edd_options['disable_cart_saving'] ) ) {
+		$edd_options['enable_cart_saving'] = '1';
+	}
+
+	// Properly set the register / login form options based on whether they were enabled previously - #2076
+	if( ! empty( $edd_options['show_register_form'] ) ) {
+		$edd_options['show_register_form'] = 'both';
+	} else {
+		$edd_options['show_register_form'] = 'none';
+	}
+
+	update_option( 'edd_settings', $edd_options );
+
+}
+
+/**
  * Upgrades for EDD v2.0 and sequential payment numbers
  *
- * @since 2.5
+ * @since 2.0
  * @return void
  */
 function edd_v20_upgrade_sequential_payment_numbers() {
