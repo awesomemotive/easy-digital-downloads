@@ -599,8 +599,7 @@ function edd_email_tag_date( $payment_id ) {
  * @return string subtotal
  */
 function edd_email_tag_subtotal( $payment_id ) {
-	return edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
-	$subtotal = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) );
+	$subtotal = edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
 	return html_entity_decode( $subtotal, ENT_COMPAT, 'UTF-8' );
 }
 
