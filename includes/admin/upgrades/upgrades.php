@@ -27,15 +27,42 @@ function edd_upgrades_screen() {
 	?> 
 	<div class="wrap">
 		<h2><?php _e( 'Easy Digital Downloads - Upgrades', 'edd' ); ?></h2>
-		<div id="edd-upgrade-status">
-			<p><?php _e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'edd' ); ?></p>
-			<?php if( ! empty( $total ) ) : ?>
-				<p><strong><?php printf( __( 'Step %d of approximately %d running', 'edd' ), $step, $steps ); ?>
-			<?php endif; ?>
-		</div>
-		<script type="text/javascript">
-			document.location.href = "index.php?edd_action=<?php echo $action; ?>&step=<?php echo $step; ?>&total=<?php echo $total; ?>&custom=<?php echo $custom; ?>";
-		</script>
+	
+		<?php if( ! empty( $action ) ) : ?>
+
+			<div id="edd-upgrade-status">
+				<p><?php _e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'edd' ); ?></p>
+				<?php if( ! empty( $total ) ) : ?>
+					<p><strong><?php printf( __( 'Step %d of approximately %d running', 'edd' ), $step, $steps ); ?>
+				<?php endif; ?>
+			</div>
+			<script type="text/javascript">
+				document.location.href = "index.php?edd_action=<?php echo $action; ?>&step=<?php echo $step; ?>&total=<?php echo $total; ?>&custom=<?php echo $custom; ?>";
+			</script>
+
+		<?php else : ?>
+
+			<div id="edd-upgrade-status">
+				<p>
+					<?php _e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'edd' ); ?>
+					<img src="<?php echo EDD_PLUGIN_URL . '/assets/images/loading.gif'; ?>" id="edd-upgrade-loader"/>
+				</p>
+			</div>
+			<script type="text/javascript">
+				jQuery( document ).ready( function() {
+					// Trigger upgrades on page load
+					var data = { action: 'edd_trigger_upgrades' };
+					jQuery.post( ajaxurl, data, function (response) {
+						if( response == 'complete' ) {
+							jQuery('#edd-upgrade-loader').hide();
+							document.location.href = 'index.php?page=edd-about'; // Redirect to the welcome page
+						}
+					});
+				});
+			</script>
+
+		<?php endif; ?>
+
 	</div>
 	<?php
 }
