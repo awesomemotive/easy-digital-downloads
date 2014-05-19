@@ -1124,23 +1124,33 @@ function edd_get_payment_tax( $payment_id = 0, $payment_meta = false ) {
  *
  * @since 1.5
  * @param int $payment_id Payment ID
- * @param bool $payment_meta Get payment meta? (default: false)
+ * @param string $type Fee type
  * @return mixed array if payment fees found, false otherwise
  */
-function edd_get_payment_fees( $payment_id = 0, $payment_meta = false ) {
-	if ( ! $payment_meta )
-		$payment_meta = edd_get_payment_meta( $payment_id );
+function edd_get_payment_fees( $payment_id = 0, $type = 'all' ) {
+
+	$payment_meta = edd_get_payment_meta( $payment_id );
 
 	$fees = array();
 	$payment_fees = isset( $payment_meta['fees'] ) ? $payment_meta['fees'] : false;
 
 	if ( ! empty( $payment_fees ) ) {
+
 		foreach ( $payment_fees as $fee_id => $fee ) {
-			$fees[] = array(
-				'id'     => $fee_id,
-				'amount' => $fee['amount'],
-				'label'  => $fee['label']
-			);
+
+			if( 'all' != $type && ! empty( $fee['type'] ) && $type != $fee['type'] ) {
+
+				unset( $payment_fees[ $fee_id ] );
+
+			} else {
+
+				$fees[] = array(
+					'id'     => $fee_id,
+					'amount' => $fee['amount'],
+					'label'  => $fee['label']
+				);
+
+			}
 		}
 	}
 
