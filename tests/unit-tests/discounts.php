@@ -169,6 +169,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_is_min_met() {
+		$this->markTestIncomplete('Test');
 		$this->assertFalse( edd_discount_is_min_met( $this->_post->ID ) );
 	}
 
