@@ -80,13 +80,17 @@ jQuery(document).ready(function($) {
 
     /* Credit card verification */
 
-    $body.on('focusout', '.edd-do-validate .card-number', function() {
-        var card_field = $(this);
+    $body.on('keyup', '.edd-do-validate .card-number', function() {
+        edd_validate_card( $(this) );
+    });
+
+    function edd_validate_card( field ) {
+        var card_field = field;
         card_field.validateCreditCard(function(result) {
             var $card_type = $('.card-type');
 
             if(result.card_type == null) {
-                $card_type.addClass('off');
+                $card_type.removeClass().addClass('off card-type');
                 card_field.removeClass('valid');
                 card_field.addClass('error');
             } else {
@@ -101,7 +105,7 @@ jQuery(document).ready(function($) {
                 }
             }
         });
-    });
+    }
 
     // Make sure a gateway is selected
     $body.on('submit', '#edd_payment_mode', function() {
