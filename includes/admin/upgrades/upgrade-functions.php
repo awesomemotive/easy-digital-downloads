@@ -325,12 +325,16 @@ function edd_v20_upgrades() {
 	global $edd_options;
 
 	// Upgrade for the anti-behavior fix - #2188
-	if( empty( $edd_options['disable_ajax_cart'] ) ) {
+	if( ! empty( $edd_options['disable_ajax_cart'] ) ) {
+		unset( $edd_options['enable_ajax_cart'] );
+	} else {
 		$edd_options['enable_ajax_cart'] = '1';
 	}
 
 	// Upgrade for the anti-behavior fix - #2188
-	if( empty( $edd_options['disable_cart_saving'] ) ) {
+	if( ! empty( $edd_options['disable_cart_saving'] ) ) {
+		unset( $edd_options['enable_cart_saving'] );
+	} else {
 		$edd_options['enable_cart_saving'] = '1';
 	}
 
