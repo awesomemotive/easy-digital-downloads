@@ -1259,9 +1259,9 @@ function edd_color_callback( $args ) {
 function edd_shop_states_callback($args) {
 	global $edd_options;
 
-	$html = '<select id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']"/>';
-
 	$states = edd_get_shop_states();
+	$class  = empty( $states ) ? ' class="edd-no-states"' : '';
+	$html   = '<select id="edd_settings[' . $args['id'] . ']" name="edd_settings[' . $args['id'] . ']"' . $class . '/>';
 
 	foreach ( $states as $option => $name ) :
 		$selected = isset( $edd_options[ $args['id'] ] ) ? selected( $option, $edd_options[$args['id']], false ) : '';
