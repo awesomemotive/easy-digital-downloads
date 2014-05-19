@@ -1127,7 +1127,7 @@ function edd_get_payment_tax( $payment_id = 0, $payment_meta = false ) {
  * @param string $type Fee type
  * @return mixed array if payment fees found, false otherwise
  */
-function edd_get_payment_fees( $payment_id = 0, $type = 'fee' ) {
+function edd_get_payment_fees( $payment_id = 0, $type = 'all' ) {
 
 	$payment_meta = edd_get_payment_meta( $payment_id );
 

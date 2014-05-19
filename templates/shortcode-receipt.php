@@ -218,20 +218,5 @@ $status    = edd_get_payment_status( $payment, true );
 		<?php endif; ?>
 		</tbody>
 
-		<tfoot>
-			<tr>
-				<?php
-				$colspan = '';
-				if( edd_use_skus() && edd_item_quantities_enabled() ) {
-					$colspan = ' colspan="3"';
-				} elseif( edd_use_skus() || edd_item_quantities_enabled() ) {
-					$colspan = ' colspan="2"';
-				}
-				?>
-				<td<?php echo $colspan; ?>><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
-				<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
-			</tr>
-		</tfoot>
-
 	</table>
 <?php endif; ?>
