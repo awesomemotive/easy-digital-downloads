@@ -35,23 +35,41 @@ class EDD_Fees {
 	 *
 	 * @since 1.5
 	 *
-	 * @param string $amount Fee Amount
-	 * @param string $label Fee label
-	 * @param string $id
+	 * @param array $args Fee arguments
 	 *
 	 * @uses EDD_Fees::get_fees()
 	 * @uses EDD_Session::set()
 	 *
 	 * @return mixed
 	 */
-	public function add_fee( $amount = '', $label = '', $id = '' ) {
-		$fees = $this->get_fees();
+	public function add_fee( $args = array() ) {
+
+		// Backwards compatabliity with pre 2.0
+		if ( func_num_args() > 1 ) {
+
+			$args   = func_get_args();
+			$amount = $args[0];
+			$label  = isset( $args[1] ) ? $args[1] : '';
+			$id     = isset( $args[2] ) ? $args[2] : '';
+
+		} else {
+
+			$amount = isset( $args['amount'] ) ? $args['amount']               : 0;
+			$label  = isset( $args['label'] )  ? $args['label']                : '';
+			$id     = isset( $args['id'] )     ? $args['id']                   : '';
+			$type   = isset( $args['type'] )   ? strtolower( $args['type'] )   : 'fee';
+			if( 'fee' != $type && 'item' != $type ) {
+				$type = 'fee';
+			}
+		}
+
+		$fees = $this->get_fees( 'all' );
 
 		$key = empty( $id ) ? sanitize_key( $label ) : sanitize_key( $id );
 
 		$amount = edd_sanitize_amount( $amount );
 
-		$fees[ $key ] = array( 'amount' => $amount, 'label' => $label );
+		$fees[ $key ] = array( 'amount' => $amount, 'label' => $label, 'type' => $type );
 
 		EDD()->session->set( 'edd_cart_fees', $fees );
 
@@ -85,11 +103,12 @@ class EDD_Fees {
 	 *
 	 * @access public
 	 * @since 1.5
+	 * @param string $type Fee type, "fee" or "item"
 	 * @uses EDD_Fees::get_fees()
 	 * @return bool
 	 */
-	public function has_fees() {
-		$fees = $this->get_fees();
+	public function has_fees( $type = 'fee' ) {
+		$fees = $this->get_fees( $type );
 		return ! empty( $fees ) && is_array( $fees );
 	}
 
@@ -98,11 +117,19 @@ class EDD_Fees {
 	 *
 	 * @access public
 	 * @since 1.5
+	 * @param string $type Fee type, "fee" or "item"
 	 * @uses EDD_Session::get()
 	 * @return mixed array|bool
 	 */
-	public function get_fees() {
+	public function get_fees( $type = 'fee' ) {
 		$fees = EDD()->session->get( 'edd_cart_fees' );
+		if( ! empty( $fees ) && ! empty( $type ) && 'all' !== $type ) {
+			foreach( $fees as $key => $fee ) {
+				if( ! empty( $fee['type'] ) && $type != $fee['type'] ) {
+					unset( $fees[ $key ] );
+				}
+			}
+		}
 		return ! empty( $fees ) ? $fees : array();
 	}
 
@@ -124,6 +151,31 @@ class EDD_Fees {
 	}
 
 	/**
+	 * Calculate the total fee amount for a specific fee type
+	 *
+	 * Can be negative
+	 *
+	 * @access public
+	 * @since 2.0
+	 * @param string $type Fee type, "fee" or "item"
+	 * @uses EDD_Fees::get_fees()
+	 * @uses EDD_Fees::has_fees()
+	 * @return float $total Total fee amount
+	 */
+	public function type_total( $type = 'fee' ) {
+		$fees  = $this->get_fees( $type );
+		$total = (float) 0.00;
+
+		if ( $this->has_fees( $type ) ) {
+			foreach ( $fees as $fee ) {
+				$total += edd_sanitize_amount( $fee['amount'] );
+			}
+		}
+
+		return edd_sanitize_amount( $total );
+	}
+
+	/**
 	 * Calculate the total fee amount
 	 *
 	 * Can be negative
@@ -135,10 +187,10 @@ class EDD_Fees {
 	 * @return float $total Total fee amount
 	 */
 	public function total() {
-		$fees  = $this->get_fees();
+		$fees  = $this->get_fees( 'all' );
 		$total = (float) 0.00;
 
-		if ( $this->has_fees() ) {
+		if ( $this->has_fees( 'all' ) ) {
 			foreach ( $fees as $fee ) {
 				$total += edd_sanitize_amount( $fee['amount'] );
 			}
@@ -158,8 +210,8 @@ class EDD_Fees {
 	 * @return array $payment_meta Return the payment meta with the fees added
 	*/
 	public function record_fees( $payment_meta, $payment_data ) {
-		if ( $this->has_fees() ) {
-			$payment_meta['fees'] = $this->get_fees();
+		if ( $this->has_fees( 'all' ) ) {
+			$payment_meta['fees'] = $this->get_fees( 'all' );
 			EDD()->session->set( 'edd_cart_fees', null );
 		}
 

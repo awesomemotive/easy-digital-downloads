@@ -609,11 +609,12 @@ function edd_cart_total( $echo = true ) {
  * Just a simple wrapper function for EDD_Fees::has_fees()
  *
  * @since 1.5
+ * @param string $type
  * @uses EDD()->fees->has_fees()
  * @return bool Whether the cart has fees applied or not
  */
-function edd_cart_has_fees() {
-	return EDD()->fees->has_fees();
+function edd_cart_has_fees( $type = 'all' ) {
+	return EDD()->fees->has_fees( $type );
 }
 
 /**
@@ -622,11 +623,12 @@ function edd_cart_has_fees() {
  * Just a simple wrapper function for EDD_Fees::get_fees()
  *
  * @since 1.5
+ * @param string $type
  * @uses EDD()->fees->get_fees()
  * @return array All the cart fees that have been applied
  */
-function edd_get_cart_fees() {
-	return EDD()->fees->get_fees();
+function edd_get_cart_fees( $type = 'all' ) {
+	return EDD()->fees->get_fees( $type );
 }
 
 /**
