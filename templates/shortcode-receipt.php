@@ -25,16 +25,31 @@ $status    = edd_get_payment_status( $payment, true );
 
 	<tbody>
 
+		<tr>
+			<td class="edd_receipt_payment_status"><strong><?php _e( 'Payment Status', 'edd' ); ?>:</strong></td>
+			<td class="edd_receipt_payment_status <?php echo strtolower( $status ); ?>"><?php echo $status; ?></td>
+		</tr>
+
+		<?php if ( $edd_receipt_args['payment_key'] ) : ?>
+			<tr>
+				<td><strong><?php _e( 'Payment Key', 'edd' ); ?>:</strong></td>
+				<td><?php echo get_post_meta( $payment->ID, '_edd_payment_purchase_key', true ); ?></td>
+			</tr>
+		<?php endif; ?>
+
+		<?php if ( $edd_receipt_args['payment_method'] ) : ?>
+			<tr>
+				<td><strong><?php _e( 'Payment Method', 'edd' ); ?>:</strong></td>
+				<td><?php echo edd_get_gateway_checkout_label( edd_get_payment_gateway( $payment->ID ) ); ?></td>
+			</tr>
+		<?php endif; ?>
 		<?php if ( $edd_receipt_args['date'] ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Date', 'edd' ); ?>:</strong></td>
 			<td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $meta['date'] ) ); ?></td>
 		</tr>
 		<?php endif; ?>
-		<tr>
-			<td class="edd_receipt_payment_status"><strong><?php _e( 'Payment Status', 'edd' ); ?>:</strong></td>
-			<td class="edd_receipt_payment_status <?php echo strtolower( $status ); ?>"><?php echo $status; ?></td>
-		</tr>
+
 		<?php if ( ( $fees = edd_get_payment_fees( $payment->ID, 'fee' ) ) ) : ?>
 		<tr>
 			<td><strong><?php _e( 'Fees', 'edd' ); ?>:</strong></td>
@@ -51,25 +66,6 @@ $status    = edd_get_payment_status( $payment, true );
 			</td>
 		</tr>
 		<?php endif; ?>
-		<?php if ( $edd_receipt_args[ 'price' ] ) : ?>
-
-			<tr>
-				<td><strong><?php _e( 'Subtotal', 'edd' ); ?></strong></td>
-				<td>
-					<?php echo edd_payment_subtotal( $payment->ID ); ?>
-				</td>
-			</tr>
-			<?php if( edd_use_taxes() ) : ?>
-			<tr>
-				<td><strong><?php _e( 'Tax', 'edd' ); ?></strong></td>
-				<td><?php echo edd_payment_tax( $payment->ID ); ?></td>
-			</tr>
-			<?php endif; ?>
-			<tr>
-				<td><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
-				<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
-			</tr>
-		<?php endif; ?>
 
 		<?php if ( $edd_receipt_args['discount'] && $user['discount'] != 'none' ) : ?>
 			<tr>
@@ -78,18 +74,27 @@ $status    = edd_get_payment_status( $payment, true );
 			</tr>
 		<?php endif; ?>
 
-		<?php if ( $edd_receipt_args['payment_method'] ) : ?>
+		<?php if( edd_use_taxes() ) : ?>
 			<tr>
-				<td><strong><?php _e( 'Payment Method', 'edd' ); ?>:</strong></td>
-				<td><?php echo edd_get_gateway_checkout_label( edd_get_payment_gateway( $payment->ID ) ); ?></td>
+				<td><strong><?php _e( 'Tax', 'edd' ); ?></strong></td>
+				<td><?php echo edd_payment_tax( $payment->ID ); ?></td>
 			</tr>
 		<?php endif; ?>
 
-		<?php if ( $edd_receipt_args['payment_key'] ) : ?>
+		<?php if ( $edd_receipt_args[ 'price' ] ) : ?>
+
 			<tr>
-				<td><strong><?php _e( 'Payment Key', 'edd' ); ?>:</strong></td>
-				<td><?php echo get_post_meta( $payment->ID, '_edd_payment_purchase_key', true ); ?></td>
+				<td><strong><?php _e( 'Subtotal', 'edd' ); ?></strong></td>
+				<td>
+					<?php echo edd_payment_subtotal( $payment->ID ); ?>
+				</td>
 			</tr>
+
+			<tr>
+				<td><strong><?php _e( 'Total Price', 'edd' ); ?>:</strong></td>
+				<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
+			</tr>
+
 		<?php endif; ?>
 
 		<?php do_action( 'edd_payment_receipt_after', $payment, $edd_receipt_args ); ?>
@@ -100,7 +105,7 @@ $status    = edd_get_payment_status( $payment, true );
 
 <?php if ( $edd_receipt_args[ 'products' ] ) : ?>
 
-	<h3><?php echo apply_filters( 'edd_payment_receipt_products_title', __( 'Items', 'edd' ) ); ?></h3>
+	<h3><?php echo apply_filters( 'edd_payment_receipt_products_title', __( 'Products', 'edd' ) ); ?></h3>
 
 	<table id="edd_purchase_receipt_products">
 		<thead>
@@ -212,6 +217,9 @@ $status    = edd_get_payment_status( $payment, true );
 			<?php foreach( $fees as $fee ) : ?>
 				<tr>
 					<td class="edd_fee_label"><?php echo esc_html( $fee['label'] ); ?></td>
+					<?php if ( edd_item_quantities_enabled() ) : ?>
+						<td></td>
+					<?php endif; ?>
 					<td class="edd_fee_amount"><?php echo edd_currency_filter( edd_format_amount( $fee['amount'] ) ); ?></td>
 				</tr>
 			<?php endforeach; ?>
