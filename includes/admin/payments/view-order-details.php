@@ -292,9 +292,8 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 	
 						<?php 
 							$column_count = edd_item_quantities_enabled() ? 4 : 3;
-							$extra_columns = apply_filters('edd_view_order_details_extra_columns', false);
-							if ($extra_columns)
-							{
+							$extra_columns = apply_filters( 'edd_view_order_details_extra_columns', false );
+							if ( $extra_columns ) {
 								$column_count += count($extra_columns);
 							}
 						?>
@@ -340,12 +339,11 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][amount]" class="edd-payment-details-download-amount" value="<?php echo esc_attr( $price ); ?>"/>
 												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][quantity]" class="edd-payment-details-download-quantity" value="<?php echo esc_attr( $quantity ); ?>"/>
 												<?php 
-													foreach($extra_columns as $extra_column => $extra_column_label)
-													{
+													foreach( $extra_columns as $extra_column => $extra_column_label ) {
 												?>
 														<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][<?php echo $extra_column; ?>]" 
 															class="edd-payment-details-download-<?php echo $extra_column; ?>" 
-															value="<?php echo apply_filters('edd_view_order_details_downloads_extra_column_value', $item_id, $key, $extra_column, $cart_item); ?>"/>
+															value="<?php echo apply_filters( 'edd_view_order_details_downloads_extra_column_value', $item_id, $key, $extra_column, $cart_item ); ?>"/>
 												<?php
 													}
 												?>
@@ -364,10 +362,9 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 	
 
 											<?php 
-												foreach($extra_columns as $extra_column => $extra_column_label)
-												{
+												foreach( $extra_columns as $extra_column => $extra_column_label ) {
 											?>
-													<li class="<?php echo $extra_column; ?>"><?php echo apply_filters('edd_view_order_details_downloads_extra_column_value', $item_id, $key, $extra_column, $cart_item); ?></li>
+													<li class="<?php echo $extra_column; ?> extra-column"><?php echo apply_filters( 'edd_view_order_details_downloads_extra_column_value', $item_id, $key, $extra_column, $cart_item ); ?></li>
 											<?php
 												}
 											?>
@@ -411,14 +408,13 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 										</li>
 	
 										<?php 
-											foreach($extra_columns as $extra_column => $extra_column_label)
-											{
+											foreach( $extra_columns as $extra_column => $extra_column_label ) {
 										?>
 												<li class="<?php echo $extra_column; ?> extra-column">
 													<span id="edd-edd-order-download-<?php echo $extra_column; ?>-wrap">
 														<label class="edd-label" for="edd-order-download-<?php echo $extra_column; ?>"><?php echo $extra_column_label; ?></label>
 										<?php
-														do_action('edd_view_order_details_download_extra_column_render', $item_id, $key, $extra_column, $cart_item, "edd-order-download-$extra_column", "edd-order-download-$extra_column");
+														do_action( 'edd_view_order_details_download_extra_column_render', $item_id, $key, $extra_column, $cart_item, "edd-order-download-$extra_column", "edd-order-download-$extra_column" );
 										?>
 													</span>
 												</li>
