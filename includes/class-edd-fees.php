@@ -51,6 +51,7 @@ class EDD_Fees {
 			$amount = $args[0];
 			$label  = isset( $args[1] ) ? $args[1] : '';
 			$id     = isset( $args[2] ) ? $args[2] : '';
+			$type   = 'fee';
 
 		} else {
 
