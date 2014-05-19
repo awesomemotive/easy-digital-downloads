@@ -389,7 +389,7 @@ jQuery(document).ready(function ($) {
 					var value = $( this ).val();
 					name = name.replace("edd-order-download-", "");
 					clone.find( 'input.edd-payment-details-download-' + name ).val( value );
-					clone.find( '.currency' ).text( value );
+					clone.find( '.extra-column' ).text( value );
 				});
 
 				// Replace the name / id attributes
