@@ -762,7 +762,7 @@ function edd_purchase_form_validate_cc() {
 	// Validate the card zip
 	if ( ! empty( $card_data['card_zip'] ) ) {
 		if ( ! edd_purchase_form_validate_cc_zip( $card_data['card_zip'], $card_data['card_country'] ) ) {
-			edd_set_error( 'invalid_cc_zip', __( 'The zip code you entered for your billing address is invalid', 'edd' ) );
+			edd_set_error( 'invalid_cc_zip', __( 'The zip / postal code you entered for your billing address is invalid', 'edd' ) );
 		}
 	}
 
