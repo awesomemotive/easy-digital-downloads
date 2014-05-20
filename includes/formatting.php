@@ -41,7 +41,7 @@ function edd_sanitize_amount( $amount ) {
 	}
 
 	$decimals = apply_filters( 'edd_sanitize_amount_decimals', 2, $amount );
-	$amount   = number_format( $amount, $decimals, '.', '' );
+	$amount   = number_format( (double) $amount, $decimals, '.', '' );
 
 	return apply_filters( 'edd_sanitize_amount', $amount );
 }
