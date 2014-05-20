@@ -146,6 +146,26 @@ function edd_login_form_shortcode( $atts, $content = null ) {
 add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
 
 /**
+ * Register Shortcode
+ *
+ * Shows a registration form allowing users to users to register for the site
+ *
+ * @since 2.0
+ * @param array $atts Shortcode attributes
+ * @param string $content
+ * @uses edd_register_form()
+ * @return string
+ */
+function edd_register_form_shortcode( $atts, $content = null ) {
+	extract( shortcode_atts( array(
+			'redirect' => '',
+		), $atts, 'edd_register' )
+	);
+	return edd_register_form( $redirect );
+}
+add_shortcode( 'edd_register', 'edd_register_form_shortcode' );
+
+/**
  * Discounts short code
  *
  * Displays a list of all the active discounts. The active discounts can be configured
