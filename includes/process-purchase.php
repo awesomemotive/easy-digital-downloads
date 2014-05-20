@@ -630,11 +630,11 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 		return -1;
 
 	$user_args = apply_filters( 'edd_insert_user_args', array(
-			'user_login'      => isset( $user_data['user_login'] ) ? $user_data['user_login'] : null,
-			'user_pass'       => isset( $user_data['user_pass'] ) ? $user_data['user_pass'] : null,
-			'user_email'      => $user_data['user_email'],
-			'first_name'      => $user_data['user_first'],
-			'last_name'       => $user_data['user_last'],
+			'user_login'      => isset( $user_data['user_login'] ) ? $user_data['user_login'] : '',
+			'user_pass'       => isset( $user_data['user_pass'] )  ? $user_data['user_pass']  : '',
+			'user_email'      => isset( $user_data['user_email'] ) ? $user_data['user_email'] : '',
+			'first_name'      => isset( $user_data['user_first'] ) ? $user_data['user_first'] : '',
+			'last_name'       => isset( $user_data['user_last'] )  ? $user_data['user_last']  : '',
 			'user_registered' => date( 'Y-m-d H:i:s' ),
 			'role'            => get_option( 'default_role' )
 		), $user_data );

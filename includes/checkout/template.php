@@ -35,7 +35,7 @@ function edd_checkout_form() {
 ?>
 			<div id="edd_checkout_form_wrap" class="edd_clearfix">
 				<?php do_action( 'edd_before_purchase_form' ); ?>
-				<form id="edd_purchase_form" action="<?php echo $form_action; ?>" method="POST">
+				<form id="edd_purchase_form" class="edd_form" action="<?php echo $form_action; ?>" method="POST">
 					<?php
 					do_action( 'edd_checkout_form_top' );
 
