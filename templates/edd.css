@@ -183,7 +183,8 @@ a.edd-add-to-cart .edd-add-to-cart-label, a.edd-add-to-cart .edd-loading {
 -------------------------------------------------------------- */
 
 /* Twenty Twelve */
-#edd_checkout_form_wrap input.edd-input.required,#edd_checkout_form_wrap select.edd-select.required { color: #000; }
+.edd_form input.edd-input.required,
+.edd_form select.edd-select.required { color: #000; }
 
 /* =Receipt Page
 -------------------------------------------------------------- */
@@ -226,10 +227,12 @@ table#edd_purchase_receipt_products .edd_bundled_product_name { font-style: ital
 #edd_user_history .edd_purchase_status.cancelled,
 #edd_user_history .edd_purchase_status.pending { color: #f73f2e; }
 
-/* =Registration Form
+/* =Registration / login Form
 -------------------------------------------------------------- */
-#edd_registration_form .edd-input { display: inline-block; width: 200px; }
-#edd_registration_form label { display: inline-block; width: 200px; }
+#edd_register_form .edd-input,
+#edd_login_form .edd-input { display: inline-block; width: 200px; }
+#edd_register_form label,
+#edd_login_form label { display: inline-block; width: 200px; }
 
 /* =Profile Form
 -------------------------------------------------------------- */
