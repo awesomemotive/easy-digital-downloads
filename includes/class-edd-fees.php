@@ -55,10 +55,11 @@ class EDD_Fees {
 
 		} else {
 
-			$amount = isset( $args['amount'] ) ? $args['amount']               : 0;
-			$label  = isset( $args['label'] )  ? $args['label']                : '';
-			$id     = isset( $args['id'] )     ? $args['id']                   : '';
-			$type   = isset( $args['type'] )   ? strtolower( $args['type'] )   : 'fee';
+			$amount  = isset( $args['amount'] )      ? $args['amount']             : 0;
+			$label   = isset( $args['label'] )       ? $args['label']              : '';
+			$id      = isset( $args['id'] )          ? $args['id']                 : '';
+			$no_tax  = isset( $args['no_tax'] )      ? true                        : false;
+			$type    = isset( $args['type'] )        ? strtolower( $args['type'] ) : 'fee';
 			if( 'fee' != $type && 'item' != $type ) {
 				$type = 'fee';
 			}
@@ -70,7 +71,7 @@ class EDD_Fees {
 
 		$amount = edd_sanitize_amount( $amount );
 
-		$fees[ $key ] = array( 'amount' => $amount, 'label' => $label, 'type' => $type );
+		$fees[ $key ] = array( 'amount' => $amount, 'label' => $label, 'type' => $type, 'no_tax' => $no_tax );
 
 		EDD()->session->set( 'edd_cart_fees', $fees );
 
