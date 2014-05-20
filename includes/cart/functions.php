@@ -645,6 +645,34 @@ function edd_get_cart_fee_total() {
 }
 
 /**
+ * Get cart tax on Fees
+ *
+ * @since 2.0
+ * @uses EDD()->fees->get_fees()
+ * @return float Total Cart tax on Fees
+ */
+function edd_get_cart_fee_tax() {
+
+	$tax  = 0;
+	$fees = edd_get_cart_fees();
+
+	if( $fees ) {
+
+		foreach ( $fees as $fee_id => $fee ) {
+			
+			if( ! empty( $fee['no_tax' ] ) ) {
+				continue;
+			}
+
+			$tax += edd_calculate_tax( $fee['amount'] );
+
+		}
+	}
+
+	return apply_filters( 'edd_get_cart_fee_tax', $tax );
+}
+
+/**
  * Get Purchase Summary
  *
  * Retrieves the purchase summary.
@@ -692,6 +720,8 @@ function edd_get_cart_tax() {
 		}
 
 	}
+
+	$cart_tax += edd_get_cart_fee_tax();
 
 	return apply_filters( 'edd_get_cart_tax', $cart_tax );
 }
