@@ -53,26 +53,47 @@ class EDD_Fees {
 			$id     = isset( $args[2] ) ? $args[2] : '';
 			$type   = 'fee';
 
+			$args = array(
+				'amount' => $amount,
+				'label'  => $label,
+				'id'     => $id,
+				'type'   => $type,
+				'no_tax' => false
+			);
+
 		} else {
 
-			$amount  = isset( $args['amount'] )      ? $args['amount']             : 0;
-			$label   = isset( $args['label'] )       ? $args['label']              : '';
-			$id      = isset( $args['id'] )          ? $args['id']                 : '';
-			$no_tax  = isset( $args['no_tax'] )      ? true                        : false;
-			$type    = isset( $args['type'] )        ? strtolower( $args['type'] ) : 'fee';
-			if( 'fee' != $type && 'item' != $type ) {
-				$type = 'fee';
+			$defaults = array(
+				'amount' => 0,
+				'label'  => '',
+				'id'     => '',
+				'no_tax' => false,
+				'type'   => 'fee'
+			);
+
+			$args = wp_parse_args( $args, $defaults );
+
+			if( $args['type'] != 'fee' && $args['type'] != 'item' ) {
+				$args['type'] = 'fee';
 			}
+
 		}
 
 		$fees = $this->get_fees( 'all' );
 
-		$key = empty( $id ) ? sanitize_key( $label ) : sanitize_key( $id );
+		// Determine the key
+		$key = empty( $args['id'] ) ? sanitize_key( $args['label'] ) : sanitize_key( $args['id'] );
 
-		$amount = edd_sanitize_amount( $amount );
+		// Remove the unneeded id key
+		unset( $args['id'] );
 
-		$fees[ $key ] = array( 'amount' => $amount, 'label' => $label, 'type' => $type, 'no_tax' => $no_tax );
+		// Sanitize the amount
+		$args['amount'] = edd_sanitize_amount( $args['amount'] );
 
+		// Set the fee
+		$fees[ $key ] = $args;
+
+		// Update fees
 		EDD()->session->set( 'edd_cart_fees', $fees );
 
 		return $fees;
