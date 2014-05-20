@@ -4,7 +4,7 @@ global $edd_register_redirect;
 edd_print_errors(); ?>
 
 <form id="edd_register_form" class="edd_form" action="" method="post">
-	<?php do_action( 'edd_register_form_top' ); ?>
+	<?php do_action( 'edd_register_form_fields_top' ); ?>
 
 	<fieldset>
 		<legend><?php _e( 'Register New Account', 'edd' ); ?></legend>
@@ -41,8 +41,8 @@ edd_print_errors(); ?>
 			<input class="button" name="edd_register_submit" type="submit" value="<?php esc_attr_e( 'Register', 'edd' ); ?>" />
 		</p>
 
-		<?php do_action( 'edd_register_fields_after' ); ?>
+		<?php do_action( 'edd_register_form_fields_after' ); ?>
 	</fieldset>
 
-	<?php do_action( 'edd_register_form_bottom' ); ?>
+	<?php do_action( 'edd_register_form_fields_bottom' ); ?>
 </form>
