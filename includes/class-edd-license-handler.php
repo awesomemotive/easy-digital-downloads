@@ -145,18 +145,29 @@ class EDD_License {
 	 * @return  void
 	 */
 	public function activate_license() {
-		if ( ! isset( $_POST['edd_settings'] ) )
-			return;
 
-		if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] ) )
+		if ( ! isset( $_POST['edd_settings'] ) ) {
 			return;
+		}
+
+		if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] ) ) {
+			return;
+		}
+
+		foreach( $_POST as $key => $value ) {
+			if( false !== strpos( $key, 'license_key_deactivate' ) ) {
+				// Don't activate a key when deactivating a different key
+				return;
+			}
+		}
 
 		if( ! current_user_can( 'manage_shop_settings' ) ) {
 			return;
 		}
 
-		if ( 'valid' == get_option( $this->item_shortname . '_license_active' ) )
+		if ( 'valid' == get_option( $this->item_shortname . '_license_active' ) ) {
 			return;
+		}
 
 		$license = sanitize_text_field( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] );
 

@@ -332,7 +332,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'ZA' => 'South Africa',
 			'ZM' => 'Zambia',
 			'ZW' => 'Zimbabwe',
-			'*'  => 'Choose'
+			'0'  => 'Choose'
 		);
 
 		$this->assertEquals( $expected, edd_get_country_list() );
@@ -452,5 +452,19 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_use_skus() {
 		$this->assertFalse( edd_use_skus() );
+	}
+
+	public function test_edd_is_host() {
+		$this->assertFalse( edd_is_host( 'wpengine' ) );
+		$this->assertFalse( edd_is_host( 'wp engine' ) );
+		$this->assertFalse( edd_is_host( 'WP Engine' ) );
+		$this->assertFalse( edd_is_host( 'WPEngine' ) );
+
+		define( 'WPE_APIKEY', 'testkey' );
+
+		$this->assertTrue( edd_is_host( 'wpengine' ) );
+		$this->assertTrue( edd_is_host( 'wp engine' ) );
+		$this->assertTrue( edd_is_host( 'WP Engine' ) );
+		$this->assertTrue( edd_is_host( 'WPEngine' ) );
 	}
 }

@@ -27,6 +27,7 @@ function edd_download_shortcode( $atts, $content = null ) {
 
 	extract( shortcode_atts( array(
 			'id' 	        => $post->ID,
+			'sku'			=> '',
 			'price'         => '1',
 			'paypal_direct' => '0',
 			'text'	        => isset( $edd_options[ 'add_to_cart_text' ] )  && $edd_options[ 'add_to_cart_text' ]    != '' ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
@@ -42,10 +43,16 @@ function edd_download_shortcode( $atts, $content = null ) {
 	if( isset( $atts['color'] )	)
 		$atts['color'] = ( $atts['color'] == 'inherit' ) ? '' : $atts['color'];
 
-	// Edd_get_purchase_link() expects the ID to be download_id since v1.3
-	$atts['download_id'] = $atts['id'];
+	if( isset( $atts['id'] ) ) {
+		// Edd_get_purchase_link() expects the ID to be download_id since v1.3
+		$atts['download_id'] = $atts['id'];
 
-	$download = edd_get_download( $atts['download_id'] );
+		$download = edd_get_download( $atts['download_id'] );
+	} elseif( isset( $atts['sku'] ) ) {
+		$download = edd_get_download_by( 'sku', $atts['sku'] );
+
+		$atts['download_id'] = $download->ID;
+	}
 
 	if ( $download ) {
 		return edd_get_purchase_link( $atts );
@@ -137,6 +144,26 @@ function edd_login_form_shortcode( $atts, $content = null ) {
 	return edd_login_form( $redirect );
 }
 add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
+
+/**
+ * Register Shortcode
+ *
+ * Shows a registration form allowing users to users to register for the site
+ *
+ * @since 2.0
+ * @param array $atts Shortcode attributes
+ * @param string $content
+ * @uses edd_register_form()
+ * @return string
+ */
+function edd_register_form_shortcode( $atts, $content = null ) {
+	extract( shortcode_atts( array(
+			'redirect' => '',
+		), $atts, 'edd_register' )
+	);
+	return edd_register_form( $redirect );
+}
+add_shortcode( 'edd_register', 'edd_register_form_shortcode' );
 
 /**
  * Discounts short code

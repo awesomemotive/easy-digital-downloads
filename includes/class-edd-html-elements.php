@@ -196,6 +196,7 @@ class EDD_HTML_Elements {
 	public function month_dropdown( $name = 'month', $selected = 0 ) {
 		$month   = 1;
 		$options = array();
+		$selected = empty( $selected ) ? date( 'n' ) : $selected;
 
 		while ( $month <= 12 ) {
 			$options[ absint( $month ) ] = edd_month_num_to_name( $month );
@@ -332,13 +333,14 @@ class EDD_HTML_Elements {
 		}
 
 		$defaults = array(
-			'name'        => isset( $name )  ? $name  : 'text',
-			'value'       => isset( $value ) ? $value : null,
-			'label'       => isset( $label ) ? $label : null,
-			'desc'        => isset( $desc )  ? $desc  : null,
-			'placeholder' => '',
-			'class'       => 'regular-text',
-			'disabled'    => false
+			'name'         => isset( $name )  ? $name  : 'text',
+			'value'        => isset( $value ) ? $value : null,
+			'label'        => isset( $label ) ? $label : null,
+			'desc'         => isset( $desc )  ? $desc  : null,
+			'placeholder'  => '',
+			'class'        => 'regular-text',
+			'disabled'     => false,
+			'autocomplete' => ''
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -356,8 +358,84 @@ class EDD_HTML_Elements {
 				$output .= '<span class="edd-description">' . esc_html( $args[ 'desc' ] ) . '</span>';
 			}
 
-			$output = '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" placeholder="' . esc_attr( $args[ 'placeholder' ] ) . '" class="' . $args[ 'class' ] . '"' . $disabled . '/>';
+			$output .= '<input type="text" name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] )  . '" autocomplete="' . esc_attr( $args[ 'autocomplete' ] )  . '" value="' . esc_attr( $args[ 'value' ] ) . '" placeholder="' . esc_attr( $args[ 'placeholder' ] ) . '" class="' . $args[ 'class' ] . '"' . $disabled . '/>';
 
+		$output .= '</span>';
+
+		return $output;
+	}
+
+	/**
+	 * Renders an HTML textarea
+	 *
+	 * @since 1.9
+	 *
+	 * @param string $name Name attribute of the textarea
+	 * @param string $value The value to prepopulate the field with
+	 * @param string $label
+	 * @param string $desc
+	 * @return string textarea
+	 */
+	public function textarea( $args = array() ) {
+		$defaults = array(
+			'name'        => 'textarea',
+			'value'       => null,
+			'label'       => null,
+			'desc'        => null,
+            'class'       => 'large-text',
+			'disabled'    => false
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$disabled = '';
+		if( $args['disabled'] ) {
+			$disabled = ' disabled="disabled"';
+		}
+
+		$output = '<span id="edd-' . sanitize_key( $args[ 'name' ] ) . '-wrap">';
+
+			$output .= '<label class="edd-label" for="edd-' . sanitize_key( $args[ 'name' ] ) . '">' . esc_html( $args[ 'label' ] ) . '</label>';
+
+			$output .= '<textarea name="' . esc_attr( $args[ 'name' ] ) . '" id="' . esc_attr( $args[ 'name' ] ) . '" class="' . $args[ 'class' ] . '"' . $disabled . '>' . esc_attr( $args[ 'value' ] ) . '</textarea>';
+
+			if ( ! empty( $args[ 'desc' ] ) ) {
+				$output .= '<span class="edd-description">' . esc_html( $args[ 'desc' ] ) . '</span>';
+			}
+
+		$output .= '</span>';
+
+		return $output;
+	}
+
+	/**
+	 * Renders an ajax user search field
+	 *
+	 * @since 2.0
+	 *
+	 * @param array $args
+	 * @return string text field with ajax search
+	 */
+	public function ajax_user_search( $args = array() ) {
+
+		$defaults = array(
+			'name'        => 'user_id',
+			'value'       => null,
+			'placeholder' => __( 'Enter username', 'edd' ),
+			'label'       => null,
+			'desc'        => null,
+            'class'       => '',
+			'disabled'    => false,
+			'autocomplete'=> 'off'
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$args['class'] = 'edd-ajax-user-search ' . $args['class'];
+
+		$output  = '<span class="edd_user_search_wrap">'; 
+			$output .= $this->text( $args );
+			$output .= '<span class="edd_user_search_results"></span>';
 		$output .= '</span>';
 
 		return $output;

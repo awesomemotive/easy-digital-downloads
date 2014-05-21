@@ -32,9 +32,10 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	if ( $new_status != 'publish' && $new_status != 'complete' )
 		return;
 
-	$user_info    = edd_get_payment_meta_user_info( $payment_id );
-	$amount       = edd_get_payment_amount( $payment_id );
-	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
+	$completed_date = edd_get_payment_completed_date( $payment_id );
+	$user_info      = edd_get_payment_meta_user_info( $payment_id );
+	$amount         = edd_get_payment_amount( $payment_id );
+	$cart_details   = edd_get_payment_meta_cart_details( $payment_id );
 
 	do_action( 'edd_pre_complete_purchase', $payment_id );
 
@@ -45,6 +46,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 			// "bundle" or "default"
 			$download_type = edd_get_download_type( $download['id'] );
+			$price_id      = isset( $download['options']['price_id'] ) ? (int) $download['options']['price_id'] : false;
 
 			$price_id      = isset( $download['options']['price_id'] ) ? (int) $download['options']['price_id'] : false;
 
@@ -59,7 +61,10 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 				}
 
-				do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download );
+				if( empty( $completed_date ) ) {
+					// Ensure this action only runs once ever
+					do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download );
+				}
 
 			}
 
@@ -69,6 +74,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		delete_transient( 'edd_earnings_total' );
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
+		delete_transient( md5( 'edd_earnings_todaytoday' ) );
 	}
 
 	// Check for discount codes and increment their use counts
@@ -89,7 +95,14 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 	edd_increase_total_earnings( $amount );
 
-	do_action( 'edd_complete_purchase', $payment_id );
+	// Ensure this action only runs once ever
+	if( empty( $completed_date ) ) {
+
+		// Save the completed date
+		update_post_meta( $payment_id, '_edd_completed_date', current_time( 'mysql' ) );
+
+		do_action( 'edd_complete_purchase', $payment_id );
+	}
 
 	// Empty the shopping cart
 	edd_empty_cart();
@@ -120,89 +133,6 @@ function edd_record_status_change( $payment_id, $new_status, $old_status ) {
 add_action( 'edd_update_payment_status', 'edd_record_status_change', 100, 3 );
 
 /**
- * Update Edited Purchase
- *
- * Updates the purchase data for a payment.
- * Used primarily for adding new downloads to a purchase.
- *
- * @since 1.0
- * @param $data Arguments passed
- * @return void
- */
-function edd_update_edited_purchase( $data ) {
-	if ( wp_verify_nonce( $data['edd-payment-nonce'], 'edd_payment_nonce' ) ) {
-		$payment_id = $_POST['payment-id'];
-
-		$payment_data = edd_get_payment_meta( $payment_id );
-
-		if ( isset( $_POST['edd-purchased-downloads'] ) ) {
-			$download_list = array();
-			$cart_items    = array();
-
-			foreach ( $_POST['edd-purchased-downloads'] as $key => $download ) {
-
-				$download_list[] = array(
-					'id'         => $key,
-					'options'    => isset( $download['options']['price_id'] ) ? array( 'price_id' => $download['options']['price_id'] ) : array()
-				);
-
-				$cart_items[]    = array(
-					'id'          => $key,
-					'name'        => get_the_title( $key ),
-					'item_number' => array(
-						'id'      => $key,
-						'options' => isset( $download['options']['price_id'] ) ? array( 'price_id' => $download['options']['price_id'] ) : array(),
-					),
-					'price'       => 0,
-					'quantity'    => 1,
-					'tax'         => 0
-				);
-			}
-
-			$payment_data['downloads']    = serialize( $download_list );
-			$payment_data['cart_details'] = serialize( $cart_items );
-		}
-
-		$user_info                 = maybe_unserialize( $payment_data['user_info'] );
-		$user_info['email']        = strip_tags( $_POST['edd-buyer-email'] );
-		$user_info['id']           = strip_tags( intval( $_POST['edd-buyer-user-id'] ) );
-		$payment_data['user_info'] = serialize( $user_info );
-		$payment_data['email']     = strip_tags( $_POST['edd-buyer-email'] );
-
-		update_post_meta( $payment_id, '_edd_payment_meta', $payment_data );
-		update_post_meta( $payment_id, '_edd_payment_user_email', strip_tags( $_POST['edd-buyer-email'] ) );
-		update_post_meta( $payment_id, '_edd_payment_user_id', strip_tags( intval( $_POST['edd-buyer-user-id'] ) ) );
-
-		if ( ! empty( $_POST['edd-payment-note'] ) ) {
-			$note    = wp_kses( $_POST['edd-payment-note'], array() );
-			$note_id = edd_insert_payment_note( $payment_id, $note );
-		}
-
-		if ( ! empty( $_POST['edd-payment-amount'] ) ) {
-			update_post_meta( $payment_id, '_edd_payment_total', sanitize_text_field( edd_sanitize_amount( $_POST['edd-payment-amount'] ) ) );
-		}
-
-		if ( ! empty( $_POST['edd-unlimited-downloads'] ) ) {
-			add_post_meta( $payment_id, '_unlimited_file_downloads', '1' );
-		} else {
-			delete_post_meta( $payment_id, '_unlimited_file_downloads' );
-		}
-
-		if ( $_POST['edd-old-status'] != $_POST['edd-payment-status'] ) {
-			edd_update_payment_status( $payment_id, $_POST['edd-payment-status'] );
-		}
-
-		if ( $_POST['edd-payment-status'] == 'publish' && isset( $_POST['edd-payment-send-email'] ) ) {
-			// Send the purchase receipt
-			edd_email_purchase_receipt( $payment_id, false );
-		}
-
-		do_action( 'edd_update_edited_purchase', $payment_id );
-	}
-}
-add_action( 'edd_edit_payment', 'edd_update_edited_purchase' );
-
-/**
  * Reduces earnings and sales stats when a purchase is refunded
  *
  * @since 1.8.2
@@ -227,7 +157,7 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 	// Decrease store earnings
 	$amount = edd_get_payment_amount( $payment_id );
 	edd_decrease_total_earnings( $amount );
-	
+
 	// Clear the This Month earnings (this_monththis_month is NOT a typo)
 	delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 }

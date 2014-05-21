@@ -38,7 +38,7 @@ function edd_add_download_meta_box() {
 		/** Product Notes */
 		add_meta_box( 'edd_product_notes', sprintf( __( '%1$s Notes', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_product_notes_meta_box', $post_type, 'normal', 'high' );
 
-		if ( current_user_can( 'view_shop_reports' ) || current_user_can( 'edit_product', get_the_ID() ) ) {
+		if ( current_user_can( 'view_product_stats', get_the_ID() ) ) {
 			/** Product Stats */
 			add_meta_box( 'edd_product_stats', sprintf( __( '%1$s Stats', 'edd' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_stats_meta_box', $post_type, 'side', 'high' );
 		}
@@ -115,11 +115,25 @@ function edd_download_meta_box_save( $post_id, $post ) {
 
 		// Accept blank or "0"
 		if ( '_edd_download_limit' == $field ) {
-			if ( ! empty( $_POST[$field] ) || strlen( $_POST[$field] ) === 0 || "0" === $_POST[$field] ) {
-				$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
-				update_post_meta( $post_id, $field, $new );
+			if ( ! empty( $_POST[ $field ] ) || strlen( $_POST[ $field ] ) === 0 || "0" === $_POST[ $field ] ) {
+
+				$global_limit = edd_get_option( 'file_download_limit' );
+				$new_limit    = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
+
+				// Only update the new limit if it is not the same as the global limit
+				if( $global_limit == $new_limit ) {
+
+					delete_post_meta( $post_id, '_edd_download_limit' );
+
+				} else {
+
+					update_post_meta( $post_id, '_edd_download_limit', $new_limit );
+
+				}
 			}
+
 		} else {
+
 			if ( ! empty( $_POST[ $field ] ) ) {
 				$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
 				update_post_meta( $post_id, $field, $new );
@@ -127,7 +141,6 @@ function edd_download_meta_box_save( $post_id, $post ) {
 				delete_post_meta( $post_id, $field );
 			}
 		}
-
 
 	}
 
@@ -362,7 +375,7 @@ function edd_render_price_field( $post_id ) {
 		<input type="hidden" id="edd_variable_prices" class="edd_variable_prices_name_field" value=""/>
 		<p>
 			<?php echo EDD()->html->checkbox( array( 'name' => '_edd_price_options_mode', 'current' => $single_option_mode ) ); ?>
-			<label for="_edd_price_options_mode"><?php apply_filters( 'edd_multi_option_purchase_text', _e( 'Enable multi-option purchase mode. Allows multiple price options to be added to your cart at once', 'edd' ) ); ?></label>
+			<label for="_edd_price_options_mode"><?php echo apply_filters( 'edd_multi_option_purchase_text', __( 'Enable multi-option purchase mode. Allows multiple price options to be added to your cart at once', 'edd' ) ); ?></label>
 		</p>
 		<div id="edd_price_fields" class="edd_meta_table_wrap">
 			<table class="widefat edd_repeatable_table" width="100%" cellpadding="0" cellspacing="0">
@@ -904,6 +917,10 @@ add_action( 'edd_product_notes_meta_box_fields', 'edd_render_product_notes_field
 function edd_render_stats_meta_box() {
 	global $post;
 
+	if( ! current_user_can( 'view_product_stats', $post->ID ) ) {
+		return;
+	}
+
 	$earnings = edd_get_download_earnings_stats( $post->ID );
 	$sales    = edd_get_download_sales_stats( $post->ID );
 ?>
@@ -920,7 +937,7 @@ function edd_render_stats_meta_box() {
 
 	<hr />
 
-	<p>
+	<p class="file-download-log">
 		<span><a href="<?php echo admin_url( 'edit.php?page=edd-reports&view=file_downloads&post_type=download&tab=logs&download=' . $post->ID ); ?>"><?php _e( 'View File Download Log', 'edd' ); ?></a></span><br/>
 	</p>
 	<p>

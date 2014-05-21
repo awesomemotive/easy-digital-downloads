@@ -24,19 +24,27 @@ if ( ! isset( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
 
 // Setup the variables
 $payment_id   = absint( $_GET['id'] );
+$number       = edd_get_payment_number( $payment_id );
 $item         = get_post( $payment_id );
+
+// Sanity check... fail if purchase ID is invalid
+if ( !is_object( $item ) || $item->post_type != 'edd_payment' ) {
+    wp_die( __( 'The specified ID does not belong to a payment. Please try again', 'edd' ), __( 'Error', 'edd' ) );
+}
+
 $payment_meta = edd_get_payment_meta( $payment_id );
 $cart_items   = edd_get_payment_meta_cart_details( $payment_id );
 $user_id      = edd_get_payment_user_id( $payment_id );
 $payment_date = strtotime( $item->post_date );
+$unlimited    = edd_payment_has_unlimited_downloads( $payment_id );
 $user_info    = edd_get_payment_meta_user_info( $payment_id );
 $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array( 'line1' => '', 'line2' => '', 'city' => '', 'country' => '', 'state' => '', 'zip' => '' );
 ?>
-<div class="wrap">
-	<h2><?php printf( __( 'Payment #%d', 'edd' ), $payment_id ); ?></h2>
+<div class="wrap edd-wrap">
+	<h2><?php printf( __( 'Payment %s', 'edd' ), $number ); ?></h2>
 	<?php do_action( 'edd_view_order_details_before', $payment_id ); ?>
 	<form id="edd-edit-order-form" method="post">
-		<?php do_action( 'edd_view_order_details_form_top' ); ?>
+		<?php do_action( 'edd_view_order_details_form_top', $payment_id ); ?>
 		<div id="poststuff">
 			<div id="edd-dashboard-widgets-wrap">
 				<div id="post-body" class="metabox-holder columns-2">
@@ -135,7 +143,7 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 												</select>
 											</p>
 										</div>
-	
+										
 										<div class="edd-admin-box-inside">
 											<p>
 												<span class="label"><?php _e( 'Date:', 'edd' ); ?></span>&nbsp;
@@ -151,6 +159,14 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 											</p>
 										</div>
 	
+										<div class="edd-admin-box-inside">
+											<p>
+												<span class="label" title="<?php _e( 'Grants the customer unlimited file downloads for this purchase, regardless of other limits set.', 'edd' ); ?>"><i data-code="f316" class="dashicons dashicons-download"></i></span>&nbsp;
+												<input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" value="1"<?php checked( true, $unlimited, true ); ?>/>
+												<label class="description" for="edd_unlimited_downloads"><?php _e( 'Unlimited file downloads', 'edd' ); ?></label>
+											</p>
+										</div>
+
 										<?php do_action( 'edd_view_order_details_update_inner', $payment_id ); ?>
 	
 									</div><!-- /.column-container -->
@@ -172,6 +188,29 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 								</div><!-- /.edd-order-update-box -->
 	
 							</div><!-- /#edd-order-data -->
+
+							<div id="edd-order-logs" class="postbox edd-order-logs">
+								
+								<h3 class="hndle">
+									<span><?php _e( 'Logs', 'edd' ); ?></span>
+								</h3>
+								<div class="inside">
+									<div class="edd-admin-box">
+	
+										<div class="edd-admin-box-inside">
+
+											<p><a href="<?php echo admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&payment=' . $payment_id ); ?>"><?php _e( 'View file download log for purchase', 'edd' ); ?></a></p>
+	
+										</div>
+
+										<?php do_action( 'edd_view_order_details_logs_inner', $payment_id ); ?>
+	
+									</div><!-- /.column-container -->
+	
+								</div><!-- /.inside -->
+
+	
+							</div><!-- /#edd-order-logs -->
 	
 							<?php do_action( 'edd_view_order_details_sidebar_after', $payment_id ); ?>
 						</div><!-- /#side-sortables -->
@@ -192,23 +231,22 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 										<div class="column">
 											<strong><?php _e( 'Name:', 'edd' ); ?></strong>&nbsp;
 											<input type="text" name="edd-payment-user-name" value="<?php esc_attr_e( $user_info['first_name'] . ' ' . $user_info['last_name'] ); ?>" class="medium-text"/>
-											<p class="description"><?php _e( 'Customer name, as shown on purchase receipts', 'edd' ); ?></p>
 										</div>
 										<div class="column">
 											<strong><?php _e( 'Email:', 'edd' ); ?></strong>&nbsp;
 											<input type="email" name="edd-payment-user-email" value="<?php esc_attr_e( edd_get_payment_user_email( $payment_id ) ); ?>" class="medium-text"/>
-											<p class="description"><?php _e( 'Customer email address that purchase receipts are sent to', 'edd' ); ?></p>
 										</div>
 										<div class="column">
 											<strong><?php _e( 'User ID:', 'edd' ); ?></strong>&nbsp;
 											<input type="number" step="1" min="-1" name="edd-payment-user-id" value="<?php esc_attr_e( $user_id ); ?>" class="small-text"/>
-											<p class="description"><?php _e( 'User ID of the customer', 'edd' ); ?></p>
 										</div>
 									</div>
 	
-									<?php do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info ); ?>
-	
-									<?php do_action( 'edd_payment_view_details', $payment_id ); ?>
+									<?php 
+									// The edd_payment_personal_details_list hook is left here for backwards compatibility
+									do_action( 'edd_payment_personal_details_list', $payment_meta, $user_info );
+									do_action( 'edd_payment_view_details', $payment_id );
+									?>
 	
 								</div><!-- /.inside -->
 							</div><!-- /#edd-customer-details -->
@@ -296,8 +334,7 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 									<span><?php printf( __( 'Purchased %s', 'edd' ), edd_get_label_plural() ); ?></span>
 								</h3>
 								
-								<?php
-								if ( $cart_items ) :
+								<?php if ( $cart_items ) :
 									$i = 0;
 									foreach ( $cart_items as $key => $cart_item ) : ?>
 									<div class="row">
@@ -317,16 +354,18 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 	
 											<li class="download">
 												<span>
-													<?php echo get_the_title( $item_id );
-	
-													if ( isset( $cart_items[ $key ]['item_number'] ) && isset( $cart_items[ $key ]['item_number']['options'] ) ) {
-														$price_options = $cart_items[ $key ]['item_number']['options'];
-	
-														if ( isset( $price_id ) ) {
-															echo ' - ' . edd_get_price_option_name( $item_id, $price_id, $payment_id );
+													<a href="<?php echo admin_url( 'post.php?post=' . $item_id . '&action=edit' ); ?>">
+														<?php echo get_the_title( $item_id );
+
+														if ( isset( $cart_items[ $key ]['item_number'] ) && isset( $cart_items[ $key ]['item_number']['options'] ) ) {
+															$price_options = $cart_items[ $key ]['item_number']['options'];
+
+															if ( isset( $price_id ) ) {
+																echo ' - ' . edd_get_price_option_name( $item_id, $price_id, $payment_id );
+															}
 														}
-													}
-													?>
+														?>
+													</a>
 												</span>
 												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][id]" class="edd-payment-details-download-id" value="<?php echo esc_attr( $item_id ); ?>"/>
 												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][price_id]" class="edd-payment-details-download-price-id" value="<?php echo esc_attr( $price_id ); ?>"/>
@@ -346,53 +385,60 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 											</li>
 	
 											<li class="actions">
-												<a href="" class="edd-order-remove-download" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
+												<?php if( edd_get_download_files( $item_id, $price_id ) ) : ?>
+													<a href="" class="edd-copy-download-link" data-download-id="<?php echo esc_attr( $item_id ); ?>" data-price-id="<?php echo esc_attr( $price_id ); ?>"><?php _e( 'Copy Download Link(s)', 'edd' ); ?></a> | 
+												<?php endif; ?>
+												<a href="" class="edd-order-remove-download edd-delete" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
 											</li>
 										</ul>
 									</div>
 									<?php
 									$i++;
-									endforeach;
-								endif;
-								?>
-	
-								<div class="inside">
-	
-									<ul>
-										<li class="download">
-											<?php echo EDD()->html->product_dropdown( array(
-												'name'   => 'edd-order-download-select',
-												'id'     => 'edd-order-download-select',
-												'chosen' => true
-											) ); ?>
-										</li>
-	
-										<?php if( edd_item_quantities_enabled() ) : ?>
-										<li class="quantity">
-											<span><?php _e( 'Quantity', 'edd' ); ?>:&nbsp;</span>
-											<input type="number" id="edd-order-download-quantity" class="small-text" min="1" step="1" value="1" />
-										</li>
-										<?php endif; ?>
-	
-										<li class="price">
-											<span><?php _e( 'Amount', 'edd' ); ?>:&nbsp;</span>
-											<?php
-											echo EDD()->html->text( array( 'name' => 'edd-order-download-amount',
-												'label' => __( 'Enter amount', 'edd' ),
-												'class' => 'small-text edd-order-download-price' 
-											) );
-											?>
-										</li>
-	
-										<li class="actions">
-											<a href="" id="edd-order-add-download" class="button button-secondary"><?php printf( __( 'Add %s to Payment', 'edd' ), edd_get_label_singular() ); ?></a>
-										</li>
-	
-									</ul>
-								
-									<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value=""/>
-	
-								</div><!-- /.inside -->
+									endforeach; ?>
+									<div class="inside">
+										<ul>
+											<li class="download">
+												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][id]" class="edd-payment-details-download-id" value="<?php echo esc_attr( $item_id ); ?>"/>
+												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][price_id]" class="edd-payment-details-download-price-id" value="<?php echo esc_attr( $price_id ); ?>"/>
+												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][amount]" class="edd-payment-details-download-amount" value="<?php echo esc_attr( $price ); ?>"/>
+												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][quantity]" class="edd-payment-details-download-quantity" value="<?php echo esc_attr( $quantity ); ?>"/>
+												<?php echo EDD()->html->product_dropdown( array(
+													'name'   => 'edd-order-download-select',
+													'id'     => 'edd-order-download-select',
+													'chosen' => true
+												) ); ?>
+											</li>
+		
+											<?php if( edd_item_quantities_enabled() ) : ?>
+											<li class="quantity">
+												<span><?php _e( 'Quantity', 'edd' ); ?>:&nbsp;</span>
+												<input type="number" id="edd-order-download-quantity" class="small-text" min="1" step="1" value="1" />
+											</li>
+											<?php endif; ?>
+		
+											<li class="price">
+												<?php
+												echo EDD()->html->text( array( 'name' => 'edd-order-download-amount',
+													'label' => __( 'Amount: ', 'edd' ),
+													'class' => 'small-text edd-order-download-price' 
+												) );
+												?>
+											</li>
+		
+											<li class="actions">
+												<a href="" id="edd-order-add-download" class="button button-secondary"><?php printf( __( 'Add %s to Payment', 'edd' ), edd_get_label_singular() ); ?></a>
+											</li>
+		
+										</ul>
+									
+										<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value=""/>
+		
+									</div><!-- /.inside -->
+								<?php else : $key = 0; ?>
+								<div class="row">
+									<p><?php printf( __( 'No %s included with this purchase', 'edd' ), edd_get_label_plural() ); ?></p>
+								</div>
+								<?php endif; ?>
 							</div><!-- /#edd-purchased-files -->
 	
 							<?php do_action( 'edd_view_order_details_files_after', $payment_id ); ?>

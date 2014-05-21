@@ -5,12 +5,21 @@ use \EDD_Payments_Query;
  * @group edd_payments
  */
 class Tests_Payments extends EDD_UnitTestCase {
-	protected $_payment_id = null;
 
+	protected $_payment_id = null;
+	protected $_key = null;
 	protected $_post = null;
 
 	public function setUp() {
+
+		global $edd_options;
+
 		parent::setUp();
+
+		// Enable a few options
+		$edd_options['enable_sequential'] = '1';
+		$edd_options['sequential_prefix'] = 'EDD-';
+		update_option( 'edd_settings', $edd_options );
 
 		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
 
@@ -120,6 +129,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$payment_id = edd_insert_payment( $purchase_data );
 
 		$this->_payment_id = $payment_id;
+		$this->_key = $purchase_data['purchase_key'];
 	}
 
 	public function test_get_payments() {
@@ -139,9 +149,20 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'user_info', (array) $out[0] );
 	}
 
+	public function test_edd_get_payment_by() {
+		$this->assertObjectHasAttribute( 'ID', edd_get_payment_by( 'id', $this->_payment_id ) );
+		$this->assertObjectHasAttribute( 'ID', edd_get_payment_by( 'key', $this->_key ) );
+	}
 
 	public function test_fake_insert_payment() {
 		$this->assertFalse( edd_insert_payment() );
+	}
+
+	public function test_payment_completd_flag_not_exists() {
+
+		$completed_date = edd_get_payment_completed_date( $this->_payment_id );
+		$this->assertEmpty( $completed_date );
+
 	}
 
 	public function test_update_payment_status() {
@@ -181,4 +202,26 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$cart = edd_get_payments();
 		$this->assertTrue( empty( $cart ) );
 	}
+
+	public function test_get_payment_completed_date() {
+
+		$completed_date = edd_get_payment_completed_date( $this->_payment_id );
+		$this->assertInternalType( 'string', $completed_date );
+		$this->assertEquals( date( 'Y-m-d' ), date( 'Y-m-d', strtotime( $completed_date ) ) );
+
+	}
+
+	public function test_get_payment_number() {
+		global $edd_options;
+
+		$this->assertEquals( 'EDD-1', edd_get_payment_number( $this->_payment_id ) );
+		$this->assertEquals( 'EDD-2', edd_get_next_payment_number() );
+		
+		// Now disable sequential and ensure values come back as expected
+		unset( $edd_options['enable_sequential'] );
+		update_option( 'edd_settings', $edd_options );
+
+		$this->assertEquals( $this->_payment_id, edd_get_payment_number( $this->_payment_id ) );
+	}
+
 }
