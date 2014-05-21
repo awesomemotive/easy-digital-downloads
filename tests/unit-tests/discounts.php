@@ -9,21 +9,6 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();
-
-		$meta = array(
-			'name' => '20 Percent Off',
-			'type' => 'percent',
-			'amount' => '20',
-			'code' => '20OFF',
-			'product_condition' => 'all',
-			'max' => 10,
-			'uses' => 54,
-			'min_price' => 128
-		);
-
-		edd_store_discount( $meta );
-
-		$this->_post->ID = edd_get_discount_id_by_code( '20OFF' );
 	}
 
 	public function tearDown() {
@@ -38,14 +23,73 @@ class Tests_Discounts extends EDD_UnitTestCase {
 			'code' => '20OFF',
 			'product_condition' => 'all',
 			'start' => '12/12/2050 00:00:00',
-			'expiration' => '12/31/2050 00:00:00'
+			'expiration' => '12/31/2050 00:00:00',
+			'max' => 10,
+			'uses' => 54,
+			'min_price' => 128
 		);
 
-		$this->assertInternalType( 'int', edd_store_discount( $post ) );
+		$this->_post->ID = edd_store_discount( $post );
+		$this->assertInternalType( 'int', $this->_post->ID );
+
+	}
+
+	public function test_addition_of_negative_discount() {
+		$post = array(
+			'name' => 'Double Double',
+			'type' => 'percent',
+			'amount' => '-100',
+			'code' => 'DOUBLE',
+			'product_condition' => 'all',
+			'max' => 10,
+			'uses' => 54,
+			'min_price' => 0
+		);
+
+		$this->_negative_post->ID = edd_store_discount( $post );
+		$this->assertInternalType( 'int', $this->_negative_post->ID );
+	}
+
+	public function test_addition_of_flat_discount() {
+		$post = array(
+			'name' => 'Flat Rate',
+			'type' => 'flat',
+			'amount' => 1,
+			'code' => 'FLAT',
+			'product_condition' => 'all',
+			'max' => 100,
+			'uses' => 0,
+			'min_price' => 0
+		);
+
+		$this->_flat_post->ID = edd_store_discount( $post );
+		$this->assertInternalType( 'int', $this->_flat_post->ID );
+	}
+
+	public function test_updating_discount_code() {
+		$post = array(
+			'name' => 'Test Discount Updated',
+			'type' => 'percent',
+			'amount' => '20',
+			'code' => '20OFF',
+			'product_condition' => 'all',
+			'start' => '12/12/2050 00:00:00',
+			'expiration' => '12/31/2050 00:00:00',
+			'max' => 10,
+			'uses' => 54,
+			'min_price' => 128
+		);
+
+		$updated_post_id = edd_store_discount( $post, $this->_post->ID );
+		$this->assertInternalType( 'int', $updated_post_id );
 	}
 
 	public function test_discount_status_update() {
 		$this->assertTrue( edd_update_discount_status( $this->_post->ID ) );
+	}
+
+	public function test_discount_status_update_fail() {
+		$this->assertFalse( edd_update_discount_status( -1 ) );
 	}
 
 	public function test_discounts_exists() {
@@ -58,10 +102,10 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_retrieved_from_database() {
-		$this->assertObjectHasAttribute( 'ID', edd_get_discount( $this->_post->ID ) );
-		$this->assertObjectHasAttribute( 'post_title', edd_get_discount( $this->_post->ID ) );
-		$this->assertObjectHasAttribute( 'post_status', edd_get_discount( $this->_post->ID ) );
-		$this->assertObjectHasAttribute( 'post_type', edd_get_discount( $this->_post->ID ) );
+		$this->assertObjectHasAttribute( 'ID', edd_get_discount(  $this->_post->ID ) );
+		$this->assertObjectHasAttribute( 'post_title', edd_get_discount(  $this->_post->ID ) );
+		$this->assertObjectHasAttribute( 'post_status', edd_get_discount(  $this->_post->ID ) );
+		$this->assertObjectHasAttribute( 'post_type', edd_get_discount(  $this->_post->ID ) );
 	}
 
 	public function test_get_discount_code() {
@@ -90,6 +134,10 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 	public function test_discount_amount() {
 		$this->assertSame( 20.0, edd_get_discount_amount( $this->_post->ID ) );
+	}
+
+	public function test_discount_amount_negative() {
+		$this->assertSame( -100, edd_get_discount_amount( $this->_negative_post->ID ) );
 	}
 
 	public function test_discount_type() {
@@ -121,6 +169,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_is_min_met() {
+		$this->markTestIncomplete('Test');
 		$this->assertFalse( edd_discount_is_min_met( $this->_post->ID ) );
 	}
 
@@ -141,6 +190,14 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$this->assertEquals( 432.0, edd_get_discounted_amount( '20OFF', '540' ) );
 	}
 
+	public function test_get_discounted_amount_negative() {
+		$this->assertEqual( 150.0, edd_get_discounted_amount( 'DOUBLE', '75' ) );
+	}
+
+	public function test_get_discounted_amount_flat() {
+		$this->assertEqual( 9.0, edd_get_discounted_amount( 'FLAT', '1' ) );
+	}
+
 	public function test_increase_discount_usage() {
 		$uses = edd_increase_discount_usage( '20OFF' );
 		$this->assertSame( 55, $uses );
@@ -150,8 +207,36 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$this->assertSame( '20%', edd_format_discount_rate( 'percent', get_post_meta( $this->_post->ID, '_edd_discount_amount', true ) ) );
 	}
 
+	public function test_edd_get_discount_by() {
+		$this->assertObjectHasAttribute( 'ID', edd_get_discount_by( 'id', $this->_post->ID ) );
+		$this->assertSame( $this->_post->ID, edd_get_discount_by( 'id', $this->_post->ID )->ID );
+		$this->assertObjectHasAttribute( 'post_title', edd_get_discount_by( 'code', '20OFF' ) );
+		$this->assertSame( $this->_post->ID, edd_get_discount_by( 'code', '20OFF' )->ID );
+		$this->assertObjectHasAttribute( 'post_name', edd_get_discount_by( 'name', '20 Percent Off' ) );
+		$this->assertSame( $this->_post->ID, edd_get_discount_by( 'name', '20 Percent Off' )->ID );
+	}
+
+	public function test_formatted_discount_amount_negative() {
+		$this->assertSame( '-100%', edd_format_discount_rate( 'percent', get_post_meta( $this->_negative_post->ID, '_edd_discount_amount', true ) ) );
+	}
+
+	public function test_formatted_discount_amount_flat() {
+		$this->assertSame( '$1.00', edd_format_discount_rate( 'flat', get_post_meta( $this->_flat_post->ID, '_edd_discount_amount', true ) ) );
+	}
+
+	public function test_discount_excluded_products() {
+		$this->assertInternalType( 'array', edd_get_discount_excluded_products( $this->_post->ID ) );
+	}
+
+	public function test_discount_product_reqs() {
+		$this->assertInternalType( 'array', edd_get_discount_product_reqs( $this->_post->ID ) );
+	}
+
 	public function test_deletion_of_discount() {
 		edd_remove_discount( $this->_post->ID );
 		$this->assertFalse( wp_cache_get( $this->_post->ID, 'posts' ) );
+
+		edd_remove_discount( $this->_negative_post->ID );
+		$this->assertFalse( wp_cache_get( $this->_negative_post->ID, 'posts' ) );
 	}
 }

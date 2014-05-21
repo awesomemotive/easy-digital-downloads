@@ -297,10 +297,10 @@ jQuery(document).ready(function ($) {
 			this.add_download();
 			this.recalculate_total();
 			this.variable_prices_check();
-			this.status_change();
 			this.add_note();
 			this.remove_note();
 			this.resend_receipt();
+			this.copy_download_link();
 		},
 
 
@@ -377,7 +377,8 @@ jQuery(document).ready(function ($) {
 				var count = $('#edd-purchased-files div.row').length;
 				var clone = $('#edd-purchased-files div.row:last').clone();
 
-				clone.find( '.download span' ).text( download_title );
+				clone.find( '.download span' ).html( '<a href="post.php?post=' + download_id + '&action=edit"></a>' );
+				clone.find( '.download span a' ).text( download_title );
 				clone.find( '.price' ).text( formatted_amount );
 				clone.find( '.quantity span' ).text( quantity );
 				clone.find( 'input.edd-payment-details-download-id' ).val( download_id );
@@ -409,13 +410,21 @@ jQuery(document).ready(function ($) {
 			$('#edd-order-recalc-total').on('click', function(e) {
 				e.preventDefault();
 				var total = 0;
-				$('#edd-purchased-files .edd-payment-details-download-amount').each(function() {
-					var quantity = $(this).next().val();
-					total += ( parseFloat( $(this).val() ) * parseInt( quantity ) );
-				});
-				$('.edd-payment-fees span.fee-amount').each(function() {
-					total += parseFloat( $(this).data('fee') );
-				});
+				if( $('#edd-purchased-files .row .edd-payment-details-download-amount').length ) {
+					$('#edd-purchased-files .row .edd-payment-details-download-amount').each(function() {
+						var quantity = $(this).next().val();
+						if( quantity ) {
+							total += ( parseFloat( $(this).val() ) * parseInt( quantity ) );
+						} else {
+							total += parseFloat( $(this).val() );
+						}
+					});
+				}
+				if( $('.edd-payment-fees').length ) {
+					$('.edd-payment-fees span.fee-amount').each(function() {
+						total += parseFloat( $(this).data('fee') );
+					});
+				}
 				$('input[name=edd-payment-total]').val( total );
 			});
 
@@ -448,19 +457,6 @@ jQuery(document).ready(function ($) {
 						}
 					});
 
-				}
-			});
-
-		},
-
-		status_change : function() {
-
-			// Show / hide the send purchase receipt check box on the Edit payment screen
-			$('#edd_payment_status').change(function() {
-				if ( 'publish' === $( '#edd_payment_status option:selected' ).val() ) {
-					$( '#edd_payment_notification' ).slideDown();
-				} else {
-					$( '#edd_payment_notification' ).slideUp();
 				}
 			});
 
@@ -546,10 +542,82 @@ jQuery(document).ready(function ($) {
 			$( 'body' ).on( 'click', '#edd-resend-receipt', function( e ) {
 				return confirm( edd_vars.resend_receipt );
 			} );
+		},
+
+		copy_download_link : function() {
+			$( 'body' ).on( 'click', '.edd-copy-download-link', function( e ) {
+				e.preventDefault();
+				var $this    = $(this);
+				var postData = {
+					action      : 'edd_get_file_download_link',
+					payment_id  : $('input[name="edd_payment_id"]').val(),
+					download_id : $this.data('download-id'),
+					price_id    : $this.data('price-id')
+				};
+				
+				$.ajax({
+					type: "POST",
+					data: postData,
+					url: ajaxurl,
+					success: function (link) {
+						
+						alert( edd_vars.copy_download_link_text + "\n\n" + link );
+
+						return false;
+					}
+				}).fail(function (data) {
+					if ( window.console && window.console.log ) {
+						console.log( data );
+					}
+				});
+
+			} );
 		}
 
 	};
 	EDD_Edit_Payment.init();
+
+
+	/**
+	 * Discount add / edit screen JS
+	 */
+	var EDD_Discount = {
+
+		init : function() {
+			this.type_select();
+			this.product_requirements();
+		},
+
+		type_select : function() {
+
+			$('#edd-edit-discount #edd-type, #edd-add-discount #edd-type').change(function() {
+
+				$('.edd-amount-description').toggle();
+
+			});
+
+		},
+
+		product_requirements : function() {
+
+			$('#products').change(function() {
+
+				if( $(this).val() ) {
+
+					$('#edd-discount-product-conditions').show();
+
+				} else {
+
+					$('#edd-discount-product-conditions').hide();
+					
+				}
+
+			});
+
+		},
+
+	};
+	EDD_Discount.init();
 
 
 	/**
@@ -581,11 +649,27 @@ jQuery(document).ready(function ($) {
 			// Show / hide Download option when exporting customers
 
 			$( '#edd_customer_export_download' ).change( function() {
-				var $this = $(this);
+
+				var $this = $(this), download_id = $('option:selected', $this).val();
+
 				if ( '0' === $this.val() ) {
 					$( '#edd_customer_export_option' ).show();
 				} else {
 					$( '#edd_customer_export_option' ).hide();
+				}
+
+				// On Download Select, Check if Variable Prices Exist
+				if ( parseInt( download_id ) != 0 ) {
+					var data = {
+						action : 'edd_check_for_download_price_variations',
+						download_id: download_id
+					};
+					$.post(ajaxurl, data, function(response) {
+						$('.edd_price_options_select').remove();
+						$this.after( response );
+					});
+				} else {
+					$('.edd_price_options_select').remove();
 				}
 			});
 
@@ -711,6 +795,10 @@ jQuery(document).ready(function ($) {
 		},
 
 		taxes : function() {
+
+			if( $('select.edd-no-states').length ) {
+				$('select.edd-no-states').closest('tr').hide();
+			}
 
 			// Update base state field based on selected base country
 			$('select[name="edd_settings[base_country]"]').change(function() {
@@ -890,10 +978,22 @@ jQuery(document).ready(function ($) {
 		var lastKey = e.which;
 
 		// Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
-		if(val.length <= 3 || (e.which == 16 || e.which == 13 || e.which == 91 || e.which == 17 ||
-			                   e.which == 37 || e.which == 38 || e.which == 39 || e.which == 40))
+		if(
+			val.length <= 3 ||
+			(
+				e.which == 16 ||
+				e.which == 13 ||
+				e.which == 91 ||
+				e.which == 17 ||
+				e.which == 37 ||
+				e.which == 38 ||
+				e.which == 39 ||
+				e.which == 40
+			)
+		) {
 			return;
-
+		}
+		
 		clearTimeout(typingTimer);
 		typingTimer = setTimeout(
 			function(){
@@ -909,10 +1009,16 @@ jQuery(document).ready(function ($) {
 						$('ul.chosen-results').empty();
 					},
 					success: function( data ) {
+<<<<<<< HEAD
 						 $.each( data, function( key, item ) {
 						 	// Remove all options but those that are selected
 						 	$('#' + menu_id + ' option:not(:selected)').remove();
 
+=======
+						// Remove all options but those that are selected
+					 	$('#' + menu_id + ' option:not(:selected)').remove();
+						$.each( data, function( key, item ) {
+>>>>>>> release/2.0
 						 	// Add any option that doesn't already exist
 							if( ! $('#' + menu_id + ' option[value="' + item.id + '"]').length ) {
 								$('#' + menu_id).prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
@@ -930,12 +1036,68 @@ jQuery(document).ready(function ($) {
 
 		        });
 			},
-			doneTypingInterval);
+			doneTypingInterval
+		);
 	});
 
 	// This fixes the Chosen box being 0px wide when the thickbox is opened
 	$('.edd-thickbox').on('click', function() {
 		$('#choose-download .edd-select-chosen').css('width', '100%');
+	});
+
+	/**
+	 * Tools screen JS
+	 */
+	var EDD_Tools = {
+
+		init : function() {
+			this.revoke_api_key();
+			this.regenerate_api_key();
+		},
+
+		revoke_api_key : function() {
+			$( 'body' ).on( 'click', '.edd-revoke-api-key', function( e ) {
+				return confirm( edd_vars.revoke_api_key );
+			} );
+		},
+		regenerate_api_key : function() {
+			$( 'body' ).on( 'click', '.edd-regenerate-api-key', function( e ) {
+				return confirm( edd_vars.regenerate_api_key );
+			} );
+		},
+	};
+	EDD_Tools.init();
+
+	// Ajax user search
+	$('.edd-ajax-user-search').keyup(function() {
+		var user_search = $(this).val();
+		$('.edd-ajax').show();
+		data = {
+			action: 'edd_search_users',
+			user_name: user_search
+		};
+		
+		document.body.style.cursor = 'wait';
+
+		$.ajax({
+			type: "POST",
+			data: data,
+			dataType: "json",
+			url: ajaxurl,
+			success: function (search_response) {
+
+				$('.edd-ajax').hide();
+				$('.edd_user_search_results').html('');
+				$(search_response.results).appendTo('.edd_user_search_results');
+				document.body.style.cursor = 'default';
+			}
+		});
+	});
+	$('body').on('click.eddSelectUser', '.edd_user_search_results a', function(e) {
+		e.preventDefault();
+		var login = $(this).data('login');
+		$('.edd-ajax-user-search').val(login);
+		$('.edd_user_search_results').html('');
 	});
 
 });

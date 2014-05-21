@@ -1,5 +1,5 @@
 <?php global $post; ?>
-<table id="edd_checkout_cart" <?php if ( edd_is_ajax_enabled() ) { echo 'class="ajaxed"'; } ?>>
+<table id="edd_checkout_cart" <?php if ( ! edd_is_ajax_disabled() ) { echo 'class="ajaxed"'; } ?>>
 	<thead>
 		<tr class="edd_cart_header_row">
 			<?php do_action( 'edd_checkout_table_header_first' ); ?>
@@ -11,8 +11,8 @@
 	</thead>
 	<tbody>
 		<?php $cart_items = edd_get_cart_contents(); ?>
+		<?php do_action( 'edd_cart_items_before' ); ?>
 		<?php if ( $cart_items ) : ?>
-			<?php do_action( 'edd_cart_items_before' ); ?>
 			<?php foreach ( $cart_items as $key => $item ) : ?>
 				<tr class="edd_cart_item" id="edd_cart_item_<?php echo esc_attr( $key ) . '_' . esc_attr( $item['id'] ); ?>" data-download-id="<?php echo esc_attr( $item['id'] ); ?>">
 					<?php do_action( 'edd_checkout_table_body_first', $item ); ?>
@@ -42,18 +42,24 @@
 					<?php do_action( 'edd_checkout_table_body_last', $item ); ?>
 				</tr>
 			<?php endforeach; ?>
-			<!-- Show any cart fees, both positive and negative fees -->
-			<?php if( edd_cart_has_fees() ) : ?>
-				<?php foreach( edd_get_cart_fees() as $fee_id => $fee ) : ?>
-					<tr class="edd_cart_fee" id="edd_cart_fee_<?php echo $fee_id; ?>">
-						<td class="edd_cart_fee_label"><?php echo esc_html( $fee['label'] ); ?></td>
-						<td class="edd_cart_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee['amount'] ) ) ); ?></td>
-						<td></td>
-					</tr>
-				<?php endforeach; ?>
-			<?php endif; ?>
-			<?php do_action( 'edd_cart_items_after' ); ?>
 		<?php endif; ?>
+		<?php do_action( 'edd_cart_items_middle' ); ?>
+		<!-- Show any cart fees, both positive and negative fees -->
+		<?php if( edd_cart_has_fees() ) : ?>
+			<?php foreach( edd_get_cart_fees() as $fee_id => $fee ) : ?>
+				<tr class="edd_cart_fee" id="edd_cart_fee_<?php echo $fee_id; ?>">
+					<td class="edd_cart_fee_label"><?php echo esc_html( $fee['label'] ); ?></td>
+					<td class="edd_cart_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee['amount'] ) ) ); ?></td>
+					<td>
+						<?php if( ! empty( $fee['type'] ) && 'item' == $fee['type'] ) : ?>
+							<a href="<?php echo esc_url( edd_remove_cart_fee_url( $fee_id ) ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
+						<?php endif; ?>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+		<?php endif; ?>
+
+		<?php do_action( 'edd_cart_items_after' ); ?>
 	</tbody>
 	<tfoot>
 

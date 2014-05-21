@@ -345,6 +345,11 @@ function edd_setup_email_tags() {
 			'description' => __( 'Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly.', 'edd' ),
 			'function'    => 'edd_email_tag_receipt_link'
 		),
+		array(
+			'tag'         => 'discount_codes',
+			'description' => __( 'Adds a list of any discount codes applied to this purchase', 'edd' ),
+			'function'    => 'edd_email_tag_discount_codes'
+		),
 	);
 
 	// Apply edd_email_tags filter
@@ -396,7 +401,7 @@ function edd_email_tag_download_list( $payment_id ) {
 					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id );
 				}
 
-				$download_list .= '<li>' . apply_filters( 'edd_email_receipt_download_title', $title, $item, $price_id ) . '<br/>';
+				$download_list .= '<li>' . apply_filters( 'edd_email_receipt_download_title', $title, $item, $price_id, $payment_id ) . '<br/>';
 				$download_list .= '<ul>';
 			}
 
@@ -594,7 +599,8 @@ function edd_email_tag_date( $payment_id ) {
  * @return string subtotal
  */
 function edd_email_tag_subtotal( $payment_id ) {
-	return edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
+	$subtotal = edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
+	return html_entity_decode( $subtotal, ENT_COMPAT, 'UTF-8' );
 }
 
 /**
@@ -606,7 +612,8 @@ function edd_email_tag_subtotal( $payment_id ) {
  * @return string tax
  */
 function edd_email_tag_tax( $payment_id ) {
-	return edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) );
+	$tax = edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) );
+	return html_entity_decode( $tax, ENT_COMPAT, 'UTF-8' );
 }
 
 /**
@@ -618,7 +625,8 @@ function edd_email_tag_tax( $payment_id ) {
  * @return string price
  */
 function edd_email_tag_price( $payment_id ) {
-	return edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) );
+	$price = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) );
+	return html_entity_decode( $price, ENT_COMPAT, 'UTF-8' );
 }
 
 /**
@@ -630,7 +638,7 @@ function edd_email_tag_price( $payment_id ) {
  * @return int payment_id
  */
 function edd_email_tag_payment_id( $payment_id ) {
-	return $payment_id;
+	return edd_get_payment_number( $payment_id );
 }
 
 /**
@@ -679,4 +687,24 @@ function edd_email_tag_sitename( $payment_id ) {
  */
 function edd_email_tag_receipt_link( $payment_id ) {
 	return sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array( 'payment_key' => edd_get_payment_key( $payment_id ), 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' );
+}
+
+/**
+ * Email template tag: discount_codes
+ * Adds a list of any discount codes applied to this purchase
+ *
+ * @param $int payment_id
+ * @since 2.0
+ * @return string $discount_codes
+ */
+function edd_email_tag_discount_codes( $payment_id ) {
+	$user_info = edd_get_payment_meta_user_info( $payment_id );
+
+	$discount_codes = '';
+
+	if( isset( $user_info['discount'] ) && $user_info['discount'] !== 'none' ) {
+		$discount_codes = $user_info['discount'];
+	}
+
+	return $discount_codes;
 }

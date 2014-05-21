@@ -29,7 +29,7 @@ function edd_sanitize_amount( $amount ) {
 
 	// Sanitize the amount
 	if ( $decimal_sep == ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
-		if ( $thousands_sep == '.' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+		if ( ( $thousands_sep == '.' || $thousands_sep == ' ' ) && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
 			$amount = str_replace( $thousands_sep, '', $amount );
 		} elseif( empty( $thousands_sep ) && false !== ( $found = strpos( $amount, '.' ) ) ) {
 			$amount = str_replace( '.', '', $amount );
@@ -72,6 +72,11 @@ function edd_format_amount( $amount, $decimals = true ) {
 	// Strip , from the amount (if set as the thousands separator)
 	if ( $thousands_sep == ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
 		$amount = str_replace( ',', '', $amount );
+	}
+
+	// Strip ' ' from the amount (if set as the thousands separator)
+	if ( $thousands_sep == ' ' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+		$amount = str_replace( ' ', '', $amount );
 	}
 
 	if ( empty( $amount ) ) {

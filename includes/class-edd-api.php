@@ -30,7 +30,7 @@ class EDD_API {
 	/**
 	 * API Version
 	 */
-	const VERSION = '1.2';
+	const VERSION = '1.3';
 
 	/**
 	 * Pretty Print?
@@ -101,11 +101,14 @@ class EDD_API {
 	 * @since 1.5
 	 */
 	public function __construct() {
-		add_action( 'init',                    array( $this, 'add_endpoint'   ) );
-		add_action( 'template_redirect',       array( $this, 'process_query'  ), -1 );
-		add_filter( 'query_vars',              array( $this, 'query_vars'     ) );
-		add_action( 'show_user_profile',       array( $this, 'user_key_field' ) );
-		add_action( 'personal_options_update', array( $this, 'update_key'     ) );
+		add_action( 'init',                     array( $this, 'add_endpoint'     ) );
+		add_action( 'template_redirect',        array( $this, 'process_query'    ), -1 );
+		add_filter( 'query_vars',               array( $this, 'query_vars'       ) );
+		add_action( 'show_user_profile',        array( $this, 'user_key_field'   ) );
+		add_action( 'edit_user_profile',        array( $this, 'user_key_field'   ) );
+		add_action( 'personal_options_update',  array( $this, 'update_key'       ) );
+		add_action( 'edit_user_profile_update', array( $this, 'update_key'       ) );
+		add_action( 'edd_process_api_key',      array( $this, 'process_api_key'  ) );
 
 		// Determine if JSON_PRETTY_PRINT is available
 		$this->pretty_print = defined( 'JSON_PRETTY_PRINT' ) ? JSON_PRETTY_PRINT : null;
@@ -152,6 +155,9 @@ class EDD_API {
 		$vars[] = 'customer';
 		$vars[] = 'discount';
 		$vars[] = 'format';
+		$vars[] = 'id';
+		$vars[] = 'purchasekey';
+		$vars[] = 'email';
 
 		return $vars;
 	}
@@ -1062,20 +1068,32 @@ class EDD_API {
 	 * @return array
 	 */
 	public function get_recent_sales() {
+		global $wp_query;
+
 		$sales = array();
 
 		if( ! user_can( $this->user_id, 'view_shop_reports' ) && ! $this->override ) {
 			return $sales;
 		}
 
-		$query = edd_get_payments( array( 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
+		if( isset( $wp_query->query_vars['id'] ) ) {
+			$query   = array();
+			$query[] = edd_get_payment_by( 'id', $wp_query->query_vars['id'] );
+		} elseif( isset( $wp_query->query_vars['purchasekey'] ) ) {
+			$query   = array();
+			$query[] = edd_get_payment_by( 'key', $wp_query->query_vars['purchasekey'] );
+		} elseif( isset( $wp_query->query_vars['email'] ) ) {
+			$query = edd_get_payments( array( 'meta_key' => '_edd_payment_user_email', 'meta_value' => $wp_query->query_vars['email'], 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
+		} else {
+			$query = edd_get_payments( array( 'number' => $this->per_page(), 'page' => $this->get_paged(), 'status' => 'publish' ) );
+		}
 
 		if ( $query ) {
 			$i = 0;
 			foreach ( $query as $payment ) {
-				$payment_meta          = edd_get_payment_meta( $payment->ID );
-				$user_info             = edd_get_payment_meta_user_info( $payment->ID );
-				$cart_items            = edd_get_payment_meta_cart_details( $payment->ID );
+				$payment_meta = edd_get_payment_meta( $payment->ID );
+				$user_info    = edd_get_payment_meta_user_info( $payment->ID );
+				$cart_items   = edd_get_payment_meta_cart_details( $payment->ID );
 
 				$sales['sales'][ $i ]['ID']       = $payment->ID;
 				$sales['sales'][ $i ]['key']      = edd_get_payment_key( $payment->ID );
@@ -1222,14 +1240,19 @@ class EDD_API {
 		global $edd_logs, $wp_query;
 
 		$query = array(
-			'key'       => $wp_query->query_vars['key'],
-			'query'     => isset( $wp_query->query_vars['query'] )     ? $wp_query->query_vars['query']     : null,
-			'type'      => isset( $wp_query->query_vars['type'] )      ? $wp_query->query_vars['type']      : null,
-			'product'   => isset( $wp_query->query_vars['product'] )   ? $wp_query->query_vars['product']   : null,
-			'customer'  => isset( $wp_query->query_vars['customer'] )  ? $wp_query->query_vars['customer']  : null,
-			'date'      => isset( $wp_query->query_vars['date'] )      ? $wp_query->query_vars['date']      : null,
-			'startdate' => isset( $wp_query->query_vars['startdate'] ) ? $wp_query->query_vars['startdate'] : null,
-			'enddate'   => isset( $wp_query->query_vars['enddate'] )   ? $wp_query->query_vars['enddate']   : null,
+			'edd-api'     => $wp_query->query_vars['edd-api'],
+			'key'         => $wp_query->query_vars['key'],
+			'token'       => $wp_query->query_vars['token'],
+			'query'       => isset( $wp_query->query_vars['query'] )       ? $wp_query->query_vars['query']       : null,
+			'type'        => isset( $wp_query->query_vars['type'] )        ? $wp_query->query_vars['type']        : null,
+			'product'     => isset( $wp_query->query_vars['product'] )     ? $wp_query->query_vars['product']     : null,
+			'customer'    => isset( $wp_query->query_vars['customer'] )    ? $wp_query->query_vars['customer']    : null,
+			'date'        => isset( $wp_query->query_vars['date'] )        ? $wp_query->query_vars['date']        : null,
+			'startdate'   => isset( $wp_query->query_vars['startdate'] )   ? $wp_query->query_vars['startdate']   : null,
+			'enddate'     => isset( $wp_query->query_vars['enddate'] )     ? $wp_query->query_vars['enddate']     : null,
+			'id'          => isset( $wp_query->query_vars['id'] )          ? $wp_query->query_vars['id']          : null,
+			'purchasekey' => isset( $wp_query->query_vars['purchasekey'] ) ? $wp_query->query_vars['purchasekey'] : null,
+			'email'       => isset( $wp_query->query_vars['email'] )       ? $wp_query->query_vars['email']       : null,
 		);
 
 		$log_data = array(
@@ -1241,7 +1264,8 @@ class EDD_API {
 		$log_meta = array(
 			'request_ip' => edd_get_ip(),
 			'user'       => $this->user_id,
-			'key'        => $wp_query->query_vars['key']
+			'key'        => $wp_query->query_vars['key'],
+			'token'      => $wp_query->query_vars['token']
 		);
 
 		$edd_logs->insert_log( $log_data, $log_meta );
@@ -1328,7 +1352,7 @@ class EDD_API {
 	function user_key_field( $user ) {
 		global $edd_options;
 
-		if ( ( isset( $edd_options['api_allow_user_keys'] ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'edit_user', $user->ID ) ) {
+		if ( ( edd_get_option( 'api_allow_user_keys', false ) || current_user_can( 'manage_shop_settings' ) ) && current_user_can( 'edit_user', $user->ID ) ) {
 			$user = get_userdata( $user->ID );
 			?>
 			<table class="form-table">
@@ -1356,6 +1380,101 @@ class EDD_API {
 	}
 
 	/**
+	 * Process an API key generation/revocation
+	 *
+	 * @access public
+	 * @since 2.0.0
+	 * @param array $args
+	 * @return void
+	 */
+	public function process_api_key( $args ) {
+
+		if( is_numeric( $args['user_id'] ) ) {
+			$user_id    = isset( $args['user_id'] ) ? absint( $args['user_id'] ) : get_current_user_id();
+		} else {
+			$userdata   = get_user_by( 'login', $args['user_id'] );
+			$user_id    = $userdata->ID;
+		}
+		$process    = isset( $args['edd_api_process'] ) ? strtolower( $args['edd_api_process'] ) : false;
+
+		if( $user_id == get_current_user_id() && ! edd_get_option( 'allow_user_api_keys' ) && ! current_user_can( 'manage_shop_settings' ) ) {
+			wp_die( sprintf( __( 'You do not have permission to %s API keys for this user', 'edd' ), $process ) );
+		} elseif( ! current_user_can( 'manage_shop_settings' ) ) {
+			wp_die( sprintf( __( 'You do not have permission to %s API keys for this user', 'edd' ), $process ) );
+		}
+
+		switch( $process ) {
+			case 'generate':
+				if( $this->generate_api_key( $user_id ) ) {
+					delete_transient( 'edd-total-api-keys' );
+					wp_redirect( add_query_arg( 'edd-message', 'api-key-generated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
+				} else {
+					wp_redirect( add_query_arg( 'edd-message', 'api-key-exists', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();	
+				}
+				break;
+			case 'regenerate':
+				$this->generate_api_key( $user_id, true );
+				delete_transient( 'edd-total-api-keys' );
+				wp_redirect( add_query_arg( 'edd-message', 'api-key-regenerated', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
+				break;
+			case 'revoke':
+				$this->revoke_api_key( $user_id );
+				delete_transient( 'edd-total-api-keys' );
+				wp_redirect( add_query_arg( 'edd-message', 'api-key-revoked', 'edit.php?post_type=download&page=edd-tools&tab=api_keys' ) ); exit();
+				break;
+			default;
+				break;
+		}
+	}
+
+	/**
+	 * Generate new API keys for a user
+	 *
+	 * @access public
+	 * @since 2.0.0
+	 * @param array $args
+	 * @return string
+	 */
+	public function generate_api_key( $user_id, $regenerate = false ) {
+		$user = get_userdata( $user_id );
+
+		if ( empty( $user->edd_user_public_key ) ) {
+			update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
+			update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
+		} elseif( $regenerate == true ) {
+			$this->revoke_api_key( $user->ID );
+			update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
+			update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
+		} else {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Revoke a users API keys
+	 *
+	 * @access public
+	 * @since 2.0.0
+	 * @param int $args
+	 * @return string
+	 */
+	public function revoke_api_key( $user_id ) {
+		$user = get_userdata( $user_id );
+
+		if ( ! empty( $user->edd_user_public_key ) ) {
+			delete_user_meta( $user_id, 'edd_user_public_key' );
+			delete_user_meta( $user_id, 'edd_user_secret_key' );
+		} else {
+			return false;
+		}
+
+		return true;
+	}
+
+
+	/**
 	 * Generate and Save API key
 	 *
 	 * Generates the key requested by user_key_field and stores it in the database
@@ -1373,13 +1492,9 @@ class EDD_API {
 
 			if ( empty( $user->edd_user_public_key ) ) {
 				update_user_meta( $user_id, 'edd_user_public_key', $this->generate_public_key( $user->user_email ) );
-			} else {
-				delete_user_meta( $user_id, 'edd_user_public_key' );
-			}
-
-			if ( empty( $user->edd_user_secret_key ) ) {
 				update_user_meta( $user_id, 'edd_user_secret_key', $this->generate_private_key( $user->ID ) );
 			} else {
+				delete_user_meta( $user_id, 'edd_user_public_key' );
 				delete_user_meta( $user_id, 'edd_user_secret_key' );
 			}
 		}

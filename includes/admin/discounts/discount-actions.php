@@ -66,7 +66,7 @@ function edd_edit_discount( $data ) {
 			}
 		}
 
-		$old_discount = edd_get_discount_by_code( $data['code'] );
+		$old_discount = edd_get_discount_by( 'code', $data['code'] );
 		$discount['uses'] = edd_get_discount_uses( $old_discount->ID );
 
 		if ( edd_store_discount( $discount, $data['discount-id'] ) ) {

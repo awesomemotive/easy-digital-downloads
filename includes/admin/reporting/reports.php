@@ -304,6 +304,24 @@ function edd_reports_tab_export() {
 					</div><!-- .postbox -->
 	
 					<div class="postbox">
+						<h3><span><?php _e( 'Export Earnings and Sales Stats', 'edd' ); ?></span></h3>
+						<div class="inside">
+							<p><?php _e( 'Download a CSV of earnings and sales over time.', 'edd' ); ?></p>
+							<p>
+								<form method="post">
+									<?php echo EDD()->html->year_dropdown( 'start_year' ); ?>
+									<?php echo EDD()->html->month_dropdown( 'start_month' ); ?>
+									<?php echo _x( 'to', 'Date one to date two', 'edd' ); ?>
+									<?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
+									<?php echo EDD()->html->month_dropdown( 'end_month' ); ?>
+									<input type="hidden" name="edd-action" value="earnings_export"/>
+									<input type="submit" value="<?php _e( 'Generate CSV', 'edd' ); ?>" class="button-secondary"/>
+								</form>
+							</p>
+						</div><!-- .inside -->
+					</div><!-- .postbox -->
+
+					<div class="postbox">
 						<h3><span><?php _e('Export Payment History', 'edd'); ?></span></h3>
 						<div class="inside">
 							<p><?php _e( 'Download a CSV of all payments recorded.', 'edd' ); ?></p>

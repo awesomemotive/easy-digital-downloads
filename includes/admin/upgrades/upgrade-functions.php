@@ -62,6 +62,22 @@ function edd_show_upgrade_notices() {
 			'</a>'
 		);
 	}
+
+	if ( version_compare( $edd_version, '2.0', '<' ) ) {
+		printf(
+			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the database, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
+			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
+			'</a>'
+		);
+	}
+
+	if ( EDD()->session->get( 'upgrade_sequential' ) && edd_get_payments() ) {
+		printf(
+			'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade past order numbers to make them sequential, click <a href="%s">here</a> to start the upgrade.', 'edd' ) . '</p></div>',
+			admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_sequential_payment_numbers' )
+		);
+	}
+
 }
 add_action( 'admin_notices', 'edd_show_upgrade_notices' );
 
@@ -96,6 +112,10 @@ function edd_trigger_upgrades() {
 
 	if ( version_compare( $edd_version, '1.5', '<' ) ) {
 		edd_v15_upgrades();
+	}
+
+	if ( version_compare( $edd_version, '2.0', '<' ) ) {
+		edd_v20_upgrades();
 	}
 
 	update_option( 'edd_version', EDD_VERSION );
@@ -293,3 +313,116 @@ function edd_v15_upgrades() {
 	// Flush the rewrite rules for the new /edd-api/ end point
 	flush_rewrite_rules();
 }
+
+/**
+ * Upgrades for EDD v2.0
+ *
+ * @since 2.0
+ * @return void
+ */
+function edd_v20_upgrades() {
+
+	global $edd_options;
+
+	// Upgrade for the anti-behavior fix - #2188
+	if( ! empty( $edd_options['disable_ajax_cart'] ) ) {
+		unset( $edd_options['enable_ajax_cart'] );
+	} else {
+		$edd_options['enable_ajax_cart'] = '1';
+	}
+
+	// Upgrade for the anti-behavior fix - #2188
+	if( ! empty( $edd_options['disable_cart_saving'] ) ) {
+		unset( $edd_options['enable_cart_saving'] );
+	} else {
+		$edd_options['enable_cart_saving'] = '1';
+	}
+
+	// Properly set the register / login form options based on whether they were enabled previously - #2076
+	if( ! empty( $edd_options['show_register_form'] ) ) {
+		$edd_options['show_register_form'] = 'both';
+	} else {
+		$edd_options['show_register_form'] = 'none';
+	}
+
+	update_option( 'edd_settings', $edd_options );
+
+}
+
+/**
+ * Upgrades for EDD v2.0 and sequential payment numbers
+ *
+ * @since 2.0
+ * @return void
+ */
+function edd_v20_upgrade_sequential_payment_numbers() {
+
+	if ( version_compare( EDD_VERSION, '2.0', '>=' ) ) {
+		return;
+	}
+
+	ignore_user_abort( true );
+
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		set_time_limit( 0 );
+	}
+
+	$step   = isset( $_GET['step'] )  ? absint( $_GET['step'] )  : 1;
+	$total  = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
+
+	if( empty( $total ) || $total <= 1 ) {
+		$payments = edd_count_payments();
+		foreach( $payments as $status ) {
+			$total += $status;
+		}
+	}
+
+	$args   = array(
+		'number' => 100,
+		'page'   => $step,
+		'status' => 'any',
+		'order'  => 'ASC'
+	);
+
+	$payments = new EDD_Payments_Query( $args );
+	$payments = $payments->get_payments();
+
+	if( $payments ) {
+
+		$prefix  = edd_get_option( 'sequential_prefix' );
+		$postfix = edd_get_option( 'sequential_postfix' );
+		$number  = ! empty( $_GET['custom'] ) ? absint( $_GET['custom'] ) : intval( edd_get_option( 'sequential_start', 1 ) );
+
+		foreach( $payments as $payment ) {
+			
+			// Re-add the prefix and postfix
+			$payment_number = $prefix . $number . $postfix;
+
+			update_post_meta( $payment->ID, '_edd_payment_number', $payment_number );
+
+			// Increment the payment number
+			$number++;
+				
+		}
+
+		// Payments found so upgrade them
+		$step++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'upgrade_sequential_payment_numbers',
+			'step'        => $step,
+			'custom'      => $number,
+			'total'       => $total
+		), admin_url( 'index.php' ) );
+		wp_redirect( $redirect ); exit;
+
+	} else {
+
+
+		// No more payments found, finish up
+		EDD()->session->set( 'upgrade_sequential', null );
+		wp_redirect( admin_url() ); exit;
+	}
+
+}
+add_action( 'edd_upgrade_sequential_payment_numbers', 'edd_v20_upgrade_sequential_payment_numbers' );

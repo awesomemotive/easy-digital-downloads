@@ -356,7 +356,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 		);
 
 		$payment_meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
-		$payment_meta['user_info'] = serialize( $user_info );
+		$payment_meta['user_info'] = $user_info;
 		update_post_meta( $payment_id, '_edd_payment_meta', $payment_meta );
 	}
 

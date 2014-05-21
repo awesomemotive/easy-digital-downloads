@@ -13,7 +13,7 @@ class Tests_Login_Register extends EDD_UnitTestCase {
      * Testthat the login form returns the expected string
      */
 	public function test_login_form() {
-		$this->assertEquals( '<p class="edd-logged-in">You are already logged in</p>', edd_login_form() );
+		$this->assertContains( 'You are already logged in', edd_login_form() );
 	}
 
 	/**

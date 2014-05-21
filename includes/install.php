@@ -45,6 +45,9 @@ function edd_install() {
 		update_option( 'edd_version_upgraded_from', $current_version );
 	}
 
+	// Setup some default options
+	$options = array();
+
 	// Checks if the purchase page option exists
 	if ( ! isset( $edd_options['purchase_page'] ) ) {
 	  // Checkout Page
@@ -99,28 +102,39 @@ function edd_install() {
 		);
 
 		// Store our page IDs
-		$options = array(
-			'purchase_page' => $checkout,
-			'success_page'  => $success,
-			'failure_page'  => $failed,
-			'purchase_history_page'  => $history
-		);
-
-		update_option( 'edd_settings', $options );
-		update_option( 'edd_version', EDD_VERSION );
-
-		// Create wp-content/uploads/edd/ folder and the .htaccess file
-		edd_create_protection_files( true );
+		$options['purchase_page']         = $checkout;
+		$options['success_page']          = $success;
+		$options['failure_page']          = $failed;
+		$options['purchase_history_page'] = $history;
 
 		// Add a temporary option to note that EDD pages have been created
-		$activation_pages = array_merge( $options, array( 'history_page' => $history ) );
-		set_transient( '_edd_activation_pages', $activation_pages, 30 );
+		set_transient( '_edd_installed', $options, 30 );
 
-		// Create EDD shop roles
-		$roles = new EDD_Roles;
-		$roles->add_roles();
-		$roles->add_caps();
 	}
+
+	// Populate some default values
+	foreach( edd_get_registered_settings() as $tab => $settings ) {
+
+		foreach ( $settings as $option ) {
+
+			if( 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
+				$options[ $option['id'] ] = '1';
+			}
+
+		}
+
+	}
+
+	update_option( 'edd_settings', $options );
+	update_option( 'edd_version', EDD_VERSION );
+
+	// Create wp-content/uploads/edd/ folder and the .htaccess file
+	edd_create_protection_files( true );
+
+	// Create EDD shop roles
+	$roles = new EDD_Roles;
+	$roles->add_roles();
+	$roles->add_caps();
 
 	// Bail if activating from network, or bulk
 	if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
@@ -147,17 +161,17 @@ function edd_after_install() {
 		return;
 	}
 
-	$activation_pages = get_transient( '_edd_activation_pages' );
+	$edd_options = get_transient( '_edd_installed' );
 
 	// Exit if not in admin or the transient doesn't exist
-	if ( false === $activation_pages ) {
+	if ( false === $edd_options ) {
 		return;
 	}
 
 	// Delete the transient
-	delete_transient( '_edd_activation_pages' );
+	delete_transient( '_edd_installed' );
 
-	do_action( 'edd_after_install', $activation_pages );
+	do_action( 'edd_after_install', $edd_options );
 }
 add_action( 'admin_init', 'edd_after_install' );
 
