@@ -36,8 +36,9 @@ function edd_process_download() {
 		'key'      => ( isset( $_GET['download_key'] ) ) ? $_GET['download_key']                            : ''
 	) );
 
-	if( $args['download'] === '' || $args['email'] === '' || $args['file_key'] === '' )
+	if( $args['download'] === '' || $args['email'] === '' || $args['file_key'] === '' ) {
 		return false;
+	}
 
     extract( $args );
 
