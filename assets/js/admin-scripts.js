@@ -219,7 +219,6 @@ jQuery(document).ready(function ($) {
 						selection.each( function( attachment, index ) {
 							attachment = attachment.toJSON();
 							if ( 0 === index ) {
-								console.log( attachment );
 								// place first attachment in field
 								window.formfield.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
 								window.formfield.find( '.edd_repeatable_upload_field' ).val( attachment.url );
@@ -229,8 +228,8 @@ jQuery(document).ready(function ($) {
 								var row = window.formfield,
 									clone = EDD_Download_Configuration.clone_repeatable( row );
 
-								clone.find( '.edd_repeatable_upload_field' ).val( attachment.url );
 								clone.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
+								clone.find( '.edd_repeatable_upload_field' ).val( attachment.url );
 								if ( attachment.title.length > 0 ) {
 									clone.find( '.edd_repeatable_name_field' ).val( attachment.title );
 								} else {
