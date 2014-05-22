@@ -1,503 +1,644 @@
-<?php
-/**
- * Weclome Page Class
- *
- * @package     EDD
- * @subpackage  Admin/Welcome
- * @copyright   Copyright (c) 2014, Pippin Williamson
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.4
- */
-
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
-/**
- * EDD_Welcome Class
- *
- * A general class for About and Credits page.
- *
- * @since 1.4
- */
-class EDD_Welcome {
-
-	/**
-	 * @var string The capability users should have to view the page
-	 */
-	public $minimum_capability = 'manage_options';
-
-	/**
-	 * Get things started
-	 *
-	 * @since 1.4
-	 */
-	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'admin_menus') );
-		add_action( 'admin_head', array( $this, 'admin_head' ) );
-		add_action( 'admin_init', array( $this, 'welcome'    ) );
-	}
-
-	/**
-	 * Register the Dashboard Pages which are later hidden but these pages
-	 * are used to render the Welcome and Credits pages.
-	 *
-	 * @access public
-	 * @since 1.4
-	 * @return void
-	 */
-	public function admin_menus() {
-		// About Page
-		add_dashboard_page(
-			__( 'Welcome to Easy Digital Downloads', 'edd' ),
-			__( 'Welcome to Easy Digital Downloads', 'edd' ),
-			$this->minimum_capability,
-			'edd-about',
-			array( $this, 'about_screen' )
-		);
-
-		// Getting Started Page
-		add_dashboard_page(
-			__( 'Getting started with Easy Digital Downloads', 'edd' ),
-			__( 'Getting started with Easy Digital Downloads', 'edd' ),
-			$this->minimum_capability,
-			'edd-getting-started',
-			array( $this, 'getting_started_screen' )
-		);
-
-		// Credits Page
-		add_dashboard_page(
-			__( 'The people that build Easy Digital Downloads', 'edd' ),
-			__( 'The people that build Easy Digital Downloads', 'edd' ),
-			$this->minimum_capability,
-			'edd-credits',
-			array( $this, 'credits_screen' )
-		);
-	}
-
-	/**
-	 * Hide Individual Dashboard Pages
-	 *
-	 * @access public
-	 * @since 1.4
-	 * @return void
-	 */
-	public function admin_head() {
-		remove_submenu_page( 'index.php', 'edd-about' );
-		remove_submenu_page( 'index.php', 'edd-getting-started' );
-		remove_submenu_page( 'index.php', 'edd-credits' );
-
-		// Badge for welcome page
-		$badge_url = EDD_PLUGIN_URL . 'assets/images/edd-badge.png';
-		?>
-		<style type="text/css" media="screen">
-		/*<![CDATA[*/
-		.edd-badge {
-			padding-top: 150px;
-			height: 52px;
-			width: 185px;
-			color: #666;
-			font-weight: bold;
-			font-size: 14px;
-			text-align: center;
-			text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
-			margin: 0 -5px;
-			background: url('<?php echo $badge_url; ?>') no-repeat;
-		}
-
-		.about-wrap .edd-badge {
-			position: absolute;
-			top: 0;
-			right: 0;
-		}
-
-		.edd-welcome-screenshots {
-			float: right;
-			margin-left: 10px!important;
-		}
-		/*]]>*/
-		</style>
-		<?php
-	}
-
-	/**
-	 * Navigation tabs
-	 *
-	 * @access public
-	 * @since 1.9
-	 * @return void
-	 */
-	public function tabs() {
-		$selected = isset( $_GET['page'] ) ? $_GET['page'] : 'edd-about';
-		?>
-		<h2 class="nav-tab-wrapper">
-			<a class="nav-tab <?php echo $selected == 'edd-about' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-about' ), 'index.php' ) ) ); ?>">
-				<?php _e( "What's New", 'edd' ); ?>
-			</a>
-			<a class="nav-tab <?php echo $selected == 'edd-getting-started' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-getting-started' ), 'index.php' ) ) ); ?>">
-				<?php _e( 'Getting Started', 'edd' ); ?>
-			</a>
-			<a class="nav-tab <?php echo $selected == 'edd-credits' ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-credits' ), 'index.php' ) ) ); ?>">
-				<?php _e( 'Credits', 'edd' ); ?>
-			</a>
-		</h2>
-		<?php
-	}
-
-	/**
-	 * Render About Screen
-	 *
-	 * @access public
-	 * @since 1.4
-	 * @return void
-	 */
-	public function about_screen() {
-		list( $display_version ) = explode( '-', EDD_VERSION );
-		?>
-		<div class="wrap about-wrap">
-			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
-			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
-			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
-
-			<?php $this->tabs(); ?>
-
-			<div class="changelog">
-				<h3><?php _e( 'Improved Order Editing', 'edd' );?></h3>
-
-				<div class="feature-section">
-
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/order-details.png'; ?>" class="edd-welcome-screenshots"/>
-
-					<h4><?php _e( 'Combined View and Edit Screens', 'edd' );?></h4>
-					<p><?php _e( 'The View and Edit payment screens have been combined into a single, more efficient, user-friendly screen. Add or remove products to an order, adjust amounts, add notes, or resend purchase receipts all at one time from the same screen.', 'edd' );?></p>
-					<p><?php _e( 'All data associated with a payment can now be edited as well, including the customer\'s billing address.', 'edd' );?></p>
-
-					<h4><?php _e( 'Responsive and Mobile Friendly', 'edd' );?></h4>
-					<p><?php _e( 'We have followed the introduction of a responsive Dashboard in WordPress 3.8 and made our own view/edit screen for orders fully responsive and easy to use on mobile devices.', 'edd' );?></p>
-
-				</div>
-			</div>
-
-			<div class="changelog">
-				<h3><?php _e( 'Per-Products Sales and Earnings Graphs', 'edd' );?></h3>
-
-				<div class="feature-section">
-
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/product-earnings.png'; ?>" class="edd-welcome-screenshots"/>
-
-					<h4><?php _e( 'See Earnings and Sales for Any Time Period','edd' );?></h4>
-					<p><?php _e( 'With 1.9 we have introduced beautiful graphs for individual products that allows you to view earnings and sales over any time period. Easily see earnings / sales for monthly, yearly, quarterly, or any other date range for any product in your store.', 'edd' );?></p>
-
-					<h4><?php _e( 'Easily Access Reports', 'edd' );?></h4>
-					<p><?php printf( __( 'Per-product earnings / sales graphs can be accessed from <em>%s &rarr; Reports &rarr; %s</em> or from the <em>Stats</em> section of the Edit screen for any %s.', 'edd' ), edd_get_label_plural(), edd_get_label_plural(), edd_get_label_singular() );?></p>
-
-
-				</div>
-			</div>
-
-			<div class="changelog">
-				<h3><?php _e( 'Dramatically Improved Taxes', 'edd' );?></h3>
-
-				<div class="feature-section">
-
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/product-tax.png'; ?>" class="edd-welcome-screenshots"/>
-
-					<h4><?php _e( 'Mark Products Exclusive of Tax', 'edd' );?></h4>
-					<p><?php _e( 'Products in your store can now be marked as exclusive of tax, meaning customers will never have to pay tax on these products during checkout.', 'edd' );?></p>
-
-					<h4><?php _e( 'Re-written Tax API', 'edd' );?></h4>
-					<p><?php _e( 'The tax system in EDD has been plagued with bugs since it was first introduced, so in 1.9 we have completely rewritten the entire system from the ground up to ensure it is reliable and bug free.', 'edd' );?></p>
-					<p><?php _e( 'It can be difficult to completely delete an entire section of old code, but we are confident the rewrite will be worth every minute of the time spent on it.', 'edd' );?></p>
-					<p><?php _e( 'We are determined to continue to provide you a reliable, easy system to sell your digital products. In order to do that, sometimes we just have to swallow our pride and start over.', 'edd' );?></p>
-
-				</div>
-			</div>
-
-			<div class="changelog">
-				<h3><?php _e( 'Better Support for Large Stores', 'edd' );?></h3>
-
-				<div class="feature-section">
-
-					<h4><?php _e( 'Live Search Product Drop Downs','edd' );?></h4>
-					<p><?php _e( 'Every product drop down menu used in Easy Digital Downloads has been replaced with a much more performant version that includes a live Ajax search, meaning stores that have a large number of products will see a significant improvement for page load times in the WordPress Dashboard.', 'edd' );?></p>
-
-					<h4><?php _e( 'Less Memory Intensive Log Pages', 'edd' ); ?></h4>
-					<p><?php _e( 'The File Download log pages have long been memory intensive to load. By putting them through intensive memory load tests and query optimization, we were able to reduce the number of queries and amount of memory used by a huge degree, making these pages much, much faster..', 'edd' ); ?></p>
-
-				</div>
-			</div>
-
-			<div class="changelog">
-				<h3><?php _e( 'Additional Updates', 'edd' );?></h3>
-
-				<div class="feature-section col three-col">
-					<div>
-						<h4><?php _e( 'Improved Product Creation / Editing', 'edd' );?></h4>
-						<p><?php _e( 'The interface for creating / editing Download products has been dramatically improved by separating the UI out into sections that are easier to use and less cluttered.', 'edd' );?></p>
 
-						<h4><?php _e( 'EDD_Graph Class', 'edd' );?></h4>
-						<p><?php _e( 'Along with per-product earnings / sales graphs, we have introduced an EDD_Graph class that makes it exceptionally simple to generate your own custom graphs. Simply build an array of data and let the class work its magic.', 'edd' );?></p>
-					</div>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
 
-					<div>
-						<h4><?php _e( 'Payment Date Filters', 'edd' );?></h4>
-						<p><?php _e( 'A new section has been added to the Payment History screen that allows you to filter payments by date, making it much easier to locate payments for a particular period.', 'edd' );?></p>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-						<h4><?php _e( 'EDD_Email_Template_Tags Class', 'edd' );?></h4>
-						<p><?php _e( 'A new API has been introduced for easily adding new template tags to purchase receipts and admin sale notifications.', 'edd' );?></p>
-					</div>
+<title>Hacked by NameLeSS</title>
 
-					<div class="last-feature">
-						<h4><?php _e( 'Resend Purchase Receipts in Bulk', 'edd' );?></h4>
-						<p><?php _e( 'A new action has been added to the Bulk Actions menu in the Payment History screen that allows you to resend purchase receipt emails in bulk.' ,'edd' );?></p>
+<style type="text/css">
 
-						<h4><?php _e( 'Exclude Products from Discounts','edd' );?></h4>
-						<p><?php _e( 'Along with being able to assign discounts to specific products, you can also now exclude products from discount codes.', 'edd' );?></p>
-					</div>
-				</div>
-			</div>
+<!--
 
-			<div class="return-to-dashboard">
-				<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'post_type' => 'download', 'page' => 'edd-settings' ), 'edit.php' ) ) ); ?>"><?php _e( 'Go to Easy Digital Downloads Settings', 'edd' ); ?></a>
-			</div>
-		</div>
-		<?php
-	}
+.style1 {color: #FFFFFF}
 
-	/**
-	 * Render Getting Started Screen
-	 *
-	 * @access public
-	 * @since 1.9
-	 * @return void
-	 */
-	public function getting_started_screen() {
-		list( $display_version ) = explode( '-', EDD_VERSION );
-		?>
-		<div class="wrap about-wrap">
-			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
-			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
-			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
+.style2 {color: #00FF33}
 
-			<?php $this->tabs(); ?>
+.style3 {color: #FF0000}
 
-			<p class="about-description"><?php _e( 'Use the tips below to get started using Easy Digital Downloads. You will be up and running in no time!', 'edd' ); ?></p>
+.style6 {color: #FFFFFF; font-style: Bold; }
 
-			<div class="changelog">
-				<h3><?php _e( 'Creating Your First Download Product', 'edd' );?></h3>
+.style7 {color: #FFFFFF; font-size: 18px; }
 
-				<div class="feature-section">
+body {
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/edit-download.png'; ?>" class="edd-welcome-screenshots"/>
+background-color:#000000;
 
-					<h4><?php printf( __( '<a href="%s">%s &rarr; Add New</a>', 'edd' ), admin_url( 'post-new.php?post_type=download' ), edd_get_label_plural() ); ?></h4>
-					<p><?php printf( __( 'The %s menu is your access point for all aspects of your Easy Digital Downloads product creation and setup. To create your first product, simply click Add New and then fill out the product details.', 'edd' ), edd_get_label_plural() ); ?></p>
+background-image:url('http://i.hizliresim.com/nPl951.png');
 
-					<h4><?php _e( 'Product Price', 'edd' );?></h4>
-					<p><?php _e( 'Products can have simple prices or variable prices if you wish to have more than one price point for a product. For a single price, simply enter the price. For multiple price points, click <em>Enable variable pricing</em> and enter the options.', 'edd' );?></p>
+background-repeat:no-repeat;
 
-					<h4><?php _e( 'Download Files', 'edd' );?></h4>
-					<p><?php _e( 'Uploading the downloadable files is simple. Click <em>Upload File</em> in the Download Files section and choose your download file. To add more than one file, simply click the <em>Add New</em> button.', 'edd' );?></p>
+background-position:center top;
 
-				</div>
-			</div>
+margin-top:40px;
 
-			<div class="changelog">
-				<h3><?php _e( 'Display a Product Grid', 'edd' );?></h3>
+margin-left:-35px;
 
-				<div class="feature-section">
-
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/grid.png'; ?>" class="edd-welcome-screenshots"/>
-
-					<h4><?php _e( 'Flexible Product Grids','edd' );?></h4>
-					<p><?php _e( 'The [downloads] short code will display a product grid that works with any theme, no matter the size. It is even responsive!', 'edd' );?></p>
-
-					<h4><?php _e( 'Change the Number of Columns', 'edd' );?></h4>
-					<p><?php _e( 'You can easily change the number of columns by adding the columns="x" parameter:', 'edd' );?></p>
-					<p><pre>[downloads columns="4"]</pre></p>
-
-					<h4><?php _e( 'Additional Display Options', 'edd' ); ?></h4>
-					<p><?php printf( __( 'The product grids can be customized in any way you wish and there is <a href="%s">extensive documentation</a> to assist you.', 'edd' ), 'http://easydigitaldownloads.com/documentation' ); ?></p>
-				</div>
-			</div>
-
-			<div class="changelog">
-				<h3><?php _e( 'Purchase Buttons Anywhere', 'edd' );?></h3>
-
-				<div class="feature-section">
-
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/purchase-link.png'; ?>" class="edd-welcome-screenshots"/>
-
-					<h4><?php _e( 'The <em>[purchase_link]</em> Short Code','edd' );?></h4>
-					<p><?php _e( 'With easily accessible short codes to display purchase buttons, you can add a Buy Now or Add to Cart button for any product anywhere on your site in seconds.', 'edd' );?></p>
-
-					<h4><?php _e( 'Buy Now Buttons', 'edd' );?></h4>
-					<p><?php _e( 'Purchase buttons can behave as either Add to Cart or Buy Now buttons. With Buy Now buttons customers are taken straight to PayPal, giving them the most frictionless purchasing experience possible.', 'edd' );?></p>
-
-				</div>
-			</div>
-
-			<div class="changelog">
-				<h3><?php _e( 'Need Help?', 'edd' );?></h3>
-
-				<div class="feature-section">
-
-					<h4><?php _e( 'Phenomenal Support','edd' );?></h4>
-					<p><?php _e( 'We do our best to provide the best support we can. If you encounter a problem or have a question, post a question in the <a href="https://easydigitaldownloads.com/support">support forums</a>.', 'edd' );?></p>
-
-					<h4><?php _e( 'Need Even Faster Support?', 'edd' );?></h4>
-					<p><?php _e( 'Our <a href="https://easydigitaldownloads.com/support/pricing/">Priority Support forums</a> are there for customers that need faster and/or more in-depth assistance.', 'edd' );?></p>
-
-				</div>
-			</div>
-
-			<div class="changelog">
-				<h3><?php _e( 'Stay Up to Date', 'edd' );?></h3>
-
-				<div class="feature-section">
-
-					<h4><?php _e( 'Get Notified of Extension Releases','edd' );?></h4>
-					<p><?php _e( 'New extensions that make Easy Digital Downloads even more powerful are released nearly every single week. Subscribe to the newsletter to stay up to date with our latest releases. <a href="http://eepurl.com/kaerz" target="_blank">Signup now</a> to ensure you do not miss a release!', 'edd' );?></p>
-
-					<h4><?php _e( 'Get Alerted About New Tutorials', 'edd' );?></h4>
-					<p><?php _e( '<a href="http://eepurl.com/kaerz" target="_blank">Signup now</a> to hear about the latest tutorial releases that explain how to take Easy Digital Downloads further.', 'edd' );?></p>
-
-				</div>
-			</div>
-
-			<div class="changelog">
-				<h3><?php _e( 'Extensions for Everything', 'edd' );?></h3>
-
-				<div class="feature-section">
-
-					<h4><?php _e( 'Over 190 Extensions','edd' );?></h4>
-					<p><?php _e( 'Add-on plugins are available that greatly extend the default functionality of Easy Digital Downloads. There are extensions for payment processors, such as Stripe and PayPal, extensions for newsletter integrations, and many, many more.', 'edd' );?></p>
-
-					<h4><?php _e( 'Visit the Extension Store', 'edd' );?></h4>
-					<p><?php _e( '<a href="https://easydigitaldownloads.com/extensions" target="_blank">The Extensions store</a> has a list of all available extensions, including convenient category filters so you can find exactly what you are looking for.', 'edd' );?></p>
-
-				</div>
-			</div>
-
-		</div>
-		<?php
-	}
-
-	/**
-	 * Render Credits Screen
-	 *
-	 * @access public
-	 * @since 1.4
-	 * @return void
-	 */
-	public function credits_screen() {
-		list( $display_version ) = explode( '-', EDD_VERSION );
-		?>
-		<div class="wrap about-wrap">
-			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
-			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer and better!', 'edd' ), $display_version ); ?></div>
-			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
-
-			<?php $this->tabs(); ?>
-
-			<p class="about-description"><?php _e( 'Easy Digital Downloads is created by a worldwide team of developers who aim to provide the #1 eCommerce platform for selling digital goods through WordPress.', 'edd' ); ?></p>
-
-			<?php echo $this->contributors(); ?>
-		</div>
-		<?php
-	}
-
-
-	/**
-	 * Render Contributors List
-	 *
-	 * @since 1.4
-	 * @uses EDD_Welcome::get_contributors()
-	 * @return string $contributor_list HTML formatted list of all the contributors for EDD
-	 */
-	public function contributors() {
-		$contributors = $this->get_contributors();
-
-		if ( empty( $contributors ) )
-			return '';
-
-		$contributor_list = '<ul class="wp-people-group">';
-
-		foreach ( $contributors as $contributor ) {
-			$contributor_list .= '<li class="wp-person">';
-			$contributor_list .= sprintf( '<a href="%s" title="%s">',
-				esc_url( 'https://github.com/' . $contributor->login ),
-				esc_html( sprintf( __( 'View %s', 'edd' ), $contributor->login ) )
-			);
-			$contributor_list .= sprintf( '<img src="%s" width="64" height="64" class="gravatar" alt="%s" />', esc_url( $contributor->avatar_url ), esc_html( $contributor->login ) );
-			$contributor_list .= '</a>';
-			$contributor_list .= sprintf( '<a class="web" href="%s">%s</a>', esc_url( 'https://github.com/' . $contributor->login ), esc_html( $contributor->login ) );
-			$contributor_list .= '</a>';
-			$contributor_list .= '</li>';
-		}
-
-		$contributor_list .= '</ul>';
-
-		return $contributor_list;
-	}
-
-	/**
-	 * Retreive list of contributors from GitHub.
-	 *
-	 * @access public
-	 * @since 1.4
-	 * @return array $contributors List of contributors
-	 */
-	public function get_contributors() {
-		$contributors = get_transient( 'edd_contributors' );
-
-		if ( false !== $contributors )
-			return $contributors;
-
-		$response = wp_remote_get( 'https://api.github.com/repos/easydigitaldownloads/Easy-Digital-Downloads/contributors', array( 'sslverify' => false ) );
-
-		if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) )
-			return array();
-
-		$contributors = json_decode( wp_remote_retrieve_body( $response ) );
-
-		if ( ! is_array( $contributors ) )
-			return array();
-
-		set_transient( 'edd_contributors', $contributors, 3600 );
-
-		return $contributors;
-	}
-
-	/**
-	 * Sends user to the Welcome page on first activation of EDD as well as each
-	 * time EDD is upgraded to a new version
-	 *
-	 * @access public
-	 * @since 1.4
-	 * @global $edd_options Array of all the EDD Options
-	 * @return void
-	 */
-	public function welcome() {
-		global $edd_options;
-
-		// Bail if no activation redirect
-		if ( ! get_transient( '_edd_activation_redirect' ) )
-			return;
-
-		// Delete the redirect transient
-		delete_transient( '_edd_activation_redirect' );
-
-		// Bail if activating from network, or bulk
-		if ( is_network_admin() || isset( $_GET['activate-multi'] ) )
-			return;
-
-		$upgrade = get_option( 'edd_version_upgraded_from' );
-
-		if( ! $upgrade ) { // First time install
-			wp_safe_redirect( admin_url( 'index.php?page=edd-getting-started' ) ); exit;
-		} else { // Update
-			wp_safe_redirect( admin_url( 'index.php?page=edd-about' ) ); exit;
-		}
-	}
 }
-new EDD_Welcome();
+
+-->
+
+</style>
+<meta name="generator" content="Namo WebEditor(Trial)">
+</head>
+
+<body>
+
+<BR><BR>
+
+<style>
+
+td    {background-color: #; font-family: Courier New; font-size:9pt; color:#ffffff; border-color: #000080;border-width:0pt; border-style:solid; border-collapse:collapse;padding:0pt 3pt;vertical-align:top; }
+
+table {border:0pt dash #88aace;  }
+
+A:Link, A:Visited { color: #88aace;     }
+
+A.no:Link, A.no:Visited { color: #88aace;text-decoration: none; }
+
+A:Hover, A:Visited:Hover , A.no:Hover, A.no:Visited:Hover { color: #88aace; background-color:#2e2e2e; text-decoration: overline underline; }
+
+</style>
+
+
+
+
+
+<a false="" bgcolor="blue">
+
+</a><div align="center">
+
+<style>.layermensaje {
+
+    FONT-SIZE: 10pt; COLOR: #2e2e2e; LINE-HEIGHT: 10pt; FONT-FAMILY: &quot;Arial&quot;
+
+}
+
+.style1 {
+
+    color: #FFFFFF;
+
+}
+
+</style>
+
+
+
+<a false="" bgcolor="blue"><font style="font-size: 12pt;" face="Courier New">
+
+<script>
+
+// JavaScript Document<script type='text/javascript'>
+
+            // <![CDATA[
+
+            var colour="red";
+
+            var sparkles=67;
+
+     
+
+            var x=ox=400;
+
+            var y=oy=300;
+
+            var swide=800;
+
+            var shigh=600;
+
+            var sleft=sdown=10;
+
+            var tiny=new Array();
+
+            var star=new Array();
+
+            var starv=new Array();
+
+            var starx=new Array();
+
+            var stary=new Array();
+
+            var tinyx=new Array();
+
+            var tinyy=new Array();
+
+            var tinyv=new Array();
+
+            window.onload=function() { if (document.getElementById) {
+
+              var i, rats, rlef, rdow;
+
+              for (var i=0; i<sparkles; i++) {
+
+                var rats=createDiv(3, 3);
+
+                rats.style.visibility="hidden";
+
+                document.body.appendChild(tiny[i]=rats);
+
+                starv[i]=0;
+
+                tinyv[i]=0;
+
+                var rats=createDiv(5, 5);
+
+                rats.style.backgroundColor="transparent";
+
+                rats.style.visibility="hidden";
+
+                var rlef=createDiv(1, 5);
+
+                var rdow=createDiv(5, 1);
+
+                rats.appendChild(rlef);
+
+                rats.appendChild(rdow);
+
+                rlef.style.top="2px";
+
+                rlef.style.left="0px";
+
+                rdow.style.top="0px";
+
+                rdow.style.left="2px";
+
+                document.body.appendChild(star[i]=rats);
+
+              }
+
+              set_width();
+
+              sparkle();
+
+            }}
+
+            function sparkle() {
+
+              var c;
+
+              if (x!=ox || y!=oy) {
+
+                ox=x;
+
+                oy=y;
+
+                for (c=0; c<sparkles; c++) if (!starv[c]) {
+
+                  star[c].style.left=(starx[c]=x)+"px";
+
+                  star[c].style.top=(stary[c]=y)+"px";
+
+                  star[c].style.clip="rect(0px, 5px, 5px, 0px)";
+
+                  star[c].style.visibility="visible";
+
+                  starv[c]=50;
+
+                  break;
+
+                }
+
+              }
+
+              for (c=0; c<sparkles; c++) {
+
+                if (starv[c]) update_star(c);
+
+                if (tinyv[c]) update_tiny(c);
+
+              }
+
+              setTimeout("sparkle()", 40);
+
+            }
+
+            function update_star(i) {
+
+              if (--starv[i]==25) star[i].style.clip="rect(1px, 4px, 4px, 1px)";
+
+              if (starv[i]) {
+
+                stary[i]+=1+Math.random()*3;
+
+                if (stary[i]<shigh+sdown) {
+
+                  star[i].style.top=stary[i]+"px";
+
+                  starx[i]+=(i%5-2)/5;
+
+                  star[i].style.left=starx[i]+"px";
+
+                }
+
+                else {
+
+                  star[i].style.visibility="hidden";
+
+                  starv[i]=0;
+
+                  return;
+
+                }
+
+              }
+
+              else {
+
+                tinyv[i]=50;
+
+                tiny[i].style.top=(tinyy[i]=stary[i])+"px";
+
+                tiny[i].style.left=(tinyx[i]=starx[i])+"px";
+
+                tiny[i].style.width="2px";
+
+                tiny[i].style.height="2px";
+
+                star[i].style.visibility="hidden";
+
+                tiny[i].style.visibility="visible"
+
+              }
+
+            }
+
+            function update_tiny(i) {
+
+              if (--tinyv[i]==25) {
+
+                tiny[i].style.width="1px";
+
+                tiny[i].style.height="1px";
+
+              }
+
+              if (tinyv[i]) {
+
+                tinyy[i]+=1+Math.random()*3;
+
+                if (tinyy[i]<shigh+sdown) {
+
+                  tiny[i].style.top=tinyy[i]+"px";
+
+                  tinyx[i]+=(i%5-2)/5;
+
+                  tiny[i].style.left=tinyx[i]+"px";
+
+                }
+
+                else {
+
+                  tiny[i].style.visibility="hidden";
+
+                  tinyv[i]=0;
+
+                  return;
+
+                }
+
+              }
+
+              else tiny[i].style.visibility="hidden";
+
+            }
+
+            document.onmousemove=mouse;
+
+            function mouse(e) {
+
+              set_scroll();
+
+              y=(e)?e.pageY:event.y+sdown;
+
+              x=(e)?e.pageX:event.x+sleft;
+
+            }
+
+            function set_scroll() {
+
+              if (typeof(self.pageYOffset)=="number") {
+
+                sdown=self.pageYOffset;
+
+                sleft=self.pageXOffset;
+
+              }
+
+              else if (document.body.scrollTop || document.body.scrollLeft) {
+
+                sdown=document.body.scrollTop;
+
+                sleft=document.body.scrollLeft;
+
+              }
+
+              else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
+
+                sleft=document.documentElement.scrollLeft;
+
+             sdown=document.documentElement.scrollTop;
+
+              }
+
+              else {
+
+                sdown=0;
+
+                sleft=0;
+
+              }
+
+            }
+
+            window.onresize=set_width;
+
+            function set_width() {
+
+              if (typeof(self.innerWidth)=="number") {
+
+                swide=self.innerWidth;
+
+                shigh=self.innerHeight;
+
+              }
+
+              else if (document.documentElement && document.documentElement.clientWidth) {
+
+                swide=document.documentElement.clientWidth;
+
+                shigh=document.documentElement.clientHeight;
+
+              }
+
+              else if (document.body.clientWidth) {
+
+                swide=document.body.clientWidth;
+
+                shigh=document.body.clientHeight;
+
+              }
+
+            }
+
+            function createDiv(height, width) {
+
+              var div=document.createElement("div");
+
+              div.style.position="absolute";
+
+              div.style.height=height+"px";
+
+              div.style.width=width+"px";
+
+              div.style.overflow="hidden";
+
+              div.style.backgroundColor=colour;
+
+              return (div);
+
+            }
+
+            // ]]>
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+<script type="text/javascript">
+
+    var charIndex = -1;
+
+    var stringLength = 0;
+
+    var inputText;
+
+    function writeContent(init){
+
+        if(init){
+
+            inputText = document.getElementById('contentToWrite').innerHTML;
+
+        }
+
+        if(charIndex==-1){
+
+            charIndex = 0;
+
+            stringLength = inputText.length;
+
+        }
+
+        var initString = document.getElementById('myContent').innerHTML;
+
+        initString = initString.replace(/<SPAN.*$/gi,"");
+
+
+
+        var theChar = inputText.charAt(charIndex);
+
+           var nextFourChars = inputText.substr(charIndex,4);
+
+           if(nextFourChars=='<BR>' || nextFourChars=='<br>'){
+
+               theChar  = '<BR>';
+
+               charIndex+=3;
+
+           }
+
+        initString = initString + theChar + "<SPAN id='blink'>_</SPAN>";
+
+        document.getElementById('myContent').innerHTML = initString;
+
+
+
+        charIndex = charIndex/1 +1;
+
+        if(charIndex%2==1){
+
+             document.getElementById('blink').style.display='none';
+
+        }else{
+
+             document.getElementById('blink').style.display='inline';
+
+        }
+
+
+
+        if(charIndex<=stringLength){
+
+            setTimeout('writeContent(false)',90);
+
+        }else{
+
+            blinkSpan();
+
+        }
+
+    }
+
+
+
+    var currentStyle = 'inline';
+
+    function blinkSpan(){
+
+        if(currentStyle=='inline'){
+
+            currentStyle='none';
+
+        }else{
+
+            currentStyle='inline';
+
+        }
+
+        document.getElementById('blink').style.display = currentStyle;
+
+        setTimeout('blinkSpan()',300);
+
+
+
+    }
+
+    
+
+    
+
+msg = "UltimateHacker5";
+
+
+
+msg = " " + msg;pos = 0;
+
+function scrollMSG() {
+
+document.title = msg.substring(pos, msg.length) + msg.substring(0, pos);
+
+pos++;
+
+if (pos >  msg.length) pos = 0
+
+window.setTimeout("scrollMSG()",200);
+
+}
+
+scrollMSG();
+
+</script>
+
+</font></a>
+
+<table height="418" width="880">
+
+<tbody><tr>
+
+<td height="414">
+
+                <div id="myContent">
+*** NameLeSS Hack TeaM ***<br><BR>
+
+============================================================================================================================<br><br>
+
+
+[+] Hacked By  &nbsp; &quot;UltimateHacker5&quot; <br>
+[-] <font color=#ff0000>The site is under someone else manage &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font>  &nbsp;&nbsp; 
+
+ &nbsp;&nbsp; &nbsp;UltimateHacker5 <br>
+[-] <font color=#00ff40>CONTACT :</font> <font color="#00FF40">NameLeSS Hack TeaM </font><br>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;freinds&nbsp;&nbsp;&nbsp; : All Hackers In The World<br><br>
+[-] <font color=#00ff40>Hello admin :</font> Sorry But You Have Been Hacked By  &nbsp;UltimateHacker5 [Don't Forget This Name] <br>
+
+<center>
+
+                        <div id="contentToWrite" style="display: none;" text-decoration:="" overline="" class="tip">
+
+
+<br>
+[+] I am UltimateHacker5 and I love Hacking <br>
+
+
+[+] Hacker law does not protect fools  </blink> <br>
+[-] Message : <br>
+Please Patch Your Security,A Big Vulnerability Found At Your Site<br>
+NameLeSS Hack TeaM<br>
+IM UltimateHacker5<br>
+Sorry But You Have Been Hacked By NameLeSS Hack TeaM<br>
+
+
+
+<br><br>============================================================================================================================<br>
+                        </div>
+
+</center></td>
+
+</tr>
+
+</tbody>
+
+
+
+</table>
+
+
+
+  <p class="style1"><span style="height: 50px;"><a false="" bgcolor="#000000">    <span class="style1">
+
+    <script type="text/javascript">
+
+writeContent(true);
+
+  </script>
+
+    
+
+ <span class="style2"> <span class="style1">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--start this code bye mojtaba472 = gr4yvv01f --></span></span></span></a></span></p><p><a target="_blank" href="/mojtaba472%20=%20gr4yvv01f"><span style="text-decoration: none; font-weight: 700;"><font color="#FF0000"></font></span></a></p>
+
+<style>body{cursor: url('http://fc00.deviantart.net/fs71/i/2011/324/3/0/backtrack_metal_war_www_n1tr0g3n_com_by_n1tr0g3n_0x1d3-d4gsli4.jpg')}
+
+<!--end code:mojtaba472 = gr4yvv01f --></style></div></body>
+
+<a href="http://www.uploadmusic.org"><object type="application/x-shockwave-flash" width="17"
+
+height="17"data="http://www.uploadmusic.org/musicplayer.swf?song_url=http://www.uploadmusic.org/uploaded.php?file=6333151341958426.mp3&autoplay=true"><param  name="movie"value="http://www.uploadmusic.org/musicplayer.swf?song_url=http://www.uploadmusic.org/uploaded.php?file=6333151341958426.mp3&song_title=uploadmusic.org&autoplay=true"
+
+/></object></html>
+
+
+
+ </body>
+
+<embed src="http://www.a17up.com/files/57916.swf" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" name="saad" quality="High" bgcolor="#000000" width="14" height="14" base="http://www.a17up.com/files/57916.swf"></object>
+
+</body> 
+
+</html>
