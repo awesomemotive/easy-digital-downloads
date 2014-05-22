@@ -5,17 +5,17 @@ php:
     - 5.4
 
 env:
-    - WP_VERSION=master WP_MULTISITE=0
-    - WP_VERSION=3.9 WP_MULTISITE=0
-    - WP_VERSION=3.8 WP_MULTISITE=0
-    - WP_VERSION=master WP_MULTISITE=1
-    - WP_VERSION=3.9 WP_MULTISITE=1
-    - WP_VERSION=3.8 WP_MULTISITE=1
+    - WP_VERSION=trunk/ WP_MULTISITE=0
+    - WP_VERSION=tags/3.9/ WP_MULTISITE=0
+    - WP_VERSION=tags/3.8/ WP_MULTISITE=0
+    - WP_VERSION=trunk/ WP_MULTISITE=1
+    - WP_VERSION=tags/3.9/ WP_MULTISITE=1
+    - WP_VERSION=tags/3.8/ WP_MULTISITE=1
 
 matrix:
     allow_failures:
-        - WP_VERSION=3.8 WP_MULTISITE=0
-        - WP_VERSION=3.8 WP_MULTISITE=1
+        - WP_VERSION=tags/3.8/ WP_MULTISITE=0
+        - WP_VERSION=tags/3.8/ WP_MULTISITE=1
     fast_finish: true
     
 
@@ -23,7 +23,7 @@ before_script:
     - mkdir -p tmp
     - WP_CORE_DIR=tmp/wordpress/
     - WP_TESTS_DIR=tmp/wordpress-tests/
-    - svn co --ignore-externals http://core.svn.wordpress.org/trunk/ tmp/wordpress/
+    - svn co --ignore-externals http://core.svn.wordpress.org/$WP_VERSION tmp/wordpress/
     - svn co --ignore-externals http://unit-tests.svn.wordpress.org/trunk/ tmp/wordpress-tests/
     - cp tmp/wordpress-tests/wp-tests-config-sample.php tmp/wordpress-tests/wp-tests-config.php
     - cp -fr tests/bootstrap-wordpress-unit-test-suite.php tmp/wordpress-tests/includes/bootstrap.php
