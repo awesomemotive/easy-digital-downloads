@@ -324,7 +324,13 @@ function edd_v15_upgrades() {
  */
 function edd_v20_upgrades() {
 
-	global $edd_options;
+	global $edd_options, $wpdb;
+
+	ignore_user_abort( true );
+
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		set_time_limit( 0 );
+	}
 
 	// Upgrade for the anti-behavior fix - #2188
 	if( ! empty( $edd_options['disable_ajax_cart'] ) ) {
@@ -346,6 +352,9 @@ function edd_v20_upgrades() {
 	} else {
 		$edd_options['show_register_form'] = 'none';
 	}
+
+	// Remove all old, improperly expired sessions. See https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/2031
+	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '_wp_session_expires_%' AND option_value+0 < 2789308218" );
 
 	update_option( 'edd_settings', $edd_options );
 
