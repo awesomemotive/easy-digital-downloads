@@ -113,7 +113,7 @@ class Tests_Fee extends EDD_UnitTestCase {
 					'amount' => 20,
 					'label' => 'Arbitrary Item',
 					'type' => 'item'
-				)
+				),
 				'tax' => array(
 					'amount' => 20,
 					'label' => 'Tax',
