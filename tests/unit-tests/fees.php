@@ -27,7 +27,7 @@ class Tests_Fee extends EDD_UnitTestCase {
 			)
 		);
 
-		EDD()->fees->add_fee( 10, 'Shipping Fee', 'shipping_fee' )
+		EDD()->fees->add_fee( 10, 'Shipping Fee', 'shipping_fee' );
 		EDD()->fees->add_fee( array( 'amount' => 20, 'label' => 'Arbitrary Item', 'id' => 'item_fee', 'type' => 'item' ) );
 
 		$this->assertEquals( $expected, EDD()->fees->get_fees( 'all' ) );
