@@ -181,6 +181,10 @@ function edd_sanitize_variable_prices_save( $prices ) {
 
 	global $post;
 
+	foreach( $prices as $id => $price ) {
+		$prices[$id]['amount'] = edd_sanitize_amount( $price['amount'] );
+	}
+
 	// Make sure all prices are rekeyed starting at 0
 	return array_values( $prices );
 }
