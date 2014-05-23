@@ -29,6 +29,8 @@ function edd_show_upgrade_notices() {
 		$edd_version = '1.3';
 	}
 
+	$edd_version = preg_replace( '/[^0-9.].*/', '', $edd_version );
+
 	if ( ! get_option( 'edd_payment_totals_upgraded' ) && ! get_option( 'edd_version' ) ) {
 		if ( wp_count_posts( 'edd_payment' )->publish < 1 )
 			return; // No payment exist yet

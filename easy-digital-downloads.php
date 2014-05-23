@@ -5,7 +5,7 @@
  * Description: Serve Digital Downloads Through WordPress
  * Author: Pippin Williamson
  * Author URI: http://pippinsplugins.com
- * Version: 1.9.9.2
+ * Version: 2.0-beta1
  * Text Domain: edd
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 1.9.9.2
+ * @version 2.0-beta1
  */
 
 // Exit if accessed directly
@@ -159,7 +159,7 @@ final class Easy_Digital_Downloads {
 		
 		// Plugin version
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '1.9.9.2' );
+			define( 'EDD_VERSION', '2.0-beta1' );
 		}
 
 		// Plugin Folder Path
