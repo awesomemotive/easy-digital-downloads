@@ -199,7 +199,7 @@ class EDD_Session {
 	 * @return int
 	 */
 	public function set_expiration_variant_time( $exp ) {
-		return 30 * 60 * 23;
+		return ( 30 * 60 * 23 );
 	}
 
 	/**
@@ -211,6 +211,6 @@ class EDD_Session {
 	 * @return int
 	 */
 	public function set_expiration_time( $exp ) {
-		return 30 * 60 * 24;
+		return ( 30 * 60 * 24 );
 	}
 }
