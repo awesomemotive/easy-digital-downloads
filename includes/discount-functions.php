@@ -834,23 +834,27 @@ function edd_get_discount_id_by_code( $code ) {
  * @return string $discounted_price Amount after discount
  */
 function edd_get_discounted_amount( $code, $base_price ) {
+	$amount      = 0;
 	$discount_id = edd_get_discount_id_by_code( $code );
-	$type        = edd_get_discount_type( $discount_id );
-	$rate        = edd_get_discount_amount( $discount_id );
 
-	if ( $type == 'flat' ) {
-		// Set amount
-		$discounted_price = $base_price - $rate;
-		if ( $discounted_price < 0 ) {
-			$discounted_price = 0;
+	if( $discount_id ) {
+		$type        = edd_get_discount_type( $discount_id );
+		$rate        = edd_get_discount_amount( $discount_id );
+
+		if ( $type == 'flat' ) {
+			// Set amount
+			$amount = $base_price - $rate;
+			if ( $amount < 0 ) {
+				$amount = 0;
+			}
+
+		} else {
+			// Percentage discount
+			$amount = $base_price - ( $base_price * ( $rate / 100 ) );
 		}
-
-	} else {
-		// Percentage discount
-		$discounted_price = $base_price - ( $base_price * ( $rate / 100 ) );
 	}
 
-	return apply_filters( 'edd_discounted_amount', $discounted_price );
+	return apply_filters( 'edd_discounted_amount', $amount );
 }
 
 /**
