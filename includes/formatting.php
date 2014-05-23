@@ -40,6 +40,7 @@ function edd_sanitize_amount( $amount ) {
 		$amount = str_replace( $thousands_sep, '', $amount );
 	}
 
+	$amount   = preg_replace( '/[^0-9\.]/', '', $amount );
 	$decimals = apply_filters( 'edd_sanitize_amount_decimals', 2, $amount );
 	$amount   = number_format( $amount, $decimals, '.', '' );
 
