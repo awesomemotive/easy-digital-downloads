@@ -20,6 +20,10 @@ class Tests_Formatting extends EDD_UnitTestCase {
 		$this->assertEquals( '20.20', edd_sanitize_amount( '20.2' ) );
 		$this->assertEquals( '25.42', edd_sanitize_amount( '25.42221112993' ) );
 		$this->assertEquals( '20.20', edd_sanitize_amount( '$20.2' ) );
+		$this->assertEquals( '10.00', edd_sanitize_amount( '£10' ) );
+		$this->assertEquals( '20.20', edd_sanitize_amount( '₱20.2' ) );
+		$this->assertEquals( '2000.00', edd_sanitize_amount( '¥2000' ) );
+		$this->assertEquals( '20.00', edd_sanitize_amount( 'Ð20' ) );
 
 	}
 
