@@ -73,7 +73,9 @@ function edd_render_download_columns( $column_name, $post_id ) {
 				break;
 			case 'sales':
 				if ( current_user_can( 'view_product_stats', $post_id ) ) {
-					echo edd_get_download_sales_stats( $post_id );
+					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&download=' . $post_id ) ) . '">';
+						echo edd_get_download_sales_stats( $post_id );
+					echo '</a>';
 				} else {
 					echo '-';
 				}
