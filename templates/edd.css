@@ -128,6 +128,10 @@
 #edd_checkout_form_wrap #edd-discount-code-wrap,
 #edd_checkout_form_wrap #edd_final_total_wrap { background: #fafafa; border: 1px solid #eee; color: #666; padding: 0.5em 1.387em; }
 #edd_checkout_form_wrap #edd-discount-code-wrap { padding: 1.387em; }
+#edd_checkout_form_wrap #edd-discount-code-wrap input.edd-input,
+#edd_checkout_form_wrap #edd-discount-code-wrap input.edd-submit { display: inline-block; }
+#edd_checkout_form_wrap #edd-discount-code-wrap input.edd-submit { padding: 3px 12px; margin-bottom: 2px; }
+#edd_checkout_form_wrap #edd-discount-error-wrap { width: 100%; display: inline-block; margin: 1em 0 0; }
 #edd_checkout_form_wrap #edd-new-account-wrap,
 #edd_checkout_form_wrap #edd-login-account-wrap { margin: -1.387em -1.387em 21px -1.387em; border-left: none; border-right: none; border-top: none; }
 #edd_checkout_form_wrap #edd_payment_mode_select { margin-bottom: 21px; }
@@ -179,7 +183,8 @@ a.edd-add-to-cart .edd-add-to-cart-label, a.edd-add-to-cart .edd-loading {
 -------------------------------------------------------------- */
 
 /* Twenty Twelve */
-#edd_checkout_form_wrap input.edd-input.required,#edd_checkout_form_wrap select.edd-select.required { color: #000; }
+.edd_form input.edd-input.required,
+.edd_form select.edd-select.required { color: #000; }
 
 /* =Receipt Page
 -------------------------------------------------------------- */
@@ -222,10 +227,12 @@ table#edd_purchase_receipt_products .edd_bundled_product_name { font-style: ital
 #edd_user_history .edd_purchase_status.cancelled,
 #edd_user_history .edd_purchase_status.pending { color: #f73f2e; }
 
-/* =Registration Form
+/* =Registration / login Form
 -------------------------------------------------------------- */
-#edd_registration_form .edd-input { display: inline-block; width: 200px; }
-#edd_registration_form label { display: inline-block; width: 200px; }
+#edd_register_form .edd-input,
+#edd_login_form .edd-input { display: inline-block; width: 200px; }
+#edd_register_form label,
+#edd_login_form label { display: inline-block; width: 200px; }
 
 /* =Profile Form
 -------------------------------------------------------------- */

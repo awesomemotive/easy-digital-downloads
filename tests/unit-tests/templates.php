@@ -49,7 +49,8 @@ class Tests_Templates extends EDD_UnitTestCase {
 			'_edd_product_type' => 'default',
 			'_edd_download_earnings' => 129.43,
 			'_edd_download_sales' => 59,
-			'_edd_download_limit_override_1' => 1
+			'_edd_download_limit_override_1' => 1,
+			'edd_sku' => 'sku12345'
 		);
 		foreach( $meta as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
@@ -66,6 +67,16 @@ class Tests_Templates extends EDD_UnitTestCase {
 	public function test_get_purchase_link() {
 		
 		$link = edd_get_purchase_link( array( 'download_id' => $this->_post->ID ) );
+		$this->assertInternalType( 'string', $link );
+		$this->assertContains( '<form id="edd_purchase_' . $this->_post->ID . '" class="edd_download_purchase_form" method="post">', $link );
+		$this->assertContains( '<input type="hidden" name="download_id" value="' . $this->_post->ID . '">', $link );
+		
+		// The product we created has variable pricing, so ensure the price options render
+		$this->assertContains( '<div class="edd_price_options">', $link );
+		$this->assertContains( '<span class="edd_price_option_name" itemprop="description">', $link );
+
+		// Repeat tests on SKU meta field
+		$link = edd_get_purchase_link( array( 'sku' => 'sku12345' ) );
 		$this->assertInternalType( 'string', $link );
 		$this->assertContains( '<form id="edd_purchase_' . $this->_post->ID . '" class="edd_download_purchase_form" method="post">', $link );
 		$this->assertContains( '<input type="hidden" name="download_id" value="' . $this->_post->ID . '">', $link );

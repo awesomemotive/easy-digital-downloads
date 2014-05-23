@@ -72,15 +72,19 @@ function edd_render_download_columns( $column_name, $post_id ) {
 				}
 				break;
 			case 'sales':
-				if ( current_user_can( 'edit_product', $post_id ) || current_user_can( 'view_shop_reports' ) ) {
-					echo edd_get_download_sales_stats( $post_id );
+				if ( current_user_can( 'view_product_stats', $post_id ) ) {
+					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&download=' . $post_id ) ) . '">';
+						echo edd_get_download_sales_stats( $post_id );
+					echo '</a>';
 				} else {
 					echo '-';
 				}
 				break;
 			case 'earnings':
-				if ( current_user_can( 'edit_product', $post_id ) || current_user_can( 'view_shop_reports' ) ) {
-					echo edd_currency_filter( edd_format_amount( edd_get_download_earnings_stats( $post_id ) ) );
+				if ( current_user_can( 'view_product_stats', $post_id ) ) {
+					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $post_id ) ) . '">';
+						echo edd_currency_filter( edd_format_amount( edd_get_download_earnings_stats( $post_id ) ) );
+					echo '</a>';
 				} else {
 					echo '-';
 				}

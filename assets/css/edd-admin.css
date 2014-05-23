@@ -9,6 +9,9 @@
 
 .edd-hidden { display: none; }
 .edd-clearfix:after { display: block; visibility: hidden; content: "."; text-indent: -9999px; height: 0; }
+.edd-wrap a { text-decoration: none; }
+a.edd-delete { color: #a00; }
+a.edd-delete:hover { color: #f00; }
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */
@@ -91,6 +94,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 .rtl .edd-admin-box .right { float: left; margin-left: 10px; }
 #edd-order-totals .inside,
 #edd-order-update .inside { margin: 0; padding: 0; }
+#edd-order-update input.edd_datepicker { width: 180px; }
 #edd-order-update input[type="number"].edd-payment-time-hour,
 #edd-order-update input[type="number"].edd-payment-time-min { width: 50px; }
 .edd-admin-box-inside:last-child { border-bottom: 0; }
@@ -196,8 +200,9 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 .edd_dashboard_widget table { width: 100%; margin-left: 0; margin-bottom: 1em;}
 td.edd_order_label { width: 80%; }
 td.edd_order_price { text-align: right; }
+@media handheld, only screen and (max-width: 1000px) {
+	.edd_dashboard_widget .edd-recent-email { display: none; }
 }
-
 
 /* Reports Styles
 -------------------------------------------------------------- */
@@ -242,8 +247,16 @@ td.edd_order_price { text-align: right; }
 .chosen-container-multi .chosen-choices input{ margin:2px; height:27px!important; border-color: #dfdfdf; }
 .chosen-container .chosen-drop { border-color: #aaa; -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); }
 .chosen-container-active .chosen-choices { -webkit-border-top-left-radius: 3px; border-top-left-radius: 3px; -webkit-border-top-right-radius: 3px; border-top-right-radius: 3px; -webkit-border-bottom-left-radius: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-color: #aaa; -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); }
+.download_page_edd-tools .tablenav .actions { overflow: visible; }
+.edd_user_search_wrap { position: relative; overflow: visible; }
+.edd_user_search_results { position: absolute; left: 0; top: 27px; }
+.edd_user_search_results ul { padding: 10px 10px 4px; margin: 0; background: #f0f0f0; border: 1px solid #DFDFDF; width: 300px; max-height: 200px; overflow-y: scroll; }
 
 /* Global Graph Styles
 -------------------------------------------------------------- */
 .edd-graph .y1Axis { color: rgb( 237, 194, 64 )!important; }
 .edd-graph .y2Axis { color: rgb( 175, 216, 248 )!important; }
+
+/* API Table Styles
+-------------------------------------------------------------- */
+.download_page_edd-tools .apikeys .column-user { width: 192px; }

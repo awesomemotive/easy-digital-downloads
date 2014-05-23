@@ -61,6 +61,8 @@ class EDD_Heartbeat {
 			$response['edd-total-earnings'] = html_entity_decode( edd_currency_filter( edd_format_amount( $earnings ) ), ENT_COMPAT, 'UTF-8' );
 			$response['edd-payments-month'] = edd_format_amount( $stats->get_sales( 0, 'this_month', false, array( 'publish', 'revoked' ) ), false );
 			$response['edd-earnings-month'] = html_entity_decode( edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'this_month' ) ) ), ENT_COMPAT, 'UTF-8' );
+			$response['edd-payments-today'] = edd_format_amount( $stats->get_sales( 0, 'today', false, array( 'publish', 'revoked' ) ), false );
+			$response['edd-earnings-today'] = html_entity_decode( edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'today' ) ) ), ENT_COMPAT, 'UTF-8' );
 
 		}
 
@@ -97,8 +99,14 @@ class EDD_Heartbeat {
 		global $pagenow;
 
 		// Only proceed if on the dashboard
-		if( 'index.php' != $pagenow )
+		if( 'index.php' != $pagenow ) {
 			return;
+		}
+
+		if( ! current_user_can( 'view_shop_reports' ) ) {
+			return; // Only load heartbeat if current user can view show reports
+		}
+
 		?>
 		<script>
 			(function($){
@@ -114,12 +122,14 @@ class EDD_Heartbeat {
 				// Only proceed if our EDD data is present
 				if ( ! data['edd-total-payments'] )
 					return;
-
+				console.log('tick');
 				// Update sale count and bold it to provide a highlight
-				$('.edd_dashboard_widget .b.b-earnings').text( data['edd-total-earnings'] ).css( 'font-weight', 'bold' );
-				$('.edd_dashboard_widget .b.b-sales').text( data['edd-total-payments'] ).css( 'font-weight', 'bold' );
-				$('.edd_dashboard_widget .table_current_month .b.b-earnings').text( data['edd-earnings-month'] ).css( 'font-weight', 'bold' );
-				$('.edd_dashboard_widget .table_current_month .b.b-sales').text( data['edd-payments-month'] ).css( 'font-weight', 'bold' );
+				$('.edd_dashboard_widget .table_totals .b.b-earnings').text( data['edd-total-earnings'] ).css( 'font-weight', 'bold' );
+				$('.edd_dashboard_widget .table_totals .b.b-sales').text( data['edd-total-payments'] ).css( 'font-weight', 'bold' );
+				$('.edd_dashboard_widget .table_today .b.b-earnings').text( data['edd-earnings-today'] ).css( 'font-weight', 'bold' );
+				$('.edd_dashboard_widget .table_today .b.b-sales').text( data['edd-payments-today'] ).css( 'font-weight', 'bold' );
+				$('.edd_dashboard_widget .table_current_month .b-earnings').text( data['edd-earnings-month'] ).css( 'font-weight', 'bold' );
+				$('.edd_dashboard_widget .table_current_month .b-sales').text( data['edd-payments-month'] ).css( 'font-weight', 'bold' );
 
 				// Return font-weight to normal after 2 seconds
 				setTimeout(function(){

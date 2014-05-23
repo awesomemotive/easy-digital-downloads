@@ -320,6 +320,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid business email in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 		edd_update_payment_status( $payment_id, 'failed' );
+		edd_insert_payment_note( $payment_id, __( 'Payment failed due to invalid PayPal business email.', 'edd' ) );
 		return;
 	}
 
@@ -328,6 +329,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid currency in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 		edd_update_payment_status( $payment_id, 'failed' );
+		edd_insert_payment_note( $payment_id, __( 'Payment failed due to invalid currency in PayPal IPN.', 'edd' ) );
 		return;
 	}
 
@@ -356,7 +358,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 		);
 
 		$payment_meta = get_post_meta( $payment_id, '_edd_payment_meta', true );
-		$payment_meta['user_info'] = serialize( $user_info );
+		$payment_meta['user_info'] = $user_info;
 		update_post_meta( $payment_id, '_edd_payment_meta', $payment_meta );
 	}
 
@@ -378,12 +380,14 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 			// The prices don't match
 			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid payment amount in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 			edd_update_payment_status( $payment_id, 'failed' );
+			edd_insert_payment_note( $payment_id, __( 'Payment failed due to invalid amount in PayPal IPN.', 'edd' ) );
 			return;
 		}
 		if ( $purchase_key != edd_get_payment_key( $payment_id ) ) {
 			// Purchase keys don't match
 			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid purchase key in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 			edd_update_payment_status( $payment_id, 'failed' );
+			edd_insert_payment_note( $payment_id, __( 'Payment failed due to invalid purchase key in PayPal IPN.', 'edd' ) );
 			return;
 		}
 

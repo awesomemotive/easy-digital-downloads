@@ -45,9 +45,10 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 	}
 
 	$args = apply_filters( 'edd_get_users_purchases_args', array(
-		'user'   => $user,
-		'number' => $number,
-		'status' => $status
+		'user'    => $user,
+		'number'  => $number,
+		'status'  => $status,
+		'orderby' => 'date'
 	) );
 
 	if ( $pagination )
@@ -62,6 +63,70 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		return false;
 
 	return $purchases;
+}
+
+/**
+ * Get Users Purchased Products
+ *
+ * Returns a list of unique products purchased by a specific user
+ *
+ * @since  2.0
+ * 
+ * @param int    $user User ID or email address
+ * @param string $status
+ * 
+ * @return bool|object List of unique products purchased by user
+ */
+function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
+	if ( empty( $user ) )
+		$user = get_current_user_id();
+
+	// Get the purchase history
+	$purchase_history = edd_get_users_purchases( $user, -1, false, $status );
+
+	if ( empty( $purchase_history ) )
+		return false;
+
+	// Get all the items purchased
+	$purchase_data = array();
+	foreach ( $purchase_history as $purchase ) {
+		$purchase_data[] = edd_get_payment_meta_downloads( $purchase->ID );
+	}
+
+	if ( empty( $purchase_data ) )
+		return false;
+
+	// Grab only the post ids of the products purchased on this order
+	$purchase_product_ids = array();
+	foreach ( $purchase_data as $purchase_meta ) {
+		$purchase_product_ids[] = wp_list_pluck( $purchase_meta, 'id' );
+	}
+
+	if ( empty( $purchase_product_ids ) )
+		return false;
+
+	// Merge all orders into a single array of all items purchased
+	$purchased_products = array();
+	foreach ( $purchase_product_ids as $product ) {
+		$purchased_products = array_merge( $product, $purchased_products );
+	}
+
+	// Only include each product purchased once
+	$product_ids = array_unique( $purchased_products );
+
+	// Make sure we still have some products and a first item
+	if ( empty ( $product_ids ) || ! isset( $product_ids[0] ) ) 
+		return false;
+	
+	$post_type 	 = get_post_type( $product_ids[0] );
+
+	$args = apply_filters( 'edd_get_users_purchased_products_args', array(
+		'include'			=> $product_ids,
+		'post_type' 		=> $post_type,
+		'posts_per_page'  	=> -1
+	) );
+
+	return apply_filters( 'edd_users_purchased_products_list', get_posts( $args ) );
 }
 
 /**
@@ -299,7 +364,7 @@ function edd_add_past_purchases_to_new_user( $user_id ) {
 			$meta                    = edd_get_payment_meta( $payment->ID );
 			$meta['user_info']       = maybe_unserialize( $meta['user_info'] );
 			$meta['user_info']['id'] = $user_id;
-			$meta['user_info']       = serialize( $meta['user_info'] );
+			$meta['user_info']       = $meta['user_info'];
 
 			// Store the updated user ID in the payment meta
 			update_post_meta( $payment->ID, '_edd_payment_meta', $meta );
