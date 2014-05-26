@@ -725,6 +725,9 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 
 	if ( empty( $code_id ) ) {
 		$code_id = edd_get_discount_id_by_code( $code );
+		if( empty( $code_id ) ) {
+			return false; // No discount was found
+		}
 	}
 
 	if ( edd_discount_is_single_use( $code_id ) ) {

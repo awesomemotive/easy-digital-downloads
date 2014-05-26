@@ -177,11 +177,11 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_is_used() {
-		$this->assertFalse( edd_is_discount_used( $this->_post_id ) );
+		$this->assertFalse( edd_is_discount_used( '20OFF' ) );
 	}
 
 	public function test_discount_is_valid_when_purchasing() {
-		//$this->assertFalse( edd_is_discount_valid( '20OFF' ) );
+		$this->assertFalse( edd_is_discount_valid( '20OFF' ) );
 	}
 
 	public function test_discount_id_by_code() {
