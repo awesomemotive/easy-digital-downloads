@@ -88,7 +88,12 @@ function edd_has_active_discounts() {
  * @param string $discount_id Discount ID
  * @return array
  */
-function edd_get_discount( $discount_id ) {
+function edd_get_discount( $discount_id = 0 ) {
+
+	if( empty( $discount_id ) ) {
+		return false;
+	}
+
 	$discount = get_post( $discount_id );
 
 	if ( get_post_type( $discount_id ) != 'edd_discount' ) {
