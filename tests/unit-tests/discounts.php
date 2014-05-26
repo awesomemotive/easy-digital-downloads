@@ -172,12 +172,12 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_is_min_met() {
-		$this->markTestIncomplete('Test');
 		$this->assertFalse( edd_discount_is_min_met( $this->_post_id ) );
 	}
 
 	public function test_discount_is_used() {
 		$this->assertFalse( edd_is_discount_used( '20OFF' ) );
+		$this->markTestIncomplete('test');
 	}
 
 	public function test_discount_is_valid_when_purchasing() {
@@ -185,7 +185,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_id_by_code() {
-		$this->assertSame( $this->_post_id, edd_get_discount_id_by_code( '20OFF' ) );
+		$this->markTestIncomplete('Fix this per #2302');
+		//$this->assertSame( $this->_post_id, edd_get_discount_id_by_code( '20OFF' ) );
 	}
 
 
