@@ -129,6 +129,10 @@ function edd_get_discount_by( $field = '', $value = '' ) {
 		return false;
 	}
 
+	if( ! is_string( $field ) ) {
+		return false;
+	}
+
 	switch( strtolower( $field ) ) {
 
 		case 'code':
@@ -786,7 +790,7 @@ function edd_is_discount_valid( $code = '', $user = '' ) {
 	$discount_id = edd_get_discount_id_by_code( $code );
 	$user        = trim( $user );
 
-	if ( $discount_id !== false ) {
+	if ( $discount_id ) {
 		if (
 			edd_is_discount_active( $discount_id ) &&
 			edd_is_discount_started( $discount_id ) &&
