@@ -109,12 +109,15 @@ function edd_get_discount( $discount_id = 0 ) {
  * Retrieves all details for a discount by its code.
  *
  * @param string $code
- * Retrieve discount by a given field
  *
  * @since       1.0
  * @return      int
  */
-function edd_get_discount_by_code( $code ) {
+function edd_get_discount_by_code( $code = '' ) {
+
+	if( empty( $code ) || ! is_string( $code ) ) {
+		return false;
+	}
 
 	return edd_get_discount_by( 'code', $code );
 
