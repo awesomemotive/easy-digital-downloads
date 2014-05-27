@@ -353,6 +353,8 @@ jQuery(document).ready(function ($) {
 				var price_name     = $('.edd_price_options_select option:selected').text();
 				var quantity       = $('#edd-order-download-quantity').val();
 
+				var extra_columns = $('.extra-column input');
+
 				if( download_id < 1 ) {
 					return false;
 				}
@@ -381,10 +383,18 @@ jQuery(document).ready(function ($) {
 				clone.find( 'input.edd-payment-details-download-amount' ).val( amount );
 				clone.find( 'input.edd-payment-details-download-quantity' ).val( quantity );
 
+				// Process the extra columns so the input value is copied into the item row
+				extra_columns.each(function() {
+					var name = $( this ).attr( 'name' );
+					var value = $( this ).val();
+					name = name.replace("edd-order-download-", "");
+					clone.find( 'input.edd-payment-details-download-' + name ).val( value );
+					clone.find( '.extra-column' ).text( value );
+				});
+
 				// Replace the name / id attributes
 				clone.find( 'input' ).each(function() {
 					var name = $( this ).attr( 'name' );
-
 					name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
 
 					$( this ).attr( 'name', name ).attr( 'id', name );

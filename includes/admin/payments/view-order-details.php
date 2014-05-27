@@ -290,8 +290,14 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 	
 							<?php do_action( 'edd_view_order_details_billing_after', $payment_id ); ?>
 	
-							<?php $column_count = edd_item_quantities_enabled() ? 'columns-4' : 'columns-3'; ?>
-							<div id="edd-purchased-files" class="postbox <?php echo $column_count; ?>">
+						<?php 
+							$column_count = edd_item_quantities_enabled() ? 4 : 3;
+							$extra_columns = apply_filters( 'edd_view_order_details_extra_columns', false );
+							if ( $extra_columns ) {
+								$column_count += count($extra_columns);
+							}
+						?>
+							<div id="edd-purchased-files" class="postbox columns-<?php echo $column_count; ?>">
 								<h3 class="hndle">
 									<span><?php printf( __( 'Purchased %s', 'edd' ), edd_get_label_plural() ); ?></span>
 								</h3>
@@ -332,6 +338,15 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][price_id]" class="edd-payment-details-download-price-id" value="<?php echo esc_attr( $price_id ); ?>"/>
 												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][amount]" class="edd-payment-details-download-amount" value="<?php echo esc_attr( $price ); ?>"/>
 												<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][quantity]" class="edd-payment-details-download-quantity" value="<?php echo esc_attr( $quantity ); ?>"/>
+												<?php 
+													foreach( $extra_columns as $extra_column => $extra_column_label ) {
+												?>
+														<input type="hidden" name="edd-payment-details-downloads[<?php echo $key; ?>][<?php echo $extra_column; ?>]" 
+															class="edd-payment-details-download-<?php echo $extra_column; ?>" 
+															value="<?php echo apply_filters( 'edd_view_order_details_downloads_extra_column_value', $item_id, $key, $extra_column, $cart_item ); ?>"/>
+												<?php
+													}
+												?>
 												
 											</li>
 	
@@ -345,6 +360,15 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 												<?php echo edd_currency_filter( edd_format_amount( $price ) ); ?>
 											</li>
 	
+
+											<?php 
+												foreach( $extra_columns as $extra_column => $extra_column_label ) {
+											?>
+													<li class="<?php echo $extra_column; ?> extra-column"><?php echo apply_filters( 'edd_view_order_details_downloads_extra_column_value', $item_id, $key, $extra_column, $cart_item ); ?></li>
+											<?php
+												}
+											?>
+										
 											<li class="actions">
 												<a href="" class="edd-order-remove-download" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Remove', 'edd' ); ?></a>
 											</li>
@@ -375,7 +399,6 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 										<?php endif; ?>
 	
 										<li class="price">
-											<span><?php _e( 'Amount', 'edd' ); ?>:&nbsp;</span>
 											<?php
 											echo EDD()->html->text( array( 'name' => 'edd-order-download-amount',
 												'label' => __( 'Enter amount', 'edd' ),
@@ -384,6 +407,22 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 											?>
 										</li>
 	
+										<?php 
+											foreach( $extra_columns as $extra_column => $extra_column_label ) {
+										?>
+												<li class="<?php echo $extra_column; ?> extra-column">
+													<span id="edd-edd-order-download-<?php echo $extra_column; ?>-wrap">
+														<label class="edd-label" for="edd-order-download-<?php echo $extra_column; ?>"><?php echo $extra_column_label; ?></label>
+										<?php
+														do_action( 'edd_view_order_details_download_extra_column_render', $item_id, $key, $extra_column, $cart_item, "edd-order-download-$extra_column", "edd-order-download-$extra_column" );
+										?>
+													</span>
+												</li>
+										<?php
+											}
+										?>
+											
+
 										<li class="actions">
 											<a href="" id="edd-order-add-download" class="button button-secondary"><?php printf( __( 'Add %s to Payment', 'edd' ), edd_get_label_singular() ); ?></a>
 										</li>
