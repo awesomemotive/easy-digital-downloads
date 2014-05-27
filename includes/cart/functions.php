@@ -76,7 +76,7 @@ function edd_get_cart_content_details() {
  * Get Cart Quantity
  *
  * @since 1.0
- * @return int $quantity Quantity of one item in the cart
+ * @return int Quantity of items in the cart
  */
 function edd_get_cart_quantity() {
 	return ( $cart = edd_get_cart_contents() ) ? count( $cart ) : 0;
