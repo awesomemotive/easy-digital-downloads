@@ -238,6 +238,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/tax-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/process-purchase.php';
 		require_once EDD_PLUGIN_DIR . 'includes/login-register.php';
+		require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
@@ -274,7 +275,6 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
 		} else {
 			require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
-			require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
 			require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
 		}
 
