@@ -121,7 +121,8 @@ class Tests_Checkout extends EDD_UnitTestCase {
 		$this->assertSame( 'https://local.dev/', edd_enforced_ssl_asset_filter( $content ) );
 
 		$content = array( 'http://local.dev/' );
+		$expected = array( 'https://local.dev/' );
 
-		$this->assertSame( 'https://local.dev/', edd_enforced_ssl_asset_filter( $content ) );	
+		$this->assertSame( $expected, edd_enforced_ssl_asset_filter( $content ) );	
 	}
 }
