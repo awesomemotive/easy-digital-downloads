@@ -433,7 +433,10 @@ function edd_get_cart_item_tax( $item = array() ) {
 			$price -= apply_filters( 'edd_get_cart_item_tax_item_discount_amount', edd_get_cart_item_discount_amount( $item ), $item );
 		}
 
-		$tax = edd_calculate_tax( $price );
+		$country = ! empty( $_POST['billing_country'] ) ? $_POST['billing_country'] : false;
+		$state   = ! empty( $_POST['card_state'] )      ? $_POST['card_state']      : false;
+
+		$tax = edd_calculate_tax( $price, $country, $state );
 
 	}
 
