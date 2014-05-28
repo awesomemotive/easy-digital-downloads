@@ -23,7 +23,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 			'start' => '12/12/2010 00:00:00',
 			'expiration' => '12/31/2050 00:00:00',
 			'min_price' => 128,
-			'status' => 'active'
+			'status' => 'active',
+			'product_condition' => 'all'
 		);
 
 		$this->_post_id = edd_store_discount( $post );
@@ -123,7 +124,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_start_date() {
-		$this->assertSame( '12/31/2010 00:00:00', edd_get_discount_start_date( $this->_post_id ) );
+		$this->assertSame( '12/12/2010 00:00:00', edd_get_discount_start_date( $this->_post_id ) );
 	}
 
 	public function test_discount_expiration_date() {
@@ -147,7 +148,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_amount_negative() {
-		$this->assertSame( -100, edd_get_discount_amount( $this->_negative_post_id ) );
+		$this->assertSame( '-100.0', edd_get_discount_amount( $this->_negative_post_id ) );
 	}
 
 	public function test_discount_type() {

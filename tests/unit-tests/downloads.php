@@ -80,7 +80,7 @@ class Tests_Downloads extends EDD_UnitTestCase {
 		$download = edd_get_download_by( 'sku', 'sku_001' );
 		$this->assertSame( $this->_post->ID, $download->ID );
 		
-		$download = edd_get_download_by( 'name', 'Test Download' );
+		$download = edd_get_download_by( 'name', 'test-download' );
 		$this->assertSame( $this->_post->ID, $download->ID );
 
 	}

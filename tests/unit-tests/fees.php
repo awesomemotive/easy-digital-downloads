@@ -50,7 +50,7 @@ class Tests_Fee extends EDD_UnitTestCase {
 		$this->assertEquals( $expected, EDD()->fees->get_fee( 'shipping_fee' ) );
 	
 		$item_fee = EDD()->fees->get_fee( 'item_fee' );
-		
+
 		$this->assertEquals( 20, $item_fee['amount'] );
 		$this->assertEquals( 'Arbitrary Item', $item_fee['label'] );
 		$this->assertEquals( 'item', $item_fee['type'] );
@@ -125,7 +125,7 @@ class Tests_Fee extends EDD_UnitTestCase {
 					,
 					'no_tax' => false
 				),
-				'tax_fee' => array(
+				'taxfee' => array(
 					'amount' => 20,
 					'label' => 'Tax Fee',
 					'type' => 'fee',
