@@ -148,7 +148,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_amount_negative() {
-		$this->assertSame( '-100.0', edd_get_discount_amount( $this->_negative_post_id ) );
+		$this->assertSame( -100.0, edd_get_discount_amount( $this->_negative_post_id ) );
 	}
 
 	public function test_discount_type() {
