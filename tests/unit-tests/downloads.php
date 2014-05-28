@@ -73,9 +73,16 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	}
 
 	public function test_edd_get_download_by() {
-		$this->assertSame( $this->_post->ID, edd_get_download_by( 'id', $this->_post->ID )->ID );
-		$this->assertSame( $this->_post->ID, edd_get_download_by( 'sku', 'sku_001' )->ID );
-		$this->assertSame( $this->_post->ID, edd_get_download_by( 'name', 'Test Download' )->ID );
+		
+		$download = edd_get_download_by( 'id', $this->_post->ID );
+		$this->assertSame( $this->_post->ID, $download->ID );
+		
+		$download = edd_get_download_by( 'sku', 'sku_001' );
+		$this->assertSame( $this->_post->ID, $download->ID );
+		
+		$download = edd_get_download_by( 'name', 'Test Download' );
+		$this->assertSame( $this->_post->ID, $download->ID );
+
 	}
 
 	public function test_download_price() {
