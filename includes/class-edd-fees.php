@@ -110,7 +110,7 @@ class EDD_Fees {
 	 * @return array $fees
 	 */
 	public function remove_fee( $id = '' ) {
-		$fees = $this->get_fees();
+		$fees = $this->get_fees( 'all' );
 
 		if ( isset( $fees[ $id ] ) ) {
 			unset( $fees[ $id ] );
@@ -165,7 +165,7 @@ class EDD_Fees {
 	 * @return bool
 	 */
 	public function get_fee( $id = '' ) {
-		$fees = $this->get_fees();
+		$fees = $this->get_fees( 'all' );
 
 		if ( ! isset( $fees[ $id ] ) )
 			return false;
