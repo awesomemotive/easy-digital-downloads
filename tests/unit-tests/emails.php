@@ -218,7 +218,7 @@ class Tests_Emails extends EDD_UnitTestCase {
 	}
 
 	public function test_email_tags_subtotal() {
-		$this->assertEquals( '&#36;100.00', edd_email_tag_subtotal( $this->_payment_id ) );
+		$this->assertEquals( '$100.00', edd_email_tag_subtotal( $this->_payment_id ) );
 	}
 
 	public function test_email_tags_tax() {

@@ -68,7 +68,8 @@ class Tests_Templates extends EDD_UnitTestCase {
 		
 		$link = edd_get_purchase_link( array( 'download_id' => $this->_post->ID ) );
 		$this->assertInternalType( 'string', $link );
-		$this->assertContains( '<form id="edd_purchase_' . $this->_post->ID . '" class="edd_download_purchase_form" method="post">', $link );
+		$this->assertContains( '<form id="edd_purchase_', $link );
+		$this->assertContains( 'class="edd_download_purchase_form" method="post">', $link );
 		$this->assertContains( '<input type="hidden" name="download_id" value="' . $this->_post->ID . '">', $link );
 		
 		// The product we created has variable pricing, so ensure the price options render

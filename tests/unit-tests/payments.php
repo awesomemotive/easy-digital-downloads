@@ -166,14 +166,14 @@ class Tests_Payments extends EDD_UnitTestCase {
 	}
 
 	public function test_update_payment_status() {
-		edd_update_payment_status( $this->_payment_id );
+		edd_update_payment_status( $this->_payment_id, 'publish' );
 
 		$out = edd_get_payments();
 		$this->assertEquals( 'publish', $out[0]->post_status );
 	}
 
 	public function test_check_for_existing_payment() {
-		$this->assertTrue( edd_check_for_existing_payment( $this->_post->ID ) );
+		$this->assertTrue( edd_check_for_existing_payment( $this->_payment_id ) );
 	}
 
 	public function test_get_payment_statuses() {
@@ -205,6 +205,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 
 	public function test_get_payment_completed_date() {
 
+		edd_update_payment_status( $this->_payment_id, 'publish' );
 		$completed_date = edd_get_payment_completed_date( $this->_payment_id );
 		$this->assertInternalType( 'string', $completed_date );
 		$this->assertEquals( date( 'Y-m-d' ), date( 'Y-m-d', strtotime( $completed_date ) ) );
