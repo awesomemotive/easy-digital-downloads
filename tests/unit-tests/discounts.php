@@ -14,16 +14,16 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 		parent::setUp();
 		$post = array(
+			'code' => '20OFF',
+			'uses' => 54,
+			'max' => 10,
 			'name' => 'Test Discount',
 			'type' => 'percent',
 			'amount' => '20',
-			'code' => '20OFF',
-			'product_condition' => 'all',
 			'start' => '12/12/2050 00:00:00',
 			'expiration' => '12/31/2050 00:00:00',
-			'max' => 10,
-			'uses' => 54,
-			'min_price' => 128
+			'min_price' => 128,
+			'status' => 'active'
 		);
 
 		$this->_post_id = edd_store_discount( $post );
