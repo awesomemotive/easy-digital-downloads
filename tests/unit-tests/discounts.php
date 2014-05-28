@@ -17,7 +17,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 			'code' => '20OFF',
 			'uses' => 54,
 			'max' => 10,
-			'name' => 'Test Discount',
+			'name' => '20 Percent Off',
 			'type' => 'percent',
 			'amount' => '20',
 			'start' => '12/12/2010 00:00:00',
@@ -77,7 +77,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 	public function test_updating_discount_code() {
 		$post = array(
-			'name' => 'Test Discount Updated',
+			'name' => '20 Percent Off',
 			'type' => 'percent',
 			'amount' => '20',
 			'code' => '20OFF',
