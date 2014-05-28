@@ -124,10 +124,12 @@ class Test_Cart extends EDD_UnitTestCase {
 	}
 
 	public function test_cart_saving_disabled() {
-		$this->assertFalse( edd_is_cart_saving_disabled() );
+		$this->assertTrue( edd_is_cart_saving_disabled() );
 	}
 
 	public function test_is_cart_saved() {
+
+		global $edd_options;
 
 		// Test for no saved cart
 		$this->assertFalse( edd_is_cart_saved() );
@@ -146,6 +148,8 @@ class Test_Cart extends EDD_UnitTestCase {
 			)
 		);
 		update_user_meta( get_current_user_id(), 'edd_saved_cart', $cart );
+		$edd_options['enable_cart_saving'] = '1';
+		update_option( 'edd_settings', $edd_options );
 
 		$this->assertTrue( edd_is_cart_saved() );
 	}

@@ -11,14 +11,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	protected $_negative_post_id = null;
 
 	public function setUp() {
+
 		parent::setUp();
-	}
-
-	public function tearDown() {
-		parent::tearDown();
-	}
-
-	public function test_addition_of_discount() {
 		$post = array(
 			'name' => 'Test Discount',
 			'type' => 'percent',
@@ -33,6 +27,14 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		);
 
 		$this->_post_id = edd_store_discount( $post );
+	}
+
+	public function tearDown() {
+		parent::tearDown();
+	}
+
+	public function test_discount_created() {
+		
 		$this->assertInternalType( 'int', $this->_post_id );
 
 	}
@@ -88,7 +90,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_status_update() {
-		$this->assertTrue( edd_update_discount_status( $this->_post_id ) );
+		$this->assertTrue( edd_update_discount_status( $this->_post_id, 'active' ) );
 	}
 
 	public function test_discount_status_update_fail() {
@@ -96,7 +98,7 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discounts_exists() {
-		edd_update_discount_status( $this->_post_id );
+		edd_update_discount_status( $this->_post_id, 'active' );
 		$this->assertTrue( edd_has_active_discounts() );
 	}
 
@@ -104,11 +106,12 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$this->assertTrue( edd_discount_exists( $this->_post_id ) );
 	}
 
-	public function test_discount_retrieved_from_database() {
-		$this->assertObjectHasAttribute( 'ID', edd_get_discount(  $this->_post_id ) );
-		$this->assertObjectHasAttribute( 'post_title', edd_get_discount(  $this->_post_id ) );
-		$this->assertObjectHasAttribute( 'post_status', edd_get_discount(  $this->_post_id ) );
-		$this->assertObjectHasAttribute( 'post_type', edd_get_discount(  $this->_post_id ) );
+	public function test_get_discount() {
+		$discount = edd_get_discount(  $this->_post_id );
+		$this->assertObjectHasAttribute( 'ID', $discount );
+		$this->assertObjectHasAttribute( 'post_title', $discount );
+		$this->assertObjectHasAttribute( 'post_status', $discount );
+		$this->assertObjectHasAttribute( 'post_type', $discount );
 	}
 
 	public function test_get_discount_code() {
