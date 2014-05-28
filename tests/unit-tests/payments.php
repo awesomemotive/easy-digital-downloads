@@ -173,6 +173,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 	}
 
 	public function test_check_for_existing_payment() {
+		edd_update_payment_status( $this->_payment_id, 'publish' );
 		$this->assertTrue( edd_check_for_existing_payment( $this->_payment_id ) );
 	}
 
