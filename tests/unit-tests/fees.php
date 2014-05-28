@@ -18,12 +18,14 @@ class Tests_Fee extends EDD_UnitTestCase {
 			'shipping_fee' => array(
 				'amount' => 10,
 				'label' => 'Shipping Fee',
-				'type'  => 'fee'
+				'type'  => 'fee',
+				'no_tax' => false
 			),
 			'item_fee' => array(
 				'amount' => 20,
 				'label' => 'Arbitrary Item',
-				'type' => 'item'
+				'type' => 'item',
+				'no_tax' => false
 			)
 		);
 
@@ -42,7 +44,8 @@ class Tests_Fee extends EDD_UnitTestCase {
 		$expected = array(
 			'amount' => 10,
 			'label' => 'Shipping Fee',
-			'type' => 'fee' 
+			'type' => 'fee' ,
+			'no_tax' => false
 		);
 		$this->assertEquals( $expected, EDD()->fees->get_fee( 'shipping_fee' ) );
 	
@@ -60,12 +63,14 @@ class Tests_Fee extends EDD_UnitTestCase {
 			'shipping_fee' => array(
 				'amount' => 10,
 				'label' => 'Shipping Fee',
-				'type'  => 'fee'
+				'type'  => 'fee',
+				'no_tax' => false
 			),
 			'item_fee' => array(
 				'amount' => 20,
 				'label' => 'Arbitrary Item',
-				'type' => 'item'
+				'type' => 'item',
+				'no_tax' => false
 			)
 		);
 
@@ -76,7 +81,8 @@ class Tests_Fee extends EDD_UnitTestCase {
 			'shipping_fee' => array(
 				'amount' => 10,
 				'label' => 'Shipping Fee',
-				'type'  => 'fee'
+				'type'  => 'fee',
+				'no_tax' => false
 			)
 		);
 
@@ -87,7 +93,8 @@ class Tests_Fee extends EDD_UnitTestCase {
 			'item_fee' => array(
 				'amount' => 20,
 				'label' => 'Arbitrary Item',
-				'type' => 'item'
+				'type' => 'item',
+				'no_tax' => false
 			)
 		);
 
@@ -95,7 +102,7 @@ class Tests_Fee extends EDD_UnitTestCase {
 	}
 
 	public function test_total_fees() {
-		EDD()->fees->add_fee( 20, 'Tax', 'Tax' );
+		EDD()->fees->add_fee( 20, 'Tax Fee', 'Tax Fee' );
 		$this->assertEquals( 50, EDD()->fees->total() );
 	}
 
@@ -107,17 +114,21 @@ class Tests_Fee extends EDD_UnitTestCase {
 				'shipping_fee' => array(
 					'amount' => 10,
 					'label' => 'Shipping Fee',
-					'type'  => 'fee'
+					'type'  => 'fee',
+					'no_tax' => false
 				),
 				'item_fee' => array(
 					'amount' => 20,
 					'label' => 'Arbitrary Item',
 					'type' => 'item'
+					,
+					'no_tax' => false
 				),
-				'tax' => array(
+				'tax_fee' => array(
 					'amount' => 20,
-					'label' => 'Tax',
-					'type' => 'fee'
+					'label' => 'Tax Fee',
+					'type' => 'fee',
+					'no_tax' => false
 				)
 			)
 		);
