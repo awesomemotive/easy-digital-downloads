@@ -185,7 +185,6 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 	public function test_discount_is_used() {
 		$this->assertFalse( edd_is_discount_used( '20OFF' ) );
-		$this->markTestIncomplete('test');
 	}
 
 	public function test_discount_is_valid_when_purchasing() {
