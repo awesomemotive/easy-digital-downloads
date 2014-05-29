@@ -125,7 +125,7 @@ function edd_install() {
 
 	}
 
-	update_option( 'edd_settings', $options );
+	update_option( 'edd_settings', array_merge( $edd_options, $options ) );
 	update_option( 'edd_version', EDD_VERSION );
 
 	// Create wp-content/uploads/edd/ folder and the .htaccess file
