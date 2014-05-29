@@ -14,7 +14,12 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download Product', 'post_name' => 'test-download-product', 'post_type' => 'download', 'post_status' => 'draft' ) );
+		$post_id = $this->factory->post->create( array(
+			'post_title' => 'Test Download Product',
+			'post_name' => 'test-download-product',
+			'post_type' => 'download',
+			'post_status' => 'publish'
+		) );
 
 		$_variable_pricing = array(
 			array(
@@ -80,7 +85,7 @@ class Tests_Downloads extends EDD_UnitTestCase {
 		$download = edd_get_download_by( 'sku', 'sku_0012' );
 		$this->assertSame( $this->_post->ID, $download->ID );
 		
-		$download = edd_get_download_by( 'name', 'Test Download Product' );
+		$download = edd_get_download_by( 'slug', 'test-download-product' );
 		$this->assertSame( $this->_post->ID, $download->ID );
 
 	}
