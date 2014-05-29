@@ -207,8 +207,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 	public function test_get_discounted_amount_negative() {
 		//$this->markTestIncomplete('Fix this per #2302');
-		//$this->assertEqual( 150.0, edd_get_discounted_amount( 'DOUBLE', '75' ) );
-	}//
+		$this->assertEqual( 150.0, edd_get_discounted_amount( 'DOUBLE', '75' ) );
+	}
 
 	public function test_get_discounted_amount_flat() {
 		//$this->markTestIncomplete('Fix this per #2302');
