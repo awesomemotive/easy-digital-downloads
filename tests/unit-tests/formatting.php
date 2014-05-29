@@ -71,7 +71,7 @@ class Tests_Formatting extends EDD_UnitTestCase {
 		$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
 
 		$this->assertEquals( '.', $thousands_sep );
-		$this->assertEquals( ',', $thousands_sep );
+		$this->assertEquals( ',', $decimal_sep );
 
 		$edd_options['thousands_separator'] = ',';
 		$edd_options['decimal_separator'] = '.';
@@ -82,7 +82,7 @@ class Tests_Formatting extends EDD_UnitTestCase {
 		$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
 
 		$this->assertEquals( ',', $thousands_sep );
-		$this->assertEquals( '.', $thousands_sep );
+		$this->assertEquals( '.', $decimal_sep );
 
 	} 
 }
