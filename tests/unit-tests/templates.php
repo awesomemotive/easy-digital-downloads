@@ -50,7 +50,7 @@ class Tests_Templates extends EDD_UnitTestCase {
 			'_edd_download_earnings' => 129.43,
 			'_edd_download_sales' => 59,
 			'_edd_download_limit_override_1' => 1,
-			'edd_sku' => 'sku12345'
+			'edd_sku' => 'sku123456'
 		);
 		foreach( $meta as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
@@ -77,7 +77,7 @@ class Tests_Templates extends EDD_UnitTestCase {
 		$this->assertContains( '<span class="edd_price_option_name" itemprop="description">', $link );
 
 		// Repeat tests on SKU meta field
-		$link = edd_get_purchase_link( array( 'sku' => 'sku12345' ) );
+		$link = edd_get_purchase_link( array( 'sku' => 'sku123456' ) );
 		$this->assertInternalType( 'string', $link );
 		$this->assertContains( '<form id="edd_purchase_', $link );
 		$this->assertContains( 'class="edd_download_purchase_form" method="post">', $link );
