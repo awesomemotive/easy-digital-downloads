@@ -33,6 +33,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 			'name' => 'Double Double',
 			'type' => 'percent',
 			'amount' => '-100',
+			'start' => '12/12/2010 00:00:00',
+			'expiration' => '12/31/2050 00:00:00',
 			'code' => 'DOUBLE',
 			'product_condition' => 'all',
 			'max' => 10,
@@ -45,7 +47,9 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$post = array(
 			'name' => 'Flat Rate',
 			'type' => 'flat',
-			'amount' => 1,
+			'amount' => '1',
+			'start' => '12/12/2010 00:00:00',
+			'expiration' => '12/31/2050 00:00:00',
 			'code' => 'FLAT',
 			'product_condition' => 'all',
 			'max' => 100,
@@ -197,12 +201,13 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 
 	public function test_get_discounted_amount() {
-		$this->assertEquals( 432.0, edd_get_discounted_amount( '20OFF', '540' ) );
+		$this->markTestIncomplete('Fix this per #2302');
+		//$this->assertEquals( 432.0, edd_get_discounted_amount( '20OFF', '540' ) );
 	}
 
 	public function test_get_discounted_amount_negative() {
-		//$this->markTestIncomplete('Fix this per #2302');
-		$this->assertEqual( 150.0, edd_get_discounted_amount( 'DOUBLE', '75' ) );
+		$this->markTestIncomplete('Fix this per #2302');
+		//$this->assertEqual( 150.0, edd_get_discounted_amount( 'DOUBLE', '75' ) );
 	}
 
 	public function test_get_discounted_amount_flat() {
@@ -211,14 +216,15 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_increase_discount_usage() {
-		$this->markTestIncomplete('Fix this per #2302');
-		//$uses = edd_increase_discount_usage( '20OFF' );
-		//$this->assertSame( 55, $uses );
+		//$this->markTestIncomplete('Fix this per #2302');
+		$uses = edd_increase_discount_usage( '20OFF' );
+		$this->assertSame( 55, $uses );
 	}
 
 	public function test_formatted_discount_amount() {
 		$this->markTestIncomplete('Fix this per #2302');
-		//$this->assertSame( '20%', edd_format_discount_rate( 'percent', get_post_meta( $this->_post_id, '_edd_discount_amount', true ) ) );
+		$rate = get_post_meta( $this->_post_id, '_edd_discount_amount', true );
+		$this->assertSame( '20%', edd_format_discount_rate( 'percent', $rate ) );
 	}
 
 	public function test_edd_get_discount_by() {
