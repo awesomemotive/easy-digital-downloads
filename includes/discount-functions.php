@@ -856,16 +856,18 @@ function edd_get_discounted_amount( $code, $base_price ) {
 		$type        = edd_get_discount_type( $discount_id );
 		$rate        = edd_get_discount_amount( $discount_id );
 
-		if ( $type == 'flat' ) {
-			// Set amount
-			$amount = $base_price - $rate;
-			if ( $amount < 0 ) {
-				$amount = 0;
-			}
+		if( $rate > 0 ) {
+			if ( $type == 'flat' ) {
+				// Set amount
+				$amount = $base_price - $rate;
+				if ( $amount < 0 ) {
+					$amount = 0;
+				}
 
-		} else {
-			// Percentage discount
-			$amount = $base_price - ( $base_price * ( $rate / 100 ) );
+			} else {
+				// Percentage discount
+				$amount = $base_price - ( $base_price * ( $rate / 100 ) );
+			}
 		}
 	}
 
