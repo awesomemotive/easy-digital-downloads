@@ -830,7 +830,7 @@ function edd_is_discount_valid( $code = '', $user = '' ) {
  * @return      int
  */
 function edd_get_discount_id_by_code( $code ) {
-	$discount = edd_get_discount_by( 'code', $code );
+	$discount = edd_get_discount_by_code( $code );
 	if( $discount ) {
 		return $discount->ID;
 	}
