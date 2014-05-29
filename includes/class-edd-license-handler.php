@@ -59,7 +59,7 @@ class EDD_License {
 		// Setup hooks
 		$this->includes();
 		$this->hooks();
-		$this->auto_updater();
+		//$this->auto_updater();
 	}
 
 	/**
@@ -87,6 +87,9 @@ class EDD_License {
 
 		// Deactivate license key
 		add_action( 'admin_init', array( $this, 'deactivate_license' ) );
+
+		// Updater
+		add_action( 'plugins_loaded', array( $this, 'auto_updater' ) );
 	}
 
 	/**
@@ -96,7 +99,7 @@ class EDD_License {
 	 * @global  array $edd_options
 	 * @return  void
 	 */
-	private function auto_updater() {
+	public function auto_updater() {
 
 		if ( 'valid' !== get_option( $this->item_shortname . '_license_active' ) )
 			return;
@@ -192,6 +195,9 @@ class EDD_License {
 		// Make sure there are no errors
 		if ( is_wp_error( $response ) )
 			return;
+
+		// Tell WordPress to look for updates
+		set_site_transient( 'update_plugins', null );
 
 		// Decode license data
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
