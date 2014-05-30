@@ -95,7 +95,9 @@ function edd_get_cart_quantity() {
  * @return string Cart key of the new item
  */
 function edd_add_to_cart( $download_id, $options = array() ) {
+
 	$cart = apply_filters( 'edd_pre_add_to_cart_contents', edd_get_cart_contents() );
+
 	$download = get_post( $download_id );
 
 	if( 'download' != $download->post_type )
