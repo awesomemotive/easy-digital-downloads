@@ -118,7 +118,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	$new_item = array();
 
 	if( isset( $options['quantity'] ) ) {
-		$quantity = absint( $options['quantity'] );
+		$quantity = absint( preg_replace( '/[^0-9\.]/', '', $options['quantity'] ) );
 		unset( $options['quantity'] );
 	} else {
 		$quantity = 1;
@@ -132,7 +132,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 			$item = array(
 				'id'           => $download_id,
 				'options'      => array(
-					'price_id' => $price
+					'price_id' => preg_replace( '/[^0-9\.]/', '', $price )
 				),
 				'quantity'     => $quantity
 			);
@@ -140,6 +140,16 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		}
 
 	} else {
+
+		// Sanitize price IDs
+		foreach( $options as $key => $option ) {
+
+			if( 'price_id' == $key ) {
+				$options[ $key ] = preg_replace( '/[^0-9\.]/', '', $option );
+			}
+
+		}
+
 		// Add a single item
 		$item = array(
 			'id'       => $download_id,
