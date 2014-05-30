@@ -125,8 +125,10 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	}
 
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
+
 		// Process multiple price options at once
 		foreach ( $options['price_id'] as $price ) {
+
 			$item = array(
 				'id'           => $download_id,
 				'options'      => array(
@@ -134,7 +136,9 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 				),
 				'quantity'     => $quantity
 			);
+
 		}
+
 	} else {
 		// Add a single item
 		$item = array(
@@ -664,7 +668,7 @@ function edd_get_cart_fee_tax() {
 	if( $fees ) {
 
 		foreach ( $fees as $fee_id => $fee ) {
-			
+
 			if( ! empty( $fee['no_tax' ] ) ) {
 				continue;
 			}
