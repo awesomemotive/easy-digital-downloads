@@ -201,28 +201,23 @@ class Tests_Discounts extends EDD_UnitTestCase {
 
 
 	public function test_get_discounted_amount() {
-		//$this->markTestIncomplete('Fix this per #2302');
 		$this->assertEquals( 432.0, edd_get_discounted_amount( '20OFF', '540' ) );
 	}
 
 	public function test_get_discounted_amount_negative() {
-		$this->markTestIncomplete('Fix this per #2302');
 		$this->assertEqual( 150.0, edd_get_discounted_amount( 'DOUBLE', '75' ) );
 	}
 
 	public function test_get_discounted_amount_flat() {
-		$this->markTestIncomplete('Fix this per #2302');
 		$this->assertEqual( 9.0, edd_get_discounted_amount( 'FLAT', '1' ) );
 	}
 
 	public function test_increase_discount_usage() {
-		//$this->markTestIncomplete('Fix this per #2302');
 		$uses = edd_increase_discount_usage( '20OFF' );
 		$this->assertSame( 55, $uses );
 	}
 
 	public function test_formatted_discount_amount() {
-		$this->markTestIncomplete('Fix this per #2302');
 		$rate = get_post_meta( $this->_post_id, '_edd_discount_amount', true );
 		$this->assertSame( '20%', edd_format_discount_rate( 'percent', $rate ) );
 	}
