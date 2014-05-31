@@ -72,7 +72,7 @@ function edd_process_add_to_cart( $data ) {
 		wp_redirect( edd_get_checkout_uri(), 303 );
 		edd_die();
 	} else {
-		wp_redirect( remove_query_arg( array( 'edd_action', 'download_id' ) ) ); edd_die();
+		wp_redirect( remove_query_arg( array( 'edd_action', 'download_id', 'edd_options' ) ) ); edd_die();
 	}
 }
 add_action( 'edd_add_to_cart', 'edd_process_add_to_cart' );
