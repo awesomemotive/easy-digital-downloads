@@ -160,6 +160,9 @@ class FPDF {
 		$this->PDFVersion = '1.3';
 	}
 
+	/**
+	 * @param integer $right
+	 */
 	function SetMargins( $left, $top, $right = null ) {
 		$this->lMargin = $left;
 		$this->tMargin = $top;
@@ -182,12 +185,18 @@ class FPDF {
 		$this->rMargin = $margin;
 	}
 
+	/**
+	 * @param boolean $auto
+	 */
 	function SetAutoPageBreak( $auto, $margin = 0 ) {
 		$this->AutoPageBreak = $auto;
 		$this->bMargin = $margin;
 		$this->PageBreakTrigger = $this->h - $margin;
 	}
 
+	/**
+	 * @param string $zoom
+	 */
 	function SetDisplayMode( $zoom, $layout = 'default' ) {
 		if ( $zoom == 'fullpage' || $zoom == 'fullwidth' || $zoom == 'real' || $zoom == 'default' || !is_string( $zoom ) )
 			$this->ZoomMode = $zoom;
@@ -199,6 +208,9 @@ class FPDF {
 			$this->Error( 'Incorrect layout display mode: ' . $layout );
 	}
 
+	/**
+	 * @param boolean $compress
+	 */
 	function SetCompression( $compress ) {
 		if ( function_exists( 'gzcompress' ) )
 			$this->compress = $compress;
@@ -206,6 +218,9 @@ class FPDF {
 			$this->compress = false;
 	}
 
+	/**
+	 * @param string $title
+	 */
 	function SetTitle( $title, $isUTF8 = false ) {
 		if ( $isUTF8 )
 			$title = $this->_UTF8toUTF16( $title );
@@ -218,6 +233,9 @@ class FPDF {
 		$this->subject = $subject;
 	}
 
+	/**
+	 * @param string $author
+	 */
 	function SetAuthor( $author, $isUTF8 = false ) {
 		if ( $isUTF8 )
 			$author = $this->_UTF8toUTF16( $author );
@@ -230,6 +248,9 @@ class FPDF {
 		$this->keywords = $keywords;
 	}
 
+	/**
+	 * @param string $creator
+	 */
 	function SetCreator( $creator, $isUTF8 = false ) {
 		if ( $isUTF8 )
 			$creator = $this->_UTF8toUTF16( $creator );
@@ -329,6 +350,11 @@ class FPDF {
 			$this->_out( $this->DrawColor );
 	}
 
+	/**
+	 * @param integer $r
+	 * @param integer $g
+	 * @param integer $b
+	 */
 	function SetFillColor( $r, $g = null, $b = null ) {
 		if ( ( $r == 0 && $g == 0 && $b == 0 ) || $g === null )
 			$this->FillColor = sprintf( '%.3F g', $r / 255 );
@@ -339,6 +365,11 @@ class FPDF {
 			$this->_out( $this->FillColor );
 	}
 
+	/**
+	 * @param integer $r
+	 * @param integer $g
+	 * @param integer $b
+	 */
 	function SetTextColor( $r, $g = null, $b = null ) {
 		if ( ( $r == 0 && $g == 0 && $b == 0 ) || $g === null )
 			$this->TextColor = sprintf( '%.3F g', $r / 255 );
@@ -367,6 +398,9 @@ class FPDF {
 		$this->_out( sprintf( '%.2F %.2F m %.2F %.2F l S', $x1 * $this->k, ( $this->h - $y1 ) * $this->k, $x2 * $this->k, ( $this->h - $y2 ) * $this->k ) );
 	}
 
+	/**
+	 * @param integer $h
+	 */
 	function Rect( $x, $y, $w, $h, $style = '' ) {
 		if ( $style == 'F' )
 			$op = 'f';
@@ -377,6 +411,9 @@ class FPDF {
 		$this->_out( sprintf( '%.2F %.2F %.2F %.2F re %s', $x * $this->k, ( $this->h - $y ) * $this->k, $w * $this->k, -$h * $this->k, $op ) );
 	}
 
+	/**
+	 * @param string $family
+	 */
 	function AddFont( $family, $style = '', $file = '' ) {
 		$family = strtolower( $family );
 		if ( $file == '' )
@@ -411,6 +448,9 @@ class FPDF {
 		$this->fonts[$fontkey] = $info;
 	}
 
+	/**
+	 * @param string $family
+	 */
 	function SetFont( $family, $style = '', $size = 0 ) {
 		if ( $family == '' )
 			$family = $this->FontFamily;
@@ -479,6 +519,10 @@ class FPDF {
 		);
 	}
 
+	/**
+	 * @param double $y
+	 * @param string $link
+	 */
 	function Link( $x, $y, $w, $h, $link ) {
 		$this->PageLinks[$this->page][] = array(
 			 $x * $this->k,
@@ -569,6 +613,9 @@ class FPDF {
 			$this->x += $w;
 	}
 
+	/**
+	 * @param integer $h
+	 */
 	function MultiCell( $w, $h, $txt, $border = 0, $align = 'J', $fill = false ) {
 		$cw =& $this->CurrentFont['cw'];
 		if ( $w == 0 )
@@ -724,6 +771,9 @@ class FPDF {
 			$this->Cell( $l / 1000 * $this->FontSize, $h, substr( $s, $j ), 0, 0, '', 0, $link );
 	}
 
+	/**
+	 * @param integer $h
+	 */
 	function Ln( $h = null ){
 		$this->x = $this->lMargin;
 		if ( $h === null )
@@ -732,6 +782,11 @@ class FPDF {
 			$this->y += $h;
 	}
 
+	/**
+	 * @param string $file
+	 * @param integer $x
+	 * @param integer $y
+	 */
 	function Image( $file, $x = null, $y = null, $w = 0, $h = 0, $type = '', $link = '' ) {
 		if ( !isset( $this->images[$file] ) ) {
 			if ( $type == '' ) {
@@ -805,6 +860,9 @@ class FPDF {
 			$this->y = $this->h + $y;
 	}
 
+	/**
+	 * @param double $x
+	 */
 	function SetXY( $x, $y ) {
 		$this->SetY( $y );
 		$this->SetX( $x );
@@ -898,6 +956,10 @@ class FPDF {
 		}
 	}
 
+	/**
+	 * @param string $orientation
+	 * @param string $size
+	 */
 	function _beginpage( $orientation, $size ) {
 		$this->page++;
 		$this->pages[$this->page] = '';
@@ -938,6 +1000,9 @@ class FPDF {
 		$this->state = 1;
 	}
 
+	/**
+	 * @param string $font
+	 */
 	function _loadfont( $font ) {
 		include( $this->fontpath . $font );
 		$a = get_defined_vars();
@@ -1011,6 +1076,9 @@ class FPDF {
 		);
 	}
 
+	/**
+	 * @param string $file
+	 */
 	function _parsepng( $file ) {
 		$f = fopen( $file, 'rb' );
 		if ( !$f )

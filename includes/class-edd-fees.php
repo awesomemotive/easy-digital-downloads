@@ -132,7 +132,7 @@ class EDD_Fees {
 	 * @since 1.5
 	 * @uses EDD_Fees::get_fees()
 	 * @uses EDD_Fees::has_fees()
-	 * @return float $total Total fee amount
+	 * @return string $total Total fee amount
 	 */
 	public function total() {
 		$fees  = $this->get_fees();

@@ -99,7 +99,7 @@ function edd_get_cart_quantity() {
  * @param int $download_id Download IDs to be added to the cart
  * @param array $options Array of options, such as variable price
  *
- * @return string Cart key of the new item
+ * @return null|integer Cart key of the new item
  */
 function edd_add_to_cart( $download_id, $options = array() ) {
 	$cart = apply_filters( 'edd_pre_add_to_cart_contents', edd_get_cart_contents() );
@@ -359,9 +359,8 @@ function edd_cart_item_price( $item_id = 0, $options = array() ) {
  * Use edd_get_cart_item_final_price()
  *
  * @since 1.0
- * @param int   $item_id Download ID number
  * @param array $options Optional parameters, used for defining variable prices
- * @param bool $include_tax Whether the price should include taxes
+ * @param bool $include_taxes Whether the price should include taxes
  * @return float|bool Price for this item
  */
 function edd_get_cart_item_price( $download_id = 0, $options = array(), $include_taxes = false ) {
@@ -594,7 +593,7 @@ function edd_get_cart_total( $discounts = false ) {
  * @since 1.3.3
  *
  * @param bool $echo
- * @return mixed|string|void
+ * @return string
  */
 function edd_cart_total( $echo = true ) {
 	global $edd_options;
@@ -681,7 +680,7 @@ function edd_get_purchase_summary( $purchase_data, $email = true ) {
  *
  * @since 1.2.3
  *
- * @return mixed|void Total tax amount
+ * @return string Total tax amount
  */
 function edd_get_cart_tax() {
 
@@ -732,7 +731,7 @@ function edd_cart_tax( $echo = false ) {
  *
  * @since 1.0.6
  * @param string $taxonomy Name of the taxonomy
- * @param mixed $terms Slug or ID of the term from which to add ites | An array of terms
+ * @param string $terms Slug or ID of the term from which to add ites | An array of terms
  * @return array Array of IDs for each item added to the cart
  */
 function edd_add_collection_to_cart( $taxonomy, $terms ) {
@@ -964,7 +963,7 @@ function edd_save_cart() {
  * Process the Cart Restoration
  *
  * @since 1.8
- * @return void || false Returns false if cart saving is disabled
+ * @return null|WP_Error || false Returns false if cart saving is disabled
  */
 function edd_restore_cart() {
 

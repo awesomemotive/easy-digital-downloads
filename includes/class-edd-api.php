@@ -137,7 +137,7 @@ class EDD_API {
 	 * @since 1.5
 	 * @author Daniel J Griffiths
 	 * @param array $vars Query vars
-	 * @return array $vars New query vars
+	 * @return string[] $vars New query vars
 	 */
 	public function query_vars( $vars ) {
 		$vars[] = 'token';
@@ -457,7 +457,7 @@ class EDD_API {
 	 * @access public
 	 * @since 1.5.1
 	 * @param array $args Arguments to override defaults
-	 * @return array $dates
+	 * @return integer|null $dates
 	*/
 	public function get_dates( $args = array() ) {
 		$dates = array();

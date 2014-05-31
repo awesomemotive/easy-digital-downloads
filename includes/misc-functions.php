@@ -257,7 +257,7 @@ function edd_get_currency() {
  *
  * @since 1.0
  *
- * @param unknown $n
+ * @param integer $n
  * @return string Short month name
  */
 function edd_month_num_to_name( $n ) {

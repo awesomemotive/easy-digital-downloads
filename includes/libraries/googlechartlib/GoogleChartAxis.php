@@ -172,6 +172,9 @@ class GoogleChartAxis
 		return $this;
 	}
 
+	/**
+	 * @param integer $axis_index
+	 */
 	public function computeChxp($axis_index)
 	{
 		if ( ! $this->label_positions )
@@ -255,6 +258,7 @@ class GoogleChartAxis
 
 	/**
 	 * @since 0.4
+	 * @param boolean $tick_marks
 	 */
 	public function setDrawTickMarks($tick_marks)
 	{
@@ -279,6 +283,7 @@ class GoogleChartAxis
 
 	/**
 	 * @since 0.5
+	 * @param integer $axis_index
 	 */
 	public function computeChxs($axis_index, $chart_type = null)
 	{

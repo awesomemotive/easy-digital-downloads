@@ -126,6 +126,7 @@ class EDD_Stats {
 	 *
 	 * @access public
 	 * @since 1.8
+	 * @param string|boolean $date
 	 * @return array|WP_Error If the date is invalid, a WP_Error object will be returned
 	 */
 	public function convert_date( $date, $end_date = false ) {
