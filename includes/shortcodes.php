@@ -249,10 +249,14 @@ function edd_downloads_query( $atts, $content = null ) {
 
 	$query = array(
 		'post_type'      => 'download',
-		'posts_per_page' => absint( $number ),
+		'posts_per_page' => (int) $number,
 		'orderby'        => $orderby,
 		'order'          => $order
 	);
+
+	if ( $query['posts_per_page'] < -1 ) {
+		$query['posts_per_page'] = abs( $query['posts_per_page'] );
+	}
 
 	switch ( $orderby ) {
 		case 'price':
