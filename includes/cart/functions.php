@@ -95,7 +95,9 @@ function edd_get_cart_quantity() {
  * @return string Cart key of the new item
  */
 function edd_add_to_cart( $download_id, $options = array() ) {
+
 	$cart = apply_filters( 'edd_pre_add_to_cart_contents', edd_get_cart_contents() );
+
 	$download = get_post( $download_id );
 
 	if( 'download' != $download->post_type )
@@ -116,24 +118,38 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	$new_item = array();
 
 	if( isset( $options['quantity'] ) ) {
-		$quantity = absint( $options['quantity'] );
+		$quantity = absint( preg_replace( '/[^0-9\.]/', '', $options['quantity'] ) );
 		unset( $options['quantity'] );
 	} else {
 		$quantity = 1;
 	}
 
 	if ( isset( $options['price_id'] ) && is_array( $options['price_id'] ) ) {
+
 		// Process multiple price options at once
 		foreach ( $options['price_id'] as $price ) {
+
 			$item = array(
 				'id'           => $download_id,
 				'options'      => array(
-					'price_id' => $price
+					'price_id' => preg_replace( '/[^0-9\.]/', '', $price )
 				),
 				'quantity'     => $quantity
 			);
+
 		}
+
 	} else {
+
+		// Sanitize price IDs
+		foreach( $options as $key => $option ) {
+
+			if( 'price_id' == $key ) {
+				$options[ $key ] = preg_replace( '/[^0-9\.]/', '', $option );
+			}
+
+		}
+
 		// Add a single item
 		$item = array(
 			'id'       => $download_id,
@@ -662,7 +678,7 @@ function edd_get_cart_fee_tax() {
 	if( $fees ) {
 
 		foreach ( $fees as $fee_id => $fee ) {
-			
+
 			if( ! empty( $fee['no_tax' ] ) ) {
 				continue;
 			}
