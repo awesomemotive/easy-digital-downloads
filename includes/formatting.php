@@ -24,6 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_sanitize_amount( $amount ) {
 	global $edd_options;
 
+	$is_negative   = false;
 	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
 	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
 
@@ -40,9 +41,17 @@ function edd_sanitize_amount( $amount ) {
 		$amount = str_replace( $thousands_sep, '', $amount );
 	}
 
+	if( $amount < 0 ) {
+		$is_negative = true;
+	}
+
 	$amount   = preg_replace( '/[^0-9\.]/', '', $amount );
 	$decimals = apply_filters( 'edd_sanitize_amount_decimals', 2, $amount );
 	$amount   = number_format( (double) $amount, $decimals, '.', '' );
+
+	if( $is_negative ) {
+		$amount *= -1;
+	}
 
 	return apply_filters( 'edd_sanitize_amount', $amount );
 }
