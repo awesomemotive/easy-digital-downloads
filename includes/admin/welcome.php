@@ -176,7 +176,7 @@ class EDD_Welcome {
 					<p><?php printf( __( 'Sequential order numbers are now supported out of the box. Simply go to <a href="%s">Settings &rarr; Misc</a> to enable them. The starting number, prefix, and postfix for order numbers can all be easily configured.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=misc' ) ); ?></p>
 
 					<h4><?php _e( 'Upgrade Routine', 'edd' );?></h4>
-					<p><?php _e( 'Sequential order numbers or important for some and mandatory for others, so we want to ensure that all users can make user of them. For this reason, we have provided a one-click upgrade routine that will update all previous purchase records with sequential order numbers matching your settings.', 'edd' );?></p>
+					<p><?php _e( 'Sequential order numbers are important for some and even mandatory for others, so we want to ensure that all users can make user of them. For this reason, we have provided a one-click upgrade routine that will update all previous purchase records with sequential order numbers matching your settings.', 'edd' );?></p>
 
 				</div>
 			</div>
@@ -200,7 +200,7 @@ class EDD_Welcome {
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/20-discount.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4><?php _e( 'Redeeming Discount Code', 'edd' );?></h4>
-					<p><?php _e( 'The discount code redemption proceess during checkout is now smoother, more intuitive. Simpler checkout processes for customers means more successful sales for you.', 'edd' );?></p>
+					<p><?php _e( 'The discount code redemption proceess during checkout is now smoother and more intuitive. Simpler checkout processes for customers means more successful sales for you.', 'edd' );?></p>
 					<p><?php _e( 'In version 2.0, customers are given the opportunity to redeem their discount code before selecting their payment method, if the site has ajax processing disabled.', 'edd' );?></p>
 
 
@@ -213,7 +213,7 @@ class EDD_Welcome {
 				<div class="feature-section">
 
 					<h4><?php _e( 'Copy Download Link(s)','edd' );?></h4>
-					<p><?php _e( 'The Purchased Downloads section of the order details screen now includes an option to copy secure download links for all files purchased, letting you easily copy-and-paste new file download for customers.', 'edd' );?></p>
+					<p><?php _e( 'The Purchased Downloads section of the order details screen now includes an option to copy secure download links for any file purchased, letting you easily copy-and-paste new file download links for customers.', 'edd' );?></p>
 
 					<h4><?php _e( 'Transaction ID Searching', 'edd' ); ?></h4>
 					<p><?php _e( 'EDD version 2.0 now supports searching for payment records by the transaction ID from the payment processor. Have you refunded a purchase in PayPal and now need to locate it in your store\'s history? Now it is even easier.', 'edd' ); ?></p>
@@ -221,7 +221,7 @@ class EDD_Welcome {
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/20-unlimited-downloads.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4><?php _e( 'Unlimited File Downloads', 'edd' ); ?></h4>
-					<p><?php _e( 'Several versions ago, EDD supported giving specific customers unlimited file downloads for a particular purchase. This option was accidentially removed but has now been brought back from the sad, sad grave. It is now a happy feature.', 'edd' ); ?></p>
+					<p><?php _e( 'Several versions ago, EDD supported giving specific customers unlimited file downloads for a particular purchase. This option was accidentially removed but has now been brought back from the sad, sad grave. It is now a happy feature. You can use this option to bypass the standard file download limits imposed on purchases.', 'edd' ); ?></p>
 
 				</div>
 			</div>
