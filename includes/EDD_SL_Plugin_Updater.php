@@ -26,7 +26,7 @@ class EDD_SL_Plugin_Updater {
 	 * @param string $_api_url The URL pointing to the custom API endpoint.
 	 * @param string $_plugin_file Path to the plugin file.
 	 * @param array $_api_data Optional data to send with API calls.
-	 * @return void
+	 * @return EDD_SL_Plugin_Updater
 	 */
 	function __construct( $_api_url, $_plugin_file, $_api_data = null ) {
 		$this->api_url  = trailingslashit( $_api_url );
@@ -55,19 +55,17 @@ class EDD_SL_Plugin_Updater {
 	/**
 	 * Check for Updates at the defined API endpoint and modify the update array.
 	 *
-	 * This function dives into the update api just when Wordpress creates its update array,
+	 * This function dives into the update api just when WordPress creates its update array,
 	 * then adds a custom API call and injects the custom plugin data retrieved from the API.
-	 * It is reassembled from parts of the native Wordpress plugin update code.
+	 * It is reassembled from parts of the native WordPress plugin update code.
 	 * See wp-includes/update.php line 121 for the original wp_update_plugins() function.
 	 *
 	 * @uses api_request()
 	 *
-	 * @param array $_transient_data Update array build by Wordpress.
+	 * @param array $_transient_data Update array build by WordPress.
 	 * @return array Modified update array with custom plugin data.
 	 */
 	function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
-
-
 		if( empty( $_transient_data ) || ! $this->do_check ) {
 
 			// This ensures that the custom API request only runs on the second time that WP fires the update check
@@ -139,12 +137,9 @@ class EDD_SL_Plugin_Updater {
 	 *
 	 * @param string $_action The requested action.
 	 * @param array $_data Parameters for the API action.
-	 * @return false||object
+	 * @return false|object
 	 */
 	private function api_request( $_action, $_data ) {
-
-		global $wp_version;
-
 		$data = array_merge( $this->api_data, $_data );
 
 		if( $data['slug'] != $this->slug ) {
