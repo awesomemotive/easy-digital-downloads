@@ -509,7 +509,7 @@ function edd_get_payment_statuses() {
  * @param int $month_num Month number
  * @param int $year Year
  * @param int $hour Hour
- * @return int $earnings Earnings
+ * @return double $earnings Earnings
  */
 function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour = null ) {
 
@@ -1320,7 +1320,7 @@ add_filter( 'comments_clauses', 'edd_hide_payment_notes', 10, 2 );
  * @since 1.5.1
  * @param array $where
  * @param obj $wp_comment_query WordPress Comment Query Object
- * @return array $where
+ * @return string $where
  */
 function edd_hide_payment_notes_from_feeds( $where, $wp_comment_query ) {
     global $wpdb;

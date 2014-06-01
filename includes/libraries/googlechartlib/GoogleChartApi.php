@@ -174,7 +174,7 @@ class GoogleChartApi
 	 *
 	 * @see setQueryMethod
 	 *
-	 * @return binary image
+	 * @return string|null image
 	 */
 	public function getImage()
 	{
@@ -195,7 +195,7 @@ class GoogleChartApi
 
 	/**
 	 * Returns the image as a GD resource.
-	 * @return ressource or false
+	 * @return resource or false
 	 * @since 0.6
 	 */
 	public function getImageGD()
@@ -236,7 +236,7 @@ class GoogleChartApi
 	 * Check if a color is valid RRGGBB format.
 	 *
 	 * @param $color (string)
-	 * @return bool
+	 * @return integer
 	 */
 	static public function validColor($color)
 	{

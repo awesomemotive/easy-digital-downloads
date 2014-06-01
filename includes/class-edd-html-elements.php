@@ -26,8 +26,6 @@ class EDD_HTML_Elements {
 	 *
 	 * @access public
 	 * @since 1.5
-	 * @param string $name Name attribute of the dropdown
-	 * @param int $selected Download to select automatically
 	 * @return string $output Product dropdown
 	 */
 	public function product_dropdown( $args = array() ) {
@@ -315,10 +313,6 @@ class EDD_HTML_Elements {
 	 *
 	 * @since 1.5.2
 	 *
-	 * @param string $name Name attribute of the text field
-	 * @param string $value The value to prepopulate the field with
-	 * @param string $label
-	 * @param string $desc
 	 * @return string Text field
 	 */
 	public function text( $args = array() ) {
@@ -370,10 +364,6 @@ class EDD_HTML_Elements {
 	 *
 	 * @since 1.9
 	 *
-	 * @param string $name Name attribute of the textarea
-	 * @param string $value The value to prepopulate the field with
-	 * @param string $label
-	 * @param string $desc
 	 * @return string textarea
 	 */
 	public function textarea( $args = array() ) {

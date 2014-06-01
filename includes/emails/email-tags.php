@@ -635,7 +635,7 @@ function edd_email_tag_price( $payment_id ) {
  *
  * @param int $payment_id
  *
- * @return int payment_id
+ * @return string payment_id
  */
 function edd_email_tag_payment_id( $payment_id ) {
 	return edd_get_payment_number( $payment_id );

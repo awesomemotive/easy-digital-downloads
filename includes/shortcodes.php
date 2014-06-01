@@ -582,7 +582,7 @@ add_shortcode( 'edd_profile_editor', 'edd_profile_editor_shortcode' );
  * @since 1.4
  * @author Sunny Ratilal
  * @param array $data Data sent from the profile editor
- * @return void
+ * @return false|null
  */
 function edd_process_profile_editor_updates( $data ) {
 	// Profile field change request

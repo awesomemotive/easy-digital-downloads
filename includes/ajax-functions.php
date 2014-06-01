@@ -293,7 +293,7 @@ add_action( 'wp_ajax_nopriv_edd_get_download_title', 'edd_ajax_get_download_titl
  * Recalculate cart taxes
  *
  * @since 1.6
- * @return void
+ * @return false|null
  */
 function edd_ajax_recalculate_taxes() {
 	if ( ! edd_get_cart_contents() ) {

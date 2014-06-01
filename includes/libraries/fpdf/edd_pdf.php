@@ -20,6 +20,9 @@ class edd_pdf extends FPDF {
 
 	}
 
+	/**
+	 * @param integer[] $w
+	 */
 	function SetWidths( $w ) {
 
 		$this->widths = $w;
@@ -56,6 +59,9 @@ class edd_pdf extends FPDF {
 
 	}
 
+	/**
+	 * @param integer $h
+	 */
 	function CheckPageBreak( $h ) {
 
 		if ( $this->GetY() + $h > $this->PageBreakTrigger ) {

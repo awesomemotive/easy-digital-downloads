@@ -245,7 +245,7 @@
 		/**
 		* Check to see if the specific browser is valid
 		* @param string $browserName
-		* @return True if the browser is the specified browser
+		* @return boolean if the browser is the specified browser
 		*/
 		function isBrowser($browserName) { return( 0 == strcasecmp($this->_browser_name, trim($browserName))); }
 
@@ -306,7 +306,7 @@
 		function isRobot() { return $this->_is_robot; }
 		/**
 		* Set the browser to be from AOL
-		* @param $isAol
+		* @param boolean $isAol
 		*/
 		function setAol($isAol) { $this->_is_aol = $isAol; }
 		/**
@@ -326,7 +326,7 @@
 		function getUserAgent() { return $this->_agent; }
 		/**
 		* Set the user agent value (the construction will use the HTTP header value - this will overwrite it)
-		* @param $agent_string The value for the User Agent
+		* @param string $agent_string The value for the User Agent
 		*/
 		function setUserAgent($agent_string) {
 			$this->reset();

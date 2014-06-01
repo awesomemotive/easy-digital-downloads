@@ -77,7 +77,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 *
 	 * @access public 
 	 * @since 2.0
-	 * @return void
+	 * @return string
 	 */
 	public function column_user( $item ) {
 		if( apply_filters( 'edd_api_log_requests', true ) ) {

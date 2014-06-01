@@ -103,7 +103,7 @@ final class Easy_Digital_Downloads {
 	 * @uses Easy_Digital_Downloads::includes() Include the required files
 	 * @uses Easy_Digital_Downloads::load_textdomain() load the language files
 	 * @see EDD()
-	 * @return The one true Easy_Digital_Downloads
+	 * @return Easy_Digital_Downloads The one true Easy_Digital_Downloads
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Easy_Digital_Downloads ) ) {
@@ -327,7 +327,7 @@ endif; // End if class_exists check
  * Example: <?php $edd = EDD(); ?>
  *
  * @since 1.4
- * @return object The one true Easy_Digital_Downloads Instance
+ * @return Easy_Digital_Downloads The one true Easy_Digital_Downloads Instance
  */
 function EDD() {
 	return Easy_Digital_Downloads::instance();
