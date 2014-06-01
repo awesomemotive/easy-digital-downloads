@@ -114,6 +114,11 @@ class EDD_Welcome {
 			float: right;
 			margin-left: 10px!important;
 		}
+
+		.about-wrap .feature-section {
+			margin-top: 20px;
+		}
+
 		/*]]>*/
 		</style>
 		<?php
@@ -168,11 +173,10 @@ class EDD_Welcome {
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/order-details.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4><?php _e( 'Prefix, Postfix, and Starting Number', 'edd' );?></h4>
-					<p><?php _e( 'The View and Edit payment screens have been combined into a single, more efficient, user-friendly screen. Add or remove products to an order, adjust amounts, add notes, or resend purchase receipts all at one time from the same screen.', 'edd' );?></p>
-					<p><?php _e( 'All data associated with a payment can now be edited as well, including the customer\'s billing address.', 'edd' );?></p>
+					<p><?php printf( __( 'Sequential order numbers are now supported out of the box. Simply go to <a href="%s">Settings &rarr; Misc</a> to enable them. The starting number, prefix, and postfix for order numbers can all be easily configured.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=misc' ) ); ?></p>
 
 					<h4><?php _e( 'Upgrade Routine', 'edd' );?></h4>
-					<p><?php _e( 'We have followed the introduction of a responsive Dashboard in WordPress 3.8 and made our own view/edit screen for orders fully responsive and easy to use on mobile devices.', 'edd' );?></p>
+					<p><?php _e( 'Sequential order numbers or important for some and mandatory for others, so we want to ensure that all users can make user of them. For this reason, we have provided a one-click upgrade routine that will update all previous purchase records with sequential order numbers matching your settings.', 'edd' );?></p>
 
 				</div>
 			</div>
@@ -184,33 +188,22 @@ class EDD_Welcome {
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/product-tax.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( '100% Discounts and Credit Cards', 'edd' );?></h4>
-					<p><?php _e( 'Products in your store can now be marked as exclusive of tax, meaning customers will never have to pay tax on these products during checkout.', 'edd' );?></p>
-
 					<h4><?php _e( 'Registration / Login Forms', 'edd' );?></h4>
-					<p><?php _e( 'Products in your store can now be marked as exclusive of tax, meaning customers will never have to pay tax on these products during checkout.', 'edd' );?></p>
+					<p><?php _e( 'The registration and login form options for the checkout form have been further refined in EDD 2.0. They now include granular control that let you determine exactly which forms are displayed. You can have just a login form, just a registration form, both forms, or neither. The choice is yours.', 'edd' );?></p>
 
-				</div>
-			</div>
+					<h4><?php _e( 'Live Item Quantity Updates', 'edd' );?></h4>
+					<p><?php _e( 'Cart item quantities are now updated on the fly when customers adjust them, meaning customers no longer need to click Update Cart and wait for the page to reload to see their new purchase total. This creates a more fluid and rapid checkout experience.', 'edd' );?></p>
 
-			<div class="changelog">
-				<h3><?php _e( 'Discounts', 'edd' );?></h3>
-
-				<div class="feature-section">
-
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/product-earnings.png'; ?>" class="edd-welcome-screenshots"/>
-
-					<h4><?php _e( 'Product Requirements','edd' );?></h4>
-					<p><?php _e( 'With 1.9 we have introduced beautiful graphs for individual products that allows you to view earnings and sales over any time period. Easily see earnings / sales for monthly, yearly, quarterly, or any other date range for any product in your store.', 'edd' );?></p>
+					<h4><?php _e( '100% Discounts and Credit Cards', 'edd' );?></h4>
+					<p><?php _e( 'Many users choose to offer 100% discount codes to customers, perhaps as part of a promotion or give away. As of EDD v2.0, 100% discount codes now work perfectly even when using a credit card processing payment gateway.', 'edd' );?></p>
 
 					<h4><?php _e( 'Redeeming Discount Code', 'edd' );?></h4>
-					<p><?php _e( 'The tax system in EDD has been plagued with bugs since it was first introduced, so in 1.9 we have completely rewritten the entire system from the ground up to ensure it is reliable and bug free.', 'edd' );?></p>
-					<p><?php _e( 'It can be difficult to completely delete an entire section of old code, but we are confident the rewrite will be worth every minute of the time spent on it.', 'edd' );?></p>
-					<p><?php _e( 'We are determined to continue to provide you a reliable, easy system to sell your digital products. In order to do that, sometimes we just have to swallow our pride and start over.', 'edd' );?></p>
+					<p><?php _e( 'The discount code redemption proceess during checkout is now smoother, more intuitive. Simpler checkout processes for customers means more successful sales for you.', 'edd' );?></p>
+					<p><?php _e( 'In version 2.0, customers are given the opportunity to redeem their discount code before selecting their payment method, if the site has ajax processing disabled.', 'edd' );?></p>
+
 
 				</div>
 			</div>
-
 
 			<div class="changelog">
 				<h3><?php _e( 'Payment History Enhancements', 'edd' );?></h3>
@@ -218,13 +211,13 @@ class EDD_Welcome {
 				<div class="feature-section">
 
 					<h4><?php _e( 'Copy Download Link(s)','edd' );?></h4>
-					<p><?php _e( 'Every product drop down menu used in Easy Digital Downloads has been replaced with a much more performant version that includes a live Ajax search, meaning stores that have a large number of products will see a significant improvement for page load times in the WordPress Dashboard.', 'edd' );?></p>
+					<p><?php _e( 'The Purchased Downloads section of the order details screen now includes an option to copy secure download links for all files purchased, letting you easily copy-and-paste new file download for customers.', 'edd' );?></p>
 
 					<h4><?php _e( 'Transaction ID Searching', 'edd' ); ?></h4>
-					<p><?php _e( 'The File Download log pages have long been memory intensive to load. By putting them through intensive memory load tests and query optimization, we were able to reduce the number of queries and amount of memory used by a huge degree, making these pages much, much faster..', 'edd' ); ?></p>
+					<p><?php _e( 'EDD version 2.0 now supports searching for payment records by the transaction ID from the payment processor. Have you refunded a purchase in PayPal and now need to locate it in your store\'s history? Now it is even easier.', 'edd' ); ?></p>
 
 					<h4><?php _e( 'Unlimited File Downloads', 'edd' ); ?></h4>
-					<p><?php _e( 'The File Download log pages have long been memory intensive to load. By putting them through intensive memory load tests and query optimization, we were able to reduce the number of queries and amount of memory used by a huge degree, making these pages much, much faster..', 'edd' ); ?></p>
+					<p><?php _e( 'Several versions ago, EDD supported giving specific customers unlimited file downloads for a particular purchase. This option was accidentially removed but has now been brought back from the sad, sad grave. It is now a happy feature.', 'edd' ); ?></p>
 
 
 				</div>
@@ -236,26 +229,26 @@ class EDD_Welcome {
 				<div class="feature-section col three-col">
 					<div>
 						<h4><?php _e( 'API Keys', 'edd' );?></h4>
-						<p><?php _e( 'The interface for creating / editing Download products has been dramatically improved by separating the UI out into sections that are easier to use and less cluttered.', 'edd' );?></p>
+						<p><?php _e( 'EDD has a complete REST API for interfacing with 3rd party systems, such as mobile devices. Granting users access to the API data was always a bit cumbersome, so in verison 2.0 we have introduced a complete new API Keys table under the Tools page.', 'edd' );?></p>
 
 						<h4><?php _e( 'Tools Page', 'edd' );?></h4>
-						<p><?php _e( 'Along with per-product earnings / sales graphs, we have introduced an EDD_Graph class that makes it exceptionally simple to generate your own custom graphs. Simply build an array of data and let the class work its magic.', 'edd' );?></p>
+						<p><?php _e( 'As more and more tools have been developed to assist with managing your store, the Tools page got a bit cluttered. We have now taken the time to introduce a proper tabbed interface to keep things neat and tidy.', 'edd' );?></p>
 					</div>
 
 					<div>
-						<h4><?php _e( 'Export Earnings / Sales Over Time', 'edd' );?></h4>
-						<p><?php _e( 'A new section has been added to the Payment History screen that allows you to filter payments by date, making it much easier to locate payments for a particular period.', 'edd' );?></p>
+						<h4><?php _e( 'Banned Emails', 'edd' );?></h4>
+						<p><?php _e( 'Along with the new Tools page, we have introduced a new tool that allows you to blacklist specific email addresses. Emails placed on this list will not be allowed to make purchases. This is useful for combatting fraud.' ,'edd' );?></p>
 
 						<h4><?php _e( 'Short Code: [edd_register]', 'edd' );?></h4>
-						<p><?php _e( 'A new API has been introduced for easily adding new template tags to purchase receipts and admin sale notifications.', 'edd' );?></p>
+						<p><?php _e( 'Many users have asked for an option to give potential customers a way to register an account on the site without being required to go through the checkout screen. The new [edd_register] short code lets you place a stand-alone registration form on any page.', 'edd' );?></p>
 					</div>
 
 					<div class="last-feature">
-						<h4><?php _e( 'Banned Emails', 'edd' );?></h4>
-						<p><?php _e( 'A new action has been added to the Bulk Actions menu in the Payment History screen that allows you to resend purchase receipt emails in bulk.' ,'edd' );?></p>
+						<h4><?php _e( 'Export Earnings / Sales Over Time', 'edd' );?></h4>
+						<p><?php _e( 'The export options have gotten better in 2.0. You can now export a CSV file of earnings and sales overtime. Want to have a CSV that shows earnings and sale counts for the last six months? Now you can.', 'edd' );?></p>
 
-						<h4><?php _e( 'Improved Admin Navigation','edd' );?></h4>
-						<p><?php _e( 'Along with being able to assign discounts to specific products, you can also now exclude products from discount codes.', 'edd' );?></p>
+						<h4><?php _e( 'Improved Discount Edit Screen', 'edd' ); ?></h4>
+						<p><?php _e( 'We try and live up to our name and make all aspects of running your store Easy. Unfortunately, the options available when creating discount codes have never been <em>easy</em>. 2.0 introduces several refinements to the discount edit screen that make it dramatically more intuitive.', 'edd' );?></p>
 					</div>
 				</div>
 			</div>
