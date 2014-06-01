@@ -329,7 +329,7 @@ function edd_count_file_downloads_of_user( $user ) {
  *
  * @access      public
  * @since       1.3.4
- * @param       $username string - the username to validate
+ * @param       string $username string - the username to validate
  * @return      bool
  */
 function edd_validate_username( $username ) {

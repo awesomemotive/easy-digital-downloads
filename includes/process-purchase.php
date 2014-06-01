@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @access      private
  * @since       1.0
- * @return      void
+ * @return      false|null
  */
 function edd_process_purchase_form() {
 

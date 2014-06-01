@@ -48,7 +48,6 @@ final class WP_Session extends Recursive_ArrayAccess implements Iterator, Counta
 	/**
 	 * Retrieve the current session instance.
 	 *
-	 * @param bool $session_id Session ID from which to populate data.
 	 *
 	 * @return bool|WP_Session
 	 */

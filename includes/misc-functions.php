@@ -200,7 +200,7 @@ function edd_get_ip() {
  * Returns the webhost this site is using if possible
  *
  * @since 2.0
- * @return mixed string $host if detected, false otherwise
+ * @return string|false string $host if detected, false otherwise
  */
 function edd_get_host() {
 	$host = false;
@@ -357,7 +357,7 @@ function edd_get_currency() {
  *
  * @since 1.0
  *
- * @param unknown $n
+ * @param integer $n
  * @return string Short month name
  */
 function edd_month_num_to_name( $n ) {

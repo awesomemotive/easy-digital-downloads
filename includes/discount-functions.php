@@ -85,7 +85,7 @@ function edd_has_active_discounts() {
  * Retrieves a complete discount code by discount ID.
  *
  * @since 1.0
- * @param string $discount_id Discount ID
+ * @param integer $discount_id Discount ID
  * @return array
  */
 function edd_get_discount( $discount_id = 0 ) {
@@ -438,8 +438,8 @@ function edd_get_discount_min_price( $code_id = null ) {
  *
  * @since 1.4
  * @param int $code_id Discount ID
- * @return int $amount Discount code amounts
- * @return float
+ * @return double $amount Discount code amounts
+ * @return double
  */
 function edd_get_discount_amount( $code_id = null ) {
 	$amount = get_post_meta( $code_id, '_edd_discount_amount', true );
@@ -483,7 +483,7 @@ function edd_get_discount_excluded_products( $code_id = null ) {
  *
  * @since 1.5
  * @param int $code_id Discount ID
- * @return array $product_reqs IDs of the required products
+ * @return integer $product_reqs IDs of the required products
  */
 function edd_get_discount_product_reqs( $code_id = null ) {
 	$product_reqs = get_post_meta( $code_id, '_edd_discount_product_reqs', true );
@@ -515,8 +515,8 @@ function edd_get_discount_product_condition( $code_id = 0 ) {
  *
  * @since 1.5
  * @param int $code_id Discount ID
- * @return array $product_reqs IDs of the required products
- * @return bool Whether or not discount code is global
+ * @return boolean $product_reqs IDs of the required products
+ * @return boolean Whether or not discount code is global
  */
 function edd_is_discount_not_global( $code_id = 0 ) {
 	return (bool) get_post_meta( $code_id, '_edd_discount_is_not_global', true );
@@ -906,7 +906,7 @@ function edd_increase_discount_usage( $code ) {
  *
  * @since 1.0
  * @param string $type Discount code type
- * @param string|int $amount Discount code amount
+ * @param double $amount Discount code amount
  * @return string $amount Formatted amount
  */
 function edd_format_discount_rate( $type, $amount ) {
@@ -922,7 +922,7 @@ function edd_format_discount_rate( $type, $amount ) {
  *
  * @since 1.4.1
  * @param string $code Discount code
- * @return array All currently active discounts
+ * @return string[] All currently active discounts
  */
 function edd_set_cart_discount( $code = '' ) {
 

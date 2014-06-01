@@ -131,7 +131,7 @@ function edd_get_checkout_uri( $args = array() ) {
  * Used to redirect a user back to the purchase
  * page if there are errors present.
  *
- * @param array $args
+ * @param string $args
  * @access public
  * @since  1.0
  * @return Void

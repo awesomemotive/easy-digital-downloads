@@ -445,7 +445,7 @@ function edd_reports_graph_controls() {
  * selected date-range (if any)
  *
  * @since 1.3
- * @return void
+ * @return integer|null
 */
 function edd_get_report_dates() {
 	$dates = array();

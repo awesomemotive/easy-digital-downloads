@@ -208,7 +208,7 @@ class GoogleChartData
 	 *
 	 * @internal
 	 * @note Used by GoogleChart when calling GoogleChart::addData()
-	 * @param $index (int)
+	 * @param integer $index (int)
 	 * @return $this
 	 */
 	public function setIndex($index)
@@ -242,7 +242,7 @@ class GoogleChartData
 
 	/**
 	 * Enable/disabled autoscaling.
-	 * @param $autoscale (bool)
+	 * @param boolean $autoscale (bool)
 	 * @return $this
 	 */
 	public function setAutoscale($autoscale)
@@ -343,7 +343,7 @@ class GoogleChartData
 	 * Set the serie color.
 	 * Color can be an array for bar charts and pie charts.
 	 *
-	 * @param $color (mixed) a RRGGBB string, or an array for Bar Chart and Pie Chart
+	 * @param string $color (mixed) a RRGGBB string, or an array for Bar Chart and Pie Chart
 	 * @see http://code.google.com/apis/chart/docs/chart_params.html#gcharts_series_color
 	 */
 	public function setColor($color)
@@ -377,7 +377,7 @@ class GoogleChartData
 
 	/**
 	 * Return true if parameter @chco is needed
-	 * @return true
+	 * @return boolean
 	 */
 	public function hasChco()
 	{
