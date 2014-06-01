@@ -749,9 +749,6 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 			if ( $user_data ) {
 				$key   = '_edd_payment_user_id';
 				$value = $user_data->ID;
-			} else {
-				edd_set_error( 'edd-discount-error', __( 'This discount code is invalid.', 'edd' ) );
-				$user_found = false; // Bail, no user found
 			}
 		}
 
