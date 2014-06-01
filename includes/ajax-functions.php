@@ -12,7 +12,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) die();
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Checks whether AJAX is enabled.
@@ -90,8 +90,6 @@ add_action( 'wp_ajax_nopriv_edd_remove_from_cart', 'edd_ajax_remove_from_cart' )
  */
 function edd_ajax_add_to_cart() {
 	if ( isset( $_POST['download_id'] ) ) {
-		global $post;
-
 		$to_add = array();
 
 		if ( isset( $_POST['price_ids'] ) && is_array( $_POST['price_ids'] ) ) {
@@ -364,7 +362,6 @@ add_action( 'wp_ajax_nopriv_edd_get_shop_states', 'edd_ajax_get_states_field' );
  * @return void
  */
 function edd_ajax_download_search() {
-
 	global $wpdb;
 
 	$search  = esc_sql( sanitize_text_field( $_GET['s'] ) );
@@ -414,7 +411,6 @@ add_action( 'wp_ajax_nopriv_edd_download_search', 'edd_ajax_download_search' );
  * @return void
  */
 function edd_check_for_download_price_variations() {
-
 	if( ! current_user_can( 'edit_products' ) ) {
 		die( '-1' );
 	}

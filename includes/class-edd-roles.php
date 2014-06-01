@@ -96,7 +96,7 @@ class EDD_Roles {
 	 *
 	 * @access public
 	 * @since  1.4.4
-	 * @global obj $wp_roles
+	 * @global WP_Roles $wp_roles
 	 * @return void
 	 */
 	public function add_caps() {
