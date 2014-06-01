@@ -170,7 +170,7 @@ class EDD_Welcome {
 
 				<div class="feature-section">
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/order-details.png'; ?>" class="edd-welcome-screenshots"/>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/20-sequential.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4><?php _e( 'Prefix, Postfix, and Starting Number', 'edd' );?></h4>
 					<p><?php printf( __( 'Sequential order numbers are now supported out of the box. Simply go to <a href="%s">Settings &rarr; Misc</a> to enable them. The starting number, prefix, and postfix for order numbers can all be easily configured.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=misc' ) ); ?></p>
@@ -186,7 +186,7 @@ class EDD_Welcome {
 
 				<div class="feature-section">
 
-					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/product-tax.png'; ?>" class="edd-welcome-screenshots"/>
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/20-register-login.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4><?php _e( 'Registration / Login Forms', 'edd' );?></h4>
 					<p><?php _e( 'The registration and login form options for the checkout form have been further refined in EDD 2.0. They now include granular control that let you determine exactly which forms are displayed. You can have just a login form, just a registration form, both forms, or neither. The choice is yours.', 'edd' );?></p>
@@ -196,6 +196,8 @@ class EDD_Welcome {
 
 					<h4><?php _e( '100% Discounts and Credit Cards', 'edd' );?></h4>
 					<p><?php _e( 'Many users choose to offer 100% discount codes to customers, perhaps as part of a promotion or give away. As of EDD v2.0, 100% discount codes now work perfectly even when using a credit card processing payment gateway.', 'edd' );?></p>
+
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/20-discount.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4><?php _e( 'Redeeming Discount Code', 'edd' );?></h4>
 					<p><?php _e( 'The discount code redemption proceess during checkout is now smoother, more intuitive. Simpler checkout processes for customers means more successful sales for you.', 'edd' );?></p>
@@ -216,9 +218,10 @@ class EDD_Welcome {
 					<h4><?php _e( 'Transaction ID Searching', 'edd' ); ?></h4>
 					<p><?php _e( 'EDD version 2.0 now supports searching for payment records by the transaction ID from the payment processor. Have you refunded a purchase in PayPal and now need to locate it in your store\'s history? Now it is even easier.', 'edd' ); ?></p>
 
+					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/20-unlimited-downloads.png'; ?>" class="edd-welcome-screenshots"/>
+
 					<h4><?php _e( 'Unlimited File Downloads', 'edd' ); ?></h4>
 					<p><?php _e( 'Several versions ago, EDD supported giving specific customers unlimited file downloads for a particular purchase. This option was accidentially removed but has now been brought back from the sad, sad grave. It is now a happy feature.', 'edd' ); ?></p>
-
 
 				</div>
 			</div>
