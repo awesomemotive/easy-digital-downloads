@@ -369,7 +369,7 @@ class EDD_Welcome {
 
 				<div class="feature-section">
 
-					<h4><?php _e( 'Over 190 Extensions','edd' );?></h4>
+					<h4><?php _e( 'Over 250 Extensions','edd' );?></h4>
 					<p><?php _e( 'Add-on plugins are available that greatly extend the default functionality of Easy Digital Downloads. There are extensions for payment processors, such as Stripe and PayPal, extensions for newsletter integrations, and many, many more.', 'edd' );?></p>
 
 					<h4><?php _e( 'Visit the Extension Store', 'edd' );?></h4>
