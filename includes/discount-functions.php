@@ -728,6 +728,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
  * @return bool $return
  */
 function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
+
 	$return     = false;
 	$user_found = true;
 
@@ -794,23 +795,28 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
  */
 function edd_is_discount_valid( $code = '', $user = '' ) {
 
+
 	$return      = false;
 	$discount_id = edd_get_discount_id_by_code( $code );
 	$user        = trim( $user );
 
-	if ( $discount_id ) {
-		if (
-			edd_is_discount_active( $discount_id ) &&
-			edd_is_discount_started( $discount_id ) &&
-			!edd_is_discount_maxed_out( $discount_id ) &&
-			!edd_is_discount_used( $code, $user, $discount_id ) &&
-			edd_discount_is_min_met( $discount_id ) &&
-			edd_discount_product_reqs_met( $discount_id )
-		) {
-			$return = true;
+	if( edd_get_cart_contents() ) {
+
+		if ( $discount_id ) {
+			if (
+				edd_is_discount_active( $discount_id ) &&
+				edd_is_discount_started( $discount_id ) &&
+				!edd_is_discount_maxed_out( $discount_id ) &&
+				!edd_is_discount_used( $code, $user, $discount_id ) &&
+				edd_discount_is_min_met( $discount_id ) &&
+				edd_discount_product_reqs_met( $discount_id )
+			) {
+				$return = true;
+			}
+		} else {
+			edd_set_error( 'edd-discount-error', __( 'This discount is invalid.', 'edd' ) );
 		}
-	} else {
-		edd_set_error( 'edd-discount-error', __( 'This discount is invalid.', 'edd' ) );
+
 	}
 
 	return apply_filters( 'edd_is_discount_valid', $return, $discount_id, $code, $user );
