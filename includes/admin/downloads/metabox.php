@@ -233,6 +233,18 @@ add_filter( 'edd_metabox_save__edd_bundled_products', 'edd_sanitize_bundled_prod
  */
 function edd_sanitize_files_save( $files ) {
 
+	// Clean up filenames to ensure whitespaces are stripped
+	foreach( $files as $id => $file ) {
+
+		if( ! empty( $files[ $id ][ 'file' ] ) ) {
+			$files[ $id ][ 'file' ] = trim( $file[ 'file' ] );
+		}
+
+		if( ! empty( $files[ $id ][ 'name' ] ) ) {
+			$files[ $id ][ 'name' ] = trim( $file[ 'name' ] );
+		}
+	}
+
 	// Make sure all files are rekeyed starting at 0
 	return array_values( $files );
 }
