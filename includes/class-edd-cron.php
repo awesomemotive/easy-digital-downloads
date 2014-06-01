@@ -9,6 +9,9 @@
  * @since       1.6
 */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  * EDD_Cron Class
  *
