@@ -749,9 +749,6 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 			if ( $user_data ) {
 				$key   = '_edd_payment_user_id';
 				$value = $user_data->ID;
-			} else {
-				edd_set_error( 'edd-discount-error', __( 'This discount code is invalid.', 'edd' ) );
-				$user_found = false; // Bail, no user found
 			}
 		}
 
@@ -830,7 +827,7 @@ function edd_is_discount_valid( $code = '', $user = '' ) {
  * @return      int
  */
 function edd_get_discount_id_by_code( $code ) {
-	$discount = edd_get_discount_by( 'code', $code );
+	$discount = edd_get_discount_by_code( $code );
 	if( $discount ) {
 		return $discount->ID;
 	}
@@ -867,6 +864,7 @@ function edd_get_discounted_amount( $code, $base_price ) {
 			// Percentage discount
 			$amount = $base_price - ( $base_price * ( $rate / 100 ) );
 		}
+
 	}
 
 	return apply_filters( 'edd_discounted_amount', $amount );
