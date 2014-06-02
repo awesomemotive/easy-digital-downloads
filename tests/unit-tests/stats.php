@@ -145,7 +145,7 @@ class Tests_Stats extends EDD_UnitTestCase {
 		$this->_stats->setup_dates( 'yesterday', 'today' );
 		$this->assertInternalType( 'numeric', $this->_stats->start_date );
 		$this->assertInternalType( 'numeric', $this->_stats->end_date );
-		$this->assertLessThan( $this->_stats->start_date, $this->_stats->end_date );
+		$this->assertGessThan( $this->_stats->start_date, $this->_stats->end_date );
 
 		// Set some valid dates
 		$this->_stats->setup_dates( '2012-01-12', '2012-04-15' );
