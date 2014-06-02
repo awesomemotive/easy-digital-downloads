@@ -175,8 +175,8 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 1. Download products overview
 2. Download configuration
 3. Download configuration details
-4. Download configuration with variable prices
-5. Payment history
+4. Payment History
+5. Payment details
 6. Discount codes
 7. Earnings and sales reports
 8. Add to cart / purchase button
