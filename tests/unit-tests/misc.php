@@ -88,6 +88,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_get_countries() {
 		$expected = array(
+			'0'  => 'Choose',
 			'US' => 'United States',
 			'CA' => 'Canada',
 			'GB' => 'United Kingdom',
@@ -340,6 +341,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_states_list() {
 		$expected = array(
+			'0'  => 'Choose',
 			'AL' => 'Alabama',
 			'AK' => 'Alaska',
 			'AZ' => 'Arizona',
@@ -413,6 +415,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_provinces_list() {
 		$expected = array(
+			'0'  => 'Choose',
 			'AB' => 'Alberta',
 			'BC' => 'British Columbia',
 			'MB' => 'Manitoba',
