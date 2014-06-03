@@ -5,9 +5,9 @@ Contributors: mordauk, sunnyratilal, chriscct7, section214, sumobi, sksmatt, Spe
 Donate link: http://pippinsplugins.com/support-the-site
 Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecommerce, e commerce, e-commerce, selling, wp-ecommerce, wp ecommerce, mordauk, Pippin Williamson, pippinsplugins
 Requires at least: 3.7
-Tested up to: 3.9
+Tested up to: 4.0
 
-Stable Tag: 1.9.9.2
+Stable Tag: 2.0
 
 License: GNU Version 2 or Any Later Version
 
@@ -117,9 +117,9 @@ If you want to just show a list of the files the user has purchased, use the [do
 
 = Can I Setup an Affiliate System? =
 
-Yes! EDD has an add-on that provides a complete affiliate system that you can use to award commissions to your affiliate marketers.
+Yes! EDD integrates directly with several affiliate platforms that provide complete affiliate systems you can use to award commissions to your affiliate marketers.
 
-[Checkout Affiliates Pro + EDD Integration Pack](http://easydigitaldownloads.com/extension/affiliates-pro-integration-pack/)
+[Checkout AffiliateWP](https://affiliatewp.com)
 
 = Can I give my customers downloadable PDF Invoices? =
 Yes, EDD has an add-on that allows for downloadable invoices to be generated for each payment.
