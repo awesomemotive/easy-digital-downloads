@@ -195,13 +195,13 @@ class EDD_Welcome {
 					<p><?php _e( 'Cart item quantities are now updated on the fly when customers adjust them, meaning customers no longer need to click Update Cart and wait for the page to reload to see their new purchase total. This creates a more fluid and rapid checkout experience.', 'edd' );?></p>
 
 					<h4><?php _e( '100% Discounts and Credit Cards', 'edd' );?></h4>
-					<p><?php _e( 'Many users choose to offer 100% discount codes to customers, perhaps as part of a promotion or give away. As of EDD v2.0, 100% discount codes now work perfectly even when using a credit card processing payment gateway.', 'edd' );?></p>
+					<p><?php _e( 'Many users choose to offer 100% discount codes to customers, perhaps as part of a promotion or giveaway. As of EDD v2.0, 100% discount codes now work perfectly even when using a credit card processing payment gateway.', 'edd' );?></p>
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/20-discount.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4><?php _e( 'Redeeming Discount Code', 'edd' );?></h4>
 					<p><?php _e( 'The discount code redemption proceess during checkout is now smoother and more intuitive. Simpler checkout processes for customers means more successful sales for you.', 'edd' );?></p>
-					<p><?php _e( 'In version 2.0, customers are given the opportunity to redeem their discount code before selecting their payment method, if the site has ajax processing disabled.', 'edd' );?></p>
+					<p><?php _e( 'In version 2.0, customers are given the opportunity to redeem their discount code before selecting their payment method, if the site has AJAX processing disabled.', 'edd' );?></p>
 
 
 				</div>
@@ -248,10 +248,10 @@ class EDD_Welcome {
 
 					<div class="last-feature">
 						<h4><?php _e( 'Export Earnings / Sales Over Time', 'edd' );?></h4>
-						<p><?php _e( 'The export options have gotten better in 2.0. You can now export a CSV file of earnings and sales overtime. Want to have a CSV that shows earnings and sale counts for the last six months? Now you can.', 'edd' );?></p>
+						<p><?php _e( 'The export options have got better in 2.0. You can now export a CSV file of earnings and sales overtime. Want to have a CSV that shows earnings and sale counts for the last six months? Now you can.', 'edd' );?></p>
 
 						<h4><?php _e( 'Improved Discount Edit Screen', 'edd' ); ?></h4>
-						<p><?php _e( 'We try and live up to our name and make all aspects of running your store Easy. Unfortunately, the options available when creating discount codes have never been <em>easy</em>. 2.0 introduces several refinements to the discount edit screen that make it dramatically more intuitive.', 'edd' );?></p>
+						<p><?php _e( 'We try and live up to our name and make all aspects of running your store easy. Unfortunately, the options available when creating discount codes have never been <em>easy</em>. Version 2.0 introduces several refinements to the discount edit screen that make it dramatically more intuitive.', 'edd' );?></p>
 					</div>
 				</div>
 			</div>
