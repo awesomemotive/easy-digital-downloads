@@ -184,6 +184,95 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 
 == Changelog ==
 
+= 2.0, June 3, 2014 =
+
+* New: Added support for sequential order numbers
+* New: Added a new [edd_register] short code
+* New: Added an enforce SSL option
+* New: Added greatly improved discount code validation during checkout
+* New: Added a new API Keys list table in Downloads > Tools
+* New: Added support for making purchases with cart fees only
+* New: Added support for searching for specific payments via the REST API
+* New: Added a tabbed interface to the Tools page
+* New: Added an option to generate file download URLs from the View Order Details screen
+* New: Added JS events for all frontend cart / checkout actions
+* New: Added an "Apply" button to the checkout discount field
+* New: Added an Earnings / Sales Overtime export tool
+* New: Added support for searching payment records by transaction ID
+* New: Added a template file for the [edd_login]
+* New: Added support for Revisions to the Downloads post type
+* New: Added {discount_codes} template tag to purchase receipt emails
+* New: Added no-index, no-follow to checkout and account pages
+* New: Added options to control how the login / registration forms are displayed on checkout
+* New: Added support for passing a discount code to the checkout screen via a query arg
+* New: Added textarea support to the EDD_HTML_Elements class
+* New: Added support for exporting customers of a specific product and a specific price option
+* New: Introduced edd_get_*_by() functions for downloads and discounts
+* New: Introduced a edd_get_users_purchased_products() function
+* New: Introduced a edd_is_host() function
+
+* Tweak: Removed the "Update" cart button and added a background update process so amounts and quantities are updated automatically.
+* Tweak: Added billing address to payment history export
+* Tweak: Added average earnings / sales to the detailed earnings reports for products
+* Tweak: Added a link to the File Downloads log from View Order Details
+* Tweak: Added a "was_completed" meta flag for payment records
+* Tweak: Reversed some of the checkbox anti-patterns
+* Tweak: Added support showing all Download products in the [downloads] short code
+* Tweak: Log the reason a payment is marked as failed from PayPal
+* Tweak: Added a columns variable to the edd_download_class filter
+* Tweak: Added tax settings to the System Info
+* Tweak: Added improved hooks to the edd_shopping_cart() function
+* Tweak: Added a link to the product edit screens for each Download in the Purchased Downloads section of View Order Details
+* Tweak: Added $payment_id to the edd_view_order_details_form_top action
+* Tweak: Modified the way that the global file download limit affects individual file download limits
+* Tweak: Add support for identifying products in [purchase_link] by an SKU
+* Tweak: Added support for hiding the credit card form if a 100% discount code is redeemed
+* Tweak: Added support for moving the checkout cart to the bottom of the checkout screen
+* Tweak: Improved the Product Requirements section of the discount edit screen
+* Tweak: Improved the Amount field of the discount edit screen
+* Tweak: Added WP_LANG constant to the System Info
+* Tweak: Improved order history display for non-completed payments in the purchase history
+* Tweak: Removed unnecessary serialization of payment meta
+
+* Bug: Cart fees weren't properly taxed
+* Bug: JS error caused by error in the German translation
+* Bug: The File Download Limit field couldn't be left empty
+* Bug: Expiration dates were set improperly in WP_Session, resulting in the garbage collection not working
+* Bug: Payment method icons fail to load properly on Windows servers
+* Bug: Entering a currency sign in the price field results in an invalid amount on save
+* Bug: Incorrect data format passed to number_format()
+* Bug: edd_before_download_content action fired too early
+* Bug: Customer names longer than two words cannot be properly saved in payment meta
+* Bug: "Activate" button for discounts fails if a discount is expired
+* Bug: Country field during checkout wasn't actually required
+* Bug: Duplicate IDs when multiple purchase buttons for the same product are on the same page
+* Bug: Cart totals incorrect when redeeming multiple discounts
+* Bug: File download limits cannot be reset
+* Bug: File URLs and other fields in File Downloads secttions are not trimmed of whitespace
+* Bug: Currency signs improperly encoded in the email subject of purchase receipts
+* Bug: Improper decimal points in Dashboard Summary widget sale counts
+* Bug: State / province fields loaded in Taxes settings when not needed
+* Bug: Custom events not purged from WP Cron when EDD is deactivated
+* Bug: Dates for "Last Quarter" incorrect Custom reports
+* Bug: Filtering payment history by a guest user fails
+* Bug: EDD_Payments_Query cannot be instantiated multiple times
+* Bug: Spaces cannot be used for the thousands separator
+* Bug: Undefined index "state" in System Info
+* Bug: 400 bad request error during API calls
+* Bug: Improper behavior during extension license deactivation
+* Bug: Restored the Unlimited File Downloads option for payment records
+* Bug: API request logs not properly displayed
+* Bug: Duplicate label in View Order Details
+* Bug: Live credit card verification doesn't update the card type after initial check
+* Bug: Removed duplicate call to edd_get_payment_meta()
+* Bug: Removed duplicate comma in edd.css
+* Bug: Return value, not echo in metabox.php
+* Bug: View Order Details can be loaded for non-payment post types
+* Bug: Obsolete mfunc/mclude/dynamic-cached-content removed
+* Bug: Payment history cannot be sorted by date
+* Bug: Current view not properly displayed in the Logs table
+* Bug: Issuewith default payment gateway when no gateways are active
+
 = 1.9.9.2: May 6, 2014 =
 
 * Fix: Critical error with ajax actions
