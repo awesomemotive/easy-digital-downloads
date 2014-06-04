@@ -248,7 +248,7 @@ class EDD_Welcome {
 
 					<div class="last-feature">
 						<h4><?php _e( 'Export Earnings / Sales Over Time', 'edd' );?></h4>
-						<p><?php _e( 'The export options have got better in version 2.0. You can now export a CSV file of earnings and sales over time. Want to have a CSV that shows earnings and sale counts for the last six months? Now you can.', 'edd' );?></p>
+						<p><?php _e( 'The export options have been improved in version 2.0. You can now export a CSV file of earnings and sales over time. Want to have a CSV that shows earnings and sale counts for the last six months? Now you can.', 'edd' );?></p>
 
 						<h4><?php _e( 'Improved Discount Edit Screen', 'edd' ); ?></h4>
 						<p><?php _e( 'We try and live up to our name and make all aspects of running your store easy. Unfortunately, the options available when creating discount codes have never been <em>easy</em>. Version 2.0 introduces several refinements to the discount edit screen that make it dramatically more intuitive.', 'edd' );?></p>
