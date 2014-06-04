@@ -242,8 +242,8 @@ class EDD_Welcome {
 						<h4><?php _e( 'Banned Emails', 'edd' );?></h4>
 						<p><?php _e( 'Along with the new Tools page, we have introduced a new tool that allows you to blacklist specific email addresses. Emails placed on this list will not be allowed to make purchases. This is useful for combatting fraud.' ,'edd' );?></p>
 
-						<h4><?php _e( 'Short Code: [edd_register]', 'edd' );?></h4>
-						<p><?php _e( 'Many users have asked for an option to give potential customers a way to register an account on the site without being required to go through the checkout screen. The new [edd_register] short code lets you place a stand-alone registration form on any page.', 'edd' );?></p>
+						<h4><?php _e( 'Shortcode: [edd_register]', 'edd' );?></h4>
+						<p><?php _e( 'Many users have asked for an option to give potential customers a way to register an account on the site without being required to go through the checkout screen. The new [edd_register] shortcode lets you place a stand-alone registration form on any page.', 'edd' );?></p>
 					</div>
 
 					<div class="last-feature">
