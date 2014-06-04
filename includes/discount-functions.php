@@ -730,7 +730,7 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 
 	$return     = false;
-	$user_found = true;
+	$user_found = false;
 
 	if ( empty( $code_id ) ) {
 		$code_id = edd_get_discount_id_by_code( $code );
@@ -748,8 +748,9 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 			$user_data = get_user_by( 'login', $user );
 
 			if ( $user_data ) {
-				$key   = '_edd_payment_user_id';
-				$value = $user_data->ID;
+				$user_found	= true;
+				$key   		= '_edd_payment_user_id';
+				$value 		= $user_data->ID;
 			}
 		}
 
