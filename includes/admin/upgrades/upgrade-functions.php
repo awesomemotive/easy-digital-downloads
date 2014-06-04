@@ -368,10 +368,6 @@ function edd_v20_upgrades() {
  */
 function edd_v20_upgrade_sequential_payment_numbers() {
 
-	if ( version_compare( EDD_VERSION, '2.0', '>=' ) ) {
-		return;
-	}
-
 	ignore_user_abort( true );
 
 	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
