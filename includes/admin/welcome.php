@@ -309,7 +309,7 @@ class EDD_Welcome {
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/grid.png'; ?>" class="edd-welcome-screenshots"/>
 
 					<h4><?php _e( 'Flexible Product Grids','edd' );?></h4>
-					<p><?php _e( 'The [downloads] short code will display a product grid that works with any theme, no matter the size. It is even responsive!', 'edd' );?></p>
+					<p><?php _e( 'The [downloads] shortcode will display a product grid that works with any theme, no matter the size. It is even responsive!', 'edd' );?></p>
 
 					<h4><?php _e( 'Change the Number of Columns', 'edd' );?></h4>
 					<p><?php _e( 'You can easily change the number of columns by adding the columns="x" parameter:', 'edd' );?></p>
@@ -327,8 +327,8 @@ class EDD_Welcome {
 
 					<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/screenshots/purchase-link.png'; ?>" class="edd-welcome-screenshots"/>
 
-					<h4><?php _e( 'The <em>[purchase_link]</em> Short Code','edd' );?></h4>
-					<p><?php _e( 'With easily accessible short codes to display purchase buttons, you can add a Buy Now or Add to Cart button for any product anywhere on your site in seconds.', 'edd' );?></p>
+					<h4><?php _e( 'The <em>[purchase_link]</em> Shortcode','edd' );?></h4>
+					<p><?php _e( 'With easily accessible shortcodes to display purchase buttons, you can add a Buy Now or Add to Cart button for any product anywhere on your site in seconds.', 'edd' );?></p>
 
 					<h4><?php _e( 'Buy Now Buttons', 'edd' );?></h4>
 					<p><?php _e( 'Purchase buttons can behave as either Add to Cart or Buy Now buttons. With Buy Now buttons customers are taken straight to PayPal, giving them the most frictionless purchasing experience possible.', 'edd' );?></p>
