@@ -66,12 +66,13 @@ function edd_get_ajax_url() {
  */
 function edd_ajax_remove_from_cart() {
 	if ( isset( $_POST['cart_item'] ) ) {
-		
+
 		edd_remove_from_cart( $_POST['cart_item'] );
 
 		$return = array(
 			'removed'  => 1,
 			'subtotal' => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+			'total'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' )
 		);
 
 		echo json_encode( $return );
@@ -119,6 +120,7 @@ function edd_ajax_add_to_cart() {
 
 		$return = array(
 			'subtotal'  => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
+			'total'     => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_total() ) ), ENT_COMPAT, 'UTF-8' )
 			'cart_item' => $items
 		);
 
@@ -209,6 +211,7 @@ function edd_ajax_update_cart_item_quantity() {
 		$return = array(
 			'download_id' => $download_id,
 			'quantity'    => $quantity,
+			'subtotal'    => html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ), ENT_COMPAT, 'UTF-8' ),
 			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' )
 		);
 		echo json_encode($return);
