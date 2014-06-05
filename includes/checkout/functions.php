@@ -116,7 +116,7 @@ function edd_get_checkout_uri( $args = array() ) {
 	$ajax_url = admin_url( 'admin-ajax.php', $scheme );
 
 	if ( ( ! preg_match( '/^https/', $uri ) && preg_match( '/^https/', $ajax_url ) ) || edd_is_ssl_enforced() ) {
-		$uri = preg_replace( '/^http/', 'https', $uri );
+		$uri = preg_replace( '/^http:/', 'https:', $uri );
 	}
 
 	if ( isset( $edd_options['no_cache_checkout'] ) && edd_is_caching_plugin_active() )
