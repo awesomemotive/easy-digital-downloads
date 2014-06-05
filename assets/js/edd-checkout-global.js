@@ -180,11 +180,13 @@ jQuery(document).ready(function($) {
                     } else {
                         $('#edd-discount-error-wrap').html( '<span class="edd_error">' + discount_response.msg + '</span>' );
                         $('#edd-discount-error-wrap').show();
+                        $('body').trigger('edd_discount_invalid', [ discount_response ]);
                     }
                 } else {
                     if ( window.console && window.console.log ) {
                         console.log( discount_response );
                     }
+                    $('body').trigger('edd_discount_failed', [ discount_response ]);
                 }
                 edd_discount_loader.hide();
             }
