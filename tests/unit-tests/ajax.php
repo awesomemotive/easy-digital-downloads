@@ -145,7 +145,7 @@ class Tests_AJAX extends EDD_UnitTestCase {
 			'cart_item' => 0
 		);
 
-		$this->assertEquals( '{"removed":1,"subtotal":"$0.00"}', $this->_handleAjax( 'edd_remove_from_cart' ) );
+		$this->assertEquals( '{"removed":1,"subtotal":"$0.00","total":"$0.00"}', $this->_handleAjax( 'edd_remove_from_cart' ) );
 	}
 
 	public function test_checkout_register_fields() {
