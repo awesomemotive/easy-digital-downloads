@@ -201,7 +201,9 @@ function edd_get_failed_transaction_uri( $extras = false ) {
 */
 function edd_listen_for_failed_payments() {
 	
-	if( is_page( edd_get_option( 'failure_page', 0 ) ) && ! empty( $_GET['payment-id'] ) ) {
+	$failed_page = edd_get_option( 'failure_page', 0 );
+
+	if( ! empty( $failed_page ) && is_page( $failed_page ) && ! empty( $_GET['payment-id'] ) ) {
 
 		$payment_id = absint( $_GET['payment-id'] );
 		edd_update_payment_status( $payment_id, 'failed' );
