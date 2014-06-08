@@ -275,15 +275,17 @@ function edd_get_lowest_price_option( $download_id = 0 ) {
 
 	if ( ! empty( $prices ) ) {
 
-		$min = PHP_INT_MAX;
-
 		foreach ( $prices as $key => $price ) {
 			if ( empty( $price['amount'] ) )
 				continue;
 
-			$min = min($min, $price['amount']);
+			if ( !isset( $min ) ) {
+				$min = $price['amount'];
+			} else {
+				$min = min( $min, $price['amount'] );
+			}
 
-			if ($price['amount'] == $min)
+			if ( $price['amount'] == $min )
 				$min_id = $key;
 		}
 
