@@ -322,7 +322,7 @@ function edd_get_highest_price_option( $download_id = 0 ) {
 			if ( empty( $price['amount'] ) )
 				continue;
 
-			$max = max($max, $price['amount']);
+			$max = max( $max, $price['amount'] );
 
 			if ($price['amount'] == $max)
 				$max_id = $key;
