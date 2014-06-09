@@ -80,11 +80,14 @@ function edd_email_preview_template_tags( $message ) {
 
 	$payment_id = rand(1, 100);
 
+	$user     = wp_get_current_user();
+	$usermeta = get_user_meta( get_current_user_id() );
+
 	$message = str_replace( '{download_list}', $download_list, $message );
 	$message = str_replace( '{file_urls}', $file_urls, $message );
-	$message = str_replace( '{name}', 'John', $message );
-	$message = str_replace( '{fullname}', 'John Doe', $message );
-	$message = str_replace( '{username}', 'john-doe', $message );
+	$message = str_replace( '{name}', ( !empty( $usermeta['first_name'][0] ) ? $usermeta['first_name'][0] : 'John' ), $message );
+ 	$message = str_replace( '{fullname}', ( !empty( $usermeta['first_name'][0] ) ? $usermeta['first_name'][0] : 'John' ) . ( !empty( $usermeta['last_name'][0] ) ? ' ' . $usermeta['last_name'][0] : ' Doe' ), $message );
+ 	$message = str_replace( '{username}', $user->user_login, $message );
 	$message = str_replace( '{date}', date( get_option( 'date_format' ), current_time( 'timestamp' ) ), $message );
 	$message = str_replace( '{subtotal}', $sub_total, $message );
 	$message = str_replace( '{tax}', $tax, $message );
