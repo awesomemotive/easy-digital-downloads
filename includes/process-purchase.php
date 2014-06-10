@@ -252,9 +252,9 @@ function edd_purchase_form_validate_gateway() {
 function edd_purchase_form_validate_discounts() {
 
 	// Retrieve the discount stored in cookies
-	$discounts = edd_get_cart_discounts();
-	$user      = isset( $_POST['edd_user_login'] ) ? sanitize_text_field( $_POST['edd_user_login'] ) : sanitize_email( $_POST['edd_email'] );
-	$error     = false;
+	$discounts 	= edd_get_cart_discounts();
+	$user      	= isset( $_POST['edd_user_login'] ) ? sanitize_text_field( $_POST['edd_user_login'] ) : ( isset($_POST['edd_email']) ? sanitize_email( $_POST['edd_email'] ) : ( is_user_logged_in() ? wp_get_current_user()->user_email : '' ) );
+	$error     	= false;
 
 	// Check for valid discount(s) is present
 	if ( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) && __( 'Enter discount', 'edd' ) != $_POST['edd-discount'] ) {
@@ -380,10 +380,10 @@ function edd_purchase_form_validate_logged_in_user() {
 		if ( $user_data ) {
 			// Collected logged in user data
 			$valid_user_data = array(
-				'user_id'   => $user_ID,
-				'user_email'  => sanitize_email( $_POST['edd_email'] ),
-				'user_first'  => ! empty( $_POST['edd_first'] ) ? sanitize_text_field( $_POST['edd_first'] ) : '',
-				'user_last'  => ! empty( $_POST['edd_last']  ) ? sanitize_text_field( $_POST['edd_last']  ) : '',
+				'user_id'    => $user_ID,
+				'user_email' => isset( $_POST['edd_email'] ) ? sanitize_email( $_POST['edd_email'] ) : $user_data->user_email,
+				'user_first' => isset( $_POST['edd_first'] ) && ! empty( $_POST['edd_first'] ) ? sanitize_text_field( $_POST['edd_first'] ) : $user_data->first_name,
+				'user_last'  => isset( $_POST['edd_last'] ) && ! empty( $_POST['edd_last']  ) ? sanitize_text_field( $_POST['edd_last']  ) : $user_data->last_name,
 			);
 
 			if ( ! is_email( $valid_user_data['user_email'] ) ) {
@@ -1004,7 +1004,7 @@ function edd_check_purchase_email( $valid_data, $posted ) {
 		}
 
 	} elseif( isset( $posted['edd-purchase-var'] ) && $posted['edd-purchase-var'] == 'needs-to-login' ) {
-		
+
 		// The user is logging in, check that their email is not banned
 		$user_data = get_user_by( 'login', $posted['edd_user_login'] );
 		if( $user_data && edd_is_email_banned( $user_data->user_email ) ) {
@@ -1012,7 +1012,7 @@ function edd_check_purchase_email( $valid_data, $posted ) {
 		}
 
 	} else {
-		
+
 		// Guest purchase, check that the email is not banned
 		if( edd_is_email_banned( $posted['edd_email'] ) ) {
 			$is_banned = true;
