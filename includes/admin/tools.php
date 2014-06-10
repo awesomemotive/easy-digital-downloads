@@ -423,7 +423,7 @@ function edd_tools_sysinfo_get() {
 		$default_gateway_is_active = edd_is_gateway_active( edd_get_default_gateway() );
 		if( $default_gateway_is_active ) {
 			$default_gateway = edd_get_default_gateway();
-			$default_gateway = $active_gateways[$default_geteway]['admin_label'];
+			$default_gateway = $active_gateways[$default_gateway]['admin_label'];
 		} else {
 			$default_gateway = 'Test Payment';
 		}
