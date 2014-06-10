@@ -145,7 +145,7 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 		foreach( $options as $key => $option ) {
 
 			if( 'price_id' == $key ) {
-				$options[ $key ] = preg_replace( '/[^0-9\.]/', '', $option );
+				$options[ $key ] = preg_replace( '/[^0-9\.-]/', '', $option );
 			}
 
 		}
