@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.7
 Tested up to: 4.0
 
-Stable Tag: 2.0
+Stable Tag: 2.0.1
 
 License: GNU Version 2 or Any Later Version
 
@@ -183,6 +183,19 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.0.1, June 10, 2014 =
+
+* Fix: Clicking Update from the Download Edit screen sometimes sends admins to a 404 page
+* Fix: Accepted Payment Method icons do not load over https://
+* Fix: Chosen drop down widths not properly set
+* Fix: Payments erroneously marked as Failed
+* Fix: Double S in checkout URL when using the Enforce SSL on Checkout option
+* Fix: Undefined index while applying a discount code
+* Fix: Sequential order upgrade routine not properly running
+* Fix: Improper grammar
+
+* Tweak: Added cart subtotal / total to some AJAX responses
 
 = 2.0, June 3, 2014 =
 
