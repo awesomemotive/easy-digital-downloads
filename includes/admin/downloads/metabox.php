@@ -699,7 +699,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 	</td>
 	-->
 	<td>
-		<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][attachment_id]'" class="edd_repeatable_attachment_id_field" value="<?php echo esc_attr( absint( $args['attachment_id'] ) ); ?>"/>
+		<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][attachment_id]" class="edd_repeatable_attachment_id_field" value="<?php echo esc_attr( absint( $args['attachment_id'] ) ); ?>"/>
 		<?php echo EDD()->html->text( array(
 			'name'        => 'edd_download_files[' . $key . '][name]',
 			'value'       => $args['name'],
