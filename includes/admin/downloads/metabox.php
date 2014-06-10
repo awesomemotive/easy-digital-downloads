@@ -685,7 +685,6 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 	);
 
 	$args = wp_parse_args( $args, $defaults );
-	extract( $args, EXTR_SKIP );
 
 	$prices = edd_get_variable_prices( $post_id );
 
@@ -700,10 +699,10 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 	</td>
 	-->
 	<td>
-		<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][attachment_id]'" class="edd_repeatable_attachment_id_field" value="<?php echo esc_attr( absint( $attachment_id ) ); ?>"/>
+		<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][attachment_id]'" class="edd_repeatable_attachment_id_field" value="<?php echo esc_attr( absint( $args['attachment_id'] ) ); ?>"/>
 		<?php echo EDD()->html->text( array(
 			'name'        => 'edd_download_files[' . $key . '][name]',
-			'value'       => $name,
+			'value'       => $args['name'],
 			'placeholder' => __( 'File Name', 'edd' ),
 			'class'       => 'edd_repeatable_name_field large-text'
 		) ); ?>
@@ -713,7 +712,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 		<div class="edd_repeatable_upload_field_container">
 			<?php echo EDD()->html->text( array(
 				'name'        => 'edd_download_files[' . $key . '][file]',
-				'value'       => $file,
+				'value'       => $args['file'],
 				'placeholder' => __( 'Upload or enter the file URL', 'edd' ),
 				'class'       => 'edd_repeatable_upload_field edd_upload_field large-text'
 			) ); ?>
@@ -738,7 +737,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id ) {
 				'name'             => 'edd_download_files[' . $key . '][condition]',
 				'class'            => 'edd_repeatable_condition_field',
 				'options'          => $options,
-				'selected'         => $condition,
+				'selected'         => $args['condition'],
 				'show_option_none' => false
 			) );
 		?>

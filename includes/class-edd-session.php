@@ -80,8 +80,8 @@ class EDD_Session {
 				require_once EDD_PLUGIN_DIR . 'includes/libraries/wp-session.php';
 			}
 	
-			add_filter( 'wp_session_expiration_variant', array( $this, 'set_expiration_variant_time' ), 99999 );
-			add_filter( 'wp_session_expiration', array( $this, 'set_expiration_time' ), 99999 );
+			//add_filter( 'wp_session_expiration_variant', array( $this, 'set_expiration_variant_time' ), 99999 );
+			//add_filter( 'wp_session_expiration', array( $this, 'set_expiration_time' ), 99999 );
 
 		}
 
