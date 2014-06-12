@@ -1095,7 +1095,7 @@ class EDD_API {
 				$user_info    = edd_get_payment_meta_user_info( $payment->ID );
 				$cart_items   = edd_get_payment_meta_cart_details( $payment->ID );
 
-				$sales['sales'][ $i ]['ID']       = $payment->ID;
+				$sales['sales'][ $i ]['ID']       = edd_get_payment_number( $payment->ID );
 				$sales['sales'][ $i ]['key']      = edd_get_payment_key( $payment->ID );
 				$sales['sales'][ $i ]['discount'] = isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? explode( ',', $user_info['discount'] ) : array();
 				$sales['sales'][ $i ]['subtotal'] = edd_get_payment_subtotal( $payment->ID );
