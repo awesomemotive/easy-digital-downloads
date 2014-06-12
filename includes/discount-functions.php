@@ -694,9 +694,11 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 					if ( edd_item_in_cart( $download_id ) ) {
 						$ret = true;
 						break;
-					} else {
-						edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'edd' ) );
 					}
+				}
+
+				if ( !$ret ) {
+					edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'edd' ) );
 				}
 
 				break;
