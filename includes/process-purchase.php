@@ -81,7 +81,7 @@ function edd_process_purchase_form() {
 		'price'        => edd_get_cart_total(),    // Amount after taxes
 		'purchase_key' => strtolower( md5( $user['user_email'] . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) ),  // Unique key
 		'user_email'   => $user['user_email'],
-		'date'         => date( 'Y-m-d H:i:s' ),
+		'date'         => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 		'user_info'    => stripslashes_deep( $user_info ),
 		'post_data'    => $_POST,
 		'cart_details' => edd_get_cart_content_details(),
