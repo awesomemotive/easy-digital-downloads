@@ -680,7 +680,7 @@ function edd_get_download_files( $download_id = 0, $variable_price_id = null ) {
 	$download_files = get_post_meta( $download_id, 'edd_download_files', true );
 
 	if ( $download_files ) {
-		if ( ! is_null( $variable_price_id ) ) {
+		if ( ! is_null( $variable_price_id ) && edd_has_variable_prices( $download_id ) ) {
 			foreach ( $download_files as $key => $file_info ) {
 				if ( isset( $file_info['condition'] ) ) {
 					if ( $file_info['condition'] == $variable_price_id || 'all' === $file_info['condition'] ) {
