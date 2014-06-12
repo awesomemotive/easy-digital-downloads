@@ -223,23 +223,22 @@ function edd_purchase_form_validate_fields() {
  * @return      string
  */
 function edd_purchase_form_validate_gateway() {
+
 	// Check if a gateway value is present
 	if ( ! empty( $_POST['edd-gateway'] ) ) {
+
 		$gateway = sanitize_text_field( $_POST['edd-gateway'] );
 
-		if ( edd_is_gateway_active( $gateway ) )
+		if ( edd_is_gateway_active( $gateway ) ) {
 			return $gateway;
-
-		if ( '0.00' == edd_get_cart_total() )
+		} elseif ( '0.00' == edd_get_cart_total() ) {
 			return 'manual';
+		}
 
-		edd_set_error( 'invalid_gateway', __( 'The selected gateway is not active', 'edd' ) );
-	} else {
-		edd_set_error( 'empty_gateway', __( 'No gateway has been selected', 'edd' ) );
 	}
 
-	// Return empty
-	return '';
+	return edd_get_default_gateway();
+
 }
 
 /**
