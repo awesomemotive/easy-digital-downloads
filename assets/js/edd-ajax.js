@@ -282,7 +282,7 @@ jQuery(document).ready(function ($) {
                 $('.edd_errors').remove();
                 $('#edd_purchase_form').submit();
             } else {
-                $('#edd_purchase_form input[type=submit]#edd-purchase-button').val(complete_purchase_val);
+                $('#edd_purchase_form #edd-purchase-button').val(complete_purchase_val);
                 $('.edd-cart-ajax').remove();
                 $('.edd_errors').remove();
                 $('#edd_purchase_submit').before(data);
