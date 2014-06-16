@@ -55,6 +55,15 @@ class EDD_Welcome {
 			array( $this, 'about_screen' )
 		);
 
+		// Changelog Page
+		add_dashboard_page(
+			__( 'Welcome to Easy Digital Downloads', 'edd' ),
+			__( 'Welcome to Easy Digital Downloads', 'edd' ),
+			$this->minimum_capability,
+			'edd-changelog',
+			array( $this, 'changelog_screen' )
+		);
+
 		// Getting Started Page
 		add_dashboard_page(
 			__( 'Getting started with Easy Digital Downloads', 'edd' ),
@@ -83,6 +92,7 @@ class EDD_Welcome {
 	 */
 	public function admin_head() {
 		remove_submenu_page( 'index.php', 'edd-about' );
+		remove_submenu_page( 'index.php', 'edd-changelog' );
 		remove_submenu_page( 'index.php', 'edd-getting-started' );
 		remove_submenu_page( 'index.php', 'edd-credits' );
 
@@ -257,6 +267,39 @@ class EDD_Welcome {
 			</div>
 
 			<div class="return-to-dashboard">
+				<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'post_type' => 'download', 'page' => 'edd-settings' ), 'edit.php' ) ) ); ?>"><?php _e( 'Go to Easy Digital Downloads Settings', 'edd' ); ?></a> &middot;
+				<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'edd-changelog' ), 'index.php' ) ) ); ?>"><?php _e( 'View the Full Changelog', 'edd' ); ?></a>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render Changelog Screen
+	 *
+	 * @access public
+	 * @since 2.0.3
+	 * @return void
+	 */
+	public function changelog_screen() {
+		list( $display_version ) = explode( '-', EDD_VERSION );
+		?>
+		<div class="wrap about-wrap">
+			<h1><?php printf( __( 'Welcome to Easy Digital Downloads %s', 'edd' ), $display_version ); ?></h1>
+			<div class="about-text"><?php printf( __( 'Thank you for updating to the latest version! Easy Digital Downloads %s is ready to make your online store faster, safer, and better!', 'edd' ), $display_version ); ?></div>
+			<div class="edd-badge"><?php printf( __( 'Version %s', 'edd' ), $display_version ); ?></div>
+
+			<?php $this->tabs(); ?>
+
+			<div class="changelog">
+				<h3><?php _e( 'Full Changelog', 'edd' );?></h3>
+
+				<div class="feature-section">
+					<?php echo $this->parse_readme(); ?>
+				</div>
+			</div>
+
+			<div class="return-to-dashboard">
 				<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'post_type' => 'download', 'page' => 'edd-settings' ), 'edit.php' ) ) ); ?>"><?php _e( 'Go to Easy Digital Downloads Settings', 'edd' ); ?></a>
 			</div>
 		</div>
@@ -404,6 +447,34 @@ class EDD_Welcome {
 			<?php echo $this->contributors(); ?>
 		</div>
 		<?php
+	}
+
+
+	/**
+	 * Parse the EDD readme.txt file
+	 *
+	 * @since 2.0.3
+	 * @return string $readme HTML formatted readme file
+	 */
+	public function parse_readme() {
+		$file = file_exists( EDD_PLUGIN_DIR . 'readme.txt' ) ? EDD_PLUGIN_DIR . 'readme.txt' : null;
+
+		if ( ! $file ) {
+			$readme = '<p>' . __( 'No valid changlog was found.', 'edd' ) . '</p>';
+		} else {
+			$readme = file_get_contents( $file );
+			$readme = nl2br( wp_specialchars( $readme ) );
+
+			$readme = end( explode( '== Changelog ==', $readme ) );
+
+			$readme = preg_replace( '/`(.*?)`/', '<code>\\1</code>', $readme );
+			$readme = preg_replace( '/[\040]\*\*(.*?)\*\*/', ' <strong>\\1</strong>', $readme );
+			$readme = preg_replace( '/[\040]\*(.*?)\*/', ' <em>\\1</em>', $readme );
+			$readme = preg_replace( '/= (.*?) =/', '<h4>\\1</h4>', $readme );
+			$readme = preg_replace( '/\[(.*?)\]\((.*?)\)/', '<a href="\\2">\\1</a>', $readme );
+		}
+
+		return $readme;
 	}
 
 
