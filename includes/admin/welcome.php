@@ -463,7 +463,7 @@ class EDD_Welcome {
 			$readme = '<p>' . __( 'No valid changlog was found.', 'edd' ) . '</p>';
 		} else {
 			$readme = file_get_contents( $file );
-			$readme = nl2br( wp_specialchars( $readme ) );
+			$readme = nl2br( esc_html( $readme ) );
 
 			$readme = end( explode( '== Changelog ==', $readme ) );
 
