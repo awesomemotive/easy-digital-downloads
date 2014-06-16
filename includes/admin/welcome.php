@@ -57,8 +57,8 @@ class EDD_Welcome {
 
 		// Changelog Page
 		add_dashboard_page(
-			__( 'Welcome to Easy Digital Downloads', 'edd' ),
-			__( 'Welcome to Easy Digital Downloads', 'edd' ),
+			__( 'Easy Digital Downloads Changelog', 'edd' ),
+			__( 'Easy Digital Downloads Changelog', 'edd' ),
 			$this->minimum_capability,
 			'edd-changelog',
 			array( $this, 'changelog_screen' )
