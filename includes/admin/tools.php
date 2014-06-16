@@ -102,6 +102,7 @@ function edd_tools_banned_emails_display() {
 	</div><!-- .postbox -->
 <?php
 	do_action( 'edd_tools_banned_emails_after' );
+	do_action( 'edd_tools_after' );
 }
 add_action( 'edd_tools_tab_general', 'edd_tools_banned_emails_display' );
 
