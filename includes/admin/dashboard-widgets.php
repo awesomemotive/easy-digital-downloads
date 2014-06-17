@@ -161,7 +161,9 @@ function edd_dashboard_sales_widget() {
 								</a>
 								<?php if ( $payment->user_info['id'] > 0 ) {
 									$user = get_user_by( 'id', $payment->user_info['id'] );
-									echo "(" . $user->data->user_login . ")";
+									if ( $user ) {
+										echo "(" . $user->data->user_login . ")";
+									}
 								} ?>
 							</td>
 							<td class="edd_order_price">
