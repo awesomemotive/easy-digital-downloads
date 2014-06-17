@@ -251,9 +251,18 @@ function edd_purchase_form_validate_gateway() {
 function edd_purchase_form_validate_discounts() {
 
 	// Retrieve the discount stored in cookies
-	$discounts 	= edd_get_cart_discounts();
-	$user      	= isset( $_POST['edd_user_login'] ) ? sanitize_text_field( $_POST['edd_user_login'] ) : ( isset($_POST['edd_email']) ? sanitize_email( $_POST['edd_email'] ) : ( is_user_logged_in() ? wp_get_current_user()->user_email : '' ) );
-	$error     	= false;
+	$discounts = edd_get_cart_discounts();
+
+	$user = '';
+	if ( isset( $_POST['edd_user_login'] ) && ! empty( $_POST['edd_user_login'] ) ) {
+		$user = sanitize_text_field( $_POST['edd_user_login'] );
+	} else if ( isset( $_POST['edd_email'] ) && ! empty($_POST['edd_email'] ) ) {
+		$user = sanitize_email( $_POST['edd_email'] );
+	} else if ( is_user_logged_in() ) {
+		$user = wp_get_current_user()->user_email;
+	}
+
+	$error = false;
 
 	// Check for valid discount(s) is present
 	if ( ! empty( $_POST['edd-discount'] ) && empty( $discounts ) && __( 'Enter discount', 'edd' ) != $_POST['edd-discount'] ) {
