@@ -45,7 +45,7 @@ class EDD_Payments_Export extends EDD_Export {
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=edd-export-' . $this->export_type . '-' . $month . '-' . $year . '.csv' );
+		header( 'Content-Disposition: attachment; filename=' . apply_filters( 'edd_payments_export_filename', 'edd-export-' . $this->export_type . '-' . $month . '-' . $year ) . '.csv' );
 		header( "Expires: 0" );
 	}
 
