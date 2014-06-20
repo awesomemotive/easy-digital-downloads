@@ -171,7 +171,6 @@ jQuery(document).ready(function($) {
                     	} else {
 
                     		$('#edd_cc_fields,#edd_cc_address').slideDown();
-                    		$('input[name="edd-gateway"]').val( 'manual' );
 
                     	}
 
