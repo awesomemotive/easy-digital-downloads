@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.7
 Tested up to: 4.0
 
-Stable Tag: 2.0.2
+Stable Tag: 2.0.3
 
 License: GNU Version 2 or Any Later Version
 
@@ -183,6 +183,18 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.0.3, June 19, 2014 =
+
+* Fix: Problem with incorrect gateway being assigned when a discount code was applied
+* Fix: Incorrect usage of "login" as a verb
+* Fix: Check if a user is deleted before retrieving user data in dashboard widget
+* Fix: Incorrect usage of esc_attr_e()
+* Fix: All submit buttons on checkout screen text updated when purchase is processing instead of just the submit purchase button
+* Fix: Fatal error in System Info when mysqli extension is not enabled
+
+* Tweak: Add link to the changelog on the welcome screen
+* Tweak: Show the currently logged-in user's name when previewing an email template
 
 = 2.0.2, June 12, 2014 =
 
