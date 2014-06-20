@@ -524,9 +524,7 @@ function edd_tools_sysinfo_get() {
 	// Server configuration (really just versioning)
 	$return .= "\n" . '-- Webserver Configuration' . "\n\n";
 	$return .= 'PHP Version:              ' . PHP_VERSION . "\n";
-	if ( function_exists( 'mysqli_get_client_version' ) ) {
-		$return .= 'MySQL Version:            ' . mysqli_get_client_version() . "\n";
-	}
+	$return .= 'MySQL Version:            ' . $wpdb->db_version() . "\n";
 	$return .= 'Webserver Info:           ' . $_SERVER['SERVER_SOFTWARE'] . "\n";
 
 	$return  = apply_filters( 'edd_sysinfo_after_webserver_config', $return );
