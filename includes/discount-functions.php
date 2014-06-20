@@ -705,6 +705,10 @@ function edd_discount_product_reqs_met( $code_id = null ) {
 
 				}
 
+				if ( !$ret ) {
+					edd_set_error( 'edd-discount-error', __( 'The product requirements for this discount are not met.', 'edd' ) );
+				}
+
 				break;
 		}
 	}
