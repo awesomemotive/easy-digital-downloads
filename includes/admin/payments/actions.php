@@ -61,7 +61,6 @@ function edd_update_payment_details( $data ) {
 	// Setup purchased Downloads and price options
 	$updated_downloads = isset( $_POST['edd-payment-details-downloads'] ) ? $_POST['edd-payment-details-downloads'] : false;
 	if( $updated_downloads && ! empty( $_POST['edd-payment-downloads-changed'] ) ) {
-
 		$downloads    = array();
 		$cart_details = array();
 		$i = 0;
