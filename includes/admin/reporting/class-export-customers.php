@@ -49,7 +49,7 @@ class EDD_Customers_Export extends EDD_Export {
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=edd-export-' . $extra . $this->export_type . '-' . date( 'm-d-Y' ) . '.csv' );
+		header( 'Content-Disposition: attachment; filename=' . apply_filters( 'edd_customers_export_filename', 'edd-export-' . $extra . $this->export_type . '-' . date( 'm-d-Y' ) ) . '.csv' );
 		header( "Expires: 0" );
 	}
 
