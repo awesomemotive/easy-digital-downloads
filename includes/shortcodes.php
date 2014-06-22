@@ -315,35 +315,111 @@ function edd_downloads_query( $atts, $content = null ) {
 		);
 
 		if ( $tags ) {
+			$tag_list	= explode( ',', $tags );
+ 			$_tax_tags	= array();
+ 
+ 			foreach( $tag_list as $tag ) {
+ 				if( is_numeric( $tag ) ) {
+ 					$term_id = $tag;
+ 				} else {
+ 					$term    = get_term_by( 'slug', $tag, 'download_tag' );
+ 
+ 					if( !$term ) {
+ 						continue;
+ 					}
+ 
+ 					$term_id = $term->term_id;
+ 				}
+ 
+ 				$_tax_cats[] = $term_id;
+ 			}
+
 			$query['tax_query'][] = array(
 				'taxonomy' => 'download_tag',
-				'terms'    => explode( ',', $tags ),
-				'field'    => 'slug'
+				'field'    => 'term_id',
+				'terms'    => $_tax_cats,
 			);
 		}
 
 		if ( $category ) {
+			$categories = explode( ',', $category );
+ 			$_tax_cats	= array();
+ 
+ 			foreach( $categories as $category ) {
+ 				if( is_numeric( $category ) ) {
+ 					$term_id = $category;
+ 				} else {
+ 					$term = get_term_by( 'slug', $category, 'download_category' );
+ 
+ 					if( !$term ) {
+ 						continue;
+ 					}
+ 
+ 					$term_id = $term->term_id;
+ 				}
+ 
+ 				$_tax_cats[] = $term_id;
+ 			}
+
 			$query['tax_query'][] = array(
 				'taxonomy' => 'download_category',
-				'terms'    => explode( ',', $category ),
-				'field'    => 'slug'
+				'field'    => 'term_id',
+				'terms'    => $_tax_cats,
 			);
 		}
 
 		if ( $exclude_category ) {
+			$categories = explode( ',', $category );
+ 			$_tax_cats	= array();
+ 
+ 			foreach( $categories as $category ) {
+ 				if( is_numeric( $category ) ) {
+ 					$term_id = $category;
+ 				} else {
+ 					$term = get_term_by( 'slug', $category, 'download_category' );
+ 
+ 					if( !$term ) {
+ 						continue;
+ 					}
+ 
+ 					$term_id = $term->term_id;
+ 				}
+ 
+ 				$_tax_cats[] = $term_id;
+ 			}
+
 			$query['tax_query'][] = array(
 				'taxonomy' => 'download_category',
-				'terms'    => explode( ',', $exclude_category ),
-				'field'    => 'slug',
+				'field'    => 'term_id',
+				'terms'    => $_tax_cats,
 				'operator' => 'NOT IN',
 			);
 		}
 
 		if ( $exclude_tags ) {
+			$tag_list	= explode( ',', $tags );
+ 			$_tax_tags	= array();
+ 
+ 			foreach( $tag_list as $tag ) {
+ 				if( is_numeric( $tag ) ) {
+ 					$term_id = $tag;
+ 				} else {
+ 					$term = get_term_by( 'slug', $tag, 'download_tag' );
+ 
+ 					if( !$term ) {
+ 						continue;
+ 					}
+ 
+ 					$term_id = $term->term_id;
+ 				}
+ 
+ 				$_tax_cats[] = $term_id;
+ 			}
+
 			$query['tax_query'][] = array(
 				'taxonomy' => 'download_tag',
-				'terms'    => explode( ',', $exclude_tags ),
-				'field'    => 'slug',
+				'field'    => 'term_id',
+				'terms'    => $_tax_cats,
 				'operator' => 'NOT IN',
 			);
 		}
