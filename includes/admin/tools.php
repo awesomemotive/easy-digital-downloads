@@ -231,7 +231,7 @@ function edd_tools_import_export_process_export() {
 
 	nocache_headers();
 	header( 'Content-Type: application/json; charset=utf-8' );
-	header( 'Content-Disposition: attachment; filename=edd-settings-export-' . date( 'm-d-Y' ) . '.json' );
+	header( 'Content-Disposition: attachment; filename=' . apply_filters( 'edd_settings_export_filename', 'edd-settings-export-' . date( 'm-d-Y' ) ) . '.json' );
 	header( "Expires: 0" );
 
 	echo json_encode( $settings );
