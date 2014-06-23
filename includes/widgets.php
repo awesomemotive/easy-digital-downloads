@@ -38,7 +38,13 @@ class edd_cart_widget extends WP_Widget {
 
 	/** @see WP_Widget::widget */
 	function widget( $args, $instance ) {
+	
+		if( ! isset( $args['id'] ) ) {
+			$args['id'] = 'edd_cart_widget';
+		}		
+
 		extract( $args );
+
 		$title = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $id );
 
 		global $post, $edd_options;
@@ -90,6 +96,11 @@ class edd_categories_tags_widget extends WP_Widget {
 
 	/** @see WP_Widget::widget */
 	function widget( $args, $instance ) {
+		
+		if( ! isset( $args['id'] ) ) {
+			$args['id'] = 'edd_categories_tags_widget';
+		}
+
 		extract( $args );
 
 		$title      = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $id );
@@ -184,6 +195,11 @@ class EDD_Product_Details_Widget extends WP_Widget {
 
     /** @see WP_Widget::widget */
     public function widget( $args, $instance ) {
+
+    	if( ! isset( $args['id'] ) ) {
+			$args['id'] = 'edd_download_details_widget';
+		}
+
         extract( $args );
 
         if ( 'current' == $instance['download_id'] && ! is_singular( 'download' ) ) {
