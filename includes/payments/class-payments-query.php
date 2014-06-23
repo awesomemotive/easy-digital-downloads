@@ -171,6 +171,8 @@ class EDD_Payments_Query extends EDD_Stats {
 
 				$this->payments[] = apply_filters( 'edd_payment', $details, $payment_id, $this );
 			}
+
+			wp_reset_postdata();
 		}
 
 		do_action( 'edd_post_get_payments', $this );
