@@ -42,7 +42,11 @@ function edd_process_download() {
 
     extract( $args );
 
+    // Verify the payment
 	$payment = edd_verify_download_link( $download, $key, $email, $expire, $file_key );
+	
+	// Determine the download method set in settings
+	$method  = edd_get_file_download_method();
 
 	// Defaulting this to true for now because the method below doesn't work well
 	$has_access = apply_filters( 'edd_file_download_has_access', true, $payment, $args );
@@ -59,7 +63,7 @@ function edd_process_download() {
 		 * If we have an attachment ID stored, use get_attached_file() to retrieve absolute URL
 		 * If this fails or returns a relative path, we fail back to our own absolute URL detection
 		 */
-		if( $attachment_id && 'attachment' == get_post_type( $attachment_id ) ) {
+		if( $attachment_id && 'attachment' == get_post_type( $attachment_id ) && 'redirect' != $method ) {
 			$attached_file = get_attached_file( $attachment_id, false );
 			if( $attached_file ) {
 				$requested_file = $attached_file;
