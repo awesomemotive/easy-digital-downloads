@@ -7,7 +7,7 @@ Tags: download, downloads, e-store, eshop, digital downloads, e-downloads, ecomm
 Requires at least: 3.7
 Tested up to: 4.0
 
-Stable Tag: 2.0.3
+Stable Tag: 2.0.4
 
 License: GNU Version 2 or Any Later Version
 
@@ -183,6 +183,19 @@ Yes, through the addition of one or more of the add-on payment gateways, you can
 9. Checkout screen
 
 == Changelog ==
+
+= 2.0.4, June 23, 2014 =
+
+* Fix: Problem with file download URLs when using the Redirect download method
+* Fix: Downloads cannot be removed from a payment in View Order Details
+* Fix: Erroneous "Cart needs one or more of the selected Downloads" error message
+* Fix: MySQL version not properly detected in System Info
+* Fix: Undefined variable in cart widget
+
+* Tweak: Added note about where to place language files in languages/readme.txt
+* Tweak: Added filters to export file names
+* Tweak: Enable author support by default on the Downloads post type
+* Tweak: Set $user to currently logged in user when validating a discount if no email or ID is supplied
 
 = 2.0.3, June 19, 2014 =
 
