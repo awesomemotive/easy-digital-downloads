@@ -44,7 +44,7 @@ function edd_process_download() {
 
     // Verify the payment
 	$payment = edd_verify_download_link( $download, $key, $email, $expire, $file_key );
-	
+
 	// Determine the download method set in settings
 	$method  = edd_get_file_download_method();
 
@@ -107,7 +107,6 @@ function edd_process_download() {
 
 		do_action( 'edd_process_download_headers', $requested_file, $download, $email, $payment );
 
-
 		nocache_headers();
 		header("Robots: none");
 		header("Content-Type: " . $ctype . "");
@@ -127,7 +126,7 @@ function edd_process_download() {
 
 			/**
 			 * Download method is seto to Redirect in settings but an absolute path was provided
-			 * We need to switch to a direct download in order for the file to download properly 
+			 * We need to switch to a direct download in order for the file to download properly
 			 */
 			$method = 'direct';
 
@@ -145,7 +144,7 @@ function edd_process_download() {
 			default:
 
 				$direct = false;
-				
+
 				if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemes ) ) && isset( $file_details['path'] ) && file_exists( $requested_file ) ) {
 
 					/** This is an absolute path */
