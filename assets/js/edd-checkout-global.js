@@ -205,6 +205,13 @@ jQuery(document).ready(function($) {
         }
     });
 
+    // Apply the discount when hitting Enter in the discount field instead
+    $checkout_form_wrap.on('keyup', '#edd-discount', function (event) {
+        if (event.keyCode == '13') {
+            $checkout_form_wrap.find('.edd-apply-discount').trigger('click');
+        }
+    });
+
     // Remove a discount
     $body.on('click', '.edd_discount_remove', function (event) {
 
