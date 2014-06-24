@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Emails
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -41,132 +41,7 @@ function edd_get_email_templates() {
  * @return string $message Fully formatted message
  */
 function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_notice = false ) {
-	global $edd_options;
-
-	$has_tags = ( strpos($message, '{' ) !== false );
-	if ( ! $has_tags ) return $message;
-
-	$user_info = maybe_unserialize( $payment_data['user_info'] );
-
-	$fullname = '';
-	if ( isset( $user_info['id'] ) && $user_info['id'] > 0 && isset( $user_info['first_name'] ) ) {
-		$user_data = get_userdata( $user_info['id'] );
-		$name      = $user_info['first_name'];
-		$fullname  = $user_info['first_name'] . ' ' . $user_info['last_name'];
-		$username  = $user_data->user_login;
-	} elseif ( isset( $user_info['first_name'] ) ) {
-		$name     = $user_info['first_name'];
-		$fullname = $user_info['first_name'] . ' ' . $user_info['last_name'];
-		$username = $user_info['first_name'];
-	} else {
-		$name     = $user_info['email'];
-		$username = $user_info['email'];
-	}
-
-	$file_urls     = '';
-	$download_list = '<ul>';
-	$cart_items     = edd_get_payment_meta_cart_details( $payment_id );
-
-	if ( $cart_items ) {
-		$show_names = apply_filters( 'edd_email_show_names', true );
-
-		foreach ( $cart_items as $item ) {
-
-			if ( edd_use_skus() )
-				$sku = edd_get_download_sku( $item['id'] );
-
-			$price_id = edd_get_cart_item_price_id( $item );
-
-			if ( $show_names ) {
-
-				$title = get_the_title( $item['id'] );
-
-				if( ! empty( $sku ) )
-					$title .= "&nbsp;&ndash;&nbsp;" . __( 'SKU', 'edd' ) . ': ' . $sku;
-
-				if( $price_id !== false )
-					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id );
-
-				$download_list .= '<li>' . apply_filters( 'edd_email_receipt_download_title', $title, $item['id'], $price_id ) . '<br/>';
-				$download_list .= '<ul>';
-			}
-
-
-			$files = edd_get_download_files( $item['id'], $price_id );
-
-			if ( $files ) {
-				foreach ( $files as $filekey => $file ) {
-					$download_list .= '<li>';
-					$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $item['id'], $price_id );
-					$download_list .= '<a href="' . esc_url( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
-					$download_list .= '</li>';
-
-					$file_urls .= esc_html( $file_url ) . '<br/>';
-				}
-			} elseif( edd_is_bundled_product( $item['id'] ) ) {
-
-				$bundled_products = edd_get_bundled_products( $item['id'] );
-
-				foreach( $bundled_products as $bundle_item ) {
-
-					$download_list .= '<li class="edd_bundled_product"><strong>' . get_the_title( $bundle_item ) . '</strong></li>';
-
-					$files = edd_get_download_files( $bundle_item );
-
-					foreach ( $files as $filekey => $file ) {
-						$download_list .= '<li>';
-						$file_url = edd_get_download_file_url( $payment_data['key'], $payment_data['email'], $filekey, $bundle_item, $price_id );
-						$download_list .= '<a href="' . esc_url( $file_url ) . '">' . $file['name'] . '</a>';
-						$download_list .= '</li>';
-
-						$file_urls .= esc_html( $file_url ) . '<br/>';
-					}
-				}
-			}
-
-			if ( $show_names ) {
-				$download_list .= '</ul>';
-			}
-
-			if ( '' != edd_get_product_notes( $item['id'] ) )
-				$download_list .= ' &mdash; <small>' . edd_get_product_notes( $item['id'] ) . '</small>';
-
-			if ( $show_names ) {
-				$download_list .= '</li>';
-			}
-		}
-	}
-	$download_list .= '</ul>';
-
-	$subtotal   = edd_currency_filter( edd_format_amount( edd_get_payment_subtotal( $payment_id ) ) );
-	$tax        = edd_currency_filter( edd_format_amount( edd_get_payment_tax( $payment_id ) ) );
-	$price      = edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) );
-	$gateway    = edd_get_gateway_checkout_label( get_post_meta( $payment_id, '_edd_payment_gateway', true ) );
-	$receipt_id = $payment_data['key'];
-	$email		= edd_get_payment_user_email( $payment_id );
-
-	$message = str_replace( '{name}', $name, $message );
-	$message = str_replace( '{fullname}', $fullname, $message );
-	$message = str_replace( '{username}', $username, $message );
-	$message = str_replace( '{download_list}', $download_list, $message );
-	$message = str_replace( '{file_urls}', $file_urls, $message );
-	$message = str_replace( '{date}', date_i18n( get_option( 'date_format' ), strtotime( $payment_data['date'] ) ), $message );
-	$message = str_replace( '{sitename}', get_bloginfo( 'name' ), $message );
-	$message = str_replace( '{subtotal}', $subtotal, $message );
-	$message = str_replace( '{tax}', $tax, $message );
-	$message = str_replace( '{price}', $price, $message );
-	$message = str_replace( '{payment_method}', $gateway, $message );
-	$message = str_replace( '{receipt_id}', $receipt_id, $message );
-	$message = str_replace( '{payment_id}', $payment_id, $message );
-	$message = str_replace( '{user_email}', $email, $message );
-
-	if( ! $admin_notice ) {
-		$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'payment_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' ), $message );
-	}
-
-	$message = apply_filters( 'edd_email_template_tags', $message, $payment_data, $payment_id, $admin_notice );
-
-	return $message;
+	return edd_do_email_tags( $message, $payment_id );
 }
 
 /**
@@ -177,7 +52,7 @@ function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_n
  * @param string $message Email message with template tags
  * @return string $message Fully formatted message
  */
-function edd_email_preview_templage_tags( $message ) {
+function edd_email_preview_template_tags( $message ) {
 	global $edd_options;
 
 	$download_list = '<ul>';
@@ -205,11 +80,14 @@ function edd_email_preview_templage_tags( $message ) {
 
 	$payment_id = rand(1, 100);
 
+	$user     = wp_get_current_user();
+	$usermeta = get_user_meta( get_current_user_id() );
+
 	$message = str_replace( '{download_list}', $download_list, $message );
 	$message = str_replace( '{file_urls}', $file_urls, $message );
-	$message = str_replace( '{name}', 'John', $message );
-	$message = str_replace( '{fullname}', 'John Doe', $message );
-	$message = str_replace( '{username}', 'john-doe', $message );
+	$message = str_replace( '{name}', ( !empty( $usermeta['first_name'][0] ) ? $usermeta['first_name'][0] : 'John' ), $message );
+ 	$message = str_replace( '{fullname}', ( !empty( $usermeta['first_name'][0] ) ? $usermeta['first_name'][0] : 'John' ) . ( !empty( $usermeta['last_name'][0] ) ? ' ' . $usermeta['last_name'][0] : ' Doe' ), $message );
+ 	$message = str_replace( '{username}', $user->user_login, $message );
 	$message = str_replace( '{date}', date( get_option( 'date_format' ), current_time( 'timestamp' ) ), $message );
 	$message = str_replace( '{subtotal}', $sub_total, $message );
 	$message = str_replace( '{tax}', $tax, $message );
@@ -221,7 +99,7 @@ function edd_email_preview_templage_tags( $message ) {
 	$message = str_replace( '{payment_id}', $payment_id, $message );
 	$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'edd' ), '<a href="' . add_query_arg( array ( 'payment_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) . '">', '</a>' ), $message );
 
-	return wpautop( $message );
+	return wpautop( apply_filters( 'edd_email_preview_template_tags', $message ) );
 }
 
 /**
@@ -232,7 +110,7 @@ function edd_email_preview_templage_tags( $message ) {
  * @return string $message Formatted message with <p> tags added
  */
 function edd_email_default_formatting( $message ) {
-	return wpautop( $message );
+	return wpautop( stripslashes( $message ) );
 }
 add_filter( 'edd_purchase_receipt', 'edd_email_default_formatting' );
 
@@ -251,7 +129,7 @@ function edd_email_template_preview() {
 	$default_email_body .= "{download_list}\n\n";
 	$default_email_body .= "{sitename}";
 
-	$email_body = isset( $edd_options['purchase_receipt'] ) ? $edd_options['purchase_receipt'] : $default_email_body;
+	$email_body = isset( $edd_options['purchase_receipt'] ) ? stripslashes( $edd_options['purchase_receipt'] ) : $default_email_body;
 	ob_start();
 	?>
 	<a href="#email-preview" id="open-email-preview" class="button-secondary" title="<?php _e( 'Purchase Receipt Preview', 'edd' ); ?> "><?php _e( 'Preview Purchase Receipt', 'edd' ); ?></a>
@@ -281,7 +159,7 @@ function edd_get_email_body_header() {
 	<head>
 		<style type="text/css">#outlook a { padding: 0; }</style>
 	</head>
-	<body>
+	<body dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>">
 	<?php
 	do_action( 'edd_email_body_header' );
 	return ob_get_clean();
@@ -303,9 +181,9 @@ function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) 
 	$default_email_body .= "{download_list}\n\n";
 	$default_email_body .= "{sitename}";
 
-	$email = isset( $edd_options['purchase_receipt'] ) ? $edd_options['purchase_receipt'] : $default_email_body;
+	$email = isset( $edd_options['purchase_receipt'] ) ? stripslashes( $edd_options['purchase_receipt'] ) : $default_email_body;
 
-	$email_body = edd_email_template_tags( $email, $payment_data, $payment_id );
+	$email_body = edd_do_email_tags( $email, $payment_id );
 
 	return apply_filters( 'edd_purchase_receipt', $email_body, $payment_id, $payment_data );
 }
@@ -360,11 +238,12 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 	$default_email_body .= __( 'Payment Method: ', 'edd' ) . " " . $gateway . "\n\n";
 	$default_email_body .= __( 'Thank you', 'edd' );
 
-	$email = isset( $edd_options['sale_notification'] ) ? $edd_options['sale_notification'] : $default_email_body;
+	$email = isset( $edd_options['sale_notification'] ) ? stripslashes( $edd_options['sale_notification'] ) : $default_email_body;
 
-	$email_body = edd_email_template_tags( $email, $payment_data, $payment_id, true );
+	//$email_body = edd_email_template_tags( $email, $payment_data, $payment_id, true );
+	$email_body = edd_do_email_tags( $email, $payment_id );
 
-	return apply_filters( 'edd_sale_notification', $email_body, $payment_id, $payment_data );
+	return apply_filters( 'edd_sale_notification', wpautop( $email_body ), $payment_id, $payment_data );
 }
 
 /**
@@ -400,7 +279,7 @@ function edd_apply_email_template( $body, $payment_id, $payment_data=array() ) {
 
 	if ( $template_name == 'none' ) {
 		if ( is_admin() )
-			$body = edd_email_preview_templage_tags( $body );
+			$body = edd_email_preview_template_tags( $body );
 
 		return $body; // Return the plain email with no template
 	}
@@ -412,7 +291,7 @@ function edd_apply_email_template( $body, $payment_id, $payment_data=array() ) {
 	$template = ob_get_clean();
 
 	if ( is_admin() )
-		$body = edd_email_preview_templage_tags( $body );
+		$body = edd_email_preview_template_tags( $body );
 
 	$body = apply_filters( 'edd_purchase_receipt_' . $template_name, $body );
 
@@ -429,9 +308,10 @@ add_filter( 'edd_purchase_receipt', 'edd_apply_email_template', 20, 3 );
  * @since 1.0.8.2
  */
 function edd_default_email_template() {
+	$text_align = is_rtl() ? 'right' : 'left';
 	echo '<div style="margin: 0; background-color: #fafafa; width: auto; padding: 30px;"><center>';
-		echo '<div style="border: 1px solid #ddd; width: 550px; background: #f0f0f0; padding: 8px; margin: 0;">';
-			echo '<div id="edd-email-content" style="background: #fff; border: 1px solid #ddd; padding: 15px; text-align: left !important;">';
+		echo '<div style="border: 1px solid #ddd; width: 660px; background: #f0f0f0; padding: 8px; margin: 0;">';
+			echo '<div id="edd-email-content" style="background: #fff; border: 1px solid #ddd; padding: 15px; text-align: ' . $text_align . ' !important;">';
 				echo '{email}'; // This tag is required in order for the contents of the email to be shown
 			echo '</div>';
 		echo '</div>';
@@ -447,8 +327,10 @@ add_action( 'edd_email_template_default', 'edd_default_email_template' );
  * @return string $email_body Email template with styling
  */
 function edd_default_email_styling( $email_body ) {
-	$first_p    = strpos( $email_body, '<p style="font-size: 14px;">' );
-	$email_body = substr_replace( $email_body, '<p style="font-size: 14px; margin-top:0;">', $first_p, 3 );
+	$first_p  = strpos( $email_body, '<p style="font-size: 14px;">' );
+	if( $first_p ) {
+		$email_body = substr_replace( $email_body, '<p style="font-size: 14px; margin-top:0;">', $first_p, 3 );
+	}
 	$email_body = str_replace( '<p>', '<p style="font-size: 14px; line-height: 150%">', $email_body );
 	$email_body = str_replace( '<ul>', '<ul style="margin: 0 0 10px 0; padding: 0;">', $email_body );
 	$email_body = str_replace( '<li>', '<li style="font-size: 14px; line-height: 150%; display:block; margin: 0 0 4px 0;">', $email_body );

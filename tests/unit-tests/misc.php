@@ -65,6 +65,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'HUF'  => __( 'Hungarian Forint', 'edd' ),
 			'ILS'  => __( 'Israeli Shekel (&#8362;)', 'edd' ),
 			'JPY'  => __( 'Japanese Yen (&yen;)', 'edd' ),
+			'MYR'  => __( 'Malaysian Ringgits', 'edd' ),
 			'MXN'  => __( 'Mexican Peso (&#36;)', 'edd' ),
 			'NZD'  => __( 'New Zealand Dollar (&#36;)', 'edd' ),
 			'NOK'  => __( 'Norwegian Krone', 'edd' ),
@@ -78,7 +79,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
 			'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
 			'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
-			'MYR' => 'Malaysian Ringgits'
+			'RUB'  => __( 'Russian Rubles', 'edd' )
 		);
 
 		$this->assertEquals( $expected, edd_get_currencies() );
@@ -87,6 +88,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_get_countries() {
 		$expected = array(
+			'0'  => 'Choose',
 			'US' => 'United States',
 			'CA' => 'Canada',
 			'GB' => 'United Kingdom',
@@ -218,7 +220,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'LR' => 'Liberia',
 			'LS' => 'Lesotho',
 			'LT' => 'Lithuania',
-			'LU' => 'Luxembourgh',
+			'LU' => 'Luxembourg',
 			'LV' => 'Latvia',
 			'LY' => 'Libyan Arab Jamahiriya',
 			'MA' => 'Morocco',
@@ -331,7 +333,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'ZA' => 'South Africa',
 			'ZM' => 'Zambia',
 			'ZW' => 'Zimbabwe',
-			'*'  => 'Choose'
+			'0'  => 'Choose'
 		);
 
 		$this->assertEquals( $expected, edd_get_country_list() );
@@ -339,6 +341,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_states_list() {
 		$expected = array(
+			'0'  => 'Choose',
 			'AL' => 'Alabama',
 			'AK' => 'Alaska',
 			'AZ' => 'Arizona',
@@ -412,6 +415,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_provinces_list() {
 		$expected = array(
+			'0'  => 'Choose',
 			'AB' => 'Alberta',
 			'BC' => 'British Columbia',
 			'MB' => 'Manitoba',
@@ -447,5 +451,23 @@ class Test_Misc extends EDD_UnitTestCase {
 	 */
 	public function test_get_symlink_url() {
 		$this->assertEquals( 'http://example.org/wp-content/uploads/edd/symlinks', edd_get_symlink_url() );
+	}
+
+	public function test_use_skus() {
+		$this->assertFalse( edd_use_skus() );
+	}
+
+	public function test_edd_is_host() {
+		$this->assertFalse( edd_is_host( 'wpengine' ) );
+		$this->assertFalse( edd_is_host( 'wp engine' ) );
+		$this->assertFalse( edd_is_host( 'WP Engine' ) );
+		$this->assertFalse( edd_is_host( 'WPEngine' ) );
+
+		define( 'WPE_APIKEY', 'testkey' );
+
+		$this->assertTrue( edd_is_host( 'wpengine' ) );
+		$this->assertTrue( edd_is_host( 'wp engine' ) );
+		$this->assertTrue( edd_is_host( 'WP Engine' ) );
+		$this->assertTrue( edd_is_host( 'WPEngine' ) );
 	}
 }

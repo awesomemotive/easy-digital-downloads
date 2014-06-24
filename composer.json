@@ -1,0 +1,17 @@
+{
+    "name": "easydigitaldownloads/Easy-Digital-Downloads",
+    "type": "project",
+    "description": "The world's easiest way to sell digital downloads through WordPress for free",
+    "keywords": ["edd", "eddwp", "easy digital downloads"],
+    "homepage": "https://easydigitaldownloads.com/",
+    "license": "GPL-2.0+",
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "require-dev": {
+        "satooshi/php-coveralls": "dev-master",
+        "phpunit/phpunit": "3.7.31",
+        "phpunit/php-invoker": "1.1.3"
+    },
+    "minimum-stability": "dev"
+}

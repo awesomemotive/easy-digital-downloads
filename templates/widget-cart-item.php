@@ -3,5 +3,3 @@
 	<span class="edd-cart-item-separator">-</span><span class="edd-cart-item-price">&nbsp;{item_amount}&nbsp;</span><span class="edd-cart-item-separator">-</span>
 	<a href="{remove_url}" data-cart-item="{cart_item_id}" data-download-id="{item_id}" data-action="edd_remove_from_cart" class="edd-remove-from-cart"><?php _e( 'remove', 'edd' ); ?></a>
 </li>
-<!-- Temporary span to not fire another ajax call -->
-<span class="temp-subtotal">{subtotal}</span>

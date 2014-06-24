@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
@@ -43,12 +43,18 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	public $count = 0;
 
 	/**
+	 * Total customers
+	 *
+	 * @var int
+	 * @since 1.95
+	 */
+	public $total = 0;
+
+	/**
 	 * Get things started
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @see WP_List_Table::__construct()
-	 * @return void
 	 */
 	public function __construct() {
 		global $status, $page;
@@ -111,7 +117,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
 
 			case 'file_downloads' :
-					return '<a href="' . admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( ! empty( $item['ID'] ) ? $item['ID'] : $item['email'] ) ) . '" target="_blank">' . $item['file_downloads'] . '</a>';
+					return '<a href="' . admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( ! empty( $item['ID'] ) ? $item['ID'] : $item['email'] ) ) . '" target="_blank">' . __( 'View download log', 'edd' ) . '</a>';
 
 			default:
 				$value = isset( $item[ $column_name ] ) ? $item[ $column_name ] : null;
@@ -162,19 +168,6 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Retrieve the total customers from the database
-	 *
-	 * @access public
-	 * @since 1.5
-	 * @global object $wpdb Used to query the database using the WordPress
-	 *   Database API
-	 * @return int $count The number of customers from the database
-	 */
-	public function get_total_customers() {
-		return $this->count;
-	}
-
-	/**
 	 * Retrieves the search query string
 	 *
 	 * @access public
@@ -218,17 +211,20 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 				$user_id = $wp_user ? $wp_user->ID : 0;
 
-				$mode    = edd_is_test_mode() ? 'test' : 'live';
+				if( $wp_user ) {
+					$user = $user_id;
+				} else {
+					$user = $customer_email;
+				}
 
-				$stats   = edd_get_purchase_stats_by_user( $customer_email, $mode );
+				$stats   = edd_get_purchase_stats_by_user( $user );
 
 				$data[] = array(
 					'ID' 			=> $user_id,
 					'name' 			=> $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' ),
 					'email' 		=> $customer_email,
 					'num_purchases'	=> $stats['purchases'],
-					'amount_spent'	=> $stats['total_spent'],
-					'file_downloads'=> edd_count_file_downloads_of_user( ! empty( $user_id ) ? $user_id : $customer_email )
+					'amount_spent'	=> $stats['total_spent']
 				);
 			}
 		}
@@ -260,10 +256,12 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 		$this->items = $this->reports_data();
 
+		$this->total = edd_count_total_customers();
+
 		$this->set_pagination_args( array(
 			'total_items' => $this->count,                  	// WE have to calculate the total number of items
 			'per_page'    => $this->per_page,                     	// WE have to determine how many items to show on a page
-			'total_pages' => ceil( $this->count / $this->per_page )   // WE have to calculate the total number of pages
+			'total_pages' => ceil( $this->total / $this->per_page )   // WE have to calculate the total number of pages
 		) );
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 // Retrieve all purchases for the current user
-$purchases = edd_get_users_purchases( get_current_user_id(), 20, true, array( 'pending', 'revoked', 'publish', 'failed', 'preapproval', 'refunded' )  );
+$purchases = edd_get_users_purchases( get_current_user_id(), 20, true, 'any' );
 if ( $purchases ) :
 	do_action( 'edd_before_download_history' ); ?>
 	<table id="edd_user_history">
@@ -15,8 +15,9 @@ if ( $purchases ) :
 			</tr>
 		</thead>
 		<?php foreach ( $purchases as $payment ) :
-			$downloads 		= edd_get_payment_meta_cart_details( $payment->ID, true );
-			$purchase_data 	= edd_get_payment_meta( $payment->ID );
+			$downloads      = edd_get_payment_meta_cart_details( $payment->ID, true );
+			$purchase_data  = edd_get_payment_meta( $payment->ID );
+			$email          = edd_get_payment_user_email( $payment->ID );
 
 			if ( $downloads ) :
 				foreach ( $downloads as $download ) :
@@ -50,7 +51,7 @@ if ( $purchases ) :
 
 										foreach ( $download_files as $filekey => $file ) :
 
-											$download_url = edd_get_download_file_url( $purchase_data['key'], $purchase_data['email'], $filekey, $download['id'], $price_id );
+											$download_url = edd_get_download_file_url( $purchase_data['key'], $email, $filekey, $download['id'], $price_id );
 											?>
 
 											<div class="edd_download_file">
@@ -76,7 +77,7 @@ if ( $purchases ) :
 							</td>
 						<?php endif; // End if ! edd_no_redownload()
 
-						do_action( 'edd_download_history_row_end', $payment->ID, $id );
+						do_action( 'edd_download_history_row_end', $payment->ID, $download['id'] );
 						?>
 					</tr>
 					<?php

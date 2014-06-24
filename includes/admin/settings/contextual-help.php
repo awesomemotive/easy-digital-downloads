@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Settings
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
  */
@@ -69,7 +69,17 @@ function edd_settings_contextual_help() {
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-settings-taxes',
 		'title'	    => __( 'Taxes', 'edd' ),
-		'content'	=> '<p>' . __( 'This screen provides basic settings for adjusting how tax rules work for purchases.', 'edd' ) . '</p>' 
+		'content'	=> 
+			'<p>' . __( 'This screen allows youto configure the tax rules for your store.', 'edd' ) . '</p>' .
+			'<p>' . __( 'If you do not wish to charge any tax on purchase, simply leave the Enable Taxes option unchecked.', 'edd' ) . '</p>' .
+			'<p>' . __( '<strong>Default Tax Rate</strong>: The default tax rate is the tax rate charged to customers located in your base country / state or province.', 'edd' ) . '</p>' .
+			'<p>' . __( '<strong>Base Country</strong>: This determines the country that is loaded by default on the checkout screen for customers that do not have an address stored in their account.', 'edd' ) . '</p>' .
+			'<p>' . __( '<strong>Base State / Province</strong>: This determines the state / province that is loaded by default on the checkout screen for customers that do not have an address stored in their account.', 'edd' ) . '</p>' .
+			'<p>' . __( '<strong>Prices Entered with Tax</strong>: if enabled, this means that the price entered on the product edit screens is the total amount the customer will pay after taxes. For example, if enabled and the price of a product is $20, the customer will pay 20$ at checkout. The exact amount charged in tax will be calculated automatically.', 'edd' ) . '</p>' .
+			'<p>' . __( '<strong>Display Tax Rate on Prices</strong>: when enabled, the amount the customer is expected to pay in tax will be displayed below purchase buttons.', 'edd' ) . '</p>' .
+			'<p>' . __( '<strong>Display During Checkout</strong>: This determines whether prices are shown with taxes or without taxes on checkout. If set to Including Tax, a $10 product with a 10% tax will be shown as $11.', 'edd' ) . '</p>' .
+			'<p>' . __( '<strong>Calculate Tax After Discounts</strong>: If enabled, this option will make it so that tax is calucated on the after-discount amount. If a purchase of $20 is made and a 20% discount is applied, tax will be calcuated off of $16 instead of $20.', 'edd' ) . '</p>' .
+			'<p>' . __( '<strong>Additional Tax Rates</strong>: This section lets you add tax rates for specific countries and/or states/provinces in those countries.', 'edd' ) . '</p>'
 	) );
 
 	$screen->add_help_tab( array(

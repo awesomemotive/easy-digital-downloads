@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Gateways
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -21,8 +21,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_get_payment_gateways() {
 	// Default, built-in gateways
 	$gateways = array(
-		'paypal' => array( 'admin_label' => __( 'PayPal Standard', 'edd' ), 'checkout_label' => __( 'PayPal', 'edd' ) ),
-		'manual' => array( 'admin_label' => __( 'Test Payment', 'edd' ), 'checkout_label' => __( 'Test Payment', 'edd' ) ),
+		'paypal' => array(
+			'admin_label'    => __( 'PayPal Standard', 'edd' ),
+			'checkout_label' => __( 'PayPal', 'edd' ),
+			'supports'       => array( 'buy_now' )
+		),
+		'manual' => array(
+			'admin_label'    => __( 'Test Payment', 'edd' ),
+			'checkout_label' => __( 'Test Payment', 'edd' )
+		),
 	);
 
 	return apply_filters( 'edd_payment_gateways', $gateways );
@@ -42,11 +49,11 @@ function edd_get_enabled_payment_gateways() {
 
 	$gateway_list = array();
 
-	foreach ( $gateways as $key => $gateway ) :
-		if ( isset( $enabled[ $key ] ) && $enabled[ $key ] == 1 ) :
+	foreach ( $gateways as $key => $gateway ) {
+		if ( isset( $enabled[ $key ] ) && $enabled[ $key ] == 1 ) {
 			$gateway_list[ $key ] = $gateway;
-		endif;
-	endforeach;
+		}
+	}
 
 	return apply_filters( 'edd_enabled_payment_gateways', $gateway_list );
 }
@@ -61,11 +68,8 @@ function edd_get_enabled_payment_gateways() {
 function edd_is_gateway_active( $gateway ) {
 	$gateways = edd_get_enabled_payment_gateways();
 
-	if ( array_key_exists( $gateway, $gateways ) ) {
-		return true;
-	}
-
-	return false;
+	$ret = array_key_exists( $gateway, $gateways );
+	return apply_filters( 'edd_is_gateway_active', $ret, $gateway, $gateways );
 }
 
 /**
@@ -77,7 +81,8 @@ function edd_is_gateway_active( $gateway ) {
  */
 function edd_get_default_gateway() {
 	global $edd_options;
-	return isset( $edd_options['default_gateway'] ) && edd_is_gateway_active( $edd_options['default_gateway'] ) ? $edd_options['default_gateway'] : 'paypal';
+	$default = isset( $edd_options['default_gateway'] ) && edd_is_gateway_active( $edd_options['default_gateway'] ) ? $edd_options['default_gateway'] : 'paypal';
+	return apply_filters( 'edd_default_gateway', $default );
 }
 
 /**
@@ -89,7 +94,16 @@ function edd_get_default_gateway() {
  */
 function edd_get_gateway_admin_label( $gateway ) {
 	$gateways = edd_get_enabled_payment_gateways();
-	return isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['admin_label'] : $gateway;
+	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['admin_label'] : $gateway;
+	$payment  = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : false;
+
+	if( $gateway == 'manual' && $payment ) {
+		if( edd_get_payment_amount( $payment ) == 0 ) {
+			$label = __( 'Free Purchase', 'edd' );
+		}
+	}
+
+	return apply_filters( 'edd_gateway_admin_label', $label, $gateway );
 }
 
 /**
@@ -101,29 +115,98 @@ function edd_get_gateway_admin_label( $gateway ) {
  */
 function edd_get_gateway_checkout_label( $gateway ) {
 	$gateways = edd_get_enabled_payment_gateways();
-	return isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['checkout_label'] : $gateway;
+	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['checkout_label'] : $gateway;
+
+	if( $gateway == 'manual' ) {
+		$label = __( 'Free Purchase', 'edd' );
+	}
+
+	return apply_filters( 'edd_gateway_checkout_label', $label, $gateway );
+}
+
+/**
+ * Returns the options a gateway supports
+ *
+ * @since 1.8
+ * @param string $gateway ID of the gateway to retrieve a label for
+ * @return array Options the gateway supports
+ */
+function edd_get_gateway_supports( $gateway ) {
+	$gateways = edd_get_enabled_payment_gateways();
+	$supports = isset( $gateways[ $gateway ]['supports'] ) ? $gateways[ $gateway ]['supports'] : array();
+	return apply_filters( 'edd_gateway_supports', $supports, $gateway );
+}
+
+/**
+ * Checks if a gateway supports buy now
+ *
+ * @since 1.8
+ * @param string $gateway ID of the gateway to retrieve a label for
+ * @return bool
+ */
+function edd_gateway_supports_buy_now( $gateway ) {
+	$supports = edd_get_gateway_supports( $gateway );
+	$ret = in_array( 'buy_now', $supports );
+	return apply_filters( 'edd_gateway_supports_buy_now', $ret, $gateway );
+}
+
+/**
+ * Checks if an enabled gateway supports buy now
+ *
+ * @since 1.8
+ * @return bool
+ */
+function edd_shop_supports_buy_now() {
+	$gateways = edd_get_enabled_payment_gateways();
+	$ret      = false;
+
+	if( $gateways ) {
+		foreach( $gateways as $gateway_id => $gateway ) {
+			if( edd_gateway_supports_buy_now( $gateway_id ) ) {
+				$ret = true;
+				break;
+			}
+		}
+	}
+
+	return apply_filters( 'edd_shop_supports_buy_now', $ret );
 }
 
 /**
  * Build the purchase data for a straight-to-gateway purchase button
  *
  * @since 1.7
- * @return array
+ *
+ * @param int   $download_id
+ * @param array $options
+ * @return mixed|void
  */
 function edd_build_straight_to_gateway_data( $download_id = 0, $options = array() ) {
+
+	$price_options = array();
 
 	if( empty( $options ) || ! edd_has_variable_prices( $download_id ) ) {
 		$price = edd_get_download_price( $download_id );
 	} else {
-		$price_options = array();
-		foreach ( $options['price_id'] as $price_id ) {
-			$prices = edd_get_variable_prices( $download_id );
-			$price_options[] = array(
-				'price_id' => $price_id,
-				'amount'   => $prices[ $price_id ]['amount']
-			);
-			$price  = $prices[ $price_id ]['amount'];
+			
+		if( is_array( $options['price_id'] ) ) {
+			$price_id = $options['price_id'][0];
+		} else {
+			$price_id = $options['price_id'];
 		}
+
+		$prices = edd_get_variable_prices( $download_id );
+
+		// Make sure a valid price ID was supplied
+		if( ! isset( $prices[ $price_id ] ) ) {
+			wp_die( __( 'The requested price ID does not exist.', 'edd' ), __( 'Error', 'edd' ) );
+		}
+
+		$price_options = array(
+			'price_id' => $price_id,
+			'amount'   => $prices[ $price_id ]['amount']
+		);
+		$price  = $prices[ $price_id ]['amount'];
 	}
 
 	// Set up Downloads array
@@ -143,6 +226,10 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 				'id'      => $download_id,
 				'options' => $price_options
 			),
+			'tax'         => 0,
+			'discount'    => 0,
+			'item_price'  => $price,
+			'subtotal'    => $price,
 			'price'       => $price,
 			'quantity'    => 1,
 		)
@@ -214,7 +301,7 @@ function edd_show_gateways() {
 
 	if ( count( $gateways ) > 1 && ! isset( $_GET['payment-mode'] ) ) {
 		$show_gateways = true;
-		if ( edd_get_cart_amount() <= 0 ) {
+		if ( edd_get_cart_subtotal() <= 0 ) {
 			$show_gateways = false;
 		}
 	}
@@ -241,14 +328,14 @@ function edd_get_chosen_gateway() {
 	} else if( count( $gateways ) >= 1 && ! $chosen ) {
 		foreach ( $gateways as $gateway_id => $gateway ):
 			$enabled_gateway = $gateway_id;
-			if ( edd_get_cart_amount() <= 0 ) {
+			if ( edd_get_cart_subtotal() <= 0 ) {
 				$enabled_gateway = 'manual'; // This allows a free download by filling in the info
 			}
 		endforeach;
-	} else if ( edd_get_cart_amount() <= 0 ) {
+	} else if ( edd_get_cart_subtotal() <= 0 ) {
 		$enabled_gateway = 'manual';
 	} else {
-		$enabled_gateway = 'none';
+		$enabled_gateway = edd_get_default_gateway();
 	}
 
 	return apply_filters( 'edd_chosen_gateway', $enabled_gateway );
@@ -270,11 +357,13 @@ function edd_record_gateway_error( $title = '', $message = '', $parent = 0 ) {
 	return edd_record_log( $title, $message, $parent, 'gateway_error' );
 }
 
-
 /**
  * Counts the number of purchases made with a gateway
  *
  * @since 1.6
+ *
+ * @param string $gateway_id
+ * @param string $status
  * @return int
  */
 function edd_count_sales_by_gateway( $gateway_id = 'paypal', $status = 'publish' ) {

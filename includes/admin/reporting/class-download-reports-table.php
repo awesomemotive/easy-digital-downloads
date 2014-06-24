@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
@@ -41,10 +41,8 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	/**
 	 * Get things started
 	 *
-	 * @access public
 	 * @since 1.5
 	 * @see WP_List_Table::__construct()
-	 * @return void
 	 */
 	public function __construct() {
 		global $status, $page;
@@ -81,6 +79,8 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 				return round( $item[ $column_name ] );
 			case 'average_earnings' :
 				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
+			case 'details' :
+				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $item[ 'ID' ] ) . '">' . __( 'View Detailed Report', 'edd' ) . '</a>';
 			default:
 				return $item[ $column_name ];
 		}
@@ -99,7 +99,8 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 			'sales'  			=> __( 'Sales', 'edd' ),
 			'earnings'  		=> __( 'Earnings', 'edd' ),
 			'average_sales'  	=> __( 'Monthly Average Sales', 'edd' ),
-			'average_earnings'  => __( 'Monthly Average Earnings', 'edd' )
+			'average_earnings'  => __( 'Monthly Average Earnings', 'edd' ),
+			'details'           => __( 'Detailed Report', 'edd' )
 		);
 
 		return $columns;
@@ -152,7 +153,12 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @return int $total Total number of downloads
 	 */
 	public function get_total_downloads() {
-		return $this->products->post_count;
+		$total  = 0;
+		$counts = wp_count_posts( 'download', 'readable' );
+		foreach( $counts as $status => $count ) {
+			$total += $count;
+		}
+		return $total;
 	}
 
 	/**
@@ -177,7 +183,9 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 */
 	public function category_filter() {
 		$current_view = isset( $_GET[ 'view' ] ) ? $_GET[ 'view' ] : 'earnings';
-		echo EDD()->html->category_dropdown( 'category', $this->get_category() );
+		if( get_terms( 'download_category' ) ) {
+			echo EDD()->html->category_dropdown( 'category', $this->get_category() );
+		}
 	}
 
 
@@ -200,7 +208,8 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 			'order'			=> $order,
 			'fields'        => 'ids',
 			'posts_per_page'=> $this->per_page,
-			'paged'         => $this->get_paged()
+			'paged'         => $this->get_paged(),
+			'suppress_filters' => true
 		);
 
 		if( ! empty( $category ) ) {
@@ -227,6 +236,8 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 				$args['meta_key'] = '_edd_download_earnings';
 				break;
 		endswitch;
+
+		$args = apply_filters( 'edd_download_reports_prepare_items_args', $args, $this );
 
 		$this->products = new WP_Query( $args );
 

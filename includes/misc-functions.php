@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -22,10 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_is_test_mode() {
 	global $edd_options;
 
-	if ( ! isset( $edd_options['test_mode'] ) || is_null( $edd_options['test_mode'] ) )
-		$ret = false;
-	else
-		$ret = true;
+	$ret = ! empty( $edd_options['test_mode'] );
 
 	return (bool) apply_filters( 'edd_is_test_mode', $ret );
 }
@@ -40,10 +37,7 @@ function edd_is_test_mode() {
 function edd_no_guest_checkout() {
 	global $edd_options;
 
-	if ( isset( $edd_options['logged_in_only'] ) )
-		$ret = true;
-	else
-		$ret = false;
+	$ret = ! empty ( $edd_options['logged_in_only'] );
 
 	return (bool) apply_filters( 'edd_no_guest_checkout', $ret );
 }
@@ -53,15 +47,12 @@ function edd_no_guest_checkout() {
  *
  * @since 1.0
  * @global $edd_options
- * @return bool $ret Wheter or not the logged_in_only setting is set
+ * @return bool $ret Whether or not the logged_in_only setting is set
  */
 function edd_logged_in_only() {
 	global $edd_options;
 
-	if ( isset( $edd_options['logged_in_only'] ) )
-		$ret = true;
-	else
-		$ret = false;
+	$ret = ! empty( $edd_options['logged_in_only'] );
 
 	return (bool) apply_filters( 'edd_logged_in_only', $ret );
 }
@@ -89,10 +80,9 @@ function edd_straight_to_checkout() {
 function edd_no_redownload() {
 	global $edd_options;
 
-	if ( isset( $edd_options['disable_redownload'] ) )
-		return true;
+	$ret = isset( $edd_options['disable_redownload'] );
 
-	return (bool) apply_filters( 'edd_no_redownload', false );
+	return (bool) apply_filters( 'edd_no_redownload', $ret );
 }
 
 /**
@@ -108,21 +98,19 @@ function edd_is_cc_verify_enabled() {
 	$ret = true;
 
 	/*
-	 * Enable if use a single gateway other than PayPal or Manual. We have to assume it accepts cerdit cards
+	 * Enable if use a single gateway other than PayPal or Manual. We have to assume it accepts credit cards
 	 * Enable if using more than one gateway if they aren't both PayPal and manual, again assuming credit card usage
 	 */
 
 	$gateways = edd_get_enabled_payment_gateways();
 
-	if ( count( $gateways ) == 1 && ! isset( $gateways['paypal'] ) && ! isset( $gateways['manual'] ) )
+	if ( count( $gateways ) == 1 && ! isset( $gateways['paypal'] ) && ! isset( $gateways['manual'] ) ) {
 		$ret = true;
-	else if ( count( $gateways ) == 1 )
+	} else if ( count( $gateways ) == 1 ) {
 		$ret = false;
-	else if ( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) )
+	} else if ( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) ) {
 		$ret = false;
-
-	if ( isset( $edd_options['edd_is_cc_verify_enabled'] ) )
-		$ret = false; // Global override
+	}
 
 	return (bool) apply_filters( 'edd_verify_credit_cards', $ret );
 }
@@ -130,10 +118,10 @@ function edd_is_cc_verify_enabled() {
 /**
  * Is Odd
  *
- * Checks wether an integer is odd.
+ * Checks whether an integer is odd.
  *
  * @since 1.0
- * @param int $int The integer to check
+ * @param int     $int The integer to check
  * @return bool Is the integer odd?
  */
 function edd_is_odd( $int ) {
@@ -146,25 +134,27 @@ function edd_is_odd( $int ) {
  * Returns the file extension of a filename.
  *
  * @since 1.0
- * @param string $string Filename
- * @return string $parts File extension
+ *
+ * @param unknown $str File name
+ *
+ * @return mixed File extension
  */
 function edd_get_file_extension( $str ) {
-   $parts = explode( '.', $str );
-   return end( $parts );
+	$parts = explode( '.', $str );
+	return end( $parts );
 }
 
 /**
  * Checks if the string (filename) provided is an image URL
  *
  * @since 1.0
- * @param string $str Filename
+ * @param string  $str Filename
  * @return bool Whether or not the filename is an image
  */
 function edd_string_is_image_url( $str ) {
 	$ext = edd_get_file_extension( $str );
 
-	switch( strtolower( $ext ) ) {
+	switch ( strtolower( $ext ) ) {
 		case 'jpg';
 			$return = true;
 			break;
@@ -176,7 +166,7 @@ function edd_string_is_image_url( $str ) {
 			break;
 		default:
 			$return = false;
-		break;
+			break;
 	}
 
 	return (bool) apply_filters( 'edd_string_is_image', $return, $str );
@@ -189,7 +179,7 @@ function edd_string_is_image_url( $str ) {
  *
  * @since 1.0.8.2
  * @return string $ip User's IP address
-*/
+ */
 function edd_get_ip() {
 	if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 		//check ip from share internet
@@ -202,6 +192,109 @@ function edd_get_ip() {
 	}
 	return apply_filters( 'edd_get_ip', $ip );
 }
+
+
+/**
+ * Get user host
+ *
+ * Returns the webhost this site is using if possible
+ *
+ * @since 2.0
+ * @return mixed string $host if detected, false otherwise
+ */
+function edd_get_host() {
+	$host = false;
+
+	if( defined( 'WPE_APIKEY' ) ) {
+		$host = 'WP Engine';
+	} elseif( defined( 'PAGELYBIN' ) ) {
+		$host = 'Pagely';
+	} elseif( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
+		$host = 'ICDSoft';
+	} elseif( DB_HOST == 'mysqlv5' ) {
+		$host = 'NetworkSolutions';
+	} elseif( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
+		$host = 'iPage';
+	} elseif( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
+		$host = 'IPower';
+	} elseif( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
+		$host = 'MediaTemple Grid';
+	} elseif( strpos( DB_HOST, '.pair.com' ) !== false ) {
+		$host = 'pair Networks';
+	} elseif( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
+		$host = 'Rackspace Cloud';
+	} elseif( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
+		$host = 'SysFix.eu Power Hosting';
+	}
+
+	return $host;
+}
+
+
+/**
+ * Check site host
+ *
+ * @since 2.0
+ * @param $host The host to check
+ * @return bool true if host matches, false if not
+ */
+function edd_is_host( $host = false ) {
+
+	$return = false;
+
+	if( $host ) {
+		$host = str_replace( ' ', '', strtolower( $host ) );
+
+		switch( $host ) {
+			case 'wpengine':
+				if( defined( 'WPE_APIKEY' ) )
+					$return = true;
+				break;
+			case 'pagely':
+				if( defined( 'PAGELYBIN' ) )
+					$return = true;
+				break;
+			case 'icdsoft':
+				if( DB_HOST == 'localhost:/tmp/mysql5.sock' )
+					$return = true;
+				break;
+			case 'networksolutions':
+				if( DB_HOST == 'mysqlv5' )
+					$return = true;
+				break;
+			case 'ipage':
+				if( strpos( DB_HOST, 'ipagemysql.com' ) !== false )
+					$return = true;
+				break;
+			case 'ipower':
+				if( strpos( DB_HOST, 'ipowermysql.com' ) !== false )
+					$return = true;
+				break;
+			case 'mediatemplegrid':
+				if( strpos( DB_HOST, '.gridserver.com' ) !== false )
+					$return = true;
+				break;
+			case 'pairnetworks':
+				if( strpos( DB_HOST, '.pair.com' ) !== false )
+					$return = true;
+				break;
+			case 'rackspacecloud':
+				if( strpos( DB_HOST, '.stabletransit.com' ) !== false )
+					$return = true;
+				break;
+			case 'sysfix.eu':
+			case 'sysfix.eupowerhosting':
+				if( strpos( DB_HOST, '.sysfix.eu' ) !== false )
+					$return = true;
+				break;
+			default:
+				$return = false;
+		}
+	}
+
+	return $return;
+}
+
 
 
 /**
@@ -237,7 +330,8 @@ function edd_get_currencies() {
 		'THB'  => __( 'Thai Baht (&#3647;)', 'edd' ),
 		'INR'  => __( 'Indian Rupee (&#8377;)', 'edd' ),
 		'TRY'  => __( 'Turkish Lira (&#8378;)', 'edd' ),
-		'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' )
+		'RIAL' => __( 'Iranian Rial (&#65020;)', 'edd' ),
+		'RUB'  => __( 'Russian Rubles', 'edd' )
 	);
 
 	return apply_filters( 'edd_currencies', $currencies );
@@ -256,13 +350,14 @@ function edd_get_currency() {
 	return apply_filters( 'edd_currency', $currency );
 }
 
-
 /**
  * Month Num To Name
  *
  * Takes a month number and returns the name three letter name of it.
  *
  * @since 1.0
+ *
+ * @param unknown $n
  * @return string Short month name
  */
 function edd_month_num_to_name( $n ) {
@@ -272,13 +367,13 @@ function edd_month_num_to_name( $n ) {
 }
 
 /**
- * Get PHP Arg Separator Ouput
+ * Get PHP Arg Separator Output
  *
  * @since 1.0.8.3
  * @return string Arg separator output
-*/
+ */
 function edd_get_php_arg_separator_output() {
-	return ini_get('arg_separator.output');
+	return ini_get( 'arg_separator.output' );
 }
 
 /**
@@ -296,15 +391,15 @@ function edd_get_current_page_url() {
 	else :
 		$page_url = 'http';
 
-		if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" )
-			$page_url .= "s";
+	if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" )
+		$page_url .= "s";
 
-		$page_url .= "://";
+	$page_url .= "://";
 
-		if ( $_SERVER["SERVER_PORT"] != "80" )
-			$page_url .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-		else
-			$page_url .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+	if ( $_SERVER["SERVER_PORT"] != "80" )
+		$page_url .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+	else
+		$page_url .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 	endif;
 
 	return apply_filters( 'edd_get_current_page_url', esc_url( $page_url ) );
@@ -326,10 +421,10 @@ function edd_get_current_page_url() {
  * @uses apply_filters() Calls 'edd_deprecated_function_trigger_error' and expects boolean value of true to do
  *   trigger or false to not trigger error.
  *
- * @param string $function The function that was called
- * @param string $version The version of WordPress that deprecated the function
- * @param string $replacement Optional. The function that should have been called
- * @param array $backtrace Optional. Contains stack backtrace of deprecated function
+ * @param string  $function    The function that was called
+ * @param string  $version     The version of WordPress that deprecated the function
+ * @param string  $replacement Optional. The function that should have been called
+ * @param array   $backtrace   Optional. Contains stack backtrace of deprecated function
  */
 function _edd_deprecated_function( $function, $version, $replacement = null, $backtrace = null ) {
 	do_action( 'edd_deprecated_function_run', $function, $replacement, $version );
@@ -339,14 +434,14 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
 	// Allow plugin to filter the output error trigger
 	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', $show_errors ) ) {
 		if ( ! is_null( $replacement ) ) {
-			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
-			trigger_error(  print_r( $backtrace ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
-			// Alernatively we could dump this to a file.
+			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'edd' ), $function, $version, $replacement ) );
+			trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			// Alternatively we could dump this to a file.
 		}
 		else {
-			trigger_error( sprintf( __('%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'edd'), $function, $version ) );
-			trigger_error( print_r($backtrace) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
-			// Alernatively we could dump this to a file.
+			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'edd' ), $function, $version ) );
+			trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			// Alternatively we could dump this to a file.
 		}
 	}
 }
@@ -357,7 +452,7 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
  *
  * @since 1.3.5
  *
- * @param string $function Name of the function.
+ * @param string  $function Name of the function.
  * @return bool Whether or not function is disabled.
  */
 function edd_is_func_disabled( $function ) {
@@ -374,7 +469,9 @@ function edd_is_func_disabled( $function ) {
  * @since 1.4
  * @usedby edd_settings()
  * @author Chris Christoff
- * @return $ret
+ *
+ * @param unknown $v
+ * @return int|string
  */
 function edd_let_to_num( $v ) {
 	$l   = substr( $v, -1 );
@@ -424,7 +521,21 @@ function edd_get_symlink_dir() {
 }
 
 /**
- * Delete symbolic links afer they have been used
+ * Retrieve the absolute path to the file upload directory without the trailing slash
+ *
+ * @since  1.8
+ * @return string $path Absolute path to the EDD upload directory
+ */
+function edd_get_upload_dir() {
+	$wp_upload_dir = wp_upload_dir();
+	wp_mkdir_p( $wp_upload_dir['basedir'] . '/edd' );
+	$path = $wp_upload_dir['basedir'] . '/edd';
+
+	return apply_filters( 'edd_get_upload_dir', $path );
+}
+
+/**
+ * Delete symbolic links after they have been used
  *
  * @access public
  * @since  1.5
@@ -471,34 +582,33 @@ function edd_use_skus() {
  */
 function edd_get_timezone_id() {
 
-    // if site timezone string exists, return it
-    if ( $timezone = get_option( 'timezone_string' ) )
-        return $timezone;
+	// if site timezone string exists, return it
+	if ( $timezone = get_option( 'timezone_string' ) )
+		return $timezone;
 
-    // get UTC offset, if it isn't set return UTC
-    if ( ! ( $utc_offset = 3600 * get_option( 'gmt_offset', 0 ) ) )
-        return 'UTC';
+	// get UTC offset, if it isn't set return UTC
+	if ( ! ( $utc_offset = 3600 * get_option( 'gmt_offset', 0 ) ) )
+		return 'UTC';
 
-    // attempt to guess the timezone string from the UTC offset
-    $timezone = timezone_name_from_abbr( '', $utc_offset );
+	// attempt to guess the timezone string from the UTC offset
+	$timezone = timezone_name_from_abbr( '', $utc_offset );
 
-    // last try, guess timezone string manually
-    if ( $timezone === false ) {
+	// last try, guess timezone string manually
+	if ( $timezone === false ) {
 
-        $is_dst = date('I');
+		$is_dst = date( 'I' );
 
-        foreach ( timezone_abbreviations_list() as $abbr ) {
-            foreach ( $abbr as $city ) {
-                if ( $city['dst'] == $is_dst &&  $city['offset'] == $utc_offset )
-                    return $city['timezone_id'];
-            }
-        }
-    }
+		foreach ( timezone_abbreviations_list() as $abbr ) {
+			foreach ( $abbr as $city ) {
+				if ( $city['dst'] == $is_dst &&  $city['offset'] == $utc_offset )
+					return $city['timezone_id'];
+			}
+		}
+	}
 
-    // fallback
-    return 'UTC';
+	// fallback
+	return 'UTC';
 }
-
 
 /**
  * Convert an object to an associative array.
@@ -506,7 +616,9 @@ function edd_get_timezone_id() {
  * Can handle multidimensional arrays
  *
  * @since 1.7
- * @return array $data The converted array
+ *
+ * @param unknown $data
+ * @return array
  */
 function edd_object_to_array( $data ) {
 	if ( is_array( $data ) || is_object( $data ) ) {
@@ -517,4 +629,39 @@ function edd_object_to_array( $data ) {
 		return $result;
 	}
 	return $data;
+}
+
+/**
+ * Set Upload Directory
+ *
+ * Sets the upload dir to edd. This function is called from
+ * edd_change_downloads_upload_dir()
+ *
+ * @since 1.0
+ * @return array Upload directory information
+ */
+function edd_set_upload_dir( $upload ) {
+
+	// Override the year / month being based on the post publication date, if year/month organization is enabled
+	if ( get_option( 'uploads_use_yearmonth_folders' ) ) {
+		// Generate the yearly and monthly dirs
+		$time = current_time( 'mysql' );
+		$y = substr( $time, 0, 4 );
+		$m = substr( $time, 5, 2 );
+		$upload['subdir'] = "/$y/$m";
+	}
+
+	$upload['subdir'] = '/edd' . $upload['subdir'];
+	$upload['path']   = $upload['basedir'] . $upload['subdir'];
+	$upload['url']    = $upload['baseurl'] . $upload['subdir'];
+	return $upload;
+}
+
+
+if ( ! function_exists( 'cal_days_in_month' ) ) {
+	// Fallback in case the calendar extension is not loaded in PHP
+	// Only supports Gregorian calendar
+	function cal_days_in_month( $calendar, $month, $year ) {
+		return date( 't', mktime( 0, 0, 0, $month, 1, $year ) );
+	}
 }

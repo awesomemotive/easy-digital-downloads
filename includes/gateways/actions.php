@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Gateways
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.7
  */
@@ -16,7 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Processes gateway select on checkout. Only for users without ajax / javascript
  *
  * @since 1.7
- * @return void
+ *
+ * @param $data
  */
 function edd_process_gateway_select( $data ) {
 	if( isset( $_POST['gateway_submit'] ) ) {

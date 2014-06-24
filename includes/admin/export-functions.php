@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Export
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
@@ -14,6 +14,22 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export.php';
+
+/**
+ * Exports earnings for a specified time period
+ * EDD_Earnings_Export class.
+ *
+ * @since 2.0
+ * @return void
+ */
+function edd_export_earnings() {
+	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-export-earnings.php';
+
+	$earnings_export = new EDD_Earnings_Export();
+
+	$earnings_export->export();
+}
+add_action( 'edd_earnings_export', 'edd_export_earnings' );
 
 /**
  * Exports all the payments stored in Payment History to a CSV file using the

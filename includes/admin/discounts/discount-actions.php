@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Discounts
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0.8.1
  */
@@ -66,7 +66,7 @@ function edd_edit_discount( $data ) {
 			}
 		}
 
-		$old_discount = edd_get_discount_by_code( $data['code'] );
+		$old_discount = edd_get_discount_by( 'code', $data['code'] );
 		$discount['uses'] = edd_get_discount_uses( $old_discount->ID );
 
 		if ( edd_store_discount( $discount, $data['discount-id'] ) ) {
@@ -107,7 +107,7 @@ add_action( 'edd_delete_discount', 'edd_delete_discount' );
  * @return void
  */
 function edd_activate_discount( $data ) {
-	$id = $data['discount'];
+	$id = absint( $data['discount'] );
 	edd_update_discount_status( $id, 'active' );
 }
 add_action( 'edd_activate_discount', 'edd_activate_discount' );
@@ -115,7 +115,7 @@ add_action( 'edd_activate_discount', 'edd_activate_discount' );
 /**
  * Deactivate Discount
  *
- * Sets a discount code's status to deactive
+ * Sets a discount code's status to deactivate
  *
  * @since 1.0
  * @param array $data Discount code data
@@ -123,7 +123,7 @@ add_action( 'edd_activate_discount', 'edd_activate_discount' );
  * @return void
 */
 function edd_deactivate_discount( $data) {
-	$id = $data['discount'];
+	$id = absint( $data['discount'] );
 	edd_update_discount_status( $id, 'inactive' );
 }
 add_action( 'edd_deactivate_discount', 'edd_deactivate_discount' );

@@ -1,16 +1,23 @@
 <?php
 namespace EDD_Unit_Tests;
+use \EDD_Roles;
 
 /**
  * @group edd_roles
  */
 class Tests_Roles extends EDD_UnitTestCase {
+
+	protected $_roles;
+
 	public function setUp() {
 		parent::setUp();
+
+		$this->_roles = new EDD_Roles;
+		$this->_roles->add_roles();
+		$this->_roles->add_caps();
 	}
 
 	public function test_roles() {
-		$roles = new \EDD_Roles();
 
 		global $wp_roles;
 
