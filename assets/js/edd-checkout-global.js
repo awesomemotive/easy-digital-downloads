@@ -250,10 +250,12 @@ jQuery(document).ready(function($) {
         return false;
     });
 
+    // When discount link is clicked, hide the link, then show the discount input and set focus.
     $body.on('click', '.edd_discount_link', function(e) {
         e.preventDefault();
         $('.edd_discount_link').parent().hide();
-        $('#edd-discount-code-wrap').show();
+        $('#edd-discount-code-wrap').show()
+            .find('#edd-discount').focus();
     });
 
     // Hide / show discount fields for browsers without javascript enabled
