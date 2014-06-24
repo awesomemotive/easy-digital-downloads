@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Payments
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -32,8 +32,12 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 	if ( $new_status != 'publish' && $new_status != 'complete' )
 		return;
 
-	$user_info    = edd_get_payment_meta_user_info( $payment_id );
-	$cart_details = edd_get_payment_meta_cart_details( $payment_id );
+	$completed_date = edd_get_payment_completed_date( $payment_id );
+	$user_info      = edd_get_payment_meta_user_info( $payment_id );
+	$amount         = edd_get_payment_amount( $payment_id );
+	$cart_details   = edd_get_payment_meta_cart_details( $payment_id );
+
+	do_action( 'edd_pre_complete_purchase', $payment_id );
 
 	if ( is_array( $cart_details ) ) {
 
@@ -42,32 +46,25 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 			// "bundle" or "default"
 			$download_type = edd_get_download_type( $download['id'] );
+			$price_id      = isset( $download['options']['price_id'] ) ? (int) $download['options']['price_id'] : false;
+
+			$price_id      = isset( $download['options']['price_id'] ) ? (int) $download['options']['price_id'] : false;
 
 			// Increase earnings and fire actions once per quantity number
 			for( $i = 0; $i < $download['quantity']; $i++ ) {
 
 				if ( ! edd_is_test_mode() || apply_filters( 'edd_log_test_payment_stats', false ) ) {
 
-					edd_record_sale_in_log( $download['id'], $payment_id, $user_info );
+					edd_record_sale_in_log( $download['id'], $payment_id, $price_id );
 					edd_increase_purchase_count( $download['id'] );
-					$amount = null;
-
-					if ( is_array( $cart_details ) ) {
-						foreach ( $cart_details as $key => $item ) {
-							if ( array_search( $download['id'], $item ) ) {
-								$cart_item_id = $key;
-							}
-						}
-
-						$amount = isset( $download['price'] ) ? $download['price'] : null;
-					}
-
-					$amount = edd_get_download_final_price( $download['id'], $user_info, $amount );
-					edd_increase_earnings( $download['id'], $amount );
+					edd_increase_earnings( $download['id'], $download['price'] );
 
 				}
 
-				do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type );
+				if( empty( $completed_date ) ) {
+					// Ensure this action only runs once ever
+					do_action( 'edd_complete_download_purchase', $download['id'], $payment_id, $download_type, $download );
+				}
 
 			}
 
@@ -75,6 +72,9 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 		// Clear the total earnings cache
 		delete_transient( 'edd_earnings_total' );
+		// Clear the This Month earnings (this_monththis_month is NOT a typo)
+		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
+		delete_transient( md5( 'edd_earnings_todaytoday' ) );
 	}
 
 	// Check for discount codes and increment their use counts
@@ -93,7 +93,16 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 		}
 	}
 
-	do_action( 'edd_complete_purchase', $payment_id );
+	edd_increase_total_earnings( $amount );
+
+	// Ensure this action only runs once ever
+	if( empty( $completed_date ) ) {
+
+		// Save the completed date
+		update_post_meta( $payment_id, '_edd_completed_date', current_time( 'mysql' ) );
+
+		do_action( 'edd_complete_purchase', $payment_id );
+	}
 
 	// Empty the shopping cart
 	edd_empty_cart();
@@ -111,11 +120,11 @@ add_action( 'edd_update_payment_status', 'edd_complete_purchase', 100, 3 );
  * @return void
  */
 function edd_record_status_change( $payment_id, $new_status, $old_status ) {
-	if ( $new_status == 'publish' )
-		$new_status = 'complete';
 
-	if ( $old_status == 'publish' )
-		$old_status = 'complete';
+	// Get the list of statuses so that status in the payment note can be translated
+	$stati      = edd_get_payment_statuses();
+	$old_status = isset( $stati[ $old_status ] ) ? $stati[ $old_status ] : $old_status;
+	$new_status = isset( $stati[ $new_status ] ) ? $stati[ $new_status ] : $new_status;
 
 	$status_change = sprintf( __( 'Status changed from %s to %s', 'edd' ), $old_status, $new_status );
 
@@ -124,87 +133,36 @@ function edd_record_status_change( $payment_id, $new_status, $old_status ) {
 add_action( 'edd_update_payment_status', 'edd_record_status_change', 100, 3 );
 
 /**
- * Update Edited Purchase
+ * Reduces earnings and sales stats when a purchase is refunded
  *
- * Updates the purchase data for a payment.
- * Used primarily for adding new downloads to a purchase.
- *
- * @since 1.0
+ * @since 1.8.2
  * @param $data Arguments passed
  * @return void
  */
-function edd_update_edited_purchase( $data ) {
-	if ( wp_verify_nonce( $data['edd-payment-nonce'], 'edd_payment_nonce' ) ) {
-		$payment_id = $_POST['payment-id'];
+function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
 
-		$payment_data = edd_get_payment_meta( $payment_id );
+	if( 'publish' != $old_status && 'revoked' != $old_status )
+		return;
 
-		if ( isset( $_POST['edd-purchased-downloads'] ) ) {
-			$download_list = array();
-			$cart_items    = array();
+	if( 'refunded' != $new_status )
+		return;
 
-			foreach ( $_POST['edd-purchased-downloads'] as $key => $download ) {
-
-				$download_list[] = array(
-					'id'         => $key,
-					'options'    => isset( $download['options']['price_id'] ) ? array( 'price_id' => $download['options']['price_id'] ) : array()
-				);
-
-				$cart_items[]    = array(
-					'id'          => $key,
-					'name'        => get_the_title( $key ),
-					'item_number' => array(
-						'id'      => $key,
-						'options' => isset( $download['options']['price_id'] ) ? array( 'price_id' => $download['options']['price_id'] ) : array(),
-					),
-					'price'       => 0,
-					'quantity'    => 1,
-					'tax'         => 0
-				);
-			}
-
-			$payment_data['downloads']    = serialize( $download_list );
-			$payment_data['cart_details'] = serialize( $cart_items );
+	$downloads = edd_get_payment_meta_cart_details( $payment_id );
+	if( $downloads ) {
+		foreach( $downloads as $download ) {
+			edd_undo_purchase( $download['id'], $payment_id );
 		}
-
-		$user_info                 = maybe_unserialize( $payment_data['user_info'] );
-		$user_info['email']        = strip_tags( $_POST['edd-buyer-email'] );
-		$user_info['id']           = strip_tags( intval( $_POST['edd-buyer-user-id'] ) );
-		$payment_data['user_info'] = serialize( $user_info );
-		$payment_data['email']     = strip_tags( $_POST['edd-buyer-email'] );
-
-		update_post_meta( $payment_id, '_edd_payment_meta', $payment_data );
-		update_post_meta( $payment_id, '_edd_payment_user_email', strip_tags( $_POST['edd-buyer-email'] ) );
-		update_post_meta( $payment_id, '_edd_payment_user_id', strip_tags( intval( $_POST['edd-buyer-user-id'] ) ) );
-
-		if ( ! empty( $_POST['edd-payment-note'] ) ) {
-			$note    = wp_kses( $_POST['edd-payment-note'], array() );
-			$note_id = edd_insert_payment_note( $payment_id, $note );
-		}
-
-		if ( ! empty( $_POST['edd-payment-amount'] ) ) {
-			update_post_meta( $payment_id, '_edd_payment_total', sanitize_text_field( edd_sanitize_amount( $_POST['edd-payment-amount'] ) ) );
-		}
-
-		if ( ! empty( $_POST['edd-unlimited-downloads'] ) ) {
-			add_post_meta( $payment_id, '_unlimited_file_downloads', '1' );
-		} else {
-			delete_post_meta( $payment_id, '_unlimited_file_downloads' );
-		}
-
-		if ( $_POST['edd-old-status'] != $_POST['edd-payment-status'] ) {
-			edd_update_payment_status( $payment_id, $_POST['edd-payment-status'] );
-		}
-
-		if ( $_POST['edd-payment-status'] == 'publish' && isset( $_POST['edd-payment-send-email'] ) ) {
-			// Send the purchase receipt
-			edd_email_purchase_receipt( $payment_id, false );
-		}
-
-		do_action( 'edd_update_edited_purchase', $payment_id );
 	}
+
+	// Decrease store earnings
+	$amount = edd_get_payment_amount( $payment_id );
+	edd_decrease_total_earnings( $amount );
+
+	// Clear the This Month earnings (this_monththis_month is NOT a typo)
+	delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
 }
-add_action( 'edd_edit_payment', 'edd_update_edited_purchase' );
+add_action( 'edd_update_payment_status', 'edd_undo_purchase_on_refund', 100, 3 );
+
 
 /**
  * Trigger a Purchase Deletion
@@ -224,27 +182,14 @@ function edd_trigger_purchase_delete( $data ) {
 add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
 
 /**
- * Flushes the total earning cache when a new payment is created
- *
- * @since 1.2
- * @param int $payment Payment ID
- * @param array $payment_data Payment Data
- * @return void
- */
-function edd_clear_earnings_cache( $payment, $payment_data ) {
-	delete_transient( 'edd_total_earnings' );
-}
-add_action( 'edd_insert_payment', 'edd_clear_earnings_cache', 10, 2 );
-
-/**
  * Flushes the current user's purchase history transient when a payment status
  * is updated
  *
  * @since 1.2.2
- * @param int $payment Payment ID
- * @param string $new_status the status of the payment, probably "publish"
- * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
- * @return void
+ *
+ * @param $payment_id
+ * @param $new_status the status of the payment, probably "publish"
+ * @param $old_status the status of the payment prior to being marked as "complete", probably "pending"
  */
 function edd_clear_user_history_cache( $payment_id, $new_status, $old_status ) {
 	$user_info = edd_get_payment_meta_user_info( $payment_id );
@@ -286,28 +231,6 @@ function edd_update_old_payments_with_totals( $data ) {
 	add_option( 'edd_payment_totals_upgraded', 1 );
 }
 add_action( 'edd_upgrade_payments', 'edd_update_old_payments_with_totals' );
-
-
-/**
- * Triggers a payment note deletion
- *
- * @since 1.6
- * @param array $data Arguments passed
- * @return void
-*/
-function edd_trigger_payment_note_deletion( $data ) {
-
-	if( ! wp_verify_nonce( $data['_wpnonce'], 'edd_delete_payment_note' ) )
-		return;
-
-	$edit_order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&edd-action=edit-payment&purchase_id=' . absint( $data['purchase_id'] ) );
-
-	edd_delete_payment_note( $data['note_id'], $data['purchase_id'] );
-
-	wp_redirect( $edit_order_url );
-}
-add_action( 'edd_delete_payment_note', 'edd_trigger_payment_note_deletion' );
-
 
 /**
  * Updates week-old+ 'pending' orders to 'abandoned'

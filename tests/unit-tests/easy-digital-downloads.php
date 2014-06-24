@@ -33,7 +33,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$path = str_replace( 'tests/unit-tests/', '', plugin_dir_path( __FILE__ ) );
 		$this->assertSame( EDD_PLUGIN_FILE, $path.'easy-digital-downloads.php' );
 	}
-	
+
 	/**
 	 * @covers Easy_Digital_Downloads::includes
 	 */
@@ -50,11 +50,13 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/cart/functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/cart/actions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-api.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-fees.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-logging.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-session.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-roles.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/class-edd-stats.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/formatting.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/widgets.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/mime-types.php' );
@@ -64,6 +66,8 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/discount-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/payments/functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/payments/actions.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/payments/class-payment-stats.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/payments/class-payments-query.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/misc-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/download-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/scripts.php' );
@@ -102,6 +106,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/admin/welcome.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/process-download.php' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'includes/shortcodes.php' );
@@ -113,10 +118,10 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/edd-admin.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-classic.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-fresh.css' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/fonts/padlock.eot' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/fonts/padlock.svg' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/fonts/padlock.ttf' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/fonts/padlock.woff' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/fonts/padlock.eot' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/fonts/padlock.svg' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/fonts/padlock.ttf' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/fonts/padlock.woff' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderBottomCenter.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderBottomLeft.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderBottomRight.png' );
@@ -130,14 +135,13 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/loading.gif' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/loading_background.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/overlay.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/icons/americanexpress.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/icons/discover.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/icons/googlecheckout.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/icons/iphone.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/icons/mastercard.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/icons/paypal.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/icons/visa.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/chosen-sprite.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/americanexpress.gif' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/discover.gif' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/iphone.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/mastercard.gif' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/paypal.gif' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/visa.gif' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/chosen-sprite.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-badge.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-cpt-2x.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-cpt.png' );
@@ -146,13 +150,15 @@ class Tests_EDD extends EDD_UnitTestCase {
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-logo.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/edd-media.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/loading.gif' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/loading.gif' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/media-button.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/tick.png' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/tick.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/ui-icons_21759b_256x240.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/ui-icons_333333_256x240.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/ui-icons_999999_256x240.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/ui-icons_cc0000_256x240.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/xit.gif' );
+		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/xit.gif' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/admin-scripts.js' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/chosen.jquery.min.js' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/edd-ajax.js' );

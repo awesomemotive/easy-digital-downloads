@@ -1,6 +1,6 @@
 # Easy Digital Downloads Test Suite [![Build Status](https://secure.travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads.png?branch=master)](http://travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads)
 
-Version: 1.0
+Version: 1.1
 
 Authors: [Chris Christoff](http://www.github.com/chriscct7) and [Sunny Ratilal](http://github.com/sunnyratilal)
 
@@ -92,3 +92,28 @@ Above usually suffices to upgrade an existing PEAR installation. The PEAR Manual
 -------------------------	
 	
 ##### Note: Due to a bug present in WordPress 3.5 MU, you may see database errors on install.
+
+# External Testing URLs #
+* Travis-CI (automated unit testing): https://travis-ci.org/easydigitaldownloads/Easy-Digital-Downloads/
+* Coveralls.io (automated code coverage): https://coveralls.io/r/easydigitaldownloads/Easy-Digital-Downloads
+
+Other Supported (manually run):
+* PHPCI: http://www.phptesting.org/
+* PHPUnit: http://phpunit.de/manual/current/en/index.html
+
+# Changelog:
+Version 1.0: 
+* Initial development
+
+Version 1.1 (Developed alongside EDD v1.8 with #1559 + independent unit test commits):
+* Reverts the use of the "strict" PHPUnit option
+* Removes the old EDD coverage calculator
+* Integrates with the new Coveralls.io powered code-coverage calculator
+* Adds coveralls.io icon to readme.md
+* Removes the Travis kill switch (added in 76db0691eec21ed066ad4fe81174d4b6177d4c88) its now an option in Travis-CI
+* Covers points of #1020 to keep
+* Forces unit testing to use phpunit.xml
+* Adds coverall.yml config file
+* Adds composer.yml file (required to use coveralls.io)
+* Solves #1556 (Travis System Upgrades)
+* Updates the filterlist for blacklisted code coverage files/dirs

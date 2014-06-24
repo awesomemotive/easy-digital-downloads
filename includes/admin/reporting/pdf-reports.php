@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @author      Sunny Ratilal
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.1.4.0
@@ -108,6 +108,12 @@ function edd_generate_pdf( $data ) {
 				$link = get_permalink( $download->ID );
 				$earnings = html_entity_decode ( edd_currency_filter( edd_get_download_earnings_stats( $download->ID ) ) );
 
+				if( function_exists( 'iconv' ) ) {
+					// Ensure characters like euro; are properly converted. See GithuB issue #472 and #1570
+					$price    = iconv('UTF-8', 'windows-1252', utf8_encode( $price ) );
+					$earnings = iconv('UTF-8', 'windows-1252', utf8_encode( $earnings ) );
+				}
+
 				$pdf->Row( array( $title, $price, $categories, $tags, $sales, $earnings ) );
 			endforeach;
 		else:
@@ -128,7 +134,7 @@ function edd_generate_pdf( $data ) {
 		$pdf->SetX( 25 );
 		$pdf->Image( $image .'&file=.png' );
 		$pdf->Ln( 7 );
-		$pdf->Output( 'edd-report-' . date_i18n('Y-m-d') . '.pdf', 'D' );
+		$pdf->Output( apply_filters( 'edd_sales_earnings_pdf_export_filename', 'edd-report-' . date_i18n('Y-m-d') ) . '.pdf', 'D' );
 	}
 }
 add_action( 'edd_generate_pdf', 'edd_generate_pdf' );

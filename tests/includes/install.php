@@ -6,13 +6,16 @@ error_reporting( E_ALL & ~E_DEPRECATED & ~E_STRICT );
 
 echo "Welcome to the Easy Digital Downloads Test Suite" . PHP_EOL;
 echo "Version: 1.0" . PHP_EOL;
-echo "Authors: Chris Christoff and Sunny Ratilal" . PHP_EOL;
+echo "Authors: Chris Christoff, Sunny Ratilal, and Pippin Williamson" . PHP_EOL;
 
 $config_file_path = $argv[1];
 $multisite = ! empty( $argv[2] );
 
 require_once $config_file_path;
 require_once dirname( $config_file_path ) . '/includes/functions.php';
+
+// Force WP_ADMIN to be true
+define( 'WP_ADMIN', true );
 
 // Load EDD
 function _load_edd() {
@@ -30,6 +33,7 @@ $PHP_SELF = $GLOBALS['PHP_SELF'] = $_SERVER['PHP_SELF'] = '/index.php';
 require_once ABSPATH . '/wp-settings.php';
 
 echo "Installing Easy Digital Downloads...\n";
+
 
 // Install Easy Digital Downloads
 edd_install();

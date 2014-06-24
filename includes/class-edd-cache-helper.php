@@ -7,17 +7,14 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
  *
  * @package     EDD
  * @subpackage  Classes/Cache Helper
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.7
 */
 class EDD_Cache_Helper {
 
 	/**
-	 * __construct function.
-	 *
-	 * @access public
-	 * @return void
+	 * Initializes the object instance
 	 */
 	public function __construct() {
 

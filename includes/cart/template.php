@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Cart
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -19,14 +19,23 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_checkout_cart() {
+
+	// Check if the Update cart button should be shown
+	if( edd_item_quantities_enabled() ) {
+		add_action( 'edd_cart_footer_buttons', 'edd_update_cart_button' );
+	}
+
+	// Check if the Save Cart button should be shown
+	if( ! edd_is_cart_saving_disabled() ) {
+		add_action( 'edd_cart_footer_buttons', 'edd_save_cart_button' );
+	}
+
 	do_action( 'edd_before_checkout_cart' );
-	echo '<!--dynamic-cached-content-->';
 	echo '<form id="edd_checkout_cart_form" method="post">';
 		echo '<div id="edd_checkout_cart_wrap">';
 			edd_get_template_part( 'checkout_cart' );
 		echo '</div>';
 	echo '</form>';
-	echo '<!--/dynamic-cached-content-->';
 	do_action( 'edd_after_checkout_cart' );
 }
 
@@ -34,39 +43,18 @@ function edd_checkout_cart() {
  * Renders the Shopping Cart
  *
  * @since 1.0
+ *
+ * @param bool $echo
  * @return string Fully formatted cart
-*/
+ */
 function edd_shopping_cart( $echo = false ) {
 	global $edd_options;
 
 	ob_start();
-	do_action('edd_before_cart');
-	$display = 'style="display:none;"';
-  	$cart_quantity = edd_get_cart_quantity();
 
-  	if ( $cart_quantity > 0 ){
-  	  $display = "";
-  	}
+	do_action( 'edd_before_cart' );
 
-  	echo "<p class='edd-cart-number-of-items' {$display}>" . __( 'Number of items in cart', 'edd' ) . ': <span class="edd-cart-quantity">' . $cart_quantity . '<span></p>';
- 	?>
-
-	<ul class="edd-cart">
-	<!--dynamic-cached-content-->
-	<?php
-		$cart_items = edd_get_cart_contents();
-		if($cart_items) :
-			foreach( $cart_items as $key => $item ) :
-				echo edd_get_cart_item_template( $key, $item, false );
-			endforeach;
-			edd_get_template_part( 'widget', 'cart-checkout' );
-		else :
-			edd_get_template_part( 'widget', 'cart-empty' );
-		endif;
-	?>
-	<!--/dynamic-cached-content-->
-	</ul>
-	<?php
+	edd_get_template_part( 'widget', 'cart' );
 
 	do_action( 'edd_after_cart' );
 
@@ -112,7 +100,7 @@ function edd_get_cart_item_template( $cart_key, $item, $ajax = false ) {
 	$item = str_replace( '{remove_url}', $remove_url, $item );
   	$subtotal = '';
   	if ( $ajax ){
-   	 $subtotal = edd_currency_filter( edd_format_amount( edd_get_cart_amount( false ) ) ) ;
+   	 $subtotal = edd_currency_filter( edd_format_amount( edd_get_cart_subtotal() ) ) ;
   	}
  	$item = str_replace( '{subtotal}', $subtotal, $item );
 
@@ -139,3 +127,105 @@ function edd_empty_checkout_cart() {
 	echo edd_empty_cart_message();
 }
 add_action( 'edd_cart_empty', 'edd_empty_checkout_cart' );
+
+/*
+ * Calculate the number of columns in the cart table dynamically.
+ *
+ * @since 1.8
+ * @return int The number of columns
+ */
+function edd_checkout_cart_columns() {
+	$head_first = did_action( 'edd_checkout_table_header_first' );
+	$head_last  = did_action( 'edd_checkout_table_header_last' );
+	$default    = 3;
+
+	return apply_filters( 'edd_checkout_cart_columns', $head_first + $head_last + $default );
+}
+
+/**
+ * Display the "Save Cart" button on the checkout
+ *
+ * @since 1.8
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_save_cart_button() {
+	global $edd_options;
+
+	if ( edd_is_cart_saving_disabled() )
+		return;
+
+	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'blue';
+	$color = ( $color == 'inherit' ) ? '' : $color;
+
+	if ( edd_is_cart_saved() ) : ?>
+		<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . $color; ?>" id="edd-restore-cart-button" href="<?php echo add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ) ) ?>"><?php _e( 'Restore Previous Cart', 'edd' ); ?></a>
+	<?php endif; ?>
+	<a class="edd-cart-saving-button edd-submit button<?php echo ' ' . $color; ?>" id="edd-save-cart-button" href="<?php echo add_query_arg( 'edd_action', 'save_cart' ) ?>"><?php _e( 'Save Cart', 'edd' ); ?></a>
+	<?php
+}
+
+/**
+ * Displays the restore cart link on the empty cart page, if a cart is saved
+ *
+ * @since 1.8
+ * @return void
+ */
+function edd_empty_cart_restore_cart_link() {
+
+	if( edd_is_cart_saving_disabled() )
+		return;
+
+	if( edd_is_cart_saved() ) {
+		echo ' <a class="edd-cart-saving-link" id="edd-restore-cart-link" href="' . add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ) ) . '">' . __( 'Restore Previous Cart.', 'edd' ) . '</a>';
+	}
+}
+add_action( 'edd_cart_empty', 'edd_empty_cart_restore_cart_link' );
+
+/**
+ * Display the "Save Cart" button on the checkout
+ *
+ * @since 1.8
+ * @global $edd_options Array of all the EDD Options
+ * @return void
+ */
+function edd_update_cart_button() {
+	global $edd_options;
+
+	if ( ! edd_item_quantities_enabled() )
+		return;
+
+	$color = isset( $edd_options[ 'checkout_color' ] ) ? $edd_options[ 'checkout_color' ] : 'blue';
+	$color = ( $color == 'inherit' ) ? '' : $color;
+?>
+	<input type="submit" name="edd_update_cart_submit" class="edd-submit edd-no-js button<?php echo ' ' . $color; ?>" value="<?php _e( 'Update Cart', 'edd' ); ?>"/>
+	<input type="hidden" name="edd_action" value="update_cart"/>
+<?php
+
+}
+
+/**
+ * Display the messages that are related to cart saving
+ *
+ * @since 1.8
+ * @return void
+ */
+function edd_display_cart_messages() {
+	$messages = EDD()->session->get( 'edd_cart_messages' );
+
+	if ( $messages ) {
+		$classes = apply_filters( 'edd_error_class', array(
+			'edd_errors'
+		) );
+		echo '<div class="' . implode( ' ', $classes ) . '">';
+		    // Loop message codes and display messages
+		   foreach ( $messages as $message_id => $message ){
+		        echo '<p class="edd_error" id="edd_msg_' . $message_id . '">' . $message . '</p>';
+		   }
+		echo '</div>';
+
+		// Remove all of the cart saving messages
+		EDD()->session->set( 'edd_cart_messages', null );
+	}
+}
+add_action( 'edd_before_checkout_cart', 'edd_display_cart_messages' );

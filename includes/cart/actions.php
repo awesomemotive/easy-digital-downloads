@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Cart
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -27,7 +27,7 @@ function edd_add_rewrite_endpoints( $rewrite_rules ) {
 add_action( 'init', 'edd_add_rewrite_endpoints' );
 
 /**
- * Process Cart Endpointss
+ * Process Cart Endpoints
  *
  * Listens for add/remove requests sent from the cart
  *
@@ -60,37 +60,57 @@ add_action( 'template_redirect', 'edd_process_cart_endpoints', 100 );
  * Process the Add to Cart request
  *
  * @since 1.0
- * @return void
+ *
+ * @param $data
  */
 function edd_process_add_to_cart( $data ) {
-	$download_id = $data['download_id'];
+	$download_id = absint( $data['download_id'] );
 	$options     = isset( $data['edd_options'] ) ? $data['edd_options'] : array();
 	$cart        = edd_add_to_cart( $download_id, $options );
 
 	if ( edd_straight_to_checkout() && ! edd_is_checkout() ) {
 		wp_redirect( edd_get_checkout_uri(), 303 );
 		edd_die();
+	} else {
+		wp_redirect( remove_query_arg( array( 'edd_action', 'download_id', 'edd_options' ) ) ); edd_die();
 	}
 }
 add_action( 'edd_add_to_cart', 'edd_process_add_to_cart' );
 
 /**
- * Process the Remove form Cart request
+ * Process the Remove from Cart request
  *
  * @since 1.0
- * @return void
+ *
+ * @param $data
  */
 function edd_process_remove_from_cart( $data ) {
-	$cart_key = $_GET['cart_item'];
+	$cart_key = absint( $_GET['cart_item'] );
 	edd_remove_from_cart( $cart_key );
+	wp_redirect( remove_query_arg( array( 'edd_action', 'cart_item' ) ) ); edd_die();
 }
 add_action( 'edd_remove', 'edd_process_remove_from_cart' );
+
+/**
+ * Process the Remove fee from Cart request
+ *
+ * @since 2.0
+ *
+ * @param $data
+ */
+function edd_process_remove_fee_from_cart( $data ) {
+	$fee = sanitize_text_field( $data['fee'] );
+	EDD()->fees->remove_fee( $fee );
+	wp_redirect( remove_query_arg( array( 'edd_action', 'fee' ) ) ); edd_die();
+}
+add_action( 'edd_remove_fee', 'edd_process_remove_fee_from_cart' );
 
 /**
  * Process the Collection Purchase request
  *
  * @since 1.0
- * @return void
+ *
+ * @param $data
  */
 function edd_process_collection_purchase( $data ) {
 	$taxonomy   = urldecode( $data['taxonomy'] );
@@ -106,7 +126,6 @@ add_action( 'edd_purchase_collection', 'edd_process_collection_purchase' );
  * Process cart updates, primarily for quantities
  *
  * @since 1.7
- * @return void
  */
 function edd_process_cart_update( $data ) {
 
@@ -118,3 +137,35 @@ function edd_process_cart_update( $data ) {
 
 }
 add_action( 'edd_update_cart', 'edd_process_cart_update' );
+
+/**
+ * Process cart save
+ *
+ * @since 1.8
+ * @return void
+ */
+function edd_process_cart_save( $data ) {
+
+	$cart = edd_save_cart();
+	if( ! is_wp_error( $cart ) ) {
+		wp_redirect( edd_get_checkout_uri() ); exit;
+	}
+
+}
+add_action( 'edd_save_cart', 'edd_process_cart_save' );
+
+/**
+ * Process cart save
+ *
+ * @since 1.8
+ * @return void
+ */
+function edd_process_cart_restore( $data ) {
+
+	$cart = edd_restore_cart();
+	if( ! is_wp_error( $cart ) ) {
+		wp_redirect( edd_get_checkout_uri() ); exit;
+	}
+
+}
+add_action( 'edd_restore_cart', 'edd_process_cart_restore' );

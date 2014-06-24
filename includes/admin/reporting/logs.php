@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
 */
@@ -140,7 +140,7 @@ function edd_log_default_views() {
 */
 function edd_log_views() {
 	$views        = edd_log_default_views();
-	$current_view = isset( $_GET['view'] ) ? $_GET['view'] : 'file_downloads';
+	$current_view = isset( $_GET['view'] ) && array_key_exists( $_GET['view'], edd_log_default_views() ) ? sanitize_text_field( $_GET['view'] ) : 'file_downloads';
 	?>
 	<form id="edd-logs-filter" method="get" action="edit.php">
 		<select id="edd-logs-view" name="view">

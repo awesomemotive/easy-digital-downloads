@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Functions
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -15,23 +15,10 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Register EDD Query Vars
- *
- * @since 1.0
- * @param array $vars Query vars
- * @return array $vars Query vars
- */
-function edd_query_vars( $vars ) {
-	$vars[] = 'edd_action';
-	$vars[] = 'cart_item';
-	$vars[] = 'edd-listener';
-	return $vars;
-}
-add_filter( 'query_vars', 'edd_query_vars' );
-
-/**
  * Blocks access to Download attachments
-  *
+ *
+ * Only blocks files that are listed as downloadable files for the product
+ *
  * @since 1.2.2
  * @return void
  */
@@ -43,11 +30,20 @@ function edd_block_attachments() {
 	$uri      = wp_get_attachment_url( get_the_ID() );
 	$edd_file = strpos( $uri, '/edd/' );
 
-	if ( ! $parent && false === $edd_file )
+	if ( ! $parent && false === $edd_file ) {
 		return;
+	}
 
-	if ( 'download' != get_post_type( $parent ) && false === $edd_file )
+	if ( 'download' != get_post_type( $parent ) && false === $edd_file ) {
 		return;
+	}
+
+	$files      = edd_get_download_files( $parent );
+	$restricted = wp_list_pluck( $files, 'file' );
+
+	if ( ! in_array( $uri, $restricted ) ) {
+		return;
+	}
 
 	wp_die( __( 'You do not have permission to view this file.', 'edd' ), __( 'Error', 'edd' ) );
 }

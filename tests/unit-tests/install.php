@@ -9,9 +9,10 @@ class Tests_Activation extends EDD_UnitTestCase {
 		parent::setUp();
 	}
 
-	public function test_settings_general() {
-		$this->assertArrayHasKey( 'purchase_page', get_option( 'edd_settings_general' ) );
-		$this->assertArrayHasKey( 'success_page', get_option( 'edd_settings_general' ) );
-		$this->assertArrayHasKey( 'failure_page', get_option( 'edd_settings_general' ) );
+	public function test_settings() {
+		global $edd_options;
+		$this->assertArrayHasKey( 'purchase_page', $edd_options );
+		$this->assertArrayHasKey( 'success_page', $edd_options );
+		$this->assertArrayHasKey( 'failure_page', $edd_options );
 	}
 }

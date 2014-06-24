@@ -14,7 +14,12 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$post_id = $this->factory->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'draft' ) );
+		$post_id = $this->factory->post->create( array(
+			'post_title' => 'Test Download Product',
+			'post_name' => 'test-download-product',
+			'post_type' => 'download',
+			'post_status' => 'publish'
+		) );
 
 		$_variable_pricing = array(
 			array(
@@ -52,7 +57,8 @@ class Tests_Downloads extends EDD_UnitTestCase {
 			'_edd_product_type' => 'default',
 			'_edd_download_earnings' => 129.43,
 			'_edd_download_sales' => 59,
-			'_edd_download_limit_override_1' => 1
+			'_edd_download_limit_override_1' => 1,
+			'edd_sku' => 'sku_0012'
 		);
 		foreach( $meta as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
@@ -69,6 +75,19 @@ class Tests_Downloads extends EDD_UnitTestCase {
 		$this->assertObjectHasAttribute( 'post_type', $out );
 
 		$this->assertEquals( $out->post_type, $this->_post->post_type );
+	}
+
+	public function test_edd_get_download_by() {
+		
+		$download = edd_get_download_by( 'id', $this->_post->ID );
+		$this->assertSame( $this->_post->ID, $download->ID );
+		
+		$download = edd_get_download_by( 'sku', 'sku_0012' );
+		$this->assertSame( $this->_post->ID, $download->ID );
+		
+		$download = edd_get_download_by( 'slug', 'test-download-product' );
+		$this->assertSame( $this->_post->ID, $download->ID );
+
 	}
 
 	public function test_download_price() {
@@ -111,7 +130,10 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	}
 
 	public function test_price_range() {
-		$this->markTestIncomplete( 'This test needs to be rewritten per #600.');
+		$range = edd_price_range( $this->_post->ID );
+		$expected = '<span class="edd_price_range_low">&#36;20.00</span><span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_range_high">&#36;100.00</span>';
+		$this->assertInternalType( 'string', $range );
+		$this->assertEquals( $expected, $range );
 	}
 
 	public function test_single_price_option_mode() {
@@ -148,7 +170,7 @@ class Tests_Downloads extends EDD_UnitTestCase {
 
 	public function test_get_download_files() {
 		$out = edd_get_download_files( $this->_post->ID );
-		
+
 		foreach ( $out as $file ) {
 			$this->assertArrayHasKey( 'name', $file );
 			$this->assertArrayHasKey( 'file', $file );
@@ -185,5 +207,13 @@ class Tests_Downloads extends EDD_UnitTestCase {
 
 	public function test_get_product_notes() {
 		$this->assertEquals( 'Purchase Notes', edd_get_product_notes( $this->_post->ID ) );
+	}
+
+	public function test_get_download_type() {
+		$this->assertEquals( 'default', edd_get_download_type( $this->_post->ID ) );
+	}
+
+	public function test_get_download_is_bundle() {
+		$this->assertFalse( edd_is_bundled_product( $this->_post->ID ) );
 	}
 }

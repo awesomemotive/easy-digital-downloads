@@ -9,6 +9,9 @@
  * @since       1.6
 */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  * EDD_Cron Class
  *
@@ -20,10 +23,8 @@ class EDD_Cron {
 	/**
 	 * Get things going
 	 *
-	 * @access public
 	 * @since 1.6
 	 * @see EDD_Cron::weekly_events()
-	 * @return void
 	 */
 	public function __construct() {
 		add_filter( 'cron_schedules', array( $this, 'add_schedules'   ) );
@@ -33,9 +34,10 @@ class EDD_Cron {
 	/**
 	 * Registers new cron schedules
 	 *
-	 * @access public
 	 * @since 1.6
-	 * @return void
+	 *
+	 * @param array $schedules
+	 * @return array
 	 */
 	public function add_schedules( $schedules = array() ) {
 		// Adds once weekly to the existing schedules.
@@ -67,9 +69,8 @@ class EDD_Cron {
 	 * @return void
 	 */
 	private function weekly_events() {
-		if ( ! wp_next_scheduled( 'edd_weekly_cron' ) ) {
-			wp_schedule_event( current_time( 'timestamp' ), 'weekly', 'edd_weekly_cron' );
-			do_action( 'edd_weekly_scheduled_events' );
+		if ( ! wp_next_scheduled( 'edd_weekly_scheduled_events' ) ) {
+			wp_schedule_event( current_time( 'timestamp' ), 'weekly', 'edd_weekly_scheduled_events' );
 		}
 	}
 
@@ -81,10 +82,10 @@ class EDD_Cron {
 	 * @return void
 	 */
 	private function daily_events() {
-		if ( ! wp_next_scheduled( 'edd_daily_cron' ) ) {
-			wp_schedule_event( current_time( 'timestamp' ), 'daily', 'edd_daily_cron' );
-			do_action( 'edd_daily_scheduled_events' );
+		if ( ! wp_next_scheduled( 'edd_daily_scheduled_events' ) ) {
+			wp_schedule_event( current_time( 'timestamp' ), 'daily', 'edd_daily_scheduled_events' );
 		}
 	}
+
 }
 $edd_cron = new EDD_Cron;

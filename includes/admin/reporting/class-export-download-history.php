@@ -6,7 +6,7 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
  */
@@ -47,7 +47,7 @@ class EDD_Download_History_Export extends EDD_Export {
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=edd-export-' . $this->export_type . '-' . $month . '-' . $year . '.csv' );
+		header( 'Content-Disposition: attachment; filename=' . apply_filters( 'edd_download_history_export_filename', 'edd-export-' . $this->export_type . '-' . $month . '-' . $year ) . '.csv' );
 		header( "Expires: 0" );
 	}
 

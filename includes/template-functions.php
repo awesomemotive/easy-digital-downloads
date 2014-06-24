@@ -4,7 +4,7 @@
  *
  * @package     EDD
  * @subpackage  Functions/Templates
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2014, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
@@ -55,10 +55,12 @@ function edd_get_purchase_link( $args = array() ) {
 		return false;
 	}
 
+	$post_id = is_object( $post ) ? $post->ID : 0;
+
 	$defaults = apply_filters( 'edd_purchase_link_defaults', array(
-		'download_id' => $post->ID,
+		'download_id' => $post_id,
 		'price'       => (bool) true,
-		'direct'      => edd_get_download_button_behavior( $post->ID ) == 'direct' ? true : false,
+		'direct'      => edd_get_download_button_behavior( $post_id ) == 'direct' ? true : false,
 		'text'        => ! empty( $edd_options[ 'add_to_cart_text' ] ) ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
 		'style'       => isset( $edd_options[ 'button_style' ] ) 	   ? $edd_options[ 'button_style' ]     : 'button',
 		'color'       => isset( $edd_options[ 'checkout_color' ] ) 	   ? $edd_options[ 'checkout_color' ] 	: 'blue',
@@ -81,10 +83,12 @@ function edd_get_purchase_link( $args = array() ) {
 	if ( $args['price'] && $args['price'] !== 'no' && ! $variable_pricing ) {
 		$price = edd_get_download_price( $args['download_id'] );
 
+		$button_text = ! empty( $args['text'] ) ? '&nbsp;&ndash;&nbsp;' . $args['text'] : '';
+
 		if ( 0 == $price ) {
-			$args['text'] = __( 'Free', 'edd' ) . '&nbsp;&ndash;&nbsp;' . $args['text'];
+			$args['text'] = __( 'Free', 'edd' ) . $button_text;
 		} else {
-			$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . '&nbsp;&ndash;&nbsp;' . $args['text'];
+			$args['text'] = edd_currency_filter( edd_format_amount( $price ) ) . $button_text;
 		}
 	}
 
@@ -96,16 +100,32 @@ function edd_get_purchase_link( $args = array() ) {
 		$checkout_display = 'style="display:none;"';
 	}
 
+	global $edd_displayed_form_ids;
+	// Collect any form IDs we've displayed already so we can avoid duplicate IDs
+	if ( isset( $edd_displayed_form_ids[$args['download_id']] ) ) {
+		$edd_displayed_form_ids[$args['download_id']]++;
+	} else {
+		$edd_displayed_form_ids[$args['download_id']] = 1;
+	}
+
+	$form_id = ! empty( $args['form_id'] ) ? $args['form_id'] : 'edd_purchase_' . $args['download_id'];
+
+	// If we've already generated a form ID for this download ID, apped -#
+	if ( $edd_displayed_form_ids[$args['download_id']] > 1 ) {
+		$form_id .= '-' . $edd_displayed_form_ids[$args['download_id']];
+	}
+
+	$args = apply_filters( 'edd_purchase_link_args', $args );
+
 	ob_start();
 ?>
-	<!--dynamic-cached-content-->
-	<form id="edd_purchase_<?php echo $args['download_id']; ?>" class="edd_download_purchase_form" method="post">
+	<form id="<?php echo $form_id; ?>" class="edd_download_purchase_form" method="post">
 
 		<?php do_action( 'edd_purchase_link_top', $args['download_id'] ); ?>
 
 		<div class="edd_purchase_submit_wrapper">
 			<?php
-			 if ( edd_is_ajax_enabled() ) {
+			 if ( ! edd_is_ajax_disabled() ) {
 				printf(
 					'<a href="#" class="edd-add-to-cart %1$s" data-action="edd_add_to_cart" data-download-id="%3$s" %4$s %5$s %6$s><span class="edd-add-to-cart-label">%2$s</span> <span class="edd-loading"><i class="edd-icon-spinner edd-icon-spin"></i></span></a>',
 					implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) ),
@@ -136,7 +156,7 @@ function edd_get_purchase_link( $args = array() ) {
 			);
 			?>
 
-			<?php if ( edd_is_ajax_enabled() ) : ?>
+			<?php if ( ! edd_is_ajax_disabled() ) : ?>
 				<span class="edd-cart-ajax-alert">
 					<span class="edd-cart-added-alert" style="display: none;">
 						<?php printf(
@@ -148,12 +168,13 @@ function edd_get_purchase_link( $args = array() ) {
 					</span>
 				</span>
 			<?php endif; ?>
+			<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
+				echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), edd_get_tax_rate() * 100 ) . '</span>';
+			} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
+				echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'edd' ), edd_get_tax_rate() * 100 ) . '</span>';
+			} ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
-		
-		<?php if( edd_display_tax_rate() ) {
-			echo '<div class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'edd' ), $edd_options['tax_rate'] ) . '</div>';
-		} ?>
-		
+
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $args['download_id'] ); ?>">
 		<?php if( ! empty( $args['direct'] ) ) { ?>
 			<input type="hidden" name="edd_action" class="edd_action_input" value="straight_to_gateway">
@@ -163,8 +184,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 		<?php do_action( 'edd_purchase_link_end', $args['download_id'] ); ?>
 
-	</form><!--end #edd_purchase_<?php echo esc_attr( $args['download_id'] ); ?>-->
-	<!--/dynamic-cached-content-->
+	</form><!--end #<?php echo esc_attr( $form_id ); ?>-->
 <?php
 	$purchase_form = ob_get_clean();
 
@@ -176,7 +196,7 @@ function edd_get_purchase_link( $args = array() ) {
  * Variable price output
  *
  * Outputs variable pricing options for each download or a specified downloads in a list.
- * The output generated can be overriden by the filters provided or by removing
+ * The output generated can be overridden by the filters provided or by removing
  * the action and adding your own custom action.
  *
  * @since 1.2.3
@@ -201,15 +221,15 @@ function edd_purchase_variable_pricing( $download_id = 0 ) {
 			<?php
 			if ( $prices ) :
 				foreach ( $prices as $key => $price ) :
-					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '">';
+					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '" itemprop="offers" itemscope itemtype="http://schema.org/Offer">';
 					printf(
 						'<label for="%3$s"><input type="%2$s" %1$s name="edd_options[price_id][]" id="%3$s" class="%4$s" value="%5$s" %7$s/> %6$s</label>',
-						checked( 0, $key, false ),
+						checked( apply_filters( 'edd_price_option_checked', 0, $download_id, $key ), $key, false ),
 						$type,
 						esc_attr( 'edd_price_option_' . $download_id . '_' . $key ),
 						esc_attr( 'edd_price_option_' . $download_id ),
 						esc_attr( $key ),
-						'<span class="edd_price_option_name">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price[ 'amount' ] ) ) . '</span>',
+						'<span class="edd_price_option_name" itemprop="description">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price" itemprop="price">' . edd_currency_filter( edd_format_amount( $price[ 'amount' ] ) ) . '</span>',
 						checked( isset( $_GET['price_option'] ), $key, false )
 					);
 					do_action( 'edd_after_price_option', $key, $price, $download_id );
@@ -228,21 +248,22 @@ add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10 );
 /**
  * Before Download Content
  *
- * Adds an action to the begining of download post content that can be hooked to
+ * Adds an action to the beginning of download post content that can be hooked to
  * by other functions.
  *
  * @since 1.0.8
  * @global $post
- * @param $content string The the_content field of the download object
- * @return $content string the content with any additional data attached
+ *
+ * @param $content The the_content field of the download object
+ * @return string the content with any additional data attached
  */
 function edd_before_download_content( $content ) {
 	global $post;
 
-	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() && !post_password_required() ) {
 		ob_start();
-		$content .= ob_get_clean();
 		do_action( 'edd_before_download_content', $post->ID );
+		$content .= ob_get_clean();
 	}
 
 	return $content;
@@ -257,13 +278,14 @@ add_filter( 'the_content', 'edd_before_download_content' );
  *
  * @since 1.0.8
  * @global $post
- * @param $content string The the_content field of the download object
- * @return $content string the content with any additional data attached
+ *
+ * @param $content The the_content field of the download object
+ * @return string the content with any additional data attached
  */
 function edd_after_download_content( $content ) {
 	global $post;
 
-	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() && !post_password_required() ) {
 		ob_start();
 		do_action( 'edd_after_download_content', $post->ID );
 		$content .= ob_get_clean();
@@ -272,28 +294,6 @@ function edd_after_download_content( $content ) {
 	return $content;
 }
 add_filter( 'the_content', 'edd_after_download_content' );
-
-/**
- * Filter Success Page Content
- *
- * Applies filters to the success page content.
- *
- * @since 1.0
- * @param string $content Content before filters
- * @return string $content Filtered content
- */
-function edd_filter_success_page_content( $content ) {
-	global $edd_options;
-
-	if ( isset( $edd_options['success_page'] ) && isset( $_GET['payment-confirmation'] ) && is_page( $edd_options['success_page'] ) ) {
-		if ( has_filter( 'edd_payment_confirm_' . $_GET['payment-confirmation'] ) ) {
-			$content = apply_filters( 'edd_payment_confirm_' . $_GET['payment-confirmation'], $content );
-		}
-	}
-
-	return $content;
-}
-add_filter( 'the_content', 'edd_filter_success_page_content' );
 
 /**
  * Get Button Colors
@@ -305,12 +305,42 @@ add_filter( 'the_content', 'edd_filter_success_page_content' );
  */
 function edd_get_button_colors() {
 	$colors = array(
-		'gray'      => __( 'Gray', 'edd' ),
-		'blue'      => __( 'Blue', 'edd' ),
-		'green'     => __( 'Green', 'edd' ),
-		'yellow'    => __( 'Yellow', 'edd' ),
-		'dark-gray' => __( 'Dark Gray', 'edd' ),
-		'inherit'	=> __( 'Inherit', 'edd' ),
+		'white'     => array(
+			'label' => __( 'White', 'edd' ),
+			'hex'   => '#ffffff'
+		),
+		'gray'      => array(
+			'label' => __( 'Gray', 'edd' ),
+			'hex'   => '#f0f0f0'
+		),
+		'blue'      => array(
+			'label' => __( 'Blue', 'edd' ),
+			'hex'   => '#428bca'
+		),
+		'red'       => array(
+			'label' => __( 'Red', 'edd' ),
+			'hex'   => '#d9534f'
+		),
+		'green'     => array(
+			'label' => __( 'Green', 'edd' ),
+			'hex'   => '#5cb85c'
+		),
+		'yellow'    => array(
+			'label' => __( 'Yellow', 'edd' ),
+			'hex'   => '#f0ad4e'
+		),
+		'orange'    => array(
+			'label' => __( 'Orange', 'edd' ),
+			'hex'   => '#ed9c28'
+		),
+		'dark-gray' => array(
+			'label' => __( 'Dark Gray', 'edd' ),
+			'hex'   => '#363636'
+		),
+		'inherit'	=> array(
+			'label' => __( 'Inherit', 'edd' ),
+			'hex'   => ''
+		)
 	);
 
 	return apply_filters( 'edd_button_colors', $colors );
@@ -334,36 +364,13 @@ function edd_get_button_styles() {
 }
 
 /**
- * Show Has Purchased Item Message
- *
- * Prints a notice when user has already purchased the item.
- *
- * @since 1.0
- * @global $user_ID
- * @param int $download_id Download ID
- * @return void
- */
-function edd_show_has_purchased_item_message() {
-	global $user_ID, $post;
-
-	if( !isset( $post->ID ) )
-		return;
-
-	if ( edd_has_user_purchased( $user_ID, $post->ID ) ) {
-		$alert = '<p class="edd_has_purchased">' . __( 'You have already purchased this item, but you may purchase it again.', 'edd' ) . '</p>';
-		echo apply_filters( 'edd_show_has_purchased_item_message', $alert );
-	}
-}
-add_action( 'edd_after_download_content', 'edd_show_has_purchased_item_message' );
-
-/**
  * Default formatting for download excerpts
  *
  * This excerpt is primarily used in the [downloads] short code
  *
  * @since 1.0.8.4
- * @param string $excerpt Content before filterting
- * @return string $excerpt Content after filterting
+ * @param string $excerpt Content before filtering
+ * @return string $excerpt Content after filtering
  * @return string
  */
 function edd_downloads_default_excerpt( $excerpt ) {
@@ -377,8 +384,8 @@ add_filter( 'edd_downloads_excerpt', 'edd_downloads_default_excerpt' );
  * This is primarily used in the [downloads] short code
  *
  * @since 1.0.8.4
- * @param string $content Content before filterting
- * @return string $content Content after filterting
+ * @param string $content Content before filtering
+ * @return string $content Content after filtering
  */
 function edd_downloads_default_content( $content ) {
 	return do_shortcode( wpautop( $content ) );
@@ -389,24 +396,25 @@ add_filter( 'edd_downloads_content', 'edd_downloads_default_content' );
  * Gets the download links for each item purchased
  *
  * @since 1.1.5
- * @param array $purchase_data Purchase data
+ * @param int $payment_id The ID of the payment to retrieve download links for
  * @return string
  */
-function edd_get_purchase_download_links( $purchase_data ) {
-	if ( ! is_array( $purchase_data['downloads'] ) )
-		return '<div class="edd-error">' . __( 'No downloads found', 'edd' ) . '</div>';
+function edd_get_purchase_download_links( $payment_id = 0 ) {
 
-	$links = '<ul class="edd_download_links">';
+	$downloads   = edd_get_payment_meta_cart_details( $payment_id, true );
+	$payment_key = edd_get_payment_key( $payment_id );
+	$email       = edd_get_payment_user_email( $payment_id );
+	$links       = '<ul class="edd_download_links">';
 
-	foreach ( $purchase_data['downloads'] as $download ) {
+	foreach ( $downloads as $download ) {
 		$links .= '<li>';
 			$links .= '<h3 class="edd_download_link_title">' . esc_html( get_the_title( $download['id'] ) ) . '</h3>';
 			$price_id = isset( $download['options'] ) && isset( $download['options']['price_id'] ) ? $download['options']['price_id'] : null;
-			$files = edd_get_download_files( $download['id'], $price_id );
+			$files    = edd_get_download_files( $download['id'], $price_id );
 			if ( is_array( $files ) ) {
 				foreach ( $files as $filekey => $file ) {
 					$links .= '<div class="edd_download_link_file">';
-						$links .= '<a href="' . esc_url( edd_get_download_file_url( $purchase_data['purchase_key'], $purchase_data['user_email'], $filekey, $download['id'], $price_id ) ) . '">';
+						$links .= '<a href="' . esc_url( edd_get_download_file_url( $payment_key, $email, $filekey, $download['id'], $price_id ) ) . '">';
 							if ( isset( $file['name'] ) )
 								$links .= esc_html( $file['name'] );
 							else
@@ -452,6 +460,9 @@ function edd_get_templates_url() {
  *
  * @param string $slug
  * @param string $name Optional. Default null
+ * @param bool   $load
+ *
+ * @return string
  *
  * @uses edd_locate_template()
  * @uses load_template()
@@ -467,7 +478,7 @@ function edd_get_template_part( $slug, $name = null, $load = true ) {
 		$templates[] = $slug . '-' . $name . '.php';
 	$templates[] = $slug . '.php';
 
-	// Allow template parst to be filtered
+	// Allow template parts to be filtered
 	$templates = apply_filters( 'edd_get_template_part', $templates, $slug, $name );
 
 	// Return the part that is found
@@ -505,20 +516,12 @@ function edd_locate_template( $template_names, $load = false, $require_once = tr
 		// Trim off any slashes from the template name
 		$template_name = ltrim( $template_name, '/' );
 
-		// Check child theme first
-		if ( file_exists( trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $template_name ) ) {
-			$located = trailingslashit( get_stylesheet_directory() ) . 'edd_templates/' . $template_name;
-			break;
-
-		// Check parent theme next
-		} elseif ( file_exists( trailingslashit( get_template_directory() ) . 'edd_templates/' . $template_name ) ) {
-			$located = trailingslashit( get_template_directory() ) . 'edd_templates/' . $template_name;
-			break;
-
-		// Check theme compatibility last
-		} elseif ( file_exists( trailingslashit( edd_get_templates_dir() ) . $template_name ) ) {
-			$located = trailingslashit( edd_get_templates_dir() ) . $template_name;
-			break;
+		// try locating this template file by looping through the template paths
+		foreach( edd_get_theme_template_paths() as $template_path ) {
+			if( file_exists( $template_path . $template_name ) ) {
+				$located = $template_path . $template_name;
+				break;
+			}
 		}
 	}
 
@@ -526,6 +529,30 @@ function edd_locate_template( $template_names, $load = false, $require_once = tr
 		load_template( $located, $require_once );
 
 	return $located;
+}
+
+/**
+ * Returns a list of paths to check for template locations
+ *
+ * @since 1.8.5
+ * @return mixed|void
+ */
+function edd_get_theme_template_paths() {
+
+	$template_dir = edd_get_theme_template_dir_name();
+
+	$file_paths = array(
+		1 => trailingslashit( get_stylesheet_directory() ) . $template_dir,
+		10 => trailingslashit( get_template_directory() ) . $template_dir,
+		100 => edd_get_templates_dir()
+	);
+
+	$file_paths = apply_filters( 'edd_template_paths', $file_paths );
+
+	// sort the file paths based on priority
+	ksort( $file_paths, SORT_NUMERIC );
+
+	return array_map( 'trailingslashit', $file_paths );
 }
 
 /**
@@ -541,13 +568,13 @@ function edd_get_theme_template_dir_name() {
 }
 
 /**
- * Should we add schema.org mcirodata?
+ * Should we add schema.org microdata?
  *
  * @since 1.7
  * @return bool
  */
 function edd_add_schema_microdata() {
-	// Don't modify anything until after wp_head() is callsed
+	// Don't modify anything until after wp_head() is called
 	$ret = did_action( 'wp_head' );
 	return apply_filters( 'edd_add_schema_microdata', $ret );
 }
@@ -580,9 +607,9 @@ add_filter( 'the_title', 'edd_microdata_title', 10, 2 );
  *
  * @since 1.5
  * @author Sunny Ratilal
- * @param string $title Post Title
- * @param int $id Post ID
- * @return string $title New title
+ *
+ * @param $content
+ * @return mixed|void New title
  */
 function edd_microdata_wrapper( $content ) {
 	global $post;
@@ -597,3 +624,36 @@ function edd_microdata_wrapper( $content ) {
 	return $content;
 }
 add_filter( 'the_content', 'edd_microdata_wrapper', 10 );
+
+/**
+ * Add no-index and no-follow to EDD checkout and purchase confirmation pages
+ *
+ * @since 2.0
+ *
+ * @return void
+ */
+function edd_checkout_meta_tags() {
+
+	$pages   = array();
+	$pages[] = edd_get_option( 'success_page' );
+	$pages[] = edd_get_option( 'failure_page' );
+	$pages[] = edd_get_option( 'purchase_history_page' );
+
+	if( ! edd_is_checkout() && ! is_page( $pages ) ) {
+		return;
+	}
+
+	echo '<meta name="robots" content="noindex,nofollow" />' . "\n";
+}
+add_action( 'wp_head', 'edd_checkout_meta_tags' );
+
+/**
+ * Adds EDD Version to the <head> tag
+ *
+ * @since 1.4.2
+ * @return void
+*/
+function edd_version_in_header(){
+	echo '<meta name="generator" content="Easy Digital Downloads v' . EDD_VERSION . '" />' . "\n";
+}
+add_action( 'wp_head', 'edd_version_in_header' );

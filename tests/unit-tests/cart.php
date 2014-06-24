@@ -89,8 +89,7 @@ class Test_Cart extends EDD_UnitTestCase {
 				'options' => array(
 					'price_id' => 0,
 					'name' => 'Simple',
-					'amount' => 20,
-					'quantity' => 1
+					'amount' => 20
 				),
 				'quantity' => 1
 			)
@@ -122,5 +121,77 @@ class Test_Cart extends EDD_UnitTestCase {
 
 	public function test_get_purchase_session() {
 		$this->assertEmpty( edd_get_purchase_session() );
+	}
+
+	public function test_cart_saving_disabled() {
+		$this->assertTrue( edd_is_cart_saving_disabled() );
+	}
+
+	public function test_is_cart_saved() {
+
+		global $edd_options;
+
+		// Test for no saved cart
+		$this->assertFalse( edd_is_cart_saved() );
+
+		// Create a saved cart then test again
+		$cart = array(
+			'0' => array(
+				'id' => $this->_post->ID,
+				'options' => array(
+					'price_id' => 0,
+					'name' => 'Simple',
+					'amount' => 20,
+					'quantity' => 1
+				),
+				'quantity' => 1
+			)
+		);
+		update_user_meta( get_current_user_id(), 'edd_saved_cart', $cart );
+		$edd_options['enable_cart_saving'] = '1';
+		update_option( 'edd_settings', $edd_options );
+
+		$this->assertTrue( edd_is_cart_saved() );
+	}
+
+	public function test_restore_cart() {
+
+		// Create a saved cart
+		$saved_cart = array(
+			'0' => array(
+				'id' => $this->_post->ID,
+				'options' => array(
+					'price_id' => 0,
+					'name' => 'Simple',
+					'amount' => 20,
+					'quantity' => 1
+				),
+				'quantity' => 1
+			)
+		);
+		update_user_meta( get_current_user_id(), 'edd_saved_cart', $saved_cart );
+
+		// Set the current cart contents (different from saved)
+		$cart = array(
+			'0' => array(
+				'id' => $this->_post->ID,
+				'options' => array(
+					'price_id' => 1,
+					'name' => 'Advanced',
+					'amount' => 30,
+					'quantity' => 1
+				),
+				'quantity' => 1
+			)
+		);
+		EDD()->session->set( 'edd_cart', $cart );
+
+		edd_restore_cart();
+
+		$this->assertEquals( edd_get_cart_contents(), $saved_cart );
+	}
+
+	public function test_generate_cart_token() {
+		$this->assertInternalType( 'int', edd_generate_cart_token() );
 	}
 }
