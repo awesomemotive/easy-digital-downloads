@@ -205,6 +205,13 @@ jQuery(document).ready(function($) {
         }
     });
 
+    // Apply the discount when hitting Enter in the discount field instead
+    $checkout_form_wrap.on('keyup', '#edd-discount', function (event) {
+        if (event.keyCode == '13') {
+            $checkout_form_wrap.find('.edd-apply-discount').trigger('click');
+        }
+    });
+
     // Remove a discount
     $body.on('click', '.edd_discount_remove', function (event) {
 
@@ -250,10 +257,11 @@ jQuery(document).ready(function($) {
         return false;
     });
 
+    // When discount link is clicked, hide the link, then show the discount input and set focus.
     $body.on('click', '.edd_discount_link', function(e) {
         e.preventDefault();
         $('.edd_discount_link').parent().hide();
-        $('#edd-discount-code-wrap').show();
+        $('#edd-discount-code-wrap').show().find('#edd-discount').focus();
     });
 
     // Hide / show discount fields for browsers without javascript enabled
