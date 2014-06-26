@@ -59,6 +59,7 @@ tr.status-refunded td { background: #cecece; border-top-color: #ccc; }
 @media handheld, only screen and (max-width: 640px) {
 	.wp-list-table.downloads th { width: auto!important;}
 }
+.download_page_edd-payment-history .ui-dialog .ui-dialog-titlebar-close span { margin-left: -8px; margin-top: -8px; }
 
 /* Metabox Styles
 -------------------------------------------------------------- */

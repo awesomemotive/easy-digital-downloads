@@ -559,9 +559,10 @@ jQuery(document).ready(function ($) {
 					data: postData,
 					url: ajaxurl,
 					success: function (link) {
-						
-						alert( edd_vars.copy_download_link_text + "\n\n" + link );
-
+						$( "#edd-download-link" ).dialog({
+							autoResize: true
+						});
+						$( "#edd-download-link" ).html( link );
 						return false;
 					}
 				}).fail(function (data) {
