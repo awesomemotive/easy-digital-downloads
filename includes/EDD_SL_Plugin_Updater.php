@@ -49,7 +49,7 @@ class EDD_SL_Plugin_Updater {
 	private function hook() {
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'pre_set_site_transient_update_plugins_filter' ) );
 		add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3 );
-		add_filter( 'http_request_args', array( $this, 'http_request_args' ), 10, 2 );
+		//add_filter( 'http_request_args', array( $this, 'http_request_args' ), 10, 2 );
 	}
 
 	/**
