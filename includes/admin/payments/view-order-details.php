@@ -481,3 +481,5 @@ $address      = ! empty( $user_info['address'] ) ? $user_info['address'] : array
 	</form>
 	<?php do_action( 'edd_view_order_details_after', $payment_id ); ?>
 </div><!-- /.wrap -->
+
+<div id="edd-download-link" title="<?php _e( 'Copy Download Link(s)', 'edd' ); ?>"></div>
