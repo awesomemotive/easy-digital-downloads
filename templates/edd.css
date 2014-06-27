@@ -89,7 +89,7 @@
 #edd_checkout_cart th:last-child,
 #edd_checkout_cart td:last-child,
 #edd_checkout_cart th.edd_cart_total { text-align: right; }
-#edd_checkout_cart td img { float: left; margin: 0 8px 0 0; background: none; padding: none; border: none; }
+#edd_checkout_cart td img { float: left; margin: 0 8px 0 0; background: none; padding: 0; border: none; }
 #edd_checkout_cart input.edd-item-quantity { width: 3em; max-height: 90%; padding: 2px; }
 #edd_checkout_cart .edd_discount { display: inline-block; margin-left: 5px; }
 .edd_discount_remove { display: inline-block; width: 10px; height: 11px; background: url( images/xit.gif ) 0 0 no-repeat; position: relative; top: 3px; }
@@ -114,7 +114,7 @@
 #edd_checkout_form_wrap input[type="radio"] { border: none; margin-right: 5px; }
 #edd_checkout_form_wrap input[type="checkbox"] { float: left; margin: 0 8px 0 0; }
 #edd_checkout_form_wrap .edd-payment-icons { height: 32px; display: block; margin: 0 0 8px; }
-#edd_checkout_form_wrap .edd-payment-icons img.payment-icon{ max-height: 32px; width: auto; margin: 0 3px 0 0; float: left; background: none; padding: none; border: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
+#edd_checkout_form_wrap .edd-payment-icons img.payment-icon{ max-height: 32px; width: auto; margin: 0 3px 0 0; float: left; background: none; padding: 0; border: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;}
 #edd_checkout_form_wrap #edd-payment-mode-wrap label { display: inline-block; margin: 0 20px 0 0; }
 #edd_checkout_form_wrap #edd-payment-mode-wrap .edd-payment-mode-label { font-weight: bold; display: inline-block; position: relative; margin-bottom: 5px; }
 #edd_checkout_form_wrap fieldset { border: 1px solid #eee; padding: 1.387em; margin: 0 0 21px 0; }
@@ -306,7 +306,7 @@ input[type="submit"].edd-submit:focus,
   border-color: #cccccc;
 }
 
-.edd-submit.button:hover.
+.edd-submit.button:hover,
 .edd-submit.button:focus,
 .edd-submit.button:active,
 .edd-submit.button.gray:hover,
