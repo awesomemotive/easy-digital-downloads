@@ -192,7 +192,7 @@ function edd_load_admin_scripts( $hook ) {
 	}
 	wp_enqueue_script( 'jquery-flot', $js_dir . 'jquery.flot' . $suffix . '.js' );
 	wp_enqueue_script( 'jquery-ui-datepicker' );
-	wp_enqueue_script( 'jquery-ui' );
+	wp_enqueue_script( 'jquery-ui-dialog' );
 	$ui_style = ( 'classic' == get_user_option( 'admin_color' ) ) ? 'classic' : 'fresh';
 	wp_enqueue_style( 'jquery-ui-css', $css_dir . 'jquery-ui-' . $ui_style . $suffix . '.css' );
 	wp_enqueue_script( 'media-upload' );
