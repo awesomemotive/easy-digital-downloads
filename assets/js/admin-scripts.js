@@ -559,9 +559,8 @@ jQuery(document).ready(function ($) {
 					data: postData,
 					url: ajaxurl,
 					success: function (link) {
-						
-						alert( edd_vars.copy_download_link_text + "\n\n" + link );
-
+						$( "#edd-download-link" ).dialog().html( '<textarea rows="10" cols="40" id="edd-download-link-textarea">' + link + '</textarea>' );
+						$( "#edd-download-link-textarea" ).focus().select();
 						return false;
 					}
 				}).fail(function (data) {
