@@ -819,6 +819,8 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 	if ( empty( $zip ) || empty( $country_code ) )
 		return $ret;
 
+	$country_code = strtoupper( $country_code );
+
 	$zip_regex = array(
 		"AD" => "AD\d{3}",
 		"AM" => "(37)?\d{4}",
