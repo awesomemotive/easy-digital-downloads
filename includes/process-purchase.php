@@ -787,17 +787,17 @@ function edd_purchase_form_validate_cc() {
  */
 function edd_get_purchase_cc_info() {
 	$cc_info = array();
-	$cc_info['card_name']   = isset( $_POST['card_name'] )   ? sanitize_text_field( $_POST['card_name'] )   : '';
-	$cc_info['card_number']  = isset( $_POST['card_number'] )  ? sanitize_text_field( $_POST['card_number'] )   : '';
-	$cc_info['card_cvc']   = isset( $_POST['card_cvc'] )   ? sanitize_text_field( $_POST['card_cvc'] )   : '';
-	$cc_info['card_exp_month']  = isset( $_POST['card_exp_month'] ) ? sanitize_text_field( $_POST['card_exp_month'] )  : '';
-	$cc_info['card_exp_year']  = isset( $_POST['card_exp_year'] )  ? sanitize_text_field( $_POST['card_exp_year'] )  : '';
-	$cc_info['card_address']  = isset( $_POST['card_address'] )  ? sanitize_text_field( $_POST['card_address'] )  : '';
-	$cc_info['card_address_2']  = isset( $_POST['card_address_2'] ) ? sanitize_text_field( $_POST['card_address_2'] )  : '';
-	$cc_info['card_city']   = isset( $_POST['card_city'] )   ? sanitize_text_field( $_POST['card_city'] )   : '';
-	$cc_info['card_state']      = isset( $_POST['card_state'] )     ? sanitize_text_field( $_POST['card_state'] )      : '';
-	$cc_info['card_country']  = isset( $_POST['billing_country'] )? sanitize_text_field( $_POST['billing_country'] )  : '';
-	$cc_info['card_zip']   = isset( $_POST['card_zip'] )  ? sanitize_text_field( $_POST['card_zip'] )   : '';
+	$cc_info['card_name']      = isset( $_POST['card_name'] )       ? sanitize_text_field( $_POST['card_name'] )       : '';
+	$cc_info['card_number']    = isset( $_POST['card_number'] )     ? sanitize_text_field( $_POST['card_number'] )     : '';
+	$cc_info['card_cvc']       = isset( $_POST['card_cvc'] )        ? sanitize_text_field( $_POST['card_cvc'] )        : '';
+	$cc_info['card_exp_month'] = isset( $_POST['card_exp_month'] )  ? sanitize_text_field( $_POST['card_exp_month'] )  : '';
+	$cc_info['card_exp_year']  = isset( $_POST['card_exp_year'] )   ? sanitize_text_field( $_POST['card_exp_year'] )   : '';
+	$cc_info['card_address']   = isset( $_POST['card_address'] )    ? sanitize_text_field( $_POST['card_address'] )    : '';
+	$cc_info['card_address_2'] = isset( $_POST['card_address_2'] )  ? sanitize_text_field( $_POST['card_address_2'] )  : '';
+	$cc_info['card_city']      = isset( $_POST['card_city'] )       ? sanitize_text_field( $_POST['card_city'] )       : '';
+	$cc_info['card_state']     = isset( $_POST['card_state'] )      ? sanitize_text_field( $_POST['card_state'] )      : '';
+	$cc_info['card_country']   = isset( $_POST['billing_country'] ) ? sanitize_text_field( $_POST['billing_country'] ) : '';
+	$cc_info['card_zip']       = isset( $_POST['card_zip'] )        ? sanitize_text_field( $_POST['card_zip'] )        : '';
 
 	// Return cc info
 	return $cc_info;
