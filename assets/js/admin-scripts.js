@@ -561,8 +561,7 @@ jQuery(document).ready(function ($) {
 					success: function (link) {
 						$( "#edd-download-link" ).dialog();
 						$( "#edd-download-link" ).html( '<textarea rows="10" cols="40" id="edd-download-link-textarea">' + link + '</textarea>' );
-						$( "#edd-download-link-textarea" ).focus();
-						$( "#edd-download-link-textarea" ).select();
+						$( "#edd-download-link-textarea" ).focus().select();
 						return false;
 					}
 				}).fail(function (data) {
