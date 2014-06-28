@@ -559,8 +559,7 @@ jQuery(document).ready(function ($) {
 					data: postData,
 					url: ajaxurl,
 					success: function (link) {
-						$( "#edd-download-link" ).dialog();
-						$( "#edd-download-link" ).html( '<textarea rows="10" cols="40" id="edd-download-link-textarea">' + link + '</textarea>' );
+						$( "#edd-download-link" ).dialog().html( '<textarea rows="10" cols="40" id="edd-download-link-textarea">' + link + '</textarea>' );
 						$( "#edd-download-link-textarea" ).focus().select();
 						return false;
 					}
