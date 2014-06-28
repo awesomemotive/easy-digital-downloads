@@ -85,7 +85,7 @@ function edd_update_payment_details( $data ) {
 				'id'          => $download['id'],
 				'item_number' => $item,
 				'price'       => $download['amount'],
-				'item_price'  => $download['amount'] / $download['quantity'],
+				'item_price'  => round( $download['amount'] / $download['quantity'], 2 ),
 				'quantity'    => $download['quantity'],
 				'discount'    => 0,
 				'tax'         => 0,
