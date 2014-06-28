@@ -553,7 +553,7 @@ jQuery(document).ready(function ($) {
 					download_id : $this.data('download-id'),
 					price_id    : $this.data('price-id')
 				};
-				
+
 				$.ajax({
 					type: "POST",
 					data: postData,
