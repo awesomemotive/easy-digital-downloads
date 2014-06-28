@@ -840,7 +840,7 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 		"BN" => "[A-Z]{2}[ ]?\d{4}",
 		"BR" => "\d{5}[\-]?\d{3}",
 		"BY" => "\d{6}",
-		"CA" => "^([ABCEGHJKLMNPRSTVXY]\d[ABCEGHJKLMNPRSTVWXYZ])\ {0,1}(\d[ABCEGHJKLMNPRSTVWXYZ]\d)$",
+		"CA" => "^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$",
 		"CC" => "6799",
 		"CH" => "^[1-9][0-9][0-9][0-9]$",
 		"CK" => "\d{4}",
