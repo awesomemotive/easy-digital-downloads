@@ -22,9 +22,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_is_test_mode() {
 	global $edd_options;
 
-	$ret = ! empty( $edd_options['test_mode'] );
+	$ret = ( ! empty( $edd_options['test_mode'] ) || edd_is_support_mode() ) ? true : false;
 
 	return (bool) apply_filters( 'edd_is_test_mode', $ret );
+}
+
+/**
+ * Is Support Mode
+ *
+ * @since 2.1
+ * @global $edd_options
+ * @return bool $ret True if support mode is enabled, false otherwise
+ */
+function edd_is_support_mode() {
+	$key = edd_get_option( 'support_key', false );
+	$ret = false;
+
+	if( isset( $_GET['support-key'] ) && ! empty( $_GET['support-key'] ) && $_GET['support-key'] == $key && current_user_can( 'manage_shop_settings' ) ) {
+		$ret = true;
+	}
+
+	return (bool) apply_filters( 'edd_is_support_mode', $ret );
 }
 
 /**
@@ -665,3 +683,34 @@ if ( ! function_exists( 'cal_days_in_month' ) ) {
 		return date( 't', mktime( 0, 0, 0, $month, 1, $year ) );
 	}
 }
+
+/**
+ * Generates a random support key
+ *
+ * @since 2.1
+ * @return void
+ */
+function edd_generate_support_key() {
+	global $edd_options;
+
+	if( ! wp_verify_nonce( $_GET['edd_support_key_nonce'], 'edd_support_key_nonce' ) )
+		return;
+
+	// As the PHP uniqid() function isn't truly random (in fact, it's quite predictable)
+	// and this is used for security, we're rolling our own uniqid function.
+
+	// Define character pool
+	$chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	$key   = '';
+
+	for( $i = 0; $i < 24; ++$i ) {
+		$key .= substr( $chars, mt_rand() % 62, 1 );
+	}
+
+	$edd_options['support_key'] = $key;
+	update_option( 'edd_settings', $edd_options );
+
+	wp_redirect( remove_query_arg( array( 'edd-action', 'edd_support_key_nonce' ) ) );
+	exit;
+}
+add_action( 'edd_generate_support_key', 'edd_generate_support_key' );
