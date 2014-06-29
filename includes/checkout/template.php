@@ -567,8 +567,8 @@ function edd_show_payment_icons() {
 			if( edd_string_is_image_url( $key ) ) {
 				echo '<img class="payment-icon" src="' . esc_url( $key ) . '"/>';
 			} else {
-				if( has_filter( 'edd_accepted_card_' . strtolower( str_replace( ' ', '', $card ) ) . '_image' ) ) {
-					$image = apply_filters( 'edd_accepted_card_' . strtolower( str_replace( ' ', '', $card ) ) . '_image', '' );
+				if( has_filter( 'edd_accepted_payment_' . strtolower( str_replace( ' ', '', $card ) ) . '_image' ) ) {
+					$image = apply_filters( 'edd_accepted_payment_' . strtolower( str_replace( ' ', '', $card ) ) . '_image', '' );
 				} else {
 					$image = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . strtolower( str_replace( ' ', '', $card ) ) . '.gif', false );
 					$content_dir = WP_CONTENT_DIR;
