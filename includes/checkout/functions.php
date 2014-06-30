@@ -200,8 +200,8 @@ function edd_get_failed_transaction_uri( $extras = false ) {
  */
 function edd_is_failed_transaction_page() {
 	global $edd_options;
-	$is_failure_page = isset( $edd_options['failure_page'] ) ? is_page( $edd_options['failure_page'] ) : false;
-	return apply_filters( 'edd_is_failure_page', $is_failure_page );
+	$ret = isset( $edd_options['failure_page'] ) ? is_page( $edd_options['failure_page'] ) : false;
+	return apply_filters( 'edd_is_failure_page', $ret );
 }
 
 /**
