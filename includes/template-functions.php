@@ -743,6 +743,11 @@ function edd_add_download_post_classes( $classes, $class = '', $post_id = false 
 				$classes[] = 'edd-download-tag-' . $value->slug;
 			}
 		}
+
+		// Add edd-download
+		if( is_singular( 'download' ) ) {
+			$classes[] = 'edd-download';
+		}
 	}
 
 	if( ( $key = array_search( 'hentry', $classes ) ) !== false ) {
