@@ -152,10 +152,25 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 
 	$new_item[] = $to_add;
 
-	if ( is_array( $cart ) ) {
-		$cart = array_merge( $cart, $new_item );
+	if ( edd_item_quantities_enabled() ) {
+		if ( is_array( $cart ) ) {
+			foreach( $cart as $key => $item ) {
+				if( $new_item[0]['id'] == $item['id'] ) {
+					$cart[$key]['quantity']++;
+					$new_item = array();
+				}
+			}
+
+			$cart = array_merge( $cart, $new_item );
+		} else {
+			$cart = $new_item;
+		}
 	} else {
-		$cart = $new_item;
+		if ( is_array( $cart ) ) {
+			$cart = array_merge( $cart, $new_item );
+		} else {
+			$cart = $new_item;
+		}
 	}
 
 	EDD()->session->set( 'edd_cart', $cart );
