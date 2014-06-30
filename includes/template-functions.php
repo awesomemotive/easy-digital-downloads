@@ -657,3 +657,98 @@ function edd_version_in_header(){
 	echo '<meta name="generator" content="Easy Digital Downloads v' . EDD_VERSION . '" />' . "\n";
 }
 add_action( 'wp_head', 'edd_version_in_header' );
+
+/**
+ * Determines if we're currently on the Purchase History page.
+ *
+ * @since 2.1
+ * @return bool True if on the Purchase History page, false otherwise.
+ */
+function edd_is_purchase_history_page() {
+	global $edd_options;
+	$is_purchase_history_page = isset( $edd_options['purchase_history_page'] ) ? is_page( $edd_options['purchase_history_page'] ) : false;
+	return apply_filters( 'edd_is_purchase_history_page', $is_purchase_history_page );
+}
+
+/**
+ * Adds body classes for EDD pages
+ *
+ * @since 2.1
+ * @param array $classes current classes
+ * @return array Modified array of classes
+ */
+function edd_add_body_classes( $class ) {
+	$classes = (array) $class;
+
+	if( edd_is_checkout() ) {
+		$classes[] = 'edd-checkout';
+		$classes[] = 'edd-page';
+	}
+
+	if( edd_is_success_page() ) {
+		$classes[] = 'edd-success';
+		$classes[] = 'edd-page';
+	}
+
+	if( edd_is_failed_transaction_page() ) {
+		$classes[] = 'edd-failed-transaction';
+		$classes[] = 'edd-page';
+	}
+
+	if( edd_is_purchase_history_page() ) {
+		$classes[] = 'edd-purchase-history';
+		$classes[] = 'edd-page';
+	}
+
+	if( edd_is_test_mode() ) {
+		$classes[] = 'edd-test-mode';
+		$classes[] = 'edd-page';
+	}
+
+	return array_unique( $classes );
+}
+add_filter( 'body_class', 'edd_add_body_classes' );
+
+/**
+ * Adds post classes for downloads
+ *
+ * @since 2.1
+ * @param array $classes Current classes
+ * @param string|array $class
+ * @param int $post_id The ID of the current post
+ * @return array Modified array of classes
+ */
+function edd_add_download_post_classes( $classes, $class = '', $post_id = false ) {
+	if( ! $post_id || get_post_type( $post_id ) !== 'download' || is_admin() ) {
+		return $classes;
+	}
+
+	$download = edd_get_download( $post_id );
+
+	if( $download ) {
+		$classes[] = 'edd-download';
+
+		// Add category slugs
+		$categories = get_the_terms( $post_id, 'download_category' );
+		if( ! empty( $categories ) ) {
+			foreach( $categories as $key => $value ) {
+				$classes[] = 'edd-download-cat-' . $value->slug;
+			}
+		}
+
+		// Add tag slugs
+		$tags = get_the_terms( $post_id, 'download_tag' );
+		if( ! empty( $tags ) ) {
+			foreach( $tags as $key => $value ) {
+				$classes[] = 'edd-download-tag-' . $value->slug;
+			}
+		}
+	}
+
+	if( ( $key = array_search( 'hentry', $classes ) ) !== false ) {
+		unset( $classes[ $key ] );
+	}
+
+	return $classes;
+}
+add_filter( 'post_class', 'edd_add_download_post_classes', 20, 3 );

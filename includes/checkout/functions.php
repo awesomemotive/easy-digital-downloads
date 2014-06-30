@@ -193,6 +193,18 @@ function edd_get_failed_transaction_uri( $extras = false ) {
 }
 
 /**
+ * Determines if we're currently on the Failed Transaction page.
+ *
+ * @since 2.1
+ * @return bool True if on the Failed Transaction page, false otherwise.
+ */
+function edd_is_failed_transaction_page() {
+	global $edd_options;
+	$is_failure_page = isset( $edd_options['failure_page'] ) ? is_page( $edd_options['failure_page'] ) : false;
+	return apply_filters( 'edd_is_failure_page', $is_failure_page );
+}
+
+/**
  * Mark payments as Failed when returning to the Failed Transaction page
  *
  * @access      public
