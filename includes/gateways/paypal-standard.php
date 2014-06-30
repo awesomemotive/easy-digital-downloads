@@ -114,7 +114,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 				$paypal_args['item_number_' . $i ] = edd_get_download_sku( $item['id'] );
 			}
 			$paypal_args['quantity_' . $i ]        = $item['quantity'];
-			$paypal_args['amount_' . $i ]          = edd_sanitize_amount($item['item_price']) - edd_sanitize_amount( $item['discount'] / $item['quantity'] ); // update Diciannove soc coop: edd_sanitize_amount
+			$paypal_args['amount_' . $i ]          = $item['item_price'] - edd_sanitize_amount( $item['discount'] / $item['quantity'] );
 			$i++;
 
 		}
@@ -129,7 +129,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 					// this is a positive fee
 					$paypal_args['item_name_' . $i ] = stripslashes_deep( html_entity_decode( wp_strip_all_tags( $fee['label'] ), ENT_COMPAT, 'UTF-8' ) );
 					$paypal_args['quantity_' . $i ]  = '1';
-					$paypal_args['amount_' . $i ]    = edd_sanitize_amount($fee['amount']); // update Diciannove soc coop: edd_sanitaze_function
+					$paypal_args['amount_' . $i ]    = $fee['amount'];
 					$i++;
 				} else {
 					// This is a negative fee (discount)
@@ -144,8 +144,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
 		// Add taxes to the cart
 		if ( edd_use_taxes() ) {
-			$paypal_args['tax_cart'] = edd_sanitize_amount(round( $purchase_data['tax'], 2 )); // update Diciannove soc coop: edd_sanitaze_function
-					
+			$paypal_args['tax_cart'] = edd_sanitize_amount(round( $purchase_data['tax'], 2 ));
 		}
 
 		$paypal_args = apply_filters( 'edd_paypal_redirect_args', $paypal_args, $purchase_data );

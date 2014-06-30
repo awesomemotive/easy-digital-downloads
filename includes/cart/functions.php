@@ -55,17 +55,18 @@ function edd_get_cart_content_details() {
 		$tax        = round( $tax * $quantity, 2 );
 		$total      = round( ( $subtotal - $discount + $tax ), 2 );
 
-		$details[ $key ]  = array(
-			'name'        => get_the_title( $item['id'] ),
-			'id'          => $item['id'],
-			'item_number' => $item,
-			'item_price'  => $item_price,
-			'quantity'    => $quantity,
-			'discount'    => $discount,
-			'subtotal'    => $subtotal,
-			'tax'         => $tax,
-			'price'       => $total,
-		);
+		 $details[ $key ]  = array(
+                        'name'        => get_the_title( $item['id'] ),
+                        'id'          => $item['id'],
+                        'item_number' => $item,
+                        'item_price'  => edd_sanitize_amount($item_price),
+                        'quantity'    => $quantity,
+                        'discount'    => edd_sanitize_amount($discount),
+                        'subtotal'    => edd_sanitize_amount($subtotal),
+                        'tax'         => edd_sanitize_amount($tax),
+                        'price'       => edd_sanitize_amount($total),
+                );
+		
 
 	}
 
