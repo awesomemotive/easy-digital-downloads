@@ -666,8 +666,8 @@ add_action( 'wp_head', 'edd_version_in_header' );
  */
 function edd_is_purchase_history_page() {
 	global $edd_options;
-	$is_purchase_history_page = isset( $edd_options['purchase_history_page'] ) ? is_page( $edd_options['purchase_history_page'] ) : false;
-	return apply_filters( 'edd_is_purchase_history_page', $is_purchase_history_page );
+	$ret = isset( $edd_options['purchase_history_page'] ) ? is_page( $edd_options['purchase_history_page'] ) : false;
+	return apply_filters( 'edd_is_purchase_history_page', $ret );
 }
 
 /**
