@@ -150,13 +150,13 @@ class edd_categories_tags_widget extends WP_Widget {
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'edd' ); ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
-				   name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo $title; ?>"/>
+				   name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo $instance['title']; ?>"/>
 		</p>
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'taxonomy' ) ); ?>"><?php _e( 'Taxonomy:', 'edd' ); ?></label>
 			<select name="<?php echo esc_attr( $this->get_field_name( 'taxonomy' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'taxonomy' ) ); ?>">
-				<option value="download_category" <?php selected( 'download_category', $taxonomy ); ?>><?php _e( 'Categories', 'edd' ); ?></option>
-				<option value="download_tag" <?php selected( 'download_tag', $taxonomy ); ?>><?php _e( 'Tags', 'edd' ); ?></option>
+				<option value="download_category" <?php selected( 'download_category', $instance['taxonomy'] ); ?>><?php _e( 'Categories', 'edd' ); ?></option>
+				<option value="download_tag" <?php selected( 'download_tag', $instance['taxonomy'] ); ?>><?php _e( 'Tags', 'edd' ); ?></option>
 			</select>
 		</p>
 		<p>
