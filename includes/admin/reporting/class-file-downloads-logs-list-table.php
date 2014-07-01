@@ -154,7 +154,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 			if( is_numeric( $_GET['user'] ) ) {
 				$ret = absint( $_GET['user'] );
 			} else {
-				$ret = $_GET['user'];
+				$ret = sanitize_text_field( $_GET['user'] );
 			}
 		}
 
