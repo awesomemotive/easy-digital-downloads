@@ -227,8 +227,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 
 		$data = $this->query();
 
-		$current_page = $this->get_pagenum();
-
 		$total_items = $this->total_items();
 
 		$this->items = $data;
