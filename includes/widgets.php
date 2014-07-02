@@ -43,20 +43,23 @@ class edd_cart_widget extends WP_Widget {
 			$args['id'] = 'edd_cart_widget';
 		}		
 
-		extract( $args );
-
 		$title = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $args['id'] );
 
 		global $post, $edd_options;
 
-		echo $before_widget;
+		echo $args['before_widget'];
+		
 		if ( $title ) {
-			echo $before_title . $title . $after_title;
+			echo $args['before_title'] . $title . $args['after_title'];
 		}
+		
 		do_action( 'edd_before_cart_widget' );
+		
 		edd_shopping_cart( true );
+		
 		do_action( 'edd_after_cart_widget' );
-		echo $after_widget;
+		
+		echo $args['after_widget'];
 	}
 
 	/** @see WP_Widget::update */
@@ -101,8 +104,6 @@ class edd_categories_tags_widget extends WP_Widget {
 			$args['id'] = 'edd_categories_tags_widget';
 		}
 
-		extract( $args );
-
 		$title      = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $args['id'] );
 		$tax        = $instance['taxonomy'];
 		$count      = isset( $instance['count'] ) && $instance['count'] == 'on' ? 1 : 0;
@@ -111,19 +112,21 @@ class edd_categories_tags_widget extends WP_Widget {
 
 		global $post, $edd_options;
 
-		echo $before_widget;
+		echo $args['before_widget'];
+		
 		if ( $title ) {
-			echo $before_title . $title . $after_title;
+			echo $args['before_title'] . $title . $args['after_title'];
 		}
 
 		do_action( 'edd_before_taxonomy_widget' );
 
 		echo "<ul class=\"edd-taxonomy-widget\">\n";
-		wp_list_categories('title_li=&taxonomy=' . $tax . '&show_count=' . $count . '&hide_empty=' . $hide_empty);
+			wp_list_categories( 'title_li=&taxonomy=' . $tax . '&show_count=' . $count . '&hide_empty=' . $hide_empty );
 		echo "</ul>\n";
 
 		do_action( 'edd_after_taxonomy_widget' );
-		echo $after_widget;
+		
+		echo $args['after_widget'];
 	}
 
 	/** @see WP_Widget::update */
@@ -200,8 +203,6 @@ class EDD_Product_Details_Widget extends WP_Widget {
 			$args['id'] = 'edd_download_details_widget';
 		}
 
-        extract( $args );
-
         if ( 'current' == $instance['download_id'] && ! is_singular( 'download' ) ) {
         	return;
         }
@@ -221,11 +222,11 @@ class EDD_Product_Details_Widget extends WP_Widget {
     	$tags 				= $instance['tags'] ? $instance['tags'] : '';
 	
         // Used by themes. Opens the widget
-        echo $before_widget;
+        echo $args['before_widget'];
 
         // Display the widget title
         if( $title ) {
-            echo $before_title . $title . $after_title;
+            echo $args['before_title'] . $title . $args['after_title'];
 		}
 
         do_action( 'edd_product_details_widget_before_title' , $instance , $download_id );
@@ -255,14 +256,14 @@ class EDD_Product_Details_Widget extends WP_Widget {
         	$text .= '</p>';
         }
         
-        do_action( 'edd_product_details_widget_before_categories_and_tags' , $instance , $download_id );
+        do_action( 'edd_product_details_widget_before_categories_and_tags', $instance, $download_id );
 
         printf( $text, $category_list, $tag_list );
         
-        do_action( 'edd_product_details_widget_before_end' , $instance , $download_id );
+        do_action( 'edd_product_details_widget_before_end', $instance, $download_id );
 
         // Used by themes. Closes the widget
-        echo $after_widget;
+        echo $args['after_widget'];
     }
 
    	/** @see WP_Widget::form */
