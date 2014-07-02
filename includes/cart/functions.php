@@ -423,7 +423,7 @@ function edd_get_cart_item_final_price( $item_key = 0 ) {
  * Get cart item tax
  *
  * @since 1.9
- * @param int $item Cart item array
+ * @param array $item Cart item array
  * @return float Tax amount
  */
 function edd_get_cart_item_tax( $item = array() ) {
