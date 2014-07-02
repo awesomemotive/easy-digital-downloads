@@ -145,7 +145,7 @@ function edd_load_admin_scripts( $hook ) {
 		return;
 	}
 
-	global $wp_version;
+	global $wp_version, $post;
 
 	$js_dir  = EDD_PLUGIN_URL . 'assets/js/';
 	$css_dir = EDD_PLUGIN_URL . 'assets/css/';
