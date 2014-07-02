@@ -28,7 +28,7 @@ class EDD_Session {
 	 * @access private
 	 * @since 1.5
 	 */
-	private $session = array();
+	private $session;
 
 
 	/**
