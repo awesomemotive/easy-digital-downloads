@@ -56,7 +56,7 @@ function edd_process_download() {
 		do_action( 'edd_process_verified_download', $args['download'], $args['email'], $payment );
 
 		// Payment has been verified, setup the download
-		$download_files = edd_get_download_files( $download );
+		$download_files = edd_get_download_files( $args['download'] );
 		$attachment_id  = ! empty( $download_files[ $file_key ]['attachment_id'] ) ? absint( $download_files[ $args['file_key'] ]['attachment_id'] ) : false;
 
 		/*
@@ -76,11 +76,11 @@ function edd_process_download() {
 		}
 
 		// Allow the file to be altered before any headers are sent
-		$requested_file = apply_filters( 'edd_requested_file', $requested_file, $download_files, $file_key );
+		$requested_file = apply_filters( 'edd_requested_file', $requested_file, $download_files, $args['file_key'] );
 
 		// Record this file download in the log
 		$user_info = array();
-		$user_info['email'] = $email;
+		$user_info['email'] = $args['email'];
 		if ( is_user_logged_in() ) {
 			$user_data         = get_userdata( get_current_user_id() );
 			$user_info['id']   = get_current_user_id();
