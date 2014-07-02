@@ -95,7 +95,7 @@ function edd_dashboard_sales_widget() {
 					<tr>
 						<td class="t sales"><?php _e( 'Earnings', 'edd' ); ?></td>
 						<td class="last b b-earnings">
-							<?php $earnings_today = $stats->get_earnings( 0, 'today', false, array( 'publish', 'revoked' ) ); ?>
+							<?php $earnings_today = $stats->get_earnings( 0, 'today', false ); ?>
 							<?php echo edd_currency_filter( edd_format_amount( $earnings_today ) ); ?>
 						</td>
 					</tr>
