@@ -504,7 +504,6 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		$per_page       = $this->per_page;
 		$orderby 		= isset( $_GET['orderby'] )     ? urldecode( $_GET['orderby'] )              : 'ID';
 		$order 			= isset( $_GET['order'] )       ? $_GET['order']                             : 'DESC';
-		$order_inverse 	= $order == 'DESC'              ? 'ASC'                                      : 'DESC';
 		$user 			= isset( $_GET['user'] )        ? $_GET['user']                              : null;
 		$status 		= isset( $_GET['status'] )      ? $_GET['status']                            : 'any';
 		$meta_key		= isset( $_GET['meta_key'] )    ? $_GET['meta_key']                          : null;
