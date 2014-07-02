@@ -437,6 +437,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 				$total_items = $this->inactive_count;
 				break;
 			case 'any':
+			default:
 				$total_items = $this->total_count;
 				break;
 		}
