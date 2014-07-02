@@ -295,8 +295,6 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 
 		$data = $this->reports_data();
 
-		$current_page = $this->get_pagenum();
-
 		$total_items = $this->get_total_downloads();
 
 		$this->items = $data;
