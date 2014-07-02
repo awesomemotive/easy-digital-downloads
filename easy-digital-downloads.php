@@ -48,6 +48,14 @@ final class Easy_Digital_Downloads {
 	private static $instance;
 
 	/**
+	 * EDD Roles Object
+	 *
+	 * @var object
+	 * @since 1.5
+	 */
+	public $roles;
+
+	/**
 	 * EDD Cart Fees Object
 	 *
 	 * @var object
