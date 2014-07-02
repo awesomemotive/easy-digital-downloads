@@ -836,6 +836,7 @@ class EDD_API {
 		$stats    = array();
 		$earnings = array();
 		$sales    = array();
+		$error    = array();
 
 		if( ! user_can( $this->user_id, 'view_shop_reports' ) && ! $this->override ) {
 			return $stats;
