@@ -48,13 +48,10 @@ function edd_email_template_tags( $message, $payment_data, $payment_id, $admin_n
  * Email Preview Template Tags
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD Options
  * @param string $message Email message with template tags
  * @return string $message Fully formatted message
  */
 function edd_email_preview_template_tags( $message ) {
-	global $edd_options;
-
 	$download_list = '<ul>';
 	$download_list .= '<li>' . __( 'Sample Product Title', 'edd' ) . '<br />';
 	$download_list .= '<ul>';
@@ -118,18 +115,15 @@ add_filter( 'edd_purchase_receipt', 'edd_email_default_formatting' );
  * Email Template Preview
  *
  * @access private
- * @global $edd_options Array of all the EDD Options
  * @since 1.0.8.2
  */
 function edd_email_template_preview() {
-	global $edd_options;
-
 	$default_email_body = __( "Dear", "edd" ) . " {name},\n\n";
 	$default_email_body .= __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "edd" ) . "\n\n";
 	$default_email_body .= "{download_list}\n\n";
 	$default_email_body .= "{sitename}";
 
-	$email_body = isset( $edd_options['purchase_receipt'] ) ? stripslashes( $edd_options['purchase_receipt'] ) : $default_email_body;
+	$email_body = stripslashes( edd_get_option( 'purchase_receipt', $default_email_body ) );
 	ob_start();
 	?>
 	<a href="#email-preview" id="open-email-preview" class="button-secondary" title="<?php _e( 'Purchase Receipt Preview', 'edd' ); ?> "><?php _e( 'Preview Purchase Receipt', 'edd' ); ?></a>
@@ -174,14 +168,12 @@ function edd_get_email_body_header() {
  * @return string $email_body Body of the email
  */
 function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) {
-	global $edd_options;
-
 	$default_email_body = __( "Dear", "edd" ) . " {name},\n\n";
 	$default_email_body .= __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "edd" ) . "\n\n";
 	$default_email_body .= "{download_list}\n\n";
 	$default_email_body .= "{sitename}";
 
-	$email = isset( $edd_options['purchase_receipt'] ) ? stripslashes( $edd_options['purchase_receipt'] ) : $default_email_body;
+	$email = stripslashes( edd_get_option( 'purchase_receipt', $default_email_body ) );
 
 	$email_body = edd_do_email_tags( $email, $payment_id );
 
@@ -198,8 +190,6 @@ function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) 
  * @return string $email_body Body of the email
  */
 function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data = array() ) {
-	global $edd_options;
-
 	$user_info = maybe_unserialize( $payment_data['user_info'] );
 	$email = edd_get_payment_user_email( $payment_id );
 
@@ -238,7 +228,7 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 	$default_email_body .= __( 'Payment Method: ', 'edd' ) . " " . $gateway . "\n\n";
 	$default_email_body .= __( 'Thank you', 'edd' );
 
-	$email = isset( $edd_options['sale_notification'] ) ? stripslashes( $edd_options['sale_notification'] ) : $default_email_body;
+	$email = stripslashes( edd_get_option( 'sale_notification', $default_email_body ) );
 
 	//$email_body = edd_email_template_tags( $email, $payment_data, $payment_id, true );
 	$email_body = edd_do_email_tags( $email, $payment_id );
@@ -272,9 +262,7 @@ function edd_get_email_body_footer() {
  * @return string $email Formatted email with the template applied
  */
 function edd_apply_email_template( $body, $payment_id, $payment_data=array() ) {
-	global $edd_options;
-
-	$template_name = isset( $edd_options['email_template'] ) ? $edd_options['email_template'] : 'default';
+	$template_name = edd_get_option( 'email_template', 'default' );
 	$template_name = apply_filters( 'edd_email_template', $template_name, $payment_id );
 
 	if ( $template_name == 'none' ) {

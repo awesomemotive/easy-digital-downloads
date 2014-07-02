@@ -285,7 +285,7 @@ add_filter( 'edd_metabox_save_edd_download_files', 'edd_metabox_save_check_blank
  * @return void
  */
 function edd_render_download_meta_box() {
-	global $post, $edd_options;
+	global $post;
 
 	/*
 	 * Output the price fields
@@ -311,7 +311,7 @@ function edd_render_download_meta_box() {
  * @return void
  */
 function edd_render_files_meta_box() {
-	global $post, $edd_options;
+	global $post;
 
 	/*
 	 * Output the files fields
@@ -327,7 +327,7 @@ function edd_render_files_meta_box() {
  * @return void
  */
 function edd_render_settings_meta_box() {
-	global $post, $edd_options;
+	global $post;
 
 	/*
 	 * Output the files fields
@@ -352,8 +352,6 @@ function edd_render_settings_meta_box() {
  * @param $post_id
  */
 function edd_render_price_field( $post_id ) {
-	global $edd_options;
-
 	$price 				= edd_get_download_price( $post_id );
 	$variable_pricing 	= edd_has_variable_prices( $post_id );
 	$prices 			= edd_get_variable_prices( $post_id );
@@ -382,7 +380,7 @@ function edd_render_price_field( $post_id ) {
 			);
 		?>
 
-		<?php if ( ! isset( $edd_options['currency_position'] ) || $edd_options['currency_position'] == 'before' ) : ?>
+		<?php if ( ! edd_get_option( 'currency_position', false ) || edd_get_option( 'currency_position', false ) == 'before' ) : ?>
 			<?php echo edd_currency_filter( '' ); ?>
 			<?php echo EDD()->html->text( $price_args ); ?>
 		<?php else : ?>
@@ -461,8 +459,6 @@ add_action( 'edd_meta_box_price_fields', 'edd_render_price_field', 10 );
  * @param       $post_id
  */
 function edd_render_price_row( $key, $args = array(), $post_id ) {
-	global $edd_options;
-
 	$defaults = array(
 		'name'   => null,
 		'amount' => null
@@ -497,7 +493,7 @@ function edd_render_price_row( $key, $args = array(), $post_id ) {
 			);
 		?>
 
-		<?php if( ! isset( $edd_options['currency_position'] ) || $edd_options['currency_position'] == 'before' ) : ?>
+		<?php if( ! edd_get_option( 'currency_position', false ) || edd_get_option( 'currency_position', false ) == 'before' ) : ?>
 			<span><?php echo edd_currency_filter( '' ); ?></span>
 			<?php echo EDD()->html->text( $price_args ); ?>
 		<?php else : ?>
@@ -764,8 +760,6 @@ add_action( 'edd_render_file_row', 'edd_render_file_row', 10, 3 );
  * @return void
  */
 function edd_render_download_limit_row( $post_id ) {
-    global $edd_options;
-
     if( ! current_user_can( 'manage_shop_settings' ) )
         return;
 
@@ -797,8 +791,6 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_download_limit_row', 20 
  * @return void
  */
 function edd_render_dowwn_tax_options( $post_id = 0 ) {
-    global $edd_options;
-
     if( ! current_user_can( 'manage_shop_settings' ) || ! edd_use_taxes() )
         return;
 
@@ -824,8 +816,6 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_dowwn_tax_options', 30 )
  * @return void
  */
 function edd_render_accounting_options( $post_id ) {
-	global $edd_options;
-
 	if( ! edd_use_skus() ) {
 		return;
 	}
@@ -900,11 +890,10 @@ add_action( 'edd_meta_box_settings_fields', 'edd_render_disable_button', 30 );
  *
  * @since 1.2.1
  * @global array $post Contains all the download data
- * @global array $edd_options Contains all the options set for EDD
  * @return void
  */
 function edd_render_product_notes_meta_box() {
-	global $post, $edd_options;
+	global $post;
 
 	do_action( 'edd_product_notes_meta_box_fields', $post->ID );
 }
@@ -917,8 +906,6 @@ function edd_render_product_notes_meta_box() {
  * @return void
  */
 function edd_render_product_notes_field( $post_id ) {
-	global $edd_options;
-
 	$product_notes = edd_get_product_notes( $post_id );
 ?>
 	<textarea rows="1" cols="40" class="large-texarea" name="edd_product_notes" id="edd_product_notes_field"><?php echo esc_textarea( $product_notes ); ?></textarea>

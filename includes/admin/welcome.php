@@ -545,12 +545,9 @@ class EDD_Welcome {
 	 *
 	 * @access public
 	 * @since 1.4
-	 * @global $edd_options Array of all the EDD Options
 	 * @return void
 	 */
 	public function welcome() {
-		global $edd_options;
-
 		// Bail if no activation redirect
 		if ( ! get_transient( '_edd_activation_redirect' ) )
 			return;

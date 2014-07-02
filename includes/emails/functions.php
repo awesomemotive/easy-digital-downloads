@@ -22,8 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
-	global $edd_options;
-
 	$payment_data = edd_get_payment_meta( $payment_id );
 	$user_id      = edd_get_payment_user_id( $payment_id );
 	$user_info    = maybe_unserialize( $payment_data['user_info'] );
@@ -42,14 +40,14 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
 	$message .= edd_get_email_body_content( $payment_id, $payment_data, $admin_notice );
 	$message .= edd_get_email_body_footer();
 
-	$from_name = isset( $edd_options['from_name'] ) ? $edd_options['from_name'] : get_bloginfo('name');
+	$from_name = edd_get_option( 'from_name', get_bloginfo( 'name' ) );
 	$from_name = apply_filters( 'edd_purchase_from_name', $from_name, $payment_id, $payment_data );
 
-	$from_email = isset( $edd_options['from_email'] ) ? $edd_options['from_email'] : get_option('admin_email');
+	$from_email = edd_get_option( 'from_email', get_option( 'admin_email' ) );
 	$from_email = apply_filters( 'edd_purchase_from_address', $from_email, $payment_id, $payment_data );
 
-	$subject = apply_filters( 'edd_purchase_subject', ! empty( $edd_options['purchase_subject'] )
-		? wp_strip_all_tags( $edd_options['purchase_subject'], true )
+	$subject = apply_filters( 'edd_purchase_subject', edd_get_option( 'purchase_subject', false )
+		? wp_strip_all_tags( edd_get_option( 'purchase_subject', '' ), true )
 		: __( 'Purchase Receipt', 'edd' ), $payment_id );
 
 	$subject = edd_do_email_tags( $subject, $payment_id );
@@ -75,29 +73,24 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true ) {
  * Email the download link(s) and payment confirmation to the admin accounts for testing.
  *
  * @since 1.5
- * @global $edd_options Array of all the EDD Options
  * @return void
  */
 function edd_email_test_purchase_receipt() {
-	global $edd_options;
-
 	$default_email_body = __( "Dear", "edd" ) . " {name},\n\n";
 	$default_email_body .= __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "edd" ) . "\n\n";
 	$default_email_body .= "{download_list}\n\n";
 	$default_email_body .= "{sitename}";
 
-	$email = isset( $edd_options['purchase_receipt'] ) ? $edd_options['purchase_receipt'] : $default_email_body;
+	$email = edd_get_option( 'purchase_receipt', $default_email_body );
 
 	$message = edd_get_email_body_header();
 	$message .= apply_filters( 'edd_purchase_receipt', edd_email_preview_template_tags( $email ), 0, array() );
 	$message .= edd_get_email_body_footer();
 
-	$from_name = isset( $edd_options['from_name'] ) ? $edd_options['from_name'] : get_bloginfo('name');
-	$from_email = isset( $edd_options['from_email'] ) ? $edd_options['from_email'] : get_option('admin_email');
+	$from_name = edd_get_option( 'from_name', get_bloginfo( 'name' ) );
+	$from_email = edd_get_option( 'from_email', get_option( 'admin_email' ) );
 
-	$subject = apply_filters( 'edd_purchase_subject', isset( $edd_options['purchase_subject'] )
-		? trim( $edd_options['purchase_subject'] )
-		: __( 'Purchase Receipt', 'edd' ), 0 );
+	$subject = apply_filters( 'edd_purchase_subject', trim( edd_get_option( 'purchase_subject', __( 'Purchase Receipt', 'edd' ) ) ), 0 );
 
 	$headers = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
 	$headers .= "Reply-To: ". $from_email . "\r\n";
@@ -117,8 +110,6 @@ function edd_email_test_purchase_receipt() {
  * @return void
  */
 function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
-	global $edd_options;
-
 	/* Send an email notification to the admin */
 	$admin_email = edd_get_admin_notice_emails();
 	$user_id     = edd_get_payment_user_id( $payment_id );
@@ -137,17 +128,13 @@ function edd_admin_email_notice( $payment_id = 0, $payment_data = array() ) {
 	$admin_message .= edd_get_sale_notification_body_content( $payment_id, $payment_data );
 	$admin_message .= edd_get_email_body_footer();
 
-	if( ! empty( $edd_options['sale_notification_subject'] ) ) {
-		$admin_subject = wp_strip_all_tags( $edd_options['sale_notification_subject'], true );
-	} else {
-		$admin_subject = sprintf( __( 'New download purchase - Order #%1$s', 'edd' ), $payment_id );
-	}
+	$admin_subject = wp_strip_all_tags( edd_get_option( 'sale_notification_subject', sprintf( __( 'New download purchase - Order #%1$s', 'edd' ), $payment_id ) ) );
 
 	$admin_subject = edd_do_email_tags( $admin_subject, $payment_id );
 	$admin_subject = apply_filters( 'edd_admin_sale_notification_subject', $admin_subject, $payment_id, $payment_data );
 
-	$from_name  = isset( $edd_options['from_name'] )  ? $edd_options['from_name']  : get_bloginfo('name');
-	$from_email = isset( $edd_options['from_email'] ) ? $edd_options['from_email'] : get_option('admin_email');
+	$from_name  = edd_get_option( 'from_name', get_bloginfo( 'name' ) );
+	$from_email = edd_get_option( 'from_email', get_option( 'admin_email' ) );
 
 	$admin_headers = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
 	$admin_headers .= "Reply-To: ". $from_email . "\r\n";
@@ -166,13 +153,11 @@ add_action( 'edd_admin_sale_notice', 'edd_admin_email_notice', 10, 2 );
  * changed in the EDD Settings)
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD Options
  * @return mixed
  */
 function edd_get_admin_notice_emails() {
-	global $edd_options;
-
-	$emails = isset( $edd_options['admin_notice_emails'] ) && strlen( trim( $edd_options['admin_notice_emails'] ) ) > 0 ? $edd_options['admin_notice_emails'] : get_bloginfo( 'admin_email' );
+	$emails = edd_get_option( 'admin_notice_emails', false );
+	$emails = strlen( trim( $emails ) ) > 0 ? $emails : get_bloginfo( 'admin_email' );
 	$emails = array_map( 'trim', explode( "\n", $emails ) );
 
 	return apply_filters( 'edd_admin_notice_emails', $emails );
@@ -187,8 +172,7 @@ function edd_get_admin_notice_emails() {
  * @return mixed
  */
 function edd_admin_notices_disabled( $payment_id = 0 ) {
-	global $edd_options;
-	$retval = isset( $edd_options['disable_admin_notices'] );
+	$retval = edd_get_option( 'disable_admin_notices', false );
 	return apply_filters( 'edd_admin_notices_disabled', $retval, $payment_id );
 }
 
@@ -202,8 +186,6 @@ function edd_admin_notices_disabled( $payment_id = 0 ) {
  * @return string $message
  */
 function edd_get_default_sale_notification_email() {
-	global $edd_options;
-
 	$default_email_body = __( 'Hello', 'edd' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'edd' ), edd_get_label_plural() ) . ".\n\n";
 	$default_email_body .= sprintf( __( '%s sold:', 'edd' ), edd_get_label_plural() ) . "\n\n";
 	$default_email_body .= '{download_list}' . "\n\n";
@@ -212,7 +194,7 @@ function edd_get_default_sale_notification_email() {
 	$default_email_body .= __( 'Payment Method: ', 'edd' ) . ' {payment_method}' . "\n\n";
 	$default_email_body .= __( 'Thank you', 'edd' );
 
-	$message = ( isset( $edd_options['sale_notification'] ) && !empty( $edd_options['sale_notification'] ) ) ? $edd_options['sale_notification'] : $default_email_body;
+	$message = edd_get_option( 'sale_notification', $default_email_body );
 
 	return $message;
 }

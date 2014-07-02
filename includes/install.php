@@ -49,7 +49,7 @@ function edd_install() {
 	$options = array();
 
 	// Checks if the purchase page option exists
-	if ( ! isset( $edd_options['purchase_page'] ) ) {
+	if ( ! edd_get_option( 'purchase_page', false ) ) {
 	  // Checkout Page
 		$checkout = wp_insert_post(
 			array(

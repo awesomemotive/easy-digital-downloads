@@ -57,8 +57,6 @@ class EDD_Payments_Export extends EDD_Export {
 	 * @return array $cols All the columns
 	 */
 	public function csv_cols() {
-		global $edd_options;
-
 		$cols = array(
 			'id'       => __( 'ID',   'edd' ),
 			'email'    => __( 'Email', 'edd' ),
@@ -98,7 +96,7 @@ class EDD_Payments_Export extends EDD_Export {
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
-		global $wpdb, $edd_options;
+		global $wpdb;
 
 		$data = array();
 

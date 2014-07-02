@@ -752,8 +752,6 @@ function edd_get_file_downloaded_count( $download_id = 0, $file_key = 0, $paymen
  * @return int $limit File download limit
  */
 function edd_get_file_download_limit( $download_id = 0 ) {
-	global $edd_options;
-
 	$ret    = 0;
 	$limit  = get_post_meta( $download_id, '_edd_download_limit', true );
 	$global = edd_get_option( 'file_download_limit', 0 );
@@ -903,11 +901,8 @@ function edd_get_file_price_condition( $download_id, $file_key ) {
  * @return string Constructed download URL
  */
 function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price_id = false ) {
-	global $edd_options;
-
-	$hours = isset( $edd_options['download_link_expiration'] )
-			&& is_numeric( $edd_options['download_link_expiration'] )
-			? absint( $edd_options['download_link_expiration'] ) : 24;
+	$hours = is_numeric( edd_get_option( 'download_link_expiration', 24 ) );
+	$hours = absint( $hours );
 
 	if ( ! ( $date = strtotime( '+' . $hours . 'hours', current_time( 'timestamp') ) ) )
 		$date = 2147472000; // Highest possible date, January 19, 2038
@@ -1060,8 +1055,7 @@ function edd_get_download_button_behavior( $download_id = 0 ) {
  * @return string The method to use for file downloads
  */
 function edd_get_file_download_method() {
-	global $edd_options;
-	$method = isset( $edd_options['download_method'] ) ? $edd_options['download_method'] : 'direct';
+	$method = edd_get_option( 'download_method', 'direct' );
 	return apply_filters( 'edd_file_download_method', $method );
 }
 

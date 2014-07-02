@@ -47,9 +47,9 @@ add_action( 'edd_after_download_content', 'edd_append_purchase_link' );
  * @return string $purchase_form
  */
 function edd_get_purchase_link( $args = array() ) {
-	global $edd_options, $post;
+	global $post;
 
-	if ( ! isset( $edd_options['purchase_page'] ) || $edd_options['purchase_page'] == 0 ) {
+	if ( ! edd_get_option( 'purchase_page', false ) || edd_get_option( 'purchase_page', false ) == 0 ) {
 		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'edd' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) );
 		edd_print_errors();
 		return false;
@@ -61,9 +61,9 @@ function edd_get_purchase_link( $args = array() ) {
 		'download_id' => $post_id,
 		'price'       => (bool) true,
 		'direct'      => edd_get_download_button_behavior( $post_id ) == 'direct' ? true : false,
-		'text'        => ! empty( $edd_options[ 'add_to_cart_text' ] ) ? $edd_options[ 'add_to_cart_text' ] : __( 'Purchase', 'edd' ),
-		'style'       => isset( $edd_options[ 'button_style' ] ) 	   ? $edd_options[ 'button_style' ]     : 'button',
-		'color'       => isset( $edd_options[ 'checkout_color' ] ) 	   ? $edd_options[ 'checkout_color' ] 	: 'blue',
+		'text'        => edd_get_option( 'add_to_cart_text', __( 'Purchase', 'edd' ) ),
+		'style'       => edd_get_option( 'button_style', 'button' ),
+		'color'       => edd_get_option( 'checkout_color', 'blue' ),
 		'class'       => 'edd-submit'
 	) );
 
@@ -204,8 +204,6 @@ function edd_get_purchase_link( $args = array() ) {
  * @return void
  */
 function edd_purchase_variable_pricing( $download_id = 0 ) {
-	global $edd_options;
-
 	$variable_pricing = edd_has_variable_prices( $download_id );
 
 	if ( ! $variable_pricing )
