@@ -194,10 +194,11 @@ function edd_sales_tax_for_year( $year = null ) {
  */
 function edd_get_sales_tax_for_year( $year = null ) {
 	
+	// Start at zero
+	$tax = 0;
+
 	if ( ! empty( $year ) ) {
 
-		// Start at zero
-		$tax = 0;
 
 		$args = array(
 			'post_type' 		=> 'edd_payment',
