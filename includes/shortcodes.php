@@ -224,19 +224,18 @@ add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
 function edd_purchase_collection_shortcode( $atts, $content = null ) {
 	global $edd_options;
 
-	extract( shortcode_atts( array(
-			'taxonomy'	=> '',
-			'terms'		=> '',
-			'text'		=> __('Purchase All Items', 'edd'),
-			'style'		=> isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button',
-			'color'		=> isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue',
-			'class'		=> 'edd-submit'
-		), $atts, 'purchase_collection' )
-	);
+	$args = shortcode_atts( array(
+		'taxonomy'	=> '',
+		'terms'		=> '',
+		'text'		=> __('Purchase All Items', 'edd'),
+		'style'		=> isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button',
+		'color'		=> isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue',
+		'class'		=> 'edd-submit'
+	), $atts, 'purchase_collection' );
 
-	$button_display = implode( ' ', array( $style, $color, $class ) );
+	$button_display = implode( ' ', array( $args['style'], $args['color'], $args['class'] ) );
 
-	return '<a href="' . add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms ) ) . '" class="' . $button_display . '">' . $text . '</a>';
+	return '<a href="' . add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $args['taxonomy'], 'terms' => $args['terms'] ) ) . '" class="' . $button_display . '">' . $args['text'] . '</a>';
 }
 add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
 
