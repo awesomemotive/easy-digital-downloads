@@ -987,13 +987,13 @@ function edd_is_cart_saved() {
  * Process the Cart Save
  *
  * @since 1.8
- * @return void
+ * @return bool
  */
 function edd_save_cart() {
 	global $edd_options;
 
 	if ( edd_is_cart_saving_disabled() )
-		return;
+		return false;
 
 	$user_id  = get_current_user_id();
 	$cart     = EDD()->session->get( 'edd_cart' );
@@ -1026,6 +1026,12 @@ function edd_save_cart() {
 	);
 
 	EDD()->session->set( 'edd_cart_messages', $messages );
+
+	if( $cart ) {
+		return true;
+	}
+
+	return false;
 }
 
 
@@ -1033,12 +1039,12 @@ function edd_save_cart() {
  * Process the Cart Restoration
  *
  * @since 1.8
- * @return void || false Returns false if cart saving is disabled
+ * @return mixed || false Returns false if cart saving is disabled
  */
 function edd_restore_cart() {
 
 	if ( edd_is_cart_saving_disabled() )
-		return;
+		return false;
 
 	$user_id    = get_current_user_id();
 	$saved_cart = get_user_meta( $user_id, 'edd_saved_cart', true );
@@ -1084,6 +1090,8 @@ function edd_restore_cart() {
 	$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'edd' ), __( 'Cart restored successfully.', 'edd' ) );
 	EDD()->session->set( 'edd_cart', $saved_cart );
 	EDD()->session->set( 'edd_cart_messages', $messages );
+
+	return true;
 }
 
 /**
