@@ -109,8 +109,8 @@ function edd_update_payment_details( $data ) {
 	// Check for payment notes
 	if ( ! empty( $data['edd-payment-note'] ) ) {
 
-		$note    = wp_kses( $data['edd-payment-note'], array() );
-		$note_id = edd_insert_payment_note( $payment_id, $note );
+		$note  = wp_kses( $data['edd-payment-note'], array() );
+		edd_insert_payment_note( $payment_id, $note );
 
 	}
 
