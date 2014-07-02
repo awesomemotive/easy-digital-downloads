@@ -137,11 +137,10 @@ add_shortcode( 'download_cart', 'edd_cart_shortcode' );
  * @return string
  */
 function edd_login_form_shortcode( $atts, $content = null ) {
-	extract( shortcode_atts( array(
-			'redirect' => '',
-		), $atts, 'edd_login' )
-	);
-	return edd_login_form( $redirect );
+	$args = shortcode_atts( array(
+		'redirect' => '',
+	), $atts, 'edd_login' );
+	return edd_login_form( $args['redirect'] );
 }
 add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
 
