@@ -80,6 +80,9 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function column_user( $item ) {
+
+		$actions = array();
+
 		if( apply_filters( 'edd_api_log_requests', true ) ) {
 			$actions['view'] = sprintf(
 				'<a href="%s">%s</a>',
