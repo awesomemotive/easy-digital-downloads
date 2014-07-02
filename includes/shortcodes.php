@@ -157,11 +157,10 @@ add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
  * @return string
  */
 function edd_register_form_shortcode( $atts, $content = null ) {
-	extract( shortcode_atts( array(
-			'redirect' => '',
-		), $atts, 'edd_register' )
-	);
-	return edd_register_form( $redirect );
+	$args = shortcode_atts( array(
+		'redirect' => '',
+	), $atts, 'edd_register' );
+	return edd_register_form( $args['redirect'] );
 }
 add_shortcode( 'edd_register', 'edd_register_form_shortcode' );
 
