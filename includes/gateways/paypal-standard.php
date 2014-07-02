@@ -23,13 +23,10 @@ add_action( 'edd_paypal_cc_form', '__return_false' );
  * Process PayPal Purchase
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD Options
  * @param array   $purchase_data Purchase Data
  * @return void
  */
 function edd_process_paypal_purchase( $purchase_data ) {
-	global $edd_options;
-
 	// Collect payment data
 	$payment_data = array(
 		'price'         => $purchase_data['price'],
@@ -62,14 +59,14 @@ function edd_process_paypal_purchase( $purchase_data ) {
 				'payment-confirmation' => 'paypal',
 				'payment-id' => $payment
 
-			), get_permalink( $edd_options['success_page'] ) );
+			), get_permalink( edd_get_option( 'success_page' ) ) );
 
 		// Get the PayPal redirect uri
 		$paypal_redirect = trailingslashit( edd_get_paypal_redirect() ) . '?';
 
 		// Setup PayPal arguments
 		$paypal_args = array(
-			'business'      => $edd_options['paypal_email'],
+			'business'      => edd_get_option( 'paypal_email' ),
 			'email'         => $purchase_data['user_email'],
 			'invoice'  => $purchase_data['purchase_key'],
 			'no_shipping'   => '1',
@@ -170,12 +167,9 @@ add_action( 'edd_gateway_paypal', 'edd_process_paypal_purchase' );
  * Listens for a PayPal IPN requests and then sends to the processing function
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD Options
  * @return void
  */
 function edd_listen_for_paypal_ipn() {
-	global $edd_options;
-
 	// Regular PayPal IPN
 	if ( isset( $_GET['edd-listener'] ) && $_GET['edd-listener'] == 'IPN' ) {
 		do_action( 'edd_verify_paypal_ipn' );
@@ -187,12 +181,9 @@ add_action( 'init', 'edd_listen_for_paypal_ipn' );
  * Process PayPal IPN
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD Options
  * @return void
  */
 function edd_process_paypal_ipn() {
-	global $edd_options;
-
 	// Check the request method is POST
 	if ( isset( $_SERVER['REQUEST_METHOD'] ) && $_SERVER['REQUEST_METHOD'] != 'POST' ) {
 		return;
@@ -267,7 +258,7 @@ function edd_process_paypal_ipn() {
 			return; // Something went wrong
 		}
 
-		if ( $api_response['body'] !== 'VERIFIED' && !isset( $edd_options['disable_paypal_verification'] ) ) {
+		if ( $api_response['body'] !== 'VERIFIED' && edd_get_option( 'disable_paypal_verification' ) ) {
 			edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid IPN verification response. IPN data: %s', 'edd' ), json_encode( $api_response ) ) );
 			return; // Response not okay
 		}
@@ -293,13 +284,10 @@ add_action( 'edd_verify_paypal_ipn', 'edd_process_paypal_ipn' );
  * Process web accept (one time) payment IPNs
  *
  * @since 1.3.4
- * @global $edd_options Array of all the EDD Options
  * @param array   $data IPN Data
  * @return void
  */
 function edd_process_paypal_web_accept_and_cart( $data ) {
-	global $edd_options;
-
 	if ( $data['txn_type'] != 'web_accept' && $data['txn_type'] != 'cart' )
 		return;
 
@@ -316,7 +304,7 @@ function edd_process_paypal_web_accept_and_cart( $data ) {
 	}
 
 	// Verify payment recipient
-	if ( strcasecmp( $business_email, trim( $edd_options['paypal_email'] ) ) != 0 ) {
+	if ( strcasecmp( $business_email, trim( edd_get_option( 'paypal_email' ) ) ) != 0 ) {
 
 		edd_record_gateway_error( __( 'IPN Error', 'edd' ), sprintf( __( 'Invalid business email in IPN response. IPN data: %s', 'edd' ), json_encode( $data ) ), $payment_id );
 		edd_update_payment_status( $payment_id, 'failed' );
@@ -403,13 +391,10 @@ add_action( 'edd_paypal_web_accept', 'edd_process_paypal_web_accept_and_cart' );
  * Process PayPal IPN Refunds
  *
  * @since 1.3.4
- * @global $edd_options Array of all the EDD Options
  * @param array   $data IPN Data
  * @return void
  */
 function edd_process_paypal_refund( $data ) {
-	global $edd_options;
-
 	// Collect payment details
 	$payment_id = intval( $data['custom'] );
 
@@ -426,13 +411,10 @@ function edd_process_paypal_refund( $data ) {
  * Get PayPal Redirect
  *
  * @since 1.0.8.2
- * @global $edd_options Array of all the EDD Options
  * @param bool    $ssl_check Is SSL?
  * @return string
  */
 function edd_get_paypal_redirect( $ssl_check = false ) {
-	global $edd_options;
-
 	if ( is_ssl() || ! $ssl_check ) {
 		$protocal = 'https://';
 	} else {
@@ -455,17 +437,10 @@ function edd_get_paypal_redirect( $ssl_check = false ) {
  * Set the Page Style for PayPal Purchase page
  *
  * @since 1.4.1
- * @global $edd_options Array of all the EDD Options
  * @return string
  */
 function edd_get_paypal_page_style() {
-	global $edd_options;
-
-	$page_style = 'PayPal';
-
-	if ( isset( $edd_options['paypal_page_style'] ) )
-		$page_style = trim( $edd_options['paypal_page_style'] );
-
+	$page_style = trim( edd_get_option( 'paypal_page_style', 'PayPal' ) );
 	return apply_filters( 'edd_paypal_page_style', $page_style );
 }
 

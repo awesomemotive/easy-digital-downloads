@@ -1071,13 +1071,10 @@ function edd_payment_subtotal( $payment_id = 0 ) {
  * returns a non formatted amount.
  *
  * @since 1.3.3
- * @global $edd_options Array of all the EDD Options
  * @param int $payment_id Payment ID
  * @return float $subtotal Subtotal for payment (non formatted)
  */
 function edd_get_payment_subtotal( $payment_id = 0) {
-	global $edd_options;
-
 	$subtotal = edd_get_payment_amount( $payment_id );
 
 	$tax = edd_use_taxes() ? edd_get_payment_tax( $payment_id ) : 0;

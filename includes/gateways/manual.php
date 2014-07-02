@@ -22,13 +22,10 @@ add_action( 'edd_manual_cc_form', '__return_false' );
  * the transaction in the Purchase History
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD Options
  * @param array $purchase_data Purchase Data
  * @return void
 */
 function edd_manual_payment( $purchase_data ) {
-	global $edd_options;
-
 	/*
 	* Purchase data comes in like this
 	*

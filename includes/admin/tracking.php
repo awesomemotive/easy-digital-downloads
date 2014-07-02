@@ -53,8 +53,7 @@ class EDD_Tracking {
 	 * @return bool
 	 */
 	private function tracking_allowed() {
-		global $edd_options;
-		return isset( $edd_options['allow_tracking'] );
+		return edd_get_option( 'allow_tracking', false );
 	}
 
 	/**
@@ -182,7 +181,7 @@ class EDD_Tracking {
 	public function check_for_optout( $data ) {
 
 		global $edd_options;
-		if( isset( $edd_options['allow_tracking'] ) ) {
+		if( edd_get_option( 'allow_tracking', false ) ) {
 			unset( $edd_options['allow_tracking'] );
 			update_option( 'edd_settings', $edd_options );
 		}
@@ -221,15 +220,12 @@ class EDD_Tracking {
 	 * @return void
 	 */
 	public function admin_notice() {
-
-		global $edd_options;
-
 		$hide_notice = get_option( 'edd_tracking_notice' );
 
 		if( $hide_notice )
 			return;
 
-		if( isset( $edd_options['allow_tracking'] ) )
+		if( edd_get_option( 'allow_tracking', false ) )
 			return;
 
 		if( ! current_user_can( 'manage_options' ) )

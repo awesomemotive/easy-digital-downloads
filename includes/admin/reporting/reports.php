@@ -18,12 +18,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Renders the reports page contents.
  *
  * @since 1.0
- * @global $edd_options Array of all the EDD Options
  * @return void
 */
 function edd_reports_page() {
-	global $edd_options;
-
 	$current_page = admin_url( 'edit.php?post_type=download&page=edd-reports' );
 	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'reports';
 	?>

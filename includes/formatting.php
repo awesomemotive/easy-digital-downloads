@@ -22,8 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return string $amount Newly sanitized amount
  */
 function edd_sanitize_amount( $amount ) {
-	global $edd_options;
-
 	$is_negative   = false;
 	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
 	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
@@ -67,8 +65,6 @@ function edd_sanitize_amount( $amount ) {
  * @return string $amount Newly formatted amount or Price Not Available
  */
 function edd_format_amount( $amount, $decimals = true ) {
-	global $edd_options;
-
 	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
 	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
 
@@ -108,10 +104,8 @@ function edd_format_amount( $amount, $decimals = true ) {
  * @return array $currency Currencies displayed correctly
  */
 function edd_currency_filter( $price ) {
-	global $edd_options;
-
 	$currency = edd_get_currency();
-	$position = isset( $edd_options['currency_position'] ) ? $edd_options['currency_position'] : 'before';
+	$position = edd_get_option( 'currency_position', 'before' );
 
 	$negative = $price < 0;
 
@@ -192,8 +186,6 @@ function edd_currency_filter( $price ) {
  * @return int $decimals
 */
 function edd_currency_decimal_filter( $decimals = 2 ) {
-	global $edd_options;
-
 	$currency = edd_get_currency();
 
 	switch ( $currency ) {
