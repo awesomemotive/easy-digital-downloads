@@ -105,7 +105,7 @@ function edd_process_download() {
 		}
 		@ini_set( 'zlib.output_compression', 'Off' );
 
-		do_action( 'edd_process_download_headers', $requested_file, $download, $email, $payment );
+		do_action( 'edd_process_download_headers', $requested_file, $args['download'], $args['email'], $payment );
 
 		nocache_headers();
 		header("Robots: none");
