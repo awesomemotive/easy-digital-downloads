@@ -901,8 +901,8 @@ function edd_get_file_price_condition( $download_id, $file_key ) {
  * @return string Constructed download URL
  */
 function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price_id = false ) {
-	$hours = is_numeric( edd_get_option( 'download_link_expiration', 24 ) );
-	$hours = absint( $hours );
+	$hours = edd_get_option( 'download_link_expiration', 24 );
+	$hours = ( is_numeric( $hours ) ? absint( $hours ) : 24 );
 
 	if ( ! ( $date = strtotime( '+' . $hours . 'hours', current_time( 'timestamp') ) ) )
 		$date = 2147472000; // Highest possible date, January 19, 2038

@@ -38,8 +38,8 @@ class EDD_Cache_Helper {
 			$page_uris   = array();
 
 			// Exclude querystring when using page ID
-			$page_uris[] = 'p=' . edd_get_option( 'purchase_page', false );
-			$page_uris[] = 'p=' . edd_get_option( 'success_page', false );
+			$page_uris[] = 'p=' . edd_get_option( 'purchase_page', 0 );
+			$page_uris[] = 'p=' . edd_get_option( 'success_page', 0 );
 
 	    	// Exclude permalinks
 			$checkout_page  = get_post( edd_get_option( 'purchase_page', false ) );

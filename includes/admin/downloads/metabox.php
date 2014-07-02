@@ -380,7 +380,7 @@ function edd_render_price_field( $post_id ) {
 			);
 		?>
 
-		<?php if ( ! edd_get_option( 'currency_position', false ) || edd_get_option( 'currency_position', false ) == 'before' ) : ?>
+		<?php if ( edd_get_option( 'currency_position', 'before' ) ) : ?>
 			<?php echo edd_currency_filter( '' ); ?>
 			<?php echo EDD()->html->text( $price_args ); ?>
 		<?php else : ?>
@@ -493,7 +493,7 @@ function edd_render_price_row( $key, $args = array(), $post_id ) {
 			);
 		?>
 
-		<?php if( ! edd_get_option( 'currency_position', false ) || edd_get_option( 'currency_position', false ) == 'before' ) : ?>
+		<?php if( edd_get_option( 'currency_position', 'before' ) ) : ?>
 			<span><?php echo edd_currency_filter( '' ); ?></span>
 			<?php echo EDD()->html->text( $price_args ); ?>
 		<?php else : ?>

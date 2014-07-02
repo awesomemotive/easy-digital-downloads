@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return bool True if on the Checkout page, false otherwise
  */
 function edd_is_checkout() {
-	$is_checkout = edd_get_option( 'purchase_page', false );
+	$is_checkout = is_page( edd_get_option( 'purchase_page', false ) );
 	return apply_filters( 'edd_is_checkout', $is_checkout );
 }
 

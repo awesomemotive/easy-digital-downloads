@@ -153,7 +153,9 @@ function edd_local_taxes_only() {
 
 	_edd_deprecated_function( __FUNCTION__, '1.6', 'no alternatives', $backtrace );
 
-	$local_only = edd_get_option( 'tax_condition', false ) == 'local';
+	global $edd_options;
+	
+	$local_only = isset( $edd_options['tax_condition'] ) && $edd_options['tax_condition'] == 'local';
 
 	return apply_filters( 'edd_local_taxes_only', $local_only );
 }
@@ -181,14 +183,17 @@ function edd_local_tax_opted_in() {
  *
  * @since 1.4
  * @deprecated 1.9
+ * @global $edd_options
  * @return bool Whether or not to show taxes on prices
  */
 function edd_taxes_on_prices() {
+	global $edd_options;
+	
 	$backtrace = debug_backtrace();
 
 	_edd_deprecated_function( __FUNCTION__, '1.9', 'no alternatives', $backtrace );
 
-	return apply_filters( 'edd_taxes_on_prices', edd_get_option( 'taxes_on_prices', false ) );
+	return apply_filters( 'edd_taxes_on_prices', isset( $edd_options['taxes_on_prices'] ) );
 }
 
 /**
