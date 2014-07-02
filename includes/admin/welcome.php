@@ -464,7 +464,7 @@ class EDD_Welcome {
 		} else {
 			$readme = file_get_contents( $file );
 			$readme = nl2br( esc_html( $readme ) );
-			$readme = explode( '== Changelog ==', $readme )
+			$readme = explode( '== Changelog ==', $readme );
 			$readme = end( $readme );
 
 			$readme = preg_replace( '/`(.*?)`/', '<code>\\1</code>', $readme );
