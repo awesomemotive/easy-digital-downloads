@@ -196,7 +196,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 */
 	function column_name( $item ) {
 		$discount     = get_post( $item['ID'] );
-		$base         = admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' . $item['ID'] );
 		$row_actions  = array();
 
 		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Edit', 'edd' ) . '</a>';
@@ -340,7 +339,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$status 		= isset( $_GET['status'] )   ? $_GET['status']                   : array( 'active', 'inactive' );
 		$meta_key		= isset( $_GET['meta_key'] ) ? $_GET['meta_key']                 : null;
 		$search         = isset( $_GET['s'] )        ? sanitize_text_field( $_GET['s'] ) : null;
-		$order_class 	= strtolower( $order_inverse );
 
 		$discounts = edd_get_discounts( array(
 			'posts_per_page' => $per_page,
@@ -424,8 +422,6 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$this->process_bulk_action();
 
 		$data = $this->discount_codes_data();
-
-		$current_page = $this->get_pagenum();
 
 		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
 
