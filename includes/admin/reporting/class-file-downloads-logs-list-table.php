@@ -178,10 +178,10 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 *
 	 * @access public
 	 * @since 1.4
-	 * @return mixed string If search is present, false otherwise
+	 * @return String The search string
 	 */
 	public function get_search() {
-		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
+		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : '';
 	}
 
 	/**
@@ -216,7 +216,7 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 
 		$search = $this->get_search();
 
-		if ( $search ) {
+		if ( ! empty( $search ) ) {
 			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
 				// This is an IP address search
 				$key     = '_edd_log_ip';

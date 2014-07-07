@@ -168,6 +168,7 @@ class EDD_HTML_Elements {
 		$current  = date( 'Y' );
 		$year     = $current - 5;
 		$selected = empty( $selected ) ? date( 'Y' ) : $selected;
+		$options  = array();
 
 		while ( $year <= $current ) {
 			$options[ absint( $year ) ] = $year;
