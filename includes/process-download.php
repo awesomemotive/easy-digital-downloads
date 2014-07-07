@@ -86,7 +86,7 @@ function edd_process_download() {
 			$user_info['id']   = get_current_user_id();
 			$user_info['name'] = $user_data->display_name;
 		}
-		edd_record_download_in_log( $download, $file_key, $user_info, edd_get_ip(), $payment, $args['price_id'] );
+		edd_record_download_in_log( $args['download'], $args['file_key'], $user_info, edd_get_ip(), $payment, $args['price_id'] );
 
 		$file_extension = edd_get_file_extension( $requested_file );
 		$ctype          = edd_get_file_ctype( $file_extension );
@@ -105,7 +105,7 @@ function edd_process_download() {
 		}
 		@ini_set( 'zlib.output_compression', 'Off' );
 
-		do_action( 'edd_process_download_headers', $requested_file, $download, $email, $payment );
+		do_action( 'edd_process_download_headers', $requested_file, $args['download'], $args['email'], $payment );
 
 		nocache_headers();
 		header("Robots: none");
