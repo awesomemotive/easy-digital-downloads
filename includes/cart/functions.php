@@ -57,6 +57,8 @@ function edd_get_cart_content_details() {
 			$subtotal -= $tax;
 		}
 
+		$fees       = edd_get_cart_fees( 'fee', $item['id'] );
+
 		$total      = $subtotal - $discount + $tax;
 
 		// Do not allow totals to go negatve
@@ -70,11 +72,11 @@ function edd_get_cart_content_details() {
 			'item_number' => $item,
 			'item_price'  => round( $item_price, edd_currency_decimal_filter() ),
 			'quantity'    => $quantity,
-			'discount'    => round( $discount, edd_currency_decimal_filter() ),
-			'subtotal'    => round( $subtotal, edd_currency_decimal_filter() ),
-			'tax'         => round( $tax, edd_currency_decimal_filter() ),
-			'fees'        => array(),
-			'price'       => round( $total, edd_currency_decimal_filter() )
+			'discount'    => $discount,
+			'subtotal'    => $subtotal,
+			'tax'         => $tax,
+			'price'       => $total,
+			'fees'        => $fees
 		);
 
 	}
@@ -656,11 +658,12 @@ function edd_cart_has_fees( $type = 'all' ) {
  *
  * @since 1.5
  * @param string $type
+ * @param int $download_id
  * @uses EDD()->fees->get_fees()
  * @return array All the cart fees that have been applied
  */
-function edd_get_cart_fees( $type = 'all' ) {
-	return EDD()->fees->get_fees( $type );
+function edd_get_cart_fees( $type = 'all', $download_id = 0 ) {
+	return EDD()->fees->get_fees( $type, $download_id );
 }
 
 /**
