@@ -64,11 +64,12 @@ class EDD_Fees {
 		} else {
 
 			$defaults = array(
-				'amount' => 0,
-				'label'  => '',
-				'id'     => '',
-				'no_tax' => false,
-				'type'   => 'fee'
+				'amount'      => 0,
+				'label'       => '',
+				'id'          => '',
+				'no_tax'      => false,
+				'type'        => 'fee',
+				'download_id' => 0
 			);
 
 			$args = wp_parse_args( $args, $defaults );
@@ -141,19 +142,59 @@ class EDD_Fees {
 	 * @access public
 	 * @since 1.5
 	 * @param string $type Fee type, "fee" or "item"
+	 * @param int $download_id The download ID whose fees to retrieve
 	 * @uses EDD_Session::get()
 	 * @return mixed array|bool
 	 */
-	public function get_fees( $type = 'fee' ) {
+	public function get_fees( $type = 'fee', $download_id = 0 ) {
+		
 		$fees = EDD()->session->get( 'edd_cart_fees' );
+		
 		if( ! empty( $fees ) && ! empty( $type ) && 'all' !== $type ) {
+			
+			// Remove fees not of the specified type
 			foreach( $fees as $key => $fee ) {
+				
 				if( ! empty( $fee['type'] ) && $type != $fee['type'] ) {
+				
 					unset( $fees[ $key ] );
+				
 				}
+
 			}
+
 		}
+
+		if( ! empty( $fees ) && ! empty( $download_id ) ) {
+	
+			// Remove fees that don't belong to the specified Download	
+			foreach( $fees as $key => $fee ) {
+
+				if( (int) $download_id !== (int) $fee['download_id'] ) {
+
+					unset( $fees[ $key ] );
+
+				}
+			
+			}
+
+		}
+
 		return ! empty( $fees ) ? $fees : array();
+	}
+
+	/**
+	 * Retrieve all active fees of a specific Download
+	 *
+	 * @access public
+	 * @since 2.1
+	 * @param int $download_id The download ID whose fees to retrieve
+	 * @uses EDD_Session::get()
+	 * @return mixed array|bool
+	 */
+	public function get_fees_of_download( $download_id = 0 ) {
+		
+		return $this->get_fees( 'fee', $download_id );
 	}
 
 	/**
@@ -207,10 +248,11 @@ class EDD_Fees {
 	 * @since 1.5
 	 * @uses EDD_Fees::get_fees()
 	 * @uses EDD_Fees::has_fees()
+	 * @param int $download_id The download ID whose fees to retrieve
 	 * @return float $total Total fee amount
 	 */
-	public function total() {
-		$fees  = $this->get_fees( 'all' );
+	public function total( $download_id = 0 ) {
+		$fees  = $this->get_fees( 'all', $download_id );
 		$total = (float) 0.00;
 
 		if ( $this->has_fees( 'all' ) ) {
