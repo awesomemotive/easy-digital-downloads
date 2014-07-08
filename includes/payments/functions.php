@@ -824,10 +824,10 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 						'quantity'    => 1,
 						'tax'         => 0,
 						'in_bundle'   => 1,
-						'parent'		=> array(
-								'id' 			=> $cart_item['id'],
-								'options' 		=> isset( $cart_item['item_number']['options'] ) ? $cart_item['item_number']['options'] : array()
-							)
+						'parent'      => array(
+							'id'      => $cart_item['id'],
+							'options' => isset( $cart_item['item_number']['options'] ) ? $cart_item['item_number']['options'] : array()
+						)
 					);
 				}
 			}
