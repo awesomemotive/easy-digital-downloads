@@ -40,8 +40,6 @@ function edd_process_download() {
 		return false;
 	}
 
-    extract( $args );
-
     // Verify the payment
 	$payment = edd_verify_download_link( $args['download'], $args['key'], $args['email'], $args['expire'], $args['file_key'] );
 
