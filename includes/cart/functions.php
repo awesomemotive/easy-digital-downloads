@@ -59,22 +59,19 @@ function edd_get_cart_content_details() {
 
 		$fees       = edd_get_cart_fees( 'fee', $item['id'] );
 
-		$total      = $subtotal - $discount + $tax;
-
-		// Do not allow totals to go negatve
-		if( $total < 0 ) {
-			$total = 0;
-		}
+		$subtotal   = $item_price * $quantity;
+		$tax        = $tax * $quantity;
+		$total      = round( ( $subtotal - $discount + $tax ), 2 );
 
 		$details[ $key ]  = array(
 			'name'        => get_the_title( $item['id'] ),
 			'id'          => $item['id'],
 			'item_number' => $item,
-			'item_price'  => round( $item_price, edd_currency_decimal_filter() ),
+			'item_price'  => round( $item_price, 2 ),
 			'quantity'    => $quantity,
-			'discount'    => $discount,
-			'subtotal'    => $subtotal,
-			'tax'         => $tax,
+			'discount'    => round( $discount, 2 ),
+			'subtotal'    => round( $subtotal, 2 ),
+			'tax'         => round( $tax, 2 ),
 			'price'       => $total,
 			'fees'        => $fees
 		);
