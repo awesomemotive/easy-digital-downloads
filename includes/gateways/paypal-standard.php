@@ -144,7 +144,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 
 		// Add taxes to the cart
 		if ( edd_use_taxes() ) {
-			$paypal_args['tax_cart'] = edd_sanitize_amount(round( $purchase_data['tax'], 2 ));
+			$paypal_args['tax_cart'] = edd_sanitize_amount( $purchase_data['tax'], 2 );
 		}
 
 		$paypal_args = apply_filters( 'edd_paypal_redirect_args', $paypal_args, $purchase_data );
