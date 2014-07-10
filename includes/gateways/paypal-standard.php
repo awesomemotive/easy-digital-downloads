@@ -198,8 +198,8 @@ function edd_process_paypal_ipn() {
 		return;
 	}
 
-	// Set initial post data to false
-	$post_data = false;
+	// Set initial post data to empty string
+	$post_data = '';
 
 	// Fallback just in case post_max_size is lower than needed
 	if ( ini_get( 'allow_url_fopen' ) ) {

@@ -43,20 +43,23 @@ class edd_cart_widget extends WP_Widget {
 			$args['id'] = 'edd_cart_widget';
 		}		
 
-		extract( $args );
-
-		$title = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $id );
+		$title = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $args['id'] );
 
 		global $post, $edd_options;
 
-		echo $before_widget;
+		echo $args['before_widget'];
+		
 		if ( $title ) {
-			echo $before_title . $title . $after_title;
+			echo $args['before_title'] . $title . $args['after_title'];
 		}
+		
 		do_action( 'edd_before_cart_widget' );
+		
 		edd_shopping_cart( true );
+		
 		do_action( 'edd_after_cart_widget' );
-		echo $after_widget;
+		
+		echo $args['after_widget'];
 	}
 
 	/** @see WP_Widget::update */
@@ -101,9 +104,7 @@ class edd_categories_tags_widget extends WP_Widget {
 			$args['id'] = 'edd_categories_tags_widget';
 		}
 
-		extract( $args );
-
-		$title      = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $id );
+		$title      = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $args['id'] );
 		$tax        = $instance['taxonomy'];
 		$count      = isset( $instance['count'] ) && $instance['count'] == 'on' ? 1 : 0;
 		$hide_empty = isset( $instance['hide_empty'] ) && $instance['hide_empty'] == 'on' ? 1 : 0;
@@ -111,19 +112,21 @@ class edd_categories_tags_widget extends WP_Widget {
 
 		global $post, $edd_options;
 
-		echo $before_widget;
+		echo $args['before_widget'];
+		
 		if ( $title ) {
-			echo $before_title . $title . $after_title;
+			echo $args['before_title'] . $title . $args['after_title'];
 		}
 
 		do_action( 'edd_before_taxonomy_widget' );
 
 		echo "<ul class=\"edd-taxonomy-widget\">\n";
-		wp_list_categories('title_li=&taxonomy=' . $tax . '&show_count=' . $count . '&hide_empty=' . $hide_empty);
+			wp_list_categories( 'title_li=&taxonomy=' . $tax . '&show_count=' . $count . '&hide_empty=' . $hide_empty );
 		echo "</ul>\n";
 
 		do_action( 'edd_after_taxonomy_widget' );
-		echo $after_widget;
+		
+		echo $args['after_widget'];
 	}
 
 	/** @see WP_Widget::update */
@@ -150,13 +153,13 @@ class edd_categories_tags_widget extends WP_Widget {
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'edd' ); ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
-				   name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo $title; ?>"/>
+				   name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo $instance['title']; ?>"/>
 		</p>
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'taxonomy' ) ); ?>"><?php _e( 'Taxonomy:', 'edd' ); ?></label>
 			<select name="<?php echo esc_attr( $this->get_field_name( 'taxonomy' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'taxonomy' ) ); ?>">
-				<option value="download_category" <?php selected( 'download_category', $taxonomy ); ?>><?php _e( 'Categories', 'edd' ); ?></option>
-				<option value="download_tag" <?php selected( 'download_tag', $taxonomy ); ?>><?php _e( 'Tags', 'edd' ); ?></option>
+				<option value="download_category" <?php selected( 'download_category', $instance['taxonomy'] ); ?>><?php _e( 'Categories', 'edd' ); ?></option>
+				<option value="download_tag" <?php selected( 'download_tag', $instance['taxonomy'] ); ?>><?php _e( 'Tags', 'edd' ); ?></option>
 			</select>
 		</p>
 		<p>
@@ -200,8 +203,6 @@ class EDD_Product_Details_Widget extends WP_Widget {
 			$args['id'] = 'edd_download_details_widget';
 		}
 
-        extract( $args );
-
         if ( 'current' == $instance['download_id'] && ! is_singular( 'download' ) ) {
         	return;
         }
@@ -214,18 +215,18 @@ class EDD_Product_Details_Widget extends WP_Widget {
         }
 
         // Variables from widget settings
-		$title              = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $id );
+		$title              = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $args['id'] );
       	$download_title 	= $instance['download_title'] ? apply_filters( 'edd_product_details_widget_download_title', '<h3>' . get_the_title( $download_id ) . '</h3>', $download_id ) : '';
        	$purchase_button 	= $instance['purchase_button'] ? apply_filters( 'edd_product_details_widget_purchase_button', edd_get_purchase_link( array( 'download_id' => $download_id ) ), $download_id ) : '';
     	$categories 		= $instance['categories'] ? $instance['categories'] : '';
     	$tags 				= $instance['tags'] ? $instance['tags'] : '';
 	
         // Used by themes. Opens the widget
-        echo $before_widget;
+        echo $args['before_widget'];
 
         // Display the widget title
         if( $title ) {
-            echo $before_title . $title . $after_title;
+            echo $args['before_title'] . $title . $args['after_title'];
 		}
 
         do_action( 'edd_product_details_widget_before_title' , $instance , $download_id );
@@ -255,14 +256,14 @@ class EDD_Product_Details_Widget extends WP_Widget {
         	$text .= '</p>';
         }
         
-        do_action( 'edd_product_details_widget_before_categories_and_tags' , $instance , $download_id );
+        do_action( 'edd_product_details_widget_before_categories_and_tags', $instance, $download_id );
 
         printf( $text, $category_list, $tag_list );
         
-        do_action( 'edd_product_details_widget_before_end' , $instance , $download_id );
+        do_action( 'edd_product_details_widget_before_end', $instance, $download_id );
 
         // Used by themes. Closes the widget
-        echo $after_widget;
+        echo $args['after_widget'];
     }
 
    	/** @see WP_Widget::form */
