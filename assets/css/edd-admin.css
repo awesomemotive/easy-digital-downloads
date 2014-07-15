@@ -127,7 +127,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 .edd_repeatable_upload_wrapper .pricing select, .edd_repeatable_product_wrapper .edd-select,
 #edd_products .edd-select { min-width: 100%; max-width: 200px; }
 .edd_repeatable_product_wrapper td { overflow: visible; }
-@media screen and ( max-width: 782px ) { 
+@media screen and ( max-width: 782px ) {
 	.order-data-column input[type="email"] {
 		padding: 6px 10px;
 	}
@@ -179,7 +179,7 @@ textarea#edd-payment-note { width: 100%; height: 4em; margin: 0; }
 @media screen and ( max-width: 1284px ) {
 	#edd-edit-order-form .column strong {
 		display:block;
-	} 
+	}
 }
 
 /** Stats */
