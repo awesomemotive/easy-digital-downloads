@@ -38,6 +38,7 @@ class edd_cart_widget extends WP_Widget {
 
 	/** @see WP_Widget::widget */
 	function widget( $args, $instance ) {
+
 		if ( $instance['hide_on_checkout'] && edd_is_checkout() ) {
 			return;
 		}
@@ -72,7 +73,7 @@ class edd_cart_widget extends WP_Widget {
 		$instance = $old_instance;
 
 		$instance['title']            = strip_tags( $new_instance['title'] );
-		$instance['hide_on_checkout'] = isset( $new_instance['hide_on_checkout'] ) ? $new_instance['hide_on_checkout'] : '';
+		$instance['hide_on_checkout'] = isset( $new_instance['hide_on_checkout'] );
 
 		return $instance;
 	}
@@ -80,24 +81,24 @@ class edd_cart_widget extends WP_Widget {
 	/** @see WP_Widget::form */
 	function form( $instance ) {
 
-        $defaults = array(
-            'title'            => '',
-            'hide_on_checkout' => ''
-        );
+		$defaults = array(
+			'title'            => '',
+			'hide_on_checkout' => ''
+		);
 
-        $instance = wp_parse_args( (array) $instance, $defaults ); ?>
+		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
 		<p>
-       		<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'edd' ); ?></label>
-     		<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo $instance['title']; ?>"/>
-    	</p>
-    	
-	    <!-- Hide on Checkout Page -->
-        <p>
-            <input <?php checked( $instance['hide_on_checkout'], 'on' ); ?> id="<?php echo esc_attr( $this->get_field_id( 'hide_on_checkout' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hide_on_checkout' ) ); ?>" type="checkbox" />
-            <label for="<?php echo esc_attr( $this->get_field_id( 'hide_on_checkout' ) ); ?>"><?php _e( 'Hide on Checkout Page', 'edd' ); ?></label>
-        </p>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'edd' ); ?></label>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo $instance['title']; ?>"/>
+		</p>
 
-   		 <?php
+		<!-- Hide on Checkout Page -->
+		<p>
+			<input <?php checked( $instance['hide_on_checkout'], 'on' ); ?> id="<?php echo esc_attr( $this->get_field_id( 'hide_on_checkout' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hide_on_checkout' ) ); ?>" type="checkbox" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'hide_on_checkout' ) ); ?>"><?php _e( 'Hide on Checkout Page', 'edd' ); ?></label>
+		</p>
+
+		<?php
 	}
 }
 
