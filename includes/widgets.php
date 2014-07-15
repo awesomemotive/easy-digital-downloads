@@ -53,10 +53,10 @@ class edd_cart_widget extends WP_Widget {
 
 		global $post, $edd_options;
 
-		echo $before_widget;
+		echo $args['before_widget'];
 
 		if ( $title ) {
-			echo $before_title . $title . $after_title;
+			echo $args['before_title'] . $title . $args['after_title'];
 		}
 
 		do_action( 'edd_before_cart_widget' );
@@ -65,7 +65,7 @@ class edd_cart_widget extends WP_Widget {
 
 		do_action( 'edd_after_cart_widget' );
 
-		echo $after_widget;
+		echo $args['after_widget'];
 	}
 
 	/** @see WP_Widget::update */
