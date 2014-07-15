@@ -226,7 +226,8 @@ function edd_admin_downloads_icon() {
 	?>
     <style type="text/css" media="screen">
         <?php if( version_compare( $wp_version, '3.8-RC', '>=' ) || version_compare( $wp_version, '3.8', '>=' ) ) { ?>
-            #adminmenu #menu-posts-download .wp-menu-image:before {
+            #adminmenu #menu-posts-download .wp-menu-image:before,
+            #dashboard_right_now .download-count:before {
                 content: '<?php echo $menu_icon; ?>';
             }
         <?php } else { ?>
