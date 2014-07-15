@@ -219,10 +219,18 @@ add_action( 'restrict_manage_posts', 'edd_add_download_filters', 100 );
  *
  * @author Daniel J Griffiths
  * @since 2.1
+ * @param array $dates The preset array of dates
+ * @global $typenow The post type we are viewing
  * @return array Empty array disables the dropdown
  */
-function edd_remove_month_filter( $date ) {
-	return array();
+function edd_remove_month_filter( $dates ) {
+	global $typenow;
+
+	if ( $typenow == 'download' ) {
+		return array();
+	}
+
+	return $dates;
 }
 add_filter( 'months_dropdown_results', 'edd_remove_month_filter', 99 );
 
