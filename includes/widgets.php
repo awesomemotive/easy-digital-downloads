@@ -47,9 +47,7 @@ class edd_cart_widget extends WP_Widget {
 			$args['id'] = 'edd_cart_widget';
 		}		
 
-		extract( $args );
-
-		$title = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $id );
+		$title = apply_filters( 'widget_title', $instance[ 'title' ], $instance, $args['id'] );
 
 		global $post, $edd_options;
 
