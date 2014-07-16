@@ -65,34 +65,8 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		$args = wp_parse_args( $data, $defaults );
 
-		$add  = $this->insert( $args, 'customer' );
+		return $this->insert( $args, 'customer' );
 
-		if( $add ) {
-
-			do_action( 'edd_insert_customer', $add );
-
-			return $add;
-		}
-
-		return false;
-
-	}
-
-	/**
-	 * Retrieve a customer by a specific field. Optionally let's you retreive via field that also has a specific context
-	 *
-	 * @access  public
-	 * @since   2.1
-	*/
-	public function get_by( $column, $row_id, $context = '' ) {
-		global $wpdb;
-
-		$and = '';
-		if( ! empty( $context ) ) {
-			$and = " AND context = '$context'";
-		}
-
-		return $wpdb->get_row( "SELECT * FROM $this->table_name WHERE $column = '$row_id'$and LIMIT 1;" );
 	}
 
 	/**
