@@ -29,6 +29,7 @@ class EDD_DB_Customers extends EDD_DB  {
 			'id'             => '%d',
 			'user_id'        => '%d',
 			'email'          => '%s',
+			'payment_ids'    => '%s',
 			'purchase_value' => '%s',
 			'purchase_count' => '%d',
 			'notes'          => '%s',
@@ -108,12 +109,8 @@ class EDD_DB_Customers extends EDD_DB  {
 			'number'       => 20,
 			'offset'       => 0,
 			'user_id'      => 0,
-			'reference'    => '',
-			'context'      => '',
-			'status'       => '',
 			'orderby'      => 'id',
-			'order'        => 'DESC',
-			'search'       => false
+			'order'        => 'DESC'
 		);
 
 		$args  = wp_parse_args( $args, $defaults );
@@ -296,6 +293,7 @@ class EDD_DB_Customers extends EDD_DB  {
 		`email` mediumtext NOT NULL,
 		`purchase_value` mediumtext NOT NULL,
 		`purchase_count` bigint(20) NOT NULL,
+		`payment_ids` largetext NOT NULL,
 		`notes` largetext NOT NULL,
 		`date_created` datetime NOT NULL,
 		PRIMARY KEY  (id),
