@@ -342,10 +342,19 @@ add_action( 'template_redirect', 'edd_enforced_ssl_asset_handler' );
  * @return mixed
  */
 function edd_enforced_ssl_asset_filter( $content ) {
+
 	if ( is_array( $content ) ) {
+
 		$content = array_map( 'edd_enforced_ssl_asset_filter', $content );
+
 	} else {
-		$content = str_replace( 'http:', 'https:', $content );
+
+		if( false !== strpos( $content, '.' ) ) {
+
+			$content = str_replace( 'http:', 'https:', $content );
+
+		}
+
 	}
 
 	return $content;
