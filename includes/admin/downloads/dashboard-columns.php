@@ -227,7 +227,7 @@ function edd_remove_month_filter( $dates ) {
 	global $typenow;
 
 	if ( $typenow == 'download' ) {
-		return array();
+		$dates = array();
 	}
 
 	return $dates;
