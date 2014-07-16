@@ -293,11 +293,10 @@ class EDD_DB_Customers extends EDD_DB  {
 		`email` mediumtext NOT NULL,
 		`purchase_value` mediumtext NOT NULL,
 		`purchase_count` bigint(20) NOT NULL,
-		`payment_ids` largetext NOT NULL,
-		`notes` largetext NOT NULL,
+		`payment_ids` longtext NOT NULL,
+		`notes` longtext NOT NULL,
 		`date_created` datetime NOT NULL,
-		PRIMARY KEY  (id),
-		KEY user_id (user_id)
+		PRIMARY KEY  (id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
 		dbDelta( $sql );
