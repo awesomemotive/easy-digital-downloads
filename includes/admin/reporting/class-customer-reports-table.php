@@ -200,31 +200,25 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			$where .= " AND meta_value LIKE '%$search%'";
 		}
 
-		$customers = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta $where ORDER BY meta_id DESC LIMIT $this->per_page OFFSET $offset" );
+		$customers = EDD()->customers->get_customers( array( 'number' => $this->per_page, 'offset' => $offset ) );
+
+		//$customers = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta $where ORDER BY meta_id DESC LIMIT $this->per_page OFFSET $offset" );
 
 		if ( $customers ) {
 
 			$this->count = count( $customers );
 
-			foreach ( $customers as $customer_email ) {
-				$wp_user = get_user_by( 'email', $customer_email );
+			foreach ( $customers as $customer ) {
 
-				$user_id = $wp_user ? $wp_user->ID : 0;
-
-				if( $wp_user ) {
-					$user = $user_id;
-				} else {
-					$user = $customer_email;
-				}
-
-				$stats   = edd_get_purchase_stats_by_user( $user );
+				$wp_user = get_user_by( 'email', $customer->email );
+				$user_id = ! empty( $customer->user_id ) ? absint( $customer->user_id ) : 0;
 
 				$data[] = array(
 					'ID' 			=> $user_id,
-					'name' 			=> $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' ),
-					'email' 		=> $customer_email,
-					'num_purchases'	=> $stats['purchases'],
-					'amount_spent'	=> $stats['total_spent']
+					'name' 			=> $customer->name,
+					'email' 		=> $customer->email,
+					'num_purchases'	=> $customer->purchase_value,
+					'amount_spent'	=> $customer->purchase_count
 				);
 			}
 		}
@@ -244,10 +238,9 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function prepare_items() {
-		$columns = $this->get_columns();
 
-		$hidden = array(); // No hidden columns
-
+		$columns  = $this->get_columns();
+		$hidden   = array(); // No hidden columns
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
@@ -257,9 +250,9 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$this->total = edd_count_total_customers();
 
 		$this->set_pagination_args( array(
-			'total_items' => $this->count,                  	// WE have to calculate the total number of items
-			'per_page'    => $this->per_page,                     	// WE have to determine how many items to show on a page
-			'total_pages' => ceil( $this->total / $this->per_page )   // WE have to calculate the total number of pages
+			'total_items' => $this->count,
+			'per_page'    => $this->per_page,
+			'total_pages' => ceil( $this->total / $this->per_page )
 		) );
 	}
 }
