@@ -134,10 +134,10 @@ function edd_get_registered_settings() {
 					'desc' => __( 'While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'edd' ),
 					'type' => 'checkbox'
 				),
-				'support_key' => array(
-					'id' => 'support_key',
+				'test_payment_key' => array(
+					'id' => 'test_payment_key',
 					'name' => __( 'Support Key', 'edd' ),
-					'desc' => sprintf( __( 'Acts as an override allowing you, or the EDD support staff, to run in test mode without affecting other users of your site. <a href="%s">Generate random key</a>', 'edd' ), wp_nonce_url( add_query_arg( array( 'edd-action' => 'generate_support_key' ) ), 'edd_support_key_nonce', 'edd_support_key_nonce' ) ),
+					'desc' => sprintf( __( 'Acts as an override allowing you, or the EDD support staff, to run in test mode without affecting other users of your site. <a href="%s">Generate random key</a>', 'edd' ), wp_nonce_url( add_query_arg( array( 'edd-action' => 'generate_test_key' ) ), 'edd_test_key_nonce', 'edd_test_key_nonce' ) ),
 					'type' => 'text'
 				),
 				'purchase_page' => array(
