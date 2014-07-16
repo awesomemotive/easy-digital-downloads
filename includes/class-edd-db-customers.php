@@ -28,6 +28,7 @@ class EDD_DB_Customers extends EDD_DB  {
 		return array(
 			'id'             => '%d',
 			'user_id'        => '%d',
+			'name'           => '%s',
 			'email'          => '%s',
 			'payment_ids'    => '%s',
 			'purchase_value' => '%s',
@@ -265,6 +266,7 @@ class EDD_DB_Customers extends EDD_DB  {
 		`id` bigint(20) NOT NULL AUTO_INCREMENT,
 		`user_id` bigint(20) NOT NULL,
 		`email` mediumtext NOT NULL,
+		`name` mediumtext NOT NULL,
 		`purchase_value` mediumtext NOT NULL,
 		`purchase_count` bigint(20) NOT NULL,
 		`payment_ids` longtext NOT NULL,
