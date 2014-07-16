@@ -178,11 +178,11 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		$cache_key = md5( 'edd_customers_' . serialize( $args ) );
 
-		$customers = wp_cache_get( $cache_key, 'edd_customers' );
+		$customers = wp_cache_get( $cache_key, 'customers' );
 		
 		if( $customers === false ) {
 			$customers = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM  $this->table_name $where ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ) );
-			wp_cache_set( $cache_key, $customers, 'edd_customers', 3600 );
+			wp_cache_set( $cache_key, $customers, 'customers', 3600 );
 		}
 
 		return $customers;
@@ -239,11 +239,11 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		$cache_key = md5( 'edd_customers_count' . serialize( $args ) );
 
-		$count = wp_cache_get( $cache_key, 'edd_customers' );
+		$count = wp_cache_get( $cache_key, 'customers' );
 		
 		if( $count === false ) {
 			$count = $wpdb->get_var( "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$where};" );
-			wp_cache_set( $cache_key, $count, 'edd_customers', 3600 );
+			wp_cache_set( $cache_key, $count, 'customers', 3600 );
 		}
 
 		return absint( $count );
