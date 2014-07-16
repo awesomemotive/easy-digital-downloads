@@ -681,6 +681,8 @@ function edd_use_php_sessions() {
 	// If the database variable is already set, no need to run autodetection
 	$edd_use_php_sessions = get_option( 'edd_use_php_sessions' );
 	if( ! $edd_use_php_sessions ) {
+		update_option( 'edd_use_php_sessions', false );
+
 		// Attempt to detect if the server supports PHP sessions
 		if( function_exists( 'session_start' ) ) {
 			session_start();
