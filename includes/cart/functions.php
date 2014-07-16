@@ -166,27 +166,38 @@ function edd_add_to_cart( $download_id, $options = array() ) {
 	if ( ! isset( $to_add['id'] ) || empty( $to_add['id'] ) )
 		return;
 
-	$new_item[] = $to_add;
+	$new_item[0] = $to_add;
 
-	if ( edd_item_quantities_enabled() ) {
-		if ( is_array( $cart ) ) {
-			foreach( $cart as $key => $item ) {
-				if( $new_item[0]['id'] == $item['id'] ) {
-					$cart[$key]['quantity']++;
-					$new_item = array();
+	if ( edd_item_quantities_enabled() && is_array( $cart ) ) {
+
+		foreach( $cart as $key => $item ) {
+
+			if( $new_item[0]['id'] == $item['id'] ) {
+
+				if( isset( $new_item[0]['options']['price_id'] ) && isset( $item['options']['price_id'] ) ) {
+
+					if( $new_item[0]['options']['price_id'] != $item['options']['price_id'] ) {
+						continue;
+					}
 				}
+
+				$cart[$key]['quantity']++;
+				$new_item = array();
+
 			}
 
-			$cart = array_merge( $cart, $new_item );
-		} else {
-			$cart = $new_item;
 		}
+
+		$cart = array_merge( $cart, $new_item );
+
+	} elseif( is_array( $cart ) ) {
+
+		$cart = array_merge( $cart, $new_item );
+
 	} else {
-		if ( is_array( $cart ) ) {
-			$cart = array_merge( $cart, $new_item );
-		} else {
-			$cart = $new_item;
-		}
+
+		$cart = $new_item;
+	
 	}
 
 	EDD()->session->set( 'edd_cart', $cart );
