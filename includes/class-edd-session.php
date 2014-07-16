@@ -34,8 +34,6 @@ class EDD_Session {
 	/**
 	 * Whether to use PHP $_SESSION or WP_Session
 	 *
-	 * PHP $_SESSION is opt-in only by defining the EDD_USE_PHP_SESSIONS constant
-	 *
 	 * @var bool
 	 * @access private
 	 * @since 1.5,1
@@ -52,12 +50,13 @@ class EDD_Session {
 	 * @since 1.5
 	 */
 	public function __construct() {
-		
-		$this->use_php_sessions = defined( 'EDD_USE_PHP_SESSIONS' ) && EDD_USE_PHP_SESSIONS;
+
+		$this->use_php_sessions = edd_use_php_sessions();
 
 		if( $this->use_php_sessions ) {
 
-			// Use PHP SESSION (must be enabled via the EDD_USE_PHP_SESSIONS constant)
+			// Use PHP SESSION (must be enabled via the EDD_USE_PHP_SESSIONS constant or
+			// activated during the installer after support autodetection)
 
 			if( ! session_id() ) {
 				add_action( 'init', 'session_start', -2 );
@@ -79,7 +78,7 @@ class EDD_Session {
 				require_once EDD_PLUGIN_DIR . 'includes/libraries/class-wp-session.php';
 				require_once EDD_PLUGIN_DIR . 'includes/libraries/wp-session.php';
 			}
-	
+
 			//add_filter( 'wp_session_expiration_variant', array( $this, 'set_expiration_variant_time' ), 99999 );
 			//add_filter( 'wp_session_expiration', array( $this, 'set_expiration_time' ), 99999 );
 
