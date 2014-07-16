@@ -859,9 +859,9 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id, $price
 		$date = 2147472000; // Highest possible date, January 19, 2038
 
 	$params = array(
-		'download_key' 	=> $key,
+		'download_key' 	=> rawurlencode( $key ),
 		'email' 		=> rawurlencode( $email ),
-		'file' 			=> $filekey,
+		'file' 			=> rawurlencode( $filekey ),
 		'price_id'      => (int) $price_id,
 		'download_id' 	=> $download_id,
 		'expire' 		=> rawurlencode( base64_encode( $date ) )
