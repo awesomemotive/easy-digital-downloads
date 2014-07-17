@@ -80,6 +80,14 @@ function edd_show_upgrade_notices() {
 		);
 	}
 
+	if ( version_compare( $edd_version, '2.1', '<' ) ) {
+		printf(
+			'<div class="updated"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the customer database, click %shere%s to start the upgrade.', 'edd' ) . '</p></div>',
+			'<a href="' . esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_customers_db' ) ) . '">',
+			'</a>'
+		);
+	}
+
 }
 add_action( 'admin_notices', 'edd_show_upgrade_notices' );
 
@@ -433,3 +441,81 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 
 }
 add_action( 'edd_upgrade_sequential_payment_numbers', 'edd_v20_upgrade_sequential_payment_numbers' );
+
+/**
+ * Upgrades for EDD v2.1 and the new customers database
+ *
+ * @since 2.1
+ * @return void
+ */
+function edd_v21_upgrade_customers_db() {
+
+	global $wpdb;
+
+	ignore_user_abort( true );
+
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		set_time_limit( 0 );
+	}
+
+	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
+	$number = 20;
+	$offset = $step == 1 ? 0 : $step * 20; 
+
+	$emails = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' LIMIT %d,%d;", $offset, $number ) );
+
+	if( $emails ) {
+
+		foreach( $emails as $email ) {
+			
+			$args = array(
+				'user'    => $email,
+				'order'   => 'ASC',
+				'orderby' => 'ID',
+				'number'  => $number,
+				'page'    => $step
+			);
+
+			$payments = new EDD_Payments_Query( $args );
+			$payments = $payments->get_payments();
+
+			if( $payments ) {
+
+				$amounts  = wp_list_pluck( $payments, 'total' );
+				$ids      = wp_list_pluck( $payments, 'ID' );
+
+				$user = get_user_by( 'email', $email );
+
+				$args = array(
+					'email'          => $email,
+					'user_id'        => $user ? $user->ID : 0,
+					'name'           => $user ? $user->display_name : '',
+					'purchase_count' => count( $payments ),
+					'purchase_value' => round( array_sum( $amounts ), 2 ),
+					'payment_ids'    => implode( ',', array_map( 'absint', $ids ) ),
+					'date_created'   => $payments[0]->date
+				);
+
+				EDD()->customers->add( $args );
+
+			}
+
+		}
+
+		// Customers found so upgrade them
+		$step++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'upgrade_customers_db',
+			'step'        => $step
+		), admin_url( 'index.php' ) );
+		wp_redirect( $redirect ); exit;
+
+	} else {
+
+		// No more customers found, finish up
+		wp_redirect( admin_url() ); exit;
+	}
+
+}
+add_action( 'edd_upgrade_customers_db', 'edd_v21_upgrade_customers_db' );
