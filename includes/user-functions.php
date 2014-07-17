@@ -354,8 +354,6 @@ add_action( 'user_register', 'edd_add_past_purchases_to_new_user' );
  *
  * @access 		public
  * @since 		1.7
- * @global object $wpdb Used to query the database using the WordPress
- *   Database API
  * @return 		int - The total number of customers.
  */
 function edd_count_total_customers() {
