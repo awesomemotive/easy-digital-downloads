@@ -137,25 +137,29 @@ class EDD_Customers_Export extends EDD_Export {
 					);
 				}
 			}
+
 		} else {
+
 			// Export all customers
 			$emails = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' " );
 
+			$customers = EDD()->customers->get_customers( array( 'number' => -1 ) );
+
 			$i = 0;
 
-			foreach ( $emails as $email ) {
+			foreach ( $customers as $customer ) {
 
 				if( 'emails' != $_POST['edd_export_option'] ) {
-					$wp_user = get_user_by( 'email', $email );
-					$data[$i]['name'] = $wp_user ? $wp_user->display_name : __( 'Guest', 'edd' );
+					$data[$i]['name'] = $customer->name;
 				}
 
-				$data[$i]['email'] = $email;
+				$data[$i]['email'] = $customer->email;
 
 				if( 'full' == $_POST['edd_export_option'] ) {
-					$stats = edd_get_purchase_stats_by_user( $email );
-					$data[$i]['purchases'] = $stats['purchases'];
-					$data[$i]['amount']    = edd_format_amount( $stats['total_spent'] );
+
+					$data[$i]['purchases'] = $customer->purchase_count;
+					$data[$i]['amount']    = edd_format_amount( $customer->purchase_value );
+
 				}
 				$i++;
 			}
