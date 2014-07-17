@@ -141,8 +141,6 @@ class EDD_Customers_Export extends EDD_Export {
 		} else {
 
 			// Export all customers
-			$emails = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email' " );
-
 			$customers = EDD()->customers->get_customers( array( 'number' => -1 ) );
 
 			$i = 0;
