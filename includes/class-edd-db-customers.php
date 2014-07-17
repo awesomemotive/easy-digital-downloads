@@ -71,6 +71,18 @@ class EDD_DB_Customers extends EDD_DB  {
 	}
 
 	/**
+	 * Checks if a customer exists by email
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
+	public function exists( $email = '' ) {
+
+		return (bool) $this->get_by( 'email', $email );
+
+	}
+
+	/**
 	 * Retrieve customers from the database
 	 *
 	 * @access  public
