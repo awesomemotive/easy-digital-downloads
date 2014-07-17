@@ -217,8 +217,8 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 					'ID' 			=> $user_id,
 					'name' 			=> $customer->name,
 					'email' 		=> $customer->email,
-					'num_purchases'	=> $customer->purchase_value,
-					'amount_spent'	=> $customer->purchase_count
+					'num_purchases'	=> $customer->purchase_count,
+					'amount_spent'	=> $customer->purchase_value
 				);
 			}
 		}
