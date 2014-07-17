@@ -359,21 +359,7 @@ add_action( 'user_register', 'edd_add_past_purchases_to_new_user' );
  * @return 		int - The total number of customers.
  */
 function edd_count_total_customers() {
-	global $wpdb;
-
-	$count = wp_cache_get( 'customer_count', 'customers' );
-
-	if( false == $count ) {
-	
-		$count = $wpdb->get_col( "SELECT COUNT(DISTINCT meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_user_email'" );
-
-		$count = $count[0];
-
-		wp_cache_set( 'customer_count', $count, 'customers', 3600 );
-
-	}
-
-	return $count;
+	return EDD()->customers->count();
 }
 
 
