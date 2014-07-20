@@ -68,8 +68,8 @@ class EDD_HTML_Elements {
 					$options[$item] = get_the_title( $item );
 				}
 			}
-		} else {
-			if( ! in_array( $args['selected'], $options ) ) {
+		} elseif ( is_numeric( $args['selected'] ) ) {
+			if ( ! in_array( $args['selected'], $options ) ) {
 				$options[$args['selected']] = get_the_title( $args['selected'] );
 			}
 		}
