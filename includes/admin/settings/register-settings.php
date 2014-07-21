@@ -797,8 +797,7 @@ add_filter( 'edd_settings_sanitize_text', 'edd_sanitize_text_field' );
  * Retrieve settings tabs
  *
  * @since 1.8
- * @param array $input The field value
- * @return string $input Sanitizied value
+ * @return array $tabs
  */
 function edd_get_settings_tabs() {
 

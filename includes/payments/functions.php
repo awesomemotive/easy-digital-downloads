@@ -193,19 +193,26 @@ function edd_insert_payment( $payment_data = array() ) {
  * @return void
  */
 function edd_update_payment_status( $payment_id, $new_status = 'publish' ) {
+
 	if ( $new_status == 'completed' || $new_status == 'complete' ) {
 		$new_status = 'publish';
 	}
 
+	if( empty( $payment_id ) ) {
+		return;
+	}
+
 	$payment = get_post( $payment_id );
 
-	if ( is_wp_error( $payment ) || !is_object( $payment ) )
+	if ( is_wp_error( $payment ) || ! is_object( $payment ) ) {
 		return;
+	}
 
 	$old_status = $payment->post_status;
 
-	if ( $old_status === $new_status )
+	if ( $old_status === $new_status ) {
 		return; // Don't permit status changes that aren't changes
+	}
 
 	$do_change = apply_filters( 'edd_should_update_payment_status', true, $payment_id, $new_status, $old_status );
 

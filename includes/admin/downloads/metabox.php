@@ -469,7 +469,7 @@ function edd_render_price_row( $key, $args = array(), $post_id ) {
 	);
 
 	$args = wp_parse_args( $args, $defaults );
-	extract( $args, EXTR_SKIP );
+
 ?>
 	<!--
 	Disabled until we can work out a way to solve the issues raised here: https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/1066
@@ -481,7 +481,7 @@ function edd_render_price_row( $key, $args = array(), $post_id ) {
 	<td>
 		<?php echo EDD()->html->text( array(
 			'name'  => 'edd_variable_prices[' . $key . '][name]',
-			'value' => esc_attr( $name ),
+			'value' => esc_attr( $args['name'] ),
 			'placeholder' => __( 'Option Name', 'edd' ),
 			'class' => 'edd_variable_prices_name large-text'
 		) ); ?>
@@ -491,7 +491,7 @@ function edd_render_price_row( $key, $args = array(), $post_id ) {
 		<?php
 			$price_args = array(
 				'name'  => 'edd_variable_prices[' . $key . '][amount]',
-				'value' => $amount,
+				'value' => $args['amount'],
 				'placeholder' => '9.99',
 				'class' => 'edd-price-field'
 			);

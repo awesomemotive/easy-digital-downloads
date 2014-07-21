@@ -110,13 +110,13 @@ class EDD_Fees {
 	 * @return array $fees
 	 */
 	public function remove_fee( $id = '' ) {
+
 		$fees = $this->get_fees( 'all' );
 
 		if ( isset( $fees[ $id ] ) ) {
 			unset( $fees[ $id ] );
+			EDD()->session->set( 'edd_cart_fees', $fees );
 		}
-
-		EDD()->session->set( 'edd_cart_fees', $fees );
 
 		return $fees;
 	}
