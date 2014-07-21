@@ -349,7 +349,28 @@ function edd_enforced_ssl_asset_filter( $content ) {
 
 	} else {
 
-		if( false !== strpos( $content, '.' ) ) {
+		// Detect if URL ends in a common domain suffix. We want to only affect assets
+		$extension = edd_get_file_extension( $content );
+		$suffixes  = array(
+			'br',
+			'ca',
+			'cn',
+			'com',
+			'de',
+			'edu',
+			'fr',
+			'in',
+			'info',
+			'jp',
+			'mobi',
+			'name',
+			'net',
+			'nz',
+			'org',
+			'ru',
+		);
+
+		if( ! in_array( $extension, $suffixes ) ) {
 
 			$content = str_replace( 'http:', 'https:', $content );
 
