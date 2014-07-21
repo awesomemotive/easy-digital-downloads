@@ -266,8 +266,9 @@ function edd_get_lowest_price_option( $download_id = 0 ) {
 	if ( empty( $download_id ) )
 		$download_id = get_the_ID();
 
-	if ( ! edd_has_variable_prices( $download_id ) )
+	if ( ! edd_has_variable_prices( $download_id ) ) {
 		return edd_get_download_price( $download_id );
+	}
 
 	$prices = edd_get_variable_prices( $download_id );
 
@@ -276,17 +277,20 @@ function edd_get_lowest_price_option( $download_id = 0 ) {
 	if ( ! empty( $prices ) ) {
 
 		foreach ( $prices as $key => $price ) {
-			if ( empty( $price['amount'] ) )
-				continue;
 
-			if ( !isset( $min ) ) {
+			if ( empty( $price['amount'] ) ) {
+				continue;
+			}
+
+			if ( ! isset( $min ) ) {
 				$min = $price['amount'];
 			} else {
 				$min = min( $min, $price['amount'] );
 			}
 
-			if ( $price['amount'] == $min )
+			if ( $price['amount'] == $min ) {
 				$min_id = $key;
+			}
 		}
 
 		$low = $prices[ $min_id ]['amount'];
@@ -304,11 +308,14 @@ function edd_get_lowest_price_option( $download_id = 0 ) {
  * @return float Amount of the highest price
  */
 function edd_get_highest_price_option( $download_id = 0 ) {
-	if ( empty( $download_id ) )
-		$download_id = get_the_ID();
 
-	if ( ! edd_has_variable_prices( $download_id ) )
+	if ( empty( $download_id ) ) {
+		$download_id = get_the_ID();
+	}
+
+	if ( ! edd_has_variable_prices( $download_id ) ) {
 		return edd_get_download_price( $download_id );
+	}
 
 	$prices = edd_get_variable_prices( $download_id );
 
@@ -319,13 +326,16 @@ function edd_get_highest_price_option( $download_id = 0 ) {
 		$max = 0;
 
 		foreach ( $prices as $key => $price ) {
-			if ( empty( $price['amount'] ) )
+
+			if ( empty( $price['amount'] ) ) {
 				continue;
+			}
 
 			$max = max( $max, $price['amount'] );
 
-			if ($price['amount'] == $max)
+			if ( $price['amount'] == $max ) {
 				$max_id = $key;
+			}
 		}
 
 		$high = $prices[ $max_id ]['amount'];
