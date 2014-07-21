@@ -116,13 +116,26 @@ class Tests_Checkout extends EDD_UnitTestCase {
 	 * Test SSL asset filter
 	 */
 	public function test_edd_enforced_ssl_asset_filter() {
-		$content = 'http://local.dev/';
+		
+		// Test page URLs. These should not get modified
 
-		$this->assertSame( 'https://local.dev/', edd_enforced_ssl_asset_filter( $content ) );
+		$content = 'http://local.dev/';
+		$this->assertSame( 'http://local.dev/', edd_enforced_ssl_asset_filter( $content ) );
 
 		$content = array( 'http://local.dev/' );
-		$expected = array( 'https://local.dev/' );
+		$expected = array( 'http://local.dev/' );
 
-		$this->assertSame( $expected, edd_enforced_ssl_asset_filter( $content ) );	
+		$this->assertSame( $expected, edd_enforced_ssl_asset_filter( $content ) );
+
+		// Test asset URLs.
+
+		$content = 'http://local.dev/assets/file.jpg';
+		$this->assertSame( 'https://local.dev/assets/file.jpg', edd_enforced_ssl_asset_filter( $content ) );
+
+		$content = array( 'http://local.dev/assets/js/js_file.js' );
+		$expected = array( 'https://local.dev/assets/js/js_file.js' );
+
+		$this->assertSame( $expected, edd_enforced_ssl_asset_filter( $content ) );
+
 	}
 }
