@@ -350,7 +350,7 @@ function edd_enforced_ssl_asset_filter( $content ) {
 	} else {
 
 		// Detect if URL ends in a common domain suffix. We want to only affect assets
-		$extension = edd_get_file_extension( $content );
+		$extension = untrailingslashit( edd_get_file_extension( $content ) );
 		$suffixes  = array(
 			'br',
 			'ca',
